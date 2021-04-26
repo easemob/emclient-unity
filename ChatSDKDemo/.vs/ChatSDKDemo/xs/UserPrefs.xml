@@ -1,0 +1,37 @@
+﻿<Properties StartupConfiguration="{AECD2D2C-BBF2-B1F4-691E-1C23C0EDFFCD}|">
+  <MonoDevelop.Ide.ItemProperties.ChatSDKDemo PreferredExecutionTarget="06359758-6474-4cfe-90fa-8835600723ab" />
+  <MonoDevelop.Ide.Workbench>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="ChatSDKDemo" expanded="True">
+            <Node name="Assets" expanded="True">
+              <Node name="ChatSDK" expanded="True">
+                <Node name="ChatSDK" expanded="True">
+                  <Node name="ChatManager" expanded="True" />
+                  <Node name="Custom" expanded="True" />
+                  <Node name="GroupManager" expanded="True" />
+                  <Node name="Models" expanded="True">
+                    <Node name="CursorResult.cs" selected="True" />
+                  </Node>
+                </Node>
+              </Node>
+              <Node name="Script" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.UnitTesting.TestPad">
+        <State name="__root__">
+          <Node name="Unity" expanded="True" selected="True" />
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
