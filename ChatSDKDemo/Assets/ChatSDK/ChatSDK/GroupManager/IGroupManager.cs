@@ -2,97 +2,109 @@
 
 namespace ChatSDK
 {
-    public interface IGroupManager
+    public abstract class IGroupManager
     {
-        void GetGroupWithId(string groupId, SDKValueCallBack<Group> callBack = null);
+        internal WeakDelegater<IGroupManagerDelegate> Delegate = new WeakDelegater<IGroupManagerDelegate>();
 
-        void GetJoinedGroups(SDKValueCallBack<Group> callBack = null);
+        public abstract void GetGroupWithId(string groupId, ValueCallBack<Group> callBack = null);
 
-        void GetJoinedGroupsFromServer(int pageSize = 200, int pageNum = 1, SDKValueCallBack<Group> callBack = null);
+        public abstract void GetJoinedGroups(ValueCallBack<Group> callBack = null);
 
-        void GetPublicGroupsFromServer(int pageSize = 200, string cursor = "", SDKValueCallBack<CursorResult<Group>> callBack = null);
+        public abstract void GetJoinedGroupsFromServer(int pageSize = 200, int pageNum = 1, ValueCallBack<Group> callBack = null);
 
-        void GetGroupsWithoutNotice(SDKValueCallBack<string> callBack = null);
+        public abstract void GetPublicGroupsFromServer(int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<Group>> callBack = null);
 
-        void CreateGroup(string groupName, GroupOptions options, string desc, List<string> inviteMembers = null, string inviteReason = "", SDKValueCallBack<CursorResult<Group>> callBack = null);
+        public abstract void GetGroupsWithoutNotice(ValueCallBack<string> callBack = null);
 
-        void GetGroupSpecificationFromServer(string groupId, SDKValueCallBack<Group> callBack = null);
+        public abstract void CreateGroup(string groupName, GroupOptions options, string desc, List<string> inviteMembers = null, string inviteReason = "", ValueCallBack<CursorResult<Group>> callBack = null);
 
-        void GetGroupMemberListFromServer(string groupId, int pageSize = 200, string cursor = "", SDKValueCallBack<CursorResult<string>> callBack = null);
+        public abstract void GetGroupSpecificationFromServer(string groupId, ValueCallBack<Group> callBack = null);
 
-        void GetGroupBlockListFromServer(string groupId, int pageSize = 200, int pageNum = 1, SDKValueCallBack<List<string>> callBack = null);
+        public abstract void GetGroupMemberListFromServer(string groupId, int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<string>> callBack = null);
 
-        void GetGroupMuteListFromServer(string groupId, int pageSize = 200, int pageNum = 1, SDKValueCallBack<List<string>> callBack = null);
+        public abstract void GetGroupBlockListFromServer(string groupId, int pageSize = 200, int pageNum = 1, ValueCallBack<List<string>> callBack = null);
 
-        void GetGroupWhiteListFromServer(string groupId, SDKValueCallBack<List<string>> callBack = null);
+        public abstract void GetGroupMuteListFromServer(string groupId, int pageSize = 200, int pageNum = 1, ValueCallBack<List<string>> callBack = null);
 
-        void CheckIfInGroupWhiteList(SDKValueCallBack<bool> callBack = null);
+        public abstract void GetGroupWhiteListFromServer(string groupId, ValueCallBack<List<string>> callBack = null);
 
-        void GetGroupAnnouncementFromServer(string groupId, SDKValueCallBack<string> callBack = null);
+        public abstract void CheckIfInGroupWhiteList(ValueCallBack<bool> callBack = null);
 
-        void AddMembers(string groupId, List<string> members, string welcome = "", SDKCallBack callBack = null);
+        public abstract void GetGroupAnnouncementFromServer(string groupId, ValueCallBack<string> callBack = null);
 
-        void RemoveMembers(string groupId, List<string> members, SDKCallBack callBack = null);
+        public abstract void AddMembers(string groupId, List<string> members, string welcome = "", CallBack callBack = null);
 
-        void BlockMembers(string groupId, List<string> members, SDKCallBack callBack = null);
+        public abstract void RemoveMembers(string groupId, List<string> members, CallBack callBack = null);
 
-        void UnblockMembers(string groupId, List<string> members, SDKCallBack callBack = null);
+        public abstract void BlockMembers(string groupId, List<string> members, CallBack callBack = null);
+         
+        public abstract void UnblockMembers(string groupId, List<string> members, CallBack callBack = null);
 
-        void ChangeGroupName(string groupId, string name, SDKValueCallBack<Group> callBack = null);
+        public abstract void ChangeGroupName(string groupId, string name, ValueCallBack<Group> callBack = null);
 
-        void ChangeGroupDescription(string groupId, string desc, SDKValueCallBack<Group> callBack = null);
+        public abstract void ChangeGroupDescription(string groupId, string desc, ValueCallBack<Group> callBack = null);
 
-        void LeaveGroup(string groupId, SDKCallBack callBack = null);
+        public abstract void LeaveGroup(string groupId, CallBack callBack = null);
 
-        void DestroyGroup(string groupId, SDKCallBack callBack = null);
+        public abstract void DestroyGroup(string groupId, CallBack callBack = null);
 
-        void BlockGroup(string groupId, SDKCallBack callBack = null);
+        public abstract void BlockGroup(string groupId, CallBack callBack = null);
 
-        void UnblockGroup(string groupId, SDKCallBack callBack = null);
+        public abstract void UnblockGroup(string groupId, CallBack callBack = null);
 
-        void ChangeGroupOwner(string groupId, string newOwner, SDKValueCallBack<Group> callBack = null);
+        public abstract void ChangeGroupOwner(string groupId, string newOwner, ValueCallBack<Group> callBack = null);
 
-        void AddAdmin(string groupId, string memberId, SDKValueCallBack<Group> callBack = null);
+        public abstract void AddAdmin(string groupId, string memberId, ValueCallBack<Group> callBack = null);
 
-        void RemoveAdmin(string groupId, string memberId, SDKValueCallBack<Group> callBack = null);
+        public abstract void RemoveAdmin(string groupId, string memberId, ValueCallBack<Group> callBack = null);
 
-        void MuteMembers(string groupId, List<string> members, SDKValueCallBack<Group> callBack = null);
+        public abstract void MuteMembers(string groupId, List<string> members, ValueCallBack<Group> callBack = null);
 
-        void UnMuteMembers(string groupId, List<string> members, SDKValueCallBack<Group> callBack = null);
+        public abstract void UnMuteMembers(string groupId, List<string> members, ValueCallBack<Group> callBack = null);
 
-        void MuteAllMembers(string groupId, SDKCallBack callBack = null);
+        public abstract void MuteAllMembers(string groupId, CallBack callBack = null);
 
-        void UnMuteAllMembers(string groupId, SDKCallBack callBack = null);
+        public abstract void UnMuteAllMembers(string groupId, CallBack callBack = null);
 
-        void AddWhiteList(string groupId, List<string> members, SDKValueCallBack<Group> callBack = null);
+        public abstract void AddWhiteList(string groupId, List<string> members, ValueCallBack<Group> callBack = null);
 
-        void RemoveWhiteList(string groupId, List<string> members, SDKValueCallBack<Group> callBack = null);
+        public abstract void RemoveWhiteList(string groupId, List<string> members, ValueCallBack<Group> callBack = null);
 
-        void GetGroupFileListFromServer(string groupId, int pageSize = 200, int pageNum = 1, SDKValueCallBack<List<GroupSharedFile>> callBack = null);
+        public abstract void GetGroupFileListFromServer(string groupId, int pageSize = 200, int pageNum = 1, ValueCallBack<List<GroupSharedFile>> callBack = null);
 
-        void UploadGroupSharedFile(string groupId, string filePath, SDKValueCallBack<bool> callBack = null);
+        public abstract void UploadGroupSharedFile(string groupId, string filePath, ValueCallBack<bool> callBack = null);
 
-        void DownloadGroupSharedFile(string groupId, string fileId, string savePath, SDKValueCallBack<bool> callBack = null);
+        public abstract void DownloadGroupSharedFile(string groupId, string fileId, string savePath, ValueCallBack<bool> callBack = null);
 
-        void RemoveGroupSharedFile(string groupId, string fileId, SDKValueCallBack<Group> callBack = null);
+        public abstract void RemoveGroupSharedFile(string groupId, string fileId, ValueCallBack<Group> callBack = null);
 
-        void UpdateGroupAnnouncement(string groupId, string announcement, SDKValueCallBack<Group> callBack = null);
+        public abstract void UpdateGroupAnnouncement(string groupId, string announcement, ValueCallBack<Group> callBack = null);
 
-        void UpdateGroupExt(string groupId, string ext, SDKValueCallBack<Group> callBack = null);
+        public abstract void UpdateGroupExt(string groupId, string ext, ValueCallBack<Group> callBack = null);
 
-        void JoinPublicGroup(string groupId, SDKValueCallBack<Group> callBack = null);
+        public abstract void JoinPublicGroup(string groupId, ValueCallBack<Group> callBack = null);
 
-        void RequestToJoinPublicGroup(string groupId, string reason = "", SDKValueCallBack<Group> callBack = null);
+        public abstract void RequestToJoinPublicGroup(string groupId, string reason = "", ValueCallBack<Group> callBack = null);
 
-        void AcceptJoinApplication(string groupId, string username, SDKValueCallBack<Group> callBack = null);
+        public abstract void AcceptJoinApplication(string groupId, string username, ValueCallBack<Group> callBack = null);
 
-        void DeclineJoinApplication(string groupId, string username, string reason = "", SDKValueCallBack<Group> callBack = null);
+        public abstract void DeclineJoinApplication(string groupId, string username, string reason = "", ValueCallBack<Group> callBack = null);
 
-        void AcceptInvitationFromGroup(string groupId, string inviter, SDKValueCallBack<Group> callBack = null);
+        public abstract void AcceptInvitationFromGroup(string groupId, string inviter, ValueCallBack<Group> callBack = null);
 
-        void DeclineInvitationFromGroup(string groupId, string username, string reason = "", SDKValueCallBack<Group> callBack = null);
+        public abstract void DeclineInvitationFromGroup(string groupId, string username, string reason = "", ValueCallBack<Group> callBack = null);
 
-        void IgnoreGroupPush(string groupId, bool enable = true, SDKValueCallBack<Group> callBack = null);
+        public abstract void IgnoreGroupPush(string groupId, bool enable = true, ValueCallBack<Group> callBack = null);
+
+        public void AddGroupManagerDelegate(IGroupManagerDelegate groupManagerDelegate)
+        {
+            Delegate.Add(groupManagerDelegate);
+        }
+
+        internal void ClearDelegates()
+        {
+            Delegate.Clear();
+        }
 
     }
 

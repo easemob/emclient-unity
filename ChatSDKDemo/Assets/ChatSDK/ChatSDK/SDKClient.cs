@@ -95,6 +95,10 @@ namespace ChatSDK
         public void Logout(bool unbindDeviceToken)
         {
             _Sdk.Logout(unbindDeviceToken);
+            _Sdk.contactManager.ClearDelegates();
+            _Sdk.chatManager.ClearDelegates();
+            _Sdk.groupManager.ClearDelegates();
+            _Sdk.roomManager.ClearDelegates();
         }
 
         private SDKClient()

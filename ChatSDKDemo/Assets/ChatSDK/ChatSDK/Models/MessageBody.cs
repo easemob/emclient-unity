@@ -5,7 +5,7 @@ namespace ChatSDK
     public class IMessageBody
     {
         public MessageBodyType Type;
-        //public abstract void ToJson();
+        public virtual void ToJson() { }
     }
 
     namespace MessageBody

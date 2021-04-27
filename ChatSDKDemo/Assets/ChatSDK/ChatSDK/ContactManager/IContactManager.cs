@@ -3,25 +3,38 @@
 namespace ChatSDK
 {
 
-    public interface IContactManager
+    public abstract class IContactManager
     {
-        void AddContact(string username, string reason = "", SDKCallBack callBack = null);
 
-        void DeleteContact(string username, SDKCallBack callBack = null);
+        internal WeakDelegater<IContactManagerDelegate> Delegate = new WeakDelegater<IContactManagerDelegate>();
 
-        void GetAllContactsFromServer(SDKValueCallBack<List<string>> callBack = null);
+        public abstract void AddContact(string username, string reason = "", CallBack callBack = null);
 
-        void GetAllContactsFromDB(SDKValueCallBack<List<string>> callBack = null);
+        public abstract void DeleteContact(string username, CallBack callBack = null);
 
-        void AddUserToBlockList(SDKValueCallBack<string> callBack = null);
+        public abstract void GetAllContactsFromServer(ValueCallBack<List<string>> callBack = null);
 
-        void RemoveUserFromBlockList(SDKValueCallBack<string> callBack = null);
+        public abstract void GetAllContactsFromDB(ValueCallBack<List<string>> callBack = null);
 
-        void GetBlockListFromServer(SDKValueCallBack<List<string>> callBack = null);
+        public abstract void AddUserToBlockList(ValueCallBack<string> callBack = null);
 
-        void AcceptInvitation(SDKValueCallBack<string> callBack = null);
+        public abstract void RemoveUserFromBlockList(ValueCallBack<string> callBack = null);
 
-        void DeclineInvitation(SDKValueCallBack<string> callBack = null);
+        public abstract void GetBlockListFromServer(ValueCallBack<List<string>> callBack = null);
+
+        public abstract void AcceptInvitation(ValueCallBack<string> callBack = null);
+
+        public abstract void DeclineInvitation(ValueCallBack<string> callBack = null);
+
+        public void AddContactManagerDelegate(IContactManagerDelegate contactManagerDelegate)
+        {
+            Delegate.Add(contactManagerDelegate);
+        }
+
+        internal void ClearDelegates()
+        {
+            Delegate.Clear();
+        }
     }
 
 }

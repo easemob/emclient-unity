@@ -316,6 +316,14 @@
     <Compile Include="Assets\ChatSDK\ChatSDK\Models\CursorResult.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\Models\GroupOptions.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\Models\GroupSharedFile.cs" />
+    <Compile Include="Assets\ChatSDK\ChatSDK\Models\Room.cs" />
+    <Compile Include="Assets\ChatSDK\ChatSDK\Models\DeviceInfo.cs" />
+    <Compile Include="Assets\ChatSDK\ChatSDK\Models\PageResult.cs" />
+    <Compile Include="Assets\ChatSDK\ChatSDK\ContactManager\IContactManagerDelegate.cs" />
+    <Compile Include="Assets\ChatSDK\ChatSDK\Tools\WeakDelegate.cs" />
+    <Compile Include="Assets\ChatSDK\ChatSDK\GroupManager\IGroupManagerDelegate.cs" />
+    <Compile Include="Assets\ChatSDK\ChatSDK\RoomManager\IRoomManagerDelegate.cs" />
+    <Compile Include="Assets\ChatSDK\ChatSDK\ChatManager\IChatManagerDelegate.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

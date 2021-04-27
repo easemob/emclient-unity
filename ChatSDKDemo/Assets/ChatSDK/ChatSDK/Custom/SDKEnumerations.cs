@@ -13,6 +13,28 @@
         CUSTOM      // custom
     };
 
+    public enum MessageType
+    {
+        Chat, Group, Room,
+    }
+
+
+    // 消息状态
+    public enum MessageStatus
+    {
+        CREATE, // 创建
+        PROGRESS, // 发送中
+        SUCCESS, // 发送成功
+        FAIL, // 发送失败
+    }
+
+    // 消息方向
+    public enum MessageDirection
+    {
+        SEND, // 发送的消息
+        RECEIVE, // 接收的消息
+    }
+
     public enum ConversationType
     {
         Chat, Group, Room,
@@ -43,11 +65,22 @@
         PublicOpenJoin, // 公开群，可以通过获取公开群列表api取的，可以直接进入；
     }
 
-    public enum EMGroupPermissionType
+    public enum GroupPermissionType
     {
         None,
         Member,
         Admin,
         Owner,
     }
+
+    public enum RoomPermissionType
+    {
+        None,
+        Member,
+        Admin,
+        Owner,
+    }
+
+    public enum PushStyle { Simple, Summary, }
+
 }

@@ -125,9 +125,14 @@
 
 
         public abstract int InitWithOptions(Options options);
+
         public abstract int CreateAccount(string username, string password);
+
         public abstract void Register(string username, string password);
+
         public abstract void Login(string username, string password);
+
         public abstract void Logout(bool unbindDeviceToken);
+
     }
 }
