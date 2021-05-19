@@ -1,46 +1,49 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
 using UnityEngine;
 using ChatSDK;
-using System;
+using System.Collections.Generic;
 
-public class TestCode : MonoBehaviour, IContactManagerDelegate
+public class TestCode : MonoBehaviour
 {
-    public void OnContactAdded(string username)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void OnContactDeleted(string username)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void OnContactInvited(string username, string reason)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void OnFriendRequestAccepted(string username)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void OnFriendRequestDeclined(string username)
-    {
-        throw new NotImplementedException();
-    }
-
-    // Use this for initialization
+    
     void Start()
     {
 
-        var options = new Options("easemob-demo#chatdemou");
+        var options = new Options("easemob-demo#easeim");
+        options.AcceptInvitationAlways = true;
+        options.UsingHttpsOnly = true;
+        options.DebugModel = true;
         SDKClient.Instance.InitWithOptions(options);
-        SDKClient.Instance.Login("du001", "1");
-        SDKClient.Instance.ContactManager.GetAllContactsFromServer(callBack: new ValueCallBack<List<string>>(onError: (error, desc) => { }, onSuccess: (x) => { Debug.Log(x); }));
-        SDKClient.Instance.ContactManager.AddContact("du001", callBack: new CallBack(onSuccess: () => { }, onError: (error, desc) => { }));
-        SDKClient.Instance.ContactManager.AddContactManagerDelegate(this);
+
+        SDKClient.Instance.Login("du001", "1", handle: new CallBack(
+            onSuccess: () => {
+                print("登录成功");
+            },
+            onError:(error, desc) => {
+                print("登录失败");
+            }));
+
+        SDKClient.Instance.ContactManager.GetAllContactsFromServer(handle: new ValueCallBack<List<string>>(onError: (error, desc) => { }, onSuccess: (x) =>
+        {
+            foreach (string v in x) {
+                print("获取的好友: " + v);
+            }
+        }));
+
+
+        //SDKClient.Instance.ContactManager.AddUserToBlockList("du012", handle: new CallBack(onSuccess: () => {
+        //    print("添加到黑名单");
+        //}, onError:(code, desc)=> {
+        //    print("添加失败 -- " + code);
+        //}));
+
+        SDKClient.Instance.ContactManager.RemoveUserFromBlockList("du012", handle: new CallBack(onSuccess: () => {
+            print("移出黑名单");
+        }, onError: (code, desc) => {
+            print("移出失败 -- " + code);
+        }));
+     
+        Debug.Log(options.ToString());
         
     }
     // Update is called once per frame

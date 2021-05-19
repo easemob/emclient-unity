@@ -25,9 +25,10 @@ namespace ChatSDK
 
         public class LocationBody : IMessageBody
         {
-            public string Latitude, Longitude, Address;
+            public double Latitude, Longitude;
+            public string Address;
 
-            public LocationBody(string latitude, string longitude, string address = "")
+            public LocationBody(double latitude, double longitude, string address = "")
             {
                 Latitude = latitude;
                 Longitude = longitude;
@@ -60,9 +61,11 @@ namespace ChatSDK
             public bool Original;
             public DownLoadStatus ThumbnaiDownStatus = DownLoadStatus.PENDING;
 
-            public ImageBody(string localPath, string displayName, long fileSize = 0, bool original = false) : base(localPath, displayName, fileSize)
+            public ImageBody(string localPath, string displayName, long fileSize = 0, bool original = false, double width = 0, double height = 0) : base(localPath, displayName, fileSize)
             {
                 Original = original;
+                Height = height;
+                Wdith = width;
                 Type = MessageBodyType.IMAGE;
             }
         }
@@ -80,12 +83,15 @@ namespace ChatSDK
         public class VideoBody : FileBody
         {
             public string ThumbnaiLocationPath, ThumbnaiRemotePath, ThumbnaiSecret;
-            public double Height, Wdith;
+            public double Height, Width;
             public int Duration;
 
-            public VideoBody(string localPath, string displayName, int duration, long fileSize = 0) : base(localPath, displayName, fileSize)
+            public VideoBody(string localPath, string displayName, int duration, long fileSize = 0, string thumbnailLocalPath = "", double width = 0, double height = 0) : base(localPath, displayName, fileSize)
             {
                 Duration = duration;
+                Height = height;
+                Width = width;
+                ThumbnaiLocationPath = thumbnailLocalPath;
                 Type = MessageBodyType.VIDEO;
             }
         }
@@ -109,9 +115,10 @@ namespace ChatSDK
             public string CustomEvent;
             public Dictionary<string, string> CustomParams;
 
-            public CustomBody(string customEvent)
+            public CustomBody(string customEvent, Dictionary<string, string> customParams = null)
             {
                 CustomEvent = customEvent;
+                CustomParams = customParams;
                 Type = MessageBodyType.CUSTOM;
             }
         }

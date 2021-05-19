@@ -6,12 +6,14 @@ namespace ChatSDK
     public delegate void OnError(int error, string desc);
     public delegate void OnProgress(int progress);
 
+
     public class CallBack
     {
         public Action Success;
         public OnError Error;
         public OnProgress Progress;
 
+        internal int callbackId = 0;
         /// <summary>
         /// 结果回调
         /// </summary>
@@ -23,6 +25,9 @@ namespace ChatSDK
             Success = onSuccess;
             Error = onError;
             Progress = onProgress;
+            callbackId = CallbackManager.Instance().currentId;
+            CallbackManager.Instance().AddCallback(CallbackManager.Instance().currentId, this);
+            
         }
     }
 
@@ -30,8 +35,9 @@ namespace ChatSDK
     public class ValueCallBack<T>
     {
         public Action<T> OnSuccessValue;
-        public OnError Error;
+        public OnError OnError;
 
+        internal int callbackId = 0;
         /// <summary>
         /// 结果回调
         /// </summary>
@@ -40,7 +46,9 @@ namespace ChatSDK
         public ValueCallBack(Action<T> onSuccess = null, OnError onError = null)
         {
             OnSuccessValue = onSuccess;
-            Error = onError;
+            OnError = onError;
+            callbackId = CallbackManager.Instance().currentId;
+            CallbackManager.Instance().AddValueCallback<T>(CallbackManager.Instance().currentId, this);
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿
-
+﻿using System.Threading.Tasks;
 
 namespace ChatSDK
 {
@@ -14,6 +13,8 @@ namespace ChatSDK
         private static SDKClient _instance;
         private IClient _Sdk;
 
+        internal WeakDelegater<IConnectionDelegate> Delegate = new WeakDelegater<IConnectionDelegate>();
+
         public static SDKClient Instance
         {
             get
@@ -22,45 +23,15 @@ namespace ChatSDK
             }
         }
 
-        public IChatManager ChatManager
-        {
-            get
-            {
-                return _Sdk.chatManager;
-            }
-        }
+        public IChatManager ChatManager { get => _Sdk.ChatManager(); }
 
-        public IContactManager ContactManager
-        {
-            get
-            {
-                return _Sdk.contactManager;
-            }
-        }
+        public IContactManager ContactManager { get => _Sdk.ContactManager(); }
 
-        public IGroupManager GroupManager
-        {
-            get
-            {
-                return _Sdk.groupManager;
-            }
-        }
+        public IGroupManager GroupManager { get => _Sdk.GroupManager(); }
 
-        public IRoomManager RoomManager
-        {
-            get
-            {
-                return _Sdk.roomManager;
-            }
-        }
-
-        public IPushManager PushManager
-        {
-            get
-            {
-                return _Sdk.pushManager;
-            }
-        }
+        public IRoomManager RoomManager { get => _Sdk.RoomManager(); }
+        
+        public IPushManager PushManager { get => _Sdk.PushManager(); }
 
         public Options Options { get { return _Options; } }
 
@@ -75,30 +46,40 @@ namespace ChatSDK
         public string AccessToken { get { return _AccessToken; } }
 
 
+        public void AddConnectionDelegate(IConnectionDelegate contactManagerDelegate)
+        {
+            Delegate.Add(contactManagerDelegate);
+        }
+
+        internal void ClearDelegates()
+        {
+            Delegate.Clear();
+        }
+
         public void InitWithOptions(Options options)
         {
             _Options = options;
-            _Sdk.InitWithOptions(options);
-            // TODO: 设置callback；
+            _Sdk.InitWithOptions(options, Delegate);
         }
 
-        public void Register(string username, string password)
+        public void CreateAccount(string username, string password, CallBack handle = null)
         {
-            _Sdk.Register(username, password);
+            _Sdk.CreateAccount(username, password, handle);
         }
 
-        public void Login(string username, string password)
+        public void Login(string username, string pwdOrToken, bool isToken = false, CallBack handle = null)
         {
-            _Sdk.Login(username, password);
+            _Sdk.Login(username, pwdOrToken, isToken, handle);
         }
 
-        public void Logout(bool unbindDeviceToken)
+        public void Logout(bool unbindDeviceToken, CallBack handle = null)
         {
-            _Sdk.Logout(unbindDeviceToken);
-            _Sdk.contactManager.ClearDelegates();
-            _Sdk.chatManager.ClearDelegates();
-            _Sdk.groupManager.ClearDelegates();
-            _Sdk.roomManager.ClearDelegates();
+            _Sdk.Logout(unbindDeviceToken, handle);
+            ClearDelegates();
+            _Sdk.ContactManager().ClearDelegates();
+            _Sdk.ChatManager().ClearDelegates();
+            _Sdk.GroupManager().ClearDelegates();
+            _Sdk.RoomManager().ClearDelegates();
         }
 
         private SDKClient()

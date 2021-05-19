@@ -2,137 +2,120 @@
 {
     public abstract class IClient
     {
-        private static IClient _Instance;
+        private static IClient instance;
         public static IClient Instance
         {
             get
             {
-                if (_Instance == null)
+                if (instance == null)
                 {
 #if UNITY_ANDROID
-                    _Instance = new Client_Android();
+                    instance = new Client_Android();
 #elif UNITY_IOS
-                    _Instance = new Client_iOS();
+                    instance = new Client_iOS();
 #elif UNITY_STANDALONE_OSX
-                    _Instance = new Client_Mac();
+                    instance = new Client_Mac();
 #elif UNITY_STANDALONE_WIN
-                    _Instance = new Client_Win();
+                    instance = new Client_Win();
 #endif
                 }
 
-                return _Instance;
+                return instance;
             }
         }
 
-        private IChatManager _ChatImp;
-        private IContactManager _ContactImp;
-        private IGroupManager _GroupImp;
-        private IRoomManager _RoomImp;
-        private IPushManager _PushImp;
+        private IChatManager chatImp;
+        private IContactManager contactImp;
+        private IGroupManager groupImp;
+        private IRoomManager roomImp;
+        private IPushManager pushImp;
 
-        public IChatManager chatManager
+
+        public IChatManager ChatManager()
         {
-            get
-            {
-                if (_ChatImp != null) { return _ChatImp; }
+            if (chatImp != null) { return chatImp; }
 #if UNITY_ANDROID
-                _ChatImp = new ChatManager_Android();
+            chatImp = new ChatManager_Android();
 #elif UNITY_IOS
-                _ChatImp = new ChatManager_iOS();
+                chatImp = new ChatManager_iOS();
 #elif UNITY_STANDALONE_OSX
-                _ChatImp = new ChatManager_Mac();
+                chatImp = new ChatManager_Mac();
 #elif UNITY_STANDALONE_WIN
-                _ChatImp = new ChatManager_Win();
+                chatImp = new ChatManager_Win();
 #endif
-                return _ChatImp;
-            }
+            return chatImp;
         }
 
-        public IContactManager contactManager
+        public IContactManager ContactManager()
         {
-            get
-            {
-                if (_ContactImp != null) { return _ContactImp; }
+            if (contactImp != null) { return contactImp; }
 #if UNITY_ANDROID
-                _ContactImp = new ContactManager_Android();
+            contactImp = new ContactManager_Android();
 #elif UNITY_IOS
-                _ContactImp = new ContactManager_iOS();
+                contactImp = new ContactManager_iOS();
 #elif UNITY_STANDALONE_OSX
-                _ContactImp = new ContactManager_Mac();
+                contactImp = new ContactManager_Mac();
 #elif UNITY_STANDALONE_WIN
-                _ContactImp = new ContactManager_Win();
+                contactImp = new ContactManager_Win();
 #endif
-                return _ContactImp;
-            }
+            return contactImp;
         }
 
 
-        public IGroupManager groupManager
+        public IGroupManager GroupManager()
         {
-            get
-            {
-                if (_GroupImp != null) { return _GroupImp; }
+            if (groupImp != null) { return groupImp; }
 #if UNITY_ANDROID
-                _GroupImp = new GroupManager_Android();
+            groupImp = new GroupManager_Android();
 #elif UNITY_IOS
-                _GroupImp = new GroupManager_iOS();
+                groupImp = new GroupManager_iOS();
 #elif UNITY_STANDALONE_OSX
-                _GroupImp = new GroupManager_Mac();
+                groupImp = new GroupManager_Mac();
 #elif UNITY_STANDALONE_WIN
-                _GroupImp = new GroupManager_Win();
+                groupImp = new GroupManager_Win();
 #endif
-                return _GroupImp;
-            }
+            return groupImp;
         }
 
 
-        public IRoomManager roomManager
+        public IRoomManager RoomManager()
         {
-            get
-            {
-                if (_RoomImp != null) { return _RoomImp; }
+            if (roomImp != null) { return roomImp; }
 #if UNITY_ANDROID
-                _RoomImp = new RoomManager_Android();
+            roomImp = new RoomManager_Android();
 #elif UNITY_IOS
-                _RoomImp = new RoomManager_iOS();
+                roomImp = new RoomManager_iOS();
 #elif UNITY_STANDALONE_OSX
-                _RoomImp = new RoomManager_Mac();
+                roomImp = new RoomManager_Mac();
 #elif UNITY_STANDALONE_WIN
-                _RoomImp = new RoomManager_Win();
+                roomImp = new RoomManager_Win();
 #endif
-                return _RoomImp;
-            }
+            return roomImp;
         }
 
 
-        public IPushManager pushManager
+        public IPushManager PushManager()
         {
-            get
-            {
-                if (_PushImp != null) { return _PushImp; }
+            if (pushImp != null) { return pushImp; }
 #if UNITY_ANDROID
-                _PushImp = new PushManager_Android();
+            pushImp = new PushManager_Android();
 #elif UNITY_IOS
-                _PushImp = new PushManager_iOS();
+                pushImp = new PushManager_iOS();
 #elif UNITY_STANDALONE_OSX
-                _PushImp = new PushManager_Mac();
+                pushImp = new PushManager_Mac();
 #elif UNITY_STANDALONE_WIN
-                _PushImp = new PushManager_Win();
+                pushImp = new PushManager_Win();
 #endif
-                return _PushImp;
-            }
+            return pushImp;
         }
 
 
-        public abstract int InitWithOptions(Options options);
+        public abstract void InitWithOptions(Options options, WeakDelegater<IConnectionDelegate> connectionDelegater = null);
 
-        public abstract int CreateAccount(string username, string password);
+        public abstract void CreateAccount(string username, string password, CallBack handle = null);
 
-        public abstract void Register(string username, string password);
+        public abstract void Login(string username, string pwdOrToken, bool isToken = false, CallBack handle = null);
 
-        public abstract void Login(string username, string password);
-
-        public abstract void Logout(bool unbindDeviceToken);
-
+        public abstract void Logout(bool unbindDeviceToken, CallBack handle = null);
     }
 }

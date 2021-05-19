@@ -1,6 +1,23 @@
-﻿<Properties StartupConfiguration="{AECD2D2C-BBF2-B1F4-691E-1C23C0EDFFCD}|">
-  <MonoDevelop.Ide.ItemProperties.ChatSDKDemo PreferredExecutionTarget="4059c8bc-4f18-494e-9ea0-b73cb4151d12" />
-  <MonoDevelop.Ide.Workbench>
+﻿<Properties StartupConfiguration="{3A4B1E97-589D-1E2D-D6C5-A6CFAD6C116F}|">
+  <MonoDevelop.Ide.ItemProperties.ChatSDKDemo PreferredExecutionTarget="95cd266c-1045-47ee-8ef5-ceac692d7815" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/ChatSDK/ChatSDK/Listeners/IContactManagerDelegate.cs">
+    <Files>
+      <File FileName="Assets/ChatSDK/ChatSDK/ContactManager/ContactManager_Android.cs" Line="69" Column="10" NotebookId="1" />
+      <File FileName="Assets/Script/TestCode.cs" Line="40" Column="57" NotebookId="1" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Tools/CallBackManager.cs" Line="74" Column="1" NotebookId="1" />
+      <File FileName="Assets/ChatSDK/ChatSDK/ContactManager/IContactManager.cs" Line="8" Column="43" NotebookId="1" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Listeners/IContactManagerDelegate.cs" Line="3" Column="22" NotebookId="1" />
+    </Files>
+    <FloatingWindows>
+      <FloatingWindow WindowId="1" X="2025" Y="25" Width="1815" Height="1027">
+        <Files>
+          <File FileName="../../../../emclient-u3d/Assets/EaseMob/EMSDKCallback.cs" Line="79" Column="44" />
+          <File FileName="../../../../emclient-u3d/Assets/EaseMob/EMClient.cs" />
+          <File FileName="../../../../emclient-u3d/Assets/EaseMob/EMTools.cs" />
+          <File FileName="../../../../emclient-u3d/Assets/EaseMob/Callbacks/EMBaseCallback.cs" />
+        </Files>
+      </FloatingWindow>
+    </FloatingWindows>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
@@ -8,16 +25,19 @@
             <Node name="Assets" expanded="True">
               <Node name="ChatSDK" expanded="True">
                 <Node name="ChatSDK" expanded="True">
-                  <Node name="ChatManager" expanded="True">
-                    <Node name="IChatManager.cs" selected="True" />
-                  </Node>
                   <Node name="ContactManager" expanded="True" />
                   <Node name="Custom" expanded="True" />
-                  <Node name="Models" expanded="True" />
+                  <Node name="Helper" expanded="True">
+                    <Node name="Android" expanded="True" />
+                  </Node>
+                  <Node name="Listeners" expanded="True">
+                    <Node name="IContactManagerDelegate.cs" selected="True" />
+                  </Node>
                   <Node name="Tools" expanded="True" />
                 </Node>
               </Node>
               <Node name="Script" expanded="True" />
+              <Node name="ThirdLibs" expanded="True" />
             </Node>
           </Node>
         </State>
@@ -26,8 +46,18 @@
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="965b6f64-3831-492d-a3f4-13e442400d58" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Assets/ThirdLibs/SimpleJSON.cs" relfile="Assets/ThirdLibs/SimpleJSON.cs" line="785" column="1" />
+      <Breakpoint file="/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/Helper/Android/ContactManagerListener.cs" relfile="Assets/ChatSDK/ChatSDK/Helper/Android/ContactManagerListener.cs" line="12" column="1" />
+      <Breakpoint file="/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/Helper/Android/ContactManagerListener.cs" relfile="Assets/ChatSDK/ChatSDK/Helper/Android/ContactManagerListener.cs" line="22" column="1" />
+      <Breakpoint file="/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/Helper/Android/ContactManagerListener.cs" relfile="Assets/ChatSDK/ChatSDK/Helper/Android/ContactManagerListener.cs" line="34" column="1" />
+      <Breakpoint file="/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/Helper/Android/ContactManagerListener.cs" relfile="Assets/ChatSDK/ChatSDK/Helper/Android/ContactManagerListener.cs" line="46" column="1" />
+      <Breakpoint file="/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/Helper/Android/ContactManagerListener.cs" relfile="Assets/ChatSDK/ChatSDK/Helper/Android/ContactManagerListener.cs" line="58" column="1" />
+      <Breakpoint file="/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Assets/Script/TestCode.cs" relfile="Assets/Script/TestCode.cs" line="35" column="1" />
+      <Breakpoint file="/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Assets/Script/TestCode.cs" relfile="Assets/Script/TestCode.cs" line="37" column="1" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />
 </Properties>

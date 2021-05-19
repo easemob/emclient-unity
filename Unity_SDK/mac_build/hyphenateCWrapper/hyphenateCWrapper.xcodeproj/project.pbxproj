@@ -653,7 +653,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = hyphenateCWrapper/Info.plist;
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = "";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Resources";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/hyphenateCWrapper",
@@ -674,7 +674,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = hyphenateCWrapper/Info.plist;
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = "";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Resources";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/hyphenateCWrapper",

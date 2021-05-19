@@ -1,30 +1,47 @@
-﻿namespace ChatSDK
+﻿using UnityEngine;
+
+namespace ChatSDK
 {
-    public class Client_Android : IClient
+    public class Client_Android : IClient  
     {
-        public override int CreateAccount(string username, string password)
-        {
-            throw new System.NotImplementedException();
+
+        static string Connection_Obj = "unity_chat_emclient_connection_obj";
+
+        private AndroidJavaObject wrapper;
+
+        GameObject listenerGameObj;
+
+        public Client_Android() {
+           
+            using (AndroidJavaClass aj = new AndroidJavaClass("com.hyphenate.unity_chat_sdk.EMClientWrapper")) {
+                wrapper = aj.CallStatic<AndroidJavaObject>("wrapper");
+            }
         }
 
-        public override int InitWithOptions(Options options)
+        public override void InitWithOptions(Options options, WeakDelegater<IConnectionDelegate> connectionDelegater)
         {
-            throw new System.NotImplementedException();
+            CallbackManager.Instance();
+            listenerGameObj = new GameObject(Connection_Obj);
+            ConnectionListener connectionListener = listenerGameObj.AddComponent<ConnectionListener>();
+            connectionListener.connectionDelegater = connectionDelegater;
+            wrapper.Call("init", options.ToString());
         }
 
-        public override void Login(string username, string password)
+        public override void CreateAccount(string username, string password, CallBack callBack = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("createAccount", username, password, null);
         }
 
-        public override void Logout(bool unbindDeviceToken)
+        public override void Login(string username, string pwdOrToken, bool isToken = false, CallBack callBack = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("login", username, pwdOrToken, isToken, callBack?.callbackId.ToString());
         }
 
-        public override void Register(string username, string password)
+        public override void Logout(bool unbindDeviceToken, CallBack callBack = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("logout", unbindDeviceToken, null);
         }
+
+       
     }
 }

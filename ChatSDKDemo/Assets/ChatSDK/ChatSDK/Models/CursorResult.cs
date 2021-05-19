@@ -1,24 +1,25 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System;
 
 namespace ChatSDK
 {
-    [DataContract]
     public class CursorResult<T>
     {
 
-        internal List<T> _Data;
-        internal string _Cursor;
-
-
-        internal string ToJson() { return ""; }
-
-        public string Cursor { get { return _Cursor; } }
-        public List<T> Data { get { return _Data; } }
-
-        public CursorResult()
+        static internal CursorResult<T> FromJsonString(string jsonString)
         {
-            
+            CursorResult<T> cr = new CursorResult<T>();
+
+            return cr;
+        }
+
+        public string Cursor { get; private set; }
+        public List<T> Data { get; private set; }
+
+        internal CursorResult()
+        {
+
         }
     }
 }

@@ -4,28 +4,22 @@ namespace ChatSDK
 {
     public class Client_Mac : IClient
     {
-        public override int CreateAccount(string username, string password)
+        public override void CreateAccount(string username, string password, CallBack callBack = null)
         {
             throw new System.NotImplementedException();
         }
 
-        public override int InitWithOptions(Options options)
-        {
-            Debug.Log(options.AppKey);
-            return 1;
-        }
-
-        public override void Login(string username, string password)
+        public override void InitWithOptions(Options options, WeakDelegater<IConnectionDelegate> connectionDelegater = null)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void Logout(bool unbindDeviceToken)
+        public override void Login(string username, string pwdOrToken, bool isToken = false, CallBack callBack = null)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void Register(string username, string password)
+        public override void Logout(bool unbindDeviceToken, CallBack callBack = null)
         {
             throw new System.NotImplementedException();
         }
