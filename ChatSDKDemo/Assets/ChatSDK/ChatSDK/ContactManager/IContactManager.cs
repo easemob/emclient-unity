@@ -6,7 +6,7 @@ namespace ChatSDK
     {
         internal WeakDelegater<IContactManagerDelegate> Delegate = new WeakDelegater<IContactManagerDelegate>();
 
-        public abstract void AddContact(string username, string reason = "", CallBack handle = null);
+        public abstract void AddContact(string username, string reason = null, CallBack handle = null);
 
         public abstract void DeleteContact(string username, bool keepConversation = false, CallBack handle = null);
 

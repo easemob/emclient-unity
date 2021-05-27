@@ -78,7 +78,7 @@ namespace ChatSDK
             wrapper.Call("fetchChatRoomInfoFromServer", roomId, handle?.callbackId);
         }
 
-        public override void FetchRoomMembers(string roomId, string cursor = "", int pageSize = 200, ValueCallBack<CursorResult<string>> handle = null)
+        public override void FetchRoomMembers(string roomId, string cursor = null, int pageSize = 200, ValueCallBack<CursorResult<string>> handle = null)
         {
             wrapper.Call("fetchChatRoomMembers", roomId, cursor, pageSize, handle?.callbackId);
         }

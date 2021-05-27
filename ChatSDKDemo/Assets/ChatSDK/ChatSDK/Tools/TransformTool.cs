@@ -24,7 +24,7 @@ namespace ChatSDK {
         }
 
         //static internal string JsonStringFromStringList(List<string> list) {
-        //    if()
+        
         //}
 
         static internal List<Group> JsonStringToGroupList(string jsonString)

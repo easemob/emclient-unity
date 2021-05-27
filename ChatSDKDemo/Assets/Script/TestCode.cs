@@ -5,14 +5,15 @@ using System.Collections.Generic;
 
 public class TestCode : MonoBehaviour, IConnectionDelegate
 {
+    
     public void OnConnected()
     {
-        throw new System.NotImplementedException();
+        print("已连接服务器");
     }
 
     public void OnDisconnected(int i)
     {
-        throw new System.NotImplementedException();
+        print("链接服务器断开: " + i);
     }
 
     void Start()
@@ -23,6 +24,7 @@ public class TestCode : MonoBehaviour, IConnectionDelegate
         options.UsingHttpsOnly = true;
         options.DebugModel = true;
         SDKClient.Instance.InitWithOptions(options);
+        SDKClient.Instance.AddConnectionDelegate(this);
 
         SDKClient.Instance.Login("du001", "1", handle: new CallBack(
             onSuccess: () => {
@@ -31,8 +33,6 @@ public class TestCode : MonoBehaviour, IConnectionDelegate
             onError:(error, desc) => {
                 print("登录失败");
             }));
-
-        SDKClient.Instance.AddConnectionDelegate(this);
 
         //SDKClient.Instance.GroupManager.CheckIfInGroupWhiteList("asdasdasdasdsas", handle: new ValueCallBack<bool>(
         //        onSuccess:(bool b)=> {
@@ -44,9 +44,16 @@ public class TestCode : MonoBehaviour, IConnectionDelegate
         members.Add("du003");
         members.Add("du004");
         
-        SDKClient.Instance.GroupManager.CreateGroup("测试", new GroupOptions(GroupStyle.PrivateMemberCanInvite), "test", members, handle: new ValueCallBack<Group>( onSuccess:(x)=> {
-            print("groupName -- " + x.Name);
-        }));
+        SDKClient.Instance.GroupManager.CreateGroup(
+            "测试",
+            new GroupOptions(GroupStyle.PrivateMemberCanInvite),
+            "test",
+            members,
+            "reason",
+            new ValueCallBack<Group>(
+                onSuccess:(x)=> { print("groupName -- " + x.Name); },
+                onError:(code, desc) => { print("创建失败: " + code + " : " + desc); }
+        ));
 
         //SDKClient.Instance.GroupManager.GetPublicGroupsFromServer();
         

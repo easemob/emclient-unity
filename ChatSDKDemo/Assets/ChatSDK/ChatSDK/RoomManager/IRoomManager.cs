@@ -28,7 +28,7 @@ namespace ChatSDK
 
         public abstract void FetchRoomInfoFromServer(string roomId, ValueCallBack<Room> handle = null);
 
-        public abstract void FetchRoomMembers(string roomId, string cursor = "", int pageSize = 200, ValueCallBack<CursorResult<string>> handle = null);
+        public abstract void FetchRoomMembers(string roomId, string cursor = null, int pageSize = 200, ValueCallBack<CursorResult<string>> handle = null);
 
         public abstract void FetchRoomMuteList(string roomId, int pageSize = 1, int pageNum = 200, ValueCallBack<List<string>> handle = null);
 

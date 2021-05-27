@@ -79,17 +79,17 @@ namespace ChatSDK
             wrapper.Call("checkIfInGroupWhiteList", groupId, handle?.callbackId);
         }
 
-        public override void CreateGroup(string groupName, GroupOptions options, string desc = "", List<string> inviteMembers = null, string inviteReason = "", ValueCallBack<Group> handle = null)
+        public override void CreateGroup(string groupName, GroupOptions options, string desc = null, List<string> inviteMembers = null, string inviteReason = null, ValueCallBack<Group> handle = null)
         {
             wrapper.Call("createGroup", groupName, options.ToJsonString(), desc, TransformTool.StringListToString(inviteMembers), inviteReason, handle?.callbackId);
         }
 
-        public override void DeclineInvitationFromGroup(string groupId, string username, string reason = "", CallBack handle = null)
+        public override void DeclineInvitationFromGroup(string groupId, string username, string reason = null, CallBack handle = null)
         {
             wrapper.Call("declineInvitationFromGroup", groupId, username, reason, handle?.callbackId);
         }
 
-        public override void DeclineJoinApplication(string groupId, string username, string reason = "", CallBack handle = null)
+        public override void DeclineJoinApplication(string groupId, string username, string reason = null, CallBack handle = null)
         {
             
             wrapper.Call("declineJoinApplication", groupId, username, reason, handle?.callbackId);
@@ -110,22 +110,22 @@ namespace ChatSDK
             wrapper.Call("getGroupAnnouncementFromServer", groupId, handle?.callbackId);
         }
 
-        public override void GetGroupBlockListFromServer(string groupId, int pageSize = 200, int pageNum = 1,  ValueCallBack<List<string>> handle = null)
+        public override void GetGroupBlockListFromServer(string groupId, int pageNum = 1, int pageSize = 200,  ValueCallBack<List<string>> handle = null)
         {
             wrapper.Call("getGroupBlockListFromServer", groupId, pageSize, pageNum, handle?.callbackId);
         }
 
-        public override void GetGroupFileListFromServer(string groupId, int pageSize = 200, int pageNum = 1, ValueCallBack<List<GroupSharedFile>> handle = null)
+        public override void GetGroupFileListFromServer(string groupId, int pageNum = 1, int pageSize = 200, ValueCallBack<List<GroupSharedFile>> handle = null)
         {
             wrapper.Call("getGroupFileListFromServer", groupId, pageSize, pageNum, handle?.callbackId);
         }
 
-        public override void GetGroupMemberListFromServer(string groupId, int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<string>> handle = null)
+        public override void GetGroupMemberListFromServer(string groupId, int pageSize = 200, string cursor = null, ValueCallBack<CursorResult<string>> handle = null)
         {
             wrapper.Call("getGroupMemberListFromServer", groupId, pageSize, cursor, handle?.callbackId);
         }
 
-        public override void GetGroupMuteListFromServer(string groupId, int pageSize = 200, int pageNum = 1, ValueCallBack<List<string>> handle = null)
+        public override void GetGroupMuteListFromServer(string groupId, int pageNum = 1, int pageSize = 200, ValueCallBack<List<string>> handle = null)
         {
             wrapper.Call("getGroupMuteListFromServer", groupId, pageSize, pageNum, handle?.callbackId);
         }
@@ -155,12 +155,12 @@ namespace ChatSDK
             wrapper.Call("getJoinedGroups", handle?.callbackId);
         }
 
-        public override void GetJoinedGroupsFromServer(int pageSize = 200, int pageNum = 1, ValueCallBack<List<Group>> handle = null)
+        public override void GetJoinedGroupsFromServer(int pageNum = 1, int pageSize = 200, ValueCallBack<List<Group>> handle = null)
         {
             wrapper.Call("getJoinedGroupsFromServer", pageSize, pageNum, handle?.callbackId);
         }
 
-        public override void GetPublicGroupsFromServer(int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<List<GroupInfo>>> handle = null)
+        public override void GetPublicGroupsFromServer(int pageSize = 200, string cursor = null, ValueCallBack<CursorResult<List<GroupInfo>>> handle = null)
         {
             wrapper.Call("getPublicGroupsFromServer", pageSize, cursor, handle?.callbackId);
         }

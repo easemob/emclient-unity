@@ -23,7 +23,7 @@ namespace ChatSDK
         }
 
 
-        public override void AddContact(string username, string reason = "", CallBack handle = null)
+        public override void AddContact(string username, string reason = null, CallBack handle = null)
         {
             wrapper.Call("addContact", username, reason, handle?.callbackId);
         }

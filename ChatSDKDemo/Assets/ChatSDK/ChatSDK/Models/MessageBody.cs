@@ -7,6 +7,11 @@ namespace ChatSDK
     {
         public MessageBodyType Type;
         public abstract string ToJsonString();
+        static public IMessageBody FromJsonString(string jsonString) {
+            JSONObject jo = JSON.Parse(jsonString).AsObject;
+            // TODO: json to body;
+            return null;
+        }
     }
 
     namespace MessageBody

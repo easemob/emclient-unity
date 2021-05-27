@@ -26,8 +26,12 @@ namespace ChatSDK
             Error = onError;
             Progress = onProgress;
             callbackId = CallbackManager.Instance().currentId.ToString();
-            CallbackManager.Instance().AddCallback(CallbackManager.Instance().currentId, this);
-            
+            CallbackManager.Instance().AddCallback(CallbackManager.Instance().currentId, this);   
+        }
+        internal void ClearCallback()
+        {
+            Error(0, null);
+            CallbackManager.Instance().RemoveCallback(int.Parse(callbackId));
         }
     }
 

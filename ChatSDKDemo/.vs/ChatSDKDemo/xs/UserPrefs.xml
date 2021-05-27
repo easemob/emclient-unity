@@ -1,10 +1,16 @@
 ﻿<Properties StartupConfiguration="{3A4B1E97-589D-1E2D-D6C5-A6CFAD6C116F}|">
   <MonoDevelop.Ide.ItemProperties.ChatSDKDemo PreferredExecutionTarget="95cd266c-1045-47ee-8ef5-ceac692d7815" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/ChatSDK/ChatSDK/Tools/TransformTool.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/ChatSDK/ChatSDK/Models/MessageBody.cs">
     <Files>
-      <File FileName="Assets/ChatSDK/ChatSDK/ChatManager/ChatManager_Android.cs" Line="109" Column="44" />
-      <File FileName="Assets/Script/TestCode.cs" Line="45" Column="30" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Tools/TransformTool.cs" Line="307" Column="2" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Custom/SDKCallBack.cs" Line="33" Column="28" />
+      <File FileName="Assets/ChatSDK/ChatSDK/PushManager/PushManager_iOS.cs" Line="58" Column="1" />
+      <File FileName="Assets/ChatSDK/ChatSDK/PushManager/PushManager_Mac.cs" Line="7" Column="9" />
+      <File FileName="Assets/ChatSDK/ChatSDK/PushManager/PushManager_Win.cs" Line="11" Column="10" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Tools/CallBackManager.cs" Line="29" Column="33" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Models/Conversation.cs" Line="72" Column="9" />
+      <File FileName="Assets/ChatSDK/ChatSDK/ChatManager/ChatManager_Win.cs" Line="98" Column="1" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Models/Message.cs" Line="294" Column="1" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Models/MessageBody.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -14,14 +20,11 @@
               <Node name="ChatSDK" expanded="True">
                 <Node name="ChatSDK" expanded="True">
                   <Node name="ChatManager" expanded="True" />
-                  <Node name="Client" expanded="True" />
-                  <Node name="ContactManager" expanded="True" />
-                  <Node name="Custom" expanded="True" />
-                  <Node name="GroupManager" expanded="True" />
-                  <Node name="Models" expanded="True" />
-                  <Node name="Tools" expanded="True">
-                    <Node name="TransformTool.cs" selected="True" />
+                  <Node name="Models" expanded="True">
+                    <Node name="MessageBody.cs" selected="True" />
                   </Node>
+                  <Node name="PushManager" expanded="True" />
+                  <Node name="Tools" expanded="True" />
                 </Node>
               </Node>
               <Node name="Script" expanded="True" />
@@ -41,7 +44,7 @@
       <Breakpoint file="/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/Models/Group.cs" relfile="Assets/ChatSDK/ChatSDK/Models/Group.cs" line="11" column="1" />
       <Breakpoint file="/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/Models/Group.cs" relfile="Assets/ChatSDK/ChatSDK/Models/Group.cs" line="25" column="1" />
       <Breakpoint file="/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/Tools/CallBackManager.cs" relfile="Assets/ChatSDK/ChatSDK/Tools/CallBackManager.cs" line="217" column="1" />
-      <Breakpoint file="/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Assets/Script/TestCode.cs" relfile="Assets/Script/TestCode.cs" line="48" column="1" />
+      <Breakpoint file="/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Assets/Script/TestCode.cs" relfile="Assets/Script/TestCode.cs" line="54" column="1" />
       <Breakpoint file="/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/Tools/CallBackManager.cs" relfile="Assets/ChatSDK/ChatSDK/Tools/CallBackManager.cs" line="137" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
