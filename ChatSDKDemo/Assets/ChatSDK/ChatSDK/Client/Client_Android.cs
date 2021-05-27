@@ -24,7 +24,7 @@ namespace ChatSDK
             listenerGameObj = new GameObject(Connection_Obj);
             ConnectionListener connectionListener = listenerGameObj.AddComponent<ConnectionListener>();
             connectionListener.connectionDelegater = connectionDelegater;
-            wrapper.Call("init", options.ToString());
+            wrapper.Call("init", options.ToJsonString());
         }
 
         public override void CreateAccount(string username, string password, CallBack callBack = null)
@@ -34,7 +34,7 @@ namespace ChatSDK
 
         public override void Login(string username, string pwdOrToken, bool isToken = false, CallBack callBack = null)
         {
-            wrapper.Call("login", username, pwdOrToken, isToken, callBack?.callbackId.ToString());
+            wrapper.Call("login", username, pwdOrToken, isToken, callBack?.callbackId);
         }
 
         public override void Logout(bool unbindDeviceToken, CallBack callBack = null)

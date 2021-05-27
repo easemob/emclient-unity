@@ -98,7 +98,7 @@ namespace ChatSDK
             AppKey = appKey;
         }
 
-        public override string ToString() {
+        internal string ToJsonString() {
 
             JSONObject jo = new JSONObject();
             jo["app_key"] = AppKey;

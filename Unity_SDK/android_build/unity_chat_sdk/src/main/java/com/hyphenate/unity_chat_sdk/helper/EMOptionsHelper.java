@@ -64,8 +64,8 @@ public class EMOptionsHelper {
 
     }
 
-    public static Map<String, Object> toJson(EMOptions options) {
-        Map<String, Object> data = new HashMap<>();
+    public static JSONObject toJson(EMOptions options) throws JSONException{
+        JSONObject data = new JSONObject();
         data.put("app_key", options.getAppKey());
         data.put("auto_login", options.getAutoLogin());
         data.put("require_ack", options.getRequireAck());

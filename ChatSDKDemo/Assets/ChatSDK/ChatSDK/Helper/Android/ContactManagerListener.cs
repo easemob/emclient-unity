@@ -5,13 +5,13 @@ using UnityEngine;
 namespace ChatSDK {
     internal class ContactManagerListener : MonoBehaviour
     {
-        internal WeakDelegater<IContactManagerDelegate> contactManagerDelegater;
+        internal WeakDelegater<IContactManagerDelegate> managerDelegater;
 
 
         internal void OnContactAdded(string jsonString) {
-            if (contactManagerDelegater != null) {
+            if (managerDelegater != null) {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IContactManagerDelegate contactManagerDelegate in contactManagerDelegater.List) {
+                foreach (IContactManagerDelegate contactManagerDelegate in managerDelegater.List) {
                     contactManagerDelegate.OnContactAdded(jo["username"].Value);
                 }
             }
@@ -19,10 +19,10 @@ namespace ChatSDK {
 
         
         internal void OnContactDeleted(string jsonString) {
-            if (contactManagerDelegater != null)
+            if (managerDelegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IContactManagerDelegate contactManagerDelegate in contactManagerDelegater.List)
+                foreach (IContactManagerDelegate contactManagerDelegate in managerDelegater.List)
                 {
                     contactManagerDelegate.OnContactDeleted(jo["username"].Value);
                 }
@@ -31,10 +31,10 @@ namespace ChatSDK {
 
         
         internal void OnContactInvited(string jsonString) {
-            if (contactManagerDelegater != null)
+            if (managerDelegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IContactManagerDelegate contactManagerDelegate in contactManagerDelegater.List)
+                foreach (IContactManagerDelegate contactManagerDelegate in managerDelegater.List)
                 {
                     contactManagerDelegate.OnContactInvited(jo["username"].Value, jo["reason"].Value);
                 }
@@ -43,10 +43,10 @@ namespace ChatSDK {
 
         
         internal void OnFriendRequestAccepted(string jsonString) {
-            if (contactManagerDelegater != null)
+            if (managerDelegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IContactManagerDelegate contactManagerDelegate in contactManagerDelegater.List)
+                foreach (IContactManagerDelegate contactManagerDelegate in managerDelegater.List)
                 {
                     contactManagerDelegate.OnFriendRequestAccepted(jo["username"].Value);
                 }
@@ -55,10 +55,10 @@ namespace ChatSDK {
 
         
         internal void OnFriendRequestDeclined(string jsonString) {
-            if (contactManagerDelegater != null)
+            if (managerDelegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IContactManagerDelegate contactManagerDelegate in contactManagerDelegater.List)
+                foreach (IContactManagerDelegate contactManagerDelegate in managerDelegater.List)
                 {
                     contactManagerDelegate.OnFriendRequestDeclined(jo["username"].Value);
                 }

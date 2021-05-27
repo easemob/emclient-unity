@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class EMGroupOptionsHelper {
-    public static EMGroupOptions fromJson(JSONObject json) throws JSONException {
+    public static EMGroupOptions fromJson(JSONObject json) throws JSONException{
         EMGroupOptions options = new EMGroupOptions();
         options.maxUsers = json.getInt("maxCount");
         options.inviteNeedConfirm = json.getBoolean("inviteNeedConfirm");
@@ -19,8 +19,8 @@ public class EMGroupOptionsHelper {
         return options;
     }
 
-    public static Map<String, Object> toJson(EMGroupOptions options) {
-        Map<String, Object> data = new HashMap<>();
+    public static JSONObject toJson(EMGroupOptions options) throws JSONException{
+        JSONObject data = new JSONObject();
         data.put("maxCount", options.maxUsers);
         data.put("inviteNeedConfirm", options.inviteNeedConfirm);
         data.put("ext", options.extField);

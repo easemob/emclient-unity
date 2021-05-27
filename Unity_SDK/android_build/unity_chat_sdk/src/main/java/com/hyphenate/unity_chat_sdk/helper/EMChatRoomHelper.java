@@ -2,14 +2,17 @@ package com.hyphenate.unity_chat_sdk.helper;
 
 import com.hyphenate.chat.EMChatRoom;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class EMChatRoomHelper {
 
 
-    public static Map<String, Object> toJson(EMChatRoom chatRoom) {
-        Map<String, Object> data = new HashMap<>();
+    public static JSONObject toJson(EMChatRoom chatRoom) throws JSONException {
+        JSONObject data = new JSONObject();
         data.put("roomId", chatRoom.getId());
         data.put("name", chatRoom.getName());
         data.put("desc", chatRoom.getDescription());

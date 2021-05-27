@@ -7,45 +7,43 @@ import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMGroupInfo;
 import com.hyphenate.chat.EMMessage;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class EMCursorResultHelper {
-    public static Map<String, Object> toJson(EMCursorResult result) {
-        Map<String, Object> data = new HashMap<>();
+    public static JSONObject toJson(EMCursorResult result) throws JSONException {
+        JSONObject data = new JSONObject();
         data.put("cursor", result.getCursor());
         List list = (List) result.getData();
-        List<Object> jsonList = new ArrayList<>();
+        JSONArray jsonArray = new JSONArray ();
         for (Object obj : list) {
             if (obj instanceof EMMessage) {
-                jsonList.add(EMMessageHelper.toJson((EMMessage) obj));
+                jsonArray.put(EMMessageHelper.toJson((EMMessage) obj));
             }
 
             if (obj instanceof EMGroup) {
-                jsonList.add(EMGroupHelper.toJson((EMGroup) obj));
+                jsonArray.put(EMGroupHelper.toJson((EMGroup) obj));
             }
 
             if (obj instanceof EMChatRoom) {
-                jsonList.add(EMChatRoomHelper.toJson((EMChatRoom) obj));
+                jsonArray.put(EMChatRoomHelper.toJson((EMChatRoom) obj));
             }
 
             if (obj instanceof String) {
-                jsonList.add(obj);
+                jsonArray.put(obj);
             }
 
             if (obj instanceof EMGroupInfo) {
-                EMGroup group = EMClient.getInstance().groupManager().getGroup(((EMGroupInfo) obj).getGroupId());
-                if (group != null) {
-                    jsonList.add(EMGroupHelper
-                            .toJson(EMClient.getInstance().groupManager().getGroup(((EMGroupInfo) obj).getGroupId())));
-                } else {
-                    jsonList.add(EMGroupInfoHelper.toJson((EMGroupInfo) obj));
-                }
+                jsonArray.put(EMGroupInfoHelper.toJson((EMGroupInfo) obj));
             }
         }
-        data.put("list", jsonList);
+        data.put("list", jsonArray);
 
         return data;
     }

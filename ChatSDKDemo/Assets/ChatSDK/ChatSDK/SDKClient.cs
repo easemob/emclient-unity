@@ -80,6 +80,7 @@ namespace ChatSDK
             _Sdk.ChatManager().ClearDelegates();
             _Sdk.GroupManager().ClearDelegates();
             _Sdk.RoomManager().ClearDelegates();
+            CallbackManager.Instance().CleanAllCallback();
         }
 
         private SDKClient()

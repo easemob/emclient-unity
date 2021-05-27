@@ -109,7 +109,6 @@
             return pushImp;
         }
 
-
         public abstract void InitWithOptions(Options options, WeakDelegater<IConnectionDelegate> connectionDelegater = null);
 
         public abstract void CreateAccount(string username, string password, CallBack handle = null);
@@ -117,5 +116,7 @@
         public abstract void Login(string username, string pwdOrToken, bool isToken = false, CallBack handle = null);
 
         public abstract void Logout(bool unbindDeviceToken, CallBack handle = null);
+
+        
     }
 }

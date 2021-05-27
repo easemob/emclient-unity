@@ -19,7 +19,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class EMMessageHelper {
-    public static EMMessage fromJson(JSONObject json) throws JSONException {
+    public static EMMessage fromJson(JSONObject json) throws JSONException{
         EMMessage message = null;
         JSONObject bodyJson = json.getJSONObject("body");
         String type = bodyJson.getString("type");
@@ -146,10 +146,10 @@ public class EMMessageHelper {
         return message;
     }
 
-    public static Map<String, Object> toJson(EMMessage message) {
+    public static JSONObject toJson(EMMessage message) throws JSONException {
         if (message == null)
             return null;
-        Map<String, Object> data = new HashMap<>();
+        JSONObject data = new JSONObject();
         String type = "";
         switch (message.getType()) {
             case TXT: {

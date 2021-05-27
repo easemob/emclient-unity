@@ -7,47 +7,41 @@ namespace ChatSDK
 
         internal WeakDelegater<IChatManagerDelegate> Delegate = new WeakDelegater<IChatManagerDelegate>();
 
-        /// <summary>
-        /// 发送消息
-        /// </summary>
-        /// <param name="message">消息体</param>
-        /// <param name="callBack">结果回调</param>
-        /// <returns>将要发送的消息</returns>
-        public abstract Message SendMessage(Message message, CallBack callBack = null);
+        public abstract bool DeleteConversation(string conversationId, bool deleteMessages);
 
-        public abstract Message ResendMessage(Message message, CallBack callBack = null);
+        public abstract void DownloadAttachment(string messageId, CallBack handle = null);
 
-        public abstract bool SendMessageReadAck(Message message, CallBack callBack = null);
+        public abstract void DownloadThumbnail(string messageId, CallBack handle = null);
 
-        public abstract bool SendConversationReadAck(string conversationId, CallBack callback = null);
-
-        public abstract bool RecallMessage(string messageId, CallBack callBack = null);
-
-        public abstract Message LoadMessage(string messageId);
+        public abstract void FetchHistoryMessages(string conversationId, ConversationType type, string startMessageId = null, int count = 20, ValueCallBack<CursorResult<Message>> handle = null);
 
         public abstract Conversation GetConversation(string conversationId, ConversationType type, bool createIfNeed = true);
 
-        public abstract bool MarkAllConversationsAsRead();
+        public abstract void GetConversationsFromServer(ValueCallBack<List<Conversation>> handle = null);
 
         public abstract int GetUnreadMessageCount();
 
-        public abstract void UpdateMessage(Message message, ValueCallBack<Message> callBack = null);
-
-        public abstract void ImportMessage(Message message, ValueCallBack<Message> callback = null);
-
-        public abstract void DownloadAttachment(Message message, ValueCallBack<Message> callBack = null);
-
-        public abstract void DownloadThumbnail(Message message, ValueCallBack<Message> callBack = null);
+        public abstract bool ImportMessages(List<Message> messages);
 
         public abstract List<Conversation> LoadAllConversations();
 
-        public abstract void GetConversationsFromServer(Message message, ValueCallBack<List<Conversation>> callBack = null);
+        public abstract Message LoadMessage(string messageId);
 
-        public abstract bool DeleteConversation(string conversationId);
+        public abstract bool MarkAllConversationsAsRead();
 
-        public abstract void FetchHistoryMessages(string conversationId, ValueCallBack<CursorResult<Message>> callBack = null);
+        public abstract void RecallMessage(string messageId, CallBack handle = null);
 
-        public abstract void SearchMsgFromDB(string keywards, MessageType type, long timestamp = 0, int maxCount = 20, string from = "", MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callBack = null);
+        public abstract Message ResendMessage(string messageId, ValueCallBack<Message> handle = null);
+
+        public abstract List<Message> SearchMsgFromDB(string keywards, long timestamp = 0, int maxCount = 20, string from = null, MessageSearchDirection direction = MessageSearchDirection.UP);
+
+        public abstract void SendConversationReadAck(string conversationId, CallBack handle = null);
+
+        public abstract Message SendMessage(Message message, CallBack handle = null);
+
+        public abstract void SendMessageReadAck(string messageId, CallBack handle = null);
+
+        public abstract void UpdateMessage(Message message, CallBack handle = null);
 
         public void AddChatManagerDelegate(IChatManagerDelegate chatManagerDelegate)
         {

@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using SimpleJSON;
 
 namespace ChatSDK
 {
-    public class IMessageBody
+    public abstract class IMessageBody
     {
         public MessageBodyType Type;
-        public virtual void ToJson() { }
+        public abstract string ToJsonString();
     }
 
     namespace MessageBody
@@ -21,6 +22,14 @@ namespace ChatSDK
                 Text = text;
                 Type = MessageBodyType.TXT;
             }
+
+            public override string ToJsonString()
+            {
+                JSONObject jo = new JSONObject();
+                jo.Add("content", Text);
+                jo.Add("type", "txt");
+                return jo.ToString();
+            }
         }
 
         public class LocationBody : IMessageBody
@@ -34,6 +43,16 @@ namespace ChatSDK
                 Longitude = longitude;
                 Address = address;
                 Type = MessageBodyType.LOCATION;
+            }
+
+            public override string ToJsonString()
+            {
+                JSONObject jo = new JSONObject();
+                jo.Add("latitude", Latitude);
+                jo.Add("longitude", Longitude);
+                jo.Add("address", Address);
+                jo.Add("type", "loc");
+                return jo.ToString();
             }
         }
 
@@ -51,13 +70,47 @@ namespace ChatSDK
                 FileSize = fileSize;
                 Type = MessageBodyType.FILE;
             }
+
+            public override string ToJsonString()
+            {
+                JSONObject jo = new JSONObject();
+                jo.Add("localPath", LocalPath);
+                jo.Add("fileSize", FileSize);
+                jo.Add("displayName", DisplayName);
+                jo.Add("remotePath", RemotePath);
+                jo.Add("secret", Secret);
+                jo.Add("fileSize", FileSize);
+                jo.Add("fileStatus", DownLoadStatusToInt(DownStatus));
+                jo.Add("type", "file");
+                return jo.ToString();
+            }
+
+            public int DownLoadStatusToInt(DownLoadStatus status) {
+                int ret = 0;
+                switch (status) { 
+                    case DownLoadStatus.DOWNLOADING:
+                        ret = 0;
+                        break;
+                    case DownLoadStatus.SUCCESS:
+                        ret = 1;
+                        break;
+                    case DownLoadStatus.FAILED:
+                        ret = 2;
+                        break;
+                    case DownLoadStatus.PENDING:
+                        ret = 3;
+                        break;
+                }
+
+                return ret;
+            }
         }
 
         public class ImageBody : FileBody
         {
 
-            public string ThumbnaiLocationPath, ThumbnaiRemotePath, ThumbnaiSecret;
-            public double Height, Wdith;
+            public string ThumbnailLocalPath, ThumbnaiRemotePath, ThumbnaiSecret;
+            public double Height, Width;
             public bool Original;
             public DownLoadStatus ThumbnaiDownStatus = DownLoadStatus.PENDING;
 
@@ -65,8 +118,28 @@ namespace ChatSDK
             {
                 Original = original;
                 Height = height;
-                Wdith = width;
+                Width = width;
                 Type = MessageBodyType.IMAGE;
+            }
+
+            public override string ToJsonString()
+            {
+                JSONObject jo = new JSONObject();
+                jo.Add("localPath", LocalPath);
+                jo.Add("fileSize", FileSize);
+                jo.Add("displayName", DisplayName);
+                jo.Add("remotePath", RemotePath);
+                jo.Add("secret", Secret);
+                jo.Add("fileSize", FileSize);
+                jo.Add("fileStatus", DownLoadStatusToInt(DownStatus));
+                jo.Add("thumbnailLocalPath", ThumbnailLocalPath);
+                jo.Add("thumbnailRemotePath", ThumbnaiRemotePath);
+                jo.Add("thumbnailSecret", ThumbnaiSecret);
+                jo.Add("height", Height);
+                jo.Add("width", Width);
+                jo.Add("sendOriginalImage", Original);
+                jo.Add("type", "img");
+                return jo.ToString();
             }
         }
 
@@ -77,6 +150,21 @@ namespace ChatSDK
             {
                 Duration = duration;
                 Type = MessageBodyType.VOICE;
+            }
+
+            public override string ToJsonString()
+            {
+                JSONObject jo = new JSONObject();
+                jo.Add("localPath", LocalPath);
+                jo.Add("fileSize", FileSize);
+                jo.Add("displayName", DisplayName);
+                jo.Add("remotePath", RemotePath);
+                jo.Add("secret", Secret);
+                jo.Add("fileSize", FileSize);
+                jo.Add("fileStatus", DownLoadStatusToInt(DownStatus));
+                jo.Add("duration", Duration);
+                jo.Add("type", "voice");
+                return jo.ToString();
             }
         }
 
@@ -94,6 +182,25 @@ namespace ChatSDK
                 ThumbnaiLocationPath = thumbnailLocalPath;
                 Type = MessageBodyType.VIDEO;
             }
+
+            public override string ToJsonString()
+            {
+                JSONObject jo = new JSONObject();
+                jo.Add("localPath", LocalPath);
+                jo.Add("fileSize", FileSize);
+                jo.Add("displayName", DisplayName);
+                jo.Add("remotePath", RemotePath);
+                jo.Add("secret", Secret);
+                jo.Add("fileSize", FileSize);
+                jo.Add("fileStatus", DownLoadStatusToInt(DownStatus));
+                jo.Add("thumbnailRemotePath", ThumbnaiRemotePath);
+                jo.Add("thumbnailSecret", ThumbnaiSecret);
+                jo.Add("height", Height);
+                jo.Add("width", Width);
+                jo.Add("duration", Duration);
+                jo.Add("type", "video");
+                return jo.ToString();
+            }
         }
 
         public class CmdBody : IMessageBody
@@ -106,6 +213,15 @@ namespace ChatSDK
                 Action = action;
                 DeliverOnlineOnly = deliverOnlineOnly;
                 Type = MessageBodyType.CMD;
+            }
+
+            public override string ToJsonString()
+            {
+                JSONObject jo = new JSONObject();
+                jo.Add("deliverOnlineOnly", DeliverOnlineOnly);
+                jo.Add("action", Action);
+                jo.Add("type", "cmd");
+                return jo.ToString();
             }
         }
 
@@ -120,6 +236,15 @@ namespace ChatSDK
                 CustomEvent = customEvent;
                 CustomParams = customParams;
                 Type = MessageBodyType.CUSTOM;
+            }
+
+            public override string ToJsonString()
+            {
+                JSONObject jo = new JSONObject();
+                jo.Add("event", CustomEvent);
+                jo.Add("params", TransformTool.JsonStringFromDictionary(CustomParams));
+                jo.Add("type", "custom");
+                return jo.ToString();
             }
         }
     }

@@ -12,8 +12,8 @@ import java.util.Map;
 
 public class EMConversationHelper {
 
-    public static Map<String, Object> toJson(EMConversation conversation) {
-        Map<String, Object> data = new HashMap<>();
+    public static JSONObject toJson(EMConversation conversation) throws JSONException {
+        JSONObject data = new JSONObject();
         data.put("con_id", conversation.conversationId());
         data.put("type", typeToInt(conversation.getType()));
         data.put("unreadCount", conversation.getUnreadMsgCount());
@@ -28,7 +28,7 @@ public class EMConversationHelper {
         }
     }
 
-    static EMConversation.EMConversationType typeFromInt(int type) {
+    public static EMConversation.EMConversationType typeFromInt(int type) {
         switch (type) {
             case 0:
                 return EMConversation.EMConversationType.Chat;
@@ -54,11 +54,11 @@ public class EMConversationHelper {
         return 0;
     }
 
-    private static Map<String, Object> jsonStringToMap(String content) throws JSONException {
+    private static JSONObject jsonStringToMap(String content) throws JSONException {
         if (content == null)
             return null;
         content = content.trim();
-        Map<String, Object> result = new HashMap<>();
+        JSONObject result = new JSONObject();
         try {
             if (content.charAt(0) == '[') {
                 JSONArray jsonArray = new JSONArray(content);

@@ -1,4 +1,5 @@
 ﻿using System;
+using SimpleJSON;
 
 namespace ChatSDK
 {
@@ -11,9 +12,13 @@ namespace ChatSDK
         public long CreateTime { get; internal set; }
         public long FileSize { get; internal set; }
 
-        public GroupSharedFile()
+        internal GroupSharedFile(JSONNode jo)
         {
-
+            this.FileName = jo["name"].Value;
+            this.FileId = jo["fileId"].Value;
+            this.FileOwner = jo["owner"].Value;
+            this.CreateTime = jo["createTime"].AsInt;
+            this.FileSize = jo["fileSize"].AsInt;
         }
     }
 

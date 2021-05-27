@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SimpleJSON;
 
 namespace ChatSDK
 {
@@ -17,12 +18,46 @@ namespace ChatSDK
 
         public bool AllMemberMuted { get; internal set; }
 
+        public int MaxUsers { get; internal set; }
+        public string Owner { get; internal set; }
+        public bool IsAllMemberMuted { get; internal set; }
+
         public RoomPermissionType PermissionType { get; internal set; }
 
 
 
-        public Room()
+        internal Room(JSONNode jo)
         {
+            if (jo != null)
+            {
+                RoomId = jo["roomId"].Value;
+                Name = jo["name"].Value;
+                Description = jo["desc"].Value;
+                Announcement = jo["announcement"].Value;
+                AdminList = TransformTool.JsonStringToStringList(jo["adminList"].Value);
+                MemberList = TransformTool.JsonStringToStringList(jo["memberList"].Value);
+                BlockList = TransformTool.JsonStringToStringList(jo["blockList"].Value);
+                MuteList = TransformTool.JsonStringToStringList(jo["muteList"].Value);
+                MaxUsers = jo["maxUsers"].AsInt;
+                Owner = jo["owner"].Value;
+                IsAllMemberMuted = jo["isAllMemberMuted"].AsBool;
+                if (jo["permissionType"].AsInt == -1)
+                {
+                    this.PermissionType = RoomPermissionType.None;
+                }
+                else if (jo["permissionType"].AsInt == 0)
+                {
+                    this.PermissionType = RoomPermissionType.Member;
+                }
+                else if (jo["permissionType"].AsInt == 1)
+                {
+                    this.PermissionType = RoomPermissionType.Admin;
+                }
+                else if (jo["permissionType"].AsInt == 2)
+                {
+                    this.PermissionType = RoomPermissionType.Owner;
+                }
+            }
         }
 
     }

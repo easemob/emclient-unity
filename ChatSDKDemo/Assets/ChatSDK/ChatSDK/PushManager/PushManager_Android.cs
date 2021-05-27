@@ -1,57 +1,69 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace ChatSDK
 {
     public class PushManager_Android : IPushManager
     {
-        public void GetNoDisturbGroupsFromServer(ValueCallBack<List<string>> callBack = null)
+
+        private AndroidJavaObject wrapper;
+
+        public PushManager_Android()
         {
-            throw new System.NotImplementedException();
+            using (AndroidJavaClass aj = new AndroidJavaClass("com.hyphenate.unity_chat_sdk.EMPushManagerWrapper"))
+            {
+                wrapper = aj.CallStatic<AndroidJavaObject>("wrapper");
+            }
         }
 
-        public PushConfig GetPushConfig()
+        public void GetNoDisturbGroupsFromServer(ValueCallBack<List<string>> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("getNoDisturbGroups", handle?.callbackId);
         }
 
-        public void GetPushConfigFromServer(ValueCallBack<PushConfig> callBack = null)
+        public void GetPushConfig(ValueCallBack<PushConfig> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("getImPushConfig", handle?.callbackId);
         }
 
-        public void SetGroupToDisturb(string groupId, bool noDisturb, ValueCallBack<bool> callBack = null)
+        public void GetPushConfigFromServer(ValueCallBack<PushConfig> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("getImPushConfigFromServer", handle?.callbackId);
         }
 
-        public void SetNoDisturb(bool noDisturb, int startTime = 0, int endTime = 24, ValueCallBack<bool> callBack = null)
+        public void SetGroupToDisturb(string groupId, bool noDisturb, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("updateGroupPushService", groupId, noDisturb, handle?.callbackId);
         }
 
-        public void SetPushStyle(PushStyle pushStyle, ValueCallBack<bool> callBack = null)
+        public void SetNoDisturb(bool noDisturb, int startTime = 0, int endTime = 24, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("imPushNoDisturb", noDisturb, startTime, endTime, handle?.callbackId);
         }
 
-        public void UpdateAPNsDeviceToken(string token, ValueCallBack<bool> callBack = null)
+        public void SetPushStyle(PushStyle pushStyle, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("updateImPushStyle", pushStyle == PushStyle.Simple ? 0 : 1 , handle?.callbackId);
         }
 
-        public void UpdateFCMPushToken(string token, ValueCallBack<bool> callBack = null)
+        public void UpdateAPNsDeviceToken(string token, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("updateAPNsDeviceToken", token, handle?.callbackId);
         }
 
-        public void UpdateHMSPushToken(string token, ValueCallBack<bool> callBack = null)
+        public void UpdateFCMPushToken(string token, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("updateFCMPushToken", token, handle?.callbackId);
         }
 
-        public void UpdatePushNickName(string nickname, ValueCallBack<bool> callBack = null)
+        public void UpdateHMSPushToken(string token, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("updateHMSPushToken", token, handle?.callbackId);
+        }
+
+        public void UpdatePushNickName(string nickname, CallBack handle = null)
+        {
+            wrapper.Call("updatePushNickname", nickname, handle?.callbackId);
         }
     }
 }

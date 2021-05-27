@@ -25,8 +25,8 @@ public class EMMessageBodyHelper {
         return body;
     }
 
-    public static Map<String, Object> textBodyToJson(EMTextMessageBody body) {
-        Map<String, Object> data = new HashMap<>();
+    public static JSONObject textBodyToJson(EMTextMessageBody body) throws JSONException {
+        JSONObject data = new JSONObject();
         data.put("content", body.getMessage());
         data.put("type", "txt");
         return data;
@@ -41,8 +41,8 @@ public class EMMessageBodyHelper {
         return body;
     }
 
-    public static Map<String, Object> localBodyToJson(EMLocationMessageBody body) {
-        Map<String, Object> data = new HashMap<>();
+    public static JSONObject localBodyToJson(EMLocationMessageBody body) throws JSONException {
+        JSONObject data = new JSONObject();
         data.put("latitude", body.getLatitude());
         data.put("longitude", body.getLongitude());
         data.put("address", body.getAddress());
@@ -60,15 +60,15 @@ public class EMMessageBodyHelper {
         return body;
     }
 
-    public static Map<String, Object> cmdBodyToJson(EMCmdMessageBody body) {
-        Map<String, Object> data = new HashMap<>();
+    public static JSONObject cmdBodyToJson(EMCmdMessageBody body) throws JSONException {
+        JSONObject data = new JSONObject();
         data.put("deliverOnlineOnly", body.isDeliverOnlineOnly());
         data.put("action", body.action());
         data.put("type", "cmd");
         return data;
     }
 
-    public static EMCustomMessageBody customBodyFromJson(JSONObject json) throws JSONException {
+    public static EMCustomMessageBody customBodyFromJson(JSONObject json) throws JSONException{
         String event = json.getString("event");
         JSONObject jsonObject = json.getJSONObject("params");
         Map<String, String> params = new HashMap<>();
@@ -84,15 +84,15 @@ public class EMMessageBodyHelper {
         return body;
     }
 
-    public static Map<String, Object> customBodyToJson(EMCustomMessageBody body) {
-        Map<String, Object> data = new HashMap<>();
+    public static JSONObject customBodyToJson(EMCustomMessageBody body) throws JSONException{
+        JSONObject data = new JSONObject();
         data.put("event", body.event());
         data.put("params", body.getParams());
         data.put("type", "custom");
         return data;
     }
 
-    public static EMFileMessageBody fileBodyFromJson(JSONObject json) throws JSONException {
+    public static EMFileMessageBody fileBodyFromJson(JSONObject json) throws  JSONException{
         String localPath = json.getString("localPath");
         File file = new File(localPath);
 
@@ -105,8 +105,8 @@ public class EMMessageBodyHelper {
         return body;
     }
 
-    public static Map<String, Object> fileBodyToJson(EMNormalFileMessageBody body) {
-        Map<String, Object> data = new HashMap<>();
+    public static JSONObject fileBodyToJson(EMNormalFileMessageBody body) throws JSONException{
+        JSONObject data = new JSONObject();
         data.put("localPath", body.getLocalUrl());
         data.put("fileSize", body.getFileSize());
         data.put("displayName", body.getFileName());
@@ -141,8 +141,8 @@ public class EMMessageBodyHelper {
         return body;
     }
 
-    public static Map<String, Object> imageBodyToJson(EMImageMessageBody body) {
-        Map<String, Object> data = new HashMap<>();
+    public static JSONObject imageBodyToJson(EMImageMessageBody body) throws JSONException{
+        JSONObject data = new JSONObject();
         data.put("localPath", body.getLocalUrl());
         data.put("displayName", body.getFileName());
         data.put("remotePath", body.getRemoteUrl());
@@ -181,8 +181,8 @@ public class EMMessageBodyHelper {
         return body;
     }
 
-    public static Map<String, Object> videoBodyToJson(EMVideoMessageBody body) {
-        Map<String, Object> data = new HashMap<>();
+    public static JSONObject videoBodyToJson(EMVideoMessageBody body) throws JSONException{
+        JSONObject data = new JSONObject();
         data.put("localPath", body.getLocalUrl());
         data.put("thumbnailLocalPath", body.getLocalThumbUri());
         data.put("duration", body.getDuration());
@@ -214,8 +214,8 @@ public class EMMessageBodyHelper {
         return body;
     }
 
-    public static Map<String, Object> voiceBodyToJson(EMVoiceMessageBody body) {
-        Map<String, Object> data = new HashMap<>();
+    public static JSONObject voiceBodyToJson(EMVoiceMessageBody body) throws JSONException {
+        JSONObject data = new JSONObject();
         data.put("localPath", body.getLocalUrl());
         data.put("duration", body.getLength());
         data.put("displayName", body.getFileName());

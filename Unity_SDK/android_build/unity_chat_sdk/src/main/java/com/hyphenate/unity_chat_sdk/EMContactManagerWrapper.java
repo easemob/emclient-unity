@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
+import com.hyphenate.unity_chat_sdk.helper.EMTransformHelper;
 import com.hyphenate.unity_chat_sdk.listeners.EMUnityContactListener;
 
 import org.json.JSONArray;
@@ -25,7 +26,7 @@ public class EMContactManagerWrapper extends  EMWrapper {
         asyncRunnable(() -> {
             try {
                 EMClient.getInstance().contactManager().addContact(username, reason);
-                onSuccess(callbackId, null,null);
+                onSuccess(null, callbackId,null);
             } catch (HyphenateException e) {
                 onError(callbackId, e);
             }
@@ -36,7 +37,7 @@ public class EMContactManagerWrapper extends  EMWrapper {
         asyncRunnable(() -> {
             try {
                 EMClient.getInstance().contactManager().deleteContact(username, keepConversation);
-                onSuccess(callbackId, null,null);
+                onSuccess(null, callbackId, null);
             } catch (HyphenateException e) {
                 onError(callbackId, e);
             }
@@ -49,11 +50,7 @@ public class EMContactManagerWrapper extends  EMWrapper {
             try {
                 List<String> contacts = EMClient.getInstance().contactManager().getAllContactsFromServer();
                 Log.d("chat_sdk", contacts.toString());
-                JSONArray jsonAry = new JSONArray();
-                for (String contact : contacts) {
-                    jsonAry.put(contact);
-                }
-                onSuccess(callbackId, "List<String>",jsonAry.toString());
+                onSuccess("List<String>", callbackId, EMTransformHelper.stringListToJsonArray(contacts).toString());
             } catch (HyphenateException e) {
                 onError(callbackId, e);
             }
@@ -66,11 +63,7 @@ public class EMContactManagerWrapper extends  EMWrapper {
             try {
                 List<String> contacts = EMClient.getInstance().contactManager().getContactsFromLocal();
                 Log.d("chat_sdk", contacts.toString());
-                JSONArray jsonAry = new JSONArray();
-                for (String contact : contacts) {
-                    jsonAry.put(contact);
-                }
-                onSuccess(callbackId, "List<String>",jsonAry.toString());
+                onSuccess("List<String>", callbackId, EMTransformHelper.stringListToJsonArray(contacts).toString());
             } catch (HyphenateException e) {
                 onError(callbackId, e);
             }
@@ -82,7 +75,7 @@ public class EMContactManagerWrapper extends  EMWrapper {
         asyncRunnable(() -> {
             try {
                 EMClient.getInstance().contactManager().addUserToBlackList(username, false);
-                onSuccess(callbackId, null,null);
+                onSuccess(null,callbackId,null);
             } catch (HyphenateException e) {
                 onError(callbackId, e);
             }
@@ -93,7 +86,7 @@ public class EMContactManagerWrapper extends  EMWrapper {
         asyncRunnable(() -> {
             try {
                 EMClient.getInstance().contactManager().removeUserFromBlackList(username);
-                onSuccess(callbackId, null,null);
+                onSuccess(null, callbackId,null);
             } catch (HyphenateException e) {
                 onError(callbackId, e);
             }
@@ -104,11 +97,7 @@ public class EMContactManagerWrapper extends  EMWrapper {
         asyncRunnable(() -> {
             try {
                 List<String> contacts = EMClient.getInstance().contactManager().getBlackListFromServer();
-                JSONArray jsonAry = new JSONArray();
-                for (String contact : contacts) {
-                    jsonAry.put(contact);
-                }
-                onSuccess(callbackId, "List<String>",jsonAry.toString());
+                onSuccess("List<String>", callbackId, EMTransformHelper.stringListToJsonArray(contacts).toString());
             } catch (HyphenateException e) {
                 onError(callbackId, e);
             }
@@ -119,7 +108,7 @@ public class EMContactManagerWrapper extends  EMWrapper {
         asyncRunnable(() -> {
             try {
                 EMClient.getInstance().contactManager().acceptInvitation(username);
-                onSuccess(callbackId, null,null);
+                onSuccess(null,callbackId, null);
             } catch (HyphenateException e) {
                 onError(callbackId, e);
             }
@@ -130,7 +119,7 @@ public class EMContactManagerWrapper extends  EMWrapper {
         asyncRunnable(() -> {
             try {
                 EMClient.getInstance().contactManager().declineInvitation(username);
-                onSuccess(callbackId, null,null);
+                onSuccess(null, callbackId,null);
             } catch (HyphenateException e) {
                 onError(callbackId, e);
             }
@@ -141,11 +130,7 @@ public class EMContactManagerWrapper extends  EMWrapper {
         asyncRunnable(() -> {
             try {
                 List<String> platforms = EMClient.getInstance().contactManager().getSelfIdsOnOtherPlatform();
-                JSONArray jsonAry = new JSONArray();
-                for (String contact : platforms) {
-                    jsonAry.put(contact);
-                }
-                onSuccess(callbackId, "List<String>",jsonAry.toString());
+                onSuccess("List<String>", callbackId, EMTransformHelper.stringListToJsonArray(platforms).toString());
             } catch (HyphenateException e) {
                 onError(callbackId, e);
             }

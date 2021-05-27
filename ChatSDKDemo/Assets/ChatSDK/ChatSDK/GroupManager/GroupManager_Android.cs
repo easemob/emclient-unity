@@ -1,232 +1,253 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace ChatSDK
 {
     public class GroupManager_Android : IGroupManager
     {
-        public override void AcceptInvitationFromGroup(string groupId, string inviter, ValueCallBack<Group> callBack = null)
+
+        static string GroupManagerListener_Obj = "unity_chat_emclient_groupmanager_delegate_obj";
+
+        private AndroidJavaObject wrapper;
+
+        GameObject listenerGameObj;
+
+        public GroupManager_Android()
         {
-            throw new System.NotImplementedException();
+            using (AndroidJavaClass aj = new AndroidJavaClass("com.hyphenate.unity_chat_sdk.EMGroupManagerWrapper"))
+            {
+                listenerGameObj = new GameObject(GroupManagerListener_Obj);
+                GroupManagerListener listener = listenerGameObj.AddComponent<GroupManagerListener>();
+                listener.groupManagerDelegater = Delegate;
+                wrapper = aj.CallStatic<AndroidJavaObject>("wrapper");
+            }
         }
 
-        public override void AcceptJoinApplication(string groupId, string username, ValueCallBack<Group> callBack = null)
+        public override void AcceptInvitationFromGroup(string groupId, string inviter, ValueCallBack<Group> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("acceptInvitationFromGroup", groupId, inviter, handle?.callbackId);
         }
 
-        public override void AddAdmin(string groupId, string memberId, ValueCallBack<Group> callBack = null)
+        public override void AcceptJoinApplication(string groupId, string username, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("acceptInvitationFromGroup", groupId, username, handle?.callbackId);
         }
 
-        public override void AddMembers(string groupId, List<string> members, string welcome = "", CallBack callBack = null)
+        public override void AddAdmin(string groupId, string memberId, ValueCallBack<Group> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("addAdmin", groupId, memberId, handle?.callbackId);
         }
 
-        public override void AddWhiteList(string groupId, List<string> members, ValueCallBack<Group> callBack = null)
+        public override void AddMembers(string groupId, List<string> members, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("addMembers", groupId, TransformTool.StringListToString(members), handle?.callbackId);
         }
 
-        public override void BlockGroup(string groupId, CallBack callBack = null)
+        public override void AddWhiteList(string groupId, List<string> members, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("addWhiteList", groupId, TransformTool.StringListToString(members), handle?.callbackId);
         }
 
-        public override void BlockMembers(string groupId, List<string> members, CallBack callBack = null)
+        public override void BlockGroup(string groupId, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("blockGroup", groupId,  handle?.callbackId);
         }
 
-        public override void ChangeGroupDescription(string groupId, string desc, ValueCallBack<Group> callBack = null)
+        public override void BlockMembers(string groupId, List<string> members, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("blockMembers", groupId, TransformTool.StringListToString(members), handle?.callbackId);
         }
 
-        public override void ChangeGroupName(string groupId, string name, ValueCallBack<Group> callBack = null)
+        public override void ChangeGroupDescription(string groupId, string desc, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("updateDescription", groupId, desc, handle?.callbackId);
         }
 
-        public override void ChangeGroupOwner(string groupId, string newOwner, ValueCallBack<Group> callBack = null)
+        public override void ChangeGroupName(string groupId, string name, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("updateGroupSubject", groupId, name, handle?.callbackId);
         }
 
-        public override void CheckIfInGroupWhiteList(ValueCallBack<bool> callBack = null)
+        public override void ChangeGroupOwner(string groupId, string newOwner, ValueCallBack<Group> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("updateGroupOwner", groupId, newOwner, handle?.callbackId);
         }
 
-        public override void CreateGroup(string groupName, GroupOptions options, string desc, List<string> inviteMembers = null, string inviteReason = "", ValueCallBack<CursorResult<Group>> callBack = null)
+        public override void CheckIfInGroupWhiteList(string groupId, ValueCallBack<bool> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("checkIfInGroupWhiteList", groupId, handle?.callbackId);
         }
 
-        public override void DeclineInvitationFromGroup(string groupId, string username, string reason = "", ValueCallBack<Group> callBack = null)
+        public override void CreateGroup(string groupName, GroupOptions options, string desc = "", List<string> inviteMembers = null, string inviteReason = "", ValueCallBack<Group> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("createGroup", groupName, options.ToJsonString(), desc, TransformTool.StringListToString(inviteMembers), inviteReason, handle?.callbackId);
         }
 
-        public override void DeclineJoinApplication(string groupId, string username, string reason = "", ValueCallBack<Group> callBack = null)
+        public override void DeclineInvitationFromGroup(string groupId, string username, string reason = "", CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("declineInvitationFromGroup", groupId, username, reason, handle?.callbackId);
         }
 
-        public override void DestroyGroup(string groupId, CallBack callBack = null)
+        public override void DeclineJoinApplication(string groupId, string username, string reason = "", CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            
+            wrapper.Call("declineJoinApplication", groupId, username, reason, handle?.callbackId);
         }
 
-        public override void DownloadGroupSharedFile(string groupId, string fileId, string savePath, ValueCallBack<bool> callBack = null)
+        public override void DestroyGroup(string groupId, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("destroyGroup", groupId, handle?.callbackId);
         }
 
-        public override void GetGroupAnnouncementFromServer(string groupId, ValueCallBack<string> callBack = null)
+        public override void DownloadGroupSharedFile(string groupId, string fileId, string savePath, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("downloadGroupSharedFile", groupId, groupId, fileId, savePath, handle?.callbackId);
         }
 
-        public override void GetGroupBlockListFromServer(string groupId, int pageSize = 200, int pageNum = 1, ValueCallBack<List<string>> callBack = null)
+        public override void GetGroupAnnouncementFromServer(string groupId, ValueCallBack<string> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("getGroupAnnouncementFromServer", groupId, handle?.callbackId);
         }
 
-        public override void GetGroupFileListFromServer(string groupId, int pageSize = 200, int pageNum = 1, ValueCallBack<List<GroupSharedFile>> callBack = null)
+        public override void GetGroupBlockListFromServer(string groupId, int pageSize = 200, int pageNum = 1,  ValueCallBack<List<string>> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("getGroupBlockListFromServer", groupId, pageSize, pageNum, handle?.callbackId);
         }
 
-        public override void GetGroupMemberListFromServer(string groupId, int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<string>> callBack = null)
+        public override void GetGroupFileListFromServer(string groupId, int pageSize = 200, int pageNum = 1, ValueCallBack<List<GroupSharedFile>> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("getGroupFileListFromServer", groupId, pageSize, pageNum, handle?.callbackId);
         }
 
-        public override void GetGroupMuteListFromServer(string groupId, int pageSize = 200, int pageNum = 1, ValueCallBack<List<string>> callBack = null)
+        public override void GetGroupMemberListFromServer(string groupId, int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<string>> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("getGroupMemberListFromServer", groupId, pageSize, cursor, handle?.callbackId);
         }
 
-        public override void GetGroupSpecificationFromServer(string groupId, ValueCallBack<Group> callBack = null)
+        public override void GetGroupMuteListFromServer(string groupId, int pageSize = 200, int pageNum = 1, ValueCallBack<List<string>> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("getGroupMuteListFromServer", groupId, pageSize, pageNum, handle?.callbackId);
         }
 
-        public override void GetGroupsWithoutNotice(ValueCallBack<string> callBack = null)
+        public override void GetGroupSpecificationFromServer(string groupId, ValueCallBack<Group> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("getGroupSpecificationFromServer", groupId, handle?.callbackId);
         }
 
-        public override void GetGroupWhiteListFromServer(string groupId, ValueCallBack<List<string>> callBack = null)
+        public override void GetGroupsWithoutNotice(ValueCallBack<List<string>> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("getGroupsWithoutPushNotification", handle?.callbackId);
         }
 
-        public override void GetGroupWithId(string groupId, ValueCallBack<Group> callBack = null)
+        public override void GetGroupWhiteListFromServer(string groupId, ValueCallBack<List<string>> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("getGroupWhiteListFromServer", groupId, handle?.callbackId);
         }
 
-        public override void GetJoinedGroups(ValueCallBack<Group> callBack = null)
+        public override void GetGroupWithId(string groupId, ValueCallBack<Group> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("getGroupWithId", groupId, handle?.callbackId);
         }
 
-        public override void GetJoinedGroupsFromServer(int pageSize = 200, int pageNum = 1, ValueCallBack<Group> callBack = null)
+        public override void GetJoinedGroups(ValueCallBack<List<Group>> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("getJoinedGroups", handle?.callbackId);
         }
 
-        public override void GetPublicGroupsFromServer(int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<Group>> callBack = null)
+        public override void GetJoinedGroupsFromServer(int pageSize = 200, int pageNum = 1, ValueCallBack<List<Group>> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("getJoinedGroupsFromServer", pageSize, pageNum, handle?.callbackId);
         }
 
-        public override void IgnoreGroupPush(string groupId, bool enable = true, ValueCallBack<Group> callBack = null)
+        public override void GetPublicGroupsFromServer(int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<List<GroupInfo>>> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("getPublicGroupsFromServer", pageSize, cursor, handle?.callbackId);
         }
 
-        public override void JoinPublicGroup(string groupId, ValueCallBack<Group> callBack = null)
+        public override void IgnoreGroupPush(string groupId, bool enable = true, ValueCallBack<Group> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("ignoreGroupPush", groupId, enable, handle?.callbackId);
         }
 
-        public override void LeaveGroup(string groupId, CallBack callBack = null)
+        public override void JoinPublicGroup(string groupId, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("joinPublicGroup", groupId, handle?.callbackId);
         }
 
-        public override void MuteAllMembers(string groupId, CallBack callBack = null)
+        public override void LeaveGroup(string groupId, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("leaveGroup", groupId, handle?.callbackId);
         }
 
-        public override void MuteMembers(string groupId, List<string> members, ValueCallBack<Group> callBack = null)
+        public override void MuteAllMembers(string groupId, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("muteAllMembers", groupId, handle?.callbackId);
         }
 
-        public override void RemoveAdmin(string groupId, string memberId, ValueCallBack<Group> callBack = null)
+        public override void MuteMembers(string groupId, List<string> members, ValueCallBack<Group> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("muteMembers", groupId, TransformTool.StringListToString(members), handle?.callbackId);
         }
 
-        public override void RemoveGroupSharedFile(string groupId, string fileId, ValueCallBack<Group> callBack = null)
+        public override void RemoveAdmin(string groupId, string memberId, ValueCallBack<Group> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("removeAdmin", groupId, memberId, handle?.callbackId);
         }
 
-        public override void RemoveMembers(string groupId, List<string> members, CallBack callBack = null)
+        public override void RemoveGroupSharedFile(string groupId, string fileId, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("removeGroupSharedFile", groupId, fileId, handle?.callbackId);
         }
 
-        public override void RemoveWhiteList(string groupId, List<string> members, ValueCallBack<Group> callBack = null)
+        public override void RemoveMembers(string groupId, List<string> members, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("removeMembers", groupId, TransformTool.StringListToString(members), handle?.callbackId);
         }
 
-        public override void RequestToJoinPublicGroup(string groupId, string reason = "", ValueCallBack<Group> callBack = null)
+        public override void RemoveWhiteList(string groupId, List<string> members, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("removeMembers", groupId, TransformTool.StringListToString(members), handle?.callbackId);
         }
 
-        public override void UnblockGroup(string groupId, CallBack callBack = null)
+        public override void RequestToJoinPublicGroup(string groupId, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("requestToJoinPublicGroup", groupId, handle?.callbackId);
         }
 
-        public override void UnblockMembers(string groupId, List<string> members, CallBack callBack = null)
+        public override void UnblockGroup(string groupId, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("unblockGroup", groupId, handle?.callbackId);
         }
 
-        public override void UnMuteAllMembers(string groupId, CallBack callBack = null)
+        public override void UnblockMembers(string groupId, List<string> members, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("unblockMembers", groupId, TransformTool.StringListToString(members), handle?.callbackId);
         }
 
-        public override void UnMuteMembers(string groupId, List<string> members, ValueCallBack<Group> callBack = null)
+        public override void UnMuteAllMembers(string groupId, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("unMuteAllMembers", groupId, handle?.callbackId);
         }
 
-        public override void UpdateGroupAnnouncement(string groupId, string announcement, ValueCallBack<Group> callBack = null)
+        public override void UnMuteMembers(string groupId, List<string> members, ValueCallBack<Group> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("unMuteMembers", groupId, TransformTool.StringListToString(members), handle?.callbackId);
         }
 
-        public override void UpdateGroupExt(string groupId, string ext, ValueCallBack<Group> callBack = null)
+        public override void UpdateGroupAnnouncement(string groupId, string announcement, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("updateGroupAnnouncement", groupId, announcement, handle?.callbackId);
         }
 
-        public override void UploadGroupSharedFile(string groupId, string filePath, ValueCallBack<bool> callBack = null)
+        public override void UpdateGroupExt(string groupId, string ext, ValueCallBack<Group> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("updateGroupExt", groupId, ext, handle?.callbackId);
+        }
+
+        public override void UploadGroupSharedFile(string groupId, string filePath, CallBack handle = null)
+        {
+            wrapper.Call("uploadGroupSharedFile", groupId, filePath, handle?.callbackId);
         }
     }
 }

@@ -5,12 +5,17 @@ import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMGroupManager;
 import com.hyphenate.chat.EMGroupOptions;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class EMGroupHelper {
-    public static Map<String, Object> toJson(EMGroup group) {
-        Map<String, Object> data = new HashMap<>();
+
+    public static JSONObject toJson(EMGroup group) throws JSONException {
+        JSONObject data = new JSONObject();
         data.put("groupId", group.getGroupId());
         data.put("name", group.getGroupName());
         data.put("desc", group.getDescription());
@@ -21,10 +26,9 @@ public class EMGroupHelper {
         data.put("adminList", group.getAdminList());
         data.put("blockList", group.getBlackList());
         data.put("muteList", group.getMuteList());
-        data.put("sharedFileList", group.getShareFileList());
+//        data.put("sharedFileList", group.getShareFileList());
         if (group.getGroupId() != null && EMClient.getInstance().pushManager().getNoPushGroups() != null) {
-            data.put("noticeEnable",
-                    !EMClient.getInstance().pushManager().getNoPushGroups().contains(group.getGroupId()));
+            data.put("noticeEnable", !EMClient.getInstance().pushManager().getNoPushGroups().contains(group.getGroupId()));
         }
         data.put("messageBlocked", group.isMsgBlocked());
         data.put("isAllMemberMuted", group.isAllMemberMuted());

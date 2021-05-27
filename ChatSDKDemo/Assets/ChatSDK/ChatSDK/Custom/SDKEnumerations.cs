@@ -35,6 +35,7 @@
         RECEIVE, // 接收的消息
     }
 
+
     public enum ConversationType
     {
         Chat, Group, Room,

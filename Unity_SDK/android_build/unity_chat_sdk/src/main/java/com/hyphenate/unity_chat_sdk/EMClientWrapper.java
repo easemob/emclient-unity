@@ -35,7 +35,7 @@ public class EMClientWrapper extends EMWrapper {
         asyncRunnable(()->{
             try {
                 EMClient.getInstance().createAccount(username, password);
-                onSuccess(callbackId,null,null);
+                onSuccess(null, callbackId,null);
             }catch (HyphenateException e) {
                 onError( callbackId, e);
             }

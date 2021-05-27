@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SimpleJSON;
 
 namespace ChatSDK
 {
@@ -29,12 +30,17 @@ namespace ChatSDK
         /// <summary>
         /// 消息类型
         /// </summary>
-        public MessageBodyType ChatType;
+        public MessageType MessageType;
 
         /// <summary>
         /// 消息方向
         /// </summary>
         public MessageDirection Direction;
+
+        /// <summary>
+        /// 消息的状态
+        /// </summary>
+        public MessageStatus Status;
 
         /// <summary>
         /// 消息本地时间
@@ -64,7 +70,7 @@ namespace ChatSDK
         /// <summary>
         /// 消息扩展
         /// </summary>
-        public Dictionary<string, string> attribute;
+        public Dictionary<string, string> Attribute;
 
 
         public Message(IMessageBody body = null)
@@ -138,6 +144,84 @@ namespace ChatSDK
         static public Message CreateCustomSendMessage(string username, string customEvent, Dictionary<string, string> customParams = null)
         {
             return CreateSendMessage(username, new MessageBody.CustomBody(customEvent, customParams: customParams));
+        }
+
+        internal Message(string jsonString) {
+            JSONObject jo = JSON.Parse(jsonString).AsObject;
+        }
+
+        internal string ToJsonString() {
+            JSONObject jo = new JSONObject();
+            jo.Add("from", From);
+            jo.Add("to", To);
+            jo.Add("hasReadAck", HasReadAck);
+            jo.Add("hasDeliverAck", HasDeliverAck);
+            jo.Add("localTime", LocalTime);
+            jo.Add("serverTime", ServerTime);
+            jo.Add("conversationId", ConversationId);
+            jo.Add("msgId", MsgId);
+            jo.Add("hasRead", HasReadAck);
+            jo.Add("status", StatusToInt(Status));
+            jo.Add("messageType", MessageTypeToInt(MessageType));
+            jo.Add("direction", DirectionToString(Direction));
+            jo.Add("attributes", TransformTool.JsonStringFromDictionary(Attribute));
+            jo.Add("body", Body.ToJsonString());
+            return jo.ToString();
+        }
+
+
+        private string DirectionToString(MessageDirection direction) {
+            if (direction == MessageDirection.SEND)
+            {
+                return "send";
+            }
+            else {
+                return "recv";
+            }
+        }
+
+        private int MessageTypeToInt(MessageType type) {
+            int ret = 0;
+            switch (type) {
+                case MessageType.Chat:
+                    ret = 0;
+                    break;
+                case MessageType.Group:
+                    ret = 1;
+                    break;
+                case MessageType.Room:
+                    ret = 2;
+                    break;
+            }
+
+            return ret;
+        }
+
+        private int StatusToInt(MessageStatus status) {
+            int ret = 0;
+            switch (status) {
+                case MessageStatus.CREATE:
+                    {
+                        ret = 0;
+                        break;
+                    }
+                case MessageStatus.PROGRESS:
+                    {
+                        ret = 1;
+                        break;
+                    }
+                case MessageStatus.SUCCESS:
+                    {
+                        ret = 2;
+                        break;
+                    }
+                case MessageStatus.FAIL:
+                    {
+                        ret = 3;
+                        break;
+                    }
+            }
+            return ret;
         }
     }
 }

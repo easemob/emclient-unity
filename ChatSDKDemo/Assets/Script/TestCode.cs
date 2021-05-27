@@ -3,13 +3,22 @@ using UnityEngine;
 using ChatSDK;
 using System.Collections.Generic;
 
-public class TestCode : MonoBehaviour
+public class TestCode : MonoBehaviour, IConnectionDelegate
 {
-    
+    public void OnConnected()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnDisconnected(int i)
+    {
+        throw new System.NotImplementedException();
+    }
+
     void Start()
     {
 
-        var options = new Options("easemob-demo#easeim");
+        var options = new Options("1110200629107815#tip");
         options.AcceptInvitationAlways = true;
         options.UsingHttpsOnly = true;
         options.DebugModel = true;
@@ -23,27 +32,23 @@ public class TestCode : MonoBehaviour
                 print("登录失败");
             }));
 
-        SDKClient.Instance.ContactManager.GetAllContactsFromServer(handle: new ValueCallBack<List<string>>(onError: (error, desc) => { }, onSuccess: (x) =>
-        {
-            foreach (string v in x) {
-                print("获取的好友: " + v);
-            }
+        SDKClient.Instance.AddConnectionDelegate(this);
+
+        //SDKClient.Instance.GroupManager.CheckIfInGroupWhiteList("asdasdasdasdsas", handle: new ValueCallBack<bool>(
+        //        onSuccess:(bool b)=> {
+        //            print("请求返回");
+        //        }
+        //    ));
+
+        List<string> members = new List<string>();
+        members.Add("du003");
+        members.Add("du004");
+        
+        SDKClient.Instance.GroupManager.CreateGroup("测试", new GroupOptions(GroupStyle.PrivateMemberCanInvite), "test", members, handle: new ValueCallBack<Group>( onSuccess:(x)=> {
+            print("groupName -- " + x.Name);
         }));
 
-
-        //SDKClient.Instance.ContactManager.AddUserToBlockList("du012", handle: new CallBack(onSuccess: () => {
-        //    print("添加到黑名单");
-        //}, onError:(code, desc)=> {
-        //    print("添加失败 -- " + code);
-        //}));
-
-        SDKClient.Instance.ContactManager.RemoveUserFromBlockList("du012", handle: new CallBack(onSuccess: () => {
-            print("移出黑名单");
-        }, onError: (code, desc) => {
-            print("移出失败 -- " + code);
-        }));
-     
-        Debug.Log(options.ToString());
+        //SDKClient.Instance.GroupManager.GetPublicGroupsFromServer();
         
     }
     // Update is called once per frame

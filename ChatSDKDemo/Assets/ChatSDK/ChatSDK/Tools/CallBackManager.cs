@@ -49,13 +49,18 @@ namespace ChatSDK {
             }
         }
 
+        internal void CleanAllCallback() {
+            dictionary.Clear();
+        }
 
         public void OnSuccess(string jsonString) {
             JSONNode jo = JSON.Parse(jsonString);
             string callbackId = jo["callbackId"].Value;
             if (dictionary.ContainsKey(callbackId)) {
                 CallBack callBack = (CallBack)dictionary[callbackId];
-                callBack.Success();
+                if (callBack.Success != null) {
+                    callBack.Success();
+                }
                 dictionary.Remove(callbackId);
             }
         }
@@ -66,12 +71,126 @@ namespace ChatSDK {
             if (dictionary.ContainsKey(callbackId))
             {
                 string value = jo["type"].Value;
+                string responseValue = jo["value"].Value;
                 if (value == "List<String>")
-                {    
-                    string responseValue = jo["value"].Value;
-                    List<string> list = TransfromTool.JsonStringToListString(responseValue);
-                    ValueCallBack<List<string>> valueCallBack = (ValueCallBack<List<string>>)dictionary[callbackId];                    
-                    valueCallBack.OnSuccessValue(list);
+                {
+                    List<string> result = TransformTool.JsonStringToStringList(responseValue);
+                    ValueCallBack<List<string>> valueCallBack = (ValueCallBack<List<string>>)dictionary[callbackId];
+                    if (valueCallBack.OnSuccessValue != null)
+                    {
+                        valueCallBack.OnSuccessValue(result);
+                    }
+                    dictionary.Remove(callbackId);
+                }
+                else if (value == "List<EMGroup>")
+                {
+                    List<Group> result = TransformTool.JsonStringToGroupList(responseValue);
+                    ValueCallBack<List<Group>> valueCallBack = (ValueCallBack<List<Group>>)dictionary[callbackId];
+                    if (valueCallBack.OnSuccessValue != null)
+                    {
+                        valueCallBack.OnSuccessValue(result);
+                    }
+                    dictionary.Remove(callbackId);
+                }
+                else if (value == "EMCursorResult<EMGroupInfo>")
+                {
+                    CursorResult<GroupInfo> result = TransformTool.JsonStringToGroupInfoResult(responseValue);
+                    ValueCallBack<CursorResult<GroupInfo>> valueCallBack = (ValueCallBack<CursorResult<GroupInfo>>)dictionary[callbackId];
+                    if (valueCallBack.OnSuccessValue != null)
+                    {
+                        valueCallBack.OnSuccessValue(result);
+                    }
+                    dictionary.Remove(callbackId);
+                }
+                else if (value == "EMCursorResult<String>")
+                {
+                    CursorResult<String> result = TransformTool.JsonStringToStringResult(responseValue);
+                    ValueCallBack<CursorResult<String>> valueCallBack = (ValueCallBack<CursorResult<String>>)dictionary[callbackId];
+                    if (valueCallBack.OnSuccessValue != null)
+                    {
+                        valueCallBack.OnSuccessValue(result);
+                    }
+                    dictionary.Remove(callbackId);
+                }
+                else if (value == "EMCursorResult<EMMessage>")
+                {
+                    CursorResult<Message> result = TransformTool.JsonStringToMessageResult(responseValue);
+                    ValueCallBack<CursorResult<Message>> valueCallBack = (ValueCallBack<CursorResult<Message>>)dictionary[callbackId];
+                    if (valueCallBack.OnSuccessValue != null)
+                    {
+                        valueCallBack.OnSuccessValue(result);
+                    }
+                    dictionary.Remove(callbackId);
+                }
+                else if (value == "List<EMMucSharedFile>")
+                {
+                    List<GroupSharedFile> result = TransformTool.JsonStringToGroupSharedFileList(responseValue);
+                    ValueCallBack<List<GroupSharedFile>> valueCallBack = (ValueCallBack<List<GroupSharedFile>>)dictionary[callbackId];
+                    if (valueCallBack.OnSuccessValue != null)
+                    {
+                        valueCallBack.OnSuccessValue(result);
+                    }
+                    dictionary.Remove(callbackId);
+                }
+                else if (value == "EMGroup")
+                {
+                    JSONNode groupJson = JSON.Parse(jo["value"]);
+                    Group result = new Group(groupJson);
+                    ValueCallBack<Group> valueCallBack = (ValueCallBack<Group>)dictionary[callbackId];
+                    if (valueCallBack.OnSuccessValue != null)
+                    {
+                        valueCallBack.OnSuccessValue(result);
+                    }
+                    dictionary.Remove(callbackId);
+                }
+                else if (value == "EMPageResult<EMChatRoom>")
+                {
+                    PageResult<Room> result = TransformTool.JsonStringToRoomPageResult(responseValue);
+                    ValueCallBack<PageResult<Room>> valueCallBack = (ValueCallBack<PageResult<Room>>)dictionary[callbackId];
+                    if (valueCallBack.OnSuccessValue != null)
+                    {
+                        valueCallBack.OnSuccessValue(result);
+                    }
+                    dictionary.Remove(callbackId);
+                }
+                else if (value == "List<EMChatRoom>")
+                {
+                    List<Room> result = TransformTool.JsonStringToRoomList(responseValue);
+                    ValueCallBack<List<Room>> valueCallBack = (ValueCallBack<List<Room>>)dictionary[callbackId];
+                    if (valueCallBack.OnSuccessValue != null)
+                    {
+                        valueCallBack.OnSuccessValue(result);
+                    }
+                    dictionary.Remove(callbackId);
+                }
+                else if (value == "EMChatRoom") {
+                    JSONNode groupJson = JSON.Parse(jo["value"]);
+                    Room result = new Room(groupJson);
+                    ValueCallBack<Room> valueCallBack = (ValueCallBack<Room>)dictionary[callbackId];
+                    if (valueCallBack.OnSuccessValue != null)
+                    {
+                        valueCallBack.OnSuccessValue(result);
+                    }
+                    dictionary.Remove(callbackId);
+                }
+                else if (value == "EMPushConfigs")
+                {
+                    JSONNode groupJson = JSON.Parse(jo["value"]);
+                    PushConfig result = new PushConfig(groupJson);
+                    ValueCallBack<PushConfig> valueCallBack = (ValueCallBack<PushConfig>)dictionary[callbackId];
+                    if (valueCallBack.OnSuccessValue != null)
+                    {
+                        valueCallBack.OnSuccessValue(result);
+                    }
+                    dictionary.Remove(callbackId);
+                }
+                else if (value == "bool")
+                {
+                    ValueCallBack<bool> valueCallBack = (ValueCallBack<bool>)dictionary[callbackId];
+                    if (valueCallBack.OnSuccessValue != null)
+                    {
+                        valueCallBack.OnSuccessValue(jo["value"].AsBool);
+                    }
                     dictionary.Remove(callbackId);
                 }
             }
@@ -85,7 +204,10 @@ namespace ChatSDK {
             {
                 int progress = jo["progress"].AsInt;
                 CallBack callBack = (CallBack)dictionary[callbackId];
-                callBack.Progress(progress);
+                if (callBack.Progress != null)
+                {
+                    callBack.Progress(progress);
+                }
             }
         }
 
@@ -96,7 +218,9 @@ namespace ChatSDK {
                 int code = jo["code"].AsInt;
                 string desc = jo["desc"].Value;
                 CallBack callBack = (CallBack)dictionary[callbackId];
-                callBack.Error(code, desc);
+                if (callBack.Error != null) {
+                    callBack.Error(code, desc);
+                }
                 dictionary.Remove(callbackId);
             }
         }

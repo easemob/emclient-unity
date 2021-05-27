@@ -202,4 +202,9 @@ public class EMSDKMethod {
     public static final String Connection_Obj = "unity_chat_emclient_connection_obj";
 
     public static final String ContactListener_Obj = "unity_chat_emclient_contact_delegate_obj";
+
+    public static final String GroupListener_Obj = "unity_chat_emclient_groupmanager_delegate_obj";
+
+    public static final String RoomListener_Obj = "unity_chat_emclient_roommanager_delegate_obj";
+
 }

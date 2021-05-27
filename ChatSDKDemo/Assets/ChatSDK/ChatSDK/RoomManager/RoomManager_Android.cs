@@ -1,122 +1,141 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace ChatSDK
 {
     public class RoomManager_Android : IRoomManager
     {
-        public override void AddRoomAdmin(string roomId, string memberId, CallBack callBack = null)
+
+        static string ManagerListener_Obj = "unity_chat_emclient_roommanager_delegate_obj";
+
+        private AndroidJavaObject wrapper;
+
+        GameObject listenerGameObj;
+
+        public RoomManager_Android()
+        {
+            using (AndroidJavaClass aj = new AndroidJavaClass("com.hyphenate.unity_chat_sdk.EMChatRoomManagerWrapper"))
+            {
+                listenerGameObj = new GameObject(ManagerListener_Obj);
+                RoomManagerListener listener = listenerGameObj.AddComponent<RoomManagerListener>();
+                listener.roomManagerDelegater = Delegate;
+                wrapper = aj.CallStatic<AndroidJavaObject>("wrapper");
+            }
+        }
+
+        public override void AddRoomAdmin(string roomId, string memberId, ValueCallBack<Room> handle = null)
+        {
+            wrapper.Call("addChatRoomAdmin", roomId, memberId, handle?.callbackId);
+        }
+
+        public override void BlockRoomMembers(string roomId, List<string> members, ValueCallBack<Room> handle = null)
+        {
+            wrapper.Call("blockChatRoomMembers", roomId, TransformTool.StringListToString(members), handle?.callbackId);
+        }
+
+        public override void ChangeOwner(string roomId, string newOwner, ValueCallBack<Room> handle = null)
+        {
+            wrapper.Call("changeChatRoomOwner", roomId, newOwner, handle?.callbackId);
+        }
+
+        public override void ChangeRoomDescription(string roomId, string newDescription, ValueCallBack<Room> handle = null)
+        {
+            wrapper.Call("changeChatRoomDescription", roomId, newDescription, handle?.callbackId);
+        }
+
+        public override void ChangeRoomSubject(string roomId, string newSubject, ValueCallBack<Room> handle = null)
+        {
+            wrapper.Call("changeChatRoomSubject", roomId, newSubject, handle?.callbackId);
+        }
+
+        public override void CreateRoom(string subject, string descriptionsc, string welcomeMsg, int maxUserCount = 300, List<string> members = null, ValueCallBack<Room> handle = null)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void BlockRoomMembers(string roomId, List<string> members, CallBack callBack = null)
+        public override void DestroyRoom(string roomId, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("destroyChatRoom", roomId, handle?.callbackId);
         }
 
-        public override void ChangeOwner(string roomId, string newOwner, CallBack callBack = null)
+        public override void FetchPublicRoomsFromServer(int pageNum = 1, int pageSize = 200, ValueCallBack<PageResult<Room>> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("fetchPublicChatRoomsFromServer", pageNum, pageSize, handle?.callbackId);
         }
 
-        public override void ChangeRoomDescription(string roomId, string newDescription, ValueCallBack<Room> callBack = null)
+        public override void FetchRoomAnnouncement(string roomId, ValueCallBack<string> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("fetchChatRoomAnnouncement", roomId, handle?.callbackId);
         }
 
-        public override void ChangeRoomSubject(string roomId, string newSubject, ValueCallBack<Room> callBack = null)
+        public override void FetchRoomBlockList(string roomId, int pageNum = 1, int pageSize = 200, ValueCallBack<List<string>> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("fetchChatRoomBlockList", roomId, pageNum, pageSize, handle?.callbackId);
         }
 
-        public override void CreateRoom(string subject, string descriptionsc, string welcomeMsg, int maxUserCount = 300, List<string> members = null, ValueCallBack<Room> callBack = null)
+        public override void FetchRoomInfoFromServer(string roomId, ValueCallBack<Room> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("fetchChatRoomInfoFromServer", roomId, handle?.callbackId);
         }
 
-        public override void DestroyRoom(string roomId, ValueCallBack<bool> callBack = null)
+        public override void FetchRoomMembers(string roomId, string cursor = "", int pageSize = 200, ValueCallBack<CursorResult<string>> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("fetchChatRoomMembers", roomId, cursor, pageSize, handle?.callbackId);
         }
 
-        public override void FetchPublicRoomsFromServer(int pageNum = 1, int pageSize = 200, ValueCallBack<PageResult<Room>> result = null)
+        public override void FetchRoomMuteList(string roomId, int pageSize = 1, int pageNum = 200, ValueCallBack<List<string>> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("fetchChatRoomMuteList", roomId, pageNum, pageSize, handle?.callbackId);
         }
 
-        public override void FetchRoomAnnouncement(string roomId, ValueCallBack<string> callBack)
+        public override void GetAllRoomsFromLocal(ValueCallBack<List<Room>> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("getAllChatRooms", handle?.callbackId);
         }
 
-        public override void FetchRoomBlockList(string roomId, int pageNum = 1, int pageSize = 200, ValueCallBack<List<string>> callBack = null)
+        public override void GetChatRoomWithId(string roomId, ValueCallBack<Room> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("getChatRoom", handle?.callbackId);
         }
 
-        public override void FetchRoomInfoFromServer(string roomId, ValueCallBack<Room> result = null)
+        public override void JoinRoom(string roomId, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("joinChatRoom", roomId, handle?.callbackId);
         }
 
-        public override void FetchRoomMembers(string roomId, string cursor = "", int pageSize = 200, ValueCallBack<CursorResult<Room>> callBack = null)
+        public override void LeaveRoom(string roomId, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("leaveChatRoom", roomId, handle?.callbackId);
         }
 
-        public override void FetchRoomMuteList(string roomId, int pageSize = 1, int pageNum = 200, ValueCallBack<List<string>> callBack = null)
+        public override void MuteRoomMembers(string roomId, List<string> members, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("muteChatRoomMembers", roomId, TransformTool.StringListToString(members), handle?.callbackId);
         }
 
-        public override List<Room> GetAllRoomsFromLocal()
+        public override void RemoveRoomAdmin(string roomId, string adminId, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("removeChatRoomAdmin", roomId, adminId, handle?.callbackId);
         }
 
-        public override Room GetChatRoomWithId(string roomId)
+        public override void RemoveRoomMembers(string roomId, List<string> members, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("removeChatRoomMembers", roomId, TransformTool.StringListToString(members), handle?.callbackId);
         }
 
-        public override void JoinRoom(string roomId, CallBack callBack = null)
+        public override void UnBlockRoomMembers(string roomId, List<string> members, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("unBlockChatRoomMembers", roomId, TransformTool.StringListToString(members), handle?.callbackId);
         }
 
-        public override void LeaveRoom(string roomId, CallBack callBack = null)
+        public override void UnMuteRoomMembers(string roomId, List<string> members, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("unMuteChatRoomMembers", roomId, TransformTool.StringListToString(members), handle?.callbackId);
         }
 
-        public override void MuteRoomMembers(string roomId, List<string> members, long duration = -1, CallBack callBack = null)
+        public override void UpdateRoomAnnouncement(string roomId, string announcement, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public override void RemoveRoomAdmin(string roomId, string adminId, CallBack callBack = null)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override void RemoveRoomMembers(string roomId, List<string> members, CallBack callBack = null)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override void UnBlockRoomMembers(string roomId, List<string> members, CallBack callBack = null)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override void UnMuteRoomMembers(string roomId, List<string> members, CallBack callBack = null)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override void UpdateRoomAnnouncement(string roomId, string announcement, CallBack callBack = null)
-        {
-            throw new System.NotImplementedException();
+            wrapper.Call("updateChatRoomAnnouncement", roomId, announcement, handle?.callbackId);
         }
     }
 }

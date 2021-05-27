@@ -16,7 +16,7 @@ namespace ChatSDK
         void OnRemovedFromChatRoom(string roomId, string roomName, string participant);
 
         // id是[roomId]的聊天室禁言列表[mutes]有增加
-        void OnMuteListAdded(string roomId, List<string> mutes, string expireTime);
+        void OnMuteListAdded(string roomId, List<string> mutes, long expireTime);
 
         // id是[roomId]的聊天室禁言列表[mutes]有减少
         void OnMuteListRemoved(string roomId, List<string> mutes);
