@@ -69,8 +69,7 @@ namespace ChatSDK {
             return manager.LoadMessagesWithTime(Id, Type, startTime, endTime, count);
         }
 
-        //internal Conversation ConversationFromJson(string jsonString) { }
-        //internal string ToJsonString() { }
+        
         internal Conversation(string jsonString) {
             JSONObject jo = JSON.Parse(jsonString).AsObject;
             Id = jo["con_id"].Value;

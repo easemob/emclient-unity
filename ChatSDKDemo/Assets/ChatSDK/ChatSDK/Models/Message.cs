@@ -14,7 +14,7 @@ namespace ChatSDK
         /// <summary>
         /// 消息所属会话Id
         /// </summary>
-        public string ConversationId { get { return Direction == MessageDirection.SEND ? To : From; } }
+        public string ConversationId = "";
 
 
         /// <summary>
@@ -101,7 +101,8 @@ namespace ChatSDK
                 Direction = direction,
                 HasReadAck = hasRead,
                 To = to,
-                From = SDKClient.Instance.CurrentUsername
+                From = SDKClient.Instance.CurrentUsername,
+                ConversationId = to,
             };
 
             return msg;
@@ -148,6 +149,20 @@ namespace ChatSDK
 
         internal Message(string jsonString) {
             JSONObject jo = JSON.Parse(jsonString).AsObject;
+            From = jo["from"].Value;
+            To = jo["from"].Value;
+            HasReadAck = jo["hasReadAck"].AsBool;
+            HasDeliverAck = jo["hasDeliverAck"].AsBool;
+            LocalTime = jo["localTime"].AsInt;
+            ServerTime = jo["serverTime"].AsInt;
+            ConversationId = jo["conversationId"].Value;
+            MsgId = jo["msgId"].Value;
+            HasReadAck = jo["hasRead"].AsBool;
+            Status = MessageStatusFromInt(jo["status"].AsInt);
+            MessageType = MessageTypeFromInt(jo["messageType"].AsInt);
+            Direction = MessageDirectionFromString(jo["direction"].Value);
+            Attribute = TransformTool.JsonStringToDictionary(jo["attributes"].Value);
+            Body = IMessageBody.FromJsonString(jo["body"].Value);
         }
 
         internal string ToJsonString() {
@@ -161,22 +176,33 @@ namespace ChatSDK
             jo.Add("conversationId", ConversationId);
             jo.Add("msgId", MsgId);
             jo.Add("hasRead", HasReadAck);
-            jo.Add("status", StatusToInt(Status));
+            jo.Add("status", MessageStatusToInt(Status));
             jo.Add("messageType", MessageTypeToInt(MessageType));
-            jo.Add("direction", DirectionToString(Direction));
+            jo.Add("direction", MessageDirectionToString(Direction));
             jo.Add("attributes", TransformTool.JsonStringFromDictionary(Attribute));
             jo.Add("body", Body.ToJsonString());
             return jo.ToString();
         }
 
-
-        private string DirectionToString(MessageDirection direction) {
+        private string MessageDirectionToString(MessageDirection direction) {
             if (direction == MessageDirection.SEND)
             {
                 return "send";
             }
             else {
                 return "recv";
+            }
+        }
+
+        private MessageDirection MessageDirectionFromString(string stringDirection)
+        {
+            if (stringDirection == "send")
+            {
+                return MessageDirection.SEND;
+            }
+            else
+            {
+                return MessageDirection.RECEIVE;
             }
         }
 
@@ -197,7 +223,19 @@ namespace ChatSDK
             return ret;
         }
 
-        private int StatusToInt(MessageStatus status) {
+        private MessageType MessageTypeFromInt(int intType) {
+            MessageType ret = MessageType.Chat;
+            switch (intType)
+            {
+                case 0: ret = MessageType.Chat; break;
+                case 1: ret = MessageType.Group; break;
+                case 2: ret = MessageType.Room; break;
+            }
+
+            return ret;
+        }
+
+        private int MessageStatusToInt(MessageStatus status) {
             int ret = 0;
             switch (status) {
                 case MessageStatus.CREATE:
@@ -218,6 +256,34 @@ namespace ChatSDK
                 case MessageStatus.FAIL:
                     {
                         ret = 3;
+                        break;
+                    }
+            }
+            return ret;
+        }
+
+        private MessageStatus MessageStatusFromInt(int intStatus) {
+            MessageStatus ret = MessageStatus.CREATE;
+            switch (intStatus)
+            {
+                case 0:
+                    {
+                        ret = MessageStatus.CREATE;
+                        break;
+                    }
+                case 1:
+                    {
+                        ret = MessageStatus.PROGRESS;
+                        break;
+                    }
+                case 2:
+                    {
+                        ret = MessageStatus.SUCCESS;
+                        break;
+                    }
+                case 3:
+                    {
+                        ret = MessageStatus.FAIL;
                         break;
                     }
             }

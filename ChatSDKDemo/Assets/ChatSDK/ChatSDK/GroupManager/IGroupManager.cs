@@ -28,11 +28,11 @@ namespace ChatSDK
 
         public abstract void CheckIfInGroupWhiteList(string groupId, ValueCallBack<bool> handle = null);
 
-        public abstract void CreateGroup(string groupName, GroupOptions options, string desc, List<string> inviteMembers = null, string inviteReason = "", ValueCallBack<Group> handle = null);
+        public abstract void CreateGroup(string groupName, GroupOptions options, string desc, List<string> inviteMembers = null, string inviteReason = null, ValueCallBack<Group> handle = null);
 
-        public abstract void DeclineInvitationFromGroup(string groupId, string username, string reason = "", CallBack handle = null);
+        public abstract void DeclineInvitationFromGroup(string groupId, string username, string reason = null, CallBack handle = null);
 
-        public abstract void DeclineJoinApplication(string groupId, string username, string reason = "", CallBack handle = null);
+        public abstract void DeclineJoinApplication(string groupId, string username, string reason = null, CallBack handle = null);
 
         public abstract void DestroyGroup(string groupId, CallBack handle = null);
 
@@ -40,13 +40,13 @@ namespace ChatSDK
 
         public abstract void GetGroupAnnouncementFromServer(string groupId, ValueCallBack<string> handle = null);
 
-        public abstract void GetGroupBlockListFromServer(string groupId, int pageSize = 200, int pageNum = 1,   ValueCallBack<List<string>> handle = null);
+        public abstract void GetGroupBlockListFromServer(string groupId, int pageNum = 1, int pageSize = 200, ValueCallBack<List<string>> handle = null);
 
-        public abstract void GetGroupFileListFromServer(string groupId, int pageSize = 200, int pageNum = 1, ValueCallBack<List<GroupSharedFile>> handle = null);
+        public abstract void GetGroupFileListFromServer(string groupId, int pageNum = 1, int pageSize = 200, ValueCallBack<List<GroupSharedFile>> handle = null);
 
-        public abstract void GetGroupMemberListFromServer(string groupId, int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<string>> handle = null);
+        public abstract void GetGroupMemberListFromServer(string groupId, int pageSize = 200, string cursor = null, ValueCallBack<CursorResult<string>> handle = null);
 
-        public abstract void GetGroupMuteListFromServer(string groupId, int pageSize = 200, int pageNum = 1, ValueCallBack<List<string>> handle = null);
+        public abstract void GetGroupMuteListFromServer(string groupId, int pageNum = 1, int pageSize = 200, ValueCallBack<List<string>> handle = null);
 
         public abstract void GetGroupSpecificationFromServer(string groupId, ValueCallBack<Group> handle = null);
 
@@ -58,9 +58,9 @@ namespace ChatSDK
 
         public abstract void GetJoinedGroups(ValueCallBack<List<Group>> handle = null);
 
-        public abstract void GetJoinedGroupsFromServer(int pageSize = 200, int pageNum = 1, ValueCallBack<List<Group>> handle = null);
+        public abstract void GetJoinedGroupsFromServer(int pageNum = 1, int pageSize = 200,  ValueCallBack<List<Group>> handle = null);
 
-        public abstract void GetPublicGroupsFromServer(int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<List<GroupInfo>>> handle = null);
+        public abstract void GetPublicGroupsFromServer(int pageSize = 200, string cursor = null, ValueCallBack<CursorResult<List<GroupInfo>>> handle = null);
 
         public abstract void IgnoreGroupPush(string groupId, bool enable = true, ValueCallBack<Group> handle = null);
 
