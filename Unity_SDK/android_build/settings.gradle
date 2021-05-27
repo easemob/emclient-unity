@@ -1,0 +1,3 @@
+include ':unity_chat_sdk'
+include ':app'
+rootProject.name = "unity_android_demo"
