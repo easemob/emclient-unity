@@ -16,3 +16,5 @@
 #endif
 #include <stdio.h>
 
+#include "models.h"
+#include "client.h"
