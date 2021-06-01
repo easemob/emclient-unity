@@ -5,7 +5,7 @@
         'msvs_RuntimeLibrary': '3', #md:2, mdd:3, mt:0, mtd:1
         'ENABLE_CALL': '0',
         'USE_SQLCIPHER':'0',
-        'emclient-linux-path':'../../../emclient-linux'
+        'emclient-linux-path':'../../../emclient-linux_3.8.1'
     },
 
     'target_defaults': {
@@ -287,7 +287,7 @@
                            #'libsqlcipher.dylib',
                            'libcurl.dylib',
                            'libz.dylib',
-                           'libcrypto.dylib',
+                           'libcrypto.1.0.0.dylib',
                        ],
                        'library_dirs': [
                            '<(emclient-linux-path)/3rd_party/platform/darwin/lib',

@@ -10,22 +10,7 @@
 		90A044992632AAE400550B6E /* easemob.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90A3E1BE262FBD60001109C1 /* easemob.framework */; };
 		90A044AF2632CA7800550B6E /* hyphenateCWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 905C2808262EDC2E0097F7C2 /* hyphenateCWrapper.cpp */; };
 		90A044B42632D23F00550B6E /* easemob.framework in Resources */ = {isa = PBXBuildFile; fileRef = 90A3E1BE262FBD60001109C1 /* easemob.framework */; };
-		90A0455F2632E5E900550B6E /* easemob.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 90A3E1BE262FBD60001109C1 /* easemob.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		90A0449B2632AAE400550B6E /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				90A0455F2632E5E900550B6E /* easemob.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		905C27CF262EC3A50097F7C2 /* hyphenateCWrapper.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = hyphenateCWrapper.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -471,7 +456,6 @@
 				905C27CB262EC3A50097F7C2 /* Sources */,
 				905C27CC262EC3A50097F7C2 /* Frameworks */,
 				905C27CD262EC3A50097F7C2 /* Resources */,
-				90A0449B2632AAE400550B6E /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -680,6 +664,7 @@
 					"$(PROJECT_DIR)/hyphenateCWrapper",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.easemob.hyphenateCWrapper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
