@@ -1,9 +1,12 @@
-﻿using System.Runtime.InteropServices;
+using UnityEngine;
+using SimpleJSON;
+using System.Runtime.InteropServices;
 
 namespace ChatSDK
 {
     public class Client_Mac : IClient
     {
+
         public override void CreateAccount(string username, string password, CallBack callBack = null)
         {
             ClientWrapper.CreateAccount(username, password);
@@ -23,6 +26,13 @@ namespace ChatSDK
         {
             ClientWrapper.Logout(unbindDeviceToken);
         }
+
+
+
+
+        [DllImport("hyphenateCWrapper")]
+        private static extern void _CreateAccount(string username, string password, string callbackId);
+
     }
 
     class ClientWrapper

@@ -25,6 +25,8 @@ obj/
 *.unityproj
 *.booproj
 
+**/Release
+
 # ============ #
 # OS generated #
 # ============ #
@@ -35,3 +37,20 @@ obj/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+
+# ========== #
+# iOS ignore #
+# ========== #
+*.a
+*.zip
+*.framework
+documents/
+**/xcshareddata
+**/xcuserdata
+
+
+# ========== #
+# mac ignore #
+# ========== #
+*.bundle
