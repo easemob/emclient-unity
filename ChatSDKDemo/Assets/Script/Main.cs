@@ -28,6 +28,10 @@ public class Main : MonoBehaviour
     // 退出聊天室按钮
     public Button LeaveRoomBtn;
 
+
+    //public ScrollView scrollView;
+    public ScrollRect scrollRect;
+
     IEnumerable<Toggle> ToggleGroup;
 
 

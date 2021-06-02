@@ -1822,6 +1822,7 @@ MonoBehaviour:
   JoinRoomBtn: {fileID: 744803168}
   RoomInfoBtn: {fileID: 436197786}
   LeaveRoomBtn: {fileID: 806709658}
+  scrollRect: {fileID: 1519377218}
 --- !u!1 &1082244973
 GameObject:
   m_ObjectHideFlags: 0
