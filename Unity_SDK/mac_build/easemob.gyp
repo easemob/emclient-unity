@@ -85,6 +85,7 @@
             'GCC_OPTIMIZATION_LEVEL': 0,
             'INFOPLIST_FILE': 'Info.plist',
             'INSTALL_PATH':'@rpath/',
+            'EXCLUDED_ARCHS':'arm64'
         },
         'library_dirs': [
            '<(LIB_DIR)',
