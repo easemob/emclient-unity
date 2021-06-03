@@ -115,9 +115,6 @@
      <Compile Include="Assets\ChatSDK\ChatSDK\RoomManager\RoomManager_Win.cs" />
      <Compile Include="Assets\ChatSDK\ChatSDK\RoomManager\RoomManager_iOS.cs" />
      <Compile Include="Assets\ChatSDK\ChatSDK\SDKClient.cs" />
-     <Compile Include="Assets\ChatSDK\ChatSDK\Tools\CallBackManager.cs" />
-     <Compile Include="Assets\ChatSDK\ChatSDK\Tools\TransformTool.cs" />
-     <Compile Include="Assets\ChatSDK\ChatSDK\Tools\WeakDelegate.cs" />
      <Compile Include="Assets\ChatSDK\ChatSDK\native\ChatAPINative.cs" />
      <Compile Include="Assets\Script\Login.cs" />
      <Compile Include="Assets\Script\Main.cs" />
@@ -748,8 +745,17 @@
  <Reference Include="com.unity.multiplayer-hlapi.Runtime">
  <HintPath>/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/com.unity.multiplayer-hlapi.Runtime.dll</HintPath>
  </Reference>
+ <Compile Include="Assets\ChatSDK\ChatSDK\Tools\CallBackManager.cs" />
+ <Compile Include="Assets\ChatSDK\ChatSDK\Tools\TransformTool.cs" />
+ <Compile Include="Assets\ChatSDK\ChatSDK\Tools\WeakDelegate.cs" />
+ <Compile Include="Assets\ChatSDK\ChatSDK\Tools\ChatCallbackObject.cs" />
+ <Compile Include="Assets\ChatSDK\ChatSDK\Tools\ChatCallbackQueue.cs" />
   </ItemGroup>
   <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Assets\ChatSDK\ChatSDK\tools2\" />
+    <Folder Include="Assets\ChatSDK\ChatSDK\Tools\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

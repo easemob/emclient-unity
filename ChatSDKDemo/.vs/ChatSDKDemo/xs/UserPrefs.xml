@@ -1,38 +1,47 @@
-﻿<Properties StartupConfiguration="{3A4B1E97-589D-1E2D-D6C5-A6CFAD6C116F}|">
+﻿<Properties>
   <MonoDevelop.Ide.ItemProperties.ChatSDKDemo PreferredExecutionTarget="95cd266c-1045-47ee-8ef5-ceac692d7815" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/ChatSDK/ChatSDK/ContactManager/IContactManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/ChatSDK/ChatSDK/Client/Client_Mac.cs">
     <Files>
       <File FileName="Assets/ChatSDK/ChatSDK/SDKClient.cs" Line="1" Column="1" IsPinned="True" />
       <File FileName="Assets/Script/Main.cs" Line="19" Column="32" />
       <File FileName="Assets/Script/Login.cs" Line="17" Column="54" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Client/Client_Mac.cs" Line="27" Column="34" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Client/Client_Mac.cs" Line="38" Column="2" />
       <File FileName="Assets/ChatSDK/ChatSDK/Client/IClient.cs" Line="1" Column="1" />
-      <File FileName="Assets/ChatSDK/ChatSDK/native/NewFile.txt" Line="21" Column="52" />
+      <File FileName="Assets/ChatSDK/ChatSDK/native/NewFile.txt" Line="27" Column="30" />
       <File FileName="Assets/ChatSDK/ChatSDK/Listeners/IRoomManagerDelegate.cs" Line="1" Column="1" />
       <File FileName="Assets/ChatSDK/ChatSDK/Listeners/IGroupManagerDelegate.cs" Line="1" Column="1" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Custom/SDKCallBack.cs" Line="7" Column="51" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Custom/SDKCallBack.cs" Line="36" Column="6" />
       <File FileName="Assets/ChatSDK/ChatSDK/Listeners/IChatManagerDelegate.cs" Line="1" Column="1" />
       <File FileName="Assets/ChatSDK/ChatSDK/Listeners/IConnectionDelegate.cs" Line="1" Column="1" />
       <File FileName="Assets/ChatSDK/ChatSDK/ContactManager/IContactManager.cs" Line="29" Column="70" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Helper/Android/ChatManagerListener.cs" Line="1" Column="1" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Models/Options.cs" Line="3" Column="1" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Models/Conversation.cs" Line="71" Column="1" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Models/Group.cs" Line="25" Column="35" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Models/GroupInfo.cs" Line="1" Column="1" />
+      <File FileName="Assets/ChatSDK/ChatSDK/tools/EmptyCSharpFile.cs" Line="27" Column="55" />
+      <File FileName="Assets/ChatSDK/ChatSDK/tools/ChatCallbackQueue.cs" Line="7" Column="29" />
+      <File FileName="../../../easemob/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/Tools/CallBackManager.cs" Line="1" Column="1" />
+      <File FileName="../../../easemob/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/Tools/TransformTool.cs" />
+      <File FileName="../../../easemob/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/Tools/WeakDelegate.cs" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Tools/WeakDelegate.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="ChatSDKDemo" expanded="True">
-            <Node name="Assets" expanded="True">
-              <Node name="ChatSDK" expanded="True">
+            <Node name="Assembly-CSharp" expanded="True">
+              <Node name="Assets" expanded="True">
                 <Node name="ChatSDK" expanded="True">
-                  <Node name="Client" expanded="True" />
-                  <Node name="ContactManager" expanded="True">
-                    <Node name="IContactManager.cs" selected="True" />
+                  <Node name="ChatSDK" expanded="True">
+                    <Node name="Client" expanded="True">
+                      <Node name="Client_Mac.cs" selected="True" />
+                    </Node>
+                    <Node name="Tools" expanded="True" />
                   </Node>
-                  <Node name="Custom" expanded="True" />
-                  <Node name="Listeners" expanded="True" />
-                  <Node name="native" expanded="True" />
                 </Node>
+                <Node name="Script" expanded="True" />
               </Node>
-              <Node name="Script" expanded="True" />
-              <Node name="ThirdLibs" expanded="True" />
             </Node>
           </Node>
         </State>

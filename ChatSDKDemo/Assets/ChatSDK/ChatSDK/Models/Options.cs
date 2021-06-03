@@ -1,10 +1,10 @@
 ﻿using System;
 using SimpleJSON;
-
+using System.Runtime.InteropServices;
 
 namespace ChatSDK
 {
-
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public class Options
     {
 

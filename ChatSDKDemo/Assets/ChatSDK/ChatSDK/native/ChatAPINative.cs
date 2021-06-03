@@ -24,7 +24,7 @@ namespace ChatSDK{
 		public static extern void Client_CreateAccount(string username, string password);
 
 		[DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void Client_InitWithOptions(Options options);
+		public static extern IntPtr Client_InitWithOptions(Options options);
 
 		[DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void Client_Login(string username, string pwdOrToken, bool isToken = false);
