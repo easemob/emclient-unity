@@ -15,6 +15,3 @@
 #define EXPORT_API
 #endif
 #include <stdio.h>
-
-#include "models.h"
-#include "client.h"
