@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using ChatSDK;
 
 public class Login : MonoBehaviour
 {
@@ -24,8 +25,13 @@ public class Login : MonoBehaviour
 
 
     void LoginAction() {
-
-        print("登录被点击: " + usernameField.text + ", " + passwordField.text);
+        string username = usernameField.text;
+        string password = passwordField.text;
+        print("登录被点击: " + username + ", " + password);
+        IClient client = IClient.Instance;
+        Options options = new Options("easemobDemo");
+        client.InitWithOptions(options);
+        client.Login(username, password);
         SceneManager.LoadScene("Main");
     }
 
