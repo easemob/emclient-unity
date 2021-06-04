@@ -21,16 +21,16 @@ namespace ChatSDK{
 		protected delegate void OnProgress(int progress);
 
 		[DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void Client_CreateAccount(string username, string password);
+		public static extern void Client_CreateAccount(IntPtr client, string username, string password);
 
 		[DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern IntPtr Client_InitWithOptions(Options options);
 
 		[DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void Client_Login(string username, string pwdOrToken, bool isToken = false);
+		public static extern void Client_Login(IntPtr client, string username, string pwdOrToken, bool isToken = false);
 
 		[DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void Client_Logout(bool unbindDeviceToken);
+		public static extern void Client_Logout(IntPtr client, bool unbindDeviceToken);
 
 
 #endregion native API import

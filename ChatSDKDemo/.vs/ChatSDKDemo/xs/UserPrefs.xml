@@ -1,30 +1,31 @@
 ﻿<Properties>
   <MonoDevelop.Ide.ItemProperties.ChatSDKDemo PreferredExecutionTarget="95cd266c-1045-47ee-8ef5-ceac692d7815" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/ChatSDK/ChatSDK/Client/Client_Mac.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/ChatSDK/ChatSDK/native/ChatAPINative.cs">
     <Files>
       <File FileName="Assets/ChatSDK/ChatSDK/SDKClient.cs" Line="1" Column="1" IsPinned="True" />
-      <File FileName="Assets/Script/Main.cs" Line="19" Column="32" />
-      <File FileName="Assets/Script/Login.cs" Line="17" Column="54" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Client/Client_Mac.cs" Line="38" Column="2" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Client/IClient.cs" Line="1" Column="1" />
-      <File FileName="Assets/ChatSDK/ChatSDK/native/NewFile.txt" Line="27" Column="30" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Listeners/IRoomManagerDelegate.cs" Line="1" Column="1" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Listeners/IGroupManagerDelegate.cs" Line="1" Column="1" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Custom/SDKCallBack.cs" Line="36" Column="6" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Listeners/IChatManagerDelegate.cs" Line="1" Column="1" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Listeners/IConnectionDelegate.cs" Line="1" Column="1" />
-      <File FileName="Assets/ChatSDK/ChatSDK/ContactManager/IContactManager.cs" Line="29" Column="70" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Helper/Android/ChatManagerListener.cs" Line="1" Column="1" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Models/Options.cs" Line="3" Column="1" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Models/Conversation.cs" Line="71" Column="1" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Models/Group.cs" Line="25" Column="35" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Models/GroupInfo.cs" Line="1" Column="1" />
-      <File FileName="Assets/ChatSDK/ChatSDK/tools/EmptyCSharpFile.cs" Line="27" Column="55" />
-      <File FileName="Assets/ChatSDK/ChatSDK/tools/ChatCallbackQueue.cs" Line="7" Column="29" />
-      <File FileName="../../../easemob/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/Tools/CallBackManager.cs" Line="1" Column="1" />
+      <File FileName="Assets/Script/Main.cs" />
+      <File FileName="Assets/Script/Login.cs" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Client/Client_Mac.cs" Line="31" Column="38" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Client/IClient.cs" Line="122" Column="2" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Listeners/IRoomManagerDelegate.cs" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Listeners/IGroupManagerDelegate.cs" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Custom/SDKCallBack.cs" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Listeners/IChatManagerDelegate.cs" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Listeners/IConnectionDelegate.cs" />
+      <File FileName="Assets/ChatSDK/ChatSDK/ContactManager/IContactManager.cs" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Helper/Android/ChatManagerListener.cs" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Models/Options.cs" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Models/Conversation.cs" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Models/Group.cs" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Models/GroupInfo.cs" />
+      <File FileName="Assets/ChatSDK/ChatSDK/tools/ChatCallbackQueue.cs" />
+      <File FileName="../../../easemob/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/Tools/CallBackManager.cs" />
       <File FileName="../../../easemob/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/Tools/TransformTool.cs" />
       <File FileName="../../../easemob/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/Tools/WeakDelegate.cs" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Tools/WeakDelegate.cs" Line="1" Column="1" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Tools/WeakDelegate.cs" />
+      <File FileName="Assets/ChatSDK/ChatSDK/ChatManager/IChatManager.cs" Line="1" Column="1" />
+      <File FileName="Assets/ChatSDK/ChatSDK/ChatManager/ChatManager_Mac.cs" Line="1" Column="1" />
+      <File FileName="Assets/ChatSDK/ChatSDK/native/ChatAPINative.cs" Line="30" Column="29" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -34,8 +35,10 @@
               <Node name="Assets" expanded="True">
                 <Node name="ChatSDK" expanded="True">
                   <Node name="ChatSDK" expanded="True">
-                    <Node name="Client" expanded="True">
-                      <Node name="Client_Mac.cs" selected="True" />
+                    <Node name="ChatManager" expanded="True" />
+                    <Node name="Client" expanded="True" />
+                    <Node name="native" expanded="True">
+                      <Node name="ChatAPINative.cs" selected="True" />
                     </Node>
                     <Node name="Tools" expanded="True" />
                   </Node>
