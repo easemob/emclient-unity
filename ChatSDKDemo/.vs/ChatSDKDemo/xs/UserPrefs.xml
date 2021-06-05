@@ -1,8 +1,8 @@
 ﻿<Properties>
   <MonoDevelop.Ide.ItemProperties.ChatSDKDemo PreferredExecutionTarget="95cd266c-1045-47ee-8ef5-ceac692d7815" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/ChatSDK/ChatSDK/Client/Client_Win.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/ChatSDK/ChatSDK/Client/Client_Mac.cs">
     <Files>
-      <File FileName="Assets/ChatSDK/ChatSDK/Client/Client_Mac.cs" Line="57" Column="10" IsPinned="True" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Client/Client_Mac.cs" Line="12" Column="27" IsPinned="True" />
       <File FileName="Assets/ChatSDK/ChatSDK/native/ChatAPINative.cs" Line="20" Column="4" IsPinned="True" />
       <File FileName="Assets/ChatSDK/ChatSDK/Client/IClient.cs" />
       <File FileName="Assets/ChatSDK/ChatSDK/Client/Client_iOS.cs" Line="26" Column="9" />
@@ -20,7 +20,7 @@
                   <Node name="ChatSDK" expanded="True">
                     <Node name="ChatManager" expanded="True" />
                     <Node name="Client" expanded="True">
-                      <Node name="Client_Win.cs" selected="True" />
+                      <Node name="Client_Mac.cs" selected="True" />
                     </Node>
                     <Node name="Custom" expanded="True" />
                     <Node name="Helper" expanded="True" />

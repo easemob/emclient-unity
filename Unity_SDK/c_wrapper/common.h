@@ -4,6 +4,7 @@
 #pragma once
 #include <stdio.h>
 #include "api_decorator.h"
+#include "LogHelper.h"
 
 #if defined(_WIN32)
 #define AGORACHAT_EXPORT

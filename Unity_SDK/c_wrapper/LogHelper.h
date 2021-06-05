@@ -55,5 +55,11 @@ public:
     }
 };
 
+#ifdef DEBUG
+#define LOG(fmt, ...) LogHelper::getInstance().writeLog(fmt, __VA_ARGS__)
+#else
+#define LOG(fmt, ...)
+#endif //DEBUG LOG
+
 #endif //_LOG_HELPER_H_
 
