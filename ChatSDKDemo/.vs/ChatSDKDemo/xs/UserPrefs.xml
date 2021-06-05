@@ -1,14 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.ItemProperties.ChatSDKDemo PreferredExecutionTarget="95cd266c-1045-47ee-8ef5-ceac692d7815" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/ChatSDK/ChatSDK/Client/Client_Mac.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Script/Login.cs">
     <Files>
-      <File FileName="Assets/ChatSDK/ChatSDK/Client/Client_Mac.cs" Line="12" Column="27" IsPinned="True" />
-      <File FileName="Assets/ChatSDK/ChatSDK/native/ChatAPINative.cs" Line="20" Column="4" IsPinned="True" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Client/IClient.cs" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Client/Client_iOS.cs" Line="26" Column="9" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Client/Client_Android.cs" Line="53" Column="10" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Custom/SDKEnumerations.cs" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Client/Client_Win.cs" Line="34" Column="10" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Client/Client_Mac.cs" Line="28" Column="1" IsPinned="True" />
+      <File FileName="Assets/ChatSDK/ChatSDK/native/ChatAPINative.cs" Line="23" Column="25" IsPinned="True" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Models/Options.cs" Line="17" Column="9" />
+      <File FileName="Assets/Script/TestCode.cs" Line="25" Column="26" />
+      <File FileName="Assets/Script/Login.cs" Line="32" Column="54" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -19,9 +17,8 @@
                 <Node name="ChatSDK" expanded="True">
                   <Node name="ChatSDK" expanded="True">
                     <Node name="ChatManager" expanded="True" />
-                    <Node name="Client" expanded="True">
-                      <Node name="Client_Mac.cs" selected="True" />
-                    </Node>
+                    <Node name="Client" expanded="True" />
+                    <Node name="ConversationManager" expanded="True" />
                     <Node name="Custom" expanded="True" />
                     <Node name="Helper" expanded="True" />
                     <Node name="Listeners" expanded="True" />
@@ -30,7 +27,9 @@
                     <Node name="Tools" expanded="True" />
                   </Node>
                 </Node>
-                <Node name="Script" expanded="True" />
+                <Node name="Script" expanded="True">
+                  <Node name="Login.cs" selected="True" />
+                </Node>
               </Node>
             </Node>
           </Node>
@@ -48,7 +47,8 @@
       <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/Models/Group.cs" relfile="Assets/ChatSDK/ChatSDK/Models/Group.cs" line="25" column="1" />
       <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/Tools/CallBackManager.cs" relfile="Assets/ChatSDK/ChatSDK/Tools/CallBackManager.cs" line="217" column="1" />
       <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/Tools/CallBackManager.cs" relfile="Assets/ChatSDK/ChatSDK/Tools/CallBackManager.cs" line="137" column="1" />
-      <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/Script/Login.cs" relfile="Assets/Script/Login.cs" line="49" column="1" />
+      <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/Script/Login.cs" relfile="Assets/Script/Login.cs" line="28" column="1" />
+      <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/Script/Login.cs" relfile="Assets/Script/Login.cs" line="40" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />

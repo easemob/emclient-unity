@@ -1,6 +1,7 @@
 #include "client.h"
 
 #include "emchatconfigs.h"
+#include "emchatprivateconfigs.h"
 #include "emclient.h"
 
 using namespace easemob;
@@ -10,6 +11,9 @@ extern "C"
 #define CLIENT static_cast<EMClient *>(client)
 }
 
+static bool G_DEBUG_MODE = false;
+static bool G_AUTO_LOGIN = true;
+
 AGORA_API void Client_CreateAccount(void *client, const char *username, const char *password)
 {
     CLIENT->createAccount(username, password);
@@ -17,9 +21,28 @@ AGORA_API void Client_CreateAccount(void *client, const char *username, const ch
 
 AGORA_API void* Client_InitWithOptions(Options *options)
 {
+    // global switch
+    G_DEBUG_MODE = options->DebugMode;
+    G_AUTO_LOGIN = options->AutoLogin;
     const char *appKey = options->AppKey;
     LOG("Client_InitWithOptions() called with AppKey=s%", appKey);
     EMChatConfigsPtr configs = EMChatConfigsPtr(new EMChatConfigs("","",appKey,0));
+    configs->setDnsURL(options->DNSURL);
+    configs->privateConfigs().chatServer() = options->IMServer;
+    configs->privateConfigs().restServer() = options->RestServer;
+    configs->privateConfigs().chatPort() = options->IMPort;
+    configs->privateConfigs().enableDns() = options->EnableDNSConfig;
+    LOG("Options with DNSURL=%s, IMServer=%s, IMPort=%d, RestServer=%s", options->DNSURL, options->IMServer, options->IMPort, options->RestServer);
+    configs->setAutoAcceptFriend(options->AcceptInvitationAlways);
+    configs->setAutoAcceptGroup(options->AutoAcceptGroupInvitation);
+    configs->setRequireReadAck(options->RequireAck);
+    configs->setRequireDeliveryAck(options->RequireDeliveryAck);
+    configs->setDeleteMessageAsExitGroup(options->DeleteMessagesAsExitGroup);
+    configs->setDeleteMessageAsExitChatRoom(options->DeleteMessagesAsExitRoom);
+    configs->setIsChatroomOwnerLeaveAllowed(options->IsRoomOwnerLeaveAllowed);
+    configs->setUsingHttps(options->UsingHttpsOnly);
+    configs->setTransferAttachments(options->ServerTransfer);
+    configs->setAutoDownloadThumbnail(options->IsAutoDownload);
     return EMClient::create(configs);
 }
 

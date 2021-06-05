@@ -3,7 +3,10 @@
 typedef struct _Options
 {
   char *AppKey;
-  bool DebugModel;
+  char *DNSURL;
+  char *IMServer;
+  char *RestServer;
+  bool DebugMode;
   bool AutoLogin;
   bool AcceptInvitationAlways;
   bool AutoAcceptGroupInvitation;
@@ -17,10 +20,8 @@ typedef struct _Options
   bool ServerTransfer;
   bool IsAutoDownload;
   bool EnableDNSConfig;
-  char *RestServer;
-  char *IMServer;
   int IMPort;
-  char *DNSURL;
+
 } Options;
 
 #endif //_MODELS_H_

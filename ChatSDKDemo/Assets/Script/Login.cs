@@ -30,6 +30,10 @@ public class Login : MonoBehaviour
         print("登录被点击: " + username + ", " + password);
         IClient client = IClient.Instance;
         Options options = new Options("easemobDemo");
+        options.DNSURL = "easemob.com";
+        options.IMServer = "easemob.com";
+        options.IMPort = 6717;
+        options.RestServer = "easemob.com";
         client.InitWithOptions(options);
         client.Login(username, password);
         SceneManager.LoadScene("Main");

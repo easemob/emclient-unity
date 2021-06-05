@@ -22,7 +22,7 @@ public class TestCode : MonoBehaviour, IConnectionDelegate
         var options = new Options("1110200629107815#tip");
         options.AcceptInvitationAlways = true;
         options.UsingHttpsOnly = true;
-        options.DebugModel = true;
+        options.DebugMode = true;
         SDKClient.Instance.InitWithOptions(options);
         SDKClient.Instance.AddConnectionDelegate(this);
 

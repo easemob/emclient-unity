@@ -20,22 +20,22 @@ namespace ChatSDK{
 		protected delegate void OnError(int error, string desc);
 		protected delegate void OnProgress(int progress);
 
-		[DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
+		[DllImport(MyLibName)]
 		public static extern void Client_CreateAccount(IntPtr client, string username, string password);
 
-		[DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
+		[DllImport(MyLibName)]
 		public static extern IntPtr Client_InitWithOptions(Options options);
 
-		[DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
+		[DllImport(MyLibName)]
 		public static extern void Client_Login(IntPtr client, string username, string pwdOrToken, bool isToken = false);
 
-		[DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
+		[DllImport(MyLibName)]
 		public static extern void Client_Logout(IntPtr client, bool unbindDeviceToken);
 
-		[DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
+		[DllImport(MyLibName)]
 		public static extern void Client_StartLog(string logFilePath);
 
-		[DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
+		[DllImport(MyLibName)]
 		public static extern void Client_StopLog();
 
 

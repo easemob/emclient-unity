@@ -13,10 +13,16 @@ namespace ChatSDK
         /// </summary>
         public string AppKey = "";
 
+        public string DNSURL = "";
+        
+        public string IMServer = "";
+
+        public string RestServer = "";
+
         /// <summary>
         /// Debug模式，会输出日志
         /// </summary>
-        public bool DebugModel = false;
+        public bool DebugMode = false;
 
         /// <summary>
         /// 自定登录，再下次初始化时，SDK会直接登录上次未退出的账号，默认开启
@@ -80,14 +86,7 @@ namespace ChatSDK
 
         public bool EnableDNSConfig = true;
 
-        public string RestServer = null;
-
-        public string IMServer = null;
-
         public int IMPort = 0;
-
-        public string DNSURL = null;
-
 
         /// <summary>
         /// 初始化Options
@@ -102,7 +101,7 @@ namespace ChatSDK
 
             JSONObject jo = new JSONObject();
             jo["app_key"] = AppKey;
-            jo["debug_model"] = DebugModel;
+            jo["debug_mode"] = DebugMode;
             jo["auto_login"] = AutoLogin;
             jo["accept_invitation_always"] = AcceptInvitationAlways;
             jo["auto_accept_group_invitation"] = AutoAcceptGroupInvitation;
