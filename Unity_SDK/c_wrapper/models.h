@@ -6,6 +6,7 @@ typedef struct _Options
   char *DNSURL;
   char *IMServer;
   char *RestServer;
+  int IMPort;
   bool DebugMode;
   bool AutoLogin;
   bool AcceptInvitationAlways;
@@ -20,8 +21,6 @@ typedef struct _Options
   bool ServerTransfer;
   bool IsAutoDownload;
   bool EnableDNSConfig;
-  int IMPort;
-
 } Options;
 
 #endif //_MODELS_H_

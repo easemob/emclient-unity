@@ -19,6 +19,8 @@ namespace ChatSDK
 
         public string RestServer = "";
 
+        public int IMPort = 0;
+
         /// <summary>
         /// Debug模式，会输出日志
         /// </summary>
@@ -85,8 +87,6 @@ namespace ChatSDK
         public bool IsAutoDownload = true;
 
         public bool EnableDNSConfig = true;
-
-        public int IMPort = 0;
 
         /// <summary>
         /// 初始化Options

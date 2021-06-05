@@ -34,6 +34,8 @@ public class Login : MonoBehaviour
         options.IMServer = "easemob.com";
         options.IMPort = 6717;
         options.RestServer = "easemob.com";
+        options.UsingHttpsOnly = true;
+        options.RequireAck = false;
         client.InitWithOptions(options);
         client.Login(username, password);
         SceneManager.LoadScene("Main");

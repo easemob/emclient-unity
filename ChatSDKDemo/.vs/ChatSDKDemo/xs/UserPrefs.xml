@@ -3,10 +3,11 @@
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Script/Login.cs">
     <Files>
       <File FileName="Assets/ChatSDK/ChatSDK/Client/Client_Mac.cs" Line="28" Column="1" IsPinned="True" />
-      <File FileName="Assets/ChatSDK/ChatSDK/native/ChatAPINative.cs" Line="23" Column="25" IsPinned="True" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Models/Options.cs" Line="17" Column="9" />
-      <File FileName="Assets/Script/TestCode.cs" Line="25" Column="26" />
-      <File FileName="Assets/Script/Login.cs" Line="32" Column="54" />
+      <File FileName="Assets/ChatSDK/ChatSDK/native/ChatAPINative.cs" IsPinned="True" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Models/Options.cs" />
+      <File FileName="Assets/Script/TestCode.cs" />
+      <File FileName="Assets/Script/Login.cs" Line="25" Column="1" />
+      <File FileName="Assets/ChatSDK/ChatSDK/ChatManager/ChatManager_Android.cs" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -48,7 +49,7 @@
       <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/Tools/CallBackManager.cs" relfile="Assets/ChatSDK/ChatSDK/Tools/CallBackManager.cs" line="217" column="1" />
       <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/Tools/CallBackManager.cs" relfile="Assets/ChatSDK/ChatSDK/Tools/CallBackManager.cs" line="137" column="1" />
       <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/Script/Login.cs" relfile="Assets/Script/Login.cs" line="28" column="1" />
-      <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/Script/Login.cs" relfile="Assets/Script/Login.cs" line="40" column="1" />
+      <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/Script/Login.cs" relfile="Assets/Script/Login.cs" line="46" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />

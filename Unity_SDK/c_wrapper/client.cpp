@@ -19,23 +19,30 @@ AGORA_API void Client_CreateAccount(void *client, const char *username, const ch
     CLIENT->createAccount(username, password);
 }
 
-AGORA_API void* Client_InitWithOptions(Options *options)
-{
-    // global switch
-    G_DEBUG_MODE = options->DebugMode;
-    G_AUTO_LOGIN = options->AutoLogin;
+EMChatConfigsPtr fromOptions(Options *options) {
     const char *appKey = options->AppKey;
-    LOG("Client_InitWithOptions() called with AppKey=s%", appKey);
+    LOG("Client_InitWithOptions() called with AppKey=%s", appKey);
     EMChatConfigsPtr configs = EMChatConfigsPtr(new EMChatConfigs("","",appKey,0));
+    const char *dnsURL = options->DNSURL;
+    const char *imServer = options->IMServer;
+    const char *restServer = options->RestServer;
+    int imPort = options->IMPort;
+    bool enableDNSConfig = options->EnableDNSConfig;
+    LOG("Options with DNSURL=%s, IMServer=%s, IMPort=%d, RestServer=%s, EnableDNSConfig=%s", dnsURL, imServer, imPort, restServer, enableDNSConfig ? "false" : "true");
     configs->setDnsURL(options->DNSURL);
     configs->privateConfigs().chatServer() = options->IMServer;
     configs->privateConfigs().restServer() = options->RestServer;
     configs->privateConfigs().chatPort() = options->IMPort;
     configs->privateConfigs().enableDns() = options->EnableDNSConfig;
-    LOG("Options with DNSURL=%s, IMServer=%s, IMPort=%d, RestServer=%s", options->DNSURL, options->IMServer, options->IMPort, options->RestServer);
-    configs->setAutoAcceptFriend(options->AcceptInvitationAlways);
-    configs->setAutoAcceptGroup(options->AutoAcceptGroupInvitation);
-    configs->setRequireReadAck(options->RequireAck);
+    bool acceptInvitationAlways = options->AcceptInvitationAlways;
+    LOG("AccepInvitationAlways=%s", options->AcceptInvitationAlways ? "false" : "true");
+    configs->setAutoAcceptFriend(acceptInvitationAlways);
+    bool autoAcceptGroupInvitation = options->AutoAcceptGroupInvitation;
+    LOG("AutoAcceptGroupInvitation=%s", autoAcceptGroupInvitation ? "false" : "true");
+    configs->setAutoAcceptGroup(autoAcceptGroupInvitation);
+    bool requireAck = options->RequireAck;
+    LOG("RequireAck=%s", requireAck ? "false" : "true");
+    configs->setRequireReadAck(requireAck);
     configs->setRequireDeliveryAck(options->RequireDeliveryAck);
     configs->setDeleteMessageAsExitGroup(options->DeleteMessagesAsExitGroup);
     configs->setDeleteMessageAsExitChatRoom(options->DeleteMessagesAsExitRoom);
@@ -43,8 +50,19 @@ AGORA_API void* Client_InitWithOptions(Options *options)
     configs->setUsingHttps(options->UsingHttpsOnly);
     configs->setTransferAttachments(options->ServerTransfer);
     configs->setAutoDownloadThumbnail(options->IsAutoDownload);
+    return configs;
+}
+
+AGORA_API void* Client_InitWithOptions(Options *options)
+{
+    // global switch
+    G_DEBUG_MODE = options->DebugMode;
+    G_AUTO_LOGIN = options->AutoLogin;
+    EMChatConfigsPtr configs = fromOptions(options);
     return EMClient::create(configs);
 }
+
+
 
 AGORA_API void Client_Login(void *client, const char *username, const char *pwdOrToken, bool isToken)
 {
