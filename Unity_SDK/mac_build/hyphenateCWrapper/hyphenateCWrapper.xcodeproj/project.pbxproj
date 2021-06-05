@@ -194,6 +194,7 @@
 		90A0455C2632D4F000550B6E /* emencryptprovider_interface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = emencryptprovider_interface.h; sourceTree = "<group>"; };
 		90A0455D2632D4F000550B6E /* emcursorresult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = emcursorresult.h; sourceTree = "<group>"; };
 		90A0455E2632D4F000550B6E /* emchatroommanager_interface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = emchatroommanager_interface.h; sourceTree = "<group>"; };
+		D7282F3D266A5BF300D45179 /* LogHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LogHelper.h; sourceTree = "<group>"; };
 		D742F1BE266843CA00B80C18 /* hyphenateCWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hyphenateCWrapper.h; sourceTree = "<group>"; };
 		D742F1BF266843CA00B80C18 /* client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = client.h; sourceTree = "<group>"; };
 		D742F1C0266843CA00B80C18 /* client.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = client.cpp; sourceTree = "<group>"; };
@@ -465,6 +466,7 @@
 				D742F1C0266843CA00B80C18 /* client.cpp */,
 				D742F1C2266843CA00B80C18 /* hyphenateCWrapper.cpp */,
 				D742F1C3266843CA00B80C18 /* models.h */,
+				D7282F3D266A5BF300D45179 /* LogHelper.h */,
 			);
 			name = c_wrapper;
 			path = ../../../c_wrapper;

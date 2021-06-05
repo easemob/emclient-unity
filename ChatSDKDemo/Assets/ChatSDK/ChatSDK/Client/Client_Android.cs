@@ -42,6 +42,14 @@ namespace ChatSDK
             wrapper.Call("logout", unbindDeviceToken, null);
         }
 
-       
+        public override void StartLog(string logFilePath)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void StopLog()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

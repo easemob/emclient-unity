@@ -5,7 +5,7 @@
         'msvs_RuntimeLibrary': '3', #md:2, mdd:3, mt:0, mtd:1
         'ENABLE_CALL': '0',
         'USE_SQLCIPHER':'0',
-        'emclient-linux-path':'../../../emclient-linux_3.8.1'
+        'emclient-linux-path':'../../../../easemob/emclient-linux'
     },
 
     'target_defaults': {

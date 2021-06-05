@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Runtime.InteropServices;
 using System;
 
 namespace ChatSDK
@@ -9,7 +8,8 @@ namespace ChatSDK
         private IntPtr _client = IntPtr.Zero;
 
         public Client_Mac() {
-            // do nothing
+            // start log service
+            StartLog("/tmp/unmanaged_dll.log");
         }
 
 
@@ -46,7 +46,15 @@ namespace ChatSDK
             }
         }
 
+        public override void StartLog(string logFilePath)
+        {
+            ChatAPINative.Client_StartLog(logFilePath);
+        }
 
+        public override void StopLog()
+        {
+            ChatAPINative.Client_StopLog();
+        }
     }
 
 }

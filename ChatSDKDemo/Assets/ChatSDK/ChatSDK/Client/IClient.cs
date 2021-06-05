@@ -117,6 +117,9 @@
 
         public abstract void Logout(bool unbindDeviceToken, CallBack handle = null);
 
+        public abstract void StartLog(string logFilePath);
+
+        public abstract void StopLog();
         
     }
 }

@@ -32,6 +32,12 @@ namespace ChatSDK{
 		[DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void Client_Logout(IntPtr client, bool unbindDeviceToken);
 
+		[DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void Client_StartLog(string logFilePath);
+
+		[DllImport(MyLibName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void Client_StopLog();
+
 
 #endregion native API import
 	}

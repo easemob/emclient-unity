@@ -2,6 +2,7 @@
 
 #include "emchatconfigs.h"
 #include "emclient.h"
+#include "LogHelper.h"
 
 using namespace easemob;
 
@@ -17,12 +18,15 @@ AGORA_API void Client_CreateAccount(void *client, const char *username, const ch
 
 AGORA_API void* Client_InitWithOptions(Options *options)
 {
-    EMChatConfigsPtr configs = EMChatConfigsPtr(new EMChatConfigs("","",options->AppKey,0));
+    const char *appKey = options->AppKey;
+    LogHelper::getInstance().writeLog("Client_InitWithOptions() called with AppKey=s%", appKey);
+    EMChatConfigsPtr configs = EMChatConfigsPtr(new EMChatConfigs("","",appKey,0));
     return EMClient::create(configs);
 }
 
 AGORA_API void Client_Login(void *client, const char *username, const char *pwdOrToken, bool isToken)
 {
+    LogHelper::getInstance().writeLog("Client_Login() called with username=%s, pwdOrToken=%s, isToken=%d", username, pwdOrToken, isToken);
     if(!isToken)
         CLIENT->login(username, pwdOrToken);
     else
@@ -38,4 +42,13 @@ AGORA_API void Client_Release(void *client)
 {
     delete CLIENT;
     client = nullptr;
+    LogHelper::getInstance().stopLogService();
+}
+
+AGORA_API void Client_StartLog(const char *logFilePath) {
+    LogHelper::getInstance().startLogService(logFilePath);
+}
+
+AGORA_API void Client_StopLog() {
+    return LogHelper::getInstance().stopLogService();
 }
