@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Runtime.InteropServices;
 
 namespace ChatSDK
 {
@@ -31,7 +32,7 @@ namespace ChatSDK
         public override void Login(string username, string pwdOrToken, bool isToken = false, CallBack callBack = null)
         {
             if(_client != IntPtr.Zero) {
-                ChatAPINative.Client_Login(_client, username, pwdOrToken, isToken);
+                ChatAPINative.Client_Login(_client, callBack, username, pwdOrToken, isToken);
             } else {
                 Debug.LogError("::InitWithOptions() not called yet.");
             }

@@ -37,7 +37,9 @@ public class Login : MonoBehaviour
         options.UsingHttpsOnly = true;
         options.RequireAck = false;
         client.InitWithOptions(options);
-        client.Login(username, password);
+        //set callback handler
+        CallBack callback = new CallBack(LoginSuccess,null,LoginError);
+        client.Login(username, password, false, callback);
         SceneManager.LoadScene("Main");
     }
 
@@ -49,5 +51,15 @@ public class Login : MonoBehaviour
     void Update()
     {
         
+    }
+
+    static void LoginSuccess()
+    {
+        Debug.Log("Login succeeds!");
+    }
+
+    static void LoginError(int code, string description)
+    {
+        Debug.LogError("Login error: code=" + code + ",description=" + description);
     }
 }

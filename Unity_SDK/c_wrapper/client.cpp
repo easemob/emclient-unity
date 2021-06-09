@@ -9,6 +9,7 @@ using namespace easemob;
 extern "C"
 {
 #define CLIENT static_cast<EMClient *>(client)
+#define CALLBACK static_cast<Callback *>(callback)
 }
 
 static bool G_DEBUG_MODE = false;
@@ -19,7 +20,7 @@ AGORA_API void Client_CreateAccount(void *client, const char *username, const ch
     CLIENT->createAccount(username, password);
 }
 
-EMChatConfigsPtr fromOptions(Options *options) {
+EMChatConfigsPtr ConfigsFromOptions(Options *options) {
     const char *appKey = options->AppKey;
     LOG("Client_InitWithOptions() called with AppKey=%s", appKey);
     EMChatConfigsPtr configs = EMChatConfigsPtr(new EMChatConfigs("","",appKey,0));
@@ -58,19 +59,33 @@ AGORA_API void* Client_InitWithOptions(Options *options)
     // global switch
     G_DEBUG_MODE = options->DebugMode;
     G_AUTO_LOGIN = options->AutoLogin;
-    EMChatConfigsPtr configs = fromOptions(options);
+    EMChatConfigsPtr configs = ConfigsFromOptions(options);
     return EMClient::create(configs);
 }
 
 
 
-AGORA_API void Client_Login(void *client, const char *username, const char *pwdOrToken, bool isToken)
+AGORA_API void Client_Login(void *client, void *callback, const char *username, const char *pwdOrToken, bool isToken)
 {
     LOG("Client_Login() called with username=%s, pwdOrToken=%s, isToken=%d", username, pwdOrToken, isToken);
-    if(!isToken)
-        CLIENT->login(username, pwdOrToken);
-    else
-        CLIENT->loginWithToken(username, pwdOrToken);
+    LOG("callback instance address=%d", callback);
+    LOG("callback OnSuccess FPtr address=%d", CALLBACK->OnSuccess);
+    LOG("callback OnError FPtr address=%d", CALLBACK->OnError);
+    EMErrorPtr result;
+    if(!isToken) {
+        result = CLIENT->login(username, pwdOrToken);
+    } else {
+        result = CLIENT->loginWithToken(username, pwdOrToken);
+    }
+    if(EMError::isNoError(result)) {
+        LOG("Login succeeds.");
+        //call OnSuccess callback
+        CALLBACK->OnSuccess();
+    }else{
+        LOG("Login error with error code %d, description: %s", result->mErrorCode, result->mDescription.c_str());
+        //call OnError callback
+        CALLBACK->OnError(result->mErrorCode, result->mDescription.c_str());
+    }
 }
 
 AGORA_API void Client_Logout(void *client, bool unbindDeviceToken)

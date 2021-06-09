@@ -27,7 +27,7 @@ namespace ChatSDK{
 		public static extern IntPtr Client_InitWithOptions(Options options);
 
 		[DllImport(MyLibName)]
-		public static extern void Client_Login(IntPtr client, string username, string pwdOrToken, bool isToken = false);
+		public static extern void Client_Login(IntPtr client, CallBack callback, string username, string pwdOrToken, bool isToken = false);
 
 		[DllImport(MyLibName)]
 		public static extern void Client_Logout(IntPtr client, bool unbindDeviceToken);

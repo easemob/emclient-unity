@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 
 namespace ChatSDK
 {
@@ -6,7 +7,7 @@ namespace ChatSDK
     public delegate void OnError(int error, string desc);
     public delegate void OnProgress(int progress);
 
-
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public class CallBack
     {
         public Action Success;
