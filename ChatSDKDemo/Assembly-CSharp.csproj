@@ -47,7 +47,7 @@
   <PropertyGroup>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <UnityProjectGenerator>Unity/VSTU</UnityProjectGenerator>
-    <UnityProjectGeneratorVersion>2.9.4.0</UnityProjectGeneratorVersion>
+    <UnityProjectGeneratorVersion>2.10.2.0</UnityProjectGeneratorVersion>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneOSX:2</UnityBuildTarget>
     <UnityVersion>2019.4.26f1c1</UnityVersion>
@@ -130,6 +130,8 @@
     <Compile Include="Assets\ChatSDK\ChatSDK\Tools\TransformTool.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\Tools\WeakDelegate.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\native\ChatAPINative.cs" />
+    <Compile Include="Assets\ChatSDK\ChatSDK\native\DelegateHub.cs" />
+    <Compile Include="Assets\Script\Delegate.cs" />
     <Compile Include="Assets\Script\Login.cs" />
     <Compile Include="Assets\Script\Main.cs" />
     <Compile Include="Assets\Script\TestCode.cs" />

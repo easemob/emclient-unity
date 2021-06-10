@@ -54,13 +54,17 @@ EMChatConfigsPtr ConfigsFromOptions(Options *options) {
     return configs;
 }
 
-AGORA_API void* Client_InitWithOptions(Options *options)
+AGORA_API void* Client_InitWithOptions(Options *options, ConnListenerFptrs fptrs)
 {
     // global switch
     G_DEBUG_MODE = options->DebugMode;
     G_AUTO_LOGIN = options->AutoLogin;
     EMChatConfigsPtr configs = ConfigsFromOptions(options);
-    return EMClient::create(configs);
+    EMClient * client = EMClient::create(configs);
+    //TODO: keep connection listener instance disposable!
+    LOG("ConnectionListener FPtrs: OnConnect=%d, OnDisconnected=%d,", fptrs.Connected, fptrs.Disconnected);
+    client->addConnectionListener(new ConnectionListener(fptrs));
+    return client;
 }
 
 
@@ -69,8 +73,6 @@ AGORA_API void Client_Login(void *client, void *callback, const char *username, 
 {
     LOG("Client_Login() called with username=%s, pwdOrToken=%s, isToken=%d", username, pwdOrToken, isToken);
     LOG("callback instance address=%d", callback);
-    LOG("callback OnSuccess FPtr address=%d", CALLBACK->OnSuccess);
-    LOG("callback OnError FPtr address=%d", CALLBACK->OnError);
     EMErrorPtr result;
     if(!isToken) {
         result = CLIENT->login(username, pwdOrToken);

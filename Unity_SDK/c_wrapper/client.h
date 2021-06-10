@@ -4,7 +4,7 @@
 #pragma once
 #include "common.h"
 #include "models.h"
-#include "callback.h"
+#include "callbacks.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -12,7 +12,7 @@ extern "C"
 #endif //__cplusplus
 
   AGORA_API void Client_CreateAccount(void *client, const char *username, const char *password);
-  AGORA_API void* Client_InitWithOptions(Options *options);
+  AGORA_API void* Client_InitWithOptions(Options *options, ConnListenerFptrs fptrs);
   AGORA_API void Client_Login(void *client, void *callback, const char *username, const char *pwdOrToken, bool isToken);
   AGORA_API void Client_Logout(void *client, bool unbindDeviceToken);
   AGORA_API void Client_StartLog(const char *logFilePath);

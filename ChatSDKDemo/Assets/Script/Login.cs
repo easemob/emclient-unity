@@ -14,13 +14,8 @@ public class Login : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
         loginButton.onClick.AddListener(LoginAction);
         registerButton.onClick.AddListener(RegisterAction);
-
-        //Options options = new Options("easemob-demo#chatdemoui");
-        //SDKClient.Instance.InitWithOptions(options);
-
     }
 
 
@@ -28,19 +23,18 @@ public class Login : MonoBehaviour
         string username = usernameField.text;
         string password = passwordField.text;
         print("登录被点击: " + username + ", " + password);
-        IClient client = IClient.Instance;
-        Options options = new Options("easemobDemo");
+        Options options = new Options("easemob-demo#easeim");
         options.DNSURL = "easemob.com";
-        options.IMServer = "easemob.com";
+        options.IMServer = "msync-im1.easemob.com";
         options.IMPort = 6717;
-        options.RestServer = "easemob.com";
+        options.RestServer = "a1.easemob.com";
         options.UsingHttpsOnly = true;
         options.RequireAck = false;
+        SDKClient client = SDKClient.Instance;
         client.InitWithOptions(options);
         //set callback handler
         CallBack callback = new CallBack(LoginSuccess,null,LoginError);
-        client.Login(username, password, false, callback);
-        SceneManager.LoadScene("Main");
+        client.Login(username, password, false, callback);        
     }
 
     void RegisterAction() {
@@ -56,6 +50,7 @@ public class Login : MonoBehaviour
     static void LoginSuccess()
     {
         Debug.Log("Login succeeds!");
+        SceneManager.LoadScene("Main");
     }
 
     static void LoginError(int code, string description)

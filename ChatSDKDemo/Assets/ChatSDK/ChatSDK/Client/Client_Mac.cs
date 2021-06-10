@@ -7,6 +7,7 @@ namespace ChatSDK
     public class Client_Mac : IClient
     {
         private IntPtr _client = IntPtr.Zero;
+        private ConnectionDelegate _deleg;
 
         public Client_Mac() {
             // start log service
@@ -26,7 +27,8 @@ namespace ChatSDK
         public override void InitWithOptions(Options options, WeakDelegater<IConnectionDelegate> connectionDelegater = null)
         {
             ChatCallbackObject.GetInstance();
-            _client = ChatAPINative.Client_InitWithOptions(options);
+            _deleg = new ConnectionDelegate(connectionDelegater);
+            _client = ChatAPINative.Client_InitWithOptions(options,_deleg.FuncPointers());
         }
 
         public override void Login(string username, string pwdOrToken, bool isToken = false, CallBack callBack = null)
