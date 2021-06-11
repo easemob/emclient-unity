@@ -6,8 +6,8 @@ namespace ChatSDK
 {
     public class Client_Mac : IClient
     {
-        private IntPtr _client = IntPtr.Zero;
-        private ConnectionDelegate _deleg;
+        private IntPtr client = IntPtr.Zero;
+        private ConnectionHub connectionHub;
 
         public Client_Mac() {
             // start log service
@@ -17,24 +17,24 @@ namespace ChatSDK
 
         public override void CreateAccount(string username, string password, CallBack callBack = null)
         {
-            if(_client != IntPtr.Zero) {
-                ChatAPINative.Client_CreateAccount(_client, username, password);
+            if(client != IntPtr.Zero) {
+                ChatAPINative.Client_CreateAccount(client, username, password);
             } else {
                 Debug.LogError("::InitWithOptions() not called yet.");
             }
         }
 
-        public override void InitWithOptions(Options options, WeakDelegater<IConnectionDelegate> connectionDelegater = null)
+        public override void InitWithOptions(Options options, WeakDelegater<IConnectionDelegate> listeners = null)
         {
             ChatCallbackObject.GetInstance();
-            _deleg = new ConnectionDelegate(connectionDelegater);
-            _client = ChatAPINative.Client_InitWithOptions(options,_deleg.FuncPointers());
+            connectionHub = new ConnectionHub(listeners);
+            client = ChatAPINative.Client_InitWithOptions(options,connectionHub.Delegates());
         }
 
         public override void Login(string username, string pwdOrToken, bool isToken = false, CallBack callBack = null)
         {
-            if(_client != IntPtr.Zero) {
-                ChatAPINative.Client_Login(_client, callBack, username, pwdOrToken, isToken);
+            if(client != IntPtr.Zero) {
+                ChatAPINative.Client_Login(client, callBack, username, pwdOrToken, isToken);
             } else {
                 Debug.LogError("::InitWithOptions() not called yet.");
             }
@@ -42,8 +42,8 @@ namespace ChatSDK
 
         public override void Logout(bool unbindDeviceToken, CallBack callBack = null)
         {
-            if (_client != IntPtr.Zero) {
-                ChatAPINative.Client_Logout(_client, unbindDeviceToken);
+            if (client != IntPtr.Zero) {
+                ChatAPINative.Client_Logout(client, unbindDeviceToken);
             } else {
                 Debug.LogError("::InitWithOptions() not called yet.");
             }

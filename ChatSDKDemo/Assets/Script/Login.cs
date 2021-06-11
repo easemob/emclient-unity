@@ -16,13 +16,6 @@ public class Login : MonoBehaviour
     {
         loginButton.onClick.AddListener(LoginAction);
         registerButton.onClick.AddListener(RegisterAction);
-    }
-
-
-    void LoginAction() {
-        string username = usernameField.text;
-        string password = passwordField.text;
-        print("登录被点击: " + username + ", " + password);
         Options options = new Options("easemob-demo#easeim");
         options.DNSURL = "easemob.com";
         options.IMServer = "msync-im1.easemob.com";
@@ -32,9 +25,16 @@ public class Login : MonoBehaviour
         options.RequireAck = false;
         SDKClient client = SDKClient.Instance;
         client.InitWithOptions(options);
+    }
+
+
+    void LoginAction() {
+        string username = usernameField.text;
+        string password = passwordField.text;
+        print("登录被点击: " + username + ", " + password);       
         //set callback handler
         CallBack callback = new CallBack(LoginSuccess,null,LoginError);
-        client.Login(username, password, false, callback);        
+        SDKClient.Instance.Login(username, password, false, callback);
     }
 
     void RegisterAction() {
@@ -55,6 +55,6 @@ public class Login : MonoBehaviour
 
     static void LoginError(int code, string description)
     {
-        Debug.LogError("Login error: code=" + code + ",description=" + description);
+        Debug.LogError($"Login error: code={code},description={description}");
     }
 }

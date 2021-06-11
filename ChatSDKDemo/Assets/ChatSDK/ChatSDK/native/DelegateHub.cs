@@ -6,23 +6,22 @@ namespace ChatSDK
 {
     public delegate void OnDisconnected(int info);
 
-    public class ConnectionDelegate : CallBack, IConnectionDelegate
+    public class ConnectionHub : CallBack, IConnectionDelegate
     {
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public struct FPtrs
+        public struct Delegate
         {
             public Action Connected;
             public OnDisconnected Disconnected;
         };
 
-        internal FPtrs _FPtrs;
-        internal WeakDelegater<IConnectionDelegate> _delegater;
+        private Delegate @delegate;
+        private WeakDelegater<IConnectionDelegate> listeners;
 
-        public ConnectionDelegate(WeakDelegater<IConnectionDelegate> delegater)
+        public ConnectionHub(WeakDelegater<IConnectionDelegate> _listeners)
         {
-            _delegater = delegater;
-            _FPtrs.Connected = OnConnected;
-            _FPtrs.Disconnected = OnDisconnected;
+            listeners = _listeners;
+            (@delegate.Connected, @delegate.Disconnected) = (OnConnected, OnDisconnected);
             callbackId = CallbackManager.Instance().currentId.ToString();
             CallbackManager.Instance().AddCallback(CallbackManager.Instance().currentId, this);
         }
@@ -30,26 +29,26 @@ namespace ChatSDK
         public void OnConnected()
         {
             //invoke each delegaters in list
-            Debug.Log("ConnectionDelegateHub.OnConnected() invoked!");
-            foreach (IConnectionDelegate dlg in _delegater.List)
+            Debug.Log("ConnectionHub.OnConnected() invoked!");
+            foreach (IConnectionDelegate listener in listeners.List)
             {
-                dlg.OnConnected();
+                listener.OnConnected();
             }
         }
 
         public void OnDisconnected(int info)
         {
             //invoke each delegaters in list
-            Debug.Log("ConnectionDelegateHub.OnDisconnected() invoked with info=" + info + "!");
-            foreach (IConnectionDelegate dlg in _delegater.List)
+            Debug.Log($"ConnectionHub.OnDisconnected() invoked with info={info}!");
+            foreach (IConnectionDelegate listener in listeners.List)
             {
-                dlg.OnDisconnected(info);
+                listener.OnDisconnected(info);
             }
         }
 
-        public FPtrs FuncPointers()
+        public Delegate Delegates()
         {
-            return _FPtrs;
+            return @delegate;
         }
     }
 }

@@ -12,6 +12,6 @@ public class ConnectionDelegate : IConnectionDelegate
 
     public void OnDisconnected(int info)
     {
-        Debug.Log("Client disconnected with " + info);
+        Debug.Log($"Client disconnected with {info}.");
     }
 }

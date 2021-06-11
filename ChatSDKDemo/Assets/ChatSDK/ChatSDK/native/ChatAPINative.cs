@@ -24,7 +24,7 @@ namespace ChatSDK{
 		public static extern void Client_CreateAccount(IntPtr client, string username, string password);
 
 		[DllImport(MyLibName)]
-		public static extern IntPtr Client_InitWithOptions(Options options, ConnectionDelegate.FPtrs fPtrs);
+		public static extern IntPtr Client_InitWithOptions(Options options, ConnectionHub.Delegate @delegate);
 
 		[DllImport(MyLibName)]
 		public static extern void Client_Login(IntPtr client, CallBack callback, string username, string pwdOrToken, bool isToken = false);
