@@ -1,8 +1,61 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using SimpleJSON;
 
 namespace ChatSDK
 {
+    //MessageTransferObject: Data object to be transferred across managed/unmanaged border
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    public struct MessageTransferObject
+    {
+        public string MsgId;
+        public string ConversationId;
+        public string From;
+        public string To;
+        public MessageType Type;
+        public MessageDirection Direction;
+        public MessageStatus Status;
+        public long LocalTime;
+        public long ServerTime;
+        public bool HasDeliverAck;
+        public bool HasReadAck;
+        public IMessageBody Body;
+        public Dictionary<string, string> Attribute;
+
+        public MessageTransferObject(Message message) =>
+            (MsgId, ConversationId, From, To, Type, Direction, Status, LocalTime, ServerTime, HasDeliverAck, HasReadAck, Body, Attribute)
+                = (message.MsgId, message.ConversationId, message.From, message.To, message.MessageType, message.Direction, message.Status,
+                    message.LocalTime, message.ServerTime, message.HasDeliverAck, message.HasReadAck, message.Body, message.Attribute);
+
+        public static List<Message> ConvertToMessageList(MessageTransferObject[] _messages)
+        {
+            List<Message> messages = new List<Message>();
+            foreach (MessageTransferObject message in _messages)
+            {
+                messages.Add(message.Unmarshall());
+            }
+            return messages;
+        }
+
+        private Message Unmarshall()
+        {
+            var result = new Message(Body);
+            result.MsgId = MsgId;
+            result.ConversationId = ConversationId;
+            result.From = From;
+            result.To = To;
+            result.MessageType = Type;
+            result.Direction = Direction;
+            result.Status = Status;
+            result.LocalTime = LocalTime;
+            result.ServerTime = ServerTime;
+            result.HasDeliverAck = HasDeliverAck;
+            result.HasReadAck = HasReadAck;
+            result.Attribute = Attribute;
+            return result;
+        }
+    }
+
     public class Message
     {
 
