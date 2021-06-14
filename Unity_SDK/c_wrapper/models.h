@@ -75,14 +75,14 @@ typedef struct _MessageTransferObject
     char * ConversationId;
     char * From;
     char * To;
-    EMMessage::EMChatType Type;
-    EMMessage::EMMessageDirection Direction;
-    EMMessage::EMMessageStatus Status;
+    unsigned char Type; //EMMessage::EMChatType
+    unsigned char Direction; //EMMessage::EMMessageDirection
+    unsigned char Status; //EMMessage::EMMessageStatus
     long LocalTime;
     long ServerTime;
     bool HasDeliverAck;
     bool HasReadAck;
-    EMMessageBody::EMMessageBodyType BodyType;
+    unsigned char BodyType; //EMMessageBody::EMMessageBodyType
     void *Body;
     char ** AttributesKeys;
     AttributeValue* AttributesValues;
@@ -103,7 +103,7 @@ typedef struct _MessageTransferObject
         LOG("Message BodyType: %d", BodyType);
         //LOG("Message Content: %s", Body);
         EMMessageBodyPtr messageBody = EMMessageBodyPtr(new EMTextMessageBody("hello"));
-        EMMessagePtr messagePtr = EMMessage::createSendMessage(From, To, messageBody);
+        EMMessagePtr messagePtr = EMMessage::createSendMessage(std::string(From), std::string(To), messageBody);
         /*messagePtr->setMsgId(MsgId);
         messagePtr->setConversationId(ConversationId);
         messagePtr->setChatType(Type);

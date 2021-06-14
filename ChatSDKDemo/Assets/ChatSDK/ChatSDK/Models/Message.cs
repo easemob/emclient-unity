@@ -6,7 +6,7 @@ using SimpleJSON;
 namespace ChatSDK
 {
     //MessageTransferObject: Data object to be transferred across managed/unmanaged border
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public struct MessageTransferObject
     {
         public string MsgId;
@@ -20,38 +20,17 @@ namespace ChatSDK
         public long ServerTime;
         public bool HasDeliverAck;
         public bool HasReadAck;
-        public MessageBodyType BodyType;
+        /*public MessageBodyType BodyType;
         [MarshalAs(UnmanagedType.AsAny)]
         public IMessageBody Body; //only 1 body processed
         public string[] AttributesKeys;
         public AttributeValue[] AttributesValues;
-        public int AttributesSize;
+        public int AttributesSize;*/
 
         public MessageTransferObject(in Message message) {
             (MsgId, ConversationId, From, To, Type, Direction, Status, LocalTime, ServerTime, HasDeliverAck, HasReadAck)
                 = (message.MsgId, message.ConversationId, message.From, message.To, message.MessageType, message.Direction, message.Status,
                     message.LocalTime, message.ServerTime, message.HasDeliverAck, message.HasReadAck);
-            if(message.Body != null)
-            {
-                BodyType = message.Body.Type;
-                Body = message.Body;
-            }
-            else
-            {
-                BodyType = MessageBodyType.TXT;
-                Body = null;
-            }
-            if(message.Attributes != null)
-            {
-                AttributesSize = message.Attributes.Count;
-                SplitMessageAttributes(message, out AttributesKeys, out AttributesValues);
-            }
-            else
-            {
-                AttributesSize = 0;
-                AttributesKeys = null;
-                AttributesValues = null;
-            }
         }
 
         public static List<Message> ConvertToMessageList(in MessageTransferObject[] _messages, int size)
@@ -92,7 +71,7 @@ namespace ChatSDK
 
         internal Message Unmarshall()
         {
-            return new Message(Body)
+            return new Message()
             {
                 MsgId = MsgId,
                 ConversationId = ConversationId,
@@ -105,13 +84,12 @@ namespace ChatSDK
                 ServerTime = ServerTime,
                 HasDeliverAck = HasDeliverAck,
                 HasReadAck = HasReadAck,
-                Attributes = MergeMessageAttributes(AttributesKeys, AttributesValues, AttributesSize)
             };
         }
     }
 
     // AttributeValue Union
-    [StructLayout(LayoutKind.Explicit, CharSet = CharSet.Unicode)]
+    [StructLayout(LayoutKind.Explicit, CharSet = CharSet.Ansi)]
     public struct AttributeValue
     {
         enum AttributeValueType : byte

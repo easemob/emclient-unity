@@ -1,18 +1,19 @@
 ﻿<Properties>
   <MonoDevelop.Ide.ItemProperties.ChatSDKDemo PreferredExecutionTarget="95cd266c-1045-47ee-8ef5-ceac692d7815" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/ChatSDK/ChatSDK/native/ChatAPINative.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/ChatSDK/ChatSDK/Custom/SDKEnumerations.cs">
     <Files>
-      <File FileName="Assets/ChatSDK/ChatSDK/ChatManager/ChatManager_Mac.cs" Line="98" Column="42" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Client/Client_Mac.cs" Line="1" Column="1" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Models/Message.cs" Line="55" Column="1" />
-      <File FileName="Assets/Script/Main.cs" Line="67" Column="1" />
+      <File FileName="Assets/ChatSDK/ChatSDK/ChatManager/ChatManager_Mac.cs" Line="101" Column="1" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Client/Client_Mac.cs" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Models/Message.cs" Line="34" Column="1" />
+      <File FileName="Assets/Script/Main.cs" Line="68" Column="1" />
       <File FileName="Assets/ChatSDK/ChatSDK/Client/IClient.cs" />
       <File FileName="Assets/ChatSDK/ChatSDK/Models/MessageBody.cs" />
-      <File FileName="../../../../../../Applications/Unity/Hub/Editor/2019.4.27f1c1/Unity.app/Contents/Resources/PackageManager/BuiltInPackages/com.unity.ugui/Runtime/EventSystem/ExecuteEvents.cs" Line="269" Column="55" />
-      <File FileName="../../../../../../Applications/Unity/Hub/Editor/2019.4.27f1c1/Unity.app/Contents/Resources/PackageManager/BuiltInPackages/com.unity.ugui/Runtime/EventSystem/InputModules/StandaloneInputModule.cs" Line="289" Column="1" />
-      <File FileName="../../../../../../Applications/Unity/Hub/Editor/2019.4.27f1c1/Unity.app/Contents/Resources/PackageManager/BuiltInPackages/com.unity.ugui/Runtime/EventSystem/EventSystem.cs" Line="377" Column="1" />
-      <File FileName="Assets/ChatSDK/ChatSDK/SDKClient.cs" Line="40" Column="23" />
-      <File FileName="Assets/ChatSDK/ChatSDK/native/ChatAPINative.cs" Line="42" Column="31" />
+      <File FileName="../../../../../../Applications/Unity/Hub/Editor/2019.4.27f1c1/Unity.app/Contents/Resources/PackageManager/BuiltInPackages/com.unity.ugui/Runtime/EventSystem/ExecuteEvents.cs" />
+      <File FileName="../../../../../../Applications/Unity/Hub/Editor/2019.4.27f1c1/Unity.app/Contents/Resources/PackageManager/BuiltInPackages/com.unity.ugui/Runtime/EventSystem/InputModules/StandaloneInputModule.cs" />
+      <File FileName="../../../../../../Applications/Unity/Hub/Editor/2019.4.27f1c1/Unity.app/Contents/Resources/PackageManager/BuiltInPackages/com.unity.ugui/Runtime/EventSystem/EventSystem.cs" />
+      <File FileName="Assets/ChatSDK/ChatSDK/SDKClient.cs" />
+      <File FileName="Assets/ChatSDK/ChatSDK/native/ChatAPINative.cs" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Custom/SDKEnumerations.cs" Line="27" Column="16" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -24,11 +25,11 @@
                   <Node name="ChatSDK" expanded="True">
                     <Node name="ChatManager" expanded="True" />
                     <Node name="Client" expanded="True" />
-                    <Node name="Custom" expanded="True" />
-                    <Node name="Models" expanded="True" />
-                    <Node name="native" expanded="True">
-                      <Node name="ChatAPINative.cs" selected="True" />
+                    <Node name="Custom" expanded="True">
+                      <Node name="SDKEnumerations.cs" selected="True" />
                     </Node>
+                    <Node name="Models" expanded="True" />
+                    <Node name="native" expanded="True" />
                     <Node name="Tools" expanded="True" />
                   </Node>
                 </Node>
@@ -50,7 +51,6 @@
       <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/Tools/CallBackManager.cs" relfile="Assets/ChatSDK/ChatSDK/Tools/CallBackManager.cs" line="217" column="1" />
       <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/Tools/CallBackManager.cs" relfile="Assets/ChatSDK/ChatSDK/Tools/CallBackManager.cs" line="137" column="1" />
       <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/native/DelegateHub.cs" relfile="Assets/ChatSDK/ChatSDK/native/DelegateHub.cs" line="34" column="1" />
-      <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/Script/Main.cs" relfile="Assets/Script/Main.cs" line="67" column="1" />
       <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/ChatManager/ChatManager_Mac.cs" relfile="Assets/ChatSDK/ChatSDK/ChatManager/ChatManager_Mac.cs" line="97" column="1" />
       <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/Models/Message.cs" relfile="Assets/ChatSDK/ChatSDK/Models/Message.cs" line="31" column="1" />
     </BreakpointStore>
