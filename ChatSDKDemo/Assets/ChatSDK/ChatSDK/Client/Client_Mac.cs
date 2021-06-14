@@ -1,12 +1,11 @@
 using UnityEngine;
 using System;
-using System.Runtime.InteropServices;
 
 namespace ChatSDK
 {
-    public class Client_Mac : IClient
+    class Client_Mac : IClient
     {
-        private IntPtr client = IntPtr.Zero;
+        internal IntPtr client = IntPtr.Zero;
         private ConnectionHub connectionHub;
 
         public Client_Mac() {
@@ -58,6 +57,7 @@ namespace ChatSDK
         {
             ChatAPINative.Client_StopLog();
         }
+
     }
 
 }

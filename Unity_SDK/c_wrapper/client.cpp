@@ -3,6 +3,7 @@
 #include "emchatconfigs.h"
 #include "emchatprivateconfigs.h"
 #include "emclient.h"
+#include "emchatmanager_interface.h"
 
 using namespace easemob;
 
@@ -108,4 +109,9 @@ AGORA_API void Client_StartLog(const char *logFilePath) {
 
 AGORA_API void Client_StopLog() {
     return LogHelper::getInstance().stopLogService();
+}
+
+AGORA_API void ChatManager_SendMessage(void *client, void *callback, MessageTransferObject *mto) {
+    EMMessagePtr messagePtr = mto->toEMMessage();
+    //CLIENT->getChatManager().sendMessage(messagePtr);
 }
