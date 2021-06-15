@@ -1,9 +1,23 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace ChatSDK
 {
     public class ChatManager_iOS : IChatManager
     {
+
+        static string Obj = "unity_chat_emclient_chatmanager_delegate_obj";
+
+        GameObject listenerGameObj;
+
+        public ChatManager_iOS()
+        {
+            CallbackManager.Instance();
+            listenerGameObj = new GameObject(Obj);
+            ChatManagerListener listener = listenerGameObj.AddComponent<ChatManagerListener>();
+            listener.managerDelegater = Delegate;
+        }
+
         public override bool DeleteConversation(string conversationId, bool deleteMessages)
         {
             throw new System.NotImplementedException();

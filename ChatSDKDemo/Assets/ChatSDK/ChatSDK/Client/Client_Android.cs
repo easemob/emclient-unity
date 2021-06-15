@@ -23,7 +23,7 @@ namespace ChatSDK
             CallbackManager.Instance();
             listenerGameObj = new GameObject(Connection_Obj);
             ConnectionListener connectionListener = listenerGameObj.AddComponent<ConnectionListener>();
-            connectionListener.connectionDelegater = connectionDelegater;
+            connectionListener.delegater = connectionDelegater;
             wrapper.Call("init", options.ToJsonString());
         }
 
@@ -42,6 +42,24 @@ namespace ChatSDK
             wrapper.Call("logout", unbindDeviceToken, null);
         }
 
-       
+        public override string CurrentUsername()
+        {
+            return wrapper.Call<string>("currentUsername");
+        }
+
+        public override bool IsConnected()
+        {
+            return wrapper.Call<bool>("isConnected");
+        }
+
+        public override bool IsLoggedIn()
+        {
+            return wrapper.Call<bool>("isLoggedIn");
+        }
+
+        public override string AccessToken()
+        {
+            return wrapper.Call<string>("accessToken");
+        }
     }
 }

@@ -60,7 +60,7 @@ namespace ChatSDK
 
         public abstract void GetJoinedGroupsFromServer(int pageNum = 1, int pageSize = 200,  ValueCallBack<List<Group>> handle = null);
 
-        public abstract void GetPublicGroupsFromServer(int pageSize = 200, string cursor = null, ValueCallBack<CursorResult<List<GroupInfo>>> handle = null);
+        public abstract void GetPublicGroupsFromServer(int pageSize = 200, string cursor = null, ValueCallBack<CursorResult<GroupInfo>> handle = null);
 
         public abstract void IgnoreGroupPush(string groupId, bool enable = true, ValueCallBack<Group> handle = null);
 

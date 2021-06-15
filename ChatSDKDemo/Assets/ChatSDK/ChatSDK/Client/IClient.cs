@@ -117,6 +117,12 @@
 
         public abstract void Logout(bool unbindDeviceToken, CallBack handle = null);
 
-        
+        public abstract string CurrentUsername();
+
+        public abstract bool IsConnected();
+
+        public abstract bool IsLoggedIn();
+
+        public abstract string AccessToken();
     }
 }

@@ -139,7 +139,7 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override void GetPublicGroupsFromServer(int pageSize = 200, string cursor = null, ValueCallBack<CursorResult<List<GroupInfo>>> handle = null)
+        public override void GetPublicGroupsFromServer(int pageSize = 200, string cursor = null, ValueCallBack<CursorResult<GroupInfo>> handle = null)
         {
             throw new System.NotImplementedException();
         }

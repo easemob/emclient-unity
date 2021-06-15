@@ -72,7 +72,7 @@ namespace ChatSDK
 
         public override Message LoadMessage(string messageId)
         {
-            string jsonStrong = wrapper.Call<string>("getMessage");
+            string jsonStrong = wrapper.Call<string>("getMessage", messageId);
             return new Message(jsonStrong);
         }
 
@@ -83,7 +83,7 @@ namespace ChatSDK
 
         public override void RecallMessage(string messageId, CallBack handle = null)
         {
-            wrapper.Call("recallMessage", handle?.callbackId);
+            wrapper.Call("recallMessage", messageId, handle?.callbackId);
         }
 
         public override Message ResendMessage(string messageId, ValueCallBack<Message> handle = null)

@@ -5,7 +5,6 @@ namespace ChatSDK
 {
     public abstract class IConversationManager
     {
-
         private static IConversationManager instance;
         public static IConversationManager Instance
         {
@@ -16,7 +15,7 @@ namespace ChatSDK
 #if UNITY_ANDROID
                     instance = new ConversationManager_Android();
 #elif UNITY_IOS
-                    //instance = new Client_iOS();
+                    instance = new ConversationManager_iOS();
 #elif UNITY_STANDALONE_OSX
                     //instance = new Client_Mac();
 #elif UNITY_STANDALONE_WIN

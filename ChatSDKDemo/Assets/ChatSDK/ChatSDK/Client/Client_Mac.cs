@@ -9,7 +9,7 @@ namespace ChatSDK
 
         public override void CreateAccount(string username, string password, CallBack callBack = null)
         {
-            _CreateAccount(username, password, callBack?.callbackId);
+            //_CreateAccount(username, password, callBack?.callbackId);
         }
 
         public override void InitWithOptions(Options options, WeakDelegater<IConnectionDelegate> connectionDelegater = null)
@@ -27,11 +27,24 @@ namespace ChatSDK
             //throw new System.NotImplementedException();
         }
 
+        public override string CurrentUsername()
+        {
+            throw new System.NotImplementedException();
+        }
 
+        public override bool IsConnected()
+        {
+            throw new System.NotImplementedException();
+        }
 
+        public override bool IsLoggedIn()
+        {
+            throw new System.NotImplementedException();
+        }
 
-        [DllImport("hyphenateCWrapper")]
-        private static extern void _CreateAccount(string username, string password, string callbackId);
-
+        public override string AccessToken()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

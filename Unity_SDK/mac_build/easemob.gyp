@@ -5,7 +5,7 @@
         'msvs_RuntimeLibrary': '3', #md:2, mdd:3, mt:0, mtd:1
         'ENABLE_CALL': '0',
         'USE_SQLCIPHER':'0',
-        'emclient-linux-path':'../../../emclient-linux_3.8.1'
+        'emclient-linux-path':'../../../emclient-linux'
     },
 
     'target_defaults': {
@@ -143,8 +143,10 @@
                 '<(emclient-linux-path)/src/emconversation_manager.cpp',
                 '<(emclient-linux-path)/src/emconversationprivate.cpp',
                 '<(emclient-linux-path)/src/emdatabase.cpp',
+                '<(emclient-linux-path)/src/emdatareport.cpp',
                 '<(emclient-linux-path)/src/emdnsmanager.cpp',
                 '<(emclient-linux-path)/src/emrtcconfigmanager.cpp',
+                '<(emclient-linux-path)/src/emreportevent.cpp',
                 #'<(emclient-linux-path)/src/emencryptproviderimpl.cpp',
                 '<(emclient-linux-path)/src/emerror.cpp',
                 '<(emclient-linux-path)/src/emgroup.cpp',
@@ -299,7 +301,7 @@
              },
              'direct_dependent_settings': {
                 'include_dirs': [
-                    'include',
+                    '<(emclient-linux-path)/include',
                 ],
             },
         },

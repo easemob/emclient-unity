@@ -34,7 +34,7 @@ public class EMUnityRoomManagerListener implements EMChatRoomChangeListener {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("roomId", roomId);
             jsonObject.put("participant", participant);
-            UnityPlayer.UnitySendMessage(EMSDKMethod.RoomListener_Obj, "onMemberJoined", jsonObject.toString());
+            UnityPlayer.UnitySendMessage(EMSDKMethod.RoomListener_Obj, "OnMemberJoined", jsonObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -48,7 +48,7 @@ public class EMUnityRoomManagerListener implements EMChatRoomChangeListener {
             jsonObject.put("roomId", roomId);
             jsonObject.put("roomName", roomName);
             jsonObject.put("participant", participant);
-            UnityPlayer.UnitySendMessage(EMSDKMethod.RoomListener_Obj, "onMemberExited", jsonObject.toString());
+            UnityPlayer.UnitySendMessage(EMSDKMethod.RoomListener_Obj, "OnMemberExited", jsonObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -63,7 +63,7 @@ public class EMUnityRoomManagerListener implements EMChatRoomChangeListener {
             jsonObject.put("roomId", roomId);
             jsonObject.put("roomName", roomName);
             jsonObject.put("participant", participant);
-            UnityPlayer.UnitySendMessage(EMSDKMethod.RoomListener_Obj, "onRemovedFromChatRoom", jsonObject.toString());
+            UnityPlayer.UnitySendMessage(EMSDKMethod.RoomListener_Obj, "OnRemovedFromChatRoom", jsonObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -77,7 +77,7 @@ public class EMUnityRoomManagerListener implements EMChatRoomChangeListener {
             jsonObject.put("roomId", roomId);
             jsonObject.put("list", EMTransformHelper.stringListToString(mutes));
             jsonObject.put("expireTime", expireTime);
-            UnityPlayer.UnitySendMessage(EMSDKMethod.RoomListener_Obj, "onMuteListAdded", jsonObject.toString());
+            UnityPlayer.UnitySendMessage(EMSDKMethod.RoomListener_Obj, "OnMuteListAdded", jsonObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -90,7 +90,7 @@ public class EMUnityRoomManagerListener implements EMChatRoomChangeListener {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("roomId", roomId);
             jsonObject.put("list", EMTransformHelper.stringListToString(mutes));
-            UnityPlayer.UnitySendMessage(EMSDKMethod.RoomListener_Obj, "onMuteListRemoved", jsonObject.toString());
+            UnityPlayer.UnitySendMessage(EMSDKMethod.RoomListener_Obj, "OnMuteListRemoved", jsonObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
