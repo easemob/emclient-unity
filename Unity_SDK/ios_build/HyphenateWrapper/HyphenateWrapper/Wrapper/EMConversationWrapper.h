@@ -8,7 +8,6 @@
 #import <Foundation/Foundation.h>
 #import "EMConversationWrapper.h"
 #import "EMWrapper.h"
-NS_ASSUME_NONNULL_BEGIN
 
 @interface EMConversationWrapper : EMWrapper
 - (NSDictionary *)getUnreadMsgCount:(NSDictionary *)param;
@@ -46,5 +45,3 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray *)loadMsgWithTime:(NSDictionary *)param;
 
 @end
-
-NS_ASSUME_NONNULL_END

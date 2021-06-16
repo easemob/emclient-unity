@@ -226,19 +226,62 @@ namespace ChatSDK
         static internal List<Message> JsonStringToMessageList(string jsonString)
         {
             if (jsonString == null) return null;
-            return null;
+            List<Message> list = new List<Message>();
+            JSONNode jsonArray = JSON.Parse(jsonString);
+            if (jsonArray != null && jsonArray.IsArray)
+            {
+                foreach (JSONNode v in jsonArray.AsArray)
+                {
+                    Message conv = new Message(v.Value);
+                    list.Add(conv);
+                }
+            }
+
+            return list;
         }
 
         static internal string JsonStringFromMessageList(List<Message> list)
         {
             if (list == null) return null;
-            return null;
+            JSONArray ja = new JSONArray();
+            foreach (Message msg in list) {
+                ja.Add(msg.ToJsonString());
+            }
+            return ja.ToString();
         }
 
         static internal List<Conversation> JsonStringToConversationList(string jsonString)
         {
             if (jsonString == null) return null;
-            return null;
+            List<Conversation> list = new List<Conversation>();
+            JSONNode jsonArray = JSON.Parse(jsonString);
+            if (jsonArray != null && jsonArray.IsArray)
+            {
+                foreach (JSONNode v in jsonArray.AsArray)
+                {
+                    Conversation conv = new Conversation(v.Value);
+                    list.Add(conv);
+                }
+            }
+
+            return list;
+        }
+
+        static internal List<GroupReadAck> JsonStringToGroupReadAckList(string jsonString)
+        {
+            if (jsonString == null) return null;
+            List<GroupReadAck> list = new List<GroupReadAck>();
+            JSONNode jsonArray = JSON.Parse(jsonString);
+            if (jsonArray != null && jsonArray.IsArray)
+            {
+                foreach (JSONNode v in jsonArray.AsArray)
+                {
+                    GroupReadAck ack = new GroupReadAck(v.Value);
+                    list.Add(ack);
+                }
+            }
+
+            return list;
         }
 
         static internal int ConversationTypeToInt(ConversationType type)

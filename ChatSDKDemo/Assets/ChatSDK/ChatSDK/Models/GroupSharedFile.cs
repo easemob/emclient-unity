@@ -12,13 +12,17 @@ namespace ChatSDK
         public long CreateTime { get; internal set; }
         public long FileSize { get; internal set; }
 
-        internal GroupSharedFile(JSONNode jo)
+        internal GroupSharedFile(string jsonString)
         {
-            this.FileName = jo["name"].Value;
-            this.FileId = jo["fileId"].Value;
-            this.FileOwner = jo["owner"].Value;
-            this.CreateTime = jo["createTime"].AsInt;
-            this.FileSize = jo["fileSize"].AsInt;
+            JSONNode jn = JSON.Parse(jsonString);
+            if (!jn.IsNull && jn.IsObject) {
+                JSONObject jo = jn.AsObject;
+                FileName = jo["name"].Value;
+                FileId = jo["fileId"].Value;
+                FileOwner = jo["owner"].Value;
+                CreateTime = jo["createTime"].AsInt;
+                FileSize = jo["fileSize"].AsInt;
+            }
         }
     }
 

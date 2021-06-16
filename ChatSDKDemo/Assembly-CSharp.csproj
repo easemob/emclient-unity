@@ -743,6 +743,7 @@
     <Reference Include="com.unity.multiplayer-hlapi.Runtime">
       <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/com.unity.multiplayer-hlapi.Runtime.dll</HintPath>
     </Reference>
+    <Compile Include="Assets\ChatSDK\ChatSDK\Models\GroupAck.cs" />
   </ItemGroup>
   <ItemGroup></ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -18,7 +18,7 @@ namespace ChatSDK
             {
                 listenerGameObj = new GameObject(Listener_Obj);
                 ChatManagerListener listener = listenerGameObj.AddComponent<ChatManagerListener>();
-                listener.managerDelegater = Delegate;
+                listener.delegater = Delegate;
                 wrapper = aj.CallStatic<AndroidJavaObject>("wrapper");
             }
         }
@@ -92,9 +92,9 @@ namespace ChatSDK
             return new Message(jsonString);
         }
 
-        public override List<Message> SearchMsgFromDB(string keywards, long timestamp = 0, int maxCount = 20, string from = null, MessageSearchDirection direction = MessageSearchDirection.UP)
+        public override List<Message> SearchMsgFromDB(string keywords, long timestamp = 0, int maxCount = 20, string from = null, MessageSearchDirection direction = MessageSearchDirection.UP)
         {
-            string jsonString = wrapper.Call<string>("searchChatMsgFromDB", keywards, timestamp, maxCount, from, direction == MessageSearchDirection.UP ? "up" : "down");
+            string jsonString = wrapper.Call<string>("searchChatMsgFromDB", keywords, timestamp, maxCount, from, direction == MessageSearchDirection.UP ? "up" : "down");
             return TransformTool.JsonStringToMessageList(jsonString);
         }
 

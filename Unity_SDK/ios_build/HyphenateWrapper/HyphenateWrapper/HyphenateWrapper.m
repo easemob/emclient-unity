@@ -312,6 +312,70 @@ void PushManager_HandleMethodCall(const char* methodName, const char* jsonString
 }
 
 const char* PushManager_GetMethodCall(const char* methodName, const char* jsonString, const char* callbackId) {
-    
     return NULL;
 }
+
+void Conversation_HandleMethodCall(const char* methodName, const char* jsonString, const char* callbackId) {
+    NSString *method = [Transfrom NSStringFromCString:methodName];
+    NSDictionary *dic = [Transfrom DictFromCString:jsonString];
+    if ([method isEqualToString:@"markMessageAsRead"]) {
+        [EMClientWrapper.instance.conversationWrapper markMessageAsRead:dic];
+    }else if ([method isEqualToString:@"syncConversationExt"]) {
+        [EMClientWrapper.instance.conversationWrapper syncConversationExt:dic];
+    }else if ([method isEqualToString:@"markAllMessagesAsRead"]) {
+        [EMClientWrapper.instance.conversationWrapper markAllMessagesAsRead:dic];
+    }
+}
+
+const char* Conversation_GetMethodCall(const char* methodName, const char* jsonString, const char* callbackId) {
+    const char* ret = NULL;
+    NSString *method = [Transfrom NSStringFromCString:methodName];
+    NSDictionary *dic = [Transfrom DictFromCString:jsonString];
+    if ([method isEqualToString:@"getUnreadMsgCount"]) {
+        NSDictionary *dict = [EMClientWrapper.instance.conversationWrapper getUnreadMsgCount:dic];
+        ret = [Transfrom DictToCString:dict];
+    }else if ([method isEqualToString:@"getLatestMessage"]) {
+        NSDictionary *dict = [EMClientWrapper.instance.conversationWrapper getLatestMessage:dic];
+        ret = [Transfrom DictToCString:dict];
+    }else if ([method isEqualToString:@"getLatestMessageFromOthers"]) {
+        NSDictionary *dict = [EMClientWrapper.instance.conversationWrapper getLatestMessageFromOthers:dic];
+        ret = [Transfrom DictToCString:dict];
+    }else if ([method isEqualToString:@"conversationExt"]) {
+        NSDictionary *dict = [EMClientWrapper.instance.conversationWrapper conversationExt:dic];
+        ret = [Transfrom DictToCString:dict];
+    }else if ([method isEqualToString:@"insertMessage"]) {
+        NSDictionary *dict = [EMClientWrapper.instance.conversationWrapper insertMessage:dic];
+        ret = [Transfrom DictToCString:dict];
+    }else if ([method isEqualToString:@"appendMessage"]) {
+        NSDictionary *dict = [EMClientWrapper.instance.conversationWrapper appendMessage:dic];
+        ret = [Transfrom DictToCString:dict];
+    }else if ([method isEqualToString:@"updateConversationMessage"]) {
+        NSDictionary *dict = [EMClientWrapper.instance.conversationWrapper updateConversationMessage:dic];
+        ret = [Transfrom DictToCString:dict];
+    }else if ([method isEqualToString:@"removeMessage"]) {
+        NSDictionary *dict = [EMClientWrapper.instance.conversationWrapper removeMessage:dic];
+        ret = [Transfrom DictToCString:dict];
+    }else if ([method isEqualToString:@"clearAllMessages"]) {
+        NSDictionary *dict = [EMClientWrapper.instance.conversationWrapper clearAllMessages:dic];
+        ret = [Transfrom DictToCString:dict];
+    }else if ([method isEqualToString:@"loadMsgWithId"]) {
+        NSDictionary *dict = [EMClientWrapper.instance.conversationWrapper loadMsgWithId:dic];
+        ret = [Transfrom DictToCString:dict];
+    }else if ([method isEqualToString:@"loadMsgWithMsgType"]) {
+        NSArray *ary = [EMClientWrapper.instance.conversationWrapper loadMsgWithMsgType:dic];
+        ret = [Transfrom ArrayToCString:ary];
+    }else if ([method isEqualToString:@"loadMsgWithStartId"]) {
+        NSArray *ary = [EMClientWrapper.instance.conversationWrapper loadMsgWithStartId:dic];
+        ret = [Transfrom ArrayToCString:ary];
+    }else if ([method isEqualToString:@"loadMsgWithKeywords"]) {
+        NSArray *ary = [EMClientWrapper.instance.conversationWrapper loadMsgWithKeywords:dic];
+        ret = [Transfrom ArrayToCString:ary];
+    }else if ([method isEqualToString:@"loadMsgWithTime"]) {
+        NSArray *ary = [EMClientWrapper.instance.conversationWrapper loadMsgWithTime:dic];
+        ret = [Transfrom ArrayToCString:ary];
+    }
+    
+    return ret;
+}
+
+

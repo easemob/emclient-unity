@@ -1,4 +1,6 @@
-﻿namespace ChatSDK
+﻿using SimpleJSON;
+
+namespace ChatSDK
 {
 
     public class DeviceInfo
@@ -8,14 +10,16 @@
         public string DeviceUUID { get; private set; }
         public string DeviceName { get; private set; }
 
-        internal DeviceInfo()
-        {
-        }
 
-        public DeviceInfo FromJsonString(string jsonString)
+        internal DeviceInfo(string jsonString)
         {
-            throw new System.NotImplementedException();
+            JSONNode jn = JSON.Parse(jsonString);
+            if (!jn.IsNull && jn.IsObject) {
+                JSONObject jo = jn.AsObject;
+                Resource = jo["resource"];
+                DeviceUUID = jo["deviceUUID"];
+                DeviceName = jo["deviceName"];
+            }
         }
     }
-
 }

@@ -34,7 +34,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    NSString *msgId = param[@"messageId"];
+    NSString *msgId = param[@"msgId"];
     EMMessage *msg =[EMClient.sharedClient.chatManager getMessageWithMessageId:msgId];
     if (!msg) {
         EMError *aError = [[EMError alloc] initWithDescription:@"Message not found" code: EMErrorMessageInvalid];
@@ -59,7 +59,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    NSString *msgId = param[@"messageId"];
+    NSString *msgId = param[@"msgId"];
     EMMessage *msg =[EMClient.sharedClient.chatManager getMessageWithMessageId:msgId];
     if (!msg) {
         EMError *aError = [[EMError alloc] initWithDescription:@"Message not found" code: EMErrorMessageInvalid];
@@ -85,9 +85,9 @@
         return;
     }
     __block NSString *callId = callbackId;
-    NSString *conversationId = param[@"conversationId"];
-    EMConversationType type = [EMConversation typeFromInt:[param[@"type"] intValue]];
-    NSString *startMsgId = param[@"startMessageId"];
+    NSString *conversationId = param[@"convId"];
+    EMConversationType type = [EMConversation typeFromInt:[param[@"convType"] intValue]];
+    NSString *startMsgId = param[@"startMsgId"];
     int count = [param[@"count"] intValue];
     [EMClient.sharedClient.chatManager asyncFetchHistoryMessagesFromServer:conversationId
                                                           conversationType:type
@@ -129,7 +129,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    NSString *messageId = param[@"messageId"];
+    NSString *messageId = param[@"msgId"];
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.chatManager recallMessageWithMessageId:messageId
                                                        completion:^(EMError *aError)
@@ -148,7 +148,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    NSString *conversationId = param[@"conversationId"];
+    NSString *conversationId = param[@"convId"];
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.chatManager ackConversationRead:conversationId completion:^(EMError *aError) {
         if (aError) {
@@ -165,7 +165,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    NSString *messageId = param[@"messageId"];
+    NSString *messageId = param[@"msgId"];
     __block NSString *callId = callbackId;
     EMMessage *msg = [EMClient.sharedClient.chatManager getMessageWithMessageId:messageId];
     if (!msg) {
@@ -217,12 +217,12 @@
         dispatch_semaphore_signal(semaphore);
     }];
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-    return @{@"bool":@(ret)};
+    return @{@"ret":@(ret)};
 }
 
 - (NSDictionary *)getConversation:(NSDictionary *)param callbackId:(NSString *)callbackId {
     NSString *conversationId = param[@"conversationId"];
-    EMConversationType type = [EMConversation typeFromInt:[param[@"type"] intValue]];
+    EMConversationType type = [EMConversation typeFromInt:[param[@"convType"] intValue]];
     BOOL createIfNeed = [param[@"createIfNeed"] boolValue];
     EMConversation *con = [EMClient.sharedClient.chatManager getConversation:conversationId type:type createIfNotExist:createIfNeed];
     if (!con) {
@@ -240,7 +240,7 @@
     for (EMConversation *con in lists) {
         count += con.unreadMessagesCount;
     }
-    return @{@"int": @(count)};
+    return @{@"ret": @(count)};
 }
 
 - (NSDictionary *)importMessages:(NSDictionary *)param callbackId:(NSString *)callbackId {
@@ -252,7 +252,7 @@
         [msgs addObject:msg];
     }
     if (msgs.count == 0) {
-        return @{@"bool":@(ret)};
+        return @{@"ret":@(ret)};
     }
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     [EMClient.sharedClient.chatManager importMessages:msgs completion:^(EMError *aError) {
@@ -276,12 +276,12 @@
 }
 
 - (NSDictionary *)getMessage:(NSDictionary *)param callbackId:(NSString *)callbackId {
-    NSString *msgId = param[@"messageId"];
+    NSString *msgId = param[@"msgId"];
     EMMessage *msg = [EMClient.sharedClient.chatManager getMessageWithMessageId:msgId];
     if (!msg) {
         return nil;
     }
-    return @{@"EMMessage": [msg toJson]};
+    return [msg toJson];
 }
 
 - (NSDictionary *)markAllChatMsgAsRead:(NSDictionary *)param callbackId:(NSString *)callbackId {
@@ -292,11 +292,11 @@
     for (EMConversation *con in lists) {
         [con markAllMessagesAsRead:nil];
     }
-    return @{@"bool":@(YES)};
+    return @{@"ret":@(YES)};
 }
 
 - (NSDictionary *)resendMessage:(NSDictionary *)param callbackId:(NSString *)callbackId {
-    NSString *msgId = param[@"messageId"];
+    NSString *msgId = param[@"msgId"];
     __block NSString *callId = callbackId;
     EMMessage *msg = [EMClient.sharedClient.chatManager getMessageWithMessageId:msgId];
     if (!msg) {
@@ -363,7 +363,7 @@
         return nil;
     }
     __block NSString *callId = callbackId;
-    EMMessage *msg = [EMMessage fromJson:param];
+    EMMessage *msg = [EMMessage fromJson:param[@"msg"]];
     [EMClient.sharedClient.chatManager sendMessage:msg progress:^(int progress){
         [self onProgress:progress callbackId:callId];
     } completion:^(EMMessage *message, EMError *error) {
@@ -373,6 +373,6 @@
             [self onSuccess:nil callbackId:callId userInfo:nil];
         }
     }];
-    return @{@"EMMessage": [msg toJson]};
+    return [msg toJson];
 }
 @end

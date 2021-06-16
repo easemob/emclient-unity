@@ -9,7 +9,7 @@ namespace ChatSDK {
         internal WeakDelegater<IConnectionDelegate> delegater;
 
 
-        public void OnConnected(string i)
+        internal void OnConnected(string i)
         {
             if (delegater != null)
             {
@@ -21,7 +21,7 @@ namespace ChatSDK {
         }
 
 
-        public void OnDisconnected(string i)
+        internal void OnDisconnected(string i)
         {
             if (delegater != null)
             {

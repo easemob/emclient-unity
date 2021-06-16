@@ -60,7 +60,7 @@
     return ret;
 }
 
-- (void)markMessageAsRead:(NSDictionary *)param callbackId:(NSString *)callbackId
+- (void)markMessageAsRead:(NSDictionary *)param
 {
     __block NSString *msgId = param[@"msgId"];
     [self getConversationWithParam:param
