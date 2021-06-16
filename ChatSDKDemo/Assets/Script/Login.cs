@@ -23,6 +23,7 @@ public class Login : MonoBehaviour
         options.RestServer = "a1.easemob.com";
         options.UsingHttpsOnly = true;
         options.RequireAck = false;
+        options.AcceptInvitationAlways = true;
         SDKClient client = SDKClient.Instance;
         client.InitWithOptions(options);
     }
@@ -31,7 +32,9 @@ public class Login : MonoBehaviour
     void LoginAction() {
         string username = usernameField.text;
         string password = passwordField.text;
-        print("登录被点击: " + username + ", " + password);       
+        print("登录被点击: " + username + ", " + password);
+        print("sizeof int=" + sizeof(int));
+        print("sizeof bool=" + sizeof(bool));
         //set callback handler
         CallBack callback = new CallBack(LoginSuccess,null,LoginError);
         SDKClient.Instance.Login(username, password, false, callback);

@@ -6,28 +6,29 @@
 
 using namespace easemob;
 
-typedef struct _Options
+struct Options
 {
-  char *AppKey;
-  char *DNSURL;
-  char *IMServer;
-  char *RestServer;
-  int IMPort;
-  bool DebugMode;
-  bool AutoLogin;
-  bool AcceptInvitationAlways;
-  bool AutoAcceptGroupInvitation;
-  bool RequireAck;
-  bool RequireDeliveryAck;
-  bool DeleteMessagesAsExitGroup;
-  bool DeleteMessagesAsExitRoom;
-  bool IsRoomOwnerLeaveAllowed;
-  bool SortMessageByServerTime;
-  bool UsingHttpsOnly;
-  bool ServerTransfer;
-  bool IsAutoDownload;
-  bool EnableDNSConfig;
-} Options;
+    char *AppKey;
+    char *DNSURL;
+    char *IMServer;
+    char *RestServer;
+    int IMPort;
+    // sizeof(bool)=1
+    bool EnableDNSConfig;
+    bool DebugMode;
+    bool AutoLogin;
+    bool AcceptInvitationAlways;
+    bool AutoAcceptGroupInvitation;
+    bool RequireAck;
+    bool RequireDeliveryAck;
+    bool DeleteMessagesAsExitGroup;
+    bool DeleteMessagesAsExitRoom;
+    bool IsRoomOwnerLeaveAllowed;
+    bool SortMessageByServerTime;
+    bool UsingHttpsOnly;
+    bool ServerTransfer;
+    bool IsAutoDownload;
+};
 
 enum class AttributeValueType
 {
@@ -63,13 +64,13 @@ union AttributeValueUnion {
     char *StringV;
 };
 
-typedef struct _AttributeValue
+struct AttributeValue
 {
     AttributeValueType VType;
     AttributeValueUnion Value;
-}AttributeValue;
+};
 
-typedef struct _MessageTransferObject
+struct MessageTransferObject
 {
     char * MsgId;
     char * ConversationId;
@@ -114,6 +115,6 @@ typedef struct _MessageTransferObject
         messagePtr->setIsReadAcked(HasReadAck);*/
         return messagePtr;
     }
-} MessageTransferObject;
+};
 
 #endif //_MODELS_H_
