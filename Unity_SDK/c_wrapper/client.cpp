@@ -133,5 +133,19 @@ AGORA_API void Client_StopLog() {
 
 AGORA_API void ChatManager_SendMessage(void *client, void *callback, MessageTransferObject *mto) {
     EMMessagePtr messagePtr = mto->toEMMessage();
-    //CLIENT->getChatManager().sendMessage(messagePtr);
+    if(callback != nullptr) {
+        EMCallbackObserverHandle handle;
+        EMCallbackPtr callbackPtr(new EMCallback(handle,
+                                                 [=]()->bool {
+                                                    CALLBACK->OnSuccess();
+                                                    return true;
+                                                 },
+                                                 [=](const easemob::EMErrorPtr error)->bool{
+                                                    CALLBACK->OnError(error->mErrorCode,error->mDescription.c_str());
+                                                    return true;
+                                                 }));
+        messagePtr->setCallback(callbackPtr);
+    }
+    
+    CLIENT->getChatManager().sendMessage(messagePtr);
 }

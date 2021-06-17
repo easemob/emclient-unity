@@ -21,9 +21,7 @@ public class Login : MonoBehaviour
         options.IMServer = "msync-im1.easemob.com";
         options.IMPort = 6717;
         options.RestServer = "a1.easemob.com";
-        options.UsingHttpsOnly = true;
-        options.RequireAck = false;
-        options.AcceptInvitationAlways = true;
+        options.EnableDNSConfig = false;
         SDKClient client = SDKClient.Instance;
         client.InitWithOptions(options);
     }

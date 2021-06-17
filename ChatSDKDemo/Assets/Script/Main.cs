@@ -63,8 +63,9 @@ public class Main : MonoBehaviour
         string receiverId = RecvIdField.text;
         string content = TextField.text;
         IChatManager chatManager = SDKClient.Instance.ChatManager;
-        Message message = Message.CreateTextSendMessage(receiverId, content);
-        chatManager.SendMessage(message);       
+        Message message = Message.CreateTextSendMessage(receiverId,content);
+        CallBack callback = new CallBack(() => { Debug.Log("Message sent successfully!"); }, (int progress) => { Debug.Log(progress); }, (int code, string desc) => { Debug.Log(code + desc); });
+        chatManager.SendMessage(message, callback);       
     }
 
     void JoinGroupAction()

@@ -1,6 +1,6 @@
 ﻿namespace ChatSDK
 {
-    public enum MessageBodyType : byte
+    public enum MessageBodyType
     {
         TXT,        // 文本
         IMAGE,      // 图片
@@ -12,14 +12,14 @@
         CUSTOM      // custom
     };
 
-    public enum MessageType : byte
+    public enum MessageType
     {
         Chat, Group, Room,
     }
 
 
     // 消息状态
-    public enum MessageStatus : byte
+    public enum MessageStatus
     {
         CREATE, // 创建
         PROGRESS, // 发送中
@@ -28,27 +28,27 @@
     }
 
     // 消息方向
-    public enum MessageDirection : byte
+    public enum MessageDirection
     {
         SEND, // 发送的消息
         RECEIVE, // 接收的消息
     }
 
 
-    public enum ConversationType : byte
+    public enum ConversationType
     {
         Chat, Group, Room,
     }
 
 
-    public enum MessageSearchDirection : byte
+    public enum MessageSearchDirection
     {
         UP, DOWN
     }
 
     namespace MessageBody
     {
-        public enum DownLoadStatus : byte
+        public enum DownLoadStatus
         {
             PENDING,    // 准备下载
             DOWNLOADING,// 下载中
@@ -57,7 +57,7 @@
         };
     }
 
-    public enum GroupStyle : byte
+    public enum GroupStyle
     {
         PrivateOnlyOwnerInvite, // 私有群，只有群主能邀请他人进群，被邀请人会收到邀请信息，同意后可入群；
         PrivateMemberCanInvite, // 私有群，所有人都可以邀请他人进群，被邀请人会收到邀请信息，同意后可入群；
@@ -65,7 +65,7 @@
         PublicOpenJoin, // 公开群，可以通过获取公开群列表api取的，可以直接进入；
     }
 
-    public enum GroupPermissionType : byte
+    public enum GroupPermissionType
     {
         None,
         Member,
@@ -73,7 +73,7 @@
         Owner,
     }
 
-    public enum RoomPermissionType : byte
+    public enum RoomPermissionType
     {
         None,
         Member,
@@ -81,7 +81,7 @@
         Owner,
     }
 
-    public enum PushStyle : byte { Simple, Summary, }
+    public enum PushStyle { Simple, Summary, }
 
     public enum COMMON_ERR_CODE
     {

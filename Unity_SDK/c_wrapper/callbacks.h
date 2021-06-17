@@ -26,24 +26,28 @@ class Callback
 public:
     
     void OnSuccess() {
-        if(_OnSuccess)
-            _OnSuccess();
+        if(onSuccess)
+            onSuccess();
     }
     
     void OnError(int code, const char *description) {
-        if(_OnError)
-            _OnError(code, description);
+        if(onError)
+            onError(code, description);
     }
     
     void OnProgress(int progress) {
-        if(_OnProgess)
-            _OnProgess(progress);
+        if(onProgress)
+            onProgress(progress);
     }
     
+    FUNC_OnSuccess SuccessFunc() { return onSuccess; }
+    FUNC_OnError ErrorFunc() { return onError; }
+    FUNC_OnProgress ProgressFunc() { return onProgress; }
+    
 private:
-    FUNC_OnSuccess _OnSuccess;
-    FUNC_OnError _OnError;
-    FUNC_OnProgress _OnProgess;
+    FUNC_OnSuccess onSuccess;
+    FUNC_OnError onError;
+    FUNC_OnProgress onProgress;
 };
 
 typedef struct _ConnListenerFptrs

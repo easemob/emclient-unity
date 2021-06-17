@@ -76,43 +76,36 @@ struct MessageTransferObject
     char * ConversationId;
     char * From;
     char * To;
-    unsigned char Type; //EMMessage::EMChatType
-    unsigned char Direction; //EMMessage::EMMessageDirection
-    unsigned char Status; //EMMessage::EMMessageStatus
-    long LocalTime;
-    long ServerTime;
+    EMMessage::EMChatType Type; //EMMessage::EMChatType
+    EMMessage::EMMessageDirection Direction; //EMMessage::EMMessageDirection
+    EMMessage::EMMessageStatus Status; //EMMessage::EMMessageStatus
     bool HasDeliverAck;
     bool HasReadAck;
-    unsigned char BodyType; //EMMessageBody::EMMessageBodyType
-    void *Body;
+    EMMessageBody::EMMessageBodyType BodyType; //EMMessageBody::EMMessageBodyType
+    /*void *Body;
     char ** AttributesKeys;
     AttributeValue* AttributesValues;
-    int AttributesSize;
+    int AttributesSize;*/
+    long LocalTime;
+    long ServerTime;
     
     EMMessagePtr toEMMessage() {
         LOG("Message MsgId: %s", MsgId);
         LOG("Message ConversationId: %s", ConversationId);
         LOG("Message From: %s", From);
         LOG("Message To: %s", To);
-        LOG("Message Type: %d", Type);
-        LOG("Message Direction: %d", Direction);
-        LOG("Message Status: %d", Status);
-        LOG("Message LocalTime: %l", LocalTime);
-        LOG("Message ServerTime: %l", ServerTime);
+        LOG("Is 1:1 message: %s", Type == EMMessage::EMChatType::SINGLE ? "true" : "false");
+        LOG("Is SEND message: %s", Direction == EMMessage::EMMessageDirection::SEND ? "true" : "false");
+        LOG("Status NEW: %s", Status == EMMessage::EMMessage::NEW ? "true" : "false");
         LOG("Message HasDeliverAck: %s", HasDeliverAck ? "true" : "false");
         LOG("Message HasReadAck: %s", HasReadAck ? "true" : "false");
-        LOG("Message BodyType: %d", BodyType);
+        LOG("TXT BodyType: %s", BodyType == EMMessageBody::EMMessageBodyType::TEXT ? "true" : "false");
         //LOG("Message Content: %s", Body);
+        LOG("sizeof LocalTime: %d", sizeof(LocalTime));
+        LOG("Message LocalTime: %ll", LocalTime);
+        LOG("Message ServerTime: %ll", ServerTime);
         EMMessageBodyPtr messageBody = EMMessageBodyPtr(new EMTextMessageBody("hello"));
         EMMessagePtr messagePtr = EMMessage::createSendMessage(std::string(From), std::string(To), messageBody);
-        /*messagePtr->setMsgId(MsgId);
-        messagePtr->setConversationId(ConversationId);
-        messagePtr->setChatType(Type);
-        messagePtr->setMsgDirection(Direction);
-        messagePtr->setStatus(Status);
-        messagePtr->setLocalTime(LocalTime);
-        messagePtr->setIsDeliverAcked(HasDeliverAck);
-        messagePtr->setIsReadAcked(HasReadAck);*/
         return messagePtr;
     }
 };

@@ -69,6 +69,8 @@ namespace ChatSDK
 
         public void Login(string username, string pwdOrToken, bool isToken = false, CallBack handle = null)
         {
+            //TODO: set current user name once login succeeds.
+            _CurrentUsername = username;
             _Sdk.Login(username, pwdOrToken, isToken, handle);
         }
 
