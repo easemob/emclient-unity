@@ -8,17 +8,6 @@ namespace ChatSDK
         public MessageBodyType Type;
         internal abstract string ToJsonString();
 
-        static public IMessageBody FromJsonString(string jsonString) {
-            JSONNode jn = JSON.Parse(jsonString);
-            //if (!jn.IsNull && jn.IsObject)
-            //{
-            //    JSONObject jo = jn.AsObject;
-            //    string type = jo["type"];
-            //    if(type == "txt")
-            //}
-            return null;
-        }
-
         internal int DownLoadStatusToInt(MessageBody.DownLoadStatus status)
         {
             int ret = 0;

@@ -1,16 +1,9 @@
 ﻿<Properties StartupConfiguration="{3A4B1E97-589D-1E2D-D6C5-A6CFAD6C116F}|">
   <MonoDevelop.Ide.ItemProperties.ChatSDKDemo PreferredExecutionTarget="95cd266c-1045-47ee-8ef5-ceac692d7815" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/ChatSDK/ChatSDK/Models/MessageBody.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/ChatSDK/ChatSDK/Models/Message.cs">
     <Files>
-      <File FileName="Assets/ChatSDK/ChatSDK/Models/Conversation.cs" Line="21" Column="1" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Models/CursorResult.cs" Line="1" Column="1" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Models/DeviceInfo.cs" Line="1" Column="1" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Models/Error.cs" Line="1" Column="1" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Models/Group.cs" Line="1" Column="1" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Models/GroupAck.cs" Line="1" Column="1" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Models/GroupInfo.cs" Line="1" Column="1" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Models/GroupOptions.cs" Line="1" Column="1" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Models/MessageBody.cs" Line="12" Column="25" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Models/MessageBody.cs" Line="13" Column="25" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Models/Message.cs" Line="167" Column="51" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -28,7 +21,7 @@
                   </Node>
                   <Node name="Listeners" expanded="True" />
                   <Node name="Models" expanded="True">
-                    <Node name="MessageBody.cs" selected="True" />
+                    <Node name="Message.cs" selected="True" />
                   </Node>
                   <Node name="Tools" expanded="True" />
                 </Node>
@@ -42,7 +35,7 @@
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="ead80828-9d7f-4fe3-aa11-826ab65175bf" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="b26c30d2-f68b-4e01-bfb2-fe113420b8fb" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Assets/ThirdLibs/SimpleJSON.cs" relfile="Assets/ThirdLibs/SimpleJSON.cs" line="785" column="1" />
