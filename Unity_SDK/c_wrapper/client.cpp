@@ -84,7 +84,7 @@ AGORA_API void* Client_InitWithOptions(Options *options, ConnListenerFptrs fptrs
     EMClient * client = EMClient::create(configs);
     //TODO: keep connection listener instance disposable!
     LOG("ConnectionListener FPtrs: OnConnect=%d, OnDisconnected=%d,", fptrs.Connected, fptrs.Disconnected);
-    client->addConnectionListener(new ConnectionListener(fptrs));
+    //client->addConnectionListener(new ConnectionListener(fptrs));
     return client;
 }
 
