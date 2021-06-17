@@ -69,6 +69,16 @@ namespace ChatSDK
             JSONObject jo = JSON.Parse(jsonString).AsObject;
             return jo["accessToken"].Value;
         }
+
+        public override void StartLog(string logFilePath)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void StopLog()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 
     class ClientNative

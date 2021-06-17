@@ -54,3 +54,8 @@ documents/
 # mac ignore #
 # ========== #
 *.bundle
+
+easemob.log
+easemobDB/
+easemobLog/
+DerivedData/

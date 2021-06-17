@@ -15,27 +15,32 @@ public class Login : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
         loginButton.onClick.AddListener(LoginAction);
         registerButton.onClick.AddListener(RegisterAction);
-        Options options = new Options("easemob-demo#chatdemoui");
-        options.DebugModel = true;
-        SDKClient.Instance.InitWithOptions(options);
+        Options options = new Options("easemob-demo#easeim");
+        //options.DNSURL = "easemob.com";
+        //options.IMServer = "msync-im1.easemob.com";
+        //options.IMPort = 6717;
+        //options.RestServer = "a1.easemob.com";
+        options.UsingHttpsOnly = true;
+        options.RequireAck = false;
+        options.AcceptInvitationAlways = true;
+        //options.EnableDNSConfig = false;
+        SDKClient client = SDKClient.Instance;
+        client.InitWithOptions(options);
     }
 
 
     void LoginAction()
     {
-        print("登录被点击: " + usernameField.text + ", " + passwordField.text);
-        SDKClient.Instance.Login(usernameField.text, passwordField.text, false, new CallBack(
-            onSuccess: () => {
-                print("登录成功");
-                SceneManager.LoadScene("Main");
-            },
-            onError:(code, desc) => {
-                print("登录失败: " + desc);
-            }
-        ));
+        string username = usernameField.text;
+        string password = passwordField.text;
+        print("登录被点击: " + username + ", " + password);
+        print("sizeof int=" + sizeof(int));
+        print("sizeof bool=" + sizeof(bool));
+        //set callback handler
+        CallBack callback = new CallBack(LoginSuccess, null, LoginError);
+        SDKClient.Instance.Login(username, password, false, callback);
     }
 
     void RegisterAction()
@@ -56,4 +61,16 @@ public class Login : MonoBehaviour
     {
 
     }
+
+    static void LoginSuccess()
+    {
+        Debug.Log("Login succeeds!");
+        SceneManager.LoadScene("Main");
+    }
+
+    static void LoginError(int code, string description)
+    {
+        Debug.LogError($"Login error: code={code},description={description}");
+    }
 }
+

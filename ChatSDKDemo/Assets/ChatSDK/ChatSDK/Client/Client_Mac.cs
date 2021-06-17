@@ -1,30 +1,54 @@
-﻿using UnityEngine;
-using SimpleJSON;
-using System.Runtime.InteropServices;
+using UnityEngine;
+using System;
 
 namespace ChatSDK
 {
-    public class Client_Mac : IClient
+    class Client_Mac : IClient
     {
+        internal IntPtr client = IntPtr.Zero;
+        private ConnectionHub connectionHub;
+
+        public Client_Mac() {
+            // start log service
+            StartLog("/tmp/unmanaged_dll.log");
+        }
+
 
         public override void CreateAccount(string username, string password, CallBack callBack = null)
         {
-            //_CreateAccount(username, password, callBack?.callbackId);
+            if (client != IntPtr.Zero)
+            {
+                ChatAPINative.Client_CreateAccount(client, username, password);
+            }
+            else
+            {
+                Debug.LogError("::InitWithOptions() not called yet.");
+            }
         }
 
-        public override void InitWithOptions(Options options, WeakDelegater<IConnectionDelegate> connectionDelegater = null)
+        public override void InitWithOptions(Options options, WeakDelegater<IConnectionDelegate> listeners = null)
         {
-            //throw new System.NotImplementedException();
+            ChatCallbackObject.GetInstance();
+            connectionHub = new ConnectionHub(listeners);
+            client = ChatAPINative.Client_InitWithOptions(options,connectionHub.Delegates());
         }
 
         public override void Login(string username, string pwdOrToken, bool isToken = false, CallBack callBack = null)
         {
-            //throw new System.NotImplementedException();
+            if(client != IntPtr.Zero) {
+                ChatAPINative.Client_Login(client, callBack, username, pwdOrToken, isToken);
+            } else {
+                Debug.LogError("::InitWithOptions() not called yet.");
+            }
         }
 
         public override void Logout(bool unbindDeviceToken, CallBack callBack = null)
         {
-            //throw new System.NotImplementedException();
+            if (client != IntPtr.Zero) {
+                ChatAPINative.Client_Logout(client, unbindDeviceToken);
+            } else {
+                Debug.LogError("::InitWithOptions() not called yet.");
+            }
         }
 
         public override string CurrentUsername()
@@ -46,5 +70,16 @@ namespace ChatSDK
         {
             throw new System.NotImplementedException();
         }
+
+        public override void StartLog(string logFilePath)
+        {
+            ChatAPINative.Client_StartLog(logFilePath);
+        }
+
+        public override void StopLog()
+        {
+            ChatAPINative.Client_StopLog();
+        }
     }
+
 }

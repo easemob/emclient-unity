@@ -27,7 +27,7 @@ public class EMClientWrapper extends EMWrapper {
         Context context = UnityPlayer.currentActivity.getApplicationContext();
         JSONObject jo = new JSONObject(options);
         EMClient.getInstance().init(context, EMOptionsHelper.fromJson(jo, context));
-        EMClient.getInstance().setDebugMode(jo.getBoolean("debug_model"));
+        EMClient.getInstance().setDebugMode(jo.getBoolean("debug_mode"));
         EMClient.getInstance().addConnectionListener(new EMUnityConnectionListener());
     }
 

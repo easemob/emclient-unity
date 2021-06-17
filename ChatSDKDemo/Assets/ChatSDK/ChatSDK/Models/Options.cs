@@ -1,93 +1,103 @@
 ﻿using System;
 using SimpleJSON;
-
+using System.Runtime.InteropServices;
 
 namespace ChatSDK
 {
-
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public class Options
     {
-
         /// <summary>
         /// AppKey,需要到Console中获取
         /// </summary>
         public string AppKey = "";
+        public string DNSURL = "";
+        public string IMServer = "";
+        public string RestServer = "";
+        public int IMPort = 0;
+
+        [MarshalAs(UnmanagedType.U1)]
+        public bool EnableDNSConfig = true;
 
         /// <summary>
         /// Debug模式，会输出日志
         /// </summary>
-        public bool DebugModel = false;
+        [MarshalAs(UnmanagedType.U1)]
+        public bool DebugMode = false;
 
         /// <summary>
         /// 自定登录，再下次初始化时，SDK会直接登录上次未退出的账号，默认开启
         /// </summary>
+        [MarshalAs(UnmanagedType.U1)]
         public bool AutoLogin = true;
 
         /// <summary>
         /// 自动同意好友申请，当您在线时，如果有好友申请会自动同意，不在线时，等上线后自动同意, 默认开启
         /// </summary>
+        [MarshalAs(UnmanagedType.U1)]
         public bool AcceptInvitationAlways = true;
 
         /// <summary>
         /// 自动同意群组邀请，当您在线时，如果有好友申请会自动同意，不在线时，等上线后自动同意，默认开启
         /// </summary>
+        [MarshalAs(UnmanagedType.U1)]
         public bool AutoAcceptGroupInvitation = true;
+
+
 
         /// <summary>
         /// 已读回执，允许您发送已读回执，默认开启
         /// </summary>
+        [MarshalAs(UnmanagedType.U1)]
         public bool RequireAck = true;
 
         /// <summary>
         /// 已送达回执，接收到消息时自动向消息发送方发送已送达回执，只对单聊消息有效，默认关闭
         /// </summary>
+        [MarshalAs(UnmanagedType.U1)]
         public bool RequireDeliveryAck = false;
 
         /// <summary>
         /// 离开群组时是否删除对应群组消息，默认开启
         /// </summary>
+        [MarshalAs(UnmanagedType.U1)]
         public bool DeleteMessagesAsExitGroup = true;
 
         /// <summary>
         /// 离开聊天室时是否删除对应消息，默认开启
         /// </summary>
+        [MarshalAs(UnmanagedType.U1)]
         public bool DeleteMessagesAsExitRoom = true;
 
         /// <summary>
         /// 是否允许聊天室拥有者离开聊天室，默认开启
         /// </summary>
+        [MarshalAs(UnmanagedType.U1)]
         public bool IsRoomOwnerLeaveAllowed = true;
 
         /// <summary>
         /// 获取本地消息时按照服务器时间排序，默认开启
         /// </summary>
+        [MarshalAs(UnmanagedType.U1)]
         public bool SortMessageByServerTime = true;
 
         /// <summary>
         /// 只是用Https,默认关闭
         /// </summary>
+        [MarshalAs(UnmanagedType.U1)]
         public bool UsingHttpsOnly = false;
 
         /// <summary>
         /// 使用环信附件存储服务，默认开启
         /// </summary>
+        [MarshalAs(UnmanagedType.U1)]
         public bool ServerTransfer = true;
 
         /// <summary>
         /// 自动下载语音和缩略图，默认开启
         /// </summary>
+        [MarshalAs(UnmanagedType.U1)]
         public bool IsAutoDownload = true;
-
-        public bool EnableDNSConfig = true;
-
-        public string RestServer = null;
-
-        public string IMServer = null;
-
-        public int IMPort = 0;
-
-        public string DNSURL = null;
-
 
         /// <summary>
         /// 初始化Options
@@ -102,7 +112,7 @@ namespace ChatSDK
 
             JSONObject jo = new JSONObject();
             jo["app_key"] = AppKey;
-            jo["debug_model"] = DebugModel;
+            jo["debug_mode"] = DebugMode;
             jo["auto_login"] = AutoLogin;
             jo["accept_invitation_always"] = AcceptInvitationAlways;
             jo["auto_accept_group_invitation"] = AutoAcceptGroupInvitation;

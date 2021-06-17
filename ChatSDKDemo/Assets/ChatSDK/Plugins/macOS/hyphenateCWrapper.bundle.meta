@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: 760dc5299cff9474eb81a634c1432470
+=======
+guid: de52bb79a95164438b8883e0c6bae5a0
+>>>>>>> bingo/c_wrapper_bingo
 folderAsset: yes
 PluginImporter:
   externalObjects: {}

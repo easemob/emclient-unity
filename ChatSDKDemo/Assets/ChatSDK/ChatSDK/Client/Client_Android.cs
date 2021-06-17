@@ -2,7 +2,7 @@
 
 namespace ChatSDK
 {
-    public class Client_Android : IClient  
+    public class Client_Android : IClient
     {
 
         static string Connection_Obj = "unity_chat_emclient_connection_obj";
@@ -11,9 +11,11 @@ namespace ChatSDK
 
         GameObject listenerGameObj;
 
-        public Client_Android() {
-           
-            using (AndroidJavaClass aj = new AndroidJavaClass("com.hyphenate.unity_chat_sdk.EMClientWrapper")) {
+        public Client_Android()
+        {
+
+            using (AndroidJavaClass aj = new AndroidJavaClass("com.hyphenate.unity_chat_sdk.EMClientWrapper"))
+            {
                 wrapper = aj.CallStatic<AndroidJavaObject>("wrapper");
             }
         }
@@ -41,7 +43,6 @@ namespace ChatSDK
         {
             wrapper.Call("logout", unbindDeviceToken, null);
         }
-
         public override string CurrentUsername()
         {
             return wrapper.Call<string>("currentUsername");
@@ -60,6 +61,15 @@ namespace ChatSDK
         public override string AccessToken()
         {
             return wrapper.Call<string>("accessToken");
+        }
+        public override void StartLog(string logFilePath)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void StopLog()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

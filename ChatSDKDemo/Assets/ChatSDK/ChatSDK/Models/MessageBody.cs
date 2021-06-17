@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System.Runtime.InteropServices;
+using System.Collections.Generic;
 using SimpleJSON;
 
 namespace ChatSDK
 {
+    [StructLayout(LayoutKind.Sequential, CharSet =  CharSet.Unicode)]
     public abstract class IMessageBody
     {
         public MessageBodyType Type;
@@ -55,7 +57,7 @@ namespace ChatSDK
 
     namespace MessageBody
     {
-
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class TextBody : IMessageBody
         {
             public string Text;
@@ -85,6 +87,7 @@ namespace ChatSDK
             }
         }
 
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class LocationBody : IMessageBody
         {
             public double Latitude, Longitude;
@@ -122,6 +125,7 @@ namespace ChatSDK
             }
         }
 
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class FileBody : IMessageBody
         {
 
@@ -172,6 +176,7 @@ namespace ChatSDK
 
         }
 
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class ImageBody : FileBody
         {
 
@@ -229,6 +234,7 @@ namespace ChatSDK
             }
         }
 
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class VoiceBody : FileBody
         {
             public int Duration;
@@ -270,6 +276,7 @@ namespace ChatSDK
             }
         }
 
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class VideoBody : FileBody
         {
             public string ThumbnaiLocationPath, ThumbnaiRemotePath, ThumbnaiSecret;
@@ -327,6 +334,7 @@ namespace ChatSDK
             }
         }
 
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class CmdBody : IMessageBody
         {
             public string Action;
@@ -361,10 +369,12 @@ namespace ChatSDK
             }
         }
 
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class CustomBody : IMessageBody
         {
 
             public string CustomEvent;
+            //TODO: Dictionary<string,string> -> string[][] in marshalling
             public Dictionary<string, string> CustomParams;
 
             public CustomBody(string customEvent, Dictionary<string, string> customParams = null)

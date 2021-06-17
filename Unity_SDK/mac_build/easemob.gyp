@@ -5,7 +5,11 @@
         'msvs_RuntimeLibrary': '3', #md:2, mdd:3, mt:0, mtd:1
         'ENABLE_CALL': '0',
         'USE_SQLCIPHER':'0',
+<<<<<<< HEAD
         'emclient-linux-path':'../../../emclient-linux'
+=======
+        'emclient-linux-path':'../../../../easemob/emclient-linux'
+>>>>>>> bingo/c_wrapper_bingo
     },
 
     'target_defaults': {

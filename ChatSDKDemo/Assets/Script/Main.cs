@@ -1,7 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
+using ChatSDK;
 
 public class Main : MonoBehaviour
 {
@@ -59,7 +60,11 @@ public class Main : MonoBehaviour
 
     void SendMessageAction()
     {
-
+        string receiverId = RecvIdField.text;
+        string content = TextField.text;
+        IChatManager chatManager = SDKClient.Instance.ChatManager;
+        Message message = Message.CreateTextSendMessage(receiverId, content);
+        chatManager.SendMessage(message);       
     }
 
     void JoinGroupAction()

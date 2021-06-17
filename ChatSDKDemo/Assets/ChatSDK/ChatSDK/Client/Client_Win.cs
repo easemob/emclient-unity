@@ -23,7 +23,11 @@
             throw new System.NotImplementedException();
         }
 
-        public override string CurrentUsername()
+        public override string CurrentUsername() {
+            throw new System.NotImplementedException();
+        }
+
+        public override void StartLog(string logFilePath)
         {
             throw new System.NotImplementedException();
         }
@@ -39,6 +43,11 @@
         }
 
         public override string AccessToken()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void StopLog()
         {
             throw new System.NotImplementedException();
         }

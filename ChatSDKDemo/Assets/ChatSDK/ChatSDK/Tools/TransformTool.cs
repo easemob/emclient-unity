@@ -210,6 +210,20 @@ namespace ChatSDK
             return jo.ToString();
         }
 
+        static internal string JsonStringFromAttributes(Dictionary<string, AttributeValue> attributes)
+        {
+            if (attributes == null) return null;
+            JSONObject jo = new JSONObject();
+            var keys = attributes.Keys;
+            foreach (var key in keys)
+            {
+                if (!attributes.TryGetValue(key, out AttributeValue value))
+                    value = new AttributeValue();
+                jo[key] = value.ToJsonString();
+            }
+            return jo.ToString();
+        }
+
         static internal Dictionary<string, string> JsonStringToDictionary(string jsonString)
         {
             if (jsonString == null) return null;
@@ -220,6 +234,18 @@ namespace ChatSDK
                 ret.Add(s, jo[s]);
             }
 
+            return ret;
+        }
+
+        static internal Dictionary<string, AttributeValue> JsonStringToAttributes(string jsonString)
+        {
+            if (jsonString == null) return null;
+            Dictionary<string, AttributeValue> ret = new Dictionary<string, AttributeValue>();
+            JSONObject jo = JSON.Parse(jsonString).AsObject;
+            foreach (string key in jo.Keys)
+            {
+                ret.Add(key, AttributeValue.FromJsonString(jo[key]));
+            }
             return ret;
         }
 

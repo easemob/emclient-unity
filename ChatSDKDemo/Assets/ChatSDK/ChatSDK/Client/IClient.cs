@@ -39,7 +39,7 @@
 #elif UNITY_IOS
                 chatImp = new ChatManager_iOS();
 #elif UNITY_STANDALONE_OSX
-                chatImp = new ChatManager_Mac();
+                chatImp = new ChatManager_Mac(instance);
 #elif UNITY_STANDALONE_WIN
                 chatImp = new ChatManager_Win();
 #endif
@@ -52,11 +52,11 @@
 #if UNITY_ANDROID
             contactImp = new ContactManager_Android();
 #elif UNITY_IOS
-                contactImp = new ContactManager_iOS();
+            contactImp = new ContactManager_iOS();
 #elif UNITY_STANDALONE_OSX
-                contactImp = new ContactManager_Mac();
+            contactImp = new ContactManager_Mac();
 #elif UNITY_STANDALONE_WIN
-                contactImp = new ContactManager_Win();
+            contactImp = new ContactManager_Win();
 #endif
             return contactImp;
         }
@@ -124,5 +124,9 @@
         public abstract bool IsLoggedIn();
 
         public abstract string AccessToken();
+
+        public abstract void StartLog(string logFilePath);
+
+        public abstract void StopLog();
     }
 }
