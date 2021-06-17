@@ -18,7 +18,7 @@ namespace ChatSDK
             {
                 listenerGameObj = new GameObject(ManagerListener_Obj);
                 RoomManagerListener listener = listenerGameObj.AddComponent<RoomManagerListener>();
-                listener.roomManagerDelegater = Delegate;
+                listener.delegater = Delegate;
                 wrapper = aj.CallStatic<AndroidJavaObject>("wrapper");
             }
         }
@@ -30,7 +30,7 @@ namespace ChatSDK
 
         public override void BlockRoomMembers(string roomId, List<string> members, ValueCallBack<Room> handle = null)
         {
-            wrapper.Call("blockChatRoomMembers", roomId, TransformTool.StringListToString(members), handle?.callbackId);
+            wrapper.Call("blockChatRoomMembers", roomId, TransformTool.JsonStringFromStringList(members), handle?.callbackId);
         }
 
         public override void ChangeOwner(string roomId, string newOwner, ValueCallBack<Room> handle = null)
@@ -110,7 +110,7 @@ namespace ChatSDK
 
         public override void MuteRoomMembers(string roomId, List<string> members, CallBack handle = null)
         {
-            wrapper.Call("muteChatRoomMembers", roomId, TransformTool.StringListToString(members), handle?.callbackId);
+            wrapper.Call("muteChatRoomMembers", roomId, TransformTool.JsonStringFromStringList(members), handle?.callbackId);
         }
 
         public override void RemoveRoomAdmin(string roomId, string adminId, CallBack handle = null)
@@ -120,17 +120,17 @@ namespace ChatSDK
 
         public override void RemoveRoomMembers(string roomId, List<string> members, CallBack handle = null)
         {
-            wrapper.Call("removeChatRoomMembers", roomId, TransformTool.StringListToString(members), handle?.callbackId);
+            wrapper.Call("removeChatRoomMembers", roomId, TransformTool.JsonStringFromStringList(members), handle?.callbackId);
         }
 
         public override void UnBlockRoomMembers(string roomId, List<string> members, CallBack handle = null)
         {
-            wrapper.Call("unBlockChatRoomMembers", roomId, TransformTool.StringListToString(members), handle?.callbackId);
+            wrapper.Call("unBlockChatRoomMembers", roomId, TransformTool.JsonStringFromStringList(members), handle?.callbackId);
         }
 
         public override void UnMuteRoomMembers(string roomId, List<string> members, CallBack handle = null)
         {
-            wrapper.Call("unMuteChatRoomMembers", roomId, TransformTool.StringListToString(members), handle?.callbackId);
+            wrapper.Call("unMuteChatRoomMembers", roomId, TransformTool.JsonStringFromStringList(members), handle?.callbackId);
         }
 
         public override void UpdateRoomAnnouncement(string roomId, string announcement, CallBack handle = null)

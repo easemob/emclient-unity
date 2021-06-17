@@ -1,9 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace ChatSDK
 {
     internal class ChatManager_Mac : IChatManager
     {
+        private IntPtr client;
+        private ChatManagerHub chatManagerHub;
+
+        internal ChatManager_Mac(IClient _client)
+        {
+            if (_client is Client_Mac clientMac)
+            {
+                client = clientMac.client;
+            }
+            chatManagerHub = new ChatManagerHub(Delegate);
+        }
+
         public override bool DeleteConversation(string conversationId, bool deleteMessages)
         {
             throw new System.NotImplementedException();
@@ -69,27 +82,30 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override List<Message> SearchMsgFromDB(string keywards, long timestamp = 0, int maxCount = 20, string from = null, MessageSearchDirection direction = MessageSearchDirection.UP)
+        public override List<Message> SearchMsgFromDB(string keywords, long timestamp = 0, int maxCount = 20, string from = null, MessageSearchDirection direction = MessageSearchDirection.UP)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void SendConversationReadAck(string conversationId, CallBack handle = null)
+        public override void SendConversationReadAck(string conversationId, CallBack callback = null)
         {
             throw new System.NotImplementedException();
         }
 
-        public override Message SendMessage(Message message, CallBack handle = null)
+        public override Message SendMessage(Message message, CallBack callback = null)
+        {
+            var mto = new MessageTransferObject(message);
+            ChatAPINative.ChatManager_SendMessage(client, callback, ref mto);
+            //TODO: what Message to return from this SendMessage?
+            return null;
+        }
+
+        public override void SendMessageReadAck(string messageId, CallBack callback = null)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void SendMessageReadAck(string messageId, CallBack handle = null)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override void UpdateMessage(Message message, CallBack handle = null)
+        public override void UpdateMessage(Message message, CallBack callback = null)
         {
             throw new System.NotImplementedException();
         }

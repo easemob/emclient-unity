@@ -35,11 +35,6 @@ namespace ChatSDK
             handle?.ClearCallback();
         }
 
-        public void UpdateAPNsDeviceToken(string token, CallBack handle = null)
-        {
-            handle?.ClearCallback();
-        }
-
         public void UpdateFCMPushToken(string token, CallBack handle = null)
         {
             handle?.ClearCallback();

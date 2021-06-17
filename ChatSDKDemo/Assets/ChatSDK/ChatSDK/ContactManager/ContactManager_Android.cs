@@ -16,8 +16,8 @@ namespace ChatSDK
             using (AndroidJavaClass aj = new AndroidJavaClass("com.hyphenate.unity_chat_sdk.EMContactManagerWrapper"))
             {
                 listenerGameObj = new GameObject(ContactListener_Obj);
-                ContactManagerListener contactListener = listenerGameObj.AddComponent<ContactManagerListener>();
-                contactListener.managerDelegater = Delegate;
+                ContactManagerListener listener = listenerGameObj.AddComponent<ContactManagerListener>();
+                listener.delegater = Delegate;
                 wrapper = aj.CallStatic<AndroidJavaObject>("wrapper");
             }
         }

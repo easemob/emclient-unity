@@ -27,7 +27,7 @@ public class EMClientWrapper extends EMWrapper {
         Context context = UnityPlayer.currentActivity.getApplicationContext();
         JSONObject jo = new JSONObject(options);
         EMClient.getInstance().init(context, EMOptionsHelper.fromJson(jo, context));
-        EMClient.getInstance().setDebugMode(jo.getBoolean("debug_model"));
+        EMClient.getInstance().setDebugMode(jo.getBoolean("debug_mode"));
         EMClient.getInstance().addConnectionListener(new EMUnityConnectionListener());
     }
 
@@ -52,5 +52,21 @@ public class EMClientWrapper extends EMWrapper {
 
     public void logout(boolean unbindDeviceToken, String callbackId) {
         EMClient.getInstance().logout(unbindDeviceToken, new EMUnityCallback(callbackId));
+    }
+
+    public String currentUsername() {
+        return EMClient.getInstance().getCurrentUser();
+    }
+
+    public boolean isConnected (){
+        return EMClient.getInstance().isConnected();
+    }
+
+    public boolean isLoggedIn() {
+        return EMClient.getInstance().isLoggedInBefore();
+    }
+
+    public String accessToken() {
+        return EMClient.getInstance().getAccessToken();
     }
 }

@@ -33,7 +33,7 @@ namespace ChatSDK
 
         public abstract Message ResendMessage(string messageId, ValueCallBack<Message> handle = null);
 
-        public abstract List<Message> SearchMsgFromDB(string keywards, long timestamp = 0, int maxCount = 20, string from = null, MessageSearchDirection direction = MessageSearchDirection.UP);
+        public abstract List<Message> SearchMsgFromDB(string keywords, long timestamp = 0, int maxCount = 20, string from = null, MessageSearchDirection direction = MessageSearchDirection.UP);
 
         public abstract void SendConversationReadAck(string conversationId, CallBack handle = null);
 

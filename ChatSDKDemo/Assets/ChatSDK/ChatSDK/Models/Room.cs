@@ -26,10 +26,11 @@ namespace ChatSDK
 
 
 
-        internal Room(JSONNode jo)
+        internal Room(string jsonString)
         {
-            if (jo != null)
-            {
+            JSONNode jn = JSON.Parse(jsonString);
+            if (!jn.IsNull && jn.IsObject) {
+                JSONObject jo = jn.AsObject;
                 RoomId = jo["roomId"].Value;
                 Name = jo["name"].Value;
                 Description = jo["desc"].Value;
@@ -43,19 +44,19 @@ namespace ChatSDK
                 IsAllMemberMuted = jo["isAllMemberMuted"].AsBool;
                 if (jo["permissionType"].AsInt == -1)
                 {
-                    this.PermissionType = RoomPermissionType.None;
+                    PermissionType = RoomPermissionType.None;
                 }
                 else if (jo["permissionType"].AsInt == 0)
                 {
-                    this.PermissionType = RoomPermissionType.Member;
+                    PermissionType = RoomPermissionType.Member;
                 }
                 else if (jo["permissionType"].AsInt == 1)
                 {
-                    this.PermissionType = RoomPermissionType.Admin;
+                    PermissionType = RoomPermissionType.Admin;
                 }
                 else if (jo["permissionType"].AsInt == 2)
                 {
-                    this.PermissionType = RoomPermissionType.Owner;
+                    PermissionType = RoomPermissionType.Owner;
                 }
             }
         }

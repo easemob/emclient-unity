@@ -71,9 +71,12 @@ namespace ChatSDK {
 
         
         internal Conversation(string jsonString) {
-            JSONObject jo = JSON.Parse(jsonString).AsObject;
-            Id = jo["con_id"].Value;
-            Type = typeFromInt(jo["type"].AsInt);
+            JSONNode jn = JSON.Parse(jsonString);
+            if (!jn.IsNull && jn.IsObject) {
+                JSONObject jo = jn.AsObject;
+                Id = jo["con_id"].Value;
+                Type = typeFromInt(jo["type"].AsInt);
+            }
         }
 
 

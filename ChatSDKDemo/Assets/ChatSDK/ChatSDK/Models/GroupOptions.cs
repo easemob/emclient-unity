@@ -10,16 +10,25 @@ namespace ChatSDK
         public bool InviteNeedConfirm;
         public string Ext;
 
-        internal GroupOptions(JSONNode jo) {
-            if (jo != null) {
+        internal GroupOptions(string jsonString) {
+            JSONNode jn = JSON.Parse(jsonString);
+            if (!jn.IsNull && jn.IsObject) {
+                JSONObject jo = jn.AsObject;
                 int style = jo["style"].AsInt;
-                if (style == 0) {
+                if (style == 0)
+                {
                     Style = GroupStyle.PrivateOnlyOwnerInvite;
-                } else if (style == 1) {
+                }
+                else if (style == 1)
+                {
                     Style = GroupStyle.PrivateMemberCanInvite;
-                } else if (style == 2) {
+                }
+                else if (style == 2)
+                {
                     Style = GroupStyle.PublicJoinNeedApproval;
-                } else if (style == 3) {
+                }
+                else if (style == 3)
+                {
                     Style = GroupStyle.PublicOpenJoin;
                 }
                 MaxCount = jo["maxCount"].AsInt;
@@ -29,7 +38,7 @@ namespace ChatSDK
         }
 
 
-        internal String ToJsonString() {
+        internal string ToJsonString() {
             JSONObject jsonObject = new JSONObject();
             jsonObject.Add("style", StyleToInt(Style));
             jsonObject.Add("maxCount", MaxCount);

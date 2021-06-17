@@ -22,5 +22,34 @@
         {
             throw new System.NotImplementedException();
         }
+
+        public override string CurrentUsername() {
+            throw new System.NotImplementedException();
+        }
+
+        public override void StartLog(string logFilePath)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override bool IsConnected()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override bool IsLoggedIn()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override string AccessToken()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void StopLog()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

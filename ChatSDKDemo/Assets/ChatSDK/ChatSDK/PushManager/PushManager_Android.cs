@@ -46,11 +46,6 @@ namespace ChatSDK
             wrapper.Call("updateImPushStyle", pushStyle == PushStyle.Simple ? 0 : 1 , handle?.callbackId);
         }
 
-        public void UpdateAPNsDeviceToken(string token, CallBack handle = null)
-        {
-            wrapper.Call("updateAPNsDeviceToken", token, handle?.callbackId);
-        }
-
         public void UpdateFCMPushToken(string token, CallBack handle = null)
         {
             wrapper.Call("updateFCMPushToken", token, handle?.callbackId);
