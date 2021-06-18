@@ -6,10 +6,5 @@ namespace ChatSDK
     {
         public int PageCount { get; internal set; }
         public List<T> Data { get; internal set; }
-
-        public PageResult()
-        {
-
-        }
     }
 }

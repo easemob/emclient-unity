@@ -6,10 +6,6 @@ namespace ChatSDK
     {
         private Options _Options;
         private string _SdkVersion = null;
-        private string _CurrentUsername = null;
-        private bool _IsLoggedIn = false;
-        private bool _IsConnected = false;
-        private string _AccessToken = null;
         private static SDKClient _instance;
         private IClient _Sdk;
 
@@ -37,13 +33,13 @@ namespace ChatSDK
 
         public string SdkVersion { get { return _SdkVersion; } }
 
-        public string CurrentUsername { get { return _CurrentUsername; } }
+        public string CurrentUsername { get => _Sdk.CurrentUsername(); }
 
-        public bool IsLoggedIn { get { return _IsLoggedIn; } }
+        public bool IsLoggedIn { get => _Sdk.IsLoggedIn(); }
 
-        public bool IsConnected { get { return _IsConnected; } }
+        public bool IsConnected { get => _Sdk.IsConnected(); }
 
-        public string AccessToken { get { return _AccessToken; } }
+        public string AccessToken { get => _Sdk.AccessToken(); }
 
 
         public void AddConnectionDelegate(IConnectionDelegate contactManagerDelegate)
@@ -69,20 +65,25 @@ namespace ChatSDK
 
         public void Login(string username, string pwdOrToken, bool isToken = false, CallBack handle = null)
         {
-            //TODO: set current user name once login succeeds.
-            _CurrentUsername = username;
             _Sdk.Login(username, pwdOrToken, isToken, handle);
         }
 
         public void Logout(bool unbindDeviceToken, CallBack handle = null)
         {
-            _Sdk.Logout(unbindDeviceToken, handle);
-            ClearDelegates();
-            _Sdk.ContactManager().ClearDelegates();
-            _Sdk.ChatManager().ClearDelegates();
-            _Sdk.GroupManager().ClearDelegates();
-            _Sdk.RoomManager().ClearDelegates();
-            CallbackManager.Instance().CleanAllCallback();
+            _Sdk.Logout(unbindDeviceToken, new CallBack(
+                onSuccess: () => {
+                    ClearDelegates();
+                    _Sdk.ContactManager().ClearDelegates();
+                    _Sdk.ChatManager().ClearDelegates();
+                    _Sdk.GroupManager().ClearDelegates();
+                    _Sdk.RoomManager().ClearDelegates();
+                    CallbackManager.Instance().CleanAllCallback();
+                    handle?.Success();
+                },
+                onError:(code, desc) => {
+                    handle?.Error(code, desc);
+                }
+                ));
         }
 
         private SDKClient()

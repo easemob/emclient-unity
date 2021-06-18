@@ -149,7 +149,7 @@ public class EMUnityGroupManagerListener implements EMGroupChangeListener {
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("groupId", groupId);
-            jsonObject.put("mutes", EMTransformHelper.stringListToString(mutes));
+            jsonObject.put("list", EMTransformHelper.stringListToString(mutes));
             jsonObject.put("muteExpire", muteExpire);
             UnityPlayer.UnitySendMessage(EMSDKMethod.GroupListener_Obj, "OnMuteListAdded", jsonObject.toString());
         } catch (JSONException e) {
@@ -163,7 +163,7 @@ public class EMUnityGroupManagerListener implements EMGroupChangeListener {
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("groupId", groupId);
-            jsonObject.put("mutes", EMTransformHelper.stringListToString(mutes));
+            jsonObject.put("list", EMTransformHelper.stringListToString(mutes));
             UnityPlayer.UnitySendMessage(EMSDKMethod.GroupListener_Obj, "OnMuteListRemoved", jsonObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();

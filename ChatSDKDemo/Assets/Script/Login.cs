@@ -38,8 +38,17 @@ public class Login : MonoBehaviour
         SDKClient.Instance.Login(username, password, false, callback);
     }
 
-    void RegisterAction() {
+    void RegisterAction()
+    {
         print("注册被点击: " + usernameField.text + ", " + passwordField.text);
+        SDKClient.Instance.CreateAccount(usernameField.text, passwordField.text, new CallBack(
+            onSuccess:()=> {
+                print("注册成功");
+            },
+            onError:(code, desc) => {
+                print("注册失败-- desc: " + desc);
+            }
+        ));
     }
 
     // Update is called once per frame

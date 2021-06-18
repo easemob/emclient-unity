@@ -104,8 +104,8 @@ namespace ChatSDK {
                 }
                 else if (value == "EMCursorResult<String>")
                 {
-                    CursorResult<String> result = TransformTool.JsonStringToStringResult(responseValue);
-                    ValueCallBack<CursorResult<String>> valueCallBack = (ValueCallBack<CursorResult<String>>)dictionary[callbackId];
+                    CursorResult<string> result = TransformTool.JsonStringToStringResult(responseValue);
+                    ValueCallBack<CursorResult<string>> valueCallBack = (ValueCallBack<CursorResult<string>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
                         valueCallBack.OnSuccessValue(result);

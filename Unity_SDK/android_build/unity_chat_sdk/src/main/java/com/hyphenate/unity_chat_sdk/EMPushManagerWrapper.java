@@ -87,7 +87,7 @@ public class EMPushManagerWrapper extends EMWrapper {
     //
     private void getNoDisturbGroups(String callbackId) {
         List<String> groupIds = EMClient.getInstance().pushManager().getNoPushGroups();
-        onSuccess(null, callbackId, EMTransformHelper.stringListToString(groupIds));
+        onSuccess("List<String>", callbackId, EMTransformHelper.stringListToString(groupIds));
     }
     //
     private void updateHMSPushToken(String token, String callbackId) {

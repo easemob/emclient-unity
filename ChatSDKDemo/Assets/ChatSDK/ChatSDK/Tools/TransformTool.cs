@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using SimpleJSON;
 
-namespace ChatSDK {
+namespace ChatSDK
+{
     public class TransformTool
     {
 
@@ -23,9 +24,15 @@ namespace ChatSDK {
             return ret;
         }
 
-        //static internal string JsonStringFromStringList(List<string> list) {
-        
-        //}
+        static internal string JsonStringFromStringList(List<string> list)
+        {
+            JSONObject jo = new JSONObject();
+            foreach (string str in list) {
+                jo.Add(str);
+            }
+
+            return jo.ToString();
+        }
 
         static internal List<Group> JsonStringToGroupList(string jsonString)
         {
@@ -183,29 +190,6 @@ namespace ChatSDK {
             return result;
         }
 
-        static internal List<string> StringToStringList(string jsonString)
-        {
-            if (jsonString == null) return null;
-            List<string> list = new List<string>();
-            if (jsonString != null && jsonString.Length > 0)
-            {
-                string[] array = jsonString.Split(',');
-                foreach (string val in array)
-                {
-                    list.Add(val);
-                }
-            }
-            return list;
-        }
-
-        static internal string StringListToString(List<string> list)
-        {
-            if (list == null) { return ""; }
-            string[] str = list.ToArray();
-            string strList = string.Join(",", str);
-            return strList ?? "";
-        }
-
         static internal string JsonStringFromDictionary(Dictionary<string, string> dictionary)
         {
             if (dictionary == null) return null;
@@ -268,19 +252,62 @@ namespace ChatSDK {
         static internal List<Message> JsonStringToMessageList(string jsonString)
         {
             if (jsonString == null) return null;
-            return null;
+            List<Message> list = new List<Message>();
+            JSONNode jsonArray = JSON.Parse(jsonString);
+            if (jsonArray != null && jsonArray.IsArray)
+            {
+                foreach (JSONNode v in jsonArray.AsArray)
+                {
+                    Message conv = new Message(v.Value);
+                    list.Add(conv);
+                }
+            }
+
+            return list;
         }
 
         static internal string JsonStringFromMessageList(List<Message> list)
         {
             if (list == null) return null;
-            return null;
+            JSONArray ja = new JSONArray();
+            foreach (Message msg in list) {
+                ja.Add(msg.ToJsonString());
+            }
+            return ja.ToString();
         }
 
         static internal List<Conversation> JsonStringToConversationList(string jsonString)
         {
             if (jsonString == null) return null;
-            return null;
+            List<Conversation> list = new List<Conversation>();
+            JSONNode jsonArray = JSON.Parse(jsonString);
+            if (jsonArray != null && jsonArray.IsArray)
+            {
+                foreach (JSONNode v in jsonArray.AsArray)
+                {
+                    Conversation conv = new Conversation(v.Value);
+                    list.Add(conv);
+                }
+            }
+
+            return list;
+        }
+
+        static internal List<GroupReadAck> JsonStringToGroupReadAckList(string jsonString)
+        {
+            if (jsonString == null) return null;
+            List<GroupReadAck> list = new List<GroupReadAck>();
+            JSONNode jsonArray = JSON.Parse(jsonString);
+            if (jsonArray != null && jsonArray.IsArray)
+            {
+                foreach (JSONNode v in jsonArray.AsArray)
+                {
+                    GroupReadAck ack = new GroupReadAck(v.Value);
+                    list.Add(ack);
+                }
+            }
+
+            return list;
         }
 
         static internal int ConversationTypeToInt(ConversationType type)
@@ -329,5 +356,51 @@ namespace ChatSDK {
             return ret;
         }
 
+        static internal string MessageBodyTypeToString(MessageBodyType type) {
+            string ret = "txt";
+            switch (type) {
+                case MessageBodyType.TXT:
+                    {
+                        ret = "txt";
+                    }
+                    break;
+                case MessageBodyType.IMAGE:
+                    {
+                        ret = "img";
+                    }
+                    break;
+                case MessageBodyType.LOCATION:
+                    {
+                        ret = "loc";
+                    }
+                    break;
+                case MessageBodyType.CMD:
+                    {
+                        ret = "cmd";
+                    }
+                    break;
+                case MessageBodyType.CUSTOM:
+                    {
+                        ret = "custom";
+                    }
+                    break;
+                case MessageBodyType.VOICE:
+                    {
+                        ret = "voice";
+                    }
+                    break;
+                case MessageBodyType.VIDEO:
+                    {
+                        ret = "video";
+                    }
+                    break;
+                case MessageBodyType.FILE:
+                    {
+                        ret = "file";
+                    }
+                    break;
+            }
+            return ret;
+        }
     }
 }

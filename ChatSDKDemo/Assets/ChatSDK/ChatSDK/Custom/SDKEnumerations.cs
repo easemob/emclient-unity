@@ -81,11 +81,10 @@
         Owner,
     }
 
-    public enum PushStyle { Simple, Summary, }
+    public enum PushStyle : byte { Simple, Summary, }
 
     public enum COMMON_ERR_CODE
     {
         ERROR_NULL_PTR = -7
     }
-
 }

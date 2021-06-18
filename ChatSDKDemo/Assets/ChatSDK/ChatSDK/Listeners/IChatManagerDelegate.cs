@@ -18,6 +18,12 @@ namespace ChatSDK
         /// 收到[messages]消息被撤回
         void OnMessagesRecalled(List<Message> messages);
 
+        /// 群组已读变化
+        void OnReadAckForGroupMessageUpdated();
+
+        ///  群消息已读
+        void OnGroupMessageRead(List<GroupReadAck> list);
+
         /// 会话列表变化
         void OnConversationsUpdate();
 

@@ -10,10 +10,11 @@ namespace ChatSDK {
         public int NoDisturbEndHour { get; internal set; }
         public PushStyle Style { get; internal set; }
 
-        internal PushConfig(JSONNode jo)
+        internal PushConfig(string jsonString)
         {
-            if (jo != null)
-            {
+            JSONNode jn = JSON.Parse(jsonString);
+            if (!jn.IsNull && jn.IsObject) {
+                JSONObject jo = jn.AsObject;
                 NoDisturb = jo["noDisturb"].AsBool;
                 NoDisturbStartHour = jo["noDisturbStartHour"].AsInt;
                 NoDisturbEndHour = jo["noDisturbEndHour"].AsInt;
@@ -22,7 +23,8 @@ namespace ChatSDK {
                 {
                     Style = PushStyle.Simple;
                 }
-                else {
+                else
+                {
                     Style = PushStyle.Summary;
                 }
             }

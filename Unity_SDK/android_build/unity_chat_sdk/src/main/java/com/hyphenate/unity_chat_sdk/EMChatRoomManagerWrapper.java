@@ -104,33 +104,33 @@ public class EMChatRoomManagerWrapper extends EMWrapper {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
             onSuccess("List<EMChatRoom>", callbackId, jsonArray.toString());
         });
     }
     //
-//    private void createChatRoom(String param, String channelName, String callbackId)
-//            throws JSONException {
-//        String subject = param.getString("subject");
-//        String description = param.getString("desc");
-//        String welcomeMessage = param.getString("welcomeMsg");
-//        int maxUserCount = param.getInt("maxUserCount");
-//        JSONArray members = param.getJSONArray("members");
-//        List<String> membersList = new ArrayList<>();
-//        for (int i = 0; i < members.length(); i++) {
-//            membersList.add((String) members.get(i));
-//        }
-//        asyncRunnable(() -> {
-//            try {
-//                EMChatRoom room = EMClient.getInstance().chatroomManager().createChatRoom(subject, description,
-//                        welcomeMessage, maxUserCount, membersList);
-//                onSuccess(result, channelName, EMChatRoomHelper.toJson(room));
-//            } catch (HyphenateException e) {
-//                onError(result, e);
-//            }
-//        });
-//    }
-//
+    private void createChatRoom(String subject, String description, String welcomeMessage, int maxUserCount, String jsonList, String callbackId)
+            throws JSONException {
+        ArrayList<String> membersList = new ArrayList();
+        if (jsonList != null) {
+            JSONArray members = null;
+            members = new JSONArray(jsonList);
+            for (int i = 0; i < members.length(); i++) {
+                membersList.add((String) members.get(i));
+            }
+        }
+
+        asyncRunnable(() -> {
+            try {
+                EMChatRoom room = EMClient.getInstance().chatroomManager().createChatRoom(subject, description, welcomeMessage, maxUserCount, membersList);
+                onSuccess("EMChatRoom", callbackId, EMChatRoomHelper.toJson(room).toString());
+            } catch (HyphenateException e) {
+                onError(callbackId, e);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
     private void destroyChatRoom(String roomId,  String callbackId) {
         asyncRunnable(() -> {
             try {

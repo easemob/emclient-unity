@@ -82,7 +82,7 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override List<Message> SearchMsgFromDB(string keywards, long timestamp = 0, int maxCount = 20, string from = null, MessageSearchDirection direction = MessageSearchDirection.UP)
+        public override List<Message> SearchMsgFromDB(string keywords, long timestamp = 0, int maxCount = 20, string from = null, MessageSearchDirection direction = MessageSearchDirection.UP)
         {
             throw new System.NotImplementedException();
         }

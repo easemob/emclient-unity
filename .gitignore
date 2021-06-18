@@ -3,12 +3,14 @@
 **/xcuserdata
 # **/*.xcuserdatad
 **/Temp
+**/xs/
 
 # =============== #
 # Unity generated #
 # =============== #
 Temp/
 Library/
+**/*.meta
 
 # ===================================== #
 # Visual Studio / MonoDevelop generated #
@@ -17,10 +19,10 @@ ExportedObj/
 obj/
 *.svd
 *.userprefs
-/*.csproj
+**/*.csproj
 *.pidb
 *.suo
-/*.sln
+**/*.sln
 *.user
 *.unityproj
 *.booproj
@@ -59,3 +61,5 @@ easemob.log
 easemobDB/
 easemobLog/
 DerivedData/
+
+**/UserPrefs

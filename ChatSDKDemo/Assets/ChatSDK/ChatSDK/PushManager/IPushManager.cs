@@ -14,8 +14,6 @@ namespace ChatSDK
 
         void UpdateFCMPushToken(string token, CallBack handle = null);
 
-        void UpdateAPNsDeviceToken(string token, CallBack handle = null);
-
         void SetNoDisturb(bool noDisturb, int startTime = 0, int endTime = 24, CallBack handle = null);
 
         void SetPushStyle(PushStyle pushStyle, CallBack handle = null);

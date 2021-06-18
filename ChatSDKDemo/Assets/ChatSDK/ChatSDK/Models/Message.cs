@@ -539,21 +539,24 @@ namespace ChatSDK
         }
 
         internal Message(string jsonString) {
-            JSONObject jo = JSON.Parse(jsonString).AsObject;
-            From = jo["from"].Value;
-            To = jo["from"].Value;
-            HasReadAck = jo["hasReadAck"].AsBool;
-            HasDeliverAck = jo["hasDeliverAck"].AsBool;
-            LocalTime = jo["localTime"].AsInt;
-            ServerTime = jo["serverTime"].AsInt;
-            ConversationId = jo["conversationId"].Value;
-            MsgId = jo["msgId"].Value;
-            HasReadAck = jo["hasRead"].AsBool;
-            Status = MessageStatusFromInt(jo["status"].AsInt);
-            MessageType = MessageTypeFromInt(jo["messageType"].AsInt);
-            Direction = MessageDirectionFromString(jo["direction"].Value);
-            Attributes = TransformTool.JsonStringToAttributes(jo["attributes"].Value);
-            Body = IMessageBody.FromJsonString(jo["body"].Value);
+            JSONNode jn = JSON.Parse(jsonString);
+            if (!jn.IsNull && jn.IsObject) {
+                JSONObject jo = jn.AsObject;
+                From = jo["from"].Value;
+                To = jo["to"].Value;
+                HasReadAck = jo["hasReadAck"].AsBool;
+                HasDeliverAck = jo["hasDeliverAck"].AsBool;
+                LocalTime = jo["localTime"].AsInt;
+                ServerTime = jo["serverTime"].AsInt;
+                ConversationId = jo["conversationId"].Value;
+                MsgId = jo["msgId"].Value;
+                HasReadAck = jo["hasRead"].AsBool;
+                Status = MessageStatusFromInt(jo["status"].AsInt);
+                MessageType = MessageTypeFromInt(jo["messageType"].AsInt);
+                Direction = MessageDirectionFromString(jo["direction"].Value);
+                //Attributes = TransformTool.JsonStringToDictionary(jo["attributes"].Value);
+                Body = BodyFromJsonString(jo["body"].Value, jo["bodyType"].Value);
+            }
         }
 
         internal string ToJsonString() {
@@ -679,6 +682,43 @@ namespace ChatSDK
                     }
             }
             return ret;
+        }
+
+        private IMessageBody BodyFromJsonString(string jsonString, string bodyType) {
+            IMessageBody body = null;
+            if (bodyType == "txt")
+            {
+                body = new MessageBody.TextBody(jsonString, null);
+            }
+            else if (bodyType == "img")
+            {
+                body = new MessageBody.ImageBody(jsonString, null);
+            }
+            else if (bodyType == "loc")
+            {
+                body = new MessageBody.LocationBody(jsonString, null);
+            }
+            else if (bodyType == "cmd")
+            {
+                body = new MessageBody.CmdBody(jsonString, null);
+            }
+            else if (bodyType == "custom")
+            {
+                body = new MessageBody.CustomBody(jsonString, null);
+            }
+            else if (bodyType == "file")
+            {
+                body = new MessageBody.FileBody(jsonString, null);
+            }
+            else if (bodyType == "video")
+            {
+                body = new MessageBody.VideoBody(jsonString, null);
+            }
+            else if (bodyType == "voice")
+            {
+                body = new MessageBody.VoiceBody(jsonString, null);
+            }
+            return body;
         }
     }
 }

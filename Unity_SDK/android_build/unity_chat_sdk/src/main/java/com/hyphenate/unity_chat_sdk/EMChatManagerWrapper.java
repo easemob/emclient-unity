@@ -50,7 +50,7 @@ public class EMChatManagerWrapper extends EMWrapper  {
             msg.setMessageStatusCallback(new EMUnityCallback(callbackId));
             EMClient.getInstance().chatManager().sendMessage(msg);
         }else {
-            onError(callbackId, new HyphenateException(500, "message not found"));
+            onError(callbackId, new HyphenateException(500, "Message not found"));
             return null;
         }
         return EMMessageHelper.toJson(msg).toString();
@@ -59,7 +59,7 @@ public class EMChatManagerWrapper extends EMWrapper  {
     private void ackMessageRead(String messageId, String callbackId) throws JSONException {
         EMMessage msg = EMClient.getInstance().chatManager().getMessage(messageId);
         if (msg == null) {
-            onError(callbackId, new HyphenateException(500, "message not found"));
+            onError(callbackId, new HyphenateException(500, "Message not found"));
         }else {
             try {
                 EMClient.getInstance().chatManager().ackMessageRead(msg.getFrom(), messageId);
@@ -87,7 +87,7 @@ public class EMChatManagerWrapper extends EMWrapper  {
                 if (msg != null) {
                     EMClient.getInstance().chatManager().recallMessage(msg);
                 }else {
-                    onError(callbackId, new HyphenateException(500, "message not found"));
+                    onError(callbackId, new HyphenateException(500, "Message not found"));
                 }
                 onSuccess(null, callbackId, null);
             } catch (HyphenateException e) {
@@ -125,11 +125,15 @@ public class EMChatManagerWrapper extends EMWrapper  {
 
     private void updateChatMessage(String messageString, String callbackId) throws JSONException{
         EMMessage msg = EMMessageHelper.fromJson(new JSONObject(messageString));
-
-        asyncRunnable(() -> {
-            EMClient.getInstance().chatManager().updateMessage(msg);
-            onSuccess(null, callbackId, Boolean.TRUE.toString());
-        });
+        EMMessage message = EMClient.getInstance().chatManager().getMessage(msg.getMsgId());
+        if (message == null) {
+            onError(callbackId, new HyphenateException(500, "Message not found"));
+        }else {
+            asyncRunnable(() -> {
+                EMClient.getInstance().chatManager().updateMessage(msg);
+                onSuccess(null, callbackId, Boolean.TRUE.toString());
+            });
+        }
     }
 
     private boolean importMessages(String messagesString) throws JSONException {
@@ -150,7 +154,7 @@ public class EMChatManagerWrapper extends EMWrapper  {
             msg.setMessageStatusCallback(new EMUnityCallback((callbackId)));
             EMClient.getInstance().chatManager().downloadAttachment(msg);
         }else {
-            HyphenateException e = new HyphenateException(500, "message not found.");
+            HyphenateException e = new HyphenateException(500, "Message not found.");
             onError(callbackId, e);
         }
     }
@@ -161,7 +165,7 @@ public class EMChatManagerWrapper extends EMWrapper  {
             msg.setMessageStatusCallback(new EMUnityCallback((callbackId)));
             EMClient.getInstance().chatManager().downloadThumbnail(msg);
         }else {
-            HyphenateException e = new HyphenateException(500, "message not found.");
+            HyphenateException e = new HyphenateException(500, "Message not found.");
             onError(callbackId, e);
         }
     }

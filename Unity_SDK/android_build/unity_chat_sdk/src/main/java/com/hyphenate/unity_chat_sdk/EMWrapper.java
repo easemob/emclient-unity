@@ -60,6 +60,7 @@ public class EMWrapper {
         post(()-> {
             JSONObject jsonObject = new JSONObject();
             try {
+                jsonObject.put("callbackId", callbackId);
                 jsonObject.put("code", e.getErrorCode());
                 jsonObject.put("desc", e.getDescription());
                 UnityPlayer.UnitySendMessage(EMSDKMethod.Callback_Obj, "OnError", jsonObject.toString());
