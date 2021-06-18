@@ -11,10 +11,10 @@ extern "C"
 {
 #endif //__cplusplus
   //Client methods
-  AGORA_API void Client_CreateAccount(void *client, const char *username, const char *password);
+  AGORA_API void Client_CreateAccount(void *client, void *callback, const char *username, const char *password);
   AGORA_API void* Client_InitWithOptions(Options *options, ConnListenerFptrs fptrs);
   AGORA_API void Client_Login(void *client, void *callback, const char *username, const char *pwdOrToken, bool isToken);
-  AGORA_API void Client_Logout(void *client, bool unbindDeviceToken);
+  AGORA_API void Client_Logout(void *client, void *callback, bool unbindDeviceToken);
   AGORA_API void Client_StartLog(const char *logFilePath);
   AGORA_API void Client_StopLog();
   //ChatManager methods

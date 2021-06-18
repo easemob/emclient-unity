@@ -21,7 +21,7 @@ namespace ChatSDK{
 		protected delegate void OnProgress(int progress);
 
 		[DllImport(MyLibName)]
-		internal static extern void Client_CreateAccount(IntPtr client, string username, string password);
+		internal static extern void Client_CreateAccount(IntPtr client, CallBack callback, string username, string password);
 
 		[DllImport(MyLibName)]
 		internal static extern IntPtr Client_InitWithOptions(Options options, ConnectionHub.Delegate @delegate);
@@ -30,7 +30,10 @@ namespace ChatSDK{
 		internal static extern void Client_Login(IntPtr client, CallBack callback, string username, string pwdOrToken, bool isToken = false);
 
 		[DllImport(MyLibName)]
-		internal static extern void Client_Logout(IntPtr client, bool unbindDeviceToken);
+		internal static extern void Client_Logout(IntPtr client, CallBack callback, bool unbindDeviceToken);
+
+		[DllImport(MyLibName)]
+		internal static extern void Client_Release(IntPtr client);
 
 		[DllImport(MyLibName)]
 		internal static extern void Client_StartLog(string logFilePath);

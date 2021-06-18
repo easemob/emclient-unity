@@ -3,7 +3,6 @@
 **/xcuserdata
 # **/*.xcuserdatad
 **/Temp
-**/xs/
 
 # =============== #
 # Unity generated #
@@ -26,6 +25,7 @@ obj/
 *.user
 *.unityproj
 *.booproj
+ChatSDKDemo/.vs
 
 **/Release
 

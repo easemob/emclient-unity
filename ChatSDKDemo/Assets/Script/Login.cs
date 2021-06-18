@@ -26,7 +26,6 @@ public class Login : MonoBehaviour
         client.InitWithOptions(options);
     }
 
-
     void LoginAction() {
         string username = usernameField.text;
         string password = passwordField.text;
@@ -49,6 +48,12 @@ public class Login : MonoBehaviour
                 print("注册失败-- desc: " + desc);
             }
         ));
+    }
+
+    void OnApplicationQuit()
+    {
+        Debug.Log("Quit and release resources...");
+        SDKClient.Instance.Logout(false);
     }
 
     // Update is called once per frame

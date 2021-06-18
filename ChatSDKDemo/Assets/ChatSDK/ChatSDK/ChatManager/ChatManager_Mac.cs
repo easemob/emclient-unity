@@ -95,7 +95,10 @@ namespace ChatSDK
         public override Message SendMessage(Message message, CallBack callback = null)
         {
             var mto = new MessageTransferObject(message);
-            ChatAPINative.ChatManager_SendMessage(client, callback, ref mto);
+            CallBack callbackDispatcher = new CallBack(onSuccess: () => callback?.Success(),
+                                                        onProgress: (int progress) => callback?.Progress(progress),
+                                                        onError: (int code, string description) => callback?.Error(code, description));
+            ChatAPINative.ChatManager_SendMessage(client, callbackDispatcher, ref mto);
             //TODO: what Message to return from this SendMessage?
             return null;
         }

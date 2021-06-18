@@ -8,18 +8,19 @@ namespace ChatSDK
         internal IntPtr client = IntPtr.Zero;
         private ConnectionHub connectionHub;
         private string currentUserName;
+        private bool isLoggedIn;
+        private bool isConnected;
 
         public Client_Mac() {
             // start log service
             StartLog("/tmp/unmanaged_dll.log");
         }
 
-
-        public override void CreateAccount(string username, string password, CallBack callBack = null)
+        public override void CreateAccount(string username, string password, CallBack callback = null)
         {
             if (client != IntPtr.Zero)
             {
-                ChatAPINative.Client_CreateAccount(client, username, password);
+                ChatAPINative.Client_CreateAccount(client, callback, username, password);
             }
             else
             {
@@ -29,26 +30,48 @@ namespace ChatSDK
 
         public override void InitWithOptions(Options options, WeakDelegater<IConnectionDelegate> listeners = null)
         {
+
             ChatCallbackObject.GetInstance();
             connectionHub = new ConnectionHub(listeners);
+            // keep only 1 client left
+            if(client != IntPtr.Zero)
+            {
+                //stop log service
+                StopLog();
+                ChatAPINative.Client_Release(client);
+            }
+            StartLog("/tmp/unmanaged_dll.log");
             client = ChatAPINative.Client_InitWithOptions(options, connectionHub.Delegates());
         }
 
-        public override void Login(string username, string pwdOrToken, bool isToken = false, CallBack callBack = null)
+        public override void Login(string username, string pwdOrToken, bool isToken = false, CallBack callback = null)
         {
             if (client != IntPtr.Zero) {
-                ChatAPINative.Client_Login(client, callBack, username, pwdOrToken, isToken);
-                //TODO: set current user name only if login succeeds.
-                currentUserName = username;
+                CallBack callbackDispatcher = new CallBack(onSuccess: () =>
+                                                            {
+                                                                currentUserName = username;
+                                                                isLoggedIn = true;
+                                                                callback?.Success();
+                                                            },
+                                                            onProgress: (int progress) => callback?.Progress(progress),
+                                                            onError: (int error, string description) => callback?.Error(error, description));
+                ChatAPINative.Client_Login(client, callbackDispatcher, username, pwdOrToken, isToken);
             } else {
                 Debug.LogError("::InitWithOptions() not called yet.");
             }
         }
 
-        public override void Logout(bool unbindDeviceToken, CallBack callBack = null)
+        public override void Logout(bool unbindDeviceToken, CallBack callback = null)
         {
-            if (client != IntPtr.Zero) {
-                ChatAPINative.Client_Logout(client, unbindDeviceToken);
+            if (client != IntPtr.Zero)
+            {
+                CallBack callbackDispatcher = new CallBack(onSuccess: () =>
+                                                            {
+                                                                currentUserName = "";
+                                                                isLoggedIn = false;
+                                                                callback?.Success();
+                                                            });
+                ChatAPINative.Client_Logout(client, callbackDispatcher, unbindDeviceToken);
             } else {
                 Debug.LogError("::InitWithOptions() not called yet.");
             }
@@ -61,12 +84,12 @@ namespace ChatSDK
 
         public override bool IsConnected()
         {
-            throw new System.NotImplementedException();
+            return isConnected;
         }
 
         public override bool IsLoggedIn()
         {
-            throw new System.NotImplementedException();
+            return isLoggedIn;
         }
 
         public override string AccessToken()

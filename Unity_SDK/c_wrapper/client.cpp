@@ -16,9 +16,19 @@ extern "C"
 static bool G_DEBUG_MODE = false;
 static bool G_AUTO_LOGIN = true;
 
-AGORA_API void Client_CreateAccount(void *client, const char *username, const char *password)
+AGORA_API void Client_CreateAccount(void *client, void *callback, const char *username, const char *password)
 {
-    CLIENT->createAccount(username, password);
+    LOG("Client_CreateAccount() called with username=%s password=%s", username, password);
+    EMErrorPtr result = CLIENT->createAccount(username, password);
+    if(callback != nullptr) {
+        if(EMError::isNoError(result)) {
+            LOG("Account creation succeeds!");
+            CALLBACK->OnSuccess();
+        }else{
+            LOG("Account creation failed!");
+            CALLBACK->OnError(result->mErrorCode, result->mDescription.c_str());
+        }
+    }
 }
 
 EMChatConfigsPtr ConfigsFromOptions(Options *options) {
@@ -88,8 +98,6 @@ AGORA_API void* Client_InitWithOptions(Options *options, ConnListenerFptrs fptrs
     return client;
 }
 
-
-
 AGORA_API void Client_Login(void *client, void *callback, const char *username, const char *pwdOrToken, bool isToken)
 {
     LOG("Client_Login() called with username=%s, pwdOrToken=%s, isToken=%d", username, pwdOrToken, isToken);
@@ -100,27 +108,31 @@ AGORA_API void Client_Login(void *client, void *callback, const char *username, 
     } else {
         result = CLIENT->loginWithToken(username, pwdOrToken);
     }
-    if(EMError::isNoError(result)) {
-        LOG("Login succeeds.");
-        //call OnSuccess callback
-        CALLBACK->OnSuccess();
-    }else{
-        LOG("Login error with error code %d, description: %s", result->mErrorCode, result->mDescription.c_str());
-        //call OnError callback
-        CALLBACK->OnError(result->mErrorCode, result->mDescription.c_str());
+    if(callback != nullptr) { // callback processing
+        if(EMError::isNoError(result)) {
+            LOG("Login succeeds.");
+            //call OnSuccess callback
+            CALLBACK->OnSuccess();
+        }else{
+            LOG("Login error with error code %d, description: %s", result->mErrorCode, result->mDescription.c_str());
+            //call OnError callback
+            CALLBACK->OnError(result->mErrorCode, result->mDescription.c_str());
+        }
     }
 }
 
-AGORA_API void Client_Logout(void *client, bool unbindDeviceToken)
+AGORA_API void Client_Logout(void *client, void *callback, bool unbindDeviceToken)
 {
     CLIENT->logout();
+    if(callback != nullptr) {
+        CALLBACK->OnSuccess();
+    }
 }
 
 AGORA_API void Client_Release(void *client)
 {
     delete CLIENT;
     client = nullptr;
-    LogHelper::getInstance().stopLogService();
 }
 
 AGORA_API void Client_StartLog(const char *logFilePath) {
@@ -146,6 +158,5 @@ AGORA_API void ChatManager_SendMessage(void *client, void *callback, MessageTran
                                                  }));
         messagePtr->setCallback(callbackPtr);
     }
-    
     CLIENT->getChatManager().sendMessage(messagePtr);
 }
