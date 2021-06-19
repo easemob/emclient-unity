@@ -55,6 +55,7 @@ namespace ChatSDK
                                                             },
                                                             onProgress: (int progress) => callback?.Progress(progress),
                                                             onError: (int error, string description) => callback?.Error(error, description));
+                Debug.Log($"Login callback dispatcher ${callbackDispatcher.callbackId}");
                 ChatAPINative.Client_Login(client, callbackDispatcher, username, pwdOrToken, isToken);
             } else {
                 Debug.LogError("::InitWithOptions() not called yet.");
@@ -71,6 +72,7 @@ namespace ChatSDK
                                                                 isLoggedIn = false;
                                                                 callback?.Success();
                                                             });
+                Debug.Log($"Logout callback dispatcher ${callbackDispatcher.callbackId}");
                 ChatAPINative.Client_Logout(client, callbackDispatcher, unbindDeviceToken);
             } else {
                 Debug.LogError("::InitWithOptions() not called yet.");

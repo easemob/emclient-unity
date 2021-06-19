@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using UnityEngine;
 
 namespace ChatSDK
 {
@@ -27,15 +28,20 @@ namespace ChatSDK
             Error = onError;
             Progress = onProgress;
             callbackId = CallbackManager.Instance().currentId.ToString();
-            CallbackManager.Instance().AddCallback(CallbackManager.Instance().currentId, this);   
+            CallbackManager.Instance().AddCallback(CallbackManager.Instance().currentId, this);
+            Debug.Log($"CallBack ${callbackId} initialized!");
         }
         internal void ClearCallback()
         {
             Error(0, null);
             CallbackManager.Instance().RemoveCallback(int.Parse(callbackId));
         }
-    }
 
+        ~CallBack()
+        {
+            Debug.Log($"CallBack ${callbackId} finalized!");
+        }
+    }
 
     public class ValueCallBack<T> : CallBack
     {

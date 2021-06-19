@@ -44,8 +44,14 @@ namespace ChatSDK {
 
         internal void RemoveCallback(int callbackId)
         {
-            if (dictionary.ContainsKey(callbackId.ToString())) {
-                dictionary.Remove(callbackId.ToString());
+            RemoveCallback(callbackId.ToString());
+        }
+
+        internal void RemoveCallback(string callbackId)
+        {
+            if (dictionary.ContainsKey(callbackId))
+            {
+                dictionary.Remove(callbackId);
             }
         }
 

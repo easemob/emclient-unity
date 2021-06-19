@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace ChatSDK
 {
@@ -7,7 +8,7 @@ namespace ChatSDK
     {
         private IntPtr client;
         private ChatManagerHub chatManagerHub;
-
+        
         internal ChatManager_Mac(IClient _client)
         {
             if (_client is Client_Mac clientMac)
@@ -95,9 +96,10 @@ namespace ChatSDK
         public override Message SendMessage(Message message, CallBack callback = null)
         {
             var mto = new MessageTransferObject(message);
-            CallBack callbackDispatcher = new CallBack(onSuccess: () => callback?.Success(),
+            CallBack callbackDispatcher = new CallBack(onSuccess: () => { Debug.Log("Message sent succeeds!"); callback?.Success(); },
                                                         onProgress: (int progress) => callback?.Progress(progress),
                                                         onError: (int code, string description) => callback?.Error(code, description));
+            Debug.Log($"Send message callback dispatcher ${callbackDispatcher.callbackId}");
             ChatAPINative.ChatManager_SendMessage(client, callbackDispatcher, ref mto);
             //TODO: what Message to return from this SendMessage?
             return null;

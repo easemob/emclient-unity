@@ -50,11 +50,11 @@ private:
     FUNC_OnProgress onProgress;
 };
 
-typedef struct _ConnListenerFptrs
+struct ConnListenerFptrs
 {
     FUNC_OnConnect Connected;
     FUNC_OnDisconnect Disconnected;
-}ConnListenerFptrs;
+};
 
 class ConnectionListener : public EMConnectionListener
 {

@@ -16,7 +16,7 @@ namespace ChatSDK
     public delegate void OnConversationsUpdate();
     public delegate void OnConversationRead(string from, string to);
 
-    public class ConnectionHub : CallBack, IConnectionDelegate
+    public class ConnectionHub : CallBack
     {
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
         public struct Delegate
@@ -34,6 +34,7 @@ namespace ChatSDK
             (@delegate.Connected, @delegate.Disconnected) = (OnConnected, OnDisconnected);
             callbackId = CallbackManager.Instance().currentId.ToString();
             CallbackManager.Instance().AddCallback(CallbackManager.Instance().currentId, this);
+            Debug.Log($"Connection Hub callback ${callbackId} initialized!");
         }
 
         public void OnConnected()
@@ -59,6 +60,11 @@ namespace ChatSDK
         public Delegate Delegates()
         {
             return @delegate;
+        }
+
+        ~ConnectionHub()
+        {
+            Debug.Log($"ConnectionHub ${callbackId} finalized!");
         }
     }
 
