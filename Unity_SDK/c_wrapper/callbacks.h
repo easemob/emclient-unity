@@ -39,15 +39,12 @@ public:
         if(onProgress)
             onProgress(progress);
     }
-    
-    FUNC_OnSuccess SuccessFunc() { return onSuccess; }
-    FUNC_OnError ErrorFunc() { return onError; }
-    FUNC_OnProgress ProgressFunc() { return onProgress; }
-    
+
 private:
     FUNC_OnSuccess onSuccess;
     FUNC_OnError onError;
     FUNC_OnProgress onProgress;
+    char * callbackId;
 };
 
 struct ConnListenerFptrs

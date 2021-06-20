@@ -30,10 +30,9 @@ namespace ChatSDK
 
         public ConnectionHub(WeakDelegater<IConnectionDelegate> _listeners)
         {
+            //callbackmanager registration done in base()!d
             listeners = _listeners;
             (@delegate.Connected, @delegate.Disconnected) = (OnConnected, OnDisconnected);
-            callbackId = CallbackManager.Instance().currentId.ToString();
-            CallbackManager.Instance().AddCallback(CallbackManager.Instance().currentId, this);
             Debug.Log($"Connection Hub callback ${callbackId} initialized!");
         }
 
@@ -101,8 +100,6 @@ namespace ChatSDK
                                                 OnMessagesRecalled,
                                                 OnConversationsUpdate,
                                                 OnConversationRead);
-            callbackId = CallbackManager.Instance().currentId.ToString();
-            CallbackManager.Instance().AddCallback(CallbackManager.Instance().currentId, this);
         }
 
         public void OnMessagesReceived(MessageTransferObject[] _messages, int size)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace ChatSDK
@@ -22,14 +23,15 @@ namespace ChatSDK
         /// <param name="onSuccess">成功</param>
         /// <param name="onProgress">进度变化</param>
         /// <param name="onError">失败</param>
-        public CallBack(Action onSuccess = null, OnProgress onProgress = null, OnError onError = null)
+        public CallBack(Action onSuccess = null, OnProgress onProgress = null, OnError onError = null,
+            [CallerMemberName]string memberName = null, [CallerFilePath]string filePath = null, [CallerLineNumber] int lineNumber =0)
         {
             Success = onSuccess;
             Error = onError;
             Progress = onProgress;
-            callbackId = CallbackManager.Instance().currentId.ToString();
-            CallbackManager.Instance().AddCallback(CallbackManager.Instance().currentId, this);
-            Debug.Log($"CallBack ${callbackId} initialized!");
+            callbackId = CallbackManager.Instance().CurrentId.ToString();
+            CallbackManager.Instance().AddCallback(CallbackManager.Instance().CurrentId, this);
+            Debug.Log($"CallBack created from {filePath}:{memberName}:{lineNumber} with callbackId={callbackId}");
         }
         internal void ClearCallback()
         {
@@ -57,8 +59,8 @@ namespace ChatSDK
         {
             OnSuccessValue = onSuccess;
             OnError = onError;
-            callbackId = CallbackManager.Instance().currentId.ToString();
-            CallbackManager.Instance().AddValueCallback<T>(CallbackManager.Instance().currentId, this);
+            callbackId = CallbackManager.Instance().CurrentId.ToString();
+            CallbackManager.Instance().AddValueCallback<T>(CallbackManager.Instance().CurrentId, this);
         }
     }
 }
