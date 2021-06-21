@@ -6,7 +6,7 @@ using UnityEngine;
 namespace ChatSDK
 {
 
-    public delegate void OnError(int error, string desc);
+    public delegate void OnError(int code, string desc);
     public delegate void OnProgress(int progress);
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]

@@ -10,15 +10,15 @@
 extern "C"
 {
 #endif //__cplusplus
-  //Client methods
-  AGORA_API void Client_CreateAccount(void *client, void *callback, const char *username, const char *password);
-  AGORA_API void* Client_InitWithOptions(Options *options, ConnListenerFptrs fptrs);
-  AGORA_API void Client_Login(void *client, void *callback, const char *username, const char *pwdOrToken, bool isToken);
-  AGORA_API void Client_Logout(void *client, void *callback, bool unbindDeviceToken);
-  AGORA_API void Client_StartLog(const char *logFilePath);
-  AGORA_API void Client_StopLog();
-  //ChatManager methods
-  AGORA_API void ChatManager_SendMessage(void *client, void *callback, MessageTransferObject *mto);
+//Client methods
+AGORA_API void Client_CreateAccount(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, const char *username, const char *password);
+AGORA_API void* Client_InitWithOptions(Options *options, ConnListenerFptrs fptrs);
+AGORA_API void Client_Login(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, const char *username, const char *pwdOrToken, bool isToken);
+AGORA_API void Client_Logout(void *client, FUNC_OnSuccess onSuccess, bool unbindDeviceToken);
+AGORA_API void Client_StartLog(const char *logFilePath);
+AGORA_API void Client_StopLog();
+//ChatManager methods
+AGORA_API void ChatManager_SendMessage(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, MessageTransferObject *mto);
 
 #ifdef __cplusplus
 }

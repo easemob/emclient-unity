@@ -16,18 +16,17 @@ extern "C"
 static bool G_DEBUG_MODE = false;
 static bool G_AUTO_LOGIN = true;
 
-AGORA_API void Client_CreateAccount(void *client, void *callback, const char *username, const char *password)
+AGORA_API void Client_CreateAccount(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, const char *username, const char *password)
 {
     LOG("Client_CreateAccount() called with username=%s password=%s", username, password);
     EMErrorPtr result = CLIENT->createAccount(username, password);
-    if(callback != nullptr) {
-        if(EMError::isNoError(result)) {
-            LOG("Account creation succeeds!");
-            CALLBACK->OnSuccess();
-        }else{
-            LOG("Account creation failed!");
-            CALLBACK->OnError(result->mErrorCode, result->mDescription.c_str());
-        }
+    
+    if(EMError::isNoError(result)) {
+        LOG("Account creation succeeds!");
+        if(onSuccess) onSuccess();
+    }else{
+        LOG("Account creation failed!");
+        if(onError) onError(result->mErrorCode, result->mDescription.c_str());
     }
 }
 
@@ -74,35 +73,24 @@ AGORA_API void* Client_InitWithOptions(Options *options, ConnListenerFptrs fptrs
     return client;
 }
 
-AGORA_API void Client_Login(void *client, void *callback, const char *username, const char *pwdOrToken, bool isToken)
+AGORA_API void Client_Login(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, const char *username, const char *pwdOrToken, bool isToken)
 {
     LOG("Client_Login() called with username=%s, pwdOrToken=%s, isToken=%d", username, pwdOrToken, isToken);
-    LOG("callback instance address=%d", callback);
     EMErrorPtr result;
-    if(!isToken) {
-        result = CLIENT->login(username, pwdOrToken);
-    } else {
-        result = CLIENT->loginWithToken(username, pwdOrToken);
-    }
-    if(callback != nullptr) { // callback processing
-        if(EMError::isNoError(result)) {
-            LOG("Login succeeds.");
-            //call OnSuccess callback
-            CALLBACK->OnSuccess();
-        }else{
-            LOG("Login error with error code %d, description: %s", result->mErrorCode, result->mDescription.c_str());
-            //call OnError callback
-            CALLBACK->OnError(result->mErrorCode, result->mDescription.c_str());
-        }
+    result = isToken ? CLIENT->loginWithToken(username, pwdOrToken) : CLIENT->login(username, pwdOrToken);
+    if(EMError::isNoError(result)) {
+        LOG("Login succeeds.");
+        if(onSuccess) onSuccess();
+    }else{
+        LOG("Login failed with code=%d desc=%s!", result->mErrorCode, result->mDescription.c_str());
+        if(onError) onError(result->mErrorCode, result->mDescription.c_str());
     }
 }
 
-AGORA_API void Client_Logout(void *client, void *callback, bool unbindDeviceToken)
+AGORA_API void Client_Logout(void *client, FUNC_OnSuccess onSuccess, bool unbindDeviceToken)
 {
     CLIENT->logout();
-    if(callback != nullptr) {
-        CALLBACK->OnSuccess();
-    }
+    if(onSuccess) onSuccess();
 }
 
 AGORA_API void Client_Release(void *client)
@@ -121,22 +109,19 @@ AGORA_API void Client_StopLog() {
 
 EMCallbackObserverHandle gCallbackObserverHandle;
 
-AGORA_API void ChatManager_SendMessage(void *client, void *callback, MessageTransferObject *mto) {
+AGORA_API void ChatManager_SendMessage(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, MessageTransferObject *mto) {
     EMMessagePtr messagePtr = mto->toEMMessage();
-    if(callback != nullptr) {
-        LOG("ChatManager_SendMessage's callback address=%x", callback);
-        EMCallbackPtr callbackPtr(new EMCallback(gCallbackObserverHandle,
-                                                 [callback]()->bool {
-                                                    LOG("Message sent succeeds.");
-                                                    //CALLBACK->OnSuccess();
-                                                    return true;
-                                                 },
-                                                 [callback](const easemob::EMErrorPtr error)->bool{
-                                                    LOG("Message sent failed with code=%d.", error->mErrorCode);
-                                                    //CALLBACK->OnError(error->mErrorCode,error->mDescription.c_str());
-                                                    return true;
-                                                 }));
-        messagePtr->setCallback(callbackPtr);
-    }
+    EMCallbackPtr callbackPtr(new EMCallback(gCallbackObserverHandle,
+                                             [onSuccess]()->bool {
+                                                LOG("Message sent succeeds.");
+                                                if(onSuccess) onSuccess();
+                                                return true;
+                                             },
+                                             [onError](const easemob::EMErrorPtr error)->bool{
+                                                LOG("Message sent failed with code=%d.", error->mErrorCode);
+                                                if(onError) onError(error->mErrorCode,error->mDescription.c_str());
+                                                return true;
+                                             }));
+    messagePtr->setCallback(callbackPtr);
     CLIENT->getChatManager().sendMessage(messagePtr);
 }

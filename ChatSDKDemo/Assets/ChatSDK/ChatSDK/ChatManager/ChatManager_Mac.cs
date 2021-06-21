@@ -8,6 +8,10 @@ namespace ChatSDK
     {
         private IntPtr client;
         private ChatManagerHub chatManagerHub;
+
+        //events
+        public event Action OnSendMessageSuccess;
+        public event OnError OnSendMessageError;
         
         internal ChatManager_Mac(IClient _client)
         {
@@ -96,11 +100,12 @@ namespace ChatSDK
         public override Message SendMessage(Message message, CallBack callback = null)
         {
             var mto = new MessageTransferObject(message);
-            CallBack callbackDispatcher = new CallBack(onSuccess: () => { Debug.Log("Message sent succeeds!"); callback?.Success(); },
-                                                        onProgress: (int progress) => callback?.Progress(progress),
-                                                        onError: (int code, string description) => callback?.Error(code, description));
-            Debug.Log($"Send message callback dispatcher ${callbackDispatcher.callbackId}");
-            ChatAPINative.ChatManager_SendMessage(client, callbackDispatcher, ref mto);
+            //clear previous linked events handler
+            OnSendMessageSuccess = null;
+            OnSendMessageError = null;
+            OnSendMessageSuccess += () => callback?.Success();
+            OnSendMessageError += (int code, string desc) => callback?.Error(code, desc);
+            ChatAPINative.ChatManager_SendMessage(client, OnSendMessageSuccess, OnSendMessageError, ref mto);
             //TODO: what Message to return from this SendMessage?
             return null;
         }

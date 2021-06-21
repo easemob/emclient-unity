@@ -4,12 +4,19 @@ using System;
 namespace ChatSDK
 {
     class Client_Mac : IClient
-    {
+    { 
         internal IntPtr client = IntPtr.Zero;
         private ConnectionHub connectionHub;
         private string currentUserName;
         private bool isLoggedIn;
         private bool isConnected;
+
+        //events
+        public event Action OnLoginSuccess;
+        public event OnError OnLoginError;
+        public event Action OnRegistrationSuccess;
+        public event OnError OnRegistrationError;
+        public event Action OnLogoutSuccess;
 
         public Client_Mac() {
             // start log service
@@ -20,7 +27,17 @@ namespace ChatSDK
         {
             if (client != IntPtr.Zero)
             {
-                ChatAPINative.Client_CreateAccount(client, callback, username, password);
+                OnRegistrationSuccess = null;
+                OnRegistrationError = null;
+                OnRegistrationSuccess += () =>
+                {
+                    if (callback != null) callback.Success();
+                };
+                OnRegistrationError += (int code, string desc) =>
+                {
+                    if (callback != null) callback.Error(code, desc);
+                };
+                ChatAPINative.Client_CreateAccount(client, OnRegistrationSuccess, OnRegistrationError, username, password);
             }
             else
             {
@@ -47,16 +64,19 @@ namespace ChatSDK
         public override void Login(string username, string pwdOrToken, bool isToken = false, CallBack callback = null)
         {
             if (client != IntPtr.Zero) {
-                CallBack callbackDispatcher = new CallBack(onSuccess: () =>
-                                                            {
-                                                                currentUserName = username;
-                                                                isLoggedIn = true;
-                                                                callback?.Success();
-                                                            },
-                                                            onProgress: (int progress) => callback?.Progress(progress),
-                                                            onError: (int error, string description) => callback?.Error(error, description));
-                Debug.Log($"Login callback dispatcher ${callbackDispatcher.callbackId}");
-                ChatAPINative.Client_Login(client, callbackDispatcher, username, pwdOrToken, isToken);
+                //clear all pre-registered events handler
+                OnLoginSuccess = null;
+                OnLoginError = null;
+
+                OnLoginSuccess += () =>
+                {
+                    currentUserName = username;
+                    isLoggedIn = true;
+                    callback?.Success();
+                };
+                OnLoginError += (int code, string desc) => callback?.Error(code, desc);
+
+                ChatAPINative.Client_Login(client, OnLoginSuccess, OnLoginError, username, pwdOrToken, isToken);
             } else {
                 Debug.LogError("::InitWithOptions() not called yet.");
             }
@@ -66,14 +86,14 @@ namespace ChatSDK
         {
             if (client != IntPtr.Zero)
             {
-                CallBack callbackDispatcher = new CallBack(onSuccess: () =>
-                                                            {
-                                                                currentUserName = "";
-                                                                isLoggedIn = false;
-                                                                callback?.Success();
-                                                            });
-                Debug.Log($"Logout callback dispatcher ${callbackDispatcher.callbackId}");
-                ChatAPINative.Client_Logout(client, callbackDispatcher, unbindDeviceToken);
+                OnLogoutSuccess = null;
+                OnLogoutSuccess += () =>
+                {
+                    currentUserName = "";
+                    isLoggedIn = false;
+                    callback?.Success();
+                };
+                ChatAPINative.Client_Logout(client, OnLogoutSuccess, unbindDeviceToken);
             } else {
                 Debug.LogError("::InitWithOptions() not called yet.");
             }
