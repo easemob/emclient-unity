@@ -24,6 +24,7 @@ namespace ChatSDK {
             {
                 callbackGameObject = new GameObject(Callback_Obj);
                 _getInstance = callbackGameObject.AddComponent<CallbackManager>();
+                DontDestroyOnLoad(callbackGameObject);
             }
 
             return _getInstance;

@@ -22,7 +22,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Temp\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;UNITY_2019_4_28;UNITY_2019_4;UNITY_2019;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_2019_4_OR_NEWER;PLATFORM_ARCH_64;UNITY_64;UNITY_INCLUDE_TESTS;ENABLE_AR;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_NATIVE_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;INCLUDE_DYNAMIC_GI;ENABLE_MONO_BDWGC;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;ENABLE_VIDEO;PLATFORM_STANDALONE;PLATFORM_STANDALONE_OSX;UNITY_STANDALONE_OSX;UNITY_STANDALONE;ENABLE_GAMECENTER;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_CLUSTER_SYNC;ENABLE_CLUSTERINPUT;ENABLE_SPATIALTRACKING;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_STANDARD_2_0;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_IG;UNITY_EDITOR_64;UNITY_EDITOR_OSX;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_VSTU;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_LEGACY_INPUT_MANAGER;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNITY_2019_4_28;UNITY_2019_4;UNITY_2019;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_2019_4_OR_NEWER;UNITY_INCLUDE_TESTS;ENABLE_AR;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_EVENT_QUEUE;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_NATIVE_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;ENABLE_RUNTIME_PERMISSIONS;ENABLE_ENGINE_CODE_STRIPPING;ENABLE_ONSCREEN_KEYBOARD;INCLUDE_DYNAMIC_GI;ENABLE_MONO_BDWGC;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_MONO;ENABLE_VIDEO;PLATFORM_ANDROID;UNITY_ANDROID;UNITY_ANDROID_API;ENABLE_EGL;ENABLE_NETWORK;ENABLE_RUNTIME_GI;ENABLE_CRUNCH_TEXTURE_COMPRESSION;PLATFORM_SUPPORTS_ADS_ID;UNITY_CAN_SHOW_SPLASH_SCREEN;UNITY_HAS_GOOGLEVR;UNITY_HAS_TANGO;ENABLE_SPATIALTRACKING;UNITY_ASTC_ONLY_DECOMPRESS;ENABLE_UNITYADS_RUNTIME;UNITY_UNITYADS_API;ENABLE_MONO;NET_STANDARD_2_0;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_IG;UNITY_EDITOR_64;UNITY_EDITOR_OSX;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_VSTU;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_LEGACY_INPUT_MANAGER;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
@@ -49,7 +49,7 @@
     <UnityProjectGenerator>Unity/VSTU</UnityProjectGenerator>
     <UnityProjectGeneratorVersion>2.9.3.0</UnityProjectGeneratorVersion>
     <UnityProjectType>Game:1</UnityProjectType>
-    <UnityBuildTarget>StandaloneOSX:2</UnityBuildTarget>
+    <UnityBuildTarget>Android:13</UnityBuildTarget>
     <UnityVersion>2019.4.28f1c1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
@@ -166,12 +166,6 @@
     </Reference>
     <Reference Include="UnityEngine.ClothModule">
       <HintPath>/Applications/Unity/Hub/Editor/2019.4.28f1c1/Unity.app/Contents/Managed/UnityEngine/UnityEngine.ClothModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.ClusterInputModule">
-      <HintPath>/Applications/Unity/Hub/Editor/2019.4.28f1c1/Unity.app/Contents/Managed/UnityEngine/UnityEngine.ClusterInputModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.ClusterRendererModule">
-      <HintPath>/Applications/Unity/Hub/Editor/2019.4.28f1c1/Unity.app/Contents/Managed/UnityEngine/UnityEngine.ClusterRendererModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>/Applications/Unity/Hub/Editor/2019.4.28f1c1/Unity.app/Contents/Managed/UnityEngine/UnityEngine.CoreModule.dll</HintPath>
@@ -324,13 +318,13 @@
       <HintPath>/Applications/Unity/Hub/Editor/2019.4.28f1c1/Unity.app/Contents/Managed/UnityEditor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.Tracker">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/PackageCache/com.unity.analytics@3.3.5/Unity.Analytics.Tracker.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/PackageCache/com.unity.analytics@3.3.5/Unity.Analytics.Tracker.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.Editor">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/PackageCache/com.unity.analytics@3.3.5/Unity.Analytics.Editor.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/PackageCache/com.unity.analytics@3.3.5/Unity.Analytics.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.StandardEvents">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/PackageCache/com.unity.analytics@3.3.5/AnalyticsStandardEvents/Unity.Analytics.StandardEvents.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/PackageCache/com.unity.analytics@3.3.5/AnalyticsStandardEvents/Unity.Analytics.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.iOS.Extensions.Xcode">
       <HintPath>/Applications/Unity/Hub/Editor/2019.4.28f1c1/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
@@ -684,91 +678,91 @@
       <HintPath>/Applications/Unity/Hub/Editor/2019.4.28f1c1/Unity.app/Contents/NetStandard/compat/2.0.0/shims/netfx/mscorlib.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline.Editor">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Monetization">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/UnityEngine.Monetization.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/UnityEngine.Monetization.dll</HintPath>
     </Reference>
     <Reference Include="com.unity.multiplayer-hlapi.Editor">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/com.unity.multiplayer-hlapi.Editor.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/com.unity.multiplayer-hlapi.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VSCode.Editor">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Purchasing.Stores">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/UnityEngine.Purchasing.Stores.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/UnityEngine.Purchasing.Stores.dll</HintPath>
     </Reference>
     <Reference Include="Purchasing.Common">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/Purchasing.Common.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/Purchasing.Common.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Advertisements">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/UnityEngine.Advertisements.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/UnityEngine.Advertisements.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Purchasing">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/UnityEngine.Purchasing.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/UnityEngine.Purchasing.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.Purchasing">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/UnityEditor.Purchasing.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/UnityEditor.Purchasing.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Purchasing.Codeless">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/UnityEngine.Purchasing.Codeless.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/UnityEngine.Purchasing.Codeless.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Purchasing.SecurityCore">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/UnityEngine.Purchasing.SecurityCore.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/UnityEngine.Purchasing.SecurityCore.dll</HintPath>
     </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
     </Reference>
     <Reference Include="com.unity.multiplayer-weaver.Editor">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/com.unity.multiplayer-weaver.Editor.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/com.unity.multiplayer-weaver.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.XR.LegacyInputHelpers">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/UnityEngine.XR.LegacyInputHelpers.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/UnityEngine.XR.LegacyInputHelpers.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Rider.Editor">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.2D.Sprite.Editor">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/Unity.2D.Sprite.Editor.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/Unity.2D.Sprite.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.2D.Tilemap.Editor">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/Unity.2D.Tilemap.Editor.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/Unity.2D.Tilemap.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.SpatialTracking">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/UnityEditor.SpatialTracking.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/UnityEditor.SpatialTracking.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.SpatialTracking">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/UnityEngine.SpatialTracking.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/UnityEngine.SpatialTracking.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Advertisements.Editor">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/UnityEngine.Advertisements.Editor.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/UnityEngine.Advertisements.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.DataPrivacy">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.XR.LegacyInputHelpers">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/UnityEditor.XR.LegacyInputHelpers.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/UnityEditor.XR.LegacyInputHelpers.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Purchasing.SecurityStub">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/UnityEngine.Purchasing.SecurityStub.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/UnityEngine.Purchasing.SecurityStub.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.UI">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
     </Reference>
     <Reference Include="com.unity.multiplayer-hlapi.Runtime">
-      <HintPath>/Users/dujiepeng/Enjoy/work/project/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/com.unity.multiplayer-hlapi.Runtime.dll</HintPath>
+      <HintPath>/Users/dujiepeng/Enjoy/work/Easemob/im/sdk3.x/emclient-unity/ChatSDKDemo/Library/ScriptAssemblies/com.unity.multiplayer-hlapi.Runtime.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup></ItemGroup>

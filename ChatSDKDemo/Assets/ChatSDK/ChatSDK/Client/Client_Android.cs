@@ -41,7 +41,7 @@ namespace ChatSDK
 
         public override void Logout(bool unbindDeviceToken, CallBack callBack = null)
         {
-            wrapper.Call("logout", unbindDeviceToken, null);
+            wrapper.Call("logout", unbindDeviceToken, callBack?.callbackId);
         }
         public override string CurrentUsername()
         {

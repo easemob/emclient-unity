@@ -18,16 +18,15 @@ public class Login : MonoBehaviour
         loginButton.onClick.AddListener(LoginAction);
         registerButton.onClick.AddListener(RegisterAction);
         Options options = new Options("easemob-demo#easeim");
-        //options.DNSURL = "easemob.com";
-        //options.IMServer = "msync-im1.easemob.com";
-        //options.IMPort = 6717;
-        //options.RestServer = "a1.easemob.com";
-        options.UsingHttpsOnly = true;
+        options.DebugMode = true;
         options.RequireAck = false;
         options.AcceptInvitationAlways = true;
-        //options.EnableDNSConfig = false;
         SDKClient client = SDKClient.Instance;
         client.InitWithOptions(options);
+
+        if (SDKClient.Instance.IsLoggedIn) {
+            SceneManager.LoadScene("Main");
+        }
     }
 
 
@@ -45,15 +44,15 @@ public class Login : MonoBehaviour
 
     void RegisterAction()
     {
-        print("注册被点击: " + usernameField.text + ", " + passwordField.text);
-        SDKClient.Instance.CreateAccount(usernameField.text, passwordField.text, new CallBack(
-            onSuccess:()=> {
-                print("注册成功");
-            },
-            onError:(code, desc) => {
-                print("注册失败-- desc: " + desc);
-            }
-        ));
+        //print("注册被点击: " + usernameField.text + ", " + passwordField.text);
+        //SDKClient.Instance.CreateAccount(usernameField.text, passwordField.text, new CallBack(
+        //    onSuccess:()=> {
+        //        print("注册成功");
+        //    },
+        //    onError:(code, desc) => {
+        //        print("注册失败-- desc: " + desc);
+        //    }
+        //));
     }
 
     // Update is called once per frame

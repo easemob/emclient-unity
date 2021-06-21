@@ -210,9 +210,9 @@ namespace ChatSDK
             return jo.ToString();
         }
 
-        static internal string JsonStringFromAttributes(Dictionary<string, AttributeValue> attributes)
+        static internal string JsonStringFromAttributes(Dictionary<string, AttributeValue> attributes = null)
         {
-            if (attributes == null) return null;
+            //if (attributes == null) return null;
             JSONObject jo = new JSONObject();
             var keys = attributes.Keys;
             foreach (var key in keys)

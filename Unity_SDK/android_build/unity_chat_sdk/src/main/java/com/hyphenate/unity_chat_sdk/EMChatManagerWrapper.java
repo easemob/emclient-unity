@@ -1,5 +1,9 @@
 package com.hyphenate.unity_chat_sdk;
 
+import android.os.Debug;
+import android.os.Message;
+import android.util.Log;
+
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMCursorResult;
@@ -31,17 +35,14 @@ public class EMChatManagerWrapper extends EMWrapper  {
         EMClient.getInstance().chatManager().addMessageListener(listener);
     }
 
-        private void sendMessage(String jsonString, String callbackId) throws JSONException {
+    private String sendMessage(String jsonString, String callbackId) throws JSONException {
+        Log.d("unity_sdk","will send: " + jsonString);
         EMMessage msg = EMMessageHelper.fromJson(new JSONObject(jsonString));
         msg.setMessageStatusCallback(new EMUnityCallback(callbackId));
         asyncRunnable(() -> {
             EMClient.getInstance().chatManager().sendMessage(msg);
-            try {
-                onSuccess("EMMessage", callbackId, EMMessageHelper.toJson(msg).toString());
-            } catch (JSONException jsonException) {
-                jsonException.printStackTrace();
-            }
         });
+        return EMMessageHelper.toJson(msg).toString();
     }
 
     private String resendMessage(String messageId, String callbackId) throws JSONException {

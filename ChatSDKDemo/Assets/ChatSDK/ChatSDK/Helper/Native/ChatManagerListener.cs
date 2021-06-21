@@ -90,8 +90,8 @@ namespace ChatSDK {
                 }
             }
         }
-
-        internal void OnCoversationUpdate()
+        
+        internal void OnConversationUpdate(string str)
         {
             if (delegater != null)
             {

@@ -397,7 +397,7 @@ namespace ChatSDK
         /// <summary>
         /// 消息Id
         /// </summary>
-        public string MsgId = "";
+        public string MsgId = new TimeSpan(DateTime.Now.Ticks).TotalMilliseconds.ToString();
 
         /// <summary>
         /// 消息所属会话Id
@@ -549,7 +549,7 @@ namespace ChatSDK
                 MsgId = jo["msgId"].Value;
                 HasReadAck = jo["hasRead"].AsBool;
                 Status = MessageStatusFromInt(jo["status"].AsInt);
-                MessageType = MessageTypeFromInt(jo["messageType"].AsInt);
+                MessageType = MessageTypeFromInt(jo["chatType"].AsInt);
                 Direction = MessageDirectionFromString(jo["direction"].Value);
                 //Attributes = TransformTool.JsonStringToDictionary(jo["attributes"].Value);
                 Body = BodyFromJsonString(jo["body"].Value, jo["bodyType"].Value);
@@ -568,9 +568,9 @@ namespace ChatSDK
             jo.Add("msgId", MsgId);
             jo.Add("hasRead", HasReadAck);
             jo.Add("status", MessageStatusToInt(Status));
-            jo.Add("messageType", MessageTypeToInt(MessageType));
+            jo.Add("chatType", MessageTypeToInt(MessageType));
             jo.Add("direction", MessageDirectionToString(Direction));
-            jo.Add("attributes", TransformTool.JsonStringFromAttributes(Attributes));
+            //jo.Add("attributes", TransformTool.JsonStringFromAttributes(Attributes));
             jo.Add("body", Body.ToJsonString());
             return jo.ToString();
         }

@@ -8,7 +8,7 @@ namespace ChatSDK
     public abstract class IMessageBody
     {
         public MessageBodyType Type;
-        internal abstract string ToJsonString();
+        internal abstract JSONObject ToJsonString();
 
         internal int DownLoadStatusToInt(MessageBody.DownLoadStatus status)
         {
@@ -78,12 +78,12 @@ namespace ChatSDK
                 }
             }
 
-            internal override string ToJsonString()
+            internal override JSONObject ToJsonString()
             {
                 JSONObject jo = new JSONObject();
                 jo.Add("content", Text);
                 jo.Add("type", "txt");
-                return jo.ToString();
+                return jo;
             }
         }
 
@@ -114,14 +114,14 @@ namespace ChatSDK
                 }
             }
 
-            internal override string ToJsonString()
+            internal override JSONObject ToJsonString()
             {
                 JSONObject jo = new JSONObject();
                 jo.Add("latitude", Latitude);
                 jo.Add("longitude", Longitude);
                 jo.Add("address", Address);
                 jo.Add("type", "loc");
-                return jo.ToString();
+                return jo;
             }
         }
 
@@ -160,7 +160,7 @@ namespace ChatSDK
 
             internal FileBody() { }
 
-            internal override string ToJsonString()
+            internal override JSONObject ToJsonString()
             {
                 JSONObject jo = new JSONObject();
                 jo.Add("localPath", LocalPath);
@@ -171,7 +171,7 @@ namespace ChatSDK
                 jo.Add("fileSize", FileSize);
                 jo.Add("fileStatus", DownLoadStatusToInt(DownStatus));
                 jo.Add("type", "file");
-                return jo.ToString();
+                return jo;
             }
 
         }
@@ -213,7 +213,7 @@ namespace ChatSDK
                 }
             }
 
-            internal override string ToJsonString()
+            internal override JSONObject ToJsonString()
             {
                 JSONObject jo = new JSONObject();
                 jo.Add("localPath", LocalPath);
@@ -230,7 +230,7 @@ namespace ChatSDK
                 jo.Add("width", Width);
                 jo.Add("sendOriginalImage", Original);
                 jo.Add("type", "img");
-                return jo.ToString();
+                return jo;
             }
         }
 
@@ -260,7 +260,7 @@ namespace ChatSDK
                 }
             }
 
-            internal override string ToJsonString()
+            internal override JSONObject ToJsonString()
             {
                 JSONObject jo = new JSONObject();
                 jo.Add("localPath", LocalPath);
@@ -272,7 +272,7 @@ namespace ChatSDK
                 jo.Add("fileStatus", DownLoadStatusToInt(DownStatus));
                 jo.Add("duration", Duration);
                 jo.Add("type", "voice");
-                return jo.ToString();
+                return jo;
             }
         }
 
@@ -314,7 +314,7 @@ namespace ChatSDK
                 }
             }
 
-            internal override string ToJsonString()
+            internal override JSONObject ToJsonString()
             {
                 JSONObject jo = new JSONObject();
                 jo.Add("localPath", LocalPath);
@@ -330,7 +330,7 @@ namespace ChatSDK
                 jo.Add("width", Width);
                 jo.Add("duration", Duration);
                 jo.Add("type", "video");
-                return jo.ToString();
+                return jo;
             }
         }
 
@@ -359,13 +359,13 @@ namespace ChatSDK
                 }
             }
 
-            internal override string ToJsonString()
+            internal override JSONObject ToJsonString()
             {
                 JSONObject jo = new JSONObject();
                 jo.Add("deliverOnlineOnly", DeliverOnlineOnly);
                 jo.Add("action", Action);
                 jo.Add("type", "cmd");
-                return jo.ToString();
+                return jo;
             }
         }
 
@@ -396,13 +396,13 @@ namespace ChatSDK
                 }
             }
 
-            internal override string ToJsonString()
+            internal override JSONObject ToJsonString()
             {
                 JSONObject jo = new JSONObject();
                 jo.Add("event", CustomEvent);
                 jo.Add("params", TransformTool.JsonStringFromDictionary(CustomParams));
                 jo.Add("type", "custom");
-                return jo.ToString();
+                return jo;
             }
         }
     }

@@ -118,7 +118,7 @@ public class EMUnityChatManagerListener implements EMMessageListener, EMConversa
     @Override
     public void onCoversationUpdate() {
         Log.d("unity_sdk","onConversationUpdate");
-        UnityPlayer.UnitySendMessage(EMSDKMethod.ChatListener_Obj, "OnConversationUpdate", null);
+        UnityPlayer.UnitySendMessage(EMSDKMethod.ChatListener_Obj, "OnConversationUpdate", "");
     }
 
     @Override

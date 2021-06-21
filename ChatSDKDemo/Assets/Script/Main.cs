@@ -50,6 +50,8 @@ public class Main : MonoBehaviour
         LeaveRoomBtn.onClick.AddListener(LeaveRoomAction);
 
         ToggleGroup = GameObject.Find("ToggleGroup").GetComponent<ToggleGroup>().ActiveToggles();
+        foreach (Toggle tog in ToggleGroup) {
+        }
     }
 
     // Update is called once per frame
@@ -64,7 +66,10 @@ public class Main : MonoBehaviour
         string content = TextField.text;
         IChatManager chatManager = SDKClient.Instance.ChatManager;
         Message message = Message.CreateTextSendMessage(receiverId, content);
-        chatManager.SendMessage(message);       
+        chatManager.SendMessage(message, new CallBack(
+            onSuccess: () => { Debug.Log("发送成功"); },
+            onError: (code, desc) => { Debug.Log("发送失败 " + code); },
+            onProgress: (progress) => { Debug.Log(progress); }));
     }
 
     void JoinGroupAction()
