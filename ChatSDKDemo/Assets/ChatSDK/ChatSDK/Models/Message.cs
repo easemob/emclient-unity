@@ -16,21 +16,24 @@ namespace ChatSDK
         public MessageType Type;
         public MessageDirection Direction;
         public MessageStatus Status;
-        public long LocalTime;
-        public long ServerTime;
+        [MarshalAs(UnmanagedType.U1)]
         public bool HasDeliverAck;
+        [MarshalAs(UnmanagedType.U1)]
         public bool HasReadAck;
-        /*public MessageBodyType BodyType;
-        [MarshalAs(UnmanagedType.AsAny)]
+        public MessageBodyType BodyType;
+        /*[MarshalAs(UnmanagedType.AsAny)]
         public IMessageBody Body; //only 1 body processed
         public string[] AttributesKeys;
         public AttributeValue[] AttributesValues;
         public int AttributesSize;*/
+        public long LocalTime;
+        public long ServerTime;
 
         public MessageTransferObject(in Message message) {
-            (MsgId, ConversationId, From, To, Type, Direction, Status, LocalTime, ServerTime, HasDeliverAck, HasReadAck)
+            (MsgId, ConversationId, From, To, Type, Direction, Status, HasDeliverAck, HasReadAck, BodyType, LocalTime, ServerTime)
                 = (message.MsgId, message.ConversationId, message.From, message.To, message.MessageType, message.Direction, message.Status,
-                    message.LocalTime, message.ServerTime, message.HasDeliverAck, message.HasReadAck);
+                    message.HasDeliverAck, message.HasReadAck, message.Body.Type,
+                    message.LocalTime, message.ServerTime);
         }
 
         public static List<Message> ConvertToMessageList(in MessageTransferObject[] _messages, int size)
@@ -113,7 +116,7 @@ namespace ChatSDK
 
         [FieldOffset(0)]
         AttributeValueType VType;
-        [FieldOffset(1)]
+        [FieldOffset(1), MarshalAs(UnmanagedType.U1)]
         bool BoolV;
         [FieldOffset(1)]
         sbyte CharV;

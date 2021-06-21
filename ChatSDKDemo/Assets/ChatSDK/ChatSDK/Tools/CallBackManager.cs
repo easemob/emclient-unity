@@ -12,7 +12,7 @@ namespace ChatSDK {
 
         static GameObject callbackGameObject;
 
-        internal int currentId = 1;
+        internal int CurrentId { get; private set; }
 
         internal Dictionary<string, object> dictionary = new Dictionary<string, object>();
 
@@ -33,20 +33,26 @@ namespace ChatSDK {
 
         internal void AddCallback(int callbackId, CallBack callback) {
             dictionary.Add(callbackId.ToString(), callback);
-            currentId++;
+            CurrentId++;
         }
 
         internal void AddValueCallback<T>(int callbackId, ValueCallBack<T> valueCallBack)
         {
             dictionary.Add(callbackId.ToString(), valueCallBack);
-            currentId++;
+            CurrentId++;
         }
 
 
         internal void RemoveCallback(int callbackId)
         {
-            if (dictionary.ContainsKey(callbackId.ToString())) {
-                dictionary.Remove(callbackId.ToString());
+            RemoveCallback(callbackId.ToString());
+        }
+
+        internal void RemoveCallback(string callbackId)
+        {
+            if (dictionary.ContainsKey(callbackId))
+            {
+                dictionary.Remove(callbackId);
             }
         }
 

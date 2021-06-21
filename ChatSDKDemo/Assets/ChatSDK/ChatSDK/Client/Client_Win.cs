@@ -23,11 +23,11 @@
             throw new System.NotImplementedException();
         }
 
-        public override string CurrentUsername() {
+       public override string CurrentUsername() {
             throw new System.NotImplementedException();
         }
 
-        public override void StartLog(string logFilePath)
+       public override void StartLog(string logFilePath)
         {
             throw new System.NotImplementedException();
         }

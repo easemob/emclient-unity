@@ -16,21 +16,20 @@ namespace ChatSDK{
         public const string MyLibName = "hyphenateCWrapper";
 #endif
 #endif
-		protected delegate void OnSuccess();
-		protected delegate void OnError(int error, string desc);
-		protected delegate void OnProgress(int progress);
+		[DllImport(MyLibName)]
+		internal static extern void Client_CreateAccount(IntPtr client, Action onSuccess, OnError onError, string username, string password);
 
 		[DllImport(MyLibName)]
-		internal static extern void Client_CreateAccount(IntPtr client, string username, string password);
+		internal static extern IntPtr Client_InitWithOptions(Options options, Action onConnect, OnDisconnected onDisconnect, Action onPong);
 
 		[DllImport(MyLibName)]
-		internal static extern IntPtr Client_InitWithOptions(Options options, ConnectionHub.Delegate @delegate);
+		internal static extern void Client_Login(IntPtr client, Action onSuccess, OnError onError, string username, string pwdOrToken, bool isToken = false);
 
 		[DllImport(MyLibName)]
-		internal static extern void Client_Login(IntPtr client, CallBack callback, string username, string pwdOrToken, bool isToken = false);
+		internal static extern void Client_Logout(IntPtr client, Action onSuccess, bool unbindDeviceToken);
 
 		[DllImport(MyLibName)]
-		internal static extern void Client_Logout(IntPtr client, bool unbindDeviceToken);
+		internal static extern void Client_Release(IntPtr client);
 
 		[DllImport(MyLibName)]
 		internal static extern void Client_StartLog(string logFilePath);
@@ -39,7 +38,7 @@ namespace ChatSDK{
 		internal static extern void Client_StopLog();
 
 		[DllImport(MyLibName)]
-		internal static extern void ChatManager_SendMessage(IntPtr client, CallBack callback, ref MessageTransferObject mto);
+		internal static extern void ChatManager_SendMessage(IntPtr client, Action onSuccess, OnError onError, ref MessageTransferObject mto);
 
 
 		#endregion native API import

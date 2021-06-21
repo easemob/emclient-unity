@@ -60,16 +60,22 @@ public class Main : MonoBehaviour
         
     }
 
+    void OnApplicationQuit()
+    {
+        Debug.Log("Quit and release resources...");
+        SDKClient.Instance.Logout(false);
+    }
+
     void SendMessageAction()
     {
         string receiverId = RecvIdField.text;
         string content = TextField.text;
         IChatManager chatManager = SDKClient.Instance.ChatManager;
         Message message = Message.CreateTextSendMessage(receiverId, content);
-        chatManager.SendMessage(message, new CallBack(
-            onSuccess: () => { Debug.Log("发送成功"); },
-            onError: (code, desc) => { Debug.Log("发送失败 " + code); },
-            onProgress: (progress) => { Debug.Log(progress); }));
+        CallBack callback = new CallBack(onSuccess: () => { Debug.Log("Message sent successfully!"); },
+                                            onProgress: (int progress) => { Debug.Log(progress); },
+                                            onError: (int code, string desc) => { Debug.Log(code + desc); });
+        chatManager.SendMessage(message, callback);
     }
 
     void JoinGroupAction()

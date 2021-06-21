@@ -62,6 +62,7 @@ namespace ChatSDK
         {
             return wrapper.Call<string>("accessToken");
         }
+
         public override void StartLog(string logFilePath)
         {
             throw new System.NotImplementedException();

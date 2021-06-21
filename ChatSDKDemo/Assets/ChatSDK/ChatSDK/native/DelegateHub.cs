@@ -16,49 +16,50 @@ namespace ChatSDK
     public delegate void OnConversationsUpdate();
     public delegate void OnConversationRead(string from, string to);
 
-    public class ConnectionHub : CallBack, IConnectionDelegate
+    public class ConnectionHub : CallBack
     {
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public struct Delegate
-        {
-            public Action Connected;
-            public OnDisconnected Disconnected;
-        };
+        //events handler
+        public Action OnConnected;
+        public OnDisconnected OnDisconnected;
+        public Action OnPong;
 
-        private Delegate @delegate;
         private WeakDelegater<IConnectionDelegate> listeners;
 
         public ConnectionHub(WeakDelegater<IConnectionDelegate> _listeners)
         {
+            //callbackmanager registration done in base()!
             listeners = _listeners;
-            (@delegate.Connected, @delegate.Disconnected) = (OnConnected, OnDisconnected);
-            callbackId = CallbackManager.Instance().currentId.ToString();
-            CallbackManager.Instance().AddCallback(CallbackManager.Instance().currentId, this);
-        }
-
-        public void OnConnected()
-        {
-            //invoke each listener in list
-            Debug.Log("ConnectionHub.OnConnected() invoked!");
-            foreach (IConnectionDelegate listener in listeners.List)
+            //register events
+            OnConnected = () =>
             {
-                listener.OnConnected();
-            }
-        }
-
-        public void OnDisconnected(int info)
-        {
-            //invoke each listener in list
-            Debug.Log($"ConnectionHub.OnDisconnected() invoked with info={info}!");
-            foreach (IConnectionDelegate listener in listeners.List)
+                Debug.Log("Connection established.");
+                foreach (IConnectionDelegate listener in listeners?.List)
+                {
+                    listener.OnConnected();
+                }
+            };
+            OnDisconnected = (int info) =>
             {
-                listener.OnDisconnected(info);
-            }
+                Debug.Log("Connection discontinued.");
+                foreach (IConnectionDelegate listener in listeners.List)
+                {
+                    listener.OnDisconnected(info);
+                }
+            };
+            OnPong = () =>
+            {
+                Debug.Log("Server ponged.");
+                foreach (IConnectionDelegate listener in listeners?.List)
+                {
+                    listener.OnPong();
+                }
+            };
+            Debug.Log($"Connection Hub callback ${callbackId} initialized!");
         }
 
-        public Delegate Delegates()
+        ~ConnectionHub()
         {
-            return @delegate;
+            Debug.Log($"ConnectionHub ${callbackId} finalized!");
         }
     }
 
@@ -95,8 +96,6 @@ namespace ChatSDK
                                                 OnMessagesRecalled,
                                                 OnConversationsUpdate,
                                                 OnConversationRead);
-            callbackId = CallbackManager.Instance().currentId.ToString();
-            CallbackManager.Instance().AddCallback(CallbackManager.Instance().currentId, this);
         }
 
         public void OnMessagesReceived(MessageTransferObject[] _messages, int size)
