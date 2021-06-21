@@ -16,6 +16,11 @@ public class TestCode : MonoBehaviour, IConnectionDelegate
         print("链接服务器断开: " + i);
     }
 
+    public void OnPong()
+    {
+        print("接收到心跳信息");
+    }
+
     void Start()
     {
 

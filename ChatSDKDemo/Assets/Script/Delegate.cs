@@ -14,4 +14,9 @@ public class ConnectionDelegate : IConnectionDelegate
     {
         Debug.Log($"Client disconnected with {info}.");
     }
+
+    public void OnPong()
+    {
+        Debug.Log("Server ponged.");
+    }
 }

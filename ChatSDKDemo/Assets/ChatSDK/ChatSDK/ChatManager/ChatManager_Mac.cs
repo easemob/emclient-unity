@@ -101,10 +101,8 @@ namespace ChatSDK
         {
             var mto = new MessageTransferObject(message);
             //clear previous linked events handler
-            OnSendMessageSuccess = null;
-            OnSendMessageError = null;
-            OnSendMessageSuccess += () => callback?.Success();
-            OnSendMessageError += (int code, string desc) => callback?.Error(code, desc);
+            OnSendMessageSuccess = () => callback?.Success();
+            OnSendMessageError = (int code, string desc) => callback?.Error(code, desc);
             ChatAPINative.ChatManager_SendMessage(client, OnSendMessageSuccess, OnSendMessageError, ref mto);
             //TODO: what Message to return from this SendMessage?
             return null;

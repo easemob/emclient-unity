@@ -60,7 +60,7 @@ EMChatConfigsPtr ConfigsFromOptions(Options *options) {
     return configs;
 }
 
-AGORA_API void* Client_InitWithOptions(Options *options, ConnListenerFptrs fptrs)
+AGORA_API void* Client_InitWithOptions(Options *options, FUNC_OnConnected onConnected, FUNC_OnDisconnected onDisconnected, FUNC_OnPong onPong)
 {
     // global switch
     G_DEBUG_MODE = options->DebugMode;
@@ -68,8 +68,7 @@ AGORA_API void* Client_InitWithOptions(Options *options, ConnListenerFptrs fptrs
     EMChatConfigsPtr configs = ConfigsFromOptions(options);
     EMClient * client = EMClient::create(configs);
     //TODO: keep connection listener instance disposable!
-    LOG("ConnectionListener FPtrs: OnConnect=%d, OnDisconnected=%d,", fptrs.Connected, fptrs.Disconnected);
-    //client->addConnectionListener(new ConnectionListener(fptrs));
+    client->addConnectionListener(new ConnectionListener(onConnected, onDisconnected, onPong));
     return client;
 }
 
@@ -95,6 +94,7 @@ AGORA_API void Client_Logout(void *client, FUNC_OnSuccess onSuccess, bool unbind
 
 AGORA_API void Client_Release(void *client)
 {
+    CLIENT->disconnect();
     delete CLIENT;
     client = nullptr;
 }

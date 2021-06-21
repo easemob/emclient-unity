@@ -4,9 +4,10 @@ using System;
 namespace ChatSDK
 {
     class Client_Mac : IClient
-    { 
+    {
+        private static ConnectionHub connectionHub;
+
         internal IntPtr client = IntPtr.Zero;
-        private ConnectionHub connectionHub;
         private string currentUserName;
         private bool isLoggedIn;
         private bool isConnected;
@@ -27,16 +28,8 @@ namespace ChatSDK
         {
             if (client != IntPtr.Zero)
             {
-                OnRegistrationSuccess = null;
-                OnRegistrationError = null;
-                OnRegistrationSuccess += () =>
-                {
-                    if (callback != null) callback.Success();
-                };
-                OnRegistrationError += (int code, string desc) =>
-                {
-                    if (callback != null) callback.Error(code, desc);
-                };
+                OnRegistrationSuccess = () => callback?.Success();
+                OnRegistrationError = (int code, string desc) => callback?.Error(code, desc);
                 ChatAPINative.Client_CreateAccount(client, OnRegistrationSuccess, OnRegistrationError, username, password);
             }
             else
@@ -49,7 +42,11 @@ namespace ChatSDK
         {
 
             ChatCallbackObject.GetInstance();
-            connectionHub = new ConnectionHub(listeners);
+            if(connectionHub == null)
+            {
+                connectionHub = new ConnectionHub(listeners); //init only once
+            }
+            
             // keep only 1 client left
             if(client != IntPtr.Zero)
             {
@@ -58,23 +55,19 @@ namespace ChatSDK
                 ChatAPINative.Client_Release(client);
             }
             StartLog("/tmp/unmanaged_dll.log");
-            client = ChatAPINative.Client_InitWithOptions(options, connectionHub.Delegates());
+            client = ChatAPINative.Client_InitWithOptions(options, connectionHub.OnConnected, connectionHub.OnDisconnected, connectionHub.OnPong);
         }
 
         public override void Login(string username, string pwdOrToken, bool isToken = false, CallBack callback = null)
         {
             if (client != IntPtr.Zero) {
-                //clear all pre-registered events handler
-                OnLoginSuccess = null;
-                OnLoginError = null;
-
-                OnLoginSuccess += () =>
+                OnLoginSuccess = () =>
                 {
                     currentUserName = username;
                     isLoggedIn = true;
                     callback?.Success();
                 };
-                OnLoginError += (int code, string desc) => callback?.Error(code, desc);
+                OnLoginError = (int code, string desc) => callback?.Error(code, desc);
 
                 ChatAPINative.Client_Login(client, OnLoginSuccess, OnLoginError, username, pwdOrToken, isToken);
             } else {
@@ -86,8 +79,7 @@ namespace ChatSDK
         {
             if (client != IntPtr.Zero)
             {
-                OnLogoutSuccess = null;
-                OnLogoutSuccess += () =>
+                OnLogoutSuccess = () =>
                 {
                     currentUserName = "";
                     isLoggedIn = false;
