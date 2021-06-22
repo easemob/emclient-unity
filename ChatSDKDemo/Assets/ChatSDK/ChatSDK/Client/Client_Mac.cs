@@ -52,7 +52,6 @@ namespace ChatSDK
             {
                 //stop log service
                 StopLog();
-                ChatAPINative.Client_Release(client);
             }
             StartLog("/tmp/unmanaged_dll.log");
             client = ChatAPINative.Client_InitWithOptions(options, connectionHub.OnConnected, connectionHub.OnDisconnected, connectionHub.OnPong);

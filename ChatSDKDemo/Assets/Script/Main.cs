@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using ChatSDK;
+using UnityEngine.SceneManagement;
 
 public class Main : MonoBehaviour
 {
@@ -88,7 +89,9 @@ public class Main : MonoBehaviour
 
     void LeaveGroupAction()
     {
-
+        //used for logout and scene change!
+        SDKClient.Instance.Logout(false);
+        SceneManager.LoadScene("Login");
     }
 
     void JoinRoomAction()

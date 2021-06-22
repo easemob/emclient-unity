@@ -29,9 +29,6 @@ namespace ChatSDK{
 		internal static extern void Client_Logout(IntPtr client, Action onSuccess, bool unbindDeviceToken);
 
 		[DllImport(MyLibName)]
-		internal static extern void Client_Release(IntPtr client);
-
-		[DllImport(MyLibName)]
 		internal static extern void Client_StartLog(string logFilePath);
 
 		[DllImport(MyLibName)]
