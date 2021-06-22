@@ -33,9 +33,10 @@
             throw new System.NotImplementedException();
         }
 
-        public override bool IsConnected()
+        public override bool IsConnected
         {
-            throw new System.NotImplementedException();
+            get => IsConnected;
+            internal set => IsConnected = value;
         }
 
         public override bool IsLoggedIn()

@@ -37,7 +37,7 @@ namespace ChatSDK
 
         public bool IsLoggedIn { get => _Sdk.IsLoggedIn(); }
 
-        public bool IsConnected { get => _Sdk.IsConnected(); }
+        public bool IsConnected { get => _Sdk.IsConnected; }
 
         public string AccessToken { get => _Sdk.AccessToken(); }
 

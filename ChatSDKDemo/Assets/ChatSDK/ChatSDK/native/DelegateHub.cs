@@ -25,7 +25,7 @@ namespace ChatSDK
 
         private WeakDelegater<IConnectionDelegate> listeners;
 
-        public ConnectionHub(WeakDelegater<IConnectionDelegate> _listeners)
+        public ConnectionHub(IClient client, WeakDelegater<IConnectionDelegate> _listeners)
         {
             //callbackmanager registration done in base()!
             listeners = _listeners;
@@ -33,6 +33,7 @@ namespace ChatSDK
             OnConnected = () =>
             {
                 Debug.Log("Connection established.");
+                client.IsConnected = true;
                 foreach (IConnectionDelegate listener in listeners?.List)
                 {
                     listener.OnConnected();
@@ -41,6 +42,7 @@ namespace ChatSDK
             OnDisconnected = (int info) =>
             {
                 Debug.Log("Connection discontinued.");
+                client.IsConnected = false;
                 foreach (IConnectionDelegate listener in listeners.List)
                 {
                     listener.OnDisconnected(info);

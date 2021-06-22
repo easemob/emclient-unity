@@ -44,7 +44,7 @@ namespace ChatSDK
             ChatCallbackObject.GetInstance();
             if(connectionHub == null)
             {
-                connectionHub = new ConnectionHub(listeners); //init only once
+                connectionHub = new ConnectionHub(this, listeners); //init only once
             }
             
             // keep only 1 client left
@@ -95,9 +95,10 @@ namespace ChatSDK
             return currentUserName;
         }
 
-        public override bool IsConnected()
+        public override bool IsConnected
         {
-            return isConnected;
+            get => isConnected;
+            internal set => isConnected = value;
         }
 
         public override bool IsLoggedIn()

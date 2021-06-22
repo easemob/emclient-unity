@@ -119,7 +119,7 @@
 
         public abstract string CurrentUsername();
 
-        public abstract bool IsConnected();
+        public abstract bool IsConnected { get; internal set; }
 
         public abstract bool IsLoggedIn();
 

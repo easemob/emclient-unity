@@ -20,21 +20,20 @@ namespace ChatSDK
         public bool HasDeliverAck;
         [MarshalAs(UnmanagedType.U1)]
         public bool HasReadAck;
-        public MessageBodyType BodyType;
-        /*[MarshalAs(UnmanagedType.AsAny)]
-        public IMessageBody Body; //only 1 body processed
-        public string[] AttributesKeys;
-        public AttributeValue[] AttributesValues;
-        public int AttributesSize;*/
         public long LocalTime;
         public long ServerTime;
-
-        public MessageTransferObject(in Message message) {
-            (MsgId, ConversationId, From, To, Type, Direction, Status, HasDeliverAck, HasReadAck, BodyType, LocalTime, ServerTime)
+        public MessageBodyType BodyType;
+        [MarshalAs(UnmanagedType.AsAny)]
+        public IMessageBody Body; //only 1 body processed
+        /*public string[] AttributesKeys;
+        public AttributeValue[] AttributesValues;
+        public int AttributesSize;*/
+        
+        public MessageTransferObject(in Message message) =>
+            (MsgId, ConversationId, From, To, Type, Direction, Status, HasDeliverAck, HasReadAck, LocalTime, ServerTime, BodyType, Body )
                 = (message.MsgId, message.ConversationId, message.From, message.To, message.MessageType, message.Direction, message.Status,
-                    message.HasDeliverAck, message.HasReadAck, message.Body.Type,
-                    message.LocalTime, message.ServerTime);
-        }
+                    message.HasDeliverAck, message.HasReadAck,
+                    message.LocalTime, message.ServerTime, message.Body.Type, message.Body);
 
         public static List<Message> ConvertToMessageList(in MessageTransferObject[] _messages, int size)
         {
