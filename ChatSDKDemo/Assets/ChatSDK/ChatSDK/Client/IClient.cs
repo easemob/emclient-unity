@@ -128,5 +128,6 @@
         public abstract void StartLog(string logFilePath);
 
         public abstract void StopLog();
+
     }
 }

@@ -79,6 +79,7 @@ namespace ChatSDK
         {
             throw new System.NotImplementedException();
         }
+
     }
 
     class ClientNative

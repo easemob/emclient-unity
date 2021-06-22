@@ -26,6 +26,7 @@ obj/
 *.unityproj
 *.booproj
 ChatSDKDemo/.vs
+ChatSDKDemo/ProjectSettings/
 
 **/Release
 

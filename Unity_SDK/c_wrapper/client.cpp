@@ -60,16 +60,23 @@ EMChatConfigsPtr ConfigsFromOptions(Options *options) {
     return configs;
 }
 
+EMClient *gClient = NULL;
+ConnectionListener *gConnectionListener = NULL;
+
 AGORA_API void* Client_InitWithOptions(Options *options, FUNC_OnConnected onConnected, FUNC_OnDisconnected onDisconnected, FUNC_OnPong onPong)
 {
     // global switch
     G_DEBUG_MODE = options->DebugMode;
     G_AUTO_LOGIN = options->AutoLogin;
-    EMChatConfigsPtr configs = ConfigsFromOptions(options);
-    EMClient * client = EMClient::create(configs);
-    //TODO: keep connection listener instance disposable!
-    client->addConnectionListener(new ConnectionListener(onConnected, onDisconnected, onPong));
-    return client;
+    // singleton client handle
+    if(gClient == nullptr) {
+        EMChatConfigsPtr configs = ConfigsFromOptions(options);
+        gClient = EMClient::create(configs);
+        gConnectionListener = new ConnectionListener(onConnected, onDisconnected, onPong);
+        gClient->addConnectionListener(gConnectionListener);
+    }
+    
+    return gClient;
 }
 
 AGORA_API void Client_Login(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, const char *username, const char *pwdOrToken, bool isToken)
@@ -90,13 +97,6 @@ AGORA_API void Client_Logout(void *client, FUNC_OnSuccess onSuccess, bool unbind
 {
     CLIENT->logout();
     if(onSuccess) onSuccess();
-}
-
-AGORA_API void Client_Release(void *client)
-{
-    CLIENT->disconnect();
-    delete CLIENT;
-    client = nullptr;
 }
 
 AGORA_API void Client_StartLog(const char *logFilePath) {

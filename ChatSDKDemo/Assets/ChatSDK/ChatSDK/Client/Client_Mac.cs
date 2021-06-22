@@ -120,6 +120,7 @@ namespace ChatSDK
         {
             ChatAPINative.Client_StopLog();
         }
+
     }
 
 }
