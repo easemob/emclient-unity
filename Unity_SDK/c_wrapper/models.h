@@ -90,8 +90,44 @@ struct MessageTransferObject
     long ServerTime;
     
     EMMessagePtr toEMMessage() {
-        LOG("Message LocalTime: %l", LocalTime);
-        LOG("Message ServerTime: %l", ServerTime);
+        LOG("sizeof char=%lu", sizeof(char));
+        LOG("Address of MsgId=%x",&MsgId);
+        LOG("MsgId=%c", MsgId);
+        int i = 0;
+        while(MsgId[i] != '\0')
+        {
+            LOG("MsgId[%d]=%d", i, MsgId[i]);
+            i++;
+        }
+        LOG("Address of ConversationId=%x",&ConversationId);
+        LOG("ConversationId=%c", ConversationId);
+        LOG("Address of From=%x",&From);
+        LOG("From=%c", From);
+        i=0;
+        while(MsgId[i] != '\0')
+        {
+            LOG("MsgId[%d]=%d", i, MsgId[i]);
+            i++;
+        }
+        LOG("Address of To=%x",&To);
+        LOG("To=%c", To);
+        LOG("Address of Type=%x",&Type);
+        LOG("Type=%d", Type);
+        LOG("Address of Direction=%x",&Direction);
+        LOG("Direction=%lu", Direction);
+        LOG("Address of Status=%x",&Status);
+        LOG("Status=%lu", Status);
+        LOG("Address of HasDeliverAck=%x",&HasDeliverAck);
+        LOG("HasDeliverAck=%lu", HasDeliverAck);
+        LOG("Address of HasReadAck=%x",&HasReadAck);
+        LOG("HasReadAck=%lu", HasReadAck);
+        LOG("Address of BodyType=%x",&BodyType);
+        LOG("BodyType=%lu", BodyType);
+        LOG("Address of LocalTime=%x",&LocalTime);
+        LOG("LocalTime=%lu", LocalTime);
+        LOG("Address of ServerTime=%x",&ServerTime);
+        LOG("ServerTime=%lu", ServerTime);
+        
         EMMessageBodyPtr messageBody = EMMessageBodyPtr(new EMTextMessageBody("hello"));
         EMMessagePtr messagePtr = EMMessage::createSendMessage(std::string(From), std::string(To), messageBody);
         return messagePtr;

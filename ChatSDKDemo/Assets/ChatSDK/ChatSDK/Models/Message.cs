@@ -6,31 +6,41 @@ using SimpleJSON;
 namespace ChatSDK
 {
     //MessageTransferObject: Data object to be transferred across managed/unmanaged border
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    [StructLayout(LayoutKind.Explicit, CharSet = CharSet.Ansi)]
     public struct MessageTransferObject
     {
+        [FieldOffset(0), MarshalAs(UnmanagedType.LPStr)]
         public string MsgId;
+        [FieldOffset(8), MarshalAs(UnmanagedType.LPStr)]
         public string ConversationId;
+        [FieldOffset(16), MarshalAs(UnmanagedType.LPStr)]
         public string From;
+        [FieldOffset(24), MarshalAs(UnmanagedType.LPStr)]
         public string To;
+        [FieldOffset(32)]
         public MessageType Type;
+        [FieldOffset(36)]
         public MessageDirection Direction;
+        [FieldOffset(40)]
         public MessageStatus Status;
-        [MarshalAs(UnmanagedType.U1)]
+        [FieldOffset(44), MarshalAs(UnmanagedType.U1)]
         public bool HasDeliverAck;
-        [MarshalAs(UnmanagedType.U1)]
+        [FieldOffset(45), MarshalAs(UnmanagedType.U1)]
         public bool HasReadAck;
-        public long LocalTime;
-        public long ServerTime;
+        [FieldOffset(48)]
         public MessageBodyType BodyType;
         [MarshalAs(UnmanagedType.AsAny)]
         public IMessageBody Body; //only 1 body processed
         /*public string[] AttributesKeys;
         public AttributeValue[] AttributesValues;
         public int AttributesSize;*/
-        
-        public MessageTransferObject(in Message message) =>
-            (MsgId, ConversationId, From, To, Type, Direction, Status, HasDeliverAck, HasReadAck, LocalTime, ServerTime, BodyType, Body )
+        [FieldOffset(56)]
+        public long LocalTime;
+        [FieldOffset(64)]
+        public long ServerTime;
+
+        public MessageTransferObject(in Message message) {
+            (MsgId, ConversationId, From, To, Type, Direction, Status, HasDeliverAck, HasReadAck, BodyType, LocalTime, ServerTime)
                 = (message.MsgId, message.ConversationId, message.From, message.To, message.MessageType, message.Direction, message.Status,
                     message.HasDeliverAck, message.HasReadAck,
                     message.LocalTime, message.ServerTime, message.Body.Type, message.Body);
