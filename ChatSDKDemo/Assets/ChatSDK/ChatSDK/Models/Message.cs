@@ -5,7 +5,7 @@ using SimpleJSON;
 
 namespace ChatSDK
 {
-    [StructLayout(LayoutKind.Explicit)]
+    [StructLayout(LayoutKind.Explicit, CharSet = CharSet.Ansi)]
     public struct MessageBodyUnion
     {
         [FieldOffset(0)]
@@ -14,13 +14,13 @@ namespace ChatSDK
         public FileBodyTO FileBody;
     }
 
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public struct TextBodyTO
     {
         public string Content;
     }
 
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public struct FileBodyTO
     {
         public string LocalPath;

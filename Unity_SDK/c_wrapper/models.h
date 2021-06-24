@@ -107,10 +107,12 @@ struct MessageTransferObject
     
     EMMessagePtr toEMMessage() {
         //compose message body
-        EMMessageBodyPtr messageBody = EMMessageBodyPtr(new EMTextMessageBody("hello"));
-        /*if(BodyType == EMMessageBody::TEXT) {
-            messageBody = EMMessageBodyPtr(new EMTextMessageBody("test"));
-        }*/
+        EMMessageBodyPtr messageBody;
+        if(BodyType == EMMessageBody::TEXT) {
+            messageBody = EMMessageBodyPtr(new EMTextMessageBody(std::string(Body.textBody.content)));
+            //unlink Body.textBody
+            Body.textBody.content = nullptr;
+        }
         EMMessagePtr messagePtr = EMMessage::createSendMessage(std::string(From), std::string(To), messageBody);
         return messagePtr;
     }
