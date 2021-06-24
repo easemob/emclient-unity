@@ -5,45 +5,68 @@ using SimpleJSON;
 
 namespace ChatSDK
 {
-    //MessageTransferObject: Data object to be transferred across managed/unmanaged border
-    [StructLayout(LayoutKind.Explicit, CharSet = CharSet.Ansi)]
-    public struct MessageTransferObject
+    [StructLayout(LayoutKind.Explicit)]
+    public struct MessageBodyUnion
     {
         [FieldOffset(0)]
+        public TextBodyTO TextBody;
+        [FieldOffset(0)]
+        public FileBodyTO FileBody;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct TextBodyTO
+    {
+        public string Content;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct FileBodyTO
+    {
+        public string LocalPath;
+    }
+
+    //MessageTransferObject: Data object to be transferred across managed/unmanaged border
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct MessageTransferObject
+    {
         public string MsgId;
-        [FieldOffset(8)]
         public string ConversationId;
-        [FieldOffset(16)]
         public string From;
-        [FieldOffset(24)]
         public string To;
-        [FieldOffset(32)]
         public MessageType Type;
-        [FieldOffset(36)]
         public MessageDirection Direction;
-        [FieldOffset(40)]
         public MessageStatus Status;
-        [FieldOffset(44), MarshalAs(UnmanagedType.U1)]
+        [MarshalAs(UnmanagedType.U1)]
         public bool HasDeliverAck;
-        [FieldOffset(45), MarshalAs(UnmanagedType.U1)]
+        [MarshalAs(UnmanagedType.U1)]
         public bool HasReadAck;
-        [FieldOffset(48)]
-        public MessageBodyType BodyType;
-        /*[MarshalAs(UnmanagedType.AsAny)]
-        public IMessageBody Body; //only 1 body processed
-        public string[] AttributesKeys;
+        
+        /*public string[] AttributesKeys;
         public AttributeValue[] AttributesValues;
         public int AttributesSize;*/
-        [FieldOffset(56)]
         public long LocalTime;
-        [FieldOffset(64)]
         public long ServerTime;
+        public MessageBodyType BodyType;
+        public MessageBodyUnion Body;
 
-        public MessageTransferObject(in Message message) =>
-            (MsgId, ConversationId, From, To, Type, Direction, Status, HasDeliverAck, HasReadAck, BodyType, LocalTime, ServerTime)
+        public MessageTransferObject(in Message message)
+        {
+            (MsgId, ConversationId, From, To, Type, Direction, Status, HasDeliverAck, HasReadAck, LocalTime, ServerTime, BodyType)
                 = (message.MsgId, message.ConversationId, message.From, message.To, message.MessageType, message.Direction, message.Status,
-                    message.HasDeliverAck, message.HasReadAck, message.Body.Type,
-                    message.LocalTime, message.ServerTime);
+                    message.HasDeliverAck, message.HasReadAck,
+                    message.LocalTime, message.ServerTime, message.Body.Type);
+            if (message.Body.Type == MessageBodyType.TXT)
+            {
+                // Text Message
+                var textBody = message.Body as MessageBody.TextBody;
+                Body = new MessageBodyUnion { TextBody = new TextBodyTO { Content = textBody.Text } };
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }          
 
         public static List<Message> ConvertToMessageList(in MessageTransferObject[] _messages, int size)
         {

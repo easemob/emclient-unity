@@ -70,65 +70,47 @@ struct AttributeValue
     AttributeValueUnion Value;
 };
 
+struct TextMessageBody {
+    char * content;
+};
+
+struct FileMessageBody {
+    char * localPath;
+};
+
+union MessageBody {
+    TextMessageBody textBody;
+    FileMessageBody fileBody;
+};
+
 struct MessageTransferObject
 {
     char * MsgId;
     char * ConversationId;
     char * From;
     char * To;
-    EMMessage::EMChatType Type; //EMMessage::EMChatType
-    EMMessage::EMMessageDirection Direction; //EMMessage::EMMessageDirection
-    EMMessage::EMMessageStatus Status; //EMMessage::EMMessageStatus
+    EMMessage::EMChatType Type;
+    EMMessage::EMMessageDirection Direction;
+    EMMessage::EMMessageStatus Status;
     bool HasDeliverAck;
     bool HasReadAck;
-    EMMessageBody::EMMessageBodyType BodyType; //EMMessageBody::EMMessageBodyType
-    /*void *Body;
-    char ** AttributesKeys;
+    
+    /*char ** AttributesKeys;
     AttributeValue* AttributesValues;
     int AttributesSize;*/
+    
     long LocalTime;
     long ServerTime;
     
+    EMMessageBody::EMMessageBodyType BodyType;
+    MessageBody Body;
+    
     EMMessagePtr toEMMessage() {
-        LOG("sizeof char=%lu", sizeof(char));
-        LOG("Address of MsgId=%x",&MsgId);
-        LOG("MsgId=%s", MsgId);
-        int i = 0;
-        while(MsgId[i] != '\0')
-        {
-            LOG("MsgId[%d]=%d", i, MsgId[i]);
-            i++;
+        //compose message body
+        EMMessageBodyPtr messageBody;
+        if(BodyType == EMMessageBody::TEXT) {
+            messageBody = EMMessageBodyPtr(new EMTextMessageBody(Body.textBody.content));
         }
-        LOG("Address of ConversationId=%x",&ConversationId);
-        LOG("ConversationId=%s", ConversationId);
-        LOG("Address of From=%x",&From);
-        LOG("From=%s", From);
-        i=0;
-        while(From[i] != '\0')
-        {
-            LOG("From[%d]=%d", i, From[i]);
-            i++;
-        }
-        LOG("Address of To=%x",&To);
-        LOG("To=%s", To);
-        LOG("Address of Type=%x",&Type);
-        LOG("Type=%d", Type);
-        LOG("Address of Direction=%x",&Direction);
-        LOG("Direction=%lu", Direction);
-        LOG("Address of Status=%x",&Status);
-        LOG("Status=%lu", Status);
-        LOG("Address of HasDeliverAck=%x",&HasDeliverAck);
-        LOG("HasDeliverAck=%lu", HasDeliverAck);
-        LOG("Address of HasReadAck=%x",&HasReadAck);
-        LOG("HasReadAck=%lu", HasReadAck);
-        LOG("Address of BodyType=%x",&BodyType);
-        LOG("BodyType=%lu", BodyType);
-        LOG("Address of LocalTime=%x",&LocalTime);
-        LOG("LocalTime=%lu", LocalTime);
-        LOG("Address of ServerTime=%x",&ServerTime);
-        LOG("ServerTime=%lu", ServerTime);
-        
-        EMMessageBodyPtr messageBody = EMMessageBodyPtr(new EMTextMessageBody("hello"));
         EMMessagePtr messagePtr = EMMessage::createSendMessage(std::string(From), std::string(To), messageBody);
         return messagePtr;
     }

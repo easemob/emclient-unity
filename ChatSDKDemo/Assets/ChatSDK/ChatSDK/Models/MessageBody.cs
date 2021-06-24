@@ -4,7 +4,7 @@ using SimpleJSON;
 
 namespace ChatSDK
 {
-    [StructLayout(LayoutKind.Sequential, CharSet =  CharSet.Unicode)]
+    [StructLayout(LayoutKind.Sequential)]
     public abstract class IMessageBody
     {
         public MessageBodyType Type;
@@ -57,7 +57,7 @@ namespace ChatSDK
 
     namespace MessageBody
     {
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        [StructLayout(LayoutKind.Sequential)]
         public class TextBody : IMessageBody
         {
             public string Text;
@@ -87,7 +87,7 @@ namespace ChatSDK
             }
         }
 
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        [StructLayout(LayoutKind.Sequential)]
         public class LocationBody : IMessageBody
         {
             public double Latitude, Longitude;
@@ -125,7 +125,7 @@ namespace ChatSDK
             }
         }
 
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        [StructLayout(LayoutKind.Sequential)]
         public class FileBody : IMessageBody
         {
 
@@ -176,7 +176,7 @@ namespace ChatSDK
 
         }
 
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        [StructLayout(LayoutKind.Sequential)]
         public class ImageBody : FileBody
         {
 
@@ -234,7 +234,7 @@ namespace ChatSDK
             }
         }
 
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        [StructLayout(LayoutKind.Sequential)]
         public class VoiceBody : FileBody
         {
             public int Duration;
@@ -276,7 +276,7 @@ namespace ChatSDK
             }
         }
 
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        [StructLayout(LayoutKind.Sequential)]
         public class VideoBody : FileBody
         {
             public string ThumbnaiLocationPath, ThumbnaiRemotePath, ThumbnaiSecret;
@@ -334,7 +334,7 @@ namespace ChatSDK
             }
         }
 
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        [StructLayout(LayoutKind.Sequential)]
         public class CmdBody : IMessageBody
         {
             public string Action;
@@ -369,7 +369,7 @@ namespace ChatSDK
             }
         }
 
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        [StructLayout(LayoutKind.Sequential)]
         public class CustomBody : IMessageBody
         {
 
