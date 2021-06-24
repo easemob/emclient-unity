@@ -9,13 +9,13 @@ namespace ChatSDK
     [StructLayout(LayoutKind.Explicit, CharSet = CharSet.Ansi)]
     public struct MessageTransferObject
     {
-        [FieldOffset(0), MarshalAs(UnmanagedType.LPStr)]
+        [FieldOffset(0)]
         public string MsgId;
-        [FieldOffset(8), MarshalAs(UnmanagedType.LPStr)]
+        [FieldOffset(8)]
         public string ConversationId;
-        [FieldOffset(16), MarshalAs(UnmanagedType.LPStr)]
+        [FieldOffset(16)]
         public string From;
-        [FieldOffset(24), MarshalAs(UnmanagedType.LPStr)]
+        [FieldOffset(24)]
         public string To;
         [FieldOffset(32)]
         public MessageType Type;
@@ -29,9 +29,9 @@ namespace ChatSDK
         public bool HasReadAck;
         [FieldOffset(48)]
         public MessageBodyType BodyType;
-        [MarshalAs(UnmanagedType.AsAny)]
+        /*[MarshalAs(UnmanagedType.AsAny)]
         public IMessageBody Body; //only 1 body processed
-        /*public string[] AttributesKeys;
+        public string[] AttributesKeys;
         public AttributeValue[] AttributesValues;
         public int AttributesSize;*/
         [FieldOffset(56)]
@@ -39,11 +39,11 @@ namespace ChatSDK
         [FieldOffset(64)]
         public long ServerTime;
 
-        public MessageTransferObject(in Message message) {
+        public MessageTransferObject(in Message message) =>
             (MsgId, ConversationId, From, To, Type, Direction, Status, HasDeliverAck, HasReadAck, BodyType, LocalTime, ServerTime)
                 = (message.MsgId, message.ConversationId, message.From, message.To, message.MessageType, message.Direction, message.Status,
-                    message.HasDeliverAck, message.HasReadAck,
-                    message.LocalTime, message.ServerTime, message.Body.Type, message.Body);
+                    message.HasDeliverAck, message.HasReadAck, message.Body.Type,
+                    message.LocalTime, message.ServerTime);
 
         public static List<Message> ConvertToMessageList(in MessageTransferObject[] _messages, int size)
         {

@@ -92,7 +92,7 @@ struct MessageTransferObject
     EMMessagePtr toEMMessage() {
         LOG("sizeof char=%lu", sizeof(char));
         LOG("Address of MsgId=%x",&MsgId);
-        LOG("MsgId=%c", MsgId);
+        LOG("MsgId=%s", MsgId);
         int i = 0;
         while(MsgId[i] != '\0')
         {
@@ -100,17 +100,17 @@ struct MessageTransferObject
             i++;
         }
         LOG("Address of ConversationId=%x",&ConversationId);
-        LOG("ConversationId=%c", ConversationId);
+        LOG("ConversationId=%s", ConversationId);
         LOG("Address of From=%x",&From);
-        LOG("From=%c", From);
+        LOG("From=%s", From);
         i=0;
-        while(MsgId[i] != '\0')
+        while(From[i] != '\0')
         {
-            LOG("MsgId[%d]=%d", i, MsgId[i]);
+            LOG("From[%d]=%d", i, From[i]);
             i++;
         }
         LOG("Address of To=%x",&To);
-        LOG("To=%c", To);
+        LOG("To=%s", To);
         LOG("Address of Type=%x",&Type);
         LOG("Type=%d", Type);
         LOG("Address of Direction=%x",&Direction);
