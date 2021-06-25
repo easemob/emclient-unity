@@ -99,7 +99,7 @@ namespace ChatSDK
 
         public override Message SendMessage(Message message, CallBack callback = null)
         {
-            var mto = new MessageTransferObject(message);
+            var mto = new MessageTO(message);
             //clear previous linked events handler
             OnSendMessageSuccess = () => callback?.Success();
             OnSendMessageError = (int code, string desc) => callback?.Error(code, desc);

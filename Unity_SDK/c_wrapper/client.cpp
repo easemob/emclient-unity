@@ -109,7 +109,7 @@ AGORA_API void Client_StopLog() {
 
 EMCallbackObserverHandle gCallbackObserverHandle;
 
-AGORA_API void ChatManager_SendMessage(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, MessageTransferObject *mto) {
+AGORA_API void ChatManager_SendMessage(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, MessageTO *mto) {
     EMMessagePtr messagePtr = mto->toEMMessage();
     EMCallbackPtr callbackPtr(new EMCallback(gCallbackObserverHandle,
                                              [onSuccess]()->bool {

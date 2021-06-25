@@ -3,6 +3,7 @@
 #include "emmessage.h"
 #include "emchatmanager_interface.h"
 #include "emtextmessagebody.h"
+#include "emlocationmessagebody.h"
 
 using namespace easemob;
 
@@ -70,20 +71,19 @@ struct AttributeValue
     AttributeValueUnion Value;
 };
 
-struct TextMessageBody {
-    char * content;
+//C# side: class TextMessageBodyTO
+struct TextMessageBodyTO {
+    char * Content;
 };
 
-struct FileMessageBody {
-    char * localPath;
+//C# side: class LocationMessageBodyTo
+struct LocationMessageBodyTO {
+    double Latitude;
+    double Longitude;
+    char * Address;
 };
 
-union MessageBody {
-    TextMessageBody textBody;
-    FileMessageBody fileBody;
-};
-
-struct MessageTransferObject
+struct MessageHeaderTO
 {
     char * MsgId;
     char * ConversationId;
@@ -103,17 +103,33 @@ struct MessageTransferObject
     long ServerTime;
     
     EMMessageBody::EMMessageBodyType BodyType;
-    MessageBody Body;
+};
+
+struct MessageTO
+{
+    MessageHeaderTO header;
+    TextMessageBodyTO textBody;
+    LocationMessageBodyTO locationBody;
     
     EMMessagePtr toEMMessage() {
+        LOG("address of header:%x", &header);
+        LOG("From:%s", header.From);
+        LOG("To:%s", header.To);
+        LOG("address of textBody:%x", textBody);
+        LOG("address of locationBody:%x", locationBody);
         //compose message body
         EMMessageBodyPtr messageBody;
-        if(BodyType == EMMessageBody::TEXT) {
-            messageBody = EMMessageBodyPtr(new EMTextMessageBody(std::string(Body.textBody.content)));
+        if(header.BodyType == EMMessageBody::TEXT) {
+            //create message body
+            messageBody = EMMessageBodyPtr(new EMTextMessageBody(std::string(textBody.Content)));
             //unlink Body.textBody
-            Body.textBody.content = nullptr;
+            textBody.Content = nullptr;
+        }else if(header.BodyType == EMMessageBody::LOCATION) {
+            messageBody = EMMessageBodyPtr(new EMLocationMessageBody(locationBody.Latitude, locationBody.Latitude, locationBody.Address));
+            LOG("Body created successfully");
+            locationBody.Address = nullptr;
         }
-        EMMessagePtr messagePtr = EMMessage::createSendMessage(std::string(From), std::string(To), messageBody);
+        EMMessagePtr messagePtr = EMMessage::createSendMessage(std::string(header.From), std::string(header.To), messageBody);
         return messagePtr;
     }
 };

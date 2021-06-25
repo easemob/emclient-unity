@@ -70,11 +70,15 @@ public class Main : MonoBehaviour
         string receiverId = RecvIdField.text;
         string content = TextField.text;
         IChatManager chatManager = SDKClient.Instance.ChatManager;
-        Message message = Message.CreateTextSendMessage(receiverId,content);
+        //Message message = Message.CreateTextSendMessage(receiverId,content);
         CallBack callback = new CallBack(onSuccess: () => { Debug.Log("Message sent successfully!"); },
                                             onProgress: (int progress) => { Debug.Log(progress); },
                                             onError: (int code, string desc) => { Debug.Log(code + desc); });
-        chatManager.SendMessage(message, callback);       
+        //chatManager.SendMessage(message, callback);
+
+        //send a location message
+        Message message = Message.CreateLocationSendMessage(receiverId, 39.97, 116.33, content);
+        chatManager.SendMessage(message, callback);
     }
 
     void JoinGroupAction()

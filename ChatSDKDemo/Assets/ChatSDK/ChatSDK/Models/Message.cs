@@ -5,30 +5,9 @@ using SimpleJSON;
 
 namespace ChatSDK
 {
-    [StructLayout(LayoutKind.Explicit, CharSet = CharSet.Ansi)]
-    public struct MessageBodyUnion
-    {
-        [FieldOffset(0)]
-        public TextBodyTO TextBody;
-        [FieldOffset(0)]
-        public FileBodyTO FileBody;
-    }
-
+    //MessageHeader: Header of one message
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-    public struct TextBodyTO
-    {
-        public string Content;
-    }
-
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-    public struct FileBodyTO
-    {
-        public string LocalPath;
-    }
-
-    //MessageTransferObject: Data object to be transferred across managed/unmanaged border
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-    public struct MessageTransferObject
+    public struct MessageHeaderTO
     {
         public string MsgId;
         public string ConversationId;
@@ -48,37 +27,16 @@ namespace ChatSDK
         public long LocalTime;
         public long ServerTime;
         public MessageBodyType BodyType;
-        public MessageBodyUnion Body;
-
-        public MessageTransferObject(in Message message)
+        
+        public MessageHeaderTO(in Message message)
         {
             (MsgId, ConversationId, From, To, Type, Direction, Status, HasDeliverAck, HasReadAck, LocalTime, ServerTime, BodyType)
                 = (message.MsgId, message.ConversationId, message.From, message.To, message.MessageType, message.Direction, message.Status,
                     message.HasDeliverAck, message.HasReadAck,
                     message.LocalTime, message.ServerTime, message.Body.Type);
-            if (message.Body.Type == MessageBodyType.TXT)
-            {
-                // Text Message
-                var textBody = message.Body as MessageBody.TextBody;
-                Body = new MessageBodyUnion { TextBody = new TextBodyTO { Content = textBody.Text } };
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
         }          
 
-        public static List<Message> ConvertToMessageList(in MessageTransferObject[] _messages, int size)
-        {
-            List<Message> messages = new List<Message>();
-            for(int i=0; i<size; i++)
-            {
-                messages.Add(_messages[i].Unmarshall());
-            }
-            return messages;
-        }
-
-        private static void SplitMessageAttributes(in Message message, out string[] Keys, out AttributeValue[] Values)
+        /*private static void SplitMessageAttributes(in Message message, out string[] Keys, out AttributeValue[] Values)
         {
             int count = message.Attributes.Count;
             Keys = new string[count];
@@ -102,23 +60,100 @@ namespace ChatSDK
                 result.Add(keys[i], values[i]);
             }
             return result;
+        }*/
+
+        
+    }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct TextMessageBodyTO
+    {
+        public string Content;
+
+        public TextMessageBodyTO(string content) => Content = content;
+
+        public static TextMessageBodyTO FromMessage(in Message message)
+        {
+            if (message.Body.Type == MessageBodyType.TXT)
+            {
+                var body = message.Body as MessageBody.TextBody;
+                return new TextMessageBodyTO(body.Text);
+            }
+            throw new InvalidOperationException();
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct LocationMessageBodyTO
+    {
+        public double Latitude;
+        public double Longitude;
+        public string Address;
+
+        public LocationMessageBodyTO(double latitude, double longitude, string address)
+            => (Latitude, Longitude, Address) = (latitude, longitude, address);
+
+        public static LocationMessageBodyTO FromMessage(in Message message)
+        {
+            if (message.Body.Type == MessageBodyType.LOCATION)
+            {
+                var body = message.Body as MessageBody.LocationBody;
+                return new LocationMessageBodyTO(body.Latitude, body.Longitude, body.Address);
+            }
+            throw new InvalidOperationException();
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct MessageTO
+    {
+        MessageHeaderTO Header;
+        TextMessageBodyTO TextBody;
+        LocationMessageBodyTO LocationBody;
+
+        public MessageTO(in Message message)
+        {
+            Header = new MessageHeaderTO(message);
+            TextBody = new TextMessageBodyTO();
+            LocationBody = new LocationMessageBodyTO();
+            //only 1 class reference is valid
+            switch(Header.BodyType)
+            {
+                case MessageBodyType.TXT:
+                    TextBody = TextMessageBodyTO.FromMessage(message);
+                    break;
+                case MessageBodyType.LOCATION:
+                    LocationBody = LocationMessageBodyTO.FromMessage(message);
+                    break;
+            }
+            
+        }
+
+        public static List<Message> ConvertToMessageList(in MessageTO[] _messages, int size)
+        {
+            List<Message> messages = new List<Message>();
+            for(int i=0; i<size; i++)
+            {
+                messages.Add(_messages[i].Unmarshall());
+            }
+            return messages;
         }
 
         internal Message Unmarshall()
         {
             return new Message()
             {
-                MsgId = MsgId,
-                ConversationId = ConversationId,
-                From = From,
-                To = To,
-                MessageType = Type,
-                Direction = Direction,
-                Status = Status,
-                LocalTime = LocalTime,
-                ServerTime = ServerTime,
-                HasDeliverAck = HasDeliverAck,
-                HasReadAck = HasReadAck,
+                MsgId = Header.MsgId,
+                ConversationId = Header.ConversationId,
+                From = Header.From,
+                To = Header.To,
+                MessageType = Header.Type,
+                Direction = Header.Direction,
+                Status = Header.Status,
+                LocalTime = Header.LocalTime,
+                ServerTime = Header.ServerTime,
+                HasDeliverAck = Header.HasDeliverAck,
+                HasReadAck = Header.HasReadAck,
             };
         }
     }

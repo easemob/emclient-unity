@@ -8,11 +8,11 @@ namespace ChatSDK
     //IConnectionDelegate
     public delegate void OnDisconnected(int info);
     //IChatManagerDelegate
-    public delegate void OnMessagesReceived(MessageTransferObject[] messages, int size);
-    public delegate void OnCmdMessagesReceived(MessageTransferObject[] messages, int size);
-    public delegate void OnMessagesRead(MessageTransferObject[] messages, int size);
-    public delegate void OnMessagesDelivered(MessageTransferObject[] messages, int size);
-    public delegate void OnMessagesRecalled(MessageTransferObject[] messages, int size);
+    public delegate void OnMessagesReceived(MessageTO[] messages, int size);
+    public delegate void OnCmdMessagesReceived(MessageTO[] messages, int size);
+    public delegate void OnMessagesRead(MessageTO[] messages, int size);
+    public delegate void OnMessagesDelivered(MessageTO[] messages, int size);
+    public delegate void OnMessagesRecalled(MessageTO[] messages, int size);
     public delegate void OnConversationsUpdate();
     public delegate void OnConversationRead(string from, string to);
 
@@ -100,9 +100,9 @@ namespace ChatSDK
                                                 OnConversationRead);
         }
 
-        public void OnMessagesReceived(MessageTransferObject[] _messages, int size)
+        public void OnMessagesReceived(MessageTO[] _messages, int size)
         {
-            List<Message> messages = MessageTransferObject.ConvertToMessageList(_messages, size);
+            List<Message> messages = MessageTO.ConvertToMessageList(_messages, size);
             //invoke each listener in list
             Debug.Log($"ChatManagerHub.OnMessagesReceived() invoked with messages={messages}!");
             foreach (IChatManagerDelegate listener in listeners.List)
@@ -111,9 +111,9 @@ namespace ChatSDK
             }
         }
 
-        public void OnCmdMessagesReceived(MessageTransferObject[] _messages, int size)
+        public void OnCmdMessagesReceived(MessageTO[] _messages, int size)
         {
-            List<Message> messages = MessageTransferObject.ConvertToMessageList(_messages, size);
+            List<Message> messages = MessageTO.ConvertToMessageList(_messages, size);
             //invoke each listener in list
             Debug.Log($"ChatManagerHub.OnCmdMessagesReceived() invoked with messages={messages}!");
             foreach (IChatManagerDelegate listener in listeners.List)
@@ -122,9 +122,9 @@ namespace ChatSDK
             }
         }
 
-        public void OnMessagesRead(MessageTransferObject[] _messages, int size)
+        public void OnMessagesRead(MessageTO[] _messages, int size)
         {
-            List<Message> messages = MessageTransferObject.ConvertToMessageList(_messages, size);
+            List<Message> messages = MessageTO.ConvertToMessageList(_messages, size);
             //invoke each listener in list
             Debug.Log($"ChatManagerHub.OnMessagesRead() invoked with messages={messages}!");
             foreach (IChatManagerDelegate listener in listeners.List)
@@ -133,9 +133,9 @@ namespace ChatSDK
             }
         }
 
-        public void OnMessagesDelivered(MessageTransferObject[] _messages, int size)
+        public void OnMessagesDelivered(MessageTO[] _messages, int size)
         {
-            List<Message> messages = MessageTransferObject.ConvertToMessageList(_messages, size);
+            List<Message> messages = MessageTO.ConvertToMessageList(_messages, size);
             //invoke each listener in list
             Debug.Log($"ChatManagerHub.OnMessagesDelivered() invoked with messages={messages}!");
             foreach (IChatManagerDelegate listener in listeners.List)
@@ -144,9 +144,9 @@ namespace ChatSDK
             }
         }
 
-        public void OnMessagesRecalled(MessageTransferObject[] _messages, int size)
+        public void OnMessagesRecalled(MessageTO[] _messages, int size)
         {
-            List<Message> messages = MessageTransferObject.ConvertToMessageList(_messages, size);
+            List<Message> messages = MessageTO.ConvertToMessageList(_messages, size);
             //invoke each listener in list
             Debug.Log($"ChatManagerHub.OnMessagesRecalled() invoked with messages={messages}!");
             foreach (IChatManagerDelegate listener in listeners.List)
