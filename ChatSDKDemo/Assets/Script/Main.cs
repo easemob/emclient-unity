@@ -40,7 +40,7 @@ public class Main : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SendBtn.onClick.AddListener(SendMessageAction);
+        SendBtn.onClick.AddListener(SendLocationAction);
 
         JoinGroupBtn.onClick.AddListener(JoinGroupAction);
         GroupInfoBtn.onClick.AddListener(GetGroupInfoAction);
@@ -70,12 +70,22 @@ public class Main : MonoBehaviour
         string receiverId = RecvIdField.text;
         string content = TextField.text;
         IChatManager chatManager = SDKClient.Instance.ChatManager;
-        //Message message = Message.CreateTextSendMessage(receiverId,content);
+        Message message = Message.CreateTextSendMessage(receiverId,content);
         CallBack callback = new CallBack(onSuccess: () => { Debug.Log("Message sent successfully!"); },
                                             onProgress: (int progress) => { Debug.Log(progress); },
                                             onError: (int code, string desc) => { Debug.Log(code + desc); });
-        //chatManager.SendMessage(message, callback);
+        chatManager.SendMessage(message, callback);
+    }
 
+    void SendLocationAction()
+    {
+        string receiverId = RecvIdField.text;
+        string content = TextField.text;
+        IChatManager chatManager = SDKClient.Instance.ChatManager;
+        CallBack callback = new CallBack(onSuccess: () => { Debug.Log("Message sent successfully!"); },
+                                            onProgress: (int progress) => { Debug.Log(progress); },
+                                            onError: (int code, string desc) => { Debug.Log(code + desc); });
+        
         //send a location message
         Message message = Message.CreateLocationSendMessage(receiverId, 39.97, 116.33, content);
         chatManager.SendMessage(message, callback);

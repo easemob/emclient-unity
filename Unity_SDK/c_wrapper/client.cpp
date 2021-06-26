@@ -109,8 +109,43 @@ AGORA_API void Client_StopLog() {
 
 EMCallbackObserverHandle gCallbackObserverHandle;
 
-AGORA_API void ChatManager_SendMessage(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, MessageTO *mto) {
-    EMMessagePtr messagePtr = mto->toEMMessage();
+EMMessagePtr toEMMessage(void *mto, EMMessageBody::EMMessageBodyType type)
+{
+    //compose message body
+    std::string from, to;
+    EMMessageBodyPtr messageBody;
+    if(type == EMMessageBody::TEXT) {
+        auto tm = static_cast<TextMessageTO *>(mto);
+        //create message body
+        messageBody = EMMessageBodyPtr(new EMTextMessageBody(std::string(tm->body.Content)));
+        //unlink Body.textBody
+        tm->body.Content = nullptr;
+        from = tm->header.From;
+        to = tm->header.To;
+    }else if(type == EMMessageBody::LOCATION) {
+        auto tm = static_cast<LocationMessageTO *>(mto);
+        LOG("address of header:%x", tm->header);
+        LOG("From:%s", tm->header.From);
+        LOG("To:%s", tm->header.To);
+        LOG("address of locationBody:%x", tm->body);
+        LOG("address lat/long:%f,%f", tm->body.Latitude, tm->body.Longitude);
+        LOG("location address: %x", tm->body.Address);
+        LOG("location address content: %s", tm->body.Address);
+        messageBody = EMMessageBodyPtr(new EMLocationMessageBody(tm->body.Latitude, tm->body.Longitude, tm->body.Address));
+        LOG("Body created successfully");
+        tm->body.Address = nullptr;
+        from = tm->header.From;
+        to = tm->header.To;
+    }
+    EMMessagePtr messagePtr = EMMessage::createSendMessage(from, to, messageBody);
+    return messagePtr;
+}
+
+AGORA_API void ChatManager_SendMessage(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, void *mto, EMMessageBody::EMMessageBodyType type) {
+    LOG("Message type: %d", type);
+    LOG("address of mto: %x", mto);
+    
+    EMMessagePtr messagePtr = toEMMessage(mto, type);
     EMCallbackPtr callbackPtr(new EMCallback(gCallbackObserverHandle,
                                              [onSuccess]()->bool {
                                                 LOG("Message sent succeeds.");
@@ -125,3 +160,5 @@ AGORA_API void ChatManager_SendMessage(void *client, FUNC_OnSuccess onSuccess, F
     messagePtr->setCallback(callbackPtr);
     CLIENT->getChatManager().sendMessage(messagePtr);
 }
+
+

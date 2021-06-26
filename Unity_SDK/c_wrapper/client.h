@@ -18,7 +18,7 @@ AGORA_API void Client_Logout(void *client, FUNC_OnSuccess onSuccess, bool unbind
 AGORA_API void Client_StartLog(const char *logFilePath);
 AGORA_API void Client_StopLog();
 //ChatManager methods
-AGORA_API void ChatManager_SendMessage(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, MessageTO *mto);
+AGORA_API void ChatManager_SendMessage(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, void *mto, EMMessageBody::EMMessageBodyType type);
 
 #ifdef __cplusplus
 }

@@ -105,33 +105,16 @@ struct MessageHeaderTO
     EMMessageBody::EMMessageBodyType BodyType;
 };
 
-struct MessageTO
+struct TextMessageTO
 {
     MessageHeaderTO header;
-    TextMessageBodyTO textBody;
-    LocationMessageBodyTO locationBody;
-    
-    EMMessagePtr toEMMessage() {
-        LOG("address of header:%x", &header);
-        LOG("From:%s", header.From);
-        LOG("To:%s", header.To);
-        LOG("address of textBody:%x", textBody);
-        LOG("address of locationBody:%x", locationBody);
-        //compose message body
-        EMMessageBodyPtr messageBody;
-        if(header.BodyType == EMMessageBody::TEXT) {
-            //create message body
-            messageBody = EMMessageBodyPtr(new EMTextMessageBody(std::string(textBody.Content)));
-            //unlink Body.textBody
-            textBody.Content = nullptr;
-        }else if(header.BodyType == EMMessageBody::LOCATION) {
-            messageBody = EMMessageBodyPtr(new EMLocationMessageBody(locationBody.Latitude, locationBody.Latitude, locationBody.Address));
-            LOG("Body created successfully");
-            locationBody.Address = nullptr;
-        }
-        EMMessagePtr messagePtr = EMMessage::createSendMessage(std::string(header.From), std::string(header.To), messageBody);
-        return messagePtr;
-    }
+    TextMessageBodyTO body;
+};
+
+struct LocationMessageTO
+{
+    MessageHeaderTO header;
+    LocationMessageBodyTO body;
 };
 
 #endif //_MODELS_H_

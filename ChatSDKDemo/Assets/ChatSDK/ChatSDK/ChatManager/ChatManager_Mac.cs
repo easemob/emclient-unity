@@ -99,11 +99,20 @@ namespace ChatSDK
 
         public override Message SendMessage(Message message, CallBack callback = null)
         {
-            var mto = new MessageTO(message);
             //clear previous linked events handler
             OnSendMessageSuccess = () => callback?.Success();
             OnSendMessageError = (int code, string desc) => callback?.Error(code, desc);
-            ChatAPINative.ChatManager_SendMessage(client, OnSendMessageSuccess, OnSendMessageError, ref mto);
+            //call overloaded ChatManager_SendMessage according to message type
+            if(message.Body.Type == MessageBodyType.TXT)
+            {
+                TextMessageTO tm = new TextMessageTO(message);
+                ChatAPINative.ChatManager_SendMessage(client, OnSendMessageSuccess, OnSendMessageError, tm, message.Body.Type);
+
+            }else if(message.Body.Type == MessageBodyType.LOCATION)
+            {
+                LocationMessageTO lm = new LocationMessageTO(message);
+                ChatAPINative.ChatManager_SendMessage(client, OnSendMessageSuccess, OnSendMessageError, lm, message.Body.Type);
+            }
             //TODO: what Message to return from this SendMessage?
             return null;
         }

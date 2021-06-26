@@ -66,69 +66,72 @@ namespace ChatSDK
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-    public struct TextMessageBodyTO
+    public class LocationMessageTO : MessageTO
     {
-        public string Content;
-
-        public TextMessageBodyTO(string content) => Content = content;
-
-        public static TextMessageBodyTO FromMessage(in Message message)
+        LocationMessageBodyTO Body;
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+        struct LocationMessageBodyTO
         {
-            if (message.Body.Type == MessageBodyType.TXT)
+            public double Latitude;
+            public double Longitude;
+            public string Address;
+
+            public LocationMessageBodyTO(in Message message)
             {
-                var body = message.Body as MessageBody.TextBody;
-                return new TextMessageBodyTO(body.Text);
+                if (message.Body.Type == MessageBodyType.LOCATION)
+                {
+                    var body = message.Body as MessageBody.LocationBody;
+                    (Latitude, Longitude, Address) = (body.Latitude, body.Longitude, body.Address);
+                }
+                else
+                {
+                    throw new InvalidOperationException();
+                }
             }
-            throw new InvalidOperationException();
         }
-    }
 
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-    public struct LocationMessageBodyTO
-    {
-        public double Latitude;
-        public double Longitude;
-        public string Address;
-
-        public LocationMessageBodyTO(double latitude, double longitude, string address)
-            => (Latitude, Longitude, Address) = (latitude, longitude, address);
-
-        public static LocationMessageBodyTO FromMessage(in Message message)
-        {
-            if (message.Body.Type == MessageBodyType.LOCATION)
-            {
-                var body = message.Body as MessageBody.LocationBody;
-                return new LocationMessageBodyTO(body.Latitude, body.Longitude, body.Address);
-            }
-            throw new InvalidOperationException();
-        }
-    }
-
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-    public struct MessageTO
-    {
-        MessageHeaderTO Header;
-        TextMessageBodyTO TextBody;
-        LocationMessageBodyTO LocationBody;
-
-        public MessageTO(in Message message)
+        public LocationMessageTO(in Message message)
         {
             Header = new MessageHeaderTO(message);
-            TextBody = new TextMessageBodyTO();
-            LocationBody = new LocationMessageBodyTO();
-            //only 1 class reference is valid
-            switch(Header.BodyType)
+            Body = new LocationMessageBodyTO(message);
+        }
+    }   
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public class TextMessageTO :  MessageTO
+    {
+        TextMessageBodyTO Body;
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+        struct TextMessageBodyTO
+        {
+            public string Content;
+
+            public TextMessageBodyTO(in Message message)
             {
-                case MessageBodyType.TXT:
-                    TextBody = TextMessageBodyTO.FromMessage(message);
-                    break;
-                case MessageBodyType.LOCATION:
-                    LocationBody = LocationMessageBodyTO.FromMessage(message);
-                    break;
+                if (message.Body.Type == MessageBodyType.TXT)
+                {
+                    var body = message.Body as MessageBody.TextBody;
+                    Content = body.Text;
+                }
+                else
+                {
+                    throw new InvalidOperationException();
+                }               
             }
-            
         }
 
+        public TextMessageTO(in Message message)
+        {
+            Header = new MessageHeaderTO(message);
+            Body = new TextMessageBodyTO(message);
+        }
+
+    }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public abstract class MessageTO
+    {
+        protected MessageHeaderTO Header;
         public static List<Message> ConvertToMessageList(in MessageTO[] _messages, int size)
         {
             List<Message> messages = new List<Message>();
@@ -154,6 +157,7 @@ namespace ChatSDK
                 ServerTime = Header.ServerTime,
                 HasDeliverAck = Header.HasDeliverAck,
                 HasReadAck = Header.HasReadAck,
+                //TODO: unmarshall to message body
             };
         }
     }
