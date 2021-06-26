@@ -13,6 +13,14 @@ public class Main : MonoBehaviour
     public InputField TextField;
     // 发送按钮
     public Button SendBtn;
+    // 位置纬度
+    public InputField LatitudeField;
+    // 位置经度
+    public InputField LongitudeField;
+    // 地址描述
+    public InputField AddressField;
+    // 发送位置按钮
+    public Button SendLocationBtn;
     // 群组id
     public InputField GroupField;
     // 加入群组按钮
@@ -40,7 +48,8 @@ public class Main : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SendBtn.onClick.AddListener(SendCmdAction);
+        SendBtn.onClick.AddListener(SendMessageAction);
+        SendLocationBtn.onClick.AddListener(SendLocationAction);
 
         JoinGroupBtn.onClick.AddListener(JoinGroupAction);
         GroupInfoBtn.onClick.AddListener(GetGroupInfoAction);
@@ -80,14 +89,16 @@ public class Main : MonoBehaviour
     void SendLocationAction()
     {
         string receiverId = RecvIdField.text;
-        string content = TextField.text;
+        double latitude = double.Parse(LatitudeField.text);
+        double longitude = double.Parse(LatitudeField.text);
+        string address = AddressField.text;
         IChatManager chatManager = SDKClient.Instance.ChatManager;
         CallBack callback = new CallBack(onSuccess: () => { Debug.Log("Message sent successfully!"); },
                                             onProgress: (int progress) => { Debug.Log(progress); },
                                             onError: (int code, string desc) => { Debug.Log(code + desc); });
         
         //send a location message
-        Message message = Message.CreateLocationSendMessage(receiverId, 39.97, 116.33, content);
+        Message message = Message.CreateLocationSendMessage(receiverId, latitude, longitude, address);
         chatManager.SendMessage(message, callback);
     }
 

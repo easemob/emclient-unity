@@ -2,17 +2,17 @@
   <MonoDevelop.Ide.ItemProperties.ChatSDKDemo PreferredExecutionTarget="95cd266c-1045-47ee-8ef5-ceac692d7815" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Script/Main.cs">
     <Files>
-      <File FileName="Assets/ChatSDK/ChatSDK/Models/Message.cs" Line="140" Column="43" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Models/MessageBody.cs" Line="333" Column="43" />
-      <File FileName="Assets/ChatSDK/ChatSDK/native/ChatAPINative.cs" Line="44" Column="108" />
-      <File FileName="Assets/ChatSDK/ChatSDK/ChatManager/ChatManager_Mac.cs" Line="118" Column="128" />
-      <File FileName="Assets/Script/Main.cs" Line="106" Column="6" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Models/Message.cs" Line="634" Column="51" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Models/MessageBody.cs" />
+      <File FileName="Assets/ChatSDK/ChatSDK/native/ChatAPINative.cs" />
+      <File FileName="Assets/ChatSDK/ChatSDK/ChatManager/ChatManager_Mac.cs" />
+      <File FileName="Assets/Script/Main.cs" Line="94" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="ChatSDKDemo" expanded="True">
-            <Node name="Assets" expanded="True">
+            <Node name="Assets" expanded="True" selected="True">
               <Node name="ChatSDK" expanded="True">
                 <Node name="ChatSDK" expanded="True">
                   <Node name="ChatManager" expanded="True" />
@@ -22,9 +22,7 @@
                   <Node name="native" expanded="True" />
                 </Node>
               </Node>
-              <Node name="Script" expanded="True">
-                <Node name="Main.cs" selected="True" />
-              </Node>
+              <Node name="Script" expanded="True" />
             </Node>
           </Node>
         </State>
@@ -33,7 +31,7 @@
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="3e414568-951f-48fa-a314-e46f2449479a" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="961a82a9-45f7-4ff3-a30e-2e7cc82abc14" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/ChatManager/ChatManager_Mac.cs" relfile="Assets/ChatSDK/ChatSDK/ChatManager/ChatManager_Mac.cs" line="104" column="1" />
