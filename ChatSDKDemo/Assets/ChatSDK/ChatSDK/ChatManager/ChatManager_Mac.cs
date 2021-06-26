@@ -112,6 +112,10 @@ namespace ChatSDK
             {
                 LocationMessageTO lm = new LocationMessageTO(message);
                 ChatAPINative.ChatManager_SendMessage(client, OnSendMessageSuccess, OnSendMessageError, lm, message.Body.Type);
+            }else if(message.Body.Type == MessageBodyType.CMD)
+            {
+                CmdMessageTO cm = new CmdMessageTO(message);
+                ChatAPINative.ChatManager_SendMessage(client, OnSendMessageSuccess, OnSendMessageError, cm, message.Body.Type);
             }
             //TODO: what Message to return from this SendMessage?
             return null;

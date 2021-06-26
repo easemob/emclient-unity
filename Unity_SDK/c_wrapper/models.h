@@ -4,6 +4,7 @@
 #include "emchatmanager_interface.h"
 #include "emtextmessagebody.h"
 #include "emlocationmessagebody.h"
+#include "emcmdmessagebody.h"
 
 using namespace easemob;
 
@@ -71,18 +72,6 @@ struct AttributeValue
     AttributeValueUnion Value;
 };
 
-//C# side: class TextMessageBodyTO
-struct TextMessageBodyTO {
-    char * Content;
-};
-
-//C# side: class LocationMessageBodyTo
-struct LocationMessageBodyTO {
-    double Latitude;
-    double Longitude;
-    char * Address;
-};
-
 struct MessageHeaderTO
 {
     char * MsgId;
@@ -105,6 +94,23 @@ struct MessageHeaderTO
     EMMessageBody::EMMessageBodyType BodyType;
 };
 
+//C# side: class TextMessageBodyTO
+struct TextMessageBodyTO {
+    char * Content;
+};
+
+//C# side: class LocationMessageBodyTo
+struct LocationMessageBodyTO {
+    double Latitude;
+    double Longitude;
+    char * Address;
+};
+
+struct CmdMessageBodyTO {
+    char * Action;
+    bool DeliverOnlineOnly;
+};
+
 struct TextMessageTO
 {
     MessageHeaderTO header;
@@ -115,6 +121,12 @@ struct LocationMessageTO
 {
     MessageHeaderTO header;
     LocationMessageBodyTO body;
+};
+
+struct CmdMessageTO
+{
+    MessageHeaderTO header;
+    CmdMessageBodyTO body;
 };
 
 #endif //_MODELS_H_

@@ -40,7 +40,7 @@ public class Main : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SendBtn.onClick.AddListener(SendLocationAction);
+        SendBtn.onClick.AddListener(SendCmdAction);
 
         JoinGroupBtn.onClick.AddListener(JoinGroupAction);
         GroupInfoBtn.onClick.AddListener(GetGroupInfoAction);
@@ -88,6 +88,20 @@ public class Main : MonoBehaviour
         
         //send a location message
         Message message = Message.CreateLocationSendMessage(receiverId, 39.97, 116.33, content);
+        chatManager.SendMessage(message, callback);
+    }
+
+    void SendCmdAction()
+    {
+        string receiverId = RecvIdField.text;
+        string content = TextField.text;
+        IChatManager chatManager = SDKClient.Instance.ChatManager;
+        CallBack callback = new CallBack(onSuccess: () => { Debug.Log("Message sent successfully!"); },
+                                            onProgress: (int progress) => { Debug.Log(progress); },
+                                            onError: (int code, string desc) => { Debug.Log(code + desc); });
+
+        //send a location message
+        Message message = Message.CreateCmdSendMessage(receiverId, content, false);
         chatManager.SendMessage(message, callback);
     }
 

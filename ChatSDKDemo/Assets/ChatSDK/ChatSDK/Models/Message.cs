@@ -66,38 +66,6 @@ namespace ChatSDK
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-    public class LocationMessageTO : MessageTO
-    {
-        LocationMessageBodyTO Body;
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        struct LocationMessageBodyTO
-        {
-            public double Latitude;
-            public double Longitude;
-            public string Address;
-
-            public LocationMessageBodyTO(in Message message)
-            {
-                if (message.Body.Type == MessageBodyType.LOCATION)
-                {
-                    var body = message.Body as MessageBody.LocationBody;
-                    (Latitude, Longitude, Address) = (body.Latitude, body.Longitude, body.Address);
-                }
-                else
-                {
-                    throw new InvalidOperationException();
-                }
-            }
-        }
-
-        public LocationMessageTO(in Message message)
-        {
-            Header = new MessageHeaderTO(message);
-            Body = new LocationMessageBodyTO(message);
-        }
-    }   
-
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public class TextMessageTO :  MessageTO
     {
         TextMessageBodyTO Body;
@@ -128,6 +96,70 @@ namespace ChatSDK
 
     }
 
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public class LocationMessageTO : MessageTO
+    {
+        LocationMessageBodyTO Body;
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+        struct LocationMessageBodyTO
+        {
+            public double Latitude;
+            public double Longitude;
+            public string Address;
+
+            public LocationMessageBodyTO(in Message message)
+            {
+                if (message.Body.Type == MessageBodyType.LOCATION)
+                {
+                    var body = message.Body as MessageBody.LocationBody;
+                    (Latitude, Longitude, Address) = (body.Latitude, body.Longitude, body.Address);
+                }
+                else
+                {
+                    throw new InvalidOperationException();
+                }
+            }
+        }
+
+        public LocationMessageTO(in Message message)
+        {
+            Header = new MessageHeaderTO(message);
+            Body = new LocationMessageBodyTO(message);
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public class CmdMessageTO : MessageTO
+    {
+        CmdMessageBodyTO Body;
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+        struct CmdMessageBodyTO
+        {
+            public string Action;
+            [MarshalAs(UnmanagedType.U1)]
+            public bool DeliverOnlineOnly;
+
+            public CmdMessageBodyTO(in Message message)
+            {
+                if (message.Body.Type == MessageBodyType.CMD)
+                {
+                    var body = message.Body as MessageBody.CmdBody;
+                    (Action, DeliverOnlineOnly) = (body.Action, body.DeliverOnlineOnly);
+                }
+                else
+                {
+                    throw new InvalidOperationException();
+                }
+            }
+        }
+
+        public CmdMessageTO(in Message message)
+        {
+            Header = new MessageHeaderTO(message);
+            Body = new CmdMessageBodyTO(message);
+        }
+    }
+    
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public abstract class MessageTO
     {
