@@ -1,25 +1,35 @@
 ﻿<Properties StartupConfiguration="{3A4B1E97-589D-1E2D-D6C5-A6CFAD6C116F}|">
   <MonoDevelop.Ide.ItemProperties.ChatSDKDemo PreferredExecutionTarget="95cd266c-1045-47ee-8ef5-ceac692d7815" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Script/Main.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/ChatSDK/ChatSDK/native/DelegateHub.cs">
     <Files>
-      <File FileName="Assets/ChatSDK/ChatSDK/Models/Message.cs" Line="634" Column="51" />
+      <File FileName="Assets/ChatSDK/ChatSDK/ChatManager/ChatManager_Mac.cs" Line="22" Column="42" />
+      <File FileName="Assets/Script/Main.cs" Line="78" Column="6" />
+      <File FileName="Assets/ChatSDK/ChatSDK/ChatManager/IChatManager.cs" Line="48" Column="21" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Models/Message.cs" Line="8" Column="5" />
       <File FileName="Assets/ChatSDK/ChatSDK/Models/MessageBody.cs" />
-      <File FileName="Assets/ChatSDK/ChatSDK/native/ChatAPINative.cs" />
-      <File FileName="Assets/ChatSDK/ChatSDK/ChatManager/ChatManager_Mac.cs" />
-      <File FileName="Assets/Script/Main.cs" Line="94" Column="1" />
+      <File FileName="Assets/ChatSDK/ChatSDK/native/ChatAPINative.cs" Line="38" Column="31" />
+      <File FileName="Assets/Script/Login.cs" Line="32" Column="49" />
+      <File FileName="Assets/ChatSDK/ChatSDK/native/DelegateHub.cs" Line="17" Column="50" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Client/Client_Mac.cs" Line="57" Column="10" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Client/IClient.cs" Line="1" Column="1" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Listeners/IChatManagerDelegate.cs" Line="25" Column="58" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Models/GroupAck.cs" Line="5" Column="18" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="ChatSDKDemo" expanded="True">
-            <Node name="Assets" expanded="True" selected="True">
+            <Node name="Assets" expanded="True">
               <Node name="ChatSDK" expanded="True">
                 <Node name="ChatSDK" expanded="True">
                   <Node name="ChatManager" expanded="True" />
+                  <Node name="Client" expanded="True" />
                   <Node name="Custom" expanded="True" />
                   <Node name="Listeners" expanded="True" />
                   <Node name="Models" expanded="True" />
-                  <Node name="native" expanded="True" />
+                  <Node name="native" expanded="True">
+                    <Node name="DelegateHub.cs" selected="True" />
+                  </Node>
                 </Node>
               </Node>
               <Node name="Script" expanded="True" />
@@ -31,11 +41,12 @@
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="961a82a9-45f7-4ff3-a30e-2e7cc82abc14" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="853b435c-6cdd-4b2c-8beb-ae526d90befc" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/ChatManager/ChatManager_Mac.cs" relfile="Assets/ChatSDK/ChatSDK/ChatManager/ChatManager_Mac.cs" line="104" column="1" />
-      <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/ChatManager/ChatManager_Mac.cs" relfile="Assets/ChatSDK/ChatSDK/ChatManager/ChatManager_Mac.cs" line="103" column="1" />
+      <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/Models/Message.cs" relfile="Assets/ChatSDK/ChatSDK/Models/Message.cs" line="40" column="1" />
+      <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/ChatManager/ChatManager_Mac.cs" relfile="Assets/ChatSDK/ChatSDK/ChatManager/ChatManager_Mac.cs" line="108" column="1" />
+      <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/ChatManager/ChatManager_Mac.cs" relfile="Assets/ChatSDK/ChatSDK/ChatManager/ChatManager_Mac.cs" line="107" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />

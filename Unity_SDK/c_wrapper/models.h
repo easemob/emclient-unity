@@ -32,6 +32,16 @@ struct Options
     bool IsAutoDownload;
 };
 
+struct GroupReadAck
+{
+    char * AckId;
+    char * MsgId;
+    char * From;
+    char * Content;
+    long Timestamp;
+    int Count;
+};
+
 enum class AttributeValueType
 {
     BOOL,

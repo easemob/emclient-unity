@@ -20,6 +20,11 @@ namespace ChatSDK
                 client = clientMac.client;
             }
             chatManagerHub = new ChatManagerHub(Delegate);
+            //registered listeners
+            ChatAPINative.ChatManager_AddListener(client, chatManagerHub.OnMessagesReceived,
+                chatManagerHub.OnCmdMessagesReceived, chatManagerHub.OnMessagesRead, chatManagerHub.OnMessagesDelivered,
+                chatManagerHub.OnMessagesRecalled, chatManagerHub.OnReadAckForGroupMessageUpdated, chatManagerHub.OnGroupMessageRead,
+                chatManagerHub.OnConversationsUpdate, chatManagerHub.OnConversationRead);
         }
 
         public override bool DeleteConversation(string conversationId, bool deleteMessages)

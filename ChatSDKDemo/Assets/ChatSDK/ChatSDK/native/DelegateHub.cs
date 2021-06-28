@@ -13,6 +13,8 @@ namespace ChatSDK
     public delegate void OnMessagesRead(MessageTO[] messages, int size);
     public delegate void OnMessagesDelivered(MessageTO[] messages, int size);
     public delegate void OnMessagesRecalled(MessageTO[] messages, int size);
+    public delegate void OnReadAckForGroupMessageUpdated();
+    public delegate void OnGroupMessageRead(GroupReadAck[] acks, int size);
     public delegate void OnConversationsUpdate();
     public delegate void OnConversationRead(string from, string to);
 
@@ -28,7 +30,15 @@ namespace ChatSDK
         public ConnectionHub(IClient client, WeakDelegater<IConnectionDelegate> _listeners)
         {
             //callbackmanager registration done in base()!
-            listeners = _listeners;
+            if(_listeners == null)
+            {
+                listeners = new WeakDelegater<IConnectionDelegate>();
+            }
+            else
+            {
+                listeners = _listeners;
+            }
+            
             //register events
             OnConnected = () =>
             {
@@ -75,6 +85,8 @@ namespace ChatSDK
             public OnMessagesRead MessagesRead;
             public OnMessagesDelivered MessagesDelivered;
             public OnMessagesRecalled MessagesRecalled;
+            public OnReadAckForGroupMessageUpdated ReadAckForGroupMessageUpdated;
+            public OnGroupMessageRead GroupMessageRead;
             public OnConversationsUpdate ConversationsUpdate;
             public OnConversationRead ConversationRead;
         };
@@ -84,18 +96,30 @@ namespace ChatSDK
 
         public ChatManagerHub(WeakDelegater<IChatManagerDelegate> _listeners)
         {
-            listeners = _listeners;
+            if (_listeners == null)
+            {
+                listeners = new WeakDelegater<IChatManagerDelegate>();
+            }
+            else
+            {
+                listeners = _listeners;
+            }
+                
             (@delegate.CmdMessagesReceived,
                 @delegate.CmdMessagesReceived,
                 @delegate.MessagesRead,
                 @delegate.MessagesDelivered,
                 @delegate.MessagesRecalled,
+                @delegate.ReadAckForGroupMessageUpdated,
+                @delegate.GroupMessageRead,
                 @delegate.ConversationsUpdate,
                 @delegate.ConversationRead) = (OnMessagesReceived,
                                                 OnCmdMessagesReceived,
                                                 OnMessagesRead,
                                                 OnMessagesDelivered,
                                                 OnMessagesRecalled,
+                                                OnReadAckForGroupMessageUpdated,
+                                                OnGroupMessageRead,
                                                 OnConversationsUpdate,
                                                 OnConversationRead);
         }
@@ -154,6 +178,17 @@ namespace ChatSDK
                 listener.OnMessagesRecalled(messages);
             }
         }
+
+        public void OnReadAckForGroupMessageUpdated()
+        {
+            //TODO: to be implemented
+        }
+
+        public void OnGroupMessageRead(GroupReadAck[] acks, int size)
+        {
+            //TODO: to be implemented
+        }
+
 
         public void OnConversationsUpdate()
         {

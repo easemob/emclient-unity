@@ -65,6 +65,8 @@ namespace ChatSDK
                     currentUserName = username;
                     isLoggedIn = true;
                     callback?.Success();
+                    //init ChatManagerHub
+                    ChatManagerHub chatManagerHub = new ChatManagerHub(null);
                 };
                 OnLoginError = (int code, string desc) => callback?.Error(code, desc);
 
