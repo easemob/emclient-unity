@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		D703D33726893F6D00A9FA7D /* chat_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D703D33626893F6D00A9FA7D /* chat_manager.cpp */; };
+		D715B7BE268C83ED00EE75D6 /* models.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D715B7BD268C83ED00EE75D6 /* models.cpp */; };
 		D742F1C4266843CA00B80C18 /* client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D742F1C0266843CA00B80C18 /* client.cpp */; };
 		D742F1C5266843CA00B80C18 /* hyphenateCWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D742F1C2266843CA00B80C18 /* hyphenateCWrapper.cpp */; };
 		D77DE29E2668B71D00A553B4 /* easemob.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D77DE29D2668B71D00A553B4 /* easemob.framework */; };
@@ -197,6 +198,7 @@
 		90A0455E2632D4F000550B6E /* emchatroommanager_interface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = emchatroommanager_interface.h; sourceTree = "<group>"; };
 		D703D33526893F2900A9FA7D /* chat_manager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = chat_manager.h; sourceTree = "<group>"; };
 		D703D33626893F6D00A9FA7D /* chat_manager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = chat_manager.cpp; sourceTree = "<group>"; };
+		D715B7BD268C83ED00EE75D6 /* models.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = models.cpp; sourceTree = "<group>"; };
 		D7282F3D266A5BF300D45179 /* LogHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LogHelper.h; sourceTree = "<group>"; };
 		D742F1BE266843CA00B80C18 /* hyphenateCWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hyphenateCWrapper.h; sourceTree = "<group>"; };
 		D742F1BF266843CA00B80C18 /* client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = client.h; sourceTree = "<group>"; };
@@ -474,6 +476,7 @@
 				D7282F3D266A5BF300D45179 /* LogHelper.h */,
 				D703D33526893F2900A9FA7D /* chat_manager.h */,
 				D703D33626893F6D00A9FA7D /* chat_manager.cpp */,
+				D715B7BD268C83ED00EE75D6 /* models.cpp */,
 			);
 			name = c_wrapper;
 			path = ../../../c_wrapper;
@@ -551,6 +554,7 @@
 				D742F1C4266843CA00B80C18 /* client.cpp in Sources */,
 				D742F1C5266843CA00B80C18 /* hyphenateCWrapper.cpp in Sources */,
 				D703D33726893F6D00A9FA7D /* chat_manager.cpp in Sources */,
+				D715B7BE268C83ED00EE75D6 /* models.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -29,7 +29,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type)
             from = tm->From;
             to = tm->To;
         }
-        break;
+            break;
         case EMMessageBody::LOCATION:
         {
             auto lm = static_cast<LocationMessageTO *>(mto);
@@ -37,7 +37,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type)
             from = lm->From;
             to = lm->To;
         }
-        break;
+            break;
         case EMMessageBody::COMMAND:
         {
             auto cm = static_cast<CmdMessageTO *>(mto);
@@ -47,7 +47,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type)
             from = cm->From;
             to = cm->To;
         }
-        break;
+            break;
     }
     LOG("Message created: From->%s, To->%s.", from.c_str(), to.c_str());
     EMMessagePtr messagePtr = EMMessage::createSendMessage(from, to, messageBody);

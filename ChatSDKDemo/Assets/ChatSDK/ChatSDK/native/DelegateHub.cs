@@ -8,7 +8,8 @@ namespace ChatSDK
     //IConnectionDelegate
     public delegate void OnDisconnected(int info);
     //IChatManagerDelegate
-    public delegate void OnMessagesReceived(MessageTO[] messages, int size);
+    public delegate void OnMessagesReceived([MarshalAs(UnmanagedType.LPArray, SizeParamIndex =2)]IntPtr[] messages,
+        [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)]MessageBodyType[] types, int size);
     public delegate void OnCmdMessagesReceived(MessageTO[] messages, int size);
     public delegate void OnMessagesRead(MessageTO[] messages, int size);
     public delegate void OnMessagesDelivered(MessageTO[] messages, int size);
@@ -105,7 +106,7 @@ namespace ChatSDK
                 listeners = _listeners;
             }
                 
-            (@delegate.CmdMessagesReceived,
+            (@delegate.MessagesReceived,
                 @delegate.CmdMessagesReceived,
                 @delegate.MessagesRead,
                 @delegate.MessagesDelivered,
@@ -124,15 +125,33 @@ namespace ChatSDK
                                                 OnConversationRead);
         }
 
-        public void OnMessagesReceived(MessageTO[] _messages, int size)
+        public void OnMessagesReceived(IntPtr[] _messages, MessageBodyType[] types, int size)
         {
-            List<Message> messages = MessageTO.ConvertToMessageList(_messages, size);
-            //invoke each listener in list
-            Debug.Log($"ChatManagerHub.OnMessagesReceived() invoked with messages={messages}!");
-            foreach (IChatManagerDelegate listener in listeners.List)
+            Debug.Log($"{size} messages received.");
+            var messages = new List<Message>(size);
+            for(int i=0; i<size; i++)
             {
-                listener.OnMessagesReceived(messages);
+                MessageTO mto = null;
+                switch(types[i])
+                {
+                    case MessageBodyType.TXT:
+                        //keep using mto
+                        mto = new TextMessageTO();
+                        Marshal.PtrToStructure(_messages[i], mto);
+                        break;
+                    case MessageBodyType.LOCATION:
+                        mto = new LocationMessageTO();
+                        Marshal.PtrToStructure(_messages[i], mto);
+                        break;
+                    case MessageBodyType.CMD:
+                        mto = new CmdMessageTO();
+                        Marshal.PtrToStructure(_messages[i], mto);
+                        break;
+                }
+                Marshal.FreeCoTaskMem(_messages[i]); //release unmanaged side memory
+                messages.Add(mto.Unmarshall());
             }
+            //TODO: call listeners one by one            
         }
 
         public void OnCmdMessagesReceived(MessageTO[] _messages, int size)

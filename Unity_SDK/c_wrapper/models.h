@@ -82,13 +82,30 @@ struct AttributeValue
     AttributeValueUnion Value;
 };
 
+//C# side: class TextMessageBodyTO
+struct TextMessageBodyTO {
+    const char * Content;
+};
+
+//C# side: class LocationMessageBodyTo
+struct LocationMessageBodyTO {
+    double Latitude;
+    double Longitude;
+    const char * Address;
+};
+
+struct CmdMessageBodyTO {
+    const char * Action;
+    bool DeliverOnlineOnly;
+};
+
 class MessageTO
 {
 public:
-    char * MsgId;
-    char * ConversationId;
-    char * From;
-    char * To;
+    const char * MsgId;
+    const char * ConversationId;
+    const char * From;
+    const char * To;
     EMMessage::EMChatType Type;
     EMMessage::EMMessageDirection Direction;
     EMMessage::EMMessageStatus Status;
@@ -103,41 +120,32 @@ public:
     long ServerTime;
     
     EMMessageBody::EMMessageBodyType BodyType;
-};
-
-//C# side: class TextMessageBodyTO
-struct TextMessageBodyTO {
-    char * Content;
-};
-
-//C# side: class LocationMessageBodyTo
-struct LocationMessageBodyTO {
-    double Latitude;
-    double Longitude;
-    char * Address;
-};
-
-struct CmdMessageBodyTO {
-    char * Action;
-    bool DeliverOnlineOnly;
+    
+    static MessageTO * FromEMMessage(EMMessagePtr &_message);
+    
+protected:
+    MessageTO(EMMessagePtr &message);
 };
 
 class TextMessageTO : public MessageTO
 {
 public:
     TextMessageBodyTO body;
+    TextMessageTO(EMMessagePtr &message);
 };
 
 class LocationMessageTO : public MessageTO
 {
 public:
     LocationMessageBodyTO body;
+    LocationMessageTO(EMMessagePtr &message);
 };
 
 class CmdMessageTO : public MessageTO
 {
 public:
     CmdMessageBodyTO body;
+    CmdMessageTO(EMMessagePtr &message);
 };
 
 #endif //_MODELS_H_

@@ -6,6 +6,7 @@
 
 #include "emconnection_listener.h"
 #include "emerror.h"
+#include "emmessagebody.h"
 
 using namespace easemob;
 
@@ -19,7 +20,8 @@ using namespace easemob;
     typedef void(__stdcall *FUNC_OnConnected)();
     typedef void(__stdcall *FUNC_OnDisconnected)(int);
     //ChatManager Listeners
-    typedef void (__stdcall *FUNC_OnMessagesReceived)(void * messages[], int size);
+    typedef void (__stdcall *FUNC_OnMessagesReceived)(void * messages[],
+                                                      EMMessageBody::EMMessageBodyType types[], int size);
     typedef void (__stdcall *FUNC_OnCmdMessagesReceived)(void * messages[], int size);
     typedef void (__stdcall *FUNC_OnMessagesRead)(void * messages[], int size);
     typedef void (__stdcall *FUNC_OnMessagesDelivered)(void * messages[], int size);
@@ -38,7 +40,8 @@ using namespace easemob;
     typedef void(*FUNC_OnDisconnected)(int);
     typedef void(*FUNC_OnPong)();
     //ChatManager Listeners
-    typedef void (*FUNC_OnMessagesReceived)(void * messages[], int size);
+    typedef void (*FUNC_OnMessagesReceived)(void * messages[],
+                                            EMMessageBody::EMMessageBodyType types[],int size);
     typedef void (*FUNC_OnCmdMessagesReceived)(void * messages[], int size);
     typedef void (*FUNC_OnMessagesRead)(void * messages[], int size);
     typedef void (*FUNC_OnMessagesDelivered)(void * messages[], int size);
@@ -80,7 +83,22 @@ public:
     ChatManagerListener(FUNC_OnMessagesReceived onMessagesReceived, FUNC_OnCmdMessagesReceived onCmdMessagesReceived, FUNC_OnMessagesRead onMessagesRead, FUNC_OnMessagesDelivered onMessagesDelivered, FUNC_OnMessagesRecalled onMessagesRecalled, FUNC_OnReadAckForGroupMessageUpdated onReadAckForGroupMessageUpdated, FUNC_OnGroupMessageRead onGroupMessageRead, FUNC_OnConversationsUpdate onConversationsUpdate, FUNC_OnConversationRead onConversationRead):onMessagesReceived(onMessagesReceived),onCmdMessagesReceived(onCmdMessagesReceived),onMessagesRead(onMessagesRead),onMessagesDelivered(onMessagesDelivered),onMessagesRecalled(onMessagesRecalled),onReadAckForGroupMessageUpdated(onReadAckForGroupMessageUpdated), onGroupMessageRead(onGroupMessageRead),onConversationsUpdate(onConversationsUpdate),onConversationRead(onConversationRead) {}
     
     void onReceiveMessages(const EMMessageList &messages) override {
-        LOG("%d messages received!", messages.size());
+        size_t size = messages.size();
+        LOG("%d messages received!", size);
+        
+        void * result[size];
+        EMMessageBody::EMMessageBodyType types[size];
+        int i = 0;
+        for(EMMessagePtr message : messages) {
+            MessageTO *mto = MessageTO::FromEMMessage(message);
+            result[i] = mto;
+            types[i] = mto->BodyType;
+            i++;
+        }
+        if(onMessagesReceived) {
+            LOG("Call onMessagesReceived delegate in managed side...");
+            onMessagesReceived(result, types, (int)size);
+        }
     }
     
     void onReceiveCmdMessages(const EMMessageList &messages) override {

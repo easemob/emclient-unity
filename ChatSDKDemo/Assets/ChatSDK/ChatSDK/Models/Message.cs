@@ -74,6 +74,16 @@ namespace ChatSDK
             Body = new TextMessageBodyTO(message);
         }
 
+        public TextMessageTO():base()
+        {
+
+        }
+
+        public override IMessageBody GetBody()
+        {
+            return new MessageBody.TextBody(Body.Content);
+        }
+
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
@@ -104,6 +114,16 @@ namespace ChatSDK
         public LocationMessageTO(in Message message):base(message)
         {
             Body = new LocationMessageBodyTO(message);
+        }
+
+        public LocationMessageTO()
+        {
+
+        }
+
+        public override IMessageBody GetBody()
+        {
+            return new MessageBody.LocationBody(Body.Latitude, Body.Longitude, Body.Address);
         }
     }
 
@@ -136,6 +156,16 @@ namespace ChatSDK
         {
             Body = new CmdMessageBodyTO(message);
         }
+
+        public CmdMessageTO()
+        {
+
+        }
+
+        public override IMessageBody GetBody()
+        {
+            return new MessageBody.CmdBody(Body.Action, Body.DeliverOnlineOnly);
+        }
     }
     
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
@@ -164,6 +194,11 @@ namespace ChatSDK
             (ConversationId,From,To,Direction,HasReadAck,BodyType)
                 = (message.ConversationId,message.From,message.To,message.Direction,message.HasReadAck,message.Body.Type);
 
+        protected MessageTO()
+        {
+
+        }
+
         public static List<Message> ConvertToMessageList(in MessageTO[] _messages, int size)
         {
             List<Message> messages = new List<Message>();
@@ -174,9 +209,11 @@ namespace ChatSDK
             return messages;
         }
 
+        public abstract IMessageBody GetBody();
+
         internal Message Unmarshall()
         {
-            return new Message()
+            var result = new Message()
             {
                 MsgId = MsgId,
                 ConversationId = ConversationId,
@@ -188,9 +225,10 @@ namespace ChatSDK
                 LocalTime = LocalTime,
                 ServerTime = ServerTime,
                 HasDeliverAck = HasDeliverAck,
-                HasReadAck = HasReadAck,
-                //TODO: unmarshall to message body
+                HasReadAck = HasReadAck,                
             };
+            result.Body = GetBody();
+            return result;
         }
     }
 
