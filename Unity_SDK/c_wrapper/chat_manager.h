@@ -19,6 +19,7 @@ AGORA_API void ChatManager_AddListener(void *client,
                                        FUNC_OnMessagesDelivered onMessagesDelivered,
                                        FUNC_OnMessagesRecalled onMessagesRecalled,
                                        FUNC_OnReadAckForGroupMessageUpdated onReadAckForGroupMessageUpdated,
+                                       FUNC_OnGroupMessageRead onGroupMessageRead,
                                        FUNC_OnConversationsUpdate onConversationsUpdate,
                                        FUNC_OnConversationRead onConversationRead
                                        );

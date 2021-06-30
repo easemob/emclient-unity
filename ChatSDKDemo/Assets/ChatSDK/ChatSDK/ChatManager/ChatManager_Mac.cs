@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Runtime.InteropServices;
 
 namespace ChatSDK
 {
@@ -108,20 +109,22 @@ namespace ChatSDK
             OnSendMessageSuccess = () => callback?.Success();
             OnSendMessageError = (int code, string desc) => callback?.Error(code, desc);
             //call overloaded ChatManager_SendMessage according to message type
-            if(message.Body.Type == MessageBodyType.TXT)
-            {
-                TextMessageTO tm = new TextMessageTO(message);
-                ChatAPINative.ChatManager_SendMessage(client, OnSendMessageSuccess, OnSendMessageError, tm, message.Body.Type);
-
-            }else if(message.Body.Type == MessageBodyType.LOCATION)
-            {
-                LocationMessageTO lm = new LocationMessageTO(message);
-                ChatAPINative.ChatManager_SendMessage(client, OnSendMessageSuccess, OnSendMessageError, lm, message.Body.Type);
-            }else if(message.Body.Type == MessageBodyType.CMD)
-            {
-                CmdMessageTO cm = new CmdMessageTO(message);
-                ChatAPINative.ChatManager_SendMessage(client, OnSendMessageSuccess, OnSendMessageError, cm, message.Body.Type);
+            MessageTO mto = null;
+            switch(message.Body.Type) {
+                case MessageBodyType.TXT:
+                    mto = new TextMessageTO(message);
+                    break;
+                case MessageBodyType.LOCATION:
+                    mto = new LocationMessageTO(message);
+                    break;
+                case MessageBodyType.CMD:
+                    mto = new CmdMessageTO(message);
+                    break;
             }
+            IntPtr mtoPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(mto));
+            Marshal.StructureToPtr(mto, mtoPtr, false);
+            ChatAPINative.ChatManager_SendMessage(client, OnSendMessageSuccess, OnSendMessageError, mtoPtr, message.Body.Type);
+            Marshal.FreeCoTaskMem(mtoPtr);
             //TODO: what Message to return from this SendMessage?
             return null;
         }

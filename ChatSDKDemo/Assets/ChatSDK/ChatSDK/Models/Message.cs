@@ -6,28 +6,9 @@ using SimpleJSON;
 namespace ChatSDK
 {
     //MessageHeader: Header of one message
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    /*[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public struct MessageHeaderTO
-    {
-        public string MsgId;
-        public string ConversationId;
-        public string From;
-        public string To;
-        public MessageType Type;
-        public MessageDirection Direction;
-        public MessageStatus Status;
-        [MarshalAs(UnmanagedType.U1)]
-        public bool HasDeliverAck;
-        [MarshalAs(UnmanagedType.U1)]
-        public bool HasReadAck;
-        
-        /*public string[] AttributesKeys;
-        public AttributeValue[] AttributesValues;
-        public int AttributesSize;*/
-        public long LocalTime;
-        public long ServerTime;
-        public MessageBodyType BodyType;
-        
+    {       
         public MessageHeaderTO(in Message message)
         {
             (MsgId, ConversationId, From, To, Type, Direction, Status, HasDeliverAck, HasReadAck, LocalTime, ServerTime, BodyType)
@@ -36,7 +17,7 @@ namespace ChatSDK
                     message.LocalTime, message.ServerTime, message.Body.Type);
         }          
 
-        /*private static void SplitMessageAttributes(in Message message, out string[] Keys, out AttributeValue[] Values)
+        private static void SplitMessageAttributes(in Message message, out string[] Keys, out AttributeValue[] Values)
         {
             int count = message.Attributes.Count;
             Keys = new string[count];
@@ -60,10 +41,10 @@ namespace ChatSDK
                 result.Add(keys[i], values[i]);
             }
             return result;
-        }*/
+        }
 
         
-    }
+    }*/
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public class TextMessageTO :  MessageTO
@@ -88,9 +69,8 @@ namespace ChatSDK
             }
         }
 
-        public TextMessageTO(in Message message)
+        public TextMessageTO(in Message message):base(message)
         {
-            Header = new MessageHeaderTO(message);
             Body = new TextMessageBodyTO(message);
         }
 
@@ -121,9 +101,8 @@ namespace ChatSDK
             }
         }
 
-        public LocationMessageTO(in Message message)
+        public LocationMessageTO(in Message message):base(message)
         {
-            Header = new MessageHeaderTO(message);
             Body = new LocationMessageBodyTO(message);
         }
     }
@@ -153,9 +132,8 @@ namespace ChatSDK
             }
         }
 
-        public CmdMessageTO(in Message message)
+        public CmdMessageTO(in Message message):base(message)
         {
-            Header = new MessageHeaderTO(message);
             Body = new CmdMessageBodyTO(message);
         }
     }
@@ -163,7 +141,29 @@ namespace ChatSDK
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public abstract class MessageTO
     {
-        protected MessageHeaderTO Header;
+        public string MsgId;
+        public string ConversationId;
+        public string From;
+        public string To;
+        public MessageType Type;
+        public MessageDirection Direction;
+        public MessageStatus Status;
+        [MarshalAs(UnmanagedType.U1)]
+        public bool HasDeliverAck;
+        [MarshalAs(UnmanagedType.U1)]
+        public bool HasReadAck;
+
+        /*public string[] AttributesKeys;
+        public AttributeValue[] AttributesValues;
+        public int AttributesSize;*/
+        public long LocalTime;
+        public long ServerTime;
+        public MessageBodyType BodyType;
+        
+        protected MessageTO(in Message message) =>
+            (ConversationId,From,To,Direction,HasReadAck,BodyType)
+                = (message.ConversationId,message.From,message.To,message.Direction,message.HasReadAck,message.Body.Type);
+
         public static List<Message> ConvertToMessageList(in MessageTO[] _messages, int size)
         {
             List<Message> messages = new List<Message>();
@@ -178,17 +178,17 @@ namespace ChatSDK
         {
             return new Message()
             {
-                MsgId = Header.MsgId,
-                ConversationId = Header.ConversationId,
-                From = Header.From,
-                To = Header.To,
-                MessageType = Header.Type,
-                Direction = Header.Direction,
-                Status = Header.Status,
-                LocalTime = Header.LocalTime,
-                ServerTime = Header.ServerTime,
-                HasDeliverAck = Header.HasDeliverAck,
-                HasReadAck = Header.HasReadAck,
+                MsgId = MsgId,
+                ConversationId = ConversationId,
+                From = From,
+                To = To,
+                MessageType = Type,
+                Direction = Direction,
+                Status = Status,
+                LocalTime = LocalTime,
+                ServerTime = ServerTime,
+                HasDeliverAck = HasDeliverAck,
+                HasReadAck = HasReadAck,
                 //TODO: unmarshall to message body
             };
         }

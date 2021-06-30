@@ -35,7 +35,7 @@ namespace ChatSDK{
 		internal static extern void Client_StopLog();
 
 		[DllImport(MyLibName)]
-		internal static extern void ChatManager_SendMessage(IntPtr client, Action onSuccess, OnError onError, TextMessageTO mto, MessageBodyType type);
+		internal static extern void ChatManager_SendMessage(IntPtr client, Action onSuccess, OnError onError, IntPtr mto, MessageBodyType type);
 
 		[DllImport(MyLibName)]
 		internal static extern void ChatManager_SendMessage(IntPtr client, Action onSuccess, OnError onError, LocationMessageTO mto, MessageBodyType type);

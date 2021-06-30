@@ -13,15 +13,7 @@ public class Main : MonoBehaviour
     public InputField TextField;
     // 发送按钮
     public Button SendBtn;
-    // 位置纬度
-    public InputField LatitudeField;
-    // 位置经度
-    public InputField LongitudeField;
-    // 地址描述
-    public InputField AddressField;
-    // 发送位置按钮
-    public Button SendLocationBtn;
-    // 群组id
+     // 群组id
     public InputField GroupField;
     // 加入群组按钮
     public Button JoinGroupBtn;
@@ -49,8 +41,7 @@ public class Main : MonoBehaviour
     void Start()
     {
         SendBtn.onClick.AddListener(SendMessageAction);
-        SendLocationBtn.onClick.AddListener(SendLocationAction);
-
+        
         JoinGroupBtn.onClick.AddListener(JoinGroupAction);
         GroupInfoBtn.onClick.AddListener(GetGroupInfoAction);
         LeaveGroupBtn.onClick.AddListener(LeaveGroupAction);
@@ -86,12 +77,12 @@ public class Main : MonoBehaviour
         chatManager.SendMessage(message, callback);
     }
 
-    void SendLocationAction()
+    void SendLocationMessageAction()
     {
         string receiverId = RecvIdField.text;
-        double latitude = double.Parse(LatitudeField.text);
-        double longitude = double.Parse(LatitudeField.text);
-        string address = AddressField.text;
+        double latitude = 39.33F;
+        double longitude = 116.33F;
+        string address = "Beijing";
         IChatManager chatManager = SDKClient.Instance.ChatManager;
         CallBack callback = new CallBack(onSuccess: () => { Debug.Log("Message sent successfully!"); },
                                             onProgress: (int progress) => { Debug.Log(progress); },

@@ -2,7 +2,7 @@
 #define _CALLBACKS_H_
 
 #include "models.h"
-#include "LogHelper.h";
+#include "LogHelper.h"
 
 #include "emconnection_listener.h"
 #include "emerror.h"
@@ -72,6 +72,54 @@ private:
     FUNC_OnConnected onConnected;
     FUNC_OnDisconnected onDisconnected;
     FUNC_OnPong onPonged;
+};
+
+class ChatManagerListener : public EMChatManagerListener
+{
+public:
+    ChatManagerListener(FUNC_OnMessagesReceived onMessagesReceived, FUNC_OnCmdMessagesReceived onCmdMessagesReceived, FUNC_OnMessagesRead onMessagesRead, FUNC_OnMessagesDelivered onMessagesDelivered, FUNC_OnMessagesRecalled onMessagesRecalled, FUNC_OnReadAckForGroupMessageUpdated onReadAckForGroupMessageUpdated, FUNC_OnGroupMessageRead onGroupMessageRead, FUNC_OnConversationsUpdate onConversationsUpdate, FUNC_OnConversationRead onConversationRead):onMessagesReceived(onMessagesReceived),onCmdMessagesReceived(onCmdMessagesReceived),onMessagesRead(onMessagesRead),onMessagesDelivered(onMessagesDelivered),onMessagesRecalled(onMessagesRecalled),onReadAckForGroupMessageUpdated(onReadAckForGroupMessageUpdated), onGroupMessageRead(onGroupMessageRead),onConversationsUpdate(onConversationsUpdate),onConversationRead(onConversationRead) {}
+    
+    void onReceiveMessages(const EMMessageList &messages) override {
+        LOG("%d messages received!", messages.size());
+    }
+    
+    void onReceiveCmdMessages(const EMMessageList &messages) override {
+        LOG("%d cmd messages received!", messages.size());
+    }
+    
+    void onReceiveHasReadAcks(const EMMessageList &messages) override{
+        LOG("%d messages read!", messages.size());
+    }
+    
+    void onReceiveHasDeliveredAcks(const EMMessageList &messages) override{
+        LOG("%d messages delivered!", messages.size());
+    }
+    
+    void onReceiveRecallMessages(const EMMessageList &messages) override {
+        LOG("%d messages recalled!", messages.size());
+    }
+    
+    void onUpdateGroupAcks() override {
+        
+    }
+    
+    void onUpdateConversationList(const EMConversationList &conversations) override {
+        
+    }
+    
+    void onReceiveReadAckForConversation(const std::string& fromUsername, const std::string& toUsername) override {
+        
+    }
+private:
+    FUNC_OnMessagesReceived onMessagesReceived;
+    FUNC_OnCmdMessagesReceived onCmdMessagesReceived;
+    FUNC_OnMessagesRead onMessagesRead;
+    FUNC_OnMessagesDelivered onMessagesDelivered;
+    FUNC_OnMessagesRecalled onMessagesRecalled;
+    FUNC_OnReadAckForGroupMessageUpdated onReadAckForGroupMessageUpdated;
+    FUNC_OnGroupMessageRead onGroupMessageRead;
+    FUNC_OnConversationsUpdate onConversationsUpdate;
+    FUNC_OnConversationRead onConversationRead;
 };
 
 #endif // _CALLBACKS_H_

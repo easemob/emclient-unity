@@ -60,7 +60,7 @@ EMChatConfigsPtr ConfigsFromOptions(Options *options) {
 }
 
 EMClient *gClient = NULL;
-ConnectionListener *gConnectionListener = NULL;
+EMConnectionListener *gConnectionListener = NULL;
 
 AGORA_API void* Client_InitWithOptions(Options *options, FUNC_OnConnected onConnected, FUNC_OnDisconnected onDisconnected, FUNC_OnPong onPong)
 {
@@ -71,8 +71,10 @@ AGORA_API void* Client_InitWithOptions(Options *options, FUNC_OnConnected onConn
     if(gClient == nullptr) {
         EMChatConfigsPtr configs = ConfigsFromOptions(options);
         gClient = EMClient::create(configs);
-        gConnectionListener = new ConnectionListener(onConnected, onDisconnected, onPong);
-        gClient->addConnectionListener(gConnectionListener);
+        if(gConnectionListener == NULL) { //only set once
+            gConnectionListener = new ConnectionListener(onConnected, onDisconnected, onPong);
+            gClient->addConnectionListener(gConnectionListener);
+        }
     }
     
     return gClient;

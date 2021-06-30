@@ -82,8 +82,9 @@ struct AttributeValue
     AttributeValueUnion Value;
 };
 
-struct MessageHeaderTO
+class MessageTO
 {
+public:
     char * MsgId;
     char * ConversationId;
     char * From;
@@ -121,21 +122,21 @@ struct CmdMessageBodyTO {
     bool DeliverOnlineOnly;
 };
 
-struct TextMessageTO
+class TextMessageTO : public MessageTO
 {
-    MessageHeaderTO header;
+public:
     TextMessageBodyTO body;
 };
 
-struct LocationMessageTO
+class LocationMessageTO : public MessageTO
 {
-    MessageHeaderTO header;
+public:
     LocationMessageBodyTO body;
 };
 
-struct CmdMessageTO
+class CmdMessageTO : public MessageTO
 {
-    MessageHeaderTO header;
+public:
     CmdMessageBodyTO body;
 };
 
