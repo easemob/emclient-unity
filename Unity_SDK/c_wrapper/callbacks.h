@@ -99,6 +99,10 @@ public:
             LOG("Call onMessagesReceived delegate in managed side...");
             onMessagesReceived(result, types, (int)size);
         }
+        //release memory manually
+        for(void * message : result) {
+            delete (MessageTO *)message;
+        }
     }
     
     void onReceiveCmdMessages(const EMMessageList &messages) override {

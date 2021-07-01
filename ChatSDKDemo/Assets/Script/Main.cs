@@ -40,6 +40,9 @@ public class Main : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //setup chat manager delegate
+        //SDKClient.Instance.ChatManager.AddChatManagerDelegate(new ChatManagerDelegate());
+
         SendBtn.onClick.AddListener(SendMessageAction);
         
         JoinGroupBtn.onClick.AddListener(JoinGroupAction);

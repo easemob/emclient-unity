@@ -54,7 +54,7 @@ namespace ChatSDK
             {
                 Debug.Log("Connection discontinued.");
                 client.IsConnected = false;
-                foreach (IConnectionDelegate listener in listeners.List)
+                foreach (IConnectionDelegate listener in listeners?.List)
                 {
                     listener.OnDisconnected(info);
                 }
@@ -76,7 +76,7 @@ namespace ChatSDK
         }
     }
 
-    public class ChatManagerHub : CallBack
+    public class ChatManagerHub
     {
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
         public struct Delegate
@@ -148,10 +148,9 @@ namespace ChatSDK
                         Marshal.PtrToStructure(_messages[i], mto);
                         break;
                 }
-                Marshal.FreeCoTaskMem(_messages[i]); //release unmanaged side memory
                 messages.Add(mto.Unmarshall());
+                //_messages[i] memory released at unmanaged side!
             }
-            //TODO: call listeners one by one            
         }
 
         public void OnCmdMessagesReceived(MessageTO[] _messages, int size)

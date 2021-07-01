@@ -38,12 +38,6 @@ namespace ChatSDK{
 		internal static extern void ChatManager_SendMessage(IntPtr client, Action onSuccess, OnError onError, IntPtr mto, MessageBodyType type);
 
 		[DllImport(MyLibName)]
-		internal static extern void ChatManager_SendMessage(IntPtr client, Action onSuccess, OnError onError, LocationMessageTO mto, MessageBodyType type);
-
-		[DllImport(MyLibName)]
-		internal static extern void ChatManager_SendMessage(IntPtr client, Action onSuccess, OnError onError, CmdMessageTO mto, MessageBodyType type);
-
-		[DllImport(MyLibName)]
 		internal static extern void ChatManager_AddListener(IntPtr client, OnMessagesReceived onMessagesReceived,
 				OnCmdMessagesReceived onCmdMessagesReceived, OnMessagesRead onMessagesRead, OnMessagesDelivered onMessagesDelivered,
 				OnMessagesRecalled onMessagesRecalled, OnReadAckForGroupMessageUpdated onReadAckForGroupMessageUpdated, OnGroupMessageRead onGroupMessageRead,

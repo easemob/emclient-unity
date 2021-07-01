@@ -19,8 +19,6 @@ public class Login : MonoBehaviour
         Options options = new Options("easemob-demo#easeim");
         SDKClient client = SDKClient.Instance;
         client.InitWithOptions(options);
-        //setup chat manager delegate
-        //client.ChatManager.AddChatManagerDelegate(new ChatManagerDelegate());
     }
 
     void LoginAction() {

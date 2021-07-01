@@ -5,7 +5,7 @@
 //  Created by Bingo Zhao on 2021/6/30.
 //  Copyright © 2021 easemob. All rights reserved.
 //
-
+#include "LogHelper.h"
 #include "models.h"
 
 //MessageTO
@@ -67,4 +67,9 @@ MessageTO * MessageTO::FromEMMessage(EMMessagePtr &_message)
             message = NULL;
     }    
     return message;
+}
+
+MessageTO::~MessageTO()
+{
+    LOG("MessageTO released...");
 }

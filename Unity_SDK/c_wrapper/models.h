@@ -123,6 +123,7 @@ public:
     
     static MessageTO * FromEMMessage(EMMessagePtr &_message);
     
+    ~MessageTO();
 protected:
     MessageTO(EMMessagePtr &message);
 };
