@@ -11,14 +11,20 @@ public class Login : MonoBehaviour
     public Button loginButton;
     public Button registerButton;
 
+    private void Awake()
+    {
+        Debug.Log("Scene Login's Awake() called.");
+        Options options = new Options("easemob-demo#easeim");
+        SDKClient client = SDKClient.Instance;
+        client.InitWithOptions(options);
+        client.AddConnectionDelegate(ConnectionDelegate.Global);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         loginButton.onClick.AddListener(LoginAction);
         registerButton.onClick.AddListener(RegisterAction);
-        Options options = new Options("easemob-demo#easeim");
-        SDKClient client = SDKClient.Instance;
-        client.InitWithOptions(options);
     }
 
     void LoginAction() {

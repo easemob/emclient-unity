@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using UnityEngine;
 
 namespace ChatSDK
 {
@@ -9,9 +10,7 @@ namespace ChatSDK
         private IntPtr client;
         private ChatManagerHub chatManagerHub;
 
-        //events
-        public event Action OnSendMessageSuccess;
-        public event OnError OnSendMessageError;
+        //manager level events
         
         internal ChatManager_Mac(IClient _client)
         {
@@ -104,10 +103,6 @@ namespace ChatSDK
 
         public override Message SendMessage(Message message, CallBack callback = null)
         {
-            //clear previous linked events handler
-            OnSendMessageSuccess = () => callback?.Success();
-            OnSendMessageError = (int code, string desc) => callback?.Error(code, desc);
-            //call overloaded ChatManager_SendMessage according to message type
             MessageTO mto = null;
             switch(message.Body.Type) {
                 case MessageBodyType.TXT:
@@ -122,7 +117,8 @@ namespace ChatSDK
             }
             IntPtr mtoPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(mto));
             Marshal.StructureToPtr(mto, mtoPtr, false);
-            ChatAPINative.ChatManager_SendMessage(client, OnSendMessageSuccess, OnSendMessageError, mtoPtr, message.Body.Type);
+            ChatAPINative.ChatManager_SendMessage(client, () => callback?.Success(),
+                (int code, string desc) => callback?.Error(code, desc), mtoPtr, message.Body.Type);
             Marshal.FreeCoTaskMem(mtoPtr);
             //TODO: what Message to return from this SendMessage?
             return null;

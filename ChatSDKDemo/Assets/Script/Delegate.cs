@@ -4,7 +4,19 @@ using ChatSDK;
 using System.Collections.Generic;
 
 public class ConnectionDelegate : IConnectionDelegate
-{ 
+{
+    private ConnectionDelegate() { }
+    private static ConnectionDelegate global;
+
+    public static ConnectionDelegate Global {
+        get {
+            if (global == null)
+            {
+                global = new ConnectionDelegate();
+            }
+            return global;
+        }
+    }
 
     public void OnConnected()
     {
@@ -24,6 +36,20 @@ public class ConnectionDelegate : IConnectionDelegate
 
 public class ChatManagerDelegate : IChatManagerDelegate
 {
+    private ChatManagerDelegate() { }
+    private static ChatManagerDelegate global;
+
+    public static ChatManagerDelegate Global
+    {
+        get
+        {
+            if (global == null)
+            {
+                global = new ChatManagerDelegate();
+            }
+            return global;
+        }
+    }
     public void OnCmdMessagesReceived(List<Message> messages)
     {
         foreach (Message message in messages)

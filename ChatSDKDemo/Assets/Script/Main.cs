@@ -36,13 +36,15 @@ public class Main : MonoBehaviour
 
     IEnumerable<Toggle> ToggleGroup;
 
+    private void Awake()
+    {
+        //setup chat manager delegate
+        SDKClient.Instance.ChatManager.AddChatManagerDelegate(ChatManagerDelegate.Global);
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        //setup chat manager delegate
-        //SDKClient.Instance.ChatManager.AddChatManagerDelegate(new ChatManagerDelegate());
-
         SendBtn.onClick.AddListener(SendMessageAction);
         
         JoinGroupBtn.onClick.AddListener(JoinGroupAction);

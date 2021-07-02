@@ -19,12 +19,12 @@ namespace ChatSDK
     public delegate void OnConversationsUpdate();
     public delegate void OnConversationRead(string from, string to);
 
-    public class ConnectionHub : CallBack
+    public class ConnectionHub
     {
         //events handler
-        public Action OnConnected;
-        public OnDisconnected OnDisconnected;
-        public Action OnPong;
+        internal Action OnConnected;
+        internal OnDisconnected OnDisconnected;
+        internal Action OnPong;
 
         private WeakDelegater<IConnectionDelegate> listeners;
 
@@ -67,32 +67,13 @@ namespace ChatSDK
                     listener.OnPong();
                 }
             };
-            Debug.Log($"Connection Hub callback ${callbackId} initialized!");
-        }
-
-        ~ConnectionHub()
-        {
-            Debug.Log($"ConnectionHub ${callbackId} finalized!");
         }
     }
 
     public class ChatManagerHub
     {
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public struct Delegate
-        {
-            public OnMessagesReceived MessagesReceived;
-            public OnCmdMessagesReceived CmdMessagesReceived;
-            public OnMessagesRead MessagesRead;
-            public OnMessagesDelivered MessagesDelivered;
-            public OnMessagesRecalled MessagesRecalled;
-            public OnReadAckForGroupMessageUpdated ReadAckForGroupMessageUpdated;
-            public OnGroupMessageRead GroupMessageRead;
-            public OnConversationsUpdate ConversationsUpdate;
-            public OnConversationRead ConversationRead;
-        };
-
-        private Delegate @delegate;
+        internal OnMessagesReceived OnMessagesReceived;
+        
         private WeakDelegater<IChatManagerDelegate> listeners;
 
         public ChatManagerHub(WeakDelegater<IChatManagerDelegate> _listeners)
@@ -105,52 +86,40 @@ namespace ChatSDK
             {
                 listeners = _listeners;
             }
-                
-            (@delegate.MessagesReceived,
-                @delegate.CmdMessagesReceived,
-                @delegate.MessagesRead,
-                @delegate.MessagesDelivered,
-                @delegate.MessagesRecalled,
-                @delegate.ReadAckForGroupMessageUpdated,
-                @delegate.GroupMessageRead,
-                @delegate.ConversationsUpdate,
-                @delegate.ConversationRead) = (OnMessagesReceived,
-                                                OnCmdMessagesReceived,
-                                                OnMessagesRead,
-                                                OnMessagesDelivered,
-                                                OnMessagesRecalled,
-                                                OnReadAckForGroupMessageUpdated,
-                                                OnGroupMessageRead,
-                                                OnConversationsUpdate,
-                                                OnConversationRead);
-        }
 
-        public void OnMessagesReceived(IntPtr[] _messages, MessageBodyType[] types, int size)
-        {
-            Debug.Log($"{size} messages received.");
-            var messages = new List<Message>(size);
-            for(int i=0; i<size; i++)
+            OnMessagesReceived = (IntPtr[] _messages, MessageBodyType[] types, int size) =>
             {
-                MessageTO mto = null;
-                switch(types[i])
+                var messages = new List<Message>(size);
+                for (int i = 0; i < size; i++)
                 {
-                    case MessageBodyType.TXT:
-                        //keep using mto
-                        mto = new TextMessageTO();
-                        Marshal.PtrToStructure(_messages[i], mto);
-                        break;
-                    case MessageBodyType.LOCATION:
-                        mto = new LocationMessageTO();
-                        Marshal.PtrToStructure(_messages[i], mto);
-                        break;
-                    case MessageBodyType.CMD:
-                        mto = new CmdMessageTO();
-                        Marshal.PtrToStructure(_messages[i], mto);
-                        break;
+                    MessageTO mto = null;
+                    switch (types[i])
+                    {
+                        case MessageBodyType.TXT:
+                            //keep using mto
+                            mto = new TextMessageTO();
+                            Marshal.PtrToStructure(_messages[i], mto);
+                            break;
+                        case MessageBodyType.LOCATION:
+                            mto = new LocationMessageTO();
+                            Marshal.PtrToStructure(_messages[i], mto);
+                            break;
+                        case MessageBodyType.CMD:
+                            mto = new CmdMessageTO();
+                            Marshal.PtrToStructure(_messages[i], mto);
+                            break;
+                    }
+                    Debug.Log($"Message {mto.MsgId} received from {mto.From}");
+                    messages.Add(mto.Unmarshall());
+                    //_messages[i] memory released at unmanaged side!
                 }
-                messages.Add(mto.Unmarshall());
-                //_messages[i] memory released at unmanaged side!
-            }
+                //chain-call to customer specified listeners
+                Debug.Log($"Invoke customer listeners upon messages receiving...");
+                foreach (IChatManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnMessagesReceived(messages);
+                }
+            };
         }
 
         public void OnCmdMessagesReceived(MessageTO[] _messages, int size)
@@ -226,11 +195,6 @@ namespace ChatSDK
             {
                 listener.OnConversationRead(from, to);
             }
-        }
-
-        public Delegate Delegates()
-        {
-            return @delegate;
         }
     }
 }
