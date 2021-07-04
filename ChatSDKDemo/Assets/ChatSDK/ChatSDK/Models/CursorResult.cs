@@ -17,6 +17,7 @@ namespace ChatSDK
         public string NextPageCursor;
         public DataType Type;
         public int Size;
+        public IntPtr SubTypes; //sub types if any
         public IntPtr Data; //list of data
     }
 }

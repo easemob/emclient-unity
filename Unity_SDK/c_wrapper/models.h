@@ -167,6 +167,7 @@ struct CursorResultTO
     const char * NextPageCursor;
     DataType Type;
     int Size;
+    EMMessageBody::EMMessageBodyType *SubTypes; //sub types if any
     void ** Data; //list of data
 };
 

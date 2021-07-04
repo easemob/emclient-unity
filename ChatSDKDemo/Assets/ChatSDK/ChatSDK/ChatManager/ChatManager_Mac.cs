@@ -56,13 +56,26 @@ namespace ChatSDK
                             result.Cursor = cursorResultTO.NextPageCursor;
                             int msgSize = cursorResultTO.Size;
                             MessageTO[] messages = new MessageTO[msgSize];
+                            IntPtr subTypes = cursorResultTO.SubTypes;
                             IntPtr dataPtr = cursorResultTO.Data;
                             for(int i = 0; i<size; i++)
                             {
-                                messages[i] = Marshal.PtrToStructure<MessageTO>(dataPtr+i);
+                                MessageBodyType msgType = Marshal.PtrToStructure<MessageBodyType>(subTypes + i);
+                                switch(msgType)
+                                {
+                                    case MessageBodyType.TXT:
+                                        messages[i] = Marshal.PtrToStructure<TextMessageTO>(dataPtr + i);
+                                        break;
+                                    case MessageBodyType.LOCATION:
+                                        messages[i] = Marshal.PtrToStructure<LocationMessageTO>(dataPtr + i);
+                                        break;
+                                    case MessageBodyType.CMD:
+                                        messages[i] = Marshal.PtrToStructure<CmdMessageTO>(dataPtr + i);
+                                        break;
+                                }
+                                
                             }
                             result.Data = MessageTO.ConvertToMessageList(messages, msgSize);
-                            handle?.OnSuccessValue(result);
                         }
                         else
                         {
