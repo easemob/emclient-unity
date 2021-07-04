@@ -120,33 +120,54 @@ public:
     long ServerTime;
     
     EMMessageBody::EMMessageBodyType BodyType;
+    MessageTO();
     
-    static MessageTO * FromEMMessage(EMMessagePtr &_message);
+    static MessageTO * FromEMMessage(const EMMessagePtr &_message);
     
-    ~MessageTO();
+    virtual ~MessageTO();
 protected:
-    MessageTO(EMMessagePtr &message);
+    MessageTO(const EMMessagePtr &message);
 };
 
 class TextMessageTO : public MessageTO
 {
 public:
     TextMessageBodyTO body;
-    TextMessageTO(EMMessagePtr &message);
+    TextMessageTO(const EMMessagePtr &message);
 };
 
 class LocationMessageTO : public MessageTO
 {
 public:
     LocationMessageBodyTO body;
-    LocationMessageTO(EMMessagePtr &message);
+    LocationMessageTO(const EMMessagePtr &message);
 };
 
 class CmdMessageTO : public MessageTO
 {
 public:
     CmdMessageBodyTO body;
-    CmdMessageTO(EMMessagePtr &message);
+    CmdMessageTO(const EMMessagePtr &message);
+};
+
+enum DataType {
+    Bool,
+    String,
+    Group,
+    CursorResult,
+    ListOfString,
+    ListOfMessage,
+    ListOfConversation,
+    ListOfGroup,
+    ListOfGroupSharedFile,
+};
+
+struct CursorResultTO
+{
+    const char * NextPageCursor;
+    DataType Type;
+    int Size;
+    void ** Data; //list of data
 };
 
 #endif //_MODELS_H_

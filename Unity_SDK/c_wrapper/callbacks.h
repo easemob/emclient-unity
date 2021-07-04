@@ -14,6 +14,7 @@ using namespace easemob;
 #if defined(_WIN32)
     //Callback
     typedef void(__stdcall *FUNC_OnSuccess)();
+    typedef void(__stdcall *FUNC_OnSuccess_With_Result)(void * data[], DataType type, int size);
     typedef void(__stdcall *FUNC_OnError)(int, const char *);
     typedef void(__stdcall *FUNC_OnProgress)(int);
     //Connection Listeners
@@ -33,6 +34,7 @@ using namespace easemob;
 #else
     //Callback
     typedef void(*FUNC_OnSuccess)();
+    typedef void(*FUNC_OnSuccess_With_Result)(void * data[], DataType type, int size);
     typedef void(*FUNC_OnError)(int, const char *);
     typedef void(*FUNC_OnProgress)(int);
     //Connection Listeners

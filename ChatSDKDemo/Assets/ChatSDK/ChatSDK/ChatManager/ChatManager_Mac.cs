@@ -43,7 +43,40 @@ namespace ChatSDK
 
         public override void FetchHistoryMessages(string conversationId, ConversationType type, string startMessageId = null, int count = 20, ValueCallBack<CursorResult<Message>> handle = null)
         {
-            throw new System.NotImplementedException();
+            ChatAPINative.ChatManager_FetchHistoryMessages(client, conversationId, type, startMessageId, count,
+                (IntPtr[] cursorResult, DataType dType, int size) => {
+                    Debug.Log($"FetchHistoryMessages callback with dType={dType}, size={size}.");
+                    //Verification: dType == DataType.CursorResult, size == 1
+                    if(dType == DataType.CursorResult && size == 1)
+                    {
+                        var cursorResultTO = Marshal.PtrToStructure<CursorResultTO>(cursorResult[0]);
+                        if(cursorResultTO.Type == DataType.ListOfMessage)
+                        {
+                            var result = new CursorResult<Message>();
+                            result.Cursor = cursorResultTO.NextPageCursor;
+                            int msgSize = cursorResultTO.Size;
+                            MessageTO[] messages = new MessageTO[msgSize];
+                            IntPtr dataPtr = cursorResultTO.Data;
+                            for(int i = 0; i<size; i++)
+                            {
+                                messages[i] = Marshal.PtrToStructure<MessageTO>(dataPtr+i);
+                            }
+                            result.Data = MessageTO.ConvertToMessageList(messages, msgSize);
+                            handle?.OnSuccessValue(result);
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException("Invalid return type from native ChatManager_FetchHistoryMessages(), please check native c wrapper code.");
+                        }
+
+                    }
+                    else
+                    {
+                        Debug.LogError("Incorrect delegate parameters returned.");
+                    }
+
+                },
+                (int code, string desc) => handle?.OnError(code, desc));
         }
 
         public override Conversation GetConversation(string conversationId, ConversationType type, bool createIfNeed = true)
@@ -103,18 +136,7 @@ namespace ChatSDK
 
         public override Message SendMessage(Message message, CallBack callback = null)
         {
-            MessageTO mto = null;
-            switch(message.Body.Type) {
-                case MessageBodyType.TXT:
-                    mto = new TextMessageTO(message);
-                    break;
-                case MessageBodyType.LOCATION:
-                    mto = new LocationMessageTO(message);
-                    break;
-                case MessageBodyType.CMD:
-                    mto = new CmdMessageTO(message);
-                    break;
-            }
+            MessageTO mto = MessageTO.FromMessage(message);
             IntPtr mtoPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(mto));
             Marshal.StructureToPtr(mto, mtoPtr, false);
             ChatAPINative.ChatManager_SendMessage(client, () => callback?.Success(),

@@ -43,6 +43,9 @@ namespace ChatSDK{
 				OnMessagesRecalled onMessagesRecalled, OnReadAckForGroupMessageUpdated onReadAckForGroupMessageUpdated, OnGroupMessageRead onGroupMessageRead,
 				OnConversationsUpdate onConversationsUpdate, OnConversationRead onConversationRead);
 
+		[DllImport(MyLibName)]
+		internal static extern void ChatManager_FetchHistoryMessages(IntPtr client, string conversationId, ConversationType type, string startMessageId, int count, OnSuccessResult onSuccessResult, OnError onError);
+
 		#endregion native API import
 	}
 }

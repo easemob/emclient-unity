@@ -8,8 +8,13 @@
 #include "LogHelper.h"
 #include "models.h"
 
+//default constructor
+MessageTO::MessageTO() {
+    //all fields set default zero value
+}
+
 //MessageTO
-MessageTO::MessageTO(EMMessagePtr &_message) {
+MessageTO::MessageTO(const EMMessagePtr &_message) {
     this->MsgId = _message->msgId().c_str();
     this->ConversationId = _message->conversationId().c_str();
     this->From = _message->from().c_str();
@@ -24,14 +29,14 @@ MessageTO::MessageTO(EMMessagePtr &_message) {
 }
 
 //TextMessageTO
-TextMessageTO::TextMessageTO(EMMessagePtr &_message):MessageTO(_message) {
+TextMessageTO::TextMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
     auto body = (EMTextMessageBody *)_message->bodies().front().get();
     this->BodyType = body->type(); //TODO: only 1st body type determined
     this->body.Content = body->text().c_str();
 }
 
 //LocationMessageTO
-LocationMessageTO::LocationMessageTO(EMMessagePtr &_message):MessageTO(_message) {
+LocationMessageTO::LocationMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
     auto body = (EMLocationMessageBody *)_message->bodies().front().get();
     this->BodyType = body->type(); //TODO: only 1st body type determined
     this->body.Latitude = body->latitude();
@@ -40,14 +45,14 @@ LocationMessageTO::LocationMessageTO(EMMessagePtr &_message):MessageTO(_message)
 }
 
 //CmdMessageTO
-CmdMessageTO::CmdMessageTO(EMMessagePtr &_message):MessageTO(_message) {
+CmdMessageTO::CmdMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
     auto body = (EMCmdMessageBody *)_message->bodies().front().get();
     this->BodyType = body->type(); //TODO: only 1st body type determined
     this->body.Action = body->action().c_str();
     this->body.DeliverOnlineOnly = body->isDeliverOnlineOnly();
 }
 
-MessageTO * MessageTO::FromEMMessage(EMMessagePtr &_message)
+MessageTO * MessageTO::FromEMMessage(const EMMessagePtr &_message)
 {
     //TODO: assume that only 1 body in _message->bodies
     MessageTO * message;

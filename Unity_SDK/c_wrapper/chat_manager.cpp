@@ -93,3 +93,33 @@ AGORA_API void ChatManager_AddListener(void *client,
         CLIENT->getChatManager().addListener(gChatManagerListener);
     }
 }
+
+AGORA_API void ChatManager_FetchHistoryMessages(void *client, const char * conversationId, EMConversation::EMConversationType type, const char * startMessageId, int count, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+{
+    EMError error;
+    EMCursorResultRaw<EMMessagePtr> msgCursorResult = CLIENT->getChatManager().fetchHistoryMessages(conversationId, type, error, count, startMessageId);
+    if(error.mErrorCode == EMError::EM_NO_ERROR) {
+        //success
+        if(onSuccess) {
+            CursorResultTO *data[1] = {new CursorResultTO()};
+            data[0]->NextPageCursor = msgCursorResult.nextPageCursor().c_str();
+            size_t size = msgCursorResult.result().size();
+            data[0]->Type = DataType::ListOfMessage;
+            data[0]->Data = (void **)new MessageTO*[size];
+            data[0]->Size = (int)size;
+            //copy EMMessagePtr -> MessageTO
+            for(int i=0; i<size; i++) {
+                data[0]->Data[i] = MessageTO::FromEMMessage(msgCursorResult.result().at(i));
+            }
+            onSuccess((void **)data, DataType::CursorResult, 1);
+            //release mem. after onSuccess call
+            delete[] (MessageTO **)data[0]->Data;
+            delete data[0];
+        }
+    }else{
+        //error
+        if(onError) {
+            onError(error.mErrorCode, error.mDescription.c_str());
+        }
+    }
+}

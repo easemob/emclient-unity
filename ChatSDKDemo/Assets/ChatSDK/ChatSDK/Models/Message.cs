@@ -209,6 +209,25 @@ namespace ChatSDK
             return messages;
         }
 
+        //factory method
+        public static MessageTO FromMessage(in Message message)
+        {
+            MessageTO mto = null;
+            switch (message.Body.Type)
+            {
+                case MessageBodyType.TXT:
+                    mto = new TextMessageTO(message);
+                    break;
+                case MessageBodyType.LOCATION:
+                    mto = new LocationMessageTO(message);
+                    break;
+                case MessageBodyType.CMD:
+                    mto = new CmdMessageTO(message);
+                    break;
+            }
+            return mto;
+        }
+
         public abstract IMessageBody GetBody();
 
         internal Message Unmarshall()

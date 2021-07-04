@@ -1,5 +1,18 @@
 ﻿namespace ChatSDK
 {
+    public enum DataType
+    {
+        Bool,
+        String,
+        Group,
+        CursorResult,
+        ListOfString,
+        ListOfMessage,
+        ListOfConversation,
+        ListOfGroup,
+        ListOfGroupSharedFile,
+    };
+
     public enum MessageBodyType
     {
         TXT,        // 文本
