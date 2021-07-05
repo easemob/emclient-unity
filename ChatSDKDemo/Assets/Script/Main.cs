@@ -45,7 +45,7 @@ public class Main : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SendBtn.onClick.AddListener(FetchHistoryMessages);
+        SendBtn.onClick.AddListener(SendMessageAction);
         
         JoinGroupBtn.onClick.AddListener(JoinGroupAction);
         GroupInfoBtn.onClick.AddListener(GetGroupInfoAction);

@@ -58,22 +58,28 @@ namespace ChatSDK
                             MessageTO[] messages = new MessageTO[msgSize];
                             IntPtr subTypes = cursorResultTO.SubTypes;
                             IntPtr dataPtr = cursorResultTO.Data;
-                            for(int i = 0; i<size; i++)
+                            for(int i = 0; i<msgSize; i++)
                             {
                                 MessageBodyType msgType = Marshal.PtrToStructure<MessageBodyType>(subTypes + i);
+                                MessageTO mto = null;
                                 switch(msgType)
                                 {
                                     case MessageBodyType.TXT:
-                                        messages[i] = Marshal.PtrToStructure<TextMessageTO>(dataPtr + i);
+                                        mto = new TextMessageTO();
+                                        Marshal.PtrToStructure(dataPtr+i, mto);
+                                        messages[i] = mto;
                                         break;
                                     case MessageBodyType.LOCATION:
-                                        messages[i] = Marshal.PtrToStructure<LocationMessageTO>(dataPtr + i);
+                                        mto = new LocationMessageTO();
+                                        Marshal.PtrToStructure(dataPtr+i, mto);
+                                        messages[i] = mto;
                                         break;
                                     case MessageBodyType.CMD:
-                                        messages[i] = Marshal.PtrToStructure<CmdMessageTO>(dataPtr + i);
+                                        mto = new CmdMessageTO();
+                                        Marshal.PtrToStructure(dataPtr+i, mto);
+                                        messages[i] = mto;
                                         break;
-                                }
-                                
+                                }                           
                             }
                             result.Data = MessageTO.ConvertToMessageList(messages, msgSize);
                         }

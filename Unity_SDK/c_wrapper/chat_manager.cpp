@@ -110,8 +110,9 @@ AGORA_API void ChatManager_FetchHistoryMessages(void *client, const char * conve
             data[0]->Size = (int)size;
             //copy EMMessagePtr -> MessageTO
             for(int i=0; i<size; i++) {
-                data[0]->SubTypes[i] = msgCursorResult.result().at(i)->bodies()[0]->type();
-                data[0]->Data[i] = MessageTO::FromEMMessage(msgCursorResult.result().at(i));
+                MessageTO *mto = MessageTO::FromEMMessage(msgCursorResult.result().at(i));
+                data[0]->Data[i] = mto;
+                data[0]->SubTypes[i] = mto->BodyType;
             }
             onSuccess((void **)data, DataType::CursorResult, 1);
             //release mem. after onSuccess call

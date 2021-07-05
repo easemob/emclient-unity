@@ -18,6 +18,7 @@ namespace ChatSDK
         public DataType Type;
         public int Size;
         public IntPtr SubTypes; //sub types if any
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst = 20)]
         public IntPtr Data; //list of data
     }
 }
