@@ -24,6 +24,10 @@ public class EMContactManagerWrapper extends  EMWrapper {
 
     private void addContact(String username, String reason, String callbackId) throws JSONException {
         asyncRunnable(() -> {
+            if (username == null || username.length() == 0) {
+                onError(callbackId, new HyphenateException(501, "username invalid"));
+                return;
+            }
             try {
                 EMClient.getInstance().contactManager().addContact(username, reason);
                 onSuccess(null, callbackId,null);
@@ -35,6 +39,10 @@ public class EMContactManagerWrapper extends  EMWrapper {
 
     private void deleteContact(String username, boolean keepConversation, String callbackId) throws JSONException {
         asyncRunnable(() -> {
+            if (username == null || username.length() == 0) {
+                onError(callbackId, new HyphenateException(501, "username invalid"));
+                return;
+            }
             try {
                 EMClient.getInstance().contactManager().deleteContact(username, keepConversation);
                 onSuccess(null, callbackId, null);
@@ -73,6 +81,10 @@ public class EMContactManagerWrapper extends  EMWrapper {
     private void addUserToBlockList(String username, String callbackId) throws JSONException {
         Log.d("chat_sdk", "addUserToBlockList");
         asyncRunnable(() -> {
+            if (username == null || username.length() == 0) {
+                onError(callbackId, new HyphenateException(501, "username invalid"));
+                return;
+            }
             try {
                 EMClient.getInstance().contactManager().addUserToBlackList(username, false);
                 onSuccess(null,callbackId,null);
@@ -84,6 +96,10 @@ public class EMContactManagerWrapper extends  EMWrapper {
 
     private void removeUserFromBlockList(String username, String callbackId) throws JSONException {
         asyncRunnable(() -> {
+            if (username == null || username.length() == 0) {
+                onError(callbackId, new HyphenateException(501, "username invalid"));
+                return;
+            }
             try {
                 EMClient.getInstance().contactManager().removeUserFromBlackList(username);
                 onSuccess(null, callbackId,null);
@@ -106,6 +122,10 @@ public class EMContactManagerWrapper extends  EMWrapper {
 
     private void acceptInvitation(String username, String callbackId) throws JSONException {
         asyncRunnable(() -> {
+            if (username == null || username.length() == 0) {
+                onError(callbackId, new HyphenateException(501, "username invalid"));
+                return;
+            }
             try {
                 EMClient.getInstance().contactManager().acceptInvitation(username);
                 onSuccess(null,callbackId, null);
@@ -117,6 +137,10 @@ public class EMContactManagerWrapper extends  EMWrapper {
 
     private void declineInvitation(String username, String callbackId) throws JSONException {
         asyncRunnable(() -> {
+            if (username == null || username.length() == 0) {
+                onError(callbackId, new HyphenateException(501, "username invalid"));
+                return;
+            }
             try {
                 EMClient.getInstance().contactManager().declineInvitation(username);
                 onSuccess(null, callbackId,null);

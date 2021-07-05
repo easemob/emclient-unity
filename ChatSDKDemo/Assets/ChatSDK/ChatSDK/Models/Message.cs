@@ -559,7 +559,7 @@ namespace ChatSDK
             }
         }
 
-        internal string ToJsonString() {
+        internal string ToJson() {
             JSONObject jo = new JSONObject();
             jo.Add("from", From);
             jo.Add("to", To);
@@ -575,7 +575,7 @@ namespace ChatSDK
             jo.Add("direction", MessageDirectionToString(Direction));
             //jo.Add("attributes", TransformTool.JsonStringFromAttributes(Attributes));
             jo.Add("body", Body.ToJsonString());
-            return jo.ToString();
+            return jo;
         }
 
         private string MessageDirectionToString(MessageDirection direction) {

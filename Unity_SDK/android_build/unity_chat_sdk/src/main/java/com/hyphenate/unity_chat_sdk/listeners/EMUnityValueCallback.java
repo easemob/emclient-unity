@@ -45,6 +45,8 @@ public class EMUnityValueCallback<T> implements EMValueCallBack<T> {
 
     @Override
     public void onSuccess(T t) {
+        Log.d("chat_sdk", "onSuccess callbackId --  " + callbackId );
+        if (callbackId == null) return;
         ImUnitySdkPlugin.handler.post(()->{
             try {
                 JSONObject jo = new JSONObject();
@@ -81,6 +83,8 @@ public class EMUnityValueCallback<T> implements EMValueCallBack<T> {
 
     @Override
     public void onError(int i, String s) {
+        Log.d("chat_sdk", "onError callbackId -- " + callbackId + " code: " + i + " desc: " + s);
+        if (callbackId == null) return;
         ImUnitySdkPlugin.handler.post(()->{
             JSONObject jo = new JSONObject();
             try {

@@ -47,6 +47,186 @@ public class EMGroupManagerWrapper extends EMWrapper {
         }
     }
 
+    private void acceptInvitationFromGroup(String groupId, String inviter, String callbackId) throws JSONException {
+
+        if (groupId == null || groupId.length() == 0 || inviter == null || inviter.length() == 0) {
+            HyphenateException e = new HyphenateException(500, "groupId or inviter is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
+        EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("EMGroup", callbackId) {
+            @Override
+            public void onSuccess(EMGroup object) {
+                try {
+                    JSONObject obj = EMGroupHelper.toJson(object);
+                    sendJsonObjectToUnity(obj.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        EMClient.getInstance().groupManager().asyncAcceptInvitation(groupId, inviter, callBack);
+    }
+
+    private void acceptJoinApplication(String groupId, String username, String callbackId) throws JSONException {
+        if (groupId == null || groupId.length() == 0 || username == null || username.length() == 0) {
+            HyphenateException e = new HyphenateException(500, "groupId or username is invalid");
+            onError(callbackId, e);
+            return;
+        }
+        EMClient.getInstance().groupManager().asyncAcceptApplication(username, groupId, new EMUnityCallback(callbackId));
+    }
+
+    private void addAdmin(String groupId, String admin, String callbackId) {
+
+        if (groupId == null || groupId.length() == 0 || admin == null || admin.length() == 0) {
+            HyphenateException e = new HyphenateException(500, "groupId or memberId is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
+        EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("EMGroup", callbackId) {
+            @Override
+            public void onSuccess(EMGroup object) {
+                try {
+                    sendJsonObjectToUnity(EMGroupHelper.toJson(object).toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        EMClient.getInstance().groupManager().asyncAddGroupAdmin(groupId, admin, callBack);
+    }
+
+    private void addMembers(String groupId, String jsonString, String callbackId) throws JSONException {
+        if (groupId == null || groupId.length() == 0 || jsonString == null || jsonString.length() == 0) {
+            HyphenateException e = new HyphenateException(500, "groupId or members is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
+        String[] allMembers = EMTransformHelper.stringArrayFromJsonString(jsonString);
+        EMClient.getInstance().groupManager().asyncAddUsersToGroup(groupId, allMembers, new EMUnityCallback(callbackId));
+    }
+
+    private void addWhiteList(String groupId, String jsonString, String callbackId) {
+        if (groupId == null || groupId.length() == 0 || jsonString == null || jsonString.length() == 0) {
+            HyphenateException e = new HyphenateException(500, "groupId or members is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
+        List<String> list = EMTransformHelper.stringListFromJsonString(jsonString);
+        EMClient.getInstance().groupManager().addToGroupWhiteList(groupId, list, new EMUnityCallback(callbackId));
+    }
+
+    private void blockGroup(String groupId, String callbackId) {
+        if (groupId == null || groupId.length() == 0) {
+            HyphenateException e = new HyphenateException(500, "groupId is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
+        EMClient.getInstance().groupManager().asyncBlockGroupMessage(groupId, new EMUnityCallback(callbackId));
+    }
+
+    private void blockMembers(String groupId, String jsonString, String callbackId) throws JSONException {
+        if (groupId == null || groupId.length() == 0 || jsonString == null || jsonString.length() == 0) {
+            HyphenateException e = new HyphenateException(500, "groupId or members is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
+        List<String> list = EMTransformHelper.stringListFromJsonString(jsonString);
+        EMClient.getInstance().groupManager().asyncBlockUsers(groupId, list, new EMUnityCallback(callbackId));
+    }
+
+    private void changeGroupDescription(String groupId, String desc, String callbackId) {
+        if (groupId == null || groupId.length() == 0 || desc == null) {
+            HyphenateException e = new HyphenateException(500, "groupId or desc is invalid");
+            onError(callbackId, e);
+            return;
+        }
+        EMClient.getInstance().groupManager().asyncChangeGroupDescription(groupId, desc, new EMUnityCallback(callbackId));
+    }
+
+    private void changeGroupSubject(String groupId, String groupName, String callbackId) {
+        if (groupId == null || groupId.length() == 0 || groupName == null) {
+            HyphenateException e = new HyphenateException(500, "groupId or groupName is invalid");
+            onError(callbackId, e);
+            return;
+        }
+        EMClient.getInstance().groupManager().asyncChangeGroupName(groupId, groupName, new EMUnityCallback(callbackId));
+    }
+
+    private void changeGroupOwner(String groupId, String newOwner, String callbackId) throws JSONException {
+
+        if (groupId == null || groupId.length() == 0 || newOwner == null || newOwner.length() == 0) {
+            HyphenateException e = new HyphenateException(500, "groupId or newOwner is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
+        EMUnityValueCallback<EMGroup> callback  = new EMUnityValueCallback<EMGroup>("EMGroup",callbackId) {
+            @Override
+            public void onSuccess(EMGroup group) {
+                try {
+                    sendJsonObjectToUnity(EMGroupHelper.toJson(group).toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        EMClient.getInstance().groupManager().asyncChangeOwner(groupId, member, callback);
+    }
+
+    private void checkIfInGroupWhiteList(String groupId, String callbackId) {
+        if (groupId == null || groupId.length() == 0) {
+            HyphenateException e = new HyphenateException(500, "groupId is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
+        EMUnityValueCallback<Boolean> callback = new EMUnityValueCallback<Boolean>("bool", callbackId) {
+            @Override
+            public void onSuccess(Boolean aBoolean) {
+                JSONObject obj = new JSONObject();
+                try {
+                    obj.put("value", aBoolean);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        EMClient.getInstance().groupManager().checkIfInGroupWhiteList(groupId, callback);
+    }
+
+    private void createGroup(String groupName, String optionsString, String desc, String memberListString, String reason, String callbackId) throws JSONException {
+
+        JSONObject optionsJson = new JSONObject(optionsString);
+
+        EMGroupOptions options = EMGroupOptionsHelper.fromJson(optionsJson);
+
+        String[] allMembers = memberListString.split(",");
+
+        EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("EMGroup", callbackId) {
+            @Override
+            public void onSuccess(EMGroup object) {
+                try {
+                    sendJsonObjectToUnity(EMGroupHelper.toJson(object).toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        EMClient.getInstance().groupManager().asyncCreateGroup(groupName, desc, allMembers, reason, options, callBack);
+    }
+
     private void getJoinedGroups(String callbackId) throws JSONException {
         asyncRunnable(()->{
             List<EMGroup> groups = EMClient.getInstance().groupManager().getAllGroups();
@@ -84,20 +264,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
         EMClient.getInstance().groupManager().asyncGetJoinedGroupsFromServer(pageNum, pageSize, callback);
     }
 
-    private void checkIfInGroupWhiteList(String groupId, String callbackId) {
-        EMUnityValueCallback<Boolean> callback = new EMUnityValueCallback<Boolean>("bool", callbackId) {
-            @Override
-            public void onSuccess(Boolean aBoolean) {
-                JSONObject obj = new JSONObject();
-                try {
-                    obj.put("value", aBoolean);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        EMClient.getInstance().groupManager().checkIfInGroupWhiteList(groupId, callback);
-    }
+
 
     private void getPublicGroupsFromServer(int pageSize, String cursor, String callbackId) throws JSONException {
         EMUnityValueCallback callback = new EMUnityValueCallback<EMCursorResult<EMGroupInfo>>("EMCursorResult<EMGroupInfo>", callbackId) {
@@ -114,27 +281,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
         EMClient.getInstance().groupManager().asyncGetPublicGroupsFromServer(pageSize, cursor, callback);
     }
 //
-    private void createGroup(String groupName, String optionsString, String desc, String memberListString, String reason, String callbackId) throws JSONException {
 
-        JSONObject optionsJson = new JSONObject(optionsString);
-
-        EMGroupOptions options = EMGroupOptionsHelper.fromJson(optionsJson);
-
-        String[] allMembers = memberListString.split(",");
-
-        EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("EMGroup", callbackId) {
-            @Override
-            public void onSuccess(EMGroup object) {
-                try {
-                    sendJsonObjectToUnity(EMGroupHelper.toJson(object).toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        EMClient.getInstance().groupManager().asyncCreateGroup(groupName, desc, allMembers, reason, options, callBack);
-    }
 //
     // ?
     private void getGroupSpecificationFromServer(String groupId, String callbackId)  throws JSONException {
@@ -244,10 +391,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
     }
 //
     // ?
-    private void addMembers(String groupId, String stringList, String callbackId) throws JSONException {
-        String[] allMembers = stringList.split(",");
-        EMClient.getInstance().groupManager().asyncAddUsersToGroup(groupId, allMembers, new EMUnityCallback(callbackId));
-    }
+
     // ？
     private void removeMembers(String groupId, String stringList, String callbackId) throws JSONException {
 
@@ -261,14 +405,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
     }
 
     // ?
-    private void blockMembers(String groupId, String stringList, String callbackId) throws JSONException {
-        String[] allMembers = stringList.split(",");
-        List<String> list = new ArrayList<String>();
-        for (int i = 0; i < allMembers.length; i++) {
-            list.add(allMembers[i]);
-        }
-        EMClient.getInstance().groupManager().asyncBlockUsers(groupId, list, new EMUnityCallback(callbackId));
-    }
+
     // ?
     private void unblockMembers(String groupId, String stringList, String callbackId) throws JSONException {
         String[] allMembers = stringList.split(",");
@@ -280,14 +417,8 @@ public class EMGroupManagerWrapper extends EMWrapper {
     }
 //
     // ?
-    private void updateGroupSubject(String groupId, String groupName, String callbackId) {
-        EMClient.getInstance().groupManager().asyncChangeGroupName(groupId, groupName, new EMUnityCallback(callbackId));
-    }
 
-    // ?
-    private void updateDescription(String groupId, String desc, String callbackId) {
-        EMClient.getInstance().groupManager().asyncChangeGroupDescription(groupId, desc, new EMUnityCallback(callbackId));
-    }
+
     // ?
     private void leaveGroup(String groupId,  String callbackId) {
         EMClient.getInstance().groupManager().asyncLeaveGroup(groupId, new EMUnityCallback(callbackId));
@@ -298,46 +429,16 @@ public class EMGroupManagerWrapper extends EMWrapper {
     }
 
     // ?
-    private void blockGroup(String groupId, String callbackId) {
-        EMClient.getInstance().groupManager().asyncBlockGroupMessage(groupId, new EMUnityCallback(callbackId));
-    }
+
     // ?
     private void unblockGroup(String groupId, String callbackId) {
         EMClient.getInstance().groupManager().asyncUnblockGroupMessage(groupId, new EMUnityCallback(callbackId));
     }
     // ?
-    private void updateGroupOwner(String groupId, String member, String callbackId) throws JSONException {
 
-        EMUnityValueCallback<EMGroup> callback  = new EMUnityValueCallback<EMGroup>("EMGroup",callbackId) {
-            @Override
-            public void onSuccess(EMGroup group) {
-                try {
-                    sendJsonObjectToUnity(EMGroupHelper.toJson(group).toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        EMClient.getInstance().groupManager().asyncChangeOwner(groupId, member, callback);
-    }
 
     // ?
-    private void addAdmin(String groupId, String admin, String callbackId) {
 
-        EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("EMGroup", callbackId) {
-            @Override
-            public void onSuccess(EMGroup object) {
-                try {
-                    sendJsonObjectToUnity(EMGroupHelper.toJson(object).toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        EMClient.getInstance().groupManager().asyncAddGroupAdmin(groupId, admin, callBack);
-    }
 
     // ?
     private void removeAdmin(String groupId, String admin, String callbackId) {
@@ -428,14 +529,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
     }
 //
     // ?
-    private void addWhiteList(String groupId, String stringList, String callbackId) {
-        String[] allMembers = stringList.split(",");
-        List<String> list = new ArrayList<String>();
-        for (int i = 0; i < allMembers.length; i++) {
-            list.add(allMembers[i]);
-        }
-        EMClient.getInstance().groupManager().addToGroupWhiteList(groupId, list, new EMUnityCallback(callbackId));
-    }
+
     // ？
     private void removeWhiteList(String groupId, String stringList, String callbackId) {
         String[] allMembers = stringList.split(",");
@@ -485,30 +579,14 @@ public class EMGroupManagerWrapper extends EMWrapper {
     }
 //
     // ？
-    private void acceptJoinApplication(String groupId, String username, String callbackId) throws JSONException {
-        EMClient.getInstance().groupManager().asyncAcceptApplication(groupId, username, new EMUnityCallback(callbackId));
-    }
+
     // ?
     private void declineJoinApplication(String groupId, String username, String reason, String callbackId) throws JSONException {
-        EMClient.getInstance().groupManager().asyncDeclineApplication(groupId, username, reason, new EMUnityCallback(callbackId));
+        EMClient.getInstance().groupManager().asyncDeclineApplication(username, groupId, reason, new EMUnityCallback(callbackId));
     }
 //
     // ?
-    private void acceptInvitationFromGroup(String groupId, String inviter, String callbackId) throws JSONException {
 
-        EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("EMGroup", callbackId) {
-            @Override
-            public void onSuccess(EMGroup object) {
-                try {
-                    JSONObject obj = EMGroupHelper.toJson(object);
-                    sendJsonObjectToUnity(obj.toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        EMClient.getInstance().groupManager().asyncAcceptInvitation(groupId, inviter, callBack);
-    }
     // ?
     private void declineInvitationFromGroup(String groupId, String username, String reason, String callbackId) {
         EMClient.getInstance().groupManager().asyncDeclineInvitation(groupId, username, reason, new EMUnityCallback(callbackId));

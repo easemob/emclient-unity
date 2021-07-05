@@ -17,24 +17,67 @@ public class EMConversationWrapper extends EMWrapper{
         return new EMConversationWrapper();
     }
 
-    private void markAllMessagesAsRead(String conversationId, int conversationType) throws JSONException {
+    private boolean appendMessage(String conversationId, int conversationType, String messageString, String callbackId) throws JSONException {
+
+        if (conversationId == null || conversationId.length() == 0) {
+            return false;
+        }
+
         EMConversation conversation = getConversation(conversationId, conversationType);
-        conversation.markAllMessagesAsRead();
+        EMMessage message = EMMessageHelper.fromJson(new JSONObject(messageString));
+        conversation.appendMessage(message);
+        return true;
     }
 
-    private void markMessageAsRead(String conversationId, int conversationType, String messageId) throws JSONException {
+    private boolean deleteAllMessages(String conversationId, int conversationType) throws JSONException {
         EMConversation conversation = getConversation(conversationId, conversationType);
-        conversation.markMessageAsRead(messageId);
+        conversation.clearAllMessages();
+        return true;
     }
 
     private boolean removeMessage(String conversationId, int conversationType, String messageId){
+        if (conversationId == null || conversationId.length() == 0) {
+            return false;
+        }
+        if (messageId == null || messageId.length() == 0) {
+            return false;
+        }
         EMConversation conversation = getConversation(conversationId, conversationType);
         conversation.removeMessage(messageId);
         return true;
     }
 
-    private String getLatestMessage(String conversationId, int conversationType){
+    private String getExt(String conversationId, int conversationType) {
+        if (conversationId == null || conversationId.length() == 0) {
+            return null;
+        }
+        EMConversation conversation = getConversation(conversationId, conversationType);
+        return conversation.getExtField();
+    }
+
+    private boolean insertMessage(String conversationId, int conversationType, String messageString) throws JSONException {
+        if (conversationId == null || conversationId.length() == 0) {
+            return false;
+        }
+
+        if (messageString == null || messageString.length() == 0) {
+            return false;
+        }
+
+        EMConversation conversation = getConversation(conversationId, conversationType);
+        EMMessage message = EMMessageHelper.fromJson(new JSONObject(messageString));
+        conversation.insertMessage(message);
+        return true;
+    }
+
+    private String lastMessage(String conversationId, int conversationType){
+
+        if (conversationId == null || conversationId.length() == 0) {
+            return null;
+        }
+
         String ret = null;
+
         EMConversation conversation = getConversation(conversationId, conversationType);
         EMMessage msg = conversation.getLastMessage();
         if (msg != null) {
@@ -47,7 +90,12 @@ public class EMConversationWrapper extends EMWrapper{
         return ret;
     }
 
-    private String getLatestMessageFromOthers(String conversationId, int conversationType){
+    private String lastReceivedMessage(String conversationId, int conversationType){
+
+        if (conversationId == null || conversationId.length() == 0) {
+            return null;
+        }
+
         String ret = null;
         EMConversation conversation = getConversation(conversationId, conversationType);
         EMMessage msg = conversation.getLatestMessageFromOthers();
@@ -61,34 +109,15 @@ public class EMConversationWrapper extends EMWrapper{
         return ret;
     }
 
-    private boolean clearAllMessages(String conversationId, int conversationType) throws JSONException {
-        EMConversation conversation = getConversation(conversationId, conversationType);
-        conversation.clearAllMessages();
-        return true;
-    }
-
-    private boolean insertMessage(String conversationId, int conversationType, String messageString) throws JSONException {
-        EMConversation conversation = getConversation(conversationId, conversationType);
-        EMMessage message = EMMessageHelper.fromJson(new JSONObject(messageString));
-        conversation.insertMessage(message);
-        return true;
-    }
-
-    private boolean appendMessage(String conversationId, int conversationType, String messageString, String callbackId) throws JSONException {
-        EMConversation conversation = getConversation(conversationId, conversationType);
-        EMMessage message = EMMessageHelper.fromJson(new JSONObject(messageString));
-        conversation.appendMessage(message);
-        return true;
-    }
-
-    private boolean updateConversationMessage(String conversationId, int conversationType, String messageString) throws JSONException {
-        EMConversation conversation = getConversation(conversationId, conversationType);
-        EMMessage message = EMMessageHelper.fromJson(new JSONObject(messageString));
-        conversation.updateMessage(message);
-        return true;
-    }
-
     private String loadMsgWithId(String conversationId, int conversationType, String msgId) {
+        if (conversationId == null || conversationId.length() == 0) {
+            return null;
+        }
+
+        if (msgId == null || msgId.length() == 0) {
+            return null;
+        }
+
         String ret = null;
         EMMessage msg = EMClient.getInstance().chatManager().getMessage(msgId);
         if (msg != null) {
@@ -102,6 +131,9 @@ public class EMConversationWrapper extends EMWrapper{
     }
 
     private String loadMsgWithStartId(String conversationId, int conversationType, String startId, int count, String directionString) {
+        if (conversationId == null || conversationId.length() == 0) {
+            return null;
+        }
         String ret = null;
         EMConversation conversation = getConversation(conversationId, conversationType);
         List<EMMessage> msgList = conversation.loadMoreMsgFromDB(startId, count);
@@ -118,6 +150,9 @@ public class EMConversationWrapper extends EMWrapper{
     }
 
     private String loadMsgWithKeywords(String conversationId, int conversationType, String keywords, String sender, int timestamp, int count, String directionString) {
+        if (conversationId == null || conversationId.length() == 0) {
+            return null;
+        }
         String ret = null;
         EMConversation conversation = getConversation(conversationId, conversationType);
         EMConversation.EMSearchDirection direction = searchDirectionFromString(directionString);
@@ -135,6 +170,9 @@ public class EMConversationWrapper extends EMWrapper{
     }
 
     private String loadMsgWithMsgType(String conversationId, int conversationType, String typeString, String sender, long timestamp, int count, String directionString) {
+        if (conversationId == null || conversationId.length() == 0) {
+            return null;
+        }
         String ret = null;
         EMConversation conversation = getConversation(conversationId, conversationType);
         EMConversation.EMSearchDirection direction = searchDirectionFromString(directionString);
@@ -163,6 +201,9 @@ public class EMConversationWrapper extends EMWrapper{
     }
 
     private String loadMsgWithTime(String conversationId, int conversationType, long startTime, long endTime, int count) throws JSONException {
+        if (conversationId == null || conversationId.length() == 0) {
+            return null;
+        }
         String ret = null;
         EMConversation conversation = getConversation(conversationId, conversationType);
         List<EMMessage> msgList = conversation.searchMsgFromDB(startTime, endTime, count);
@@ -178,22 +219,50 @@ public class EMConversationWrapper extends EMWrapper{
         return ret;
     }
 
+    private void markAllMessagesAsRead(String conversationId, int conversationType) throws JSONException {
+        if (conversationId == null || conversationId.length() == 0) {
+            return;
+        }
+        EMConversation conversation = getConversation(conversationId, conversationType);
+        conversation.markAllMessagesAsRead();
+    }
+
+    private void markMessageAsRead(String conversationId, int conversationType, String messageId) throws JSONException {
+        if (conversationId == null || conversationId.length() == 0 || messageId == null || messageId.length() == 0) {
+            return;
+        }
+        EMConversation conversation = getConversation(conversationId, conversationType);
+        conversation.markMessageAsRead(messageId);
+    }
+
     private void SetExt(String conversationId, int conversationType, String ext) {
+        if (conversationId == null || conversationId.length() == 0) {
+            return;
+        }
         EMConversation conversation = getConversation(conversationId, conversationType);
         conversation.setExtField(ext);
     }
 
-    private String getExt(String conversationId, int conversationType) {
-        EMConversation conversation = getConversation(conversationId, conversationType);
-        return conversation.getExtField();
-    }
-
     private int unreadCount(String conversationId, int conversationType) {
+        if (conversationId == null || conversationId.length() == 0) {
+            return 0;
+        }
         EMConversation conversation = getConversation(conversationId, conversationType);
         return conversation.getUnreadMsgCount();
     }
 
+    private boolean updateConversationMessage(String conversationId, int conversationType, String messageString) throws JSONException {
+        if (conversationId == null || conversationId.length() == 0 || messageString == null || messageString.length() == 0) {
+            return false;
+        }
+        EMConversation conversation = getConversation(conversationId, conversationType);
+        EMMessage message = EMMessageHelper.fromJson(new JSONObject(messageString));
+        conversation.updateMessage(message);
+        return true;
+    }
+
     private EMConversation getConversation(String conversationId, int conType ){
+
         EMConversation.EMConversationType type = EMConversationHelper.typeFromInt(conType);
         EMConversation conversation = EMClient.getInstance().chatManager().getConversation(conversationId, type, true);
         return conversation;

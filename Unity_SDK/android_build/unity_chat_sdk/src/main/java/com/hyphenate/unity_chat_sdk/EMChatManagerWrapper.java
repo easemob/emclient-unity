@@ -35,118 +35,10 @@ public class EMChatManagerWrapper extends EMWrapper  {
         EMClient.getInstance().chatManager().addMessageListener(listener);
     }
 
-    private String sendMessage(String jsonString, String callbackId) throws JSONException {
-        Log.d("unity_sdk","will send: " + jsonString);
-        EMMessage msg = EMMessageHelper.fromJson(new JSONObject(jsonString));
-        msg.setMessageStatusCallback(new EMUnityCallback(callbackId));
-        asyncRunnable(() -> {
-            EMClient.getInstance().chatManager().sendMessage(msg);
-        });
-        return EMMessageHelper.toJson(msg).toString();
-    }
+    private boolean deleteConversation(String conversationId, boolean deleteMessages) {
 
-    private String resendMessage(String messageId, String callbackId) throws JSONException {
-        EMMessage msg = EMClient.getInstance().chatManager().getMessage(messageId);
-        if (msg != null) {
-            msg.setMessageStatusCallback(new EMUnityCallback(callbackId));
-            EMClient.getInstance().chatManager().sendMessage(msg);
-        }else {
-            onError(callbackId, new HyphenateException(500, "Message not found"));
-            return null;
-        }
-        return EMMessageHelper.toJson(msg).toString();
-    }
+        return EMClient.getInstance().chatManager().deleteConversation(conversationId, deleteMessages);
 
-    private void ackMessageRead(String messageId, String callbackId) throws JSONException {
-        EMMessage msg = EMClient.getInstance().chatManager().getMessage(messageId);
-        if (msg == null) {
-            onError(callbackId, new HyphenateException(500, "Message not found"));
-        }else {
-            try {
-                EMClient.getInstance().chatManager().ackMessageRead(msg.getFrom(), messageId);
-                onSuccess(null, callbackId, null);
-            } catch (HyphenateException e) {
-                onError(callbackId, e);
-            }
-        }
-    }
-    private void ackConversationRead(String conversationId,  String callbackId){
-        asyncRunnable(() -> {
-            try {
-                EMClient.getInstance().chatManager().ackConversationRead(conversationId);
-                onSuccess(null, callbackId, Boolean.TRUE.toString());
-            } catch (HyphenateException e) {
-                onError(callbackId, e);
-            }
-        });
-    }
-
-    private void recallMessage(String messageId, String callbackId) {
-        asyncRunnable(() -> {
-            try {
-                EMMessage msg = EMClient.getInstance().chatManager().getMessage(messageId);
-                if (msg != null) {
-                    EMClient.getInstance().chatManager().recallMessage(msg);
-                }else {
-                    onError(callbackId, new HyphenateException(500, "Message not found"));
-                }
-                onSuccess(null, callbackId, null);
-            } catch (HyphenateException e) {
-                onError(callbackId, e);
-            }
-        });
-    }
-
-    private String getMessage(String messageId) throws JSONException {
-        EMMessage msg = EMClient.getInstance().chatManager().getMessage(messageId);
-        return EMMessageHelper.toJson(msg).toString();
-    }
-    //
-    private String getConversation(String conversationId, int type, boolean createIfNeed) throws JSONException {
-        EMConversation.EMConversationType conversationType = EMConversation.EMConversationType.Chat;
-        if (type == 0) {
-            conversationType = EMConversation.EMConversationType.Chat;
-        }else if(type == 1) {
-            conversationType = EMConversation.EMConversationType.GroupChat;
-        }else if(type == 2) {
-            conversationType = EMConversation.EMConversationType.ChatRoom;
-        }
-        EMConversation conversation = EMClient.getInstance().chatManager().getConversation(conversationId, conversationType, createIfNeed);
-        return EMConversationHelper.toJson(conversation).toString();
-    }
-
-    private boolean markAllChatMsgAsRead(){
-        EMClient.getInstance().chatManager().markAllConversationsAsRead();
-        return true;
-    }
-
-    private int getUnreadMessageCount() {
-        return EMClient.getInstance().chatManager().getUnreadMessageCount();
-    }
-
-    private void updateChatMessage(String messageString, String callbackId) throws JSONException{
-        EMMessage msg = EMMessageHelper.fromJson(new JSONObject(messageString));
-        EMMessage message = EMClient.getInstance().chatManager().getMessage(msg.getMsgId());
-        if (message == null) {
-            onError(callbackId, new HyphenateException(500, "Message not found"));
-        }else {
-            asyncRunnable(() -> {
-                EMClient.getInstance().chatManager().updateMessage(msg);
-                onSuccess(null, callbackId, Boolean.TRUE.toString());
-            });
-        }
-    }
-
-    private boolean importMessages(String messagesString) throws JSONException {
-        JSONArray jsonArray = new JSONArray(messagesString);
-        List<EMMessage> list = new ArrayList<>();
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject jsonObject = jsonArray.getJSONObject(i);
-            list.add(EMMessageHelper.fromJson(jsonObject));
-        }
-
-        EMClient.getInstance().chatManager().importMessages(list);
-        return true;
     }
 
     private void downloadAttachment(String messageId, String callbackId) {
@@ -171,37 +63,55 @@ public class EMChatManagerWrapper extends EMWrapper  {
         }
     }
 
-    private String loadAllConversations() {
-        List<EMConversation> list = new ArrayList<>(EMClient.getInstance().chatManager().getAllConversations().values());
-        Collections.sort(list, (o1, o2) -> {
-            if (o1.getLastMessage() == null) {
-                return 1;
+    private void fetchHistoryMessages(String conversationId, final int type, String startMessageId, int count,String callbackId) {
+        asyncRunnable(()->{
+            EMConversation.EMConversationType conversationType = EMConversation.EMConversationType.Chat;
+            if (type == 0) {
+                conversationType = EMConversation.EMConversationType.Chat;
+            }else if(type == 1) {
+                conversationType = EMConversation.EMConversationType.GroupChat;
+            }else if(type == 2) {
+                conversationType = EMConversation.EMConversationType.ChatRoom;
             }
 
-            if (o2.getLastMessage() == null) {
-                return -1;
+            if (conversationId == null) {
+                HyphenateException e = new HyphenateException(500, "Conversation not found");
+                onError(callbackId, e);
+                return;
             }
-            return (int) (o2.getLastMessage().getMsgTime() - o1.getLastMessage().getMsgTime());
+
+            try {
+                EMCursorResult<EMMessage> cursorResult = EMClient.getInstance().chatManager().fetchHistoryMessages(conversationId,
+                        conversationType, count, startMessageId.length() > 0 ? startMessageId : null);
+                onSuccess("EMCursorResult<EMMessage>", callbackId, EMCursorResultHelper.toJson(cursorResult).toString());
+            } catch (HyphenateException e) {
+                onError(callbackId, e);
+            } catch (JSONException ignored) {
+
+            }
         });
-        JSONArray jsonArray = new JSONArray();
-        try {
-            for (EMConversation conversation : list) {
-                jsonArray.put(EMConversationHelper.toJson(conversation));
-            }
-        }catch (JSONException ignored) {
+    }
 
+    private String getConversation(String conversationId, int type, boolean createIfNeed) throws JSONException {
+        EMConversation.EMConversationType conversationType = EMConversation.EMConversationType.Chat;
+        if (type == 0) {
+            conversationType = EMConversation.EMConversationType.Chat;
+        }else if(type == 1) {
+            conversationType = EMConversation.EMConversationType.GroupChat;
+        }else if(type == 2) {
+            conversationType = EMConversation.EMConversationType.ChatRoom;
         }
-
-        return jsonArray.toString();
+        EMConversation conversation = EMClient.getInstance().chatManager().getConversation(conversationId, conversationType, createIfNeed);
+        return EMConversationHelper.toJson(conversation).toString();
     }
 
     private void getConversationsFromServer(String callbackId) {
         asyncRunnable(() -> {
             try {
-                List<EMConversation> list = new ArrayList<>(
-                        EMClient.getInstance().chatManager().fetchConversationsFromServer().values());
+                List<EMConversation> list = new ArrayList<>(EMClient.getInstance().chatManager().fetchConversationsFromServer().values());
                 Collections.sort(list,
                         (o1, o2) -> (int) (o2.getLastMessage().getMsgTime() - o1.getLastMessage().getMsgTime()));
+
                 JSONArray jsonArray = new JSONArray();
 
                 for (EMConversation conversation : list) {
@@ -216,31 +126,94 @@ public class EMChatManagerWrapper extends EMWrapper  {
         });
     }
 
-    private boolean deleteConversation(String conversationId, boolean deleteMessages) {
-        return EMClient.getInstance().chatManager().deleteConversation(conversationId, deleteMessages);
+    private int getUnreadMessageCount() {
+        return EMClient.getInstance().chatManager().getUnreadMessageCount();
     }
 
-    private void fetchHistoryMessages(String conversationId, final int type, String startMessageId, int count,String callbackId) {
-        asyncRunnable(()->{
-            EMConversation.EMConversationType conversationType = EMConversation.EMConversationType.Chat;
-            if (type == 0) {
-                conversationType = EMConversation.EMConversationType.Chat;
-            }else if(type == 1) {
-                conversationType = EMConversation.EMConversationType.GroupChat;
-            }else if(type == 2) {
-                conversationType = EMConversation.EMConversationType.ChatRoom;
+    private boolean importMessages(String messagesString) throws JSONException {
+        if (messagesString == null) {
+            return false;
+        }
+        JSONArray jsonArray = new JSONArray(messagesString);
+        List<EMMessage> list = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            list.add(EMMessageHelper.fromJson(jsonObject));
+        }
+
+        EMClient.getInstance().chatManager().importMessages(list);
+        return true;
+    }
+
+
+    private String loadAllConversations() {
+        List<EMConversation> list = new ArrayList<>(EMClient.getInstance().chatManager().getAllConversations().values());
+        Collections.sort(list, (o1, o2) -> {
+            if (o1.getLastMessage() == null) {
+                return 1;
             }
+
+            if (o2.getLastMessage() == null) {
+                return -1;
+            }
+            return o2.getLastMessage().getMsgTime() - o1.getLastMessage().getMsgTime() > 0 ? 1 : -1;
+        });
+        JSONArray jsonArray = new JSONArray();
+        try {
+            for (EMConversation conversation : list) {
+                jsonArray.put(EMConversationHelper.toJson(conversation));
+            }
+        }finally {
+            return jsonArray.toString();
+        }
+    }
+
+    private String loadMessage(String messageId) throws JSONException {
+        if (messageId == null || messageId.length() == 0 ) return null;
+        EMMessage msg = EMClient.getInstance().chatManager().getMessage(messageId);
+        return EMMessageHelper.toJson(msg).toString();
+    }
+
+    private boolean markAllConversationsAsRead(){
+        EMClient.getInstance().chatManager().markAllConversationsAsRead();
+        return true;
+    }
+
+    private void recallMessage(String messageId, String callbackId) {
+        asyncRunnable(() -> {
             try {
-                EMCursorResult<EMMessage> cursorResult = EMClient.getInstance().chatManager().fetchHistoryMessages(conversationId,
-                        conversationType, count, startMessageId.length() > 0 ? startMessageId : null);
-                onSuccess("EMCursorResult<EMMessage>", callbackId, EMCursorResultHelper.toJson(cursorResult).toString());
+                if (messageId == null || messageId.length() == 0) {
+                    onError(callbackId, new HyphenateException(500, "Message not found"));
+                    return;
+                }
+                EMMessage msg = EMClient.getInstance().chatManager().getMessage(messageId);
+                if (msg != null) {
+                    EMClient.getInstance().chatManager().recallMessage(msg);
+                    onSuccess(null, callbackId, null);
+                }else {
+                    onError(callbackId, new HyphenateException(500, "Message not found"));
+                    return;
+                }
             } catch (HyphenateException e) {
                 onError(callbackId, e);
-            } catch (JSONException ignored) {
-
             }
         });
+    }
 
+    private String resendMessage(String messageId, String callbackId) throws JSONException {
+        if (messageId == null || messageId.length() == 0) {
+            onError(callbackId, new HyphenateException(500, "Message not found"));
+            return null;
+        }
+        EMMessage msg = EMClient.getInstance().chatManager().getMessage(messageId);
+        if (msg != null) {
+            msg.setMessageStatusCallback(new EMUnityCallback(callbackId));
+            EMClient.getInstance().chatManager().sendMessage(msg);
+        }else {
+            onError(callbackId, new HyphenateException(500, "Message not found"));
+            return null;
+        }
+        return EMMessageHelper.toJson(msg).toString();
     }
 
     private String searchChatMsgFromDB(String keywords, long timeStamp, int count, String from, String directionString) throws JSONException {
@@ -255,4 +228,67 @@ public class EMChatManagerWrapper extends EMWrapper  {
         return jsonArray.toString();
     }
 
+    private void ackConversationRead(String conversationId,  String callbackId){
+        asyncRunnable(() -> {
+            if (conversationId == null || conversationId.length() == 0) {
+                onError(callbackId, new HyphenateException(500, "Conversation not found"));
+                return ;
+            }
+            try {
+                EMClient.getInstance().chatManager().ackConversationRead(conversationId);
+                onSuccess(null, callbackId, null);
+            } catch (HyphenateException e) {
+                onError(callbackId, e);
+            }
+        });
+    }
+
+    private String sendMessage(String jsonString, String callbackId) throws JSONException {
+        Log.d("unity_sdk","will send: " + jsonString);
+        if (jsonString == null || jsonString.length() == 0) {
+            onError(callbackId, new HyphenateException(501, "Message contains invalid content"));
+            return null;
+        }
+        EMMessage msg = EMMessageHelper.fromJson(new JSONObject(jsonString));
+        msg.setMessageStatusCallback(new EMUnityCallback(callbackId));
+        asyncRunnable(() -> {
+            EMClient.getInstance().chatManager().sendMessage(msg);
+        });
+        return EMMessageHelper.toJson(msg).toString();
+    }
+
+    private void ackMessageRead(String messageId, String callbackId) throws JSONException {
+        if (messageId == null || messageId.length() == 0) {
+            onError(callbackId, new HyphenateException(500, "Message not found"));
+            return;
+        }
+        EMMessage msg = EMClient.getInstance().chatManager().getMessage(messageId);
+        if (msg == null) {
+            onError(callbackId, new HyphenateException(500, "Message not found"));
+        }else {
+            try {
+                EMClient.getInstance().chatManager().ackMessageRead(msg.getFrom(), messageId);
+                onSuccess(null, callbackId, null);
+            } catch (HyphenateException e) {
+                onError(callbackId, e);
+            }
+        }
+    }
+
+    private void updateChatMessage(String jsonString, String callbackId) throws JSONException{
+        if (jsonString == null || jsonString.length() == 0) {
+            onError(callbackId, new HyphenateException(501, "Message contains invalid content"));
+            return;
+        }
+        EMMessage msg = EMMessageHelper.fromJson(new JSONObject(jsonString));
+        EMMessage message = EMClient.getInstance().chatManager().getMessage(msg.getMsgId());
+        if (message == null) {
+            onError(callbackId, new HyphenateException(500, "Message not found"));
+        }else {
+            asyncRunnable(() -> {
+                EMClient.getInstance().chatManager().updateMessage(msg);
+                onSuccess(null, callbackId, Boolean.TRUE.toString());
+            });
+        }
+    }
 }

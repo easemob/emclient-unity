@@ -12,7 +12,7 @@ namespace ChatSDK {
             JSONObject obj = new JSONObject();
             obj.Add("convId", conversationId);
             obj.Add("convType", TransformTool.ConversationTypeToInt(converationType));
-            obj.Add("msg", message.ToJsonString());
+            obj.Add("msg", message.ToJson());
             string ret = ConversationNative.Conversation_GetMethodCall("appendMessage", obj.ToString());
             JSONNode jn = JSON.Parse(ret);
             return jn["ret"].AsBool;
@@ -53,7 +53,7 @@ namespace ChatSDK {
             JSONObject obj = new JSONObject();
             obj.Add("convId", conversationId);
             obj.Add("convType", TransformTool.ConversationTypeToInt(converationType));
-            obj.Add("msg", message.ToJsonString());
+            obj.Add("msg", message.ToJson());
             string ret = ConversationNative.Conversation_GetMethodCall("insertMessage", obj.ToString());
             JSONNode jn = JSON.Parse(ret);
             return jn["ret"].AsBool;
@@ -181,7 +181,7 @@ namespace ChatSDK {
             JSONObject obj = new JSONObject();
             obj.Add("convId", conversationId);
             obj.Add("convType", TransformTool.ConversationTypeToInt(converationType));
-            obj.Add("msg", message.ToJsonString());
+            obj.Add("msg", message.ToJson());
             string ret = ConversationNative.Conversation_GetMethodCall("updateConversationMessage", obj.ToString());
             JSONNode jn = JSON.Parse(ret);
             return jn["ret"].AsBool;

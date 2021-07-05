@@ -64,3 +64,4 @@ DerivedData/
 
 **/UserPrefs
 **/.vs
+*.csproj

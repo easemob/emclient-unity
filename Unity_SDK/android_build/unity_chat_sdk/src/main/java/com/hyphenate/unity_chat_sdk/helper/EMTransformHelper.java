@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EMTransformHelper {
@@ -52,6 +53,36 @@ public class EMTransformHelper {
         }
         ret = ret.substring(0, ret.length() - 1);
         return ret;
+    }
+
+    static public String[] stringArrayFromJsonString(String jsonString) {
+        try {
+            JSONArray ja = new JSONArray(jsonString);
+            String[] strings = new String[ja.length()];
+            for (int i = 0; i < ja.length(); i++) {
+                strings[i] = ja.getString(i);
+            }
+            return strings;
+        } catch (JSONException jsonException) {
+            jsonException.printStackTrace();
+        }
+
+        return null;
+    }
+
+    static public List<String> stringListFromJsonString(String jsonString) {
+        try {
+            JSONArray ja = new JSONArray(jsonString);
+            List<String> list = new ArrayList<String>();
+            for (int i = 0; i < ja.length(); i++) {
+                list.add(ja.getString(i));
+            }
+            return list;
+        } catch (JSONException jsonException) {
+            jsonException.printStackTrace();
+        }
+
+        return null;
     }
 
 }

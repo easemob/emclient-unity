@@ -144,9 +144,7 @@ namespace ChatSDK
 
         public override Message SendMessage(Message message, CallBack handle = null)
         {
-            JSONObject obj = new JSONObject();
-            obj.Add("msg", message.ToJsonString());
-            string ret = ChatManagerNative.ChatManager_GetMethodCall("sendMessage", obj.ToString());
+            string ret = ChatManagerNative.ChatManager_GetMethodCall("sendMessage", message.ToJson().ToString());
             return new Message(ret);
         }
 
@@ -159,9 +157,7 @@ namespace ChatSDK
 
         public override void UpdateMessage(Message message, CallBack handle = null)
         {
-            JSONObject obj = new JSONObject();
-            obj.Add("msg", message.ToJsonString());
-            ChatManagerNative.ChatManager_HandleMethodCall("updateChatMessage", obj.ToString(), handle?.callbackId);
+            ChatManagerNative.ChatManager_HandleMethodCall("updateChatMessage", message.ToJson().ToString(), handle?.callbackId);
         }
     }
 

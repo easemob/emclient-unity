@@ -144,7 +144,7 @@ namespace ChatSDK
 
         static internal CursorResult<string> JsonStringToStringResult(string jsonString)
         {
-            if (jsonString == null) return null;
+            if (jsonString == null || jsonString.Length == 0) return null;
             CursorResult<string> result = null;
             if (jsonString != null)
             {
@@ -168,7 +168,7 @@ namespace ChatSDK
 
         static internal CursorResult<Message> JsonStringToMessageResult(string jsonString)
         {
-            if (jsonString == null) return null;
+            if (jsonString == null || jsonString.Length == 0) return null;
             CursorResult<Message> result = null;
             if (jsonString != null)
             {
@@ -226,7 +226,7 @@ namespace ChatSDK
 
         static internal Dictionary<string, string> JsonStringToDictionary(string jsonString)
         {
-            if (jsonString == null) return null;
+            if (jsonString == null || jsonString.Length == 0) return null;
             Dictionary<string, string> ret = new Dictionary<string, string>();
             JSONObject jo = JSON.Parse(jsonString).AsObject;
             foreach (string s in jo.Keys)
@@ -239,7 +239,7 @@ namespace ChatSDK
 
         static internal Dictionary<string, AttributeValue> JsonStringToAttributes(string jsonString)
         {
-            if (jsonString == null) return null;
+            if (jsonString == null || jsonString.Length == 0) return null;
             Dictionary<string, AttributeValue> ret = new Dictionary<string, AttributeValue>();
             JSONObject jo = JSON.Parse(jsonString).AsObject;
             foreach (string key in jo.Keys)
@@ -251,7 +251,7 @@ namespace ChatSDK
 
         static internal List<Message> JsonStringToMessageList(string jsonString)
         {
-            if (jsonString == null) return null;
+            if (jsonString == null || jsonString.Length == 0) return null;
             List<Message> list = new List<Message>();
             JSONNode jsonArray = JSON.Parse(jsonString);
             if (jsonArray != null && jsonArray.IsArray)
@@ -271,14 +271,14 @@ namespace ChatSDK
             if (list == null) return null;
             JSONArray ja = new JSONArray();
             foreach (Message msg in list) {
-                ja.Add(msg.ToJsonString());
+                ja.Add(msg.ToJson());
             }
             return ja.ToString();
         }
 
         static internal List<Conversation> JsonStringToConversationList(string jsonString)
         {
-            if (jsonString == null) return null;
+            if (jsonString == null || jsonString.Length == 0) return null;
             List<Conversation> list = new List<Conversation>();
             JSONNode jsonArray = JSON.Parse(jsonString);
             if (jsonArray != null && jsonArray.IsArray)
@@ -295,7 +295,7 @@ namespace ChatSDK
 
         static internal List<GroupReadAck> JsonStringToGroupReadAckList(string jsonString)
         {
-            if (jsonString == null) return null;
+            if (jsonString == null || jsonString.Length == 0) return null;
             List<GroupReadAck> list = new List<GroupReadAck>();
             JSONNode jsonArray = JSON.Parse(jsonString);
             if (jsonArray != null && jsonArray.IsArray)

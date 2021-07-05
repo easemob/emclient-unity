@@ -31,7 +31,7 @@ namespace ChatSDK
 
         public override void AcceptJoinApplication(string groupId, string username, CallBack handle = null)
         {
-            wrapper.Call("acceptInvitationFromGroup", groupId, username, handle?.callbackId);
+            wrapper.Call("acceptJoinApplication", groupId, username, handle?.callbackId);
         }
 
         public override void AddAdmin(string groupId, string memberId, ValueCallBack<Group> handle = null)
