@@ -134,6 +134,7 @@
     <Compile Include="Assets\ChatSDK\ChatSDK\Tools\WeakDelegate.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\native\ChatAPINative.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\native\DelegateHub.cs" />
+    <Compile Include="Assets\ChatSDK\ChatSDK\native\TransferObjects.cs" />
     <Compile Include="Assets\Script\Delegate.cs" />
     <Compile Include="Assets\Script\Login.cs" />
     <Compile Include="Assets\Script\Main.cs" />

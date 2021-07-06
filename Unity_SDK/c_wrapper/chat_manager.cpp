@@ -48,6 +48,38 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type)
             to = cm->To;
         }
             break;
+        case EMMessageBody::FILE:
+        {
+            auto fm = static_cast<FileMessageTO *>(mto);
+            auto body = new EMFileMessageBody(fm->body.LocalPath);
+            body->setDisplayName(fm->body.DisplayName);
+            body->setSecretKey(fm->body.Secret);
+            body->setRemotePath(fm->body.RemotePath);
+            body->setFileLength(fm->body.FileSize);
+            body->setDownloadStatus(fm->body.DownStatus);
+            messageBody = EMMessageBodyPtr(body);
+            from = fm->From;
+            to = fm->To;
+        }
+            break;
+        case EMMessageBody::IMAGE:
+        {
+            auto im = static_cast<ImageMessageTO *>(mto);
+            auto body = new EMImageMessageBody(im->body.LocalPath, im->body.ThumbnailLocalPath);
+            body->setSecretKey(im->body.Secret);
+            body->setFileLength(im->body.FileSize);
+            body->setDownloadStatus(im->body.DownStatus);
+            body->setDisplayName(im->body.DisplayName);
+            body->setRemotePath(im->body.ThumbnaiRemotePath);
+            body->setThumbnailSecretKey(im->body.ThumbnaiSecret);
+            body->setThumbnailRemotePath(im->body.ThumbnaiRemotePath);
+            body->setThumbnailDownloadStatus(im->body.ThumbnaiDownStatus);
+            //TODO: add ThumbnailDisplayName field later
+            messageBody = EMMessageBodyPtr(body);
+            from = im->From;
+            to = im->To;
+        }
+            break;
     }
     LOG("Message created: From->%s, To->%s.", from.c_str(), to.c_str());
     EMMessagePtr messagePtr = EMMessage::createSendMessage(from, to, messageBody);

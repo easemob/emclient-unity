@@ -46,7 +46,7 @@ public class Main : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SendBtn.onClick.AddListener(FetchHistoryMessages);
+        SendBtn.onClick.AddListener(SendImageMessageAction);
         
         JoinGroupBtn.onClick.AddListener(JoinGroupAction);
         GroupInfoBtn.onClick.AddListener(GetGroupInfoAction);
@@ -113,7 +113,35 @@ public class Main : MonoBehaviour
         chatManager.SendMessage(message, callback);
     }
 
-    void FetchHistoryMessages()
+    void SendFileMessageAction()
+    {
+        string receiverId = RecvIdField.text;
+        string displayName = TextField.text;
+        string localPath = "/Users/bingo/1.txt";
+        long fileSize = 4;
+        IChatManager chatManager = SDKClient.Instance.ChatManager;
+        Message message = Message.CreateFileSendMessage(receiverId, localPath, displayName, fileSize);
+        CallBack callback = new CallBack(onSuccess: () => { Debug.Log("Message sent successfully!"); },
+                                            onProgress: (int progress) => { Debug.Log(progress); },
+                                            onError: (int code, string desc) => { Debug.Log(code + desc); });
+        chatManager.SendMessage(message, callback);
+    }
+
+    void SendImageMessageAction()
+    {
+        string receiverId = RecvIdField.text;
+        string displayName = TextField.text;
+        string localPath = "/Users/bingo/1.png";
+        long fileSize = 2385;
+        IChatManager chatManager = SDKClient.Instance.ChatManager;
+        Message message = Message.CreateImageSendMessage(receiverId, localPath, displayName, fileSize, true, 447, 147);
+        CallBack callback = new CallBack(onSuccess: () => { Debug.Log("Message sent successfully!"); },
+                                            onProgress: (int progress) => { Debug.Log(progress); },
+                                            onError: (int code, string desc) => { Debug.Log(code + desc); });
+        chatManager.SendMessage(message, callback);
+    }
+
+    void FetchHistoryMessagesAction()
     {
         IChatManager chatManager = SDKClient.Instance.ChatManager;
         chatManager.FetchHistoryMessages("ys1", ConversationType.Chat, "", 32,

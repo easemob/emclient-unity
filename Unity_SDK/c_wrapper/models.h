@@ -5,6 +5,8 @@
 #include "emtextmessagebody.h"
 #include "emlocationmessagebody.h"
 #include "emcmdmessagebody.h"
+#include "emfilemessagebody.h"
+#include "emimagemessagebody.h"
 
 using namespace easemob;
 
@@ -99,6 +101,31 @@ struct CmdMessageBodyTO {
     bool DeliverOnlineOnly;
 };
 
+struct FileMessageBodyTO {
+    const char * LocalPath;
+    const char *DisplayName;
+    const char * Secret;
+    const char * RemotePath;
+    long FileSize;
+    EMFileMessageBody::EMDownloadStatus DownStatus;
+};
+
+struct ImageMessageBodyTO {
+    const char * LocalPath;
+    const char * DisplayName;
+    const char * Secret;
+    const char * RemotePath;
+    const char * ThumbnailLocalPath;
+    const char * ThumbnaiRemotePath;
+    const char * ThumbnaiSecret;
+    long FileSize;
+    double Height;
+    double Width;
+    EMFileMessageBody::EMDownloadStatus DownStatus;
+    EMFileMessageBody::EMDownloadStatus ThumbnaiDownStatus;
+    bool Original;
+};
+
 class MessageTO
 {
 public:
@@ -148,6 +175,20 @@ class CmdMessageTO : public MessageTO
 public:
     CmdMessageBodyTO body;
     CmdMessageTO(const EMMessagePtr &message);
+};
+
+class FileMessageTO : public MessageTO
+{
+public:
+    FileMessageBodyTO body;
+    FileMessageTO(const EMMessagePtr &message);
+};
+
+class ImageMessageTO : public MessageTO
+{
+public:
+    ImageMessageBodyTO body;
+    ImageMessageTO(const EMMessagePtr &message);
 };
 
 enum DataType {
