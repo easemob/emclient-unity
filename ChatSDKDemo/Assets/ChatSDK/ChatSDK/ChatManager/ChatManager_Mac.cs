@@ -83,6 +83,7 @@ namespace ChatSDK
                                 }                           
                             }
                             result.Data = MessageTO.ConvertToMessageList(messages, msgSize);
+                            handle?.OnSuccessValue(result);
                         }
                         else
                         {

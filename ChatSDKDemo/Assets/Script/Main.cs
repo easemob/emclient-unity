@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using ChatSDK;
+using ChatSDK.MessageBody;
 using UnityEngine.SceneManagement;
 
 public class Main : MonoBehaviour
@@ -119,6 +120,20 @@ public class Main : MonoBehaviour
             new ValueCallBack<CursorResult<Message>>(onSuccess: (CursorResult<Message> cursorResult) =>
             {
                 Debug.Log($"Fetch history messages with next cursor: {cursorResult.Cursor}");
+                foreach(var message in cursorResult.Data)
+                {
+                    Debug.Log($"MsgId: {message.MsgId}: {message.From} -> {message.To}");
+                    if(message.Body.Type == MessageBodyType.TXT)
+                    {
+                        var body = (TextBody)message.Body;
+                        Debug.Log($"Content: {body.Text}");
+                    }else if(message.Body.Type == MessageBodyType.LOCATION)
+                    {
+                        var body = (LocationBody)message.Body;
+                        Debug.Log($"Address: {body.Address}");
+                    }
+                    
+                }
             }, onError: (int code, string desc) =>
             {
                 Debug.LogError($"Fetch history messages with error, code={code}, desc={desc}.");
