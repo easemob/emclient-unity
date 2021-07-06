@@ -50,13 +50,13 @@ namespace ChatSDK
 
         public abstract void GetGroupSpecificationFromServer(string groupId, ValueCallBack<Group> handle = null);
 
-        public abstract void GetGroupsWithoutNotice(ValueCallBack<List<string>> handle = null);
+        public abstract List<string> GetGroupsWithoutNotice();
 
         public abstract void GetGroupWhiteListFromServer(string groupId, ValueCallBack<List<string>> handle = null);
 
-        public abstract void GetGroupWithId(string groupId, ValueCallBack<Group> handle = null);
+        public abstract Group GetGroupWithId(string groupId);
 
-        public abstract void GetJoinedGroups(ValueCallBack<List<Group>> handle = null);
+        public abstract List<Group> GetJoinedGroups();
 
         public abstract void GetJoinedGroupsFromServer(int pageNum = 1, int pageSize = 200,  ValueCallBack<List<Group>> handle = null);
 

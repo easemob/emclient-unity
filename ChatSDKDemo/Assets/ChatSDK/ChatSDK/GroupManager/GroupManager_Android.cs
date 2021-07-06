@@ -61,17 +61,17 @@ namespace ChatSDK
 
         public override void ChangeGroupDescription(string groupId, string desc, CallBack handle = null)
         {
-            wrapper.Call("updateDescription", groupId, desc, handle?.callbackId);
+            wrapper.Call("changeGroupDescription", groupId, desc, handle?.callbackId);
         }
 
         public override void ChangeGroupName(string groupId, string name, CallBack handle = null)
         {
-            wrapper.Call("updateGroupSubject", groupId, name, handle?.callbackId);
+            wrapper.Call("changeGroupSubject", groupId, name, handle?.callbackId);
         }
 
         public override void ChangeGroupOwner(string groupId, string newOwner, ValueCallBack<Group> handle = null)
         {
-            wrapper.Call("updateGroupOwner", groupId, newOwner, handle?.callbackId);
+            wrapper.Call("changeGroupOwner", groupId, newOwner, handle?.callbackId);
         }
 
         public override void CheckIfInGroupWhiteList(string groupId, ValueCallBack<bool> handle = null)
@@ -135,9 +135,17 @@ namespace ChatSDK
             wrapper.Call("getGroupSpecificationFromServer", groupId, handle?.callbackId);
         }
 
-        public override void GetGroupsWithoutNotice(ValueCallBack<List<string>> handle = null)
+        public override List<string> GetGroupsWithoutNotice()
         {
-            wrapper.Call("getGroupsWithoutPushNotification", handle?.callbackId);
+            string jsonString = wrapper.Call<string>("getGroupsWithoutPushNotification");
+            List<string> ret = null;
+            if (jsonString.Length == 0) {
+                return new List<string>();
+            }
+
+            ret = TransformTool.JsonStringToStringList(jsonString);
+
+            return ret;
         }
 
         public override void GetGroupWhiteListFromServer(string groupId, ValueCallBack<List<string>> handle = null)
@@ -145,14 +153,26 @@ namespace ChatSDK
             wrapper.Call("getGroupWhiteListFromServer", groupId, handle?.callbackId);
         }
 
-        public override void GetGroupWithId(string groupId, ValueCallBack<Group> handle = null)
+        public override Group GetGroupWithId(string groupId)
         {
-            wrapper.Call("getGroupWithId", groupId, handle?.callbackId);
+            string jsonString = wrapper.Call<string>("getGroupWithId", groupId);
+            if (jsonString == null || jsonString.Length == 0) {
+                return null;
+            }
+
+            return new Group(jsonString);
+
         }
 
-        public override void GetJoinedGroups(ValueCallBack<List<Group>> handle = null)
+        public override List<Group> GetJoinedGroups()
         {
-            wrapper.Call("getJoinedGroups", handle?.callbackId);
+            string jsonString = wrapper.Call<string>("getJoinedGroups");
+            if (jsonString == null || jsonString.Length == 0)
+            {
+                return null;
+            }
+
+            return TransformTool.JsonStringToGroupList(jsonString);
         }
 
         public override void GetJoinedGroupsFromServer(int pageNum = 1, int pageSize = 200, ValueCallBack<List<Group>> handle = null)

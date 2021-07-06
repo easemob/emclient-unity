@@ -170,7 +170,8 @@ namespace ChatSDK {
                     }
                     dictionary.Remove(callbackId);
                 }
-                else if (value == "EMChatRoom") {
+                else if (value == "EMChatRoom")
+                {
                     JSONNode groupJson = JSON.Parse(jo["value"]);
                     Room result = new Room(groupJson);
                     ValueCallBack<Room> valueCallBack = (ValueCallBack<Room>)dictionary[callbackId];
@@ -197,6 +198,21 @@ namespace ChatSDK {
                     if (valueCallBack.OnSuccessValue != null)
                     {
                         valueCallBack.OnSuccessValue(jo["value"].AsBool);
+                    }
+                    dictionary.Remove(callbackId);
+                }
+                else if (value == "String")
+                {
+                    ValueCallBack<string> valueCallBack = (ValueCallBack<string>)dictionary[callbackId];
+                    if (valueCallBack.OnSuccessValue != null)
+                    {
+                        string str = null;
+                        if (jo["value"].IsArray) {
+                            foreach (JSONNode jn in jo["value"].AsArray) {
+                                str = jn.Value;
+                            }
+                        }
+                        valueCallBack.OnSuccessValue(str);
                     }
                     dictionary.Remove(callbackId);
                 }

@@ -31,6 +31,8 @@ public class EMUnityValueCallback<T> implements EMValueCallBack<T> {
     }
 
     public void sendJsonObjectToUnity (String jsonString) {
+        Log.d("chat_sdk", "getObject callbackId --  " + callbackId + " jsonString: "  + jsonString);
+        if (callbackId == null) return;
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("type",valueType);
