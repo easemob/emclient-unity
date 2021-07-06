@@ -4,7 +4,9 @@ namespace ChatSDK
 {
     public interface IPushManager {
 
-        void GetPushConfig(ValueCallBack<PushConfig> handle = null);
+        List<string> GetNoDisturbGroups();
+
+        PushConfig GetPushConfig();
 
         void GetPushConfigFromServer(ValueCallBack<PushConfig> handle = null);
 
@@ -19,9 +21,6 @@ namespace ChatSDK
         void SetPushStyle(PushStyle pushStyle, CallBack handle = null);
 
         void SetGroupToDisturb(string groupId, bool noDisturb, CallBack handle = null);
-
-        void GetNoDisturbGroupsFromServer(ValueCallBack<List<string>> handle = null);
-
     }    
 
 }

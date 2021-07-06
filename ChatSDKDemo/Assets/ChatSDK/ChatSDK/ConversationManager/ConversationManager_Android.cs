@@ -157,7 +157,7 @@ namespace ChatSDK {
 
         public override void SetExt(string conversationId, ConversationType conversationType, Dictionary<string, string> ext)
         {
-            wrapper.Call(conversationId, TransformTool.ConversationTypeToInt(conversationType), TransformTool.JsonStringFromDictionary(ext));
+            wrapper.Call("SetExt", conversationId, TransformTool.ConversationTypeToInt(conversationType), TransformTool.JsonStringFromDictionary(ext));
         }
 
         public override int UnReadCount(string conversationId, ConversationType conversationType)

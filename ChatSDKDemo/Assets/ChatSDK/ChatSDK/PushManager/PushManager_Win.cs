@@ -4,10 +4,9 @@ namespace ChatSDK
 {
     public class PushManager_Win : IPushManager
     {
-        // Win 不需要推送，直接返回；
-        public void GetNoDisturbGroupsFromServer(ValueCallBack<List<string>> handle = null)
+        public List<string> GetNoDisturbGroups()
         {
-            handle?.ClearCallback();
+            return null;
         }
 
         public void GetPushConfig(ValueCallBack<PushConfig> handle = null)

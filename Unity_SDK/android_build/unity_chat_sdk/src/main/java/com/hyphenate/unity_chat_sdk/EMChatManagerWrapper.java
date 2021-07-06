@@ -148,6 +148,7 @@ public class EMChatManagerWrapper extends EMWrapper  {
 
     private String loadAllConversations() {
         List<EMConversation> list = new ArrayList<>(EMClient.getInstance().chatManager().getAllConversations().values());
+        if (list == null) return null;
         Collections.sort(list, (o1, o2) -> {
             if (o1.getLastMessage() == null) {
                 return 1;

@@ -201,11 +201,6 @@ namespace ChatSDK
             GroupManagerNative.GroupManager_HandleMethodCall("getGroupSpecificationFromServer", obj.ToString(), handle?.callbackId);
         }
 
-        public override void GetGroupsWithoutNotice(ValueCallBack<List<string>> handle = null)
-        {
-            GroupManagerNative.GroupManager_HandleMethodCall("getGroupsWithoutPushNotification", handle?.callbackId);
-        }
-
         public override void GetGroupWhiteListFromServer(string groupId, ValueCallBack<List<string>> handle = null)
         {
             JSONObject obj = new JSONObject();
@@ -213,16 +208,18 @@ namespace ChatSDK
             GroupManagerNative.GroupManager_HandleMethodCall("getGroupWhiteListFromServer", obj.ToString(), handle?.callbackId);
         }
 
-        public override void GetGroupWithId(string groupId, ValueCallBack<Group> handle = null)
+        public override Group GetGroupWithId(string groupId)
         {
-            JSONObject obj = new JSONObject();
-            obj.Add("groupId", groupId);
-            GroupManagerNative.GroupManager_HandleMethodCall("getGroupWithId", obj.ToString(), handle?.callbackId);
+            //JSONObject obj = new JSONObject();
+            //obj.Add("groupId", groupId);
+            //GroupManagerNative.GroupManager_HandleMethodCall("getGroupWithId", obj.ToString(), handle?.callbackId);
+            return null;
         }
 
-        public override void GetJoinedGroups(ValueCallBack<List<Group>> handle = null)
+        public override List<Group> GetJoinedGroups()
         {
-            GroupManagerNative.GroupManager_HandleMethodCall("getJoinedGroups", handle?.callbackId);
+            //GroupManagerNative.GroupManager_HandleMethodCall("getJoinedGroups", handle?.callbackId);
+            return null;
         }
 
         public override void GetJoinedGroupsFromServer(int pageNum = 1, int pageSize = 200, ValueCallBack<List<Group>> handle = null)
@@ -239,14 +236,6 @@ namespace ChatSDK
             obj.Add("cursor", cursor);
             obj.Add("pageSize", pageSize);
             GroupManagerNative.GroupManager_HandleMethodCall("getPublicGroupsFromServer", obj.ToString(), handle?.callbackId);
-        }
-
-        public override void IgnoreGroupPush(string groupId, bool enable = true, ValueCallBack<Group> handle = null)
-        {
-            JSONObject obj = new JSONObject();
-            obj.Add("groupId", groupId);
-            obj.Add("enable", enable);
-            GroupManagerNative.GroupManager_HandleMethodCall("ignoreGroupPush", obj.ToString(), handle?.callbackId);
         }
 
         public override void JoinPublicGroup(string groupId, CallBack handle = null)

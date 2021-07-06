@@ -18,15 +18,17 @@ public class EMPushManagerWrapper extends EMWrapper {
         return new EMPushManagerWrapper();
     }
 
-    private void getImPushConfig(String callbackId) {
-        asyncRunnable(()-> {
-            try {
-                EMPushConfigs configs = EMClient.getInstance().pushManager().getPushConfigs();
-                onSuccess("EMPushConfigs", callbackId, EMPushConfigHelper.toJson(configs).toString());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        });
+    private String getNoDisturbGroups(String callbackId) {
+        List<String> groupIds = EMClient.getInstance().pushManager().getNoPushGroups();
+        if (groupIds == null) return null;
+        return EMTransformHelper.stringListToJsonArray(groupIds).toString();
+    }
+
+    private String getPushConfig() throws  JSONException{
+        EMPushConfigs configs = EMClient.getInstance().pushManager().getPushConfigs();
+        if (configs == null) return null;
+
+        return EMPushConfigHelper.toJson(configs).toString();
     }
 
     private void getImPushConfigFromServer(String callbackId) {
@@ -85,10 +87,7 @@ public class EMPushManagerWrapper extends EMWrapper {
         });
     }
     //
-    private void getNoDisturbGroups(String callbackId) {
-        List<String> groupIds = EMClient.getInstance().pushManager().getNoPushGroups();
-        onSuccess("List<String>", callbackId, EMTransformHelper.stringListToString(groupIds));
-    }
+
     //
     private void updateHMSPushToken(String token, String callbackId) {
         asyncRunnable(()->{

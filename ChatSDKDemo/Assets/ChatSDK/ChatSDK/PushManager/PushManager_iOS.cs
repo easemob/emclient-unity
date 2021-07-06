@@ -6,9 +6,10 @@ namespace ChatSDK
 {
     public class PushManager_iOS : IPushManager
     {
-        public void GetNoDisturbGroupsFromServer(ValueCallBack<List<string>> handle = null)
+        public List<string> GetNoDisturbGroups()
         {
-            PushManagerNative.PushManager_HandleMethodCall("getNoDisturbGroups", handle?.callbackId);
+            //PushManagerNative.PushManager_HandleMethodCall("getNoDisturbGroups", handle?.callbackId);
+            return null;
         }
 
         public void GetPushConfig(ValueCallBack<PushConfig> handle = null)

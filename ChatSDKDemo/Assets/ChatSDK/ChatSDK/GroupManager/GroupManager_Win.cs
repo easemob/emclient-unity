@@ -114,22 +114,17 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override void GetGroupsWithoutNotice(ValueCallBack<List<string>> handle = null)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public override void GetGroupWhiteListFromServer(string groupId, ValueCallBack<List<string>> handle = null)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void GetGroupWithId(string groupId, ValueCallBack<Group> handle = null)
+        public override Group GetGroupWithId(string groupId)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void GetJoinedGroups(ValueCallBack<List<Group>> handle = null)
+        public override List<Group> GetJoinedGroups()
         {
             throw new System.NotImplementedException();
         }
@@ -140,11 +135,6 @@ namespace ChatSDK
         }
 
         public override void GetPublicGroupsFromServer(int pageSize = 200, string cursor = null, ValueCallBack<CursorResult<GroupInfo>> handle = null)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override void IgnoreGroupPush(string groupId, bool enable = true, ValueCallBack<Group> handle = null)
         {
             throw new System.NotImplementedException();
         }

@@ -46,14 +46,14 @@ public class EMTransformHelper {
         return jsonArray;
     }
 
-    static public String stringListToString(List<String> list) {
-        String ret = "";
-        for (String s: list) {
-            ret = ret + ",";
-        }
-        ret = ret.substring(0, ret.length() - 1);
-        return ret;
-    }
+//    static public String stringListToString(List<String> list) {
+//        String ret = "";
+//        for (String s: list) {
+//            ret = ret + ",";
+//        }
+//        ret = ret.substring(0, ret.length() - 1);
+//        return ret;
+//    }
 
     static public String[] stringArrayFromJsonString(String jsonString) {
         try {

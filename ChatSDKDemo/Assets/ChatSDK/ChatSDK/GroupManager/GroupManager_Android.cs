@@ -135,19 +135,6 @@ namespace ChatSDK
             wrapper.Call("getGroupSpecificationFromServer", groupId, handle?.callbackId);
         }
 
-        public override List<string> GetGroupsWithoutNotice()
-        {
-            string jsonString = wrapper.Call<string>("getGroupsWithoutPushNotification");
-            List<string> ret = null;
-            if (jsonString.Length == 0) {
-                return new List<string>();
-            }
-
-            ret = TransformTool.JsonStringToStringList(jsonString);
-
-            return ret;
-        }
-
         public override void GetGroupWhiteListFromServer(string groupId, ValueCallBack<List<string>> handle = null)
         {
             wrapper.Call("getGroupWhiteListFromServer", groupId, handle?.callbackId);
@@ -167,11 +154,6 @@ namespace ChatSDK
         public override List<Group> GetJoinedGroups()
         {
             string jsonString = wrapper.Call<string>("getJoinedGroups");
-            if (jsonString == null || jsonString.Length == 0)
-            {
-                return null;
-            }
-
             return TransformTool.JsonStringToGroupList(jsonString);
         }
 
@@ -183,11 +165,6 @@ namespace ChatSDK
         public override void GetPublicGroupsFromServer(int pageSize = 200, string cursor = null, ValueCallBack<CursorResult<GroupInfo>> handle = null)
         {
             wrapper.Call("getPublicGroupsFromServer", pageSize, cursor, handle?.callbackId);
-        }
-
-        public override void IgnoreGroupPush(string groupId, bool enable = true, ValueCallBack<Group> handle = null)
-        {
-            wrapper.Call("ignoreGroupPush", groupId, enable, handle?.callbackId);
         }
 
         public override void JoinPublicGroup(string groupId, CallBack handle = null)

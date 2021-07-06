@@ -70,9 +70,6 @@ namespace ChatSDK
         public override List<Conversation> LoadAllConversations()
         {
             string jsonString = wrapper.Call<string>("loadAllConversations");
-            if (jsonString == null || jsonString.Length == 0) {
-                return null;
-            }
             return TransformTool.JsonStringToConversationList(jsonString);
         }
 
@@ -109,10 +106,6 @@ namespace ChatSDK
         public override List<Message> SearchMsgFromDB(string keywords, long timestamp = 0, int maxCount = 20, string from = null, MessageSearchDirection direction = MessageSearchDirection.UP)
         {
             string jsonString = wrapper.Call<string>("searchChatMsgFromDB", keywords, timestamp, maxCount, from, direction == MessageSearchDirection.UP ? "up" : "down");
-            if (jsonString == null || jsonString.Length == 0)
-            {
-                return null;
-            }
             return TransformTool.JsonStringToMessageList(jsonString);
         }
 

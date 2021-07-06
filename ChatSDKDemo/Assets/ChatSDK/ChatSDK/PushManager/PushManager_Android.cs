@@ -16,14 +16,16 @@ namespace ChatSDK
             }
         }
 
-        public void GetNoDisturbGroupsFromServer(ValueCallBack<List<string>> handle = null)
+        public List<string> GetNoDisturbGroups()
         {
-            wrapper.Call("getNoDisturbGroups", handle?.callbackId);
+            string jsonString = wrapper.Call<string>("getNoDisturbGroups");
+            return TransformTool.JsonStringToStringList(jsonString);
         }
 
-        public void GetPushConfig(ValueCallBack<PushConfig> handle = null)
+        public PushConfig GetPushConfig()
         {
-            wrapper.Call("getImPushConfig", handle?.callbackId);
+            string jsonString = wrapper.Call<string>("getPushConfig");
+            return null;
         }
 
         public void GetPushConfigFromServer(ValueCallBack<PushConfig> handle = null)

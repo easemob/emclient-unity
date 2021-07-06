@@ -149,7 +149,7 @@ public class EMUnityGroupManagerListener implements EMGroupChangeListener {
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("groupId", groupId);
-            jsonObject.put("list", EMTransformHelper.stringListToString(mutes));
+            jsonObject.put("list", EMTransformHelper.stringListToJsonArray(mutes).toString());
             jsonObject.put("muteExpire", muteExpire);
             UnityPlayer.UnitySendMessage(EMSDKMethod.GroupListener_Obj, "OnMuteListAdded", jsonObject.toString());
         } catch (JSONException e) {
@@ -163,7 +163,7 @@ public class EMUnityGroupManagerListener implements EMGroupChangeListener {
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("groupId", groupId);
-            jsonObject.put("list", EMTransformHelper.stringListToString(mutes));
+            jsonObject.put("list", EMTransformHelper.stringListToJsonArray(mutes).toString());
             UnityPlayer.UnitySendMessage(EMSDKMethod.GroupListener_Obj, "OnMuteListRemoved", jsonObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -176,7 +176,7 @@ public class EMUnityGroupManagerListener implements EMGroupChangeListener {
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("groupId", groupId);
-            jsonObject.put("whitelist", EMTransformHelper.stringListToString(whitelist));
+            jsonObject.put("whitelist", EMTransformHelper.stringListToJsonArray(whitelist).toString());
             UnityPlayer.UnitySendMessage(EMSDKMethod.GroupListener_Obj, "OnWhiteListAdded", jsonObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -189,7 +189,7 @@ public class EMUnityGroupManagerListener implements EMGroupChangeListener {
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("groupId", groupId);
-            jsonObject.put("whitelist", EMTransformHelper.stringListToString(whitelist));
+            jsonObject.put("whitelist", EMTransformHelper.stringListToJsonArray(whitelist).toString());
             UnityPlayer.UnitySendMessage(EMSDKMethod.GroupListener_Obj, "OnWhiteListRemoved", jsonObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();

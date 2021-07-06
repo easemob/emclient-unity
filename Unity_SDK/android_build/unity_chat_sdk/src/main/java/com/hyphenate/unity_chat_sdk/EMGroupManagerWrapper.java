@@ -412,7 +412,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
         EMClient.getInstance().groupManager().fetchGroupWhiteList(groupId, callback);
     }
 
-    private String getGroupWithId(String groupId, String callbackId) throws JSONException {
+    private String getGroupWithId(String groupId) throws JSONException {
 
         if (groupId == null || groupId.length() == 0) {
             return null;
@@ -428,6 +428,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
 
     private String getJoinedGroups() throws JSONException {
         List<EMGroup> groups = EMClient.getInstance().groupManager().getAllGroups();
+        if (groups == null) return null;
         JSONArray jsonArray = new JSONArray();
         for (EMGroup group : groups) {
             jsonArray.put(EMGroupHelper.toJson(group));

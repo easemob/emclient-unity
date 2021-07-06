@@ -50,8 +50,6 @@ namespace ChatSDK
 
         public abstract void GetGroupSpecificationFromServer(string groupId, ValueCallBack<Group> handle = null);
 
-        public abstract List<string> GetGroupsWithoutNotice();
-
         public abstract void GetGroupWhiteListFromServer(string groupId, ValueCallBack<List<string>> handle = null);
 
         public abstract Group GetGroupWithId(string groupId);
@@ -61,8 +59,6 @@ namespace ChatSDK
         public abstract void GetJoinedGroupsFromServer(int pageNum = 1, int pageSize = 200,  ValueCallBack<List<Group>> handle = null);
 
         public abstract void GetPublicGroupsFromServer(int pageSize = 200, string cursor = null, ValueCallBack<CursorResult<GroupInfo>> handle = null);
-
-        public abstract void IgnoreGroupPush(string groupId, bool enable = true, ValueCallBack<Group> handle = null);
 
         public abstract void JoinPublicGroup(string groupId, CallBack handle = null);
 
