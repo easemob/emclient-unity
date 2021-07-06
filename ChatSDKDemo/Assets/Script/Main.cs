@@ -45,7 +45,7 @@ public class Main : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SendBtn.onClick.AddListener(SendMessageAction);
+        SendBtn.onClick.AddListener(FetchHistoryMessages);
         
         JoinGroupBtn.onClick.AddListener(JoinGroupAction);
         GroupInfoBtn.onClick.AddListener(GetGroupInfoAction);
@@ -115,7 +115,7 @@ public class Main : MonoBehaviour
     void FetchHistoryMessages()
     {
         IChatManager chatManager = SDKClient.Instance.ChatManager;
-        chatManager.FetchHistoryMessages("ys1", ConversationType.Chat, "", 20,
+        chatManager.FetchHistoryMessages("ys1", ConversationType.Chat, "", 32,
             new ValueCallBack<CursorResult<Message>>(onSuccess: (CursorResult<Message> cursorResult) =>
             {
                 Debug.Log($"Fetch history messages with next cursor: {cursorResult.Cursor}");

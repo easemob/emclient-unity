@@ -56,27 +56,28 @@ namespace ChatSDK
                             result.Cursor = cursorResultTO.NextPageCursor;
                             int msgSize = cursorResultTO.Size;
                             MessageTO[] messages = new MessageTO[msgSize];
-                            IntPtr subTypes = cursorResultTO.SubTypes;
-                            IntPtr dataPtr = cursorResultTO.Data;
-                            for(int i = 0; i<msgSize; i++)
+                            MessageBodyType[] subTypes = cursorResultTO.SubTypes;
+                            IntPtr[] dataPtr = cursorResultTO.Data;
+                            MessageBodyType msgType;
+                            MessageTO mto = null;
+                            for (int i = 0; i<msgSize; i++)
                             {
-                                MessageBodyType msgType = Marshal.PtrToStructure<MessageBodyType>(subTypes + i);
-                                MessageTO mto = null;
+                                msgType = subTypes[i];
                                 switch(msgType)
                                 {
                                     case MessageBodyType.TXT:
                                         mto = new TextMessageTO();
-                                        Marshal.PtrToStructure(dataPtr+i, mto);
+                                        Marshal.PtrToStructure(dataPtr[i], mto);
                                         messages[i] = mto;
                                         break;
                                     case MessageBodyType.LOCATION:
                                         mto = new LocationMessageTO();
-                                        Marshal.PtrToStructure(dataPtr+i, mto);
+                                        Marshal.PtrToStructure(dataPtr[i], mto);
                                         messages[i] = mto;
                                         break;
                                     case MessageBodyType.CMD:
                                         mto = new CmdMessageTO();
-                                        Marshal.PtrToStructure(dataPtr+i, mto);
+                                        Marshal.PtrToStructure(dataPtr[i], mto);
                                         messages[i] = mto;
                                         break;
                                 }                           

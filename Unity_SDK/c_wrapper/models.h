@@ -124,7 +124,7 @@ public:
     
     static MessageTO * FromEMMessage(const EMMessagePtr &_message);
     
-    virtual ~MessageTO();
+    //virtual ~MessageTO();
 protected:
     MessageTO(const EMMessagePtr &message);
 };
@@ -167,8 +167,8 @@ struct CursorResultTO
     const char * NextPageCursor;
     DataType Type;
     int Size;
-    EMMessageBody::EMMessageBodyType *SubTypes; //sub types if any
-    void ** Data; //list of data
+    EMMessageBody::EMMessageBodyType SubTypes[32]; //sub types if any
+    void * Data[32]; //list of data
 };
 
 #endif //_MODELS_H_

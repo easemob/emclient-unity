@@ -101,12 +101,11 @@ AGORA_API void ChatManager_FetchHistoryMessages(void *client, const char * conve
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
         //success
         if(onSuccess) {
-            CursorResultTO *data[1] = {new CursorResultTO()};
+            auto cursorResultTo = new CursorResultTO();
+            CursorResultTO *data[1] = {cursorResultTo};
             data[0]->NextPageCursor = msgCursorResult.nextPageCursor().c_str();
             size_t size = msgCursorResult.result().size();
             data[0]->Type = DataType::ListOfMessage;
-            data[0]->SubTypes = new EMMessageBody::EMMessageBodyType[size];
-            data[0]->Data = (void **)new MessageTO*[size];
             data[0]->Size = (int)size;
             //copy EMMessagePtr -> MessageTO
             for(int i=0; i<size; i++) {
@@ -115,10 +114,7 @@ AGORA_API void ChatManager_FetchHistoryMessages(void *client, const char * conve
                 data[0]->SubTypes[i] = mto->BodyType;
             }
             onSuccess((void **)data, DataType::CursorResult, 1);
-            //release mem. after onSuccess call
-            delete[] data[0]->SubTypes;
-            delete[] (MessageTO **)data[0]->Data;
-            delete data[0];
+            //NOTE: NO need to release mem. after onSuccess call, managed side would free them.
         }
     }else{
         //error

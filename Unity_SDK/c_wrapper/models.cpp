@@ -74,7 +74,7 @@ MessageTO * MessageTO::FromEMMessage(const EMMessagePtr &_message)
     return message;
 }
 
-MessageTO::~MessageTO()
+/*MessageTO::~MessageTO()
 {
     LOG("MessageTO released...");
-}
+}*/
