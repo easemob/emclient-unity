@@ -58,5 +58,6 @@ easemob.log
 easemobDB/
 easemobLog/
 DerivedData/
+appdata/
 
 **/UserPrefs

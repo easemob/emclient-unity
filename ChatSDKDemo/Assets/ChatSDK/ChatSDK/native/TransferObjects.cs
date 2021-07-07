@@ -191,9 +191,9 @@ namespace ChatSDK
             public string ThumbnailLocalPath;
             public string ThumbnaiRemotePath;
             public string ThumbnaiSecret;
-            public long FileSize;
             public double Height;
             public double Width;
+            public long FileSize;
             public DownLoadStatus DownStatus;
             public DownLoadStatus ThumbnaiDownStatus;
             [MarshalAs(UnmanagedType.U1)]

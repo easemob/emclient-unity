@@ -118,9 +118,9 @@ struct ImageMessageBodyTO {
     const char * ThumbnailLocalPath;
     const char * ThumbnaiRemotePath;
     const char * ThumbnaiSecret;
-    long FileSize;
     double Height;
     double Width;
+    long FileSize;
     EMFileMessageBody::EMDownloadStatus DownStatus;
     EMFileMessageBody::EMDownloadStatus ThumbnaiDownStatus;
     bool Original;

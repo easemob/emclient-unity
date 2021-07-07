@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using ChatSDK;
+using ChatSDK.MessageBody;
 using System.Collections.Generic;
 
 public class ConnectionDelegate : IConnectionDelegate
@@ -93,16 +94,23 @@ public class ChatManagerDelegate : IChatManagerDelegate
         foreach(Message message in messages)
         {
             Debug.Log($"From: {message.From} \t To: {message.To}");
-            if(message.Body is ChatSDK.MessageBody.TextBody tb)
+            if(message.Body is TextBody tb)
             {
                 Debug.Log($"Content: {tb.Text}");
-            }else if(message.Body is ChatSDK.MessageBody.LocationBody lb)
+            }else if(message.Body is LocationBody lb)
             {
                 Debug.Log($"Latitude: {lb.Latitude} \t Longtitude: {lb.Longitude}");
                 Debug.Log($"Address: {lb.Address}");
-            }else if(message.Body is ChatSDK.MessageBody.CmdBody cb)
+            }else if(message.Body is CmdBody cb)
             {
                 Debug.Log($"Action: {cb.Action} DeliverOnlineOnly: {cb.DeliverOnlineOnly}");
+            }else if(message.Body is FileBody fb)
+            {
+                Debug.Log($"LocalPath:{fb.LocalPath}, DisplayName:{fb.DisplayName}");
+            }else if (message.Body is ImageBody ib)
+            {
+                Debug.Log($"LocalPath:{ib.LocalPath}, DisplayName:{ib.DisplayName}");
+                Debug.Log($"ThumbnailLocalPath:{ib.ThumbnailLocalPath}");
             }
         }
     }

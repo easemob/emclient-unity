@@ -159,8 +159,20 @@ public class Main : MonoBehaviour
                     {
                         var body = (LocationBody)message.Body;
                         Debug.Log($"Address: {body.Address}");
+                    }else if (message.Body.Type == MessageBodyType.CMD)
+                    {
+                        var body = (CmdBody)message.Body;
+                        Debug.Log($"Action: {body.Action}");
+                    }else if (message.Body.Type == MessageBodyType.FILE)
+                    {
+                        var body = (FileBody)message.Body;
+                        Debug.Log($"LocalPath: {body.LocalPath}, DisplayName: {body.DisplayName}");
+                    }else if (message.Body.Type == MessageBodyType.IMAGE)
+                    {
+                        var body = (ImageBody)message.Body;
+                        Debug.Log($"LocalPath: {body.LocalPath}, DisplayName: {body.DisplayName}");
+                        Debug.Log($"ThumnailLocalPath: {body.ThumbnailLocalPath}");
                     }
-                    
                 }
             }, onError: (int code, string desc) =>
             {

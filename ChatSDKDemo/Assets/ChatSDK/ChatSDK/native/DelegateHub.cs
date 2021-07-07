@@ -108,6 +108,14 @@ namespace ChatSDK
                             mto = new CmdMessageTO();
                             Marshal.PtrToStructure(_messages[i], mto);
                             break;
+                        case MessageBodyType.FILE:
+                            mto = new FileMessageTO();
+                            Marshal.PtrToStructure(_messages[i], mto);
+                            break;
+                        case MessageBodyType.IMAGE:
+                            mto = new ImageMessageTO();
+                            Marshal.PtrToStructure(_messages[i], mto);
+                            break;
                     }
                     Debug.Log($"Message {mto.MsgId} received from {mto.From}");
                     messages.Add(mto.Unmarshall());

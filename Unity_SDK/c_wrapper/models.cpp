@@ -52,6 +52,36 @@ CmdMessageTO::CmdMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
     this->body.DeliverOnlineOnly = body->isDeliverOnlineOnly();
 }
 
+//FileMessageTO
+FileMessageTO::FileMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
+    auto body = (EMFileMessageBody *)_message->bodies().front().get();
+    this->BodyType = body->type(); //TODO: only 1st body type determined
+    this->body.DisplayName = body->displayName().c_str();
+    this->body.DownStatus = body->downloadStatus();
+    this->body.FileSize = body->fileLength();
+    this->body.LocalPath = body->localPath().c_str();
+    this->body.RemotePath = body->remotePath().c_str();
+    this->body.Secret = body->secretKey().c_str();
+}
+
+//ImageMessageTO
+ImageMessageTO::ImageMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
+    auto body = (EMImageMessageBody *)_message->bodies().front().get();
+    this->BodyType = body->type(); //TODO: only 1st body type determined
+    this->body.DisplayName = body->displayName().c_str();
+    this->body.DownStatus = body->downloadStatus();
+    this->body.FileSize = body->fileLength();
+    this->body.LocalPath = body->localPath().c_str();
+    this->body.RemotePath = body->remotePath().c_str();
+    this->body.Secret = body->secretKey().c_str();
+    this->body.Height = body->size().mHeight;
+    this->body.Width = body->size().mWidth;
+    // TODO: set this->body.Original
+    this->body.ThumbnaiDownStatus = body->thumbnailDownloadStatus();
+    this->body.ThumbnaiSecret = body->thumbnailSecretKey().c_str();
+    this->body.ThumbnaiRemotePath = body->thumbnailRemotePath().c_str();
+    this->body.ThumbnailLocalPath = body->thumbnailLocalPath().c_str();
+}
 MessageTO * MessageTO::FromEMMessage(const EMMessagePtr &_message)
 {
     //TODO: assume that only 1 body in _message->bodies
@@ -66,6 +96,21 @@ MessageTO * MessageTO::FromEMMessage(const EMMessagePtr &_message)
         case EMMessageBody::LOCATION:
         {
             message = new LocationMessageTO(_message);
+        }
+            break;
+        case EMMessageBody::COMMAND:
+        {
+            message = new CmdMessageTO(_message);
+        }
+            break;
+        case EMMessageBody::FILE:
+        {
+            message = new FileMessageTO(_message);
+        }
+            break;
+        case EMMessageBody::IMAGE:
+        {
+            message = new ImageMessageTO(_message);
         }
             break;
         default:
