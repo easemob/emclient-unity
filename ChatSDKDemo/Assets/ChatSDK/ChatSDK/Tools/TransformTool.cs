@@ -25,6 +25,7 @@ namespace ChatSDK
 
         static internal string JsonStringFromStringList(List<string> list)
         {
+            if (list == null) return null;
             JSONObject jo = new JSONObject();
             foreach (string str in list) {
                 jo.Add(str);

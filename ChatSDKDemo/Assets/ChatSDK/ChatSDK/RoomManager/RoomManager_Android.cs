@@ -50,7 +50,7 @@ namespace ChatSDK
 
         public override void CreateRoom(string subject, string descriptionsc, string welcomeMsg, int maxUserCount = 300, List<string> members = null, ValueCallBack<Room> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("createChatRoom", subject, descriptionsc, welcomeMsg, maxUserCount, TransformTool.JsonStringFromStringList(members),handle?.callbackId);
         }
 
         public override void DestroyRoom(string roomId, CallBack handle = null)

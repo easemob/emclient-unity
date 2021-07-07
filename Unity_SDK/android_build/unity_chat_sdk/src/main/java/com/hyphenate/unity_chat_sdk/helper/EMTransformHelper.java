@@ -1,5 +1,6 @@
 package com.hyphenate.unity_chat_sdk.helper;
 
+import com.hyphenate.chat.EMChatRoom;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMGroupInfo;
 
@@ -11,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EMTransformHelper {
-    static public JSONArray stringListToJsonArray(List<String> list) {
+
+    static public JSONArray jsonArrayFromStringList(List<String> list) {
         JSONArray jsonAry = new JSONArray();
         if (list != null) {
             for (String str : list) {
@@ -22,7 +24,19 @@ public class EMTransformHelper {
     }
 
 
-    static public JSONArray groupListToJsonArray(List<EMGroup> list) {
+    static public JSONArray jsonArrayFromChatRoomList(List<EMChatRoom> list) {
+        JSONArray jsonArray = new JSONArray();
+        for (EMChatRoom ite: list) {
+            try {
+                jsonArray.put(EMChatRoomHelper.toJson(ite));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return jsonArray;
+    }
+
+    static public JSONArray jsonArrayFromGroupList(List<EMGroup> list) {
         JSONArray jsonArray = new JSONArray();
         for (EMGroup group: list) {
             try {
@@ -34,7 +48,7 @@ public class EMTransformHelper {
         return jsonArray;
     }
 
-    static public JSONArray groupInfoListToJsonArray(List<EMGroupInfo> list) {
+    static public JSONArray jsonArrayFromGroupInfoList(List<EMGroupInfo> list) {
         JSONArray jsonArray = new JSONArray();
         for (EMGroupInfo group: list) {
             try {
@@ -46,16 +60,7 @@ public class EMTransformHelper {
         return jsonArray;
     }
 
-//    static public String stringListToString(List<String> list) {
-//        String ret = "";
-//        for (String s: list) {
-//            ret = ret + ",";
-//        }
-//        ret = ret.substring(0, ret.length() - 1);
-//        return ret;
-//    }
-
-    static public String[] stringArrayFromJsonString(String jsonString) {
+    static public String[] jsonStringToStringArray(String jsonString) {
         try {
             JSONArray ja = new JSONArray(jsonString);
             String[] strings = new String[ja.length()];
@@ -70,7 +75,7 @@ public class EMTransformHelper {
         return null;
     }
 
-    static public List<String> stringListFromJsonString(String jsonString) {
+    static public List<String> jsonStringToStringList(String jsonString) {
         try {
             JSONArray ja = new JSONArray(jsonString);
             List<String> list = new ArrayList<String>();

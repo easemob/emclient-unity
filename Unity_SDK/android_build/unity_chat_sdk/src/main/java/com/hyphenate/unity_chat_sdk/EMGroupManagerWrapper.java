@@ -99,7 +99,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             return;
         }
 
-        String[] allMembers = EMTransformHelper.stringArrayFromJsonString(jsonString);
+        String[] allMembers = EMTransformHelper.jsonStringToStringArray(jsonString);
         EMClient.getInstance().groupManager().asyncAddUsersToGroup(groupId, allMembers, new EMUnityCallback(callbackId));
     }
 
@@ -110,7 +110,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             return;
         }
 
-        List<String> list = EMTransformHelper.stringListFromJsonString(jsonString);
+        List<String> list = EMTransformHelper.jsonStringToStringList(jsonString);
         EMClient.getInstance().groupManager().addToGroupWhiteList(groupId, list, new EMUnityCallback(callbackId));
     }
 
@@ -131,7 +131,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             return;
         }
 
-        List<String> list = EMTransformHelper.stringListFromJsonString(jsonString);
+        List<String> list = EMTransformHelper.jsonStringToStringList(jsonString);
         EMClient.getInstance().groupManager().asyncBlockUsers(groupId, list, new EMUnityCallback(callbackId));
     }
 
@@ -202,7 +202,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
 
         EMGroupOptions options = EMGroupOptionsHelper.fromJson(optionsJson);
 
-        String[] allMembers = EMTransformHelper.stringArrayFromJsonString(memberListString);
+        String[] allMembers = EMTransformHelper.jsonStringToStringArray(memberListString);
 
         EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("EMGroup", callbackId) {
             @Override
@@ -405,7 +405,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
         EMUnityValueCallback<List<String>> callback = new EMUnityValueCallback<List<String>>("List<String>", callbackId) {
             @Override
             public void onSuccess(List<String> strings) {
-                sendJsonObjectToUnity(EMTransformHelper.stringListToJsonArray(strings).toString());
+                sendJsonObjectToUnity(EMTransformHelper.jsonArrayFromStringList(strings).toString());
             }
         };
 
@@ -448,7 +448,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
         EMUnityValueCallback<List<EMGroup>> callback = new EMUnityValueCallback<List<EMGroup>>("List<EMGroup>", callbackId) {
             @Override
             public void onSuccess(List<EMGroup> emGroups) {
-                sendJsonObjectToUnity(EMTransformHelper.groupListToJsonArray(emGroups).toString());
+                sendJsonObjectToUnity(EMTransformHelper.jsonArrayFromGroupList(emGroups).toString());
             }
         };
         EMClient.getInstance().groupManager().asyncGetJoinedGroupsFromServer(pageNum, pageSize, callback);
@@ -528,7 +528,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             return;
         }
 
-        List<String> list = EMTransformHelper.stringListFromJsonString(jsonString);
+        List<String> list = EMTransformHelper.jsonStringToStringList(jsonString);
 
         EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("EMGroup",callbackId) {
             @Override
@@ -585,7 +585,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             return;
         }
 
-        List<String> list = EMTransformHelper.stringListFromJsonString(stringList);
+        List<String> list = EMTransformHelper.jsonStringToStringList(stringList);
         EMClient.getInstance().groupManager().asyncRemoveUsersFromGroup(groupId, list, new EMUnityCallback(callbackId));
     }
 
@@ -597,7 +597,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             return;
         }
 
-        List<String> list = EMTransformHelper.stringListFromJsonString(jsonString);
+        List<String> list = EMTransformHelper.jsonStringToStringList(jsonString);
         EMClient.getInstance().groupManager().removeFromGroupWhiteList(groupId, list, new EMUnityCallback(callbackId));
     }
 
@@ -629,7 +629,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             return;
         }
 
-        List<String> list = EMTransformHelper.stringListFromJsonString(jsonString);
+        List<String> list = EMTransformHelper.jsonStringToStringList(jsonString);
         EMClient.getInstance().groupManager().asyncUnblockUsers(groupId, list, new EMUnityCallback(callbackId));
     }
 
@@ -673,7 +673,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             }
         };
 
-        List<String> list = EMTransformHelper.stringListFromJsonString(jsonString);
+        List<String> list = EMTransformHelper.jsonStringToStringList(jsonString);
 
         EMClient.getInstance().groupManager().asyncUnMuteGroupMembers(groupId, list, callBack);
     }

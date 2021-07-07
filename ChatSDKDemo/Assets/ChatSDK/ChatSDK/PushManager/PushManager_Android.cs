@@ -25,27 +25,30 @@ namespace ChatSDK
         public PushConfig GetPushConfig()
         {
             string jsonString = wrapper.Call<string>("getPushConfig");
-            return null;
+            if (jsonString == null) {
+                return null;
+            }
+            return new PushConfig(jsonString);
         }
 
         public void GetPushConfigFromServer(ValueCallBack<PushConfig> handle = null)
         {
-            wrapper.Call("getImPushConfigFromServer", handle?.callbackId);
+            wrapper.Call("getPushConfigFromServer", handle?.callbackId);
         }
 
         public void SetGroupToDisturb(string groupId, bool noDisturb, CallBack handle = null)
         {
-            wrapper.Call("updateGroupPushService", groupId, noDisturb, handle?.callbackId);
+            wrapper.Call("setGroupToDisturb", groupId, noDisturb, handle?.callbackId);
         }
 
         public void SetNoDisturb(bool noDisturb, int startTime = 0, int endTime = 24, CallBack handle = null)
         {
-            wrapper.Call("imPushNoDisturb", noDisturb, startTime, endTime, handle?.callbackId);
+            wrapper.Call("setNoDisturb", noDisturb, startTime, endTime, handle?.callbackId);
         }
 
         public void SetPushStyle(PushStyle pushStyle, CallBack handle = null)
         {
-            wrapper.Call("updateImPushStyle", pushStyle == PushStyle.Simple ? 0 : 1 , handle?.callbackId);
+            wrapper.Call("setPushStyle", pushStyle == PushStyle.Simple ? 0 : 1 , handle?.callbackId);
         }
 
         public void UpdateFCMPushToken(string token, CallBack handle = null)

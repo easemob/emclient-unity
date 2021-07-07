@@ -75,7 +75,7 @@ public class EMUnityRoomManagerListener implements EMChatRoomChangeListener {
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("roomId", roomId);
-            jsonObject.put("list", EMTransformHelper.stringListToJsonArray(mutes).toString());
+            jsonObject.put("list", EMTransformHelper.jsonArrayFromStringList(mutes).toString());
             jsonObject.put("expireTime", expireTime);
             UnityPlayer.UnitySendMessage(EMSDKMethod.RoomListener_Obj, "OnMuteListAdded", jsonObject.toString());
         } catch (JSONException e) {
@@ -89,7 +89,7 @@ public class EMUnityRoomManagerListener implements EMChatRoomChangeListener {
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("roomId", roomId);
-            jsonObject.put("list", EMTransformHelper.stringListToJsonArray(mutes).toString());
+            jsonObject.put("list", EMTransformHelper.jsonArrayFromStringList(mutes).toString());
             UnityPlayer.UnitySendMessage(EMSDKMethod.RoomListener_Obj, "OnMuteListRemoved", jsonObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -102,7 +102,7 @@ public class EMUnityRoomManagerListener implements EMChatRoomChangeListener {
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("roomId", roomId);
-            jsonObject.put("list", EMTransformHelper.stringListToJsonArray(list).toString());
+            jsonObject.put("list", EMTransformHelper.jsonArrayFromStringList(list).toString());
             UnityPlayer.UnitySendMessage(EMSDKMethod.RoomListener_Obj, "OnWhiteListAdded", jsonObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -115,7 +115,7 @@ public class EMUnityRoomManagerListener implements EMChatRoomChangeListener {
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("roomId", roomId);
-            jsonObject.put("list", EMTransformHelper.stringListToJsonArray(list).toString());
+            jsonObject.put("list", EMTransformHelper.jsonArrayFromStringList(list).toString());
             UnityPlayer.UnitySendMessage(EMSDKMethod.RoomListener_Obj, "OnWhiteListRemoved", jsonObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();
