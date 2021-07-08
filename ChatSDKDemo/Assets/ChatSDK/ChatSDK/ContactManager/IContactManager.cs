@@ -12,7 +12,7 @@ namespace ChatSDK
 
         public abstract void GetAllContactsFromServer(ValueCallBack<List<string>> handle = null);
 
-        public abstract void GetAllContactsFromDB(ValueCallBack<List<string>> handle = null);
+        public abstract List<string> GetAllContactsFromDB();
 
         public abstract void AddUserToBlockList(string username, CallBack handle = null);
 

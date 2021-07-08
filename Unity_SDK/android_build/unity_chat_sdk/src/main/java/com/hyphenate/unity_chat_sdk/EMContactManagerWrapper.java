@@ -58,24 +58,23 @@ public class EMContactManagerWrapper extends  EMWrapper {
             try {
                 List<String> contacts = EMClient.getInstance().contactManager().getAllContactsFromServer();
                 Log.d("chat_sdk", contacts.toString());
-                onSuccess("List<String>", callbackId, EMTransformHelper.jsonArrayFromStringList(contacts).toString());
+                onSuccess("List<String>", callbackId, EMTransformHelper.jsonArrayFromStringList(contacts));
             } catch (HyphenateException e) {
                 onError(callbackId, e);
             }
         });
     }
 
-    private void getAllContactsFromDB(String callbackId) throws JSONException {
+    private String getAllContactsFromDB() throws JSONException {
         Log.d("chat_sdk", "getAllContactsFromDB");
-        asyncRunnable(() -> {
-            try {
-                List<String> contacts = EMClient.getInstance().contactManager().getContactsFromLocal();
-                Log.d("chat_sdk", contacts.toString());
-                onSuccess("List<String>", callbackId, EMTransformHelper.jsonArrayFromStringList(contacts).toString());
-            } catch (HyphenateException e) {
-                onError(callbackId, e);
-            }
-        });
+        try {
+            List<String> contacts = EMClient.getInstance().contactManager().getContactsFromLocal();
+            if (contacts == null) { return null; }
+            Log.d("chat_sdk", contacts.toString());
+            return EMTransformHelper.jsonArrayFromStringList(contacts).toString();
+        } catch (HyphenateException e) {
+            return  null;
+        }
     }
 
     private void addUserToBlockList(String username, String callbackId) throws JSONException {
@@ -113,7 +112,7 @@ public class EMContactManagerWrapper extends  EMWrapper {
         asyncRunnable(() -> {
             try {
                 List<String> contacts = EMClient.getInstance().contactManager().getBlackListFromServer();
-                onSuccess("List<String>", callbackId, EMTransformHelper.jsonArrayFromStringList(contacts).toString());
+                onSuccess("List<String>", callbackId, EMTransformHelper.jsonArrayFromStringList(contacts));
             } catch (HyphenateException e) {
                 onError(callbackId, e);
             }
@@ -154,7 +153,7 @@ public class EMContactManagerWrapper extends  EMWrapper {
         asyncRunnable(() -> {
             try {
                 List<String> platforms = EMClient.getInstance().contactManager().getSelfIdsOnOtherPlatform();
-                onSuccess("List<String>", callbackId, EMTransformHelper.jsonArrayFromStringList(platforms).toString());
+                onSuccess("List<String>", callbackId, EMTransformHelper.jsonArrayFromStringList(platforms));
             } catch (HyphenateException e) {
                 onError(callbackId, e);
             }

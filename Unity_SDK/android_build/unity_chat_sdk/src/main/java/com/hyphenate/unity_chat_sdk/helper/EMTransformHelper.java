@@ -14,6 +14,7 @@ import java.util.List;
 public class EMTransformHelper {
 
     static public JSONArray jsonArrayFromStringList(List<String> list) {
+        if (list == null) return  null;
         JSONArray jsonAry = new JSONArray();
         if (list != null) {
             for (String str : list) {
@@ -25,6 +26,7 @@ public class EMTransformHelper {
 
 
     static public JSONArray jsonArrayFromChatRoomList(List<EMChatRoom> list) {
+        if (list == null) return  null;
         JSONArray jsonArray = new JSONArray();
         for (EMChatRoom ite: list) {
             try {
@@ -37,6 +39,7 @@ public class EMTransformHelper {
     }
 
     static public JSONArray jsonArrayFromGroupList(List<EMGroup> list) {
+        if (list == null) return  null;
         JSONArray jsonArray = new JSONArray();
         for (EMGroup group: list) {
             try {
@@ -48,19 +51,8 @@ public class EMTransformHelper {
         return jsonArray;
     }
 
-    static public JSONArray jsonArrayFromGroupInfoList(List<EMGroupInfo> list) {
-        JSONArray jsonArray = new JSONArray();
-        for (EMGroupInfo group: list) {
-            try {
-                jsonArray.put(EMGroupInfoHelper.toJson(group));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        return jsonArray;
-    }
-
     static public String[] jsonStringToStringArray(String jsonString) {
+        if (jsonString == null) return  null;
         try {
             JSONArray ja = new JSONArray(jsonString);
             String[] strings = new String[ja.length()];
@@ -76,6 +68,7 @@ public class EMTransformHelper {
     }
 
     static public List<String> jsonStringToStringList(String jsonString) {
+        if (jsonString == null) return  null;
         try {
             JSONArray ja = new JSONArray(jsonString);
             List<String> list = new ArrayList<String>();

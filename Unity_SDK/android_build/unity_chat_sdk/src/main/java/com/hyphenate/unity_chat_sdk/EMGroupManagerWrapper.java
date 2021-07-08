@@ -51,7 +51,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             public void onSuccess(EMGroup object) {
                 try {
                     JSONObject obj = EMGroupHelper.toJson(object);
-                    sendJsonObjectToUnity(obj.toString());
+                    sendJsonObjectToUnity(obj);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -82,7 +82,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             @Override
             public void onSuccess(EMGroup object) {
                 try {
-                    sendJsonObjectToUnity(EMGroupHelper.toJson(object).toString());
+                    sendJsonObjectToUnity(EMGroupHelper.toJson(object));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -165,7 +165,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             @Override
             public void onSuccess(EMGroup group) {
                 try {
-                    sendJsonObjectToUnity(EMGroupHelper.toJson(group).toString());
+                    sendJsonObjectToUnity(EMGroupHelper.toJson(group));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -208,7 +208,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             @Override
             public void onSuccess(EMGroup object) {
                 try {
-                    sendJsonObjectToUnity(EMGroupHelper.toJson(object).toString());
+                    sendJsonObjectToUnity(EMGroupHelper.toJson(object));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -274,7 +274,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             public void onSuccess(String s) {
                 JSONArray jsonArray = new JSONArray();
                 jsonArray.put(s);
-                sendJsonObjectToUnity(jsonArray.toString());
+                sendJsonObjectToUnity(jsonArray);
             }
         };
         EMClient.getInstance().groupManager().asyncFetchGroupAnnouncement(groupId, callback);
@@ -295,7 +295,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
                 for (String s: strings) {
                     jsonArray.put(s);
                 }
-                sendJsonObjectToUnity(jsonArray.toString());
+                sendJsonObjectToUnity(jsonArray);
             }
         };
 
@@ -318,7 +318,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
                     for (EMMucSharedFile file :object) {
                         jsonArray.put(EMMucSharedFileHelper.toJson(file));
                     }
-                    sendJsonObjectToUnity(jsonArray.toString());
+                    sendJsonObjectToUnity(jsonArray);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -340,7 +340,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             public void onSuccess(EMCursorResult<String> stringEMCursorResult) {
                 try {
                     JSONObject jsonObject = EMCursorResultHelper.toJson(stringEMCursorResult);
-                    sendJsonObjectToUnity(jsonObject.toString());
+                    sendJsonObjectToUnity(jsonObject);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -365,7 +365,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
                 for (int i = 0; i < strings.length; i++) {
                     jsonArray.put(strings[i]);
                 }
-                sendJsonObjectToUnity(jsonArray.toString());
+                sendJsonObjectToUnity(jsonArray);
             }
         };
 
@@ -384,7 +384,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             @Override
             public void onSuccess(EMGroup object) {
                 try {
-                    sendJsonObjectToUnity(EMGroupHelper.toJson(object).toString());
+                    sendJsonObjectToUnity(EMGroupHelper.toJson(object));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -405,7 +405,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
         EMUnityValueCallback<List<String>> callback = new EMUnityValueCallback<List<String>>("List<String>", callbackId) {
             @Override
             public void onSuccess(List<String> strings) {
-                sendJsonObjectToUnity(EMTransformHelper.jsonArrayFromStringList(strings).toString());
+                sendJsonObjectToUnity(EMTransformHelper.jsonArrayFromStringList(strings));
             }
         };
 
@@ -448,7 +448,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
         EMUnityValueCallback<List<EMGroup>> callback = new EMUnityValueCallback<List<EMGroup>>("List<EMGroup>", callbackId) {
             @Override
             public void onSuccess(List<EMGroup> emGroups) {
-                sendJsonObjectToUnity(EMTransformHelper.jsonArrayFromGroupList(emGroups).toString());
+                sendJsonObjectToUnity(EMTransformHelper.jsonArrayFromGroupList(emGroups));
             }
         };
         EMClient.getInstance().groupManager().asyncGetJoinedGroupsFromServer(pageNum, pageSize, callback);
@@ -467,7 +467,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             public void onSuccess(EMCursorResult<EMGroupInfo> emGroupInfoEMCursorResult) {
                 try {
                     JSONObject jsonObject = EMCursorResultHelper.toJson(emGroupInfoEMCursorResult);
-                    sendJsonObjectToUnity(jsonObject.toString());
+                    sendJsonObjectToUnity(jsonObject);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -511,7 +511,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             @Override
             public void onSuccess(EMGroup group) {
                 try {
-                    sendJsonObjectToUnity(EMGroupHelper.toJson(group).toString());
+                    sendJsonObjectToUnity(EMGroupHelper.toJson(group));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -534,7 +534,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             @Override
             public void onSuccess(EMGroup object) {
                 try {
-                    sendJsonObjectToUnity(EMGroupHelper.toJson(object).toString());
+                    sendJsonObjectToUnity(EMGroupHelper.toJson(object));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -556,7 +556,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             @Override
             public void onSuccess(EMGroup group) {
                 try {
-                    sendJsonObjectToUnity(EMGroupHelper.toJson(group).toString());
+                    sendJsonObjectToUnity(EMGroupHelper.toJson(group));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -645,7 +645,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             @Override
             public void onSuccess(EMGroup group) {
                 try {
-                    sendJsonObjectToUnity(EMGroupHelper.toJson(group).toString());
+                    sendJsonObjectToUnity(EMGroupHelper.toJson(group));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -666,7 +666,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             @Override
             public void onSuccess(EMGroup object) {
                 try {
-                    sendJsonObjectToUnity(EMGroupHelper.toJson(object).toString());
+                    sendJsonObjectToUnity(EMGroupHelper.toJson(object));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -699,7 +699,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
         asyncRunnable(() -> {
             try {
                 EMGroup group = EMClient.getInstance().groupManager().updateGroupExtension(groupId, ext);
-                onSuccess("EMGroup", callbackId, EMGroupHelper.toJson(group).toString());
+                onSuccess("EMGroup", callbackId, EMGroupHelper.toJson(group));
             } catch (HyphenateException e) {
                 onError(callbackId, e);
             } catch ( JSONException e) {

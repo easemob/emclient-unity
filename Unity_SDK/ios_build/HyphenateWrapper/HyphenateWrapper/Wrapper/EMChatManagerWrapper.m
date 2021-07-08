@@ -51,17 +51,17 @@
 
 - (void)downloadAttachment:(NSDictionary *)param callbackId:(NSString *)callbackId {
     NSString *msgId = param[@"msgId"];
-    
+    EMError *error;
     if (!msgId) {
-        EMError *error = [[EMError alloc] initWithDescription:@"messageId is invalid" code: EMErrorMessageInvalid];
+        error = [[EMError alloc] initWithDescription:@"messageId is invalid" code: EMErrorMessageInvalid];
         [self onError:callbackId error:error];
         return;
     }
     
     EMMessage *msg =[EMClient.sharedClient.chatManager getMessageWithMessageId:msgId];
     if (!msg) {
-        aError = [[EMError alloc] initWithDescription:@"Message not found" code: EMErrorMessageInvalid];
-        [self onError:callbackId error:aError];
+        error = [[EMError alloc] initWithDescription:@"Message not found" code: EMErrorMessageInvalid];
+        [self onError:callbackId error:error];
         return;
     }
     
@@ -80,17 +80,17 @@
 - (void)downloadThumbnail:(NSDictionary *)param callbackId:(NSString *)callbackId {
 
     NSString *msgId = param[@"msgId"];
-    
+    EMError *error;
     if (!msgId) {
-        EMError *error = [[EMError alloc] initWithDescription:@"messageId is invalid" code: EMErrorMessageInvalid];
+        error = [[EMError alloc] initWithDescription:@"messageId is invalid" code: EMErrorMessageInvalid];
         [self onError:callbackId error:error];
         return;
     }
     
     EMMessage *msg =[EMClient.sharedClient.chatManager getMessageWithMessageId:msgId];
     if (!msg) {
-        aError = [[EMError alloc] initWithDescription:@"Message not found" code: EMErrorMessageInvalid];
-        [self onError:callbackId error:aError];
+        error = [[EMError alloc] initWithDescription:@"Message not found" code: EMErrorMessageInvalid];
+        [self onError:callbackId error:error];
         return;
     }
     
@@ -350,7 +350,7 @@
         EMError *error = [[EMError alloc] initWithDescription:@"Message contains invalid content"
                                                          code: EMErrorMessageIncludeIllegalContent];
         [self onError:callbackId error:error];
-        return;
+        return nil;
     }
     __block NSString *callId = callbackId;
     EMMessage *msg = [EMMessage fromJson:param];
@@ -377,13 +377,13 @@
         return;
     }
     __block NSString *callId = callbackId;
-    EMMessage *msg = [EMClient.sharedClient.chatManager getMessageWithMessageId:messageId];
+    EMMessage *msg = [EMClient.sharedClient.chatManager getMessageWithMessageId:msgId];
     if (!msg) {
         EMError *aError = [[EMError alloc] initWithDescription:@"Message not found" code: EMErrorMessageInvalid];
         [self onError:callbackId error:aError];
         return;
     }
-    [EMClient.sharedClient.chatManager sendMessageReadAck:messageId toUser:msg.from completion:^(EMError *aError) {
+    [EMClient.sharedClient.chatManager sendMessageReadAck:msgId toUser:msg.from completion:^(EMError *aError) {
         if (aError) {
             [self onError:callId error:aError];
         }else {

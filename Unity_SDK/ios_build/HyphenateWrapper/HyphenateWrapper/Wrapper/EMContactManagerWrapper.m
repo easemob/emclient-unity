@@ -25,16 +25,37 @@
     return self;
 }
 
-- (void)addContact:(NSDictionary *)param callbackId:(NSString *)callbackId {
-    if (!param) {
-        EMError *aError = [[EMError alloc] initWithDescription:@"Param error" code: EMErrorMessageIncludeIllegalContent];
+- (void)acceptInvitation:(NSDictionary *)param callbackId:(NSString *)callbackId {
+    NSString *username = param[@"username"];
+    if (!username) {
+        EMError *aError = [[EMError alloc] initWithDescription:@"username is invalid " code: EMErrorMessageIncludeIllegalContent];
         [self onError:callbackId error:aError];
         return;
     }
-    __block NSString *callId =callbackId;
     __weak typeof(self) weakSelf = self;
+    __block NSString *callId = callbackId;
+    [EMClient.sharedClient.contactManager approveFriendRequestFromUser:username
+                                                            completion:^(NSString *aUsername, EMError *aError)
+    {
+        if (!aError) {
+            [weakSelf onSuccess:nil callbackId:callId userInfo:nil];
+        }else {
+            [weakSelf onError:callId error:aError];
+        }
+    }];
+}
+
+- (void)addContact:(NSDictionary *)param callbackId:(NSString *)callbackId {
     NSString *username = param[@"username"];
+    if (!username) {
+        EMError *aError = [[EMError alloc] initWithDescription:@"username is invalid " code: EMErrorMessageIncludeIllegalContent];
+        [self onError:callbackId error:aError];
+        return;
+    }
+    
     NSString *reason = param[@"reason"];
+    __block NSString *callId = callbackId;
+    __weak typeof(self) weakSelf = self;
     [EMClient.sharedClient.contactManager addContact:username
                                              message:reason
                                           completion:^(NSString *aUsername, EMError *aError)
@@ -47,15 +68,56 @@
     }];
 }
 
-- (void)deleteContact:(NSDictionary *)param callbackId:(NSString *)callbackId {
-    if (!param) {
-        EMError *aError = [[EMError alloc] initWithDescription:@"Param error" code: EMErrorMessageIncludeIllegalContent];
+- (void)addUserToBlockList:(NSDictionary *)param callbackId:(NSString *)callbackId {
+    NSString *username = param[@"username"];
+    if (!username) {
+        EMError *aError = [[EMError alloc] initWithDescription:@"username is invalid " code: EMErrorMessageIncludeIllegalContent];
+        [self onError:callbackId error:aError];
+        return;
+    }
+    __block NSString *callId = callbackId;
+    __weak typeof(self) weakSelf = self;
+    [EMClient.sharedClient.contactManager addUserToBlackList:username
+                                                  completion:^(NSString *aUsername, EMError *aError)
+    {
+        if (!aError) {
+            [weakSelf onSuccess:nil callbackId:callId userInfo:nil];
+        }else {
+            [weakSelf onError:callId error:aError];
+        }
+    }];
+}
+
+- (void)declineInvitation:(NSDictionary *)param callbackId:(NSString *)callbackId {
+    NSString *username = param[@"username"];
+    if (!username) {
+        EMError *aError = [[EMError alloc] initWithDescription:@"username is invalid " code: EMErrorMessageIncludeIllegalContent];
         [self onError:callbackId error:aError];
         return;
     }
     __weak typeof(self) weakSelf = self;
-    __block NSString *callId =callbackId;
+    __block NSString *callId = callbackId;
+    [EMClient.sharedClient.contactManager declineFriendRequestFromUser:username
+                                                            completion:^(NSString *aUsername, EMError *aError)
+    {
+        if (!aError) {
+            [weakSelf onSuccess:nil callbackId:callId userInfo:nil];
+        }else {
+            [weakSelf onError:callId error:aError];
+        }
+    }];
+}
+
+
+- (void)deleteContact:(NSDictionary *)param callbackId:(NSString *)callbackId {
     NSString *username = param[@"username"];
+    if (!username) {
+        EMError *aError = [[EMError alloc] initWithDescription:@"username is invalid " code: EMErrorMessageIncludeIllegalContent];
+        [self onError:callbackId error:aError];
+        return;
+    }
+    __weak typeof(self) weakSelf = self;
+    __block NSString *callId = callbackId;
     BOOL keepConversation = [param[@"keepConversation"] boolValue];
     [EMClient.sharedClient.contactManager deleteContact:username
                                    isDeleteConversation:keepConversation
@@ -69,8 +131,18 @@
     }];
 }
 
+- (id)getAllContactsFromDB:(NSDictionary *)param callbackId:(NSString *)callbackId {
+    
+    NSArray<NSString*>* aList = [EMClient.sharedClient.contactManager getContacts];
+    if (aList == nil) {
+        return nil;
+    }
+    return aList;
+}
+
+
 - (void)getAllContactsFromServer:(NSDictionary *)param callbackId:(NSString *)callbackId {
-    __block NSString *callId =callbackId;
+    __block NSString *callId = callbackId;
     __weak typeof(self) weakSelf = self;
     [EMClient.sharedClient.contactManager getContactsFromServerWithCompletion:^(NSArray *aList, EMError *aError) {
         if (!aError) {
@@ -81,30 +153,19 @@
     }];
 }
 
-- (void)getAllContactsFromDB:(NSDictionary *)param callbackId:(NSString *)callbackId {
-    __block NSString *callId =callbackId;
-    NSArray<NSString*>* aList = [EMClient.sharedClient.contactManager getContacts];
-    [self onSuccess:@"List<String>" callbackId:callId userInfo:aList];
-}
-- (void)addUserToBlockList:(NSDictionary *)param callbackId:(NSString *)callbackId {
-    if (!param) {
-        EMError *aError = [[EMError alloc] initWithDescription:@"Param error" code: EMErrorMessageIncludeIllegalContent];
-        [self onError:callbackId error:aError];
-        return;
-    }
-    __block NSString *callId =callbackId;
+- (void)getBlockListFromServer:(NSDictionary *)param callbackId:(NSString *)callbackId {
     __weak typeof(self) weakSelf = self;
-    NSString *username = param[@"username"];
-    [EMClient.sharedClient.contactManager addUserToBlackList:username
-                                                  completion:^(NSString *aUsername, EMError *aError)
-    {
+    __block NSString *callId = callbackId;
+    [EMClient.sharedClient.contactManager getBlackListFromServerWithCompletion:^(NSArray *aList, EMError *aError) {
         if (!aError) {
-            [weakSelf onSuccess:nil callbackId:callId userInfo:nil];
+            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:aList];
         }else {
             [weakSelf onError:callId error:aError];
         }
     }];
 }
+
+
 - (void)removeUserFromBlockList:(NSDictionary *)param callbackId:(NSString *)callbackId {
     if (!param) {
         EMError *aError = [[EMError alloc] initWithDescription:@"Param error" code: EMErrorMessageIncludeIllegalContent];
@@ -124,55 +185,9 @@
         }
     }];
 }
-- (void)getBlockListFromServer:(NSDictionary *)param callbackId:(NSString *)callbackId {
-    __weak typeof(self) weakSelf = self;
-    __block NSString *callId =callbackId;
-    [EMClient.sharedClient.contactManager getBlackListFromServerWithCompletion:^(NSArray *aList, EMError *aError) {
-        if (!aError) {
-            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:aList];
-        }else {
-            [weakSelf onError:callId error:aError];
-        }
-    }];
-}
-- (void)acceptInvitation:(NSDictionary *)param callbackId:(NSString *)callbackId {
-    if (!param) {
-        EMError *aError = [[EMError alloc] initWithDescription:@"Param error" code: EMErrorMessageIncludeIllegalContent];
-        [self onError:callbackId error:aError];
-        return;
-    }
-    __weak typeof(self) weakSelf = self;
-    __block NSString *callId =callbackId;
-    NSString *username = param[@"username"];
-    [EMClient.sharedClient.contactManager approveFriendRequestFromUser:username
-                                                            completion:^(NSString *aUsername, EMError *aError)
-    {
-        if (!aError) {
-            [weakSelf onSuccess:nil callbackId:callId userInfo:nil];
-        }else {
-            [weakSelf onError:callId error:aError];
-        }
-    }];
-}
-- (void)declineInvitation:(NSDictionary *)param callbackId:(NSString *)callbackId {
-    if (!param) {
-        EMError *aError = [[EMError alloc] initWithDescription:@"Param error" code: EMErrorMessageIncludeIllegalContent];
-        [self onError:callbackId error:aError];
-        return;
-    }
-    __weak typeof(self) weakSelf = self;
-    __block NSString *callId =callbackId;
-    NSString *username = param[@"username"];
-    [EMClient.sharedClient.contactManager declineFriendRequestFromUser:username
-                                                            completion:^(NSString *aUsername, EMError *aError)
-    {
-        if (!aError) {
-            [weakSelf onSuccess:nil callbackId:callId userInfo:nil];
-        }else {
-            [weakSelf onError:callId error:aError];
-        }
-    }];
-}
+
+
+
 - (void)getSelfIdsOnOtherPlatform:(NSDictionary *)param callbackId:(NSString *)callbackId {
     __weak typeof(self) weakSelf = self;
     __block NSString *callId =callbackId;

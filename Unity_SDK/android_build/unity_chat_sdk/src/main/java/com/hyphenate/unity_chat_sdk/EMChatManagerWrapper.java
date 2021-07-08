@@ -83,7 +83,7 @@ public class EMChatManagerWrapper extends EMWrapper  {
             try {
                 EMCursorResult<EMMessage> cursorResult = EMClient.getInstance().chatManager().fetchHistoryMessages(conversationId,
                         conversationType, count, startMessageId.length() > 0 ? startMessageId : null);
-                onSuccess("EMCursorResult<EMMessage>", callbackId, EMCursorResultHelper.toJson(cursorResult).toString());
+                onSuccess("EMCursorResult<EMMessage>", callbackId, EMCursorResultHelper.toJson(cursorResult));
             } catch (HyphenateException e) {
                 onError(callbackId, e);
             } catch (JSONException ignored) {
@@ -118,7 +118,7 @@ public class EMChatManagerWrapper extends EMWrapper  {
                 for (EMConversation conversation : list) {
                     jsonArray.put(EMConversationHelper.toJson(conversation));
                 }
-                onSuccess("List<EMConversation>", callbackId, jsonArray.toString());
+                onSuccess("List<EMConversation>", callbackId, jsonArray);
             } catch (HyphenateException e) {
                 onError(callbackId, e);
             } catch (JSONException ignored){
@@ -173,6 +173,7 @@ public class EMChatManagerWrapper extends EMWrapper  {
     private String loadMessage(String messageId) throws JSONException {
         if (messageId == null || messageId.length() == 0 ) return null;
         EMMessage msg = EMClient.getInstance().chatManager().getMessage(messageId);
+        if (msg == null) return  null;
         return EMMessageHelper.toJson(msg).toString();
     }
 
@@ -289,7 +290,7 @@ public class EMChatManagerWrapper extends EMWrapper  {
         }else {
             asyncRunnable(() -> {
                 EMClient.getInstance().chatManager().updateMessage(msg);
-                onSuccess(null, callbackId, Boolean.TRUE.toString());
+                onSuccess(null, callbackId, Boolean.TRUE);
             });
         }
     }

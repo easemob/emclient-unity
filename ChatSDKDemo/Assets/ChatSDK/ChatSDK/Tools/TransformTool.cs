@@ -7,6 +7,170 @@ namespace ChatSDK
     public class TransformTool
     {
 
+
+        static internal List<string> JsonObjectToStringList(JSONNode jn) {
+            List<string> ret = new List<string>();
+            if (jn != null && jn.IsArray)
+            {
+                foreach (JSONNode v in jn.AsArray)
+                {
+                    ret.Add(v.Value);
+                }
+            }
+            return ret;
+        }
+
+
+        static internal List<Group> JsonObjectToGroupList(JSONNode jn)
+        {
+            List<Group> list = new List<Group>();
+            if (jn != null && jn.IsArray)
+            {
+                foreach (JSONNode v in jn.AsArray)
+                {
+                    list.Add(new Group(v));
+                }
+            }
+            
+            return list;
+        }
+
+        static internal CursorResult<GroupInfo> JsonObjectToGroupInfoResult(JSONNode jsonObject)
+        {
+            CursorResult<GroupInfo> result = null;
+            if (jsonObject != null)
+            {
+                result = new CursorResult<GroupInfo>();
+
+                result.Cursor = jsonObject["cursor"].Value;
+
+                List<GroupInfo> list = new List<GroupInfo>();
+
+                foreach (JSONNode obj in jsonObject["list"].AsArray)
+                {
+                    list.Add(new GroupInfo(obj));
+                }
+
+                result.Data = list;
+            }
+            return result;
+        }
+
+        static internal CursorResult<string> JsonObjectToStringResult(JSONNode jsonObject)
+        {
+            if (jsonObject == null) return null;
+
+            CursorResult<string> result = null;
+
+            result = new CursorResult<string>();
+
+            result.Cursor = jsonObject["cursor"].Value;
+
+            List<string> list = new List<string>();
+
+            foreach (JSONNode obj in jsonObject["list"].AsArray)
+            {
+                list.Add(obj);
+            }
+
+            result.Data = list;
+            return result;
+        }
+
+        static internal CursorResult<Message> JsonObjectToMessageResult(JSONNode jsonObject)
+        {
+            if (jsonObject == null) return null;
+
+            CursorResult<Message> result = null;
+
+            result = new CursorResult<Message>();
+
+            result.Cursor = jsonObject["cursor"].Value;
+
+            List<Message> list = new List<Message>();
+
+            foreach (JSONNode obj in jsonObject["list"].AsArray)
+            {
+                list.Add(new Message(obj));
+            }
+
+            result.Data = list;
+
+            return result;
+        }
+
+        static internal List<GroupSharedFile> JsonObjectToGroupSharedFileList(JSONNode jsonObject)
+        {
+            if (jsonObject == null) return null;
+
+            List<GroupSharedFile> list = new List<GroupSharedFile>();
+
+            if (jsonObject.IsArray) {
+                foreach (JSONNode obj in jsonObject.AsArray)
+                {
+                    list.Add(new GroupSharedFile(obj));
+                }
+            }
+
+            return list;
+        }
+
+        static internal PageResult<Room> JsonObjectToRoomPageResult(JSONNode jsonObject)
+        {
+            if (jsonObject == null) return null;
+
+            PageResult<Room> result = new PageResult<Room>();
+
+            result.PageCount = jsonObject["count"].AsInt;
+
+            List<Room> list = new List<Room>();
+
+            foreach (JSONNode obj in jsonObject["list"].AsArray)
+            {
+                list.Add(new Room(obj));
+            }
+
+            result.Data = list;
+
+            return result;
+        }
+
+        static internal List<Room> JsonStringToRoomList(JSONNode jsonObject)
+        {
+            if (jsonObject == null) return null;
+
+            List<Room> list = new List<Room>();
+
+            if (jsonObject.IsArray)
+            {
+                foreach (JSONNode obj in jsonObject.AsArray)
+                {
+                    list.Add(new Room(obj));
+                }
+            }
+            return list;
+        }
+
+        static internal List<Conversation> JsonObjectToConversationList(JSONNode jsonObject)
+        {
+            if (jsonObject == null) return null;
+
+            List<Conversation> list = new List<Conversation>();
+            
+            if (jsonObject.IsArray)
+            {
+                foreach (JSONNode v in jsonObject.AsArray)
+                {
+                    Conversation conv = new Conversation(v.Value);
+                    list.Add(conv);
+                }
+            }
+
+            return list;
+        }
+
+
+        /*--------*/
         static internal List<string> JsonStringToStringList(string jsonString)
         {
             if (jsonString == null) return null;

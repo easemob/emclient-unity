@@ -6,10 +6,10 @@ namespace ChatSDK
     public class Group
     {
 
-        internal Group(string jsonString)
+        internal Group(JSONNode jn)
         {
-            JSONNode jn = JSON.Parse(jsonString);
-            if (!jn.IsNull && jn.IsObject) {
+            if (!jn.IsNull && jn.IsObject)
+            {
                 JSONObject jo = jn.AsObject;
                 this.GroupId = jo["groupId"].Value;
                 this.Name = jo["name"].Value;

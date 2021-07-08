@@ -35,7 +35,7 @@ public class EMWrapper {
         cachedThreadPool.execute(runnable);
     }
 
-    public void onSuccess( String type, String callbackId,  String obj) {
+    public void onSuccess( String type, String callbackId, Object obj) {
         Log.d("chat_sdk", "onSuccess callbackId -- " + callbackId + " type: " + type + " obj: " + obj);
         if (callbackId == null) return;
         post(()-> {

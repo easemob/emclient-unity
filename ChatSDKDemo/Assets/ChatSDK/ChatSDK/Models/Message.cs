@@ -538,8 +538,7 @@ namespace ChatSDK
             return CreateSendMessage(username, new MessageBody.CustomBody(customEvent, customParams: customParams));
         }
 
-        internal Message(string jsonString) {
-            JSONNode jn = JSON.Parse(jsonString);
+        internal Message(JSONNode jn) {
             if (!jn.IsNull && jn.IsObject) {
                 JSONObject jo = jn.AsObject;
                 From = jo["from"].Value;

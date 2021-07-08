@@ -29,7 +29,7 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override void GetAllContactsFromDB(ValueCallBack<List<string>> handle = null)
+        public override List<string> GetAllContactsFromDB()
         {
             throw new System.NotImplementedException();
         }

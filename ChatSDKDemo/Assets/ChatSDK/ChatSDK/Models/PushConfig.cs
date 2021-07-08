@@ -10,9 +10,8 @@ namespace ChatSDK {
         public int NoDisturbEndHour { get; internal set; }
         public PushStyle Style { get; internal set; }
 
-        internal PushConfig(string jsonString)
+        internal PushConfig(JSONNode jn)
         {
-            JSONNode jn = JSON.Parse(jsonString);
             if (!jn.IsNull && jn.IsObject) {
                 JSONObject jo = jn.AsObject;
                 NoDisturb = jo["noDisturb"].AsBool;

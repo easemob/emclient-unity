@@ -30,13 +30,13 @@ public class EMUnityValueCallback<T> implements EMValueCallBack<T> {
         this.valueType = valueType;
     }
 
-    public void sendJsonObjectToUnity (String jsonString) {
-        Log.d("chat_sdk", "getObject callbackId --  " + callbackId + " jsonString: "  + jsonString);
+    public void sendJsonObjectToUnity (Object jo) {
+        Log.d("chat_sdk", "getObject callbackId --  " + callbackId + " jo: "  + jo);
         if (callbackId == null) return;
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("type",valueType);
-            jsonObject.put("value", jsonString);
+            jsonObject.put("value", jo);
             jsonObject.put("callbackId", callbackId);
             Log.d("chat_sdk", "back: " + jsonObject.toString());
             UnityPlayer.UnitySendMessage(EMSDKMethod.Callback_Obj, "OnSuccessValue", jsonObject.toString());
@@ -70,7 +70,7 @@ public class EMUnityValueCallback<T> implements EMValueCallBack<T> {
                         }
                     }
                     jo.put("type",valueType);
-                    jo.put("value",jsonAry.toString());
+                    jo.put("value",jsonAry);
                 }else if(t instanceof EMCursorResult) {
                 }
 

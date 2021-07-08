@@ -26,9 +26,8 @@ namespace ChatSDK
 
 
 
-        internal Room(string jsonString)
+        internal Room(JSONNode jn)
         {
-            JSONNode jn = JSON.Parse(jsonString);
             if (!jn.IsNull && jn.IsObject) {
                 JSONObject jo = jn.AsObject;
                 RoomId = jo["roomId"].Value;

@@ -52,6 +52,7 @@ public class EMConversationWrapper extends EMWrapper{
             return null;
         }
         EMConversation conversation = getConversation(conversationId, conversationType);
+        if (conversation == null) return null;
         return conversation.getExtField();
     }
 

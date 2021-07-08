@@ -50,8 +50,6 @@ void ContactManager_HandleMethodCall(const char* methodName, const char* jsonStr
         [EMClientWrapper.instance.contactManager deleteContact:dic callbackId:callId];
     }else if ([method isEqualToString:@"getAllContactsFromServer"]) {
         [EMClientWrapper.instance.contactManager getAllContactsFromServer:dic callbackId:callId];
-    }else if ([method isEqualToString:@"getAllContactsFromDB"]) {
-        [EMClientWrapper.instance.contactManager getAllContactsFromDB:dic callbackId:callId];
     }else if ([method isEqualToString:@"addUserToBlockList"]) {
         [EMClientWrapper.instance.contactManager addUserToBlockList:dic callbackId:callId];
     }else if ([method isEqualToString:@"removeUserFromBlockList"]) {
@@ -68,7 +66,16 @@ void ContactManager_HandleMethodCall(const char* methodName, const char* jsonStr
 }
 
 const char* ContactManager_GetMethodCall(const char* methodName, const char* jsonString, const char* callbackId) {
-    return NULL;
+    const char* ret = NULL;
+    NSString *method = [Transfrom NSStringFromCString:methodName];
+    NSDictionary *dic = [Transfrom JsonObjectFromCSString:jsonString];
+    NSString *callId = [Transfrom NSStringFromCString:callbackId];
+    if ([method isEqualToString:@"getAllContactsFromDB"]) {
+        id jsonObject = [EMClientWrapper.instance.contactManager getAllContactsFromDB:dic callbackId:callId];
+        ret = [Transfrom JsonObjectToCSString:jsonObject];
+    }
+    
+    return ret;
 }
 
 void ChatManager_HandleMethodCall(const char* methodName, const char* jsonString, const char* callbackId) {
@@ -99,32 +106,32 @@ const char* ChatManager_GetMethodCall(const char* methodName, const char* jsonSt
     NSDictionary *dic = [Transfrom JsonObjectFromCSString:jsonString];
     NSString *callId = [Transfrom NSStringFromCString:callbackId];
     if ([method isEqualToString:@"deleteConversation"]) {
-        NSDictionary *dict = [EMClientWrapper.instance.chatManager deleteConversation:dic callbackId:callId];
-        return [Transfrom JsonObjectToCSString:dict];
+        id jsonObject = [EMClientWrapper.instance.chatManager deleteConversation:dic callbackId:callId];
+        return [Transfrom JsonObjectToCSString:jsonObject];
     }else if ([method isEqualToString:@"getConversation"]) {
-        NSDictionary *dict = [EMClientWrapper.instance.chatManager getConversation:dic callbackId:callId];
-        return [Transfrom JsonObjectToCSString:dict];
+        id jsonObject = [EMClientWrapper.instance.chatManager getConversation:dic callbackId:callId];
+        return [Transfrom JsonObjectToCSString:jsonObject];
     }else if ([method isEqualToString:@"getUnreadMessageCount"]) {
-        NSDictionary *dict = [EMClientWrapper.instance.chatManager getUnreadMessageCount:dic callbackId:callId];
-        return [Transfrom JsonObjectToCSString:dict];
+        id jsonObject = [EMClientWrapper.instance.chatManager getUnreadMessageCount:dic callbackId:callId];
+        return [Transfrom JsonObjectToCSString:jsonObject];
     }else if ([method isEqualToString:@"importMessages"]) {
-        NSDictionary *dict = [EMClientWrapper.instance.chatManager importMessages:dic callbackId:callId];
-        return [Transfrom JsonObjectToCSString:dict];
+        id jsonObject = [EMClientWrapper.instance.chatManager importMessages:dic callbackId:callId];
+        return [Transfrom JsonObjectToCSString:jsonObject];
     }else if ([method isEqualToString:@"loadAllConversations"]) {
-        NSDictionary *dict = [EMClientWrapper.instance.chatManager loadAllConversations:dic callbackId:callId];
-        return [Transfrom JsonObjectToCSString:dict];
+        id jsonObject = [EMClientWrapper.instance.chatManager loadAllConversations:dic callbackId:callId];
+        return [Transfrom JsonObjectToCSString:jsonObject];
     }else if ([method isEqualToString:@"getMessage"]) {
-        NSDictionary *dict = [EMClientWrapper.instance.chatManager getMessage:dic callbackId:callId];
-        return [Transfrom JsonObjectToCSString:dict];
+        id jsonObject = [EMClientWrapper.instance.chatManager getMessage:dic callbackId:callId];
+        return [Transfrom JsonObjectToCSString:jsonObject];
     }else if ([method isEqualToString:@"resendMessage"]) {
-        NSDictionary *dict = [EMClientWrapper.instance.chatManager resendMessage:dic callbackId:callId];
-        return [Transfrom JsonObjectToCSString:dict];
+        id jsonObject = [EMClientWrapper.instance.chatManager resendMessage:dic callbackId:callId];
+        return [Transfrom JsonObjectToCSString:jsonObject];
     }else if ([method isEqualToString:@"searchChatMsgFromDB"]) {
-        NSDictionary *dict = [EMClientWrapper.instance.chatManager searchChatMsgFromDB:dic callbackId:callId];
-        return [Transfrom JsonObjectToCSString:dict];
+        id jsonObject = [EMClientWrapper.instance.chatManager searchChatMsgFromDB:dic callbackId:callId];
+        return [Transfrom JsonObjectToCSString:jsonObject];
     }else if ([method isEqualToString:@"sendMessage"]) {
-        NSDictionary *dict = [EMClientWrapper.instance.chatManager sendMessage:dic callbackId:callId];
-        return [Transfrom JsonObjectToCSString:dict];
+        id jsonObject = [EMClientWrapper.instance.chatManager sendMessage:dic callbackId:callId];
+        return [Transfrom JsonObjectToCSString:jsonObject];
     }
     return NULL;
 }
@@ -332,35 +339,35 @@ const char* Conversation_GetMethodCall(const char* methodName, const char* jsonS
     NSString *method = [Transfrom NSStringFromCString:methodName];
     NSDictionary *dic = [Transfrom JsonObjectFromCSString:jsonString];
     if ([method isEqualToString:@"getUnreadMsgCount"]) {
-        NSDictionary *dict = [EMClientWrapper.instance.conversationWrapper getUnreadMsgCount:dic];
-        ret = [Transfrom JsonObjectToCSString:dict];
+        id jsonObject = [EMClientWrapper.instance.conversationWrapper getUnreadMsgCount:dic];
+        ret = [Transfrom JsonObjectToCSString:jsonObject];
     }else if ([method isEqualToString:@"getLatestMessage"]) {
-        NSDictionary *dict = [EMClientWrapper.instance.conversationWrapper getLatestMessage:dic];
-        ret = [Transfrom JsonObjectToCSString:dict];
+        id jsonObject = [EMClientWrapper.instance.conversationWrapper getLatestMessage:dic];
+        ret = [Transfrom JsonObjectToCSString:jsonObject];
     }else if ([method isEqualToString:@"getLatestMessageFromOthers"]) {
-        NSDictionary *dict = [EMClientWrapper.instance.conversationWrapper getLatestMessageFromOthers:dic];
-        ret = [Transfrom JsonObjectToCSString:dict];
+        id jsonObject = [EMClientWrapper.instance.conversationWrapper getLatestMessageFromOthers:dic];
+        ret = [Transfrom JsonObjectToCSString:jsonObject];
     }else if ([method isEqualToString:@"conversationExt"]) {
-        NSDictionary *dict = [EMClientWrapper.instance.conversationWrapper conversationExt:dic];
-        ret = [Transfrom JsonObjectToCSString:dict];
+        id jsonObject = [EMClientWrapper.instance.conversationWrapper conversationExt:dic];
+        ret = [Transfrom JsonObjectToCSString:jsonObject];
     }else if ([method isEqualToString:@"insertMessage"]) {
-        NSDictionary *dict = [EMClientWrapper.instance.conversationWrapper insertMessage:dic];
-        ret = [Transfrom JsonObjectToCSString:dict];
+        id jsonObject = [EMClientWrapper.instance.conversationWrapper insertMessage:dic];
+        ret = [Transfrom JsonObjectToCSString:jsonObject];
     }else if ([method isEqualToString:@"appendMessage"]) {
-        NSDictionary *dict = [EMClientWrapper.instance.conversationWrapper appendMessage:dic];
-        ret = [Transfrom JsonObjectToCSString:dict];
+        id jsonObject = [EMClientWrapper.instance.conversationWrapper appendMessage:dic];
+        ret = [Transfrom JsonObjectToCSString:jsonObject];
     }else if ([method isEqualToString:@"updateConversationMessage"]) {
-        NSDictionary *dict = [EMClientWrapper.instance.conversationWrapper updateConversationMessage:dic];
-        ret = [Transfrom JsonObjectToCSString:dict];
+        id jsonObject = [EMClientWrapper.instance.conversationWrapper updateConversationMessage:dic];
+        ret = [Transfrom JsonObjectToCSString:jsonObject];
     }else if ([method isEqualToString:@"removeMessage"]) {
-        NSDictionary *dict = [EMClientWrapper.instance.conversationWrapper removeMessage:dic];
-        ret = [Transfrom JsonObjectToCSString:dict];
+        id jsonObject = [EMClientWrapper.instance.conversationWrapper removeMessage:dic];
+        ret = [Transfrom JsonObjectToCSString:jsonObject];
     }else if ([method isEqualToString:@"clearAllMessages"]) {
-        NSDictionary *dict = [EMClientWrapper.instance.conversationWrapper clearAllMessages:dic];
-        ret = [Transfrom JsonObjectToCSString:dict];
+        id jsonObject = [EMClientWrapper.instance.conversationWrapper clearAllMessages:dic];
+        ret = [Transfrom JsonObjectToCSString:jsonObject];
     }else if ([method isEqualToString:@"loadMsgWithId"]) {
-        NSDictionary *dict = [EMClientWrapper.instance.conversationWrapper loadMsgWithId:dic];
-        ret = [Transfrom JsonObjectToCSString:dict];
+        id jsonObject = [EMClientWrapper.instance.conversationWrapper loadMsgWithId:dic];
+        ret = [Transfrom JsonObjectToCSString:jsonObject];
     }else if ([method isEqualToString:@"loadMsgWithMsgType"]) {
         NSArray *ary = [EMClientWrapper.instance.conversationWrapper loadMsgWithMsgType:dic];
         ret = [Transfrom JsonObjectToCSString:ary];

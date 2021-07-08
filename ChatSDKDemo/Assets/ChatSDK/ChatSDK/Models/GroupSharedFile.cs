@@ -12,9 +12,8 @@ namespace ChatSDK
         public long CreateTime { get; internal set; }
         public long FileSize { get; internal set; }
 
-        internal GroupSharedFile(string jsonString)
+        internal GroupSharedFile(JSONNode jn)
         {
-            JSONNode jn = JSON.Parse(jsonString);
             if (!jn.IsNull && jn.IsObject) {
                 JSONObject jo = jn.AsObject;
                 FileName = jo["name"].Value;

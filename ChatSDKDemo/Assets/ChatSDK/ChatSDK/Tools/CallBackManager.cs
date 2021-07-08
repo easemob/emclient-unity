@@ -78,7 +78,7 @@ namespace ChatSDK {
             if (dictionary.ContainsKey(callbackId))
             {
                 string value = jo["type"].Value;
-                string responseValue = jo["value"].Value;
+                JSONNode responseValue = jo["value"];
                 if (value == "List<String>")
                 {
                     List<string> result = TransformTool.JsonStringToStringList(responseValue);
@@ -91,7 +91,7 @@ namespace ChatSDK {
                 }
                 else if (value == "List<EMGroup>")
                 {
-                    List<Group> result = TransformTool.JsonStringToGroupList(responseValue);
+                    List<Group> result = TransformTool.JsonObjectToGroupList(responseValue);
                     ValueCallBack<List<Group>> valueCallBack = (ValueCallBack<List<Group>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
@@ -101,7 +101,7 @@ namespace ChatSDK {
                 }
                 else if (value == "EMCursorResult<EMGroupInfo>")
                 {
-                    CursorResult<GroupInfo> result = TransformTool.JsonStringToGroupInfoResult(responseValue);
+                    CursorResult<GroupInfo> result = TransformTool.JsonObjectToGroupInfoResult(responseValue);
                     ValueCallBack<CursorResult<GroupInfo>> valueCallBack = (ValueCallBack<CursorResult<GroupInfo>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
@@ -111,7 +111,7 @@ namespace ChatSDK {
                 }
                 else if (value == "EMCursorResult<String>")
                 {
-                    CursorResult<string> result = TransformTool.JsonStringToStringResult(responseValue);
+                    CursorResult<string> result = TransformTool.JsonObjectToStringResult(responseValue);
                     ValueCallBack<CursorResult<string>> valueCallBack = (ValueCallBack<CursorResult<string>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
@@ -121,7 +121,7 @@ namespace ChatSDK {
                 }
                 else if (value == "EMCursorResult<EMMessage>")
                 {
-                    CursorResult<Message> result = TransformTool.JsonStringToMessageResult(responseValue);
+                    CursorResult<Message> result = TransformTool.JsonObjectToMessageResult(responseValue);
                     ValueCallBack<CursorResult<Message>> valueCallBack = (ValueCallBack<CursorResult<Message>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
@@ -131,7 +131,7 @@ namespace ChatSDK {
                 }
                 else if (value == "List<EMMucSharedFile>")
                 {
-                    List<GroupSharedFile> result = TransformTool.JsonStringToGroupSharedFileList(responseValue);
+                    List<GroupSharedFile> result = TransformTool.JsonObjectToGroupSharedFileList(responseValue);
                     ValueCallBack<List<GroupSharedFile>> valueCallBack = (ValueCallBack<List<GroupSharedFile>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
@@ -141,8 +141,10 @@ namespace ChatSDK {
                 }
                 else if (value == "EMGroup")
                 {
-                    JSONNode groupJson = JSON.Parse(jo["value"]);
-                    Group result = new Group(groupJson);
+                    Group result = null;
+                    if (responseValue != null) {
+                        result = new Group(responseValue);
+                    }
                     ValueCallBack<Group> valueCallBack = (ValueCallBack<Group>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
@@ -152,7 +154,7 @@ namespace ChatSDK {
                 }
                 else if (value == "EMPageResult<EMChatRoom>")
                 {
-                    PageResult<Room> result = TransformTool.JsonStringToRoomPageResult(responseValue);
+                    PageResult<Room> result = TransformTool.JsonObjectToRoomPageResult(responseValue);
                     ValueCallBack<PageResult<Room>> valueCallBack = (ValueCallBack<PageResult<Room>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
@@ -172,7 +174,7 @@ namespace ChatSDK {
                 }
                 else if (value == "List<EMConversation>")
                 {
-                    List<Conversation> result = TransformTool.JsonStringToConversationList(responseValue);
+                    List<Conversation> result = TransformTool.JsonObjectToConversationList(responseValue);
                     ValueCallBack<List<Conversation>> valueCallBack = (ValueCallBack<List<Conversation>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
@@ -182,8 +184,11 @@ namespace ChatSDK {
                 }
                 else if (value == "EMChatRoom")
                 {
-                    JSONNode groupJson = JSON.Parse(jo["value"]);
-                    Room result = new Room(groupJson);
+                    Room result = null;
+                    if (responseValue != null)
+                    {
+                        result = new Room(responseValue);
+                    }
                     ValueCallBack<Room> valueCallBack = (ValueCallBack<Room>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
@@ -193,8 +198,12 @@ namespace ChatSDK {
                 }
                 else if (value == "EMPushConfigs")
                 {
-                    JSONNode groupJson = JSON.Parse(jo["value"]);
-                    PushConfig result = new PushConfig(groupJson);
+                    PushConfig result = null;
+                    if (responseValue != null)
+                    {
+                        result = new PushConfig(responseValue);
+                    }
+                    
                     ValueCallBack<PushConfig> valueCallBack = (ValueCallBack<PushConfig>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
@@ -207,7 +216,14 @@ namespace ChatSDK {
                     ValueCallBack<bool> valueCallBack = (ValueCallBack<bool>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
-                        valueCallBack.OnSuccessValue(jo["value"].AsBool);
+                        if (responseValue.IsBoolean)
+                        {
+                            valueCallBack.OnSuccessValue(responseValue.AsBool);
+                        }
+                        else {
+                            valueCallBack.OnSuccessValue(false);
+                        }
+                        
                     }
                     dictionary.Remove(callbackId);
                 }
@@ -217,10 +233,8 @@ namespace ChatSDK {
                     if (valueCallBack.OnSuccessValue != null)
                     {
                         string str = null;
-                        if (jo["value"].IsArray) {
-                            foreach (JSONNode jn in jo["value"].AsArray) {
-                                str = jn.Value;
-                            }
+                        if (responseValue.IsString) {
+                            str = responseValue.Value;
                         }
                         valueCallBack.OnSuccessValue(str);
                     }
