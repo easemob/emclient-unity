@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SimpleJSON;
 
 namespace ChatSDK
 {
@@ -146,8 +147,8 @@ namespace ChatSDK
             if (jsonString == null || jsonString.Length == 0) {
                 return null;
             }
-
-            return new Group(jsonString);
+            JSONNode jn = JSON.Parse(jsonString);
+            return new Group(jn);
 
         }
 
