@@ -46,7 +46,7 @@ public class Main : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SendBtn.onClick.AddListener(SendImageMessageAction);
+        SendBtn.onClick.AddListener(CreateGroupAction);
         
         JoinGroupBtn.onClick.AddListener(JoinGroupAction);
         GroupInfoBtn.onClick.AddListener(GetGroupInfoAction);
@@ -177,6 +177,24 @@ public class Main : MonoBehaviour
             }, onError: (int code, string desc) =>
             {
                 Debug.LogError($"Fetch history messages with error, code={code}, desc={desc}.");
+            }));
+    }
+
+    void CreateGroupAction()
+    {
+        string groupName = RecvIdField.text;
+        string description = TextField.text;
+        List<string> inviteMembers = new List<string>{ "f1", "ys1" };
+        GroupOptions options = new GroupOptions(GroupStyle.PublicOpenJoin, 20, false, "");
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.CreateGroup(groupName, options, description, inviteMembers, "join us!",
+            new ValueCallBack<Group>(onSuccess: (Group group) =>
+            {
+                Debug.Log($"Group {group.GroupId} named {group.Name} created successfully.");
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Create group failed with code={code}, desc={desc}");
             }));
     }
 

@@ -8,8 +8,8 @@ namespace ChatSDK
     //IConnectionDelegate
     public delegate void OnDisconnected(int info);
     //IChatManagerDelegate
-    public delegate void OnMessagesReceived([MarshalAs(UnmanagedType.LPArray, SizeParamIndex =2)]IntPtr[] messages,
-        [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)]MessageBodyType[] types, int size);
+    public delegate void OnMessagesReceived([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] messages,
+        [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] MessageBodyType[] types, int size);
     public delegate void OnCmdMessagesReceived(MessageTO[] messages, int size);
     public delegate void OnMessagesRead(MessageTO[] messages, int size);
     public delegate void OnMessagesDelivered(MessageTO[] messages, int size);
@@ -18,6 +18,26 @@ namespace ChatSDK
     public delegate void OnGroupMessageRead(GroupReadAck[] acks, int size);
     public delegate void OnConversationsUpdate();
     public delegate void OnConversationRead(string from, string to);
+    //IGroupManagerDelegate
+    public delegate void OnInvitationReceived(string groupId, string groupName, string inviter, string reason);
+    public delegate void OnRequestToJoinReceived(string groupId, string groupName, string applicant, string reason);
+    public delegate void OnRequestToJoinAccepted(string groupId, string groupName, string accepter);
+    public delegate void OnRequestToJoinDeclined(string groupId, string groupName, string decliner, string reason);
+    public delegate void OnInvitationAccepted(string groupId, string invitee, string reason);
+    public delegate void OnInvitationDeclined(string groupId, string invitee, string reason);
+    public delegate void OnUserRemoved(string groupId, string groupName);
+    public delegate void OnGroupDestroyed(string groupId, string groupName);
+    public delegate void OnAutoAcceptInvitationFromGroup(string groupId, string inviter, string inviteMessage);
+    public delegate void OnMuteListAdded(string groupId, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] string[] mutes, int size, int muteExpire);
+    public delegate void OnMuteListRemoved(string groupId, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] string[] mutes, int size);
+    public delegate void OnAdminAdded(string groupId, string administrator);
+    public delegate void OnAdminRemoved(string groupId, string administrator);
+    public delegate void OnOwnerChanged(string groupId, string newOwner, string oldOwner);
+    public delegate void OnMemberJoined(string groupId, string member);
+    public delegate void OnMemberExited(string groupId, string member);
+    public delegate void OnAnnouncementChanged(string groupId, string announcement);
+    public delegate void OnSharedFileAdded(string groupId, GroupSharedFile sharedFile);
+    public delegate void OnSharedFileDeleted(string groupId, string fileId);
 
     public class ConnectionHub
     {
@@ -31,7 +51,7 @@ namespace ChatSDK
         public ConnectionHub(IClient client, WeakDelegater<IConnectionDelegate> _listeners)
         {
             //callbackmanager registration done in base()!
-            if(_listeners == null)
+            if (_listeners == null)
             {
                 listeners = new WeakDelegater<IConnectionDelegate>();
             }
@@ -39,7 +59,7 @@ namespace ChatSDK
             {
                 listeners = _listeners;
             }
-            
+
             //register events
             OnConnected = () =>
             {
@@ -73,7 +93,15 @@ namespace ChatSDK
     public class ChatManagerHub
     {
         internal OnMessagesReceived OnMessagesReceived;
-        
+        internal OnCmdMessagesReceived OnCmdMessagesReceived;
+        internal OnMessagesRead OnMessagesRead;
+        internal OnMessagesDelivered OnMessagesDelivered;
+        internal OnMessagesRecalled OnMessagesRecalled;
+        internal OnReadAckForGroupMessageUpdated OnReadAckForGroupMessageUpdated;
+        internal OnGroupMessageRead OnGroupMessageRead;
+        internal OnConversationsUpdate OnConversationsUpdate;
+        internal OnConversationRead OnConversationRead;
+
         private WeakDelegater<IChatManagerDelegate> listeners;
 
         public ChatManagerHub(WeakDelegater<IChatManagerDelegate> _listeners)
@@ -129,80 +157,51 @@ namespace ChatSDK
                 }
             };
         }
+    }
 
-        public void OnCmdMessagesReceived(MessageTO[] _messages, int size)
+    public class GroupManagerHub
+    {
+        internal OnInvitationReceived OnInvitationReceived;
+        internal OnRequestToJoinReceived OnRequestToJoinReceived;
+        internal OnRequestToJoinAccepted OnRequestToJoinAccepted;
+        internal OnRequestToJoinDeclined OnRequestToJoinDeclined;
+        internal OnInvitationAccepted OnInvitationAccepted;
+        internal OnInvitationDeclined OnInvitationDeclined;
+        internal OnUserRemoved OnUserRemoved;
+        internal OnGroupDestroyed OnGroupDestroyed;
+        internal OnAutoAcceptInvitationFromGroup OnAutoAcceptInvitationFromGroup;
+        internal OnMuteListAdded OnMuteListAdded;
+        internal OnMuteListRemoved OnMuteListRemoved;
+        internal OnAdminAdded OnAdminAdded;
+        internal OnAdminRemoved OnAdminRemoved;
+        internal OnOwnerChanged OnOwnerChanged;
+        internal OnMemberJoined OnMemberJoined;
+        internal OnMemberExited OnMemberExited;
+        internal OnAnnouncementChanged OnAnnouncementChanged;
+        internal OnSharedFileAdded OnSharedFileAdded;
+        internal OnSharedFileDeleted OnSharedFileDeleted;
+
+        private WeakDelegater<IGroupManagerDelegate> listeners;
+
+        public GroupManagerHub(WeakDelegater<IGroupManagerDelegate> _listeners)
         {
-            List<Message> messages = MessageTO.ConvertToMessageList(_messages, size);
-            //invoke each listener in list
-            Debug.Log($"ChatManagerHub.OnCmdMessagesReceived() invoked with messages={messages}!");
-            foreach (IChatManagerDelegate listener in listeners.List)
+            if (_listeners == null)
             {
-                listener.OnCmdMessagesReceived(messages);
+                listeners = new WeakDelegater<IGroupManagerDelegate>();
             }
-        }
-
-        public void OnMessagesRead(MessageTO[] _messages, int size)
-        {
-            List<Message> messages = MessageTO.ConvertToMessageList(_messages, size);
-            //invoke each listener in list
-            Debug.Log($"ChatManagerHub.OnMessagesRead() invoked with messages={messages}!");
-            foreach (IChatManagerDelegate listener in listeners.List)
+            else
             {
-                listener.OnMessagesRead(messages);
+                listeners = _listeners;
             }
-        }
 
-        public void OnMessagesDelivered(MessageTO[] _messages, int size)
-        {
-            List<Message> messages = MessageTO.ConvertToMessageList(_messages, size);
-            //invoke each listener in list
-            Debug.Log($"ChatManagerHub.OnMessagesDelivered() invoked with messages={messages}!");
-            foreach (IChatManagerDelegate listener in listeners.List)
+            OnInvitationReceived = (string groupId, string groupName, string inviter, string reason) =>
             {
-                listener.OnMessagesDelivered(messages);
-            }
-        }
-
-        public void OnMessagesRecalled(MessageTO[] _messages, int size)
-        {
-            List<Message> messages = MessageTO.ConvertToMessageList(_messages, size);
-            //invoke each listener in list
-            Debug.Log($"ChatManagerHub.OnMessagesRecalled() invoked with messages={messages}!");
-            foreach (IChatManagerDelegate listener in listeners.List)
-            {
-                listener.OnMessagesRecalled(messages);
-            }
-        }
-
-        public void OnReadAckForGroupMessageUpdated()
-        {
-            //TODO: to be implemented
-        }
-
-        public void OnGroupMessageRead(GroupReadAck[] acks, int size)
-        {
-            //TODO: to be implemented
-        }
-
-
-        public void OnConversationsUpdate()
-        {
-            //invoke each listener in list
-            Debug.Log($"ChatManagerHub.OnConversationUpdate() invoked!");
-            foreach (IChatManagerDelegate listener in listeners.List)
-            {
-                listener.OnConversationsUpdate();
-            }
-        }
-
-        public void OnConversationRead(string from, string to)
-        {
-            //invoke each listener in list
-            Debug.Log($"ChatManagerHub.OnConversationRead(from={from}, to={to}) invoked!");
-            foreach (IChatManagerDelegate listener in listeners.List)
-            {
-                listener.OnConversationRead(from, to);
-            }
+                Debug.Log($"Group[Id={groupId},Name={groupName}] invitation received from {inviter}, reason: {reason}");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnInvitationReceived(groupId, groupName, inviter, reason);
+                }
+            };
         }
     }
 }

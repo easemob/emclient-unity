@@ -13,6 +13,7 @@
 		D742F1C5266843CA00B80C18 /* hyphenateCWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D742F1C2266843CA00B80C18 /* hyphenateCWrapper.cpp */; };
 		D77DE29E2668B71D00A553B4 /* easemob.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D77DE29D2668B71D00A553B4 /* easemob.framework */; };
 		D77DE29F2668B72600A553B4 /* easemob.framework in Resources */ = {isa = PBXBuildFile; fileRef = D77DE29D2668B71D00A553B4 /* easemob.framework */; };
+		D79C40F32695D1A2004818E5 /* group_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D79C40F12695D1A2004818E5 /* group_manager.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -208,6 +209,8 @@
 		D742F1C6266846C400B80C18 /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
 		D742F1C826684CEA00B80C18 /* api_decorator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = api_decorator.h; sourceTree = "<group>"; };
 		D77DE29D2668B71D00A553B4 /* easemob.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = easemob.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D79C40F12695D1A2004818E5 /* group_manager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = group_manager.cpp; sourceTree = "<group>"; };
+		D79C40F42695D1CE004818E5 /* group_manager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = group_manager.h; sourceTree = "<group>"; };
 		D7C6A8742671AD720083042D /* callbacks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = callbacks.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -475,8 +478,10 @@
 				D742F1C3266843CA00B80C18 /* models.h */,
 				D7282F3D266A5BF300D45179 /* LogHelper.h */,
 				D703D33526893F2900A9FA7D /* chat_manager.h */,
+				D79C40F12695D1A2004818E5 /* group_manager.cpp */,
 				D703D33626893F6D00A9FA7D /* chat_manager.cpp */,
 				D715B7BD268C83ED00EE75D6 /* models.cpp */,
+				D79C40F42695D1CE004818E5 /* group_manager.h */,
 			);
 			name = c_wrapper;
 			path = ../../../c_wrapper;
@@ -552,6 +557,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D742F1C4266843CA00B80C18 /* client.cpp in Sources */,
+				D79C40F32695D1A2004818E5 /* group_manager.cpp in Sources */,
 				D742F1C5266843CA00B80C18 /* hyphenateCWrapper.cpp in Sources */,
 				D703D33726893F6D00A9FA7D /* chat_manager.cpp in Sources */,
 				D715B7BE268C83ED00EE75D6 /* models.cpp in Sources */,

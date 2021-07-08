@@ -2,11 +2,15 @@
 #define _MODELS_H_
 #include "emmessage.h"
 #include "emchatmanager_interface.h"
+#include "emmuc.h"
+#include "emgroup.h"
+#include "emgroupmanager_interface.h"
 #include "emtextmessagebody.h"
 #include "emlocationmessagebody.h"
 #include "emcmdmessagebody.h"
 #include "emfilemessagebody.h"
 #include "emimagemessagebody.h"
+#include "emmucsetting.h"
 
 using namespace easemob;
 
@@ -211,5 +215,59 @@ struct CursorResultTO
     EMMessageBody::EMMessageBodyType SubTypes[32]; //sub types if any
     void * Data[32]; //list of data
 };
+
+struct GroupOptions
+{
+    const char * Ext;
+    int MaxCount;
+    EMMucSetting::EMMucStyle Style;
+    bool InviteNeedConfirm;
+    
+    EMMucSetting toMucSetting() {
+        return EMMucSetting(Style, MaxCount, InviteNeedConfirm, Ext);
+    }
+    
+    static GroupOptions FromMucSetting(EMMucSettingPtr setting);
+};
+
+struct GroupSharedFileTO
+{
+    const char * FileName;
+    const char * FileId;
+    const char * FileOwner;
+    long CreateTime;
+    long FileSize;
+};
+
+struct Mute
+{
+    const char * Member;
+    int64_t Duration;
+};
+
+struct GroupTO
+{
+    const char * GroupId;
+    const char * Name;
+    const char * Description;
+    const char * Owner;
+    const char * Annoumcement;
+    const char * MemberList[64];
+    const char * AdminList[16];
+    const char * BlockList[16];
+    Mute MuteList[16];
+    GroupOptions Options;
+    int MemberCount;
+    int AdminCount;
+    int BlockCount;
+    int MuteCount;
+    EMGroup::EMMucMemberType PermissionType;
+    bool NoticeEnabled;
+    bool MessageBlocked;
+    bool IsAllMemberMuted;
+    
+    static GroupTO * FromEMGroup(EMGroupPtr &group);
+};
+
 
 #endif //_MODELS_H_

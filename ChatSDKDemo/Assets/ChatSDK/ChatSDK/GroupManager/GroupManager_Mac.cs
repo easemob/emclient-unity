@@ -1,9 +1,54 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using UnityEngine;
 
 namespace ChatSDK
 {
     public class GroupManager_Mac : IGroupManager
     {
+        private IntPtr client;
+        private GroupManagerHub groupManagerHub;
+
+        //manager level events
+
+        internal GroupManager_Mac(IClient _client)
+        {
+            if (_client is Client_Mac clientMac)
+            {
+                client = clientMac.client;
+            }
+            groupManagerHub = new GroupManagerHub(Delegate);
+            //registered listeners
+            ChatAPINative.GroupManager_AddListener(client, groupManagerHub.OnInvitationReceived,
+                groupManagerHub.OnRequestToJoinReceived, groupManagerHub.OnRequestToJoinAccepted, groupManagerHub.OnRequestToJoinDeclined,
+                groupManagerHub.OnInvitationAccepted, groupManagerHub.OnInvitationDeclined, groupManagerHub.OnUserRemoved,
+                groupManagerHub.OnGroupDestroyed, groupManagerHub.OnAutoAcceptInvitationFromGroup, groupManagerHub.OnMuteListAdded,
+                groupManagerHub.OnMuteListRemoved, groupManagerHub.OnAdminAdded, groupManagerHub.OnAdminRemoved, groupManagerHub.OnOwnerChanged,
+                groupManagerHub.OnMemberJoined, groupManagerHub.OnMemberExited, groupManagerHub.OnAnnouncementChanged, groupManagerHub.OnSharedFileAdded,
+                groupManagerHub.OnSharedFileDeleted);
+        }
+
+        internal OnInvitationReceived OnInvitationReceived;
+        internal OnRequestToJoinReceived OnRequestToJoinReceived;
+        internal OnRequestToJoinAccepted OnRequestToJoinAccepted;
+        internal OnRequestToJoinDeclined OnRequestToJoinDeclined;
+        internal OnInvitationAccepted OnInvitationAccepted;
+        internal OnInvitationDeclined OnInvitationDeclined;
+        internal OnUserRemoved OnUserRemoved;
+        internal OnGroupDestroyed OnGroupDestroyed;
+        internal OnAutoAcceptInvitationFromGroup OnAutoAcceptInvitationFromGroup;
+        internal OnMuteListAdded OnMuteListAdded;
+        internal OnMuteListRemoved OnMuteListRemoved;
+        internal OnAdminAdded OnAdminAdded;
+        internal OnAdminRemoved OnAdminRemoved;
+        internal OnOwnerChanged OnOwnerChanged;
+        internal OnMemberJoined OnMemberJoined;
+        internal OnMemberExited OnMemberExited;
+        internal OnAnnouncementChanged OnAnnouncementChanged;
+        internal OnSharedFileAdded OnSharedFileAdded;
+        internal OnSharedFileDeleted OnSharedFileDeleted;
+    
         public override void AcceptInvitationFromGroup(string groupId, string inviter, ValueCallBack<Group> handle = null)
         {
             throw new System.NotImplementedException();
@@ -61,7 +106,34 @@ namespace ChatSDK
 
         public override void CreateGroup(string groupName, GroupOptions options, string desc, List<string> inviteMembers = null, string inviteReason = null, ValueCallBack<Group> handle = null)
         {
-            throw new System.NotImplementedException();
+            //turn List<string> into array
+            int size = 0;
+            var membersArray = new string[0];
+            if(inviteMembers != null && inviteMembers.Count >0)
+            {
+                membersArray = new string[size];
+                size = inviteMembers.Count;
+                int i = 0;
+                foreach(string member in inviteMembers)
+                {
+                    membersArray[i] = member;
+                    i++;
+                }
+            }
+            ChatAPINative.GroupManager_CreateGroup(client, groupName, options, desc, membersArray, size, inviteReason,
+                onSuccessResult: (IntPtr[] data, DataType dType, int size) => {
+                    if(dType == DataType.Group && size == 1)
+                    {
+                        GroupTO result = new GroupTO();
+                        Marshal.PtrToStructure(data[0], result);
+                        handle?.OnSuccessValue(result.GroupInfo());
+                    }
+                    else
+                    {
+                        Debug.LogError($"Group information expected.");
+                    }
+                },
+                handle?.OnError);
         }
 
         public override void DeclineInvitationFromGroup(string groupId, string username, string reason = null, CallBack handle = null)

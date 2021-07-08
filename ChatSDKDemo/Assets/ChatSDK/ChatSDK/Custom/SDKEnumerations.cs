@@ -80,10 +80,13 @@
 
     public enum GroupPermissionType
     {
-        None,
+        //NOTE: map to c++ side
         Member,
         Admin,
         Owner,
+        Unknown = -1,
+        Default=Unknown,
+        None=Unknown
     }
 
     public enum RoomPermissionType

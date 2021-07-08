@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using SimpleJSON;
 
 namespace ChatSDK
@@ -64,6 +65,11 @@ namespace ChatSDK
         public bool IsAllMemberMuted { get; internal set; }
         public GroupOptions Options { get; internal set; }
         public GroupPermissionType PermissionType { get; internal set; }
+
+        internal Group()
+        {
+            //default constructor
+        }
 
     }
 }

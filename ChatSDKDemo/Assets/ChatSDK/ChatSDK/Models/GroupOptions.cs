@@ -1,15 +1,17 @@
-﻿using System;
+﻿using System.Runtime.InteropServices;
 using SimpleJSON;
 
 namespace ChatSDK
 {
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public class GroupOptions
     {
-        public GroupStyle Style;
-        public int MaxCount;
-        public bool InviteNeedConfirm;
         public string Ext;
-
+        public int MaxCount;
+        public GroupStyle Style;
+        [MarshalAs(UnmanagedType.U1)]
+        public bool InviteNeedConfirm;
+        
         internal GroupOptions(string jsonString) {
             JSONNode jn = JSON.Parse(jsonString);
             if (!jn.IsNull && jn.IsObject) {

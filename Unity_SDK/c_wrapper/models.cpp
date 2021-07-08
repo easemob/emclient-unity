@@ -7,6 +7,7 @@
 //
 #include "LogHelper.h"
 #include "models.h"
+#include "emgroup.h"
 
 //default constructor
 MessageTO::MessageTO() {
@@ -119,7 +120,49 @@ MessageTO * MessageTO::FromEMMessage(const EMMessagePtr &_message)
     return message;
 }
 
-/*MessageTO::~MessageTO()
+GroupOptions GroupOptions::FromMucSetting(EMMucSettingPtr setting) {
+    auto extension = setting->extension();
+    auto str = extension.c_str();
+    GroupOptions options {.Ext=str, .MaxCount=setting->maxUserCount(), .InviteNeedConfirm = setting->inviteNeedConfirm(), .Style=setting->style()};
+    return options;
+}
+
+GroupTO * GroupTO::FromEMGroup(EMGroupPtr &group)
 {
-    LOG("MessageTO released...");
-}*/
+    GroupTO *gto = new GroupTO();
+    gto->GroupId = group->groupId().c_str();
+    gto->Name = group->groupSubject().c_str();
+    gto->Description = group->groupDescription().c_str();
+    gto->Owner = group->groupOwner().c_str();
+    gto->Annoumcement = group->groupAnnouncement().c_str();
+    gto->MemberCount = (int)group->groupMembers().size();
+    gto->AdminCount = (int)group->groupAdmins().size();
+    gto->BlockCount = (int)group->groupBans().size();
+    gto->MuteCount = (int)group->groupMutes().size();
+    gto->Options = GroupOptions::FromMucSetting(group->groupSetting());
+    gto->NoticeEnabled = group->isPushEnabled();
+    gto->MessageBlocked = group->isMessageBlocked();
+    gto->IsAllMemberMuted = group->isMucAllMembersMuted();
+    gto->PermissionType = group->groupMemberType();
+    int i = 0;
+    for(std::string member : group->groupMembers()) {
+        gto->MemberList[i] = member.c_str();
+        i++;
+    }
+    i=0;
+    for(std::string admin : group->groupAdmins()) {
+        gto->AdminList[i] = admin.c_str();
+        i++;
+    }
+    i=0;
+    for(std::string block : group->groupBans()) {
+        gto->BlockList[i] = block.c_str();
+        i++;
+    }
+    i=0;
+    for(auto mute : group->groupMutes()) {
+        gto->MuteList[i] = Mute{.Member = mute.first.c_str(), .Duration=mute.second};
+        i++;
+    }
+    return gto;
+}

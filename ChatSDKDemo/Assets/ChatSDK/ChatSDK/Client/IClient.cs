@@ -70,7 +70,7 @@
 #elif UNITY_IOS
                 groupImp = new GroupManager_iOS();
 #elif UNITY_STANDALONE_OSX
-                groupImp = new GroupManager_Mac();
+                groupImp = new GroupManager_Mac(instance);
 #elif UNITY_STANDALONE_WIN
                 groupImp = new GroupManager_Win();
 #endif

@@ -1,8 +1,9 @@
-﻿using System;
+﻿using System.Runtime.InteropServices;
 using SimpleJSON;
 
 namespace ChatSDK
 {
+    [StructLayout(LayoutKind.Sequential)]
     public class GroupSharedFile
     {
 

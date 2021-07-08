@@ -4,7 +4,7 @@ namespace ChatSDK
     public interface IGroupManagerDelegate
     {
         // id是[groupId], 名称是[groupName]的群邀请被[inviter]拒绝,理由是[reason]
-        void OnInvitatiOnReceived(
+        void OnInvitationReceived(
             string groupId, string groupName, string inviter, string reason);
 
         // 收到用户[applicant]申请加入id是[groupId], 名称是[groupName]的群，原因是[reason]
@@ -20,10 +20,10 @@ namespace ChatSDK
             string groupId, string groupName, string decliner, string reason);
 
         // 入群邀请被同意
-        void OnInvitatiOnAccepted(string groupId, string invitee, string reason);
+        void OnInvitationAccepted(string groupId, string invitee, string reason);
 
         // 入群邀请被拒绝
-        void OnInvitatiOnDeclined(string groupId, string invitee, string reason);
+        void OnInvitationDeclined(string groupId, string invitee, string reason);
 
         // 被移出群组
         void OnUserRemoved(string groupId, string groupName);
@@ -32,7 +32,7 @@ namespace ChatSDK
         void OnGroupDestroyed(string groupId, string groupName);
 
         // 自动同意加群
-        void OnAutoAcceptInvitatiOnFromGroup(
+        void OnAutoAcceptInvitationFromGroup(
             string groupId, string inviter, string inviteMessage);
 
         // 群禁言列表增加

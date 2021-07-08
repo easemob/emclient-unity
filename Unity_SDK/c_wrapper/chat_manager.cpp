@@ -10,11 +10,6 @@
 #include "emclient.h"
 #include "emmessagebody.h"
 
-extern "C"
-{
-#define CLIENT static_cast<EMClient *>(client)
-#define CALLBACK static_cast<Callback *>(callback)
-}
 EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type)
 {
     //compose message body

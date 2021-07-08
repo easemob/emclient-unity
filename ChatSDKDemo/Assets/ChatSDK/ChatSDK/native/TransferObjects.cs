@@ -626,4 +626,52 @@ namespace ChatSDK
             return result;
         }
     }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct GroupTO
+    {
+        public string GroupId;
+        public string Name;
+        public string Description;
+        public string Owner;
+        public string Annoumcement;
+        public string[] MemberList;
+        public string[] AdminList;
+        public string[] BlockList;
+        public string[] MuteList;
+        [MarshalAs(UnmanagedType.LPStruct)]
+        public GroupOptions Options;
+        public int MemberCount;
+        public int AdminCount;
+        public int BlockCount;
+        public int MuteCount;
+        public GroupPermissionType PermissionType;
+        [MarshalAs(UnmanagedType.U1)]
+        public bool NoticeEnabled;
+        [MarshalAs(UnmanagedType.U1)]
+        public bool MessageBlocked;
+        [MarshalAs(UnmanagedType.U1)]
+        public bool IsAllMemberMuted;
+
+        internal Group GroupInfo()
+        {
+            return new Group()
+            {
+                GroupId = GroupId,
+                Name = Name,
+                Description = Description,
+                Owner = Owner,
+                Annoumcement = Annoumcement,
+                MemberList = new List<string>(MemberList),
+                AdminList = new List<string>(AdminList),
+                BlockList = new List<string>(BlockList),
+                MuteList = new List<string>(MuteList),
+                Options = Options,
+                PermissionType = PermissionType,
+                NoticeEnabled = NoticeEnabled,
+                MessageBlocked = MessageBlocked,
+                IsAllMemberMuted = IsAllMemberMuted
+            };
+        }
+    }
 }

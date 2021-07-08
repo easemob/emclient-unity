@@ -16,6 +16,7 @@ namespace ChatSDK{
         public const string MyLibName = "hyphenateCWrapper";
 #endif
 #endif
+		/** Client Stub **/
 		[DllImport(MyLibName)]
 		internal static extern void Client_CreateAccount(IntPtr client, Action onSuccess, OnError onError, string username, string password);
 
@@ -37,6 +38,7 @@ namespace ChatSDK{
 		[DllImport(MyLibName)]
 		internal static extern void ChatManager_SendMessage(IntPtr client, Action onSuccess, OnError onError, IntPtr mto, MessageBodyType type);
 
+		/** ChatManager Stub **/
 		[DllImport(MyLibName)]
 		internal static extern void ChatManager_AddListener(IntPtr client, OnMessagesReceived onMessagesReceived,
 				OnCmdMessagesReceived onCmdMessagesReceived, OnMessagesRead onMessagesRead, OnMessagesDelivered onMessagesDelivered,
@@ -46,6 +48,21 @@ namespace ChatSDK{
 		[DllImport(MyLibName)]
 		internal static extern void ChatManager_FetchHistoryMessages(IntPtr client, string conversationId, ConversationType type, string startMessageId, int count, OnSuccessResult onSuccessResult, OnError onError);
 
+		/** GroupManager Stub **/
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_AddListener(IntPtr client, OnInvitationReceived onInvitationReceived,
+				OnRequestToJoinReceived onRequestToJoinReceived, OnRequestToJoinAccepted onRequestToJoinAccepted, OnRequestToJoinDeclined onRequestToJoinDeclined,
+				OnInvitationAccepted onInvitationAccepted, OnInvitationDeclined onInvitationDeclined, OnUserRemoved onUserRemoved,
+				OnGroupDestroyed onGroupDestroyed, OnAutoAcceptInvitationFromGroup onAutoAcceptInvitationFromGroup, OnMuteListAdded onMuteListAdded,
+				OnMuteListRemoved onMuteListRemoved, OnAdminAdded onAdminAdded, OnAdminRemoved onAdminRemoved, OnOwnerChanged onOwnerChanged,
+				OnMemberJoined onMemberJoined, OnMemberExited onMemberExited, OnAnnouncementChanged onAnnouncementChanged, OnSharedFileAdded onSharedFileAdded,
+				OnSharedFileDeleted onSharedFileDeleted);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_CreateGroup(IntPtr client, string groupName, GroupOptions options, string desc,
+			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 5)]string[] inviteMembers = null, int size = 0, string inviteReason = null, OnSuccessResult onSuccessResult = null, OnError onError = null);
+
+		
 		#endregion native API import
 	}
 }
