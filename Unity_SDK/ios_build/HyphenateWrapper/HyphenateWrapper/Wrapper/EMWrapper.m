@@ -17,35 +17,47 @@
 
 - (void)onSuccess:(NSString *)aType
        callbackId:(NSString *)aCallbackId
-         userInfo:(NSString *)jsonStr
+         userInfo:(id)jsonObject
 {
+    if (aCallbackId == nil || aCallbackId.length == 0) {
+        return;
+    }
+    
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     dict[@"callbackId"] = aCallbackId;
-    if (!aType && !jsonStr) {
-        UnitySendMessage(Callback_Obj, "onSuccess", [Transfrom DictToCString:dict]);
+    if (!aType && !jsonObject) {
+        UnitySendMessage(Callback_Obj, "onSuccess", [Transfrom JsonObjectToCSString:dict]);
     }else {
         dict[@"type"] = aType;
-        dict[@"value"] = jsonStr ?: @"";
-        UnitySendMessage(Callback_Obj, "OnSuccessValue", [Transfrom DictToCString:dict]);
+        if (jsonObject != nil) {
+            dict[@"value"] = jsonObject;
+        }
+        UnitySendMessage(Callback_Obj, "OnSuccessValue", [Transfrom JsonObjectToCSString:dict]);
     }
 }
 
 - (void)onProgress:(int)progress
         callbackId:(NSString *)aCallbackId {
+    if (aCallbackId == nil || aCallbackId.length == 0) {
+        return;
+    }
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     dict[@"callbackId"] = aCallbackId;
     dict[@"progress"] = @(progress);
-    UnitySendMessage(Callback_Obj, "OnProgress", [Transfrom DictToCString:dict]);
+    UnitySendMessage(Callback_Obj, "OnProgress", [Transfrom JsonObjectToCSString:dict]);
 }
 
 - (void)onError:(NSString *)aCallbackId
           error:(EMError *)aError
 {
+    if (aCallbackId == nil || aCallbackId.length == 0) {
+        return;
+    }
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     dict[@"callbackId"] = aCallbackId;
     dict[@"code"] = @(aError.code);
     dict[@"desc"] = aError.errorDescription;
-    UnitySendMessage(Callback_Obj, "OnError", [Transfrom DictToCString:dict]);
+    UnitySendMessage(Callback_Obj, "OnError", [Transfrom JsonObjectToCSString:dict]);
 }
 
 @end

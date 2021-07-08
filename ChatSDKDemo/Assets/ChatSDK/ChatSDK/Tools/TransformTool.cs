@@ -268,14 +268,14 @@ namespace ChatSDK
             return list;
         }
 
-        static internal string JsonStringFromMessageList(List<Message> list)
+        static internal JSONArray JsonObjectFromMessageList(List<Message> list)
         {
             if (list == null) return null;
             JSONArray ja = new JSONArray();
             foreach (Message msg in list) {
                 ja.Add(msg.ToJson());
             }
-            return ja.ToString();
+            return ja;
         }
 
         static internal List<Conversation> JsonStringToConversationList(string jsonString)

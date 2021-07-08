@@ -170,6 +170,16 @@ namespace ChatSDK {
                     }
                     dictionary.Remove(callbackId);
                 }
+                else if (value == "List<EMConversation>")
+                {
+                    List<Conversation> result = TransformTool.JsonStringToConversationList(responseValue);
+                    ValueCallBack<List<Conversation>> valueCallBack = (ValueCallBack<List<Conversation>>)dictionary[callbackId];
+                    if (valueCallBack.OnSuccessValue != null)
+                    {
+                        valueCallBack.OnSuccessValue(result);
+                    }
+                    dictionary.Remove(callbackId);
+                }
                 else if (value == "EMChatRoom")
                 {
                     JSONNode groupJson = JSON.Parse(jo["value"]);

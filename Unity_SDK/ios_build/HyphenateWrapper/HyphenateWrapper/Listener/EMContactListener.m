@@ -13,23 +13,23 @@
 @implementation EMContactListener
 
 - (void)friendRequestDidApproveByUser:(NSString *)aUsername {
-    UnitySendMessage(ContactListener_Obj, "OnFriendRequestAccepted", [Transfrom DictToCString:@{@"username": aUsername}]);
+    UnitySendMessage(ContactListener_Obj, "OnFriendRequestAccepted", [Transfrom JsonObjectToCSString:@{@"username": aUsername}]);
 }
 
 - (void)friendRequestDidDeclineByUser:(NSString *)aUsername {
-    UnitySendMessage(ContactListener_Obj, "OnFriendRequestDeclined", [Transfrom DictToCString:@{@"username": aUsername}]);
+    UnitySendMessage(ContactListener_Obj, "OnFriendRequestDeclined", [Transfrom JsonObjectToCSString:@{@"username": aUsername}]);
 }
 
 - (void)friendshipDidRemoveByUser:(NSString *)aUsername {
-    UnitySendMessage(ContactListener_Obj, "OnFriendRequestDeclined", [Transfrom DictToCString:@{@"OnContactDeleted": aUsername}]);
+    UnitySendMessage(ContactListener_Obj, "OnFriendRequestDeclined", [Transfrom JsonObjectToCSString:@{@"OnContactDeleted": aUsername}]);
 }
 
 - (void)friendshipDidAddByUser:(NSString *)aUsername {
-    UnitySendMessage(ContactListener_Obj, "OnFriendRequestDeclined", [Transfrom DictToCString:@{@"OnContactAdded": aUsername}]);
+    UnitySendMessage(ContactListener_Obj, "OnFriendRequestDeclined", [Transfrom JsonObjectToCSString:@{@"OnContactAdded": aUsername}]);
 }
 
 - (void)friendRequestDidReceiveFromUser:(NSString *)aUsername
                                 message:(NSString *)aMessage {
-    UnitySendMessage(ContactListener_Obj, "OnContactInvited", [Transfrom DictToCString:@{@"OnContactAdded": aUsername, @"reason": aMessage}]);
+    UnitySendMessage(ContactListener_Obj, "OnContactInvited", [Transfrom JsonObjectToCSString:@{@"OnContactAdded": aUsername, @"reason": aMessage}]);
 }
 @end

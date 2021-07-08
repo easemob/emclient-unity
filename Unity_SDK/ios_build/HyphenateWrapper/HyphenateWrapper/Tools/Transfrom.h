@@ -6,25 +6,31 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <HyphenateChat/HyphenateChat.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface Transfrom : NSObject
 
+// const char -> NSString
 + (NSString *)NSStringFromCString:(const char*)cStr;
+
+// NSString -> const char
 + (const char*)NSStringToCSString:(NSString *)nsStr;
 
-+ (NSDictionary *)DictFromCString:(const char*)cStr;
-+ (const char*)DictToCString:(NSDictionary *)aDict;
+// const char -> JsonObject
++ (id)JsonObjectFromCSString:(const char*)cStr;
 
-+ (NSDictionary *)DictFromNSString:(NSString*)nsStr;
-+ (NSString*)DictToNSString:(NSDictionary *)aDict;
+// JsonObject -> const char
++ (const char*)JsonObjectToCSString:(id)jsonObject;
 
-+ (NSArray *)ArrayFromNSString:(NSString *)nsStr;
-+ (NSString *)ArrayToNSString:(NSArray<NSString*>*)strAry;
+// JsonObject -> NSString
++ (NSString *)NSStringFromJsonObject:(id)jsonObject;
 
-+ (NSArray *)ArrayFromCString:(const char*)cStr;
-+ (const char*)ArrayToCString:(NSArray<NSString*>*)strAry;
+// NSString -> JsonObject
++ (id)NSStringToJsonObject:(NSString *)jsonString;
+
+
 @end
 
 NS_ASSUME_NONNULL_END

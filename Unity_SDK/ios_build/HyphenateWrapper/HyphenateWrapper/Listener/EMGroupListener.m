@@ -21,7 +21,7 @@
         @"inviter":aInviter,
         @"message":aMessage
     };
-    UnitySendMessage(GroupListener_Obj, "OnInvitationReceived", [Transfrom DictToCString:map]);
+    UnitySendMessage(GroupListener_Obj, "OnInvitationReceived", [Transfrom JsonObjectToCSString:map]);
 }
 
 - (void)groupInvitationDidAccept:(EMGroup *)aGroup
@@ -30,7 +30,7 @@
         @"groupId":aGroup.groupId,
         @"invitee":aInvitee
     };
-    UnitySendMessage(GroupListener_Obj, "OnInvitationAccepted", [Transfrom DictToCString:map]);
+    UnitySendMessage(GroupListener_Obj, "OnInvitationAccepted", [Transfrom JsonObjectToCSString:map]);
     
 }
 
@@ -42,7 +42,7 @@
         @"invitee":aInvitee,
         @"reason":aReason
     };
-    UnitySendMessage(GroupListener_Obj, "OnInvitationDeclined", [Transfrom DictToCString:map]);
+    UnitySendMessage(GroupListener_Obj, "OnInvitationDeclined", [Transfrom JsonObjectToCSString:map]);
 }
 
 - (void)didJoinGroup:(EMGroup *)aGroup
@@ -53,7 +53,7 @@
         @"message":aMessage,
         @"inviter":aInviter
     };
-    UnitySendMessage(GroupListener_Obj, "OnAutoAcceptInvitationFromGroup", [Transfrom DictToCString:map]);
+    UnitySendMessage(GroupListener_Obj, "OnAutoAcceptInvitationFromGroup", [Transfrom JsonObjectToCSString:map]);
 }
 
 - (void)didLeaveGroup:(EMGroup *)aGroup
@@ -63,9 +63,9 @@
         @"groupName":aGroup.groupName
     };
     if (aReason == EMGroupLeaveReasonBeRemoved) {
-        UnitySendMessage(GroupListener_Obj, "OnUserRemoved", [Transfrom DictToCString:map]);
+        UnitySendMessage(GroupListener_Obj, "OnUserRemoved", [Transfrom JsonObjectToCSString:map]);
     } else if (aReason == EMGroupLeaveReasonDestroyed) {
-        UnitySendMessage(GroupListener_Obj, "OnGroupDestroyed", [Transfrom DictToCString:map]);
+        UnitySendMessage(GroupListener_Obj, "OnGroupDestroyed", [Transfrom JsonObjectToCSString:map]);
     }
 }
 
@@ -78,7 +78,7 @@
         @"applicant":aUsername,
         @"reason":aReason
     };
-    UnitySendMessage(GroupListener_Obj, "OnRequestToJoinReceived", [Transfrom DictToCString:map]);
+    UnitySendMessage(GroupListener_Obj, "OnRequestToJoinReceived", [Transfrom JsonObjectToCSString:map]);
 }
 
 - (void)joinGroupRequestDidDecline:(NSString *)aGroupId
@@ -87,7 +87,7 @@
         @"groupId":aGroupId,
         @"reason":aReason
     };
-    UnitySendMessage(GroupListener_Obj, "OnRequestToJoinDeclined", [Transfrom DictToCString:map]);
+    UnitySendMessage(GroupListener_Obj, "OnRequestToJoinDeclined", [Transfrom JsonObjectToCSString:map]);
 }
 
 - (void)joinGroupRequestDidApprove:(EMGroup *)aGroup {
@@ -96,7 +96,7 @@
         @"groupName":aGroup.groupName,
         @"accepter":aGroup.owner,
     };
-    UnitySendMessage(GroupListener_Obj, "OnRequestToJoinAccepted", [Transfrom DictToCString:map]);
+    UnitySendMessage(GroupListener_Obj, "OnRequestToJoinAccepted", [Transfrom JsonObjectToCSString:map]);
 }
 
 /*
@@ -118,7 +118,7 @@
         @"list":aMutedMembers,
         @"muteExpire":[NSNumber numberWithInteger:aMuteExpire]
     };
-    UnitySendMessage(GroupListener_Obj, "OnMuteListAdded", [Transfrom DictToCString:map]);
+    UnitySendMessage(GroupListener_Obj, "OnMuteListAdded", [Transfrom JsonObjectToCSString:map]);
 }
 
 - (void)groupMuteListDidUpdate:(EMGroup *)aGroup
@@ -127,7 +127,7 @@
         @"groupId":aGroup.groupId,
         @"list":aMutedMembers
     };
-    UnitySendMessage(GroupListener_Obj, "OnMuteListRemoved", [Transfrom DictToCString:map]);
+    UnitySendMessage(GroupListener_Obj, "OnMuteListRemoved", [Transfrom JsonObjectToCSString:map]);
 }
 
 - (void)groupAdminListDidUpdate:(EMGroup *)aGroup
@@ -136,7 +136,7 @@
         @"groupId":aGroup.groupId,
         @"admin":aAdmin
     };
-    UnitySendMessage(GroupListener_Obj, "OnAdminAdded", [Transfrom DictToCString:map]);
+    UnitySendMessage(GroupListener_Obj, "OnAdminAdded", [Transfrom JsonObjectToCSString:map]);
 }
 
 - (void)groupAdminListDidUpdate:(EMGroup *)aGroup
@@ -145,7 +145,7 @@
         @"groupId":aGroup.groupId,
         @"admin":aAdmin
     };
-    UnitySendMessage(GroupListener_Obj, "OnAdminRemoved", [Transfrom DictToCString:map]);
+    UnitySendMessage(GroupListener_Obj, "OnAdminRemoved", [Transfrom JsonObjectToCSString:map]);
 }
 
 - (void)groupOwnerDidUpdate:(EMGroup *)aGroup
@@ -156,7 +156,7 @@
         @"newOwner":aNewOwner,
         @"oldOwner":aOldOwner
     };
-    UnitySendMessage(GroupListener_Obj, "OnOwnerChanged", [Transfrom DictToCString:map]);
+    UnitySendMessage(GroupListener_Obj, "OnOwnerChanged", [Transfrom JsonObjectToCSString:map]);
 }
 
 - (void)userDidJoinGroup:(EMGroup *)aGroup
@@ -165,7 +165,7 @@
         @"groupId":aGroup.groupId,
         @"member":aUsername
     };
-    UnitySendMessage(GroupListener_Obj, "OnMemberJoined", [Transfrom DictToCString:map]);
+    UnitySendMessage(GroupListener_Obj, "OnMemberJoined", [Transfrom JsonObjectToCSString:map]);
 }
 
 - (void)userDidLeaveGroup:(EMGroup *)aGroup
@@ -174,7 +174,7 @@
         @"groupId":aGroup.groupId,
         @"member":aUsername
     };
-    UnitySendMessage(GroupListener_Obj, "OnMemberExited", [Transfrom DictToCString:map]);
+    UnitySendMessage(GroupListener_Obj, "OnMemberExited", [Transfrom JsonObjectToCSString:map]);
 }
 
 - (void)groupAnnouncementDidUpdate:(EMGroup *)aGroup
@@ -183,7 +183,7 @@
         @"groupId":aGroup.groupId,
         @"announcement":aAnnouncement
     };
-    UnitySendMessage(GroupListener_Obj, "OnAnnouncementChanged", [Transfrom DictToCString:map]);
+    UnitySendMessage(GroupListener_Obj, "OnAnnouncementChanged", [Transfrom JsonObjectToCSString:map]);
 }
 
 - (void)groupFileListDidUpdate:(EMGroup *)aGroup
@@ -193,7 +193,7 @@
         @"groupId":aGroup.groupId,
         @"sharedFile":[aSharedFile toJson]
     };
-    UnitySendMessage(GroupListener_Obj, "OnSharedFileAdded", [Transfrom DictToCString:map]);
+    UnitySendMessage(GroupListener_Obj, "OnSharedFileAdded", [Transfrom JsonObjectToCSString:map]);
 }
 
 - (void)groupFileListDidUpdate:(EMGroup *)aGroup
@@ -203,7 +203,7 @@
         @"groupId":aGroup.groupId,
         @"fileId":aFileId
     };
-    UnitySendMessage(GroupListener_Obj, "OnSharedFileDeleted", [Transfrom DictToCString:map]);
+    UnitySendMessage(GroupListener_Obj, "OnSharedFileDeleted", [Transfrom JsonObjectToCSString:map]);
 }
 
 

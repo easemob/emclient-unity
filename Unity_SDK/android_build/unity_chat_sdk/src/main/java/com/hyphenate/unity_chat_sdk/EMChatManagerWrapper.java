@@ -37,8 +37,8 @@ public class EMChatManagerWrapper extends EMWrapper  {
 
     private boolean deleteConversation(String conversationId, boolean deleteMessages) {
 
+        if (conversationId == null || conversationId.length() == 0) { return false; }
         return EMClient.getInstance().chatManager().deleteConversation(conversationId, deleteMessages);
-
     }
 
     private void downloadAttachment(String messageId, String callbackId) {
@@ -102,6 +102,7 @@ public class EMChatManagerWrapper extends EMWrapper  {
             conversationType = EMConversation.EMConversationType.ChatRoom;
         }
         EMConversation conversation = EMClient.getInstance().chatManager().getConversation(conversationId, conversationType, createIfNeed);
+        if (conversation == null) return null;
         return EMConversationHelper.toJson(conversation).toString();
     }
 
@@ -184,7 +185,7 @@ public class EMChatManagerWrapper extends EMWrapper  {
         asyncRunnable(() -> {
             try {
                 if (messageId == null || messageId.length() == 0) {
-                    onError(callbackId, new HyphenateException(500, "Message not found"));
+                    onError(callbackId, new HyphenateException(500, "messageId is invalid"));
                     return;
                 }
                 EMMessage msg = EMClient.getInstance().chatManager().getMessage(messageId);
@@ -203,7 +204,7 @@ public class EMChatManagerWrapper extends EMWrapper  {
 
     private String resendMessage(String messageId, String callbackId) throws JSONException {
         if (messageId == null || messageId.length() == 0) {
-            onError(callbackId, new HyphenateException(500, "Message not found"));
+            onError(callbackId, new HyphenateException(500, "messageId is invalid"));
             return null;
         }
         EMMessage msg = EMClient.getInstance().chatManager().getMessage(messageId);
@@ -232,7 +233,7 @@ public class EMChatManagerWrapper extends EMWrapper  {
     private void ackConversationRead(String conversationId,  String callbackId){
         asyncRunnable(() -> {
             if (conversationId == null || conversationId.length() == 0) {
-                onError(callbackId, new HyphenateException(500, "Conversation not found"));
+                onError(callbackId, new HyphenateException(500, "conversationId is invalid"));
                 return ;
             }
             try {
@@ -260,7 +261,7 @@ public class EMChatManagerWrapper extends EMWrapper  {
 
     private void ackMessageRead(String messageId, String callbackId) throws JSONException {
         if (messageId == null || messageId.length() == 0) {
-            onError(callbackId, new HyphenateException(500, "Message not found"));
+            onError(callbackId, new HyphenateException(500, "messageId is invalid"));
             return;
         }
         EMMessage msg = EMClient.getInstance().chatManager().getMessage(messageId);

@@ -109,9 +109,9 @@ public class EMMessageHelper {
                 }
                 break;
             }
-            message.setFrom(json.getString("from"));
         }
         message.setTo(json.getString("to"));
+        message.setFrom(json.getString("from"));
         message.setAcked(json.getBoolean("hasReadAck"));
         if (statusFromInt(json.getInt("status")) == EMMessage.Status.SUCCESS) {
             message.setUnread(!json.getBoolean("hasRead"));

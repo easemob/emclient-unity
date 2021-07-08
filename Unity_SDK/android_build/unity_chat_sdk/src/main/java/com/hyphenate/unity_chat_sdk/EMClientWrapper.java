@@ -32,6 +32,20 @@ public class EMClientWrapper extends EMWrapper {
     }
 
     public void createAccount(String username, String password, String callbackId) {
+
+        if (username == null || username.length() == 0 ) {
+            HyphenateException e = new HyphenateException(101, "Username is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
+        if (password == null || password.length() == 0) {
+            HyphenateException e = new HyphenateException(102, "password is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
+
         asyncRunnable(()->{
             try {
                 EMClient.getInstance().createAccount(username, password);
@@ -43,6 +57,19 @@ public class EMClientWrapper extends EMWrapper {
     }
 
     public void login(String username, String pwdOrToken, boolean isToken, String callbackId) {
+
+        if (username == null || username.length() == 0 ) {
+            HyphenateException e = new HyphenateException(101, "Username is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
+        if (pwdOrToken == null || pwdOrToken.length() == 0) {
+            HyphenateException e = new HyphenateException(102, "password or token is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
         if (!isToken) {
             EMClient.getInstance().login(username, pwdOrToken, new EMUnityCallback(callbackId));
         }else {

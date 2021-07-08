@@ -13,9 +13,9 @@ namespace ChatSDK
 
         public abstract void DownloadThumbnail(string messageId, CallBack handle = null);
 
-        public abstract void FetchHistoryMessages(string conversationId, ConversationType type, string startMessageId = null, int count = 20, ValueCallBack<CursorResult<Message>> handle = null);
+        public abstract void FetchHistoryMessages(string conversationId, ConversationType type = ConversationType.Chat, string startMessageId = null, int count = 20, ValueCallBack<CursorResult<Message>> handle = null);
 
-        public abstract Conversation GetConversation(string conversationId, ConversationType type, bool createIfNeed = true);
+        public abstract Conversation GetConversation(string conversationId, ConversationType type = ConversationType.Chat, bool createIfNeed = true);
 
         public abstract void GetConversationsFromServer(ValueCallBack<List<Conversation>> handle = null);
 

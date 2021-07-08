@@ -47,7 +47,7 @@
         if (aError) {
             [weakSelf onError:callId error:aError];
         }else {
-            [weakSelf onSuccess:@"EMPageResult<EMChatRoom>" callbackId:callId userInfo:[Transfrom DictToNSString:[aResult toJson]]];
+            [weakSelf onSuccess:@"EMPageResult<EMChatRoom>" callbackId:callId userInfo:[aResult toJson]];
         }
     }];
 }
@@ -77,7 +77,7 @@
         if (aError) {
             [weakSelf onError:callId error:aError];
         }else {
-            [weakSelf onSuccess:@"EMChatroom" callbackId:callId userInfo:[Transfrom DictToNSString:[aChatroom toJson]]];
+            [weakSelf onSuccess:@"EMChatroom" callbackId:callId userInfo:[aChatroom toJson]];
         }
     }];
 }
@@ -99,7 +99,7 @@
         if (aError) {
             [weakSelf onError:callId error:aError];
         }else {
-            [weakSelf onSuccess:@"EMChatroom" callbackId:callId userInfo:[Transfrom DictToNSString:[aChatroom toJson]]];
+            [weakSelf onSuccess:@"EMChatroom" callbackId:callId userInfo:[aChatroom toJson]];
         }
     }];
 }
@@ -163,7 +163,7 @@
         if (aError) {
             [weakSelf onError:callId error:aError];
         }else {
-            [weakSelf onSuccess:@"EMChatroom" callbackId:callId userInfo:[Transfrom DictToNSString:[aChatroom toJson]]];
+            [weakSelf onSuccess:@"EMChatroom" callbackId:callId userInfo:[aChatroom toJson]];
         }
         
     }];
@@ -178,7 +178,7 @@
     
     EMChatroom *chatroom = [EMChatroom chatroomWithId:param[@"roomId"]];
     if (chatroom) {
-        [self onSuccess:@"EMChatroom" callbackId:callbackId userInfo:[Transfrom DictToNSString:[chatroom toJson]]];
+        [self onSuccess:@"EMChatroom" callbackId:callbackId userInfo:[chatroom toJson]];
     }else {
         EMError *aError = [EMError errorWithDescription:@"Room not found" code:EMErrorMessageInvalid];
         [self onError:callbackId error:aError];
@@ -197,7 +197,7 @@
         if (aError) {
             [weakSelf onError:callId error:aError];
         }else {
-            [weakSelf onSuccess:@"EMPageResult<EMChatRoom>" callbackId:callId userInfo:[Transfrom DictToNSString:[aResult toJson]]];
+            [weakSelf onSuccess:@"EMPageResult<EMChatRoom>" callbackId:callId userInfo:[aResult toJson]];
         }
     }];
 }
@@ -223,7 +223,7 @@
         if (aError) {
             [weakSelf onError:callId error:aError];
         }else {
-            [weakSelf onSuccess:@"EMCursorResult<String>" callbackId:callId userInfo:[Transfrom DictToNSString:[aResult toJson]]];
+            [weakSelf onSuccess:@"EMCursorResult<String>" callbackId:callId userInfo:[aResult toJson]];
         }
     }];
 }
@@ -249,7 +249,7 @@
         if (aError) {
             [weakSelf onError:callId error:aError];
         }else {
-            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:[Transfrom ArrayToNSString:aList]];
+            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:aList];
         }
     }];
 }
@@ -275,7 +275,7 @@
         if (aError) {
             [weakSelf onError:callId error:aError];
         }else {
-            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:[Transfrom ArrayToNSString:aList]];
+            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:aList];
         }
     }];
 }
@@ -322,7 +322,7 @@
         if (aError) {
             [weakSelf onError:callId error:aError];
         }else {
-            [weakSelf onSuccess:@"EMChatRoom" callbackId:callId userInfo:[Transfrom DictToNSString:[aChatroom toJson]]];
+            [weakSelf onSuccess:@"EMChatRoom" callbackId:callId userInfo:[aChatroom toJson]];
         }
     }];
 }
@@ -346,7 +346,7 @@
         if (aError) {
             [weakSelf onError:callId error:aError];
         }else {
-            [weakSelf onSuccess:@"EMChatRoom" callbackId:callId userInfo:[Transfrom DictToNSString:[aChatroom toJson]]];
+            [weakSelf onSuccess:@"EMChatRoom" callbackId:callId userInfo:[aChatroom toJson]];
         }
     }];
 }
@@ -370,7 +370,7 @@
         if (aError) {
             [weakSelf onError:callId error:aError];
         }else {
-            [weakSelf onSuccess:@"EMChatRoom" callbackId:callId userInfo:[Transfrom DictToNSString:[aChatroom toJson]]];
+            [weakSelf onSuccess:@"EMChatRoom" callbackId:callId userInfo:[aChatroom toJson]];
         }
     }];
 }
@@ -394,7 +394,7 @@
         if (aError) {
             [weakSelf onError:callId error:aError];
         }else {
-            [weakSelf onSuccess:@"EMChatRoom" callbackId:callId userInfo:[Transfrom DictToNSString:[aChatroom toJson]]];
+            [weakSelf onSuccess:@"EMChatRoom" callbackId:callId userInfo:[aChatroom toJson]];
         }
     }];
 }
@@ -418,7 +418,7 @@
         if (aError) {
             [weakSelf onError:callId error:aError];
         }else {
-            [weakSelf onSuccess:@"EMChatRoom" callbackId:callId userInfo:[Transfrom DictToNSString:[aChatroom toJson]]];
+            [weakSelf onSuccess:@"EMChatRoom" callbackId:callId userInfo:[aChatroom toJson]];
         }
     }];
 }
@@ -442,7 +442,7 @@
         if (aError) {
             [weakSelf onError:callId error:aError];
         }else {
-            [weakSelf onSuccess:@"EMChatRoom" callbackId:callId userInfo:[Transfrom DictToNSString:[aChatroom toJson]]];
+            [weakSelf onSuccess:@"EMChatRoom" callbackId:callId userInfo:[aChatroom toJson]];
         }
     }];
 }
@@ -466,7 +466,7 @@
         if (aError) {
             [weakSelf onError:callId error:aError];
         }else {
-            [weakSelf onSuccess:@"EMChatRoom" callbackId:callId userInfo:[Transfrom DictToNSString:[aChatroom toJson]]];
+            [weakSelf onSuccess:@"EMChatRoom" callbackId:callId userInfo:[aChatroom toJson]];
         }
     }];
 }
@@ -490,7 +490,7 @@
         if (aError) {
             [weakSelf onError:callId error:aError];
         }else {
-            [weakSelf onSuccess:@"EMChatRoom" callbackId:callId userInfo:[Transfrom DictToNSString:[aChatroom toJson]]];
+            [weakSelf onSuccess:@"EMChatRoom" callbackId:callId userInfo:[aChatroom toJson]];
         }
     }];
 }
@@ -516,7 +516,7 @@
         if (aError) {
             [weakSelf onError:callId error:aError];
         }else {
-            [weakSelf onSuccess:@"EMChatRoom" callbackId:callId userInfo:[Transfrom DictToNSString:[aChatroom toJson]]];
+            [weakSelf onSuccess:@"EMChatRoom" callbackId:callId userInfo:[aChatroom toJson]];
         }
     }];
 }
@@ -540,7 +540,7 @@
         if (aError) {
             [weakSelf onError:callId error:aError];
         }else {
-            [weakSelf onSuccess:@"EMChatRoom" callbackId:callId userInfo:[Transfrom DictToNSString:[aChatroom toJson]]];
+            [weakSelf onSuccess:@"EMChatRoom" callbackId:callId userInfo:[aChatroom toJson]];
         }
     }];
 }
@@ -564,7 +564,7 @@
         if (aError) {
             [weakSelf onError:callId error:aError];
         }else {
-            [weakSelf onSuccess:@"EMChatRoom" callbackId:callId userInfo:[Transfrom DictToNSString:[aChatroom toJson]]];
+            [weakSelf onSuccess:@"EMChatRoom" callbackId:callId userInfo:[aChatroom toJson]];
         }
     }];
 }

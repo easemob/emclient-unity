@@ -26,7 +26,7 @@
     }
     __block NSString *callId = callbackId;
     NSArray *groupIds = [EMClient.sharedClient.pushManager noPushGroups];
-    [self onSuccess:@"List<String>" callbackId:callId userInfo:[Transfrom ArrayToNSString:groupIds]];
+    [self onSuccess:@"List<String>" callbackId:callId userInfo:groupIds];
 }
 
 - (void)getPushConfig:(NSDictionary *)param callbackId:(NSString *)callbackId {
@@ -43,7 +43,7 @@
         if (aError) {
             [weakSelf onError:callId error:aError];
         }else {
-            [weakSelf onSuccess:@"EMPushConfigs" callbackId:callId userInfo:[Transfrom DictToNSString:[aOptions toJson]]];
+            [weakSelf onSuccess:@"EMPushConfigs" callbackId:callId userInfo:[aOptions toJson]];
         }
     }];
 }
@@ -61,7 +61,7 @@
     if (aError) {
         [weakSelf onError:callId error:aError];
     }else {
-        [weakSelf onSuccess:@"EMPushConfigs" callbackId:callId userInfo:[Transfrom DictToNSString:[aOptions toJson]]];
+        [weakSelf onSuccess:@"EMPushConfigs" callbackId:callId userInfo:[aOptions toJson]];
     }
 }
 

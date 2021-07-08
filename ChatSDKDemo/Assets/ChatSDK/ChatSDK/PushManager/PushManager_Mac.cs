@@ -9,9 +9,9 @@ namespace ChatSDK
             return null;
         }
 
-        public void GetPushConfig(ValueCallBack<PushConfig> handle = null)
+        public PushConfig GetPushConfig()
         {
-            handle?.ClearCallback();
+            return null;
         }
 
         public void GetPushConfigFromServer(ValueCallBack<PushConfig> handle = null)

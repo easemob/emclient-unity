@@ -61,6 +61,10 @@ namespace ChatSDK
             obj.Add("convType", TransformTool.ConversationTypeToInt(type));
             obj.Add("createIfNeed", createIfNeed);
             string jsonString = ChatManagerNative.ChatManager_GetMethodCall("getConversation", obj.ToString());
+            if (jsonString == null || jsonString.Length == 0)
+            {
+                return null;
+            }
             return new Conversation(jsonString);
         }
 
@@ -72,6 +76,9 @@ namespace ChatSDK
         public override int GetUnreadMessageCount()
         {
             string jsonString = ChatManagerNative.ChatManager_GetMethodCall("getUnreadMessageCount");
+            if (jsonString == null || jsonString.Length == 0) {
+                return 0;
+            }
             Dictionary<string, string> dict = TransformTool.JsonStringToDictionary(jsonString);
             string countString = dict["ret"];
             return int.Parse(countString);
@@ -80,31 +87,46 @@ namespace ChatSDK
         public override bool ImportMessages(List<Message> messages)
         {
             JSONObject obj = new JSONObject();
-            obj.Add("list", TransformTool.JsonStringFromMessageList(messages));
-            string ret = ChatManagerNative.ChatManager_GetMethodCall("importMessages", obj.ToString());
-            JSONNode jn = JSON.Parse(ret);
+            obj.Add("list", TransformTool.JsonObjectFromMessageList(messages));
+            string jsonString = ChatManagerNative.ChatManager_GetMethodCall("importMessages", obj.ToString());
+            if (jsonString == null || jsonString.Length == 0) {
+                return false;
+            }
+            JSONNode jn = JSON.Parse(jsonString);
             return jn["ret"].AsBool;
         }
 
         public override List<Conversation> LoadAllConversations()
         {
             string jsonString = ChatManagerNative.ChatManager_GetMethodCall("loadAllConversations");
-            return TransformTool.JsonStringToConversationList(jsonString);
+            if (jsonString == null || jsonString.Length == 0) {
+                return null;
+            }
+            JSONNode jn = JSON.Parse(jsonString);
+            return TransformTool.JsonStringToConversationList(jn["ret"]);
         }
 
         public override Message LoadMessage(string messageId)
         {
             JSONObject obj = new JSONObject();
-            obj.Add("messageId", messageId);
-            string ret = ChatManagerNative.ChatManager_GetMethodCall("getMessage", obj.ToString());
-            return new Message(ret);
+            obj.Add("msgId", messageId);
+            string jsonString = ChatManagerNative.ChatManager_GetMethodCall("getMessage", obj.ToString());
+            if (jsonString == null || jsonString.Length == 0)
+            {
+                return null;
+            }
+            return new Message(jsonString);
         }
 
         public override bool MarkAllConversationsAsRead()
         {
             JSONObject obj = new JSONObject();
-            string ret = ChatManagerNative.ChatManager_GetMethodCall("markAllChatMsgAsRead", obj.ToString());
-            JSONNode jn = JSON.Parse(ret);
+            string jsonString = ChatManagerNative.ChatManager_GetMethodCall("markAllChatMsgAsRead", obj.ToString());
+            if (jsonString == null || jsonString.Length == 0)
+            {
+                return false;
+            }
+            JSONNode jn = JSON.Parse(jsonString);
             return jn["ret"].AsBool;
         }
 
@@ -112,15 +134,19 @@ namespace ChatSDK
         {
             JSONObject obj = new JSONObject();
             obj.Add("msgId", messageId);
-            ChatManagerNative.ChatManager_GetMethodCall("recallMessage", obj.ToString());
+            ChatManagerNative.ChatManager_GetMethodCall("recallMessage", obj.ToString(), handle?.callbackId);
         }
 
         public override Message ResendMessage(string messageId, ValueCallBack<Message> handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("msgId", messageId);
-            string ret = ChatManagerNative.ChatManager_GetMethodCall("resendMessage", obj.ToString());
-            return new Message(ret);
+            string jsonString = ChatManagerNative.ChatManager_GetMethodCall("resendMessage", obj.ToString());
+            if (jsonString == null || jsonString.Length == 0)
+            {
+                return null;
+            }
+            return new Message(jsonString);
         }
 
         public override List<Message> SearchMsgFromDB(string keywords, long timestamp = 0, int maxCount = 20, string from = null, MessageSearchDirection direction = MessageSearchDirection.UP)
@@ -131,8 +157,8 @@ namespace ChatSDK
             obj.Add("count", maxCount);
             obj.Add("timestamp", timestamp);
             obj.Add("direction", direction == MessageSearchDirection.UP ? "up" : "down");
-            string ret = ChatManagerNative.ChatManager_GetMethodCall("searchChatMsgFromDB", obj.ToString());
-            return TransformTool.JsonStringToMessageList(ret);
+            string jsonString = ChatManagerNative.ChatManager_GetMethodCall("searchChatMsgFromDB", obj.ToString());
+            return TransformTool.JsonStringToMessageList(jsonString);
         }
 
         public override void SendConversationReadAck(string conversationId, CallBack handle = null)
@@ -144,8 +170,12 @@ namespace ChatSDK
 
         public override Message SendMessage(Message message, CallBack handle = null)
         {
-            string ret = ChatManagerNative.ChatManager_GetMethodCall("sendMessage", message.ToJson().ToString());
-            return new Message(ret);
+            string jsonString = ChatManagerNative.ChatManager_GetMethodCall("sendMessage", message.ToJson().ToString());
+            if (jsonString == null || jsonString.Length == 0)
+            {
+                return null;
+            }
+            return new Message(jsonString);
         }
 
         public override void SendMessageReadAck(string messageId, CallBack handle = null)

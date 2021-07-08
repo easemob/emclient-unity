@@ -64,7 +64,7 @@ namespace ChatSDK
 
         public override bool ImportMessages(List<Message> messages)
         {
-            return wrapper.Call<bool>("importMessages", TransformTool.JsonStringFromMessageList(messages));
+            return wrapper.Call<bool>("importMessages", TransformTool.JsonObjectFromMessageList(messages).ToString());
         }
 
         public override List<Conversation> LoadAllConversations()
@@ -116,7 +116,11 @@ namespace ChatSDK
 
         public override Message SendMessage(Message message, CallBack handle = null)
         {
+            Debug.Log("message to string: " + message.ToJson());
             string jsonString = wrapper.Call<string>("sendMessage", message.ToJson().ToString(), handle?.callbackId);
+            if (jsonString == null || jsonString.Length == 0) {
+                return null;
+            }
             return new Message(jsonString);
         }
 

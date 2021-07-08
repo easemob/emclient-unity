@@ -559,7 +559,7 @@ namespace ChatSDK
             }
         }
 
-        internal string ToJson() {
+        internal JSONObject ToJson() {
             JSONObject jo = new JSONObject();
             jo.Add("from", From);
             jo.Add("to", To);

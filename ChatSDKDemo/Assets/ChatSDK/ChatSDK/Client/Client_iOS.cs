@@ -18,7 +18,7 @@ namespace ChatSDK
             listenerGameObj = new GameObject(Connection_Obj);
             ConnectionListener listener = listenerGameObj.AddComponent<ConnectionListener>();
             listener.delegater = connectionDelegater;
-            ClientNative.Client_HandleMethodCall("initializeSDKWithOptions", options.ToJsonString(), null);
+            ClientNative.Client_HandleMethodCall("initWithOptions", options.ToJsonString(), null);
         }
 
         public override void CreateAccount(string username, string password, CallBack callBack = null)

@@ -12,9 +12,9 @@ namespace ChatSDK
             return null;
         }
 
-        public void GetPushConfig(ValueCallBack<PushConfig> handle = null)
+        public PushConfig GetPushConfig()
         {
-            PushManagerNative.PushManager_HandleMethodCall("getPushConfig", handle?.callbackId);
+            return null;
         }
 
         public void GetPushConfigFromServer(ValueCallBack<PushConfig> handle = null)

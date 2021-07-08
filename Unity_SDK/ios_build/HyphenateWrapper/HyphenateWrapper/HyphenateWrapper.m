@@ -12,10 +12,10 @@
 
 void Client_HandleMethodCall(const char* methodName, const char* jsonString, const char* callbackId) {
     NSString *method = [Transfrom NSStringFromCString:methodName];
-    NSDictionary *dic = [Transfrom DictFromCString:jsonString];
+    NSDictionary *dic = [Transfrom JsonObjectFromCSString:jsonString];
     NSString *callId = [Transfrom NSStringFromCString:callbackId];
-    if ([method isEqualToString:@"initializeSDKWithOptions"]) {
-        [EMClientWrapper.instance initSDKWithDict:dic];
+    if ([method isEqualToString:@"initWithOptions"]) {
+        [EMClientWrapper.instance initWithOptions:dic];
     }else if ([method isEqualToString:@"createAccount"]) {
         [EMClientWrapper.instance createAccount:dic callbackId:callId];
     }else if ([method isEqualToString:@"login"]) {
@@ -28,13 +28,13 @@ void Client_HandleMethodCall(const char* methodName, const char* jsonString, con
 const char* Client_GetMethodCall(const char* methodName, const char* jsonString, const char* callbackId) {
     NSString *method = [Transfrom NSStringFromCString:methodName];
     if ([method isEqualToString:@"getCurrentUsername"]) {
-        return [Transfrom DictToCString:@{@"getCurrentUsername":EMClient.sharedClient.currentUsername}];
+        return [Transfrom JsonObjectToCSString:@{@"getCurrentUsername":EMClient.sharedClient.currentUsername}];
     } else if ([method isEqualToString:@"isConnected"]) {
-        return [Transfrom DictToCString:@{@"isConnected": @(EMClient.sharedClient.isConnected)}];
+        return [Transfrom JsonObjectToCSString:@{@"isConnected": @(EMClient.sharedClient.isConnected)}];
     } else if ([method isEqualToString:@"isLoggedIn"]) {
-        return [Transfrom DictToCString:@{@"isLoggedIn": @(EMClient.sharedClient.isLoggedIn)}];
+        return [Transfrom JsonObjectToCSString:@{@"isLoggedIn": @(EMClient.sharedClient.isLoggedIn)}];
     }else if ([method isEqualToString:@"accessToken"]) {
-        return [Transfrom DictToCString:@{@"accessToken": EMClient.sharedClient.accessUserToken}];
+        return [Transfrom JsonObjectToCSString:@{@"accessToken": EMClient.sharedClient.accessUserToken}];
     }else {
         return "";
     }
@@ -42,7 +42,7 @@ const char* Client_GetMethodCall(const char* methodName, const char* jsonString,
 
 void ContactManager_HandleMethodCall(const char* methodName, const char* jsonString, const char* callbackId) {
     NSString *method = [Transfrom NSStringFromCString:methodName];
-    NSDictionary *dic = [Transfrom DictFromCString:jsonString];
+    NSDictionary *dic = [Transfrom JsonObjectFromCSString:jsonString];
     NSString *callId = [Transfrom NSStringFromCString:callbackId];
     if ([method isEqualToString:@"addContact"]) {
         [EMClientWrapper.instance.contactManager addContact:dic callbackId:callId];
@@ -73,7 +73,7 @@ const char* ContactManager_GetMethodCall(const char* methodName, const char* jso
 
 void ChatManager_HandleMethodCall(const char* methodName, const char* jsonString, const char* callbackId) {
     NSString *method = [Transfrom NSStringFromCString:methodName];
-    NSDictionary *dic = [Transfrom DictFromCString:jsonString];
+    NSDictionary *dic = [Transfrom JsonObjectFromCSString:jsonString];
     NSString *callId = [Transfrom NSStringFromCString:callbackId];
     if ([method isEqualToString:@"downloadAttachment"]) {
         [EMClientWrapper.instance.chatManager downloadAttachment:dic callbackId:callId];
@@ -96,42 +96,42 @@ void ChatManager_HandleMethodCall(const char* methodName, const char* jsonString
 
 const char* ChatManager_GetMethodCall(const char* methodName, const char* jsonString, const char* callbackId) {
     NSString *method = [Transfrom NSStringFromCString:methodName];
-    NSDictionary *dic = [Transfrom DictFromCString:jsonString];
+    NSDictionary *dic = [Transfrom JsonObjectFromCSString:jsonString];
     NSString *callId = [Transfrom NSStringFromCString:callbackId];
     if ([method isEqualToString:@"deleteConversation"]) {
         NSDictionary *dict = [EMClientWrapper.instance.chatManager deleteConversation:dic callbackId:callId];
-        return [Transfrom DictToCString:dict];
+        return [Transfrom JsonObjectToCSString:dict];
     }else if ([method isEqualToString:@"getConversation"]) {
         NSDictionary *dict = [EMClientWrapper.instance.chatManager getConversation:dic callbackId:callId];
-        return [Transfrom DictToCString:dict];
+        return [Transfrom JsonObjectToCSString:dict];
     }else if ([method isEqualToString:@"getUnreadMessageCount"]) {
         NSDictionary *dict = [EMClientWrapper.instance.chatManager getUnreadMessageCount:dic callbackId:callId];
-        return [Transfrom DictToCString:dict];
+        return [Transfrom JsonObjectToCSString:dict];
     }else if ([method isEqualToString:@"importMessages"]) {
         NSDictionary *dict = [EMClientWrapper.instance.chatManager importMessages:dic callbackId:callId];
-        return [Transfrom DictToCString:dict];
+        return [Transfrom JsonObjectToCSString:dict];
     }else if ([method isEqualToString:@"loadAllConversations"]) {
         NSDictionary *dict = [EMClientWrapper.instance.chatManager loadAllConversations:dic callbackId:callId];
-        return [Transfrom DictToCString:dict];
+        return [Transfrom JsonObjectToCSString:dict];
     }else if ([method isEqualToString:@"getMessage"]) {
         NSDictionary *dict = [EMClientWrapper.instance.chatManager getMessage:dic callbackId:callId];
-        return [Transfrom DictToCString:dict];
+        return [Transfrom JsonObjectToCSString:dict];
     }else if ([method isEqualToString:@"resendMessage"]) {
         NSDictionary *dict = [EMClientWrapper.instance.chatManager resendMessage:dic callbackId:callId];
-        return [Transfrom DictToCString:dict];
+        return [Transfrom JsonObjectToCSString:dict];
     }else if ([method isEqualToString:@"searchChatMsgFromDB"]) {
         NSDictionary *dict = [EMClientWrapper.instance.chatManager searchChatMsgFromDB:dic callbackId:callId];
-        return [Transfrom DictToCString:dict];
+        return [Transfrom JsonObjectToCSString:dict];
     }else if ([method isEqualToString:@"sendMessage"]) {
         NSDictionary *dict = [EMClientWrapper.instance.chatManager sendMessage:dic callbackId:callId];
-        return [Transfrom DictToCString:dict];
+        return [Transfrom JsonObjectToCSString:dict];
     }
     return NULL;
 }
 
 void GroupManager_HandleMethodCall(const char* methodName, const char* jsonString, const char* callbackId) {
     NSString *method = [Transfrom NSStringFromCString:methodName];
-    NSDictionary *dic = [Transfrom DictFromCString:jsonString];
+    NSDictionary *dic = [Transfrom JsonObjectFromCSString:jsonString];
     NSString *callId = [Transfrom NSStringFromCString:callbackId];
     if ([method isEqualToString:@"acceptInvitationFromGroup"]) {
         [EMClientWrapper.instance.groupManager acceptInvitationFromGroup:dic callbackId:callId];
@@ -235,7 +235,7 @@ const char* GroupManager_GetMethodCall(const char* methodName, const char* jsonS
 
 void RoomManager_HandleMethodCall(const char* methodName, const char* jsonString, const char* callbackId) {
     NSString *method = [Transfrom NSStringFromCString:methodName];
-    NSDictionary *dic = [Transfrom DictFromCString:jsonString];
+    NSDictionary *dic = [Transfrom JsonObjectFromCSString:jsonString];
     NSString *callId = [Transfrom NSStringFromCString:callbackId];
     if ([method isEqualToString:@"addChatRoomAdmin"]) {
         [EMClientWrapper.instance.roomManager chatRoomAddAdmin:dic callbackId:callId];
@@ -292,7 +292,7 @@ const char* RoomManager_GetMethodCall(const char* methodName, const char* jsonSt
 
 void PushManager_HandleMethodCall(const char* methodName, const char* jsonString, const char* callbackId) {
     NSString *method = [Transfrom NSStringFromCString:methodName];
-    NSDictionary *dic = [Transfrom DictFromCString:jsonString];
+    NSDictionary *dic = [Transfrom JsonObjectFromCSString:jsonString];
     NSString *callId = [Transfrom NSStringFromCString:callbackId];
     if ([method isEqualToString:@"getNoDisturbGroups"]) {
         [EMClientWrapper.instance.pushManager getNoDisturbGroups:dic callbackId:callId];
@@ -317,7 +317,7 @@ const char* PushManager_GetMethodCall(const char* methodName, const char* jsonSt
 
 void Conversation_HandleMethodCall(const char* methodName, const char* jsonString, const char* callbackId) {
     NSString *method = [Transfrom NSStringFromCString:methodName];
-    NSDictionary *dic = [Transfrom DictFromCString:jsonString];
+    NSDictionary *dic = [Transfrom JsonObjectFromCSString:jsonString];
     if ([method isEqualToString:@"markMessageAsRead"]) {
         [EMClientWrapper.instance.conversationWrapper markMessageAsRead:dic];
     }else if ([method isEqualToString:@"syncConversationExt"]) {
@@ -330,49 +330,49 @@ void Conversation_HandleMethodCall(const char* methodName, const char* jsonStrin
 const char* Conversation_GetMethodCall(const char* methodName, const char* jsonString, const char* callbackId) {
     const char* ret = NULL;
     NSString *method = [Transfrom NSStringFromCString:methodName];
-    NSDictionary *dic = [Transfrom DictFromCString:jsonString];
+    NSDictionary *dic = [Transfrom JsonObjectFromCSString:jsonString];
     if ([method isEqualToString:@"getUnreadMsgCount"]) {
         NSDictionary *dict = [EMClientWrapper.instance.conversationWrapper getUnreadMsgCount:dic];
-        ret = [Transfrom DictToCString:dict];
+        ret = [Transfrom JsonObjectToCSString:dict];
     }else if ([method isEqualToString:@"getLatestMessage"]) {
         NSDictionary *dict = [EMClientWrapper.instance.conversationWrapper getLatestMessage:dic];
-        ret = [Transfrom DictToCString:dict];
+        ret = [Transfrom JsonObjectToCSString:dict];
     }else if ([method isEqualToString:@"getLatestMessageFromOthers"]) {
         NSDictionary *dict = [EMClientWrapper.instance.conversationWrapper getLatestMessageFromOthers:dic];
-        ret = [Transfrom DictToCString:dict];
+        ret = [Transfrom JsonObjectToCSString:dict];
     }else if ([method isEqualToString:@"conversationExt"]) {
         NSDictionary *dict = [EMClientWrapper.instance.conversationWrapper conversationExt:dic];
-        ret = [Transfrom DictToCString:dict];
+        ret = [Transfrom JsonObjectToCSString:dict];
     }else if ([method isEqualToString:@"insertMessage"]) {
         NSDictionary *dict = [EMClientWrapper.instance.conversationWrapper insertMessage:dic];
-        ret = [Transfrom DictToCString:dict];
+        ret = [Transfrom JsonObjectToCSString:dict];
     }else if ([method isEqualToString:@"appendMessage"]) {
         NSDictionary *dict = [EMClientWrapper.instance.conversationWrapper appendMessage:dic];
-        ret = [Transfrom DictToCString:dict];
+        ret = [Transfrom JsonObjectToCSString:dict];
     }else if ([method isEqualToString:@"updateConversationMessage"]) {
         NSDictionary *dict = [EMClientWrapper.instance.conversationWrapper updateConversationMessage:dic];
-        ret = [Transfrom DictToCString:dict];
+        ret = [Transfrom JsonObjectToCSString:dict];
     }else if ([method isEqualToString:@"removeMessage"]) {
         NSDictionary *dict = [EMClientWrapper.instance.conversationWrapper removeMessage:dic];
-        ret = [Transfrom DictToCString:dict];
+        ret = [Transfrom JsonObjectToCSString:dict];
     }else if ([method isEqualToString:@"clearAllMessages"]) {
         NSDictionary *dict = [EMClientWrapper.instance.conversationWrapper clearAllMessages:dic];
-        ret = [Transfrom DictToCString:dict];
+        ret = [Transfrom JsonObjectToCSString:dict];
     }else if ([method isEqualToString:@"loadMsgWithId"]) {
         NSDictionary *dict = [EMClientWrapper.instance.conversationWrapper loadMsgWithId:dic];
-        ret = [Transfrom DictToCString:dict];
+        ret = [Transfrom JsonObjectToCSString:dict];
     }else if ([method isEqualToString:@"loadMsgWithMsgType"]) {
         NSArray *ary = [EMClientWrapper.instance.conversationWrapper loadMsgWithMsgType:dic];
-        ret = [Transfrom ArrayToCString:ary];
+        ret = [Transfrom JsonObjectToCSString:ary];
     }else if ([method isEqualToString:@"loadMsgWithStartId"]) {
         NSArray *ary = [EMClientWrapper.instance.conversationWrapper loadMsgWithStartId:dic];
-        ret = [Transfrom ArrayToCString:ary];
+        ret = [Transfrom JsonObjectToCSString:ary];
     }else if ([method isEqualToString:@"loadMsgWithKeywords"]) {
         NSArray *ary = [EMClientWrapper.instance.conversationWrapper loadMsgWithKeywords:dic];
-        ret = [Transfrom ArrayToCString:ary];
+        ret = [Transfrom JsonObjectToCSString:ary];
     }else if ([method isEqualToString:@"loadMsgWithTime"]) {
         NSArray *ary = [EMClientWrapper.instance.conversationWrapper loadMsgWithTime:dic];
-        ret = [Transfrom ArrayToCString:ary];
+        ret = [Transfrom JsonObjectToCSString:ary];
     }
     
     return ret;

@@ -5,6 +5,7 @@
 //  Created by 杜洁鹏 on 2021/6/5.
 //
 
+#import <HyphenateChat/HyphenateChat.h>
 #import "EMClientListener.h"
 #import "EMMethod.h"
 #import "Transfrom.h"
@@ -49,11 +50,11 @@
 }
 
 - (void)onDisconnected:(int)code {
-    UnitySendMessage(ContactListener_Obj, "OnDisconnected", [Transfrom NSStringToCSString:[NSString stringWithFormat:@"%d",code]]);
+    UnitySendMessage(Connection_Obj, "OnDisconnected", [Transfrom NSStringToCSString:[NSString stringWithFormat:@"%d",code]]);
 }
 
 - (void)onConnected {
-    UnitySendMessage(ContactListener_Obj, "OnConnected", "");
+    UnitySendMessage(Connection_Obj, "OnConnected", "");
 }
 
 @end

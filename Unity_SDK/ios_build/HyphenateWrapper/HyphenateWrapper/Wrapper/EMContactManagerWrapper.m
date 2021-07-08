@@ -74,7 +74,7 @@
     __weak typeof(self) weakSelf = self;
     [EMClient.sharedClient.contactManager getContactsFromServerWithCompletion:^(NSArray *aList, EMError *aError) {
         if (!aError) {
-            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:[Transfrom ArrayToNSString:aList]];
+            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:aList];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -84,7 +84,7 @@
 - (void)getAllContactsFromDB:(NSDictionary *)param callbackId:(NSString *)callbackId {
     __block NSString *callId =callbackId;
     NSArray<NSString*>* aList = [EMClient.sharedClient.contactManager getContacts];
-    [self onSuccess:@"List<String>" callbackId:callId userInfo:[Transfrom ArrayToNSString:aList]];
+    [self onSuccess:@"List<String>" callbackId:callId userInfo:aList];
 }
 - (void)addUserToBlockList:(NSDictionary *)param callbackId:(NSString *)callbackId {
     if (!param) {
@@ -129,7 +129,7 @@
     __block NSString *callId =callbackId;
     [EMClient.sharedClient.contactManager getBlackListFromServerWithCompletion:^(NSArray *aList, EMError *aError) {
         if (!aError) {
-            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:[Transfrom ArrayToNSString:aList]];
+            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:aList];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -178,7 +178,7 @@
     __block NSString *callId =callbackId;
     [EMClient.sharedClient.contactManager getSelfIdsOnOtherPlatformWithCompletion:^(NSArray *aList, EMError *aError) {
         if (!aError) {
-            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:[Transfrom ArrayToNSString:aList]];
+            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:aList];
         }else {
             [weakSelf onError:callId error:aError];
         }

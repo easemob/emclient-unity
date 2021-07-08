@@ -115,7 +115,7 @@
 
         public abstract void Login(string username, string pwdOrToken, bool isToken = false, CallBack handle = null);
 
-        public abstract void Logout(bool unbindDeviceToken, CallBack handle = null);
+        public abstract void Logout(bool unbindDeviceToken = true, CallBack handle = null);
 
         public abstract string CurrentUsername();
 

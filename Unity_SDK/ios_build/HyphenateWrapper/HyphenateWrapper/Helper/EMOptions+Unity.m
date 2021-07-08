@@ -36,6 +36,12 @@
 }
 
 + (EMOptions *)fromJson:(NSDictionary *)aJson {
+    
+    NSString *str = aJson[@"app_key"];
+    if ([str isKindOfClass:[NSNull class]] || str.length == 0) {
+        return nil;
+    }
+    
     EMOptions *options = [EMOptions optionsWithAppkey:aJson[@"app_key"]];
     options.isAutoLogin = [aJson[@"auto_login"] boolValue];
     options.enableConsoleLog = [aJson[@"debug_model"] boolValue];
