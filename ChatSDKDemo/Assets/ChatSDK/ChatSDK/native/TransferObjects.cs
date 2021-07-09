@@ -628,6 +628,13 @@ namespace ChatSDK
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public class Mute
+    {
+        public string Member;
+        public Int64 Duration;
+    }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public struct GroupTO
     {
         public string GroupId;
@@ -635,11 +642,14 @@ namespace ChatSDK
         public string Description;
         public string Owner;
         public string Annoumcement;
-        public string[] MemberList;
-        public string[] AdminList;
-        public string[] BlockList;
-        public string[] MuteList;
-        [MarshalAs(UnmanagedType.LPStruct)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 64)]
+        public IntPtr[] MemberList;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
+        public IntPtr[] AdminList;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
+        public IntPtr[] BlockList;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
+        public IntPtr[] MuteList;
         public GroupOptions Options;
         public int MemberCount;
         public int AdminCount;
@@ -655,23 +665,50 @@ namespace ChatSDK
 
         internal Group GroupInfo()
         {
-            return new Group()
+            var result =new Group()
             {
                 GroupId = GroupId,
                 Name = Name,
                 Description = Description,
                 Owner = Owner,
                 Annoumcement = Annoumcement,
-                MemberList = new List<string>(MemberList),
-                AdminList = new List<string>(AdminList),
-                BlockList = new List<string>(BlockList),
-                MuteList = new List<string>(MuteList),
                 Options = Options,
                 PermissionType = PermissionType,
                 NoticeEnabled = NoticeEnabled,
                 MessageBlocked = MessageBlocked,
                 IsAllMemberMuted = IsAllMemberMuted
             };
+            var memberList = new List<string>();
+            foreach(IntPtr memberPtr in MemberList)
+            {
+                string m = Marshal.PtrToStructure<string>(memberPtr);
+                memberList.Add(m);
+            }
+            var adminList = new List<string>();
+            foreach (IntPtr adminPtr in AdminList)
+            {
+                string a = Marshal.PtrToStructure<string>(adminPtr);
+                adminList.Add(a);
+            }
+            var blockList = new List<string>();
+            foreach (IntPtr blockPtr in BlockList)
+            {
+                string b = Marshal.PtrToStructure<string>(blockPtr);
+                blockList.Add(b);
+            }
+            var muteList = new List<Mute>();
+            foreach(IntPtr mutePtr in MuteList)
+            {
+                Mute m = Marshal.PtrToStructure<Mute>(mutePtr);
+                muteList.Add(m);
+            }
+
+            result.MemberList = memberList;
+            result.AdminList = adminList;
+            result.BlockList = blockList;
+            result.MuteList = muteList;
+
+            return result;
         }
     }
 }

@@ -111,8 +111,8 @@ namespace ChatSDK
             var membersArray = new string[0];
             if(inviteMembers != null && inviteMembers.Count >0)
             {
-                membersArray = new string[size];
                 size = inviteMembers.Count;
+                membersArray = new string[size];
                 int i = 0;
                 foreach(string member in inviteMembers)
                 {
@@ -121,11 +121,10 @@ namespace ChatSDK
                 }
             }
             ChatAPINative.GroupManager_CreateGroup(client, groupName, options, desc, membersArray, size, inviteReason,
-                onSuccessResult: (IntPtr[] data, DataType dType, int size) => {
-                    if(dType == DataType.Group && size == 1)
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
+                    if(dType == DataType.Group && dSize == 1)
                     {
-                        GroupTO result = new GroupTO();
-                        Marshal.PtrToStructure(data[0], result);
+                        var result = Marshal.PtrToStructure<GroupTO>(data[0]);
                         handle?.OnSuccessValue(result.GroupInfo());
                     }
                     else

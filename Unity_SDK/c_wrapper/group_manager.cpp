@@ -19,17 +19,18 @@ AGORA_API void GroupManager_AddListener(void *client,FUNC_OnInvitationReceived o
     }
 }
 
-AGORA_API void GroupManager_CreateGroup(void *client, const char * groupName, GroupOptions options, const char * desc, const char * inviteMembers[], int size, const char * inviteReason, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_CreateGroup(void *client, const char * groupName, GroupOptions * options, const char * desc, const char * inviteMembers[], int size, const char * inviteReason, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
-    EMMucSetting setting = options.toMucSetting();
-    EMMucMemberList memberList(size);
+    EMMucSetting setting = options->toMucSetting();
+    EMMucMemberList memberList;
     for(int i=0; i<size; i++) {
         memberList.push_back(inviteMembers[i]);
     }
     EMGroupPtr result = CLIENT->getGroupManager().createGroup(groupName, desc, inviteReason, setting, memberList, error);
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
         //succees
+        LOG("GroupManager_CreateGroup succeeds: %s", result->groupSubject().c_str());
         if(onSuccess) {
             GroupTO *data[1] = {GroupTO::FromEMGroup(result)};
             onSuccess((void **)data, DataType::Group, 1);

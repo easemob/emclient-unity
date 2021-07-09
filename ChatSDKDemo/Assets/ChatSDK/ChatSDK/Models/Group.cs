@@ -21,7 +21,8 @@ namespace ChatSDK
                 this.MemberList = TransformTool.JsonStringToStringList(jo["memberList"].Value);
                 this.AdminList = TransformTool.JsonStringToStringList(jo["memberList"].Value);
                 this.BlockList = TransformTool.JsonStringToStringList(jo["memberList"].Value);
-                this.MuteList = TransformTool.JsonStringToStringList(jo["memberList"].Value);
+                //TODO: MuteList is List<Mute>
+                //this.MuteList = TransformTool.JsonStringToStringList(jo["memberList"].Value);
                 this.NoticeEnabled = jo["noticeEnable"].AsBool;
                 this.MessageBlocked = jo["messageBlocked"].AsBool;
                 this.IsAllMemberMuted = jo["isAllMemberMuted"].AsBool;
@@ -59,7 +60,7 @@ namespace ChatSDK
         public List<string> MemberList { get; internal set; }
         public List<string> AdminList { get; internal set; }
         public List<string> BlockList { get; internal set; }
-        public List<string> MuteList { get; internal set; }
+        public List<Mute> MuteList { get; internal set; }
         public bool NoticeEnabled { get; internal set; }
         public bool MessageBlocked { get; internal set; }
         public bool IsAllMemberMuted { get; internal set; }
