@@ -91,7 +91,9 @@ namespace ChatSDK
 
         public override void ChangeGroupName(string groupId, string name, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            ChatAPINative.GroupManager_ChangeGroupName(client, groupId, name,
+                onSuccess: () => handle?.Success(),
+                onError: (int code, string desc) => handle?.Error(code, desc));
         }
 
         public override void ChangeGroupOwner(string groupId, string newOwner, ValueCallBack<Group> handle = null)

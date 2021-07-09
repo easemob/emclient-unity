@@ -1,16 +1,17 @@
 ﻿<Properties StartupConfiguration="{3A4B1E97-589D-1E2D-D6C5-A6CFAD6C116F}|">
   <MonoDevelop.Ide.ItemProperties.ChatSDKDemo PreferredExecutionTarget="95cd266c-1045-47ee-8ef5-ceac692d7815" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/ExecuteEvents.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/ChatSDK/ChatSDK/native/ChatAPINative.cs">
     <Files>
       <File FileName="Assets/ChatSDK/ChatSDK/native/DelegateHub.cs" Line="167" Column="41" />
-      <File FileName="Assets/Script/Main.cs" Line="188" Column="1" />
-      <File FileName="Assets/ChatSDK/ChatSDK/GroupManager/GroupManager_Mac.cs" Line="127" Column="1" />
-      <File FileName="Assets/ChatSDK/ChatSDK/native/TransferObjects.cs" Line="649" Column="9" />
+      <File FileName="Assets/Script/Main.cs" Line="194" Column="15" />
+      <File FileName="Assets/ChatSDK/ChatSDK/GroupManager/GroupManager_Mac.cs" Line="94" Column="55" />
+      <File FileName="Assets/ChatSDK/ChatSDK/native/TransferObjects.cs" Line="706" Column="44" />
       <File FileName="Assets/Script/Login.cs" Line="37" Column="1" />
       <File FileName="Assets/ChatSDK/ChatSDK/Models/CursorResult.cs" Line="15" Column="18" />
       <File FileName="Assets/ChatSDK/ChatSDK/ChatManager/ChatManager_Mac.cs" Line="1" Column="1" />
-      <File FileName="Assets/ChatSDK/ChatSDK/Models/Group.cs" Line="25" Column="19" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Models/Group.cs" Line="10" Column="42" />
       <File FileName="Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/ExecuteEvents.cs" Line="263" Column="1" />
+      <File FileName="Assets/ChatSDK/ChatSDK/native/ChatAPINative.cs" Line="61" Column="3" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -22,15 +23,15 @@
                   <Node name="ChatManager" expanded="True" />
                   <Node name="Client" expanded="True" />
                   <Node name="Custom" expanded="True" />
-                  <Node name="GroupManager" expanded="True">
-                    <Node name="GroupManager_Mac.cs" selected="True" />
-                  </Node>
+                  <Node name="GroupManager" expanded="True" />
                   <Node name="Helper" expanded="True">
                     <Node name="Native" expanded="True" />
                   </Node>
                   <Node name="Listeners" expanded="True" />
                   <Node name="Models" expanded="True" />
-                  <Node name="native" expanded="True" />
+                  <Node name="native" expanded="True">
+                    <Node name="ChatAPINative.cs" selected="True" />
+                  </Node>
                 </Node>
                 <Node name="Scripts" expanded="True" />
               </Node>
@@ -50,7 +51,7 @@
       <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/ChatManager/IChatManager.cs" relfile="Assets/ChatSDK/ChatSDK/ChatManager/IChatManager.cs" line="48" column="1" />
       <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/Script/Login.cs" relfile="Assets/Script/Login.cs" line="37" column="1" />
       <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/ChatManager/ChatManager_Mac.cs" relfile="Assets/ChatSDK/ChatSDK/ChatManager/ChatManager_Mac.cs" line="21" column="1" />
-      <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/GroupManager/GroupManager_Mac.cs" relfile="Assets/ChatSDK/ChatSDK/GroupManager/GroupManager_Mac.cs" line="125" column="1" />
+      <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/native/TransferObjects.cs" relfile="Assets/ChatSDK/ChatSDK/native/TransferObjects.cs" line="700" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />

@@ -42,3 +42,22 @@ AGORA_API void GroupManager_CreateGroup(void *client, const char * groupName, Gr
         }
     }
 }
+
+AGORA_API void GroupManager_ChangeGroupName(void *client, const char * groupId, const char * groupName, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+{
+    EMError error;
+    CLIENT->getGroupManager().changeGroupSubject(groupId, groupName, error);
+    if(error.mErrorCode == EMError::EM_NO_ERROR) {
+        //success
+        LOG("GroupManager_ChangeGroupName execution succeeds: %s %s", groupId, groupName);
+        if(onSuccess) {
+            onSuccess();
+        }
+    }else{
+        if(onError)
+        {
+            onError(error.mErrorCode, error.mDescription.c_str());
+        }
+    }
+    
+}

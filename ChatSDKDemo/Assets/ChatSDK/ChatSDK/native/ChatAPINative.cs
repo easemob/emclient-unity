@@ -62,7 +62,9 @@ namespace ChatSDK{
 		internal static extern void GroupManager_CreateGroup(IntPtr client, string groupName, GroupOptions options, string desc,
 			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 5)]string[] inviteMembers = null, int size = 0, string inviteReason = null, OnSuccessResult onSuccessResult = null, OnError onError = null);
 
-		
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_ChangeGroupName(IntPtr client, string groupId, string groupName, Action onSuccess, OnError onError);
+
 		#endregion native API import
 	}
 }

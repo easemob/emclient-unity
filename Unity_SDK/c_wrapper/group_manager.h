@@ -19,7 +19,7 @@ AGORA_API void GroupManager_AddListener(void *client,FUNC_OnInvitationReceived,
                                         FUNC_OnMemberJoined, FUNC_OnMemberExited, FUNC_OnAnnouncementChanged, FUNC_OnSharedFileAdded,
                                         FUNC_OnSharedFileDeleted);
 AGORA_API void GroupManager_CreateGroup(void *client, const char * groupName, GroupOptions *options, const char * desc, const char * inviteMembers[], int size, const char * inviteReason, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError);
-
+AGORA_API void GroupManager_ChangeGroupName(void *client, const char * groupId, const char * groupName, FUNC_OnSuccess onSuccess, FUNC_OnError onError);
 #ifdef __cplusplus
 }
 #endif //__cplusplus
