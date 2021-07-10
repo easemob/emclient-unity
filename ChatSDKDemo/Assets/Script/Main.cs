@@ -46,7 +46,7 @@ public class Main : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SendBtn.onClick.AddListener(RenameGroupAction);
+        SendBtn.onClick.AddListener(AddMembersAction);
         
         JoinGroupBtn.onClick.AddListener(JoinGroupAction);
         GroupInfoBtn.onClick.AddListener(GetGroupInfoAction);
@@ -209,6 +209,16 @@ public class Main : MonoBehaviour
                 onError: (int code, string desc) => Debug.LogError($"Failed to change group {groupId} name to {newName}")));
     }
 
+    void AddMembersAction()
+    {
+        string groupId = RecvIdField.text;
+        string member = TextField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.AddMembers(groupId, new List<string> { member },
+            new CallBack(
+                onSuccess: () => Debug.Log($"Add {member} into group {groupId}"),
+                onError: (int code, string desc) => Debug.LogError($"Failed to add member {member} to group {groupId} with error: {desc}.")));
+    }
     void JoinGroupAction()
     {
 

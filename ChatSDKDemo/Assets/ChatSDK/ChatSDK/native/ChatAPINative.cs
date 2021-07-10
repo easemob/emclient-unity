@@ -65,6 +65,11 @@ namespace ChatSDK{
 		[DllImport(MyLibName)]
 		internal static extern void GroupManager_ChangeGroupName(IntPtr client, string groupId, string groupName, Action onSuccess, OnError onError);
 
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_AddMembers(IntPtr client, string groupId,
+			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 3)] string[] memberArray, int size,
+			Action onSuccess, OnError onError);
 		#endregion native API import
 	}
 }

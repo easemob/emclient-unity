@@ -59,5 +59,26 @@ AGORA_API void GroupManager_ChangeGroupName(void *client, const char * groupId, 
             onError(error.mErrorCode, error.mDescription.c_str());
         }
     }
-    
+}
+
+AGORA_API void GroupManager_AddMembers(void *client, const char * groupId, const char * members[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+{
+    EMError error;
+    EMMucMemberList memberList;
+    for(int i=0; i<size; i++){
+        memberList.push_back(members[i]);
+    }
+    CLIENT->getGroupManager().addGroupMembers(groupId, memberList, "", error); //TODO: lack of welcome message param. in signature
+    if(error.mErrorCode == EMError::EM_NO_ERROR) {
+        //success
+        LOG("GroupManager_AddMembers execution succeeds: %s", groupId);
+        if(onSuccess) {
+            onSuccess();
+        }
+    }else{
+        if(onError)
+        {
+            onError(error.mErrorCode, error.mDescription.c_str());
+        }
+    }
 }

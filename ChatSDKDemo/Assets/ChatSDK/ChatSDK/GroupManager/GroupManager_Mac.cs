@@ -66,7 +66,18 @@ namespace ChatSDK
 
         public override void AddMembers(string groupId, List<string> members, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            int size = members.Count;
+            string[] memberArray = new string[size];
+            int i = 0;
+            foreach(string member in members)
+            {
+                memberArray[i] = member;
+                i++;
+            }
+            
+            ChatAPINative.GroupManager_AddMembers(client, groupId, memberArray, size,
+                onSuccess: () => handle?.Success(),
+                onError: (int code, string desc) => handle?.Error(code, desc));
         }
 
         public override void AddWhiteList(string groupId, List<string> members, CallBack handle = null)
