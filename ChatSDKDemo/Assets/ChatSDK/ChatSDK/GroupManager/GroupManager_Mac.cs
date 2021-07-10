@@ -61,7 +61,19 @@ namespace ChatSDK
 
         public override void AddAdmin(string groupId, string memberId, ValueCallBack<Group> handle = null)
         {
-            throw new System.NotImplementedException();
+            ChatAPINative.GroupManager_AddAdmin(client, groupId, memberId,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
+                    if (dType == DataType.Group && dSize == 1)
+                    {
+                        var result = Marshal.PtrToStructure<GroupTO>(data[0]);
+                        handle?.OnSuccessValue(result.GroupInfo());
+                    }
+                    else
+                    {
+                        Debug.LogError($"Group information expected.");
+                    }
+                },
+                handle?.OnError);
         }
 
         public override void AddMembers(string groupId, List<string> members, CallBack handle = null)
@@ -265,7 +277,19 @@ namespace ChatSDK
 
         public override void RemoveMembers(string groupId, List<string> members, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            //TODO: C++ sdie remove members return a EMGroupPtr instance, shuold be ValueCallBack?
+            int size = members.Count;
+            string[] memberArray = new string[size];
+            int i = 0;
+            foreach (string member in members)
+            {
+                memberArray[i] = member;
+                i++;
+            }
+
+            ChatAPINative.GroupManager_RemoveMembers(client, groupId, memberArray, size,
+                onSuccess: () => handle?.Success(),
+                onError: (int code, string desc) => handle?.Error(code, desc));
         }
 
         public override void RemoveWhiteList(string groupId, List<string> members, CallBack handle = null)

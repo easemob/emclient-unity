@@ -46,7 +46,7 @@ public class Main : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SendBtn.onClick.AddListener(AddMembersAction);
+        SendBtn.onClick.AddListener(RemoveMembersAction);
         
         JoinGroupBtn.onClick.AddListener(JoinGroupAction);
         GroupInfoBtn.onClick.AddListener(GetGroupInfoAction);
@@ -219,6 +219,34 @@ public class Main : MonoBehaviour
                 onSuccess: () => Debug.Log($"Add {member} into group {groupId}"),
                 onError: (int code, string desc) => Debug.LogError($"Failed to add member {member} to group {groupId} with error: {desc}.")));
     }
+
+    void AddAdminAction()
+    {
+        string groupId = RecvIdField.text;
+        string admin = TextField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.AddAdmin(groupId, admin,
+            new ValueCallBack<Group>(onSuccess: (Group group) =>
+            {
+                Debug.Log($"Add admin {admin} into group {group.GroupId} successfully.");
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Add admin {admin} into group {groupId} failed with code={code}, desc={desc}");
+            }));
+    }
+
+    void RemoveMembersAction()
+    {
+        string groupId = RecvIdField.text;
+        string member = TextField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.RemoveMembers(groupId, new List<string> { member },
+            new CallBack(
+                onSuccess: () => Debug.Log($"Remove {member} from group {groupId}"),
+                onError: (int code, string desc) => Debug.LogError($"Failed to remove member {member} from group {groupId} with error: {desc}.")));
+    }
+
     void JoinGroupAction()
     {
 

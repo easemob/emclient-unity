@@ -146,17 +146,17 @@ GroupTO * GroupTO::FromEMGroup(EMGroupPtr &group)
     gto->PermissionType = group->groupMemberType();
     int i = 0;
     for(std::string member : group->groupMembers()) {
-        gto->MemberList[i] = (void *)member.c_str();
+        gto->MemberList[i] = member.c_str();
         i++;
     }
     i=0;
     for(std::string admin : group->groupAdmins()) {
-        gto->AdminList[i] = (void *)admin.c_str();
+        gto->AdminList[i] = admin.c_str();
         i++;
     }
     i=0;
     for(std::string block : group->groupBans()) {
-        gto->BlockList[i] = (void *)block.c_str();
+        gto->BlockList[i] = block.c_str();
         i++;
     }
     i=0;

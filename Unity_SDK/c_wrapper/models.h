@@ -252,9 +252,9 @@ struct GroupTO
     const char * Description;
     const char * Owner;
     const char * Annoumcement;
-    void * MemberList[64];
-    void * AdminList[16];
-    void * BlockList[16];
+    const char * MemberList[64];
+    const char * AdminList[16];
+    const char * BlockList[16];
     Mute MuteList[16];
     GroupOptions Options;
     int MemberCount;

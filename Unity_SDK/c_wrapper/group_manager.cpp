@@ -82,3 +82,44 @@ AGORA_API void GroupManager_AddMembers(void *client, const char * groupId, const
         }
     }
 }
+
+AGORA_API void GroupManager_RemoveMembers(void *client, const char * groupId, const char * members[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+{
+    EMError error;
+    EMMucMemberList memberList;
+    for(int i=0; i<size; i++){
+        memberList.push_back(members[i]);
+    }
+    CLIENT->getGroupManager().removeGroupMembers(groupId, memberList, error);
+    if(error.mErrorCode == EMError::EM_NO_ERROR) {
+        //success
+        LOG("GroupManager_RemoveMembers execution succeeds: %s", groupId);
+        if(onSuccess) {
+            onSuccess();
+        }
+    }else{
+        if(onError)
+        {
+            onError(error.mErrorCode, error.mDescription.c_str());
+        }
+    }
+}
+
+AGORA_API void GroupManager_AddAdmin(void *client, const char * groupId, const char * admin, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+{
+    EMError error;
+    EMGroupPtr result = CLIENT->getGroupManager().addGroupAdmin(groupId, admin, error);
+    if(error.mErrorCode == EMError::EM_NO_ERROR) {
+        //success
+        LOG("GroupManager_AddAdmin succeeds: %s %s", groupId, admin);
+        if(onSuccess) {
+            GroupTO *data[1] = {GroupTO::FromEMGroup(result)};
+            onSuccess((void **)data, DataType::Group, 1);
+        }
+    }else{
+        if(onError)
+        {
+            onError(error.mErrorCode, error.mDescription.c_str());
+        }
+    }
+}

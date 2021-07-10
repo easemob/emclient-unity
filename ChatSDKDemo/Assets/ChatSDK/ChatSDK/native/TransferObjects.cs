@@ -687,7 +687,7 @@ namespace ChatSDK
             var adminList = new List<string>();
             foreach (IntPtr adminPtr in AdminList)
             {
-                string a = Marshal.PtrToStructure<string>(adminPtr);
+                string a = Marshal.PtrToStringAnsi(adminPtr);
                 adminList.Add(a);
             }
             var blockList = new List<string>();
