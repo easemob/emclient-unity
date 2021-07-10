@@ -2,7 +2,7 @@
 
 namespace ChatSDK
 {
-    public class Client_Android : IClient
+    class Client_Android : IClient
     {
 
         static string Connection_Obj = "unity_chat_emclient_connection_obj";

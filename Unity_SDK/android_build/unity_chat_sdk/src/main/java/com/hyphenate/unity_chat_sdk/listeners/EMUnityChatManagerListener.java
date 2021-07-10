@@ -25,7 +25,7 @@ public class EMUnityChatManagerListener implements EMMessageListener, EMConversa
         JSONArray ja = new JSONArray();
         try {
             for (EMMessage msg : list) {
-                ja.put(EMMessageHelper.toJson(msg));
+                ja.put(EMMessageHelper.toJson(msg).toString());
             }
             UnityPlayer.UnitySendMessage(EMSDKMethod.ChatListener_Obj, "OnMessageReceived", ja.toString());
         } catch (JSONException jsonException) {
@@ -39,7 +39,7 @@ public class EMUnityChatManagerListener implements EMMessageListener, EMConversa
         JSONArray ja = new JSONArray();
         try {
             for (EMMessage msg : list) {
-                ja.put(EMMessageHelper.toJson(msg));
+                ja.put(EMMessageHelper.toJson(msg).toString());
             }
             UnityPlayer.UnitySendMessage(EMSDKMethod.ChatListener_Obj, "OnCmdMessageReceived", ja.toString());
         } catch (JSONException jsonException) {
@@ -53,7 +53,7 @@ public class EMUnityChatManagerListener implements EMMessageListener, EMConversa
         JSONArray ja = new JSONArray();
         try {
             for (EMMessage msg : list) {
-                ja.put(EMMessageHelper.toJson(msg));
+                ja.put(EMMessageHelper.toJson(msg).toString());
             }
             UnityPlayer.UnitySendMessage(EMSDKMethod.ChatListener_Obj, "OnMessageRead", ja.toString());
         } catch (JSONException jsonException) {
@@ -67,7 +67,7 @@ public class EMUnityChatManagerListener implements EMMessageListener, EMConversa
         JSONArray ja = new JSONArray();
         try {
             for (EMGroupReadAck ack : list) {
-                ja.put(EMGroupReadAckHelper.toJson(ack));
+                ja.put(EMGroupReadAckHelper.toJson(ack).toString());
             }
             UnityPlayer.UnitySendMessage(EMSDKMethod.ChatListener_Obj, "OnGroupMessageRead", ja.toString());
         } catch (JSONException jsonException) {
@@ -87,7 +87,7 @@ public class EMUnityChatManagerListener implements EMMessageListener, EMConversa
         JSONArray ja = new JSONArray();
         try {
             for (EMMessage msg : list) {
-                ja.put(EMMessageHelper.toJson(msg));
+                ja.put(EMMessageHelper.toJson(msg).toString());
             }
             UnityPlayer.UnitySendMessage(EMSDKMethod.ChatListener_Obj, "OnMessageDelivered", ja.toString());
         } catch (JSONException jsonException) {
@@ -101,7 +101,7 @@ public class EMUnityChatManagerListener implements EMMessageListener, EMConversa
         JSONArray ja = new JSONArray();
         try {
             for (EMMessage msg : list) {
-                ja.put(EMMessageHelper.toJson(msg));
+                ja.put(EMMessageHelper.toJson(msg).toString());
             }
             UnityPlayer.UnitySendMessage(EMSDKMethod.ChatListener_Obj, "OnMessageRecalled", ja.toString());
         } catch (JSONException jsonException) {

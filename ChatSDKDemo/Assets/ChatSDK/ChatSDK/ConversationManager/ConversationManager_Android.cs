@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using SimpleJSON;
 
 namespace ChatSDK {
     public class ConversationManager_Android : IConversationManager
@@ -44,33 +45,36 @@ namespace ChatSDK {
 
         public override Message LastMessage(string conversationId, ConversationType conversationType)
         {
-            string messageString = wrapper.Call<string>("lastMessage", conversationId, TransformTool.ConversationTypeToInt(conversationType));
+            string jsonString = wrapper.Call<string>("lastMessage", conversationId, TransformTool.ConversationTypeToInt(conversationType));
 
-            if (messageString == null || messageString.Length == 0) {    
+            if (jsonString == null || jsonString.Length == 0) {    
                 return null;
             }
-            return new Message(messageString);
+
+            return new Message(jsonString);
             
         }
 
         public override Message LastReceivedMessage(string conversationId, ConversationType conversationType)
         {
-            string messageString = wrapper.Call<string>("lastReceivedMessage", conversationId, TransformTool.ConversationTypeToInt(conversationType));
-            if (messageString == null || messageString.Length == 0)
+            string jsonString = wrapper.Call<string>("lastReceivedMessage", conversationId, TransformTool.ConversationTypeToInt(conversationType));
+            if (jsonString == null || jsonString.Length == 0)
             {
                 return null;
             }
-            return new Message(messageString);
+
+            return new Message(jsonString);
         }
 
         public override Message LoadMessage(string conversationId, ConversationType conversationType, string messageId)
         {
-            string messageString = wrapper.Call<string>("loadMsgWithId", conversationId, TransformTool.ConversationTypeToInt(conversationType), messageId);
-            if (messageString == null || messageString.Length == 0)
+            string jsonString = wrapper.Call<string>("loadMsgWithId", conversationId, TransformTool.ConversationTypeToInt(conversationType), messageId);
+            if (jsonString == null || jsonString.Length == 0)
             {
                 return null;
             }
-            return new Message(messageString);
+
+            return new Message(jsonString);
         }
 
         public override List<Message> LoadMessages(string conversationId, ConversationType conversationType, string startMessageId, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP)

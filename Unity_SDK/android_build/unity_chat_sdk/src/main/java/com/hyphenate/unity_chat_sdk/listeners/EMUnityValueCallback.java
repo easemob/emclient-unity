@@ -30,13 +30,13 @@ public class EMUnityValueCallback<T> implements EMValueCallBack<T> {
         this.valueType = valueType;
     }
 
-    public void sendJsonObjectToUnity (Object jo) {
-        Log.d("chat_sdk", "getObject callbackId --  " + callbackId + " jo: "  + jo);
+    public void sendJsonObjectToUnity (String jsonString) {
+        Log.d("chat_sdk", "getObject callbackId --  " + callbackId + " jsonString: "  + jsonString);
         if (callbackId == null) return;
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("type",valueType);
-            jsonObject.put("value", jo);
+            jsonObject.put("value", jsonString);
             jsonObject.put("callbackId", callbackId);
             Log.d("chat_sdk", "back: " + jsonObject.toString());
             UnityPlayer.UnitySendMessage(EMSDKMethod.Callback_Obj, "OnSuccessValue", jsonObject.toString());
@@ -62,15 +62,15 @@ public class EMUnityValueCallback<T> implements EMValueCallBack<T> {
                         if (obj instanceof String) {
                             jsonAry.put((String) obj);
                         } else if (obj instanceof EMGroup) {
-                            JSONObject json = EMGroupHelper.toJson((EMGroup) obj);
-                            jsonAry.put(json);
+                            JSONObject jsonObject = EMGroupHelper.toJson((EMGroup) obj);
+                            jsonAry.put(jsonObject.toString());
                         } else if (obj instanceof EMGroupInfo) {
-                            JSONObject object = EMGroupInfoHelper.toJson((EMGroupInfo) obj);
-                            jsonAry.put(object);
+                            JSONObject jsonObject = EMGroupInfoHelper.toJson((EMGroupInfo) obj);
+                            jsonAry.put(jsonObject.toString());
                         }
                     }
                     jo.put("type",valueType);
-                    jo.put("value",jsonAry);
+                    jo.put("value",jsonAry.toString());
                 }else if(t instanceof EMCursorResult) {
                 }
 

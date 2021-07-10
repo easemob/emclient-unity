@@ -6,45 +6,48 @@ namespace ChatSDK
     public class Group
     {
 
-        internal Group(JSONNode jn)
+        internal Group(string jsonString)
         {
-            if (!jn.IsNull && jn.IsObject)
-            {
-                JSONObject jo = jn.AsObject;
-                this.GroupId = jo["groupId"].Value;
-                this.Name = jo["name"].Value;
-                this.Description = jo["desc"].Value;
-                this.Owner = jo["owner"].Value;
-                this.Annoumcement = jo["announcement"].Value;
-                this.MemberCount = jo["memberCount"].AsInt;
-                this.MemberList = TransformTool.JsonStringToStringList(jo["memberList"].Value);
-                this.AdminList = TransformTool.JsonStringToStringList(jo["memberList"].Value);
-                this.BlockList = TransformTool.JsonStringToStringList(jo["memberList"].Value);
-                this.MuteList = TransformTool.JsonStringToStringList(jo["memberList"].Value);
-                this.NoticeEnabled = jo["noticeEnable"].AsBool;
-                this.MessageBlocked = jo["messageBlocked"].AsBool;
-                this.IsAllMemberMuted = jo["isAllMemberMuted"].AsBool;
-                JSONObject options = jo["options"].AsObject;
-                if (options != null)
+            if (jsonString != null) {
+                JSONNode jn = JSON.Parse(jsonString);
+                if (!jn.IsNull && jn.IsObject)
                 {
-                    this.Options = new GroupOptions(options);
-                }
+                    JSONObject jo = jn.AsObject;
+                    this.GroupId = jo["groupId"].Value;
+                    this.Name = jo["name"].Value;
+                    this.Description = jo["desc"].Value;
+                    this.Owner = jo["owner"].Value;
+                    this.Annoumcement = jo["announcement"].Value;
+                    this.MemberCount = jo["memberCount"].AsInt;
+                    this.MemberList = TransformTool.JsonStringToStringList(jo["memberList"].Value);
+                    this.AdminList = TransformTool.JsonStringToStringList(jo["memberList"].Value);
+                    this.BlockList = TransformTool.JsonStringToStringList(jo["memberList"].Value);
+                    this.MuteList = TransformTool.JsonStringToStringList(jo["memberList"].Value);
+                    this.NoticeEnabled = jo["noticeEnable"].AsBool;
+                    this.MessageBlocked = jo["messageBlocked"].AsBool;
+                    this.IsAllMemberMuted = jo["isAllMemberMuted"].AsBool;
+                    JSONObject options = jo["options"].AsObject;
+                    if (options != null)
+                    {
+                        this.Options = new GroupOptions(options);
+                    }
 
-                if (jo["permissionType"].AsInt == -1)
-                {
-                    this.PermissionType = GroupPermissionType.None;
-                }
-                else if (jo["permissionType"].AsInt == 0)
-                {
-                    this.PermissionType = GroupPermissionType.Member;
-                }
-                else if (jo["permissionType"].AsInt == 1)
-                {
-                    this.PermissionType = GroupPermissionType.Admin;
-                }
-                else if (jo["permissionType"].AsInt == 2)
-                {
-                    this.PermissionType = GroupPermissionType.Owner;
+                    if (jo["permissionType"].AsInt == -1)
+                    {
+                        this.PermissionType = GroupPermissionType.None;
+                    }
+                    else if (jo["permissionType"].AsInt == 0)
+                    {
+                        this.PermissionType = GroupPermissionType.Member;
+                    }
+                    else if (jo["permissionType"].AsInt == 1)
+                    {
+                        this.PermissionType = GroupPermissionType.Admin;
+                    }
+                    else if (jo["permissionType"].AsInt == 2)
+                    {
+                        this.PermissionType = GroupPermissionType.Owner;
+                    }
                 }
             }
         }

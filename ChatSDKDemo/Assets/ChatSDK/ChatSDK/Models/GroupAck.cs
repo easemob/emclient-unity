@@ -13,15 +13,18 @@ namespace ChatSDK {
         public long Timestamp { get; internal set; }
 
         internal GroupReadAck(string jsonString) {
-            JSONNode jn = JSON.Parse(jsonString);
-            if (!jn.IsNull && jn.IsObject) {
-                JSONObject jo = jn.AsObject;
-                AckId = jo["ackId"].Value;
-                MsgId = jo["msgId"].Value;
-                From = jo["from"].Value;
-                Content = jo["content"].Value;
-                Count = jo["count"].AsInt;
-                Timestamp = jo["timestamp"].AsInt;
+            if (jsonString != null) {
+                JSONNode jn = JSON.Parse(jsonString);
+                if (!jn.IsNull && jn.IsObject)
+                {
+                    JSONObject jo = jn.AsObject;
+                    AckId = jo["ackId"].Value;
+                    MsgId = jo["msgId"].Value;
+                    From = jo["from"].Value;
+                    Content = jo["content"].Value;
+                    Count = jo["count"].AsInt;
+                    Timestamp = jo["timestamp"].AsInt;
+                }
             }
         }
     }

@@ -17,6 +17,7 @@ public class Login : MonoBehaviour
         loginButton.onClick.AddListener(LoginAction);
         registerButton.onClick.AddListener(RegisterAction);
         Options options = new Options("easemob-demo#easeim");
+        options.DebugMode = true;
         options.UsingHttpsOnly = true;
         SDKClient client = SDKClient.Instance;
         client.InitWithOptions(options);

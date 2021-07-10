@@ -30,7 +30,7 @@ public class EMTransformHelper {
         JSONArray jsonArray = new JSONArray();
         for (EMChatRoom ite: list) {
             try {
-                jsonArray.put(EMChatRoomHelper.toJson(ite));
+                jsonArray.put(EMChatRoomHelper.toJson(ite).toString());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -43,7 +43,7 @@ public class EMTransformHelper {
         JSONArray jsonArray = new JSONArray();
         for (EMGroup group: list) {
             try {
-                jsonArray.put(EMGroupHelper.toJson(group));
+                jsonArray.put(EMGroupHelper.toJson(group).toString());
             } catch (JSONException e) {
                 e.printStackTrace();
             }

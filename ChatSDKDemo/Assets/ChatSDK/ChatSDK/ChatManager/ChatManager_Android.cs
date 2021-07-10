@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using SimpleJSON;
 
 namespace ChatSDK
 {
@@ -49,7 +50,10 @@ namespace ChatSDK
             if (jsonString == null || jsonString.Length == 0) {
                 return null;
             }
-            return new Conversation(jsonString);
+
+            JSONNode jn = JSON.Parse(jsonString);
+
+            return new Conversation(jn);
         }
 
         public override void GetConversationsFromServer(ValueCallBack<List<Conversation>> handle = null)
@@ -80,6 +84,7 @@ namespace ChatSDK
             {
                 return null;
             }
+
             return new Message(jsonString);
         }
 
@@ -100,6 +105,7 @@ namespace ChatSDK
             {
                 return null;
             }
+
             return new Message(jsonString);
         }
 
@@ -121,6 +127,7 @@ namespace ChatSDK
             if (jsonString == null || jsonString.Length == 0) {
                 return null;
             }
+
             return new Message(jsonString);
         }
 

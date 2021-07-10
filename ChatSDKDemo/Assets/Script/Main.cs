@@ -80,6 +80,16 @@ public class Main : MonoBehaviour
 
     void JoinGroupAction()
     {
+        List<Group> groups = SDKClient.Instance.GroupManager.GetJoinedGroups();
+        foreach (Group group in groups) {
+            Debug.Log("group: -----------" + group.Name);
+        }
+
+        List<Conversation> conversations = SDKClient.Instance.ChatManager.LoadAllConversations();
+        foreach (Conversation conversation in conversations)
+        {
+            Debug.Log("conversation: -----------" + conversation.LastMessage.ToJson().ToString());
+        }
 
     }
 

@@ -400,7 +400,7 @@ namespace ChatSDK
         /// <summary>
         /// 消息Id
         /// </summary>
-        public string MsgId = new TimeSpan(DateTime.Now.Ticks).TotalMilliseconds.ToString();
+        public string MsgId =  ((long)(new TimeSpan(DateTime.Now.Ticks).TotalMilliseconds)).ToString();
 
         /// <summary>
         /// 消息所属会话Id
@@ -538,23 +538,27 @@ namespace ChatSDK
             return CreateSendMessage(username, new MessageBody.CustomBody(customEvent, customParams: customParams));
         }
 
-        internal Message(JSONNode jn) {
-            if (!jn.IsNull && jn.IsObject) {
-                JSONObject jo = jn.AsObject;
-                From = jo["from"].Value;
-                To = jo["to"].Value;
-                HasReadAck = jo["hasReadAck"].AsBool;
-                HasDeliverAck = jo["hasDeliverAck"].AsBool;
-                LocalTime = jo["localTime"].AsInt;
-                ServerTime = jo["serverTime"].AsInt;
-                ConversationId = jo["conversationId"].Value;
-                MsgId = jo["msgId"].Value;
-                HasReadAck = jo["hasRead"].AsBool;
-                Status = MessageStatusFromInt(jo["status"].AsInt);
-                MessageType = MessageTypeFromInt(jo["chatType"].AsInt);
-                Direction = MessageDirectionFromString(jo["direction"].Value);
-                //Attributes = TransformTool.JsonStringToDictionary(jo["attributes"].Value);
-                Body = BodyFromJsonString(jo["body"].Value, jo["bodyType"].Value);
+        internal Message(string jsonString) {
+            if (jsonString != null) {
+                JSONNode jn = JSON.Parse(jsonString);
+                if (!jn.IsNull && jn.IsObject)
+                {
+                    JSONObject jo = jn.AsObject;
+                    From = jo["from"].Value;
+                    To = jo["to"].Value;
+                    HasReadAck = jo["hasReadAck"].AsBool;
+                    HasDeliverAck = jo["hasDeliverAck"].AsBool;
+                    LocalTime = jo["localTime"].AsInt;
+                    ServerTime = jo["serverTime"].AsInt;
+                    ConversationId = jo["conversationId"].Value;
+                    MsgId = jo["msgId"].Value;
+                    HasReadAck = jo["hasRead"].AsBool;
+                    Status = MessageStatusFromInt(jo["status"].AsInt);
+                    MessageType = MessageTypeFromInt(jo["chatType"].AsInt);
+                    Direction = MessageDirectionFromString(jo["direction"].Value);
+                    //Attributes = TransformTool.JsonStringToDictionary(jo["attributes"].Value);
+                    Body = BodyFromJsonString(jo["body"].Value, jo["bodyType"].Value);
+                }
             }
         }
 

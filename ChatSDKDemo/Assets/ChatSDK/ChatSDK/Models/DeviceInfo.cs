@@ -13,12 +13,15 @@ namespace ChatSDK
 
         internal DeviceInfo(string jsonString)
         {
-            JSONNode jn = JSON.Parse(jsonString);
-            if (!jn.IsNull && jn.IsObject) {
-                JSONObject jo = jn.AsObject;
-                Resource = jo["resource"];
-                DeviceUUID = jo["deviceUUID"];
-                DeviceName = jo["deviceName"];
+            if (jsonString != null) {
+                JSONNode jn = JSON.Parse(jsonString);
+                if (!jn.IsNull && jn.IsObject)
+                {
+                    JSONObject jo = jn.AsObject;
+                    Resource = jo["resource"];
+                    DeviceUUID = jo["deviceUUID"];
+                    DeviceName = jo["deviceName"];
+                }
             }
         }
     }

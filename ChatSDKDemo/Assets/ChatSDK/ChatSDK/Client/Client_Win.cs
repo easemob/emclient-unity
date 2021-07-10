@@ -1,6 +1,6 @@
 ﻿namespace ChatSDK
 {
-    public class Client_Win : IClient
+    class Client_Win : IClient
     {
 
         public override void InitWithOptions(Options options, WeakDelegater<IConnectionDelegate> connectionDelegater = null)

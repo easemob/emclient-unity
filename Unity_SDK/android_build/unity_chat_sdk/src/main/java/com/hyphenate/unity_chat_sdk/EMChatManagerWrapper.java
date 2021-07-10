@@ -83,7 +83,7 @@ public class EMChatManagerWrapper extends EMWrapper  {
             try {
                 EMCursorResult<EMMessage> cursorResult = EMClient.getInstance().chatManager().fetchHistoryMessages(conversationId,
                         conversationType, count, startMessageId.length() > 0 ? startMessageId : null);
-                onSuccess("EMCursorResult<EMMessage>", callbackId, EMCursorResultHelper.toJson(cursorResult));
+                onSuccess("EMCursorResult<EMMessage>", callbackId, EMCursorResultHelper.toJson(cursorResult).toString());
             } catch (HyphenateException e) {
                 onError(callbackId, e);
             } catch (JSONException ignored) {
@@ -116,9 +116,9 @@ public class EMChatManagerWrapper extends EMWrapper  {
                 JSONArray jsonArray = new JSONArray();
 
                 for (EMConversation conversation : list) {
-                    jsonArray.put(EMConversationHelper.toJson(conversation));
+                    jsonArray.put(EMConversationHelper.toJson(conversation).toString());
                 }
-                onSuccess("List<EMConversation>", callbackId, jsonArray);
+                onSuccess("List<EMConversation>", callbackId, jsonArray.toString());
             } catch (HyphenateException e) {
                 onError(callbackId, e);
             } catch (JSONException ignored){
@@ -163,7 +163,7 @@ public class EMChatManagerWrapper extends EMWrapper  {
         JSONArray jsonArray = new JSONArray();
         try {
             for (EMConversation conversation : list) {
-                jsonArray.put(EMConversationHelper.toJson(conversation));
+                jsonArray.put(EMConversationHelper.toJson(conversation).toString());
             }
         }finally {
             return jsonArray.toString();
@@ -225,7 +225,7 @@ public class EMChatManagerWrapper extends EMWrapper  {
         if (msgList == null) return null;
         JSONArray jsonArray = new JSONArray();
         for (EMMessage msg : msgList) {
-            jsonArray.put(EMMessageHelper.toJson(msg));
+            jsonArray.put(EMMessageHelper.toJson(msg).toString());
         }
 
         return jsonArray.toString();

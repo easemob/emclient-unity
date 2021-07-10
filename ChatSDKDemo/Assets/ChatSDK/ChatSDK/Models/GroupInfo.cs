@@ -8,11 +8,15 @@ namespace ChatSDK {
         public string GroupId { get; internal set; }
         public string GroupName { get; internal set; }
 
-        internal GroupInfo(JSONNode jn) {
-            if (!jn.IsNull && jn.IsObject) {
-                JSONObject jo = jn.AsObject;
-                GroupId = jo["gruopId"].Value;
-                GroupName = jo["groupName"].Value;
+        internal GroupInfo(string jsonString) {
+            if (jsonString != null) {
+                JSONNode jn = JSON.Parse(jsonString);
+                if (!jn.IsNull && jn.IsObject)
+                {
+                    JSONObject jo = jn.AsObject;
+                    GroupId = jo["gruopId"].Value;
+                    GroupName = jo["groupName"].Value;
+                }
             }
         }
     }

@@ -7,170 +7,6 @@ namespace ChatSDK
     public class TransformTool
     {
 
-
-        static internal List<string> JsonObjectToStringList(JSONNode jn) {
-            List<string> ret = new List<string>();
-            if (jn != null && jn.IsArray)
-            {
-                foreach (JSONNode v in jn.AsArray)
-                {
-                    ret.Add(v.Value);
-                }
-            }
-            return ret;
-        }
-
-
-        static internal List<Group> JsonObjectToGroupList(JSONNode jn)
-        {
-            List<Group> list = new List<Group>();
-            if (jn != null && jn.IsArray)
-            {
-                foreach (JSONNode v in jn.AsArray)
-                {
-                    list.Add(new Group(v));
-                }
-            }
-            
-            return list;
-        }
-
-        static internal CursorResult<GroupInfo> JsonObjectToGroupInfoResult(JSONNode jsonObject)
-        {
-            CursorResult<GroupInfo> result = null;
-            if (jsonObject != null)
-            {
-                result = new CursorResult<GroupInfo>();
-
-                result.Cursor = jsonObject["cursor"].Value;
-
-                List<GroupInfo> list = new List<GroupInfo>();
-
-                foreach (JSONNode obj in jsonObject["list"].AsArray)
-                {
-                    list.Add(new GroupInfo(obj));
-                }
-
-                result.Data = list;
-            }
-            return result;
-        }
-
-        static internal CursorResult<string> JsonObjectToStringResult(JSONNode jsonObject)
-        {
-            if (jsonObject == null) return null;
-
-            CursorResult<string> result = null;
-
-            result = new CursorResult<string>();
-
-            result.Cursor = jsonObject["cursor"].Value;
-
-            List<string> list = new List<string>();
-
-            foreach (JSONNode obj in jsonObject["list"].AsArray)
-            {
-                list.Add(obj);
-            }
-
-            result.Data = list;
-            return result;
-        }
-
-        static internal CursorResult<Message> JsonObjectToMessageResult(JSONNode jsonObject)
-        {
-            if (jsonObject == null) return null;
-
-            CursorResult<Message> result = null;
-
-            result = new CursorResult<Message>();
-
-            result.Cursor = jsonObject["cursor"].Value;
-
-            List<Message> list = new List<Message>();
-
-            foreach (JSONNode obj in jsonObject["list"].AsArray)
-            {
-                list.Add(new Message(obj));
-            }
-
-            result.Data = list;
-
-            return result;
-        }
-
-        static internal List<GroupSharedFile> JsonObjectToGroupSharedFileList(JSONNode jsonObject)
-        {
-            if (jsonObject == null) return null;
-
-            List<GroupSharedFile> list = new List<GroupSharedFile>();
-
-            if (jsonObject.IsArray) {
-                foreach (JSONNode obj in jsonObject.AsArray)
-                {
-                    list.Add(new GroupSharedFile(obj));
-                }
-            }
-
-            return list;
-        }
-
-        static internal PageResult<Room> JsonObjectToRoomPageResult(JSONNode jsonObject)
-        {
-            if (jsonObject == null) return null;
-
-            PageResult<Room> result = new PageResult<Room>();
-
-            result.PageCount = jsonObject["count"].AsInt;
-
-            List<Room> list = new List<Room>();
-
-            foreach (JSONNode obj in jsonObject["list"].AsArray)
-            {
-                list.Add(new Room(obj));
-            }
-
-            result.Data = list;
-
-            return result;
-        }
-
-        static internal List<Room> JsonStringToRoomList(JSONNode jsonObject)
-        {
-            if (jsonObject == null) return null;
-
-            List<Room> list = new List<Room>();
-
-            if (jsonObject.IsArray)
-            {
-                foreach (JSONNode obj in jsonObject.AsArray)
-                {
-                    list.Add(new Room(obj));
-                }
-            }
-            return list;
-        }
-
-        static internal List<Conversation> JsonObjectToConversationList(JSONNode jsonObject)
-        {
-            if (jsonObject == null) return null;
-
-            List<Conversation> list = new List<Conversation>();
-            
-            if (jsonObject.IsArray)
-            {
-                foreach (JSONNode v in jsonObject.AsArray)
-                {
-                    Conversation conv = new Conversation(v.Value);
-                    list.Add(conv);
-                }
-            }
-
-            return list;
-        }
-
-
-        /*--------*/
         static internal List<string> JsonStringToStringList(string jsonString)
         {
             if (jsonString == null) return null;
@@ -179,9 +15,12 @@ namespace ChatSDK
             JSONNode jsonArray = JSON.Parse(jsonString);
             if (jsonArray != null && jsonArray.IsArray)
             {
-                foreach (JSONNode v in jsonArray.AsArray)
+                foreach (JSONNode obj in jsonArray.AsArray)
                 {
-                    ret.Add(v.Value);
+                    if (obj.IsString)
+                    {
+                        ret.Add(obj.Value);
+                    }
                 }
             }
             return ret;
@@ -190,12 +29,12 @@ namespace ChatSDK
         static internal string JsonStringFromStringList(List<string> list)
         {
             if (list == null) return null;
-            JSONObject jo = new JSONObject();
+            JSONArray ja = new JSONArray();
             foreach (string str in list) {
-                jo.Add(str);
+                ja.Add(str);
             }
 
-            return jo.ToString();
+            return ja.ToString();
         }
 
         static internal List<Group> JsonStringToGroupList(string jsonString)
@@ -206,7 +45,9 @@ namespace ChatSDK
             JSONNode jsonArray = JSON.Parse(jsonString);
             foreach (JSONNode obj in jsonArray.AsArray)
             {
-                list.Add(new Group(obj));
+                if (obj.IsString) {
+                    list.Add(new Group(obj.Value));
+                }
             }
             return list;
         }
@@ -219,7 +60,10 @@ namespace ChatSDK
                 JSONNode jsonArray = JSON.Parse(jsonString);
                 foreach (JSONNode obj in jsonArray.AsArray)
                 {
-                    list.Add(new GroupInfo(obj));
+                    if (obj.IsString)
+                    {
+                        list.Add(new GroupInfo(obj.Value));
+                    }
                 }
             }
             return list;
@@ -233,18 +77,17 @@ namespace ChatSDK
                 JSONNode jsonArray = JSON.Parse(jsonString);
                 foreach (JSONNode obj in jsonArray.AsArray)
                 {
-                    list.Add(new GroupSharedFile(obj));
+                    if (obj.IsString)
+                    {
+                        list.Add(new GroupSharedFile(obj.Value));
+                    }
+                        
                 }
             }
             return list;
         }
 
-        /*
-          {
-            "cursor":"xxx",
-            "list": [{"groupId: "","groupName":""}]
-          }
-        */
+        
         static internal CursorResult<GroupInfo> JsonStringToGroupInfoResult(string jsonString)
         {
             CursorResult<GroupInfo> result = null;
@@ -258,11 +101,15 @@ namespace ChatSDK
 
                 List<GroupInfo> list = new List<GroupInfo>();
 
-                foreach (JSONNode obj in jsonObject["list"].AsArray)
-                {
-                    list.Add(new GroupInfo(obj));
+                if (jsonObject["list"].IsArray) {
+                    foreach (JSONNode obj in jsonObject["list"].AsArray)
+                    {
+                        if (obj.IsString)
+                        {
+                            list.Add(new GroupInfo(obj.Value));
+                        }
+                    }
                 }
-
                 result.Data = list;
             }
             return result;
@@ -281,9 +128,15 @@ namespace ChatSDK
 
                 List<Room> list = new List<Room>();
 
-                foreach (JSONNode obj in jsonObject["list"].AsArray)
+                if (jsonObject["list"].IsArray)
                 {
-                    list.Add(new Room(obj));
+                    foreach (JSONNode obj in jsonObject["list"].AsArray)
+                    {
+                        if (obj.IsString)
+                        {
+                            list.Add(new Room(obj.Value));
+                        }
+                    }
                 }
 
                 result.Data = list;
@@ -299,7 +152,10 @@ namespace ChatSDK
                 JSONNode jsonArray = JSON.Parse(jsonString);
                 foreach (JSONNode obj in jsonArray.AsArray)
                 {
-                    list.Add(new Room(obj));
+                    if (obj.IsString)
+                    {
+                        list.Add(new Room(obj.Value));
+                    }
                 }
             }
             return list;
@@ -321,7 +177,11 @@ namespace ChatSDK
 
                 foreach (JSONNode obj in jsonObject["list"].AsArray)
                 {
-                    list.Add(obj);
+                    if (obj.IsString)
+                    {
+                        list.Add(obj.Value);
+                    }
+                    
                 }
 
                 result.Data = list;
@@ -345,7 +205,9 @@ namespace ChatSDK
 
                 foreach (JSONNode obj in jsonObject["list"].AsArray)
                 {
-                    list.Add(new Message(obj));
+                    if (obj.IsString) {
+                        list.Add(new Message(obj.Value));
+                    }
                 }
 
                 result.Data = list;
@@ -424,8 +286,11 @@ namespace ChatSDK
             {
                 foreach (JSONNode v in jsonArray.AsArray)
                 {
-                    Message conv = new Message(v.Value);
-                    list.Add(conv);
+                    if (v.IsString)
+                    {
+                        Message conv = new Message(v.Value);
+                        list.Add(conv);
+                    }  
                 }
             }
 
@@ -454,8 +319,10 @@ namespace ChatSDK
             {
                 foreach (JSONNode v in jsonArray.AsArray)
                 {
-                    Conversation conv = new Conversation(v.Value);
-                    list.Add(conv);
+                    if (v.IsString) {
+                        Conversation conv = new Conversation(v.Value);
+                        list.Add(conv);
+                    }
                 }
             }
 
@@ -471,8 +338,12 @@ namespace ChatSDK
             {
                 foreach (JSONNode v in jsonArray.AsArray)
                 {
-                    GroupReadAck ack = new GroupReadAck(v.Value);
-                    list.Add(ack);
+                    if (v.IsString)
+                    {
+                        GroupReadAck ack = new GroupReadAck(v.Value);
+                        list.Add(ack);
+                    }
+                        
                 }
             }
 

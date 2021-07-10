@@ -24,15 +24,15 @@ public class EMCursorResultHelper {
         JSONArray jsonArray = new JSONArray ();
         for (Object obj : list) {
             if (obj instanceof EMMessage) {
-                jsonArray.put(EMMessageHelper.toJson((EMMessage) obj));
+                jsonArray.put(EMMessageHelper.toJson((EMMessage) obj).toString());
             }
 
             if (obj instanceof EMGroup) {
-                jsonArray.put(EMGroupHelper.toJson((EMGroup) obj));
+                jsonArray.put(EMGroupHelper.toJson((EMGroup) obj).toString());
             }
 
             if (obj instanceof EMChatRoom) {
-                jsonArray.put(EMChatRoomHelper.toJson((EMChatRoom) obj));
+                jsonArray.put(EMChatRoomHelper.toJson((EMChatRoom) obj).toString());
             }
 
             if (obj instanceof String) {
@@ -40,10 +40,10 @@ public class EMCursorResultHelper {
             }
 
             if (obj instanceof EMGroupInfo) {
-                jsonArray.put(EMGroupInfoHelper.toJson((EMGroupInfo) obj));
+                jsonArray.put(EMGroupInfoHelper.toJson((EMGroupInfo) obj).toString());
             }
         }
-        data.put("list", jsonArray);
+        data.put("list", jsonArray.toString());
 
         return data;
     }

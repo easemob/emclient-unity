@@ -5,7 +5,7 @@ using SimpleJSON;
 namespace ChatSDK
 {
 
-    public class Client_iOS : IClient
+    class Client_iOS : IClient
     {
 
         static string Connection_Obj = "unity_chat_emclient_connection_obj";

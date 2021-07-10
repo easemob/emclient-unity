@@ -22,7 +22,7 @@ public class EMMessageHelper {
     public static EMMessage fromJson(JSONObject json) throws JSONException{
         EMMessage message = null;
         JSONObject bodyJson = json.getJSONObject("body");
-        String type = bodyJson.getString("type");
+        String type = bodyJson.getString("bodyType");
         if (json.getString("direction").equals("send")) {
             switch (type) {
                 case "txt": {
@@ -160,45 +160,46 @@ public class EMMessageHelper {
         switch (message.getType()) {
             case TXT: {
                 type = "txt";
-                data.put("body", EMMessageBodyHelper.textBodyToJson((EMTextMessageBody) message.getBody()));
+                data.put("body", EMMessageBodyHelper.textBodyToJson((EMTextMessageBody) message.getBody()).toString());
             }
             break;
             case IMAGE: {
                 type = "img";
-                data.put("body", EMMessageBodyHelper.imageBodyToJson((EMImageMessageBody) message.getBody()));
+                data.put("body", EMMessageBodyHelper.imageBodyToJson((EMImageMessageBody) message.getBody()).toString());
             }
             break;
             case LOCATION: {
                 type = "loc";
-                data.put("body", EMMessageBodyHelper.localBodyToJson((EMLocationMessageBody) message.getBody()));
+                data.put("body", EMMessageBodyHelper.localBodyToJson((EMLocationMessageBody) message.getBody()).toString());
             }
             break;
             case CMD: {
                 type = "cmd";
-                data.put("body", EMMessageBodyHelper.cmdBodyToJson((EMCmdMessageBody) message.getBody()));
+                data.put("body", EMMessageBodyHelper.cmdBodyToJson((EMCmdMessageBody) message.getBody()).toString());
             }
             break;
             case CUSTOM: {
                 type = "custom";
-                data.put("body", EMMessageBodyHelper.customBodyToJson((EMCustomMessageBody) message.getBody()));
+                data.put("body", EMMessageBodyHelper.customBodyToJson((EMCustomMessageBody) message.getBody()).toString());
             }
             break;
             case FILE: {
                 type = "file";
-                data.put("body", EMMessageBodyHelper.fileBodyToJson((EMNormalFileMessageBody) message.getBody()));
+                data.put("body", EMMessageBodyHelper.fileBodyToJson((EMNormalFileMessageBody) message.getBody()).toString());
             }
             break;
             case VIDEO: {
                 type = "video";
-                data.put("body", EMMessageBodyHelper.videoBodyToJson((EMVideoMessageBody) message.getBody()));
+                data.put("body", EMMessageBodyHelper.videoBodyToJson((EMVideoMessageBody) message.getBody()).toString());
             }
             break;
             case VOICE: {
                 type = "voice";
-                data.put("body", EMMessageBodyHelper.voiceBodyToJson((EMVoiceMessageBody) message.getBody()));
+                data.put("body", EMMessageBodyHelper.voiceBodyToJson((EMVoiceMessageBody) message.getBody()).toString());
             }
             break;
         }
+        data.put("bodyType",type);
 
         if (message.ext().size() > 0 && null != message.ext()) {
             data.put("attributes", message.ext());
@@ -215,6 +216,8 @@ public class EMMessageHelper {
         data.put("conversationId", message.conversationId());
         data.put("msgId", message.getMsgId());
         data.put("hasRead", !message.isUnread());
+
+        System.out.println("-------------" + data.toString());
 
         return data;
     }

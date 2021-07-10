@@ -10,30 +10,34 @@ namespace ChatSDK
         public bool InviteNeedConfirm;
         public string Ext;
 
-        internal GroupOptions(string jsonString) {
-            JSONNode jn = JSON.Parse(jsonString);
-            if (!jn.IsNull && jn.IsObject) {
-                JSONObject jo = jn.AsObject;
-                int style = jo["style"].AsInt;
-                if (style == 0)
+        internal GroupOptions(string jsonString)
+        {
+            if (jsonString != null) {
+                JSONNode jn = JSON.Parse(jsonString);
+                if (!jn.IsNull && jn.IsObject)
                 {
-                    Style = GroupStyle.PrivateOnlyOwnerInvite;
+                    JSONObject jo = jn.AsObject;
+                    int style = jo["style"].AsInt;
+                    if (style == 0)
+                    {
+                        Style = GroupStyle.PrivateOnlyOwnerInvite;
+                    }
+                    else if (style == 1)
+                    {
+                        Style = GroupStyle.PrivateMemberCanInvite;
+                    }
+                    else if (style == 2)
+                    {
+                        Style = GroupStyle.PublicJoinNeedApproval;
+                    }
+                    else if (style == 3)
+                    {
+                        Style = GroupStyle.PublicOpenJoin;
+                    }
+                    MaxCount = jo["maxCount"].AsInt;
+                    InviteNeedConfirm = jo["inviteNeedConfirm"].AsBool;
+                    Ext = jo["ext"].Value;
                 }
-                else if (style == 1)
-                {
-                    Style = GroupStyle.PrivateMemberCanInvite;
-                }
-                else if (style == 2)
-                {
-                    Style = GroupStyle.PublicJoinNeedApproval;
-                }
-                else if (style == 3)
-                {
-                    Style = GroupStyle.PublicOpenJoin;
-                }
-                MaxCount = jo["maxCount"].AsInt;
-                InviteNeedConfirm = jo["inviteNeedConfirm"].AsBool;
-                Ext = jo["ext"].Value;
             }
         }
 

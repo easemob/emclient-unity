@@ -141,7 +141,7 @@ public class EMConversationWrapper extends EMWrapper{
         JSONArray jsonArray = new JSONArray();
         try {
             for (EMMessage msg: msgList) {
-                jsonArray.put(EMMessageHelper.toJson(msg));
+                jsonArray.put(EMMessageHelper.toJson(msg).toString());
             }
             ret = jsonArray.toString();
         }  catch (JSONException e) {
@@ -161,7 +161,7 @@ public class EMConversationWrapper extends EMWrapper{
         JSONArray jsonArray = new JSONArray();
         try {
             for (EMMessage msg: msgList) {
-                jsonArray.put(EMMessageHelper.toJson(msg));
+                jsonArray.put(EMMessageHelper.toJson(msg).toString());
             }
             ret = jsonArray.toString();
         }  catch (JSONException e) {
@@ -192,7 +192,7 @@ public class EMConversationWrapper extends EMWrapper{
         JSONArray jsonArray = new JSONArray();
         try {
             for (EMMessage msg: msgList) {
-                jsonArray.put(EMMessageHelper.toJson(msg));
+                jsonArray.put(EMMessageHelper.toJson(msg).toString());
             }
             ret = jsonArray.toString();
         }  catch (JSONException e) {
@@ -211,7 +211,7 @@ public class EMConversationWrapper extends EMWrapper{
         JSONArray jsonArray = new JSONArray();
         try {
             for (EMMessage msg: msgList) {
-                jsonArray.put(EMMessageHelper.toJson(msg));
+                jsonArray.put(EMMessageHelper.toJson(msg).toString());
             }
             ret = jsonArray.toString();
         }  catch (JSONException e) {
