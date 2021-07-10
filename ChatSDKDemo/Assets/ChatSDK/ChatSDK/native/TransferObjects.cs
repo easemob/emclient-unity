@@ -641,14 +641,14 @@ namespace ChatSDK
         public string Name;
         public string Description;
         public string Owner;
-        public string Annoumcement;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 64)]
+        public string Announcement;
+        [MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.SysInt, SizeConst = 64)]
         public IntPtr[] MemberList;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
+        [MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.SysInt, SizeConst = 16)]
         public IntPtr[] AdminList;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
+        [MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.SysInt, SizeConst = 16)]
         public IntPtr[] BlockList;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
+        [MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.SysInt, SizeConst = 16)]
         public IntPtr[] MuteList;
         public GroupOptions Options;
         public int MemberCount;
@@ -671,8 +671,9 @@ namespace ChatSDK
                 Name = Name,
                 Description = Description,
                 Owner = Owner,
-                Annoumcement = Annoumcement,
+                Annoumcement = Announcement,
                 Options = Options,
+                MemberCount = MemberCount,
                 PermissionType = PermissionType,
                 NoticeEnabled = NoticeEnabled,
                 MessageBlocked = MessageBlocked,
@@ -685,7 +686,7 @@ namespace ChatSDK
                 memberList.Add(m);
             }
             var adminList = new List<string>();
-            foreach (IntPtr adminPtr in AdminList)
+            foreach(IntPtr adminPtr in AdminList)
             {
                 string a = Marshal.PtrToStringAnsi(adminPtr);
                 adminList.Add(a);

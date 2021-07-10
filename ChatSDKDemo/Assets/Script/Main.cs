@@ -46,7 +46,7 @@ public class Main : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SendBtn.onClick.AddListener(RemoveMembersAction);
+        SendBtn.onClick.AddListener(AddAdminAction);
         
         JoinGroupBtn.onClick.AddListener(JoinGroupAction);
         GroupInfoBtn.onClick.AddListener(GetGroupInfoAction);
@@ -229,6 +229,7 @@ public class Main : MonoBehaviour
             new ValueCallBack<Group>(onSuccess: (Group group) =>
             {
                 Debug.Log($"Add admin {admin} into group {group.GroupId} successfully.");
+                Debug.Log($"Admin[0]={group.AdminList[0]}");
             },
             onError: (int code, string desc) =>
             {
