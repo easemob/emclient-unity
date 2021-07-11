@@ -52,6 +52,9 @@ using namespace easemob;
     typedef void (__stdcall *FUNC_OnAnnouncementChanged)(const char * groupId, const char * announcement);
     typedef void (__stdcall *FUNC_OnSharedFileAdded)(const char * groupId, GroupSharedFileTO sharedFile);
     typedef void (__stdcall *FUNC_OnSharedFileDeleted)(const char * groupId, const char * fileId);
+    //RoomManager Listener
+    typedef void (*FUNC_OnChatRoomDestroyed)(__stdcall const char * roomId, const char * roomName);
+    typedef void (*FUNC_OnRemovedFromChatRoom)(__stdcall const char * roomId, const char * roomName, const char * participant);
 #else
     //Callback
     typedef void(*FUNC_OnSuccess)();
@@ -93,6 +96,9 @@ using namespace easemob;
     typedef void (*FUNC_OnAnnouncementChanged)(const char * groupId, const char * announcement);
     typedef void (*FUNC_OnSharedFileAdded)(const char * groupId, GroupSharedFileTO sharedFile);
     typedef void (*FUNC_OnSharedFileDeleted)(const char * groupId, const char * fileId);
+    //RoomManager Listener
+    typedef void (*FUNC_OnChatRoomDestroyed)(const char * roomId, const char * roomName);
+    typedef void (*FUNC_OnRemovedFromChatRoom)(const char * roomId, const char * roomName, const char * participant);
 #endif
 
 class ConnectionListener : public EMConnectionListener
@@ -220,6 +226,32 @@ private:
     FUNC_OnAnnouncementChanged onAnnouncementChanged;
     FUNC_OnSharedFileAdded onSharedFileAdded;
     FUNC_OnSharedFileDeleted onSharedFileDeleted;
+};
+
+class RoomManagerListener : public EMChatroomManagerListener
+{
+public:
+    RoomManagerListener(void * client, FUNC_OnChatRoomDestroyed onChatRoomDestroyed, FUNC_OnMemberJoined onMemberJoined, FUNC_OnMemberExited onMemberExited,
+                        FUNC_OnRemovedFromChatRoom onRemovedFromChatRoom, FUNC_OnMuteListAdded onMuteListAdded, FUNC_OnMuteListRemoved onMuteListRemoved,
+                        FUNC_OnAdminAdded onAdminAdded, FUNC_OnAdminRemoved onAdminRemoved, FUNC_OnOwnerChanged onOwnerChanged, FUNC_OnAnnouncementChanged onAnnouncementChanged ):client(client), onChatRoomDestroyed(onChatRoomDestroyed), onMemberJoined(onMemberJoined), onMemberExited(onMemberExited), onRemovedFromChatRoom(onRemovedFromChatRoom), onMuteListAdded(onMuteListAdded), onMuteListRemoved(onMuteListRemoved), onAdminAdded(onAdminAdded), onAdminRemoved(onAdminRemoved), onOwnerChanged(onOwnerChanged), onAnnouncementChanged(onAnnouncementChanged) {}
+    
+    void  onMemberJoinedChatroom(const EMChatroomPtr chatroom, const std::string &member) override {
+        if(onMemberJoined) {
+            onMemberJoined(chatroom->chatroomId().c_str(), member.c_str());
+        }
+    }
+private:
+    void * client;
+    FUNC_OnChatRoomDestroyed onChatRoomDestroyed;
+    FUNC_OnMemberJoined onMemberJoined;
+    FUNC_OnMemberExited onMemberExited;
+    FUNC_OnRemovedFromChatRoom onRemovedFromChatRoom;
+    FUNC_OnMuteListAdded onMuteListAdded;
+    FUNC_OnMuteListRemoved onMuteListRemoved;
+    FUNC_OnAdminAdded onAdminAdded;
+    FUNC_OnAdminRemoved onAdminRemoved;
+    FUNC_OnOwnerChanged onOwnerChanged;
+    FUNC_OnAnnouncementChanged onAnnouncementChanged;
 };
 
 #endif // _CALLBACKS_H_

@@ -131,13 +131,8 @@ AGORA_API void GroupManager_GetGroupWithId(void *client, const char * groupId, F
     EMGroupPtr result = CLIENT->getGroupManager().fetchGroupSpecification(groupId, error);
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
         //success
-        LOG("GroupManager_GetGroupWithId succeeds with %s, group info:", result->groupId().c_str());
-        LOG("Subject: %s", result->groupSubject().c_str());
-        LOG("Member count %d", result->groupMembers().size());
-        LOG("Admin count %d", result->mucAdmins().size());
         if(onSuccess) {
             GroupTO *datum = GroupTO::FromEMGroup(result);
-            datum->LogInfo();
             GroupTO *data[1] = {datum};
             onSuccess((void **)data, DataType::Group, 1);
         }

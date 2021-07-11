@@ -207,3 +207,82 @@ void GroupTO::LogInfo()
     LOG("MessageBlocked: %p %d", &MessageBlocked, MessageBlocked);
     LOG("IsAllMemberMuted: %p %d", &IsAllMemberMuted, IsAllMemberMuted);
 }
+
+RoomTO * RoomTO::FromEMChatRoom(EMChatroomPtr &room)
+{
+    RoomTO *rto = new RoomTO();
+    rto->RoomId = room->chatroomId().c_str();
+    rto->Name = room->chatroomSubject().c_str();
+    rto->Description = room->chatroomDescription().c_str();
+    rto->Owner = room->owner().c_str();
+    rto->Announcement = room->chatroomAnnouncement().c_str();
+    
+    rto->MemberCount = (int)room->chatroomMembers().size();
+    rto->AdminCount = (int)room->chatroomAdmins().size();
+    rto->BlockCount = (int)room->chatroomBans().size();
+    rto->MuteCount = (int)room->chatroomMutes().size();
+    
+    int i = 0;
+    rto->MemberList = new char *[rto->MemberCount];
+    for(std::string member : room->chatroomMembers()) {
+        rto->MemberList[i] = new char[member.size()+1];
+        std::strcpy(rto->MemberList[i], member.c_str());
+        i++;
+    }
+    i=0;
+    rto->AdminList = new char *[rto->AdminCount];
+    for(std::string admin : room->chatroomAdmins()) {
+        rto->AdminList[i] = new char[admin.size()+1];
+        std::strcpy(rto->AdminList[i], admin.c_str());
+        i++;
+    }
+    i=0;
+    rto->BlockList = new char *[rto->BlockCount];
+    for(std::string block : room->chatroomBans()) {
+        rto->BlockList[i] = new char[block.size()+1];
+        std::strcpy(rto->BlockList[i], block.c_str());
+        i++;
+    }
+    i=0;
+    rto->MuteList = new Mute[rto->MuteCount];
+    for(auto mute : room->chatroomMutes()) {
+        char *memberStr = new char[mute.first.size()+1];
+        std::strcpy(memberStr, mute.first.c_str());
+        rto->MuteList[i] = Mute{.Member = memberStr, .Duration=mute.second};
+        i++;
+    }
+    
+    rto->PermissionType = room->chatroomMemberType();
+    
+    rto->MaxUsers = room->chatroomMemberMaxCount();
+    
+    rto->IsAllMemberMuted = room->isMucAllMembersMuted();
+    
+    return rto;
+}
+
+void RoomTO::LogInfo()
+{
+    LOG("RoomTO's info:");
+    LOG("RoomId: %p %p %s", &RoomId, RoomId, RoomId);
+    LOG("Name: %p %p %s", &Name, Name, Name);
+    LOG("Description: %p %p %s", &Description, Description, Description);
+    LOG("Owner: %p %p %s", &Owner, Owner, Owner);
+    LOG("Announcement: %p %p %s", &Announcement, Announcement, Announcement);
+    
+    LOG("MemberList address: %p %p", &MemberList, MemberList);
+    LOG("AdminList address: %p %p", &AdminList, AdminList);
+    LOG("BlockList address: %p %p", &BlockList, BlockList);
+    LOG("MuteList address: %p %p", &MuteList, MuteList);
+
+    LOG("MemberCount: %p %d", &MemberCount, MemberCount);
+    LOG("AdminCount: %p %d", &AdminCount, AdminCount);
+    LOG("BlockCount: %p %d", &BlockCount, BlockCount);
+    LOG("MuteCount: %p %d", &MuteCount, MuteCount);
+    
+    LOG("PermissionType: %p %d", &PermissionType, PermissionType);
+    
+    LOG("MaxUsers: %p %d", &MaxUsers, MaxUsers);
+    
+    LOG("IsAllMemberMuted: %p %d", &IsAllMemberMuted, IsAllMemberMuted);
+}

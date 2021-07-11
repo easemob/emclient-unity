@@ -86,7 +86,7 @@
 #elif UNITY_IOS
                 roomImp = new RoomManager_iOS();
 #elif UNITY_STANDALONE_OSX
-                roomImp = new RoomManager_Mac();
+                roomImp = new RoomManager_Mac(instance);
 #elif UNITY_STANDALONE_WIN
                 roomImp = new RoomManager_Win();
 #endif

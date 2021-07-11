@@ -5,6 +5,7 @@
         Bool,
         String,
         Group,
+        Room,
         CursorResult,
         ListOfString,
         ListOfMessage,
@@ -91,10 +92,12 @@
 
     public enum RoomPermissionType
     {
-        None,
         Member,
         Admin,
         Owner,
+        Unknown = -1,
+        Default = Unknown,
+        None = Unknown
     }
 
     public enum PushStyle : byte { Simple, Summary, }

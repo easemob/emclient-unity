@@ -46,7 +46,7 @@ public class Main : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SendBtn.onClick.AddListener(GetGroupInfoAction);
+        SendBtn.onClick.AddListener(ChangeRoomSubjectAction);
         
         JoinGroupBtn.onClick.AddListener(JoinGroupAction);
         GroupInfoBtn.onClick.AddListener(GetGroupInfoAction);
@@ -198,6 +198,39 @@ public class Main : MonoBehaviour
             }));
     }
 
+    void CreateRoomAction()
+    {
+        string subject = RecvIdField.text;
+        string description = TextField.text;
+        List<string> members = new List<string> { "f1", "ys1" };
+        IRoomManager roomManager = SDKClient.Instance.RoomManager;
+        roomManager.CreateRoom(subject, description, description, 300, members,
+            new ValueCallBack<Room>(onSuccess: (Room room) =>
+            {
+                Debug.Log($"Room {room.RoomId} named {room.Name} created successfully.");
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Create room failed with code={code}, desc={desc}");
+            }));
+    }
+
+    void ChangeRoomSubjectAction()
+    {
+        string roomId = RecvIdField.text;
+        string newSubject = TextField.text;
+        IRoomManager roomManager = SDKClient.Instance.RoomManager;
+        roomManager.ChangeRoomSubject(roomId, newSubject,
+            new ValueCallBack<Room>(onSuccess: (Room room) =>
+            {
+                Debug.Log($"Room {room.RoomId} subject changed to {room.Name} successfully.");
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Change room subject failed with code={code}, desc={desc}");
+            }));
+    }
+
     void RenameGroupAction()
     {
         string groupId = RecvIdField.text;
@@ -229,7 +262,10 @@ public class Main : MonoBehaviour
             new ValueCallBack<Group>(onSuccess: (Group group) =>
             {
                 Debug.Log($"Add admin {admin} into group {group.GroupId} successfully.");
-                Debug.Log($"Admin[0]={group.AdminList[0]}");
+                if(group.AdminList.Count > 0)
+                {
+                    Debug.Log($"Admin[0]={group.AdminList[0]}");
+                }               
             },
             onError: (int code, string desc) =>
             {

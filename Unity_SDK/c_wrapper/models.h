@@ -4,7 +4,9 @@
 #include "emchatmanager_interface.h"
 #include "emmuc.h"
 #include "emgroup.h"
+#include "emchatroom.h"
 #include "emgroupmanager_interface.h"
+#include "emchatroommanager_interface.h"
 #include "emtextmessagebody.h"
 #include "emlocationmessagebody.h"
 #include "emcmdmessagebody.h"
@@ -199,6 +201,7 @@ enum DataType {
     Bool,
     String,
     Group,
+    Room,
     CursorResult,
     ListOfString,
     ListOfMessage,
@@ -267,6 +270,30 @@ struct GroupTO
     bool IsAllMemberMuted;
     
     static GroupTO * FromEMGroup(EMGroupPtr &group);
+    
+    void LogInfo();
+};
+
+struct RoomTO
+{
+    const char * RoomId;
+    const char * Name;
+    const char * Description;
+    const char * Owner;
+    const char * Announcement;
+    char ** MemberList;
+    char ** AdminList;
+    char ** BlockList;
+    Mute * MuteList;
+    int MemberCount;
+    int AdminCount;
+    int BlockCount;
+    int MuteCount;
+    EMGroup::EMMucMemberType PermissionType;
+    int MaxUsers;
+    bool IsAllMemberMuted;
+    
+    static RoomTO * FromEMChatRoom(EMChatroomPtr &room);
     
     void LogInfo();
 };

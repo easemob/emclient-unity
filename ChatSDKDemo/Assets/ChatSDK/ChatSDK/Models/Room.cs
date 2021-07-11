@@ -14,7 +14,7 @@ namespace ChatSDK
         public List<string> AdminList { get; internal set; }
         public List<string> MemberList { get; internal set; }
         public List<string> BlockList { get; internal set; }
-        public List<string> MuteList { get; internal set; }
+        public List<Mute> MuteList { get; internal set; }
 
         public bool AllMemberMuted { get; internal set; }
 
@@ -38,7 +38,8 @@ namespace ChatSDK
                 AdminList = TransformTool.JsonStringToStringList(jo["adminList"].Value);
                 MemberList = TransformTool.JsonStringToStringList(jo["memberList"].Value);
                 BlockList = TransformTool.JsonStringToStringList(jo["blockList"].Value);
-                MuteList = TransformTool.JsonStringToStringList(jo["muteList"].Value);
+                //TODO: Mute{member, duration}
+                //MuteList = TransformTool.JsonStringToStringList(jo["muteList"].Value);
                 MaxUsers = jo["maxUsers"].AsInt;
                 Owner = jo["owner"].Value;
                 IsAllMemberMuted = jo["isAllMemberMuted"].AsBool;
@@ -59,6 +60,12 @@ namespace ChatSDK
                     PermissionType = RoomPermissionType.Owner;
                 }
             }
+        }
+
+
+        internal Room()
+        {
+            //default constructor
         }
 
     }

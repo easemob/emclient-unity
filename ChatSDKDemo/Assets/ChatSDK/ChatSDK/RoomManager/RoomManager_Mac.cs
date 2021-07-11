@@ -1,9 +1,30 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using UnityEngine;
 
 namespace ChatSDK
 {
     public class RoomManager_Mac : IRoomManager
     {
+        private IntPtr client;
+        private RoomManagerHub roomManagerHub;
+
+        //manager level events
+
+        internal RoomManager_Mac(IClient _client)
+        {
+            if (_client is Client_Mac clientMac)
+            {
+                client = clientMac.client;
+            }
+            roomManagerHub = new RoomManagerHub(Delegate);
+            //registered listeners
+            ChatAPINative.RoomManager_AddListener(client, roomManagerHub.OnChatRoomDestroyed, roomManagerHub.OnMemberJoined,
+                roomManagerHub.OnMemberExited, roomManagerHub.OnRemovedFromChatRoom, roomManagerHub.OnMuteListAdded, roomManagerHub.OnMuteListRemoved,
+                roomManagerHub.OnAdminAdded, roomManagerHub.OnAdminRemoved, roomManagerHub.OnOwnerChanged, roomManagerHub.OnAnnouncementChanged);
+        }
+
         public override void AddRoomAdmin(string roomId, string memberId, ValueCallBack<Room> handle = null)
         {
             throw new System.NotImplementedException();
@@ -26,12 +47,50 @@ namespace ChatSDK
 
         public override void ChangeRoomSubject(string roomId, string newSubject, ValueCallBack<Room> handle = null)
         {
-            throw new System.NotImplementedException();
+            ChatAPINative.RoomManager_ChangeRoomSubject(client, roomId, newSubject,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
+                    if (dType == DataType.Room && dSize == 1)
+                    {
+                        var result = Marshal.PtrToStructure<RoomTO>(data[0]);
+                        handle?.OnSuccessValue(result.RoomInfo());
+                    }
+                    else
+                    {
+                        Debug.LogError($"Group information expected.");
+                    }
+                },
+                handle?.OnError);
         }
 
-        public override void CreateRoom(string subject, string descriptionsc, string welcomeMsg, int maxUserCount = 300, List<string> members = null, ValueCallBack<Room> handle = null)
+        public override void CreateRoom(string subject, string description, string welcomeMsg, int maxUserCount = 300, List<string> members = null, ValueCallBack<Room> handle = null)
         {
-            throw new System.NotImplementedException();
+            //turn List<string> into array
+            int size = 0;
+            var membersArray = new string[0];
+            if (members != null && members.Count > 0)
+            {
+                size = members.Count;
+                membersArray = new string[size];
+                int i = 0;
+                foreach (string member in members)
+                {
+                    membersArray[i] = member;
+                    i++;
+                }
+            }
+            ChatAPINative.RoomManager_CreateRoom(client, subject, description, welcomeMsg, maxUserCount, membersArray, size,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
+                    if (dType == DataType.Room && dSize == 1)
+                    {
+                        var result = Marshal.PtrToStructure<RoomTO>(data[0]);
+                        handle?.OnSuccessValue(result.RoomInfo());
+                    }
+                    else
+                    {
+                        Debug.LogError($"Group information expected.");
+                    }
+                },
+                handle?.OnError);
         }
 
         public override void DestroyRoom(string roomId, CallBack handle = null)

@@ -719,4 +719,83 @@ namespace ChatSDK
             return result;
         }
     }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct RoomTO
+    {
+        public string RoomId;
+        public string Name;
+        public string Description;
+        public string Owner;
+        public string Announcement;
+        public IntPtr MemberList;
+        public IntPtr AdminList;
+        public IntPtr BlockList;
+        public IntPtr MuteList;
+        public int MemberCount;
+        public int AdminCount;
+        public int BlockCount;
+        public int MuteCount;
+        public RoomPermissionType PermissionType;
+        public int MaxUsers;
+        [MarshalAs(UnmanagedType.U1)]
+        public bool IsAllMemberMuted;
+
+        internal Room RoomInfo()
+        {
+            var result = new Room()
+            {
+                RoomId = RoomId,
+                Name = Name,
+                Description = Description,
+                Owner = Owner,
+                Announcement = Announcement,
+                PermissionType = PermissionType,
+                MaxUsers = MaxUsers,
+                IsAllMemberMuted = IsAllMemberMuted
+            };
+            var memberList = new List<string>();
+            IntPtr current = MemberList;
+            for (int i = 0; i < MemberCount; i++)
+            {
+                IntPtr memberPtr = Marshal.PtrToStructure<IntPtr>(current);
+                string m = Marshal.PtrToStringAnsi(memberPtr);
+                memberList.Add(m);
+                current = (IntPtr)((long)current + Marshal.SizeOf(current));
+            }
+            var adminList = new List<string>();
+            current = AdminList;
+            for (int i = 0; i < AdminCount; i++)
+            {
+                IntPtr adminPtr = Marshal.PtrToStructure<IntPtr>(current);
+                string a = Marshal.PtrToStringAnsi(adminPtr);
+                adminList.Add(a);
+                current = (IntPtr)((long)current + Marshal.SizeOf(current));
+            }
+            var blockList = new List<string>();
+            current = AdminList;
+            for (int i = 0; i < BlockCount; i++)
+            {
+                IntPtr blockPtr = Marshal.PtrToStructure<IntPtr>(current);
+                string b = Marshal.PtrToStructure<string>(blockPtr);
+                blockList.Add(b);
+                current = (IntPtr)((long)current + Marshal.SizeOf(current));
+            }
+            var muteList = new List<Mute>();
+            current = MuteList;
+            for (int i = 0; i < MuteCount; i++)
+            {
+                Mute m = Marshal.PtrToStructure<Mute>(current);
+                muteList.Add(m);
+                current = (IntPtr)((long)current + Marshal.SizeOf(current));
+            }
+
+            result.MemberList = memberList;
+            result.AdminList = adminList;
+            result.BlockList = blockList;
+            result.MuteList = muteList;
+
+            return result;
+        }
+    }
 }

@@ -38,7 +38,10 @@ namespace ChatSDK
     public delegate void OnAnnouncementChanged(string groupId, string announcement);
     public delegate void OnSharedFileAdded(string groupId, GroupSharedFile sharedFile);
     public delegate void OnSharedFileDeleted(string groupId, string fileId);
-
+    //IRoomManagerDelegate, most of them are duplicated as IGroupManagerDelegate
+    public delegate void OnChatRoomDestroyed(string roomId, string roomName);
+    public delegate void OnRemovedFromChatRoom(string roomId, string roomName, string participant);
+    
     public class ConnectionHub
     {
         //events handler
@@ -200,6 +203,43 @@ namespace ChatSDK
                 foreach (IGroupManagerDelegate listener in listeners?.List)
                 {
                     listener.OnInvitationReceived(groupId, groupName, inviter, reason);
+                }
+            };
+        }
+    }
+
+    public class RoomManagerHub
+    {
+        internal OnChatRoomDestroyed OnChatRoomDestroyed;
+        internal OnMemberJoined OnMemberJoined;
+        internal OnMemberExited OnMemberExited;
+        internal OnRemovedFromChatRoom OnRemovedFromChatRoom;
+        internal OnMuteListAdded OnMuteListAdded;
+        internal OnMuteListRemoved OnMuteListRemoved;
+        internal OnAdminAdded OnAdminAdded;
+        internal OnAdminRemoved OnAdminRemoved;
+        internal OnOwnerChanged OnOwnerChanged;
+        internal OnAnnouncementChanged OnAnnouncementChanged;
+
+        private WeakDelegater<IRoomManagerDelegate> listeners;
+
+        public RoomManagerHub(WeakDelegater<IRoomManagerDelegate> _listeners)
+        {
+            if (_listeners == null)
+            {
+                listeners = new WeakDelegater<IRoomManagerDelegate>();
+            }
+            else
+            {
+                listeners = _listeners;
+            }
+
+            OnMemberJoined = (string groupId, string member) =>
+            {
+                Debug.Log($"Member {member} just joined group {groupId}.");
+                foreach (IRoomManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnMemberJoined(groupId, member);
                 }
             };
         }

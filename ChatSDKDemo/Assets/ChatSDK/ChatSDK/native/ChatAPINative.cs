@@ -83,6 +83,20 @@ namespace ChatSDK{
 		[DllImport(MyLibName)]
 		internal static extern void GroupManager_GetGroupWithId(IntPtr client, string groupId, OnSuccessResult onSuccessResult = null, OnError onError = null);
 
+		/** RoomManager Stub **/
+		[DllImport(MyLibName)]
+		internal static extern void RoomManager_AddListener(IntPtr client, OnChatRoomDestroyed onChatRoomDestroyed, OnMemberJoined onMemberJoined,
+				OnMemberExited onMemberExited, OnRemovedFromChatRoom onRemovedFromChatRoom, OnMuteListAdded onMuteListAdded, OnMuteListRemoved onMuteListRemoved,
+				OnAdminAdded onAdminAdded, OnAdminRemoved onAdminRemoved, OnOwnerChanged onOwnerChanged, OnAnnouncementChanged onAnnouncementChanged);
+
+		[DllImport(MyLibName)]
+		internal static extern void RoomManager_CreateRoom(IntPtr client, string subject, string descriptionsc, string welcomeMsg, int maxUserCount = 300,
+			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 3)] string[] memberArray = null, int size = 0,
+			OnSuccessResult onSuccessResult = null, OnError onError = null);
+
+		[DllImport(MyLibName)]
+		internal static extern void RoomManager_ChangeRoomSubject(IntPtr client, string roomId, string newSubject, OnSuccessResult onSuccessResult = null, OnError onError = null);
+
 		#endregion native API import
 	}
 }
