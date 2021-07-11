@@ -121,10 +121,7 @@ MessageTO * MessageTO::FromEMMessage(const EMMessagePtr &_message)
 }
 
 GroupOptions GroupOptions::FromMucSetting(EMMucSettingPtr setting) {
-    auto extension = setting->extension();
-    auto str = extension.c_str();
-    GroupOptions options {.Ext=str, .MaxCount=setting->maxUserCount(), .InviteNeedConfirm = setting->inviteNeedConfirm(), .Style=setting->style()};
-    return options;
+    return GroupOptions {.Ext=setting->extension().c_str(), .MaxCount=setting->maxUserCount(), .InviteNeedConfirm = setting->inviteNeedConfirm(), .Style=setting->style()};
 }
 
 GroupTO * GroupTO::FromEMGroup(EMGroupPtr &group)
@@ -134,35 +131,79 @@ GroupTO * GroupTO::FromEMGroup(EMGroupPtr &group)
     gto->Name = group->groupSubject().c_str();
     gto->Description = group->groupDescription().c_str();
     gto->Owner = group->groupOwner().c_str();
-    gto->Annoumcement = group->groupAnnouncement().c_str();
+    gto->Announcement = group->groupAnnouncement().c_str();
+    
     gto->MemberCount = (int)group->groupMembers().size();
     gto->AdminCount = (int)group->groupAdmins().size();
     gto->BlockCount = (int)group->groupBans().size();
     gto->MuteCount = (int)group->groupMutes().size();
+    
+    int i = 0;
+    gto->MemberList = new char *[gto->MemberCount];
+    for(std::string member : group->groupMembers()) {
+        gto->MemberList[i] = new char[member.size()+1];
+        std::strcpy(gto->MemberList[i], member.c_str());
+        i++;
+    }
+    i=0;
+    gto->AdminList = new char *[gto->AdminCount];
+    for(std::string admin : group->groupAdmins()) {
+        gto->AdminList[i] = new char[admin.size()+1];
+        std::strcpy(gto->AdminList[i], admin.c_str());
+        i++;
+    }
+    i=0;
+    gto->BlockList = new char *[gto->BlockCount];
+    for(std::string block : group->groupBans()) {
+        gto->BlockList[i] = new char[block.size()+1];
+        std::strcpy(gto->BlockList[i], block.c_str());
+        i++;
+    }
+    i=0;
+    gto->MuteList = new Mute[gto->MuteCount];
+    for(auto mute : group->groupMutes()) {
+        char *memberStr = new char[mute.first.size()+1];
+        std::strcpy(memberStr, mute.first.c_str());
+        gto->MuteList[i] = Mute{.Member = memberStr, .Duration=mute.second};
+        i++;
+    }
+    
     gto->Options = GroupOptions::FromMucSetting(group->groupSetting());
+    
+    gto->PermissionType = group->groupMemberType();
+    
     gto->NoticeEnabled = group->isPushEnabled();
     gto->MessageBlocked = group->isMessageBlocked();
     gto->IsAllMemberMuted = group->isMucAllMembersMuted();
-    gto->PermissionType = group->groupMemberType();
-    int i = 0;
-    for(std::string member : group->groupMembers()) {
-        gto->MemberList[i] = member.c_str();
-        i++;
-    }
-    i=0;
-    for(std::string admin : group->groupAdmins()) {
-        gto->AdminList[i] = admin.c_str();
-        i++;
-    }
-    i=0;
-    for(std::string block : group->groupBans()) {
-        gto->BlockList[i] = block.c_str();
-        i++;
-    }
-    i=0;
-    for(auto mute : group->groupMutes()) {
-        gto->MuteList[i] = Mute{.Member = mute.first.c_str(), .Duration=mute.second};
-        i++;
-    }
+    
     return gto;
+}
+
+void GroupTO::LogInfo()
+{
+    LOG("GroupTO's info:");
+    LOG("GroupId: %p %p %s", &GroupId, GroupId, GroupId);
+    LOG("Name: %p %p %s", &Name, Name, Name);
+    LOG("Description: %p %p %s", &Description, Description, Description);
+    LOG("Owner: %p %p %s", &Owner, Owner, Owner);
+    LOG("Announcement: %p %p %s", &Announcement, Announcement, Announcement);
+    
+    LOG("MemberList address: %p %p", &MemberList, MemberList);
+    LOG("AdminList address: %p %p", &AdminList, AdminList);
+    LOG("BlockList address: %p %p", &BlockList, BlockList);
+    LOG("MuteList address: %p %p", &MuteList, MuteList);
+
+    
+    LOG("Options: %p", &Options);
+    
+    LOG("MemberCount: %p %d", &MemberCount, MemberCount);
+    LOG("AdminCount: %p %d", &AdminCount, AdminCount);
+    LOG("BlockCount: %p %d", &BlockCount, BlockCount);
+    LOG("MuteCount: %p %d", &MuteCount, MuteCount);
+    
+    LOG("PermissionType: %p %d", &PermissionType, PermissionType);
+    
+    LOG("NoticeEnabled: %p %d", &NoticeEnabled, NoticeEnabled);
+    LOG("MessageBlocked: %p %d", &MessageBlocked, MessageBlocked);
+    LOG("IsAllMemberMuted: %p %d", &IsAllMemberMuted, IsAllMemberMuted);
 }

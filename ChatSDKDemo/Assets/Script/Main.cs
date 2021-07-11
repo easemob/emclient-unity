@@ -46,7 +46,7 @@ public class Main : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SendBtn.onClick.AddListener(AddAdminAction);
+        SendBtn.onClick.AddListener(GetGroupInfoAction);
         
         JoinGroupBtn.onClick.AddListener(JoinGroupAction);
         GroupInfoBtn.onClick.AddListener(GetGroupInfoAction);
@@ -255,7 +255,21 @@ public class Main : MonoBehaviour
 
     void GetGroupInfoAction()
     {
-
+        string groupId = RecvIdField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.GetGroupWithId(groupId,
+            new ValueCallBack<Group>(onSuccess: (Group group) =>
+            {
+                Debug.Log($"Group {group.GroupId} information retrieved successfully.");
+                if(group.MemberCount > 0)
+                {
+                    Debug.Log($"MemberLsit[0]={group.MemberList[0]}");
+                }
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Failed to get group information, error code={code}, desc={desc}");
+            }));
     }
 
     void LeaveGroupAction()

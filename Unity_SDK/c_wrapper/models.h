@@ -251,11 +251,11 @@ struct GroupTO
     const char * Name;
     const char * Description;
     const char * Owner;
-    const char * Annoumcement;
-    const char * MemberList[64];
-    const char * AdminList[16];
-    const char * BlockList[16];
-    Mute MuteList[16];
+    const char * Announcement;
+    char ** MemberList;
+    char ** AdminList;
+    char ** BlockList;
+    Mute * MuteList;
     GroupOptions Options;
     int MemberCount;
     int AdminCount;
@@ -267,6 +267,8 @@ struct GroupTO
     bool IsAllMemberMuted;
     
     static GroupTO * FromEMGroup(EMGroupPtr &group);
+    
+    void LogInfo();
 };
 
 

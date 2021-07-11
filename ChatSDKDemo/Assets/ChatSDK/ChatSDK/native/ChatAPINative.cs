@@ -79,6 +79,10 @@ namespace ChatSDK{
 		[DllImport(MyLibName)]
 		internal static extern void GroupManager_AddAdmin(IntPtr client, string groupId, string memberId,
 				OnSuccessResult onSuccessResult = null, OnError onError = null);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_GetGroupWithId(IntPtr client, string groupId, OnSuccessResult onSuccessResult = null, OnError onError = null);
+
 		#endregion native API import
 	}
 }

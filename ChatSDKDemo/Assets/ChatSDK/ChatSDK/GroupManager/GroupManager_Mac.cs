@@ -222,7 +222,19 @@ namespace ChatSDK
 
         public override void GetGroupWithId(string groupId, ValueCallBack<Group> handle = null)
         {
-            throw new System.NotImplementedException();
+            ChatAPINative.GroupManager_GetGroupWithId(client, groupId,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
+                    if (dType == DataType.Group && dSize == 1)
+                    {
+                        var result = Marshal.PtrToStructure<GroupTO>(data[0]);
+                        handle?.OnSuccessValue(result.GroupInfo());
+                    }
+                    else
+                    {
+                        Debug.LogError($"Group information expected.");
+                    }
+                },
+                handle?.OnError); 
         }
 
         public override void GetJoinedGroups(ValueCallBack<List<Group>> handle = null)
