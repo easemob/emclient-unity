@@ -97,6 +97,15 @@ namespace ChatSDK{
 		[DllImport(MyLibName)]
 		internal static extern void RoomManager_ChangeRoomSubject(IntPtr client, string roomId, string newSubject, OnSuccessResult onSuccessResult = null, OnError onError = null);
 
+		[DllImport(MyLibName)]
+		internal static extern void RoomManager_AddRoomAdmin(IntPtr client, string roomId, string memberId, OnSuccessResult onSuccessResult = null, OnError onError = null);
+
+		[DllImport(MyLibName)]
+		internal static extern void RoomManager_RemoveRoomMembers(IntPtr client, string roomId, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 3)] string[] memberArray = null,
+			int size = 0, Action onSuccess = null, OnError onError = null);
+
+		
+
 		#endregion native API import
 	}
 }

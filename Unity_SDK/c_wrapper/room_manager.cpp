@@ -66,3 +66,47 @@ AGORA_API void RoomManager_ChangeRoomSubject(void *client, const char * roomId, 
         }
     }
 }
+
+AGORA_API void RoomManager_AddRoomAdmin(void * client, const char * roomId, const char * memberId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+{
+    EMError error;
+    EMChatroomPtr result = CLIENT->getChatroomManager().addChatroomAdmin(roomId, memberId, error);
+    if(error.mErrorCode == EMError::EM_NO_ERROR) {
+        //succees
+        LOG("RoomManager_AddRoomAdmin succeeds: %s", result->chatroomSubject().c_str());
+        if(onSuccess) {
+            RoomTO *datum = RoomTO::FromEMChatRoom(result);
+            RoomTO *data[1] = {datum};
+            datum->LogInfo();
+            onSuccess((void **)data, DataType::Room, 1);
+        }
+    }else{
+        //error
+        if(onError) {
+            onError(error.mErrorCode, error.mDescription.c_str());
+        }
+    }
+}
+
+AGORA_API void RoomManager_RemoveRoomMembers(void * client, const char * roomId, const char * memberArray[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+{
+    EMError error;
+    EMMucMemberList memberList;
+    for(int i=0; i<size; i++) {
+        memberList.push_back(memberArray[i]);
+    }
+    EMChatroomPtr result = CLIENT->getChatroomManager().removeChatroomMembers(roomId, memberList, error);
+    if(error.mErrorCode == EMError::EM_NO_ERROR) {
+        //succees
+        LOG("RoomManager_RemoveRoomMembers succeeds: %s", result->chatroomSubject().c_str());
+        if(onSuccess) {
+            onSuccess();
+        }
+    }else{
+        //error
+        if(onError) {
+            onError(error.mErrorCode, error.mDescription.c_str());
+        }
+    }
+    
+}

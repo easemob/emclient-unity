@@ -2,9 +2,9 @@
   <MonoDevelop.Ide.ItemProperties.ChatSDKDemo PreferredExecutionTarget="95cd266c-1045-47ee-8ef5-ceac692d7815" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/ChatSDK/ChatSDK/native/ChatAPINative.cs">
     <Files>
-      <File FileName="Assets/Script/Main.cs" Line="216" Column="6" />
-      <File FileName="Assets/ChatSDK/ChatSDK/RoomManager/RoomManager_Mac.cs" Line="50" Column="56" />
-      <File FileName="Assets/ChatSDK/ChatSDK/native/ChatAPINative.cs" Line="97" Column="24" />
+      <File FileName="Assets/Script/Main.cs" Line="49" Column="60" />
+      <File FileName="Assets/ChatSDK/ChatSDK/RoomManager/RoomManager_Mac.cs" Line="189" Column="56" />
+      <File FileName="Assets/ChatSDK/ChatSDK/native/ChatAPINative.cs" Line="90" Column="96" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -35,7 +35,7 @@
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="318ef1b5-d8df-4876-bf20-c8599c56af56" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="03de6416-bdaf-4274-b246-b4efaa3fd619" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/Script/Delegate.cs" relfile="Assets/Script/Delegate.cs" line="94" column="1" />
@@ -43,7 +43,7 @@
       <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/Script/Login.cs" relfile="Assets/Script/Login.cs" line="37" column="1" />
       <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/ChatManager/ChatManager_Mac.cs" relfile="Assets/ChatSDK/ChatSDK/ChatManager/ChatManager_Mac.cs" line="21" column="1" />
       <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/native/TransferObjects.cs" relfile="Assets/ChatSDK/ChatSDK/native/TransferObjects.cs" line="680" column="1" />
-      <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/Script/Main.cs" relfile="Assets/Script/Main.cs" line="248" column="1" />
+      <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/Script/Main.cs" relfile="Assets/Script/Main.cs" line="264" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />

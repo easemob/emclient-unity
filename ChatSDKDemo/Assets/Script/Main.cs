@@ -231,6 +231,23 @@ public class Main : MonoBehaviour
             }));
     }
 
+    void RemoveRoomMembersAction()
+    {
+        string roomId = RecvIdField.text;
+        string description = TextField.text;
+        List<string> members = new List<string> { "f1", "ys1" };
+        IRoomManager roomManager = SDKClient.Instance.RoomManager;
+        roomManager.RemoveRoomMembers(roomId, members,
+            new CallBack(onSuccess: () =>
+            {
+                Debug.Log($"Remove members from room {roomId} successfully.");
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Remove members from room failed with code={code}, desc={desc}");
+            }));
+    }
+
     void RenameGroupAction()
     {
         string groupId = RecvIdField.text;

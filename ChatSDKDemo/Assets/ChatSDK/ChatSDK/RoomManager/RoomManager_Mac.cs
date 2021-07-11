@@ -27,7 +27,19 @@ namespace ChatSDK
 
         public override void AddRoomAdmin(string roomId, string memberId, ValueCallBack<Room> handle = null)
         {
-            throw new System.NotImplementedException();
+            ChatAPINative.RoomManager_AddRoomAdmin(client, roomId, memberId,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
+                    if (dType == DataType.Room && dSize == 1)
+                    {
+                        var result = Marshal.PtrToStructure<RoomTO>(data[0]);
+                        handle?.OnSuccessValue(result.RoomInfo());
+                    }
+                    else
+                    {
+                        Debug.LogError($"Room information expected.");
+                    }
+                },
+                handle?.OnError);
         }
 
         public override void BlockRoomMembers(string roomId, List<string> members, ValueCallBack<Room> handle = null)
@@ -56,7 +68,7 @@ namespace ChatSDK
                     }
                     else
                     {
-                        Debug.LogError($"Group information expected.");
+                        Debug.LogError($"Room information expected.");
                     }
                 },
                 handle?.OnError);
@@ -87,7 +99,7 @@ namespace ChatSDK
                     }
                     else
                     {
-                        Debug.LogError($"Group information expected.");
+                        Debug.LogError($"Room information expected.");
                     }
                 },
                 handle?.OnError);
@@ -160,7 +172,23 @@ namespace ChatSDK
 
         public override void RemoveRoomMembers(string roomId, List<string> members, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            //turn List<string> into array
+            int size = 0;
+            var membersArray = new string[0];
+            if (members != null && members.Count > 0)
+            {
+                size = members.Count;
+                membersArray = new string[size];
+                int i = 0;
+                foreach (string member in members)
+                {
+                    membersArray[i] = member;
+                    i++;
+                }
+            }
+            ChatAPINative.RoomManager_RemoveRoomMembers(client, roomId, membersArray, size,
+                handle?.Success,
+                handle?.Error);
         }
 
         public override void UnBlockRoomMembers(string roomId, List<string> members, CallBack handle = null)
