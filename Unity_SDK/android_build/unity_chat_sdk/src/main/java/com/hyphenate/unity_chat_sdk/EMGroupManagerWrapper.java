@@ -214,6 +214,9 @@ public class EMGroupManagerWrapper extends EMWrapper {
                 }
             }
         };
+        if (allMembers == null) {
+            allMembers = new String[0];
+        }
 
         EMClient.getInstance().groupManager().asyncCreateGroup(groupName, desc, allMembers, reason, options, callBack);
     }
@@ -360,10 +363,9 @@ public class EMGroupManagerWrapper extends EMWrapper {
         EMUnityValueCallback<Map<String, Long>> callback = new EMUnityValueCallback<Map<String, Long>>("List<String>", callbackId) {
             @Override
             public void onSuccess(Map<String, Long> stringLongMap) {
-                String[] strings = (String[])stringLongMap.keySet().toArray();
                 JSONArray jsonArray = new JSONArray();
-                for (int i = 0; i < strings.length; i++) {
-                    jsonArray.put(strings[i]);
+                for (Map.Entry<String, Long> entry : stringLongMap.entrySet()) {
+                    jsonArray.put(entry.getKey());
                 }
                 sendJsonObjectToUnity(jsonArray.toString());
             }

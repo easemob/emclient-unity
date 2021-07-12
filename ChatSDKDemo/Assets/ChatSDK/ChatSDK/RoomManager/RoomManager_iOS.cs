@@ -128,7 +128,7 @@ namespace ChatSDK
             RoomManagerNative.RoomManager_HandleMethodCall("getAllChatRooms", obj.ToString(), handle?.callbackId);
         }
 
-        public override void GetChatRoomWithId(string roomId, ValueCallBack<Room> handle = null)
+        public override void GetRoomWithId(string roomId, ValueCallBack<Room> handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("roomId", roomId);

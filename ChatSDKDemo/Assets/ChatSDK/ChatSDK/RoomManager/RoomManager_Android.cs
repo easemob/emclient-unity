@@ -93,7 +93,7 @@ namespace ChatSDK
             wrapper.Call("getAllChatRooms", handle?.callbackId);
         }
 
-        public override void GetChatRoomWithId(string roomId, ValueCallBack<Room> handle = null)
+        public override void GetRoomWithId(string roomId, ValueCallBack<Room> handle = null)
         {
             wrapper.Call("getChatRoom", handle?.callbackId);
         }

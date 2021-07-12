@@ -21,8 +21,9 @@ import java.util.Map;
 public class EMMessageHelper {
     public static EMMessage fromJson(JSONObject json) throws JSONException{
         EMMessage message = null;
-        JSONObject bodyJson = json.getJSONObject("body");
-        String type = bodyJson.getString("bodyType");
+        String bodyString = json.getString("body");
+        JSONObject bodyJson = new JSONObject(bodyString);
+        String type = json.getString("bodyType");
         if (json.getString("direction").equals("send")) {
             switch (type) {
                 case "txt": {
@@ -208,8 +209,8 @@ public class EMMessageHelper {
         data.put("to", message.getTo());
         data.put("hasReadAck", message.isAcked());
         data.put("hasDeliverAck", message.isDelivered());
-        data.put("localTime", message.localTime());
-        data.put("serverTime", message.getMsgTime());
+        data.put("localTime", String.valueOf(message.localTime()));
+        data.put("serverTime", String.valueOf(message.getMsgTime()));
         data.put("status", statusToInt(message.status()));
         data.put("chatType", chatTypeToInt(message.getChatType()));
         data.put("direction", message.direct() == EMMessage.Direct.SEND ? "send" : "rec");

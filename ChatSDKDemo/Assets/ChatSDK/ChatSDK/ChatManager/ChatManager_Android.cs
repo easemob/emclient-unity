@@ -51,9 +51,7 @@ namespace ChatSDK
                 return null;
             }
 
-            JSONNode jn = JSON.Parse(jsonString);
-
-            return new Conversation(jn);
+            return new Conversation(jsonString);
         }
 
         public override void GetConversationsFromServer(ValueCallBack<List<Conversation>> handle = null)

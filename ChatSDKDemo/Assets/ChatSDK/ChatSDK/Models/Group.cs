@@ -26,10 +26,10 @@ namespace ChatSDK
                     this.NoticeEnabled = jo["noticeEnable"].AsBool;
                     this.MessageBlocked = jo["messageBlocked"].AsBool;
                     this.IsAllMemberMuted = jo["isAllMemberMuted"].AsBool;
-                    JSONObject options = jo["options"].AsObject;
-                    if (options != null)
+                    string optionsString = jo["options"].Value;
+                    if (optionsString != null)
                     {
-                        this.Options = new GroupOptions(options);
+                        this.Options = new GroupOptions(optionsString);
                     }
 
                     if (jo["permissionType"].AsInt == -1)

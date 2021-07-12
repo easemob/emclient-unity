@@ -74,7 +74,7 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override void GetChatRoomWithId(string roomId, ValueCallBack<Room> handle = null)
+        public override void GetRoomWithId(string roomId, ValueCallBack<Room> handle = null)
         {
             throw new System.NotImplementedException();
         }

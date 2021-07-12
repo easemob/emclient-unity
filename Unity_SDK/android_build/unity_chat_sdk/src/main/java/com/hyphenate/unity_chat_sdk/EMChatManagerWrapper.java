@@ -82,7 +82,7 @@ public class EMChatManagerWrapper extends EMWrapper  {
 
             try {
                 EMCursorResult<EMMessage> cursorResult = EMClient.getInstance().chatManager().fetchHistoryMessages(conversationId,
-                        conversationType, count, startMessageId.length() > 0 ? startMessageId : null);
+                        conversationType, count, startMessageId);
                 onSuccess("EMCursorResult<EMMessage>", callbackId, EMCursorResultHelper.toJson(cursorResult).toString());
             } catch (HyphenateException e) {
                 onError(callbackId, e);

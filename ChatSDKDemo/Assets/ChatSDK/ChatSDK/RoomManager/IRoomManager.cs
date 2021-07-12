@@ -34,7 +34,7 @@ namespace ChatSDK
 
         public abstract void GetAllRoomsFromLocal(ValueCallBack<List<Room>> handle = null);
 
-        public abstract void GetChatRoomWithId(string roomId, ValueCallBack<Room> handle = null);
+        public abstract void GetRoomWithId(string roomId, ValueCallBack<Room> handle = null);
 
         public abstract void JoinRoom(string roomId, CallBack handle = null);
 

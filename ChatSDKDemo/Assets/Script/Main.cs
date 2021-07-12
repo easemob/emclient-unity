@@ -35,6 +35,9 @@ public class Main : MonoBehaviour
 
     IEnumerable<Toggle> ToggleGroup;
 
+    Group firstGroup;
+    Conversation conversation;
+
 
     // Start is called before the first frame update
     void Start()
@@ -68,53 +71,134 @@ public class Main : MonoBehaviour
 
     void SendMessageAction()
     {
-        string receiverId = RecvIdField.text;
-        string content = TextField.text;
-        IChatManager chatManager = SDKClient.Instance.ChatManager;
-        Message message = Message.CreateTextSendMessage(receiverId, content);
-        CallBack callback = new CallBack(onSuccess: () => { Debug.Log("Message sent successfully!"); },
-                                            onProgress: (int progress) => { Debug.Log(progress); },
-                                            onError: (int code, string desc) => { Debug.Log(code + desc); });
-        chatManager.SendMessage(message, callback);
+
+        ValueCallBack<Group> callback = new ValueCallBack<Group>(
+                onSuccess:(group) => {
+                    Debug.Log("group 0 " + group.GroupId);
+                },
+
+                onError:(code, desc) =>
+                {
+                    Debug.Log("group 0 " + code + "aa " + desc);
+                }
+            );
+
+
+        List<string> memberList = new List<string>();
+        memberList.Add("du003");
+        memberList.Add("du004");
+
+        GroupOptions groupOptions = new GroupOptions(GroupStyle.PublicJoinNeedApproval);
+        SDKClient.Instance.GroupManager.CreateGroup("un群组", groupOptions, "来自", memberList, null, callback);
     }
 
     void JoinGroupAction()
     {
-        List<Group> groups = SDKClient.Instance.GroupManager.GetJoinedGroups();
-        foreach (Group group in groups) {
-            Debug.Log("group: -----------" + group.Name);
-        }
+        
+        ValueCallBack<Group> callback = new ValueCallBack<Group>(
+         onSuccess: (group) => {
+             Debug.Log("group 1 " + group.GroupId);
+         },
 
-        List<Conversation> conversations = SDKClient.Instance.ChatManager.LoadAllConversations();
-        foreach (Conversation conversation in conversations)
-        {
-            Debug.Log("conversation: -----------" + conversation.LastMessage.ToJson().ToString());
-        }
+         onError: (code, desc) =>{
+             Debug.Log("group 1 " + code + "aa " + desc);
+         }
+       );
+
+        List<string> list = new List<string>();
+        list.Add("du003");
+
+        SDKClient.Instance.GroupManager.MuteMembers("153813531033602", list, callback);
 
     }
 
     void GetGroupInfoAction()
     {
 
+        ValueCallBack<Group> callback = new ValueCallBack<Group>(
+         onSuccess: (group) => {
+             Debug.Log("group 1 " + group.GroupId);
+         },
+
+         onError: (code, desc) => {
+             Debug.Log("group 1 " + code + "aa " + desc);
+         }
+       );
+
+        List<string> list = new List<string>();
+        list.Add("du003");
+
+        SDKClient.Instance.GroupManager.UnMuteMembers("153813531033602", list, callback);
+
     }
 
     void LeaveGroupAction()
     {
 
+        ValueCallBack<Group> callback = new ValueCallBack<Group>(
+            onSuccess: (group) => {
+                Debug.Log("group 2 " + group.Name);
+                foreach (string s in group.MemberList)
+                {
+                    Debug.Log("ssss - " + s);
+                }
+
+            },
+            onError: (code, desc) => {
+                Debug.Log("group 2 " + code + "aa " + desc);
+            });
+
+        SDKClient.Instance.GroupManager.GetGroupSpecificationFromServer("153813531033602", callback);
     }
 
     void JoinRoomAction()
     {
+        CallBack callback = new CallBack(
+
+
+            onSuccess: () => {
+                Debug.Log("成功");
+            },
+            onError: (code, desc) => {
+                Debug.Log("group 2 " + code + "aa " + desc);
+            });
+
+        List<string> list = new List<string>();
+        list.Add("du003");
+
+        SDKClient.Instance.GroupManager.AddMembers("153813531033602", list, callback);
 
     }
 
     void GetRoomInfoAction()
     {
+        ValueCallBack<CursorResult<string>> callback = new ValueCallBack<CursorResult<string>>(
+           onSuccess: (result) => {
+               foreach (string s in result.Data) {
+                   Debug.Log("ssss - " + s);
+               }
+           },
+           onError: (code, desc) => {
+               Debug.Log("group 2 " + code + "aa " + desc);
+           });
 
+        SDKClient.Instance.GroupManager.GetGroupMemberListFromServer("153813531033602", handle:callback);
     }
 
     void LeaveRoomAction()
     {
+        ValueCallBack<List<string>> callback = new ValueCallBack<List<string>>(
+           onSuccess: (result) => {
+               foreach (string s in result)
+               {
+                   Debug.Log("ssss - " + s);
+               }
+           },
+           onError: (code, desc) => {
+               Debug.Log("group 2 " + code + "aa " + desc);
+           });
 
+        SDKClient.Instance.GroupManager.GetGroupMuteListFromServer("153813531033602", handle: callback);
+        
     }
 }

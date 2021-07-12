@@ -7,8 +7,10 @@ namespace ChatSDK
     [StructLayout(LayoutKind.Sequential, CharSet =  CharSet.Unicode)]
     public abstract class IMessageBody
     {
+
         public MessageBodyType Type;
         internal abstract JSONObject ToJsonString();
+        internal abstract string TypeString();
 
         internal int DownLoadStatusToInt(MessageBody.DownLoadStatus status)
         {
@@ -82,8 +84,13 @@ namespace ChatSDK
             {
                 JSONObject jo = new JSONObject();
                 jo.Add("content", Text);
-                jo.Add("type", "txt");
+                //jo.Add("bodyType", "txt");
                 return jo;
+            }
+
+            internal override string TypeString()
+            {
+                return "txt";
             }
         }
 
@@ -120,8 +127,13 @@ namespace ChatSDK
                 jo.Add("latitude", Latitude);
                 jo.Add("longitude", Longitude);
                 jo.Add("address", Address);
-                jo.Add("type", "loc");
+                //jo.Add("bodyType", "loc");
                 return jo;
+            }
+
+            internal override string TypeString()
+            {
+                return "loc";
             }
         }
 
@@ -170,8 +182,13 @@ namespace ChatSDK
                 jo.Add("secret", Secret);
                 jo.Add("fileSize", FileSize);
                 jo.Add("fileStatus", DownLoadStatusToInt(DownStatus));
-                jo.Add("type", "file");
+                //jo.Add("bodyType", "file");
                 return jo;
+            }
+
+            internal override string TypeString()
+            {
+                return "file";
             }
 
         }
@@ -229,8 +246,13 @@ namespace ChatSDK
                 jo.Add("height", Height);
                 jo.Add("width", Width);
                 jo.Add("sendOriginalImage", Original);
-                jo.Add("type", "img");
+                //jo.Add("bodyType", "img");
                 return jo;
+            }
+
+            internal override string TypeString()
+            {
+                return "img";
             }
         }
 
@@ -271,8 +293,13 @@ namespace ChatSDK
                 jo.Add("fileSize", FileSize);
                 jo.Add("fileStatus", DownLoadStatusToInt(DownStatus));
                 jo.Add("duration", Duration);
-                jo.Add("type", "voice");
+                //jo.Add("bodyType", "voice");
                 return jo;
+            }
+
+            internal override string TypeString()
+            {
+                return "voice";
             }
         }
 
@@ -329,8 +356,13 @@ namespace ChatSDK
                 jo.Add("height", Height);
                 jo.Add("width", Width);
                 jo.Add("duration", Duration);
-                jo.Add("type", "video");
+                //jo.Add("bodyType", "video");
                 return jo;
+            }
+
+            internal override string TypeString()
+            {
+                return "video";
             }
         }
 
@@ -364,8 +396,13 @@ namespace ChatSDK
                 JSONObject jo = new JSONObject();
                 jo.Add("deliverOnlineOnly", DeliverOnlineOnly);
                 jo.Add("action", Action);
-                jo.Add("type", "cmd");
+                //jo.Add("bodyType", "cmd");
                 return jo;
+            }
+
+            internal override string TypeString()
+            {
+                return "cmd";
             }
         }
 
@@ -401,8 +438,13 @@ namespace ChatSDK
                 JSONObject jo = new JSONObject();
                 jo.Add("event", CustomEvent);
                 jo.Add("params", TransformTool.JsonStringFromDictionary(CustomParams));
-                jo.Add("type", "custom");
+                //jo.Add("bodyType", "custom");
                 return jo;
+            }
+
+            internal override string TypeString()
+            {
+                return "custom";
             }
         }
     }

@@ -160,7 +160,7 @@ namespace ChatSDK {
                 else if (value == "EMCursorResult<EMMessage>")
                 {
                     CursorResult<Message> result = null;
-                    if (responseValue != null && responseValue.IsString) {
+                    if (responseValue != null) {
                         result = TransformTool.JsonStringToMessageResult(responseValue.Value);
                     }
                     

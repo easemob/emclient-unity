@@ -548,8 +548,8 @@ namespace ChatSDK
                     To = jo["to"].Value;
                     HasReadAck = jo["hasReadAck"].AsBool;
                     HasDeliverAck = jo["hasDeliverAck"].AsBool;
-                    LocalTime = jo["localTime"].AsInt;
-                    ServerTime = jo["serverTime"].AsInt;
+                    LocalTime = long.Parse(jo["localTime"].Value);
+                    ServerTime = long.Parse(jo["serverTime"].Value);
                     ConversationId = jo["conversationId"].Value;
                     MsgId = jo["msgId"].Value;
                     HasReadAck = jo["hasRead"].AsBool;
@@ -578,6 +578,7 @@ namespace ChatSDK
             jo.Add("direction", MessageDirectionToString(Direction));
             //jo.Add("attributes", TransformTool.JsonStringFromAttributes(Attributes));
             jo.Add("body", Body.ToJsonString());
+            jo.Add("bodyType", Body.TypeString());
             return jo;
         }
 

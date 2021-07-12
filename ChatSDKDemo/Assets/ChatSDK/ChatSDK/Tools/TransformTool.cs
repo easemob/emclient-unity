@@ -175,7 +175,9 @@ namespace ChatSDK
 
                 List<string> list = new List<string>();
 
-                foreach (JSONNode obj in jsonObject["list"].AsArray)
+                JSONArray jsonArray = JSON.Parse(jsonObject["list"].Value).AsArray;
+
+                foreach (JSONNode obj in jsonArray)
                 {
                     if (obj.IsString)
                     {
@@ -203,7 +205,9 @@ namespace ChatSDK
 
                 List<Message> list = new List<Message>();
 
-                foreach (JSONNode obj in jsonObject["list"].AsArray)
+                JSONArray jsonArray = JSON.Parse(jsonObject["list"].Value).AsArray;
+
+                foreach (JSONNode obj in jsonArray)
                 {
                     if (obj.IsString) {
                         list.Add(new Message(obj.Value));

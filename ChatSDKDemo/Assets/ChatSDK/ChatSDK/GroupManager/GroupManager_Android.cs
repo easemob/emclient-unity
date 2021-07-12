@@ -147,8 +147,8 @@ namespace ChatSDK
             if (jsonString == null || jsonString.Length == 0) {
                 return null;
             }
-            JSONNode jn = JSON.Parse(jsonString);
-            return new Group(jn);
+
+            return new Group(jsonString);
 
         }
 

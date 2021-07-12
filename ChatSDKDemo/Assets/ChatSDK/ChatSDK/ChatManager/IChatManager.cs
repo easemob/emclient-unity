@@ -7,7 +7,7 @@ namespace ChatSDK
 
         internal WeakDelegater<IChatManagerDelegate> Delegate = new WeakDelegater<IChatManagerDelegate>();
 
-        public abstract bool DeleteConversation(string conversationId, bool deleteMessages);
+        public abstract bool DeleteConversation(string conversationId, bool deleteMessages = true);
 
         public abstract void DownloadAttachment(string messageId, CallBack handle = null);
 

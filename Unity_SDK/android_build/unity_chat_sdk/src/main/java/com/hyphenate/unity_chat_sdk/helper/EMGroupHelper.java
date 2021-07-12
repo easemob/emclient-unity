@@ -52,7 +52,7 @@ public class EMGroupHelper {
                 options.style = EMGroupManager.EMGroupStyle.EMGroupStylePrivateOnlyOwnerInvite;
             }
         }
-        data.put("options", EMGroupOptionsHelper.toJson(options));
+        data.put("options", EMGroupOptionsHelper.toJson(options).toString());
         return data;
     }
 
