@@ -42,7 +42,6 @@ public class EMCursorResultHelper {
             if (obj instanceof EMGroupInfo) {
                 jsonArray.put(EMGroupInfoHelper.toJson((EMGroupInfo) obj).toString());
             }
-            System.out.println(obj);
         }
         data.put("list", jsonArray.toString());
 

@@ -178,7 +178,7 @@ namespace ChatSDK
             wrapper.Call("leaveGroup", groupId, handle?.callbackId);
         }
 
-        public override void MuteAllMembers(string groupId, CallBack handle = null)
+        public override void MuteAllMembers(string groupId, ValueCallBack<Group> handle = null)
         {
             wrapper.Call("muteAllMembers", groupId, handle?.callbackId);
         }
@@ -208,22 +208,17 @@ namespace ChatSDK
             wrapper.Call("removeWhiteList", groupId, TransformTool.JsonStringFromStringList(members), handle?.callbackId);
         }
 
-        public override void RequestToJoinPublicGroup(string groupId, CallBack handle = null)
-        {
-            wrapper.Call("requestToJoinPublicGroup", groupId, handle?.callbackId);
-        }
-
-        public override void UnblockGroup(string groupId, CallBack handle = null)
+        public override void UnBlockGroup(string groupId, CallBack handle = null)
         {
             wrapper.Call("unblockGroup", groupId, handle?.callbackId);
         }
 
-        public override void UnblockMembers(string groupId, List<string> members, CallBack handle = null)
+        public override void UnBlockMembers(string groupId, List<string> members, CallBack handle = null)
         {
             wrapper.Call("unblockMembers", groupId, TransformTool.JsonStringFromStringList(members), handle?.callbackId);
         }
 
-        public override void UnMuteAllMembers(string groupId, CallBack handle = null)
+        public override void UnMuteAllMembers(string groupId, ValueCallBack<Group> handle = null)
         {
             wrapper.Call("unMuteAllMembers", groupId, handle?.callbackId);
         }

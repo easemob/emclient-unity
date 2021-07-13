@@ -252,7 +252,7 @@ namespace ChatSDK
             GroupManagerNative.GroupManager_HandleMethodCall("leaveGroup", obj.ToString(), handle?.callbackId);
         }
 
-        public override void MuteAllMembers(string groupId, CallBack handle = null)
+        public override void MuteAllMembers(string groupId, ValueCallBack<Group> handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("groupId", groupId);
@@ -299,21 +299,14 @@ namespace ChatSDK
             GroupManagerNative.GroupManager_HandleMethodCall("removeWhiteList", obj.ToString(), handle?.callbackId);
         }
 
-        public override void RequestToJoinPublicGroup(string groupId, CallBack handle = null)
-        {
-            JSONObject obj = new JSONObject();
-            obj.Add("groupId", groupId);
-            GroupManagerNative.GroupManager_HandleMethodCall("requestToJoinPublicGroup", obj.ToString(), handle?.callbackId);
-        }
-
-        public override void UnblockGroup(string groupId, CallBack handle = null)
+        public override void UnBlockGroup(string groupId, CallBack handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("groupId", groupId);
             GroupManagerNative.GroupManager_HandleMethodCall("unblockGroup", obj.ToString(), handle?.callbackId);
         }
 
-        public override void UnblockMembers(string groupId, List<string> members, CallBack handle = null)
+        public override void UnBlockMembers(string groupId, List<string> members, CallBack handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("groupId", groupId);
@@ -321,7 +314,7 @@ namespace ChatSDK
             GroupManagerNative.GroupManager_HandleMethodCall("removeWhiteList", obj.ToString(), handle?.callbackId);
         }
 
-        public override void UnMuteAllMembers(string groupId, CallBack handle = null)
+        public override void UnMuteAllMembers(string groupId, ValueCallBack<Group> handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("groupId", groupId);

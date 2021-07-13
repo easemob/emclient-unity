@@ -52,22 +52,22 @@ namespace ChatSDK
             return list;
         }
 
-        static internal List<GroupInfo> JsonStringToGroupInfoList(string jsonString)
-        {
-            List<GroupInfo> list = new List<GroupInfo>();
-            if (jsonString != null)
-            {
-                JSONNode jsonArray = JSON.Parse(jsonString);
-                foreach (JSONNode obj in jsonArray.AsArray)
-                {
-                    if (obj.IsString)
-                    {
-                        list.Add(new GroupInfo(obj.Value));
-                    }
-                }
-            }
-            return list;
-        }
+        //static internal List<GroupInfo> JsonStringToGroupInfoList(string jsonString)
+        //{
+        //    List<GroupInfo> list = new List<GroupInfo>();
+        //    if (jsonString != null)
+        //    {
+        //        JSONNode jsonArray = JSON.Parse(jsonString);
+        //        foreach (JSONNode obj in jsonArray.AsArray)
+        //        {
+        //            if (obj.IsString)
+        //            {
+        //                list.Add(new GroupInfo(obj.Value));
+        //            }
+        //        }
+        //    }
+        //    return list;
+        //}
 
         static internal List<GroupSharedFile> JsonStringToGroupSharedFileList(string jsonString)
         {
@@ -101,8 +101,11 @@ namespace ChatSDK
 
                 List<GroupInfo> list = new List<GroupInfo>();
 
-                if (jsonObject["list"].IsArray) {
-                    foreach (JSONNode obj in jsonObject["list"].AsArray)
+                if (jsonObject["list"].IsString) {
+
+                    JSONArray jsonArray = JSON.Parse(jsonObject["list"].Value).AsArray;
+
+                    foreach (JSONNode obj in jsonArray)
                     {
                         if (obj.IsString)
                         {
@@ -110,6 +113,7 @@ namespace ChatSDK
                         }
                     }
                 }
+
                 result.Data = list;
             }
             return result;

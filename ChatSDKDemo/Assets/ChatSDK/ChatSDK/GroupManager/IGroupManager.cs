@@ -64,7 +64,7 @@ namespace ChatSDK
 
         public abstract void LeaveGroup(string groupId, CallBack handle = null);
 
-        public abstract void MuteAllMembers(string groupId, CallBack handle = null);
+        public abstract void MuteAllMembers(string groupId, ValueCallBack<Group> handle = null);
 
         public abstract void MuteMembers(string groupId, List<string> members, ValueCallBack<Group> handle = null);
 
@@ -76,13 +76,11 @@ namespace ChatSDK
 
         public abstract void RemoveWhiteList(string groupId, List<string> members, CallBack handle = null);
 
-        public abstract void RequestToJoinPublicGroup(string groupId, CallBack handle = null);
+        public abstract void UnBlockGroup(string groupId, CallBack handle = null);
 
-        public abstract void UnblockGroup(string groupId, CallBack handle = null);
+        public abstract void UnBlockMembers(string groupId, List<string> members, CallBack handle = null);
 
-        public abstract void UnblockMembers(string groupId, List<string> members, CallBack handle = null);
-
-        public abstract void UnMuteAllMembers(string groupId, CallBack handle = null);
+        public abstract void UnMuteAllMembers(string groupId, ValueCallBack<Group> handle = null);
 
         public abstract void UnMuteMembers(string groupId, List<string> members, ValueCallBack<Group> handle = null);
 

@@ -24,10 +24,10 @@ public class EMGroupHelper {
         data.put("owner", group.getOwner());
         data.put("announcement", group.getAnnouncement());
         data.put("memberCount", group.getMemberCount());
-        data.put("memberList", EMTransformHelper.jsonArrayFromStringList(group.getMembers()));
-        data.put("adminList", EMTransformHelper.jsonArrayFromStringList(group.getAdminList()));
-        data.put("blockList", EMTransformHelper.jsonArrayFromStringList(group.getBlackList()));
-        data.put("muteList", EMTransformHelper.jsonArrayFromStringList(group.getMuteList()));
+        data.put("memberList", EMTransformHelper.jsonArrayFromStringList(group.getMembers()).toString());
+        data.put("adminList", EMTransformHelper.jsonArrayFromStringList(group.getAdminList()).toString());
+        data.put("blockList", EMTransformHelper.jsonArrayFromStringList(group.getBlackList()).toString());
+        data.put("muteList", EMTransformHelper.jsonArrayFromStringList(group.getMuteList()).toString());
         if (group.getGroupId() != null && EMClient.getInstance().pushManager().getNoPushGroups() != null) {
             data.put("noticeEnable", !EMClient.getInstance().pushManager().getNoPushGroups().contains(group.getGroupId()));
         }

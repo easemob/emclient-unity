@@ -185,11 +185,11 @@ public class EMGroupManagerWrapper extends EMWrapper {
         EMUnityValueCallback<Boolean> callback = new EMUnityValueCallback<Boolean>("bool", callbackId) {
             @Override
             public void onSuccess(Boolean aBoolean) {
-                JSONObject obj = new JSONObject();
-                try {
-                    obj.put("ret", aBoolean);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if (aBoolean) {
+                    sendJsonObjectToUnity(new Integer(1).toString());
+                }else {
+                    
+                    sendJsonObjectToUnity(new Integer(0).toString());
                 }
             }
         };
@@ -275,9 +275,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
         EMUnityValueCallback<String> callback = new EMUnityValueCallback<String>("String", callbackId) {
             @Override
             public void onSuccess(String s) {
-                JSONArray jsonArray = new JSONArray();
-                jsonArray.put(s);
-                sendJsonObjectToUnity(jsonArray.toString());
+                sendJsonObjectToUnity(s);
             }
         };
         EMClient.getInstance().groupManager().asyncFetchGroupAnnouncement(groupId, callback);
@@ -601,15 +599,6 @@ public class EMGroupManagerWrapper extends EMWrapper {
 
         List<String> list = EMTransformHelper.jsonStringToStringList(jsonString);
         EMClient.getInstance().groupManager().removeFromGroupWhiteList(groupId, list, new EMUnityCallback(callbackId));
-    }
-
-    private void requestToJoinPublicGroup(String groupId, String callbackId) throws JSONException {
-        if (groupId == null || groupId.length() == 0) {
-            HyphenateException e = new HyphenateException(500, "groupId or is invalid");
-            onError(callbackId, e);
-            return;
-        }
-        EMClient.getInstance().groupManager().asyncJoinGroup(groupId, new EMUnityCallback(callbackId));
     }
 
     private void unblockGroup(String groupId, String callbackId) {

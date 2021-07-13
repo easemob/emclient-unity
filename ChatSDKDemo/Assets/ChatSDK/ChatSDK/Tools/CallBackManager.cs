@@ -280,11 +280,7 @@ namespace ChatSDK {
                         do {
                             if (responseValue != null)
                             {
-                                JSONNode jn = JSON.Parse(responseValue.Value);
-                                if (jn != null && jn["ret"].IsBoolean)
-                                {
-                                    ret = jn["ret"].AsBool;
-                                }
+                                ret = responseValue.Value == "0" ? false : true;
                             }
 
                         } while (false);

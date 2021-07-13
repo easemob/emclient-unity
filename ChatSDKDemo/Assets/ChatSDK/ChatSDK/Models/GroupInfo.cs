@@ -11,11 +11,10 @@ namespace ChatSDK {
         internal GroupInfo(string jsonString) {
             if (jsonString != null) {
                 JSONNode jn = JSON.Parse(jsonString);
-                if (!jn.IsNull && jn.IsObject)
+                if (!jn.IsNull)
                 {
-                    JSONObject jo = jn.AsObject;
-                    GroupId = jo["gruopId"].Value;
-                    GroupName = jo["groupName"].Value;
+                    GroupId = jn["groupId"].Value;
+                    GroupName = jn["groupName"].Value;
                 }
             }
         }

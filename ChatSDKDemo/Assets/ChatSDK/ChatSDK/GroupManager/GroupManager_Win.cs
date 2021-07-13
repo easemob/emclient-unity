@@ -149,7 +149,7 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override void MuteAllMembers(string groupId, CallBack handle = null)
+        public override void MuteAllMembers(string groupId, ValueCallBack<Group> handle = null)
         {
             throw new System.NotImplementedException();
         }
@@ -179,22 +179,17 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override void RequestToJoinPublicGroup(string groupId, CallBack handle = null)
+        public override void UnBlockGroup(string groupId, CallBack handle = null)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void UnblockGroup(string groupId, CallBack handle = null)
+        public override void UnBlockMembers(string groupId, List<string> members, CallBack handle = null)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void UnblockMembers(string groupId, List<string> members, CallBack handle = null)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override void UnMuteAllMembers(string groupId, CallBack handle = null)
+        public override void UnMuteAllMembers(string groupId, ValueCallBack<Group> handle = null)
         {
             throw new System.NotImplementedException();
         }

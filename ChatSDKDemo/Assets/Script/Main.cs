@@ -35,7 +35,7 @@ public class Main : MonoBehaviour
 
     IEnumerable<Toggle> ToggleGroup;
 
-    Group firstGroup;
+    GroupInfo currGroup;
     Conversation conversation;
 
 
@@ -55,6 +55,9 @@ public class Main : MonoBehaviour
         ToggleGroup = GameObject.Find("ToggleGroup").GetComponent<ToggleGroup>().ActiveToggles();
         foreach (Toggle tog in ToggleGroup) {
         }
+
+
+        //Debug.Log("token ---- " + SDKClient.Instance.AccessToken);
     }
 
     // Update is called once per frame
@@ -94,47 +97,56 @@ public class Main : MonoBehaviour
 
     void JoinGroupAction()
     {
-        
-        ValueCallBack<Group> callback = new ValueCallBack<Group>(
-         onSuccess: (group) => {
-             Debug.Log("group 1 " + group.GroupId);
-         },
 
-         onError: (code, desc) =>{
-             Debug.Log("group 1 " + code + "aa " + desc);
-         }
-       );
-
-        List<string> list = new List<string>();
-        list.Add("du003");
-
-        SDKClient.Instance.GroupManager.MuteMembers("153813531033602", list, callback);
+        ValueCallBack<bool> callBack = new ValueCallBack<bool>(
+            onSuccess: (value) => {
+                if (value) {
+                    Debug.Log("白名单 -- " + (value ? "在白名单" : "不在白名单"));
+                }
+            }
+            );
+        SDKClient.Instance.GroupManager.CheckIfInGroupWhiteList("153875044696065", callBack);
 
     }
 
     void GetGroupInfoAction()
     {
 
-        ValueCallBack<Group> callback = new ValueCallBack<Group>(
-         onSuccess: (group) => {
-             Debug.Log("group 1 " + group.GroupId);
-         },
-
-         onError: (code, desc) => {
-             Debug.Log("group 1 " + code + "aa " + desc);
-         }
-       );
-
-        List<string> list = new List<string>();
-        list.Add("du003");
-
-        SDKClient.Instance.GroupManager.UnMuteMembers("153813531033602", list, callback);
-
+        ValueCallBack<List<string>> callBack = new ValueCallBack<List<string>>(
+                onSuccess:(list)=> {
+                    foreach (string s in list) {
+                        Debug.Log("白--- " + s);
+                    }
+                }
+            );
+        SDKClient.Instance.GroupManager.GetGroupWhiteListFromServer("153875044696065", callBack);
     }
 
     void LeaveGroupAction()
     {
 
+        CallBack callBack = new CallBack();
+        SDKClient.Instance.GroupManager.BlockGroup("153875044696065", callBack);
+    }
+
+    void JoinRoomAction()
+    {
+        CallBack callBack = new CallBack();
+        SDKClient.Instance.GroupManager.UnBlockGroup("153875044696065", callBack);
+    }
+
+    void GetRoomInfoAction()
+    {
+        ValueCallBack<Group> callBack = new ValueCallBack<Group>(
+                onSuccess:(d)=> {
+                    Debug.Log("aaaaa -" + d.Options.Ext);
+                }
+            );
+        SDKClient.Instance.GroupManager.UpdateGroupExt("153875044696065", ",,,,", callBack);
+    }
+
+    void LeaveRoomAction()
+    {
         ValueCallBack<Group> callback = new ValueCallBack<Group>(
             onSuccess: (group) => {
                 Debug.Log("group 2 " + group.Name);
@@ -148,57 +160,7 @@ public class Main : MonoBehaviour
                 Debug.Log("group 2 " + code + "aa " + desc);
             });
 
-        SDKClient.Instance.GroupManager.GetGroupSpecificationFromServer("153813531033602", callback);
-    }
+        SDKClient.Instance.GroupManager.GetGroupSpecificationFromServer("153875044696065", callback);
 
-    void JoinRoomAction()
-    {
-        CallBack callback = new CallBack(
-
-
-            onSuccess: () => {
-                Debug.Log("成功");
-            },
-            onError: (code, desc) => {
-                Debug.Log("group 2 " + code + "aa " + desc);
-            });
-
-        List<string> list = new List<string>();
-        list.Add("du003");
-
-        SDKClient.Instance.GroupManager.AddMembers("153813531033602", list, callback);
-
-    }
-
-    void GetRoomInfoAction()
-    {
-        ValueCallBack<CursorResult<string>> callback = new ValueCallBack<CursorResult<string>>(
-           onSuccess: (result) => {
-               foreach (string s in result.Data) {
-                   Debug.Log("ssss - " + s);
-               }
-           },
-           onError: (code, desc) => {
-               Debug.Log("group 2 " + code + "aa " + desc);
-           });
-
-        SDKClient.Instance.GroupManager.GetGroupMemberListFromServer("153813531033602", handle:callback);
-    }
-
-    void LeaveRoomAction()
-    {
-        ValueCallBack<List<string>> callback = new ValueCallBack<List<string>>(
-           onSuccess: (result) => {
-               foreach (string s in result)
-               {
-                   Debug.Log("ssss - " + s);
-               }
-           },
-           onError: (code, desc) => {
-               Debug.Log("group 2 " + code + "aa " + desc);
-           });
-
-        SDKClient.Instance.GroupManager.GetGroupMuteListFromServer("153813531033602", handle: callback);
-        
     }
 }
