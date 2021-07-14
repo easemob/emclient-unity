@@ -17,7 +17,7 @@ public class EMConversationWrapper extends EMWrapper{
         return new EMConversationWrapper();
     }
 
-    private boolean appendMessage(String conversationId, int conversationType, String messageString, String callbackId) throws JSONException {
+    private boolean appendMessage(String conversationId, int conversationType, String messageString) throws JSONException {
 
         if (conversationId == null || conversationId.length() == 0) {
             return false;
@@ -150,7 +150,7 @@ public class EMConversationWrapper extends EMWrapper{
         return ret;
     }
 
-    private String loadMsgWithKeywords(String conversationId, int conversationType, String keywords, String sender, int timestamp, int count, String directionString) {
+    private String loadMsgWithKeywords(String conversationId, int conversationType, String keywords, String sender, long timestamp, int count, String directionString) {
         if (conversationId == null || conversationId.length() == 0) {
             return null;
         }
@@ -270,6 +270,6 @@ public class EMConversationWrapper extends EMWrapper{
     }
 
     private EMConversation.EMSearchDirection searchDirectionFromString(String direction) {
-        return direction == "up" ? EMConversation.EMSearchDirection.UP : EMConversation.EMSearchDirection.DOWN;
+        return direction.equals("up")  ? EMConversation.EMSearchDirection.UP : EMConversation.EMSearchDirection.DOWN;
     }
 }

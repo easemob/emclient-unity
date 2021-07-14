@@ -220,7 +220,7 @@ public class EMChatManagerWrapper extends EMWrapper  {
     }
 
     private String searchChatMsgFromDB(String keywords, long timeStamp, int count, String from, String directionString) throws JSONException {
-        EMConversation.EMSearchDirection direction = directionString == "up" ? EMConversation.EMSearchDirection.UP : EMConversation.EMSearchDirection.DOWN;
+        EMConversation.EMSearchDirection direction = directionString.equals("up")  ? EMConversation.EMSearchDirection.UP : EMConversation.EMSearchDirection.DOWN;
         List<EMMessage> msgList = EMClient.getInstance().chatManager().searchMsgFromDB(keywords, timeStamp, count, from, direction);
         if (msgList == null) return null;
         JSONArray jsonArray = new JSONArray();

@@ -102,7 +102,7 @@ namespace ChatSDK {
                 if (value == "List<String>")
                 {
                     List<string> result = null;
-                    if (responseValue != null && responseValue.IsString)
+                    if (responseValue != null)
                     {
                         result = TransformTool.JsonStringToStringList(responseValue.Value);
                     }
@@ -116,7 +116,7 @@ namespace ChatSDK {
                 else if (value == "List<EMGroup>")
                 {
                     List<Group> result = null;
-                    if (responseValue != null && responseValue.IsString)
+                    if (responseValue != null)
                     {
                         result = TransformTool.JsonStringToGroupList(responseValue.Value);
                     }
@@ -131,7 +131,7 @@ namespace ChatSDK {
                 else if (value == "EMCursorResult<EMGroupInfo>")
                 {
                     CursorResult<GroupInfo> result = null;
-                    if (responseValue != null && responseValue.IsString)
+                    if (responseValue != null)
                     {
                         result = TransformTool.JsonStringToGroupInfoResult(responseValue.Value);
                     }
@@ -146,7 +146,7 @@ namespace ChatSDK {
                 else if (value == "EMCursorResult<String>")
                 {
                     CursorResult<string> result = null;
-                    if (responseValue != null && responseValue.IsString) {
+                    if (responseValue != null) {
                         result = TransformTool.JsonStringToStringResult(responseValue.Value);
                     }
 
@@ -174,7 +174,7 @@ namespace ChatSDK {
                 else if (value == "List<EMMucSharedFile>")
                 {
                     List<GroupSharedFile> result = null;
-                    if (responseValue != null && responseValue.IsString) {
+                    if (responseValue != null) {
                         result = TransformTool.JsonStringToGroupSharedFileList(responseValue.Value);
                     }
                     

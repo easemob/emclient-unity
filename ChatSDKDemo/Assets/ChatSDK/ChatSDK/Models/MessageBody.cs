@@ -9,7 +9,7 @@ namespace ChatSDK
     {
 
         public MessageBodyType Type;
-        internal abstract JSONObject ToJsonString();
+        internal abstract JSONObject ToJson();
         internal abstract string TypeString();
 
         internal int DownLoadStatusToInt(MessageBody.DownLoadStatus status)
@@ -80,7 +80,7 @@ namespace ChatSDK
                 }
             }
 
-            internal override JSONObject ToJsonString()
+            internal override JSONObject ToJson()
             {
                 JSONObject jo = new JSONObject();
                 jo.Add("content", Text);
@@ -121,7 +121,7 @@ namespace ChatSDK
                 }
             }
 
-            internal override JSONObject ToJsonString()
+            internal override JSONObject ToJson()
             {
                 JSONObject jo = new JSONObject();
                 jo.Add("latitude", Latitude);
@@ -172,7 +172,7 @@ namespace ChatSDK
 
             internal FileBody() { }
 
-            internal override JSONObject ToJsonString()
+            internal override JSONObject ToJson()
             {
                 JSONObject jo = new JSONObject();
                 jo.Add("localPath", LocalPath);
@@ -230,7 +230,7 @@ namespace ChatSDK
                 }
             }
 
-            internal override JSONObject ToJsonString()
+            internal override JSONObject ToJson()
             {
                 JSONObject jo = new JSONObject();
                 jo.Add("localPath", LocalPath);
@@ -282,7 +282,7 @@ namespace ChatSDK
                 }
             }
 
-            internal override JSONObject ToJsonString()
+            internal override JSONObject ToJson()
             {
                 JSONObject jo = new JSONObject();
                 jo.Add("localPath", LocalPath);
@@ -341,7 +341,7 @@ namespace ChatSDK
                 }
             }
 
-            internal override JSONObject ToJsonString()
+            internal override JSONObject ToJson()
             {
                 JSONObject jo = new JSONObject();
                 jo.Add("localPath", LocalPath);
@@ -391,7 +391,7 @@ namespace ChatSDK
                 }
             }
 
-            internal override JSONObject ToJsonString()
+            internal override JSONObject ToJson()
             {
                 JSONObject jo = new JSONObject();
                 jo.Add("deliverOnlineOnly", DeliverOnlineOnly);
@@ -433,11 +433,13 @@ namespace ChatSDK
                 }
             }
 
-            internal override JSONObject ToJsonString()
+            internal override JSONObject ToJson()
             {
                 JSONObject jo = new JSONObject();
                 jo.Add("event", CustomEvent);
-                jo.Add("params", TransformTool.JsonStringFromDictionary(CustomParams));
+                if (CustomParams != null) {
+                    jo.Add("params", TransformTool.JsonStringFromDictionary(CustomParams));
+                }
                 //jo.Add("bodyType", "custom");
                 return jo;
             }

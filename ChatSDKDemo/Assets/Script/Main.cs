@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Runtime.InteropServices;
 
 using ChatSDK;
 
@@ -55,9 +56,6 @@ public class Main : MonoBehaviour
         ToggleGroup = GameObject.Find("ToggleGroup").GetComponent<ToggleGroup>().ActiveToggles();
         foreach (Toggle tog in ToggleGroup) {
         }
-
-
-        //Debug.Log("token ---- " + SDKClient.Instance.AccessToken);
     }
 
     // Update is called once per frame
@@ -74,93 +72,224 @@ public class Main : MonoBehaviour
 
     void SendMessageAction()
     {
-
-        ValueCallBack<Group> callback = new ValueCallBack<Group>(
-                onSuccess:(group) => {
-                    Debug.Log("group 0 " + group.GroupId);
-                },
-
-                onError:(code, desc) =>
-                {
-                    Debug.Log("group 0 " + code + "aa " + desc);
-                }
-            );
-
-
-        List<string> memberList = new List<string>();
-        memberList.Add("du003");
-        memberList.Add("du004");
-
-        GroupOptions groupOptions = new GroupOptions(GroupStyle.PublicJoinNeedApproval);
-        SDKClient.Instance.GroupManager.CreateGroup("un群组", groupOptions, "来自", memberList, null, callback);
+        SendTextMessage();
     }
 
     void JoinGroupAction()
     {
-
-        ValueCallBack<bool> callBack = new ValueCallBack<bool>(
-            onSuccess: (value) => {
-                if (value) {
-                    Debug.Log("白名单 -- " + (value ? "在白名单" : "不在白名单"));
-                }
-            }
-            );
-        SDKClient.Instance.GroupManager.CheckIfInGroupWhiteList("153875044696065", callBack);
-
+        AppendConversationMessage();
     }
 
     void GetGroupInfoAction()
     {
-
-        ValueCallBack<List<string>> callBack = new ValueCallBack<List<string>>(
-                onSuccess:(list)=> {
-                    foreach (string s in list) {
-                        Debug.Log("白--- " + s);
-                    }
-                }
-            );
-        SDKClient.Instance.GroupManager.GetGroupWhiteListFromServer("153875044696065", callBack);
+        DeleteAllMessages();
     }
 
     void LeaveGroupAction()
     {
-
-        CallBack callBack = new CallBack();
-        SDKClient.Instance.GroupManager.BlockGroup("153875044696065", callBack);
+        UpdateConversationMessage();
     }
 
     void JoinRoomAction()
     {
-        CallBack callBack = new CallBack();
-        SDKClient.Instance.GroupManager.UnBlockGroup("153875044696065", callBack);
+        LoadConversationMessagesWithType();
     }
 
     void GetRoomInfoAction()
     {
-        ValueCallBack<Group> callBack = new ValueCallBack<Group>(
-                onSuccess:(d)=> {
-                    Debug.Log("aaaaa -" + d.Options.Ext);
-                }
-            );
-        SDKClient.Instance.GroupManager.UpdateGroupExt("153875044696065", ",,,,", callBack);
+        GetConversationExt();
     }
 
     void LeaveRoomAction()
     {
-        ValueCallBack<Group> callback = new ValueCallBack<Group>(
-            onSuccess: (group) => {
-                Debug.Log("group 2 " + group.Name);
-                foreach (string s in group.MemberList)
-                {
-                    Debug.Log("ssss - " + s);
-                }
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation("du003");
+        List<Message> list = conv.LoadMessages(null);
+        foreach (Message msg in list) {
+            ChatSDK.MessageBody.TextBody textBody = (ChatSDK.MessageBody.TextBody)msg.Body;
+            Debug.Log("message message: " + textBody.Text);
+        }
+    }
 
+
+    // 发送文字消息
+    void SendTextMessage() {
+
+        Message msg = Message.CreateTextSendMessage("du003", "我是文字消息");
+
+        CallBack callBack = new CallBack(
+
+            onSuccess:()=> {
+                Debug.Log("发送成功");
             },
-            onError: (code, desc) => {
-                Debug.Log("group 2 " + code + "aa " + desc);
-            });
 
-        SDKClient.Instance.GroupManager.GetGroupSpecificationFromServer("153875044696065", callback);
+            onError:(code, desc)=> {
+                Debug.LogError("发送失败: " + code + "desc: " + desc);
+            }
 
+            );
+
+        SDKClient.Instance.ChatManager.SendMessage(msg, callBack);
+    }
+
+    // 获取与xxx的会话
+    void GetConversation() {
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation("du003");
+        Debug.Log("conversation id: " + conv.Id);
+    }
+
+    void GetUnreadCount() {
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation("du003");
+        Debug.Log("unread count --- " + conv.UnReadCount);
+    }
+
+    void GetLatestReceiveMessage() {
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation("du003");
+        Message msg = conv.LastReceivedMessage;
+        if (msg != null)
+        {
+            if (msg.Body.Type == MessageBodyType.TXT)
+            {
+                ChatSDK.MessageBody.TextBody textBody = (ChatSDK.MessageBody.TextBody)msg.Body;
+                Debug.Log("lataestReceive message: " + textBody.Text);
+            }
+        }
+    }
+
+    void GetLatestMessage() {
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation("du003");
+        Message msg = conv.LastMessage;
+        if (msg != null)
+        {
+            if (msg.Body.Type == MessageBodyType.TXT)
+            {
+                ChatSDK.MessageBody.TextBody textBody = (ChatSDK.MessageBody.TextBody)msg.Body;
+                Debug.Log("latest message: " + textBody.Text);
+            }
+        }
+    }
+
+    void MarkAllMessageAsRead() {
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation("du003");
+        conv.MarkAllMessageAsRead();
+    }
+
+    void DeleteLastMessage() {
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation("du003");
+        Message msg = conv.LastMessage;
+        conv.DeleteMessage(msg.MsgId);
+    }
+
+    void DeleteAllMessages() {
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation("du003");
+        conv.DeleteAllMessages();
+    }
+
+    void LoadMessages() {
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation("du003");
+        List<Message> list = conv.LoadMessages(null);
+        Debug.Log("load messsage count --- " + list.Count);
+    }
+
+    void MakeAllConversationAsRead() {
+        SDKClient.Instance.ChatManager.MarkAllConversationsAsRead();
+    }
+
+    void GetAllMessageUnReadCount() {
+        int count = SDKClient.Instance.ChatManager.GetUnreadMessageCount();
+        Debug.Log("all unread count --- " + count);
+    }
+
+    void InsertConversationMessage() {
+        Message msg = Message.CreateTextSendMessage("du003", "我是会话插入的消息");
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation("du003");
+        conv.InsertMessage(msg);
+    }
+
+    void UpdateChatMangerMessage(Message msg) {
+        ChatSDK.MessageBody.TextBody textBody = new ChatSDK.MessageBody.TextBody("我是更新的消息");
+        msg.Body = textBody;
+
+        CallBack callback = new CallBack(
+                onSuccess: () => {
+                    Debug.Log("插入成功");
+                },
+                onError:(code, desc) => {
+                    Debug.LogError("插入失败 --- " + code + " " + desc);
+                }
+            );
+
+        SDKClient.Instance.ChatManager.UpdateMessage(msg, callback);
+    }
+
+    void AppendConversationMessage()
+    {
+        Message msg = Message.CreateTextSendMessage("du003", "我是会话Append的消息");
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation("du003");
+        bool ret = conv.AppendMessage(msg);
+        Debug.Log("插入 " + (ret ? "成功" : "失败") );
+
+    }
+
+    void UpdateConversationMessage() {
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation("du003");
+        Message msg = conv.LastMessage;
+        ChatSDK.MessageBody.TextBody body = new ChatSDK.MessageBody.TextBody("我是Conversation更新的消息");
+        msg.Body = body;
+
+        conv.UpdateMessage(msg);
+    }
+
+    void InsertChatManagerMessage() {
+        Message msg = Message.CreateTextSendMessage("du003", "我是Chat插入的消息");
+        List<Message> list = new List<Message>();
+        list.Add(msg);
+        SDKClient.Instance.ChatManager.ImportMessages(list);
+    }
+
+    void RecallMessage(Message msg) {
+        SDKClient.Instance.ChatManager.RecallMessage(msg.MsgId);
+    }
+
+    void SetConversationExt() {
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation("du003");
+        Dictionary<string, string> dict = new Dictionary<string, string>();
+        dict.Add("keyaaa", "valuebbb");
+        conv.Ext = dict;
+    }
+
+    void GetConversationExt() {
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation("du003");
+        foreach (string key in conv.Ext.Keys) {
+            Debug.Log("ext --- " + conv.Ext[key]);
+        }   
+    }
+
+    void LoadConversationMessagesWithKeyword(string str) {
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation("du003");
+        List<Message> msgs = conv.LoadMessagesWithKeyword(str, null);
+        foreach (Message msg in msgs) {
+            if (msg.Body.Type == MessageBodyType.TXT)
+            {
+                ChatSDK.MessageBody.TextBody textBody = (ChatSDK.MessageBody.TextBody)msg.Body;
+                Debug.Log("search message: " + textBody.Text);
+            }
+        }
+    }
+
+    void LoadConversationMessagesWithType() {
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation("du003");
+        List<Message> msgs = conv.LoadMessagesWithMsgType(MessageBodyType.TXT, null);
+        foreach (Message msg in msgs)
+        {
+            if (msg.Body.Type == MessageBodyType.TXT)
+            {
+                ChatSDK.MessageBody.TextBody textBody = (ChatSDK.MessageBody.TextBody)msg.Body;
+                Debug.Log("type message: " + textBody.Text);
+            }
+        }
+    }
+
+    void LoadConversationMessageWithType() {
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation("du003");
     }
 }

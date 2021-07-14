@@ -65,7 +65,7 @@ namespace ChatSDK {
             return manager.LoadMessagesWithKeyword(Id, Type, keywords, sender, timestamp, count, direction);
         }
 
-        public List<Message> LoadMessagesWithTime(int startTime, int endTime, int count = 20) {
+        public List<Message> LoadMessagesWithTime(long startTime, long endTime, int count = 20) {
             return manager.LoadMessagesWithTime(Id, Type, startTime, endTime, count);
         }
 

@@ -577,7 +577,7 @@ namespace ChatSDK
             jo.Add("chatType", MessageTypeToInt(MessageType));
             jo.Add("direction", MessageDirectionToString(Direction));
             //jo.Add("attributes", TransformTool.JsonStringFromAttributes(Attributes));
-            jo.Add("body", Body.ToJsonString());
+            jo.Add("body", Body.ToJson().ToString());
             jo.Add("bodyType", Body.TypeString());
             return jo;
         }
