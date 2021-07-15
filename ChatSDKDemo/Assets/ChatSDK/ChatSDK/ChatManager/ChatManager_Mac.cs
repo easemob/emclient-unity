@@ -160,7 +160,19 @@ namespace ChatSDK
             MessageTO mto = MessageTO.FromMessage(message);
             IntPtr mtoPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(mto));
             Marshal.StructureToPtr(mto, mtoPtr, false);
-            ChatAPINative.ChatManager_SendMessage(client, () => callback?.Success(),
+            ChatAPINative.ChatManager_SendMessage(client,
+                () =>
+                {
+                    try
+                    {
+                        callback?.Success();
+                    }
+                    catch(NullReferenceException nre)
+                    {
+                        Debug.LogWarning($"NullReferenceException: {nre.StackTrace}");
+                    }
+                    
+                },
                 (int code, string desc) => callback?.Error(code, desc), mtoPtr, message.Body.Type);
             Marshal.FreeCoTaskMem(mtoPtr);
             //TODO: what Message to return from this SendMessage?

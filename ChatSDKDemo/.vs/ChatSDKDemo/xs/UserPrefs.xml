@@ -1,10 +1,14 @@
 ﻿<Properties StartupConfiguration="{3A4B1E97-589D-1E2D-D6C5-A6CFAD6C116F}|">
   <MonoDevelop.Ide.ItemProperties.ChatSDKDemo PreferredExecutionTarget="95cd266c-1045-47ee-8ef5-ceac692d7815" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/ChatSDK/ChatSDK/native/ChatAPINative.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/ChatSDK/ChatSDK/RoomManager/IRoomManager.cs">
     <Files>
-      <File FileName="Assets/Script/Main.cs" Line="49" Column="60" />
-      <File FileName="Assets/ChatSDK/ChatSDK/RoomManager/RoomManager_Mac.cs" Line="189" Column="56" />
-      <File FileName="Assets/ChatSDK/ChatSDK/native/ChatAPINative.cs" Line="90" Column="96" />
+      <File FileName="Assets/Script/Main.cs" Line="223" Column="35" />
+      <File FileName="Assets/ChatSDK/ChatSDK/RoomManager/RoomManager_Mac.cs" />
+      <File FileName="Assets/ChatSDK/ChatSDK/native/ChatAPINative.cs" Line="39" Column="25" />
+      <File FileName="Assets/ChatSDK/ChatSDK/ChatManager/IChatManager.cs" Line="40" Column="33" />
+      <File FileName="Assets/ChatSDK/ChatSDK/ChatManager/ChatManager_Mac.cs" Line="158" Column="25" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Client/Client_Mac.cs" Line="1" Column="1" />
+      <File FileName="Assets/ChatSDK/ChatSDK/RoomManager/IRoomManager.cs" Line="17" Column="31" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -19,10 +23,10 @@
                   <Node name="GroupManager" expanded="True" />
                   <Node name="Listeners" expanded="True" />
                   <Node name="Models" expanded="True" />
-                  <Node name="native" expanded="True">
-                    <Node name="ChatAPINative.cs" selected="True" />
+                  <Node name="native" expanded="True" />
+                  <Node name="RoomManager" expanded="True">
+                    <Node name="IRoomManager.cs" selected="True" />
                   </Node>
-                  <Node name="RoomManager" expanded="True" />
                 </Node>
                 <Node name="Scripts" expanded="True" />
               </Node>
@@ -35,7 +39,7 @@
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="03de6416-bdaf-4274-b246-b4efaa3fd619" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="311c1bc4-b24d-4bb8-80ac-fed4f3c2662f" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/Users/bingo/GitHub/bingo/emclient-unity/ChatSDKDemo/Assets/Script/Delegate.cs" relfile="Assets/Script/Delegate.cs" line="94" column="1" />

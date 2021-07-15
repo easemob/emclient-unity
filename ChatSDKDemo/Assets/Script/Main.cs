@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using ChatSDK;
 using ChatSDK.MessageBody;
 using UnityEngine.SceneManagement;
+using System.Threading.Tasks;
 
 public class Main : MonoBehaviour
 {
@@ -46,7 +47,7 @@ public class Main : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SendBtn.onClick.AddListener(ChangeRoomSubjectAction);
+        SendBtn.onClick.AddListener(SendImageMessageAction);
         
         JoinGroupBtn.onClick.AddListener(JoinGroupAction);
         GroupInfoBtn.onClick.AddListener(GetGroupInfoAction);
@@ -71,8 +72,10 @@ public class Main : MonoBehaviour
         SDKClient.Instance.Logout(false);
     }
 
-    void SendMessageAction()
+    async void SendMessageAction()
     {
+        SendBtn.enabled = false;
+        
         string receiverId = RecvIdField.text;
         string content = TextField.text;
         IChatManager chatManager = SDKClient.Instance.ChatManager;
@@ -80,7 +83,8 @@ public class Main : MonoBehaviour
         CallBack callback = new CallBack(onSuccess: () => { Debug.Log("Message sent successfully!"); },
                                             onProgress: (int progress) => { Debug.Log(progress); },
                                             onError: (int code, string desc) => { Debug.Log(code + desc); });
-        chatManager.SendMessage(message, callback);
+        await Task.Run(()=>chatManager.SendMessage(message, callback));
+        SendBtn.enabled = true;
     }
 
     void SendLocationMessageAction()
@@ -127,18 +131,24 @@ public class Main : MonoBehaviour
         chatManager.SendMessage(message, callback);
     }
 
-    void SendImageMessageAction()
+    async void SendImageMessageAction()
     {
-        string receiverId = RecvIdField.text;
-        string displayName = TextField.text;
-        string localPath = "/Users/bingo/1.png";
-        long fileSize = 2385;
-        IChatManager chatManager = SDKClient.Instance.ChatManager;
-        Message message = Message.CreateImageSendMessage(receiverId, localPath, displayName, fileSize, true, 447, 147);
-        CallBack callback = new CallBack(onSuccess: () => { Debug.Log("Message sent successfully!"); },
-                                            onProgress: (int progress) => { Debug.Log(progress); },
-                                            onError: (int code, string desc) => { Debug.Log(code + desc); });
-        chatManager.SendMessage(message, callback);
+        SendBtn.enabled = false;
+        await Task.Run(() =>
+        {
+            string receiverId = RecvIdField.text;
+            string displayName = TextField.text;
+            string localPath = "/Users/bingo/1.png";
+            long fileSize = 2385;
+            IChatManager chatManager = SDKClient.Instance.ChatManager;
+            Message message = Message.CreateImageSendMessage(receiverId, localPath, displayName, fileSize, true, 447, 147);
+            CallBack callback = new CallBack(onSuccess: () => { Debug.Log("Message sent successfully!"); },
+                                                onProgress: (int progress) => { Debug.Log(progress); },
+                                                onError: (int code, string desc) => { Debug.Log(code + desc); });
+            chatManager.SendMessage(message, callback);
+
+        });
+        SendBtn.enabled = true;
     }
 
     void FetchHistoryMessagesAction()
@@ -215,12 +225,13 @@ public class Main : MonoBehaviour
             }));
     }
 
-    void ChangeRoomSubjectAction()
+    async void ChangeRoomSubjectAction()
     {
+        SendBtn.enabled = false;
         string roomId = RecvIdField.text;
         string newSubject = TextField.text;
         IRoomManager roomManager = SDKClient.Instance.RoomManager;
-        roomManager.ChangeRoomSubject(roomId, newSubject,
+        await Task.Run(()=>roomManager.ChangeRoomSubject(roomId, newSubject,
             new ValueCallBack<Room>(onSuccess: (Room room) =>
             {
                 Debug.Log($"Room {room.RoomId} subject changed to {room.Name} successfully.");
@@ -228,7 +239,8 @@ public class Main : MonoBehaviour
             onError: (int code, string desc) =>
             {
                 Debug.LogError($"Change room subject failed with code={code}, desc={desc}");
-            }));
+            })));
+        SendBtn.enabled = true;
     }
 
     void RemoveRoomMembersAction()
