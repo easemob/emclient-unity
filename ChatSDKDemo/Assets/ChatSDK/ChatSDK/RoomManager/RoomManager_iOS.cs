@@ -52,11 +52,11 @@ namespace ChatSDK
             RoomManagerNative.RoomManager_HandleMethodCall("changeChatRoomDescription", obj.ToString(), handle?.callbackId);
         }
 
-        public override void ChangeRoomSubject(string roomId, string newSubject, ValueCallBack<Room> handle = null)
+        public override void ChangeRoomName(string roomId, string newName, ValueCallBack<Room> handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("roomId", roomId);
-            obj.Add("subject", newSubject);
+            obj.Add("subject", newName);
             RoomManagerNative.RoomManager_HandleMethodCall("changeChatRoomSubject", obj.ToString(), handle?.callbackId);
         }
 
@@ -128,14 +128,7 @@ namespace ChatSDK
             RoomManagerNative.RoomManager_HandleMethodCall("getAllChatRooms", obj.ToString(), handle?.callbackId);
         }
 
-        public override void GetRoomWithId(string roomId, ValueCallBack<Room> handle = null)
-        {
-            JSONObject obj = new JSONObject();
-            obj.Add("roomId", roomId);
-            RoomManagerNative.RoomManager_HandleMethodCall("getChatRoom", obj.ToString(), handle?.callbackId);
-        }
-
-        public override void JoinRoom(string roomId, CallBack handle = null)
+        public override void JoinRoom(string roomId, ValueCallBack<Room> handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("roomId", roomId);
@@ -157,7 +150,7 @@ namespace ChatSDK
             RoomManagerNative.RoomManager_HandleMethodCall("muteChatRoomMembers", obj.ToString(), handle?.callbackId);
         }
 
-        public override void RemoveRoomAdmin(string roomId, string adminId, CallBack handle = null)
+        public override void RemoveRoomAdmin(string roomId, string adminId, ValueCallBack<Room> handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("roomId", roomId);

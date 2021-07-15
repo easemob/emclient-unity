@@ -48,7 +48,6 @@ namespace ChatSDK
     public class ValueCallBack<T> : CallBack
     {
         public Action<T> OnSuccessValue;
-        public OnError OnError;
 
         /// <summary>
         /// 结果回调
@@ -58,7 +57,7 @@ namespace ChatSDK
         public ValueCallBack(Action<T> onSuccess = null, OnError onError = null)
         {
             OnSuccessValue = onSuccess;
-            OnError = onError;
+            Error = onError;
             callbackId = CallbackManager.Instance().CurrentId.ToString();
             CallbackManager.Instance().AddValueCallback<T>(CallbackManager.Instance().CurrentId, this);
         }

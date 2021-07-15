@@ -132,9 +132,12 @@ namespace ChatSDK
 
                 List<Room> list = new List<Room>();
 
-                if (jsonObject["list"].IsArray)
+                if (jsonObject["list"].IsString)
                 {
-                    foreach (JSONNode obj in jsonObject["list"].AsArray)
+
+                    JSONArray jsonArray = JSON.Parse(jsonObject["list"].Value).AsArray;
+
+                    foreach (JSONNode obj in jsonArray)
                     {
                         if (obj.IsString)
                         {

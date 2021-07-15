@@ -21,9 +21,9 @@ public class EMChatRoomHelper {
         data.put("owner", chatRoom.getOwner());
         data.put("maxUsers", chatRoom.getMaxUsers());
         data.put("memberCount", chatRoom.getMemberCount());
-        data.put("adminList", EMTransformHelper.jsonArrayFromStringList(chatRoom.getAdminList()));
-        data.put("memberList", EMTransformHelper.jsonArrayFromStringList(chatRoom.getMemberList()));
-        data.put("blockList", EMTransformHelper.jsonArrayFromStringList(chatRoom.getBlackList()));
+        data.put("adminList", EMTransformHelper.jsonArrayFromStringList(chatRoom.getAdminList()).toString());
+        data.put("memberList", EMTransformHelper.jsonArrayFromStringList(chatRoom.getMemberList()).toString());
+        data.put("blockList", EMTransformHelper.jsonArrayFromStringList(chatRoom.getBlackList()).toString());
 
         List<String> muteList = new ArrayList<>();
         Object[] objArray = chatRoom.getMuteList().keySet().toArray();
@@ -31,7 +31,7 @@ public class EMChatRoomHelper {
             muteList.add((String)obj);
         }
 
-        data.put("muteList", EMTransformHelper.jsonArrayFromStringList(muteList));
+        data.put("muteList", EMTransformHelper.jsonArrayFromStringList(muteList).toString());
         data.put("isAllMemberMuted", chatRoom.isAllMemberMuted());
         data.put("announcement", chatRoom.getAnnouncement());
         data.put("permissionType", intTypeFromPermissionType(chatRoom.getChatRoomPermissionType()));

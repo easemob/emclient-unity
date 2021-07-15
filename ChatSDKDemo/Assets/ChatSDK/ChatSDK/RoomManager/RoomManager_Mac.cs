@@ -24,7 +24,7 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override void ChangeRoomSubject(string roomId, string newSubject, ValueCallBack<Room> handle = null)
+        public override void ChangeRoomName(string roomId, string newName, ValueCallBack<Room> handle = null)
         {
             throw new System.NotImplementedException();
         }
@@ -74,12 +74,7 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override void GetRoomWithId(string roomId, ValueCallBack<Room> handle = null)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override void JoinRoom(string roomId, CallBack handle = null)
+        public override void JoinRoom(string roomId, ValueCallBack<Room> handle = null)
         {
             throw new System.NotImplementedException();
         }
@@ -94,7 +89,7 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override void RemoveRoomAdmin(string roomId, string adminId, CallBack handle = null)
+        public override void RemoveRoomAdmin(string roomId, string adminId, ValueCallBack<Room> handle = null)
         {
             throw new System.NotImplementedException();
         }

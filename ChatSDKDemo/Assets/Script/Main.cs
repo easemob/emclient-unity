@@ -36,7 +36,7 @@ public class Main : MonoBehaviour
 
     IEnumerable<Toggle> ToggleGroup;
 
-    GroupInfo currGroup;
+    Room currRoom;
     Conversation conversation;
 
 
@@ -72,32 +72,32 @@ public class Main : MonoBehaviour
 
     void SendMessageAction()
     {
-        SendTextMessage();
+        FetchRoomMemberList("153983136104449");
     }
 
     void JoinGroupAction()
     {
-        AppendConversationMessage();
+        MuteRoomMembers();
     }
 
     void GetGroupInfoAction()
     {
-        DeleteAllMessages();
+        UnMuteRoomMembers();
     }
 
     void LeaveGroupAction()
     {
-        UpdateConversationMessage();
+        FetchRoomMuteList();
     }
 
     void JoinRoomAction()
     {
-        LoadConversationMessagesWithType();
+        GetRoomAnnouncement();
     }
 
     void GetRoomInfoAction()
     {
-        GetConversationExt();
+        FetchRoomInfo("153983136104449");
     }
 
     void LeaveRoomAction()
@@ -291,5 +291,267 @@ public class Main : MonoBehaviour
 
     void LoadConversationMessageWithType() {
         Conversation conv = SDKClient.Instance.ChatManager.GetConversation("du003");
+    }
+
+
+    ///// room
+
+    void CreateRoom() {
+
+
+        ValueCallBack<Room> callback = new ValueCallBack<Room>(
+
+            onSuccess: (room) => {
+                Debug.Log("room --- " + room.RoomId);
+            }
+            );
+
+        SDKClient.Instance.RoomManager.CreateRoom("unun1", "descaaaa", handle: callback);
+    }
+
+    void FetchPublicRooms() {
+
+        ValueCallBack<PageResult<Room>> callback = new ValueCallBack<PageResult<Room>>(
+
+            onSuccess:(result)=> {
+                foreach (Room room in result.Data) {
+                    Debug.Log("room --- " + room.RoomId);
+                    currRoom = room;
+                }
+            }
+            );
+
+        SDKClient.Instance.RoomManager.FetchPublicRoomsFromServer(handle: callback);
+    }
+
+    void JoinRoom(string roomId) {
+
+        ValueCallBack<Room> callBack = new ValueCallBack<Room>(
+            onSuccess: (room) => {
+                Debug.Log("room ----------- 加入成功 " + room.RoomId);
+            }
+            );
+
+        SDKClient.Instance.RoomManager.JoinRoom(roomId, callBack);
+    }
+
+    void LeaveRoom(string roomId) {
+        CallBack callBack = new CallBack(
+    onSuccess: () => {
+        Debug.Log("room ----------- 离开成功");
+    }
+    );
+
+        SDKClient.Instance.RoomManager.LeaveRoom(roomId, callBack);
+    }
+
+    void FetchRoomInfo(string roomId) {
+
+        ValueCallBack<Room> callBack = new ValueCallBack<Room>(
+            onSuccess: (room) => {
+                Debug.Log("room ----------- 详情成功 " + room.RoomId);
+                Debug.Log("room ----------- 详情成功 " + room.Name);
+                Debug.Log("room ----------- 详情成功 " + room.Description);
+                Debug.Log("room ----------- 详情成功 " + room.Announcement);
+                foreach (string s in room.MemberList) {
+                    Debug.Log("room ----------- 成员 " + s);
+                }
+
+                foreach (string s in room.AdminList)
+                {
+                    Debug.Log("room ----------- 管理员 " + s);
+                }
+
+                foreach (string s in room.MuteList)
+                {
+                    Debug.Log("room ----------- 禁言 " + s);
+                }
+            }
+            );
+
+        SDKClient.Instance.RoomManager.FetchRoomInfoFromServer(roomId, callBack);
+    }
+
+    void FetchRoomMemberList(string roomId) {
+
+        ValueCallBack<CursorResult<string>> callBack = new ValueCallBack<CursorResult<string>>(
+                onSuccess: (result) => {
+                    foreach (string s in result.Data) {
+                        Debug.Log("username --- " + s);
+                    }
+                }
+            );
+
+        SDKClient.Instance.RoomManager.FetchRoomMembers(roomId, handle: callBack);
+    }
+
+
+    void AddRoomAdmin() {
+
+        //153983136104449
+
+        ValueCallBack<Room> callback = new ValueCallBack<Room>(
+                onSuccess: (room) => {
+                    Debug.Log("管理员列表添加 ===== ");
+                    foreach (string s in room.AdminList) {
+                        Debug.Log("管理员列表 ===== " + s);
+                    }
+                }
+
+            );
+
+        SDKClient.Instance.RoomManager.AddRoomAdmin("153983136104449", "du003", callback);
+    }
+
+    void RemoveRoomAdmin() {
+        ValueCallBack<Room> callback = new ValueCallBack<Room>(
+                onSuccess: (room) => {
+                    Debug.Log("管理员列表删除 ===== ");
+                    foreach (string s in room.AdminList)
+                    {
+                        Debug.Log("管理员列表 ===== " + s);
+                    }
+                },
+                onError:(code, desc) => {
+                    Debug.LogError("error -- " + code + " desc " + desc);
+                }
+
+            );
+
+        SDKClient.Instance.RoomManager.RemoveRoomAdmin("153983136104449", "du003", callback);
+    }
+
+    void ChangeRoomDesc() {
+        ValueCallBack<Room> callBack = new ValueCallBack<Room>(
+                onSuccess:(room)=> {
+                    Debug.Log("room decs --- " + room.Description);
+                }
+        );
+
+        SDKClient.Instance.RoomManager.ChangeRoomDescription("153983136104449", "我是聊天室描述", callBack);
+    }
+
+    void ChangeRoomName() {
+
+        ValueCallBack<Room> callBack = new ValueCallBack<Room>(
+                onSuccess: (room) => {
+                    Debug.Log("room name --- " + room.Name);
+                }
+        );
+
+        SDKClient.Instance.RoomManager.ChangeRoomName("153983136104449", "我是聊天室名称", callBack);
+
+    }
+
+    void UpdateRoomAnnouncement() {
+ 
+    CallBack callBack = new CallBack(
+        onSuccess: () => {
+            Debug.Log("room ----------- Announcement成功");
+        }
+    );
+
+        SDKClient.Instance.RoomManager.UpdateRoomAnnouncement("153983136104449", "我是Announcement4444", callBack);
+    }
+
+    void GetRoomAnnouncement()
+    {
+        ValueCallBack<string> callBack = new ValueCallBack<string>(
+            onSuccess: (Announcement) => {
+                Debug.Log("room Announcement --- " + Announcement);
+            }
+        );
+
+        SDKClient.Instance.RoomManager.FetchRoomAnnouncement("153983136104449", callBack);
+    }
+
+    void BlockRoomMembers() {
+
+        ValueCallBack<Room> callback = new ValueCallBack<Room>(
+             onSuccess: (room) => {
+
+                 foreach (string s in room.BlockList)
+                 {
+                     Debug.Log("block user --- " + s);
+                 }
+             },
+
+             onError: (code, desc) => {
+                 Debug.Log("block user errir --- " + code + " desc " + desc);
+             }
+        );
+
+        List<string> members = new List<string>();
+        members.Add("du003");
+
+        SDKClient.Instance.RoomManager.BlockRoomMembers("153983136104449", members, callback);
+    }
+
+    void UnBlockRoomMembers()
+    {
+        CallBack callBack = new CallBack(
+            onSuccess: () => {
+                Debug.Log("room ----------- 移除黑名单");
+            }
+        );
+
+        List<string> members = new List<string>();
+        members.Add("du003");
+
+        SDKClient.Instance.RoomManager.UnBlockRoomMembers("153983136104449", members, callBack);
+
+    }
+
+    void FetchRoomBlockList() {
+        ValueCallBack<List<string>> callback = new ValueCallBack<List<string>>(
+            onSuccess: (list) => {
+
+                foreach(string s in list) {
+                    Debug.Log("block user --- " + s);
+                }
+            }
+        );
+
+        SDKClient.Instance.RoomManager.FetchRoomBlockList("153983136104449", handle:callback);
+    }
+
+    void MuteRoomMembers() {
+        CallBack callBack = new CallBack(
+            onSuccess: () => {
+                Debug.Log("room ----------- 成员禁言");
+            }
+        );
+
+        List<string> members = new List<string>();
+        members.Add("du003");
+
+        SDKClient.Instance.RoomManager.MuteRoomMembers("153983136104449", members, callBack);
+    }
+
+    void UnMuteRoomMembers() {
+        CallBack callBack = new CallBack(
+            onSuccess: () => {
+                Debug.Log("room ----------- 成员禁言");
+            }
+        );
+
+        List<string> members = new List<string>();
+        members.Add("du003");
+
+        SDKClient.Instance.RoomManager.UnMuteRoomMembers("153983136104449", members, callBack);
+    }
+
+    void FetchRoomMuteList() {
+        ValueCallBack<List<string>> callback = new ValueCallBack<List<string>>(
+            onSuccess: (list) => {
+
+                foreach (string s in list)
+                {
+                    Debug.Log("禁言 user --- " + s);
+                }
+            }
+        );
+
+        SDKClient.Instance.RoomManager.FetchRoomMuteList("153983136104449", handle: callback);
     }
 }

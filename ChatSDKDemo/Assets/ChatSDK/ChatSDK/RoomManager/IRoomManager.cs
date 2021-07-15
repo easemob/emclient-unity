@@ -14,9 +14,9 @@ namespace ChatSDK
 
         public abstract void ChangeRoomDescription(string roomId, string newDescription, ValueCallBack<Room> handle = null);
 
-        public abstract void ChangeRoomSubject(string roomId, string newSubject, ValueCallBack<Room> handle = null);
+        public abstract void ChangeRoomName(string roomId, string newName, ValueCallBack<Room> handle = null);
 
-        public abstract void CreateRoom(string subject, string descriptionsc, string welcomeMsg, int maxUserCount = 300, List<string> members = null, ValueCallBack<Room> handle = null);
+        public abstract void CreateRoom(string subject, string descriptionsc = null, string welcomeMsg = null, int maxUserCount = 300, List<string> members = null, ValueCallBack<Room> handle = null);
 
         public abstract void DestroyRoom(string roomId, CallBack handle = null);
 
@@ -30,19 +30,17 @@ namespace ChatSDK
 
         public abstract void FetchRoomMembers(string roomId, string cursor = null, int pageSize = 200, ValueCallBack<CursorResult<string>> handle = null);
 
-        public abstract void FetchRoomMuteList(string roomId, int pageSize = 1, int pageNum = 200, ValueCallBack<List<string>> handle = null);
+        public abstract void FetchRoomMuteList(string roomId, int pageSize = 200, int pageNum = 1, ValueCallBack<List<string>> handle = null);
 
         public abstract void GetAllRoomsFromLocal(ValueCallBack<List<Room>> handle = null);
 
-        public abstract void GetRoomWithId(string roomId, ValueCallBack<Room> handle = null);
-
-        public abstract void JoinRoom(string roomId, CallBack handle = null);
+        public abstract void JoinRoom(string roomId, ValueCallBack<Room> handle = null);
 
         public abstract void LeaveRoom(string roomId, CallBack handle = null);
 
         public abstract void MuteRoomMembers(string roomId, List<string> members, CallBack handle = null);
 
-        public abstract void RemoveRoomAdmin(string roomId, string adminId, CallBack handle = null);
+        public abstract void RemoveRoomAdmin(string roomId, string adminId, ValueCallBack<Room> handle = null);
 
         public abstract void RemoveRoomMembers(string roomId, List<string> members, CallBack handle = null);
 
