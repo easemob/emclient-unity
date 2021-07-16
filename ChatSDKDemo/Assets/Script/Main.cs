@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 using ChatSDK;
 
-public class Main : MonoBehaviour
+public class Main : MonoBehaviour , IConnectionDelegate
 {
     // 接收消息id
     public InputField RecvIdField;
@@ -58,10 +58,15 @@ public class Main : MonoBehaviour
         }
     }
 
+    private void Awake()
+    {
+        SDKClient.Instance.AddConnectionDelegate(this);
+    }
+
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     void OnApplicationQuit()
@@ -72,42 +77,37 @@ public class Main : MonoBehaviour
 
     void SendMessageAction()
     {
-        FetchRoomMemberList("153983136104449");
+
     }
 
     void JoinGroupAction()
     {
-        MuteRoomMembers();
+        CreateRoom();
     }
 
     void GetGroupInfoAction()
     {
-        UnMuteRoomMembers();
+        DestroyRoom();
     }
 
     void LeaveGroupAction()
     {
-        FetchRoomMuteList();
+        GetAllRoomsFromLocal();
     }
 
     void JoinRoomAction()
     {
-        GetRoomAnnouncement();
+        GetPublicRoomsFromServer();
     }
 
     void GetRoomInfoAction()
     {
-        FetchRoomInfo("153983136104449");
+
     }
 
     void LeaveRoomAction()
     {
-        Conversation conv = SDKClient.Instance.ChatManager.GetConversation("du003");
-        List<Message> list = conv.LoadMessages(null);
-        foreach (Message msg in list) {
-            ChatSDK.MessageBody.TextBody textBody = (ChatSDK.MessageBody.TextBody)msg.Body;
-            Debug.Log("message message: " + textBody.Text);
-        }
+
     }
 
 
@@ -118,11 +118,11 @@ public class Main : MonoBehaviour
 
         CallBack callBack = new CallBack(
 
-            onSuccess:()=> {
+            onSuccess: () => {
                 Debug.Log("发送成功");
             },
 
-            onError:(code, desc)=> {
+            onError: (code, desc) => {
                 Debug.LogError("发送失败: " + code + "desc: " + desc);
             }
 
@@ -213,7 +213,7 @@ public class Main : MonoBehaviour
                 onSuccess: () => {
                     Debug.Log("插入成功");
                 },
-                onError:(code, desc) => {
+                onError: (code, desc) => {
                     Debug.LogError("插入失败 --- " + code + " " + desc);
                 }
             );
@@ -226,7 +226,7 @@ public class Main : MonoBehaviour
         Message msg = Message.CreateTextSendMessage("du003", "我是会话Append的消息");
         Conversation conv = SDKClient.Instance.ChatManager.GetConversation("du003");
         bool ret = conv.AppendMessage(msg);
-        Debug.Log("插入 " + (ret ? "成功" : "失败") );
+        Debug.Log("插入 " + (ret ? "成功" : "失败"));
 
     }
 
@@ -261,7 +261,7 @@ public class Main : MonoBehaviour
         Conversation conv = SDKClient.Instance.ChatManager.GetConversation("du003");
         foreach (string key in conv.Ext.Keys) {
             Debug.Log("ext --- " + conv.Ext[key]);
-        }   
+        }
     }
 
     void LoadConversationMessagesWithKeyword(string str) {
@@ -301,19 +301,43 @@ public class Main : MonoBehaviour
 
         ValueCallBack<Room> callback = new ValueCallBack<Room>(
 
-            onSuccess: (room) => {
+            onSuccess: (room) =>
+            {
                 Debug.Log("room --- " + room.RoomId);
-            }
-            );
+            },
 
-        SDKClient.Instance.RoomManager.CreateRoom("unun1", "descaaaa", handle: callback);
+            onError: (code, desc) => {
+                Debug.Log("room ----------- 失败 code " + code + "  desc " + desc);
+            }
+        );
+
+        List<string> members = new List<string>();
+        members.Add("du003");
+        members.Add("du004");
+
+        SDKClient.Instance.RoomManager.CreateRoom("unun1", "descaaaa", members: members, handle: callback);
+    }
+
+    void DestroyRoom() {
+
+
+        CallBack callback = new CallBack(
+            onSuccess: () => {
+                Debug.Log("解散成功");
+            },
+            onError:(code, desc) => {
+                Debug.Log("解散失败 --- " + code + " " + desc);
+            }
+        );
+
+        SDKClient.Instance.RoomManager.DestroyRoom("154157521633281", callback);
     }
 
     void FetchPublicRooms() {
 
         ValueCallBack<PageResult<Room>> callback = new ValueCallBack<PageResult<Room>>(
 
-            onSuccess:(result)=> {
+            onSuccess: (result) => {
                 foreach (Room room in result.Data) {
                     Debug.Log("room --- " + room.RoomId);
                     currRoom = room;
@@ -337,10 +361,10 @@ public class Main : MonoBehaviour
 
     void LeaveRoom(string roomId) {
         CallBack callBack = new CallBack(
-    onSuccess: () => {
-        Debug.Log("room ----------- 离开成功");
-    }
-    );
+            onSuccess: () => {
+                Debug.Log("room ----------- 离开成功");
+            }
+        );
 
         SDKClient.Instance.RoomManager.LeaveRoom(roomId, callBack);
     }
@@ -412,7 +436,7 @@ public class Main : MonoBehaviour
                         Debug.Log("管理员列表 ===== " + s);
                     }
                 },
-                onError:(code, desc) => {
+                onError: (code, desc) => {
                     Debug.LogError("error -- " + code + " desc " + desc);
                 }
 
@@ -423,7 +447,7 @@ public class Main : MonoBehaviour
 
     void ChangeRoomDesc() {
         ValueCallBack<Room> callBack = new ValueCallBack<Room>(
-                onSuccess:(room)=> {
+                onSuccess: (room) => {
                     Debug.Log("room decs --- " + room.Description);
                 }
         );
@@ -444,12 +468,12 @@ public class Main : MonoBehaviour
     }
 
     void UpdateRoomAnnouncement() {
- 
-    CallBack callBack = new CallBack(
-        onSuccess: () => {
-            Debug.Log("room ----------- Announcement成功");
-        }
-    );
+
+        CallBack callBack = new CallBack(
+            onSuccess: () => {
+                Debug.Log("room ----------- Announcement成功");
+            }
+        );
 
         SDKClient.Instance.RoomManager.UpdateRoomAnnouncement("153983136104449", "我是Announcement4444", callBack);
     }
@@ -506,13 +530,13 @@ public class Main : MonoBehaviour
         ValueCallBack<List<string>> callback = new ValueCallBack<List<string>>(
             onSuccess: (list) => {
 
-                foreach(string s in list) {
+                foreach (string s in list) {
                     Debug.Log("block user --- " + s);
                 }
             }
         );
 
-        SDKClient.Instance.RoomManager.FetchRoomBlockList("153983136104449", handle:callback);
+        SDKClient.Instance.RoomManager.FetchRoomBlockList("153983136104449", handle: callback);
     }
 
     void MuteRoomMembers() {
@@ -553,5 +577,193 @@ public class Main : MonoBehaviour
         );
 
         SDKClient.Instance.RoomManager.FetchRoomMuteList("153983136104449", handle: callback);
+    }
+
+    void RemoveRoomMembers() {
+        CallBack callBack = new CallBack(
+            onSuccess: () => {
+                Debug.Log("room ----------- 移除成功");
+            },
+
+            onError: (code, desc) => {
+                Debug.Log("room ----------- 移除失败 code " + code + "  desc " + desc);
+            }
+        );
+
+        List<string> members = new List<string>();
+        members.Add("du004");
+        SDKClient.Instance.RoomManager.RemoveRoomMembers("153983136104449", members, callBack);
+
+    }
+
+    void GetAllRoomsFromLocal() {
+
+        ValueCallBack<List<Room>> callback = new ValueCallBack<List<Room>>(
+            onSuccess: (list) => {
+                foreach (Room room in list) {
+                    Debug.Log("local room -- " + room.RoomId);
+                }
+            },
+            onError: (code, desc) => {
+                Debug.Log("room ----------- 失败 code " + code + "  desc " + desc);
+            }
+        );
+
+
+
+        SDKClient.Instance.RoomManager.GetAllRoomsFromLocal(callback);
+    }
+
+    void GetPublicRoomsFromServer() {
+
+        ValueCallBack<PageResult<Room>> callback = new ValueCallBack<PageResult<Room>>(
+            onSuccess:(result)=> {
+                foreach (Room room in result.Data) {
+                    Debug.Log("room id --- " + room.RoomId);
+                }
+            },
+            onError:(code, desc) => {
+                Debug.Log("错误 --- " + code + " " + desc);
+            }
+        );
+
+        SDKClient.Instance.RoomManager.FetchPublicRoomsFromServer(handle: callback);
+    }
+
+    void ChangeRoomOwner() {
+
+        ValueCallBack<Room> callback = new ValueCallBack<Room>(
+            onSuccess: (room) => {
+            },
+            onError:(code, desc) => {
+            }
+        );
+
+
+        SDKClient.Instance.RoomManager.ChangeOwner("", "du004", callback);
+    }
+
+    ////// push
+    ///
+    void GetLocalPushConfig() {
+        PushConfig config = SDKClient.Instance.PushManager.GetPushConfig();
+        Debug.Log("local config --- " + (config.NoDisturb ? "推送免打扰" : "正常推送"));
+        Debug.Log("local config --- " + (config.Style == PushStyle.Simple ? "显示完整内容" : "您有一条新消息"));
+        Debug.Log("local config --- 免打扰开始时间 " + config.NoDisturbStartHour);
+        Debug.Log("local config --- 免打扰结束时间 " + config.NoDisturbEndHour);
+    }
+
+    void GetPushConfigFromServer() {
+        ValueCallBack<PushConfig> callback = new ValueCallBack<PushConfig>(
+            onSuccess: (config) => {
+                Debug.Log("config --- " + (config.NoDisturb ? "推送免打扰" : "正常推送"));
+                Debug.Log("config --- " + (config.Style == PushStyle.Simple ? "显示完整内容" : "您有一条新消息"));
+                Debug.Log("config --- 免打扰开始时间 " + config.NoDisturbStartHour);
+                Debug.Log("config --- 免打扰结束时间 " + config.NoDisturbEndHour);
+            }
+        );
+        SDKClient.Instance.PushManager.GetPushConfigFromServer(callback);
+    }
+
+    void SetNoDisturb() {
+        CallBack callback = new CallBack(
+            onSuccess: () => {
+                Debug.Log("设置免打扰成功");
+            },
+
+            onError: (code, desc) => {
+                Debug.Log("设置免打扰失败" + code + " " + desc);
+            }
+        );
+        SDKClient.Instance.PushManager.SetNoDisturb(true, 3, 10, callback);
+    }
+
+    void SetPushType() {
+        CallBack callback = new CallBack(
+            onSuccess: () => {
+                Debug.Log("设置免打扰成功");
+            },
+
+            onError: (code, desc) => {
+                Debug.Log("设置免打扰失败" + code + " " + desc);
+            }
+        );
+        PushConfig config = SDKClient.Instance.PushManager.GetPushConfig();
+
+        SDKClient.Instance.PushManager.SetPushStyle(config.Style == PushStyle.Simple ? PushStyle.Summary : PushStyle.Simple, callback);
+    }
+
+    void UpdateNickname() {
+        CallBack callback = new CallBack(
+            onSuccess: () => {
+                Debug.Log("设置昵称成功");
+            },
+
+            onError: (code, desc) => {
+                Debug.Log("设置昵称失败" + code + " " + desc);
+            }
+        );
+
+        SDKClient.Instance.PushManager.UpdatePushNickName("我是新昵称", callback);
+    }
+
+
+
+    void SetNoDisturbGroups() {
+
+        //137296031580162
+        //137600494010369
+        //138019701063681
+        //138597050155009
+        //129975025991681
+
+        CallBack callBack = new CallBack(
+            onSuccess: () => {
+                Debug.Log("设置群组免打扰成功");
+            },
+
+            onError: (code, desc) => {
+                Debug.Log("设置群组免打扰失败 --- " + code + " " + desc);
+            }
+        );
+
+        SDKClient.Instance.PushManager.SetGroupToDisturb("138019701063681", true, callBack);
+
+    }
+
+    void SetDisturbGroups() {
+        CallBack callBack = new CallBack(
+            onSuccess: () => {
+                Debug.Log("设置打扰成功");
+            },
+
+            onError: (code, desc) => {
+                Debug.Log("设置打扰失败 --- " + code + " " + desc);
+            }
+        );
+
+        SDKClient.Instance.PushManager.SetGroupToDisturb("138019701063681", false, callBack);
+    }
+
+    void GetNoDisturbGroups() {
+        List<string>list = SDKClient.Instance.PushManager.GetNoDisturbGroups();
+        foreach (string s in list) {
+            Debug.Log("disturb group ------- " + s);
+        }
+    }
+
+    public void OnConnected()
+    {
+        Debug.Log("连接恢复-------");
+    }
+
+    public void OnDisconnected(int i)
+    {
+        Debug.Log("连接断开------- " + i);
+    }
+
+    public void OnPong()
+    {
+        throw new System.NotImplementedException();
     }
 }

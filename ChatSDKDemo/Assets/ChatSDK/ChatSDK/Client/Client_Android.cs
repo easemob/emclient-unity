@@ -24,7 +24,9 @@ namespace ChatSDK
         {
             CallbackManager.Instance();
             listenerGameObj = new GameObject(Connection_Obj);
+
             ConnectionListener connectionListener = listenerGameObj.AddComponent<ConnectionListener>();
+            
             connectionListener.delegater = connectionDelegater;
             wrapper.Call("init", options.ToJsonString());
         }

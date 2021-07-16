@@ -16,7 +16,7 @@ namespace ChatSDK
         public OnError Error;
         public OnProgress Progress;
 
-        internal string callbackId ;
+        internal string callbackId;
         /// <summary>
         /// 结果回调
         /// </summary>

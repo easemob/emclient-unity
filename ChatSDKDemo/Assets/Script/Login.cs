@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using ChatSDK;
 
-public class Login : MonoBehaviour
+public class Login : MonoBehaviour, IConnectionDelegate
 {
 
     public InputField usernameField;
@@ -16,14 +16,14 @@ public class Login : MonoBehaviour
     {
         loginButton.onClick.AddListener(LoginAction);
         registerButton.onClick.AddListener(RegisterAction);
-        Options options = new Options("easemob-demo#easeim");
+        Options options = new Options("easemob-demo#chatdemoui");
         options.DebugMode = true;
         options.UsingHttpsOnly = true;
         SDKClient client = SDKClient.Instance;
         client.InitWithOptions(options);
-
+        client.AddConnectionDelegate(this);
         if (SDKClient.Instance.IsLoggedIn) {
-            SceneManager.LoadScene("Main");
+            //SceneManager.LoadScene("Main");
         }
     }
 
@@ -66,5 +66,20 @@ public class Login : MonoBehaviour
     void Update()
     {
 
+    }
+
+    public void OnConnected()
+    {
+        Debug.Log("连接成功");
+    }
+
+    public void OnDisconnected(int i)
+    {
+        Debug.LogError("连接失败");
+    }
+
+    public void OnPong()
+    {
+        throw new System.NotImplementedException();
     }
 }

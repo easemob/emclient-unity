@@ -18,7 +18,7 @@ public class EMPushManagerWrapper extends EMWrapper {
         return new EMPushManagerWrapper();
     }
 
-    private String getNoDisturbGroups(String callbackId) {
+    private String getNoDisturbGroups() {
         List<String> groupIds = EMClient.getInstance().pushManager().getNoPushGroups();
         if (groupIds == null) return null;
         return EMTransformHelper.jsonArrayFromStringList(groupIds).toString();
@@ -130,18 +130,6 @@ public class EMPushManagerWrapper extends EMWrapper {
             }
         });
     }
-
-
-    //
-
-    //
-
-    //
-
-    //
-
-    //
-
 
     private void updateAPNsDeviceToken(String nickname, String callbackId) {
         asyncRunnable(()->{
