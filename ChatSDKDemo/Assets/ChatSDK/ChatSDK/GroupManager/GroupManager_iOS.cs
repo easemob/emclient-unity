@@ -12,11 +12,10 @@ namespace ChatSDK
         {
         }
 
-        public override void AcceptInvitationFromGroup(string groupId, string inviter, ValueCallBack<Group> handle = null)
+        public override void AcceptInvitationFromGroup(string groupId, ValueCallBack<Group> handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("groupId", groupId);
-            obj.Add("inviter", inviter);
             GroupManagerNative.GroupManager_HandleMethodCall("acceptInvitationFromGroup", obj.ToString(), handle?.callbackId);
         }
 
@@ -109,11 +108,10 @@ namespace ChatSDK
             GroupManagerNative.GroupManager_HandleMethodCall("createGroup", obj.ToString(), handle?.callbackId);
         }
 
-        public override void DeclineInvitationFromGroup(string groupId, string username, string reason = null, CallBack handle = null)
+        public override void DeclineInvitationFromGroup(string groupId, string reason = null, CallBack handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("groupId", groupId);
-            obj.Add("inviter", username);
             obj.Add("reason", reason);
             GroupManagerNative.GroupManager_HandleMethodCall("declineInvitationFromGroup", obj.ToString(), handle?.callbackId);
         }

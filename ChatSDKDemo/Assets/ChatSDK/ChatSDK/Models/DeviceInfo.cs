@@ -2,12 +2,25 @@
 
 namespace ChatSDK
 {
-
+    /// <summary>
+    /// 设备信息
+    /// </summary>
     public class DeviceInfo
 
     {
+        /// <summary>
+        /// 设备Resource
+        /// </summary>
         public string Resource { get; private set; }
+
+        /// <summary>
+        /// 设备UUId
+        /// </summary>
         public string DeviceUUID { get; private set; }
+
+        /// <summary>
+        /// 设备名称
+        /// </summary>
         public string DeviceName { get; private set; }
 
 

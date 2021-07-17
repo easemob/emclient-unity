@@ -3,6 +3,9 @@ using SimpleJSON;
 
 namespace ChatSDK
 {
+    /// <summary>
+    /// 群组对象
+    /// </summary>
     public class Group
     {
 
@@ -52,20 +55,79 @@ namespace ChatSDK
             }
         }
 
+        /// <summary>
+        /// 群组id
+        /// </summary>
         public string GroupId { get; internal set; }
+
+        /// <summary>
+        /// 群组名称
+        /// </summary>
         public string Name { get; internal set; }
+
+        /// <summary>
+        /// 群组描述
+        /// </summary>
         public string Description { get; internal set; }
+
+        /// <summary>
+        /// 群主
+        /// </summary>
         public string Owner { get; internal set; }
+
+        /// <summary>
+        /// 群公告
+        /// </summary>
         public string Annoumcement { get; internal set; }
+
+        /// <summary>
+        /// 群人数
+        /// </summary>
         public int MemberCount { get; internal set; }
+
+        /// <summary>
+        /// 群成员列表
+        /// </summary>
         public List<string> MemberList { get; internal set; }
+
+        /// <summary>
+        /// 管理员列表
+        /// </summary>
         public List<string> AdminList { get; internal set; }
+
+        /// <summary>
+        /// 黑名单列表
+        /// </summary>
         public List<string> BlockList { get; internal set; }
+
+        /// <summary>
+        /// 禁言列表
+        /// </summary>
         public List<string> MuteList { get; internal set; }
+
+        /// <summary>
+        /// 是否推送
+        /// </summary>
         public bool NoticeEnabled { get; internal set; }
+
+        /// <summary>
+        /// 不接收群消息
+        /// </summary>
         public bool MessageBlocked { get; internal set; }
+
+        /// <summary>
+        /// 是否全员禁言
+        /// </summary>
         public bool IsAllMemberMuted { get; internal set; }
+
+        /// <summary>
+        /// 去设置
+        /// </summary>
         public GroupOptions Options { get; internal set; }
+
+        /// <summary>
+        /// 当前用户在群中的角色
+        /// </summary>
         public GroupPermissionType PermissionType { get; internal set; }
 
     }

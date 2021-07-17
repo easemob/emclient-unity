@@ -7,12 +7,12 @@ namespace ChatSDK {
 
         internal WeakDelegater<IGroupManagerDelegate> delegater;
 
-        internal void OnInvitatiOnReceived(string jsonString)
+        internal void OnInvitationReceived(string jsonString)
         {
             if (delegater != null) {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IGroupManagerDelegate delegater in delegater.List) {
-                    delegater.OnInvitationReceived(
+                    delegater.OnInvitationReceivedFromGroup(
                         jo["groupId"].Value,
                         jo["groupName"].Value,
                         jo["inviter"].Value,
@@ -30,7 +30,7 @@ namespace ChatSDK {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IGroupManagerDelegate delegater in delegater.List)
                 {
-                    delegater.OnRequestToJoinReceived(
+                    delegater.OnRequestToJoinReceivedFromGroup(
                         jo["groupId"].Value,
                         jo["groupName"].Value,
                         jo["applicant"].Value,
@@ -47,7 +47,7 @@ namespace ChatSDK {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IGroupManagerDelegate delegater in delegater.List)
                 {
-                    delegater.OnRequestToJoinAccepted(
+                    delegater.OnRequestToJoinAcceptedFromGroup(
                         jo["groupId"].Value,
                         jo["groupName"].Value,
                         jo["accepter"].Value
@@ -63,7 +63,7 @@ namespace ChatSDK {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IGroupManagerDelegate delegater in delegater.List)
                 {
-                    delegater.OnRequestToJoinDeclined(
+                    delegater.OnRequestToJoinDeclinedFromGroup(
                         jo["groupId"].Value,
                         jo["groupName"].Value,
                         jo["decliner"].Value,
@@ -80,7 +80,7 @@ namespace ChatSDK {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IGroupManagerDelegate delegater in delegater.List)
                 {
-                    delegater.OnInvitationAccepted(
+                    delegater.OnInvitationAcceptedFromGroup(
                         jo["groupId"].Value,
                         jo["invitee"].Value,
                         jo["reason"].Value
@@ -96,7 +96,7 @@ namespace ChatSDK {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IGroupManagerDelegate delegater in delegater.List)
                 {
-                    delegater.OnInvitationDeclined(
+                    delegater.OnInvitationDeclinedFromGroup(
                         jo["groupId"].Value,
                         jo["invitee"].Value,
                         jo["inviter"].Value
@@ -112,7 +112,7 @@ namespace ChatSDK {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IGroupManagerDelegate delegater in delegater.List)
                 {
-                    delegater.OnUserRemoved(
+                    delegater.OnUserRemovedFromGroup(
                         jo["groupId"].Value,
                         jo["groupName"].Value
                         );
@@ -127,7 +127,7 @@ namespace ChatSDK {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IGroupManagerDelegate delegater in delegater.List)
                 {
-                    delegater.OnGroupDestroyed(
+                    delegater.OnDestroyedFromGroup(
                         jo["groupId"].Value,
                         jo["groupName"].Value
                         );
@@ -158,9 +158,9 @@ namespace ChatSDK {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IGroupManagerDelegate delegater in delegater.List)
                 {
-                    delegater.OnMuteListAdded(
+                    delegater.OnMuteListAddedFromGroup(
                         jo["groupId"].Value,
-                        TransformTool.JsonStringToStringList(jo["mutes"].Value),
+                        TransformTool.JsonStringToStringList(jo["list"].Value),
                         jo["muteExpire"].AsInt
                         );
                 }
@@ -174,9 +174,9 @@ namespace ChatSDK {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IGroupManagerDelegate delegater in delegater.List)
                 {
-                    delegater.OnMuteListRemoved(
+                    delegater.OnMuteListRemovedFromGroup(
                         jo["groupId"].Value,
-                        TransformTool.JsonStringToStringList(jo["mutes"].Value)
+                        TransformTool.JsonStringToStringList(jo["list"].Value)
                         );
                 }
             }
@@ -189,7 +189,7 @@ namespace ChatSDK {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IGroupManagerDelegate delegater in delegater.List)
                 {
-                    delegater.OnAdminAdded(
+                    delegater.OnAdminAddedFromGroup(
                         jo["groupId"].Value,
                         jo["admin"].Value
                         );
@@ -204,7 +204,7 @@ namespace ChatSDK {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IGroupManagerDelegate delegater in delegater.List)
                 {
-                    delegater.OnAdminRemoved(
+                    delegater.OnAdminRemovedFromGroup(
                         jo["groupId"].Value,
                         jo["admin"].Value
                         );
@@ -219,7 +219,7 @@ namespace ChatSDK {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IGroupManagerDelegate delegater in delegater.List)
                 {
-                    delegater.OnOwnerChanged(
+                    delegater.OnOwnerChangedFromGroup(
                         jo["groupId"].Value,
                         jo["newOwner"].Value,
                         jo["oldOwner"].Value
@@ -235,7 +235,7 @@ namespace ChatSDK {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IGroupManagerDelegate delegater in delegater.List)
                 {
-                    delegater.OnMemberJoined(
+                    delegater.OnMemberJoinedFromGroup(
                         jo["groupId"].Value,
                         jo["member"].Value
                         );
@@ -250,7 +250,7 @@ namespace ChatSDK {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IGroupManagerDelegate delegater in delegater.List)
                 {
-                    delegater.OnMemberExited(
+                    delegater.OnMemberExitedFromGroup(
                         jo["groupId"].Value,
                         jo["member"].Value
                         );
@@ -265,7 +265,7 @@ namespace ChatSDK {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IGroupManagerDelegate delegater in delegater.List)
                 {
-                    delegater.OnAnnouncementChanged(
+                    delegater.OnAnnouncementChangedFromGroup(
                         jo["groupId"].Value,
                         jo["announcement"].Value
                         );
@@ -280,7 +280,7 @@ namespace ChatSDK {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IGroupManagerDelegate delegater in delegater.List)
                 {
-                    delegater.OnSharedFileAdded(
+                    delegater.OnSharedFileAddedFromGroup(
                         jo["groupId"].Value,
                         new GroupSharedFile(jo["sharedFile"])
                         );
@@ -295,7 +295,7 @@ namespace ChatSDK {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IGroupManagerDelegate delegater in delegater.List)
                 {
-                    delegater.OnSharedFileDeleted(
+                    delegater.OnSharedFileDeletedFromGroup(
                         jo["groupId"].Value,
                         jo["fileId"].Value
                         );

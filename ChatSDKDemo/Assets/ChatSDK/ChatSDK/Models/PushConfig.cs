@@ -2,12 +2,29 @@
 using SimpleJSON;
 
 namespace ChatSDK {
+    /// <summary>
+    /// 推送配置
+    /// </summary>
     public class PushConfig
     {
-
+        /// <summary>
+        /// 免打扰
+        /// </summary>
         public bool NoDisturb { get; internal set; }
+
+        /// <summary>
+        /// 免打扰开始时间
+        /// </summary>
         public int NoDisturbStartHour { get; internal set; }
+
+        /// <summary>
+        /// 免打扰结束时间
+        /// </summary>
         public int NoDisturbEndHour { get; internal set; }
+
+        /// <summary>
+        /// 推送显示类型
+        /// </summary>
         public PushStyle Style { get; internal set; }
 
         internal PushConfig(string jsonString)

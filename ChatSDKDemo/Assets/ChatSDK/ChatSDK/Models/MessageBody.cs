@@ -181,11 +181,20 @@ namespace ChatSDK
         }
     }
 
+    /// <summary>
+    /// 消息体
+    /// </summary>
     namespace MessageBody
     {
+        /// <summary>
+        /// 文字消息
+        /// </summary>
        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class TextBody : IMessageBody
         {
+            /// <summary>
+            /// 消息内容
+            /// </summary>
             public string Text;
 
             public TextBody(string text)
@@ -211,10 +220,20 @@ namespace ChatSDK
             }
         }
 
+        /// <summary>
+        /// 位置消息
+        /// </summary>
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class LocationBody : IMessageBody
         {
+            /// <summary>
+            /// 经纬度坐标
+            /// </summary>
             public double Latitude, Longitude;
+
+            /// <summary>
+            /// 地址信息
+            /// </summary>
             public string Address;
 
             public LocationBody(double latitude, double longitude, string address = "")
@@ -245,12 +264,40 @@ namespace ChatSDK
             }
         }
 
+        /// <summary>
+        /// 文件消息
+        /// </summary>
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class FileBody : IMessageBody
         {
+            /// <summary>
+            /// 本地路径
+            /// </summary>
+            public string LocalPath;
 
-            public string LocalPath, DisplayName, Secret, RemotePath;
+            /// <summary>
+            /// 文件名称
+            /// </summary>
+            public string DisplayName;
+
+            /// <summary>
+            /// 环信验证信息
+            /// </summary>
+            public string Secret;
+
+            /// <summary>
+            /// 文件URL
+            /// </summary>
+            public string RemotePath;
+
+            /// <summary>
+            /// 文件大小
+            /// </summary>
             public long FileSize;
+
+            /// <summary>
+            /// 下载状态
+            /// </summary>
             public DownLoadStatus DownStatus = DownLoadStatus.PENDING;
 
             public FileBody(string localPath, string displayName = "", long fileSize = 0)
@@ -287,13 +334,41 @@ namespace ChatSDK
 
         }
 
+        /// <summary>
+        /// 图片消息
+        /// </summary>
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class ImageBody : FileBody
         {
 
-            public string ThumbnailLocalPath, ThumbnaiRemotePath, ThumbnaiSecret;
+            /// <summary>
+            /// 缩略图本地路径，只有接收方才有
+            /// </summary>
+            public string ThumbnailLocalPath;
+
+            /// <summary>
+            /// 缩略图URL,只有接收方才有
+            /// </summary>
+            public string ThumbnaiRemotePath;
+
+            /// <summary>
+            /// 缩略图验证信息，只有接收方才有
+            /// </summary>
+            public string ThumbnaiSecret;
+
+            /// <summary>
+            /// 文件宽高
+            /// </summary>
             public double Height, Width;
+
+            /// <summary>
+            /// 是否发送原图
+            /// </summary>
             public bool Original;
+
+            /// <summary>
+            /// 下载状态
+            /// </summary>
             public DownLoadStatus ThumbnaiDownStatus = DownLoadStatus.PENDING;
 
             public ImageBody(string localPath, string displayName, long fileSize = 0, bool original = false, double width = 0, double height = 0) : base(localPath, displayName, fileSize)
@@ -335,9 +410,15 @@ namespace ChatSDK
             }
         }
 
+        /// <summary>
+        /// 音频消息
+        /// </summary>
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class VoiceBody : FileBody
         {
+            /// <summary>
+            /// 消息时长
+            /// </summary>
             public int Duration;
             public VoiceBody(string localPath, string displayName, int duration, long fileSize = 0) : base(localPath, displayName, fileSize)
             {
@@ -370,10 +451,30 @@ namespace ChatSDK
             }
         }
 
+        /// <summary>
+        /// 视频消息
+        /// </summary>
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class VideoBody : FileBody
         {
-            public string ThumbnaiLocationPath, ThumbnaiRemotePath, ThumbnaiSecret;
+            /// <summary>
+            /// 缩略图本地路径，只有接收方有
+            /// </summary>
+            public string ThumbnaiLocationPath;
+
+            /// <summary>
+            /// 缩略图URL，是有接收方有
+            /// </summary>
+            public string ThumbnaiRemotePath;
+
+            /// <summary>
+            /// 缩略图验证信息，只有接收方有
+            /// </summary>
+            public string ThumbnaiSecret;
+
+            /// <summary>
+            /// 视频宽高
+            /// </summary>
             public double Height, Width;
             public int Duration;
 
@@ -416,10 +517,20 @@ namespace ChatSDK
             }
         }
 
+        /// <summary>
+        /// Cmd消息
+        /// </summary>
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class CmdBody : IMessageBody
         {
+            /// <summary>
+            /// 消息Action信息
+            /// </summary>
             public string Action;
+
+            /// <summary>
+            /// 是否只发在线
+            /// </summary>
             public bool DeliverOnlineOnly;
 
             public CmdBody(string action, bool deliverOnlineOnly = false)
@@ -449,12 +560,21 @@ namespace ChatSDK
             }
         }
 
+        /// <summary>
+        /// 自定义消息
+        /// </summary>
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class CustomBody : IMessageBody
         {
-
+            /// <summary>
+            /// 自定义事件
+            /// </summary>
             public string CustomEvent;
             //TODO: Dictionary<string,string> -> string[][] in marshalling
+
+            /// <summary>
+            /// 自定义Params
+            /// </summary>
             public Dictionary<string, string> CustomParams;
 
             public CustomBody(string customEvent, Dictionary<string, string> customParams = null)

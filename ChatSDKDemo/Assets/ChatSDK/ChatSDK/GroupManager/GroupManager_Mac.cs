@@ -4,7 +4,7 @@ namespace ChatSDK
 {
     public class GroupManager_Mac : IGroupManager
     {
-        public override void AcceptInvitationFromGroup(string groupId, string inviter, ValueCallBack<Group> handle = null)
+        public override void AcceptInvitationFromGroup(string groupId, ValueCallBack<Group> handle = null)
         {
             throw new System.NotImplementedException();
         }
@@ -64,7 +64,7 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override void DeclineInvitationFromGroup(string groupId, string username, string reason = null, CallBack handle = null)
+        public override void DeclineInvitationFromGroup(string groupId, string reason = null, CallBack handle = null)
         {
             throw new System.NotImplementedException();
         }

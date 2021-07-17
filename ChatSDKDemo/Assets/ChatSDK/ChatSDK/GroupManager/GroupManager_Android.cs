@@ -18,9 +18,9 @@ namespace ChatSDK
             }
         }
 
-        public override void AcceptInvitationFromGroup(string groupId, string inviter, ValueCallBack<Group> handle = null)
+        public override void AcceptInvitationFromGroup(string groupId, ValueCallBack<Group> handle = null)
         {
-            wrapper.Call("acceptInvitationFromGroup", groupId, inviter, handle?.callbackId);
+            wrapper.Call("acceptInvitationFromGroup", groupId, handle?.callbackId);
         }
 
         public override void AcceptJoinApplication(string groupId, string username, CallBack handle = null)
@@ -78,9 +78,9 @@ namespace ChatSDK
             wrapper.Call("createGroup", groupName, options.ToJsonString(), desc, TransformTool.JsonStringFromStringList(inviteMembers), inviteReason, handle?.callbackId);
         }
 
-        public override void DeclineInvitationFromGroup(string groupId, string username, string reason = null, CallBack handle = null)
+        public override void DeclineInvitationFromGroup(string groupId,string reason = null, CallBack handle = null)
         {
-            wrapper.Call("declineInvitationFromGroup", groupId, username, reason, handle?.callbackId);
+            wrapper.Call("declineInvitationFromGroup", groupId, reason, handle?.callbackId);
         }
 
         public override void DeclineJoinApplication(string groupId, string username, string reason = null, CallBack handle = null)

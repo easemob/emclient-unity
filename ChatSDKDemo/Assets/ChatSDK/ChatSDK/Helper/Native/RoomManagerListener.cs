@@ -15,7 +15,7 @@ namespace ChatSDK {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IRoomManagerDelegate delegater in delegater.List)
                 {
-                    delegater.OnChatRoomDestroyed(
+                    delegater.OnDestroyedFromRoom(
                         jo["roomId"].Value,
                         jo["roomName"].Value
                         );
@@ -30,7 +30,7 @@ namespace ChatSDK {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IRoomManagerDelegate delegater in delegater.List)
                 {
-                    delegater.OnMemberJoined(
+                    delegater.OnMemberJoinedFromRoom(
                         jo["roomId"].Value,
                         jo["participant"].Value
                         );
@@ -45,7 +45,7 @@ namespace ChatSDK {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IRoomManagerDelegate delegater in delegater.List)
                 {
-                    delegater.OnMemberExited(
+                    delegater.OnMemberExitedFromRoom(
                         jo["roomId"].Value,
                         jo["roomName"].Value,
                         jo["participant"].Value
@@ -61,7 +61,7 @@ namespace ChatSDK {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IRoomManagerDelegate delegater in delegater.List)
                 {
-                    delegater.OnRemovedFromChatRoom(
+                    delegater.OnRemovedFromRoom(
                         jo["roomId"].Value,
                         jo["roomName"].Value,
                         jo["participant"].Value
@@ -77,7 +77,7 @@ namespace ChatSDK {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IRoomManagerDelegate delegater in delegater.List)
                 {
-                    delegater.OnMuteListAdded(
+                    delegater.OnMuteListAddedFromRoom(
                         jo["roomId"].Value,
                         TransformTool.JsonStringToStringList(jo["list"].Value),
                         jo["expireTime"].AsInt
@@ -93,7 +93,7 @@ namespace ChatSDK {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IRoomManagerDelegate delegater in delegater.List)
                 {
-                    delegater.OnMuteListRemoved(
+                    delegater.OnMuteListRemovedFromRoom(
                         jo["roomId"].Value,
                         TransformTool.JsonStringToStringList(jo["list"].Value)
                         );
@@ -108,7 +108,7 @@ namespace ChatSDK {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IRoomManagerDelegate delegater in delegater.List)
                 {
-                    delegater.OnAdminAdded(
+                    delegater.OnAdminAddedFromRoom(
                         jo["roomId"].Value,
                         jo["admin"].Value
                         );
@@ -123,7 +123,7 @@ namespace ChatSDK {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IRoomManagerDelegate delegater in delegater.List)
                 {
-                    delegater.OnAdminRemoved(
+                    delegater.OnAdminRemovedFromRoom(
                         jo["roomId"].Value,
                         jo["admin"].Value
                         );
@@ -138,7 +138,7 @@ namespace ChatSDK {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IRoomManagerDelegate delegater in delegater.List)
                 {
-                    delegater.OnOwnerChanged(
+                    delegater.OnOwnerChangedFromRoom(
                         jo["roomId"].Value,
                         jo["newOwner"].Value,
                         jo["oldOwner"].Value
@@ -154,7 +154,7 @@ namespace ChatSDK {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IRoomManagerDelegate delegater in delegater.List)
                 {
-                    delegater.OnAnnouncementChanged(
+                    delegater.OnAnnouncementChangedFromRoom(
                         jo["roomId"].Value,
                         jo["announcement"].Value
                         );

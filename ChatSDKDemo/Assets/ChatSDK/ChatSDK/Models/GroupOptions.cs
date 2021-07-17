@@ -3,11 +3,29 @@ using SimpleJSON;
 
 namespace ChatSDK
 {
+    /// <summary>
+    /// 群配置信息
+    /// </summary>
     public class GroupOptions
     {
+        /// <summary>
+        /// 群类型
+        /// </summary>
         public GroupStyle Style;
+
+        /// <summary>
+        /// 群人数上限
+        /// </summary>
         public int MaxCount;
+
+        /// <summary>
+        /// 加群是否需要验证
+        /// </summary>
         public bool InviteNeedConfirm;
+
+        /// <summary>
+        /// 群扩展
+        /// </summary>
         public string Ext;
 
         internal GroupOptions(string jsonString)

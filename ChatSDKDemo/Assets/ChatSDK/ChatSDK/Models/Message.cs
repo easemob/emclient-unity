@@ -394,6 +394,9 @@ namespace ChatSDK
         }
     }
 
+    /// <summary>
+    /// 消息
+    /// </summary>
     public class Message
     {
 

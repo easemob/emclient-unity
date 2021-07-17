@@ -38,10 +38,10 @@ public class EMGroupManagerWrapper extends EMWrapper {
         EMClient.getInstance().groupManager().addGroupChangeListener(new EMUnityGroupManagerListener());
     }
 
-    private void acceptInvitationFromGroup(String groupId, String inviter, String callbackId) throws JSONException {
+    private void acceptInvitationFromGroup(String groupId, String callbackId) throws JSONException {
 
-        if (groupId == null || groupId.length() == 0 || inviter == null || inviter.length() == 0) {
-            HyphenateException e = new HyphenateException(500, "groupId or inviter is invalid");
+        if (groupId == null || groupId.length() == 0) {
+            HyphenateException e = new HyphenateException(500, "groupId is invalid");
             onError(callbackId, e);
             return;
         }
@@ -58,7 +58,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             }
         };
 
-        EMClient.getInstance().groupManager().asyncAcceptInvitation(groupId, inviter, callBack);
+        EMClient.getInstance().groupManager().asyncAcceptInvitation(groupId, null, callBack);
     }
 
     private void acceptJoinApplication(String groupId, String username, String callbackId) throws JSONException {
@@ -221,15 +221,15 @@ public class EMGroupManagerWrapper extends EMWrapper {
         EMClient.getInstance().groupManager().asyncCreateGroup(groupName, desc, allMembers, reason, options, callBack);
     }
 
-    private void declineInvitationFromGroup(String groupId, String username, String reason, String callbackId) {
+    private void declineInvitationFromGroup(String groupId, String reason, String callbackId) {
 
-        if (groupId == null || groupId.length() == 0 || username == null || username.length() == 0) {
-            HyphenateException e = new HyphenateException(500, "groupId or username is invalid");
+        if (groupId == null || groupId.length() == 0) {
+            HyphenateException e = new HyphenateException(500, "groupId is invalid");
             onError(callbackId, e);
             return;
         }
 
-        EMClient.getInstance().groupManager().asyncDeclineInvitation(groupId, username, reason, new EMUnityCallback(callbackId));
+        EMClient.getInstance().groupManager().asyncDeclineInvitation(groupId, null, reason, new EMUnityCallback(callbackId));
     }
 
     private void declineJoinApplication(String groupId, String username, String reason, String callbackId) throws JSONException {

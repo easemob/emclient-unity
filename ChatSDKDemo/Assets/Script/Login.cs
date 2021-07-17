@@ -16,9 +16,11 @@ public class Login : MonoBehaviour, IConnectionDelegate
     {
         loginButton.onClick.AddListener(LoginAction);
         registerButton.onClick.AddListener(RegisterAction);
-        Options options = new Options("easemob-demo#easeim");
+        Options options = new Options("easemob-demo#chatdemoui");
         options.DebugMode = true;
         options.UsingHttpsOnly = true;
+        options.AcceptInvitationAlways = true;
+        options.AutoAcceptGroupInvitation = true;
         SDKClient client = SDKClient.Instance;
         client.InitWithOptions(options);
         client.AddConnectionDelegate(this);

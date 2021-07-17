@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 using ChatSDK;
 
-public class Main : MonoBehaviour , IConnectionDelegate, IChatManagerDelegate, IContactManagerDelegate, IGroupManagerDelegate
+public class Main : MonoBehaviour , IConnectionDelegate, IChatManagerDelegate, IContactManagerDelegate, IGroupManagerDelegate, IRoomManagerDelegate
 {
     // 接收消息id
     public InputField RecvIdField;
@@ -39,6 +39,7 @@ public class Main : MonoBehaviour , IConnectionDelegate, IChatManagerDelegate, I
     Room currRoom;
     Conversation conversation;
 
+    string groupId;
 
     // Start is called before the first frame update
     void Start()
@@ -64,12 +65,13 @@ public class Main : MonoBehaviour , IConnectionDelegate, IChatManagerDelegate, I
         SDKClient.Instance.ChatManager.AddChatManagerDelegate(this);
         SDKClient.Instance.ContactManager.AddContactManagerDelegate(this);
         SDKClient.Instance.GroupManager.AddGroupManagerDelegate(this);
+        SDKClient.Instance.RoomManager.AddRoomManagerDelegate(this);
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        
     }
 
     void OnApplicationQuit()
@@ -93,56 +95,90 @@ public class Main : MonoBehaviour , IConnectionDelegate, IChatManagerDelegate, I
 
         Message msg = Message.CreateTextSendMessage("du003", "文字消息");
         SDKClient.Instance.ChatManager.SendMessage(msg, callBack);
+
     }
 
     void JoinGroupAction()
     {
-        CallBack callback = new CallBack(
-            onSuccess: () => {
-                Debug.Log("发送邀请");
-            }
-        );
-        SDKClient.Instance.ContactManager.AddContact("du003", null , callback);
+        SDKClient.Instance.RoomManager.CreateRoom("uniaa", null, null, 200, null,null );
+
     }
 
     void GetGroupInfoAction()
     {
-        CallBack callback = new CallBack(
-            onSuccess: () => {
-                Debug.Log("删除好友");
+
+        ValueCallBack<Group> callBack = new ValueCallBack<Group>(
+            onSuccess: (group) => {
+                Debug.Log("创建群组成功，群组id " + group.GroupId);
+            },
+            onError:(code, desc) => {
+                Debug.Log("创建群组失败 " + code + " desc " + desc);
             }
         );
-        SDKClient.Instance.ContactManager.DeleteContact("du003", false , callback);
+
+        GroupOptions groupOptions = new GroupOptions(GroupStyle.PrivateMemberCanInvite);
+        SDKClient.Instance.GroupManager.CreateGroup("群组名称", groupOptions, desc: "群描述", handle: callBack);
     }
 
     void LeaveGroupAction()
     {
-        CallBack callback = new CallBack(
-                onSuccess: () => {
-                    Debug.Log("同意好友申请");
-                }
-            );
-        SDKClient.Instance.ContactManager.AcceptInvitation("du003", callback);
+        ValueCallBack<PageResult<Room>> callback = new ValueCallBack<PageResult<Room>>();
+        callback.OnSuccessValue = (PageResult<Room> result) => {
+            foreach (var room in result.Data) {
+                Debug.Log("聊天室id " + room.RoomId);
+            }
+        };
+        callback.Error = (int code, string desc) => {
+            Debug.Log("获取列表失败 " + code + " desc " + desc);
+        };
+
+        // 从服务器获取聊天室列表
+        SDKClient.Instance.RoomManager.FetchPublicRoomsFromServer(handle:callback);
+
     }
 
     void JoinRoomAction()
     {
-        CallBack callback = new CallBack(
-            onSuccess: () => {
-                Debug.Log("拒绝好友申请");
-            }
-        );
-        SDKClient.Instance.ContactManager.DeclineInvitation("du003", callback);
+        string roomId = "";
+
+        ValueCallBack<Room> callback = new ValueCallBack<Room>();
+        callback.OnSuccessValue = (Room room) => {
+            Debug.Log("加入成功");
+        };
+
+        callback.Error = (int code, string desc) =>
+        {
+            Debug.Log("加入聊天室失败 " + code + " desc " + desc);
+        };
+
+        SDKClient.Instance.RoomManager.JoinRoom(roomId, callback);
     }
 
     void GetRoomInfoAction()
     {
+        ValueCallBack<PushConfig> callback = new ValueCallBack<PushConfig>();
+        callback.OnSuccessValue = (PushConfig config) => {
+            Debug.Log("获取推送配置成功");
+        };
 
+        callback.Error = (int code, string desc) =>
+        {
+            Debug.Log("获取推送配置失败 " + code + " desc " + desc);
+        };
+        SDKClient.Instance.PushManager.GetPushConfigFromServer(callback);
     }
 
     void LeaveRoomAction()
     {
-
+        CallBack callBack = new CallBack();
+        callBack.Success = () => {
+            Debug.Log("设置免打扰成功");
+        };
+        callBack.Error = (int code, string desc) =>
+        {
+            Debug.Log("设置免打扰失败 " + code + " desc " + desc);
+        };
+        SDKClient.Instance.PushManager.SetNoDisturb(true, 22, 8, callBack);
     }
 
 
@@ -901,7 +937,9 @@ public class Main : MonoBehaviour , IConnectionDelegate, IChatManagerDelegate, I
 
     public void OnGroupMessageRead(List<GroupReadAck> list)
     {
-        throw new System.NotImplementedException();
+        foreach (var ack in list) {
+            Debug.Log("群消息已读id -- " + ack.MsgId);
+        }
     }
 
     public void OnConversationsUpdate()
@@ -915,7 +953,7 @@ public class Main : MonoBehaviour , IConnectionDelegate, IChatManagerDelegate, I
 
     public void OnConversationRead(string from, string to)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("会话已读");
     }
 
     //////
@@ -944,98 +982,163 @@ public class Main : MonoBehaviour , IConnectionDelegate, IChatManagerDelegate, I
         Debug.Log("通讯录申请被拒绝 ---- username " + username);
     }
 
-    public void OnInvitationReceived(string groupId, string groupName, string inviter, string reason)
+    ///////// group
+    public void OnInvitationReceivedFromGroup(string groupId, string groupName, string inviter, string reason)
     {
-        throw new System.NotImplementedException();
+        this.groupId = groupId;
+        Debug.Log("收到群组邀请 " + groupId +  " " + groupName);
     }
 
-    public void OnRequestToJoinReceived(string groupId, string groupName, string applicant, string reason)
+    public void OnRequestToJoinReceivedFromGroup(string groupId, string groupName, string applicant, string reason)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("收到加群申请 " + groupId + " " + groupName);
     }
 
-    public void OnRequestToJoinAccepted(string groupId, string groupName, string accepter)
+    public void OnRequestToJoinAcceptedFromGroup(string groupId, string groupName, string accepter)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("加群申请被同意 " + groupId + " " + groupName);
     }
 
-    public void OnRequestToJoinDeclined(string groupId, string groupName, string decliner, string reason)
+    public void OnRequestToJoinDeclinedFromGroup(string groupId, string groupName, string decliner, string reason)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("加群申请被拒绝 " + groupId + " " + groupName);
     }
 
-    public void OnInvitationAccepted(string groupId, string invitee, string reason)
+    public void OnInvitationAcceptedFromGroup(string groupId, string invitee, string reason)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("收到群组邀请被同意 " + groupId + " " + invitee);
     }
 
-    public void OnInvitationDeclined(string groupId, string invitee, string reason)
+    public void OnInvitationDeclinedFromGroup(string groupId, string invitee, string reason)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("收到群组邀请被拒绝 " + groupId + " " + invitee);
     }
 
-    public void OnUserRemoved(string groupId, string groupName)
+    public void OnUserRemovedFromGroup(string groupId, string groupName)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("被群组移除 " + groupId + " " + groupName);
     }
 
-    public void OnGroupDestroyed(string groupId, string groupName)
+    public void OnDestroyedFromGroup(string groupId, string groupName)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("群组解散 " + groupId + " " + groupName);
     }
 
     public void OnAutoAcceptInvitationFromGroup(string groupId, string inviter, string inviteMessage)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("自动同意群组邀请 " + groupId + " " + inviter);
     }
 
-    public void OnMuteListAdded(string groupId, List<string> mutes, int muteExpire)
+    public void OnMuteListAddedFromGroup(string groupId, List<string> mutes, int muteExpire)
     {
-        throw new System.NotImplementedException();
+        foreach (var username in mutes) {
+            Debug.Log("被加入到禁言列表 " + groupId + " " + username);
+        }
     }
 
-    public void OnMuteListRemoved(string groupId, List<string> mutes)
+    public void OnMuteListRemovedFromGroup(string groupId, List<string> mutes)
     {
-        throw new System.NotImplementedException();
+        foreach (var username in mutes)
+        {
+            Debug.Log("从禁言列表中移除 " + groupId + " " + username);
+        }
     }
 
-    public void OnAdminAdded(string groupId, string administrator)
+    public void OnAdminAddedFromGroup(string groupId, string administrator)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("被添加为管理员 " + groupId + " " + administrator);
     }
 
-    public void OnAdminRemoved(string groupId, string administrator)
+    public void OnAdminRemovedFromGroup(string groupId, string administrator)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("被移除管理员 " + groupId + " " + administrator);
     }
 
-    public void OnOwnerChanged(string groupId, string newOwner, string oldOwner)
+    public void OnOwnerChangedFromGroup(string groupId, string newOwner, string oldOwner)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("群主变化 " + groupId + " 新群主 " + newOwner + "  旧群主 " + oldOwner);
     }
 
-    public void OnMemberJoined(string groupId, string member)
+    public void OnMemberJoinedFromGroup(string groupId, string member)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("进入群 " + groupId + " " + member);
     }
 
-    public void OnMemberExited(string groupId, string member)
+    public void OnMemberExitedFromGroup(string groupId, string member)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("离开群 " + groupId + " " + member);
     }
 
-    public void OnAnnouncementChanged(string groupId, string announcement)
+    public void OnAnnouncementChangedFromGroup(string groupId, string announcement)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("群描述变化 " + groupId + " " + announcement);
     }
 
-    public void OnSharedFileAdded(string groupId, GroupSharedFile sharedFile)
+    public void OnSharedFileAddedFromGroup(string groupId, GroupSharedFile sharedFile)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("群文件添加 " + groupId + " " + sharedFile.FileId);
     }
 
-    public void OnSharedFileDeleted(string groupId, string fileId)
+    public void OnSharedFileDeletedFromGroup(string groupId, string fileId)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("群文件移除 " + groupId + " " + fileId);
     }
+
+    ////// room
+    ///
+    public void OnDestroyedFromRoom(string roomId, string roomName)
+    {
+        Debug.Log("聊天室解散 " + roomId + " " + roomName);
+    }
+
+    public void OnMemberJoinedFromRoom(string roomId, string participant)
+    {
+        Debug.Log("用户加入聊天室 " + roomId + " " + participant);
+    }
+
+    public void OnMemberExitedFromRoom(string roomId, string roomName, string participant)
+    {
+        Debug.Log("用户离开聊天室 " + roomId + " " + participant);
+    }
+
+    public void OnRemovedFromRoom(string roomId, string roomName, string participant)
+    {
+        Debug.Log("用户被从聊天室删除 " + roomId + " " + roomName + " " + participant);
+    }
+
+    public void OnMuteListAddedFromRoom(string roomId, List<string> mutes, long expireTime)
+    {
+        foreach (var s in mutes) {
+            Debug.Log("用户被加入禁言 " + roomId + " " + s + " " + expireTime.ToString());
+        }
+    }
+
+    public void OnMuteListRemovedFromRoom(string roomId, List<string> mutes)
+    {
+        foreach (var s in mutes)
+        {
+            Debug.Log("用户被移除禁言 " + roomId + " " + s);
+        }
+    }
+
+    public void OnAdminAddedFromRoom(string roomId, string admin)
+    {
+        Debug.Log("聊天室添加管理员 " + roomId + " " + admin);
+    }
+
+    public void OnAdminRemovedFromRoom(string roomId, string admin)
+    {
+        Debug.Log("聊天室移除管理员 " + roomId + " " + admin);
+    }
+
+    public void OnOwnerChangedFromRoom(string roomId, string newOwner, string oldOwner)
+    {
+        Debug.Log("聊天室更换房主 " + roomId + " 新房主 " + newOwner + " 旧房主 " + oldOwner);
+    }
+
+    public void OnAnnouncementChangedFromRoom(string roomId, string announcement)
+    {
+        Debug.Log("聊天室描述更新 " + roomId + " " + announcement);
+    }
+
 }

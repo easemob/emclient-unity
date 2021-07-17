@@ -2,19 +2,35 @@
 namespace ChatSDK {
     public interface IContactManagerDelegate 
     {
-        // 被[username]添加为好友
+        /// <summary>
+        /// 添加好友回调
+        /// </summary>
+        /// <param name="username">好友id</param>
         void OnContactAdded(string username);
 
-        // 被[username]从好友中删除
+        /// <summary>
+        /// 删除好友回调
+        /// </summary>
+        /// <param name="username">好友id</param>
         void OnContactDeleted(string username);
 
-        // 收到[username]的好友申请，原因是[reason]
+        /// <summary>
+        /// 收到好友申请
+        /// </summary>
+        /// <param name="username">申请id</param>
+        /// <param name="reason">申请原因</param>
         void OnContactInvited(string username, string reason);
 
-        // 发出的好友申请被[username]同意
+        /// <summary>
+        /// 发出的好友申请被对方同意
+        /// </summary>
+        /// <param name="username">对方id</param>
         void OnFriendRequestAccepted(string username);
 
-        // 发出的好友申请被[username]拒绝
+        /// <summary>
+        /// 发出的好友申请被对方拒绝
+        /// </summary>
+        /// <param name="username">对方id</param>
         void OnFriendRequestDeclined(string username);
     }
 }
