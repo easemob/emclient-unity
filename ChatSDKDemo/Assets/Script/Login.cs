@@ -16,14 +16,14 @@ public class Login : MonoBehaviour, IConnectionDelegate
     {
         loginButton.onClick.AddListener(LoginAction);
         registerButton.onClick.AddListener(RegisterAction);
-        Options options = new Options("easemob-demo#chatdemoui");
+        Options options = new Options("easemob-demo#easeim");
         options.DebugMode = true;
         options.UsingHttpsOnly = true;
         SDKClient client = SDKClient.Instance;
         client.InitWithOptions(options);
         client.AddConnectionDelegate(this);
         if (SDKClient.Instance.IsLoggedIn) {
-            //SceneManager.LoadScene("Main");
+            SceneManager.LoadScene("Main");
         }
     }
 

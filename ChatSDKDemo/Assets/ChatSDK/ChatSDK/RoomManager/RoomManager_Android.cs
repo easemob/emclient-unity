@@ -6,19 +6,12 @@ namespace ChatSDK
     public class RoomManager_Android : IRoomManager
     {
 
-        static string ManagerListener_Obj = "unity_chat_emclient_roommanager_delegate_obj";
-
         private AndroidJavaObject wrapper;
-
-        GameObject listenerGameObj;
 
         public RoomManager_Android()
         {
             using (AndroidJavaClass aj = new AndroidJavaClass("com.hyphenate.unity_chat_sdk.EMChatRoomManagerWrapper"))
             {
-                listenerGameObj = new GameObject(ManagerListener_Obj);
-                RoomManagerListener listener = listenerGameObj.AddComponent<RoomManagerListener>();
-                listener.delegater = Delegate;
                 wrapper = aj.CallStatic<AndroidJavaObject>("wrapper");
             }
         }

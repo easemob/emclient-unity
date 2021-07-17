@@ -4,8 +4,7 @@ namespace ChatSDK
 {
 
     public abstract class IRoomManager {
-        internal WeakDelegater<IRoomManagerDelegate> Delegate = new WeakDelegater<IRoomManagerDelegate>();
-
+        
         public abstract void AddRoomAdmin(string roomId, string memberId, ValueCallBack<Room> handle = null);
 
         public abstract void BlockRoomMembers(string roomId, List<string> members, ValueCallBack<Room> handle = null);
@@ -53,13 +52,13 @@ namespace ChatSDK
         public void AddRoomManagerDelegate(IRoomManagerDelegate roomManagerDelegate)
 
         {
-            Delegate.Add(roomManagerDelegate);
+            CallbackManager.Instance().roomManagerDelegates.Add(roomManagerDelegate);
         }
 
 
         internal void ClearDelegates()
         {
-            Delegate.Clear();
+            CallbackManager.Instance().roomManagerDelegates.Clear();
         }
 
 

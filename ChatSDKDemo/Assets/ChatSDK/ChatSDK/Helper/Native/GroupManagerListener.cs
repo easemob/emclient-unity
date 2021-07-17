@@ -12,7 +12,7 @@ namespace ChatSDK {
             if (delegater != null) {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IGroupManagerDelegate delegater in delegater.List) {
-                    delegater.OnInvitatiOnReceived(
+                    delegater.OnInvitationReceived(
                         jo["groupId"].Value,
                         jo["groupName"].Value,
                         jo["inviter"].Value,
@@ -73,14 +73,14 @@ namespace ChatSDK {
             }
         }
 
-        internal void OnInvitatiOnAccepted(string jsonString)
+        internal void OnInvitationAccepted(string jsonString)
         {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IGroupManagerDelegate delegater in delegater.List)
                 {
-                    delegater.OnInvitatiOnAccepted(
+                    delegater.OnInvitationAccepted(
                         jo["groupId"].Value,
                         jo["invitee"].Value,
                         jo["reason"].Value
@@ -89,14 +89,14 @@ namespace ChatSDK {
             }
         }
 
-        internal void OnInvitatiOnDeclined(string jsonString)
+        internal void OnInvitationDeclined(string jsonString)
         {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IGroupManagerDelegate delegater in delegater.List)
                 {
-                    delegater.OnInvitatiOnDeclined(
+                    delegater.OnInvitationDeclined(
                         jo["groupId"].Value,
                         jo["invitee"].Value,
                         jo["inviter"].Value
@@ -135,14 +135,14 @@ namespace ChatSDK {
             }
         }
 
-        internal void OnAutoAcceptInvitatiOnFromGroup(string jsonString)
+        internal void OnAutoAcceptInvitationFromGroup(string jsonString)
         {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
                 foreach (IGroupManagerDelegate delegater in delegater.List)
                 {
-                    delegater.OnAutoAcceptInvitatiOnFromGroup(
+                    delegater.OnAutoAcceptInvitationFromGroup(
                         jo["groupId"].Value,
                         jo["inviter"].Value,
                         jo["inviteMessage"].Value

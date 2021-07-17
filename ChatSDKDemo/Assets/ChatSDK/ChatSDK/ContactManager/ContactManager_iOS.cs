@@ -7,15 +7,9 @@ namespace ChatSDK
 {
     public class ContactManager_iOS : IContactManager
     {
-        static string Obj = "unity_chat_emclient_contact_delegate_obj";
-
-        GameObject listenerGameObj;
-
+        
         public ContactManager_iOS() {
-            CallbackManager.Instance();
-            listenerGameObj = new GameObject(Obj);
-            ContactManagerListener listener = listenerGameObj.AddComponent<ContactManagerListener>();
-            listener.delegater = Delegate;
+
         }
 
         public override void AcceptInvitation(string username, CallBack handle = null)

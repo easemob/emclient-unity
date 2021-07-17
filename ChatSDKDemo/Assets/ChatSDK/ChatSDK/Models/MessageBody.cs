@@ -12,6 +12,130 @@ namespace ChatSDK
         internal abstract JSONObject ToJson();
         internal abstract string TypeString();
 
+        public static IMessageBody Constructor(string jsonString, string type)
+        {
+            IMessageBody body = null;
+            if (type == "txt")
+            {
+                body = new MessageBody.TextBody();
+                JSONNode jn = JSON.Parse(jsonString);
+                if (!jn.IsNull && jn.IsObject)
+                {
+                    JSONObject jo = jn.AsObject;
+                    ((MessageBody.TextBody)body).Text = jo["content"];
+                }
+            }
+            else if (type == "img")
+            {
+                body = new MessageBody.ImageBody();
+                JSONNode jn = JSON.Parse(jsonString);
+                if (!jn.IsNull && jn.IsObject)
+                {
+                    JSONObject jo = jn.AsObject;
+                    ((MessageBody.ImageBody)body).LocalPath = jo["localPath"].Value;
+                    ((MessageBody.ImageBody)body).FileSize = jo["fileSize"].AsInt;
+                    ((MessageBody.ImageBody)body).DisplayName = jo["displayName"].Value;
+                    ((MessageBody.ImageBody)body).RemotePath = jo["remotePath"].Value;
+                    ((MessageBody.ImageBody)body).Secret = jo["secret"].Value;
+                    ((MessageBody.ImageBody)body).DownStatus = body.DownLoadStatusFromInt(jo["fileStatus"].AsInt);
+                    ((MessageBody.ImageBody)body).ThumbnailLocalPath = jo["thumbnailLocalPath"].Value;
+                    ((MessageBody.ImageBody)body).ThumbnaiRemotePath = jo["thumbnailRemotePath"].Value;
+                    ((MessageBody.ImageBody)body).ThumbnaiSecret = jo["thumbnailSecret"].Value;
+                    ((MessageBody.ImageBody)body).Height = jo["height"].AsDouble;
+                    ((MessageBody.ImageBody)body).Width = jo["width"].AsDouble;
+                    ((MessageBody.ImageBody)body).Original = jo["sendOriginalImage"].AsBool;
+                }
+            }
+            else if (type == "loc")
+            {
+                body = new MessageBody.LocationBody();
+                JSONNode jn = JSON.Parse(jsonString);
+                if (!jn.IsNull && jn.IsObject)
+                {
+                    JSONObject jo = jn.AsObject;
+                    ((MessageBody.LocationBody)body).Latitude = jo["latitude"].AsDouble;
+                    ((MessageBody.LocationBody)body).Longitude = jo["longitude"].AsDouble;
+                    ((MessageBody.LocationBody)body).Address = jo["address"].Value;
+                }
+            }
+            else if (type == "cmd")
+            {
+                body = new MessageBody.CmdBody();
+                JSONNode jn = JSON.Parse(jsonString);
+                if (!jn.IsNull && jn.IsObject)
+                {
+                    JSONObject jo = jn.AsObject;
+                    ((MessageBody.CmdBody)body).Action = jo["action"].Value;
+                    ((MessageBody.CmdBody)body).DeliverOnlineOnly = jo["deliverOnlineOnly"].AsBool;
+                }
+            }
+            else if (type == "custom")
+            {
+                body = new MessageBody.CustomBody();
+                JSONNode jn = JSON.Parse(jsonString);
+                if (!jn.IsNull && jn.IsObject)
+                {
+                    JSONObject jo = jn.AsObject;
+                    ((MessageBody.CustomBody)body).CustomEvent = jo["event"].Value;
+                    ((MessageBody.CustomBody)body).CustomParams = TransformTool.JsonStringToDictionary(jo["params"].Value);
+                }
+            }
+            else if (type == "file")
+            {
+                body = new MessageBody.FileBody();
+                JSONNode jn = JSON.Parse(jsonString);
+                if (!jn.IsNull && jn.IsObject)
+                {
+                    JSONObject jo = jn.AsObject;
+                    ((MessageBody.FileBody)body).LocalPath = jo["latitude"].Value;
+                    ((MessageBody.FileBody)body).FileSize = jo["fileSize"].AsInt;
+                    ((MessageBody.FileBody)body).DisplayName = jo["displayName"].Value;
+                    ((MessageBody.FileBody)body).RemotePath = jo["remotePath"].Value;
+                    ((MessageBody.FileBody)body).Secret = jo["secret"].Value;
+                    ((MessageBody.FileBody)body).FileSize = jo["displayName"].AsInt;
+                    ((MessageBody.FileBody)body).DownStatus = body.DownLoadStatusFromInt(jo["fileStatus"].AsInt);
+                }
+            }
+            else if (type == "video")
+            {
+                body = new MessageBody.VideoBody();
+                JSONNode jn = JSON.Parse(jsonString);
+                if (!jn.IsNull && jn.IsObject)
+                {
+                    JSONObject jo = jn.AsObject;
+                    ((MessageBody.VideoBody)body).LocalPath = jo["localPath"].Value;
+                    ((MessageBody.VideoBody)body).FileSize = jo["fileSize"].AsInt;
+                    ((MessageBody.VideoBody)body).DisplayName = jo["displayName"].Value;
+                    ((MessageBody.VideoBody)body).RemotePath = jo["remotePath"].Value;
+                    ((MessageBody.VideoBody)body).Secret = jo["secret"].Value;
+                    ((MessageBody.VideoBody)body).DownStatus = body.DownLoadStatusFromInt(jo["fileStatus"].AsInt);
+                    ((MessageBody.VideoBody)body).ThumbnaiRemotePath = jo["thumbnailRemotePath"].Value;
+                    ((MessageBody.VideoBody)body).ThumbnaiSecret = jo["thumbnailSecret"].Value;
+                    ((MessageBody.VideoBody)body).ThumbnaiLocationPath = jo["thumbnailLocalPath"].Value;
+                    ((MessageBody.VideoBody)body).Height = jo["height"].AsDouble;
+                    ((MessageBody.VideoBody)body).Width = jo["width"].AsDouble;
+                    ((MessageBody.VideoBody)body).Duration = jo["duration"].AsInt;
+                }
+            }
+            else if (type == "voice")
+            {
+                body = new MessageBody.VoiceBody();
+                JSONNode jn = JSON.Parse(jsonString);
+                if (!jn.IsNull && jn.IsObject)
+                {
+                    JSONObject jo = jn.AsObject;
+                    ((MessageBody.VoiceBody)body).LocalPath = jo["localPath"].Value;
+                    ((MessageBody.VoiceBody)body).FileSize = jo["fileSize"].AsInt;
+                    ((MessageBody.VoiceBody)body).DisplayName = jo["displayName"].Value;
+                    ((MessageBody.VoiceBody)body).RemotePath = jo["remotePath"].Value;
+                    ((MessageBody.VoiceBody)body).Secret = jo["secret"].Value;
+                    ((MessageBody.VoiceBody)body).DownStatus = body.DownLoadStatusFromInt(jo["fileStatus"].AsInt);
+                    ((MessageBody.VoiceBody)body).Duration = jo["duration"].AsInt;
+                }
+            }
+            return body;
+        }
+
         internal int DownLoadStatusToInt(MessageBody.DownLoadStatus status)
         {
             int ret = 0;
@@ -59,7 +183,7 @@ namespace ChatSDK
 
     namespace MessageBody
     {
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+       [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class TextBody : IMessageBody
         {
             public string Text;
@@ -70,21 +194,14 @@ namespace ChatSDK
                 Type = MessageBodyType.TXT;
             }
 
-            internal TextBody(string jsonString, object obj)
-            {
+            internal TextBody() {
                 Type = MessageBodyType.TXT;
-                JSONNode jn = JSON.Parse(jsonString);
-                if (!jn.IsNull && jn.IsObject) {
-                    JSONObject jo = jn.AsObject;
-                    Text = jo["content"];
-                }
             }
 
             internal override JSONObject ToJson()
             {
                 JSONObject jo = new JSONObject();
                 jo.Add("content", Text);
-                //jo.Add("bodyType", "txt");
                 return jo;
             }
 
@@ -108,17 +225,8 @@ namespace ChatSDK
                 Type = MessageBodyType.LOCATION;
             }
 
-            internal LocationBody(string jsonString, object obj)
-            {
+            internal LocationBody() {
                 Type = MessageBodyType.LOCATION;
-                JSONNode jn = JSON.Parse(jsonString);
-                if (!jn.IsNull && jn.IsObject)
-                {
-                    JSONObject jo = jn.AsObject;
-                    Latitude = jo["latitude"].AsDouble;
-                    Longitude = jo["longitude"].AsDouble;
-                    Address = jo["address"].Value;
-                }
             }
 
             internal override JSONObject ToJson()
@@ -153,24 +261,10 @@ namespace ChatSDK
                 Type = MessageBodyType.FILE;
             }
 
-            internal FileBody(string jsonString, object obj)
+            internal FileBody()
             {
                 Type = MessageBodyType.FILE;
-                JSONNode jn = JSON.Parse(jsonString);
-                if (!jn.IsNull && jn.IsObject)
-                {
-                    JSONObject jo = jn.AsObject;
-                    LocalPath = jo["latitude"].Value;
-                    FileSize = jo["fileSize"].AsInt;
-                    DisplayName = jo["displayName"].Value;
-                    RemotePath = jo["remotePath"].Value;
-                    Secret = jo["secret"].Value;
-                    FileSize = jo["displayName"].AsInt;
-                    DownStatus = DownLoadStatusFromInt(jo["fileStatus"].AsInt);
-                }
             }
-
-            internal FileBody() { }
 
             internal override JSONObject ToJson()
             {
@@ -210,25 +304,10 @@ namespace ChatSDK
                 Type = MessageBodyType.IMAGE;
             }
 
-            internal ImageBody(string jsonString, object obj) {
+            internal ImageBody() {
                 Type = MessageBodyType.IMAGE;
-                JSONNode jn = JSON.Parse(jsonString);
-                if (!jn.IsNull && jn.IsObject) {
-                    JSONObject jo = jn.AsObject;
-                    LocalPath = jo["localPath"].Value;
-                    FileSize = jo["fileSize"].AsInt;
-                    DisplayName = jo["displayName"].Value;
-                    RemotePath = jo["remotePath"].Value;
-                    Secret = jo["secret"].Value;
-                    DownStatus = DownLoadStatusFromInt(jo["fileStatus"].AsInt);
-                    ThumbnailLocalPath = jo["thumbnailLocalPath"].Value;
-                    ThumbnaiRemotePath = jo["thumbnailRemotePath"].Value;
-                    ThumbnaiSecret = jo["thumbnailSecret"].Value;
-                    Height = jo["height"].AsDouble;
-                    Width = jo["width"].AsDouble;
-                    Original = jo["sendOriginalImage"].AsBool;
-                }
             }
+
 
             internal override JSONObject ToJson()
             {
@@ -266,20 +345,8 @@ namespace ChatSDK
                 Type = MessageBodyType.VOICE;
             }
 
-            internal VoiceBody(string jsonString, object obj) {
+            internal VoiceBody() {
                 Type = MessageBodyType.VOICE;
-                JSONNode jn = JSON.Parse(jsonString);
-                if (!jn.IsNull && jn.IsObject)
-                {
-                    JSONObject jo = jn.AsObject;
-                    LocalPath = jo["localPath"].Value;
-                    FileSize = jo["fileSize"].AsInt;
-                    DisplayName = jo["displayName"].Value;
-                    RemotePath = jo["remotePath"].Value;
-                    Secret = jo["secret"].Value;
-                    DownStatus = DownLoadStatusFromInt(jo["fileStatus"].AsInt);
-                    Duration = jo["duration"].AsInt;
-                }
             }
 
             internal override JSONObject ToJson()
@@ -319,26 +386,9 @@ namespace ChatSDK
                 Type = MessageBodyType.VIDEO;
             }
 
-            internal VideoBody(string jsonString, object obj)
+            internal VideoBody()
             {
                 Type = MessageBodyType.VIDEO;
-                JSONNode jn = JSON.Parse(jsonString);
-                if (!jn.IsNull && jn.IsObject)
-                {
-                    JSONObject jo = jn.AsObject;
-                    LocalPath = jo["localPath"].Value;
-                    FileSize = jo["fileSize"].AsInt;
-                    DisplayName = jo["displayName"].Value;
-                    RemotePath = jo["remotePath"].Value;
-                    Secret = jo["secret"].Value;
-                    DownStatus = DownLoadStatusFromInt(jo["fileStatus"].AsInt);
-                    ThumbnaiRemotePath = jo["thumbnailRemotePath"].Value;
-                    ThumbnaiSecret = jo["thumbnailSecret"].Value;
-                    ThumbnaiLocationPath = jo["thumbnailLocalPath"].Value;
-                    Height = jo["height"].AsDouble;
-                    Width = jo["width"].AsDouble;
-                    Duration = jo["duration"].AsInt;
-                }
             }
 
             internal override JSONObject ToJson()
@@ -379,16 +429,9 @@ namespace ChatSDK
                 Type = MessageBodyType.CMD;
             }
 
-            internal CmdBody(string jsonString, object obj)
+            internal CmdBody()
             {
                 Type = MessageBodyType.CMD;
-                JSONNode jn = JSON.Parse(jsonString);
-                if (!jn.IsNull && jn.IsObject)
-                {
-                    JSONObject jo = jn.AsObject;
-                    Action = jo["action"].Value;
-                    DeliverOnlineOnly = jo["deliverOnlineOnly"].AsBool;
-                }
             }
 
             internal override JSONObject ToJson()
@@ -421,16 +464,9 @@ namespace ChatSDK
                 Type = MessageBodyType.CUSTOM;
             }
 
-            internal CustomBody(string jsonString, object obj)
+            internal CustomBody()
             {
                 Type = MessageBodyType.CUSTOM;
-                JSONNode jn = JSON.Parse(jsonString);
-                if (!jn.IsNull && jn.IsObject)
-                {
-                    JSONObject jo = jn.AsObject;
-                    CustomEvent = jo["event"].Value;
-                    CustomParams = TransformTool.JsonStringToDictionary(jo["params"].Value);
-                }
             }
 
             internal override JSONObject ToJson()

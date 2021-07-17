@@ -9,8 +9,6 @@ namespace ChatSDK
         private static SDKClient _instance;
         private IClient _Sdk;
 
-        internal WeakDelegater<IConnectionDelegate> Delegate = new WeakDelegater<IConnectionDelegate>();
-
         public static SDKClient Instance
         {
             get
@@ -42,20 +40,21 @@ namespace ChatSDK
         public string AccessToken { get => _Sdk.AccessToken(); }
 
 
-        public void AddConnectionDelegate(IConnectionDelegate contactManagerDelegate)
+        public void AddConnectionDelegate(IConnectionDelegate ConnectionDelegate)
         {
-            Delegate.Add(contactManagerDelegate);
+            CallbackManager.Instance().connnectDelegates.Add(ConnectionDelegate);
         }
 
         internal void ClearDelegates()
         {
-            Delegate.Clear();
+            CallbackManager.Instance().connnectDelegates.Clear();
         }
 
         public void InitWithOptions(Options options)
         {
             _Options = options;
-            _Sdk.InitWithOptions(options, Delegate);
+            _Sdk.InitWithOptions(options, null);
+            registerManagers();
         }
 
         public void CreateAccount(string username, string password, CallBack handle = null)
@@ -89,6 +88,13 @@ namespace ChatSDK
         private SDKClient()
         {
             _Sdk = IClient.Instance;
+        }
+
+        private void registerManagers() {
+            _Sdk.ContactManager();
+            _Sdk.ChatManager();
+            _Sdk.GroupManager();
+            _Sdk.RoomManager();
         }
     }
 }

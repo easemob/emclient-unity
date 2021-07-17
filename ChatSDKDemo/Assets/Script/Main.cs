@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 using ChatSDK;
 
-public class Main : MonoBehaviour , IConnectionDelegate
+public class Main : MonoBehaviour , IConnectionDelegate, IChatManagerDelegate, IContactManagerDelegate, IGroupManagerDelegate
 {
     // 接收消息id
     public InputField RecvIdField;
@@ -61,6 +61,9 @@ public class Main : MonoBehaviour , IConnectionDelegate
     private void Awake()
     {
         SDKClient.Instance.AddConnectionDelegate(this);
+        SDKClient.Instance.ChatManager.AddChatManagerDelegate(this);
+        SDKClient.Instance.ContactManager.AddContactManagerDelegate(this);
+        SDKClient.Instance.GroupManager.AddGroupManagerDelegate(this);
     }
 
     // Update is called once per frame
@@ -78,26 +81,58 @@ public class Main : MonoBehaviour , IConnectionDelegate
     void SendMessageAction()
     {
 
+        CallBack callBack = new CallBack(
+            onSuccess: () => {
+                Debug.Log("unity 消息发送成功");
+            },
+
+            onError: (code, desc)=> {
+                Debug.Log("unity 消息发送失败");
+            }
+        );
+
+        Message msg = Message.CreateTextSendMessage("du003", "文字消息");
+        SDKClient.Instance.ChatManager.SendMessage(msg, callBack);
     }
 
     void JoinGroupAction()
     {
-        CreateRoom();
+        CallBack callback = new CallBack(
+            onSuccess: () => {
+                Debug.Log("发送邀请");
+            }
+        );
+        SDKClient.Instance.ContactManager.AddContact("du003", null , callback);
     }
 
     void GetGroupInfoAction()
     {
-        DestroyRoom();
+        CallBack callback = new CallBack(
+            onSuccess: () => {
+                Debug.Log("删除好友");
+            }
+        );
+        SDKClient.Instance.ContactManager.DeleteContact("du003", false , callback);
     }
 
     void LeaveGroupAction()
     {
-        GetAllRoomsFromLocal();
+        CallBack callback = new CallBack(
+                onSuccess: () => {
+                    Debug.Log("同意好友申请");
+                }
+            );
+        SDKClient.Instance.ContactManager.AcceptInvitation("du003", callback);
     }
 
     void JoinRoomAction()
     {
-        GetPublicRoomsFromServer();
+        CallBack callback = new CallBack(
+            onSuccess: () => {
+                Debug.Log("拒绝好友申请");
+            }
+        );
+        SDKClient.Instance.ContactManager.DeclineInvitation("du003", callback);
     }
 
     void GetRoomInfoAction()
@@ -763,6 +798,243 @@ public class Main : MonoBehaviour , IConnectionDelegate
     }
 
     public void OnPong()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnMessagesReceived(List<Message> messages)
+    {
+        Debug.Log("unity ---- 收到消息");
+        foreach (var msg in messages) {
+
+            switch (msg.Body.Type) {
+                case MessageBodyType.TXT:
+                    {
+                        ChatSDK.MessageBody.TextBody body = (ChatSDK.MessageBody.TextBody)msg.Body;
+                        Debug.Log("unity ---- 文字消息 " + body.Text);
+
+                    }
+                    break;
+                case MessageBodyType.IMAGE:
+                    {
+                        ChatSDK.MessageBody.ImageBody body = (ChatSDK.MessageBody.ImageBody)msg.Body;
+                        Debug.Log("unity ---- 图片消息remote path " + body.RemotePath);
+                        Debug.Log("unity ---- 图片消息thumbnai remote path " + body.ThumbnaiRemotePath);
+                    }
+                    break;
+                case MessageBodyType.VOICE:
+                    {
+                        ChatSDK.MessageBody.VoiceBody body = (ChatSDK.MessageBody.VoiceBody)msg.Body;
+                        Debug.Log("unity ---- 短音频消息remote path " + body.RemotePath);
+                        Debug.Log("unity ---- 短音频消息时长 " + body.Duration);
+                    }
+                    break;
+                case MessageBodyType.VIDEO:
+                    {
+                        ChatSDK.MessageBody.VideoBody body = (ChatSDK.MessageBody.VideoBody)msg.Body;
+                        Debug.Log("unity ---- 短视频消息remote path " + body.RemotePath);
+                        Debug.Log("unity ---- 短视频消息时长 " + body.Duration);
+                    }
+                    break;
+                case MessageBodyType.FILE:
+                    {
+                        Debug.Log("unity ---- 文件消息");
+                    }
+                    break;
+                case MessageBodyType.CUSTOM:
+                    {
+                        Debug.Log("unity ---- 自定义消息");
+                    }
+                    break;
+                case MessageBodyType.LOCATION:
+                    {
+                        ChatSDK.MessageBody.LocationBody body = (ChatSDK.MessageBody.LocationBody)msg.Body;
+                        Debug.Log("unity ---- 位置消息 " + body.Address);
+                        Debug.Log("unity ---- 位置消息 " + body.Latitude);
+                        Debug.Log("unity ---- 位置消息 " + body.Longitude);
+                    }
+                    break;
+            }
+        }
+    }
+
+    public void OnCmdMessagesReceived(List<Message> messages)
+    {
+        Debug.Log("unity ---- 收到cmd消息");
+
+        foreach (var msg in messages) {
+            ChatSDK.MessageBody.CmdBody cmdBody = (ChatSDK.MessageBody.CmdBody)msg.Body;
+            Debug.Log("cmd action -- " + cmdBody.Action);
+        }
+
+    }
+
+    public void OnMessagesRead(List<Message> messages)
+    {
+        Debug.Log("unity ---- 收到消息已读");
+
+        foreach (var msg in messages)
+        {
+            Debug.Log("已读消息id -- " + msg.MsgId);
+        }
+    }
+
+    public void OnMessagesDelivered(List<Message> messages)
+    {
+        //throw new System.NotImplementedException();
+    }
+
+    public void OnMessagesRecalled(List<Message> messages)
+    {
+        Debug.Log("unity ---- 消息被撤回");
+
+        foreach (var msg in messages)
+        {
+            Debug.Log("撤回消息id -- " + msg.MsgId);
+        }
+    }
+
+    public void OnReadAckForGroupMessageUpdated()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnGroupMessageRead(List<GroupReadAck> list)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnConversationsUpdate()
+    {
+        Debug.Log("unity ---- 会话列表变化");
+        List<Conversation> list = SDKClient.Instance.ChatManager.LoadAllConversations();
+        foreach (var conv in list) {
+            Debug.Log("unity ---- 会话id ---- " + conv.Id);
+        }
+    }
+
+    public void OnConversationRead(string from, string to)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    //////
+    public void OnContactAdded(string username)
+    {
+        Debug.Log("添加通讯录 ---- username " + username);
+    }
+
+    public void OnContactDeleted(string username)
+    {
+        Debug.Log("删除通讯录 ---- username " + username);
+    }
+
+    public void OnContactInvited(string username, string reason)
+    {
+        Debug.Log("通讯录申请 ---- username " + username);
+    }
+
+    public void OnFriendRequestAccepted(string username)
+    {
+        Debug.Log("通讯录申请被同意 ---- username " + username);
+    }
+
+    public void OnFriendRequestDeclined(string username)
+    {
+        Debug.Log("通讯录申请被拒绝 ---- username " + username);
+    }
+
+    public void OnInvitationReceived(string groupId, string groupName, string inviter, string reason)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnRequestToJoinReceived(string groupId, string groupName, string applicant, string reason)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnRequestToJoinAccepted(string groupId, string groupName, string accepter)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnRequestToJoinDeclined(string groupId, string groupName, string decliner, string reason)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnInvitationAccepted(string groupId, string invitee, string reason)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnInvitationDeclined(string groupId, string invitee, string reason)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnUserRemoved(string groupId, string groupName)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnGroupDestroyed(string groupId, string groupName)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnAutoAcceptInvitationFromGroup(string groupId, string inviter, string inviteMessage)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnMuteListAdded(string groupId, List<string> mutes, int muteExpire)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnMuteListRemoved(string groupId, List<string> mutes)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnAdminAdded(string groupId, string administrator)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnAdminRemoved(string groupId, string administrator)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnOwnerChanged(string groupId, string newOwner, string oldOwner)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnMemberJoined(string groupId, string member)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnMemberExited(string groupId, string member)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnAnnouncementChanged(string groupId, string announcement)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnSharedFileAdded(string groupId, GroupSharedFile sharedFile)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnSharedFileDeleted(string groupId, string fileId)
     {
         throw new System.NotImplementedException();
     }

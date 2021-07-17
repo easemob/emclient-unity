@@ -4,7 +4,7 @@ namespace ChatSDK
 {
     public abstract class IContactManager
     {
-        internal WeakDelegater<IContactManagerDelegate> Delegate = new WeakDelegater<IContactManagerDelegate>();
+        
 
         public abstract void AddContact(string username, string reason = null, CallBack handle = null);
 
@@ -28,12 +28,12 @@ namespace ChatSDK
 
         public void AddContactManagerDelegate(IContactManagerDelegate contactManagerDelegate)
         {
-            Delegate.Add(contactManagerDelegate);
+            CallbackManager.Instance().contactManagerDelegates.Add(contactManagerDelegate);
         }
 
         internal void ClearDelegates()
         {
-            Delegate.Clear();
+            CallbackManager.Instance().contactManagerDelegates.Clear();
         }
     }
 

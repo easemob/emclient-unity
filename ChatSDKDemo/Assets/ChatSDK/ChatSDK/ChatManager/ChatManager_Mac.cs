@@ -19,7 +19,7 @@ namespace ChatSDK
             {
                 client = clientMac.client;
             }
-            chatManagerHub = new ChatManagerHub(Delegate);
+            chatManagerHub = new ChatManagerHub(CallbackManager.Instance().chatManagerDelegates);
         }
 
         public override bool DeleteConversation(string conversationId, bool deleteMessages)

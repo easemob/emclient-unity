@@ -8,16 +8,8 @@ namespace ChatSDK
     public class GroupManager_iOS : IGroupManager
     {
 
-        static string Obj = "unity_chat_emclient_groupmanager_delegate_obj";
-
-        GameObject listenerGameObj;
-
         public GroupManager_iOS()
         {
-            CallbackManager.Instance();
-            listenerGameObj = new GameObject(Obj);
-            GroupManagerListener listener = listenerGameObj.AddComponent<GroupManagerListener>();
-            listener.delegater = Delegate;
         }
 
         public override void AcceptInvitationFromGroup(string groupId, string inviter, ValueCallBack<Group> handle = null)

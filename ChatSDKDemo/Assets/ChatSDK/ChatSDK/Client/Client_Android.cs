@@ -4,12 +4,7 @@ namespace ChatSDK
 {
     class Client_Android : IClient
     {
-
-        static string Connection_Obj = "unity_chat_emclient_connection_obj";
-
         private AndroidJavaObject wrapper;
-
-        GameObject listenerGameObj;
 
         public Client_Android()
         {
@@ -22,12 +17,6 @@ namespace ChatSDK
 
         public override void InitWithOptions(Options options, WeakDelegater<IConnectionDelegate> connectionDelegater)
         {
-            CallbackManager.Instance();
-            listenerGameObj = new GameObject(Connection_Obj);
-
-            ConnectionListener connectionListener = listenerGameObj.AddComponent<ConnectionListener>();
-            
-            connectionListener.delegater = connectionDelegater;
             wrapper.Call("init", options.ToJsonString());
         }
 

@@ -4,7 +4,6 @@ namespace ChatSDK
 {
     public abstract class IGroupManager
     {
-        internal WeakDelegater<IGroupManagerDelegate> Delegate = new WeakDelegater<IGroupManagerDelegate>();
 
         public abstract void AcceptInvitationFromGroup(string groupId, string inviter, ValueCallBack<Group> handle = null);
 
@@ -92,12 +91,12 @@ namespace ChatSDK
 
         public void AddGroupManagerDelegate(IGroupManagerDelegate groupManagerDelegate)
         {
-            Delegate.Add(groupManagerDelegate);
+            CallbackManager.Instance().groupManagerDelegates.Add(groupManagerDelegate);
         }
 
         internal void ClearDelegates()
         {
-            Delegate.Clear();
+            CallbackManager.Instance().groupManagerDelegates.Clear();
         }
 
     }

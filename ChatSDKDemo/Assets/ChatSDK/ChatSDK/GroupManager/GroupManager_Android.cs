@@ -8,19 +8,12 @@ namespace ChatSDK
     public class GroupManager_Android : IGroupManager
     {
 
-        static string GroupManagerListener_Obj = "unity_chat_emclient_groupmanager_delegate_obj";
-
         private AndroidJavaObject wrapper;
-
-        GameObject listenerGameObj;
 
         public GroupManager_Android()
         {
             using (AndroidJavaClass aj = new AndroidJavaClass("com.hyphenate.unity_chat_sdk.EMGroupManagerWrapper"))
             {
-                listenerGameObj = new GameObject(GroupManagerListener_Obj);
-                GroupManagerListener listener = listenerGameObj.AddComponent<GroupManagerListener>();
-                listener.delegater = Delegate;
                 wrapper = aj.CallStatic<AndroidJavaObject>("wrapper");
             }
         }

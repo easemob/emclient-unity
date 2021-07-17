@@ -7,17 +7,10 @@ namespace ChatSDK
 {
     public class RoomManager_iOS : IRoomManager
     {
-
-        static string Obj = "unity_chat_emclient_roommanager_delegate_obj";
-
         GameObject listenerGameObj;
 
         public RoomManager_iOS()
         {
-            CallbackManager.Instance();
-            listenerGameObj = new GameObject(Obj);
-            RoomManagerListener listener = listenerGameObj.AddComponent<RoomManagerListener>();
-            listener.delegater = Delegate;
         }
 
         public override void AddRoomAdmin(string roomId, string memberId, ValueCallBack<Room> handle = null)

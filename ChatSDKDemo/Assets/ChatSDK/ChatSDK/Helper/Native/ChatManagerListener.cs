@@ -10,6 +10,7 @@ namespace ChatSDK {
 
         internal void OnMessageReceived(string jsonString)
         {
+
             if (delegater != null)
             {
                 List<Message> list = TransformTool.JsonStringToMessageList(jsonString);

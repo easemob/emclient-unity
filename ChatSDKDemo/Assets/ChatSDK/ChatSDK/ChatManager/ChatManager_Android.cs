@@ -7,19 +7,12 @@ namespace ChatSDK
     public class ChatManager_Android : IChatManager
     {
 
-        static string Listener_Obj = "unity_chat_emclient_chat_manager_delegate_obj";
-
         private AndroidJavaObject wrapper;
-
-        GameObject listenerGameObj;
 
         public ChatManager_Android()
         {
             using (AndroidJavaClass aj = new AndroidJavaClass("com.hyphenate.unity_chat_sdk.EMChatManagerWrapper"))
             {
-                listenerGameObj = new GameObject(Listener_Obj);
-                ChatManagerListener listener = listenerGameObj.AddComponent<ChatManagerListener>();
-                listener.delegater = Delegate;
                 wrapper = aj.CallStatic<AndroidJavaObject>("wrapper");
             }
         }

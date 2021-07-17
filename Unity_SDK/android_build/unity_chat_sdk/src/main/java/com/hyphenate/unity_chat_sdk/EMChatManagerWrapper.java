@@ -29,8 +29,11 @@ public class EMChatManagerWrapper extends EMWrapper  {
         return new EMChatManagerWrapper();
     }
 
+    EMUnityChatManagerListener listener;
+
     public EMChatManagerWrapper() {
-        EMUnityChatManagerListener listener = new EMUnityChatManagerListener();
+        Log.d("android sdk", "初始化");
+        listener = new EMUnityChatManagerListener();
         EMClient.getInstance().chatManager().addConversationListener(listener);
         EMClient.getInstance().chatManager().addMessageListener(listener);
     }

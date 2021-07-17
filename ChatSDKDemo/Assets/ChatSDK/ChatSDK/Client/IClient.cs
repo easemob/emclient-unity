@@ -2,6 +2,7 @@
 {
     public abstract class IClient
     {
+        static private bool _initialized = false;
         private static IClient instance;
         public static IClient Instance
         {
@@ -9,6 +10,7 @@
             {
                 if (instance == null)
                 {
+                    CallbackManager.Instance();
 #if UNITY_ANDROID
                     instance = new Client_Android();
 #elif UNITY_IOS
@@ -18,6 +20,7 @@
 #elif UNITY_STANDALONE_WIN
                     instance = new Client_Win();
 #endif
+                    _initialized = true;
                 }
 
                 return instance;
@@ -33,6 +36,7 @@
 
         public IChatManager ChatManager()
         {
+            if (_initialized == false) return null;
             if (chatImp != null) { return chatImp; }
 #if UNITY_ANDROID
             chatImp = new ChatManager_Android();
@@ -48,6 +52,7 @@
 
         public IContactManager ContactManager()
         {
+            if (_initialized == false) return null;
             if (contactImp != null) { return contactImp; }
 #if UNITY_ANDROID
             contactImp = new ContactManager_Android();
@@ -64,6 +69,7 @@
 
         public IGroupManager GroupManager()
         {
+            if (_initialized == false) return null;
             if (groupImp != null) { return groupImp; }
 #if UNITY_ANDROID
             groupImp = new GroupManager_Android();
@@ -80,6 +86,7 @@
 
         public IRoomManager RoomManager()
         {
+            if (_initialized == false) return null;
             if (roomImp != null) { return roomImp; }
 #if UNITY_ANDROID
             roomImp = new RoomManager_Android();
@@ -96,6 +103,7 @@
 
         public IPushManager PushManager()
         {
+            if (_initialized == false) return null;
             if (pushImp != null) { return pushImp; }
 #if UNITY_ANDROID
             pushImp = new PushManager_Android();
