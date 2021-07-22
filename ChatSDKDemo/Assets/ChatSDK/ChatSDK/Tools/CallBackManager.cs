@@ -115,7 +115,6 @@ namespace ChatSDK {
                 if (callBack.Success != null)
 
                 {
-
                     callBack.Success();
                 }
 

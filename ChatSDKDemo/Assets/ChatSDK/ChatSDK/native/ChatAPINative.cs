@@ -10,13 +10,13 @@ namespace ChatSDK{
 		public const string MyLibName = "hyphenateCWrapper";
 #else
 
-#if UNITY_IPHONE
-		public const string MyLibName = "__Internal";
-#else
+//#if UNITY_IPHONE
+//		public const string MyLibName = "__Internal";
+//#else
         public const string MyLibName = "hyphenateCWrapper";
+//#endif
 #endif
-#endif
-		[DllImport(MyLibName)]
+        [DllImport(MyLibName)]
 		internal static extern void Client_CreateAccount(IntPtr client, Action onSuccess, OnError onError, string username, string password);
 
 		[DllImport(MyLibName)]
@@ -41,6 +41,6 @@ namespace ChatSDK{
 		internal static extern void ChatManager_SendMessage(IntPtr client, Action onSuccess, OnError onError, ref MessageTransferObject mto);
 
 
-		#endregion native API import
+#endregion native API import
 	}
 }

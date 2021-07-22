@@ -8,11 +8,16 @@
 #import <Foundation/Foundation.h>
 #import <HyphenateChat/HyphenateChat.h>
 
-NS_ASSUME_NONNULL_BEGIN
+#define easemob_dispatch_main_async_safe(block)\
+if ([NSThread isMainThread]) {\
+    block();\
+} else {\
+    dispatch_async(dispatch_get_main_queue(), block);\
+}
 
 @interface EMWrapper : NSObject
-- (void)onSuccess:(NSString *)aType callbackId:(NSString *)aCallbackId userInfo:(NSString *)jsonStr;
+- (void)onSuccess:(NSString *)aType callbackId:(NSString *)aCallbackId userInfo:(NSString *)jsonObject;
+- (void)onProgress:(int)progress callbackId:(NSString *)aCallbackId;
 - (void)onError:(NSString *)aCallbackId error:(EMError *)aError;
 @end
 
-NS_ASSUME_NONNULL_END

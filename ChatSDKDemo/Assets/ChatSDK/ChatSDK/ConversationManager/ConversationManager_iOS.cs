@@ -23,7 +23,7 @@ namespace ChatSDK {
             JSONObject obj = new JSONObject();
             obj.Add("convId", conversationId);
             obj.Add("convType", TransformTool.ConversationTypeToInt(converationType));
-            string ret = ConversationNative.Conversation_GetMethodCall("deleteAllMessages", obj.ToString());
+            string ret = ConversationNative.Conversation_GetMethodCall("clearAllMessages", obj.ToString());
             JSONNode jn = JSON.Parse(ret);
             return jn["ret"].AsBool;
         }
@@ -34,7 +34,7 @@ namespace ChatSDK {
             obj.Add("convId", conversationId);
             obj.Add("convType", TransformTool.ConversationTypeToInt(converationType));
             obj.Add("msgId", messageId);
-            string ret = ConversationNative.Conversation_GetMethodCall("deleteAllMessages", obj.ToString());
+            string ret = ConversationNative.Conversation_GetMethodCall("removeMessage", obj.ToString());
             JSONNode jn = JSON.Parse(ret);
             return jn["ret"].AsBool;
         }
@@ -53,7 +53,7 @@ namespace ChatSDK {
             JSONObject obj = new JSONObject();
             obj.Add("convId", conversationId);
             obj.Add("convType", TransformTool.ConversationTypeToInt(converationType));
-            obj.Add("msg", message.ToJson());
+            obj.Add("msg", message.ToJson().ToString());
             string ret = ConversationNative.Conversation_GetMethodCall("insertMessage", obj.ToString());
             JSONNode jn = JSON.Parse(ret);
             return jn["ret"].AsBool;

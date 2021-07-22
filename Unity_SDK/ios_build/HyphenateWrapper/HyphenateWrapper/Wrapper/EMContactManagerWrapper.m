@@ -32,7 +32,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMContactManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.contactManager approveFriendRequestFromUser:username
                                                             completion:^(NSString *aUsername, EMError *aError)
@@ -55,7 +55,7 @@
     
     NSString *reason = param[@"reason"];
     __block NSString *callId = callbackId;
-    __weak typeof(self) weakSelf = self;
+    __weak EMContactManagerWrapper * weakSelf = self;
     [EMClient.sharedClient.contactManager addContact:username
                                              message:reason
                                           completion:^(NSString *aUsername, EMError *aError)
@@ -76,7 +76,7 @@
         return;
     }
     __block NSString *callId = callbackId;
-    __weak typeof(self) weakSelf = self;
+    __weak EMContactManagerWrapper * weakSelf = self;
     [EMClient.sharedClient.contactManager addUserToBlackList:username
                                                   completion:^(NSString *aUsername, EMError *aError)
     {
@@ -95,7 +95,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMContactManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.contactManager declineFriendRequestFromUser:username
                                                             completion:^(NSString *aUsername, EMError *aError)
@@ -116,7 +116,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMContactManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     BOOL keepConversation = [param[@"keepConversation"] boolValue];
     [EMClient.sharedClient.contactManager deleteContact:username
@@ -143,7 +143,7 @@
 
 - (void)getAllContactsFromServer:(NSDictionary *)param callbackId:(NSString *)callbackId {
     __block NSString *callId = callbackId;
-    __weak typeof(self) weakSelf = self;
+    __weak EMContactManagerWrapper * weakSelf = self;
     [EMClient.sharedClient.contactManager getContactsFromServerWithCompletion:^(NSArray *aList, EMError *aError) {
         if (!aError) {
             [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:aList];
@@ -154,7 +154,7 @@
 }
 
 - (void)getBlockListFromServer:(NSDictionary *)param callbackId:(NSString *)callbackId {
-    __weak typeof(self) weakSelf = self;
+    __weak EMContactManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.contactManager getBlackListFromServerWithCompletion:^(NSArray *aList, EMError *aError) {
         if (!aError) {
@@ -173,7 +173,7 @@
         return;
     }
     __block NSString *callId =callbackId;
-    __weak typeof(self) weakSelf = self;
+    __weak EMContactManagerWrapper * weakSelf = self;
     NSString *username = param[@"username"];
     [EMClient.sharedClient.contactManager removeUserFromBlackList:username
                                                   completion:^(NSString *aUsername, EMError *aError)
@@ -189,7 +189,7 @@
 
 
 - (void)getSelfIdsOnOtherPlatform:(NSDictionary *)param callbackId:(NSString *)callbackId {
-    __weak typeof(self) weakSelf = self;
+    __weak EMContactManagerWrapper * weakSelf = self;
     __block NSString *callId =callbackId;
     [EMClient.sharedClient.contactManager getSelfIdsOnOtherPlatformWithCompletion:^(NSArray *aList, EMError *aError) {
         if (!aError) {

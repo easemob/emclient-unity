@@ -6,12 +6,18 @@
 //
 
 #import "Transfrom.h"
+#import "EMConversation+Unity.h"
+
 
 @implementation Transfrom
 
 + (NSString *)NSStringFromCString:(const char*)cStr {
-    NSString *ret = [NSString stringWithUTF8String:cStr];
-    return ret ? ret : @"";
+    NSString *ret = @"";
+    if (cStr != NULL) {
+        ret = [NSString stringWithUTF8String:cStr];
+    }
+    
+    return ret;
 }
 
 + (const char*)NSStringToCSString:(NSString *)nsStr {
@@ -23,24 +29,57 @@
     return [nsStr UTF8String];
 }
 
-+ (NSDictionary *)DictFromCString:(const char*)cStr
++ (NSDictionary *)JsonObjectFromCSString:(const char*)cStr
 {
-    NSString *str = [Transfrom NSStringFromCString:cStr];
-    return [Transfrom DictFromNSString:str];
+    NSString *str = [self NSStringFromCString:cStr];
+    return [self NSStringToJsonObject:str];
 }
 
-+ (const char*)DictToCString:(NSDictionary *)aDict {
-    NSString *str = [Transfrom DictToNSString:aDict];
-    return [Transfrom NSStringToCSString:str];
++ (const char*)JsonObjectToCSString:(NSDictionary *)aDict {
+    if (aDict == nil) {
+        return NULL;
+    }
+    NSString *str = [self NSStringFromJsonObject:aDict];
+    return [self NSStringToCSString:str];
 }
 
-+ (NSDictionary *)DictFromNSString:(NSString*)nsStr {
-    if (nsStr == nil) {
++ (NSString *)NSStringFromJsonObject:(id)jsonObject
+{
+    if (!jsonObject) {
         return nil;
     }
-    NSData *jsonData = [nsStr dataUsingEncoding:NSUTF8StringEncoding];
+    
+    if ([jsonObject isKindOfClass:[NSString class]]) {
+        return jsonObject;
+    }
+    
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonObject
+                                                       options:NSJSONWritingPrettyPrinted
+                                                         error:&error];
+    NSString *jsonString;
+    if (!jsonData || error) {
+        NSLog(@"%@",error);
+        return nil;
+    }else{
+        jsonString = [[NSString alloc]initWithData:jsonData encoding:NSUTF8StringEncoding];
+    }
+
+    NSMutableString *mutStr = [NSMutableString stringWithString:jsonString];
+    NSRange range2 = {0,mutStr.length};
+    [mutStr replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:range2];
+    return mutStr;
+}
+
+
++ (id)NSStringToJsonObject:(NSString *)jsonString
+{
+    if (jsonString == nil) {
+        return nil;
+    }
+    NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
     NSError *err;
-    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
+    id jsonObject = [NSJSONSerialization JSONObjectWithData:jsonData
                                                         options:NSJSONReadingMutableContainers
                                                           error:&err];
     if(err)
@@ -48,27 +87,29 @@
         NSLog(@"json解析失败：%@",err);
         return nil;
     }
-    return dic;
-}
-
-+ (NSString*)DictToNSString:(NSDictionary *)aDict {
-    NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:aDict
-                                                       options:NSJSONWritingPrettyPrinted
-                                                         error:&error];
-    NSString *jsonString;
-    if (!jsonData) {
-        NSLog(@"%@",error);
-    }else{
-        jsonString = [[NSString alloc]initWithData:jsonData encoding:NSUTF8StringEncoding];
+    
+    
+    if ([jsonObject isKindOfClass:[NSDictionary class]]) {
+        NSMutableDictionary *tmp = [[NSMutableDictionary alloc] initWithDictionary:jsonObject];
+        for (NSString *str in ((NSDictionary *)jsonObject).allKeys) {
+            if ([jsonObject[str] isKindOfClass:[NSNull class]]) {
+                [tmp removeObjectForKey:str];
+            }
+        }
+        jsonObject = tmp;
     }
-
-    NSMutableString *mutStr = [NSMutableString stringWithString:jsonString];
-    NSRange range = {0,jsonString.length};
-    [mutStr replaceOccurrencesOfString:@" " withString:@"" options:NSLiteralSearch range:range];
-    NSRange range2 = {0,mutStr.length};
-    [mutStr replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:range2];
-    return mutStr;
+    
+    if ([jsonObject isKindOfClass:[NSArray class]]) {
+        NSMutableArray *tmp = [[NSMutableArray alloc] initWithArray:jsonObject];
+        for (id obj in ((NSArray *)jsonObject)) {
+            if ([obj isKindOfClass:[NSArray class]]) {
+                [tmp removeObject:obj];
+            }
+        }
+        jsonObject = tmp;
+    }
+    
+    return jsonObject;
 }
 
 @end

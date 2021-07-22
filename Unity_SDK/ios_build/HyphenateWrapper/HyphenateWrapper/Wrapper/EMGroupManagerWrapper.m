@@ -64,7 +64,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager getJoinedGroupsFromServerWithPage:[param[@"pageNum"] intValue]
                                                                  pageSize:[param[@"pageSize"] intValue]
@@ -88,7 +88,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager getPublicGroupsFromServerWithCursor:param[@"cursor"]
                                                                    pageSize:[param[@"pageSize"] integerValue]
@@ -108,7 +108,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager createGroupWithSubject:param[@"groupName"]
                                                    description:param[@"desc"]
@@ -131,7 +131,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager getGroupSpecificationFromServerWithId:param[@"groupId"]
                                                                    completion:^(EMGroup *aGroup, EMError *aError)
@@ -150,7 +150,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager getGroupMemberListFromServerWithId:param[@"groupId"]
                                                                     cursor:param[@"cursor"]
@@ -171,7 +171,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager getGroupBlacklistFromServerWithId:param[@"groupId"]
                                                                pageNumber:[param[@"pageNum"] intValue]
@@ -192,7 +192,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager getGroupMuteListFromServerWithId:param[@"groupId"]
                                                               pageNumber:[param[@"pageNum"] intValue]
@@ -213,7 +213,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager getGroupWhiteListFromServerWithId:param[@"groupId"]
                                                                completion:^(NSArray *aList, EMError *aError)
@@ -232,7 +232,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager isMemberInWhiteListFromServerWithGroupId:param[@"groupId"]
                                                                       completion:^(BOOL inWhiteList, EMError *aError)
@@ -251,7 +251,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager getGroupFileListWithId:param[@"groupId"]
                                                     pageNumber:[param[@"pageNum"] intValue]
@@ -271,7 +271,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager getGroupAnnouncementWithId:param[@"groupId"]
                                                         completion:^(NSString *aAnnouncement, EMError *aError)
@@ -290,7 +290,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     NSArray *members = [Transfrom NSStringToJsonObject:param[@"members"]];
     [EMClient.sharedClient.groupManager addMembers:members
@@ -312,7 +312,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager removeMembers:param[@"members"]
                                             fromGroup:param[@"groupId"]
@@ -333,7 +333,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager blockMembers:param[@"members"]
                                            fromGroup:param[@"groupId"]
@@ -353,7 +353,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager unblockMembers:param[@"members"]
                                              fromGroup:param[@"groupId"]
@@ -373,7 +373,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager updateGroupSubject:param[@"name"]
                                                   forGroup:param[@"groupId"]
@@ -393,7 +393,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager updateDescription:param[@"desc"]
                                                  forGroup:param[@"groupId"]
@@ -413,7 +413,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager leaveGroup:param[@"groupId"]
                                         completion:^(EMError *aError)
@@ -432,7 +432,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager destroyGroup:param[@"groupId"]
                                     finishCompletion:^(EMError *aError)
@@ -452,7 +452,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager blockGroup:param[@"groupId"]
                                         completion:^(EMGroup *aGroup, EMError *aError)
@@ -471,7 +471,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager unblockGroup:param[@"groupId"]
                                           completion:^(EMGroup *aGroup, EMError *aError)
@@ -490,7 +490,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager updateGroupOwner:param[@"groupId"]
                                                 newOwner:param[@"owner"]
@@ -510,7 +510,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager addAdmin:param[@"admin"]
                                          toGroup:param[@"groupId"]
@@ -530,7 +530,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager removeAdmin:param[@"admin"]
                                           fromGroup:param[@"groupId"]
@@ -550,7 +550,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager muteMembers:param[@"members"]
                                    muteMilliseconds:[param[@"duration"] integerValue]
@@ -571,7 +571,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager unmuteMembers:param[@"members"]
                                             fromGroup:param[@"groupId"]
@@ -591,7 +591,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager muteAllMembersFromGroup:param[@"groupId"]
                                                      completion:^(EMGroup *aGroup, EMError *aError)
@@ -610,7 +610,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager unmuteAllMembersFromGroup:param[@"groupId"]
                                                        completion:^(EMGroup *aGroup, EMError *aError)
@@ -629,7 +629,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager addWhiteListMembers:param[@"members"]
                                                   fromGroup:param[@"groupId"]
@@ -648,7 +648,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager removeWhiteListMembers:param[@"members"]
                                                      fromGroup:param[@"groupId"]
@@ -667,7 +667,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager uploadGroupSharedFileWithId:param[@"groupId"]
                                                            filePath:param[@"filePath"]
@@ -690,7 +690,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager downloadGroupSharedFileWithId:param[@"groupId"]
                                                              filePath:param[@"savePath"]
@@ -714,7 +714,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager removeGroupSharedFileWithId:param[@"groupId"]
                                                        sharedFileId:param[@"fileId"]
@@ -734,7 +734,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager updateGroupAnnouncementWithId:param[@"groupId"]
                                                          announcement:param[@"announcement"]
@@ -755,7 +755,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager updateGroupExtWithId:param[@"groupId"]
                                                          ext:param[@"ext"]
@@ -775,7 +775,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager joinPublicGroup:param[@"groupId"]
                                              completion:^(EMGroup *aGroup, EMError *aError)
@@ -794,7 +794,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager requestToJoinPublicGroup:param[@"groupId"]
                                                          message:param[@"reason"]
@@ -814,7 +814,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager approveJoinGroupRequest:param[@"groupId"]
                                                          sender:param[@"username"]
@@ -834,7 +834,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager declineJoinGroupRequest:param[@"groupId"]
                                                          sender:param[@"username"]
@@ -855,7 +855,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager acceptInvitationFromGroup:param[@"groupId"]
                                                           inviter:param[@"inviter"]
@@ -875,7 +875,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager declineGroupInvitation:param[@"groupId"]
                                                        inviter:param[@"inviter"]
@@ -896,7 +896,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager updatePushServiceForGroup:param[@"groupId"]
                                                     isPushEnabled:[param[@"enable"] boolValue]

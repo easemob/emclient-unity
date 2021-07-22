@@ -32,7 +32,6 @@ public class EMChatManagerWrapper extends EMWrapper  {
     EMUnityChatManagerListener listener;
 
     public EMChatManagerWrapper() {
-        Log.d("android sdk", "初始化");
         listener = new EMUnityChatManagerListener();
         EMClient.getInstance().chatManager().addConversationListener(listener);
         EMClient.getInstance().chatManager().addMessageListener(listener);
@@ -281,20 +280,12 @@ public class EMChatManagerWrapper extends EMWrapper  {
         }
     }
 
-    private void updateChatMessage(String jsonString, String callbackId) throws JSONException{
+    private boolean updateChatMessage(String jsonString) throws JSONException{
         if (jsonString == null || jsonString.length() == 0) {
-            onError(callbackId, new HyphenateException(501, "Message contains invalid content"));
-            return;
+            return false;
         }
         EMMessage msg = EMMessageHelper.fromJson(new JSONObject(jsonString));
-        EMMessage message = EMClient.getInstance().chatManager().getMessage(msg.getMsgId());
-        if (message == null) {
-            onError(callbackId, new HyphenateException(500, "Message not found"));
-        }else {
-            asyncRunnable(() -> {
-                EMClient.getInstance().chatManager().updateMessage(msg);
-                onSuccess(null, callbackId, Boolean.TRUE);
-            });
-        }
+        EMClient.getInstance().chatManager().updateMessage(msg);
+        return true;
     }
 }

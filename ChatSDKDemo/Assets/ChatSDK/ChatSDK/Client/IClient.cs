@@ -16,9 +16,9 @@
 #elif UNITY_IOS
                     instance = new Client_iOS();
 #elif UNITY_STANDALONE_OSX
-                    instance = new Client_Mac();
+//                    instance = new Client_Mac();
 #elif UNITY_STANDALONE_WIN
-                    instance = new Client_Win();
+//                    instance = new Client_Win();
 #endif
                     _initialized = true;
                 }
@@ -27,11 +27,11 @@
             }
         }
 
-        private IChatManager chatImp;
-        private IContactManager contactImp;
-        private IGroupManager groupImp;
-        private IRoomManager roomImp;
-        private IPushManager pushImp;
+        private IChatManager chatImp = null;
+        private IContactManager contactImp = null;
+        private IGroupManager groupImp = null;
+        private IRoomManager roomImp = null;
+        private IPushManager pushImp = null;
 
 
         public IChatManager ChatManager()
@@ -41,11 +41,11 @@
 #if UNITY_ANDROID
             chatImp = new ChatManager_Android();
 #elif UNITY_IOS
-                chatImp = new ChatManager_iOS();
+            chatImp = new ChatManager_iOS();
 #elif UNITY_STANDALONE_OSX
-                chatImp = new ChatManager_Mac(instance);
+//                chatImp = new ChatManager_Mac(instance);
 #elif UNITY_STANDALONE_WIN
-                chatImp = new ChatManager_Win();
+//                chatImp = new ChatManager_Win();
 #endif
             return chatImp;
         }
@@ -59,9 +59,9 @@
 #elif UNITY_IOS
             contactImp = new ContactManager_iOS();
 #elif UNITY_STANDALONE_OSX
-            contactImp = new ContactManager_Mac();
+//            contactImp = new ContactManager_Mac();
 #elif UNITY_STANDALONE_WIN
-            contactImp = new ContactManager_Win();
+//            contactImp = new ContactManager_Win();
 #endif
             return contactImp;
         }
@@ -74,11 +74,11 @@
 #if UNITY_ANDROID
             groupImp = new GroupManager_Android();
 #elif UNITY_IOS
-                groupImp = new GroupManager_iOS();
+            groupImp = new GroupManager_iOS();
 #elif UNITY_STANDALONE_OSX
-                groupImp = new GroupManager_Mac();
+//                groupImp = new GroupManager_Mac();
 #elif UNITY_STANDALONE_WIN
-                groupImp = new GroupManager_Win();
+//                groupImp = new GroupManager_Win();
 #endif
             return groupImp;
         }
@@ -91,11 +91,11 @@
 #if UNITY_ANDROID
             roomImp = new RoomManager_Android();
 #elif UNITY_IOS
-                roomImp = new RoomManager_iOS();
+            roomImp = new RoomManager_iOS();
 #elif UNITY_STANDALONE_OSX
-                roomImp = new RoomManager_Mac();
+//                roomImp = new RoomManager_Mac();
 #elif UNITY_STANDALONE_WIN
-                roomImp = new RoomManager_Win();
+//                roomImp = new RoomManager_Win();
 #endif
             return roomImp;
         }
@@ -108,11 +108,11 @@
 #if UNITY_ANDROID
             pushImp = new PushManager_Android();
 #elif UNITY_IOS
-                pushImp = new PushManager_iOS();
+            pushImp = new PushManager_iOS();
 #elif UNITY_STANDALONE_OSX
-                pushImp = new PushManager_Mac();
+//                pushImp = new PushManager_Mac();
 #elif UNITY_STANDALONE_WIN
-                pushImp = new PushManager_Win();
+//                pushImp = new PushManager_Win();
 #endif
             return pushImp;
         }

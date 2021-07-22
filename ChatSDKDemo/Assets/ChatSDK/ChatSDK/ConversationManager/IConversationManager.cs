@@ -17,9 +17,9 @@ namespace ChatSDK
 #elif UNITY_IOS
                     instance = new ConversationManager_iOS();
 #elif UNITY_STANDALONE_OSX
-                    instance = new ConversationManager_Mac();
+//                    instance = new ConversationManager_Mac();
 #elif UNITY_STANDALONE_WIN
-                    //instance = new Client_Win();
+//                    //instance = new Client_Win();
 #endif
                 }
 

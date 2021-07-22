@@ -18,6 +18,9 @@ namespace ChatSDK
             listenerGameObj = new GameObject(Connection_Obj);
             ConnectionListener listener = listenerGameObj.AddComponent<ConnectionListener>();
             listener.delegater = connectionDelegater;
+
+            Debug.Log("initWithOptions" + options.ToJsonString());
+
             ClientNative.Client_HandleMethodCall("initWithOptions", options.ToJsonString(), null);
         }
 

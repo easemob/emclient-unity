@@ -353,7 +353,7 @@
         return nil;
     }
     __block NSString *callId = callbackId;
-    EMMessage *msg = [EMMessage fromJson:param];
+    EMMessage *msg = [EMMessage fromJson:param] ;
     [EMClient.sharedClient.chatManager sendMessage:msg
                                           progress:^(int progress)
     {

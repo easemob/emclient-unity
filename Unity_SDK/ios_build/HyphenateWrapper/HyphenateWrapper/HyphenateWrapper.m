@@ -26,18 +26,27 @@ void Client_HandleMethodCall(const char* methodName, const char* jsonString, con
 }
 
 const char* Client_GetMethodCall(const char* methodName, const char* jsonString, const char* callbackId) {
+    char* res = NULL;
     NSString *method = [Transfrom NSStringFromCString:methodName];
     if ([method isEqualToString:@"getCurrentUsername"]) {
-        return [Transfrom JsonObjectToCSString:@{@"getCurrentUsername":EMClient.sharedClient.currentUsername}];
+        const char *csStr = [Transfrom JsonObjectToCSString:@{@"getCurrentUsername":EMClient.sharedClient.currentUsername}];
+        res = (char*)malloc(strlen(csStr) +1);
+        strcpy(res, csStr);
     } else if ([method isEqualToString:@"isConnected"]) {
-        return [Transfrom JsonObjectToCSString:@{@"isConnected": @(EMClient.sharedClient.isConnected)}];
+        const char *csStr = [Transfrom JsonObjectToCSString:@{@"isConnected": @(EMClient.sharedClient.isConnected)}];
+        res = (char*)malloc(strlen(csStr) +1);
+        strcpy(res, csStr);
     } else if ([method isEqualToString:@"isLoggedIn"]) {
-        return [Transfrom JsonObjectToCSString:@{@"isLoggedIn": @(EMClient.sharedClient.isLoggedIn)}];
+        const char *csStr = [Transfrom JsonObjectToCSString:@{@"isLoggedIn": @(EMClient.sharedClient.isLoggedIn)}];
+        res = (char*)malloc(strlen(csStr) +1);
+        strcpy(res, csStr);
     }else if ([method isEqualToString:@"accessToken"]) {
-        return [Transfrom JsonObjectToCSString:@{@"accessToken": EMClient.sharedClient.accessUserToken}];
-    }else {
-        return "";
+        const char *csStr =  [Transfrom JsonObjectToCSString:@{@"accessToken": EMClient.sharedClient.accessUserToken}];
+        res = (char*)malloc(strlen(csStr) +1);
+        strcpy(res, csStr);
     }
+
+    return res;
 }
 
 void ContactManager_HandleMethodCall(const char* methodName, const char* jsonString, const char* callbackId) {
@@ -105,35 +114,54 @@ const char* ChatManager_GetMethodCall(const char* methodName, const char* jsonSt
     NSString *method = [Transfrom NSStringFromCString:methodName];
     NSDictionary *dic = [Transfrom JsonObjectFromCSString:jsonString];
     NSString *callId = [Transfrom NSStringFromCString:callbackId];
+    char* res = NULL;
     if ([method isEqualToString:@"deleteConversation"]) {
         id jsonObject = [EMClientWrapper.instance.chatManager deleteConversation:dic callbackId:callId];
-        return [Transfrom JsonObjectToCSString:jsonObject];
+        const char *csStr = [Transfrom JsonObjectToCSString:jsonObject];
+        res = (char*)malloc(strlen(csStr) +1);
+        strcpy(res, csStr);
     }else if ([method isEqualToString:@"getConversation"]) {
         id jsonObject = [EMClientWrapper.instance.chatManager getConversation:dic callbackId:callId];
-        return [Transfrom JsonObjectToCSString:jsonObject];
+        const char *csStr = [Transfrom JsonObjectToCSString:jsonObject];
+        res = (char*)malloc(strlen(csStr) +1);
+        strcpy(res, csStr);
     }else if ([method isEqualToString:@"getUnreadMessageCount"]) {
         id jsonObject = [EMClientWrapper.instance.chatManager getUnreadMessageCount:dic callbackId:callId];
-        return [Transfrom JsonObjectToCSString:jsonObject];
+        const char *csStr = [Transfrom JsonObjectToCSString:jsonObject];
+        res = (char*)malloc(strlen(csStr) +1);
+        strcpy(res, csStr);
     }else if ([method isEqualToString:@"importMessages"]) {
         id jsonObject = [EMClientWrapper.instance.chatManager importMessages:dic callbackId:callId];
-        return [Transfrom JsonObjectToCSString:jsonObject];
+        const char *csStr = [Transfrom JsonObjectToCSString:jsonObject];
+        res = (char*)malloc(strlen(csStr) +1);
+        strcpy(res, csStr);
     }else if ([method isEqualToString:@"loadAllConversations"]) {
         id jsonObject = [EMClientWrapper.instance.chatManager loadAllConversations:dic callbackId:callId];
-        return [Transfrom JsonObjectToCSString:jsonObject];
+        const char *csStr = [Transfrom JsonObjectToCSString:jsonObject];
+        res = (char*)malloc(strlen(csStr) +1);
+        strcpy(res, csStr);
     }else if ([method isEqualToString:@"getMessage"]) {
         id jsonObject = [EMClientWrapper.instance.chatManager getMessage:dic callbackId:callId];
-        return [Transfrom JsonObjectToCSString:jsonObject];
+        const char *csStr = [Transfrom JsonObjectToCSString:jsonObject];
+        res = (char*)malloc(strlen(csStr) +1);
+        strcpy(res, csStr);
     }else if ([method isEqualToString:@"resendMessage"]) {
         id jsonObject = [EMClientWrapper.instance.chatManager resendMessage:dic callbackId:callId];
-        return [Transfrom JsonObjectToCSString:jsonObject];
+        const char *csStr = [Transfrom JsonObjectToCSString:jsonObject];
+        res = (char*)malloc(strlen(csStr) +1);
+        strcpy(res, csStr);
     }else if ([method isEqualToString:@"searchChatMsgFromDB"]) {
         id jsonObject = [EMClientWrapper.instance.chatManager searchChatMsgFromDB:dic callbackId:callId];
-        return [Transfrom JsonObjectToCSString:jsonObject];
+        const char *csStr = [Transfrom JsonObjectToCSString:jsonObject];
+        res = (char*)malloc(strlen(csStr) +1);
+        strcpy(res, csStr);
     }else if ([method isEqualToString:@"sendMessage"]) {
         id jsonObject = [EMClientWrapper.instance.chatManager sendMessage:dic callbackId:callId];
-        return [Transfrom JsonObjectToCSString:jsonObject];
+        const char *csStr = [Transfrom JsonObjectToCSString:jsonObject];
+        res = (char*)malloc(strlen(csStr) +1);
+        strcpy(res, csStr);
     }
-    return NULL;
+    return res;
 }
 
 void GroupManager_HandleMethodCall(const char* methodName, const char* jsonString, const char* callbackId) {

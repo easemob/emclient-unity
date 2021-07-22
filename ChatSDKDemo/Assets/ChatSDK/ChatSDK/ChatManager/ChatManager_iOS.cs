@@ -38,14 +38,15 @@ namespace ChatSDK
             ChatManagerNative.ChatManager_HandleMethodCall("downloadThumbnail", obj.ToString(), handle?.callbackId);
         }
 
-        public override void FetchHistoryMessages(string conversationId, ConversationType type, string startMessageId = null, int count = 20, ValueCallBack<CursorResult<Message>> handle = null)
+        public override void FetchHistoryMessagesFromServer(string conversationId, ConversationType type, string startMessageId = null, int count = 20, ValueCallBack<CursorResult<Message>> handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("convId", conversationId);
             obj.Add("convType", TransformTool.ConversationTypeToInt(type));
-            obj.Add("startMsgId", startMessageId);
+            obj.Add("startMsgId", startMessageId ?? "");
             obj.Add("count", count);
-            ConversationNative.Conversation_GetMethodCall("fetchHistoryMessages", obj.ToString(), handle?.callbackId);
+            string jsonString = obj.ToString();
+            ChatManagerNative.ChatManager_HandleMethodCall("fetchHistoryMessages", jsonString, handle?.callbackId);
         }
 
         public override Conversation GetConversation(string conversationId, ConversationType type, bool createIfNeed = true)
@@ -64,7 +65,7 @@ namespace ChatSDK
 
         public override void GetConversationsFromServer(ValueCallBack<List<Conversation>> handle = null)
         {
-            ChatManagerNative.ChatManager_GetMethodCall("getConversationsFromServer", handle?.callbackId);
+            ChatManagerNative.ChatManager_HandleMethodCall("getConversationsFromServer", null, handle?.callbackId);
         }
 
         public override int GetUnreadMessageCount()
@@ -96,8 +97,7 @@ namespace ChatSDK
             if (jsonString == null || jsonString.Length == 0) {
                 return null;
             }
-            JSONNode jn = JSON.Parse(jsonString);
-            return TransformTool.JsonStringToConversationList(jn["ret"]);
+            return TransformTool.JsonStringToConversationList(jsonString);
         }
 
         public override Message LoadMessage(string messageId)
@@ -128,10 +128,10 @@ namespace ChatSDK
         {
             JSONObject obj = new JSONObject();
             obj.Add("msgId", messageId);
-            ChatManagerNative.ChatManager_GetMethodCall("recallMessage", obj.ToString(), handle?.callbackId);
+            ChatManagerNative.ChatManager_HandleMethodCall("recallMessage", obj.ToString(), handle?.callbackId);
         }
 
-        public override Message ResendMessage(string messageId, ValueCallBack<Message> handle = null)
+        public override Message ResendMessage(string messageId, CallBack handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("msgId", messageId);
@@ -164,7 +164,7 @@ namespace ChatSDK
 
         public override Message SendMessage(Message message, CallBack handle = null)
         {
-            string jsonString = ChatManagerNative.ChatManager_GetMethodCall("sendMessage", message.ToJson().ToString());
+            string jsonString = ChatManagerNative.ChatManager_GetMethodCall("sendMessage", message.ToJson().ToString(), handle?.callbackId);
             if (jsonString == null || jsonString.Length == 0)
             {
                 return null;
@@ -179,9 +179,14 @@ namespace ChatSDK
             ChatManagerNative.ChatManager_GetMethodCall("ackMessageRead", obj.ToString(), handle?.callbackId);
         }
 
-        public override void UpdateMessage(Message message, CallBack handle = null)
+        public override bool UpdateMessage(Message message)
         {
-            ChatManagerNative.ChatManager_HandleMethodCall("updateChatMessage", message.ToJson().ToString(), handle?.callbackId);
+            string jsonString = ChatManagerNative.ChatManager_GetMethodCall("updateChatMessage", message.ToJson().ToString());
+            if (jsonString == null || jsonString.Length == 0) {
+                return false;
+            }
+            JSONObject jsonObject = JSON.Parse(jsonString).AsObject;
+            return jsonObject["isLoggedIn"].AsBool;
         }
     }
 

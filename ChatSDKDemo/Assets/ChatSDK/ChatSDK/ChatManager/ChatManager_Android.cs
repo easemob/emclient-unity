@@ -32,7 +32,7 @@ namespace ChatSDK
             wrapper.Call("downloadThumbnail", messageId, handle?.callbackId);
         }
 
-        public override void FetchHistoryMessages(string conversationId, ConversationType type, string startMessageId = null, int count = 20, ValueCallBack<CursorResult<Message>> handle = null)
+        public override void FetchHistoryMessagesFromServer(string conversationId, ConversationType type, string startMessageId = null, int count = 20, ValueCallBack<CursorResult<Message>> handle = null)
         {
             wrapper.Call("fetchHistoryMessages", conversationId, TransformTool.ConversationTypeToInt(type), startMessageId, count, handle?.callbackId);
         }
@@ -89,7 +89,7 @@ namespace ChatSDK
             wrapper.Call("recallMessage", messageId, handle?.callbackId);
         }
 
-        public override Message ResendMessage(string messageId, ValueCallBack<Message> handle = null)
+        public override Message ResendMessage(string messageId, CallBack handle = null)
         {
             string jsonString = wrapper.Call<string>("resendMessage", messageId, handle?.callbackId);
             if (jsonString == null || jsonString.Length == 0)
@@ -127,9 +127,9 @@ namespace ChatSDK
             wrapper.Call("ackMessageRead", messageId, handle?.callbackId);
         }
 
-        public override void UpdateMessage(Message message, CallBack handle = null)
+        public override bool UpdateMessage(Message message)
         {
-            wrapper.Call("updateChatMessage", message.ToJson().ToString(), handle?.callbackId);
+            return wrapper.Call<bool>("updateChatMessage", message.ToJson().ToString());
         }
     }
     

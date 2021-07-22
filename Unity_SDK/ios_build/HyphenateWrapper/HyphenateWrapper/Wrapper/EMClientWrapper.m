@@ -69,7 +69,7 @@ static EMClientWrapper *_instance;
         return;
     }
     
-    __weak typeof(self) weakSelf = self;
+    __weak EMClientWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient registerWithUsername:username
                                        password:password
@@ -102,7 +102,7 @@ static EMClientWrapper *_instance;
     }
     
     __block NSString *callId = callbackId;
-    __weak typeof(self) weakSelf = self;
+    __weak EMClientWrapper * weakSelf = self;
     __block void (^block)(EMError *) = ^(EMError *error) {
         if (!error) {
             [weakSelf onSuccess:nil callbackId:callId userInfo:nil];
@@ -129,7 +129,7 @@ static EMClientWrapper *_instance;
 }
 
 - (void)logout:(NSDictionary *)param callbackId:(NSString *)callbackId {
-    __weak typeof(self) weakSelf = self;
+    __weak EMClientWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     BOOL unbindDeviceToken = [param[@"unbindDeviceToken"] boolValue];
     [EMClient.sharedClient logout:unbindDeviceToken completion:^(EMError *aError) {

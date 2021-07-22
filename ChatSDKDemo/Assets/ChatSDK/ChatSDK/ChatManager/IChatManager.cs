@@ -34,7 +34,7 @@ namespace ChatSDK
         /// <param name="startMessageId">起始消息id</param>
         /// <param name="count">返回数量</param>
         /// <param name="handle">返回结果</param>
-        public abstract void FetchHistoryMessages(string conversationId, ConversationType type = ConversationType.Chat, string startMessageId = null, int count = 20, ValueCallBack<CursorResult<Message>> handle = null);
+        public abstract void FetchHistoryMessagesFromServer(string conversationId, ConversationType type = ConversationType.Chat, string startMessageId = null, int count = 20, ValueCallBack<CursorResult<Message>> handle = null);
 
         /// <summary>
         /// 获取会话
@@ -96,7 +96,7 @@ namespace ChatSDK
         /// <param name="messageId">消息id</param>
         /// <param name="handle">执行结果</param>
         /// <returns>要发送的消息</returns>
-        public abstract Message ResendMessage(string messageId, ValueCallBack<Message> handle = null);
+        public abstract Message ResendMessage(string messageId, CallBack handle = null);
 
         /// <summary>
         /// 从db中搜索消息
@@ -134,9 +134,9 @@ namespace ChatSDK
         /// <summary>
         /// 更新消息
         /// </summary>
-        /// <param name="message">消息</param>
-        /// <param name="handle">执行结果</param>
-        public abstract void UpdateMessage(Message message, CallBack handle = null);
+        /// <param name="message">要更新的消息</param>
+        /// <returns>执行结果</returns>
+        public abstract bool UpdateMessage(Message message);
 
         /// <summary>
         /// 添加消息监听

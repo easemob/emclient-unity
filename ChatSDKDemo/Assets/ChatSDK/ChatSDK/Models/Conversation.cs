@@ -127,7 +127,7 @@ namespace ChatSDK {
         /// <param name="count">获取数量</param>
         /// <param name="direction">获取消息的方向</param>
         /// <returns></returns>
-        public List<Message> LoadMessagesWithMsgType(MessageBodyType type, string sender, int timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP) {
+        public List<Message> LoadMessagesWithMsgType(MessageBodyType type, string sender = null, int timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP) {
             return manager.LoadMessagesWithMsgType(Id, Type, type, sender, timestamp, count, direction);
         }
 
@@ -151,7 +151,7 @@ namespace ChatSDK {
         /// <param name="count">获取数量</param>
         /// <param name="direction">获取消息的方向</param>
         /// <returns></returns>
-        public List<Message> LoadMessagesWithKeyword(string keywords, string sender, int timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP) {
+        public List<Message> LoadMessagesWithKeyword(string keywords, string sender = null, int timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP) {
             return manager.LoadMessagesWithKeyword(Id, Type, keywords, sender, timestamp, count, direction);
         }
 

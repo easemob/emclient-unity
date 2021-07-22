@@ -37,7 +37,7 @@
     NSInteger page = [param[@"pageNum"] integerValue];
     NSInteger pageSize = [param[@"pageSize"] integerValue];
     
-    __weak typeof(self) weakSelf = self;
+    __weak EMRoomManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     
     [EMClient.sharedClient.roomManager getChatroomsFromServerWithPage:page
@@ -59,7 +59,7 @@
         return;
     }
     
-    __weak typeof(self) weakSelf = self;
+    __weak EMRoomManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     
     NSString *subject = param[@"subject"];
@@ -89,7 +89,7 @@
         return;
     }
     
-    __weak typeof(self) weakSelf = self;
+    __weak EMRoomManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     
     NSString *chatroomId = param[@"roomId"];
@@ -111,7 +111,7 @@
         return;
     }
     
-    __weak typeof(self) weakSelf = self;
+    __weak EMRoomManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     
     NSString *chatroomId = param[@"roomId"];
@@ -133,7 +133,7 @@
         return;
     }
     
-    __weak typeof(self) weakSelf = self;
+    __weak EMRoomManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     
     NSString *chatroomId = param[@"roomId"];
@@ -153,7 +153,7 @@
         return;
     }
     
-    __weak typeof(self)weakSelf = self;
+    __weak EMRoomManagerWrapper *weakSelf = self;
     __block NSString *callId = callbackId;
     
     NSString *chatroomId = param[@"roomId"];
@@ -187,7 +187,7 @@
 
 - (void)getAllChatrooms:(NSDictionary *)param callbackId:(NSString *)callbackId  {
     
-    __weak typeof(self) weakSelf = self;
+    __weak EMRoomManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     
     [EMClient.sharedClient.roomManager getChatroomsFromServerWithPage:0
@@ -209,7 +209,7 @@
         return;
     }
     
-    __weak typeof(self) weakSelf = self;
+    __weak EMRoomManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     
     NSString *chatroomId = param[@"roomId"];
@@ -235,7 +235,7 @@
         return;
     }
     
-    __weak typeof(self) weakSelf = self;
+    __weak EMRoomManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     
     NSString *chatroomId = param[@"roomId"];
@@ -261,7 +261,7 @@
         return;
     }
     
-    __weak typeof(self) weakSelf = self;
+    __weak EMRoomManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     
     NSString *chatroomId = param[@"roomId"];
@@ -287,7 +287,7 @@
         return;
     }
     
-    __weak typeof(self) weakSelf = self;
+    __weak EMRoomManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     
     NSString *chatroomId = param[@"roomId"];
@@ -309,7 +309,7 @@
         return;
     }
     
-    __weak typeof(self) weakSelf = self;
+    __weak EMRoomManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     
     NSString *chatroomId = param[@"roomId"];
@@ -334,7 +334,7 @@
         return;
     }
     
-    __weak typeof(self) weakSelf = self;
+    __weak EMRoomManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     
     NSString *chatroomId = param[@"roomId"];
@@ -358,7 +358,7 @@
         return;
     }
     
-    __weak typeof(self) weakSelf = self;
+    __weak EMRoomManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     
     NSArray *members = param[@"members"];
@@ -382,7 +382,7 @@
         return;
     }
     
-    __weak typeof(self) weakSelf = self;
+    __weak EMRoomManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     
     NSArray *members = param[@"members"];
@@ -406,7 +406,7 @@
         return;
     }
     
-    __weak typeof(self) weakSelf = self;
+    __weak EMRoomManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     
     NSArray *members = param[@"members"];
@@ -430,7 +430,7 @@
         return;
     }
     
-    __weak typeof(self) weakSelf = self;
+    __weak EMRoomManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     
     NSString *chatroomId = param[@"roomId"];
@@ -454,7 +454,7 @@
         return;
     }
     
-    __weak typeof(self) weakSelf = self;
+    __weak EMRoomManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     
     NSString *admin = param[@"admin"];
@@ -478,7 +478,7 @@
         return;
     }
     
-    __weak typeof(self) weakSelf = self;
+    __weak EMRoomManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     
     NSString *admin = param[@"admin"];
@@ -502,7 +502,7 @@
         return;
     }
     
-    __weak typeof(self) weakSelf = self;
+    __weak EMRoomManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     
     NSArray *muteMembers = param[@"members"];
@@ -528,7 +528,7 @@
         return;
     }
     
-    __weak typeof(self) weakSelf = self;
+    __weak EMRoomManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     
     NSArray *unMuteMembers = param[@"members"];
@@ -552,7 +552,7 @@
         return;
     }
     
-    __weak typeof(self) weakSelf = self;
+    __weak EMRoomManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     
     NSString *chatroomId = param[@"roomId"];

@@ -12,8 +12,12 @@
 @implementation Transfrom
 
 + (NSString *)NSStringFromCString:(const char*)cStr {
-    NSString *ret = [NSString stringWithUTF8String:cStr];
-    return ret ? ret : @"";
+    NSString *ret = @"";
+    if (cStr != NULL) {
+        ret = [NSString stringWithUTF8String:cStr];
+    }
+    
+    return ret;
 }
 
 + (const char*)NSStringToCSString:(NSString *)nsStr {

@@ -4,59 +4,57 @@ using UnityEngine.UI;
 using System.Runtime.InteropServices;
 
 using ChatSDK;
+using UnityEngine.SceneManagement;
 
 public class Main : MonoBehaviour , IConnectionDelegate, IChatManagerDelegate, IContactManagerDelegate, IGroupManagerDelegate, IRoomManagerDelegate
 {
     // 接收消息id
-    public InputField RecvIdField;
-    // 输入内容
-    public InputField TextField;
-    // 发送按钮
+    public Text InputText;
+    public Button Logout;
+
     public Button SendBtn;
-    // 群组id
-    public InputField GroupField;
-    // 加入群组按钮
-    public Button JoinGroupBtn;
-    // 获取群详情按钮
-    public Button GroupInfoBtn;
-    // 退出群组按钮
-    public Button LeaveGroupBtn;
-    // 聊天室id
-    public InputField RoomField;
-    // 加入聊天室按钮
-    public Button JoinRoomBtn;
-    // 获取聊天室按钮
-    public Button RoomInfoBtn;
-    // 退出聊天室按钮
-    public Button LeaveRoomBtn;
+    public Button RecallBtn;
+    public Button ResendBtn;
+    public Button SearchBtn;
+    public Button UpdateBtn;
+    public Button SendReadBtn;
+    public Button DownAttBtn;
+    public Button DownAttDBtn;
+    public Button IsConnectBtn;
+    public Button CurrentUsernameBtn;
+    public Button AccessTokenBtn;
+    public Button IsLoggedInBtn;
+    public Button ConversationBtn;
+    public Button GroupBtn;
+    public Button RoomBtn;
+    public Button PushBtn;
 
 
-    //public ScrollView scrollView;
-    public ScrollRect scrollRect;
-
-    IEnumerable<Toggle> ToggleGroup;
-
-    Room currRoom;
-    Conversation conversation;
-
-    string groupId;
 
     // Start is called before the first frame update
     void Start()
     {
-        SendBtn.onClick.AddListener(SendMessageAction);
+        Logout.onClick.AddListener(LogoutAction);
 
-        JoinGroupBtn.onClick.AddListener(JoinGroupAction);
-        GroupInfoBtn.onClick.AddListener(GetGroupInfoAction);
-        LeaveGroupBtn.onClick.AddListener(LeaveGroupAction);
+        SendBtn.onClick.AddListener(SendMsg);
+        RecallBtn.onClick.AddListener(RecallMsg);
+        ResendBtn.onClick.AddListener(ResendMsg);
+        SearchBtn.onClick.AddListener(SearchMsg);
 
-        JoinRoomBtn.onClick.AddListener(JoinRoomAction);
-        RoomInfoBtn.onClick.AddListener(GetRoomInfoAction);
-        LeaveRoomBtn.onClick.AddListener(LeaveRoomAction);
+        UpdateBtn.onClick.AddListener(UpdateMsg);
+        SendReadBtn.onClick.AddListener(ReadAck);
+        DownAttBtn.onClick.AddListener(DownLoadAttachment);
+        DownAttDBtn.onClick.AddListener(DownloadThumbnail);
 
-        ToggleGroup = GameObject.Find("ToggleGroup").GetComponent<ToggleGroup>().ActiveToggles();
-        foreach (Toggle tog in ToggleGroup) {
-        }
+        IsConnectBtn.onClick.AddListener(IsConnectAction);
+        CurrentUsernameBtn.onClick.AddListener(CurrentUsernameAction);
+        AccessTokenBtn.onClick.AddListener(AccessTokenAction);
+        IsLoggedInBtn.onClick.AddListener(IsLoggedinAction);
+
+        ConversationBtn.onClick.AddListener(ToConversationSence);
+        GroupBtn.onClick.AddListener(ToGroupSence);
+        RoomBtn.onClick.AddListener(ToRoomSence);
+        PushBtn.onClick.AddListener(ToPushSence);
     }
 
     private void Awake()
@@ -78,6 +76,230 @@ public class Main : MonoBehaviour , IConnectionDelegate, IChatManagerDelegate, I
     {
         Debug.Log("Quit and release resources...");
         SDKClient.Instance.Logout(false);
+    }
+
+
+    void LogoutAction() {
+
+        ValueCallBack<List<Conversation>> callback = new ValueCallBack<List<Conversation>>();
+
+        callback.OnSuccessValue = (List<Conversation> list) => {
+
+            foreach (var conversation in list) {
+                Debug.Log("conv id ---- " + conversation.Id);
+            }
+        };
+
+        callback.Error = (int code, string desc) => { Debug.LogError("error code " + code + " " +desc); };
+
+        SDKClient.Instance.ChatManager.GetConversationsFromServer(callback);
+    }
+
+    void SendMsg() {
+        CallBack callBack = new CallBack(
+            onSuccess: () => {
+                Debug.Log("unity 成功");
+            },
+
+            onError: (code, desc) => {
+                Debug.LogError("unity 失败 code " + code + " " + desc);
+            }
+        );
+
+        string to = InputText.text;
+        Message msg = Message.CreateTextSendMessage(to, "文字消息");
+        SDKClient.Instance.ChatManager.SendMessage(msg, callBack);
+    }
+
+    void RecallMsg() {
+
+        CallBack callBack = new CallBack(
+            onSuccess: () => {
+                Debug.Log("unity 成功");
+            },
+
+            onError: (code, desc) => {
+                Debug.LogError("unity 失败 code " + code + " " + desc);
+            }
+        );
+
+        string msgId = InputText.text;
+        SDKClient.Instance.ChatManager.RecallMessage(msgId, callBack);
+    }
+
+    void ResendMsg() {
+
+        CallBack callBack = new CallBack(
+           onSuccess: () => {
+               Debug.Log("unity 成功");
+           },
+
+           onError: (code, desc) => {
+               Debug.LogError("unity 失败 code " + code + " " + desc);
+           }
+       );
+
+        string msgId = InputText.text;
+        SDKClient.Instance.ChatManager.ResendMessage(msgId, callBack);
+    }
+
+    void SearchMsg() {
+
+        string keywords = InputText.text;
+        List<Message>list = SDKClient.Instance.ChatManager.SearchMsgFromDB(keywords);
+
+        foreach (var msg in list) {
+            if (msg.Body.Type == MessageBodyType.TXT) {
+                ChatSDK.MessageBody.TextBody body = (ChatSDK.MessageBody.TextBody)msg.Body;
+                Debug.Log("搜索消息 -- " + body.Text);
+            }
+        }
+
+    }
+
+    void UpdateMsg() {
+        string msgId = InputText.text;
+        Message msg = SDKClient.Instance.ChatManager.LoadMessage(msgId);
+        msg.Body = new ChatSDK.MessageBody.TextBody("我是更新的消息");
+        bool ret = SDKClient.Instance.ChatManager.UpdateMessage(msg);
+        if (ret)
+        {
+            Debug.Log("更新成功");
+        }
+        else {
+            Debug.LogError("更新失败");
+        }
+    }
+
+    void ReadAck() {
+
+        CallBack callBack = new CallBack(
+            onSuccess: () => {
+                Debug.Log("unity 成功");
+            },
+
+            onError: (code, desc) => {
+                Debug.LogError("unity 失败 code " + code + " " + desc);
+            }
+        );
+
+        string msgId = InputText.text;
+        SDKClient.Instance.ChatManager.SendMessageReadAck(msgId, callBack);
+    }
+
+    void DownLoadAttachment() {
+
+        CallBack callBack = new CallBack(
+           onSuccess: () => {
+               Debug.Log("unity 成功");
+           },
+
+           onError: (code, desc) => {
+               Debug.LogError("unity 失败 code " + code + " " + desc);
+           },
+
+           onProgress: (progress) => {
+               Debug.Log("unity 下载 --- " + progress);
+           }
+       );
+
+        string msgId = InputText.text;
+        SDKClient.Instance.ChatManager.DownloadAttachment(msgId, callBack);
+    }
+
+    void DownloadThumbnail() {
+        CallBack callBack = new CallBack(
+           onSuccess: () => {
+               Debug.Log("unity 成功");
+           },
+
+           onError: (code, desc) => {
+               Debug.LogError("unity 失败 code " + code + " " + desc);
+           },
+
+           onProgress: (progress) => {
+               Debug.Log("unity 下载 --- " + progress);
+           }
+       );
+
+        string msgId = InputText.text;
+        SDKClient.Instance.ChatManager.DownloadThumbnail(msgId, callBack);
+    }
+
+    void IsConnectAction()
+    {
+        bool ret = SDKClient.Instance.IsConnected;
+        if (ret)
+        {
+            Debug.Log("已连接");
+        }
+        else {
+            Debug.Log("连接失败");
+        }
+    }
+
+    void CurrentUsernameAction()
+    {
+        string ret = SDKClient.Instance.CurrentUsername;
+        if (ret != null)
+        {
+            Debug.Log("当前登录账号 -- " + ret);
+        }
+        else
+        {
+            Debug.Log("当前登录账号获取失败");
+        }
+    }
+
+    void AccessTokenAction() {
+        string ret = SDKClient.Instance.AccessToken;
+        if (ret != null)
+        {
+            Debug.Log("accessToken -- " + ret);
+        }
+        else
+        {
+            Debug.Log("get accessToken failed");
+        }
+    }
+
+    void IsLoggedinAction() {
+        bool ret = SDKClient.Instance.IsLoggedIn;
+        if (ret)
+        {
+            Debug.Log("has loggedin");
+        }
+        else {
+            Debug.Log("has no loggedin");
+        }
+    }
+
+
+    void ToConversationSence() {
+        SceneManager.LoadScene("Conversation");
+    }
+
+    void ToGroupSence() {
+        SDKClient.Instance.ChatManager.RecallMessage("899312925376776248");
+    }
+
+    void ToRoomSence() {
+
+        int count = SDKClient.Instance.ChatManager.GetUnreadMessageCount();
+        Debug.Log("未读数 前  " + count);
+
+        bool ret = SDKClient.Instance.ChatManager.MarkAllConversationsAsRead();
+        Debug.Log("设置成功 --- ? " + (ret ? "YES" : "NO"));
+
+        count = SDKClient.Instance.ChatManager.GetUnreadMessageCount();
+        Debug.Log("未读数 后  " + count);
+
+    }
+
+    void ToPushSence() {
+        Message msg = SDKClient.Instance.ChatManager.LoadMessage("899321361271359640");
+        ChatSDK.MessageBody.TextBody textBody = (ChatSDK.MessageBody.TextBody)msg.Body;
+        Debug.Log("----- " + textBody.Text);
     }
 
     void SendMessageAction()
@@ -280,16 +502,14 @@ public class Main : MonoBehaviour , IConnectionDelegate, IChatManagerDelegate, I
         ChatSDK.MessageBody.TextBody textBody = new ChatSDK.MessageBody.TextBody("我是更新的消息");
         msg.Body = textBody;
 
-        CallBack callback = new CallBack(
-                onSuccess: () => {
-                    Debug.Log("插入成功");
-                },
-                onError: (code, desc) => {
-                    Debug.LogError("插入失败 --- " + code + " " + desc);
-                }
-            );
-
-        SDKClient.Instance.ChatManager.UpdateMessage(msg, callback);
+        bool ret = SDKClient.Instance.ChatManager.UpdateMessage(msg);
+        if (ret)
+        {
+            Debug.Log("更新成功");
+        }
+        else {
+            Debug.LogError("更新失败");
+        }
     }
 
     void AppendConversationMessage()
@@ -411,7 +631,7 @@ public class Main : MonoBehaviour , IConnectionDelegate, IChatManagerDelegate, I
             onSuccess: (result) => {
                 foreach (Room room in result.Data) {
                     Debug.Log("room --- " + room.RoomId);
-                    currRoom = room;
+                    //currRoom = room;
                 }
             }
             );
@@ -985,7 +1205,7 @@ public class Main : MonoBehaviour , IConnectionDelegate, IChatManagerDelegate, I
     ///////// group
     public void OnInvitationReceivedFromGroup(string groupId, string groupName, string inviter, string reason)
     {
-        this.groupId = groupId;
+        //this.groupId = groupId;
         Debug.Log("收到群组邀请 " + groupId +  " " + groupName);
     }
 

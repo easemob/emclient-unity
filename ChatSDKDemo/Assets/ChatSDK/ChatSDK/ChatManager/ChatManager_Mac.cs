@@ -37,7 +37,7 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override void FetchHistoryMessages(string conversationId, ConversationType type, string startMessageId = null, int count = 20, ValueCallBack<CursorResult<Message>> handle = null)
+        public override void FetchHistoryMessagesFromServer(string conversationId, ConversationType type, string startMessageId = null, int count = 20, ValueCallBack<CursorResult<Message>> handle = null)
         {
             throw new System.NotImplementedException();
         }
@@ -82,7 +82,7 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override Message ResendMessage(string messageId, ValueCallBack<Message> handle = null)
+        public override Message ResendMessage(string messageId, CallBack handle = null)
         {
             throw new System.NotImplementedException();
         }
@@ -113,7 +113,7 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override void UpdateMessage(Message message, CallBack callback = null)
+        public override bool UpdateMessage(Message message)
         {
             throw new System.NotImplementedException();
         }
