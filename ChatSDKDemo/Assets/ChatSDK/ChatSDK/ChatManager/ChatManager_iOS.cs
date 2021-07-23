@@ -135,7 +135,7 @@ namespace ChatSDK
         {
             JSONObject obj = new JSONObject();
             obj.Add("msgId", messageId);
-            string jsonString = ChatManagerNative.ChatManager_GetMethodCall("resendMessage", obj.ToString());
+            string jsonString = ChatManagerNative.ChatManager_GetMethodCall("resendMessage", obj.ToString(), handle?.callbackId);
             if (jsonString == null || jsonString.Length == 0)
             {
                 return null;
@@ -147,7 +147,7 @@ namespace ChatSDK
         {
             JSONObject obj = new JSONObject();
             obj.Add("keywords", keywords);
-            obj.Add("from", from);
+            obj.Add("from", from ?? "");
             obj.Add("count", maxCount);
             obj.Add("timestamp", timestamp);
             obj.Add("direction", direction == MessageSearchDirection.UP ? "up" : "down");
@@ -159,7 +159,7 @@ namespace ChatSDK
         {
             JSONObject obj = new JSONObject();
             obj.Add("convId", conversationId);
-            ChatManagerNative.ChatManager_GetMethodCall("ackConversationRead", obj.ToString(), handle?.callbackId);
+            ChatManagerNative.ChatManager_HandleMethodCall("ackConversationRead", obj.ToString(), handle?.callbackId);
         }
 
         public override Message SendMessage(Message message, CallBack handle = null)

@@ -29,7 +29,10 @@ public class Main : MonoBehaviour , IConnectionDelegate, IChatManagerDelegate, I
     public Button RoomBtn;
     public Button PushBtn;
 
-
+    public Button ContactBtn;
+    public Button Custom1Btn;
+    public Button Custom2Btn;
+    public Button Custom3Btn;
 
     // Start is called before the first frame update
     void Start()
@@ -55,6 +58,11 @@ public class Main : MonoBehaviour , IConnectionDelegate, IChatManagerDelegate, I
         GroupBtn.onClick.AddListener(ToGroupSence);
         RoomBtn.onClick.AddListener(ToRoomSence);
         PushBtn.onClick.AddListener(ToPushSence);
+        ContactBtn.onClick.AddListener(ToContactSence);
+        Custom1Btn.onClick.AddListener(Custom1Action);
+        Custom2Btn.onClick.AddListener(Custom2Action);
+        Custom3Btn.onClick.AddListener(Custom3Action);
+
     }
 
     private void Awake()
@@ -81,18 +89,37 @@ public class Main : MonoBehaviour , IConnectionDelegate, IChatManagerDelegate, I
 
     void LogoutAction() {
 
-        ValueCallBack<List<Conversation>> callback = new ValueCallBack<List<Conversation>>();
+        CallBack callback = new CallBack();
 
-        callback.OnSuccessValue = (List<Conversation> list) => {
-
-            foreach (var conversation in list) {
-                Debug.Log("conv id ---- " + conversation.Id);
-            }
+        callback.Success = () =>
+        {
+            Debug.Log("发送成功");
         };
 
-        callback.Error = (int code, string desc) => { Debug.LogError("error code " + code + " " +desc); };
+        callback.Error = (int code, string desc) =>
+        {
+            Debug.Log("发送失败 -- " + code + desc);
+        };
 
-        SDKClient.Instance.ChatManager.GetConversationsFromServer(callback);
+        SDKClient.Instance.ChatManager.SendConversationReadAck("du003", callback);
+
+        //ValueCallBack<List<Conversation>> callback = new ValueCallBack<List<Conversation>>();
+
+        //callback.OnSuccessValue = (List<Conversation> list) => {
+
+        //    foreach (var conversation in list) {
+        //        Debug.Log("conv id ---- " + conversation.Id);
+        //    }
+        //};
+
+        //callback.Error = (int code, string desc) => { Debug.LogError("error code " + code + " " +desc); };
+
+        //List<Message>list = SDKClient.Instance.ChatManager.SearchMsgFromDB("文字", direction: MessageSearchDirection.DOWN);
+        //foreach (var msg in list)
+        //{
+        //    ChatSDK.MessageBody.TextBody textBody = (ChatSDK.MessageBody.TextBody)msg.Body;
+        //    Debug.Log("message id --- " + msg.MsgId + " " + "content " + textBody.Text);
+        //}
     }
 
     void SendMsg() {
@@ -301,6 +328,17 @@ public class Main : MonoBehaviour , IConnectionDelegate, IChatManagerDelegate, I
         ChatSDK.MessageBody.TextBody textBody = (ChatSDK.MessageBody.TextBody)msg.Body;
         Debug.Log("----- " + textBody.Text);
     }
+
+
+    void ToContactSence() {
+        SceneManager.LoadScene("Contact");
+    }
+
+    void Custom1Action() { }
+    void Custom2Action() { }
+    void Custom3Action() { }
+
+
 
     void SendMessageAction()
     {

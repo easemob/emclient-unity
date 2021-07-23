@@ -293,7 +293,7 @@
 
 - (id)searchChatMsgFromDB:(NSDictionary *)param{
 
-    NSString *keywards = param[@"keywards"];
+    NSString *keywards = param[@"keywords"];
     long long timestamp = [param[@"timestamp"] longLongValue];
     int count = [param[@"count"] intValue];
     NSString *from = param[@"from"];
