@@ -52,12 +52,12 @@ namespace ChatSDK
         /// 创建聊天室
         /// </summary>
         /// <param name="subject">名称</param>
-        /// <param name="descriptionsc">描述</param>
+        /// <param name="descriptions">描述</param>
         /// <param name="welcomeMsg">欢迎信息</param>
         /// <param name="maxUserCount">用户上限</param>
         /// <param name="members">邀请用户</param>
         /// <param name="handle">结果回调</param>
-        public abstract void CreateRoom(string subject, string descriptionsc = null, string welcomeMsg = null, int maxUserCount = 300, List<string> members = null, ValueCallBack<Room> handle = null);
+        public abstract void CreateRoom(string subject, string descriptions = null, string welcomeMsg = null, int maxUserCount = 300, List<string> members = null, ValueCallBack<Room> handle = null);
 
         /// <summary>
         /// 销毁聊天室
@@ -104,7 +104,7 @@ namespace ChatSDK
         /// <param name="cursor">游标</param>
         /// <param name="pageSize">每页数量</param>
         /// <param name="handle">结果回调</param>
-        public abstract void FetchRoomMembers(string roomId, string cursor = null, int pageSize = 200, ValueCallBack<CursorResult<string>> handle = null);
+        public abstract void FetchRoomMembers(string roomId, string cursor = "", int pageSize = 200, ValueCallBack<CursorResult<string>> handle = null);
 
         /// <summary>
         /// 获取聊天室禁言列表

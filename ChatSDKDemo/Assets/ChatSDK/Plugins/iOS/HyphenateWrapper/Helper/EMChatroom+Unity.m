@@ -6,6 +6,7 @@
 //
 
 #import "EMChatroom+Unity.h"
+#import "Transfrom.h"
 
 @implementation EMChatroom (Unity)
 - (NSDictionary *)toJson {
@@ -16,14 +17,15 @@
     ret[@"owner"] = self.owner;
     ret[@"maxUsers"] = @(self.maxOccupantsCount);
     ret[@"memberCount"] = @(self.occupantsCount);
-    ret[@"adminList"] = self.adminList;
-    ret[@"memberList"] = self.memberList;
-    ret[@"blockList"] = self.blacklist;
-    ret[@"muteList"] = self.muteList;
+    ret[@"memberList"] = [Transfrom NSStringFromJsonObject:self.memberList];
+    ret[@"adminList"] = [Transfrom NSStringFromJsonObject:self.adminList];
+    ret[@"blockList"] = [Transfrom NSStringFromJsonObject:self.blacklist];
+    ret[@"muteList"] = [Transfrom NSStringFromJsonObject:self.muteList];
     ret[@"isAllMemberMuted"] = @(self.isMuteAllMembers);
     ret[@"announcement"] = self.announcement;
     ret[@"permissionType"] = @([self premissionTypeToInt:self.permissionType]);
-    
+
+
     return ret;
 }
 

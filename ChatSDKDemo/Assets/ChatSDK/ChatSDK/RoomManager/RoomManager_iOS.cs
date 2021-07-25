@@ -53,10 +53,15 @@ namespace ChatSDK
             RoomManagerNative.RoomManager_HandleMethodCall("changeChatRoomSubject", obj.ToString(), handle?.callbackId);
         }
 
-        public override void CreateRoom(string subject, string descriptionsc, string welcomeMsg, int maxUserCount = 300, List<string> members = null, ValueCallBack<Room> handle = null)
+        public override void CreateRoom(string subject, string descriptions, string welcomeMsg, int maxUserCount = 300, List<string> members = null, ValueCallBack<Room> handle = null)
         {
-            //JSONObject obj = new JSONObject();
-            //RoomManagerNative.RoomManager_HandleMethodCall("addChatRoomAdmin", obj.ToString(), handle?.callbackId);
+            JSONObject obj = new JSONObject();
+            obj.Add("subject", subject ?? "");
+            obj.Add("desc", descriptions ?? "");
+            obj.Add("maxUserCount", maxUserCount);
+            obj.Add("welcomeMsg", welcomeMsg ?? "");
+            obj.Add("members", TransformTool.JsonStringFromStringList(members));
+            RoomManagerNative.RoomManager_HandleMethodCall("createChatroom", obj.ToString(), handle?.callbackId);
         }
 
         public override void DestroyRoom(string roomId, CallBack handle = null)

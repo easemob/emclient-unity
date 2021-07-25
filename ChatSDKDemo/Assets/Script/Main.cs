@@ -309,16 +309,7 @@ public class Main : MonoBehaviour , IConnectionDelegate, IChatManagerDelegate, I
     }
 
     void ToRoomSence() {
-
-        int count = SDKClient.Instance.ChatManager.GetUnreadMessageCount();
-        Debug.Log("未读数 前  " + count);
-
-        bool ret = SDKClient.Instance.ChatManager.MarkAllConversationsAsRead();
-        Debug.Log("设置成功 --- ? " + (ret ? "YES" : "NO"));
-
-        count = SDKClient.Instance.ChatManager.GetUnreadMessageCount();
-        Debug.Log("未读数 后  " + count);
-
+        SceneManager.LoadScene("RoomManager");
     }
 
     void ToPushSence() {
@@ -754,19 +745,13 @@ public class Main : MonoBehaviour , IConnectionDelegate, IChatManagerDelegate, I
 
     void RemoveRoomAdmin() {
         ValueCallBack<Room> callback = new ValueCallBack<Room>(
-                onSuccess: (room) => {
+                onSuccess: (room) =>
+                {
                     Debug.Log("管理员列表删除 ===== ");
-                    foreach (string s in room.AdminList)
-                    {
-                        Debug.Log("管理员列表 ===== " + s);
-                    }
-                },
-                onError: (code, desc) => {
-                    Debug.LogError("error -- " + code + " desc " + desc);
                 }
+        );
 
-            );
-
+                    
         SDKClient.Instance.RoomManager.RemoveRoomAdmin("153983136104449", "du003", callback);
     }
 
