@@ -23,9 +23,9 @@ namespace ChatSDK
                     this.Annoumcement = jo["announcement"].Value;
                     this.MemberCount = jo["memberCount"].AsInt;
                     this.MemberList = TransformTool.JsonStringToStringList(jo["memberList"].Value);
-                    this.AdminList = TransformTool.JsonStringToStringList(jo["memberList"].Value);
-                    this.BlockList = TransformTool.JsonStringToStringList(jo["memberList"].Value);
-                    this.MuteList = TransformTool.JsonStringToStringList(jo["memberList"].Value);
+                    this.AdminList = TransformTool.JsonStringToStringList(jo["adminList"].Value);
+                    this.BlockList = TransformTool.JsonStringToStringList(jo["blockList"].Value);
+                    this.MuteList = TransformTool.JsonStringToStringList(jo["muteList"].Value);
                     this.NoticeEnabled = jo["noticeEnable"].AsBool;
                     this.MessageBlocked = jo["messageBlocked"].AsBool;
                     this.IsAllMemberMuted = jo["isAllMemberMuted"].AsBool;

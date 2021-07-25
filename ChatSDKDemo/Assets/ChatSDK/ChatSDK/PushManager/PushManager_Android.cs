@@ -61,6 +61,10 @@ namespace ChatSDK
             wrapper.Call("updateHMSPushToken", token, handle?.callbackId);
         }
 
+        public void UpdateAPNSPuthToken(string token, CallBack handle = null) {
+            handle?.ClearCallback();
+        }
+
         public void UpdatePushNickName(string nickname, CallBack handle = null)
         {
             wrapper.Call("updatePushNickname", nickname, handle?.callbackId);

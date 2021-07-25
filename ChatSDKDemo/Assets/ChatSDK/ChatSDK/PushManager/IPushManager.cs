@@ -46,6 +46,14 @@ namespace ChatSDK
         /// <param name="handle">返回结果</param>
         void UpdateFCMPushToken(string token, CallBack handle = null);
 
+
+        /// <summary>
+        /// 绑定苹果推送deviceToken
+        /// </summary>
+        /// <param name="token">苹果deviceToken</param>
+        /// <param name="handle">返回结果</param>
+        void UpdateAPNSPuthToken(string token, CallBack handle = null);
+
         /// <summary>
         /// 设置推送免打扰
         /// </summary>

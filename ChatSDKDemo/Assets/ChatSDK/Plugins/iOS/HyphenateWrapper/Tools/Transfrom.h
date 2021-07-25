@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (const char*)JsonObjectToCSString:(id)jsonObject;
 
 // JsonObject -> NSString
-+ (NSString *)NSStringFromJsonObject:(id)jsonObject;
++ (NSString *)NSStringFromJsonObject:(nullable id)jsonObject;
 
 // NSString -> JsonObject
 + (id)NSStringToJsonObject:(NSString *)jsonString;

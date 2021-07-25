@@ -100,10 +100,10 @@ namespace ChatSDK
         public override void CreateGroup(string groupName, GroupOptions options, string desc, List<string> inviteMembers = null, string inviteReason = null, ValueCallBack<Group> handle = null)
         {
             JSONObject obj = new JSONObject();
-            obj.Add("groupName", groupName);
-            obj.Add("desc", desc);
+            obj.Add("groupName", groupName ?? "");
+            obj.Add("desc", desc ?? "");
             obj.Add("inviteMembers", TransformTool.JsonStringFromStringList(inviteMembers));
-            obj.Add("inviteReason", inviteReason);
+            obj.Add("inviteReason", inviteReason ?? "");
             obj.Add("options", options.ToJsonString());
             GroupManagerNative.GroupManager_HandleMethodCall("createGroup", obj.ToString(), handle?.callbackId);
         }
@@ -170,7 +170,7 @@ namespace ChatSDK
         {
             JSONObject obj = new JSONObject();
             obj.Add("groupId", groupId);
-            obj.Add("cursor", cursor);
+            obj.Add("cursor", cursor ?? "");
             obj.Add("pageSize", pageSize);
             GroupManagerNative.GroupManager_HandleMethodCall("getGroupMemberListFromServer", obj.ToString(), handle?.callbackId);
         }
@@ -200,16 +200,28 @@ namespace ChatSDK
 
         public override Group GetGroupWithId(string groupId)
         {
-            //JSONObject obj = new JSONObject();
-            //obj.Add("groupId", groupId);
-            //GroupManagerNative.GroupManager_HandleMethodCall("getGroupWithId", obj.ToString(), handle?.callbackId);
-            return null;
+            JSONObject obj = new JSONObject();
+            obj.Add("groupId", groupId);
+            string jsonString = GroupManagerNative.GroupManager_GetMethodCall("getGroupWithId", obj.ToString());
+            if (jsonString == null || jsonString.Length == 0) {
+                return null;
+            }
+            return new Group(jsonString);
         }
 
         public override List<Group> GetJoinedGroups()
         {
-            //GroupManagerNative.GroupManager_HandleMethodCall("getJoinedGroups", handle?.callbackId);
-            return null;
+
+            string jsonString = GroupManagerNative.GroupManager_GetMethodCall("getJoinedGroups");
+            List<Group> list = new List<Group>();
+            if (jsonString == null || jsonString.Length == 0)
+            {
+                return list;
+            }
+
+            list = TransformTool.JsonStringToGroupList(jsonString);
+
+            return list;
         }
 
         public override void GetJoinedGroupsFromServer(int pageNum = 1, int pageSize = 200, ValueCallBack<List<Group>> handle = null)
@@ -223,9 +235,10 @@ namespace ChatSDK
         public override void GetPublicGroupsFromServer(int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<GroupInfo>> handle = null)
         {
             JSONObject obj = new JSONObject();
-            obj.Add("cursor", cursor);
+            obj.Add("cursor", cursor ?? "");
             obj.Add("pageSize", pageSize);
-            GroupManagerNative.GroupManager_HandleMethodCall("getPublicGroupsFromServer", obj.ToString(), handle?.callbackId);
+            string jsonString = obj.ToString();
+            GroupManagerNative.GroupManager_HandleMethodCall("getPublicGroupsFromServer", jsonString, handle?.callbackId);
         }
 
         public override void JoinPublicGroup(string groupId, CallBack handle = null)

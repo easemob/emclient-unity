@@ -28,10 +28,12 @@ namespace ChatSDK
 
         static internal string JsonStringFromStringList(List<string> list)
         {
-            if (list == null) return null;
             JSONArray ja = new JSONArray();
-            foreach (string str in list) {
-                ja.Add(str);
+            if (list != null) {
+                foreach (string str in list)
+                {
+                    ja.Add(str);
+                }
             }
 
             return ja.ToString();
@@ -228,35 +230,41 @@ namespace ChatSDK
 
         static internal string JsonStringFromDictionary(Dictionary<string, string> dictionary)
         {
-            if (dictionary == null) return null;
-            JSONObject jo = new JSONObject();
-            IDictionary<string, string> sortedParams = new SortedDictionary<string, string>(dictionary);
-            IEnumerator<KeyValuePair<string, string>> dem = sortedParams.GetEnumerator();
 
-            while (dem.MoveNext())
-            {
-                string key = dem.Current.Key;
-                string value = dem.Current.Value;
-                if (!string.IsNullOrEmpty(key) && !string.IsNullOrEmpty(value))
+            JSONObject jo = new JSONObject();
+            if (dictionary != null) {
+                IDictionary<string, string> sortedParams = new SortedDictionary<string, string>(dictionary);
+                IEnumerator<KeyValuePair<string, string>> dem = sortedParams.GetEnumerator();
+
+                while (dem.MoveNext())
                 {
-                    jo[key] = value;
+                    string key = dem.Current.Key;
+                    string value = dem.Current.Value;
+                    if (!string.IsNullOrEmpty(key) && !string.IsNullOrEmpty(value))
+                    {
+                        jo[key] = value;
+                    }
                 }
-            }
+            }            
 
             return jo.ToString();
         }
 
         static internal string JsonStringFromAttributes(Dictionary<string, AttributeValue> attributes = null)
         {
-            //if (attributes == null) return null;
+            
             JSONObject jo = new JSONObject();
-            var keys = attributes.Keys;
-            foreach (var key in keys)
+            if (attributes != null)
             {
-                if (!attributes.TryGetValue(key, out AttributeValue value))
-                    value = new AttributeValue();
-                jo[key] = value.ToJsonString();
+                var keys = attributes.Keys;
+                foreach (var key in keys)
+                {
+                    if (!attributes.TryGetValue(key, out AttributeValue value))
+                        value = new AttributeValue();
+                    jo[key] = value.ToJsonString();
+                }
             }
+                
             return jo.ToString();
         }
 

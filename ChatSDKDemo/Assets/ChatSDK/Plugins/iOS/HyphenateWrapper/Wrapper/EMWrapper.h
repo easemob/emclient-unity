@@ -15,9 +15,13 @@ if ([NSThread isMainThread]) {\
     dispatch_async(dispatch_get_main_queue(), block);\
 }
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface EMWrapper : NSObject
-- (void)onSuccess:(NSString *)aType callbackId:(NSString *)aCallbackId userInfo:(NSString *)jsonObject;
-- (void)onProgress:(int)progress callbackId:(NSString *)aCallbackId;
-- (void)onError:(NSString *)aCallbackId error:(EMError *)aError;
+- (void)onSuccess:(nullable NSString *)aType callbackId:(nullable NSString *)aCallbackId userInfo:(nullable id)jsonObject;
+- (void)onProgress:(int)progress callbackId:(nullable NSString *)aCallbackId;
+- (void)onError:(nullable NSString *)aCallbackId error:(nullable EMError *)aError;
 @end
+
+NS_ASSUME_NONNULL_END
 

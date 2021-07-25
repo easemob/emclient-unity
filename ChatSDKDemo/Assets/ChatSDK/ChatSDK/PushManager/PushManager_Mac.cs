@@ -44,6 +44,11 @@ namespace ChatSDK
             handle?.ClearCallback();
         }
 
+        public void UpdateAPNSPuthToken(string token, CallBack handle = null)
+        {
+            handle?.ClearCallback();
+        }
+
         public void UpdatePushNickName(string nickname, CallBack handle = null)
         {
             handle?.ClearCallback();

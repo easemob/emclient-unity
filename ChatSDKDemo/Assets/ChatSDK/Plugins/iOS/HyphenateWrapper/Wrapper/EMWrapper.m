@@ -17,7 +17,7 @@
 
 - (void)onSuccess:(NSString *)aType
        callbackId:(NSString *)aCallbackId
-         userInfo:(NSString *)jsonObject
+         userInfo:(id)jsonObject
 {
     if (aCallbackId == nil || aCallbackId.length == 0) {
         return;
@@ -30,6 +30,9 @@
     }else {
         dict[@"type"] = aType;
         if (jsonObject != nil) {
+            if (![jsonObject isKindOfClass:[NSString class]]) {
+                jsonObject = [Transfrom NSStringFromJsonObject:jsonObject];
+            }
             dict[@"value"] = jsonObject;
         }
         UnitySendMessage(Callback_Obj, "OnSuccessValue", [Transfrom JsonObjectToCSString:dict]);

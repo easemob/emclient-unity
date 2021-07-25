@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Runtime.InteropServices;
-
 using ChatSDK;
 using UnityEngine.SceneManagement;
 
@@ -307,7 +305,7 @@ public class Main : MonoBehaviour , IConnectionDelegate, IChatManagerDelegate, I
     }
 
     void ToGroupSence() {
-        SDKClient.Instance.ChatManager.RecallMessage("899312925376776248");
+        SceneManager.LoadScene("GroupManager");
     }
 
     void ToRoomSence() {
@@ -324,9 +322,7 @@ public class Main : MonoBehaviour , IConnectionDelegate, IChatManagerDelegate, I
     }
 
     void ToPushSence() {
-        Message msg = SDKClient.Instance.ChatManager.LoadMessage("899321361271359640");
-        ChatSDK.MessageBody.TextBody textBody = (ChatSDK.MessageBody.TextBody)msg.Body;
-        Debug.Log("----- " + textBody.Text);
+        SceneManager.LoadScene("PushManager");
     }
 
 

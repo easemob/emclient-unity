@@ -6,6 +6,8 @@
 //
 
 #import "EMGroup+Unity.h"
+#import "Transfrom.h"
+
 
 @implementation EMGroup (Unity)
 
@@ -17,15 +19,21 @@
     ret[@"owner"] = self.owner;
     ret[@"announcement"] = self.announcement;
     ret[@"memberCount"] = @(self.occupantsCount);
-    ret[@"memberList"] = self.memberList;
-    ret[@"adminList"] = self.adminList;
-    ret[@"blockList"] = self.blacklist;
-    ret[@"muteList"] = self.muteList;
-    ret[@"sharedFileList"] = self.sharedFileList;
+    ret[@"memberList"] = [Transfrom NSStringFromJsonObject:self.memberList];
+    ret[@"adminList"] = [Transfrom NSStringFromJsonObject:self.adminList];
+    ret[@"blockList"] = [Transfrom NSStringFromJsonObject:self.blacklist];
+    ret[@"muteList"] = [Transfrom NSStringFromJsonObject:self.muteList];
+    if (self.sharedFileList) {
+        NSMutableArray *array = [NSMutableArray array];
+        for (EMGroupSharedFile *file in self.sharedFileList) {
+            [array addObject:[Transfrom NSStringFromJsonObject:[file toJson]]];
+        }
+        ret[@"sharedFileList"] = [Transfrom NSStringFromJsonObject:array];
+    }
     ret[@"noticeEnable"] = @(self.isPushNotificationEnabled);
     ret[@"messageBlocked"] = @(self.isBlocked);
     ret[@"isAllMemberMuted"] = @(self.isMuteAllMembers);
-    ret[@"options"] = [self.setting toJson];
+    ret[@"options"] = [Transfrom NSStringFromJsonObject:[self.setting toJson]];
     ret[@"permissionType"] = @([EMGroup premissionTypeToInt:self.permissionType]);
     
     return ret;

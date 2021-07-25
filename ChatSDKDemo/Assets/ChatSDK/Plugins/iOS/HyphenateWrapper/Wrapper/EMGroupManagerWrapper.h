@@ -11,9 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface EMGroupManagerWrapper : EMWrapper
 
-- (void)getGroupWithId:(NSDictionary *)param callbackId:(NSString *)callbackId;
+- (id)getGroupWithId:(NSDictionary *)param;
 
-- (void)getJoinedGroups:(NSDictionary *)param callbackId:(NSString *)callbackId;
+- (id)getJoinedGroups:(NSDictionary *)param;
 
 - (void)getGroupsWithoutPushNotification:(NSDictionary *)param callbackId:(NSString *)callbackId;
 

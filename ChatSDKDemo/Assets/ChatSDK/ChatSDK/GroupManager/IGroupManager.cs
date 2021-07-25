@@ -165,7 +165,7 @@ namespace ChatSDK
         /// <param name="pageSize">每页数量</param>
         /// <param name="cursor">游标</param>
         /// <param name="handle">执行结果</param>
-        public abstract void GetGroupMemberListFromServer(string groupId, int pageSize = 200, string cursor = null, ValueCallBack<CursorResult<string>> handle = null);
+        public abstract void GetGroupMemberListFromServer(string groupId, int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<string>> handle = null);
 
         /// <summary>
         /// 获取群禁言列表
@@ -217,7 +217,7 @@ namespace ChatSDK
         /// <param name="pageSize">每页数量</param>
         /// <param name="cursor">游标</param>
         /// <param name="handle">执行结果</param>
-        public abstract void GetPublicGroupsFromServer(int pageSize = 200, string cursor = null, ValueCallBack<CursorResult<GroupInfo>> handle = null);
+        public abstract void GetPublicGroupsFromServer(int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<GroupInfo>> handle = null);
 
         /// <summary>
         /// 加入公开群
