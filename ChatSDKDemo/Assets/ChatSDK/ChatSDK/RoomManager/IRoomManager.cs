@@ -114,13 +114,7 @@ namespace ChatSDK
         /// <param name="pageNum">页码</param>
         /// <param name="handle">结果回调</param>
         public abstract void FetchRoomMuteList(string roomId, int pageSize = 200, int pageNum = 1, ValueCallBack<List<string>> handle = null);
-
-        /// <summary>
-        /// 获取本地缓存聊天室列表，需要先从服务器获取才会有数据
-        /// </summary>
-        /// <param name="handle">结果回调</param>
-        public abstract void GetAllRoomsFromLocal(ValueCallBack<List<Room>> handle = null);
-
+ 
         /// <summary>
         /// 加入聊天室
         /// </summary>

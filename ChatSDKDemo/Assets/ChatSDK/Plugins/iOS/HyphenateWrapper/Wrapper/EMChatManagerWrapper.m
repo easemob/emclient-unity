@@ -291,17 +291,15 @@
     return [msg toJson];
 }
 
-- (id)searchChatMsgFromDB:(NSDictionary *)param{
+- (void)searchChatMsgFromDB:(NSDictionary *)param callbackId:(NSString *)callbackId {
 
+    __block NSString *callId = callbackId;
     NSString *keywards = param[@"keywords"];
     long long timestamp = [param[@"timestamp"] longLongValue];
     int count = [param[@"count"] intValue];
     NSString *from = param[@"from"];
     EMMessageSearchDirection direction = [param[@"direction"] isEqualToString:@"up"] ? EMMessageSearchDirectionUp : EMMessageSearchDirectionDown;
-    __block NSArray *msgs = nil;
-    __block EMError *err = nil;
     
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     [EMClient.sharedClient.chatManager loadMessagesWithKeyword:keywards
                                                      timestamp:timestamp
                                                          count:count
@@ -309,18 +307,16 @@
                                                searchDirection:direction
                                                     completion:^(NSArray *aMessages, EMError *aError)
      {
-        msgs = aMessages;
-        err = aError;
-        dispatch_semaphore_signal(semaphore);
-    }];
-    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-    NSMutableArray *ary = [NSMutableArray array];
-    if (!err) {
-        for (EMMessage *msg in msgs) {
-            [ary addObject:[Transfrom NSStringFromJsonObject:[msg toJson]]];
+        if (aError) {
+            [self onError:callId error:aError];
+        }else {
+            NSMutableArray *ary = [NSMutableArray array];
+            for (EMMessage *msg in aMessages) {
+                [ary addObject:[Transfrom NSStringFromJsonObject:[msg toJson]]];
+            }
+            [self onSuccess:@"List<EMMessage>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:ary]];
         }
-    }
-    return ary;
+    }];
 }
 
 - (void)ackConversationRead:(NSDictionary *)param callbackId:(NSString *)callbackId {

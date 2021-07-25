@@ -185,23 +185,6 @@
     }
 }
 
-- (void)getAllChatrooms:(NSDictionary *)param callbackId:(NSString *)callbackId  {
-    
-    __weak EMRoomManagerWrapper * weakSelf = self;
-    __block NSString *callId = callbackId;
-    
-    [EMClient.sharedClient.roomManager getChatroomsFromServerWithPage:0
-                                                             pageSize:-1
-                                                           completion:^(EMPageResult *aResult, EMError *aError)
-     {
-        if (aError) {
-            [weakSelf onError:callId error:aError];
-        }else {
-            [weakSelf onSuccess:@"EMPageResult<EMChatRoom>" callbackId:callId userInfo:[aResult toJson]];
-        }
-    }];
-}
-
 - (void)getChatroomMemberListFromServer:(NSDictionary *)param callbackId:(NSString *)callbackId  {
     if (!param) {
         EMError *aError = [[EMError alloc] initWithDescription:@"Param error" code: EMErrorMessageIncludeIllegalContent];

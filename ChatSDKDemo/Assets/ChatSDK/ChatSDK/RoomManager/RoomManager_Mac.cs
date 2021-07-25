@@ -69,11 +69,6 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override void GetAllRoomsFromLocal(ValueCallBack<List<Room>> handle = null)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public override void JoinRoom(string roomId, ValueCallBack<Room> handle = null)
         {
             throw new System.NotImplementedException();

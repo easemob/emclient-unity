@@ -115,19 +115,23 @@ public class DemoConversation : MonoBehaviour
 
         Conversation conv = SDKClient.Instance.ChatManager.GetConversation(str);
 
-        Message msg = conv.LoadMessage(msgId);
-
-        ChatSDK.MessageBody.TextBody textBody = (ChatSDK.MessageBody.TextBody)msg.Body;
-
-        Debug.Log("msg context --- " + textBody.Text);
-
         Message latestMsg = conv.LastMessage;
+
+        ChatSDK.MessageBody.TextBody textBody = (ChatSDK.MessageBody.TextBody)latestMsg.Body;
 
         Debug.Log("latestMsg context --- " + textBody.Text);
 
         Message latestReceiveMsg = conv.LastReceivedMessage;
 
+        textBody = (ChatSDK.MessageBody.TextBody)latestReceiveMsg.Body;
+
         Debug.Log("latestReceiveMsg context --- " + textBody.Text);
+
+        Message loadMsg = conv.LoadMessage(latestMsg.MsgId);
+
+        textBody = (ChatSDK.MessageBody.TextBody)loadMsg.Body;
+
+        Debug.Log("loadMsg context --- " + textBody.Text);
     }
 
     void LoadMsgs1BtnAction()
@@ -136,14 +140,20 @@ public class DemoConversation : MonoBehaviour
 
         Conversation conv = SDKClient.Instance.ChatManager.GetConversation(str);
 
-        List<Message>list = conv.LoadMessages(null);
+        ValueCallBack<List<Message>> callback = new ValueCallBack<List<Message>>();
 
-        foreach (var msg in list) {
+        callback.OnSuccessValue = (List<Message> list) => {
+            foreach (Message msg in list)
+            {
+                if (msg.Body.Type == MessageBodyType.TXT)
+                {
+                    ChatSDK.MessageBody.TextBody textBody = (ChatSDK.MessageBody.TextBody)msg.Body;
+                    Debug.Log("search message: " + textBody.Text);
+                }
+            }
+        };
 
-            ChatSDK.MessageBody.TextBody textBody = (ChatSDK.MessageBody.TextBody)msg.Body;
-
-            Debug.Log("msg context --- " + textBody.Text);
-        }
+        conv.LoadMessages(handle: callback);
     }
 
     void LoadMsgs2BtnAction()
@@ -154,16 +164,20 @@ public class DemoConversation : MonoBehaviour
 
         string keyword = MessageIdText.text;
 
-        List<Message> list = conv.LoadMessagesWithKeyword(keyword);
+        ValueCallBack<List<Message>> callback = new ValueCallBack<List<Message>>();
 
-        foreach (var msg in list)
-        {
+        callback.OnSuccessValue = (List<Message> list) => {
+            foreach (Message msg in list)
+            {
+                if (msg.Body.Type == MessageBodyType.TXT)
+                {
+                    ChatSDK.MessageBody.TextBody textBody = (ChatSDK.MessageBody.TextBody)msg.Body;
+                    Debug.Log("search message: " + textBody.Text);
+                }
+            }
+        };
 
-            ChatSDK.MessageBody.TextBody textBody = (ChatSDK.MessageBody.TextBody)msg.Body;
-
-            Debug.Log("msg context --- " + textBody.Text);
-        }
-
+        conv.LoadMessagesWithKeyword(keyword, handle: callback);
     }
 
     void LoadMsgs3BtnAction() {
@@ -172,15 +186,22 @@ public class DemoConversation : MonoBehaviour
 
         Conversation conv = SDKClient.Instance.ChatManager.GetConversation(str);
 
-        List<Message> list = conv.LoadMessagesWithMsgType(MessageBodyType.TXT);
 
-        foreach (var msg in list)
-        {
+        ValueCallBack<List<Message>> callback = new ValueCallBack<List<Message>>();
 
-            ChatSDK.MessageBody.TextBody textBody = (ChatSDK.MessageBody.TextBody)msg.Body;
+        callback.OnSuccessValue = (List<Message> list) => {
+            foreach (Message msg in list)
+            {
+                if (msg.Body.Type == MessageBodyType.TXT)
+                {
+                    ChatSDK.MessageBody.TextBody textBody = (ChatSDK.MessageBody.TextBody)msg.Body;
+                    Debug.Log("search message: " + textBody.Text);
+                }
+            }
+        };
 
-            Debug.Log("msg context --- " + textBody.Text);
-        }
+        conv.LoadMessagesWithMsgType(MessageBodyType.TXT, handle: callback);
+
     }
 
     void SetExtBtnAction() {

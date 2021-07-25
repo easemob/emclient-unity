@@ -23,7 +23,7 @@ namespace ChatSDK
         {
             JSONObject obj = new JSONObject();
             obj.Add("username", username);
-            obj.Add("reason", reason);
+            obj.Add("reason", reason ?? "");
             ContactManagerNative.ContactManager_HandleMethodCall("addContact", obj.ToString(), handle?.callbackId);
         }
 

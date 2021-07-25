@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using ChatSDK;
 using UnityEngine.SceneManagement;
 
-public class DemoContact : MonoBehaviour
+public class DemoContact : MonoBehaviour, IContactManagerDelegate
 {
 
     public Text InputText;
@@ -35,6 +35,8 @@ public class DemoContact : MonoBehaviour
         AllServerBlocksBtn.onClick.AddListener(AllServerBlocksAction);
         AllLocalContactsBtn.onClick.AddListener(AllLocalContactsAction);
         AllLocalBlocksBtn.onClick.AddListener(AllLocalBlocksAction);
+
+        SDKClient.Instance.ContactManager.AddContactManagerDelegate(this);
   
     }
 
@@ -175,5 +177,30 @@ public class DemoContact : MonoBehaviour
         void AllLocalBlocksAction()
     {
         
+    }
+
+    public void OnContactAdded(string username)
+    {
+        Debug.Log("OnContactAdded --- " + username);
+    }
+
+    public void OnContactDeleted(string username)
+    {
+        Debug.Log("OnContactDeleted --- " + username);
+    }
+
+    public void OnContactInvited(string username, string reason)
+    {
+        Debug.Log("OnContactInvited --- " + username);
+    }
+
+    public void OnFriendRequestAccepted(string username)
+    {
+        Debug.Log("OnFriendRequestAccepted --- " + username);
+    }
+
+    public void OnFriendRequestDeclined(string username)
+    {
+        Debug.Log("OnFriendRequestDeclined --- " + username);
     }
 }

@@ -59,9 +59,9 @@ public class DemoGroup : MonoBehaviour, IGroupManagerDelegate
 
     private string firstInput
     {
-        //get => InputText.text;
+        get => "154996968587266";
         //get => currentGroupId;
-        get => "154921334800385";
+        //get => InputText.text ?? currentGroupId;
     }
 
     // Start is called before the first frame update
@@ -526,7 +526,7 @@ public class DemoGroup : MonoBehaviour, IGroupManagerDelegate
             Debug.Log("操作失败 -- " + code + " " + desc);
         };
 
-        SDKClient.Instance.GroupManager.JoinPublicGroup("152172918538241", callback);
+        SDKClient.Instance.GroupManager.JoinPublicGroup(firstInput, callback);
     }
 
     void Custom29Action() {
@@ -717,103 +717,121 @@ public class DemoGroup : MonoBehaviour, IGroupManagerDelegate
     }
 
     void Custom43Action() {
-        //SDKClient.Instance.GroupManager.UploadGroupSharedFile
+
+
+        CallBack callback = new CallBack();
+        callback.Success = () => {
+            Debug.Log("操作成功");
+        };
+        callback.Error = (int code, string desc) => {
+            Debug.Log("操作失败 -- " + code + " " + desc);
+        };
+
+        SDKClient.Instance.GroupManager.applyJoinToGroup(firstInput, handle: callback);
     }
 
     void Custom44Action() { }
 
     public void OnInvitationReceivedFromGroup(string groupId, string groupName, string inviter, string reason)
     {
-        throw new System.NotImplementedException();
+        currentGroupId = groupId;
+        Debug.Log("OnInvitationReceivedFromGroup --- " + groupId + " " + groupName + " " + inviter + " " + reason);
     }
 
     public void OnRequestToJoinReceivedFromGroup(string groupId, string groupName, string applicant, string reason)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("OnRequestToJoinReceivedFromGroup --- " + groupId + " " + groupName + " " + applicant + " " + reason);
     }
 
     public void OnRequestToJoinAcceptedFromGroup(string groupId, string groupName, string accepter)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("OnRequestToJoinAcceptedFromGroup --- " + groupId + " " + groupName + " " + accepter);
     }
 
     public void OnRequestToJoinDeclinedFromGroup(string groupId, string groupName, string decliner, string reason)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("OnRequestToJoinDeclinedFromGroup --- " + groupId + " " + groupName + " " + decliner + " " + reason);
     }
 
     public void OnInvitationAcceptedFromGroup(string groupId, string invitee, string reason)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("OnInvitationAcceptedFromGroup --- " + groupId + " " + invitee + " " + reason);
     }
 
     public void OnInvitationDeclinedFromGroup(string groupId, string invitee, string reason)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("OnInvitationDeclinedFromGroup --- " + groupId + " " + invitee + " "  + reason);
     }
 
     public void OnUserRemovedFromGroup(string groupId, string groupName)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("OnUserRemovedFromGroup --- " + groupId + " " + groupName );
     }
 
     public void OnDestroyedFromGroup(string groupId, string groupName)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("OnDestroyedFromGroup --- " + groupId + " " + groupName);
     }
 
     public void OnAutoAcceptInvitationFromGroup(string groupId, string inviter, string inviteMessage)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("OnAutoAcceptInvitationFromGroup --- " + groupId + " " + inviter + " " + inviteMessage);
     }
 
     public void OnMuteListAddedFromGroup(string groupId, List<string> mutes, int muteExpire)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("OnMuteListAddedFromGroup --- " + groupId);
+        foreach (var username in mutes) {
+            Debug.Log("username --- " + username);
+        }
     }
 
     public void OnMuteListRemovedFromGroup(string groupId, List<string> mutes)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("OnMuteListRemovedFromGroup --- " + groupId);
+        foreach (var username in mutes)
+        {
+            Debug.Log("username --- " + username);
+        }
     }
 
     public void OnAdminAddedFromGroup(string groupId, string administrator)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("OnAdminAddedFromGroup --- " + groupId + " " + administrator);
     }
 
     public void OnAdminRemovedFromGroup(string groupId, string administrator)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("OnAdminRemovedFromGroup --- " + groupId + " " + administrator);
     }
 
     public void OnOwnerChangedFromGroup(string groupId, string newOwner, string oldOwner)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("OnOwnerChangedFromGroup --- " + groupId + " " + newOwner + " " + oldOwner);
     }
 
     public void OnMemberJoinedFromGroup(string groupId, string member)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("OnMemberJoinedFromGroup --- " + groupId + " " + member);
     }
 
     public void OnMemberExitedFromGroup(string groupId, string member)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("OnMemberExitedFromGroup --- " + groupId + " " + member);
     }
 
     public void OnAnnouncementChangedFromGroup(string groupId, string announcement)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("OnAnnouncementChangedFromGroup --- " + groupId + " " + announcement);
     }
 
     public void OnSharedFileAddedFromGroup(string groupId, GroupSharedFile sharedFile)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("OnSharedFileAddedFromGroup --- " + groupId + " " + sharedFile.FileId + " " + sharedFile.FileName + " " + sharedFile.FileOwner);
     }
 
     public void OnSharedFileDeletedFromGroup(string groupId, string fileId)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("OnSharedFileDeletedFromGroup --- " + groupId + " " + fileId);
     }
 }

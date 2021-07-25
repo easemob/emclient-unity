@@ -4,6 +4,11 @@ namespace ChatSDK
 {
     public class GroupManager_Mac : IGroupManager
     {
+        public override void applyJoinToGroup(string groupId, string reason, CallBack handle = null)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public override void AcceptInvitationFromGroup(string groupId, ValueCallBack<Group> handle = null)
         {
             throw new System.NotImplementedException();

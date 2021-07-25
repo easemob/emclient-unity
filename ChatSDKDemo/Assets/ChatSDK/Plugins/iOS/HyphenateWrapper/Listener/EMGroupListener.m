@@ -115,7 +115,7 @@
                     muteExpire:(NSInteger)aMuteExpire {
     NSDictionary *map = @{
         @"groupId":aGroup.groupId,
-        @"list":aMutedMembers,
+        @"list":[Transfrom NSStringFromJsonObject:aMutedMembers],
         @"muteExpire":[NSNumber numberWithInteger:aMuteExpire]
     };
     UnitySendMessage(GroupListener_Obj, "OnMuteListAdded", [Transfrom JsonObjectToCSString:map]);
@@ -125,7 +125,7 @@
            removedMutedMembers:(NSArray *)aMutedMembers {
     NSDictionary *map = @{
         @"groupId":aGroup.groupId,
-        @"list":aMutedMembers
+        @"list":[Transfrom NSStringFromJsonObject:aMutedMembers]
     };
     UnitySendMessage(GroupListener_Obj, "OnMuteListRemoved", [Transfrom JsonObjectToCSString:map]);
 }

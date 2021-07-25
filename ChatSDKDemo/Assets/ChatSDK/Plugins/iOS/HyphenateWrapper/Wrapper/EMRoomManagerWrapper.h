@@ -25,8 +25,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)getChatroom:(NSDictionary *)param callbackId:(NSString *)callbackId;
 
-- (void)getAllChatrooms:(NSDictionary *)param callbackId:(NSString *)callbackId;
-
 - (void)getChatroomMemberListFromServer:(NSDictionary *)param callbackId:(NSString *)callbackId;
 
 - (void)fetchChatroomBlockListFromServer:(NSDictionary *)param callbackId:(NSString *)callbackId;

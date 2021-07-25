@@ -21,15 +21,15 @@
 }
 
 - (void)friendshipDidRemoveByUser:(NSString *)aUsername {
-    UnitySendMessage(ContactListener_Obj, "OnFriendRequestDeclined", [Transfrom JsonObjectToCSString:@{@"OnContactDeleted": aUsername}]);
+    UnitySendMessage(ContactListener_Obj, "OnContactDeleted", [Transfrom JsonObjectToCSString:@{@"username": aUsername}]);
 }
 
 - (void)friendshipDidAddByUser:(NSString *)aUsername {
-    UnitySendMessage(ContactListener_Obj, "OnFriendRequestDeclined", [Transfrom JsonObjectToCSString:@{@"OnContactAdded": aUsername}]);
+    UnitySendMessage(ContactListener_Obj, "OnContactAdded", [Transfrom JsonObjectToCSString:@{@"username": aUsername}]);
 }
 
 - (void)friendRequestDidReceiveFromUser:(NSString *)aUsername
                                 message:(NSString *)aMessage {
-    UnitySendMessage(ContactListener_Obj, "OnContactInvited", [Transfrom JsonObjectToCSString:@{@"OnContactAdded": aUsername, @"reason": aMessage}]);
+    UnitySendMessage(ContactListener_Obj, "OnContactInvited", [Transfrom JsonObjectToCSString:@{@"username": aUsername, @"reason": aMessage}]);
 }
 @end

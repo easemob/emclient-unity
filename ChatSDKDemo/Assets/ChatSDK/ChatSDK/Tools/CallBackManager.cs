@@ -341,6 +341,21 @@ namespace ChatSDK {
                     }
                     dictionary.Remove(callbackId);
                 }
+                else if (value == "List<EMMessage>")
+                {
+                    ValueCallBack<List<Message>> valueCallBack = (ValueCallBack<List<Message>>)dictionary[callbackId];
+                    if (valueCallBack.OnSuccessValue != null)
+                    {
+                        List<Message> result = null;
+                        if (responseValue != null)
+                        {
+                            result = TransformTool.JsonStringToMessageList(responseValue.Value);
+                        }
+
+                        valueCallBack.OnSuccessValue(result);
+                    }
+                    dictionary.Remove(callbackId);
+                }
             }
         }
 

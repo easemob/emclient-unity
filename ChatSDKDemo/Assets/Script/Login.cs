@@ -19,8 +19,8 @@ public class Login : MonoBehaviour, IConnectionDelegate
         Options options = new Options("easemob-demo#chatdemoui");
         options.DebugMode = true;
         options.UsingHttpsOnly = true;
-        options.AcceptInvitationAlways = true;
-        options.AutoAcceptGroupInvitation = true;
+        options.AcceptInvitationAlways = false;
+        options.AutoAcceptGroupInvitation = false;
         SDKClient client = SDKClient.Instance;
         client.InitWithOptions(options);
         client.AddConnectionDelegate(this);

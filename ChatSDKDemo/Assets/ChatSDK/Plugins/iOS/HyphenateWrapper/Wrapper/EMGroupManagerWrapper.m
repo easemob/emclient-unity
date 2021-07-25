@@ -816,7 +816,7 @@
                                                       completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
+            [weakSelf onSuccess:nil callbackId:callbackId userInfo:nil];
         }else {
             [weakSelf onError:callId error:aError];
         }

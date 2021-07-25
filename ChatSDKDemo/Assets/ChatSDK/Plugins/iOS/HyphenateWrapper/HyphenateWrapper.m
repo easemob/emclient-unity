@@ -110,6 +110,8 @@ void ChatManager_HandleMethodCall(const char* methodName, const char* jsonString
         [EMClientWrapper.instance.chatManager ackConversationRead:dic callbackId:callId];
     }else if ([method isEqualToString:@"ackMessageRead"]) {
         [EMClientWrapper.instance.chatManager ackMessageRead:dic callbackId:callId];
+    }else if ([method isEqualToString:@"searchChatMsgFromDB"]) {
+        [EMClientWrapper.instance.chatManager searchChatMsgFromDB:dic callbackId:callId];
     }
 }
 
@@ -133,8 +135,6 @@ const char* ChatManager_GetMethodCall(const char* methodName, const char* jsonSt
         jsonObject = [EMClientWrapper.instance.chatManager getMessage:dic];
     }else if ([method isEqualToString:@"resendMessage"]) {
         jsonObject = [EMClientWrapper.instance.chatManager resendMessage:dic callbackId:callId];
-    }else if ([method isEqualToString:@"searchChatMsgFromDB"]) {
-        jsonObject = [EMClientWrapper.instance.chatManager searchChatMsgFromDB:dic];
     }else if ([method isEqualToString:@"sendMessage"]) {
         jsonObject = [EMClientWrapper.instance.chatManager sendMessage:dic callbackId:callId];
     }else if ([method isEqualToString:@"updateChatMessage"]) {
@@ -298,8 +298,6 @@ void RoomManager_HandleMethodCall(const char* methodName, const char* jsonString
         [EMClientWrapper.instance.roomManager getChatroomMemberListFromServer:dic callbackId:callId];
     }else if ([method isEqualToString:@"fetchChatRoomMuteList"]) {
         [EMClientWrapper.instance.roomManager getChatroomMuteListFromServer:dic callbackId:callId];
-    }else if ([method isEqualToString:@"getAllChatRooms"]) {
-        [EMClientWrapper.instance.roomManager getAllChatrooms:dic callbackId:callId];
     }else if ([method isEqualToString:@"getChatRoom"]) {
         [EMClientWrapper.instance.roomManager getChatroom:dic callbackId:callId];
     }else if ([method isEqualToString:@"joinChatRoom"]) {
@@ -365,12 +363,21 @@ const char* PushManager_GetMethodCall(const char* methodName, const char* jsonSt
 void Conversation_HandleMethodCall(const char* methodName, const char* jsonString, const char* callbackId) {
     NSString *method = [Transfrom NSStringFromCString:methodName];
     NSDictionary *dic = [Transfrom JsonObjectFromCSString:jsonString];
+    NSString *callId = [Transfrom NSStringFromCString:callbackId];
     if ([method isEqualToString:@"markMessageAsRead"]) {
         [EMClientWrapper.instance.conversationWrapper markMessageAsRead:dic];
     }else if ([method isEqualToString:@"syncConversationExt"]) {
         [EMClientWrapper.instance.conversationWrapper syncConversationExt:dic];
     }else if ([method isEqualToString:@"markAllMessagesAsRead"]) {
         [EMClientWrapper.instance.conversationWrapper markAllMessagesAsRead:dic];
+    }else if ([method isEqualToString:@"loadMsgWithMsgType"]) {
+        [EMClientWrapper.instance.conversationWrapper loadMsgWithMsgType:dic callbackId:callId];
+    }else if ([method isEqualToString:@"loadMsgWithStartId"]) {
+        [EMClientWrapper.instance.conversationWrapper loadMsgWithStartId:dic callbackId:callId];
+    }else if ([method isEqualToString:@"loadMsgWithKeywords"]) {
+        [EMClientWrapper.instance.conversationWrapper loadMsgWithKeywords:dic callbackId:callId];
+    }else if ([method isEqualToString:@"loadMsgWithTime"]) {
+        [EMClientWrapper.instance.conversationWrapper loadMsgWithTime:dic callbackId:callId];
     }
 }
 
@@ -400,14 +407,6 @@ const char* Conversation_GetMethodCall(const char* methodName, const char* jsonS
         jsonObject = [EMClientWrapper.instance.conversationWrapper clearAllMessages:dic];
     }else if ([method isEqualToString:@"loadMsgWithId"]) {
         jsonObject = [EMClientWrapper.instance.conversationWrapper loadMsgWithId:dic];
-    }else if ([method isEqualToString:@"loadMsgWithMsgType"]) {
-        jsonObject = [EMClientWrapper.instance.conversationWrapper loadMsgWithMsgType:dic];
-    }else if ([method isEqualToString:@"loadMsgWithStartId"]) {
-        jsonObject = [EMClientWrapper.instance.conversationWrapper loadMsgWithStartId:dic];
-    }else if ([method isEqualToString:@"loadMsgWithKeywords"]) {
-        jsonObject = [EMClientWrapper.instance.conversationWrapper loadMsgWithKeywords:dic];
-    }else if ([method isEqualToString:@"loadMsgWithTime"]) {
-        jsonObject = [EMClientWrapper.instance.conversationWrapper loadMsgWithTime:dic];
     }
     
     const char *csStr = [Transfrom JsonObjectToCSString:jsonObject];

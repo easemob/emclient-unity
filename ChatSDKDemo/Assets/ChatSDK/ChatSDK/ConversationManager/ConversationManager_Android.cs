@@ -77,38 +77,17 @@ namespace ChatSDK {
             return new Message(jsonString);
         }
 
-        public override List<Message> LoadMessages(string conversationId, ConversationType conversationType, string startMessageId, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP)
+        public override void LoadMessages(string conversationId, ConversationType conversationType, string startMessageId, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callback = null)
         {
-            string messageListString = wrapper.Call<string>("loadMsgWithStartId", conversationId, TransformTool.ConversationTypeToInt(conversationType), startMessageId, count, SearchDirectionToString(direction));
-            if (messageListString == null)
-            {
-                return null;
-            }
-
-            if (messageListString == "") {
-                return new List<Message>();
-            }
-
-            return TransformTool.JsonStringToMessageList(messageListString);
+            wrapper.Call("loadMsgWithStartId", conversationId, TransformTool.ConversationTypeToInt(conversationType), startMessageId, count, SearchDirectionToString(direction), callback?.callbackId);
         }
 
-        public override List<Message> LoadMessagesWithKeyword(string conversationId, ConversationType conversationType, string keywords, string sender, long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP)
+        public override void LoadMessagesWithKeyword(string conversationId, ConversationType conversationType, string keywords, string sender, long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callback = null)
         {
-            string messageListString = wrapper.Call<string>("loadMsgWithKeywords", conversationId, TransformTool.ConversationTypeToInt(conversationType), keywords, sender, timestamp, count, SearchDirectionToString(direction));
-            if (messageListString == null)
-            {
-                return null;
-            }
-
-            if (messageListString == "")
-            {
-                return new List<Message>();
-            }
-
-            return TransformTool.JsonStringToMessageList(messageListString);
+            wrapper.Call("loadMsgWithKeywords", conversationId, TransformTool.ConversationTypeToInt(conversationType), keywords, sender, timestamp, count, SearchDirectionToString(direction), callback?.callbackId);
         }
 
-        public override List<Message> LoadMessagesWithMsgType(string conversationId, ConversationType conversationType, MessageBodyType bodyType, string sender, long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP)
+        public override void LoadMessagesWithMsgType(string conversationId, ConversationType conversationType, MessageBodyType bodyType, string sender, long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callback = null)
         {
             string typeString = "txt";
             switch (bodyType) {
@@ -121,32 +100,12 @@ namespace ChatSDK {
                 case MessageBodyType.VIDEO: typeString = "video"; break;
                 case MessageBodyType.VOICE: typeString = "voice"; break;
             }
-            string messageListString = wrapper.Call<string>("loadMsgWithMsgType", conversationId, TransformTool.ConversationTypeToInt(conversationType), typeString, sender, timestamp, count, SearchDirectionToString(direction));
-            if (messageListString == null)
-            {
-                return null;
-            }
-
-            if (messageListString == "")
-            {
-                return new List<Message>();
-            }
-            return TransformTool.JsonStringToMessageList(messageListString);
+            wrapper.Call("loadMsgWithMsgType", conversationId, TransformTool.ConversationTypeToInt(conversationType), typeString, sender, timestamp, count, SearchDirectionToString(direction), callback?.callbackId);
         }
 
-        public override List<Message> LoadMessagesWithTime(string conversationId, ConversationType conversationType, long startTime, long endTime, int count = 20)
+        public override void LoadMessagesWithTime(string conversationId, ConversationType conversationType, long startTime, long endTime, int count = 20, ValueCallBack<List<Message>> callback = null)
         {
-            string messageListString = wrapper.Call<string>("loadMsgWithTime", conversationId, TransformTool.ConversationTypeToInt(conversationType), startTime, endTime, count);
-            if (messageListString == null)
-            {
-                return null;
-            }
-
-            if (messageListString == "")
-            {
-                return new List<Message>();
-            }
-            return TransformTool.JsonStringToMessageList(messageListString);
+            wrapper.Call("loadMsgWithTime", conversationId, TransformTool.ConversationTypeToInt(conversationType), startTime, endTime, count, callback?.callbackId);
         }
 
         public override void MarkAllMessageAsRead(string conversationId, ConversationType conversationType)

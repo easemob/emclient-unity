@@ -12,6 +12,14 @@ namespace ChatSDK
         {
         }
 
+        public override void applyJoinToGroup(string groupId, string reason, CallBack handle = null)
+        {
+            JSONObject obj = new JSONObject();
+            obj.Add("groupId", groupId);
+            obj.Add("reason", reason ?? "");
+            GroupManagerNative.GroupManager_HandleMethodCall("requestToJoinPublicGroup", obj.ToString(), handle?.callbackId);
+        }
+
         public override void AcceptInvitationFromGroup(string groupId, ValueCallBack<Group> handle = null)
         {
             JSONObject obj = new JSONObject();
@@ -112,7 +120,7 @@ namespace ChatSDK
         {
             JSONObject obj = new JSONObject();
             obj.Add("groupId", groupId);
-            obj.Add("reason", reason);
+            obj.Add("reason", reason ?? "");
             GroupManagerNative.GroupManager_HandleMethodCall("declineInvitationFromGroup", obj.ToString(), handle?.callbackId);
         }
 
@@ -121,7 +129,7 @@ namespace ChatSDK
             JSONObject obj = new JSONObject();
             obj.Add("groupId", groupId);
             obj.Add("username", username);
-            obj.Add("reason", reason);
+            obj.Add("reason", reason ?? "");
             GroupManagerNative.GroupManager_HandleMethodCall("declineJoinApplication", obj.ToString(), handle?.callbackId);
         }
 
@@ -336,7 +344,7 @@ namespace ChatSDK
         {
             JSONObject obj = new JSONObject();
             obj.Add("groupId", groupId);
-            obj.Add("announcement", announcement);
+            obj.Add("announcement", announcement ?? "");
             GroupManagerNative.GroupManager_HandleMethodCall("updateGroupAnnouncement", obj.ToString(), handle?.callbackId);
         }
 
@@ -344,7 +352,7 @@ namespace ChatSDK
         {
             JSONObject obj = new JSONObject();
             obj.Add("groupId", groupId);
-            obj.Add("ext", ext);
+            obj.Add("ext", ext ?? "");
             GroupManagerNative.GroupManager_HandleMethodCall("updateGroupExt", obj.ToString(), handle?.callbackId);
         }
 

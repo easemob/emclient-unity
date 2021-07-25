@@ -131,9 +131,9 @@ public class EMConversationWrapper extends EMWrapper{
         return ret;
     }
 
-    private String loadMsgWithStartId(String conversationId, int conversationType, String startId, int count, String directionString) {
+    private void loadMsgWithStartId(String conversationId, int conversationType, String startId, int count, String directionString, String callbackId) {
         if (conversationId == null || conversationId.length() == 0) {
-            return null;
+            return;
         }
         String ret = null;
         EMConversation conversation = getConversation(conversationId, conversationType);
@@ -147,12 +147,12 @@ public class EMConversationWrapper extends EMWrapper{
         }  catch (JSONException e) {
             e.printStackTrace();
         }
-        return ret;
+        onSuccess("List<EMMessage>", callbackId, ret);
     }
 
-    private String loadMsgWithKeywords(String conversationId, int conversationType, String keywords, String sender, long timestamp, int count, String directionString) {
+    private void loadMsgWithKeywords(String conversationId, int conversationType, String keywords, String sender, long timestamp, int count, String directionString, String callbackId) {
         if (conversationId == null || conversationId.length() == 0) {
-            return null;
+            return;
         }
         String ret = null;
         EMConversation conversation = getConversation(conversationId, conversationType);
@@ -167,12 +167,13 @@ public class EMConversationWrapper extends EMWrapper{
         }  catch (JSONException e) {
             e.printStackTrace();
         }
-        return ret;
+
+        onSuccess("List<EMMessage>", callbackId, ret);
     }
 
-    private String loadMsgWithMsgType(String conversationId, int conversationType, String typeString, String sender, long timestamp, int count, String directionString) {
+    private void loadMsgWithMsgType(String conversationId, int conversationType, String typeString, String sender, long timestamp, int count, String directionString, String callbackId) {
         if (conversationId == null || conversationId.length() == 0) {
-            return null;
+            return;
         }
         String ret = null;
         EMConversation conversation = getConversation(conversationId, conversationType);
@@ -198,12 +199,12 @@ public class EMConversationWrapper extends EMWrapper{
         }  catch (JSONException e) {
             e.printStackTrace();
         }
-        return ret;
+        onSuccess("List<EMMessage>", callbackId, ret);
     }
 
-    private String loadMsgWithTime(String conversationId, int conversationType, long startTime, long endTime, int count) throws JSONException {
+    private void loadMsgWithTime(String conversationId, int conversationType, long startTime, long endTime, int count, String callbackId ) throws JSONException {
         if (conversationId == null || conversationId.length() == 0) {
-            return null;
+            return;
         }
         String ret = null;
         EMConversation conversation = getConversation(conversationId, conversationType);
@@ -217,7 +218,7 @@ public class EMConversationWrapper extends EMWrapper{
         }  catch (JSONException e) {
             e.printStackTrace();
         }
-        return ret;
+        onSuccess("List<EMMessage>", callbackId, ret);
     }
 
     private void markAllMessagesAsRead(String conversationId, int conversationType) throws JSONException {

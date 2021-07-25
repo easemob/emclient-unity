@@ -5,6 +5,14 @@ namespace ChatSDK
     public abstract class IGroupManager
     {
         /// <summary>
+        /// 申请加入群组
+        /// </summary>
+        /// <param name="groupId">群组id</param>
+        /// <param name="reason">原因</param>
+        /// <param name="handle">执行结果</param>
+        public abstract void applyJoinToGroup(string groupId, string reason = "" , CallBack handle = null);
+
+        /// <summary>
         /// 同意加群邀请
         /// </summary>
         /// <param name="groupId">群组id</param>

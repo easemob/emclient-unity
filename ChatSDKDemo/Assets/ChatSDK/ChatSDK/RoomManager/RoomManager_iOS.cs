@@ -120,12 +120,6 @@ namespace ChatSDK
             RoomManagerNative.RoomManager_HandleMethodCall("fetchChatRoomMuteList", obj.ToString(), handle?.callbackId);
         }
 
-        public override void GetAllRoomsFromLocal(ValueCallBack<List<Room>> handle = null)
-        {
-            JSONObject obj = new JSONObject();
-            RoomManagerNative.RoomManager_HandleMethodCall("getAllChatRooms", obj.ToString(), handle?.callbackId);
-        }
-
         public override void JoinRoom(string roomId, ValueCallBack<Room> handle = null)
         {
             JSONObject obj = new JSONObject();

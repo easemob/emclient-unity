@@ -221,16 +221,16 @@ public class EMChatManagerWrapper extends EMWrapper  {
         return EMMessageHelper.toJson(msg).toString();
     }
 
-    private String searchChatMsgFromDB(String keywords, long timeStamp, int count, String from, String directionString) throws JSONException {
+    private void searchChatMsgFromDB(String keywords, long timeStamp, int count, String from, String directionString, String callbackId) throws JSONException {
         EMConversation.EMSearchDirection direction = directionString.equals("up")  ? EMConversation.EMSearchDirection.UP : EMConversation.EMSearchDirection.DOWN;
         List<EMMessage> msgList = EMClient.getInstance().chatManager().searchMsgFromDB(keywords, timeStamp, count, from, direction);
-        if (msgList == null) return null;
+        if (msgList == null) return ;
         JSONArray jsonArray = new JSONArray();
         for (EMMessage msg : msgList) {
             jsonArray.put(EMMessageHelper.toJson(msg).toString());
         }
 
-        return jsonArray.toString();
+        onSuccess("List<EMMessage>", callbackId, jsonArray.toString());
     }
 
     private void ackConversationRead(String conversationId,  String callbackId){

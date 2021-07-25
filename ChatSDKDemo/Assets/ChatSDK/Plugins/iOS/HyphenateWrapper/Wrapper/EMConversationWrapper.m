@@ -76,7 +76,7 @@
     [self getConversationWithParam:param
                         completion:^(EMConversation *conversation)
      {
-        NSDictionary *ext = param[@"ext"];
+        NSDictionary *ext = [Transfrom NSStringToJsonObject: param[@"ext"]];
         conversation.ext = ext;
     }];
 }
@@ -189,133 +189,132 @@
     return ret;
 }
 
-- (NSArray *)loadMsgWithMsgType:(NSDictionary *)param
+- (void)loadMsgWithMsgType:(NSDictionary *)param callbackId:(NSString *)callbackId
 {
+    __block NSString *callId = callbackId;
     EMMessageBodyType type = [EMMessageBody typeFromString:param[@"type"]];
     long long timeStamp = [param[@"timeStamp"] longLongValue];
     int count = [param[@"count"] intValue];
     NSString *sender = param[@"sender"];
     EMMessageSearchDirection direction = [self searchDirectionFromString:param[@"direction"]];
     
-    __block NSMutableArray *jsonMsgs = [NSMutableArray array];
     [self getConversationWithParam:param
                         completion:^(EMConversation *conversation)
      {
         if (conversation) {
-            dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                [conversation loadMessagesWithType:type
-                                         timestamp:timeStamp
-                                             count:count
-                                          fromUser:sender
-                                   searchDirection:direction
-                                        completion:^(NSArray *aMessages, EMError *aError)
-                 {
+            [conversation loadMessagesWithType:type
+                                     timestamp:timeStamp
+                                         count:count
+                                      fromUser:sender
+                               searchDirection:direction
+                                    completion:^(NSArray *aMessages, EMError *aError)
+             {
+                if (aError) {
+                    [self onError:callId error:aError];
+                }else {
+                    NSMutableArray *ary = [NSMutableArray array];
                     for (EMMessage *msg in aMessages) {
-                        [jsonMsgs addObject:[msg toJson]];
+                        [ary addObject:[Transfrom NSStringFromJsonObject:[msg toJson]]];
                     }
-                    dispatch_semaphore_signal(semaphore);
-                }];
-            });
-            dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+                    [self onSuccess:@"List<EMMessage>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:ary]];
+                }
+            }];
         }
     }];
 
-    return jsonMsgs;
 }
 
-- (NSArray *)loadMsgWithStartId:(NSDictionary *)param
+- (void)loadMsgWithStartId:(NSDictionary *)param callbackId:(NSString *)callbackId
 {
     __block NSString *startId = param[@"startId"];
+    __block NSString *callId = callbackId;
     int count = [param[@"count"] intValue];
     EMMessageSearchDirection direction = [self searchDirectionFromString:param[@"direction"]];
-    
-    __block NSMutableArray *jsonMsgs = [NSMutableArray array];
+
     [self getConversationWithParam:param completion:^(EMConversation *conversation)
     {
         if (conversation) {
-            dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                [conversation loadMessagesStartFromId:startId
-                                                count:count
-                                      searchDirection:direction
-                                           completion:^(NSArray *aMessages, EMError *aError)
-                 {
-                    
+            [conversation loadMessagesStartFromId:startId
+                                            count:count
+                                  searchDirection:direction
+                                       completion:^(NSArray *aMessages, EMError *aError)
+             {
+                if (aError) {
+                    [self onError:callId error:aError];
+                }else {
+                    NSMutableArray *ary = [NSMutableArray array];
                     for (EMMessage *msg in aMessages) {
-                        [jsonMsgs addObject:[msg toJson]];
+                        [ary addObject:[Transfrom NSStringFromJsonObject:[msg toJson]]];
                     }
-                    dispatch_semaphore_signal(semaphore);
-                }];
-            });
-            dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+                    [self onSuccess:@"List<EMMessage>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:ary]];
+                }
+            }];
         }
     }];
-    return jsonMsgs;
 }
 
-- (NSArray *)loadMsgWithKeywords:(NSDictionary *)param
+- (void)loadMsgWithKeywords:(NSDictionary *)param callbackId:(NSString *)callbackId
 {
+    __block  NSString * callId = callbackId;
     __block  NSString * keywords = param[@"keywords"];
     long long timestamp = [param[@"timestamp"] longLongValue];
     int count = [param[@"count"] intValue];
     __block  NSString *sender = param[@"sender"];
     EMMessageSearchDirection direction = [self searchDirectionFromString:param[@"direction"]];
     
-    __block NSMutableArray *jsonMsgs = [NSMutableArray array];
     [self getConversationWithParam:param
                         completion:^(EMConversation *conversation)
      {
         if (conversation) {
-            dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                [conversation loadMessagesWithKeyword:keywords
-                                            timestamp:timestamp
-                                                count:count
-                                             fromUser:sender
-                                      searchDirection:direction
-                                           completion:^(NSArray *aMessages, EMError *aError)
-                 {
+            [conversation loadMessagesWithKeyword:keywords
+                                        timestamp:timestamp
+                                            count:count
+                                         fromUser:sender
+                                  searchDirection:direction
+                                       completion:^(NSArray *aMessages, EMError *aError)
+             {
+                if (aError) {
+                    [self onError:callId error:aError];
+                }else {
+                    NSMutableArray *ary = [NSMutableArray array];
                     for (EMMessage *msg in aMessages) {
-                        [jsonMsgs addObject:[msg toJson]];
+                        [ary addObject:[Transfrom NSStringFromJsonObject:[msg toJson]]];
                     }
-                    dispatch_semaphore_signal(semaphore);
-                }];
-            });
-            dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+                    [self onSuccess:@"List<EMMessage>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:ary]];
+                }
+            }];
         }
     }];
-    return jsonMsgs;
 }
 
-- (NSArray *)loadMsgWithTime:(NSDictionary *)param
+- (void)loadMsgWithTime:(NSDictionary *)param callbackId:(NSString *)callbackId
 {
+    __block NSString * callId = callbackId;
     long long startTime = [param[@"startTime"] longLongValue];
     long long entTime = [param[@"endTime"] longLongValue];
     int count = [param[@"count"] intValue];
     
-    __block NSMutableArray *jsonMsgs = [NSMutableArray array];
     [self getConversationWithParam:param
                         completion:^(EMConversation *conversation)
      {
         if (conversation) {
-            dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                [conversation loadMessagesFrom:startTime
-                                            to:entTime
-                                         count:count
-                                    completion:^(NSArray *aMessages, EMError *aError)
-                 {
+            [conversation loadMessagesFrom:startTime
+                                        to:entTime
+                                     count:count
+                                completion:^(NSArray *aMessages, EMError *aError)
+             {
+                if (aError) {
+                    [self onError:callId error:aError];
+                }else {
+                    NSMutableArray *ary = [NSMutableArray array];
                     for (EMMessage *msg in aMessages) {
-                        [jsonMsgs addObject:[msg toJson]];
+                        [ary addObject:[Transfrom NSStringFromJsonObject:[msg toJson]]];
                     }
-                    dispatch_semaphore_signal(semaphore);
-                }];
-            });
-            dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+                    [self onSuccess:@"List<EMMessage>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:ary]];
+                }
+            }];
         }
     }];
-    return jsonMsgs;
 }
 
 - (EMMessageSearchDirection)searchDirectionFromString:(NSString *)aDirection {

@@ -38,6 +38,23 @@ public class EMGroupManagerWrapper extends EMWrapper {
         EMClient.getInstance().groupManager().addGroupChangeListener(new EMUnityGroupManagerListener());
     }
 
+    private void applyJoinToGroup(final String groupId, final String reason, String callbackId) throws JSONException {
+        if (groupId == null || groupId.length() == 0) {
+            HyphenateException e = new HyphenateException(500, "groupId is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
+        asyncRunnable(() -> {
+            try {
+                EMClient.getInstance().groupManager().applyJoinToGroup(groupId, reason);
+                onSuccess(null, callbackId, null);
+            } catch (HyphenateException e) {
+                onError(callbackId, e);
+            }
+        });
+    }
+
     private void acceptInvitationFromGroup(String groupId, String callbackId) throws JSONException {
 
         if (groupId == null || groupId.length() == 0) {

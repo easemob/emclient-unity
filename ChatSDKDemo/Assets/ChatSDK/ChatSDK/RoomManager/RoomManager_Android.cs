@@ -81,11 +81,6 @@ namespace ChatSDK
             wrapper.Call("fetchChatRoomMuteList", roomId, pageNum, pageSize, handle?.callbackId);
         }
 
-        public override void GetAllRoomsFromLocal(ValueCallBack<List<Room>> handle = null)
-        {
-            wrapper.Call("getAllChatRooms", handle?.callbackId);
-        }
-
         public override void JoinRoom(string roomId, ValueCallBack<Room> handle = null)
         {
             wrapper.Call("joinChatRoom", roomId, handle?.callbackId);

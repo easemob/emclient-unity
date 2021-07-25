@@ -18,6 +18,10 @@ namespace ChatSDK
             }
         }
 
+        public override void applyJoinToGroup(string groupId, string reason, CallBack handle = null) {
+            wrapper.Call("", groupId, reason, handle?.callbackId);
+        }
+
         public override void AcceptInvitationFromGroup(string groupId, ValueCallBack<Group> handle = null)
         {
             wrapper.Call("acceptInvitationFromGroup", groupId, handle?.callbackId);

@@ -5,9 +5,9 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using ChatSDK;
 
-public class DemoRoom : MonoBehaviour
+public class DemoRoom : MonoBehaviour, IRoomManagerDelegate
 {
-
+    public Text InputText;
     public Button BackBtn;
     public Button Custom1Btn;
     public Button Custom2Btn;
@@ -38,7 +38,7 @@ public class DemoRoom : MonoBehaviour
     private string currentId;
 
     private string roomId  {
-        get => currentId;
+        get => currentId ?? InputText.text;
     }
 
     // Start is called before the first frame update
@@ -71,6 +71,8 @@ public class DemoRoom : MonoBehaviour
         Custom24Btn.onClick.AddListener(Custom24Action);
 
         BackBtn.onClick.AddListener(BackAction);
+
+        SDKClient.Instance.RoomManager.AddRoomManagerDelegate(this);
     }
 
     // Update is called once per frame
@@ -286,28 +288,12 @@ public class DemoRoom : MonoBehaviour
 
         SDKClient.Instance.RoomManager.FetchRoomMuteList(roomId, handle: callback);
     }
-    void Custom14Action()
-    {
-        ValueCallBack<List<Room>> callback = new ValueCallBack<List<Room>>(
-           onSuccess: (list) => {
-               foreach (Room room in list)
-               {
-                   Debug.Log("local room -- " + room.RoomId);
-               }
-           },
-           onError: (code, desc) => {
-               Debug.Log("room ----------- 失败 code " + code + "  desc " + desc);
-           }
-       );
+    void Custom14Action() { }
 
-
-
-        SDKClient.Instance.RoomManager.GetAllRoomsFromLocal(callback);
-    }
+    
     void Custom15Action()
     {
-        string roomId = "";
-
+     
         ValueCallBack<Room> callback = new ValueCallBack<Room>();
         callback.OnSuccessValue = (Room room) => {
             Debug.Log("加入成功");
@@ -318,20 +304,20 @@ public class DemoRoom : MonoBehaviour
             Debug.Log("加入聊天室失败 " + code + " desc " + desc);
         };
 
-        SDKClient.Instance.RoomManager.JoinRoom(roomId, callback);
+        SDKClient.Instance.RoomManager.JoinRoom("154985791815681", callback);
 
     }
     void Custom16Action()
     {
         CallBack callBack = new CallBack();
         callBack.Success = () => {
-            Debug.Log("设置免打扰成功");
+            Debug.Log("成功");
         };
         callBack.Error = (int code, string desc) =>
         {
-            Debug.Log("设置免打扰失败 " + code + " desc " + desc);
+            Debug.Log("失败 " + code + " desc " + desc);
         };
-        SDKClient.Instance.PushManager.SetNoDisturb(true, 22, 8, callBack);
+        SDKClient.Instance.RoomManager.LeaveRoom("154985791815681", callBack);
     }
     void Custom17Action()
     {
@@ -422,5 +408,64 @@ public class DemoRoom : MonoBehaviour
     void BackAction()
     {
         SceneManager.LoadScene("Main");
+    }
+
+    public void OnDestroyedFromRoom(string roomId, string roomName)
+    {
+        Debug.Log("OnDestroyedFromRoom --- " + roomId + " " + roomName);
+    }
+
+    public void OnMemberJoinedFromRoom(string roomId, string participant)
+    {
+        Debug.Log("OnMemberJoinedFromRoom --- " + roomId + " " + participant);
+    }
+
+    public void OnMemberExitedFromRoom(string roomId, string roomName, string participant)
+    {
+        Debug.Log("OnMemberExitedFromRoom --- " + roomId + " " + participant);
+    }
+
+    public void OnRemovedFromRoom(string roomId, string roomName, string participant)
+    {
+        Debug.Log("OnRemovedFromRoom --- " + roomId + " " + participant);
+    }
+
+    public void OnMuteListAddedFromRoom(string roomId, List<string> mutes, long expireTime)
+    {
+        Debug.Log("OnMuteListAddedFromRoom --- " + roomId);
+
+        foreach (var name in mutes) {
+            Debug.Log("name --- " + name);
+        }
+    }
+
+    public void OnMuteListRemovedFromRoom(string roomId, List<string> mutes)
+    {
+        Debug.Log("OnMuteListRemovedFromRoom --- " + roomId);
+
+        foreach (var name in mutes)
+        {
+            Debug.Log("name --- " + name);
+        }
+    }
+
+    public void OnAdminAddedFromRoom(string roomId, string admin)
+    {
+        Debug.Log("OnAdminAddedFromRoom --- " + roomId + " " + admin);
+    }
+
+    public void OnAdminRemovedFromRoom(string roomId, string admin)
+    {
+        Debug.Log("OnAdminRemovedFromRoom --- " + roomId + " " + admin);
+    }
+
+    public void OnOwnerChangedFromRoom(string roomId, string newOwner, string oldOwner)
+    {
+        Debug.Log("OnOwnerChangedFromRoom --- " + roomId + " " + newOwner + " " + oldOwner);
+    }
+
+    public void OnAnnouncementChangedFromRoom(string roomId, string announcement)
+    {
+        Debug.Log("OnAnnouncementChangedFromRoom --- " + roomId + " " + announcement);
     }
 }

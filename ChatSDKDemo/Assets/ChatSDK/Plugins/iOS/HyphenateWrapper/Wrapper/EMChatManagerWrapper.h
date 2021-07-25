@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)recallMessage:(NSDictionary *)param callbackId:(NSString *)callbackId;
 - (void)ackConversationRead:(NSDictionary *)param callbackId:(NSString *)callbackId;
 - (void)ackMessageRead:(NSDictionary *)param callbackId:(NSString *)callbackId;
-
+- (void)searchChatMsgFromDB:(NSDictionary *)param callbackId:(NSString *)callbackId;
 
 - (id)deleteConversation:(NSDictionary *)param;
 - (id)getConversation:(NSDictionary *)param;
@@ -27,7 +27,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (id)getMessage:(NSDictionary *)param;
 - (id)markAllChatMsgAsRead:(NSDictionary *)param;
 - (id)resendMessage:(NSDictionary *)param callbackId:(NSString *)callbackId;
-- (id)searchChatMsgFromDB:(NSDictionary *)param;
 - (id)sendMessage:(NSDictionary *)param callbackId:(NSString *)callbackId;
 - (id)updateChatMessage:(NSDictionary *)param;
 @end

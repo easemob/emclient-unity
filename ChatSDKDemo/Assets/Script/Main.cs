@@ -504,8 +504,21 @@ public class Main : MonoBehaviour , IConnectionDelegate, IChatManagerDelegate, I
 
     void LoadMessages() {
         Conversation conv = SDKClient.Instance.ChatManager.GetConversation("du003");
-        List<Message> list = conv.LoadMessages(null);
-        Debug.Log("load messsage count --- " + list.Count);
+
+        ValueCallBack<List<Message>> callback = new ValueCallBack<List<Message>>();
+
+        callback.OnSuccessValue = (List<Message> list) => {
+            foreach (Message msg in list)
+            {
+                if (msg.Body.Type == MessageBodyType.TXT)
+                {
+                    ChatSDK.MessageBody.TextBody textBody = (ChatSDK.MessageBody.TextBody)msg.Body;
+                    Debug.Log("search message: " + textBody.Text);
+                }
+            }
+        };
+
+        conv.LoadMessages(handle: callback);
     }
 
     void MakeAllConversationAsRead() {
@@ -582,33 +595,44 @@ public class Main : MonoBehaviour , IConnectionDelegate, IChatManagerDelegate, I
 
     void LoadConversationMessagesWithKeyword(string str) {
         Conversation conv = SDKClient.Instance.ChatManager.GetConversation("du003");
-        List<Message> msgs = conv.LoadMessagesWithKeyword(str, null);
-        foreach (Message msg in msgs) {
-            if (msg.Body.Type == MessageBodyType.TXT)
+
+        ValueCallBack<List<Message>> callback = new ValueCallBack<List<Message>>();
+
+        callback.OnSuccessValue = (List<Message> list) => {
+            foreach (Message msg in list)
             {
-                ChatSDK.MessageBody.TextBody textBody = (ChatSDK.MessageBody.TextBody)msg.Body;
-                Debug.Log("search message: " + textBody.Text);
+                if (msg.Body.Type == MessageBodyType.TXT)
+                {
+                    ChatSDK.MessageBody.TextBody textBody = (ChatSDK.MessageBody.TextBody)msg.Body;
+                    Debug.Log("search message: " + textBody.Text);
+                }
             }
-        }
+        };
+
+
+        conv.LoadMessagesWithKeyword(str, null, handle:callback);
+        
     }
 
     void LoadConversationMessagesWithType() {
         Conversation conv = SDKClient.Instance.ChatManager.GetConversation("du003");
-        List<Message> msgs = conv.LoadMessagesWithMsgType(MessageBodyType.TXT, null);
-        foreach (Message msg in msgs)
-        {
-            if (msg.Body.Type == MessageBodyType.TXT)
+
+
+        ValueCallBack<List<Message>> callback = new ValueCallBack<List<Message>>();
+
+        callback.OnSuccessValue = (List<Message> list) => {
+            foreach (Message msg in list)
             {
-                ChatSDK.MessageBody.TextBody textBody = (ChatSDK.MessageBody.TextBody)msg.Body;
-                Debug.Log("type message: " + textBody.Text);
+                if (msg.Body.Type == MessageBodyType.TXT)
+                {
+                    ChatSDK.MessageBody.TextBody textBody = (ChatSDK.MessageBody.TextBody)msg.Body;
+                    Debug.Log("search message: " + textBody.Text);
+                }
             }
-        }
-    }
+        };
 
-    void LoadConversationMessageWithType() {
-        Conversation conv = SDKClient.Instance.ChatManager.GetConversation("du003");
+        conv.LoadMessagesWithMsgType(MessageBodyType.TXT, null, handle: callback);
     }
-
 
     ///// room
 
@@ -908,20 +932,6 @@ public class Main : MonoBehaviour , IConnectionDelegate, IChatManagerDelegate, I
 
     void GetAllRoomsFromLocal() {
 
-        ValueCallBack<List<Room>> callback = new ValueCallBack<List<Room>>(
-            onSuccess: (list) => {
-                foreach (Room room in list) {
-                    Debug.Log("local room -- " + room.RoomId);
-                }
-            },
-            onError: (code, desc) => {
-                Debug.Log("room ----------- 失败 code " + code + "  desc " + desc);
-            }
-        );
-
-
-
-        SDKClient.Instance.RoomManager.GetAllRoomsFromLocal(callback);
     }
 
     void GetPublicRoomsFromServer() {
