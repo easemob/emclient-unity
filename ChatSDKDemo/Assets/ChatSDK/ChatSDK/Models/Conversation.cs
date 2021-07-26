@@ -79,6 +79,12 @@ namespace ChatSDK {
             }
         }
 
+        internal Conversation(string id, ConversationType type)
+        {
+            Id = id;
+            Type = type;
+        }
+
 
         private ConversationType typeFromInt(int intType) {
             ConversationType type = ConversationType.Chat;

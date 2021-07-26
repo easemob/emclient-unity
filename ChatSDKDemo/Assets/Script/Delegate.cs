@@ -120,3 +120,45 @@ public class ChatManagerDelegate : IChatManagerDelegate
         throw new NotImplementedException();
     }
 }
+
+public class ContactManagerDelegate : IContactManagerDelegate
+{
+    private ContactManagerDelegate() { }
+    private static ContactManagerDelegate global;
+
+    public static ContactManagerDelegate Global
+    {
+        get
+        {
+            if (global == null)
+            {
+                global = new ContactManagerDelegate();
+            }
+            return global;
+        }
+    }
+    public void OnContactAdded(string username)
+    {
+        Debug.Log($"{username} add you.");
+    }
+
+    public void OnContactDeleted(string username)
+    {
+        Debug.Log($"{username} delete you.");
+    }
+
+    public void OnContactInvited(string username, string reason)
+    {
+        Debug.Log($"{username} invite you with reason:{reason}.");
+    }
+
+    public void OnFriendRequestAccepted(string username)
+    {
+        Debug.Log($"{username} accept your invitation.");
+    }
+
+    public void OnFriendRequestDeclined(string username)
+    {
+        Debug.Log($"{username} declinet your invitation.");
+    }
+}

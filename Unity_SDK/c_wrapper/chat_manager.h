@@ -13,6 +13,7 @@ extern "C"
 //ChatManager methods
 AGORA_API void ChatManager_SendMessage(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, void *mto, EMMessageBody::EMMessageBodyType type);
 AGORA_API void ChatManager_FetchHistoryMessages(void *client, const char * conversationId, EMConversation::EMConversationType type, const char * startMessageId, int count, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError);
+AGORA_API void ChatManager_GetConversationsFromServer(void *client, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError);
 AGORA_API void ChatManager_AddListener(void *client,
                                        FUNC_OnMessagesReceived onMessagesReceived,
                                        FUNC_OnCmdMessagesReceived onCmdMessagesReceived,

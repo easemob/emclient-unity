@@ -61,6 +61,23 @@ AGORA_API void GroupManager_ChangeGroupName(void *client, const char * groupId, 
     }
 }
 
+AGORA_API void GroupManager_DestoryGroup(void *client, const char * groupId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+{
+    EMError error;
+    CLIENT->getGroupManager().destroyGroup(groupId, error);
+    if(error.mErrorCode == EMError::EM_NO_ERROR) {
+        LOG("GroupManager_DestoryGroup execution succeeds: %s", groupId);
+        if(onSuccess) {
+            onSuccess();
+        }
+    }else{
+        if(onError)
+        {
+            onError(error.mErrorCode, error.mDescription.c_str());
+        }
+    }
+}
+
 AGORA_API void GroupManager_AddMembers(void *client, const char * groupId, const char * members[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;

@@ -54,7 +54,7 @@
 #elif UNITY_IOS
             contactImp = new ContactManager_iOS();
 #elif UNITY_STANDALONE_OSX
-            contactImp = new ContactManager_Mac();
+            contactImp = new ContactManager_Mac(instance);
 #elif UNITY_STANDALONE_WIN
             contactImp = new ContactManager_Win();
 #endif

@@ -75,6 +75,20 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type)
             to = im->To;
         }
             break;
+        case EMMessageBody::VOICE:
+        {
+            auto vm = static_cast<VoiceMessageTO *>(mto);
+            auto body = new EMVoiceMessageBody(vm->body.LocalPath, vm->body.Duration);
+            body->setDisplayName(vm->body.DisplayName);
+            body->setSecretKey(vm->body.Secret);
+            body->setRemotePath(vm->body.RemotePath);
+            body->setFileLength(vm->body.FileSize);
+            body->setDownloadStatus(vm->body.DownStatus);
+            messageBody = EMMessageBodyPtr(body);
+            from = vm->From;
+            to = vm->To;
+        }
+            break;
     }
     LOG("Message created: From->%s, To->%s.", from.c_str(), to.c_str());
     EMMessagePtr messagePtr = EMMessage::createSendMessage(from, to, messageBody);
@@ -146,6 +160,36 @@ AGORA_API void ChatManager_FetchHistoryMessages(void *client, const char * conve
     }else{
         //error
         if(onError) {
+            onError(error.mErrorCode, error.mDescription.c_str());
+        }
+    }
+}
+
+AGORA_API void ChatManager_GetConversationsFromServer(void *client, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+{
+    EMError error;
+    EMConversationList conversationList = CLIENT->getChatManager().getConversationsFromServer(error);
+    if (error.mErrorCode == EMError::EM_NO_ERROR) {
+        if (onSuccess) {
+            size_t size = conversationList.size();
+            auto conversationTOArray = new TOArray();
+            TOArray *data[1] = {conversationTOArray};
+            data[0]->Type = DataType::ListOfConversation;
+            data[0]->Size = (int)size;
+            for(int i=0; i<size; i++) {
+                ConversationTO* conversationTO = new ConversationTO();
+                conversationTO->ConverationId = conversationList.at(i)->conversationId().c_str();
+                conversationTO->type = conversationList.at(i)->conversationType();
+                conversationTO->ExtField = conversationList.at(i)->extField().c_str();
+                LOG("GetConversation %d, id=%s, type=%d, extfiled=%s",
+                    i, conversationTO->ConverationId, conversationTO->type, conversationTO->ExtField);
+                data[0]->Data[i] = conversationTO;
+            }
+            onSuccess((void**)data, DataType::ListOfConversation, 1);
+            //NOTE: NO need to release mem. after onSuccess call, managed side would free them.
+        }
+    }else{
+        if (onError) {
             onError(error.mErrorCode, error.mDescription.c_str());
         }
     }

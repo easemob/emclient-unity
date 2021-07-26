@@ -235,6 +235,53 @@ namespace ChatSDK
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public class VoiceMessageTO : MessageTO
+    {
+        VoiceMessageBodyTO Body;
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+        struct VoiceMessageBodyTO
+        {
+            public string LocalPath;
+            public string DisplayName;
+            public string Secret;
+            public string RemotePath;
+            public long FileSize;
+            public DownLoadStatus DownStatus;
+            public int Duration;
+
+            public VoiceMessageBodyTO(in Message message)
+            {
+                if (message.Body.Type == MessageBodyType.VOICE)
+                {
+                    var body = message.Body as VoiceBody;
+                    (LocalPath, DisplayName, Secret, RemotePath, FileSize, DownStatus, Duration) =
+                        (body.LocalPath, body.DisplayName ?? "", body.Secret ?? "", body.RemotePath ?? "", body.FileSize, body.DownStatus, body.Duration);
+                }
+                else
+                {
+                    throw new InvalidOperationException();
+                }
+            }
+        }
+
+        public VoiceMessageTO(in Message message) : base(message)
+        {
+            BodyType = MessageBodyType.VOICE;
+            Body = new VoiceMessageBodyTO(message);
+        }
+
+        public VoiceMessageTO()
+        {
+
+        }
+
+        public override IMessageBody UnmarshallBody()
+        {
+            return new MessageBody.VoiceBody(Body.LocalPath, Body.DisplayName, Body.Duration, Body.FileSize);
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public abstract class MessageTO
     {
         public string MsgId;
@@ -295,6 +342,9 @@ namespace ChatSDK
                     break;
                 case MessageBodyType.IMAGE:
                     mto = new ImageMessageTO(message);
+                    break;
+                case MessageBodyType.VOICE:
+                    mto = new VoiceMessageTO(message);
                     break;
             }
             return mto;
@@ -797,5 +847,27 @@ namespace ChatSDK
 
             return result;
         }
+    }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public class ConversationTO
+    {
+        public string ConverationId;
+        public ConversationType Type;
+        public string ExtField;
+
+        public ConversationTO()
+        {
+
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public class TOArray
+    {
+        public DataType Type;
+        public int Size;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
+        public IntPtr[] Data; //list of data
     }
 }

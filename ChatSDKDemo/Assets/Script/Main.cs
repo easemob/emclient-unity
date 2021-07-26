@@ -47,15 +47,17 @@ public class Main : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SendBtn.onClick.AddListener(SendImageMessageAction);
-        
+        SendBtn.onClick.AddListener(GetSelfIdsOnOtherPlatformAction);
+        LeaveGroupBtn.onClick.AddListener(DeclineInvitationAction);
+        LeaveRoomBtn.onClick.AddListener(GetBlockListFromServerAction);
+
         JoinGroupBtn.onClick.AddListener(JoinGroupAction);
         GroupInfoBtn.onClick.AddListener(GetGroupInfoAction);
-        LeaveGroupBtn.onClick.AddListener(LeaveGroupAction);
+        //LeaveGroupBtn.onClick.AddListener(LeaveGroupAction);
 
         JoinRoomBtn.onClick.AddListener(JoinRoomAction);
         RoomInfoBtn.onClick.AddListener(GetRoomInfoAction);
-        LeaveRoomBtn.onClick.AddListener(LeaveRoomAction);
+        
 
         ToggleGroup = GameObject.Find("ToggleGroup").GetComponent<ToggleGroup>().ActiveToggles();
     }
@@ -150,6 +152,21 @@ public class Main : MonoBehaviour
         });
         SendBtn.enabled = true;
     }
+	
+	void SendVoiceMessageAction()
+    {
+        string receiverId = RecvIdField.text;
+        string displayName = TextField.text;
+        string localPath = "/Users/Shared/1.mp3";
+        long fileSize = 5993;
+        int duration = 10;
+        IChatManager chatManager = SDKClient.Instance.ChatManager;
+        Message message = Message.CreateVoiceSendMessage(receiverId, localPath, displayName, fileSize, duration);
+        CallBack callback = new CallBack(onSuccess: () => { Debug.Log("Message send successfully!"); },
+                                onProgress: (int progress) => { Debug.Log(progress); },
+                                onError: (int code, string desc) => { Debug.Log(code + desc); });
+        chatManager.SendMessage(message, callback);
+    }
 
     void FetchHistoryMessagesAction()
     {
@@ -188,6 +205,29 @@ public class Main : MonoBehaviour
             {
                 Debug.LogError($"Fetch history messages with error, code={code}, desc={desc}.");
             }));
+    }
+
+    void GetConversationsFromServer()
+    {
+        IChatManager chatManager = SDKClient.Instance.ChatManager;
+        chatManager.GetConversationsFromServer(
+            new ValueCallBack<List<Conversation>>(
+                onSuccess: (List<Conversation> conversationList) =>
+                {
+                    Debug.Log($"Get conversations from server succeed");
+                    int count = 1;
+                    foreach(var converation in conversationList)
+                    {
+                        //string extField = TransformTool.JsonStringFromDictionary(converation.Ext);
+                        Debug.Log($"conversation{count} id={converation.Id}, type={converation.GetType()}");
+                        count++;
+                    }
+                },
+                onError: (int code, string desc) =>
+                {
+                    Debug.LogError($"Get conversations from server failed, code={code}, desc={desc}");
+                }
+                ));
     }
 
     void CreateGroupAction()
@@ -269,6 +309,16 @@ public class Main : MonoBehaviour
             new CallBack(
                 onSuccess: () => Debug.Log($"Group name changed to {newName}"),
                 onError: (int code, string desc) => Debug.LogError($"Failed to change group {groupId} name to {newName}")));
+    }
+
+    void DestoryGroupAction()
+    {
+        string groupId = RecvIdField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.DestroyGroup(groupId,
+            new CallBack(
+                onSuccess: () => Debug.Log($"Destory group {groupId} success."),
+                onError: (int code, string desc) => Debug.LogError($"Failed to destory group {groupId} with error: {desc}.")));
     }
 
     void AddMembersAction()
@@ -357,5 +407,187 @@ public class Main : MonoBehaviour
     void LeaveRoomAction()
     {
 
+    }
+
+    //ContactManager related
+    void AddContactAction()
+    {
+        string username = RecvIdField.text;
+        string reason = TextField.text;
+        IContactManager contactManager = SDKClient.Instance.ContactManager;
+        contactManager.AddContact(username, reason,
+            new CallBack(onSuccess: () =>
+            {
+                Debug.Log($"Add contact {username} successfully.");
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Add contact {username} failed with code={code}, desc={desc}");
+            }));
+    }
+
+    void DeleteContactAction()
+    {
+        string username = RecvIdField.text;
+        IContactManager contactManager = SDKClient.Instance.ContactManager;
+        contactManager.DeleteContact(username, false,
+            new CallBack(onSuccess: () =>
+            {
+                Debug.Log($"Delete contact {username} successfully.");
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Delete contact {username} failed with code={code}, desc={desc}");
+            }));
+    }
+
+
+    public int repeatcount = 0;
+    void GetAllContactsFromServerAction()
+    {
+        IContactManager contactManager = SDKClient.Instance.ContactManager;
+        repeatcount++;
+        contactManager.GetAllContactsFromServer(
+            new ValueCallBack<List<string>>(
+                onSuccess: (List<string> contactList) =>
+                {
+                    Debug.Log($"Get contacts from server succeed. repeat:{repeatcount}");
+                    int count = 1;
+                    foreach(var contact in contactList)
+                    {
+                        Debug.Log($"contact{count}:{contact}, repeat:{repeatcount}");
+                    }
+                },
+                onError: (int code, string desc) =>
+                {
+                    Debug.LogError($"Get contacts from server failed, code={code}, desc={desc}");
+                }
+                ));
+    }
+
+    void GetAllContactsFromDBAction()
+    {
+        IContactManager contactManager = SDKClient.Instance.ContactManager;
+        repeatcount++;
+        contactManager.GetAllContactsFromDB(
+            new ValueCallBack<List<string>>(
+                onSuccess: (List<string> contactList) =>
+                {
+                    Debug.Log($"Get contacts from DB succeed. repeat:{repeatcount}");
+                    int count = 1;
+                    foreach (var contact in contactList)
+                    {
+                        Debug.Log($"contact{count}:{contact}, repeat:{repeatcount}");
+                    }
+                },
+                onError: (int code, string desc) =>
+                {
+                    Debug.LogError($"Get contacts from DB failed, code={code}, desc={desc}");
+                }
+                ));
+    }
+
+    void AddUserToBlockListAction()
+    {
+        string username = RecvIdField.text;
+        IContactManager contactManager = SDKClient.Instance.ContactManager;
+        contactManager.AddUserToBlockList(username,
+            new CallBack(onSuccess: () =>
+            {
+                Debug.Log($"Add {username} to block list successfully.");
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Add {username} to block list failed with code={code}, desc={desc}");
+            }));
+    }
+
+    void RemoveUserFromBlockListAction()
+    {
+        string username = RecvIdField.text;
+        IContactManager contactManager = SDKClient.Instance.ContactManager;
+        contactManager.RemoveUserFromBlockList(username,
+            new CallBack(onSuccess: () =>
+            {
+                Debug.Log($"Remove {username} from block list successfully.");
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Remove {username} from block list failed with code={code}, desc={desc}");
+            }));
+    }
+
+    void GetBlockListFromServerAction()
+    {
+        IContactManager contactManager = SDKClient.Instance.ContactManager;
+        repeatcount++;
+        contactManager.GetBlockListFromServer(
+            new ValueCallBack<List<string>>(
+                onSuccess: (List<string> contactList) =>
+                {
+                    Debug.Log($"Get blacklist from server succeed. repeat:{repeatcount}");
+                    int count = 1;
+                    foreach (var contact in contactList)
+                    {
+                        Debug.Log($"contact{count}:{contact}, repeat:{repeatcount}");
+                    }
+                },
+                onError: (int code, string desc) =>
+                {
+                    Debug.LogError($"Get black list from DB failed, code={code}, desc={desc}");
+                }
+                ));
+    }
+
+    void AcceptInvitationAction()
+    {
+        string username = RecvIdField.text;
+        IContactManager contactManager = SDKClient.Instance.ContactManager;
+        contactManager.AcceptInvitation(username,
+            new CallBack(onSuccess: () =>
+            {
+                Debug.Log($"Accept invitation from {username} successfully.");
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Accept invitation from {username} failed with code={code}, desc={desc}");
+            }));
+    }
+
+    void DeclineInvitationAction()
+    {
+        string username = RecvIdField.text;
+        IContactManager contactManager = SDKClient.Instance.ContactManager;
+        contactManager.DeclineInvitation(username,
+            new CallBack(onSuccess: () =>
+            {
+                Debug.Log($"Decline invitation from {username} successfully.");
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Decline invitation from {username} failed with code={code}, desc={desc}");
+            }));
+    }
+
+    void GetSelfIdsOnOtherPlatformAction()
+    {
+        IContactManager contactManager = SDKClient.Instance.ContactManager;
+        repeatcount++;
+        contactManager.GetSelfIdsOnOtherPlatform(
+            new ValueCallBack<List<string>>(
+                onSuccess: (List<string> selfIdList) =>
+                {
+                    Debug.Log($"Get self id on other platform succeed. repeat:{repeatcount}");
+                    int count = 1;
+                    foreach (var selfId in selfIdList)
+                    {
+                        Debug.Log($"selfid{count}:{selfId}, repeat:{repeatcount}");
+                    }
+                },
+                onError: (int code, string desc) =>
+                {
+                    Debug.LogError($"Get self id failed, code={code}, desc={desc}");
+                }
+                ));
     }
 }

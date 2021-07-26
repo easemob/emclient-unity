@@ -172,7 +172,9 @@ namespace ChatSDK
 
         public override void DestroyGroup(string groupId, CallBack handle = null)
         {
-            throw new System.NotImplementedException();
+            ChatAPINative.GroupManager_DestoryGroup(client, groupId,
+                onSuccess: () => handle?.Success(),
+                onError: (int code, string desc) => handle?.Error(code, desc));
         }
 
         public override void DownloadGroupSharedFile(string groupId, string fileId, string savePath, CallBack handle = null)

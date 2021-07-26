@@ -8,6 +8,7 @@
 #include "emconnection_listener.h"
 #include "emerror.h"
 #include "emmessagebody.h"
+#include "emcontactlistener.h"
 
 using namespace easemob;
 
@@ -99,6 +100,13 @@ using namespace easemob;
     //RoomManager Listener
     typedef void (*FUNC_OnChatRoomDestroyed)(const char * roomId, const char * roomName);
     typedef void (*FUNC_OnRemovedFromChatRoom)(const char * roomId, const char * roomName, const char * participant);
+    //ContactManager Listener
+    typedef void (*FUNC_OnContactAdded)(const char * username);
+    typedef void (*FUNC_OnContactDeleted)(const char * username);
+    typedef void (*FUNC_OnContactInvited)(const char * username, const char * reason);
+    typedef void (*FUNC_OnFriendRequestAccepted)(const char * username);
+    typedef void (*FUNC_OnFriendRequestDeclined)(const char * username);
+
 #endif
 
 class ConnectionListener : public EMConnectionListener
@@ -252,6 +260,35 @@ private:
     FUNC_OnAdminRemoved onAdminRemoved;
     FUNC_OnOwnerChanged onOwnerChanged;
     FUNC_OnAnnouncementChanged onAnnouncementChanged;
+};
+
+class ContactManagerListener : public EMContactListener
+{
+public:
+    ContactManagerListener(FUNC_OnContactAdded _onContactAdded, FUNC_OnContactDeleted _onContactDeleted, FUNC_OnContactInvited _onContactInvited, FUNC_OnFriendRequestAccepted _onFriendRequestAccepted, FUNC_OnFriendRequestDeclined _OnFriendRequestDeclined):onContactAdded_(_onContactAdded),onContactDeleted_(_onContactDeleted),onContactInvited_(_onContactInvited),onFriendRequestAccepted_(_onFriendRequestAccepted),OnFriendRequestDeclined_(_OnFriendRequestDeclined){}
+    
+    void onContactAdded(const std::string &username) override {
+        LOG("receive contactadded from user %s!", username.c_str());
+    }
+    void onContactDeleted(const std::string &username) override {
+        LOG("receive contactdeleted from user %s!", username.c_str());
+    }
+    void onContactInvited(const std::string &username, std::string &reason) override {
+        LOG("receive contactinvited from user %s with reason %s!", username.c_str(), reason.c_str());
+    }
+    void onContactAgreed(const std::string &username) override {
+        LOG("receive contactagreed from user %s!", username.c_str());
+    }
+    void onContactRefused(const std::string &username) override {
+        LOG("receive contactrefused from user %s!", username.c_str());
+    }
+
+private:
+    FUNC_OnContactAdded onContactAdded_;
+    FUNC_OnContactDeleted onContactDeleted_;
+    FUNC_OnContactInvited onContactInvited_;
+    FUNC_OnFriendRequestAccepted onFriendRequestAccepted_;
+    FUNC_OnFriendRequestDeclined OnFriendRequestDeclined_;
 };
 
 #endif // _CALLBACKS_H_

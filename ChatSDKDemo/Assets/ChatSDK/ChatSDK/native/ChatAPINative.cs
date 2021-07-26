@@ -48,6 +48,9 @@ namespace ChatSDK{
 		[DllImport(MyLibName)]
 		internal static extern void ChatManager_FetchHistoryMessages(IntPtr client, string conversationId, ConversationType type, string startMessageId, int count, OnSuccessResult onSuccessResult, OnError onError);
 
+		[DllImport(MyLibName)]
+		internal static extern void ChatManager_GetConversationsFromServer(IntPtr client, OnSuccessResult onSuccessResult, OnError onError);
+
 		/** GroupManager Stub **/
 		[DllImport(MyLibName)]
 		internal static extern void GroupManager_AddListener(IntPtr client, OnInvitationReceived onInvitationReceived,
@@ -65,6 +68,8 @@ namespace ChatSDK{
 		[DllImport(MyLibName)]
 		internal static extern void GroupManager_ChangeGroupName(IntPtr client, string groupId, string groupName, Action onSuccess, OnError onError);
 
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_DestoryGroup(IntPtr client, string groupId, Action onSuccess, OnError onError);
 
 		[DllImport(MyLibName)]
 		internal static extern void GroupManager_AddMembers(IntPtr client, string groupId,
@@ -104,7 +109,40 @@ namespace ChatSDK{
 		internal static extern void RoomManager_RemoveRoomMembers(IntPtr client, string roomId, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 3)] string[] memberArray = null,
 			int size = 0, Action onSuccess = null, OnError onError = null);
 
-		
+		/** ContactManager Stub **/
+		[DllImport(MyLibName)]
+		internal static extern void ContactManager_AddListener(IntPtr client, OnContactAdd onContactAdd,OnContactDeleted onContactDeleted,
+			OnContactInvited onContactInvited, OnFriendRequestAccepted onFriendRequestAccepted,OnFriendRequestDeclined onFriendRequestDeclined);
+
+		[DllImport(MyLibName)]
+		internal static extern void ContactManager_AddContact(IntPtr client, string username, string reason, Action onSuccess = null, OnError onError = null);
+
+		[DllImport(MyLibName)]
+		internal static extern void ContactManager_DeleteContact(IntPtr client, string username, bool keepConversation = false, Action onSuccess = null, OnError onError = null);
+
+		[DllImport(MyLibName)]
+		internal static extern void ContactManager_GetContactsFromServer(IntPtr client, OnSuccessResult onSuccessResult, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void ContactManager_GetContactsFromDB(IntPtr client, OnSuccessResult onSuccessResult, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void ContactManager_AddToBlackList(IntPtr client, string username, bool both, Action onSuccess = null, OnError onError = null);
+
+		[DllImport(MyLibName)]
+		internal static extern void ContactManager_RemoveFromBlackList(IntPtr client, string username, Action onSuccess = null, OnError onError = null);
+
+		[DllImport(MyLibName)]
+		internal static extern void ContactManager_GetBlackListFromServer(IntPtr client, OnSuccessResult onSuccessResult, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void ContactManager_AcceptInvitation(IntPtr client, string username, Action onSuccess = null, OnError onError = null);
+
+		[DllImport(MyLibName)]
+		internal static extern void ContactManager_DeclineInvitation(IntPtr client, string username, Action onSuccess = null, OnError onError = null);
+
+		[DllImport(MyLibName)]
+		internal static extern void ContactManager_GetSelfIdsOnOtherPlatform(IntPtr client, OnSuccessResult onSuccessResult, OnError onError);
 
 		#endregion native API import
 	}

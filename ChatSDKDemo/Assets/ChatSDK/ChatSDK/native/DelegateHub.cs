@@ -41,7 +41,13 @@ namespace ChatSDK
     //IRoomManagerDelegate, most of them are duplicated as IGroupManagerDelegate
     public delegate void OnChatRoomDestroyed(string roomId, string roomName);
     public delegate void OnRemovedFromChatRoom(string roomId, string roomName, string participant);
-    
+    //IContactManagerDelegate
+    public delegate void OnContactAdd(string username);
+    public delegate void OnContactDeleted(string username);
+    public delegate void OnContactInvited(string username, string reason);
+    public delegate void OnFriendRequestAccepted(string username);
+    public delegate void OnFriendRequestDeclined(string username);
+
     public class ConnectionHub
     {
         //events handler
@@ -147,6 +153,10 @@ namespace ChatSDK
                             mto = new ImageMessageTO();
                             Marshal.PtrToStructure(_messages[i], mto);
                             break;
+                        case MessageBodyType.VOICE:
+                            mto = new VoiceMessageTO();
+                            Marshal.PtrToStructure(_messages[i], mto);
+                            break;
                     }
                     Debug.Log($"Message {mto.MsgId} received from {mto.From}");
                     messages.Add(mto.Unmarshall());
@@ -240,6 +250,74 @@ namespace ChatSDK
                 foreach (IRoomManagerDelegate listener in listeners?.List)
                 {
                     listener.OnMemberJoined(groupId, member);
+                }
+            };
+        }
+    }
+
+    public class ContactManagerHub
+    {
+        internal OnContactAdd OnContactAdd;
+        internal OnContactDeleted OnContactDeleted;
+        internal OnContactInvited OnContactInvited;
+        internal OnFriendRequestAccepted OnFriendRequestAccepted;
+        internal OnFriendRequestDeclined OnFriendRequestDeclined;
+
+        private WeakDelegater<IContactManagerDelegate> listeners;
+
+        public ContactManagerHub(WeakDelegater<IContactManagerDelegate> _listeners)
+        {
+            if (_listeners == null)
+            {
+                listeners = new WeakDelegater<IContactManagerDelegate>();
+            }
+            else
+            {
+                listeners = _listeners;
+            }
+
+            OnContactAdd = (string username) =>
+            {
+                Debug.Log($"Name={username}] add you.");
+                foreach (IContactManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnContactAdded(username);
+                }
+            };
+
+            OnContactDeleted = (string username) =>
+            {
+                Debug.Log($"Name={username}] delete you.");
+                foreach (IContactManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnContactDeleted(username);
+                }
+            };
+
+            OnContactInvited = (string username, string reason) =>
+            {
+                Debug.Log($"Name={username}] invite you with reason:{reason}.");
+                foreach (IContactManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnContactInvited(username, reason);
+                }
+            };
+
+            OnFriendRequestAccepted = (string username) =>
+            {
+                Debug.Log($"Name={username}] accept your invitation.");
+                foreach (IContactManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnFriendRequestAccepted(username);
+                }
+            };
+
+            OnFriendRequestDeclined = (string username) =>
+            {
+                Debug.Log($"Name={username}] decline your invitation.");
+                foreach (IContactManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnFriendRequestDeclined(username);
                 }
             };
         }

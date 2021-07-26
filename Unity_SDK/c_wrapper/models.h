@@ -2,6 +2,7 @@
 #define _MODELS_H_
 #include "emmessage.h"
 #include "emchatmanager_interface.h"
+#include "emcontactmanager_interface.h"
 #include "emmuc.h"
 #include "emgroup.h"
 #include "emchatroom.h"
@@ -12,6 +13,7 @@
 #include "emcmdmessagebody.h"
 #include "emfilemessagebody.h"
 #include "emimagemessagebody.h"
+#include "emvoicemessagebody.h"
 #include "emmucsetting.h"
 
 using namespace easemob;
@@ -132,6 +134,16 @@ struct ImageMessageBodyTO {
     bool Original;
 };
 
+struct VoiceMessageBodyTO {
+    const char * LocalPath;
+    const char * DisplayName;
+    const char * Secret;
+    const char * RemotePath;
+    long FileSize;
+    EMFileMessageBody::EMDownloadStatus DownStatus;
+    int Duration;
+};
+
 class MessageTO
 {
 public:
@@ -195,6 +207,13 @@ class ImageMessageTO : public MessageTO
 public:
     ImageMessageBodyTO body;
     ImageMessageTO(const EMMessagePtr &message);
+};
+
+class VoiceMessageTO : public MessageTO
+{
+public:
+    VoiceMessageBodyTO body;
+    VoiceMessageTO(const EMMessagePtr &message);
 };
 
 enum DataType {
@@ -298,5 +317,18 @@ struct RoomTO
     void LogInfo();
 };
 
+struct ConversationTO
+{
+    const char * ConverationId;
+    EMConversation::EMConversationType type;
+    const char * ExtField;
+};
+
+struct TOArray
+{
+    DataType Type;
+    int Size;
+    void * Data[32]; //list of data
+};
 
 #endif //_MODELS_H_

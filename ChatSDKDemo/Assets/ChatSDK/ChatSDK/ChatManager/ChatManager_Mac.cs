@@ -107,7 +107,34 @@ namespace ChatSDK
 
         public override void GetConversationsFromServer(ValueCallBack<List<Conversation>> handle = null)
         {
-            throw new System.NotImplementedException();
+            ChatAPINative.ChatManager_GetConversationsFromServer(client,
+                (IntPtr[] conversationResult, DataType dType, int size) =>
+                {
+                    Debug.Log($"GetConversationsFromServer callback with dType={dType}, size={size}");
+                    //Verify parameter
+                    if(dType == DataType.ListOfConversation && size == 1)
+                    {
+                        var conversationTOArray = Marshal.PtrToStructure<TOArray>(conversationResult[0]);
+                        var result = new List<Conversation>();
+                        int toSize = conversationTOArray.Size;
+                        for (int i=0; i< toSize; i++)
+                        {                            
+                            ConversationTO conversationTO = new ConversationTO();
+                            Marshal.PtrToStructure(conversationTOArray.Data[i], conversationTO);
+                            Conversation conversation = new Conversation(conversationTO.ConverationId, conversationTO.Type);
+                            //ExtField maybe empty
+                            if (conversationTO.ExtField.Length > 0)
+                                conversation.Ext = TransformTool.JsonStringToDictionary(conversationTO.ExtField);
+                            result.Add(conversation);
+                        }
+                        handle?.OnSuccessValue(result);
+                    }
+                    else
+                    {
+                        Debug.LogError("Incorrect delegate parameters returned.");
+                    }
+                },
+                (int code, string desc) => handle?.OnError(code, desc));
         }
 
         public override int GetUnreadMessageCount()

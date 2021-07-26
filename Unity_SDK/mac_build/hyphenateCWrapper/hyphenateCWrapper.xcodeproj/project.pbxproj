@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D64BF41F26AAE9CD00223225 /* contact_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64BF41E26AAE9CD00223225 /* contact_manager.cpp */; };
 		D703D33726893F6D00A9FA7D /* chat_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D703D33626893F6D00A9FA7D /* chat_manager.cpp */; };
 		D715B7BE268C83ED00EE75D6 /* models.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D715B7BD268C83ED00EE75D6 /* models.cpp */; };
 		D742F1C4266843CA00B80C18 /* client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D742F1C0266843CA00B80C18 /* client.cpp */; };
@@ -198,6 +199,8 @@
 		90A0455C2632D4F000550B6E /* emencryptprovider_interface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = emencryptprovider_interface.h; sourceTree = "<group>"; };
 		90A0455D2632D4F000550B6E /* emcursorresult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = emcursorresult.h; sourceTree = "<group>"; };
 		90A0455E2632D4F000550B6E /* emchatroommanager_interface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = emchatroommanager_interface.h; sourceTree = "<group>"; };
+		D64BF41D26AAE9CD00223225 /* contact_manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = contact_manager.h; sourceTree = "<group>"; };
+		D64BF41E26AAE9CD00223225 /* contact_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = contact_manager.cpp; sourceTree = "<group>"; };
 		D703D33526893F2900A9FA7D /* chat_manager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = chat_manager.h; sourceTree = "<group>"; };
 		D703D33626893F6D00A9FA7D /* chat_manager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = chat_manager.cpp; sourceTree = "<group>"; };
 		D715B7BD268C83ED00EE75D6 /* models.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = models.cpp; sourceTree = "<group>"; };
@@ -471,6 +474,8 @@
 		D742F1BD266843CA00B80C18 /* c_wrapper */ = {
 			isa = PBXGroup;
 			children = (
+				D64BF41E26AAE9CD00223225 /* contact_manager.cpp */,
+				D64BF41D26AAE9CD00223225 /* contact_manager.h */,
 				D7C6A8742671AD720083042D /* callbacks.h */,
 				D742F1C826684CEA00B80C18 /* api_decorator.h */,
 				D742F1C6266846C400B80C18 /* common.h */,
@@ -562,6 +567,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D742F1C4266843CA00B80C18 /* client.cpp in Sources */,
+				D64BF41F26AAE9CD00223225 /* contact_manager.cpp in Sources */,
 				D79C40F32695D1A2004818E5 /* group_manager.cpp in Sources */,
 				D742F1C5266843CA00B80C18 /* hyphenateCWrapper.cpp in Sources */,
 				D703D33726893F6D00A9FA7D /* chat_manager.cpp in Sources */,

@@ -83,6 +83,19 @@ ImageMessageTO::ImageMessageTO(const EMMessagePtr &_message):MessageTO(_message)
     this->body.ThumbnaiRemotePath = body->thumbnailRemotePath().c_str();
     this->body.ThumbnailLocalPath = body->thumbnailLocalPath().c_str();
 }
+
+VoiceMessageTO::VoiceMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
+    auto body = (EMVoiceMessageBody *)_message->bodies().front().get();
+    this->BodyType = body->type(); //TODO: only 1st body type determined
+    this->body.DisplayName = body->displayName().c_str();
+    this->body.DownStatus = body->downloadStatus();
+    this->body.FileSize = body->fileLength();
+    this->body.LocalPath = body->localPath().c_str();
+    this->body.RemotePath = body->remotePath().c_str();
+    this->body.Secret = body->secretKey().c_str();
+    this->body.Duration = body->duration();
+}
+
 MessageTO * MessageTO::FromEMMessage(const EMMessagePtr &_message)
 {
     //TODO: assume that only 1 body in _message->bodies
@@ -112,6 +125,11 @@ MessageTO * MessageTO::FromEMMessage(const EMMessagePtr &_message)
         case EMMessageBody::IMAGE:
         {
             message = new ImageMessageTO(_message);
+        }
+            break;
+        case EMMessageBody::VOICE:
+        {
+            message = new VoiceMessageTO(_message);
         }
             break;
         default:
