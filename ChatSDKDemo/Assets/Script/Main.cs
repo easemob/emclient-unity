@@ -47,7 +47,7 @@ public class Main : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SendBtn.onClick.AddListener(GetSelfIdsOnOtherPlatformAction);
+        SendBtn.onClick.AddListener(GetConversationAction);
         LeaveGroupBtn.onClick.AddListener(DeclineInvitationAction);
         LeaveRoomBtn.onClick.AddListener(GetBlockListFromServerAction);
 
@@ -74,6 +74,7 @@ public class Main : MonoBehaviour
         SDKClient.Instance.Logout(false);
     }
 
+    //chatmanager
     async void SendMessageAction()
     {
         SendBtn.enabled = false;
@@ -207,7 +208,7 @@ public class Main : MonoBehaviour
             }));
     }
 
-    void GetConversationsFromServer()
+    void GetConversationsFromServerAction()
     {
         IChatManager chatManager = SDKClient.Instance.ChatManager;
         chatManager.GetConversationsFromServer(
@@ -230,6 +231,158 @@ public class Main : MonoBehaviour
                 ));
     }
 
+    void DownloadAttachmentAction()
+    {
+        string messageId = RecvIdField.text;
+        IChatManager chatManager = SDKClient.Instance.ChatManager;
+        CallBack callback = new CallBack(onSuccess: () => { Debug.Log("Down load attachment successfully!"); },
+                                onProgress: (int progress) => { Debug.Log(progress); },
+                                onError: (int code, string desc) => { Debug.Log(code + desc); });
+        chatManager.DownloadAttachment(messageId, callback);
+    }
+
+    void DownloadThumbnailAction()
+    {
+        string messageId = RecvIdField.text;
+        IChatManager chatManager = SDKClient.Instance.ChatManager;
+        CallBack callback = new CallBack(onSuccess: () => { Debug.Log("Down load thumbnail successfully!"); },
+                                onProgress: (int progress) => { Debug.Log(progress); },
+                                onError: (int code, string desc) => { Debug.Log(code + desc); });
+        chatManager.DownloadThumbnail(messageId, callback);
+    }
+
+    void GetUnreadMessageCountAction()
+    {
+        IChatManager chatManager = SDKClient.Instance.ChatManager;
+        int unreadMessageCount = chatManager.GetUnreadMessageCount();
+        Debug.Log($"Get unread message count:{unreadMessageCount}");
+    }
+
+    void ImportMessagesAction()
+    {
+        List<Message> messageList = new List<Message>();
+
+        string receiverId = RecvIdField.text;
+        string content = "123";
+        IChatManager chatManager = SDKClient.Instance.ChatManager;
+        Message message1 = Message.CreateTextSendMessage(receiverId, content);
+        messageList.Add(message1);
+
+        receiverId = RecvIdField.text;
+        content = "456";
+        Message message2 = Message.CreateTextSendMessage(receiverId, content);
+        messageList.Add(message2);
+
+        chatManager.ImportMessages(messageList);
+    }
+
+    void LoadAllConversationsAction()
+    {
+        IChatManager chatManager = SDKClient.Instance.ChatManager;
+        List<Conversation> conversationList = chatManager.LoadAllConversations();
+        int i = 0;
+        foreach(Conversation conversation in conversationList)
+        {
+            Debug.Log($"Get conversaion:{i} with id:{conversation.Id} and type:{conversation.GetType()}");
+            i++;
+        }
+    }
+
+    void LoadMessageAction()
+    {
+        string messageId = RecvIdField.text;
+        IChatManager chatManager = SDKClient.Instance.ChatManager;
+        Message message = chatManager.LoadMessage(messageId);
+        Debug.Log($"Load message id:{message.MsgId} and type:{message.GetType()}");
+    }
+
+    void MarkAllConversationsAsReadAction()
+    {
+        IChatManager chatManager = SDKClient.Instance.ChatManager;
+        if(chatManager.MarkAllConversationsAsRead())
+            Debug.Log("Mark all conversation as read successfully!");
+        else
+            Debug.Log("Mark all conversation as read failed!");
+    }
+
+    void RecallMessageAction()
+    {
+        string messageId = RecvIdField.text;
+        IChatManager chatManager = SDKClient.Instance.ChatManager;
+        CallBack callback = new CallBack(onSuccess: () => { Debug.Log($"Recall message:{messageId} successfully!"); },
+                                onProgress: (int progress) => { Debug.Log(progress); },
+                                onError: (int code, string desc) => { Debug.Log(code + desc); });
+        chatManager.RecallMessage(messageId, callback);
+    }
+
+    void ReSendMessageAction()
+    {
+        string messageId = RecvIdField.text;
+        IChatManager chatManager = SDKClient.Instance.ChatManager;
+        CallBack callback = new CallBack(onSuccess: () => { Debug.Log($"Resend message:{messageId} successfully!"); },
+                                onProgress: (int progress) => { Debug.Log(progress); },
+                                onError: (int code, string desc) => { Debug.Log(code + desc); });
+        chatManager.ResendMessage(messageId, callback);
+    }
+
+    void SearchMsgFromDBAction()
+    {
+        string keywords = RecvIdField.text;
+        IChatManager chatManager = SDKClient.Instance.ChatManager;
+        List<Message>  messageList = chatManager.SearchMsgFromDB(keywords, 1627439541, 20, null, MessageSearchDirection.UP);
+        int i = 0;
+        foreach(Message message in messageList)
+        {
+            Debug.Log($"Find message:{i}, msgid:{message.MsgId}, conversationid:{message.ConversationId}, to:{message.To}, from:{message.From}, type:{message.MessageType}");
+            i++;
+        }
+    }
+
+    void SendConversationReadAckAction()
+    {
+        string conversationId = RecvIdField.text;
+        IChatManager chatManager = SDKClient.Instance.ChatManager;
+        CallBack callback = new CallBack(onSuccess: () => { Debug.Log($"Send converation:{conversationId} read ack successfully!"); },
+                                onProgress: (int progress) => { Debug.Log(progress); },
+                                onError: (int code, string desc) => { Debug.Log(code + desc); });
+        chatManager.SendConversationReadAck(conversationId, callback);
+    }
+
+    void SendMessageReadAckAction()
+    {
+        string messageId = RecvIdField.text;
+        IChatManager chatManager = SDKClient.Instance.ChatManager;
+        CallBack callback = new CallBack(onSuccess: () => { Debug.Log($"Send message:{messageId} read ack successfully!"); },
+                                onProgress: (int progress) => { Debug.Log(progress); },
+                                onError: (int code, string desc) => { Debug.Log(code + desc); });
+        chatManager.SendMessageReadAck(messageId, callback);
+    }
+
+    void UpdateMessageAction()
+    {
+        string messageId = RecvIdField.text;
+        string receiverId = "yqtest";
+        string content = TextField.text;
+        IChatManager chatManager = SDKClient.Instance.ChatManager;
+        Message message = Message.CreateTextSendMessage(receiverId, content);
+        CallBack callback = new CallBack(onSuccess: () => { Debug.Log("Update message successfully!"); },
+                                            onProgress: (int progress) => { Debug.Log(progress); },
+                                            onError: (int code, string desc) => { Debug.Log(code + desc); });
+        //to-do: Add more message fields in update action
+        message.MsgId = messageId;
+        message.Direction = MessageDirection.RECEIVE;
+        chatManager.UpdateMessage(message, callback);
+    }
+
+    void GetConversationAction()
+    {
+        string conversationId = RecvIdField.text;
+        ConversationType type = ConversationType.Chat;
+        IChatManager chatManager = SDKClient.Instance.ChatManager;
+        chatManager.GetConversation(conversationId, type, true);
+    }
+
+    //groupmanager
     void CreateGroupAction()
     {
         string groupName = RecvIdField.text;

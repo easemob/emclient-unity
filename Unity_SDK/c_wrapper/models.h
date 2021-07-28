@@ -317,6 +317,18 @@ struct RoomTO
     void LogInfo();
 };
 
+struct GroupReadAckTO
+{
+    const char * metaId;
+    const char * msgId;
+    const char * from;
+    const char * content;
+    int count;
+    long timestamp;
+    
+    static GroupReadAckTO * FromGroupReadAck(EMGroupReadAckPtr&  groupReadAckPtr);
+};
+
 struct ConversationTO
 {
     const char * ConverationId;
@@ -329,6 +341,13 @@ struct TOArray
     DataType Type;
     int Size;
     void * Data[32]; //list of data
+};
+
+struct TOArrayDiff
+{
+    int Size;
+    void * Data[32];
+    int Type[32];
 };
 
 #endif //_MODELS_H_

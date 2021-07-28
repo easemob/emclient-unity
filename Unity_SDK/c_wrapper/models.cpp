@@ -304,3 +304,15 @@ void RoomTO::LogInfo()
     
     LOG("IsAllMemberMuted: %p %d", &IsAllMemberMuted, IsAllMemberMuted);
 }
+
+GroupReadAckTO * GroupReadAckTO::FromGroupReadAck(EMGroupReadAckPtr&  groupReadAckPtr)
+{
+    GroupReadAckTO *groupReadAckTO = new GroupReadAckTO();
+    groupReadAckTO->metaId = groupReadAckPtr->meta_id.c_str();
+    groupReadAckTO->msgId = groupReadAckPtr->msgPtr->msgId().c_str();
+    groupReadAckTO->from = groupReadAckPtr->from.c_str();
+    groupReadAckTO->content = groupReadAckPtr->content.c_str();
+    groupReadAckTO->count = groupReadAckPtr->count;
+    groupReadAckTO->timestamp = (long)groupReadAckPtr->timestamp;
+    return groupReadAckTO;
+}

@@ -31,7 +31,7 @@ namespace ChatSDK
 
         public abstract void RecallMessage(string messageId, CallBack handle = null);
 
-        public abstract Message ResendMessage(string messageId, ValueCallBack<Message> handle = null);
+        public abstract Message ResendMessage(string messageId, CallBack handle = null);
 
         public abstract List<Message> SearchMsgFromDB(string keywords, long timestamp = 0, int maxCount = 20, string from = null, MessageSearchDirection direction = MessageSearchDirection.UP);
 

@@ -10,14 +10,25 @@ namespace ChatSDK
     //IChatManagerDelegate
     public delegate void OnMessagesReceived([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] messages,
         [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] MessageBodyType[] types, int size);
-    public delegate void OnCmdMessagesReceived(MessageTO[] messages, int size);
-    public delegate void OnMessagesRead(MessageTO[] messages, int size);
-    public delegate void OnMessagesDelivered(MessageTO[] messages, int size);
-    public delegate void OnMessagesRecalled(MessageTO[] messages, int size);
+
+    public delegate void OnCmdMessagesReceived([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] messages,
+        [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] MessageBodyType[] types, int size);
+
+    public delegate void OnMessagesRead([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] messages,
+        [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] MessageBodyType[] types, int size);
+
+    public delegate void OnMessagesDelivered([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] messages,
+        [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] MessageBodyType[] types, int size);
+
+    public delegate void OnMessagesRecalled([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] messages,
+        [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] MessageBodyType[] types, int size);
+
     public delegate void OnReadAckForGroupMessageUpdated();
-    public delegate void OnGroupMessageRead(GroupReadAck[] acks, int size);
+
+    public delegate void OnGroupMessageRead([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] IntPtr[] acks, int size);
     public delegate void OnConversationsUpdate();
     public delegate void OnConversationRead(string from, string to);
+
     //IGroupManagerDelegate
     public delegate void OnInvitationReceived(string groupId, string groupName, string inviter, string reason);
     public delegate void OnRequestToJoinReceived(string groupId, string groupName, string applicant, string reason);
@@ -38,9 +49,11 @@ namespace ChatSDK
     public delegate void OnAnnouncementChanged(string groupId, string announcement);
     public delegate void OnSharedFileAdded(string groupId, GroupSharedFile sharedFile);
     public delegate void OnSharedFileDeleted(string groupId, string fileId);
+
     //IRoomManagerDelegate, most of them are duplicated as IGroupManagerDelegate
     public delegate void OnChatRoomDestroyed(string roomId, string roomName);
     public delegate void OnRemovedFromChatRoom(string roomId, string roomName, string participant);
+
     //IContactManagerDelegate
     public delegate void OnContactAdd(string username);
     public delegate void OnContactDeleted(string username);
@@ -126,49 +139,151 @@ namespace ChatSDK
 
             OnMessagesReceived = (IntPtr[] _messages, MessageBodyType[] types, int size) =>
             {
-                var messages = new List<Message>(size);
-                for (int i = 0; i < size; i++)
-                {
-                    MessageTO mto = null;
-                    switch (types[i])
-                    {
-                        case MessageBodyType.TXT:
-                            //keep using mto
-                            mto = new TextMessageTO();
-                            Marshal.PtrToStructure(_messages[i], mto);
-                            break;
-                        case MessageBodyType.LOCATION:
-                            mto = new LocationMessageTO();
-                            Marshal.PtrToStructure(_messages[i], mto);
-                            break;
-                        case MessageBodyType.CMD:
-                            mto = new CmdMessageTO();
-                            Marshal.PtrToStructure(_messages[i], mto);
-                            break;
-                        case MessageBodyType.FILE:
-                            mto = new FileMessageTO();
-                            Marshal.PtrToStructure(_messages[i], mto);
-                            break;
-                        case MessageBodyType.IMAGE:
-                            mto = new ImageMessageTO();
-                            Marshal.PtrToStructure(_messages[i], mto);
-                            break;
-                        case MessageBodyType.VOICE:
-                            mto = new VoiceMessageTO();
-                            Marshal.PtrToStructure(_messages[i], mto);
-                            break;
-                    }
-                    Debug.Log($"Message {mto.MsgId} received from {mto.From}");
-                    messages.Add(mto.Unmarshall());
-                    //_messages[i] memory released at unmanaged side!
-                }
+                List<Message> messages = GetMessageListFromIntPtrArray(_messages, types, size);
+                
                 //chain-call to customer specified listeners
-                Debug.Log($"Invoke customer listeners upon messages receiving...");
+                Debug.Log($"Invoke customer listeners in OnMessagesReceived upon messages receiving...");
                 foreach (IChatManagerDelegate listener in listeners?.List)
                 {
                     listener.OnMessagesReceived(messages);
                 }
             };
+
+            OnCmdMessagesReceived = (IntPtr[] _messages, MessageBodyType[] types, int size) =>
+            {
+                List<Message> messages = GetMessageListFromIntPtrArray(_messages, types, size);
+
+                //chain-call to customer specified listeners
+                Debug.Log($"Invoke customer listeners in OnCmdMessagesReceived upon messages receiving...");
+                foreach (IChatManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnCmdMessagesReceived(messages);
+                }
+            };
+
+            OnMessagesRead = (IntPtr[] _messages, MessageBodyType[] types, int size) =>
+            {
+                List<Message> messages = GetMessageListFromIntPtrArray(_messages, types, size);
+
+                //chain-call to customer specified listeners
+                Debug.Log($"Invoke customer listeners in OnMessagesRead upon messages receiving...");
+                foreach (IChatManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnMessagesRead(messages);
+                }
+            };
+
+            OnMessagesDelivered = (IntPtr[] _messages, MessageBodyType[] types, int size) =>
+            {
+                List<Message> messages = GetMessageListFromIntPtrArray(_messages, types, size);
+
+                //chain-call to customer specified listeners
+                Debug.Log($"Invoke customer listeners in OnMessagesDelivered upon messages receiving...");
+                foreach (IChatManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnMessagesDelivered(messages);
+                }
+            };
+
+            OnMessagesRecalled = (IntPtr[] _messages, MessageBodyType[] types, int size) =>
+            {
+                List<Message> messages = GetMessageListFromIntPtrArray(_messages, types, size);
+
+                //chain-call to customer specified listeners
+                Debug.Log($"Invoke customer listeners in OnMessagesRecalled upon messages receiving...");
+                foreach (IChatManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnMessagesRecalled(messages);
+                }
+            };
+
+            OnReadAckForGroupMessageUpdated = () =>
+            {
+                Debug.Log($"Invoke customer listeners in OnReadAckForGroupMessageUpdated");
+                foreach (IChatManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnReadAckForGroupMessageUpdated();
+                }
+            };
+
+            OnGroupMessageRead = (IntPtr[] _messages, int size) =>
+            {
+                Debug.Log($"Invoke customer listeners in OnGroupMessageRead upon group ack receiving...");
+                var acks = new List<GroupReadAck>(size);
+                GroupReadAckTO gto = null;
+                for (int i=0; i<size; i++)
+                {
+                    gto = new GroupReadAckTO();
+                    Marshal.PtrToStructure(_messages[i], gto);
+                    Debug.Log($"Received group message read ackid:{gto.AckId}, msgid:{gto.MsgId}");
+                }
+                acks.Add(gto.Unmarshall());
+                foreach (IChatManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnGroupMessageRead(acks);
+                }
+            };
+
+            //to-do: no any return parameter?
+            OnConversationsUpdate = () =>
+            {
+                Debug.Log($"Invoke customer listeners in OnConversationsUpdate when conversation updated.");
+                foreach (IChatManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnConversationsUpdate();
+                }
+            };
+
+            OnConversationRead = (string from, string to) =>
+            {
+                Debug.Log($"Invoke customer listeners in OnConversationRead when conversation read.");
+                foreach (IChatManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnConversationRead(from, to);
+                }
+            };
+
+        }
+
+        public List<Message>  GetMessageListFromIntPtrArray(IntPtr[] _messages, MessageBodyType[] types, int size)
+        {
+            var messages = new List<Message>(size);
+            for (int i = 0; i < size; i++)
+            {
+                MessageTO mto = null;
+                switch (types[i])
+                {
+                    case MessageBodyType.TXT:
+                        //keep using mto
+                        mto = new TextMessageTO();
+                        Marshal.PtrToStructure(_messages[i], mto);
+                        break;
+                    case MessageBodyType.LOCATION:
+                        mto = new LocationMessageTO();
+                        Marshal.PtrToStructure(_messages[i], mto);
+                        break;
+                    case MessageBodyType.CMD:
+                        mto = new CmdMessageTO();
+                        Marshal.PtrToStructure(_messages[i], mto);
+                        break;
+                    case MessageBodyType.FILE:
+                        mto = new FileMessageTO();
+                        Marshal.PtrToStructure(_messages[i], mto);
+                        break;
+                    case MessageBodyType.IMAGE:
+                        mto = new ImageMessageTO();
+                        Marshal.PtrToStructure(_messages[i], mto);
+                        break;
+                    case MessageBodyType.VOICE:
+                        mto = new VoiceMessageTO();
+                        Marshal.PtrToStructure(_messages[i], mto);
+                        break;
+                }
+                Debug.Log($"Message {mto.MsgId} received from {mto.From}");
+                messages.Add(mto.Unmarshall());
+                //_messages[i] memory released at unmanaged side!                
+            }
+            return messages;
         }
     }
 

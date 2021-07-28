@@ -850,6 +850,36 @@ namespace ChatSDK
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public class GroupReadAckTO
+    {
+        public string AckId;
+        public string MsgId;
+        public string From;
+        public string Content;
+        public int Count;
+        public long Timestamp;
+
+        public GroupReadAckTO()
+        {
+
+        }
+
+        internal GroupReadAck Unmarshall()
+        {
+            var result = new GroupReadAck()
+            {
+                AckId = AckId,
+                MsgId = MsgId,
+                From = From,
+                Content = Content,
+                Count = Count,
+                Timestamp = Timestamp
+            };
+            return result;
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public class ConversationTO
     {
         public string ConverationId;
@@ -869,5 +899,15 @@ namespace ChatSDK
         public int Size;
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
         public IntPtr[] Data; //list of data
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public class TOArrayDiff
+    {
+        public int Size;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
+        public IntPtr[] Data; //list of data
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
+        public int[] Type; //list of type
     }
 }

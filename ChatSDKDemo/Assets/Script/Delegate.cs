@@ -55,38 +55,50 @@ public class ChatManagerDelegate : IChatManagerDelegate
     {
         foreach (Message message in messages)
         {
-            Debug.Log(message);
+            Debug.Log($"Received cmd messageid:{message.MsgId}, to:{message.To}, from:{message.From}");
         }
     }
 
     public void OnConversationRead(string from, string to)
     {
-        throw new NotImplementedException();
+        Debug.Log($"Conversation Read, from:{from}, to:{to}");
     }
 
     public void OnConversationsUpdate()
     {
-        throw new NotImplementedException();
+        Debug.Log("Receive conversation update.");
     }
 
     public void OnGroupMessageRead(List<GroupReadAck> list)
     {
-        throw new NotImplementedException();
+        foreach(GroupReadAck ack in list)
+        {
+            Debug.Log($"Receive group read ack, AckId:{ack.AckId}, msgId:{ack.MsgId}, from:{ack.From}");
+        }
     }
 
     public void OnMessagesDelivered(List<Message> messages)
     {
-        throw new NotImplementedException();
+        foreach (Message message in messages)
+        {
+            Debug.Log($"Delivery message, msgId:{message.MsgId}, to:{message.To}, from:{message.From}");
+        }
     }
 
     public void OnMessagesRead(List<Message> messages)
     {
-        throw new NotImplementedException();
+        foreach (Message message in messages)
+        {
+            Debug.Log($"Message read, msgId:{message.MsgId}, to:{message.To}, from:{message.From}");
+        }
     }
 
     public void OnMessagesRecalled(List<Message> messages)
     {
-        throw new NotImplementedException();
+        foreach (Message message in messages)
+        {
+            Debug.Log($"Message recalled, msgId:{message.MsgId}, to:{message.To}, from:{message.From}");
+        }
     }
 
     public void OnMessagesReceived(List<Message> messages)

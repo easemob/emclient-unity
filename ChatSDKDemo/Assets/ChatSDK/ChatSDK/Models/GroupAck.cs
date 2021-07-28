@@ -24,6 +24,11 @@ namespace ChatSDK {
                 Timestamp = jo["timestamp"].AsInt;
             }
         }
+
+        internal GroupReadAck()
+        {
+
+        }
     }
 }
 

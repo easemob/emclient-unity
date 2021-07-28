@@ -19,9 +19,11 @@ using namespace easemob;
     typedef void(__stdcall *FUNC_OnSuccess_With_Result)(void * data[], DataType type, int size);
     typedef void(__stdcall *FUNC_OnError)(int, const char *);
     typedef void(__stdcall *FUNC_OnProgress)(int);
+
     //Connection Listeners
     typedef void(__stdcall *FUNC_OnConnected)();
     typedef void(__stdcall *FUNC_OnDisconnected)(int);
+
     //ChatManager Listeners
     typedef void (__stdcall *FUNC_OnMessagesReceived)(void * messages[],
                                                       EMMessageBody::EMMessageBodyType types[], int size);
@@ -33,6 +35,7 @@ using namespace easemob;
     typedef void (__stdcall *FUNC_OnGroupMessageRead)(GroupReadAck acks[], int size);
     typedef void (__stdcall *FUNC_OnConversationsUpdate)();
     typedef void (__stdcall *FUNC_OnConversationRead)(const char * from, const char * to);
+
     //GroupManager Listener
     typedef void (__stdcall *FUNC_OnInvitationReceived)(const char * groupId, const char * groupName, const char * inviter, const char * reason);
     typedef void (__stdcall *FUNC_OnRequestToJoinReceived)(const char * groupId, const char * groupName, const char * applicant, const char * reason);
@@ -53,6 +56,7 @@ using namespace easemob;
     typedef void (__stdcall *FUNC_OnAnnouncementChanged)(const char * groupId, const char * announcement);
     typedef void (__stdcall *FUNC_OnSharedFileAdded)(const char * groupId, GroupSharedFileTO sharedFile);
     typedef void (__stdcall *FUNC_OnSharedFileDeleted)(const char * groupId, const char * fileId);
+
     //RoomManager Listener
     typedef void (*FUNC_OnChatRoomDestroyed)(__stdcall const char * roomId, const char * roomName);
     typedef void (*FUNC_OnRemovedFromChatRoom)(__stdcall const char * roomId, const char * roomName, const char * participant);
@@ -62,21 +66,23 @@ using namespace easemob;
     typedef void(*FUNC_OnSuccess_With_Result)(void * data[], DataType type, int size);
     typedef void(*FUNC_OnError)(int, const char *);
     typedef void(*FUNC_OnProgress)(int);
+
     //Connection Listener
     typedef void(*FUNC_OnConnected)();
     typedef void(*FUNC_OnDisconnected)(int);
     typedef void(*FUNC_OnPong)();
+
     //ChatManager Listener
-    typedef void (*FUNC_OnMessagesReceived)(void * messages[],
-                                            EMMessageBody::EMMessageBodyType types[],int size);
-    typedef void (*FUNC_OnCmdMessagesReceived)(void * messages[], int size);
-    typedef void (*FUNC_OnMessagesRead)(void * messages[], int size);
-    typedef void (*FUNC_OnMessagesDelivered)(void * messages[], int size);
-    typedef void (*FUNC_OnMessagesRecalled)(void * messages[], int size);
+    typedef void (*FUNC_OnMessagesReceived)(void * messages[],EMMessageBody::EMMessageBodyType types[],int size);
+    typedef void (*FUNC_OnCmdMessagesReceived)(void * messages[],EMMessageBody::EMMessageBodyType types[],int size);
+    typedef void (*FUNC_OnMessagesRead)(void * messages[],EMMessageBody::EMMessageBodyType types[],int size);
+    typedef void (*FUNC_OnMessagesDelivered)(void * messages[],EMMessageBody::EMMessageBodyType types[],int size);
+    typedef void (*FUNC_OnMessagesRecalled)(void * messages[],EMMessageBody::EMMessageBodyType types[],int size);
     typedef void (*FUNC_OnReadAckForGroupMessageUpdated)();
-    typedef void (*FUNC_OnGroupMessageRead)(GroupReadAck acks[], int size);
+    typedef void (*FUNC_OnGroupMessageRead)(void * acks[], int size);
     typedef void (*FUNC_OnConversationsUpdate)();
     typedef void (*FUNC_OnConversationRead)(const char * from, const char * to);
+
     //GroupManager Listener
     typedef void (*FUNC_OnInvitationReceived)(const char * groupId, const char * groupName, const char * inviter, const char * reason);
     typedef void (*FUNC_OnRequestToJoinReceived)(const char * groupId, const char * groupName, const char * applicant, const char * reason);
@@ -97,9 +103,11 @@ using namespace easemob;
     typedef void (*FUNC_OnAnnouncementChanged)(const char * groupId, const char * announcement);
     typedef void (*FUNC_OnSharedFileAdded)(const char * groupId, GroupSharedFileTO sharedFile);
     typedef void (*FUNC_OnSharedFileDeleted)(const char * groupId, const char * fileId);
+
     //RoomManager Listener
     typedef void (*FUNC_OnChatRoomDestroyed)(const char * roomId, const char * roomName);
     typedef void (*FUNC_OnRemovedFromChatRoom)(const char * roomId, const char * roomName, const char * participant);
+
     //ContactManager Listener
     typedef void (*FUNC_OnContactAdded)(const char * username);
     typedef void (*FUNC_OnContactDeleted)(const char * username);
@@ -164,30 +172,138 @@ public:
     
     void onReceiveCmdMessages(const EMMessageList &messages) override {
         LOG("%d cmd messages received!", messages.size());
+        
+        size_t size = messages.size();
+        void * result[size];
+        EMMessageBody::EMMessageBodyType types[size];
+        int i = 0;
+        for(EMMessagePtr message : messages) {
+            MessageTO *mto = MessageTO::FromEMMessage(message);
+            result[i] = mto;
+            types[i] = mto->BodyType;
+            i++;
+        }
+        if(onCmdMessagesReceived) {
+            LOG("Call onCmdMessagesReceived delegate in managed side...");
+            onCmdMessagesReceived(result, types, (int)size);
+        }
+        //release memory manually
+        for(void * message : result) {
+            delete (MessageTO *)message;
+        }
     }
     
     void onReceiveHasReadAcks(const EMMessageList &messages) override{
         LOG("%d messages read!", messages.size());
+        
+        size_t size = messages.size();
+        void * result[size];
+        EMMessageBody::EMMessageBodyType types[size];
+        int i = 0;
+        for(EMMessagePtr message : messages) {
+            MessageTO *mto = MessageTO::FromEMMessage(message);
+            result[i] = mto;
+            types[i] = mto->BodyType;
+            i++;
+        }
+        if(onMessagesRead) {
+            LOG("Call onMessagesRead delegate in managed side...");
+            onMessagesRead(result, types, (int)size);
+        }
+        //release memory manually
+        for(void * message : result) {
+            delete (MessageTO *)message;
+        }
     }
     
     void onReceiveHasDeliveredAcks(const EMMessageList &messages) override{
         LOG("%d messages delivered!", messages.size());
+        
+        size_t size = messages.size();
+        void * result[size];
+        EMMessageBody::EMMessageBodyType types[size];
+        int i = 0;
+        for(EMMessagePtr message : messages) {
+            MessageTO *mto = MessageTO::FromEMMessage(message);
+            result[i] = mto;
+            types[i] = mto->BodyType;
+            i++;
+        }
+        if(onMessagesDelivered) {
+            LOG("Call onMessagesDelivered delegate in managed side...");
+            onMessagesDelivered(result, types, (int)size);
+        }
+        //release memory manually
+        for(void * message : result) {
+            delete (MessageTO *)message;
+        }
     }
     
     void onReceiveRecallMessages(const EMMessageList &messages) override {
         LOG("%d messages recalled!", messages.size());
+        
+        size_t size = messages.size();
+        void * result[size];
+        EMMessageBody::EMMessageBodyType types[size];
+        int i = 0;
+        for(EMMessagePtr message : messages) {
+            MessageTO *mto = MessageTO::FromEMMessage(message);
+            result[i] = mto;
+            types[i] = mto->BodyType;
+            i++;
+        }
+        if(onMessagesRecalled) {
+            LOG("Call onMessagesRecalled delegate in managed side...");
+            onMessagesRecalled(result, types, (int)size);
+        }
+        //release memory manually
+        for(void * message : result) {
+            delete (MessageTO *)message;
+        }
     }
     
     void onUpdateGroupAcks() override {
+        if(onReadAckForGroupMessageUpdated) {
+            LOG("Call onReadAckForGroupMessageUpdated delegate in managed side...");
+            onReadAckForGroupMessageUpdated();
+        }
+    }
+    
+    void onReceiveReadAcksForGroupMessage(const EMGroupReadAckList &acks) override {
+        LOG("%d group messages read!", acks.size());
         
+        size_t size = acks.size();
+        void * result[size];
+        int i = 0;
+        for(EMGroupReadAckPtr ack : acks) {
+            GroupReadAckTO *gto = GroupReadAckTO::FromGroupReadAck(ack);
+            result[i] = gto;
+            i++;
+        }
+        if(onGroupMessageRead) {
+            LOG("Call onGroupMessageRead delegate in managed side...");
+            onGroupMessageRead(result, (int)size);
+        }
+        //release memory manually
+        for(void * gto : result) {
+            delete (GroupReadAckTO *)gto;
+        }
     }
     
     void onUpdateConversationList(const EMConversationList &conversations) override {
-        
+        LOG("%d conversation updated!");
+        if(onConversationsUpdate) {
+            LOG("Call onConversationsUpdate delegate in managed side...");
+            onConversationsUpdate();
+        }
     }
     
     void onReceiveReadAckForConversation(const std::string& fromUsername, const std::string& toUsername) override {
-        
+        LOG("Receive read ack for conversation to:%s, from:%s", toUsername.c_str(), fromUsername.c_str());
+        if(onConversationRead) {
+            LOG("Call onConversationRead delegate in managed side...");
+            onConversationRead(fromUsername.c_str(), toUsername.c_str());
+        }
     }
 private:
     FUNC_OnMessagesReceived onMessagesReceived;
