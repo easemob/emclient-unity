@@ -47,7 +47,8 @@ namespace ChatSDK
     public delegate void OnMemberJoined(string groupId, string member);
     public delegate void OnMemberExited(string groupId, string member);
     public delegate void OnAnnouncementChanged(string groupId, string announcement);
-    public delegate void OnSharedFileAdded(string groupId, GroupSharedFile sharedFile);
+    public delegate void OnSharedFileAdded(string groupId,
+        [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] sharedFile, int size);
     public delegate void OnSharedFileDeleted(string groupId, string fileId);
 
     //IRoomManagerDelegate, most of them are duplicated as IGroupManagerDelegate
@@ -324,10 +325,188 @@ namespace ChatSDK
 
             OnInvitationReceived = (string groupId, string groupName, string inviter, string reason) =>
             {
-                Debug.Log($"Group[Id={groupId},Name={groupName}] invitation received from {inviter}, reason: {reason}");
+                Debug.Log($"OnInvitationReceived, group[Id={groupId},Name={groupName}] invitation received from {inviter}, reason: {reason}");
                 foreach (IGroupManagerDelegate listener in listeners?.List)
                 {
                     listener.OnInvitationReceived(groupId, groupName, inviter, reason);
+                }
+            };
+
+            OnRequestToJoinReceived = (string groupId, string groupName, string applicant, string reason) =>
+            {
+                Debug.Log($"ROnRequestToJoinReceived, group[Id={groupId},Name={groupName}], applicant:{applicant}, reason: {reason}");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnRequestToJoinReceived(groupId, groupName, applicant, reason);
+                }
+            };
+
+            OnRequestToJoinAccepted = (string groupId, string groupName, string accepter) =>
+            {
+                Debug.Log($"OnRequestToJoinAccepted, group[Id={groupId},Name={groupName}], accepter: {accepter}");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnRequestToJoinAccepted(groupId, groupName, accepter);
+                }
+            };
+
+            OnRequestToJoinDeclined = (string groupId, string groupName, string decliner, string reason) =>
+            {
+                Debug.Log($"OnRequestToJoinDeclined, group[Id={groupId},Name={groupName}], decliner: {decliner}, reason:{reason}");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnRequestToJoinDeclined(groupId, groupName, decliner, reason);
+                }
+            };
+
+            OnInvitationAccepted = (string groupId, string invitee, string reason) =>
+            {
+                Debug.Log($"OnInvitationAccepted, group[Id={groupId}], invitee: {invitee}, reason:{reason}");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnInvitationAccepted(groupId, invitee, reason);
+                }
+            };
+
+            OnInvitationDeclined = (string groupId, string invitee, string reason) =>
+            {
+                Debug.Log($"OnInvitationDeclined, group[Id={groupId}], invitee: {invitee}, reason:{reason}");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnInvitationDeclined(groupId, invitee, reason);
+                }
+            };
+
+            OnUserRemoved = (string groupId, string groupName) =>
+            {
+                Debug.Log($"OnUserRemoved, group[Id={groupId}, Name={groupName}]");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnUserRemoved(groupId, groupName);
+                }
+            };
+
+            OnGroupDestroyed = (string groupId, string groupName) =>
+            {
+                Debug.Log($"OnGroupDestroyed, group[Id={groupId}, Name={groupName}]");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnGroupDestroyed(groupId, groupName);
+                }
+            };
+
+            OnAutoAcceptInvitationFromGroup = (string groupId, string inviter, string inviteMessage) =>
+            {
+                Debug.Log($"OnAutoAcceptInvitationFromGroup, group[Id={groupId}], inviter:{inviter}, inviteMessage:{inviteMessage}");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnAutoAcceptInvitationFromGroup(groupId, inviter, inviteMessage);
+                }
+            };
+
+            OnMuteListAdded = (string groupId, string[] mutes, int size, int muteExpire) =>
+            {
+                Debug.Log($"OnMuteListAdded, group[Id={groupId}], mute member num:{size}, muteExpire:{muteExpire}");
+
+                var acks = new List<string>(size);
+                for (int i = 0; i < size; i++)
+                {
+                    acks.Add(mutes[i]);
+                }
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnMuteListAdded(groupId, acks, muteExpire);
+                }
+            };
+
+            OnMuteListRemoved = (string groupId, string[] mutes, int size) =>
+            {
+                Debug.Log($"OnMuteListRemoved, group[Id={groupId}], mute member num:{size}");
+
+                var acks = new List<string>(size);
+                for (int i = 0; i < size; i++)
+                {
+                    acks.Add(mutes[i]);
+                }
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnMuteListRemoved(groupId, acks);
+                }
+            };
+
+            OnAdminAdded = (string groupId, string administrator) =>
+            {
+                Debug.Log($"OnAdminAdded, group[Id={groupId}], admin:{administrator}");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnAdminAdded(groupId, administrator);
+                }
+            };
+
+            OnAdminRemoved = (string groupId, string administrator) =>
+            {
+                Debug.Log($"OnAdminRemoved, group[Id={groupId}], admin:{administrator}");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnAdminRemoved(groupId, administrator);
+                }
+            };
+
+            OnOwnerChanged = (string groupId, string newOwner, string oldOwner) =>
+            {
+                Debug.Log($"OnOwnerChanged, group[Id={groupId}], newOwner:{newOwner}, oldOwner:{oldOwner}");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnOwnerChanged(groupId, newOwner, oldOwner);
+                }
+            };
+
+            OnMemberJoined = (string groupId, string member) =>
+            {
+                Debug.Log($"OnMemberJoined, group[Id={groupId}], member:{member}");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnMemberJoined(groupId, member);
+                }
+            };
+
+            OnMemberExited = (string groupId, string member) =>
+            {
+                Debug.Log($"OnMemberExited, group[Id={groupId}], member:{member}");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnMemberExited(groupId, member);
+                }
+            };
+
+            OnAnnouncementChanged = (string groupId, string announcement) =>
+            {
+                Debug.Log($"OnAnnouncementChanged, group[Id={groupId}], announcement:{announcement}");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnAnnouncementChanged(groupId, announcement);
+                }
+            };
+
+            OnSharedFileAdded = (string groupId, IntPtr[] sharedFile, int size) =>
+            {
+                GroupSharedFile groupSharedFile = new GroupSharedFile();
+                Marshal.PtrToStructure(sharedFile[0], groupSharedFile);
+
+                Debug.Log($"OnSharedFileAdded, group[Id={groupId}], fileName:{groupSharedFile.FileName}, fileId:{groupSharedFile.FileId}");
+
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnSharedFileAdded(groupId, groupSharedFile);
+                }
+            };
+
+            OnSharedFileDeleted = (string groupId, string fileId) =>
+            {
+                Debug.Log($"OnSharedFileDeleted, group[Id={groupId}], fileId:{fileId}");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnSharedFileDeleted(groupId, fileId);
                 }
             };
         }

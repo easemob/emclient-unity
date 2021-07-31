@@ -86,7 +86,7 @@ namespace ChatSDK
             wrapper.Call("recallMessage", messageId, handle?.callbackId);
         }
 
-        public override Message ResendMessage(string messageId, ValueCallBack<Message> handle = null)
+        public override Message ResendMessage(string messageId, CallBack handle = null)
         {
             string jsonString = wrapper.Call<string>("resendMessage", messageId, handle?.callbackId);
             return new Message(jsonString);

@@ -64,7 +64,7 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override Message ResendMessage(string messageId, ValueCallBack<Message> handle = null)
+        public override Message ResendMessage(string messageId, CallBack handle = null)
         {
             throw new System.NotImplementedException();
         }

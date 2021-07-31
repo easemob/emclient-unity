@@ -101,7 +101,7 @@ using namespace easemob;
     typedef void (*FUNC_OnMemberJoined)(const char * groupId, const char * member);
     typedef void (*FUNC_OnMemberExited)(const char * groupId, const char * member);
     typedef void (*FUNC_OnAnnouncementChanged)(const char * groupId, const char * announcement);
-    typedef void (*FUNC_OnSharedFileAdded)(const char * groupId, GroupSharedFileTO sharedFile);
+    typedef void (*FUNC_OnSharedFileAdded)(const char * groupId, void * sharedFile[], int size);
     typedef void (*FUNC_OnSharedFileDeleted)(const char * groupId, const char * fileId);
 
     //RoomManager Listener
@@ -320,7 +320,7 @@ private:
 class GroupManagerListener : public EMGroupManagerListener
 {
 public:
-    GroupManagerListener(void * client, FUNC_OnInvitationReceived onInvitationReceived, FUNC_OnRequestToJoinReceived onRequestToJoinReceived, FUNC_OnRequestToJoinAccepted onRequestToJoinAccepted, FUNC_OnRequestToJoinDeclined onRequestToJoinDeclined, FUNC_OnInvitationAccepted onInvitationAccepted, FUNC_OnInvitationDeclined onInvitationDeclined, FUNC_OnUserRemoved onUserRemoved, FUNC_OnGroupDestroyed onGroupDestroyed, FUNC_OnAutoAcceptInvitationFromGroup onAutoAcceptInvitationFromGroup, FUNC_OnMuteListAdded onMuteListAdded, FUNC_OnMuteListRemoved onMuteListRemoved, FUNC_OnAdminAdded onAdminAdded, FUNC_OnAdminRemoved onAdminRemoved, FUNC_OnOwnerChanged onOwnerChanged, FUNC_OnMemberJoined onMemberJoined, FUNC_OnMemberExited onMemberExited, FUNC_OnAnnouncementChanged onAnnouncementChanged, FUNC_OnSharedFileAdded onSharedFileAdded, FUNC_OnSharedFileDeleted onSharedFileDeleted):client(client),onInvitationReceived(onInvitationReceived),onRequestToJoinReceived(onRequestToJoinReceived),onRequestToJoinAccepted(onRequestToJoinAccepted),onRequestToJoinDeclined(onRequestToJoinDeclined),onInvitationAccepted(onInvitationAccepted),onInvitationDeclined(onInvitationDeclined),onUserRemoved(onUserRemoved),onGroupDestroyed(onGroupDestroyed),onAutoAcceptInvitationFromGroup(onAutoAcceptInvitationFromGroup),onMuteListAdded(onMuteListAdded),onMuteListRemoved(onMuteListRemoved),onAdminAdded(onAdminAdded),onAdminRemoved(onAdminRemoved),onOwnerChanged(onOwnerChanged),onMemberJoined(onMemberJoined),onMemberExited(onMemberExited),onAnnouncementChanged(onAnnouncementChanged),onSharedFileAdded(onSharedFileAdded),onSharedFileDeleted(onSharedFileDeleted) {}
+    GroupManagerListener(void * client, FUNC_OnInvitationReceived onInvitationReceived, FUNC_OnRequestToJoinReceived onRequestToJoinReceived, FUNC_OnRequestToJoinAccepted onRequestToJoinAccepted, FUNC_OnRequestToJoinDeclined onRequestToJoinDeclined, FUNC_OnInvitationAccepted onInvitationAccepted, FUNC_OnInvitationDeclined onInvitationDeclined, FUNC_OnUserRemoved onUserRemoved, FUNC_OnGroupDestroyed onGroupDestroyed, FUNC_OnAutoAcceptInvitationFromGroup onAutoAcceptInvitationFromGroupCB, FUNC_OnMuteListAdded onMuteListAdded, FUNC_OnMuteListRemoved onMuteListRemoved, FUNC_OnAdminAdded onAdminAdded, FUNC_OnAdminRemoved onAdminRemoved, FUNC_OnOwnerChanged onOwnerChanged, FUNC_OnMemberJoined onMemberJoined, FUNC_OnMemberExited onMemberExited, FUNC_OnAnnouncementChanged onAnnouncementChanged, FUNC_OnSharedFileAdded onSharedFileAdded, FUNC_OnSharedFileDeleted onSharedFileDeleted):client(client),onInvitationReceived(onInvitationReceived),onRequestToJoinReceived(onRequestToJoinReceived),onRequestToJoinAccepted(onRequestToJoinAccepted),onRequestToJoinDeclined(onRequestToJoinDeclined),onInvitationAccepted(onInvitationAccepted),onInvitationDeclined(onInvitationDeclined),onUserRemoved(onUserRemoved),onGroupDestroyed(onGroupDestroyed),onAutoAcceptInvitationFromGroupCB(onAutoAcceptInvitationFromGroupCB),onMuteListAdded(onMuteListAdded),onMuteListRemoved(onMuteListRemoved),onAdminAdded(onAdminAdded),onAdminRemoved(onAdminRemoved),onOwnerChanged(onOwnerChanged),onMemberJoined(onMemberJoined),onMemberExited(onMemberExited),onAnnouncementChanged(onAnnouncementChanged),onSharedFileAdded(onSharedFileAdded),onSharedFileDeleted(onSharedFileDeleted) {}
     
     void onReceiveInviteFromGroup(const std::string groupId, const std::string& inviter, const std::string& inviteMessage) override {
         if(onInvitationReceived) {
@@ -329,6 +329,171 @@ public:
             onInvitationReceived(groupId.c_str(), groupName.c_str(), inviter.c_str(), inviteMessage.c_str());
         }
     }
+    
+    void onReceiveInviteAcceptionFromGroup(const EMGroupPtr group, const std::string& invitee) override {
+        if(onInvitationAccepted) {
+            auto groupName = group->groupSubject();
+            onInvitationAccepted(group->groupId().c_str(), invitee.c_str(), "");
+        }
+    }
+
+    void onReceiveInviteDeclineFromGroup(const EMGroupPtr group, const std::string& invitee, const std::string &reason) override {
+        if(onInvitationDeclined) {
+            onInvitationDeclined(group->groupId().c_str(), invitee.c_str(), reason.c_str());
+        }
+    }
+
+    void onAutoAcceptInvitationFromGroup(const EMGroupPtr group, const std::string& inviter, const std::string& inviteMessage) override {
+        if(onAutoAcceptInvitationFromGroupCB) {
+            onAutoAcceptInvitationFromGroupCB(group->groupId().c_str(), inviter.c_str(), inviteMessage.c_str());
+        }
+    }
+
+    void onLeaveGroup(const EMGroupPtr group, EMMuc::EMMucLeaveReason reason) override {
+        
+        if(onUserRemoved && EMMuc::EMMucLeaveReason::BE_KICKED == reason) {
+            auto groupName = group->groupSubject();
+            onUserRemoved(group->groupId().c_str(), groupName.c_str());
+            return;
+        }
+        if(onGroupDestroyed && EMMuc::EMMucLeaveReason::DESTROYED == reason) {
+            auto groupName = group->groupSubject();
+            onGroupDestroyed(group->groupId().c_str(), groupName.c_str());
+            return;
+        }
+    }
+
+    void onReceiveJoinGroupApplication(const EMGroupPtr group, const std::string& from, const std::string& message) override {
+        if(onRequestToJoinReceived) {
+            auto groupName = group->groupSubject();
+            onRequestToJoinReceived(group->groupId().c_str(), groupName.c_str(), from.c_str(), message.c_str());
+        }
+    }
+
+    void onReceiveAcceptionFromGroup(const EMGroupPtr group) override {
+        if(onRequestToJoinAccepted) {
+            auto groupName = group->groupSubject();
+            onRequestToJoinAccepted(group->groupId().c_str(), groupName.c_str(), "");
+        }
+    }
+
+    void onReceiveRejectionFromGroup(const std::string &groupId, const std::string &reason) override {
+        if(onRequestToJoinDeclined) {
+            auto group = CLIENT->getGroupManager().groupWithId(groupId);
+            auto groupName = group->groupSubject();
+            onRequestToJoinDeclined(groupId.c_str(), groupName.c_str(), "", reason.c_str());
+        }
+    }
+
+    void onUpdateMyGroupList(const std::vector<EMGroupPtr> &list) override {
+        //no corresponding delegate defined in API
+    }
+
+ 
+    void onAddMutesFromGroup(const EMGroupPtr group, const std::vector<std::string> &mutes, int64_t muteExpire) override {
+        if(onMuteListAdded) {
+            int size = (int)mutes.size();
+            //convert vector to array
+            const char * muteArray[size];
+            for(size_t i=0; i<mutes.size(); i++) {
+                char * ptr = new char[mutes[i].size()+1];
+                strncpy(ptr, mutes[i].c_str(), mutes.size()+1);
+                muteArray[i] = ptr;
+            }
+            onMuteListAdded(group->groupId().c_str(), muteArray, size, (int)muteExpire);
+        }
+    }
+
+ 
+    void onRemoveMutesFromGroup(const EMGroupPtr group, const std::vector<std::string> &mutes) override {
+        if(onMuteListRemoved) {
+            int size = (int)mutes.size();
+            //convert vector to array
+            const char * muteArray[size];
+            for(size_t i=0; i<mutes.size(); i++) {
+                char * ptr = new char[mutes[i].size()+1];
+                strncpy(ptr, mutes[i].c_str(), mutes.size()+1);
+                muteArray[i] = ptr;
+            }
+            onMuteListRemoved(group->groupId().c_str(), muteArray, size);
+        }
+    }
+       
+
+    void onAddWhiteListMembersFromGroup(const easemob::EMGroupPtr Group, const std::vector<std::string> &members) override {
+        //no corresponding delegate defined in API
+    }
+       
+       
+    void onRemoveWhiteListMembersFromGroup(const easemob::EMGroupPtr Group, const std::vector<std::string> &members) override {
+        //no corresponding delegate defined in API
+    }
+       
+
+    void onAllMemberMuteChangedFromGroup(const easemob::EMGroupPtr Group, bool isAllMuted) override {
+        //no corresponding delegate defined in API
+    }
+
+  
+    void onAddAdminFromGroup(const EMGroupPtr group, const std::string& admin) override {
+        if(onAdminAdded) {
+            onAdminAdded(group->groupId().c_str(), admin.c_str());
+        }
+    }
+
+
+    void onRemoveAdminFromGroup(const EMGroupPtr group, const std::string& admin) override {
+        if(onAdminRemoved) {
+            onAdminRemoved(group->groupId().c_str(), admin.c_str());
+        }
+    }
+
+
+    void onAssignOwnerFromGroup(const EMGroupPtr group, const std::string& newOwner, const std::string& oldOwner) override {
+        if(onOwnerChanged) {
+            onOwnerChanged(group->groupId().c_str(), newOwner.c_str(), oldOwner.c_str());
+        }
+    }
+       
+
+    void onMemberJoinedGroup(const EMGroupPtr group, const std::string& member) override {
+        if(onMemberJoined) {
+            onMemberJoined(group->groupId().c_str(), member.c_str());
+        }
+    }
+
+    void onMemberLeftGroup(const EMGroupPtr group, const std::string& member) override {
+        if(onMemberExited) {
+            onMemberExited(group->groupId().c_str(), member.c_str());
+        }
+    }
+
+    void onUpdateAnnouncementFromGroup(const EMGroupPtr group, const std::string& announcement) override {
+        if(onAnnouncementChanged) {
+            onAnnouncementChanged(group->groupId().c_str(), announcement.c_str());
+        }
+    }
+
+    void onUploadSharedFileFromGroup(const EMGroupPtr group, const EMMucSharedFilePtr sharedFile) override {
+        if(onSharedFileAdded) {
+
+            GroupSharedFileTO* groupSharedFileTO = new GroupSharedFileTO();
+            groupSharedFileTO->FileName = sharedFile->fileName().c_str();
+            groupSharedFileTO->FileId = sharedFile->fileId().c_str();
+            groupSharedFileTO->FileOwner = sharedFile->fileOwner().c_str();
+            groupSharedFileTO->CreateTime = sharedFile->create();
+            groupSharedFileTO->FileSize = sharedFile->fileSize();
+            GroupSharedFileTO* groupSharedFileTOArray[1] = {groupSharedFileTO};
+            onSharedFileAdded(group->groupId().c_str(), (void **)groupSharedFileTOArray, 1);
+        }
+    }
+
+    void onDeleteSharedFileFromGroup(const EMGroupPtr group, const std::string& fileId) override {
+        if(onSharedFileDeleted) {
+            onSharedFileDeleted(group->groupId().c_str(), fileId.c_str());
+        }
+    }
+    
 private:
     void * client;
     FUNC_OnInvitationReceived onInvitationReceived;
@@ -339,7 +504,7 @@ private:
     FUNC_OnInvitationDeclined onInvitationDeclined;
     FUNC_OnUserRemoved onUserRemoved;
     FUNC_OnGroupDestroyed onGroupDestroyed;
-    FUNC_OnAutoAcceptInvitationFromGroup onAutoAcceptInvitationFromGroup;
+    FUNC_OnAutoAcceptInvitationFromGroup onAutoAcceptInvitationFromGroupCB;
     FUNC_OnMuteListAdded onMuteListAdded;
     FUNC_OnMuteListRemoved onMuteListRemoved;
     FUNC_OnAdminAdded onAdminAdded;

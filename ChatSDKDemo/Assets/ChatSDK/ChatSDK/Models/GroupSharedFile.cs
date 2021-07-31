@@ -25,6 +25,11 @@ namespace ChatSDK
                 FileSize = jo["fileSize"].AsInt;
             }
         }
+
+        internal GroupSharedFile()
+        {
+
+        }
     }
 
 }

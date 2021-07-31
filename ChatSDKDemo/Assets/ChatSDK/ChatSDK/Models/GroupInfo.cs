@@ -16,6 +16,12 @@ namespace ChatSDK {
                 GroupName = jo["groupName"].Value;
             }
         }
+
+        internal GroupInfo()
+        {
+
+        }
+
     }
 
 }

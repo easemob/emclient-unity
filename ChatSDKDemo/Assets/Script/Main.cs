@@ -47,7 +47,7 @@ public class Main : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SendBtn.onClick.AddListener(GetConversationAction);
+        SendBtn.onClick.AddListener(test);
         LeaveGroupBtn.onClick.AddListener(DeclineInvitationAction);
         LeaveRoomBtn.onClick.AddListener(GetBlockListFromServerAction);
 
@@ -382,25 +382,8 @@ public class Main : MonoBehaviour
         chatManager.GetConversation(conversationId, type, true);
     }
 
-    //groupmanager
-    void CreateGroupAction()
-    {
-        string groupName = RecvIdField.text;
-        string description = TextField.text;
-        List<string> inviteMembers = new List<string>{ "f1", "ys1" };
-        GroupOptions options = new GroupOptions(GroupStyle.PublicOpenJoin, 20, false, "");
-        IGroupManager groupManager = SDKClient.Instance.GroupManager;
-        groupManager.CreateGroup(groupName, options, description, inviteMembers, "join us!",
-            new ValueCallBack<Group>(onSuccess: (Group group) =>
-            {
-                Debug.Log($"Group {group.GroupId} named {group.Name} created successfully.");
-            },
-            onError: (int code, string desc) =>
-            {
-                Debug.LogError($"Create group failed with code={code}, desc={desc}");
-            }));
-    }
 
+    //roommanager
     void CreateRoomAction()
     {
         string subject = RecvIdField.text;
@@ -450,6 +433,40 @@ public class Main : MonoBehaviour
             onError: (int code, string desc) =>
             {
                 Debug.LogError($"Remove members from room failed with code={code}, desc={desc}");
+            }));
+    }
+
+    void JoinRoomAction()
+    {
+
+    }
+
+    void GetRoomInfoAction()
+    {
+
+    }
+
+    void LeaveRoomAction()
+    {
+
+    }
+
+    //groupmanager
+    void CreateGroupAction()
+    {
+        string groupName = RecvIdField.text;
+        string description = TextField.text;
+        List<string> inviteMembers = new List<string> { "f1", "ys1" };
+        GroupOptions options = new GroupOptions(GroupStyle.PublicOpenJoin, 20, false, "");
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.CreateGroup(groupName, options, description, inviteMembers, "join us!",
+            new ValueCallBack<Group>(onSuccess: (Group group) =>
+            {
+                Debug.Log($"Group {group.GroupId} named {group.Name} created successfully.");
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Create group failed with code={code}, desc={desc}");
             }));
     }
 
@@ -542,24 +559,533 @@ public class Main : MonoBehaviour
 
     void LeaveGroupAction()
     {
+        string groupId = RecvIdField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.LeaveGroup(groupId,
+            new CallBack(
+                onSuccess: () => Debug.Log($"Leave group {groupId} success."),
+                onError: (int code, string desc) => Debug.LogError($"Failed to leave group {groupId} with error: {desc}.")));
+
         //used for logout and scene change!
-        SDKClient.Instance.Logout(false);
-        SceneManager.LoadScene("Login");
+        //SDKClient.Instance.Logout(false);
+        //SceneManager.LoadScene("Login");
     }
 
-    void JoinRoomAction()
+    void MuteAllMembersAction()
     {
-
+        string groupId = RecvIdField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.MuteAllMembers(groupId,
+            new CallBack(
+                onSuccess: () => Debug.Log($"Mute all group {groupId} members success."),
+                onError: (int code, string desc) => Debug.LogError($"Failed to mute group {groupId} with error: {desc}.")));
     }
 
-    void GetRoomInfoAction()
+    void AcceptInvitationFromGroupAction()
     {
-
+        string groupId = RecvIdField.text;
+        string inviter = TextField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.AcceptInvitationFromGroup(groupId, inviter,
+            new ValueCallBack<Group>(onSuccess: (Group group) =>
+            {
+                Debug.Log($"Accept invitation from inviter {inviter} of group {group.GroupId} successfully.");
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Accept invitation from inviter {inviter} of group {groupId} failed with code={code}, desc={desc}");
+            }));
     }
 
-    void LeaveRoomAction()
+    void AcceptJoinApplicationAction()
     {
+        string groupId = RecvIdField.text;
+        string username = TextField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.AcceptJoinApplication(groupId, username,
+            new CallBack(
+                onSuccess: () => Debug.Log($"Accept join application from username {username} of group {groupId} successfully."),
+                onError: (int code, string desc) => Debug.LogError($"Failed to accept application from username {username} of group {groupId} with error: {desc}.")));
+    }
 
+    void AddWhiteListAction()
+    {
+        string groupId = RecvIdField.text;
+        string member = TextField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.AddMembers(groupId, new List<string> { member },
+            new CallBack(
+                onSuccess: () => Debug.Log($"Add {member} into whitelist {groupId} successfully."),
+                onError: (int code, string desc) => Debug.LogError($"Failed to add member {member} to whitelist {groupId} with error: {desc}.")));
+    }
+
+    void BlockGroupAction()
+    {
+        string groupId = RecvIdField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.BlockGroup(groupId,
+            new CallBack(
+                onSuccess: () => Debug.Log($"Block group {groupId} successfully."),
+                onError: (int code, string desc) => Debug.LogError($"Failed to block group {groupId} with error: {desc}.")));
+    }
+
+    void BlockMembersAction()
+    {
+        string groupId = RecvIdField.text;
+        string member = TextField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.BlockMembers(groupId, new List<string> { member },
+            new CallBack(
+                onSuccess: () => Debug.Log($"Block {member} in {groupId} successfully."),
+                onError: (int code, string desc) => Debug.LogError($"Failed to block member {member} to whitelist {groupId} with error: {desc}.")));
+    }
+
+    void ChangeGroupDescriptionAction()
+    {
+        string groupId = RecvIdField.text;
+        string desc = TextField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.ChangeGroupDescription(groupId, desc,
+            new CallBack(
+                onSuccess: () => Debug.Log($"change group {groupId} description {desc} successfully."),
+                onError: (int code, string errDesc) => Debug.LogError($"Failed to change group {groupId} description with error: {errDesc}.")));
+    }
+
+
+    void ChangeGroupOwnerAction()
+    {
+        string groupId = RecvIdField.text;
+        string newOwner = TextField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.ChangeGroupOwner(groupId, newOwner,
+            new ValueCallBack<Group>(onSuccess: (Group group) =>
+            {
+                Debug.Log($"Change owner {newOwner} of group {group.GroupId} successfully.");
+                if (group.AdminList.Count > 0)
+                {
+                    Debug.Log($"Admin[0]={group.AdminList[0]}");
+                }
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Change owner {newOwner} of group {groupId} failed with code={code}, desc={desc}");
+            }));
+    }
+
+    void CheckIfInGroupWhiteListAction()
+    {
+        string groupId = RecvIdField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.CheckIfInGroupWhiteList(groupId, 
+            new ValueCallBack<bool>(onSuccess: (bool ret) =>
+            {
+                if(ret)
+                    Debug.Log($"CheckIfInGroupWhiteListf for group {groupId} is true.");
+                else
+                    Debug.Log($"CheckIfInGroupWhiteListf for group {groupId} is false.");
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"CheckIfInGroupWhiteListf for group {groupId} failed with code={code}, desc={desc}");
+            }));
+    }
+
+    void DeclineInvitationFromGroupAction()
+    {
+        string groupId = RecvIdField.text;
+        string username = TextField.text;
+        string reason = "testing";
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.DeclineInvitationFromGroup(groupId, username, reason,
+            new CallBack(
+                onSuccess: () => Debug.Log($"Decline invitation from user {username} in group {groupId} with reason:{reason} successfully."),
+                onError: (int code, string desc) => Debug.LogError($"Failed to decline invitation from user {username} in group {groupId}.")));
+    }
+
+    void DeclineJoinApplicationAction()
+    {
+        string groupId = RecvIdField.text;
+        string username = TextField.text;
+        string reason = "testing";
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.DeclineJoinApplication(groupId, username, reason,
+            new CallBack(
+                onSuccess: () => Debug.Log($"Decline invitation of application from user {username} in group {groupId} with reason:{reason} successfully."),
+                onError: (int code, string desc) => Debug.LogError($"Failed to decline invitation of application from user {username} in group {groupId}.")));
+    }
+
+    void GetGroupAnnouncementFromServerAction()
+    {
+        string groupId = RecvIdField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.GetGroupAnnouncementFromServer(groupId,
+            new ValueCallBack<string>(onSuccess: (string ret) =>
+            {
+                Debug.Log($"Get from group {groupId}, announcement:{ret}.");
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Get annnouncement from group {groupId} failed with code={code}, desc={desc}");
+            }));
+    }
+
+    void GetGroupBlockListFromServerAction()
+    {
+        string groupId = RecvIdField.text;
+        int pageNum = 1;
+        int pageSize = 200;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.GetGroupBlockListFromServer(groupId, pageNum, pageSize,
+            new ValueCallBack<List<string>>(onSuccess: (List<string> banList) =>
+            {
+                int i = 0;
+                foreach(string banItem in banList)
+                {
+                    Debug.Log($"Get banList from group {groupId}, item{i}:{banItem}.");
+                    i++;
+                }
+                
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Get annnouncement from group {groupId} failed with code={code}, desc={desc}");
+            }));
+    }
+
+    void GetGroupFileListFromServerAction()
+    {
+        string groupId = RecvIdField.text;
+        int pageNum = 1;
+        int pageSize = 200;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.GetGroupFileListFromServer(groupId, pageNum, pageSize,
+            new ValueCallBack<List<GroupSharedFile>>(onSuccess: (List<GroupSharedFile> fileList) =>
+            {
+                int i = 0;
+                foreach (GroupSharedFile file in fileList)
+                {
+                    Debug.Log($"Get shared file from group {groupId}, item{i}, filename:{file.FileName}, fileid:{file.FileId}.");
+                    i++;
+                }
+
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Get shared files from group {groupId} failed with code={code}, desc={desc}");
+            }));
+    }
+
+    void GetGroupMemberListFromServerAction()
+    {
+        string groupId = RecvIdField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.GetGroupMemberListFromServer(groupId, 200, "", 
+            new ValueCallBack<CursorResult<string>>(onSuccess: (CursorResult<string> cursorResult) =>
+            {
+                Debug.Log($"Get group membe list with next cursor: {cursorResult.Cursor}");
+                foreach (var item in cursorResult.Data)
+                {
+                    Debug.Log($"member: {item}");
+                }
+            }, onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Group member list from server failed with error, code={code}, desc={desc}.");
+            }));
+    }
+
+    void GetGroupMuteListFromServerAction()
+    {
+        string groupId = RecvIdField.text;
+        int pageNum = 1;
+        int pageSize = 200;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.GetGroupMuteListFromServer(groupId, pageNum, pageSize,
+            new ValueCallBack<List<string>>(onSuccess: (List<string> muteList) =>
+            {
+                int i = 0;
+                foreach (string muteItem in muteList)
+                {
+                    Debug.Log($"Get muteList of group {groupId}, item{i}:{muteItem}.");
+                    i++;
+                }
+
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Get muteList from group {groupId} failed with code={code}, desc={desc}");
+            }));
+    }
+
+    void GetGroupSpecificationFromServerAction()
+    {
+        string groupId = RecvIdField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.GetGroupSpecificationFromServer(groupId,
+            new ValueCallBack<Group>(onSuccess: (Group group) =>
+            {
+                Debug.Log($"Get group specification of group {group.GroupId} successfully.");
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Get group specification of group {groupId} failed with code={code}, desc={desc}");
+            }));
+    }
+
+    void GetGroupsWithoutNoticeAction()
+    {
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.GetGroupsWithoutNotice(
+            new ValueCallBack<List<string>>(onSuccess: (List<string> groupList) =>
+            {
+                int i = 0;
+                foreach (string group in groupList)
+                {
+                    Debug.Log($"Get a group without notice : {group}.");
+                    i++;
+                }
+
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Get group without notice failed with code={code}, desc={desc}");
+            }));
+    }
+
+    void GetGroupWhiteListFromServerAction()
+    {
+        string groupId = RecvIdField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.GetGroupWhiteListFromServer(groupId,
+            new ValueCallBack<List<string>>(onSuccess: (List<string> whiteList) =>
+            {
+                int i = 0;
+                foreach (string member in whiteList)
+                {
+                    Debug.Log($"{member} is in whiteList.");
+                    i++;
+                }
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Get group without notice failed with code={code}, desc={desc}");
+            }));
+    }
+
+    void GetJoinedGroupsAction()
+    {
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.GetJoinedGroups(
+            new ValueCallBack<List<Group>>(onSuccess: (List<Group> groupList) =>
+            {
+                int i = 0;
+                foreach (Group group in groupList)
+                {
+                    Debug.Log($"Get joined group{i} with groupid:{group.GroupId}");
+                    i++;
+                }
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Get joined groups failed with code={code}, desc={desc}");
+            }));
+    }
+
+    void GetJoinedGroupsFromServerAction()
+    {
+        int pageNum = 1;
+        int pageSize = 200;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.GetJoinedGroupsFromServer(pageNum, pageSize,
+            new ValueCallBack<List<Group>>(onSuccess: (List<Group> groupList) =>
+            {
+                int i = 0;
+                foreach (Group group in groupList)
+                {
+                    Debug.Log($"Get joined group{i} from server with groupid:{group.GroupId}");
+                    i++;
+                }
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Get joined groups from server failed with code={code}, desc={desc}");
+            }));
+    }
+
+    void GetPublicGroupsFromServerAction()
+    {
+        string cursor = RecvIdField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.GetPublicGroupsFromServer(200, cursor,
+            new ValueCallBack<CursorResult<GroupInfo>>(onSuccess: (CursorResult<GroupInfo> cursorResult) =>
+            {
+                Debug.Log($"Get public groups from server with next cursor: {cursorResult.Cursor}");
+                foreach (var item in cursorResult.Data)
+                {
+                    Debug.Log($"public groupid: {item.GroupId}, name:{item.GroupName}");
+                }
+            }, onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Group public groups from server failed with error, code={code}, desc={desc}.");
+            }));
+    }
+
+    void JoinPublicGroupAction()
+    {
+        string groupId = RecvIdField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.DestroyGroup(groupId,
+            new CallBack(
+                onSuccess: () => Debug.Log($"Join public group {groupId} success."),
+                onError: (int code, string desc) => Debug.LogError($"Failed to join public group {groupId} with error: {desc}.")));
+    }
+
+    void MuteMembersAction()
+    {
+        string groupId = RecvIdField.text;
+        string member = TextField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.MuteMembers(groupId, new List<string> { member },
+            new ValueCallBack<Group>(onSuccess: (Group group) =>
+            {
+                Debug.Log($"Mute member {member} in group {group.GroupId} successfully.");
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Mute member {member} in group {groupId} failed with code={code}, desc={desc}");
+            }));
+    }
+
+    void RemoveAdminAction()
+    {
+        string groupId = RecvIdField.text;
+        string admin = TextField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.RemoveAdmin(groupId, admin,
+            new ValueCallBack<Group>(onSuccess: (Group group) =>
+            {
+                Debug.Log($"Remove admin:{admin} from group {group.GroupId} successfully.");
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Failed to remove admin:{admin} from group failed with error code={code}, desc={desc}");
+            }));
+    }
+
+    void RemoveGroupSharedFileAction()
+    {
+        string groupId = RecvIdField.text;
+        string fileId = TextField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.RemoveGroupSharedFile(groupId, fileId,
+            new CallBack(
+                onSuccess: () => Debug.Log($"Remove group shard file {fileId} from group {groupId} successfully."),
+                onError: (int code, string desc) => Debug.LogError($"Failed to remove group shared file {fileId} from group {groupId} with error: {desc}.")));
+    }
+
+    void RemoveWhiteListAction()
+    {
+        string groupId = RecvIdField.text;
+        string member = TextField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.RemoveWhiteList(groupId, new List<string> { member },
+            new CallBack(
+                onSuccess: () => Debug.Log($"Remove whileList {member} from group {groupId} successfully."),
+                onError: (int code, string desc) => Debug.LogError($"Failed to remove whileList {member} from group {groupId} with error: {desc}.")));
+    }
+
+    void RequestToJoinPublicGroupAction()
+    {
+        string groupId = RecvIdField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.RequestToJoinPublicGroup(groupId,
+            new CallBack(
+                onSuccess: () => Debug.Log($"Request to join public group {groupId} successfully."),
+                onError: (int code, string desc) => Debug.LogError($"Failed to join public group {groupId} with error: {desc}.")));
+    }
+
+    void UnblockGroupAction()
+    {
+        string groupId = RecvIdField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.UnblockGroup(groupId,
+            new CallBack(
+                onSuccess: () => Debug.Log($"Unblock group {groupId} successfully."),
+                onError: (int code, string desc) => Debug.LogError($"Failed to unblock group {groupId} with error: {desc}.")));
+    }
+
+    void UnblockMembersAction()
+    {
+        string groupId = RecvIdField.text;
+        string member = TextField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.UnblockMembers(groupId, new List<string> { member },
+            new CallBack(
+                onSuccess: () => Debug.Log($"Unblock member {member} from group {groupId} successfully."),
+                onError: (int code, string desc) => Debug.LogError($"Failed to unblock {member} from group {groupId} with error: {desc}.")));
+    }
+
+    void UnMuteAllMembersAction()
+    {
+        string groupId = RecvIdField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.UnMuteAllMembers(groupId,
+            new CallBack(
+                onSuccess: () => Debug.Log($"Unmute group {groupId} successfully."),
+                onError: (int code, string desc) => Debug.LogError($"Failed to unmute group {groupId} with error: {desc}.")));
+    }
+
+    void UnMuteMembersAction()
+    {
+        string groupId = RecvIdField.text;
+        string member = TextField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.UnMuteMembers(groupId, new List<string> { member },
+            new ValueCallBack<Group>(onSuccess: (Group group) =>
+            {
+                Debug.Log($"Unmute member {member} in group {group.GroupId} successfully.");
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Unmute member {member} in group {groupId} failed with code={code}, desc={desc}");
+            }));
+    }
+
+    void UpdateGroupAnnouncementAction()
+    {
+        string groupId = RecvIdField.text;
+        string announcement = TextField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.UpdateGroupAnnouncement(groupId, announcement,
+            new CallBack(
+                onSuccess: () => Debug.Log($"Update group {groupId} with annoucement {announcement} successfully."),
+                onError: (int code, string desc) => Debug.LogError($"Failed to update announcement for group {groupId} with error: {desc}.")));
+    }
+
+    void UpdateGroupExtAction()
+    {
+        string groupId = RecvIdField.text;
+        string newExtension = TextField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.UpdateGroupExt(groupId, newExtension,
+            new ValueCallBack<Group>(onSuccess: (Group group) =>
+            {
+                Debug.Log($"Update ext:{newExtension} for group {group.GroupId} successfully.");
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Failed to update ext:{newExtension} for group failed with error code={code}, desc={desc}");
+            }));
+    }
+
+    void UploadGroupSharedFileAction()
+    {
+        string groupId = RecvIdField.text;
+        string filePath = TextField.text;
+        IGroupManager groupManager = SDKClient.Instance.GroupManager;
+        groupManager.UploadGroupSharedFile(groupId, filePath,
+            new CallBack(
+                onSuccess: () => Debug.Log($"Upload group shared file {filePath} to group {groupId} successfully."),
+                onError: (int code, string desc) => Debug.LogError($"Failed to upload group shared file {filePath} to group {groupId} with error: {desc}.")));
     }
 
     //ContactManager related

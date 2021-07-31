@@ -115,7 +115,7 @@ namespace ChatSDK
             ChatManagerNative.ChatManager_GetMethodCall("recallMessage", obj.ToString());
         }
 
-        public override Message ResendMessage(string messageId, ValueCallBack<Message> handle = null)
+        public override Message ResendMessage(string messageId, CallBack handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("msgId", messageId);

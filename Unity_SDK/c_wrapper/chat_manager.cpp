@@ -96,7 +96,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type)
 }
 
 
-EMCallbackObserverHandle gCallbackObserverHandle;
+static EMCallbackObserverHandle gCallbackObserverHandle;
 
 AGORA_API void ChatManager_SendMessage(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, void *mto, EMMessageBody::EMMessageBodyType type) {
     EMMessagePtr messagePtr = BuildEMMessage(mto, type);

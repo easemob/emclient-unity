@@ -129,7 +129,7 @@ public class ChatManagerDelegate : IChatManagerDelegate
 
     public void OnReadAckForGroupMessageUpdated()
     {
-        throw new NotImplementedException();
+        Debug.Log("OnReadAckForGroupMessageUpdated");
     }
 }
 
@@ -173,4 +173,132 @@ public class ContactManagerDelegate : IContactManagerDelegate
     {
         Debug.Log($"{username} declinet your invitation.");
     }
+}
+
+public class GroupManagerDelegate : IGroupManagerDelegate
+{
+    private GroupManagerDelegate() { }
+    private static GroupManagerDelegate global;
+
+    public static GroupManagerDelegate Global
+    {
+        get
+        {
+            if (global == null)
+            {
+                global = new GroupManagerDelegate();
+            }
+            return global;
+        }
+    }
+
+
+    public void OnInvitationReceived(string groupId, string groupName, string inviter, string reason)
+    {
+        Debug.Log($"OnInvitationReceived is called, groupId:{groupId}, groupName:{groupName}, reason:{reason}");
+    }
+
+    
+    public void OnRequestToJoinReceived(string groupId, string groupName, string applicant, string reason)
+    {
+        Debug.Log($"OnRequestToJoinReceived is called, groupId:{groupId}, groupName:{groupName}, applicant:{applicant}, reason:{reason}");
+    }
+
+    public void OnRequestToJoinAccepted(string groupId, string groupName, string accepter)
+    {
+        Debug.Log($"OnRequestToJoinAccepted is called, groupId:{groupId}, groupName:{groupName}, accepter:{accepter}");
+    }
+
+    public void OnRequestToJoinDeclined(string groupId, string groupName, string decliner, string reason)
+    {
+        Debug.Log($"OnRequestToJoinDeclined is called, groupId:{groupId}, decliner:{decliner}, reason:{reason}");
+    }
+
+    public void OnInvitationAccepted(string groupId, string invitee, string reason)
+    {
+        Debug.Log($"OnInvitationAccepted is called, groupId:{groupId}, invitee:{invitee}, reason:{reason}");
+    }
+
+    public void OnInvitationDeclined(string groupId, string invitee, string reason)
+    {
+        Debug.Log($"OnInvitationDeclined is called, groupId:{groupId}, invitee:{invitee}, reason:{reason}");
+    }
+
+    public void OnUserRemoved(string groupId, string groupName)
+    {
+        Debug.Log($"OnUserRemoved is called, groupId:{groupId}, groupName:{groupName}");
+    }
+
+    public void OnGroupDestroyed(string groupId, string groupName)
+    {
+        Debug.Log($"OnGroupDestroyed is called, groupId:{groupId}, groupName:{groupName}");
+    }
+
+    public void OnAutoAcceptInvitationFromGroup(string groupId, string inviter, string inviteMessage)
+    {
+        Debug.Log($"OnAutoAcceptInvitationFromGroup is called, groupId:{groupId}, inviter:{inviter}, inviteMessage:{inviteMessage}");
+    }
+
+    public void OnMuteListAdded(string groupId, List<string> mutes, int muteExpire)
+    {
+        Debug.Log($"OnMuteListAdded is called, groupId:{groupId}, muteExpire:{muteExpire}");
+        int i = 0;
+        foreach(string str in mutes)
+        {
+            Debug.Log($"mute item{i}: {str}");
+            i++;
+        }
+    }
+
+    public void OnMuteListRemoved(string groupId, List<string> mutes)
+    {
+        Debug.Log($"OnMuteListRemoved is called, groupId:{groupId}");
+        int i = 0;
+        foreach (string str in mutes)
+        {
+            Debug.Log($"mute item{i}: {str}");
+            i++;
+        }
+    }
+
+    public void OnAdminAdded(string groupId, string administrator)
+    {
+        Debug.Log($"OnAdminAdded is called, groupId:{groupId}, administrator:{administrator}");
+    }
+
+    public void OnAdminRemoved(string groupId, string administrator)
+    {
+        Debug.Log($"OnAdminRemoved is called, groupId:{groupId}, administrator:{administrator}");
+    }
+
+    public void OnOwnerChanged(string groupId, string newOwner, string oldOwner)
+    {
+        Debug.Log($"OnOwnerChanged is called, groupId:{groupId}, newOwner:{newOwner}, oldOwner:{oldOwner}");
+    }
+
+    public void OnMemberJoined(string groupId, string member)
+    {
+        Debug.Log($"OnMemberJoined is called, groupId:{groupId}, member:{member}");
+    }
+
+    public void OnMemberExited(string groupId, string member)
+    {
+        Debug.Log($"OnMemberExited is called, groupId:{groupId}, member:{member}");
+    }
+
+    public void OnAnnouncementChanged(string groupId, string announcement)
+    {
+        Debug.Log($"OnAnnouncementChanged is called, groupId:{groupId}, announcement:{announcement}");
+    }
+
+    public void OnSharedFileAdded(string groupId, GroupSharedFile sharedFile)
+    {
+        Debug.Log($"OnSharedFileAdded is called, groupId:{groupId}, fileId:{sharedFile.FileId}, fileName:{sharedFile.FileName}");
+    }
+
+    public void OnSharedFileDeleted(string groupId, string fileId)
+    {
+        Debug.Log($"OnSharedFileDeleted is called, groupId:{groupId}, fileId:{fileId}");
+    }
+
 }

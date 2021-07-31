@@ -144,6 +144,141 @@ namespace ChatSDK{
 		[DllImport(MyLibName)]
 		internal static extern void GroupManager_GetGroupWithId(IntPtr client, string groupId, OnSuccessResult onSuccessResult = null, OnError onError = null);
 
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_AcceptInvitationFromGroup(IntPtr client, string groupId, string inviter, OnSuccessResult onSuccessResult = null, OnError onError = null);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_AcceptJoinGroupApplication(IntPtr client, string groupId, string username, Action onSuccess, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_AddWhiteListMembers(IntPtr client, string groupId,
+			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 3)] string[] memberArray, int size,
+			Action onSuccess, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_BlockGroupMessage(IntPtr client, string groupId, Action onSuccess, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_BlockGroupMembers(IntPtr client, string groupId,
+			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 3)] string[] memberArray, int size,
+			Action onSuccess, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_ChangeGroupDescription(IntPtr client, string groupId, string desc, Action onSuccess, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_TransferGroupOwner(IntPtr client, string groupId, string newOwner,
+			OnSuccessResult onSuccessResult = null, OnError onError = null);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_FetchIsMemberInWhiteList(IntPtr client, string groupId, 
+			OnSuccessResult onSuccessResult = null, OnError onError = null);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_DeclineInvitationFromGroup(IntPtr client, string groupId, string username, string reason, Action onSuccess, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_DeclineJoinGroupApplication(IntPtr client, string groupId, string username, string reason, Action onSuccess, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_DownloadGroupSharedFile(IntPtr client, string groupId, string filePath, string fileId, Action onSuccess, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_FetchGroupAnnouncement(IntPtr client, string groupId,
+			OnSuccessResult onSuccessResult = null, OnError onError = null);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_FetchGroupBans(IntPtr client, string groupId, int pageNum, int pageSize,
+			OnSuccessResult onSuccessResult = null, OnError onError = null);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_FetchGroupSharedFiles(IntPtr client, string groupId, int pageNum, int pageSize,
+			OnSuccessResult onSuccessResult = null, OnError onError = null);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_FetchGroupMembers(IntPtr client, string groupId, int pageSize, string cursor, OnSuccessResult onSuccessResult, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_FetchGroupMutes(IntPtr client, string groupId, int pageNum, int pageSize,
+			OnSuccessResult onSuccessResult = null, OnError onError = null);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_FetchGroupSpecification(IntPtr client, string groupId,
+			OnSuccessResult onSuccessResult = null, OnError onError = null);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_GetGroupsWithoutNotice(IntPtr client,
+			OnSuccessResult onSuccessResult = null, OnError onError = null);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_FetchGroupWhiteList(IntPtr client, string groupId,
+			OnSuccessResult onSuccessResult = null, OnError onError = null);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_LoadAllMyGroupsFromDB(IntPtr client,
+			OnSuccessResult onSuccessResult = null, OnError onError = null);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_FetchAllMyGroupsWithPage(IntPtr client, int pageNum, int pageSize, 
+			OnSuccessResult onSuccessResult = null, OnError onError = null);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_FetchPublicGroupsWithCursor(IntPtr client, int pageSize, string cursor,
+			OnSuccessResult onSuccessResult = null, OnError onError = null);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_JoinPublicGroup(IntPtr client, string groupId, Action onSuccess, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_LeaveGroup(IntPtr client, string groupId, Action onSuccess, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_MuteAllGroupMembers(IntPtr client, string groupId, Action onSuccess, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_MuteGroupMembers(IntPtr client, string groupId,
+			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 3)] string[] memberArray, int size, int muteDuration,
+			OnSuccessResult onSuccessResult = null, OnError onError = null);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_RemoveGroupAdmin(IntPtr client, string groupId, string admin, OnSuccessResult onSuccessResult = null, OnError onError = null);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_DeleteGroupSharedFile(IntPtr client, string groupId, string fileId, Action onSuccess, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_RemoveWhiteListMembers(IntPtr client, string groupId,
+			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 3)] string[] memberArray, int size,
+			Action onSuccess, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_ApplyJoinPublicGroup(IntPtr client, string groupId, string nickName, string message, Action onSuccess, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_UnblockGroupMessage(IntPtr client, string groupId, Action onSuccess, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_UnblockGroupMembers(IntPtr client, string groupId,
+			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 3)] string[] memberArray, int size,
+			Action onSuccess, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_UnMuteAllMembers(IntPtr client, string groupId, Action onSuccess, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_UnmuteGroupMembers(IntPtr client, string groupId,
+			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 3)] string[] memberArray, int size,
+			OnSuccessResult onSuccessResult = null, OnError onError = null);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_UpdateGroupAnnouncement(IntPtr client, string groupId, string newAnnouncement, Action onSuccess, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_ChangeGroupExtension(IntPtr client, string groupId, string newExtension, OnSuccessResult onSuccessResult = null, OnError onError = null);
+
+		[DllImport(MyLibName)]
+		internal static extern void GroupManager_UploadGroupSharedFile(IntPtr client, string groupId, string filePath, Action onSuccess, OnError onError);
+
 		/** RoomManager Stub **/
 		[DllImport(MyLibName)]
 		internal static extern void RoomManager_AddListener(IntPtr client, OnChatRoomDestroyed onChatRoomDestroyed, OnMemberJoined onMemberJoined,
