@@ -18,6 +18,8 @@
 
 using namespace easemob;
 
+EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type);
+
 struct Options
 {
     char *AppKey;

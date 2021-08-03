@@ -302,3 +302,86 @@ public class GroupManagerDelegate : IGroupManagerDelegate
     }
 
 }
+
+public class RoomManagerDelegate : IRoomManagerDelegate
+{
+    private RoomManagerDelegate() { }
+    private static RoomManagerDelegate global;
+
+    public static RoomManagerDelegate Global
+    {
+        get
+        {
+            if (global == null)
+            {
+                global = new RoomManagerDelegate();
+            }
+            return global;
+        }
+    }
+
+
+    public void OnChatRoomDestroyed(string roomId, string roomName)
+    {
+        Debug.Log($"OnChatRoomDestroyed is called, roomId:{roomId}, roomName:{roomName}");
+    }
+
+
+    public void OnMemberJoined(string roomId, string participant)
+    {
+        Debug.Log($"OnMemberJoined is called, roomId:{roomId}, participant:{participant}");
+    }
+
+    public void OnMemberExited(string roomId, string roomName, string participant)
+    {
+        Debug.Log($"OnMemberExited is called, roomId:{roomId}, roomName:{roomName}, participant:{participant}");
+    }
+
+    public void OnRemovedFromChatRoom(string roomId, string roomName, string participant)
+    {
+        Debug.Log($"OnRemovedFromChatRoom is called, roomId:{roomId}, roomName:{roomName}, participant:{participant}");
+    }
+
+    public void OnAdminAdded(string roomId, string admin)
+    {
+        Debug.Log($"OnAdminAdded is called, roomId:{roomId}, admin:{admin}");
+    }
+
+    public void OnAdminRemoved(string roomId, string admin)
+    {
+        Debug.Log($"OnAdminRemoved is called, roomId:{roomId}, admin:{admin}");
+    }
+
+    public void OnOwnerChanged(string roomId, string newOwner, string oldOwner)
+    {
+        Debug.Log($"OnOwnerChanged is called, roomId:{roomId}, newOwner:{newOwner}, oldOwner:{oldOwner}");
+    }
+
+    public void OnAnnouncementChanged(string roomId, string announcement)
+    {
+        Debug.Log($"OnAnnouncementChanged is called, roomId:{roomId}, announcement:{announcement}");
+    }
+
+    public void OnMuteListAdded(string roomId, List<string> mutes, long expireTime)
+    {
+        Debug.Log($"OnMuteListAdded is called, roomId:{roomId}, expireTime:{expireTime}");
+        int i = 0;
+        foreach (string str in mutes)
+        {
+            Debug.Log($"mute item{i}: {str}");
+            i++;
+        }
+    }
+
+    public void OnMuteListRemoved(string roomId, List<string> mutes)
+    {
+        Debug.Log($"OnMuteListRemoved is called, roomId:{roomId}");
+        int i = 0;
+        foreach (string str in mutes)
+        {
+            Debug.Log($"mute item{i}: {str}");
+            i++;
+        }
+    }
+
+}

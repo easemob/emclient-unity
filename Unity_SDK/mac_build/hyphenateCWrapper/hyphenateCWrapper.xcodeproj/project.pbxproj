@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		D64BF41F26AAE9CD00223225 /* contact_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64BF41E26AAE9CD00223225 /* contact_manager.cpp */; };
+		D6F6450326B81E2B007D0FE2 /* conversation_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6F6450126B81E2A007D0FE2 /* conversation_manager.cpp */; };
 		D703D33726893F6D00A9FA7D /* chat_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D703D33626893F6D00A9FA7D /* chat_manager.cpp */; };
 		D715B7BE268C83ED00EE75D6 /* models.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D715B7BD268C83ED00EE75D6 /* models.cpp */; };
 		D742F1C4266843CA00B80C18 /* client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D742F1C0266843CA00B80C18 /* client.cpp */; };
@@ -201,6 +202,8 @@
 		90A0455E2632D4F000550B6E /* emchatroommanager_interface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = emchatroommanager_interface.h; sourceTree = "<group>"; };
 		D64BF41D26AAE9CD00223225 /* contact_manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = contact_manager.h; sourceTree = "<group>"; };
 		D64BF41E26AAE9CD00223225 /* contact_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = contact_manager.cpp; sourceTree = "<group>"; };
+		D6F6450126B81E2A007D0FE2 /* conversation_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = conversation_manager.cpp; sourceTree = "<group>"; };
+		D6F6450226B81E2B007D0FE2 /* conversation_manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = conversation_manager.h; sourceTree = "<group>"; };
 		D703D33526893F2900A9FA7D /* chat_manager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = chat_manager.h; sourceTree = "<group>"; };
 		D703D33626893F6D00A9FA7D /* chat_manager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = chat_manager.cpp; sourceTree = "<group>"; };
 		D715B7BD268C83ED00EE75D6 /* models.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = models.cpp; sourceTree = "<group>"; };
@@ -474,6 +477,8 @@
 		D742F1BD266843CA00B80C18 /* c_wrapper */ = {
 			isa = PBXGroup;
 			children = (
+				D6F6450126B81E2A007D0FE2 /* conversation_manager.cpp */,
+				D6F6450226B81E2B007D0FE2 /* conversation_manager.h */,
 				D64BF41E26AAE9CD00223225 /* contact_manager.cpp */,
 				D64BF41D26AAE9CD00223225 /* contact_manager.h */,
 				D7C6A8742671AD720083042D /* callbacks.h */,
@@ -572,6 +577,7 @@
 				D742F1C5266843CA00B80C18 /* hyphenateCWrapper.cpp in Sources */,
 				D703D33726893F6D00A9FA7D /* chat_manager.cpp in Sources */,
 				D7AFD64F269B278B008ABC57 /* room_manager.cpp in Sources */,
+				D6F6450326B81E2B007D0FE2 /* conversation_manager.cpp in Sources */,
 				D715B7BE268C83ED00EE75D6 /* models.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

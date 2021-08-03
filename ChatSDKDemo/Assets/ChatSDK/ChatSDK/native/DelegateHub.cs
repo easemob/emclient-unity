@@ -54,6 +54,7 @@ namespace ChatSDK
     //IRoomManagerDelegate, most of them are duplicated as IGroupManagerDelegate
     public delegate void OnChatRoomDestroyed(string roomId, string roomName);
     public delegate void OnRemovedFromChatRoom(string roomId, string roomName, string participant);
+    public delegate void OnMemberExitedFromRoom(string roomId, string roomName, string member);
 
     //IContactManagerDelegate
     public delegate void OnContactAdd(string username);
@@ -516,7 +517,7 @@ namespace ChatSDK
     {
         internal OnChatRoomDestroyed OnChatRoomDestroyed;
         internal OnMemberJoined OnMemberJoined;
-        internal OnMemberExited OnMemberExited;
+        internal OnMemberExitedFromRoom OnMemberExited;
         internal OnRemovedFromChatRoom OnRemovedFromChatRoom;
         internal OnMuteListAdded OnMuteListAdded;
         internal OnMuteListRemoved OnMuteListRemoved;
@@ -538,12 +539,103 @@ namespace ChatSDK
                 listeners = _listeners;
             }
 
-            OnMemberJoined = (string groupId, string member) =>
+            OnChatRoomDestroyed = (string roomId, string roomName) =>
             {
-                Debug.Log($"Member {member} just joined group {groupId}.");
+                Debug.Log($"OnChatRoomDestroyed, roomId {roomId}, roomName {roomName}.");
                 foreach (IRoomManagerDelegate listener in listeners?.List)
                 {
-                    listener.OnMemberJoined(groupId, member);
+                    listener.OnChatRoomDestroyed(roomId, roomName);
+                }
+            };
+
+            OnMemberJoined = (string roomId, string member) =>
+            {
+                Debug.Log($"Member {member} just joined room {roomId}.");
+                foreach (IRoomManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnMemberJoined(roomId, member);
+                }
+            };
+
+            OnMemberExited = (string roomId, string roomName, string member) =>
+            {
+                Debug.Log($"OnMemberExited, roomId {roomId}, member {member}.");
+                foreach (IRoomManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnMemberExited(roomId, roomName, member);
+                }
+            };
+
+            OnRemovedFromChatRoom = (string roomId, string roomName, string participant) =>
+            {
+                Debug.Log($"OnRemovedFromChatRoom, roomId {roomId}, roomName {roomName}, paticipant {participant}.");
+                foreach (IRoomManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnRemovedFromChatRoom(roomId, roomName, participant);
+                }
+            };
+
+            OnMuteListAdded = (string roomId, string[] mutes, int size, int muteExpire) =>
+            {
+                Debug.Log($"OnMuteListAdded, roomId {roomId}, mute member num {size}, muteExpire {muteExpire}.");
+                var acks = new List<string>(size);
+                for (int i = 0; i < size; i++)
+                {
+                    acks.Add(mutes[i]);
+                }
+                foreach (IRoomManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnMuteListAdded(roomId, acks, muteExpire);
+                }
+            };
+
+            OnMuteListRemoved = (string roomId, string[] mutes, int size) =>
+            {
+                Debug.Log($"OnMuteListRemoved, roomId {roomId}, mute member num {size}");
+                var acks = new List<string>(size);
+                for (int i = 0; i < size; i++)
+                {
+                    acks.Add(mutes[i]);
+                }
+                foreach (IRoomManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnMuteListRemoved(roomId, acks);
+                }
+            };
+
+            OnAdminAdded = (string roomId, string administrator) =>
+            {
+                Debug.Log($"OnAdminAdded, roomId {roomId}, admin {administrator}.");
+                foreach (IRoomManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnAdminAdded(roomId, administrator);
+                }
+            };
+
+            OnAdminRemoved = (string roomId, string administrator) =>
+            {
+                Debug.Log($"OnAdminRemoved, roomId {roomId}, admin {administrator}.");
+                foreach (IRoomManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnAdminRemoved(roomId, administrator);
+                }
+            };
+
+            OnOwnerChanged = (string roomId, string newOwner, string oldOwner) =>
+            {
+                Debug.Log($"OnOwnerChanged, roomId {roomId}, newOwner {newOwner}, oldOwner {oldOwner}.");
+                foreach (IRoomManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnOwnerChanged(roomId, newOwner, oldOwner);
+                }
+            };
+
+            OnAnnouncementChanged = (string roomId, string announcement) =>
+            {
+                Debug.Log($"OnAnnouncementChanged, roomId {roomId}, announcement {announcement}");
+                foreach (IRoomManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnAnnouncementChanged(roomId, announcement);
                 }
             };
         }

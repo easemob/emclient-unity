@@ -58,8 +58,9 @@ using namespace easemob;
     typedef void (__stdcall *FUNC_OnSharedFileDeleted)(const char * groupId, const char * fileId);
 
     //RoomManager Listener
-    typedef void (*FUNC_OnChatRoomDestroyed)(__stdcall const char * roomId, const char * roomName);
-    typedef void (*FUNC_OnRemovedFromChatRoom)(__stdcall const char * roomId, const char * roomName, const char * participant);
+    typedef void (__stdcall *FUNC_OnChatRoomDestroyed)(__stdcall const char * roomId, const char * roomName);
+    typedef void (__stdcall *FUNC_OnRemovedFromChatRoom)(__stdcall const char * roomId, const char * roomName, const char * participant);
+    typedef void (__stdcall *FUNC_OnMemberExitedFromRoom)(const char * roomId, const char * roomName, const char * member);
 #else
     //Callback
     typedef void(*FUNC_OnSuccess)();
@@ -107,6 +108,7 @@ using namespace easemob;
     //RoomManager Listener
     typedef void (*FUNC_OnChatRoomDestroyed)(const char * roomId, const char * roomName);
     typedef void (*FUNC_OnRemovedFromChatRoom)(const char * roomId, const char * roomName, const char * participant);
+    typedef void (*FUNC_OnMemberExitedFromRoom)(const char * roomId, const char * roomName, const char * member);
 
     //ContactManager Listener
     typedef void (*FUNC_OnContactAdded)(const char * username);
@@ -520,7 +522,7 @@ private:
 class RoomManagerListener : public EMChatroomManagerListener
 {
 public:
-    RoomManagerListener(void * client, FUNC_OnChatRoomDestroyed onChatRoomDestroyed, FUNC_OnMemberJoined onMemberJoined, FUNC_OnMemberExited onMemberExited,
+    RoomManagerListener(void * client, FUNC_OnChatRoomDestroyed onChatRoomDestroyed, FUNC_OnMemberJoined onMemberJoined, FUNC_OnMemberExitedFromRoom onMemberExited,
                         FUNC_OnRemovedFromChatRoom onRemovedFromChatRoom, FUNC_OnMuteListAdded onMuteListAdded, FUNC_OnMuteListRemoved onMuteListRemoved,
                         FUNC_OnAdminAdded onAdminAdded, FUNC_OnAdminRemoved onAdminRemoved, FUNC_OnOwnerChanged onOwnerChanged, FUNC_OnAnnouncementChanged onAnnouncementChanged ):client(client), onChatRoomDestroyed(onChatRoomDestroyed), onMemberJoined(onMemberJoined), onMemberExited(onMemberExited), onRemovedFromChatRoom(onRemovedFromChatRoom), onMuteListAdded(onMuteListAdded), onMuteListRemoved(onMuteListRemoved), onAdminAdded(onAdminAdded), onAdminRemoved(onAdminRemoved), onOwnerChanged(onOwnerChanged), onAnnouncementChanged(onAnnouncementChanged) {}
     
@@ -529,11 +531,92 @@ public:
             onMemberJoined(chatroom->chatroomId().c_str(), member.c_str());
         }
     }
+    
+    void onLeaveChatroom(const EMChatroomPtr chatroom, EMMuc::EMMucLeaveReason reason) override {
+        if(EMMuc::EMMucLeaveReason::DESTROYED == reason && onChatRoomDestroyed) {
+            onChatRoomDestroyed(chatroom->chatroomId().c_str(), chatroom->chatroomSubject().c_str());
+            return;
+        }
+        if((EMMuc::EMMucLeaveReason::BE_KICKED == reason && onRemovedFromChatRoom)) {
+            //no participant is return!!
+            onRemovedFromChatRoom(chatroom->chatroomId().c_str(), chatroom->chatroomSubject().c_str(), "");
+            return;
+        }
+    }
+    
+    void onMemberLeftChatroom(const EMChatroomPtr chatroom, const std::string &member) override {
+        if(onMemberExited) {
+            onMemberExited(chatroom->chatroomId().c_str(), chatroom->chatroomSubject().c_str(), member.c_str());
+        }
+    }
+
+    void onAddMutesFromChatroom(const EMChatroomPtr chatroom, const std::vector<std::string> &mutes, int64_t muteExpire) override {
+        if(onMuteListAdded) {
+            size_t size = mutes.size();
+            const char * data[size];
+            for(size_t i=0; i<size; i++) {
+                char* ptr = new char[mutes[i].size()+1];
+                strncpy(ptr, mutes[i].c_str(), mutes[i].size()+1);
+                data[i] = ptr;
+            }
+            onMuteListAdded(chatroom->chatroomId().c_str(), data, size, (int)muteExpire);
+        }
+    }
+
+    void onRemoveMutesFromChatroom(const EMChatroomPtr chatroom, const std::vector<std::string> &mutes) override {
+        if(onMuteListRemoved) {
+            size_t size = mutes.size();
+            const char * data[size];
+            for(size_t i=0; i<size; i++) {
+                char* ptr = new char[mutes[i].size()+1];
+                strncpy(ptr, mutes[i].c_str(), mutes[i].size()+1);
+                data[i] = ptr;
+            }
+            onMuteListRemoved(chatroom->chatroomId().c_str(), data, size);
+        }
+    }
+
+    void onAddWhiteListMembersFromChatroom(const easemob::EMChatroomPtr chatroom, const std::vector<std::string> &members) override {
+        
+    }
+    
+    void onRemoveWhiteListMembersFromChatroom(const easemob::EMChatroomPtr chatroom, const std::vector<std::string> &members) override {
+        
+    }
+    
+    void onAllMemberMuteChangedFromChatroom(const easemob::EMChatroomPtr chatroom, bool isAllMuted) override {
+        
+    }
+    
+    void onAddAdminFromChatroom(const EMChatroomPtr chatroom, const std::string &admin) override {
+        if(onAdminAdded) {
+            onAdminAdded(chatroom->chatroomId().c_str(), admin.c_str());
+        }
+    }
+
+    void onRemoveAdminFromChatroom(const EMChatroomPtr chatroom, const std::string &admin) override {
+        if(onAdminRemoved) {
+            onAdminRemoved(chatroom->chatroomId().c_str(), admin.c_str());
+        }
+    }
+
+    void onAssignOwnerFromChatroom(const EMChatroomPtr chatroom, const std::string &newOwner, const std::string &oldOwner) override {
+        if(onOwnerChanged) {
+            onOwnerChanged(chatroom->chatroomId().c_str(), newOwner.c_str(), oldOwner.c_str());
+        }
+    }
+
+    void onUpdateAnnouncementFromChatroom(const EMChatroomPtr chatroom, const std::string &announcement) override {
+        if(onAnnouncementChanged) {
+            onAnnouncementChanged(chatroom->chatroomId().c_str(), announcement.c_str());
+        }
+    }
+    
 private:
     void * client;
     FUNC_OnChatRoomDestroyed onChatRoomDestroyed;
     FUNC_OnMemberJoined onMemberJoined;
-    FUNC_OnMemberExited onMemberExited;
+    FUNC_OnMemberExitedFromRoom onMemberExited;
     FUNC_OnRemovedFromChatRoom onRemovedFromChatRoom;
     FUNC_OnMuteListAdded onMuteListAdded;
     FUNC_OnMuteListRemoved onMuteListRemoved;
@@ -550,18 +633,39 @@ public:
     
     void onContactAdded(const std::string &username) override {
         LOG("receive contactadded from user %s!", username.c_str());
+        if(onContactAdded_)
+        {
+            onContactAdded_(username.c_str());
+        }
+            
     }
     void onContactDeleted(const std::string &username) override {
         LOG("receive contactdeleted from user %s!", username.c_str());
+        if(onContactDeleted_)
+        {
+            onContactDeleted_(username.c_str());
+        }
     }
     void onContactInvited(const std::string &username, std::string &reason) override {
         LOG("receive contactinvited from user %s with reason %s!", username.c_str(), reason.c_str());
+        if(onContactInvited_)
+        {
+            onContactInvited_(username.c_str(), reason.c_str());
+        }
     }
     void onContactAgreed(const std::string &username) override {
         LOG("receive contactagreed from user %s!", username.c_str());
+        if(onFriendRequestAccepted_)
+        {
+            onFriendRequestAccepted_(username.c_str());
+        }
     }
     void onContactRefused(const std::string &username) override {
         LOG("receive contactrefused from user %s!", username.c_str());
+        if(OnFriendRequestDeclined_)
+        {
+            OnFriendRequestDeclined_(username.c_str());
+        }
     }
 
 private:

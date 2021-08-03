@@ -5,28 +5,6 @@ namespace ChatSDK
 {
     public abstract class IConversationManager
     {
-        private static IConversationManager instance;
-        public static IConversationManager Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-#if UNITY_ANDROID
-                    instance = new ConversationManager_Android();
-#elif UNITY_IOS
-                    instance = new ConversationManager_iOS();
-#elif UNITY_STANDALONE_OSX
-                    instance = new ConversationManager_Mac();
-#elif UNITY_STANDALONE_WIN
-                    //instance = new Client_Win();
-#endif
-                }
-
-                return instance;
-            }
-        }
-
         public abstract Message LastMessage(string conversationId, ConversationType converationType);
         public abstract Message LastReceivedMessage(string conversationId, ConversationType converationType);
         public abstract Dictionary<string, string> GetExt(string conversationId, ConversationType converationType);

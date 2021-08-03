@@ -282,8 +282,15 @@ namespace ChatSDK{
 		/** RoomManager Stub **/
 		[DllImport(MyLibName)]
 		internal static extern void RoomManager_AddListener(IntPtr client, OnChatRoomDestroyed onChatRoomDestroyed, OnMemberJoined onMemberJoined,
-				OnMemberExited onMemberExited, OnRemovedFromChatRoom onRemovedFromChatRoom, OnMuteListAdded onMuteListAdded, OnMuteListRemoved onMuteListRemoved,
+				OnMemberExitedFromRoom onMemberExited, OnRemovedFromChatRoom onRemovedFromChatRoom, OnMuteListAdded onMuteListAdded, OnMuteListRemoved onMuteListRemoved,
 				OnAdminAdded onAdminAdded, OnAdminRemoved onAdminRemoved, OnOwnerChanged onOwnerChanged, OnAnnouncementChanged onAnnouncementChanged);
+
+		[DllImport(MyLibName)]
+		internal static extern void RoomManager_AddRoomAdmin(IntPtr client, string roomId, string memberId, OnSuccessResult onSuccessResult = null, OnError onError = null);
+
+		[DllImport(MyLibName)]
+		internal static extern void RoomManager_BlockChatroomMembers(IntPtr client, string roomId, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 3)] string[] memberArray = null,
+			int size = 0, OnSuccessResult onSuccessResult = null, OnError onError = null);
 
 		[DllImport(MyLibName)]
 		internal static extern void RoomManager_CreateRoom(IntPtr client, string subject, string descriptionsc, string welcomeMsg, int maxUserCount = 300,
@@ -294,11 +301,62 @@ namespace ChatSDK{
 		internal static extern void RoomManager_ChangeRoomSubject(IntPtr client, string roomId, string newSubject, OnSuccessResult onSuccessResult = null, OnError onError = null);
 
 		[DllImport(MyLibName)]
-		internal static extern void RoomManager_AddRoomAdmin(IntPtr client, string roomId, string memberId, OnSuccessResult onSuccessResult = null, OnError onError = null);
-
-		[DllImport(MyLibName)]
 		internal static extern void RoomManager_RemoveRoomMembers(IntPtr client, string roomId, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 3)] string[] memberArray = null,
 			int size = 0, Action onSuccess = null, OnError onError = null);
+
+		[DllImport(MyLibName)]
+		internal static extern void RoomManager_TransferChatroomOwner(IntPtr client, string roomId, string newOwner, OnSuccessResult onSuccessResult = null, OnError onError = null);
+
+		[DllImport(MyLibName)]
+		internal static extern void RoomManager_ChangeChatroomDescription(IntPtr client, string roomId, string newDescription, OnSuccessResult onSuccessResult = null, OnError onError = null);
+
+		[DllImport(MyLibName)]
+		internal static extern void RoomManager_DestroyChatroom(IntPtr client, string roomId, Action onSuccess, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void RoomManager_FetchChatroomsWithPage(IntPtr client, int pageNum, int pageSize, OnSuccessResult onSuccessResult, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void RoomManager_FetchChatroomAnnouncement(IntPtr client, string roomId, OnSuccessResult onSuccessResult, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void RoomManager_FetchChatroomBans(IntPtr client, string roomId, int pageNum, int pageSize, OnSuccessResult onSuccessResult, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void RoomManager_FetchChatroomSpecification(IntPtr client, string roomId, OnSuccessResult onSuccessResult, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void RoomManager_FetchChatroomMembers(IntPtr client, string roomId, string cursor, int pageSize, OnSuccessResult onSuccessResult, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void RoomManager_FetchChatroomMutes(IntPtr client, string roomId, int pageNum, int pageSize, OnSuccessResult onSuccessResult, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void RoomManager_JoinedChatroomById(IntPtr client, string roomId, OnSuccessResult onSuccessResult, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void RoomManager_JoinChatroom(IntPtr client, string roomId, Action onSuccess, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void RoomManager_LeaveChatroom(IntPtr client, string roomId, Action onSuccess, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void RoomManager_MuteChatroomMembers(IntPtr client, string roomId, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 3)] string[] memberArray,
+			int size, int muteDuration, Action onSuccess, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void RoomManager_RemoveChatroomAdmin(IntPtr client, string roomId, Action onSuccess, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void RoomManager_UnblockChatroomMembers(IntPtr client, string roomId, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 3)] string[] memberArray,
+			int size, Action onSuccess, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void RoomManager_UnmuteChatroomMembers(IntPtr client, string roomId, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 3)] string[] memberArray,
+			int size, Action onSuccess, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void RoomManager_UpdateChatroomAnnouncement(IntPtr client, string roomId, string newAnnouncement, Action onSuccess, OnError onError);
 
 		/** ContactManager Stub **/
 		[DllImport(MyLibName)]
@@ -334,6 +392,78 @@ namespace ChatSDK{
 
 		[DllImport(MyLibName)]
 		internal static extern void ContactManager_GetSelfIdsOnOtherPlatform(IntPtr client, OnSuccessResult onSuccessResult, OnError onError);
+
+		/** ConversationManager Stub **/
+		[DllImport(MyLibName)]
+		internal static extern bool ConversationManager_AppendMessage(IntPtr client, string conversationId, ConversationType converationType, IntPtr mto, MessageBodyType type);
+
+		[DllImport(MyLibName)]
+		internal static extern bool ConversationManager_ClearAllMessages(IntPtr client, string conversationId, ConversationType converationType);
+
+		[DllImport(MyLibName)]
+		internal static extern bool ConversationManager_RemoveMessage(IntPtr client, string conversationId, ConversationType converationType, string messageId);
+
+		[DllImport(MyLibName)]
+		internal static extern bool ConversationManager_ExtField(IntPtr client, string conversationId, ConversationType converationType,
+			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.AsAny, SizeParamIndex = 4)] IntPtr[] extField = null,
+			int size = 0);
+
+		[DllImport(MyLibName)]
+		internal static extern bool ConversationManager_InsertMessage(IntPtr client, string conversationId, ConversationType converationType, IntPtr mto, MessageBodyType type);
+
+		[DllImport(MyLibName)]
+		internal static extern void ConversationManager_LatestMessage(IntPtr client, string conversationId, ConversationType converationType,
+			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.AsAny, SizeParamIndex = 4)] IntPtr[] extField = null,
+			int size = 0);
+
+		[DllImport(MyLibName)]
+		internal static extern void ConversationManager_LatestMessageFromOthers(IntPtr client, string conversationId, ConversationType converationType,
+			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.AsAny, SizeParamIndex = 4)] IntPtr[] extField = null,
+			int size = 0);
+
+		[DllImport(MyLibName)]
+		internal static extern void ConversationManager_LoadMessage(IntPtr client, string conversationId, ConversationType converationType, string messageId,
+			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.AsAny, SizeParamIndex = 5)] IntPtr[] extField = null,
+			int size = 0);
+
+		[DllImport(MyLibName)]
+		internal static extern void ConversationManager_LoadMessages(IntPtr client, string conversationId, ConversationType converationType,
+			string startMessageId, int count,MessageSearchDirection direction,
+			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.AsAny, SizeParamIndex = 7)] IntPtr[] extField = null,
+			int size = 0);
+
+		[DllImport(MyLibName)]
+		internal static extern void LoadMessagesWithKeyword(IntPtr client, string conversationId, ConversationType converationType,
+			string keywords, string sender, long timestamp, int count, MessageSearchDirection direction,
+			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.AsAny, SizeParamIndex = 9)] IntPtr[] extField = null,
+			int size = 0);
+
+		[DllImport(MyLibName)]
+		internal static extern void LoadMessagesWithMsgType(IntPtr client, string conversationId, ConversationType converationType,
+			MessageBodyType bodyType, long timestamp, int count, string sender, MessageSearchDirection direction,
+			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.AsAny, SizeParamIndex = 9)] IntPtr[] extField = null,
+			int size = 0);
+
+		[DllImport(MyLibName)]
+		internal static extern void LoadMessagesWithTime(IntPtr client, string conversationId, ConversationType converationType,
+			long startTimeStamp, long endTimeStamp, int count, 
+			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.AsAny, SizeParamIndex = 7)] IntPtr[] extField = null,
+			int size = 0);
+
+		[DllImport(MyLibName)]
+		internal static extern void ConversationManager_MarkAllMessagesAsRead(IntPtr client, string conversationId, ConversationType converationType);
+
+		[DllImport(MyLibName)]
+		internal static extern void ConversationManager_MarkMessageAsRead(IntPtr client, string conversationId, ConversationType converationType, string messageId);
+
+		[DllImport(MyLibName)]
+		internal static extern void ConversationManager_SetExtField(IntPtr client, string conversationId, ConversationType converationType, string ext);
+
+		[DllImport(MyLibName)]
+		internal static extern int ConversationManager_UnreadMessagesCount(IntPtr client, string conversationId, ConversationType converationType);
+
+		[DllImport(MyLibName)]
+		internal static extern bool ConversationManager_UpdateMessage(IntPtr client, string conversationId, ConversationType converationType, IntPtr mto, MessageBodyType type);
 
 		#endregion native API import
 	}

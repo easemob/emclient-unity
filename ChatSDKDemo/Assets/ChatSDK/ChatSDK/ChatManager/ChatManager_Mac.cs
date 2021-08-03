@@ -159,7 +159,7 @@ namespace ChatSDK
                             Conversation conversation = new Conversation(conversationTO.ConverationId, conversationTO.Type);
                             //ExtField maybe empty
                             if (conversationTO.ExtField.Length > 0)
-                                conversation.Ext = TransformTool.JsonStringToDictionary(conversationTO.ExtField);
+                                conversation.Ext = TransformTool.JsonStringToDictionary(conversationTO.ExtField); //to-do:ext is a json string?
                             result.Add(conversation);
                         }
                         handle?.OnSuccessValue(result);
@@ -251,7 +251,6 @@ namespace ChatSDK
             Marshal.PtrToStructure(toArrayList[0], returnTOArray);
 
             MessageTO mto = null;
-            //tricky: use DataType to save MessageBodyType
             MessageBodyType type = (MessageBodyType)returnTOArray.Type[0];
 
             switch (type)

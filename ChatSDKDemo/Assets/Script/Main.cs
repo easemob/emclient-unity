@@ -384,6 +384,77 @@ public class Main : MonoBehaviour
 
 
     //roommanager
+    async void AddRoomAdminAction()
+    {
+        SendBtn.enabled = false;
+        string roomId = RecvIdField.text;
+        string memberId = TextField.text;
+        IRoomManager roomManager = SDKClient.Instance.RoomManager;
+        await Task.Run(() => roomManager.AddRoomAdmin(roomId, memberId,
+            new ValueCallBack<Room>(onSuccess: (Room room) =>
+            {
+                Debug.Log($"Add admin:{memberId} to Room {room.RoomId} successfully.");
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Add admin:{memberId} to room failed with code={code}, desc={desc}");
+            })));
+        SendBtn.enabled = true;
+    }
+
+
+    void BlockRoomMembersAction()
+    {
+        string roomId = RecvIdField.text;
+        List<string> members = new List<string> { "f1", "ys1" };
+        IRoomManager roomManager = SDKClient.Instance.RoomManager;
+        roomManager.BlockRoomMembers(roomId, members,
+            new ValueCallBack<Room>(onSuccess: (Room room) =>
+            {
+                Debug.Log($"Block member in {room.RoomId} named {room.Name} successfully.");
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Block memmber in room failed with code={code}, desc={desc}");
+            }));
+    }
+
+    async void ChangeOwnerAction()
+    {
+        SendBtn.enabled = false;
+        string roomId = RecvIdField.text;
+        string newOwner = TextField.text;
+        IRoomManager roomManager = SDKClient.Instance.RoomManager;
+        await Task.Run(() => roomManager.AddRoomAdmin(roomId, newOwner,
+            new ValueCallBack<Room>(onSuccess: (Room room) =>
+            {
+                Debug.Log($"Change newOwner:{newOwner} to Room {room.RoomId} successfully.");
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Change newOwner:{newOwner} to room failed with code={code}, desc={desc}");
+            })));
+        SendBtn.enabled = true;
+    }
+
+    async void ChangeRoomDescriptionAction()
+    {
+        SendBtn.enabled = false;
+        string roomId = RecvIdField.text;
+        string newDescription = TextField.text;
+        IRoomManager roomManager = SDKClient.Instance.RoomManager;
+        await Task.Run(() => roomManager.AddRoomAdmin(roomId, newDescription,
+            new ValueCallBack<Room>(onSuccess: (Room room) =>
+            {
+                Debug.Log($"Change newDescription:{newDescription} to Room {room.RoomId} successfully.");
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Change newDescription:{newDescription} to room failed with code={code}, desc={desc}");
+            })));
+        SendBtn.enabled = true;
+    }
+
     void CreateRoomAction()
     {
         string subject = RecvIdField.text;
@@ -407,7 +478,7 @@ public class Main : MonoBehaviour
         string roomId = RecvIdField.text;
         string newSubject = TextField.text;
         IRoomManager roomManager = SDKClient.Instance.RoomManager;
-        await Task.Run(()=>roomManager.ChangeRoomSubject(roomId, newSubject,
+        await Task.Run(() => roomManager.ChangeRoomSubject(roomId, newSubject,
             new ValueCallBack<Room>(onSuccess: (Room room) =>
             {
                 Debug.Log($"Room {room.RoomId} subject changed to {room.Name} successfully.");
@@ -417,6 +488,16 @@ public class Main : MonoBehaviour
                 Debug.LogError($"Change room subject failed with code={code}, desc={desc}");
             })));
         SendBtn.enabled = true;
+    }
+
+    void DestroyRoomAction()
+    {
+        string roomId = RecvIdField.text;
+        IRoomManager roomManager = SDKClient.Instance.RoomManager;
+        roomManager.DestroyRoom(roomId,
+            new CallBack(
+                onSuccess: () => Debug.Log($"Destory room {roomId} successfully."),
+                onError: (int code, string desc) => Debug.LogError($"Failed to destory room {roomId} with error: {desc}.")));
     }
 
     void RemoveRoomMembersAction()
@@ -436,9 +517,152 @@ public class Main : MonoBehaviour
             }));
     }
 
+    void FetchPublicRoomsFromServerAction()
+    {
+        int pageNum = 1;
+        int pageSize = 20; ;
+        IRoomManager roomManager = SDKClient.Instance.RoomManager;
+        roomManager.FetchPublicRoomsFromServer(pageNum, pageSize,
+            new ValueCallBack<PageResult<Room>>(onSuccess: (PageResult<Room> pageResult) =>
+            {
+                Debug.Log($"Fetch public rooms {pageResult.Data.Count} from server successfully.");
+                int i = 0;
+                foreach (var item in pageResult.Data)
+                {
+                    Debug.Log($"Room{i}: roomId={item.RoomId}, roomName={item.Name}");
+                    i++;
+                }
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Fetch public rooms from server failed with error, code={code}, desc={desc}.");
+            }));
+    }
+
+    void FetchRoomAnnouncementAction()
+    {
+        string roomId = RecvIdField.text;
+        IRoomManager roomManager = SDKClient.Instance.RoomManager;
+        roomManager.FetchRoomAnnouncement(roomId,
+            new ValueCallBack<string>(onSuccess: (string result) =>
+            {
+                Debug.Log($"Fetch public rooms {roomId} announcement {result} successfully.");
+      
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Fetch public rooms from server failed with error, code={code}, desc={desc}.");
+            }));
+    }
+
+    void FetchRoomBlockListAction()
+    {
+        string roomId = RecvIdField.text;
+        int pageNum = 1;
+        int pageSize = 200;
+        IRoomManager roomManager = SDKClient.Instance.RoomManager;
+        roomManager.FetchRoomBlockList(roomId, pageNum, pageSize,
+            new ValueCallBack<List<string>>(onSuccess: (List<string> banList) =>
+            {
+                int i = 0;
+                foreach (string item in banList)
+                {
+                    Debug.Log($"Fetch blockList of room {roomId}, item{i}:{item}.");
+                    i++;
+                }
+
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Fetch blockList of room {roomId} failed with code={code}, desc={desc}");
+            }));
+    }
+
+    async void FetchRoomInfoFromServerAction()
+    {
+        SendBtn.enabled = false;
+        string roomId = RecvIdField.text;
+        IRoomManager roomManager = SDKClient.Instance.RoomManager;
+        await Task.Run(() => roomManager.FetchRoomInfoFromServer(roomId,
+            new ValueCallBack<Room>(onSuccess: (Room room) =>
+            {
+                Debug.Log($"Fetch room info roomId={room.RoomId} roomName={room.Name} from server successfully.");
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Fetch room info from server failed with code={code}, desc={desc}");
+            })));
+        SendBtn.enabled = true;
+    }
+
+    void FetchRoomMembersAction()
+    {
+        string roomId = RecvIdField.text;
+        string cursor = TextField.text;
+        int pageSize = 200;
+        IRoomManager roomManager = SDKClient.Instance.RoomManager;
+        roomManager.FetchRoomMembers(roomId, cursor, pageSize,
+            new ValueCallBack<CursorResult<string>>(onSuccess: (CursorResult<string> cursorResult) =>
+            {
+                Debug.Log($"Fetch room member list with next cursor: {cursorResult.Cursor}");
+                foreach (var item in cursorResult.Data)
+                {
+                    Debug.Log($"member: {item}");
+                }
+            }, onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Group member list from server failed with error, code={code}, desc={desc}.");
+            }));
+    }
+
+    void FetchRoomMuteListAction()
+    {
+        string roomId = RecvIdField.text;
+        int pageNum = 1;
+        int pageSize = 200;
+        IRoomManager roomManager = SDKClient.Instance.RoomManager;
+        roomManager.FetchRoomMuteList(roomId, pageNum, pageSize,
+            new ValueCallBack<List<string>>(onSuccess: (List<string> muteList) =>
+            {
+                int i = 0;
+                foreach (string item in muteList)
+                {
+                    Debug.Log($"Fetch muteList of room {roomId}, item{i}:{item}.");
+                    i++;
+                }
+
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Fetch muteList of room {roomId} failed with code={code}, desc={desc}");
+            }));
+    }
+
+    async void GetChatRoomWithIdAction()
+    {
+        SendBtn.enabled = false;
+        string roomId = RecvIdField.text;
+        IRoomManager roomManager = SDKClient.Instance.RoomManager;
+        await Task.Run(() => roomManager.GetChatRoomWithId(roomId,
+            new ValueCallBack<Room>(onSuccess: (Room room) =>
+            {
+                Debug.Log($"Get room with roomId={room.RoomId} roomName={room.Name} successfully.");
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Get room with roomId={roomId} failed with code={code}, desc={desc}");
+            })));
+        SendBtn.enabled = true;
+    }
+
     void JoinRoomAction()
     {
-
+        string roomId = RecvIdField.text;
+        IRoomManager roomManager = SDKClient.Instance.RoomManager;
+        roomManager.JoinRoom(roomId,
+            new CallBack(
+                onSuccess: () => Debug.Log($"Join room {roomId} successfully."),
+                onError: (int code, string desc) => Debug.LogError($"Failed to join room {roomId} with error: {desc}.")));
     }
 
     void GetRoomInfoAction()
@@ -448,7 +672,67 @@ public class Main : MonoBehaviour
 
     void LeaveRoomAction()
     {
+        string roomId = RecvIdField.text;
+        IRoomManager roomManager = SDKClient.Instance.RoomManager;
+        roomManager.LeaveRoom(roomId,
+            new CallBack(
+                onSuccess: () => Debug.Log($"Leave room {roomId} successfully."),
+                onError: (int code, string desc) => Debug.LogError($"Failed to leave room {roomId} with error: {desc}.")));
+    }
 
+    void MuteRoomMembersAction()
+    {
+        string roomId = RecvIdField.text;
+        List<string> members = new List<string> { "f1", "ys1" };
+        IRoomManager roomManager = SDKClient.Instance.RoomManager;
+        roomManager.MuteRoomMembers(roomId, members,
+            new CallBack(
+                onSuccess: () => Debug.Log($"Mute members in room {roomId} successfully."),
+                onError: (int code, string desc) => Debug.LogError($"Failed mute members in {roomId} with error: {desc}.")));
+    }
+
+    void RemoveRoomAdminAction()
+    {
+        string roomId = RecvIdField.text;
+        string adminId = TextField.text;
+        IRoomManager roomManager = SDKClient.Instance.RoomManager;
+        roomManager.RemoveRoomAdmin(roomId, adminId,
+            new CallBack(
+                onSuccess: () => Debug.Log($"Remove admin {adminId} from room {roomId} successfully."),
+                onError: (int code, string desc) => Debug.LogError($"Failed to remove admin {adminId} room {roomId} with error: {desc}.")));
+    }
+
+    void UnBlockRoomMembersAction()
+    {
+        string roomId = RecvIdField.text;
+        List<string> members = new List<string> { "f1", "ys1" };
+        IRoomManager roomManager = SDKClient.Instance.RoomManager;
+        roomManager.UnBlockRoomMembers(roomId, members,
+            new CallBack(
+                onSuccess: () => Debug.Log($"Unblock members in room {roomId} successfully."),
+                onError: (int code, string desc) => Debug.LogError($"Failed to unblock members in {roomId} with error: {desc}.")));
+    }
+
+    void UnMuteRoomMembersAction()
+    {
+        string roomId = RecvIdField.text;
+        List<string> members = new List<string> { "f1", "ys1" };
+        IRoomManager roomManager = SDKClient.Instance.RoomManager;
+        roomManager.UnMuteRoomMembers(roomId, members,
+            new CallBack(
+                onSuccess: () => Debug.Log($"Unmute members in room {roomId} successfully."),
+                onError: (int code, string desc) => Debug.LogError($"Failed to unmute members in {roomId} with error: {desc}.")));
+    }
+
+    void UpdateRoomAnnouncementAction()
+    {
+        string roomId = RecvIdField.text;
+        string newAnnouncement = TextField.text;
+        IRoomManager roomManager = SDKClient.Instance.RoomManager;
+        roomManager.UpdateRoomAnnouncement(roomId, newAnnouncement,
+            new CallBack(
+                onSuccess: () => Debug.Log($"Update room annoucement {newAnnouncement} to room {roomId} successfully."),
+                onError: (int code, string desc) => Debug.LogError($"Failed to update announcement to room {roomId} with error: {desc}.")));
     }
 
     //groupmanager
@@ -782,7 +1066,7 @@ public class Main : MonoBehaviour
         groupManager.GetGroupMemberListFromServer(groupId, 200, "", 
             new ValueCallBack<CursorResult<string>>(onSuccess: (CursorResult<string> cursorResult) =>
             {
-                Debug.Log($"Get group membe list with next cursor: {cursorResult.Cursor}");
+                Debug.Log($"Get group member list with next cursor: {cursorResult.Cursor}");
                 foreach (var item in cursorResult.Data)
                 {
                     Debug.Log($"member: {item}");
@@ -1269,4 +1553,218 @@ public class Main : MonoBehaviour
                 }
                 ));
     }
+
+    //ConversationManager related
+    void AppendMessageAction()
+    {
+        string conversationId = RecvIdField.text;
+        Message message = Message.CreateTextSendMessage("yqtest", "hello world");
+        IConversationManager conversationManager = SDKClient.Instance.ConversationManager;
+        if(conversationManager.AppendMessage(conversationId, ConversationType.Chat, message))
+        {
+            Debug.Log($"AppendMessage for conversation {conversationId} with message {message.MsgId} successfully.");
+        }
+        else
+        {
+            Debug.LogError($"AppendMessage for conversation {conversationId} with message {message.MsgId} failed.");
+        }
+    }
+
+    void DeleteAllMessagesAction()
+    {
+        string conversationId = RecvIdField.text;
+        IConversationManager conversationManager = SDKClient.Instance.ConversationManager;
+        if (conversationManager.DeleteAllMessages(conversationId, ConversationType.Chat))
+        {
+            Debug.Log($"DeleteAllMessage for conversation {conversationId} successfully.");
+        }
+        else
+        {
+            Debug.LogError($"DeleteAllMessage for conversation {conversationId} failed.");
+        }
+    }
+
+    void DeleteMessageAction()
+    {
+        string conversationId = RecvIdField.text;
+        string messageId = TextField.text;
+        IConversationManager conversationManager = SDKClient.Instance.ConversationManager;
+        if (conversationManager.DeleteMessage(conversationId, ConversationType.Chat, messageId))
+        {
+            Debug.Log($"DeleteMessage {messageId} for conversation {conversationId} successfully.");
+        }
+        else
+        {
+            Debug.LogError($"DeleteMessage {messageId} for conversation {conversationId} failed.");
+        }
+    }
+
+    void GetExtAction()
+    {
+        string conversationId = RecvIdField.text;
+        IConversationManager conversationManager = SDKClient.Instance.ConversationManager;
+        Dictionary<string, string> dict = conversationManager.GetExt(conversationId, ConversationType.Chat);
+        if (dict.Count > 0)
+        {
+            foreach(var k in dict)
+            {
+                Debug.Log($"GetExt conversation {conversationId} successfully: key={k.Key}, value={k.Value}");
+            }
+            
+        }
+        else
+        {
+            Debug.Log($"GetExt for conversation {conversationId} complete, but the ext is empty.");
+        }
+    }
+
+    void InsertMessageAction()
+    {
+        string conversationId = RecvIdField.text;
+        Message message = Message.CreateTextSendMessage("yqtest", "hello world");
+        IConversationManager conversationManager = SDKClient.Instance.ConversationManager;
+        if (conversationManager.InsertMessage(conversationId, ConversationType.Chat, message))
+        {
+            Debug.Log($"InsertMessage for conversation {conversationId} with message {message.MsgId} successfully.");
+        }
+        else
+        {
+            Debug.LogError($"InsertMessage for conversation {conversationId} with message {message.MsgId} failed.");
+        }
+    }
+
+    void LastMessageAction()
+    {
+        string conversationId = RecvIdField.text;
+        IConversationManager conversationManager = SDKClient.Instance.ConversationManager;
+        Message lastMessage = conversationManager.LastMessage(conversationId, ConversationType.Chat);
+        Debug.Log($"LastMessage get message id={lastMessage.MsgId} successfully.");
+    }
+
+    void LastReceivedMessageAction()
+    {
+        string conversationId = RecvIdField.text;
+        IConversationManager conversationManager = SDKClient.Instance.ConversationManager;
+        Message lastMessage = conversationManager.LastReceivedMessage(conversationId, ConversationType.Chat);
+        Debug.Log($"LastReceivedMessage get message id={lastMessage.MsgId} successfully.");
+    }
+
+    void ConversationManagerLoadMessageAction()
+    {
+        string conversationId = RecvIdField.text;
+        string messageId = TextField.text;
+        IConversationManager conversationManager = SDKClient.Instance.ConversationManager;
+        Message message = conversationManager.LoadMessage(conversationId, ConversationType.Chat, messageId);
+        Debug.Log($"LoadMessage return message id={message.MsgId} successfully.");
+    }
+
+    void LoadMessagesAction()
+    {
+        string conversationId = RecvIdField.text;
+        string startMessageId = TextField.text;
+        IConversationManager conversationManager = SDKClient.Instance.ConversationManager;
+        List<Message> msgList = conversationManager.LoadMessages(conversationId, ConversationType.Chat, startMessageId, 20, MessageSearchDirection.UP);
+        foreach(Message msg in msgList)
+        {
+            Debug.Log($"LoadMessages return message id={msg.MsgId} successfully.");
+        }
+    }
+
+    void LoadMessagesWithKeywordAction()
+    {
+        string conversationId = RecvIdField.text;
+        string keywords = TextField.text;
+        string sender = keywords; // need more input field on UI
+
+        IConversationManager conversationManager = SDKClient.Instance.ConversationManager;
+
+        //(string conversationId, ConversationType converationType, string keywords, string sender, long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP)
+        List<Message> msgList = conversationManager.LoadMessagesWithKeyword(conversationId, ConversationType.Chat, keywords, sender);
+        foreach (Message msg in msgList)
+        {
+            Debug.Log($"LoadMessagesWithKeywordAction return message id={msg.MsgId} successfully.");
+        }
+    }
+
+    void LoadMessagesWithMsgTypeAction()
+    {
+        string conversationId = RecvIdField.text;
+        string sender = TextField.text;
+
+        IConversationManager conversationManager = SDKClient.Instance.ConversationManager;
+
+        //(string conversationId, ConversationType conversationType, MessageBodyType bodyType, string sender, long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP)
+        List<Message> msgList = conversationManager.LoadMessagesWithMsgType(conversationId, ConversationType.Chat, MessageBodyType.TXT, sender);
+        foreach (Message msg in msgList)
+        {
+            Debug.Log($"LoadMessagesWithMsgType return message id={msg.MsgId} successfully.");
+        }
+    }
+
+    void LoadMessagesWithTimeAction()
+    {
+        string conversationId = RecvIdField.text;
+        string startTimeStr = TextField.text;
+        long startTime = long.Parse(startTimeStr);
+        long endTime = startTime + 100;
+
+        IConversationManager conversationManager = SDKClient.Instance.ConversationManager;
+
+        //(string conversationId, ConversationType converationType, long startTime, long endTime, int count = 20)
+        List<Message> msgList = conversationManager.LoadMessagesWithTime(conversationId, ConversationType.Chat, startTime, endTime);
+        foreach (Message msg in msgList)
+        {
+            Debug.Log($"LoadMessagesWithTime return message id={msg.MsgId} successfully.");
+        }
+    }
+
+    void MarkAllMessageAsReadAction()
+    {
+        string conversationId = RecvIdField.text;
+        IConversationManager conversationManager = SDKClient.Instance.ConversationManager;
+        conversationManager.MarkAllMessageAsRead(conversationId, ConversationType.Chat);
+        Debug.Log($"MarkAllMessageAsRead for conversation {conversationId} successfully.");
+    }
+
+    void MarkMessageAsReadAction()
+    {
+        string conversationId = RecvIdField.text;
+        string messageId = TextField.text;
+        IConversationManager conversationManager = SDKClient.Instance.ConversationManager;
+        conversationManager.MarkMessageAsRead(conversationId, ConversationType.Chat, messageId);
+        Debug.Log($"MarkMessageAsRead messageId {messageId} for conversation {conversationId} successfully.");
+    }
+
+    void SetExtAction()
+    {
+        string conversationId = RecvIdField.text;
+        IConversationManager conversationManager = SDKClient.Instance.ConversationManager;
+        Dictionary<string, string> dict = new Dictionary<string, string>{{ "city", "Beijing" },{ "date","20210803" } };
+        conversationManager.SetExt(conversationId, ConversationType.Chat, dict);
+        Debug.Log($"SetExt for conversation {conversationId} successfully.");
+    }
+
+    void UnReadCountAction()
+    {
+        string conversationId = RecvIdField.text;
+        IConversationManager conversationManager = SDKClient.Instance.ConversationManager;
+        int count = conversationManager.UnReadCount(conversationId, ConversationType.Chat);
+        Debug.Log($"UnReadCount return {count} unread messages for conversation {conversationId}.");
+    }
+
+    void ConversationManagerUpdateMessageAction()
+    {
+        string conversationId = RecvIdField.text;
+        Message message = Message.CreateTextSendMessage("yqtest", "hello world");
+        IConversationManager conversationManager = SDKClient.Instance.ConversationManager;
+        if (conversationManager.UpdateMessage(conversationId, ConversationType.Chat, message))
+        {
+            Debug.Log($"UpdateMessage for conversation {conversationId} with message {message.MsgId} successfully.");
+        }
+        else
+        {
+            Debug.LogError($"UpdateMessage for conversation {conversationId} with message {message.MsgId} failed.");
+        }
+    }
 }
+

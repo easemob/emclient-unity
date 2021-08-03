@@ -30,6 +30,8 @@ namespace ChatSDK
         
         public IPushManager PushManager { get => _Sdk.PushManager(); }
 
+        public IConversationManager ConversationManager { get => _Sdk.ConversationManager();  }
+
         public Options Options { get { return _Options; } }
 
         public string SdkVersion { get { return _SdkVersion; } }
