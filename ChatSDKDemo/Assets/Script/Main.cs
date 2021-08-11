@@ -47,7 +47,6 @@ public class Main : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SendBtn.onClick.AddListener(test);
         LeaveGroupBtn.onClick.AddListener(DeclineInvitationAction);
         LeaveRoomBtn.onClick.AddListener(GetBlockListFromServerAction);
 

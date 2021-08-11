@@ -61,3 +61,6 @@ DerivedData/
 appdata/
 
 **/UserPrefs
+.vs
+*.meta
+*.csproj

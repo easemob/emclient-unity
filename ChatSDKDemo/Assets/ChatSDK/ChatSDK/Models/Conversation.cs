@@ -6,7 +6,7 @@ namespace ChatSDK {
     public class Conversation
     {
 
-        private IConversationManager manager { get => IConversationManager.Instance; }
+        private IConversationManager manager { get => SDKClient.Instance.ConversationManager; }
 
         public string Id { get; }
 

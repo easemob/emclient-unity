@@ -32,16 +32,21 @@ public class Login : MonoBehaviour
         string password = passwordField.text;
         print("登录被点击: " + username + ", " + password);
         //set callback handler
-        CallBack callback = new CallBack(onSuccess: () =>
-                                            {
-                                                Debug.Log("Login succeeds!");
-                                                SceneManager.LoadScene("Main");
-                                            },
-                                            null,
-                                            (int code, string description) =>
-                                                Debug.LogError($"Login error: code={code},description={description}")
-                                        );
-        Debug.Log($"LoginAction callback dispatcher ${callback.callbackId}");
+        CallBack callback = new CallBack(
+            onSuccess: () =>
+            {
+                Debug.Log("登录成功");
+                AlertView.Default(transform, "登录成功", () => {
+                    SceneManager.LoadScene("Main");
+                });
+            },
+
+            onError: (code, desc) =>
+            {
+                Debug.LogError($"Login error: code={code},description={desc}");
+            }
+        );
+
         SDKClient.Instance.Login(username, password, false, callback);
     }
 
