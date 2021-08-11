@@ -11,6 +11,11 @@
 
 EMContactListener *gContactListener = NULL;
 
+EMContactListener* ContactManager_GetListeners()
+{
+    return gContactListener;
+}
+
 AGORA_API void ContactManager_AddListener(void *client,
                                         FUNC_OnContactAdded onContactAdded,
                                         FUNC_OnContactDeleted onContactDeleted,

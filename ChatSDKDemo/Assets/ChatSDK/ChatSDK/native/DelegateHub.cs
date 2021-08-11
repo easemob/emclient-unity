@@ -70,6 +70,9 @@ namespace ChatSDK
         internal OnDisconnected OnDisconnected;
         internal Action OnPong;
 
+        //to-do:test
+        public string ts;
+
         private WeakDelegater<IConnectionDelegate> listeners;
 
         public ConnectionHub(IClient client, WeakDelegater<IConnectionDelegate> _listeners)
@@ -83,6 +86,8 @@ namespace ChatSDK
             {
                 listeners = _listeners;
             }
+
+            //Debug.Log($"Listener num in _listeners is : {listeners.}");
 
             //register events
             OnConnected = () =>

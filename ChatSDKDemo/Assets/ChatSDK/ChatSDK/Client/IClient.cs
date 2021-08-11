@@ -103,7 +103,7 @@
 #elif UNITY_IOS
             pushImp = new PushManager_iOS();
 #elif UNITY_STANDALONE_OSX
-            pushImp = new PushManager_Mac();
+            pushImp = new PushManager_Mac(instance);
 #elif UNITY_STANDALONE_WIN
             pushImp = new PushManager_Win();
 #endif

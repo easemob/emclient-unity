@@ -28,28 +28,6 @@ namespace ChatSDK
                 groupManagerHub.OnMemberJoined, groupManagerHub.OnMemberExited, groupManagerHub.OnAnnouncementChanged, groupManagerHub.OnSharedFileAdded,
                 groupManagerHub.OnSharedFileDeleted);
         }
-
-        /*
-        internal OnInvitationReceived OnInvitationReceived;
-        internal OnRequestToJoinReceived OnRequestToJoinReceived;
-        internal OnRequestToJoinAccepted OnRequestToJoinAccepted;
-        internal OnRequestToJoinDeclined OnRequestToJoinDeclined;
-        internal OnInvitationAccepted OnInvitationAccepted;
-        internal OnInvitationDeclined OnInvitationDeclined;
-        internal OnUserRemoved OnUserRemoved;
-        internal OnGroupDestroyed OnGroupDestroyed;
-        internal OnAutoAcceptInvitationFromGroup OnAutoAcceptInvitationFromGroup;
-        internal OnMuteListAdded OnMuteListAdded;
-        internal OnMuteListRemoved OnMuteListRemoved;
-        internal OnAdminAdded OnAdminAdded;
-        internal OnAdminRemoved OnAdminRemoved;
-        internal OnOwnerChanged OnOwnerChanged;
-        internal OnMemberJoined OnMemberJoined;
-        internal OnMemberExited OnMemberExited;
-        internal OnAnnouncementChanged OnAnnouncementChanged;
-        internal OnSharedFileAdded OnSharedFileAdded;
-        internal OnSharedFileDeleted OnSharedFileDeleted;
-        */
     
         public override void AcceptInvitationFromGroup(string groupId, string inviter, ValueCallBack<Group> handle = null)
         {

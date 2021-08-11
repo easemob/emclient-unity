@@ -5,6 +5,9 @@
 #include "common.h"
 #include "models.h"
 
+//to-do:just for testing
+#include "callbacks.h"
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -27,6 +30,14 @@ AGORA_API void ConversationManager_MarkMessageAsRead(void *client, const char * 
 AGORA_API void ConversationManager_SetExtField(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, const char * ext);
 AGORA_API int ConversationManager_UnreadMessagesCount(void *client, const char * conversationId, EMConversation::EMConversationType conversationType);
 AGORA_API bool ConversationManager_UpdateMessage(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, void *mto, EMMessageBody::EMMessageBodyType type);
+
+//to-do: just for testing
+AGORA_API void* DirectReturnSinglePointer();
+AGORA_API void* DirectReturnArrayPointers();
+AGORA_API void  ParamReturnPointersInStruct(void * astruct);
+AGORA_API void  ParamReturnPointersInArray(void * array[], int size);
+AGORA_API void  CallbackReturnPointersinStruct(FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError);
+AGORA_API void  PrintAndFreeResource();
 #ifdef __cplusplus
 }
 #endif //__cplusplus
