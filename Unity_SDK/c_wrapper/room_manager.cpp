@@ -19,7 +19,7 @@ AGORA_API void RoomManager_AddListener(void *client, FUNC_OnChatRoomDestroyed on
 {
     if(gRoomManagerListener == NULL) { //only set once!
         gRoomManagerListener = new RoomManagerListener(client, onChatRoomDestroyed,  onMemberJoined, onMemberExited, onRemovedFromChatRoom, onMuteListAdded, onMuteListRemoved, onAdminAdded, onAdminRemoved, onOwnerChanged, onAnnouncementChanged);
-        CLIENT->getChatroomManager().addListener(gRoomManagerListener);
+       CLIENT->getChatroomManager().addListener(gRoomManagerListener);
     }
 }
 

@@ -133,11 +133,13 @@ public:
         if(onDisconnected)
             onDisconnected(error->mErrorCode);
     }
+
     void onPong() override {
         LOG("Server ponged.");
         if(onPonged)
             onPonged();
     }
+    
 private:
     FUNC_OnConnected onConnected;
     FUNC_OnDisconnected onDisconnected;

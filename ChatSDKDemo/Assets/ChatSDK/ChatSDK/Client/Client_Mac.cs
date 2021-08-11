@@ -1,5 +1,7 @@
 using UnityEngine;
 using System;
+//to-do: just for testing
+using System.Runtime.InteropServices;
 
 namespace ChatSDK
 {
@@ -38,6 +40,28 @@ namespace ChatSDK
             }
         }
 
+
+        //to-do: just for testing
+        public string getMemory(object o)
+        {
+            GCHandle h = GCHandle.Alloc(o, GCHandleType.WeakTrackResurrection);
+            IntPtr addr = GCHandle.ToIntPtr(h);
+            return "0x" + addr.ToString("X");
+
+            //GCHandle h = GCHandle.Alloc(o, GCHandleType.Pinned);
+            //IntPtr addr = h.AddrOfPinnedObject();
+            //return "0x" + addr.ToString("X");
+            //h.AddrOfPinnedObject().ToString();
+            //return "0x" + h.AddrOfPinnedObject().ToString();
+
+        }
+
+        public string GetTimeStamp()
+        {
+            TimeSpan ts = DateTime.Now - new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            return Convert.ToInt64(ts.TotalSeconds).ToString();
+        }
+
         public override void InitWithOptions(Options options, WeakDelegater<IConnectionDelegate> listeners = null)
         {
 
@@ -45,7 +69,9 @@ namespace ChatSDK
             if(connectionHub == null)
             {
                 connectionHub = new ConnectionHub(this, listeners); //init only once
+                connectionHub.ts = GetTimeStamp();
             }
+            Debug.Log($"connectionHub  ts is {connectionHub.ts}");
             
             // keep only 1 client left
             if(client != IntPtr.Zero)
@@ -76,6 +102,7 @@ namespace ChatSDK
 
         public override void Logout(bool unbindDeviceToken, CallBack callback = null)
         {
+            Debug.Log($"in logout, step1, connectionHub  ts is {connectionHub.ts}");
             if (client != IntPtr.Zero)
             {
                 OnLogoutSuccess = () =>
@@ -88,6 +115,7 @@ namespace ChatSDK
             } else {
                 Debug.LogError("::InitWithOptions() not called yet.");
             }
+            Debug.Log($"in logout, step2, connectionHub  ts is {connectionHub.ts}");
         }
 
         public override string CurrentUsername()

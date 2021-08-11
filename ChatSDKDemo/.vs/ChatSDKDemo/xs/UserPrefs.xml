@@ -1,14 +1,23 @@
 ﻿<Properties StartupConfiguration="{3A4B1E97-589D-1E2D-D6C5-A6CFAD6C116F}|">
   <MonoDevelop.Ide.ItemProperties.ChatSDKDemo PreferredExecutionTarget="95cd266c-1045-47ee-8ef5-ceac692d7815" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/ChatSDK/ChatSDK/GroupManager/GroupManager_Mac.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/ChatSDK/ChatSDK/native/DelegateHub.cs">
     <Files>
-      <File FileName="Assets/ChatSDK/ChatSDK/PushManager/IPushManager.cs" Line="1" Column="1" />
-      <File FileName="Assets/ChatSDK/ChatSDK/PushManager/PushManager_Mac.cs" Line="10" Column="37" />
-      <File FileName="Assets/ChatSDK/ChatSDK/native/ChatAPINative.cs" Line="466" Column="64" />
-      <File FileName="Assets/ChatSDK/ChatSDK/native/TransferObjects.cs" Line="315" Column="37" />
-      <File FileName="Assets/Script/Main.cs" Line="1766" Column="43" />
-      <File FileName="Assets/ChatSDK/ChatSDK/GroupManager/IGroupManager.cs" Line="43" Column="57" />
-      <File FileName="Assets/ChatSDK/ChatSDK/GroupManager/GroupManager_Mac.cs" Line="279" Column="54" />
+      <File FileName="Assets/ChatSDK/ChatSDK/ConversationManager/ConversationManager_Mac.cs" Line="27" Column="13" />
+      <File FileName="Assets/ChatSDK/ChatSDK/ConversationManager/IConversationManager.cs" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Client/Client_Mac.cs" />
+      <File FileName="Assets/Script/Login.cs" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Custom/SDKCallBack.cs" />
+      <File FileName="Assets/Script/Delegate.cs" />
+      <File FileName="Assets/ChatSDK/ChatSDK/SDKClient.cs" />
+      <File FileName="Assets/ChatSDK/ChatSDK/native/ChatAPINative.cs" />
+      <File FileName="Assets/Script/Main.cs" />
+      <File FileName="Assets/ChatSDK/ChatSDK/ContactManager/IContactManager.cs" />
+      <File FileName="Assets/ChatSDK/ChatSDK/ChatManager/ChatManager_Mac.cs" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Client/IClient.cs" />
+      <File FileName="Assets/ChatSDK/ChatSDK/ContactManager/ContactManager_Mac.cs" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Listeners/IConnectionDelegate.cs" />
+      <File FileName="Assets/ChatSDK/ChatSDK/native/DelegateHub.cs" Line="91" Column="1" />
+      <File FileName="Assets/ChatSDK/ChatSDK/Tools/CallBackManager.cs" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -20,10 +29,13 @@
                   <Node name="ChatManager" expanded="True" />
                   <Node name="Client" expanded="True" />
                   <Node name="ContactManager" expanded="True" />
-                  <Node name="ConversationManager" expanded="True" />
+                  <Node name="ConversationManager" expanded="True">
+                    <Node name="ConversationManager_Mac.cs" selected="True" />
+                  </Node>
                   <Node name="Custom" expanded="True" />
-                  <Node name="GroupManager" expanded="True">
-                    <Node name="GroupManager_Mac.cs" selected="True" />
+                  <Node name="GroupManager" expanded="True" />
+                  <Node name="Helper" expanded="True">
+                    <Node name="Native" expanded="True" />
                   </Node>
                   <Node name="Listeners" expanded="True" />
                   <Node name="Models" expanded="True" />
@@ -39,23 +51,18 @@
           </Node>
         </State>
       </Pad>
-      <Pad Id="MonoDevelop.UnitTesting.TestPad">
-        <State name="__root__">
-          <Node name="Unity" expanded="True" selected="True" />
-        </State>
-      </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="1d99034f-963e-40ee-9b99-ab1298f3a89b" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="a12aab2f-867f-477d-a84d-311db43fa057" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/Users/imdev/Applications/emclient/emclient-unity/ChatSDKDemo/Assets/Script/Delegate.cs" relfile="Assets/Script/Delegate.cs" line="106" column="1" />
-      <Breakpoint file="/Users/imdev/Applications/emclient/emclient-unity/ChatSDKDemo/Assets/Script/Login.cs" relfile="Assets/Script/Login.cs" line="37" column="1" />
-      <Breakpoint file="/Users/imdev/Applications/emclient/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/ChatManager/ChatManager_Mac.cs" relfile="Assets/ChatSDK/ChatSDK/ChatManager/ChatManager_Mac.cs" line="21" column="1" />
       <Breakpoint file="/Users/imdev/Applications/emclient/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/native/TransferObjects.cs" relfile="Assets/ChatSDK/ChatSDK/native/TransferObjects.cs" line="680" column="1" />
       <Breakpoint file="/Users/imdev/Applications/emclient/emclient-unity/ChatSDKDemo/Assets/Script/Main.cs" relfile="Assets/Script/Main.cs" line="472" column="1" />
+      <Breakpoint file="/Users/imdev/Applications/emclient/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/Client/Client_Mac.cs" relfile="Assets/ChatSDK/ChatSDK/Client/Client_Mac.cs" line="75" column="1" />
+      <Breakpoint file="/Users/imdev/Applications/emclient/emclient-unity/ChatSDKDemo/Assets/ChatSDK/ChatSDK/Client/Client_Mac.cs" relfile="Assets/ChatSDK/ChatSDK/Client/Client_Mac.cs" line="26" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />

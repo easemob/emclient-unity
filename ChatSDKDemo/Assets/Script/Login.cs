@@ -16,8 +16,9 @@ public class Login : MonoBehaviour
         Debug.Log("Scene Login's Awake() called.");
         Options options = new Options("easemob-demo#easeim");
         SDKClient client = SDKClient.Instance;
-        client.InitWithOptions(options);
         client.AddConnectionDelegate(ConnectionDelegate.Global);
+        client.InitWithOptions(options);
+        ///client.AddConnectionDelegate(ConnectionDelegate.Global);
     }
 
     // Start is called before the first frame update

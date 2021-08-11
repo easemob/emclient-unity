@@ -47,8 +47,8 @@ public class Main : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SendBtn.onClick.AddListener(test);
-        LeaveGroupBtn.onClick.AddListener(DeclineInvitationAction);
+        SendBtn.onClick.AddListener(AppendMessageAction);
+        LeaveGroupBtn.onClick.AddListener(DeleteAllMessagesAction);
         LeaveRoomBtn.onClick.AddListener(GetBlockListFromServerAction);
 
         JoinGroupBtn.onClick.AddListener(JoinGroupAction);
@@ -1766,5 +1766,104 @@ public class Main : MonoBehaviour
             Debug.LogError($"UpdateMessage for conversation {conversationId} with message {message.MsgId} failed.");
         }
     }
+
+    //PushManager related
+    void GetNoDisturbGroupsFromServerAction()
+    {
+        IPushManager pushManager = SDKClient.Instance.PushManager;
+        pushManager.GetNoDisturbGroupsFromServer(
+            new ValueCallBack<List<string>>(onSuccess: (List<string> ignoreList) =>
+            {
+                int i = 0;
+                foreach (string ignoreItem in ignoreList)
+                {
+                    Debug.Log($"Get ignoreList successfully, item{i}:{ignoreItem}.");
+                    i++;
+                }
+
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Get ignoreList failed with code={code}, desc={desc}");
+            }));
+    }
+
+    void GetPushConfigAction()
+    {
+        IPushManager pushManager = SDKClient.Instance.PushManager;
+        pushManager.GetPushConfig(
+            new ValueCallBack<PushConfig>(onSuccess: (PushConfig pushConfig) =>
+            {
+                Debug.Log($"Get pushconfig successfully, NoDisturb:{pushConfig.NoDisturb}, startHour:{pushConfig.NoDisturbStartHour}, endHour:{pushConfig.NoDisturbEndHour},style:{pushConfig.Style}.");
+            },
+            onError: (int code, string desc) =>
+            {
+                Debug.LogError($"Get ignoreList failed with code={code}, desc={desc}");
+            }));
+    }
+
+    void SetGroupToDisturbAction()
+    {
+        string groupId = RecvIdField.text;
+        bool noDisturb = true;
+        IPushManager pushManager = SDKClient.Instance.PushManager;
+        pushManager.SetGroupToDisturb(groupId, noDisturb,
+            new CallBack(
+                onSuccess: () => Debug.Log($"SetGroupToDisturb for {groupId} success."),
+                onError: (int code, string desc) => Debug.LogError($"Failed to SetGroupToDisturb for group {groupId} with error: {desc}.")));
+    }
+
+    void SetNoDisturbAction()
+    {
+        bool noDisturb = true;
+        int startTime = 0;
+        int endTime = 24;
+        IPushManager pushManager = SDKClient.Instance.PushManager;
+        pushManager.SetNoDisturb(noDisturb, startTime, endTime,
+            new CallBack(
+                onSuccess: () => Debug.Log($"SetNoDisturb success, noDisturb:{noDisturb}."),
+                onError: (int code, string desc) => Debug.LogError($"Failed to SetNoDisturb with error: {desc}.")));
+    }
+
+    void SetPushStyleAction()
+    {
+        PushStyle pushStyle = PushStyle.Simple;
+        IPushManager pushManager = SDKClient.Instance.PushManager;
+        pushManager.SetPushStyle(pushStyle,
+            new CallBack(
+                onSuccess: () => Debug.Log($"SetPushStyleAction success, pushStyle:{pushStyle}."),
+                onError: (int code, string desc) => Debug.LogError($"Failed to SetPushStyleAction with error: {desc}.")));
+    }
+
+    void UpdateFCMPushTokenAction()
+    {
+        string token = RecvIdField.text;
+        IPushManager pushManager = SDKClient.Instance.PushManager;
+        pushManager.UpdateFCMPushToken(token,
+            new CallBack(
+                onSuccess: () => Debug.Log($"UpdateFCMPushTokenAction success, token:{token}."),
+                onError: (int code, string desc) => Debug.LogError($"Failed to UpdateFCMPushTokenAction with error: {desc}.")));
+    }
+
+    void UpdateHMSPushTokenAction()
+    {
+        string token = RecvIdField.text;
+        IPushManager pushManager = SDKClient.Instance.PushManager;
+        pushManager.UpdateHMSPushToken(token,
+            new CallBack(
+                onSuccess: () => Debug.Log($"UpdateHMSPushToken success, token:{token}."),
+                onError: (int code, string desc) => Debug.LogError($"Failed to UpdateHMSPushToken with error: {desc}.")));
+    }
+
+    void UpdatePushNickNameAction()
+    {
+        string nickname = RecvIdField.text;
+        IPushManager pushManager = SDKClient.Instance.PushManager;
+        pushManager.UpdateHMSPushToken(nickname,
+            new CallBack(
+                onSuccess: () => Debug.Log($"UpdatePushNickNameAction success, nickname:{nickname}."),
+                onError: (int code, string desc) => Debug.LogError($"Failed to UpdatePushNickNameAction with error: {desc}.")));
+    }
+
 }
 

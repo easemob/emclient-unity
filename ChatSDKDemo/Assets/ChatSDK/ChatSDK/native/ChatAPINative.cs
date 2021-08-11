@@ -465,6 +465,53 @@ namespace ChatSDK{
 		[DllImport(MyLibName)]
 		internal static extern bool ConversationManager_UpdateMessage(IntPtr client, string conversationId, ConversationType converationType, IntPtr mto, MessageBodyType type);
 
+		//PushManager
+		[DllImport(MyLibName)]
+		internal static extern void PushManager_GetIgnoredGroupIds(IntPtr client, OnSuccessResult onSuccessResult, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void PushManager_GetPushConfig(IntPtr client, OnSuccessResult onSuccessResult, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void PushManager_GetUserConfigsFromServer(IntPtr client, OnSuccessResult onSuccessResult, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void PushManager_IgnoreGroupPush(IntPtr client, string groupId, bool noDisturb, Action onSuccess, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void PushManager_UpdatePushNoDisturbing(IntPtr client, bool noDisturb, int startTime, int endTime, Action onSuccess, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void PushManager_UpdatePushDisplayStyle(IntPtr client, PushStyle pushStyle, Action onSuccess, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void PushManager_UpdateFCMPushToken(IntPtr client, string token, Action onSuccess, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void PushManager_UpdateHMSPushToken(IntPtr client, string token, Action onSuccess, OnError onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void PushManager_UpdatePushNickName(IntPtr client, string nickname, Action onSuccess, OnError onError);
+
+		//to-do: just for testing
+		[DllImport(MyLibName)]
+		internal static extern IntPtr DirectReturnSinglePointer();
+
+		[DllImport(MyLibName)]
+		internal static extern void PrintAndFreeResource();
+
+		[DllImport(MyLibName)]
+		internal static extern IntPtr DirectReturnArrayPointers();
+
+		[DllImport(MyLibName)]
+		internal static extern void ParamReturnPointersInStruct(IntPtr intPtr);
+
+		[DllImport(MyLibName)]
+		internal static extern void ParamReturnPointersInArray(IntPtr[] intPtr, int size);
+
+		[DllImport(MyLibName)]
+		internal static extern void CallbackReturnPointersinStruct(OnSuccessResult onSuccessResult, OnError onError);
+
 		#endregion native API import
 	}
 }

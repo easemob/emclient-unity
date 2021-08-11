@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+//to-do: just for testing
+using UnityEngine;
 
 namespace ChatSDK
 {
@@ -15,7 +17,80 @@ namespace ChatSDK
             }
         }
 
+        //to-do: just for testing
+        public string getMemory(object o)
+        {
+            //GCHandle h = GCHandle.Alloc(o, GCHandleType.WeakTrackResurrection);
+            //IntPtr addr = GCHandle.ToIntPtr(h);
+
+            GCHandle h = GCHandle.Alloc(o, GCHandleType.Pinned);
+            IntPtr addr = h.AddrOfPinnedObject();
+            return "0x" + addr.ToString("X");
+        }
+
         public override bool AppendMessage(string conversationId, ConversationType converationType, Message message)
+        {
+            IntPtr intPtr = ChatAPINative.DirectReturnSinglePointer();
+            string str = Marshal.PtrToStringAnsi(intPtr);
+            Debug.Log($"str is {str}");
+
+
+            /*
+            IntPtr intPtr = ChatAPINative.DirectReturnSinglePointer();
+            var ret = new GroupSharedFile();
+            Debug.Log($"address1: {getMemory(ret)}");
+            Marshal.PtrToStructure(intPtr, ret);
+            Debug.Log($"filename={ret.FileName}, fileid={ret.FileId}, fileowner={ret.FileOwner}, createtime={ret.CreateTime}, filesize={ret.FileSize}");
+            var ret2 = new GroupSharedFile();
+            Debug.Log($"address2: {getMemory(ret2)}");
+            */
+
+            //GroupSharedFile gsf = new GroupSharedFile();
+            //IntPtr intPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(gsf));
+            //Marshal.StructureToPtr(gsf, intPtr, false);
+            //ChatAPINative.ParamReturnPointersInStruct(intPtr);
+            //Marshal.PtrToStructure(intPtr, gsf);
+            //Debug.Log($"fileName={gsf.FileName}");
+
+            /*
+            IntPtr[] array = new IntPtr[2];
+            for(int i=0; i<2; i++)
+            {
+                GroupSharedFile gsf = new GroupSharedFile();
+                IntPtr intPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(gsf));
+                Marshal.StructureToPtr(gsf, intPtr, false);
+                array[i] = intPtr;
+ 
+            }
+            ChatAPINative.ParamReturnPointersInArray(array, 2);
+            for(int i=0; i<2; i++)
+            {
+                GroupSharedFile gsf = new GroupSharedFile();
+                Marshal.PtrToStructure(array[i], gsf);
+                Debug.Log($"fileName={gsf.FileName}");
+            }*/
+
+            /*
+            ChatAPINative.CallbackReturnPointersinStruct(
+                (IntPtr[] data, DataType dType, int size) => {
+
+                    GroupSharedFile gsf = new GroupSharedFile();
+                    Marshal.PtrToStructure(data[0], gsf);
+                    Debug.Log($"fileOwner={gsf.FileOwner}");
+
+                },
+                (int code, string desc) => { Debug.Log("error"); });
+            */
+            return true;
+        }
+
+        public override bool DeleteAllMessages(string conversationId, ConversationType converationType)
+        {
+            ChatAPINative.PrintAndFreeResource();
+            return true;
+        }
+
+        /*public override bool AppendMessage(string conversationId, ConversationType converationType, Message message)
         {
             MessageTO mto = MessageTO.FromMessage(message);
             IntPtr mtoPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(mto));
@@ -28,7 +103,7 @@ namespace ChatSDK
         public override bool DeleteAllMessages(string conversationId, ConversationType converationType)
         {
             return ChatAPINative.ConversationManager_ClearAllMessages(client, conversationId, converationType);
-        }
+        }*/
 
         public override bool DeleteMessage(string conversationId, ConversationType converationType, string messageId)
         {
@@ -109,7 +184,9 @@ namespace ChatSDK
                     Marshal.PtrToStructure(returnTOArray.Data[0], mto);
                     break;
             }
-            return mto.Unmarshall();
+            Message msg = mto.Unmarshall();
+            Marshal.FreeCoTaskMem(intPtr); //to-do: how to release pointer in ToArrayDiff???
+            return msg;
         }
 
         public override Message LastReceivedMessage(string conversationId, ConversationType converationType)
@@ -145,7 +222,9 @@ namespace ChatSDK
                     Marshal.PtrToStructure(returnTOArray.Data[0], mto);
                     break;
             }
-            return mto.Unmarshall();
+            Message msg = mto.Unmarshall();
+            Marshal.FreeCoTaskMem(intPtr); //to-do: how to release pointer in ToArrayDiff???
+            return msg;
         }
 
         public override Message LoadMessage(string conversationId, ConversationType converationType, string messageId)
@@ -181,7 +260,9 @@ namespace ChatSDK
                     Marshal.PtrToStructure(returnTOArray.Data[0], mto);
                     break;
             }
-            return mto.Unmarshall();
+            Message msg = mto.Unmarshall();
+            Marshal.FreeCoTaskMem(intPtr); //to-do: how to release pointer in ToArrayDiff???
+            return msg;
         }
 
         public override List<Message> LoadMessages(string conversationId, ConversationType converationType, string startMessageId, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP)
@@ -221,9 +302,10 @@ namespace ChatSDK
                         messages[i] = mto;
                         break;
                 }
-                
             }
-            return MessageTO.ConvertToMessageList(messages, returnTOArray.Size);
+            List<Message> msgList = MessageTO.ConvertToMessageList(messages, returnTOArray.Size);
+            Marshal.FreeCoTaskMem(intPtr); //to-do: how to release pointer in ToArrayDiff???
+            return msgList;
         }
 
         public override List<Message> LoadMessagesWithKeyword(string conversationId, ConversationType converationType, string keywords, string sender, long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP)
@@ -265,7 +347,9 @@ namespace ChatSDK
                 }
 
             }
-            return MessageTO.ConvertToMessageList(messages, returnTOArray.Size);
+            List<Message> msgList = MessageTO.ConvertToMessageList(messages, returnTOArray.Size);
+            Marshal.FreeCoTaskMem(intPtr); //to-do: how to release pointer in ToArrayDiff???
+            return msgList;
         }
 
         public override List<Message> LoadMessagesWithMsgType(string conversationId, ConversationType conversationType, MessageBodyType bodyType, string sender, long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP)
@@ -306,7 +390,9 @@ namespace ChatSDK
                         break;
                 }
             }
-            return MessageTO.ConvertToMessageList(messages, returnTOArray.Size);
+            List<Message> msgList = MessageTO.ConvertToMessageList(messages, returnTOArray.Size);
+            Marshal.FreeCoTaskMem(intPtr); //to-do: how to release pointer in ToArrayDiff???
+            return msgList;
         }
 
         public override List<Message> LoadMessagesWithTime(string conversationId, ConversationType converationType, long startTime, long endTime, int count = 20)
@@ -347,7 +433,9 @@ namespace ChatSDK
                         break;
                 }
             }
-            return MessageTO.ConvertToMessageList(messages, returnTOArray.Size);
+            List<Message> msgList = MessageTO.ConvertToMessageList(messages, returnTOArray.Size);
+            Marshal.FreeCoTaskMem(intPtr); //to-do: how to release pointer in ToArrayDiff???
+            return msgList;     
         }
 
         public override void MarkAllMessageAsRead(string conversationId, ConversationType converationType)

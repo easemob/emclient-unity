@@ -419,6 +419,9 @@ public:
     
     void setUseRtcConfig( bool bUseRtcConfig) { mUseRtcConfig = bUseRtcConfig; }
     bool getUseRtcConfig() { return mUseRtcConfig; }
+
+    void setAppId( const std::string& appId) { mAppId = appId; }
+    const std::string& getAppId() { return mAppId; }
     
     /**
       * \brief set transfer attachments or not.
@@ -500,6 +503,7 @@ private:
     
     std::string mDnsURL;
     std::string mRtcConfigURL;
+    std::string mAppId;
 };
 
 typedef std::shared_ptr<EMChatConfigs> EMChatConfigsPtr;

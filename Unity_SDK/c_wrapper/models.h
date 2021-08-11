@@ -15,6 +15,7 @@
 #include "emimagemessagebody.h"
 #include "emvoicemessagebody.h"
 #include "emmucsetting.h"
+#include "empushconfigs.h"
 
 using namespace easemob;
 
@@ -336,6 +337,14 @@ struct ConversationTO
     const char * ConverationId;
     EMConversation::EMConversationType type;
     const char * ExtField;
+};
+
+struct PushConfigTO
+{
+    bool NoDisturb;
+    int NoDisturbStartHour;
+    int NoDisturbEndHour;
+    easemob::EMPushConfigs::EMPushDisplayStyle Style;
 };
 
 struct TOArray

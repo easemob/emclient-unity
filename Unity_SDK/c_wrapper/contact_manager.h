@@ -33,5 +33,7 @@ AGORA_API void ContactManager_GetSelfIdsOnOtherPlatform(void *client, FUNC_OnSuc
 }
 #endif //__cplusplus
 
+EMContactListener* ContactManager_GetListeners();
+
 #endif //_CONTACT_MANAGER_H_
 
