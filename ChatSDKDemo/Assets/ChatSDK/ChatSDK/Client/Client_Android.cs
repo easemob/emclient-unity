@@ -39,10 +39,10 @@ namespace ChatSDK
             return wrapper.Call<string>("currentUsername");
         }
 
-        public override bool IsConnected()
-        {
-            return wrapper.Call<bool>("isConnected");
-        }
+        public override bool IsConnected {
+            get => wrapper.Call<bool>("isConnected");
+            //TODO: jiepeng to add set isConnected
+            internal set {} }
 
         public override bool IsLoggedIn()
         {
@@ -63,5 +63,6 @@ namespace ChatSDK
         {
             //throw new System.NotImplementedException();
         }
+
     }
 }

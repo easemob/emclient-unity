@@ -23,18 +23,20 @@
             throw new System.NotImplementedException();
         }
 
-       public override string CurrentUsername() {
-            throw new System.NotImplementedException();
-        }
-
-       public override void StartLog(string logFilePath)
+        public override string CurrentUsername()
         {
             throw new System.NotImplementedException();
         }
 
-        public override bool IsConnected()
+        public override void StartLog(string logFilePath)
         {
             throw new System.NotImplementedException();
+        }
+
+        public override bool IsConnected
+        {
+            get => IsConnected;
+            internal set => IsConnected = value;
         }
 
         public override bool IsLoggedIn()

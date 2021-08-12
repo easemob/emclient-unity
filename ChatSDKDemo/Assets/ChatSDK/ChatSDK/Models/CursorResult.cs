@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
+using System.Runtime.InteropServices;
 using System;
 
 namespace ChatSDK
@@ -19,5 +19,17 @@ namespace ChatSDK
         /// 列表
         /// </summary>
         public List<T> Data { get; internal set; }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct CursorResultTO
+    {
+        public string NextPageCursor;
+        public DataType Type;
+        public int Size;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
+        public MessageBodyType[] SubTypes; //sub types if any
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst = 32)]
+        public IntPtr[] Data; //list of data
     }
 }

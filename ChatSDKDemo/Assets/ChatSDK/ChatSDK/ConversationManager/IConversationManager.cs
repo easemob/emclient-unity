@@ -17,7 +17,7 @@ namespace ChatSDK
 #elif UNITY_IOS
                     instance = new ConversationManager_iOS();
 #elif UNITY_STANDALONE_OSX
-//                    instance = new ConversationManager_Mac();
+                    //                    instance = new ConversationManager_Mac();
 #elif UNITY_STANDALONE_WIN
 //                    //instance = new Client_Win();
 #endif
@@ -42,11 +42,6 @@ namespace ChatSDK
         public abstract bool DeleteAllMessages(string conversationId, ConversationType conversationType);
 
         public abstract Message LoadMessage(string conversationId, ConversationType conversationType, string messageId);
-        //public abstract List<Message> LoadMessagesWithMsgType(string conversationId, ConversationType conversationType, MessageBodyType bodyType, string sender, long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP);
-        //public abstract List<Message> LoadMessages(string conversationId, ConversationType conversationType, string startMessageId = "", int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP);
-        //public abstract List<Message> LoadMessagesWithKeyword(string conversationId, ConversationType conversationType, string keywords = "", string sender = "", long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP);
-        //public abstract List<Message> LoadMessagesWithTime(string conversationId, ConversationType conversationType, long startTime, long endTime, int count = 20);
-
         public abstract void LoadMessagesWithMsgType(string conversationId, ConversationType conversationType, MessageBodyType bodyType, string sender, long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callback = null);
         public abstract void LoadMessages(string conversationId, ConversationType conversationType, string startMessageId = "", int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callback = null);
         public abstract void LoadMessagesWithKeyword(string conversationId, ConversationType conversationType, string keywords = "", string sender = "", long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callback = null);

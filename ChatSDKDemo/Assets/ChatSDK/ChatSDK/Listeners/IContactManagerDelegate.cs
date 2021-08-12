@@ -1,6 +1,7 @@
 ﻿using System;
-namespace ChatSDK {
-    public interface IContactManagerDelegate 
+namespace ChatSDK
+{
+    public interface IContactManagerDelegate
     {
         /// <summary>
         /// 添加好友回调

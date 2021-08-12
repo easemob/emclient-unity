@@ -54,10 +54,14 @@ namespace ChatSDK
             return jo["getCurrentUsername"].Value;
         }
 
-        public override bool IsConnected() {
-            string jsonString = ClientNative.Client_GetMethodCall("isConnected");
-            JSONObject jsonObject = JSON.Parse(jsonString).AsObject;
-            return jsonObject["isConnected"].AsBool;
+        public override bool IsConnected {
+            get {
+                string jsonString = ClientNative.Client_GetMethodCall("isConnected");
+                JSONObject jsonObject = JSON.Parse(jsonString).AsObject;
+                return jsonObject["isConnected"].AsBool;
+            }
+
+            internal set => IsConnected = value;            
         }
 
         public override bool IsLoggedIn() {
@@ -82,6 +86,7 @@ namespace ChatSDK
         {
             throw new System.NotImplementedException();
         }
+
     }
 
     class ClientNative

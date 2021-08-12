@@ -1,5 +1,19 @@
 ﻿namespace ChatSDK
 {
+    public enum DataType
+    {
+        Bool,
+        String,
+        Group,
+        Room,
+        CursorResult,
+        ListOfString,
+        ListOfMessage,
+        ListOfConversation,
+        ListOfGroup,
+        ListOfGroupSharedFile,
+    };
+
     /// <summary>
     /// 消息体类型
     /// </summary>
@@ -204,10 +218,6 @@
     public enum GroupPermissionType
     {
         /// <summary>
-        /// 不再群组
-        /// </summary>
-        None,
-        /// <summary>
         /// 群成员
         /// </summary>
         Member,
@@ -219,6 +229,9 @@
         /// 群主
         /// </summary>
         Owner,
+        Unknown = -1,
+        Default=Unknown,
+        None=Unknown
     }
 
     /// <summary>
@@ -226,10 +239,6 @@
     /// </summary>
     public enum RoomPermissionType
     {
-        /// <summary>
-        /// 不在聊天室
-        /// </summary>
-        None,
         /// <summary>
         /// 聊天室成员
         /// </summary>
@@ -242,6 +251,9 @@
         /// 聊天室创建者
         /// </summary>
         Owner,
+        Unknown = -1,
+        Default = Unknown,
+        None = Unknown
     }
 
     /// <summary>

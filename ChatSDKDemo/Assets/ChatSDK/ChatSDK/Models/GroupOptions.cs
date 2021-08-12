@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Runtime.InteropServices;
 using SimpleJSON;
 
 namespace ChatSDK
@@ -6,6 +6,8 @@ namespace ChatSDK
     /// <summary>
     /// 群配置信息
     /// </summary>
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public class GroupOptions
     {
         /// <summary>
@@ -30,7 +32,8 @@ namespace ChatSDK
 
         internal GroupOptions(string jsonString)
         {
-            if (jsonString != null) {
+            if (jsonString != null)
+            {
                 JSONNode jn = JSON.Parse(jsonString);
                 if (!jn.IsNull && jn.IsObject)
                 {

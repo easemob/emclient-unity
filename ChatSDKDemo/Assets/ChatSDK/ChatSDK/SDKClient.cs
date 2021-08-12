@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using UnityEngine;
 
 namespace ChatSDK
 {
@@ -43,6 +44,11 @@ namespace ChatSDK
         public IPushManager PushManager { get => _Sdk.PushManager(); }
 
         /// <summary>
+        /// 会话管理类
+        /// </summary>
+        public IConversationManager ConversationManager { get => _Sdk.ConversationManager(); }
+
+        /// <summary>
         /// 获取sdk配置信息
         /// </summary>
         public Options Options { get { return _Options; } }
@@ -63,7 +69,9 @@ namespace ChatSDK
         /// <summary>
         /// 当前是否连接到服务器
         /// </summary>
-        public bool IsConnected { get => _Sdk.IsConnected(); }
+
+        // TODO: dujiepeng
+        public bool IsConnected { get => false; }
 
         /// <summary>
         /// 当前用户的token

@@ -9,7 +9,7 @@ namespace ChatSDK {
     public class Conversation
     {
 
-        private IConversationManager manager { get => IConversationManager.Instance; }
+        private IConversationManager manager { get => SDKClient.Instance.ConversationManager; }
 
         /// <summary>
         /// 会话id
@@ -180,6 +180,12 @@ namespace ChatSDK {
                     Type = typeFromInt(jo["type"].AsInt);
                 }
             } 
+        }
+
+        internal Conversation(string id, ConversationType type)
+        {
+            Id = id;
+            Type = type;
         }
 
 

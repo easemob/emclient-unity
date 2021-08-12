@@ -32,6 +32,7 @@
         private IGroupManager groupImp = null;
         private IRoomManager roomImp = null;
         private IPushManager pushImp = null;
+        private IConversationManager conversationImp = null;
 
 
         public IChatManager ChatManager()
@@ -43,9 +44,9 @@
 #elif UNITY_IOS
             chatImp = new ChatManager_iOS();
 #elif UNITY_STANDALONE_OSX
-//                chatImp = new ChatManager_Mac(instance);
+            chatImp = new ChatManager_Mac(instance);
 #elif UNITY_STANDALONE_WIN
-//                chatImp = new ChatManager_Win();
+            chatImp = new ChatManager_Win();
 #endif
             return chatImp;
         }
@@ -59,7 +60,7 @@
 #elif UNITY_IOS
             contactImp = new ContactManager_iOS();
 #elif UNITY_STANDALONE_OSX
-//            contactImp = new ContactManager_Mac();
+            contactImp = new ContactManager_Mac(instance);
 #elif UNITY_STANDALONE_WIN
 //            contactImp = new ContactManager_Win();
 #endif
@@ -76,9 +77,9 @@
 #elif UNITY_IOS
             groupImp = new GroupManager_iOS();
 #elif UNITY_STANDALONE_OSX
-//                groupImp = new GroupManager_Mac();
+            groupImp = new GroupManager_Mac(instance);
 #elif UNITY_STANDALONE_WIN
-//                groupImp = new GroupManager_Win();
+            groupImp = new GroupManager_Win();
 #endif
             return groupImp;
         }
@@ -93,9 +94,9 @@
 #elif UNITY_IOS
             roomImp = new RoomManager_iOS();
 #elif UNITY_STANDALONE_OSX
-//                roomImp = new RoomManager_Mac();
+            roomImp = new RoomManager_Mac(instance);
 #elif UNITY_STANDALONE_WIN
-//                roomImp = new RoomManager_Win();
+            roomImp = new RoomManager_Win();
 #endif
             return roomImp;
         }
@@ -110,11 +111,26 @@
 #elif UNITY_IOS
             pushImp = new PushManager_iOS();
 #elif UNITY_STANDALONE_OSX
-//                pushImp = new PushManager_Mac();
+            pushImp = new PushManager_Mac(instance);
 #elif UNITY_STANDALONE_WIN
-//                pushImp = new PushManager_Win();
+            pushImp = new PushManager_Win();
 #endif
             return pushImp;
+        }
+
+        public IConversationManager ConversationManager()
+        {
+            if (conversationImp != null) { return conversationImp; }
+#if UNITY_ANDROID
+            conversationImp = new RoomManager_Android();
+#elif UNITY_IOS
+            conversationImp = new RoomManager_iOS();
+#elif UNITY_STANDALONE_OSX
+            conversationImp = new ConversationManager_Mac(instance);
+#elif UNITY_STANDALONE_WIN
+            conversationImp = new RoomManager_Win();
+#endif
+            return conversationImp;
         }
 
         public abstract void InitWithOptions(Options options, WeakDelegater<IConnectionDelegate> connectionDelegater = null);
@@ -127,7 +143,7 @@
 
         public abstract string CurrentUsername();
 
-        public abstract bool IsConnected();
+        public abstract bool IsConnected { get; internal set; }
 
         public abstract bool IsLoggedIn();
 
@@ -136,5 +152,6 @@
         public abstract void StartLog(string logFilePath);
 
         public abstract void StopLog();
+
     }
 }

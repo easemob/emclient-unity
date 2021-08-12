@@ -54,6 +54,11 @@ namespace ChatSDK {
                 }
             }
         }
+
+        internal GroupReadAck()
+        {
+
+        }
     }
 }
 

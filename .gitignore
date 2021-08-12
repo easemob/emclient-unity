@@ -9,7 +9,6 @@
 # =============== #
 Temp/
 Library/
-**/*.meta
 
 # ===================================== #
 # Visual Studio / MonoDevelop generated #
@@ -18,14 +17,12 @@ ExportedObj/
 obj/
 *.svd
 *.userprefs
-**/*.csproj
 *.pidb
 *.suo
-**/*.sln
+/*.sln
 *.user
 *.unityproj
 *.booproj
-ChatSDKDemo/.vs
 
 **/Release
 
@@ -61,8 +58,15 @@ easemob.log
 easemobDB/
 easemobLog/
 DerivedData/
+appdata/
 
 **/UserPrefs
 **/.vs
 *.csproj
 **/.idea/
+.vs
+*.meta
+*.csproj
+/ProjectSettings
+
+

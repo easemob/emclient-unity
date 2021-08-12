@@ -4,7 +4,6 @@ using SimpleJSON;
 
 namespace ChatSDK
 {
-    [StructLayout(LayoutKind.Sequential, CharSet =  CharSet.Unicode)]
     public abstract class IMessageBody
     {
 
@@ -189,7 +188,7 @@ namespace ChatSDK
         /// <summary>
         /// 文字消息
         /// </summary>
-       [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class TextBody : IMessageBody
         {
             /// <summary>

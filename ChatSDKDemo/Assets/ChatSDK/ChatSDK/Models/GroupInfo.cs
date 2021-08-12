@@ -28,6 +28,12 @@ namespace ChatSDK {
                 }
             }
         }
+
+        internal GroupInfo()
+        {
+
+        }
+
     }
 
 }

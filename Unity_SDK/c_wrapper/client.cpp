@@ -3,7 +3,7 @@
 #include "emchatconfigs.h"
 #include "emchatprivateconfigs.h"
 #include "emclient.h"
-#include "emchatmanager_interface.h"
+#include "contact_manager.h"
 
 using namespace easemob;
 
@@ -15,6 +15,7 @@ extern "C"
 
 static bool G_DEBUG_MODE = false;
 static bool G_AUTO_LOGIN = true;
+
 
 AGORA_API void Client_CreateAccount(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, const char *username, const char *password)
 {
@@ -57,19 +58,35 @@ EMChatConfigsPtr ConfigsFromOptions(Options *options) {
     configs->setUsingHttps(options->UsingHttpsOnly);
     configs->setTransferAttachments(options->ServerTransfer);
     configs->setAutoDownloadThumbnail(options->IsAutoDownload);
+    //configs->setLogPath("/tmp/sdk.log");
+    //configs->setEnableConsoleLog(true);
     return configs;
 }
+
+EMClient *gClient = NULL;
+EMConnectionListener *gConnectionListener = NULL;
 
 AGORA_API void* Client_InitWithOptions(Options *options, FUNC_OnConnected onConnected, FUNC_OnDisconnected onDisconnected, FUNC_OnPong onPong)
 {
     // global switch
     G_DEBUG_MODE = options->DebugMode;
     G_AUTO_LOGIN = options->AutoLogin;
-    EMChatConfigsPtr configs = ConfigsFromOptions(options);
-    EMClient * client = EMClient::create(configs);
-    //TODO: keep connection listener instance disposable!
-    client->addConnectionListener(new ConnectionListener(onConnected, onDisconnected, onPong));
-    return client;
+    LOG("gClient address is: %x", gClient);
+    LOG("gConnectionListener address is: %x", gConnectionListener);
+    // singleton client handle
+    if(gClient == nullptr) {
+        EMChatConfigsPtr configs = ConfigsFromOptions(options);
+        gClient = EMClient::create(configs);
+        LOG("after create gClient address is: %x", gClient);
+        if(gConnectionListener == NULL) { //only set once
+            gConnectionListener = new ConnectionListener(onConnected, onDisconnected, onPong);
+            //gConnectionListener = new ConnectionListener(onConnected, nullptr, nullptr);
+            LOG("after new gConnectionListener address is: %x", gConnectionListener);
+            gClient->addConnectionListener(gConnectionListener);
+        }
+    }
+    
+    return gClient;
 }
 
 AGORA_API void Client_Login(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, const char *username, const char *pwdOrToken, bool isToken)
@@ -88,15 +105,35 @@ AGORA_API void Client_Login(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError
 
 AGORA_API void Client_Logout(void *client, FUNC_OnSuccess onSuccess, bool unbindDeviceToken)
 {
-    CLIENT->logout();
-    if(onSuccess) onSuccess();
-}
+    /*
+    CLIENT->getChatManager().clearListeners();
+    LOG("ChatManager listener cleared.");
+    CLIENT->getGroupManager().clearListeners();
+    LOG("GroupManager listener cleared.");
+    CLIENT->getChatroomManager().clearListeners();
+    LOG("RoomManager listener cleared.");
+    
+    EMContactListener* contactListers = nullptr;
+    contactListers = ContactManager_GetListeners();
+    if(contactListers)
+    {
+        LOG("ContactManager listener cleared.");
+        CLIENT->getContactManager().removeContactListener(contactListers);
+    }
+        
+    CLIENT->removeConnectionListener(gConnectionListener);
+    delete gConnectionListener;
+    gConnectionListener = nullptr;
+    */
 
-AGORA_API void Client_Release(void *client)
-{
-    CLIENT->disconnect();
-    delete CLIENT;
-    client = nullptr;
+    //gConnectionListener->ClearAllCallBack();
+    CLIENT->logout();
+    CLIENT->removeConnectionListener(gConnectionListener);
+    delete gConnectionListener;
+    gConnectionListener = nullptr;
+    
+    if(onSuccess) onSuccess();
+    
 }
 
 AGORA_API void Client_StartLog(const char *logFilePath) {
@@ -105,23 +142,4 @@ AGORA_API void Client_StartLog(const char *logFilePath) {
 
 AGORA_API void Client_StopLog() {
     return LogHelper::getInstance().stopLogService();
-}
-
-EMCallbackObserverHandle gCallbackObserverHandle;
-
-AGORA_API void ChatManager_SendMessage(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, MessageTransferObject *mto) {
-    EMMessagePtr messagePtr = mto->toEMMessage();
-    EMCallbackPtr callbackPtr(new EMCallback(gCallbackObserverHandle,
-                                             [onSuccess]()->bool {
-                                                LOG("Message sent succeeds.");
-                                                if(onSuccess) onSuccess();
-                                                return true;
-                                             },
-                                             [onError](const easemob::EMErrorPtr error)->bool{
-                                                LOG("Message sent failed with code=%d.", error->mErrorCode);
-                                                if(onError) onError(error->mErrorCode,error->mDescription.c_str());
-                                                return true;
-                                             }));
-    messagePtr->setCallback(callbackPtr);
-    CLIENT->getChatManager().sendMessage(messagePtr);
 }

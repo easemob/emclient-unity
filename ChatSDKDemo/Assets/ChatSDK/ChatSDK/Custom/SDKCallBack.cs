@@ -5,7 +5,8 @@ using UnityEngine;
 
 namespace ChatSDK
 {
-
+    // ValueCallback<T>
+    public delegate void OnSuccessResult([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)]IntPtr[] data, DataType dType, int size);
     public delegate void OnError(int code, string desc);
     public delegate void OnProgress(int progress);
 

@@ -50,6 +50,11 @@ namespace ChatSDK {
                 }
             }
         }
+
+        internal PushConfig()
+        {
+
+        }
     }
 
 }

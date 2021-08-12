@@ -6,7 +6,8 @@ namespace ChatSDK
     /// <summary>
     /// 聊天室管理类
     /// </summary>
-    public abstract class IRoomManager {
+    public abstract class IRoomManager
+    {
 
         /// <summary>
         /// 添加管理员，群主可以操作
@@ -114,7 +115,7 @@ namespace ChatSDK
         /// <param name="pageNum">页码</param>
         /// <param name="handle">结果回调</param>
         public abstract void FetchRoomMuteList(string roomId, int pageSize = 200, int pageNum = 1, ValueCallBack<List<string>> handle = null);
- 
+
         /// <summary>
         /// 加入聊天室
         /// </summary>
@@ -192,11 +193,5 @@ namespace ChatSDK
         {
             CallbackManager.Instance().roomManagerDelegates.Clear();
         }
-
-
-
-
     }
-
-
 }

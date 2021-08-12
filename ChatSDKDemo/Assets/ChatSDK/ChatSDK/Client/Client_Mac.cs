@@ -1,5 +1,7 @@
 using UnityEngine;
 using System;
+//to-do: just for testing
+using System.Runtime.InteropServices;
 
 namespace ChatSDK
 {
@@ -38,21 +40,44 @@ namespace ChatSDK
             }
         }
 
+
+        //to-do: just for testing
+        public string getMemory(object o)
+        {
+            GCHandle h = GCHandle.Alloc(o, GCHandleType.WeakTrackResurrection);
+            IntPtr addr = GCHandle.ToIntPtr(h);
+            return "0x" + addr.ToString("X");
+
+            //GCHandle h = GCHandle.Alloc(o, GCHandleType.Pinned);
+            //IntPtr addr = h.AddrOfPinnedObject();
+            //return "0x" + addr.ToString("X");
+            //h.AddrOfPinnedObject().ToString();
+            //return "0x" + h.AddrOfPinnedObject().ToString();
+
+        }
+
+        public string GetTimeStamp()
+        {
+            TimeSpan ts = DateTime.Now - new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            return Convert.ToInt64(ts.TotalSeconds).ToString();
+        }
+
         public override void InitWithOptions(Options options, WeakDelegater<IConnectionDelegate> listeners = null)
         {
 
             ChatCallbackObject.GetInstance();
             if(connectionHub == null)
             {
-                connectionHub = new ConnectionHub(listeners); //init only once
+                connectionHub = new ConnectionHub(this, listeners); //init only once
+                connectionHub.ts = GetTimeStamp();
             }
+            Debug.Log($"connectionHub  ts is {connectionHub.ts}");
             
             // keep only 1 client left
             if(client != IntPtr.Zero)
             {
                 //stop log service
                 StopLog();
-                ChatAPINative.Client_Release(client);
             }
             StartLog("/tmp/unmanaged_dll.log");
             client = ChatAPINative.Client_InitWithOptions(options, connectionHub.OnConnected, connectionHub.OnDisconnected, connectionHub.OnPong);
@@ -77,6 +102,7 @@ namespace ChatSDK
 
         public override void Logout(bool unbindDeviceToken, CallBack callback = null)
         {
+            Debug.Log($"in logout, step1, connectionHub  ts is {connectionHub.ts}");
             if (client != IntPtr.Zero)
             {
                 OnLogoutSuccess = () =>
@@ -89,6 +115,7 @@ namespace ChatSDK
             } else {
                 Debug.LogError("::InitWithOptions() not called yet.");
             }
+            Debug.Log($"in logout, step2, connectionHub  ts is {connectionHub.ts}");
         }
 
         public override string CurrentUsername()
@@ -96,9 +123,10 @@ namespace ChatSDK
             return currentUserName;
         }
 
-        public override bool IsConnected()
+        public override bool IsConnected
         {
-            return isConnected;
+            get => isConnected;
+            internal set => isConnected = value;
         }
 
         public override bool IsLoggedIn()
@@ -120,6 +148,7 @@ namespace ChatSDK
         {
             ChatAPINative.Client_StopLog();
         }
+
     }
 
 }

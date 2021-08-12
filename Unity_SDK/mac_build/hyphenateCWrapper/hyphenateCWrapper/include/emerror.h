@@ -47,7 +47,7 @@ public:
         CHANNEL_SYNC_NOT_OPEN,              //Channel sync not open
         INVALID_CONVERSATION,               //Invalid conversation
         
-        USER_ALREADY_LOGIN = 200,           //User has already login
+        USER_ALREADY_LOGIN_SAME = 200,      //Same User is already login
         USER_NOT_LOGIN,                     //User has not login
         USER_AUTHENTICATION_FAILED,         //User name or password is wrong
         USER_ALREADY_EXIST,                 //User has already exist
@@ -65,6 +65,7 @@ public:
         USER_MUTED,                         //User mutes in groups or chatrooms
         USER_KICKED_BY_CHANGE_PASSWORD,     //User has changed the password
         USER_KICKED_BY_OTHER_DEVICE,        //User was kicked by other device or console backend
+        USER_ALREADY_LOGIN_ANOTHER,         //Another User is already login
         
         SERVER_NOT_REACHABLE = 300,         //Server is not reachable
         SERVER_TIMEOUT,                     //Wait server response timeout
@@ -91,6 +92,7 @@ public:
         SERVICE_NOT_ENABLED,
         MESSAGE_EXPIRED,                    //The message has expired
         MESSAGE_ILLEGAL_WHITELIST,          //The message has delivery failed because it was not in the whitelist
+        MESSAGE_EXTERNAL_LOGIC_BLOCKED,     //The message blocked by external logic
         
         GROUP_INVALID_ID = 600,             //Group id is invalid
         GROUP_ALREADY_JOINED,               //User has already joined the group

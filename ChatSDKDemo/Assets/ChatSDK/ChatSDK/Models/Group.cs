@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using SimpleJSON;
 
 namespace ChatSDK
@@ -11,7 +12,8 @@ namespace ChatSDK
 
         internal Group(string jsonString)
         {
-            if (jsonString != null) {
+            if (jsonString != null)
+            {
                 JSONNode jn = JSON.Parse(jsonString);
                 if (!jn.IsNull && jn.IsObject)
                 {
@@ -129,6 +131,11 @@ namespace ChatSDK
         /// 当前用户在群中的角色
         /// </summary>
         public GroupPermissionType PermissionType { get; internal set; }
+
+        internal Group()
+        {
+            //default constructor
+        }
 
     }
 }

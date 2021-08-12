@@ -1,11 +1,13 @@
-﻿using System;
+﻿using System.Runtime.InteropServices;
 using SimpleJSON;
 
 namespace ChatSDK
 {
+
     /// <summary>
     /// 群共享文件
     /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
     public class GroupSharedFile
     {
 
@@ -48,6 +50,11 @@ namespace ChatSDK
                     FileSize = jo["fileSize"].AsInt;
                 }
             }            
+        }
+
+        internal GroupSharedFile()
+        {
+
         }
     }
 

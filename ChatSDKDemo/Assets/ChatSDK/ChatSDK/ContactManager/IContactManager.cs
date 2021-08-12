@@ -7,7 +7,7 @@ namespace ChatSDK
     /// </summary>
     public abstract class IContactManager
     {
-        
+
         /// <summary>
         /// 添加好友
         /// </summary>

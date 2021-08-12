@@ -10,7 +10,7 @@ namespace ChatSDK
         /// <param name="groupId">群组id</param>
         /// <param name="reason">原因</param>
         /// <param name="handle">执行结果</param>
-        public abstract void applyJoinToGroup(string groupId, string reason = "" , CallBack handle = null);
+        public abstract void applyJoinToGroup(string groupId, string reason = "", CallBack handle = null);
 
         /// <summary>
         /// 同意加群邀请
@@ -217,7 +217,7 @@ namespace ChatSDK
         /// <param name="pageNum">页码</param>
         /// <param name="pageSize">每页数量</param>
         /// <param name="handle">执行结果</param>
-        public abstract void GetJoinedGroupsFromServer(int pageNum = 1, int pageSize = 200,  ValueCallBack<List<Group>> handle = null);
+        public abstract void GetJoinedGroupsFromServer(int pageNum = 1, int pageSize = 200, ValueCallBack<List<Group>> handle = null);
 
         /// <summary>
         /// 获取公开群列表

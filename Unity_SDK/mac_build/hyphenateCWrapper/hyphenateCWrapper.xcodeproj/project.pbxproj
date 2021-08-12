@@ -7,10 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D64BF41F26AAE9CD00223225 /* contact_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64BF41E26AAE9CD00223225 /* contact_manager.cpp */; };
+		D6F6450326B81E2B007D0FE2 /* conversation_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6F6450126B81E2A007D0FE2 /* conversation_manager.cpp */; };
+		D6F6450626B945B4007D0FE2 /* push_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6F6450526B945B3007D0FE2 /* push_manager.cpp */; };
+		D703D33726893F6D00A9FA7D /* chat_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D703D33626893F6D00A9FA7D /* chat_manager.cpp */; };
+		D715B7BE268C83ED00EE75D6 /* models.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D715B7BD268C83ED00EE75D6 /* models.cpp */; };
 		D742F1C4266843CA00B80C18 /* client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D742F1C0266843CA00B80C18 /* client.cpp */; };
 		D742F1C5266843CA00B80C18 /* hyphenateCWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D742F1C2266843CA00B80C18 /* hyphenateCWrapper.cpp */; };
 		D77DE29E2668B71D00A553B4 /* easemob.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D77DE29D2668B71D00A553B4 /* easemob.framework */; };
 		D77DE29F2668B72600A553B4 /* easemob.framework in Resources */ = {isa = PBXBuildFile; fileRef = D77DE29D2668B71D00A553B4 /* easemob.framework */; };
+		D79C40F32695D1A2004818E5 /* group_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D79C40F12695D1A2004818E5 /* group_manager.cpp */; };
+		D7AFD64F269B278B008ABC57 /* room_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7AFD64E269B278B008ABC57 /* room_manager.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -194,6 +201,18 @@
 		90A0455C2632D4F000550B6E /* emencryptprovider_interface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = emencryptprovider_interface.h; sourceTree = "<group>"; };
 		90A0455D2632D4F000550B6E /* emcursorresult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = emcursorresult.h; sourceTree = "<group>"; };
 		90A0455E2632D4F000550B6E /* emchatroommanager_interface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = emchatroommanager_interface.h; sourceTree = "<group>"; };
+		D64BF41D26AAE9CD00223225 /* contact_manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = contact_manager.h; sourceTree = "<group>"; };
+		D64BF41E26AAE9CD00223225 /* contact_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = contact_manager.cpp; sourceTree = "<group>"; };
+		D687D3AA26BA9226006C77D5 /* empushconfigs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = empushconfigs.h; sourceTree = "<group>"; };
+		D687D3AB26BA9226006C77D5 /* empushmanager_interface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = empushmanager_interface.h; sourceTree = "<group>"; };
+		D687D3AC26BA9226006C77D5 /* empushmanager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = empushmanager.h; sourceTree = "<group>"; };
+		D6F6450126B81E2A007D0FE2 /* conversation_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = conversation_manager.cpp; sourceTree = "<group>"; };
+		D6F6450226B81E2B007D0FE2 /* conversation_manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = conversation_manager.h; sourceTree = "<group>"; };
+		D6F6450426B945B3007D0FE2 /* push_manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = push_manager.h; sourceTree = "<group>"; };
+		D6F6450526B945B3007D0FE2 /* push_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = push_manager.cpp; sourceTree = "<group>"; };
+		D703D33526893F2900A9FA7D /* chat_manager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = chat_manager.h; sourceTree = "<group>"; };
+		D703D33626893F6D00A9FA7D /* chat_manager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = chat_manager.cpp; sourceTree = "<group>"; };
+		D715B7BD268C83ED00EE75D6 /* models.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = models.cpp; sourceTree = "<group>"; };
 		D7282F3D266A5BF300D45179 /* LogHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LogHelper.h; sourceTree = "<group>"; };
 		D742F1BE266843CA00B80C18 /* hyphenateCWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hyphenateCWrapper.h; sourceTree = "<group>"; };
 		D742F1BF266843CA00B80C18 /* client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = client.h; sourceTree = "<group>"; };
@@ -203,6 +222,10 @@
 		D742F1C6266846C400B80C18 /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
 		D742F1C826684CEA00B80C18 /* api_decorator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = api_decorator.h; sourceTree = "<group>"; };
 		D77DE29D2668B71D00A553B4 /* easemob.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = easemob.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D79C40F12695D1A2004818E5 /* group_manager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = group_manager.cpp; sourceTree = "<group>"; };
+		D79C40F42695D1CE004818E5 /* group_manager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = group_manager.h; sourceTree = "<group>"; };
+		D7AFD64E269B278B008ABC57 /* room_manager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = room_manager.cpp; sourceTree = "<group>"; };
+		D7AFD650269B27B0008ABC57 /* room_manager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = room_manager.h; sourceTree = "<group>"; };
 		D7C6A8742671AD720083042D /* callbacks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = callbacks.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -256,6 +279,9 @@
 		90A044B52632D4EF00550B6E /* include */ = {
 			isa = PBXGroup;
 			children = (
+				D687D3AA26BA9226006C77D5 /* empushconfigs.h */,
+				D687D3AB26BA9226006C77D5 /* empushmanager_interface.h */,
+				D687D3AC26BA9226006C77D5 /* empushmanager.h */,
 				90A044B62632D4EF00550B6E /* emstl.h */,
 				90A044B72632D4EF00550B6E /* emdeviceinfo.h */,
 				90A044B82632D4EF00550B6E /* emchatroom.h */,
@@ -460,6 +486,12 @@
 		D742F1BD266843CA00B80C18 /* c_wrapper */ = {
 			isa = PBXGroup;
 			children = (
+				D6F6450526B945B3007D0FE2 /* push_manager.cpp */,
+				D6F6450426B945B3007D0FE2 /* push_manager.h */,
+				D6F6450126B81E2A007D0FE2 /* conversation_manager.cpp */,
+				D6F6450226B81E2B007D0FE2 /* conversation_manager.h */,
+				D64BF41E26AAE9CD00223225 /* contact_manager.cpp */,
+				D64BF41D26AAE9CD00223225 /* contact_manager.h */,
 				D7C6A8742671AD720083042D /* callbacks.h */,
 				D742F1C826684CEA00B80C18 /* api_decorator.h */,
 				D742F1C6266846C400B80C18 /* common.h */,
@@ -469,6 +501,13 @@
 				D742F1C2266843CA00B80C18 /* hyphenateCWrapper.cpp */,
 				D742F1C3266843CA00B80C18 /* models.h */,
 				D7282F3D266A5BF300D45179 /* LogHelper.h */,
+				D703D33526893F2900A9FA7D /* chat_manager.h */,
+				D79C40F12695D1A2004818E5 /* group_manager.cpp */,
+				D703D33626893F6D00A9FA7D /* chat_manager.cpp */,
+				D715B7BD268C83ED00EE75D6 /* models.cpp */,
+				D79C40F42695D1CE004818E5 /* group_manager.h */,
+				D7AFD64E269B278B008ABC57 /* room_manager.cpp */,
+				D7AFD650269B27B0008ABC57 /* room_manager.h */,
 			);
 			name = c_wrapper;
 			path = ../../../c_wrapper;
@@ -544,7 +583,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				D742F1C4266843CA00B80C18 /* client.cpp in Sources */,
+				D6F6450626B945B4007D0FE2 /* push_manager.cpp in Sources */,
+				D64BF41F26AAE9CD00223225 /* contact_manager.cpp in Sources */,
+				D79C40F32695D1A2004818E5 /* group_manager.cpp in Sources */,
 				D742F1C5266843CA00B80C18 /* hyphenateCWrapper.cpp in Sources */,
+				D703D33726893F6D00A9FA7D /* chat_manager.cpp in Sources */,
+				D7AFD64F269B278B008ABC57 /* room_manager.cpp in Sources */,
+				D6F6450326B81E2B007D0FE2 /* conversation_manager.cpp in Sources */,
+				D715B7BE268C83ED00EE75D6 /* models.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
