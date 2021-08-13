@@ -49,35 +49,28 @@ public class Login : MonoBehaviour
     }
 
     void LoginAction() {
+        SDKClient.Instance.Login(m_UsernameText.text, m_PasswordText.text,
+            handle: new CallBack(
 
-        //UIManager.DefaultAlert(transform, "login failed, code: " + 111);
+                onSuccess: () =>
+                {
+                    Debug.Log("login succeed");
+                    SceneManager.LoadSceneAsync("Main");
+                },
 
-        InputAlertConfig config = new InputAlertConfig("测试", (dict)=> {
-            foreach (var kv in dict) {
-                Debug.Log($"key: {kv.Key}, value: {kv.Value}");
-            }
-        });
-
-        config.AddField("群组id");
-        config.AddField("用户名");
-
-        UIManager.DefaultInputAlert(transform, config);
-
-        //SDKClient.Instance.Login(m_UsernameText.text, m_PasswordText.text,
-        //    handle: new CallBack(
-
-        //        onSuccess: () =>
-        //        {
-        //            Debug.Log("login succeed");
-        //            //SceneManager.LoadSceneAsync("Main");
-        //        },
-
-        //        onError: (code, desc) =>
-        //        {
-        //            UIManager.DefaultAlert(transform, "login failed, code: " + code);
-        //        }
-        //    )
-        //);
+                onError: (code, desc) =>
+                {
+                    if (code == 200)
+                    {
+                        SceneManager.LoadSceneAsync("Main");
+                    }
+                    else {
+                        UIManager.DefaultAlert(transform, "login failed, code: " + code);
+                    }
+                    
+                }
+            )
+        );
     }
 
     void RegisterAction() {

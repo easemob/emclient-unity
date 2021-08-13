@@ -31,7 +31,7 @@ namespace ChatSDK
 
         public override void AddContact(string username, string reason = null, CallBack handle = null)
         {
-            ChatAPINative.ContactManager_AddContact(client, username, reason,
+            ChatAPINative.ContactManager_AddContact(client, username, reason ?? "",
                 () => handle?.Success(),
                 (int code, string desc) => handle?.Error(code, desc));
         }
