@@ -62,7 +62,7 @@
 #elif UNITY_STANDALONE_OSX
             contactImp = new ContactManager_Mac(instance);
 #elif UNITY_STANDALONE_WIN
-//            contactImp = new ContactManager_Win();
+            contactImp = new ContactManager_Win();
 #endif
             return contactImp;
         }
