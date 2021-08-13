@@ -102,7 +102,7 @@ namespace ChatSDK
         public void InitWithOptions(Options options)
         {
             _Options = options;
-            _Sdk.InitWithOptions(options, null);
+            _Sdk.InitWithOptions(options, CallbackManager.Instance().connnectDelegates);
             registerManagers();
         }
 
@@ -162,6 +162,7 @@ namespace ChatSDK
             _Sdk.ChatManager();
             _Sdk.GroupManager();
             _Sdk.RoomManager();
+            _Sdk.ConversationManager();
         }
     }
 }

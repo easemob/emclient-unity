@@ -64,7 +64,6 @@ namespace ChatSDK
 
         public override void InitWithOptions(Options options, WeakDelegater<IConnectionDelegate> listeners = null)
         {
-
             ChatCallbackObject.GetInstance();
             if(connectionHub == null)
             {

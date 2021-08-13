@@ -40,7 +40,7 @@ public class AlertView
         return new AlertView(new AlertInfo(title, info, confirm, cancel), transform);
     }
 
-    static public AlertView Default(Transform transform, string info, Action confirm, Action cancel = null) {
+    static public AlertView Default(Transform transform, string info, Action confirm = null, Action cancel = null) {
         return DefaultTitle(transform, "提示", info, confirm, cancel);
     }
 

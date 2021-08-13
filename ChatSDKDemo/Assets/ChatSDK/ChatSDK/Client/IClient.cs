@@ -16,9 +16,9 @@
 #elif UNITY_IOS
                     instance = new Client_iOS();
 #elif UNITY_STANDALONE_OSX
-//                    instance = new Client_Mac();
+                    instance = new Client_Mac();
 #elif UNITY_STANDALONE_WIN
-//                    instance = new Client_Win();
+                    instance = new Client_Win();
 #endif
                     _initialized = true;
                 }
@@ -122,13 +122,13 @@
         {
             if (conversationImp != null) { return conversationImp; }
 #if UNITY_ANDROID
-            conversationImp = new RoomManager_Android();
+            conversationImp = new ConversationManager_Android();
 #elif UNITY_IOS
-            conversationImp = new RoomManager_iOS();
+            conversationImp = new ConversationManager_iOS();
 #elif UNITY_STANDALONE_OSX
             conversationImp = new ConversationManager_Mac(instance);
 #elif UNITY_STANDALONE_WIN
-            conversationImp = new RoomManager_Win();
+            conversationImp = new ConversationManager_Win();
 #endif
             return conversationImp;
         }
