@@ -35,15 +35,6 @@ public class AlertView
     private Button m_CancelBtn;
 
 
-    static public AlertView DefaultTitle(Transform transform, string title, string info, Action confirm, Action cancel = null)
-    {
-        return new AlertView(new AlertInfo(title, info, confirm, cancel), transform);
-    }
-
-    static public AlertView Default(Transform transform, string info, Action confirm = null, Action cancel = null) {
-        return DefaultTitle(transform, "提示", info, confirm, cancel);
-    }
-
     public AlertView(AlertInfo info, Transform transform) {
         alertInfo = info;
 

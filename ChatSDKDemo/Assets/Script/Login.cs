@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using ChatSDK;
 
-public class Login : MonoBehaviour, IConnectionDelegate
+public class Login : MonoBehaviour
 {
     // Start is called before the first frame update
 
@@ -29,7 +29,7 @@ public class Login : MonoBehaviour, IConnectionDelegate
         m_RegisterBtn.onClick.AddListener(RegisterAction);
 
         InitEaseMobSDK();
-        SDKClient.Instance.AddConnectionDelegate(this);
+       
     }
 
     private void OnApplicationQuit()
@@ -49,22 +49,35 @@ public class Login : MonoBehaviour, IConnectionDelegate
     }
 
     void LoginAction() {
-        //SceneManager.LoadSceneAsync("Main");
-        SDKClient.Instance.Login(m_UsernameText.text, m_PasswordText.text,
-            handle: new CallBack(
 
-                onSuccess: () =>
-                {
-                    Debug.Log("login succeed");
-                    //SceneManager.LoadSceneAsync("Main");
-                },
+        //UIManager.DefaultAlert(transform, "login failed, code: " + 111);
 
-                onError: (code, desc) =>
-                {
-                    AlertView.Default(transform, "login failed, code: " + code);
-                }
-            )
-        );
+        InputAlertConfig config = new InputAlertConfig("测试", (dict)=> {
+            foreach (var kv in dict) {
+                Debug.Log($"key: {kv.Key}, value: {kv.Value}");
+            }
+        });
+
+        config.AddField("群组id");
+        config.AddField("用户名");
+
+        UIManager.DefaultInputAlert(transform, config);
+
+        //SDKClient.Instance.Login(m_UsernameText.text, m_PasswordText.text,
+        //    handle: new CallBack(
+
+        //        onSuccess: () =>
+        //        {
+        //            Debug.Log("login succeed");
+        //            //SceneManager.LoadSceneAsync("Main");
+        //        },
+
+        //        onError: (code, desc) =>
+        //        {
+        //            UIManager.DefaultAlert(transform, "login failed, code: " + code);
+        //        }
+        //    )
+        //);
     }
 
     void RegisterAction() {
@@ -84,25 +97,10 @@ public class Login : MonoBehaviour, IConnectionDelegate
     }
 
     void InitEaseMobSDK() {
-        Debug.Log("----------- 1");
+
         Options options = new Options("easemob-demo#chatdemoui");
-        Debug.Log("----------- " + options.AppKey);
         options.DebugMode = true;
         SDKClient.Instance.InitWithOptions(options);
     }
 
-    public void OnConnected()
-    {
-        Debug.Log("----------- OnConnected");
-    }
-
-    public void OnDisconnected(int i)
-    {
-        Debug.Log("----------- OnDisconnected");
-    }
-
-    public void OnPong()
-    {
-        Debug.Log("----------- OnPong");
-    }
 }
