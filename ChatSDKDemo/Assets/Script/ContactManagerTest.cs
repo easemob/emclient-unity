@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using ChatSDK;
 
-public class ContactManagerTest : MonoBehaviour
+public class ContactManagerTest : MonoBehaviour, IContactManagerDelegate
 {
     private Button addContactBtn;
     private Button deleteContactBtn;
@@ -47,6 +48,8 @@ public class ContactManagerTest : MonoBehaviour
 
         backButton = transform.Find("BackBtn").GetComponent<Button>();
         backButton.onClick.AddListener(backButtonAction);
+
+        SDKClient.Instance.ContactManager.AddContactManagerDelegate(this);
     }
 
 
@@ -57,38 +60,159 @@ public class ContactManagerTest : MonoBehaviour
 
     void AddContactBtnAction()
     {
+
+        InputAlertConfig config = new InputAlertConfig("添加好友", (dict) =>
+        {
+            SDKClient.Instance.ContactManager.AddContact(dict["id"], handle: new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.DefaultAlert(transform, "成功");
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.DefaultAlert(transform, $"失败code:{code}");
+                }
+            ));
+        });
+
+        config.AddField("id");
+
+        UIManager.DefaultInputAlert(transform, config);
+
+
         Debug.Log("AddContactBtnAction");
     }
     void DeleteContactBtnAction()
     {
+
+        InputAlertConfig config = new InputAlertConfig("删除好友", (dict) => {
+            SDKClient.Instance.ContactManager.DeleteContact(dict["id"], handle: new CallBack(
+                onSuccess: () => {
+                    UIManager.DefaultAlert(transform, "成功");
+                },
+                onError: (code, desc) => {
+                    UIManager.DefaultAlert(transform, $"失败code:{code}");
+                }
+            ));
+        });
+
+        config.AddField("id");
+
+        UIManager.DefaultInputAlert(transform, config);
+
         Debug.Log("DeleteContactBtnAction");
     }
     void GetAllContactsFromServerBtnAction()
     {
+
+        SDKClient.Instance.ContactManager.GetAllContactsFromServer(new ValueCallBack<List<string>>(
+            onSuccess: (list) => {
+                string str = string.Join(",", list.ToArray());
+                UIManager.DefaultAlert(transform, str);
+            },
+            onError: (code, desc) => {
+                UIManager.DefaultAlert(transform, $"失败code:{code}");
+            }
+        ));
+
         Debug.Log("GetAllContactsFromServerBtnAction");
     }
+
     void GetAllContactsFromDBBtnAction()
     {
         Debug.Log("GetAllContactsFromDBBtnAction");
     }
+
     void AddUserToBlockListBtnAction()
     {
+
+        InputAlertConfig config = new InputAlertConfig("添加黑名单", (dict) => {
+            SDKClient.Instance.ContactManager.AddUserToBlockList(dict["id"], handle: new CallBack(
+                onSuccess: () => {
+                    UIManager.DefaultAlert(transform, "成功");
+                },
+                onError: (code, desc) => {
+                    UIManager.DefaultAlert(transform, $"失败code:{code}");
+                }
+            ));
+        });
+
+        config.AddField("id");
+
+        UIManager.DefaultInputAlert(transform, config);
+
         Debug.Log("AddUserToBlockListBtnAction");
     }
     void RemoveUserFromBlockListBtnAction()
     {
+
+        InputAlertConfig config = new InputAlertConfig("移除黑名单", (dict) => {
+            SDKClient.Instance.ContactManager.RemoveUserFromBlockList(dict["id"], handle: new CallBack(
+                onSuccess: () => {
+                    UIManager.DefaultAlert(transform, "成功");
+                },
+                onError: (code, desc) => {
+                    UIManager.DefaultAlert(transform, $"失败code:{code}");
+                }
+            ));
+        });
+
+        config.AddField("id");
+
+        UIManager.DefaultInputAlert(transform, config);
+
         Debug.Log("RemoveUserFromBlockListBtnAction");
     }
     void GetBlockListFromServerBtnAction()
     {
+        SDKClient.Instance.ContactManager.GetBlockListFromServer(new ValueCallBack<List<string>>(
+            onSuccess: (list) => {
+                string str = string.Join(",", list.ToArray());
+                UIManager.DefaultAlert(transform, str);
+            },
+            onError: (code, desc) => {
+                UIManager.DefaultAlert(transform, $"失败code:{code}");
+            }
+        ));
+
         Debug.Log("GetBlockListFromServerBtnAction");
     }
     void AcceptInvitationBtnAction()
     {
+        InputAlertConfig config = new InputAlertConfig("同意好友申请", (dict) => {
+            SDKClient.Instance.ContactManager.AcceptInvitation(dict["id"], handle: new CallBack(
+                onSuccess: () => {
+                    UIManager.DefaultAlert(transform, "成功");
+                },
+                onError: (code, desc) => {
+                    UIManager.DefaultAlert(transform, $"失败code:{code}");
+                }
+            ));
+        });
+
+        config.AddField("id");
+
+        UIManager.DefaultInputAlert(transform, config);
+
         Debug.Log("AcceptInvitationBtnAction");
     }
     void DeclineInvitationBtnAction()
     {
+        InputAlertConfig config = new InputAlertConfig("拒绝好友申请", (dict) => {
+            SDKClient.Instance.ContactManager.DeclineInvitation(dict["id"], handle: new CallBack(
+                onSuccess: () => {
+                    UIManager.DefaultAlert(transform, "成功");
+                },
+                onError: (code, desc) => {
+                    UIManager.DefaultAlert(transform, $"失败code:{code}");
+                }
+            ));
+        });
+
+        config.AddField("id");
+
+        UIManager.DefaultInputAlert(transform, config);
+
         Debug.Log("DeclineInvitationBtnAction");
     }
     void GetSelfIdsOnOtherPlatformBtnAction()
@@ -107,5 +231,30 @@ public class ContactManagerTest : MonoBehaviour
     void Update()
     {
 
+    }
+
+    public void OnContactAdded(string username)
+    {
+        UIManager.DefaultAlert(transform, $"OnContactAdded: {username}");
+    }
+
+    public void OnContactDeleted(string username)
+    {
+        UIManager.DefaultAlert(transform, $"OnContactDeleted: {username}");
+    }
+
+    public void OnContactInvited(string username, string reason)
+    {
+        UIManager.DefaultAlert(transform, $"OnContactInvited: {username}, reason: {reason}");
+    }
+
+    public void OnFriendRequestAccepted(string username)
+    {
+        UIManager.DefaultAlert(transform, $"OnFriendRequestAccepted: {username}");
+    }
+
+    public void OnFriendRequestDeclined(string username)
+    {
+        UIManager.DefaultAlert(transform, $"OnFriendRequestDeclined: {username}");
     }
 }

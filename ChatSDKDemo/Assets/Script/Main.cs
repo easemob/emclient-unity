@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using ChatSDK;
 
 public class Main : MonoBehaviour
 {
@@ -102,6 +103,7 @@ public class Main : MonoBehaviour
 
     void LogoutBtnAction()
     {
+        SDKClient.Instance.Logout(false);
         SceneManager.LoadSceneAsync("Login");
     }
 
