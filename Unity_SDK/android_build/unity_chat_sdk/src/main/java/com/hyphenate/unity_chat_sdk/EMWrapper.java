@@ -35,8 +35,9 @@ public class EMWrapper {
         cachedThreadPool.execute(runnable);
     }
 
-    public void onSuccess( String type, String callbackId,  String obj) {
-        Log.d("chat_sdk", "callbackId -- " + callbackId + " type: " + type + " obj: " + obj);
+    public void onSuccess( String type, String callbackId, Object obj) {
+        Log.d("chat_sdk", "onSuccess callbackId -- " + callbackId + " type: " + type + " obj: " + obj);
+        if (callbackId == null) return;
         post(()-> {
             try {
                 JSONObject jsonObject = new JSONObject();
@@ -57,6 +58,8 @@ public class EMWrapper {
     }
 
     public void onError(String callbackId, HyphenateException e) {
+        Log.d("chat_sdk", "onError callbackId -- " + callbackId + " code: " + e.getErrorCode() + " desc: " + e.getDescription());
+        if (callbackId == null) return;
         post(()-> {
             JSONObject jsonObject = new JSONObject();
             try {

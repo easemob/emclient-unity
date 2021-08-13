@@ -8,175 +8,709 @@ namespace ChatSDK
     //IConnectionDelegate
     public delegate void OnDisconnected(int info);
     //IChatManagerDelegate
-    public delegate void OnMessagesReceived(MessageTransferObject[] messages, int size);
-    public delegate void OnCmdMessagesReceived(MessageTransferObject[] messages, int size);
-    public delegate void OnMessagesRead(MessageTransferObject[] messages, int size);
-    public delegate void OnMessagesDelivered(MessageTransferObject[] messages, int size);
-    public delegate void OnMessagesRecalled(MessageTransferObject[] messages, int size);
+    public delegate void OnMessagesReceived([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] messages,
+        [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] MessageBodyType[] types, int size);
+
+    public delegate void OnCmdMessagesReceived([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] messages,
+        [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] MessageBodyType[] types, int size);
+
+    public delegate void OnMessagesRead([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] messages,
+        [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] MessageBodyType[] types, int size);
+
+    public delegate void OnMessagesDelivered([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] messages,
+        [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] MessageBodyType[] types, int size);
+
+    public delegate void OnMessagesRecalled([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] messages,
+        [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] MessageBodyType[] types, int size);
+
+    public delegate void OnReadAckForGroupMessageUpdated();
+
+    public delegate void OnGroupMessageRead([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] IntPtr[] acks, int size);
     public delegate void OnConversationsUpdate();
     public delegate void OnConversationRead(string from, string to);
 
-    public class ConnectionHub : CallBack, IConnectionDelegate
-    {
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public struct Delegate
-        {
-            public Action Connected;
-            public OnDisconnected Disconnected;
-        };
+    //IGroupManagerDelegate
+    public delegate void OnInvitationReceived(string groupId, string groupName, string inviter, string reason);
+    public delegate void OnRequestToJoinReceived(string groupId, string groupName, string applicant, string reason);
+    public delegate void OnRequestToJoinAccepted(string groupId, string groupName, string accepter);
+    public delegate void OnRequestToJoinDeclined(string groupId, string groupName, string decliner, string reason);
+    public delegate void OnInvitationAccepted(string groupId, string invitee, string reason);
+    public delegate void OnInvitationDeclined(string groupId, string invitee, string reason);
+    public delegate void OnUserRemoved(string groupId, string groupName);
+    public delegate void OnGroupDestroyed(string groupId, string groupName);
+    public delegate void OnAutoAcceptInvitationFromGroup(string groupId, string inviter, string inviteMessage);
+    public delegate void OnMuteListAdded(string groupId, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] string[] mutes, int size, int muteExpire);
+    public delegate void OnMuteListRemoved(string groupId, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] string[] mutes, int size);
+    public delegate void OnAdminAdded(string groupId, string administrator);
+    public delegate void OnAdminRemoved(string groupId, string administrator);
+    public delegate void OnOwnerChanged(string groupId, string newOwner, string oldOwner);
+    public delegate void OnMemberJoined(string groupId, string member);
+    public delegate void OnMemberExited(string groupId, string member);
+    public delegate void OnAnnouncementChanged(string groupId, string announcement);
+    public delegate void OnSharedFileAdded(string groupId,
+        [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] sharedFile, int size);
+    public delegate void OnSharedFileDeleted(string groupId, string fileId);
 
-        private Delegate @delegate;
+    //IRoomManagerDelegate, most of them are duplicated as IGroupManagerDelegate
+    public delegate void OnChatRoomDestroyed(string roomId, string roomName);
+    public delegate void OnRemovedFromChatRoom(string roomId, string roomName, string participant);
+    public delegate void OnMemberExitedFromRoom(string roomId, string roomName, string member);
+
+    //IContactManagerDelegate
+    public delegate void OnContactAdd(string username);
+    public delegate void OnContactDeleted(string username);
+    public delegate void OnContactInvited(string username, string reason);
+    public delegate void OnFriendRequestAccepted(string username);
+    public delegate void OnFriendRequestDeclined(string username);
+
+    public class ConnectionHub
+    {
+        //events handler
+        internal Action OnConnected;
+        internal OnDisconnected OnDisconnected;
+        internal Action OnPong;
+
+        //to-do:test
+        public string ts;
+
         private WeakDelegater<IConnectionDelegate> listeners;
 
-        public ConnectionHub(WeakDelegater<IConnectionDelegate> _listeners)
+        public ConnectionHub(IClient client, WeakDelegater<IConnectionDelegate> _listeners)
         {
-            listeners = _listeners;
-            (@delegate.Connected, @delegate.Disconnected) = (OnConnected, OnDisconnected);
-            callbackId = CallbackManager.Instance().currentId.ToString();
-            CallbackManager.Instance().AddCallback(CallbackManager.Instance().currentId, this);
-        }
-
-        public void OnConnected()
-        {
-            //invoke each listener in list
-            Debug.Log("ConnectionHub.OnConnected() invoked!");
-            foreach (IConnectionDelegate listener in listeners.List)
+            //callbackmanager registration done in base()!
+            if (_listeners == null)
             {
-                listener.OnConnected();
+                listeners = new WeakDelegater<IConnectionDelegate>();
             }
-        }
-
-        public void OnDisconnected(int info)
-        {
-            //invoke each listener in list
-            Debug.Log($"ConnectionHub.OnDisconnected() invoked with info={info}!");
-            foreach (IConnectionDelegate listener in listeners.List)
+            else
             {
-                listener.OnDisconnected(info);
+                listeners = _listeners;
             }
-        }
 
-        public Delegate Delegates()
-        {
-            return @delegate;
+            //Debug.Log($"Listener num in _listeners is : {listeners.}");
+
+            //register events
+            OnConnected = () =>
+            {
+                Debug.Log("Connection established.");
+                client.IsConnected = true;
+                foreach (IConnectionDelegate listener in listeners?.List)
+                {
+                    listener.OnConnected();
+                }
+            };
+            OnDisconnected = (int info) =>
+            {
+                Debug.Log("Connection discontinued.");
+                client.IsConnected = false;
+                foreach (IConnectionDelegate listener in listeners?.List)
+                {
+                    listener.OnDisconnected(info);
+                }
+            };
+            OnPong = () =>
+            {
+                Debug.Log("Server ponged.");
+                foreach (IConnectionDelegate listener in listeners?.List)
+                {
+                    listener.OnPong();
+                }
+            };
         }
     }
 
-    public class ChatManagerHub : CallBack
+    public class ChatManagerHub
     {
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public struct Delegate
-        {
-            public OnMessagesReceived MessagesReceived;
-            public OnCmdMessagesReceived CmdMessagesReceived;
-            public OnMessagesRead MessagesRead;
-            public OnMessagesDelivered MessagesDelivered;
-            public OnMessagesRecalled MessagesRecalled;
-            public OnConversationsUpdate ConversationsUpdate;
-            public OnConversationRead ConversationRead;
-        };
+        internal OnMessagesReceived OnMessagesReceived;
+        internal OnCmdMessagesReceived OnCmdMessagesReceived;
+        internal OnMessagesRead OnMessagesRead;
+        internal OnMessagesDelivered OnMessagesDelivered;
+        internal OnMessagesRecalled OnMessagesRecalled;
+        internal OnReadAckForGroupMessageUpdated OnReadAckForGroupMessageUpdated;
+        internal OnGroupMessageRead OnGroupMessageRead;
+        internal OnConversationsUpdate OnConversationsUpdate;
+        internal OnConversationRead OnConversationRead;
 
-        private Delegate @delegate;
         private WeakDelegater<IChatManagerDelegate> listeners;
 
         public ChatManagerHub(WeakDelegater<IChatManagerDelegate> _listeners)
         {
-            listeners = _listeners;
-            (@delegate.CmdMessagesReceived,
-                @delegate.CmdMessagesReceived,
-                @delegate.MessagesRead,
-                @delegate.MessagesDelivered,
-                @delegate.MessagesRecalled,
-                @delegate.ConversationsUpdate,
-                @delegate.ConversationRead) = (OnMessagesReceived,
-                                                OnCmdMessagesReceived,
-                                                OnMessagesRead,
-                                                OnMessagesDelivered,
-                                                OnMessagesRecalled,
-                                                OnConversationsUpdate,
-                                                OnConversationRead);
-            callbackId = CallbackManager.Instance().currentId.ToString();
-            CallbackManager.Instance().AddCallback(CallbackManager.Instance().currentId, this);
-        }
-
-        public void OnMessagesReceived(MessageTransferObject[] _messages, int size)
-        {
-            List<Message> messages = MessageTransferObject.ConvertToMessageList(_messages, size);
-            //invoke each listener in list
-            Debug.Log($"ChatManagerHub.OnMessagesReceived() invoked with messages={messages}!");
-            foreach (IChatManagerDelegate listener in listeners.List)
+            if (_listeners == null)
             {
-                listener.OnMessagesReceived(messages);
+                listeners = new WeakDelegater<IChatManagerDelegate>();
             }
-        }
-
-        public void OnCmdMessagesReceived(MessageTransferObject[] _messages, int size)
-        {
-            List<Message> messages = MessageTransferObject.ConvertToMessageList(_messages, size);
-            //invoke each listener in list
-            Debug.Log($"ChatManagerHub.OnCmdMessagesReceived() invoked with messages={messages}!");
-            foreach (IChatManagerDelegate listener in listeners.List)
+            else
             {
-                listener.OnCmdMessagesReceived(messages);
+                listeners = _listeners;
             }
-        }
 
-        public void OnMessagesRead(MessageTransferObject[] _messages, int size)
-        {
-            List<Message> messages = MessageTransferObject.ConvertToMessageList(_messages, size);
-            //invoke each listener in list
-            Debug.Log($"ChatManagerHub.OnMessagesRead() invoked with messages={messages}!");
-            foreach (IChatManagerDelegate listener in listeners.List)
+            OnMessagesReceived = (IntPtr[] _messages, MessageBodyType[] types, int size) =>
             {
-                listener.OnMessagesRead(messages);
-            }
-        }
+                List<Message> messages = GetMessageListFromIntPtrArray(_messages, types, size);
+                
+                //chain-call to customer specified listeners
+                Debug.Log($"Invoke customer listeners in OnMessagesReceived upon messages receiving...");
+                foreach (IChatManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnMessagesReceived(messages);
+                }
+            };
 
-        public void OnMessagesDelivered(MessageTransferObject[] _messages, int size)
-        {
-            List<Message> messages = MessageTransferObject.ConvertToMessageList(_messages, size);
-            //invoke each listener in list
-            Debug.Log($"ChatManagerHub.OnMessagesDelivered() invoked with messages={messages}!");
-            foreach (IChatManagerDelegate listener in listeners.List)
+            OnCmdMessagesReceived = (IntPtr[] _messages, MessageBodyType[] types, int size) =>
             {
-                listener.OnMessagesDelivered(messages);
-            }
-        }
+                List<Message> messages = GetMessageListFromIntPtrArray(_messages, types, size);
 
-        public void OnMessagesRecalled(MessageTransferObject[] _messages, int size)
-        {
-            List<Message> messages = MessageTransferObject.ConvertToMessageList(_messages, size);
-            //invoke each listener in list
-            Debug.Log($"ChatManagerHub.OnMessagesRecalled() invoked with messages={messages}!");
-            foreach (IChatManagerDelegate listener in listeners.List)
+                //chain-call to customer specified listeners
+                Debug.Log($"Invoke customer listeners in OnCmdMessagesReceived upon messages receiving...");
+                foreach (IChatManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnCmdMessagesReceived(messages);
+                }
+            };
+
+            OnMessagesRead = (IntPtr[] _messages, MessageBodyType[] types, int size) =>
             {
-                listener.OnMessagesRecalled(messages);
-            }
-        }
+                List<Message> messages = GetMessageListFromIntPtrArray(_messages, types, size);
 
-        public void OnConversationsUpdate()
-        {
-            //invoke each listener in list
-            Debug.Log($"ChatManagerHub.OnConversationUpdate() invoked!");
-            foreach (IChatManagerDelegate listener in listeners.List)
+                //chain-call to customer specified listeners
+                Debug.Log($"Invoke customer listeners in OnMessagesRead upon messages receiving...");
+                foreach (IChatManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnMessagesRead(messages);
+                }
+            };
+
+            OnMessagesDelivered = (IntPtr[] _messages, MessageBodyType[] types, int size) =>
             {
-                listener.OnConversationsUpdate();
-            }
-        }
+                List<Message> messages = GetMessageListFromIntPtrArray(_messages, types, size);
 
-        public void OnConversationRead(string from, string to)
-        {
-            //invoke each listener in list
-            Debug.Log($"ChatManagerHub.OnConversationRead(from={from}, to={to}) invoked!");
-            foreach (IChatManagerDelegate listener in listeners.List)
+                //chain-call to customer specified listeners
+                Debug.Log($"Invoke customer listeners in OnMessagesDelivered upon messages receiving...");
+                foreach (IChatManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnMessagesDelivered(messages);
+                }
+            };
+
+            OnMessagesRecalled = (IntPtr[] _messages, MessageBodyType[] types, int size) =>
             {
-                listener.OnConversationRead(from, to);
-            }
+                List<Message> messages = GetMessageListFromIntPtrArray(_messages, types, size);
+
+                //chain-call to customer specified listeners
+                Debug.Log($"Invoke customer listeners in OnMessagesRecalled upon messages receiving...");
+                foreach (IChatManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnMessagesRecalled(messages);
+                }
+            };
+
+            OnReadAckForGroupMessageUpdated = () =>
+            {
+                Debug.Log($"Invoke customer listeners in OnReadAckForGroupMessageUpdated");
+                foreach (IChatManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnReadAckForGroupMessageUpdated();
+                }
+            };
+
+            OnGroupMessageRead = (IntPtr[] _messages, int size) =>
+            {
+                Debug.Log($"Invoke customer listeners in OnGroupMessageRead upon group ack receiving...");
+                var acks = new List<GroupReadAck>(size);
+                GroupReadAckTO gto = null;
+                for (int i=0; i<size; i++)
+                {
+                    gto = new GroupReadAckTO();
+                    Marshal.PtrToStructure(_messages[i], gto);
+                    Debug.Log($"Received group message read ackid:{gto.AckId}, msgid:{gto.MsgId}");
+                }
+                acks.Add(gto.Unmarshall());
+                foreach (IChatManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnGroupMessageRead(acks);
+                }
+            };
+
+            //to-do: no any return parameter?
+            OnConversationsUpdate = () =>
+            {
+                Debug.Log($"Invoke customer listeners in OnConversationsUpdate when conversation updated.");
+                foreach (IChatManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnConversationsUpdate();
+                }
+            };
+
+            OnConversationRead = (string from, string to) =>
+            {
+                Debug.Log($"Invoke customer listeners in OnConversationRead when conversation read.");
+                foreach (IChatManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnConversationRead(from, to);
+                }
+            };
+
         }
 
-        public Delegate Delegates()
+        public List<Message>  GetMessageListFromIntPtrArray(IntPtr[] _messages, MessageBodyType[] types, int size)
         {
-            return @delegate;
+            var messages = new List<Message>(size);
+            for (int i = 0; i < size; i++)
+            {
+                MessageTO mto = null;
+                switch (types[i])
+                {
+                    case MessageBodyType.TXT:
+                        //keep using mto
+                        mto = new TextMessageTO();
+                        Marshal.PtrToStructure(_messages[i], mto);
+                        break;
+                    case MessageBodyType.LOCATION:
+                        mto = new LocationMessageTO();
+                        Marshal.PtrToStructure(_messages[i], mto);
+                        break;
+                    case MessageBodyType.CMD:
+                        mto = new CmdMessageTO();
+                        Marshal.PtrToStructure(_messages[i], mto);
+                        break;
+                    case MessageBodyType.FILE:
+                        mto = new FileMessageTO();
+                        Marshal.PtrToStructure(_messages[i], mto);
+                        break;
+                    case MessageBodyType.IMAGE:
+                        mto = new ImageMessageTO();
+                        Marshal.PtrToStructure(_messages[i], mto);
+                        break;
+                    case MessageBodyType.VOICE:
+                        mto = new VoiceMessageTO();
+                        Marshal.PtrToStructure(_messages[i], mto);
+                        break;
+                }
+                Debug.Log($"Message {mto.MsgId} received from {mto.From}");
+                messages.Add(mto.Unmarshall());
+                //_messages[i] memory released at unmanaged side!                
+            }
+            return messages;
+        }
+    }
+
+    public class GroupManagerHub
+    {
+        internal OnInvitationReceived OnInvitationReceived;
+        internal OnRequestToJoinReceived OnRequestToJoinReceived;
+        internal OnRequestToJoinAccepted OnRequestToJoinAccepted;
+        internal OnRequestToJoinDeclined OnRequestToJoinDeclined;
+        internal OnInvitationAccepted OnInvitationAccepted;
+        internal OnInvitationDeclined OnInvitationDeclined;
+        internal OnUserRemoved OnUserRemoved;
+        internal OnGroupDestroyed OnGroupDestroyed;
+        internal OnAutoAcceptInvitationFromGroup OnAutoAcceptInvitationFromGroup;
+        internal OnMuteListAdded OnMuteListAdded;
+        internal OnMuteListRemoved OnMuteListRemoved;
+        internal OnAdminAdded OnAdminAdded;
+        internal OnAdminRemoved OnAdminRemoved;
+        internal OnOwnerChanged OnOwnerChanged;
+        internal OnMemberJoined OnMemberJoined;
+        internal OnMemberExited OnMemberExited;
+        internal OnAnnouncementChanged OnAnnouncementChanged;
+        internal OnSharedFileAdded OnSharedFileAdded;
+        internal OnSharedFileDeleted OnSharedFileDeleted;
+
+        private WeakDelegater<IGroupManagerDelegate> listeners;
+
+        public GroupManagerHub(WeakDelegater<IGroupManagerDelegate> _listeners)
+        {
+            if (_listeners == null)
+            {
+                listeners = new WeakDelegater<IGroupManagerDelegate>();
+            }
+            else
+            {
+                listeners = _listeners;
+            }
+
+            OnInvitationReceived = (string groupId, string groupName, string inviter, string reason) =>
+            {
+                Debug.Log($"OnInvitationReceived, group[Id={groupId},Name={groupName}] invitation received from {inviter}, reason: {reason}");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnInvitationReceivedFromGroup(groupId, groupName, inviter, reason);
+                }
+            };
+
+            OnRequestToJoinReceived = (string groupId, string groupName, string applicant, string reason) =>
+            {
+                Debug.Log($"ROnRequestToJoinReceived, group[Id={groupId},Name={groupName}], applicant:{applicant}, reason: {reason}");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnRequestToJoinReceivedFromGroup(groupId, groupName, applicant, reason);
+                }
+            };
+
+            OnRequestToJoinAccepted = (string groupId, string groupName, string accepter) =>
+            {
+                Debug.Log($"OnRequestToJoinAccepted, group[Id={groupId},Name={groupName}], accepter: {accepter}");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnRequestToJoinAcceptedFromGroup(groupId, groupName, accepter);
+                }
+            };
+
+            OnRequestToJoinDeclined = (string groupId, string groupName, string decliner, string reason) =>
+            {
+                Debug.Log($"OnRequestToJoinDeclined, group[Id={groupId},Name={groupName}], decliner: {decliner}, reason:{reason}");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnRequestToJoinDeclinedFromGroup(groupId, groupName, decliner, reason);
+                }
+            };
+
+            OnInvitationAccepted = (string groupId, string invitee, string reason) =>
+            {
+                Debug.Log($"OnInvitationAccepted, group[Id={groupId}], invitee: {invitee}, reason:{reason}");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnInvitationAcceptedFromGroup(groupId, invitee, reason);
+                }
+            };
+
+            OnInvitationDeclined = (string groupId, string invitee, string reason) =>
+            {
+                Debug.Log($"OnInvitationDeclined, group[Id={groupId}], invitee: {invitee}, reason:{reason}");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnInvitationDeclinedFromGroup(groupId, invitee, reason);
+                }
+            };
+
+            OnUserRemoved = (string groupId, string groupName) =>
+            {
+                Debug.Log($"OnUserRemoved, group[Id={groupId}, Name={groupName}]");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnUserRemovedFromGroup(groupId, groupName);
+                }
+            };
+
+            OnGroupDestroyed = (string groupId, string groupName) =>
+            {
+                Debug.Log($"OnGroupDestroyed, group[Id={groupId}, Name={groupName}]");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnDestroyedFromGroup(groupId, groupName);
+                }
+            };
+
+            OnAutoAcceptInvitationFromGroup = (string groupId, string inviter, string inviteMessage) =>
+            {
+                Debug.Log($"OnAutoAcceptInvitationFromGroup, group[Id={groupId}], inviter:{inviter}, inviteMessage:{inviteMessage}");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnAutoAcceptInvitationFromGroup(groupId, inviter, inviteMessage);
+                }
+            };
+
+            OnMuteListAdded = (string groupId, string[] mutes, int size, int muteExpire) =>
+            {
+                Debug.Log($"OnMuteListAdded, group[Id={groupId}], mute member num:{size}, muteExpire:{muteExpire}");
+
+                var acks = new List<string>(size);
+                for (int i = 0; i < size; i++)
+                {
+                    acks.Add(mutes[i]);
+                }
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnMuteListAddedFromGroup(groupId, acks, muteExpire);
+                }
+            };
+
+            OnMuteListRemoved = (string groupId, string[] mutes, int size) =>
+            {
+                Debug.Log($"OnMuteListRemoved, group[Id={groupId}], mute member num:{size}");
+
+                var acks = new List<string>(size);
+                for (int i = 0; i < size; i++)
+                {
+                    acks.Add(mutes[i]);
+                }
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnMuteListRemovedFromGroup(groupId, acks);
+                }
+            };
+
+            OnAdminAdded = (string groupId, string administrator) =>
+            {
+                Debug.Log($"OnAdminAdded, group[Id={groupId}], admin:{administrator}");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnAdminAddedFromGroup(groupId, administrator);
+                }
+            };
+
+            OnAdminRemoved = (string groupId, string administrator) =>
+            {
+                Debug.Log($"OnAdminRemoved, group[Id={groupId}], admin:{administrator}");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnAdminRemovedFromGroup(groupId, administrator);
+                }
+            };
+
+            OnOwnerChanged = (string groupId, string newOwner, string oldOwner) =>
+            {
+                Debug.Log($"OnOwnerChanged, group[Id={groupId}], newOwner:{newOwner}, oldOwner:{oldOwner}");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnOwnerChangedFromGroup(groupId, newOwner, oldOwner);
+                }
+            };
+
+            OnMemberJoined = (string groupId, string member) =>
+            {
+                Debug.Log($"OnMemberJoined, group[Id={groupId}], member:{member}");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnMemberJoinedFromGroup(groupId, member);
+                }
+            };
+
+            OnMemberExited = (string groupId, string member) =>
+            {
+                Debug.Log($"OnMemberExited, group[Id={groupId}], member:{member}");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnMemberExitedFromGroup(groupId, member);
+                }
+            };
+
+            OnAnnouncementChanged = (string groupId, string announcement) =>
+            {
+                Debug.Log($"OnAnnouncementChanged, group[Id={groupId}], announcement:{announcement}");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnAnnouncementChangedFromGroup(groupId, announcement);
+                }
+            };
+
+            OnSharedFileAdded = (string groupId, IntPtr[] sharedFile, int size) =>
+            {
+                GroupSharedFile groupSharedFile = new GroupSharedFile();
+                Marshal.PtrToStructure(sharedFile[0], groupSharedFile);
+
+                Debug.Log($"OnSharedFileAdded, group[Id={groupId}], fileName:{groupSharedFile.FileName}, fileId:{groupSharedFile.FileId}");
+
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnSharedFileAddedFromGroup(groupId, groupSharedFile);
+                }
+            };
+
+            OnSharedFileDeleted = (string groupId, string fileId) =>
+            {
+                Debug.Log($"OnSharedFileDeleted, group[Id={groupId}], fileId:{fileId}");
+                foreach (IGroupManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnSharedFileDeletedFromGroup(groupId, fileId);
+                }
+            };
+        }
+    }
+
+    public class RoomManagerHub
+    {
+        internal OnChatRoomDestroyed OnChatRoomDestroyed;
+        internal OnMemberJoined OnMemberJoined;
+        internal OnMemberExitedFromRoom OnMemberExited;
+        internal OnRemovedFromChatRoom OnRemovedFromChatRoom;
+        internal OnMuteListAdded OnMuteListAdded;
+        internal OnMuteListRemoved OnMuteListRemoved;
+        internal OnAdminAdded OnAdminAdded;
+        internal OnAdminRemoved OnAdminRemoved;
+        internal OnOwnerChanged OnOwnerChanged;
+        internal OnAnnouncementChanged OnAnnouncementChanged;
+
+        private WeakDelegater<IRoomManagerDelegate> listeners;
+
+        public RoomManagerHub(WeakDelegater<IRoomManagerDelegate> _listeners)
+        {
+            if (_listeners == null)
+            {
+                listeners = new WeakDelegater<IRoomManagerDelegate>();
+            }
+            else
+            {
+                listeners = _listeners;
+            }
+
+            OnChatRoomDestroyed = (string roomId, string roomName) =>
+            {
+                Debug.Log($"OnChatRoomDestroyed, roomId {roomId}, roomName {roomName}.");
+                foreach (IRoomManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnDestroyedFromRoom(roomId, roomName);
+                }
+            };
+
+            OnMemberJoined = (string roomId, string member) =>
+            {
+                Debug.Log($"Member {member} just joined room {roomId}.");
+                foreach (IRoomManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnMemberJoinedFromRoom(roomId, member);
+                }
+            };
+
+            OnMemberExited = (string roomId, string roomName, string member) =>
+            {
+                Debug.Log($"OnMemberExited, roomId {roomId}, member {member}.");
+                foreach (IRoomManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnMemberExitedFromRoom(roomId, roomName, member);
+                }
+            };
+
+            OnRemovedFromChatRoom = (string roomId, string roomName, string participant) =>
+            {
+                Debug.Log($"OnRemovedFromChatRoom, roomId {roomId}, roomName {roomName}, paticipant {participant}.");
+                foreach (IRoomManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnRemovedFromRoom(roomId, roomName, participant);
+                }
+            };
+
+            OnMuteListAdded = (string roomId, string[] mutes, int size, int muteExpire) =>
+            {
+                Debug.Log($"OnMuteListAdded, roomId {roomId}, mute member num {size}, muteExpire {muteExpire}.");
+                var acks = new List<string>(size);
+                for (int i = 0; i < size; i++)
+                {
+                    acks.Add(mutes[i]);
+                }
+                foreach (IRoomManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnMuteListAddedFromRoom(roomId, acks, muteExpire);
+                }
+            };
+
+            OnMuteListRemoved = (string roomId, string[] mutes, int size) =>
+            {
+                Debug.Log($"OnMuteListRemoved, roomId {roomId}, mute member num {size}");
+                var acks = new List<string>(size);
+                for (int i = 0; i < size; i++)
+                {
+                    acks.Add(mutes[i]);
+                }
+                foreach (IRoomManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnMuteListRemovedFromRoom(roomId, acks);
+                }
+            };
+
+            OnAdminAdded = (string roomId, string administrator) =>
+            {
+                Debug.Log($"OnAdminAdded, roomId {roomId}, admin {administrator}.");
+                foreach (IRoomManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnAdminAddedFromRoom(roomId, administrator);
+                }
+            };
+
+            OnAdminRemoved = (string roomId, string administrator) =>
+            {
+                Debug.Log($"OnAdminRemoved, roomId {roomId}, admin {administrator}.");
+                foreach (IRoomManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnAdminRemovedFromRoom(roomId, administrator);
+                }
+            };
+
+            OnOwnerChanged = (string roomId, string newOwner, string oldOwner) =>
+            {
+                Debug.Log($"OnOwnerChanged, roomId {roomId}, newOwner {newOwner}, oldOwner {oldOwner}.");
+                foreach (IRoomManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnOwnerChangedFromRoom(roomId, newOwner, oldOwner);
+                }
+            };
+
+            OnAnnouncementChanged = (string roomId, string announcement) =>
+            {
+                Debug.Log($"OnAnnouncementChanged, roomId {roomId}, announcement {announcement}");
+                foreach (IRoomManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnAnnouncementChangedFromRoom(roomId, announcement);
+                }
+            };
+        }
+    }
+
+    public class ContactManagerHub
+    {
+        internal OnContactAdd OnContactAdd;
+        internal OnContactDeleted OnContactDeleted;
+        internal OnContactInvited OnContactInvited;
+        internal OnFriendRequestAccepted OnFriendRequestAccepted;
+        internal OnFriendRequestDeclined OnFriendRequestDeclined;
+
+        private WeakDelegater<IContactManagerDelegate> listeners;
+
+        public ContactManagerHub(WeakDelegater<IContactManagerDelegate> _listeners)
+        {
+            if (_listeners == null)
+            {
+                listeners = new WeakDelegater<IContactManagerDelegate>();
+            }
+            else
+            {
+                listeners = _listeners;
+            }
+
+            OnContactAdd = (string username) =>
+            {
+                Debug.Log($"Name={username}] add you.");
+                foreach (IContactManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnContactAdded(username);
+                }
+            };
+
+            OnContactDeleted = (string username) =>
+            {
+                Debug.Log($"Name={username}] delete you.");
+                foreach (IContactManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnContactDeleted(username);
+                }
+            };
+
+            OnContactInvited = (string username, string reason) =>
+            {
+                Debug.Log($"Name={username}] invite you with reason:{reason}.");
+                foreach (IContactManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnContactInvited(username, reason);
+                }
+            };
+
+            OnFriendRequestAccepted = (string username) =>
+            {
+                Debug.Log($"Name={username}] accept your invitation.");
+                foreach (IContactManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnFriendRequestAccepted(username);
+                }
+            };
+
+            OnFriendRequestDeclined = (string username) =>
+            {
+                Debug.Log($"Name={username}] decline your invitation.");
+                foreach (IContactManagerDelegate listener in listeners?.List)
+                {
+                    listener.OnFriendRequestDeclined(username);
+                }
+            };
         }
     }
 }

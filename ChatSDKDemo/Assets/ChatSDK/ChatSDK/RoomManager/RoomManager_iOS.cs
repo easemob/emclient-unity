@@ -7,17 +7,10 @@ namespace ChatSDK
 {
     public class RoomManager_iOS : IRoomManager
     {
-
-        static string Obj = "unity_chat_emclient_roommanager_delegate_obj";
-
         GameObject listenerGameObj;
 
         public RoomManager_iOS()
         {
-            CallbackManager.Instance();
-            listenerGameObj = new GameObject(Obj);
-            RoomManagerListener listener = listenerGameObj.AddComponent<RoomManagerListener>();
-            listener.delegater = Delegate;
         }
 
         public override void AddRoomAdmin(string roomId, string memberId, ValueCallBack<Room> handle = null)
@@ -52,18 +45,23 @@ namespace ChatSDK
             RoomManagerNative.RoomManager_HandleMethodCall("changeChatRoomDescription", obj.ToString(), handle?.callbackId);
         }
 
-        public override void ChangeRoomSubject(string roomId, string newSubject, ValueCallBack<Room> handle = null)
+        public override void ChangeRoomName(string roomId, string newName, ValueCallBack<Room> handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("roomId", roomId);
-            obj.Add("subject", newSubject);
+            obj.Add("subject", newName);
             RoomManagerNative.RoomManager_HandleMethodCall("changeChatRoomSubject", obj.ToString(), handle?.callbackId);
         }
 
-        public override void CreateRoom(string subject, string descriptionsc, string welcomeMsg, int maxUserCount = 300, List<string> members = null, ValueCallBack<Room> handle = null)
+        public override void CreateRoom(string subject, string descriptions, string welcomeMsg, int maxUserCount = 300, List<string> members = null, ValueCallBack<Room> handle = null)
         {
-            //JSONObject obj = new JSONObject();
-            //RoomManagerNative.RoomManager_HandleMethodCall("addChatRoomAdmin", obj.ToString(), handle?.callbackId);
+            JSONObject obj = new JSONObject();
+            obj.Add("subject", subject ?? "");
+            obj.Add("desc", descriptions ?? "");
+            obj.Add("maxUserCount", maxUserCount);
+            obj.Add("welcomeMsg", welcomeMsg ?? "");
+            obj.Add("members", TransformTool.JsonStringFromStringList(members));
+            RoomManagerNative.RoomManager_HandleMethodCall("createChatroom", obj.ToString(), handle?.callbackId);
         }
 
         public override void DestroyRoom(string roomId, CallBack handle = null)
@@ -122,20 +120,7 @@ namespace ChatSDK
             RoomManagerNative.RoomManager_HandleMethodCall("fetchChatRoomMuteList", obj.ToString(), handle?.callbackId);
         }
 
-        public override void GetAllRoomsFromLocal(ValueCallBack<List<Room>> handle = null)
-        {
-            JSONObject obj = new JSONObject();
-            RoomManagerNative.RoomManager_HandleMethodCall("getAllChatRooms", obj.ToString(), handle?.callbackId);
-        }
-
-        public override void GetChatRoomWithId(string roomId, ValueCallBack<Room> handle = null)
-        {
-            JSONObject obj = new JSONObject();
-            obj.Add("roomId", roomId);
-            RoomManagerNative.RoomManager_HandleMethodCall("getChatRoom", obj.ToString(), handle?.callbackId);
-        }
-
-        public override void JoinRoom(string roomId, CallBack handle = null)
+        public override void JoinRoom(string roomId, ValueCallBack<Room> handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("roomId", roomId);
@@ -157,7 +142,7 @@ namespace ChatSDK
             RoomManagerNative.RoomManager_HandleMethodCall("muteChatRoomMembers", obj.ToString(), handle?.callbackId);
         }
 
-        public override void RemoveRoomAdmin(string roomId, string adminId, CallBack handle = null)
+        public override void RemoveRoomAdmin(string roomId, string adminId, ValueCallBack<Room> handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("roomId", roomId);

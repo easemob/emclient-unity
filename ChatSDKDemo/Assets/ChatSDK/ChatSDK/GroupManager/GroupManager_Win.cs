@@ -4,7 +4,13 @@ namespace ChatSDK
 {
     internal class GroupManager_Win : IGroupManager
     {
-        public override void AcceptInvitationFromGroup(string groupId, string inviter, ValueCallBack<Group> handle = null)
+
+        public override void applyJoinToGroup(string groupId, string reason, CallBack handle = null)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void AcceptInvitationFromGroup(string groupId, ValueCallBack<Group> handle = null)
         {
             throw new System.NotImplementedException();
         }
@@ -64,7 +70,7 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override void DeclineInvitationFromGroup(string groupId, string username, string reason = null, CallBack handle = null)
+        public override void DeclineInvitationFromGroup(string groupId, string reason = null, CallBack handle = null)
         {
             throw new System.NotImplementedException();
         }
@@ -114,22 +120,17 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override void GetGroupsWithoutNotice(ValueCallBack<List<string>> handle = null)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public override void GetGroupWhiteListFromServer(string groupId, ValueCallBack<List<string>> handle = null)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void GetGroupWithId(string groupId, ValueCallBack<Group> handle = null)
+        public override Group GetGroupWithId(string groupId)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void GetJoinedGroups(ValueCallBack<List<Group>> handle = null)
+        public override List<Group> GetJoinedGroups()
         {
             throw new System.NotImplementedException();
         }
@@ -144,11 +145,6 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override void IgnoreGroupPush(string groupId, bool enable = true, ValueCallBack<Group> handle = null)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public override void JoinPublicGroup(string groupId, CallBack handle = null)
         {
             throw new System.NotImplementedException();
@@ -159,7 +155,7 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override void MuteAllMembers(string groupId, CallBack handle = null)
+        public override void MuteAllMembers(string groupId, ValueCallBack<Group> handle = null)
         {
             throw new System.NotImplementedException();
         }
@@ -189,22 +185,17 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override void RequestToJoinPublicGroup(string groupId, CallBack handle = null)
+        public override void UnBlockGroup(string groupId, CallBack handle = null)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void UnblockGroup(string groupId, CallBack handle = null)
+        public override void UnBlockMembers(string groupId, List<string> members, CallBack handle = null)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void UnblockMembers(string groupId, List<string> members, CallBack handle = null)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override void UnMuteAllMembers(string groupId, CallBack handle = null)
+        public override void UnMuteAllMembers(string groupId, ValueCallBack<Group> handle = null)
         {
             throw new System.NotImplementedException();
         }

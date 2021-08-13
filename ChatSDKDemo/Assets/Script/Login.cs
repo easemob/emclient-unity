@@ -1,76 +1,108 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using ChatSDK;
-using System.Runtime.InteropServices;
 
-public class Login : MonoBehaviour
+public class Login : MonoBehaviour, IConnectionDelegate
 {
-
-    public InputField usernameField;
-    public InputField passwordField;
-    public Button loginButton;
-    public Button registerButton;
-
     // Start is called before the first frame update
+
+    private Text m_UsernameText;
+    private Text m_PasswordText;
+    private Button m_LoginBtn;
+    private Button m_RegisterBtn;
+
+
+    private void Awake()
+    {
+
+        Debug.Log("login script has load");
+
+        m_UsernameText = transform.Find("Panel/Username/Text").GetComponent<Text>();
+        m_PasswordText = transform.Find("Panel/Password/Text").GetComponent<Text>();
+        m_LoginBtn = transform.Find("Panel/LoginBtn").GetComponent<Button>();
+        m_RegisterBtn = transform.Find("Panel/RegisterBtn").GetComponent<Button>();
+
+        m_LoginBtn.onClick.AddListener(LoginAction);
+        m_RegisterBtn.onClick.AddListener(RegisterAction);
+
+        InitEaseMobSDK();
+        SDKClient.Instance.AddConnectionDelegate(this);
+    }
+
+    private void OnApplicationQuit()
+    {
+        SDKClient.Instance.Logout(false);
+    }
+
     void Start()
     {
-        loginButton.onClick.AddListener(LoginAction);
-        registerButton.onClick.AddListener(RegisterAction);
-        Options options = new Options("easemob-demo#easeim");
-        //options.DNSURL = "easemob.com";
-        //options.IMServer = "msync-im1.easemob.com";
-        //options.IMPort = 6717;
-        //options.RestServer = "a1.easemob.com";
-        options.UsingHttpsOnly = true;
-        options.RequireAck = false;
-        options.AcceptInvitationAlways = true;
-        //options.EnableDNSConfig = false;
-        SDKClient client = SDKClient.Instance;
-        client.InitWithOptions(options);
-    }
-
-
-    void LoginAction()
-    {
-        string username = usernameField.text;
-        string password = passwordField.text;
-        print("登录被点击: " + username + ", " + password);
-        print("sizeof int=" + sizeof(int));
-        print("sizeof bool=" + sizeof(bool));
-        //set callback handler
-        CallBack callback = new CallBack(LoginSuccess, null, LoginError);
-        SDKClient.Instance.Login(username, password, false, callback);
-    }
-
-    void RegisterAction()
-    {
-        print("注册被点击: " + usernameField.text + ", " + passwordField.text);
-        SDKClient.Instance.CreateAccount(usernameField.text, passwordField.text, new CallBack(
-            onSuccess:()=> {
-                print("注册成功");
-            },
-            onError:(code, desc) => {
-                print("注册失败-- desc: " + desc);
-            }
-        ));
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        
     }
 
-    static void LoginSuccess()
-    {
-        Debug.Log("Login succeeds!");
-        SceneManager.LoadScene("Main");
+    void LoginAction() {
+        //SceneManager.LoadSceneAsync("Main");
+        SDKClient.Instance.Login(m_UsernameText.text, m_PasswordText.text,
+            handle: new CallBack(
+
+                onSuccess: () =>
+                {
+                    Debug.Log("login succeed");
+                    //SceneManager.LoadSceneAsync("Main");
+                },
+
+                onError: (code, desc) =>
+                {
+                    AlertView.Default(transform, "login failed, code: " + code);
+                }
+            )
+        );
     }
 
-    static void LoginError(int code, string description)
+    void RegisterAction() {
+        SDKClient.Instance.CreateAccount(m_UsernameText.text, m_PasswordText.text,
+            handle: new CallBack(
+
+                onSuccess: () => {
+                    Debug.Log("login succeed");
+                    SceneManager.LoadSceneAsync("Main");
+                },
+
+                onError: (code, desc) => {
+                    Debug.LogFormat("login failed, code: {0}, desc: {1}", code, desc);
+                }
+            )
+        );
+    }
+
+    void InitEaseMobSDK() {
+        Debug.Log("----------- 1");
+        Options options = new Options("easemob-demo#chatdemoui");
+        Debug.Log("----------- " + options.AppKey);
+        options.DebugMode = true;
+        SDKClient.Instance.InitWithOptions(options);
+    }
+
+    public void OnConnected()
     {
-        Debug.LogError($"Login error: code={code},description={description}");
+        Debug.Log("----------- OnConnected");
+    }
+
+    public void OnDisconnected(int i)
+    {
+        Debug.Log("----------- OnDisconnected");
+    }
+
+    public void OnPong()
+    {
+        Debug.Log("----------- OnPong");
     }
 }
-

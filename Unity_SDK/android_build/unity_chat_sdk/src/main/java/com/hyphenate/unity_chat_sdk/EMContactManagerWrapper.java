@@ -24,6 +24,10 @@ public class EMContactManagerWrapper extends  EMWrapper {
 
     private void addContact(String username, String reason, String callbackId) throws JSONException {
         asyncRunnable(() -> {
+            if (username == null || username.length() == 0) {
+                onError(callbackId, new HyphenateException(501, "username invalid"));
+                return;
+            }
             try {
                 EMClient.getInstance().contactManager().addContact(username, reason);
                 onSuccess(null, callbackId,null);
@@ -35,6 +39,10 @@ public class EMContactManagerWrapper extends  EMWrapper {
 
     private void deleteContact(String username, boolean keepConversation, String callbackId) throws JSONException {
         asyncRunnable(() -> {
+            if (username == null || username.length() == 0) {
+                onError(callbackId, new HyphenateException(501, "username invalid"));
+                return;
+            }
             try {
                 EMClient.getInstance().contactManager().deleteContact(username, keepConversation);
                 onSuccess(null, callbackId, null);
@@ -50,29 +58,32 @@ public class EMContactManagerWrapper extends  EMWrapper {
             try {
                 List<String> contacts = EMClient.getInstance().contactManager().getAllContactsFromServer();
                 Log.d("chat_sdk", contacts.toString());
-                onSuccess("List<String>", callbackId, EMTransformHelper.stringListToJsonArray(contacts).toString());
+                onSuccess("List<String>", callbackId, EMTransformHelper.jsonArrayFromStringList(contacts).toString());
             } catch (HyphenateException e) {
                 onError(callbackId, e);
             }
         });
     }
 
-    private void getAllContactsFromDB(String callbackId) throws JSONException {
+    private String getAllContactsFromDB() throws JSONException {
         Log.d("chat_sdk", "getAllContactsFromDB");
-        asyncRunnable(() -> {
-            try {
-                List<String> contacts = EMClient.getInstance().contactManager().getContactsFromLocal();
-                Log.d("chat_sdk", contacts.toString());
-                onSuccess("List<String>", callbackId, EMTransformHelper.stringListToJsonArray(contacts).toString());
-            } catch (HyphenateException e) {
-                onError(callbackId, e);
-            }
-        });
+        try {
+            List<String> contacts = EMClient.getInstance().contactManager().getContactsFromLocal();
+            if (contacts == null) { return null; }
+            Log.d("chat_sdk", contacts.toString());
+            return EMTransformHelper.jsonArrayFromStringList(contacts).toString();
+        } catch (HyphenateException e) {
+            return  null;
+        }
     }
 
     private void addUserToBlockList(String username, String callbackId) throws JSONException {
         Log.d("chat_sdk", "addUserToBlockList");
         asyncRunnable(() -> {
+            if (username == null || username.length() == 0) {
+                onError(callbackId, new HyphenateException(501, "username invalid"));
+                return;
+            }
             try {
                 EMClient.getInstance().contactManager().addUserToBlackList(username, false);
                 onSuccess(null,callbackId,null);
@@ -84,6 +95,10 @@ public class EMContactManagerWrapper extends  EMWrapper {
 
     private void removeUserFromBlockList(String username, String callbackId) throws JSONException {
         asyncRunnable(() -> {
+            if (username == null || username.length() == 0) {
+                onError(callbackId, new HyphenateException(501, "username invalid"));
+                return;
+            }
             try {
                 EMClient.getInstance().contactManager().removeUserFromBlackList(username);
                 onSuccess(null, callbackId,null);
@@ -97,7 +112,7 @@ public class EMContactManagerWrapper extends  EMWrapper {
         asyncRunnable(() -> {
             try {
                 List<String> contacts = EMClient.getInstance().contactManager().getBlackListFromServer();
-                onSuccess("List<String>", callbackId, EMTransformHelper.stringListToJsonArray(contacts).toString());
+                onSuccess("List<String>", callbackId, EMTransformHelper.jsonArrayFromStringList(contacts).toString());
             } catch (HyphenateException e) {
                 onError(callbackId, e);
             }
@@ -106,6 +121,10 @@ public class EMContactManagerWrapper extends  EMWrapper {
 
     private void acceptInvitation(String username, String callbackId) throws JSONException {
         asyncRunnable(() -> {
+            if (username == null || username.length() == 0) {
+                onError(callbackId, new HyphenateException(501, "username invalid"));
+                return;
+            }
             try {
                 EMClient.getInstance().contactManager().acceptInvitation(username);
                 onSuccess(null,callbackId, null);
@@ -117,6 +136,10 @@ public class EMContactManagerWrapper extends  EMWrapper {
 
     private void declineInvitation(String username, String callbackId) throws JSONException {
         asyncRunnable(() -> {
+            if (username == null || username.length() == 0) {
+                onError(callbackId, new HyphenateException(501, "username invalid"));
+                return;
+            }
             try {
                 EMClient.getInstance().contactManager().declineInvitation(username);
                 onSuccess(null, callbackId,null);
@@ -130,7 +153,7 @@ public class EMContactManagerWrapper extends  EMWrapper {
         asyncRunnable(() -> {
             try {
                 List<String> platforms = EMClient.getInstance().contactManager().getSelfIdsOnOtherPlatform();
-                onSuccess("List<String>", callbackId, EMTransformHelper.stringListToJsonArray(platforms).toString());
+                onSuccess("List<String>", callbackId, EMTransformHelper.jsonArrayFromStringList(platforms).toString());
             } catch (HyphenateException e) {
                 onError(callbackId, e);
             }

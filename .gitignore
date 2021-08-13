@@ -17,7 +17,6 @@ ExportedObj/
 obj/
 *.svd
 *.userprefs
-/*.csproj
 *.pidb
 *.suo
 /*.sln
@@ -59,5 +58,15 @@ easemob.log
 easemobDB/
 easemobLog/
 DerivedData/
+appdata/
 
 **/UserPrefs
+**/.vs
+*.csproj
+**/.idea/
+.vs
+*.meta
+*.csproj
+/ProjectSettings
+
+

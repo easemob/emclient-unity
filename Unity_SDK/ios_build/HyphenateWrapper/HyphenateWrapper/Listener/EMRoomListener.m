@@ -19,7 +19,7 @@
         @"participant":aUsername
     };
     
-    UnitySendMessage(RoomListener_Obj, "OnMemberJoined", [Transfrom DictToCString:map]);
+    UnitySendMessage(RoomListener_Obj, "OnMemberJoined", [Transfrom JsonObjectToCSString:map]);
 }
 
 - (void)userDidLeaveChatroom:(EMChatroom *)aChatroom
@@ -30,7 +30,7 @@
         @"participant":aUsername
     };
     
-    UnitySendMessage(RoomListener_Obj, "OnMemberExited", [Transfrom DictToCString:map]);
+    UnitySendMessage(RoomListener_Obj, "OnMemberExited", [Transfrom JsonObjectToCSString:map]);
 }
 
 - (void)didDismissFromChatroom:(EMChatroom *)aChatroom
@@ -40,9 +40,9 @@
         @"roomName":aChatroom.subject
     };
     if (aReason == EMChatroomBeKickedReasonDestroyed) {
-        UnitySendMessage(RoomListener_Obj, "OnChatRoomDestroyed", [Transfrom DictToCString:map]);
+        UnitySendMessage(RoomListener_Obj, "OnChatRoomDestroyed", [Transfrom JsonObjectToCSString:map]);
     } else if (aReason == EMChatroomBeKickedReasonBeRemoved) {
-        UnitySendMessage(RoomListener_Obj, "OnRemovedFromChatRoom", [Transfrom DictToCString:map]);
+        UnitySendMessage(RoomListener_Obj, "OnRemovedFromChatRoom", [Transfrom JsonObjectToCSString:map]);
     }
 }
 
@@ -54,7 +54,7 @@
         @"mutes":aMutes,
         @"expireTime":[NSString stringWithFormat:@"%ld", aMuteExpire]
     };
-    UnitySendMessage(RoomListener_Obj, "OnMuteListAdded", [Transfrom DictToCString:map]);
+    UnitySendMessage(RoomListener_Obj, "OnMuteListAdded", [Transfrom JsonObjectToCSString:map]);
 }
 
 - (void)chatroomMuteListDidUpdate:(EMChatroom *)aChatroom
@@ -63,7 +63,7 @@
         @"roomId":aChatroom.chatroomId,
         @"list":aMutes
     };
-    UnitySendMessage(RoomListener_Obj, "OnMuteListRemoved", [Transfrom DictToCString:map]);
+    UnitySendMessage(RoomListener_Obj, "OnMuteListRemoved", [Transfrom JsonObjectToCSString:map]);
 }
 
 - (void)chatroomAdminListDidUpdate:(EMChatroom *)aChatroom
@@ -72,7 +72,7 @@
         @"roomId":aChatroom.chatroomId,
         @"admin":aAdmin
     };
-    UnitySendMessage(RoomListener_Obj, "OnAdminAdded", [Transfrom DictToCString:map]);
+    UnitySendMessage(RoomListener_Obj, "OnAdminAdded", [Transfrom JsonObjectToCSString:map]);
 }
 
 - (void)chatroomAdminListDidUpdate:(EMChatroom *)aChatroom
@@ -81,7 +81,7 @@
         @"roomId":aChatroom.chatroomId,
         @"admin":aAdmin
     };
-    UnitySendMessage(RoomListener_Obj, "OnAdminRemoved", [Transfrom DictToCString:map]);
+    UnitySendMessage(RoomListener_Obj, "OnAdminRemoved", [Transfrom JsonObjectToCSString:map]);
 }
 
 - (void)chatroomOwnerDidUpdate:(EMChatroom *)aChatroom
@@ -92,7 +92,7 @@
         @"newOwner":aNewOwner,
         @"oldOwner":aOldOwner
     };
-    UnitySendMessage(RoomListener_Obj, "OnOwnerChanged", [Transfrom DictToCString:map]);
+    UnitySendMessage(RoomListener_Obj, "OnOwnerChanged", [Transfrom JsonObjectToCSString:map]);
 }
 
 - (void)chatroomAnnouncementDidUpdate:(EMChatroom *)aChatroom
@@ -101,7 +101,7 @@
         @"roomId":aChatroom.chatroomId,
         @"announcement":aAnnouncement
     };
-    UnitySendMessage(RoomListener_Obj, "OnAnnouncementChanged", [Transfrom DictToCString:map]);
+    UnitySendMessage(RoomListener_Obj, "OnAnnouncementChanged", [Transfrom JsonObjectToCSString:map]);
 }
 
 @end

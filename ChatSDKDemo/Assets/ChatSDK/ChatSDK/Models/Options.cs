@@ -35,13 +35,13 @@ namespace ChatSDK
         /// 自动同意好友申请，当您在线时，如果有好友申请会自动同意，不在线时，等上线后自动同意, 默认开启
         /// </summary>
         [MarshalAs(UnmanagedType.U1)]
-        public bool AcceptInvitationAlways = true;
+        public bool AcceptInvitationAlways = false;
 
         /// <summary>
         /// 自动同意群组邀请，当您在线时，如果有好友申请会自动同意，不在线时，等上线后自动同意，默认开启
         /// </summary>
         [MarshalAs(UnmanagedType.U1)]
-        public bool AutoAcceptGroupInvitation = true;
+        public bool AutoAcceptGroupInvitation = false;
 
 
 

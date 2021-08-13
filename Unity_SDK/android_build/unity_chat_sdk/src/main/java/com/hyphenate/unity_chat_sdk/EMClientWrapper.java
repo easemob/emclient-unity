@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.hyphenate.EMConnectionListener;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMOptions;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.unity_chat_sdk.helper.EMOptionsHelper;
 import com.hyphenate.unity_chat_sdk.listeners.EMUnityCallback;
@@ -26,12 +27,28 @@ public class EMClientWrapper extends EMWrapper {
     public void init(String options) throws JSONException {
         Context context = UnityPlayer.currentActivity.getApplicationContext();
         JSONObject jo = new JSONObject(options);
-        EMClient.getInstance().init(context, EMOptionsHelper.fromJson(jo, context));
+        EMOptions emOptions = EMOptionsHelper.fromJson(jo, context);
+        emOptions.setUseFCM(false);
+        EMClient.getInstance().init(context, emOptions);
         EMClient.getInstance().setDebugMode(jo.getBoolean("debug_mode"));
         EMClient.getInstance().addConnectionListener(new EMUnityConnectionListener());
     }
 
     public void createAccount(String username, String password, String callbackId) {
+
+        if (username == null || username.length() == 0 ) {
+            HyphenateException e = new HyphenateException(101, "username is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
+        if (password == null || password.length() == 0) {
+            HyphenateException e = new HyphenateException(102, "password is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
+
         asyncRunnable(()->{
             try {
                 EMClient.getInstance().createAccount(username, password);
@@ -43,6 +60,19 @@ public class EMClientWrapper extends EMWrapper {
     }
 
     public void login(String username, String pwdOrToken, boolean isToken, String callbackId) {
+
+        if (username == null || username.length() == 0 ) {
+            HyphenateException e = new HyphenateException(101, "Username is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
+        if (pwdOrToken == null || pwdOrToken.length() == 0) {
+            HyphenateException e = new HyphenateException(102, "password or token is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
         if (!isToken) {
             EMClient.getInstance().login(username, pwdOrToken, new EMUnityCallback(callbackId));
         }else {

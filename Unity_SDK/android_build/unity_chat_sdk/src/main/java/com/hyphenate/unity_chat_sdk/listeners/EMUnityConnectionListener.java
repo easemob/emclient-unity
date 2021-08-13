@@ -3,7 +3,6 @@ package com.hyphenate.unity_chat_sdk.listeners;
 import android.util.Log;
 
 import com.hyphenate.EMConnectionListener;
-import com.hyphenate.util.EMLog;
 import com.unity3d.player.UnityPlayer;
 
 import util.EMSDKMethod;

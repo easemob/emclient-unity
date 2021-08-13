@@ -24,12 +24,12 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override void ChangeRoomSubject(string roomId, string newSubject, ValueCallBack<Room> handle = null)
+        public override void ChangeRoomName(string roomId, string newName, ValueCallBack<Room> handle = null)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void CreateRoom(string subject, string descriptionsc, string welcomeMsg, int maxUserCount = 300, List<string> members = null, ValueCallBack<Room> handle = null)
+        public override void CreateRoom(string subject, string descriptions, string welcomeMsg, int maxUserCount = 300, List<string> members = null, ValueCallBack<Room> handle = null)
         {
             throw new System.NotImplementedException();
         }
@@ -69,17 +69,7 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override void GetAllRoomsFromLocal(ValueCallBack<List<Room>> handle = null)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override void GetChatRoomWithId(string roomId, ValueCallBack<Room> handle = null)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override void JoinRoom(string roomId, CallBack handle = null)
+        public override void JoinRoom(string roomId, ValueCallBack<Room> handle = null)
         {
             throw new System.NotImplementedException();
         }
@@ -94,7 +84,7 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override void RemoveRoomAdmin(string roomId, string adminId, CallBack handle = null)
+        public override void RemoveRoomAdmin(string roomId, string adminId, ValueCallBack<Room> handle = null)
         {
             throw new System.NotImplementedException();
         }

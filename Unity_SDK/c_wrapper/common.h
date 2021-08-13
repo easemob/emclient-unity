@@ -6,6 +6,12 @@
 #include "api_decorator.h"
 #include "LogHelper.h"
 
+extern "C"
+{
+#define CLIENT static_cast<EMClient *>(client)
+#define CALLBACK static_cast<Callback *>(callback)
+}
+
 #if defined(_WIN32)
 #define AGORACHAT_EXPORT
 

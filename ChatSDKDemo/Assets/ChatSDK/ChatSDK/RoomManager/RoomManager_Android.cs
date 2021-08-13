@@ -6,19 +6,12 @@ namespace ChatSDK
     public class RoomManager_Android : IRoomManager
     {
 
-        static string ManagerListener_Obj = "unity_chat_emclient_roommanager_delegate_obj";
-
         private AndroidJavaObject wrapper;
-
-        GameObject listenerGameObj;
 
         public RoomManager_Android()
         {
             using (AndroidJavaClass aj = new AndroidJavaClass("com.hyphenate.unity_chat_sdk.EMChatRoomManagerWrapper"))
             {
-                listenerGameObj = new GameObject(ManagerListener_Obj);
-                RoomManagerListener listener = listenerGameObj.AddComponent<RoomManagerListener>();
-                listener.delegater = Delegate;
                 wrapper = aj.CallStatic<AndroidJavaObject>("wrapper");
             }
         }
@@ -43,14 +36,14 @@ namespace ChatSDK
             wrapper.Call("changeChatRoomDescription", roomId, newDescription, handle?.callbackId);
         }
 
-        public override void ChangeRoomSubject(string roomId, string newSubject, ValueCallBack<Room> handle = null)
+        public override void ChangeRoomName(string roomId, string newName, ValueCallBack<Room> handle = null)
         {
-            wrapper.Call("changeChatRoomSubject", roomId, newSubject, handle?.callbackId);
+            wrapper.Call("changeChatRoomSubject", roomId, newName, handle?.callbackId);
         }
 
-        public override void CreateRoom(string subject, string descriptionsc, string welcomeMsg, int maxUserCount = 300, List<string> members = null, ValueCallBack<Room> handle = null)
+        public override void CreateRoom(string subject, string descriptions, string welcomeMsg, int maxUserCount = 300, List<string> members = null, ValueCallBack<Room> handle = null)
         {
-            throw new System.NotImplementedException();
+            wrapper.Call("createChatRoom", subject, descriptions, welcomeMsg, maxUserCount, TransformTool.JsonStringFromStringList(members),handle?.callbackId);
         }
 
         public override void DestroyRoom(string roomId, CallBack handle = null)
@@ -83,22 +76,12 @@ namespace ChatSDK
             wrapper.Call("fetchChatRoomMembers", roomId, cursor, pageSize, handle?.callbackId);
         }
 
-        public override void FetchRoomMuteList(string roomId, int pageSize = 1, int pageNum = 200, ValueCallBack<List<string>> handle = null)
+        public override void FetchRoomMuteList(string roomId, int pageSize, int pageNum, ValueCallBack<List<string>> handle = null)
         {
             wrapper.Call("fetchChatRoomMuteList", roomId, pageNum, pageSize, handle?.callbackId);
         }
 
-        public override void GetAllRoomsFromLocal(ValueCallBack<List<Room>> handle = null)
-        {
-            wrapper.Call("getAllChatRooms", handle?.callbackId);
-        }
-
-        public override void GetChatRoomWithId(string roomId, ValueCallBack<Room> handle = null)
-        {
-            wrapper.Call("getChatRoom", handle?.callbackId);
-        }
-
-        public override void JoinRoom(string roomId, CallBack handle = null)
+        public override void JoinRoom(string roomId, ValueCallBack<Room> handle = null)
         {
             wrapper.Call("joinChatRoom", roomId, handle?.callbackId);
         }
@@ -113,7 +96,7 @@ namespace ChatSDK
             wrapper.Call("muteChatRoomMembers", roomId, TransformTool.JsonStringFromStringList(members), handle?.callbackId);
         }
 
-        public override void RemoveRoomAdmin(string roomId, string adminId, CallBack handle = null)
+        public override void RemoveRoomAdmin(string roomId, string adminId, ValueCallBack<Room> handle = null)
         {
             wrapper.Call("removeChatRoomAdmin", roomId, adminId, handle?.callbackId);
         }

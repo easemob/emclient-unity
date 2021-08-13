@@ -2,14 +2,9 @@
 
 namespace ChatSDK
 {
-    public class Client_Android : IClient
+    class Client_Android : IClient
     {
-
-        static string Connection_Obj = "unity_chat_emclient_connection_obj";
-
         private AndroidJavaObject wrapper;
-
-        GameObject listenerGameObj;
 
         public Client_Android()
         {
@@ -22,10 +17,6 @@ namespace ChatSDK
 
         public override void InitWithOptions(Options options, WeakDelegater<IConnectionDelegate> connectionDelegater)
         {
-            CallbackManager.Instance();
-            listenerGameObj = new GameObject(Connection_Obj);
-            ConnectionListener connectionListener = listenerGameObj.AddComponent<ConnectionListener>();
-            connectionListener.delegater = connectionDelegater;
             wrapper.Call("init", options.ToJsonString());
         }
 
@@ -41,17 +32,17 @@ namespace ChatSDK
 
         public override void Logout(bool unbindDeviceToken, CallBack callBack = null)
         {
-            wrapper.Call("logout", unbindDeviceToken, null);
+            wrapper.Call("logout", unbindDeviceToken, callBack?.callbackId);
         }
         public override string CurrentUsername()
         {
             return wrapper.Call<string>("currentUsername");
         }
 
-        public override bool IsConnected()
-        {
-            return wrapper.Call<bool>("isConnected");
-        }
+        public override bool IsConnected {
+            get => wrapper.Call<bool>("isConnected");
+            //TODO: jiepeng to add set isConnected
+            internal set {} }
 
         public override bool IsLoggedIn()
         {
@@ -62,14 +53,16 @@ namespace ChatSDK
         {
             return wrapper.Call<string>("accessToken");
         }
+
         public override void StartLog(string logFilePath)
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
         }
 
         public override void StopLog()
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
         }
+
     }
 }

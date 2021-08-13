@@ -9,15 +9,17 @@ namespace ChatSDK
 
         static internal List<string> JsonStringToStringList(string jsonString)
         {
+            if (jsonString == null) return null;
+
             List<string> ret = new List<string>();
-            if (jsonString != null)
+            JSONNode jsonArray = JSON.Parse(jsonString);
+            if (jsonArray != null && jsonArray.IsArray)
             {
-                JSONNode jsonArray = JSON.Parse(jsonString);
-                if (jsonArray != null && jsonArray.IsArray)
+                foreach (JSONNode obj in jsonArray.AsArray)
                 {
-                    foreach (JSONNode v in jsonArray.AsArray)
+                    if (obj.IsString)
                     {
-                        ret.Add(v.Value);
+                        ret.Add(obj.Value);
                     }
                 }
             }
@@ -26,41 +28,48 @@ namespace ChatSDK
 
         static internal string JsonStringFromStringList(List<string> list)
         {
-            JSONObject jo = new JSONObject();
-            foreach (string str in list) {
-                jo.Add(str);
+            JSONArray ja = new JSONArray();
+            if (list != null) {
+                foreach (string str in list)
+                {
+                    ja.Add(str);
+                }
             }
 
-            return jo.ToString();
+            return ja.ToString();
         }
 
         static internal List<Group> JsonStringToGroupList(string jsonString)
         {
+            if (jsonString == null) return null;
+
             List<Group> list = new List<Group>();
-            if (jsonString != null)
+            JSONNode jsonArray = JSON.Parse(jsonString);
+            foreach (JSONNode obj in jsonArray.AsArray)
             {
-                JSONNode jsonArray = JSON.Parse(jsonString);
-                foreach (JSONNode obj in jsonArray.AsArray)
-                {
-                    list.Add(new Group(obj));
+                if (obj.IsString) {
+                    list.Add(new Group(obj.Value));
                 }
             }
             return list;
         }
 
-        static internal List<GroupInfo> JsonStringToGroupInfoList(string jsonString)
-        {
-            List<GroupInfo> list = new List<GroupInfo>();
-            if (jsonString != null)
-            {
-                JSONNode jsonArray = JSON.Parse(jsonString);
-                foreach (JSONNode obj in jsonArray.AsArray)
-                {
-                    list.Add(new GroupInfo(obj));
-                }
-            }
-            return list;
-        }
+        //static internal List<GroupInfo> JsonStringToGroupInfoList(string jsonString)
+        //{
+        //    List<GroupInfo> list = new List<GroupInfo>();
+        //    if (jsonString != null)
+        //    {
+        //        JSONNode jsonArray = JSON.Parse(jsonString);
+        //        foreach (JSONNode obj in jsonArray.AsArray)
+        //        {
+        //            if (obj.IsString)
+        //            {
+        //                list.Add(new GroupInfo(obj.Value));
+        //            }
+        //        }
+        //    }
+        //    return list;
+        //}
 
         static internal List<GroupSharedFile> JsonStringToGroupSharedFileList(string jsonString)
         {
@@ -70,18 +79,17 @@ namespace ChatSDK
                 JSONNode jsonArray = JSON.Parse(jsonString);
                 foreach (JSONNode obj in jsonArray.AsArray)
                 {
-                    list.Add(new GroupSharedFile(obj));
+                    if (obj.IsString)
+                    {
+                        list.Add(new GroupSharedFile(obj.Value));
+                    }
+                        
                 }
             }
             return list;
         }
 
-        /*
-          {
-            "cursor":"xxx",
-            "list": [{"groupId: "","groupName":""}]
-          }
-        */
+        
         static internal CursorResult<GroupInfo> JsonStringToGroupInfoResult(string jsonString)
         {
             CursorResult<GroupInfo> result = null;
@@ -95,9 +103,17 @@ namespace ChatSDK
 
                 List<GroupInfo> list = new List<GroupInfo>();
 
-                foreach (JSONNode obj in jsonObject["list"].AsArray)
-                {
-                    list.Add(new GroupInfo(obj));
+                if (jsonObject["list"].IsString) {
+
+                    JSONArray jsonArray = JSON.Parse(jsonObject["list"].Value).AsArray;
+
+                    foreach (JSONNode obj in jsonArray)
+                    {
+                        if (obj.IsString)
+                        {
+                            list.Add(new GroupInfo(obj.Value));
+                        }
+                    }
                 }
 
                 result.Data = list;
@@ -118,9 +134,18 @@ namespace ChatSDK
 
                 List<Room> list = new List<Room>();
 
-                foreach (JSONNode obj in jsonObject["list"].AsArray)
+                if (jsonObject["list"].IsString)
                 {
-                    list.Add(new Room(obj));
+
+                    JSONArray jsonArray = JSON.Parse(jsonObject["list"].Value).AsArray;
+
+                    foreach (JSONNode obj in jsonArray)
+                    {
+                        if (obj.IsString)
+                        {
+                            list.Add(new Room(obj.Value));
+                        }
+                    }
                 }
 
                 result.Data = list;
@@ -136,7 +161,10 @@ namespace ChatSDK
                 JSONNode jsonArray = JSON.Parse(jsonString);
                 foreach (JSONNode obj in jsonArray.AsArray)
                 {
-                    list.Add(new Room(obj));
+                    if (obj.IsString)
+                    {
+                        list.Add(new Room(obj.Value));
+                    }
                 }
             }
             return list;
@@ -144,7 +172,7 @@ namespace ChatSDK
 
         static internal CursorResult<string> JsonStringToStringResult(string jsonString)
         {
-            if (jsonString == null) return null;
+            if (jsonString == null || jsonString.Length == 0) return null;
             CursorResult<string> result = null;
             if (jsonString != null)
             {
@@ -156,9 +184,15 @@ namespace ChatSDK
 
                 List<string> list = new List<string>();
 
-                foreach (JSONNode obj in jsonObject["list"].AsArray)
+                JSONArray jsonArray = JSON.Parse(jsonObject["list"].Value).AsArray;
+
+                foreach (JSONNode obj in jsonArray)
                 {
-                    list.Add(obj);
+                    if (obj.IsString)
+                    {
+                        list.Add(obj.Value);
+                    }
+                    
                 }
 
                 result.Data = list;
@@ -168,7 +202,7 @@ namespace ChatSDK
 
         static internal CursorResult<Message> JsonStringToMessageResult(string jsonString)
         {
-            if (jsonString == null) return null;
+            if (jsonString == null || jsonString.Length == 0) return null;
             CursorResult<Message> result = null;
             if (jsonString != null)
             {
@@ -180,9 +214,13 @@ namespace ChatSDK
 
                 List<Message> list = new List<Message>();
 
-                foreach (JSONNode obj in jsonObject["list"].AsArray)
+                JSONArray jsonArray = JSON.Parse(jsonObject["list"].Value).AsArray;
+
+                foreach (JSONNode obj in jsonArray)
                 {
-                    list.Add(new Message(obj));
+                    if (obj.IsString) {
+                        list.Add(new Message(obj.Value));
+                    }
                 }
 
                 result.Data = list;
@@ -192,41 +230,47 @@ namespace ChatSDK
 
         static internal string JsonStringFromDictionary(Dictionary<string, string> dictionary)
         {
-            if (dictionary == null) return null;
-            JSONObject jo = new JSONObject();
-            IDictionary<string, string> sortedParams = new SortedDictionary<string, string>(dictionary);
-            IEnumerator<KeyValuePair<string, string>> dem = sortedParams.GetEnumerator();
 
-            while (dem.MoveNext())
-            {
-                string key = dem.Current.Key;
-                string value = dem.Current.Value;
-                if (!string.IsNullOrEmpty(key) && !string.IsNullOrEmpty(value))
+            JSONObject jo = new JSONObject();
+            if (dictionary != null) {
+                IDictionary<string, string> sortedParams = new SortedDictionary<string, string>(dictionary);
+                IEnumerator<KeyValuePair<string, string>> dem = sortedParams.GetEnumerator();
+
+                while (dem.MoveNext())
                 {
-                    jo[key] = value;
+                    string key = dem.Current.Key;
+                    string value = dem.Current.Value;
+                    if (!string.IsNullOrEmpty(key) && !string.IsNullOrEmpty(value))
+                    {
+                        jo[key] = value;
+                    }
                 }
-            }
+            }            
 
             return jo.ToString();
         }
 
-        static internal string JsonStringFromAttributes(Dictionary<string, AttributeValue> attributes)
+        static internal string JsonStringFromAttributes(Dictionary<string, AttributeValue> attributes = null)
         {
-            if (attributes == null) return null;
+            
             JSONObject jo = new JSONObject();
-            var keys = attributes.Keys;
-            foreach (var key in keys)
+            if (attributes != null)
             {
-                if (!attributes.TryGetValue(key, out AttributeValue value))
-                    value = new AttributeValue();
-                jo[key] = value.ToJsonString();
+                var keys = attributes.Keys;
+                foreach (var key in keys)
+                {
+                    if (!attributes.TryGetValue(key, out AttributeValue value))
+                        value = new AttributeValue();
+                    jo[key] = value.ToJsonString();
+                }
             }
+                
             return jo.ToString();
         }
 
         static internal Dictionary<string, string> JsonStringToDictionary(string jsonString)
         {
-            if (jsonString == null) return null;
+            if (jsonString == null || jsonString.Length == 0) return null;
             Dictionary<string, string> ret = new Dictionary<string, string>();
             JSONObject jo = JSON.Parse(jsonString).AsObject;
             foreach (string s in jo.Keys)
@@ -239,7 +283,7 @@ namespace ChatSDK
 
         static internal Dictionary<string, AttributeValue> JsonStringToAttributes(string jsonString)
         {
-            if (jsonString == null) return null;
+            if (jsonString == null || jsonString.Length == 0) return null;
             Dictionary<string, AttributeValue> ret = new Dictionary<string, AttributeValue>();
             JSONObject jo = JSON.Parse(jsonString).AsObject;
             foreach (string key in jo.Keys)
@@ -253,40 +297,51 @@ namespace ChatSDK
         {
             if (jsonString == null) return null;
             List<Message> list = new List<Message>();
+            if (jsonString.Length == 0) {
+                return list;
+            }
             JSONNode jsonArray = JSON.Parse(jsonString);
             if (jsonArray != null && jsonArray.IsArray)
             {
                 foreach (JSONNode v in jsonArray.AsArray)
                 {
-                    Message conv = new Message(v.Value);
-                    list.Add(conv);
+                    if (v.IsString)
+                    {
+                        Message conv = new Message(v.Value);
+                        list.Add(conv);
+                    }  
                 }
             }
 
             return list;
         }
 
-        static internal string JsonStringFromMessageList(List<Message> list)
+        static internal JSONArray JsonObjectFromMessageList(List<Message> list)
         {
             if (list == null) return null;
             JSONArray ja = new JSONArray();
             foreach (Message msg in list) {
-                ja.Add(msg.ToJsonString());
+                ja.Add(msg.ToJson());
             }
-            return ja.ToString();
+            return ja;
         }
 
         static internal List<Conversation> JsonStringToConversationList(string jsonString)
         {
             if (jsonString == null) return null;
             List<Conversation> list = new List<Conversation>();
+            if (jsonString.Length == 0) {
+                return list;
+            }
             JSONNode jsonArray = JSON.Parse(jsonString);
             if (jsonArray != null && jsonArray.IsArray)
             {
                 foreach (JSONNode v in jsonArray.AsArray)
                 {
-                    Conversation conv = new Conversation(v.Value);
-                    list.Add(conv);
+                    if (v.IsString) {
+                        Conversation conv = new Conversation(v.Value);
+                        list.Add(conv);
+                    }
                 }
             }
 
@@ -295,15 +350,19 @@ namespace ChatSDK
 
         static internal List<GroupReadAck> JsonStringToGroupReadAckList(string jsonString)
         {
-            if (jsonString == null) return null;
+            if (jsonString == null || jsonString.Length == 0) return null;
             List<GroupReadAck> list = new List<GroupReadAck>();
             JSONNode jsonArray = JSON.Parse(jsonString);
             if (jsonArray != null && jsonArray.IsArray)
             {
                 foreach (JSONNode v in jsonArray.AsArray)
                 {
-                    GroupReadAck ack = new GroupReadAck(v.Value);
-                    list.Add(ack);
+                    if (v.IsString)
+                    {
+                        GroupReadAck ack = new GroupReadAck(v.Value);
+                        list.Add(ack);
+                    }
+                        
                 }
             }
 

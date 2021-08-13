@@ -7,15 +7,9 @@ namespace ChatSDK
 {
     public class ContactManager_iOS : IContactManager
     {
-        static string Obj = "unity_chat_emclient_contact_delegate_obj";
-
-        GameObject listenerGameObj;
-
+        
         public ContactManager_iOS() {
-            CallbackManager.Instance();
-            listenerGameObj = new GameObject(Obj);
-            ContactManagerListener listener = listenerGameObj.AddComponent<ContactManagerListener>();
-            listener.delegater = Delegate;
+
         }
 
         public override void AcceptInvitation(string username, CallBack handle = null)
@@ -29,7 +23,7 @@ namespace ChatSDK
         {
             JSONObject obj = new JSONObject();
             obj.Add("username", username);
-            obj.Add("reason", reason);
+            obj.Add("reason", reason ?? "");
             ContactManagerNative.ContactManager_HandleMethodCall("addContact", obj.ToString(), handle?.callbackId);
         }
 
@@ -55,9 +49,14 @@ namespace ChatSDK
             ContactManagerNative.ContactManager_HandleMethodCall("deleteContact", obj.ToString(), handle?.callbackId);
         }
 
-        public override void GetAllContactsFromDB(ValueCallBack<List<string>> handle = null)
+        public override List<string> GetAllContactsFromDB()
         {
-            ContactManagerNative.ContactManager_HandleMethodCall("getAllContactsFromDB", null, handle?.callbackId);
+            string jsonString =  ContactManagerNative.ContactManager_GetMethodCall("getAllContactsFromDB");
+            if (jsonString == null || jsonString.Length == 0)
+            {
+                return null;
+            }
+            return TransformTool.JsonStringToStringList(jsonString);
         }
 
         public override void GetAllContactsFromServer(ValueCallBack<List<string>> handle = null)

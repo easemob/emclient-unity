@@ -7,6 +7,8 @@ namespace ChatSDK
         void OnConnected();
 
         void OnDisconnected(int i);
+
+        void OnPong();
     }
 
 }

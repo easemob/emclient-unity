@@ -6,12 +6,18 @@
 //
 
 #import "Transfrom.h"
+#import "EMConversation+Unity.h"
+
 
 @implementation Transfrom
 
 + (NSString *)NSStringFromCString:(const char*)cStr {
-    NSString *ret = [NSString stringWithUTF8String:cStr];
-    return ret ? ret : @"";
+    NSString *ret = @"";
+    if (cStr != NULL) {
+        ret = [NSString stringWithUTF8String:cStr];
+    }
+    
+    return ret;
 }
 
 + (const char*)NSStringToCSString:(NSString *)nsStr {
@@ -23,65 +29,52 @@
     return [nsStr UTF8String];
 }
 
-+ (NSDictionary *)DictFromCString:(const char*)cStr
++ (NSDictionary *)JsonObjectFromCSString:(const char*)cStr
 {
     NSString *str = [self NSStringFromCString:cStr];
-    return [self DictFromNSString:str];
+    return [self NSStringToJsonObject:str];
 }
 
-+ (const char*)DictToCString:(NSDictionary *)aDict {
-    NSString *str = [self DictToNSString:aDict];
++ (const char*)JsonObjectToCSString:(NSDictionary *)aDict {
+    if (aDict == nil) {
+        return NULL;
+    }
+    NSString *str = [self NSStringFromJsonObject:aDict];
     return [self NSStringToCSString:str];
 }
 
-+ (NSDictionary *)DictFromNSString:(NSString*)nsStr {
-    if (nsStr == nil) {
-        return nil;
-    }
-    NSData *jsonData = [nsStr dataUsingEncoding:NSUTF8StringEncoding];
-    NSError *err;
-    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
-                                                        options:NSJSONReadingMutableContainers
-                                                          error:&err];
-    if(err)
-    {
-        NSLog(@"json解析失败：%@",err);
-        return nil;
-    }
-    return dic;
-}
-
-+ (NSString*)DictToNSString:(NSDictionary *)aDict {
-    if (!aDict) {
++ (NSString *)NSStringFromJsonObject:(id)jsonObject
+{
+    if (!jsonObject) {
         return nil;
     }
     NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:aDict
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonObject
                                                        options:NSJSONWritingPrettyPrinted
                                                          error:&error];
     NSString *jsonString;
-    if (!jsonData) {
+    if (!jsonData || error) {
         NSLog(@"%@",error);
+        return nil;
     }else{
         jsonString = [[NSString alloc]initWithData:jsonData encoding:NSUTF8StringEncoding];
     }
 
     NSMutableString *mutStr = [NSMutableString stringWithString:jsonString];
-//    NSRange range = {0,jsonString.length};
-//    [mutStr replaceOccurrencesOfString:@" " withString:@"" options:NSLiteralSearch range:range];
     NSRange range2 = {0,mutStr.length};
     [mutStr replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:range2];
     return mutStr;
 }
 
 
-+ (NSArray *)ArrayFromNSString:(NSString *)nsStr {
-    if (nsStr == nil) {
++ (id)NSStringToJsonObject:(NSString *)jsonString
+{
+    if (jsonString == nil) {
         return nil;
     }
-    NSData *jsonData = [nsStr dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
     NSError *err;
-    NSArray<NSString*>* jsonAry = [NSJSONSerialization JSONObjectWithData:jsonData
+    id jsonObject = [NSJSONSerialization JSONObjectWithData:jsonData
                                                         options:NSJSONReadingMutableContainers
                                                           error:&err];
     if(err)
@@ -89,27 +82,29 @@
         NSLog(@"json解析失败：%@",err);
         return nil;
     }
-    return jsonAry;
-}
-
-+ (NSString *)ArrayToNSString:(NSArray<NSString*>*)strAry {
-    if (!strAry) {
-        return nil;
+    
+    
+    if ([jsonObject isKindOfClass:[NSDictionary class]]) {
+        NSMutableDictionary *tmp = [[NSMutableDictionary alloc] initWithDictionary:jsonObject];
+        for (NSString *str in ((NSDictionary *)jsonObject).allKeys) {
+            if ([jsonObject[str] isKindOfClass:[NSNull class]]) {
+                [tmp removeObjectForKey:str];
+            }
+        }
+        jsonObject = tmp;
     }
-    NSError *error = nil;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:strAry options:NSJSONWritingPrettyPrinted error:&error];
-    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    NSString *jsonTemp = [jsonString stringByReplacingOccurrencesOfString:@"\n" withString:@""];
-    //    NSString *jsonResult = [jsonTemp stringByReplacingOccurrencesOfString:@" " withString:@""];
-    return jsonTemp;
-}
-
-+ (NSArray *)ArrayFromCString:(const char*)cStr {
-    return [self ArrayFromNSString: [self NSStringFromCString:cStr]];
-}
-
-+ (const char*)ArrayToCString:(NSArray<NSString*>*)strAry {
-    return [self NSStringToCSString: [self ArrayToNSString:strAry]];
+    
+    if ([jsonObject isKindOfClass:[NSArray class]]) {
+        NSMutableArray *tmp = [[NSMutableArray alloc] initWithArray:jsonObject];
+        for (id obj in ((NSArray *)jsonObject)) {
+            if ([obj isKindOfClass:[NSArray class]]) {
+                [tmp removeObject:obj];
+            }
+        }
+        jsonObject = tmp;
+    }
+    
+    return jsonObject;
 }
 
 @end

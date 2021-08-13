@@ -6,19 +6,29 @@ namespace ChatSDK
 {
     public class PushManager_iOS : IPushManager
     {
-        public void GetNoDisturbGroupsFromServer(ValueCallBack<List<string>> handle = null)
+        public List<string> GetNoDisturbGroups()
         {
-            PushManagerNative.PushManager_HandleMethodCall("getNoDisturbGroups", handle?.callbackId);
+            string jsonString = PushManagerNative.PushManager_GetMethodCall("getNoDisturbGroups");
+            if (jsonString == null || jsonString.Length == 0)
+            {
+                return null;
+            }
+            return TransformTool.JsonStringToStringList(jsonString);
         }
 
-        public void GetPushConfig(ValueCallBack<PushConfig> handle = null)
+        public PushConfig GetPushConfig()
         {
-            PushManagerNative.PushManager_HandleMethodCall("getPushConfig", handle?.callbackId);
+            string jsonString = PushManagerNative.PushManager_GetMethodCall("getPushConfig", null, null);
+            if(jsonString == null || jsonString.Length == 0)
+            {
+                return null;
+            }
+            return new PushConfig(jsonString);
         }
 
         public void GetPushConfigFromServer(ValueCallBack<PushConfig> handle = null)
         {
-            PushManagerNative.PushManager_HandleMethodCall("getPushConfigFromServer", handle?.callbackId);
+            PushManagerNative.PushManager_HandleMethodCall("getPushConfigFromServer", null, handle?.callbackId);
         }
 
         public void SetGroupToDisturb(string groupId, bool noDisturb, CallBack handle = null)
@@ -53,6 +63,13 @@ namespace ChatSDK
         public void UpdateHMSPushToken(string token, CallBack handle = null)
         {
             handle?.ClearCallback();
+        }
+
+        public void UpdateAPNSPuthToken(string token, CallBack handle = null)
+        {
+            JSONObject obj = new JSONObject();
+            obj.Add("deviceToken", token);
+            PushManagerNative.PushManager_HandleMethodCall("updateDeviceToken", obj.ToString(), handle?.callbackId);
         }
 
         public void UpdatePushNickName(string nickname, CallBack handle = null)

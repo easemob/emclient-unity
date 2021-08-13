@@ -1,39 +1,64 @@
-﻿using System;
+﻿using System.Runtime.InteropServices;
 using SimpleJSON;
 
 namespace ChatSDK
 {
+    /// <summary>
+    /// 群配置信息
+    /// </summary>
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public class GroupOptions
     {
+        /// <summary>
+        /// 群类型
+        /// </summary>
         public GroupStyle Style;
+
+        /// <summary>
+        /// 群人数上限
+        /// </summary>
         public int MaxCount;
+
+        /// <summary>
+        /// 加群是否需要验证
+        /// </summary>
         public bool InviteNeedConfirm;
+
+        /// <summary>
+        /// 群扩展
+        /// </summary>
         public string Ext;
 
-        internal GroupOptions(string jsonString) {
-            JSONNode jn = JSON.Parse(jsonString);
-            if (!jn.IsNull && jn.IsObject) {
-                JSONObject jo = jn.AsObject;
-                int style = jo["style"].AsInt;
-                if (style == 0)
+        internal GroupOptions(string jsonString)
+        {
+            if (jsonString != null)
+            {
+                JSONNode jn = JSON.Parse(jsonString);
+                if (!jn.IsNull && jn.IsObject)
                 {
-                    Style = GroupStyle.PrivateOnlyOwnerInvite;
+                    JSONObject jo = jn.AsObject;
+                    int style = jo["style"].AsInt;
+                    if (style == 0)
+                    {
+                        Style = GroupStyle.PrivateOnlyOwnerInvite;
+                    }
+                    else if (style == 1)
+                    {
+                        Style = GroupStyle.PrivateMemberCanInvite;
+                    }
+                    else if (style == 2)
+                    {
+                        Style = GroupStyle.PublicJoinNeedApproval;
+                    }
+                    else if (style == 3)
+                    {
+                        Style = GroupStyle.PublicOpenJoin;
+                    }
+                    MaxCount = jo["maxCount"].AsInt;
+                    InviteNeedConfirm = jo["inviteNeedConfirm"].AsBool;
+                    Ext = jo["ext"].Value;
                 }
-                else if (style == 1)
-                {
-                    Style = GroupStyle.PrivateMemberCanInvite;
-                }
-                else if (style == 2)
-                {
-                    Style = GroupStyle.PublicJoinNeedApproval;
-                }
-                else if (style == 3)
-                {
-                    Style = GroupStyle.PublicOpenJoin;
-                }
-                MaxCount = jo["maxCount"].AsInt;
-                InviteNeedConfirm = jo["inviteNeedConfirm"].AsBool;
-                Ext = jo["ext"].Value;
             }
         }
 

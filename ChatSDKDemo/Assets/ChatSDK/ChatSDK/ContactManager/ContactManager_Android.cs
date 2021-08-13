@@ -6,18 +6,11 @@ namespace ChatSDK
     public class ContactManager_Android : IContactManager
     {
 
-        static string ContactListener_Obj = "unity_chat_emclient_contact_delegate_obj";
-
         private AndroidJavaObject wrapper;
-
-        GameObject listenerGameObj;
 
         public ContactManager_Android() {
             using (AndroidJavaClass aj = new AndroidJavaClass("com.hyphenate.unity_chat_sdk.EMContactManagerWrapper"))
             {
-                listenerGameObj = new GameObject(ContactListener_Obj);
-                ContactManagerListener listener = listenerGameObj.AddComponent<ContactManagerListener>();
-                listener.delegater = Delegate;
                 wrapper = aj.CallStatic<AndroidJavaObject>("wrapper");
             }
         }
@@ -38,9 +31,17 @@ namespace ChatSDK
             wrapper.Call("getAllContactsFromServer", handle?.callbackId);
         }
 
-        public override void GetAllContactsFromDB(ValueCallBack<List<string>> handle = null)
+        public override List<string> GetAllContactsFromDB()
         {
-            wrapper.Call("getAllContactsFromDB", handle?.callbackId);
+            string jsonString = wrapper.Call<string>("getAllContactsFromDB");
+            if (jsonString == null) {
+                return null;
+            }
+
+            if (jsonString.Length == 0) {
+                return new List<string>();
+            }
+            return TransformTool.JsonStringToStringList(jsonString);
         }
 
         public override void AddUserToBlockList(string username, CallBack handle = null)

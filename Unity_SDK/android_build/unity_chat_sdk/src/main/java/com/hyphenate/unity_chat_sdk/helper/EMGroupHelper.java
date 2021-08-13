@@ -9,7 +9,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class EMGroupHelper {
@@ -22,11 +24,10 @@ public class EMGroupHelper {
         data.put("owner", group.getOwner());
         data.put("announcement", group.getAnnouncement());
         data.put("memberCount", group.getMemberCount());
-        data.put("memberList", group.getMembers());
-        data.put("adminList", group.getAdminList());
-        data.put("blockList", group.getBlackList());
-        data.put("muteList", group.getMuteList());
-//        data.put("sharedFileList", group.getShareFileList());
+        data.put("memberList", EMTransformHelper.jsonArrayFromStringList(group.getMembers()).toString());
+        data.put("adminList", EMTransformHelper.jsonArrayFromStringList(group.getAdminList()).toString());
+        data.put("blockList", EMTransformHelper.jsonArrayFromStringList(group.getBlackList()).toString());
+        data.put("muteList", EMTransformHelper.jsonArrayFromStringList(group.getMuteList()).toString());
         if (group.getGroupId() != null && EMClient.getInstance().pushManager().getNoPushGroups() != null) {
             data.put("noticeEnable", !EMClient.getInstance().pushManager().getNoPushGroups().contains(group.getGroupId()));
         }
@@ -51,7 +52,7 @@ public class EMGroupHelper {
                 options.style = EMGroupManager.EMGroupStyle.EMGroupStylePrivateOnlyOwnerInvite;
             }
         }
-        data.put("options", EMGroupOptionsHelper.toJson(options));
+        data.put("options", EMGroupOptionsHelper.toJson(options).toString());
         return data;
     }
 

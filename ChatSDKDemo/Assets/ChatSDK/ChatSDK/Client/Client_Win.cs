@@ -1,6 +1,6 @@
 ﻿namespace ChatSDK
 {
-    public class Client_Win : IClient
+    class Client_Win : IClient
     {
 
         public override void InitWithOptions(Options options, WeakDelegater<IConnectionDelegate> connectionDelegater = null)
@@ -23,7 +23,8 @@
             throw new System.NotImplementedException();
         }
 
-        public override string CurrentUsername() {
+        public override string CurrentUsername()
+        {
             throw new System.NotImplementedException();
         }
 
@@ -32,9 +33,10 @@
             throw new System.NotImplementedException();
         }
 
-        public override bool IsConnected()
+        public override bool IsConnected
         {
-            throw new System.NotImplementedException();
+            get => IsConnected;
+            internal set => IsConnected = value;
         }
 
         public override bool IsLoggedIn()

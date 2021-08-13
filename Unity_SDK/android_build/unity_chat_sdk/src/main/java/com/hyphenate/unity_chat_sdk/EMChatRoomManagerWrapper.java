@@ -8,6 +8,7 @@ import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.unity_chat_sdk.helper.EMChatRoomHelper;
 import com.hyphenate.unity_chat_sdk.helper.EMCursorResultHelper;
 import com.hyphenate.unity_chat_sdk.helper.EMPageResultHelper;
+import com.hyphenate.unity_chat_sdk.helper.EMTransformHelper;
 import com.hyphenate.unity_chat_sdk.listeners.EMUnityRoomManagerListener;
 import com.hyphenate.unity_chat_sdk.listeners.EMUnityValueCallback;
 
@@ -29,30 +30,149 @@ public class EMChatRoomManagerWrapper extends EMWrapper {
         EMClient.getInstance().chatroomManager().addChatRoomChangeListener(new EMUnityRoomManagerListener());
     }
 
-    private void joinChatRoom(String roomId, String callbackId) throws JSONException {
-        EMUnityValueCallback<EMChatRoom> callBack = new EMUnityValueCallback<EMChatRoom>("EMChatRoom", callbackId) {
-            @Override
-            public void onSuccess(EMChatRoom object) {
-                try {
-                    sendJsonObjectToUnity(EMChatRoomHelper.toJson(object).toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
+    private void addChatRoomAdmin(String roomId, String admin, String callbackId) {
 
-        EMClient.getInstance().chatroomManager().joinChatRoom(roomId, callBack);
-    }
-    //
-    private void leaveChatRoom(String roomId, String callbackId) {
-
+        if (roomId == null || roomId.length() == 0 || admin == null || admin.length() == 0) {
+            HyphenateException e = new HyphenateException(500, "roomId or memberId is invalid");
+            onError(callbackId, e);
+            return;
+        }
         asyncRunnable(() -> {
-            EMClient.getInstance().chatroomManager().leaveChatRoom(roomId);
-            onSuccess(null, callbackId, null);
+            try {
+                EMClient.getInstance().chatroomManager().addChatRoomAdmin(roomId, admin);
+                EMChatRoom room = EMClient.getInstance().chatroomManager().getChatRoom(roomId);
+                onSuccess("EMChatRoom", callbackId, EMChatRoomHelper.toJson(room).toString());
+            } catch (HyphenateException e) {
+                onError(callbackId, e);
+            } catch (JSONException e) {
+            }
         });
     }
-    //
-    private void fetchPublicChatRoomsFromServer(String param, int pageNum, int pageSize, String callbackId) {
+
+    private void blockChatRoomMembers(String roomId, String jsonString, String callbackId) {
+
+        if (roomId == null || roomId.length() == 0 || jsonString == null || jsonString.length() == 0) {
+            HyphenateException e = new HyphenateException(500, "roomId or members is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
+        List<String> list = EMTransformHelper.jsonStringToStringList(jsonString);
+
+        asyncRunnable(() -> {
+            try {
+                EMChatRoom room = EMClient.getInstance().chatroomManager().blockChatroomMembers(roomId, list);
+                onSuccess("EMChatRoom", callbackId, EMChatRoomHelper.toJson(room).toString());
+            } catch (HyphenateException e) {
+                onError(callbackId, e);
+            } catch (JSONException e) {
+
+            }
+        });
+    }
+
+    private void changeChatRoomOwner(String roomId, String newOwner, String callbackId) {
+
+        if (roomId == null || roomId.length() == 0 || newOwner == null || newOwner.length() == 0) {
+            HyphenateException e = new HyphenateException(500, "roomId or newOwner is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
+        asyncRunnable(() -> {
+            try {
+                EMChatRoom room = EMClient.getInstance().chatroomManager().changeOwner(roomId, newOwner);
+                onSuccess("EMChatRoom", callbackId, EMChatRoomHelper.toJson(room).toString());
+            } catch (HyphenateException e) {
+                onError(callbackId, e);
+            } catch (JSONException e) {
+            }
+        });
+    }
+
+    private void changeChatRoomDescription(String roomId, String description, String callbackId) {
+
+        if (roomId == null || roomId.length() == 0 || description == null) {
+            HyphenateException e = new HyphenateException(500, "roomId or description is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
+        asyncRunnable(() -> {
+            try {
+                EMChatRoom room = EMClient.getInstance().chatroomManager().changeChatroomDescription(roomId, description);
+                onSuccess("EMChatRoom", callbackId, EMChatRoomHelper.toJson(room).toString());
+            } catch (HyphenateException e) {
+                onError(callbackId, e);
+            } catch (JSONException e) {
+            }
+        });
+    }
+
+    private void changeChatRoomSubject(String roomId, String subject, String callbackId) {
+
+        if (roomId == null || roomId.length() == 0 || subject == null) {
+            HyphenateException e = new HyphenateException(500, "roomId or subject is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
+        asyncRunnable(() -> {
+            try {
+                EMChatRoom room = EMClient.getInstance().chatroomManager().changeChatRoomSubject(roomId, subject);
+                onSuccess("EMChatRoom", callbackId, EMChatRoomHelper.toJson(room).toString());
+            } catch (HyphenateException e) {
+                onError(callbackId, e);
+            } catch (JSONException e) {
+            }
+        });
+    }
+
+    private void createChatRoom(String subject, String description, String welcomeMessage, int maxUserCount, String jsonString, String callbackId)
+            throws JSONException {
+        asyncRunnable(() -> {
+
+            List<String> membersList = null;
+            if (jsonString != null && jsonString.length() > 0) {
+                membersList = EMTransformHelper.jsonStringToStringList(jsonString);
+            }
+
+            try {
+                EMChatRoom room = EMClient.getInstance().chatroomManager().createChatRoom(subject, description, welcomeMessage, maxUserCount, membersList);
+                onSuccess("EMChatRoom", callbackId, EMChatRoomHelper.toJson(room).toString());
+            } catch (HyphenateException e) {
+                onError(callbackId, e);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private void destroyChatRoom(String roomId,  String callbackId) {
+
+        if (roomId == null || roomId.length() == 0) {
+            HyphenateException e = new HyphenateException(500, "roomId is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
+        asyncRunnable(() -> {
+            try {
+                EMClient.getInstance().chatroomManager().destroyChatRoom(roomId);
+                onSuccess(null, callbackId, null);
+            } catch (HyphenateException e) {
+                onError(callbackId, e);
+            }
+        });
+    }
+
+    private void fetchPublicChatRoomsFromServer(int pageNum, int pageSize, String callbackId) {
+
+        if (pageSize <= 0) {
+            HyphenateException e = new HyphenateException(500, "pageSize is invalid");
+            onError(callbackId, e);
+            return;
+        }
 
         EMUnityValueCallback<EMPageResult<EMChatRoom>> callback = new EMUnityValueCallback<EMPageResult<EMChatRoom>>("EMPageResult<EMChatRoom>", callbackId) {
             @Override
@@ -68,8 +188,53 @@ public class EMChatRoomManagerWrapper extends EMWrapper {
 
         EMClient.getInstance().chatroomManager().asyncFetchPublicChatRoomsFromServer(pageNum, pageSize, callback);
     }
-    //
+
+    private void fetchChatRoomAnnouncement(String roomId, String callbackId) {
+
+        if (roomId == null || roomId.length() == 0) {
+            HyphenateException e = new HyphenateException(500, "roomId is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
+        asyncRunnable(() -> {
+            try {
+                String announcement = EMClient.getInstance().chatroomManager().fetchChatRoomAnnouncement(roomId);
+
+                onSuccess("String", callbackId, announcement);
+            } catch (HyphenateException e) {
+                onError(callbackId, e);
+            }
+        });
+    }
+
+    private void fetchChatRoomBlockList(String roomId, int pageNum, int pageSize, String callbackId)
+            throws JSONException {
+
+        if (roomId == null || roomId.length() == 0 || pageSize <= 0) {
+            HyphenateException e = new HyphenateException(500, "roomId or pageSize is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
+        asyncRunnable(() -> {
+            try {
+                List<String> blockList = EMClient.getInstance().chatroomManager().fetchChatRoomBlackList(roomId, pageNum, pageSize);
+                onSuccess("List<String>", callbackId, EMTransformHelper.jsonArrayFromStringList(blockList).toString());
+            } catch (HyphenateException e) {
+                onError(callbackId, e);
+            }
+        });
+    }
+
     private void fetchChatRoomInfoFromServer(String roomId, String callbackId) {
+
+        if (roomId == null || roomId.length() == 0) {
+            HyphenateException e = new HyphenateException(500, "roomId is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
         asyncRunnable(() -> {
             try {
                 EMChatRoom room = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(roomId);
@@ -81,92 +246,15 @@ public class EMChatRoomManagerWrapper extends EMWrapper {
             }
         });
     }
-    //
-    private void getChatRoom(String roomId, String callbackId) {
-        asyncRunnable(() -> {
-            EMChatRoom room = EMClient.getInstance().chatroomManager().getChatRoom(roomId);
-            try {
-                onSuccess("EMChatRoom", callbackId, EMChatRoomHelper.toJson(room).toString());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        });
-    }
-    //
-    private void getAllChatRooms(String callbackId) {
-        asyncRunnable(() -> {
-            List<EMChatRoom> list = EMClient.getInstance().chatroomManager().getAllChatRooms();
-            JSONArray jsonArray = new JSONArray();
-            try {
-                for (EMChatRoom room : list) {
-                    jsonArray.put(EMChatRoomHelper.toJson(room));
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            onSuccess("List<EMChatRoom>", callbackId, jsonArray.toString());
-        });
-    }
-    //
-    private void createChatRoom(String subject, String description, String welcomeMessage, int maxUserCount, String jsonList, String callbackId)
-            throws JSONException {
-        ArrayList<String> membersList = new ArrayList();
-        if (jsonList != null) {
-            JSONArray members = null;
-            members = new JSONArray(jsonList);
-            for (int i = 0; i < members.length(); i++) {
-                membersList.add((String) members.get(i));
-            }
+
+    private void fetchChatRoomMembers(String roomId, String cursor, int pageSize, String callbackId)  {
+
+        if (roomId == null || roomId.length() == 0 || pageSize <= 0) {
+            HyphenateException e = new HyphenateException(500, "roomId or pageSize is invalid");
+            onError(callbackId, e);
+            return;
         }
 
-        asyncRunnable(() -> {
-            try {
-                EMChatRoom room = EMClient.getInstance().chatroomManager().createChatRoom(subject, description, welcomeMessage, maxUserCount, membersList);
-                onSuccess("EMChatRoom", callbackId, EMChatRoomHelper.toJson(room).toString());
-            } catch (HyphenateException e) {
-                onError(callbackId, e);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
-    private void destroyChatRoom(String roomId,  String callbackId) {
-        asyncRunnable(() -> {
-            try {
-                EMClient.getInstance().chatroomManager().destroyChatRoom(roomId);
-                onSuccess(null, callbackId, null);
-            } catch (HyphenateException e) {
-                onError(callbackId, e);
-            }
-        });
-    }
-    //
-    private void changeChatRoomSubject(String roomId, String subject, String callbackId) {
-        asyncRunnable(() -> {
-            try {
-                EMChatRoom room = EMClient.getInstance().chatroomManager().changeChatRoomSubject(roomId, subject);
-                onSuccess("EMChatRoom", callbackId, EMChatRoomHelper.toJson(room).toString());
-            } catch (HyphenateException e) {
-                onError(callbackId, e);
-            } catch (JSONException e) {
-            }
-        });
-    }
-    //
-    private void changeChatRoomDescription(String roomId, String description, String callbackId) {
-        asyncRunnable(() -> {
-            try {
-                EMChatRoom room = EMClient.getInstance().chatroomManager().changeChatroomDescription(roomId, description);
-                onSuccess("EMChatRoom", callbackId, EMChatRoomHelper.toJson(room).toString());
-            } catch (HyphenateException e) {
-                onError(callbackId, e);
-            } catch (JSONException e) {
-            }
-        });
-    }
-    //
-    private void fetchChatRoomMembers(String roomId, String cursor, int pageSize, String callbackId)  {
         asyncRunnable(() -> {
             try {
                 EMCursorResult<String> cursorResult = EMClient.getInstance().chatroomManager().fetchChatRoomMembers(roomId, cursor, pageSize);
@@ -178,13 +266,97 @@ public class EMChatRoomManagerWrapper extends EMWrapper {
             }
         });
     }
-    //
-    private void muteChatRoomMembers(String roomId, String stringList, String callbackId) {
-        String[] allMembers = stringList.split(",");
-        List<String> list = new ArrayList<String>();
-        for (int i = 0; i < allMembers.length; i++) {
-            list.add(allMembers[i]);
+
+    private void fetchChatRoomMuteList(String roomId, int pageNum, int pageSize, String callbackId) {
+
+        if (roomId == null || roomId.length() == 0 || pageSize <= 0) {
+            HyphenateException e = new HyphenateException(500, "roomId or pageSize is invalid");
+            onError(callbackId, e);
+            return;
         }
+
+        asyncRunnable(() -> {
+            try {
+                Map<String, Long> map = EMClient.getInstance().chatroomManager().fetchChatRoomMuteList(roomId, pageNum, pageSize);
+                JSONArray jsonArray = new JSONArray();
+                for (Map.Entry<String, Long> entry : map.entrySet()) {
+                    jsonArray.put(entry.getKey());
+                }
+                onSuccess("List<String>", callbackId, jsonArray.toString());
+            } catch (HyphenateException e) {
+                onError(callbackId, e);
+            }
+        });
+    }
+
+    private void getAllChatRooms(String callbackId) {
+
+        asyncRunnable(() -> {
+            List<EMChatRoom> list = EMClient.getInstance().chatroomManager().getAllChatRooms();
+            onSuccess("List<EMChatRoom>", callbackId, EMTransformHelper.jsonArrayFromChatRoomList(list).toString());
+        });
+    }
+
+    private String getChatRoom(String roomId) throws JSONException {
+
+        if (roomId == null || roomId.length() == 0) {
+            return null;
+        }
+
+        EMChatRoom room = new EMChatRoom(roomId);
+        if (room == null) {
+            return  null;
+        }
+
+        return EMChatRoomHelper.toJson(room).toString();
+    }
+
+    private void joinChatRoom(String roomId, String callbackId) throws JSONException {
+
+        if (roomId == null || roomId.length() == 0) {
+            HyphenateException e = new HyphenateException(500, "roomId is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
+        EMUnityValueCallback<EMChatRoom> callBack = new EMUnityValueCallback<EMChatRoom>("EMChatRoom", callbackId) {
+            @Override
+            public void onSuccess(EMChatRoom object) {
+                try {
+                    sendJsonObjectToUnity(EMChatRoomHelper.toJson(object).toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        EMClient.getInstance().chatroomManager().joinChatRoom(roomId, callBack);
+    }
+
+    private void leaveChatRoom(String roomId, String callbackId) {
+
+        if (roomId == null || roomId.length() == 0) {
+            HyphenateException e = new HyphenateException(500, "roomId is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
+        asyncRunnable(() -> {
+            EMClient.getInstance().chatroomManager().leaveChatRoom(roomId);
+            onSuccess(null, callbackId, null);
+        });
+    }
+
+    private void muteChatRoomMembers(String roomId, String jsonString, String callbackId) {
+
+        if (roomId == null || roomId.length() == 0 || jsonString == null || jsonString.length() == 0) {
+            HyphenateException e = new HyphenateException(500, "roomId or members is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
+        List<String> list = EMTransformHelper.jsonStringToStringList(jsonString);
+
         asyncRunnable(() -> {
             try {
                 EMChatRoom room = EMClient.getInstance().chatroomManager().muteChatRoomMembers(roomId, list,-1);
@@ -195,12 +367,74 @@ public class EMChatRoomManagerWrapper extends EMWrapper {
         });
     }
 
-    private void unMuteChatRoomMembers(String roomId, String stringList, String callbackId) {
-        String[] allMembers = stringList.split(",");
-        List<String> list = new ArrayList<String>();
-        for (int i = 0; i < allMembers.length; i++) {
-            list.add(allMembers[i]);
+    private void removeChatRoomAdmin(String roomId, String adminId, String callbackId) {
+
+        if (roomId == null || roomId.length() == 0 || adminId == null || adminId.length() == 0) {
+            HyphenateException e = new HyphenateException(500, "roomId or adminId is invalid");
+            onError(callbackId, e);
+            return;
         }
+
+        asyncRunnable(() -> {
+            try {
+                EMClient.getInstance().chatroomManager().removeChatRoomAdmin(roomId, adminId);
+                EMChatRoom room = EMClient.getInstance().chatroomManager().getChatRoom(roomId);
+                onSuccess("EMChatRoom", callbackId, EMChatRoomHelper.toJson(room).toString());
+            } catch (HyphenateException e) {
+                onError(callbackId, e);
+            } catch (JSONException e) {
+            }
+        });
+    }
+
+    private void removeChatRoomMembers(String roomId, String jsonString, String callbackId)  {
+
+        if (roomId == null || roomId.length() == 0 || jsonString == null || jsonString.length() == 0) {
+            HyphenateException e = new HyphenateException(500, "roomId or members is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
+        List<String> list = EMTransformHelper.jsonStringToStringList(jsonString);
+
+        asyncRunnable(() -> {
+            try {
+                EMChatRoom room = EMClient.getInstance().chatroomManager().removeChatRoomMembers(roomId, list);
+                onSuccess(null, callbackId, null);
+            } catch (HyphenateException e) {
+                onError(callbackId, e);
+            }
+        });
+    }
+
+    private void unBlockChatRoomMembers(String roomId, String jsonString, String callbackId) {
+
+        if (roomId == null || roomId.length() == 0 || jsonString == null || jsonString.length() == 0) {
+            HyphenateException e = new HyphenateException(500, "roomId or members is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
+        List<String> list = EMTransformHelper.jsonStringToStringList(jsonString);
+        asyncRunnable(() -> {
+            try {
+                EMChatRoom room = EMClient.getInstance().chatroomManager().unblockChatRoomMembers(roomId, list);
+                onSuccess(null, callbackId, null);
+            } catch (HyphenateException e) {
+                onError(callbackId, e);
+            }
+        });
+    }
+
+    private void unMuteChatRoomMembers(String roomId, String jsonString, String callbackId) {
+        if (roomId == null || roomId.length() == 0 || jsonString == null || jsonString.length() == 0) {
+            HyphenateException e = new HyphenateException(500, "roomId or members is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
+        List<String> list = EMTransformHelper.jsonStringToStringList(jsonString);
+
         asyncRunnable(() -> {
             try {
                 EMChatRoom room = EMClient.getInstance().chatroomManager().unMuteChatRoomMembers(roomId, list);
@@ -211,144 +445,18 @@ public class EMChatRoomManagerWrapper extends EMWrapper {
         });
     }
 
-    private void changeChatRoomOwner(String roomId, String newOwner, String callbackId) {
-        asyncRunnable(() -> {
-            try {
-                EMChatRoom room = EMClient.getInstance().chatroomManager().changeOwner(roomId, newOwner);
-                onSuccess("EMChatRoom", callbackId, EMChatRoomHelper.toJson(room).toString());
-            } catch (HyphenateException e) {
-                onError(callbackId, e);
-            } catch (JSONException e) {
-            }
-        });
-    }
-    //
-    private void addChatRoomAdmin(String roomId, String admin, String callbackId) {
-
-        asyncRunnable(() -> {
-            try {
-                EMChatRoom room = EMClient.getInstance().chatroomManager().addChatRoomAdmin(roomId, admin);
-                onSuccess("EMChatRoom", callbackId, EMChatRoomHelper.toJson(room).toString());
-            } catch (HyphenateException e) {
-                onError(callbackId, e);
-            } catch (JSONException e) {
-            }
-        });
-    }
-
-    private void removeChatRoomAdmin(String roomId, String admin, String callbackId) {
-
-        asyncRunnable(() -> {
-            try {
-                EMChatRoom room = EMClient.getInstance().chatroomManager().removeChatRoomAdmin(roomId, admin);
-                onSuccess(null, callbackId, null);
-            } catch (HyphenateException e) {
-                onError(callbackId, e);
-            }
-        });
-    }
-    //
-    private void fetchChatRoomMuteList(String roomId, int pageNum, int pageSize, String callbackId) {
-
-        asyncRunnable(() -> {
-            try {
-                Map<String, Long> map = EMClient.getInstance().chatroomManager().fetchChatRoomMuteList(roomId, pageNum, pageSize);
-                String[] strings = (String[])map.keySet().toArray();
-                JSONArray jsonArray = new JSONArray();
-                for (int i = 0; i < strings.length; i++) {
-                    jsonArray.put(strings[i]);
-                }
-                onSuccess("List<String>", callbackId, jsonArray.toString());
-            } catch (HyphenateException e) {
-                onError(callbackId, e);
-            }
-        });
-    }
-    //
-    private void removeChatRoomMembers(String roomId, String stringList, String callbackId)  {
-
-        String[] allMembers = stringList.split(",");
-        List<String> list = new ArrayList<String>();
-        for (int i = 0; i < allMembers.length; i++) {
-            list.add(allMembers[i]);
-        }
-        asyncRunnable(() -> {
-            try {
-                EMChatRoom room = EMClient.getInstance().chatroomManager().removeChatRoomMembers(roomId, list);
-                onSuccess(null, callbackId, null);
-            } catch (HyphenateException e) {
-                onError(callbackId, e);
-            }
-        });
-    }
-    //
-    private void blockChatRoomMembers(String roomId, String stringList, String callbackId) {
-        String[] allMembers = stringList.split(",");
-        List<String> list = new ArrayList<String>();
-        for (int i = 0; i < allMembers.length; i++) {
-            list.add(allMembers[i]);
-        }
-        asyncRunnable(() -> {
-            try {
-                EMChatRoom room = EMClient.getInstance().chatroomManager().blockChatroomMembers(roomId, list);
-                onSuccess("EMChatRoom", callbackId, EMChatRoomHelper.toJson(room).toString());
-            } catch (HyphenateException e) {
-                onError(callbackId, e);
-            } catch (JSONException e) {
-
-            }
-        });
-    }
-    //
-    private void unBlockChatRoomMembers(String roomId, String stringList, String callbackId) {
-        String[] allMembers = stringList.split(",");
-        List<String> list = new ArrayList<String>();
-        for (int i = 0; i < allMembers.length; i++) {
-            list.add(allMembers[i]);
-        }
-        asyncRunnable(() -> {
-            try {
-                EMChatRoom room = EMClient.getInstance().chatroomManager().unblockChatRoomMembers(roomId, list);
-                onSuccess(null, callbackId, null);
-            } catch (HyphenateException e) {
-                onError(callbackId, e);
-            }
-        });
-    }
-    //
-    private void fetchChatRoomBlockList(String roomId, int pageNum, int pageSize, String callbackId)
-            throws JSONException {
-
-        asyncRunnable(() -> {
-            try {
-                List<String> blockList = EMClient.getInstance().chatroomManager().fetchChatRoomBlackList(roomId, pageNum, pageSize);
-                JSONArray jsonAry = new JSONArray();
-                for (String member : blockList) {
-                    jsonAry.put(member);
-                }
-                onSuccess("List<String>", callbackId, jsonAry.toString());
-            } catch (HyphenateException e) {
-                onError(callbackId, e);
-            }
-        });
-    }
-
     private void updateChatRoomAnnouncement(String roomId, String announcement, String callbackId) {
+
+        if (roomId == null || roomId.length() == 0 || announcement == null || announcement.length() == 0) {
+            HyphenateException e = new HyphenateException(500, "roomId or announcement is invalid");
+            onError(callbackId, e);
+            return;
+        }
+
         asyncRunnable(() -> {
             try {
                 EMClient.getInstance().chatroomManager().updateChatRoomAnnouncement(roomId, announcement);
                 onSuccess(null, callbackId, null);
-            } catch (HyphenateException e) {
-                onError(callbackId, e);
-            }
-        });
-    }
-
-    private void fetchChatRoomAnnouncement(String roomId, String callbackId) {
-        asyncRunnable(() -> {
-            try {
-                String announcement = EMClient.getInstance().chatroomManager().fetchChatRoomAnnouncement(roomId);
-                onSuccess("String", callbackId, announcement);
             } catch (HyphenateException e) {
                 onError(callbackId, e);
             }

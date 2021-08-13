@@ -28,7 +28,7 @@ public class EMMessageBodyHelper {
     public static JSONObject textBodyToJson(EMTextMessageBody body) throws JSONException {
         JSONObject data = new JSONObject();
         data.put("content", body.getMessage());
-        data.put("type", "txt");
+//        data.put("bodyType", "txt");
         return data;
     }
 
@@ -46,7 +46,7 @@ public class EMMessageBodyHelper {
         data.put("latitude", body.getLatitude());
         data.put("longitude", body.getLongitude());
         data.put("address", body.getAddress());
-        data.put("type", "loc");
+//        data.put("bodyType", "loc");
         return data;
     }
 
@@ -64,23 +64,24 @@ public class EMMessageBodyHelper {
         JSONObject data = new JSONObject();
         data.put("deliverOnlineOnly", body.isDeliverOnlineOnly());
         data.put("action", body.action());
-        data.put("type", "cmd");
+//        data.put("bodyType", "cmd");
         return data;
     }
 
     public static EMCustomMessageBody customBodyFromJson(JSONObject json) throws JSONException{
         String event = json.getString("event");
-        JSONObject jsonObject = json.getJSONObject("params");
-        Map<String, String> params = new HashMap<>();
-        Iterator iterator = jsonObject.keys();
-        while (iterator.hasNext()) {
-            String key = iterator.next().toString();
-            params.put(key, jsonObject.getString(key));
-        }
-
         EMCustomMessageBody body = new EMCustomMessageBody(event);
-        body.setParams(params);
-
+        if (json.has("params")) {
+            String paramString = json.getString("params");
+            JSONObject jsonObject = new JSONObject(paramString);
+            Map<String, String> params = new HashMap<>();
+            Iterator iterator = jsonObject.keys();
+            while (iterator.hasNext()) {
+                String key = iterator.next().toString();
+                params.put(key, jsonObject.getString(key));
+            }
+            body.setParams(params);
+        }
         return body;
     }
 
@@ -88,7 +89,7 @@ public class EMMessageBodyHelper {
         JSONObject data = new JSONObject();
         data.put("event", body.event());
         data.put("params", body.getParams());
-        data.put("type", "custom");
+//        data.put("bodyType", "custom");
         return data;
     }
 
@@ -114,7 +115,7 @@ public class EMMessageBodyHelper {
         data.put("secret", body.getSecret());
         data.put("fileSize", body.getFileSize());
         data.put("fileStatus", downloadStatusToInt(body.downloadStatus()));
-        data.put("type", "file");
+//        data.put("bodyType", "file");
         return data;
     }
 
@@ -155,7 +156,7 @@ public class EMMessageBodyHelper {
         data.put("width", body.getWidth());
         data.put("sendOriginalImage", body.isSendOriginalImage());
         data.put("fileSize", body.getFileSize());
-        data.put("type", "img");
+//        data.put("bodyType", "img");
         return data;
     }
 
@@ -196,7 +197,7 @@ public class EMMessageBodyHelper {
         data.put("fileStatus", downloadStatusToInt(body.downloadStatus()));
         data.put("secret", body.getSecret());
         data.put("fileSize", body.getVideoFileLength());
-        data.put("type", "video");
+//        data.put("bodyType", "video");
 
         return data;
     }
@@ -222,7 +223,7 @@ public class EMMessageBodyHelper {
         data.put("remotePath", body.getRemoteUrl());
         data.put("fileStatus", downloadStatusToInt(body.downloadStatus()));
         data.put("secret", body.getSecret());
-        data.put("type", "voice");
+//        data.put("bodyType", "voice");
         data.put("fileSize", body.getFileSize());
         return data;
     }

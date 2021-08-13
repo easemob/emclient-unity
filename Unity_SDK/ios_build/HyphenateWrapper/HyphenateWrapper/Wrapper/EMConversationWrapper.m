@@ -105,7 +105,7 @@
     [self getConversationWithParam:param
                         completion:^(EMConversation *conversation)
      {
-        NSDictionary *msgDict = [Transfrom DictFromNSString:param[@"msg"]];
+        NSDictionary *msgDict = [Transfrom NSStringToJsonObject:param[@"msg"]];
         EMMessage *msg = [EMMessage fromJson:msgDict];
         
         EMError *error = nil;
@@ -121,7 +121,7 @@
     [self getConversationWithParam:param
                         completion:^(EMConversation *conversation)
      {
-        NSDictionary *msgDict = [Transfrom DictFromNSString:param[@"msg"]];
+        NSDictionary *msgDict = [Transfrom NSStringToJsonObject:param[@"msg"]];
         EMMessage *msg = [EMMessage fromJson:msgDict];
         
         EMError *error = nil;
@@ -137,7 +137,7 @@
     [self getConversationWithParam:param
                         completion:^(EMConversation *conversation)
      {
-        NSDictionary *msgDict = [Transfrom DictFromNSString:param[@"msg"]];
+        NSDictionary *msgDict = [Transfrom NSStringToJsonObject:param[@"msg"]];
         EMMessage *msg = [EMMessage fromJson:msgDict];
         
         EMError *error = nil;

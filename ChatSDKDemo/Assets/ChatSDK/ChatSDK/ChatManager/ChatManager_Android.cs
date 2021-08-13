@@ -1,24 +1,18 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using SimpleJSON;
 
 namespace ChatSDK
 {
     public class ChatManager_Android : IChatManager
     {
 
-        static string Listener_Obj = "unity_chat_emclient_chat_manager_delegate_obj";
-
         private AndroidJavaObject wrapper;
-
-        GameObject listenerGameObj;
 
         public ChatManager_Android()
         {
             using (AndroidJavaClass aj = new AndroidJavaClass("com.hyphenate.unity_chat_sdk.EMChatManagerWrapper"))
             {
-                listenerGameObj = new GameObject(Listener_Obj);
-                ChatManagerListener listener = listenerGameObj.AddComponent<ChatManagerListener>();
-                listener.delegater = Delegate;
                 wrapper = aj.CallStatic<AndroidJavaObject>("wrapper");
             }
         }
@@ -38,7 +32,7 @@ namespace ChatSDK
             wrapper.Call("downloadThumbnail", messageId, handle?.callbackId);
         }
 
-        public override void FetchHistoryMessages(string conversationId, ConversationType type, string startMessageId = null, int count = 20, ValueCallBack<CursorResult<Message>> handle = null)
+        public override void FetchHistoryMessagesFromServer(string conversationId, ConversationType type, string startMessageId = null, int count = 20, ValueCallBack<CursorResult<Message>> handle = null)
         {
             wrapper.Call("fetchHistoryMessages", conversationId, TransformTool.ConversationTypeToInt(type), startMessageId, count, handle?.callbackId);
         }
@@ -46,6 +40,10 @@ namespace ChatSDK
         public override Conversation GetConversation(string conversationId, ConversationType type, bool createIfNeed = true)
         {
             string jsonString = wrapper.Call<string>("getConversation", conversationId, TransformTool.ConversationTypeToInt(type), createIfNeed);
+            if (jsonString == null || jsonString.Length == 0) {
+                return null;
+            }
+
             return new Conversation(jsonString);
         }
 
@@ -61,24 +59,29 @@ namespace ChatSDK
 
         public override bool ImportMessages(List<Message> messages)
         {
-            return wrapper.Call<bool>("importMessages", TransformTool.JsonStringFromMessageList(messages));
+            return wrapper.Call<bool>("importMessages", TransformTool.JsonObjectFromMessageList(messages).ToString());
         }
 
         public override List<Conversation> LoadAllConversations()
         {
-            string jsonStrong = wrapper.Call<string>("loadAllConversations");
-            return TransformTool.JsonStringToConversationList(jsonStrong);
+            string jsonString = wrapper.Call<string>("loadAllConversations");
+            return TransformTool.JsonStringToConversationList(jsonString);
         }
 
         public override Message LoadMessage(string messageId)
         {
-            string jsonStrong = wrapper.Call<string>("getMessage", messageId);
-            return new Message(jsonStrong);
+            string jsonString = wrapper.Call<string>("loadMessage", messageId);
+            if (jsonString == null || jsonString.Length == 0)
+            {
+                return null;
+            }
+
+            return new Message(jsonString);
         }
 
         public override bool MarkAllConversationsAsRead()
         {
-            return wrapper.Call<bool>("markAllChatMsgAsRead");
+            return wrapper.Call<bool>("markAllConversationsAsRead");
         }
 
         public override void RecallMessage(string messageId, CallBack handle = null)
@@ -86,9 +89,14 @@ namespace ChatSDK
             wrapper.Call("recallMessage", messageId, handle?.callbackId);
         }
 
-        public override Message ResendMessage(string messageId, ValueCallBack<Message> handle = null)
+        public override Message ResendMessage(string messageId, CallBack handle = null)
         {
             string jsonString = wrapper.Call<string>("resendMessage", messageId, handle?.callbackId);
+            if (jsonString == null || jsonString.Length == 0)
+            {
+                return null;
+            }
+
             return new Message(jsonString);
         }
 
@@ -105,7 +113,12 @@ namespace ChatSDK
 
         public override Message SendMessage(Message message, CallBack handle = null)
         {
-            string jsonString = wrapper.Call<string>("sendMessage", message.ToJsonString(), handle?.callbackId);
+            Debug.Log("message to string: " + message.ToJson());
+            string jsonString = wrapper.Call<string>("sendMessage", message.ToJson().ToString(), handle?.callbackId);
+            if (jsonString == null || jsonString.Length == 0) {
+                return null;
+            }
+
             return new Message(jsonString);
         }
 
@@ -114,9 +127,9 @@ namespace ChatSDK
             wrapper.Call("ackMessageRead", messageId, handle?.callbackId);
         }
 
-        public override void UpdateMessage(Message message, CallBack handle = null)
+        public override bool UpdateMessage(Message message)
         {
-            wrapper.Call("updateChatMessage", message.ToJsonString(), handle?.callbackId);
+            return wrapper.Call<bool>("updateChatMessage", message.ToJson().ToString());
         }
     }
     

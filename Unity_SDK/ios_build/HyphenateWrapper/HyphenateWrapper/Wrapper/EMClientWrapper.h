@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) EMConversationWrapper *conversationWrapper;
 
 + (EMClientWrapper *)instance;
-- (void)initSDKWithDict:(NSDictionary *)param;
+- (void)initWithOptions:(NSDictionary *)param;
 - (void)createAccount:(NSDictionary *)param callbackId:(NSString *)callbackId;
 - (void)login:(NSDictionary *)param callbackId:(NSString *)callbackId;
 - (void)logout:(NSDictionary *)param callbackId:(NSString *)callbackId;

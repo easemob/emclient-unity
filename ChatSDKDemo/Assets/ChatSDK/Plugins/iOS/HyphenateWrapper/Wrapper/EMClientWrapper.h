@@ -12,6 +12,7 @@
 #import "EMRoomManagerWrapper.h"
 #import "EMGroupManagerWrapper.h"
 #import "EMPushManagerWrapper.h"
+#import "EMConversationWrapper.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,10 +22,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) EMGroupManagerWrapper *groupManager;
 @property (nonatomic, strong) EMRoomManagerWrapper *roomManager;
 @property (nonatomic, strong) EMPushManagerWrapper *pushManager;
+@property (nonatomic, strong) EMConversationWrapper *conversationWrapper;
 
 + (EMClientWrapper *)instance;
-- (void)initSDKWithDict:(NSDictionary *)param;
+- (void)initWithOptions:(NSDictionary *)param;
 - (void)createAccount:(NSDictionary *)param callbackId:(NSString *)callbackId;
+- (void)login:(NSDictionary *)param callbackId:(NSString *)callbackId;
+- (void)logout:(NSDictionary *)param callbackId:(NSString *)callbackId;
+
 @end
 
 NS_ASSUME_NONNULL_END

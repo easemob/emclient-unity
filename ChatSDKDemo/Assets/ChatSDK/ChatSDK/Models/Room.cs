@@ -14,7 +14,7 @@ namespace ChatSDK
         public List<string> AdminList { get; internal set; }
         public List<string> MemberList { get; internal set; }
         public List<string> BlockList { get; internal set; }
-        public List<string> MuteList { get; internal set; }
+        public List<Mute> MuteList { get; internal set; }
 
         public bool AllMemberMuted { get; internal set; }
 
@@ -28,37 +28,49 @@ namespace ChatSDK
 
         internal Room(string jsonString)
         {
-            JSONNode jn = JSON.Parse(jsonString);
-            if (!jn.IsNull && jn.IsObject) {
-                JSONObject jo = jn.AsObject;
-                RoomId = jo["roomId"].Value;
-                Name = jo["name"].Value;
-                Description = jo["desc"].Value;
-                Announcement = jo["announcement"].Value;
-                AdminList = TransformTool.JsonStringToStringList(jo["adminList"].Value);
-                MemberList = TransformTool.JsonStringToStringList(jo["memberList"].Value);
-                BlockList = TransformTool.JsonStringToStringList(jo["blockList"].Value);
-                MuteList = TransformTool.JsonStringToStringList(jo["muteList"].Value);
-                MaxUsers = jo["maxUsers"].AsInt;
-                Owner = jo["owner"].Value;
-                IsAllMemberMuted = jo["isAllMemberMuted"].AsBool;
-                if (jo["permissionType"].AsInt == -1)
+            if (jsonString != null)
+            {
+                JSONNode jn = JSON.Parse(jsonString);
+
+                if (!jn.IsNull && jn.IsObject)
                 {
-                    PermissionType = RoomPermissionType.None;
-                }
-                else if (jo["permissionType"].AsInt == 0)
-                {
-                    PermissionType = RoomPermissionType.Member;
-                }
-                else if (jo["permissionType"].AsInt == 1)
-                {
-                    PermissionType = RoomPermissionType.Admin;
-                }
-                else if (jo["permissionType"].AsInt == 2)
-                {
-                    PermissionType = RoomPermissionType.Owner;
+                    JSONObject jo = jn.AsObject;
+                    RoomId = jo["roomId"].Value;
+                    Name = jo["name"].Value;
+                    Description = jo["desc"].Value;
+                    Announcement = jo["announcement"].Value;
+                    AdminList = TransformTool.JsonStringToStringList(jo["adminList"].Value);
+                    MemberList = TransformTool.JsonStringToStringList(jo["memberList"].Value);
+                    BlockList = TransformTool.JsonStringToStringList(jo["blockList"].Value);
+                    // TODO: dujiepeng
+                    //MuteList = TransformTool.JsonStringToStringList(jo["muteList"].Value);
+                    MaxUsers = jo["maxUsers"].AsInt;
+                    Owner = jo["owner"].Value;
+                    IsAllMemberMuted = jo["isAllMemberMuted"].AsBool;
+                    if (jo["permissionType"].AsInt == -1)
+                    {
+                        PermissionType = RoomPermissionType.None;
+                    }
+                    else if (jo["permissionType"].AsInt == 0)
+                    {
+                        PermissionType = RoomPermissionType.Member;
+                    }
+                    else if (jo["permissionType"].AsInt == 1)
+                    {
+                        PermissionType = RoomPermissionType.Admin;
+                    }
+                    else if (jo["permissionType"].AsInt == 2)
+                    {
+                        PermissionType = RoomPermissionType.Owner;
+                    }
                 }
             }
+        }
+
+
+        internal Room()
+        {
+            //default constructor
         }
 
     }

@@ -26,7 +26,7 @@
     }
     __block NSString *callId = callbackId;
     NSArray *groupIds = [EMClient.sharedClient.pushManager noPushGroups];
-    [self onSuccess:@"List<String>" callbackId:callId userInfo:[Transfrom ArrayToNSString:groupIds]];
+    [self onSuccess:@"List<String>" callbackId:callId userInfo:groupIds];
 }
 
 - (void)getPushConfig:(NSDictionary *)param callbackId:(NSString *)callbackId {
@@ -35,7 +35,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMPushManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.pushManager getPushNotificationOptionsFromServerWithCompletion:^(EMPushOptions *aOptions,
                                                                                             EMError *aError)
@@ -43,7 +43,7 @@
         if (aError) {
             [weakSelf onError:callId error:aError];
         }else {
-            [weakSelf onSuccess:@"EMPushConfigs" callbackId:callId userInfo:[Transfrom DictToNSString:[aOptions toJson]]];
+            [weakSelf onSuccess:@"EMPushConfigs" callbackId:callId userInfo:[aOptions toJson]];
         }
     }];
 }
@@ -54,14 +54,14 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMPushManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     EMError *aError = nil;
     EMPushOptions *aOptions = [EMClient.sharedClient.pushManager getPushOptionsFromServerWithError:&aError];
     if (aError) {
         [weakSelf onError:callId error:aError];
     }else {
-        [weakSelf onSuccess:@"EMPushConfigs" callbackId:callId userInfo:[Transfrom DictToNSString:[aOptions toJson]]];
+        [weakSelf onSuccess:@"EMPushConfigs" callbackId:callId userInfo:[aOptions toJson]];
     }
 }
 
@@ -71,7 +71,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMPushManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     NSString *groupId = param[@"groupId"];
     BOOL noDisturb = [param[@"noDisturb"] boolValue];
@@ -122,7 +122,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMPushManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     int intStyle = [param[@"style"] intValue];
     EMPushDisplayStyle style = intStyle == 0 ? EMPushDisplayStyleSimpleBanner : EMPushDisplayStyleMessageSummary;
@@ -141,7 +141,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMPushManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     NSString *nickname = param[@"nickname"];
     [EMClient.sharedClient.pushManager updatePushDisplayName:nickname completion:^(NSString *aDisplayName, EMError *aError) {

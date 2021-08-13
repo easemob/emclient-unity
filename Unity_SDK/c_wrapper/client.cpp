@@ -3,7 +3,7 @@
 #include "emchatconfigs.h"
 #include "emchatprivateconfigs.h"
 #include "emclient.h"
-#include "emchatmanager_interface.h"
+#include "contact_manager.h"
 
 using namespace easemob;
 
@@ -16,9 +16,19 @@ extern "C"
 static bool G_DEBUG_MODE = false;
 static bool G_AUTO_LOGIN = true;
 
-AGORA_API void Client_CreateAccount(void *client, const char *username, const char *password)
+
+AGORA_API void Client_CreateAccount(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, const char *username, const char *password)
 {
-    CLIENT->createAccount(username, password);
+    LOG("Client_CreateAccount() called with username=%s password=%s", username, password);
+    EMErrorPtr result = CLIENT->createAccount(username, password);
+    
+    if(EMError::isNoError(result)) {
+        LOG("Account creation succeeds!");
+        if(onSuccess) onSuccess();
+    }else{
+        LOG("Account creation failed!");
+        if(onError) onError(result->mErrorCode, result->mDescription.c_str());
+    }
 }
 
 EMChatConfigsPtr ConfigsFromOptions(Options *options) {
@@ -37,90 +47,93 @@ EMChatConfigsPtr ConfigsFromOptions(Options *options) {
     configs->privateConfigs().restServer() = options->RestServer;
     configs->privateConfigs().chatPort() = options->IMPort;
     configs->privateConfigs().enableDns() = options->EnableDNSConfig;
-    LOG("DebugMode=%s", options->DebugMode ? "true" : "false");
-    LOG("AutoLogin=%s", options->AutoLogin ? "true" : "false");
-    bool acceptInvitationAlways = options->AcceptInvitationAlways;
-    LOG("AcceptInvitationAlways=%s", options->AcceptInvitationAlways ? "true" : "false");
-    configs->setAutoAcceptFriend(acceptInvitationAlways);
-    bool autoAcceptGroupInvitation = options->AutoAcceptGroupInvitation;
-    LOG("AutoAcceptGroupInvitation=%s", autoAcceptGroupInvitation ? "true" : "false");
-    configs->setAutoAcceptGroup(autoAcceptGroupInvitation);
-    bool requireAck = options->RequireAck;
-    LOG("RequireAck=%s", requireAck ? "true" : "false");
-    configs->setRequireReadAck(requireAck);
-    bool requireDeliveryAck = options->RequireDeliveryAck;
-    LOG("RequireDeliveryAck=%s", requireDeliveryAck ? "true" : "false");
-    configs->setRequireDeliveryAck(requireDeliveryAck);
-    bool deleteMessagesAsExitGroup = options->DeleteMessagesAsExitGroup;
-    LOG("DeleteMessagesAsExitGroup=%s", deleteMessagesAsExitGroup ? "true" : "false");
-    configs->setDeleteMessageAsExitGroup(deleteMessagesAsExitGroup);
-    bool deleteMessagesAsExitRoom = options->DeleteMessagesAsExitRoom;
-    LOG("DeleteMessagesAsExitRoom=%s", deleteMessagesAsExitRoom ? "true" : "false");
-    configs->setDeleteMessageAsExitChatRoom(deleteMessagesAsExitRoom);
-    bool isRoomOwnerLeaveAllowed = options->IsRoomOwnerLeaveAllowed;
-    LOG("IsRoomOwnerLeaveAllowed=%s", isRoomOwnerLeaveAllowed ? "true" : "false");
-    configs->setIsChatroomOwnerLeaveAllowed(isRoomOwnerLeaveAllowed);
-    bool sortMessageByServerTime = options->SortMessageByServerTime;
-    LOG("SortMessageByServerTime=%s", sortMessageByServerTime ? "true" : "false");
-    configs->setSortMessageByServerTime(sortMessageByServerTime);
-    bool usingHttpsOnly = options->UsingHttpsOnly;
-    LOG("UsingHttpsOnly=%s", usingHttpsOnly ? "true" : "false");
-    configs->setUsingHttps(usingHttpsOnly);
-    bool serverTransfer = options->ServerTransfer;
-    LOG("ServerTransfer=%s", serverTransfer ? "true" : "false");
-    configs->setTransferAttachments(serverTransfer);
-    bool isAutoDownload = options->IsAutoDownload;
-    LOG("IsAutoDownload=%s", isAutoDownload ? "true" : "false");
-    configs->setAutoDownloadThumbnail(isAutoDownload);
+    configs->setAutoAcceptFriend(options->AcceptInvitationAlways);
+    configs->setAutoAcceptGroup(options->AutoAcceptGroupInvitation);
+    configs->setRequireReadAck(options->RequireAck);
+    configs->setRequireDeliveryAck(options->RequireDeliveryAck);
+    configs->setDeleteMessageAsExitGroup(options->DeleteMessagesAsExitGroup);
+    configs->setDeleteMessageAsExitChatRoom(options->DeleteMessagesAsExitRoom);
+    configs->setIsChatroomOwnerLeaveAllowed(options->IsRoomOwnerLeaveAllowed);
+    configs->setSortMessageByServerTime(options->SortMessageByServerTime);
+    configs->setUsingHttps(options->UsingHttpsOnly);
+    configs->setTransferAttachments(options->ServerTransfer);
+    configs->setAutoDownloadThumbnail(options->IsAutoDownload);
+    //configs->setLogPath("/tmp/sdk.log");
+    //configs->setEnableConsoleLog(true);
     return configs;
 }
 
-AGORA_API void* Client_InitWithOptions(Options *options, ConnListenerFptrs fptrs)
+EMClient *gClient = NULL;
+EMConnectionListener *gConnectionListener = NULL;
+
+AGORA_API void* Client_InitWithOptions(Options *options, FUNC_OnConnected onConnected, FUNC_OnDisconnected onDisconnected, FUNC_OnPong onPong)
 {
     // global switch
     G_DEBUG_MODE = options->DebugMode;
     G_AUTO_LOGIN = options->AutoLogin;
-    EMChatConfigsPtr configs = ConfigsFromOptions(options);
-    EMClient * client = EMClient::create(configs);
-    //TODO: keep connection listener instance disposable!
-    LOG("ConnectionListener FPtrs: OnConnect=%d, OnDisconnected=%d,", fptrs.Connected, fptrs.Disconnected);
-    client->addConnectionListener(new ConnectionListener(fptrs));
-    return client;
+    LOG("gClient address is: %x", gClient);
+    LOG("gConnectionListener address is: %x", gConnectionListener);
+    // singleton client handle
+    if(gClient == nullptr) {
+        EMChatConfigsPtr configs = ConfigsFromOptions(options);
+        gClient = EMClient::create(configs);
+        LOG("after create gClient address is: %x", gClient);
+        if(gConnectionListener == NULL) { //only set once
+            gConnectionListener = new ConnectionListener(onConnected, onDisconnected, onPong);
+            //gConnectionListener = new ConnectionListener(onConnected, nullptr, nullptr);
+            LOG("after new gConnectionListener address is: %x", gConnectionListener);
+            gClient->addConnectionListener(gConnectionListener);
+        }
+    }
+    
+    return gClient;
 }
 
-
-
-AGORA_API void Client_Login(void *client, void *callback, const char *username, const char *pwdOrToken, bool isToken)
+AGORA_API void Client_Login(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, const char *username, const char *pwdOrToken, bool isToken)
 {
     LOG("Client_Login() called with username=%s, pwdOrToken=%s, isToken=%d", username, pwdOrToken, isToken);
-    LOG("callback instance address=%d", callback);
     EMErrorPtr result;
-    if(!isToken) {
-        result = CLIENT->login(username, pwdOrToken);
-    } else {
-        result = CLIENT->loginWithToken(username, pwdOrToken);
-    }
+    result = isToken ? CLIENT->loginWithToken(username, pwdOrToken) : CLIENT->login(username, pwdOrToken);
     if(EMError::isNoError(result)) {
         LOG("Login succeeds.");
-        //call OnSuccess callback
-        CALLBACK->OnSuccess();
+        if(onSuccess) onSuccess();
     }else{
-        LOG("Login error with error code %d, description: %s", result->mErrorCode, result->mDescription.c_str());
-        //call OnError callback
-        CALLBACK->OnError(result->mErrorCode, result->mDescription.c_str());
+        LOG("Login failed with code=%d desc=%s!", result->mErrorCode, result->mDescription.c_str());
+        if(onError) onError(result->mErrorCode, result->mDescription.c_str());
     }
 }
 
-AGORA_API void Client_Logout(void *client, bool unbindDeviceToken)
+AGORA_API void Client_Logout(void *client, FUNC_OnSuccess onSuccess, bool unbindDeviceToken)
 {
-    CLIENT->logout();
-}
+    /*
+    CLIENT->getChatManager().clearListeners();
+    LOG("ChatManager listener cleared.");
+    CLIENT->getGroupManager().clearListeners();
+    LOG("GroupManager listener cleared.");
+    CLIENT->getChatroomManager().clearListeners();
+    LOG("RoomManager listener cleared.");
+    
+    EMContactListener* contactListers = nullptr;
+    contactListers = ContactManager_GetListeners();
+    if(contactListers)
+    {
+        LOG("ContactManager listener cleared.");
+        CLIENT->getContactManager().removeContactListener(contactListers);
+    }
+        
+    CLIENT->removeConnectionListener(gConnectionListener);
+    delete gConnectionListener;
+    gConnectionListener = nullptr;
+    */
 
-AGORA_API void Client_Release(void *client)
-{
-    delete CLIENT;
-    client = nullptr;
-    LogHelper::getInstance().stopLogService();
+    //gConnectionListener->ClearAllCallBack();
+    CLIENT->logout();
+    CLIENT->removeConnectionListener(gConnectionListener);
+    delete gConnectionListener;
+    gConnectionListener = nullptr;
+    
+    if(onSuccess) onSuccess();
+    
 }
 
 AGORA_API void Client_StartLog(const char *logFilePath) {
@@ -129,9 +142,4 @@ AGORA_API void Client_StartLog(const char *logFilePath) {
 
 AGORA_API void Client_StopLog() {
     return LogHelper::getInstance().stopLogService();
-}
-
-AGORA_API void ChatManager_SendMessage(void *client, void *callback, MessageTransferObject *mto) {
-    EMMessagePtr messagePtr = mto->toEMMessage();
-    //CLIENT->getChatManager().sendMessage(messagePtr);
 }

@@ -77,11 +77,11 @@ public class EMOptionsHelper {
         data.put("delete_messages_as_exit_room", options.isDeleteMessagesAsExitChatRoom());
         data.put("is_auto_download", options.getAutodownloadThumbnail());
         data.put("is_room_owner_leave_allowed", options.isChatroomOwnerLeaveAllowed());
-        // data.put("serverTransfer", "");
+//         data.put("serverTransfer", "");
 //         data.put("debugModel", EMClient.getInstance().setDebugMode().);
 //        data.put("push_config", EMPushConfigHelper.toJson(options.getPushConfig()));
-        data.put("using_https_only", options.getUsingHttpsOnly());
 
+        data.put("using_https_only", options.getUsingHttpsOnly());
         data.put("enable_dns_config", options.getEnableDNSConfig());
         data.put("im_port", options.getImPort());
         data.put("im_server", options.getImServer());

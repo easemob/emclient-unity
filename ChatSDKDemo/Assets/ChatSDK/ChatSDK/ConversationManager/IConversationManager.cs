@@ -17,9 +17,9 @@ namespace ChatSDK
 #elif UNITY_IOS
                     instance = new ConversationManager_iOS();
 #elif UNITY_STANDALONE_OSX
-                    //instance = new Client_Mac();
+                    //                    instance = new ConversationManager_Mac();
 #elif UNITY_STANDALONE_WIN
-                    //instance = new Client_Win();
+//                    //instance = new Client_Win();
 #endif
                 }
 
@@ -27,24 +27,24 @@ namespace ChatSDK
             }
         }
 
-        public abstract Message LastMessage(string conversationId, ConversationType converationType);
-        public abstract Message LastReceivedMessage(string conversationId, ConversationType converationType);
-        public abstract Dictionary<string, string> GetExt(string conversationId, ConversationType converationType);
-        public abstract void SetExt(string conversationId, ConversationType converationType, Dictionary<string, string> ext);
-        public abstract int UnReadCount(string conversationId, ConversationType converationType);
+        public abstract Message LastMessage(string conversationId, ConversationType conversationType);
+        public abstract Message LastReceivedMessage(string conversationId, ConversationType conversationType);
+        public abstract Dictionary<string, string> GetExt(string conversationId, ConversationType conversationType);
+        public abstract void SetExt(string conversationId, ConversationType conversationType, Dictionary<string, string> ext);
+        public abstract int UnReadCount(string conversationId, ConversationType conversationType);
 
-        public abstract void MarkMessageAsRead(string conversationId, ConversationType converationType, string messageId);
-        public abstract void MarkAllMessageAsRead(string conversationId, ConversationType converationType);
-        public abstract bool InsertMessage(string conversationId, ConversationType converationType, Message message);
-        public abstract bool AppendMessage(string conversationId, ConversationType converationType, Message message);
-        public abstract bool UpdateMessage(string conversationId, ConversationType converationType, Message message);
-        public abstract bool DeleteMessage(string conversationId, ConversationType converationType, string messageId);
-        public abstract bool DeleteAllMessages(string conversationId, ConversationType converationType);
+        public abstract void MarkMessageAsRead(string conversationId, ConversationType conversationType, string messageId);
+        public abstract void MarkAllMessageAsRead(string conversationId, ConversationType conversationType);
+        public abstract bool InsertMessage(string conversationId, ConversationType conversationType, Message message);
+        public abstract bool AppendMessage(string conversationId, ConversationType conversationType, Message message);
+        public abstract bool UpdateMessage(string conversationId, ConversationType conversationType, Message message);
+        public abstract bool DeleteMessage(string conversationId, ConversationType conversationType, string messageId);
+        public abstract bool DeleteAllMessages(string conversationId, ConversationType conversationType);
 
-        public abstract Message LoadMessage(string conversationId, ConversationType converationType, string messageId);
-        public abstract List<Message> LoadMessagesWithMsgType(string conversationId, ConversationType conversationType, MessageBodyType bodyType, string sender, long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP);
-        public abstract List<Message> LoadMessages(string conversationId, ConversationType converationType, string startMessageId, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP);
-        public abstract List<Message> LoadMessagesWithKeyword(string conversationId, ConversationType converationType, string keywords, string sender, long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP);
-        public abstract List<Message> LoadMessagesWithTime(string conversationId, ConversationType converationType, long startTime, long endTime, int count = 20);
+        public abstract Message LoadMessage(string conversationId, ConversationType conversationType, string messageId);
+        public abstract void LoadMessagesWithMsgType(string conversationId, ConversationType conversationType, MessageBodyType bodyType, string sender, long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callback = null);
+        public abstract void LoadMessages(string conversationId, ConversationType conversationType, string startMessageId = "", int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callback = null);
+        public abstract void LoadMessagesWithKeyword(string conversationId, ConversationType conversationType, string keywords = "", string sender = "", long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callback = null);
+        public abstract void LoadMessagesWithTime(string conversationId, ConversationType conversationType, long startTime, long endTime, int count = 20, ValueCallBack<List<Message>> callback = null);
     }
 }

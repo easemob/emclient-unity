@@ -6,12 +6,18 @@
 //
 
 #import "EMMessage+Unity.h"
+#import "Transfrom.h"
 
 @implementation EMMessage (Unity)
 
 + (EMMessage *)fromJson:(NSDictionary *)aJson
 {
-    EMMessageBody *body = [EMMessageBody fromJson:aJson[@"body"]];
+    NSString *bodyType = aJson[@"bodyType"];
+    NSString *bodyString = aJson[@"body"];
+    
+    NSDictionary *bodyDict = [Transfrom NSStringToJsonObject:bodyString];
+    
+    EMMessageBody *body = [EMMessageBody fromJson:bodyDict bodyType:bodyType];
     if (!body) {
         return nil;
     }
@@ -24,12 +30,15 @@
     NSString *to = aJson[@"to"];
     NSString *conversationId = aJson[@"conversationId"];
     
-
+    NSDictionary *dict = nil;
+    if (![aJson[@"attributes"] isKindOfClass:[NSNull class]]) {
+        // TODO:
+    }
     EMMessage *msg = [[EMMessage alloc] initWithConversationID:conversationId
                                                           from:from
                                                             to:to
                                                           body:body
-                                                           ext:aJson[@"attributes"]];
+                                                           ext:dict];
     if (aJson[@"msgId"]) {
         msg.messageId = aJson[@"msgId"];
     }
@@ -64,7 +73,8 @@
     ret[@"status"] = @([self statusToInt:self.status]);
     ret[@"chatType"] = @([self chatTypeToInt:self.chatType]);
     ret[@"direction"] = self.direction == EMMessageDirectionSend ? @"send" : @"rec";
-    ret[@"body"] = [self.body toJson];
+    ret[@"bodyType"] = [self.body typeToString];
+    ret[@"body"] = [Transfrom NSStringFromJsonObject:[self.body toJson]];
     
     return ret;
 }
@@ -162,27 +172,30 @@
 
 @implementation EMMessageBody (Unity)
 
-+ (EMMessageBody *)fromJson:(NSDictionary *)bodyJson {
+
++ (EMMessageBody *)fromJson:(NSDictionary *)bodyJson bodyType:(NSString *)type{
     EMMessageBody *ret = nil;
-    NSString *type = bodyJson[@"type"];
     if ([type isEqualToString:@"txt"]) {
-        ret = [EMTextMessageBody fromJson:bodyJson];
+        ret = [EMTextMessageBody fromJson:bodyJson bodyType:nil];
     } else if ([type isEqualToString:@"img"]) {
-        ret = [EMImageMessageBody fromJson:bodyJson];
+        ret = [EMImageMessageBody fromJson:bodyJson bodyType:nil];
     } else if ([type isEqualToString:@"loc"]) {
-        ret = [EMLocationMessageBody fromJson:bodyJson];
+        ret = [EMLocationMessageBody fromJson:bodyJson bodyType:nil];
     } else if ([type isEqualToString:@"video"]) {
-        ret = [EMVideoMessageBody fromJson:bodyJson];
+        ret = [EMVideoMessageBody fromJson:bodyJson bodyType:nil];
     } else if ([type isEqualToString:@"voice"]) {
-        ret = [EMVoiceMessageBody fromJson:bodyJson];
+        ret = [EMVoiceMessageBody fromJson:bodyJson bodyType:nil];
     } else if ([type isEqualToString:@"file"]) {
-        ret = [EMFileMessageBody fromJson:bodyJson];
+        ret = [EMFileMessageBody fromJson:bodyJson bodyType:nil];
     } else if ([type isEqualToString:@"cmd"]) {
-        ret = [EMCmdMessageBody fromJson:bodyJson];
+        ret = [EMCmdMessageBody fromJson:bodyJson bodyType:nil];
     } else if ([type isEqualToString:@"custom"]) {
-        ret = [EMCustomMessageBody fromJson:bodyJson];
+        ret = [EMCustomMessageBody fromJson:bodyJson bodyType:nil];
     }
     return ret;
+}
+- (NSString *)typeToString {
+    return nil;
 }
 
 - (NSDictionary *)toJson {
@@ -222,7 +235,7 @@
 }
 
 + (EMMessageBodyType)typeFromString:(NSString *)aStrType {
-   
+    
     EMMessageBodyType ret = EMMessageBodyTypeText;
     
     if([aStrType isEqualToString:@"txt"]){
@@ -250,14 +263,15 @@
 #pragma mark - txt
 
 @interface EMTextMessageBody (Unity)
-+ (EMMessageBody *)fromJson:(NSDictionary *)aJson;
++ (EMMessageBody *)fromJson:(NSDictionary *)aJson bodyType:(NSString *)type;
 - (NSDictionary *)toJson;
+- (NSString *)typeToString;
 @end
 
 
 @implementation EMTextMessageBody (Unity)
 
-+ (EMMessageBody *)fromJson:(NSDictionary *)aJson {
++ (EMMessageBody *)fromJson:(NSDictionary *)aJson bodyType:(NSString *)type{
     return [[EMTextMessageBody alloc] initWithText:aJson[@"content"]];
 }
 
@@ -267,19 +281,24 @@
     return ret;
 }
 
+- (NSString *)typeToString {
+    return @"txt";
+}
+
 @end
 
 #pragma mark - loc
 
 @interface EMLocationMessageBody (Unity)
-+ (EMMessageBody *)fromJson:(NSDictionary *)aJson;
++ (EMMessageBody *)fromJson:(NSDictionary *)aJson bodyType:(NSString *)type;
 - (NSDictionary *)toJson;
+- (NSString *)typeToString;
 @end
 
 
 @implementation EMLocationMessageBody (Unity)
 
-+ (EMMessageBody *)fromJson:(NSDictionary *)aJson {
++ (EMMessageBody *)fromJson:(NSDictionary *)aJson bodyType:(NSString *)type{
     double latitude = [aJson[@"latitude"] doubleValue];
     double longitude = [aJson[@"longitude"] doubleValue];
     NSString *address = aJson[@"address"];
@@ -297,18 +316,23 @@
     return ret;
 }
 
+- (NSString *)typeToString {
+    return @"loc";
+}
+
 @end
 
 #pragma mark - cmd
 
 @interface EMCmdMessageBody (Unity)
-+ (EMCmdMessageBody *)fromJson:(NSDictionary *)aJson;
++ (EMCmdMessageBody *)fromJson:(NSDictionary *)aJson bodyType:(NSString *)type;
 - (NSDictionary *)toJson;
+- (NSString *)typeToString;
 @end
 
 @implementation EMCmdMessageBody (Unity)
 
-+ (EMCmdMessageBody *)fromJson:(NSDictionary *)aJson {
++ (EMCmdMessageBody *)fromJson:(NSDictionary *)aJson bodyType:(NSString *)type{
     EMCmdMessageBody *ret = [[EMCmdMessageBody alloc] initWithAction:aJson[@"action"]];
     ret.isDeliverOnlineOnly = [aJson[@"deliverOnlineOnly"] boolValue];
     return ret;
@@ -321,18 +345,23 @@
     return ret;
 }
 
+- (NSString *)typeToString {
+    return @"cmd";
+}
+
 @end
 
 #pragma mark - custom
 
 @interface EMCustomMessageBody (Unity)
-+ (EMCustomMessageBody *)fromJson:(NSDictionary *)aJson;
++ (EMCustomMessageBody *)fromJson:(NSDictionary *)aJson bodyType:(NSString *)type;
 - (NSDictionary *)toJson;
+- (NSString *)typeToString;
 @end
 
 @implementation EMCustomMessageBody (Unity)
 
-+ (EMCustomMessageBody *)fromJson:(NSDictionary *)aJson {
++ (EMCustomMessageBody *)fromJson:(NSDictionary *)aJson bodyType:(NSString *)type{
     EMCustomMessageBody *ret = [[EMCustomMessageBody alloc] initWithEvent:aJson[@"event"]
                                                                       ext:aJson[@"params"]];
     return ret;
@@ -345,18 +374,23 @@
     return ret;
 }
 
+- (NSString *)typeToString {
+    return @"custom";
+}
+
 @end
 
 #pragma mark - file
 
 @interface EMFileMessageBody (Unity)
-+ (EMMessageBody *)fromJson:(NSDictionary *)aJson;
++ (EMMessageBody *)fromJson:(NSDictionary *)aJson bodyType:(NSString *)type;
 - (NSDictionary *)toJson;
+- (NSString *)typeToString;
 @end
 
 @implementation EMFileMessageBody (Unity)
 
-+ (EMMessageBody *)fromJson:(NSDictionary *)aJson {
++ (EMMessageBody *)fromJson:(NSDictionary *)aJson bodyType:(NSString *)type{
     NSString *path = aJson[@"localPath"];
     NSString *displayName = aJson[@"displayName"];
     EMFileMessageBody *ret = [[EMFileMessageBody alloc] initWithLocalPath:path
@@ -377,6 +411,10 @@
     ret[@"fileSize"] = @(self.fileLength);
     ret[@"fileStatus"] = @([self downloadStatusToInt:self.downloadStatus]);
     return ret;
+}
+
+- (NSString *)typeToString {
+    return @"file";
 }
 
 - (EMDownloadStatus)downloadStatusFromInt:(int)aStatus {
@@ -427,13 +465,14 @@
 #pragma mark - img
 
 @interface EMImageMessageBody (Unity)
-+ (EMMessageBody *)fromJson:(NSDictionary *)aJson;
++ (EMMessageBody *)fromJson:(NSDictionary *)aJson bodyType:(NSString *)type;
 - (NSDictionary *)toJson;
+- (NSString *)typeToString;
 @end
 
 @implementation EMImageMessageBody (Unity)
 
-+ (EMMessageBody *)fromJson:(NSDictionary *)aJson {
++ (EMMessageBody *)fromJson:(NSDictionary *)aJson bodyType:(NSString *)type{
     NSString *path = aJson[@"localPath"];
     NSString *displayName = aJson[@"displayName"];
     NSData *imageData = [NSData dataWithContentsOfFile:path];
@@ -469,17 +508,23 @@
     ret[@"sendOriginalImage"] = self.compressionRatio == 1.0 ? @(true) : @(false);
     return ret;
 }
+
+- (NSString *)typeToString {
+    return @"img";
+}
+
 @end
 
 #pragma mark - video
 
 @interface EMVideoMessageBody (Unity)
-+ (EMVideoMessageBody *)fromJson:(NSDictionary *)aJson;
++ (EMVideoMessageBody *)fromJson:(NSDictionary *)aJson bodyType:(NSString *)type;
 - (NSDictionary *)toJson;
+- (NSString *)typeToString;
 @end
 
 @implementation EMVideoMessageBody (Unity)
-+ (EMVideoMessageBody *)fromJson:(NSDictionary *)aJson {
++ (EMVideoMessageBody *)fromJson:(NSDictionary *)aJson bodyType:(NSString *)type{
     NSString *path = aJson[@"localPath"];
     NSString *displayName = aJson[@"displayName"];
     EMVideoMessageBody *ret = [[EMVideoMessageBody alloc] initWithLocalPath:path displayName:displayName];
@@ -507,17 +552,23 @@
     ret[@"duration"] = @(self.duration);
     return ret;
 }
+
+- (NSString *)typeToString {
+    return @"video";
+}
+
 @end
 
 #pragma mark - voice
 
 @interface EMVoiceMessageBody (Unity)
-+ (EMVoiceMessageBody *)fromJson:(NSDictionary *)aJson;
++ (EMVoiceMessageBody *)fromJson:(NSDictionary *)aJson bodyType:(NSString *)type;
 - (NSDictionary *)toJson;
+- (NSString *)typeToString;
 @end
 
 @implementation EMVoiceMessageBody (Unity)
-+ (EMVoiceMessageBody *)fromJson:(NSDictionary *)aJson {
++ (EMVoiceMessageBody *)fromJson:(NSDictionary *)aJson bodyType:(NSString *)type{
     NSString *path = aJson[@"localPath"];
     NSString *displayName = aJson[@"displayName"];
     EMVoiceMessageBody *ret = [[EMVoiceMessageBody alloc] initWithLocalPath:path displayName:displayName];
@@ -534,6 +585,10 @@
     ret[@"fileSize"] = @(self.fileLength);
     ret[@"fileStatus"] = @([self downloadStatusToInt:self.downloadStatus]);;
     return ret;
+}
+
+- (NSString *)typeToString {
+    return @"voice";
 }
 
 @end

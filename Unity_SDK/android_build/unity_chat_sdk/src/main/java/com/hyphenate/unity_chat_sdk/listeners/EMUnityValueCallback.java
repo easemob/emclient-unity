@@ -31,6 +31,8 @@ public class EMUnityValueCallback<T> implements EMValueCallBack<T> {
     }
 
     public void sendJsonObjectToUnity (String jsonString) {
+        Log.d("chat_sdk", "getObject callbackId --  " + callbackId + " jsonString: "  + jsonString);
+        if (callbackId == null) return;
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("type",valueType);
@@ -45,6 +47,8 @@ public class EMUnityValueCallback<T> implements EMValueCallBack<T> {
 
     @Override
     public void onSuccess(T t) {
+        Log.d("chat_sdk", "onSuccess callbackId --  " + callbackId );
+        if (callbackId == null) return;
         ImUnitySdkPlugin.handler.post(()->{
             try {
                 JSONObject jo = new JSONObject();
@@ -58,11 +62,11 @@ public class EMUnityValueCallback<T> implements EMValueCallBack<T> {
                         if (obj instanceof String) {
                             jsonAry.put((String) obj);
                         } else if (obj instanceof EMGroup) {
-                            JSONObject json = EMGroupHelper.toJson((EMGroup) obj);
-                            jsonAry.put(json);
+                            JSONObject jsonObject = EMGroupHelper.toJson((EMGroup) obj);
+                            jsonAry.put(jsonObject.toString());
                         } else if (obj instanceof EMGroupInfo) {
-                            JSONObject object = EMGroupInfoHelper.toJson((EMGroupInfo) obj);
-                            jsonAry.put(object);
+                            JSONObject jsonObject = EMGroupInfoHelper.toJson((EMGroupInfo) obj);
+                            jsonAry.put(jsonObject.toString());
                         }
                     }
                     jo.put("type",valueType);
@@ -81,6 +85,8 @@ public class EMUnityValueCallback<T> implements EMValueCallBack<T> {
 
     @Override
     public void onError(int i, String s) {
+        Log.d("chat_sdk", "onError callbackId -- " + callbackId + " code: " + i + " desc: " + s);
+        if (callbackId == null) return;
         ImUnitySdkPlugin.handler.post(()->{
             JSONObject jo = new JSONObject();
             try {

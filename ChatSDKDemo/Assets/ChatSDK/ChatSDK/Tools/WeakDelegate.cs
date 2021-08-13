@@ -13,7 +13,7 @@ namespace ChatSDK
         {
             get
             {
-                return (InnerList.Where(x => x.Target is T).Select(x => (T)x.Target));
+                return InnerList.Where(x => x.Target is T).Select(x => (T)x.Target);
             }
         }
 

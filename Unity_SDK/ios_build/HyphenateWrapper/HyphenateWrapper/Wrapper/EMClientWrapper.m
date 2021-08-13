@@ -41,7 +41,7 @@ static EMClientWrapper *_instance;
     return self;
 }
 
-- (void)initSDKWithDict:(NSDictionary *)param {
+- (void)initWithOptions:(NSDictionary *)param {
     if (!param) {
         return;
     }
@@ -53,15 +53,24 @@ static EMClientWrapper *_instance;
 }
 
 - (void)createAccount:(NSDictionary *)param callbackId:(NSString *)callbackId {
-    if (!param) {
-        EMError *aError = [[EMError alloc] initWithDescription:@"Param error" code: EMErrorMessageIncludeIllegalContent];
-        [self onError:callbackId error:aError];
-        return;
-    }
-    __weak typeof(self) weakSelf = self;
-    __block NSString *callId = callbackId;
+    EMError *error = nil;
     NSString *username = param[@"username"];
     NSString *password = param[@"password"];
+    
+    if (!username) {
+        error = [EMError errorWithDescription:@"username is invalid" code:EMErrorInvalidUsername];
+        [self onError:callbackId error:error];
+        return;
+    }
+    
+    if (!password) {
+        error = [EMError errorWithDescription:@"password is invalid" code:EMErrorInvalidUsername];
+        [self onError:callbackId error:error];
+        return;
+    }
+    
+    __weak EMClientWrapper * weakSelf = self;
+    __block NSString *callId = callbackId;
     [EMClient.sharedClient registerWithUsername:username
                                        password:password
                                      completion:^(NSString *aUsername, EMError *aError)
@@ -75,16 +84,25 @@ static EMClientWrapper *_instance;
 }
 
 - (void)login:(NSDictionary *)param callbackId:(NSString *)callbackId {
-    if (!param) {
-        EMError *aError = [[EMError alloc] initWithDescription:@"Param error" code: EMErrorMessageIncludeIllegalContent];
-        [self onError:callbackId error:aError];
-        return;
-    }
-    __block NSString *callId = callbackId;
+    EMError *error = nil;
     NSString *username = param[@"username"];
     NSString *pwdOrToken = param[@"pwdOrToken"];
     BOOL isToken = [param[@"isToken"] boolValue];
-    __weak typeof(self) weakSelf = self;
+    
+    if (!username) {
+        error = [EMError errorWithDescription:@"username is invalid" code:EMErrorInvalidUsername];
+        [self onError:callbackId error:error];
+        return;
+    }
+    
+    if (!pwdOrToken) {
+        error = [EMError errorWithDescription:@"password or token is invalid" code:EMErrorInvalidUsername];
+        [self onError:callbackId error:error];
+        return;
+    }
+    
+    __block NSString *callId = callbackId;
+    __weak EMClientWrapper * weakSelf = self;
     __block void (^block)(EMError *) = ^(EMError *error) {
         if (!error) {
             [weakSelf onSuccess:nil callbackId:callId userInfo:nil];
@@ -111,12 +129,7 @@ static EMClientWrapper *_instance;
 }
 
 - (void)logout:(NSDictionary *)param callbackId:(NSString *)callbackId {
-    if (!param) {
-        EMError *aError = [[EMError alloc] initWithDescription:@"Param error" code: EMErrorMessageIncludeIllegalContent];
-        [self onError:callbackId error:aError];
-        return;
-    }
-    __weak typeof(self) weakSelf = self;
+    __weak EMClientWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     BOOL unbindDeviceToken = [param[@"unbindDeviceToken"] boolValue];
     [EMClient.sharedClient logout:unbindDeviceToken completion:^(EMError *aError) {

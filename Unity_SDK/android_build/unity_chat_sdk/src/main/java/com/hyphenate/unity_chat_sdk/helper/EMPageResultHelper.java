@@ -22,18 +22,18 @@ public class EMPageResultHelper {
         JSONArray jsonList = new JSONArray();
         for (Object obj : list) {
             if (obj instanceof EMMessage) {
-                jsonList.put(EMMessageHelper.toJson((EMMessage) obj));
+                jsonList.put(EMMessageHelper.toJson((EMMessage) obj).toString());
             }
 
             if (obj instanceof EMGroup) {
-                jsonList.put(EMGroupHelper.toJson((EMGroup) obj));
+                jsonList.put(EMGroupHelper.toJson((EMGroup) obj).toString());
             }
 
             if (obj instanceof EMChatRoom) {
-                jsonList.put(EMChatRoomHelper.toJson((EMChatRoom) obj));
+                jsonList.put(EMChatRoomHelper.toJson((EMChatRoom) obj).toString());
             }
         }
-        data.put("list", jsonList);
+        data.put("list", jsonList.toString());
         return data;
     }
 }

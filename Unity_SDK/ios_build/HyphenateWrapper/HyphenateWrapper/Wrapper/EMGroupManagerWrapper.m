@@ -35,7 +35,7 @@
         return;
     }
     EMGroup *group = [EMGroup groupWithId:param[@"groupId"]];
-    [self onSuccess:@"EMGroup" callbackId:callbackId userInfo:[Transfrom DictToNSString:[group toJson]]];
+    [self onSuccess:@"EMGroup" callbackId:callbackId userInfo:[group toJson]];
 }
 
 
@@ -45,7 +45,7 @@
     for (EMGroup *group in joinedGroups) {
         [list addObject:[group toJson]];
     }
-    [self onSuccess:@"List<EMGroup>" callbackId:callbackId userInfo:[Transfrom ArrayToNSString:list]];
+    [self onSuccess:@"List<EMGroup>" callbackId:callbackId userInfo:list];
 }
 
 - (void)getGroupsWithoutPushNotification:(NSDictionary *)param callbackId:(NSString *)callbackId  {
@@ -55,7 +55,7 @@
     for (EMGroup *group in groups) {
         [list addObject:[group toJson]];
     }
-    [self onSuccess:@"List<EMGroup>" callbackId:callbackId userInfo:[Transfrom ArrayToNSString:list]];
+    [self onSuccess:@"List<EMGroup>" callbackId:callbackId userInfo:list];
 }
 
 - (void)getJoinedGroupsFromServer:(NSDictionary *)param callbackId:(NSString *)callbackId  {
@@ -64,7 +64,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager getJoinedGroupsFromServerWithPage:[param[@"pageNum"] intValue]
                                                                  pageSize:[param[@"pageSize"] intValue]
@@ -75,7 +75,7 @@
             for (EMGroup *group in aList) {
                 [list addObject:[group toJson]];
             }
-            [weakSelf onSuccess:@"List<EMGroup>" callbackId:callId userInfo:[Transfrom ArrayToNSString:list]];
+            [weakSelf onSuccess:@"List<EMGroup>" callbackId:callId userInfo:list];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -88,14 +88,14 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager getPublicGroupsFromServerWithCursor:param[@"cursor"]
                                                                    pageSize:[param[@"pageSize"] integerValue]
                                                                  completion:^(EMCursorResult *aResult, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"List<EMGroupInfo>" callbackId:callId userInfo:[Transfrom DictToNSString:[aResult toJson]]];
+            [weakSelf onSuccess:@"List<EMGroupInfo>" callbackId:callId userInfo:[aResult toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -108,7 +108,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager createGroupWithSubject:param[@"groupName"]
                                                    description:param[@"desc"]
@@ -118,7 +118,7 @@
                                                     completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[Transfrom DictToNSString:[aGroup toJson]]];
+            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -131,13 +131,13 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager getGroupSpecificationFromServerWithId:param[@"groupId"]
                                                                    completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[Transfrom DictToNSString:[aGroup toJson]]];
+            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -150,7 +150,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager getGroupMemberListFromServerWithId:param[@"groupId"]
                                                                     cursor:param[@"cursor"]
@@ -158,7 +158,7 @@
                                                                 completion:^(EMCursorResult *aResult, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMCursorResult<String>" callbackId:callId userInfo:[Transfrom DictToNSString:[aResult toJson]]];
+            [weakSelf onSuccess:@"EMCursorResult<String>" callbackId:callId userInfo:[aResult toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -171,7 +171,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager getGroupBlacklistFromServerWithId:param[@"groupId"]
                                                                pageNumber:[param[@"pageNum"] intValue]
@@ -179,7 +179,7 @@
                                                                completion:^(NSArray *aList, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:[Transfrom ArrayToNSString:aList]];
+            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:aList];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -192,7 +192,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager getGroupMuteListFromServerWithId:param[@"groupId"]
                                                               pageNumber:[param[@"pageNum"] intValue]
@@ -200,7 +200,7 @@
                                                               completion:^(NSArray *aList, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:[Transfrom ArrayToNSString:aList]];
+            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:aList];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -213,13 +213,13 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager getGroupWhiteListFromServerWithId:param[@"groupId"]
                                                                completion:^(NSArray *aList, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:[Transfrom ArrayToNSString:aList]];
+            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:aList];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -232,13 +232,13 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager isMemberInWhiteListFromServerWithGroupId:param[@"groupId"]
                                                                       completion:^(BOOL inWhiteList, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"bool" callbackId:callId userInfo:[Transfrom DictToNSString:@{@"bool": @(inWhiteList)}]];
+            [weakSelf onSuccess:@"bool" callbackId:callId userInfo:@{@"bool": @(inWhiteList)}];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -251,7 +251,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager getGroupFileListWithId:param[@"groupId"]
                                                     pageNumber:[param[@"pageNum"] intValue]
@@ -259,7 +259,7 @@
                                                     completion:^(NSArray *aList, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:[Transfrom ArrayToNSString:aList]];
+            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:aList];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -271,7 +271,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager getGroupAnnouncementWithId:param[@"groupId"]
                                                         completion:^(NSString *aAnnouncement, EMError *aError)
@@ -290,16 +290,16 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
-    NSArray *members = [Transfrom ArrayFromNSString:param[@"members"]];
+    NSArray *members = [Transfrom NSStringToJsonObject:param[@"members"]];
     [EMClient.sharedClient.groupManager addMembers:members
                                            toGroup:param[@"groupId"]
                                            message:param[@"welcome"]
                                         completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[Transfrom DictToNSString:[aGroup toJson]]];
+            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -312,14 +312,14 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager removeMembers:param[@"members"]
                                             fromGroup:param[@"groupId"]
                                            completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[Transfrom DictToNSString:[aGroup toJson]]];
+            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -333,14 +333,14 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager blockMembers:param[@"members"]
                                            fromGroup:param[@"groupId"]
                                           completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[Transfrom DictToNSString:[aGroup toJson]]];
+            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -353,14 +353,14 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager unblockMembers:param[@"members"]
                                              fromGroup:param[@"groupId"]
                                             completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[Transfrom DictToNSString:[aGroup toJson]]];
+            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -373,14 +373,14 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager updateGroupSubject:param[@"name"]
                                                   forGroup:param[@"groupId"]
                                                 completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[Transfrom DictToNSString:[aGroup toJson]]];
+            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -393,14 +393,14 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager updateDescription:param[@"desc"]
                                                  forGroup:param[@"groupId"]
                                                completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[Transfrom DictToNSString:[aGroup toJson]]];
+            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -413,7 +413,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager leaveGroup:param[@"groupId"]
                                         completion:^(EMError *aError)
@@ -432,7 +432,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager destroyGroup:param[@"groupId"]
                                     finishCompletion:^(EMError *aError)
@@ -452,13 +452,13 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager blockGroup:param[@"groupId"]
                                         completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[Transfrom DictToNSString:[aGroup toJson]]];
+            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -471,13 +471,13 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager unblockGroup:param[@"groupId"]
                                           completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[Transfrom DictToNSString:[aGroup toJson]]];
+            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -490,14 +490,14 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager updateGroupOwner:param[@"groupId"]
                                                 newOwner:param[@"owner"]
                                               completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[Transfrom DictToNSString:[aGroup toJson]]];
+            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -510,14 +510,14 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager addAdmin:param[@"admin"]
                                          toGroup:param[@"groupId"]
                                       completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[Transfrom DictToNSString:[aGroup toJson]]];
+            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -530,14 +530,14 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager removeAdmin:param[@"admin"]
                                           fromGroup:param[@"groupId"]
                                          completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[Transfrom DictToNSString:[aGroup toJson]]];
+            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -550,7 +550,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager muteMembers:param[@"members"]
                                    muteMilliseconds:[param[@"duration"] integerValue]
@@ -558,7 +558,7 @@
                                          completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[Transfrom DictToNSString:[aGroup toJson]]];
+            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -571,14 +571,14 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager unmuteMembers:param[@"members"]
                                             fromGroup:param[@"groupId"]
                                            completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[Transfrom DictToNSString:[aGroup toJson]]];
+            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -591,13 +591,13 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager muteAllMembersFromGroup:param[@"groupId"]
                                                      completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[Transfrom DictToNSString:[aGroup toJson]]];
+            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -610,13 +610,13 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager unmuteAllMembersFromGroup:param[@"groupId"]
                                                        completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[Transfrom DictToNSString:[aGroup toJson]]];
+            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -629,13 +629,13 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager addWhiteListMembers:param[@"members"]
                                                   fromGroup:param[@"groupId"]
                                                  completion:^(EMGroup *aGroup, EMError *aError) {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[Transfrom DictToNSString:[aGroup toJson]]];
+            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -648,13 +648,13 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager removeWhiteListMembers:param[@"members"]
                                                      fromGroup:param[@"groupId"]
                                                     completion:^(EMGroup *aGroup, EMError *aError) {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[Transfrom DictToNSString:[aGroup toJson]]];
+            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -667,7 +667,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager uploadGroupSharedFileWithId:param[@"groupId"]
                                                            filePath:param[@"filePath"]
@@ -690,7 +690,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager downloadGroupSharedFileWithId:param[@"groupId"]
                                                              filePath:param[@"savePath"]
@@ -714,7 +714,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager removeGroupSharedFileWithId:param[@"groupId"]
                                                        sharedFileId:param[@"fileId"]
@@ -734,14 +734,14 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager updateGroupAnnouncementWithId:param[@"groupId"]
                                                          announcement:param[@"announcement"]
                                                            completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[Transfrom DictToNSString:[aGroup toJson]]];
+            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -755,14 +755,14 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager updateGroupExtWithId:param[@"groupId"]
                                                          ext:param[@"ext"]
                                                   completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[Transfrom DictToNSString:[aGroup toJson]]];
+            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -775,13 +775,13 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager joinPublicGroup:param[@"groupId"]
                                              completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[Transfrom DictToNSString:[aGroup toJson]]];
+            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -794,14 +794,14 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager requestToJoinPublicGroup:param[@"groupId"]
                                                          message:param[@"reason"]
                                                       completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[Transfrom DictToNSString:[aGroup toJson]]];
+            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -814,14 +814,14 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager approveJoinGroupRequest:param[@"groupId"]
                                                          sender:param[@"username"]
                                                      completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[Transfrom DictToNSString:[aGroup toJson]]];
+            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -834,7 +834,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager declineJoinGroupRequest:param[@"groupId"]
                                                          sender:param[@"username"]
@@ -842,7 +842,7 @@
                                                      completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[Transfrom DictToNSString:[aGroup toJson]]];
+            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -855,14 +855,14 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager acceptInvitationFromGroup:param[@"groupId"]
                                                           inviter:param[@"inviter"]
                                                        completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[Transfrom DictToNSString:[aGroup toJson]]];
+            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -875,7 +875,7 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager declineGroupInvitation:param[@"groupId"]
                                                        inviter:param[@"inviter"]
@@ -896,14 +896,14 @@
         [self onError:callbackId error:aError];
         return;
     }
-    __weak typeof(self) weakSelf = self;
+    __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.groupManager updatePushServiceForGroup:param[@"groupId"]
                                                     isPushEnabled:[param[@"enable"] boolValue]
                                                        completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[Transfrom DictToNSString:[aGroup toJson]]];
+            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }

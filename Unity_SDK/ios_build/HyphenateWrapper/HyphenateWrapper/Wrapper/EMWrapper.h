@@ -16,7 +16,7 @@ if ([NSThread isMainThread]) {\
 }
 
 @interface EMWrapper : NSObject
-- (void)onSuccess:(NSString *)aType callbackId:(NSString *)aCallbackId userInfo:(NSString *)jsonStr;
+- (void)onSuccess:(NSString *)aType callbackId:(NSString *)aCallbackId userInfo:(id)jsonObject;
 - (void)onProgress:(int)progress callbackId:(NSString *)aCallbackId;
 - (void)onError:(NSString *)aCallbackId error:(EMError *)aError;
 @end

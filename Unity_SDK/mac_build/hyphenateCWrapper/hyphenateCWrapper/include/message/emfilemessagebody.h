@@ -19,7 +19,7 @@
 #define __easemob__EMFileMessageBody__
 
 #include <string>
-#include "message/emmessagebody.h"
+#include "emmessagebody.h"
 
 namespace easemob {
 

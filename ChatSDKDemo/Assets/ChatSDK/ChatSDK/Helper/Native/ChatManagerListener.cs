@@ -10,6 +10,7 @@ namespace ChatSDK {
 
         internal void OnMessageReceived(string jsonString)
         {
+
             if (delegater != null)
             {
                 List<Message> list = TransformTool.JsonStringToMessageList(jsonString);
@@ -90,8 +91,8 @@ namespace ChatSDK {
                 }
             }
         }
-
-        internal void OnCoversationUpdate()
+        
+        internal void OnConversationUpdate(string str)
         {
             if (delegater != null)
             {

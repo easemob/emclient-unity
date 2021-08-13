@@ -1,98 +1,119 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-
-using ChatSDK;
 
 public class Main : MonoBehaviour
 {
-    // 接收消息id
-    public InputField RecvIdField;
-    // 输入内容
-    public InputField TextField;
-    // 发送按钮
-    public Button SendBtn;
-    // 群组id
-    public InputField GroupField;
-    // 加入群组按钮
-    public Button JoinGroupBtn;
-    // 获取群详情按钮
-    public Button GroupInfoBtn;
-    // 退出群组按钮
-    public Button LeaveGroupBtn;
-    // 聊天室id
-    public InputField RoomField;
-    // 加入聊天室按钮
-    public Button JoinRoomBtn;
-    // 获取聊天室按钮
-    public Button RoomInfoBtn;
-    // 退出聊天室按钮
-    public Button LeaveRoomBtn;
-
-
-    //public ScrollView scrollView;
-    public ScrollRect scrollRect;
-
-    IEnumerable<Toggle> ToggleGroup;
-
-
     // Start is called before the first frame update
+
+    private Button ChatBtn;
+    private Button ContactBtn;
+    private Button ConversationBtn;
+    private Button GroupBtn;
+    private Button RoomBtn;
+    private Button PushBtn;
+    private Button isConnectedBtn;
+    private Button isLoggedBtn;
+    private Button CurrentUsernameBtn;
+    private Button AccessTokenBtn;
+    private Button LogoutBtn;
+
+
+    private void Awake()
+    {
+
+        Debug.Log("main script has load");
+
+        ChatBtn = transform.Find("Panel/ChatBtn").GetComponent<Button>();
+        ContactBtn = transform.Find("Panel/ContactBtn").GetComponent<Button>();
+        ConversationBtn = transform.Find("Panel/ConversationBtn").GetComponent<Button>();
+        GroupBtn = transform.Find("Panel/GroupBtn").GetComponent<Button>();
+        RoomBtn = transform.Find("Panel/RoomBtn").GetComponent<Button>();
+        PushBtn = transform.Find("Panel/PushBtn").GetComponent<Button>();
+        isConnectedBtn = transform.Find("Panel/Panel/IsConnectBtn").GetComponent<Button>();
+        isLoggedBtn = transform.Find("Panel/Panel/IsLoggedBtn").GetComponent<Button>();
+        CurrentUsernameBtn = transform.Find("Panel/Panel/CurrentUsernameBtn").GetComponent<Button>();
+        AccessTokenBtn = transform.Find("Panel/Panel/AccessTokenBtn").GetComponent<Button>();
+        LogoutBtn = transform.Find("Panel/LogoutBtn").GetComponent<Button>();
+
+        ChatBtn.onClick.AddListener(ChatBtnAction);
+        ContactBtn.onClick.AddListener(ContactBtnAction);
+        ConversationBtn.onClick.AddListener(ConversationBtnAction);
+        GroupBtn.onClick.AddListener(GroupBtnAction);
+        RoomBtn.onClick.AddListener(RoomBtnAction);
+        PushBtn.onClick.AddListener(PushBtnAction);
+        isConnectedBtn.onClick.AddListener(isConnectedBtnAction);
+        isLoggedBtn.onClick.AddListener(isLoggedBtnAction);
+        CurrentUsernameBtn.onClick.AddListener(CurrentUsernameBtnAction);
+        AccessTokenBtn.onClick.AddListener(AccessTokenBtnAction);
+        LogoutBtn.onClick.AddListener(LogoutBtnAction);
+    }
+
+
+
+    void ChatBtnAction()
+    {
+        SceneManager.LoadSceneAsync("ChatManager");
+    }
+
+    void ContactBtnAction()
+    {
+        SceneManager.LoadSceneAsync("ContactManager");
+    }
+
+    void ConversationBtnAction()
+    {
+        SceneManager.LoadSceneAsync("ConversationManager");
+    }
+
+    void GroupBtnAction()
+    {
+        SceneManager.LoadSceneAsync("GroupManager");
+    }
+
+    void RoomBtnAction()
+    {
+        SceneManager.LoadSceneAsync("RoomManager");
+    }
+
+    void PushBtnAction()
+    {
+        SceneManager.LoadSceneAsync("PushManager");
+    }
+
+    void isConnectedBtnAction()
+    {
+
+    }
+
+    void isLoggedBtnAction()
+    {
+    }
+
+    void CurrentUsernameBtnAction()
+    {
+    }
+
+    void AccessTokenBtnAction()
+    {
+    }
+
+    void LogoutBtnAction()
+    {
+        SceneManager.LoadSceneAsync("Login");
+    }
+
+
+
     void Start()
     {
-        SendBtn.onClick.AddListener(SendMessageAction);
 
-        JoinGroupBtn.onClick.AddListener(JoinGroupAction);
-        GroupInfoBtn.onClick.AddListener(GetGroupInfoAction);
-        LeaveGroupBtn.onClick.AddListener(LeaveGroupAction);
-
-        JoinRoomBtn.onClick.AddListener(JoinRoomAction);
-        RoomInfoBtn.onClick.AddListener(GetRoomInfoAction);
-        LeaveRoomBtn.onClick.AddListener(LeaveRoomAction);
-
-        ToggleGroup = GameObject.Find("ToggleGroup").GetComponent<ToggleGroup>().ActiveToggles();
     }
 
     // Update is called once per frame
     void Update()
-    {
-        
-    }
-
-    void SendMessageAction()
-    {
-        string receiverId = RecvIdField.text;
-        string content = TextField.text;
-        IChatManager chatManager = SDKClient.Instance.ChatManager;
-        Message message = Message.CreateTextSendMessage(receiverId, content);
-        chatManager.SendMessage(message);       
-    }
-
-    void JoinGroupAction()
-    {
-
-    }
-
-    void GetGroupInfoAction()
-    {
-
-    }
-
-    void LeaveGroupAction()
-    {
-
-    }
-
-    void JoinRoomAction()
-    {
-
-    }
-
-    void GetRoomInfoAction()
-    {
-
-    }
-
-    void LeaveRoomAction()
     {
 
     }

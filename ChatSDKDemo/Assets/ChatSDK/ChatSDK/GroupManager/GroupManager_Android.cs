@@ -1,37 +1,35 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SimpleJSON;
 
 namespace ChatSDK
 {
     public class GroupManager_Android : IGroupManager
     {
 
-        static string GroupManagerListener_Obj = "unity_chat_emclient_groupmanager_delegate_obj";
-
         private AndroidJavaObject wrapper;
-
-        GameObject listenerGameObj;
 
         public GroupManager_Android()
         {
             using (AndroidJavaClass aj = new AndroidJavaClass("com.hyphenate.unity_chat_sdk.EMGroupManagerWrapper"))
             {
-                listenerGameObj = new GameObject(GroupManagerListener_Obj);
-                GroupManagerListener listener = listenerGameObj.AddComponent<GroupManagerListener>();
-                listener.delegater = Delegate;
                 wrapper = aj.CallStatic<AndroidJavaObject>("wrapper");
             }
         }
 
-        public override void AcceptInvitationFromGroup(string groupId, string inviter, ValueCallBack<Group> handle = null)
+        public override void applyJoinToGroup(string groupId, string reason, CallBack handle = null) {
+            wrapper.Call("", groupId, reason, handle?.callbackId);
+        }
+
+        public override void AcceptInvitationFromGroup(string groupId, ValueCallBack<Group> handle = null)
         {
-            wrapper.Call("acceptInvitationFromGroup", groupId, inviter, handle?.callbackId);
+            wrapper.Call("acceptInvitationFromGroup", groupId, handle?.callbackId);
         }
 
         public override void AcceptJoinApplication(string groupId, string username, CallBack handle = null)
         {
-            wrapper.Call("acceptInvitationFromGroup", groupId, username, handle?.callbackId);
+            wrapper.Call("acceptJoinApplication", groupId, username, handle?.callbackId);
         }
 
         public override void AddAdmin(string groupId, string memberId, ValueCallBack<Group> handle = null)
@@ -61,17 +59,17 @@ namespace ChatSDK
 
         public override void ChangeGroupDescription(string groupId, string desc, CallBack handle = null)
         {
-            wrapper.Call("updateDescription", groupId, desc, handle?.callbackId);
+            wrapper.Call("changeGroupDescription", groupId, desc, handle?.callbackId);
         }
 
         public override void ChangeGroupName(string groupId, string name, CallBack handle = null)
         {
-            wrapper.Call("updateGroupSubject", groupId, name, handle?.callbackId);
+            wrapper.Call("changeGroupSubject", groupId, name, handle?.callbackId);
         }
 
         public override void ChangeGroupOwner(string groupId, string newOwner, ValueCallBack<Group> handle = null)
         {
-            wrapper.Call("updateGroupOwner", groupId, newOwner, handle?.callbackId);
+            wrapper.Call("changeGroupOwner", groupId, newOwner, handle?.callbackId);
         }
 
         public override void CheckIfInGroupWhiteList(string groupId, ValueCallBack<bool> handle = null)
@@ -84,9 +82,9 @@ namespace ChatSDK
             wrapper.Call("createGroup", groupName, options.ToJsonString(), desc, TransformTool.JsonStringFromStringList(inviteMembers), inviteReason, handle?.callbackId);
         }
 
-        public override void DeclineInvitationFromGroup(string groupId, string username, string reason = null, CallBack handle = null)
+        public override void DeclineInvitationFromGroup(string groupId,string reason = null, CallBack handle = null)
         {
-            wrapper.Call("declineInvitationFromGroup", groupId, username, reason, handle?.callbackId);
+            wrapper.Call("declineInvitationFromGroup", groupId, reason, handle?.callbackId);
         }
 
         public override void DeclineJoinApplication(string groupId, string username, string reason = null, CallBack handle = null)
@@ -135,24 +133,26 @@ namespace ChatSDK
             wrapper.Call("getGroupSpecificationFromServer", groupId, handle?.callbackId);
         }
 
-        public override void GetGroupsWithoutNotice(ValueCallBack<List<string>> handle = null)
-        {
-            wrapper.Call("getGroupsWithoutPushNotification", handle?.callbackId);
-        }
-
         public override void GetGroupWhiteListFromServer(string groupId, ValueCallBack<List<string>> handle = null)
         {
             wrapper.Call("getGroupWhiteListFromServer", groupId, handle?.callbackId);
         }
 
-        public override void GetGroupWithId(string groupId, ValueCallBack<Group> handle = null)
+        public override Group GetGroupWithId(string groupId)
         {
-            wrapper.Call("getGroupWithId", groupId, handle?.callbackId);
+            string jsonString = wrapper.Call<string>("getGroupWithId", groupId);
+            if (jsonString == null || jsonString.Length == 0) {
+                return null;
+            }
+
+            return new Group(jsonString);
+
         }
 
-        public override void GetJoinedGroups(ValueCallBack<List<Group>> handle = null)
+        public override List<Group> GetJoinedGroups()
         {
-            wrapper.Call("getJoinedGroups", handle?.callbackId);
+            string jsonString = wrapper.Call<string>("getJoinedGroups");
+            return TransformTool.JsonStringToGroupList(jsonString);
         }
 
         public override void GetJoinedGroupsFromServer(int pageNum = 1, int pageSize = 200, ValueCallBack<List<Group>> handle = null)
@@ -165,11 +165,6 @@ namespace ChatSDK
             wrapper.Call("getPublicGroupsFromServer", pageSize, cursor, handle?.callbackId);
         }
 
-        public override void IgnoreGroupPush(string groupId, bool enable = true, ValueCallBack<Group> handle = null)
-        {
-            wrapper.Call("ignoreGroupPush", groupId, enable, handle?.callbackId);
-        }
-
         public override void JoinPublicGroup(string groupId, CallBack handle = null)
         {
             wrapper.Call("joinPublicGroup", groupId, handle?.callbackId);
@@ -180,7 +175,7 @@ namespace ChatSDK
             wrapper.Call("leaveGroup", groupId, handle?.callbackId);
         }
 
-        public override void MuteAllMembers(string groupId, CallBack handle = null)
+        public override void MuteAllMembers(string groupId, ValueCallBack<Group> handle = null)
         {
             wrapper.Call("muteAllMembers", groupId, handle?.callbackId);
         }
@@ -210,22 +205,17 @@ namespace ChatSDK
             wrapper.Call("removeWhiteList", groupId, TransformTool.JsonStringFromStringList(members), handle?.callbackId);
         }
 
-        public override void RequestToJoinPublicGroup(string groupId, CallBack handle = null)
-        {
-            wrapper.Call("requestToJoinPublicGroup", groupId, handle?.callbackId);
-        }
-
-        public override void UnblockGroup(string groupId, CallBack handle = null)
+        public override void UnBlockGroup(string groupId, CallBack handle = null)
         {
             wrapper.Call("unblockGroup", groupId, handle?.callbackId);
         }
 
-        public override void UnblockMembers(string groupId, List<string> members, CallBack handle = null)
+        public override void UnBlockMembers(string groupId, List<string> members, CallBack handle = null)
         {
             wrapper.Call("unblockMembers", groupId, TransformTool.JsonStringFromStringList(members), handle?.callbackId);
         }
 
-        public override void UnMuteAllMembers(string groupId, CallBack handle = null)
+        public override void UnMuteAllMembers(string groupId, ValueCallBack<Group> handle = null)
         {
             wrapper.Call("unMuteAllMembers", groupId, handle?.callbackId);
         }
