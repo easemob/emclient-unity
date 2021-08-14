@@ -20,6 +20,7 @@
 #include "emconnection_listener.h"
 #include "emmultidevicescallbackinterface.h"
 #include "emdeviceinfo.h"
+#include "empushmanager_interface.h"
 
 namespace easemob {
     
@@ -175,6 +176,15 @@ namespace easemob {
          * @return Chatroom manager instance.
          */
         EMChatroomManagerInterface&   getChatroomManager();
+        
+        
+        /**
+         * \brief Get push manager to manage the push config.
+         *
+         * @param  NA
+         * @return Push manager instance.
+         */
+        EMPushManagerInterface& getPushManager();
         
         /**
          * \brief Get call manager to handle the voice/video call.

@@ -246,7 +246,7 @@ namespace ChatSDK
                 handle?.Error);
         }
 
-        public override void FetchRoomMembers(string roomId, string cursor = null, int pageSize = 200, ValueCallBack<CursorResult<string>> handle = null)
+        public override void FetchRoomMembers(string roomId, string cursor = "", int pageSize = 200, ValueCallBack<CursorResult<string>> handle = null)
         {
             ChatAPINative.RoomManager_FetchChatroomMembers(client, roomId, cursor, pageSize,
                 (IntPtr[] cursorResult, DataType dType, int size) => {
@@ -308,10 +308,26 @@ namespace ChatSDK
 
         public override void JoinRoom(string roomId, ValueCallBack<Room> handle = null)
         {
-            // TODO: change callback value to room.
             ChatAPINative.RoomManager_JoinChatroom(client, roomId,
-                onSuccess: () => handle?.Success(),
-                onError: (int code, string desc) => handle?.Error(code, desc));
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
+                    if (dType == DataType.Room)
+                    {
+                        if(0 == dSize)
+                        {
+                            Debug.Log("No room information returned.");
+                            handle?.OnSuccessValue(null);
+                            return;
+                        }
+                        
+                        var result = Marshal.PtrToStructure<RoomTO>(data[0]);
+                        handle?.OnSuccessValue(result.RoomInfo());
+                    }
+                    else
+                    {
+                        Debug.LogError($"Group information expected.");
+                    }
+                },
+                handle?.Error);
         }
 
         public override void LeaveRoom(string roomId, CallBack handle = null)
@@ -348,8 +364,25 @@ namespace ChatSDK
         public override void RemoveRoomAdmin(string roomId, string adminId, ValueCallBack<Room> handle = null)
         {
             ChatAPINative.RoomManager_RemoveChatroomAdmin(client, roomId,
-                onSuccess: () => handle?.Success(),
-                onError: (int code, string desc) => handle?.Error(code, desc));
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
+                    if (dType == DataType.Room)
+                    {
+                        if (0 == dSize)
+                        {
+                            Debug.Log("No room information returned.");
+                            handle?.OnSuccessValue(null);
+                            return;
+                        }
+
+                        var result = Marshal.PtrToStructure<RoomTO>(data[0]);
+                        handle?.OnSuccessValue(result.RoomInfo());
+                    }
+                    else
+                    {
+                        Debug.LogError($"Group information expected.");
+                    }
+                },
+                handle?.Error);
         }
 
         public override void RemoveRoomMembers(string roomId, List<string> members, CallBack handle = null)

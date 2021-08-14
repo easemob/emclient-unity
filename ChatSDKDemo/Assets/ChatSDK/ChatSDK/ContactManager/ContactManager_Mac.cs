@@ -57,33 +57,37 @@ namespace ChatSDK
                 (int code, string desc) => handle?.Error(code, desc));
         }
 
-        // TODO: dujiepeng
         public override List<string> GetAllContactsFromDB()
         {
-            return null;
-            //ChatAPINative.ContactManager_GetContactsFromDB(client,
-            //    (IntPtr[] contactsResult, DataType dType, int size) =>
-            //    {
-            //        Debug.Log($"GetAllContactsFromDB callback with dType={dType}, size={size}");
-            //        //Verify parameter
-            //        if (dType == DataType.ListOfString && size == 1)
-            //        {
-            //            var contactTOArray = Marshal.PtrToStructure<TOArray>(contactsResult[0]);
-            //            var result = new List<string>();
-            //            int toSize = contactTOArray.Size;
-            //            for (int i = 0; i < toSize; i++)
-            //            {
-            //                result.Add(Marshal.PtrToStringAnsi(contactTOArray.Data[i]));
-            //            }
-            //            handle?.OnSuccessValue(result);
-            //        }
-            //        else
-            //        {
-            //            Debug.LogError("Incorrect delegate parameters returned.");
-            //        }
-            //    },
+            //make a array of IntPtr(point to TOArray)
+            TOArray toArray = new TOArray();
+            IntPtr intPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(toArray));
+            Marshal.StructureToPtr(toArray, intPtr, false);
+            var array = new IntPtr[1];
+            array[0] = intPtr;
 
-            //    (int code, string desc) => handle?.Error(code, desc));
+            ChatAPINative.ContactManager_GetContactsFromDB(client, array, 1);
+
+            //get data from IntPtr
+            var returnTOArray = Marshal.PtrToStructure<TOArray>(array[0]);
+            var stringList = new List<string>();
+
+            //cannot get any message
+            if (returnTOArray.Size <= 0)
+            {
+                Debug.Log($"Cannot find any contacts.");
+                Marshal.FreeCoTaskMem(intPtr);
+                return stringList;
+            }
+
+            
+            for (int i=0; i< returnTOArray.Size; i++)
+            {
+                stringList.Add(Marshal.PtrToStringAnsi(returnTOArray.Data[i]));
+            }
+            ChatAPINative.ContactManager_ReleaseStringList(array, 1);
+            Marshal.FreeCoTaskMem(intPtr);
+            return stringList;
         }
 
         public override void GetAllContactsFromServer(ValueCallBack<List<string>> handle = null)

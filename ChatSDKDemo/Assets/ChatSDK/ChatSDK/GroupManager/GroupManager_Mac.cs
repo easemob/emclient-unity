@@ -273,6 +273,9 @@ namespace ChatSDK
                     }
                     else
                     {
+                        if(0 == dSize)
+                            Debug.Log("No member in BlockList.");
+                        else
                         Debug.LogError($"Group information expected.");
                     }
                 },
@@ -296,13 +299,16 @@ namespace ChatSDK
                     }
                     else
                     {
+                        if (0 == dSize)
+                            Debug.Log("No file exist in group.");
+                        else
                         Debug.LogError($"Group information expected.");
                     }
                 },
                 handle?.Error);
         }
 
-        public override void GetGroupMemberListFromServer(string groupId, int pageSize = 200, string cursor = null, ValueCallBack<CursorResult<string>> handle = null)
+        public override void GetGroupMemberListFromServer(string groupId, int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<string>> handle = null)
         {
             ChatAPINative.GroupManager_FetchGroupMembers(client, groupId, pageSize, cursor,
                 (IntPtr[] cursorResult, DataType dType, int size) => {
@@ -313,6 +319,7 @@ namespace ChatSDK
                         if (cursorResultTO.Type == DataType.ListOfString)
                         {
                             var result = new CursorResult<String>();
+                            result.Data = new List<string>();
                             result.Cursor = cursorResultTO.NextPageCursor;
                             int itemSize = cursorResultTO.Size;
 
@@ -401,48 +408,66 @@ namespace ChatSDK
               handle?.Error);
         }
 
-        // TODO:
         public override Group GetGroupWithId(string groupId)
         {
-            return null;
-            //ChatAPINative.GroupManager_GetGroupWithId(client, groupId,
-            //    onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
-            //        if (dType == DataType.Group && dSize == 1)
-            //        {
-            //            var result = Marshal.PtrToStructure<GroupTO>(data[0]);
-            //            handle?.OnSuccessValue(result.GroupInfo());
-            //        }
-            //        else
-            //        {
-            //            Debug.LogError($"Group information expected.");
-            //        }
-            //    },
-            //    handle?.OnError); 
+            //make a array of IntPtr(point to TOArray)
+            TOArray toArray = new TOArray();
+            IntPtr intPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(toArray));
+            Marshal.StructureToPtr(toArray, intPtr, false);
+            var array = new IntPtr[1];
+            array[0] = intPtr;
+
+            ChatAPINative.GroupManager_GetGroupWithId(client,groupId, array, 1);
+
+            //get data from IntPtr
+            var returnTOArray = Marshal.PtrToStructure<TOArray>(array[0]);
+
+            //cannot get any message
+            if (returnTOArray.Size == 0)
+            {
+                Debug.Log($"Cannot find any group with id {groupId}");
+                Marshal.FreeCoTaskMem(intPtr);
+                return null;
+            }
+
+            var groupTO = Marshal.PtrToStructure<GroupTO>(returnTOArray.Data[0]);
+            ChatAPINative.GroupManager_ReleaseGroupList(array, 1);
+            Marshal.FreeCoTaskMem(intPtr);
+            return groupTO.GroupInfo();
         }
 
-        // TODO:
         public override List<Group> GetJoinedGroups()
         {
+            //make a array of IntPtr(point to TOArray)
+            TOArray toArray = new TOArray();
+            IntPtr intPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(toArray));
+            Marshal.StructureToPtr(toArray, intPtr, false);
+            var array = new IntPtr[1];
+            array[0] = intPtr;
 
-            return null;
-            //ChatAPINative.GroupManager_LoadAllMyGroupsFromDB(client,
-            //  onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
-            //      List<Group> groupList = new List<Group>();
-            //      if (dType == DataType.ListOfGroup && dSize > 0)
-            //      {
-            //          for (int i = 0; i < dSize; i++)
-            //          {
-            //              var result = Marshal.PtrToStructure<GroupTO>(data[i]);
-            //              groupList.Add(result.GroupInfo());
-            //          }
-            //          handle?.OnSuccessValue(groupList);
-            //      }
-            //      else
-            //      {
-            //          Debug.LogError($"Group information expected.");
-            //      }
-            //  },
-            //  handle?.OnError);
+            ChatAPINative.GroupManager_LoadAllMyGroupsFromDB(client, array, 1);
+
+            //get data from IntPtr
+            var returnTOArray = Marshal.PtrToStructure<TOArray>(array[0]);
+
+            //cannot get any message
+            if (returnTOArray.Size == 0)
+            {
+                Debug.Log($"Cannot find any group with id LoadAllMyGroupsFromDB");
+                Marshal.FreeCoTaskMem(intPtr);
+                return (new List<Group>());
+            }
+
+            var result = new List<Group>();
+            for(int i=0; i< returnTOArray.Size; i++)
+            {
+                var groupTO = Marshal.PtrToStructure<GroupTO>(returnTOArray.Data[i]);
+                result.Add(groupTO.GroupInfo());
+            }
+            
+            ChatAPINative.GroupManager_ReleaseGroupList(array, 1);
+            Marshal.FreeCoTaskMem(intPtr);
+            return result;
         }
 
         public override void GetJoinedGroupsFromServer(int pageNum = 1, int pageSize = 200, ValueCallBack<List<Group>> handle = null)
@@ -467,7 +492,7 @@ namespace ChatSDK
               handle?.Error);
         }
 
-        public override void GetPublicGroupsFromServer(int pageSize = 200, string cursor = null, ValueCallBack<CursorResult<GroupInfo>> handle = null)
+        public override void GetPublicGroupsFromServer(int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<GroupInfo>> handle = null)
         {
             ChatAPINative.GroupManager_FetchPublicGroupsWithCursor(client, pageSize, cursor,
                 (IntPtr[] cursorResult, DataType dType, int size) => {
@@ -475,9 +500,10 @@ namespace ChatSDK
                     if (dType == DataType.CursorResult && size == 1)
                     {
                         var cursorResultTO = Marshal.PtrToStructure<CursorResultTO>(cursorResult[0]);
-                        if (cursorResultTO.Type == DataType.ListOfString)
+                        if (cursorResultTO.Type == DataType.ListOfGroup)
                         {
                             var result = new CursorResult<GroupInfo>();
+                            result.Data = new List<GroupInfo>();
                             result.Cursor = cursorResultTO.NextPageCursor;
                             int itemSize = cursorResultTO.Size;
 
@@ -523,8 +549,21 @@ namespace ChatSDK
         public override void MuteAllMembers(string groupId, ValueCallBack<Group> handle = null)
         {
             ChatAPINative.GroupManager_MuteAllGroupMembers(client, groupId,
-               onSuccess: () => handle?.Success(),
-               onError: (int code, string desc) => handle?.Error(code, desc));
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
+                    if (dType == DataType.Group && 1 == dSize)
+                    {
+                        var result = Marshal.PtrToStructure<GroupTO>(data[0]);
+                        handle?.OnSuccessValue(result.GroupInfo());
+                    }
+                    else
+                    {
+                        if(0 == dSize)
+                            Debug.LogError($"Empty Group.");
+                        else
+                            Debug.LogError($"Group information expected.");
+                    }
+                },
+                handle?.Error);
         }
 
         public override void MuteMembers(string groupId, List<string> members, ValueCallBack<Group> handle = null)
@@ -550,7 +589,10 @@ namespace ChatSDK
                     }
                     else
                     {
-                        Debug.LogError($"Group information expected.");
+                        if (0 == dSize)
+                            Debug.LogError($"Empty Group.");
+                        else
+                            Debug.LogError($"Group information expected.");
                     }
                 },
                 handle?.Error);
@@ -640,8 +682,21 @@ namespace ChatSDK
         public override void UnMuteAllMembers(string groupId, ValueCallBack<Group> handle = null)
         {
             ChatAPINative.GroupManager_UnMuteAllMembers(client, groupId,
-               onSuccess: () => handle?.Success(),
-               onError: (int code, string desc) => handle?.Error(code, desc));
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
+                    if (dType == DataType.Group && 1 == dSize)
+                    {
+                        var result = Marshal.PtrToStructure<GroupTO>(data[0]);
+                        handle?.OnSuccessValue(result.GroupInfo());
+                    }
+                    else
+                    {
+                        if (0 == dSize)
+                            Debug.LogError($"Empty Group.");
+                        else
+                            Debug.LogError($"Group information expected.");
+                    }
+                },
+                handle?.Error);
         }
 
         public override void UnMuteMembers(string groupId, List<string> members, ValueCallBack<Group> handle = null)

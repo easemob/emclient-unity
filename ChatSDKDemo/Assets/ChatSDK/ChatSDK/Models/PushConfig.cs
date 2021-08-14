@@ -1,16 +1,17 @@
 ﻿using System;
 using SimpleJSON;
+using System.Runtime.InteropServices;
 
 namespace ChatSDK {
-    /// <summary>
-    /// 推送配置
-    /// </summary>
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public class PushConfig
     {
         /// <summary>
         /// 免打扰
         /// </summary>
-        public bool NoDisturb { get; internal set; }
+        [MarshalAs(UnmanagedType.U1)]
+        public bool NoDisturb;
+        //public bool NoDisturb { get; internal set; }
 
         /// <summary>
         /// 免打扰开始时间
