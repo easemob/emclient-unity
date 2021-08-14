@@ -357,8 +357,8 @@ struct TOArray
 struct TOArrayDiff
 {
     int Size;
-    void * Data[32];
-    int Type[32];
+    void * Data[200];
+    int Type[200];
 };
 
 #endif //_MODELS_H_

@@ -165,6 +165,7 @@ namespace ChatSDK
 
         public override void FetchPublicRoomsFromServer(int pageNum = 1, int pageSize = 200, ValueCallBack<PageResult<Room>> handle = null)
         {
+            if (pageSize > 200) pageSize = 200;
             ChatAPINative.RoomManager_FetchChatroomsWithPage(client, pageNum, pageSize,
                 (IntPtr[] data, DataType dType, int size) => {
                     Debug.Log($"FetchPublicRoomsFromServer callback with dType={dType}, size={size}.");
@@ -208,6 +209,7 @@ namespace ChatSDK
 
         public override void FetchRoomBlockList(string roomId, int pageNum = 1, int pageSize = 200, ValueCallBack<List<string>> handle = null)
         {
+            if (pageSize > 200) pageSize = 200;
             ChatAPINative.RoomManager_FetchChatroomBans(client, roomId, pageNum, pageSize,
                 onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
                     List<string> banList = new List<string>();
@@ -248,6 +250,7 @@ namespace ChatSDK
 
         public override void FetchRoomMembers(string roomId, string cursor = "", int pageSize = 200, ValueCallBack<CursorResult<string>> handle = null)
         {
+            if (pageSize > 200) pageSize = 200;
             ChatAPINative.RoomManager_FetchChatroomMembers(client, roomId, cursor, pageSize,
                 (IntPtr[] cursorResult, DataType dType, int size) => {
                     Debug.Log($"FetchRoomMembers callback with dType={dType}, size={size}.");
@@ -284,6 +287,7 @@ namespace ChatSDK
 
         public override void FetchRoomMuteList(string roomId, int pageSize = 1, int pageNum = 200, ValueCallBack<List<string>> handle = null)
         {
+            if (pageSize > 200) pageSize = 200;
             ChatAPINative.RoomManager_FetchChatroomMutes(client, roomId, pageNum, pageSize,
                 onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
                     List<string> muteList = new List<string>();

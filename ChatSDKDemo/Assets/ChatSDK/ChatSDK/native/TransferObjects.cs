@@ -899,7 +899,7 @@ namespace ChatSDK
     {
         public DataType Type;
         public int Size;
-        [MarshalAs(UnmanagedType.ByValArray)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 200)]
         public IntPtr[] Data; //list of data
     }
 
@@ -907,9 +907,9 @@ namespace ChatSDK
     public class TOArrayDiff
     {
         public int Size;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 200)]
         public IntPtr[] Data; //list of data
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 200)]
         public int[] Type; //list of type
     }
 }

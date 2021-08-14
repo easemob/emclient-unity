@@ -258,6 +258,7 @@ namespace ChatSDK
 
         public override void GetGroupBlockListFromServer(string groupId, int pageNum = 1, int pageSize = 200, ValueCallBack<List<string>> handle = null)
         {
+            if (pageSize > 200) pageSize = 200;
             ChatAPINative.GroupManager_FetchGroupBans(client, groupId, pageNum, pageSize,
                 onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
                     List<string> banList = new List<string>();
@@ -284,6 +285,7 @@ namespace ChatSDK
 
         public override void GetGroupFileListFromServer(string groupId, int pageNum = 1, int pageSize = 200, ValueCallBack<List<GroupSharedFile>> handle = null)
         {
+            if (pageSize > 200) pageSize = 200;
             ChatAPINative.GroupManager_FetchGroupSharedFiles(client, groupId, pageNum, pageSize,
                 onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
                     List<GroupSharedFile> fileList = new List<GroupSharedFile>();
@@ -310,6 +312,7 @@ namespace ChatSDK
 
         public override void GetGroupMemberListFromServer(string groupId, int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<string>> handle = null)
         {
+            if (pageSize > 200) pageSize = 200;
             ChatAPINative.GroupManager_FetchGroupMembers(client, groupId, pageSize, cursor,
                 (IntPtr[] cursorResult, DataType dType, int size) => {
                     Debug.Log($"GetGroupMemberListFromServer callback with dType={dType}, size={size}.");
@@ -347,6 +350,7 @@ namespace ChatSDK
 
         public override void GetGroupMuteListFromServer(string groupId, int pageNum = 1, int pageSize = 200, ValueCallBack<List<string>> handle = null)
         {
+            if (pageSize > 200) pageSize = 200;
             ChatAPINative.GroupManager_FetchGroupMutes(client, groupId, pageNum, pageSize,
                 onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
                     List<string> muteList = new List<string>();
@@ -472,6 +476,7 @@ namespace ChatSDK
 
         public override void GetJoinedGroupsFromServer(int pageNum = 1, int pageSize = 200, ValueCallBack<List<Group>> handle = null)
         {
+            if (pageSize > 200) pageSize = 200;
             ChatAPINative.GroupManager_FetchAllMyGroupsWithPage(client, pageNum, pageSize,
               onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
                   List<Group> groupList = new List<Group>();
@@ -494,6 +499,7 @@ namespace ChatSDK
 
         public override void GetPublicGroupsFromServer(int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<GroupInfo>> handle = null)
         {
+            if (pageSize > 200) pageSize = 200;
             ChatAPINative.GroupManager_FetchPublicGroupsWithCursor(client, pageSize, cursor,
                 (IntPtr[] cursorResult, DataType dType, int size) => {
                     Debug.Log($"GetPublicGroupsFromServer callback with dType={dType}, size={size}.");
