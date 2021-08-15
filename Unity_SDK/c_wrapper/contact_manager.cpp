@@ -32,7 +32,20 @@ AGORA_API void ContactManager_AddListener(void *client,
 
 AGORA_API void ContactManager_AddContact(void *client, const char* username, const char* reason, FUNC_OnSuccess onSuccess, FUNC_OnError onError) {
     EMError error;
-    CLIENT->getContactManager().inviteContact(username, reason, error);
+    //param check
+    if(nullptr == username) {
+        error.setErrorCode(EMError::INVALID_USER_NAME);
+        error.mDescription = "User name is illegal";
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    
+    std::string reasonStr = "";
+    if(nullptr != reason) {
+        reasonStr.append(reason);
+    }
+    
+    CLIENT->getContactManager().inviteContact(username, reasonStr, error);
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
         LOG("AddContact success.");
         if(onSuccess) onSuccess();
@@ -71,22 +84,29 @@ AGORA_API void ContactManager_GetContactsFromServer(void *client, FUNC_OnSuccess
     }
 }
 
-AGORA_API void ContactManager_GetContactsFromDB(void *client, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError) {
+AGORA_API void ContactManager_GetContactsFromDB(void *client, void * array[], int size) {
     EMError error;
+    TOArray* toArray = (TOArray*)array[0];
     vector<std::string> vec = CLIENT->getContactManager().getContactsFromDB(error);
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
         LOG("GetContactsFromDB success.");
         size_t size = vec.size();
-        auto contactTOArray = new TOArray();
-        TOArray *data[1] = {contactTOArray};
-        data[0]->Type = DataType::ListOfString;
-        data[0]->Size = (int)size;
-        for(int i=0; i<size; i++) {
-            data[0]->Data[i] = (void*)(vec[i].c_str());
+        if(0 == size) {
+            toArray->Size = 0;
+            return;
+        } else {
+            toArray->Type = DataType::ListOfString;
+            toArray->Size = (int)size;
+            for(int i=0; i<size; i++) {
+                char* p = new char[vec[i].size() + 1];
+                strncpy(p, vec[i].c_str(), vec[i].size() + 1);
+                toArray->Data[i] = (void*)p;
+            }
         }
-        onSuccess((void**)data, DataType::ListOfString, 1);
     } else {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        LOG("GetContactsFromDB failed with error:%d, desc:%s.", error.mErrorCode, error.mDescription.c_str());
+        toArray->Size = 0;
+        return;
     }
 }
 
@@ -175,5 +195,17 @@ AGORA_API void ContactManager_GetSelfIdsOnOtherPlatform(void *client, FUNC_OnSuc
         onSuccess((void**)data, DataType::ListOfString, 1);
     } else {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+    }
+}
+
+AGORA_API void ContactManager_ReleaseStringList(void * stringArray[], int size)
+{
+    if(size != 1) return;
+    TOArray* toArray = (TOArray*)stringArray[0];
+    
+    if(toArray->Size > 0) {
+        for(int i=0; i<toArray->Size; i++) {
+            delete (char*)toArray->Data[i];
+        }
     }
 }

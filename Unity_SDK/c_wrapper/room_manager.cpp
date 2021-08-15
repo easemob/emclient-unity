@@ -35,6 +35,7 @@ AGORA_API void RoomManager_AddRoomAdmin(void * client, const char * roomId, cons
             RoomTO *data[1] = {datum};
             datum->LogInfo();
             onSuccess((void **)data, DataType::Room, 1);
+            delete datum;
         }
     }else{
         //error
@@ -60,6 +61,7 @@ AGORA_API void RoomManager_BlockChatroomMembers(void * client, const char * room
             RoomTO *data[1] = {datum};
             datum->LogInfo();
             onSuccess((void **)data, DataType::Room, 1);
+            delete datum;
         }
     }else{
         //error
@@ -84,6 +86,7 @@ AGORA_API void RoomManager_CreateRoom(void *client, const char * subject, const 
         if(onSuccess) {
             RoomTO *data[1] = {RoomTO::FromEMChatRoom(result)};
             onSuccess((void **)data, DataType::Room, 1);
+            delete (RoomTO*)data[0];
         }
     }else{
         //error
@@ -105,6 +108,7 @@ AGORA_API void RoomManager_ChangeRoomSubject(void *client, const char * roomId, 
             RoomTO *data[1] = {datum};
             datum->LogInfo();
             onSuccess((void **)data, DataType::Room, 1);
+            delete datum;
         }
     }else{
         //error
@@ -149,6 +153,7 @@ AGORA_API void RoomManager_TransferChatroomOwner(void * client, const char * roo
             RoomTO *data[1] = {datum};
             datum->LogInfo();
             onSuccess((void **)data, DataType::Room, 1);
+            delete datum;
         }
     }else{
         //error
@@ -170,6 +175,7 @@ AGORA_API void RoomManager_ChangeChatroomDescription(void * client, const char *
             RoomTO *data[1] = {datum};
             datum->LogInfo();
             onSuccess((void **)data, DataType::Room, 1);
+            delete datum;
         }
     }else{
         //error
@@ -206,11 +212,13 @@ AGORA_API void RoomManager_FetchChatroomsWithPage(void *client, int pageNum, int
             int size = (int)pageResult.result().size();
             RoomTO* data[size];
             for(int i=0; i<size; i++) {
-                EMChatroomPtr charRoomPtr((EMChatroom*)pageResult.result().at(i).get());
+                EMChatroomPtr charRoomPtr = std::dynamic_pointer_cast<EMChatroom>(pageResult.result().at(i));
                 data[i] = RoomTO::FromEMChatRoom(charRoomPtr);
             }
             onSuccess((void **)data, DataType::Room, (int)size);
-            //NOTE: NO need to release mem. after onSuccess call, managed side would free them.
+            for(int i=0; i<size; i++) {
+                delete (RoomTO*)data[i];
+            }
         }
     }else{
         //error
@@ -228,9 +236,8 @@ AGORA_API void RoomManager_FetchChatroomAnnouncement(void *client, const char * 
         //succees
         LOG("RoomManager_FetchChatroomAnnouncement succeeds: %s", roomId);
         if(onSuccess) {
-            char* ptr = new char[announcement.size()+1];
-            strncpy(ptr, announcement.c_str(), announcement.size()+1);
-            char *data[1] = {ptr};
+            const char *data[1];
+            data[0]= announcement.c_str();
             onSuccess((void **)data, DataType::String, 1);
         }
     }else{
@@ -252,9 +259,7 @@ AGORA_API void RoomManager_FetchChatroomBans(void *client, const char * roomId, 
             size_t size = banList.size();
             const char * data[size];
             for(size_t i=0; i<size; i++) {
-                char* ptr = new char[banList[i].size()+1];
-                strncpy(ptr, banList[i].c_str(), banList[i].size()+1);
-                data[i] = ptr;
+                data[i] = banList[i].c_str();
             }
             onSuccess((void **)data, DataType::String, (int)size);
         }
@@ -278,6 +283,7 @@ AGORA_API void RoomManager_FetchChatroomSpecification(void * client, const char 
             RoomTO *data[1] = {datum};
             datum->LogInfo();
             onSuccess((void **)data, DataType::Room, 1);
+            delete (RoomTO*)datum;
         }
     }else{
         //error
@@ -294,18 +300,15 @@ AGORA_API void RoomManager_FetchChatroomMembers(void * client, const char * room
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
         //success
         if(onSuccess) {
-            auto cursorResultTo = new CursorResultTO();
-            CursorResultTO *data[1] = {cursorResultTo};
+            CursorResultTO cursorResultTo;
+            CursorResultTO *data[1] = {&cursorResultTo};
             data[0]->NextPageCursor = msgCursorResult.nextPageCursor().c_str();
             size_t size = msgCursorResult.result().size();
             data[0]->Type = DataType::ListOfString;
             data[0]->Size = (int)size;
-            //copy string
+            
             for(int i=0; i<size; i++) {
-                std::string member = msgCursorResult.result().at(i);
-                char* ptr = new char[member.size()+1];
-                strncpy(ptr, member.c_str(), member.size()+1);
-                data[0]->Data[i] = ptr;
+                data[0]->Data[i] = (void*)msgCursorResult.result().at(i).c_str();
             }
             onSuccess((void **)data, DataType::CursorResult, 1);
             //NOTE: NO need to release mem. after onSuccess call, managed side would free them.
@@ -329,9 +332,7 @@ AGORA_API void RoomManager_FetchChatroomMutes(void * client, const char * roomId
             size_t size = muteList.size();
             const char * data[size];
             for(size_t i=0; i<size; i++) {
-                char* ptr = new char[muteList[i].first.size()+1];
-                strncpy(ptr, muteList[i].first.c_str(), muteList[i].first.size()+1);
-                data[i] = ptr;
+                data[i] = muteList[i].first.c_str();
             }
             onSuccess((void **)data, DataType::String, (int)size);
         }
@@ -362,20 +363,32 @@ AGORA_API void RoomManager_JoinedChatroomById(void * client, const char * roomId
             RoomTO *data[1] = {datum};
             datum->LogInfo();
             onSuccess((void **)data, DataType::Room, 1);
+            delete (RoomTO*)datum;
         }
     }else{
         LOG("RoomManager_JoinedChatroomById succeeds, but no room is found");
     }
 }
 
-AGORA_API void RoomManager_JoinChatroom(void *client, const char * roomId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void RoomManager_JoinChatroom(void *client, const char * roomId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     EMChatroomPtr result = CLIENT->getChatroomManager().joinChatroom(roomId, error);
+    
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
         //success
+        LOG("RoomManager_JoinChatroom succeeds: roomId:%s", roomId);
         if(onSuccess) {
-            onSuccess();
+            RoomTO *data[1];
+            if(result) {
+                data[0] = {RoomTO::FromEMChatRoom(result)};
+                onSuccess((void **)data, DataType::Room, 1);
+                delete (RoomTO*)data[0];
+                LOG("RoomManager_JoinChatroom return room with id:%s", roomId);
+            } else {
+                onSuccess((void **)data, DataType::Room, 0);
+                LOG("RoomManager_JoinChatroom NO room returned");
+            }
         }
     }else{
         if(onError)
@@ -423,14 +436,25 @@ AGORA_API void RoomManager_MuteChatroomMembers(void * client, const char * roomI
     }
 }
 
-AGORA_API void RoomManager_RemoveChatroomAdmin(void *client, const char * roomId, const char * adminId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void RoomManager_RemoveChatroomAdmin(void *client, const char * roomId, const char * adminId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     EMChatroomPtr result = CLIENT->getChatroomManager().removeChatroomAdmin(roomId, adminId, error);
+    
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
         //success
+        LOG("RoomManager_RemoveChatroomAdmin succeeds: roomId:%s", roomId);
         if(onSuccess) {
-            onSuccess();
+            RoomTO *data[1];
+            if(result) {
+                data[0] = {RoomTO::FromEMChatRoom(result)};
+                onSuccess((void **)data, DataType::Room, 1);
+                delete (RoomTO*)data[0];
+                LOG("RoomManager_RemoveChatroomAdmin return room with id:%s", roomId);
+            } else {
+                onSuccess((void **)data, DataType::Room, 0);
+                LOG("RoomManager_RemoveChatroomAdmin NO room returned");
+            }
         }
     }else{
         if(onError)

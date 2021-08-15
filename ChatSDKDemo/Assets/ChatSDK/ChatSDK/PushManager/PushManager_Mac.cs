@@ -18,54 +18,68 @@ namespace ChatSDK
         }
 
         // Mac 不需要推送，直接返回；
-        // to-do: what means about above comments? no need to implement??
-        // TODO: 需要实现
+
         public List<string> GetNoDisturbGroups() {
-            return null;
+
+            //make a array of IntPtr(point to TOArray)
+            TOArray toArray = new TOArray();
+            IntPtr intPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(toArray));
+            Marshal.StructureToPtr(toArray, intPtr, false);
+            var array = new IntPtr[1];
+            array[0] = intPtr;
+
+            ChatAPINative.PushManager_GetIgnoredGroupIds(client, array, 1);
+
+            //get data from IntPtr
+            var returnTOArray = Marshal.PtrToStructure<TOArray>(array[0]);
+
+            var result = new List<string>();
+
+            //cannot get any message
+            if (returnTOArray.Size == 0)
+            {
+                Debug.Log($"Cannot find any group ids with NoDisturb.");
+                Marshal.FreeCoTaskMem(intPtr);
+                return result;
+            }
+
+            for(int i=0; i<returnTOArray.Size; i++)
+            {
+                result.Add(Marshal.PtrToStringAnsi(returnTOArray.Data[i]));
+            }
+
+            ChatAPINative.PushManager_ReleaseStringList(array, 1);
+            Marshal.FreeCoTaskMem(intPtr);
+            return result;
+
         }
 
-        //public void GetNoDisturbGroupsFromServer(ValueCallBack<List<string>> handle = null)
-        //{
-        //    ChatAPINative.PushManager_GetIgnoredGroupIds(client,
-        //        onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
-        //            List<string> ignoreList = new List<string>();
-        //            if (dType == DataType.ListOfString && dSize > 0)
-        //            {
-        //                for (int i = 0; i < dSize; i++)
-        //                {
-        //                    var banItem = Marshal.PtrToStringAnsi(data[i]);
-        //                    ignoreList.Add(banItem);
-        //                }
-
-        //                handle?.OnSuccessValue(ignoreList);
-        //            }
-        //            else
-        //            {
-        //                Debug.LogError($"DataType information expected.");
-        //            }
-        //        },
-        //        handle?.Error);
-        //}
-
-        // TODO
         public PushConfig GetPushConfig()
         {
-            return null;
-            //ChatAPINative.PushManager_GetPushConfig(client,
-            //                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
+            //make a array of IntPtr(point to TOArray)
+            TOArray toArray = new TOArray();
+            IntPtr intPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(toArray));
+            Marshal.StructureToPtr(toArray, intPtr, false);
+            var array = new IntPtr[1];
+            array[0] = intPtr;
 
-            //                    if (1 == dSize)
-            //                    {
-            //                        PushConfig pushConfig = new PushConfig();
-            //                        Marshal.PtrToStructure(data[0], pushConfig);
-            //                        handle?.OnSuccessValue(pushConfig);
-            //                    }
-            //                    else
-            //                    {
-            //                        Debug.LogError($"size is not correct {dSize}.");
-            //                    }
-            //                },
-            //                handle?.OnError);
+            ChatAPINative.PushManager_GetPushConfig(client, array, 1);
+
+            //get data from IntPtr
+            var returnTOArray = Marshal.PtrToStructure<TOArray>(array[0]);
+
+            //cannot get any message
+            if (returnTOArray.Size == 0)
+            {
+                Debug.Log($"No group config is set.");
+                Marshal.FreeCoTaskMem(intPtr);
+                return null;
+            }
+
+            PushConfig pushConfig = Marshal.PtrToStructure<PushConfig>(returnTOArray.Data[0]);
+            ChatAPINative.ConversationManager_ReleasePushConfigList(array, 1);
+            Marshal.FreeCoTaskMem(intPtr);
+            return pushConfig;
         }
 
         public void GetPushConfigFromServer(ValueCallBack<PushConfig> handle = null)

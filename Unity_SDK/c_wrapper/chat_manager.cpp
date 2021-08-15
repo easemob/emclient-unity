@@ -56,12 +56,14 @@ AGORA_API void ChatManager_FetchHistoryMessages(void *client, const char * conve
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
         //success
         if(onSuccess) {
-            auto cursorResultTo = new CursorResultTO();
-            CursorResultTO *data[1] = {cursorResultTo};
+            //auto cursorResultTo = new CursorResultTO();
+            CursorResultTO cursorResultTo;
+            CursorResultTO *data[1] = {&cursorResultTo};
             data[0]->NextPageCursor = msgCursorResult.nextPageCursor().c_str();
             size_t size = msgCursorResult.result().size();
             data[0]->Type = DataType::ListOfMessage;
             data[0]->Size = (int)size;
+            LOG("fetchHistoryMessages history message count:%d", size);
             //copy EMMessagePtr -> MessageTO
             for(int i=0; i<size; i++) {
                 MessageTO *mto = MessageTO::FromEMMessage(msgCursorResult.result().at(i));
@@ -69,7 +71,11 @@ AGORA_API void ChatManager_FetchHistoryMessages(void *client, const char * conve
                 data[0]->SubTypes[i] = mto->BodyType;
             }
             onSuccess((void **)data, DataType::CursorResult, 1);
-            //NOTE: NO need to release mem. after onSuccess call, managed side would free them.
+            
+            //free memory
+            for(int i=0; i<size; i++) {
+                delete (MessageTO*)data[0]->Data[i];
+            }
         }
     }else{
         //error
@@ -86,8 +92,9 @@ AGORA_API void ChatManager_GetConversationsFromServer(void *client, FUNC_OnSucce
     if (error.mErrorCode == EMError::EM_NO_ERROR) {
         if (onSuccess) {
             size_t size = conversationList.size();
-            auto conversationTOArray = new TOArray();
-            TOArray *data[1] = {conversationTOArray};
+            //auto conversationTOArray = new TOArray();
+            TOArray conversationTOArray;
+            TOArray *data[1] = {&conversationTOArray};
             data[0]->Type = DataType::ListOfConversation;
             data[0]->Size = (int)size;
             for(size_t i=0; i<size; i++) {
@@ -100,7 +107,10 @@ AGORA_API void ChatManager_GetConversationsFromServer(void *client, FUNC_OnSucce
                 data[0]->Data[i] = conversationTO;
             }
             onSuccess((void**)data, DataType::ListOfConversation, 1);
-            //NOTE: NO need to release mem. after onSuccess call, managed side would free them.
+            //free memory
+            for(size_t i=0; i<size; i++) {
+                delete (ConversationTO*)data[0]->Data[i];
+            }
         }
     }else{
         if (onError) {
@@ -168,14 +178,14 @@ AGORA_API void ChatManager_DownloadMessageThumbnail(void *client, const char * m
     CLIENT->getChatManager().downloadMessageThumbnail(messagePtr);
 }
 
-AGORA_API int ChatManager_ConversationWithType(void *client, const char * conversationId, EMConversation::EMConversationType type, bool createIfNotExist)
+AGORA_API bool ChatManager_ConversationWithType(void *client, const char * conversationId, EMConversation::EMConversationType type, bool createIfNotExist)
 {
     EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(conversationId, type, createIfNotExist);
     //verify sharedptr
     if(conversationPtr) {
-        return 1; //Conversation exist
+        return true; //Conversation exist
     } else {
-        return 0; //Conversation not exist
+        return false; //Conversation not exist
     }
 }
 
@@ -194,7 +204,7 @@ AGORA_API int ChatManager_GetUnreadMessageCount(void *client)
     return count;
 }
 
-AGORA_API int ChatManager_InsertMessages(void *client, void * messageList[], EMMessageBody::EMMessageBodyType typeList[], int size)
+AGORA_API bool ChatManager_InsertMessages(void *client, void * messageList[], EMMessageBody::EMMessageBodyType typeList[], int size)
 {
     EMMessageList list;
     //convert TO to EMMessagePtr
@@ -203,12 +213,10 @@ AGORA_API int ChatManager_InsertMessages(void *client, void * messageList[], EMM
         list.push_back(messagePtr);
     }
     if(list.size() > 0) {
-        if(CLIENT->getChatManager().insertMessages(list))
-            return 1;
-        else;
-        return 0;
+        return CLIENT->getChatManager().insertMessages(list);
+    } else {
+        return true;
     }
-    return 0;
 }
 
 AGORA_API void ChatManager_LoadAllConversationsFromDB(void *client, void * conversationArray[], int size)
@@ -217,7 +225,9 @@ AGORA_API void ChatManager_LoadAllConversationsFromDB(void *client, void * conve
     if(conversationList.size() == 0 || conversationArray == NULL || size != 1)
         return;
     //save return list to array
-    TOArray* toArray = (TOArray*)conversationArray;
+    TOArray* toArray = (TOArray*)conversationArray[0];
+    toArray->Size = 0;
+    LOG("Found conversation %d in Db", conversationList.size());
     for(size_t i=0; i<conversationList.size(); i++) {
         ConversationTO* conversationTO = new ConversationTO;
         conversationTO->ConverationId = conversationList[i]->conversationId().c_str();
@@ -232,10 +242,23 @@ AGORA_API void ChatManager_LoadAllConversationsFromDB(void *client, void * conve
 
 AGORA_API void ChatManager_GetMessage(void *client, const char * messageId, void * messageArray[], int size)
 {
-    EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(messageId);
-    if(messagePtr == NULL || messageArray == NULL | size != 1)
+    if(messageArray == NULL | size != 1) {
+        LOG("Parameter error for ChatManager_GetMessage");
         return;
-    TOArrayDiff* toArray = (TOArrayDiff*)messageArray;
+    }
+        
+    EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(messageId);
+
+    if(messagePtr == NULL) {
+        LOG("Cannot find the message with id %s in ChatManager_GetMessage", messageId);
+        return;
+    }
+    
+    LOG("Found the message with id %s in ChatManager_GetMessage", messageId);
+    
+    TOArrayDiff* toArray = (TOArrayDiff*)messageArray[0];
+    toArray->Size = 0;
+    
     MessageTO* mto = MessageTO::FromEMMessage(messagePtr);
     toArray->Data[0] = mto;
     toArray->Type[0] = (int)messagePtr->bodies()[0]->type();
@@ -243,18 +266,18 @@ AGORA_API void ChatManager_GetMessage(void *client, const char * messageId, void
     return;
 }
 
-AGORA_API int ChatManager_MarkAllConversationsAsRead(void *client)
+AGORA_API bool ChatManager_MarkAllConversationsAsRead(void *client)
 {
+    bool ret = true;
     EMError error;
-    int ret = 1; // default is true
     EMConversationList conversationList = CLIENT->getChatManager().getConversationsFromServer(error);
     if(conversationList.size() == 0)
-        return 1; //true
+        return true;
     else
     {
         for(size_t i=0; i<conversationList.size(); i++) {
             if(!conversationList[i]->markAllMessagesAsRead())
-                ret = 0; // false
+                ret = false;
         }
     }
     return ret;
@@ -316,7 +339,8 @@ AGORA_API void ChatManager_ResendMessage(void *client, const char * messageId, v
     CLIENT->getChatManager().resendMessage(messagePtr);
     
     //return message
-    TOArrayDiff* toArray = (TOArrayDiff*)messageArray;
+    TOArrayDiff* toArray = (TOArrayDiff*)messageArray[0];
+    toArray->Size = 0;
     MessageTO* mto = MessageTO::FromEMMessage(messagePtr);
     toArray->Data[0] = mto;
     toArray->Type[0] = (DataType)messagePtr->bodies()[0]->type();
@@ -326,13 +350,20 @@ AGORA_API void ChatManager_ResendMessage(void *client, const char * messageId, v
 
 AGORA_API void ChatManager_LoadMoreMessages(void *client, void * messageArray[], int size, const char * keywords, long timestamp, int maxcount, const char * from, EMConversation::EMMessageSearchDirection direction)
 {
-    EMMessageList messageList = CLIENT->getChatManager().loadMoreMessages(timestamp, keywords, maxcount, from, direction);
-    if(messageList.size() == 0)
-        return;
-    
     //save return list to array
-    TOArrayDiff* toArray = (TOArrayDiff*)messageArray;
+    TOArrayDiff* toArray = (TOArrayDiff*)messageArray[0];
+    toArray->Size = 0;
+    
+    EMMessageList messageList = CLIENT->getChatManager().loadMoreMessages(timestamp, keywords, maxcount, from, direction);
+    if(messageList.size() == 0) {
+        LOG("No messages found with ts:%ld, kw:%s, from:%s, maxc:%d, direct:%d", timestamp, keywords, from, maxcount, direction);
+        return;
+    }
+    
+    LOG("Found %d messages with ts:%ld, kw:%s, from:%s, maxc:%d, direct:%d", messageList.size(), timestamp, keywords, from, maxcount, direction);
+    
     for(size_t i=0; i<messageList.size(); i++) {
+        LOG("Found message %d, id:%s", i, messageList[i]->msgId().c_str());
         MessageTO* mto = MessageTO::FromEMMessage(messageList[i]);
         toArray->Data[i] = mto;
         toArray->Type[i] = (int)messageList[i]->bodies()[0]->type();
@@ -372,30 +403,41 @@ AGORA_API void ChatManager_SendReadAckForMessage(void *client, const char * mess
     if(onSuccess) onSuccess();
 }
 
-AGORA_API void ChatManager_UpdateMessage(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, void *mto, EMMessageBody::EMMessageBodyType type)
+AGORA_API bool ChatManager_UpdateMessage(void *client, void *mto, EMMessageBody::EMMessageBodyType type)
 {
-    
-    EMMessagePtr messagePtr = BuildEMMessage(mto, type);
+    EMMessagePtr messagePtr = BuildEMMessage(mto, type, true);
     //only look for conversation, not create one if cannot find.
-    EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(messagePtr->conversationId(), EMConversation::EMConversationType::CHAT, false);
+    EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(messagePtr->conversationId(), EMConversation::EMConversationType::CHAT, true);
     EMError error;
     if(nullptr == conversationPtr) {
         
-        LOG("Cannot find conversation with message id:%s", messagePtr->msgId().c_str());
-        error.mErrorCode = EMError::MESSAGE_INVALID;
-        error.mDescription = "Invalid message.";
-        if(onError) onError(error.mErrorCode,error.mDescription.c_str());
-        return;
+        LOG("Cannot find conversation with conversation id:%s", messagePtr->conversationId().c_str());
+        return false;
     }
     
-    if(conversationPtr->updateMessage(messagePtr))
-    {
-        if (onSuccess) onSuccess();
+    return conversationPtr->updateMessage(messagePtr);
+}
+
+AGORA_API void ChatManager_ReleaseConversationList(void * conversationArray[], int size)
+{
+    if(size != 1) return;
+    TOArray* toArray = (TOArray*)conversationArray[0];
+    
+    if(toArray->Size > 0) {
+        for(int i=0; i<toArray->Size; i++) {
+            delete (ConversationTO*)toArray->Data[i];
+        }
     }
-    else
-    {
-        error.mErrorCode = EMError::DATABASE_ERROR;
-        error.mDescription = "Database operation failed";
-        if(onError) onError(error.mErrorCode,error.mDescription.c_str());
+}
+
+AGORA_API void ChatManager_ReleaseMessageList(void * messageArray[], int size)
+{
+    if(size != 1) return;
+    TOArrayDiff* toArray = (TOArrayDiff*)messageArray[0];
+    
+    if(toArray->Size > 0) {
+        for(int i=0; i<toArray->Size; i++) {
+            delete (MessageTO*)toArray->Data[i];
+        }
     }
 }
