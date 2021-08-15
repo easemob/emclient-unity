@@ -52,6 +52,15 @@ namespace ChatSDK {
             }
         }
 
+        public override string ToString()
+        {
+            string style = Style == PushStyle.Simple ? "Simple" : "Summary";
+            return $"NoDisturb: {NoDisturb}," +
+                $"NoDisturbStartHour: {NoDisturbStartHour}, " +
+                $"NoDisturbEndHour: {NoDisturbEndHour}, Style: " + style;
+                ;  
+        }
+
         internal PushConfig()
         {
 

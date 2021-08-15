@@ -86,7 +86,7 @@ public class Main : MonoBehaviour
 
     void isConnectedBtnAction()
     {
-
+        
     }
 
     void isLoggedBtnAction()
@@ -106,7 +106,6 @@ public class Main : MonoBehaviour
         SDKClient.Instance.Logout(false);
         SceneManager.LoadSceneAsync("Login");
     }
-
 
 
     void Start()

@@ -7,17 +7,19 @@ using UnityEngine.UI;
 
 public class AlertInfo {
 
-    public AlertInfo(string title, string info, Action confirmAction, Action cancelAction) {
+    public AlertInfo(string title, string info, Action confirmAction, Action cancelAction, string confirmText = "确定", string cancelText = "取消") {
         this.title = title;
         this.info = info;
         this.onConfirm = confirmAction;
         this.onCancel = cancelAction;
+        this.confirmBtnInfo = confirmText;
+        this.cancelBtnInfo = cancelText;
     }
 
     public string title;
     public string info;
-    public string confirmBtnInfo = "确定";
-    public string cancelBtnInfo = "取消";
+    public string confirmBtnInfo;
+    public string cancelBtnInfo;
 
     public Action onConfirm;
     public Action onCancel;
@@ -49,29 +51,26 @@ public class AlertView
         m_ConfirmBtn = alertView.transform.Find("Panel/ConfirmBtn").GetComponent<Button>();
         m_CancelBtn = alertView.transform.Find("Panel/CancelBtn").GetComponent<Button>();
 
-
-        Debug.Log(info.title);
-        Debug.Log(info.info);
-
         m_TitleText.text = info.title;
         m_InfoText.text = info.info;
-       
+
+        Text confirmText = m_ConfirmBtn.transform.Find("Text").GetComponent<Text>();
+        Text cancelText = m_CancelBtn.transform.Find("Text").GetComponent<Text>();
+
+        confirmText.text = info.confirmBtnInfo;
+        cancelText.text = info.cancelBtnInfo;
+
         m_ConfirmBtn.onClick.AddListener(OnConfirmClicked);
         m_CancelBtn.onClick.AddListener(OnCancelClicked);
     }
 
     private void OnConfirmClicked() {
-        if (alertInfo.onConfirm != null)
-        {
-            alertInfo.onConfirm.Invoke();
-        }
+        alertInfo.onConfirm?.Invoke();
         ClosePanel();
     }
 
     private void OnCancelClicked() {
-        if (alertInfo.onCancel != null) {
-            alertInfo.onCancel.Invoke();
-        }
+        alertInfo.onCancel?.Invoke();
         ClosePanel();
     }
 

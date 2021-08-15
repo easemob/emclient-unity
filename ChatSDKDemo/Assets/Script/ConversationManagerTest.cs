@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using ChatSDK;
 
 public class ConversationManagerTest : MonoBehaviour
 {
@@ -25,6 +26,32 @@ public class ConversationManagerTest : MonoBehaviour
     private Button LoadMessagesWithKeywordBtn;
     private Button LoadMessagesWithTimeBtn;
     private Button LoadMessagesWithMsgTypeBtn;
+
+    private string conversationId;
+    private ConversationType type;
+
+    private int iConvType
+    {
+        get
+        {
+            int ret = 0;
+            if (type == ConversationType.Chat)
+            {
+                ret = 0;
+            }
+
+            if (type == ConversationType.Group)
+            {
+                ret = 1;
+            }
+
+            if (type == ConversationType.Room)
+            {
+                ret = 2;
+            }
+            return ret;
+        }
+    }
 
     private void Awake()
     {
@@ -80,50 +107,352 @@ public class ConversationManagerTest : MonoBehaviour
 
     void LastMessageBtnAction()
     {
-        Debug.Log("LastMessageBtnAction");
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+
+            conversationId = dict["ConversationId"];
+            type = ConversationType.Chat;
+            int intType = int.Parse(dict["ConversationType(0/1/2)"]);
+            if (intType == 0)
+            {
+                type = ConversationType.Chat;
+            }
+            else if (intType == 1)
+            {
+                type = ConversationType.Group;
+            }
+            else
+            {
+                type = ConversationType.Room;
+            }
+
+            Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, type);
+
+            if (conv.LastMessage != null)
+            {
+                UIManager.SuccessAlert(transform);
+            }
+            else
+            {
+                UIManager.DefaultAlert(transform, "未获取到最后一条消");
+            }
+
+        });
+        config.AddField("ConversationId", conversationId ?? "");
+        config.AddField("ConversationType(0/1/2)", iConvType.ToString());
+
+
+        UIManager.DefaultInputAlert(transform, config);
     }
     void LastReceiveMessageBtnAction()
     {
-        Debug.Log("LastReceiveMessageBtnAction");
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+
+            conversationId = dict["ConversationId"];
+            type = ConversationType.Chat;
+            int intType = int.Parse(dict["ConversationType(0/1/2)"]);
+            if (intType == 0)
+            {
+                type = ConversationType.Chat;
+            }
+            else if (intType == 1)
+            {
+                type = ConversationType.Group;
+            }
+            else
+            {
+                type = ConversationType.Room;
+            }
+
+            Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, type);
+
+            if (conv.LastReceivedMessage != null)
+            {
+                UIManager.SuccessAlert(transform);
+            }
+            else
+            {
+                UIManager.DefaultAlert(transform, "未获取到最后一条消");
+            }
+
+        });
+        config.AddField("ConversationId", conversationId ?? "");
+        config.AddField("ConversationType(0/1/2)", iConvType.ToString());
+
+
+        UIManager.DefaultInputAlert(transform, config);
     }
     void GetExtBtnAction()
     {
-        Debug.Log("GetExtBtnAction");
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+
+            conversationId = dict["ConversationId"];
+            type = ConversationType.Chat;
+            int intType = int.Parse(dict["ConversationType(0/1/2)"]);
+            if (intType == 0)
+            {
+                type = ConversationType.Chat;
+            }
+            else if (intType == 1)
+            {
+                type = ConversationType.Group;
+            }
+            else
+            {
+                type = ConversationType.Room;
+            }
+
+            Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, type);
+
+            if (conv.Ext != null)
+            {
+                List<string> list = new List<string>();
+                foreach (var kv in conv.Ext) {
+                    list.Add($"{kv.Key}:{kv.Value}");
+                }
+                string str = string.Join(",", list.ToArray());
+                UIManager.DefaultAlert(transform, str);
+            }
+            else
+            {
+                UIManager.DefaultAlert(transform, "未获取到Ext");
+            }
+
+        });
+        config.AddField("ConversationId", conversationId ?? "");
+        config.AddField("ConversationType(0/1/2)", iConvType.ToString());
+
+
+        UIManager.DefaultInputAlert(transform, config);
     }
     void SetExtBtnAction()
     {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+
+            conversationId = dict["ConversationId"];
+            type = ConversationType.Chat;
+            int intType = int.Parse(dict["ConversationType(0/1/2)"]);
+            string key = dict["key"];
+            string value = dict["value"];
+            if (intType == 0)
+            {
+                type = ConversationType.Chat;
+            }
+            else if (intType == 1)
+            {
+                type = ConversationType.Group;
+            }
+            else
+            {
+                type = ConversationType.Room;
+            }
+
+            Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, type);
+
+            Dictionary<string, string> KV = new Dictionary<string, string>();
+            KV.Add(key, value);
+            conv.Ext = KV;
+            UIManager.DefaultAlert(transform, "已设置");
+
+        });
+        config.AddField("ConversationId", conversationId ?? "");
+        config.AddField("ConversationType(0/1/2)", iConvType.ToString());
+        config.AddField("key");
+        config.AddField("value");
+
+        UIManager.DefaultInputAlert(transform, config);
+
         Debug.Log("SetExtBtnAction");
     }
     void UnReadCountBtnAction()
     {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+
+            conversationId = dict["ConversationId"];
+            type = ConversationType.Chat;
+            int intType = int.Parse(dict["ConversationType(0/1/2)"]);
+            if (intType == 0)
+            {
+                type = ConversationType.Chat;
+            }
+            else if (intType == 1)
+            {
+                type = ConversationType.Group;
+            }
+            else
+            {
+                type = ConversationType.Room;
+            }
+
+            Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, type);
+            UIManager.DefaultAlert(transform, $"未读数: {conv.UnReadCount.ToString()}");
+
+        });
+        config.AddField("ConversationId", conversationId ?? "");
+        config.AddField("ConversationType(0/1/2)", iConvType.ToString());
+
+
+        UIManager.DefaultInputAlert(transform, config);
         Debug.Log("UnReadCountBtnAction");
     }
     void MarkMessageAsReadBtnAction()
     {
+
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+
+            conversationId = dict["ConversationId"];
+            type = ConversationType.Chat;
+            int intType = int.Parse(dict["ConversationType(0/1/2)"]);
+            string msgId = dict["MsgId"];
+            if (intType == 0)
+            {
+                type = ConversationType.Chat;
+            }
+            else if (intType == 1)
+            {
+                type = ConversationType.Group;
+            }
+            else
+            {
+                type = ConversationType.Room;
+            }
+
+            Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, type);
+            conv.MarkMessageAsRead(msgId);
+            UIManager.DefaultAlert(transform, "已设置");
+
+        });
+        config.AddField("ConversationId", conversationId ?? "");
+        config.AddField("ConversationType(0/1/2)", iConvType.ToString());
+        config.AddField("MsgId");
+
+        UIManager.DefaultInputAlert(transform, config);
+
         Debug.Log("MarkMessageAsReadBtnAction");
     }
     void MarkAllMessageAsReadBtnAction()
     {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+
+            conversationId = dict["ConversationId"];
+            type = ConversationType.Chat;
+            int intType = int.Parse(dict["ConversationType(0/1/2)"]);
+            if (intType == 0)
+            {
+                type = ConversationType.Chat;
+            }
+            else if (intType == 1)
+            {
+                type = ConversationType.Group;
+            }
+            else
+            {
+                type = ConversationType.Room;
+            }
+
+            Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, type);
+            conv.MarkAllMessageAsRead();
+            UIManager.DefaultAlert(transform, "已设置");
+
+        });
+        config.AddField("ConversationId", conversationId ?? "");
+        config.AddField("ConversationType(0/1/2)", iConvType.ToString());
+
+
+        UIManager.DefaultInputAlert(transform, config);
+
         Debug.Log("MarkAllMessageAsReadBtnAction");
     }
     void InsertMessageBtnAction()
     {
+        UIManager.UnfinishedAlert(transform);
         Debug.Log("InsertMessageBtnAction");
     }
     void AppendMessageBtnAction()
     {
+        UIManager.UnfinishedAlert(transform);
         Debug.Log("AppendMessageBtnAction");
     }
     void UpdateMessageBtnAction()
     {
+        UIManager.UnfinishedAlert(transform);
         Debug.Log("UpdateMessageBtnAction");
     }
     void DeleteMessageBtnAction()
     {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+
+            conversationId = dict["ConversationId"];
+            type = ConversationType.Chat;
+            string msgId = dict["MsgId"];
+
+            int intType = int.Parse(dict["ConversationType(0/1/2)"]);
+            if (intType == 0)
+            {
+                type = ConversationType.Chat;
+            }
+            else if (intType == 1)
+            {
+                type = ConversationType.Group;
+            }
+            else
+            {
+                type = ConversationType.Room;
+            }
+
+            Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, type);
+            conv.DeleteMessage(msgId);
+            UIManager.DefaultAlert(transform, "已删除");
+
+        });
+        config.AddField("ConversationId", conversationId ?? "");
+        config.AddField("ConversationType(0/1/2)", iConvType.ToString());
+        config.AddField("MsgId");
+
+        UIManager.DefaultInputAlert(transform, config);
+
         Debug.Log("DeleteMessageBtnAction");
     }
     void DeleteAllMessageBtnAction()
     {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+
+            conversationId = dict["ConversationId"];
+            type = ConversationType.Chat;
+
+            int intType = int.Parse(dict["ConversationType(0/1/2)"]);
+            if (intType == 0)
+            {
+                type = ConversationType.Chat;
+            }
+            else if (intType == 1)
+            {
+                type = ConversationType.Group;
+            }
+            else
+            {
+                type = ConversationType.Room;
+            }
+
+            Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, type);
+            conv.DeleteAllMessages();
+            UIManager.DefaultAlert(transform, "已删除");
+
+        });
+        config.AddField("ConversationId", conversationId ?? "");
+        config.AddField("ConversationType(0/1/2)", iConvType.ToString());
+       
+
+        UIManager.DefaultInputAlert(transform, config);
+
         Debug.Log("DeleteAllMessageBtnAction");
     }
     void LoadMessageBtnAction()
