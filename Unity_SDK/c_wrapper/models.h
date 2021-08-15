@@ -19,7 +19,7 @@
 
 using namespace easemob;
 
-EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type);
+EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bool buildReceiveMsg=false);
 
 struct Options
 {
@@ -351,14 +351,14 @@ struct TOArray
 {
     DataType Type;
     int Size;
-    void * Data[32]; //list of data
+    void * Data[]; //list of data
 };
 
 struct TOArrayDiff
 {
     int Size;
-    void * Data[32];
-    int Type[32];
+    void * Data[200];
+    int Type[200];
 };
 
 #endif //_MODELS_H_

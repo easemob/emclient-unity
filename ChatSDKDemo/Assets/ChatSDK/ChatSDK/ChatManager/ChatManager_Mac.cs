@@ -132,9 +132,9 @@ namespace ChatSDK
 
         public override Conversation GetConversation(string conversationId, ConversationType type, bool createIfNeed = true)
         {
-            int conversionExist = ChatAPINative.ChatManager_ConversationWithType(client, conversationId, type, createIfNeed);
-            Debug.Log($"conversationExist is {conversionExist}");
-            if (conversionExist != 0 || createIfNeed)
+            bool conversationExist = ChatAPINative.ChatManager_ConversationWithType(client, conversationId, type, createIfNeed);
+            Debug.Log($"conversationExist is {conversationExist}");
+            if (conversationExist || createIfNeed)
                 return new Conversation(conversationId, type);
             else
                 return null;
@@ -183,11 +183,11 @@ namespace ChatSDK
                 return true;
              //turn List<> into array
             int size = 0;
-            var messageArray = new IntPtr[0];
-            var typeArray = new MessageBodyType[0];
+            //var messageArray = new IntPtr[0];
+            //var typeArray = new MessageBodyType[0];
             size = messages.Count;
-            messageArray = new IntPtr[size];
-            typeArray = new MessageBodyType[size];
+            var messageArray = new IntPtr[size];
+            var typeArray = new MessageBodyType[size];
             int i = 0;
             foreach (Message message in messages)
             {
@@ -197,16 +197,13 @@ namespace ChatSDK
                 messageArray[i] = mtoPtr;
                 i++;
             }
-            int ret = ChatAPINative.ChatManager_InsertMessages(client, messageArray, typeArray, size);
+            bool ret = ChatAPINative.ChatManager_InsertMessages(client, messageArray, typeArray, size);
             //free resource
             for (int j = 0; j < size; j++)
             {
-                Marshal.FreeCoTaskMem(messageArray[i]);
+                Marshal.FreeCoTaskMem(messageArray[j]);
             }
-            if (ret != 0)
-                return true;
-            else
-                return false;
+            return ret;
         }
 
         public override List<Conversation> LoadAllConversations()
@@ -214,25 +211,34 @@ namespace ChatSDK
             //Construct param array
             TOArray toArray = new TOArray();
             toArray.Size = 0;
+
+            IntPtr intPtr = Marshal.AllocCoTaskMem(toArray.Size);
+            Marshal.StructureToPtr(toArray, intPtr, false);
+
             var toArrayList = new IntPtr[1];
-            Marshal.StructureToPtr(toArray, toArrayList[0], false);
+            toArrayList[0] = intPtr;
 
             //Call API will change field value in toArray
             ChatAPINative.ChatManager_LoadAllConversationsFromDB(client, toArrayList, 1);
 
             //Parse return param array
-            TOArray returnTOArray = new TOArray();
-            Marshal.PtrToStructure(toArrayList[0],returnTOArray);
+            Marshal.PtrToStructure(toArrayList[0], toArray);
             List<Conversation> conversationList = new List<Conversation>();
 
             //Parse every returned ConversationTO item
-            for(int i=0; i<returnTOArray.Size; i++)
+            for (int i=0; i< toArray.Size; i++)
             {
                 ConversationTO conversationTO = new ConversationTO();
-                Marshal.PtrToStructure(returnTOArray.Data[i], conversationTO);
+                Marshal.PtrToStructure(toArray.Data[i], conversationTO);
                 Conversation conversation = new Conversation(conversationTO.ConverationId, conversationTO.Type);
                 conversationList.Add(conversation);
             }
+
+            //free resource from SDK
+            ChatAPINative.ChatManager_ReleaseConversationList(toArrayList, 1);
+            //free IntPtr
+            Marshal.FreeCoTaskMem(intPtr);
+
             return conversationList;
         }
 
@@ -241,14 +247,25 @@ namespace ChatSDK
             //Construct param array
             TOArrayDiff toArray = new TOArrayDiff();
             toArray.Size = 0;
+
+            IntPtr intPtr = Marshal.AllocCoTaskMem(toArray.Size);
+            Marshal.StructureToPtr(toArray, intPtr, false);
+
             var toArrayList = new IntPtr[1];
-            Marshal.StructureToPtr(toArray, toArrayList[0], false);
+            toArrayList[0] = intPtr;
 
             ChatAPINative.ChatManager_GetMessage(client, messageId, toArrayList, 1);
 
             //Parse return param array
             TOArrayDiff returnTOArray = new TOArrayDiff();
             Marshal.PtrToStructure(toArrayList[0], returnTOArray);
+
+            //no any message returned
+            if (0 == returnTOArray.Size)
+            {
+                Marshal.FreeCoTaskMem(intPtr);
+                return null;
+            }
 
             MessageTO mto = null;
             MessageBodyType type = (MessageBodyType)returnTOArray.Type[0];
@@ -269,15 +286,19 @@ namespace ChatSDK
                     Marshal.PtrToStructure(returnTOArray.Data[0], mto);
                     break;
             }
+
+            //free resouce from SDK
+            ChatAPINative.ChatManager_ReleaseMessageList(toArrayList, 1);
+            //free IntPtr
+            Marshal.FreeCoTaskMem(intPtr);
+
             return mto.Unmarshall();
         }
 
         public override bool MarkAllConversationsAsRead()
         {
-            if (ChatAPINative.ChatManager_MarkAllConversationsAsRead(client) != 0)
-                return true;
-            else
-                return false;
+            return ChatAPINative.ChatManager_MarkAllConversationsAsRead(client);
+
         }
 
         public override void RecallMessage(string messageId, CallBack handle = null)
@@ -304,8 +325,12 @@ namespace ChatSDK
             //Construct param array
             TOArrayDiff toArray = new TOArrayDiff();
             toArray.Size = 0;
+
+            IntPtr intPtr = Marshal.AllocCoTaskMem(toArray.Size);
+            Marshal.StructureToPtr(toArray, intPtr, false);
+
             var toArrayList = new IntPtr[1];
-            Marshal.StructureToPtr(toArray, toArrayList[0], false);
+            toArrayList[0] = intPtr;
 
             ChatAPINative.ChatManager_ResendMessage(client, messageId, toArrayList, 1,
                 () =>
@@ -327,6 +352,13 @@ namespace ChatSDK
             TOArrayDiff returnTOArray = new TOArrayDiff();
             Marshal.PtrToStructure(toArrayList[0], returnTOArray);
 
+            //no any message returned
+            if (0 == returnTOArray.Size)
+            {
+                Marshal.FreeCoTaskMem(intPtr);
+                return null;
+            }
+
             MessageTO mto = null;
             //tricky: use DataType to save MessageBodyType
             MessageBodyType type = (MessageBodyType)returnTOArray.Type[0];
@@ -347,6 +379,12 @@ namespace ChatSDK
                     Marshal.PtrToStructure(returnTOArray.Data[0], mto);
                     break;
             }
+
+            //free resource from SDK
+            ChatAPINative.ChatManager_ReleaseMessageList(toArrayList, 1);
+            //free IntPtr
+            Marshal.FreeCoTaskMem(intPtr);
+
             return mto.Unmarshall();
         }
 
@@ -355,14 +393,26 @@ namespace ChatSDK
             //Construct param array
             TOArrayDiff toArray = new TOArrayDiff();
             toArray.Size = 0;
+
+            IntPtr intPtr = Marshal.AllocCoTaskMem(toArray.Size);
+            Marshal.StructureToPtr(toArray, intPtr, false);
+
             var toArrayList = new IntPtr[1];
-            Marshal.StructureToPtr(toArray, toArrayList[0], false);
+            toArrayList[0] = intPtr;
 
             ChatAPINative.ChatManager_LoadMoreMessages(client, toArrayList, 1, keywords, timestamp, maxCount, from, direction);
 
             //Parse return param array
             TOArrayDiff returnTOArray = new TOArrayDiff();
             Marshal.PtrToStructure(toArrayList[0], returnTOArray);
+
+            //no any message returned
+            if (0 == returnTOArray.Size)
+            {
+                Debug.Log($"Cannot find any message with kw:{keywords}, ts:{timestamp}, from:{from}, direction:{direction}");
+                Marshal.FreeCoTaskMem(intPtr);
+                return new List<Message>();
+            }
 
             MessageTO[] messages = new MessageTO[returnTOArray.Size];
             MessageBodyType msgType;
@@ -391,6 +441,11 @@ namespace ChatSDK
                 }
             }
             List<Message> messageList = MessageTO.ConvertToMessageList(messages, returnTOArray.Size);
+
+            //free resource from SDK
+            ChatAPINative.ChatManager_ReleaseMessageList(toArrayList, 1);
+            //free IntPtr
+            Marshal.FreeCoTaskMem(intPtr);
 
             return messageList;
         }
@@ -457,28 +512,14 @@ namespace ChatSDK
                 );
         }
 
-        // TODO: dujiepeng
         public override bool UpdateMessage(Message message)
         {
-            return false;
-            //MessageTO mto = MessageTO.FromMessage(message);
-            //IntPtr mtoPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(mto));
-            //Marshal.StructureToPtr(mto, mtoPtr, false);
-            //ChatAPINative.ChatManager_UpdateMessage(client,
-            //    () =>
-            //    {
-            //        try
-            //        {
-            //            callback?.Success();
-            //        }
-            //        catch (NullReferenceException nre)
-            //        {
-            //            Debug.LogWarning($"NullReferenceException: {nre.StackTrace}");
-            //        }
-
-            //    },
-            //    (int code, string desc) => callback?.Error(code, desc), mtoPtr, message.Body.Type);
-            //Marshal.FreeCoTaskMem(mtoPtr);
+            MessageTO mto = MessageTO.FromMessage(message);
+            IntPtr mtoPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(mto));
+            Marshal.StructureToPtr(mto, mtoPtr, false);
+            bool ret = ChatAPINative.ChatManager_UpdateMessage(client, mtoPtr, message.Body.Type);
+            Marshal.FreeCoTaskMem(mtoPtr);
+            return ret;
         }
     }
 }

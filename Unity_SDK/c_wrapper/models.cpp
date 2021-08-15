@@ -9,19 +9,21 @@
 #include "models.h"
 #include "emgroup.h"
 
-EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type)
+EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bool buildReceiveMsg)
 {
     //compose message body
-    std::string from, to;
+    std::string from, to, msgId;
     EMMessageBodyPtr messageBody;
     switch(type) {
         case EMMessageBody::TEXT:
         {
             auto tm = static_cast<TextMessageTO *>(mto);
+            LOG("Message id from MTO is: %s", tm->MsgId);
             //create message body
             messageBody = EMMessageBodyPtr(new EMTextMessageBody(std::string(tm->body.Content)));
             from = tm->From;
             to = tm->To;
+            msgId = tm->MsgId;
         }
             break;
         case EMMessageBody::LOCATION:
@@ -30,6 +32,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type)
             messageBody = EMMessageBodyPtr(new EMLocationMessageBody(lm->body.Latitude, lm->body.Longitude, lm->body.Address));
             from = lm->From;
             to = lm->To;
+            msgId = lm->MsgId;
         }
             break;
         case EMMessageBody::COMMAND:
@@ -40,6 +43,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type)
             messageBody = EMMessageBodyPtr(body);
             from = cm->From;
             to = cm->To;
+            msgId = cm->MsgId;
         }
             break;
         case EMMessageBody::FILE:
@@ -54,6 +58,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type)
             messageBody = EMMessageBodyPtr(body);
             from = fm->From;
             to = fm->To;
+            msgId = fm->MsgId;
         }
             break;
         case EMMessageBody::IMAGE:
@@ -72,6 +77,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type)
             messageBody = EMMessageBodyPtr(body);
             from = im->From;
             to = im->To;
+            msgId = im->MsgId;
         }
             break;
         case EMMessageBody::VOICE:
@@ -86,12 +92,19 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type)
             messageBody = EMMessageBodyPtr(body);
             from = vm->From;
             to = vm->To;
+            msgId = vm->MsgId;
         }
             break;
     }
     LOG("Message created: From->%s, To->%s.", from.c_str(), to.c_str());
+    if(buildReceiveMsg) {
+        EMMessagePtr messagePtr = EMMessage::createReceiveMessage(to, from, messageBody, EMMessage::EMChatType::SINGLE, msgId);
+        return messagePtr;
+    } else {
     EMMessagePtr messagePtr = EMMessage::createSendMessage(from, to, messageBody);
     return messagePtr;
+    }
+
 }
 
 //default constructor
@@ -271,8 +284,13 @@ GroupTO * GroupTO::FromEMGroup(EMGroupPtr &group)
         i++;
     }
     
+    if(group->groupSetting()) {
+        LOG("groupSetting exist, groupid:%s, ext:%s", gto->GroupId, group->groupSetting()->extension().c_str());
     gto->Options = GroupOptions::FromMucSetting(group->groupSetting());
-    
+    } else {
+        LOG("groupSetting is NOT exist, so not set group setting, groupid:%s", gto->GroupId);
+    }
+
     gto->PermissionType = group->groupMemberType();
     
     gto->NoticeEnabled = group->isPushEnabled();

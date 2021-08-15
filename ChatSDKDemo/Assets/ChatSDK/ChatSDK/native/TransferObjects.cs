@@ -304,8 +304,9 @@ namespace ChatSDK
         public MessageBodyType BodyType;
 
         protected MessageTO(in Message message) =>
-            (ConversationId, From, To, Direction, HasReadAck, BodyType)
-                = (message.ConversationId, message.From, message.To, message.Direction, message.HasReadAck, message.Body.Type);
+            (MsgId, ConversationId, From, To, Type, Direction, Status, HasReadAck, HasDeliverAck, LocalTime, ServerTime, BodyType)
+                = (message.MsgId, message.ConversationId, message.From, message.To, message.MessageType, message.Direction,
+                message.Status, message.HasReadAck, message.HasDeliverAck, message.LocalTime, message.ServerTime, message.Body.Type);
 
         protected MessageTO()
         {
@@ -898,7 +899,7 @@ namespace ChatSDK
     {
         public DataType Type;
         public int Size;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 200)]
         public IntPtr[] Data; //list of data
     }
 
@@ -906,9 +907,9 @@ namespace ChatSDK
     public class TOArrayDiff
     {
         public int Size;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 200)]
         public IntPtr[] Data; //list of data
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 200)]
         public int[] Type; //list of type
     }
 }

@@ -79,10 +79,9 @@ AGORA_API void* Client_InitWithOptions(Options *options, FUNC_OnConnected onConn
         gClient = EMClient::create(configs);
         LOG("after create gClient address is: %x", gClient);
         if(gConnectionListener == NULL) { //only set once
-            gConnectionListener = new ConnectionListener(onConnected, onDisconnected, onPong);
-            //gConnectionListener = new ConnectionListener(onConnected, nullptr, nullptr);
-            LOG("after new gConnectionListener address is: %x", gConnectionListener);
-            gClient->addConnectionListener(gConnectionListener);
+            //gConnectionListener = new ConnectionListener(onConnected, onDisconnected, onPong);
+            //LOG("after new gConnectionListener address is: %x", gConnectionListener);
+            //gClient->addConnectionListener(gConnectionListener);
         }
     }
     
@@ -128,9 +127,9 @@ AGORA_API void Client_Logout(void *client, FUNC_OnSuccess onSuccess, bool unbind
 
     //gConnectionListener->ClearAllCallBack();
     CLIENT->logout();
-    CLIENT->removeConnectionListener(gConnectionListener);
-    delete gConnectionListener;
-    gConnectionListener = nullptr;
+    //CLIENT->removeConnectionListener(gConnectionListener);
+    //delete gConnectionListener;
+    //gConnectionListener = nullptr;
     
     if(onSuccess) onSuccess();
     
