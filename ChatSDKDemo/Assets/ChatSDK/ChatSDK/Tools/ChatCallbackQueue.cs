@@ -6,6 +6,7 @@ namespace ChatSDK
 {
     public sealed class ChatCallbackQueue : MonoBehaviour
     {
+
         private Queue<Action> queue = new Queue<Action>();
 
         public void ClearQueue()

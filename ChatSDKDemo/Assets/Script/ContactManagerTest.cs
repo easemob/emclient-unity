@@ -217,7 +217,7 @@ public class ContactManagerTest : MonoBehaviour, IContactManagerDelegate
     }
     void GetSelfIdsOnOtherPlatformBtnAction()
     {
-        Debug.Log("GetSelfIdsOnOtherPlatformBtnAction");
+        UIManager.UnfinishedAlert(transform);
     }
 
 
@@ -246,6 +246,23 @@ public class ContactManagerTest : MonoBehaviour, IContactManagerDelegate
     public void OnContactInvited(string username, string reason)
     {
         UIManager.DefaultAlert(transform, $"OnContactInvited: {username}, reason: {reason}");
+        
+
+        /*
+        CallBack callback = new CallBack(
+            onSuccess: () => {
+                UIManager.SuccessAlert(transform);
+            },
+            onError: (code, desc) => {
+                UIManager.ErrorAlert(transform, code, desc);
+            }
+        );
+
+        UIManager.AskAlert(transform, $"{username} 希望添加您为好友",
+            () => { SDKClient.Instance.ContactManager.AcceptInvitation(username, callback); },
+            () => { SDKClient.Instance.ContactManager.DeclineInvitation(username, callback); }
+        );
+        */
     }
 
     public void OnFriendRequestAccepted(string username)

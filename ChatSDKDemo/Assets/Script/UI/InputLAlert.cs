@@ -6,15 +6,22 @@ using UnityEngine.UI;
 
 public class InputAlertConfig
 {
-    
-    public InputAlertConfig(string title, Action<Dictionary<string, string>> confirmAction, Action cancelAction = null)
+
+    public InputAlertConfig(Action<Dictionary<string, string>> confirmAction = null, Action cancelAction = null) {
+        this.title = title ?? "提示";
+        this.onConfirm = confirmAction;
+        this.onCancel = cancelAction;
+    }
+
+    public InputAlertConfig(string title = null, Action<Dictionary<string, string>> confirmAction = null, Action cancelAction = null)
     {
-        this.title = title;
+        this.title = title ?? "提示";
         this.onConfirm = confirmAction;
         this.onCancel = cancelAction;
     }
 
     public List<string> list = new List<string>();
+    public List<string> txtList = new List<string>();
     public string title;
     public string info;
     public string confirmBtnInfo = "确定";
@@ -23,8 +30,9 @@ public class InputAlertConfig
     public Action<Dictionary<string, string>> onConfirm;
     public Action onCancel;
 
-    public InputAlertConfig AddField(string field) {
+    public InputAlertConfig AddField(string field, string text = "") {
         list.Add(field);
+        txtList.Add(text);
         return this;
     }
 }
@@ -67,15 +75,20 @@ public class InputAlert
     }
 
     private void AddFieldToContent(Transform contentTransform) {
-        foreach (string info in alertConfig.list) {
+
+        for (int i = 0; i < alertConfig.list.Count; i++) {
             GameObject textField = GameObject.Instantiate(Resources.Load("Prefabs/TextField")) as GameObject;
             textField.transform.SetParent(contentTransform);
             textField.transform.localPosition = Vector3.zero;
             textField.transform.localScale = Vector3.one;
             childs.Add(textField);
-            Text text = textField.transform.Find("Placeholder").GetComponent<Text>() as Text;
-            text.text = info;
+            Text placeholder = textField.transform.Find("Placeholder").GetComponent<Text>() as Text;
+            placeholder.text = alertConfig.list[i];
+
+            Text text = textField.transform.Find("Text").GetComponent<Text>() as Text;
+            text.text = alertConfig.txtList[i];
         }
+
     }
 
     private Dictionary<string, string> getAllInputValues() {

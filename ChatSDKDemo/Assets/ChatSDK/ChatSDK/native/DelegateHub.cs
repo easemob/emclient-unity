@@ -94,27 +94,33 @@ namespace ChatSDK
             {
                 Debug.Log("Connection established.");
                 client.IsConnected = true;
-                foreach (IConnectionDelegate listener in listeners?.List)
-                {
-                    listener.OnConnected();
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IConnectionDelegate listener in listeners?.List)
+                    {
+                        listener.OnConnected();
+                    }
+                });
             };
             OnDisconnected = (int info) =>
             {
                 Debug.Log("Connection discontinued.");
                 client.IsConnected = false;
-                foreach (IConnectionDelegate listener in listeners?.List)
-                {
-                    listener.OnDisconnected(info);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IConnectionDelegate listener in listeners?.List)
+                    {
+                        listener.OnDisconnected(info);
+                    }
+                });
             };
             OnPong = () =>
             {
                 Debug.Log("Server ponged.");
-                foreach (IConnectionDelegate listener in listeners?.List)
-                {
-                    listener.OnPong();
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IConnectionDelegate listener in listeners?.List)
+                    {
+                        listener.OnPong();
+                    }
+                });
             };
         }
     }
@@ -150,10 +156,12 @@ namespace ChatSDK
                 
                 //chain-call to customer specified listeners
                 Debug.Log($"Invoke customer listeners in OnMessagesReceived upon messages receiving...");
-                foreach (IChatManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnMessagesReceived(messages);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IChatManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnMessagesReceived(messages);
+                    }
+                });
             };
 
             OnCmdMessagesReceived = (IntPtr[] _messages, MessageBodyType[] types, int size) =>
@@ -162,10 +170,12 @@ namespace ChatSDK
 
                 //chain-call to customer specified listeners
                 Debug.Log($"Invoke customer listeners in OnCmdMessagesReceived upon messages receiving...");
-                foreach (IChatManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnCmdMessagesReceived(messages);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IChatManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnCmdMessagesReceived(messages);
+                    }
+                });
             };
 
             OnMessagesRead = (IntPtr[] _messages, MessageBodyType[] types, int size) =>
@@ -174,10 +184,12 @@ namespace ChatSDK
 
                 //chain-call to customer specified listeners
                 Debug.Log($"Invoke customer listeners in OnMessagesRead upon messages receiving...");
-                foreach (IChatManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnMessagesRead(messages);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IChatManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnMessagesRead(messages);
+                    }
+                });
             };
 
             OnMessagesDelivered = (IntPtr[] _messages, MessageBodyType[] types, int size) =>
@@ -186,10 +198,12 @@ namespace ChatSDK
 
                 //chain-call to customer specified listeners
                 Debug.Log($"Invoke customer listeners in OnMessagesDelivered upon messages receiving...");
-                foreach (IChatManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnMessagesDelivered(messages);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IChatManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnMessagesDelivered(messages);
+                    }
+                });
             };
 
             OnMessagesRecalled = (IntPtr[] _messages, MessageBodyType[] types, int size) =>
@@ -198,19 +212,23 @@ namespace ChatSDK
 
                 //chain-call to customer specified listeners
                 Debug.Log($"Invoke customer listeners in OnMessagesRecalled upon messages receiving...");
-                foreach (IChatManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnMessagesRecalled(messages);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IChatManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnMessagesRecalled(messages);
+                    }
+                });
             };
 
             OnReadAckForGroupMessageUpdated = () =>
             {
                 Debug.Log($"Invoke customer listeners in OnReadAckForGroupMessageUpdated");
-                foreach (IChatManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnReadAckForGroupMessageUpdated();
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IChatManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnReadAckForGroupMessageUpdated();
+                    }
+                });
             };
 
             OnGroupMessageRead = (IntPtr[] _messages, int size) =>
@@ -225,29 +243,36 @@ namespace ChatSDK
                     Debug.Log($"Received group message read ackid:{gto.AckId}, msgid:{gto.MsgId}");
                 }
                 acks.Add(gto.Unmarshall());
-                foreach (IChatManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnGroupMessageRead(acks);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IChatManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnGroupMessageRead(acks);
+                    }
+                });
+                
             };
 
             //to-do: no any return parameter?
             OnConversationsUpdate = () =>
             {
                 Debug.Log($"Invoke customer listeners in OnConversationsUpdate when conversation updated.");
-                foreach (IChatManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnConversationsUpdate();
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IChatManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnConversationsUpdate();
+                    }
+                });
             };
 
             OnConversationRead = (string from, string to) =>
             {
                 Debug.Log($"Invoke customer listeners in OnConversationRead when conversation read.");
-                foreach (IChatManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnConversationRead(from, to);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IChatManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnConversationRead(from, to);
+                    }
+                });
             };
 
         }
@@ -332,82 +357,101 @@ namespace ChatSDK
             OnInvitationReceived = (string groupId, string groupName, string inviter, string reason) =>
             {
                 Debug.Log($"OnInvitationReceived, group[Id={groupId},Name={groupName}] invitation received from {inviter}, reason: {reason}");
-                foreach (IGroupManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnInvitationReceivedFromGroup(groupId, groupName, inviter, reason);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnInvitationReceivedFromGroup(groupId, groupName, inviter, reason);
+                    }
+                });
             };
 
             OnRequestToJoinReceived = (string groupId, string groupName, string applicant, string reason) =>
             {
                 Debug.Log($"ROnRequestToJoinReceived, group[Id={groupId},Name={groupName}], applicant:{applicant}, reason: {reason}");
-                foreach (IGroupManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnRequestToJoinReceivedFromGroup(groupId, groupName, applicant, reason);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnRequestToJoinReceivedFromGroup(groupId, groupName, applicant, reason);
+                    }
+                });
             };
 
             OnRequestToJoinAccepted = (string groupId, string groupName, string accepter) =>
             {
                 Debug.Log($"OnRequestToJoinAccepted, group[Id={groupId},Name={groupName}], accepter: {accepter}");
-                foreach (IGroupManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnRequestToJoinAcceptedFromGroup(groupId, groupName, accepter);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnRequestToJoinAcceptedFromGroup(groupId, groupName, accepter);
+                    }
+                });
             };
 
             OnRequestToJoinDeclined = (string groupId, string groupName, string decliner, string reason) =>
             {
                 Debug.Log($"OnRequestToJoinDeclined, group[Id={groupId},Name={groupName}], decliner: {decliner}, reason:{reason}");
-                foreach (IGroupManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnRequestToJoinDeclinedFromGroup(groupId, groupName, decliner, reason);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnRequestToJoinDeclinedFromGroup(groupId, groupName, decliner, reason);
+                    }
+                });
             };
 
             OnInvitationAccepted = (string groupId, string invitee, string reason) =>
             {
                 Debug.Log($"OnInvitationAccepted, group[Id={groupId}], invitee: {invitee}, reason:{reason}");
-                foreach (IGroupManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnInvitationAcceptedFromGroup(groupId, invitee, reason);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnInvitationAcceptedFromGroup(groupId, invitee, reason);
+                    }
+                });
             };
 
             OnInvitationDeclined = (string groupId, string invitee, string reason) =>
             {
                 Debug.Log($"OnInvitationDeclined, group[Id={groupId}], invitee: {invitee}, reason:{reason}");
-                foreach (IGroupManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnInvitationDeclinedFromGroup(groupId, invitee, reason);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnInvitationDeclinedFromGroup(groupId, invitee, reason);
+                    }
+                });
             };
 
             OnUserRemoved = (string groupId, string groupName) =>
             {
                 Debug.Log($"OnUserRemoved, group[Id={groupId}, Name={groupName}]");
-                foreach (IGroupManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnUserRemovedFromGroup(groupId, groupName);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnUserRemovedFromGroup(groupId, groupName);
+                    }
+                });
             };
 
             OnGroupDestroyed = (string groupId, string groupName) =>
             {
                 Debug.Log($"OnGroupDestroyed, group[Id={groupId}, Name={groupName}]");
-                foreach (IGroupManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnDestroyedFromGroup(groupId, groupName);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnDestroyedFromGroup(groupId, groupName);
+                    }
+                });
             };
 
             OnAutoAcceptInvitationFromGroup = (string groupId, string inviter, string inviteMessage) =>
             {
                 Debug.Log($"OnAutoAcceptInvitationFromGroup, group[Id={groupId}], inviter:{inviter}, inviteMessage:{inviteMessage}");
-                foreach (IGroupManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnAutoAcceptInvitationFromGroup(groupId, inviter, inviteMessage);
-                }
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnAutoAcceptInvitationFromGroup(groupId, inviter, inviteMessage);
+                    }
+                });
             };
 
             OnMuteListAdded = (string groupId, string[] mutes, int size, int muteExpire) =>
@@ -419,10 +463,13 @@ namespace ChatSDK
                 {
                     acks.Add(mutes[i]);
                 }
-                foreach (IGroupManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnMuteListAddedFromGroup(groupId, acks, muteExpire);
-                }
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnMuteListAddedFromGroup(groupId, acks, muteExpire);
+                    }
+                });
             };
 
             OnMuteListRemoved = (string groupId, string[] mutes, int size) =>
@@ -434,64 +481,79 @@ namespace ChatSDK
                 {
                     acks.Add(mutes[i]);
                 }
-                foreach (IGroupManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnMuteListRemovedFromGroup(groupId, acks);
-                }
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnMuteListRemovedFromGroup(groupId, acks);
+                    }
+                });
             };
 
             OnAdminAdded = (string groupId, string administrator) =>
             {
                 Debug.Log($"OnAdminAdded, group[Id={groupId}], admin:{administrator}");
-                foreach (IGroupManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnAdminAddedFromGroup(groupId, administrator);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnAdminAddedFromGroup(groupId, administrator);
+                    }
+                });
             };
 
             OnAdminRemoved = (string groupId, string administrator) =>
             {
                 Debug.Log($"OnAdminRemoved, group[Id={groupId}], admin:{administrator}");
-                foreach (IGroupManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnAdminRemovedFromGroup(groupId, administrator);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnAdminRemovedFromGroup(groupId, administrator);
+                    }
+                });
             };
 
             OnOwnerChanged = (string groupId, string newOwner, string oldOwner) =>
             {
                 Debug.Log($"OnOwnerChanged, group[Id={groupId}], newOwner:{newOwner}, oldOwner:{oldOwner}");
-                foreach (IGroupManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnOwnerChangedFromGroup(groupId, newOwner, oldOwner);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnOwnerChangedFromGroup(groupId, newOwner, oldOwner);
+                    }
+                });
             };
 
             OnMemberJoined = (string groupId, string member) =>
             {
                 Debug.Log($"OnMemberJoined, group[Id={groupId}], member:{member}");
-                foreach (IGroupManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnMemberJoinedFromGroup(groupId, member);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnMemberJoinedFromGroup(groupId, member);
+                    }
+                });
             };
 
             OnMemberExited = (string groupId, string member) =>
             {
                 Debug.Log($"OnMemberExited, group[Id={groupId}], member:{member}");
-                foreach (IGroupManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnMemberExitedFromGroup(groupId, member);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnMemberExitedFromGroup(groupId, member);
+                    }
+                });
             };
 
             OnAnnouncementChanged = (string groupId, string announcement) =>
             {
                 Debug.Log($"OnAnnouncementChanged, group[Id={groupId}], announcement:{announcement}");
-                foreach (IGroupManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnAnnouncementChangedFromGroup(groupId, announcement);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnAnnouncementChangedFromGroup(groupId, announcement);
+                    }
+                });
             };
 
             OnSharedFileAdded = (string groupId, IntPtr[] sharedFile, int size) =>
@@ -501,19 +563,23 @@ namespace ChatSDK
 
                 Debug.Log($"OnSharedFileAdded, group[Id={groupId}], fileName:{groupSharedFile.FileName}, fileId:{groupSharedFile.FileId}");
 
-                foreach (IGroupManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnSharedFileAddedFromGroup(groupId, groupSharedFile);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnSharedFileAddedFromGroup(groupId, groupSharedFile);
+                    }
+                });
             };
 
             OnSharedFileDeleted = (string groupId, string fileId) =>
             {
                 Debug.Log($"OnSharedFileDeleted, group[Id={groupId}], fileId:{fileId}");
-                foreach (IGroupManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnSharedFileDeletedFromGroup(groupId, fileId);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnSharedFileDeletedFromGroup(groupId, fileId);
+                    }
+                });
             };
         }
     }
@@ -547,37 +613,45 @@ namespace ChatSDK
             OnChatRoomDestroyed = (string roomId, string roomName) =>
             {
                 Debug.Log($"OnChatRoomDestroyed, roomId {roomId}, roomName {roomName}.");
-                foreach (IRoomManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnDestroyedFromRoom(roomId, roomName);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IRoomManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnDestroyedFromRoom(roomId, roomName);
+                    }
+                });
             };
 
             OnMemberJoined = (string roomId, string member) =>
             {
                 Debug.Log($"Member {member} just joined room {roomId}.");
-                foreach (IRoomManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnMemberJoinedFromRoom(roomId, member);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IRoomManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnMemberJoinedFromRoom(roomId, member);
+                    }
+                });
             };
 
             OnMemberExited = (string roomId, string roomName, string member) =>
             {
                 Debug.Log($"OnMemberExited, roomId {roomId}, member {member}.");
-                foreach (IRoomManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnMemberExitedFromRoom(roomId, roomName, member);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IRoomManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnMemberExitedFromRoom(roomId, roomName, member);
+                    }
+                });
             };
 
             OnRemovedFromChatRoom = (string roomId, string roomName, string participant) =>
             {
                 Debug.Log($"OnRemovedFromChatRoom, roomId {roomId}, roomName {roomName}, paticipant {participant}.");
-                foreach (IRoomManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnRemovedFromRoom(roomId, roomName, participant);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IRoomManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnRemovedFromRoom(roomId, roomName, participant);
+                    }
+                });
             };
 
             OnMuteListAdded = (string roomId, string[] mutes, int size, int muteExpire) =>
@@ -588,10 +662,12 @@ namespace ChatSDK
                 {
                     acks.Add(mutes[i]);
                 }
-                foreach (IRoomManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnMuteListAddedFromRoom(roomId, acks, muteExpire);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IRoomManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnMuteListAddedFromRoom(roomId, acks, muteExpire);
+                    }
+                });
             };
 
             OnMuteListRemoved = (string roomId, string[] mutes, int size) =>
@@ -602,46 +678,56 @@ namespace ChatSDK
                 {
                     acks.Add(mutes[i]);
                 }
-                foreach (IRoomManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnMuteListRemovedFromRoom(roomId, acks);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IRoomManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnMuteListRemovedFromRoom(roomId, acks);
+                    }
+                });
             };
 
             OnAdminAdded = (string roomId, string administrator) =>
             {
                 Debug.Log($"OnAdminAdded, roomId {roomId}, admin {administrator}.");
-                foreach (IRoomManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnAdminAddedFromRoom(roomId, administrator);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IRoomManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnAdminAddedFromRoom(roomId, administrator);
+                    }
+                });
             };
 
             OnAdminRemoved = (string roomId, string administrator) =>
             {
                 Debug.Log($"OnAdminRemoved, roomId {roomId}, admin {administrator}.");
-                foreach (IRoomManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnAdminRemovedFromRoom(roomId, administrator);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IRoomManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnAdminRemovedFromRoom(roomId, administrator);
+                    }
+                });
             };
 
             OnOwnerChanged = (string roomId, string newOwner, string oldOwner) =>
             {
                 Debug.Log($"OnOwnerChanged, roomId {roomId}, newOwner {newOwner}, oldOwner {oldOwner}.");
-                foreach (IRoomManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnOwnerChangedFromRoom(roomId, newOwner, oldOwner);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IRoomManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnOwnerChangedFromRoom(roomId, newOwner, oldOwner);
+                    }
+                });
             };
 
             OnAnnouncementChanged = (string roomId, string announcement) =>
             {
                 Debug.Log($"OnAnnouncementChanged, roomId {roomId}, announcement {announcement}");
-                foreach (IRoomManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnAnnouncementChangedFromRoom(roomId, announcement);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IRoomManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnAnnouncementChangedFromRoom(roomId, announcement);
+                    }
+                });
             };
         }
     }
@@ -670,46 +756,56 @@ namespace ChatSDK
             OnContactAdd = (string username) =>
             {
                 Debug.Log($"Name={username}] add you.");
-                foreach (IContactManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnContactAdded(username);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IContactManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnContactAdded(username);
+                    }
+                });  
             };
 
             OnContactDeleted = (string username) =>
             {
                 Debug.Log($"Name={username}] delete you.");
-                foreach (IContactManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnContactDeleted(username);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IContactManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnContactDeleted(username);
+                    }
+                });
             };
 
             OnContactInvited = (string username, string reason) =>
             {
                 Debug.Log($"Name={username}] invite you with reason:{reason}.");
-                foreach (IContactManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnContactInvited(username, reason);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IContactManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnContactInvited(username, reason);
+                    }
+                });
             };
 
             OnFriendRequestAccepted = (string username) =>
             {
                 Debug.Log($"Name={username}] accept your invitation.");
-                foreach (IContactManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnFriendRequestAccepted(username);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IContactManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnFriendRequestAccepted(username);
+                    }
+                });
             };
 
             OnFriendRequestDeclined = (string username) =>
             {
                 Debug.Log($"Name={username}] decline your invitation.");
-                foreach (IContactManagerDelegate listener in listeners?.List)
-                {
-                    listener.OnFriendRequestDeclined(username);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IContactManagerDelegate listener in listeners?.List)
+                    {
+                        listener.OnFriendRequestDeclined(username);
+                    }
+                });
             };
         }
     }
