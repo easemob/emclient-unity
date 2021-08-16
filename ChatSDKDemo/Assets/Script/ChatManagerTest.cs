@@ -108,7 +108,8 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
             Message msg = Message.CreateTextSendMessage(dict["to"], dict["content"]);
             SDKClient.Instance.ChatManager.SendMessage(msg, new CallBack(
                 onSuccess: () => {
-                    UIManager.SuccessAlert(transform);
+                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { UIManager.SuccessAlert(transform); });
+                    //UIManager.SuccessAlert(transform);
                 },
                 onError:(code, desc) => {
                     UIManager.ErrorAlert(transform, code, desc);
@@ -279,7 +280,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         InputAlertConfig config = new InputAlertConfig((dict) => {
             string conversationId = dict["ConversationId"];
             ConversationType type = ConversationType.Chat;
-            int iType = int.Parse(dict["type(0/1/2)"]);
+            int iType = int.Parse(dict["ConversationType(0/1/2)"]);
             switch (iType)
             {
                 case 0:
@@ -317,7 +318,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         config.AddField("StartMsgId");
         config.AddField("LoadCount");
 
-
+        UIManager.DefaultInputAlert(transform, config);
         Debug.Log("FetchHistoryMessagesBtnAction");
     }
     void GetConversationsFromServerBtnAction()

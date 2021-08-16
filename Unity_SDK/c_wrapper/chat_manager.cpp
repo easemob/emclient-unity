@@ -80,6 +80,7 @@ AGORA_API void ChatManager_FetchHistoryMessages(void *client, const char * conve
     }else{
         //error
         if(onError) {
+            LOG("fetchHistoryMessages history message failed, error id:%d, desc::%s", error.mErrorCode, error.mDescription.c_str());
             onError(error.mErrorCode, error.mDescription.c_str());
         }
     }
