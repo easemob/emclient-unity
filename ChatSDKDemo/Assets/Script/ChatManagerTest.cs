@@ -122,18 +122,22 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     }
     void SendImageBtnAction()
     {
+        UIManager.UnfinishedAlert(transform);
         Debug.Log("SendImageBtnAction");
     }
     void SendFileBtnAction()
     {
+        UIManager.UnfinishedAlert(transform);
         Debug.Log("SendFileBtnAction");
     }
     void SendVideoBtnAction()
     {
+        UIManager.UnfinishedAlert(transform);
         Debug.Log("SendVideoBtnAction");
     }
     void SendVoiceBtnAction()
     {
+        UIManager.UnfinishedAlert(transform);
         Debug.Log("SendVoiceBtnAction");
     }
 
@@ -382,7 +386,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         bool ret = SDKClient.Instance.ChatManager.MarkAllConversationsAsRead();
         if (ret) {
             int unreadCount = SDKClient.Instance.ChatManager.GetUnreadMessageCount();
-            UIManager.DefaultAlert(transform, "设置成功，当前未读数为: {unreadCount}");
+            UIManager.DefaultAlert(transform, $"设置成功，当前未读数为: {unreadCount}");
         }
         else
         {

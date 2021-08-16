@@ -361,7 +361,39 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
         Debug.Log("CheckIfInGroupWhiteListBtnAction");
 
     }
-    void CreateGroupBtnAction() { Debug.Log("CreateGroupBtnAction"); }
+    void CreateGroupBtnAction() {
+
+        InputAlertConfig config = new InputAlertConfig((dict)=> {
+
+            string name = dict["name"];
+            string desc = dict["desc"];
+            string memberId = dict["memberId"];
+
+            GroupOptions optison = new GroupOptions(GroupStyle.PrivateMemberCanInvite);
+
+            List<string> members = new List<string>();
+
+            if (memberId.Length > 0) {
+                members.Add(memberId);
+            }
+            SDKClient.Instance.GroupManager.CreateGroup(name, optison, desc, members, handle:new ValueCallBack<Group>(
+                onSuccess: (group) => {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError:(code, desc) => {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+
+        });
+        config.AddField("name");
+        config.AddField("desc");
+        config.AddField("memberId");
+
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("CreateGroupBtnAction");
+    }
 
     void DeclineInvitationFromGroupBtnAction() {
 
