@@ -76,10 +76,10 @@ namespace ChatSDK
                 (IntPtr[] cursorResult, DataType dType, int size) => {
                     Debug.Log($"FetchHistoryMessages callback with dType={dType}, size={size}.");
                     //Verification: dType == DataType.CursorResult, size == 1
-                    if(dType == DataType.CursorResult && size == 1)
+                    if (dType == DataType.CursorResult && size == 1)
                     {
                         var cursorResultTO = Marshal.PtrToStructure<CursorResultTO>(cursorResult[0]);
-                        if(cursorResultTO.Type == DataType.ListOfMessage)
+                        if (cursorResultTO.Type == DataType.ListOfMessage)
                         {
                             var result = new CursorResult<Message>();
                             result.Cursor = cursorResultTO.NextPageCursor;
@@ -89,10 +89,10 @@ namespace ChatSDK
                             IntPtr[] dataPtr = cursorResultTO.Data;
                             MessageBodyType msgType;
                             MessageTO mto = null;
-                            for (int i = 0; i<msgSize; i++)
+                            for (int i = 0; i < msgSize; i++)
                             {
                                 msgType = subTypes[i];
-                                switch(msgType)
+                                switch (msgType)
                                 {
                                     //to-do: need to other types?
                                     case MessageBodyType.TXT:
@@ -110,7 +110,7 @@ namespace ChatSDK
                                         Marshal.PtrToStructure(dataPtr[i], mto);
                                         messages[i] = mto;
                                         break;
-                                }                           
+                                }
                             }
                             result.Data = MessageTO.ConvertToMessageList(messages, msgSize);
                             handle?.OnSuccessValue(result);
@@ -127,7 +127,10 @@ namespace ChatSDK
                     }
 
                 },
-                (int code, string desc) => handle?.Error(code, desc));
+                (int code, string desc) => {
+                    Debug.LogError($"FetchHistoryMessages failed with code={code},desc={desc}");
+                    handle?.Error(code, desc);
+                });
         }
 
         public override Conversation GetConversation(string conversationId, ConversationType type, bool createIfNeed = true)

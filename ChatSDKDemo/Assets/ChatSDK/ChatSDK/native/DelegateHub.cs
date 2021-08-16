@@ -70,9 +70,6 @@ namespace ChatSDK
         internal OnDisconnected OnDisconnected;
         internal Action OnPong;
 
-        //to-do:test
-        public string ts;
-
         private WeakDelegater<IConnectionDelegate> listeners;
 
         public ConnectionHub(IClient client, WeakDelegater<IConnectionDelegate> _listeners)
