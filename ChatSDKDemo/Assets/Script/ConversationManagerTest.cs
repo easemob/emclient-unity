@@ -253,14 +253,57 @@ public class ConversationManagerTest : MonoBehaviour
     }
     void LoadMessageBtnAction()
     {
+
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string msgId = dict["MsgId"];
+            Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
+            Message msg = conv.LoadMessage(msgId);
+            UIManager.DefaultAlert(transform, msg == null ? "获取成功" : "获取失败");
+        });
+
+        config.AddField("MsgId");
+
+        UIManager.DefaultInputAlert(transform, config);
+
         Debug.Log("LoadMessageBtnAction");
     }
+
     void LoadMessagesBtnAction()
     {
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
+        conv.LoadMessages(null, count:200, handle:new ValueCallBack<List<Message>>(
+            onSuccess: (list) => {
+                UIManager.DefaultAlert(transform, $"获取到{list.Count}条消息");
+            },
+            onError:(code, desc) => {
+                UIManager.ErrorAlert(transform, code, desc);
+            }
+        ));
+
         Debug.Log("LoadMessagesBtnAction");
     }
     void LoadMessagesWithKeywordBtnAction()
     {
+
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string keyword = dict["keyword"];
+            Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
+            conv.LoadMessagesWithKeyword(keyword, count: 200, handle: new ValueCallBack<List<Message>>(
+                onSuccess: (list) => {
+                    UIManager.DefaultAlert(transform, $"获取到{list.Count}条消息");
+                },
+            onError: (code, desc) => {
+                UIManager.ErrorAlert(transform, code, desc);
+            }
+            ));
+        });
+
+        config.AddField("keyword");
+
+        UIManager.DefaultInputAlert(transform, config);
+
         Debug.Log("LoadMessagesWithKeywordBtnAction");
     }
     void LoadMessagesWithTimeBtnAction()
