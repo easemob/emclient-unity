@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using ChatSDK;
 
-public class GroupManagerTest : MonoBehaviour
+public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
 {
-
+    private Text groupText;
     private Button backButton;
 
     private Button AcceptInvitationFromGroupBtn;
@@ -53,11 +54,17 @@ public class GroupManagerTest : MonoBehaviour
     private Button UpdateGroupExtBtn;
     private Button UploadGroupSharedFileBtn;
 
+    private string currentGroupId
+    {
+        get => groupText.text;
+    }
 
 
     private void Awake()
     {
         Debug.Log("group manager test script has load");
+
+        groupText = transform.Find("GroupText/Text").GetComponent<Text>();
 
         backButton = transform.Find("BackBtn").GetComponent<Button>();
 
@@ -150,52 +157,703 @@ public class GroupManagerTest : MonoBehaviour
         UpdateGroupAnnouncementBtn.onClick.AddListener(UpdateGroupAnnouncementBtnAction);
         UpdateGroupExtBtn.onClick.AddListener(UpdateGroupExtBtnAction);
         UploadGroupSharedFileBtn.onClick.AddListener(UploadGroupSharedFileBtnAction);
+
+        SDKClient.Instance.GroupManager.AddGroupManagerDelegate(this);
     }
 
 
-    void AcceptInvitationFromGroupBtnAction() { Debug.Log("AcceptInvitationFromGroupBtnAction"); }
-    void AcceptJoinApplicationBtnAction() { Debug.Log("AcceptJoinApplicationBtnAction"); }
-    void AddMembersBtnAction() { Debug.Log("AddMembersBtnAction"); }
-    void AddAdminBtnAction() { Debug.Log("AddAdminBtnAction"); }
-    void AddWhiteListBtnAction() { Debug.Log("AddWhiteListBtnAction"); }
-    void BlockGroupBtnAction() { Debug.Log("BlockGroupBtnAction"); }
-    void BlockMembersBtnAction() { Debug.Log("BlockMembersBtnAction"); }
-    void ChangeGroupDescriptionBtnAction() { Debug.Log("ChangeGroupDescriptionBtnAction"); }
-    void ChangeGroupNameBtnAction() { Debug.Log("ChangeGroupNameBtnAction"); }
-    void ChangeGroupOwnerBtnAction() { Debug.Log("ChangeGroupOwnerBtnAction"); }
-    void CheckIfInGroupWhiteListBtnAction() { Debug.Log("CheckIfInGroupWhiteListBtnAction"); }
+    void AcceptInvitationFromGroupBtnAction()
+    {
+        UIManager.DefaultAlert(transform, "请在收到请求后回复");
+        Debug.Log("AcceptInvitationFromGroupBtnAction");
+    }
+    void AcceptJoinApplicationBtnAction()
+    {
+        UIManager.DefaultAlert(transform, "请在收到请求后回复");
+        Debug.Log("AcceptJoinApplicationBtnAction");
+    }
+    void AddMembersBtnAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            List<string> list = new List<string>();
+            list.Add(dict["memberId"]);
+            SDKClient.Instance.GroupManager.AddGroupMembers(currentGroupId, list, new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("memberId");
+
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("AddMembersBtnAction");
+    }
+    void AddAdminBtnAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            SDKClient.Instance.GroupManager.AddGroupAdmin(currentGroupId, dict["adminId"], new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("adminId");
+
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("AddAdminBtnAction");
+    }
+
+    void AddWhiteListBtnAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            List<string> list = new List<string>();
+            list.Add(dict["memberId"]);
+            SDKClient.Instance.GroupManager.AddGroupWhiteList(currentGroupId, list, new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("memberId");
+
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("AddAdminBtnAction");
+    }
+    void BlockGroupBtnAction()
+    {
+        SDKClient.Instance.GroupManager.BlockGroup(currentGroupId, new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+    }
+    void BlockMembersBtnAction() {
+
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            List<string> list = new List<string>();
+            list.Add(dict["memberId"]);
+            SDKClient.Instance.GroupManager.BlockGroupMembers(currentGroupId, list, new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("memberId");
+
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("BlockMembersBtnAction");
+    }
+    void ChangeGroupDescriptionBtnAction() {
+
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            SDKClient.Instance.GroupManager.ChangeGroupDescription(currentGroupId, dict["Description"], new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("Description");
+
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("ChangeGroupDescriptionBtnAction");
+    }
+
+    void ChangeGroupNameBtnAction() {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            SDKClient.Instance.GroupManager.ChangeGroupName(currentGroupId, dict["name"], new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("name");
+
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("ChangeGroupNameBtnAction");
+    }
+    void ChangeGroupOwnerBtnAction() {
+
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            SDKClient.Instance.GroupManager.ChangeGroupOwner(currentGroupId, dict["newOwner"], new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("newOwner");
+
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("ChangeGroupOwnerBtnAction");
+
+    }
+    void CheckIfInGroupWhiteListBtnAction() {
+
+        SDKClient.Instance.GroupManager.CheckIfInGroupWhiteList(currentGroupId, new ValueCallBack<bool>(
+           onSuccess: (ret) => {
+               UIManager.DefaultAlert(transform, ret ? "在白名单中" : "不在白名单中");
+           },
+           onError: (code, desc)=> {
+               UIManager.ErrorAlert(transform, code, desc);
+           }
+        ));
+
+        Debug.Log("CheckIfInGroupWhiteListBtnAction");
+
+    }
     void CreateGroupBtnAction() { Debug.Log("CreateGroupBtnAction"); }
-    void DeclineInvitationFromGroupBtnAction() { Debug.Log("DeclineInvitationFromGroupBtnAction"); }
-    void DeclineJoinApplicationBtnAction() { Debug.Log("DeclineJoinApplicationBtnAction"); }
-    void DestoryGroupBtnAction() { Debug.Log("DestoryGroupBtnAction"); }
-    void DownloadGroupSharedFileBtnAction() { Debug.Log("DownloadGroupSharedFileBtnAction"); }
-    void GetGroupAnnouncementFromServerBtnAction() { Debug.Log("GetGroupAnnouncementFromServerBtnAction"); }
-    void GetGroupBlockListFromServerBtnAction() { Debug.Log("GetGroupBlockListFromServerBtnAction"); }
-    void GetGroupFileListFromServerBtnAction() { Debug.Log("GetGroupFileListFromServerBtnAction"); }
-    void GetGroupMemberListFromServerBtnAction() { Debug.Log("GetGroupMemberListFromServerBtnAction"); }
-    void GetGroupMuteListFromServerBtnAction() { Debug.Log("GetGroupMuteListFromServerBtnAction"); }
-    void GetGroupSpecificationFromServerBtnAction() { Debug.Log("GetGroupSpecificationFromServerBtnAction"); }
-    void GetGroupWhiteListFromServerBtnAction() { Debug.Log("GetGroupWhiteListFromServerBtnAction"); }
-    void GetGroupWithIdBtnAction() { Debug.Log("GetGroupWithIdBtnAction"); }
-    void GetJoinedGroupsBtnAction() { Debug.Log("GetJoinedGroupsBtnAction"); }
-    void GetJoinedGroupsFromServerBtnAction() { Debug.Log("GetJoinedGroupsFromServerBtnAction"); }
-    void GetPublicGroupsFromServerBtnAction() { Debug.Log("GetPublicGroupsFromServerBtnAction"); }
-    void JoinPublicGroupBtnAction() { Debug.Log("JoinPublicGroupBtnAction"); }
-    void LeaveGroupBtnAction() { Debug.Log("LeaveGroupBtnAction"); }
-    void MuteAllMembersBtnAction() { Debug.Log("MuteAllMembersBtnAction"); }
-    void MuteMembersBtnAction() { Debug.Log("MuteMembersBtnAction"); }
-    void RemoveAdminBtnAction() { Debug.Log("RemoveAdminBtnAction"); }
-    void RemoveGroupSharedFileBtnAction() { Debug.Log("RemoveGroupSharedFileBtnAction"); }
-    void RemoveMembersBtnAction() { Debug.Log("RemoveMembersBtnAction"); }
-    void RemoveWhiteListBtnAction() { Debug.Log("RemoveWhiteListBtnAction"); }
-    void RequestToJoinPublicGroupBtnAction() { Debug.Log("RequestToJoinPublicGroupBtnAction"); }
-    void UnblockGroupBtnAction() { Debug.Log("UnblockGroupBtnAction"); }
-    void UnblockMembersBtnAction() { Debug.Log("UnblockMembersBtnAction"); }
-    void UnMuteAllMembersBtnAction() { Debug.Log("UnMuteAllMembersBtnAction"); }
-    void UnMuteMembersBtnAction() { Debug.Log("UnMuteMembersBtnAction"); }
-    void UpdateGroupAnnouncementBtnAction() { Debug.Log("UpdateGroupAnnouncementBtnAction"); }
-    void UpdateGroupExtBtnAction() { Debug.Log("UpdateGroupExtBtnAction"); }
-    void UploadGroupSharedFileBtnAction() { Debug.Log("UploadGroupSharedFileBtnAction"); }
+
+    void DeclineInvitationFromGroupBtnAction() {
+
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            SDKClient.Instance.GroupManager.DeclineGroupInvitation(currentGroupId, handle: new CallBack(
+                onSuccess:() =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("DeclineInvitationFromGroupBtnAction");
+
+    }
+
+    void DeclineJoinApplicationBtnAction() {
+
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            SDKClient.Instance.GroupManager.DeclineGroupJoinApplication(currentGroupId, dict["userId"],handle: new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("userId");
+
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("DeclineJoinApplicationBtnAction");
+    }
+
+    void DestoryGroupBtnAction() {
+        SDKClient.Instance.GroupManager.DestroyGroup(currentGroupId, new CallBack(
+            onSuccess: () =>
+            {
+                UIManager.SuccessAlert(transform);
+            },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+        ));
+
+        Debug.Log("DestoryGroupBtnAction");
+    }
+
+    void DownloadGroupSharedFileBtnAction() {
+
+        UIManager.UnfinishedAlert(transform);
+
+        Debug.Log("DownloadGroupSharedFileBtnAction");
+    }
+
+    void GetGroupAnnouncementFromServerBtnAction() {
+
+        SDKClient.Instance.GroupManager.GetGroupAnnouncementFromServer(currentGroupId, new ValueCallBack<string>(
+                onSuccess: (str) =>
+                {
+                    UIManager.DefaultAlert(transform, str);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+
+        Debug.Log("GetGroupAnnouncementFromServerBtnAction");
+    }
+
+    void GetGroupBlockListFromServerBtnAction() {
+
+        SDKClient.Instance.GroupManager.GetGroupBlockListFromServer(currentGroupId, handle: new ValueCallBack<List<string>>(
+            onSuccess: (list) =>
+            {
+                string str = string.Join(",", list.ToArray());
+                UIManager.DefaultAlert(transform, str);
+            },
+            onError: (code, desc) =>
+            {
+                UIManager.ErrorAlert(transform, code, desc);
+            }
+        ));
+
+        Debug.Log("GetGroupBlockListFromServerBtnAction");
+    }
+
+    void GetGroupFileListFromServerBtnAction() {
+        SDKClient.Instance.GroupManager.GetGroupFileListFromServer(currentGroupId, handle: new ValueCallBack<List<GroupSharedFile>> (
+            onSuccess: (fileList) =>
+            {
+                List<string> list = new List<string>();
+                foreach (var file in fileList) {
+                    list.Add(file.FileId);
+                }
+                string str = string.Join(",", list.ToArray());
+                UIManager.DefaultAlert(transform, str);
+            },
+            onError: (code, desc) =>
+            {
+                UIManager.ErrorAlert(transform, code, desc);
+            }
+        ));
+        Debug.Log("GetGroupFileListFromServerBtnAction");
+    }
+
+    void GetGroupMemberListFromServerBtnAction() {
+        SDKClient.Instance.GroupManager.GetGroupMemberListFromServer(currentGroupId, handle: new ValueCallBack<CursorResult<string>>(
+            onSuccess: (result) => {
+                List<string> list = new List<string>();
+                foreach (var username in result.Data) {
+                    list.Add(username);
+                }
+                string str = string.Join(",", list.ToArray());
+                UIManager.DefaultAlert(transform, str);
+            },
+            onError: (code, desc) =>
+            {
+                UIManager.ErrorAlert(transform, code, desc);
+            }
+        ));
+
+        Debug.Log("GetGroupMemberListFromServerBtnAction");
+    }
+
+    void GetGroupMuteListFromServerBtnAction() {
+
+        SDKClient.Instance.GroupManager.GetGroupMuteListFromServer(currentGroupId, handle: new ValueCallBack<List<string>>(
+            onSuccess: (list) => {
+                string str = string.Join(",", list.ToArray());
+                UIManager.DefaultAlert(transform, str);
+            },
+            onError: (code, desc) =>
+            {
+                UIManager.ErrorAlert(transform, code, desc);
+            }
+        ));
+
+        Debug.Log("GetGroupMuteListFromServerBtnAction");
+    }
+
+    void GetGroupSpecificationFromServerBtnAction() {
+
+        SDKClient.Instance.GroupManager.GetGroupSpecificationFromServer(currentGroupId, new ValueCallBack<Group>(
+            onSuccess: (group) => {
+                List<string> list = new List<string>();
+                list.Add(group.Name);
+                list.Add(group.Description);
+                string str = string.Join(",", list.ToArray());
+                UIManager.DefaultAlert(transform, str);
+            },
+            onError: (code, desc) =>
+            {
+                UIManager.ErrorAlert(transform, code, desc);
+            }
+        ));
+
+        Debug.Log("GetGroupSpecificationFromServerBtnAction");
+
+    }
+
+    void GetGroupWhiteListFromServerBtnAction() {
+        SDKClient.Instance.GroupManager.GetGroupWhiteListFromServer(currentGroupId, handle: new ValueCallBack<List<string>>(
+            onSuccess: (list) => {
+                string str = string.Join(",", list.ToArray());
+                UIManager.DefaultAlert(transform, str);
+            },
+            onError: (code, desc) =>
+            {
+                UIManager.ErrorAlert(transform, code, desc);
+            }
+        ));
+
+        Debug.Log("GetGroupWhiteListFromServerBtnAction");
+    }
+
+    void GetGroupWithIdBtnAction() {
+        Group group = SDKClient.Instance.GroupManager.GetGroupWithId(currentGroupId);
+        if (group != null)
+        {
+            UIManager.SuccessAlert(transform);
+        }
+        else {
+            UIManager.DefaultAlert(transform, "未获取到群组");
+        }
+
+        Debug.Log("GetGroupWithIdBtnAction");
+    }
+
+    void GetJoinedGroupsBtnAction() {
+        List<Group> groupList = SDKClient.Instance.GroupManager.GetJoinedGroups();
+        List<string> list = new List<string>();
+        foreach (var group in groupList) {
+            list.Add(group.Name);
+        }
+        string str = string.Join(",", list.ToArray());
+        UIManager.DefaultAlert(transform, str);
+
+        Debug.Log("GetJoinedGroupsBtnAction");
+    }
+
+    void GetJoinedGroupsFromServerBtnAction() {
+        SDKClient.Instance.GroupManager.GetJoinedGroupsFromServer(handle: new ValueCallBack<List<Group>>(
+            onSuccess: (groupList) => {
+                List<string> list = new List<string>();
+                foreach (var group in groupList)
+                {
+                    list.Add(group.Name);
+                }
+                string str = string.Join(",", list.ToArray());
+                UIManager.DefaultAlert(transform, str);
+            },
+            onError: (code, desc) =>
+            {
+                UIManager.ErrorAlert(transform, code, desc);
+            }
+        ));
+        Debug.Log("GetJoinedGroupsFromServerBtnAction");
+    }
+
+    void GetPublicGroupsFromServerBtnAction() {
+        SDKClient.Instance.GroupManager.GetPublicGroupsFromServer(handle: new ValueCallBack<CursorResult<GroupInfo>>(
+            onSuccess: (result) => {
+                List<string> list = new List<string>();
+                foreach (var group in result.Data)
+                {
+                    list.Add(group.GroupName);
+                }
+                string str = string.Join(",", list.ToArray());
+                UIManager.DefaultAlert(transform, str);
+            },
+            onError: (code, desc) =>
+            {
+                UIManager.ErrorAlert(transform, code, desc);
+            }
+        ));
+    }
+
+    void JoinPublicGroupBtnAction() {
+
+        SDKClient.Instance.GroupManager.JoinPublicGroup(currentGroupId, new CallBack(
+            onSuccess: () => { UIManager.SuccessAlert(transform); },
+            onError:(code, desc) => { UIManager.ErrorAlert(transform, code, desc); }
+        ));
+
+        Debug.Log("JoinPublicGroupBtnAction");
+    }
+
+    void LeaveGroupBtnAction() {
+        SDKClient.Instance.GroupManager.LeaveGroup(currentGroupId, new CallBack(
+            onSuccess: () => { UIManager.SuccessAlert(transform); },
+            onError: (code, desc) => { UIManager.ErrorAlert(transform, code, desc); }
+        ));
+        Debug.Log("LeaveGroupBtnAction");
+    }
+
+    void MuteAllMembersBtnAction() {
+        SDKClient.Instance.GroupManager.MuteGroupAllMembers(currentGroupId, new CallBack(
+            onSuccess: () => { UIManager.SuccessAlert(transform); },
+            onError: (code, desc) => { UIManager.ErrorAlert(transform, code, desc); }
+        ));
+        Debug.Log("MuteAllMembersBtnAction");
+    }
+
+    void MuteMembersBtnAction() {
+
+        InputAlertConfig config = new InputAlertConfig((dict) => {
+            string member = dict["memberId"];
+            List<string> list = new List<string>();
+            list.Add(member);
+            SDKClient.Instance.GroupManager.MuteGroupMembers(currentGroupId, list, new CallBack(
+                onSuccess: () => { UIManager.SuccessAlert(transform); },
+                onError: (code, desc) => { UIManager.ErrorAlert(transform, code, desc); }
+            ));
+        });
+
+        config.AddField("memberId");
+
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("MuteMembersBtnAction");
+    }
+
+    void RemoveAdminBtnAction() {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            SDKClient.Instance.GroupManager.RemoveGroupAdmin(currentGroupId, dict["adminId"], new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("adminId");
+
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("RemoveAdminBtnAction");
+    }
+
+    void RemoveGroupSharedFileBtnAction() {
+
+        Debug.Log("RemoveGroupSharedFileBtnAction");
+    }
+
+    void RemoveMembersBtnAction() {
+
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            List<string> list = new List<string>();
+            list.Add(dict["MemberId"]);
+            SDKClient.Instance.GroupManager.RemoveGroupMembers(currentGroupId, list, new CallBack (
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("MemberId");
+
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("RemoveMembersBtnAction");
+    }
+    void RemoveWhiteListBtnAction() {
+
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            List<string> list = new List<string>();
+            list.Add(dict["MemberId"]);
+            SDKClient.Instance.GroupManager.RemoveGroupWhiteList(currentGroupId, list, new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("MemberId");
+
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("RemoveWhiteListBtnAction");
+    }
+    void RequestToJoinPublicGroupBtnAction() {
+
+        SDKClient.Instance.GroupManager.applyJoinToGroup(currentGroupId, handle: new CallBack(
+            onSuccess: () => { UIManager.SuccessAlert(transform); },
+            onError: (code, desc) => { UIManager.ErrorAlert(transform, code, desc); }
+        ));
+
+        Debug.Log("RequestToJoinPublicGroupBtnAction");
+    }
+
+    void UnblockGroupBtnAction() {
+        SDKClient.Instance.GroupManager.UnBlockGroup(currentGroupId, new CallBack(
+            onSuccess: () => { UIManager.SuccessAlert(transform); },
+            onError: (code, desc) => { UIManager.ErrorAlert(transform, code, desc); }
+        ));
+        Debug.Log("UnblockGroupBtnAction");
+    }
+
+    void UnblockMembersBtnAction() {
+
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            List<string> list = new List<string>();
+            list.Add(dict["memberId"]);
+            SDKClient.Instance.GroupManager.UnBlockGroupMembers(currentGroupId, list, new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("memberId");
+
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("UnblockMembersBtnAction");
+    }
+
+    void UnMuteAllMembersBtnAction() {
+        SDKClient.Instance.GroupManager.UnMuteGroupAllMembers(currentGroupId, new CallBack(
+            onSuccess: () => { UIManager.SuccessAlert(transform); },
+            onError: (code, desc) => { UIManager.ErrorAlert(transform, code, desc); }
+        ));
+        Debug.Log("UnMuteAllMembersBtnAction");
+    }
+
+    void UnMuteMembersBtnAction() {
+
+        InputAlertConfig config = new InputAlertConfig((dict) => {
+            string member = dict["memberId"];
+            List<string> list = new List<string>();
+            list.Add(member);
+            SDKClient.Instance.GroupManager.UnMuteGroupMembers(currentGroupId, list, new CallBack(
+                onSuccess: () => { UIManager.SuccessAlert(transform); },
+                onError: (code, desc) => { UIManager.ErrorAlert(transform, code, desc); }
+            ));
+        });
+
+        config.AddField("memberId");
+
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("UnMuteMembersBtnAction");
+
+    }
+    void UpdateGroupAnnouncementBtnAction() {
+
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            SDKClient.Instance.GroupManager.UpdateGroupAnnouncement(currentGroupId, dict["Announcement"], new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("Announcement");
+
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("UpdateGroupAnnouncementBtnAction");
+    }
+
+    void UpdateGroupExtBtnAction() {
+
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            SDKClient.Instance.GroupManager.UpdateGroupExt(currentGroupId, dict["ext"], new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("ext");
+
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("UpdateGroupExtBtnAction");
+    }
+
+    void UploadGroupSharedFileBtnAction() {
+        UIManager.UnfinishedAlert(transform);
+        Debug.Log("UploadGroupSharedFileBtnAction");
+    }
 
 
     void backButtonAction()
@@ -213,5 +871,159 @@ public class GroupManagerTest : MonoBehaviour
     void Update()
     {
 
+    }
+
+    // 收到群组邀请
+    public void OnInvitationReceivedFromGroup(string groupId, string groupName, string inviter, string reason)
+    {
+        UIManager.TitleAlert(transform, "收到群组邀请", $"groupId: {groupId}",
+            () =>
+            {
+                SDKClient.Instance.GroupManager.AcceptGroupInvitation(groupId, new ValueCallBack<Group>(
+                    onSuccess: (group) =>
+                    {
+                        UIManager.SuccessAlert(transform);
+                    },
+                    onError: (code, desc) =>
+                    {
+                        UIManager.ErrorAlert(transform, code, desc);
+                    }
+                ));
+            },
+            () =>
+            {
+                SDKClient.Instance.GroupManager.DeclineGroupInvitation(groupId, handle: new CallBack(
+                    onSuccess: () =>
+                    {
+                        UIManager.SuccessAlert(transform);
+                    },
+                    onError: (code, desc) =>
+                    {
+                        UIManager.ErrorAlert(transform, code, desc);
+                    }
+                ));
+            },
+            "同意",
+            "拒绝"
+        );
+    }
+
+    public void OnRequestToJoinReceivedFromGroup(string groupId, string groupName, string applicant, string reason)
+    {
+        UIManager.TitleAlert(transform, "收到加群申请", $"groupId: {groupId}, user: {applicant}",
+            () =>
+            {
+                SDKClient.Instance.GroupManager.AcceptGroupJoinApplication(groupId, applicant, new CallBack(
+                    onSuccess: () =>
+                    {
+                        UIManager.SuccessAlert(transform);
+                    },
+                    onError: (code, desc) =>
+                    {
+                        UIManager.ErrorAlert(transform, code, desc);
+                    }
+                ));
+            },
+            () =>
+            {
+                SDKClient.Instance.GroupManager.DeclineGroupJoinApplication(groupId, applicant, handle: new CallBack(
+                    onSuccess: () =>
+                    {
+                        UIManager.SuccessAlert(transform);
+                    },
+                    onError: (code, desc) =>
+                    {
+                        UIManager.ErrorAlert(transform, code, desc);
+                    }
+                ));
+            },
+            "同意",
+            "拒绝"
+        );
+    }
+
+    public void OnRequestToJoinAcceptedFromGroup(string groupId, string groupName, string accepter)
+    {
+        UIManager.DefaultAlert(transform, $"加群申请已同意,groupId: {groupId}");
+    }
+
+    public void OnRequestToJoinDeclinedFromGroup(string groupId, string groupName, string decliner, string reason)
+    {
+        UIManager.DefaultAlert(transform, $"加群申请被拒绝:{groupId} :{decliner}");
+    }
+
+    public void OnInvitationAcceptedFromGroup(string groupId, string invitee, string reason)
+    {
+        UIManager.DefaultAlert(transform, $"{groupId}邀请被{invitee}同意");
+    }
+
+    public void OnInvitationDeclinedFromGroup(string groupId, string invitee, string reason)
+    {
+        UIManager.DefaultAlert(transform, $"{groupId}邀请被{invitee}拒绝");
+    }
+
+    public void OnUserRemovedFromGroup(string groupId, string groupName)
+    {
+        UIManager.DefaultAlert(transform, $"被{groupId}移除");
+    }
+
+    public void OnDestroyedFromGroup(string groupId, string groupName)
+    {
+        UIManager.DefaultAlert(transform, $"群组{groupId}已销毁");
+    }
+
+    public void OnAutoAcceptInvitationFromGroup(string groupId, string inviter, string inviteMessage)
+    {
+        UIManager.DefaultAlert(transform, $"自动同意群组{groupId}邀请，邀请人{inviter}");
+    }
+
+    public void OnMuteListAddedFromGroup(string groupId, List<string> mutes, int muteExpire)
+    {
+        UIManager.DefaultAlert(transform, $"{groupId}禁言列表添加");
+    }
+
+    public void OnMuteListRemovedFromGroup(string groupId, List<string> mutes)
+    {
+        UIManager.DefaultAlert(transform, $"{groupId}禁言列表移除");
+    }
+
+    public void OnAdminAddedFromGroup(string groupId, string administrator)
+    {
+        UIManager.DefaultAlert(transform, $"{groupId}管理员列表添加{administrator}");
+    }
+
+    public void OnAdminRemovedFromGroup(string groupId, string administrator)
+    {
+        UIManager.DefaultAlert(transform, $"{groupId}管理员列表移除{administrator}");
+    }
+
+    public void OnOwnerChangedFromGroup(string groupId, string newOwner, string oldOwner)
+    {
+        UIManager.DefaultAlert(transform, $"{groupId}群主由{oldOwner}变为{newOwner}");
+    }
+
+    public void OnMemberJoinedFromGroup(string groupId, string member)
+    {
+        UIManager.DefaultAlert(transform, $"{member}加入群组{groupId}");
+    }
+
+    public void OnMemberExitedFromGroup(string groupId, string member)
+    {
+        UIManager.DefaultAlert(transform, $"{member}离开群组{groupId}");
+    }
+
+    public void OnAnnouncementChangedFromGroup(string groupId, string announcement)
+    {
+        UIManager.DefaultAlert(transform, $"{groupId}群组公告变更{announcement}");
+    }
+
+    public void OnSharedFileAddedFromGroup(string groupId, GroupSharedFile sharedFile)
+    {
+        UIManager.DefaultAlert(transform, $"{groupId}群组共享文件增加");
+    }
+
+    public void OnSharedFileDeletedFromGroup(string groupId, string fileId)
+    {
+        UIManager.DefaultAlert(transform, $"{groupId}群组共享文件被移除");
     }
 }

@@ -26,10 +26,13 @@
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     dict[@"callbackId"] = aCallbackId;
     if (!aType && !jsonObject) {
-        UnitySendMessage(Callback_Obj, "onSuccess", [Transfrom JsonObjectToCSString:dict]);
+        UnitySendMessage(Callback_Obj, "OnSuccess", [Transfrom JsonObjectToCSString:dict]);
     }else {
         dict[@"type"] = aType;
         if (jsonObject != nil) {
+            if (![jsonObject isKindOfClass:[NSString class]]) {
+                jsonObject = [Transfrom NSStringFromJsonObject:jsonObject];
+            }
             dict[@"value"] = jsonObject;
         }
         UnitySendMessage(Callback_Obj, "OnSuccessValue", [Transfrom JsonObjectToCSString:dict]);

@@ -28,35 +28,24 @@
 }
 
 
-- (void)getGroupWithId:(NSDictionary *)param callbackId:(NSString *)callbackId  {
+- (id)getGroupWithId:(NSDictionary *)param {
     if (!param) {
-        EMError *aError = [[EMError alloc] initWithDescription:@"Param error" code: EMErrorMessageIncludeIllegalContent];
-        [self onError:callbackId error:aError];
-        return;
+        return nil;
     }
     EMGroup *group = [EMGroup groupWithId:param[@"groupId"]];
-    [self onSuccess:@"EMGroup" callbackId:callbackId userInfo:[group toJson]];
+    return [group toJson];
 }
 
 
-- (void)getJoinedGroups:(NSDictionary *)param callbackId:(NSString *)callbackId  {
+- (id)getJoinedGroups:(NSDictionary *)param {
     NSArray *joinedGroups = [EMClient.sharedClient.groupManager getJoinedGroups];
     NSMutableArray *list = [NSMutableArray array];
     for (EMGroup *group in joinedGroups) {
-        [list addObject:[group toJson]];
+        [list addObject:[Transfrom NSStringFromJsonObject:[group toJson]]];
     }
-    [self onSuccess:@"List<EMGroup>" callbackId:callbackId userInfo:list];
+    return list;
 }
 
-- (void)getGroupsWithoutPushNotification:(NSDictionary *)param callbackId:(NSString *)callbackId  {
-    EMError *error = nil;
-    NSArray *groups = [EMClient.sharedClient.groupManager getGroupsWithoutPushNotification:&error];
-    NSMutableArray *list = [NSMutableArray array];
-    for (EMGroup *group in groups) {
-        [list addObject:[group toJson]];
-    }
-    [self onSuccess:@"List<EMGroup>" callbackId:callbackId userInfo:list];
-}
 
 - (void)getJoinedGroupsFromServer:(NSDictionary *)param callbackId:(NSString *)callbackId  {
     if (!param) {
@@ -73,7 +62,7 @@
         if (!aError) {
             NSMutableArray *list = [NSMutableArray array];
             for (EMGroup *group in aList) {
-                [list addObject:[group toJson]];
+                [list addObject:[Transfrom NSStringFromJsonObject:[group toJson]]];
             }
             [weakSelf onSuccess:@"List<EMGroup>" callbackId:callId userInfo:list];
         }else {
@@ -95,7 +84,7 @@
                                                                  completion:^(EMCursorResult *aResult, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"List<EMGroupInfo>" callbackId:callId userInfo:[aResult toJson]];
+            [weakSelf onSuccess:@"EMCursorResult<EMGroupInfo>" callbackId:callId userInfo:[aResult toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -110,11 +99,15 @@
     }
     __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
+    
+    NSArray *inviteMembers = [Transfrom NSStringToJsonObject:param[@"inviteMembers"]];
+    NSDictionary *optionJson = [Transfrom NSStringToJsonObject:param[@"options"]];
+    
     [EMClient.sharedClient.groupManager createGroupWithSubject:param[@"groupName"]
                                                    description:param[@"desc"]
-                                                      invitees:param[@"inviteMembers"]
+                                                      invitees:inviteMembers
                                                        message:param[@"inviteReason"]
-                                                       setting:[EMGroupOptions formJson:param[@"options"]]
+                                                       setting:[EMGroupOptions formJson:optionJson]
                                                     completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
@@ -299,7 +292,7 @@
                                         completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
+            [weakSelf onSuccess:nil callbackId:callbackId userInfo:nil];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -312,14 +305,17 @@
         [self onError:callbackId error:aError];
         return;
     }
+    
+    NSArray *members = [Transfrom NSStringToJsonObject:param[@"members"]];
+    
     __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
-    [EMClient.sharedClient.groupManager removeMembers:param[@"members"]
+    [EMClient.sharedClient.groupManager removeMembers:members
                                             fromGroup:param[@"groupId"]
                                            completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
+            [weakSelf onSuccess:nil callbackId:callbackId userInfo:nil];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -333,14 +329,17 @@
         [self onError:callbackId error:aError];
         return;
     }
+    
+    NSArray *members = [Transfrom NSStringToJsonObject:param[@"members"]];
+    
     __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
-    [EMClient.sharedClient.groupManager blockMembers:param[@"members"]
+    [EMClient.sharedClient.groupManager blockMembers:members
                                            fromGroup:param[@"groupId"]
                                           completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
+            [weakSelf onSuccess:nil callbackId:callbackId userInfo:nil];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -353,14 +352,15 @@
         [self onError:callbackId error:aError];
         return;
     }
+    NSArray *members = [Transfrom NSStringToJsonObject:param[@"members"]];
     __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
-    [EMClient.sharedClient.groupManager unblockMembers:param[@"members"]
+    [EMClient.sharedClient.groupManager unblockMembers:members
                                              fromGroup:param[@"groupId"]
                                             completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
+            [weakSelf onSuccess:nil callbackId:callbackId userInfo:nil];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -380,7 +380,7 @@
                                                 completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
+            [weakSelf onSuccess:nil callbackId:callbackId userInfo:nil];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -400,7 +400,7 @@
                                                completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
+            [weakSelf onSuccess:nil callbackId:callbackId userInfo:nil];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -458,7 +458,7 @@
                                         completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
+            [weakSelf onSuccess:nil callbackId:callbackId userInfo:nil];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -477,7 +477,7 @@
                                           completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
+            [weakSelf onSuccess:nil callbackId:callbackId userInfo:nil];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -497,7 +497,7 @@
                                               completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
+            [weakSelf onSuccess:nil callbackId:callbackId userInfo:nil];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -512,12 +512,12 @@
     }
     __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
-    [EMClient.sharedClient.groupManager addAdmin:param[@"admin"]
+    [EMClient.sharedClient.groupManager addAdmin:param[@"memberId"]
                                          toGroup:param[@"groupId"]
                                       completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
+            [weakSelf onSuccess:nil callbackId:callbackId userInfo:nil];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -537,7 +537,7 @@
                                          completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
+            [weakSelf onSuccess:nil callbackId:callbackId userInfo:nil];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -550,15 +550,16 @@
         [self onError:callbackId error:aError];
         return;
     }
+    NSArray *members = [Transfrom NSStringToJsonObject:param[@"members"]];
     __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
-    [EMClient.sharedClient.groupManager muteMembers:param[@"members"]
-                                   muteMilliseconds:[param[@"duration"] integerValue]
+    [EMClient.sharedClient.groupManager muteMembers:members
+                                   muteMilliseconds:-1
                                           fromGroup:param[@"groupId"]
                                          completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
+            [weakSelf onSuccess:nil callbackId:callbackId userInfo:nil];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -571,14 +572,15 @@
         [self onError:callbackId error:aError];
         return;
     }
+    NSArray *members = [Transfrom NSStringToJsonObject:param[@"members"]];
     __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
-    [EMClient.sharedClient.groupManager unmuteMembers:param[@"members"]
+    [EMClient.sharedClient.groupManager unmuteMembers:members
                                             fromGroup:param[@"groupId"]
                                            completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
+            [weakSelf onSuccess:nil callbackId:callbackId userInfo:nil];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -597,7 +599,7 @@
                                                      completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
+            [weakSelf onSuccess:nil callbackId:callbackId userInfo:nil];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -616,7 +618,7 @@
                                                        completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
+            [weakSelf onSuccess:nil callbackId:callbackId userInfo:nil];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -631,11 +633,14 @@
     }
     __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
-    [EMClient.sharedClient.groupManager addWhiteListMembers:param[@"members"]
+    
+    NSArray *members = [Transfrom NSStringToJsonObject:param[@"members"]];
+    
+    [EMClient.sharedClient.groupManager addWhiteListMembers:members
                                                   fromGroup:param[@"groupId"]
                                                  completion:^(EMGroup *aGroup, EMError *aError) {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
+            [weakSelf onSuccess:nil callbackId:callbackId userInfo:nil];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -648,13 +653,14 @@
         [self onError:callbackId error:aError];
         return;
     }
+    NSArray *members = [Transfrom NSStringToJsonObject:param[@"members"]];
     __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
-    [EMClient.sharedClient.groupManager removeWhiteListMembers:param[@"members"]
+    [EMClient.sharedClient.groupManager removeWhiteListMembers:members
                                                      fromGroup:param[@"groupId"]
                                                     completion:^(EMGroup *aGroup, EMError *aError) {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
+            [weakSelf onSuccess:nil callbackId:callbackId userInfo:nil];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -741,7 +747,7 @@
                                                            completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
+            [weakSelf onSuccess:nil callbackId:callbackId userInfo:nil];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -762,7 +768,7 @@
                                                   completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
+            [weakSelf onSuccess:nil callbackId:callbackId userInfo:nil];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -781,7 +787,7 @@
                                              completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
+            [weakSelf onSuccess:nil callbackId:callbackId userInfo:nil];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -801,7 +807,7 @@
                                                       completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
+            [weakSelf onSuccess:nil callbackId:callbackId userInfo:nil];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -821,7 +827,7 @@
                                                      completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
+            [weakSelf onSuccess:nil callbackId:callbackId userInfo:nil];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -842,7 +848,7 @@
                                                      completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
+            [weakSelf onSuccess:nil callbackId:callbackId userInfo:nil];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -890,24 +896,5 @@
     }];
 }
 
-- (void)ignoreGroupPush:(NSDictionary *)param callbackId:(NSString *)callbackId  {
-    if (!param) {
-        EMError *aError = [[EMError alloc] initWithDescription:@"Param error" code: EMErrorMessageIncludeIllegalContent];
-        [self onError:callbackId error:aError];
-        return;
-    }
-    __weak EMGroupManagerWrapper * weakSelf = self;
-    __block NSString *callId = callbackId;
-    [EMClient.sharedClient.groupManager updatePushServiceForGroup:param[@"groupId"]
-                                                    isPushEnabled:[param[@"enable"] boolValue]
-                                                       completion:^(EMGroup *aGroup, EMError *aError)
-     {
-        if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
-        }else {
-            [weakSelf onError:callId error:aError];
-        }
-    }];
-}
 
 @end

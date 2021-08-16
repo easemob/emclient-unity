@@ -48,6 +48,11 @@
     if (!jsonObject) {
         return nil;
     }
+    
+    if ([jsonObject isKindOfClass:[NSString class]]) {
+        return jsonObject;
+    }
+    
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonObject
                                                        options:NSJSONWritingPrettyPrinted

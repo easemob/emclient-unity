@@ -33,7 +33,7 @@ namespace ChatSDK
         public override void applyJoinToGroup(string groupId, string reason, CallBack handle = null) {
         }
 
-        public override void AcceptInvitationFromGroup(string groupId, ValueCallBack<Group> handle = null)
+        public override void AcceptGroupInvitation(string groupId, ValueCallBack<Group> handle = null)
         {
             ChatAPINative.GroupManager_AcceptInvitationFromGroup(client, groupId, "",
                 onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
@@ -50,21 +50,22 @@ namespace ChatSDK
                 handle?.Error);
         }
 
-        public override void AcceptJoinApplication(string groupId, string username, CallBack handle = null)
+        public override void AcceptGroupJoinApplication(string groupId, string username, CallBack handle = null)
         {
             ChatAPINative.GroupManager_AcceptJoinGroupApplication(client, groupId, username,
                 onSuccess: () => handle?.Success(),
                 onError: (int code, string desc) => handle?.Error(code, desc));
         }
 
-        public override void AddAdmin(string groupId, string memberId, ValueCallBack<Group> handle = null)
+        public override void AddGroupAdmin(string groupId, string memberId, CallBack handle = null)
         {
             ChatAPINative.GroupManager_AddAdmin(client, groupId, memberId,
                 onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
                     if (dType == DataType.Group && dSize == 1)
                     {
                         var result = Marshal.PtrToStructure<GroupTO>(data[0]);
-                        handle?.OnSuccessValue(result.GroupInfo());
+                        //handle?.OnSuccessValue(result.GroupInfo());
+                        handle?.Success();
                     }
                     else
                     {
@@ -74,7 +75,7 @@ namespace ChatSDK
                 handle?.Error);
         }
 
-        public override void AddMembers(string groupId, List<string> members, CallBack handle = null)
+        public override void AddGroupMembers(string groupId, List<string> members, CallBack handle = null)
         {
             int size = members.Count;
             string[] memberArray = new string[size];
@@ -90,7 +91,7 @@ namespace ChatSDK
                 onError: (int code, string desc) => handle?.Error(code, desc));
         }
 
-        public override void AddWhiteList(string groupId, List<string> members, CallBack handle = null)
+        public override void AddGroupWhiteList(string groupId, List<string> members, CallBack handle = null)
         {
             int size = members.Count;
             string[] memberArray = new string[size];
@@ -113,7 +114,7 @@ namespace ChatSDK
                 onError: (int code, string desc) => handle?.Error(code, desc));
         }
 
-        public override void BlockMembers(string groupId, List<string> members, CallBack handle = null)
+        public override void BlockGroupMembers(string groupId, List<string> members, CallBack handle = null)
         {
             int size = members.Count;
             string[] memberArray = new string[size];
@@ -143,14 +144,14 @@ namespace ChatSDK
                 onError: (int code, string desc) => handle?.Error(code, desc));
         }
 
-        public override void ChangeGroupOwner(string groupId, string newOwner, ValueCallBack<Group> handle = null)
+        public override void ChangeGroupOwner(string groupId, string newOwner, CallBack handle = null)
         {
             ChatAPINative.GroupManager_TransferGroupOwner(client, groupId, newOwner,
                 onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
                     if (dType == DataType.Group && dSize == 1)
                     {
                         var result = Marshal.PtrToStructure<GroupTO>(data[0]);
-                        handle?.OnSuccessValue(result.GroupInfo());
+                        handle?.Success();
                     }
                     else
                     {
@@ -211,14 +212,14 @@ namespace ChatSDK
                 handle?.Error);
         }
 
-        public override void DeclineInvitationFromGroup(string groupId, string reason = null, CallBack handle = null)
+        public override void DeclineGroupInvitation(string groupId, string reason = null, CallBack handle = null)
         {
             ChatAPINative.GroupManager_DeclineInvitationFromGroup(client, groupId, "", reason,
                 onSuccess: () => handle?.Success(),
                 onError: (int code, string desc) => handle?.Error(code, desc));
         }
 
-        public override void DeclineJoinApplication(string groupId, string username, string reason = null, CallBack handle = null)
+        public override void DeclineGroupJoinApplication(string groupId, string username, string reason = null, CallBack handle = null)
         {
             ChatAPINative.GroupManager_DeclineJoinGroupApplication(client, groupId, username, reason,
                 onSuccess: () => handle?.Success(),
@@ -552,14 +553,14 @@ namespace ChatSDK
                 onError: (int code, string desc) => handle?.Error(code, desc));
         }
 
-        public override void MuteAllMembers(string groupId, ValueCallBack<Group> handle = null)
+        public override void MuteGroupAllMembers(string groupId, CallBack handle = null)
         {
             ChatAPINative.GroupManager_MuteAllGroupMembers(client, groupId,
                 onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
                     if (dType == DataType.Group && 1 == dSize)
                     {
                         var result = Marshal.PtrToStructure<GroupTO>(data[0]);
-                        handle?.OnSuccessValue(result.GroupInfo());
+                        handle?.Success();
                     }
                     else
                     {
@@ -572,7 +573,7 @@ namespace ChatSDK
                 handle?.Error);
         }
 
-        public override void MuteMembers(string groupId, List<string> members, ValueCallBack<Group> handle = null)
+        public override void MuteGroupMembers(string groupId, List<string> members, CallBack handle = null)
         {
             int size = members.Count;
             string[] memberArray = new string[size];
@@ -591,7 +592,7 @@ namespace ChatSDK
                     if (dType == DataType.Group && dSize == 1)
                     {
                         var result = Marshal.PtrToStructure<GroupTO>(data[0]);
-                        handle?.OnSuccessValue(result.GroupInfo());
+                        handle?.Success();
                     }
                     else
                     {
@@ -605,14 +606,14 @@ namespace ChatSDK
 
         }
 
-        public override void RemoveAdmin(string groupId, string memberId, ValueCallBack<Group> handle = null)
+        public override void RemoveGroupAdmin(string groupId, string memberId, CallBack handle = null)
         {
             ChatAPINative.GroupManager_RemoveGroupAdmin(client, groupId, memberId, 
                 onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
                     if (dType == DataType.Group && dSize == 1)
                     {
                         var result = Marshal.PtrToStructure<GroupTO>(data[0]);
-                        handle?.OnSuccessValue(result.GroupInfo());
+                        handle?.Success();
                     }
                     else
                     {
@@ -629,7 +630,7 @@ namespace ChatSDK
                onError: (int code, string desc) => handle?.Error(code, desc));
         }
 
-        public override void RemoveMembers(string groupId, List<string> members, CallBack handle = null)
+        public override void RemoveGroupMembers(string groupId, List<string> members, CallBack handle = null)
         {
             //TODO: C++ sdie remove members return a EMGroupPtr instance, shuold be ValueCallBack?
             int size = members.Count;
@@ -646,7 +647,7 @@ namespace ChatSDK
                 onError: (int code, string desc) => handle?.Error(code, desc));
         }
 
-        public override void RemoveWhiteList(string groupId, List<string> members, CallBack handle = null)
+        public override void RemoveGroupWhiteList(string groupId, List<string> members, CallBack handle = null)
         {
             int size = members.Count;
             string[] memberArray = new string[size];
@@ -669,7 +670,7 @@ namespace ChatSDK
                onError: (int code, string desc) => handle?.Error(code, desc));
         }
 
-        public override void UnBlockMembers(string groupId, List<string> members, CallBack handle = null)
+        public override void UnBlockGroupMembers(string groupId, List<string> members, CallBack handle = null)
         {
             int size = members.Count;
             string[] memberArray = new string[size];
@@ -685,14 +686,14 @@ namespace ChatSDK
                 onError: (int code, string desc) => handle?.Error(code, desc));
         }
 
-        public override void UnMuteAllMembers(string groupId, ValueCallBack<Group> handle = null)
+        public override void UnMuteGroupAllMembers(string groupId, CallBack handle = null)
         {
             ChatAPINative.GroupManager_UnMuteAllMembers(client, groupId,
                 onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
                     if (dType == DataType.Group && 1 == dSize)
                     {
                         var result = Marshal.PtrToStructure<GroupTO>(data[0]);
-                        handle?.OnSuccessValue(result.GroupInfo());
+                        handle?.Success();
                     }
                     else
                     {
@@ -705,7 +706,7 @@ namespace ChatSDK
                 handle?.Error);
         }
 
-        public override void UnMuteMembers(string groupId, List<string> members, ValueCallBack<Group> handle = null)
+        public override void UnMuteGroupMembers(string groupId, List<string> members, CallBack handle = null)
         {
             int size = members.Count;
             string[] memberArray = new string[size];
@@ -721,7 +722,7 @@ namespace ChatSDK
                     if (dType == DataType.Group && dSize == 1)
                     {
                         var result = Marshal.PtrToStructure<GroupTO>(data[0]);
-                        handle?.OnSuccessValue(result.GroupInfo());
+                        handle?.Success();
                     }
                     else
                     {
@@ -738,14 +739,14 @@ namespace ChatSDK
                onError: (int code, string desc) => handle?.Error(code, desc));
         }
 
-        public override void UpdateGroupExt(string groupId, string ext, ValueCallBack<Group> handle = null)
+        public override void UpdateGroupExt(string groupId, string ext, CallBack handle = null)
         {
             ChatAPINative.GroupManager_ChangeGroupExtension(client, groupId, ext,
                 onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
                     if (dType == DataType.Group && dSize == 1)
                     {
                         var result = Marshal.PtrToStructure<GroupTO>(data[0]);
-                        handle?.OnSuccessValue(result.GroupInfo());
+                        handle?.Success();
                     }
                     else
                     {

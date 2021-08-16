@@ -4,33 +4,32 @@ namespace ChatSDK
 {
     internal class GroupManager_Win : IGroupManager
     {
-
-        public override void applyJoinToGroup(string groupId, string reason, CallBack handle = null)
+        public override void AcceptGroupInvitation(string groupId, ValueCallBack<Group> handle = null)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void AcceptInvitationFromGroup(string groupId, ValueCallBack<Group> handle = null)
+        public override void AcceptGroupJoinApplication(string groupId, string username, CallBack handle = null)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void AcceptJoinApplication(string groupId, string username, CallBack handle = null)
+        public override void AddGroupAdmin(string groupId, string memberId, CallBack handle = null)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void AddAdmin(string groupId, string memberId, ValueCallBack<Group> handle = null)
+        public override void AddGroupMembers(string groupId, List<string> members, CallBack handle = null)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void AddMembers(string groupId, List<string> members, CallBack handle = null)
+        public override void AddGroupWhiteList(string groupId, List<string> members, CallBack handle = null)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void AddWhiteList(string groupId, List<string> members, CallBack handle = null)
+        public override void applyJoinToGroup(string groupId, string reason = "", CallBack handle = null)
         {
             throw new System.NotImplementedException();
         }
@@ -40,7 +39,7 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override void BlockMembers(string groupId, List<string> members, CallBack handle = null)
+        public override void BlockGroupMembers(string groupId, List<string> members, CallBack handle = null)
         {
             throw new System.NotImplementedException();
         }
@@ -55,7 +54,7 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override void ChangeGroupOwner(string groupId, string newOwner, ValueCallBack<Group> handle = null)
+        public override void ChangeGroupOwner(string groupId, string newOwner, CallBack handle = null)
         {
             throw new System.NotImplementedException();
         }
@@ -65,17 +64,17 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override void CreateGroup(string groupName, GroupOptions options, string desc, List<string> inviteMembers = null, string inviteReason = null, ValueCallBack<Group> handle = null)
+        public override void CreateGroup(string groupName, GroupOptions options, string desc = null, List<string> inviteMembers = null, string inviteReason = null, ValueCallBack<Group> handle = null)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void DeclineInvitationFromGroup(string groupId, string reason = null, CallBack handle = null)
+        public override void DeclineGroupInvitation(string groupId, string reason = null, CallBack handle = null)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void DeclineJoinApplication(string groupId, string username, string reason = null, CallBack handle = null)
+        public override void DeclineGroupJoinApplication(string groupId, string username, string reason = null, CallBack handle = null)
         {
             throw new System.NotImplementedException();
         }
@@ -105,7 +104,7 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override void GetGroupMemberListFromServer(string groupId, int pageSize = 200, string cursor = null, ValueCallBack<CursorResult<string>> handle = null)
+        public override void GetGroupMemberListFromServer(string groupId, int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<string>> handle = null)
         {
             throw new System.NotImplementedException();
         }
@@ -140,7 +139,7 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override void GetPublicGroupsFromServer(int pageSize = 200, string cursor = null, ValueCallBack<CursorResult<GroupInfo>> handle = null)
+        public override void GetPublicGroupsFromServer(int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<GroupInfo>> handle = null)
         {
             throw new System.NotImplementedException();
         }
@@ -155,17 +154,22 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override void MuteAllMembers(string groupId, ValueCallBack<Group> handle = null)
+        public override void MuteGroupAllMembers(string groupId, CallBack handle = null)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void MuteMembers(string groupId, List<string> members, ValueCallBack<Group> handle = null)
+        public override void MuteGroupMembers(string groupId, List<string> members, CallBack handle = null)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void RemoveAdmin(string groupId, string memberId, ValueCallBack<Group> handle = null)
+        public override void RemoveGroupAdmin(string groupId, string memberId, CallBack handle = null)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void RemoveGroupMembers(string groupId, List<string> members, CallBack handle = null)
         {
             throw new System.NotImplementedException();
         }
@@ -175,12 +179,7 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override void RemoveMembers(string groupId, List<string> members, CallBack handle = null)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override void RemoveWhiteList(string groupId, List<string> members, CallBack handle = null)
+        public override void RemoveGroupWhiteList(string groupId, List<string> members, CallBack handle = null)
         {
             throw new System.NotImplementedException();
         }
@@ -190,17 +189,17 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override void UnBlockMembers(string groupId, List<string> members, CallBack handle = null)
+        public override void UnBlockGroupMembers(string groupId, List<string> members, CallBack handle = null)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void UnMuteAllMembers(string groupId, ValueCallBack<Group> handle = null)
+        public override void UnMuteGroupAllMembers(string groupId, CallBack handle = null)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void UnMuteMembers(string groupId, List<string> members, ValueCallBack<Group> handle = null)
+        public override void UnMuteGroupMembers(string groupId, List<string> members, CallBack handle = null)
         {
             throw new System.NotImplementedException();
         }
@@ -210,7 +209,7 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override void UpdateGroupExt(string groupId, string ext, ValueCallBack<Group> handle = null)
+        public override void UpdateGroupExt(string groupId, string ext, CallBack handle = null)
         {
             throw new System.NotImplementedException();
         }

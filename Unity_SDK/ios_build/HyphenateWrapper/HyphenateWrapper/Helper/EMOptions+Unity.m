@@ -44,7 +44,7 @@
     
     EMOptions *options = [EMOptions optionsWithAppkey:aJson[@"app_key"]];
     options.isAutoLogin = [aJson[@"auto_login"] boolValue];
-    options.enableConsoleLog = [aJson[@"debug_model"] boolValue];
+    options.enableConsoleLog = [aJson[@"debug_mode"] boolValue];
     options.enableRequireReadAck = [aJson[@"require_ack"] boolValue];
     options.enableDeliveryAck = [aJson[@"require_delivery_ack"] boolValue];
     options.sortMessageByServerTime = [aJson[@"sort_message_by_server_time"] boolValue];

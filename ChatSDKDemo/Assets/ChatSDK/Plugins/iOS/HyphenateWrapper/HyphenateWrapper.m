@@ -194,16 +194,10 @@ void GroupManager_HandleMethodCall(const char* methodName, const char* jsonStrin
         [EMClientWrapper.instance.groupManager getGroupMuteListFromServer:dic callbackId:callId];
     }else if ([method isEqualToString:@"getGroupSpecificationFromServer"]) {
         [EMClientWrapper.instance.groupManager getGroupSpecificationFromServer:dic callbackId:callId];
-    }else if ([method isEqualToString:@"getGroupsWithoutPushNotification"]) {
-        [EMClientWrapper.instance.groupManager getGroupsWithoutPushNotification:dic callbackId:callId];
     }else if ([method isEqualToString:@"getGroupWhiteListFromServer"]) {
         [EMClientWrapper.instance.groupManager getGroupWhiteListFromServer:dic callbackId:callId];
-    }else if ([method isEqualToString:@"getGroupsWithoutPushNotification"]) {
-        [EMClientWrapper.instance.groupManager getGroupsWithoutPushNotification:dic callbackId:callId];
     }else if ([method isEqualToString:@"getPublicGroupsFromServer"]) {
         [EMClientWrapper.instance.groupManager getPublicGroupsFromServer:dic callbackId:callId];
-    }else if ([method isEqualToString:@"ignoreGroupPush"]) {
-        [EMClientWrapper.instance.groupManager ignoreGroupPush:dic callbackId:callId];
     }else if ([method isEqualToString:@"joinPublicGroup"]) {
         [EMClientWrapper.instance.groupManager joinPublicGroup:dic callbackId:callId];
     }else if ([method isEqualToString:@"leaveGroup"]) {

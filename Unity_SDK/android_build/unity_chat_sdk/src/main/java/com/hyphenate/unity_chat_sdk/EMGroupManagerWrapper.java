@@ -2,7 +2,6 @@ package com.hyphenate.unity_chat_sdk;
 
 import android.util.Log;
 
-import com.hyphenate.analytics.EMTimeTag;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCursorResult;
 import com.hyphenate.chat.EMGroup;
@@ -98,11 +97,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
         EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("EMGroup", callbackId) {
             @Override
             public void onSuccess(EMGroup object) {
-                try {
-                    sendJsonObjectToUnity(EMGroupHelper.toJson(object).toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                sendEmptyCallback();
             }
         };
 
@@ -181,11 +176,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
         EMUnityValueCallback<EMGroup> callback  = new EMUnityValueCallback<EMGroup>("EMGroup",callbackId) {
             @Override
             public void onSuccess(EMGroup group) {
-                try {
-                    sendJsonObjectToUnity(EMGroupHelper.toJson(group).toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                sendEmptyCallback();
             }
         };
 
@@ -527,11 +518,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
         EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("EMGroup", callbackId) {
             @Override
             public void onSuccess(EMGroup group) {
-                try {
-                    sendJsonObjectToUnity(EMGroupHelper.toJson(group).toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                sendEmptyCallback();
             }
         };
         EMClient.getInstance().groupManager().muteAllMembers(groupId, callBack);
@@ -550,11 +537,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
         EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("EMGroup",callbackId) {
             @Override
             public void onSuccess(EMGroup object) {
-                try {
-                    sendJsonObjectToUnity(EMGroupHelper.toJson(object).toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                sendEmptyCallback();
             }
         };
 
@@ -572,11 +555,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
         EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("EMGroup", callbackId) {
             @Override
             public void onSuccess(EMGroup group) {
-                try {
-                    sendJsonObjectToUnity(EMGroupHelper.toJson(group).toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                sendEmptyCallback();
             }
         };
 
@@ -652,11 +631,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
         EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("EMGroup", callbackId) {
             @Override
             public void onSuccess(EMGroup group) {
-                try {
-                    sendJsonObjectToUnity(EMGroupHelper.toJson(group).toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                sendEmptyCallback();
             }
         };
 
@@ -673,11 +648,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
         EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("EMGroup",callbackId) {
             @Override
             public void onSuccess(EMGroup object) {
-                try {
-                    sendJsonObjectToUnity(EMGroupHelper.toJson(object).toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                sendEmptyCallback();
             }
         };
 
@@ -707,11 +678,9 @@ public class EMGroupManagerWrapper extends EMWrapper {
         asyncRunnable(() -> {
             try {
                 EMGroup group = EMClient.getInstance().groupManager().updateGroupExtension(groupId, ext);
-                onSuccess("EMGroup", callbackId, EMGroupHelper.toJson(group).toString());
+                onSuccess(null, callbackId, null);
             } catch (HyphenateException e) {
                 onError(callbackId, e);
-            } catch ( JSONException e) {
-
             }
         });
     }
