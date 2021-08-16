@@ -85,12 +85,15 @@ public class ContactManagerTest : MonoBehaviour, IContactManagerDelegate
     void DeleteContactBtnAction()
     {
 
-        InputAlertConfig config = new InputAlertConfig("删除好友", (dict) => {
+        InputAlertConfig config = new InputAlertConfig("删除好友", (dict) =>
+        {
             SDKClient.Instance.ContactManager.DeleteContact(dict["id"], handle: new CallBack(
-                onSuccess: () => {
+                onSuccess: () =>
+                {
                     UIManager.DefaultAlert(transform, "成功");
                 },
-                onError: (code, desc) => {
+                onError: (code, desc) =>
+                {
                     UIManager.DefaultAlert(transform, $"失败code:{code}");
                 }
             ));
@@ -106,11 +109,13 @@ public class ContactManagerTest : MonoBehaviour, IContactManagerDelegate
     {
 
         SDKClient.Instance.ContactManager.GetAllContactsFromServer(new ValueCallBack<List<string>>(
-            onSuccess: (list) => {
+            onSuccess: (list) =>
+            {
                 string str = string.Join(",", list.ToArray());
                 UIManager.DefaultAlert(transform, str);
             },
-            onError: (code, desc) => {
+            onError: (code, desc) =>
+            {
                 UIManager.DefaultAlert(transform, $"失败code:{code}");
             }
         ));
@@ -126,12 +131,15 @@ public class ContactManagerTest : MonoBehaviour, IContactManagerDelegate
     void AddUserToBlockListBtnAction()
     {
 
-        InputAlertConfig config = new InputAlertConfig("添加黑名单", (dict) => {
+        InputAlertConfig config = new InputAlertConfig("添加黑名单", (dict) =>
+        {
             SDKClient.Instance.ContactManager.AddUserToBlockList(dict["id"], handle: new CallBack(
-                onSuccess: () => {
+                onSuccess: () =>
+                {
                     UIManager.DefaultAlert(transform, "成功");
                 },
-                onError: (code, desc) => {
+                onError: (code, desc) =>
+                {
                     UIManager.DefaultAlert(transform, $"失败code:{code}");
                 }
             ));
@@ -146,12 +154,15 @@ public class ContactManagerTest : MonoBehaviour, IContactManagerDelegate
     void RemoveUserFromBlockListBtnAction()
     {
 
-        InputAlertConfig config = new InputAlertConfig("移除黑名单", (dict) => {
+        InputAlertConfig config = new InputAlertConfig("移除黑名单", (dict) =>
+        {
             SDKClient.Instance.ContactManager.RemoveUserFromBlockList(dict["id"], handle: new CallBack(
-                onSuccess: () => {
+                onSuccess: () =>
+                {
                     UIManager.DefaultAlert(transform, "成功");
                 },
-                onError: (code, desc) => {
+                onError: (code, desc) =>
+                {
                     UIManager.DefaultAlert(transform, $"失败code:{code}");
                 }
             ));
@@ -166,11 +177,13 @@ public class ContactManagerTest : MonoBehaviour, IContactManagerDelegate
     void GetBlockListFromServerBtnAction()
     {
         SDKClient.Instance.ContactManager.GetBlockListFromServer(new ValueCallBack<List<string>>(
-            onSuccess: (list) => {
+            onSuccess: (list) =>
+            {
                 string str = string.Join(",", list.ToArray());
                 UIManager.DefaultAlert(transform, str);
             },
-            onError: (code, desc) => {
+            onError: (code, desc) =>
+            {
                 UIManager.DefaultAlert(transform, $"失败code:{code}");
             }
         ));
@@ -179,12 +192,15 @@ public class ContactManagerTest : MonoBehaviour, IContactManagerDelegate
     }
     void AcceptInvitationBtnAction()
     {
-        InputAlertConfig config = new InputAlertConfig("同意好友申请", (dict) => {
+        InputAlertConfig config = new InputAlertConfig("同意好友申请", (dict) =>
+        {
             SDKClient.Instance.ContactManager.AcceptInvitation(dict["id"], handle: new CallBack(
-                onSuccess: () => {
+                onSuccess: () =>
+                {
                     UIManager.DefaultAlert(transform, "成功");
                 },
-                onError: (code, desc) => {
+                onError: (code, desc) =>
+                {
                     UIManager.DefaultAlert(transform, $"失败code:{code}");
                 }
             ));
@@ -198,12 +214,15 @@ public class ContactManagerTest : MonoBehaviour, IContactManagerDelegate
     }
     void DeclineInvitationBtnAction()
     {
-        InputAlertConfig config = new InputAlertConfig("拒绝好友申请", (dict) => {
+        InputAlertConfig config = new InputAlertConfig("拒绝好友申请", (dict) =>
+        {
             SDKClient.Instance.ContactManager.DeclineInvitation(dict["id"], handle: new CallBack(
-                onSuccess: () => {
+                onSuccess: () =>
+                {
                     UIManager.DefaultAlert(transform, "成功");
                 },
-                onError: (code, desc) => {
+                onError: (code, desc) =>
+                {
                     UIManager.DefaultAlert(transform, $"失败code:{code}");
                 }
             ));
@@ -245,24 +264,17 @@ public class ContactManagerTest : MonoBehaviour, IContactManagerDelegate
 
     public void OnContactInvited(string username, string reason)
     {
-        UIManager.DefaultAlert(transform, $"OnContactInvited: {username}, reason: {reason}");
-        
-
-        /*
-        CallBack callback = new CallBack(
-            onSuccess: () => {
-                UIManager.SuccessAlert(transform);
-            },
-            onError: (code, desc) => {
-                UIManager.ErrorAlert(transform, code, desc);
-            }
+        CallBack callBack = new CallBack(
+            onSuccess: () => { UIManager.SuccessAlert(transform); },
+            onError: (code, desc) => { UIManager.ErrorAlert(transform, code, desc); }
         );
 
-        UIManager.AskAlert(transform, $"{username} 希望添加您为好友",
-            () => { SDKClient.Instance.ContactManager.AcceptInvitation(username, callback); },
-            () => { SDKClient.Instance.ContactManager.DeclineInvitation(username, callback); }
+        UIManager.TitleAlert(transform, $"收到好友申请", $"{username}添加您为好友",
+            () => { SDKClient.Instance.ContactManager.AcceptInvitation(username, callBack); },
+            () => { SDKClient.Instance.ContactManager.DeclineInvitation(username, callBack); },
+            "同意",
+            "拒绝"
         );
-        */
     }
 
     public void OnFriendRequestAccepted(string username)
