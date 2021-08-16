@@ -101,8 +101,9 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
         EMMessagePtr messagePtr = EMMessage::createReceiveMessage(to, from, messageBody, EMMessage::EMChatType::SINGLE, msgId);
         return messagePtr;
     } else {
-    EMMessagePtr messagePtr = EMMessage::createSendMessage(from, to, messageBody);
-    return messagePtr;
+        EMMessagePtr messagePtr = EMMessage::createSendMessage(from, to, messageBody);
+        messagePtr->setMsgId(msgId);
+        return messagePtr;
     }
 
 }
