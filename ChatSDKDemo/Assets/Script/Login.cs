@@ -94,6 +94,10 @@ public class Login : MonoBehaviour
         Options options = new Options("easemob-demo#chatdemoui");
         options.DebugMode = true;
         SDKClient.Instance.InitWithOptions(options);
+
+        if (SDKClient.Instance.IsLoggedIn) {
+            SceneManager.LoadSceneAsync("Main");
+        } 
     }
 
 }

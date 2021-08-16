@@ -362,8 +362,13 @@
 @implementation EMCustomMessageBody (Unity)
 
 + (EMCustomMessageBody *)fromJson:(NSDictionary *)aJson bodyType:(NSString *)type{
+    
+    NSString *params = aJson[@"params"];
+    
+    NSDictionary *dict = [Transfrom NSStringToJsonObject:params];
+    
     EMCustomMessageBody *ret = [[EMCustomMessageBody alloc] initWithEvent:aJson[@"event"]
-                                                                      ext:aJson[@"params"]];
+                                                                      ext:dict];
     return ret;
 }
 

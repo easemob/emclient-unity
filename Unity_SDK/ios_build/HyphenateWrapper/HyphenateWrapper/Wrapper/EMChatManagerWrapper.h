@@ -17,18 +17,18 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)recallMessage:(NSDictionary *)param callbackId:(NSString *)callbackId;
 - (void)ackConversationRead:(NSDictionary *)param callbackId:(NSString *)callbackId;
 - (void)ackMessageRead:(NSDictionary *)param callbackId:(NSString *)callbackId;
-- (void)updateChatMessage:(NSDictionary *)param callbackId:(NSString *)callbackId;
+- (void)searchChatMsgFromDB:(NSDictionary *)param callbackId:(NSString *)callbackId;
 
-- (id)deleteConversation:(NSDictionary *)param callbackId:(NSString *)callbackId;
-- (id)getConversation:(NSDictionary *)param callbackId:(NSString *)callbackId;
-- (id)getUnreadMessageCount:(NSDictionary *)param callbackId:(NSString *)callbackId;
-- (id)importMessages:(NSDictionary *)param callbackId:(NSString *)callbackId;
-- (id)loadAllConversations:(NSDictionary *)param callbackId:(NSString *)callbackId;
-- (id)getMessage:(NSDictionary *)param callbackId:(NSString *)callbackId;
-- (id)markAllChatMsgAsRead:(NSDictionary *)param callbackId:(NSString *)callbackId;
+- (id)deleteConversation:(NSDictionary *)param;
+- (id)getConversation:(NSDictionary *)param;
+- (id)getUnreadMessageCount:(NSDictionary *)param;
+- (id)importMessages:(NSDictionary *)param;
+- (id)loadAllConversations:(NSDictionary *)param;
+- (id)getMessage:(NSDictionary *)param;
+- (id)markAllChatMsgAsRead:(NSDictionary *)param;
 - (id)resendMessage:(NSDictionary *)param callbackId:(NSString *)callbackId;
-- (id)searchChatMsgFromDB:(NSDictionary *)param callbackId:(NSString *)callbackId;
 - (id)sendMessage:(NSDictionary *)param callbackId:(NSString *)callbackId;
+- (id)updateChatMessage:(NSDictionary *)param;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -41,10 +41,9 @@ public class EMChatRoomManagerWrapper extends EMWrapper {
             try {
                 EMClient.getInstance().chatroomManager().addChatRoomAdmin(roomId, admin);
                 EMChatRoom room = EMClient.getInstance().chatroomManager().getChatRoom(roomId);
-                onSuccess("EMChatRoom", callbackId, EMChatRoomHelper.toJson(room).toString());
+                onSuccess(null, callbackId, null);
             } catch (HyphenateException e) {
                 onError(callbackId, e);
-            } catch (JSONException e) {
             }
         });
     }
@@ -62,11 +61,9 @@ public class EMChatRoomManagerWrapper extends EMWrapper {
         asyncRunnable(() -> {
             try {
                 EMChatRoom room = EMClient.getInstance().chatroomManager().blockChatroomMembers(roomId, list);
-                onSuccess("EMChatRoom", callbackId, EMChatRoomHelper.toJson(room).toString());
+                onSuccess(null, callbackId, null);
             } catch (HyphenateException e) {
                 onError(callbackId, e);
-            } catch (JSONException e) {
-
             }
         });
     }
@@ -82,10 +79,9 @@ public class EMChatRoomManagerWrapper extends EMWrapper {
         asyncRunnable(() -> {
             try {
                 EMChatRoom room = EMClient.getInstance().chatroomManager().changeOwner(roomId, newOwner);
-                onSuccess("EMChatRoom", callbackId, EMChatRoomHelper.toJson(room).toString());
+                onSuccess(null, callbackId, null);
             } catch (HyphenateException e) {
                 onError(callbackId, e);
-            } catch (JSONException e) {
             }
         });
     }
@@ -101,10 +97,9 @@ public class EMChatRoomManagerWrapper extends EMWrapper {
         asyncRunnable(() -> {
             try {
                 EMChatRoom room = EMClient.getInstance().chatroomManager().changeChatroomDescription(roomId, description);
-                onSuccess("EMChatRoom", callbackId, EMChatRoomHelper.toJson(room).toString());
+                onSuccess(null, callbackId, null);
             } catch (HyphenateException e) {
                 onError(callbackId, e);
-            } catch (JSONException e) {
             }
         });
     }
@@ -120,10 +115,9 @@ public class EMChatRoomManagerWrapper extends EMWrapper {
         asyncRunnable(() -> {
             try {
                 EMChatRoom room = EMClient.getInstance().chatroomManager().changeChatRoomSubject(roomId, subject);
-                onSuccess("EMChatRoom", callbackId, EMChatRoomHelper.toJson(room).toString());
+                onSuccess(null, callbackId, null);
             } catch (HyphenateException e) {
                 onError(callbackId, e);
-            } catch (JSONException e) {
             }
         });
     }
@@ -200,7 +194,6 @@ public class EMChatRoomManagerWrapper extends EMWrapper {
         asyncRunnable(() -> {
             try {
                 String announcement = EMClient.getInstance().chatroomManager().fetchChatRoomAnnouncement(roomId);
-
                 onSuccess("String", callbackId, announcement);
             } catch (HyphenateException e) {
                 onError(callbackId, e);
@@ -378,11 +371,9 @@ public class EMChatRoomManagerWrapper extends EMWrapper {
         asyncRunnable(() -> {
             try {
                 EMClient.getInstance().chatroomManager().removeChatRoomAdmin(roomId, adminId);
-                EMChatRoom room = EMClient.getInstance().chatroomManager().getChatRoom(roomId);
-                onSuccess("EMChatRoom", callbackId, EMChatRoomHelper.toJson(room).toString());
+                onSuccess(null, callbackId, null);
             } catch (HyphenateException e) {
                 onError(callbackId, e);
-            } catch (JSONException e) {
             }
         });
     }

@@ -20,14 +20,14 @@ namespace ChatSDK
             GroupManagerNative.GroupManager_HandleMethodCall("requestToJoinPublicGroup", obj.ToString(), handle?.callbackId);
         }
 
-        public override void AcceptInvitationFromGroup(string groupId, ValueCallBack<Group> handle = null)
+        public override void AcceptGroupInvitation(string groupId, ValueCallBack<Group> handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("groupId", groupId);
             GroupManagerNative.GroupManager_HandleMethodCall("acceptInvitationFromGroup", obj.ToString(), handle?.callbackId);
         }
 
-        public override void AcceptJoinApplication(string groupId, string username, CallBack handle = null)
+        public override void AcceptGroupJoinApplication(string groupId, string username, CallBack handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("groupId", groupId);
@@ -35,7 +35,7 @@ namespace ChatSDK
             GroupManagerNative.GroupManager_HandleMethodCall("acceptJoinApplication", obj.ToString(), handle?.callbackId);
         }
 
-        public override void AddAdmin(string groupId, string memberId, ValueCallBack<Group> handle = null)
+        public override void AddGroupAdmin(string groupId, string memberId, CallBack handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("groupId", groupId);
@@ -43,7 +43,7 @@ namespace ChatSDK
             GroupManagerNative.GroupManager_HandleMethodCall("addAdmin", obj.ToString(), handle?.callbackId);
         }
 
-        public override void AddMembers(string groupId, List<string> members, CallBack handle = null)
+        public override void AddGroupMembers(string groupId, List<string> members, CallBack handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("groupId", groupId);
@@ -51,7 +51,7 @@ namespace ChatSDK
             GroupManagerNative.GroupManager_HandleMethodCall("addMembers", obj.ToString(), handle?.callbackId);
         }
 
-        public override void AddWhiteList(string groupId, List<string> members, CallBack handle = null)
+        public override void AddGroupWhiteList(string groupId, List<string> members, CallBack handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("groupId", groupId);
@@ -66,7 +66,7 @@ namespace ChatSDK
             GroupManagerNative.GroupManager_HandleMethodCall("blockGroup", obj.ToString(), handle?.callbackId);
         }
 
-        public override void BlockMembers(string groupId, List<string> members, CallBack handle = null)
+        public override void BlockGroupMembers(string groupId, List<string> members, CallBack handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("groupId", groupId);
@@ -90,7 +90,7 @@ namespace ChatSDK
             GroupManagerNative.GroupManager_HandleMethodCall("updateGroupSubject", obj.ToString(), handle?.callbackId);
         }
 
-        public override void ChangeGroupOwner(string groupId, string newOwner, ValueCallBack<Group> handle = null)
+        public override void ChangeGroupOwner(string groupId, string newOwner, CallBack handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("groupId", groupId);
@@ -116,7 +116,7 @@ namespace ChatSDK
             GroupManagerNative.GroupManager_HandleMethodCall("createGroup", obj.ToString(), handle?.callbackId);
         }
 
-        public override void DeclineInvitationFromGroup(string groupId, string reason = null, CallBack handle = null)
+        public override void DeclineGroupInvitation(string groupId, string reason = null, CallBack handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("groupId", groupId);
@@ -124,7 +124,7 @@ namespace ChatSDK
             GroupManagerNative.GroupManager_HandleMethodCall("declineInvitationFromGroup", obj.ToString(), handle?.callbackId);
         }
 
-        public override void DeclineJoinApplication(string groupId, string username, string reason = null, CallBack handle = null)
+        public override void DeclineGroupJoinApplication(string groupId, string username, string reason = null, CallBack handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("groupId", groupId);
@@ -263,14 +263,14 @@ namespace ChatSDK
             GroupManagerNative.GroupManager_HandleMethodCall("leaveGroup", obj.ToString(), handle?.callbackId);
         }
 
-        public override void MuteAllMembers(string groupId, ValueCallBack<Group> handle = null)
+        public override void MuteGroupAllMembers(string groupId, CallBack handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("groupId", groupId);
             GroupManagerNative.GroupManager_HandleMethodCall("muteAllMembers", obj.ToString(), handle?.callbackId);
         }
 
-        public override void MuteMembers(string groupId, List<string> members, ValueCallBack<Group> handle = null)
+        public override void MuteGroupMembers(string groupId, List<string> members, CallBack handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("groupId", groupId);
@@ -278,7 +278,7 @@ namespace ChatSDK
             GroupManagerNative.GroupManager_HandleMethodCall("muteMembers", obj.ToString(), handle?.callbackId);
         }
 
-        public override void RemoveAdmin(string groupId, string memberId, ValueCallBack<Group> handle = null)
+        public override void RemoveGroupAdmin(string groupId, string memberId, CallBack handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("groupId", groupId);
@@ -294,7 +294,7 @@ namespace ChatSDK
             GroupManagerNative.GroupManager_HandleMethodCall("removeGroupSharedFile", obj.ToString(), handle?.callbackId);
         }
 
-        public override void RemoveMembers(string groupId, List<string> members, CallBack handle = null)
+        public override void RemoveGroupMembers(string groupId, List<string> members, CallBack handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("groupId", groupId);
@@ -302,7 +302,7 @@ namespace ChatSDK
             GroupManagerNative.GroupManager_HandleMethodCall("removeMembers", obj.ToString(), handle?.callbackId);
         }
 
-        public override void RemoveWhiteList(string groupId, List<string> members, CallBack handle = null)
+        public override void RemoveGroupWhiteList(string groupId, List<string> members, CallBack handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("groupId", groupId);
@@ -317,22 +317,22 @@ namespace ChatSDK
             GroupManagerNative.GroupManager_HandleMethodCall("unblockGroup", obj.ToString(), handle?.callbackId);
         }
 
-        public override void UnBlockMembers(string groupId, List<string> members, CallBack handle = null)
+        public override void UnBlockGroupMembers(string groupId, List<string> members, CallBack handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("groupId", groupId);
             obj.Add("members", TransformTool.JsonStringFromStringList(members));
-            GroupManagerNative.GroupManager_HandleMethodCall("removeWhiteList", obj.ToString(), handle?.callbackId);
+            GroupManagerNative.GroupManager_HandleMethodCall("unblockMembers", obj.ToString(), handle?.callbackId);
         }
 
-        public override void UnMuteAllMembers(string groupId, ValueCallBack<Group> handle = null)
+        public override void UnMuteGroupAllMembers(string groupId, CallBack handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("groupId", groupId);
             GroupManagerNative.GroupManager_HandleMethodCall("unMuteAllMembers", obj.ToString(), handle?.callbackId);
         }
 
-        public override void UnMuteMembers(string groupId, List<string> members, ValueCallBack<Group> handle = null)
+        public override void UnMuteGroupMembers(string groupId, List<string> members, CallBack handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("groupId", groupId);
@@ -348,7 +348,7 @@ namespace ChatSDK
             GroupManagerNative.GroupManager_HandleMethodCall("updateGroupAnnouncement", obj.ToString(), handle?.callbackId);
         }
 
-        public override void UpdateGroupExt(string groupId, string ext, ValueCallBack<Group> handle = null)
+        public override void UpdateGroupExt(string groupId, string ext, CallBack handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("groupId", groupId);

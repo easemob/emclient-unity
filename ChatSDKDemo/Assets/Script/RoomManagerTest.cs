@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using ChatSDK;
 
 public class RoomManagerTest : MonoBehaviour
 {
 
+    private Text roomText;
     private Button backButton;
 
     private Button AddRoomAdminBtn;
@@ -32,9 +34,15 @@ public class RoomManagerTest : MonoBehaviour
     private Button UnMuteRoomMembersBtn;
     private Button UpdateRoomAnnouncementBtn;
 
+    private string currentRoomId {
+        get => roomText.text;
+    }
+
     private void Awake()
     {
         Debug.Log("room manager test script has load");
+
+        roomText = transform.Find("RoomText/Text").GetComponent<Text>();
 
         backButton = transform.Find("BackBtn").GetComponent<Button>();
 
@@ -96,18 +104,90 @@ public class RoomManagerTest : MonoBehaviour
 
     void AddRoomAdminBtnAction()
     {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            SDKClient.Instance.RoomManager.AddRoomAdmin(currentRoomId, dict["adminId"], new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+        config.AddField("adminId");
+
+        UIManager.DefaultInputAlert(transform, config);
+
         Debug.Log("AddRoomAdminBtnAction");
     }
     void BlockRoomMembersBtnAction()
     {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            List<string> list = new List<string>();
+            list.Add(dict["memberId"]);
+            SDKClient.Instance.RoomManager.BlockRoomMembers(currentRoomId, list, new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+        config.AddField("memberId");
+
+        UIManager.DefaultInputAlert(transform, config);
+
         Debug.Log("BlockRoomMembersBtnAction");
     }
     void ChangeOwnerBtnAction()
     {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            SDKClient.Instance.RoomManager.ChangeRoomOwner(currentRoomId, dict["newOwner"], new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("newOwner");
+
+        UIManager.DefaultInputAlert(transform, config);
+
         Debug.Log("ChangeOwnerBtnAction");
     }
     void ChangeRoomDescriptionBtnAction()
     {
+
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            SDKClient.Instance.RoomManager.ChangeRoomDescription(currentRoomId, dict["Description"], new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+        config.AddField("Description");
+
+        UIManager.DefaultInputAlert(transform, config);
+
         Debug.Log("ChangeRoomDescriptionBtnAction");
     }
 

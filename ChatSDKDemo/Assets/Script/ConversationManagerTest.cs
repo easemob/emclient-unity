@@ -54,7 +54,7 @@ public class ConversationManagerTest : MonoBehaviour
     {
         Debug.Log("conversation manager test script has load");
 
-        conversationText = transform.Find("TextField/Text").GetComponent<Text>();
+        conversationText = transform.Find("ConversationText/Text").GetComponent<Text>();
 
         ToggleGroup toggleGroup = transform.Find("ChatToggleGroup").GetComponent<ToggleGroup>();
 
@@ -112,67 +112,48 @@ public class ConversationManagerTest : MonoBehaviour
 
     void LastMessageBtnAction()
     {
-        InputAlertConfig config = new InputAlertConfig((dict) =>
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
+
+        if (conv.LastMessage != null)
         {
-            Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
-
-            if (conv.LastMessage != null)
-            {
-                UIManager.SuccessAlert(transform);
-            }
-            else
-            {
-                UIManager.DefaultAlert(transform, "未获取到最后一条消");
-            }
-
-        });
-
-        UIManager.DefaultInputAlert(transform, config);
+            UIManager.SuccessAlert(transform);
+        }
+        else
+        {
+            UIManager.DefaultAlert(transform, "未获取到最后一条消");
+        }
     }
     void LastReceiveMessageBtnAction()
     {
-        InputAlertConfig config = new InputAlertConfig((dict) =>
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
+
+        if (conv.LastReceivedMessage != null)
         {
-          
-            Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
-
-            if (conv.LastReceivedMessage != null)
-            {
-                UIManager.SuccessAlert(transform);
-            }
-            else
-            {
-                UIManager.DefaultAlert(transform, "未获取到最后一条消");
-            }
-
-        });
-
-        UIManager.DefaultInputAlert(transform, config);
+            UIManager.SuccessAlert(transform);
+        }
+        else
+        {
+            UIManager.DefaultAlert(transform, "未获取到最后一条消");
+        }
     }
     void GetExtBtnAction()
     {
-        InputAlertConfig config = new InputAlertConfig((dict) =>
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
+
+        if (conv.Ext != null)
         {
-      
-            Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
-
-            if (conv.Ext != null)
+            List<string> list = new List<string>();
+            foreach (var kv in conv.Ext)
             {
-                List<string> list = new List<string>();
-                foreach (var kv in conv.Ext) {
-                    list.Add($"{kv.Key}:{kv.Value}");
-                }
-                string str = string.Join(",", list.ToArray());
-                UIManager.DefaultAlert(transform, str);
+                list.Add($"{kv.Key}:{kv.Value}");
             }
-            else
-            {
-                UIManager.DefaultAlert(transform, "未获取到Ext");
-            }
-
-        });
-
-        UIManager.DefaultInputAlert(transform, config);
+            string str = string.Join(",", list.ToArray());
+            UIManager.DefaultAlert(transform, str);
+        }
+        else
+        {
+            UIManager.DefaultAlert(transform, "未获取到Ext");
+        }
     }
     void SetExtBtnAction()
     {
@@ -199,14 +180,8 @@ public class ConversationManagerTest : MonoBehaviour
     }
     void UnReadCountBtnAction()
     {
-        InputAlertConfig config = new InputAlertConfig((dict) =>
-        {
-            Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
-            UIManager.DefaultAlert(transform, $"未读数: {conv.UnReadCount.ToString()}");
-
-        });
-        
-        UIManager.DefaultInputAlert(transform, config);
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
+        UIManager.DefaultAlert(transform, $"未读数: {conv.UnReadCount.ToString()}");
         Debug.Log("UnReadCountBtnAction");
     }
     void MarkMessageAsReadBtnAction()
@@ -230,16 +205,9 @@ public class ConversationManagerTest : MonoBehaviour
     }
     void MarkAllMessageAsReadBtnAction()
     {
-        InputAlertConfig config = new InputAlertConfig((dict) =>
-        {
-
-            Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
-            conv.MarkAllMessageAsRead();
-            UIManager.DefaultAlert(transform, "已设置");
-
-        });
-
-        UIManager.DefaultInputAlert(transform, config);
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
+        conv.MarkAllMessageAsRead();
+        UIManager.DefaultAlert(transform, "已设置");
 
         Debug.Log("MarkAllMessageAsReadBtnAction");
     }
@@ -277,15 +245,9 @@ public class ConversationManagerTest : MonoBehaviour
     }
     void DeleteAllMessageBtnAction()
     {
-        InputAlertConfig config = new InputAlertConfig((dict) =>
-        {
-            Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
-            conv.DeleteAllMessages();
-            UIManager.DefaultAlert(transform, "已删除");
-
-        });
-
-        UIManager.DefaultInputAlert(transform, config);
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
+        conv.DeleteAllMessages();
+        UIManager.DefaultAlert(transform, "已删除");
 
         Debug.Log("DeleteAllMessageBtnAction");
     }

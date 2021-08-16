@@ -36,12 +36,12 @@
 
 - (NSDictionary *)loadMsgWithId:(NSDictionary *)param;
 
-- (NSArray *)loadMsgWithMsgType:(NSDictionary *)param;
+- (void)loadMsgWithMsgType:(NSDictionary *)param callbackId:(NSString *)callbackId;
 
-- (NSArray *)loadMsgWithStartId:(NSDictionary *)param;
+- (void)loadMsgWithStartId:(NSDictionary *)param callbackId:(NSString *)callbackId;
 
-- (NSArray *)loadMsgWithKeywords:(NSDictionary *)param;
+- (void)loadMsgWithKeywords:(NSDictionary *)param callbackId:(NSString *)callbackId;
 
-- (NSArray *)loadMsgWithTime:(NSDictionary *)param;
+- (void)loadMsgWithTime:(NSDictionary *)param callbackId:(NSString *)callbackId;
 
 @end

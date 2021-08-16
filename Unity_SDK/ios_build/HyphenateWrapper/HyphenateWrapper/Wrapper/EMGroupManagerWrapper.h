@@ -11,11 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface EMGroupManagerWrapper : EMWrapper
 
-- (void)getGroupWithId:(NSDictionary *)param callbackId:(NSString *)callbackId;
+- (id)getGroupWithId:(NSDictionary *)param;
 
-- (void)getJoinedGroups:(NSDictionary *)param callbackId:(NSString *)callbackId;
-
-- (void)getGroupsWithoutPushNotification:(NSDictionary *)param callbackId:(NSString *)callbackId;
+- (id)getJoinedGroups:(NSDictionary *)param;
 
 - (void)getJoinedGroupsFromServer:(NSDictionary *)param callbackId:(NSString *)callbackId;
 
@@ -98,8 +96,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)acceptInvitationFromGroup:(NSDictionary *)param callbackId:(NSString *)callbackId;
 
 - (void)declineInvitationFromGroup:(NSDictionary *)param callbackId:(NSString *)callbackId;
-
-- (void)ignoreGroupPush:(NSDictionary *)param callbackId:(NSString *)callbackId;
 
 @end
 

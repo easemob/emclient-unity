@@ -51,7 +51,7 @@
                        muteExpire:(NSInteger)aMuteExpire {
     NSDictionary *map = @{
         @"roomId":aChatroom.chatroomId,
-        @"mutes":aMutes,
+        @"list":[Transfrom NSStringFromJsonObject:aMutes],
         @"expireTime":[NSString stringWithFormat:@"%ld", aMuteExpire]
     };
     UnitySendMessage(RoomListener_Obj, "OnMuteListAdded", [Transfrom JsonObjectToCSString:map]);
@@ -61,7 +61,7 @@
               removedMutedMembers:(NSArray *)aMutes {
     NSDictionary *map = @{
         @"roomId":aChatroom.chatroomId,
-        @"list":aMutes
+        @"list":[Transfrom NSStringFromJsonObject:aMutes]
     };
     UnitySendMessage(RoomListener_Obj, "OnMuteListRemoved", [Transfrom JsonObjectToCSString:map]);
 }

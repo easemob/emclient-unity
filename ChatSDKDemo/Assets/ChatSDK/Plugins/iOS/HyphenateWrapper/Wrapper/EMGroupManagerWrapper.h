@@ -15,8 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (id)getJoinedGroups:(NSDictionary *)param;
 
-- (void)getGroupsWithoutPushNotification:(NSDictionary *)param callbackId:(NSString *)callbackId;
-
 - (void)getJoinedGroupsFromServer:(NSDictionary *)param callbackId:(NSString *)callbackId;
 
 - (void)getPublicGroupsFromServer:(NSDictionary *)param callbackId:(NSString *)callbackId;
@@ -98,8 +96,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)acceptInvitationFromGroup:(NSDictionary *)param callbackId:(NSString *)callbackId;
 
 - (void)declineInvitationFromGroup:(NSDictionary *)param callbackId:(NSString *)callbackId;
-
-- (void)ignoreGroupPush:(NSDictionary *)param callbackId:(NSString *)callbackId;
 
 @end
 
