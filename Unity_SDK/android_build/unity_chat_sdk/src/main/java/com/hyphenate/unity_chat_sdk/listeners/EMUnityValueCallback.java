@@ -30,6 +30,16 @@ public class EMUnityValueCallback<T> implements EMValueCallBack<T> {
         this.valueType = valueType;
     }
 
+    public void sendEmptyCallback() {
+        JSONObject jsonObject = new JSONObject();
+        try{
+            jsonObject.put("callbackId", callbackId);
+            UnityPlayer.UnitySendMessage(EMSDKMethod.Callback_Obj, "OnSuccess", jsonObject.toString());
+        }catch (JSONException e) {
+
+        }
+    }
+
     public void sendJsonObjectToUnity (String jsonString) {
         Log.d("chat_sdk", "getObject callbackId --  " + callbackId + " jsonString: "  + jsonString);
         if (callbackId == null) return;

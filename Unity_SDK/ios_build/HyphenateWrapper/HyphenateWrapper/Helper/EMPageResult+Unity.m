@@ -6,6 +6,7 @@
 //
 
 #import "EMPageResult+Unity.h"
+#import "Transfrom.h"
 
 @implementation EMPageResult (Unity)
 - (NSDictionary *)toJson {
@@ -13,13 +14,13 @@
     NSMutableArray *dataList = [NSMutableArray array];
     for (id obj in self.list) {
         if ([obj respondsToSelector:@selector(toJson)]) {
-            [dataList addObject:[obj toJson]];
+            [dataList addObject:[Transfrom NSStringFromJsonObject: [obj toJson]]];
         }else if ([obj isKindOfClass:[NSString class]]){
             [dataList addObject:obj];
         }
     }
-    
-    data[@"list"] = dataList;
+   
+    data[@"list"] = [Transfrom NSStringFromJsonObject:dataList];
     data[@"count"] = @(self.count);
     
     return data;

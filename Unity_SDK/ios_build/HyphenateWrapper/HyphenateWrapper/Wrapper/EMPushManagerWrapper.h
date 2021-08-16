@@ -11,9 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface EMPushManagerWrapper : EMWrapper
 
-- (void)getNoDisturbGroups:(NSDictionary *)param callbackId:(NSString *)callbackId;
+- (id)getNoDisturbGroups:(NSDictionary *)param;
 
-- (void)getPushConfig:(NSDictionary *)param callbackId:(NSString *)callbackId;
+- (id)getPushConfig:(NSDictionary *)param;
 
 - (void)getPushConfigFromServer:(NSDictionary *)param callbackId:(NSString *)callbackId;
 

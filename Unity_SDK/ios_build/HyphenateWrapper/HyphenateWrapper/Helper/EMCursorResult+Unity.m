@@ -6,6 +6,7 @@
 //
 
 #import "EMCursorResult+Unity.h"
+#import "Transfrom.h"
 
 @implementation EMCursorResult (Unity)
 - (NSDictionary *)toJson {
@@ -14,13 +15,13 @@
     
     for (id obj in self.list) {
         if ([obj respondsToSelector:@selector(toJson)]) {
-            [dataList addObject:[obj toJson]];
+            [dataList addObject:[Transfrom NSStringFromJsonObject:[obj toJson]]];
         }else if ([obj isKindOfClass:[NSString class]]){
             [dataList addObject:obj];
         }
     }
     
-    data[@"list"] = dataList;
+    data[@"list"] = [Transfrom NSStringFromJsonObject:dataList];
     data[@"cursor"] = self.cursor;
     
     return data;

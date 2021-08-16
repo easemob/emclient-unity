@@ -18,51 +18,28 @@
     return self;
 }
 
-- (void)getNoDisturbGroups:(NSDictionary *)param callbackId:(NSString *)callbackId {
-    if (!param) {
-        EMError *aError = [[EMError alloc] initWithDescription:@"Param error" code: EMErrorMessageIncludeIllegalContent];
-        [self onError:callbackId error:aError];
-        return;
-    }
-    __block NSString *callId = callbackId;
+- (id)getNoDisturbGroups:(NSDictionary *)param  {
     NSArray *groupIds = [EMClient.sharedClient.pushManager noPushGroups];
-    [self onSuccess:@"List<String>" callbackId:callId userInfo:groupIds];
+    return groupIds;
 }
 
-- (void)getPushConfig:(NSDictionary *)param callbackId:(NSString *)callbackId {
-    if (!param) {
-        EMError *aError = [[EMError alloc] initWithDescription:@"Param error" code: EMErrorMessageIncludeIllegalContent];
-        [self onError:callbackId error:aError];
-        return;
-    }
+- (id)getPushConfig:(NSDictionary *)param {
+    EMPushOptions *aOptions = EMClient.sharedClient.pushManager.pushOptions;
+    return [aOptions toJson];
+}
+
+- (void)getPushConfigFromServer:(NSDictionary *)param callbackId:(NSString *)callbackId {
+
     __weak EMPushManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
-    [EMClient.sharedClient.pushManager getPushNotificationOptionsFromServerWithCompletion:^(EMPushOptions *aOptions,
-                                                                                            EMError *aError)
-     {
+
+    [EMClient.sharedClient.pushManager getPushNotificationOptionsFromServerWithCompletion:^(EMPushOptions * _Nonnull aOptions, EMError * _Nonnull aError) {
         if (aError) {
             [weakSelf onError:callId error:aError];
         }else {
             [weakSelf onSuccess:@"EMPushConfigs" callbackId:callId userInfo:[aOptions toJson]];
         }
-    }];
-}
-
-- (void)getPushConfigFromServer:(NSDictionary *)param callbackId:(NSString *)callbackId {
-    if (!param) {
-        EMError *aError = [[EMError alloc] initWithDescription:@"Param error" code: EMErrorMessageIncludeIllegalContent];
-        [self onError:callbackId error:aError];
-        return;
-    }
-    __weak EMPushManagerWrapper * weakSelf = self;
-    __block NSString *callId = callbackId;
-    EMError *aError = nil;
-    EMPushOptions *aOptions = [EMClient.sharedClient.pushManager getPushOptionsFromServerWithError:&aError];
-    if (aError) {
-        [weakSelf onError:callId error:aError];
-    }else {
-        [weakSelf onSuccess:@"EMPushConfigs" callbackId:callId userInfo:[aOptions toJson]];
-    }
+    }] ;
 }
 
 - (void)updateGroupPushService:(NSDictionary *)param callbackId:(NSString *)callbackId {

@@ -16,27 +16,27 @@ namespace ChatSDK
             }
         }
 
-        public override void AddRoomAdmin(string roomId, string memberId, ValueCallBack<Room> handle = null)
+        public override void AddRoomAdmin(string roomId, string memberId, CallBack handle = null)
         {
             wrapper.Call("addChatRoomAdmin", roomId, memberId, handle?.callbackId);
         }
 
-        public override void BlockRoomMembers(string roomId, List<string> members, ValueCallBack<Room> handle = null)
+        public override void BlockRoomMembers(string roomId, List<string> members, CallBack handle = null)
         {
             wrapper.Call("blockChatRoomMembers", roomId, TransformTool.JsonStringFromStringList(members), handle?.callbackId);
         }
 
-        public override void ChangeOwner(string roomId, string newOwner, ValueCallBack<Room> handle = null)
+        public override void ChangeRoomOwner(string roomId, string newOwner, CallBack handle = null)
         {
             wrapper.Call("changeChatRoomOwner", roomId, newOwner, handle?.callbackId);
         }
 
-        public override void ChangeRoomDescription(string roomId, string newDescription, ValueCallBack<Room> handle = null)
+        public override void ChangeRoomDescription(string roomId, string newDescription, CallBack handle = null)
         {
             wrapper.Call("changeChatRoomDescription", roomId, newDescription, handle?.callbackId);
         }
 
-        public override void ChangeRoomName(string roomId, string newName, ValueCallBack<Room> handle = null)
+        public override void ChangeRoomName(string roomId, string newName, CallBack handle = null)
         {
             wrapper.Call("changeChatRoomSubject", roomId, newName, handle?.callbackId);
         }
@@ -96,7 +96,7 @@ namespace ChatSDK
             wrapper.Call("muteChatRoomMembers", roomId, TransformTool.JsonStringFromStringList(members), handle?.callbackId);
         }
 
-        public override void RemoveRoomAdmin(string roomId, string adminId, ValueCallBack<Room> handle = null)
+        public override void RemoveRoomAdmin(string roomId, string adminId, CallBack handle = null)
         {
             wrapper.Call("removeChatRoomAdmin", roomId, adminId, handle?.callbackId);
         }

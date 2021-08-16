@@ -26,14 +26,14 @@ namespace ChatSDK
                 roomManagerHub.OnAdminAdded, roomManagerHub.OnAdminRemoved, roomManagerHub.OnOwnerChanged, roomManagerHub.OnAnnouncementChanged);
         }
 
-        public override void AddRoomAdmin(string roomId, string memberId, ValueCallBack<Room> handle = null)
+        public override void AddRoomAdmin(string roomId, string memberId, CallBack handle = null)
         {
             ChatAPINative.RoomManager_AddRoomAdmin(client, roomId, memberId,
                 onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
                     if (dType == DataType.Room && dSize == 1)
                     {
                         var result = Marshal.PtrToStructure<RoomTO>(data[0]);
-                        handle?.OnSuccessValue(result.RoomInfo());
+                        handle?.Success();
                     }
                     else
                     {
@@ -43,7 +43,7 @@ namespace ChatSDK
                 handle?.Error);
         }
 
-        public override void BlockRoomMembers(string roomId, List<string> members, ValueCallBack<Room> handle = null)
+        public override void BlockRoomMembers(string roomId, List<string> members, CallBack handle = null)
         {
             //turn List<string> into array
             int size = 0;
@@ -64,7 +64,7 @@ namespace ChatSDK
                     if (dType == DataType.Room && dSize == 1)
                     {
                         var result = Marshal.PtrToStructure<RoomTO>(data[0]);
-                        handle?.OnSuccessValue(result.RoomInfo());
+                        handle?.Success();
                     }
                     else
                     {
@@ -74,14 +74,14 @@ namespace ChatSDK
                 handle?.Error);
         }
 
-        public override void ChangeOwner(string roomId, string newOwner, ValueCallBack<Room> handle = null)
+        public override void ChangeRoomOwner(string roomId, string newOwner, CallBack handle = null)
         {
             ChatAPINative.RoomManager_TransferChatroomOwner(client, roomId, newOwner,
                 onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
                     if (dType == DataType.Room && dSize == 1)
                     {
                         var result = Marshal.PtrToStructure<RoomTO>(data[0]);
-                        handle?.OnSuccessValue(result.RoomInfo());
+                        handle?.Success();
                     }
                     else
                     {
@@ -91,14 +91,14 @@ namespace ChatSDK
                 handle?.Error);
         }
 
-        public override void ChangeRoomDescription(string roomId, string newDescription, ValueCallBack<Room> handle = null)
+        public override void ChangeRoomDescription(string roomId, string newDescription, CallBack handle = null)
         {
             ChatAPINative.RoomManager_ChangeChatroomDescription(client, roomId, newDescription,
                 onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
                     if (dType == DataType.Room && dSize == 1)
                     {
                         var result = Marshal.PtrToStructure<RoomTO>(data[0]);
-                        handle?.OnSuccessValue(result.RoomInfo());
+                        handle?.Success();
                     }
                     else
                     {
@@ -108,14 +108,14 @@ namespace ChatSDK
                 handle?.Error);
         }
 
-        public override void ChangeRoomName(string roomId, string newName, ValueCallBack<Room> handle = null)
+        public override void ChangeRoomName(string roomId, string newName, CallBack handle = null)
         {
             ChatAPINative.RoomManager_ChangeRoomSubject(client, roomId, newName,
                 onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
                     if (dType == DataType.Room && dSize == 1)
                     {
                         var result = Marshal.PtrToStructure<RoomTO>(data[0]);
-                        handle?.OnSuccessValue(result.RoomInfo());
+                        handle?.Success();
                     }
                     else
                     {
@@ -365,7 +365,7 @@ namespace ChatSDK
                 onError: (int code, string desc) => handle?.Error(code, desc));
         }
 
-        public override void RemoveRoomAdmin(string roomId, string adminId, ValueCallBack<Room> handle = null)
+        public override void RemoveRoomAdmin(string roomId, string adminId, CallBack handle = null)
         {
             ChatAPINative.RoomManager_RemoveChatroomAdmin(client, roomId,
                 onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
@@ -374,12 +374,12 @@ namespace ChatSDK
                         if (0 == dSize)
                         {
                             Debug.Log("No room information returned.");
-                            handle?.OnSuccessValue(null);
+                            handle?.Success();
                             return;
                         }
 
                         var result = Marshal.PtrToStructure<RoomTO>(data[0]);
-                        handle?.OnSuccessValue(result.RoomInfo());
+                        handle?.Success();
                     }
                     else
                     {

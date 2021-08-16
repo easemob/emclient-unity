@@ -15,7 +15,7 @@ namespace ChatSDK
         /// <param name="roomId">聊天室id</param>
         /// <param name="memberId">管理员id</param>
         /// <param name="handle">结果回调</param>
-        public abstract void AddRoomAdmin(string roomId, string memberId, ValueCallBack<Room> handle = null);
+        public abstract void AddRoomAdmin(string roomId, string memberId, CallBack handle = null);
 
         /// <summary>
         /// 将用户添加到黑名单
@@ -23,7 +23,7 @@ namespace ChatSDK
         /// <param name="roomId">聊天室id</param>
         /// <param name="members">黑名单id</param>
         /// <param name="handle">结果回调</param>
-        public abstract void BlockRoomMembers(string roomId, List<string> members, ValueCallBack<Room> handle = null);
+        public abstract void BlockRoomMembers(string roomId, List<string> members, CallBack handle = null);
 
         /// <summary>
         /// 转移聊天室
@@ -31,7 +31,7 @@ namespace ChatSDK
         /// <param name="roomId">聊天室id</param>
         /// <param name="newOwner">新创建者id</param>
         /// <param name="handle">结果回调</param>
-        public abstract void ChangeOwner(string roomId, string newOwner, ValueCallBack<Room> handle = null);
+        public abstract void ChangeRoomOwner(string roomId, string newOwner, CallBack handle = null);
 
         /// <summary>
         /// 修改聊天室描述
@@ -39,7 +39,7 @@ namespace ChatSDK
         /// <param name="roomId">聊天室id</param>
         /// <param name="newDescription">新描述</param>
         /// <param name="handle">结果回调</param>
-        public abstract void ChangeRoomDescription(string roomId, string newDescription, ValueCallBack<Room> handle = null);
+        public abstract void ChangeRoomDescription(string roomId, string newDescription, CallBack handle = null);
 
         /// <summary>
         /// 修改聊天室名称
@@ -47,7 +47,7 @@ namespace ChatSDK
         /// <param name="roomId">聊天室id</param>
         /// <param name="newName">新名称</param>
         /// <param name="handle">结果回调</param>
-        public abstract void ChangeRoomName(string roomId, string newName, ValueCallBack<Room> handle = null);
+        public abstract void ChangeRoomName(string roomId, string newName, CallBack handle = null);
 
         /// <summary>
         /// 创建聊天室
@@ -144,7 +144,7 @@ namespace ChatSDK
         /// <param name="roomId">聊天室id</param>
         /// <param name="adminId">管理员id</param>
         /// <param name="handle">结果回调</param>
-        public abstract void RemoveRoomAdmin(string roomId, string adminId, ValueCallBack<Room> handle = null);
+        public abstract void RemoveRoomAdmin(string roomId, string adminId, CallBack handle = null);
 
         /// <summary>
         /// 移除聊天室成员

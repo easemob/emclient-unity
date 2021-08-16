@@ -17,7 +17,7 @@ namespace ChatSDK
         /// </summary>
         /// <param name="groupId">群组id</param>
         /// <param name="handle">执行结果</param>
-        public abstract void AcceptInvitationFromGroup(string groupId, ValueCallBack<Group> handle = null);
+        public abstract void AcceptGroupInvitation(string groupId, ValueCallBack<Group> handle = null);
 
         /// <summary>
         /// 同意加群申请
@@ -25,7 +25,7 @@ namespace ChatSDK
         /// <param name="groupId">群组id</param>
         /// <param name="username">用户id</param>
         /// <param name="handle">执行结果</param>
-        public abstract void AcceptJoinApplication(string groupId, string username, CallBack handle = null);
+        public abstract void AcceptGroupJoinApplication(string groupId, string username, CallBack handle = null);
 
         /// <summary>
         /// 添加管理员
@@ -33,7 +33,7 @@ namespace ChatSDK
         /// <param name="groupId">群组id</param>
         /// <param name="memberId">用户id</param>
         /// <param name="handle">执行结果</param>
-        public abstract void AddAdmin(string groupId, string memberId, ValueCallBack<Group> handle = null);
+        public abstract void AddGroupAdmin(string groupId, string memberId, CallBack handle = null);
 
         /// <summary>
         /// 添加群成员
@@ -41,7 +41,7 @@ namespace ChatSDK
         /// <param name="groupId">群组id</param>
         /// <param name="members">用户id</param>
         /// <param name="handle">执行结果</param>
-        public abstract void AddMembers(string groupId, List<string> members, CallBack handle = null);
+        public abstract void AddGroupMembers(string groupId, List<string> members, CallBack handle = null);
 
         /// <summary>
         /// 添加白名单
@@ -49,7 +49,7 @@ namespace ChatSDK
         /// <param name="groupId">群组id</param>
         /// <param name="members">用户id</param>
         /// <param name="handle">执行结果</param>
-        public abstract void AddWhiteList(string groupId, List<string> members, CallBack handle = null);
+        public abstract void AddGroupWhiteList(string groupId, List<string> members, CallBack handle = null);
 
         /// <summary>
         /// 不接收群消息
@@ -64,7 +64,7 @@ namespace ChatSDK
         /// <param name="groupId">群组id</param>
         /// <param name="members">用户id</param>
         /// <param name="handle">执行结果</param>
-        public abstract void BlockMembers(string groupId, List<string> members, CallBack handle = null);
+        public abstract void BlockGroupMembers(string groupId, List<string> members, CallBack handle = null);
 
         /// <summary>
         /// 修改群描述
@@ -88,7 +88,7 @@ namespace ChatSDK
         /// <param name="groupId">群组id</param>
         /// <param name="newOwner">新群主id</param>
         /// <param name="handle">执行结果</param>
-        public abstract void ChangeGroupOwner(string groupId, string newOwner, ValueCallBack<Group> handle = null);
+        public abstract void ChangeGroupOwner(string groupId, string newOwner, CallBack handle = null);
 
         /// <summary>
         /// 检查自己是否在白名单中
@@ -114,7 +114,7 @@ namespace ChatSDK
         /// <param name="groupId">群组id</param>
         /// <param name="reason">原因</param>
         /// <param name="handle">执行结果</param>
-        public abstract void DeclineInvitationFromGroup(string groupId, string reason = null, CallBack handle = null);
+        public abstract void DeclineGroupInvitation(string groupId, string reason = null, CallBack handle = null);
 
         /// <summary>
         /// 拒绝群申请
@@ -123,7 +123,7 @@ namespace ChatSDK
         /// <param name="username">用户id</param>
         /// <param name="reason">原因</param>
         /// <param name="handle">执行结果</param>
-        public abstract void DeclineJoinApplication(string groupId, string username, string reason = null, CallBack handle = null);
+        public abstract void DeclineGroupJoinApplication(string groupId, string username, string reason = null, CallBack handle = null);
 
         /// <summary>
         /// 解散群
@@ -246,7 +246,7 @@ namespace ChatSDK
         /// </summary>
         /// <param name="groupId">群组id</param>
         /// <param name="handle">执行结果</param>
-        public abstract void MuteAllMembers(string groupId, ValueCallBack<Group> handle = null);
+        public abstract void MuteGroupAllMembers(string groupId, CallBack handle = null);
 
         /// <summary>
         /// 禁言群成员
@@ -254,7 +254,7 @@ namespace ChatSDK
         /// <param name="groupId">群组id</param>
         /// <param name="members">群成员id</param>
         /// <param name="handle">执行结果</param>
-        public abstract void MuteMembers(string groupId, List<string> members, ValueCallBack<Group> handle = null);
+        public abstract void MuteGroupMembers(string groupId, List<string> members, CallBack handle = null);
 
         /// <summary>
         /// 删除群管理员
@@ -262,7 +262,7 @@ namespace ChatSDK
         /// <param name="groupId">群组id</param>
         /// <param name="memberId">群管理员id</param>
         /// <param name="handle">执行结果</param>
-        public abstract void RemoveAdmin(string groupId, string memberId, ValueCallBack<Group> handle = null);
+        public abstract void RemoveGroupAdmin(string groupId, string memberId, CallBack handle = null);
 
         /// <summary>
         /// 删除群共享文件
@@ -278,7 +278,7 @@ namespace ChatSDK
         /// <param name="groupId">群组id</param>
         /// <param name="members">群成员id</param>
         /// <param name="handle">执行结果</param>
-        public abstract void RemoveMembers(string groupId, List<string> members, CallBack handle = null);
+        public abstract void RemoveGroupMembers(string groupId, List<string> members, CallBack handle = null);
 
         /// <summary>
         /// 删除白名单
@@ -286,7 +286,7 @@ namespace ChatSDK
         /// <param name="groupId">群组id</param>
         /// <param name="members">白名单用户id</param>
         /// <param name="handle">执行结果</param>
-        public abstract void RemoveWhiteList(string groupId, List<string> members, CallBack handle = null);
+        public abstract void RemoveGroupWhiteList(string groupId, List<string> members, CallBack handle = null);
 
         /// <summary>
         /// 恢复接受群消息
@@ -301,14 +301,14 @@ namespace ChatSDK
         /// <param name="groupId">群组id</param>
         /// <param name="members">黑名单用户id</param>
         /// <param name="handle">执行结果</param>
-        public abstract void UnBlockMembers(string groupId, List<string> members, CallBack handle = null);
+        public abstract void UnBlockGroupMembers(string groupId, List<string> members, CallBack handle = null);
 
         /// <summary>
         /// 解除群禁言
         /// </summary>
         /// <param name="groupId">群组id</param>
         /// <param name="handle">执行结果</param>
-        public abstract void UnMuteAllMembers(string groupId, ValueCallBack<Group> handle = null);
+        public abstract void UnMuteGroupAllMembers(string groupId, CallBack handle = null);
 
         /// <summary>
         /// 解除用户禁言
@@ -316,7 +316,7 @@ namespace ChatSDK
         /// <param name="groupId">群组id</param>
         /// <param name="members">禁言公户id</param>
         /// <param name="handle">执行结果</param>
-        public abstract void UnMuteMembers(string groupId, List<string> members, ValueCallBack<Group> handle = null);
+        public abstract void UnMuteGroupMembers(string groupId, List<string> members, CallBack handle = null);
 
         /// <summary>
         /// 更新群公告
@@ -332,7 +332,7 @@ namespace ChatSDK
         /// <param name="groupId">群组id</param>
         /// <param name="ext">扩展信息</param>
         /// <param name="handle">执行结果</param>
-        public abstract void UpdateGroupExt(string groupId, string ext, ValueCallBack<Group> handle = null);
+        public abstract void UpdateGroupExt(string groupId, string ext, CallBack handle = null);
 
         /// <summary>
         /// 上传群共享文件

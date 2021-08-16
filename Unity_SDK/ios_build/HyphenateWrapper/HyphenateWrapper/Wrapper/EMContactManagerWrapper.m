@@ -146,7 +146,7 @@
     __weak EMContactManagerWrapper * weakSelf = self;
     [EMClient.sharedClient.contactManager getContactsFromServerWithCompletion:^(NSArray *aList, EMError *aError) {
         if (!aError) {
-            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:aList];
+            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:aList]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -158,7 +158,7 @@
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.contactManager getBlackListFromServerWithCompletion:^(NSArray *aList, EMError *aError) {
         if (!aError) {
-            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:aList];
+            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:aList]];
         }else {
             [weakSelf onError:callId error:aError];
         }

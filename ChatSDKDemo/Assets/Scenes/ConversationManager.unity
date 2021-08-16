@@ -2101,7 +2101,7 @@ PrefabInstance:
     - target: {fileID: 6532829451471162549, guid: 8e90ae31ac2fb4317bf26089cd5754ba,
         type: 3}
       propertyPath: m_Name
-      value: TextField
+      value: ConversationText
       objectReference: {fileID: 0}
     - target: {fileID: 6532829452372941178, guid: 8e90ae31ac2fb4317bf26089cd5754ba,
         type: 3}
@@ -2111,7 +2111,7 @@ PrefabInstance:
     - target: {fileID: 6532829452772774668, guid: 8e90ae31ac2fb4317bf26089cd5754ba,
         type: 3}
       propertyPath: m_Name
-      value: ConversationText
+      value: Text
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8e90ae31ac2fb4317bf26089cd5754ba, type: 3}
