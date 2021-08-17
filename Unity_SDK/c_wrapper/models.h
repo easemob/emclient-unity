@@ -237,17 +237,17 @@ struct CursorResultTO
     const char * NextPageCursor;
     DataType Type;
     int Size;
-    EMMessageBody::EMMessageBodyType SubTypes[32]; //sub types if any
-    void * Data[32]; //list of data
+    EMMessageBody::EMMessageBodyType SubTypes[200]; //sub types if any
+    void * Data[200]; //list of data
 };
 
 struct GroupOptions
 {
-    const char * Ext;
-    int MaxCount;
     EMMucSetting::EMMucStyle Style;
+    int MaxCount;
     bool InviteNeedConfirm;
-    
+    const char * Ext;
+
     EMMucSetting toMucSetting() {
         return EMMucSetting(Style, MaxCount, InviteNeedConfirm, Ext);
     }
@@ -294,6 +294,12 @@ struct GroupTO
     static GroupTO * FromEMGroup(EMGroupPtr &group);
     
     void LogInfo();
+};
+
+struct GroupInfoTO
+{
+    const char * GroupId;
+    const char * Name;
 };
 
 struct RoomTO
@@ -351,7 +357,7 @@ struct TOArray
 {
     DataType Type;
     int Size;
-    void * Data[]; //list of data
+    void * Data[200]; //list of data
 };
 
 struct TOArrayDiff

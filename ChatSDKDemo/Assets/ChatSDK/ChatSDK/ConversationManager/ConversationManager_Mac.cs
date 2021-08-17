@@ -66,10 +66,10 @@ namespace ChatSDK
             }
 
             // return empty dictionary
-            Dictionary<string, string> ret = new Dictionary<string, string>();
+            //Dictionary<string, string> ret = new Dictionary<string, string>();
             Marshal.FreeCoTaskMem(intPtr);
             ChatAPINative.ConversationManager_ReleaseStringList(array, 1);
-            return ret;
+            return null;
         }
 
         public override bool InsertMessage(string conversationId, ConversationType conversationType, Message message)

@@ -214,6 +214,7 @@ namespace ChatSDK
 
         public override void DeclineGroupInvitation(string groupId, string reason = null, CallBack handle = null)
         {
+            reason = "hehe";
             ChatAPINative.GroupManager_DeclineInvitationFromGroup(client, groupId, "", reason,
                 onSuccess: () => handle?.Success(),
                 onError: (int code, string desc) => handle?.Error(code, desc));
@@ -516,10 +517,10 @@ namespace ChatSDK
 
                             for (int i = 0; i < itemSize; i++)
                             {
-                                var item = Marshal.PtrToStructure<GroupTO>(cursorResultTO.Data[i]);
+                                var item = Marshal.PtrToStructure<GroupInfoTO>(cursorResultTO.Data[i]);
                                 var groupInfo = new GroupInfo();
                                 groupInfo.GroupId = item.GroupId;
-                                groupInfo.GroupName = item.Name;
+                                groupInfo.GroupName = item.GroupName;
                                 result.Data.Add(groupInfo);
                             }
                             handle?.OnSuccessValue(result);

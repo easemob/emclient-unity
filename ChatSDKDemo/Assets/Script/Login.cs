@@ -91,7 +91,7 @@ public class Login : MonoBehaviour
 
     void InitEaseMobSDK() {
 
-        Options options = new Options("easemob-demo#chatdemoui");
+        Options options = new Options("easemob-demo#easeim");
         options.DebugMode = true;
         SDKClient.Instance.InitWithOptions(options);
 

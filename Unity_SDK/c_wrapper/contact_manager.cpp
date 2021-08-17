@@ -8,6 +8,7 @@
 #include "contact_manager.h"
 
 #include "emclient.h"
+#include "tool.h"
 
 EMContactListener *gContactListener = NULL;
 
@@ -32,18 +33,12 @@ AGORA_API void ContactManager_AddListener(void *client,
 
 AGORA_API void ContactManager_AddContact(void *client, const char* username, const char* reason, FUNC_OnSuccess onSuccess, FUNC_OnError onError) {
     EMError error;
-    //param check
-    if(nullptr == username) {
-        error.setErrorCode(EMError::INVALID_USER_NAME);
-        error.mDescription = "User name is illegal";
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+    if(!MandatoryCheck(username, error)) {
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str());
         return;
     }
-    
-    std::string reasonStr = "";
-    if(nullptr != reason) {
-        reasonStr.append(reason);
-    }
+
+    std::string reasonStr = OptionalStrParamCheck(reason);
     
     CLIENT->getContactManager().inviteContact(username, reasonStr, error);
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
@@ -56,6 +51,11 @@ AGORA_API void ContactManager_AddContact(void *client, const char* username, con
 
 AGORA_API void ContactManager_DeleteContact(void *client, const char* username, bool keepConversation, FUNC_OnSuccess onSuccess, FUNC_OnError onError) {
     EMError error;
+    if(!MandatoryCheck(username, error)) {
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    
     CLIENT->getContactManager().deleteContact(username, error, keepConversation);
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
         LOG("DeleteContact success.");
@@ -113,6 +113,10 @@ AGORA_API void ContactManager_GetContactsFromDB(void *client, void * array[], in
 AGORA_API void ContactManager_AddToBlackList(void *client, const char* username, bool both, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
+    if(!MandatoryCheck(username, error)) {
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
     CLIENT->getContactManager().addToBlackList(username, both, error);
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
         LOG("AddToBlackList success.");
@@ -125,6 +129,10 @@ AGORA_API void ContactManager_AddToBlackList(void *client, const char* username,
 AGORA_API void ContactManager_RemoveFromBlackList(void *client, const char* username,FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
+    if(!MandatoryCheck(username, error)) {
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
     CLIENT->getContactManager().removeFromBlackList(username, error);
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
         LOG("RemoveFromBlackList success.");
@@ -157,6 +165,10 @@ AGORA_API void ContactManager_GetBlackListFromServer(void *client, FUNC_OnSucces
 AGORA_API void ContactManager_AcceptInvitation(void *client, const char* username,FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
+    if(!MandatoryCheck(username, error)) {
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
     CLIENT->getContactManager().acceptInvitation(username, error);
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
         LOG("AcceptInvitation success.");
@@ -169,6 +181,10 @@ AGORA_API void ContactManager_AcceptInvitation(void *client, const char* usernam
 AGORA_API void ContactManager_DeclineInvitation(void *client, const char* username,FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
+    if(!MandatoryCheck(username, error)) {
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
     CLIENT->getContactManager().declineInvitation(username, error);
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
         LOG("DeclineInvitation success.");

@@ -14,6 +14,7 @@
 #include "empushmanager_interface.h"
 #include "models.h"
 #include "push_manager.h"
+#include "tool.h"
 
 AGORA_API void PushManager_GetIgnoredGroupIds(void *client, void * array[], int size)
 {
@@ -102,6 +103,11 @@ AGORA_API void PushManager_GetUserConfigsFromServer(void *client, FUNC_OnSuccess
 AGORA_API void PushManager_IgnoreGroupPush(void *client, const char * groupId, bool noDisturb, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
+    if(!MandatoryCheck(groupId, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    
     CLIENT->getPushManager().ignoreGroupPush(groupId, noDisturb, error);
 
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
@@ -167,6 +173,12 @@ AGORA_API void PushManager_UpdatePushDisplayStyle(void *client, EMPushConfigs::E
 AGORA_API void PushManager_UpdateFCMPushToken(void *client, const char * token, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
+
+    if(!MandatoryCheck(token, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    
     CLIENT->getPushManager().bindUserDeviceToken(token, "FCM", error);
 
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
@@ -185,6 +197,12 @@ AGORA_API void PushManager_UpdateFCMPushToken(void *client, const char * token, 
 AGORA_API void PushManager_UpdateHMSPushToken(void *client, const char * token, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
+    
+    if(!MandatoryCheck(token, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    
     CLIENT->getPushManager().bindUserDeviceToken(token, "HMS", error);
 
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
@@ -203,6 +221,12 @@ AGORA_API void PushManager_UpdateHMSPushToken(void *client, const char * token, 
 AGORA_API void PushManager_UpdatePushNickName(void *client, const char * nickname, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
+    
+    if(!MandatoryCheck(nickname, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    
     CLIENT->getPushManager().updatePushNickName(nickname, error);
 
     if(error.mErrorCode == EMError::EM_NO_ERROR) {

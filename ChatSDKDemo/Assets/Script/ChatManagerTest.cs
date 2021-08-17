@@ -112,7 +112,8 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
                     //UIManager.SuccessAlert(transform);
                 },
                 onError:(code, desc) => {
-                    UIManager.ErrorAlert(transform, code, desc);
+                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { UIManager.ErrorAlert(transform, code, desc); });
+                    //UIManager.ErrorAlert(transform, code, desc);
                 }               
             ));
         });
@@ -383,7 +384,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         bool ret = SDKClient.Instance.ChatManager.MarkAllConversationsAsRead();
         if (ret) {
             int unreadCount = SDKClient.Instance.ChatManager.GetUnreadMessageCount();
-            UIManager.DefaultAlert(transform, "设置成功，当前未读数为: {unreadCount}");
+            UIManager.DefaultAlert(transform, $"设置成功，当前未读数为: {unreadCount}");
         }
         else
         {
@@ -419,7 +420,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     {
         InputAlertConfig config = new InputAlertConfig("发送会话Ack", (dict) =>
         {
-            int count = int.Parse(dict["LoadCount"]);
+            //int count = int.Parse(dict["LoadCount"]);
             SDKClient.Instance.ChatManager.SendConversationReadAck(dict["id"], new CallBack(
                 onSuccess: () => {
                     UIManager.SuccessAlert(transform);
@@ -441,7 +442,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     {
         InputAlertConfig config = new InputAlertConfig("发送消息Ack", (dict) =>
         {
-            int count = int.Parse(dict["LoadCount"]);
+            //int count = int.Parse(dict["LoadCount"]);
             SDKClient.Instance.ChatManager.SendMessageReadAck(dict["id"], new CallBack(
                 onSuccess: () => {
                     UIManager.SuccessAlert(transform);
