@@ -34,21 +34,7 @@ public class ConversationManagerTest : MonoBehaviour
         get => conversationText.text;
     }
 
-    private ConversationType convType {
-        get {
-            if (chatToggle.isOn)
-            {
-                return ConversationType.Chat;
-            }
-            else if (groupToggle.isOn)
-            {
-                return ConversationType.Group;
-            }
-            else {
-                return ConversationType.Room;
-            }
-        }
-    }
+    private ConversationType convType = ConversationType.Chat;
 
     private void Awake()
     {
@@ -59,8 +45,31 @@ public class ConversationManagerTest : MonoBehaviour
         ToggleGroup toggleGroup = transform.Find("ChatToggleGroup").GetComponent<ToggleGroup>();
 
         chatToggle = toggleGroup.transform.Find("Single").GetComponent<Toggle>();
-        groupToggle = toggleGroup.transform.Find("Single").GetComponent<Toggle>();
-        roomToggle = toggleGroup.transform.Find("Single").GetComponent<Toggle>();
+        groupToggle = toggleGroup.transform.Find("Group").GetComponent<Toggle>();
+        roomToggle = toggleGroup.transform.Find("Room").GetComponent<Toggle>();
+
+        chatToggle.onValueChanged.AddListener(isOn => {
+            if (isOn) {
+                convType = ConversationType.Chat;
+                Debug.Log("单聊");
+            }
+        });
+
+        groupToggle.onValueChanged.AddListener(isOn => {
+            if (isOn)
+            {
+                convType = ConversationType.Group;
+                Debug.Log("群聊");
+            }
+        });
+
+        roomToggle.onValueChanged.AddListener(isOn => {
+            if (isOn)
+            {
+                convType = ConversationType.Room;
+                Debug.Log("聊天室");
+            }
+        });
 
         backButton = transform.Find("BackBtn").GetComponent<Button>();
 
@@ -103,6 +112,8 @@ public class ConversationManagerTest : MonoBehaviour
         LoadMessagesWithTimeBtn.onClick.AddListener(LoadMessagesWithTimeBtnAction);
         LoadMessagesWithMsgTypeBtn.onClick.AddListener(LoadMessagesWithMsgTypeBtnAction);
     }
+
+
 
 
     void backButtonAction()
@@ -253,14 +264,57 @@ public class ConversationManagerTest : MonoBehaviour
     }
     void LoadMessageBtnAction()
     {
+
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string msgId = dict["MsgId"];
+            Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
+            Message msg = conv.LoadMessage(msgId);
+            UIManager.DefaultAlert(transform, msg == null ? "获取成功" : "获取失败");
+        });
+
+        config.AddField("MsgId");
+
+        UIManager.DefaultInputAlert(transform, config);
+
         Debug.Log("LoadMessageBtnAction");
     }
+
     void LoadMessagesBtnAction()
     {
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
+        conv.LoadMessages(null, count:200, handle:new ValueCallBack<List<Message>>(
+            onSuccess: (list) => {
+                UIManager.DefaultAlert(transform, $"获取到{list.Count}条消息");
+            },
+            onError:(code, desc) => {
+                UIManager.ErrorAlert(transform, code, desc);
+            }
+        ));
+
         Debug.Log("LoadMessagesBtnAction");
     }
     void LoadMessagesWithKeywordBtnAction()
     {
+
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string keyword = dict["keyword"];
+            Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
+            conv.LoadMessagesWithKeyword(keyword, count: 200, handle: new ValueCallBack<List<Message>>(
+                onSuccess: (list) => {
+                    UIManager.DefaultAlert(transform, $"获取到{list.Count}条消息");
+                },
+            onError: (code, desc) => {
+                UIManager.ErrorAlert(transform, code, desc);
+            }
+            ));
+        });
+
+        config.AddField("keyword");
+
+        UIManager.DefaultInputAlert(transform, config);
+
         Debug.Log("LoadMessagesWithKeywordBtnAction");
     }
     void LoadMessagesWithTimeBtnAction()

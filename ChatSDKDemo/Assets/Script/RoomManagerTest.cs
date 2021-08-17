@@ -193,75 +193,303 @@ public class RoomManagerTest : MonoBehaviour
 
     void ChangeRoomSubjectBtnAction()
     {
+
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            SDKClient.Instance.RoomManager.ChangeRoomName(currentRoomId, dict["Name"], new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+        config.AddField("Name");
+
+        UIManager.DefaultInputAlert(transform, config);
+
         Debug.Log("ChangeRoomSubjectBtnAction");
     }
     void CreateRoomBtnAction()
     {
+        UIManager.UnfinishedAlert(transform);
+
         Debug.Log("CreateRoomBtnAction");
     }
     void DestroyRoomBtnAction()
     {
+        UIManager.UnfinishedAlert(transform);
         Debug.Log("DestroyRoomBtnAction");
     }
     void FetchPublicRoomsFromServerBtnAction()
     {
+
+        SDKClient.Instance.RoomManager.FetchPublicRoomsFromServer(handle: new ValueCallBack<PageResult<Room>>(
+            onSuccess: (result) => {
+                List<string> list = new List<string>();
+
+                foreach (var room in result.Data) {
+                    list.Add(room.Name);
+                }
+
+                string str = string.Join(",", list.ToArray());
+                UIManager.DefaultAlert(transform, str);
+
+            },
+            onError:(code, desc) => {
+                UIManager.ErrorAlert(transform, code, desc);
+            }
+        ));
+
         Debug.Log("FetchPublicRoomsFromServerBtnAction");
     }
     void FetchRoomAnnouncementBtnAction()
     {
+
+        SDKClient.Instance.RoomManager.FetchRoomAnnouncement(currentRoomId, new ValueCallBack<string>(
+            onSuccess: (str) => {
+                UIManager.DefaultAlert(transform, str);
+            },
+            onError: (code, desc) => {
+                UIManager.ErrorAlert(transform, code, desc);
+            }
+        ));
+
         Debug.Log("FetchRoomAnnouncementBtnAction");
     }
 
     void FetchRoomBlockListBtnAction()
     {
+
+        SDKClient.Instance.RoomManager.FetchRoomBlockList(currentRoomId, handle: new ValueCallBack<List<string>>(
+            onSuccess: (list) => {
+                string str = string.Join(",", list.ToArray());
+                UIManager.DefaultAlert(transform, str);
+            },
+            onError: (code, desc) => {
+                UIManager.ErrorAlert(transform, code, desc);
+            }
+        ));
+
         Debug.Log("FetchRoomBlockListBtnAction");
     }
     void FetchRoomInfoFromServerBtnAction()
     {
+
+        SDKClient.Instance.RoomManager.FetchRoomInfoFromServer(currentRoomId, new ValueCallBack<Room>(
+            onSuccess: (room) => {
+                List<string> list = new List<string>();
+                list.Add(room.Name);
+                list.Add(room.Description);
+                string str = string.Join(",", list.ToArray());
+                UIManager.DefaultAlert(transform, str);
+            },
+            onError: (code, desc) => {
+                UIManager.ErrorAlert(transform, code, desc);
+            }
+        ));
+
         Debug.Log("FetchRoomInfoFromServerBtnAction");
     }
     void FetchRoomMembersBtnAction()
     {
+        SDKClient.Instance.RoomManager.FetchRoomMembers(currentRoomId, handle: new ValueCallBack<CursorResult<string>>(
+            onSuccess: (result) => {
+                string str = string.Join(",", result.Data.ToArray());
+                UIManager.DefaultAlert(transform, str);
+                UIManager.DefaultAlert(transform, str);
+            },
+            onError: (code, desc) => {
+                UIManager.ErrorAlert(transform, code, desc);
+            }
+        ));
+
         Debug.Log("FetchRoomMembersBtnAction");
     }
     void FetchRoomMuteListBtnAction()
     {
+
+        SDKClient.Instance.RoomManager.FetchRoomMuteList(currentRoomId, handle: new ValueCallBack<List<string>>(
+            onSuccess: (result) => {
+                string str = string.Join(",", result.ToArray());
+                UIManager.DefaultAlert(transform, str);
+                UIManager.DefaultAlert(transform, str);
+            },
+            onError: (code, desc) => {
+                UIManager.ErrorAlert(transform, code, desc);
+            }
+        ));
+
         Debug.Log("FetchRoomMuteListBtnAction");
     }
     void GetAllRoomsFromLocalBtnAction()
     {
+        UIManager.UnfinishedAlert(transform);
         Debug.Log("GetAllRoomsFromLocalBtnAction");
     }
     void JoinRoomBtnAction()
     {
+        SDKClient.Instance.RoomManager.JoinRoom(currentRoomId, new ValueCallBack<Room>(
+            onSuccess: (room) => {
+                UIManager.DefaultAlert(transform, "加入成功");
+            },
+            onError: (code, desc) => {
+                UIManager.ErrorAlert(transform, code, desc);
+            }
+        ));
         Debug.Log("JoinRoomBtnAction");
     }
     void LeaveRoomBtnAction()
     {
+        SDKClient.Instance.RoomManager.LeaveRoom(currentRoomId, new CallBack(
+            onSuccess: () => {
+                UIManager.DefaultAlert(transform, "离开成功");
+            },
+            onError: (code, desc) => {
+                UIManager.ErrorAlert(transform, code, desc);
+            }
+        ));
+
         Debug.Log("LeaveRoomBtnAction");
     }
     void MuteRoomMembersBtnAction()
     {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string member = dict["MemberId"];
+            List<string> list = new List<string>();
+            list.Add(member);
+            SDKClient.Instance.RoomManager.MuteRoomMembers(currentRoomId, list, new CallBack(
+                onSuccess: () => {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) => {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("MemberId");
+
+        UIManager.DefaultInputAlert(transform, config);
+
         Debug.Log("MuteRoomMembersBtnAction");
     }
     void RemoveRoomAdminBtnAction()
     {
+
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string adminId = dict["AdminId"];
+            SDKClient.Instance.RoomManager.RemoveRoomAdmin(currentRoomId, adminId, new CallBack(
+                onSuccess: () => {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) => {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("AdminId");
+
+        UIManager.DefaultInputAlert(transform, config);
+
         Debug.Log("RemoveRoomAdminBtnAction");
     }
     void RemoveRoomMembersBtnAction()
     {
+
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string member = dict["MemberId"];
+            List<string> list = new List<string>();
+            list.Add(member);
+            SDKClient.Instance.RoomManager.RemoveRoomMembers(currentRoomId, list, new CallBack(
+                onSuccess: () => {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) => {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("MemberId");
+
+        UIManager.DefaultInputAlert(transform, config);
+
         Debug.Log("RemoveRoomMembersBtnAction");
     }
     void UnBlockRoomMembersBtnAction()
     {
+
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string member = dict["MemberId"];
+            List<string> list = new List<string>();
+            list.Add(member);
+            SDKClient.Instance.RoomManager.UnBlockRoomMembers(currentRoomId, list, new CallBack(
+                onSuccess: () => {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) => {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("MemberId");
+
+        UIManager.DefaultInputAlert(transform, config);
+
         Debug.Log("UnBlockRoomMembersBtnAction");
     }
     void UnMuteRoomMembersBtnAction()
     {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string member = dict["MemberId"];
+            List<string> list = new List<string>();
+            list.Add(member);
+            SDKClient.Instance.RoomManager.UnMuteRoomMembers(currentRoomId, list, new CallBack(
+                onSuccess: () => {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) => {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("MemberId");
+
+        UIManager.DefaultInputAlert(transform, config);
+
         Debug.Log("UnMuteRoomMembersBtnAction");
     }
     void UpdateRoomAnnouncementBtnAction()
     {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string announcement = dict["announcement"];
+            SDKClient.Instance.RoomManager.UpdateRoomAnnouncement(currentRoomId, announcement, new CallBack(
+                onSuccess: () => {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) => {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("announcement");
+
+        UIManager.DefaultInputAlert(transform, config);
+
         Debug.Log("UpdateRoomAnnouncementBtnAction");
     }
 

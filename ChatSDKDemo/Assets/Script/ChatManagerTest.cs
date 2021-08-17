@@ -124,18 +124,22 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     }
     void SendImageBtnAction()
     {
+        UIManager.UnfinishedAlert(transform);
         Debug.Log("SendImageBtnAction");
     }
     void SendFileBtnAction()
     {
+        UIManager.UnfinishedAlert(transform);
         Debug.Log("SendFileBtnAction");
     }
     void SendVideoBtnAction()
     {
+        UIManager.UnfinishedAlert(transform);
         Debug.Log("SendVideoBtnAction");
     }
     void SendVoiceBtnAction()
     {
+        UIManager.UnfinishedAlert(transform);
         Debug.Log("SendVoiceBtnAction");
     }
 

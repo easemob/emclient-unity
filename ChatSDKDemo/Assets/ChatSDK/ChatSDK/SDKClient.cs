@@ -70,8 +70,7 @@ namespace ChatSDK
         /// 当前是否连接到服务器
         /// </summary>
 
-        // TODO: dujiepeng
-        public bool IsConnected { get => false; }
+        public bool IsConnected { get => _Sdk.IsConnected; }
 
         /// <summary>
         /// 当前用户的token
