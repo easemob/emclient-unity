@@ -34,21 +34,7 @@ public class ConversationManagerTest : MonoBehaviour
         get => conversationText.text;
     }
 
-    private ConversationType convType {
-        get {
-            if (chatToggle.isOn)
-            {
-                return ConversationType.Chat;
-            }
-            else if (groupToggle.isOn)
-            {
-                return ConversationType.Group;
-            }
-            else {
-                return ConversationType.Room;
-            }
-        }
-    }
+    private ConversationType convType = ConversationType.Chat;
 
     private void Awake()
     {
@@ -59,8 +45,31 @@ public class ConversationManagerTest : MonoBehaviour
         ToggleGroup toggleGroup = transform.Find("ChatToggleGroup").GetComponent<ToggleGroup>();
 
         chatToggle = toggleGroup.transform.Find("Single").GetComponent<Toggle>();
-        groupToggle = toggleGroup.transform.Find("Single").GetComponent<Toggle>();
-        roomToggle = toggleGroup.transform.Find("Single").GetComponent<Toggle>();
+        groupToggle = toggleGroup.transform.Find("Group").GetComponent<Toggle>();
+        roomToggle = toggleGroup.transform.Find("Room").GetComponent<Toggle>();
+
+        chatToggle.onValueChanged.AddListener(isOn => {
+            if (isOn) {
+                convType = ConversationType.Chat;
+                Debug.Log("单聊");
+            }
+        });
+
+        groupToggle.onValueChanged.AddListener(isOn => {
+            if (isOn)
+            {
+                convType = ConversationType.Group;
+                Debug.Log("群聊");
+            }
+        });
+
+        roomToggle.onValueChanged.AddListener(isOn => {
+            if (isOn)
+            {
+                convType = ConversationType.Room;
+                Debug.Log("聊天室");
+            }
+        });
 
         backButton = transform.Find("BackBtn").GetComponent<Button>();
 
@@ -103,6 +112,8 @@ public class ConversationManagerTest : MonoBehaviour
         LoadMessagesWithTimeBtn.onClick.AddListener(LoadMessagesWithTimeBtnAction);
         LoadMessagesWithMsgTypeBtn.onClick.AddListener(LoadMessagesWithMsgTypeBtnAction);
     }
+
+
 
 
     void backButtonAction()

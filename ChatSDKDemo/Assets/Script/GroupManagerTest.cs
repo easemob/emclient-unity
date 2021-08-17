@@ -380,8 +380,8 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
                 onSuccess: (group) => {
                     UIManager.SuccessAlert(transform);
                 },
-                onError:(code, desc) => {
-                    UIManager.ErrorAlert(transform, code, desc);
+                onError:(code, error) => {
+                    UIManager.ErrorAlert(transform, code, error);
                 }
             ));
 

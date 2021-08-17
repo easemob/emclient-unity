@@ -86,19 +86,22 @@ public class Main : MonoBehaviour
 
     void isConnectedBtnAction()
     {
-        
+        UIManager.DefaultAlert(transform, SDKClient.Instance.IsConnected ? "已连接" : "未连接");
     }
 
     void isLoggedBtnAction()
     {
+        UIManager.DefaultAlert(transform, SDKClient.Instance.IsLoggedIn ? "已登录" : "未登录");
     }
 
     void CurrentUsernameBtnAction()
     {
+        UIManager.DefaultAlert(transform, SDKClient.Instance.CurrentUsername);
     }
 
     void AccessTokenBtnAction()
     {
+        UIManager.DefaultAlert(transform, SDKClient.Instance.AccessToken);
     }
 
     void LogoutBtnAction()
