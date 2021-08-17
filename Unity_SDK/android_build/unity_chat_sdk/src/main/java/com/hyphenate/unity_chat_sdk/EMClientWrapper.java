@@ -1,6 +1,9 @@
 package com.hyphenate.unity_chat_sdk;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 
 import com.hyphenate.EMConnectionListener;
 import com.hyphenate.chat.EMClient;
@@ -24,7 +27,26 @@ public class EMClientWrapper extends EMWrapper {
         return new EMClientWrapper();
     }
 
+    private void applyAuth(){
+        if(Build.VERSION.SDK_INT >= 23){
+            int REQUEST_CODE_CONTANCT = 101;
+            String[] permissions = {
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+            };
+
+            for(String str:permissions){
+                if(UnityPlayer.currentActivity.checkSelfPermission(str) != PackageManager.PERMISSION_GRANTED){
+                    UnityPlayer.currentActivity.requestPermissions(permissions,REQUEST_CODE_CONTANCT);
+                    return;
+                }
+            }
+        }
+    }
+
     public void init(String options) throws JSONException {
+
+        applyAuth();
+
         Context context = UnityPlayer.currentActivity.getApplicationContext();
         JSONObject jo = new JSONObject(options);
         EMOptions emOptions = EMOptionsHelper.fromJson(jo, context);
@@ -47,7 +69,6 @@ public class EMClientWrapper extends EMWrapper {
             onError(callbackId, e);
             return;
         }
-
 
         asyncRunnable(()->{
             try {

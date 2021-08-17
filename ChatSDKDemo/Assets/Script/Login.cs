@@ -79,11 +79,11 @@ public class Login : MonoBehaviour
 
                 onSuccess: () => {
                     Debug.Log("login succeed");
-                    SceneManager.LoadSceneAsync("Main");
+                    UIManager.SuccessAlert(transform);
                 },
 
                 onError: (code, desc) => {
-                    Debug.LogFormat("login failed, code: {0}, desc: {1}", code, desc);
+                    UIManager.ErrorAlert(transform, code, desc);
                 }
             )
         );
@@ -91,7 +91,9 @@ public class Login : MonoBehaviour
 
     void InitEaseMobSDK() {
 
-        Options options = new Options("easemob-demo#chatdemoui");
+        Options options = new Options("easemob-demo#easeim");
+        options.AutoLogin = false;
+        options.UsingHttpsOnly = true;
         options.DebugMode = true;
         SDKClient.Instance.InitWithOptions(options);
 

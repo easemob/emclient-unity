@@ -12,7 +12,7 @@
 - (NSDictionary *)toJson {
     NSMutableDictionary *ret = [NSMutableDictionary dictionary];
     ret[@"con_id"] = self.conversationId;
-    ret[@"type"] = @([self.class typeToInt:self.type]);
+    ret[@"type"] = @([EMConversation typeToInt:self.type]);
     ret[@"unreadCount"] = @(self.unreadMessagesCount);
     ret[@"ext"] = self.ext;
     ret[@"latestMessage"] = [self.latestMessage toJson];
