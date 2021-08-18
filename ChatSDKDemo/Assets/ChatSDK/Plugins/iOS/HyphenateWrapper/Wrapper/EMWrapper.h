@@ -18,9 +18,21 @@ if ([NSThread isMainThread]) {\
 NS_ASSUME_NONNULL_BEGIN
 
 @interface EMWrapper : NSObject
-- (void)onSuccess:(nullable NSString *)aType callbackId:(nullable NSString *)aCallbackId userInfo:(nullable id)jsonObject;
-- (void)onProgress:(int)progress callbackId:(nullable NSString *)aCallbackId;
-- (void)onError:(nullable NSString *)aCallbackId error:(nullable EMError *)aError;
+
+- (void)onMessageSendError:(NSString *)aCallbackId
+                  userinfo:(id)jsonObject
+                     error:(EMError *)aError;
+
+- (void)onSuccess:(nullable NSString *)aType
+       callbackId:(nullable NSString *)aCallbackId
+         userInfo:(nullable id)jsonObject;
+
+- (void)onProgress:(int)progress
+        callbackId:(nullable NSString *)aCallbackId;
+
+- (void)onError:(nullable NSString *)aCallbackId
+          error:(nullable EMError *)aError;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -472,7 +472,7 @@ namespace ChatSDK
                 );
         }
 
-        public override Message SendMessage(Message message, CallBack callback = null)
+        public override void SendMessage(ref Message message, CallBack callback = null)
         {
             MessageTO mto = MessageTO.FromMessage(message);
             IntPtr mtoPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(mto));
@@ -492,8 +492,6 @@ namespace ChatSDK
                 },
                 (int code, string desc) => callback?.Error(code, desc), mtoPtr, message.Body.Type);
             Marshal.FreeCoTaskMem(mtoPtr);
-            //TODO: what Message to return from this SendMessage?
-            return null;
         }
 
         public override void SendMessageReadAck(string messageId, CallBack callback = null)

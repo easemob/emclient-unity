@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ChatSDK
 {
-    public sealed class ChatCallbackObject
+    internal sealed class ChatCallbackObject
     {
         private static string _GameObjectName = "chatCallbackObject";
         private GameObject _CallbackGameObject

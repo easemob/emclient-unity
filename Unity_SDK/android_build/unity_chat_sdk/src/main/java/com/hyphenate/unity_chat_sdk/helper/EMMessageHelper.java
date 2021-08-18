@@ -218,8 +218,6 @@ public class EMMessageHelper {
         data.put("msgId", message.getMsgId());
         data.put("hasRead", !message.isUnread());
 
-        System.out.println("-------------" + data.toString());
-
         return data;
     }
 

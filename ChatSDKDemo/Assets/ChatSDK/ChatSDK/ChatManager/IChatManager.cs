@@ -122,7 +122,7 @@ namespace ChatSDK
         /// <param name="message">消息</param>
         /// <param name="handle">执行结果</param>
         /// <returns>将要发送的消息</returns>
-        public abstract Message SendMessage(Message message, CallBack handle = null);
+        public abstract void SendMessage(ref Message message, CallBack handle = null);
 
         /// <summary>
         /// 发送消息已读回执

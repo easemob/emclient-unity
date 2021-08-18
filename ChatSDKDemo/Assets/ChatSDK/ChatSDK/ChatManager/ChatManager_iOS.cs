@@ -162,14 +162,11 @@ namespace ChatSDK
             ChatManagerNative.ChatManager_HandleMethodCall("ackConversationRead", obj.ToString(), handle?.callbackId);
         }
 
-        public override Message SendMessage(Message message, CallBack handle = null)
+        public override void SendMessage(ref Message message, CallBack handle = null)
         {
-            string jsonString = ChatManagerNative.ChatManager_GetMethodCall("sendMessage", message.ToJson().ToString(), handle?.callbackId);
-            if (jsonString == null || jsonString.Length == 0)
-            {
-                return null;
-            }
-            return new Message(jsonString);
+            CallbackManager.Instance().tempMsgDict.Add(message.LocalTime.ToString(), message);
+
+            ChatManagerNative.ChatManager_GetMethodCall("sendMessage", message.ToJson().ToString(), handle?.callbackId);
         }
 
         public override void SendMessageReadAck(string messageId, CallBack handle = null)
