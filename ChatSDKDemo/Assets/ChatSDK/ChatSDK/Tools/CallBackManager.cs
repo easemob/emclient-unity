@@ -28,6 +28,8 @@ namespace ChatSDK {
 
         private static CallbackManager _getInstance;
 
+        internal Dictionary<string, Message> tempMsgDict = new Dictionary<string, Message>();
+
         internal static CallbackManager Instance()
         {
             if (_getInstance == null)
@@ -69,6 +71,7 @@ namespace ChatSDK {
 
         internal void CleanAllCallback() {
             dictionary.Clear();
+            tempMsgDict.Clear();
         }
 
         internal void SetupAllListeners() {
@@ -183,7 +186,8 @@ namespace ChatSDK {
                 else if (value == "EMCursorResult<String>")
                 {
                     CursorResult<string> result = null;
-                    if (responseValue != null) {
+                    if (responseValue != null)
+                    {
                         result = TransformTool.JsonStringToStringResult(responseValue.Value);
                     }
 
@@ -197,10 +201,11 @@ namespace ChatSDK {
                 else if (value == "EMCursorResult<EMMessage>")
                 {
                     CursorResult<Message> result = null;
-                    if (responseValue != null) {
+                    if (responseValue != null)
+                    {
                         result = TransformTool.JsonStringToMessageResult(responseValue.Value);
                     }
-                    
+
                     ValueCallBack<CursorResult<Message>> valueCallBack = (ValueCallBack<CursorResult<Message>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
@@ -211,10 +216,11 @@ namespace ChatSDK {
                 else if (value == "List<EMMucSharedFile>")
                 {
                     List<GroupSharedFile> result = null;
-                    if (responseValue != null) {
+                    if (responseValue != null)
+                    {
                         result = TransformTool.JsonStringToGroupSharedFileList(responseValue.Value);
                     }
-                    
+
                     ValueCallBack<List<GroupSharedFile>> valueCallBack = (ValueCallBack<List<GroupSharedFile>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
@@ -225,7 +231,8 @@ namespace ChatSDK {
                 else if (value == "EMGroup")
                 {
                     Group result = null;
-                    if (responseValue != null && responseValue.IsString) {
+                    if (responseValue != null && responseValue.IsString)
+                    {
                         result = new Group(responseValue.Value);
                     }
                     ValueCallBack<Group> valueCallBack = (ValueCallBack<Group>)dictionary[callbackId];
@@ -238,10 +245,11 @@ namespace ChatSDK {
                 else if (value == "EMPageResult<EMChatRoom>")
                 {
                     PageResult<Room> result = null;
-                    if (responseValue != null && responseValue.IsString) {
+                    if (responseValue != null && responseValue.IsString)
+                    {
                         result = TransformTool.JsonStringToRoomPageResult(responseValue.Value);
                     }
-                    
+
                     ValueCallBack<PageResult<Room>> valueCallBack = (ValueCallBack<PageResult<Room>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
@@ -256,7 +264,7 @@ namespace ChatSDK {
                     {
                         result = TransformTool.JsonStringToRoomList(responseValue.Value);
                     }
-                    
+
                     ValueCallBack<List<Room>> valueCallBack = (ValueCallBack<List<Room>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
@@ -271,7 +279,7 @@ namespace ChatSDK {
                     {
                         result = TransformTool.JsonStringToConversationList(responseValue.Value);
                     }
-                    
+
                     ValueCallBack<List<Conversation>> valueCallBack = (ValueCallBack<List<Conversation>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
@@ -300,7 +308,7 @@ namespace ChatSDK {
                     {
                         result = new PushConfig(responseValue.Value);
                     }
-                    
+
                     ValueCallBack<PushConfig> valueCallBack = (ValueCallBack<PushConfig>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
@@ -314,7 +322,8 @@ namespace ChatSDK {
                     if (valueCallBack.OnSuccessValue != null)
                     {
                         bool ret = false;
-                        do {
+                        do
+                        {
                             if (responseValue != null)
                             {
                                 ret = responseValue.Value == "0" ? false : true;
@@ -334,7 +343,8 @@ namespace ChatSDK {
                     if (valueCallBack.OnSuccessValue != null)
                     {
                         string str = null;
-                        if (responseValue != null && responseValue.IsString) {
+                        if (responseValue != null && responseValue.IsString)
+                        {
                             str = responseValue.Value;
                         }
                         valueCallBack.OnSuccessValue(str);
@@ -355,6 +365,29 @@ namespace ChatSDK {
                         valueCallBack.OnSuccessValue(result);
                     }
                     dictionary.Remove(callbackId);
+                }
+                else if (value == "OnMessageSuccess")
+                {
+                    Message msg = new Message(responseValue.Value);
+
+                    foreach (var info in tempMsgDict) {
+                        Debug.Log($"key -- {info.Key}");
+                    }
+
+                    Message sendMsg = tempMsgDict[msg.LocalTime.ToString()];
+                    sendMsg.MsgId = msg.MsgId;
+                    sendMsg.Body = msg.Body;
+                    sendMsg.Status = msg.Status;
+                    tempMsgDict.Remove(msg.LocalTime.ToString());
+                    OnSuccess(jsonString);
+                }
+                else if (value == "OnMessageError") {
+                    Message msg = new Message(responseValue.Value);
+                    Message sendMsg = tempMsgDict[msg.LocalTime.ToString()];
+                    sendMsg.Body = msg.Body;
+                    sendMsg.Status = msg.Status;
+                    tempMsgDict.Remove(msg.LocalTime.ToString());
+                    OnError(jsonString);
                 }
             }
         }

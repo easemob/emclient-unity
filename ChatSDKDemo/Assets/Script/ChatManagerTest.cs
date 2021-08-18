@@ -106,9 +106,12 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     {
         InputAlertConfig config = new InputAlertConfig((dict)=> {
             Message msg = Message.CreateTextSendMessage(dict["to"], dict["content"]);
-            SDKClient.Instance.ChatManager.SendMessage(msg, new CallBack(
+            SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
                 onSuccess: () => {
-                    UIManager.SuccessAlert(transform);
+                    UIManager.TitleAlert(transform, "成功", msg.MsgId);
+                    //ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    //    UIManager.TitleAlert(transform, "成功", msg.MsgId);
+                    //});
                 },
                 onError:(code, desc) => {
                     UIManager.ErrorAlert(transform, code, desc);
@@ -145,7 +148,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     {
         InputAlertConfig config = new InputAlertConfig((dict) => {
             Message msg = Message.CreateCmdSendMessage(dict["to"], dict["action"]);
-            SDKClient.Instance.ChatManager.SendMessage(msg, new CallBack(
+            SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
                 onSuccess: () => {
                     UIManager.SuccessAlert(transform);
                 },
@@ -164,7 +167,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     {
         InputAlertConfig config = new InputAlertConfig((dict) => {
             Message msg = Message.CreateCustomSendMessage(dict["to"], dict["custom"]);
-            SDKClient.Instance.ChatManager.SendMessage(msg, new CallBack(
+            SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
                 onSuccess: () => {
                     UIManager.SuccessAlert(transform);
                 },
@@ -182,7 +185,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     {
         InputAlertConfig config = new InputAlertConfig((dict) => {
             Message msg = Message.CreateLocationSendMessage(dict["to"], 139.33, 130.55, dict["address"]);
-            SDKClient.Instance.ChatManager.SendMessage(msg, new CallBack(
+            SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
                 onSuccess: () => {
                     UIManager.SuccessAlert(transform);
                 },

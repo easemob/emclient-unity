@@ -9,7 +9,7 @@ namespace ChatSDK
         /// <summary>
         /// 消息Id
         /// </summary>
-        public string MsgId = ((long)(new TimeSpan(DateTime.Now.Ticks).TotalMilliseconds)).ToString();
+        public string MsgId = ((long)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalMilliseconds)).ToString();
 
         /// <summary>
         /// 消息所属会话Id
@@ -45,7 +45,7 @@ namespace ChatSDK
         /// <summary>
         /// 消息本地时间
         /// </summary>
-        public long LocalTime = 0;
+        public long LocalTime = (long)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalMilliseconds);
 
         /// <summary>
         /// 消息服务器时间
@@ -182,8 +182,8 @@ namespace ChatSDK
             jo.Add("to", To);
             jo.Add("hasReadAck", HasReadAck);
             jo.Add("hasDeliverAck", HasDeliverAck);
-            jo.Add("localTime", LocalTime);
-            jo.Add("serverTime", ServerTime);
+            jo.Add("localTime", LocalTime.ToString());
+            jo.Add("serverTime", ServerTime.ToString());
             jo.Add("conversationId", ConversationId);
             jo.Add("msgId", MsgId);
             jo.Add("hasRead", HasReadAck);

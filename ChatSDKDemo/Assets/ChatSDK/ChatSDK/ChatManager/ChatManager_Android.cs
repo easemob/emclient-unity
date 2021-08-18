@@ -111,15 +111,12 @@ namespace ChatSDK
             wrapper.Call("ackConversationRead", conversationId, handle?.callbackId);
         }
 
-        public override Message SendMessage(Message message, CallBack handle = null)
+        public override void SendMessage(ref Message message, CallBack handle = null)
         {
-            Debug.Log("message to string: " + message.ToJson());
-            string jsonString = wrapper.Call<string>("sendMessage", message.ToJson().ToString(), handle?.callbackId);
-            if (jsonString == null || jsonString.Length == 0) {
-                return null;
-            }
 
-            return new Message(jsonString);
+            CallbackManager.Instance().tempMsgDict.Add(message.LocalTime.ToString(), message);
+
+            wrapper.Call<string>("sendMessage", message.ToJson().ToString(), handle?.callbackId);
         }
 
         public override void SendMessageReadAck(string messageId, CallBack handle = null)
