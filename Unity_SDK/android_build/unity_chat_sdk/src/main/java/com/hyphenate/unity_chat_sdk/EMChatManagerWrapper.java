@@ -255,7 +255,26 @@ public class EMChatManagerWrapper extends EMWrapper  {
             return null;
         }
         EMMessage msg = EMMessageHelper.fromJson(new JSONObject(jsonString));
-        msg.setMessageStatusCallback(new EMUnityCallback(callbackId));
+        msg.setMessageStatusCallback(new EMUnityCallback(callbackId){
+            @Override
+            public void onSuccess() {
+                try {
+                    EMChatManagerWrapper.this.onSuccess("OnMessageSuccess", callbackId, EMMessageHelper.toJson(msg));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                try {
+                    EMChatManagerWrapper.this.onSuccess("OnMessageError", callbackId, EMMessageHelper.toJson(msg));
+                    EMChatManagerWrapper.this.onError(callbackId, new HyphenateException(i, s));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         asyncRunnable(() -> {
             EMClient.getInstance().chatManager().sendMessage(msg);
         });

@@ -4,7 +4,7 @@ namespace ChatSDK
 {
     public class ChatManager_Win : IChatManager
     {
-        public override bool DeleteConversation(string conversationId, bool deleteMessages)
+        public override bool DeleteConversation(string conversationId, bool deleteMessages = true)
         {
             throw new System.NotImplementedException();
         }
@@ -19,12 +19,12 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override void FetchHistoryMessagesFromServer(string conversationId, ConversationType type, string startMessageId = null, int count = 20, ValueCallBack<CursorResult<Message>> handle = null)
+        public override void FetchHistoryMessagesFromServer(string conversationId, ConversationType type = ConversationType.Chat, string startMessageId = null, int count = 20, ValueCallBack<CursorResult<Message>> handle = null)
         {
             throw new System.NotImplementedException();
         }
 
-        public override Conversation GetConversation(string conversationId, ConversationType type, bool createIfNeed = true)
+        public override Conversation GetConversation(string conversationId, ConversationType type = ConversationType.Chat, bool createIfNeed = true)
         {
             throw new System.NotImplementedException();
         }
@@ -79,7 +79,7 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
-        public override Message SendMessage(Message message, CallBack handle = null)
+        public override void SendMessage(ref Message message, CallBack handle = null)
         {
             throw new System.NotImplementedException();
         }

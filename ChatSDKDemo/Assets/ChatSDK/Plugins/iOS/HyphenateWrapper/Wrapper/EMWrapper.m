@@ -10,15 +10,41 @@
 #import "EMMethod.h"
 #import "Transfrom.h"
 
+
 @implementation EMWrapper
 {
     
 }
 
+
+- (void)onMessageSendError:(NSString *)aCallbackId
+                  userinfo:(id)jsonObject
+                     error:(EMError *)aError
+{
+    if (aCallbackId == nil || aCallbackId.length == 0) {
+        return;
+    }
+    
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"callbackId"] = aCallbackId;
+    dict[@"type"] = @"OnMessageError";
+    if (jsonObject != nil) {
+        if (![jsonObject isKindOfClass:[NSString class]]) {
+            jsonObject = [Transfrom NSStringFromJsonObject:jsonObject];
+        }
+        dict[@"value"] = jsonObject;
+    }
+    
+    dict[@"code"] = @(aError.code);
+    dict[@"desc"] = aError.errorDescription;
+    
+    
+    UnitySendMessage(Callback_Obj, "OnSuccessValue", [Transfrom JsonObjectToCSString:dict]);
+}
+
 - (void)onSuccess:(NSString *)aType
        callbackId:(NSString *)aCallbackId
-         userInfo:(id)jsonObject
-{
+         userInfo:(id)jsonObject {
     if (aCallbackId == nil || aCallbackId.length == 0) {
         return;
     }
@@ -62,5 +88,6 @@
     dict[@"desc"] = aError.errorDescription;
     UnitySendMessage(Callback_Obj, "OnError", [Transfrom JsonObjectToCSString:dict]);
 }
+
 
 @end
