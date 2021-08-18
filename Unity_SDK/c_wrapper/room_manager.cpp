@@ -98,7 +98,7 @@ AGORA_API void RoomManager_CreateRoom(void *client, const char * subject, const 
     
     std::string descStr = OptionalStrParamCheck(desc);
     std::string welcomMsgStr = OptionalStrParamCheck(welcomMsg);
-    EMChatroomPtr result = CLIENT->getChatroomManager().createChatroom(subject, desc, welcomMsg, setting, memberList, error);
+    EMChatroomPtr result = CLIENT->getChatroomManager().createChatroom(subject, descStr, welcomMsgStr, setting, memberList, error);
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
         //succees
         LOG("RoomManager_CreateRoom succeeds: %s", result->chatroomId().c_str());
@@ -254,10 +254,12 @@ AGORA_API void RoomManager_FetchChatroomsWithPage(void *client, int pageNum, int
         //success
         if(onSuccess) {
             int size = (int)pageResult.result().size();
+            LOG("Found rooms with num:%d", size);
             RoomTO* data[size];
             for(int i=0; i<size; i++) {
                 EMChatroomPtr charRoomPtr = std::dynamic_pointer_cast<EMChatroom>(pageResult.result().at(i));
                 data[i] = RoomTO::FromEMChatRoom(charRoomPtr);
+                LOG("Room %d, id:%s, name:%s", i, charRoomPtr->chatroomId().c_str(), charRoomPtr->chatroomSubject().c_str());
             }
             onSuccess((void **)data, DataType::Room, (int)size);
             for(int i=0; i<size; i++) {
@@ -361,22 +363,21 @@ AGORA_API void RoomManager_FetchChatroomMembers(void * client, const char * room
     }
     
     std::string cursorStr = OptionalStrParamCheck(cursor);
-    EMCursorResultRaw<std::string> msgCursorResult = CLIENT->getChatroomManager().fetchChatroomMembers(roomId, cursor, pageSize, error);
+    EMCursorResultRaw<std::string> msgCursorResult = CLIENT->getChatroomManager().fetchChatroomMembers(roomId, cursorStr, pageSize, error);
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
         //success
         if(onSuccess) {
             CursorResultTO cursorResultTo;
             CursorResultTO *data[1] = {&cursorResultTo};
             data[0]->NextPageCursor = msgCursorResult.nextPageCursor().c_str();
-            size_t size = msgCursorResult.result().size();
+            int size = (int)msgCursorResult.result().size();
             data[0]->Type = DataType::ListOfString;
-            data[0]->Size = (int)size;
+            data[0]->Size = (size > ARRAY_SIZE_LIMITATION)?ARRAY_SIZE_LIMITATION:size;
             
-            for(int i=0; i<size; i++) {
+            for(int i=0; i<data[0]->Size; i++) {
                 data[0]->Data[i] = (void*)msgCursorResult.result().at(i).c_str();
             }
             onSuccess((void **)data, DataType::CursorResult, 1);
-            //NOTE: NO need to release mem. after onSuccess call, managed side would free them.
         }
     }else{
         //error

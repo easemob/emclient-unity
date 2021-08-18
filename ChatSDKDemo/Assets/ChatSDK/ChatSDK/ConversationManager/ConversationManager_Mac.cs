@@ -280,7 +280,7 @@ namespace ChatSDK
 
         public override void LoadMessagesWithKeyword(string conversationId, ConversationType conversationType, string keywords = "", string sender = "", long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callback = null)
         {
-            ChatAPINative.LoadMessagesWithKeyword(client, conversationId, conversationType, keywords, sender, timestamp, count, direction,
+            ChatAPINative.ConversationManager_LoadMessagesWithKeyword(client, conversationId, conversationType, keywords, sender, timestamp, count, direction,
 
                  (IntPtr[] toResult, DataType dType, int size) => {
                      if (dType == DataType.ListOfString && size == 1)
@@ -334,7 +334,7 @@ namespace ChatSDK
 
         public override void LoadMessagesWithMsgType(string conversationId, ConversationType conversationType, MessageBodyType bodyType, string sender, long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callback = null)
         {
-            ChatAPINative.LoadMessagesWithMsgType(client, conversationId, conversationType, bodyType, timestamp, count, sender, direction,
+            ChatAPINative.ConversationManager_LoadMessagesWithMsgType(client, conversationId, conversationType, bodyType, timestamp, count, sender, direction,
 
                  (IntPtr[] toResult, DataType dType, int size) => {
                      if (dType == DataType.ListOfString && size == 1)
@@ -388,7 +388,7 @@ namespace ChatSDK
 
         public override void LoadMessagesWithTime(string conversationId, ConversationType conversationType, long startTime, long endTime, int count = 20, ValueCallBack<List<Message>> callback = null)
         {
-            ChatAPINative.LoadMessagesWithTime(client, conversationId, conversationType, startTime, endTime, count,
+            ChatAPINative.ConversationManager_LoadMessagesWithTime(client, conversationId, conversationType, startTime, endTime, count,
 
                  (IntPtr[] toResult, DataType dType, int size) => {
                      if (dType == DataType.ListOfString && size == 1)

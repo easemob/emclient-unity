@@ -108,12 +108,10 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
             Message msg = Message.CreateTextSendMessage(dict["to"], dict["content"]);
             SDKClient.Instance.ChatManager.SendMessage(msg, new CallBack(
                 onSuccess: () => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { UIManager.SuccessAlert(transform); });
-                    //UIManager.SuccessAlert(transform);
+                    UIManager.SuccessAlert(transform);
                 },
                 onError:(code, desc) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { UIManager.ErrorAlert(transform, code, desc); });
-                    //UIManager.ErrorAlert(transform, code, desc);
+                    UIManager.ErrorAlert(transform, code, desc);
                 }               
             ));
         });

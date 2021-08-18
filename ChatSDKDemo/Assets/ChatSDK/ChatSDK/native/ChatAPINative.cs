@@ -454,17 +454,17 @@ namespace ChatSDK{
 			string startMessageId, int count,MessageSearchDirection direction, OnSuccessResult onSuccessResult, OnError onError);
 
 		[DllImport(MyLibName)]
-		internal static extern void LoadMessagesWithKeyword(IntPtr client, string conversationId, ConversationType converationType,
+		internal static extern void ConversationManager_LoadMessagesWithKeyword(IntPtr client, string conversationId, ConversationType converationType,
 			string keywords, string sender, long timestamp, int count, MessageSearchDirection direction,
 			OnSuccessResult onSuccessResult, OnError onError);
 
 		[DllImport(MyLibName)]
-		internal static extern void LoadMessagesWithMsgType(IntPtr client, string conversationId, ConversationType converationType,
+		internal static extern void ConversationManager_LoadMessagesWithMsgType(IntPtr client, string conversationId, ConversationType converationType,
 			MessageBodyType bodyType, long timestamp, int count, string sender, MessageSearchDirection direction,
 			OnSuccessResult onSuccessResult, OnError onError);
 
 		[DllImport(MyLibName)]
-		internal static extern void LoadMessagesWithTime(IntPtr client, string conversationId, ConversationType converationType,
+		internal static extern void ConversationManager_LoadMessagesWithTime(IntPtr client, string conversationId, ConversationType converationType,
 			long startTimeStamp, long endTimeStamp, int count,
 			OnSuccessResult onSuccessResult, OnError onError);
 

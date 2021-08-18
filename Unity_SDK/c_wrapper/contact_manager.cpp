@@ -70,12 +70,12 @@ AGORA_API void ContactManager_GetContactsFromServer(void *client, FUNC_OnSuccess
     vector<std::string> vec = CLIENT->getContactManager().getContactsFromServer(error);
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
         LOG("GetContactsFromServer success.");
-        size_t size = vec.size();
+        int size = (int)vec.size();
         auto contactTOArray = new TOArray();
         TOArray *data[1] = {contactTOArray};
         data[0]->Type = DataType::ListOfString;
-        data[0]->Size = (int)size;
-        for(int i=0; i<size; i++) {
+        data[0]->Size = (size > ARRAY_SIZE_LIMITATION)?ARRAY_SIZE_LIMITATION:size;
+        for(int i=0; i<data[0]->Size; i++) {
             data[0]->Data[i] = (void*)(vec[i].c_str());
         }
         onSuccess((void**)data, DataType::ListOfString, 1);
@@ -96,8 +96,8 @@ AGORA_API void ContactManager_GetContactsFromDB(void *client, void * array[], in
             return;
         } else {
             toArray->Type = DataType::ListOfString;
-            toArray->Size = (int)size;
-            for(int i=0; i<size; i++) {
+            toArray->Size = (size > ARRAY_SIZE_LIMITATION)?ARRAY_SIZE_LIMITATION:size;
+            for(int i=0; i<toArray->Size; i++) {
                 char* p = new char[vec[i].size() + 1];
                 strncpy(p, vec[i].c_str(), vec[i].size() + 1);
                 toArray->Data[i] = (void*)p;
@@ -148,12 +148,12 @@ AGORA_API void ContactManager_GetBlackListFromServer(void *client, FUNC_OnSucces
     vector<std::string> vec = CLIENT->getContactManager().getBlackListFromServer(error);
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
         LOG("GetBlackListFromServer success.");
-        size_t size = vec.size();
+        int size = (int)vec.size();
         auto blackListTOArray = new TOArray();
         TOArray *data[1] = {blackListTOArray};
         data[0]->Type = DataType::ListOfString;
-        data[0]->Size = (int)size;
-        for(int i=0; i<size; i++) {
+        data[0]->Size = (size > ARRAY_SIZE_LIMITATION)?ARRAY_SIZE_LIMITATION:size;
+        for(int i=0; i<data[0]->Size; i++) {
             data[0]->Data[i] = (void*)(vec[i].c_str());
         }
         onSuccess((void**)data, DataType::ListOfString, 1);
@@ -200,12 +200,12 @@ AGORA_API void ContactManager_GetSelfIdsOnOtherPlatform(void *client, FUNC_OnSuc
     vector<std::string> vec = CLIENT->getContactManager().getSelfIdsOnOtherPlatform(error);
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
         LOG("GetSelfIdsOnOtherPlatform success.");
-        size_t size = vec.size();
+        int size = (int)vec.size();
         auto selfIdListTOArray = new TOArray();
         TOArray *data[1] = {selfIdListTOArray};
         data[0]->Type = DataType::ListOfString;
-        data[0]->Size = (int)size;
-        for(int i=0; i<size; i++) {
+        data[0]->Size = (size > ARRAY_SIZE_LIMITATION)?ARRAY_SIZE_LIMITATION:size;
+        for(int i=0; i<data[0]->Size; i++) {
             data[0]->Data[i] = (void*)(vec[i].c_str());
         }
         onSuccess((void**)data, DataType::ListOfString, 1);
@@ -221,7 +221,8 @@ AGORA_API void ContactManager_ReleaseStringList(void * stringArray[], int size)
     
     if(toArray->Size > 0) {
         for(int i=0; i<toArray->Size; i++) {
-            delete (char*)toArray->Data[i];
+            if(i < ARRAY_SIZE_LIMITATION)
+                delete (char*)toArray->Data[i];
         }
     }
 }

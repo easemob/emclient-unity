@@ -18,19 +18,26 @@
 
 AGORA_API void PushManager_GetIgnoredGroupIds(void *client, void * array[], int size)
 {
-    std::vector<std::string> ignoreList = CLIENT->getPushManager().getPushConfigs()->getIgnoredGroupIds();
-    
     TOArray* toArray = (TOArray*)array[0];
+    EMPushConfigsPtr configPtr = CLIENT->getPushManager().getPushConfigs();
+    if(!configPtr) {
+        LOG("Cannot get any push config ");
+        toArray->Size = 0;
+        return;
+    }
     
+    std::vector<std::string> ignoreList = configPtr->getIgnoredGroupIds();
+
     if(ignoreList.size() > 0) {
         LOG("GetIgnoredGroupIds group id number:%d", ignoreList.size());
-        toArray->Size = (int)ignoreList.size();
+        int size = (int)ignoreList.size();
+        toArray->Size = (size > ARRAY_SIZE_LIMITATION) ? ARRAY_SIZE_LIMITATION:size;
         toArray->Type = DataType::ListOfString;
         
-        for(size_t i=0; i<ignoreList.size(); i++) {
+        for(size_t i=0; i<toArray->Size; i++) {
             char* p = new char[ignoreList[i].size()+1];
             strncpy(p, ignoreList[i].c_str(), ignoreList[i].size()+1);
-            toArray->Data[1] = (void*)p;
+            toArray->Data[i] = (void*)p;
         }
     } else {
         toArray->Size = 0;
@@ -249,7 +256,8 @@ AGORA_API void PushManager_ReleaseStringList(void * stringArray[], int size)
     
     if(toArray->Size > 0) {
         for(int i=0; i<toArray->Size; i++) {
-            delete (char*)toArray->Data[i];
+            if(i < ARRAY_SIZE_LIMITATION)
+                delete (char*)toArray->Data[i];
         }
     }
 }
@@ -261,7 +269,8 @@ AGORA_API void ConversationManager_ReleasePushConfigList(void * pcArray[], int s
     
     if(toArray->Size > 0) {
         for(int i=0; i<toArray->Size; i++) {
-            delete (PushConfigTO*)toArray->Data[i];
+            if(i<ARRAY_SIZE_LIMITATION)
+                delete (PushConfigTO*)toArray->Data[i];
         }
     }
 }

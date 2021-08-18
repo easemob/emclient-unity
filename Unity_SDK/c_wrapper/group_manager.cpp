@@ -580,12 +580,12 @@ AGORA_API void GroupManager_FetchGroupMembers(void *client, const char * groupId
             CursorResultTO *data[1] = {&cursorResultTo};
             
             data[0]->NextPageCursor = msgCursorResult.nextPageCursor().c_str();
-            size_t size = msgCursorResult.result().size();
+            int size = (int)msgCursorResult.result().size();
             data[0]->Type = DataType::ListOfString;
-            data[0]->Size = (int)size;
-            LOG("GroupManager_FetchGroupMembers member size: %d", size);
+            data[0]->Size = (size > ARRAY_SIZE_LIMITATION)?ARRAY_SIZE_LIMITATION:size;
+            LOG("GroupManager_FetchGroupMembers member size: %d", data[0]->Size);
             
-            for(int i=0; i<size; i++) {
+            for(int i=0; i<data[0]->Size; i++) {
                 data[0]->Data[i] = (void*)msgCursorResult.result().at(i).c_str();
                 LOG("member %d: %s", i, msgCursorResult.result().at(i).c_str());
             }
@@ -710,12 +710,12 @@ AGORA_API void GroupManager_LoadAllMyGroupsFromDB(void *client, void * array[], 
     EMGroupList groupList = CLIENT->getGroupManager().loadAllMyGroupsFromDB();
 
     if(groupList.size() > 0) {
-        LOG("LoadAllMyGroupsFromDB successfully, group num:%d", groupList.size());
-        
-        toArray->Size = (int)groupList.size();
+        int size = (int)groupList.size();
+        toArray->Size = (size > ARRAY_SIZE_LIMITATION)?ARRAY_SIZE_LIMITATION:size;
+        LOG("LoadAllMyGroupsFromDB successfully, group num:%d", toArray->Size);
         toArray->Type = DataType::ListOfGroup;
         
-        for(size_t i=0; i<groupList.size(); i++) {
+        for(size_t i=0; i<toArray->Size; i++) {
             GroupTO *datum = GroupTO::FromEMGroup(groupList[i]);
             toArray->Data[i] = (void*)datum;
         }
@@ -750,49 +750,6 @@ AGORA_API void GroupManager_FetchAllMyGroupsWithPage(void *client, int pageNum, 
     }
 }
 
-/*
- AGORA_API void GroupManager_FetchPublicGroupsWithCursor(void *client, int pageSize, const char * cursor, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
- {
-     EMError error;
-     LOG("pageSize is:%d", pageSize);
-     
-     std::string cursorStr = OptionalStrParamCheck(cursor);
-     EMCursorResult cursorResult = CLIENT->getGroupManager().fetchPublicGroupsWithCursor(cursorStr, pageSize, error);
-     if(error.mErrorCode == EMError::EM_NO_ERROR) {
-         //success
-         LOG("GroupManager_FetchPublicGroupsWithCursor succeeds, return group size: %d", cursorResult.result().size());
-         if(onSuccess) {
-             
-             //auto cursorResultTo = new CursorResultTO();
-             CursorResultTO cursorResultTo;
-             CursorResultTO *data[1] = {&cursorResultTo};
-             data[0]->NextPageCursor = cursorResult.nextPageCursor().c_str();
-             LOG("nextPageCursor is:%s", cursorResult.nextPageCursor().c_str());
-             size_t size = (cursorResult.result().size() > 200)? 200:cursorResult.result().size();
-             data[0]->Type = DataType::ListOfGroup;
-             data[0]->Size = (int)size;
-
-             for(size_t i=0; i<size; i++) {
-                 EMGroupPtr groupPtr = std::dynamic_pointer_cast<EMGroup>(cursorResult.result().at(i));
-                 LOG("%d Group id is: %s, group name: %s", i, groupPtr->groupId().c_str(), groupPtr->groupSubject().c_str());
-                 data[0]->Data[i] = GroupTO::FromEMGroup(groupPtr);
-             }
-             LOG("Convert EMGroupPtr to GroupTO complete.");
-             onSuccess((void **)data, DataType::CursorResult, 1);
-             
-             //free memory
-             for(size_t i=0; i<size; i++) {
-                 delete (GroupTO*)data[0]->Data[i];
-             }
-         }
-     }else{
-         if(onError) {
-             onError(error.mErrorCode, error.mDescription.c_str());
-         }
-     }
- }
- */
-
 AGORA_API void GroupManager_FetchPublicGroupsWithCursor(void *client, int pageSize, const char * cursor, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
@@ -810,7 +767,7 @@ AGORA_API void GroupManager_FetchPublicGroupsWithCursor(void *client, int pageSi
             CursorResultTO *data[1] = {&cursorResultTo};
             data[0]->NextPageCursor = cursorResult.nextPageCursor().c_str();
             LOG("nextPageCursor is:%s", cursorResult.nextPageCursor().c_str());
-            size_t size = (cursorResult.result().size() > 200)? 200:cursorResult.result().size();
+            size_t size = (cursorResult.result().size() > ARRAY_SIZE_LIMITATION)? ARRAY_SIZE_LIMITATION:cursorResult.result().size();
             data[0]->Type = DataType::ListOfGroup;
             data[0]->Size = (int)size;
 
@@ -1225,7 +1182,8 @@ AGORA_API void GroupManager_ReleaseGroupList(void * groupArray[], int size)
     
     if(toArray->Size > 0) {
         for(int i=0; i<toArray->Size; i++) {
-            delete (GroupTO*)toArray->Data[i];
+            if(i < ARRAY_SIZE_LIMITATION)
+                delete (GroupTO*)toArray->Data[i];
         }
     }
 }

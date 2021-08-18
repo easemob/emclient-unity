@@ -19,6 +19,8 @@
 
 using namespace easemob;
 
+const int ARRAY_SIZE_LIMITATION = 200;
+
 EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bool buildReceiveMsg=false);
 
 struct Options
@@ -237,8 +239,8 @@ struct CursorResultTO
     const char * NextPageCursor;
     DataType Type;
     int Size;
-    EMMessageBody::EMMessageBodyType SubTypes[200]; //sub types if any
-    void * Data[200]; //list of data
+    EMMessageBody::EMMessageBodyType SubTypes[ARRAY_SIZE_LIMITATION]; //sub types if any
+    void * Data[ARRAY_SIZE_LIMITATION]; //list of data
 };
 
 struct GroupOptions
@@ -357,14 +359,14 @@ struct TOArray
 {
     DataType Type;
     int Size;
-    void * Data[200]; //list of data
+    void * Data[ARRAY_SIZE_LIMITATION]; //list of data
 };
 
 struct TOArrayDiff
 {
     int Size;
-    void * Data[200];
-    int Type[200];
+    void * Data[ARRAY_SIZE_LIMITATION];
+    int Type[ARRAY_SIZE_LIMITATION];
 };
 
 #endif //_MODELS_H_
