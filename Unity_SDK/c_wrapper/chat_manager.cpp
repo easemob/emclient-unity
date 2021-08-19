@@ -11,7 +11,55 @@
 #include "emmessagebody.h"
 #include "tool.h"
 
+typedef std::map<int64_t, MessageTO*>::iterator TsMsgIter;
+typedef std::map<int64_t, EMMessagePtr>::iterator TsMsgPtrIter;
+
+std::mutex tsMsgLocker;
+//MessgeTO must be freed at C# side!
+std::map<int64_t, MessageTO*> tsMsgTOMap;
+std::map<int64_t, EMMessagePtr> tsMsgPtrMap;
+
 static EMCallbackObserverHandle gCallbackObserverHandle;
+
+void AddTsMsgItem(int64_t ts,  MessageTO* mto, EMMessagePtr msgPtr)
+{
+    std::lock_guard<std::mutex> maplocker(tsMsgLocker);
+    tsMsgTOMap[ts] = mto;
+    tsMsgPtrMap[ts] = msgPtr;
+}
+
+void DeleteTsMsgItem(int64_t ts)
+{
+    std::lock_guard<std::mutex> maplocker(tsMsgLocker);
+    auto it = tsMsgTOMap.find(ts);
+    if(tsMsgTOMap.end() != it) {
+        tsMsgTOMap.erase(it);
+    }
+    
+    auto itPtr = tsMsgPtrMap.find(ts);
+    if(tsMsgPtrMap.end() != itPtr) {
+        tsMsgPtrMap.erase(itPtr);
+    }
+}
+
+void UpdateTsMsgMap(int64_t ts)
+{
+    LOG("UpdateTsMsgMap ts:%ld", ts);
+    std::lock_guard<std::mutex> maplocker(tsMsgLocker);
+    
+    auto it = tsMsgTOMap.find(ts);
+    if(tsMsgTOMap.end() == it) {
+        return;
+    }
+    
+    auto itPtr = tsMsgPtrMap.find(ts);
+    if(tsMsgPtrMap.end() == itPtr) {
+        return;
+    }
+    std::string msgId = it->second->MsgId;
+    it->second->MsgId = itPtr->second->msgId().c_str();
+    LOG("after update, msgid: %s -> %s", msgId.c_str(), it->second->MsgId);
+}
 
 AGORA_API void ChatManager_SendMessage(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, void *mto, EMMessageBody::EMMessageBodyType type) {
     EMError error;
@@ -21,10 +69,16 @@ AGORA_API void ChatManager_SendMessage(void *client, FUNC_OnSuccess onSuccess, F
     }
     
     EMMessagePtr messagePtr = BuildEMMessage(mto, type);
+    
+    int64_t ts = messagePtr->timestamp();
+    AddTsMsgItem(ts, (MessageTO*)mto, messagePtr);
+    
     EMCallbackPtr callbackPtr(new EMCallback(gCallbackObserverHandle,
-                                             [onSuccess]()->bool {
+                                             [=]()->bool {
                                                 LOG("Message sent succeeds.");
+                                                UpdateTsMsgMap(ts);
                                                 if(onSuccess) onSuccess();
+                                                DeleteTsMsgItem(ts);
                                                 return true;
                                              },
                                              [onError](const easemob::EMErrorPtr error)->bool{
