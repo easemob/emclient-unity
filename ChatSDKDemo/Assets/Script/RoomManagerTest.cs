@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using ChatSDK;
 
-public class RoomManagerTest : MonoBehaviour
+public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
 {
 
     private Text roomText;
@@ -94,6 +94,9 @@ public class RoomManagerTest : MonoBehaviour
         UnBlockRoomMembersBtn.onClick.AddListener(UnBlockRoomMembersBtnAction);
         UnMuteRoomMembersBtn.onClick.AddListener(UnMuteRoomMembersBtnAction);
         UpdateRoomAnnouncementBtn.onClick.AddListener(UpdateRoomAnnouncementBtnAction);
+
+
+        SDKClient.Instance.RoomManager.AddRoomManagerDelegate(this);
     }
 
 
@@ -503,5 +506,60 @@ public class RoomManagerTest : MonoBehaviour
     void Update()
     {
 
+    }
+
+    public void OnDestroyedFromRoom(string roomId, string roomName)
+    {
+        UIManager.DefaultAlert(transform, $"OnDestroyedFromRoom: {roomId} , {roomName}");
+    }
+
+    public void OnMemberJoinedFromRoom(string roomId, string participant)
+    {
+        UIManager.DefaultAlert(transform, $"OnMemberJoinedFromRoom: {roomId} , {participant}");
+    }
+
+    public void OnMemberExitedFromRoom(string roomId, string roomName, string participant)
+    {
+        UIManager.DefaultAlert(transform, $"OnMemberExitedFromRoom: {roomId} , {roomName}, {participant}");
+    }
+
+    public void OnRemovedFromRoom(string roomId, string roomName, string participant)
+    {
+        UIManager.DefaultAlert(transform, $"OnRemovedFromRoom: {roomId} , {roomName}, {participant}");
+    }
+
+    public void OnMuteListAddedFromRoom(string roomId, List<string> mutes, long expireTime)
+    {
+
+        string str = string.Join(",", mutes.ToArray());
+        
+        UIManager.DefaultAlert(transform, $"OnMuteListAddedFromRoom: {roomId} , {str}");
+    }
+
+    public void OnMuteListRemovedFromRoom(string roomId, List<string> mutes)
+    {
+        string str = string.Join(",", mutes.ToArray());
+        
+        UIManager.DefaultAlert(transform, $"OnMuteListRemovedFromRoom: {roomId} , {str}");
+    }
+
+    public void OnAdminAddedFromRoom(string roomId, string admin)
+    {
+        UIManager.DefaultAlert(transform, $"OnAdminAddedFromRoom: {roomId} , {admin}");
+    }
+
+    public void OnAdminRemovedFromRoom(string roomId, string admin)
+    {
+        UIManager.DefaultAlert(transform, $"OnAdminRemovedFromRoom: {roomId} , {admin}");
+    }
+
+    public void OnOwnerChangedFromRoom(string roomId, string newOwner, string oldOwner)
+    {
+        UIManager.DefaultAlert(transform, $"OnOwnerChangedFromRoom: {roomId} , {newOwner}, {oldOwner}");
+    }
+
+    public void OnAnnouncementChangedFromRoom(string roomId, string announcement)
+    {
+        UIManager.DefaultAlert(transform, $"OnAnnouncementChangedFromRoom: {roomId} , {announcement}");
     }
 }

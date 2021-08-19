@@ -101,13 +101,16 @@
     __block NSString *callId = callbackId;
     
     NSArray *inviteMembers = [Transfrom NSStringToJsonObject:param[@"inviteMembers"]];
+    
     NSDictionary *optionJson = [Transfrom NSStringToJsonObject:param[@"options"]];
+    
+    EMGroupOptions *options = [EMGroupOptions formJson:optionJson];
     
     [EMClient.sharedClient.groupManager createGroupWithSubject:param[@"groupName"]
                                                    description:param[@"desc"]
-                                                      invitees:inviteMembers
+                                                      invitees:inviteMembers.count == 0 ? inviteMembers : nil
                                                        message:param[@"inviteReason"]
-                                                       setting:[EMGroupOptions formJson:optionJson]
+                                                       setting:options
                                                     completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {

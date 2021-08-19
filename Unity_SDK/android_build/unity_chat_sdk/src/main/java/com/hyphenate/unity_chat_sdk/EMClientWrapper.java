@@ -53,6 +53,7 @@ public class EMClientWrapper extends EMWrapper {
         emOptions.setUseFCM(false);
         EMClient.getInstance().init(context, emOptions);
         EMClient.getInstance().setDebugMode(jo.getBoolean("debug_mode"));
+//        EMClient.getInstance().setDebugMode(true);
         EMClient.getInstance().addConnectionListener(new EMUnityConnectionListener());
     }
 

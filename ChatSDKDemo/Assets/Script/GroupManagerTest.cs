@@ -159,6 +159,7 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
         UploadGroupSharedFileBtn.onClick.AddListener(UploadGroupSharedFileBtnAction);
 
         SDKClient.Instance.GroupManager.AddGroupManagerDelegate(this);
+
     }
 
 
@@ -378,7 +379,8 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
             }
             SDKClient.Instance.GroupManager.CreateGroup(name, optison, desc, members, handle:new ValueCallBack<Group>(
                 onSuccess: (group) => {
-                    UIManager.SuccessAlert(transform);
+                    groupText.text = group.GroupId;
+                    UIManager.DefaultAlert(transform, group.GroupId);
                 },
                 onError:(code, error) => {
                     UIManager.ErrorAlert(transform, code, error);

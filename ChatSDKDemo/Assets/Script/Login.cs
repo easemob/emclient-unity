@@ -60,14 +60,14 @@ public class Login : MonoBehaviour
 
                 onError: (code, desc) =>
                 {
-                    if (code == 200)
-                    {
-                        SceneManager.LoadSceneAsync("Main");
-                    }
-                    else {
-                        UIManager.DefaultAlert(transform, "login failed, code: " + code);
-                    }
-                    
+                    //if (code == 200)
+                    //{
+                    //    SceneManager.LoadSceneAsync("Main");
+                    //}
+                    //else {
+                    //    UIManager.DefaultAlert(transform, "login failed, code: " + code);
+                    //}
+                    UIManager.DefaultAlert(transform, "login failed, code: " + code);
                 }
             )
         );
@@ -97,7 +97,7 @@ public class Login : MonoBehaviour
         options.DebugMode = true;
         SDKClient.Instance.InitWithOptions(options);
 
-        if (SDKClient.Instance.IsLoggedIn) {
+        if (SDKClient.Instance.IsLoggedIn && SDKClient.Instance.Options.AutoLogin) {
             SceneManager.LoadSceneAsync("Main");
         } 
     }
