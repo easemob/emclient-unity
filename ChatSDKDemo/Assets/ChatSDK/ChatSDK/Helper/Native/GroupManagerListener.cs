@@ -282,7 +282,7 @@ namespace ChatSDK {
                 {
                     delegater.OnSharedFileAddedFromGroup(
                         jo["groupId"].Value,
-                        new GroupSharedFile(jo["sharedFile"])
+                        new GroupSharedFile(jo["sharedFile"].Value)
                         );
                 }
             }
