@@ -118,13 +118,8 @@ public class EMMessageHelper {
             message.setUnread(!json.getBoolean("hasRead"));
         }
         message.setDeliverAcked(json.getBoolean("hasDeliverAck"));
-        if (json.getLong("localTime") != 0) {
-            message.setLocalTime(json.getLong("localTime"));
-        }
-
-        if (json.getLong("serverTime") != 0) {
-            message.setMsgTime(json.getLong("serverTime"));
-        }
+        message.setLocalTime(Long.parseLong(json.getString("localTime")));
+        message.setMsgTime(Long.parseLong(json.getString("serverTime")));
 
         message.setStatus(statusFromInt(json.getInt("status")));
         message.setChatType(chatTypeFromInt(json.getInt("chatType")));

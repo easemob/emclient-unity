@@ -114,7 +114,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
                     //});
                 },
                 onError:(code, desc) => {
-                    UIManager.ErrorAlert(transform, code, desc);
+                    UIManager.ErrorAlert(transform, code, msg.MsgId);
                 }               
             ));
         });

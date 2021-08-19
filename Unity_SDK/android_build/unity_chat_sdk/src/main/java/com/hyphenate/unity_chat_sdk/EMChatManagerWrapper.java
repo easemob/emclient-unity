@@ -51,8 +51,7 @@ public class EMChatManagerWrapper extends EMWrapper  {
         }else {
             HyphenateException e = new HyphenateException(500, "Message not found.");
             onError(callbackId, e);
-        }
-    }
+        }    }
 
     private void downloadThumbnail(String messageId, String callbackId) {
         EMMessage msg = EMClient.getInstance().chatManager().getMessage(messageId);
@@ -259,7 +258,7 @@ public class EMChatManagerWrapper extends EMWrapper  {
             @Override
             public void onSuccess() {
                 try {
-                    EMChatManagerWrapper.this.onSuccess("OnMessageSuccess", callbackId, EMMessageHelper.toJson(msg));
+                    EMChatManagerWrapper.this.onSuccess("OnMessageSuccess", callbackId, EMMessageHelper.toJson(msg).toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -268,8 +267,7 @@ public class EMChatManagerWrapper extends EMWrapper  {
             @Override
             public void onError(int i, String s) {
                 try {
-                    EMChatManagerWrapper.this.onSuccess("OnMessageError", callbackId, EMMessageHelper.toJson(msg));
-                    EMChatManagerWrapper.this.onError(callbackId, new HyphenateException(i, s));
+                    EMChatManagerWrapper.this.onSendMessageError(callbackId, EMMessageHelper.toJson(msg).toString(), i, s);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

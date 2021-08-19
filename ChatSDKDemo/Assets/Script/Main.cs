@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using ChatSDK;
 
-public class Main : MonoBehaviour
+public class Main : MonoBehaviour, IConnectionDelegate
 {
     // Start is called before the first frame update
 
@@ -50,6 +50,8 @@ public class Main : MonoBehaviour
         CurrentUsernameBtn.onClick.AddListener(CurrentUsernameBtnAction);
         AccessTokenBtn.onClick.AddListener(AccessTokenBtnAction);
         LogoutBtn.onClick.AddListener(LogoutBtnAction);
+
+        SDKClient.Instance.AddConnectionDelegate(this);
     }
 
 
@@ -120,5 +122,23 @@ public class Main : MonoBehaviour
     void Update()
     {
 
+    }
+
+    public void OnConnected()
+    {
+        UIManager.DefaultAlert(transform, "OnConnected");
+    }
+
+    public void OnDisconnected(int i)
+    {
+        UIManager.DefaultAlert(transform, $"OnDisconnected : {i.ToString()}");
+        if (i == 206) {
+            SceneManager.LoadSceneAsync("Login");
+        }
+    }
+
+    public void OnPong()
+    {
+        
     }
 }
