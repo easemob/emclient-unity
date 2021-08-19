@@ -773,6 +773,18 @@ namespace ChatSDK
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public class GroupInfoTO
+    {
+        public string GroupId;
+        public string GroupName;
+
+        public GroupInfoTO()
+        {
+
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public struct RoomTO
     {
         public string RoomId;

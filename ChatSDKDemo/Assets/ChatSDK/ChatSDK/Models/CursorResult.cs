@@ -27,9 +27,9 @@ namespace ChatSDK
         public string NextPageCursor;
         public DataType Type;
         public int Size;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 200)]
         public MessageBodyType[] SubTypes; //sub types if any
-        [MarshalAs(UnmanagedType.ByValArray,SizeConst = 32)]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst = 200)]
         public IntPtr[] Data; //list of data
     }
 }

@@ -39,7 +39,7 @@ namespace ChatSDK
                 {
                     try
                     {
-                        handle?.Success();
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); });
                     }
                     catch (NullReferenceException nre)
                     {
@@ -47,7 +47,10 @@ namespace ChatSDK
                     }
 
                 },
-                (int code, string desc) => handle?.Error(code, desc)
+                (int code, string desc) =>
+                {
+                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); });
+                }
                 );
         }
 
@@ -58,7 +61,7 @@ namespace ChatSDK
                 {
                     try
                     {
-                        handle?.Success();
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); }); 
                     }
                     catch (NullReferenceException nre)
                     {
@@ -66,7 +69,10 @@ namespace ChatSDK
                     }
 
                 },
-                (int code, string desc) => handle?.Error(code, desc)
+                (int code, string desc) =>
+                {
+                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); });
+                }
                 );
         }
 
@@ -311,7 +317,7 @@ namespace ChatSDK
                  {
                      try
                      {
-                         handle?.Success();
+                         ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); });
                      }
                      catch (NullReferenceException nre)
                      {
@@ -319,7 +325,10 @@ namespace ChatSDK
                      }
 
                  },
-                 (int code, string desc) => handle?.Error(code, desc)
+                 (int code, string desc) =>
+                 {
+                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); });
+                 }
                  );
         }
 
@@ -340,7 +349,7 @@ namespace ChatSDK
                 {
                     try
                     {
-                        handle?.Success();
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); });
                     }
                     catch (NullReferenceException nre)
                     {
@@ -348,7 +357,10 @@ namespace ChatSDK
                     }
 
                 },
-                (int code, string desc) => handle?.Error(code, desc)
+                (int code, string desc) =>
+                {
+                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); });
+                }
                 );
 
             //Parse return param array
@@ -482,7 +494,7 @@ namespace ChatSDK
                 {
                     try
                     {
-                        callback?.Success();
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { callback?.Success(); });
                     }
                     catch(NullReferenceException nre)
                     {
@@ -490,7 +502,13 @@ namespace ChatSDK
                     }
                     
                 },
-                (int code, string desc) => callback?.Error(code, desc), mtoPtr, message.Body.Type);
+                (int code, string desc) =>
+                {
+                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { callback?.Error(code, desc); });
+                    //callback?.Error(code, desc);
+                },
+                mtoPtr, message.Body.Type);
+
             Marshal.FreeCoTaskMem(mtoPtr);
         }
 
