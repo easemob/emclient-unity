@@ -14,22 +14,30 @@
 #include "empushmanager_interface.h"
 #include "models.h"
 #include "push_manager.h"
+#include "tool.h"
 
 AGORA_API void PushManager_GetIgnoredGroupIds(void *client, void * array[], int size)
 {
-    std::vector<std::string> ignoreList = CLIENT->getPushManager().getPushConfigs()->getIgnoredGroupIds();
-    
     TOArray* toArray = (TOArray*)array[0];
+    EMPushConfigsPtr configPtr = CLIENT->getPushManager().getPushConfigs();
+    if(!configPtr) {
+        LOG("Cannot get any push config ");
+        toArray->Size = 0;
+        return;
+    }
     
+    std::vector<std::string> ignoreList = configPtr->getIgnoredGroupIds();
+
     if(ignoreList.size() > 0) {
         LOG("GetIgnoredGroupIds group id number:%d", ignoreList.size());
-        toArray->Size = (int)ignoreList.size();
+        int size = (int)ignoreList.size();
+        toArray->Size = (size > ARRAY_SIZE_LIMITATION) ? ARRAY_SIZE_LIMITATION:size;
         toArray->Type = DataType::ListOfString;
         
-        for(size_t i=0; i<ignoreList.size(); i++) {
+        for(size_t i=0; i<toArray->Size; i++) {
             char* p = new char[ignoreList[i].size()+1];
             strncpy(p, ignoreList[i].c_str(), ignoreList[i].size()+1);
-            toArray->Data[1] = (void*)p;
+            toArray->Data[i] = (void*)p;
         }
     } else {
         toArray->Size = 0;
@@ -102,6 +110,11 @@ AGORA_API void PushManager_GetUserConfigsFromServer(void *client, FUNC_OnSuccess
 AGORA_API void PushManager_IgnoreGroupPush(void *client, const char * groupId, bool noDisturb, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
+    if(!MandatoryCheck(groupId, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    
     CLIENT->getPushManager().ignoreGroupPush(groupId, noDisturb, error);
 
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
@@ -167,6 +180,12 @@ AGORA_API void PushManager_UpdatePushDisplayStyle(void *client, EMPushConfigs::E
 AGORA_API void PushManager_UpdateFCMPushToken(void *client, const char * token, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
+
+    if(!MandatoryCheck(token, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    
     CLIENT->getPushManager().bindUserDeviceToken(token, "FCM", error);
 
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
@@ -185,6 +204,12 @@ AGORA_API void PushManager_UpdateFCMPushToken(void *client, const char * token, 
 AGORA_API void PushManager_UpdateHMSPushToken(void *client, const char * token, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
+    
+    if(!MandatoryCheck(token, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    
     CLIENT->getPushManager().bindUserDeviceToken(token, "HMS", error);
 
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
@@ -203,6 +228,12 @@ AGORA_API void PushManager_UpdateHMSPushToken(void *client, const char * token, 
 AGORA_API void PushManager_UpdatePushNickName(void *client, const char * nickname, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
+    
+    if(!MandatoryCheck(nickname, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    
     CLIENT->getPushManager().updatePushNickName(nickname, error);
 
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
@@ -225,7 +256,8 @@ AGORA_API void PushManager_ReleaseStringList(void * stringArray[], int size)
     
     if(toArray->Size > 0) {
         for(int i=0; i<toArray->Size; i++) {
-            delete (char*)toArray->Data[i];
+            if(i < ARRAY_SIZE_LIMITATION)
+                delete (char*)toArray->Data[i];
         }
     }
 }
@@ -237,7 +269,8 @@ AGORA_API void ConversationManager_ReleasePushConfigList(void * pcArray[], int s
     
     if(toArray->Size > 0) {
         for(int i=0; i<toArray->Size; i++) {
-            delete (PushConfigTO*)toArray->Data[i];
+            if(i<ARRAY_SIZE_LIMITATION)
+                delete (PushConfigTO*)toArray->Data[i];
         }
     }
 }

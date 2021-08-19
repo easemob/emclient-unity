@@ -108,9 +108,10 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
             Message msg = Message.CreateTextSendMessage(dict["to"], dict["content"]);
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
                 onSuccess: () => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        UIManager.TitleAlert(transform, "成功", msg.MsgId);
-                    });
+                    UIManager.TitleAlert(transform, "成功", msg.MsgId);
+                    //ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    //    UIManager.TitleAlert(transform, "成功", msg.MsgId);
+                    //});
                 },
                 onError:(code, desc) => {
                     UIManager.ErrorAlert(transform, code, msg.MsgId);
@@ -424,7 +425,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     {
         InputAlertConfig config = new InputAlertConfig("发送会话Ack", (dict) =>
         {
-            int count = int.Parse(dict["LoadCount"]);
+            //int count = int.Parse(dict["LoadCount"]);
             SDKClient.Instance.ChatManager.SendConversationReadAck(dict["id"], new CallBack(
                 onSuccess: () => {
                     UIManager.SuccessAlert(transform);
@@ -446,7 +447,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     {
         InputAlertConfig config = new InputAlertConfig("发送消息Ack", (dict) =>
         {
-            int count = int.Parse(dict["LoadCount"]);
+            //int count = int.Parse(dict["LoadCount"]);
             SDKClient.Instance.ChatManager.SendMessageReadAck(dict["id"], new CallBack(
                 onSuccess: () => {
                     UIManager.SuccessAlert(transform);

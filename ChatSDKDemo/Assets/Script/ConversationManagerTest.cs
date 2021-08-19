@@ -270,7 +270,7 @@ public class ConversationManagerTest : MonoBehaviour
             string msgId = dict["MsgId"];
             Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
             Message msg = conv.LoadMessage(msgId);
-            UIManager.DefaultAlert(transform, msg == null ? "获取成功" : "获取失败");
+            UIManager.DefaultAlert(transform, msg == null ? "获取失败" : "获取成功");
         });
 
         config.AddField("MsgId");

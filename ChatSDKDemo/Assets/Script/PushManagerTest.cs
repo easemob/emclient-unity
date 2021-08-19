@@ -62,7 +62,10 @@ public class PushManagerTest : MonoBehaviour
 
     void GetPushConfigBtnAction() {
         PushConfig config = SDKClient.Instance.PushManager.GetPushConfig();
-        UIManager.DefaultAlert(transform, config.ToString());
+        if(null != config)
+            UIManager.DefaultAlert(transform, config.ToString());
+        else
+            UIManager.DefaultAlert(transform, "未配置");
     }
 
     void GetPushConfigFromServerBtnAction() {
@@ -77,8 +80,16 @@ public class PushManagerTest : MonoBehaviour
     }
     void GetNoDisturbGroupsBtnAction() {
         List<string> list = SDKClient.Instance.PushManager.GetNoDisturbGroups();
-        string str = string.Join(",", list.ToArray());
-        UIManager.DefaultAlert(transform, str);
+        if(list.Count > 0)
+        {
+            string str = string.Join(",", list.ToArray());
+            UIManager.DefaultAlert(transform, str);
+        }
+        else
+        {
+            UIManager.DefaultAlert(transform, "未配置");
+        }
+        
     }
     void UpdatePushNickNameBtnAction() {
 

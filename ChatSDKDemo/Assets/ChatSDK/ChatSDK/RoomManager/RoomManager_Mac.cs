@@ -172,6 +172,7 @@ namespace ChatSDK
                     if (dType == DataType.Room && size > 0)
                     {
                         var result = new PageResult<Room>();
+                        result.Data = new List<Room>();
                         for(int i=0; i<size; i++)
                         {
                             var roomTO = Marshal.PtrToStructure<RoomTO>(data[i]);
@@ -260,6 +261,7 @@ namespace ChatSDK
                         if (cursorResultTO.Type == DataType.ListOfString)
                         {
                             var result = new CursorResult<String>();
+                            result.Data = new List<string>();
                             result.Cursor = cursorResultTO.NextPageCursor;
                             int itemSize = cursorResultTO.Size;
 

@@ -8,6 +8,7 @@
 #include "contact_manager.h"
 
 #include "emclient.h"
+#include "tool.h"
 
 EMContactListener *gContactListener = NULL;
 
@@ -32,18 +33,12 @@ AGORA_API void ContactManager_AddListener(void *client,
 
 AGORA_API void ContactManager_AddContact(void *client, const char* username, const char* reason, FUNC_OnSuccess onSuccess, FUNC_OnError onError) {
     EMError error;
-    //param check
-    if(nullptr == username) {
-        error.setErrorCode(EMError::INVALID_USER_NAME);
-        error.mDescription = "User name is illegal";
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+    if(!MandatoryCheck(username, error)) {
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str());
         return;
     }
-    
-    std::string reasonStr = "";
-    if(nullptr != reason) {
-        reasonStr.append(reason);
-    }
+
+    std::string reasonStr = OptionalStrParamCheck(reason);
     
     CLIENT->getContactManager().inviteContact(username, reasonStr, error);
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
@@ -56,6 +51,11 @@ AGORA_API void ContactManager_AddContact(void *client, const char* username, con
 
 AGORA_API void ContactManager_DeleteContact(void *client, const char* username, bool keepConversation, FUNC_OnSuccess onSuccess, FUNC_OnError onError) {
     EMError error;
+    if(!MandatoryCheck(username, error)) {
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    
     CLIENT->getContactManager().deleteContact(username, error, keepConversation);
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
         LOG("DeleteContact success.");
@@ -70,12 +70,12 @@ AGORA_API void ContactManager_GetContactsFromServer(void *client, FUNC_OnSuccess
     vector<std::string> vec = CLIENT->getContactManager().getContactsFromServer(error);
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
         LOG("GetContactsFromServer success.");
-        size_t size = vec.size();
+        int size = (int)vec.size();
         auto contactTOArray = new TOArray();
         TOArray *data[1] = {contactTOArray};
         data[0]->Type = DataType::ListOfString;
-        data[0]->Size = (int)size;
-        for(int i=0; i<size; i++) {
+        data[0]->Size = (size > ARRAY_SIZE_LIMITATION)?ARRAY_SIZE_LIMITATION:size;
+        for(int i=0; i<data[0]->Size; i++) {
             data[0]->Data[i] = (void*)(vec[i].c_str());
         }
         onSuccess((void**)data, DataType::ListOfString, 1);
@@ -96,8 +96,8 @@ AGORA_API void ContactManager_GetContactsFromDB(void *client, void * array[], in
             return;
         } else {
             toArray->Type = DataType::ListOfString;
-            toArray->Size = (int)size;
-            for(int i=0; i<size; i++) {
+            toArray->Size = (size > ARRAY_SIZE_LIMITATION)?ARRAY_SIZE_LIMITATION:size;
+            for(int i=0; i<toArray->Size; i++) {
                 char* p = new char[vec[i].size() + 1];
                 strncpy(p, vec[i].c_str(), vec[i].size() + 1);
                 toArray->Data[i] = (void*)p;
@@ -113,6 +113,10 @@ AGORA_API void ContactManager_GetContactsFromDB(void *client, void * array[], in
 AGORA_API void ContactManager_AddToBlackList(void *client, const char* username, bool both, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
+    if(!MandatoryCheck(username, error)) {
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
     CLIENT->getContactManager().addToBlackList(username, both, error);
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
         LOG("AddToBlackList success.");
@@ -125,6 +129,10 @@ AGORA_API void ContactManager_AddToBlackList(void *client, const char* username,
 AGORA_API void ContactManager_RemoveFromBlackList(void *client, const char* username,FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
+    if(!MandatoryCheck(username, error)) {
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
     CLIENT->getContactManager().removeFromBlackList(username, error);
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
         LOG("RemoveFromBlackList success.");
@@ -140,12 +148,12 @@ AGORA_API void ContactManager_GetBlackListFromServer(void *client, FUNC_OnSucces
     vector<std::string> vec = CLIENT->getContactManager().getBlackListFromServer(error);
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
         LOG("GetBlackListFromServer success.");
-        size_t size = vec.size();
+        int size = (int)vec.size();
         auto blackListTOArray = new TOArray();
         TOArray *data[1] = {blackListTOArray};
         data[0]->Type = DataType::ListOfString;
-        data[0]->Size = (int)size;
-        for(int i=0; i<size; i++) {
+        data[0]->Size = (size > ARRAY_SIZE_LIMITATION)?ARRAY_SIZE_LIMITATION:size;
+        for(int i=0; i<data[0]->Size; i++) {
             data[0]->Data[i] = (void*)(vec[i].c_str());
         }
         onSuccess((void**)data, DataType::ListOfString, 1);
@@ -157,6 +165,10 @@ AGORA_API void ContactManager_GetBlackListFromServer(void *client, FUNC_OnSucces
 AGORA_API void ContactManager_AcceptInvitation(void *client, const char* username,FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
+    if(!MandatoryCheck(username, error)) {
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
     CLIENT->getContactManager().acceptInvitation(username, error);
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
         LOG("AcceptInvitation success.");
@@ -169,6 +181,10 @@ AGORA_API void ContactManager_AcceptInvitation(void *client, const char* usernam
 AGORA_API void ContactManager_DeclineInvitation(void *client, const char* username,FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
+    if(!MandatoryCheck(username, error)) {
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
     CLIENT->getContactManager().declineInvitation(username, error);
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
         LOG("DeclineInvitation success.");
@@ -184,12 +200,12 @@ AGORA_API void ContactManager_GetSelfIdsOnOtherPlatform(void *client, FUNC_OnSuc
     vector<std::string> vec = CLIENT->getContactManager().getSelfIdsOnOtherPlatform(error);
     if(error.mErrorCode == EMError::EM_NO_ERROR) {
         LOG("GetSelfIdsOnOtherPlatform success.");
-        size_t size = vec.size();
+        int size = (int)vec.size();
         auto selfIdListTOArray = new TOArray();
         TOArray *data[1] = {selfIdListTOArray};
         data[0]->Type = DataType::ListOfString;
-        data[0]->Size = (int)size;
-        for(int i=0; i<size; i++) {
+        data[0]->Size = (size > ARRAY_SIZE_LIMITATION)?ARRAY_SIZE_LIMITATION:size;
+        for(int i=0; i<data[0]->Size; i++) {
             data[0]->Data[i] = (void*)(vec[i].c_str());
         }
         onSuccess((void**)data, DataType::ListOfString, 1);
@@ -205,7 +221,8 @@ AGORA_API void ContactManager_ReleaseStringList(void * stringArray[], int size)
     
     if(toArray->Size > 0) {
         for(int i=0; i<toArray->Size; i++) {
-            delete (char*)toArray->Data[i];
+            if(i < ARRAY_SIZE_LIMITATION)
+                delete (char*)toArray->Data[i];
         }
     }
 }

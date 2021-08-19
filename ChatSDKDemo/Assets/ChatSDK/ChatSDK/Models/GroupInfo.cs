@@ -1,11 +1,13 @@
 ﻿using System;
 using SimpleJSON;
+using System.Runtime.InteropServices;
 
 namespace ChatSDK {
 
     /// <summary>
     /// 公开群列表返回的群信息
     /// </summary>
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public class GroupInfo
     {
         /// <summary>
