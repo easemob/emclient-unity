@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
@@ -9,6 +10,10 @@ namespace ChatSDK
     {
         private IntPtr client;
         private ChatManagerHub chatManagerHub;
+
+        System.Object msgMapLocker;
+        Dictionary<long, IntPtr> msgPtrMap;
+        Dictionary<long, Message> msgMap;
 
         //manager level events
         
@@ -24,6 +29,41 @@ namespace ChatSDK
                 chatManagerHub.OnCmdMessagesReceived, chatManagerHub.OnMessagesRead, chatManagerHub.OnMessagesDelivered,
                 chatManagerHub.OnMessagesRecalled, chatManagerHub.OnReadAckForGroupMessageUpdated, chatManagerHub.OnGroupMessageRead,
                 chatManagerHub.OnConversationsUpdate, chatManagerHub.OnConversationRead);
+
+            msgPtrMap = new Dictionary<long, IntPtr>();
+            msgMap = new Dictionary<long, Message>();
+            msgMapLocker = new System.Object();
+        }
+
+        public void AddMsgMap(long ts, IntPtr msgPtr, Message msg)
+        {
+            lock(msgMapLocker)
+            {
+                msgPtrMap.Add(ts, msgPtr);
+                msgMap.Add(ts, msg);
+            }
+        }
+
+        public void UpdatedMsgId(long ts)
+        {
+            lock (msgMapLocker)
+            {
+                var intPtr = msgPtrMap[ts];
+                var messageTO = Marshal.PtrToStructure<MessageTO>(intPtr);
+                var msg = msgMap[ts];
+                msg.MsgId = messageTO.MsgId;
+            }
+        }
+
+        public void DeleteFromMsgMap(long ts)
+        {
+            lock (msgMapLocker)
+            {
+                IntPtr intPtr = msgPtrMap[ts];
+                msgPtrMap.Remove(ts);
+                Marshal.FreeCoTaskMem(intPtr);
+                msgMap.Remove(ts);
+            }
         }
 
         public override bool DeleteConversation(string conversationId, bool deleteMessages)
@@ -489,11 +529,14 @@ namespace ChatSDK
             MessageTO mto = MessageTO.FromMessage(message);
             IntPtr mtoPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(mto));
             Marshal.StructureToPtr(mto, mtoPtr, false);
+            AddMsgMap(mto.LocalTime, mtoPtr, message);
             ChatAPINative.ChatManager_SendMessage(client,
                 () =>
                 {
                     try
                     {
+                        UpdatedMsgId(mto.LocalTime);
+                        DeleteFromMsgMap(mto.LocalTime);
                         ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { callback?.Success(); });
                     }
                     catch(NullReferenceException nre)
@@ -509,7 +552,7 @@ namespace ChatSDK
                 },
                 mtoPtr, message.Body.Type);
 
-            Marshal.FreeCoTaskMem(mtoPtr);
+            //Marshal.FreeCoTaskMem(mtoPtr);
         }
 
         public override void SendMessageReadAck(string messageId, CallBack callback = null)
