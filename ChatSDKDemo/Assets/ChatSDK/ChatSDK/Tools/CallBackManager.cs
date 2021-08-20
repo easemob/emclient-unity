@@ -87,7 +87,7 @@ namespace ChatSDK {
             chatManagerListener.delegater = new List<IChatManagerDelegate>(); ;
 
             GameObject contactGameObj = new GameObject(ContactManagerListener_Obj);
-            //DontDestroyOnLoad(contactGameObj);
+            DontDestroyOnLoad(contactGameObj);
             contactManagerListener = contactGameObj.AddComponent<ContactManagerListener>();
             contactManagerListener.delegater = new List<IContactManagerDelegate>();
 
