@@ -52,6 +52,11 @@ public class ContactManagerTest : MonoBehaviour, IContactManagerDelegate
         SDKClient.Instance.ContactManager.AddContactManagerDelegate(this);
     }
 
+    private void OnDestroy()
+    {
+        SDKClient.Instance.ContactManager.RemoveContactManagerDelegate(this);
+    }
+
 
     void backButtonAction()
     {
