@@ -19,7 +19,7 @@ namespace ChatSDK
             {
                 client = clientMac.client;
             }
-            roomManagerHub = new RoomManagerHub(CallbackManager.Instance().roomManagerDelegates);
+            roomManagerHub = new RoomManagerHub();
             //registered listeners
             ChatAPINative.RoomManager_AddListener(client, roomManagerHub.OnChatRoomDestroyed, roomManagerHub.OnMemberJoined,
                 roomManagerHub.OnMemberExited, roomManagerHub.OnRemovedFromChatRoom, roomManagerHub.OnMuteListAdded, roomManagerHub.OnMuteListRemoved,

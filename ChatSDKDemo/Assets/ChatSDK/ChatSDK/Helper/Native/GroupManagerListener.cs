@@ -1,24 +1,28 @@
-﻿using SimpleJSON;
+﻿using System.Collections.Generic;
+using SimpleJSON;
 using UnityEngine;
 
 namespace ChatSDK {
     internal class GroupManagerListener : MonoBehaviour
     {
 
-        internal WeakDelegater<IGroupManagerDelegate> delegater;
+        internal List<IGroupManagerDelegate> delegater;
 
         internal void OnInvitationReceived(string jsonString)
         {
             if (delegater != null) {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IGroupManagerDelegate delegater in delegater.List) {
-                    delegater.OnInvitationReceivedFromGroup(
-                        jo["groupId"].Value,
-                        jo["groupName"].Value,
-                        jo["inviter"].Value,
-                        jo["reason"].Value
-                        );
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnInvitationReceivedFromGroup(
+                            jo["groupId"].Value,
+                            jo["groupName"].Value,
+                            jo["inviter"].Value,
+                            jo["reason"].Value
+                            );
+                    }
+                });
             }
             
         }
@@ -28,15 +32,17 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IGroupManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnRequestToJoinReceivedFromGroup(
-                        jo["groupId"].Value,
-                        jo["groupName"].Value,
-                        jo["applicant"].Value,
-                        jo["reason"].Value
-                        );
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnRequestToJoinReceivedFromGroup(
+                            jo["groupId"].Value,
+                            jo["groupName"].Value,
+                            jo["applicant"].Value,
+                            jo["reason"].Value
+                            );
+                    }
+                });
             }
         }
 
@@ -45,14 +51,16 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IGroupManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnRequestToJoinAcceptedFromGroup(
-                        jo["groupId"].Value,
-                        jo["groupName"].Value,
-                        jo["accepter"].Value
-                        );
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnRequestToJoinAcceptedFromGroup(
+                            jo["groupId"].Value,
+                            jo["groupName"].Value,
+                            jo["accepter"].Value
+                            );
+                    }
+                });
             }
         }
 
@@ -61,15 +69,17 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IGroupManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnRequestToJoinDeclinedFromGroup(
-                        jo["groupId"].Value,
-                        jo["groupName"].Value,
-                        jo["decliner"].Value,
-                        jo["reason"].Value
-                        );
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnRequestToJoinDeclinedFromGroup(
+                            jo["groupId"].Value,
+                            jo["groupName"].Value,
+                            jo["decliner"].Value,
+                            jo["reason"].Value
+                            );
+                    }
+                });
             }
         }
 
@@ -78,14 +88,16 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IGroupManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnInvitationAcceptedFromGroup(
-                        jo["groupId"].Value,
-                        jo["invitee"].Value,
-                        jo["reason"].Value
-                        );
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnInvitationAcceptedFromGroup(
+                            jo["groupId"].Value,
+                            jo["invitee"].Value,
+                            jo["reason"].Value
+                            );
+                    }
+                });
             }
         }
 
@@ -94,14 +106,16 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IGroupManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnInvitationDeclinedFromGroup(
-                        jo["groupId"].Value,
-                        jo["invitee"].Value,
-                        jo["inviter"].Value
-                        );
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnInvitationDeclinedFromGroup(
+                            jo["groupId"].Value,
+                            jo["invitee"].Value,
+                            jo["inviter"].Value
+                            );
+                    }
+                });
             }
         }
 
@@ -110,13 +124,15 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IGroupManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnUserRemovedFromGroup(
-                        jo["groupId"].Value,
-                        jo["groupName"].Value
-                        );
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnUserRemovedFromGroup(
+                            jo["groupId"].Value,
+                            jo["groupName"].Value
+                            );
+                    }
+                });
             }
         }
 
@@ -125,13 +141,15 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IGroupManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnDestroyedFromGroup(
-                        jo["groupId"].Value,
-                        jo["groupName"].Value
-                        );
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnDestroyedFromGroup(
+                            jo["groupId"].Value,
+                            jo["groupName"].Value
+                            );
+                    }
+                });
             }
         }
 
@@ -140,14 +158,16 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IGroupManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnAutoAcceptInvitationFromGroup(
-                        jo["groupId"].Value,
-                        jo["inviter"].Value,
-                        jo["inviteMessage"].Value
-                        );
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnAutoAcceptInvitationFromGroup(
+                            jo["groupId"].Value,
+                            jo["inviter"].Value,
+                            jo["inviteMessage"].Value
+                            );
+                    }
+                });
             }
         }
 
@@ -156,14 +176,16 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IGroupManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnMuteListAddedFromGroup(
-                        jo["groupId"].Value,
-                        TransformTool.JsonStringToStringList(jo["list"].Value),
-                        jo["muteExpire"].AsInt
-                        );
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnMuteListAddedFromGroup(
+                            jo["groupId"].Value,
+                            TransformTool.JsonStringToStringList(jo["list"].Value),
+                            jo["muteExpire"].AsInt
+                            );
+                    }
+                });
             }
         }
 
@@ -172,13 +194,15 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IGroupManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnMuteListRemovedFromGroup(
-                        jo["groupId"].Value,
-                        TransformTool.JsonStringToStringList(jo["list"].Value)
-                        );
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnMuteListRemovedFromGroup(
+                            jo["groupId"].Value,
+                            TransformTool.JsonStringToStringList(jo["list"].Value)
+                            );
+                    }
+                });
             }
         }
 
@@ -187,13 +211,15 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IGroupManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnAdminAddedFromGroup(
-                        jo["groupId"].Value,
-                        jo["admin"].Value
-                        );
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnAdminAddedFromGroup(
+                            jo["groupId"].Value,
+                            jo["admin"].Value
+                            );
+                    }
+                });
             }
         }
 
@@ -202,13 +228,15 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IGroupManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnAdminRemovedFromGroup(
-                        jo["groupId"].Value,
-                        jo["admin"].Value
-                        );
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnAdminRemovedFromGroup(
+                            jo["groupId"].Value,
+                            jo["admin"].Value
+                            );
+                    }
+                });
             }
         }
 
@@ -217,14 +245,16 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IGroupManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnOwnerChangedFromGroup(
-                        jo["groupId"].Value,
-                        jo["newOwner"].Value,
-                        jo["oldOwner"].Value
-                        );
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnOwnerChangedFromGroup(
+                            jo["groupId"].Value,
+                            jo["newOwner"].Value,
+                            jo["oldOwner"].Value
+                            );
+                    }
+                });
             }
         }
 
@@ -233,13 +263,15 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IGroupManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnMemberJoinedFromGroup(
-                        jo["groupId"].Value,
-                        jo["member"].Value
-                        );
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnMemberJoinedFromGroup(
+                            jo["groupId"].Value,
+                            jo["member"].Value
+                            );
+                    }
+                });
             }
         }
 
@@ -248,13 +280,15 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IGroupManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnMemberExitedFromGroup(
-                        jo["groupId"].Value,
-                        jo["member"].Value
-                        );
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnMemberExitedFromGroup(
+                            jo["groupId"].Value,
+                            jo["member"].Value
+                            );
+                    }
+                });
             }
         }
 
@@ -263,13 +297,15 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IGroupManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnAnnouncementChangedFromGroup(
-                        jo["groupId"].Value,
-                        jo["announcement"].Value
-                        );
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnAnnouncementChangedFromGroup(
+                            jo["groupId"].Value,
+                            jo["announcement"].Value
+                            );
+                    }
+                });
             }
         }
 
@@ -278,13 +314,15 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IGroupManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnSharedFileAddedFromGroup(
-                        jo["groupId"].Value,
-                        new GroupSharedFile(jo["sharedFile"])
-                        );
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnSharedFileAddedFromGroup(
+                            jo["groupId"].Value,
+                            new GroupSharedFile(jo["sharedFile"].Value)
+                            );
+                    }
+                });
             }
         }
 
@@ -293,13 +331,15 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IGroupManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnSharedFileDeletedFromGroup(
-                        jo["groupId"].Value,
-                        jo["fileId"].Value
-                        );
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnSharedFileDeletedFromGroup(
+                            jo["groupId"].Value,
+                            jo["fileId"].Value
+                            );
+                    }
+                });
             }
         }
     }

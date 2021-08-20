@@ -7,7 +7,7 @@ namespace ChatSDK
 {
     class Client_Mac : IClient
     {
-        private static ConnectionHub connectionHub;
+        private ConnectionHub connectionHub;
 
         internal IntPtr client = IntPtr.Zero;
         private string currentUserName;
@@ -40,12 +40,12 @@ namespace ChatSDK
             }
         }
 
-        public override void InitWithOptions(Options options, WeakDelegater<IConnectionDelegate> listeners = null)
+        public override void InitWithOptions(Options options)
         {
             ChatCallbackObject.GetInstance();
             if(connectionHub == null)
             {
-                connectionHub = new ConnectionHub(this, listeners); //init only once
+                connectionHub = new ConnectionHub(this); //init only once
             }
             
             

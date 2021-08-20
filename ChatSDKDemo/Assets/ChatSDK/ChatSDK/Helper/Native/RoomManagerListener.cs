@@ -7,19 +7,21 @@ namespace ChatSDK {
     internal class RoomManagerListener : MonoBehaviour
     {
 
-        internal WeakDelegater<IRoomManagerDelegate> delegater;
+        internal List<IRoomManagerDelegate> delegater;
 
         internal void OnChatRoomDestroyed(string jsonString) {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IRoomManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnDestroyedFromRoom(
-                        jo["roomId"].Value,
-                        jo["roomName"].Value
-                        );
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IRoomManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnDestroyedFromRoom(
+                            jo["roomId"].Value,
+                            jo["roomName"].Value
+                            );
+                    }
+                });
             }
         }
 
@@ -28,13 +30,15 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IRoomManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnMemberJoinedFromRoom(
-                        jo["roomId"].Value,
-                        jo["participant"].Value
-                        );
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IRoomManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnMemberJoinedFromRoom(
+                            jo["roomId"].Value,
+                            jo["participant"].Value
+                            );
+                    }
+                });
             }
         }
 
@@ -43,14 +47,16 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IRoomManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnMemberExitedFromRoom(
-                        jo["roomId"].Value,
-                        jo["roomName"].Value,
-                        jo["participant"].Value
-                        );
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IRoomManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnMemberExitedFromRoom(
+                            jo["roomId"].Value,
+                            jo["roomName"].Value,
+                            jo["participant"].Value
+                            );
+                    }
+                });
             }
         }
 
@@ -59,14 +65,16 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IRoomManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnRemovedFromRoom(
-                        jo["roomId"].Value,
-                        jo["roomName"].Value,
-                        jo["participant"].Value
-                        );
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IRoomManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnRemovedFromRoom(
+                            jo["roomId"].Value,
+                            jo["roomName"].Value,
+                            jo["participant"].Value
+                            );
+                    }
+                });
             }
         }
 
@@ -75,14 +83,16 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IRoomManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnMuteListAddedFromRoom(
-                        jo["roomId"].Value,
-                        TransformTool.JsonStringToStringList(jo["list"].Value),
-                        jo["expireTime"].AsInt
-                        );
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IRoomManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnMuteListAddedFromRoom(
+                            jo["roomId"].Value,
+                            TransformTool.JsonStringToStringList(jo["list"].Value),
+                            jo["expireTime"].AsInt
+                            );
+                    }
+                });
             }
         }
 
@@ -91,13 +101,15 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IRoomManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnMuteListRemovedFromRoom(
-                        jo["roomId"].Value,
-                        TransformTool.JsonStringToStringList(jo["list"].Value)
-                        );
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IRoomManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnMuteListRemovedFromRoom(
+                            jo["roomId"].Value,
+                            TransformTool.JsonStringToStringList(jo["list"].Value)
+                            );
+                    }
+                });
             }
         }
 
@@ -106,13 +118,15 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IRoomManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnAdminAddedFromRoom(
-                        jo["roomId"].Value,
-                        jo["admin"].Value
-                        );
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IRoomManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnAdminAddedFromRoom(
+                            jo["roomId"].Value,
+                            jo["admin"].Value
+                            );
+                    }
+                });
             }
         }
 
@@ -121,13 +135,15 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IRoomManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnAdminRemovedFromRoom(
-                        jo["roomId"].Value,
-                        jo["admin"].Value
-                        );
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IRoomManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnAdminRemovedFromRoom(
+                            jo["roomId"].Value,
+                            jo["admin"].Value
+                            );
+                    }
+                });
             }
         }
 
@@ -136,14 +152,16 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IRoomManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnOwnerChangedFromRoom(
-                        jo["roomId"].Value,
-                        jo["newOwner"].Value,
-                        jo["oldOwner"].Value
-                        );
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IRoomManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnOwnerChangedFromRoom(
+                            jo["roomId"].Value,
+                            jo["newOwner"].Value,
+                            jo["oldOwner"].Value
+                            );
+                    }
+                });
             }
         }
 
@@ -152,13 +170,15 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IRoomManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnAnnouncementChangedFromRoom(
-                        jo["roomId"].Value,
-                        jo["announcement"].Value
-                        );
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IRoomManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnAnnouncementChangedFromRoom(
+                            jo["roomId"].Value,
+                            jo["announcement"].Value
+                            );
+                    }
+                });
             }
         }
     }

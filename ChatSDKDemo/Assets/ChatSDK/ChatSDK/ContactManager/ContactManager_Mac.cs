@@ -17,7 +17,7 @@ namespace ChatSDK
                 client = clientMac.client;
             }
             //register listeners
-            contactManagerHub = new ContactManagerHub(CallbackManager.Instance().contactManagerDelegates);
+            contactManagerHub = new ContactManagerHub();
             ChatAPINative.ContactManager_AddListener(client, contactManagerHub.OnContactAdd,contactManagerHub.OnContactDeleted,
                 contactManagerHub.OnContactInvited, contactManagerHub.OnFriendRequestAccepted,contactManagerHub.OnFriendRequestDeclined);
         }

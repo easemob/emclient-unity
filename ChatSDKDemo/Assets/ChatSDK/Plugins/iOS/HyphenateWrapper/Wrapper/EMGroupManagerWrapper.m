@@ -255,7 +255,14 @@
                                                     completion:^(NSArray *aList, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:aList];
+            
+            NSMutableArray<NSString*>* list = [NSMutableArray array];
+            
+            for (EMGroupSharedFile *file in aList) {
+                [list addObject:[Transfrom NSStringFromJsonObject:[file toJson]]];
+            }
+            
+            [weakSelf onSuccess:@"List<EMMucSharedFile>" callbackId:callId userInfo:list];
         }else {
             [weakSelf onError:callId error:aError];
         }

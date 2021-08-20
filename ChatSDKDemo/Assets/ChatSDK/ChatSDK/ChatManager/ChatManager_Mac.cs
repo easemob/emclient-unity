@@ -18,7 +18,7 @@ namespace ChatSDK
             {
                 client = clientMac.client;
             }
-            chatManagerHub = new ChatManagerHub(CallbackManager.Instance().chatManagerDelegates);
+            chatManagerHub = new ChatManagerHub();
             //registered listeners
             ChatAPINative.ChatManager_AddListener(client, chatManagerHub.OnMessagesReceived,
                 chatManagerHub.OnCmdMessagesReceived, chatManagerHub.OnMessagesRead, chatManagerHub.OnMessagesDelivered,

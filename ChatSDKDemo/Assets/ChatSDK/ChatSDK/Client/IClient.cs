@@ -3,7 +3,9 @@
     public abstract class IClient
     {
         static private bool _initialized = false;
+
         private static IClient instance;
+
         public static IClient Instance
         {
             get
@@ -133,7 +135,7 @@
             return conversationImp;
         }
 
-        public abstract void InitWithOptions(Options options, WeakDelegater<IConnectionDelegate> connectionDelegater = null);
+        public abstract void InitWithOptions(Options options);
 
         public abstract void CreateAccount(string username, string password, CallBack handle = null);
 

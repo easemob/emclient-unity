@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace ChatSDK {
@@ -6,17 +7,19 @@ namespace ChatSDK {
     internal class ConnectionListener : MonoBehaviour
     {
 
-        internal WeakDelegater<IConnectionDelegate> delegater;
+        internal List<IConnectionDelegate> delegater;
 
 
         internal void OnConnected(string i)
         {
             if (delegater != null)
             {
-                foreach (IConnectionDelegate connectionDelegate in delegater.List)
-                {
-                    connectionDelegate.OnConnected();
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IConnectionDelegate connectionDelegate in delegater)
+                    {
+                        connectionDelegate.OnConnected();
+                    }
+                });
             }
         }
 
@@ -25,10 +28,12 @@ namespace ChatSDK {
         {
             if (delegater != null)
             {
-                foreach (IConnectionDelegate connectionDelegate in delegater.List)
-                {
-                    connectionDelegate.OnDisconnected(int.Parse(i));
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IConnectionDelegate connectionDelegate in delegater)
+                    {
+                        connectionDelegate.OnDisconnected(int.Parse(i));
+                    }
+                });
             }
         }
     }

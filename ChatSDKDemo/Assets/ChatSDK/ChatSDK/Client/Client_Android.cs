@@ -15,7 +15,7 @@ namespace ChatSDK
             }
         }
 
-        public override void InitWithOptions(Options options, WeakDelegater<IConnectionDelegate> connectionDelegater)
+        public override void InitWithOptions(Options options)
         {
             wrapper.Call("init", options.ToJsonString());
         }
@@ -41,8 +41,8 @@ namespace ChatSDK
 
         public override bool IsConnected {
             get => wrapper.Call<bool>("isConnected");
-            //TODO: jiepeng to add set isConnected
-            internal set {} }
+            internal set {}
+        }
 
         public override bool IsLoggedIn()
         {

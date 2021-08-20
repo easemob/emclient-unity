@@ -18,7 +18,7 @@ namespace ChatSDK
             {
                 client = clientMac.client;
             }
-            groupManagerHub = new GroupManagerHub(CallbackManager.Instance().groupManagerDelegates);
+            groupManagerHub = new GroupManagerHub();
             //registered listeners
             ChatAPINative.GroupManager_AddListener(client, groupManagerHub.OnInvitationReceived,
                 groupManagerHub.OnRequestToJoinReceived, groupManagerHub.OnRequestToJoinAccepted, groupManagerHub.OnRequestToJoinDeclined,
