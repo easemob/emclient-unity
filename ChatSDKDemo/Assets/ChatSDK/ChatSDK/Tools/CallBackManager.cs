@@ -16,12 +16,13 @@ namespace ChatSDK {
         static string GroupManagerListener_Obj = "unity_chat_emclient_groupmanager_delegate_obj";
         static string RoomManagerListener_Obj = "unity_chat_emclient_roommanager_delegate_obj";
 
-        internal WeakDelegater<IConnectionDelegate> connnectDelegates = new WeakDelegater<IConnectionDelegate>();
-        internal WeakDelegater<IChatManagerDelegate> chatManagerDelegates = new WeakDelegater<IChatManagerDelegate>();
-        internal WeakDelegater<IContactManagerDelegate> contactManagerDelegates = new WeakDelegater<IContactManagerDelegate>();
-        internal WeakDelegater<IGroupManagerDelegate> groupManagerDelegates = new WeakDelegater<IGroupManagerDelegate>();
-        internal WeakDelegater<IRoomManagerDelegate> roomManagerDelegates = new WeakDelegater<IRoomManagerDelegate>();
 
+        internal ConnectionListener connectionListener;
+        internal ChatManagerListener chatManagerListener;
+        internal ContactManagerListener contactManagerListener;
+        internal GroupManagerListener groupManagerListener;
+        internal RoomManagerListener roomManagerListener;
+        
         internal int CurrentId { get; private set; }
 
         internal Dictionary<string, object> dictionary = new Dictionary<string, object>();
@@ -77,28 +78,28 @@ namespace ChatSDK {
         internal void SetupAllListeners() {
             GameObject connectionObject = new GameObject(Connection_Obj);
             DontDestroyOnLoad(connectionObject);
-            ConnectionListener connectionListener = connectionObject.AddComponent<ConnectionListener>();
-            connectionListener.delegater = connnectDelegates;
+            connectionListener = connectionObject.AddComponent<ConnectionListener>();
+            connectionListener.delegater = new List<IConnectionDelegate>();
 
             GameObject chatManagerObject = new GameObject(ChatManagerListener_Obj);
             DontDestroyOnLoad(chatManagerObject);
-            ChatManagerListener chatManagerListener = chatManagerObject.AddComponent<ChatManagerListener>();
-            chatManagerListener.delegater = chatManagerDelegates;
+            chatManagerListener = chatManagerObject.AddComponent<ChatManagerListener>();
+            chatManagerListener.delegater = new List<IChatManagerDelegate>(); ;
 
             GameObject contactGameObj = new GameObject(ContactManagerListener_Obj);
-            DontDestroyOnLoad(contactGameObj);
-            ContactManagerListener contactManagerListener = contactGameObj.AddComponent<ContactManagerListener>();
-            contactManagerListener.delegater = contactManagerDelegates;
+            //DontDestroyOnLoad(contactGameObj);
+            contactManagerListener = contactGameObj.AddComponent<ContactManagerListener>();
+            contactManagerListener.delegater = new List<IContactManagerDelegate>();
 
             GameObject groupGameObj = new GameObject(GroupManagerListener_Obj);
             DontDestroyOnLoad(groupGameObj);
             GroupManagerListener groupManagerListener = groupGameObj.AddComponent<GroupManagerListener>();
-            groupManagerListener.delegater = groupManagerDelegates;
+            groupManagerListener.delegater = new List<IGroupManagerDelegate>(); ;
 
             GameObject roomGameObj = new GameObject(RoomManagerListener_Obj);
             DontDestroyOnLoad(roomGameObj);
-            RoomManagerListener roomManagerListener = roomGameObj.AddComponent<RoomManagerListener>();
-            roomManagerListener.delegater = roomManagerDelegates;
+            roomManagerListener = roomGameObj.AddComponent<RoomManagerListener>();
+            roomManagerListener.delegater = new List<IRoomManagerDelegate>();
         }
 
         public void OnSuccess(string jsonString) {

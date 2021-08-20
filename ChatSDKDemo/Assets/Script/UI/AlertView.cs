@@ -8,6 +8,9 @@ using UnityEngine.UI;
 public class AlertInfo {
 
     public AlertInfo(string title, string info, Action confirmAction, Action cancelAction, string confirmText = "确定", string cancelText = "取消") {
+
+        Debug.Log($"AlertInfo : {title}, {info}, {confirmAction}, {cancelAction}, {confirmText}, {cancelText}");
+
         this.title = title;
         this.info = info;
         this.onConfirm = confirmAction;
@@ -40,6 +43,8 @@ public class AlertView
     public AlertView(AlertInfo info, Transform transform) {
         alertInfo = info;
 
+
+        Debug.Log($"AlertView : ${transform}");
 
         alertView = GameObject.Instantiate(Resources.Load("UI/AlertView")) as GameObject;
         alertView.transform.SetParent(transform);

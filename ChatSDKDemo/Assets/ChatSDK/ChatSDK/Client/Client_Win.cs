@@ -3,7 +3,7 @@
     class Client_Win : IClient
     {
 
-        public override void InitWithOptions(Options options, WeakDelegater<IConnectionDelegate> connectionDelegater = null)
+        public override void InitWithOptions(Options options)
         {
             throw new System.NotImplementedException();
         }

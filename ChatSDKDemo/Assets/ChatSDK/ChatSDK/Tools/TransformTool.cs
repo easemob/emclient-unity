@@ -259,8 +259,9 @@ namespace ChatSDK
                 var keys = attributes.Keys;
                 foreach (var key in keys)
                 {
-                    if (!attributes.TryGetValue(key, out AttributeValue value))
+                    if (!attributes.TryGetValue(key, out AttributeValue value)) {
                         value = new AttributeValue();
+                    }
                     jo[key] = value.ToJsonString();
                 }
             }

@@ -37,6 +37,7 @@ public class UIManager : MonoBehaviour
 
     static public AlertView TitleAlert(Transform transform, string title, string info, Action confirm = null, Action cancel = null, string confirmText = "确定", string cancelText = "取消")
     {
+        Debug.Log($"TitleAlert {transform}, {title}, {info}, {confirm}, {cancel}");
         return new AlertView(new AlertInfo(title, info, confirm, cancel, confirmText, cancelText), transform);
     }
 
