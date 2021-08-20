@@ -183,15 +183,27 @@ namespace ChatSDK
         /// </summary>
         /// <param name="roomManagerDelegate"></param>
         public void AddRoomManagerDelegate(IRoomManagerDelegate roomManagerDelegate)
-
         {
-            CallbackManager.Instance().roomManagerDelegates.Add(roomManagerDelegate);
+            if (!CallbackManager.Instance().roomManagerListener.delegater.Contains(roomManagerDelegate))
+            {
+                CallbackManager.Instance().roomManagerListener.delegater.Add(roomManagerDelegate);
+            }
         }
 
+        /// <summary>
+        /// 移除聊天室监听
+        /// </summary>
+        /// <param name="roomManagerDelegate"></param>
+        public void RemoveRoomManagerDelegate(IRoomManagerDelegate roomManagerDelegate) {
+            if (CallbackManager.Instance().roomManagerListener.delegater.Contains(roomManagerDelegate))
+            {
+                CallbackManager.Instance().roomManagerListener.delegater.Remove(roomManagerDelegate);
+            }            
+        }
 
         internal void ClearDelegates()
         {
-            CallbackManager.Instance().roomManagerDelegates.Clear();
+            CallbackManager.Instance().roomManagerListener.delegater.Clear();
         }
     }
 }

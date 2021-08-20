@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using ChatSDK;
 
-public class RoomManagerTest : MonoBehaviour
+public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
 {
 
     private Text roomText;
@@ -94,6 +94,14 @@ public class RoomManagerTest : MonoBehaviour
         UnBlockRoomMembersBtn.onClick.AddListener(UnBlockRoomMembersBtnAction);
         UnMuteRoomMembersBtn.onClick.AddListener(UnMuteRoomMembersBtnAction);
         UpdateRoomAnnouncementBtn.onClick.AddListener(UpdateRoomAnnouncementBtnAction);
+
+        SDKClient.Instance.RoomManager.AddRoomManagerDelegate(this);
+    }
+
+
+    private void OnDestroy()
+    {
+        SDKClient.Instance.RoomManager.RemoveRoomManagerDelegate(this);
     }
 
 
@@ -113,13 +121,13 @@ public class RoomManagerTest : MonoBehaviour
                 },
                 onError: (code, desc) =>
                 {
-                    UIManager.ErrorAlert(transform, code, desc);
+                    UIManager.ErrorAlert(this.transform, code, desc);
                 }
             ));
         });
         config.AddField("adminId");
 
-        UIManager.DefaultInputAlert(transform, config);
+        UIManager.DefaultInputAlert(this.transform, config);
 
         Debug.Log("AddRoomAdminBtnAction");
     }
@@ -136,13 +144,13 @@ public class RoomManagerTest : MonoBehaviour
                 },
                 onError: (code, desc) =>
                 {
-                    UIManager.ErrorAlert(transform, code, desc);
+                    UIManager.ErrorAlert(this.transform, code, desc);
                 }
             ));
         });
         config.AddField("memberId");
 
-        UIManager.DefaultInputAlert(transform, config);
+        UIManager.DefaultInputAlert(this.transform, config);
 
         Debug.Log("BlockRoomMembersBtnAction");
     }
@@ -157,14 +165,14 @@ public class RoomManagerTest : MonoBehaviour
                 },
                 onError: (code, desc) =>
                 {
-                    UIManager.ErrorAlert(transform, code, desc);
+                    UIManager.ErrorAlert(this.transform, code, desc);
                 }
             ));
         });
 
         config.AddField("newOwner");
 
-        UIManager.DefaultInputAlert(transform, config);
+        UIManager.DefaultInputAlert(this.transform, config);
 
         Debug.Log("ChangeOwnerBtnAction");
     }
@@ -180,13 +188,13 @@ public class RoomManagerTest : MonoBehaviour
                 },
                 onError: (code, desc) =>
                 {
-                    UIManager.ErrorAlert(transform, code, desc);
+                    UIManager.ErrorAlert(this.transform, code, desc);
                 }
             ));
         });
         config.AddField("Description");
 
-        UIManager.DefaultInputAlert(transform, config);
+        UIManager.DefaultInputAlert(this.transform, config);
 
         Debug.Log("ChangeRoomDescriptionBtnAction");
     }
@@ -203,13 +211,13 @@ public class RoomManagerTest : MonoBehaviour
                 },
                 onError: (code, desc) =>
                 {
-                    UIManager.ErrorAlert(transform, code, desc);
+                    UIManager.ErrorAlert(this.transform, code, desc);
                 }
             ));
         });
         config.AddField("Name");
 
-        UIManager.DefaultInputAlert(transform, config);
+        UIManager.DefaultInputAlert(this.transform, config);
 
         Debug.Log("ChangeRoomSubjectBtnAction");
     }
@@ -236,11 +244,11 @@ public class RoomManagerTest : MonoBehaviour
                 }
 
                 string str = string.Join(",", list.ToArray());
-                UIManager.DefaultAlert(transform, str);
+                UIManager.DefaultAlert(this.transform, str);
 
             },
             onError:(code, desc) => {
-                UIManager.ErrorAlert(transform, code, desc);
+                UIManager.ErrorAlert(this.transform, code, desc);
             }
         ));
 
@@ -251,10 +259,10 @@ public class RoomManagerTest : MonoBehaviour
 
         SDKClient.Instance.RoomManager.FetchRoomAnnouncement(currentRoomId, new ValueCallBack<string>(
             onSuccess: (str) => {
-                UIManager.DefaultAlert(transform, str);
+                UIManager.DefaultAlert(this.transform, str);
             },
             onError: (code, desc) => {
-                UIManager.ErrorAlert(transform, code, desc);
+                UIManager.ErrorAlert(this.transform, code, desc);
             }
         ));
 
@@ -267,10 +275,10 @@ public class RoomManagerTest : MonoBehaviour
         SDKClient.Instance.RoomManager.FetchRoomBlockList(currentRoomId, handle: new ValueCallBack<List<string>>(
             onSuccess: (list) => {
                 string str = string.Join(",", list.ToArray());
-                UIManager.DefaultAlert(transform, str);
+                UIManager.DefaultAlert(this.transform, str);
             },
             onError: (code, desc) => {
-                UIManager.ErrorAlert(transform, code, desc);
+                UIManager.ErrorAlert(this.transform, code, desc);
             }
         ));
 
@@ -285,10 +293,10 @@ public class RoomManagerTest : MonoBehaviour
                 list.Add(room.Name);
                 list.Add(room.Description);
                 string str = string.Join(",", list.ToArray());
-                UIManager.DefaultAlert(transform, str);
+                UIManager.DefaultAlert(this.transform, str);
             },
             onError: (code, desc) => {
-                UIManager.ErrorAlert(transform, code, desc);
+                UIManager.ErrorAlert(this.transform, code, desc);
             }
         ));
 
@@ -299,11 +307,11 @@ public class RoomManagerTest : MonoBehaviour
         SDKClient.Instance.RoomManager.FetchRoomMembers(currentRoomId, handle: new ValueCallBack<CursorResult<string>>(
             onSuccess: (result) => {
                 string str = string.Join(",", result.Data.ToArray());
-                UIManager.DefaultAlert(transform, str);
-                UIManager.DefaultAlert(transform, str);
+                UIManager.DefaultAlert(this.transform, str);
+                UIManager.DefaultAlert(this.transform, str);
             },
             onError: (code, desc) => {
-                UIManager.ErrorAlert(transform, code, desc);
+                UIManager.ErrorAlert(this.transform, code, desc);
             }
         ));
 
@@ -315,11 +323,11 @@ public class RoomManagerTest : MonoBehaviour
         SDKClient.Instance.RoomManager.FetchRoomMuteList(currentRoomId, handle: new ValueCallBack<List<string>>(
             onSuccess: (result) => {
                 string str = string.Join(",", result.ToArray());
-                UIManager.DefaultAlert(transform, str);
-                UIManager.DefaultAlert(transform, str);
+                UIManager.DefaultAlert(this.transform, str);
+                UIManager.DefaultAlert(this.transform, str);
             },
             onError: (code, desc) => {
-                UIManager.ErrorAlert(transform, code, desc);
+                UIManager.ErrorAlert(this.transform, code, desc);
             }
         ));
 
@@ -334,10 +342,10 @@ public class RoomManagerTest : MonoBehaviour
     {
         SDKClient.Instance.RoomManager.JoinRoom(currentRoomId, new ValueCallBack<Room>(
             onSuccess: (room) => {
-                UIManager.DefaultAlert(transform, "加入成功");
+                UIManager.DefaultAlert(this.transform, "加入成功");
             },
             onError: (code, desc) => {
-                UIManager.ErrorAlert(transform, code, desc);
+                UIManager.ErrorAlert(this.transform, code, desc);
             }
         ));
         Debug.Log("JoinRoomBtnAction");
@@ -346,10 +354,10 @@ public class RoomManagerTest : MonoBehaviour
     {
         SDKClient.Instance.RoomManager.LeaveRoom(currentRoomId, new CallBack(
             onSuccess: () => {
-                UIManager.DefaultAlert(transform, "离开成功");
+                UIManager.DefaultAlert(this.transform, "离开成功");
             },
             onError: (code, desc) => {
-                UIManager.ErrorAlert(transform, code, desc);
+                UIManager.ErrorAlert(this.transform, code, desc);
             }
         ));
 
@@ -367,14 +375,14 @@ public class RoomManagerTest : MonoBehaviour
                     UIManager.SuccessAlert(transform);
                 },
                 onError: (code, desc) => {
-                    UIManager.ErrorAlert(transform, code, desc);
+                    UIManager.ErrorAlert(this.transform, code, desc);
                 }
             ));
         });
 
         config.AddField("MemberId");
 
-        UIManager.DefaultInputAlert(transform, config);
+        UIManager.DefaultInputAlert(this.transform, config);
 
         Debug.Log("MuteRoomMembersBtnAction");
     }
@@ -389,14 +397,14 @@ public class RoomManagerTest : MonoBehaviour
                     UIManager.SuccessAlert(transform);
                 },
                 onError: (code, desc) => {
-                    UIManager.ErrorAlert(transform, code, desc);
+                    UIManager.ErrorAlert(this.transform, code, desc);
                 }
             ));
         });
 
         config.AddField("AdminId");
 
-        UIManager.DefaultInputAlert(transform, config);
+        UIManager.DefaultInputAlert(this.transform, config);
 
         Debug.Log("RemoveRoomAdminBtnAction");
     }
@@ -413,14 +421,14 @@ public class RoomManagerTest : MonoBehaviour
                     UIManager.SuccessAlert(transform);
                 },
                 onError: (code, desc) => {
-                    UIManager.ErrorAlert(transform, code, desc);
+                    UIManager.ErrorAlert(this.transform, code, desc);
                 }
             ));
         });
 
         config.AddField("MemberId");
 
-        UIManager.DefaultInputAlert(transform, config);
+        UIManager.DefaultInputAlert(this.transform, config);
 
         Debug.Log("RemoveRoomMembersBtnAction");
     }
@@ -437,14 +445,14 @@ public class RoomManagerTest : MonoBehaviour
                     UIManager.SuccessAlert(transform);
                 },
                 onError: (code, desc) => {
-                    UIManager.ErrorAlert(transform, code, desc);
+                    UIManager.ErrorAlert(this.transform, code, desc);
                 }
             ));
         });
 
         config.AddField("MemberId");
 
-        UIManager.DefaultInputAlert(transform, config);
+        UIManager.DefaultInputAlert(this.transform, config);
 
         Debug.Log("UnBlockRoomMembersBtnAction");
     }
@@ -460,14 +468,14 @@ public class RoomManagerTest : MonoBehaviour
                     UIManager.SuccessAlert(transform);
                 },
                 onError: (code, desc) => {
-                    UIManager.ErrorAlert(transform, code, desc);
+                    UIManager.ErrorAlert(this.transform, code, desc);
                 }
             ));
         });
 
         config.AddField("MemberId");
 
-        UIManager.DefaultInputAlert(transform, config);
+        UIManager.DefaultInputAlert(this.transform, config);
 
         Debug.Log("UnMuteRoomMembersBtnAction");
     }
@@ -481,14 +489,14 @@ public class RoomManagerTest : MonoBehaviour
                     UIManager.SuccessAlert(transform);
                 },
                 onError: (code, desc) => {
-                    UIManager.ErrorAlert(transform, code, desc);
+                    UIManager.ErrorAlert(this.transform, code, desc);
                 }
             ));
         });
 
         config.AddField("announcement");
 
-        UIManager.DefaultInputAlert(transform, config);
+        UIManager.DefaultInputAlert(this.transform, config);
 
         Debug.Log("UpdateRoomAnnouncementBtnAction");
     }
@@ -504,4 +512,63 @@ public class RoomManagerTest : MonoBehaviour
     {
 
     }
+
+    public void OnDestroyedFromRoom(string roomId, string roomName)
+    {
+        UIManager.DefaultAlert(this.transform, $"回调 OnDestroyedFromRoom: {roomId} , {roomName}");
+    }
+
+    public void OnMemberJoinedFromRoom(string roomId, string participant)
+    {
+        UIManager.DefaultAlert(this.transform, $"回调 OnMemberJoinedFromRoom: {roomId} , {participant}");
+    }
+
+    public void OnMemberExitedFromRoom(string roomId, string roomName, string participant)
+    {
+        UIManager.DefaultAlert(this.transform, $"回调 OnMemberExitedFromRoom: {roomId} , {roomName}, {participant}");
+    }
+
+    public void OnRemovedFromRoom(string roomId, string roomName, string participant)
+    {
+
+        Debug.Log($"roomId: {roomId}, name:{roomName}, participant:{participant}, transfrom: {this.transform}");
+
+        UIManager.DefaultAlert(this.transform, $"回调 OnRemovedFromRoom: {roomId} , {roomName ?? ""}, {participant}");
+    }
+
+    public void OnMuteListAddedFromRoom(string roomId, List<string> mutes, long expireTime)
+    {
+
+        string str = string.Join(",", mutes.ToArray());
+        
+        UIManager.DefaultAlert(this.transform, $"回调 OnMuteListAddedFromRoom: {roomId} , {str}");
+    }
+
+    public void OnMuteListRemovedFromRoom(string roomId, List<string> mutes)
+    {
+        string str = string.Join(",", mutes.ToArray());
+        
+        UIManager.DefaultAlert(this.transform, $"回调 OnMuteListRemovedFromRoom: {roomId} , {str}");
+    }
+
+    public void OnAdminAddedFromRoom(string roomId, string admin)
+    {
+        UIManager.DefaultAlert(this.transform, $"回调 OnAdminAddedFromRoom: {roomId} , {admin}");
+    }
+
+    public void OnAdminRemovedFromRoom(string roomId, string admin)
+    {
+        UIManager.DefaultAlert(this.transform, $"回调 OnAdminRemovedFromRoom: {roomId} , {admin}");
+    }
+
+    public void OnOwnerChangedFromRoom(string roomId, string newOwner, string oldOwner)
+    {
+        UIManager.DefaultAlert(this.transform, $"回调 OnOwnerChangedFromRoom: {roomId} , {newOwner}, {oldOwner}");
+    }
+
+    public void OnAnnouncementChangedFromRoom(string roomId, string announcement)
+    {
+        UIManager.DefaultAlert(this.transform, $"回调 OnAnnouncementChangedFromRoom: {roomId} , {announcement}");
+    }
+
 }

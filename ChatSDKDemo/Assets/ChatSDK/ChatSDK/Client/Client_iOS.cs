@@ -1,6 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using UnityEngine;
 using SimpleJSON;
+using System.Collections.Generic;
 
 namespace ChatSDK
 {
@@ -12,12 +13,8 @@ namespace ChatSDK
 
         GameObject listenerGameObj;
 
-        public override void InitWithOptions(Options options, WeakDelegater<IConnectionDelegate> connectionDelegater = null)
+        public override void InitWithOptions(Options options)
         {
-            CallbackManager.Instance();
-            listenerGameObj = new GameObject(Connection_Obj);
-            ConnectionListener listener = listenerGameObj.AddComponent<ConnectionListener>();
-            listener.delegater = connectionDelegater;
             ClientNative.Client_HandleMethodCall("initWithOptions", options.ToJsonString(), null);
         }
 

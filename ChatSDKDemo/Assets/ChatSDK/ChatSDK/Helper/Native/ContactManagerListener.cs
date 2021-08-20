@@ -1,19 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
 using SimpleJSON;
 using UnityEngine;
 
 namespace ChatSDK {
     internal class ContactManagerListener : MonoBehaviour
     {
-        internal WeakDelegater<IContactManagerDelegate> delegater;
+        internal List<IContactManagerDelegate> delegater;
 
 
         internal void OnContactAdded(string jsonString) {
             if (delegater != null) {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IContactManagerDelegate contactManagerDelegate in delegater.List) {
-                    contactManagerDelegate.OnContactAdded(jo["username"].Value);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IContactManagerDelegate contactManagerDelegate in delegater)
+                    {
+                        contactManagerDelegate.OnContactAdded(jo["username"].Value);
+                    }
+                });
+                
             }
         }
 
@@ -22,10 +27,13 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IContactManagerDelegate contactManagerDelegate in delegater.List)
-                {
-                    contactManagerDelegate.OnContactDeleted(jo["username"].Value);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IContactManagerDelegate contactManagerDelegate in delegater)
+                    {
+                        contactManagerDelegate.OnContactDeleted(jo["username"].Value);
+                    }
+                });
+                
             }
         }
 
@@ -34,10 +42,12 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IContactManagerDelegate contactManagerDelegate in delegater.List)
-                {
-                    contactManagerDelegate.OnContactInvited(jo["username"].Value, jo["reason"].Value);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IContactManagerDelegate contactManagerDelegate in delegater)
+                    {
+                        contactManagerDelegate.OnContactInvited(jo["username"].Value, jo["reason"].Value);
+                    }
+                });
             }
         }
 
@@ -46,10 +56,12 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IContactManagerDelegate contactManagerDelegate in delegater.List)
-                {
-                    contactManagerDelegate.OnFriendRequestAccepted(jo["username"].Value);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IContactManagerDelegate contactManagerDelegate in delegater)
+                    {
+                        contactManagerDelegate.OnFriendRequestAccepted(jo["username"].Value);
+                    }
+                });
             }
         }
 
@@ -58,10 +70,12 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 JSONNode jo = JSON.Parse(jsonString);
-                foreach (IContactManagerDelegate contactManagerDelegate in delegater.List)
-                {
-                    contactManagerDelegate.OnFriendRequestDeclined(jo["username"].Value);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IContactManagerDelegate contactManagerDelegate in delegater)
+                    {
+                        contactManagerDelegate.OnFriendRequestDeclined(jo["username"].Value);
+                    }
+                });
             }
         }
     }

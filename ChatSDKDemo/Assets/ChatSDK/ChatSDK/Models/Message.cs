@@ -169,7 +169,7 @@ namespace ChatSDK
                     Status = MessageStatusFromInt(jo["status"].AsInt);
                     MessageType = MessageTypeFromInt(jo["chatType"].AsInt);
                     Direction = MessageDirectionFromString(jo["direction"].Value);
-                    //Attributes = TransformTool.JsonStringToDictionary(jo["attributes"].Value);
+                    //Attributes = TransformTool.JsonStringToAttributes(jo["attributes"].Value);
                     Body = IMessageBody.Constructor(jo["body"].Value, jo["bodyType"].Value);
                 }
             }

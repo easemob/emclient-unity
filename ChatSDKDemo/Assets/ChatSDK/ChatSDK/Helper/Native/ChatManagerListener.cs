@@ -6,7 +6,7 @@ using UnityEngine;
 namespace ChatSDK {
     public class ChatManagerListener : MonoBehaviour
     {
-        internal WeakDelegater<IChatManagerDelegate> delegater;
+        internal List<IChatManagerDelegate> delegater;
 
         internal void OnMessageReceived(string jsonString)
         {
@@ -14,10 +14,12 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 List<Message> list = TransformTool.JsonStringToMessageList(jsonString);
-                foreach (IChatManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnMessagesReceived(list);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IChatManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnMessagesReceived(list);
+                    }
+                });
             }
         }
 
@@ -26,10 +28,12 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 List<Message> list = TransformTool.JsonStringToMessageList(jsonString);
-                foreach (IChatManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnCmdMessagesReceived(list);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IChatManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnCmdMessagesReceived(list);
+                    }
+                });
             }
         }
 
@@ -38,10 +42,12 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 List<Message> list = TransformTool.JsonStringToMessageList(jsonString);
-                foreach (IChatManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnMessagesRead(list);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IChatManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnMessagesRead(list);
+                    }
+                });
             }
         }
 
@@ -50,10 +56,12 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 List<GroupReadAck> list = TransformTool.JsonStringToGroupReadAckList(jsonString);
-                foreach (IChatManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnGroupMessageRead(list);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IChatManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnGroupMessageRead(list);
+                    }
+                });
             }
         }
 
@@ -61,10 +69,12 @@ namespace ChatSDK {
         {
             if (delegater != null)
             {
-                foreach (IChatManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnReadAckForGroupMessageUpdated();
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IChatManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnReadAckForGroupMessageUpdated();
+                    }
+                });
             }
         }
 
@@ -73,10 +83,12 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 List<Message> list = TransformTool.JsonStringToMessageList(jsonString);
-                foreach (IChatManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnMessagesDelivered(list);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IChatManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnMessagesDelivered(list);
+                    }
+                });
             }
         }
 
@@ -85,10 +97,12 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 List<Message> list = TransformTool.JsonStringToMessageList(jsonString);
-                foreach (IChatManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnMessagesRecalled(list);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IChatManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnMessagesRecalled(list);
+                    }
+                });
             }
         }
         
@@ -96,10 +110,12 @@ namespace ChatSDK {
         {
             if (delegater != null)
             {
-                foreach (IChatManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnConversationsUpdate();
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IChatManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnConversationsUpdate();
+                    }
+                });
             }
         }
 
@@ -108,10 +124,12 @@ namespace ChatSDK {
             if (delegater != null)
             {
                 Dictionary<string, string> dict = TransformTool.JsonStringToDictionary(jsonString);
-                foreach (IChatManagerDelegate delegater in delegater.List)
-                {
-                    delegater.OnConversationRead(dict["from"], dict["to"]);
-                }
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IChatManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnConversationRead(dict["from"], dict["to"]);
+                    }
+                });
             }
         }
     }

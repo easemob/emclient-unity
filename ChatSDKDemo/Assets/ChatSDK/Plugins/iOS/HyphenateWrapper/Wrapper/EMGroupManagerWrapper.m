@@ -101,13 +101,16 @@
     __block NSString *callId = callbackId;
     
     NSArray *inviteMembers = [Transfrom NSStringToJsonObject:param[@"inviteMembers"]];
+    
     NSDictionary *optionJson = [Transfrom NSStringToJsonObject:param[@"options"]];
+    
+    EMGroupOptions *options = [EMGroupOptions formJson:optionJson];
     
     [EMClient.sharedClient.groupManager createGroupWithSubject:param[@"groupName"]
                                                    description:param[@"desc"]
-                                                      invitees:inviteMembers
+                                                      invitees:inviteMembers.count == 0 ? inviteMembers : nil
                                                        message:param[@"inviteReason"]
-                                                       setting:[EMGroupOptions formJson:optionJson]
+                                                       setting:options
                                                     completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
@@ -252,7 +255,14 @@
                                                     completion:^(NSArray *aList, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:aList];
+            
+            NSMutableArray<NSString*>* list = [NSMutableArray array];
+            
+            for (EMGroupSharedFile *file in aList) {
+                [list addObject:[Transfrom NSStringFromJsonObject:[file toJson]]];
+            }
+            
+            [weakSelf onSuccess:@"List<EMMucSharedFile>" callbackId:callId userInfo:list];
         }else {
             [weakSelf onError:callId error:aError];
         }

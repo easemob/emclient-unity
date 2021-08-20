@@ -106,15 +106,13 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     {
         InputAlertConfig config = new InputAlertConfig((dict)=> {
             Message msg = Message.CreateTextSendMessage(dict["to"], dict["content"]);
+           
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
                 onSuccess: () => {
                     UIManager.TitleAlert(transform, "成功", msg.MsgId);
-                    //ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                    //    UIManager.TitleAlert(transform, "成功", msg.MsgId);
-                    //});
                 },
                 onError:(code, desc) => {
-                    UIManager.ErrorAlert(transform, code, desc);
+                    UIManager.ErrorAlert(transform, code, msg.MsgId);
                 }               
             ));
         });

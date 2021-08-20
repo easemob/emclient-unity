@@ -125,6 +125,9 @@ public class ContactManagerTest : MonoBehaviour, IContactManagerDelegate
 
     void GetAllContactsFromDBBtnAction()
     {
+        List<string>list = SDKClient.Instance.ContactManager.GetAllContactsFromDB();
+        string str = string.Join(",", list.ToArray());
+        UIManager.DefaultAlert(transform, str);
         Debug.Log("GetAllContactsFromDBBtnAction");
     }
 

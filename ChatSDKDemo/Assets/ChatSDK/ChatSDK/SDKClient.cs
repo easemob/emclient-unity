@@ -6,7 +6,7 @@ namespace ChatSDK
     public class SDKClient
     {
         private Options _Options;
-        private string _SdkVersion = null;
+        //private string _SdkVersion = null;
         private static SDKClient _instance;
         private IClient _Sdk;
 
@@ -80,19 +80,23 @@ namespace ChatSDK
         /// <summary>
         /// 添加连接回调监听
         /// </summary>
-        /// <param name="ConnectionDelegate"></param>
-        public void AddConnectionDelegate(IConnectionDelegate ConnectionDelegate)
+        /// <param name="connectionDelegate"></param>
+        public void AddConnectionDelegate(IConnectionDelegate connectionDelegate)
         {
-            CallbackManager.Instance().connnectDelegates.Add(ConnectionDelegate);
+            if (!CallbackManager.Instance().connectionListener.delegater.Contains(connectionDelegate)) {
+                CallbackManager.Instance().connectionListener.delegater.Add(connectionDelegate);
+            }
         }
 
-        /// <summary>
-        /// 清理所有连接回调
-        /// </summary>
-        internal void ClearDelegates()
+
+        public void DeleteConnectionDelegate(IConnectionDelegate connectionDelegate)
         {
-            CallbackManager.Instance().connnectDelegates.Clear();
+            if (CallbackManager.Instance().connectionListener.delegater.Contains(connectionDelegate))
+            {
+                CallbackManager.Instance().connectionListener.delegater.Remove(connectionDelegate);
+            }
         }
+
 
         /// <summary>
         /// 初始化sdk
@@ -100,8 +104,9 @@ namespace ChatSDK
         /// <param name="options">环信sdk配置</param>
         public void InitWithOptions(Options options)
         {
+            CallbackManager.Instance();
             _Options = options;
-            _Sdk.InitWithOptions(options, CallbackManager.Instance().connnectDelegates);
+            _Sdk.InitWithOptions(options);
             registerManagers();
         }
 
@@ -137,16 +142,16 @@ namespace ChatSDK
         {
             _Sdk.Logout(unbindDeviceToken, new CallBack(
                 onSuccess: () => {
-                    ClearDelegates();
+                    CallbackManager.Instance().connectionListener.delegater.Clear();
                     _Sdk.ContactManager().ClearDelegates();
                     _Sdk.ChatManager().ClearDelegates();
                     _Sdk.GroupManager().ClearDelegates();
                     _Sdk.RoomManager().ClearDelegates();
                     CallbackManager.Instance().CleanAllCallback();
-                    handle?.Success();
+                    handle.Success?.Invoke();
                 },
                 onError:(code, desc) => {
-                    handle?.Error(code, desc);
+                    handle?.Error?.Invoke(code, desc);
                 }
                 ));
         }

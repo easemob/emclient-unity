@@ -2,6 +2,7 @@ package com.hyphenate.unity_chat_sdk;
 
 import android.util.Log;
 
+import com.hyphenate.EMError;
 import com.hyphenate.chat.EMChatRoom;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMGroupInfo;
@@ -34,6 +35,22 @@ public class EMWrapper {
     public void asyncRunnable(Runnable runnable) {
         cachedThreadPool.execute(runnable);
     }
+
+    public void onSendMessageError(String callbackId, Object obj, int code, String desc) {
+        if (callbackId == null) return;
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("callbackId", callbackId);
+            jsonObject.put("type", "OnMessageError");
+            jsonObject.put("value", (obj  == null) ? "" : obj);
+            jsonObject.put("code", code);
+            jsonObject.put("desc", desc);
+            UnityPlayer.UnitySendMessage(EMSDKMethod.Callback_Obj, "OnSuccessValue", jsonObject.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void onSuccess( String type, String callbackId, Object obj) {
         Log.d("chat_sdk", "onSuccess callbackId -- " + callbackId + " type: " + type + " obj: " + obj);

@@ -348,12 +348,28 @@ namespace ChatSDK
         /// <param name="groupManagerDelegate">实现IGroupManagerDelegate监听的对象</param>
         public void AddGroupManagerDelegate(IGroupManagerDelegate groupManagerDelegate)
         {
-            CallbackManager.Instance().groupManagerDelegates.Add(groupManagerDelegate);
+            if (!CallbackManager.Instance().groupManagerListener.delegater.Contains(groupManagerDelegate))
+            {
+                CallbackManager.Instance().groupManagerListener.delegater.Add(groupManagerDelegate);
+            }
         }
+
+        /// <summary>
+        /// 移除群组监听
+        /// </summary>
+        /// <param name="groupManagerDelegate"></param>
+        public void RemoveGroupManagerDelegate(IGroupManagerDelegate groupManagerDelegate)
+        {
+            if (CallbackManager.Instance().groupManagerListener.delegater.Contains(groupManagerDelegate))
+            {
+                CallbackManager.Instance().groupManagerListener.delegater.Remove(groupManagerDelegate);
+            }
+        }
+
 
         internal void ClearDelegates()
         {
-            CallbackManager.Instance().groupManagerDelegates.Clear();
+            CallbackManager.Instance().groupManagerListener.delegater.Clear();
         }
 
     }

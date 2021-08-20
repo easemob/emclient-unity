@@ -144,12 +144,27 @@ namespace ChatSDK
         /// <param name="chatManagerDelegate">实现IChatManagerDelegate的对象</param>
         public void AddChatManagerDelegate(IChatManagerDelegate chatManagerDelegate)
         {
-            CallbackManager.Instance().chatManagerDelegates.Add(chatManagerDelegate);
+            if (!CallbackManager.Instance().chatManagerListener.delegater.Contains(chatManagerDelegate))
+            {
+                CallbackManager.Instance().chatManagerListener.delegater.Add(chatManagerDelegate);
+            }
+        }
+
+        /// <summary>
+        /// 移除聊天监听
+        /// </summary>
+        /// <param name="chatManagerDelegate"></param>
+        public void RemoveChatManagerDelegate(IChatManagerDelegate chatManagerDelegate)
+        {
+            if (CallbackManager.Instance().chatManagerListener.delegater.Contains(chatManagerDelegate))
+            {
+                CallbackManager.Instance().chatManagerListener.delegater.Remove(chatManagerDelegate);
+            }
         }
 
         internal void ClearDelegates()
         {
-            CallbackManager.Instance().chatManagerDelegates.Clear();
+            CallbackManager.Instance().chatManagerListener.delegater.Clear();
         }
 
     }
