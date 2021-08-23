@@ -117,9 +117,10 @@ namespace ChatSDK {
                 CallBack callBack = (CallBack)dictionary[callbackId];
 
                 if (callBack.Success != null)
-
                 {
-                    callBack.Success();
+                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        callBack.Success();
+                    });
                 }
 
                 dictionary.Remove(callbackId);
@@ -150,7 +151,9 @@ namespace ChatSDK {
                     ValueCallBack<List<string>> valueCallBack = (ValueCallBack<List<string>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
-                        valueCallBack.OnSuccessValue(result);
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                            valueCallBack.OnSuccessValue(result);
+                        });
                     }
                     dictionary.Remove(callbackId);
                 }
@@ -165,7 +168,9 @@ namespace ChatSDK {
                     ValueCallBack<List<Group>> valueCallBack = (ValueCallBack<List<Group>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
-                        valueCallBack.OnSuccessValue(result);
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                            valueCallBack.OnSuccessValue(result);
+                        });
                     }
                     dictionary.Remove(callbackId);
                 }
@@ -180,7 +185,9 @@ namespace ChatSDK {
                     ValueCallBack<CursorResult<GroupInfo>> valueCallBack = (ValueCallBack<CursorResult<GroupInfo>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
-                        valueCallBack.OnSuccessValue(result);
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                            valueCallBack.OnSuccessValue(result);
+                        });
                     }
                     dictionary.Remove(callbackId);
                 }
@@ -195,7 +202,9 @@ namespace ChatSDK {
                     ValueCallBack<CursorResult<string>> valueCallBack = (ValueCallBack<CursorResult<string>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
-                        valueCallBack.OnSuccessValue(result);
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                            valueCallBack.OnSuccessValue(result);
+                        });
                     }
                     dictionary.Remove(callbackId);
                 }
@@ -210,7 +219,9 @@ namespace ChatSDK {
                     ValueCallBack<CursorResult<Message>> valueCallBack = (ValueCallBack<CursorResult<Message>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
-                        valueCallBack.OnSuccessValue(result);
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                            valueCallBack.OnSuccessValue(result);
+                        });
                     }
                     dictionary.Remove(callbackId);
                 }
@@ -225,7 +236,9 @@ namespace ChatSDK {
                     ValueCallBack<List<GroupSharedFile>> valueCallBack = (ValueCallBack<List<GroupSharedFile>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
-                        valueCallBack.OnSuccessValue(result);
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                            valueCallBack.OnSuccessValue(result);
+                        });
                     }
                     dictionary.Remove(callbackId);
                 }
@@ -239,7 +252,9 @@ namespace ChatSDK {
                     ValueCallBack<Group> valueCallBack = (ValueCallBack<Group>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
-                        valueCallBack.OnSuccessValue(result);
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                            valueCallBack.OnSuccessValue(result);
+                        });
                     }
                     dictionary.Remove(callbackId);
                 }
@@ -254,7 +269,9 @@ namespace ChatSDK {
                     ValueCallBack<PageResult<Room>> valueCallBack = (ValueCallBack<PageResult<Room>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
-                        valueCallBack.OnSuccessValue(result);
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                            valueCallBack.OnSuccessValue(result);
+                        });
                     }
                     dictionary.Remove(callbackId);
                 }
@@ -269,7 +286,9 @@ namespace ChatSDK {
                     ValueCallBack<List<Room>> valueCallBack = (ValueCallBack<List<Room>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
-                        valueCallBack.OnSuccessValue(result);
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                            valueCallBack.OnSuccessValue(result);
+                        });
                     }
                     dictionary.Remove(callbackId);
                 }
@@ -284,7 +303,9 @@ namespace ChatSDK {
                     ValueCallBack<List<Conversation>> valueCallBack = (ValueCallBack<List<Conversation>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
-                        valueCallBack.OnSuccessValue(result);
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                            valueCallBack.OnSuccessValue(result);
+                        });
                     }
                     dictionary.Remove(callbackId);
                 }
@@ -298,7 +319,9 @@ namespace ChatSDK {
                     ValueCallBack<Room> valueCallBack = (ValueCallBack<Room>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
-                        valueCallBack.OnSuccessValue(result);
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                            valueCallBack.OnSuccessValue(result);
+                        });
                     }
                     dictionary.Remove(callbackId);
                 }
@@ -313,7 +336,9 @@ namespace ChatSDK {
                     ValueCallBack<PushConfig> valueCallBack = (ValueCallBack<PushConfig>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
-                        valueCallBack.OnSuccessValue(result);
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                            valueCallBack.OnSuccessValue(result);
+                        });
                     }
                     dictionary.Remove(callbackId);
                 }
@@ -322,17 +347,19 @@ namespace ChatSDK {
                     ValueCallBack<bool> valueCallBack = (ValueCallBack<bool>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
-                        bool ret = false;
+                        bool result = false;
                         do
                         {
                             if (responseValue != null)
                             {
-                                ret = responseValue.Value == "0" ? false : true;
+                                result = responseValue.Value == "0" ? false : true;
                             }
 
                         } while (false);
 
-                        valueCallBack.OnSuccessValue(ret);
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                            valueCallBack.OnSuccessValue(result);
+                        });
 
                     }
 
@@ -343,12 +370,14 @@ namespace ChatSDK {
                     ValueCallBack<string> valueCallBack = (ValueCallBack<string>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
-                        string str = null;
+                        string result = null;
                         if (responseValue != null && responseValue.IsString)
                         {
-                            str = responseValue.Value;
+                            result = responseValue.Value;
                         }
-                        valueCallBack.OnSuccessValue(str);
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                            valueCallBack.OnSuccessValue(result);
+                        });
                     }
                     dictionary.Remove(callbackId);
                 }
@@ -363,7 +392,9 @@ namespace ChatSDK {
                             result = TransformTool.JsonStringToMessageList(responseValue.Value);
                         }
 
-                        valueCallBack.OnSuccessValue(result);
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                            valueCallBack.OnSuccessValue(result);
+                        });
                     }
                     dictionary.Remove(callbackId);
                 }
@@ -431,7 +462,9 @@ namespace ChatSDK {
 
             if (callBack != null && callBack.Error != null)
             {
-                callBack.Error(code, desc);
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    callBack.Error(code, desc);
+                });
             }
 
             dictionary.Remove(callbackId);
