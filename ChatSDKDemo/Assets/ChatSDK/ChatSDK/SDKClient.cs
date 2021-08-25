@@ -6,7 +6,6 @@ namespace ChatSDK
     public class SDKClient
     {
         private Options _Options;
-        //private string _SdkVersion = null;
         private static SDKClient _instance;
         private IClient _Sdk;
 
@@ -54,7 +53,10 @@ namespace ChatSDK
         public Options Options { get { return _Options; } }
 
 
-        //public string SdkVersion { get { return _SdkVersion; } }
+        /// <summary>
+        /// 获取sdk版本号
+        /// </summary>
+        public string SdkVersion { get => "2.0.0"; }
 
         /// <summary>
         /// 获取当前登录的环信id
