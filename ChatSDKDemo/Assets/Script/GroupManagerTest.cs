@@ -162,6 +162,10 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
 
     }
 
+    private void OnDestroy()
+    {
+        SDKClient.Instance.GroupManager.RemoveGroupManagerDelegate(this);
+    }
 
     void AcceptInvitationFromGroupBtnAction()
     {

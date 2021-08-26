@@ -95,6 +95,10 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         SDKClient.Instance.ChatManager.AddChatManagerDelegate(this);
     }
 
+    private void OnDestroy()
+    {
+        SDKClient.Instance.ChatManager.RemoveChatManagerDelegate(this);
+    }
 
     void backButtonAction()
     {
@@ -423,7 +427,6 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     {
         InputAlertConfig config = new InputAlertConfig("发送会话Ack", (dict) =>
         {
-            //int count = int.Parse(dict["LoadCount"]);
             SDKClient.Instance.ChatManager.SendConversationReadAck(dict["id"], new CallBack(
                 onSuccess: () => {
                     UIManager.SuccessAlert(transform);
@@ -483,7 +486,16 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
     public void OnMessagesReceived(List<Message> messages)
     {
-        UIManager.DefaultAlert(transform, $"OnMessagesReceived: {messages.Count}");
+
+        List<string> list = new List<string>();
+
+        foreach (var msg in messages) {
+            list.Add(msg.MsgId);
+        }
+
+        string str = string.Join(",", list.ToArray());
+
+        UIManager.DefaultAlert(transform, $"OnMessagesReceived: {str}");
     }
 
     public void OnCmdMessagesReceived(List<Message> messages)
