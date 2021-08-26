@@ -733,7 +733,7 @@ namespace ChatSDK
             }
 
             //to-do: need to add this into API function??
-            int muteDuration = 1000;
+            int muteDuration = -1;
 
             ChatAPINative.GroupManager_MuteGroupMembers(client, groupId, memberArray, size, muteDuration,
                 onSuccessResult: (IntPtr[] data, DataType dType, int dSize) =>

@@ -427,7 +427,7 @@ namespace ChatSDK
                 }
             }
 
-            int muteDuration = 1000; // no this parameter for API?
+            int muteDuration = -1; // no this parameter for API?
 
             ChatAPINative.RoomManager_MuteChatroomMembers(client, roomId, membersArray, size, muteDuration,
                 onSuccess: () => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); }); },
