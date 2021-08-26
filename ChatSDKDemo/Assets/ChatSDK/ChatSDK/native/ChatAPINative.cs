@@ -47,7 +47,7 @@ namespace ChatSDK{
 				OnConversationsUpdate onConversationsUpdate, OnConversationRead onConversationRead);
 
 		[DllImport(MyLibName)]
-		internal static extern void ChatManager_FetchHistoryMessages(IntPtr client, string conversationId, ConversationType type, string startMessageId, int count, OnSuccessResult onSuccessResult, OnError onError);
+		internal static extern void ChatManager_FetchHistoryMessages(IntPtr client, string conversationId, ConversationType type, string startMessageId, int count, OnSuccessResultV2 onSuccessResult, OnError onError);
 
 		[DllImport(MyLibName)]
 		internal static extern void ChatManager_GetConversationsFromServer(IntPtr client, OnSuccessResult onSuccessResult, OnError onError);
@@ -74,24 +74,10 @@ namespace ChatSDK{
 			int size);
 
 		[DllImport(MyLibName)]
-		internal static extern int ChatManager_LoadAllConversationsFromDB(IntPtr client,
-			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.AsAny, SizeParamIndex = 2)] IntPtr[] toArray,
-			int size);
+		internal static extern int ChatManager_LoadAllConversationsFromDB(IntPtr client, OnSuccessResult onSuccessResult);
 
 		[DllImport(MyLibName)]
-		internal static extern int ChatManager_ReleaseConversationList(
-			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.AsAny, SizeParamIndex = 1)] IntPtr[] toArray,
-			int size);
-
-		[DllImport(MyLibName)]
-		internal static extern int ChatManager_GetMessage(IntPtr client, string messageId,
-			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.AsAny, SizeParamIndex = 3)] IntPtr[] toArray,
-			int size);
-
-		[DllImport(MyLibName)]
-		internal static extern int ChatManager_ReleaseMessageList(
-			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.AsAny, SizeParamIndex = 1)] IntPtr[] toArray,
-			int size);
+		internal static extern int ChatManager_GetMessage(IntPtr client, string messageId,OnSuccessResult onSuccessResult, OnError onError);
 
 		[DllImport(MyLibName)]
 		internal static extern bool ChatManager_MarkAllConversationsAsRead(IntPtr client);
@@ -100,14 +86,11 @@ namespace ChatSDK{
 		internal static extern void ChatManager_RecallMessage(IntPtr client, string messageId, Action onSuccess, OnError onError);
 
 		[DllImport(MyLibName)]
-		internal static extern int ChatManager_ResendMessage(IntPtr client, string messageId,
-			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.AsAny, SizeParamIndex = 3)] IntPtr[] toArray,
-			int size, Action onSuccess, OnError onError);
+		internal static extern int ChatManager_ResendMessage(IntPtr client, string messageId, OnSuccessResult onSuccessResult, Action onSuccess, OnError onError);
 
 		[DllImport(MyLibName)]
-		internal static extern int ChatManager_LoadMoreMessages(IntPtr client, 
-			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.AsAny, SizeParamIndex = 3)] IntPtr[] toArray,
-			int size, string keywords, long timestamp, int maxcount, string from, MessageSearchDirection direction);
+		internal static extern int ChatManager_LoadMoreMessages(IntPtr client,
+			OnSuccessResult onSuccessResult, string keywords, long timestamp, int maxcount, string from, MessageSearchDirection direction);
 
 		[DllImport(MyLibName)]
 		internal static extern void ChatManager_SendReadAckForConversation(IntPtr client, string conversationId, Action onSuccess, OnError onError);
@@ -153,8 +136,7 @@ namespace ChatSDK{
 				OnSuccessResult onSuccessResult = null, OnError onError = null);
 
 		[DllImport(MyLibName)]
-		internal static extern void GroupManager_GetGroupWithId(IntPtr client, string groupId,
-			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 3)] IntPtr[] memberArray, int size);
+		internal static extern void GroupManager_GetGroupWithId(IntPtr client, string groupId, OnSuccessResult onSuccessResult = null);
 
 		[DllImport(MyLibName)]
 		internal static extern void GroupManager_AcceptInvitationFromGroup(IntPtr client, string groupId, string inviter, OnSuccessResult onSuccessResult = null, OnError onError = null);
@@ -208,7 +190,7 @@ namespace ChatSDK{
 			OnSuccessResult onSuccessResult = null, OnError onError = null);
 
 		[DllImport(MyLibName)]
-		internal static extern void GroupManager_FetchGroupMembers(IntPtr client, string groupId, int pageSize, string cursor, OnSuccessResult onSuccessResult, OnError onError);
+		internal static extern void GroupManager_FetchGroupMembers(IntPtr client, string groupId, int pageSize, string cursor, OnSuccessResultV2 onSuccessResult, OnError onError);
 
 		[DllImport(MyLibName)]
 		internal static extern void GroupManager_FetchGroupMutes(IntPtr client, string groupId, int pageNum, int pageSize,
@@ -227,8 +209,7 @@ namespace ChatSDK{
 			OnSuccessResult onSuccessResult = null, OnError onError = null);
 
 		[DllImport(MyLibName)]
-		internal static extern void GroupManager_LoadAllMyGroupsFromDB(IntPtr client,
-			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 2)] IntPtr[] array, int size);
+		internal static extern void GroupManager_LoadAllMyGroupsFromDB(IntPtr client, OnSuccessResult onSuccessResult);
 
 		[DllImport(MyLibName)]
 		internal static extern void GroupManager_FetchAllMyGroupsWithPage(IntPtr client, int pageNum, int pageSize, 
@@ -236,7 +217,7 @@ namespace ChatSDK{
 
 		[DllImport(MyLibName)]
 		internal static extern void GroupManager_FetchPublicGroupsWithCursor(IntPtr client, int pageSize, string cursor,
-			OnSuccessResult onSuccessResult = null, OnError onError = null);
+			OnSuccessResultV2 onSuccessResult = null, OnError onError = null);
 
 		[DllImport(MyLibName)]
 		internal static extern void GroupManager_JoinPublicGroup(IntPtr client, string groupId, Action onSuccess, OnError onError);
@@ -291,11 +272,6 @@ namespace ChatSDK{
 		[DllImport(MyLibName)]
 		internal static extern void GroupManager_UploadGroupSharedFile(IntPtr client, string groupId, string filePath, Action onSuccess, OnError onError);
 
-		[DllImport(MyLibName)]
-		internal static extern int GroupManager_ReleaseGroupList(
-			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.AsAny, SizeParamIndex = 1)] IntPtr[] toArray,
-			int size);
-
 		/** RoomManager Stub **/
 		[DllImport(MyLibName)]
 		internal static extern void RoomManager_AddListener(IntPtr client, OnChatRoomDestroyed onChatRoomDestroyed, OnMemberJoined onMemberJoined,
@@ -343,7 +319,7 @@ namespace ChatSDK{
 		internal static extern void RoomManager_FetchChatroomSpecification(IntPtr client, string roomId, OnSuccessResult onSuccessResult, OnError onError);
 
 		[DllImport(MyLibName)]
-		internal static extern void RoomManager_FetchChatroomMembers(IntPtr client, string roomId, string cursor, int pageSize, OnSuccessResult onSuccessResult, OnError onError);
+		internal static extern void RoomManager_FetchChatroomMembers(IntPtr client, string roomId, string cursor, int pageSize, OnSuccessResultV2 onSuccessResult, OnError onError);
 
 		[DllImport(MyLibName)]
 		internal static extern void RoomManager_FetchChatroomMutes(IntPtr client, string roomId, int pageNum, int pageSize, OnSuccessResult onSuccessResult, OnError onError);
@@ -390,8 +366,7 @@ namespace ChatSDK{
 		internal static extern void ContactManager_GetContactsFromServer(IntPtr client, OnSuccessResult onSuccessResult, OnError onError);
 
 		[DllImport(MyLibName)]
-		internal static extern void ContactManager_GetContactsFromDB(IntPtr client, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.AsAny, SizeParamIndex = 2)] IntPtr[] array = null,
-			int size = 0);
+		internal static extern void ContactManager_GetContactsFromDB(IntPtr client, OnSuccessResult onSuccessResult, OnError onError);
 
 		[DllImport(MyLibName)]
 		internal static extern void ContactManager_AddToBlackList(IntPtr client, string username, bool both, Action onSuccess = null, OnError onError = null);
@@ -411,11 +386,6 @@ namespace ChatSDK{
 		[DllImport(MyLibName)]
 		internal static extern void ContactManager_GetSelfIdsOnOtherPlatform(IntPtr client, OnSuccessResult onSuccessResult, OnError onError);
 
-		[DllImport(MyLibName)]
-		internal static extern int ContactManager_ReleaseStringList(
-			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.AsAny, SizeParamIndex = 1)] IntPtr[] toArray,
-			int size);
-
 		/** ConversationManager Stub **/
 		[DllImport(MyLibName)]
 		internal static extern bool ConversationManager_AppendMessage(IntPtr client, string conversationId, ConversationType converationType, IntPtr mto, MessageBodyType type);
@@ -427,27 +397,19 @@ namespace ChatSDK{
 		internal static extern bool ConversationManager_RemoveMessage(IntPtr client, string conversationId, ConversationType converationType, string messageId);
 
 		[DllImport(MyLibName)]
-		internal static extern bool ConversationManager_ExtField(IntPtr client, string conversationId, ConversationType converationType,
-			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.AsAny, SizeParamIndex = 4)] IntPtr[] extField = null,
-			int size = 0);
+		internal static extern bool ConversationManager_ExtField(IntPtr client, string conversationId, ConversationType converationType, OnSuccessResult onSuccessResult);
 
 		[DllImport(MyLibName)]
 		internal static extern bool ConversationManager_InsertMessage(IntPtr client, string conversationId, ConversationType converationType, IntPtr mto, MessageBodyType type);
 
 		[DllImport(MyLibName)]
-		internal static extern void ConversationManager_LatestMessage(IntPtr client, string conversationId, ConversationType converationType,
-			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.AsAny, SizeParamIndex = 4)] IntPtr[] extField = null,
-			int size = 0);
+		internal static extern void ConversationManager_LatestMessage(IntPtr client, string conversationId, ConversationType converationType, OnSuccessResult onSuccessResult);
 
 		[DllImport(MyLibName)]
-		internal static extern void ConversationManager_LatestMessageFromOthers(IntPtr client, string conversationId, ConversationType converationType,
-			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.AsAny, SizeParamIndex = 4)] IntPtr[] extField = null,
-			int size = 0);
+		internal static extern void ConversationManager_LatestMessageFromOthers(IntPtr client, string conversationId, ConversationType converationType, OnSuccessResult onSuccessResult);
 
 		[DllImport(MyLibName)]
-		internal static extern void ConversationManager_LoadMessage(IntPtr client, string conversationId, ConversationType converationType, string messageId,
-			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.AsAny, SizeParamIndex = 5)] IntPtr[] extField = null,
-			int size = 0);
+		internal static extern void ConversationManager_LoadMessage(IntPtr client, string conversationId, ConversationType converationType, string messageId, OnSuccessResult onSuccessResult);
 
 		[DllImport(MyLibName)]
 		internal static extern void ConversationManager_LoadMessages(IntPtr client, string conversationId, ConversationType converationType,
@@ -483,24 +445,12 @@ namespace ChatSDK{
 		[DllImport(MyLibName)]
 		internal static extern bool ConversationManager_UpdateMessage(IntPtr client, string conversationId, ConversationType converationType, IntPtr mto, MessageBodyType type);
 
-		[DllImport(MyLibName)]
-		internal static extern int ConversationManager_ReleaseStringList(
-			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.AsAny, SizeParamIndex = 1)] IntPtr[] toArray,
-			int size);
-
-		[DllImport(MyLibName)]
-		internal static extern int ConversationManager_ReleaseMessageList(
-			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.AsAny, SizeParamIndex = 1)] IntPtr[] toArray,
-			int size);
-
 		//PushManager
 		[DllImport(MyLibName)]
-		internal static extern void PushManager_GetIgnoredGroupIds(IntPtr client,
-			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.AsAny, SizeParamIndex = 2)] IntPtr[] toArray,int size);
+		internal static extern void PushManager_GetIgnoredGroupIds(IntPtr client, OnSuccessResult onSuccessResult);
 
 		[DllImport(MyLibName)]
-		internal static extern void PushManager_GetPushConfig(IntPtr client,
-			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.AsAny, SizeParamIndex = 2)] IntPtr[] toArray, int size);
+		internal static extern void PushManager_GetPushConfig(IntPtr client, OnSuccessResult onSuccessResult);
 
 		[DllImport(MyLibName)]
 		internal static extern void PushManager_GetUserConfigsFromServer(IntPtr client, OnSuccessResult onSuccessResult, OnError onError);
@@ -522,16 +472,6 @@ namespace ChatSDK{
 
 		[DllImport(MyLibName)]
 		internal static extern void PushManager_UpdatePushNickName(IntPtr client, string nickname, Action onSuccess, OnError onError);
-
-		[DllImport(MyLibName)]
-		internal static extern int PushManager_ReleaseStringList(
-			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.AsAny, SizeParamIndex = 1)] IntPtr[] toArray,
-			int size);
-
-		[DllImport(MyLibName)]
-		internal static extern int ConversationManager_ReleasePushConfigList(
-			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.AsAny, SizeParamIndex = 1)] IntPtr[] toArray,
-			int size);
 
 		#endregion native API import
 	}

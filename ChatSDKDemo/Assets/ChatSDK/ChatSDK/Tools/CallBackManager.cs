@@ -93,7 +93,7 @@ namespace ChatSDK {
 
             GameObject groupGameObj = new GameObject(GroupManagerListener_Obj);
             DontDestroyOnLoad(groupGameObj);
-            GroupManagerListener groupManagerListener = groupGameObj.AddComponent<GroupManagerListener>();
+            groupManagerListener = groupGameObj.AddComponent<GroupManagerListener>();
             groupManagerListener.delegater = new List<IGroupManagerDelegate>(); ;
 
             GameObject roomGameObj = new GameObject(RoomManagerListener_Obj);

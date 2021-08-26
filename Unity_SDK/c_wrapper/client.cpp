@@ -15,7 +15,7 @@ extern "C"
 
 static bool G_DEBUG_MODE = false;
 static bool G_AUTO_LOGIN = true;
-
+static bool G_LOGIN_STATUS = false;
 
 AGORA_API void Client_CreateAccount(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, const char *username, const char *password)
 {
@@ -78,11 +78,12 @@ AGORA_API void* Client_InitWithOptions(Options *options, FUNC_OnConnected onConn
         EMChatConfigsPtr configs = ConfigsFromOptions(options);
         gClient = EMClient::create(configs);
         LOG("after create gClient address is: %x", gClient);
-        if(gConnectionListener == NULL) { //only set once
-            //gConnectionListener = new ConnectionListener(onConnected, onDisconnected, onPong);
-            //LOG("after new gConnectionListener address is: %x", gConnectionListener);
-            //gClient->addConnectionListener(gConnectionListener);
-        }
+    }
+    
+    if(gConnectionListener == NULL) { //only set once
+        gConnectionListener = new ConnectionListener(onConnected, onDisconnected, onPong);
+        LOG("after new gConnectionListener address is: %x", gConnectionListener);
+        //gClient->addConnectionListener(gConnectionListener);
     }
     
     return gClient;
@@ -95,6 +96,7 @@ AGORA_API void Client_Login(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError
     result = isToken ? CLIENT->loginWithToken(username, pwdOrToken) : CLIENT->login(username, pwdOrToken);
     if(EMError::isNoError(result)) {
         LOG("Login succeeds.");
+        G_LOGIN_STATUS = true;
         if(onSuccess) onSuccess();
     }else{
         LOG("Login failed with code=%d desc=%s!", result->mErrorCode, result->mDescription.c_str());
@@ -125,14 +127,17 @@ AGORA_API void Client_Logout(void *client, FUNC_OnSuccess onSuccess, bool unbind
     gConnectionListener = nullptr;
     */
 
-    //gConnectionListener->ClearAllCallBack();
-    CLIENT->logout();
-    //CLIENT->removeConnectionListener(gConnectionListener);
-    //delete gConnectionListener;
-    //gConnectionListener = nullptr;
-    
-    if(onSuccess) onSuccess();
-    
+    if(G_LOGIN_STATUS) {
+        LOG("Execute logout action.");
+        CLIENT->logout();
+        //CLIENT->removeConnectionListener(gConnectionListener);
+        delete gConnectionListener;
+        gConnectionListener = nullptr;
+        G_LOGIN_STATUS = false;
+        if(onSuccess) onSuccess();
+    } else {
+        LOG("Already logout, NO need to execute logout action.");
+    }
 }
 
 AGORA_API void Client_StartLog(const char *logFilePath) {
