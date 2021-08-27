@@ -162,6 +162,10 @@ AGORA_API void GroupManager_AddAdmin(void *client, const char * groupId, const c
 
 AGORA_API void GroupManager_GetGroupWithId(void *client, const char * groupId, FUNC_OnSuccess_With_Result onSuccess)
 {
+    if(!MandatoryCheck(groupId)) {
+        onSuccess(nullptr, DataType::Group, 0);
+        return;
+    }
     EMError error;
     EMGroupPtr result = CLIENT->getGroupManager().fetchGroupSpecification(groupId, error);
     GroupTO* data[1];
@@ -169,6 +173,7 @@ AGORA_API void GroupManager_GetGroupWithId(void *client, const char * groupId, F
         if(result) {
             LOG("GetGroupWithId successfully, group id:%s", result->groupId().c_str());
             data[0] = GroupTO::FromEMGroup(result);
+            data[0]->LogInfo();
             onSuccess((void **)data, DataType::Group, 1);
             delete (GroupTO*)data[0];
             return;
@@ -658,6 +663,7 @@ AGORA_API void GroupManager_FetchAllMyGroupsWithPage(void *client, int pageNum, 
                 GroupTO * data[size];
                 for(size_t i=0; i<size; i++) {
                     data[i] = GroupTO::FromEMGroup(groupList[i]);
+                    data[i]->LogInfo();
                 }
                 onSuccess((void **)data, DataType::ListOfGroup, (int)size);
                 for(size_t i=0; i<size; i++) {

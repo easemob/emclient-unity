@@ -277,7 +277,7 @@ GroupTO::~GroupTO()
     MuteList = NULL;
 }
 
-std::string EMPTY_STR = "EMPTY";
+std::string EMPTY_STR = " ";
 GroupTO * GroupTO::FromEMGroup(EMGroupPtr &group)
 {
     GroupTO *gto = new GroupTO();
@@ -286,6 +286,11 @@ GroupTO * GroupTO::FromEMGroup(EMGroupPtr &group)
     gto->Description = group->groupDescription().c_str();
     gto->Owner = group->groupOwner().c_str();
     gto->Announcement = group->groupAnnouncement().c_str();
+    
+    // empty string may cause error of illegal sequence byte of
+    // PtrToStructure at c# side, here add " " to them.
+    if (strlen(gto->Description) == 0) gto->Description = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(gto->Announcement) == 0) gto->Announcement = const_cast<char*>(EMPTY_STR.c_str());
     
     gto->MemberCount = (int)group->groupMembers().size();
     gto->AdminCount = (int)group->groupAdmins().size();
@@ -348,8 +353,12 @@ GroupTO * GroupTO::FromEMGroup(EMGroupPtr &group)
     }
     
     if(group->groupSetting()) {
-        LOG("groupSetting exist, groupid:%s, ext:%s", gto->GroupId, group->groupSetting()->extension().c_str());
+        LOG("groupSetting exist, groupid:%s, ext:%s, ext len:%d", gto->GroupId,
+            group->groupSetting()->extension().c_str(), strlen(group->groupSetting()->extension().c_str()));
         gto->Options = GroupOptions::FromMucSetting(group->groupSetting());
+        //FromMucSetting cannot set Ext address correctly(byte NOT alianed?), here set again!
+        gto->Options.Ext = group->groupSetting()->extension().c_str();
+        if(strlen(gto->Options.Ext) == 0) gto->Options.Ext = EMPTY_STR.c_str();
     } else {
         LOG("groupSetting is NOT exist, so not set group setting, groupid:%s", gto->GroupId);
     }
@@ -364,20 +373,32 @@ GroupTO * GroupTO::FromEMGroup(EMGroupPtr &group)
 
 void GroupTO::LogInfo()
 {
+    LOG("---------------------------");
     LOG("GroupTO's info:");
-    LOG("GroupId: %p %p %s", &GroupId, GroupId, GroupId);
-    LOG("Name: %p %p %s", &Name, Name, Name);
-    LOG("Description: %p %p %s", &Description, Description, Description);
-    LOG("Owner: %p %p %s", &Owner, Owner, Owner);
-    LOG("Announcement: %p %p %s", &Announcement, Announcement, Announcement);
+    LOG("GroupId: %p %p %s, len:%d", &GroupId, GroupId, GroupId, strlen(GroupId));
+    LOG("Name: %p %p %s, len:%d", &Name, Name, Name, strlen(Name));
+    LOG("Description: %p %p %s, len:%d", &Description, Description, Description, strlen(Description));
+    LOG("Owner: %p %p %s, len:%d", &Owner, Owner, Owner, strlen(Owner));
+    LOG("Announcement: %p %p %s, len:%d", &Announcement, Announcement, Announcement, strlen(Announcement));
     
     LOG("MemberList address: %p %p", &MemberList, MemberList);
+    for(int i=0; i<MemberCount; i++) {
+        LOG("member %d: %s, len:%d", i, MemberList[i], strlen(MemberList[i]));
+    }
     LOG("AdminList address: %p %p", &AdminList, AdminList);
+    for(int i=0; i<AdminCount; i++) {
+        LOG("admin %1: %s, len:%d", i, AdminList[i], strlen(AdminList[i]));
+    }
     LOG("BlockList address: %p %p", &BlockList, BlockList);
+    for(int i=0; i<BlockCount; i++) {
+        LOG("blocker %1: %s, len:%d", i, BlockList[i], strlen(BlockList[i]));
+    }
     LOG("MuteList address: %p %p", &MuteList, MuteList);
-
+    for(int i=0; i<MuteCount; i++) {
+        LOG("mute %1: %s, len:%d", i, MuteList[i].Member, strlen(MuteList[i].Member));
+    }
     
-    LOG("Options: %p", &Options);
+    LOG("Options: %p, ext:%s, ext len: %d", &Options, Options.Ext, strlen(Options.Ext));
     
     LOG("MemberCount: %p %d", &MemberCount, MemberCount);
     LOG("AdminCount: %p %d", &AdminCount, AdminCount);
@@ -389,6 +410,7 @@ void GroupTO::LogInfo()
     LOG("NoticeEnabled: %p %d", &NoticeEnabled, NoticeEnabled);
     LOG("MessageBlocked: %p %d", &MessageBlocked, MessageBlocked);
     LOG("IsAllMemberMuted: %p %d", &IsAllMemberMuted, IsAllMemberMuted);
+    LOG("---------------------------");
 }
 
 RoomTO * RoomTO::FromEMChatRoom(EMChatroomPtr &room)

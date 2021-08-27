@@ -83,7 +83,7 @@ AGORA_API void* Client_InitWithOptions(Options *options, FUNC_OnConnected onConn
     if(gConnectionListener == NULL) { //only set once
         gConnectionListener = new ConnectionListener(onConnected, onDisconnected, onPong);
         LOG("after new gConnectionListener address is: %x", gConnectionListener);
-        //gClient->addConnectionListener(gConnectionListener);
+        gClient->addConnectionListener(gConnectionListener);
     }
     
     return gClient;
@@ -130,7 +130,7 @@ AGORA_API void Client_Logout(void *client, FUNC_OnSuccess onSuccess, bool unbind
     if(G_LOGIN_STATUS) {
         LOG("Execute logout action.");
         CLIENT->logout();
-        //CLIENT->removeConnectionListener(gConnectionListener);
+        CLIENT->removeConnectionListener(gConnectionListener);
         delete gConnectionListener;
         gConnectionListener = nullptr;
         G_LOGIN_STATUS = false;
