@@ -110,14 +110,18 @@ AGORA_API void ChatManager_AddListener(void *client,
 
 AGORA_API void ChatManager_FetchHistoryMessages(void *client, const char * conversationId, EMConversation::EMConversationType type, const char * startMessageId, int count, FUNC_OnSuccess_With_Result_V2 onSuccess, FUNC_OnError onError)
 {
+    EMError error;
+    if(!MandatoryCheck(conversationId, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    // avoid conversationId is released from stack at calling thread
+    std::string conversationIdStr = conversationId;
+    std::string startMessageIdStr = OptionalStrParamCheck(startMessageId);
+    
     std::thread t([=](){
         EMError error;
-        if(!MandatoryCheck(conversationId, error)) {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
-            return;
-        }
-        std::string startMessageIdStr = OptionalStrParamCheck(startMessageId);
-        EMCursorResultRaw<EMMessagePtr> msgCursorResult = CLIENT->getChatManager().fetchHistoryMessages(conversationId, type, error, count, startMessageIdStr);
+        EMCursorResultRaw<EMMessagePtr> msgCursorResult = CLIENT->getChatManager().fetchHistoryMessages(conversationIdStr, type, error, count, startMessageIdStr);
         
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             //header
@@ -145,7 +149,7 @@ AGORA_API void ChatManager_FetchHistoryMessages(void *client, const char * conve
             onError(error.mErrorCode, error.mDescription.c_str());
         }
     });
-    t.join();
+    t.detach();
 }
 
 AGORA_API void ChatManager_GetConversationsFromServer(void *client, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
@@ -171,7 +175,7 @@ AGORA_API void ChatManager_GetConversationsFromServer(void *client, FUNC_OnSucce
             if (onError) onError(error.mErrorCode, error.mDescription.c_str());
         }
     });
-    t.join();
+    t.detach();
 }
 
 AGORA_API void ChatManager_RemoveConversation(void *client, const char * conversationId, bool isRemoveMessages)
@@ -444,13 +448,16 @@ AGORA_API void ChatManager_LoadMoreMessages(void *client, FUNC_OnSuccess_With_Re
 
 AGORA_API void ChatManager_SendReadAckForConversation(void *client, const char * conversationId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    EMError error;
+    if(!MandatoryCheck(conversationId, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    std::string conversationIdStr = conversationId;
+    
     std::thread t([=](){
         EMError error;
-        if(!MandatoryCheck(conversationId, error)) {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
-            return;
-        }
-        CLIENT->getChatManager().sendReadAckForConversation(conversationId, error);
+        CLIENT->getChatManager().sendReadAckForConversation(conversationIdStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("Send read ack for conversation:%s successfully.", conversationId);
             if(onSuccess) onSuccess();
@@ -458,17 +465,20 @@ AGORA_API void ChatManager_SendReadAckForConversation(void *client, const char *
             if(onError) onError(error.mErrorCode,error.mDescription.c_str());
         }
     });
-    t.join();
+    t.detach();
 }
 
 AGORA_API void ChatManager_SendReadAckForMessage(void *client, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    EMError error;
+    if(!MandatoryCheck(messageId, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    std::string messageIdStr = messageId;
+    
     std::thread t([=](){
         EMError error;
-        if(!MandatoryCheck(messageId, error)) {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
-            return;
-        }
         EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(messageId);
         if(nullptr == messagePtr) {
             
@@ -482,7 +492,7 @@ AGORA_API void ChatManager_SendReadAckForMessage(void *client, const char * mess
         LOG("Send read ack for message:%s successfully.", messageId);
         if(onSuccess) onSuccess();
     });
-    t.join();
+    t.detach();
 }
 
 AGORA_API bool ChatManager_UpdateMessage(void *client, void *mto, EMMessageBody::EMMessageBodyType type)

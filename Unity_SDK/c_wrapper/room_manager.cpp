@@ -26,13 +26,17 @@ AGORA_API void RoomManager_AddListener(void *client, FUNC_OnChatRoomDestroyed on
 
 AGORA_API void RoomManager_AddRoomAdmin(void * client, const char * roomId, const char * memberId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    EMError error;
+    if(!MandatoryCheck(roomId, memberId, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    std::string roomIdStr = roomId;
+    std::string memberIdStr = memberId;
+    
     std::thread t([=](){
         EMError error;
-        if(!MandatoryCheck(roomId, memberId, error)) {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
-            return;
-        }
-        EMChatroomPtr result = CLIENT->getChatroomManager().addChatroomAdmin(roomId, memberId, error);
+        EMChatroomPtr result = CLIENT->getChatroomManager().addChatroomAdmin(roomIdStr, memberIdStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("RoomManager_AddRoomAdmin succeeds: %s", result->chatroomSubject().c_str());
             if(onSuccess) {
@@ -46,22 +50,25 @@ AGORA_API void RoomManager_AddRoomAdmin(void * client, const char * roomId, cons
             if(onError) onError(error.mErrorCode, error.mDescription.c_str());
         }
     });
-    t.join();
+    t.detach();
 }
 
 AGORA_API void RoomManager_BlockChatroomMembers(void * client, const char * roomId, const char * memberArray[], int size, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    EMError error;
+    if(!MandatoryCheck(roomId, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    EMMucMemberList memberList;
+    for(int i=0; i<size; i++) {
+        memberList.push_back(memberArray[i]);
+    }
+    std::string roomIdStr = roomId;
+    
     std::thread t([=](){
         EMError error;
-        if(!MandatoryCheck(roomId, error)) {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
-            return;
-        }
-        EMMucMemberList memberList;
-        for(int i=0; i<size; i++) {
-            memberList.push_back(memberArray[i]);
-        }
-        EMChatroomPtr chatRoomPtr = CLIENT->getChatroomManager().blockChatroomMembers(roomId, memberList, error);
+        EMChatroomPtr chatRoomPtr = CLIENT->getChatroomManager().blockChatroomMembers(roomIdStr, memberList, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("RoomManager_BlockChatroomMembers succeeds: %s", chatRoomPtr->chatroomSubject().c_str());
             if(onSuccess) {
@@ -75,25 +82,28 @@ AGORA_API void RoomManager_BlockChatroomMembers(void * client, const char * room
             if(onError) onError(error.mErrorCode, error.mDescription.c_str());
         }
     });
-    t.join();
+    t.detach();
 }
 
 AGORA_API void RoomManager_CreateRoom(void *client, const char * subject, const char * desc, const char * welcomMsg, int maxUserCount, const char * memberArray[], int size, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    EMError error;
+    if(!MandatoryCheck(subject, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    EMMucSetting setting(EMMucSetting::EMMucStyle::DEFAUT, maxUserCount, false);
+    EMMucMemberList memberList;
+    for(int i=0; i<size; i++) {
+        memberList.push_back(memberArray[i]);
+    }
+    std::string subjectStr = subject;
+    std::string descStr = OptionalStrParamCheck(desc);
+    std::string welcomMsgStr = OptionalStrParamCheck(welcomMsg);
+    
     std::thread t([=](){
         EMError error;
-        if(!MandatoryCheck(subject, error)) {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
-            return;
-        }
-        EMMucSetting setting(EMMucSetting::EMMucStyle::DEFAUT, maxUserCount, false);
-        EMMucMemberList memberList;
-        for(int i=0; i<size; i++) {
-            memberList.push_back(memberArray[i]);
-        }
-        std::string descStr = OptionalStrParamCheck(desc);
-        std::string welcomMsgStr = OptionalStrParamCheck(welcomMsg);
-        EMChatroomPtr result = CLIENT->getChatroomManager().createChatroom(subject, descStr, welcomMsgStr, setting, memberList, error);
+        EMChatroomPtr result = CLIENT->getChatroomManager().createChatroom(subjectStr, descStr, welcomMsgStr, setting, memberList, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("RoomManager_CreateRoom succeeds: %s", result->chatroomId().c_str());
             if(onSuccess) {
@@ -105,18 +115,22 @@ AGORA_API void RoomManager_CreateRoom(void *client, const char * subject, const 
             if(onError) onError(error.mErrorCode, error.mDescription.c_str());
         }
     });
-    t.join();
+    t.detach();
 }
 
 AGORA_API void RoomManager_ChangeRoomSubject(void *client, const char * roomId, const char * newSubject, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    EMError error;
+    if(!MandatoryCheck(roomId, newSubject, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    std::string roomIdStr = roomId;
+    std::string newSubjectStr = newSubject;
+    
     std::thread t([=](){
         EMError error;
-        if(!MandatoryCheck(roomId, newSubject, error)) {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
-            return;
-        }
-        EMChatroomPtr result = CLIENT->getChatroomManager().changeChatroomSubject(roomId, newSubject, error);
+        EMChatroomPtr result = CLIENT->getChatroomManager().changeChatroomSubject(roomIdStr, newSubjectStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("RoomManager_ChangeRoomSubject succeeds: %s", result->chatroomSubject().c_str());
             if(onSuccess) {
@@ -130,22 +144,25 @@ AGORA_API void RoomManager_ChangeRoomSubject(void *client, const char * roomId, 
             if(onError) onError(error.mErrorCode, error.mDescription.c_str());
         }
     });
-    t.join();
+    t.detach();
 }
 
 AGORA_API void RoomManager_RemoveRoomMembers(void * client, const char * roomId, const char * memberArray[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    EMError error;
+    if(!MandatoryCheck(roomId, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    EMMucMemberList memberList;
+    for(int i=0; i<size; i++) {
+        memberList.push_back(memberArray[i]);
+    }
+    std::string roomIdStr = roomId;
+    
     std::thread t([=](){
         EMError error;
-        if(!MandatoryCheck(roomId, error)) {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
-            return;
-        }
-        EMMucMemberList memberList;
-        for(int i=0; i<size; i++) {
-            memberList.push_back(memberArray[i]);
-        }
-        EMChatroomPtr result = CLIENT->getChatroomManager().removeChatroomMembers(roomId, memberList, error);
+        EMChatroomPtr result = CLIENT->getChatroomManager().removeChatroomMembers(roomIdStr, memberList, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("RoomManager_RemoveRoomMembers succeeds: %s", result->chatroomSubject().c_str());
             if(onSuccess) onSuccess();
@@ -153,18 +170,22 @@ AGORA_API void RoomManager_RemoveRoomMembers(void * client, const char * roomId,
             if(onError) onError(error.mErrorCode, error.mDescription.c_str());
         }
     });
-    t.join();
+    t.detach();
 }
 
 AGORA_API void RoomManager_TransferChatroomOwner(void * client, const char * roomId, const char * newOwner, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    EMError error;
+    if(!MandatoryCheck(roomId, newOwner, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    std::string roomIdStr = roomId;
+    std::string newOwnerStr = newOwner;
+    
     std::thread t([=](){
         EMError error;
-        if(!MandatoryCheck(roomId, newOwner, error)) {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
-            return;
-        }
-        EMChatroomPtr result = CLIENT->getChatroomManager().transferChatroomOwner(roomId, newOwner, error);
+        EMChatroomPtr result = CLIENT->getChatroomManager().transferChatroomOwner(roomIdStr, newOwnerStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("RoomManager_TransferChatroomOwner succeeds: %s", result->chatroomSubject().c_str());
             if(onSuccess) {
@@ -178,18 +199,22 @@ AGORA_API void RoomManager_TransferChatroomOwner(void * client, const char * roo
             if(onError) onError(error.mErrorCode, error.mDescription.c_str());
         }
     });
-    t.join();
+    t.detach();
 }
 
 AGORA_API void RoomManager_ChangeChatroomDescription(void * client, const char * roomId, const char * newDescription, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    EMError error;
+    if(!MandatoryCheck(roomId, newDescription, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    std::string roomIdStr = roomId;
+    std::string newDescriptionStr = newDescription;
+    
     std::thread t([=](){
         EMError error;
-        if(!MandatoryCheck(roomId, newDescription, error)) {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
-            return;
-        }
-        EMChatroomPtr result = CLIENT->getChatroomManager().changeChatroomDescription(roomId, newDescription, error);
+        EMChatroomPtr result = CLIENT->getChatroomManager().changeChatroomDescription(roomIdStr, newDescriptionStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("RoomManager_ChangeChatroomDescription succeeds: %s", result->chatroomSubject().c_str());
             if(onSuccess) {
@@ -203,25 +228,28 @@ AGORA_API void RoomManager_ChangeChatroomDescription(void * client, const char *
             if(onError) onError(error.mErrorCode, error.mDescription.c_str());
         }
     });
-    t.join();
+    t.detach();
 }
 
 AGORA_API void RoomManager_DestroyChatroom(void *client, const char * roomId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    EMError error;
+    if(!MandatoryCheck(roomId, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    std::string roomIdStr = roomId;
+    
     std::thread t([=](){
         EMError error;
-        if(!MandatoryCheck(roomId, error)) {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
-            return;
-        }
-        CLIENT->getChatroomManager().destroyChatroom(roomId, error);
+        CLIENT->getChatroomManager().destroyChatroom(roomIdStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             if(onSuccess) onSuccess();
         }else{
             if(onError) onError(error.mErrorCode, error.mDescription.c_str());
         }
     });
-    t.join();
+    t.detach();
 }
 
 AGORA_API void RoomManager_FetchChatroomsWithPage(void *client, int pageNum, int pageSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
@@ -248,18 +276,21 @@ AGORA_API void RoomManager_FetchChatroomsWithPage(void *client, int pageNum, int
             if(onError) onError(error.mErrorCode, error.mDescription.c_str());
         }
     });
-    t.join();
+    t.detach();
 }
 
 AGORA_API void RoomManager_FetchChatroomAnnouncement(void *client, const char * roomId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    EMError error;
+    if(!MandatoryCheck(roomId, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    std::string roomIdStr = roomId;
+    
     std::thread t([=](){
         EMError error;
-        if(!MandatoryCheck(roomId, error)) {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
-            return;
-        }
-        std::string announcement = CLIENT->getChatroomManager().fetchChatroomAnnouncement(roomId, error);
+        std::string announcement = CLIENT->getChatroomManager().fetchChatroomAnnouncement(roomIdStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("RoomManager_FetchChatroomAnnouncement succeeds: %s", roomId);
             if(onSuccess) {
@@ -271,20 +302,23 @@ AGORA_API void RoomManager_FetchChatroomAnnouncement(void *client, const char * 
             if(onError) onError(error.mErrorCode, error.mDescription.c_str());
         }
     });
-    t.join();
+    t.detach();
 }
 
 AGORA_API void RoomManager_FetchChatroomBans(void *client, const char * roomId, int pageNum, int pageSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    EMError error;
+    if(!MandatoryCheck(roomId, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    std::string roomIdStr = roomId;
+    
     std::thread t([=](){
         EMError error;
-        if(!MandatoryCheck(roomId, error)) {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
-            return;
-        }
-        EMMucMemberList banList = CLIENT->getChatroomManager().fetchChatroomBans(roomId, pageNum, pageSize, error);
+        EMMucMemberList banList = CLIENT->getChatroomManager().fetchChatroomBans(roomIdStr, pageNum, pageSize, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
-            LOG("RoomManager_FetchChatroomBans succeeds, roomId: %s", roomId);
+            LOG("RoomManager_FetchChatroomBans succeeds, roomId: %s", roomIdStr.c_str());
             if(onSuccess) {
                 size_t size = banList.size();
                 const char * data[size];
@@ -297,18 +331,21 @@ AGORA_API void RoomManager_FetchChatroomBans(void *client, const char * roomId, 
             if(onError) onError(error.mErrorCode, error.mDescription.c_str());
         }
     });
-    t.join();
+    t.detach();
 }
 
 AGORA_API void RoomManager_FetchChatroomSpecification(void * client, const char * roomId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    EMError error;
+    if(!MandatoryCheck(roomId, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    std::string roomIdStr = roomId;
+    
     std::thread t([=](){
         EMError error;
-        if(!MandatoryCheck(roomId, error)) {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
-            return;
-        }
-        EMChatroomPtr result = CLIENT->getChatroomManager().fetchChatroomSpecification(roomId, error, false);
+        EMChatroomPtr result = CLIENT->getChatroomManager().fetchChatroomSpecification(roomIdStr, error, false);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("RoomManager_FetchChatroomSpecification succeeds roomId: %s", result->chatroomId().c_str());
             if(onSuccess) {
@@ -322,19 +359,22 @@ AGORA_API void RoomManager_FetchChatroomSpecification(void * client, const char 
             if(onError) onError(error.mErrorCode, error.mDescription.c_str());
         }
     });
-    t.join();
+    t.detach();
 }
 
 AGORA_API void RoomManager_FetchChatroomMembers(void * client, const char * roomId, const char * cursor, int pageSize, FUNC_OnSuccess_With_Result_V2 onSuccess, FUNC_OnError onError)
 {
+    EMError error;
+    if(!MandatoryCheck(roomId, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    std::string roomIdStr = roomId;
+    std::string cursorStr = OptionalStrParamCheck(cursor);
+    
     std::thread t([=](){
         EMError error;
-        if(!MandatoryCheck(roomId, error)) {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
-            return;
-        }
-        std::string cursorStr = OptionalStrParamCheck(cursor);
-        EMCursorResultRaw<std::string> msgCursorResult = CLIENT->getChatroomManager().fetchChatroomMembers(roomId, cursorStr, pageSize, error);
+        EMCursorResultRaw<std::string> msgCursorResult = CLIENT->getChatroomManager().fetchChatroomMembers(roomIdStr, cursorStr, pageSize, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             if(onSuccess) {
                 //header
@@ -353,20 +393,23 @@ AGORA_API void RoomManager_FetchChatroomMembers(void * client, const char * room
             if(onError) onError(error.mErrorCode, error.mDescription.c_str());
         }
     });
-    t.join();
+    t.detach();
 }
 
 AGORA_API void RoomManager_FetchChatroomMutes(void * client, const char * roomId, int pageNum, int pageSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    EMError error;
+    if(!MandatoryCheck(roomId, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    std::string roomIdStr = roomId;
+    
     std::thread t([=](){
         EMError error;
-        if(!MandatoryCheck(roomId, error)) {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
-            return;
-        }
-        EMMucMuteList muteList = CLIENT->getChatroomManager().fetchChatroomMutes(roomId, pageNum, pageSize, error);
+        EMMucMuteList muteList = CLIENT->getChatroomManager().fetchChatroomMutes(roomIdStr, pageNum, pageSize, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
-            LOG("RoomManager_FetchChatroomMutes succeeds, roomId: %s", roomId);
+            LOG("RoomManager_FetchChatroomMutes succeeds, roomId: %s", roomIdStr.c_str());
             if(onSuccess) {
                 size_t size = muteList.size();
                 const char * data[size];
@@ -379,7 +422,7 @@ AGORA_API void RoomManager_FetchChatroomMutes(void * client, const char * roomId
             if(onError) onError(error.mErrorCode, error.mDescription.c_str());
         }
     });
-    t.join();
+    t.detach();
 }
 
 AGORA_API void RoomManager_GetAllRoomsFromLocal(void * client, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
@@ -391,13 +434,16 @@ AGORA_API void RoomManager_GetAllRoomsFromLocal(void * client, FUNC_OnSuccess_Wi
 
 AGORA_API void RoomManager_JoinedChatroomById(void * client, const char * roomId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    EMError error;
+    if(!MandatoryCheck(roomId, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    std::string roomIdStr = roomId;
+    
     std::thread t([=](){
         EMError error;
-        if(!MandatoryCheck(roomId, error)) {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
-            return;
-        }
-        EMChatroomPtr result = CLIENT->getChatroomManager().joinedChatroomById(roomId);
+        EMChatroomPtr result = CLIENT->getChatroomManager().joinedChatroomById(roomIdStr);
         if(result != nullptr)
         {
             LOG("RoomManager_JoinedChatroomById succeeds roomId: %s", result->chatroomId().c_str());
@@ -412,18 +458,21 @@ AGORA_API void RoomManager_JoinedChatroomById(void * client, const char * roomId
             LOG("RoomManager_JoinedChatroomById succeeds, but no room is found");
         }
     });
-    t.join();
+    t.detach();
 }
 
 AGORA_API void RoomManager_JoinChatroom(void *client, const char * roomId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    EMError error;
+    if(!MandatoryCheck(roomId, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    std::string roomIdStr = roomId;
+    
     std::thread t([=](){
         EMError error;
-        if(!MandatoryCheck(roomId, error)) {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
-            return;
-        }
-        EMChatroomPtr result = CLIENT->getChatroomManager().joinChatroom(roomId, error);
+        EMChatroomPtr result = CLIENT->getChatroomManager().joinChatroom(roomIdStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("RoomManager_JoinChatroom succeeds: roomId:%s", roomId);
             if(onSuccess) {
@@ -442,68 +491,78 @@ AGORA_API void RoomManager_JoinChatroom(void *client, const char * roomId, FUNC_
             if(onError) onError(error.mErrorCode, error.mDescription.c_str());
         }
     });
-    t.join();
+    t.detach();
 }
 
 AGORA_API void RoomManager_LeaveChatroom(void *client, const char * roomId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    EMError error;
+    if(!MandatoryCheck(roomId, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    std::string roomIdStr = roomId;
+    
     std::thread t([=](){
         EMError error;
-        if(!MandatoryCheck(roomId, error)) {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
-            return;
-        }
-        CLIENT->getChatroomManager().leaveChatroom(roomId, error);
+        CLIENT->getChatroomManager().leaveChatroom(roomIdStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             if(onSuccess) onSuccess();
         }else{
             if(onError) onError(error.mErrorCode, error.mDescription.c_str());
         }
     });
-    t.join();
+    t.detach();
 }
 
 AGORA_API void RoomManager_MuteChatroomMembers(void * client, const char * roomId, const char * memberArray[], int size, int muteDuration, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    EMError error;
+    if(!MandatoryCheck(roomId, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    EMMucMemberList memberList;
+    for(int i=0; i<size; i++) {
+        memberList.push_back(memberArray[i]);
+    }
+    std::string roomIdStr = roomId;
+    
     std::thread t([=](){
         EMError error;
-        if(!MandatoryCheck(roomId, error)) {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
-            return;
-        }
-        EMMucMemberList memberList;
-        for(int i=0; i<size; i++) {
-            memberList.push_back(memberArray[i]);
-        }
-        EMChatroomPtr chatRoomPtr = CLIENT->getChatroomManager().muteChatroomMembers(roomId, memberList, muteDuration, error);
+        EMChatroomPtr chatRoomPtr = CLIENT->getChatroomManager().muteChatroomMembers(roomIdStr, memberList, muteDuration, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             if(onSuccess) onSuccess();
         }else{
             if(onError) onError(error.mErrorCode, error.mDescription.c_str());
         }
     });
-    t.join();
+    t.detach();
 }
 
 AGORA_API void RoomManager_RemoveChatroomAdmin(void *client, const char * roomId, const char * adminId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    EMError error;
+    if(!MandatoryCheck(roomId, adminId, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    std::string roomIdStr = roomId;
+    std::string adminIdStr = adminId;
+    
     std::thread t([=](){
         EMError error;
-        if(!MandatoryCheck(roomId, adminId, error)) {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
-            return;
-        }
-        EMChatroomPtr result = CLIENT->getChatroomManager().removeChatroomAdmin(roomId, adminId, error);
+        EMChatroomPtr result = CLIENT->getChatroomManager().removeChatroomAdmin(roomIdStr, adminIdStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             //success
-            LOG("RoomManager_RemoveChatroomAdmin succeeds: roomId:%s", roomId);
+            LOG("RoomManager_RemoveChatroomAdmin succeeds: roomId:%s", roomIdStr.c_str());
             if(onSuccess) {
                 if(result) {
                     RoomTO *data[1];
                     data[0] = {RoomTO::FromEMChatRoom(result)};
                     onSuccess((void **)data, DataType::Room, 1);
                     delete (RoomTO*)data[0];
-                    LOG("RoomManager_RemoveChatroomAdmin return room with id:%s", roomId);
+                    LOG("RoomManager_RemoveChatroomAdmin return room with id:%s", roomIdStr.c_str());
                 } else {
                     onSuccess(nullptr, DataType::Room, 0);
                     LOG("RoomManager_RemoveChatroomAdmin NO room returned");
@@ -513,67 +572,77 @@ AGORA_API void RoomManager_RemoveChatroomAdmin(void *client, const char * roomId
             if(onError) onError(error.mErrorCode, error.mDescription.c_str());
         }
     });
-    t.join();
+    t.detach();
 }
 
 AGORA_API void RoomManager_UnblockChatroomMembers(void * client, const char * roomId, const char * memberArray[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    EMError error;
+    if(!MandatoryCheck(roomId, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    EMMucMemberList memberList;
+    for(int i=0; i<size; i++) {
+        memberList.push_back(memberArray[i]);
+    }
+    std::string roomIdStr = roomId;
+    
     std::thread t([=](){
         EMError error;
-        if(!MandatoryCheck(roomId, error)) {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
-            return;
-        }
-        EMMucMemberList memberList;
-        for(int i=0; i<size; i++) {
-            memberList.push_back(memberArray[i]);
-        }
-        EMChatroomPtr chatRoomPtr = CLIENT->getChatroomManager().unblockChatroomMembers(roomId, memberList, error);
+        EMChatroomPtr chatRoomPtr = CLIENT->getChatroomManager().unblockChatroomMembers(roomIdStr, memberList, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             if(onSuccess) onSuccess();
         }else{
             if(onError) onError(error.mErrorCode, error.mDescription.c_str());
         }
     });
-    t.join();
+    t.detach();
 }
 
 AGORA_API void RoomManager_UnmuteChatroomMembers(void * client, const char * roomId, const char * memberArray[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    EMError error;
+    if(!MandatoryCheck(roomId, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    EMMucMemberList memberList;
+    for(int i=0; i<size; i++) {
+        memberList.push_back(memberArray[i]);
+    }
+    std::string roomIdStr = roomId;
+    
     std::thread t([=](){
         EMError error;
-        if(!MandatoryCheck(roomId, error)) {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
-            return;
-        }
-        EMMucMemberList memberList;
-        for(int i=0; i<size; i++) {
-            memberList.push_back(memberArray[i]);
-        }
-        EMChatroomPtr chatRoomPtr = CLIENT->getChatroomManager().unmuteChatroomMembers(roomId, memberList, error);
+        EMChatroomPtr chatRoomPtr = CLIENT->getChatroomManager().unmuteChatroomMembers(roomIdStr, memberList, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             if(onSuccess) onSuccess();
         }else{
             if(onError) onError(error.mErrorCode, error.mDescription.c_str());
         }
     });
-    t.join();
+    t.detach();
 }
 
 AGORA_API void RoomManager_UpdateChatroomAnnouncement(void *client, const char * roomId, const char * newAnnouncement, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    EMError error;
+    if(!MandatoryCheck(roomId, newAnnouncement, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    std::string roomIdStr = roomId;
+    std::string newAnnouncementStr = newAnnouncement;
+    
     std::thread t([=](){
         EMError error;
-        if(!MandatoryCheck(roomId, newAnnouncement, error)) {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
-            return;
-        }
-        EMChatroomPtr chatRoomPtr = CLIENT->getChatroomManager().updateChatroomAnnouncement(roomId, newAnnouncement, error);
+        EMChatroomPtr chatRoomPtr = CLIENT->getChatroomManager().updateChatroomAnnouncement(roomIdStr, newAnnouncementStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             if(onSuccess) onSuccess();
         }else{
             if(onError) onError(error.mErrorCode, error.mDescription.c_str());
         }
     });
-    t.join();
+    t.detach();
 }

@@ -72,26 +72,29 @@ AGORA_API void PushManager_GetUserConfigsFromServer(void *client, FUNC_OnSuccess
             if(onError) onError(error.mErrorCode, error.mDescription.c_str());
         }
     });
-    t.join();
+    t.detach();
 }
 
 AGORA_API void PushManager_IgnoreGroupPush(void *client, const char * groupId, bool noDisturb, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    EMError error;
+    if(!MandatoryCheck(groupId, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    std::string groupIdStr = groupId;
+    
     std::thread t([=](){
         EMError error;
-        if(!MandatoryCheck(groupId, error)) {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
-            return;
-        }
-        CLIENT->getPushManager().ignoreGroupPush(groupId, noDisturb, error);
+        CLIENT->getPushManager().ignoreGroupPush(groupIdStr, noDisturb, error);
         if(error.mErrorCode == EMError::EM_NO_ERROR) {
-            LOG("PushManager_IgnoreGroupPush execution succeeds: %s", groupId);
+            LOG("PushManager_IgnoreGroupPush execution succeeds: %s", groupIdStr.c_str());
             if(onSuccess) onSuccess();
         }else{
             if(onError) onError(error.mErrorCode, error.mDescription.c_str());
         }
     });
-    t.join();
+    t.detach();
 }
 
 AGORA_API void PushManager_UpdatePushNoDisturbing(void *client, bool noDisturb, int startTime, int endTime, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
@@ -115,7 +118,7 @@ AGORA_API void PushManager_UpdatePushNoDisturbing(void *client, bool noDisturb, 
             if(onError) onError(error.mErrorCode, error.mDescription.c_str());
         }
     });
-    t.join();
+    t.detach();
 }
 
 AGORA_API void PushManager_UpdatePushDisplayStyle(void *client, EMPushConfigs::EMPushDisplayStyle style, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
@@ -131,55 +134,64 @@ AGORA_API void PushManager_UpdatePushDisplayStyle(void *client, EMPushConfigs::E
             if(onError) onError(error.mErrorCode, error.mDescription.c_str());
         }
     });
-    t.join();
+    t.detach();
 }
 
 AGORA_API void PushManager_UpdateFCMPushToken(void *client, const char * token, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    EMError error;
+    if(!MandatoryCheck(token, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    std::string tokenStr = token;
+    
     std::thread t([=](){
         EMError error;
-        if(!MandatoryCheck(token, error)) {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
-            return;
-        }
-        CLIENT->getPushManager().bindUserDeviceToken(token, "FCM", error);
+        CLIENT->getPushManager().bindUserDeviceToken(tokenStr, "FCM", error);
         if(error.mErrorCode == EMError::EM_NO_ERROR) {
-            LOG("PushManager_UpdateFCMPushToken execution succeeds, token: %s for FCM", token);
+            LOG("PushManager_UpdateFCMPushToken execution succeeds, token: %s for FCM", tokenStr.c_str());
             if(onSuccess) onSuccess();
         }else{
             if(onError) onError(error.mErrorCode, error.mDescription.c_str());
         }
     });
-    t.join();
+    t.detach();
 }
 
 AGORA_API void PushManager_UpdateHMSPushToken(void *client, const char * token, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    EMError error;
+    if(!MandatoryCheck(token, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    std::string tokenStr = token;
+    
     std::thread t([=](){
         EMError error;
-        if(!MandatoryCheck(token, error)) {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
-            return;
-        }
-        CLIENT->getPushManager().bindUserDeviceToken(token, "HMS", error);
+        CLIENT->getPushManager().bindUserDeviceToken(tokenStr, "HMS", error);
         if(error.mErrorCode == EMError::EM_NO_ERROR) {
-            LOG("PushManager_UpdateHMSPushToken execution succeeds, token: %s for FCM", token);
+            LOG("PushManager_UpdateHMSPushToken execution succeeds, token: %s for FCM", tokenStr.c_str());
             if(onSuccess) onSuccess();
         }else{
             if(onError) onError(error.mErrorCode, error.mDescription.c_str());
         }
     });
-    t.join();
+    t.detach();
 }
 
 AGORA_API void PushManager_UpdatePushNickName(void *client, const char * nickname, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    EMError error;
+    if(!MandatoryCheck(nickname, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        return;
+    }
+    std::string nicknameStr = nickname;
+    
     std::thread t([=](){
         EMError error;
-        if(!MandatoryCheck(nickname, error)) {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
-            return;
-        }
         CLIENT->getPushManager().updatePushNickName(nickname, error);
         if(error.mErrorCode == EMError::EM_NO_ERROR) {
             LOG("PushManager_UpdatePushNickName execution succeeds, nickname: %s", nickname);
@@ -188,5 +200,5 @@ AGORA_API void PushManager_UpdatePushNickName(void *client, const char * nicknam
             if(onError) onError(error.mErrorCode, error.mDescription.c_str());
         }
     });
-    t.join();
+    t.detach();
 }
