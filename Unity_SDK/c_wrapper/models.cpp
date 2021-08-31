@@ -241,6 +241,43 @@ GroupOptions GroupOptions::FromMucSetting(EMMucSettingPtr setting) {
     return GroupOptions {.Ext=setting->extension().c_str(), .MaxCount=setting->maxUserCount(), .InviteNeedConfirm = setting->inviteNeedConfirm(), .Style=setting->style()};
 }
 
+GroupTO::~GroupTO()
+{
+    if (MemberCount > 0) {
+        for(int i=0; i<MemberCount; i++) {
+            delete (char *)MemberList[i];
+        }
+    }
+    delete MemberList;
+    MemberList = NULL;
+    
+    
+    if (AdminCount > 0) {
+        for(int i=0; i<AdminCount; i++) {
+            delete (char *)AdminList[i];
+        }
+    }
+    delete AdminList;
+    AdminList = NULL;
+    
+    if (BlockCount > 0) {
+        for(int i=0; i<BlockCount; i++) {
+            delete (char *)BlockList[i];
+        }
+    }
+    delete BlockList;
+    BlockList = NULL;
+    
+    if (MuteCount > 0) {
+        for(int i=0; i<MuteCount; i++) {
+            delete (char *)MuteList[i].Member;
+        }
+    }
+    delete MuteList;
+    MuteList = NULL;
+}
+
+std::string EMPTY_STR = " ";
 GroupTO * GroupTO::FromEMGroup(EMGroupPtr &group)
 {
     GroupTO *gto = new GroupTO();
@@ -250,50 +287,83 @@ GroupTO * GroupTO::FromEMGroup(EMGroupPtr &group)
     gto->Owner = group->groupOwner().c_str();
     gto->Announcement = group->groupAnnouncement().c_str();
     
+    // empty string may cause error of illegal sequence byte of
+    // PtrToStructure at c# side, here add " " to them.
+    if (strlen(gto->Description) == 0) gto->Description = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(gto->Announcement) == 0) gto->Announcement = const_cast<char*>(EMPTY_STR.c_str());
+    
     gto->MemberCount = (int)group->groupMembers().size();
     gto->AdminCount = (int)group->groupAdmins().size();
     gto->BlockCount = (int)group->groupBans().size();
     gto->MuteCount = (int)group->groupMutes().size();
     
     int i = 0;
-    gto->MemberList = new char *[gto->MemberCount];
-    for(std::string member : group->groupMembers()) {
-        gto->MemberList[i] = new char[member.size()+1];
-        std::strcpy(gto->MemberList[i], member.c_str());
-        i++;
+    // Branch:xxx <=0 is used to avoid illegal sequnence error from Marshal.PtrtoStructure
+    if (gto->MemberCount <= 0) {
+        gto->MemberList = new char *[1];
+        gto->MemberList[0] = const_cast<char*>(EMPTY_STR.c_str());
+    } else {
+        gto->MemberList = new char *[gto->MemberCount];
+        for(std::string member : group->groupMembers()) {
+            gto->MemberList[i] = new char[member.size()+1];
+            std::strncpy(gto->MemberList[i], member.c_str(), member.size()+1);
+            i++;
+        }
     }
-    i=0;
-    gto->AdminList = new char *[gto->AdminCount];
-    for(std::string admin : group->groupAdmins()) {
-        gto->AdminList[i] = new char[admin.size()+1];
-        std::strcpy(gto->AdminList[i], admin.c_str());
-        i++;
+
+    if (gto->AdminCount <= 0) {
+        gto->AdminList = new char *[1];
+        gto->AdminList[0] = const_cast<char*>(EMPTY_STR.c_str());
+        
+    } else {
+        i=0;
+        gto->AdminList = new char *[gto->AdminCount];
+        for(std::string admin : group->groupAdmins()) {
+            gto->AdminList[i] = new char[admin.size()+1];
+            std::strncpy(gto->AdminList[i], admin.c_str(), admin.size()+1);
+            i++;
+        }
     }
-    i=0;
-    gto->BlockList = new char *[gto->BlockCount];
-    for(std::string block : group->groupBans()) {
-        gto->BlockList[i] = new char[block.size()+1];
-        std::strcpy(gto->BlockList[i], block.c_str());
-        i++;
+
+    if (gto->BlockCount <= 0) {
+        gto->BlockList = new char *[1];
+        gto->BlockList[0] = const_cast<char*>(EMPTY_STR.c_str());
+    } else {
+        i=0;
+        gto->BlockList = new char *[gto->BlockCount];
+        for(std::string block : group->groupBans()) {
+            gto->BlockList[i] = new char[block.size()+1];
+            std::strncpy(gto->BlockList[i], block.c_str(), block.size()+1);
+            i++;
+        }
     }
-    i=0;
-    gto->MuteList = new Mute[gto->MuteCount];
-    for(auto mute : group->groupMutes()) {
-        char *memberStr = new char[mute.first.size()+1];
-        std::strcpy(memberStr, mute.first.c_str());
-        gto->MuteList[i] = Mute{.Member = memberStr, .Duration=mute.second};
-        i++;
+
+    if (gto->MuteCount <= 0) {
+        gto->MuteList = new Mute[1];
+        gto->MuteList[0] = Mute{.Member = EMPTY_STR.c_str(), .Duration=1000};
+    } else {
+        i=0;
+        gto->MuteList = new Mute[gto->MuteCount];
+        for(auto mute : group->groupMutes()) {
+            char *memberStr = new char[mute.first.size()+1];
+            std::strncpy(memberStr, mute.first.c_str(), mute.first.size()+1);
+            gto->MuteList[i] = Mute{.Member = memberStr, .Duration=mute.second};
+            i++;
+        }
     }
     
     if(group->groupSetting()) {
-        LOG("groupSetting exist, groupid:%s, ext:%s", gto->GroupId, group->groupSetting()->extension().c_str());
-    gto->Options = GroupOptions::FromMucSetting(group->groupSetting());
+        LOG("groupSetting exist, groupid:%s, ext:%s, ext len:%d", gto->GroupId,
+            group->groupSetting()->extension().c_str(), strlen(group->groupSetting()->extension().c_str()));
+        gto->Options = GroupOptions::FromMucSetting(group->groupSetting());
+        //FromMucSetting cannot set Ext address correctly(byte NOT alianed?), here set again!
+        gto->Options.Ext = group->groupSetting()->extension().c_str();
+        if(strlen(gto->Options.Ext) == 0) gto->Options.Ext = EMPTY_STR.c_str();
     } else {
         LOG("groupSetting is NOT exist, so not set group setting, groupid:%s", gto->GroupId);
     }
 
     gto->PermissionType = group->groupMemberType();
-    
     gto->NoticeEnabled = group->isPushEnabled();
     gto->MessageBlocked = group->isMessageBlocked();
     gto->IsAllMemberMuted = group->isMucAllMembersMuted();
@@ -303,20 +373,32 @@ GroupTO * GroupTO::FromEMGroup(EMGroupPtr &group)
 
 void GroupTO::LogInfo()
 {
+    LOG("---------------------------");
     LOG("GroupTO's info:");
-    LOG("GroupId: %p %p %s", &GroupId, GroupId, GroupId);
-    LOG("Name: %p %p %s", &Name, Name, Name);
-    LOG("Description: %p %p %s", &Description, Description, Description);
-    LOG("Owner: %p %p %s", &Owner, Owner, Owner);
-    LOG("Announcement: %p %p %s", &Announcement, Announcement, Announcement);
+    LOG("GroupId: %p %p %s, len:%d", &GroupId, GroupId, GroupId, strlen(GroupId));
+    LOG("Name: %p %p %s, len:%d", &Name, Name, Name, strlen(Name));
+    LOG("Description: %p %p %s, len:%d", &Description, Description, Description, strlen(Description));
+    LOG("Owner: %p %p %s, len:%d", &Owner, Owner, Owner, strlen(Owner));
+    LOG("Announcement: %p %p %s, len:%d", &Announcement, Announcement, Announcement, strlen(Announcement));
     
     LOG("MemberList address: %p %p", &MemberList, MemberList);
+    for(int i=0; i<MemberCount; i++) {
+        LOG("member %d: %s, len:%d", i, MemberList[i], strlen(MemberList[i]));
+    }
     LOG("AdminList address: %p %p", &AdminList, AdminList);
+    for(int i=0; i<AdminCount; i++) {
+        LOG("admin %1: %s, len:%d", i, AdminList[i], strlen(AdminList[i]));
+    }
     LOG("BlockList address: %p %p", &BlockList, BlockList);
+    for(int i=0; i<BlockCount; i++) {
+        LOG("blocker %1: %s, len:%d", i, BlockList[i], strlen(BlockList[i]));
+    }
     LOG("MuteList address: %p %p", &MuteList, MuteList);
-
+    for(int i=0; i<MuteCount; i++) {
+        LOG("mute %1: %s, len:%d", i, MuteList[i].Member, strlen(MuteList[i].Member));
+    }
     
-    LOG("Options: %p", &Options);
+    LOG("Options: %p, ext:%s, ext len: %d", &Options, Options.Ext, strlen(Options.Ext));
     
     LOG("MemberCount: %p %d", &MemberCount, MemberCount);
     LOG("AdminCount: %p %d", &AdminCount, AdminCount);
@@ -328,6 +410,7 @@ void GroupTO::LogInfo()
     LOG("NoticeEnabled: %p %d", &NoticeEnabled, NoticeEnabled);
     LOG("MessageBlocked: %p %d", &MessageBlocked, MessageBlocked);
     LOG("IsAllMemberMuted: %p %d", &IsAllMemberMuted, IsAllMemberMuted);
+    LOG("---------------------------");
 }
 
 RoomTO * RoomTO::FromEMChatRoom(EMChatroomPtr &room)
@@ -419,4 +502,40 @@ GroupReadAckTO * GroupReadAckTO::FromGroupReadAck(EMGroupReadAckPtr&  groupReadA
     groupReadAckTO->count = groupReadAckPtr->count;
     groupReadAckTO->timestamp = (long)groupReadAckPtr->timestamp;
     return groupReadAckTO;
+}
+
+ConversationTO * ConversationTO::FromEMConversation(EMConversationPtr&  conversationPtr)
+{
+    ConversationTO* conversationTO = new ConversationTO();
+    conversationTO->ConverationId = conversationPtr->conversationId().c_str();
+    conversationTO->type = conversationPtr->conversationType();
+    conversationTO->ExtField = conversationPtr->extField().c_str();
+    return conversationTO;
+}
+
+GroupSharedFileTO * GroupSharedFileTO::FromEMGroupSharedFile(EMMucSharedFilePtr &sharedFile)
+{
+    GroupSharedFileTO* gsTO = new GroupSharedFileTO();
+    gsTO->FileName = sharedFile->fileName().c_str();
+    gsTO->FileId = sharedFile->fileId().c_str();
+    gsTO->FileOwner = sharedFile->fileOwner().c_str();
+    gsTO->CreateTime = sharedFile->create();
+    gsTO->FileSize = sharedFile->fileSize();
+    return gsTO;
+}
+
+PushConfigTO * PushConfigTO::FromEMPushConfig(EMPushConfigsPtr&  pushConfigPtr)
+{
+    PushConfigTO* pushConfigTO = new PushConfigTO();
+    
+    if(pushConfigPtr->getDisplayStatus() == easemob::EMPushConfigs::EMPushNoDisturbStatus::Close)
+        pushConfigTO->NoDisturb = true;
+    else
+        pushConfigTO->NoDisturb = false;
+
+    pushConfigTO->NoDisturbStartHour = pushConfigPtr->getNoDisturbingStartHour();
+    pushConfigTO->NoDisturbEndHour = pushConfigPtr->getNoDisturbingEndHour();
+    pushConfigTO->Style = pushConfigPtr->getDisplayStyle();
+    LOG("Push config, starthour:%d, endhour:%d, style:%d", pushConfigTO->NoDisturbStartHour, pushConfigTO->NoDisturbEndHour, pushConfigTO->Style);
+    return pushConfigTO;
 }

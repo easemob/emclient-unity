@@ -243,6 +243,12 @@ struct CursorResultTO
     void * Data[ARRAY_SIZE_LIMITATION]; //list of data
 };
 
+struct CursorResultTOV2
+{
+    const char * NextPageCursor;
+    DataType Type;
+};
+
 struct GroupOptions
 {
     EMMucSetting::EMMucStyle Style;
@@ -264,6 +270,8 @@ struct GroupSharedFileTO
     const char * FileOwner;
     long CreateTime;
     long FileSize;
+    
+    static GroupSharedFileTO * FromEMGroupSharedFile(EMMucSharedFilePtr &sharedFile);
 };
 
 struct Mute
@@ -292,6 +300,8 @@ struct GroupTO
     bool NoticeEnabled;
     bool MessageBlocked;
     bool IsAllMemberMuted;
+    
+    ~GroupTO();
     
     static GroupTO * FromEMGroup(EMGroupPtr &group);
     
@@ -345,6 +355,8 @@ struct ConversationTO
     const char * ConverationId;
     EMConversation::EMConversationType type;
     const char * ExtField;
+    
+    static ConversationTO * FromEMConversation(EMConversationPtr&  conversationPtr);
 };
 
 struct PushConfigTO
@@ -353,6 +365,8 @@ struct PushConfigTO
     int NoDisturbStartHour;
     int NoDisturbEndHour;
     easemob::EMPushConfigs::EMPushDisplayStyle Style;
+    
+    static PushConfigTO * FromEMPushConfig(EMPushConfigsPtr&  pushConfigPtr);
 };
 
 struct TOArray
@@ -367,6 +381,15 @@ struct TOArrayDiff
     int Size;
     void * Data[ARRAY_SIZE_LIMITATION];
     int Type[ARRAY_SIZE_LIMITATION];
+};
+
+struct TOItem
+{
+    int Type;
+    void * Data;
+    
+    TOItem(){}
+    TOItem(int type, void* data): Type(type), Data(data){}
 };
 
 #endif //_MODELS_H_
