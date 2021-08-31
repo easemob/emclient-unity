@@ -17,6 +17,7 @@ using namespace easemob;
     //Callback
     typedef void(__stdcall *FUNC_OnSuccess)();
     typedef void(__stdcall *FUNC_OnSuccess_With_Result)(void * data[], DataType type, int size);
+    typedef void(__stdcall *FUNC_OnSuccess_With_Result_V2)(void * header, void * data[], DataType type, int size);
     typedef void(__stdcall *FUNC_OnError)(int, const char *);
     typedef void(__stdcall *FUNC_OnProgress)(int);
 
@@ -65,6 +66,7 @@ using namespace easemob;
     //Callback
     typedef void(*FUNC_OnSuccess)();
     typedef void(*FUNC_OnSuccess_With_Result)(void * data[], DataType type, int size);
+    typedef void(*FUNC_OnSuccess_With_Result_V2)(void * header, void * data[], DataType type, int size);
     typedef void(*FUNC_OnError)(int, const char *);
     typedef void(*FUNC_OnProgress)(int);
 
@@ -561,7 +563,7 @@ public:
                 strncpy(ptr, mutes[i].c_str(), mutes[i].size()+1);
                 data[i] = ptr;
             }
-            onMuteListAdded(chatroom->chatroomId().c_str(), data, size, (int)muteExpire);
+            onMuteListAdded(chatroom->chatroomId().c_str(), data, (int)size, (int)muteExpire);
         }
     }
 
@@ -574,7 +576,7 @@ public:
                 strncpy(ptr, mutes[i].c_str(), mutes[i].size()+1);
                 data[i] = ptr;
             }
-            onMuteListRemoved(chatroom->chatroomId().c_str(), data, size);
+            onMuteListRemoved(chatroom->chatroomId().c_str(), data, (int)size);
         }
     }
 

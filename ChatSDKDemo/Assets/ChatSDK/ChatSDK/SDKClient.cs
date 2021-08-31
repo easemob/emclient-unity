@@ -150,7 +150,7 @@ namespace ChatSDK
                     _Sdk.GroupManager().ClearDelegates();
                     _Sdk.RoomManager().ClearDelegates();
                     CallbackManager.Instance().CleanAllCallback();
-                    handle.Success?.Invoke();
+                    //handle.Success?.Invoke();
                 },
                 onError:(code, desc) => {
                     handle?.Error?.Invoke(code, desc);

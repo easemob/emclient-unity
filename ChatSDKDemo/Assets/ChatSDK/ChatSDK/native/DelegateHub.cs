@@ -133,7 +133,7 @@ namespace ChatSDK
 
             OnMessagesReceived = (IntPtr[] _messages, MessageBodyType[] types, int size) =>
             {
-                List<Message> messages = GetMessageListFromIntPtrArray(_messages, types, size);
+                List<Message> messages = MessageTO.GetMessageListFromIntPtrArray(_messages, types, size);
                 
                 //chain-call to customer specified listeners
                 Debug.Log($"Invoke customer listeners in OnMessagesReceived upon messages receiving...");
@@ -147,7 +147,7 @@ namespace ChatSDK
 
             OnCmdMessagesReceived = (IntPtr[] _messages, MessageBodyType[] types, int size) =>
             {
-                List<Message> messages = GetMessageListFromIntPtrArray(_messages, types, size);
+                List<Message> messages = MessageTO.GetMessageListFromIntPtrArray(_messages, types, size);
 
                 //chain-call to customer specified listeners
                 Debug.Log($"Invoke customer listeners in OnCmdMessagesReceived upon messages receiving...");
@@ -161,7 +161,7 @@ namespace ChatSDK
 
             OnMessagesRead = (IntPtr[] _messages, MessageBodyType[] types, int size) =>
             {
-                List<Message> messages = GetMessageListFromIntPtrArray(_messages, types, size);
+                List<Message> messages = MessageTO.GetMessageListFromIntPtrArray(_messages, types, size);
 
                 //chain-call to customer specified listeners
                 Debug.Log($"Invoke customer listeners in OnMessagesRead upon messages receiving...");
@@ -175,7 +175,7 @@ namespace ChatSDK
 
             OnMessagesDelivered = (IntPtr[] _messages, MessageBodyType[] types, int size) =>
             {
-                List<Message> messages = GetMessageListFromIntPtrArray(_messages, types, size);
+                List<Message> messages = MessageTO.GetMessageListFromIntPtrArray(_messages, types, size);
 
                 //chain-call to customer specified listeners
                 Debug.Log($"Invoke customer listeners in OnMessagesDelivered upon messages receiving...");
@@ -189,7 +189,7 @@ namespace ChatSDK
 
             OnMessagesRecalled = (IntPtr[] _messages, MessageBodyType[] types, int size) =>
             {
-                List<Message> messages = GetMessageListFromIntPtrArray(_messages, types, size);
+                List<Message> messages = MessageTO.GetMessageListFromIntPtrArray(_messages, types, size);
 
                 //chain-call to customer specified listeners
                 Debug.Log($"Invoke customer listeners in OnMessagesRecalled upon messages receiving...");
@@ -256,47 +256,6 @@ namespace ChatSDK
                 });
             };
 
-        }
-
-        public List<Message>  GetMessageListFromIntPtrArray(IntPtr[] _messages, MessageBodyType[] types, int size)
-        {
-            var messages = new List<Message>(size);
-            for (int i = 0; i < size; i++)
-            {
-                MessageTO mto = null;
-                switch (types[i])
-                {
-                    case MessageBodyType.TXT:
-                        //keep using mto
-                        mto = new TextMessageTO();
-                        Marshal.PtrToStructure(_messages[i], mto);
-                        break;
-                    case MessageBodyType.LOCATION:
-                        mto = new LocationMessageTO();
-                        Marshal.PtrToStructure(_messages[i], mto);
-                        break;
-                    case MessageBodyType.CMD:
-                        mto = new CmdMessageTO();
-                        Marshal.PtrToStructure(_messages[i], mto);
-                        break;
-                    case MessageBodyType.FILE:
-                        mto = new FileMessageTO();
-                        Marshal.PtrToStructure(_messages[i], mto);
-                        break;
-                    case MessageBodyType.IMAGE:
-                        mto = new ImageMessageTO();
-                        Marshal.PtrToStructure(_messages[i], mto);
-                        break;
-                    case MessageBodyType.VOICE:
-                        mto = new VoiceMessageTO();
-                        Marshal.PtrToStructure(_messages[i], mto);
-                        break;
-                }
-                Debug.Log($"Message {mto.MsgId} received from {mto.From}");
-                messages.Add(mto.Unmarshall());
-                //_messages[i] memory released at unmanaged side!                
-            }
-            return messages;
         }
     }
 

@@ -351,6 +351,50 @@ namespace ChatSDK
             return mto;
         }
 
+        public static MessageTO FromIntPtr(IntPtr intPtr, MessageBodyType type)
+        {
+            if (IntPtr.Zero == intPtr)
+                return null;
+
+            MessageTO mto = null;
+
+            switch (type)
+            {
+                case MessageBodyType.TXT:
+                    mto = Marshal.PtrToStructure<TextMessageTO>(intPtr);
+                    break;
+                case MessageBodyType.LOCATION:
+                    mto = Marshal.PtrToStructure<LocationMessageTO>(intPtr);
+                    break;
+                case MessageBodyType.CMD:
+                    mto = Marshal.PtrToStructure<CmdMessageTO>(intPtr);
+                    break;
+                case MessageBodyType.FILE:
+                    mto = Marshal.PtrToStructure<FileMessageTO>(intPtr);
+                    break;
+                case MessageBodyType.IMAGE:
+                    mto = Marshal.PtrToStructure<ImageMessageTO>(intPtr);
+                    break;
+                case MessageBodyType.VOICE:
+                    mto = Marshal.PtrToStructure<VoiceMessageTO>(intPtr);
+                    break;
+            }
+            return mto;
+        }
+
+        public static List<Message> GetMessageListFromIntPtrArray(IntPtr[] _messages, MessageBodyType[] types, int size)
+        {
+            var messages = new List<Message>(size);
+            for (int i = 0; i < size; i++)
+            {
+                MessageTO mto = null;
+                mto = FromIntPtr(_messages[i], types[i]);
+                if (null != mto) messages.Add(mto.Unmarshall());
+                //_messages[i] memory released at unmanaged side!                
+            }
+            return messages;
+        }
+
         public abstract IMessageBody UnmarshallBody();
 
         internal Message Unmarshall()
@@ -745,11 +789,11 @@ namespace ChatSDK
                 current = (IntPtr)((long)current + Marshal.SizeOf(current));
             }
             var blockList = new List<string>();
-            current = AdminList;
+            current = BlockList;
             for(int i= 0; i < BlockCount; i++)
             {
                 IntPtr blockPtr = Marshal.PtrToStructure<IntPtr>(current);
-                string b = Marshal.PtrToStructure<string>(blockPtr);
+                string b = Marshal.PtrToStringAnsi(blockPtr);
                 blockList.Add(b);
                 current = (IntPtr)((long)current + Marshal.SizeOf(current));
             }
@@ -904,6 +948,20 @@ namespace ChatSDK
         {
 
         }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct CursorResultTOV2
+    {
+        public string NextPageCursor;
+        public DataType Type;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public class TOItem
+    {
+        public int Type;
+        public IntPtr Data;
     }
 
     [StructLayout(LayoutKind.Sequential)]

@@ -20,6 +20,11 @@ namespace ChatSDK
 
         public override bool AppendMessage(string conversationId, ConversationType converationType, Message message)
         {
+            if (null == conversationId)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return false;
+            }
             MessageTO mto = MessageTO.FromMessage(message);
             IntPtr mtoPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(mto));
             Marshal.StructureToPtr(mto, mtoPtr, false);
@@ -30,50 +35,62 @@ namespace ChatSDK
 
         public override bool DeleteAllMessages(string conversationId, ConversationType conversationType)
         {
+            if (null == conversationId)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return false;
+            }
             return ChatAPINative.ConversationManager_ClearAllMessages(client, conversationId, conversationType);
         }
 
         public override bool DeleteMessage(string conversationId, ConversationType conversationType, string messageId)
         {
+            if (null == conversationId)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return false;
+            }
             return ChatAPINative.ConversationManager_RemoveMessage(client, conversationId, conversationType, messageId);
         }
 
         public override Dictionary<string, string> GetExt(string conversationId, ConversationType conversationType)
         {
-            //make a array of IntPtr(point to TOArray)
-            TOArray toArray = new TOArray();
-            IntPtr intPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(toArray));
-            Marshal.StructureToPtr(toArray, intPtr, false);
-            var array = new IntPtr[1];
-            array[0] = intPtr;
-
-            ChatAPINative.ConversationManager_ExtField(client, conversationId, conversationType, array, 1);
-
-            //get data from IntPtr
-            var returnTO = Marshal.PtrToStructure<TOArray>(array[0]);
-            if(returnTO.Size > 0 && returnTO.Type == DataType.ListOfString)
+            if (null == conversationId)
             {
-                if(returnTO.Size > 0)
-                {
-                //only one string return
-                string ext = Marshal.PtrToStringAnsi(returnTO.Data[0]);
-                if (ext.Length > 0)
-                {
-                    Marshal.FreeCoTaskMem(intPtr);
-                    return TransformTool.JsonStringToDictionary(ext);
-                }
-                }
+                Debug.LogError("Mandatory parameter is null!");
+                return new Dictionary<string, string>(); // return empty dict
             }
+            string ext = null;
+            ChatAPINative.ConversationManager_ExtField(client, conversationId, conversationType,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) =>
+                {
+                    if (DataType.String == dType)
+                    {
+                        if (1 == dSize)
+                            ext = Marshal.PtrToStringAnsi(data[0]);
+                        else
+                            Debug.Log($"Empty ext for conversation id={conversationId}");
+                    }
+                    else
+                    {
+                        Debug.LogError($"String type expected, but return type is {dType}.");
+                    }
+                }
+                );
 
-            // return empty dictionary
-            //Dictionary<string, string> ret = new Dictionary<string, string>();
-            Marshal.FreeCoTaskMem(intPtr);
-            ChatAPINative.ConversationManager_ReleaseStringList(array, 1);
-            return null;
+            if (null != ext && ext.Length > 0)
+                return TransformTool.JsonStringToDictionary(ext);
+            else
+                return new Dictionary<string, string>(); // return empty dict
         }
 
         public override bool InsertMessage(string conversationId, ConversationType conversationType, Message message)
         {
+            if (null == conversationId)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return false;
+            }
             MessageTO mto = MessageTO.FromMessage(message);
             IntPtr mtoPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(mto));
             Marshal.StructureToPtr(mto, mtoPtr, false);
@@ -84,385 +101,289 @@ namespace ChatSDK
 
         public override Message LastMessage(string conversationId, ConversationType conversationType)
         {
-            //make a array of IntPtr(point to TOArray)
-            TOArrayDiff toArrayDiff = new TOArrayDiff();
-            IntPtr intPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(toArrayDiff));
-            Marshal.StructureToPtr(toArrayDiff, intPtr, false);
-            var array = new IntPtr[1];
-            array[0] = intPtr;
-
-            ChatAPINative.ConversationManager_LatestMessage(client, conversationId, conversationType, array, 1);
-
-            //get data from IntPtr
-            var returnTOArray = Marshal.PtrToStructure<TOArrayDiff>(array[0]);
-
-            //cannot get any message
-            if(returnTOArray.Size == 0)
+            if (null == conversationId)
             {
-                Debug.Log($"Cannot find any last message for conversation id {conversationId}");
-                Marshal.FreeCoTaskMem(intPtr);
+                Debug.LogError("Mandatory parameter is null!");
                 return null;
             }
-
-            MessageTO mto = null;
-            MessageBodyType type = (MessageBodyType)returnTOArray.Type[0];
-
-            Debug.Log($"Found the last message for conversation id {conversationId}, msgtype: {type}");
-
-            switch (type)
-            {
-                //to-do: need to add other types?
-                case MessageBodyType.TXT:
-                    mto = new TextMessageTO();
-                    Marshal.PtrToStructure(returnTOArray.Data[0], mto);
-                    break;
-                case MessageBodyType.LOCATION:
-                    mto = new LocationMessageTO();
-                    Marshal.PtrToStructure(returnTOArray.Data[0], mto);
-                    break;
-                case MessageBodyType.CMD:
-                    mto = new CmdMessageTO();
-                    Marshal.PtrToStructure(returnTOArray.Data[0], mto);
-                    break;
-            }
-            Message msg = mto.Unmarshall();
-            Marshal.FreeCoTaskMem(intPtr);
-            ChatAPINative.ConversationManager_ReleaseMessageList(array, 1);
+            Message msg = null;
+            ChatAPINative.ConversationManager_LatestMessage(client, conversationId, conversationType,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) =>
+                {
+                    if (DataType.ListOfMessage == dType)
+                    {
+                        if (1 == dSize)
+                        {
+                            TOItem item = Marshal.PtrToStructure<TOItem>(data[0]);
+                            var msgTO = MessageTO.FromIntPtr(item.Data, (MessageBodyType)item.Type);
+                            msg = msgTO.Unmarshall();
+                        }
+                        else if (-1 == dSize)
+                            Debug.LogError("Mandatory parameter is null!");
+                        else
+                            Debug.Log($"Cannot find the last message with conversationid={conversationId}");
+                    }
+                    else
+                        Debug.LogError($"ListOfMessage type expected, but return type is {dType}.");
+                }
+                );
             return msg;
         }
 
         public override Message LastReceivedMessage(string conversationId, ConversationType conversationType)
         {
-            //make a array of IntPtr(point to TOArray)
-            TOArrayDiff toArrayDiff = new TOArrayDiff();
-            IntPtr intPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(toArrayDiff));
-            Marshal.StructureToPtr(toArrayDiff, intPtr, false);
-            var array = new IntPtr[1];
-            array[0] = intPtr;
-
-            ChatAPINative.ConversationManager_LatestMessageFromOthers(client, conversationId, conversationType, array, 1);
-
-            //get data from IntPtr
-            var returnTOArray = Marshal.PtrToStructure<TOArrayDiff>(array[0]);
-
-            //cannot get any message
-            if (returnTOArray.Size == 0)
+            if (null == conversationId)
             {
-                Debug.Log($"Cannot find any last received message for conversation id {conversationId}");
-                Marshal.FreeCoTaskMem(intPtr);
+                Debug.LogError("Mandatory parameter is null!");
                 return null;
             }
-
-            MessageTO mto = null;
-            MessageBodyType type = (MessageBodyType)returnTOArray.Type[0];
-
-            switch (type)
-            {
-                //to-do: need to add other types?
-                case MessageBodyType.TXT:
-                    mto = new TextMessageTO();
-                    Marshal.PtrToStructure(returnTOArray.Data[0], mto);
-                    break;
-                case MessageBodyType.LOCATION:
-                    mto = new LocationMessageTO();
-                    Marshal.PtrToStructure(returnTOArray.Data[0], mto);
-                    break;
-                case MessageBodyType.CMD:
-                    mto = new CmdMessageTO();
-                    Marshal.PtrToStructure(returnTOArray.Data[0], mto);
-                    break;
-            }
-            Message msg = mto.Unmarshall();
-            Marshal.FreeCoTaskMem(intPtr);
-            ChatAPINative.ConversationManager_ReleaseMessageList(array, 1);
+            Message msg = null;
+            ChatAPINative.ConversationManager_LatestMessageFromOthers(client, conversationId, conversationType,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) =>
+                {
+                    if (DataType.ListOfMessage == dType)
+                    {
+                        if (1 == dSize)
+                        {
+                            TOItem item = Marshal.PtrToStructure<TOItem>(data[0]);
+                            var msgTO = MessageTO.FromIntPtr(item.Data, (MessageBodyType)item.Type);
+                            msg = msgTO.Unmarshall();
+                        }
+                        else if (-1 == dSize)
+                            Debug.LogError("Mandatory parameter is null!");
+                        else
+                            Debug.Log($"Cannot find the last message with conversationid={conversationId}");
+                    }
+                    else
+                        Debug.LogError($"ListOfMessage type expected, but return type is {dType}.");
+                }
+                );
             return msg;
         }
 
         public override Message LoadMessage(string conversationId, ConversationType conversationType, string messageId)
         {
-            //make a array of IntPtr(point to TOArray)
-            TOArrayDiff toArrayDiff = new TOArrayDiff();
-            IntPtr intPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(toArrayDiff));
-            Marshal.StructureToPtr(toArrayDiff, intPtr, false);
-            var array = new IntPtr[1];
-            array[0] = intPtr;
-
-            ChatAPINative.ConversationManager_LoadMessage(client, conversationId, conversationType, messageId, array, 1);
-
-            //get data from IntPtr
-            var returnTOArray = Marshal.PtrToStructure<TOArrayDiff>(array[0]);
-            //cannot get any message
-            if (returnTOArray.Size == 0)
+            if (null == conversationId)
             {
-                Debug.Log($"Cannot find any last message for conversation id {conversationId}");
-                Marshal.FreeCoTaskMem(intPtr);
+                Debug.LogError("Mandatory parameter is null!");
                 return null;
             }
-
-            MessageTO mto = null;
-            MessageBodyType type = (MessageBodyType)returnTOArray.Type[0];
-
-            switch (type)
-            {
-                //to-do: need to add other types?
-                case MessageBodyType.TXT:
-                    mto = new TextMessageTO();
-                    Marshal.PtrToStructure(returnTOArray.Data[0], mto);
-                    break;
-                case MessageBodyType.LOCATION:
-                    mto = new LocationMessageTO();
-                    Marshal.PtrToStructure(returnTOArray.Data[0], mto);
-                    break;
-                case MessageBodyType.CMD:
-                    mto = new CmdMessageTO();
-                    Marshal.PtrToStructure(returnTOArray.Data[0], mto);
-                    break;
-            }
-            Message msg = mto.Unmarshall();
-            Marshal.FreeCoTaskMem(intPtr);
-            ChatAPINative.ConversationManager_ReleaseMessageList(array, 1);
+            Message msg = null;
+            ChatAPINative.ConversationManager_LoadMessage(client, conversationId, conversationType, messageId,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) =>
+                {
+                    if (DataType.ListOfMessage == dType)
+                    {
+                        if (1 == dSize)
+                        {
+                            TOItem item = Marshal.PtrToStructure<TOItem>(data[0]);
+                            var msgTO = MessageTO.FromIntPtr(item.Data, (MessageBodyType)item.Type);
+                            msg = msgTO.Unmarshall();
+                        }
+                        else if (-1 == dSize)
+                            Debug.LogError("Mandatory parameter is null!");
+                        else
+                            Debug.Log($"Failed to load the message in conversation={conversationId}");
+                    }
+                    else
+                        Debug.LogError($"ListOfMessage type expected, but return type is {dType}.");
+                }
+                );
             return msg;
         }
 
         public override void LoadMessages(string conversationId, ConversationType conversationType, string startMessageId = "", int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callback = null)
         {
+            if (null == conversationId)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
             ChatAPINative.ConversationManager_LoadMessages(client, conversationId, conversationType, startMessageId, count, direction,
 
-                 (IntPtr[] toResult, DataType dType, int size) => {
-                    if (dType == DataType.ListOfString && size == 1)
+                 (IntPtr[] data, DataType dType, int size) => {
+                    if (dType == DataType.ListOfMessage)
                     {
-                        var toArrayDiff = Marshal.PtrToStructure<TOArrayDiff>(toResult[0]);
-
-                        int msgSize = toArrayDiff.Size;
-                        Debug.Log($"LoadMessages callback with dType={dType}, size={msgSize}.");
-
-                        if(msgSize <= 0)
+                        var list = new List<Message>();
+                        if (size > 0)
                         {
-                             var emptyList = new List<Message>();
-                             callback?.OnSuccessValue(emptyList);
-                             return;
-                         }
-
-                        MessageTO[] messages = new MessageTO[msgSize];
-                        MessageTO mto = null;
-                        for (int i = 0; i < msgSize; i++)
-                        {
-                            switch ((MessageBodyType)toArrayDiff.Type[i])
+                            for (int i = 0; i < size; i++)
                             {
-                                //to-do: need to other types?
-                                case MessageBodyType.TXT:
-                                    mto = new TextMessageTO();
-                                    Marshal.PtrToStructure(toArrayDiff.Data[i], mto);
-                                    messages[i] = mto;
-                                    break;
-                                case MessageBodyType.LOCATION:
-                                    mto = new LocationMessageTO();
-                                    Marshal.PtrToStructure(toArrayDiff.Data[i], mto);
-                                    messages[i] = mto;
-                                    break;
-                                case MessageBodyType.CMD:
-                                    mto = new CmdMessageTO();
-                                    Marshal.PtrToStructure(toArrayDiff.Data[i], mto);
-                                    messages[i] = mto;
-                                    break;
+                                 TOItem item = Marshal.PtrToStructure<TOItem>(data[i]);
+                                 MessageTO mto = MessageTO.FromIntPtr(item.Data, (MessageBodyType)item.Type);
+                                 list.Add(mto.Unmarshall());
                             }
                         }
-                        var result = MessageTO.ConvertToMessageList(messages, msgSize);
-                        callback?.OnSuccessValue(result);
-                    }
+                        else
+                        {
+                             Debug.Log($"Cannot load any message for coversationid={conversationId}");
+                        }
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { callback?.OnSuccessValue(list); });
+                     }
                     else
                     {
                         Debug.LogError("Incorrect parameters returned.");
                     }
                 },
-                (int code, string desc) => callback?.Error(code, desc));
+                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { callback?.Error(code, desc); }); });
         }
 
         public override void LoadMessagesWithKeyword(string conversationId, ConversationType conversationType, string keywords = "", string sender = "", long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callback = null)
         {
+            if (null == conversationId)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
             ChatAPINative.ConversationManager_LoadMessagesWithKeyword(client, conversationId, conversationType, keywords, sender, timestamp, count, direction,
 
-                 (IntPtr[] toResult, DataType dType, int size) => {
-                     if (dType == DataType.ListOfString && size == 1)
+                 (IntPtr[] data, DataType dType, int size) => {
+                     if (dType == DataType.ListOfMessage)
                      {
-                         var toArrayDiff = Marshal.PtrToStructure<TOArrayDiff>(toResult[0]);
-
-                         int msgSize = toArrayDiff.Size;
-                         Debug.Log($"LoadMessagesWithKeyword callback with dType={dType}, size={msgSize}.");
-
-                         if (msgSize <= 0)
+                         var list = new List<Message>();
+                         if (size > 0)
                          {
-                             var emptyList = new List<Message>();
-                             callback?.OnSuccessValue(emptyList);
-                             return;
-                         }
-
-                         MessageTO[] messages = new MessageTO[msgSize];
-                         MessageTO mto = null;
-                         for (int i = 0; i < msgSize; i++)
-                         {
-                             switch ((MessageBodyType)toArrayDiff.Type[i])
+                             for (int i = 0; i < size; i++)
                              {
-                                 //to-do: need to other types?
-                                 case MessageBodyType.TXT:
-                                     mto = new TextMessageTO();
-                                     Marshal.PtrToStructure(toArrayDiff.Data[i], mto);
-                                     messages[i] = mto;
-                                     break;
-                                 case MessageBodyType.LOCATION:
-                                     mto = new LocationMessageTO();
-                                     Marshal.PtrToStructure(toArrayDiff.Data[i], mto);
-                                     messages[i] = mto;
-                                     break;
-                                 case MessageBodyType.CMD:
-                                     mto = new CmdMessageTO();
-                                     Marshal.PtrToStructure(toArrayDiff.Data[i], mto);
-                                     messages[i] = mto;
-                                     break;
+                                 TOItem item = Marshal.PtrToStructure<TOItem>(data[i]);
+                                 MessageTO mto = MessageTO.FromIntPtr(item.Data, (MessageBodyType)item.Type);
+                                 list.Add(mto.Unmarshall());
                              }
                          }
-                         var result = MessageTO.ConvertToMessageList(messages, msgSize);
-                         callback?.OnSuccessValue(result);
+                         else
+                         {
+                             Debug.Log($"Cannot load any message for coversationid={conversationId}");
+                         }
+                         ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { callback?.OnSuccessValue(list); });
                      }
                      else
                      {
                          Debug.LogError("Incorrect parameters returned.");
                      }
                  },
-                (int code, string desc) => callback?.Error(code, desc));
+                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { callback?.Error(code, desc); }); });
         }
 
         public override void LoadMessagesWithMsgType(string conversationId, ConversationType conversationType, MessageBodyType bodyType, string sender, long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callback = null)
         {
+            if (null == conversationId)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
             ChatAPINative.ConversationManager_LoadMessagesWithMsgType(client, conversationId, conversationType, bodyType, timestamp, count, sender, direction,
 
-                 (IntPtr[] toResult, DataType dType, int size) => {
-                     if (dType == DataType.ListOfString && size == 1)
+                 (IntPtr[] data, DataType dType, int size) => {
+                     if (dType == DataType.ListOfMessage)
                      {
-                         var toArrayDiff = Marshal.PtrToStructure<TOArrayDiff>(toResult[0]);
-
-                         int msgSize = toArrayDiff.Size;
-                         Debug.Log($"LoadMessagesWithKeyword callback with dType={dType}, size={msgSize}.");
-
-                         if (msgSize <= 0)
+                         var list = new List<Message>();
+                         if (size > 0)
                          {
-                             var emptyList = new List<Message>();
-                             callback?.OnSuccessValue(emptyList);
-                             return;
-                         }
-
-                         MessageTO[] messages = new MessageTO[msgSize];
-                         MessageTO mto = null;
-                         for (int i = 0; i < msgSize; i++)
-                         {
-                             switch ((MessageBodyType)toArrayDiff.Type[i])
+                             for (int i = 0; i < size; i++)
                              {
-                                 //to-do: need to other types?
-                                 case MessageBodyType.TXT:
-                                     mto = new TextMessageTO();
-                                     Marshal.PtrToStructure(toArrayDiff.Data[i], mto);
-                                     messages[i] = mto;
-                                     break;
-                                 case MessageBodyType.LOCATION:
-                                     mto = new LocationMessageTO();
-                                     Marshal.PtrToStructure(toArrayDiff.Data[i], mto);
-                                     messages[i] = mto;
-                                     break;
-                                 case MessageBodyType.CMD:
-                                     mto = new CmdMessageTO();
-                                     Marshal.PtrToStructure(toArrayDiff.Data[i], mto);
-                                     messages[i] = mto;
-                                     break;
+                                 TOItem item = Marshal.PtrToStructure<TOItem>(data[i]);
+                                 MessageTO mto = MessageTO.FromIntPtr(item.Data, (MessageBodyType)item.Type);
+                                 list.Add(mto.Unmarshall());
                              }
                          }
-                         var result = MessageTO.ConvertToMessageList(messages, msgSize);
-                         callback?.OnSuccessValue(result);
+                         else
+                         {
+                             Debug.Log($"Cannot load any message for coversationid={conversationId}");
+                         }
+                         ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { callback?.OnSuccessValue(list); });
                      }
                      else
                      {
                          Debug.LogError("Incorrect parameters returned.");
                      }
                  },
-                (int code, string desc) => callback?.Error(code, desc));
+                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { callback?.Error(code, desc); }); });
         }
 
         public override void LoadMessagesWithTime(string conversationId, ConversationType conversationType, long startTime, long endTime, int count = 20, ValueCallBack<List<Message>> callback = null)
         {
+            if (null == conversationId)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
             ChatAPINative.ConversationManager_LoadMessagesWithTime(client, conversationId, conversationType, startTime, endTime, count,
 
-                 (IntPtr[] toResult, DataType dType, int size) => {
-                     if (dType == DataType.ListOfString && size == 1)
+                 (IntPtr[] data, DataType dType, int size) => {
+                     if (dType == DataType.ListOfMessage)
                      {
-                         var toArrayDiff = Marshal.PtrToStructure<TOArrayDiff>(toResult[0]);
-
-                         int msgSize = toArrayDiff.Size;
-                         Debug.Log($"LoadMessagesWithKeyword callback with dType={dType}, size={msgSize}.");
-
-                         if (msgSize <= 0)
+                         var list = new List<Message>();
+                         if (size > 0)
                          {
-                             var emptyList = new List<Message>();
-                             callback?.OnSuccessValue(emptyList);
-                             return;
-                         }
-
-                         MessageTO[] messages = new MessageTO[msgSize];
-                         MessageTO mto = null;
-                         for (int i = 0; i < msgSize; i++)
-                         {
-                             switch ((MessageBodyType)toArrayDiff.Type[i])
+                             for (int i = 0; i < size; i++)
                              {
-                                 //to-do: need to other types?
-                                 case MessageBodyType.TXT:
-                                     mto = new TextMessageTO();
-                                     Marshal.PtrToStructure(toArrayDiff.Data[i], mto);
-                                     messages[i] = mto;
-                                     break;
-                                 case MessageBodyType.LOCATION:
-                                     mto = new LocationMessageTO();
-                                     Marshal.PtrToStructure(toArrayDiff.Data[i], mto);
-                                     messages[i] = mto;
-                                     break;
-                                 case MessageBodyType.CMD:
-                                     mto = new CmdMessageTO();
-                                     Marshal.PtrToStructure(toArrayDiff.Data[i], mto);
-                                     messages[i] = mto;
-                                     break;
+                                 TOItem item = Marshal.PtrToStructure<TOItem>(data[i]);
+                                 MessageTO mto = MessageTO.FromIntPtr(item.Data, (MessageBodyType)item.Type);
+                                 list.Add(mto.Unmarshall());
                              }
                          }
-                         var result = MessageTO.ConvertToMessageList(messages, msgSize);
-                         callback?.OnSuccessValue(result);
+                         else
+                         {
+                             Debug.Log($"Cannot load any message for coversationid={conversationId}");
+                         }
+                         ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { callback?.OnSuccessValue(list); });
                      }
                      else
                      {
                          Debug.LogError("Incorrect parameters returned.");
                      }
                  },
-                (int code, string desc) => callback?.Error(code, desc)); 
+                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { callback?.Error(code, desc); }); });
         }
 
         public override void MarkAllMessageAsRead(string conversationId, ConversationType conversationType)
         {
+            if (null == conversationId)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
             ChatAPINative.ConversationManager_MarkAllMessagesAsRead(client, conversationId, conversationType);
         }
 
         public override void MarkMessageAsRead(string conversationId, ConversationType conversationType, string messageId)
         {
+            if (null == conversationId || null == messageId)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
             ChatAPINative.ConversationManager_MarkMessageAsRead(client, conversationId, conversationType, messageId);
         }
 
         public override void SetExt(string conversationId, ConversationType conversationType, Dictionary<string, string> ext)
         {
+            if (null == conversationId || null == ext)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
             string extStr = TransformTool.JsonStringFromDictionary(ext);
             ChatAPINative.ConversationManager_SetExtField(client, conversationId, conversationType, extStr);
         }
 
         public override int UnReadCount(string conversationId, ConversationType conversationType)
         {
+            if (null == conversationId)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return -1;
+            }
             return ChatAPINative.ConversationManager_UnreadMessagesCount(client, conversationId, conversationType);
         }
 
         public override bool UpdateMessage(string conversationId, ConversationType conversationType, Message message)
         {
+            if (null == conversationId || null == message)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return false;
+            }
             MessageTO mto = MessageTO.FromMessage(message);
             IntPtr mtoPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(mto));
             Marshal.StructureToPtr(mto, mtoPtr, false);
