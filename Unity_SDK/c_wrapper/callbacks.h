@@ -15,11 +15,11 @@ using namespace easemob;
 //callback entries definition
 #if defined(_WIN32)
     //Callback
-    typedef void(__stdcall *FUNC_OnSuccess)();
-    typedef void(__stdcall *FUNC_OnSuccess_With_Result)(void * data[], DataType type, int size);
-    typedef void(__stdcall *FUNC_OnSuccess_With_Result_V2)(void * header, void * data[], DataType type, int size);
-    typedef void(__stdcall *FUNC_OnError)(int, const char *);
-    typedef void(__stdcall *FUNC_OnProgress)(int);
+    typedef void(__stdcall *FUNC_OnSuccess)(int callbackId);
+    typedef void(__stdcall *FUNC_OnSuccess_With_Result)(void * data[], DataType type, int size, int callbackId);
+    typedef void(__stdcall *FUNC_OnSuccess_With_Result_V2)(void * header, void * data[], DataType type, int size, int callbackId);
+    typedef void(__stdcall *FUNC_OnError)(int, const char *, int);
+    typedef void(__stdcall *FUNC_OnProgress)(int, int);
 
     //Connection Listeners
     typedef void(__stdcall *FUNC_OnConnected)();
@@ -64,11 +64,11 @@ using namespace easemob;
     typedef void (__stdcall *FUNC_OnMemberExitedFromRoom)(const char * roomId, const char * roomName, const char * member);
 #else
     //Callback
-    typedef void(*FUNC_OnSuccess)();
-    typedef void(*FUNC_OnSuccess_With_Result)(void * data[], DataType type, int size);
-    typedef void(*FUNC_OnSuccess_With_Result_V2)(void * header, void * data[], DataType type, int size);
-    typedef void(*FUNC_OnError)(int, const char *);
-    typedef void(*FUNC_OnProgress)(int);
+    typedef void(*FUNC_OnSuccess)(int callbackId);
+    typedef void(*FUNC_OnSuccess_With_Result)(void * data[], DataType type, int size, int callbackId);
+    typedef void(*FUNC_OnSuccess_With_Result_V2)(void * header, void * data[], DataType type, int size, int callbackId);
+    typedef void(*FUNC_OnError)(int, const char *, int);
+    typedef void(*FUNC_OnProgress)(int, int);
 
     //Connection Listener
     typedef void(*FUNC_OnConnected)();

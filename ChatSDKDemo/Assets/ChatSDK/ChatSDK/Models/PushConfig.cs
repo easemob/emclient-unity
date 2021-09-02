@@ -65,6 +65,14 @@ namespace ChatSDK {
         {
 
         }
+
+        internal PushConfig(PushConfig pg)
+        {
+            NoDisturb = pg.NoDisturb;
+            NoDisturbStartHour = pg.NoDisturbStartHour;
+            NoDisturbEndHour = pg.NoDisturbEndHour;
+            Style = pg.Style;
+        }
     }
 
 }

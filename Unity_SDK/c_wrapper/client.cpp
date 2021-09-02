@@ -24,10 +24,10 @@ AGORA_API void Client_CreateAccount(void *client, FUNC_OnSuccess onSuccess, FUNC
     
     if(EMError::isNoError(result)) {
         LOG("Account creation succeeds!");
-        if(onSuccess) onSuccess();
+        if(onSuccess) onSuccess(-1);
     }else{
         LOG("Account creation failed!");
-        if(onError) onError(result->mErrorCode, result->mDescription.c_str());
+        if(onError) onError(result->mErrorCode, result->mDescription.c_str(), -1);
     }
 }
 
@@ -97,10 +97,10 @@ AGORA_API void Client_Login(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError
     if(EMError::isNoError(result)) {
         LOG("Login succeeds.");
         G_LOGIN_STATUS = true;
-        if(onSuccess) onSuccess();
+        if(onSuccess) onSuccess(-1);
     }else{
         LOG("Login failed with code=%d desc=%s!", result->mErrorCode, result->mDescription.c_str());
-        if(onError) onError(result->mErrorCode, result->mDescription.c_str());
+        if(onError) onError(result->mErrorCode, result->mDescription.c_str(), -1);
     }
 }
 
@@ -134,7 +134,7 @@ AGORA_API void Client_Logout(void *client, FUNC_OnSuccess onSuccess, bool unbind
         delete gConnectionListener;
         gConnectionListener = nullptr;
         G_LOGIN_STATUS = false;
-        if(onSuccess) onSuccess();
+        if(onSuccess) onSuccess(-1);
     } else {
         LOG("Already logout, NO need to execute logout action.");
     }

@@ -29,9 +29,21 @@ namespace ChatSDK
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.ContactManager_AcceptInvitation(client, username,
-                onSuccess: () => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); }); },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.ContactManager_AcceptInvitation(client, callbackId, username,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
+                        myhandle?.Success();
+                    });
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
+                        myhandle?.Error(code, desc);
+                    });
+                });
         }
 
         public override void AddContact(string username, string reason = null, CallBack handle = null)
@@ -41,9 +53,21 @@ namespace ChatSDK
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.ContactManager_AddContact(client, username, reason ?? "",
-                onSuccess: () => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); }); },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.ContactManager_AddContact(client, callbackId, username, reason ?? "",
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
+                        myhandle?.Success();
+                    });
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
+                        myhandle?.Error(code, desc);
+                    });
+                });
         }
 
         public override void AddUserToBlockList(string username, CallBack handle = null)
@@ -53,9 +77,21 @@ namespace ChatSDK
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.ContactManager_AddToBlackList(client, username, true,
-                onSuccess: () => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); }); },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.ContactManager_AddToBlackList(client, callbackId, username, true,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
+                        myhandle?.Success();
+                    });
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
+                        myhandle?.Error(code, desc);
+                    });
+                });
         }
 
         public override void DeclineInvitation(string username, CallBack handle = null)
@@ -65,9 +101,21 @@ namespace ChatSDK
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.ContactManager_DeclineInvitation(client, username,
-                onSuccess: () => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); }); },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.ContactManager_DeclineInvitation(client, callbackId, username,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
+                        myhandle?.Success();
+                    });
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
+                        myhandle?.Error(code, desc);
+                    });
+                });
         }
 
         public override void DeleteContact(string username, bool keepConversation = false, CallBack handle = null)
@@ -77,16 +125,28 @@ namespace ChatSDK
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.ContactManager_DeleteContact(client, username, false,
-                onSuccess: () => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); }); },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.ContactManager_DeleteContact(client, callbackId, username, false,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
+                        myhandle?.Success();
+                    });
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
+                        myhandle?.Error(code, desc);
+                    });
+                });
         }
 
         public override List<string> GetAllContactsFromDB()
         {
             List<string> list = new List<string>();
             ChatAPINative.ContactManager_GetContactsFromDB(client,
-                (IntPtr[] data, DataType dType, int size) =>
+                (IntPtr[] data, DataType dType, int size, int cbId) =>
                 {
                     Debug.Log($"GetAllContactsFromServer callback with dType={dType}, size={size}");
                     if (dType == DataType.ListOfString)
@@ -102,14 +162,16 @@ namespace ChatSDK
                     else
                         Debug.LogError("Incorrect delegate parameters returned.");
                 },
-                (int code, string desc) => { Debug.Log($"GetAllContactsFromDB failed with code={code}, desc={desc}"); });
+                (int code, string desc, int cbId) => { Debug.Log($"GetAllContactsFromDB failed with code={code}, desc={desc}"); });
             return list;
         }
 
         public override void GetAllContactsFromServer(ValueCallBack<List<string>> handle = null)
         {
-            ChatAPINative.ContactManager_GetContactsFromServer(client,
-                (IntPtr[] data, DataType dType, int size) =>
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.ContactManager_GetContactsFromServer(client, callbackId,
+                (IntPtr[] data, DataType dType, int size, int cbId) =>
                 {
                     Debug.Log($"GetAllContactsFromServer callback with dType={dType}, size={size}");
                     if (dType == DataType.ListOfString)
@@ -126,20 +188,30 @@ namespace ChatSDK
                         {
                             Debug.Log("Empty contact list is returned.");
                         }
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.OnSuccessValue(list); });
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                            var myhandle = (ValueCallBack<List<string>>)CallbackManager.Instance().GetCallBackHandle(cbId);
+                            myhandle?.OnSuccessValue(list);
+                        });
                     }
                     else
                     {
                         Debug.LogError("Incorrect delegate parameters returned.");
                     }
                 },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        var myhandle = (ValueCallBack<List<string>>)CallbackManager.Instance().GetCallBackHandle(cbId);
+                        myhandle?.Error(code, desc);
+                    });
+                });
         }
 
         public override void GetBlockListFromServer(ValueCallBack<List<string>> handle = null)
         {
-            ChatAPINative.ContactManager_GetBlackListFromServer(client,
-                (IntPtr[] array, DataType dType, int size) =>
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.ContactManager_GetBlackListFromServer(client, callbackId,
+                (IntPtr[] array, DataType dType, int size, int cbId) =>
                 {
                     Debug.Log($"GetBlockListFromServer callback with dType={dType}, size={size}");
                     if (DataType.ListOfString == dType)
@@ -149,7 +221,10 @@ namespace ChatSDK
                         {
                             list.Add(Marshal.PtrToStringAnsi(array[i]));
                         }
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.OnSuccessValue(list); });
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                            var myhandle = (ValueCallBack<List<string>>)CallbackManager.Instance().GetCallBackHandle(cbId);
+                            myhandle?.OnSuccessValue(list);
+                        });
                     }
                     else
                     {
@@ -157,13 +232,20 @@ namespace ChatSDK
                     }
                 },
 
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        var myhandle = (ValueCallBack<List<string>>)CallbackManager.Instance().GetCallBackHandle(cbId);
+                        myhandle?.Error(code, desc);
+                    });
+                });
         }
 
         public override void GetSelfIdsOnOtherPlatform(ValueCallBack<List<string>> handle = null)
         {
-            ChatAPINative.ContactManager_GetSelfIdsOnOtherPlatform(client,
-                (IntPtr[] array, DataType dType, int size) =>
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.ContactManager_GetSelfIdsOnOtherPlatform(client, callbackId, 
+                (IntPtr[] array, DataType dType, int size, int cbId) =>
                 {
                     Debug.Log($"GetSelfIdsOnOtherPlatform callback with dType={dType}, size={size}");
                     //Verify parameter
@@ -174,7 +256,10 @@ namespace ChatSDK
                         {
                             list.Add(Marshal.PtrToStringAnsi(array[i]));
                         }
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.OnSuccessValue(list); });
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                            var myhandle = (ValueCallBack<List<string>>)CallbackManager.Instance().GetCallBackHandle(cbId);
+                            myhandle?.OnSuccessValue(list);
+                        });
                     }
                     else
                     {
@@ -182,7 +267,12 @@ namespace ChatSDK
                     }
                 },
 
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        var myhandle = (ValueCallBack<List<string>>)CallbackManager.Instance().GetCallBackHandle(cbId);
+                        myhandle?.Error(code, desc);
+                    });
+                });
         }
 
         public override void RemoveUserFromBlockList(string username, CallBack handle = null)
@@ -192,9 +282,21 @@ namespace ChatSDK
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.ContactManager_RemoveFromBlackList(client, username,
-                onSuccess: () => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); }); },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.ContactManager_RemoveFromBlackList(client, callbackId, username,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
+                        myhandle?.Success();
+                    });
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
+                        myhandle?.Error(code, desc);
+                    });
+                });
         }
     }
 }

@@ -62,7 +62,7 @@ namespace ChatSDK
             }
             string ext = null;
             ChatAPINative.ConversationManager_ExtField(client, conversationId, conversationType,
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) =>
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
                 {
                     if (DataType.String == dType)
                     {
@@ -108,7 +108,7 @@ namespace ChatSDK
             }
             Message msg = null;
             ChatAPINative.ConversationManager_LatestMessage(client, conversationId, conversationType,
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) =>
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
                 {
                     if (DataType.ListOfMessage == dType)
                     {
@@ -139,7 +139,7 @@ namespace ChatSDK
             }
             Message msg = null;
             ChatAPINative.ConversationManager_LatestMessageFromOthers(client, conversationId, conversationType,
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) =>
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
                 {
                     if (DataType.ListOfMessage == dType)
                     {
@@ -170,7 +170,7 @@ namespace ChatSDK
             }
             Message msg = null;
             ChatAPINative.ConversationManager_LoadMessage(client, conversationId, conversationType, messageId,
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) =>
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
                 {
                     if (DataType.ListOfMessage == dType)
                     {
@@ -199,9 +199,11 @@ namespace ChatSDK
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.ConversationManager_LoadMessages(client, conversationId, conversationType, startMessageId, count, direction,
+            int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
 
-                 (IntPtr[] data, DataType dType, int size) => {
+            ChatAPINative.ConversationManager_LoadMessages(client, callbackId, conversationId, conversationType, startMessageId, count, direction,
+
+                 (IntPtr[] data, DataType dType, int size, int cbId) => {
                     if (dType == DataType.ListOfMessage)
                     {
                         var list = new List<Message>();
@@ -218,14 +220,22 @@ namespace ChatSDK
                         {
                              Debug.Log($"Cannot load any message for coversationid={conversationId}");
                         }
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { callback?.OnSuccessValue(list); });
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                            var myhandle = (ValueCallBack<List<Message>>)CallbackManager.Instance().GetCallBackHandle(cbId);
+                            myhandle?.OnSuccessValue(list);
+                        });
                      }
                     else
                     {
                         Debug.LogError("Incorrect parameters returned.");
                     }
                 },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { callback?.Error(code, desc); }); });
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        var myhandle = (ValueCallBack<List<Message>>)CallbackManager.Instance().GetCallBackHandle(cbId);
+                        myhandle?.Error(code, desc);
+                    });
+                });
         }
 
         public override void LoadMessagesWithKeyword(string conversationId, ConversationType conversationType, string keywords = "", string sender = "", long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callback = null)
@@ -235,9 +245,11 @@ namespace ChatSDK
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.ConversationManager_LoadMessagesWithKeyword(client, conversationId, conversationType, keywords, sender, timestamp, count, direction,
+            int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
 
-                 (IntPtr[] data, DataType dType, int size) => {
+            ChatAPINative.ConversationManager_LoadMessagesWithKeyword(client, callbackId, conversationId, conversationType, keywords, sender, timestamp, count, direction,
+
+                 (IntPtr[] data, DataType dType, int size, int cbId) => {
                      if (dType == DataType.ListOfMessage)
                      {
                          var list = new List<Message>();
@@ -254,14 +266,22 @@ namespace ChatSDK
                          {
                              Debug.Log($"Cannot load any message for coversationid={conversationId}");
                          }
-                         ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { callback?.OnSuccessValue(list); });
+                         ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                             var myhandle = (ValueCallBack<List<Message>>)CallbackManager.Instance().GetCallBackHandle(cbId);
+                             myhandle?.OnSuccessValue(list);
+                         });
                      }
                      else
                      {
                          Debug.LogError("Incorrect parameters returned.");
                      }
                  },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { callback?.Error(code, desc); }); });
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        var myhandle = (ValueCallBack<List<Message>>)CallbackManager.Instance().GetCallBackHandle(cbId);
+                        myhandle?.Error(code, desc);
+                    });
+                });
         }
 
         public override void LoadMessagesWithMsgType(string conversationId, ConversationType conversationType, MessageBodyType bodyType, string sender, long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callback = null)
@@ -271,9 +291,11 @@ namespace ChatSDK
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.ConversationManager_LoadMessagesWithMsgType(client, conversationId, conversationType, bodyType, timestamp, count, sender, direction,
+            int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
 
-                 (IntPtr[] data, DataType dType, int size) => {
+            ChatAPINative.ConversationManager_LoadMessagesWithMsgType(client, callbackId, conversationId, conversationType, bodyType, timestamp, count, sender, direction,
+
+                 (IntPtr[] data, DataType dType, int size, int cbId) => {
                      if (dType == DataType.ListOfMessage)
                      {
                          var list = new List<Message>();
@@ -290,14 +312,22 @@ namespace ChatSDK
                          {
                              Debug.Log($"Cannot load any message for coversationid={conversationId}");
                          }
-                         ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { callback?.OnSuccessValue(list); });
+                         ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                             var myhandle = (ValueCallBack<List<Message>>)CallbackManager.Instance().GetCallBackHandle(cbId);
+                             myhandle?.OnSuccessValue(list);
+                         });
                      }
                      else
                      {
                          Debug.LogError("Incorrect parameters returned.");
                      }
                  },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { callback?.Error(code, desc); }); });
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        var myhandle = (ValueCallBack<List<Message>>)CallbackManager.Instance().GetCallBackHandle(cbId);
+                        myhandle?.Error(code, desc);
+                    });
+                });
         }
 
         public override void LoadMessagesWithTime(string conversationId, ConversationType conversationType, long startTime, long endTime, int count = 20, ValueCallBack<List<Message>> callback = null)
@@ -307,9 +337,11 @@ namespace ChatSDK
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.ConversationManager_LoadMessagesWithTime(client, conversationId, conversationType, startTime, endTime, count,
+            int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
 
-                 (IntPtr[] data, DataType dType, int size) => {
+            ChatAPINative.ConversationManager_LoadMessagesWithTime(client, callbackId, conversationId, conversationType, startTime, endTime, count,
+
+                 (IntPtr[] data, DataType dType, int size, int cbId) => {
                      if (dType == DataType.ListOfMessage)
                      {
                          var list = new List<Message>();
@@ -326,14 +358,22 @@ namespace ChatSDK
                          {
                              Debug.Log($"Cannot load any message for coversationid={conversationId}");
                          }
-                         ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { callback?.OnSuccessValue(list); });
+                         ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                             var myhandle = (ValueCallBack<List<Message>>)CallbackManager.Instance().GetCallBackHandle(cbId);
+                             myhandle?.OnSuccessValue(list);
+                         });
                      }
                      else
                      {
                          Debug.LogError("Incorrect parameters returned.");
                      }
                  },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { callback?.Error(code, desc); }); });
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        var myhandle = (ValueCallBack<List<Message>>)CallbackManager.Instance().GetCallBackHandle(cbId);
+                        myhandle?.Error(code, desc);
+                    });
+                });
         }
 
         public override void MarkAllMessageAsRead(string conversationId, ConversationType conversationType)

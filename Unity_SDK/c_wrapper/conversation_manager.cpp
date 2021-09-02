@@ -42,7 +42,7 @@ AGORA_API bool ConversationManager_RemoveMessage(void *client, const char * conv
 AGORA_API void ConversationManager_ExtField(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, FUNC_OnSuccess_With_Result onSuccess)
 {
     if(!MandatoryCheck(conversationId)) {
-        onSuccess(nullptr, DataType::String, 0);
+        onSuccess(nullptr, DataType::String, 0, -1);
         return;
     }
     EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(conversationId, conversationType, true);
@@ -52,10 +52,10 @@ AGORA_API void ConversationManager_ExtField(void *client, const char * conversat
         LOG("Ext is %s for conversation %s", str.c_str(), conversationId);
         const char *data[1];
         data[0] = str.c_str();
-        onSuccess((void **)data, DataType::String, 1);
+        onSuccess((void **)data, DataType::String, 1, -1);
     } else {
         LOG("Ext is empty for conversation %s", str.c_str(), conversationId);
-        onSuccess(nullptr, DataType::String, 0);
+        onSuccess(nullptr, DataType::String, 0, -1);
     }
 }
 
@@ -72,13 +72,13 @@ AGORA_API bool ConversationManager_InsertMessage(void *client, const char * conv
 AGORA_API void ConversationManager_LatestMessage(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, FUNC_OnSuccess_With_Result onSuccess)
 {
     if(!MandatoryCheck(conversationId)) {
-        onSuccess(nullptr, DataType::ListOfMessage, -1);
+        onSuccess(nullptr, DataType::ListOfMessage, -1, -1);
         return;
     }
     EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(conversationId, conversationType, true);
     if(!conversationPtr) {
         LOG("Cannot get conversation with id:%s", conversationId);
-        onSuccess(nullptr, DataType::ListOfMessage, 0);
+        onSuccess(nullptr, DataType::ListOfMessage, 0, -1);
         return;
     }
     EMMessagePtr msgPtr = conversationPtr->latestMessage();
@@ -87,25 +87,25 @@ AGORA_API void ConversationManager_LatestMessage(void *client, const char * conv
         LOG("Found last message for conversation id:%s, message id:%s", conversationId, msgPtr->msgId().c_str());
         TOItem* item = new TOItem((int)msgPtr->bodies()[0]->type(), MessageTO::FromEMMessage(msgPtr));
         data[0] = item;
-        onSuccess((void **)data, DataType::ListOfMessage, 1);
+        onSuccess((void **)data, DataType::ListOfMessage, 1, -1);
         delete (MessageTO*)item->Data;
         delete item;
     } else {
         LOG("NOT find any last message for conversation id:%s", conversationId);
-        onSuccess(nullptr, DataType::ListOfMessage, 0);
+        onSuccess(nullptr, DataType::ListOfMessage, 0, -1);
     }
 }
 
 AGORA_API void ConversationManager_LatestMessageFromOthers(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, FUNC_OnSuccess_With_Result onSuccess)
 {
     if(!MandatoryCheck(conversationId)) {
-        onSuccess(nullptr, DataType::ListOfMessage, -1);
+        onSuccess(nullptr, DataType::ListOfMessage, -1, -1);
         return;
     }
     EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(conversationId, conversationType, true);
     if(!conversationPtr) {
         LOG("Cannot get conversation with id:%s", conversationId);
-        onSuccess(nullptr, DataType::ListOfMessage, 0);
+        onSuccess(nullptr, DataType::ListOfMessage, 0, -1);
         return;
     }
     EMMessagePtr msgPtr = conversationPtr->latestMessageFromOthers();
@@ -114,25 +114,25 @@ AGORA_API void ConversationManager_LatestMessageFromOthers(void *client, const c
         LOG("Found last message for conversation id:%s, message id:%s", conversationId, msgPtr->msgId().c_str());
         TOItem* item = new TOItem((int)msgPtr->bodies()[0]->type(), MessageTO::FromEMMessage(msgPtr));
         data[0] = item;
-        onSuccess((void **)data, DataType::ListOfMessage, 1);
+        onSuccess((void **)data, DataType::ListOfMessage, 1, -1);
         delete (MessageTO*)item->Data;
         delete item;
     } else {
         LOG("NOT find any last message for conversation id:%s", conversationId);
-        onSuccess(nullptr, DataType::ListOfMessage, 0);
+        onSuccess(nullptr, DataType::ListOfMessage, 0, -1);
     }
 }
 
 AGORA_API void ConversationManager_LoadMessage(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, const char * messageId, FUNC_OnSuccess_With_Result onSuccess)
 {
     if(!MandatoryCheck(conversationId, messageId)) {
-        onSuccess(nullptr, DataType::ListOfMessage, -1);
+        onSuccess(nullptr, DataType::ListOfMessage, -1, -1);
         return;
     }
     EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(conversationId, conversationType, true);
     if(!conversationPtr) {
         LOG("Cannot get conversation with id:%s", conversationId);
-        onSuccess(nullptr, DataType::ListOfMessage, 0);
+        onSuccess(nullptr, DataType::ListOfMessage, 0, -1);
         return;
     }
     EMMessagePtr msgPtr = conversationPtr->loadMessage(messageId);
@@ -141,20 +141,20 @@ AGORA_API void ConversationManager_LoadMessage(void *client, const char * conver
         LOG("Loaded the message for conversation id:%s, message id:%s", conversationId, msgPtr->msgId().c_str());
         TOItem* item = new TOItem((int)msgPtr->bodies()[0]->type(), MessageTO::FromEMMessage(msgPtr));
         data[0] = item;
-        onSuccess((void **)data, DataType::ListOfMessage, 1);
+        onSuccess((void **)data, DataType::ListOfMessage, 1, -1);
         delete (MessageTO*)item->Data;
         delete item;
     } else {
         LOG("Failed to load the message %s for conversation id:%s", messageId, conversationId);
-        onSuccess(nullptr, DataType::ListOfMessage, 0);
+        onSuccess(nullptr, DataType::ListOfMessage, 0, -1);
     }
 }
 
-AGORA_API void ConversationManager_LoadMessages(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, const char * startMessageId, int count, EMConversation::EMMessageSearchDirection direction, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+AGORA_API void ConversationManager_LoadMessages(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType conversationType, const char * startMessageId, int count, EMConversation::EMMessageSearchDirection direction, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(conversationId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string conversationIdStr = conversationId;
@@ -175,24 +175,24 @@ AGORA_API void ConversationManager_LoadMessages(void *client, const char * conve
                 LOG("message %d, msgid %s", i, mto->MsgId);
                 data[i] = item;
             }
-            onSuccess((void **)data, DataType::ListOfMessage, size);
+            onSuccess((void **)data, DataType::ListOfMessage, size, callbackId);
             for(int i=0; i<size; i++) {
                 delete (MessageTO*)data[i]->Data;
                 delete data[i];
             }
         } else {
             LOG("Cannot load any messages in LoadMessages.");
-            onSuccess(nullptr, DataType::ListOfMessage, 0);
+            onSuccess(nullptr, DataType::ListOfMessage, 0, callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void ConversationManager_LoadMessagesWithKeyword(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, const char * keywords, const char * sender, long timestamp, int count, EMConversation::EMMessageSearchDirection direction, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+AGORA_API void ConversationManager_LoadMessagesWithKeyword(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType conversationType, const char * keywords, const char * sender, long timestamp, int count, EMConversation::EMMessageSearchDirection direction, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(conversationId, keywords, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string conversationIdStr = conversationId;
@@ -200,7 +200,6 @@ AGORA_API void ConversationManager_LoadMessagesWithKeyword(void *client, const c
     std::string senderStr = OptionalStrParamCheck(sender);
     
     std::thread t([=](){
-        EMError error;
         EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(conversationIdStr, conversationType, true);
         EMMessageList msgList = conversationPtr->loadMoreMessages(keywordsStr, timestamp, count, senderStr, direction);
         
@@ -214,31 +213,30 @@ AGORA_API void ConversationManager_LoadMessagesWithKeyword(void *client, const c
                 LOG("message %d, msgid %s", i, mto->MsgId);
                 data[i] = item;
             }
-            onSuccess((void **)data, DataType::ListOfMessage, size);
+            onSuccess((void **)data, DataType::ListOfMessage, size, callbackId);
             for(int i=0; i<size; i++) {
                 delete (MessageTO*)data[i]->Data;
                 delete data[i];
             }
         } else {
             LOG("Cannot load any messages in LoadMessages.");
-            onSuccess(nullptr, DataType::ListOfMessage, 0);
+            onSuccess(nullptr, DataType::ListOfMessage, 0, callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void ConversationManager_LoadMessagesWithMsgType(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, EMMessageBody::EMMessageBodyType type, long timestamp, int count, const char * sender, EMConversation::EMMessageSearchDirection direction, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+AGORA_API void ConversationManager_LoadMessagesWithMsgType(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType conversationType, EMMessageBody::EMMessageBodyType type, long timestamp, int count, const char * sender, EMConversation::EMMessageSearchDirection direction, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(conversationId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string conversationIdStr = conversationId;
     std::string senderStr = OptionalStrParamCheck(sender);
     
     std::thread t([=](){
-        EMError error;
         EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(conversationIdStr, conversationType, true);
         EMMessageList msgList = conversationPtr->loadMoreMessages(type, timestamp, count, senderStr, direction);
         
@@ -252,24 +250,24 @@ AGORA_API void ConversationManager_LoadMessagesWithMsgType(void *client, const c
                 LOG("message %d, msgid %s", i, mto->MsgId);
                 data[i] = item;
             }
-            onSuccess((void **)data, DataType::ListOfMessage, size);
+            onSuccess((void **)data, DataType::ListOfMessage, size, callbackId);
             for(int i=0; i<size; i++) {
                 delete (MessageTO*)data[i]->Data;
                 delete data[i];
             }
         } else {
             LOG("Cannot load any messages in LoadMessages.");
-            onSuccess(nullptr, DataType::ListOfMessage, 0);
+            onSuccess(nullptr, DataType::ListOfMessage, 0, callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void ConversationManager_LoadMessagesWithTime(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, long startTimeStamp, long endTimeStamp, int count, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+AGORA_API void ConversationManager_LoadMessagesWithTime(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType conversationType, long startTimeStamp, long endTimeStamp, int count, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(conversationId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string conversationIdStr = conversationId;
@@ -288,14 +286,14 @@ AGORA_API void ConversationManager_LoadMessagesWithTime(void *client, const char
                 LOG("message %d, msgid %s", i, mto->MsgId);
                 data[i] = item;
             }
-            onSuccess((void **)data, DataType::ListOfMessage, size);
+            onSuccess((void **)data, DataType::ListOfMessage, size, callbackId);
             for(int i=0; i<size; i++) {
                 delete (MessageTO*)data[i]->Data;
                 delete data[i];
             }
         } else {
             LOG("Cannot load any messages in LoadMessages.");
-            onSuccess(nullptr, DataType::ListOfMessage, 0);
+            onSuccess(nullptr, DataType::ListOfMessage, 0, callbackId);
         }
     });
     t.detach();

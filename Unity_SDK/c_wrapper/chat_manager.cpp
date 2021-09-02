@@ -61,10 +61,10 @@ void UpdateTsMsgMap(int64_t ts)
     LOG("after update, msgid: %s -> %s", msgId.c_str(), it->second->MsgId);
 }
 
-AGORA_API void ChatManager_SendMessage(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, void *mto, EMMessageBody::EMMessageBodyType type) {
+AGORA_API void ChatManager_SendMessage(void *client, int callbackId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, void *mto, EMMessageBody::EMMessageBodyType type) {
     EMError error;
     if(!MandatoryCheck(mto, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     EMMessagePtr messagePtr = BuildEMMessage(mto, type);
@@ -75,13 +75,13 @@ AGORA_API void ChatManager_SendMessage(void *client, FUNC_OnSuccess onSuccess, F
                                              [=]()->bool {
                                                 LOG("Message sent succeeds.");
                                                 UpdateTsMsgMap(ts);
-                                                if(onSuccess) onSuccess();
+                                                if(onSuccess) onSuccess(callbackId);
                                                 DeleteTsMsgItem(ts);
                                                 return true;
                                              },
-                                             [onError](const easemob::EMErrorPtr error)->bool{
+                                             [=](const easemob::EMErrorPtr error)->bool{
                                                 LOG("Message sent failed with code=%d.", error->mErrorCode);
-                                                if(onError) onError(error->mErrorCode,error->mDescription.c_str());
+                                                if(onError) onError(error->mErrorCode,error->mDescription.c_str(), callbackId);
                                                 return true;
                                              }));
     messagePtr->setCallback(callbackPtr);
@@ -108,11 +108,11 @@ AGORA_API void ChatManager_AddListener(void *client,
     }
 }
 
-AGORA_API void ChatManager_FetchHistoryMessages(void *client, const char * conversationId, EMConversation::EMConversationType type, const char * startMessageId, int count, FUNC_OnSuccess_With_Result_V2 onSuccess, FUNC_OnError onError)
+AGORA_API void ChatManager_FetchHistoryMessages(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType type, const char * startMessageId, int count, FUNC_OnSuccess_With_Result_V2 onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(conversationId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     // avoid conversationId is released from stack at calling thread
@@ -138,7 +138,7 @@ AGORA_API void ChatManager_FetchHistoryMessages(void *client, const char * conve
                 LOG("message %d: msgid=%s, type=%d", i, mto->MsgId, mto->BodyType);
                 data[i] = item;
             }
-            onSuccess((void *)&cursorResultTo, (void **)data, DataType::CursorResult, size);
+            onSuccess((void *)&cursorResultTo, (void **)data, DataType::CursorResult, size, callbackId);
             //free memory
             for(int i=0; i<size; i++) {
                 delete (MessageTO*)data[i]->Data;
@@ -146,13 +146,13 @@ AGORA_API void ChatManager_FetchHistoryMessages(void *client, const char * conve
             }
         } else {
             LOG("fetchHistoryMessages history message failed, error id:%d, desc::%s", error.mErrorCode, error.mDescription.c_str());
-            onError(error.mErrorCode, error.mDescription.c_str());
+            onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void ChatManager_GetConversationsFromServer(void *client, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+AGORA_API void ChatManager_GetConversationsFromServer(void *client, int callbackId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     std::thread t([=](){
         EMError error;
@@ -165,14 +165,14 @@ AGORA_API void ChatManager_GetConversationsFromServer(void *client, FUNC_OnSucce
                     data[i] = ConversationTO::FromEMConversation(conversationList.at(i));
                     LOG("GetConversation %d, id=%s, type=%d, extfiled=%s",i, data[i]->ConverationId, data[i]->type, data[i]->ExtField);
                 }
-                onSuccess((void**)data, DataType::ListOfConversation, size);
+                onSuccess((void**)data, DataType::ListOfConversation, size, callbackId);
                 //free memory
                 for(size_t i=0; i<size; i++) {
                     delete (ConversationTO*)data[i];
                 }
             }
         }else{
-            if (onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
@@ -185,11 +185,11 @@ AGORA_API void ChatManager_RemoveConversation(void *client, const char * convers
     CLIENT->getChatManager().removeConversation(conversationId, isRemoveMessages);
 }
 
-AGORA_API void ChatManager_DownloadMessageAttachments(void *client, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void ChatManager_DownloadMessageAttachments(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(messageId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(messageId);
@@ -198,29 +198,29 @@ AGORA_API void ChatManager_DownloadMessageAttachments(void *client, const char *
         LOG("Cannot find message with message id:%s", messageId);
         error.mErrorCode = EMError::MESSAGE_INVALID;
         error.mDescription = "Invalid message.";
-        if(onError) onError(error.mErrorCode,error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode,error.mDescription.c_str(), callbackId);
         return;
     }
     EMCallbackPtr callbackPtr(new EMCallback(gCallbackObserverHandle,
-                                             [onSuccess]()->bool {
+                                             [=]()->bool {
                                                 LOG("Download message attachment succeeds.");
-                                                if(onSuccess) onSuccess();
+                                                if(onSuccess) onSuccess(callbackId);
                                                 return true;
                                              },
-                                             [onError](const easemob::EMErrorPtr error)->bool{
+                                             [=](const easemob::EMErrorPtr error)->bool{
                                                 LOG("Download message attachment failed with code=%d.", error->mErrorCode);
-                                                if(onError) onError(error->mErrorCode,error->mDescription.c_str());
+                                                if(onError) onError(error->mErrorCode,error->mDescription.c_str(), callbackId);
                                                 return true;
                                              }));
     messagePtr->setCallback(callbackPtr);
     CLIENT->getChatManager().downloadMessageAttachments(messagePtr);
 }
 
-AGORA_API void ChatManager_DownloadMessageThumbnail(void *client, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void ChatManager_DownloadMessageThumbnail(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(messageId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(messageId);
@@ -230,18 +230,18 @@ AGORA_API void ChatManager_DownloadMessageThumbnail(void *client, const char * m
         LOG("Cannot find message with message id:%s", messageId);
         error.mErrorCode = EMError::MESSAGE_INVALID;
         error.mDescription = "Invalid message.";
-        if(onError) onError(error.mErrorCode,error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode,error.mDescription.c_str(), callbackId);
         return;
     }
     EMCallbackPtr callbackPtr(new EMCallback(gCallbackObserverHandle,
-                                             [onSuccess]()->bool {
+                                             [=]()->bool {
                                                 LOG("Download message thumbnail succeeds.");
-                                                if(onSuccess) onSuccess();
+                                                if(onSuccess) onSuccess(callbackId);
                                                 return true;
                                              },
-                                             [onError](const easemob::EMErrorPtr error)->bool{
+                                             [=](const easemob::EMErrorPtr error)->bool{
                                                 LOG("Download message thumbnail failed with code=%d.", error->mErrorCode);
-                                                if(onError) onError(error->mErrorCode,error->mDescription.c_str());
+                                                if(onError) onError(error->mErrorCode,error->mDescription.c_str(), callbackId);
                                                 return true;
                                              }));
     messagePtr->setCallback(callbackPtr);
@@ -302,7 +302,7 @@ AGORA_API void ChatManager_LoadAllConversationsFromDB(void *client, FUNC_OnSucce
         data[i] = ConversationTO::FromEMConversation(conversationList.at(i));
         LOG("GetConversation %d, id=%s, type=%d, extfiled=%s",i, data[i]->ConverationId, data[i]->type, data[i]->ExtField);
     }
-    onSuccess((void**)data, DataType::ListOfConversation, size);
+    onSuccess((void**)data, DataType::ListOfConversation, size, -1);
     //free memory
     for(size_t i=0; i<size; i++) {
         delete (ConversationTO*)data[i];
@@ -313,20 +313,20 @@ AGORA_API void ChatManager_GetMessage(void *client, const char * messageId, FUNC
 {
     EMError error;
     if(!MandatoryCheck(messageId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), -1);
         return;
     }
     EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(messageId);
     if(nullptr == messagePtr) {
         LOG("Cannot find the message with id %s in ChatManager_GetMessage", messageId);
-        onSuccess(nullptr, DataType::ListOfMessage, 0);
+        onSuccess(nullptr, DataType::ListOfMessage, 0, -1);
         return;
     } else {
         LOG("Found the message with id %s in ChatManager_GetMessage", messageId);
         MessageTO* mto = MessageTO::FromEMMessage(messagePtr);
         TOItem* item = new TOItem((int)messagePtr->bodies()[0]->type(), mto);
         TOItem* data[1] = {item};
-        onSuccess((void**)data, DataType::ListOfMessage, 1);
+        onSuccess((void**)data, DataType::ListOfMessage, 1, -1);
         delete mto;
         delete item;
     }
@@ -349,11 +349,11 @@ AGORA_API bool ChatManager_MarkAllConversationsAsRead(void *client)
     return ret;
 }
 
-AGORA_API void ChatManager_RecallMessage(void *client, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void ChatManager_RecallMessage(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(messageId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     
@@ -364,29 +364,29 @@ AGORA_API void ChatManager_RecallMessage(void *client, const char * messageId, F
         LOG("Cannot find message with message id:%s", messageId);
         error.mErrorCode = EMError::MESSAGE_INVALID;
         error.mDescription = "Invalid message.";
-        if(onError) onError(error.mErrorCode,error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode,error.mDescription.c_str(), callbackId);
         return;
     }
     EMCallbackPtr callbackPtr(new EMCallback(gCallbackObserverHandle,
-                                             [onSuccess]()->bool {
+                                             [=]()->bool {
                                                 LOG("Recall message succeeds.");
-                                                if(onSuccess) onSuccess();
+                                                if(onSuccess) onSuccess(callbackId);
                                                 return true;
                                              },
-                                             [onError](const easemob::EMErrorPtr error)->bool{
+                                             [=](const easemob::EMErrorPtr error)->bool{
                                                 LOG("Recall message failed with code=%d.", error->mErrorCode);
-                                                if(onError) onError(error->mErrorCode,error->mDescription.c_str());
+                                                if(onError) onError(error->mErrorCode,error->mDescription.c_str(), callbackId);
                                                 return true;
                                              }));
     messagePtr->setCallback(callbackPtr);
     CLIENT->getChatManager().recallMessage(messagePtr, error);
 }
 
-AGORA_API void ChatManager_ResendMessage(void *client, const char * messageId, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void ChatManager_ResendMessage(void *client, int callbackId, const char * messageId, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(messageId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(messageId);
@@ -396,18 +396,18 @@ AGORA_API void ChatManager_ResendMessage(void *client, const char * messageId, F
         LOG("Cannot find message with message id:%s", messageId);
         error.mErrorCode = EMError::MESSAGE_INVALID;
         error.mDescription = "Invalid message.";
-        if(onError) onError(error.mErrorCode,error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode,error.mDescription.c_str(), callbackId);
         return;
     }
     EMCallbackPtr callbackPtr(new EMCallback(gCallbackObserverHandle,
-                                             [onSuccess]()->bool {
+                                             [=]()->bool {
                                                 LOG("Resend message succeeds.");
-                                                if(onSuccess) onSuccess();
+                                                if(onSuccess) onSuccess(callbackId);
                                                 return true;
                                              },
-                                             [onError](const easemob::EMErrorPtr error)->bool{
+                                             [=](const easemob::EMErrorPtr error)->bool{
                                                 LOG("Resend message failed with code=%d.", error->mErrorCode);
-                                                if(onError) onError(error->mErrorCode,error->mDescription.c_str());
+                                                if(onError) onError(error->mErrorCode,error->mDescription.c_str(), callbackId);
                                                 return true;
                                              }));
     messagePtr->setCallback(callbackPtr);
@@ -417,7 +417,7 @@ AGORA_API void ChatManager_ResendMessage(void *client, const char * messageId, F
     MessageTO* mto = MessageTO::FromEMMessage(messagePtr);
     TOItem* item = new TOItem((int)messagePtr->bodies()[0]->type(), mto);
     TOItem* data[1] = {item};
-    onSuccessResult((void **)data, DataType::ListOfMessage, 1);
+    onSuccessResult((void **)data, DataType::ListOfMessage, 1, callbackId);
     delete mto;
     delete item;
 }
@@ -439,18 +439,18 @@ AGORA_API void ChatManager_LoadMoreMessages(void *client, FUNC_OnSuccess_With_Re
         TOItem* item = new TOItem((int)messageList[i]->bodies()[0]->type(), mto);
         data[i] = item;
     }
-    onSuccess((void **)data, DataType::ListOfMessage, size);
+    onSuccess((void **)data, DataType::ListOfMessage, size, -1);
     for(size_t i=0; i<size; i++) {
         delete (MessageTO*)data[i]->Data;
         delete (TOItem*)data[i];
     }
 }
 
-AGORA_API void ChatManager_SendReadAckForConversation(void *client, const char * conversationId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void ChatManager_SendReadAckForConversation(void *client, int callbackId, const char * conversationId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(conversationId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string conversationIdStr = conversationId;
@@ -460,19 +460,19 @@ AGORA_API void ChatManager_SendReadAckForConversation(void *client, const char *
         CLIENT->getChatManager().sendReadAckForConversation(conversationIdStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("Send read ack for conversation:%s successfully.", conversationId);
-            if(onSuccess) onSuccess();
+            if(onSuccess) onSuccess(callbackId);
         } else {
-            if(onError) onError(error.mErrorCode,error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode,error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void ChatManager_SendReadAckForMessage(void *client, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void ChatManager_SendReadAckForMessage(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(messageId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string messageIdStr = messageId;
@@ -485,12 +485,12 @@ AGORA_API void ChatManager_SendReadAckForMessage(void *client, const char * mess
             LOG("Cannot find message with message id:%s", messageId);
             error.mErrorCode = EMError::MESSAGE_INVALID;
             error.mDescription = "Invalid message.";
-            if(onError) onError(error.mErrorCode,error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode,error.mDescription.c_str(), callbackId);
             return;
         }
         CLIENT->getChatManager().sendReadAckForMessage(messagePtr);
         LOG("Send read ack for message:%s successfully.", messageId);
-        if(onSuccess) onSuccess();
+        if(onSuccess) onSuccess(callbackId);
     });
     t.detach();
 }
