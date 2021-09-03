@@ -282,6 +282,121 @@ namespace ChatSDK
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public class VideoMessageTO : MessageTO
+    {
+        VideoMessageBodyTO Body;
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+        struct VideoMessageBodyTO
+        {
+            public string LocalPath;
+            public string DisplayName;
+            public string Secret;
+            public string RemotePath;
+            public string ThumbnaiLocationPath;
+            public string ThumbnaiRemotePath;
+            public string ThumbnaiSecret;
+            public double Height;
+            public double Width;
+            public int Duration;
+            public long FileSize;
+            public DownLoadStatus DownStatus;
+
+            public VideoMessageBodyTO(in Message message)
+            {
+                if (message.Body.Type == MessageBodyType.VIDEO)
+                {
+                    var body = message.Body as VideoBody;
+                    LocalPath = body.LocalPath;
+                    DisplayName = body.DisplayName ?? "";
+                    Secret = body.Secret ?? "";
+                    RemotePath = body.RemotePath ?? "";
+                    ThumbnaiLocationPath = body.ThumbnaiLocationPath ?? "";
+                    ThumbnaiRemotePath = body.ThumbnaiRemotePath ?? "";
+                    ThumbnaiSecret = body.ThumbnaiSecret ?? "";
+                    Height = body.Height;
+                    Width = body.Width;
+                    Duration = body.Duration;
+                    FileSize = body.FileSize;
+                    DownStatus = body.DownStatus;
+                }
+                else
+                {
+                    throw new InvalidOperationException();
+                }
+            }
+        }
+
+        public VideoMessageTO(in Message message) : base(message)
+        {
+            BodyType = MessageBodyType.VIDEO;
+            Body = new VideoMessageBodyTO(message);
+        }
+
+        public VideoMessageTO()
+        {
+        
+        }
+
+        public override IMessageBody UnmarshallBody()
+        {
+            return new MessageBody.VideoBody(Body.LocalPath, Body.DisplayName, Body.Duration, Body.FileSize, Body.ThumbnaiLocationPath, Body.Width, Body.Height);
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public class CustomMessageTO : MessageTO
+    {
+        CustomMessageBodyTO Body;
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+        struct CustomMessageBodyTO
+        {
+            public string CustomEvent;
+            public string CustomParams; //corresponding to Dictionary<string, string>
+
+            public CustomMessageBodyTO(in Message message)
+            {
+                if (message.Body.Type == MessageBodyType.CUSTOM)
+                {
+                    var body = message.Body as CustomBody;
+
+                    CustomEvent = body.CustomEvent;
+                    if (null != body.CustomParams && body.CustomParams.Count > 0)
+                    {
+                        CustomParams = TransformTool.JsonStringFromDictionary(body.CustomParams);
+                    }
+                    else
+                        CustomParams = "";
+                }
+                else
+                {
+                    throw new InvalidOperationException();
+                }
+            }
+        }
+
+        public CustomMessageTO(in Message message) : base(message)
+        {
+            BodyType = MessageBodyType.CUSTOM;
+            Body = new CustomMessageBodyTO(message);
+        }
+
+        public CustomMessageTO()
+        {
+
+        }
+
+        public override IMessageBody UnmarshallBody()
+        {
+            Dictionary<string, string> dict;
+            if (null != Body.CustomParams && Body.CustomParams.Length > 0)
+                dict = TransformTool.JsonStringToDictionary(Body.CustomParams);
+            else
+                dict = new Dictionary<string, string>(); // empty dict
+            return new MessageBody.CustomBody(Body.CustomEvent, dict);
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public abstract class MessageTO
     {
         public string MsgId;
@@ -347,6 +462,12 @@ namespace ChatSDK
                 case MessageBodyType.VOICE:
                     mto = new VoiceMessageTO(message);
                     break;
+                case MessageBodyType.VIDEO:
+                    mto = new VideoMessageTO(message);
+                    break;
+                case MessageBodyType.CUSTOM:
+                    mto = new CustomMessageTO(message);
+                    break;
             }
             return mto;
         }
@@ -377,6 +498,12 @@ namespace ChatSDK
                     break;
                 case MessageBodyType.VOICE:
                     mto = Marshal.PtrToStructure<VoiceMessageTO>(intPtr);
+                    break;
+                case MessageBodyType.VIDEO:
+                    mto = Marshal.PtrToStructure<VideoMessageTO>(intPtr);
+                    break;
+                case MessageBodyType.CUSTOM:
+                    mto = Marshal.PtrToStructure<CustomMessageTO>(intPtr);
                     break;
             }
             return mto;

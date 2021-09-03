@@ -71,10 +71,7 @@ namespace ChatSDK
                     {
                         var pc = Marshal.PtrToStructure<PushConfig>(array[0]);
                         PushConfig pushConfig = new PushConfig(pc);
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                            var myhandle = (ValueCallBack<PushConfig>)CallbackManager.Instance().GetCallBackHandle(cbId);
-                            myhandle?.OnSuccessValue(pushConfig);
-                        });
+                        ChatCallbackObject.ValueCallBackOnSuccess<PushConfig>(cbId, pushConfig);
                     }
                     else
                     {
@@ -82,16 +79,13 @@ namespace ChatSDK
                     }
                 },
                 onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (ValueCallBack<PushConfig>)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Error(code, desc);
-                    });
+                    ChatCallbackObject.ValueCallBackOnError<PushConfig>(cbId, code, desc);
                 });
         }
 
         public void SetGroupToDisturb(string groupId, bool noDisturb, CallBack handle = null)
         {
-            if (null == groupId)
+            if (null == groupId || 0 == groupId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
@@ -100,16 +94,10 @@ namespace ChatSDK
 
             ChatAPINative.PushManager_IgnoreGroupPush(client, callbackId, groupId, noDisturb,
                 onSuccess: (int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Success();
-                    });
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
                 },
                 onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Error(code, desc);
-                    });
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
                 });
         }
 
@@ -119,16 +107,10 @@ namespace ChatSDK
 
             ChatAPINative.PushManager_UpdatePushNoDisturbing(client, callbackId, noDisturb, startTime, endTime,
                 onSuccess: (int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Success();
-                    });
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
                 },
                 onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Error(code, desc);
-                    });
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
                 });
         }
 
@@ -138,16 +120,10 @@ namespace ChatSDK
 
             ChatAPINative.PushManager_UpdatePushDisplayStyle(client, callbackId, pushStyle,
                 onSuccess: (int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Success();
-                    });
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
                 },
                 onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Error(code, desc);
-                    });
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
                 });
         }
 
@@ -162,16 +138,10 @@ namespace ChatSDK
 
             ChatAPINative.PushManager_UpdateFCMPushToken(client, callbackId, token,
                 onSuccess: (int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Success();
-                    });
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
                 },
                 onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Error(code, desc);
-                    });
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
                 });
         }
 
@@ -186,16 +156,10 @@ namespace ChatSDK
 
             ChatAPINative.PushManager_UpdateHMSPushToken(client, callbackId, token,
                 onSuccess: (int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Success();
-                    });
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
                 },
                 onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Error(code, desc);
-                    });
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
                 });
         }
 
@@ -206,7 +170,7 @@ namespace ChatSDK
 
         public void UpdatePushNickName(string nickname, CallBack handle = null)
         {
-            if (null == nickname)
+            if (null == nickname || 0 == nickname.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
@@ -215,15 +179,10 @@ namespace ChatSDK
 
             ChatAPINative.PushManager_UpdatePushNickName(client, callbackId, nickname,
                 onSuccess: (int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Success(); });
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
                 },
                 onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Error(code, desc);
-                    });
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
                 });
         }
     }

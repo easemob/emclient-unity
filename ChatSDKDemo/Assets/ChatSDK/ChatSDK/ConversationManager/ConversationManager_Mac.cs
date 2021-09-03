@@ -20,7 +20,7 @@ namespace ChatSDK
 
         public override bool AppendMessage(string conversationId, ConversationType converationType, Message message)
         {
-            if (null == conversationId)
+            if (null == conversationId || 0 == conversationId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return false;
@@ -35,7 +35,7 @@ namespace ChatSDK
 
         public override bool DeleteAllMessages(string conversationId, ConversationType conversationType)
         {
-            if (null == conversationId)
+            if (null == conversationId || 0 == conversationId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return false;
@@ -45,7 +45,7 @@ namespace ChatSDK
 
         public override bool DeleteMessage(string conversationId, ConversationType conversationType, string messageId)
         {
-            if (null == conversationId)
+            if (null == conversationId || 0 == conversationId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return false;
@@ -55,7 +55,7 @@ namespace ChatSDK
 
         public override Dictionary<string, string> GetExt(string conversationId, ConversationType conversationType)
         {
-            if (null == conversationId)
+            if (null == conversationId || 0 == conversationId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return new Dictionary<string, string>(); // return empty dict
@@ -86,7 +86,7 @@ namespace ChatSDK
 
         public override bool InsertMessage(string conversationId, ConversationType conversationType, Message message)
         {
-            if (null == conversationId)
+            if (null == conversationId || 0 == conversationId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return false;
@@ -101,7 +101,7 @@ namespace ChatSDK
 
         public override Message LastMessage(string conversationId, ConversationType conversationType)
         {
-            if (null == conversationId)
+            if (null == conversationId || 0 == conversationId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return null;
@@ -132,7 +132,7 @@ namespace ChatSDK
 
         public override Message LastReceivedMessage(string conversationId, ConversationType conversationType)
         {
-            if (null == conversationId)
+            if (null == conversationId || 0 == conversationId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return null;
@@ -163,7 +163,7 @@ namespace ChatSDK
 
         public override Message LoadMessage(string conversationId, ConversationType conversationType, string messageId)
         {
-            if (null == conversationId)
+            if (null == conversationId || 0 == conversationId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return null;
@@ -194,7 +194,7 @@ namespace ChatSDK
 
         public override void LoadMessages(string conversationId, ConversationType conversationType, string startMessageId = "", int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callback = null)
         {
-            if (null == conversationId)
+            if (null == conversationId || 0 == conversationId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
@@ -220,10 +220,7 @@ namespace ChatSDK
                         {
                              Debug.Log($"Cannot load any message for coversationid={conversationId}");
                         }
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                            var myhandle = (ValueCallBack<List<Message>>)CallbackManager.Instance().GetCallBackHandle(cbId);
-                            myhandle?.OnSuccessValue(list);
-                        });
+                        ChatCallbackObject.ValueCallBackOnSuccess<List<Message>>(cbId, list);
                      }
                     else
                     {
@@ -231,16 +228,13 @@ namespace ChatSDK
                     }
                 },
                 onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (ValueCallBack<List<Message>>)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Error(code, desc);
-                    });
+                    ChatCallbackObject.ValueCallBackOnError<List<Message>>(cbId, code, desc);
                 });
         }
 
         public override void LoadMessagesWithKeyword(string conversationId, ConversationType conversationType, string keywords = "", string sender = "", long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callback = null)
         {
-            if (null == conversationId)
+            if (null == conversationId || 0 == conversationId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
@@ -266,10 +260,7 @@ namespace ChatSDK
                          {
                              Debug.Log($"Cannot load any message for coversationid={conversationId}");
                          }
-                         ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                             var myhandle = (ValueCallBack<List<Message>>)CallbackManager.Instance().GetCallBackHandle(cbId);
-                             myhandle?.OnSuccessValue(list);
-                         });
+                         ChatCallbackObject.ValueCallBackOnSuccess<List<Message>>(cbId, list);
                      }
                      else
                      {
@@ -277,16 +268,13 @@ namespace ChatSDK
                      }
                  },
                 onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (ValueCallBack<List<Message>>)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Error(code, desc);
-                    });
+                    ChatCallbackObject.ValueCallBackOnError<List<Message>>(cbId, code, desc);
                 });
         }
 
         public override void LoadMessagesWithMsgType(string conversationId, ConversationType conversationType, MessageBodyType bodyType, string sender, long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callback = null)
         {
-            if (null == conversationId)
+            if (null == conversationId || 0 == conversationId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
@@ -312,10 +300,7 @@ namespace ChatSDK
                          {
                              Debug.Log($"Cannot load any message for coversationid={conversationId}");
                          }
-                         ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                             var myhandle = (ValueCallBack<List<Message>>)CallbackManager.Instance().GetCallBackHandle(cbId);
-                             myhandle?.OnSuccessValue(list);
-                         });
+                         ChatCallbackObject.ValueCallBackOnSuccess<List<Message>>(cbId, list);
                      }
                      else
                      {
@@ -323,16 +308,13 @@ namespace ChatSDK
                      }
                  },
                 onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (ValueCallBack<List<Message>>)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Error(code, desc);
-                    });
+                    ChatCallbackObject.ValueCallBackOnError<List<Message>>(cbId, code, desc);
                 });
         }
 
         public override void LoadMessagesWithTime(string conversationId, ConversationType conversationType, long startTime, long endTime, int count = 20, ValueCallBack<List<Message>> callback = null)
         {
-            if (null == conversationId)
+            if (null == conversationId || 0 == conversationId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
@@ -358,10 +340,7 @@ namespace ChatSDK
                          {
                              Debug.Log($"Cannot load any message for coversationid={conversationId}");
                          }
-                         ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                             var myhandle = (ValueCallBack<List<Message>>)CallbackManager.Instance().GetCallBackHandle(cbId);
-                             myhandle?.OnSuccessValue(list);
-                         });
+                         ChatCallbackObject.ValueCallBackOnSuccess<List<Message>>(cbId, list);
                      }
                      else
                      {
@@ -369,16 +348,13 @@ namespace ChatSDK
                      }
                  },
                 onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (ValueCallBack<List<Message>>)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Error(code, desc);
-                    });
+                    ChatCallbackObject.ValueCallBackOnError<List<Message>>(cbId, code, desc);
                 });
         }
 
         public override void MarkAllMessageAsRead(string conversationId, ConversationType conversationType)
         {
-            if (null == conversationId)
+            if (null == conversationId || 0 == conversationId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
@@ -388,7 +364,7 @@ namespace ChatSDK
 
         public override void MarkMessageAsRead(string conversationId, ConversationType conversationType, string messageId)
         {
-            if (null == conversationId || null == messageId)
+            if (null == conversationId || null == messageId || 0 == conversationId.Length || 0 == messageId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
@@ -398,7 +374,7 @@ namespace ChatSDK
 
         public override void SetExt(string conversationId, ConversationType conversationType, Dictionary<string, string> ext)
         {
-            if (null == conversationId || null == ext)
+            if (null == conversationId || 0 == conversationId.Length || null == ext)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
@@ -419,7 +395,7 @@ namespace ChatSDK
 
         public override bool UpdateMessage(string conversationId, ConversationType conversationType, Message message)
         {
-            if (null == conversationId || null == message)
+            if (null == conversationId || 0 == conversationId.Length || null == message)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return false;

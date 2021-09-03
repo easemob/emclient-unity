@@ -1,5 +1,6 @@
 #include "client.h"
 
+#include "emlogininfo.h"
 #include "emchatconfigs.h"
 #include "emchatprivateconfigs.h"
 #include "emclient.h"
@@ -146,4 +147,11 @@ AGORA_API void Client_StartLog(const char *logFilePath) {
 
 AGORA_API void Client_StopLog() {
     return LogHelper::getInstance().stopLogService();
+}
+
+AGORA_API void Client_LoginToken(void *client, FUNC_OnSuccess_With_Result onSuccess) {
+    const EMLoginInfo& loginInfo = CLIENT->getLoginInfo();
+    const char* data[1];
+    data[0] = loginInfo.loginToken().c_str();
+    if(onSuccess) onSuccess((void **)data, DataType::String, 1, -1);
 }

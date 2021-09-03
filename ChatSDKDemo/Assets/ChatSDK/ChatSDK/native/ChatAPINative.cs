@@ -36,6 +36,9 @@ namespace ChatSDK{
 		[DllImport(MyLibName)]
 		internal static extern void Client_StopLog();
 
+		[DllImport(MyLibName)]
+		internal static extern void Client_LoginToken(IntPtr client, OnSuccessResult onSuccess);
+
 		/** ChatManager Stub **/
 		[DllImport(MyLibName)]
 		internal static extern void ChatManager_SendMessage(IntPtr client, int callbackId, OnSuccess onSuccess, OnErrorV2 onError, IntPtr mto, MessageBodyType type);

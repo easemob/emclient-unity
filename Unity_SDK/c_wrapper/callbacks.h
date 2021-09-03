@@ -172,6 +172,7 @@ public:
         }
         //release memory manually
         for(void * message : result) {
+            MessageTO::FreeResource((MessageTO*)message);
             delete (MessageTO *)message;
         }
     }
@@ -195,6 +196,7 @@ public:
         }
         //release memory manually
         for(void * message : result) {
+            MessageTO::FreeResource((MessageTO*)message);
             delete (MessageTO *)message;
         }
     }
@@ -218,6 +220,7 @@ public:
         }
         //release memory manually
         for(void * message : result) {
+            MessageTO::FreeResource((MessageTO*)message);
             delete (MessageTO *)message;
         }
     }
@@ -241,6 +244,7 @@ public:
         }
         //release memory manually
         for(void * message : result) {
+            MessageTO::FreeResource((MessageTO*)message);
             delete (MessageTO *)message;
         }
     }
@@ -264,6 +268,7 @@ public:
         }
         //release memory manually
         for(void * message : result) {
+            MessageTO::FreeResource((MessageTO*)message);
             delete (MessageTO *)message;
         }
     }

@@ -24,7 +24,7 @@ namespace ChatSDK
 
         public override void AcceptInvitation(string username, CallBack handle = null)
         {
-            if (null == username)
+            if (null == username || 0 == username.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
@@ -33,22 +33,16 @@ namespace ChatSDK
 
             ChatAPINative.ContactManager_AcceptInvitation(client, callbackId, username,
                 onSuccess: (int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Success();
-                    });
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
                 },
                 onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Error(code, desc);
-                    });
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
                 });
         }
 
         public override void AddContact(string username, string reason = null, CallBack handle = null)
         {
-            if (null == username)
+            if (null == username || 0 == username.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
@@ -57,22 +51,16 @@ namespace ChatSDK
 
             ChatAPINative.ContactManager_AddContact(client, callbackId, username, reason ?? "",
                 onSuccess: (int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Success();
-                    });
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
                 },
                 onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Error(code, desc);
-                    });
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
                 });
         }
 
         public override void AddUserToBlockList(string username, CallBack handle = null)
         {
-            if (null == username)
+            if (null == username || 0 == username.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
@@ -81,22 +69,17 @@ namespace ChatSDK
 
             ChatAPINative.ContactManager_AddToBlackList(client, callbackId, username, true,
                 onSuccess: (int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Success();
-                    });
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+
                 },
                 onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Error(code, desc);
-                    });
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
                 });
         }
 
         public override void DeclineInvitation(string username, CallBack handle = null)
         {
-            if (null == username)
+            if (null == username || 0 == username.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
@@ -105,22 +88,16 @@ namespace ChatSDK
 
             ChatAPINative.ContactManager_DeclineInvitation(client, callbackId, username,
                 onSuccess: (int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Success();
-                    });
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
                 },
                 onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Error(code, desc);
-                    });
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
                 });
         }
 
         public override void DeleteContact(string username, bool keepConversation = false, CallBack handle = null)
         {
-            if (null == username)
+            if (null == username || 0 == username.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
@@ -129,16 +106,10 @@ namespace ChatSDK
 
             ChatAPINative.ContactManager_DeleteContact(client, callbackId, username, false,
                 onSuccess: (int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Success();
-                    });
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
                 },
                 onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Error(code, desc);
-                    });
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
                 });
         }
 
@@ -188,10 +159,7 @@ namespace ChatSDK
                         {
                             Debug.Log("Empty contact list is returned.");
                         }
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                            var myhandle = (ValueCallBack<List<string>>)CallbackManager.Instance().GetCallBackHandle(cbId);
-                            myhandle?.OnSuccessValue(list);
-                        });
+                        ChatCallbackObject.ValueCallBackOnSuccess<List<string>>(cbId, list);
                     }
                     else
                     {
@@ -199,10 +167,7 @@ namespace ChatSDK
                     }
                 },
                 onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (ValueCallBack<List<string>>)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Error(code, desc);
-                    });
+                    ChatCallbackObject.ValueCallBackOnError<List<string>>(cbId, code, desc);
                 });
         }
 
@@ -221,10 +186,7 @@ namespace ChatSDK
                         {
                             list.Add(Marshal.PtrToStringAnsi(array[i]));
                         }
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                            var myhandle = (ValueCallBack<List<string>>)CallbackManager.Instance().GetCallBackHandle(cbId);
-                            myhandle?.OnSuccessValue(list);
-                        });
+                        ChatCallbackObject.ValueCallBackOnSuccess<List<string>>(cbId, list);
                     }
                     else
                     {
@@ -233,10 +195,7 @@ namespace ChatSDK
                 },
 
                 onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (ValueCallBack<List<string>>)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Error(code, desc);
-                    });
+                    ChatCallbackObject.ValueCallBackOnError<List<string>>(cbId, code, desc);
                 });
         }
 
@@ -256,10 +215,7 @@ namespace ChatSDK
                         {
                             list.Add(Marshal.PtrToStringAnsi(array[i]));
                         }
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                            var myhandle = (ValueCallBack<List<string>>)CallbackManager.Instance().GetCallBackHandle(cbId);
-                            myhandle?.OnSuccessValue(list);
-                        });
+                        ChatCallbackObject.ValueCallBackOnSuccess<List<string>>(cbId, list);
                     }
                     else
                     {
@@ -268,16 +224,13 @@ namespace ChatSDK
                 },
 
                 onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (ValueCallBack<List<string>>)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Error(code, desc);
-                    });
+                    ChatCallbackObject.ValueCallBackOnError<List<string>>(cbId, code, desc);
                 });
         }
 
         public override void RemoveUserFromBlockList(string username, CallBack handle = null)
         {
-            if (null == username)
+            if (null == username || 0 == username.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
@@ -286,16 +239,10 @@ namespace ChatSDK
 
             ChatAPINative.ContactManager_RemoveFromBlackList(client, callbackId, username,
                 onSuccess: (int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Success();
-                    });
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
                 },
                 onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                        var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
-                        myhandle?.Error(code, desc);
-                    });
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
                 });
         }
     }

@@ -141,6 +141,7 @@ AGORA_API void ChatManager_FetchHistoryMessages(void *client, int callbackId, co
             onSuccess((void *)&cursorResultTo, (void **)data, DataType::CursorResult, size, callbackId);
             //free memory
             for(int i=0; i<size; i++) {
+                MessageTO::FreeResource((MessageTO*)data[i]->Data);
                 delete (MessageTO*)data[i]->Data;
                 delete (TOItem*)data[i];
             }
@@ -327,6 +328,7 @@ AGORA_API void ChatManager_GetMessage(void *client, const char * messageId, FUNC
         TOItem* item = new TOItem((int)messagePtr->bodies()[0]->type(), mto);
         TOItem* data[1] = {item};
         onSuccess((void**)data, DataType::ListOfMessage, 1, -1);
+        MessageTO::FreeResource(mto);
         delete mto;
         delete item;
     }
@@ -418,6 +420,7 @@ AGORA_API void ChatManager_ResendMessage(void *client, int callbackId, const cha
     TOItem* item = new TOItem((int)messagePtr->bodies()[0]->type(), mto);
     TOItem* data[1] = {item};
     onSuccessResult((void **)data, DataType::ListOfMessage, 1, callbackId);
+    MessageTO::FreeResource(mto);
     delete mto;
     delete item;
 }
@@ -441,6 +444,7 @@ AGORA_API void ChatManager_LoadMoreMessages(void *client, FUNC_OnSuccess_With_Re
     }
     onSuccess((void **)data, DataType::ListOfMessage, size, -1);
     for(size_t i=0; i<size; i++) {
+        MessageTO::FreeResource((MessageTO*)data[i]->Data);
         delete (MessageTO*)data[i]->Data;
         delete (TOItem*)data[i];
     }

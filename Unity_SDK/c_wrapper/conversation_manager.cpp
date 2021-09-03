@@ -88,6 +88,7 @@ AGORA_API void ConversationManager_LatestMessage(void *client, const char * conv
         TOItem* item = new TOItem((int)msgPtr->bodies()[0]->type(), MessageTO::FromEMMessage(msgPtr));
         data[0] = item;
         onSuccess((void **)data, DataType::ListOfMessage, 1, -1);
+        MessageTO::FreeResource((MessageTO*)item->Data);
         delete (MessageTO*)item->Data;
         delete item;
     } else {
@@ -115,6 +116,7 @@ AGORA_API void ConversationManager_LatestMessageFromOthers(void *client, const c
         TOItem* item = new TOItem((int)msgPtr->bodies()[0]->type(), MessageTO::FromEMMessage(msgPtr));
         data[0] = item;
         onSuccess((void **)data, DataType::ListOfMessage, 1, -1);
+        MessageTO::FreeResource((MessageTO*)item->Data);
         delete (MessageTO*)item->Data;
         delete item;
     } else {
@@ -142,6 +144,7 @@ AGORA_API void ConversationManager_LoadMessage(void *client, const char * conver
         TOItem* item = new TOItem((int)msgPtr->bodies()[0]->type(), MessageTO::FromEMMessage(msgPtr));
         data[0] = item;
         onSuccess((void **)data, DataType::ListOfMessage, 1, -1);
+        MessageTO::FreeResource((MessageTO*)item->Data);
         delete (MessageTO*)item->Data;
         delete item;
     } else {
@@ -177,6 +180,7 @@ AGORA_API void ConversationManager_LoadMessages(void *client, int callbackId, co
             }
             onSuccess((void **)data, DataType::ListOfMessage, size, callbackId);
             for(int i=0; i<size; i++) {
+                MessageTO::FreeResource((MessageTO*)data[i]->Data);
                 delete (MessageTO*)data[i]->Data;
                 delete data[i];
             }
@@ -215,6 +219,7 @@ AGORA_API void ConversationManager_LoadMessagesWithKeyword(void *client, int cal
             }
             onSuccess((void **)data, DataType::ListOfMessage, size, callbackId);
             for(int i=0; i<size; i++) {
+                MessageTO::FreeResource((MessageTO*)data[i]->Data);
                 delete (MessageTO*)data[i]->Data;
                 delete data[i];
             }
@@ -252,6 +257,7 @@ AGORA_API void ConversationManager_LoadMessagesWithMsgType(void *client, int cal
             }
             onSuccess((void **)data, DataType::ListOfMessage, size, callbackId);
             for(int i=0; i<size; i++) {
+                MessageTO::FreeResource((MessageTO*)data[i]->Data);
                 delete (MessageTO*)data[i]->Data;
                 delete data[i];
             }
@@ -288,6 +294,7 @@ AGORA_API void ConversationManager_LoadMessagesWithTime(void *client, int callba
             }
             onSuccess((void **)data, DataType::ListOfMessage, size, callbackId);
             for(int i=0; i<size; i++) {
+                MessageTO::FreeResource((MessageTO*)data[i]->Data);
                 delete (MessageTO*)data[i]->Data;
                 delete data[i];
             }
