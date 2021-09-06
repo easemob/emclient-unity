@@ -732,7 +732,7 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
         }
         List<string> list = new List<string>();
         foreach (var group in groupList) {
-            list.Add(group.Name);
+            list.Add(group.GroupId);
         }
         string str = string.Join(",", list.ToArray());
         UIManager.DefaultAlert(transform, str);
@@ -746,7 +746,7 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
                 List<string> list = new List<string>();
                 foreach (var group in groupList)
                 {
-                    list.Add(group.Name);
+                    list.Add(group.GroupId);
                 }
                 string str = string.Join(",", list.ToArray());
                 UIManager.DefaultAlert(transform, str);
@@ -872,6 +872,30 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
     }
 
     void RemoveGroupSharedFileBtnAction() {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string id = dict["fileId"];
+            if (null == currentGroupId || 0 == currentGroupId.Length || null == id || 0 == id.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
+            SDKClient.Instance.GroupManager.RemoveGroupSharedFile(currentGroupId, dict["fileId"], new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("fileId");
+
+        UIManager.DefaultInputAlert(transform, config);
 
         Debug.Log("RemoveGroupSharedFileBtnAction");
     }

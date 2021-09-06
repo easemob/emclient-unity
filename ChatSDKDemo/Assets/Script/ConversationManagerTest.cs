@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -374,9 +375,9 @@ public class ConversationManagerTest : MonoBehaviour
                 onSuccess: (list) => {
                     UIManager.DefaultAlert(transform, $"获取到{list.Count}条消息");
                 },
-            onError: (code, desc) => {
-                UIManager.ErrorAlert(transform, code, desc);
-            }
+                onError: (code, desc) => {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
             ));
         });
 
@@ -388,10 +389,47 @@ public class ConversationManagerTest : MonoBehaviour
     }
     void LoadMessagesWithTimeBtnAction()
     {
+        if (null == conversationId || 0 == conversationId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
+
+        long startTime = 0;
+        long endTime = (long)(DateTime.UtcNow.Ticks);
+        //long endTime = (long)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalMilliseconds);
+
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
+        conv.LoadMessagesWithTime(startTime, endTime, count:200, new ValueCallBack<List<Message>>(
+            onSuccess: (list) => {
+                UIManager.DefaultAlert(transform, $"获取到{list.Count}条消息");
+            },
+            onError: (code, desc) => {
+                UIManager.ErrorAlert(transform, code, desc);
+            }
+        ));
+
         Debug.Log("LoadMessagesWithTimeBtnAction");
     }
     void LoadMessagesWithMsgTypeBtnAction()
     {
+        if (null == conversationId || 0 == conversationId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
+
+        MessageBodyType type = MessageBodyType.TXT;
+
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
+        conv.LoadMessagesWithMsgType(type, null, -1, count: 200, MessageSearchDirection.UP, new ValueCallBack<List<Message>>(
+            onSuccess: (list) => {
+                UIManager.DefaultAlert(transform, $"获取到{list.Count}条消息");
+            },
+            onError: (code, desc) => {
+                UIManager.ErrorAlert(transform, code, desc);
+            }
+        ));
         Debug.Log("LoadMessagesWithMsgTypeBtnAction");
     }
 
