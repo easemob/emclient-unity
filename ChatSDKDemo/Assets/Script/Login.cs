@@ -35,6 +35,7 @@ public class Login : MonoBehaviour
     private void OnApplicationQuit()
     {
         SDKClient.Instance.Logout(false);
+        AssetBundle.UnloadAllAssetBundles(false);
     }
 
     void Start()
