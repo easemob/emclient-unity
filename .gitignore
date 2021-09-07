@@ -103,5 +103,4 @@ sysinfo.txt
 *.apk
 *.unitypackage
 **/change_all.sh
-**/change_all.sh.meta
 
