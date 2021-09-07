@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ChatSDK {
 
-    internal class ConnectionListener : MonoBehaviour
+    internal sealed class ConnectionListener : MonoBehaviour
     {
 
         internal List<IConnectionDelegate> delegater;

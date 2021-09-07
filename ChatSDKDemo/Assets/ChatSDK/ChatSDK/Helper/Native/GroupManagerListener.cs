@@ -3,7 +3,7 @@ using SimpleJSON;
 using UnityEngine;
 
 namespace ChatSDK {
-    internal class GroupManagerListener : MonoBehaviour
+    internal sealed class GroupManagerListener : MonoBehaviour
     {
 
         internal List<IGroupManagerDelegate> delegater;

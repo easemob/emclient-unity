@@ -2,7 +2,7 @@
 
 namespace ChatSDK
 {
-    public class ChatManager_Win : IChatManager
+    internal sealed class ChatManager_Win : IChatManager
     {
         public override bool DeleteConversation(string conversationId, bool deleteMessages = true)
         {

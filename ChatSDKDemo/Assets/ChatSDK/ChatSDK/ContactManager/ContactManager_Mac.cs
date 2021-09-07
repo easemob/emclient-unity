@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace ChatSDK
 {
-    public class ContactManager_Mac : IContactManager
+    internal sealed class ContactManager_Mac : IContactManager
     {
         private IntPtr client;
         private ContactManagerHub contactManagerHub;

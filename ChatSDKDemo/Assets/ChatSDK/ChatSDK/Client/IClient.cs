@@ -1,6 +1,6 @@
 ﻿namespace ChatSDK
 {
-    public abstract class IClient
+    internal abstract class IClient
     {
         static private bool _initialized = false;
 

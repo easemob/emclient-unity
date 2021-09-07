@@ -5,7 +5,7 @@ using SimpleJSON;
 
 namespace ChatSDK
 {
-    public class GroupManager_Android : IGroupManager
+    internal sealed class GroupManager_Android : IGroupManager
     {
 
         private AndroidJavaObject wrapper;

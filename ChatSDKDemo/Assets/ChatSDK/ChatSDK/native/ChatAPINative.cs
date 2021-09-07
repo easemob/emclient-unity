@@ -2,7 +2,7 @@
 using System;
 
 namespace ChatSDK{
-	public class ChatAPINative
+	public sealed class ChatAPINative
 	{
 
 #region DllImport

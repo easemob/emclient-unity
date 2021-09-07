@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace ChatSDK
 {
 
-    class Client_iOS : IClient
+    internal sealed class Client_iOS : IClient
     {
 
         static string Connection_Obj = "unity_chat_emclient_connection_obj";

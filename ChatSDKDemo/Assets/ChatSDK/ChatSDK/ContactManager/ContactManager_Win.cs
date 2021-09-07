@@ -2,7 +2,7 @@
 
 namespace ChatSDK
 {
-    public class ContactManager_Win : IContactManager
+    internal sealed class ContactManager_Win : IContactManager
     {
         public override void AcceptInvitation(string username, CallBack handle = null)
         {

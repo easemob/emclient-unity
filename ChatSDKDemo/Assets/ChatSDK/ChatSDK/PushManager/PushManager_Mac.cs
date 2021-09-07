@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace ChatSDK
 {
-    public class PushManager_Mac : IPushManager
+    internal sealed class PushManager_Mac : IPushManager
     {
         private IntPtr client;
 

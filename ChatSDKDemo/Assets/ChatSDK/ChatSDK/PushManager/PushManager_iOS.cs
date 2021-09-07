@@ -4,7 +4,7 @@ using SimpleJSON;
 
 namespace ChatSDK
 {
-    public class PushManager_iOS : IPushManager
+    internal sealed class PushManager_iOS : IPushManager
     {
         public List<string> GetNoDisturbGroups()
         {

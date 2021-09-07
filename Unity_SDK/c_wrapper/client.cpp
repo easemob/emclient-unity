@@ -18,7 +18,7 @@ static bool G_DEBUG_MODE = false;
 static bool G_AUTO_LOGIN = true;
 static bool G_LOGIN_STATUS = false;
 
-AGORA_API void Client_CreateAccount(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, const char *username, const char *password)
+Hypheante_API void Client_CreateAccount(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, const char *username, const char *password)
 {
     LOG("Client_CreateAccount() called with username=%s password=%s", username, password);
     EMErrorPtr result = CLIENT->createAccount(username, password);
@@ -67,7 +67,7 @@ EMChatConfigsPtr ConfigsFromOptions(Options *options) {
 EMClient *gClient = NULL;
 EMConnectionListener *gConnectionListener = NULL;
 
-AGORA_API void* Client_InitWithOptions(Options *options, FUNC_OnConnected onConnected, FUNC_OnDisconnected onDisconnected, FUNC_OnPong onPong)
+Hypheante_API void* Client_InitWithOptions(Options *options, FUNC_OnConnected onConnected, FUNC_OnDisconnected onDisconnected, FUNC_OnPong onPong)
 {
     // global switch
     G_DEBUG_MODE = options->DebugMode;
@@ -90,7 +90,7 @@ AGORA_API void* Client_InitWithOptions(Options *options, FUNC_OnConnected onConn
     return gClient;
 }
 
-AGORA_API void Client_Login(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, const char *username, const char *pwdOrToken, bool isToken)
+Hypheante_API void Client_Login(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, const char *username, const char *pwdOrToken, bool isToken)
 {
     LOG("Client_Login() called with username=%s, pwdOrToken=%s, isToken=%d", username, pwdOrToken, isToken);
     EMErrorPtr result;
@@ -105,7 +105,7 @@ AGORA_API void Client_Login(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError
     }
 }
 
-AGORA_API void Client_Logout(void *client, FUNC_OnSuccess onSuccess, bool unbindDeviceToken)
+Hypheante_API void Client_Logout(void *client, FUNC_OnSuccess onSuccess, bool unbindDeviceToken)
 {
     /*
     CLIENT->getChatManager().clearListeners();
@@ -141,15 +141,15 @@ AGORA_API void Client_Logout(void *client, FUNC_OnSuccess onSuccess, bool unbind
     }
 }
 
-AGORA_API void Client_StartLog(const char *logFilePath) {
+Hypheante_API void Client_StartLog(const char *logFilePath) {
     LogHelper::getInstance().startLogService(logFilePath);
 }
 
-AGORA_API void Client_StopLog() {
+Hypheante_API void Client_StopLog() {
     return LogHelper::getInstance().stopLogService();
 }
 
-AGORA_API void Client_LoginToken(void *client, FUNC_OnSuccess_With_Result onSuccess) {
+Hypheante_API void Client_LoginToken(void *client, FUNC_OnSuccess_With_Result onSuccess) {
     const EMLoginInfo& loginInfo = CLIENT->getLoginInfo();
     const char* data[1];
     data[0] = loginInfo.loginToken().c_str();

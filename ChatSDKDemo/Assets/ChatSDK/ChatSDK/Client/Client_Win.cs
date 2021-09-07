@@ -1,6 +1,6 @@
 ﻿namespace ChatSDK
 {
-    class Client_Win : IClient
+    internal sealed class Client_Win : IClient
     {
 
         public override void InitWithOptions(Options options)

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ChatSDK
 {
-    public class ContactManager_Android : IContactManager
+    internal sealed class ContactManager_Android : IContactManager
     {
 
         private AndroidJavaObject wrapper;

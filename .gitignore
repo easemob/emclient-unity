@@ -102,4 +102,5 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+**/change_all.sh
 

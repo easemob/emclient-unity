@@ -2,7 +2,7 @@
 
 namespace ChatSDK
 {
-    public class RoomManager_Win : IRoomManager
+    internal sealed class RoomManager_Win : IRoomManager
     {
         public override void AddRoomAdmin(string roomId, string memberId, CallBack handle = null)
         {

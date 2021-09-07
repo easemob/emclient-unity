@@ -2,7 +2,7 @@
 
 namespace ChatSDK
 {
-    public class PushManager_Win : IPushManager
+    internal sealed class PushManager_Win : IPushManager
     {
         public List<string> GetNoDisturbGroups()
         {
