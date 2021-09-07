@@ -61,7 +61,7 @@ void UpdateTsMsgMap(int64_t ts)
     LOG("after update, msgid: %s -> %s", msgId.c_str(), it->second->MsgId);
 }
 
-AGORA_API void ChatManager_SendMessage(void *client, int callbackId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, void *mto, EMMessageBody::EMMessageBodyType type) {
+Hypheante_API void ChatManager_SendMessage(void *client, int callbackId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, void *mto, EMMessageBody::EMMessageBodyType type) {
     EMError error;
     if(!MandatoryCheck(mto, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -90,7 +90,7 @@ AGORA_API void ChatManager_SendMessage(void *client, int callbackId, FUNC_OnSucc
 
 EMChatManagerListener *gChatManagerListener = nullptr;
 
-AGORA_API void ChatManager_AddListener(void *client,
+Hypheante_API void ChatManager_AddListener(void *client,
                                        FUNC_OnMessagesReceived onMessagesReceived,
                                        FUNC_OnCmdMessagesReceived onCmdMessagesReceived,
                                        FUNC_OnMessagesRead onMessagesRead,
@@ -108,7 +108,7 @@ AGORA_API void ChatManager_AddListener(void *client,
     }
 }
 
-AGORA_API void ChatManager_FetchHistoryMessages(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType type, const char * startMessageId, int count, FUNC_OnSuccess_With_Result_V2 onSuccess, FUNC_OnError onError)
+Hypheante_API void ChatManager_FetchHistoryMessages(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType type, const char * startMessageId, int count, FUNC_OnSuccess_With_Result_V2 onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(conversationId, error)) {
@@ -153,7 +153,7 @@ AGORA_API void ChatManager_FetchHistoryMessages(void *client, int callbackId, co
     t.detach();
 }
 
-AGORA_API void ChatManager_GetConversationsFromServer(void *client, int callbackId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+Hypheante_API void ChatManager_GetConversationsFromServer(void *client, int callbackId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     std::thread t([=](){
         EMError error;
@@ -179,14 +179,14 @@ AGORA_API void ChatManager_GetConversationsFromServer(void *client, int callback
     t.detach();
 }
 
-AGORA_API void ChatManager_RemoveConversation(void *client, const char * conversationId, bool isRemoveMessages)
+Hypheante_API void ChatManager_RemoveConversation(void *client, const char * conversationId, bool isRemoveMessages)
 {
     if(!MandatoryCheck(conversationId))
         return;
     CLIENT->getChatManager().removeConversation(conversationId, isRemoveMessages);
 }
 
-AGORA_API void ChatManager_DownloadMessageAttachments(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+Hypheante_API void ChatManager_DownloadMessageAttachments(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(messageId, error)) {
@@ -217,7 +217,7 @@ AGORA_API void ChatManager_DownloadMessageAttachments(void *client, int callback
     CLIENT->getChatManager().downloadMessageAttachments(messagePtr);
 }
 
-AGORA_API void ChatManager_DownloadMessageThumbnail(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+Hypheante_API void ChatManager_DownloadMessageThumbnail(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(messageId, error)) {
@@ -249,7 +249,7 @@ AGORA_API void ChatManager_DownloadMessageThumbnail(void *client, int callbackId
     CLIENT->getChatManager().downloadMessageThumbnail(messagePtr);
 }
 
-AGORA_API bool ChatManager_ConversationWithType(void *client, const char * conversationId, EMConversation::EMConversationType type, bool createIfNotExist)
+Hypheante_API bool ChatManager_ConversationWithType(void *client, const char * conversationId, EMConversation::EMConversationType type, bool createIfNotExist)
 {
     if(!MandatoryCheck(conversationId))
         return false;
@@ -262,7 +262,7 @@ AGORA_API bool ChatManager_ConversationWithType(void *client, const char * conve
     }
 }
 
-AGORA_API int ChatManager_GetUnreadMessageCount(void *client)
+Hypheante_API int ChatManager_GetUnreadMessageCount(void *client)
 {
     EMError error;
     int count = 0;
@@ -277,7 +277,7 @@ AGORA_API int ChatManager_GetUnreadMessageCount(void *client)
     return count;
 }
 
-AGORA_API bool ChatManager_InsertMessages(void *client, void * messageList[], EMMessageBody::EMMessageBodyType typeList[], int size)
+Hypheante_API bool ChatManager_InsertMessages(void *client, void * messageList[], EMMessageBody::EMMessageBodyType typeList[], int size)
 {
     EMMessageList list;
     //convert TO to EMMessagePtr
@@ -292,7 +292,7 @@ AGORA_API bool ChatManager_InsertMessages(void *client, void * messageList[], EM
     }
 }
 
-AGORA_API void ChatManager_LoadAllConversationsFromDB(void *client, FUNC_OnSuccess_With_Result onSuccess)
+Hypheante_API void ChatManager_LoadAllConversationsFromDB(void *client, FUNC_OnSuccess_With_Result onSuccess)
 {
     EMConversationList conversationList = CLIENT->getChatManager().loadAllConversationsFromDB();
     
@@ -310,7 +310,7 @@ AGORA_API void ChatManager_LoadAllConversationsFromDB(void *client, FUNC_OnSucce
     }
 }
 
-AGORA_API void ChatManager_GetMessage(void *client, const char * messageId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+Hypheante_API void ChatManager_GetMessage(void *client, const char * messageId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(messageId, error)) {
@@ -334,7 +334,7 @@ AGORA_API void ChatManager_GetMessage(void *client, const char * messageId, FUNC
     }
 }
 
-AGORA_API bool ChatManager_MarkAllConversationsAsRead(void *client)
+Hypheante_API bool ChatManager_MarkAllConversationsAsRead(void *client)
 {
     bool ret = true;
     EMError error;
@@ -351,7 +351,7 @@ AGORA_API bool ChatManager_MarkAllConversationsAsRead(void *client)
     return ret;
 }
 
-AGORA_API void ChatManager_RecallMessage(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+Hypheante_API void ChatManager_RecallMessage(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(messageId, error)) {
@@ -384,7 +384,7 @@ AGORA_API void ChatManager_RecallMessage(void *client, int callbackId, const cha
     CLIENT->getChatManager().recallMessage(messagePtr, error);
 }
 
-AGORA_API void ChatManager_ResendMessage(void *client, int callbackId, const char * messageId, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+Hypheante_API void ChatManager_ResendMessage(void *client, int callbackId, const char * messageId, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(messageId, error)) {
@@ -425,7 +425,7 @@ AGORA_API void ChatManager_ResendMessage(void *client, int callbackId, const cha
     delete item;
 }
 
-AGORA_API void ChatManager_LoadMoreMessages(void *client, FUNC_OnSuccess_With_Result onSuccess, const char * keywords, long timestamp, int maxcount, const char * from, EMConversation::EMMessageSearchDirection direction)
+Hypheante_API void ChatManager_LoadMoreMessages(void *client, FUNC_OnSuccess_With_Result onSuccess, const char * keywords, long timestamp, int maxcount, const char * from, EMConversation::EMMessageSearchDirection direction)
 {
     std::string keywordsStr = OptionalStrParamCheck(keywords);
     std::string fromStr = OptionalStrParamCheck(from);
@@ -450,7 +450,7 @@ AGORA_API void ChatManager_LoadMoreMessages(void *client, FUNC_OnSuccess_With_Re
     }
 }
 
-AGORA_API void ChatManager_SendReadAckForConversation(void *client, int callbackId, const char * conversationId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+Hypheante_API void ChatManager_SendReadAckForConversation(void *client, int callbackId, const char * conversationId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(conversationId, error)) {
@@ -472,7 +472,7 @@ AGORA_API void ChatManager_SendReadAckForConversation(void *client, int callback
     t.detach();
 }
 
-AGORA_API void ChatManager_SendReadAckForMessage(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+Hypheante_API void ChatManager_SendReadAckForMessage(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(messageId, error)) {
@@ -499,7 +499,7 @@ AGORA_API void ChatManager_SendReadAckForMessage(void *client, int callbackId, c
     t.detach();
 }
 
-AGORA_API bool ChatManager_UpdateMessage(void *client, void *mto, EMMessageBody::EMMessageBodyType type)
+Hypheante_API bool ChatManager_UpdateMessage(void *client, void *mto, EMMessageBody::EMMessageBodyType type)
 {
     if(!MandatoryCheck(mto))
         return false;

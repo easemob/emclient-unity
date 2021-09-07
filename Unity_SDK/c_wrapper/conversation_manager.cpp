@@ -11,7 +11,7 @@
 #include "emmessagebody.h"
 #include "tool.h"
 
-AGORA_API bool ConversationManager_AppendMessage(void *client, const char * conversationId, EMConversation::EMConversationType converationType, void *mto, EMMessageBody::EMMessageBodyType type)
+Hypheante_API bool ConversationManager_AppendMessage(void *client, const char * conversationId, EMConversation::EMConversationType converationType, void *mto, EMMessageBody::EMMessageBodyType type)
 {
     if(!MandatoryCheck(conversationId))
        return false;
@@ -21,7 +21,7 @@ AGORA_API bool ConversationManager_AppendMessage(void *client, const char * conv
     return conversationPtr->appendMessage(messagePtr);
 }
 
-AGORA_API bool ConversationManager_ClearAllMessages(void *client, const char * conversationId, EMConversation::EMConversationType converationType)
+Hypheante_API bool ConversationManager_ClearAllMessages(void *client, const char * conversationId, EMConversation::EMConversationType converationType)
 {
     if(!MandatoryCheck(conversationId))
        return false;
@@ -30,7 +30,7 @@ AGORA_API bool ConversationManager_ClearAllMessages(void *client, const char * c
     return conversationPtr->clearAllMessages();
 }
 
-AGORA_API bool ConversationManager_RemoveMessage(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, const char * messageId)
+Hypheante_API bool ConversationManager_RemoveMessage(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, const char * messageId)
 {
     if(!MandatoryCheck(conversationId))
        return false;
@@ -39,7 +39,7 @@ AGORA_API bool ConversationManager_RemoveMessage(void *client, const char * conv
     return conversationPtr->removeMessage(messageId);
 }
 
-AGORA_API void ConversationManager_ExtField(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, FUNC_OnSuccess_With_Result onSuccess)
+Hypheante_API void ConversationManager_ExtField(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, FUNC_OnSuccess_With_Result onSuccess)
 {
     if(!MandatoryCheck(conversationId)) {
         onSuccess(nullptr, DataType::String, 0, -1);
@@ -59,7 +59,7 @@ AGORA_API void ConversationManager_ExtField(void *client, const char * conversat
     }
 }
 
-AGORA_API bool ConversationManager_InsertMessage(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, void *mto, EMMessageBody::EMMessageBodyType type)
+Hypheante_API bool ConversationManager_InsertMessage(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, void *mto, EMMessageBody::EMMessageBodyType type)
 {
     if(!MandatoryCheck(conversationId))
        return false;
@@ -69,7 +69,7 @@ AGORA_API bool ConversationManager_InsertMessage(void *client, const char * conv
     return conversationPtr->insertMessage(messagePtr);
 }
 
-AGORA_API void ConversationManager_LatestMessage(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, FUNC_OnSuccess_With_Result onSuccess)
+Hypheante_API void ConversationManager_LatestMessage(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, FUNC_OnSuccess_With_Result onSuccess)
 {
     if(!MandatoryCheck(conversationId)) {
         onSuccess(nullptr, DataType::ListOfMessage, -1, -1);
@@ -97,7 +97,7 @@ AGORA_API void ConversationManager_LatestMessage(void *client, const char * conv
     }
 }
 
-AGORA_API void ConversationManager_LatestMessageFromOthers(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, FUNC_OnSuccess_With_Result onSuccess)
+Hypheante_API void ConversationManager_LatestMessageFromOthers(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, FUNC_OnSuccess_With_Result onSuccess)
 {
     if(!MandatoryCheck(conversationId)) {
         onSuccess(nullptr, DataType::ListOfMessage, -1, -1);
@@ -125,7 +125,7 @@ AGORA_API void ConversationManager_LatestMessageFromOthers(void *client, const c
     }
 }
 
-AGORA_API void ConversationManager_LoadMessage(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, const char * messageId, FUNC_OnSuccess_With_Result onSuccess)
+Hypheante_API void ConversationManager_LoadMessage(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, const char * messageId, FUNC_OnSuccess_With_Result onSuccess)
 {
     if(!MandatoryCheck(conversationId, messageId)) {
         onSuccess(nullptr, DataType::ListOfMessage, -1, -1);
@@ -153,7 +153,7 @@ AGORA_API void ConversationManager_LoadMessage(void *client, const char * conver
     }
 }
 
-AGORA_API void ConversationManager_LoadMessages(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType conversationType, const char * startMessageId, int count, EMConversation::EMMessageSearchDirection direction, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+Hypheante_API void ConversationManager_LoadMessages(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType conversationType, const char * startMessageId, int count, EMConversation::EMMessageSearchDirection direction, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(conversationId, error)) {
@@ -192,7 +192,7 @@ AGORA_API void ConversationManager_LoadMessages(void *client, int callbackId, co
     t.detach();
 }
 
-AGORA_API void ConversationManager_LoadMessagesWithKeyword(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType conversationType, const char * keywords, const char * sender, long timestamp, int count, EMConversation::EMMessageSearchDirection direction, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+Hypheante_API void ConversationManager_LoadMessagesWithKeyword(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType conversationType, const char * keywords, const char * sender, long timestamp, int count, EMConversation::EMMessageSearchDirection direction, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(conversationId, keywords, error)) {
@@ -231,7 +231,7 @@ AGORA_API void ConversationManager_LoadMessagesWithKeyword(void *client, int cal
     t.detach();
 }
 
-AGORA_API void ConversationManager_LoadMessagesWithMsgType(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType conversationType, EMMessageBody::EMMessageBodyType type, long timestamp, int count, const char * sender, EMConversation::EMMessageSearchDirection direction, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+Hypheante_API void ConversationManager_LoadMessagesWithMsgType(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType conversationType, EMMessageBody::EMMessageBodyType type, long timestamp, int count, const char * sender, EMConversation::EMMessageSearchDirection direction, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(conversationId, error)) {
@@ -269,7 +269,7 @@ AGORA_API void ConversationManager_LoadMessagesWithMsgType(void *client, int cal
     t.detach();
 }
 
-AGORA_API void ConversationManager_LoadMessagesWithTime(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType conversationType, long startTimeStamp, long endTimeStamp, int count, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+Hypheante_API void ConversationManager_LoadMessagesWithTime(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType conversationType, long startTimeStamp, long endTimeStamp, int count, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(conversationId, error)) {
@@ -306,7 +306,7 @@ AGORA_API void ConversationManager_LoadMessagesWithTime(void *client, int callba
     t.detach();
 }
 
-AGORA_API void ConversationManager_MarkAllMessagesAsRead(void *client, const char * conversationId, EMConversation::EMConversationType conversationType)
+Hypheante_API void ConversationManager_MarkAllMessagesAsRead(void *client, const char * conversationId, EMConversation::EMConversationType conversationType)
 {
     if(!MandatoryCheck(conversationId))
         return;
@@ -315,7 +315,7 @@ AGORA_API void ConversationManager_MarkAllMessagesAsRead(void *client, const cha
     conversationPtr->markAllMessagesAsRead(true);
 }
 
-AGORA_API void ConversationManager_MarkMessageAsRead(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, const char * messageId)
+Hypheante_API void ConversationManager_MarkMessageAsRead(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, const char * messageId)
 {
     if(!MandatoryCheck(conversationId, messageId))
         return;
@@ -324,7 +324,7 @@ AGORA_API void ConversationManager_MarkMessageAsRead(void *client, const char * 
     conversationPtr->markMessageAsRead(messageId,true);
 }
 
-AGORA_API void ConversationManager_SetExtField(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, const char * ext)
+Hypheante_API void ConversationManager_SetExtField(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, const char * ext)
 {
     if(!MandatoryCheck(conversationId, ext))
         return;
@@ -333,7 +333,7 @@ AGORA_API void ConversationManager_SetExtField(void *client, const char * conver
     conversationPtr->setExtField(ext);
 }
 
-AGORA_API int ConversationManager_UnreadMessagesCount(void *client, const char * conversationId, EMConversation::EMConversationType conversationType)
+Hypheante_API int ConversationManager_UnreadMessagesCount(void *client, const char * conversationId, EMConversation::EMConversationType conversationType)
 {
     if(!MandatoryCheck(conversationId))
         return 0;
@@ -342,7 +342,7 @@ AGORA_API int ConversationManager_UnreadMessagesCount(void *client, const char *
     return conversationPtr->unreadMessagesCount();
 }
 
-AGORA_API bool ConversationManager_UpdateMessage(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, void *mto, EMMessageBody::EMMessageBodyType type)
+Hypheante_API bool ConversationManager_UpdateMessage(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, void *mto, EMMessageBody::EMMessageBodyType type)
 {
     if(!MandatoryCheck(conversationId))
         return false;

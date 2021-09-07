@@ -13,7 +13,7 @@
 using namespace easemob;
 EMChatroomManagerListener *gRoomManagerListener = nullptr;
 
-AGORA_API void RoomManager_AddListener(void *client, FUNC_OnChatRoomDestroyed onChatRoomDestroyed, FUNC_OnMemberJoined onMemberJoined,
+Hypheante_API void RoomManager_AddListener(void *client, FUNC_OnChatRoomDestroyed onChatRoomDestroyed, FUNC_OnMemberJoined onMemberJoined,
                                        FUNC_OnMemberExitedFromRoom onMemberExited,FUNC_OnRemovedFromChatRoom onRemovedFromChatRoom,
                                        FUNC_OnMuteListAdded onMuteListAdded, FUNC_OnMuteListRemoved onMuteListRemoved,FUNC_OnAdminAdded onAdminAdded,
                                        FUNC_OnAdminRemoved onAdminRemoved, FUNC_OnOwnerChanged onOwnerChanged, FUNC_OnAnnouncementChanged onAnnouncementChanged)
@@ -24,7 +24,7 @@ AGORA_API void RoomManager_AddListener(void *client, FUNC_OnChatRoomDestroyed on
     }
 }
 
-AGORA_API void RoomManager_AddRoomAdmin(void * client, int callbackId, const char * roomId, const char * memberId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+Hypheante_API void RoomManager_AddRoomAdmin(void * client, int callbackId, const char * roomId, const char * memberId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(roomId, memberId, error)) {
@@ -53,7 +53,7 @@ AGORA_API void RoomManager_AddRoomAdmin(void * client, int callbackId, const cha
     t.detach();
 }
 
-AGORA_API void RoomManager_BlockChatroomMembers(void * client, int callbackId, const char * roomId, const char * memberArray[], int size, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+Hypheante_API void RoomManager_BlockChatroomMembers(void * client, int callbackId, const char * roomId, const char * memberArray[], int size, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(roomId, error)) {
@@ -85,7 +85,7 @@ AGORA_API void RoomManager_BlockChatroomMembers(void * client, int callbackId, c
     t.detach();
 }
 
-AGORA_API void RoomManager_CreateRoom(void *client, int callbackId, const char * subject, const char * desc, const char * welcomMsg, int maxUserCount, const char * memberArray[], int size, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+Hypheante_API void RoomManager_CreateRoom(void *client, int callbackId, const char * subject, const char * desc, const char * welcomMsg, int maxUserCount, const char * memberArray[], int size, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(subject, error)) {
@@ -118,7 +118,7 @@ AGORA_API void RoomManager_CreateRoom(void *client, int callbackId, const char *
     t.detach();
 }
 
-AGORA_API void RoomManager_ChangeRoomSubject(void *client, int callbackId, const char * roomId, const char * newSubject, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+Hypheante_API void RoomManager_ChangeRoomSubject(void *client, int callbackId, const char * roomId, const char * newSubject, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(roomId, newSubject, error)) {
@@ -147,7 +147,7 @@ AGORA_API void RoomManager_ChangeRoomSubject(void *client, int callbackId, const
     t.detach();
 }
 
-AGORA_API void RoomManager_RemoveRoomMembers(void * client, int callbackId, const char * roomId, const char * memberArray[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+Hypheante_API void RoomManager_RemoveRoomMembers(void * client, int callbackId, const char * roomId, const char * memberArray[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(roomId, error)) {
@@ -173,7 +173,7 @@ AGORA_API void RoomManager_RemoveRoomMembers(void * client, int callbackId, cons
     t.detach();
 }
 
-AGORA_API void RoomManager_TransferChatroomOwner(void * client, int callbackId, const char * roomId, const char * newOwner, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+Hypheante_API void RoomManager_TransferChatroomOwner(void * client, int callbackId, const char * roomId, const char * newOwner, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(roomId, newOwner, error)) {
@@ -202,7 +202,7 @@ AGORA_API void RoomManager_TransferChatroomOwner(void * client, int callbackId, 
     t.detach();
 }
 
-AGORA_API void RoomManager_ChangeChatroomDescription(void * client, int callbackId, const char * roomId, const char * newDescription, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+Hypheante_API void RoomManager_ChangeChatroomDescription(void * client, int callbackId, const char * roomId, const char * newDescription, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(roomId, newDescription, error)) {
@@ -231,7 +231,7 @@ AGORA_API void RoomManager_ChangeChatroomDescription(void * client, int callback
     t.detach();
 }
 
-AGORA_API void RoomManager_DestroyChatroom(void *client, int callbackId, const char * roomId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+Hypheante_API void RoomManager_DestroyChatroom(void *client, int callbackId, const char * roomId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(roomId, error)) {
@@ -252,7 +252,7 @@ AGORA_API void RoomManager_DestroyChatroom(void *client, int callbackId, const c
     t.detach();
 }
 
-AGORA_API void RoomManager_FetchChatroomsWithPage(void *client, int callbackId, int pageNum, int pageSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+Hypheante_API void RoomManager_FetchChatroomsWithPage(void *client, int callbackId, int pageNum, int pageSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     std::thread t([=](){
         EMError error;
@@ -279,7 +279,7 @@ AGORA_API void RoomManager_FetchChatroomsWithPage(void *client, int callbackId, 
     t.detach();
 }
 
-AGORA_API void RoomManager_FetchChatroomAnnouncement(void *client, int callbackId, const char * roomId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+Hypheante_API void RoomManager_FetchChatroomAnnouncement(void *client, int callbackId, const char * roomId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(roomId, error)) {
@@ -305,7 +305,7 @@ AGORA_API void RoomManager_FetchChatroomAnnouncement(void *client, int callbackI
     t.detach();
 }
 
-AGORA_API void RoomManager_FetchChatroomBans(void *client, int callbackId, const char * roomId, int pageNum, int pageSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+Hypheante_API void RoomManager_FetchChatroomBans(void *client, int callbackId, const char * roomId, int pageNum, int pageSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(roomId, error)) {
@@ -334,7 +334,7 @@ AGORA_API void RoomManager_FetchChatroomBans(void *client, int callbackId, const
     t.detach();
 }
 
-AGORA_API void RoomManager_FetchChatroomSpecification(void * client, int callbackId, const char * roomId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+Hypheante_API void RoomManager_FetchChatroomSpecification(void * client, int callbackId, const char * roomId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(roomId, error)) {
@@ -362,7 +362,7 @@ AGORA_API void RoomManager_FetchChatroomSpecification(void * client, int callbac
     t.detach();
 }
 
-AGORA_API void RoomManager_FetchChatroomMembers(void * client, int callbackId, const char * roomId, const char * cursor, int pageSize, FUNC_OnSuccess_With_Result_V2 onSuccess, FUNC_OnError onError)
+Hypheante_API void RoomManager_FetchChatroomMembers(void * client, int callbackId, const char * roomId, const char * cursor, int pageSize, FUNC_OnSuccess_With_Result_V2 onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(roomId, error)) {
@@ -396,7 +396,7 @@ AGORA_API void RoomManager_FetchChatroomMembers(void * client, int callbackId, c
     t.detach();
 }
 
-AGORA_API void RoomManager_FetchChatroomMutes(void * client, int callbackId, const char * roomId, int pageNum, int pageSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+Hypheante_API void RoomManager_FetchChatroomMutes(void * client, int callbackId, const char * roomId, int pageNum, int pageSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(roomId, error)) {
@@ -425,14 +425,14 @@ AGORA_API void RoomManager_FetchChatroomMutes(void * client, int callbackId, con
     t.detach();
 }
 
-AGORA_API void RoomManager_GetAllRoomsFromLocal(void * client, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+Hypheante_API void RoomManager_GetAllRoomsFromLocal(void * client, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     //mdata private??
     //loadAllChatroomsFromDB
     //CLIENT->getChatroomManager()
 }
 
-AGORA_API void RoomManager_JoinedChatroomById(void * client, int callbackId, const char * roomId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+Hypheante_API void RoomManager_JoinedChatroomById(void * client, int callbackId, const char * roomId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(roomId, error)) {
@@ -461,7 +461,7 @@ AGORA_API void RoomManager_JoinedChatroomById(void * client, int callbackId, con
     t.detach();
 }
 
-AGORA_API void RoomManager_JoinChatroom(void *client, int callbackId, const char * roomId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+Hypheante_API void RoomManager_JoinChatroom(void *client, int callbackId, const char * roomId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(roomId, error)) {
@@ -494,7 +494,7 @@ AGORA_API void RoomManager_JoinChatroom(void *client, int callbackId, const char
     t.detach();
 }
 
-AGORA_API void RoomManager_LeaveChatroom(void *client, int callbackId, const char * roomId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+Hypheante_API void RoomManager_LeaveChatroom(void *client, int callbackId, const char * roomId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(roomId, error)) {
@@ -515,7 +515,7 @@ AGORA_API void RoomManager_LeaveChatroom(void *client, int callbackId, const cha
     t.detach();
 }
 
-AGORA_API void RoomManager_MuteChatroomMembers(void * client, int callbackId, const char * roomId, const char * memberArray[], int size, int muteDuration, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+Hypheante_API void RoomManager_MuteChatroomMembers(void * client, int callbackId, const char * roomId, const char * memberArray[], int size, int muteDuration, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(roomId, error)) {
@@ -540,7 +540,7 @@ AGORA_API void RoomManager_MuteChatroomMembers(void * client, int callbackId, co
     t.detach();
 }
 
-AGORA_API void RoomManager_RemoveChatroomAdmin(void *client, int callbackId, const char * roomId, const char * adminId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+Hypheante_API void RoomManager_RemoveChatroomAdmin(void *client, int callbackId, const char * roomId, const char * adminId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(roomId, adminId, error)) {
@@ -575,7 +575,7 @@ AGORA_API void RoomManager_RemoveChatroomAdmin(void *client, int callbackId, con
     t.detach();
 }
 
-AGORA_API void RoomManager_UnblockChatroomMembers(void * client, int callbackId, const char * roomId, const char * memberArray[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+Hypheante_API void RoomManager_UnblockChatroomMembers(void * client, int callbackId, const char * roomId, const char * memberArray[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(roomId, error)) {
@@ -600,7 +600,7 @@ AGORA_API void RoomManager_UnblockChatroomMembers(void * client, int callbackId,
     t.detach();
 }
 
-AGORA_API void RoomManager_UnmuteChatroomMembers(void * client, int callbackId, const char * roomId, const char * memberArray[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+Hypheante_API void RoomManager_UnmuteChatroomMembers(void * client, int callbackId, const char * roomId, const char * memberArray[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(roomId, error)) {
@@ -625,7 +625,7 @@ AGORA_API void RoomManager_UnmuteChatroomMembers(void * client, int callbackId, 
     t.detach();
 }
 
-AGORA_API void RoomManager_UpdateChatroomAnnouncement(void *client, int callbackId, const char * roomId, const char * newAnnouncement, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+Hypheante_API void RoomManager_UpdateChatroomAnnouncement(void *client, int callbackId, const char * roomId, const char * newAnnouncement, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(roomId, newAnnouncement, error)) {
