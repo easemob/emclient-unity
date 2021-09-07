@@ -181,6 +181,13 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
     {
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
+            string mid = dict["memberId"];
+            if (null == currentGroupId || 0 == currentGroupId.Length || null == mid || 0 == mid.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             List<string> list = new List<string>();
             list.Add(dict["memberId"]);
             SDKClient.Instance.GroupManager.AddGroupMembers(currentGroupId, list, new CallBack(
@@ -205,6 +212,13 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
     {
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
+            string aid = dict["adminId"];
+            if (null == currentGroupId || 0 == currentGroupId.Length || null == aid || 0 == aid.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             SDKClient.Instance.GroupManager.AddGroupAdmin(currentGroupId, dict["adminId"], new CallBack(
                 onSuccess: () =>
                 {
@@ -228,6 +242,13 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
     {
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
+            string mid = dict["memberId"];
+            if (null == currentGroupId || 0 == currentGroupId.Length || null == mid || 0 == mid.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             List<string> list = new List<string>();
             list.Add(dict["memberId"]);
             SDKClient.Instance.GroupManager.AddGroupWhiteList(currentGroupId, list, new CallBack(
@@ -250,6 +271,11 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
     }
     void BlockGroupBtnAction()
     {
+        if (null == currentGroupId || 0 == currentGroupId.Length )
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
         SDKClient.Instance.GroupManager.BlockGroup(currentGroupId, new CallBack(
                 onSuccess: () =>
                 {
@@ -265,6 +291,13 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
 
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
+            string mid = dict["memberId"];
+            if (null == currentGroupId || 0 == currentGroupId.Length || null == mid || 0 == mid.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             List<string> list = new List<string>();
             list.Add(dict["memberId"]);
             SDKClient.Instance.GroupManager.BlockGroupMembers(currentGroupId, list, new CallBack(
@@ -289,6 +322,13 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
 
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
+            string descStr = dict["Description"];
+            if (null == currentGroupId || 0 == currentGroupId.Length || null == descStr || 0 == descStr.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             SDKClient.Instance.GroupManager.ChangeGroupDescription(currentGroupId, dict["Description"], new CallBack(
                 onSuccess: () =>
                 {
@@ -311,6 +351,13 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
     void ChangeGroupNameBtnAction() {
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
+            string nameStr = dict["name"];
+            if (null == currentGroupId || 0 == currentGroupId.Length || null == nameStr || 0 == nameStr.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             SDKClient.Instance.GroupManager.ChangeGroupName(currentGroupId, dict["name"], new CallBack(
                 onSuccess: () =>
                 {
@@ -333,6 +380,13 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
 
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
+            string nw = dict["newOwner"];
+            if (null == currentGroupId || 0 == currentGroupId.Length || null == nw || 0 == nw.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             SDKClient.Instance.GroupManager.ChangeGroupOwner(currentGroupId, dict["newOwner"], new CallBack(
                 onSuccess: () =>
                 {
@@ -353,7 +407,11 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
 
     }
     void CheckIfInGroupWhiteListBtnAction() {
-
+        if (null == currentGroupId || 0 == currentGroupId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
         SDKClient.Instance.GroupManager.CheckIfInGroupWhiteList(currentGroupId, new ValueCallBack<bool>(
            onSuccess: (ret) => {
                UIManager.DefaultAlert(transform, ret ? "在白名单中" : "不在白名单中");
@@ -373,6 +431,11 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
             string name = dict["name"];
             string desc = dict["desc"];
             string memberId = dict["memberId"];
+            if (null == name || 0 == name.Length || null == memberId || 0 == memberId.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
 
             GroupOptions optison = new GroupOptions(GroupStyle.PrivateMemberCanInvite);
 
@@ -405,6 +468,12 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
 
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
+            if (null == currentGroupId || 0 == currentGroupId.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             SDKClient.Instance.GroupManager.DeclineGroupInvitation(currentGroupId, handle: new CallBack(
                 onSuccess:() =>
                 {
@@ -427,6 +496,11 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
 
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
+            if (null == currentGroupId || 0 == currentGroupId.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
             SDKClient.Instance.GroupManager.DeclineGroupJoinApplication(currentGroupId, dict["userId"],handle: new CallBack(
                 onSuccess: () =>
                 {
@@ -447,6 +521,11 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
     }
 
     void DestoryGroupBtnAction() {
+        if (null == currentGroupId || 0 == currentGroupId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
         SDKClient.Instance.GroupManager.DestroyGroup(currentGroupId, new CallBack(
             onSuccess: () =>
             {
@@ -469,7 +548,11 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
     }
 
     void GetGroupAnnouncementFromServerBtnAction() {
-
+        if (null == currentGroupId || 0 == currentGroupId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
         SDKClient.Instance.GroupManager.GetGroupAnnouncementFromServer(currentGroupId, new ValueCallBack<string>(
                 onSuccess: (str) =>
                 {
@@ -485,7 +568,11 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
     }
 
     void GetGroupBlockListFromServerBtnAction() {
-
+        if (null == currentGroupId || 0 == currentGroupId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
         SDKClient.Instance.GroupManager.GetGroupBlockListFromServer(currentGroupId, handle: new ValueCallBack<List<string>>(
             onSuccess: (list) =>
             {
@@ -502,9 +589,19 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
     }
 
     void GetGroupFileListFromServerBtnAction() {
+        if (null == currentGroupId || 0 == currentGroupId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
         SDKClient.Instance.GroupManager.GetGroupFileListFromServer(currentGroupId, handle: new ValueCallBack<List<GroupSharedFile>> (
             onSuccess: (fileList) =>
             {
+                if(0 == fileList.Count)
+                {
+                    UIManager.DefaultAlert(transform, "filelist未配置");
+                    return;
+                }
                 List<string> list = new List<string>();
                 foreach (var file in fileList) {
                     list.Add(file.FileId);
@@ -521,6 +618,11 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
     }
 
     void GetGroupMemberListFromServerBtnAction() {
+        if (null == currentGroupId || 0 == currentGroupId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
         SDKClient.Instance.GroupManager.GetGroupMemberListFromServer(currentGroupId, handle: new ValueCallBack<CursorResult<string>>(
             onSuccess: (result) => {
                 List<string> list = new List<string>();
@@ -540,7 +642,11 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
     }
 
     void GetGroupMuteListFromServerBtnAction() {
-
+        if (null == currentGroupId || 0 == currentGroupId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
         SDKClient.Instance.GroupManager.GetGroupMuteListFromServer(currentGroupId, handle: new ValueCallBack<List<string>>(
             onSuccess: (list) => {
                 string str = string.Join(",", list.ToArray());
@@ -556,7 +662,11 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
     }
 
     void GetGroupSpecificationFromServerBtnAction() {
-
+        if (null == currentGroupId || 0 == currentGroupId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
         SDKClient.Instance.GroupManager.GetGroupSpecificationFromServer(currentGroupId, new ValueCallBack<Group>(
             onSuccess: (group) => {
                 List<string> list = new List<string>();
@@ -576,6 +686,11 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
     }
 
     void GetGroupWhiteListFromServerBtnAction() {
+        if (null == currentGroupId || 0 == currentGroupId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
         SDKClient.Instance.GroupManager.GetGroupWhiteListFromServer(currentGroupId, handle: new ValueCallBack<List<string>>(
             onSuccess: (list) => {
                 string str = string.Join(",", list.ToArray());
@@ -591,6 +706,11 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
     }
 
     void GetGroupWithIdBtnAction() {
+        if (null == currentGroupId || 0 == currentGroupId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
         Group group = SDKClient.Instance.GroupManager.GetGroupWithId(currentGroupId);
         if (group != null)
         {
@@ -605,9 +725,14 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
 
     void GetJoinedGroupsBtnAction() {
         List<Group> groupList = SDKClient.Instance.GroupManager.GetJoinedGroups();
+        if (0 == groupList.Count)
+        {
+            UIManager.DefaultAlert(transform, "未加入任何群组");
+            return;
+        }
         List<string> list = new List<string>();
         foreach (var group in groupList) {
-            list.Add(group.Name);
+            list.Add(group.GroupId);
         }
         string str = string.Join(",", list.ToArray());
         UIManager.DefaultAlert(transform, str);
@@ -621,7 +746,7 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
                 List<string> list = new List<string>();
                 foreach (var group in groupList)
                 {
-                    list.Add(group.Name);
+                    list.Add(group.GroupId);
                 }
                 string str = string.Join(",", list.ToArray());
                 UIManager.DefaultAlert(transform, str);
@@ -653,7 +778,11 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
     }
 
     void JoinPublicGroupBtnAction() {
-
+        if (null == currentGroupId || 0 == currentGroupId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
         SDKClient.Instance.GroupManager.JoinPublicGroup(currentGroupId, new CallBack(
             onSuccess: () => { UIManager.SuccessAlert(transform); },
             onError:(code, desc) => { UIManager.ErrorAlert(transform, code, desc); }
@@ -663,6 +792,11 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
     }
 
     void LeaveGroupBtnAction() {
+        if (null == currentGroupId || 0 == currentGroupId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
         SDKClient.Instance.GroupManager.LeaveGroup(currentGroupId, new CallBack(
             onSuccess: () => { UIManager.SuccessAlert(transform); },
             onError: (code, desc) => { UIManager.ErrorAlert(transform, code, desc); }
@@ -671,6 +805,11 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
     }
 
     void MuteAllMembersBtnAction() {
+        if (null == currentGroupId || 0 == currentGroupId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
         SDKClient.Instance.GroupManager.MuteGroupAllMembers(currentGroupId, new CallBack(
             onSuccess: () => { UIManager.SuccessAlert(transform); },
             onError: (code, desc) => { UIManager.ErrorAlert(transform, code, desc); }
@@ -682,6 +821,12 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
 
         InputAlertConfig config = new InputAlertConfig((dict) => {
             string member = dict["memberId"];
+            if (null == currentGroupId || 0 == currentGroupId.Length || null == member || 0 == member.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             List<string> list = new List<string>();
             list.Add(member);
             SDKClient.Instance.GroupManager.MuteGroupMembers(currentGroupId, list, new CallBack(
@@ -700,6 +845,13 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
     void RemoveAdminBtnAction() {
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
+            string id = dict["adminId"];
+            if (null == currentGroupId || 0 == currentGroupId.Length || null == id || 0 == id.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             SDKClient.Instance.GroupManager.RemoveGroupAdmin(currentGroupId, dict["adminId"], new CallBack(
                 onSuccess: () =>
                 {
@@ -720,6 +872,30 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
     }
 
     void RemoveGroupSharedFileBtnAction() {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string id = dict["fileId"];
+            if (null == currentGroupId || 0 == currentGroupId.Length || null == id || 0 == id.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
+            SDKClient.Instance.GroupManager.RemoveGroupSharedFile(currentGroupId, dict["fileId"], new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("fileId");
+
+        UIManager.DefaultInputAlert(transform, config);
 
         Debug.Log("RemoveGroupSharedFileBtnAction");
     }
@@ -728,6 +904,13 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
 
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
+            string mid = dict["MemberId"];
+            if (null == currentGroupId || 0 == currentGroupId.Length || null == mid || 0 == mid.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             List<string> list = new List<string>();
             list.Add(dict["MemberId"]);
             SDKClient.Instance.GroupManager.RemoveGroupMembers(currentGroupId, list, new CallBack (
@@ -752,6 +935,13 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
 
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
+            string mid = dict["MemberId"];
+            if (null == currentGroupId || 0 == currentGroupId.Length || null == mid || 0 == mid.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             List<string> list = new List<string>();
             list.Add(dict["MemberId"]);
             SDKClient.Instance.GroupManager.RemoveGroupWhiteList(currentGroupId, list, new CallBack(
@@ -773,7 +963,11 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
         Debug.Log("RemoveWhiteListBtnAction");
     }
     void RequestToJoinPublicGroupBtnAction() {
-
+        if (null == currentGroupId || 0 == currentGroupId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
         SDKClient.Instance.GroupManager.applyJoinToGroup(currentGroupId, handle: new CallBack(
             onSuccess: () => { UIManager.SuccessAlert(transform); },
             onError: (code, desc) => { UIManager.ErrorAlert(transform, code, desc); }
@@ -783,6 +977,11 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
     }
 
     void UnblockGroupBtnAction() {
+        if (null == currentGroupId || 0 == currentGroupId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
         SDKClient.Instance.GroupManager.UnBlockGroup(currentGroupId, new CallBack(
             onSuccess: () => { UIManager.SuccessAlert(transform); },
             onError: (code, desc) => { UIManager.ErrorAlert(transform, code, desc); }
@@ -794,6 +993,13 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
 
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
+            string mid = dict["memberId"];
+            if (null == currentGroupId || 0 == currentGroupId.Length || null == mid || 0 == mid.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             List<string> list = new List<string>();
             list.Add(dict["memberId"]);
             SDKClient.Instance.GroupManager.UnBlockGroupMembers(currentGroupId, list, new CallBack(
@@ -816,6 +1022,11 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
     }
 
     void UnMuteAllMembersBtnAction() {
+        if (null == currentGroupId || 0 == currentGroupId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
         SDKClient.Instance.GroupManager.UnMuteGroupAllMembers(currentGroupId, new CallBack(
             onSuccess: () => { UIManager.SuccessAlert(transform); },
             onError: (code, desc) => { UIManager.ErrorAlert(transform, code, desc); }
@@ -827,6 +1038,12 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
 
         InputAlertConfig config = new InputAlertConfig((dict) => {
             string member = dict["memberId"];
+            if (null == currentGroupId || 0 == currentGroupId.Length || null == member || 0 == member.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             List<string> list = new List<string>();
             list.Add(member);
             SDKClient.Instance.GroupManager.UnMuteGroupMembers(currentGroupId, list, new CallBack(
@@ -846,6 +1063,11 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
 
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
+            if (null == currentGroupId || 0 == currentGroupId.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
             SDKClient.Instance.GroupManager.UpdateGroupAnnouncement(currentGroupId, dict["Announcement"], new CallBack(
                 onSuccess: () =>
                 {
@@ -869,6 +1091,11 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
 
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
+            if (null == currentGroupId || 0 == currentGroupId.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
             SDKClient.Instance.GroupManager.UpdateGroupExt(currentGroupId, dict["ext"], new CallBack(
                 onSuccess: () =>
                 {

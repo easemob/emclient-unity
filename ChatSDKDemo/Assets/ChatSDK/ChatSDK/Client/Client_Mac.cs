@@ -116,7 +116,21 @@ namespace ChatSDK
 
         public override string AccessToken()
         {
-            throw new System.NotImplementedException();
+            string result = null;
+            ChatAPINative.Client_LoginToken(client,
+                (IntPtr[] data, DataType dType, int dSize, int cbId) =>
+                {
+                    if(DataType.String == dType && 1 == dSize)
+                    {
+                        result = Marshal.PtrToStringAnsi(data[0]);
+                    }
+                    else
+                    {
+                        Debug.Log("Cannot get login token.");
+                    }
+                }
+                );
+            return result;
         }
 
         public override void StartLog(string logFilePath)

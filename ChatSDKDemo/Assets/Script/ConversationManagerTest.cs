@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -123,6 +124,11 @@ public class ConversationManagerTest : MonoBehaviour
 
     void LastMessageBtnAction()
     {
+        if (null == conversationId || 0 == conversationId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
         Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
 
         if (conv.LastMessage != null)
@@ -136,6 +142,11 @@ public class ConversationManagerTest : MonoBehaviour
     }
     void LastReceiveMessageBtnAction()
     {
+        if (null == conversationId || 0 == conversationId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
         Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
 
         if (conv.LastReceivedMessage != null)
@@ -149,17 +160,29 @@ public class ConversationManagerTest : MonoBehaviour
     }
     void GetExtBtnAction()
     {
+        if (null == conversationId || 0 == conversationId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
         Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
 
         if (conv.Ext != null)
         {
             List<string> list = new List<string>();
-            foreach (var kv in conv.Ext)
+            if(0 == list.Count)
             {
-                list.Add($"{kv.Key}:{kv.Value}");
+                UIManager.DefaultAlert(transform, "未获取到Ext");
             }
-            string str = string.Join(",", list.ToArray());
-            UIManager.DefaultAlert(transform, str);
+            else
+            {
+                foreach (var kv in conv.Ext)
+                {
+                    list.Add($"{kv.Key}:{kv.Value}");
+                }
+                string str = string.Join(",", list.ToArray());
+                UIManager.DefaultAlert(transform, str);
+            }
         }
         else
         {
@@ -172,7 +195,15 @@ public class ConversationManagerTest : MonoBehaviour
         {
             string key = dict["key"];
             string value = dict["value"];
-          
+
+            if (null == conversationId || 0 == conversationId.Length ||
+                null == key || 0 == key.Length ||
+                null == value || 0 == value.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
 
             Dictionary<string, string> KV = new Dictionary<string, string>();
@@ -191,6 +222,11 @@ public class ConversationManagerTest : MonoBehaviour
     }
     void UnReadCountBtnAction()
     {
+        if (null == conversationId || 0 == conversationId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
         Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
         UIManager.DefaultAlert(transform, $"未读数: {conv.UnReadCount.ToString()}");
         Debug.Log("UnReadCountBtnAction");
@@ -200,8 +236,12 @@ public class ConversationManagerTest : MonoBehaviour
 
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
-
             string msgId = dict["MsgId"];
+            if (null == conversationId || 0 == conversationId.Length || null == msgId || 0 == msgId.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
             Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
             conv.MarkMessageAsRead(msgId);
             UIManager.DefaultAlert(transform, "已设置");
@@ -216,6 +256,11 @@ public class ConversationManagerTest : MonoBehaviour
     }
     void MarkAllMessageAsReadBtnAction()
     {
+        if (null == conversationId || 0 == conversationId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
         Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
         conv.MarkAllMessageAsRead();
         UIManager.DefaultAlert(transform, "已设置");
@@ -242,6 +287,11 @@ public class ConversationManagerTest : MonoBehaviour
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
             string msgId = dict["MsgId"];
+            if (null == conversationId || 0 == conversationId.Length || null == msgId || 0 == msgId.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
             Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
             conv.DeleteMessage(msgId);
             UIManager.DefaultAlert(transform, "已删除");
@@ -256,6 +306,11 @@ public class ConversationManagerTest : MonoBehaviour
     }
     void DeleteAllMessageBtnAction()
     {
+        if (null == conversationId || 0 == conversationId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
         Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
         conv.DeleteAllMessages();
         UIManager.DefaultAlert(transform, "已删除");
@@ -268,6 +323,11 @@ public class ConversationManagerTest : MonoBehaviour
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
             string msgId = dict["MsgId"];
+            if (null == conversationId || 0 == conversationId.Length || null == msgId || 0 == msgId.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
             Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
             Message msg = conv.LoadMessage(msgId);
             UIManager.DefaultAlert(transform, msg == null ? "获取失败" : "获取成功");
@@ -282,6 +342,11 @@ public class ConversationManagerTest : MonoBehaviour
 
     void LoadMessagesBtnAction()
     {
+        if (null == conversationId || 0 == conversationId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
         Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
         conv.LoadMessages(null, count:200, handle:new ValueCallBack<List<Message>>(
             onSuccess: (list) => {
@@ -296,18 +361,23 @@ public class ConversationManagerTest : MonoBehaviour
     }
     void LoadMessagesWithKeywordBtnAction()
     {
-
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
             string keyword = dict["keyword"];
+            if (null == conversationId || 0 == conversationId.Length || null == keyword || 0 == keyword.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
             conv.LoadMessagesWithKeyword(keyword, count: 200, handle: new ValueCallBack<List<Message>>(
                 onSuccess: (list) => {
                     UIManager.DefaultAlert(transform, $"获取到{list.Count}条消息");
                 },
-            onError: (code, desc) => {
-                UIManager.ErrorAlert(transform, code, desc);
-            }
+                onError: (code, desc) => {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
             ));
         });
 
@@ -319,10 +389,47 @@ public class ConversationManagerTest : MonoBehaviour
     }
     void LoadMessagesWithTimeBtnAction()
     {
+        if (null == conversationId || 0 == conversationId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
+
+        long startTime = 0;
+        long endTime = (long)(DateTime.UtcNow.Ticks);
+        //long endTime = (long)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalMilliseconds);
+
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
+        conv.LoadMessagesWithTime(startTime, endTime, count:200, new ValueCallBack<List<Message>>(
+            onSuccess: (list) => {
+                UIManager.DefaultAlert(transform, $"获取到{list.Count}条消息");
+            },
+            onError: (code, desc) => {
+                UIManager.ErrorAlert(transform, code, desc);
+            }
+        ));
+
         Debug.Log("LoadMessagesWithTimeBtnAction");
     }
     void LoadMessagesWithMsgTypeBtnAction()
     {
+        if (null == conversationId || 0 == conversationId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
+
+        MessageBodyType type = MessageBodyType.TXT;
+
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
+        conv.LoadMessagesWithMsgType(type, null, -1, count: 200, MessageSearchDirection.UP, new ValueCallBack<List<Message>>(
+            onSuccess: (list) => {
+                UIManager.DefaultAlert(transform, $"获取到{list.Count}条消息");
+            },
+            onError: (code, desc) => {
+                UIManager.ErrorAlert(transform, code, desc);
+            }
+        ));
         Debug.Log("LoadMessagesWithMsgTypeBtnAction");
     }
 

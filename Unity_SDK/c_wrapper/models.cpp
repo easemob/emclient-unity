@@ -8,6 +8,7 @@
 #include "LogHelper.h"
 #include "models.h"
 #include "emgroup.h"
+#include "json.hpp"
 
 EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bool buildReceiveMsg)
 {
@@ -93,6 +94,57 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             from = vm->From;
             to = vm->To;
             msgId = vm->MsgId;
+        }
+            break;
+        case EMMessageBody::VIDEO:
+        {
+            auto im = static_cast<VideoMessageTO *>(mto);
+            auto body = new EMVideoMessageBody(im->body.LocalPath, im->body.ThumbnaiLocationPath);
+
+            body->setSecretKey(im->body.Secret);
+            body->setFileLength(im->body.FileSize);
+            body->setDownloadStatus(im->body.DownStatus);
+            body->setDisplayName(im->body.DisplayName);
+            body->setRemotePath(im->body.ThumbnaiRemotePath);
+            
+            body->setThumbnailSecretKey(im->body.ThumbnaiSecret);
+            body->setThumbnailRemotePath(im->body.ThumbnaiRemotePath);
+            body->setThumbnailDownloadStatus(im->body.DownStatus);
+            //TODO: same with FileLength?
+            body->setSize(im->body.FileSize);
+            body->setDuration(im->body.Duration);
+            
+            //TODO: add ThumbnailDisplayName field later
+            messageBody = EMMessageBodyPtr(body);
+            from = im->From;
+            to = im->To;
+            msgId = im->MsgId;
+        }
+            break;
+        case EMMessageBody::CUSTOM:
+        {
+            auto im = static_cast<CustomMessageTO *>(mto);
+            auto body = new EMCustomMessageBody(im->body.CustomEvent);
+            
+            LOG("json string is:%s", im->body.CustomParams);
+            nlohmann::json j = nlohmann::json::parse(im->body.CustomParams);
+            
+            easemob::EMCustomMessageBody::EMCustomExts ext;
+            for(auto it=j.begin(); it!=j.end(); it++) {
+                LOG("key: %s, value: %s", it.key().c_str(), it.value().dump().c_str());
+                
+                //value() looks like "\"value\"",  need to get rid of the first and the end char
+                std::string str(it.value().dump().c_str()+1, strlen(it.value().dump().c_str())-2);
+                std::pair<std::string, std::string> kv{it.key().c_str(), str};
+                ext.push_back(kv);
+            }
+            if (ext.size() > 0)
+                body->setExts(ext);
+
+            messageBody = EMMessageBodyPtr(body);
+            from = im->From;
+            to = im->To;
+            msgId = im->MsgId;
         }
             break;
     }
@@ -195,6 +247,60 @@ VoiceMessageTO::VoiceMessageTO(const EMMessagePtr &_message):MessageTO(_message)
     this->body.Duration = body->duration();
 }
 
+VideoMessageTO::VideoMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
+    auto body = (EMVideoMessageBody *)_message->bodies().front().get();
+    this->BodyType = body->type();
+    this->body.LocalPath = body->localPath().c_str();
+    this->body.DisplayName = body->displayName().c_str();
+    this->body.Secret = body->secretKey().c_str();
+    this->body.RemotePath = body->remotePath().c_str();
+    this->body.ThumbnaiLocationPath = body->thumbnailLocalPath().c_str();
+    this->body.ThumbnaiRemotePath = body->thumbnailRemotePath().c_str();
+    this->body.ThumbnaiSecret = body->thumbnailSecretKey().c_str();
+    this->body.Height = body->size().mHeight;
+    this->body.Width = body->size().mWidth;
+    this->body.Duration = body->duration();
+    this->body.FileSize = body->fileLength();
+    this->body.DownStatus = body->downloadStatus();
+}
+
+CustomMessageTO::CustomMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
+    auto body = (EMCustomMessageBody *)_message->bodies().front().get();
+    this->BodyType = body->type();
+    this->body.CustomEvent = body->event().c_str();
+    
+    EMCustomMessageBody::EMCustomExts ext = body->exts();
+    nlohmann::json j;
+    for(size_t i=0; i<ext.size(); i++) {
+        j[ext[i].first] = ext[i].second;
+    }
+    // need to be freed in FreeResource function
+    std::string* extStr = new std::string();
+    if(ext.size() > 0){
+        *extStr = j.dump();
+    }
+    this->body.CustomParams = nullptr;
+    if(extStr->length() > 0)
+        this->body.CustomParams = (*extStr).c_str();
+}
+
+void MessageTO::FreeResource(MessageTO * mto)
+{
+    if(nullptr == mto)
+        return;
+    switch(mto->BodyType) {
+        case EMMessageBody::CUSTOM:
+        {
+            CustomMessageTO* cmto = (CustomMessageTO*)mto;
+            if(nullptr != cmto->body.CustomParams)
+                delete cmto->body.CustomParams;
+        }
+            break;
+        default:
+            return;
+    }
+}
+
 MessageTO * MessageTO::FromEMMessage(const EMMessagePtr &_message)
 {
     //TODO: assume that only 1 body in _message->bodies
@@ -229,6 +335,16 @@ MessageTO * MessageTO::FromEMMessage(const EMMessagePtr &_message)
         case EMMessageBody::VOICE:
         {
             message = new VoiceMessageTO(_message);
+        }
+            break;
+        case EMMessageBody::VIDEO:
+        {
+            message = new VideoMessageTO(_message);
+        }
+            break;
+        case EMMessageBody::CUSTOM:
+        {
+            message = new CustomMessageTO(_message);
         }
             break;
         default:

@@ -31,11 +31,11 @@ AGORA_API void ContactManager_AddListener(void *client,
     }
 }
 
-AGORA_API void ContactManager_AddContact(void *client, const char* username, const char* reason, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void ContactManager_AddContact(void *client, int callbackId, const char* username, const char* reason, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(username, error)) {
-        if (onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string usernameStr = username;
@@ -46,19 +46,19 @@ AGORA_API void ContactManager_AddContact(void *client, const char* username, con
         CLIENT->getContactManager().inviteContact(usernameStr, reasonStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("AddContact success.");
-            if(onSuccess) onSuccess();
+            if(onSuccess) onSuccess(callbackId);
         } else {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void ContactManager_DeleteContact(void *client, const char* username, bool keepConversation, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void ContactManager_DeleteContact(void *client, int callbackId, const char* username, bool keepConversation, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(username, error)) {
-        if (onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string usernameStr = username;
@@ -68,15 +68,15 @@ AGORA_API void ContactManager_DeleteContact(void *client, const char* username, 
         CLIENT->getContactManager().deleteContact(usernameStr, error, keepConversation);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("DeleteContact success.");
-            if(onSuccess) onSuccess();
+            if(onSuccess) onSuccess(callbackId);
         } else {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void ContactManager_GetContactsFromServer(void *client, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+AGORA_API void ContactManager_GetContactsFromServer(void *client, int callbackId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     std::thread t([=](){
         EMError error;
@@ -88,9 +88,9 @@ AGORA_API void ContactManager_GetContactsFromServer(void *client, FUNC_OnSuccess
             for(int i=0; i<size; i++) {
                 data[i] = vec[i].c_str();
             }
-            onSuccess((void**)data, DataType::ListOfString, size);
+            onSuccess((void**)data, DataType::ListOfString, size, callbackId);
         } else {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
@@ -107,19 +107,19 @@ AGORA_API void ContactManager_GetContactsFromDB(void *client, FUNC_OnSuccess_Wit
         for(int i=0; i<size; i++) {
             data[i] = vec[i].c_str();
         }
-        onSuccess((void **)data, DataType::ListOfString, size);
+        onSuccess((void **)data, DataType::ListOfString, size, -1);
     } else {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), -1);
         LOG("GetContactsFromDB failed with error:%d, desc:%s.", error.mErrorCode, error.mDescription.c_str());
         return;
     }
 }
 
-AGORA_API void ContactManager_AddToBlackList(void *client, const char* username, bool both, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void ContactManager_AddToBlackList(void *client, int callbackId, const char* username, bool both, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(username, error)) {
-        if (onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string usernameStr = username;
@@ -129,19 +129,19 @@ AGORA_API void ContactManager_AddToBlackList(void *client, const char* username,
         CLIENT->getContactManager().addToBlackList(usernameStr, both, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("AddToBlackList success.");
-            if(onSuccess) onSuccess();
+            if(onSuccess) onSuccess(callbackId);
         } else {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void ContactManager_RemoveFromBlackList(void *client, const char* username,FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void ContactManager_RemoveFromBlackList(void *client, int callbackId, const char* username,FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(username, error)) {
-        if (onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string usernameStr = username;
@@ -151,15 +151,15 @@ AGORA_API void ContactManager_RemoveFromBlackList(void *client, const char* user
         CLIENT->getContactManager().removeFromBlackList(usernameStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("RemoveFromBlackList success.");
-            if(onSuccess) onSuccess();
+            if(onSuccess) onSuccess(callbackId);
         } else {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void ContactManager_GetBlackListFromServer(void *client, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+AGORA_API void ContactManager_GetBlackListFromServer(void *client, int callbackId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     std::thread t([=](){
         EMError error;
@@ -171,19 +171,19 @@ AGORA_API void ContactManager_GetBlackListFromServer(void *client, FUNC_OnSucces
             for(int i=0; i<size; i++) {
                 data[i] = vec[i].c_str();
             }
-            onSuccess((void**)data, DataType::ListOfString, size);
+            onSuccess((void**)data, DataType::ListOfString, size, callbackId);
         } else {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void ContactManager_AcceptInvitation(void *client, const char* username,FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void ContactManager_AcceptInvitation(void *client, int callbackId, const char* username,FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(username, error)) {
-        if (onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string usernameStr = username;
@@ -193,19 +193,19 @@ AGORA_API void ContactManager_AcceptInvitation(void *client, const char* usernam
         CLIENT->getContactManager().acceptInvitation(usernameStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("AcceptInvitation success.");
-            if(onSuccess) onSuccess();
+            if(onSuccess) onSuccess(callbackId);
         } else {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void ContactManager_DeclineInvitation(void *client, const char* username,FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void ContactManager_DeclineInvitation(void *client, int callbackId, const char* username,FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(username, error)) {
-        if (onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string usernameStr = username;
@@ -215,15 +215,15 @@ AGORA_API void ContactManager_DeclineInvitation(void *client, const char* userna
         CLIENT->getContactManager().declineInvitation(usernameStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("DeclineInvitation success.");
-            if(onSuccess) onSuccess();
+            if(onSuccess) onSuccess(callbackId);
         } else {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void ContactManager_GetSelfIdsOnOtherPlatform(void *client, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+AGORA_API void ContactManager_GetSelfIdsOnOtherPlatform(void *client, int callbackId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     std::thread t([=](){
         EMError error;
@@ -235,9 +235,9 @@ AGORA_API void ContactManager_GetSelfIdsOnOtherPlatform(void *client, FUNC_OnSuc
             for(int i=0; i<size; i++) {
                 data[i] = vec[i].c_str();
             }
-            onSuccess((void**)data, DataType::ListOfString, size);
+            onSuccess((void**)data, DataType::ListOfString, size, callbackId);
         } else {
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();

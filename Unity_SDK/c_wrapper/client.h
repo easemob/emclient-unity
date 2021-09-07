@@ -17,6 +17,7 @@ AGORA_API void Client_Login(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError
 AGORA_API void Client_Logout(void *client, FUNC_OnSuccess onSuccess, bool unbindDeviceToken);
 AGORA_API void Client_StartLog(const char *logFilePath);
 AGORA_API void Client_StopLog();
+AGORA_API void Client_LoginToken(void *client, FUNC_OnSuccess_With_Result onSuccess);
 
 #ifdef __cplusplus
 }

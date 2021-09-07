@@ -76,5 +76,37 @@ namespace ChatSDK
                 callbackQueue = null;
             }
         }
+
+        static public void ValueCallBackOnSuccess<T>(int cbId, object obj)
+        {
+            ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                ValueCallBack<T> myhandle = (ValueCallBack<T>)CallbackManager.Instance().GetCallBackHandle(cbId);
+                myhandle?.OnSuccessValue((T)obj);
+            });
+        }
+
+        static public void ValueCallBackOnError<T>(int cbId, int code, string desc)
+        {
+            ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                ValueCallBack<T> myhandle = (ValueCallBack<T>)CallbackManager.Instance().GetCallBackHandle(cbId);
+                myhandle?.Error(code, desc);
+            });
+        }
+
+        static public void CallBackOnSuccess(int cbId)
+        {
+            ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
+                myhandle?.Success();
+            });
+        }
+
+        static public void CallBackOnError(int cbId, int code, string desc)
+        {
+            ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
+                myhandle?.Error(code, desc);
+            });
+        }
     }
 }

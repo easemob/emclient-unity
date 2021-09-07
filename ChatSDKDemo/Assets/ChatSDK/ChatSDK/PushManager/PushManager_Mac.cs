@@ -22,7 +22,7 @@ namespace ChatSDK
         public List<string> GetNoDisturbGroups() {
             var list = new List<string>();
             ChatAPINative.PushManager_GetIgnoredGroupIds(client,
-                (IntPtr[] array, DataType dType, int size) =>
+                (IntPtr[] array, DataType dType, int size, int cbId) =>
                 {
                     Debug.Log($"PushManager_GetIgnoredGroupIds callback with dType={dType}, size={size}");
                     if (dType == DataType.ListOfString)
@@ -45,7 +45,7 @@ namespace ChatSDK
         {
             PushConfig pushConfig = null;
             ChatAPINative.PushManager_GetPushConfig(client,
-                (IntPtr[] array, DataType dType, int size) =>
+                (IntPtr[] array, DataType dType, int size, int cbId) =>
                 {
                     Debug.Log($"GetPushConfig callback with dType={dType}, size={size}");
                     if (1 == size)
@@ -62,46 +62,69 @@ namespace ChatSDK
 
         public void GetPushConfigFromServer(ValueCallBack<PushConfig> handle = null)
         {
-            ChatAPINative.PushManager_GetUserConfigsFromServer(client,
-                onSuccessResult: (IntPtr[] array, DataType dType, int size) => {
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.PushManager_GetUserConfigsFromServer(client, callbackId, 
+                onSuccessResult: (IntPtr[] array, DataType dType, int size, int cbId) => {
                     Debug.Log($"GetPushConfigFromServer callback with dType={dType}, size={size}");
                     if (1 == size)
                     {
-                        PushConfig pushConfig = Marshal.PtrToStructure<PushConfig>(array[0]);
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.OnSuccessValue(pushConfig); });
+                        var pc = Marshal.PtrToStructure<PushConfig>(array[0]);
+                        PushConfig pushConfig = new PushConfig(pc);
+                        ChatCallbackObject.ValueCallBackOnSuccess<PushConfig>(cbId, pushConfig);
                     }
                     else
                     {
                         Debug.LogError($"size is not correct {size}.");
                     }
                 },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.ValueCallBackOnError<PushConfig>(cbId, code, desc);
+                });
         }
 
         public void SetGroupToDisturb(string groupId, bool noDisturb, CallBack handle = null)
         {
-            if (null == groupId)
+            if (null == groupId || 0 == groupId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.PushManager_IgnoreGroupPush(client, groupId, noDisturb,
-                onSuccess: () => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); }); },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.PushManager_IgnoreGroupPush(client, callbackId, groupId, noDisturb,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public void SetNoDisturb(bool noDisturb, int startTime = 0, int endTime = 24, CallBack handle = null)
         {
-            ChatAPINative.PushManager_UpdatePushNoDisturbing(client, noDisturb, startTime, endTime,
-                onSuccess: () => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); }); },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.PushManager_UpdatePushNoDisturbing(client, callbackId, noDisturb, startTime, endTime,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public void SetPushStyle(PushStyle pushStyle, CallBack handle = null)
         {
-            ChatAPINative.PushManager_UpdatePushDisplayStyle(client, pushStyle,
-                onSuccess: () => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); }); },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.PushManager_UpdatePushDisplayStyle(client, callbackId, pushStyle,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public void UpdateFCMPushToken(string token, CallBack handle = null)
@@ -111,9 +134,15 @@ namespace ChatSDK
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.PushManager_UpdateFCMPushToken(client, token,
-                onSuccess: () => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); }); },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.PushManager_UpdateFCMPushToken(client, callbackId, token,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public void UpdateHMSPushToken(string token, CallBack handle = null)
@@ -123,9 +152,15 @@ namespace ChatSDK
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.PushManager_UpdateHMSPushToken(client, token,
-                onSuccess: () => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); }); },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.PushManager_UpdateHMSPushToken(client, callbackId, token,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public void UpdateAPNSPuthToken(string token, CallBack handle = null)
@@ -135,14 +170,20 @@ namespace ChatSDK
 
         public void UpdatePushNickName(string nickname, CallBack handle = null)
         {
-            if (null == nickname)
+            if (null == nickname || 0 == nickname.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.PushManager_UpdatePushNickName(client, nickname,
-                onSuccess: () => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); }); },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.PushManager_UpdatePushNickName(client, callbackId, nickname,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
     }
 }

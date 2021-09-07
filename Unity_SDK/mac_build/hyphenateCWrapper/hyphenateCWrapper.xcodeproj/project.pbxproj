@@ -209,6 +209,7 @@
 		D687D3AA26BA9226006C77D5 /* empushconfigs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = empushconfigs.h; sourceTree = "<group>"; };
 		D687D3AB26BA9226006C77D5 /* empushmanager_interface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = empushmanager_interface.h; sourceTree = "<group>"; };
 		D687D3AC26BA9226006C77D5 /* empushmanager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = empushmanager.h; sourceTree = "<group>"; };
+		D6D07D6526E0F0E900E0129D /* json.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = json.hpp; sourceTree = "<group>"; };
 		D6F6450126B81E2A007D0FE2 /* conversation_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = conversation_manager.cpp; sourceTree = "<group>"; };
 		D6F6450226B81E2B007D0FE2 /* conversation_manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = conversation_manager.h; sourceTree = "<group>"; };
 		D6F6450426B945B3007D0FE2 /* push_manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = push_manager.h; sourceTree = "<group>"; };
@@ -489,6 +490,7 @@
 		D742F1BD266843CA00B80C18 /* c_wrapper */ = {
 			isa = PBXGroup;
 			children = (
+				D6D07D6526E0F0E900E0129D /* json.hpp */,
 				D64E944826CB697400257D21 /* tool.cpp */,
 				D64E944926CB697500257D21 /* tool.h */,
 				D6F6450526B945B3007D0FE2 /* push_manager.cpp */,

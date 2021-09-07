@@ -462,7 +462,7 @@ namespace ChatSDK
             public string ThumbnaiLocationPath;
 
             /// <summary>
-            /// 缩略图URL，是有接收方有
+            /// 缩略图URL，只有接收方有
             /// </summary>
             public string ThumbnaiRemotePath;
 

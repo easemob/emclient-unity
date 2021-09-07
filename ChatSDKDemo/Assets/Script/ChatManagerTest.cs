@@ -204,6 +204,12 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     void ResendBtnAction()
     {
         InputAlertConfig config = new InputAlertConfig((dict) => {
+            string msgid = dict["msgId"];
+            if(null == msgid || 0 == msgid.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
             SDKClient.Instance.ChatManager.ResendMessage(dict["msgId"], new CallBack(
                 onSuccess: () => {
                     UIManager.SuccessAlert(transform);
@@ -220,6 +226,13 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     void RecallBtnAction()
     {
         InputAlertConfig config = new InputAlertConfig((dict) => {
+            string msgid = dict["msgId"];
+            if (null == msgid || 0 == msgid.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             SDKClient.Instance.ChatManager.RecallMessage(dict["msgId"], new CallBack(
                 onSuccess: () => {
                     UIManager.SuccessAlert(transform);
@@ -236,6 +249,14 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     void GetConversationBtnAction()
     {
         InputAlertConfig config = new InputAlertConfig((dict) => {
+            string cid = dict["conversationId"];
+            string chatType = dict["type(0/1/2)"];
+            if (null == cid || 0 == cid.Length || null == chatType || 0 == chatType.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             ConversationType type = ConversationType.Chat;
             int iType = int.Parse(dict["type(0/1/2)"]);
             switch (iType) {
@@ -284,9 +305,16 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     }
     void FetchHistoryMessagesBtnAction()
     {
-
         InputAlertConfig config = new InputAlertConfig((dict) => {
             string conversationId = dict["ConversationId"];
+            string chatType = dict["ConversationType(0/1/2)"];
+            string count = dict["LoadCount"];
+            if (null == conversationId || 0 == conversationId.Length || null == chatType || 0 == chatType.Length || null == count || 0 == count.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             ConversationType type = ConversationType.Chat;
             int iType = int.Parse(dict["ConversationType(0/1/2)"]);
             switch (iType)
@@ -303,7 +331,6 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
             }
             string startId = dict["StartMsgId"];
             int loadCount = int.Parse(dict["LoadCount"]);
-
 
             SDKClient.Instance.ChatManager.FetchHistoryMessagesFromServer(conversationId, type, startId, loadCount, new ValueCallBack<CursorResult<Message>>(
                 onSuccess: (result) => {
@@ -404,6 +431,14 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     {
         InputAlertConfig config = new InputAlertConfig("根据关键字获取消息", (dict) =>
         {
+            string keywordStr = dict["Keyword"];
+            string countStr = dict["LoadCount"];
+            if (null == keywordStr || 0 == keywordStr.Length || null == countStr || 0 == countStr.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             int count = int.Parse(dict["LoadCount"]);
             List<Message> list = SDKClient.Instance.ChatManager.SearchMsgFromDB(dict["Keyword"], maxCount: count);
             if (list != null)
@@ -427,6 +462,13 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     {
         InputAlertConfig config = new InputAlertConfig("发送会话Ack", (dict) =>
         {
+            string conversationId = dict["id"];
+            if (null == conversationId || 0 == conversationId.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             SDKClient.Instance.ChatManager.SendConversationReadAck(dict["id"], new CallBack(
                 onSuccess: () => {
                     UIManager.SuccessAlert(transform);
@@ -448,6 +490,13 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     {
         InputAlertConfig config = new InputAlertConfig("发送消息Ack", (dict) =>
         {
+            string idStr = dict["id"];
+            if (null == idStr || 0 == idStr.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             //int count = int.Parse(dict["LoadCount"]);
             SDKClient.Instance.ChatManager.SendMessageReadAck(dict["id"], new CallBack(
                 onSuccess: () => {
