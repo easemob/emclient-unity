@@ -6,64 +6,64 @@ using UnityEngine;
 namespace ChatSDK
 {
     //IConnectionDelegate
-    public delegate void OnDisconnected(int info);
+    internal delegate void OnDisconnected(int info);
     //IChatManagerDelegate
-    public delegate void OnMessagesReceived([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] messages,
+    internal delegate void OnMessagesReceived([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] messages,
         [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] MessageBodyType[] types, int size);
 
-    public delegate void OnCmdMessagesReceived([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] messages,
+    internal delegate void OnCmdMessagesReceived([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] messages,
         [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] MessageBodyType[] types, int size);
 
-    public delegate void OnMessagesRead([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] messages,
+    internal delegate void OnMessagesRead([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] messages,
         [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] MessageBodyType[] types, int size);
 
-    public delegate void OnMessagesDelivered([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] messages,
+    internal delegate void OnMessagesDelivered([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] messages,
         [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] MessageBodyType[] types, int size);
 
-    public delegate void OnMessagesRecalled([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] messages,
+    internal delegate void OnMessagesRecalled([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] messages,
         [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] MessageBodyType[] types, int size);
 
-    public delegate void OnReadAckForGroupMessageUpdated();
+    internal delegate void OnReadAckForGroupMessageUpdated();
 
-    public delegate void OnGroupMessageRead([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] IntPtr[] acks, int size);
-    public delegate void OnConversationsUpdate();
-    public delegate void OnConversationRead(string from, string to);
+    internal delegate void OnGroupMessageRead([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] IntPtr[] acks, int size);
+    internal delegate void OnConversationsUpdate();
+    internal delegate void OnConversationRead(string from, string to);
 
     //IGroupManagerDelegate
-    public delegate void OnInvitationReceived(string groupId, string groupName, string inviter, string reason);
-    public delegate void OnRequestToJoinReceived(string groupId, string groupName, string applicant, string reason);
-    public delegate void OnRequestToJoinAccepted(string groupId, string groupName, string accepter);
-    public delegate void OnRequestToJoinDeclined(string groupId, string groupName, string decliner, string reason);
-    public delegate void OnInvitationAccepted(string groupId, string invitee, string reason);
-    public delegate void OnInvitationDeclined(string groupId, string invitee, string reason);
-    public delegate void OnUserRemoved(string groupId, string groupName);
-    public delegate void OnGroupDestroyed(string groupId, string groupName);
-    public delegate void OnAutoAcceptInvitationFromGroup(string groupId, string inviter, string inviteMessage);
-    public delegate void OnMuteListAdded(string groupId, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] string[] mutes, int size, int muteExpire);
-    public delegate void OnMuteListRemoved(string groupId, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] string[] mutes, int size);
-    public delegate void OnAdminAdded(string groupId, string administrator);
-    public delegate void OnAdminRemoved(string groupId, string administrator);
-    public delegate void OnOwnerChanged(string groupId, string newOwner, string oldOwner);
-    public delegate void OnMemberJoined(string groupId, string member);
-    public delegate void OnMemberExited(string groupId, string member);
-    public delegate void OnAnnouncementChanged(string groupId, string announcement);
-    public delegate void OnSharedFileAdded(string groupId,
+    internal delegate void OnInvitationReceived(string groupId, string groupName, string inviter, string reason);
+    internal delegate void OnRequestToJoinReceived(string groupId, string groupName, string applicant, string reason);
+    internal delegate void OnRequestToJoinAccepted(string groupId, string groupName, string accepter);
+    internal delegate void OnRequestToJoinDeclined(string groupId, string groupName, string decliner, string reason);
+    internal delegate void OnInvitationAccepted(string groupId, string invitee, string reason);
+    internal delegate void OnInvitationDeclined(string groupId, string invitee, string reason);
+    internal delegate void OnUserRemoved(string groupId, string groupName);
+    internal delegate void OnGroupDestroyed(string groupId, string groupName);
+    internal delegate void OnAutoAcceptInvitationFromGroup(string groupId, string inviter, string inviteMessage);
+    internal delegate void OnMuteListAdded(string groupId, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] string[] mutes, int size, int muteExpire);
+    internal delegate void OnMuteListRemoved(string groupId, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] string[] mutes, int size);
+    internal delegate void OnAdminAdded(string groupId, string administrator);
+    internal delegate void OnAdminRemoved(string groupId, string administrator);
+    internal delegate void OnOwnerChanged(string groupId, string newOwner, string oldOwner);
+    internal delegate void OnMemberJoined(string groupId, string member);
+    internal delegate void OnMemberExited(string groupId, string member);
+    internal delegate void OnAnnouncementChanged(string groupId, string announcement);
+    internal delegate void OnSharedFileAdded(string groupId,
         [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] sharedFile, int size);
-    public delegate void OnSharedFileDeleted(string groupId, string fileId);
+    internal delegate void OnSharedFileDeleted(string groupId, string fileId);
 
     //IRoomManagerDelegate, most of them are duplicated as IGroupManagerDelegate
-    public delegate void OnChatRoomDestroyed(string roomId, string roomName);
-    public delegate void OnRemovedFromChatRoom(string roomId, string roomName, string participant);
-    public delegate void OnMemberExitedFromRoom(string roomId, string roomName, string member);
+    internal delegate void OnChatRoomDestroyed(string roomId, string roomName);
+    internal delegate void OnRemovedFromChatRoom(string roomId, string roomName, string participant);
+    internal delegate void OnMemberExitedFromRoom(string roomId, string roomName, string member);
 
     //IContactManagerDelegate
-    public delegate void OnContactAdd(string username);
-    public delegate void OnContactDeleted(string username);
-    public delegate void OnContactInvited(string username, string reason);
-    public delegate void OnFriendRequestAccepted(string username);
-    public delegate void OnFriendRequestDeclined(string username);
+    internal delegate void OnContactAdd(string username);
+    internal delegate void OnContactDeleted(string username);
+    internal delegate void OnContactInvited(string username, string reason);
+    internal delegate void OnFriendRequestAccepted(string username);
+    internal delegate void OnFriendRequestDeclined(string username);
 
-    public class ConnectionHub
+    internal sealed class ConnectionHub
     {
         //events handler
         internal Action OnConnected;
@@ -113,7 +113,7 @@ namespace ChatSDK
         }
     }
 
-    public class ChatManagerHub
+    internal sealed class ChatManagerHub
     {
         internal OnMessagesReceived OnMessagesReceived;
         internal OnCmdMessagesReceived OnCmdMessagesReceived;
@@ -127,7 +127,7 @@ namespace ChatSDK
 
         private List<IChatManagerDelegate> listeners;
 
-        public ChatManagerHub()
+        internal ChatManagerHub()
         {
             listeners = CallbackManager.Instance().chatManagerListener.delegater;
 
@@ -259,7 +259,7 @@ namespace ChatSDK
         }
     }
 
-    public class GroupManagerHub
+    internal sealed class GroupManagerHub
     {
         internal OnInvitationReceived OnInvitationReceived;
         internal OnRequestToJoinReceived OnRequestToJoinReceived;
@@ -283,7 +283,7 @@ namespace ChatSDK
 
         private List<IGroupManagerDelegate> listeners;
 
-        public GroupManagerHub()
+        internal GroupManagerHub()
         {
             listeners = CallbackManager.Instance().groupManagerListener.delegater;
 
@@ -517,7 +517,7 @@ namespace ChatSDK
         }
     }
 
-    public class RoomManagerHub
+    internal sealed class RoomManagerHub
     {
         internal OnChatRoomDestroyed OnChatRoomDestroyed;
         internal OnMemberJoined OnMemberJoined;
@@ -532,7 +532,7 @@ namespace ChatSDK
 
         private List<IRoomManagerDelegate> listeners;
 
-        public RoomManagerHub()
+        internal RoomManagerHub()
         {
             listeners = CallbackManager.Instance().roomManagerListener.delegater;
 
@@ -658,7 +658,7 @@ namespace ChatSDK
         }
     }
 
-    public class ContactManagerHub
+    internal sealed class ContactManagerHub
     {
         internal OnContactAdd OnContactAdd;
         internal OnContactDeleted OnContactDeleted;
@@ -668,7 +668,7 @@ namespace ChatSDK
 
         private List<IContactManagerDelegate> listeners;
 
-        public ContactManagerHub()
+        internal ContactManagerHub()
         {
             listeners = CallbackManager.Instance().contactManagerListener.delegater;
 

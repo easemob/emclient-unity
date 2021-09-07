@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace ChatSDK
 {
-    internal class RoomManager_iOS : IRoomManager
+    internal sealed class RoomManager_iOS : IRoomManager
     {
         GameObject listenerGameObj;
 
