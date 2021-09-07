@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace ChatSDK
 {
-    public class GroupManager_iOS : IGroupManager
+    internal sealed class GroupManager_iOS : IGroupManager
     {
 
         public GroupManager_iOS()

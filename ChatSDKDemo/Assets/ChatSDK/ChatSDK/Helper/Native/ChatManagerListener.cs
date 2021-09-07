@@ -4,7 +4,7 @@ using SimpleJSON;
 using UnityEngine;
 
 namespace ChatSDK {
-    public class ChatManagerListener : MonoBehaviour
+    internal sealed class ChatManagerListener : MonoBehaviour
     {
         internal List<IChatManagerDelegate> delegater;
 

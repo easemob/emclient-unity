@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace ChatSDK
 {
-    public class RoomManager_Mac : IRoomManager
+    internal class RoomManager_Mac : IRoomManager
     {
         private IntPtr client;
         private RoomManagerHub roomManagerHub;

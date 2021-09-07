@@ -4,7 +4,7 @@ using SimpleJSON;
 
 namespace ChatSDK
 {
-    public class ChatManager_Android : IChatManager
+    internal sealed class ChatManager_Android : IChatManager
     {
 
         private AndroidJavaObject wrapper;

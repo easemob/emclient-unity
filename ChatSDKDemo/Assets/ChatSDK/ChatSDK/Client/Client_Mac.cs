@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace ChatSDK
 {
-    class Client_Mac : IClient
+    internal sealed class Client_Mac : IClient
     {
         private ConnectionHub connectionHub;
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ChatSDK
 {
-    public sealed class ChatCallbackQueue : MonoBehaviour
+    internal sealed class ChatCallbackQueue : MonoBehaviour
     {
 
         private Queue<Action> queue = new Queue<Action>();

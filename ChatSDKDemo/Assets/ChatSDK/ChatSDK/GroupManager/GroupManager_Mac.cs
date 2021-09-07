@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace ChatSDK
 {
-    public class GroupManager_Mac : IGroupManager
+    internal sealed class GroupManager_Mac : IGroupManager
     {
         private IntPtr client;
         private GroupManagerHub groupManagerHub;

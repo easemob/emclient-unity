@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ChatSDK
 {
-    public class RoomManager_Android : IRoomManager
+    internal class RoomManager_Android : IRoomManager
     {
 
         private AndroidJavaObject wrapper;

@@ -72,7 +72,7 @@ namespace ChatSDK
 
         private List<IConnectionDelegate> listeners;
 
-        public ConnectionHub(IClient client)
+        internal ConnectionHub(IClient client)
         {
             //callbackmanager registration done in base()!
             listeners = CallbackManager.Instance().connectionListener.delegater;

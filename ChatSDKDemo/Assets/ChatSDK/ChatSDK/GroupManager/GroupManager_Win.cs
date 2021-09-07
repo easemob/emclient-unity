@@ -2,7 +2,7 @@
 
 namespace ChatSDK
 {
-    internal class GroupManager_Win : IGroupManager
+    internal sealed class GroupManager_Win : IGroupManager
     {
         public override void AcceptGroupInvitation(string groupId, ValueCallBack<Group> handle = null)
         {

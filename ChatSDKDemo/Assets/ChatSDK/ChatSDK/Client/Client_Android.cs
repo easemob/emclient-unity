@@ -2,7 +2,7 @@
 
 namespace ChatSDK
 {
-    class Client_Android : IClient
+    internal sealed class Client_Android : IClient
     {
         private AndroidJavaObject wrapper;
 
