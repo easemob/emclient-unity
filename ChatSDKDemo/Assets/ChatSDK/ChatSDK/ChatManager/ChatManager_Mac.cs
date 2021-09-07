@@ -68,7 +68,7 @@ namespace ChatSDK
 
         public override bool DeleteConversation(string conversationId, bool deleteMessages)
         {
-            if (null == conversationId)
+            if (null == conversationId || 0 == conversationId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return false;
@@ -79,17 +79,19 @@ namespace ChatSDK
 
         public override void DownloadAttachment(string messageId, CallBack handle = null)
         {
-            if (null == messageId)
+            if (null == messageId || 0 == messageId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.ChatManager_DownloadMessageAttachments(client, messageId,
-                () =>
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.ChatManager_DownloadMessageAttachments(client, callbackId, messageId,
+                (int cbId) =>
                 {
                     try
                     {
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); });
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
                     }
                     catch (NullReferenceException nre)
                     {
@@ -97,26 +99,28 @@ namespace ChatSDK
                     }
 
                 },
-                (int code, string desc) =>
+                (int code, string desc, int cbId) =>
                 {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); });
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
                 }
                 );
         }
 
         public override void DownloadThumbnail(string messageId, CallBack handle = null)
         {
-            if (null == messageId)
+            if (null == messageId || 0 == messageId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.ChatManager_DownloadMessageThumbnail(client, messageId,
-                () =>
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.ChatManager_DownloadMessageThumbnail(client, callbackId, messageId,
+                (int cbId) =>
                 {
                     try
                     {
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); }); 
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
                     }
                     catch (NullReferenceException nre)
                     {
@@ -124,23 +128,25 @@ namespace ChatSDK
                     }
 
                 },
-                (int code, string desc) =>
+                (int code, string desc, int cbId) =>
                 {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); });
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
                 }
                 );
         }
 
         public override void FetchHistoryMessagesFromServer(string conversationId, ConversationType type, string startMessageId = null, int count = 20, ValueCallBack<CursorResult<Message>> handle = null)
         {
-            if (null == conversationId)
+            if (null == conversationId || 0 == conversationId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.ChatManager_FetchHistoryMessages(client, conversationId, type, startMessageId, count,
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
-                (IntPtr header, IntPtr[] array, DataType dType, int size) => {
+            ChatAPINative.ChatManager_FetchHistoryMessages(client, callbackId, conversationId, type, startMessageId, count,
+
+                (IntPtr header, IntPtr[] array, DataType dType, int size, int cbId) => {
                     Debug.Log($"FetchHistoryMessages callback with dType={dType}, size={size}."); 
                     if (DataType.CursorResult == dType)
                     {
@@ -161,7 +167,7 @@ namespace ChatSDK
                                 if (null != mto) messages[i] = mto;
                             }
                             result.Data = MessageTO.ConvertToMessageList(messages, size);
-                            ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.OnSuccessValue(result); });
+                            ChatCallbackObject.ValueCallBackOnSuccess<CursorResult<Message>>(cbId, result);
                         }
                         else
                         {
@@ -174,15 +180,15 @@ namespace ChatSDK
                     }
                 },
 
-                (int code, string desc) => {
+                (int code, string desc, int cbId) => {
                     Debug.LogError($"FetchHistoryMessages failed with code={code},desc={desc}");
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); });
+                    ChatCallbackObject.ValueCallBackOnError<CursorResult<Message>>(cbId, code, desc);
                 });
         }
 
         public override Conversation GetConversation(string conversationId, ConversationType type, bool createIfNeed = true)
         {
-            if (null == conversationId)
+            if (null == conversationId || 0 == conversationId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return null;
@@ -197,8 +203,10 @@ namespace ChatSDK
 
         public override void GetConversationsFromServer(ValueCallBack<List<Conversation>> handle = null)
         {
-            ChatAPINative.ChatManager_GetConversationsFromServer(client,
-                (IntPtr[] array, DataType dType, int size) =>
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.ChatManager_GetConversationsFromServer(client, callbackId, 
+                (IntPtr[] array, DataType dType, int size, int cbId) =>
                 {
                     Debug.Log($"GetConversationsFromServer callback with dType={dType}, size={size}");
                     if(DataType.ListOfConversation == dType)
@@ -214,16 +222,16 @@ namespace ChatSDK
                                 conversation.Ext = TransformTool.JsonStringToDictionary(conversationTO.ExtField); //to-do:ext is a json string?
                             result.Add(conversation);
                         }
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.OnSuccessValue(result); });
+                        ChatCallbackObject.ValueCallBackOnSuccess<List<Conversation>>(cbId, result);
                     }
                     else
                     {
                         Debug.LogError("Incorrect delegate parameters returned.");
                     }
                 },
-                (int code, string desc) =>
+                (int code, string desc, int cbId) =>
                 {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); });
+                    ChatCallbackObject.ValueCallBackOnError<List<Conversation>>(cbId, code, desc);
                 });
         }
 
@@ -265,7 +273,7 @@ namespace ChatSDK
         {
             var result = new List<Conversation>();
             ChatAPINative.ChatManager_LoadAllConversationsFromDB(client,
-                (IntPtr[] array, DataType dType, int size) =>
+                (IntPtr[] array, DataType dType, int size, int cbId) =>
                 {
                     Debug.Log($"GetConversationsFromServer callback with dType={dType}, size={size}");
                     if (DataType.ListOfConversation == dType)
@@ -294,14 +302,14 @@ namespace ChatSDK
 
         public override Message LoadMessage(string messageId)
         {
-            if (null == messageId)
+            if (null == messageId || 0 == messageId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return null;
             }
             Message msg = null;
             ChatAPINative.ChatManager_GetMessage(client, messageId,
-                (IntPtr[] array, DataType dType, int size) =>
+                (IntPtr[] array, DataType dType, int size, int cbId) =>
                 {
                     Debug.Log($"LoadMessage callback with dType={dType}, size={size}");
                     if (DataType.ListOfMessage == dType)
@@ -326,7 +334,7 @@ namespace ChatSDK
                         Debug.LogError("Incorrect datatype returned.");
                     }
                 },
-                (int code, string desc) => { Debug.Log($"Load message failed with error id={code}, desc={desc}"); });
+                (int code, string desc, int cbId) => { Debug.Log($"Load message failed with error id={code}, desc={desc}"); });
             return msg;
         }
 
@@ -338,17 +346,18 @@ namespace ChatSDK
 
         public override void RecallMessage(string messageId, CallBack handle = null)
         {
-            if (null == messageId)
+            if (null == messageId || 0 == messageId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.ChatManager_RecallMessage(client, messageId,
-                 () =>
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+            ChatAPINative.ChatManager_RecallMessage(client, callbackId, messageId,
+                 (int cbId) =>
                  {
                      try
                      {
-                         ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); });
+                         ChatCallbackObject.CallBackOnSuccess(cbId);
                      }
                      catch (NullReferenceException nre)
                      {
@@ -356,24 +365,26 @@ namespace ChatSDK
                      }
 
                  },
-                 (int code, string desc) =>
+                 (int code, string desc, int cbId) =>
                  {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); });
+                     ChatCallbackObject.CallBackOnError(cbId, code, desc);
                  }
                  );
         }
 
         public override Message ResendMessage(string messageId, CallBack handle = null)
         {
-            if (null == messageId)
+            if (null == messageId || 0 == messageId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return null;
             }
             Message msg = null;
-            ChatAPINative.ChatManager_ResendMessage(client, messageId,
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.ChatManager_ResendMessage(client, callbackId, messageId,
                 //onSuccessResult (used to get message from SDK)
-                (IntPtr[] array, DataType dType, int size) =>
+                (IntPtr[] array, DataType dType, int size, int cbId) =>
                 {
                     Debug.Log($"ResendMessage return message dType={dType}, size={size}");
                     if (DataType.ListOfMessage == dType)
@@ -399,11 +410,11 @@ namespace ChatSDK
                     }
                 },
                 //onSuccess
-                () =>
+                (int cbId) =>
                 {
                     try
                     {
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); });
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
                     }
                     catch (NullReferenceException nre)
                     {
@@ -412,9 +423,9 @@ namespace ChatSDK
 
                 },
                 //onError
-                (int code, string desc) =>
+                (int code, string desc, int cbId) =>
                 {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); });
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
                 }
                 );
 
@@ -424,14 +435,14 @@ namespace ChatSDK
         public override List<Message> SearchMsgFromDB(string keywords, long timestamp = 0, int maxCount = 20, string from = null, MessageSearchDirection direction = MessageSearchDirection.DOWN)
         {
             var messageList = new List<Message>();
-            if (null == keywords)
+            if (null == keywords || 0 == keywords.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return messageList;
             }
 
             ChatAPINative.ChatManager_LoadMoreMessages(client,
-                (IntPtr[] array, DataType dType, int size) =>
+                (IntPtr[] array, DataType dType, int size, int cbId) =>
                 {
                     Debug.Log($"SearchMsgFromDB return message dType={dType}, size={size}");
 
@@ -457,17 +468,19 @@ namespace ChatSDK
 
         public override void SendConversationReadAck(string conversationId, CallBack callback = null)
         {
-            if (null == conversationId)
+            if (null == conversationId || 0 == conversationId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.ChatManager_SendReadAckForConversation(client, conversationId,
-                () =>
+            int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
+
+            ChatAPINative.ChatManager_SendReadAckForConversation(client, callbackId, conversationId,
+                (int cbId) =>
                 {
                     try
                     {
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { callback?.Success(); });
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
                     }
                     catch (NullReferenceException nre)
                     {
@@ -475,9 +488,9 @@ namespace ChatSDK
                     }
 
                 },
-                (int code, string desc) =>
+                (int code, string desc, int cbId) =>
                 {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { callback?.Error(code, desc); });
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
                 }
                 );
         }
@@ -488,14 +501,16 @@ namespace ChatSDK
             IntPtr mtoPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(mto));
             Marshal.StructureToPtr(mto, mtoPtr, false);
             AddMsgMap(mto.LocalTime, mtoPtr, message);
-            ChatAPINative.ChatManager_SendMessage(client,
-                () =>
+
+            int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
+            ChatAPINative.ChatManager_SendMessage(client, callbackId, 
+                (int cbId) =>
                 {
                     try
                     {
                         UpdatedMsgId(mto.LocalTime);
                         DeleteFromMsgMap(mto.LocalTime);
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { callback?.Success(); });
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
                     }
                     catch(NullReferenceException nre)
                     {
@@ -503,10 +518,10 @@ namespace ChatSDK
                     }
                     
                 },
-                (int code, string desc) =>
+                (int code, string desc, int cbId) =>
                 {
                     DeleteFromMsgMap(mto.LocalTime);
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { callback?.Error(code, desc); });
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
                 },
                 mtoPtr, message.Body.Type);
 
@@ -515,17 +530,19 @@ namespace ChatSDK
 
         public override void SendMessageReadAck(string messageId, CallBack callback = null)
         {
-            if (null == messageId)
+            if (null == messageId || 0 == messageId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.ChatManager_SendReadAckForMessage(client, messageId,
-                () =>
+            int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
+
+            ChatAPINative.ChatManager_SendReadAckForMessage(client, callbackId, messageId,
+                (int cbId) =>
                 {
                     try
                     {
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { callback?.Success(); });
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
                     }
                     catch (NullReferenceException nre)
                     {
@@ -533,9 +550,9 @@ namespace ChatSDK
                     }
 
                 },
-                (int code, string desc) =>
+                (int code, string desc, int cbId) =>
                 {
-                    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { callback?.Error(code, desc); });
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
                 }
                 );
         }

@@ -14,6 +14,8 @@
 #include "emfilemessagebody.h"
 #include "emimagemessagebody.h"
 #include "emvoicemessagebody.h"
+#include "emvideomessagebody.h"
+#include "emcustommessagebody.h"
 #include "emmucsetting.h"
 #include "empushconfigs.h"
 
@@ -149,6 +151,26 @@ struct VoiceMessageBodyTO {
     int Duration;
 };
 
+struct VideoMessageBodyTO {
+    const char * LocalPath;
+    const char * DisplayName;
+    const char * Secret;
+    const char * RemotePath;
+    const char * ThumbnaiLocationPath;
+    const char * ThumbnaiRemotePath;
+    const char * ThumbnaiSecret;
+    double Height;
+    double Width;
+    int Duration;
+    long FileSize;
+    EMFileMessageBody::EMDownloadStatus DownStatus;
+};
+
+struct CustomMessageBodyTO {
+    const char *  CustomEvent;
+    const char *  CustomParams;
+};
+
 class MessageTO
 {
 public:
@@ -173,6 +195,9 @@ public:
     MessageTO();
     
     static MessageTO * FromEMMessage(const EMMessagePtr &_message);
+    //since can not use destory function
+    //so here add a function to free related resource
+    static void FreeResource(MessageTO * mto);
     
     //virtual ~MessageTO();
 protected:
@@ -219,6 +244,20 @@ class VoiceMessageTO : public MessageTO
 public:
     VoiceMessageBodyTO body;
     VoiceMessageTO(const EMMessagePtr &message);
+};
+
+class VideoMessageTO : public MessageTO
+{
+public:
+    VideoMessageBodyTO body;
+    VideoMessageTO(const EMMessagePtr &message);
+};
+
+class CustomMessageTO : public MessageTO
+{
+public:
+    CustomMessageBodyTO body;
+    CustomMessageTO(const EMMessagePtr &message);
 };
 
 enum DataType {

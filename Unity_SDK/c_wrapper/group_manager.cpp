@@ -21,11 +21,11 @@ AGORA_API void GroupManager_AddListener(void *client,FUNC_OnInvitationReceived o
     }
 }
 
-AGORA_API void GroupManager_CreateGroup(void *client, const char * groupName, GroupOptions * options, const char * desc, const char * inviteMembers[], int size, const char * inviteReason, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_CreateGroup(void *client, int callbackId, const char * groupName, GroupOptions * options, const char * desc, const char * inviteMembers[], int size, const char * inviteReason, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupName, options, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     LOG("GroupOption, ext:%s, maxcout:%d, style:%d, confirm:%d", options->Ext, options->MaxCount, options->Style, options->InviteNeedConfirm);
@@ -45,21 +45,21 @@ AGORA_API void GroupManager_CreateGroup(void *client, const char * groupName, Gr
             LOG("GroupManager_CreateGroup succeeds: name=%s, id=%s", result->groupSubject().c_str(), result->groupId().c_str());
             if(onSuccess) {
                 GroupTO *data[1] = {GroupTO::FromEMGroup(result)};
-                onSuccess((void **)data, DataType::Group, 1);
+                onSuccess((void **)data, DataType::Group, 1, callbackId);
                 delete (GroupTO*)(data[0]);
             }
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_ChangeGroupName(void *client, const char * groupId, const char * groupName, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_ChangeGroupName(void *client, int callbackId, const char * groupId, const char * groupName, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupName, groupId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string groupNameStr = groupName;
@@ -70,19 +70,19 @@ AGORA_API void GroupManager_ChangeGroupName(void *client, const char * groupId, 
         CLIENT->getGroupManager().changeGroupSubject(groupIdStr, groupNameStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("GroupManager_ChangeGroupName execution succeeds: %s %s", groupIdStr.c_str(), groupNameStr.c_str());
-            if(onSuccess) onSuccess();
+            if(onSuccess) onSuccess(callbackId);
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_DestoryGroup(void *client, const char * groupId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_DestoryGroup(void *client, int callbackId, const char * groupId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string groupIdStr = groupId;
@@ -92,19 +92,19 @@ AGORA_API void GroupManager_DestoryGroup(void *client, const char * groupId, FUN
         CLIENT->getGroupManager().destroyGroup(groupIdStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("GroupManager_DestoryGroup execution succeeds: %s", groupIdStr.c_str());
-            if(onSuccess) onSuccess();
+            if(onSuccess) onSuccess(callbackId);
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_AddMembers(void *client, const char * groupId, const char * members[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_AddMembers(void *client, int callbackId, const char * groupId, const char * members[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
-         if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
          return;
      }
     EMMucMemberList memberList;
@@ -118,19 +118,19 @@ AGORA_API void GroupManager_AddMembers(void *client, const char * groupId, const
         CLIENT->getGroupManager().addGroupMembers(groupIdStr, memberList, "", error); //TODO: lack of welcome message param. in signature
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("GroupManager_AddMembers execution succeeds: %s", groupIdStr.c_str());
-            if(onSuccess) onSuccess();
+            if(onSuccess) onSuccess(callbackId);
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_RemoveMembers(void *client, const char * groupId, const char * members[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_RemoveMembers(void *client, int callbackId, const char * groupId, const char * members[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
-         if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
          return;
      }
     EMMucMemberList memberList;
@@ -144,19 +144,19 @@ AGORA_API void GroupManager_RemoveMembers(void *client, const char * groupId, co
         CLIENT->getGroupManager().removeGroupMembers(groupIdStr, memberList, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("GroupManager_RemoveMembers execution succeeds: %s", groupIdStr.c_str());
-            if(onSuccess) onSuccess();
+            if(onSuccess) onSuccess(callbackId);
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_AddAdmin(void *client, const char * groupId, const char * admin, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_AddAdmin(void *client, int callbackId, const char * groupId, const char * admin, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, admin, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string groupIdStr = groupId;
@@ -169,11 +169,11 @@ AGORA_API void GroupManager_AddAdmin(void *client, const char * groupId, const c
             LOG("GroupManager_AddAdmin succeeds: %s %s", groupIdStr.c_str(), adminStr.c_str());
             if(onSuccess) {
                 GroupTO *data[1] = {GroupTO::FromEMGroup(result)};
-                onSuccess((void **)data, DataType::Group, 1);
+                onSuccess((void **)data, DataType::Group, 1, callbackId);
                 delete (GroupTO*)data[0];
             }
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
@@ -182,7 +182,7 @@ AGORA_API void GroupManager_AddAdmin(void *client, const char * groupId, const c
 AGORA_API void GroupManager_GetGroupWithId(void *client, const char * groupId, FUNC_OnSuccess_With_Result onSuccess)
 {
     if(!MandatoryCheck(groupId)) {
-        onSuccess(nullptr, DataType::Group, 0);
+        onSuccess(nullptr, DataType::Group, 0, -1);
         return;
     }
     EMError error;
@@ -193,20 +193,20 @@ AGORA_API void GroupManager_GetGroupWithId(void *client, const char * groupId, F
             LOG("GetGroupWithId successfully, group id:%s", result->groupId().c_str());
             data[0] = GroupTO::FromEMGroup(result);
             data[0]->LogInfo();
-            onSuccess((void **)data, DataType::Group, 1);
+            onSuccess((void **)data, DataType::Group, 1, -1);
             delete (GroupTO*)data[0];
             return;
         }
     }
     LOG("Cannot get group with id %s", groupId);
-    onSuccess(nullptr, DataType::Group, 0);
+    onSuccess(nullptr, DataType::Group, 0, -1);
 }
 
-AGORA_API void GroupManager_AcceptInvitationFromGroup(void *client, const char * groupId, const char * inviter, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_AcceptInvitationFromGroup(void *client, int callbackId, const char * groupId, const char * inviter, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, inviter, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string groupIdStr = groupId;
@@ -219,21 +219,21 @@ AGORA_API void GroupManager_AcceptInvitationFromGroup(void *client, const char *
             if(onSuccess) {
                 GroupTO *gto = GroupTO::FromEMGroup(result);
                 GroupTO *data[1] = {gto};
-                onSuccess((void **)data, DataType::Group, 1);
+                onSuccess((void **)data, DataType::Group, 1, callbackId);
                 delete (GroupTO*)data[0];
             }
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_AcceptJoinGroupApplication(void *client, const char * groupId, const char * username, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_AcceptJoinGroupApplication(void *client, int callbackId, const char * groupId, const char * username, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, username, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string groupIdStr = groupId;
@@ -243,19 +243,19 @@ AGORA_API void GroupManager_AcceptJoinGroupApplication(void *client, const char 
         EMError error;
         EMGroupPtr result = CLIENT->getGroupManager().acceptJoinGroupApplication(groupIdStr, usernameStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
-            if(onSuccess) onSuccess();
+            if(onSuccess) onSuccess(callbackId);
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_AddWhiteListMembers(void *client, const char * groupId, const char * members[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_AddWhiteListMembers(void *client, int callbackId, const char * groupId, const char * members[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     EMMucMemberList memberList;
@@ -269,19 +269,19 @@ AGORA_API void GroupManager_AddWhiteListMembers(void *client, const char * group
         CLIENT->getGroupManager().addWhiteListMembers(groupIdStr, memberList, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("AddWhiteListMembers succeed for group: %s", groupIdStr.c_str());
-            if(onSuccess) onSuccess();
+            if(onSuccess) onSuccess(callbackId);
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_BlockGroupMessage(void *client, const char * groupId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_BlockGroupMessage(void *client, int callbackId, const char * groupId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string groupIdStr = groupId;
@@ -290,19 +290,19 @@ AGORA_API void GroupManager_BlockGroupMessage(void *client, const char * groupId
         EMError error;
         EMGroupPtr result = CLIENT->getGroupManager().blockGroupMessage(groupIdStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
-            if(onSuccess) onSuccess();
+            if(onSuccess) onSuccess(callbackId);
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_BlockGroupMembers(void *client, const char * groupId, const char * members[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_BlockGroupMembers(void *client, int callbackId, const char * groupId, const char * members[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     EMMucMemberList memberList;
@@ -316,19 +316,19 @@ AGORA_API void GroupManager_BlockGroupMembers(void *client, const char * groupId
         CLIENT->getGroupManager().blockGroupMembers(groupIdStr, memberList, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("Block members of group: %s succesfully", groupIdStr.c_str());
-            if(onSuccess) onSuccess();
+            if(onSuccess) onSuccess(callbackId);
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_ChangeGroupDescription(void *client, const char * groupId, const char * desc, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_ChangeGroupDescription(void *client, int callbackId, const char * groupId, const char * desc, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, desc, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string groupIdStr = groupId;
@@ -338,19 +338,19 @@ AGORA_API void GroupManager_ChangeGroupDescription(void *client, const char * gr
         EMError error;
         EMGroupPtr result = CLIENT->getGroupManager().changeGroupDescription(groupIdStr, descStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
-            if(onSuccess) onSuccess();
+            if(onSuccess) onSuccess(callbackId);
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_TransferGroupOwner(void *client, const char * groupId, const char * newOwner, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_TransferGroupOwner(void *client, int callbackId, const char * groupId, const char * newOwner, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, newOwner, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string groupIdStr = groupId;
@@ -363,21 +363,21 @@ AGORA_API void GroupManager_TransferGroupOwner(void *client, const char * groupI
             LOG("GroupManager_TransferGroupOwner succeeds: group:%s newowner: %s", groupIdStr.c_str(), newOwnerStr.c_str());
             if(onSuccess) {
                 GroupTO *data[1] = {GroupTO::FromEMGroup(result)};
-                onSuccess((void **)data, DataType::Group, 1);
+                onSuccess((void **)data, DataType::Group, 1, callbackId);
                 delete (GroupTO*)data[0];
             }
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_FetchIsMemberInWhiteList(void *client, const char * groupId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_FetchIsMemberInWhiteList(void *client, int callbackId, const char * groupId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string groupIdStr = groupId;
@@ -396,21 +396,21 @@ AGORA_API void GroupManager_FetchIsMemberInWhiteList(void *client, const char * 
                 }else{
                     *(data[0]) = 0; // 0 - false
                 }
-                onSuccess((void **)data, DataType::Bool, 1);
+                onSuccess((void **)data, DataType::Bool, 1, callbackId);
                 delete boolInt;
             }
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_DeclineInvitationFromGroup(void *client, const char * groupId, const char * username, const char * reason, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_DeclineInvitationFromGroup(void *client, int callbackId, const char * groupId, const char * username, const char * reason, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string groupIdStr = groupId;
@@ -421,19 +421,19 @@ AGORA_API void GroupManager_DeclineInvitationFromGroup(void *client, const char 
         EMError error;
         CLIENT->getGroupManager().declineInvitationFromGroup(groupIdStr, usernameStr, reasonStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
-            if(onSuccess) onSuccess();
+            if(onSuccess) onSuccess(callbackId);
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_DeclineJoinGroupApplication(void *client, const char * groupId, const char * username, const char * reason, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_DeclineJoinGroupApplication(void *client, int callbackId, const char * groupId, const char * username, const char * reason, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string groupIdStr = groupId;
@@ -444,41 +444,41 @@ AGORA_API void GroupManager_DeclineJoinGroupApplication(void *client, const char
         EMError error;
         CLIENT->getGroupManager().declineJoinGroupApplication(groupIdStr, usernameStr, reasonStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
-            if(onSuccess) onSuccess();
+            if(onSuccess) onSuccess(callbackId);
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_DownloadGroupSharedFile(void *client, const char * groupId, const char * filePath, const char * fileId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_DownloadGroupSharedFile(void *client, int callbackId, const char * groupId, const char * filePath, const char * fileId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, filePath, fileId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     EMCallbackPtr callbackPtr(new EMCallback(gCallbackObserverHandle,
-                                             [onSuccess]()->bool {
+                                             [=]()->bool {
                                                 LOG("Download group shared file succeeds.");
-                                                if(onSuccess) onSuccess();
+                                                if(onSuccess) onSuccess(callbackId);
                                                 return true;
                                              },
-                                             [onError](const easemob::EMErrorPtr error)->bool{
+                                             [=](const easemob::EMErrorPtr error)->bool{
                                                 LOG("Download group shared file failed with code=%d.", error->mErrorCode);
-                                                if(onError) onError(error->mErrorCode,error->mDescription.c_str());
+                                                if(onError) onError(error->mErrorCode,error->mDescription.c_str(), callbackId);
                                                 return true;
                                              }));
     
     EMGroupPtr groupPtr = CLIENT->getGroupManager().downloadGroupSharedFile(groupId, filePath, fileId, callbackPtr, error);
 }
 
-AGORA_API void GroupManager_FetchGroupAnnouncement(void *client, const char * groupId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_FetchGroupAnnouncement(void *client, int callbackId, const char * groupId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string groupIdStr = groupId;
@@ -490,20 +490,20 @@ AGORA_API void GroupManager_FetchGroupAnnouncement(void *client, const char * gr
             LOG("GroupManager_FetchGroupAnnouncement succeeds, groupid: %s, announcement:%s", groupIdStr.c_str(), ret.c_str());
             if(onSuccess) {
                 const char *data[1] = {ret.c_str()};
-                onSuccess((void **)data, DataType::String, 1);
+                onSuccess((void **)data, DataType::String, 1, callbackId);
             }
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_FetchGroupBans(void *client, const char * groupId, int pageNum, int pageSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_FetchGroupBans(void *client, int callbackId, const char * groupId, int pageNum, int pageSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string groupIdStr = groupId;
@@ -519,20 +519,20 @@ AGORA_API void GroupManager_FetchGroupBans(void *client, const char * groupId, i
                 for(size_t i=0; i<size; i++) {
                     data[i] = banList[i].c_str();
                 }
-                onSuccess((void **)data, DataType::String, (int)size);
+                onSuccess((void **)data, DataType::String, (int)size, callbackId);
             }
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_FetchGroupSharedFiles(void *client, const char * groupId, int pageNum, int pageSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_FetchGroupSharedFiles(void *client, int callbackId, const char * groupId, int pageNum, int pageSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string groupIdStr = groupId;
@@ -548,23 +548,23 @@ AGORA_API void GroupManager_FetchGroupSharedFiles(void *client, const char * gro
                 for(size_t i=0; i<size; i++) {
                     data[i] = GroupSharedFileTO::FromEMGroupSharedFile(fileList[i]);
                 }
-                onSuccess((void **)data, DataType::ListOfGroupSharedFile, (int)size);
+                onSuccess((void **)data, DataType::ListOfGroupSharedFile, (int)size, callbackId);
                 for(size_t i=0; i<size; i++) {
                     delete (GroupSharedFileTO*)data[i];
                 }
             }
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_FetchGroupMembers(void *client, const char * groupId, int pageSize, const char * cursor, FUNC_OnSuccess_With_Result_V2 onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_FetchGroupMembers(void *client, int callbackId, const char * groupId, int pageSize, const char * cursor, FUNC_OnSuccess_With_Result_V2 onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string groupIdStr = groupId;
@@ -587,20 +587,20 @@ AGORA_API void GroupManager_FetchGroupMembers(void *client, const char * groupId
                     data[i] = msgCursorResult.result().at(i).c_str();
                     LOG("member %d: %s", i, data[i]);
                 }
-                onSuccess((void *)&cursorResultTo, (void **)data, DataType::CursorResult, size);
+                onSuccess((void *)&cursorResultTo, (void **)data, DataType::CursorResult, size, callbackId);
             }
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_FetchGroupMutes(void *client, const char * groupId, int pageNum, int pageSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_FetchGroupMutes(void *client, int callbackId, const char * groupId, int pageNum, int pageSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string groupIdStr = groupId;
@@ -616,20 +616,20 @@ AGORA_API void GroupManager_FetchGroupMutes(void *client, const char * groupId, 
                 for(size_t i=0; i<size; i++) {
                     data[i] = muteList[i].first.c_str();
                 }
-                onSuccess((void **)data, DataType::String, (int)size);
+                onSuccess((void **)data, DataType::String, (int)size, callbackId);
             }
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_FetchGroupSpecification(void *client, const char * groupId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_FetchGroupSpecification(void *client, int callbackId, const char * groupId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string groupIdStr = groupId;
@@ -641,17 +641,17 @@ AGORA_API void GroupManager_FetchGroupSpecification(void *client, const char * g
             LOG("GroupManager_FetchGroupSpecification succeeds: group:%s", groupIdStr.c_str());
             if(onSuccess) {
                 GroupTO *data[1] = {GroupTO::FromEMGroup(result)};
-                onSuccess((void **)data, DataType::Group, 1);
+                onSuccess((void **)data, DataType::Group, 1, callbackId);
                 delete (GroupTO*)data[0];
             }
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_GetGroupsWithoutNotice(void *client, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_GetGroupsWithoutNotice(void *client, int callbackId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     std::thread t([=](){
         EMError error;
@@ -667,20 +667,20 @@ AGORA_API void GroupManager_GetGroupsWithoutNotice(void *client, FUNC_OnSuccess_
                         data[i] = groupList[i]->groupId().c_str();
                     }
                 }
-                onSuccess((void **)data, DataType::String, (int)size);
+                onSuccess((void **)data, DataType::String, (int)size, callbackId);
             }
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_FetchGroupWhiteList(void *client, const char * groupId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_FetchGroupWhiteList(void *client, int callbackId, const char * groupId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string groupIdStr = groupId;
@@ -697,10 +697,10 @@ AGORA_API void GroupManager_FetchGroupWhiteList(void *client, const char * group
                 for(size_t i=0; i<size; i++) {
                     data[i] = memberList[i].c_str();
                 }
-                onSuccess((void **)data, DataType::String, (int)size);
+                onSuccess((void **)data, DataType::String, (int)size, callbackId);
             }
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
@@ -708,24 +708,21 @@ AGORA_API void GroupManager_FetchGroupWhiteList(void *client, const char * group
 
 AGORA_API void GroupManager_LoadAllMyGroupsFromDB(void *client, FUNC_OnSuccess_With_Result onSuccess)
 {
-    std::thread t([=](){
-        EMGroupList groupList = CLIENT->getGroupManager().loadAllMyGroupsFromDB();
-        int size = (int)groupList.size();
-        LOG("LoadAllMyGroupsFromDB successfully, group num:%d", size);
-        
-        GroupTO *data[size];
-        for(size_t i=0; i<size; i++) {
-            data[i] = GroupTO::FromEMGroup(groupList[i]);
-        }
-        onSuccess((void **)data, DataType::ListOfGroup, size);
-        for(size_t i=0; i<size; i++) {
-            delete (GroupTO*)data[i];
-        }
-    });
-    t.detach();
+    EMGroupList groupList = CLIENT->getGroupManager().loadAllMyGroupsFromDB();
+    int size = (int)groupList.size();
+    LOG("LoadAllMyGroupsFromDB successfully, group num:%d", size);
+    
+    GroupTO *data[size];
+    for(size_t i=0; i<size; i++) {
+        data[i] = GroupTO::FromEMGroup(groupList[i]);
+    }
+    onSuccess((void **)data, DataType::ListOfGroup, size, -1);
+    for(size_t i=0; i<size; i++) {
+        delete (GroupTO*)data[i];
+    }
 }
 
-AGORA_API void GroupManager_FetchAllMyGroupsWithPage(void *client, int pageNum, int pageSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_FetchAllMyGroupsWithPage(void *client, int callbackId, int pageNum, int pageSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     std::thread t([=](){
         EMError error;
@@ -739,19 +736,19 @@ AGORA_API void GroupManager_FetchAllMyGroupsWithPage(void *client, int pageNum, 
                     data[i] = GroupTO::FromEMGroup(groupList[i]);
                     data[i]->LogInfo();
                 }
-                onSuccess((void **)data, DataType::ListOfGroup, (int)size);
+                onSuccess((void **)data, DataType::ListOfGroup, (int)size, callbackId);
                 for(size_t i=0; i<size; i++) {
                     delete (GroupTO*)data[i];
                 }
             }
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_FetchPublicGroupsWithCursor(void *client, int pageSize, const char * cursor, FUNC_OnSuccess_With_Result_V2 onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_FetchPublicGroupsWithCursor(void *client, int callbackId, int pageSize, const char * cursor, FUNC_OnSuccess_With_Result_V2 onSuccess, FUNC_OnError onError)
 {
     std::string cursorStr = OptionalStrParamCheck(cursor);
     
@@ -782,7 +779,7 @@ AGORA_API void GroupManager_FetchPublicGroupsWithCursor(void *client, int pageSi
                     data[i] = grouInfoTo;
                 }
                 LOG("Convert EMGroupPtr to GroupTO(%d) complete.",size);
-                onSuccess((void *)&cursorResultTo, (void **)data, DataType::CursorResult, (int)size);
+                onSuccess((void *)&cursorResultTo, (void **)data, DataType::CursorResult, (int)size, callbackId);
                 //free memory
                 for(size_t i=0; i<size; i++) {
                     delete (GroupInfoTO*)data[i];
@@ -790,18 +787,18 @@ AGORA_API void GroupManager_FetchPublicGroupsWithCursor(void *client, int pageSi
             }
         }else{
             if(onError) {
-                onError(error.mErrorCode, error.mDescription.c_str());
+                onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
             }
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_JoinPublicGroup(void *client, const char * groupId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_JoinPublicGroup(void *client, int callbackId, const char * groupId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string groupIdStr = groupId;
@@ -811,19 +808,19 @@ AGORA_API void GroupManager_JoinPublicGroup(void *client, const char * groupId, 
         CLIENT->getGroupManager().joinPublicGroup(groupIdStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("GroupManager_JoinPublicGroup execution succeeds: %s", groupIdStr.c_str());
-            if(onSuccess) onSuccess();
+            if(onSuccess) onSuccess(callbackId);
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_LeaveGroup(void *client, const char * groupId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_LeaveGroup(void *client, int callbackId, const char * groupId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string groupIdStr = groupId;
@@ -833,19 +830,19 @@ AGORA_API void GroupManager_LeaveGroup(void *client, const char * groupId, FUNC_
         CLIENT->getGroupManager().leaveGroup(groupIdStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("GroupManager_LeaveGroup execution succeeds: %s", groupIdStr.c_str());
-            if(onSuccess) onSuccess();
+            if(onSuccess) onSuccess(callbackId);
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_MuteAllGroupMembers(void *client, const char * groupId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_MuteAllGroupMembers(void *client, int callbackId, const char * groupId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string groupIdStr = groupId;
@@ -859,24 +856,24 @@ AGORA_API void GroupManager_MuteAllGroupMembers(void *client, const char * group
                 if(group) {
                     GroupTO * data[1];
                     data[0] = GroupTO::FromEMGroup(group);
-                    onSuccess((void **)data, DataType::Group, 1);
+                    onSuccess((void **)data, DataType::Group, 1, callbackId);
                     delete (GroupTO*)data[0];
                 } else {
-                    onSuccess(nullptr, DataType::Group, 0);
+                    onSuccess(nullptr, DataType::Group, 0, callbackId);
                 }
             }
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_MuteGroupMembers(void *client, const char * groupId, const char * members[], int size, int muteDuration, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_MuteGroupMembers(void *client, int callbackId, const char * groupId, const char * members[], int size, int muteDuration, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     
@@ -893,21 +890,21 @@ AGORA_API void GroupManager_MuteGroupMembers(void *client, const char * groupId,
             LOG("GroupManager_MuteGroupMembers succeeds: group:%s", groupIdStr.c_str());
             if(onSuccess) {
                 GroupTO *data[1] = {GroupTO::FromEMGroup(result)};
-                onSuccess((void **)data, DataType::Group, 1);
+                onSuccess((void **)data, DataType::Group, 1, callbackId);
                 delete (GroupTO*)data[0];
             }
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_RemoveGroupAdmin(void *client, const char * groupId, const char * admin, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_RemoveGroupAdmin(void *client, int callbackId, const char * groupId, const char * admin, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, admin, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string groupIdStr = groupId;
@@ -920,21 +917,21 @@ AGORA_API void GroupManager_RemoveGroupAdmin(void *client, const char * groupId,
             if(onSuccess) {
                 GroupTO *datum = GroupTO::FromEMGroup(result);
                 GroupTO *data[1] = {datum};
-                onSuccess((void **)data, DataType::Group, 1);
+                onSuccess((void **)data, DataType::Group, 1, callbackId);
                 delete (GroupTO*)data[0];
             }
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_DeleteGroupSharedFile(void *client, const char * groupId, const char * fileId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_DeleteGroupSharedFile(void *client, int callbackId, const char * groupId, const char * fileId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, fileId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string groupIdStr = groupId;
@@ -945,19 +942,19 @@ AGORA_API void GroupManager_DeleteGroupSharedFile(void *client, const char * gro
         CLIENT->getGroupManager().deleteGroupSharedFile(groupIdStr, fileIdStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("GroupManager_DeleteGroupSharedFile execution succeeds: %s", groupIdStr.c_str());
-            if(onSuccess) onSuccess();
+            if(onSuccess) onSuccess(callbackId);
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_RemoveWhiteListMembers(void *client, const char * groupId, const char * members[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_RemoveWhiteListMembers(void *client, int callbackId, const char * groupId, const char * members[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     EMMucMemberList memberList;
@@ -971,19 +968,19 @@ AGORA_API void GroupManager_RemoveWhiteListMembers(void *client, const char * gr
         CLIENT->getGroupManager().removeWhiteListMembers(groupIdStr, memberList, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("GroupManager_RemoveWhiteListMembers execution succeeds: %s", groupIdStr.c_str());
-            if(onSuccess) onSuccess();
+            if(onSuccess) onSuccess(callbackId);
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_ApplyJoinPublicGroup(void *client, const char * groupId, const char * nickName, const char * message, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_ApplyJoinPublicGroup(void *client, int callbackId, const char * groupId, const char * nickName, const char * message, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string groupIdStr = groupId;
@@ -995,19 +992,19 @@ AGORA_API void GroupManager_ApplyJoinPublicGroup(void *client, const char * grou
         CLIENT->getGroupManager().applyJoinPublicGroup(groupIdStr, nickNameStr, messageStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("GroupManager_ApplyJoinPublicGroup execution succeeds: %s", groupIdStr.c_str());
-            if(onSuccess) onSuccess();
+            if(onSuccess) onSuccess(callbackId);
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_UnblockGroupMessage(void *client, const char * groupId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_UnblockGroupMessage(void *client, int callbackId, const char * groupId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string groupIdStr = groupId;
@@ -1017,19 +1014,19 @@ AGORA_API void GroupManager_UnblockGroupMessage(void *client, const char * group
         CLIENT->getGroupManager().unblockGroupMessage(groupIdStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("GroupManager_UnblockGroupMessage execution succeeds: %s", groupIdStr.c_str());
-            if(onSuccess) onSuccess();
+            if(onSuccess) onSuccess(callbackId);
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_UnblockGroupMembers(void *client, const char * groupId, const char * members[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_UnblockGroupMembers(void *client, int callbackId, const char * groupId, const char * members[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     EMMucMemberList memberList;
@@ -1043,19 +1040,19 @@ AGORA_API void GroupManager_UnblockGroupMembers(void *client, const char * group
         CLIENT->getGroupManager().unblockGroupMembers(groupIdStr, memberList, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("GroupManager_UnblockGroupMembers execution succeeds: %s", groupIdStr.c_str());
-            if(onSuccess) onSuccess();
+            if(onSuccess) onSuccess(callbackId);
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_UnMuteAllMembers(void *client, const char * groupId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_UnMuteAllMembers(void *client, int callbackId, const char * groupId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string groupIdStr = groupId;
@@ -1069,25 +1066,25 @@ AGORA_API void GroupManager_UnMuteAllMembers(void *client, const char * groupId,
                 GroupTO * data[1];
                 if(group) {
                     data[0] = GroupTO::FromEMGroup(group);
-                    onSuccess((void **)data, DataType::Group, 1);
+                    onSuccess((void **)data, DataType::Group, 1, callbackId);
                     delete (GroupTO*)data[0];
                 } else {
                     data[0] = nullptr;
-                    onSuccess((void **)data, DataType::Group, 0);
+                    onSuccess((void **)data, DataType::Group, 0, callbackId);
                 }
             }
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_UnmuteGroupMembers(void *client, const char * groupId, const char * members[], int size, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_UnmuteGroupMembers(void *client, int callbackId, const char * groupId, const char * members[], int size, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     EMMucMemberList memberList;
@@ -1103,21 +1100,21 @@ AGORA_API void GroupManager_UnmuteGroupMembers(void *client, const char * groupI
             LOG("GroupManager_UnmuteGroupMembers succeeds: group:%s", groupIdStr.c_str());
             if(onSuccess) {
                 GroupTO *data[1] = {GroupTO::FromEMGroup(result)};
-                onSuccess((void **)data, DataType::Group, 1);
+                onSuccess((void **)data, DataType::Group, 1, callbackId);
                 delete (GroupTO*)data[0];
             }
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_UpdateGroupAnnouncement(void *client, const char * groupId, const char * newAnnouncement, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_UpdateGroupAnnouncement(void *client, int callbackId, const char * groupId, const char * newAnnouncement, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, newAnnouncement, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string groupIdStr = groupId;
@@ -1128,19 +1125,19 @@ AGORA_API void GroupManager_UpdateGroupAnnouncement(void *client, const char * g
         CLIENT->getGroupManager().updateGroupAnnouncement(groupIdStr, newAnnouncementStr,error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("GroupManager_UpdateGroupAnnouncement execution succeeds: %s", groupIdStr.c_str());
-            if(onSuccess) onSuccess();
+            if(onSuccess) onSuccess(callbackId);
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_ChangeGroupExtension(void *client, const char * groupId, const char * newExtension, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_ChangeGroupExtension(void *client, int callbackId, const char * groupId, const char * newExtension, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, newExtension, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string groupIdStr = groupId;
@@ -1153,32 +1150,32 @@ AGORA_API void GroupManager_ChangeGroupExtension(void *client, const char * grou
             if(onSuccess) {
                 GroupTO *datum = GroupTO::FromEMGroup(result);
                 GroupTO *data[1] = {datum};
-                onSuccess((void **)data, DataType::Group, 1);
+                onSuccess((void **)data, DataType::Group, 1, callbackId);
                 delete (GroupTO*)data[0];
             }
         }else{
-            if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
     t.detach();
 }
 
-AGORA_API void GroupManager_UploadGroupSharedFile(void *client, const char * groupId, const char * filePath, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+AGORA_API void GroupManager_UploadGroupSharedFile(void *client, int callbackId, const char * groupId, const char * filePath, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, filePath, error)) {
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str());
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     EMCallbackPtr callbackPtr(new EMCallback(gCallbackObserverHandle,
-                                             [onSuccess]()->bool {
+                                             [=]()->bool {
                                                 LOG("Upload group shared file succeeds.");
-                                                if(onSuccess) onSuccess();
+                                                if(onSuccess) onSuccess(callbackId);
                                                 return true;
                                              },
-                                             [onError](const easemob::EMErrorPtr error)->bool{
+                                             [=](const easemob::EMErrorPtr error)->bool{
                                                 LOG("Failed to upload group shared file failed with code=%d.", error->mErrorCode);
-                                                if(onError) onError(error->mErrorCode,error->mDescription.c_str());
+                                                if(onError) onError(error->mErrorCode,error->mDescription.c_str(), callbackId);
                                                 return true;
                                              }));
     

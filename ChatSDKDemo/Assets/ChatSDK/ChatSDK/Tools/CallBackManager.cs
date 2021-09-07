@@ -75,6 +75,12 @@ namespace ChatSDK {
             tempMsgDict.Clear();
         }
 
+        internal object GetCallBackHandle(int callbackId)
+        {
+            if (-1 == callbackId) return null;
+            return dictionary[callbackId.ToString()];
+        }
+
         internal void SetupAllListeners() {
             GameObject connectionObject = new GameObject(Connection_Obj);
             DontDestroyOnLoad(connectionObject);

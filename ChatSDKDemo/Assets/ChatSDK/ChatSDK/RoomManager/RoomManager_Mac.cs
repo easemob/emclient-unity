@@ -28,29 +28,33 @@ namespace ChatSDK
 
         public override void AddRoomAdmin(string roomId, string memberId, CallBack handle = null)
         {
-            if (null == roomId || null == memberId)
+            if (null == roomId || 0 == roomId.Length || null == memberId || 0 == memberId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.RoomManager_AddRoomAdmin(client, roomId, memberId,
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.RoomManager_AddRoomAdmin(client, callbackId, roomId, memberId,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) => {
                     if (DataType.Room == dType && 1 == dSize)
                     {
                         var result = Marshal.PtrToStructure<RoomTO>(data[0]);
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); });
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
                     }
                     else
                     {
                         Debug.LogError($"Room information expected.");
                     }
                 },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void BlockRoomMembers(string roomId, List<string> members, CallBack handle = null)
         {
-            if (null == roomId || null == members || 0 == members.Count)
+            if (null == roomId || 0 == roomId.Length || null == members || 0 == members.Count)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
@@ -69,90 +73,106 @@ namespace ChatSDK
                     i++;
                 }
             }
-            ChatAPINative.RoomManager_BlockChatroomMembers(client, roomId, membersArray, size,
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.RoomManager_BlockChatroomMembers(client, callbackId, roomId, membersArray, size,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) => {
                     if (DataType.Room == dType && 1 == dSize)
                     {
                         var result = Marshal.PtrToStructure<RoomTO>(data[0]);
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); });
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
                     }
                     else
                     {
                         Debug.LogError($"Room information expected.");
                     }
                 },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void ChangeRoomOwner(string roomId, string newOwner, CallBack handle = null)
         {
-            if (null == roomId || null == newOwner)
+            if (null == roomId || 0 == roomId.Length || null == newOwner || 0 == newOwner.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.RoomManager_TransferChatroomOwner(client, roomId, newOwner,
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.RoomManager_TransferChatroomOwner(client, callbackId, roomId, newOwner,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) => {
                     if (DataType.Room == dType && 1 == dSize)
                     {
                         var result = Marshal.PtrToStructure<RoomTO>(data[0]);
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); });
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
                     }
                     else
                     {
                         Debug.LogError($"Room information expected.");
                     }
                 },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void ChangeRoomDescription(string roomId, string newDescription, CallBack handle = null)
         {
-            if (null == roomId || null == newDescription)
+            if (null == roomId || 0 == roomId.Length || null == newDescription || 0 == newDescription.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.RoomManager_ChangeChatroomDescription(client, roomId, newDescription,
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.RoomManager_ChangeChatroomDescription(client, callbackId, roomId, newDescription,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) => {
                     if (DataType.Room == dType && 1 == dSize)
                     {
                         var result = Marshal.PtrToStructure<RoomTO>(data[0]);
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); });
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
                     }
                     else
                     {
                         Debug.LogError($"Room information expected.");
                     }
                 },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void ChangeRoomName(string roomId, string newName, CallBack handle = null)
         {
-            if (null == roomId || null == newName)
+            if (null == roomId || 0 == roomId.Length || null == newName || 0 == newName.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.RoomManager_ChangeRoomSubject(client, roomId, newName,
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.RoomManager_ChangeRoomSubject(client, callbackId, roomId, newName,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) => {
                     if (DataType.Room == dType && 1 == dSize)
                     {
                         var result = Marshal.PtrToStructure<RoomTO>(data[0]);
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); });
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
                     }
                     else
                     {
                         Debug.LogError($"Room information expected.");
                     }
                 },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void CreateRoom(string subject, string description, string welcomeMsg, int maxUserCount = 300, List<string> members = null, ValueCallBack<Room> handle = null)
         {
-            if (null == subject || null == members || 0 == members.Count)
+            if (null == subject || 0 == subject.Length || null == members || 0 == members.Count)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
@@ -171,37 +191,50 @@ namespace ChatSDK
                     i++;
                 }
             }
-            ChatAPINative.RoomManager_CreateRoom(client, subject, description, welcomeMsg, maxUserCount, membersArray, size,
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.RoomManager_CreateRoom(client, callbackId, subject, description, welcomeMsg, maxUserCount, membersArray, size,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) => {
                     if (DataType.Room == dType && 1 == dSize)
                     {
                         var result = Marshal.PtrToStructure<RoomTO>(data[0]);
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.OnSuccessValue(result.RoomInfo()); });
+                        var room = result.RoomInfo();
+                        ChatCallbackObject.ValueCallBackOnSuccess<Room>(cbId, room);
                     }
                     else
                     {
                         Debug.LogError($"Room information expected.");
                     }
                 },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.ValueCallBackOnError<Room>(cbId, code, desc);
+                });
         }
 
         public override void DestroyRoom(string roomId, CallBack handle = null)
         {
-            if (null == roomId)
+            if (null == roomId || 0 == roomId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.RoomManager_DestroyChatroom(client, roomId,
-                onSuccess: () => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); }); },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.RoomManager_DestroyChatroom(client, callbackId, roomId,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void FetchPublicRoomsFromServer(int pageNum = 1, int pageSize = 200, ValueCallBack<PageResult<Room>> handle = null)
         {
-            ChatAPINative.RoomManager_FetchChatroomsWithPage(client, pageNum, pageSize,
-                (IntPtr[] data, DataType dType, int size) => {
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.RoomManager_FetchChatroomsWithPage(client, callbackId, pageNum, pageSize,
+                (IntPtr[] data, DataType dType, int size, int cbId) => {
                     Debug.Log($"FetchPublicRoomsFromServer callback with dType={dType}, size={size}.");
                     if (DataType.Room == dType && size > 0)
                     {
@@ -212,7 +245,7 @@ namespace ChatSDK
                             var roomTO = Marshal.PtrToStructure<RoomTO>(data[i]);
                             result.Data.Add(roomTO.RoomInfo());
                         }
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.OnSuccessValue(result); });
+                        ChatCallbackObject.ValueCallBackOnSuccess<PageResult<Room>>(cbId, result);
                     }
                     else
                     {
@@ -220,23 +253,28 @@ namespace ChatSDK
                     }
 
                 },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.ValueCallBackOnError<PageResult<Room>>(cbId, code, desc);
+                });
         }
 
         public override void FetchRoomAnnouncement(string roomId, ValueCallBack<string> handle = null)
         {
-            if (null == roomId)
+            if (null == roomId || 0 == roomId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.RoomManager_FetchChatroomAnnouncement(client, roomId,
-                (IntPtr[] data, DataType dType, int size) => {
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.RoomManager_FetchChatroomAnnouncement(client, callbackId, roomId,
+                (IntPtr[] data, DataType dType, int size, int cbId) => {
                     Debug.Log($"FetchRoomAnnouncement callback with dType={dType}, size={size}.");
                     if (DataType.String == dType && 1 == size)
                     {
                         string result = Marshal.PtrToStringAnsi(data[0]);
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.OnSuccessValue(result); });
+                        string str = new string(result.ToCharArray());
+                        ChatCallbackObject.ValueCallBackOnSuccess<string>(cbId, str);
                     }
                     else
                     {
@@ -244,18 +282,22 @@ namespace ChatSDK
                     }
 
                 },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.ValueCallBackOnError<string>(cbId, code, desc);
+                });
         }
 
         public override void FetchRoomBlockList(string roomId, int pageNum = 1, int pageSize = 200, ValueCallBack<List<string>> handle = null)
         {
-            if (null == roomId)
+            if (null == roomId || 0 == roomId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.RoomManager_FetchChatroomBans(client, roomId, pageNum, pageSize,
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.RoomManager_FetchChatroomBans(client, callbackId, roomId, pageNum, pageSize,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) => {
                     List<string> banList = new List<string>();
                     if (DataType.String == dType && dSize > 0)
                     {
@@ -264,48 +306,56 @@ namespace ChatSDK
                             var muteItem = Marshal.PtrToStringAnsi(data[i]);
                             banList.Add(muteItem);
                         }
-
-                        handle?.OnSuccessValue(banList);
+                        ChatCallbackObject.ValueCallBackOnSuccess<List<string>>(cbId, banList); 
                     }
                     else
                     {
                         Debug.LogError($"Group information expected.");
                     }
                 },
-                handle?.Error);
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.ValueCallBackOnError<List<string>>(cbId, code, desc);
+                });
         }
 
         public override void FetchRoomInfoFromServer(string roomId, ValueCallBack<Room> handle = null)
         {
-            if (null == roomId)
+            if (null == roomId || 0 == roomId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.RoomManager_FetchChatroomSpecification(client, roomId,
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.RoomManager_FetchChatroomSpecification(client, callbackId, roomId,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) => {
                     if (DataType.Room == dType && 1 == dSize)
                     {
                         var result = Marshal.PtrToStructure<RoomTO>(data[0]);
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.OnSuccessValue(result.RoomInfo()); });
+                        var room = result.RoomInfo();
+                        ChatCallbackObject.ValueCallBackOnSuccess<Room>(cbId, room);
                     }
                     else
                     {
                         Debug.LogError($"Room information expected.");
                     }
                 },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.ValueCallBackOnError<Room>(cbId, code, desc);
+                });
         }
 
         public override void FetchRoomMembers(string roomId, string cursor = "", int pageSize = 200, ValueCallBack<CursorResult<string>> handle = null)
         {
-            if (null == roomId)
+            if (null == roomId || 0 == roomId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.RoomManager_FetchChatroomMembers(client, roomId, cursor, pageSize,
-                (IntPtr header, IntPtr[] array, DataType dType, int size) => {
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.RoomManager_FetchChatroomMembers(client, callbackId, roomId, cursor, pageSize,
+                (IntPtr header, IntPtr[] array, DataType dType, int size, int cbId) => {
                     Debug.Log($"FetchRoomMembers callback with dType={dType}, size={size}.");
                     if (DataType.CursorResult == dType)
                     {
@@ -319,7 +369,7 @@ namespace ChatSDK
                             {
                                 result.Data.Add(Marshal.PtrToStringAnsi(array[i]));
                             }
-                            ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.OnSuccessValue(result); });
+                            ChatCallbackObject.ValueCallBackOnSuccess<CursorResult<string>>(cbId, result);
                         }
                         else
                         {
@@ -333,18 +383,22 @@ namespace ChatSDK
                     }
 
                 },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.ValueCallBackOnError<CursorResult<string>>(cbId, code, desc);
+                });
         }
 
         public override void FetchRoomMuteList(string roomId, int pageSize = 1, int pageNum = 200, ValueCallBack<List<string>> handle = null)
         {
-            if (null == roomId)
+            if (null == roomId || 0 == roomId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.RoomManager_FetchChatroomMutes(client, roomId, pageNum, pageSize,
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.RoomManager_FetchChatroomMutes(client, callbackId, roomId, pageNum, pageSize,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) => {
                     List<string> muteList = new List<string>();
                     if (DataType.String == dType && dSize > 0)
                     {
@@ -353,61 +407,74 @@ namespace ChatSDK
                             var muteItem = Marshal.PtrToStringAnsi(data[i]);
                             muteList.Add(muteItem);
                         }
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.OnSuccessValue(muteList); });
+                        ChatCallbackObject.ValueCallBackOnSuccess<List<string>>(cbId, muteList);
                     }
                     else
                     {
                         Debug.LogError($"Group information expected.");
                     }
                 },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.ValueCallBackOnError<List<string>>(cbId, code, desc);
+                });
         }
 
 
         public override void JoinRoom(string roomId, ValueCallBack<Room> handle = null)
         {
-            if (null == roomId)
+            if (null == roomId || 0 == roomId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.RoomManager_JoinChatroom(client, roomId,
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.RoomManager_JoinChatroom(client, callbackId, roomId,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) => {
                     if (DataType.Room == dType)
                     {
                         if(0 == dSize)
                         {
                             Debug.Log("No room information returned.");
-                            handle?.OnSuccessValue(null);
+                            ChatCallbackObject.ValueCallBackOnSuccess<Room>(cbId, null);
                             return;
                         }
                         
                         var result = Marshal.PtrToStructure<RoomTO>(data[0]);
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.OnSuccessValue(result.RoomInfo()); });
+                        var room = result.RoomInfo();
+                        ChatCallbackObject.ValueCallBackOnSuccess<Room>(cbId, room);
                     }
                     else
                     {
                         Debug.LogError($"Group information expected.");
                     }
                 },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.ValueCallBackOnError<Room>(cbId, code, desc);
+                });
         }
 
         public override void LeaveRoom(string roomId, CallBack handle = null)
         {
-            if (null == roomId)
+            if (null == roomId || 0 == roomId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.RoomManager_LeaveChatroom(client, roomId,
-                onSuccess: () => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); }); },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.RoomManager_LeaveChatroom(client, callbackId, roomId,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void MuteRoomMembers(string roomId, List<string> members, CallBack handle = null)
         {
-            if (null == roomId || null == members || 0 == members.Count)
+            if (null == roomId || 0 == roomId.Length || null == members || 0 == members.Count)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
@@ -428,44 +495,49 @@ namespace ChatSDK
             }
 
             int muteDuration = -1; // no this parameter for API?
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
-            ChatAPINative.RoomManager_MuteChatroomMembers(client, roomId, membersArray, size, muteDuration,
-                onSuccess: () => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); }); },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+            ChatAPINative.RoomManager_MuteChatroomMembers(client, callbackId, roomId, membersArray, size, muteDuration,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void RemoveRoomAdmin(string roomId, string adminId, CallBack handle = null)
         {
-            if (null == roomId || null == adminId)
+            if (null == roomId || 0 == roomId.Length || null == adminId || 0 == adminId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.RoomManager_RemoveChatroomAdmin(client, roomId,
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) => {
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.RoomManager_RemoveChatroomAdmin(client, callbackId, roomId,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) => {
                     if (DataType.Room == dType)
                     {
                         if (0 == dSize)
                         {
                             Debug.Log("No room information returned.");
-                            handle?.Success();
-                            return;
                         }
-
-                        var result = Marshal.PtrToStructure<RoomTO>(data[0]);
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); });
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
                     }
                     else
                     {
                         Debug.LogError($"Group information expected.");
                     }
                 },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void RemoveRoomMembers(string roomId, List<string> members, CallBack handle = null)
         {
-            if (null == roomId || null == members || 0 == members.Count)
+            if (null == roomId || 0 == roomId.Length || null == members || 0 == members.Count)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
@@ -484,14 +556,20 @@ namespace ChatSDK
                     i++;
                 }
             }
-            ChatAPINative.RoomManager_RemoveRoomMembers(client, roomId, membersArray, size,
-                onSuccess: () => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); }); },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.RoomManager_RemoveRoomMembers(client, callbackId, roomId, membersArray, size,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void UnBlockRoomMembers(string roomId, List<string> members, CallBack handle = null)
         {
-            if (null == roomId || null == members || 0 == members.Count)
+            if (null == roomId || 0 == roomId.Length || null == members || 0 == members.Count)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
@@ -510,15 +588,20 @@ namespace ChatSDK
                     i++;
                 }
             }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
-            ChatAPINative.RoomManager_UnblockChatroomMembers(client, roomId, membersArray, size,
-                onSuccess: () => handle?.Success(),
-                onError: (int code, string desc) => handle?.Error(code, desc));
+            ChatAPINative.RoomManager_UnblockChatroomMembers(client, callbackId, roomId, membersArray, size,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void UnMuteRoomMembers(string roomId, List<string> members, CallBack handle = null)
         {
-            if (null == roomId || null == members || 0 == members.Count)
+            if (null == roomId || 0 == roomId.Length || null == members || 0 == members.Count)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
@@ -537,22 +620,33 @@ namespace ChatSDK
                     i++;
                 }
             }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
-            ChatAPINative.RoomManager_UnmuteChatroomMembers(client, roomId, membersArray, size,
-                onSuccess: () => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); }); },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+            ChatAPINative.RoomManager_UnmuteChatroomMembers(client, callbackId, roomId, membersArray, size,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void UpdateRoomAnnouncement(string roomId, string announcement, CallBack handle = null)
         {
-            if (null == roomId || null == announcement)
+            if (null == roomId || 0 == roomId.Length || null == announcement || 0 == announcement.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            ChatAPINative.RoomManager_UpdateChatroomAnnouncement(client, roomId, announcement,
-                onSuccess: () => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Success(); }); },
-                onError: (int code, string desc) => { ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => { handle?.Error(code, desc); }); });
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.RoomManager_UpdateChatroomAnnouncement(client, callbackId, roomId, announcement,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
     }
 }
