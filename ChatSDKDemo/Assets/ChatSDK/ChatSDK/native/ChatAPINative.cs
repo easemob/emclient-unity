@@ -19,16 +19,16 @@ namespace ChatSDK{
 		/** Client Stub **/
 		[DllImport(MyLibName)]
 
-		internal static extern void Client_CreateAccount(IntPtr client, Action onSuccess, OnError onError, string username, string password);
+		internal static extern void Client_CreateAccount(IntPtr client, int callbackId, OnSuccess onSuccess, OnErrorV2 onError, string username, string password);
 
 		[DllImport(MyLibName)]
 		internal static extern IntPtr Client_InitWithOptions(Options options, Action onConnect, OnDisconnected onDisconnect, Action onPong);
 
 		[DllImport(MyLibName)]
-		internal static extern void Client_Login(IntPtr client, Action onSuccess, OnError onError, string username, string pwdOrToken, bool isToken = false);
+		internal static extern void Client_Login(IntPtr client, int callbackId, OnSuccess onSuccess, OnErrorV2 onError, string username, string pwdOrToken, bool isToken = false);
 
 		[DllImport(MyLibName)]
-		internal static extern void Client_Logout(IntPtr client, Action onSuccess, bool unbindDeviceToken);
+		internal static extern void Client_Logout(IntPtr client, int callbackId, OnSuccess onSuccess, bool unbindDeviceToken);
 
 		[DllImport(MyLibName)]
 		internal static extern void Client_StartLog(string logFilePath);

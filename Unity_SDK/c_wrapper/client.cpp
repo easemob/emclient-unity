@@ -1,3 +1,4 @@
+#include <thread>
 #include "client.h"
 
 #include "emlogininfo.h"
@@ -18,18 +19,24 @@ static bool G_DEBUG_MODE = false;
 static bool G_AUTO_LOGIN = true;
 static bool G_LOGIN_STATUS = false;
 
-Hypheante_API void Client_CreateAccount(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, const char *username, const char *password)
+Hypheante_API void Client_CreateAccount(void *client, int callbackId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, const char *username, const char *password)
 {
-    LOG("Client_CreateAccount() called with username=%s password=%s", username, password);
-    EMErrorPtr result = CLIENT->createAccount(username, password);
+    std::string usernameStr = username;
+    std::string passwordStr = password;
     
-    if(EMError::isNoError(result)) {
-        LOG("Account creation succeeds!");
-        if(onSuccess) onSuccess(-1);
-    }else{
-        LOG("Account creation failed!");
-        if(onError) onError(result->mErrorCode, result->mDescription.c_str(), -1);
-    }
+    LOG("Client_CreateAccount() called with username=%s password=%s", usernameStr.c_str(), passwordStr.c_str());
+    std::thread t([=](){
+        EMErrorPtr result = CLIENT->createAccount(usernameStr, passwordStr);
+        
+        if(EMError::isNoError(result)) {
+            LOG("Account creation succeeds!");
+            if(onSuccess) onSuccess(callbackId);
+        }else{
+            LOG("Account creation failed!");
+            if(onError) onError(result->mErrorCode, result->mDescription.c_str(), callbackId);
+        }
+    });
+    t.detach();
 }
 
 EMChatConfigsPtr ConfigsFromOptions(Options *options) {
@@ -90,22 +97,28 @@ Hypheante_API void* Client_InitWithOptions(Options *options, FUNC_OnConnected on
     return gClient;
 }
 
-Hypheante_API void Client_Login(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, const char *username, const char *pwdOrToken, bool isToken)
+Hypheante_API void Client_Login(void *client, int callbackId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, const char *username, const char *pwdOrToken, bool isToken)
 {
-    LOG("Client_Login() called with username=%s, pwdOrToken=%s, isToken=%d", username, pwdOrToken, isToken);
-    EMErrorPtr result;
-    result = isToken ? CLIENT->loginWithToken(username, pwdOrToken) : CLIENT->login(username, pwdOrToken);
-    if(EMError::isNoError(result)) {
-        LOG("Login succeeds.");
-        G_LOGIN_STATUS = true;
-        if(onSuccess) onSuccess(-1);
-    }else{
-        LOG("Login failed with code=%d desc=%s!", result->mErrorCode, result->mDescription.c_str());
-        if(onError) onError(result->mErrorCode, result->mDescription.c_str(), -1);
-    }
+    std::string usernameStr = username;
+    std::string pwdOrTokenStr = pwdOrToken;
+    
+    LOG("Client_Login() called with username=%s, pwdOrToken=%s, isToken=%d", usernameStr.c_str(), pwdOrTokenStr.c_str(), isToken);
+    std::thread t([=](){
+        EMErrorPtr result;
+        result = isToken ? CLIENT->loginWithToken(usernameStr, pwdOrTokenStr) : CLIENT->login(usernameStr, pwdOrTokenStr);
+        if(EMError::isNoError(result)) {
+            LOG("Login succeeds.");
+            G_LOGIN_STATUS = true;
+            if(onSuccess) onSuccess(callbackId);
+        }else{
+            LOG("Login failed with code=%d desc=%s!", result->mErrorCode, result->mDescription.c_str());
+            if(onError) onError(result->mErrorCode, result->mDescription.c_str(), callbackId);
+        }
+    });
+    t.detach();
 }
 
-Hypheante_API void Client_Logout(void *client, FUNC_OnSuccess onSuccess, bool unbindDeviceToken)
+Hypheante_API void Client_Logout(void *client, int callbackId, FUNC_OnSuccess onSuccess, bool unbindDeviceToken)
 {
     /*
     CLIENT->getChatManager().clearListeners();
@@ -128,17 +141,20 @@ Hypheante_API void Client_Logout(void *client, FUNC_OnSuccess onSuccess, bool un
     gConnectionListener = nullptr;
     */
 
-    if(G_LOGIN_STATUS) {
-        LOG("Execute logout action.");
-        CLIENT->logout();
-        CLIENT->removeConnectionListener(gConnectionListener);
-        delete gConnectionListener;
-        gConnectionListener = nullptr;
-        G_LOGIN_STATUS = false;
-        if(onSuccess) onSuccess(-1);
-    } else {
-        LOG("Already logout, NO need to execute logout action.");
-    }
+    std::thread t([=](){
+        if(G_LOGIN_STATUS) {
+            LOG("Execute logout action.");
+            CLIENT->logout();
+            CLIENT->removeConnectionListener(gConnectionListener);
+            delete gConnectionListener;
+            gConnectionListener = nullptr;
+            G_LOGIN_STATUS = false;
+            if(onSuccess) onSuccess(callbackId);
+        } else {
+            LOG("Already logout, NO need to execute logout action.");
+        }
+    });
+    t.detach();
 }
 
 Hypheante_API void Client_StartLog(const char *logFilePath) {
