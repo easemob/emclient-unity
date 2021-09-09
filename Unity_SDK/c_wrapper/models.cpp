@@ -126,20 +126,24 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             auto im = static_cast<CustomMessageTO *>(mto);
             auto body = new EMCustomMessageBody(im->body.CustomEvent);
             
-            LOG("json string is:%s", im->body.CustomParams);
-            nlohmann::json j = nlohmann::json::parse(im->body.CustomParams);
-            
-            easemob::EMCustomMessageBody::EMCustomExts ext;
-            for(auto it=j.begin(); it!=j.end(); it++) {
-                LOG("key: %s, value: %s", it.key().c_str(), it.value().dump().c_str());
+            if(nullptr !=  im->body.CustomParams && strlen(im->body.CustomParams) > 0) {
+                LOG("json string is:%s", im->body.CustomParams);
                 
-                //value() looks like "\"value\"",  need to get rid of the first and the end char
-                std::string str(it.value().dump().c_str()+1, strlen(it.value().dump().c_str())-2);
-                std::pair<std::string, std::string> kv{it.key().c_str(), str};
-                ext.push_back(kv);
+                nlohmann::json j = nlohmann::json::parse(im->body.CustomParams);
+                easemob::EMCustomMessageBody::EMCustomExts ext;
+                for(auto it=j.begin(); it!=j.end(); it++) {
+                    LOG("key: %s, value: %s", it.key().c_str(), it.value().dump().c_str());
+                    //value() looks like "\"value\"",  need to get rid of the first and the end char
+                    std::string str(it.value().dump().c_str()+1, strlen(it.value().dump().c_str())-2);
+                    std::pair<std::string, std::string> kv{it.key().c_str(), str};
+                    ext.push_back(kv);
+                }
+                if (ext.size() > 0)
+                    body->setExts(ext);
             }
-            if (ext.size() > 0)
-                body->setExts(ext);
+            else {
+                LOG("Empty json string for CustomerParams.");
+            }
 
             messageBody = EMMessageBodyPtr(body);
             from = im->From;
@@ -629,15 +633,36 @@ ConversationTO * ConversationTO::FromEMConversation(EMConversationPtr&  conversa
     return conversationTO;
 }
 
-GroupSharedFileTO * GroupSharedFileTO::FromEMGroupSharedFile(EMMucSharedFilePtr &sharedFile)
+GroupSharedFileTO * GroupSharedFileTO::FromEMGroupSharedFile(const EMMucSharedFilePtr &sharedFile)
 {
     GroupSharedFileTO* gsTO = new GroupSharedFileTO();
-    gsTO->FileName = sharedFile->fileName().c_str();
-    gsTO->FileId = sharedFile->fileId().c_str();
-    gsTO->FileOwner = sharedFile->fileOwner().c_str();
+    //PtrToStructure cannot work if no end "\0"
+    char* p = new char[strlen(sharedFile->fileName().c_str()) + 1];
+    strncpy(p, sharedFile->fileName().c_str(), strlen(sharedFile->fileName().c_str()) + 1);
+    gsTO->FileName = p;
+            
+    p = new char[strlen(sharedFile->fileId().c_str()) + 1];
+    strncpy(p, sharedFile->fileId().c_str(), strlen(sharedFile->fileId().c_str()) + 1);
+    gsTO->FileId = p;
+            
+    p = new char[strlen(sharedFile->fileOwner().c_str()) + 1];
+    strncpy(p, sharedFile->fileOwner().c_str(), strlen(sharedFile->fileOwner().c_str()) + 1);
+    gsTO->FileOwner = p;
+    
     gsTO->CreateTime = sharedFile->create();
     gsTO->FileSize = sharedFile->fileSize();
     return gsTO;
+}
+
+void GroupSharedFileTO::DeleteGroupSharedFileTO(GroupSharedFileTO* gto)
+{
+    if(nullptr == gto) return;
+    
+    if(nullptr != gto->FileName) delete gto->FileName;
+    if(nullptr != gto->FileId) delete gto->FileId;
+    if(nullptr != gto->FileOwner) delete gto->FileOwner;
+    
+    delete gto;
 }
 
 PushConfigTO * PushConfigTO::FromEMPushConfig(EMPushConfigsPtr&  pushConfigPtr)

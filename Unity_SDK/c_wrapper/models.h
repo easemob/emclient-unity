@@ -310,7 +310,8 @@ struct GroupSharedFileTO
     long CreateTime;
     long FileSize;
     
-    static GroupSharedFileTO * FromEMGroupSharedFile(EMMucSharedFilePtr &sharedFile);
+    static GroupSharedFileTO * FromEMGroupSharedFile(const EMMucSharedFilePtr &sharedFile);
+    static void DeleteGroupSharedFileTO(GroupSharedFileTO* gto);
 };
 
 struct Mute
