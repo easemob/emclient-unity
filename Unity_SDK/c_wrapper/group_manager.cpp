@@ -205,12 +205,12 @@ Hypheante_API void GroupManager_GetGroupWithId(void *client, const char * groupI
 Hypheante_API void GroupManager_AcceptInvitationFromGroup(void *client, int callbackId, const char * groupId, const char * inviter, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
-    if(!MandatoryCheck(groupId, inviter, error)) {
+    if(!MandatoryCheck(groupId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
     std::string groupIdStr = groupId;
-    std::string inviterStr = inviter;
+    std::string inviterStr = OptionalStrParamCheck(inviter);
     
     std::thread t([=](){
         EMError error;
@@ -547,10 +547,11 @@ Hypheante_API void GroupManager_FetchGroupSharedFiles(void *client, int callback
                 GroupSharedFileTO * data[size];
                 for(size_t i=0; i<size; i++) {
                     data[i] = GroupSharedFileTO::FromEMGroupSharedFile(fileList[i]);
+                    LOG("share file %d, id=%s, name=%s", i, data[i]->FileId, data[i]->FileName);
                 }
                 onSuccess((void **)data, DataType::ListOfGroupSharedFile, (int)size, callbackId);
                 for(size_t i=0; i<size; i++) {
-                    delete (GroupSharedFileTO*)data[i];
+                    GroupSharedFileTO::DeleteGroupSharedFileTO(data[i]);
                 }
             }
         }else{
@@ -941,9 +942,10 @@ Hypheante_API void GroupManager_DeleteGroupSharedFile(void *client, int callback
         EMError error;
         CLIENT->getGroupManager().deleteGroupSharedFile(groupIdStr, fileIdStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
-            LOG("GroupManager_DeleteGroupSharedFile execution succeeds: %s", groupIdStr.c_str());
+            LOG("GroupManager_DeleteGroupSharedFile succeeds, group=%s, fileid=%s", groupIdStr.c_str(), fileIdStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("GroupManager_DeleteGroupSharedFile failed, group=%s, fileid=%s", groupIdStr.c_str(), fileIdStr.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });

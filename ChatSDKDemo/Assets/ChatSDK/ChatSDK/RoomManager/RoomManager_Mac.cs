@@ -514,8 +514,9 @@ namespace ChatSDK
                 return;
             }
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+            Debug.Log($"RemoveRoomAdmin callbackId={callbackId}");
 
-            ChatAPINative.RoomManager_RemoveChatroomAdmin(client, callbackId, roomId,
+            ChatAPINative.RoomManager_RemoveChatroomAdmin(client, callbackId, roomId, adminId,
                 onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) => {
                     if (DataType.Room == dType)
                     {
@@ -527,10 +528,11 @@ namespace ChatSDK
                     }
                     else
                     {
-                        Debug.LogError($"Group information expected.");
+                        Debug.LogError($"Room information expected.");
                     }
                 },
                 onError: (int code, string desc, int cbId) => {
+                    Debug.Log($"RemoveRoomAdmin return error, code={code}, desc={desc}");
                     ChatCallbackObject.CallBackOnError(cbId, code, desc);
                 });
         }
