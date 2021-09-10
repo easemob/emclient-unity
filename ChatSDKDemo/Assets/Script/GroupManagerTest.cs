@@ -874,14 +874,15 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
     void RemoveGroupSharedFileBtnAction() {
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
-            string id = dict["fileId"];
+            string id = dict["fileId part1"];
+            id += dict["fileId part2"];
             if (null == currentGroupId || 0 == currentGroupId.Length || null == id || 0 == id.Length)
             {
                 UIManager.DefaultAlert(transform, "缺少必要参数");
                 return;
             }
 
-            SDKClient.Instance.GroupManager.RemoveGroupSharedFile(currentGroupId, dict["fileId"], new CallBack(
+            SDKClient.Instance.GroupManager.RemoveGroupSharedFile(currentGroupId, id, new CallBack(
                 onSuccess: () =>
                 {
                     UIManager.SuccessAlert(transform);
@@ -893,7 +894,8 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
             ));
         });
 
-        config.AddField("fileId");
+        config.AddField("fileId part1");
+        config.AddField("fileId part2");
 
         UIManager.DefaultInputAlert(transform, config);
 

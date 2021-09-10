@@ -14,6 +14,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
 {
     //compose message body
     std::string from, to, msgId;
+    EMMessage::EMChatType msgType = EMMessage::EMChatType::SINGLE;
     EMMessageBodyPtr messageBody;
     switch(type) {
         case EMMessageBody::TEXT:
@@ -25,6 +26,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             from = tm->From;
             to = tm->To;
             msgId = tm->MsgId;
+            msgType = tm->Type;
         }
             break;
         case EMMessageBody::LOCATION:
@@ -34,6 +36,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             from = lm->From;
             to = lm->To;
             msgId = lm->MsgId;
+            msgType = lm->Type;
         }
             break;
         case EMMessageBody::COMMAND:
@@ -45,6 +48,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             from = cm->From;
             to = cm->To;
             msgId = cm->MsgId;
+            msgType = cm->Type;
         }
             break;
         case EMMessageBody::FILE:
@@ -60,6 +64,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             from = fm->From;
             to = fm->To;
             msgId = fm->MsgId;
+            msgType = fm->Type;
         }
             break;
         case EMMessageBody::IMAGE:
@@ -79,6 +84,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             from = im->From;
             to = im->To;
             msgId = im->MsgId;
+            msgType = im->Type;
         }
             break;
         case EMMessageBody::VOICE:
@@ -94,6 +100,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             from = vm->From;
             to = vm->To;
             msgId = vm->MsgId;
+            msgType = vm->Type;
         }
             break;
         case EMMessageBody::VIDEO:
@@ -119,6 +126,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             from = im->From;
             to = im->To;
             msgId = im->MsgId;
+            msgType = im->Type;
         }
             break;
         case EMMessageBody::CUSTOM:
@@ -149,15 +157,16 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             from = im->From;
             to = im->To;
             msgId = im->MsgId;
+            msgType = im->Type;
         }
             break;
     }
     LOG("Message created: From->%s, To->%s.", from.c_str(), to.c_str());
     if(buildReceiveMsg) {
-        EMMessagePtr messagePtr = EMMessage::createReceiveMessage(to, from, messageBody, EMMessage::EMChatType::SINGLE, msgId);
+        EMMessagePtr messagePtr = EMMessage::createReceiveMessage(to, from, messageBody, msgType, msgId);
         return messagePtr;
     } else {
-        EMMessagePtr messagePtr = EMMessage::createSendMessage(from, to, messageBody);
+        EMMessagePtr messagePtr = EMMessage::createSendMessage(from, to, messageBody, msgType);
         messagePtr->setMsgId(msgId);
         return messagePtr;
     }
