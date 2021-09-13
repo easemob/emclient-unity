@@ -71,12 +71,12 @@ namespace ChatSDK
             return jo["accessToken"].Value;
         }
 
-        public override void StartLog(string logFilePath)
+        internal override void StartLog(string logFilePath)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void StopLog()
+        internal override void StopLog()
         {
             throw new System.NotImplementedException();
         }

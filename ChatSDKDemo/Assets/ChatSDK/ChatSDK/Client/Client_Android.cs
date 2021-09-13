@@ -54,12 +54,12 @@ namespace ChatSDK
             return wrapper.Call<string>("accessToken");
         }
 
-        public override void StartLog(string logFilePath)
+        internal override void StartLog(string logFilePath)
         {
             //throw new System.NotImplementedException();
         }
 
-        public override void StopLog()
+        internal override void StopLog()
         {
             //throw new System.NotImplementedException();
         }
