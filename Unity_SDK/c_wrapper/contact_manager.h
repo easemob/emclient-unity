@@ -33,7 +33,7 @@ Hypheante_API void ContactManager_GetSelfIdsOnOtherPlatform(void *client, int ca
 }
 #endif //__cplusplus
 
-EMContactListener* ContactManager_GetListeners();
+void ContactManager_RemoveListener(void*client);
 
 #endif //_CONTACT_MANAGER_H_
 

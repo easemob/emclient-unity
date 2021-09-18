@@ -14,7 +14,6 @@ public class Login : MonoBehaviour
     private Button m_LoginBtn;
     private Button m_RegisterBtn;
 
-
     private void Awake()
     {
 
@@ -30,12 +29,6 @@ public class Login : MonoBehaviour
 
         InitEaseMobSDK();
        
-    }
-
-    private void OnApplicationQuit()
-    {
-        SDKClient.Instance.Logout(false);
-        AssetBundle.UnloadAllAssetBundles(false);
     }
 
     void Start()
@@ -61,14 +54,14 @@ public class Login : MonoBehaviour
 
                 onError: (code, desc) =>
                 {
-                    //if (code == 200)
-                    //{
-                    //    SceneManager.LoadSceneAsync("Main");
-                    //}
-                    //else {
-                    //    UIManager.DefaultAlert(transform, "login failed, code: " + code);
-                    //}
-                    UIManager.DefaultAlert(transform, "login failed, code: " + code);
+                    if (code == 200)
+                    {
+                        SceneManager.LoadSceneAsync("Main");
+                    }
+                    else {
+                        UIManager.DefaultAlert(transform, "login failed, code: " + code);
+                    }
+                    //UIManager.DefaultAlert(transform, "login failed, code: " + code);
                 }
             )
         );

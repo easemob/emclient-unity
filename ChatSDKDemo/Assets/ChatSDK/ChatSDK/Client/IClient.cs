@@ -155,5 +155,7 @@
 
         public abstract void StopLog();
 
+        public abstract void ClearResource();
+
     }
 }

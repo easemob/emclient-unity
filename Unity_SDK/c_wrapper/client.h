@@ -18,7 +18,7 @@ Hypheante_API void Client_Logout(void *client, int callbackId, FUNC_OnSuccess on
 Hypheante_API void Client_StartLog(const char *logFilePath);
 Hypheante_API void Client_StopLog();
 Hypheante_API void Client_LoginToken(void *client, FUNC_OnSuccess_With_Result onSuccess);
-
+Hypheante_API void Client_ClearResource(void *client);
 #ifdef __cplusplus
 }
 #endif //__cplusplus

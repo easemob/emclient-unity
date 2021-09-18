@@ -54,6 +54,8 @@ public:
     void setNoDisturbingEndHour(int end);
     int getNoDisturbingEndHour();
     
+    std::vector<std::string> getIgnoreUIds();
+    
     std::vector<std::string> getIgnoredGroupIds();
     
     std::map<std::string, EMAttributeValue> toParametersWithoutIgnoredGroupIds();
@@ -67,8 +69,10 @@ private:
     int mStatus;
     int mNoDisturbingStartH;
     int mNoDisturbingEndH;
+    std::vector<std::string> mIgnoreUIds;
     std::vector<std::string> mIgnoredGroupIds;
     
+    void setIgnoreUIds(std::vector<std::string> uidList);
     void setIgnoredGroupIds(std::vector<std::string> list);
 };
     

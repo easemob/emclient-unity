@@ -81,6 +81,11 @@ namespace ChatSDK
             throw new System.NotImplementedException();
         }
 
+        public override void ClearResource()
+        {
+            throw new System.NotImplementedException();
+        }
+
     }
 
     class ClientNative

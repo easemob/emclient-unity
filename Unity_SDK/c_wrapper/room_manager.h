@@ -47,4 +47,6 @@ Hypheante_API void RoomManager_UpdateChatroomAnnouncement(void *client, int call
 }
 #endif //__cplusplus
 
+void RoomManager_RemoveListener(void*client);
+
 #endif /* _ROOM_MANAGER_H_ */

@@ -144,18 +144,28 @@ namespace ChatSDK
         {
             _Sdk.Logout(unbindDeviceToken, new CallBack(
                 onSuccess: () => {
-                    CallbackManager.Instance().connectionListener.delegater.Clear();
-                    _Sdk.ContactManager().ClearDelegates();
-                    _Sdk.ChatManager().ClearDelegates();
-                    _Sdk.GroupManager().ClearDelegates();
-                    _Sdk.RoomManager().ClearDelegates();
                     CallbackManager.Instance().CleanAllCallback();
-                    //handle.Success?.Invoke();
+                    if (null != handle)
+                        handle.Success?.Invoke();
                 },
                 onError:(code, desc) => {
                     handle?.Error?.Invoke(code, desc);
                 }
                 ));
+        }
+
+        /// <summary>
+        /// replay时负责释放底层SDK资源，必须在logout后调用
+        /// </summary>
+        public void ClearResource()
+        {
+            CallbackManager.Instance().connectionListener.delegater.Clear();
+            _Sdk.ContactManager().ClearDelegates();
+            _Sdk.ChatManager().ClearDelegates();
+            _Sdk.GroupManager().ClearDelegates();
+            _Sdk.RoomManager().ClearDelegates();
+            CallbackManager.Instance().CleanAllCallback();
+            _Sdk.ClearResource();
         }
 
         private SDKClient()

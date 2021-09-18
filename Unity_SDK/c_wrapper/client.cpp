@@ -1,11 +1,14 @@
 #include <thread>
 #include "client.h"
+#include "chat_manager.h"
 
 #include "emlogininfo.h"
 #include "emchatconfigs.h"
 #include "emchatprivateconfigs.h"
 #include "emclient.h"
 #include "contact_manager.h"
+#include "group_manager.h"
+#include "room_manager.h"
 
 using namespace easemob;
 
@@ -18,6 +21,8 @@ extern "C"
 static bool G_DEBUG_MODE = false;
 static bool G_AUTO_LOGIN = true;
 static bool G_LOGIN_STATUS = false;
+
+static bool NeedAllocResource = false;
 
 Hypheante_API void Client_CreateAccount(void *client, int callbackId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, const char *username, const char *password)
 {
@@ -79,18 +84,17 @@ Hypheante_API void* Client_InitWithOptions(Options *options, FUNC_OnConnected on
     // global switch
     G_DEBUG_MODE = options->DebugMode;
     G_AUTO_LOGIN = options->AutoLogin;
-    LOG("gClient address is: %x", gClient);
-    LOG("gConnectionListener address is: %x", gConnectionListener);
     // singleton client handle
     if(gClient == nullptr) {
         EMChatConfigsPtr configs = ConfigsFromOptions(options);
         gClient = EMClient::create(configs);
-        LOG("after create gClient address is: %x", gClient);
+    } else {
+        if(NeedAllocResource)
+            gClient->allocResource();
     }
     
     if(gConnectionListener == NULL) { //only set once
         gConnectionListener = new ConnectionListener(onConnected, onDisconnected, onPong);
-        LOG("after new gConnectionListener address is: %x", gConnectionListener);
         gClient->addConnectionListener(gConnectionListener);
     }
     
@@ -120,34 +124,10 @@ Hypheante_API void Client_Login(void *client, int callbackId, FUNC_OnSuccess onS
 
 Hypheante_API void Client_Logout(void *client, int callbackId, FUNC_OnSuccess onSuccess, bool unbindDeviceToken)
 {
-    /*
-    CLIENT->getChatManager().clearListeners();
-    LOG("ChatManager listener cleared.");
-    CLIENT->getGroupManager().clearListeners();
-    LOG("GroupManager listener cleared.");
-    CLIENT->getChatroomManager().clearListeners();
-    LOG("RoomManager listener cleared.");
-    
-    EMContactListener* contactListers = nullptr;
-    contactListers = ContactManager_GetListeners();
-    if(contactListers)
-    {
-        LOG("ContactManager listener cleared.");
-        CLIENT->getContactManager().removeContactListener(contactListers);
-    }
-        
-    CLIENT->removeConnectionListener(gConnectionListener);
-    delete gConnectionListener;
-    gConnectionListener = nullptr;
-    */
-
     std::thread t([=](){
         if(G_LOGIN_STATUS) {
             LOG("Execute logout action.");
             CLIENT->logout();
-            CLIENT->removeConnectionListener(gConnectionListener);
-            delete gConnectionListener;
-            gConnectionListener = nullptr;
             G_LOGIN_STATUS = false;
             if(onSuccess) onSuccess(callbackId);
         } else {
@@ -170,4 +150,30 @@ Hypheante_API void Client_LoginToken(void *client, FUNC_OnSuccess_With_Result on
     const char* data[1];
     data[0] = loginInfo.loginToken().c_str();
     if(onSuccess) onSuccess((void **)data, DataType::String, 1, -1);
+}
+
+// this function must be executed after logout!!!
+Hypheante_API void Client_ClearResource(void *client) {
+    if(true == G_LOGIN_STATUS) {
+        LOG("Still in login status, cannot clear resource.");
+        return;
+    }
+    
+    LOG("Clear resource begin");
+    CLIENT->clearResource();
+    
+    // set flag for next replay
+    NeedAllocResource = true;
+    
+    // clear all listeners when replay
+    ChatManager_RemoveListener(client);
+    GroupManager_RemoveListener(client);
+    RoomManager_RemoveListener(client);
+    ContactManager_RemoveListener(client);
+    
+    CLIENT->removeConnectionListener(gConnectionListener);
+    LOG("Connection listener cleared.");
+    delete gConnectionListener;
+    gConnectionListener = nullptr;
+    LOG("Clear resource completed");
 }
