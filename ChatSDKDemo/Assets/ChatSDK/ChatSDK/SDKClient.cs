@@ -93,6 +93,7 @@ namespace ChatSDK
 
         public void DeleteConnectionDelegate(IConnectionDelegate connectionDelegate)
         {
+            if (CallbackManager.IsQuit()) return;
             if (CallbackManager.Instance().connectionListener.delegater.Contains(connectionDelegate))
             {
                 CallbackManager.Instance().connectionListener.delegater.Remove(connectionDelegate);
@@ -152,20 +153,6 @@ namespace ChatSDK
                     handle?.Error?.Invoke(code, desc);
                 }
                 ));
-        }
-
-        /// <summary>
-        /// replay时负责释放底层SDK资源，必须在logout后调用
-        /// </summary>
-        public void ClearResource()
-        {
-            CallbackManager.Instance().connectionListener.delegater.Clear();
-            _Sdk.ContactManager().ClearDelegates();
-            _Sdk.ChatManager().ClearDelegates();
-            _Sdk.GroupManager().ClearDelegates();
-            _Sdk.RoomManager().ClearDelegates();
-            CallbackManager.Instance().CleanAllCallback();
-            _Sdk.ClearResource();
         }
 
         private SDKClient()

@@ -8,6 +8,7 @@ namespace ChatSDK {
 
     internal class CallbackManager : MonoBehaviour
     {
+        private static bool isQuitting = false;
 
         static string Callback_Obj = "unity_chat_callback_obj";
 
@@ -68,8 +69,19 @@ namespace ChatSDK {
             IClient.Instance.ClearResource();
         }
 
+        public void OnDestroy()
+        {
+            isQuitting = true;
+        }
+
+        public static bool IsQuit()
+        {
+            return isQuitting;
+        }
+
         internal static CallbackManager Instance()
         {
+
             if (_getInstance == null)
             {
                 GameObject callbackGameObject = new GameObject(Callback_Obj);
@@ -81,7 +93,7 @@ namespace ChatSDK {
                 }
                 catch(Exception)
                 {
-                    Debug.Log($"DontDestroyOnLoad check.");
+                    Debug.Log($"DontDestroyOnLoad triggered.");
                 }
 
             }
@@ -125,7 +137,8 @@ namespace ChatSDK {
             return dictionary[callbackId.ToString()];
         }
 
-        internal void SetupAllListeners() {
+        internal void SetupAllListeners()
+        {
             GameObject connectionObject = new GameObject(Connection_Obj);
             try
             {
@@ -135,7 +148,7 @@ namespace ChatSDK {
             }
             catch (Exception)
             {
-                Debug.Log($"DontDestroyOnLoad check.");
+                Debug.Log($"DontDestroyOnLoad triggered.");
             }
 
             GameObject chatManagerObject = new GameObject(ChatManagerListener_Obj);
@@ -147,7 +160,7 @@ namespace ChatSDK {
             }
             catch (Exception)
             {
-                Debug.Log($"DontDestroyOnLoad check.");
+                Debug.Log($"DontDestroyOnLoad triggered.");
             }
 
 
@@ -160,7 +173,7 @@ namespace ChatSDK {
             }
             catch (Exception)
             {
-                Debug.Log($"DontDestroyOnLoad check.");
+                Debug.Log($"DontDestroyOnLoad triggered.");
             }
 
             GameObject groupGameObj = new GameObject(GroupManagerListener_Obj);
@@ -172,7 +185,7 @@ namespace ChatSDK {
             }
             catch (Exception)
             {
-                Debug.Log($"DontDestroyOnLoad check.");
+                Debug.Log($"DontDestroyOnLoad triggered.");
             }
 
 
@@ -185,7 +198,7 @@ namespace ChatSDK {
             }
             catch (Exception)
             {
-                Debug.Log($"DontDestroyOnLoad check.");
+                Debug.Log($"DontDestroyOnLoad triggered.");
             }
         }
 

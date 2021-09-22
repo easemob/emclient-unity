@@ -194,7 +194,9 @@ namespace ChatSDK
         /// 移除聊天室监听
         /// </summary>
         /// <param name="roomManagerDelegate"></param>
-        public void RemoveRoomManagerDelegate(IRoomManagerDelegate roomManagerDelegate) {
+        public void RemoveRoomManagerDelegate(IRoomManagerDelegate roomManagerDelegate)
+        {
+            if (CallbackManager.IsQuit()) return;
             if (CallbackManager.Instance().roomManagerListener.delegater.Contains(roomManagerDelegate))
             {
                 CallbackManager.Instance().roomManagerListener.delegater.Remove(roomManagerDelegate);
