@@ -140,8 +140,4 @@ public class Main : MonoBehaviour, IConnectionDelegate
         }
     }
 
-    public void OnPong()
-    {
-        
-    }
 }

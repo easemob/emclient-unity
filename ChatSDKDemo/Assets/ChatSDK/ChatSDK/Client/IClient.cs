@@ -47,8 +47,6 @@
             chatImp = new ChatManager_iOS();
 #elif UNITY_STANDALONE_OSX
             chatImp = new ChatManager_Mac(instance);
-#elif UNITY_STANDALONE_WIN
-            chatImp = new ChatManager_Win();
 #endif
             return chatImp;
         }
@@ -63,8 +61,6 @@
             contactImp = new ContactManager_iOS();
 #elif UNITY_STANDALONE_OSX
             contactImp = new ContactManager_Mac(instance);
-#elif UNITY_STANDALONE_WIN
-            contactImp = new ContactManager_Win();
 #endif
             return contactImp;
         }
@@ -80,8 +76,6 @@
             groupImp = new GroupManager_iOS();
 #elif UNITY_STANDALONE_OSX
             groupImp = new GroupManager_Mac(instance);
-#elif UNITY_STANDALONE_WIN
-            groupImp = new GroupManager_Win();
 #endif
             return groupImp;
         }
@@ -97,8 +91,6 @@
             roomImp = new RoomManager_iOS();
 #elif UNITY_STANDALONE_OSX
             roomImp = new RoomManager_Mac(instance);
-#elif UNITY_STANDALONE_WIN
-            roomImp = new RoomManager_Win();
 #endif
             return roomImp;
         }
@@ -114,8 +106,6 @@
             pushImp = new PushManager_iOS();
 #elif UNITY_STANDALONE_OSX
             pushImp = new PushManager_Mac(instance);
-#elif UNITY_STANDALONE_WIN
-            pushImp = new PushManager_Win();
 #endif
             return pushImp;
         }
@@ -129,8 +119,6 @@
             conversationImp = new ConversationManager_iOS();
 #elif UNITY_STANDALONE_OSX
             conversationImp = new ConversationManager_Mac(instance);
-#elif UNITY_STANDALONE_WIN
-            conversationImp = new ConversationManager_Win();
 #endif
             return conversationImp;
         }

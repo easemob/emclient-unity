@@ -98,12 +98,12 @@ namespace ChatSDK
             OnPong = () =>
             {
                 Debug.Log("Server ponged.");
-                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                    foreach (IConnectionDelegate listener in CallbackManager.Instance().connectionListener.delegater)
-                    {
-                        listener.OnPong();
-                    }
-                });
+                //ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                //    foreach (IConnectionDelegate listener in CallbackManager.Instance().connectionListener.delegater)
+                //    {
+                //        listener.OnPong();
+                //    }
+                //});
             };
         }
     }

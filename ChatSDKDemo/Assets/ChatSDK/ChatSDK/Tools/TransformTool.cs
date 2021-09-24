@@ -4,7 +4,7 @@ using SimpleJSON;
 
 namespace ChatSDK
 {
-    public class TransformTool
+    internal class TransformTool
     {
 
         static internal List<string> JsonStringToStringList(string jsonString)
