@@ -1,6 +1,5 @@
 using UnityEngine;
 using System;
-//to-do: just for testing
 using System.Runtime.InteropServices;
 
 namespace ChatSDK
@@ -22,6 +21,7 @@ namespace ChatSDK
         public event OnSuccess OnLogoutSuccess;
 
         public Client_Mac() {
+            //to-do: test
             // start log service
             StartLog("/tmp/unmanaged_dll.log");
         }
@@ -147,6 +147,11 @@ namespace ChatSDK
         internal override void StopLog()
         {
             ChatAPINative.Client_StopLog();
+        }
+
+        public override void ClearResource()
+        {
+            ChatAPINative.Client_ClearResource(client);
         }
 
     }

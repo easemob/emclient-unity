@@ -131,7 +131,7 @@ public:
             onConnected();
     }
     void onDisconnect(EMErrorPtr error) override {
-        LOG("Connection discontinued with code=%d.", error->mErrorCode);
+        LOG("Connection disconnected with code=%d.", error->mErrorCode);
         if(onDisconnected)
             onDisconnected(error->mErrorCode);
     }
@@ -487,15 +487,12 @@ public:
 
     void onUploadSharedFileFromGroup(const EMGroupPtr group, const EMMucSharedFilePtr sharedFile) override {
         if(onSharedFileAdded) {
-
-            GroupSharedFileTO* groupSharedFileTO = new GroupSharedFileTO();
-            groupSharedFileTO->FileName = sharedFile->fileName().c_str();
-            groupSharedFileTO->FileId = sharedFile->fileId().c_str();
-            groupSharedFileTO->FileOwner = sharedFile->fileOwner().c_str();
-            groupSharedFileTO->CreateTime = sharedFile->create();
-            groupSharedFileTO->FileSize = sharedFile->fileSize();
-            GroupSharedFileTO* groupSharedFileTOArray[1] = {groupSharedFileTO};
-            onSharedFileAdded(group->groupId().c_str(), (void **)groupSharedFileTOArray, 1);
+            if(sharedFile) {
+                GroupSharedFileTO* groupSharedFileTO = GroupSharedFileTO::FromEMGroupSharedFile(sharedFile);
+                GroupSharedFileTO* groupSharedFileTOArray[1] = {groupSharedFileTO};
+                onSharedFileAdded(group->groupId().c_str(), (void **)groupSharedFileTOArray, 1);
+                GroupSharedFileTO::DeleteGroupSharedFileTO(groupSharedFileTO);
+            }
         }
     }
 

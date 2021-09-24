@@ -21,6 +21,8 @@ std::map<int64_t, EMMessagePtr> tsMsgPtrMap;
 
 static EMCallbackObserverHandle gCallbackObserverHandle;
 
+EMChatManagerListener *gChatManagerListener = nullptr;
+
 void AddTsMsgItem(int64_t ts,  MessageTO* mto, EMMessagePtr msgPtr)
 {
     std::lock_guard<std::mutex> maplocker(tsMsgLocker);
@@ -87,8 +89,6 @@ Hypheante_API void ChatManager_SendMessage(void *client, int callbackId, FUNC_On
     messagePtr->setCallback(callbackPtr);
     CLIENT->getChatManager().sendMessage(messagePtr);
 }
-
-EMChatManagerListener *gChatManagerListener = nullptr;
 
 Hypheante_API void ChatManager_AddListener(void *client,
                                        FUNC_OnMessagesReceived onMessagesReceived,
@@ -512,4 +512,15 @@ Hypheante_API bool ChatManager_UpdateMessage(void *client, void *mto, EMMessageB
         return false;
     }
     return conversationPtr->updateMessage(messagePtr);
+}
+
+void ChatManager_RemoveListener(void*client)
+{
+    CLIENT->getChatManager().clearListeners();
+    LOG("ChatManager listener cleared.");
+    if(nullptr != gChatManagerListener) {
+        delete gChatManagerListener;
+        gChatManagerListener = nullptr;
+        LOG("ChatManager listener handle deleted.");
+    }
 }

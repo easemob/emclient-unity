@@ -39,6 +39,9 @@ namespace ChatSDK{
 		[DllImport(MyLibName)]
 		internal static extern void Client_LoginToken(IntPtr client, OnSuccessResult onSuccess);
 
+		[DllImport(MyLibName)]
+		internal static extern void Client_ClearResource(IntPtr client);
+
 		/** ChatManager Stub **/
 		[DllImport(MyLibName)]
 		internal static extern void ChatManager_SendMessage(IntPtr client, int callbackId, OnSuccess onSuccess, OnErrorV2 onError, IntPtr mto, MessageBodyType type);
@@ -330,7 +333,7 @@ namespace ChatSDK{
 			int size, int muteDuration, OnSuccess onSuccess, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
-		internal static extern void RoomManager_RemoveChatroomAdmin(IntPtr client, int callbackId, string roomId, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+		internal static extern void RoomManager_RemoveChatroomAdmin(IntPtr client, int callbackId, string roomId, string adminId, OnSuccessResult onSuccessResult, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
 		internal static extern void RoomManager_UnblockChatroomMembers(IntPtr client, int callbackId, string roomId, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 4)] string[] memberArray,

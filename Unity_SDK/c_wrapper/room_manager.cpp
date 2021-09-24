@@ -569,6 +569,7 @@ Hypheante_API void RoomManager_RemoveChatroomAdmin(void *client, int callbackId,
                 }
             }
         }else{
+            LOG("RoomManager_RemoveChatroomAdmin failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -645,4 +646,15 @@ Hypheante_API void RoomManager_UpdateChatroomAnnouncement(void *client, int call
         }
     });
     t.detach();
+}
+
+void RoomManager_RemoveListener(void*client)
+{
+    CLIENT->getChatroomManager().clearListeners();
+    LOG("RoomManager listener cleared.");
+    if(nullptr != gRoomManagerListener) {
+        delete gRoomManagerListener;
+        gRoomManagerListener = nullptr;
+        LOG("RoomManager listener handle deleted.");
+    }
 }

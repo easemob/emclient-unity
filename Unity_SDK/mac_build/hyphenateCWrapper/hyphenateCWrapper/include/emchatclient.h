@@ -280,6 +280,8 @@ public:
      */
     void kickAllDevices(const std::string&username, const std::string& password, EMError &error);
     
+    void clearResource();
+    void allocResource();
 private:
     EMChatClient();
     void init(const EMChatConfigsPtr configs);

@@ -54,7 +54,10 @@ public class Main : MonoBehaviour, IConnectionDelegate
         SDKClient.Instance.AddConnectionDelegate(this);
     }
 
-
+    private void OnDestroy()
+    {
+        SDKClient.Instance.DeleteConnectionDelegate(this);
+    }
 
     void ChatBtnAction()
     {

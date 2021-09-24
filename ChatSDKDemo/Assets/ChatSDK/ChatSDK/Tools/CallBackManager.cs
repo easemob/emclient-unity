@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using SimpleJSON;
 using UnityEngine;
+using UnityEditor;
 
 namespace ChatSDK {
 
     internal class CallbackManager : MonoBehaviour
     {
+        private static bool isQuitting = false;
 
         static string Callback_Obj = "unity_chat_callback_obj";
 
@@ -31,19 +33,73 @@ namespace ChatSDK {
 
         internal Dictionary<string, Message> tempMsgDict = new Dictionary<string, Message>();
 
+#if UNITY_EDITOR
+        [RuntimeInitializeOnLoadMethod]
+        static void InitializeOnLoadMethod()
+        {
+            EditorApplication.wantsToQuit -= Quit;
+            EditorApplication.wantsToQuit += Quit;
+        }
+
+        static bool Quit()
+        {
+            IClient.Instance.Logout(false);
+            CallbackManager.Instance().ClearResource();
+            Debug.Log("Quit...");
+            return true;
+        }
+#endif
+
+        private void OnApplicationQuit()
+        {
+            IClient.Instance.Logout(false);
+            CallbackManager.Instance().ClearResource();
+            Debug.Log("Quit...");
+        }
+
+        /// 负责释放底层SDK资源，必须在logout后调用
+        public void ClearResource()
+        {
+            CallbackManager.Instance().connectionListener.delegater.Clear();
+            IClient.Instance.ContactManager().ClearDelegates();
+            IClient.Instance.ChatManager().ClearDelegates();
+            IClient.Instance.GroupManager().ClearDelegates();
+            IClient.Instance.RoomManager().ClearDelegates();
+            CallbackManager.Instance().CleanAllCallback();
+            IClient.Instance.ClearResource();
+        }
+
+        public void OnDestroy()
+        {
+            isQuitting = true;
+        }
+
+        public static bool IsQuit()
+        {
+            return isQuitting;
+        }
+
         internal static CallbackManager Instance()
         {
+
             if (_getInstance == null)
             {
                 GameObject callbackGameObject = new GameObject(Callback_Obj);
-                DontDestroyOnLoad(callbackGameObject);
-                _getInstance = callbackGameObject.AddComponent<CallbackManager>();
-                _getInstance.SetupAllListeners();
+                try
+                {
+                    DontDestroyOnLoad(callbackGameObject);
+                    _getInstance = callbackGameObject.AddComponent<CallbackManager>();
+                    _getInstance.SetupAllListeners();
+                }
+                catch(Exception)
+                {
+                    Debug.Log($"DontDestroyOnLoad triggered.");
+                }
+
             }
 
             return _getInstance;
         }
-
 
         internal void AddCallback(int callbackId, CallBack callback) {
             dictionary.Add(callbackId.ToString(), callback);
@@ -81,31 +137,69 @@ namespace ChatSDK {
             return dictionary[callbackId.ToString()];
         }
 
-        internal void SetupAllListeners() {
+        internal void SetupAllListeners()
+        {
             GameObject connectionObject = new GameObject(Connection_Obj);
-            DontDestroyOnLoad(connectionObject);
-            connectionListener = connectionObject.AddComponent<ConnectionListener>();
-            connectionListener.delegater = new List<IConnectionDelegate>();
+            try
+            {
+                DontDestroyOnLoad(connectionObject);
+                connectionListener = connectionObject.AddComponent<ConnectionListener>();
+                connectionListener.delegater = new List<IConnectionDelegate>();
+            }
+            catch (Exception)
+            {
+                Debug.Log($"DontDestroyOnLoad triggered.");
+            }
 
             GameObject chatManagerObject = new GameObject(ChatManagerListener_Obj);
-            DontDestroyOnLoad(chatManagerObject);
-            chatManagerListener = chatManagerObject.AddComponent<ChatManagerListener>();
-            chatManagerListener.delegater = new List<IChatManagerDelegate>(); ;
+            try
+            {
+                DontDestroyOnLoad(chatManagerObject);
+                chatManagerListener = chatManagerObject.AddComponent<ChatManagerListener>();
+                chatManagerListener.delegater = new List<IChatManagerDelegate>();
+            }
+            catch (Exception)
+            {
+                Debug.Log($"DontDestroyOnLoad triggered.");
+            }
+
 
             GameObject contactGameObj = new GameObject(ContactManagerListener_Obj);
-            DontDestroyOnLoad(contactGameObj);
-            contactManagerListener = contactGameObj.AddComponent<ContactManagerListener>();
-            contactManagerListener.delegater = new List<IContactManagerDelegate>();
+            try
+            {
+                DontDestroyOnLoad(contactGameObj);
+                contactManagerListener = contactGameObj.AddComponent<ContactManagerListener>();
+                contactManagerListener.delegater = new List<IContactManagerDelegate>();
+            }
+            catch (Exception)
+            {
+                Debug.Log($"DontDestroyOnLoad triggered.");
+            }
 
             GameObject groupGameObj = new GameObject(GroupManagerListener_Obj);
-            DontDestroyOnLoad(groupGameObj);
-            groupManagerListener = groupGameObj.AddComponent<GroupManagerListener>();
-            groupManagerListener.delegater = new List<IGroupManagerDelegate>(); ;
+            try
+            {
+                DontDestroyOnLoad(groupGameObj);
+                groupManagerListener = groupGameObj.AddComponent<GroupManagerListener>();
+                groupManagerListener.delegater = new List<IGroupManagerDelegate>();
+            }
+            catch (Exception)
+            {
+                Debug.Log($"DontDestroyOnLoad triggered.");
+            }
+
 
             GameObject roomGameObj = new GameObject(RoomManagerListener_Obj);
-            DontDestroyOnLoad(roomGameObj);
-            roomManagerListener = roomGameObj.AddComponent<RoomManagerListener>();
-            roomManagerListener.delegater = new List<IRoomManagerDelegate>();
+            try
+            {
+                DontDestroyOnLoad(roomGameObj);
+                roomManagerListener = roomGameObj.AddComponent<RoomManagerListener>();
+                roomManagerListener.delegater = new List<IRoomManagerDelegate>();
+            }
+            catch (Exception)
+            {
+                Debug.Log($"DontDestroyOnLoad triggered.");
+            }
         }
 
         public void OnSuccess(string jsonString) {

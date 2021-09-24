@@ -14,6 +14,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
 {
     //compose message body
     std::string from, to, msgId;
+    EMMessage::EMChatType msgType = EMMessage::EMChatType::SINGLE;
     EMMessageBodyPtr messageBody;
     switch(type) {
         case EMMessageBody::TEXT:
@@ -25,6 +26,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             from = tm->From;
             to = tm->To;
             msgId = tm->MsgId;
+            msgType = tm->Type;
         }
             break;
         case EMMessageBody::LOCATION:
@@ -34,6 +36,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             from = lm->From;
             to = lm->To;
             msgId = lm->MsgId;
+            msgType = lm->Type;
         }
             break;
         case EMMessageBody::COMMAND:
@@ -45,6 +48,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             from = cm->From;
             to = cm->To;
             msgId = cm->MsgId;
+            msgType = cm->Type;
         }
             break;
         case EMMessageBody::FILE:
@@ -60,6 +64,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             from = fm->From;
             to = fm->To;
             msgId = fm->MsgId;
+            msgType = fm->Type;
         }
             break;
         case EMMessageBody::IMAGE:
@@ -79,6 +84,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             from = im->From;
             to = im->To;
             msgId = im->MsgId;
+            msgType = im->Type;
         }
             break;
         case EMMessageBody::VOICE:
@@ -94,6 +100,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             from = vm->From;
             to = vm->To;
             msgId = vm->MsgId;
+            msgType = vm->Type;
         }
             break;
         case EMMessageBody::VIDEO:
@@ -119,6 +126,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             from = im->From;
             to = im->To;
             msgId = im->MsgId;
+            msgType = im->Type;
         }
             break;
         case EMMessageBody::CUSTOM:
@@ -126,34 +134,39 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             auto im = static_cast<CustomMessageTO *>(mto);
             auto body = new EMCustomMessageBody(im->body.CustomEvent);
             
-            LOG("json string is:%s", im->body.CustomParams);
-            nlohmann::json j = nlohmann::json::parse(im->body.CustomParams);
-            
-            easemob::EMCustomMessageBody::EMCustomExts ext;
-            for(auto it=j.begin(); it!=j.end(); it++) {
-                LOG("key: %s, value: %s", it.key().c_str(), it.value().dump().c_str());
+            if(nullptr !=  im->body.CustomParams && strlen(im->body.CustomParams) > 0) {
+                LOG("json string is:%s", im->body.CustomParams);
                 
-                //value() looks like "\"value\"",  need to get rid of the first and the end char
-                std::string str(it.value().dump().c_str()+1, strlen(it.value().dump().c_str())-2);
-                std::pair<std::string, std::string> kv{it.key().c_str(), str};
-                ext.push_back(kv);
+                nlohmann::json j = nlohmann::json::parse(im->body.CustomParams);
+                easemob::EMCustomMessageBody::EMCustomExts ext;
+                for(auto it=j.begin(); it!=j.end(); it++) {
+                    LOG("key: %s, value: %s", it.key().c_str(), it.value().dump().c_str());
+                    //value() looks like "\"value\"",  need to get rid of the first and the end char
+                    std::string str(it.value().dump().c_str()+1, strlen(it.value().dump().c_str())-2);
+                    std::pair<std::string, std::string> kv{it.key().c_str(), str};
+                    ext.push_back(kv);
+                }
+                if (ext.size() > 0)
+                    body->setExts(ext);
             }
-            if (ext.size() > 0)
-                body->setExts(ext);
+            else {
+                LOG("Empty json string for CustomerParams.");
+            }
 
             messageBody = EMMessageBodyPtr(body);
             from = im->From;
             to = im->To;
             msgId = im->MsgId;
+            msgType = im->Type;
         }
             break;
     }
     LOG("Message created: From->%s, To->%s.", from.c_str(), to.c_str());
     if(buildReceiveMsg) {
-        EMMessagePtr messagePtr = EMMessage::createReceiveMessage(to, from, messageBody, EMMessage::EMChatType::SINGLE, msgId);
+        EMMessagePtr messagePtr = EMMessage::createReceiveMessage(to, from, messageBody, msgType, msgId);
         return messagePtr;
     } else {
-        EMMessagePtr messagePtr = EMMessage::createSendMessage(from, to, messageBody);
+        EMMessagePtr messagePtr = EMMessage::createSendMessage(from, to, messageBody, msgType);
         messagePtr->setMsgId(msgId);
         return messagePtr;
     }
@@ -629,15 +642,36 @@ ConversationTO * ConversationTO::FromEMConversation(EMConversationPtr&  conversa
     return conversationTO;
 }
 
-GroupSharedFileTO * GroupSharedFileTO::FromEMGroupSharedFile(EMMucSharedFilePtr &sharedFile)
+GroupSharedFileTO * GroupSharedFileTO::FromEMGroupSharedFile(const EMMucSharedFilePtr &sharedFile)
 {
     GroupSharedFileTO* gsTO = new GroupSharedFileTO();
-    gsTO->FileName = sharedFile->fileName().c_str();
-    gsTO->FileId = sharedFile->fileId().c_str();
-    gsTO->FileOwner = sharedFile->fileOwner().c_str();
+    //PtrToStructure cannot work if no end "\0"
+    char* p = new char[strlen(sharedFile->fileName().c_str()) + 1];
+    strncpy(p, sharedFile->fileName().c_str(), strlen(sharedFile->fileName().c_str()) + 1);
+    gsTO->FileName = p;
+            
+    p = new char[strlen(sharedFile->fileId().c_str()) + 1];
+    strncpy(p, sharedFile->fileId().c_str(), strlen(sharedFile->fileId().c_str()) + 1);
+    gsTO->FileId = p;
+            
+    p = new char[strlen(sharedFile->fileOwner().c_str()) + 1];
+    strncpy(p, sharedFile->fileOwner().c_str(), strlen(sharedFile->fileOwner().c_str()) + 1);
+    gsTO->FileOwner = p;
+    
     gsTO->CreateTime = sharedFile->create();
     gsTO->FileSize = sharedFile->fileSize();
     return gsTO;
+}
+
+void GroupSharedFileTO::DeleteGroupSharedFileTO(GroupSharedFileTO* gto)
+{
+    if(nullptr == gto) return;
+    
+    if(nullptr != gto->FileName) delete gto->FileName;
+    if(nullptr != gto->FileId) delete gto->FileId;
+    if(nullptr != gto->FileOwner) delete gto->FileOwner;
+    
+    delete gto;
 }
 
 PushConfigTO * PushConfigTO::FromEMPushConfig(EMPushConfigsPtr&  pushConfigPtr)

@@ -93,6 +93,7 @@ namespace ChatSDK
 
         public void DeleteConnectionDelegate(IConnectionDelegate connectionDelegate)
         {
+            if (CallbackManager.IsQuit()) return;
             if (CallbackManager.Instance().connectionListener.delegater.Contains(connectionDelegate))
             {
                 CallbackManager.Instance().connectionListener.delegater.Remove(connectionDelegate);
@@ -144,13 +145,9 @@ namespace ChatSDK
         {
             _Sdk.Logout(unbindDeviceToken, new CallBack(
                 onSuccess: () => {
-                    CallbackManager.Instance().connectionListener.delegater.Clear();
-                    _Sdk.ContactManager().ClearDelegates();
-                    _Sdk.ChatManager().ClearDelegates();
-                    _Sdk.GroupManager().ClearDelegates();
-                    _Sdk.RoomManager().ClearDelegates();
                     CallbackManager.Instance().CleanAllCallback();
-                    //handle.Success?.Invoke();
+                    if (null != handle)
+                        handle.Success?.Invoke();
                 },
                 onError:(code, desc) => {
                     handle?.Error?.Invoke(code, desc);
