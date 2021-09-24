@@ -34,6 +34,8 @@ public:
     
     virtual void unBindUserDeviceToken(const std::string& certName, EMError& error) = 0;
     
+    virtual void ignoreUsersPush(const std::vector<std::string>& uIds, bool isIgnore, EMError& error) = 0;
+    
     virtual void ignoreGroupPush(const std::string& groupId, bool isIgnore, EMError& error) = 0;
     
     virtual void ignoreGroupsPush(const std::vector<std::string> groupIds, bool isIgnore, EMError& error) = 0;

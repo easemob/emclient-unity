@@ -94,6 +94,7 @@ namespace ChatSDK
         /// <param name="contactManagerDelegate"></param>
         public void RemoveContactManagerDelegate(IContactManagerDelegate contactManagerDelegate)
         {
+            if (CallbackManager.IsQuit()) return;
             if (CallbackManager.Instance().contactManagerListener.delegater.Contains(contactManagerDelegate))
             {
                 CallbackManager.Instance().contactManagerListener.delegater.Remove(contactManagerDelegate);

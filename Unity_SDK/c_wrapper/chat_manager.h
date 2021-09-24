@@ -45,5 +45,7 @@ Hypheante_API bool ChatManager_UpdateMessage(void *client, void *mto, EMMessageB
 }
 #endif //__cplusplus
 
+void ChatManager_RemoveListener(void*client);
+
 #endif //_CHAT_MANAGER_H_
 

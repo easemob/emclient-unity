@@ -66,4 +66,6 @@ Hypheante_API void GroupManager_UploadGroupSharedFile(void *client, int callback
 }
 #endif //__cplusplus
 
+void GroupManager_RemoveListener(void*client);
+
 #endif //_GROUP_MANAGER_H_

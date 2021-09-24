@@ -1183,3 +1183,14 @@ Hypheante_API void GroupManager_UploadGroupSharedFile(void *client, int callback
     
     CLIENT->getGroupManager().uploadGroupSharedFile(groupId, filePath, callbackPtr, error);
 }
+
+void GroupManager_RemoveListener(void*client)
+{
+    CLIENT->getGroupManager().clearListeners();
+    LOG("GroupManager listener cleared.");
+    if(nullptr != gGroupManagerListener) {
+        delete gGroupManagerListener;
+        gGroupManagerListener = nullptr;
+        LOG("GroupManager listener handle deleted.");
+    }
+}

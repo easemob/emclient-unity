@@ -256,7 +256,10 @@ namespace easemob {
         void onConnect();
         void onDisconnect(EMErrorPtr error);
         void onPong();
-
+        
+        void clearResource();
+        void allocResource();
+        
     private:
         EMClient();
         void init(const EMChatConfigsPtr configs);

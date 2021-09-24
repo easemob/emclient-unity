@@ -20,8 +20,6 @@ public class PushManagerTest : MonoBehaviour
     private Button SetPushStyleBtn;
     private Button SetGroupToDisturbBtn;
 
-
-
     private void Awake()
     {
         Debug.Log("push manager test script has load");
@@ -53,7 +51,6 @@ public class PushManagerTest : MonoBehaviour
         SetGroupToDisturbBtn.onClick.AddListener(SetGroupToDisturbBtnAction);
 
     }
-
 
     void backButtonAction()
     {

@@ -242,3 +242,15 @@ Hypheante_API void ContactManager_GetSelfIdsOnOtherPlatform(void *client, int ca
     });
     t.detach();
 }
+
+void ContactManager_RemoveListener(void*client)
+{
+    if(nullptr != gContactListener)
+    {
+        CLIENT->getContactManager().removeContactListener(gContactListener);
+        LOG("ContactManager listener cleared.");
+        delete gContactListener;
+        gContactListener = nullptr;
+        LOG("ContactManager listener handle deleted.");
+    }
+}

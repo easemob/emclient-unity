@@ -647,3 +647,14 @@ Hypheante_API void RoomManager_UpdateChatroomAnnouncement(void *client, int call
     });
     t.detach();
 }
+
+void RoomManager_RemoveListener(void*client)
+{
+    CLIENT->getChatroomManager().clearListeners();
+    LOG("RoomManager listener cleared.");
+    if(nullptr != gRoomManagerListener) {
+        delete gRoomManagerListener;
+        gRoomManagerListener = nullptr;
+        LOG("RoomManager listener handle deleted.");
+    }
+}

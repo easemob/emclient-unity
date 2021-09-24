@@ -104,7 +104,6 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
         SDKClient.Instance.RoomManager.RemoveRoomManagerDelegate(this);
     }
 
-
     void backButtonAction()
     {
         SceneManager.LoadSceneAsync("Main");

@@ -360,6 +360,7 @@ namespace ChatSDK
         /// <param name="groupManagerDelegate"></param>
         public void RemoveGroupManagerDelegate(IGroupManagerDelegate groupManagerDelegate)
         {
+            if (CallbackManager.IsQuit()) return;
             if (CallbackManager.Instance().groupManagerListener.delegater.Contains(groupManagerDelegate))
             {
                 CallbackManager.Instance().groupManagerListener.delegater.Remove(groupManagerDelegate);
