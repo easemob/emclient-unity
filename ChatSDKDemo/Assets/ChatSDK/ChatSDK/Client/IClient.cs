@@ -151,9 +151,9 @@
 
         public abstract string AccessToken();
 
-        public abstract void StartLog(string logFilePath);
+        internal abstract void StartLog(string logFilePath);
 
-        public abstract void StopLog();
+        internal abstract void StopLog();
 
         public abstract void ClearResource();
 

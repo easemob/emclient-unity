@@ -45,7 +45,7 @@ namespace ChatSDK
         /// <summary>
         /// 会话管理类
         /// </summary>
-        public IConversationManager ConversationManager { get => _Sdk.ConversationManager(); }
+        internal IConversationManager ConversationManager { get => _Sdk.ConversationManager(); }
 
         /// <summary>
         /// 获取sdk配置信息
@@ -100,7 +100,7 @@ namespace ChatSDK
             }
         }
 
-
+       
         /// <summary>
         /// 初始化sdk
         /// </summary>
