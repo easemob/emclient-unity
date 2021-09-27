@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using SimpleJSON;
 using UnityEngine;
 using UnityEditor;
-using UnityEditor.Compilation;
 
 namespace ChatSDK {
 
