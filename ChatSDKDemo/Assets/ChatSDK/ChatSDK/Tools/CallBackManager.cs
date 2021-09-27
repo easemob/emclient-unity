@@ -34,6 +34,7 @@ namespace ChatSDK {
         internal Dictionary<string, Message> tempMsgDict = new Dictionary<string, Message>();
 
 #if UNITY_EDITOR
+
         [RuntimeInitializeOnLoadMethod]
         static void InitializeOnLoadMethod()
         {

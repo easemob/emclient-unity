@@ -61,7 +61,7 @@ Hypheante_API void PushManager_GetUserConfigsFromServer(void *client, int callba
             onSuccess(nullptr, DataType::Group, 0, callbackId);
             return;
         }
-        if(error.mErrorCode == EMError::EM_NO_ERROR) {
+        if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("PushManager_GetUserConfigsFromServer execution succeeds");
             if(onSuccess) {
                 PushConfigTO * data[1];
@@ -89,7 +89,7 @@ Hypheante_API void PushManager_IgnoreGroupPush(void *client, int callbackId, con
     std::thread t([=](){
         EMError error;
         CLIENT->getPushManager().ignoreGroupPush(groupIdStr, noDisturb, error);
-        if(error.mErrorCode == EMError::EM_NO_ERROR) {
+        if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("PushManager_IgnoreGroupPush execution succeeds: %s", groupIdStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
@@ -109,12 +109,12 @@ Hypheante_API void PushManager_UpdatePushNoDisturbing(void *client, int callback
         EMPushConfigs::EMPushNoDisturbStatus status = pushConfigPtr->getDisplayStatus();
         
         if(noDisturb)
-            status = EMPushConfigs::EMPushNoDisturbStatus::Day; //to-do: is this right to set Day?
+            status = EMPushConfigs::EMPushNoDisturbStatus::Custom; //to-do: is this right to set Day?
         else
             status = EMPushConfigs::EMPushNoDisturbStatus::Close;
         
         CLIENT->getPushManager().updatePushNoDisturbing(style, status, startTime, endTime, error);
-        if(error.mErrorCode == EMError::EM_NO_ERROR) {
+        if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("PushManager_UpdatePushNoDisturbing execution succeeds, and NoDisturbStatus: %d", status);
             if(onSuccess) onSuccess(callbackId);
         }else{
@@ -131,7 +131,7 @@ Hypheante_API void PushManager_UpdatePushDisplayStyle(void *client, int callback
         EMError error;
         CLIENT->getPushManager().updatePushDisplayStyle(style, error);
 
-        if(error.mErrorCode == EMError::EM_NO_ERROR) {
+        if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("PushManager_updatePushDisplayStyle execution succeeds, and style: %d", style);
             if(onSuccess) onSuccess(callbackId);
         }else{
@@ -154,7 +154,7 @@ Hypheante_API void PushManager_UpdateFCMPushToken(void *client, int callbackId, 
     std::thread t([=](){
         EMError error;
         CLIENT->getPushManager().bindUserDeviceToken(tokenStr, "FCM", error);
-        if(error.mErrorCode == EMError::EM_NO_ERROR) {
+        if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("PushManager_UpdateFCMPushToken execution succeeds, token: %s for FCM", tokenStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
@@ -177,7 +177,7 @@ Hypheante_API void PushManager_UpdateHMSPushToken(void *client, int callbackId, 
     std::thread t([=](){
         EMError error;
         CLIENT->getPushManager().bindUserDeviceToken(tokenStr, "HMS", error);
-        if(error.mErrorCode == EMError::EM_NO_ERROR) {
+        if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("PushManager_UpdateHMSPushToken execution succeeds, token: %s for HMS", tokenStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
@@ -200,7 +200,7 @@ Hypheante_API void PushManager_UpdatePushNickName(void *client, int callbackId, 
     std::thread t([=](){
         EMError error;
         CLIENT->getPushManager().updatePushNickName(nickname, error);
-        if(error.mErrorCode == EMError::EM_NO_ERROR) {
+        if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("PushManager_UpdatePushNickName execution succeeds, nickname: %s", nicknameStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{

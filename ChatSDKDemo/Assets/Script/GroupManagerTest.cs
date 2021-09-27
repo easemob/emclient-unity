@@ -536,8 +536,8 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
     void DownloadGroupSharedFileBtnAction() {
 
         UIManager.UnfinishedAlert(transform);
-
         Debug.Log("DownloadGroupSharedFileBtnAction");
+
     }
 
     void GetGroupAnnouncementFromServerBtnAction() {
