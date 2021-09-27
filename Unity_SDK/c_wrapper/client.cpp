@@ -47,7 +47,7 @@ Hypheante_API void Client_CreateAccount(void *client, int callbackId, FUNC_OnSuc
 EMChatConfigsPtr ConfigsFromOptions(Options *options) {
     const char *appKey = options->AppKey;
     LOG("Client_InitWithOptions() called with AppKey=%s", appKey);
-    EMChatConfigsPtr configs = EMChatConfigsPtr(new EMChatConfigs("","",appKey,0));
+    EMChatConfigsPtr configs = EMChatConfigsPtr(new EMChatConfigs("./sdkdata","./sdkdata",appKey,0));
     //TODO: non null-ptr assertion
     const char *dnsURL = options->DNSURL;
     const char *imServer = options->IMServer;
@@ -84,18 +84,24 @@ Hypheante_API void* Client_InitWithOptions(Options *options, FUNC_OnConnected on
     // global switch
     G_DEBUG_MODE = options->DebugMode;
     G_AUTO_LOGIN = options->AutoLogin;
+    
     // singleton client handle
     if(gClient == nullptr) {
         EMChatConfigsPtr configs = ConfigsFromOptions(options);
         gClient = EMClient::create(configs);
+        LOG("Emclient created.");
     } else {
-        if(NeedAllocResource)
+        if(NeedAllocResource) {
             gClient->allocResource();
+            NeedAllocResource = false;
+            LOG("Alloc sdk resource.");
+        }
     }
     
     if(gConnectionListener == NULL) { //only set once
         gConnectionListener = new ConnectionListener(onConnected, onDisconnected, onPong);
         gClient->addConnectionListener(gConnectionListener);
+        LOG("New connection listener and hook it.");
     }
     
     return gClient;
@@ -134,7 +140,7 @@ Hypheante_API void Client_Logout(void *client, int callbackId, FUNC_OnSuccess on
             LOG("Already logout, NO need to execute logout action.");
         }
     });
-    t.detach();
+    t.join();
 }
 
 Hypheante_API void Client_StartLog(const char *logFilePath) {
@@ -159,7 +165,7 @@ Hypheante_API void Client_ClearResource(void *client) {
         return;
     }
     
-    LOG("Clear resource begin");
+    LOG("Clear resource begin--------------");
     CLIENT->clearResource();
     
     // set flag for next replay
@@ -172,8 +178,9 @@ Hypheante_API void Client_ClearResource(void *client) {
     ContactManager_RemoveListener(client);
     
     CLIENT->removeConnectionListener(gConnectionListener);
-    LOG("Connection listener cleared.");
+    LOG("Connection listener removed.");
     delete gConnectionListener;
     gConnectionListener = nullptr;
-    LOG("Clear resource completed");
+
+    LOG("Clear resource completed----------");
 }

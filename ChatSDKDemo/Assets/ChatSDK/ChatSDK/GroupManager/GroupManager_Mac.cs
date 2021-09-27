@@ -664,7 +664,10 @@ namespace ChatSDK
                   else
                   {
                       if (0 == dSize)
+                      {
                           Debug.Log("Empty group white List.");
+                          ChatCallbackObject.ValueCallBackOnSuccess<List<string>>(cbId, memberList);
+                      }
                       else
                           Debug.LogError($"Group information expected.");
                   }
@@ -860,7 +863,10 @@ namespace ChatSDK
                     else
                     {
                         if (0 == dSize)
+                        {
                             Debug.LogError($"Empty Group.");
+                            ChatCallbackObject.CallBackOnSuccess(cbId);
+                        }
                         else
                             Debug.LogError($"Group information expected.");
                     }
@@ -958,7 +964,7 @@ namespace ChatSDK
 
         public override void RemoveGroupMembers(string groupId, List<string> members, CallBack handle = null)
         {
-            if (null == groupId || 0 == groupId.Length)
+            if (null == groupId || 0 == groupId.Length || null == members || 0 == members.Count)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;

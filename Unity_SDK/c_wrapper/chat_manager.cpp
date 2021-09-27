@@ -105,6 +105,7 @@ Hypheante_API void ChatManager_AddListener(void *client,
     if(nullptr == gChatManagerListener) { //only set once!
         gChatManagerListener = new ChatManagerListener(onMessagesReceived, onCmdMessagesReceived, onMessagesRead, onMessagesDelivered, onMessagesRecalled, onReadAckForGroupMessageUpdated, onGroupMessageRead, onConversationsUpdate, onConversationRead);
         CLIENT->getChatManager().addListener(gChatManagerListener);
+        LOG("New ChatManager listener and hook it.");
     }
 }
 
@@ -161,6 +162,7 @@ Hypheante_API void ChatManager_GetConversationsFromServer(void *client, int call
         if (EMError::EM_NO_ERROR == error.mErrorCode) {
             if (onSuccess) {
                 int size = (int)conversationList.size();
+                LOG("%d conversation found.", size);
                 ConversationTO *data[size];
                 for(size_t i=0; i<size; i++) {
                     data[i] = ConversationTO::FromEMConversation(conversationList.at(i));
@@ -184,6 +186,7 @@ Hypheante_API void ChatManager_RemoveConversation(void *client, const char * con
     if(!MandatoryCheck(conversationId))
         return;
     CLIENT->getChatManager().removeConversation(conversationId, isRemoveMessages);
+    LOG("Remove conversation completed.");
 }
 
 Hypheante_API void ChatManager_DownloadMessageAttachments(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
@@ -256,8 +259,10 @@ Hypheante_API bool ChatManager_ConversationWithType(void *client, const char * c
     EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(conversationId, type, createIfNotExist);
     //verify sharedptr
     if(conversationPtr) {
+        LOG("Get converation with id=%s", conversationId);
         return true; //Conversation exist
     } else {
+        LOG("Cannot get converation with id=%s", conversationId);
         return false; //Conversation not exist
     }
 }
@@ -274,6 +279,7 @@ Hypheante_API int ChatManager_GetUnreadMessageCount(void *client)
             count += conversationList[i]->unreadMessagesCount();
         }
     }
+    LOG("Unread message count: %d", count);
     return count;
 }
 
@@ -286,6 +292,7 @@ Hypheante_API bool ChatManager_InsertMessages(void *client, void * messageList[]
         list.push_back(messagePtr);
     }
     if(list.size() > 0) {
+        LOG("%d messages will be inserted.");
         return CLIENT->getChatManager().insertMessages(list);
     } else {
         return true;
@@ -343,6 +350,7 @@ Hypheante_API bool ChatManager_MarkAllConversationsAsRead(void *client)
         return true;
     else
     {
+        LOG("%d conversations will be marked as read.", conversationList.size());
         for(size_t i=0; i<conversationList.size(); i++) {
             if(!conversationList[i]->markAllMessagesAsRead())
                 ret = false;
@@ -463,9 +471,10 @@ Hypheante_API void ChatManager_SendReadAckForConversation(void *client, int call
         EMError error;
         CLIENT->getChatManager().sendReadAckForConversation(conversationIdStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
-            LOG("Send read ack for conversation:%s successfully.", conversationId);
+            LOG("Send read ack for conversation:%s successfully.", conversationIdStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         } else {
+            LOG("Send read ack for conversation:%s failed.", conversationIdStr.c_str());
             if(onError) onError(error.mErrorCode,error.mDescription.c_str(), callbackId);
         }
     });
@@ -483,17 +492,17 @@ Hypheante_API void ChatManager_SendReadAckForMessage(void *client, int callbackI
     
     std::thread t([=](){
         EMError error;
-        EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(messageId);
+        EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(messageIdStr);
         if(nullptr == messagePtr) {
             
-            LOG("Cannot find message with message id:%s", messageId);
+            LOG("Cannot find message with message id:%s", messageIdStr.c_str());
             error.mErrorCode = EMError::MESSAGE_INVALID;
             error.mDescription = "Invalid message.";
             if(onError) onError(error.mErrorCode,error.mDescription.c_str(), callbackId);
             return;
         }
         CLIENT->getChatManager().sendReadAckForMessage(messagePtr);
-        LOG("Send read ack for message:%s successfully.", messageId);
+        LOG("Send read ack for message:%s successfully.", messageIdStr.c_str());
         if(onSuccess) onSuccess(callbackId);
     });
     t.detach();
@@ -517,10 +526,9 @@ Hypheante_API bool ChatManager_UpdateMessage(void *client, void *mto, EMMessageB
 void ChatManager_RemoveListener(void*client)
 {
     CLIENT->getChatManager().clearListeners();
-    LOG("ChatManager listener cleared.");
     if(nullptr != gChatManagerListener) {
         delete gChatManagerListener;
         gChatManagerListener = nullptr;
-        LOG("ChatManager listener handle deleted.");
     }
+    LOG("ChatManager listener removed.");
 }

@@ -21,6 +21,7 @@ Hypheante_API void RoomManager_AddListener(void *client, FUNC_OnChatRoomDestroye
     if(nullptr == gRoomManagerListener) { //only set once!
         gRoomManagerListener = new RoomManagerListener(client, onChatRoomDestroyed,  onMemberJoined, onMemberExited, onRemovedFromChatRoom, onMuteListAdded, onMuteListRemoved, onAdminAdded, onAdminRemoved, onOwnerChanged, onAnnouncementChanged);
        CLIENT->getChatroomManager().addListener(gRoomManagerListener);
+        LOG("New RoomManager listener and hook it.");
     }
 }
 
@@ -47,6 +48,7 @@ Hypheante_API void RoomManager_AddRoomAdmin(void * client, int callbackId, const
                 delete datum;
             }
         }else{
+            LOG("RoomManager_AddRoomAdmin failed, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -79,6 +81,7 @@ Hypheante_API void RoomManager_BlockChatroomMembers(void * client, int callbackI
                 delete datum;
             }
         }else{
+            LOG("RoomManager_BlockChatroomMembers failed, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -112,6 +115,7 @@ Hypheante_API void RoomManager_CreateRoom(void *client, int callbackId, const ch
                 delete (RoomTO*)data[0];
             }
         }else{
+            LOG("RoomManager_CreateRoom failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -141,6 +145,7 @@ Hypheante_API void RoomManager_ChangeRoomSubject(void *client, int callbackId, c
                 delete datum;
             }
         }else{
+            LOG("RoomManager_ChangeRoomSubject failed, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -167,6 +172,7 @@ Hypheante_API void RoomManager_RemoveRoomMembers(void * client, int callbackId, 
             LOG("RoomManager_RemoveRoomMembers succeeds: %s", result->chatroomSubject().c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("RoomManager_RemoveRoomMembers failed, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -196,6 +202,7 @@ Hypheante_API void RoomManager_TransferChatroomOwner(void * client, int callback
                 delete datum;
             }
         }else{
+            LOG("RoomManager_TransferChatroomOwner failed, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -225,6 +232,7 @@ Hypheante_API void RoomManager_ChangeChatroomDescription(void * client, int call
                 delete datum;
             }
         }else{
+            LOG("RoomManager_ChangeChatroomDescription failed, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -244,8 +252,10 @@ Hypheante_API void RoomManager_DestroyChatroom(void *client, int callbackId, con
         EMError error;
         CLIENT->getChatroomManager().destroyChatroom(roomIdStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("Destory room %s successfully.", roomIdStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("Destory room %s failed, code=%d, desc=%s.", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -273,6 +283,7 @@ Hypheante_API void RoomManager_FetchChatroomsWithPage(void *client, int callback
                 }
             }
         }else{
+            LOG("Fetch room failed with code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -292,13 +303,14 @@ Hypheante_API void RoomManager_FetchChatroomAnnouncement(void *client, int callb
         EMError error;
         std::string announcement = CLIENT->getChatroomManager().fetchChatroomAnnouncement(roomIdStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
-            LOG("RoomManager_FetchChatroomAnnouncement succeeds: %s", roomId);
+            LOG("RoomManager_FetchChatroomAnnouncement succeeds: %s", roomIdStr.c_str());
             if(onSuccess) {
                 const char *data[1];
                 data[0]= announcement.c_str();
                 onSuccess((void **)data, DataType::String, 1, callbackId);
             }
         }else{
+            LOG("RoomManager_FetchChatroomAnnouncement failed, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -328,6 +340,7 @@ Hypheante_API void RoomManager_FetchChatroomBans(void *client, int callbackId, c
                 onSuccess((void **)data, DataType::String, (int)size, callbackId);
             }
         }else{
+            LOG("RoomManager_FetchChatroomBans failed, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -356,6 +369,7 @@ Hypheante_API void RoomManager_FetchChatroomSpecification(void * client, int cal
                 delete (RoomTO*)datum;
             }
         }else{
+            LOG("RoomManager_FetchChatroomSpecification failed roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -383,6 +397,7 @@ Hypheante_API void RoomManager_FetchChatroomMembers(void * client, int callbackI
                 cursorResultTo.Type = DataType::ListOfString;
                 //items
                 int size = (int)msgCursorResult.result().size();
+                LOG("Fetch room member successfully, num=%d, roomId=%s", size, roomIdStr.c_str());
                 const char * data[size];
                 for(int i=0; i<size; i++) {
                     data[i] = msgCursorResult.result().at(i).c_str();
@@ -390,6 +405,7 @@ Hypheante_API void RoomManager_FetchChatroomMembers(void * client, int callbackI
                 onSuccess((void *)&cursorResultTo, (void **)data, DataType::CursorResult, size, callbackId);
             }
         }else{
+            LOG("Fetch room member failed, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -419,6 +435,7 @@ Hypheante_API void RoomManager_FetchChatroomMutes(void * client, int callbackId,
                 onSuccess((void **)data, DataType::String, (int)size, callbackId);
             }
         }else{
+            LOG("RoomManager_FetchChatroomMutes failed, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -474,20 +491,21 @@ Hypheante_API void RoomManager_JoinChatroom(void *client, int callbackId, const 
         EMError error;
         EMChatroomPtr result = CLIENT->getChatroomManager().joinChatroom(roomIdStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
-            LOG("RoomManager_JoinChatroom succeeds: roomId:%s", roomId);
+            LOG("RoomManager_JoinChatroom succeeds: roomId:%s", roomIdStr.c_str());
             if(onSuccess) {
                 RoomTO *data[1];
                 if(result) {
                     data[0] = {RoomTO::FromEMChatRoom(result)};
                     onSuccess((void **)data, DataType::Room, 1, callbackId);
                     delete (RoomTO*)data[0];
-                    LOG("RoomManager_JoinChatroom return room with id:%s", roomId);
+                    LOG("RoomManager_JoinChatroom return room with id:%s", roomIdStr.c_str());
                 } else {
                     onSuccess((void **)data, DataType::Room, 0, callbackId);
                     LOG("RoomManager_JoinChatroom NO room returned");
                 }
             }
         }else{
+            LOG("RoomManager_JoinChatroom failed, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -507,8 +525,10 @@ Hypheante_API void RoomManager_LeaveChatroom(void *client, int callbackId, const
         EMError error;
         CLIENT->getChatroomManager().leaveChatroom(roomIdStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("Leave room successfully, roomId=%s", roomIdStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("Leave room failed, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -532,8 +552,10 @@ Hypheante_API void RoomManager_MuteChatroomMembers(void * client, int callbackId
         EMError error;
         EMChatroomPtr chatRoomPtr = CLIENT->getChatroomManager().muteChatroomMembers(roomIdStr, memberList, muteDuration, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("Mute member successfully, roomId=%s", roomIdStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("Mute member failed, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -593,8 +615,10 @@ Hypheante_API void RoomManager_UnblockChatroomMembers(void * client, int callbac
         EMError error;
         EMChatroomPtr chatRoomPtr = CLIENT->getChatroomManager().unblockChatroomMembers(roomIdStr, memberList, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("Unblock members successfully, roomId=%s", roomIdStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("Unblock members failed, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -618,8 +642,10 @@ Hypheante_API void RoomManager_UnmuteChatroomMembers(void * client, int callback
         EMError error;
         EMChatroomPtr chatRoomPtr = CLIENT->getChatroomManager().unmuteChatroomMembers(roomIdStr, memberList, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("Unmute room members successfully, roomId=%s", roomIdStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("Unmute room members successfully, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -640,8 +666,10 @@ Hypheante_API void RoomManager_UpdateChatroomAnnouncement(void *client, int call
         EMError error;
         EMChatroomPtr chatRoomPtr = CLIENT->getChatroomManager().updateChatroomAnnouncement(roomIdStr, newAnnouncementStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("Update announcement successfully, roomId=%s", roomIdStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("Update announcement failed, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -651,10 +679,9 @@ Hypheante_API void RoomManager_UpdateChatroomAnnouncement(void *client, int call
 void RoomManager_RemoveListener(void*client)
 {
     CLIENT->getChatroomManager().clearListeners();
-    LOG("RoomManager listener cleared.");
-    if(nullptr != gRoomManagerListener) {
+        if(nullptr != gRoomManagerListener) {
         delete gRoomManagerListener;
         gRoomManagerListener = nullptr;
-        LOG("RoomManager listener handle deleted.");
     }
+    LOG("RoomManager listener removed.");
 }

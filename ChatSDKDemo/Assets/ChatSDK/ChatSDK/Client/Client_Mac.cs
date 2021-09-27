@@ -21,7 +21,6 @@ namespace ChatSDK
         public event OnSuccess OnLogoutSuccess;
 
         public Client_Mac() {
-            //to-do: test
             // start log service
             StartLog("/tmp/unmanaged_dll.log");
         }
@@ -58,8 +57,9 @@ namespace ChatSDK
             {
                 //stop log service
                 StopLog();
+                StartLog("/tmp/unmanaged_dll.log");
             }
-            StartLog("/tmp/unmanaged_dll.log");
+            
             client = ChatAPINative.Client_InitWithOptions(options, connectionHub.OnConnected, connectionHub.OnDisconnected, connectionHub.OnPong);
             Debug.Log($"InitWithOptions completed.");
         }

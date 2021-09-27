@@ -10,12 +10,7 @@
 #include "emclient.h"
 #include "tool.h"
 
-EMContactListener *gContactListener = nullptr;
-
-EMContactListener* ContactManager_GetListeners()
-{
-    return gContactListener;
-}
+ContactManagerListener *gContactListener = nullptr;
 
 Hypheante_API void ContactManager_AddListener(void *client,
                                         FUNC_OnContactAdded onContactAdded,
@@ -28,6 +23,7 @@ Hypheante_API void ContactManager_AddListener(void *client,
     if(nullptr == gContactListener) { //only set once!
         gContactListener = new ContactManagerListener(onContactAdded, onContactDeleted, onContactInvited, onFriendRequestAccepted, OnFriendRequestDeclined);
         CLIENT->getContactManager().registerContactListener(gContactListener);
+        LOG("New ContactManager listener and hook it.");
     }
 }
 
@@ -48,6 +44,7 @@ Hypheante_API void ContactManager_AddContact(void *client, int callbackId, const
             LOG("AddContact success.");
             if(onSuccess) onSuccess(callbackId);
         } else {
+            LOG("AddContact failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -70,6 +67,7 @@ Hypheante_API void ContactManager_DeleteContact(void *client, int callbackId, co
             LOG("DeleteContact success.");
             if(onSuccess) onSuccess(callbackId);
         } else {
+            LOG("DeleteContact failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -90,6 +88,7 @@ Hypheante_API void ContactManager_GetContactsFromServer(void *client, int callba
             }
             onSuccess((void**)data, DataType::ListOfString, size, callbackId);
         } else {
+            LOG("GetContactsFromServer failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -110,7 +109,7 @@ Hypheante_API void ContactManager_GetContactsFromDB(void *client, FUNC_OnSuccess
         onSuccess((void **)data, DataType::ListOfString, size, -1);
     } else {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), -1);
-        LOG("GetContactsFromDB failed with error:%d, desc:%s.", error.mErrorCode, error.mDescription.c_str());
+        LOG("GetContactsFromDB failed with code=%d, desc=%s.", error.mErrorCode, error.mDescription.c_str());
         return;
     }
 }
@@ -131,6 +130,7 @@ Hypheante_API void ContactManager_AddToBlackList(void *client, int callbackId, c
             LOG("AddToBlackList success.");
             if(onSuccess) onSuccess(callbackId);
         } else {
+            LOG("AddToBlackList failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -153,6 +153,7 @@ Hypheante_API void ContactManager_RemoveFromBlackList(void *client, int callback
             LOG("RemoveFromBlackList success.");
             if(onSuccess) onSuccess(callbackId);
         } else {
+            LOG("RemoveFromBlackList failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -173,6 +174,7 @@ Hypheante_API void ContactManager_GetBlackListFromServer(void *client, int callb
             }
             onSuccess((void**)data, DataType::ListOfString, size, callbackId);
         } else {
+            LOG("GetBlackListFromServer failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -195,6 +197,7 @@ Hypheante_API void ContactManager_AcceptInvitation(void *client, int callbackId,
             LOG("AcceptInvitation success.");
             if(onSuccess) onSuccess(callbackId);
         } else {
+            LOG("AcceptInvitation failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -217,6 +220,7 @@ Hypheante_API void ContactManager_DeclineInvitation(void *client, int callbackId
             LOG("DeclineInvitation success.");
             if(onSuccess) onSuccess(callbackId);
         } else {
+            LOG("DeclineInvitation failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -237,6 +241,7 @@ Hypheante_API void ContactManager_GetSelfIdsOnOtherPlatform(void *client, int ca
             }
             onSuccess((void**)data, DataType::ListOfString, size, callbackId);
         } else {
+            LOG("GetSelfIdsOnOtherPlatform failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -248,9 +253,8 @@ void ContactManager_RemoveListener(void*client)
     if(nullptr != gContactListener)
     {
         CLIENT->getContactManager().removeContactListener(gContactListener);
-        LOG("ContactManager listener cleared.");
         delete gContactListener;
         gContactListener = nullptr;
-        LOG("ContactManager listener handle deleted.");
+        LOG("ContactManager listener removed.");
     }
 }

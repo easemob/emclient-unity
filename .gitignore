@@ -59,6 +59,7 @@ easemobDB/
 easemobLog/
 DerivedData/
 appdata/
+sdkdata/
 
 **/UserPrefs
 **/.vs

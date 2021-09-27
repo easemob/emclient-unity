@@ -40,10 +40,11 @@ Hypheante_API void PushManager_GetPushConfig(void *client, FUNC_OnSuccess_With_R
     EMPushConfigsPtr configPtr = CLIENT->getPushManager().getPushConfigs();
     if(!configPtr) {
         //DataType has no suitable enum value for this.
-        LOG("No any push config ");
+        LOG("No any push config.");
         onSuccess(nullptr, DataType::ListOfString, 0, -1);
         return;
     }
+    LOG("Found push config.");
     PushConfigTO* data[1];
     data[0] = PushConfigTO::FromEMPushConfig(configPtr);
     onSuccess((void**)data, DataType::ListOfString, 1, -1);
@@ -69,6 +70,7 @@ Hypheante_API void PushManager_GetUserConfigsFromServer(void *client, int callba
                 delete data[0];
             }
         }else{
+            LOG("PushManager_GetUserConfigsFromServer execution failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -91,6 +93,7 @@ Hypheante_API void PushManager_IgnoreGroupPush(void *client, int callbackId, con
             LOG("PushManager_IgnoreGroupPush execution succeeds: %s", groupIdStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("PushManager_IgnoreGroupPush execution failed, groupId=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -115,6 +118,7 @@ Hypheante_API void PushManager_UpdatePushNoDisturbing(void *client, int callback
             LOG("PushManager_UpdatePushNoDisturbing execution succeeds, and NoDisturbStatus: %d", status);
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("PushManager_UpdatePushNoDisturbing execution failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -131,6 +135,7 @@ Hypheante_API void PushManager_UpdatePushDisplayStyle(void *client, int callback
             LOG("PushManager_updatePushDisplayStyle execution succeeds, and style: %d", style);
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("PushManager_updatePushDisplayStyle execution failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -153,6 +158,7 @@ Hypheante_API void PushManager_UpdateFCMPushToken(void *client, int callbackId, 
             LOG("PushManager_UpdateFCMPushToken execution succeeds, token: %s for FCM", tokenStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("PushManager_UpdateFCMPushToken execution failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -172,9 +178,10 @@ Hypheante_API void PushManager_UpdateHMSPushToken(void *client, int callbackId, 
         EMError error;
         CLIENT->getPushManager().bindUserDeviceToken(tokenStr, "HMS", error);
         if(error.mErrorCode == EMError::EM_NO_ERROR) {
-            LOG("PushManager_UpdateHMSPushToken execution succeeds, token: %s for FCM", tokenStr.c_str());
+            LOG("PushManager_UpdateHMSPushToken execution succeeds, token: %s for HMS", tokenStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("PushManager_UpdateHMSPushToken execution failed HMS, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -194,9 +201,10 @@ Hypheante_API void PushManager_UpdatePushNickName(void *client, int callbackId, 
         EMError error;
         CLIENT->getPushManager().updatePushNickName(nickname, error);
         if(error.mErrorCode == EMError::EM_NO_ERROR) {
-            LOG("PushManager_UpdatePushNickName execution succeeds, nickname: %s", nickname);
+            LOG("PushManager_UpdatePushNickName execution succeeds, nickname: %s", nicknameStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("PushManager_UpdatePushNickName execution failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
