@@ -374,7 +374,7 @@ namespace ChatSDK
 
         public override void SetExt(string conversationId, ConversationType conversationType, Dictionary<string, string> ext)
         {
-            if (null == conversationId || 0 == conversationId.Length || null == ext)
+            if (null == conversationId || 0 == conversationId.Length || null == ext || 0 == ext.Count)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
@@ -385,7 +385,7 @@ namespace ChatSDK
 
         public override int UnReadCount(string conversationId, ConversationType conversationType)
         {
-            if (null == conversationId)
+            if (null == conversationId || 0 == conversationId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return -1;

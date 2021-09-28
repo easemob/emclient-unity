@@ -18,6 +18,7 @@ Hypheante_API void GroupManager_AddListener(void *client,FUNC_OnInvitationReceiv
     if(nullptr == gGroupManagerListener) { //only set once!
         gGroupManagerListener = new GroupManagerListener(client, onInvitationReceived,  onRequestToJoinReceived, onRequestToJoinAccepted, onRequestToJoinDeclined, onInvitationAccepted, onInvitationDeclined, onUserRemoved, onGroupDestroyed, onAutoAcceptInvitationFromGroup, onMuteListAdded, onMuteListRemoved, onAdminAdded, onAdminRemoved, onOwnerChanged, onMemberJoined, onMemberExited, onAnnouncementChanged, onSharedFileAdded, onSharedFileDeleted);
         CLIENT->getGroupManager().addListener(gGroupManagerListener);
+        LOG("New GroupManager listener and hook it.");
     }
 }
 
@@ -49,6 +50,7 @@ Hypheante_API void GroupManager_CreateGroup(void *client, int callbackId, const 
                 delete (GroupTO*)(data[0]);
             }
         }else{
+            LOG("GroupManager_CreateGroup failed for groupname=%s: code=%d, desc=%s", groupNameStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -72,6 +74,7 @@ Hypheante_API void GroupManager_ChangeGroupName(void *client, int callbackId, co
             LOG("GroupManager_ChangeGroupName execution succeeds: %s %s", groupIdStr.c_str(), groupNameStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("GroupManager_ChangeGroupName execution failed for groupid=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -91,9 +94,10 @@ Hypheante_API void GroupManager_DestoryGroup(void *client, int callbackId, const
         EMError error;
         CLIENT->getGroupManager().destroyGroup(groupIdStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
-            LOG("GroupManager_DestoryGroup execution succeeds: %s", groupIdStr.c_str());
+            LOG("GroupManager_DestoryGroup execution succeeds for groupid: %s", groupIdStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("GroupManager_DestoryGroup execution failed for groupid=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -114,12 +118,17 @@ Hypheante_API void GroupManager_AddMembers(void *client, int callbackId, const c
     std::string groupIdStr = groupId;
     
     std::thread t([=](){
+        for(int i=0; i<size; i++) {
+            LOG("GroupManager_AddMembers, member: %s", memberList[i].c_str());
+        }
+        
         EMError error;
         CLIENT->getGroupManager().addGroupMembers(groupIdStr, memberList, "", error); //TODO: lack of welcome message param. in signature
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("GroupManager_AddMembers execution succeeds: %s", groupIdStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("GroupManager_AddMembers execution failed for groupId=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -146,6 +155,7 @@ Hypheante_API void GroupManager_RemoveMembers(void *client, int callbackId, cons
             LOG("GroupManager_RemoveMembers execution succeeds: %s", groupIdStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("GroupManager_RemoveMembers execution failed for groupid=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -173,6 +183,7 @@ Hypheante_API void GroupManager_AddAdmin(void *client, int callbackId, const cha
                 delete (GroupTO*)data[0];
             }
         }else{
+            LOG("GroupManager_AddAdmin failed for groupid=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -217,12 +228,14 @@ Hypheante_API void GroupManager_AcceptInvitationFromGroup(void *client, int call
         EMGroupPtr result = CLIENT->getGroupManager().acceptInvitationFromGroup(groupIdStr, inviterStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             if(onSuccess) {
+                LOG("Accep invitation successfully for groupid=%s", groupIdStr.c_str());
                 GroupTO *gto = GroupTO::FromEMGroup(result);
                 GroupTO *data[1] = {gto};
                 onSuccess((void **)data, DataType::Group, 1, callbackId);
                 delete (GroupTO*)data[0];
             }
         }else{
+            LOG("Accep invitation faled for groupid=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -243,8 +256,10 @@ Hypheante_API void GroupManager_AcceptJoinGroupApplication(void *client, int cal
         EMError error;
         EMGroupPtr result = CLIENT->getGroupManager().acceptJoinGroupApplication(groupIdStr, usernameStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("Accept join application successfully for gourpid=%s", groupIdStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("Accept join application failed for gourpid=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -271,6 +286,7 @@ Hypheante_API void GroupManager_AddWhiteListMembers(void *client, int callbackId
             LOG("AddWhiteListMembers succeed for group: %s", groupIdStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("AddWhiteListMembers failed for groupid=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -290,8 +306,10 @@ Hypheante_API void GroupManager_BlockGroupMessage(void *client, int callbackId, 
         EMError error;
         EMGroupPtr result = CLIENT->getGroupManager().blockGroupMessage(groupIdStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("Block group %s successfully.", groupIdStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("Block group %s failed, code=%d, desc=%s.", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -318,6 +336,7 @@ Hypheante_API void GroupManager_BlockGroupMembers(void *client, int callbackId, 
             LOG("Block members of group: %s succesfully", groupIdStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("Block members of group: %s failed, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -338,8 +357,10 @@ Hypheante_API void GroupManager_ChangeGroupDescription(void *client, int callbac
         EMError error;
         EMGroupPtr result = CLIENT->getGroupManager().changeGroupDescription(groupIdStr, descStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("Change desc successfully for groupid=%s", groupIdStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("Change desc failed for groupid=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -367,6 +388,7 @@ Hypheante_API void GroupManager_TransferGroupOwner(void *client, int callbackId,
                 delete (GroupTO*)data[0];
             }
         }else{
+            LOG("GroupManager_TransferGroupOwner failed for groupid=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -400,6 +422,7 @@ Hypheante_API void GroupManager_FetchIsMemberInWhiteList(void *client, int callb
                 delete boolInt;
             }
         }else{
+            LOG("GroupManager_FetchIsMemberInWhiteList failed, groupid=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -421,8 +444,10 @@ Hypheante_API void GroupManager_DeclineInvitationFromGroup(void *client, int cal
         EMError error;
         CLIENT->getGroupManager().declineInvitationFromGroup(groupIdStr, usernameStr, reasonStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("Decline invitation successfully for groupId=%s", groupIdStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("Decline invitation failed for groupId=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -444,8 +469,10 @@ Hypheante_API void GroupManager_DeclineJoinGroupApplication(void *client, int ca
         EMError error;
         CLIENT->getGroupManager().declineJoinGroupApplication(groupIdStr, usernameStr, reasonStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("Decline join group application successfully for groupid=%s", groupIdStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("Decline join group application failed for groupid=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -493,6 +520,7 @@ Hypheante_API void GroupManager_FetchGroupAnnouncement(void *client, int callbac
                 onSuccess((void **)data, DataType::String, 1, callbackId);
             }
         }else{
+            LOG("GroupManager_FetchGroupAnnouncement failed, groupid%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -522,6 +550,7 @@ Hypheante_API void GroupManager_FetchGroupBans(void *client, int callbackId, con
                 onSuccess((void **)data, DataType::String, (int)size, callbackId);
             }
         }else{
+            LOG("GroupManager_FetchGroupBans failed, groupid=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -555,6 +584,7 @@ Hypheante_API void GroupManager_FetchGroupSharedFiles(void *client, int callback
                 }
             }
         }else{
+            LOG("GroupManager_fetchGroupSharedFiles failed, groupid=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -582,7 +612,7 @@ Hypheante_API void GroupManager_FetchGroupMembers(void *client, int callbackId, 
                 cursorResultTo.Type = DataType::ListOfString;
                 //items
                 int size = (int)msgCursorResult.result().size();
-                LOG("GroupManager_FetchGroupMembers member size: %d", size);
+                LOG("GroupManager_FetchGroupMembers successfully, member size: %d", size);
                 const char *data[size];
                 for(int i=0; i<size; i++) {
                     data[i] = msgCursorResult.result().at(i).c_str();
@@ -591,6 +621,7 @@ Hypheante_API void GroupManager_FetchGroupMembers(void *client, int callbackId, 
                 onSuccess((void *)&cursorResultTo, (void **)data, DataType::CursorResult, size, callbackId);
             }
         }else{
+            LOG("GroupManager_FetchGroupMembers failed, groupId=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -620,6 +651,7 @@ Hypheante_API void GroupManager_FetchGroupMutes(void *client, int callbackId, co
                 onSuccess((void **)data, DataType::String, (int)size, callbackId);
             }
         }else{
+            LOG("GroupManager_FetchGroupMutes failed, groupid=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -646,6 +678,7 @@ Hypheante_API void GroupManager_FetchGroupSpecification(void *client, int callba
                 delete (GroupTO*)data[0];
             }
         }else{
+            LOG("GroupManager_FetchGroupSpecification failed: groupId=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -660,17 +693,21 @@ Hypheante_API void GroupManager_GetGroupsWithoutNotice(void *client, int callbac
         EMGroupList groupList = CLIENT->getGroupManager().loadAllMyGroupsFromDB();
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             //success
+            int count = 0;
             if(onSuccess) {
                 size_t size = groupList.size();
                 const char * data[size];
                 for(size_t i=0; i<size; i++) {
                     if(groupList[i]->isPushEnabled() == false) {
-                        data[i] = groupList[i]->groupId().c_str();
+                        data[count] = groupList[i]->groupId().c_str();
+                        count++;
                     }
                 }
-                onSuccess((void **)data, DataType::String, (int)size, callbackId);
+                LOG("Found groups without notice successfully, num=%d", count);
+                onSuccess((void **)data, DataType::String, (int)count, callbackId);
             }
         }else{
+            LOG("Cannot load groups with code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -701,6 +738,7 @@ Hypheante_API void GroupManager_FetchGroupWhiteList(void *client, int callbackId
                 onSuccess((void **)data, DataType::String, (int)size, callbackId);
             }
         }else{
+            LOG("GroupManager_FetchGroupWhiteList failed, groupid=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -743,6 +781,7 @@ Hypheante_API void GroupManager_FetchAllMyGroupsWithPage(void *client, int callb
                 }
             }
         }else{
+            LOG("GroupManager_FetchAllMyGroupsWithPage failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -788,6 +827,7 @@ Hypheante_API void GroupManager_FetchPublicGroupsWithCursor(void *client, int ca
             }
         }else{
             if(onError) {
+                LOG("GroupManager_FetchPublicGroupsWithCursor failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
                 onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
             }
         }
@@ -811,6 +851,7 @@ Hypheante_API void GroupManager_JoinPublicGroup(void *client, int callbackId, co
             LOG("GroupManager_JoinPublicGroup execution succeeds: %s", groupIdStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("GroupManager_JoinPublicGroup execution failed,groupId=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -833,6 +874,7 @@ Hypheante_API void GroupManager_LeaveGroup(void *client, int callbackId, const c
             LOG("GroupManager_LeaveGroup execution succeeds: %s", groupIdStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("GroupManager_LeaveGroup execution failed, groupId=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -864,6 +906,7 @@ Hypheante_API void GroupManager_MuteAllGroupMembers(void *client, int callbackId
                 }
             }
         }else{
+            LOG("GroupManager_MuteAllGroupMembers execution failed, groupId=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -895,6 +938,7 @@ Hypheante_API void GroupManager_MuteGroupMembers(void *client, int callbackId, c
                 delete (GroupTO*)data[0];
             }
         }else{
+            LOG("GroupManager_MuteGroupMembers failed, groupId=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -915,6 +959,7 @@ Hypheante_API void GroupManager_RemoveGroupAdmin(void *client, int callbackId, c
         EMError error;
         EMGroupPtr result = CLIENT->getGroupManager().removeGroupAdmin(groupIdStr, adminStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("Remove admin successfully for groupId=%s", groupIdStr.c_str());
             if(onSuccess) {
                 GroupTO *datum = GroupTO::FromEMGroup(result);
                 GroupTO *data[1] = {datum};
@@ -922,6 +967,7 @@ Hypheante_API void GroupManager_RemoveGroupAdmin(void *client, int callbackId, c
                 delete (GroupTO*)data[0];
             }
         }else{
+            LOG("Remove admin failed for groupId=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -945,7 +991,7 @@ Hypheante_API void GroupManager_DeleteGroupSharedFile(void *client, int callback
             LOG("GroupManager_DeleteGroupSharedFile succeeds, group=%s, fileid=%s", groupIdStr.c_str(), fileIdStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
-            LOG("GroupManager_DeleteGroupSharedFile failed, group=%s, fileid=%s", groupIdStr.c_str(), fileIdStr.c_str());
+            LOG("GroupManager_DeleteGroupSharedFile failed, group=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -972,6 +1018,7 @@ Hypheante_API void GroupManager_RemoveWhiteListMembers(void *client, int callbac
             LOG("GroupManager_RemoveWhiteListMembers execution succeeds: %s", groupIdStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("GroupManager_RemoveWhiteListMembers execution failed, groupId=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -996,6 +1043,7 @@ Hypheante_API void GroupManager_ApplyJoinPublicGroup(void *client, int callbackI
             LOG("GroupManager_ApplyJoinPublicGroup execution succeeds: %s", groupIdStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("GroupManager_ApplyJoinPublicGroup execution failed, groupId=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -1018,6 +1066,7 @@ Hypheante_API void GroupManager_UnblockGroupMessage(void *client, int callbackId
             LOG("GroupManager_UnblockGroupMessage execution succeeds: %s", groupIdStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("GroupManager_UnblockGroupMessage execution failed, groupId=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -1044,6 +1093,7 @@ Hypheante_API void GroupManager_UnblockGroupMembers(void *client, int callbackId
             LOG("GroupManager_UnblockGroupMembers execution succeeds: %s", groupIdStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("GroupManager_UnblockGroupMembers execution failed, groupId=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -1076,6 +1126,7 @@ Hypheante_API void GroupManager_UnMuteAllMembers(void *client, int callbackId, c
                 }
             }
         }else{
+            LOG("GroupManager_UnMuteAllMembers execution failed, groupId=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -1106,6 +1157,7 @@ Hypheante_API void GroupManager_UnmuteGroupMembers(void *client, int callbackId,
                 delete (GroupTO*)data[0];
             }
         }else{
+            LOG("GroupManager_UnmuteGroupMembers failed: groupId%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -1129,6 +1181,7 @@ Hypheante_API void GroupManager_UpdateGroupAnnouncement(void *client, int callba
             LOG("GroupManager_UpdateGroupAnnouncement execution succeeds: %s", groupIdStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
+            LOG("GroupManager_UpdateGroupAnnouncement execution failed, groupId=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -1149,6 +1202,7 @@ Hypheante_API void GroupManager_ChangeGroupExtension(void *client, int callbackI
         EMError error;
         EMGroupPtr result = CLIENT->getGroupManager().changeGroupExtension(groupIdStr, newExtensionStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("Change group ext successfully for groupId=%s", groupIdStr.c_str());
             if(onSuccess) {
                 GroupTO *datum = GroupTO::FromEMGroup(result);
                 GroupTO *data[1] = {datum};
@@ -1156,6 +1210,7 @@ Hypheante_API void GroupManager_ChangeGroupExtension(void *client, int callbackI
                 delete (GroupTO*)data[0];
             }
         }else{
+            LOG("Change group ext failed for groupId=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
@@ -1187,10 +1242,9 @@ Hypheante_API void GroupManager_UploadGroupSharedFile(void *client, int callback
 void GroupManager_RemoveListener(void*client)
 {
     CLIENT->getGroupManager().clearListeners();
-    LOG("GroupManager listener cleared.");
     if(nullptr != gGroupManagerListener) {
         delete gGroupManagerListener;
         gGroupManagerListener = nullptr;
-        LOG("GroupManager listener handle deleted.");
     }
+    LOG("GroupManager listener removed.");
 }

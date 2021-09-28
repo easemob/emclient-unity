@@ -302,7 +302,7 @@ public:
     }
     
     void onUpdateConversationList(const EMConversationList &conversations) override {
-        LOG("%d conversation updated!");
+        LOG("%d conversation updated!", conversations.size());
         if(onConversationsUpdate) {
             LOG("Call onConversationsUpdate delegate in managed side...");
             onConversationsUpdate();

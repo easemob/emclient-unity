@@ -170,7 +170,7 @@ public class ConversationManagerTest : MonoBehaviour
         if (conv.Ext != null)
         {
             List<string> list = new List<string>();
-            if(0 == list.Count)
+            if(0 == conv.Ext.Count)
             {
                 UIManager.DefaultAlert(transform, "未获取到Ext");
             }
