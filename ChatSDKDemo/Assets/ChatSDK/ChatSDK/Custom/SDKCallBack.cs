@@ -10,8 +10,20 @@ namespace ChatSDK
     internal delegate void OnSuccessResult([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)]IntPtr[] data, DataType dType, int size, int callbackId);
     internal delegate void OnErrorV2(int code, string desc, int callbackId);
 
+    
     public delegate void OnSuccess(int callbackId);
+
+    /// <summary>
+    /// 执行错误
+    /// </summary>
+    /// <param name="code">错误信息</param>
+    /// <param name="desc">错误描述</param>
     public delegate void OnError(int code, string desc);
+
+    /// <summary>
+    /// 执行进度
+    /// </summary>
+    /// <param name="progress">进度值，0~100</param>
     public delegate void OnProgress(int progress);
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]

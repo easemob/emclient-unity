@@ -152,7 +152,7 @@ namespace ChatSDK
         /// <param name="roomId">聊天室id</param>
         /// <param name="members">成员id</param>
         /// <param name="handle">结果回调</param>
-        public abstract void RemoveRoomMembers(string roomId, List<string> members, CallBack handle = null);
+        public abstract void DeleteRoomMembers(string roomId, List<string> members, CallBack handle = null);
 
         /// <summary>
         /// 移除黑名单

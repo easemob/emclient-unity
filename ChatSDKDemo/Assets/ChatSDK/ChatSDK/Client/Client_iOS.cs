@@ -8,11 +8,6 @@ namespace ChatSDK
 
     internal sealed class Client_iOS : IClient
     {
-
-        static string Connection_Obj = "unity_chat_emclient_connection_obj";
-
-        GameObject listenerGameObj;
-
         public override void InitWithOptions(Options options)
         {
             ClientNative.Client_HandleMethodCall("initWithOptions", options.ToJsonString(), null);

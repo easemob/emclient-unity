@@ -217,7 +217,7 @@ namespace ChatSDK
         /// <param name="pageNum">页码</param>
         /// <param name="pageSize">每页数量</param>
         /// <param name="handle">执行结果</param>
-        public abstract void GetJoinedGroupsFromServer(int pageNum = 1, int pageSize = 200, ValueCallBack<List<Group>> handle = null);
+        public abstract void FetchJoinedGroupsFromServer(int pageNum = 1, int pageSize = 200, ValueCallBack<List<Group>> handle = null);
 
         /// <summary>
         /// 获取公开群列表
@@ -225,7 +225,7 @@ namespace ChatSDK
         /// <param name="pageSize">每页数量</param>
         /// <param name="cursor">游标</param>
         /// <param name="handle">执行结果</param>
-        public abstract void GetPublicGroupsFromServer(int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<GroupInfo>> handle = null);
+        public abstract void FetchPublicGroupsFromServer(int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<GroupInfo>> handle = null);
 
         /// <summary>
         /// 加入公开群
@@ -270,7 +270,7 @@ namespace ChatSDK
         /// <param name="groupId">群组id</param>
         /// <param name="fileId">共享文件id</param>
         /// <param name="handle">执行结果</param>
-        public abstract void RemoveGroupSharedFile(string groupId, string fileId, CallBack handle = null);
+        public abstract void DeleteGroupSharedFile(string groupId, string fileId, CallBack handle = null);
 
         /// <summary>
         /// 删除群成员
@@ -278,7 +278,7 @@ namespace ChatSDK
         /// <param name="groupId">群组id</param>
         /// <param name="members">群成员id</param>
         /// <param name="handle">执行结果</param>
-        public abstract void RemoveGroupMembers(string groupId, List<string> members, CallBack handle = null);
+        public abstract void DeleteGroupMembers(string groupId, List<string> members, CallBack handle = null);
 
         /// <summary>
         /// 删除白名单

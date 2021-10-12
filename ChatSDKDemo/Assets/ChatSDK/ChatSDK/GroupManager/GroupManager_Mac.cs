@@ -734,7 +734,7 @@ namespace ChatSDK
             return list;
         }
 
-        public override void GetJoinedGroupsFromServer(int pageNum = 1, int pageSize = 200, ValueCallBack<List<Group>> handle = null)
+        public override void FetchJoinedGroupsFromServer(int pageNum = 1, int pageSize = 200, ValueCallBack<List<Group>> handle = null)
         {
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
@@ -761,7 +761,7 @@ namespace ChatSDK
               });
         }
 
-        public override void GetPublicGroupsFromServer(int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<GroupInfo>> handle = null)
+        public override void FetchPublicGroupsFromServer(int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<GroupInfo>> handle = null)
         {
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
@@ -944,7 +944,7 @@ namespace ChatSDK
                 });
         }
 
-        public override void RemoveGroupSharedFile(string groupId, string fileId, CallBack handle = null)
+        public override void DeleteGroupSharedFile(string groupId, string fileId, CallBack handle = null)
         {
             if (null == groupId || 0 == groupId.Length || null == fileId || 0 == fileId.Length)
             {
@@ -962,7 +962,7 @@ namespace ChatSDK
                 });
         }
 
-        public override void RemoveGroupMembers(string groupId, List<string> members, CallBack handle = null)
+        public override void DeleteGroupMembers(string groupId, List<string> members, CallBack handle = null)
         {
             if (null == groupId || 0 == groupId.Length || null == members || 0 == members.Count)
             {

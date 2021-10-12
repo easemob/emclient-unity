@@ -739,7 +739,7 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
     }
 
     void GetJoinedGroupsFromServerBtnAction() {
-        SDKClient.Instance.GroupManager.GetJoinedGroupsFromServer(handle: new ValueCallBack<List<Group>>(
+        SDKClient.Instance.GroupManager.FetchJoinedGroupsFromServer(handle: new ValueCallBack<List<Group>>(
             onSuccess: (groupList) => {
                 List<string> list = new List<string>();
                 foreach (var group in groupList)
@@ -758,7 +758,7 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
     }
 
     void GetPublicGroupsFromServerBtnAction() {
-        SDKClient.Instance.GroupManager.GetPublicGroupsFromServer(handle: new ValueCallBack<CursorResult<GroupInfo>>(
+        SDKClient.Instance.GroupManager.FetchPublicGroupsFromServer(handle: new ValueCallBack<CursorResult<GroupInfo>>(
             onSuccess: (result) => {
                 List<string> list = new List<string>();
                 foreach (var group in result.Data)
@@ -880,7 +880,7 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
                 return;
             }
 
-            SDKClient.Instance.GroupManager.RemoveGroupSharedFile(currentGroupId, id, new CallBack(
+            SDKClient.Instance.GroupManager.DeleteGroupSharedFile(currentGroupId, id, new CallBack(
                 onSuccess: () =>
                 {
                     UIManager.SuccessAlert(transform);
@@ -913,7 +913,7 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
 
             List<string> list = new List<string>();
             list.Add(dict["MemberId"]);
-            SDKClient.Instance.GroupManager.RemoveGroupMembers(currentGroupId, list, new CallBack (
+            SDKClient.Instance.GroupManager.DeleteGroupMembers(currentGroupId, list, new CallBack (
                 onSuccess: () =>
                 {
                     UIManager.SuccessAlert(transform);

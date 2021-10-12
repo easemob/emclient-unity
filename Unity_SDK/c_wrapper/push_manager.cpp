@@ -17,7 +17,7 @@
 #include "push_manager.h"
 #include "tool.h"
 
-Hypheante_API void PushManager_GetIgnoredGroupIds(void *client, FUNC_OnSuccess_With_Result onSuccess)
+HYPHENATE_API void PushManager_GetIgnoredGroupIds(void *client, FUNC_OnSuccess_With_Result onSuccess)
 {
     EMPushConfigsPtr configPtr = CLIENT->getPushManager().getPushConfigs();
     if(!configPtr) {
@@ -35,7 +35,7 @@ Hypheante_API void PushManager_GetIgnoredGroupIds(void *client, FUNC_OnSuccess_W
     onSuccess((void **)data, DataType::ListOfString, size, -1);
 }
 
-Hypheante_API void PushManager_GetPushConfig(void *client, FUNC_OnSuccess_With_Result onSuccess)
+HYPHENATE_API void PushManager_GetPushConfig(void *client, FUNC_OnSuccess_With_Result onSuccess)
 {
     EMPushConfigsPtr configPtr = CLIENT->getPushManager().getPushConfigs();
     if(!configPtr) {
@@ -51,7 +51,7 @@ Hypheante_API void PushManager_GetPushConfig(void *client, FUNC_OnSuccess_With_R
     delete data[0];
 }
 
-Hypheante_API void PushManager_GetUserConfigsFromServer(void *client, int callbackId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+HYPHENATE_API void PushManager_GetUserConfigsFromServer(void *client, int callbackId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     std::thread t([=](){
         EMError error;
@@ -77,7 +77,7 @@ Hypheante_API void PushManager_GetUserConfigsFromServer(void *client, int callba
     t.detach();
 }
 
-Hypheante_API void PushManager_IgnoreGroupPush(void *client, int callbackId, const char * groupId, bool noDisturb, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+HYPHENATE_API void PushManager_IgnoreGroupPush(void *client, int callbackId, const char * groupId, bool noDisturb, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
@@ -100,7 +100,7 @@ Hypheante_API void PushManager_IgnoreGroupPush(void *client, int callbackId, con
     t.detach();
 }
 
-Hypheante_API void PushManager_UpdatePushNoDisturbing(void *client, int callbackId, bool noDisturb, int startTime, int endTime, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+HYPHENATE_API void PushManager_UpdatePushNoDisturbing(void *client, int callbackId, bool noDisturb, int startTime, int endTime, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     std::thread t([=](){
         EMError error;
@@ -125,7 +125,7 @@ Hypheante_API void PushManager_UpdatePushNoDisturbing(void *client, int callback
     t.detach();
 }
 
-Hypheante_API void PushManager_UpdatePushDisplayStyle(void *client, int callbackId, EMPushConfigs::EMPushDisplayStyle style, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+HYPHENATE_API void PushManager_UpdatePushDisplayStyle(void *client, int callbackId, EMPushConfigs::EMPushDisplayStyle style, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     std::thread t([=](){
         EMError error;
@@ -142,7 +142,7 @@ Hypheante_API void PushManager_UpdatePushDisplayStyle(void *client, int callback
     t.detach();
 }
 
-Hypheante_API void PushManager_UpdateFCMPushToken(void *client, int callbackId, const char * token, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+HYPHENATE_API void PushManager_UpdateFCMPushToken(void *client, int callbackId, const char * token, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(token, error)) {
@@ -165,7 +165,7 @@ Hypheante_API void PushManager_UpdateFCMPushToken(void *client, int callbackId, 
     t.detach();
 }
 
-Hypheante_API void PushManager_UpdateHMSPushToken(void *client, int callbackId, const char * token, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+HYPHENATE_API void PushManager_UpdateHMSPushToken(void *client, int callbackId, const char * token, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(token, error)) {
@@ -188,7 +188,7 @@ Hypheante_API void PushManager_UpdateHMSPushToken(void *client, int callbackId, 
     t.detach();
 }
 
-Hypheante_API void PushManager_UpdatePushNickName(void *client, int callbackId, const char * nickname, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+HYPHENATE_API void PushManager_UpdatePushNickName(void *client, int callbackId, const char * nickname, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(nickname, error)) {

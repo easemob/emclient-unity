@@ -7,8 +7,6 @@ namespace ChatSDK
 {
     internal sealed class ChatManager_iOS : IChatManager
     {
-        GameObject listenerGameObj;
-
         public ChatManager_iOS()
         {
            

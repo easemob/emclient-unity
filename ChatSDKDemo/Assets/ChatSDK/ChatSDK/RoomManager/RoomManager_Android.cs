@@ -101,7 +101,7 @@ namespace ChatSDK
             wrapper.Call("removeChatRoomAdmin", roomId, adminId, handle?.callbackId);
         }
 
-        public override void RemoveRoomMembers(string roomId, List<string> members, CallBack handle = null)
+        public override void DeleteRoomMembers(string roomId, List<string> members, CallBack handle = null)
         {
             wrapper.Call("removeChatRoomMembers", roomId, TransformTool.JsonStringFromStringList(members), handle?.callbackId);
         }

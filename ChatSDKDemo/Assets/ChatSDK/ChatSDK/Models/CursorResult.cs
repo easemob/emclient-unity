@@ -22,7 +22,7 @@ namespace ChatSDK
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct CursorResultTO
+    internal struct CursorResultTO
     {
         public string NextPageCursor;
         public DataType Type;
