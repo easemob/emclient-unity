@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <stdarg.h>
+#include <time.h>
 
 class LogHelper {
 private:
@@ -41,6 +42,15 @@ public:
         }
     }
 
+    void appendTimePrefix(FILE* f) {
+        if(nullptr == f) return;
+        time_t now = time(NULL);
+        struct tm nowTm;
+        localtime_r(&now, &nowTm);
+        fprintf(f, "[%d/%d/%d %d:%d:%d]: ", nowTm.tm_year + 1900, nowTm.tm_mon, nowTm.tm_mday,
+                nowTm.tm_hour, nowTm.tm_min, nowTm.tm_sec);
+    }
+    
     void writeLog(const char *format, ...) {
         va_list la;
         va_start(la, format);
@@ -48,6 +58,7 @@ public:
         if (!fileStream)
             return;
         
+        appendTimePrefix(fileStream);
         vfprintf(fileStream, format, la);
         va_end(la);
         fprintf(fileStream, "\n");

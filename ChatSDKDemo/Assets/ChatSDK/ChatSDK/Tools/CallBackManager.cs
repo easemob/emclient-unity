@@ -34,11 +34,15 @@ namespace ChatSDK {
         internal Dictionary<string, Message> tempMsgDict = new Dictionary<string, Message>();
 
 #if UNITY_EDITOR
+
         [RuntimeInitializeOnLoadMethod]
         static void InitializeOnLoadMethod()
         {
             EditorApplication.wantsToQuit -= Quit;
             EditorApplication.wantsToQuit += Quit;
+
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
         }
 
         static bool Quit()
@@ -47,6 +51,25 @@ namespace ChatSDK {
             CallbackManager.Instance().ClearResource();
             Debug.Log("Quit...");
             return true;
+        }
+
+        static void OnPlayModeStateChanged(PlayModeStateChange stateChange)
+        {
+            switch (stateChange)
+            {
+                case (PlayModeStateChange.EnteredPlayMode):
+                    {
+                        EditorApplication.LockReloadAssemblies();
+                        Debug.Log("Assembly Reload locked as entering play mode");
+                        break;
+                    }
+                case (PlayModeStateChange.ExitingPlayMode):
+                    {
+                        Debug.Log("Assembly Reload unlocked as exiting play mode");
+                        EditorApplication.UnlockReloadAssemblies();
+                        break;
+                    }
+            }
         }
 #endif
 

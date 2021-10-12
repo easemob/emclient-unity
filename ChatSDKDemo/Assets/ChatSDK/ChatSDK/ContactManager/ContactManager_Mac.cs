@@ -104,7 +104,7 @@ namespace ChatSDK
             }
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
-            ChatAPINative.ContactManager_DeleteContact(client, callbackId, username, false,
+            ChatAPINative.ContactManager_DeleteContact(client, callbackId, username, keepConversation,
                 onSuccess: (int cbId) => {
                     ChatCallbackObject.CallBackOnSuccess(cbId);
                 },

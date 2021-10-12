@@ -466,30 +466,23 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
 
     void DeclineInvitationFromGroupBtnAction() {
 
-        InputAlertConfig config = new InputAlertConfig((dict) =>
+        if (null == currentGroupId || 0 == currentGroupId.Length)
         {
-            if (null == currentGroupId || 0 == currentGroupId.Length)
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
+
+        SDKClient.Instance.GroupManager.DeclineGroupInvitation(currentGroupId, handle: new CallBack(
+            onSuccess:() =>
             {
-                UIManager.DefaultAlert(transform, "缺少必要参数");
-                return;
+                UIManager.SuccessAlert(transform);
+            },
+            onError: (code, desc) =>
+            {
+                UIManager.ErrorAlert(transform, code, desc);
             }
-
-            SDKClient.Instance.GroupManager.DeclineGroupInvitation(currentGroupId, handle: new CallBack(
-                onSuccess:() =>
-                {
-                    UIManager.SuccessAlert(transform);
-                },
-                onError: (code, desc) =>
-                {
-                    UIManager.ErrorAlert(transform, code, desc);
-                }
-            ));
-        });
-
-        UIManager.DefaultInputAlert(transform, config);
-
+        ));
         Debug.Log("DeclineInvitationFromGroupBtnAction");
-
     }
 
     void DeclineJoinApplicationBtnAction() {
@@ -543,8 +536,8 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
     void DownloadGroupSharedFileBtnAction() {
 
         UIManager.UnfinishedAlert(transform);
-
         Debug.Log("DownloadGroupSharedFileBtnAction");
+
     }
 
     void GetGroupAnnouncementFromServerBtnAction() {
@@ -693,6 +686,11 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
         }
         SDKClient.Instance.GroupManager.GetGroupWhiteListFromServer(currentGroupId, handle: new ValueCallBack<List<string>>(
             onSuccess: (list) => {
+                if(0 == list.Count)
+                {
+                    UIManager.DefaultAlert(transform, "Empty group white List");
+                    return;
+                }
                 string str = string.Join(",", list.ToArray());
                 UIManager.DefaultAlert(transform, str);
             },

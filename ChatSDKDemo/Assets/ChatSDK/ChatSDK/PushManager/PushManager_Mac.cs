@@ -129,38 +129,16 @@ namespace ChatSDK
 
         public void UpdateFCMPushToken(string token, CallBack handle = null)
         {
-            if (null == token)
-            {
-                Debug.LogError("Mandatory parameter is null!");
-                return;
-            }
+            //不支持
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
-
-            ChatAPINative.PushManager_UpdateFCMPushToken(client, callbackId, token,
-                onSuccess: (int cbId) => {
-                    ChatCallbackObject.CallBackOnSuccess(cbId);
-                },
-                onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
-                });
+            ChatCallbackObject.CallBackOnError(callbackId, -1, "Not Supported.");
         }
 
         public void UpdateHMSPushToken(string token, CallBack handle = null)
         {
-            if (null == token)
-            {
-                Debug.LogError("Mandatory parameter is null!");
-                return;
-            }
+            //不支持
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
-
-            ChatAPINative.PushManager_UpdateHMSPushToken(client, callbackId, token,
-                onSuccess: (int cbId) => {
-                    ChatCallbackObject.CallBackOnSuccess(cbId);
-                },
-                onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
-                });
+            ChatCallbackObject.CallBackOnError(callbackId, -1, "Not Supported.");
         }
 
         public void UpdateAPNSPuthToken(string token, CallBack handle = null)

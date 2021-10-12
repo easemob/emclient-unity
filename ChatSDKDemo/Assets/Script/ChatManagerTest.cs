@@ -334,6 +334,11 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
             SDKClient.Instance.ChatManager.FetchHistoryMessagesFromServer(conversationId, type, startId, loadCount, new ValueCallBack<CursorResult<Message>>(
                 onSuccess: (result) => {
+                    if(0 == result.Data.Count)
+                    {
+                        UIManager.DefaultAlert(transform, "No history messages.");
+                        return;
+                    }
                     List<string> strList = new List<string>();
                     foreach (var msg in result.Data)
                     {
@@ -443,7 +448,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
             List<Message> list = SDKClient.Instance.ChatManager.SearchMsgFromDB(dict["Keyword"], maxCount: count);
             if (list != null)
             {
-                UIManager.SuccessAlert(transform);
+                UIManager.DefaultAlert(transform, $"找到的消息条数: {list.Count}");
             }
             else
             {
