@@ -19,9 +19,13 @@
 
 进入 console -> 添加应用 -> Appkey 获取 `Appkey`。
 
-### 引入 SDK
+### 下载 SDK
 
-> TODO: 补充下载链接， SDK版本。
+[下载imUnitySDK](https://downloadsdk.easemob.com/downloads/SDK/Unity/imUnitySDK.unitypackage)
+
+#### 导入SDK 到 Unity
+
+`Assets` -> `Import Package` -> `Custom Package..`  -> `imUnitySDK.unitypackage`
 
 ## SDK讲解
 
