@@ -232,7 +232,7 @@ namespace ChatSDK
             return list;
         }
 
-        public override void GetJoinedGroupsFromServer(int pageNum = 1, int pageSize = 200, ValueCallBack<List<Group>> handle = null)
+        public override void FetchJoinedGroupsFromServer(int pageNum = 1, int pageSize = 200, ValueCallBack<List<Group>> handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("pageNum", pageNum);
@@ -240,7 +240,7 @@ namespace ChatSDK
             GroupManagerNative.GroupManager_HandleMethodCall("getJoinedGroupsFromServer", obj.ToString(), handle?.callbackId);
         }
 
-        public override void GetPublicGroupsFromServer(int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<GroupInfo>> handle = null)
+        public override void FetchPublicGroupsFromServer(int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<GroupInfo>> handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("cursor", cursor ?? "");
@@ -286,7 +286,7 @@ namespace ChatSDK
             GroupManagerNative.GroupManager_HandleMethodCall("removeAdmin", obj.ToString(), handle?.callbackId);
         }
 
-        public override void RemoveGroupSharedFile(string groupId, string fileId, CallBack handle = null)
+        public override void DeleteGroupSharedFile(string groupId, string fileId, CallBack handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("groupId", groupId);
@@ -294,7 +294,7 @@ namespace ChatSDK
             GroupManagerNative.GroupManager_HandleMethodCall("removeGroupSharedFile", obj.ToString(), handle?.callbackId);
         }
 
-        public override void RemoveGroupMembers(string groupId, List<string> members, CallBack handle = null)
+        public override void DeleteGroupMembers(string groupId, List<string> members, CallBack handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("groupId", groupId);

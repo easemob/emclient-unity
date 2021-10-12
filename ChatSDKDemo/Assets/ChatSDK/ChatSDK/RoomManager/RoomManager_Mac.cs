@@ -537,7 +537,7 @@ namespace ChatSDK
                 });
         }
 
-        public override void RemoveRoomMembers(string roomId, List<string> members, CallBack handle = null)
+        public override void DeleteRoomMembers(string roomId, List<string> members, CallBack handle = null)
         {
             if (null == roomId || 0 == roomId.Length || null == members || 0 == members.Count)
             {

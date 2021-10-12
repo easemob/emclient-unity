@@ -498,7 +498,7 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
 
             List<string> list = new List<string>();
             list.Add(member);
-            SDKClient.Instance.RoomManager.RemoveRoomMembers(currentRoomId, list, new CallBack(
+            SDKClient.Instance.RoomManager.DeleteRoomMembers(currentRoomId, list, new CallBack(
                 onSuccess: () => {
                     UIManager.SuccessAlert(transform);
                 },
