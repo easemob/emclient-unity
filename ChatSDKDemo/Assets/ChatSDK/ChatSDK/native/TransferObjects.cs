@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using ChatSDK.MessageBody;
 using SimpleJSON;
+using UnityEngine;
 
 namespace ChatSDK
 {
@@ -411,17 +412,16 @@ namespace ChatSDK
         [MarshalAs(UnmanagedType.U1)]
         public bool HasReadAck;
 
-        /*public string[] AttributesKeys;
-        public AttributeValue[] AttributesValues;
-        public int AttributesSize;*/
+        public string AttributesValues;
         public long LocalTime;
         public long ServerTime;
         public MessageBodyType BodyType;
 
         protected MessageTO(in Message message) =>
-            (MsgId, ConversationId, From, To, Type, Direction, Status, HasReadAck, HasDeliverAck, LocalTime, ServerTime, BodyType)
+            (MsgId, ConversationId, From, To, Type, Direction, Status, HasReadAck, HasDeliverAck, AttributesValues, LocalTime, ServerTime, BodyType)
                 = (message.MsgId, message.ConversationId, message.From, message.To, message.MessageType, message.Direction,
-                message.Status, message.HasReadAck, message.HasDeliverAck, message.LocalTime, message.ServerTime, message.Body.Type);
+                message.Status, message.HasReadAck, message.HasDeliverAck, TransformTool.JsonStringFromAttributes(message.Attributes), message.LocalTime,
+                message.ServerTime, message.Body.Type);
 
         protected MessageTO()
         {
@@ -535,6 +535,7 @@ namespace ChatSDK
                 MessageType = Type,
                 Direction = Direction,
                 Status = Status,
+                Attributes = TransformTool.JsonStringToAttributes(AttributesValues),
                 LocalTime = LocalTime,
                 ServerTime = ServerTime,
                 HasDeliverAck = HasDeliverAck,
@@ -545,62 +546,70 @@ namespace ChatSDK
         }
     }
 
-    // AttributeValue Union
-    [StructLayout(LayoutKind.Explicit, CharSet = CharSet.Ansi)]
-    public struct AttributeValue
+    public class AttributeValue
     {
-        enum AttributeValueType : byte
-        {
-            BOOL = 0,
-            CHAR,
-            UCHAR,
-            SHORT,
-            USHORT,
-            INT32,
-            UINT32,
-            INT64,
-            UINT64,
-            FLOAT,
-            DOUBLE,
-            STRING,
-            STRVECTOR,
-            JSONSTRING,
-            NULLOBJ
-        }
-
-        [FieldOffset(0)]
         AttributeValueType VType;
-        [FieldOffset(1), MarshalAs(UnmanagedType.U1)]
-        bool BoolV;
-        [FieldOffset(1)]
-        sbyte CharV;
-        [FieldOffset(1)]
-        char UCharV;
-        [FieldOffset(1)]
-        short ShortV;
-        [FieldOffset(1)]
-        ushort UShortV;
-        [FieldOffset(1)]
-        int Int32V;
-        [FieldOffset(1)]
-        uint UInt32V;
-        [FieldOffset(1)]
-        long Int64V;
-        [FieldOffset(1)]
-        ulong UInt64V;
-        [FieldOffset(1)]
-        float FloatV;
-        [FieldOffset(1)]
-        double DoubleV;
-        [FieldOffset(1)]
-        string StringV;
 
-        /*[FieldOffset(1)]
-        string[] StringVec;
-        [FieldOffset(1)]
+        bool BoolV;
+        sbyte CharV;
+        char UCharV;
+        short ShortV;
+        ushort UShortV;
+        int Int32V;
+        uint UInt32V;
+        long Int64V;
+        ulong UInt64V;
+        float FloatV;
+        double DoubleV;
+        string StringV;
+        List<string> StringVecV;
         string JsonStringV;
-        [FieldOffset(1)]
-        IntPtr NullV;*/
+        Dictionary<string, AttributeValue> AttributeV;
+
+        public static AttributeValue Of(in object value, AttributeValueType type)
+        {
+            if (type == AttributeValueType.BOOL)
+            {
+                return Of((bool)value);
+            }
+            else if (type == AttributeValueType.INT32)
+            {
+                return Of((int)value);
+            }
+            else if (type == AttributeValueType.UINT32)
+            {
+                return Of((uint)value);
+            }
+            else if (type == AttributeValueType.INT64)
+            {
+                return Of((long)value);
+            }
+            else if (type == AttributeValueType.FLOAT)
+            {
+                return Of((float)value);
+            }
+            else if (type == AttributeValueType.DOUBLE)
+            {
+                return Of((double)value);
+            }
+            else if (type == AttributeValueType.STRING ||
+                type == AttributeValueType.JSONSTRING)
+            {
+                return Of((string)value, type);
+            }
+            else if (type == AttributeValueType.STRVECTOR)
+            {
+                return Of((List<string>)value);
+            }
+            else if (type == AttributeValueType.ATTRIBUTEVALUE)
+            {
+                return Of((Dictionary<string, AttributeValue>)value);
+            }
+            else
+            {
+                return null;
+            }
+        }
 
         public static AttributeValue Of(in bool value)
         {
@@ -611,47 +620,6 @@ namespace ChatSDK
             };
             return result;
         }
-
-        public static AttributeValue Of(in sbyte value)
-        {
-            var result = new AttributeValue
-            {
-                VType = AttributeValueType.CHAR,
-                CharV = value
-            };
-            return result;
-        }
-
-        public static AttributeValue Of(in char value)
-        {
-            var result = new AttributeValue
-            {
-                VType = AttributeValueType.UCHAR,
-                UCharV = value
-            };
-            return result;
-        }
-
-        public static AttributeValue Of(in short value)
-        {
-            var result = new AttributeValue
-            {
-                VType = AttributeValueType.SHORT,
-                ShortV = value
-            };
-            return result;
-        }
-
-        public static AttributeValue Of(in ushort value)
-        {
-            var result = new AttributeValue
-            {
-                VType = AttributeValueType.USHORT,
-                UShortV = value
-            };
-            return result;
-        }
-
         public static AttributeValue Of(in int value)
         {
             var result = new AttributeValue
@@ -681,17 +649,6 @@ namespace ChatSDK
             };
             return result;
         }
-
-        public static AttributeValue Of(in ulong value)
-        {
-            var result = new AttributeValue
-            {
-                VType = AttributeValueType.UINT64,
-                UInt64V = value
-            };
-            return result;
-        }
-
         public static AttributeValue Of(in float value)
         {
             var result = new AttributeValue
@@ -712,58 +669,120 @@ namespace ChatSDK
             return result;
         }
 
-        public static AttributeValue Of(in string value)
+        public static AttributeValue Of(in string value, AttributeValueType type)
+        {
+            var result = new AttributeValue();
+            if (AttributeValueType.JSONSTRING == type)
+            {
+                result.VType = AttributeValueType.JSONSTRING;
+                result.JsonStringV = value;
+            }
+            else
+            {
+                result.VType = AttributeValueType.STRING;
+                result.StringV = value;
+            }
+            return result;
+        }
+
+        public static AttributeValue Of(in List<string> value)
         {
             var result = new AttributeValue
             {
-                VType = AttributeValueType.STRING,
-                StringV = value
+                VType = AttributeValueType.STRVECTOR,
+                StringVecV = value
             };
             return result;
         }
 
-        public string ToJsonString()
+        public static AttributeValue Of(in Dictionary<string, AttributeValue> value)
+        {
+            var result = new AttributeValue
+            {
+                VType = AttributeValueType.ATTRIBUTEVALUE,
+                AttributeV = value
+            };
+            return result;
+        }
+
+        public object GetAttributeValue(AttributeValueType type)
+        {
+            if (type == AttributeValueType.BOOL)
+            {
+                return BoolV;
+            }
+            else if (type == AttributeValueType.INT32)
+            {
+                return Int32V;
+            }
+            else if (type == AttributeValueType.UINT32)
+            {
+                return UInt32V;
+            }
+            else if (type == AttributeValueType.INT64)
+            {
+                return Int64V;
+            }
+            else if (type == AttributeValueType.FLOAT)
+            {
+                return FloatV;
+            }
+            else if (type == AttributeValueType.DOUBLE)
+            {
+                return DoubleV;
+            }
+            else if (type == AttributeValueType.STRING)
+            {
+                return StringV;
+            }
+            else if (type == AttributeValueType.JSONSTRING)
+            {
+                return JsonStringV;
+            }
+            else if (type == AttributeValueType.STRVECTOR)
+            {
+                return StringVecV;
+            }
+            else if (type == AttributeValueType.ATTRIBUTEVALUE)
+            {
+                return AttributeV;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+
+        public AttributeValueType GetAttributeValueType()
+        {
+            return VType;
+        }
+
+        public JSONObject ToJsonObject()
         {
             JSONObject jo = new JSONObject();
             string _type;
             string value;
+            JSONObject jo_attr = null;
+            JSONArray array = null;
             switch (VType)
             {
                 case AttributeValueType.BOOL:
                     _type = "b";
                     value = BoolV.ToString();
                     break;
-                case AttributeValueType.CHAR:
-                    _type = "c";
-                    value = CharV.ToString();
-                    break;
-                case AttributeValueType.UCHAR:
-                    _type = "uc";
-                    value = UCharV.ToString();
-                    break;
-                case AttributeValueType.SHORT:
-                    _type = "s";
-                    value = ShortV.ToString();
-                    break;
-                case AttributeValueType.USHORT:
-                    _type = "us";
-                    value = UShortV.ToString();
-                    break;
                 case AttributeValueType.INT32:
-                    _type = "i1";
+                    _type = "i";
                     value = Int32V.ToString();
                     break;
                 case AttributeValueType.UINT32:
-                    _type = "ui1";
+                    _type = "ui";
                     value = UInt32V.ToString();
                     break;
                 case AttributeValueType.INT64:
-                    _type = "i2";
+                    _type = "l";
                     value = Int64V.ToString();
-                    break;
-                case AttributeValueType.UINT64:
-                    _type = "ui2";
-                    value = UInt64V.ToString();
                     break;
                 case AttributeValueType.FLOAT:
                     _type = "f";
@@ -777,59 +796,85 @@ namespace ChatSDK
                     _type = "str";
                     value = StringV;
                     break;
-                //TODO: add STRVECTOR, JSONSTRING, NULLOBJ
+
+                case AttributeValueType.STRVECTOR:
+                    _type = "strv";
+                    array = new JSONArray();
+                    foreach (var it in StringVecV)
+                    {
+                        array.Add(it);
+                    }
+                    value = ""; // here use JSONObject, not string
+                    break;
+
+                case AttributeValueType.JSONSTRING:
+                    _type = "jstr";
+                    value = JsonStringV;
+                    break;
+
+                case AttributeValueType.ATTRIBUTEVALUE:
+                    _type = "attr";
+                    jo_attr = new JSONObject();
+                    foreach (var item in AttributeV)
+                    {
+                        jo_attr[item.Key] = item.Value.ToJsonObject();
+                    }
+                    value = ""; // here use JSONObject, not string
+                    break;
+
                 default:
                     throw new NotImplementedException();
             }
+
             jo["type"] = _type;
-            jo["value"] = value;
-            return jo.ToString();
+            if ("attr" == _type)
+            {
+                jo["value"] = jo_attr;
+            }
+            else if ("strv" == _type)
+            {
+                jo["value"] = array;
+            }
+            else
+            {
+                jo["value"] = value;
+            }
+            return jo;
         }
 
-        internal static AttributeValue FromJsonString(string jsonString)
+        internal static AttributeValue FromJsonObject(JSONNode jn)
         {
-            if (jsonString == null) return new AttributeValue();
+            if (null == jn) return null;
+
+            JSONObject jo = jn.AsObject;
             AttributeValue result = new AttributeValue();
-            JSONObject jo = JSON.Parse(jsonString).AsObject;
+
             string typeString = jo["type"];
-            string value = jo["value"].Value;
+            JSONNode jvalue = jo["value"];
+
+            string value = null;
+            if ("strv" != typeString && "attr" != typeString)
+            {
+                value = jvalue.Value;
+            }
+
             switch (typeString)
             {
                 case "b":
                     result.VType = AttributeValueType.BOOL;
                     result.BoolV = Boolean.Parse(value);
                     break;
-                case "c":
-                    result.VType = AttributeValueType.CHAR;
-                    result.CharV = (sbyte)Char.Parse(value);
-                    break;
-                case "uc":
-                    result.VType = AttributeValueType.UCHAR;
-                    result.UCharV = Char.Parse(value);
-                    break;
-                case "s":
-                    result.VType = AttributeValueType.SHORT;
-                    result.ShortV = short.Parse(value);
-                    break;
-                case "us":
-                    result.VType = AttributeValueType.USHORT;
-                    result.UShortV = ushort.Parse(value);
-                    break;
-                case "i1":
+                case "i":
                     result.VType = AttributeValueType.INT32;
                     result.Int32V = int.Parse(value);
                     break;
-                case "ui1":
+                case "ui":
                     result.VType = AttributeValueType.UINT32;
                     result.UInt32V = uint.Parse(value);
                     break;
-                case "i2":
+                case "l":
                     result.VType = AttributeValueType.INT64;
                     result.Int64V = long.Parse(value);
-                    break;
-                case "ui2":
-                    result.VType = AttributeValueType.UINT64;
-                    result.UInt64V = ulong.Parse(value);
                     break;
                 case "f":
                     result.VType = AttributeValueType.FLOAT;
@@ -843,9 +888,270 @@ namespace ChatSDK
                     result.VType = AttributeValueType.STRING;
                     result.StringV = value;
                     break;
-                default: throw new NotImplementedException();
+                case "strv":
+                    result.VType = AttributeValueType.STRVECTOR;
+                    result.StringVecV = new List<string>();
+                    JSONArray jo_vec = jvalue.AsArray;
+                    if (null == jo_vec)
+                    {
+                        if (jvalue.IsString)
+                        {
+                            JSONNode jchild = JSON.Parse(jvalue.Value);
+                            jo_vec = jchild.AsArray;
+                            if (null == jo_vec)
+                            {
+                                Debug.Log($"Cannot parse strv type, value:{jvalue}");
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            Debug.Log($"Cannot parse strv type, value:{jvalue}");
+                            break;
+                        }
+                    }
+                    int count = 0;
+                    while (count < jo_vec.Count)
+                    {
+                        result.StringVecV.Add(jo_vec[count]);
+                        count++;
+                    }
+                    break;
+                case "jstr":
+                    result.VType = AttributeValueType.JSONSTRING;
+                    result.JsonStringV = value;
+                    break;
+                case "attr":
+                    result.VType = AttributeValueType.ATTRIBUTEVALUE;
+                    result.AttributeV = new Dictionary<string, AttributeValue>();
+                    JSONNode jo_attr = jvalue.AsObject;
+                    if(null == jo_attr)
+                    {
+                        if(jvalue.IsString)
+                        {
+                            JSONNode jchild = JSON.Parse(jvalue.Value);
+                            jo_attr = jchild.AsObject;
+                            if (null == jo_attr)
+                            {
+                                Debug.Log($"Cannot parse attr type, value:{jvalue}");
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            Debug.Log($"Cannot parse attr type, value:{jvalue}");
+                            break;
+                        }
+                    }
+                    foreach (string k in jo_attr.Keys)
+                    {
+                        result.AttributeV.Add(k, FromJsonObject(jo_attr[k]));
+                    }
+                    break;
+                default:
+                    break;
             }
             return result;
+        }
+
+        public static void PrintAttribute(AttributeValue value)
+        {
+            switch (value.GetAttributeValueType())
+            {
+                case AttributeValueType.BOOL:
+                    Debug.Log($"type: {AttributeValueType.BOOL.ToString()}, value is {value.BoolV.ToString()}");
+                    break;
+                case AttributeValueType.INT32:
+                    Debug.Log($"type: {AttributeValueType.INT32.ToString()}, value is {value.Int32V.ToString()}");
+                    break;
+                case AttributeValueType.UINT32:
+                    Debug.Log($"type: {AttributeValueType.UINT32.ToString()}, value is {value.UInt32V.ToString()}");
+                    break;
+                case AttributeValueType.INT64:
+                    Debug.Log($"type: {AttributeValueType.INT64.ToString()}, value is {value.Int64V.ToString()}");
+                    break;
+                case AttributeValueType.FLOAT:
+                    Debug.Log($"type: {AttributeValueType.FLOAT.ToString()}, value is {value.FloatV.ToString()}");
+                    break;
+                case AttributeValueType.DOUBLE:
+                    Debug.Log($"type: {AttributeValueType.DOUBLE.ToString()}, value is {value.DoubleV.ToString()}");
+                    break;
+                case AttributeValueType.STRING:
+                    Debug.Log($"type: {AttributeValueType.STRING.ToString()}, value is {value.StringV.ToString()}");
+                    break;
+                case AttributeValueType.STRVECTOR:
+                    foreach (var item_print in value.StringVecV)
+                    {
+                        Debug.Log($"type: {AttributeValueType.STRVECTOR.ToString()}, array: {item_print}");
+                    }
+                    break;
+                case AttributeValueType.JSONSTRING:
+                    Debug.Log($"type: {AttributeValueType.JSONSTRING.ToString()}, value is {value.JsonStringV.ToString()}");
+                    break;
+                case AttributeValueType.ATTRIBUTEVALUE:
+                    Debug.Log($"type: {AttributeValueType.ATTRIBUTEVALUE.ToString()}");
+                    foreach (var dict_item in value.AttributeV)
+                    {
+                        Debug.Log($"key: {dict_item.Key}--");
+                        PrintAttribute(dict_item.Value);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public static void ToAndFromTest(Dictionary<string, AttributeValue> attriMap)
+        {
+            // to json string
+            JSONObject jo = new JSONObject();
+            foreach (var item in attriMap)
+            {
+                jo[item.Key] = item.Value.ToJsonObject();
+            }
+            string jsonString = jo.ToString();
+            Debug.Log($"toJson: --------------{jsonString}");
+
+            // from json string
+            JSONNode jn = JSON.Parse(jsonString);
+            JSONNode jo_from = jn.AsObject;
+            foreach (string k in jo_from.Keys)
+            {
+                AttributeValue attr_parsed = FromJsonObject(jo_from[k]);
+                PrintAttribute(attr_parsed);
+            }
+        }
+
+        public static void ParseAttributeExample(Message msg)
+        {
+            if (null == msg) return;
+            if (null == msg.Attributes || msg.Attributes.Count == 0) return;
+
+            foreach (var item in msg.Attributes)
+            {
+                AttributeValue.PrintAttribute(item.Value);
+            }
+        }
+
+        public static void MakeMsgAttributesExample(Message msg)
+        {
+            if (null == msg) return;
+
+            // make level3
+            
+            Dictionary<string, AttributeValue> level3_map = new Dictionary<string, AttributeValue>();
+
+            bool b = true;
+            msg.SetAttribute(level3_map, "level3-bool", b, AttributeValueType.BOOL);
+
+            int i = -39999;
+            msg.SetAttribute(level3_map, "level3-int32", i, AttributeValueType.INT32);
+
+            uint ui = 3294967294;
+            msg.SetAttribute(level3_map, "level3-uint32", ui, AttributeValueType.UINT32);
+
+            long l = -3223372036854775807;
+            msg.SetAttribute(level3_map, "level3-int64", l, AttributeValueType.INT64);
+
+            float f = 3.123F;
+            msg.SetAttribute(level3_map, "level3-float", f, AttributeValueType.FLOAT);
+
+            double d = 3.23456D;
+            msg.SetAttribute(level3_map, "level3-double", d, AttributeValueType.DOUBLE);
+
+            string str = "a level3 string";
+            msg.SetAttribute(level3_map, "level3-string", str, AttributeValueType.STRING);
+
+            string jstr = "a level3 json string";
+            msg.SetAttribute(level3_map, "level3-jstring", jstr, AttributeValueType.JSONSTRING);
+
+            List<string> list3 = new List<string>();
+            list3.Add("level3-array1");
+            list3.Add("level3-array2");
+            list3.Add("level3-array3");
+            msg.SetAttribute(level3_map, "level3-list", list3, AttributeValueType.STRVECTOR);
+
+            // make level2
+            Dictionary<string, AttributeValue> level2_map = new Dictionary<string, AttributeValue>();
+
+            b = false;
+            msg.SetAttribute(level2_map, "level2-bool", b, AttributeValueType.BOOL);
+
+            i = -29999;
+            msg.SetAttribute(level2_map, "level2-int32", i, AttributeValueType.INT32);
+
+            ui = 2294967294;
+            msg.SetAttribute(level2_map, "level2-uint32", ui, AttributeValueType.UINT32);
+
+            l = -2223372036854775807;
+            msg.SetAttribute(level2_map, "level2-int64", l, AttributeValueType.INT64);
+
+            f = 2.123F;
+            msg.SetAttribute(level2_map, "level2-float", f, AttributeValueType.FLOAT);
+
+            d = 2.23456D;
+            msg.SetAttribute(level2_map, "level2-double", d, AttributeValueType.DOUBLE);
+
+            str = "a level2 string";
+            msg.SetAttribute(level2_map, "level2-string", str, AttributeValueType.STRING);
+
+            jstr = "a level2 json string";
+            msg.SetAttribute(level2_map, "level2-jstring", jstr, AttributeValueType.JSONSTRING);
+
+            List<string> list2 = new List<string>();
+            list2.Add("level2-array1");
+            list2.Add("level2-array2");
+            list2.Add("level2-array3");
+            msg.SetAttribute(level2_map, "level2-list", list2, AttributeValueType.STRVECTOR);
+
+            msg.SetAttribute(level2_map, "level2-attr", level3_map, AttributeValueType.ATTRIBUTEVALUE);
+            
+            // make level1
+            Dictionary<string, AttributeValue> level1_map = new Dictionary<string, AttributeValue>();
+
+            //string jstr = "a level1 json string";
+            //msg.SetAttribute(level1_map, "level1-jstring", jstr, AttributeValueType.JSONSTRING);
+
+            
+            bool b1 = true;
+            msg.SetAttribute(level1_map, "level1-bool", b1, AttributeValueType.BOOL);
+
+            
+            int i1 = -19999;
+            msg.SetAttribute(level1_map, "level1-int32", i1, AttributeValueType.INT32);
+
+            uint ui1 = 1294967294;
+            msg.SetAttribute(level1_map, "level1-uint32", ui1, AttributeValueType.UINT32);
+
+            long l1 = -1223372036854775807;
+            msg.SetAttribute(level1_map, "level1-int64", l1, AttributeValueType.INT64);
+            
+            float f1 = 1.123F;
+            msg.SetAttribute(level1_map, "level1-float", f1, AttributeValueType.FLOAT);
+
+            double d1 = 1.23456D;
+            msg.SetAttribute(level1_map, "level1-double", d1, AttributeValueType.DOUBLE);
+            
+            string str1 = "a level1 string";
+            msg.SetAttribute(level1_map, "level1-string", str1, AttributeValueType.STRING);
+
+            string str2 = "a level1 string1-jasldjfasdlfjasdlfjasdlfjasofasudf9asdf7as9d6fas98d6f9asd7f9asd7fs9af7as97fa9s8dsa97fasd890f7asd98fuzxd9f87zuxd09f7ad098f7uyas89df07asd09f8as7df0as";
+            msg.SetAttribute(level1_map, "level1-string1", str2, AttributeValueType.STRING);
+            
+            string jstr1 = "a level1 json string";
+            msg.SetAttribute(level1_map, "level1-jstring", jstr1, AttributeValueType.JSONSTRING);
+            
+            List<string> list1 = new List<string>();
+            list1.Add("level1-array1");
+            list1.Add("level1-array2");
+            list1.Add("level1-array3");
+            msg.SetAttribute(level1_map, "level1-list", list1, AttributeValueType.STRVECTOR);
+            
+            msg.SetAttribute(level1_map, "level1-attr", level2_map, AttributeValueType.ATTRIBUTEVALUE);
+
+            msg.Attributes = level1_map;
+
+            ToAndFromTest(msg.Attributes);
         }
     }
 

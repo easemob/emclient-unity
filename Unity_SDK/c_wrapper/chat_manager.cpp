@@ -69,6 +69,7 @@ HYPHENATE_API void ChatManager_SendMessage(void *client, int callbackId, FUNC_On
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
+    
     EMMessagePtr messagePtr = BuildEMMessage(mto, type);
     int64_t ts = messagePtr->timestamp();
     AddTsMsgItem(ts, (MessageTO*)mto, messagePtr);
@@ -84,6 +85,7 @@ HYPHENATE_API void ChatManager_SendMessage(void *client, int callbackId, FUNC_On
                                              [=](const easemob::EMErrorPtr error)->bool{
                                                 LOG("Message sent failed with code=%d.", error->mErrorCode);
                                                 if(onError) onError(error->mErrorCode,error->mDescription.c_str(), callbackId);
+                                                DeleteTsMsgItem(ts);
                                                 return true;
                                              }));
     messagePtr->setCallback(callbackPtr);

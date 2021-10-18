@@ -14,6 +14,7 @@ namespace ChatSDK
         System.Object msgMapLocker;
         Dictionary<long, IntPtr> msgPtrMap;
         Dictionary<long, Message> msgMap;
+        Dictionary<int, long> cbId2TsMap;
 
         //manager level events
         
@@ -32,15 +33,17 @@ namespace ChatSDK
 
             msgPtrMap = new Dictionary<long, IntPtr>();
             msgMap = new Dictionary<long, Message>();
-            msgMapLocker = new System.Object();
+            cbId2TsMap = new Dictionary<int, long>();
+            msgMapLocker = new System.Object();  
         }
 
-        public void AddMsgMap(long ts, IntPtr msgPtr, Message msg)
+        public void AddMsgMap(long ts, IntPtr msgPtr, Message msg, int cbId)
         {
             lock(msgMapLocker)
             {
                 msgPtrMap.Add(ts, msgPtr);
                 msgMap.Add(ts, msg);
+                cbId2TsMap.Add(cbId, ts);
             }
         }
 
@@ -48,21 +51,34 @@ namespace ChatSDK
         {
             lock (msgMapLocker)
             {
-                var intPtr = msgPtrMap[ts];
-                var messageTO = Marshal.PtrToStructure<MessageTO>(intPtr);
-                var msg = msgMap[ts];
-                msg.MsgId = messageTO.MsgId;
+                if (msgPtrMap.ContainsKey(ts) && msgMap.ContainsKey(ts))
+                {
+                    var intPtr = msgPtrMap[ts];
+                    var messageTO = Marshal.PtrToStructure<MessageTO>(intPtr);
+                    var msg = msgMap[ts];
+                    msg.MsgId = messageTO.MsgId;
+                }
             }
         }
 
-        public void DeleteFromMsgMap(long ts)
+        public void DeleteFromMsgMap(long ts, int cbId)
         {
             lock (msgMapLocker)
             {
-                IntPtr intPtr = msgPtrMap[ts];
-                msgPtrMap.Remove(ts);
-                Marshal.FreeCoTaskMem(intPtr);
-                msgMap.Remove(ts);
+                if(msgPtrMap.ContainsKey(ts))
+                {
+                    IntPtr intPtr = msgPtrMap[ts];
+                    msgPtrMap.Remove(ts);
+                    Marshal.FreeCoTaskMem(intPtr);
+                }
+                if (msgMap.ContainsKey(ts))
+                {
+                    msgMap.Remove(ts);
+                }
+                if (cbId2TsMap.ContainsKey(cbId))
+                {
+                    cbId2TsMap.Remove(cbId);
+                }
             }
         }
 
@@ -498,18 +514,24 @@ namespace ChatSDK
         public override void SendMessage(ref Message message, CallBack callback = null)
         {
             MessageTO mto = MessageTO.FromMessage(message);
+            int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
+
             IntPtr mtoPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(mto));
             Marshal.StructureToPtr(mto, mtoPtr, false);
-            AddMsgMap(mto.LocalTime, mtoPtr, message);
-
-            int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
+            AddMsgMap(mto.LocalTime, mtoPtr, message, callbackId);
+            
             ChatAPINative.ChatManager_SendMessage(client, callbackId, 
                 (int cbId) =>
                 {
                     try
                     {
-                        UpdatedMsgId(mto.LocalTime);
-                        DeleteFromMsgMap(mto.LocalTime);
+                        ChatManager_Mac chatMac = (ChatManager_Mac)SDKClient.Instance.ChatManager;
+                        if (chatMac.cbId2TsMap.ContainsKey(cbId))
+                        {
+                            long ts = chatMac.cbId2TsMap[cbId];
+                            chatMac.UpdatedMsgId(ts);
+                            chatMac.DeleteFromMsgMap(ts, cbId);
+                        }
                         ChatCallbackObject.CallBackOnSuccess(cbId);
                     }
                     catch(NullReferenceException nre)
@@ -520,7 +542,12 @@ namespace ChatSDK
                 },
                 (int code, string desc, int cbId) =>
                 {
-                    DeleteFromMsgMap(mto.LocalTime);
+                    ChatManager_Mac chatMac = (ChatManager_Mac)SDKClient.Instance.ChatManager;
+                    if (chatMac.cbId2TsMap.ContainsKey(cbId))
+                    {
+                        long ts = chatMac.cbId2TsMap[cbId];
+                        chatMac.DeleteFromMsgMap(ts, cbId);
+                    }
                     ChatCallbackObject.CallBackOnError(cbId, code, desc);
                 },
                 mtoPtr, message.Body.Type);

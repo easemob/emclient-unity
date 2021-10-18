@@ -133,7 +133,6 @@ namespace ChatSDK
             return CreateSendMessage(username, new MessageBody.VoiceBody(localPath, displayName: displayName, fileSize: fileSize, duration: duration));
         }
 
-
         static public Message CreateLocationSendMessage(string username, double latitude, double longitude, string address = "")
         {
             return CreateSendMessage(username, new MessageBody.LocationBody(latitude: latitude, longitude: longitude, address: address));
@@ -147,6 +146,102 @@ namespace ChatSDK
         static public Message CreateCustomSendMessage(string username, string customEvent, Dictionary<string, string> customParams = null)
         {
             return CreateSendMessage(username, new MessageBody.CustomBody(customEvent, customParams: customParams));
+        }
+
+        /// <summary>
+        /// 获取扩展属性的类型
+        /// </summary>
+        ///
+        /// <returns>
+        /// 返回枚举类型，参考SDKEnumerations.cs
+        /// </returns>
+        public AttributeValueType GetAttributeValueType(AttributeValue value)
+        {
+            if (null == value) return AttributeValueType.NULLOBJ;
+
+            return value.GetAttributeValueType();
+        }
+
+        /// <summary>
+        /// 设置一个扩展属性
+        /// 
+        /// attrMap为目标属性Dictionary
+        /// value为需要设置的类型数据
+        /// type为value的枚举类型，参考SDKEnumerations.cs
+        /// </summary>
+        public void SetAttribute(Dictionary<string, AttributeValue> arriMap, string key, in object value, AttributeValueType type)
+        {
+            if(null == arriMap)
+            {
+                return;
+            }
+            AttributeValue attr = AttributeValue.Of(value, type);
+            if (null != attr)
+            {
+                arriMap[key] = attr;
+            }
+        }
+
+        /// <summary>
+        /// 获取扩展属性的value
+        /// 
+        /// value为需要解析的AttributeValue
+        /// 注意：需要优先判断found为true，才能使用返回值
+        /// </summary>
+        /// 
+        /// <returns>
+        /// 对应类型数据T
+        /// found是否成功
+        /// </returns>
+        public T GetAttributeValue<T>(AttributeValue value, out bool found)
+        {
+            if(null == value)
+            {
+                found = false;
+                return default(T);
+            }
+
+            AttributeValueType type = value.GetAttributeValueType();
+            object v = value.GetAttributeValue(type);
+            if (null != v)
+            {
+                found = true;
+                return (T)v;
+            } else
+            {
+                found = false;
+                return default(T);
+            }
+        }
+
+        /// <summary>
+        /// 获取扩展属性的value
+        /// 
+        /// attrMap为目标属性Dictionary
+        /// key为属性名称
+        /// 注意：需要优先判断found为true，才能使用返回值
+        /// </summary>
+        /// 
+        /// <returns>
+        /// 对应类型数据
+        /// found是否成功
+        /// </returns>
+        public T GetAttributeValue<T>(Dictionary<string, AttributeValue> arriMap, string key, out bool found)
+        {
+            if (null == arriMap)
+            {
+                found = false;
+                return default(T);
+            }
+
+            if (!arriMap.ContainsKey(key))
+            {
+                found = false;
+                return default(T);
+            }
+
+            AttributeValue value = arriMap[key];
+            return GetAttributeValue<T>(value, out found);
         }
 
         internal Message(string jsonString)

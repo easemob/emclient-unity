@@ -24,6 +24,8 @@ using namespace easemob;
 const int ARRAY_SIZE_LIMITATION = 200;
 
 EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bool buildReceiveMsg=false);
+void SetMessageAttrs(EMMessagePtr msg, string attrs);
+std::string GetAttrsStringFromMessage(EMMessagePtr msg);
 
 struct Options
 {
@@ -183,11 +185,8 @@ public:
     EMMessage::EMMessageStatus Status;
     bool HasDeliverAck;
     bool HasReadAck;
-    
-    /*char ** AttributesKeys;
-    AttributeValue* AttributesValues;
-    int AttributesSize;*/
-    
+
+    const char * AttributesValues;
     long LocalTime;
     long ServerTime;
     
