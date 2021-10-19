@@ -250,6 +250,7 @@ namespace ChatSDK
             return jo.ToString();
         }
 
+        /*
         static internal string JsonStringFromAttributes(Dictionary<string, AttributeValue> attributes = null)
         {
             
@@ -267,6 +268,20 @@ namespace ChatSDK
             }
                 
             return jo.ToString();
+            
+        }*/
+
+        static internal string JsonStringFromAttributes(Dictionary<string, AttributeValue> attributes = null)
+        {
+            if (null == attributes || 0 == attributes.Count)
+                return "";
+
+            JSONObject jo = new JSONObject();
+            foreach (var item in attributes)
+            {
+                jo[item.Key] = item.Value.ToJsonObject();
+            }
+            return jo.ToString();
         }
 
         static internal Dictionary<string, string> JsonStringToDictionary(string jsonString)
@@ -282,14 +297,35 @@ namespace ChatSDK
             return ret;
         }
 
+        /*
         static internal Dictionary<string, AttributeValue> JsonStringToAttributes(string jsonString)
         {
+            
             if (jsonString == null || jsonString.Length == 0) return null;
             Dictionary<string, AttributeValue> ret = new Dictionary<string, AttributeValue>();
             JSONObject jo = JSON.Parse(jsonString).AsObject;
             foreach (string key in jo.Keys)
             {
                 ret.Add(key, AttributeValue.FromJsonString(jo[key]));
+            }
+            return ret;
+            
+        }*/
+
+        static internal Dictionary<string, AttributeValue> JsonStringToAttributes(string jsonString)
+        {
+            Dictionary<string, AttributeValue> ret = new Dictionary<string, AttributeValue>();
+
+            // Json at least has { and } two characters
+            if (null == jsonString || jsonString.Length <= 2) return ret;
+
+            JSONNode jn = JSON.Parse(jsonString);
+            if (null == jn) return ret;
+
+            JSONNode jo = jn.AsObject;
+            foreach (string k in jo.Keys)
+            {
+                ret.Add(k, AttributeValue.FromJsonObject(jo[k]));
             }
             return ret;
         }
