@@ -155,7 +155,7 @@ namespace ChatSDK
         /// <returns>
         /// 返回枚举类型，参考SDKEnumerations.cs
         /// </returns>
-        public AttributeValueType GetAttributeValueType(AttributeValue value)
+        static public AttributeValueType GetAttributeValueType(AttributeValue value)
         {
             if (null == value) return AttributeValueType.NULLOBJ;
 
@@ -163,13 +163,13 @@ namespace ChatSDK
         }
 
         /// <summary>
-        /// 设置一个扩展属性
+        /// 设置一个扩展属性;
         /// 
-        /// attrMap为目标属性Dictionary
-        /// value为需要设置的类型数据
+        /// attrMap为目标属性Dictionary;
+        /// value为需要设置的类型数据;
         /// type为value的枚举类型，参考SDKEnumerations.cs
         /// </summary>
-        public void SetAttribute(Dictionary<string, AttributeValue> arriMap, string key, in object value, AttributeValueType type)
+        static public void SetAttribute(Dictionary<string, AttributeValue> arriMap, string key, in object value, AttributeValueType type)
         {
             if(null == arriMap)
             {
@@ -183,17 +183,17 @@ namespace ChatSDK
         }
 
         /// <summary>
-        /// 获取扩展属性的value
+        /// 获取扩展属性的value;
         /// 
-        /// value为需要解析的AttributeValue
-        /// 注意：需要优先判断found为true，才能使用返回值
+        /// value为需要解析的AttributeValue;
+        /// 注意：需要优先判断found为true，才能使用返回值;
         /// </summary>
         /// 
         /// <returns>
-        /// 对应类型数据T
+        /// 对应类型数据T;
         /// found是否成功
         /// </returns>
-        public T GetAttributeValue<T>(AttributeValue value, out bool found)
+        static public T GetAttributeValue<T>(AttributeValue value, out bool found)
         {
             if(null == value)
             {
@@ -215,18 +215,18 @@ namespace ChatSDK
         }
 
         /// <summary>
-        /// 获取扩展属性的value
+        /// 获取扩展属性的value;
         /// 
-        /// attrMap为目标属性Dictionary
-        /// key为属性名称
+        /// attrMap为目标属性Dictionary;
+        /// key为属性名称;
         /// 注意：需要优先判断found为true，才能使用返回值
         /// </summary>
         /// 
         /// <returns>
-        /// 对应类型数据
+        /// 对应类型数据;
         /// found是否成功
         /// </returns>
-        public T GetAttributeValue<T>(Dictionary<string, AttributeValue> arriMap, string key, out bool found)
+        static public T GetAttributeValue<T>(Dictionary<string, AttributeValue> arriMap, string key, out bool found)
         {
             if (null == arriMap)
             {

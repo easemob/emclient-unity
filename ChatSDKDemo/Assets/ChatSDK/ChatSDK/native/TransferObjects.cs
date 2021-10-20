@@ -1042,69 +1042,69 @@ namespace ChatSDK
             Dictionary<string, AttributeValue> level3_map = new Dictionary<string, AttributeValue>();
 
             bool b = true;
-            msg.SetAttribute(level3_map, "level3-bool", b, AttributeValueType.BOOL);
+            Message.SetAttribute(level3_map, "level3-bool", b, AttributeValueType.BOOL);
 
             int i = -39999;
-            msg.SetAttribute(level3_map, "level3-int32", i, AttributeValueType.INT32);
+            Message.SetAttribute(level3_map, "level3-int32", i, AttributeValueType.INT32);
 
             uint ui = 3294967294;
-            msg.SetAttribute(level3_map, "level3-uint32", ui, AttributeValueType.UINT32);
+            Message.SetAttribute(level3_map, "level3-uint32", ui, AttributeValueType.UINT32);
 
             long l = -3223372036854775807;
-            msg.SetAttribute(level3_map, "level3-int64", l, AttributeValueType.INT64);
+            Message.SetAttribute(level3_map, "level3-int64", l, AttributeValueType.INT64);
 
             float f = 3.123F;
-            msg.SetAttribute(level3_map, "level3-float", f, AttributeValueType.FLOAT);
+            Message.SetAttribute(level3_map, "level3-float", f, AttributeValueType.FLOAT);
 
             double d = 3.23456D;
-            msg.SetAttribute(level3_map, "level3-double", d, AttributeValueType.DOUBLE);
+            Message.SetAttribute(level3_map, "level3-double", d, AttributeValueType.DOUBLE);
 
             string str = "a level3 string";
-            msg.SetAttribute(level3_map, "level3-string", str, AttributeValueType.STRING);
+            Message.SetAttribute(level3_map, "level3-string", str, AttributeValueType.STRING);
 
             string jstr = "a level3 json string";
-            msg.SetAttribute(level3_map, "level3-jstring", jstr, AttributeValueType.JSONSTRING);
+            Message.SetAttribute(level3_map, "level3-jstring", jstr, AttributeValueType.JSONSTRING);
 
             List<string> list3 = new List<string>();
             list3.Add("level3-array1");
             list3.Add("level3-array2");
             list3.Add("level3-array3");
-            msg.SetAttribute(level3_map, "level3-list", list3, AttributeValueType.STRVECTOR);
+            Message.SetAttribute(level3_map, "level3-list", list3, AttributeValueType.STRVECTOR);
 
             // make level2
             Dictionary<string, AttributeValue> level2_map = new Dictionary<string, AttributeValue>();
 
             b = false;
-            msg.SetAttribute(level2_map, "level2-bool", b, AttributeValueType.BOOL);
+            Message.SetAttribute(level2_map, "level2-bool", b, AttributeValueType.BOOL);
 
             i = -29999;
-            msg.SetAttribute(level2_map, "level2-int32", i, AttributeValueType.INT32);
+            Message.SetAttribute(level2_map, "level2-int32", i, AttributeValueType.INT32);
 
             ui = 2294967294;
-            msg.SetAttribute(level2_map, "level2-uint32", ui, AttributeValueType.UINT32);
+            Message.SetAttribute(level2_map, "level2-uint32", ui, AttributeValueType.UINT32);
 
             l = -2223372036854775807;
-            msg.SetAttribute(level2_map, "level2-int64", l, AttributeValueType.INT64);
+            Message.SetAttribute(level2_map, "level2-int64", l, AttributeValueType.INT64);
 
             f = 2.123F;
-            msg.SetAttribute(level2_map, "level2-float", f, AttributeValueType.FLOAT);
+            Message.SetAttribute(level2_map, "level2-float", f, AttributeValueType.FLOAT);
 
             d = 2.23456D;
-            msg.SetAttribute(level2_map, "level2-double", d, AttributeValueType.DOUBLE);
+            Message.SetAttribute(level2_map, "level2-double", d, AttributeValueType.DOUBLE);
 
             str = "a level2 string";
-            msg.SetAttribute(level2_map, "level2-string", str, AttributeValueType.STRING);
+            Message.SetAttribute(level2_map, "level2-string", str, AttributeValueType.STRING);
 
             jstr = "a level2 json string";
-            msg.SetAttribute(level2_map, "level2-jstring", jstr, AttributeValueType.JSONSTRING);
+            Message.SetAttribute(level2_map, "level2-jstring", jstr, AttributeValueType.JSONSTRING);
 
             List<string> list2 = new List<string>();
             list2.Add("level2-array1");
             list2.Add("level2-array2");
             list2.Add("level2-array3");
-            msg.SetAttribute(level2_map, "level2-list", list2, AttributeValueType.STRVECTOR);
+            Message.SetAttribute(level2_map, "level2-list", list2, AttributeValueType.STRVECTOR);
 
-            msg.SetAttribute(level2_map, "level2-attr", level3_map, AttributeValueType.ATTRIBUTEVALUE);
+            Message.SetAttribute(level2_map, "level2-attr", level3_map, AttributeValueType.ATTRIBUTEVALUE);
             
             // make level1
             Dictionary<string, AttributeValue> level1_map = new Dictionary<string, AttributeValue>();
@@ -1114,40 +1114,40 @@ namespace ChatSDK
 
             
             bool b1 = true;
-            msg.SetAttribute(level1_map, "level1-bool", b1, AttributeValueType.BOOL);
+            Message.SetAttribute(level1_map, "level1-bool", b1, AttributeValueType.BOOL);
 
             
             int i1 = -19999;
-            msg.SetAttribute(level1_map, "level1-int32", i1, AttributeValueType.INT32);
+            Message.SetAttribute(level1_map, "level1-int32", i1, AttributeValueType.INT32);
 
             uint ui1 = 1294967294;
-            msg.SetAttribute(level1_map, "level1-uint32", ui1, AttributeValueType.UINT32);
+            Message.SetAttribute(level1_map, "level1-uint32", ui1, AttributeValueType.UINT32);
 
             long l1 = -1223372036854775807;
-            msg.SetAttribute(level1_map, "level1-int64", l1, AttributeValueType.INT64);
+            Message.SetAttribute(level1_map, "level1-int64", l1, AttributeValueType.INT64);
             
             float f1 = 1.123F;
-            msg.SetAttribute(level1_map, "level1-float", f1, AttributeValueType.FLOAT);
+            Message.SetAttribute(level1_map, "level1-float", f1, AttributeValueType.FLOAT);
 
             double d1 = 1.23456D;
-            msg.SetAttribute(level1_map, "level1-double", d1, AttributeValueType.DOUBLE);
+            Message.SetAttribute(level1_map, "level1-double", d1, AttributeValueType.DOUBLE);
             
             string str1 = "a level1 string";
-            msg.SetAttribute(level1_map, "level1-string", str1, AttributeValueType.STRING);
+            Message.SetAttribute(level1_map, "level1-string", str1, AttributeValueType.STRING);
 
             string str2 = "a level1 string1-jasldjfasdlfjasdlfjasdlfjasofasudf9asdf7as9d6fas98d6f9asd7f9asd7fs9af7as97fa9s8dsa97fasd890f7asd98fuzxd9f87zuxd09f7ad098f7uyas89df07asd09f8as7df0as";
-            msg.SetAttribute(level1_map, "level1-string1", str2, AttributeValueType.STRING);
+            Message.SetAttribute(level1_map, "level1-string1", str2, AttributeValueType.STRING);
             
             string jstr1 = "a level1 json string";
-            msg.SetAttribute(level1_map, "level1-jstring", jstr1, AttributeValueType.JSONSTRING);
+            Message.SetAttribute(level1_map, "level1-jstring", jstr1, AttributeValueType.JSONSTRING);
             
             List<string> list1 = new List<string>();
             list1.Add("level1-array1");
             list1.Add("level1-array2");
             list1.Add("level1-array3");
-            msg.SetAttribute(level1_map, "level1-list", list1, AttributeValueType.STRVECTOR);
-            
-            msg.SetAttribute(level1_map, "level1-attr", level2_map, AttributeValueType.ATTRIBUTEVALUE);
+            Message.SetAttribute(level1_map, "level1-list", list1, AttributeValueType.STRVECTOR);
+
+            Message.SetAttribute(level1_map, "level1-attr", level2_map, AttributeValueType.ATTRIBUTEVALUE);
 
             msg.Attributes = level1_map;
 
