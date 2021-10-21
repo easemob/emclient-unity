@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-//to-do: just for testing
 using UnityEngine;
 
 namespace ChatSDK

@@ -4,8 +4,6 @@
 #pragma once
 #include "common.h"
 #include "models.h"
-
-//to-do:just for testing
 #include "callbacks.h"
 
 #ifdef __cplusplus
