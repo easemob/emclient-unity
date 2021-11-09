@@ -465,6 +465,21 @@ namespace ChatSDK{
 		[DllImport(MyLibName)]
 		internal static extern void PushManager_UpdatePushNickName(IntPtr client, int callbackId, string nickname, OnSuccess onSuccess, OnErrorV2 onError);
 
+		[DllImport(MyLibName)]
+		internal static extern void UserInfoManager_UpdateOwnInfo(IntPtr client, int callbackId, IntPtr userInfo, OnSuccess onSuccess, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void UserInfoManager_UpdateOwnInfoByAttribute(IntPtr client, int callbackId, int userInfoType, string value, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void UserInfoManager_FetchUserInfoByUserId(IntPtr client, int callbackId, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 3)] string[] users,
+			int size, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void UserInfoManager_FetchUserInfoByAttribute(IntPtr client, int callbackId, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 3)] string[] users,
+			int userSize, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.I4, SizeParamIndex = 5)] int[] userinfoTypes,
+			int typeSize, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+
 		#endregion native API import
 	}
 }

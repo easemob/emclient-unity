@@ -33,6 +33,7 @@
         private IRoomManager roomImp = null;
         private IPushManager pushImp = null;
         private IConversationManager conversationImp = null;
+        private IUserInfoManager userInfoImp = null;
 
         /// <summary>
         /// 获取聊天管理对象
@@ -135,6 +136,19 @@
             conversationImp = new ConversationManager_Mac(instance);
 #endif
             return conversationImp;
+        }
+
+        internal IUserInfoManager UserInfoManager()
+        {
+            if (userInfoImp != null) { return userInfoImp; }
+#if UNITY_ANDROID
+            userInfoImp = new UserInfoManager_Android();
+#elif UNITY_IOS
+            userInfoImp = new UserInfoManager_iOS();
+#elif UNITY_STANDALONE_OSX
+            userInfoImp = new UserInfoManager_Mac(instance);
+#endif
+            return userInfoImp;
         }
 
         /// <summary>
