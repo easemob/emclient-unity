@@ -9,11 +9,12 @@
 #include "models.h"
 #include "emgroup.h"
 #include "json.hpp"
+#include "tool.h"
 
 EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bool buildReceiveMsg)
 {
     //compose message body
-    std::string from, to, msgId;
+    std::string from, to, msgId, attrs;
     EMMessage::EMChatType msgType = EMMessage::EMChatType::SINGLE;
     EMMessageBodyPtr messageBody;
     switch(type) {
@@ -27,6 +28,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = tm->To;
             msgId = tm->MsgId;
             msgType = tm->Type;
+            attrs = tm->AttributesValues;
         }
             break;
         case EMMessageBody::LOCATION:
@@ -37,6 +39,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = lm->To;
             msgId = lm->MsgId;
             msgType = lm->Type;
+            attrs = lm->AttributesValues;
         }
             break;
         case EMMessageBody::COMMAND:
@@ -49,6 +52,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = cm->To;
             msgId = cm->MsgId;
             msgType = cm->Type;
+            attrs = cm->AttributesValues;
         }
             break;
         case EMMessageBody::FILE:
@@ -65,6 +69,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = fm->To;
             msgId = fm->MsgId;
             msgType = fm->Type;
+            attrs = fm->AttributesValues;
         }
             break;
         case EMMessageBody::IMAGE:
@@ -85,6 +90,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = im->To;
             msgId = im->MsgId;
             msgType = im->Type;
+            attrs = im->AttributesValues;
         }
             break;
         case EMMessageBody::VOICE:
@@ -101,6 +107,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = vm->To;
             msgId = vm->MsgId;
             msgType = vm->Type;
+            attrs = vm->AttributesValues;
         }
             break;
         case EMMessageBody::VIDEO:
@@ -127,6 +134,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = im->To;
             msgId = im->MsgId;
             msgType = im->Type;
+            attrs = im->AttributesValues;
         }
             break;
         case EMMessageBody::CUSTOM:
@@ -140,9 +148,8 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
                 nlohmann::json j = nlohmann::json::parse(im->body.CustomParams);
                 easemob::EMCustomMessageBody::EMCustomExts ext;
                 for(auto it=j.begin(); it!=j.end(); it++) {
-                    LOG("key: %s, value: %s", it.key().c_str(), it.value().dump().c_str());
-                    //value() looks like "\"value\"",  need to get rid of the first and the end char
-                    std::string str(it.value().dump().c_str()+1, strlen(it.value().dump().c_str())-2);
+                    std::string str = it.value().get<std::string>();
+                    LOG("custom message ext str is: %s", str.c_str());
                     std::pair<std::string, std::string> kv{it.key().c_str(), str};
                     ext.push_back(kv);
                 }
@@ -158,19 +165,280 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = im->To;
             msgId = im->MsgId;
             msgType = im->Type;
+            attrs = im->AttributesValues;
         }
             break;
     }
     LOG("Message created: From->%s, To->%s.", from.c_str(), to.c_str());
     if(buildReceiveMsg) {
         EMMessagePtr messagePtr = EMMessage::createReceiveMessage(to, from, messageBody, msgType, msgId);
+        SetMessageAttrs(messagePtr, attrs);
         return messagePtr;
     } else {
         EMMessagePtr messagePtr = EMMessage::createSendMessage(from, to, messageBody, msgType);
         messagePtr->setMsgId(msgId);
+        SetMessageAttrs(messagePtr, attrs);
         return messagePtr;
     }
 
+}
+
+/*
+ attrs may looks like(most quote symbol are removed, and all items in {} are string):
+ {
+    name1: {type:b, value:true},
+    name2: {type:c, value:11},
+    name3: {type:uc, value:a},
+    name4: {type:s, value:-123},
+    name5: {type:us, value:123},
+    name6: {type:i, value:-456},
+    name7: {type:ui, value:456},
+    name8: {type:l, value:-123456},
+    name9: {type:ul, value:123456},
+    name10:{type:f, value:1.23},
+    name11:{type:d, value:1.23456},
+    name12:{type:str, value:"a string"},
+    name13:{type:strv, value:["str1", "str2", "str3"]},
+    name14:{type:jstr, value:"a json string"},
+    name15:{type:attr, value:{
+        name1: {type:b, value:true},
+        name2: {type:c, value:11},
+        ...
+        name15: {type:attr, value:{
+            name1: {type:b, value:true},
+            ...
+            name15:{type:str, value:"end"}
+        }}
+    }}
+ 
+ }
+ */
+void SetMessageAttr(EMMessagePtr msg, std::string& key, nlohmann::json& j)
+{
+    if(nullptr == msg || key.length() == 0 || j.is_null())
+        return;
+
+    std::string type = j.at("type").get<string>();
+    std::string value = "";
+    std::string attributeStr = j.dump();
+    
+    if(type.compare("attr") != 0 && type.compare("strv") != 0) {
+        value = j.at("value").get<std::string>();
+    }
+    
+    if(type.compare("b") == 0) {
+        if(strcasecmp(value.c_str(), "false") == 0) {
+            LOG("Set type bool: value: false");
+            msg->setAttribute(key, false);
+        }
+        else {
+            LOG("Set type bool: value: true");
+            msg->setAttribute(key, true);
+        }
+        
+    } else if (type.compare("c") == 0) {
+        //unsupported in emmessage
+        
+    } else if (type.compare("uc") == 0) {
+        //unsupported in emmessage
+        
+    } else if (type.compare("s") == 0) {
+        //unsupported in emmessage
+        
+    } else if (type.compare("us") == 0) {
+        //unsupported in emmessage
+        
+    } else if (type.compare("i") == 0) {
+        //int i = atoi(value.c_str());
+        int i = convertFromString<int32_t>(value);
+        msg->setAttribute(key, i);
+        LOG("Set type: int32_t, value:%d ", i);
+        
+    } else if (type.compare("ui") == 0) {
+        //uint32_t  ui = (uint32_t)strtoul(value.c_str(), nullptr, 10);
+        uint32_t ui = convertFromString<uint32_t>(value);
+        msg->setAttribute(key, ui);
+        LOG("Set type: uint32_t, value:%u", ui);
+        
+    } else if (type.compare("l") == 0) {
+        //int64_t l = atoll(value.c_str());
+        int64_t l = convertFromString<int64_t>(value);
+        msg->setAttribute(key, l);
+        LOG("Set type: int64_t, value:%lld", l);
+        
+    } else if (type.compare("ul") == 0) {
+        //unsupported in emmessage
+        
+    } else if (type.compare("f") == 0) {
+        //float f = atof(value.c_str());
+        float f = convertFromString<float>(value);
+        msg->setAttribute(key, f);
+        LOG("Set type: float, value:%f", f);
+        
+    } else if (type.compare("d") == 0) {
+        //double d = atof(value.c_str());
+        double d = convertFromString<double>(value);
+        msg->setAttribute(key, d);
+        LOG("Set type: double, value:%f", d);
+        
+    } else if (type.compare("str") == 0) {
+        msg->setAttribute(key, value);
+        LOG("Set type: string, value:%s", value.c_str());
+        
+    } else if (type.compare("strv") == 0) {
+        // seems server is not support EMJsonString, so change to string
+        msg->setAttribute(key, attributeStr);
+        LOG("Set type: strv, value:%s", attributeStr.c_str());
+        
+    } else if (type.compare("jstr") == 0) {
+        msg->setAttribute(key, value);
+        LOG("Set type: EMJsonString, value:%s", attributeStr.c_str());
+        
+    } else if (type.compare("attr") == 0) {
+        // seems server is not support EMJsonString, so change to string
+        msg->setAttribute(key, attributeStr);
+        LOG("Set type: attr, value:%s", attributeStr.c_str());
+    }
+    else {
+        LOG("Error attribute type %s", type.c_str());
+    }
+}
+
+void SetMessageAttrs(EMMessagePtr msg, std::string attrs)
+{
+    // Json: as least has { and } two characters
+    if(nullptr == msg || attrs.length() <= 2) return;
+    nlohmann::json j;
+    try
+    {
+        j = nlohmann::json::parse(attrs);
+    }
+    catch(std::exception)
+    {
+        LOG("Parse json failed, skip SetMessageAttr, jstr: %s", attrs.c_str());
+        return;
+    }
+    
+    for(auto it=j.begin(); it!=j.end(); it++) {
+        std::string key = it.key();
+        SetMessageAttr(msg, key, it.value());
+    }
+}
+
+std::string GetSpecialTypeAttrString(EMAttributeValuePtr attribute, std::string& value)
+{
+    std::string type = "str";
+    if(nullptr == attribute) return type;
+    
+    nlohmann::json j;
+    try
+    {
+        j = nlohmann::json::parse(attribute->value<EMJsonString>());
+    }
+    catch(std::exception)
+    {
+        // value is not json string, just return
+        return type;
+    }
+    
+    // JSON string contain a special attribute
+    if (!j.at("type").is_null()) {
+        type = j.at("type").get<std::string>();
+        if (type.compare("strv") == 0 || type.compare("attr") == 0) {
+            if (j.at("value").is_object() || j.at("value").is_array()) {
+                value = j.at("value").dump();
+            }
+        }
+    }
+    return type;
+}
+
+nlohmann::json GetAttrJson(EMAttributeValuePtr attribute)
+{
+    nlohmann::json j;
+    if (attribute->is<bool>()) {
+        j["type"] = "b";
+        if (attribute->value<bool>())
+            j["value"] = "True";
+        else
+            j["value"] = "False";
+        
+    } else if (attribute->is<char>()) {
+        j["type"] = "c";
+        j["value"] = convert2String<char>(attribute->value<char>());
+        
+    } else if (attribute->is<unsigned char>()) {
+        j["type"] = "uc";
+        j["value"] = convert2String<unsigned char>(attribute->value<unsigned char>());
+        
+    } else if (attribute->is<short>()) {
+        j["type"] = "s";
+        j["value"] = convert2String<short>(attribute->value<short>());
+        
+    } else if (attribute->is<unsigned short>()) {
+        j["type"] = "us";
+        j["value"] = convert2String<unsigned short>(attribute->value<unsigned short>());
+        
+    } else if (attribute->is<int32_t>()) {
+        j["type"] = "i";
+        j["value"] = convert2String<int32_t>(attribute->value<int32_t>());
+        
+    } else if (attribute->is<uint32_t>()) {
+        j["type"] = "ui";
+        j["value"] = convert2String<uint32_t>(attribute->value<uint32_t>());
+        
+    } else if (attribute->is<int64_t>()) {
+        j["type"] = "l";
+        j["value"] = convert2String<int64_t>(attribute->value<int64_t>());
+        
+    } else if (attribute->is<uint64_t>()) {
+        j["type"] = "ul";
+        j["value"] = convert2String<uint64_t>(attribute->value<uint64_t>());
+        
+    } else if (attribute->is<float>()) {
+        j["type"] = "f";
+        j["value"] = convert2String<float>(attribute->value<float>());
+        
+    } else if (attribute->is<double>()) {
+        j["type"] = "d";
+        j["value"] = convert2String<double>(attribute->value<double>());
+        
+    } else if (attribute->is<std::string>()) {
+        std::string value = attribute->value<std::string>();
+        j["type"] = GetSpecialTypeAttrString(attribute, value);;
+        j["value"] = value;
+        
+    } else if (attribute->is<std::vector<std::string>>()) {
+        j["type"] = "strv";
+        j["value"] = attribute->value<std::vector<std::string>>();
+        
+    } else if (attribute->is<EMJsonString>()) {
+        j["type"] = "attr";
+        j["value"] = attribute->value<EMJsonString>();
+    } else {
+        LOG("Error type in message attributes!");
+    }
+    return j;
+}
+
+std::string GetAttrsStringFromMessage(EMMessagePtr msg)
+{
+    if (nullptr == msg) return "";
+    
+    std::map<std::string, EMAttributeValuePtr> ext = msg->ext();
+    if (ext.size() == 0) return "";
+    
+    nlohmann::json j;
+    std::string key = "";
+    for(auto it : ext) {
+        key = it.first;
+        EMAttributeValuePtr attribute = it.second;
+        nlohmann::json child = GetAttrJson(attribute);
+        if (!child.is_null()) {
+            j[key] = child;
+        }
+    }
+    return j.dump();
 }
 
 //default constructor
@@ -191,6 +459,24 @@ MessageTO::MessageTO(const EMMessagePtr &_message) {
     this->HasReadAck = _message->isReadAcked();
     this->LocalTime = _message->localTime();
     this->ServerTime = _message->timestamp();
+    
+    char* p = nullptr;
+    std::string str = GetAttrsStringFromMessage(_message);
+    
+    //LOG("Got attributes from others: %s", str.c_str());
+    
+    if (str.length() > 0) {
+        p = new char[str.size() + 1];
+        p[str.size()] = '\0';
+        strncpy(p, str.c_str(), str.size());
+    } else {
+        // pass a space to AttributesValues
+        // make sure PtrToStructure can be success
+        p = new char[2];
+        p[0] = ' ';
+        p[1] = '\0';
+    }
+    this->AttributesValues = p;
 }
 
 //TextMessageTO
@@ -287,20 +573,26 @@ CustomMessageTO::CustomMessageTO(const EMMessagePtr &_message):MessageTO(_messag
     for(size_t i=0; i<ext.size(); i++) {
         j[ext[i].first] = ext[i].second;
     }
-    // need to be freed in FreeResource function
-    std::string* extStr = new std::string();
+    
     if(ext.size() > 0){
-        *extStr = j.dump();
+        std::string str = j.dump();
+        // need to be freed in FreeResource function
+        char* p = new char[str.size() + 1];
+        p[str.size()] = '\0';
+        strncpy(p, str.c_str(), str.size());
+        this->body.CustomParams = p;
     }
-    this->body.CustomParams = nullptr;
-    if(extStr->length() > 0)
-        this->body.CustomParams = (*extStr).c_str();
 }
 
 void MessageTO::FreeResource(MessageTO * mto)
 {
     if(nullptr == mto)
         return;
+    
+    if (nullptr != mto->AttributesValues) {
+        delete mto->AttributesValues;
+    }
+    
     switch(mto->BodyType) {
         case EMMessageBody::CUSTOM:
         {
