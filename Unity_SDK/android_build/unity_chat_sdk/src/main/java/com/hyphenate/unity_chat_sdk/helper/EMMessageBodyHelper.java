@@ -87,9 +87,12 @@ public class EMMessageBodyHelper {
 
     public static JSONObject customBodyToJson(EMCustomMessageBody body) throws JSONException{
         JSONObject data = new JSONObject();
+        JSONObject params = new JSONObject();
+        for (Map.Entry<String, String> m: body.getParams().entrySet()) {
+            params.put(m.getKey(), m.getValue());
+        }
         data.put("event", body.event());
-        data.put("params", body.getParams());
-//        data.put("bodyType", "custom");
+        data.put("params", params.toString());
         return data;
     }
 
