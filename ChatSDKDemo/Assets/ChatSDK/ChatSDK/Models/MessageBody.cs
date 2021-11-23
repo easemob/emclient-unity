@@ -86,7 +86,7 @@ namespace ChatSDK
                 if (!jn.IsNull && jn.IsObject)
                 {
                     JSONObject jo = jn.AsObject;
-                    ((MessageBody.FileBody)body).LocalPath = jo["latitude"].Value;
+                    ((MessageBody.FileBody)body).LocalPath = jo["localPath"].Value;
                     ((MessageBody.FileBody)body).FileSize = jo["fileSize"].AsInt;
                     ((MessageBody.FileBody)body).DisplayName = jo["displayName"].Value;
                     ((MessageBody.FileBody)body).RemotePath = jo["remotePath"].Value;
