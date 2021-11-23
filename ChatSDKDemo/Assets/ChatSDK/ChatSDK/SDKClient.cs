@@ -146,8 +146,7 @@ namespace ChatSDK
             _Sdk.Logout(unbindDeviceToken, new CallBack(
                 onSuccess: () => {
                     CallbackManager.Instance().CleanAllCallback();
-                    if (null != handle)
-                        handle.Success?.Invoke();
+                    handle?.Success?.Invoke();
                 },
                 onError:(code, desc) => {
                     handle?.Error?.Invoke(code, desc);

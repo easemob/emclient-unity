@@ -75,7 +75,9 @@ namespace ChatSDK {
 
         private void OnApplicationQuit()
         {
-            IClient.Instance.Logout(false);
+            if (SDKClient.Instance.IsLoggedIn) {
+                SDKClient.Instance.Logout(false);
+            }
             CallbackManager.Instance().ClearResource();
             Debug.Log("Quit...");
         }
