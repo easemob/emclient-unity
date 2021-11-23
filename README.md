@@ -193,7 +193,7 @@ conv.LoadMessages(handle:new ValueCallBack<List<Message>>(
 #### 获取会话中未读消息数
 
 ```C#
-Conversation conv = SDKClient.Instance.ChatManager.GetConversation("emId");
+Conversation conv = SDKClient.Instance.ChatManager.GetConversation("conversationId");
 int unreadCount = conv.UnReadCount;
 ```
 
@@ -236,7 +236,7 @@ conv.DeleteMessage("messageId");
 
 #### 删除会话中所有的消息
 ```C#
-Conversation conv = SDKClient.Instance.ChatManager.GetConversation("emId");
+Conversation conv = SDKClient.Instance.ChatManager.GetConversation("conversationId");
 conv.DeleteAllMessages();
 ```
 
