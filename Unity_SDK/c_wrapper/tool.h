@@ -23,10 +23,6 @@ bool MandatoryCheck(const char* ptr1, const char* ptr2, const char* ptr3, EMErro
 
 std::string OptionalStrParamCheck(const char* ptr);
 
-// 获取小数位数
-int GetNumOfDecFraction(std::string& str);
-double GetFloatFromString(std::string& str);
-
 template<typename T>
 static std::string convert2String(const T &from)
 {

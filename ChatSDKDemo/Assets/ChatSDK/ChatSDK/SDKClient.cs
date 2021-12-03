@@ -48,6 +48,11 @@ namespace ChatSDK
         internal IConversationManager ConversationManager { get => _Sdk.ConversationManager(); }
 
         /// <summary>
+        /// 用户信息管理类
+        /// </summary>
+        internal IUserInfoManager UserInfoManager { get => _Sdk.UserInfoManager(); }
+
+        /// <summary>
         /// 获取sdk配置信息
         /// </summary>
         public Options Options { get { return _Options; } }
