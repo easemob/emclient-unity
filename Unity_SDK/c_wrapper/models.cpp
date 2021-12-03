@@ -981,3 +981,100 @@ PushConfigTO * PushConfigTO::FromEMPushConfig(EMPushConfigsPtr&  pushConfigPtr)
     LOG("Push config, starthour:%d, endhour:%d, style:%d", pushConfigTO->NoDisturbStartHour, pushConfigTO->NoDisturbEndHour, pushConfigTO->Style);
     return pushConfigTO;
 }
+
+
+std::map<std::string, UserInfo> UserInfo::FromResponse(std::string json, std::map<UserInfoType, std::string>& utypeMap)
+{
+    std::map<std::string, UserInfo> userinfoMap;
+    if (json.length() <= 2) return userinfoMap;
+    
+    nlohmann::json j;
+    try {
+        j = nlohmann::json::parse(json);
+    }
+    catch(std::exception) {
+        LOG("Failed to parse response from server to json.");
+        return userinfoMap;
+    }
+    
+    for(auto it=j.begin(); it!=j.end(); it++) {
+        std::string user = it.key();
+        nlohmann::json u = it.value();
+        
+        if (u.is_null() || u.empty() || !u.is_object()) continue;
+
+        UserInfo ui;
+        if (u.count(utypeMap[NICKNAME]) > 0 && u.at(utypeMap[NICKNAME]).is_string())
+            ui.nickName = u.at(utypeMap[NICKNAME]).get<std::string>();
+        else
+            ui.nickName = "";
+        
+        if (u.count(utypeMap[AVATAR_URL]) > 0 && u.at(utypeMap[AVATAR_URL]).is_string())
+            ui.avatarUrl = u.at(utypeMap[AVATAR_URL]).get<std::string>();
+        else
+            ui.avatarUrl = "";
+        
+        if (u.count(utypeMap[EMAIL]) > 0 && u.at(utypeMap[EMAIL]).is_string())
+            ui.email = u.at(utypeMap[EMAIL]).get<std::string>();
+        else
+            ui.email = "";
+        
+        if (u.count(utypeMap[PHONE]) > 0 && u.at(utypeMap[PHONE]).is_string())
+            ui.phoneNumber = u.at(utypeMap[PHONE]).get<std::string>();
+        else
+            ui.phoneNumber = "";
+        
+        if (u.count(utypeMap[SIGN]) > 0 && u.at(utypeMap[SIGN]).is_string())
+            ui.signature = u.at(utypeMap[SIGN]).get<std::string>();
+        else
+            ui.signature = "";
+        
+        if (u.count(utypeMap[BIRTH]) > 0 && u.at(utypeMap[BIRTH]).is_string())
+            ui.birth = u.at(utypeMap[BIRTH]).get<std::string>();
+        else
+            ui.birth = "";
+        
+        if (u.count(utypeMap[EXT]) > 0 && u.at(utypeMap[EXT]).is_string())
+            ui.ext = u.at(utypeMap[EXT]).get<std::string>();
+        else
+            ui.ext = "";
+        
+        if (u.count(utypeMap[GENDER]) > 0 && u.at(utypeMap[GENDER]).is_string()) {
+            std::string str = u.at(utypeMap[GENDER]).get<std::string>();
+            ui.gender = std::stoi(str);
+        }
+        else
+            ui.gender = 0;
+
+        ui.userId = user;
+        
+        userinfoMap[user] = ui;
+    }
+    return userinfoMap;
+}
+
+std::map<std::string, UserInfoTO> UserInfo::Convert2TO(std::map<std::string, UserInfo>& userInfoMap)
+{
+    std::map<std::string, UserInfoTO> userinfoToMap;
+    if (userInfoMap.size() == 0) return userinfoToMap;
+    
+    LOG("origin address of nickName is %x", userInfoMap["yqtest"].nickName.c_str());
+    
+    // DO not use "for(auto it : userInfoMap)" !!, since the "it" will be a copied value from userInfoMap
+    // Not a poiter to userInfoMap!!
+    for (auto it = userInfoMap.begin(); it != userInfoMap.end(); it++) {
+        UserInfoTO uto;
+        uto.nickName    = it->second.nickName.c_str();
+        uto.avatarUrl   = it->second.avatarUrl.c_str();
+        uto.email       = it->second.email.c_str();
+        uto.phoneNumber = it->second.phoneNumber.c_str();
+        uto.gender      = it->second.gender;
+        uto.signature   = it->second.signature.c_str();
+        uto.birth       = it->second.birth.c_str();
+        uto.ext         = it->second.ext.c_str();
+        uto.userId      = it->second.userId.c_str();
+        userinfoToMap[it->first] = uto;
+    }
+    LOG("address of second is %x", &(userinfoToMap["yqtest"]));
+    return userinfoToMap;
+}

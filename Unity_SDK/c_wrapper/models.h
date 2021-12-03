@@ -18,6 +18,7 @@
 #include "emcustommessagebody.h"
 #include "emmucsetting.h"
 #include "empushconfigs.h"
+#include "json.hpp"
 
 using namespace easemob;
 
@@ -406,6 +407,46 @@ struct PushConfigTO
     easemob::EMPushConfigs::EMPushDisplayStyle Style;
     
     static PushConfigTO * FromEMPushConfig(EMPushConfigsPtr&  pushConfigPtr);
+};
+
+enum UserInfoType {
+    NICKNAME    = 0,
+    AVATAR_URL  = 1,
+    EMAIL       = 2,
+    PHONE       = 3,
+    GENDER      = 4,
+    SIGN        = 5,
+    BIRTH       = 6,
+    EXT         = 100
+};
+
+struct UserInfoTO
+{
+    const char* nickName;
+    const char* avatarUrl;
+    const char* email;
+    const char* phoneNumber;
+    const char* signature;
+    const char* birth;
+    const char* userId;
+    const char* ext;
+    int         gender = 0;
+};
+
+struct UserInfo
+{
+    std::string nickName;
+    std::string avatarUrl;
+    std::string email;
+    std::string phoneNumber;
+    std::string signature;
+    std::string birth;
+    std::string userId;
+    std::string ext;
+    int         gender = 0;
+    
+    static std::map<std::string, UserInfo> FromResponse(std::string json, std::map<UserInfoType, std::string>& utypeMap);
+    static std::map<std::string, UserInfoTO> Convert2TO(std::map<std::string, UserInfo>& userInfoMap);
 };
 
 struct TOArray

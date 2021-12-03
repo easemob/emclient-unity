@@ -7,7 +7,6 @@
 //
 
 #include <thread>
-//#include "empushmanager_interface.h"
 #include "emchatclient.h"
 #include "emchatconfigs.h"
 #include "emclient.h"
