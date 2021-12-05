@@ -32,6 +32,9 @@ const char* PushManager_GetMethodCall(const char* methodName, const char* jsonSt
 void Conversation_HandleMethodCall(const char* methodName, const char* jsonString, const char* callbackId);
 const char* Conversation_GetMethodCall(const char* methodName, const char* jsonString, const char* callbackId);
 
+void UserInfoManager_MethodCall(const char* methodName, const char* jsonString, const char* callbackId);
+
+
 extern void UnitySendMessage(const char *,const char *, const char *);
 #ifdef __cplusplus
 }

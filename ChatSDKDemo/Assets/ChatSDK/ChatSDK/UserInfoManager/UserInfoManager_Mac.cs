@@ -52,7 +52,8 @@ namespace ChatSDK
 			Marshal.FreeCoTaskMem(up);
 		}
 
-		public override void UpdateOwnByAttribute(UserInfoType userInfoType, string value, ValueCallBack<string> handle = null)
+		// 暂不提供该方法
+		internal void UpdateOwnByAttribute(UserInfoType userInfoType, string value, ValueCallBack<string> handle = null)
 		{
 			if (null == value)
 			{
@@ -135,7 +136,8 @@ namespace ChatSDK
 				});
 		}
 
-		public override void FetchUserInfoByAttribute(List<string> idList, List<UserInfoType> attrs, ValueCallBack<Dictionary<string, UserInfo>> handle = null)
+		// 暂不提供该方法
+		internal void FetchUserInfoByAttribute(List<string> idList, List<UserInfoType> attrs, ValueCallBack<Dictionary<string, UserInfo>> handle = null)
 		{
 			if (null == idList || 0 == idList.Count || null == attrs || 0 == attrs.Count)
 			{

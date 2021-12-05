@@ -102,7 +102,7 @@
     if ([jsonObject isKindOfClass:[NSArray class]]) {
         NSMutableArray *tmp = [[NSMutableArray alloc] initWithArray:jsonObject];
         for (id obj in ((NSArray *)jsonObject)) {
-            if ([obj isKindOfClass:[NSArray class]]) {
+            if ([obj isKindOfClass:[NSNull class]]) {
                 [tmp removeObject:obj];
             }
         }

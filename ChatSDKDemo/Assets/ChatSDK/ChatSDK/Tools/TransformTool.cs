@@ -29,7 +29,8 @@ namespace ChatSDK
         static internal string JsonStringFromStringList(List<string> list)
         {
             JSONArray ja = new JSONArray();
-            if (list != null) {
+            if (list != null)
+            {
                 foreach (string str in list)
                 {
                     ja.Add(str);
@@ -47,7 +48,8 @@ namespace ChatSDK
             JSONNode jsonArray = JSON.Parse(jsonString);
             foreach (JSONNode obj in jsonArray.AsArray)
             {
-                if (obj.IsString) {
+                if (obj.IsString)
+                {
                     list.Add(new Group(obj.Value));
                 }
             }
@@ -83,13 +85,13 @@ namespace ChatSDK
                     {
                         list.Add(new GroupSharedFile(obj.Value));
                     }
-                        
+
                 }
             }
             return list;
         }
 
-        
+
         static internal CursorResult<GroupInfo> JsonStringToGroupInfoResult(string jsonString)
         {
             CursorResult<GroupInfo> result = null;
@@ -103,7 +105,8 @@ namespace ChatSDK
 
                 List<GroupInfo> list = new List<GroupInfo>();
 
-                if (jsonObject["list"].IsString) {
+                if (jsonObject["list"].IsString)
+                {
 
                     JSONArray jsonArray = JSON.Parse(jsonObject["list"].Value).AsArray;
 
@@ -192,7 +195,7 @@ namespace ChatSDK
                     {
                         list.Add(obj.Value);
                     }
-                    
+
                 }
 
                 result.Data = list;
@@ -218,7 +221,8 @@ namespace ChatSDK
 
                 foreach (JSONNode obj in jsonArray)
                 {
-                    if (obj.IsString) {
+                    if (obj.IsString)
+                    {
                         list.Add(new Message(obj.Value));
                     }
                 }
@@ -232,7 +236,8 @@ namespace ChatSDK
         {
 
             JSONObject jo = new JSONObject();
-            if (dictionary != null) {
+            if (dictionary != null)
+            {
                 IDictionary<string, string> sortedParams = new SortedDictionary<string, string>(dictionary);
                 IEnumerator<KeyValuePair<string, string>> dem = sortedParams.GetEnumerator();
 
@@ -245,7 +250,7 @@ namespace ChatSDK
                         jo[key] = value;
                     }
                 }
-            }            
+            }
 
             return jo.ToString();
         }
@@ -334,7 +339,8 @@ namespace ChatSDK
         {
             if (jsonString == null) return null;
             List<Message> list = new List<Message>();
-            if (jsonString.Length == 0) {
+            if (jsonString.Length == 0)
+            {
                 return list;
             }
             JSONNode jsonArray = JSON.Parse(jsonString);
@@ -346,7 +352,7 @@ namespace ChatSDK
                     {
                         Message conv = new Message(v.Value);
                         list.Add(conv);
-                    }  
+                    }
                 }
             }
 
@@ -357,7 +363,8 @@ namespace ChatSDK
         {
             if (list == null) return null;
             JSONArray ja = new JSONArray();
-            foreach (Message msg in list) {
+            foreach (Message msg in list)
+            {
                 ja.Add(msg.ToJson());
             }
             return ja;
@@ -367,7 +374,8 @@ namespace ChatSDK
         {
             if (jsonString == null) return null;
             List<Conversation> list = new List<Conversation>();
-            if (jsonString.Length == 0) {
+            if (jsonString.Length == 0)
+            {
                 return list;
             }
             JSONNode jsonArray = JSON.Parse(jsonString);
@@ -375,7 +383,8 @@ namespace ChatSDK
             {
                 foreach (JSONNode v in jsonArray.AsArray)
                 {
-                    if (v.IsString) {
+                    if (v.IsString)
+                    {
                         Conversation conv = new Conversation(v.Value);
                         list.Add(conv);
                     }
@@ -399,7 +408,7 @@ namespace ChatSDK
                         GroupReadAck ack = new GroupReadAck(v.Value);
                         list.Add(ack);
                     }
-                        
+
                 }
             }
 
@@ -433,7 +442,8 @@ namespace ChatSDK
         static internal MessageType MessageTypeFromInt(int intType)
         {
             MessageType ret = MessageType.Chat;
-            switch (intType) {
+            switch (intType)
+            {
                 case 0: ret = MessageType.Chat; break;
                 case 1: ret = MessageType.Group; break;
                 case 2: ret = MessageType.Room; break;
@@ -441,7 +451,8 @@ namespace ChatSDK
             return ret;
         }
 
-        static internal int MessageTypeToInt(MessageType type) {
+        static internal int MessageTypeToInt(MessageType type)
+        {
             int ret = 0;
             switch (type)
             {
@@ -452,9 +463,11 @@ namespace ChatSDK
             return ret;
         }
 
-        static internal string MessageBodyTypeToString(MessageBodyType type) {
+        static internal string MessageBodyTypeToString(MessageBodyType type)
+        {
             string ret = "txt";
-            switch (type) {
+            switch (type)
+            {
                 case MessageBodyType.TXT:
                     {
                         ret = "txt";
@@ -497,6 +510,17 @@ namespace ChatSDK
                     break;
             }
             return ret;
+        }
+
+        static internal string JsonStringFromUserInfo(UserInfo info)
+        {
+            return info.ToJson().ToString();
+            
+        }
+
+        static internal UserInfo JsonStringToUserInfo(string jsonString)
+        {
+            return new UserInfo(jsonString);
         }
     }
 }

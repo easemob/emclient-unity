@@ -36,7 +36,7 @@ public class EMUnityValueCallback<T> implements EMValueCallBack<T> {
             jsonObject.put("callbackId", callbackId);
             UnityPlayer.UnitySendMessage(EMSDKMethod.Callback_Obj, "OnSuccess", jsonObject.toString());
         }catch (JSONException e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -51,7 +51,7 @@ public class EMUnityValueCallback<T> implements EMValueCallBack<T> {
             Log.d("chat_sdk", "back: " + jsonObject.toString());
             UnityPlayer.UnitySendMessage(EMSDKMethod.Callback_Obj, "OnSuccessValue", jsonObject.toString());
         }catch (JSONException e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -63,14 +63,14 @@ public class EMUnityValueCallback<T> implements EMValueCallBack<T> {
             try {
                 JSONObject jo = new JSONObject();
                 jo.put("callbackId", callbackId);
-                if (valueType == null && valueType == null) {
+                if (valueType == null) {
                     UnityPlayer.UnitySendMessage(EMSDKMethod.Callback_Obj, "OnSuccess", jo.toString());
                     return;
                 }else if (t instanceof List) {
                     JSONArray jsonAry = new JSONArray();
                     for (Object obj: (List) t) {
                         if (obj instanceof String) {
-                            jsonAry.put((String) obj);
+                            jsonAry.put(obj);
                         } else if (obj instanceof EMGroup) {
                             JSONObject jsonObject = EMGroupHelper.toJson((EMGroup) obj);
                             jsonAry.put(jsonObject.toString());
@@ -82,6 +82,7 @@ public class EMUnityValueCallback<T> implements EMValueCallBack<T> {
                     jo.put("type",valueType);
                     jo.put("value",jsonAry.toString());
                 }else if(t instanceof EMCursorResult) {
+                    // EMCursorResult 用 set object to unity 处理了
                 }
 
                 Log.d("chat_sdk", "back: " + jo.toString());

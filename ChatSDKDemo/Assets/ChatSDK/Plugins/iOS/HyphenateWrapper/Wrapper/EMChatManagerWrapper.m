@@ -352,9 +352,9 @@
         [self onProgress:progress callbackId:callId];
     } completion:^(EMMessage *message, EMError *error) {
         if (error) {
-            [self onMessageSendError:callId userinfo:[message toJson] error:error];
+            [self onError:callId error:error];
         }else {
-            [self onSuccess:@"OnMessageSuccess" callbackId:callId userInfo:[message toJson]];
+            [self onSuccess:nil callbackId:callId userInfo:nil];
         }
     }];
     return [msg toJson];
