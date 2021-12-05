@@ -412,4 +412,20 @@ const char* Conversation_GetMethodCall(const char* methodName, const char* jsonS
     return ret;
 }
 
+void UserInfoManager_MethodCall(const char* methodName, const char* jsonString, const char* callbackId) {
+    NSString *method = [Transfrom NSStringFromCString:methodName];
+    NSDictionary *dic = [Transfrom JsonObjectFromCSString:jsonString];
+    NSString *callId = [Transfrom NSStringFromCString:callbackId];
+    if([method isEqualToString:@"fetchUserInfoByUserId"]) {
+        [EMClientWrapper.instance.userInfoManager fetchUserInfoById:dic callbackId:callId];
+    } else if([method isEqualToString:@"updateOwnInfo"]) {
+        [EMClientWrapper.instance.userInfoManager updateOwnUserInfo:dic callbackId:callId];
+    } else if([method isEqualToString:@"updateOwnByAttribute"]) {
+        [EMClientWrapper.instance.userInfoManager updateOwnUserInfoWithType:dic callbackId:callId];
+    }
+}
 
+
+const char* UserInfoManager_GetMethodCall(const char* methodName, const char* jsonString, const char* callbackId){
+    return NULL;
+}

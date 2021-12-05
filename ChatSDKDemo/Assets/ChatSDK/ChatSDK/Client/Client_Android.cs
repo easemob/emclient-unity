@@ -22,7 +22,7 @@ namespace ChatSDK
 
         public override void CreateAccount(string username, string password, CallBack callBack = null)
         {
-            wrapper.Call("createAccount", username, password, null);
+            wrapper.Call("createAccount", username, password, callBack?.callbackId);
         }
 
         public override void Login(string username, string pwdOrToken, bool isToken = false, CallBack callBack = null)

@@ -75,7 +75,9 @@ namespace ChatSDK {
 
         private void OnApplicationQuit()
         {
-            IClient.Instance.Logout(false);
+            if (SDKClient.Instance.IsLoggedIn) {
+                SDKClient.Instance.Logout(false);
+            }
             CallbackManager.Instance().ClearResource();
             Debug.Log("Quit...");
         }
@@ -274,7 +276,8 @@ namespace ChatSDK {
                     ValueCallBack<List<string>> valueCallBack = (ValueCallBack<List<string>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
+                        {
                             valueCallBack.OnSuccessValue(result);
                         });
                     }
@@ -291,7 +294,8 @@ namespace ChatSDK {
                     ValueCallBack<List<Group>> valueCallBack = (ValueCallBack<List<Group>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
+                        {
                             valueCallBack.OnSuccessValue(result);
                         });
                     }
@@ -308,7 +312,8 @@ namespace ChatSDK {
                     ValueCallBack<CursorResult<GroupInfo>> valueCallBack = (ValueCallBack<CursorResult<GroupInfo>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
+                        {
                             valueCallBack.OnSuccessValue(result);
                         });
                     }
@@ -325,7 +330,8 @@ namespace ChatSDK {
                     ValueCallBack<CursorResult<string>> valueCallBack = (ValueCallBack<CursorResult<string>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
+                        {
                             valueCallBack.OnSuccessValue(result);
                         });
                     }
@@ -342,7 +348,8 @@ namespace ChatSDK {
                     ValueCallBack<CursorResult<Message>> valueCallBack = (ValueCallBack<CursorResult<Message>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
+                        {
                             valueCallBack.OnSuccessValue(result);
                         });
                     }
@@ -359,7 +366,8 @@ namespace ChatSDK {
                     ValueCallBack<List<GroupSharedFile>> valueCallBack = (ValueCallBack<List<GroupSharedFile>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
+                        {
                             valueCallBack.OnSuccessValue(result);
                         });
                     }
@@ -375,7 +383,8 @@ namespace ChatSDK {
                     ValueCallBack<Group> valueCallBack = (ValueCallBack<Group>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
+                        {
                             valueCallBack.OnSuccessValue(result);
                         });
                     }
@@ -392,7 +401,8 @@ namespace ChatSDK {
                     ValueCallBack<PageResult<Room>> valueCallBack = (ValueCallBack<PageResult<Room>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
+                        {
                             valueCallBack.OnSuccessValue(result);
                         });
                     }
@@ -409,7 +419,8 @@ namespace ChatSDK {
                     ValueCallBack<List<Room>> valueCallBack = (ValueCallBack<List<Room>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
+                        {
                             valueCallBack.OnSuccessValue(result);
                         });
                     }
@@ -426,7 +437,8 @@ namespace ChatSDK {
                     ValueCallBack<List<Conversation>> valueCallBack = (ValueCallBack<List<Conversation>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
+                        {
                             valueCallBack.OnSuccessValue(result);
                         });
                     }
@@ -442,7 +454,8 @@ namespace ChatSDK {
                     ValueCallBack<Room> valueCallBack = (ValueCallBack<Room>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
+                        {
                             valueCallBack.OnSuccessValue(result);
                         });
                     }
@@ -459,7 +472,8 @@ namespace ChatSDK {
                     ValueCallBack<PushConfig> valueCallBack = (ValueCallBack<PushConfig>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
+                        {
                             valueCallBack.OnSuccessValue(result);
                         });
                     }
@@ -480,7 +494,8 @@ namespace ChatSDK {
 
                         } while (false);
 
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
+                        {
                             valueCallBack.OnSuccessValue(result);
                         });
 
@@ -498,7 +513,8 @@ namespace ChatSDK {
                         {
                             result = responseValue.Value;
                         }
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
+                        {
                             valueCallBack.OnSuccessValue(result);
                         });
                     }
@@ -515,7 +531,8 @@ namespace ChatSDK {
                             result = TransformTool.JsonStringToMessageList(responseValue.Value);
                         }
 
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
+                        {
                             valueCallBack.OnSuccessValue(result);
                         });
                     }
@@ -525,7 +542,8 @@ namespace ChatSDK {
                 {
                     Message msg = new Message(responseValue.Value);
 
-                    foreach (var info in tempMsgDict) {
+                    foreach (var info in tempMsgDict)
+                    {
                         Debug.Log($"key -- {info.Key}");
                     }
 
@@ -536,13 +554,36 @@ namespace ChatSDK {
                     tempMsgDict.Remove(msg.LocalTime.ToString());
                     OnSuccess(jsonString);
                 }
-                else if (value == "OnMessageError") {
+                else if (value == "OnMessageError")
+                {
                     Message msg = new Message(responseValue.Value);
                     Message sendMsg = tempMsgDict[msg.LocalTime.ToString()];
                     sendMsg.Body = msg.Body;
                     sendMsg.Status = msg.Status;
                     tempMsgDict.Remove(msg.LocalTime.ToString());
                     OnError(jsonString);
+                }
+                else if (value == "Map<String, UserInfo>") {
+
+                    ValueCallBack<Dictionary<string, UserInfo>> valueCallBack = (ValueCallBack<Dictionary<string, UserInfo>>)dictionary[callbackId];
+                    if (valueCallBack.OnSuccessValue != null)
+                    {
+                        Dictionary<string, UserInfo> result = new Dictionary<string, UserInfo>();
+                        JSONNode jn = JSON.Parse(responseValue.Value);
+                        foreach (JSONNode obj in jn.AsArray)
+                        {
+                            foreach (string key in obj.Keys)
+                            {
+                                result[key] = new UserInfo(obj[key].Value);
+                            }
+                        }
+                        
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
+                        {
+                            valueCallBack.OnSuccessValue(result);
+                        });
+                    }
+                    dictionary.Remove(callbackId);
                 }
             }
         }

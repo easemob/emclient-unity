@@ -191,7 +191,7 @@
     NSDictionary *map = @{
         @"type":@"onSharedFileAdded",
         @"groupId":aGroup.groupId,
-        @"sharedFile":[Transfrom NSStringFromJsonObject:[aSharedFile toJson]]
+        @"sharedFile":[aSharedFile toJson]
     };
     UnitySendMessage(GroupListener_Obj, "OnSharedFileAdded", [Transfrom JsonObjectToCSString:map]);
 }

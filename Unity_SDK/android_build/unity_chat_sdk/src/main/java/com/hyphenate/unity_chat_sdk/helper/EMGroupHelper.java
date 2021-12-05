@@ -4,6 +4,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMGroupManager;
 import com.hyphenate.chat.EMGroupOptions;
+import com.hyphenate.chat.EMUserInfo;
 
 import org.json.JSONArray;
 import org.json.JSONException;

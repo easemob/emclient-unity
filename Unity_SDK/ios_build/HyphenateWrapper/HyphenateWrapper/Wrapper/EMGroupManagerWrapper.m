@@ -172,7 +172,7 @@
                                                                completion:^(NSArray *aList, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:aList];
+            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:aList]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -193,7 +193,7 @@
                                                               completion:^(NSArray *aList, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:aList];
+            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:aList]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -212,7 +212,7 @@
                                                                completion:^(NSArray *aList, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:aList];
+            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:aList]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -252,7 +252,14 @@
                                                     completion:^(NSArray *aList, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:aList];
+            
+            NSMutableArray *array = [NSMutableArray array];
+            for (EMGroupSharedFile *file in aList) {
+                [array addObject:[file toJson]];
+            }
+            
+            
+            [weakSelf onSuccess:@"List<EMMucSharedFile>" callbackId:callId userInfo:array];
         }else {
             [weakSelf onError:callId error:aError];
         }

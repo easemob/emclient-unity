@@ -62,5 +62,100 @@ namespace ChatSDK
         public string userId = "";
         public string ext = "";
         public int gender = 0;
+
+        internal UserInfo()
+        {
+            //default constructor
+        }
+
+        internal UserInfo(string jsonString)
+        {
+            if (jsonString != null)
+            {
+                JSONNode jn = JSON.Parse(jsonString);
+                if (!jn.IsNull && jn.IsObject)
+                {
+                    JSONObject jo = jn.AsObject;
+                    if(!jo["nickName"].IsNull) {
+                        this.nickName = jo["nickName"].Value;
+                    }
+
+                    if (!jo["avatarUrl"].IsNull) {
+                        this.avatarUrl = jo["avatarUrl"].Value;
+                    }
+
+                    if (!jo["mail"].IsNull) {
+                        this.email = jo["mail"].Value;
+                    }
+
+                    if (!jo["phone"].IsNull) {
+                        this.phoneNumber = jo["phone"].Value;
+                    }
+
+                    if (!jo["sign"].IsNull)
+                    {
+                        this.signature = jo["sign"].Value;
+                    }
+
+                    if (!jo["birth"].IsNull)
+                    {
+                        this.birth = jo["birth"].Value;
+                    }
+
+                    if (!jo["userId"].IsNull)
+                    {
+                        this.userId = jo["userId"].Value;
+                    }
+
+                    if (!jo["gender"].IsNull)
+                    {
+                        this.gender = jo["gender"].AsInt;
+                    }
+                    
+                    if (!jo["ext"].IsNull) {
+                        this.ext = jo["ext"].Value;
+                    }
+                    
+                }
+            }
+        }
+
+        internal JSONObject ToJson()
+        {
+            JSONObject jo = new JSONObject();
+            jo.Add("userId", userId);
+            if (nickName != null) {
+                jo.Add("nickName", nickName);
+            }
+
+            if (avatarUrl != null) {
+                jo.Add("avatarUrl", avatarUrl);
+            }
+
+            if (email != null) {
+                jo.Add("mail", email);
+            }
+
+            if (phoneNumber != null) {
+                jo.Add("phone", phoneNumber);
+            }
+
+            if (signature != null) {
+                jo.Add("sign", signature);
+            }
+
+            if (birth != null) {
+                jo.Add("birth", birth);
+            }
+
+            if(ext != null)
+            {
+                jo.Add("ext", ext);
+            }
+            
+           
+            jo.Add("gender", gender);
+            return jo;
+        }
     };
 }

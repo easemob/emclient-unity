@@ -19,7 +19,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class EMMessageHelper {
-    public static EMMessage fromJson(JSONObject json) throws JSONException{
+    public static EMMessage fromJson(JSONObject json) throws JSONException {
         EMMessage message = null;
         String bodyString = json.getString("body");
         JSONObject bodyJson = new JSONObject(bodyString);

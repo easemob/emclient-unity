@@ -229,6 +229,24 @@ public class ContactManagerTest : MonoBehaviour, IContactManagerDelegate
     }
     void AcceptInvitationBtnAction()
     {
+
+
+        UserInfo userInfo = new UserInfo();
+        userInfo.userId = "du001";
+        userInfo.nickName = "unity test";
+        userInfo.signature = "测试";
+
+        SDKClient.Instance.UserInfoManager.UpdateOwnInfo(userInfo, handle: new CallBack(
+            onSuccess:()=> {
+                UIManager.DefaultAlert(transform, "成功");
+            },
+            onError: (code, desc) => {
+                UIManager.DefaultAlert(transform, $"失败 {code}");
+            }
+        ));
+
+
+        /*
         InputAlertConfig config = new InputAlertConfig("同意好友申请", (dict) =>
         {
             string idStr = dict["id"];
@@ -252,11 +270,26 @@ public class ContactManagerTest : MonoBehaviour, IContactManagerDelegate
         config.AddField("id");
 
         UIManager.DefaultInputAlert(transform, config);
-
+        */
         Debug.Log("AcceptInvitationBtnAction");
     }
     void DeclineInvitationBtnAction()
     {
+
+        List<string> list = new List<string>();
+        list.Add("du001");
+        SDKClient.Instance.UserInfoManager.FetchUserInfoByUserId(list, new ValueCallBack<Dictionary<string, UserInfo>>(
+            onSuccess: (dic) => {
+                UserInfo userinfo = dic["du001"];
+                UIManager.DefaultAlert(transform, $"成功, {userinfo.userId}, {userinfo.nickName}, {userinfo.signature}");
+            },
+
+            onError: (code, desc) => {
+                UIManager.DefaultAlert(transform, $"失败code:{code}");
+            }
+        ));
+
+        /*
         InputAlertConfig config = new InputAlertConfig("拒绝好友申请", (dict) =>
         {
             string idStr = dict["id"];
@@ -280,7 +313,7 @@ public class ContactManagerTest : MonoBehaviour, IContactManagerDelegate
         config.AddField("id");
 
         UIManager.DefaultInputAlert(transform, config);
-
+        */
         Debug.Log("DeclineInvitationBtnAction");
     }
     void GetSelfIdsOnOtherPlatformBtnAction()
