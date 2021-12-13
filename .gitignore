@@ -59,6 +59,7 @@ easemobDB/
 easemobLog/
 DerivedData/
 appdata/
+sdkdata/
 
 **/UserPrefs
 **/.vs
@@ -102,4 +103,6 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
-
+**/change_all.sh
+**/change_all.sh.meta
+*.meta

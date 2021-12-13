@@ -13,6 +13,7 @@
 #import "EMGroupManagerWrapper.h"
 #import "EMPushManagerWrapper.h"
 #import "EMConversationWrapper.h"
+#import "EMUserInfoManagerWrapper.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -23,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) EMRoomManagerWrapper *roomManager;
 @property (nonatomic, strong) EMPushManagerWrapper *pushManager;
 @property (nonatomic, strong) EMConversationWrapper *conversationWrapper;
+@property (nonatomic, strong) EMUserInfoManagerWrapper *userInfoManager;
 
 + (EMClientWrapper *)instance;
 - (void)initWithOptions:(NSDictionary *)param;

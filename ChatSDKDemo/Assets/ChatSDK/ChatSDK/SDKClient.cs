@@ -6,7 +6,6 @@ namespace ChatSDK
     public class SDKClient
     {
         private Options _Options;
-        //private string _SdkVersion = null;
         private static SDKClient _instance;
         private IClient _Sdk;
 
@@ -46,7 +45,12 @@ namespace ChatSDK
         /// <summary>
         /// 会话管理类
         /// </summary>
-        public IConversationManager ConversationManager { get => _Sdk.ConversationManager(); }
+        internal IConversationManager ConversationManager { get => _Sdk.ConversationManager(); }
+
+        /// <summary>
+        /// 用户信息管理类
+        /// </summary>
+        internal IUserInfoManager UserInfoManager { get => _Sdk.UserInfoManager(); }
 
         /// <summary>
         /// 获取sdk配置信息
@@ -54,7 +58,10 @@ namespace ChatSDK
         public Options Options { get { return _Options; } }
 
 
-        //public string SdkVersion { get { return _SdkVersion; } }
+        /// <summary>
+        /// 获取sdk版本号
+        /// </summary>
+        public string SdkVersion { get => "2.1.0"; }
 
         /// <summary>
         /// 获取当前登录的环信id
@@ -91,13 +98,14 @@ namespace ChatSDK
 
         public void DeleteConnectionDelegate(IConnectionDelegate connectionDelegate)
         {
+            if (CallbackManager.IsQuit()) return;
             if (CallbackManager.Instance().connectionListener.delegater.Contains(connectionDelegate))
             {
                 CallbackManager.Instance().connectionListener.delegater.Remove(connectionDelegate);
             }
         }
 
-
+       
         /// <summary>
         /// 初始化sdk
         /// </summary>
@@ -142,13 +150,8 @@ namespace ChatSDK
         {
             _Sdk.Logout(unbindDeviceToken, new CallBack(
                 onSuccess: () => {
-                    CallbackManager.Instance().connectionListener.delegater.Clear();
-                    _Sdk.ContactManager().ClearDelegates();
-                    _Sdk.ChatManager().ClearDelegates();
-                    _Sdk.GroupManager().ClearDelegates();
-                    _Sdk.RoomManager().ClearDelegates();
                     CallbackManager.Instance().CleanAllCallback();
-                    handle.Success?.Invoke();
+                    handle?.Success?.Invoke();
                 },
                 onError:(code, desc) => {
                     handle?.Error?.Invoke(code, desc);

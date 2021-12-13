@@ -7,7 +7,6 @@
 
 #import <Foundation/Foundation.h>
 #import <HyphenateChat/HyphenateChat.h>
-#import "EMMessage+Unity.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

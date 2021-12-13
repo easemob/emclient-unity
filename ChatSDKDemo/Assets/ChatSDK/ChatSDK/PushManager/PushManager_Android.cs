@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ChatSDK
 {
-    public class PushManager_Android : IPushManager
+    internal sealed class PushManager_Android : IPushManager
     {
 
         private AndroidJavaObject wrapper;

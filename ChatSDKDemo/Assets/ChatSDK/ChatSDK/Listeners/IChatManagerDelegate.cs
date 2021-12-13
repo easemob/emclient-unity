@@ -4,7 +4,7 @@ namespace ChatSDK
     public interface IChatManagerDelegate
     {
         /// <summary>
-        /// 收消息
+        /// 收到消息
         /// </summary>
         /// <param name="messages">消息列表</param>
         void OnMessagesReceived(List<Message> messages);

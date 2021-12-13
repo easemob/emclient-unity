@@ -152,7 +152,7 @@ namespace ChatSDK
         /// <param name="roomId">聊天室id</param>
         /// <param name="members">成员id</param>
         /// <param name="handle">结果回调</param>
-        public abstract void RemoveRoomMembers(string roomId, List<string> members, CallBack handle = null);
+        public abstract void DeleteRoomMembers(string roomId, List<string> members, CallBack handle = null);
 
         /// <summary>
         /// 移除黑名单
@@ -194,7 +194,9 @@ namespace ChatSDK
         /// 移除聊天室监听
         /// </summary>
         /// <param name="roomManagerDelegate"></param>
-        public void RemoveRoomManagerDelegate(IRoomManagerDelegate roomManagerDelegate) {
+        public void RemoveRoomManagerDelegate(IRoomManagerDelegate roomManagerDelegate)
+        {
+            if (CallbackManager.IsQuit()) return;
             if (CallbackManager.Instance().roomManagerListener.delegater.Contains(roomManagerDelegate))
             {
                 CallbackManager.Instance().roomManagerListener.delegater.Remove(roomManagerDelegate);

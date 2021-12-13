@@ -104,7 +104,6 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
         SDKClient.Instance.RoomManager.RemoveRoomManagerDelegate(this);
     }
 
-
     void backButtonAction()
     {
         SceneManager.LoadSceneAsync("Main");
@@ -114,6 +113,13 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
     {
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
+            string id = dict["adminId"];
+            if (null == currentRoomId || 0 == currentRoomId.Length || null == id || 0 == id.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             SDKClient.Instance.RoomManager.AddRoomAdmin(currentRoomId, dict["adminId"], new CallBack(
                 onSuccess: () =>
                 {
@@ -135,6 +141,13 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
     {
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
+            string id = dict["memberId"];
+            if (null == currentRoomId || 0 == currentRoomId.Length || null == id || 0 == id.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             List<string> list = new List<string>();
             list.Add(dict["memberId"]);
             SDKClient.Instance.RoomManager.BlockRoomMembers(currentRoomId, list, new CallBack(
@@ -158,6 +171,13 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
     {
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
+            string nw = dict["newOwner"];
+            if (null == currentRoomId || 0 == currentRoomId.Length || null == nw || 0 == nw.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             SDKClient.Instance.RoomManager.ChangeRoomOwner(currentRoomId, dict["newOwner"], new CallBack(
                 onSuccess: () =>
                 {
@@ -181,6 +201,12 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
 
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
+            if (null == currentRoomId || 0 == currentRoomId.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             SDKClient.Instance.RoomManager.ChangeRoomDescription(currentRoomId, dict["Description"], new CallBack(
                 onSuccess: () =>
                 {
@@ -204,6 +230,13 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
 
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
+            string subName = dict["Name"];
+            if (null == currentRoomId || 0 == currentRoomId.Length || null == subName || 0 == subName.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             SDKClient.Instance.RoomManager.ChangeRoomName(currentRoomId, dict["Name"], new CallBack(
                 onSuccess: () =>
                 {
@@ -256,7 +289,11 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
     }
     void FetchRoomAnnouncementBtnAction()
     {
-
+        if (null == currentRoomId || 0 == currentRoomId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
         SDKClient.Instance.RoomManager.FetchRoomAnnouncement(currentRoomId, new ValueCallBack<string>(
             onSuccess: (str) => {
                 UIManager.DefaultAlert(this.transform, str);
@@ -271,7 +308,11 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
 
     void FetchRoomBlockListBtnAction()
     {
-
+        if (null == currentRoomId || 0 == currentRoomId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
         SDKClient.Instance.RoomManager.FetchRoomBlockList(currentRoomId, handle: new ValueCallBack<List<string>>(
             onSuccess: (list) => {
                 string str = string.Join(",", list.ToArray());
@@ -286,7 +327,11 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
     }
     void FetchRoomInfoFromServerBtnAction()
     {
-
+        if (null == currentRoomId || 0 == currentRoomId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
         SDKClient.Instance.RoomManager.FetchRoomInfoFromServer(currentRoomId, new ValueCallBack<Room>(
             onSuccess: (room) => {
                 List<string> list = new List<string>();
@@ -304,6 +349,11 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
     }
     void FetchRoomMembersBtnAction()
     {
+        if (null == currentRoomId || 0 == currentRoomId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
         SDKClient.Instance.RoomManager.FetchRoomMembers(currentRoomId, handle: new ValueCallBack<CursorResult<string>>(
             onSuccess: (result) => {
                 string str = string.Join(",", result.Data.ToArray());
@@ -319,7 +369,11 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
     }
     void FetchRoomMuteListBtnAction()
     {
-
+        if (null == currentRoomId || 0 == currentRoomId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
         SDKClient.Instance.RoomManager.FetchRoomMuteList(currentRoomId, handle: new ValueCallBack<List<string>>(
             onSuccess: (result) => {
                 string str = string.Join(",", result.ToArray());
@@ -340,6 +394,11 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
     }
     void JoinRoomBtnAction()
     {
+        if (null == currentRoomId || 0 == currentRoomId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
         SDKClient.Instance.RoomManager.JoinRoom(currentRoomId, new ValueCallBack<Room>(
             onSuccess: (room) => {
                 UIManager.DefaultAlert(this.transform, "加入成功");
@@ -352,6 +411,11 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
     }
     void LeaveRoomBtnAction()
     {
+        if (null == currentRoomId || 0 == currentRoomId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
         SDKClient.Instance.RoomManager.LeaveRoom(currentRoomId, new CallBack(
             onSuccess: () => {
                 UIManager.DefaultAlert(this.transform, "离开成功");
@@ -368,6 +432,12 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
             string member = dict["MemberId"];
+            if (null == currentRoomId || 0 == currentRoomId.Length || null == member || 0 == member.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             List<string> list = new List<string>();
             list.Add(member);
             SDKClient.Instance.RoomManager.MuteRoomMembers(currentRoomId, list, new CallBack(
@@ -392,6 +462,12 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
             string adminId = dict["AdminId"];
+            if (null == currentRoomId || 0 == currentRoomId.Length || null == adminId || 0 == adminId.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             SDKClient.Instance.RoomManager.RemoveRoomAdmin(currentRoomId, adminId, new CallBack(
                 onSuccess: () => {
                     UIManager.SuccessAlert(transform);
@@ -414,9 +490,15 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
             string member = dict["MemberId"];
+            if (null == currentRoomId || 0 == currentRoomId.Length || null == member || 0 == member.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             List<string> list = new List<string>();
             list.Add(member);
-            SDKClient.Instance.RoomManager.RemoveRoomMembers(currentRoomId, list, new CallBack(
+            SDKClient.Instance.RoomManager.DeleteRoomMembers(currentRoomId, list, new CallBack(
                 onSuccess: () => {
                     UIManager.SuccessAlert(transform);
                 },
@@ -438,6 +520,12 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
             string member = dict["MemberId"];
+            if (null == currentRoomId || 0 == currentRoomId.Length || null == member || 0 == member.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             List<string> list = new List<string>();
             list.Add(member);
             SDKClient.Instance.RoomManager.UnBlockRoomMembers(currentRoomId, list, new CallBack(
@@ -461,6 +549,12 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
             string member = dict["MemberId"];
+            if (null == currentRoomId || 0 == currentRoomId.Length || null == member || 0 == member.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             List<string> list = new List<string>();
             list.Add(member);
             SDKClient.Instance.RoomManager.UnMuteRoomMembers(currentRoomId, list, new CallBack(
@@ -483,6 +577,11 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
     {
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
+            if (null == currentRoomId || 0 == currentRoomId.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
             string announcement = dict["announcement"];
             SDKClient.Instance.RoomManager.UpdateRoomAnnouncement(currentRoomId, announcement, new CallBack(
                 onSuccess: () => {

@@ -1,572 +1,2109 @@
-# unity-im-sdk
+# 环信im unity sdk
 
-### 结构说明
+文章主要讲解环信 im unity sdk 如何使用。
 
-`SDKClient` sdk单例，主要用于初始化，注册，登录，退出等操作。
+[环信官网](https://www.easemob.com/)
 
-`Options` 用户配置sdk基本信息，如appkey，推送证书等；
+[环信iOS集成文档](http://docs-im.easemob.com/im/ios/sdk/prepare)
 
-**Appkey是您在环信的唯一标识，需要[去环信官网申请](https://www.easemob.com/) **
+[环信Android集成文档](http://docs-im.easemob.com/im/android/sdk/import)
 
-示例:
+源码地址: [Github](https://github.com/easemob/emclient-unity)  
+任何问题可以通过 [Github Issues](https://github.com/easemob/emclient-unity/issues) 提问
 
-```
-// 初始化sdk，并设置appkey
-Options options = new Options("easemob-demo#chatdemoui");
+**QQ群: 891289413**
+
+## 前期准备
+
+如果您还没有 Appkey，可以前往[环信官网](https://www.easemob.com/)注册[即时通讯云](https://console.easemob.com/user/register)。
+
+进入 console -> 添加应用 -> Appkey 获取 `Appkey`。
+
+### 下载 SDK
+
+[下载imUnitySDK](https://downloadsdk.easemob.com/downloads/SDK/Unity/imUnitySDK.unitypackage)
+
+#### 导入SDK 到 Unity
+
+`Assets` -> `Import Package` -> `Custom Package..`  -> `imUnitySDK.unitypackage`
+
+## SDK讲解
+
+- `SDKClient` 用于管理sdk各个模块和一些账号相关的操作，如注册，登录，退出;
+- `IChatManager`用于管理聊天相关操作，如发送消息，接收消息，发送已读回执，获取会话列表等;
+- `IContactManager` 用于管理通讯录相关操作，如获取通讯录列表，添加好友，删除好友等;
+- `IGroupManager`用于群组相关操作，如获取群组列表，加入群组，离开群组等;
+- `IRoomManager`用于管理聊天室，如获取聊天室列表;
+- `IPushManager`用于管理推送配置，如设置推送昵称，推送免打扰时间段等;
+
+
+### SDKClient
+
+#### 初始化
+
+```C#
+// 设置 Appkey
+Options options = new Options(appKey: "easemob-demo#easeim");
+
+// 设置 APNs Cert Name
+options.EnableApplePush("APNS_CERT_NAME");
+
+// 设置 FCM ID
+options.EnableFCMPush("FCM_ID");
+
+// 初始化 sdk
 SDKClient.Instance.InitWithOptions(options);
-
-
-// CallBack, 用于接受返回结果
-CallBack callback = new CallBack();
-callback.Success = () => {
-		Debug.Log("登录成功");
-};
-
-callback.Error = (int code, string desc) => {
-		Debug.Log("登录失败 error code " + code + " desc " + desc);
-};
-
-// 登录，username和password是环信的id和对应的密码，需要在环信console注册。
-SDKClient.Instance.Login(username, password, handle: callback) ;
 ```
 
-`IChatManager` 消息管理类，用于获取/删除会话，发送消息，撤回消息，重发消息等操作；
+>环信的推送只针对离线设备，如果您的app只是后台且没有被系统挂起，此时客户端的长连接仍然还在，这时消息仍然会直接走收消息的方法，并不会触发推送，这就要求您在收消息时判断App的状态，并实现本地推送。  
+>推送证书申请上传，安卓端请参考文档[第三方推送集成](http://docs-im.easemob.com/im/android/push/thirdpartypush#%E7%AC%AC%E4%B8%89%E6%96%B9%E6%8E%A8%E9%80%81%E9%9B%86%E6%88%90)，iOS请参考文档[APNs推送](http://docs-im.easemob.com/im/ios/apns/deploy)。
 
-`Conversation` 会话类，用于管理消息，如删除/获取/插入消息等，收发消息后会自动创建会话，会话id为对方id。
+#### 注册
 
-```
-// 创建/获取与du003的会话
-Conversation conversation = SDKClient.Instance.ChatManager.GetConversation("du003");
-
-// 从会话中获取200条消息
-List<Message> msgs = conversation.LoadMessages(null, 200);
-
-// 获取所有有消息的会话
-List<Conversation>list = SDKClient.Instance.ChatManager.LoadAllConversations();
-```
-
-
-
-
-
-`Message`消息类，用户描述消息方向和包装消息体;
-
-`MessageBody` 消息体，描述消息类型和消息内容；
-
-示例:
-
-```
-CallBack callBack = new CallBack(
-		onSuccess: () => {
-				Debug.Log("unity 消息发送成功");
+```C#
+SDKClient.Instance.CreateAccount("username", "password", new CallBack(
+    onSuccess: () => {
+        Debug.Log("执行成功");
     },
-		onError: (code, desc)=> {
-				Debug.Log("unity 消息发送失败");
-		}
-);
-
-// 发送文字，接收方id是du003，环信发消息时只需要知道对方的id就可以发送。
-Message msg = Message.CreateTextSendMessage("du003", "文字消息");
-SDKClient.Instance.ChatManager.SendMessage(msg, callBack);
+    onError: (code, desc) => {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
 ```
 
-`IContactManager`通讯录管理类，用于管理好友管理，如添加/删除好友，获取好友列表，添加/移除黑名单等；
+>客户端注册需要将注册方式设置为`开放注册`，具体说明请参考文档[用户管理](http://docs-im.easemob.com/im/server/ready/user#%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86)。
 
-示例:
+#### 登录
 
-```
-CallBack callBack = new CallBack(
-		onSuccess: () => {
-				Debug.Log("发送加好友请求成功");
-		},
-		onError: (code, desc) => {
-				Debug.Log("发送加好友请求失败 " + code + " desc " + desc);
-		}
-);
-// 添加du003为好友
-SDKClient.Instance.ContactManager.AddContact("du003", handle: callBack);
-```
-
-`IGroupManager` 群组管理类，用于管理群组，如创建/销毁/申请加入群组，获取已加入群组列表，以及管理群管理员，成员，禁言，群黑名单等操作；
-
-`GroupOptions` 创建群时的群设置配置信息；
-
-`Group` 群组类，用于描述群的各种属性；
-
-示例：
-
-```
-// 带有参数的callback，返回创建的群信息
-ValueCallBack<Group> callBack = new ValueCallBack<Group>(
-		onSuccess: (group) => {
-				Debug.Log("创建群组成功，群组id " + group.GroupId);
+```C#
+SDKClient.Instance.Login("username", "password", handle: new CallBack(
+    onSuccess: () => {
+        Debug.Log("执行成功");
     },
-		onError:(code, desc) => {
-				Debug.Log("创建群组失败 " + code + " desc " + desc);
-		}
-);
-// 设置群组为私有群，群成员可以邀请
-GroupOptions groupOptions = new GroupOptions(GroupStyle.PrivateMemberCanInvite);
-SDKClient.Instance.GroupManager.CreateGroup("群组名称", groupOptions, desc: "群描述", handle: callBack);
-```
-
-
-
-`IRoomManager` 聊天室管理类，用于创建/销毁/加入聊天室；(默认客户端不支持创建和销毁聊天室，需要通过服务器操作，如需客户端操作需单独开通)；
-
-`Room` 聊天室类，用于描述聊天室的各种属性；
-
-示例:
-
-```
-ValueCallBack<PageResult<Room>> callback = new ValueCallBack<PageResult<Room>>();
-callback.OnSuccessValue = (PageResult<Room> result) => {
-		foreach (var room in result.Data) {
-				Debug.Log("聊天室id " + room.RoomId);
-		}
-};
-callback.Error = (int code, string desc) => {
-		Debug.Log("获取列表失败 " + code + " desc " + desc);
-};
-// 从服务器获取聊天室列表
-SDKClient.Instance.RoomManager.FetchPublicRoomsFromServer(handle:callback);
-```
-
-
-
-```
-ValueCallBack<Room> callback = new ValueCallBack<Room>();
-callback.OnSuccessValue = (Room room) => {
-		Debug.Log("加入成功");
-};
-
-callback.Error = (int code, string desc) =>
-{
-		Debug.Log("加入聊天室失败 " + code + " desc " + desc);
-};
-// 加入roomId的聊天室
-SDKClient.Instance.RoomManager.JoinRoom(roomId, callback);
-```
-
-
-
-`IPushManager` 推送管理类，用于设置推送昵称，设置推送免打扰等操作；
-
-`PushConfig` 推送配置对象，用于获取当前推送状态；
-
-示例：
-
-```
-ValueCallBack<PushConfig> callback = new ValueCallBack<PushConfig>();
-callback.OnSuccessValue = (PushConfig config) => {
-		Debug.Log("获取推送配置成功");
-};
-callback.Error = (int code, string desc) =>
-{
-		Debug.Log("获取推送配置失败 " + code + " desc " + desc);
-};
-SDKClient.Instance.PushManager.GetPushConfigFromServer(callback);
-```
-
-```
-CallBack callBack = new CallBack();
-callBack.Success = () => {
-		Debug.Log("设置免打扰成功");
-};
-callBack.Error = (int code, string desc) =>
-{
-		Debug.Log("设置免打扰失败 " + code + " desc " + desc);
-};
-// 设置晚10点到早8点不接收推送
-SDKClient.Instance.PushManager.SetNoDisturb(true, 22, 8, callBack);
-```
-
-
-
-### 实现监听
-
-`IConnectionDelegate` 用于监听链接状态
-
-示例:
-
-```
-public class Main : MonoBehaviour, IConnectionDelegate
-{
-		private void Awake()
+    onError: (code, desc) =>
     {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+}
+```
+
+#### 获取当前登录环信id
+
+```C#
+String currentUsername = SDKClient.Instance.CurrentUsername();
+```
+
+#### 退出
+
+```C#
+SDKClient.Instance.Logout(true, new CallBack(
+    onSuccess: () => {
+        Debug.Log("执行成功");
+    },
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+>退出也有失败的情况，需要确定是否失败。  
+>注册环信id详细说明请参考文档[用户体系集成](http://docs-im.easemob.com/im/server/ready/user)。
+
+
+#### 监听服务器连接状态
+
+```C#
+public class TestSDK : MonoBehaviour, IConnectionDelegate
+{
+
+    private void Start()
+    {
+        // 添加监听，需在sdk 初始化后调用
         SDKClient.Instance.AddConnectionDelegate(this);
     }
 
-		public void OnConnected()
+    private void OnDestroy()
     {
-        Debug.Log("连接恢复-------");
+        // 移除监听
+        SDKClient.Instance.DeleteConnectionDelegate(this);
+    }
+
+    public void OnConnected()
+    {
+        Debug.Log("连接到服务器");
     }
 
     public void OnDisconnected(int i)
     {
-        Debug.Log("连接断开------- " + i);
+        Debug.Log($"与服务器断开连接，code: {i}");
     }
 }
+
+```
+
+#### 获取当前连接状态
+
+```C#
+bool isConnected = SDKClient.Instance.IsConnected;
+```
+
+#### 获取 unity sdk 版本号
+
+```C#
+string version = SDKClient.Instance.SdkVersion;
+```
+
+### IChatManager
+
+#### 获取会话列表	
+
+```C#
+List<Conversation>conversations = SDKClient.Instance.ChatManager.LoadAllConversations();
+```
+
+>会话列表是存在本地的一种消息管理对象，如果您会话中没有消息则表示会话不存在。
+
+
+#### 创建会话
+
+```C#
+// emId: 会话对应环信id, 如果是群组或者聊天室，则为群组id或者聊天室id
+  Conversation conv = SDKClient.Instance.ChatManager.GetConversation("emId");
+```
+
+#### 获取会话中的消息
+
+```C#
+Conversation conv = SDKClient.Instance.ChatManager.GetConversation("emId");
+conv.LoadMessages(handle:new ValueCallBack<List<Message>>(
+    onSuccess: (messages) => {
+        Debug.Log("获取成功");
+    },
+    onError:(code, desc) => {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+#### 获取会话中未读消息数
+
+```C#
+Conversation conv = SDKClient.Instance.ChatManager.GetConversation("conversationId");
+int unreadCount = conv.UnReadCount;
+```
+
+#### 设置单条消息为已读
+
+```C#
+Conversation conv = SDKClient.Instance.ChatManager.GetConversation("emId");
+conv.MarkMessageAsRead("messageId");
+```
+
+#### 设置所有消息为已读
+
+```C#
+Conversation conv = SDKClient.Instance.ChatManager.GetConversation("emId");
+conv.MarkAllMessageAsRead();
+```
+
+#### 发送消息已读状态
+
+```C#
+SDKClient.Instance.ChatManager.SendMessageReadAck("messageId", new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+#### 删除会话中的消息
+
+```C#
+Conversation conv = SDKClient.Instance.ChatManager.GetConversation("emId");
+conv.DeleteMessage("messageId");
+```
+
+#### 删除会话中所有的消息
+```C#
+Conversation conv = SDKClient.Instance.ChatManager.GetConversation("conversationId");
+conv.DeleteAllMessages();
+```
+
+#### 插入消息
+
+```C#
+Conversation conv = SDKClient.Instance.ChatManager.GetConversation("emId");
+conv.InsertMessage(message);
+```
+
+> SDK在您发送和接收消息(_cmd类型消息除外_)后会自动将消息插入数据库中，并不需要您自己将消息插入数据库，但如果您需要自己插入一条消息时可以调用该api。
+
+#### 更新消息
+
+```C#
+Conversation conv = SDKClient.Instance.ChatManager.GetConversation("emId");
+conv.UpdateMessage(message)
 ```
 
 
+#### 删除会话
 
-`IChatManagerDelegate` 用于监听消息相关回调
-
-示例:
-
+```C#
+SDKClient.Instance.ChatManager.DeleteConversation("emId");
 ```
-public class Main : MonoBehaviour, IChatManagerDelegate
+​	
+#### 构建要发送的消息
+
+```C#
+// 文本消息
+Message textMessage = Message.CreateTextSendMessage("接收方id", "消息内容");
+
+// 图片消息
+Message imgMessage = Message.CreateImageSendMessage("接收方id", localPath: "图片路径", displayName: "图片名称.xx");
+
+// 视频消息
+Message videoMessage = Message.CreateVideoSendMessage("接收方id", localPath: "适配路径", displayName: "适配文件名称.xx");
+
+// 音频消息
+Message voiceMessage = Message.CreateVoiceSendMessage("接收方id", localPath: "音频文件路径", displayName: "音频文件名称.xx", duration: 10);
+
+// 文件消息
+Message fileMessage = Message.CreateFileSendMessage("接收方id", localPath:"文件路径", displayName:"文件名称.xx");
+
+// 位置消息
+Message localMessage = Message.CreateLocationSendMessage("接收方id", address:"位置名称", latitude:0.11, longitude:0.31);
+
+// cmd消息
+Message cmdMessage = Message.CreateCmdSendMessage("接收方id", action: "自定义事件");
+
+// 自定义消息
+Message customMessage = Message.CreateCustomSendMessage("接收方id", customEvent: "自定义事件");
+```
+
+> 如果您是要构建群组或者聊天室消息，需要修改消息的`MessageType`属性, 如:   
+> `message.MessageType = MessageType.Group;`
+
+#### 发送消息
+
+```C#
+SDKClient.Instance.ChatManager.SendMessage(ref message, new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    },
+    // 只有带有附件的消息才会回调进度
+    onProgress: (progress) => { }
+));
+```
+>环信收发消息并不需要对方是您通讯录中的成员，只要知道对方的环信id就可以发送消息。
+
+#### 重发消息
+
+```C#
+SDKClient.Instance.ChatManager.ResendMessage("messageId", new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    },
+    // 只有带有附件的消息才会回调进度
+    onProgress: (progress) => { }
+));
+```
+#### 撤回消息
+
+```C#
+SDKClient.Instance.ChatManager.RecallMessage("messageId", new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 消息撤回为增值服务，您只能撤回2分钟内的消息，如需开通，请[咨询商务](https://www.easemob.com/pricing/im#p08)。
+
+
+#### 收消息监听
+
+```C#
+
+public class TestSDK : MonoBehaviour, IChatManagerDelegate
 {
-		private void Awake()
+
+    private void Start()
     {
-        SDKClient.Instance.AddChatManagerDelegate(this);
+        // 添加监听，需在sdk 初始化后调用
+        SDKClient.Instance.ChatManager.AddChatManagerDelegate(this);
     }
 
-		public void OnMessagesReceived(List<Message> messages)
+    private void OnDestroy()
     {
-        foreach (var msg in messages) {
-
-            switch (msg.Body.Type) {
-                case MessageBodyType.TXT:
-                    {
-                        ChatSDK.MessageBody.TextBody body = (ChatSDK.MessageBody.TextBody)msg.Body;
-                        Debug.Log("unity ---- 文字消息 " + body.Text);
-
-                    }
-                    break;
-                case MessageBodyType.IMAGE:
-                    {
-                        ChatSDK.MessageBody.ImageBody body = (ChatSDK.MessageBody.ImageBody)msg.Body;
-                        Debug.Log("unity ---- 图片消息remote path " + body.RemotePath);
-                        Debug.Log("unity ---- 图片消息thumbnai remote path " + body.ThumbnaiRemotePath);
-                    }
-                    break;
-                case MessageBodyType.VOICE:
-                    {
-                        ChatSDK.MessageBody.VoiceBody body = (ChatSDK.MessageBody.VoiceBody)msg.Body;
-                        Debug.Log("unity ---- 短音频消息remote path " + body.RemotePath);
-                        Debug.Log("unity ---- 短音频消息时长 " + body.Duration);
-                    }
-                    break;
-                case MessageBodyType.VIDEO:
-                    {
-                        ChatSDK.MessageBody.VideoBody body = (ChatSDK.MessageBody.VideoBody)msg.Body;
-                        Debug.Log("unity ---- 短视频消息remote path " + body.RemotePath);
-                        Debug.Log("unity ---- 短视频消息时长 " + body.Duration);
-                    }
-                    break;
-                case MessageBodyType.FILE:
-                    {
-                        Debug.Log("unity ---- 文件消息");
-                    }
-                    break;
-                case MessageBodyType.CUSTOM:
-                    {
-                        Debug.Log("unity ---- 自定义消息");
-                    }
-                    break;
-                case MessageBodyType.LOCATION:
-                    {
-                        ChatSDK.MessageBody.LocationBody body = (ChatSDK.MessageBody.LocationBody)msg.Body;
-                        Debug.Log("unity ---- 位置消息 " + body.Address);
-                        Debug.Log("unity ---- 位置消息 " + body.Latitude);
-                        Debug.Log("unity ---- 位置消息 " + body.Longitude);
-                    }
-                    break;
-            }
-        }
+        // 移除监听
+        SDKClient.Instance.ChatManager.AddChatManagerDelegate(this);
     }
 
+    // 收到消息
+    public void OnMessagesReceived(List<Message> messages)
+    {
+
+    }
+
+    // 收到CMD消息
     public void OnCmdMessagesReceived(List<Message> messages)
     {
-        Debug.Log("unity ---- 收到cmd消息");
-
-        foreach (var msg in messages) {
-            ChatSDK.MessageBody.CmdBody cmdBody = (ChatSDK.MessageBody.CmdBody)msg.Body;
-            Debug.Log("cmd action -- " + cmdBody.Action);
-        }
 
     }
 
+    // 发出的消息已读回调
     public void OnMessagesRead(List<Message> messages)
     {
-        Debug.Log("unity ---- 收到消息已读");
 
-        foreach (var msg in messages)
-        {
-            Debug.Log("已读消息id -- " + msg.MsgId);
-        }
     }
 
+    // 发出的消息已送达回调
     public void OnMessagesDelivered(List<Message> messages)
     {
-        Debug.Log("unity ---- 收到消息已送达回执");
 
-        foreach (var msg in messages)
-        {
-            Debug.Log("送达消息id -- " + msg.MsgId);
-        }
     }
 
+    // 消息被撤回回调
     public void OnMessagesRecalled(List<Message> messages)
     {
-        foreach (var msg in messages)
-        {
-            Debug.Log("撤回消息id -- " + msg.MsgId);
-        }
+
     }
 
+    // 发出的群消息已读更新
     public void OnReadAckForGroupMessageUpdated()
     {
-        Debug.Log("群消息已读数量变化");
+
     }
 
+    // 发出的群消息已读
     public void OnGroupMessageRead(List<GroupReadAck> list)
     {
-        foreach (var ack in list) {
-            Debug.Log("群消息已读id -- " + ack.MsgId);
-        }
+
     }
 
+    // 会话列表变化
     public void OnConversationsUpdate()
     {
-        Debug.Log("unity ---- 会话列表变化");
-        List<Conversation> list = SDKClient.Instance.ChatManager.LoadAllConversations();
-        foreach (var conv in list) {
-            Debug.Log("unity ---- 会话id ---- " + conv.Id);
-        }
+
     }
 
+    // 会话已读
     public void OnConversationRead(string from, string to)
     {
-        Debug.Log("会话已读");
+
     }
 }
+
+
+```
+
+### IContactManager
+
+#### 从服务器获取通讯录中的用户列表
+
+```C#
+SDKClient.Instance.ContactManager.GetAllContactsFromServer(new ValueCallBack<List<string>>(
+    onSuccess: (list) => {
+        Debug.Log("执行成功");
+    },
+
+    onError:(code, desc) => {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
 ```
 
 
+#### 发送添加申请
 
-`IContactManagerDelegate` 通讯录变化回调
+```C#
+SDKClient.Instance.ContactManager.AddContact("emId", "hello", new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
 
-示例:
-
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
 ```
-public class Main : MonoBehaviour, IContactManagerDelegate
+
+> 添加申请不会发推送，如果用户不在线，等上线后会收到。
+
+#### 删除通讯录中的成员
+
+```C#
+SDKClient.Instance.ContactManager.DeleteContact("emId", handle: new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+#### 从服务器获取黑名单
+
+```C#
+SDKClient.Instance.ContactManager.GetBlockListFromServer(new ValueCallBack<List<string>>(
+    onSuccess: (list) =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+#### 添加用户到黑名单中
+
+```C#
+SDKClient.Instance.ContactManager.AddUserToBlockList("emId", new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 黑名单和通讯录是独立的，被添加人不需要在您的通讯录中，如果是通讯录中成员被加入到黑名单后，他仍然会出现在您的通讯录名单中，同时他也会出现在您的黑名单中。被添加到黑名单后，您双方均无法收发对方的消息。
+
+#### 将用户从黑名单中删除
+
+```C#
+SDKClient.Instance.ContactManager.RemoveUserFromBlockList("emId", new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+
+#### 通讯录监听
+
+```C#
+public class TestSDK : MonoBehaviour, IContactManagerDelegate
 {
-		private void Awake()
+
+    private void Start()
     {
-        SDKClient.Instance.AddContactManagerDelegate(this);
+        // 添加监听，需在sdk 初始化后调用
+        SDKClient.Instance.ContactManager.AddContactManagerDelegate(this);
     }
 
-		public void OnContactAdded(string username)
+    private void OnDestroy()
     {
-        Debug.Log("添加通讯录 ---- username " + username);
+        // 移除监听
+        SDKClient.Instance.ContactManager.RemoveContactManagerDelegate(this);
     }
 
+    // 联系人增加回调
+    public void OnContactAdded(string username)
+    {
+
+    }
+
+    // 联系人减少回调
     public void OnContactDeleted(string username)
     {
-        Debug.Log("删除通讯录 ---- username " + username);
+
     }
 
+    // 收到添加好友请求
     public void OnContactInvited(string username, string reason)
     {
-        Debug.Log("通讯录申请 ---- username " + username);
+
     }
 
+    // 发出的添加好友请求被同意
     public void OnFriendRequestAccepted(string username)
     {
-        Debug.Log("通讯录申请被同意 ---- username " + username);
+
     }
 
+    // 发出的添加好友请求被解决
     public void OnFriendRequestDeclined(string username)
     {
-        Debug.Log("通讯录申请被拒绝 ---- username " + username);
+
     }
 }
-```
-
-`IGroupManagerDelegate` 群变化回调
 
 ```
-public class Main : MonoBehaviour, IGroupManagerDelegate
+
+#### 同意添加申请
+
+```C#
+SDKClient.Instance.ContactManager.AcceptInvitation("emId", new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+#### 拒绝添加申请
+
+```C#
+SDKClient.Instance.ContactManager.DeclineInvitation("emId", new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+### IGroupManager
+
+#### 从服务器获取已加入群组列表
+
+```C#
+SDKClient.Instance.GroupManager.FetchJoinedGroupsFromServer(handle: new ValueCallBack<List<Group>>(
+    onSuccess: (list) =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+#### 从缓存中获取已加入群组列表
+
+```C#
+List<Group>groups = SDKClient.Instance.GroupManager.GetJoinedGroups();
+```
+
+#### 从服务器获取公开群组列表
+
+```C#
+SDKClient.Instance.GroupManager.FetchPublicGroupsFromServer(handle: new ValueCallBack<CursorResult<GroupInfo>>(
+    onSuccess: (result) =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+#### 创建群组
+
+```C#
+SDKClient.Instance.GroupManager.CreateGroup("群组名称", options: new GroupOptions(GroupStyle.PrivateMemberCanInvite), handle: new ValueCallBack<Group>(
+    onSuccess: (group) =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> GroupOptions `GroupStyle` 等参数进行设置，群组有四种，分别是:
+ `PrivateOnlyOwnerInvite` 私有群，只有群主和管理员能邀请他人进群，被邀请人会收到邀请信息，同意后可入群;
+ `PrivateMemberCanInvite` 私有群，所有人都可以邀请他人进群，被邀请人会收到邀请信息，同意后可入群;
+ `PublicJoinNeedApproval` 公开群，可以通过获取公开群列表api取的，申请加入时需要群主或管理员同意;
+ `PublicOpenJoin` 公开群，可以通过获取公开群列表api取，可以直接进入;
+
+
+#### 获取群组详情
+
+```C#
+SDKClient.Instance.GroupManager.GetGroupSpecificationFromServer("groupId", handle: new ValueCallBack<Group>(
+    onSuccess: (group) =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+#### 获取群成员列表
+
+```C#
+SDKClient.Instance.GroupManager.GetGroupMemberListFromServer("groupId", handle: new ValueCallBack<CursorResult<string>>(
+    onSuccess: (result) =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+#### 加入公开群组
+
+```C#
+SDKClient.Instance.GroupManager.JoinPublicGroup("groupId", handle: new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 需要群组类型是 `PublicOpenJoin` ,调用后直接加入群组。
+
+#### 申请加入公开群
+
+```C#
+SDKClient.Instance.GroupManager.applyJoinToGroup("groupId", handle: new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 需要群组类型是 `PublicJoinNeedApproval` ,申请后，群主和管理员会收到加群邀请，同意后入群。
+
+#### 邀请用户入群
+
+```C#
+SDKClient.Instance.GroupManager.AddGroupMembers("groupId", members, handle: new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 需要群组类型是 `PrivateOnlyOwnerInvite` 或 `PrivateMemberCanInvite` ,
+ `PrivateOnlyOwnerInvite` 时，群主和管理员可以调用；
+ `PrivateMemberCanInvite ` 是，群中任何人都可以调用；
+被邀请方会收到邀请通知，同意后进群。邀请通知并不会以推送的形式发出，如果用户不在线，等上线后会收到，用户同意后入群。
+
+#### 从群组中删除用户
+
+```C#
+SDKClient.Instance.GroupManager.DeleteGroupMembers("emId", members, new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 群主和管理员可以调用。
+
+#### 添加管理员
+
+```C#
+SDKClient.Instance.GroupManager.AddGroupAdmin("emId", "memberId", new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 群主可以调用。被操作人会收到被添加为管理员回调，该回调无推送，如用户不在线，上线后会收到。
+
+
+#### 移除管理员
+
+```C#
+SDKClient.Instance.GroupManager.RemoveGroupAdmin("emId", "adminId", new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 群主可以调用。被操作人会收到被移除管理员回调，该回调无推送，如用户不在线，上线后会收到。
+
+#### 退出群组
+
+```C#
+SDKClient.Instance.GroupManager.LeaveGroup("emId", new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+#### 解散群组
+
+```C#
+SDKClient.Instance.GroupManager.DestroyGroup("emId", new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 只有群主可以调用。
+
+#### 转移群组
+
+```C#
+SDKClient.Instance.GroupManager.ChangeGroupOwner("emId", "newOwnerId", new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 只有群主可以调用。
+
+#### 获取群组黑名单列表
+
+```C#
+SDKClient.Instance.GroupManager.GetGroupBlockListFromServer("emId", handle: new ValueCallBack<List<string>>(
+    onSuccess: (list) =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+#### 将群成员添加到群黑名单
+
+```C#
+SDKClient.Instance.GroupManager.BlockGroupMembers("groupId", members, new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 该方法只有群主和管理员可以调用，被操作用户当前必须是群成员，当用户被加入到群黑名单后，该用户将从群成员中移除并加入到当前群的黑名单中。同时该用户将无法再进入该群。
+
+#### 将用户从黑名单移除
+
+```C#
+SDKClient.Instance.GroupManager.UnBlockGroupMembers("groupId", members, new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 该方法只有群主和管理员可以调用，当账号从黑名单中移除后可以再允许申请加群。
+
+#### 获取群禁言列表
+
+```C#
+SDKClient.Instance.GroupManager.GetGroupMuteListFromServer("groupId", handle: new ValueCallBack<List<string>>(
+    onSuccess: (list) =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+
+```
+
+#### 对成员禁言
+
+```C#
+SDKClient.Instance.GroupManager.MuteGroupMembers("groupId", members, new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 该方法只有群主和管理员可以调用，被禁言的用户仍然可以收到群中的消息，但是无法发出消息， 白名单中的用户即使被加入到禁言列表中也不受影响。
+
+#### 对成员解除禁言
+
+```C#
+SDKClient.Instance.GroupManager.UnMuteGroupMembers("groupId", members, new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 该方法只有群主和管理员可以调用。
+
+#### 对所有成员禁言
+
+```C#
+SDKClient.Instance.GroupManager.MuteGroupAllMembers("groupId", new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+>该方法只有群主和管理员可以调用，对群主，管理员，白名单中的成员无效，且针对所有人的`禁言`操作与 `muteMembers` 、 `unMuteMembers` 接口不冲突，该接口的操作并不会导致 `getGroupMuteListFromServer` 接口的返回的数据变化。
+
+#### 对所有成员解除禁言
+
+```C#
+SDKClient.Instance.GroupManager.UnMuteGroupAllMembers("groupId", new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 该方法只有群主和管理员可以调用，且针对所有人的`解除禁言`操作与`muteMembers`、`unMuteMembers`接口不冲突，该接口的操作并不会导致`getGroupMuteListFromServer`接口的返回的数据变化。当调用该方法后，之前在禁言列表中的用户仍在禁言列表中，且仍处于禁言状态。
+
+#### 获取白名单列表
+
+```C#
+SDKClient.Instance.GroupManager.GetGroupWhiteListFromServer("groupId", handle: new ValueCallBack<List<string>>(
+    onSuccess: (list) =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+#### 将用户添加到白名单中
+
+```C#
+SDKClient.Instance.GroupManager.AddGroupWhiteList("groupId", members, handle: new ValueCallBack<List<string>>(
+    onSuccess: (list) =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 该方法只有群主和管理员可以调用，当用户被加入到白名单后，当群组全部禁言或者被添加到禁言列表后仍可以发言。
+
+#### 将用户从白名单中移除
+
+```C#
+SDKClient.Instance.GroupManager.RemoveGroupWhiteList("groupId", members, handle: new ValueCallBack<List<string>>(
+    onSuccess: (list) =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 该方法只有群主和管理员可以调用。
+
+#### 判断自己是否在白名单中
+
+```C#
+SDKClient.Instance.GroupManager.CheckIfInGroupWhiteList("groupId",  new ValueCallBack<bool>(
+    onSuccess: (result) =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+#### 不接收群消息
+
+```C#
+SDKClient.Instance.GroupManager.BlockGroup("groupId",  new ValueCallBack<bool>(
+    onSuccess: (result) =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+>设置后群组中的所有消息都无法收到，用户不在线时也不会有推送告知。
+
+#### 恢复接收群消息
+
+```C#
+SDKClient.Instance.GroupManager.UnBlockGroup("groupId",  new ValueCallBack<bool>(
+    onSuccess: (result) =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+#### 更新群名称
+
+```C#
+SDKClient.Instance.GroupManager.ChangeGroupName("groupId", "new name", new ValueCallBack<bool>(
+    onSuccess: (result) =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 群主或管理员可以调用。
+
+#### 更新群描述
+
+```C#
+SDKClient.Instance.GroupManager.ChangeGroupDescription("groupId", "new description", new ValueCallBack<bool>(
+    onSuccess: (result) =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 群主或管理员可以调用。
+
+
+#### 获取群组公告
+
+```C#
+SDKClient.Instance.GroupManager.GetGroupAnnouncementFromServer("groupId", new ValueCallBack<string>(
+    onSuccess: (result) =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+#### 更新群公告
+
+```C#
+SDKClient.Instance.GroupManager.UpdateGroupAnnouncement("groupId", "new announcement",new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 群主或管理员可以调用。
+
+#### 获取群共享文件列表
+
+```C#
+SDKClient.Instance.GroupManager.GetGroupFileListFromServer("groupId", handle: new ValueCallBack<List<GroupSharedFile>>(
+    onSuccess: (list) =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+#### 上传群共享文件
+
+```C#
+SDKClient.Instance.GroupManager.UploadGroupSharedFile("groupId", "file path", handle: new ValueCallBack<List<GroupSharedFile>>(
+    onSuccess: (list) =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+#### 下载群共享文件
+
+```C#
+SDKClient.Instance.GroupManager.DownloadGroupSharedFile("groupId", "fileId", savePath, handle: new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+#### 删除群共享文件
+
+```C#
+SDKClient.Instance.GroupManager.DeleteGroupSharedFile("groupId", "fileId", new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 群主，管理员，文件上传者可以调用。
+
+#### 群回调监听
+
+```C#
+public class TestSDK : MonoBehaviour, IGroupManagerDelegate
 {
-		private void Awake()
+
+    private void Start()
     {
-        SDKClient.Instance.AddGroupManagerDelegate(this);
+        // 添加监听，需在sdk 初始化后调用
+        SDKClient.Instance.GroupManager.AddGroupManagerDelegate(this);
     }
 
-		public void OnInvitationReceivedFromGroup(string groupId, string groupName, string inviter, string reason)
+    private void OnDestroy()
     {
-        this.groupId = groupId;
-        Debug.Log("收到群组邀请 " + groupId +  " " + groupName);
+        // 移除监听
+        SDKClient.Instance.GroupManager.RemoveGroupManagerDelegate(this);
     }
 
+    // 收到加群邀请
+    public void OnInvitationReceivedFromGroup(string groupId, string groupName, string inviter, string reason)
+    {
+
+    }
+
+    // 收到加群申请
     public void OnRequestToJoinReceivedFromGroup(string groupId, string groupName, string applicant, string reason)
     {
-        Debug.Log("收到加群申请 " + groupId + " " + groupName);
+
     }
 
+    // 发出的加群申请被同意
     public void OnRequestToJoinAcceptedFromGroup(string groupId, string groupName, string accepter)
     {
-        Debug.Log("加群申请被同意 " + groupId + " " + groupName);
+
     }
 
+    // 发出的加群申请被拒绝
     public void OnRequestToJoinDeclinedFromGroup(string groupId, string groupName, string decliner, string reason)
     {
-        Debug.Log("加群申请被拒绝 " + groupId + " " + groupName);
+
     }
 
+    // 发出的加群邀请被同意
     public void OnInvitationAcceptedFromGroup(string groupId, string invitee, string reason)
     {
-        Debug.Log("收到群组邀请被同意 " + groupId + " " + invitee);
+
     }
 
+    // 发出的加群邀请被拒绝
     public void OnInvitationDeclinedFromGroup(string groupId, string invitee, string reason)
     {
-        Debug.Log("收到群组邀请被拒绝 " + groupId + " " + invitee);
+
     }
 
+    // 群成员被删除
     public void OnUserRemovedFromGroup(string groupId, string groupName)
     {
-        Debug.Log("被群组移除 " + groupId + " " + groupName);
+
     }
 
+    // 群解散
     public void OnDestroyedFromGroup(string groupId, string groupName)
     {
-        Debug.Log("群组解散 " + groupId + " " + groupName);
+
     }
 
+    // 自动同意加群邀请
     public void OnAutoAcceptInvitationFromGroup(string groupId, string inviter, string inviteMessage)
     {
-        Debug.Log("自动同意群组邀请 " + groupId + " " + inviter);
+
     }
 
+    // 收到禁言列表增加回调
     public void OnMuteListAddedFromGroup(string groupId, List<string> mutes, int muteExpire)
     {
-        foreach (var username in mutes) {
-            Debug.Log("被加入到禁言列表 " + groupId + " " + username);
-        }
+
     }
 
+    // 收到禁言列表减少回调
     public void OnMuteListRemovedFromGroup(string groupId, List<string> mutes)
     {
-        foreach (var username in mutes)
-        {
-            Debug.Log("从禁言列表中移除 " + groupId + " " + username);
-        }
+
     }
 
+    // 收到管理员列表增加回调
     public void OnAdminAddedFromGroup(string groupId, string administrator)
     {
-        Debug.Log("被添加为管理员 " + groupId + " " + administrator);
+
     }
 
+    // 收到管理员列表减少回调
     public void OnAdminRemovedFromGroup(string groupId, string administrator)
     {
-        Debug.Log("被移除管理员 " + groupId + " " + administrator);
+
     }
 
+    // 收到群主变更回调
     public void OnOwnerChangedFromGroup(string groupId, string newOwner, string oldOwner)
     {
-        Debug.Log("群主变化 " + groupId + " 新群主 " + newOwner + "  旧群主 " + oldOwner);
+
     }
 
+    // 收到群成员增加回调
     public void OnMemberJoinedFromGroup(string groupId, string member)
     {
-        Debug.Log("进入群 " + groupId + " " + member);
+
     }
 
+    // 收到群成员减少回调
     public void OnMemberExitedFromGroup(string groupId, string member)
     {
-        Debug.Log("离开群 " + groupId + " " + member);
+
     }
 
+    // 收到群公告变更回调
     public void OnAnnouncementChangedFromGroup(string groupId, string announcement)
     {
-        Debug.Log("群描述变化 " + groupId + " " + announcement);
+
     }
 
+    // 收到群文件增加回调
     public void OnSharedFileAddedFromGroup(string groupId, GroupSharedFile sharedFile)
     {
-        Debug.Log("群文件添加 " + groupId + " " + sharedFile.FileId);
+
     }
 
+    // 收到群文件减少回调
     public void OnSharedFileDeletedFromGroup(string groupId, string fileId)
     {
-        Debug.Log("群文件移除 " + groupId + " " + fileId);
+
     }
 }
-```
-
-
-
-`IRoomManagerDelegate` 聊天室变化回调
-
-示例：
 
 ```
-public class Main : MonoBehaviour, IRoomManagerDelegate
+
+#### 同意加群申请
+
+```C#
+SDKClient.Instance.GroupManager.AcceptGroupJoinApplication("groupId", "memberId", new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 群主和管理员可以调用。
+
+#### 拒绝加群申请
+
+```C#
+SDKClient.Instance.GroupManager.DeclineGroupJoinApplication("groupId", "memberId", handle: new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 群主和管理员可以调用。
+
+#### 同意加群邀请
+
+```C#
+SDKClient.Instance.GroupManager.AcceptGroupInvitation("groupId", new ValueCallBack<Group>(
+    onSuccess: (group) =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+#### 拒绝加群邀请
+
+```C#
+SDKClient.Instance.GroupManager.DeclineGroupInvitation("groupId", handle: new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+### IRoomManager
+
+#### 从服务器获取聊天室列表
+
+```C#
+SDKClient.Instance.RoomManager.FetchPublicRoomsFromServer(handle: new ValueCallBack<PageResult<Room>>(
+    onSuccess: (result) =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+#### 创建聊天室
+
+```C#
+SDKClient.Instance.RoomManager.CreateRoom("RoomName", handle: new ValueCallBack<Room>(
+    onSuccess: (room) =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+>聊天室创建需要单独拥有权限，具体可以参考文档[聊天室管理](http://docs-im.easemob.com/im/server/basics/chatroom)。
+
+#### 加入聊天室
+
+```C#
+SDKClient.Instance.RoomManager.JoinRoom("roomId", handle: new ValueCallBack<Room>(
+    onSuccess: (result) =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+#### 离开聊天室
+
+```C#
+SDKClient.Instance.RoomManager.LeaveRoom("roomId", handle: new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+#### 销毁聊天室
+
+```C#
+SDKClient.Instance.RoomManager.DestroyRoom("roomId", handle: new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+>聊天室销毁需要单独拥有权限，具体可以参考文档[聊天室管理](http://docs-im.easemob.com/im/server/basics/chatroom)。
+
+#### 转移聊天室
+
+```C#
+SDKClient.Instance.RoomManager.ChangeRoomOwner("roomId", "newOwnerId", handle: new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+>聊天室转移需要单独拥有权限，具体可以参考文档[聊天室管理](http://docs-im.easemob.com/im/server/basics/chatroom)。
+
+#### 获取聊天室详情
+
+```C#
+SDKClient.Instance.RoomManager.FetchRoomInfoFromServer("roomId", handle: new ValueCallBack<Room>(
+    onSuccess: (room) =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+#### 获取聊天室成员
+
+```C#
+SDKClient.Instance.RoomManager.FetchRoomMembers("roomId", handle: new ValueCallBack<CursorResult<string>>(
+    onSuccess: (result) =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+#### 移除聊天室成员
+
+```C#
+SDKClient.Instance.RoomManager.DeleteRoomMembers("roomId", members, handle: new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 创建者或管理员调用。
+
+#### 添加管理员
+
+```C#
+SDKClient.Instance.RoomManager.AddRoomAdmin("roomId", "memberId", handle: new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+
+```
+
+> 创建者调用，被操作者会收到回调。
+
+#### 移除管理员
+
+```C#
+SDKClient.Instance.RoomManager.RemoveRoomAdmin("roomId", "adminId", handle: new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 创建者调用，被操作者会收到回调。
+
+#### 获取禁言列表
+
+```C#
+SDKClient.Instance.RoomManager.FetchRoomMuteList("roomId",  handle: new ValueCallBack<List<string>>(
+    onSuccess: (list) =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+#### 设置禁言
+
+```C#
+SDKClient.Instance.RoomManager.MuteRoomMembers("roomId", members, handle: new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 创建者或者管理员调用。
+
+#### 解除禁言
+
+```C#
+SDKClient.Instance.RoomManager.UnMuteRoomMembers("roomId", members, handle: new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 创建者或者管理员调用。
+
+#### 获取黑名单列表
+
+```C#
+SDKClient.Instance.RoomManager.FetchRoomBlockList("roomId", handle: new ValueCallBack<List<string>>(
+    onSuccess: (list) =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+#### 添加黑名单
+
+```C#
+SDKClient.Instance.RoomManager.BlockRoomMembers("roomId", members, handle: new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 创建者或管理员调用。
+
+#### 移除黑名单
+
+```C#
+SDKClient.Instance.RoomManager.UnBlockRoomMembers("roomId", members, handle: new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 创建者或管理员调用。
+
+
+#### 修改聊天室名称
+
+```C#
+SDKClient.Instance.RoomManager.ChangeRoomName("roomId", "new name", handle: new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 创建者或管理员调用。
+
+#### 修改聊天室描述
+
+```C#
+SDKClient.Instance.RoomManager.ChangeRoomDescription("roomId", "new description", handle: new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));****
+```
+
+> 创建者或管理员调用。
+
+#### 获取聊天室公告
+
+```C#
+SDKClient.Instance.RoomManager.FetchRoomAnnouncement("roomId", new ValueCallBack<string>(
+    onSuccess: (result) =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+#### 修改聊天室公告
+
+```C#
+SDKClient.Instance.RoomManager.UpdateRoomAnnouncement("roomId", "new announcement", new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 创建者或管理员调用
+
+#### 添加聊天室监听
+
+```C#
+public class TestSDK : MonoBehaviour, IRoomManagerDelegate
 {
-		private void Awake()
+
+    private void Start()
     {
-        SDKClient.Instance.AddRoomManagerDelegate(this);
+        // 添加监听，需在sdk 初始化后调用
+        SDKClient.Instance.RoomManager.AddRoomManagerDelegate(this);
     }
 
-		public void OnDestroyedFromRoom(string roomId, string roomName)
+    private void OnDestroy()
     {
-        Debug.Log("聊天室解散 " + roomId + " " + roomName);
+        // 移除监听
+        SDKClient.Instance.RoomManager.RemoveRoomManagerDelegate(this);
     }
 
+
+    // 聊天室被销毁回调
+    public void OnDestroyedFromRoom(string roomId, string roomName)
+    {
+
+    }
+
+    // 有用户加入聊天室回调
     public void OnMemberJoinedFromRoom(string roomId, string participant)
     {
-        Debug.Log("用户加入聊天室 " + roomId + " " + participant);
+
     }
 
+    // 有用户离开聊天室回调
     public void OnMemberExitedFromRoom(string roomId, string roomName, string participant)
     {
-        Debug.Log("用户离开聊天室 " + roomId + " " + participant);
+
     }
 
+    // 当前账号被移出聊天室
     public void OnRemovedFromRoom(string roomId, string roomName, string participant)
     {
-        Debug.Log("用户被从聊天室删除 " + roomId + " " + roomName + " " + participant);
+
     }
 
+    // 被禁言用户增加
     public void OnMuteListAddedFromRoom(string roomId, List<string> mutes, long expireTime)
     {
-        foreach (var s in mutes) {
-            Debug.Log("用户被加入禁言 " + roomId + " " + s + " " + expireTime.ToString());
-        }
+
     }
 
+    // 被禁言用户减少
     public void OnMuteListRemovedFromRoom(string roomId, List<string> mutes)
     {
-        foreach (var s in mutes)
-        {
-            Debug.Log("用户被移除禁言 " + roomId + " " + s);
-        }
+
     }
 
+    // 管理员增加
     public void OnAdminAddedFromRoom(string roomId, string admin)
     {
-        Debug.Log("聊天室添加管理员 " + roomId + " " + admin);
+
     }
 
+    // 管理员减少
     public void OnAdminRemovedFromRoom(string roomId, string admin)
     {
-        Debug.Log("聊天室移除管理员 " + roomId + " " + admin);
+
     }
 
+    // 聊天室拥有者变更
     public void OnOwnerChangedFromRoom(string roomId, string newOwner, string oldOwner)
     {
-        Debug.Log("聊天室更换房主 " + roomId + " 新房主 " + newOwner + " 旧房主 " + oldOwner);
+
     }
 
+    // 聊天室公告变更
     public void OnAnnouncementChangedFromRoom(string roomId, string announcement)
     {
-        Debug.Log("聊天室描述更新 " + roomId + " " + announcement);
-    
+
+    }
+}
+
+```
+
+### IPushManager
+
+> 推送的配置需要在 `Options` 中设置推送证书名称后才会生效。
+
+#### 设置推送昵称
+
+```C#
+SDKClient.Instance.PushManager.UpdatePushNickName("push nickname", new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+> 推送昵称是指当前账号给其他用户发消息，对方不在线，收到推送时显示在推送中的名字，如果没设置，将显示环信id。
+
+
+#### 从服务器获取推送配置
+
+```C#
+SDKClient.Instance.PushManager.GetPushConfigFromServer(new ValueCallBack<PushConfig>(
+    onSuccess: (config) =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+#### 从本地缓存获取推送配置
+
+```C#
+PushConfig config = SDKClient.Instance.PushManager.GetPushConfig();
+```
+
+> 需要从服务器获取过推送配置后本地才会缓存。
+
+#### 设置推送显示样式
+
+```C#
+SDKClient.Instance.PushManager.SetPushStyle(PushStyle.Simple, new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+ `PushStyle` 是收推送时样式，目前有两种样式：
+枚举值 | 描述
+--|--
+Simple| 显示详情
+Summary| 显示概要， "您有一条新消息"
+
+
+#### 设置消息免打扰
+
+```C#
+SDKClient.Instance.PushManager.SetNoDisturb(true, 22, 7, new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+> 22点到7点之间不接收消息推送。如果是全天不想接收推送，可以设置时间为 `0` 到 `24` 。
+
+#### 关闭消息免打扰
+
+```C#
+SDKClient.Instance.PushManager.SetNoDisturb(false, handle: new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```
+
+#### 设置群组免打扰
+
+```C#
+try{
+  await pushConfig.setGroupToDisturb(groupId, true);
+} on EMError catch(e) {
+  print('操作失败，原因是: $e');
 }
 ```
 
+#### 获取免打扰群组列表
+
+```C#
+SDKClient.Instance.PushManager.SetGroupToDisturb("groupId", true, handle: new CallBack(
+    onSuccess: () =>
+    {
+        Debug.Log("执行成功");
+    },
+
+    onError: (code, desc) =>
+    {
+        Debug.Log($"错误码 -- {code}");
+        Debug.Log($"错误描述 -- {desc}");
+    }
+));
+```

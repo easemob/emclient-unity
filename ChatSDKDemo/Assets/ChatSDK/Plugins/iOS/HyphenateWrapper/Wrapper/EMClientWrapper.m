@@ -12,13 +12,14 @@
 
 @interface EMClientWrapper ()
 {
-    EMChatManagerWrapper *_chatManager;
-    EMContactManagerWrapper *_contactManager;
-    EMGroupManagerWrapper *_groupManager;
-    EMRoomManagerWrapper *_roomManager;
-    EMPushManagerWrapper *_pushManager;
-    EMConversationWrapper *_conversationWrapper;
-    
+//    EMChatManagerWrapper *_chatManager;
+//    EMContactManagerWrapper *_contactManager;
+//    EMGroupManagerWrapper *_groupManager;
+//    EMRoomManagerWrapper *_roomManager;
+//    EMPushManagerWrapper *_pushManager;
+//    EMConversationWrapper *_conversationWrapper;
+//    EMUserInfoManagerWrapper *_userInfoManager;
+//
     
     EMClientListener *_listener;
 }
@@ -148,7 +149,7 @@ static EMClientWrapper *_instance;
     _roomManager = [[EMRoomManagerWrapper alloc] init];
     _pushManager = [[EMPushManagerWrapper alloc] init];
     _conversationWrapper = [[EMConversationWrapper alloc] init];
-    
+    _userInfoManager = [[EMUserInfoManagerWrapper alloc] init];
 }
 
 

@@ -2,7 +2,7 @@
 
 namespace ChatSDK
 {
-    class Client_Android : IClient
+    internal sealed class Client_Android : IClient
     {
         private AndroidJavaObject wrapper;
 
@@ -22,7 +22,7 @@ namespace ChatSDK
 
         public override void CreateAccount(string username, string password, CallBack callBack = null)
         {
-            wrapper.Call("createAccount", username, password, null);
+            wrapper.Call("createAccount", username, password, callBack?.callbackId);
         }
 
         public override void Login(string username, string pwdOrToken, bool isToken = false, CallBack callBack = null)
@@ -54,12 +54,17 @@ namespace ChatSDK
             return wrapper.Call<string>("accessToken");
         }
 
-        public override void StartLog(string logFilePath)
+        internal override void StartLog(string logFilePath)
         {
             //throw new System.NotImplementedException();
         }
 
-        public override void StopLog()
+        internal override void StopLog()
+        {
+            //throw new System.NotImplementedException();
+        }
+
+        public override void ClearResource()
         {
             //throw new System.NotImplementedException();
         }

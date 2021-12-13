@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace ChatSDK
 {
-    public class ContactManager_iOS : IContactManager
+    internal sealed class ContactManager_iOS : IContactManager
     {
         
         public ContactManager_iOS() {

@@ -20,8 +20,6 @@ public class PushManagerTest : MonoBehaviour
     private Button SetPushStyleBtn;
     private Button SetGroupToDisturbBtn;
 
-
-
     private void Awake()
     {
         Debug.Log("push manager test script has load");
@@ -53,7 +51,6 @@ public class PushManagerTest : MonoBehaviour
         SetGroupToDisturbBtn.onClick.AddListener(SetGroupToDisturbBtnAction);
 
     }
-
 
     void backButtonAction()
     {
@@ -95,6 +92,12 @@ public class PushManagerTest : MonoBehaviour
 
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
+            string nickname = dict["nickname"];
+            if (null == nickname || 0 == nickname.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
             SDKClient.Instance.PushManager.UpdatePushNickName(dict["nickname"], new CallBack(
                 onSuccess: () => {
                     UIManager.SuccessAlert(transform);
@@ -121,6 +124,17 @@ public class PushManagerTest : MonoBehaviour
     void SetNoDisturbBtnAction() {
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
+            string noDisturbStr = dict["NoDisturb(0/1)"];
+            string startTimeStr = dict["StartTime(0~24)"];
+            string endTimeStr = dict["EndTime(0~24)"];
+            if (null == noDisturbStr || 0 == noDisturbStr.Length ||
+                null == startTimeStr || 0 == startTimeStr.Length ||
+                null == endTimeStr || 0 == endTimeStr.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             int noDisturb = int.Parse(dict["NoDisturb(0/1)"]);
             int startTime = int.Parse(dict["StartTime(0~24)"]);
             int endTime = int.Parse(dict["EndTime(0~24)"]);
@@ -143,6 +157,13 @@ public class PushManagerTest : MonoBehaviour
     void SetPushStyleBtnAction() {
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
+            string pushStyleStr = dict["PushStyle(0/1)"];
+            if (null == pushStyleStr || 0 == pushStyleStr.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
             int pushStyle = int.Parse(dict["PushStyle(0/1)"]);
             SDKClient.Instance.PushManager.SetPushStyle(pushStyle == 0 ? PushStyle.Simple: PushStyle.Summary, new CallBack(
                 onSuccess: () => {
@@ -160,8 +181,17 @@ public class PushManagerTest : MonoBehaviour
     void SetGroupToDisturbBtnAction() {
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
-            int noDisturb = int.Parse(dict["NoDisturb(0/1)"]);
             string groupId = dict["groupId"];
+
+            string noDisturbStr = dict["NoDisturb(0/1)"];
+            if (null == noDisturbStr || 0 == noDisturbStr.Length || null == groupId || 0 == groupId.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
+            int noDisturb = int.Parse(dict["NoDisturb(0/1)"]);
+            
             SDKClient.Instance.PushManager.SetGroupToDisturb(groupId, noDisturb == 1 ? true : false, new CallBack(
                 onSuccess: () => {
                     UIManager.SuccessAlert(transform);

@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		900F7BED26785A5F007B5576 /* EMConversationWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 900F7BEC26785A5F007B5576 /* EMConversationWrapper.m */; };
-		902CC1D9266B4E07002F9A50 /* HyphenateChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 902CC1D8266B4DDB002F9A50 /* HyphenateChat.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		902CC1D9266B4E07002F9A50 /* HyphenateChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 902CC1D8266B4DDB002F9A50 /* HyphenateChat.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		902CC1EA266B5148002F9A50 /* EMPushManagerWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 902CC1DB266B5148002F9A50 /* EMPushManagerWrapper.m */; };
 		902CC1EB266B5148002F9A50 /* EMChatManagerWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 902CC1DC266B5148002F9A50 /* EMChatManagerWrapper.m */; };
 		902CC1EC266B5148002F9A50 /* EMContactManagerWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 902CC1DF266B5148002F9A50 /* EMContactManagerWrapper.m */; };
@@ -32,6 +32,9 @@
 		90A3004F266BB03600BB3A19 /* EMContactListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 90A3004E266BB03600BB3A19 /* EMContactListener.m */; };
 		90D7B17D266774C9008CA320 /* HyphenateWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 90D7B17C266774C9008CA320 /* HyphenateWrapper.m */; };
 		90D7B17E266774C9008CA320 /* HyphenateWrapper.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 90D7B17B266774C9008CA320 /* HyphenateWrapper.h */; };
+		90D7B7FB2759D7DE00FD1C72 /* EMUserInfoManagerWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 90D7B7FA2759D7DE00FD1C72 /* EMUserInfoManagerWrapper.m */; };
+		90D7B7FE2759F11A00FD1C72 /* EMGroupMessageAck+Unity.m in Sources */ = {isa = PBXBuildFile; fileRef = 90D7B7FC2759F11A00FD1C72 /* EMGroupMessageAck+Unity.m */; };
+		90D7B8012759FE5200FD1C72 /* EMUserInfo+Unity.m in Sources */ = {isa = PBXBuildFile; fileRef = 90D7B8002759FE5200FD1C72 /* EMUserInfo+Unity.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -97,6 +100,12 @@
 		90D7B178266774C9008CA320 /* libHyphenateWrapper.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libHyphenateWrapper.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		90D7B17B266774C9008CA320 /* HyphenateWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HyphenateWrapper.h; sourceTree = "<group>"; };
 		90D7B17C266774C9008CA320 /* HyphenateWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HyphenateWrapper.m; sourceTree = "<group>"; };
+		90D7B7F92759D7DE00FD1C72 /* EMUserInfoManagerWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EMUserInfoManagerWrapper.h; sourceTree = "<group>"; };
+		90D7B7FA2759D7DE00FD1C72 /* EMUserInfoManagerWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EMUserInfoManagerWrapper.m; sourceTree = "<group>"; };
+		90D7B7FC2759F11A00FD1C72 /* EMGroupMessageAck+Unity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "EMGroupMessageAck+Unity.m"; sourceTree = "<group>"; };
+		90D7B7FD2759F11A00FD1C72 /* EMGroupMessageAck+Unity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "EMGroupMessageAck+Unity.h"; sourceTree = "<group>"; };
+		90D7B7FF2759FE5200FD1C72 /* EMUserInfo+Unity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EMUserInfo+Unity.h"; sourceTree = "<group>"; };
+		90D7B8002759FE5200FD1C72 /* EMUserInfo+Unity.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "EMUserInfo+Unity.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,6 +139,8 @@
 				90A30046266B790900BB3A19 /* EMWrapper.m */,
 				900F7BEB26785A5F007B5576 /* EMConversationWrapper.h */,
 				900F7BEC26785A5F007B5576 /* EMConversationWrapper.m */,
+				90D7B7F92759D7DE00FD1C72 /* EMUserInfoManagerWrapper.h */,
+				90D7B7FA2759D7DE00FD1C72 /* EMUserInfoManagerWrapper.m */,
 			);
 			path = Wrapper;
 			sourceTree = "<group>";
@@ -152,6 +163,8 @@
 				9068A331266E368C0022B90F /* EMConversation+Unity.h */,
 				9068A332266E368C0022B90F /* EMConversation+Unity.m */,
 				9068A334266E36E60022B90F /* EMMessage+Unity.h */,
+				90D7B7FD2759F11A00FD1C72 /* EMGroupMessageAck+Unity.h */,
+				90D7B7FC2759F11A00FD1C72 /* EMGroupMessageAck+Unity.m */,
 				9068A335266E36E60022B90F /* EMMessage+Unity.m */,
 				9068A337266E38120022B90F /* EMCursorResult+Unity.h */,
 				9068A338266E38120022B90F /* EMCursorResult+Unity.m */,
@@ -163,6 +176,8 @@
 				9068A3472670719F0022B90F /* EMPageResult+Unity.m */,
 				9068A349267072490022B90F /* EMChatroom+Unity.h */,
 				9068A34A267072490022B90F /* EMChatroom+Unity.m */,
+				90D7B7FF2759FE5200FD1C72 /* EMUserInfo+Unity.h */,
+				90D7B8002759FE5200FD1C72 /* EMUserInfo+Unity.m */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -284,12 +299,14 @@
 				902CC1ED266B5148002F9A50 /* EMRoomManagerWrapper.m in Sources */,
 				9068A33C266E3DF40022B90F /* EMChatListener.m in Sources */,
 				9068A339266E38120022B90F /* EMCursorResult+Unity.m in Sources */,
+				90D7B7FB2759D7DE00FD1C72 /* EMUserInfoManagerWrapper.m in Sources */,
 				9068A33F266E457A0022B90F /* EMPushOptions+Unity.m in Sources */,
 				902CC1F0266B5148002F9A50 /* Transfrom.m in Sources */,
 				900F7BED26785A5F007B5576 /* EMConversationWrapper.m in Sources */,
 				902CC1EE266B5148002F9A50 /* EMClientWrapper.m in Sources */,
 				90D7B17D266774C9008CA320 /* HyphenateWrapper.m in Sources */,
 				90A3004C266BA9DC00BB3A19 /* EMClientListener.m in Sources */,
+				90D7B7FE2759F11A00FD1C72 /* EMGroupMessageAck+Unity.m in Sources */,
 				90A3004F266BB03600BB3A19 /* EMContactListener.m in Sources */,
 				9068A342266E4D890022B90F /* EMGroup+Unity.m in Sources */,
 				9068A336266E36E60022B90F /* EMMessage+Unity.m in Sources */,
@@ -300,6 +317,7 @@
 				9068A3482670719F0022B90F /* EMPageResult+Unity.m in Sources */,
 				902CC1EA266B5148002F9A50 /* EMPushManagerWrapper.m in Sources */,
 				9068A34E2670A5360022B90F /* EMRoomListener.m in Sources */,
+				90D7B8012759FE5200FD1C72 /* EMUserInfo+Unity.m in Sources */,
 				902CC1EF266B5148002F9A50 /* EMGroupManagerWrapper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

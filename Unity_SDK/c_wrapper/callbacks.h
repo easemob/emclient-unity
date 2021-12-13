@@ -15,10 +15,11 @@ using namespace easemob;
 //callback entries definition
 #if defined(_WIN32)
     //Callback
-    typedef void(__stdcall *FUNC_OnSuccess)();
-    typedef void(__stdcall *FUNC_OnSuccess_With_Result)(void * data[], DataType type, int size);
-    typedef void(__stdcall *FUNC_OnError)(int, const char *);
-    typedef void(__stdcall *FUNC_OnProgress)(int);
+    typedef void(__stdcall *FUNC_OnSuccess)(int callbackId);
+    typedef void(__stdcall *FUNC_OnSuccess_With_Result)(void * data[], DataType type, int size, int callbackId);
+    typedef void(__stdcall *FUNC_OnSuccess_With_Result_V2)(void * header, void * data[], DataType type, int size, int callbackId);
+    typedef void(__stdcall *FUNC_OnError)(int, const char *, int);
+    typedef void(__stdcall *FUNC_OnProgress)(int, int);
 
     //Connection Listeners
     typedef void(__stdcall *FUNC_OnConnected)();
@@ -63,10 +64,11 @@ using namespace easemob;
     typedef void (__stdcall *FUNC_OnMemberExitedFromRoom)(const char * roomId, const char * roomName, const char * member);
 #else
     //Callback
-    typedef void(*FUNC_OnSuccess)();
-    typedef void(*FUNC_OnSuccess_With_Result)(void * data[], DataType type, int size);
-    typedef void(*FUNC_OnError)(int, const char *);
-    typedef void(*FUNC_OnProgress)(int);
+    typedef void(*FUNC_OnSuccess)(int callbackId);
+    typedef void(*FUNC_OnSuccess_With_Result)(void * data[], DataType type, int size, int callbackId);
+    typedef void(*FUNC_OnSuccess_With_Result_V2)(void * header, void * data[], DataType type, int size, int callbackId);
+    typedef void(*FUNC_OnError)(int, const char *, int);
+    typedef void(*FUNC_OnProgress)(int, int);
 
     //Connection Listener
     typedef void(*FUNC_OnConnected)();
@@ -129,7 +131,7 @@ public:
             onConnected();
     }
     void onDisconnect(EMErrorPtr error) override {
-        LOG("Connection discontinued with code=%d.", error->mErrorCode);
+        LOG("Connection disconnected with code=%d.", error->mErrorCode);
         if(onDisconnected)
             onDisconnected(error->mErrorCode);
     }
@@ -170,6 +172,7 @@ public:
         }
         //release memory manually
         for(void * message : result) {
+            MessageTO::FreeResource((MessageTO*)message);
             delete (MessageTO *)message;
         }
     }
@@ -193,6 +196,7 @@ public:
         }
         //release memory manually
         for(void * message : result) {
+            MessageTO::FreeResource((MessageTO*)message);
             delete (MessageTO *)message;
         }
     }
@@ -216,6 +220,7 @@ public:
         }
         //release memory manually
         for(void * message : result) {
+            MessageTO::FreeResource((MessageTO*)message);
             delete (MessageTO *)message;
         }
     }
@@ -239,6 +244,7 @@ public:
         }
         //release memory manually
         for(void * message : result) {
+            MessageTO::FreeResource((MessageTO*)message);
             delete (MessageTO *)message;
         }
     }
@@ -262,6 +268,7 @@ public:
         }
         //release memory manually
         for(void * message : result) {
+            MessageTO::FreeResource((MessageTO*)message);
             delete (MessageTO *)message;
         }
     }
@@ -295,7 +302,7 @@ public:
     }
     
     void onUpdateConversationList(const EMConversationList &conversations) override {
-        LOG("%d conversation updated!");
+        LOG("%d conversation updated!", conversations.size());
         if(onConversationsUpdate) {
             LOG("Call onConversationsUpdate delegate in managed side...");
             onConversationsUpdate();
@@ -480,15 +487,12 @@ public:
 
     void onUploadSharedFileFromGroup(const EMGroupPtr group, const EMMucSharedFilePtr sharedFile) override {
         if(onSharedFileAdded) {
-
-            GroupSharedFileTO* groupSharedFileTO = new GroupSharedFileTO();
-            groupSharedFileTO->FileName = sharedFile->fileName().c_str();
-            groupSharedFileTO->FileId = sharedFile->fileId().c_str();
-            groupSharedFileTO->FileOwner = sharedFile->fileOwner().c_str();
-            groupSharedFileTO->CreateTime = sharedFile->create();
-            groupSharedFileTO->FileSize = sharedFile->fileSize();
-            GroupSharedFileTO* groupSharedFileTOArray[1] = {groupSharedFileTO};
-            onSharedFileAdded(group->groupId().c_str(), (void **)groupSharedFileTOArray, 1);
+            if(sharedFile) {
+                GroupSharedFileTO* groupSharedFileTO = GroupSharedFileTO::FromEMGroupSharedFile(sharedFile);
+                GroupSharedFileTO* groupSharedFileTOArray[1] = {groupSharedFileTO};
+                onSharedFileAdded(group->groupId().c_str(), (void **)groupSharedFileTOArray, 1);
+                GroupSharedFileTO::DeleteGroupSharedFileTO(groupSharedFileTO);
+            }
         }
     }
 
@@ -561,7 +565,7 @@ public:
                 strncpy(ptr, mutes[i].c_str(), mutes[i].size()+1);
                 data[i] = ptr;
             }
-            onMuteListAdded(chatroom->chatroomId().c_str(), data, size, (int)muteExpire);
+            onMuteListAdded(chatroom->chatroomId().c_str(), data, (int)size, (int)muteExpire);
         }
     }
 
@@ -574,7 +578,7 @@ public:
                 strncpy(ptr, mutes[i].c_str(), mutes[i].size()+1);
                 data[i] = ptr;
             }
-            onMuteListRemoved(chatroom->chatroomId().c_str(), data, size);
+            onMuteListRemoved(chatroom->chatroomId().c_str(), data, (int)size);
         }
     }
 

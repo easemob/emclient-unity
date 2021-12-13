@@ -86,7 +86,7 @@ namespace ChatSDK
                 if (!jn.IsNull && jn.IsObject)
                 {
                     JSONObject jo = jn.AsObject;
-                    ((MessageBody.FileBody)body).LocalPath = jo["latitude"].Value;
+                    ((MessageBody.FileBody)body).LocalPath = jo["localPath"].Value;
                     ((MessageBody.FileBody)body).FileSize = jo["fileSize"].AsInt;
                     ((MessageBody.FileBody)body).DisplayName = jo["displayName"].Value;
                     ((MessageBody.FileBody)body).RemotePath = jo["remotePath"].Value;
@@ -209,7 +209,10 @@ namespace ChatSDK
             internal override JSONObject ToJson()
             {
                 JSONObject jo = new JSONObject();
-                jo.Add("content", Text);
+                if (Text != null) {
+                    jo.Add("content", Text);
+                }
+                
                 return jo;
             }
 
@@ -252,8 +255,10 @@ namespace ChatSDK
                 JSONObject jo = new JSONObject();
                 jo.Add("latitude", Latitude);
                 jo.Add("longitude", Longitude);
-                jo.Add("address", Address);
-                //jo.Add("bodyType", "loc");
+                if (Address != null) {
+                    jo.Add("address", Address);
+                }
+
                 return jo;
             }
 
@@ -315,15 +320,29 @@ namespace ChatSDK
             internal override JSONObject ToJson()
             {
                 JSONObject jo = new JSONObject();
-                jo.Add("localPath", LocalPath);
+                if (LocalPath != null) {
+                    jo.Add("localPath", LocalPath);
+                }
+                
                 jo.Add("fileSize", FileSize);
-                jo.Add("displayName", DisplayName);
-                jo.Add("remotePath", RemotePath);
-                jo.Add("secret", Secret);
+
+                if (DisplayName != null) {
+                    jo.Add("displayName", DisplayName);
+                }
+                
+                if (RemotePath != null) {
+                    jo.Add("remotePath", RemotePath);
+                }
+                if (Secret != null) {
+                    jo.Add("secret", Secret);
+                }
+
                 jo.Add("fileSize", FileSize);
+
                 jo.Add("fileStatus", DownLoadStatusToInt(DownStatus));
-                //jo.Add("bodyType", "file");
+
                 return jo;
+
             }
 
             internal override string TypeString()
@@ -386,20 +405,46 @@ namespace ChatSDK
             internal override JSONObject ToJson()
             {
                 JSONObject jo = new JSONObject();
-                jo.Add("localPath", LocalPath);
-                jo.Add("fileSize", FileSize);
-                jo.Add("displayName", DisplayName);
-                jo.Add("remotePath", RemotePath);
-                jo.Add("secret", Secret);
-                jo.Add("fileSize", FileSize);
-                jo.Add("fileStatus", DownLoadStatusToInt(DownStatus));
-                jo.Add("thumbnailLocalPath", ThumbnailLocalPath);
-                jo.Add("thumbnailRemotePath", ThumbnaiRemotePath);
-                jo.Add("thumbnailSecret", ThumbnaiSecret);
+                if (LocalPath != null) {
+                    jo.Add("localPath", LocalPath);
+                }
+
+                if (DisplayName != null)
+                {
+                    jo.Add("displayName", DisplayName);
+                }
+
+                if (RemotePath != null)
+                {
+                    jo.Add("remotePath", RemotePath);
+                }
+
+                if (Secret != null)
+                {
+                    jo.Add("secret", Secret);
+                }
+
+                if (ThumbnailLocalPath != null)
+                {
+                    jo.Add("thumbnailLocalPath", ThumbnailLocalPath);
+                }
+
+                if (ThumbnaiRemotePath != null)
+                {
+                    jo.Add("thumbnailRemotePath", ThumbnaiRemotePath);
+                }
+
+                if (ThumbnaiSecret != null)
+                {
+                    jo.Add("thumbnailSecret", ThumbnaiSecret);
+                }
+
                 jo.Add("height", Height);
                 jo.Add("width", Width);
                 jo.Add("sendOriginalImage", Original);
-                //jo.Add("bodyType", "img");
+                jo.Add("fileSize", FileSize);
+                jo.Add("fileStatus", DownLoadStatusToInt(DownStatus));
+                
                 return jo;
             }
 
@@ -432,15 +477,30 @@ namespace ChatSDK
             internal override JSONObject ToJson()
             {
                 JSONObject jo = new JSONObject();
-                jo.Add("localPath", LocalPath);
-                jo.Add("fileSize", FileSize);
-                jo.Add("displayName", DisplayName);
-                jo.Add("remotePath", RemotePath);
-                jo.Add("secret", Secret);
+                if (LocalPath != null) {
+                    jo.Add("localPath", LocalPath);
+                }
+
+                if (DisplayName != null)
+                {
+                    jo.Add("displayName", DisplayName);
+                }
+
+                if (RemotePath != null)
+                {
+                    jo.Add("remotePath", RemotePath);
+                }
+
+                if (Secret != null)
+                {
+                    jo.Add("secret", Secret);
+                }
+
+                
                 jo.Add("fileSize", FileSize);
                 jo.Add("fileStatus", DownLoadStatusToInt(DownStatus));
                 jo.Add("duration", Duration);
-                //jo.Add("bodyType", "voice");
+                
                 return jo;
             }
 
@@ -462,7 +522,7 @@ namespace ChatSDK
             public string ThumbnaiLocationPath;
 
             /// <summary>
-            /// 缩略图URL，是有接收方有
+            /// 缩略图URL，只有接收方有
             /// </summary>
             public string ThumbnaiRemotePath;
 
@@ -494,18 +554,40 @@ namespace ChatSDK
             internal override JSONObject ToJson()
             {
                 JSONObject jo = new JSONObject();
-                jo.Add("localPath", LocalPath);
-                jo.Add("displayName", DisplayName);
-                jo.Add("remotePath", RemotePath);
-                jo.Add("secret", Secret);
-                jo.Add("fileSize", FileSize);
-                jo.Add("fileStatus", DownLoadStatusToInt(DownStatus));
-                jo.Add("thumbnailRemotePath", ThumbnaiRemotePath);
-                jo.Add("thumbnailSecret", ThumbnaiSecret);
-                jo.Add("thumbnailLocalPath", ThumbnaiLocationPath);
+                if (LocalPath != null) {
+                    jo.Add("localPath", LocalPath);
+                }
+
+                if (DisplayName != null) {
+                    jo.Add("displayName", DisplayName);
+                }
+
+                if (RemotePath != null) {
+                    jo.Add("remotePath", RemotePath);
+                }
+
+                if (Secret != null) {
+                    jo.Add("secret", Secret);
+                }
+
+                if (ThumbnaiRemotePath != null) {
+                    jo.Add("thumbnailRemotePath", ThumbnaiRemotePath);
+                }
+
+                if (ThumbnaiSecret != null) {
+                    jo.Add("thumbnailSecret", ThumbnaiSecret);
+                }
+
+                if (ThumbnaiLocationPath != null) {
+                    jo.Add("thumbnailLocalPath", ThumbnaiLocationPath);
+                }
+                
+                
                 jo.Add("height", Height);
                 jo.Add("width", Width);
                 jo.Add("duration", Duration);
+                jo.Add("fileSize", FileSize);
+                jo.Add("fileStatus", DownLoadStatusToInt(DownStatus));
                 //jo.Add("bodyType", "video");
                 return jo;
             }
@@ -548,8 +630,11 @@ namespace ChatSDK
             {
                 JSONObject jo = new JSONObject();
                 jo.Add("deliverOnlineOnly", DeliverOnlineOnly);
-                jo.Add("action", Action);
-                //jo.Add("bodyType", "cmd");
+                if (Action != null) {
+                    jo.Add("action", Action);
+                }
+                
+                
                 return jo;
             }
 
@@ -591,11 +676,14 @@ namespace ChatSDK
             internal override JSONObject ToJson()
             {
                 JSONObject jo = new JSONObject();
-                jo.Add("event", CustomEvent);
+                if (CustomEvent != null) {
+                    jo.Add("event", CustomEvent);
+                }
+                
                 if (CustomParams != null) {
                     jo.Add("params", TransformTool.JsonStringFromDictionary(CustomParams));
                 }
-                //jo.Add("bodyType", "custom");
+
                 return jo;
             }
 

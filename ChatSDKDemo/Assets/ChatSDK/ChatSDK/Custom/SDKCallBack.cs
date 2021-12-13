@@ -6,8 +6,24 @@ using UnityEngine;
 namespace ChatSDK
 {
     // ValueCallback<T>
-    public delegate void OnSuccessResult([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)]IntPtr[] data, DataType dType, int size);
+    internal delegate void OnSuccessResultV2(IntPtr header, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] IntPtr[] data, DataType dType, int size, int callbackId);
+    internal delegate void OnSuccessResult([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)]IntPtr[] data, DataType dType, int size, int callbackId);
+    internal delegate void OnErrorV2(int code, string desc, int callbackId);
+
+    
+    public delegate void OnSuccess(int callbackId);
+
+    /// <summary>
+    /// 执行错误
+    /// </summary>
+    /// <param name="code">错误信息</param>
+    /// <param name="desc">错误描述</param>
     public delegate void OnError(int code, string desc);
+
+    /// <summary>
+    /// 执行进度
+    /// </summary>
+    /// <param name="progress">进度值，0~100</param>
     public delegate void OnProgress(int progress);
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
@@ -24,15 +40,13 @@ namespace ChatSDK
         /// <param name="onSuccess">成功</param>
         /// <param name="onProgress">进度变化</param>
         /// <param name="onError">失败</param>
-        public CallBack(Action onSuccess = null, OnProgress onProgress = null, OnError onError = null,
-            [CallerMemberName]string memberName = null, [CallerFilePath]string filePath = null, [CallerLineNumber] int lineNumber =0)
+        public CallBack(Action onSuccess = null, OnProgress onProgress = null, OnError onError = null)
         {
             Success = onSuccess;
             Error = onError;
             Progress = onProgress;
             callbackId = CallbackManager.Instance().CurrentId.ToString();
             CallbackManager.Instance().AddCallback(CallbackManager.Instance().CurrentId, this);
-            Debug.Log($"CallBack created from {filePath}:{memberName}:{lineNumber} with callbackId={callbackId}");
         }
         internal void ClearCallback()
         {

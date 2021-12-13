@@ -173,36 +173,36 @@ namespace ChatSDK
 
 
         // MeiZu
-        internal string mZAppId = "", mZAppKey = "";
-        internal bool enableMZPush = false;
+        private string mZAppId = "", mZAppKey = "";
+        private bool enableMZPush = false;
 
         // OPPO
-        internal string oPPOAppKey = "", oPPOAppSecret = "";
-        internal bool enableOPPOPush = false;
+        private string oPPOAppKey = "", oPPOAppSecret = "";
+        private bool enableOPPOPush = false;
 
         // XiaoMi
-        internal string miAppId = "", miAppKey = "";
-        internal bool enableMiPush = false;
+        private string miAppId = "", miAppKey = "";
+        private bool enableMiPush = false;
 
-        internal bool enableVivoPush = false;
+        private bool enableVivoPush = false;
 
         // Google
-        internal string fCMId = "";
-        internal bool enableFCMPush = false;
+        private string fCMId = "";
+        private bool enableFCMPush = false;
 
         // Apple
-        internal string aPNsCerName = "";
-        internal bool enableAPNs = false;
+        private string aPNsCerName = "";
+        private bool enableAPNs = false;
 
         // HuaWei
-        internal bool enableHWPush = false;
+        private bool enableHWPush = false;
 
 
         /// <summary>
         /// 开启魅族推送
         /// </summary>
-        /// <param name="appId"></param>
-        /// <param name="appKey"></param>
+        /// <param name="appId">魅族 APP ID</param>
+        /// <param name="appKey">魅族 APP KEY</param>
         public void EnableMeiZuPush(string appId, string appKey)
         {
             enableMZPush = true;
@@ -213,8 +213,8 @@ namespace ChatSDK
         /// <summary>
         /// 开启OPPO推送
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="secret"></param>
+        /// <param name="key">OPPO KEY</param>
+        /// <param name="secret">OPPO SECRET</param>
         public void EnableOPPOPush(string key, string secret)
         {
             enableOPPOPush = true;
@@ -233,8 +233,8 @@ namespace ChatSDK
         /// <summary>
         /// 开启小米推送
         /// </summary>
-        /// <param name="miAppId"></param>
-        /// <param name="miAppKey"></param>
+        /// <param name="miAppId">小米 APP ID</param>
+        /// <param name="miAppKey">小米 APP KEY</param>
         public void EnableMiPush(string miAppId, string miAppKey)
         {
             enableMiPush = true;
@@ -245,7 +245,7 @@ namespace ChatSDK
         /// <summary>
         /// 开启FCM推送
         /// </summary>
-        /// <param name="fcmId"></param>
+        /// <param name="fcmId">FCM ID</param>
         public void EnableFCMPush(string fcmId)
         {
             enableFCMPush = true;
@@ -255,7 +255,7 @@ namespace ChatSDK
         /// <summary>
         /// 开启APNs推送
         /// </summary>
-        /// <param name="apnsCerName"></param>
+        /// <param name="apnsCerName">推送证书名称</param>
         public void EnableApplePush(string apnsCerName)
         {
             enableAPNs = true;
@@ -265,10 +265,9 @@ namespace ChatSDK
         /// <summary>
         /// 开启华为推送
         /// </summary>
-        /// <param name="enable"></param>
-        public void EnableHuaWeiPush(bool enable)
+        public void EnableHuaWeiPush()
         {
-            enableHWPush = enable;
+            enableHWPush = true;
         }
     }
 }

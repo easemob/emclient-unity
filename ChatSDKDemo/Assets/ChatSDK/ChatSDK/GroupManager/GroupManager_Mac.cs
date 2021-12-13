@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace ChatSDK
 {
-    public class GroupManager_Mac : IGroupManager
+    internal sealed class GroupManager_Mac : IGroupManager
     {
         private IntPtr client;
         private GroupManagerHub groupManagerHub;
@@ -31,57 +31,104 @@ namespace ChatSDK
 
         public override void applyJoinToGroup(string groupId, string reason, CallBack handle = null)
         {
-            ChatAPINative.GroupManager_ApplyJoinPublicGroup(client, groupId, "", reason,
-                onSuccess: () => handle?.Success(),
-                onError: (int code, string desc) => handle?.Error(code, desc));
+            if (null == groupId || 0 == groupId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_ApplyJoinPublicGroup(client, callbackId, groupId, "", reason,
+                onSuccess: (int cbId) =>
+                {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) =>
+                {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void AcceptGroupInvitation(string groupId, ValueCallBack<Group> handle = null)
         {
-            ChatAPINative.GroupManager_AcceptInvitationFromGroup(client, groupId, "",
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) =>
+            if (null == groupId || 0 == groupId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_AcceptInvitationFromGroup(client, callbackId, groupId, "",
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
                 {
-                    if (dType == DataType.Group && dSize == 1)
+                    if (DataType.Group == dType && 1 == dSize)
                     {
                         var result = Marshal.PtrToStructure<GroupTO>(data[0]);
-                        handle?.OnSuccessValue(result.GroupInfo());
+                        var group = result.GroupInfo();
+                        ChatCallbackObject.ValueCallBackOnSuccess<Group>(cbId, group);
                     }
                     else
                     {
                         Debug.LogError($"Group information expected.");
                     }
                 },
-                handle?.Error);
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.ValueCallBackOnError<Group>(cbId, code, desc);
+                });
         }
 
         public override void AcceptGroupJoinApplication(string groupId, string username, CallBack handle = null)
         {
-            ChatAPINative.GroupManager_AcceptJoinGroupApplication(client, groupId, username,
-                onSuccess: () => handle?.Success(),
-                onError: (int code, string desc) => handle?.Error(code, desc));
+            if (null == groupId || 0 == groupId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_AcceptJoinGroupApplication(client, callbackId, groupId, username,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void AddGroupAdmin(string groupId, string memberId, CallBack handle = null)
         {
-            ChatAPINative.GroupManager_AddAdmin(client, groupId, memberId,
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) =>
+            if (null == groupId || 0 == groupId.Length || null == memberId || 0 == memberId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_AddAdmin(client, callbackId, groupId, memberId,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
                 {
-                    if (dType == DataType.Group && dSize == 1)
+                    if (DataType.Group == dType && 1 == dSize)
                     {
                         var result = Marshal.PtrToStructure<GroupTO>(data[0]);
-                        //handle?.OnSuccessValue(result.GroupInfo());
-                        handle?.Success();
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
                     }
                     else
                     {
                         Debug.LogError($"Group information expected.");
                     }
                 },
-                handle?.Error);
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void AddGroupMembers(string groupId, List<string> members, CallBack handle = null)
         {
+            if (null == groupId || 0 == groupId.Length || null == members || 0 == members.Count)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
             int size = members.Count;
             string[] memberArray = new string[size];
             int i = 0;
@@ -90,14 +137,24 @@ namespace ChatSDK
                 memberArray[i] = member;
                 i++;
             }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
-            ChatAPINative.GroupManager_AddMembers(client, groupId, memberArray, size,
-                onSuccess: () => handle?.Success(),
-                onError: (int code, string desc) => handle?.Error(code, desc));
+            ChatAPINative.GroupManager_AddMembers(client, callbackId, groupId, memberArray, size,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void AddGroupWhiteList(string groupId, List<string> members, CallBack handle = null)
         {
+            if (null == groupId || 0 ==groupId.Length || null == members || 0 == members.Count)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
             int size = members.Count;
             string[] memberArray = new string[size];
             int i = 0;
@@ -106,21 +163,42 @@ namespace ChatSDK
                 memberArray[i] = member;
                 i++;
             }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
-            ChatAPINative.GroupManager_AddWhiteListMembers(client, groupId, memberArray, size,
-                onSuccess: () => handle?.Success(),
-                onError: (int code, string desc) => handle?.Error(code, desc));
+            ChatAPINative.GroupManager_AddWhiteListMembers(client, callbackId, groupId, memberArray, size,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void BlockGroup(string groupId, CallBack handle = null)
         {
-            ChatAPINative.GroupManager_BlockGroupMessage(client, groupId,
-                onSuccess: () => handle?.Success(),
-                onError: (int code, string desc) => handle?.Error(code, desc));
+            if (null == groupId || 0 == groupId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_BlockGroupMessage(client, callbackId, groupId,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void BlockGroupMembers(string groupId, List<string> members, CallBack handle = null)
         {
+            if (null == groupId || 0 == groupId.Length || null == members || 0 == members.Count)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
             int size = members.Count;
             string[] memberArray = new string[size];
             int i = 0;
@@ -129,71 +207,121 @@ namespace ChatSDK
                 memberArray[i] = member;
                 i++;
             }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
-            ChatAPINative.GroupManager_BlockGroupMembers(client, groupId, memberArray, size,
-                onSuccess: () => handle?.Success(),
-                onError: (int code, string desc) => handle?.Error(code, desc));
+            ChatAPINative.GroupManager_BlockGroupMembers(client, callbackId, groupId, memberArray, size,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void ChangeGroupDescription(string groupId, string desc, CallBack handle = null)
         {
-            ChatAPINative.GroupManager_ChangeGroupDescription(client, groupId, desc,
-                onSuccess: () => handle?.Success(),
-                onError: (int code, string errDesc) => handle?.Error(code, errDesc));
+            if (null == groupId || 0 == groupId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_ChangeGroupDescription(client, callbackId, groupId, desc,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string errDesc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void ChangeGroupName(string groupId, string name, CallBack handle = null)
         {
-            ChatAPINative.GroupManager_ChangeGroupName(client, groupId, name,
-                onSuccess: () => handle?.Success(),
-                onError: (int code, string desc) => handle?.Error(code, desc));
+            if (null == groupId || 0 == groupId.Length || null == name || 0 == name.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_ChangeGroupName(client, callbackId, groupId, name,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void ChangeGroupOwner(string groupId, string newOwner, CallBack handle = null)
         {
-            ChatAPINative.GroupManager_TransferGroupOwner(client, groupId, newOwner,
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) =>
+            if (null == groupId || 0 == groupId.Length || null == newOwner || 0 == newOwner.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_TransferGroupOwner(client, callbackId, groupId, newOwner,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
                 {
-                    if (dType == DataType.Group && dSize == 1)
+                    if (DataType.Group == dType && 1 == dSize)
                     {
                         var result = Marshal.PtrToStructure<GroupTO>(data[0]);
-                        handle?.Success();
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
                     }
                     else
                     {
                         Debug.LogError($"Group information expected.");
                     }
                 },
-                handle?.Error);
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void CheckIfInGroupWhiteList(string groupId, ValueCallBack<bool> handle = null)
         {
-            ChatAPINative.GroupManager_FetchIsMemberInWhiteList(client, groupId,
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) =>
+            if (null == groupId || 0 == groupId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_FetchIsMemberInWhiteList(client, callbackId, groupId,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
                 {
-                    if (dType == DataType.Bool && dSize == 1)
+                    if (DataType.Bool == dType && 1 == dSize)
                     {
                         int result = (int)data[0];
                         if (result != 0)
-                            handle?.OnSuccessValue(true);
+                            ChatCallbackObject.ValueCallBackOnSuccess<bool>(cbId, true);
                         else
-                            handle?.OnSuccessValue(false);
+                            ChatCallbackObject.ValueCallBackOnSuccess<bool>(cbId, false);
                     }
                     else
                     {
                         Debug.LogError($"Group information expected.");
                     }
                 },
-                handle?.Error);
+                (int code, string desc, int cbId) => {
+                    ChatCallbackObject.ValueCallBackOnError<bool>(cbId, code, desc);
+                });
         }
 
         public override void CreateGroup(string groupName, GroupOptions options, string desc, List<string> inviteMembers = null, string inviteReason = null, ValueCallBack<Group> handle = null)
         {
+            if (null == groupName || 0 == groupName.Length || null == options)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
             //turn List<string> into array
             int size = 0;
             var membersArray = new string[0];
-            if (inviteMembers != null && inviteMembers.Count > 0)
+            if (null != inviteMembers && inviteMembers.Count > 0)
             {
                 size = inviteMembers.Count;
                 membersArray = new string[size];
@@ -204,85 +332,154 @@ namespace ChatSDK
                     i++;
                 }
             }
-            ChatAPINative.GroupManager_CreateGroup(client, groupName, options, desc, membersArray, size, inviteReason,
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) =>
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_CreateGroup(client, callbackId, groupName, options, desc, membersArray, size, inviteReason,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
                 {
-                    if (dType == DataType.Group && dSize == 1)
+                    if (DataType.Group == dType && 1 == dSize)
                     {
                         var result = Marshal.PtrToStructure<GroupTO>(data[0]);
-                        handle?.OnSuccessValue(result.GroupInfo());
+                        var group = result.GroupInfo();
+                        ChatCallbackObject.ValueCallBackOnSuccess<Group>(cbId, group);
                     }
                     else
                     {
                         Debug.LogError($"Group information expected.");
                     }
                 },
-                handle?.Error);
+                (int code, string errDesc, int cbId) =>
+                {
+                    ChatCallbackObject.ValueCallBackOnError<Group>(cbId, code, desc);
+                }
+                );
         }
 
         public override void DeclineGroupInvitation(string groupId, string reason = null, CallBack handle = null)
         {
-            reason = "hehe";
-            ChatAPINative.GroupManager_DeclineInvitationFromGroup(client, groupId, "", reason,
-                onSuccess: () => handle?.Success(),
-                onError: (int code, string desc) => handle?.Error(code, desc));
+            if (null == groupId || 0 == groupId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_DeclineInvitationFromGroup(client, callbackId, groupId, "", reason,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void DeclineGroupJoinApplication(string groupId, string username, string reason = null, CallBack handle = null)
         {
-            ChatAPINative.GroupManager_DeclineJoinGroupApplication(client, groupId, username, reason,
-                onSuccess: () => handle?.Success(),
-                onError: (int code, string desc) => handle?.Error(code, desc));
+            if (null == groupId || 0 == groupId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_DeclineJoinGroupApplication(client, callbackId, groupId, username, reason,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void DestroyGroup(string groupId, CallBack handle = null)
         {
-            ChatAPINative.GroupManager_DestoryGroup(client, groupId,
-                onSuccess: () => handle?.Success(),
-                onError: (int code, string desc) => handle?.Error(code, desc));
+            if (null == groupId || 0 == groupId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_DestoryGroup(client, callbackId, groupId,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void DownloadGroupSharedFile(string groupId, string fileId, string savePath, CallBack handle = null)
         {
-            ChatAPINative.GroupManager_DownloadGroupSharedFile(client, groupId, savePath, fileId,
-                onSuccess: () => handle?.Success(),
-                onError: (int code, string desc) => handle?.Error(code, desc));
+            if (null == groupId || null == fileId || null == savePath ||
+                0 == groupId.Length || 0 == fileId.Length || 0 == savePath.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_DownloadGroupSharedFile(client, callbackId, groupId, savePath, fileId,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void GetGroupAnnouncementFromServer(string groupId, ValueCallBack<string> handle = null)
         {
-            ChatAPINative.GroupManager_FetchGroupAnnouncement(client, groupId,
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) =>
+            if (null == groupId || 0 == groupId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_FetchGroupAnnouncement(client, callbackId, groupId,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
                 {
-                    if (dType == DataType.String && dSize == 1)
+                    if (DataType.String == dType && 1 == dSize)
                     {
+                        
                         var result = Marshal.PtrToStringAnsi(data[0]);
-                        handle?.OnSuccessValue(result);
+                        // result maybe release before handle is processed in queue.
+                        // so here alloc a string to store the value.
+                        string str = new string(result.ToCharArray());
+                        ChatCallbackObject.ValueCallBackOnSuccess<string>(cbId, str);
                     }
                     else
                     {
                         Debug.LogError($"Group information expected.");
                     }
                 },
-                handle?.Error);
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.ValueCallBackOnError<string>(cbId, code, desc);
+                });
         }
 
         public override void GetGroupBlockListFromServer(string groupId, int pageNum = 1, int pageSize = 200, ValueCallBack<List<string>> handle = null)
         {
-            if (pageSize > 200) pageSize = 200;
-            ChatAPINative.GroupManager_FetchGroupBans(client, groupId, pageNum, pageSize,
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) =>
+            if (null == groupId || 0 == groupId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_FetchGroupBans(client, callbackId, groupId, pageNum, pageSize,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
                 {
                     List<string> banList = new List<string>();
-                    if (dType == DataType.String && dSize > 0)
+                    if (DataType.String == dType && dSize > 0)
                     {
                         for (int i = 0; i < dSize; i++)
                         {
                             var banItem = Marshal.PtrToStringAnsi(data[i]);
                             banList.Add(banItem);
                         }
-
-                        handle?.OnSuccessValue(banList);
+                        ChatCallbackObject.ValueCallBackOnSuccess<List<string>>(cbId, banList);
                     }
                     else
                     {
@@ -292,60 +489,75 @@ namespace ChatSDK
                             Debug.LogError($"Group information expected.");
                     }
                 },
-                handle?.Error);
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.ValueCallBackOnError<List<string>>(cbId, code, desc);
+                });
         }
 
         public override void GetGroupFileListFromServer(string groupId, int pageNum = 1, int pageSize = 200, ValueCallBack<List<GroupSharedFile>> handle = null)
         {
-            if (pageSize > 200) pageSize = 200;
-            ChatAPINative.GroupManager_FetchGroupSharedFiles(client, groupId, pageNum, pageSize,
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) =>
+            if (null == groupId || 0 == groupId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_FetchGroupSharedFiles(client, callbackId, groupId, pageNum, pageSize,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
                 {
                     List<GroupSharedFile> fileList = new List<GroupSharedFile>();
-                    if (dType == DataType.ListOfGroupSharedFile && dSize > 0)
+                    if (DataType.ListOfGroupSharedFile == dType && dSize > 0)
                     {
                         for (int i = 0; i < dSize; i++)
                         {
                             var file = Marshal.PtrToStructure<GroupSharedFile>(data[i]);
                             fileList.Add(file);
                         }
-
-                        handle?.OnSuccessValue(fileList);
+                        ChatCallbackObject.ValueCallBackOnSuccess<List<GroupSharedFile>>(cbId, fileList);
                     }
                     else
                     {
                         if (0 == dSize)
-                            Debug.Log("No file exist in group.");
+                            ChatCallbackObject.ValueCallBackOnSuccess<List<GroupSharedFile>>(cbId, fileList);
+                            //Debug.Log("No file exist in group.");
                         else
                             Debug.LogError($"Group information expected.");
                     }
                 },
-                handle?.Error);
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.ValueCallBackOnError<List<GroupSharedFile>>(cbId, code, desc);
+                });
         }
 
         public override void GetGroupMemberListFromServer(string groupId, int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<string>> handle = null)
         {
-            if (pageSize > 200) pageSize = 200;
-            ChatAPINative.GroupManager_FetchGroupMembers(client, groupId, pageSize, cursor,
-                (IntPtr[] cursorResult, DataType dType, int size) =>
+            if (null == groupId || 0 == groupId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_FetchGroupMembers(client, callbackId, groupId, pageSize, cursor,
+                (IntPtr header, IntPtr[] array, DataType dType, int size, int cbId) =>
                 {
                     Debug.Log($"GetGroupMemberListFromServer callback with dType={dType}, size={size}.");
-                    if (dType == DataType.CursorResult && size == 1)
+                    if (DataType.CursorResult == dType)
                     {
-                        var cursorResultTO = Marshal.PtrToStructure<CursorResultTO>(cursorResult[0]);
-                        if (cursorResultTO.Type == DataType.ListOfString)
+                        var cursorResultTO = Marshal.PtrToStructure<CursorResultTOV2>(header);
+                        if (DataType.ListOfString == cursorResultTO.Type)
                         {
                             var result = new CursorResult<String>();
                             result.Data = new List<string>();
                             result.Cursor = cursorResultTO.NextPageCursor;
-                            int itemSize = cursorResultTO.Size;
 
-                            for (int i = 0; i < itemSize; i++)
+                            for (int i = 0; i < size; i++)
                             {
-                                var item = Marshal.PtrToStringAnsi(cursorResultTO.Data[i]);
+                                var item = Marshal.PtrToStringAnsi(array[i]);
                                 result.Data.Add(item);
                             }
-                            handle?.OnSuccessValue(result);
+                            ChatCallbackObject.ValueCallBackOnSuccess<CursorResult<string>>(cbId, result);
                         }
                         else
                         {
@@ -359,25 +571,32 @@ namespace ChatSDK
                     }
 
                 },
-                (int code, string desc) => handle?.Error(code, desc));
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.ValueCallBackOnError<CursorResult<string>>(cbId, code, desc);
+                });
         }
 
         public override void GetGroupMuteListFromServer(string groupId, int pageNum = 1, int pageSize = 200, ValueCallBack<List<string>> handle = null)
         {
-            if (pageSize > 200) pageSize = 200;
-            ChatAPINative.GroupManager_FetchGroupMutes(client, groupId, pageNum, pageSize,
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) =>
+            if (null == groupId || 0 == groupId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_FetchGroupMutes(client, callbackId, groupId, pageNum, pageSize,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
                 {
                     List<string> muteList = new List<string>();
-                    if (dType == DataType.String && dSize > 0)
+                    if (DataType.String == dType && dSize > 0)
                     {
                         for (int i = 0; i < dSize; i++)
                         {
                             var muteItem = Marshal.PtrToStringAnsi(data[i]);
                             muteList.Add(muteItem);
                         }
-
-                        handle?.OnSuccessValue(muteList);
+                        ChatCallbackObject.ValueCallBackOnSuccess<List<string>>(cbId, muteList);
                     }
                     else
                     {
@@ -387,172 +606,195 @@ namespace ChatSDK
                             Debug.LogError($"Group information expected.");
                     }
                 },
-                handle?.Error);
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.ValueCallBackOnError<List<string>>(cbId, code, desc);
+                });
         }
 
         public override void GetGroupSpecificationFromServer(string groupId, ValueCallBack<Group> handle = null)
         {
-            ChatAPINative.GroupManager_FetchGroupSpecification(client, groupId,
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) =>
+            if (null == groupId || 0 == groupId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_FetchGroupSpecification(client, callbackId, groupId,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
                 {
-                    if (dType == DataType.Group && dSize == 1)
+                    if (DataType.Group == dType && 1 == dSize)
                     {
                         var result = Marshal.PtrToStructure<GroupTO>(data[0]);
-                        handle?.OnSuccessValue(result.GroupInfo());
+                        var group = result.GroupInfo();
+                        ChatCallbackObject.ValueCallBackOnSuccess<Group>(cbId, group);
                     }
                     else
                     {
                         Debug.LogError($"Group information expected.");
                     }
                 },
-                handle?.Error);
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.ValueCallBackOnError<Group>(cbId, code, desc);
+                });
         }
 
         public override void GetGroupWhiteListFromServer(string groupId, ValueCallBack<List<string>> handle = null)
         {
-            ChatAPINative.GroupManager_FetchGroupWhiteList(client, groupId,
-              onSuccessResult: (IntPtr[] data, DataType dType, int dSize) =>
+            if (null == groupId || 0 == groupId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_FetchGroupWhiteList(client, callbackId, groupId,
+              onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
               {
                   List<string> memberList = new List<string>();
-                  if (dType == DataType.String && dSize > 0)
+                  if (DataType.String == dType && dSize > 0)
                   {
                       for (int i = 0; i < dSize; i++)
                       {
                           var muteItem = Marshal.PtrToStringAnsi(data[i]);
                           memberList.Add(muteItem);
                       }
-
-                      handle?.OnSuccessValue(memberList);
+                      ChatCallbackObject.ValueCallBackOnSuccess<List<string>>(cbId, memberList);
                   }
                   else
                   {
                       if (0 == dSize)
+                      {
                           Debug.Log("Empty group white List.");
+                          ChatCallbackObject.ValueCallBackOnSuccess<List<string>>(cbId, memberList);
+                      }
                       else
                           Debug.LogError($"Group information expected.");
                   }
               },
-              handle?.Error);
+            onError: (int code, string desc, int cbId) => {
+                ChatCallbackObject.ValueCallBackOnError<List<string>>(cbId, code, desc);
+            });
         }
 
+        
         public override Group GetGroupWithId(string groupId)
         {
-            //make a array of IntPtr(point to TOArray)
-            TOArray toArray = new TOArray();
-            IntPtr intPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(toArray));
-            Marshal.StructureToPtr(toArray, intPtr, false);
-            var array = new IntPtr[1];
-            array[0] = intPtr;
-
-            ChatAPINative.GroupManager_GetGroupWithId(client, groupId, array, 1);
-
-            //get data from IntPtr
-            var returnTOArray = Marshal.PtrToStructure<TOArray>(array[0]);
-
-            //cannot get any message
-            if (returnTOArray.Size == 0)
+            if (null == groupId || 0 == groupId.Length)
             {
-                Debug.Log($"Cannot find any group with id {groupId}");
-                Marshal.FreeCoTaskMem(intPtr);
+                Debug.LogError("Mandatory parameter is null!");
                 return null;
             }
-
-            var groupTO = Marshal.PtrToStructure<GroupTO>(returnTOArray.Data[0]);
-            ChatAPINative.GroupManager_ReleaseGroupList(array, 1);
-            Marshal.FreeCoTaskMem(intPtr);
-            return groupTO.GroupInfo();
+            Group group = null;
+            ChatAPINative.GroupManager_GetGroupWithId(client, groupId,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
+                {
+                    if (DataType.Group == dType)
+                    {
+                        if (1 == dSize)
+                        {
+                            var groupTO = Marshal.PtrToStructure<GroupTO>(data[0]);
+                            group = groupTO.GroupInfo();
+                            Debug.Log($"GetGroupWithId return group with id={group.GroupId}");
+                        }
+                        else
+                        {
+                            Debug.Log($"Cannot get group with id={groupId}");
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError($"Group information expected.");
+                    }
+                }
+                );
+            return group;
         }
 
         public override List<Group> GetJoinedGroups()
         {
-            //make a array of IntPtr(point to TOArray)
-            TOArray toArray = new TOArray();
-            IntPtr intPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(toArray));
-            Marshal.StructureToPtr(toArray, intPtr, false);
-            var array = new IntPtr[1];
-            array[0] = intPtr;
-
-            ChatAPINative.GroupManager_LoadAllMyGroupsFromDB(client, array, 1);
-
-            //get data from IntPtr
-            var returnTOArray = Marshal.PtrToStructure<TOArray>(array[0]);
-
-            //cannot get any message
-            if (returnTOArray.Size == 0)
-            {
-                Debug.Log($"Cannot find any group with id LoadAllMyGroupsFromDB");
-                Marshal.FreeCoTaskMem(intPtr);
-                return (new List<Group>());
-            }
-
-            var result = new List<Group>();
-            for (int i = 0; i < returnTOArray.Size; i++)
-            {
-                var groupTO = Marshal.PtrToStructure<GroupTO>(returnTOArray.Data[i]);
-                result.Add(groupTO.GroupInfo());
-            }
-
-            ChatAPINative.GroupManager_ReleaseGroupList(array, 1);
-            Marshal.FreeCoTaskMem(intPtr);
-            return result;
+            var list = new List<Group>();
+            ChatAPINative.GroupManager_LoadAllMyGroupsFromDB(client,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
+                {
+                    if (DataType.ListOfGroup == dType)
+                    {
+                        for(int i=0; i< dSize; i++)
+                        {
+                            GroupTO gto = Marshal.PtrToStructure<GroupTO>(data[i]);
+                            list.Add(gto.GroupInfo());
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError($"Group information expected.");
+                    }
+                }
+                );
+            return list;
         }
 
-        public override void GetJoinedGroupsFromServer(int pageNum = 1, int pageSize = 200, ValueCallBack<List<Group>> handle = null)
+        public override void FetchJoinedGroupsFromServer(int pageNum = 1, int pageSize = 200, ValueCallBack<List<Group>> handle = null)
         {
-            if (pageSize > 200) pageSize = 200;
-            ChatAPINative.GroupManager_FetchAllMyGroupsWithPage(client, pageNum, pageSize,
-              onSuccessResult: (IntPtr[] data, DataType dType, int dSize) =>
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_FetchAllMyGroupsWithPage(client, callbackId, pageNum, pageSize,
+              onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
               {
                   List<Group> groupList = new List<Group>();
-                  if (dType == DataType.ListOfGroup && dSize > 0)
+                  if (DataType.ListOfGroup == dType && dSize > 0)
                   {
                       for (int i = 0; i < dSize; i++)
                       {
                           var result = Marshal.PtrToStructure<GroupTO>(data[i]);
                           groupList.Add(result.GroupInfo());
                       }
-                      handle?.OnSuccessValue(groupList);
+                      ChatCallbackObject.ValueCallBackOnSuccess<List<Group>>(cbId, groupList);
                   }
                   else
                   {
                       Debug.LogError($"Group information expected.");
                   }
               },
-              handle?.Error);
+              onError: (int code, string desc, int cbId) => {
+                  ChatCallbackObject.ValueCallBackOnError<List<Group>>(cbId, code, desc);
+              });
         }
 
-        public override void GetPublicGroupsFromServer(int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<GroupInfo>> handle = null)
+        public override void FetchPublicGroupsFromServer(int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<GroupInfo>> handle = null)
         {
-            if (pageSize > 200) pageSize = 200;
-            ChatAPINative.GroupManager_FetchPublicGroupsWithCursor(client, pageSize, cursor,
-                (IntPtr[] cursorResult, DataType dType, int size) =>
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_FetchPublicGroupsWithCursor(client, callbackId, pageSize, cursor,
+                (IntPtr header, IntPtr[] array, DataType dType, int size, int cbId) =>
                 {
                     Debug.Log($"GetPublicGroupsFromServer callback with dType={dType}, size={size}.");
-                    if (dType == DataType.CursorResult && size == 1)
+                    if (DataType.CursorResult == dType)
                     {
-                        var cursorResultTO = Marshal.PtrToStructure<CursorResultTO>(cursorResult[0]);
-                        if (cursorResultTO.Type == DataType.ListOfGroup)
+                        //header
+                        var cursorResultTO = Marshal.PtrToStructure<CursorResultTOV2>(header);
+                        if (DataType.ListOfGroup == cursorResultTO.Type)
                         {
                             var result = new CursorResult<GroupInfo>();
                             result.Data = new List<GroupInfo>();
                             result.Cursor = cursorResultTO.NextPageCursor;
-                            int itemSize = cursorResultTO.Size;
-
+                            Debug.Log($"GetPublicGroupsFromServer next page cursor {result.Cursor}");
+                            //items
+                            int itemSize = size;
                             for (int i = 0; i < itemSize; i++)
                             {
-                                var item = Marshal.PtrToStructure<GroupInfoTO>(cursorResultTO.Data[i]);
+                                var item = Marshal.PtrToStructure<GroupInfoTO>(array[i]);
                                 var groupInfo = new GroupInfo();
                                 groupInfo.GroupId = item.GroupId;
                                 groupInfo.GroupName = item.GroupName;
                                 result.Data.Add(groupInfo);
                             }
-                            handle?.OnSuccessValue(result);
+                            ChatCallbackObject.ValueCallBackOnSuccess<CursorResult<GroupInfo>>(cbId, result);
                         }
                         else
                         {
                             throw new InvalidOperationException("Invalid return type from native GetPublicGroupsFromServer(), please check native c wrapper code.");
                         }
-
                     }
                     else
                     {
@@ -560,46 +802,87 @@ namespace ChatSDK
                     }
 
                 },
-                (int code, string desc) => handle?.Error(code, desc));
+                (int code, string desc, int cbId) => {
+                    ChatCallbackObject.ValueCallBackOnError<CursorResult<GroupInfo>>(cbId, code, desc);
+                });
         }
 
         public override void JoinPublicGroup(string groupId, CallBack handle = null)
         {
-            ChatAPINative.GroupManager_JoinPublicGroup(client, groupId,
-                onSuccess: () => handle?.Success(),
-                onError: (int code, string desc) => handle?.Error(code, desc));
+            if (null == groupId || 0 == groupId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_JoinPublicGroup(client, callbackId, groupId,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void LeaveGroup(string groupId, CallBack handle = null)
         {
-            ChatAPINative.GroupManager_LeaveGroup(client, groupId,
-                onSuccess: () => handle?.Success(),
-                onError: (int code, string desc) => handle?.Error(code, desc));
+            if (null == groupId || 0 == groupId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_LeaveGroup(client, callbackId, groupId,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void MuteGroupAllMembers(string groupId, CallBack handle = null)
         {
-            ChatAPINative.GroupManager_MuteAllGroupMembers(client, groupId,
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) =>
+            if (null == groupId || 0 == groupId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_MuteAllGroupMembers(client, callbackId, groupId,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
                 {
-                    if (dType == DataType.Group && 1 == dSize)
+                    if (DataType.Group == dType && 1 == dSize)
                     {
                         var result = Marshal.PtrToStructure<GroupTO>(data[0]);
-                        handle?.Success();
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
                     }
                     else
                     {
                         if (0 == dSize)
+                        {
                             Debug.LogError($"Empty Group.");
+                            ChatCallbackObject.CallBackOnSuccess(cbId);
+                        }
                         else
                             Debug.LogError($"Group information expected.");
                     }
                 },
-                handle?.Error);
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void MuteGroupMembers(string groupId, List<string> members, CallBack handle = null)
         {
+            if (null == groupId || 0 == groupId.Length || null == members || 0 == members.Count)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
             int size = members.Count;
             string[] memberArray = new string[size];
             int i = 0;
@@ -610,15 +893,16 @@ namespace ChatSDK
             }
 
             //to-do: need to add this into API function??
-            int muteDuration = 1000;
+            int muteDuration = -1;
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
-            ChatAPINative.GroupManager_MuteGroupMembers(client, groupId, memberArray, size, muteDuration,
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) =>
+            ChatAPINative.GroupManager_MuteGroupMembers(client, callbackId, groupId, memberArray, size, muteDuration,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
                 {
-                    if (dType == DataType.Group && dSize == 1)
+                    if (DataType.Group == dType && 1 == dSize)
                     {
                         var result = Marshal.PtrToStructure<GroupTO>(data[0]);
-                        handle?.Success();
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
                     }
                     else
                     {
@@ -628,38 +912,64 @@ namespace ChatSDK
                             Debug.LogError($"Group information expected.");
                     }
                 },
-                handle?.Error);
-
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void RemoveGroupAdmin(string groupId, string memberId, CallBack handle = null)
         {
-            ChatAPINative.GroupManager_RemoveGroupAdmin(client, groupId, memberId,
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) =>
+            if (null == groupId || 0 == groupId.Length || null == memberId || 0 == memberId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_RemoveGroupAdmin(client, callbackId, groupId, memberId,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
                 {
-                    if (dType == DataType.Group && dSize == 1)
+                    if (DataType.Group == dType && 1 == dSize)
                     {
                         var result = Marshal.PtrToStructure<GroupTO>(data[0]);
-                        handle?.Success();
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
                     }
                     else
                     {
                         Debug.LogError($"Group information expected.");
                     }
                 },
-                handle?.Error);
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
-        public override void RemoveGroupSharedFile(string groupId, string fileId, CallBack handle = null)
+        public override void DeleteGroupSharedFile(string groupId, string fileId, CallBack handle = null)
         {
-            ChatAPINative.GroupManager_DeleteGroupSharedFile(client, groupId, fileId,
-               onSuccess: () => handle?.Success(),
-               onError: (int code, string desc) => handle?.Error(code, desc));
+            if (null == groupId || 0 == groupId.Length || null == fileId || 0 == fileId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_DeleteGroupSharedFile(client, callbackId, groupId, fileId,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
-        public override void RemoveGroupMembers(string groupId, List<string> members, CallBack handle = null)
+        public override void DeleteGroupMembers(string groupId, List<string> members, CallBack handle = null)
         {
-            //TODO: C++ sdie remove members return a EMGroupPtr instance, shuold be ValueCallBack?
+            if (null == groupId || 0 == groupId.Length || null == members || 0 == members.Count)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+
             int size = members.Count;
             string[] memberArray = new string[size];
             int i = 0;
@@ -668,14 +978,24 @@ namespace ChatSDK
                 memberArray[i] = member;
                 i++;
             }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
-            ChatAPINative.GroupManager_RemoveMembers(client, groupId, memberArray, size,
-                onSuccess: () => handle?.Success(),
-                onError: (int code, string desc) => handle?.Error(code, desc));
+            ChatAPINative.GroupManager_RemoveMembers(client, callbackId, groupId, memberArray, size,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void RemoveGroupWhiteList(string groupId, List<string> members, CallBack handle = null)
         {
+            if (null == groupId || 0 == groupId.Length || null == members || 0 == members.Count)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
             int size = members.Count;
             string[] memberArray = new string[size];
             int i = 0;
@@ -684,21 +1004,42 @@ namespace ChatSDK
                 memberArray[i] = member;
                 i++;
             }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
-            ChatAPINative.GroupManager_RemoveWhiteListMembers(client, groupId, memberArray, size,
-                onSuccess: () => handle?.Success(),
-                onError: (int code, string desc) => handle?.Error(code, desc));
+            ChatAPINative.GroupManager_RemoveWhiteListMembers(client, callbackId, groupId, memberArray, size,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void UnBlockGroup(string groupId, CallBack handle = null)
         {
-            ChatAPINative.GroupManager_UnblockGroupMessage(client, groupId,
-               onSuccess: () => handle?.Success(),
-               onError: (int code, string desc) => handle?.Error(code, desc));
+            if (null == groupId || 0 == groupId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_UnblockGroupMessage(client, callbackId, groupId,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void UnBlockGroupMembers(string groupId, List<string> members, CallBack handle = null)
         {
+            if (null == groupId || 0 == groupId.Length || null == members || 0 == members.Count)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
             int size = members.Count;
             string[] memberArray = new string[size];
             int i = 0;
@@ -707,21 +1048,33 @@ namespace ChatSDK
                 memberArray[i] = member;
                 i++;
             }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
-            ChatAPINative.GroupManager_UnblockGroupMembers(client, groupId, memberArray, size,
-                onSuccess: () => handle?.Success(),
-                onError: (int code, string desc) => handle?.Error(code, desc));
+            ChatAPINative.GroupManager_UnblockGroupMembers(client, callbackId, groupId, memberArray, size,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void UnMuteGroupAllMembers(string groupId, CallBack handle = null)
         {
-            ChatAPINative.GroupManager_UnMuteAllMembers(client, groupId,
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) =>
+            if (null == groupId || 0 == groupId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_UnMuteAllMembers(client, callbackId, groupId,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
                 {
-                    if (dType == DataType.Group && 1 == dSize)
+                    if (DataType.Group == dType && 1 == dSize)
                     {
                         var result = Marshal.PtrToStructure<GroupTO>(data[0]);
-                        handle?.Success();
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
                     }
                     else
                     {
@@ -731,11 +1084,18 @@ namespace ChatSDK
                             Debug.LogError($"Group information expected.");
                     }
                 },
-                handle?.Error);
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void UnMuteGroupMembers(string groupId, List<string> members, CallBack handle = null)
         {
+            if (null == groupId || 0 == groupId.Length || null == members || 0 == members.Count)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
             int size = members.Count;
             string[] memberArray = new string[size];
             int i = 0;
@@ -744,53 +1104,87 @@ namespace ChatSDK
                 memberArray[i] = member;
                 i++;
             }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
-            ChatAPINative.GroupManager_UnmuteGroupMembers(client, groupId, memberArray, size,
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) =>
+            ChatAPINative.GroupManager_UnmuteGroupMembers(client, callbackId, groupId, memberArray, size,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
                 {
-                    if (dType == DataType.Group && dSize == 1)
+                    if (DataType.Group == dType && 1 == dSize)
                     {
                         var result = Marshal.PtrToStructure<GroupTO>(data[0]);
-                        handle?.Success();
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
                     }
                     else
                     {
                         Debug.LogError($"Group information expected.");
                     }
                 },
-                handle?.Error);
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void UpdateGroupAnnouncement(string groupId, string announcement, CallBack handle = null)
         {
-            ChatAPINative.GroupManager_UpdateGroupAnnouncement(client, groupId, announcement,
-               onSuccess: () => handle?.Success(),
-               onError: (int code, string desc) => handle?.Error(code, desc));
+            if (null == groupId || 0 == groupId.Length || null == announcement || 0 == announcement.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_UpdateGroupAnnouncement(client, callbackId, groupId, announcement,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void UpdateGroupExt(string groupId, string ext, CallBack handle = null)
         {
-            ChatAPINative.GroupManager_ChangeGroupExtension(client, groupId, ext,
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize) =>
+            if (null == groupId || 0 == groupId.Length || null == ext)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_ChangeGroupExtension(client, callbackId, groupId, ext,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
                 {
-                    if (dType == DataType.Group && dSize == 1)
+                    if (DataType.Group == dType && 1 == dSize)
                     {
                         var result = Marshal.PtrToStructure<GroupTO>(data[0]);
-                        handle?.Success();
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
                     }
                     else
                     {
                         Debug.LogError($"Group information expected.");
                     }
                 },
-                handle?.Error);
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
         public override void UploadGroupSharedFile(string groupId, string filePath, CallBack handle = null)
         {
-            ChatAPINative.GroupManager_UploadGroupSharedFile(client, groupId, filePath,
-               onSuccess: () => handle?.Success(),
-               onError: (int code, string desc) => handle?.Error(code, desc));
+            if (null == groupId || 0 == groupId.Length || null == filePath || 0 == filePath.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.GroupManager_UploadGroupSharedFile(client, callbackId, groupId, filePath,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
         }
 
 

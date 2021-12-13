@@ -193,7 +193,7 @@
     __block NSString *callId =callbackId;
     [EMClient.sharedClient.contactManager getSelfIdsOnOtherPlatformWithCompletion:^(NSArray *aList, EMError *aError) {
         if (!aError) {
-            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:aList];
+            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:aList]];
         }else {
             [weakSelf onError:callId error:aError];
         }

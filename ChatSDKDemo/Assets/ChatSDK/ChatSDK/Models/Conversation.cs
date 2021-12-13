@@ -169,7 +169,7 @@ namespace ChatSDK {
             manager.LoadMessagesWithTime(Id, Type, startTime, endTime, count, handle);
         }
 
-        
+
         internal Conversation(string jsonString) {
             if (jsonString != null) {
                 JSONNode jn = JSON.Parse(jsonString);

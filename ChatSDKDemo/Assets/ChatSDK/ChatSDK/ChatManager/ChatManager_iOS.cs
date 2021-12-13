@@ -5,10 +5,8 @@ using UnityEngine;
 
 namespace ChatSDK
 {
-    public class ChatManager_iOS : IChatManager
+    internal sealed class ChatManager_iOS : IChatManager
     {
-        GameObject listenerGameObj;
-
         public ChatManager_iOS()
         {
            

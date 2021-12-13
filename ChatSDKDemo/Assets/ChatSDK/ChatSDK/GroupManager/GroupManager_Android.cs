@@ -5,7 +5,7 @@ using SimpleJSON;
 
 namespace ChatSDK
 {
-    public class GroupManager_Android : IGroupManager
+    internal sealed class GroupManager_Android : IGroupManager
     {
 
         private AndroidJavaObject wrapper;
@@ -155,12 +155,12 @@ namespace ChatSDK
             return TransformTool.JsonStringToGroupList(jsonString);
         }
 
-        public override void GetJoinedGroupsFromServer(int pageNum = 1, int pageSize = 200, ValueCallBack<List<Group>> handle = null)
+        public override void FetchJoinedGroupsFromServer(int pageNum = 1, int pageSize = 200, ValueCallBack<List<Group>> handle = null)
         {
             wrapper.Call("getJoinedGroupsFromServer", pageSize, pageNum, handle?.callbackId);
         }
 
-        public override void GetPublicGroupsFromServer(int pageSize = 200, string cursor = null, ValueCallBack<CursorResult<GroupInfo>> handle = null)
+        public override void FetchPublicGroupsFromServer(int pageSize = 200, string cursor = null, ValueCallBack<CursorResult<GroupInfo>> handle = null)
         {
             wrapper.Call("getPublicGroupsFromServer", pageSize, cursor, handle?.callbackId);
         }
@@ -190,12 +190,12 @@ namespace ChatSDK
             wrapper.Call("removeAdmin", groupId, memberId, handle?.callbackId);
         }
 
-        public override void RemoveGroupSharedFile(string groupId, string fileId, CallBack handle = null)
+        public override void DeleteGroupSharedFile(string groupId, string fileId, CallBack handle = null)
         {
             wrapper.Call("removeGroupSharedFile", groupId, fileId, handle?.callbackId);
         }
 
-        public override void RemoveGroupMembers(string groupId, List<string> members, CallBack handle = null)
+        public override void DeleteGroupMembers(string groupId, List<string> members, CallBack handle = null)
         {
             wrapper.Call("removeMembers", groupId, TransformTool.JsonStringFromStringList(members), handle?.callbackId);
         }

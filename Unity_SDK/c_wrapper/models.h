@@ -14,14 +14,19 @@
 #include "emfilemessagebody.h"
 #include "emimagemessagebody.h"
 #include "emvoicemessagebody.h"
+#include "emvideomessagebody.h"
+#include "emcustommessagebody.h"
 #include "emmucsetting.h"
 #include "empushconfigs.h"
+#include "json.hpp"
 
 using namespace easemob;
 
 const int ARRAY_SIZE_LIMITATION = 200;
 
 EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bool buildReceiveMsg=false);
+void SetMessageAttrs(EMMessagePtr msg, string attrs);
+std::string GetAttrsStringFromMessage(EMMessagePtr msg);
 
 struct Options
 {
@@ -149,6 +154,26 @@ struct VoiceMessageBodyTO {
     int Duration;
 };
 
+struct VideoMessageBodyTO {
+    const char * LocalPath;
+    const char * DisplayName;
+    const char * Secret;
+    const char * RemotePath;
+    const char * ThumbnaiLocationPath;
+    const char * ThumbnaiRemotePath;
+    const char * ThumbnaiSecret;
+    double Height;
+    double Width;
+    int Duration;
+    long FileSize;
+    EMFileMessageBody::EMDownloadStatus DownStatus;
+};
+
+struct CustomMessageBodyTO {
+    const char *  CustomEvent;
+    const char *  CustomParams;
+};
+
 class MessageTO
 {
 public:
@@ -161,11 +186,8 @@ public:
     EMMessage::EMMessageStatus Status;
     bool HasDeliverAck;
     bool HasReadAck;
-    
-    /*char ** AttributesKeys;
-    AttributeValue* AttributesValues;
-    int AttributesSize;*/
-    
+
+    const char * AttributesValues;
     long LocalTime;
     long ServerTime;
     
@@ -173,6 +195,9 @@ public:
     MessageTO();
     
     static MessageTO * FromEMMessage(const EMMessagePtr &_message);
+    //since can not use destory function
+    //so here add a function to free related resource
+    static void FreeResource(MessageTO * mto);
     
     //virtual ~MessageTO();
 protected:
@@ -221,6 +246,20 @@ public:
     VoiceMessageTO(const EMMessagePtr &message);
 };
 
+class VideoMessageTO : public MessageTO
+{
+public:
+    VideoMessageBodyTO body;
+    VideoMessageTO(const EMMessagePtr &message);
+};
+
+class CustomMessageTO : public MessageTO
+{
+public:
+    CustomMessageBodyTO body;
+    CustomMessageTO(const EMMessagePtr &message);
+};
+
 enum DataType {
     Bool,
     String,
@@ -241,6 +280,12 @@ struct CursorResultTO
     int Size;
     EMMessageBody::EMMessageBodyType SubTypes[ARRAY_SIZE_LIMITATION]; //sub types if any
     void * Data[ARRAY_SIZE_LIMITATION]; //list of data
+};
+
+struct CursorResultTOV2
+{
+    const char * NextPageCursor;
+    DataType Type;
 };
 
 struct GroupOptions
@@ -264,6 +309,9 @@ struct GroupSharedFileTO
     const char * FileOwner;
     long CreateTime;
     long FileSize;
+    
+    static GroupSharedFileTO * FromEMGroupSharedFile(const EMMucSharedFilePtr &sharedFile);
+    static void DeleteGroupSharedFileTO(GroupSharedFileTO* gto);
 };
 
 struct Mute
@@ -292,6 +340,8 @@ struct GroupTO
     bool NoticeEnabled;
     bool MessageBlocked;
     bool IsAllMemberMuted;
+    
+    ~GroupTO();
     
     static GroupTO * FromEMGroup(EMGroupPtr &group);
     
@@ -345,6 +395,8 @@ struct ConversationTO
     const char * ConverationId;
     EMConversation::EMConversationType type;
     const char * ExtField;
+    
+    static ConversationTO * FromEMConversation(EMConversationPtr&  conversationPtr);
 };
 
 struct PushConfigTO
@@ -353,6 +405,48 @@ struct PushConfigTO
     int NoDisturbStartHour;
     int NoDisturbEndHour;
     easemob::EMPushConfigs::EMPushDisplayStyle Style;
+    
+    static PushConfigTO * FromEMPushConfig(EMPushConfigsPtr&  pushConfigPtr);
+};
+
+enum UserInfoType {
+    NICKNAME    = 0,
+    AVATAR_URL  = 1,
+    EMAIL       = 2,
+    PHONE       = 3,
+    GENDER      = 4,
+    SIGN        = 5,
+    BIRTH       = 6,
+    EXT         = 100
+};
+
+struct UserInfoTO
+{
+    const char* nickName;
+    const char* avatarUrl;
+    const char* email;
+    const char* phoneNumber;
+    const char* signature;
+    const char* birth;
+    const char* userId;
+    const char* ext;
+    int         gender = 0;
+};
+
+struct UserInfo
+{
+    std::string nickName;
+    std::string avatarUrl;
+    std::string email;
+    std::string phoneNumber;
+    std::string signature;
+    std::string birth;
+    std::string userId;
+    std::string ext;
+    int         gender = 0;
+    
+    static std::map<std::string, UserInfo> FromResponse(std::string json, std::map<UserInfoType, std::string>& utypeMap);
+    static std::map<std::string, UserInfoTO> Convert2TO(std::map<std::string, UserInfo>& userInfoMap);
 };
 
 struct TOArray
@@ -367,6 +461,15 @@ struct TOArrayDiff
     int Size;
     void * Data[ARRAY_SIZE_LIMITATION];
     int Type[ARRAY_SIZE_LIMITATION];
+};
+
+struct TOItem
+{
+    int Type;
+    void * Data;
+    
+    TOItem(){}
+    TOItem(int type, void* data): Type(type), Data(data){}
 };
 
 #endif //_MODELS_H_

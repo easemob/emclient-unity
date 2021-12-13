@@ -198,12 +198,9 @@
     NSString *sender = param[@"sender"];
     EMMessageSearchDirection direction = [self searchDirectionFromString:param[@"direction"]];
     
-    
-    
     [self getConversationWithParam:param
                         completion:^(EMConversation *conversation)
      {
-        
         if (conversation) {
             [conversation loadMessagesWithType:type
                                      timestamp:timeStamp

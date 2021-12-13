@@ -11,29 +11,29 @@
 #include <cstdint>
 #define AGORA_CALL __cdecl
 #if defined(AGORACHAT_EXPORT)
-#define AGORA_API extern "C" __declspec(dllexport)
+#define HYPHENATE_API extern "C" __declspec(dllexport)
 #else
-#define AGORA_API extern "C" __declspec(dllimport)
+#define HYPHENATE_API extern "C" __declspec(dllimport)
 #endif
 #define _AGORA_CPP_API
 
 #elif defined(__APPLE__)
-#define AGORA_API __attribute__((visibility("default"))) extern "C"
+#define HYPHENATE_API __attribute__((visibility("default"))) extern "C"
 #define AGORA_CALL
 #define _AGORA_CPP_API
 
 #elif defined(__ANDROID__) || defined(__linux__)
 #if defined(__ANDROID__) && defined(FEATURE_RTM_STANDALONE_SDK)
-#define AGORA_API extern "C"
+#define HYPHENATE_API extern "C"
 #define _AGORA_CPP_API
 #else
-#define AGORA_API extern "C" __attribute__((visibility("default")))
+#define HYPHENATE_API extern "C" __attribute__((visibility("default")))
 #define _AGORA_CPP_API __attribute__((visibility("default")))
 #endif
 #define AGORA_CALL
 
 #else
-#define AGORA_API extern "C"
+#define HYPHENATE_API extern "C"
 #define AGORA_CALL
 #define _AGORA_CPP_API
 #endif

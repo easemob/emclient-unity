@@ -1,9 +1,14 @@
+#include <thread>
 #include "client.h"
+#include "chat_manager.h"
 
+#include "emlogininfo.h"
 #include "emchatconfigs.h"
 #include "emchatprivateconfigs.h"
 #include "emclient.h"
 #include "contact_manager.h"
+#include "group_manager.h"
+#include "room_manager.h"
 
 using namespace easemob;
 
@@ -15,26 +20,34 @@ extern "C"
 
 static bool G_DEBUG_MODE = false;
 static bool G_AUTO_LOGIN = true;
+static bool G_LOGIN_STATUS = false;
 
+static bool NeedAllocResource = false;
 
-AGORA_API void Client_CreateAccount(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, const char *username, const char *password)
+HYPHENATE_API void Client_CreateAccount(void *client, int callbackId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, const char *username, const char *password)
 {
-    LOG("Client_CreateAccount() called with username=%s password=%s", username, password);
-    EMErrorPtr result = CLIENT->createAccount(username, password);
+    std::string usernameStr = username;
+    std::string passwordStr = password;
     
-    if(EMError::isNoError(result)) {
-        LOG("Account creation succeeds!");
-        if(onSuccess) onSuccess();
-    }else{
-        LOG("Account creation failed!");
-        if(onError) onError(result->mErrorCode, result->mDescription.c_str());
-    }
+    LOG("Client_CreateAccount() called with username=%s password=%s", usernameStr.c_str(), passwordStr.c_str());
+    std::thread t([=](){
+        EMErrorPtr result = CLIENT->createAccount(usernameStr, passwordStr);
+        
+        if(EMError::isNoError(result)) {
+            LOG("Account creation succeeds!");
+            if(onSuccess) onSuccess(callbackId);
+        }else{
+            LOG("Account creation failed!");
+            if(onError) onError(result->mErrorCode, result->mDescription.c_str(), callbackId);
+        }
+    });
+    t.detach();
 }
 
 EMChatConfigsPtr ConfigsFromOptions(Options *options) {
     const char *appKey = options->AppKey;
     LOG("Client_InitWithOptions() called with AppKey=%s", appKey);
-    EMChatConfigsPtr configs = EMChatConfigsPtr(new EMChatConfigs("","",appKey,0));
+    EMChatConfigsPtr configs = EMChatConfigsPtr(new EMChatConfigs("./sdkdata","./sdkdata",appKey,0));
     //TODO: non null-ptr assertion
     const char *dnsURL = options->DNSURL;
     const char *imServer = options->IMServer;
@@ -66,79 +79,108 @@ EMChatConfigsPtr ConfigsFromOptions(Options *options) {
 EMClient *gClient = NULL;
 EMConnectionListener *gConnectionListener = NULL;
 
-AGORA_API void* Client_InitWithOptions(Options *options, FUNC_OnConnected onConnected, FUNC_OnDisconnected onDisconnected, FUNC_OnPong onPong)
+HYPHENATE_API void* Client_InitWithOptions(Options *options, FUNC_OnConnected onConnected, FUNC_OnDisconnected onDisconnected, FUNC_OnPong onPong)
 {
     // global switch
     G_DEBUG_MODE = options->DebugMode;
     G_AUTO_LOGIN = options->AutoLogin;
-    LOG("gClient address is: %x", gClient);
-    LOG("gConnectionListener address is: %x", gConnectionListener);
+    
     // singleton client handle
     if(gClient == nullptr) {
         EMChatConfigsPtr configs = ConfigsFromOptions(options);
         gClient = EMClient::create(configs);
-        LOG("after create gClient address is: %x", gClient);
-        if(gConnectionListener == NULL) { //only set once
-            //gConnectionListener = new ConnectionListener(onConnected, onDisconnected, onPong);
-            //LOG("after new gConnectionListener address is: %x", gConnectionListener);
-            //gClient->addConnectionListener(gConnectionListener);
+        LOG("Emclient created.");
+    } else {
+        if(NeedAllocResource) {
+            gClient->allocResource();
+            NeedAllocResource = false;
+            LOG("Alloc sdk resource.");
         }
+    }
+    
+    if(gConnectionListener == NULL) { //only set once
+        gConnectionListener = new ConnectionListener(onConnected, onDisconnected, onPong);
+        gClient->addConnectionListener(gConnectionListener);
+        LOG("New connection listener and hook it.");
     }
     
     return gClient;
 }
 
-AGORA_API void Client_Login(void *client, FUNC_OnSuccess onSuccess, FUNC_OnError onError, const char *username, const char *pwdOrToken, bool isToken)
+HYPHENATE_API void Client_Login(void *client, int callbackId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, const char *username, const char *pwdOrToken, bool isToken)
 {
-    LOG("Client_Login() called with username=%s, pwdOrToken=%s, isToken=%d", username, pwdOrToken, isToken);
-    EMErrorPtr result;
-    result = isToken ? CLIENT->loginWithToken(username, pwdOrToken) : CLIENT->login(username, pwdOrToken);
-    if(EMError::isNoError(result)) {
-        LOG("Login succeeds.");
-        if(onSuccess) onSuccess();
-    }else{
-        LOG("Login failed with code=%d desc=%s!", result->mErrorCode, result->mDescription.c_str());
-        if(onError) onError(result->mErrorCode, result->mDescription.c_str());
-    }
+    std::string usernameStr = username;
+    std::string pwdOrTokenStr = pwdOrToken;
+    
+    LOG("Client_Login() called with username=%s, pwdOrToken=%s, isToken=%d", usernameStr.c_str(), pwdOrTokenStr.c_str(), isToken);
+    std::thread t([=](){
+        EMErrorPtr result;
+        result = isToken ? CLIENT->loginWithToken(usernameStr, pwdOrTokenStr) : CLIENT->login(usernameStr, pwdOrTokenStr);
+        if(EMError::isNoError(result)) {
+            LOG("Login succeeds.");
+            G_LOGIN_STATUS = true;
+            if(onSuccess) onSuccess(callbackId);
+        }else{
+            LOG("Login failed with code=%d desc=%s!", result->mErrorCode, result->mDescription.c_str());
+            if(onError) onError(result->mErrorCode, result->mDescription.c_str(), callbackId);
+        }
+    });
+    t.detach();
 }
 
-AGORA_API void Client_Logout(void *client, FUNC_OnSuccess onSuccess, bool unbindDeviceToken)
+HYPHENATE_API void Client_Logout(void *client, int callbackId, FUNC_OnSuccess onSuccess, bool unbindDeviceToken)
 {
-    /*
-    CLIENT->getChatManager().clearListeners();
-    LOG("ChatManager listener cleared.");
-    CLIENT->getGroupManager().clearListeners();
-    LOG("GroupManager listener cleared.");
-    CLIENT->getChatroomManager().clearListeners();
-    LOG("RoomManager listener cleared.");
-    
-    EMContactListener* contactListers = nullptr;
-    contactListers = ContactManager_GetListeners();
-    if(contactListers)
-    {
-        LOG("ContactManager listener cleared.");
-        CLIENT->getContactManager().removeContactListener(contactListers);
-    }
-        
-    CLIENT->removeConnectionListener(gConnectionListener);
-    delete gConnectionListener;
-    gConnectionListener = nullptr;
-    */
-
-    //gConnectionListener->ClearAllCallBack();
-    CLIENT->logout();
-    //CLIENT->removeConnectionListener(gConnectionListener);
-    //delete gConnectionListener;
-    //gConnectionListener = nullptr;
-    
-    if(onSuccess) onSuccess();
-    
+    std::thread t([=](){
+        if(G_LOGIN_STATUS) {
+            LOG("Execute logout action.");
+            CLIENT->logout();
+            G_LOGIN_STATUS = false;
+            if(onSuccess) onSuccess(callbackId);
+        } else {
+            LOG("Already logout, NO need to execute logout action.");
+        }
+    });
+    t.join();
 }
 
-AGORA_API void Client_StartLog(const char *logFilePath) {
+HYPHENATE_API void Client_StartLog(const char *logFilePath) {
     LogHelper::getInstance().startLogService(logFilePath);
 }
 
-AGORA_API void Client_StopLog() {
+HYPHENATE_API void Client_StopLog() {
     return LogHelper::getInstance().stopLogService();
+}
+
+HYPHENATE_API void Client_LoginToken(void *client, FUNC_OnSuccess_With_Result onSuccess) {
+    const EMLoginInfo& loginInfo = CLIENT->getLoginInfo();
+    const char* data[1];
+    data[0] = loginInfo.loginToken().c_str();
+    if(onSuccess) onSuccess((void **)data, DataType::String, 1, -1);
+}
+
+// this function must be executed after logout!!!
+HYPHENATE_API void Client_ClearResource(void *client) {
+    if(true == G_LOGIN_STATUS) {
+        LOG("Still in login status, cannot clear resource.");
+        return;
+    }
+    
+    LOG("Clear resource begin--------------");
+    CLIENT->clearResource();
+    
+    // set flag for next replay
+    NeedAllocResource = true;
+    
+    // clear all listeners when replay
+    ChatManager_RemoveListener(client);
+    GroupManager_RemoveListener(client);
+    RoomManager_RemoveListener(client);
+    ContactManager_RemoveListener(client);
+    
+    CLIENT->removeConnectionListener(gConnectionListener);
+    LOG("Connection listener removed.");
+    delete gConnectionListener;
+    gConnectionListener = nullptr;
+
+    LOG("Clear resource completed----------");
 }

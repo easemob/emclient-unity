@@ -48,6 +48,9 @@ public:
     
     void updateDeviceInformation(const std::string& model, const std::string& deviceToken, EMError& error);
     
+    virtual void ignoreUsersPush(const std::vector<std::string>& uIds, bool isIgnore, EMError& error);
+    virtual std::string ignoreUserPushParamPackage(const std::vector<std::string>& uIds, bool isIgnore);
+    
     virtual void ignoreGroupPush(const std::string& groupId, bool isIgnore, EMError& error);
     virtual void ignoreGroupsPush(const std::vector<std::string> groupIds, bool isIgnore, EMError& error);
     
@@ -65,7 +68,8 @@ private:
     EMPushConfigsPtr mPushConfigs;
     
     void _setPushOptions(EMPushConfigsPtr configs);
-    EMPushConfigsPtr _updateUserConfigsWithParams(const EMHttpParameters &parameters, EMError& error);
+    
+    EMPushConfigsPtr _updateUserConfigsWithParams(const EMHttpParameters &parameters, EMError& error, const std::string paramsContent = "");
 };
     
 }

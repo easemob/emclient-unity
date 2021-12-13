@@ -4,11 +4,13 @@ import android.os.Debug;
 import android.os.Message;
 import android.util.Log;
 
+import com.hyphenate.chat.EMChatRoom;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMCursorResult;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.exceptions.HyphenateException;
+import com.hyphenate.unity_chat_sdk.helper.EMChatRoomHelper;
 import com.hyphenate.unity_chat_sdk.helper.EMConversationHelper;
 import com.hyphenate.unity_chat_sdk.helper.EMCursorResultHelper;
 import com.hyphenate.unity_chat_sdk.helper.EMMessageHelper;
@@ -43,10 +45,10 @@ public class EMChatManagerWrapper extends EMWrapper  {
         return EMClient.getInstance().chatManager().deleteConversation(conversationId, deleteMessages);
     }
 
-    private void downloadAttachment(String messageId, String callbackId) {
+    private void downloadAttachment(final String messageId, String callbackId) {
         EMMessage msg = EMClient.getInstance().chatManager().getMessage(messageId);
         if (msg != null) {
-            msg.setMessageStatusCallback(new EMUnityCallback((callbackId)));
+            msg.setMessageStatusCallback(new EMUnityCallback(callbackId));
             EMClient.getInstance().chatManager().downloadAttachment(msg);
         }else {
             HyphenateException e = new HyphenateException(500, "Message not found.");
@@ -56,7 +58,7 @@ public class EMChatManagerWrapper extends EMWrapper  {
     private void downloadThumbnail(String messageId, String callbackId) {
         EMMessage msg = EMClient.getInstance().chatManager().getMessage(messageId);
         if (msg != null) {
-            msg.setMessageStatusCallback(new EMUnityCallback((callbackId)));
+            msg.setMessageStatusCallback(new EMUnityCallback(callbackId));
             EMClient.getInstance().chatManager().downloadThumbnail(msg);
         }else {
             HyphenateException e = new HyphenateException(500, "Message not found.");

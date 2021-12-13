@@ -5,10 +5,8 @@ using UnityEngine;
 
 namespace ChatSDK
 {
-    public class RoomManager_iOS : IRoomManager
+    internal sealed class RoomManager_iOS : IRoomManager
     {
-        GameObject listenerGameObj;
-
         public RoomManager_iOS()
         {
         }
@@ -150,7 +148,7 @@ namespace ChatSDK
             RoomManagerNative.RoomManager_HandleMethodCall("removeChatRoomAdmin", obj.ToString(), handle?.callbackId);
         }
 
-        public override void RemoveRoomMembers(string roomId, List<string> members, CallBack handle = null)
+        public override void DeleteRoomMembers(string roomId, List<string> members, CallBack handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("roomId", roomId);

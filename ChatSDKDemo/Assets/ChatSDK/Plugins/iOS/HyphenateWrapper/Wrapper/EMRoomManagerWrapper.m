@@ -232,7 +232,7 @@
         if (aError) {
             [weakSelf onError:callId error:aError];
         }else {
-            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:aList];
+            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:[Transfrom  NSStringFromJsonObject:aList]];
         }
     }];
 }
@@ -258,7 +258,7 @@
         if (aError) {
             [weakSelf onError:callId error:aError];
         }else {
-            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:aList];
+            [weakSelf onSuccess:@"List<String>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:aList]];
         }
     }];
 }

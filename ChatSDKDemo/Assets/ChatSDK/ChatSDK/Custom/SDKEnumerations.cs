@@ -274,4 +274,24 @@
     {
         ERROR_NULL_PTR = -7
     }
+
+    /// <summary>
+    /// Message中属性类型
+    /// STRVECTOR 对应 List<string>类型
+    /// ATTRIBUTEVALUE 对应 Dictionary<string, AttributeValue>类型
+    /// </summary>
+    public enum AttributeValueType : byte
+    {
+        BOOL = 0,
+        INT32,
+        UINT32,
+        INT64,
+        FLOAT,
+        DOUBLE,
+        STRING,
+        STRVECTOR,
+        JSONSTRING,
+        ATTRIBUTEVALUE,
+        NULLOBJ
+    }
 }
