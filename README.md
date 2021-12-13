@@ -21,7 +21,7 @@
 
 ### 下载 SDK
 
-[下载imUnitySDK](https://downloadsdk.easemob.com/downloads/SDK/Unity/imUnitySDK.unitypackage)
+[下载imUnitySDK](https://downloadsdk.easemob.com/downloads/SDK/Unity/im_unity_sdk_2_2_0.unitypackage)
 
 #### 导入SDK 到 Unity
 
