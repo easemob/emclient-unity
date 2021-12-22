@@ -17,7 +17,7 @@ namespace ChatSDK {
         public override void FetchUserInfoByUserId(List<string> idList, ValueCallBack<Dictionary<string, UserInfo>> handle = null)
         {
             string jsonString = TransformTool.JsonStringFromStringList(idList);
-            UserInfoManagerNative.UserInfoManager_MethodCall("fetchUserInfoByUserId", jsonString, callbackId: handle?.callbackId);
+            ChatAPIIOS.UserInfoManager_MethodCall("fetchUserInfoByUserId", jsonString, callbackId: handle?.callbackId);
         }
 
 
@@ -30,18 +30,8 @@ namespace ChatSDK {
         public override void UpdateOwnInfo(UserInfo userInfo, CallBack handle = null)
         {
             string jsonString = TransformTool.JsonStringFromUserInfo(userInfo);
-            UserInfoManagerNative.UserInfoManager_MethodCall("updateOwnInfo", jsonString, callbackId:handle?.callbackId);
+            ChatAPIIOS.UserInfoManager_MethodCall("updateOwnInfo", jsonString, callbackId:handle?.callbackId);
         }
-    }
-
-
-    class UserInfoManagerNative
-    {
-        [DllImport("__Internal")]
-        internal extern static void UserInfoManager_MethodCall(string methodName, string jsonString = null, string callbackId = null);
-
-        [DllImport("__Internal")]
-        internal extern static string UserInfoManager_GetMethodCall(string methodName, string jsonString = null, string callbackId = null);
     }
 }
 

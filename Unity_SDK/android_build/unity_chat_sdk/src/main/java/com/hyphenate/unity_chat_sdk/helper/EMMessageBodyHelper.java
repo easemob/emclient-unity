@@ -231,7 +231,11 @@ public class EMMessageBodyHelper {
         int duration = json.getInt("duration");
         int fileSize = json.getInt("fileSize");
         EMVideoMessageBody body = new EMVideoMessageBody(localPath, "", duration, fileSize);
-        body.setThumbnailUrl(json.getString("thumbnailRemotePath"));
+
+        if (json.has("thumbnailRemotePath")){
+            body.setThumbnailUrl(json.getString("thumbnailRemotePath"));
+        }
+
         if (json.has("thumbnailLocalPath")) {
             body.setLocalThumb(json.getString("thumbnailLocalPath"));
         }
@@ -248,7 +252,11 @@ public class EMMessageBodyHelper {
             body.setSecret(json.getString("secret"));
         }
 
-        body.setFileLength(json.getInt("fileSize"));
+        if(json.has("fileSize")) {
+            body.setFileLength(json.getInt("fileSize"));
+        }
+
+
         body.setDownloadStatus(downloadStatusFromInt(json.getInt("fileStatus")));
         int width = json.getInt("height");
         int height = json.getInt("width");
@@ -280,7 +288,6 @@ public class EMMessageBodyHelper {
             data.put("secret", body.getSecret());
         }
         data.put("fileStatus", downloadStatusToInt(body.downloadStatus()));
-
         data.put("duration", body.getDuration());
         data.put("fileSize", body.getVideoFileLength());
         data.put("height", body.getThumbnailHeight());
