@@ -61,7 +61,7 @@ namespace ChatSDK
         /// <summary>
         /// 获取sdk版本号
         /// </summary>
-        public string SdkVersion { get => "2.2.0"; }
+        public string SdkVersion { get => "2.2.3"; }
 
         /// <summary>
         /// 获取当前登录的环信id
