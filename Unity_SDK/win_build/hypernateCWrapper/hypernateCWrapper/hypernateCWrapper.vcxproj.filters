@@ -1,0 +1,477 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="头文件\cwrapper">
+      <UniqueIdentifier>{f27b46dc-1b27-452e-879a-135d982226d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\cwrapper">
+      <UniqueIdentifier>{5a4ccdeb-d309-4bce-80a7-3ddb7e5fdabf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\easemob">
+      <UniqueIdentifier>{2a81e019-c534-45cc-8f40-89f9b75d4aba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\easemob\3rd_party">
+      <UniqueIdentifier>{6d42825c-f486-45ae-b474-139255d28368}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\easemob\protocol">
+      <UniqueIdentifier>{892df44d-a867-499a-b835-77a2ff3455f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\easemob\src">
+      <UniqueIdentifier>{a5c9deea-cbd5-4f86-9b8a-1e999f7dc8cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\easemob\3rd_party\curlcpp">
+      <UniqueIdentifier>{e6dc7f7f-8eac-49bd-98a5-c15880e81fcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\easemob\3rd_party\protobuf">
+      <UniqueIdentifier>{35409bf0-4871-4345-a19a-6d1105fbbfaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\easemob\3rd_party\curlcpp\src">
+      <UniqueIdentifier>{67e3215f-b1be-46a3-b408-7e4dc3c9cfbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\easemob\3rd_party\protobuf\google">
+      <UniqueIdentifier>{14a693a3-a59f-4d2e-a061-c18077f49b31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\easemob\3rd_party\protobuf\google\protobuf">
+      <UniqueIdentifier>{7a212614-588b-48b5-9e01-99cf486bb05c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\easemob\3rd_party\protobuf\google\protobuf\io">
+      <UniqueIdentifier>{a14f5c50-6ccf-4029-ab34-7252dd239424}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\easemob\3rd_party\protobuf\google\protobuf\stubs">
+      <UniqueIdentifier>{cb437d02-c2c5-48f6-bc7d-1e36b2c287fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\easemob\protocol\generated">
+      <UniqueIdentifier>{dc7ebe5f-3db2-4b6b-94d4-e883c2fb90ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\easemob\src\message">
+      <UniqueIdentifier>{0e95c55b-4899-4210-97fa-f0fcdce6dbc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\easemob\src\utils">
+      <UniqueIdentifier>{82c3bc87-51e0-47ac-a915-2e77f24fb473}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\c_wrapper\json.hpp">
+      <Filter>头文件\cwrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\c_wrapper\userinfo_manager.h">
+      <Filter>头文件\cwrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\c_wrapper\tool.h">
+      <Filter>头文件\cwrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\c_wrapper\room_manager.h">
+      <Filter>头文件\cwrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\c_wrapper\push_manager.h">
+      <Filter>头文件\cwrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\c_wrapper\models.h">
+      <Filter>头文件\cwrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\c_wrapper\LogHelper.h">
+      <Filter>头文件\cwrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\c_wrapper\hyphenateCWrapper.h">
+      <Filter>头文件\cwrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\c_wrapper\group_manager.h">
+      <Filter>头文件\cwrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\c_wrapper\conversation_manager.h">
+      <Filter>头文件\cwrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\c_wrapper\contact_manager.h">
+      <Filter>头文件\cwrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\c_wrapper\common.h">
+      <Filter>头文件\cwrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\c_wrapper\client.h">
+      <Filter>头文件\cwrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\c_wrapper\chat_manager.h">
+      <Filter>头文件\cwrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\c_wrapper\callbacks.h">
+      <Filter>头文件\cwrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\c_wrapper\api_decorator.h">
+      <Filter>头文件\cwrapper</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\c_wrapper\userinfo_manager.cpp">
+      <Filter>源文件\cwrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\c_wrapper\tool.cpp">
+      <Filter>源文件\cwrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\c_wrapper\room_manager.cpp">
+      <Filter>源文件\cwrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\c_wrapper\push_manager.cpp">
+      <Filter>源文件\cwrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\c_wrapper\models.cpp">
+      <Filter>源文件\cwrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\c_wrapper\hyphenateCWrapper.cpp">
+      <Filter>源文件\cwrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\c_wrapper\group_manager.cpp">
+      <Filter>源文件\cwrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\c_wrapper\conversation_manager.cpp">
+      <Filter>源文件\cwrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\c_wrapper\contact_manager.cpp">
+      <Filter>源文件\cwrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\c_wrapper\client.cpp">
+      <Filter>源文件\cwrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\c_wrapper\chat_manager.cpp">
+      <Filter>源文件\cwrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\b64decoder.c">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\b64encoder.c">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emattributevalue.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emchatclient.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emchatclientimpl.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emchatconfigs.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emchatmanager.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emchatroom.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emchatroommanager.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emclient.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emcollector.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emconfigmanager.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emcontactmanager.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emconversation.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emconversation_manager.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emconversationprivate.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emdatabase.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emdatareport.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emdnsmanager.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emencryptproviderimpl.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emerror.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emgroup.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emgroupmanager.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emjsonstring.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emmuc.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emmucmanager.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\empushconfigs.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\empushmanager.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emreportevent.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emrtcconfigmanager.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emsemaphoretracker.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emsessionmanager.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emtaskqueue.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emuserinfomanager.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\sqlite.cpp">
+      <Filter>源文件\easemob\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\utils\emcryptoadapter.cpp">
+      <Filter>源文件\easemob\src\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\utils\emencryptutils.cpp">
+      <Filter>源文件\easemob\src\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\utils\emfilecompressor.cpp">
+      <Filter>源文件\easemob\src\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\utils\emhttprequest.cpp">
+      <Filter>源文件\easemob\src\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\utils\emlog.cpp">
+      <Filter>源文件\easemob\src\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\utils\emtimer.cpp">
+      <Filter>源文件\easemob\src\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\utils\emutils.cpp">
+      <Filter>源文件\easemob\src\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\message\emcmdmessagebody.cpp">
+      <Filter>源文件\easemob\src\message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\message\emcustommessagebody.cpp">
+      <Filter>源文件\easemob\src\message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\message\emfilemessagebody.cpp">
+      <Filter>源文件\easemob\src\message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\message\emimagemessagebody.cpp">
+      <Filter>源文件\easemob\src\message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\message\emlocationmessagebody.cpp">
+      <Filter>源文件\easemob\src\message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\message\emmessage.cpp">
+      <Filter>源文件\easemob\src\message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\message\emmessagebody.cpp">
+      <Filter>源文件\easemob\src\message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\message\emmessageencoder.cpp">
+      <Filter>源文件\easemob\src\message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\message\emtextmessagebody.cpp">
+      <Filter>源文件\easemob\src\message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\message\emvideomessagebody.cpp">
+      <Filter>源文件\easemob\src\message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\message\emvoicemessagebody.cpp">
+      <Filter>源文件\easemob\src\message</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\basenode.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\chatclient.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\conference.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\conferencebody.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\emcompressionzlib.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\emconnectionfactory.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\emconnectiontcpbase.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\emconnectiontcpclient.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\emlogsink.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\emmutex.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\keyvalue.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\message.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\messagebody.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\messagebodycontent.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\messageconfig.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\meta.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\metaqueue.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\msync.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\mucbody.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\mucmeta.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\notice.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\protocolparser.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\provision.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\rosterbody.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\rostermeta.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\statistics.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\status.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\syncdl.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\syncul.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\testserver.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\uid.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\unreaddl.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\unreadul.cpp">
+      <Filter>源文件\easemob\protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\generated\conferencebody.pb.cc">
+      <Filter>源文件\easemob\protocol\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\generated\jid.pb.cc">
+      <Filter>源文件\easemob\protocol\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\generated\keyvalue.pb.cc">
+      <Filter>源文件\easemob\protocol\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\generated\messagebody.pb.cc">
+      <Filter>源文件\easemob\protocol\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\generated\msync.pb.cc">
+      <Filter>源文件\easemob\protocol\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\generated\mucbody.pb.cc">
+      <Filter>源文件\easemob\protocol\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\generated\rosterbody.pb.cc">
+      <Filter>源文件\easemob\protocol\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\generated\statisticsbody.pb.cc">
+      <Filter>源文件\easemob\protocol\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\3rd_party\curlcpp\src\curl_easy.cpp">
+      <Filter>源文件\easemob\3rd_party\curlcpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\3rd_party\curlcpp\src\curl_exception.cpp">
+      <Filter>源文件\easemob\3rd_party\curlcpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\3rd_party\curlcpp\src\curl_form.cpp">
+      <Filter>源文件\easemob\3rd_party\curlcpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\3rd_party\curlcpp\src\curl_header.cpp">
+      <Filter>源文件\easemob\3rd_party\curlcpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\3rd_party\curlcpp\src\curl_writer.cpp">
+      <Filter>源文件\easemob\3rd_party\curlcpp\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\3rd_party\protobuf\google\protobuf\generated_message_util.cc">
+      <Filter>源文件\easemob\3rd_party\protobuf\google\protobuf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\3rd_party\protobuf\google\protobuf\message_lite.cc">
+      <Filter>源文件\easemob\3rd_party\protobuf\google\protobuf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\3rd_party\protobuf\google\protobuf\repeated_field.cc">
+      <Filter>源文件\easemob\3rd_party\protobuf\google\protobuf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\3rd_party\protobuf\google\protobuf\wire_format_lite.cc">
+      <Filter>源文件\easemob\3rd_party\protobuf\google\protobuf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\3rd_party\protobuf\google\protobuf\io\coded_stream.cc">
+      <Filter>源文件\easemob\3rd_party\protobuf\google\protobuf\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\3rd_party\protobuf\google\protobuf\io\zero_copy_stream.cc">
+      <Filter>源文件\easemob\3rd_party\protobuf\google\protobuf\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\3rd_party\protobuf\google\protobuf\io\zero_copy_stream_impl_lite.cc">
+      <Filter>源文件\easemob\3rd_party\protobuf\google\protobuf\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\3rd_party\protobuf\google\protobuf\stubs\atomicops_internals_x86_msvc.cc">
+      <Filter>源文件\easemob\3rd_party\protobuf\google\protobuf\stubs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\3rd_party\protobuf\google\protobuf\stubs\common.cc">
+      <Filter>源文件\easemob\3rd_party\protobuf\google\protobuf\stubs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\3rd_party\protobuf\google\protobuf\stubs\once.cc">
+      <Filter>源文件\easemob\3rd_party\protobuf\google\protobuf\stubs</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

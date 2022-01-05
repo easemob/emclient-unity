@@ -22,7 +22,7 @@ namespace ChatSDK
 
         public Client_Mac() {
             // start log service
-            StartLog("/tmp/unmanaged_dll.log");
+            StartLog("unmanaged_dll.log");
         }
 
         public override void CreateAccount(string username, string password, CallBack callback = null)
@@ -57,7 +57,7 @@ namespace ChatSDK
             {
                 //stop log service
                 StopLog();
-                StartLog("/tmp/unmanaged_dll.log");
+                StartLog("unmanaged_dll.log");
             }
             
             client = ChatAPINative.Client_InitWithOptions(options, connectionHub.OnConnected, connectionHub.OnDisconnected, connectionHub.OnPong);

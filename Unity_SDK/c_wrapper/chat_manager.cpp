@@ -6,6 +6,7 @@
 //  Copyright © 2021 easemob. All rights reserved.
 //
 #include <thread>
+#include <mutex>
 #include "chat_manager.h"
 #include "emclient.h"
 #include "emmessagebody.h"
@@ -134,7 +135,7 @@ HYPHENATE_API void ChatManager_FetchHistoryMessages(void *client, int callbackId
             //items
             int size = (int)msgCursorResult.result().size();
             LOG("fetchHistoryMessages history message count:%d", size);
-            TOItem* data[size];
+            TOItem** data = new TOItem*[size];
             for(int i=0; i<size; i++) {
                 MessageTO *mto = MessageTO::FromEMMessage(msgCursorResult.result().at(i));
                 TOItem* item = new TOItem(mto->BodyType, mto);
@@ -148,6 +149,8 @@ HYPHENATE_API void ChatManager_FetchHistoryMessages(void *client, int callbackId
                 delete (MessageTO*)data[i]->Data;
                 delete (TOItem*)data[i];
             }
+	    //delete array
+	    delete []data;
         } else {
             LOG("fetchHistoryMessages history message failed, error id:%d, desc::%s", error.mErrorCode, error.mDescription.c_str());
             onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -165,7 +168,7 @@ HYPHENATE_API void ChatManager_GetConversationsFromServer(void *client, int call
             if (onSuccess) {
                 int size = (int)conversationList.size();
                 LOG("%d conversation found.", size);
-                ConversationTO *data[size];
+                ConversationTO**data = new ConversationTO*[size];
                 for(size_t i=0; i<size; i++) {
                     data[i] = ConversationTO::FromEMConversation(conversationList.at(i));
                     LOG("GetConversation %d, id=%s, type=%d, extfiled=%s",i, data[i]->ConverationId, data[i]->type, data[i]->ExtField);
@@ -175,6 +178,7 @@ HYPHENATE_API void ChatManager_GetConversationsFromServer(void *client, int call
                 for(size_t i=0; i<size; i++) {
                     delete (ConversationTO*)data[i];
                 }
+		delete []data;
             }
         }else{
             if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -306,7 +310,7 @@ HYPHENATE_API void ChatManager_LoadAllConversationsFromDB(void *client, FUNC_OnS
     EMConversationList conversationList = CLIENT->getChatManager().loadAllConversationsFromDB();
     
     int size = (int)conversationList.size();
-    ConversationTO* data[size];
+    ConversationTO** data = new ConversationTO*[size];
     LOG("Found conversations %d in Db", size);
     for(size_t i=0; i<size; i++) {
         data[i] = ConversationTO::FromEMConversation(conversationList.at(i));
@@ -317,6 +321,7 @@ HYPHENATE_API void ChatManager_LoadAllConversationsFromDB(void *client, FUNC_OnS
     for(size_t i=0; i<size; i++) {
         delete (ConversationTO*)data[i];
     }
+    delete []data;
 }
 
 HYPHENATE_API void ChatManager_GetMessage(void *client, const char * messageId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
@@ -435,7 +440,7 @@ HYPHENATE_API void ChatManager_ResendMessage(void *client, int callbackId, const
     delete item;
 }
 
-HYPHENATE_API void ChatManager_LoadMoreMessages(void *client, FUNC_OnSuccess_With_Result onSuccess, const char * keywords, long timestamp, int maxcount, const char * from, EMConversation::EMMessageSearchDirection direction)
+HYPHENATE_API void ChatManager_LoadMoreMessages(void *client, FUNC_OnSuccess_With_Result onSuccess, const char * keywords, int64_t timestamp, int maxcount, const char * from, EMConversation::EMMessageSearchDirection direction)
 {
     std::string keywordsStr = OptionalStrParamCheck(keywords);
     std::string fromStr = OptionalStrParamCheck(from);
@@ -446,7 +451,7 @@ HYPHENATE_API void ChatManager_LoadMoreMessages(void *client, FUNC_OnSuccess_Wit
     }
     LOG("Found %d messages with ts:%ld, kw:%s, from:%s, maxc:%d, direct:%d", messageList.size(), timestamp, keywordsStr.c_str(), fromStr.c_str(), maxcount, direction);
     int size = (int)messageList.size();
-    TOItem* data[size];
+    TOItem** data = new TOItem*[size];
     for(size_t i=0; i<size; i++) {
         MessageTO* mto = MessageTO::FromEMMessage(messageList[i]);
         TOItem* item = new TOItem((int)messageList[i]->bodies()[0]->type(), mto);
@@ -458,6 +463,7 @@ HYPHENATE_API void ChatManager_LoadMoreMessages(void *client, FUNC_OnSuccess_Wit
         delete (MessageTO*)data[i]->Data;
         delete (TOItem*)data[i];
     }
+    delete []data;
 }
 
 HYPHENATE_API void ChatManager_SendReadAckForConversation(void *client, int callbackId, const char * conversationId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)

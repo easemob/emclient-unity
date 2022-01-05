@@ -171,7 +171,7 @@ HYPHENATE_API void ConversationManager_LoadMessages(void *client, int callbackId
         int size = (int)msgList.size();
         if(size > 0) {
             LOG("Load messages %d.", size);
-            TOItem* data[size];
+            TOItem** data = new TOItem*[size];
             for(int i=0; i<size; i++) {
                 MessageTO* mto = MessageTO::FromEMMessage(msgList[i]);
                 TOItem* item = new TOItem((int)msgList[i]->bodies()[0]->type(), mto);
@@ -184,6 +184,7 @@ HYPHENATE_API void ConversationManager_LoadMessages(void *client, int callbackId
                 delete (MessageTO*)data[i]->Data;
                 delete data[i];
             }
+	    delete []data;
         } else {
             LOG("Cannot load any messages in LoadMessages.");
             onSuccess(nullptr, DataType::ListOfMessage, 0, callbackId);
@@ -192,7 +193,7 @@ HYPHENATE_API void ConversationManager_LoadMessages(void *client, int callbackId
     t.detach();
 }
 
-HYPHENATE_API void ConversationManager_LoadMessagesWithKeyword(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType conversationType, const char * keywords, const char * sender, long timestamp, int count, EMConversation::EMMessageSearchDirection direction, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+HYPHENATE_API void ConversationManager_LoadMessagesWithKeyword(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType conversationType, const char * keywords, const char * sender, int64_t timestamp, int count, EMConversation::EMMessageSearchDirection direction, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(conversationId, keywords, error)) {
@@ -210,7 +211,7 @@ HYPHENATE_API void ConversationManager_LoadMessagesWithKeyword(void *client, int
         int size = (int)msgList.size();
         if(size > 0) {
             LOG("Load messages %d.", size);
-            TOItem* data[size];
+            TOItem** data = new TOItem*[size];
             for(int i=0; i<size; i++) {
                 MessageTO* mto = MessageTO::FromEMMessage(msgList[i]);
                 TOItem* item = new TOItem((int)msgList[i]->bodies()[0]->type(), mto);
@@ -223,6 +224,7 @@ HYPHENATE_API void ConversationManager_LoadMessagesWithKeyword(void *client, int
                 delete (MessageTO*)data[i]->Data;
                 delete data[i];
             }
+	    delete []data;
         } else {
             LOG("Cannot load any messages in LoadMessages.");
             onSuccess(nullptr, DataType::ListOfMessage, 0, callbackId);
@@ -231,7 +233,7 @@ HYPHENATE_API void ConversationManager_LoadMessagesWithKeyword(void *client, int
     t.detach();
 }
 
-HYPHENATE_API void ConversationManager_LoadMessagesWithMsgType(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType conversationType, EMMessageBody::EMMessageBodyType type, long timestamp, int count, const char * sender, EMConversation::EMMessageSearchDirection direction, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+HYPHENATE_API void ConversationManager_LoadMessagesWithMsgType(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType conversationType, EMMessageBody::EMMessageBodyType type, int64_t timestamp, int count, const char * sender, EMConversation::EMMessageSearchDirection direction, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(conversationId, error)) {
@@ -248,7 +250,7 @@ HYPHENATE_API void ConversationManager_LoadMessagesWithMsgType(void *client, int
         int size = (int)msgList.size();
         if(size > 0) {
             LOG("Load messages %d.", size);
-            TOItem* data[size];
+            TOItem** data = new TOItem*[size];
             for(int i=0; i<size; i++) {
                 MessageTO* mto = MessageTO::FromEMMessage(msgList[i]);
                 TOItem* item = new TOItem((int)msgList[i]->bodies()[0]->type(), mto);
@@ -261,6 +263,7 @@ HYPHENATE_API void ConversationManager_LoadMessagesWithMsgType(void *client, int
                 delete (MessageTO*)data[i]->Data;
                 delete data[i];
             }
+	    delete []data;
         } else {
             LOG("Cannot load any messages in LoadMessages.");
             onSuccess(nullptr, DataType::ListOfMessage, 0, callbackId);
@@ -269,7 +272,7 @@ HYPHENATE_API void ConversationManager_LoadMessagesWithMsgType(void *client, int
     t.detach();
 }
 
-HYPHENATE_API void ConversationManager_LoadMessagesWithTime(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType conversationType, long startTimeStamp, long endTimeStamp, int count, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+HYPHENATE_API void ConversationManager_LoadMessagesWithTime(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType conversationType, int64_t startTimeStamp, int64_t endTimeStamp, int count, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(conversationId, error)) {
@@ -285,7 +288,7 @@ HYPHENATE_API void ConversationManager_LoadMessagesWithTime(void *client, int ca
         int size = (int)msgList.size();
         if(size > 0) {
             LOG("Load messages %d.", size);
-            TOItem* data[size];
+            TOItem** data = new TOItem*[size];
             for(int i=0; i<size; i++) {
                 MessageTO* mto = MessageTO::FromEMMessage(msgList[i]);
                 TOItem* item = new TOItem((int)msgList[i]->bodies()[0]->type(), mto);
@@ -298,6 +301,7 @@ HYPHENATE_API void ConversationManager_LoadMessagesWithTime(void *client, int ca
                 delete (MessageTO*)data[i]->Data;
                 delete data[i];
             }
+	    delete []data;
         } else {
             LOG("Cannot load any messages in LoadMessages.");
             onSuccess(nullptr, DataType::ListOfMessage, 0, callbackId);

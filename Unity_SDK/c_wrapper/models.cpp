@@ -11,6 +11,8 @@
 #include "json.hpp"
 #include "tool.h"
 
+std::string EMPTY_STR = " ";
+
 EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bool buildReceiveMsg)
 {
     //compose message body
@@ -21,7 +23,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
         case EMMessageBody::TEXT:
         {
             auto tm = static_cast<TextMessageTO *>(mto);
-            LOG("Message id from MTO is: %s", tm->MsgId);
+            LOG("Message id from MTO is: id:%s", tm->MsgId);
             //create message body
             messageBody = EMMessageBodyPtr(new EMTextMessageBody(std::string(tm->body.Content)));
             from = tm->From;
@@ -227,7 +229,11 @@ void SetMessageAttr(EMMessagePtr msg, std::string& key, nlohmann::json& j)
     }
     
     if(type.compare("b") == 0) {
+#ifdef _WIN32
+        if(_stricmp(value.c_str(), "false") == 0) {
+#else
         if(strcasecmp(value.c_str(), "false") == 0) {
+#endif
             LOG("Set type bool: value: false");
             msg->setAttribute(key, false);
         }
@@ -574,14 +580,19 @@ CustomMessageTO::CustomMessageTO(const EMMessagePtr &_message):MessageTO(_messag
         j[ext[i].first] = ext[i].second;
     }
     
+    std::string str;
     if(ext.size() > 0){
-        std::string str = j.dump();
-        // need to be freed in FreeResource function
-        char* p = new char[str.size() + 1];
-        p[str.size()] = '\0';
-        strncpy(p, str.c_str(), str.size());
-        this->body.CustomParams = p;
+        str = j.dump();
     }
+    else {
+        str = EMPTY_STR; // Make sure PtrToStructure can be successful.
+    }
+
+    // need to be freed in FreeResource function
+    char* p = new char[str.size() + 1];
+    p[str.size()] = '\0';
+    strncpy(p, str.c_str(), str.size());
+    this->body.CustomParams = p;
 }
 
 void MessageTO::FreeResource(MessageTO * mto)
@@ -659,7 +670,12 @@ MessageTO * MessageTO::FromEMMessage(const EMMessagePtr &_message)
 }
 
 GroupOptions GroupOptions::FromMucSetting(EMMucSettingPtr setting) {
-    return GroupOptions {.Ext=setting->extension().c_str(), .MaxCount=setting->maxUserCount(), .InviteNeedConfirm = setting->inviteNeedConfirm(), .Style=setting->style()};
+    GroupOptions go;
+    go.Ext = setting->extension().c_str();
+    go.MaxCount = setting->maxUserCount();
+    go.InviteNeedConfirm = setting->inviteNeedConfirm();
+    go.Style = setting->style();
+    return go;
 }
 
 GroupTO::~GroupTO()
@@ -698,7 +714,6 @@ GroupTO::~GroupTO()
     MuteList = NULL;
 }
 
-std::string EMPTY_STR = " ";
 GroupTO * GroupTO::FromEMGroup(EMGroupPtr &group)
 {
     GroupTO *gto = new GroupTO();
@@ -761,14 +776,20 @@ GroupTO * GroupTO::FromEMGroup(EMGroupPtr &group)
 
     if (gto->MuteCount <= 0) {
         gto->MuteList = new Mute[1];
-        gto->MuteList[0] = Mute{.Member = EMPTY_STR.c_str(), .Duration=1000};
+	    Mute mute;
+	    mute.Member = EMPTY_STR.c_str();
+	    mute.Duration = 1000;
+	    gto->MuteList[0] = mute;
     } else {
         i=0;
         gto->MuteList = new Mute[gto->MuteCount];
+	    Mute m;
         for(auto mute : group->groupMutes()) {
             char *memberStr = new char[mute.first.size()+1];
             std::strncpy(memberStr, mute.first.c_str(), mute.first.size()+1);
-            gto->MuteList[i] = Mute{.Member = memberStr, .Duration=mute.second};
+	        m.Member = memberStr;
+	        m.Duration = mute.second;
+	        gto->MuteList[i] = m;
             i++;
         }
     }
@@ -871,10 +892,13 @@ RoomTO * RoomTO::FromEMChatRoom(EMChatroomPtr &room)
     }
     i=0;
     rto->MuteList = new Mute[rto->MuteCount];
+    Mute m;
     for(auto mute : room->chatroomMutes()) {
         char *memberStr = new char[mute.first.size()+1];
         std::strcpy(memberStr, mute.first.c_str());
-        rto->MuteList[i] = Mute{.Member = memberStr, .Duration=mute.second};
+	    m.Member = memberStr;
+	    m.Duration = mute.second;
+	    rto->MuteList[i] = m;
         i++;
     }
     
@@ -921,7 +945,7 @@ GroupReadAckTO * GroupReadAckTO::FromGroupReadAck(EMGroupReadAckPtr&  groupReadA
     groupReadAckTO->from = groupReadAckPtr->from.c_str();
     groupReadAckTO->content = groupReadAckPtr->content.c_str();
     groupReadAckTO->count = groupReadAckPtr->count;
-    groupReadAckTO->timestamp = (long)groupReadAckPtr->timestamp;
+    groupReadAckTO->timestamp = groupReadAckPtr->timestamp;
     return groupReadAckTO;
 }
 
