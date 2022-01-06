@@ -47,7 +47,8 @@ public:
         time_t now = time(NULL);
         struct tm nowTm;
 #ifdef _WIN32
-	localtime_s(&nowTm, &now);
+	    localtime_s(&nowTm, &now);
+        nowTm.tm_mon++;
 #else
         localtime_r(&now, &nowTm);
 #endif

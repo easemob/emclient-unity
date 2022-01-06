@@ -19,7 +19,7 @@ namespace ChatSDK
                     instance = new Client_Android();
 #elif UNITY_IOS
                     instance = new Client_iOS();
-#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN
+#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
                     instance = new Client_Mac();
 #endif
                     _initialized = true;
@@ -49,7 +49,7 @@ namespace ChatSDK
             chatImp = new ChatManager_Android();
 #elif UNITY_IOS
             chatImp = new ChatManager_iOS();
-#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN
+#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
             chatImp = new ChatManager_Mac(instance);
 #endif
             return chatImp;
@@ -67,7 +67,7 @@ namespace ChatSDK
             contactImp = new ContactManager_Android();
 #elif UNITY_IOS
             contactImp = new ContactManager_iOS();
-#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN
+#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
             contactImp = new ContactManager_Mac(instance);
 #endif
             return contactImp;
@@ -85,7 +85,7 @@ namespace ChatSDK
             groupImp = new GroupManager_Android();
 #elif UNITY_IOS
             groupImp = new GroupManager_iOS();
-#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN
+#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
             groupImp = new GroupManager_Mac(instance);
 #endif
             return groupImp;
@@ -103,7 +103,7 @@ namespace ChatSDK
             roomImp = new RoomManager_Android();
 #elif UNITY_IOS
             roomImp = new RoomManager_iOS();
-#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN
+#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
             roomImp = new RoomManager_Mac(instance);
 #endif
             return roomImp;
@@ -121,7 +121,7 @@ namespace ChatSDK
             pushImp = new PushManager_Android();
 #elif UNITY_IOS
             pushImp = new PushManager_iOS();
-#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN
+#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
             pushImp = new PushManager_Mac(instance);
 #endif
             return pushImp;
@@ -134,7 +134,7 @@ namespace ChatSDK
             conversationImp = new ConversationManager_Android();
 #elif UNITY_IOS
             conversationImp = new ConversationManager_iOS();
-#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN
+#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
             conversationImp = new ConversationManager_Mac(instance);
 #endif
             return conversationImp;
@@ -147,7 +147,7 @@ namespace ChatSDK
             userInfoImp = new UserInfoManager_Android();
 #elif UNITY_IOS
             userInfoImp = new UserInfoManager_iOS();
-#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN
+#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
             userInfoImp = new UserInfoManager_Mac(instance);
 #endif
             return userInfoImp;

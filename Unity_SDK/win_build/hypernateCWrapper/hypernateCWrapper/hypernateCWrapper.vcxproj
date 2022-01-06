@@ -227,6 +227,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>..\..\..\..\..\emclient-linux\3rd_party\protobuf;..\..\..\..\..\emclient-linux\3rd_party\platform\win\include;..\..\..\..\..\emclient-linux\3rd_party\openssl\include;..\..\..\..\..\emclient-linux\3rd_party\curlcpp\include;..\..\..\..\..\emclient-linux\3rd_party\sqlite3\include;..\..\..\..\..\emclient-linux\3rd_party\rapidjson\include;..\..\..\..\..\emclient-linux\protocol\generated;..\..\..\..\..\emclient-linux\protocol;..\..\..\..\..\emclient-linux\include\message;.\..\..\..\..\emclient-linux\include\utils;..\..\..\..\..\emclient-linux\include;$(IncludePath)</IncludePath>
+    <IntDir>obj\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
