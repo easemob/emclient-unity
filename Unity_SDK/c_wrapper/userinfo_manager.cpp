@@ -44,6 +44,7 @@ HYPHENATE_API void UserInfoManager_UpdateOwnInfo(void *client, int callbackId, v
         j[UserInfoTypeMap[PHONE]]       = uto->phoneNumber;
         j[UserInfoTypeMap[GENDER]]      = uto->gender;
         j[UserInfoTypeMap[SIGN]]        = uto->signature;
+        j[UserInfoTypeMap[BIRTH]]       = uto->birth;
         j[UserInfoTypeMap[EXT]]         = uto->ext;
         jstr = j.dump();
     }

@@ -1058,8 +1058,6 @@ std::map<std::string, UserInfoTO> UserInfo::Convert2TO(std::map<std::string, Use
     std::map<std::string, UserInfoTO> userinfoToMap;
     if (userInfoMap.size() == 0) return userinfoToMap;
     
-    LOG("origin address of nickName is %x", userInfoMap["yqtest"].nickName.c_str());
-    
     // DO not use "for(auto it : userInfoMap)" !!, since the "it" will be a copied value from userInfoMap
     // Not a poiter to userInfoMap!!
     for (auto it = userInfoMap.begin(); it != userInfoMap.end(); it++) {
@@ -1075,6 +1073,6 @@ std::map<std::string, UserInfoTO> UserInfo::Convert2TO(std::map<std::string, Use
         uto.userId      = it->second.userId.c_str();
         userinfoToMap[it->first] = uto;
     }
-    LOG("address of second is %x", &(userinfoToMap["yqtest"]));
+    
     return userinfoToMap;
 }

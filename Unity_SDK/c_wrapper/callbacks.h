@@ -412,6 +412,9 @@ public:
                 muteArray[i] = ptr;
             }
             onMuteListAdded(group->groupId().c_str(), muteArray, size, (int)muteExpire);
+            for(const char * item : muteArray) {
+                delete item;
+            }
         }
     }
 
@@ -427,6 +430,9 @@ public:
                 muteArray[i] = ptr;
             }
             onMuteListRemoved(group->groupId().c_str(), muteArray, size);
+            for(const char * item : muteArray) {
+                delete item;
+            }
         }
     }
        
@@ -566,6 +572,9 @@ public:
                 data[i] = ptr;
             }
             onMuteListAdded(chatroom->chatroomId().c_str(), data, (int)size, (int)muteExpire);
+            for(const char * item : data) {
+                delete item;
+            }
         }
     }
 
@@ -579,19 +588,22 @@ public:
                 data[i] = ptr;
             }
             onMuteListRemoved(chatroom->chatroomId().c_str(), data, (int)size);
+            for(const char * item : data) {
+                delete item;
+            }
         }
     }
 
     void onAddWhiteListMembersFromChatroom(const easemob::EMChatroomPtr chatroom, const std::vector<std::string> &members) override {
-        
+        //no corresponding delegate defined in API
     }
     
     void onRemoveWhiteListMembersFromChatroom(const easemob::EMChatroomPtr chatroom, const std::vector<std::string> &members) override {
-        
+        //no corresponding delegate defined in API
     }
     
     void onAllMemberMuteChangedFromChatroom(const easemob::EMChatroomPtr chatroom, bool isAllMuted) override {
-        
+        //no corresponding delegate defined in API
     }
     
     void onAddAdminFromChatroom(const EMChatroomPtr chatroom, const std::string &admin) override {
@@ -639,37 +651,31 @@ public:
     
     void onContactAdded(const std::string &username) override {
         LOG("receive contactadded from user %s!", username.c_str());
-        if(onContactAdded_)
-        {
+        if(onContactAdded_) {
             onContactAdded_(username.c_str());
         }
-            
     }
     void onContactDeleted(const std::string &username) override {
         LOG("receive contactdeleted from user %s!", username.c_str());
-        if(onContactDeleted_)
-        {
+        if(onContactDeleted_) {
             onContactDeleted_(username.c_str());
         }
     }
     void onContactInvited(const std::string &username, std::string &reason) override {
         LOG("receive contactinvited from user %s with reason %s!", username.c_str(), reason.c_str());
-        if(onContactInvited_)
-        {
+        if(onContactInvited_) {
             onContactInvited_(username.c_str(), reason.c_str());
         }
     }
     void onContactAgreed(const std::string &username) override {
         LOG("receive contactagreed from user %s!", username.c_str());
-        if(onFriendRequestAccepted_)
-        {
+        if(onFriendRequestAccepted_) {
             onFriendRequestAccepted_(username.c_str());
         }
     }
     void onContactRefused(const std::string &username) override {
         LOG("receive contactrefused from user %s!", username.c_str());
-        if(OnFriendRequestDeclined_)
-        {
+        if(OnFriendRequestDeclined_) {
             OnFriendRequestDeclined_(username.c_str());
         }
     }
