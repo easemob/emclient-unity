@@ -441,11 +441,11 @@ public:
                 muteArray[i] = ptr;
             }
             onMuteListAdded(group->groupId().c_str(), muteArray, size, (int)muteExpire);
-	    //bug fix for memory leak
-	    for (size_t i=0; i<mutes.size(); i++) {
-	    	delete muteArray[i];
-	    }
-	    delete []muteArray;
+            //bug fix for memory leak
+            for (size_t i=0; i<mutes.size(); i++) {
+                delete muteArray[i];
+            }
+            delete []muteArray;
         }
     }
 
@@ -461,11 +461,11 @@ public:
                 muteArray[i] = ptr;
             }
             onMuteListRemoved(group->groupId().c_str(), muteArray, size);
-	    //bug fix for memory leak
-	    for (size_t i=0; i<mutes.size(); i++) {
-	    	delete muteArray[i];
-	    }
-	    delete []muteArray;
+            //bug fix for memory leak
+            for (size_t i=0; i<mutes.size(); i++) {
+                delete muteArray[i];
+            }
+            delete []muteArray;
         }
     }
        
@@ -605,10 +605,10 @@ public:
                 data[i] = ptr;
             }
             onMuteListAdded(chatroom->chatroomId().c_str(), data, (int)size, (int)muteExpire);
-	    for (size_t i=0; i<size; i++) {
-	    	delete data[i];
-	    }
-	    delete []data;
+            for (size_t i=0; i<size; i++) {
+                delete data[i];
+            }
+            delete []data;
         }
     }
 
@@ -622,10 +622,10 @@ public:
                 data[i] = ptr;
             }
             onMuteListRemoved(chatroom->chatroomId().c_str(), data, (int)size);
-	    for (size_t i=0; i<size; i++) {
-	    	delete data[i];
-	    }
-	    delete []data;
+            for (size_t i=0; i<size; i++) {
+                delete data[i];
+            }
+            delete []data;
         }
     }
 
