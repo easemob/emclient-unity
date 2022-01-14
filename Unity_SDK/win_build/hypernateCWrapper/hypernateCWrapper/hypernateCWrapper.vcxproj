@@ -1,0 +1,318 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\c_wrapper\api_decorator.h" />
+    <ClInclude Include="..\..\..\c_wrapper\callbacks.h" />
+    <ClInclude Include="..\..\..\c_wrapper\chat_manager.h" />
+    <ClInclude Include="..\..\..\c_wrapper\client.h" />
+    <ClInclude Include="..\..\..\c_wrapper\common.h" />
+    <ClInclude Include="..\..\..\c_wrapper\contact_manager.h" />
+    <ClInclude Include="..\..\..\c_wrapper\conversation_manager.h" />
+    <ClInclude Include="..\..\..\c_wrapper\group_manager.h" />
+    <ClInclude Include="..\..\..\c_wrapper\hyphenateCWrapper.h" />
+    <ClInclude Include="..\..\..\c_wrapper\json.hpp" />
+    <ClInclude Include="..\..\..\c_wrapper\LogHelper.h" />
+    <ClInclude Include="..\..\..\c_wrapper\models.h" />
+    <ClInclude Include="..\..\..\c_wrapper\push_manager.h" />
+    <ClInclude Include="..\..\..\c_wrapper\room_manager.h" />
+    <ClInclude Include="..\..\..\c_wrapper\tool.h" />
+    <ClInclude Include="..\..\..\c_wrapper\userinfo_manager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\emclient-linux\3rd_party\curlcpp\src\curl_easy.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\3rd_party\curlcpp\src\curl_exception.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\3rd_party\curlcpp\src\curl_form.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\3rd_party\curlcpp\src\curl_header.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\3rd_party\curlcpp\src\curl_writer.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\3rd_party\protobuf\google\protobuf\generated_message_util.cc" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\3rd_party\protobuf\google\protobuf\io\coded_stream.cc" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\3rd_party\protobuf\google\protobuf\io\zero_copy_stream.cc" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\3rd_party\protobuf\google\protobuf\io\zero_copy_stream_impl_lite.cc" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\3rd_party\protobuf\google\protobuf\message_lite.cc" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\3rd_party\protobuf\google\protobuf\repeated_field.cc" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\3rd_party\protobuf\google\protobuf\stubs\atomicops_internals_x86_msvc.cc" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\3rd_party\protobuf\google\protobuf\stubs\common.cc" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\3rd_party\protobuf\google\protobuf\stubs\once.cc" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\3rd_party\protobuf\google\protobuf\wire_format_lite.cc" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\basenode.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\chatclient.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\conference.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\conferencebody.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\emcompressionzlib.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\emconnectionfactory.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\emconnectiontcpbase.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\emconnectiontcpclient.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\emlogsink.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\emmutex.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\generated\conferencebody.pb.cc" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\generated\jid.pb.cc" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\generated\keyvalue.pb.cc" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\generated\messagebody.pb.cc" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\generated\msync.pb.cc" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\generated\mucbody.pb.cc" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\generated\rosterbody.pb.cc" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\generated\statisticsbody.pb.cc" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\keyvalue.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\message.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\messagebody.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\messagebodycontent.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\messageconfig.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\meta.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\metaqueue.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\msync.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\mucbody.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\mucmeta.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\notice.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\protocolparser.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\provision.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\rosterbody.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\rostermeta.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\statistics.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\status.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\syncdl.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\syncul.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\testserver.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\uid.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\unreaddl.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\protocol\unreadul.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\b64decoder.c" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\b64encoder.c" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emattributevalue.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emchatclient.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emchatclientimpl.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emchatconfigs.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emchatmanager.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emchatroom.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emchatroommanager.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emclient.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emcollector.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emconfigmanager.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emcontactmanager.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emconversation.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emconversationprivate.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emconversation_manager.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emdatabase.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emdatareport.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emdnsmanager.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emencryptproviderimpl.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emerror.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emgroup.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emgroupmanager.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emjsonstring.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emmuc.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emmucmanager.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\empushconfigs.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\empushmanager.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emreportevent.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emrtcconfigmanager.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emsemaphoretracker.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emsessionmanager.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emtaskqueue.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\emuserinfomanager.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\message\emcmdmessagebody.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\message\emcustommessagebody.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\message\emfilemessagebody.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\message\emimagemessagebody.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\message\emlocationmessagebody.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\message\emmessage.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\message\emmessagebody.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\message\emmessageencoder.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\message\emtextmessagebody.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\message\emvideomessagebody.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\message\emvoicemessagebody.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\sqlite.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\utils\emcryptoadapter.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\utils\emencryptutils.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\utils\emfilecompressor.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\utils\emhttprequest.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\utils\emlog.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\utils\emtimer.cpp" />
+    <ClCompile Include="..\..\..\..\..\emclient-linux\src\utils\emutils.cpp" />
+    <ClCompile Include="..\..\..\c_wrapper\chat_manager.cpp" />
+    <ClCompile Include="..\..\..\c_wrapper\client.cpp" />
+    <ClCompile Include="..\..\..\c_wrapper\contact_manager.cpp" />
+    <ClCompile Include="..\..\..\c_wrapper\conversation_manager.cpp" />
+    <ClCompile Include="..\..\..\c_wrapper\group_manager.cpp" />
+    <ClCompile Include="..\..\..\c_wrapper\hyphenateCWrapper.cpp" />
+    <ClCompile Include="..\..\..\c_wrapper\models.cpp" />
+    <ClCompile Include="..\..\..\c_wrapper\push_manager.cpp" />
+    <ClCompile Include="..\..\..\c_wrapper\room_manager.cpp" />
+    <ClCompile Include="..\..\..\c_wrapper\tool.cpp" />
+    <ClCompile Include="..\..\..\c_wrapper\userinfo_manager.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{70c06909-ada6-4504-b3ff-8cec6c31f16b}</ProjectGuid>
+    <RootNamespace>hypernateCWrapper</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <TargetFrameworkVersion>3.5</TargetFrameworkVersion>
+    <ProjectName>hyphenateCWrapper</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <CLRSupport>false</CLRSupport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>..\..\..\..\..\emclient-linux\3rd_party\protobuf;..\..\..\..\..\emclient-linux\3rd_party\platform\win\include;..\..\..\..\..\emclient-linux\3rd_party\openssl\include;..\..\..\..\..\emclient-linux\3rd_party\curlcpp\include;..\..\..\..\..\emclient-linux\3rd_party\sqlite3\include;..\..\..\..\..\emclient-linux\3rd_party\rapidjson\include;..\..\..\..\..\emclient-linux\protocol\generated;..\..\..\..\..\emclient-linux\protocol;..\..\..\..\..\emclient-linux\include\message;..\..\..\..\..\emclient-linux\include\utils;..\..\..\..\..\emclient-linux\include;$(IncludePath)</IncludePath>
+    <IntDir>obj\$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>..\..\..\..\..\emclient-linux\3rd_party\protobuf;..\..\..\..\..\emclient-linux\3rd_party\platform\win\include;..\..\..\..\..\emclient-linux\3rd_party\openssl\include;..\..\..\..\..\emclient-linux\3rd_party\curlcpp\include;..\..\..\..\..\emclient-linux\3rd_party\sqlite3\include;..\..\..\..\..\emclient-linux\3rd_party\rapidjson\include;..\..\..\..\..\emclient-linux\protocol\generated;..\..\..\..\..\emclient-linux\protocol;..\..\..\..\..\emclient-linux\include\message;.\..\..\..\..\emclient-linux\include\utils;..\..\..\..\..\emclient-linux\include;$(IncludePath)</IncludePath>
+    <IntDir>obj\$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_WIN32;AGORACHAT_EXPORT;CURL_STATICLIB;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\..\..\..\..\emclient-linux\3rd_party\platform\win\curl_7.40.0\lib\debug;..\..\..\..\..\emclient-linux\3rd_party\platform\win\openssl_1.0.0\debug;..\..\..\..\..\emclient-linux\3rd_party\platform\win\sqlite_3.34.1\debug;..\..\..\..\..\emclient-linux\3rd_party\platform\win\zlib_1.2.11\debug\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libcurl.lib;libeay32.lib;ssleay32.lib;sqlite3.lib;zlibd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>LIBCMTD.lib</IgnoreSpecificDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_WIN32;AGORACHAT_EXPORT;CURL_STATICLIB;DEBUG;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\..\..\..\..\emclient-linux\3rd_party\platform\win\curl_7.40.0\lib\debug;..\..\..\..\..\emclient-linux\3rd_party\platform\win\openssl_1.0.0\debug;..\..\..\..\..\emclient-linux\3rd_party\platform\win\sqlite_3.34.1\debug;..\..\..\..\..\emclient-linux\3rd_party\platform\win\zlib_1.2.11\debug\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libcurl.lib;libeay32.lib;ssleay32.lib;sqlite3.lib;zlibd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.LIB</IgnoreSpecificDefaultLibraries>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

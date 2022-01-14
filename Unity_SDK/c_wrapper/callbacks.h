@@ -24,16 +24,17 @@ using namespace easemob;
     //Connection Listeners
     typedef void(__stdcall *FUNC_OnConnected)();
     typedef void(__stdcall *FUNC_OnDisconnected)(int);
+    typedef void(__stdcall *FUNC_OnPong)();
 
     //ChatManager Listeners
     typedef void (__stdcall *FUNC_OnMessagesReceived)(void * messages[],
                                                       EMMessageBody::EMMessageBodyType types[], int size);
-    typedef void (__stdcall *FUNC_OnCmdMessagesReceived)(void * messages[], int size);
-    typedef void (__stdcall *FUNC_OnMessagesRead)(void * messages[], int size);
-    typedef void (__stdcall *FUNC_OnMessagesDelivered)(void * messages[], int size);
-    typedef void (__stdcall *FUNC_OnMessagesRecalled)(void * messages[], int size);
+    typedef void (__stdcall *FUNC_OnCmdMessagesReceived)(void * messages[], EMMessageBody::EMMessageBodyType types[], int size);
+    typedef void (__stdcall *FUNC_OnMessagesRead)(void * messages[], EMMessageBody::EMMessageBodyType types[], int size);
+    typedef void (__stdcall *FUNC_OnMessagesDelivered)(void * messages[], EMMessageBody::EMMessageBodyType types[], int size);
+    typedef void (__stdcall *FUNC_OnMessagesRecalled)(void * messages[], EMMessageBody::EMMessageBodyType types[], int size);
     typedef void (__stdcall *FUNC_OnReadAckForGroupMessageUpdated)();
-    typedef void (__stdcall *FUNC_OnGroupMessageRead)(GroupReadAck acks[], int size);
+    typedef void (__stdcall *FUNC_OnGroupMessageRead)(void* acks[], int size);
     typedef void (__stdcall *FUNC_OnConversationsUpdate)();
     typedef void (__stdcall *FUNC_OnConversationRead)(const char * from, const char * to);
 
@@ -55,12 +56,19 @@ using namespace easemob;
     typedef void (__stdcall *FUNC_OnMemberJoined)(const char * groupId, const char * member);
     typedef void (__stdcall *FUNC_OnMemberExited)(const char * groupId, const char * member);
     typedef void (__stdcall *FUNC_OnAnnouncementChanged)(const char * groupId, const char * announcement);
-    typedef void (__stdcall *FUNC_OnSharedFileAdded)(const char * groupId, GroupSharedFileTO sharedFile);
+    typedef void (__stdcall *FUNC_OnSharedFileAdded)(const char * groupId, void* sharedFile[], int size);
     typedef void (__stdcall *FUNC_OnSharedFileDeleted)(const char * groupId, const char * fileId);
 
+    //ContactManager Listener
+    typedef void (__stdcall *FUNC_OnContactAdded)(const char* username);
+    typedef void (__stdcall *FUNC_OnContactDeleted)(const char* username);
+    typedef void (__stdcall *FUNC_OnContactInvited)(const char* username, const char* reason);
+    typedef void (__stdcall *FUNC_OnFriendRequestAccepted)(const char* username);
+    typedef void (__stdcall *FUNC_OnFriendRequestDeclined)(const char* username);
+
     //RoomManager Listener
-    typedef void (__stdcall *FUNC_OnChatRoomDestroyed)(__stdcall const char * roomId, const char * roomName);
-    typedef void (__stdcall *FUNC_OnRemovedFromChatRoom)(__stdcall const char * roomId, const char * roomName, const char * participant);
+    typedef void (__stdcall *FUNC_OnChatRoomDestroyed)(const char * roomId, const char * roomName);
+    typedef void (__stdcall *FUNC_OnRemovedFromChatRoom)(const char * roomId, const char * roomName, const char * participant);
     typedef void (__stdcall *FUNC_OnMemberExitedFromRoom)(const char * roomId, const char * roomName, const char * member);
 #else
     //Callback
@@ -157,8 +165,8 @@ public:
         size_t size = messages.size();
         LOG("%d messages received!", size);
         
-        void * result[size];
-        EMMessageBody::EMMessageBodyType types[size];
+        void** result = new void*[size];
+        EMMessageBody::EMMessageBodyType* types = new EMMessageBody::EMMessageBodyType[size];
         int i = 0;
         for(EMMessagePtr message : messages) {
             MessageTO *mto = MessageTO::FromEMMessage(message);
@@ -171,18 +179,21 @@ public:
             onMessagesReceived(result, types, (int)size);
         }
         //release memory manually
-        for(void * message : result) {
+        for(size_t i=0; i<size; i++) {
+	    void* message = result[i];
             MessageTO::FreeResource((MessageTO*)message);
             delete (MessageTO *)message;
         }
+	delete []result;
+	delete []types;
     }
     
     void onReceiveCmdMessages(const EMMessageList &messages) override {
         LOG("%d cmd messages received!", messages.size());
         
         size_t size = messages.size();
-        void * result[size];
-        EMMessageBody::EMMessageBodyType types[size];
+        void** result = new void*[size];
+        EMMessageBody::EMMessageBodyType* types = new EMMessageBody::EMMessageBodyType[size];
         int i = 0;
         for(EMMessagePtr message : messages) {
             MessageTO *mto = MessageTO::FromEMMessage(message);
@@ -195,18 +206,21 @@ public:
             onCmdMessagesReceived(result, types, (int)size);
         }
         //release memory manually
-        for(void * message : result) {
+        for(size_t i=0; i<size; i++) {
+	    void* message = result[i];
             MessageTO::FreeResource((MessageTO*)message);
             delete (MessageTO *)message;
         }
+	delete []result;
+	delete []types;
     }
     
     void onReceiveHasReadAcks(const EMMessageList &messages) override{
         LOG("%d messages read!", messages.size());
         
         size_t size = messages.size();
-        void * result[size];
-        EMMessageBody::EMMessageBodyType types[size];
+        void** result = new void*[size];
+        EMMessageBody::EMMessageBodyType* types = new EMMessageBody::EMMessageBodyType[size];
         int i = 0;
         for(EMMessagePtr message : messages) {
             MessageTO *mto = MessageTO::FromEMMessage(message);
@@ -214,23 +228,30 @@ public:
             types[i] = mto->BodyType;
             i++;
         }
+
+        //just for testing
+        LOG("result address: %x, mto address: %x", &result, result[0]);
+
         if(onMessagesRead) {
             LOG("Call onMessagesRead delegate in managed side...");
             onMessagesRead(result, types, (int)size);
         }
         //release memory manually
-        for(void * message : result) {
+        for(size_t i=0; i<size; i++) {
+	        void* message = result[i];
             MessageTO::FreeResource((MessageTO*)message);
             delete (MessageTO *)message;
         }
+	delete []result;
+	delete []types;
     }
     
     void onReceiveHasDeliveredAcks(const EMMessageList &messages) override{
         LOG("%d messages delivered!", messages.size());
         
         size_t size = messages.size();
-        void * result[size];
-        EMMessageBody::EMMessageBodyType types[size];
+        void** result = new void*[size];
+        EMMessageBody::EMMessageBodyType* types = new EMMessageBody::EMMessageBodyType[size];
         int i = 0;
         for(EMMessagePtr message : messages) {
             MessageTO *mto = MessageTO::FromEMMessage(message);
@@ -243,18 +264,21 @@ public:
             onMessagesDelivered(result, types, (int)size);
         }
         //release memory manually
-        for(void * message : result) {
+        for(size_t i=0; i<size; i++) {
+	    void* message = result[i];
             MessageTO::FreeResource((MessageTO*)message);
             delete (MessageTO *)message;
         }
+	delete []result;
+	delete []types;
     }
     
     void onReceiveRecallMessages(const EMMessageList &messages) override {
         LOG("%d messages recalled!", messages.size());
         
         size_t size = messages.size();
-        void * result[size];
-        EMMessageBody::EMMessageBodyType types[size];
+        void** result = new void*[size];
+        EMMessageBody::EMMessageBodyType* types = new EMMessageBody::EMMessageBodyType[size];
         int i = 0;
         for(EMMessagePtr message : messages) {
             MessageTO *mto = MessageTO::FromEMMessage(message);
@@ -267,10 +291,13 @@ public:
             onMessagesRecalled(result, types, (int)size);
         }
         //release memory manually
-        for(void * message : result) {
+        for(size_t i=0; i<size; i++) {
+	    void* message = result[i];
             MessageTO::FreeResource((MessageTO*)message);
             delete (MessageTO *)message;
         }
+	delete []result;
+	delete []types;
     }
     
     void onUpdateGroupAcks() override {
@@ -284,7 +311,7 @@ public:
         LOG("%d group messages read!", acks.size());
         
         size_t size = acks.size();
-        void * result[size];
+        void** result = new void*[size];
         int i = 0;
         for(EMGroupReadAckPtr ack : acks) {
             GroupReadAckTO *gto = GroupReadAckTO::FromGroupReadAck(ack);
@@ -296,9 +323,11 @@ public:
             onGroupMessageRead(result, (int)size);
         }
         //release memory manually
-        for(void * gto : result) {
+        for(size_t i=0; i<size; i++) {
+	    void* gto = result[i];
             delete (GroupReadAckTO *)gto;
         }
+	delete []result;
     }
     
     void onUpdateConversationList(const EMConversationList &conversations) override {
@@ -405,16 +434,18 @@ public:
         if(onMuteListAdded) {
             int size = (int)mutes.size();
             //convert vector to array
-            const char * muteArray[size];
+            const char** muteArray = new const char*[size];
             for(size_t i=0; i<mutes.size(); i++) {
                 char * ptr = new char[mutes[i].size()+1];
                 strncpy(ptr, mutes[i].c_str(), mutes.size()+1);
                 muteArray[i] = ptr;
             }
             onMuteListAdded(group->groupId().c_str(), muteArray, size, (int)muteExpire);
-            for(const char * item : muteArray) {
-                delete item;
-            }
+	    //bug fix for memory leak
+	    for (size_t i=0; i<mutes.size(); i++) {
+	    	delete muteArray[i];
+	    }
+	    delete []muteArray;
         }
     }
 
@@ -423,16 +454,18 @@ public:
         if(onMuteListRemoved) {
             int size = (int)mutes.size();
             //convert vector to array
-            const char * muteArray[size];
+            const char** muteArray = new const char*[size];
             for(size_t i=0; i<mutes.size(); i++) {
                 char * ptr = new char[mutes[i].size()+1];
                 strncpy(ptr, mutes[i].c_str(), mutes.size()+1);
                 muteArray[i] = ptr;
             }
             onMuteListRemoved(group->groupId().c_str(), muteArray, size);
-            for(const char * item : muteArray) {
-                delete item;
-            }
+	    //bug fix for memory leak
+	    for (size_t i=0; i<mutes.size(); i++) {
+	    	delete muteArray[i];
+	    }
+	    delete []muteArray;
         }
     }
        
@@ -565,32 +598,34 @@ public:
     void onAddMutesFromChatroom(const EMChatroomPtr chatroom, const std::vector<std::string> &mutes, int64_t muteExpire) override {
         if(onMuteListAdded) {
             size_t size = mutes.size();
-            const char * data[size];
+            const char** data = new const char*[size];
             for(size_t i=0; i<size; i++) {
                 char* ptr = new char[mutes[i].size()+1];
                 strncpy(ptr, mutes[i].c_str(), mutes[i].size()+1);
                 data[i] = ptr;
             }
             onMuteListAdded(chatroom->chatroomId().c_str(), data, (int)size, (int)muteExpire);
-            for(const char * item : data) {
-                delete item;
-            }
+	    for (size_t i=0; i<size; i++) {
+	    	delete data[i];
+	    }
+	    delete []data;
         }
     }
 
     void onRemoveMutesFromChatroom(const EMChatroomPtr chatroom, const std::vector<std::string> &mutes) override {
         if(onMuteListRemoved) {
             size_t size = mutes.size();
-            const char * data[size];
+            const char** data = new const char*[size];
             for(size_t i=0; i<size; i++) {
                 char* ptr = new char[mutes[i].size()+1];
                 strncpy(ptr, mutes[i].c_str(), mutes[i].size()+1);
                 data[i] = ptr;
             }
             onMuteListRemoved(chatroom->chatroomId().c_str(), data, (int)size);
-            for(const char * item : data) {
-                delete item;
-            }
+	    for (size_t i=0; i<size; i++) {
+	    	delete data[i];
+	    }
+	    delete []data;
         }
     }
 
