@@ -24,7 +24,8 @@ obj/
 *.booproj
 **/obj/
 **/.vs/
-
+*.sln
+*.vcxproj
 
 # ============ #
 # OS generated #
