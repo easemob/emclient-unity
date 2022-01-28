@@ -107,3 +107,4 @@ sysinfo.txt
 **/change_all.sh.meta
 *.meta
 **/unmanaged_dll.log
+*.pdb

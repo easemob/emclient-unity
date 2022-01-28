@@ -244,7 +244,7 @@
                           'libcurl.lib',
                           'libeay32.lib',
                           'ssleay32.lib',
-                          'sqlite3.lib',
+                          'libsqlite3.lib',
                           'zlib.lib',
                        ],
                        'library_dirs': [
