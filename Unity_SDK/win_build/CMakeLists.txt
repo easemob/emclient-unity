@@ -5,7 +5,7 @@
 
 
 cmake_minimum_required(VERSION 3.15.0)
-project(hypernateCWrapper VERSION 0.1.0 LANGUAGES C CXX)
+project(hyphenateCWrapper VERSION 0.1.0 LANGUAGES C CXX)
 
 if(NOT CORE_ROOT_DIRS)
   set(CORE_ROOT_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../../../emclient-linux-yq)
@@ -140,7 +140,7 @@ include(${CORE_ROOT_DIRS}/cmake/libcurlcpp.cmake)
 # sdkcore
 include(${CORE_ROOT_DIRS}/cmake/libsdkcore.cmake)
 
-# hypernateCWrapper
+# hyphenateCWrapper
 include(${HC_ROOT_DIR}/cmake/libhc.cmake)
 
 include(CTest)
