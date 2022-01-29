@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.15.0)
 project(hyphenateCWrapper VERSION 0.1.0 LANGUAGES C CXX)
 
 if(NOT CORE_ROOT_DIRS)
-  set(CORE_ROOT_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../../../emclient-linux-yq)
+  set(CORE_ROOT_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../../../emclient-linux)
 endif(NOT CORE_ROOT_DIRS)
 
 if(NOT HC_ROOT_DIR)
