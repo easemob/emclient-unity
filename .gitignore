@@ -108,3 +108,4 @@ sysinfo.txt
 *.meta
 **/unmanaged_dll.log
 *.pdb
+.vscode
