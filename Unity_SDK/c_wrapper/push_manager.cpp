@@ -27,11 +27,12 @@ HYPHENATE_API void PushManager_GetIgnoredGroupIds(void *client, FUNC_OnSuccess_W
     std::vector<std::string> ignoreList = configPtr->getIgnoredGroupIds();
     int size = (int)ignoreList.size();
     LOG("GetIgnoredGroupIds group id number:%d", size);
-    const char * data[size];
+    const char** data = new const char*[size];
     for(size_t i=0; i<size; i++) {
         data[i] = ignoreList[i].c_str();
     }
     onSuccess((void **)data, DataType::ListOfString, size, -1);
+    delete []data;
 }
 
 HYPHENATE_API void PushManager_GetPushConfig(void *client, FUNC_OnSuccess_With_Result onSuccess)

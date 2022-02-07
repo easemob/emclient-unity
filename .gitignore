@@ -19,12 +19,13 @@ obj/
 *.userprefs
 *.pidb
 *.suo
-/*.sln
 *.user
 *.unityproj
 *.booproj
-
-**/Release
+**/obj/
+**/.vs/
+*.sln
+*.vcxproj
 
 # ============ #
 # OS generated #
@@ -83,7 +84,6 @@ ExportedObj/
 .consulo/
 *.csproj
 *.unityproj
-*.sln
 *.suo
 *.tmp
 *.user
@@ -106,3 +106,6 @@ sysinfo.txt
 **/change_all.sh
 **/change_all.sh.meta
 *.meta
+**/unmanaged_dll.log
+*.pdb
+.vscode

@@ -359,7 +359,6 @@ namespace ChatSDK
                 if (message.Body.Type == MessageBodyType.CUSTOM)
                 {
                     var body = message.Body as CustomBody;
-
                     CustomEvent = body.CustomEvent;
                     if (null != body.CustomParams && body.CustomParams.Count > 0)
                     {
@@ -389,7 +388,8 @@ namespace ChatSDK
         public override IMessageBody UnmarshallBody()
         {
             Dictionary<string, string> dict;
-            if (null != Body.CustomParams && Body.CustomParams.Length > 0)
+            // valid json format: {a:b}
+            if (null != Body.CustomParams && Body.CustomParams.Length > 3)
                 dict = TransformTool.JsonStringToDictionary(Body.CustomParams);
             else
                 dict = new Dictionary<string, string>(); // empty dict
