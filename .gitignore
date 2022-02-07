@@ -109,3 +109,4 @@ sysinfo.txt
 **/unmanaged_dll.log
 *.pdb
 .vscode
+*.code-workspace
