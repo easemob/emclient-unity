@@ -13,7 +13,7 @@ project(
   LANGUAGES C CXX)
 
 if(NOT CORE_ROOT_DIRS)
-  set(CORE_ROOT_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../../emclient-linux-yq)
+  set(CORE_ROOT_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../../emclient-linux)
 endif(NOT CORE_ROOT_DIRS)
 message(CORE_ROOT_DIRS=${CORE_ROOT_DIRS})
 
