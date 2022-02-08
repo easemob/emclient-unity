@@ -58,7 +58,7 @@ struct GroupReadAck
     char * MsgId;
     char * From;
     char * Content;
-    long Timestamp;
+    int64_t Timestamp;
     int Count;
 };
 
@@ -89,8 +89,8 @@ union AttributeValueUnion {
     unsigned short UShortV;
     int Int32V;
     unsigned int UInt32V;
-    long Int64V;
-    unsigned long UInt64V;
+    int64_t Int64V;
+    uint64_t UInt64V;
     float FloatV;
     double DoubleV;
     char *StringV;
@@ -124,7 +124,7 @@ struct FileMessageBodyTO {
     const char *DisplayName;
     const char * Secret;
     const char * RemotePath;
-    long FileSize;
+    int64_t FileSize;
     EMFileMessageBody::EMDownloadStatus DownStatus;
 };
 
@@ -138,7 +138,7 @@ struct ImageMessageBodyTO {
     const char * ThumbnaiSecret;
     double Height;
     double Width;
-    long FileSize;
+    int64_t FileSize;
     EMFileMessageBody::EMDownloadStatus DownStatus;
     EMFileMessageBody::EMDownloadStatus ThumbnaiDownStatus;
     bool Original;
@@ -149,7 +149,7 @@ struct VoiceMessageBodyTO {
     const char * DisplayName;
     const char * Secret;
     const char * RemotePath;
-    long FileSize;
+    int64_t FileSize;
     EMFileMessageBody::EMDownloadStatus DownStatus;
     int Duration;
 };
@@ -165,7 +165,7 @@ struct VideoMessageBodyTO {
     double Height;
     double Width;
     int Duration;
-    long FileSize;
+    int64_t FileSize;
     EMFileMessageBody::EMDownloadStatus DownStatus;
 };
 
@@ -188,8 +188,8 @@ public:
     bool HasReadAck;
 
     const char * AttributesValues;
-    long LocalTime;
-    long ServerTime;
+    int64_t LocalTime;
+    int64_t ServerTime;
     
     EMMessageBody::EMMessageBodyType BodyType;
     MessageTO();
@@ -307,8 +307,8 @@ struct GroupSharedFileTO
     const char * FileName;
     const char * FileId;
     const char * FileOwner;
-    long CreateTime;
-    long FileSize;
+    int64_t CreateTime;
+    int64_t FileSize;
     
     static GroupSharedFileTO * FromEMGroupSharedFile(const EMMucSharedFilePtr &sharedFile);
     static void DeleteGroupSharedFileTO(GroupSharedFileTO* gto);
@@ -385,7 +385,7 @@ struct GroupReadAckTO
     const char * from;
     const char * content;
     int count;
-    long timestamp;
+    int64_t timestamp;
     
     static GroupReadAckTO * FromGroupReadAck(EMGroupReadAckPtr&  groupReadAckPtr);
 };

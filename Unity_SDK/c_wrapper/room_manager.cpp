@@ -271,7 +271,7 @@ HYPHENATE_API void RoomManager_FetchChatroomsWithPage(void *client, int callback
             if(onSuccess) {
                 int size = (int)pageResult.result().size();
                 LOG("Found rooms with num:%d", size);
-                RoomTO* data[size];
+                RoomTO** data = new RoomTO*[size];
                 for(int i=0; i<size; i++) {
                     EMChatroomPtr charRoomPtr = std::dynamic_pointer_cast<EMChatroom>(pageResult.result().at(i));
                     data[i] = RoomTO::FromEMChatRoom(charRoomPtr);
@@ -281,6 +281,7 @@ HYPHENATE_API void RoomManager_FetchChatroomsWithPage(void *client, int callback
                 for(int i=0; i<size; i++) {
                     delete (RoomTO*)data[i];
                 }
+		delete []data;
             }
         }else{
             LOG("Fetch room failed with code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
@@ -333,11 +334,12 @@ HYPHENATE_API void RoomManager_FetchChatroomBans(void *client, int callbackId, c
             LOG("RoomManager_FetchChatroomBans succeeds, roomId: %s", roomIdStr.c_str());
             if(onSuccess) {
                 size_t size = banList.size();
-                const char * data[size];
+                const char** data = new const char*[size];
                 for(size_t i=0; i<size; i++) {
                     data[i] = banList[i].c_str();
                 }
                 onSuccess((void **)data, DataType::String, (int)size, callbackId);
+		delete []data;
             }
         }else{
             LOG("RoomManager_FetchChatroomBans failed, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
@@ -398,11 +400,12 @@ HYPHENATE_API void RoomManager_FetchChatroomMembers(void * client, int callbackI
                 //items
                 int size = (int)msgCursorResult.result().size();
                 LOG("Fetch room member successfully, num=%d, roomId=%s", size, roomIdStr.c_str());
-                const char * data[size];
+                const char** data = new const char*[size];
                 for(int i=0; i<size; i++) {
                     data[i] = msgCursorResult.result().at(i).c_str();
                 }
                 onSuccess((void *)&cursorResultTo, (void **)data, DataType::CursorResult, size, callbackId);
+		delete []data;
             }
         }else{
             LOG("Fetch room member failed, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
@@ -428,11 +431,12 @@ HYPHENATE_API void RoomManager_FetchChatroomMutes(void * client, int callbackId,
             LOG("RoomManager_FetchChatroomMutes succeeds, roomId: %s", roomIdStr.c_str());
             if(onSuccess) {
                 size_t size = muteList.size();
-                const char * data[size];
+                const char** data = new const char*[size];
                 for(size_t i=0; i<size; i++) {
                     data[i] = muteList[i].first.c_str();
                 }
                 onSuccess((void **)data, DataType::String, (int)size, callbackId);
+		delete []data;
             }
         }else{
             LOG("RoomManager_FetchChatroomMutes failed, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());

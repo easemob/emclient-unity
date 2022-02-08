@@ -82,11 +82,12 @@ HYPHENATE_API void ContactManager_GetContactsFromServer(void *client, int callba
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             int size = (int)vec.size();
             LOG("GetContactsFromServer success, contact num:%d.", size);
-            const char* data[size];
+            const char** data = new const char*[size];
             for(int i=0; i<size; i++) {
                 data[i] = vec[i].c_str();
             }
             onSuccess((void**)data, DataType::ListOfString, size, callbackId);
+	    delete []data;
         } else {
             LOG("GetContactsFromServer failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -102,11 +103,12 @@ HYPHENATE_API void ContactManager_GetContactsFromDB(void *client, FUNC_OnSuccess
     if(EMError::EM_NO_ERROR == error.mErrorCode) {
         int size = (int)vec.size();
         LOG("GetContactsFromDB success, contact num:%d.",size);
-        const char * data[size];
+        const char** data = new const char*[size];
         for(int i=0; i<size; i++) {
             data[i] = vec[i].c_str();
         }
         onSuccess((void **)data, DataType::ListOfString, size, -1);
+	delete []data;
     } else {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), -1);
         LOG("GetContactsFromDB failed with code=%d, desc=%s.", error.mErrorCode, error.mDescription.c_str());
@@ -168,11 +170,12 @@ HYPHENATE_API void ContactManager_GetBlackListFromServer(void *client, int callb
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("GetBlackListFromServer success.");
             int size = (int)vec.size();
-            const char * data[size];
+            const char** data = new const char*[size];
             for(int i=0; i<size; i++) {
                 data[i] = vec[i].c_str();
             }
             onSuccess((void**)data, DataType::ListOfString, size, callbackId);
+	    delete []data;
         } else {
             LOG("GetBlackListFromServer failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -235,11 +238,12 @@ HYPHENATE_API void ContactManager_GetSelfIdsOnOtherPlatform(void *client, int ca
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("GetSelfIdsOnOtherPlatform success.");
             int size = (int)vec.size();
-            const char * data[size];
+            const char** data = new const char*[size];
             for(int i=0; i<size; i++) {
                 data[i] = vec[i].c_str();
             }
             onSuccess((void**)data, DataType::ListOfString, size, callbackId);
+	    delete []data;
         } else {
             LOG("GetSelfIdsOnOtherPlatform failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);

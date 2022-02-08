@@ -310,7 +310,7 @@ namespace ChatSDK
                     }
                     else
                     {
-                        Debug.LogError($"Group information expected.");
+                        Debug.LogError($"Room information expected.");
                     }
                 },
                 onError: (int code, string desc, int cbId) => {
@@ -373,7 +373,7 @@ namespace ChatSDK
                         }
                         else
                         {
-                            throw new InvalidOperationException("Invalid return type from native GroupManager_FetchGroupMembers(), please check native c wrapper code.");
+                            throw new InvalidOperationException("Invalid return type from native RoomManager_FetchChatroomMembers(), please check native c wrapper code.");
                         }
 
                     }
@@ -411,7 +411,7 @@ namespace ChatSDK
                     }
                     else
                     {
-                        Debug.LogError($"Group information expected.");
+                        Debug.LogError($"Room information expected.");
                     }
                 },
                 onError: (int code, string desc, int cbId) => {
@@ -446,7 +446,7 @@ namespace ChatSDK
                     }
                     else
                     {
-                        Debug.LogError($"Group information expected.");
+                        Debug.LogError($"Room information expected.");
                     }
                 },
                 onError: (int code, string desc, int cbId) => {
