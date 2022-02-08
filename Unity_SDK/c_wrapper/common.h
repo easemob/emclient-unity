@@ -13,7 +13,10 @@ extern "C"
 }
 
 #if defined(_WIN32)
+
+#ifndef AGORACHAT_EXPORT
 #define AGORACHAT_EXPORT
+#endif
 
 #elif defined(__APPLE__)
 
