@@ -17,6 +17,7 @@
     **`HC_BUILD_SHARED_LIBS`**：默认构建动态库（Windows是动态库，MacOS是framework），可以设置为`OFF`则构建静态库（Windows是`.dll`，MacOS是`.a`）  
     **`CMAKE_BUILD_TYPE`**: 默认构建调试版本，可选值为`Debug` 和`Release`  
     **`HC_ENABLE_COMPILE_WARNING`**： 默认禁止警告，可以设置`ON`打开警告  
+    **`MAC_DYNAMIC_GENERATE_TYPE`**: 默认`Dynamic`，可以设置`Framework`
 
 ## 构建工程
     ```
@@ -24,6 +25,12 @@
     cmake .. -G Xcode # (macOS)
     cmake .. -G "Visual Studio 16 2019" # (Windows)
     ```
+## 构建bundle
+
+    首先，生成动态库版本，而不是framework版本。
+    其次，目前构建bundle需要额外处理，需要执行`Unity_SDK/mac_build/build_bundle.sh`脚本才能正常生成bundle。
+    **注意** 执行的时候需要在脚本所在目录执行脚本。
+
 ## 建议构建方式
 **采用以下方式进行构建，省去手动输入命令。**
 
