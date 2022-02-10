@@ -6,6 +6,7 @@
 # -Hd:/codes/gyp/emclient-unity/Unity_SDK/win_build
 # -Bd:/codes/gyp/emclient-unity/Unity_SDK/win_build/build -G "Visual Studio 16
 # 2019" -T host=x86 -A x64
+# `-DCMAKE_BUILD_TYPE=Debug` or Release
 
 cmake_minimum_required(VERSION 3.15.0 FATAL_ERROR)
 project(

@@ -49,3 +49,14 @@
 
     目前，仅支持windows平台和macOS平台。
     其他平台，后续开放。
+
+## QA
+
+**使用cmake命令遇到报错："STREQUAL" Debug or Release等字样**
+> 需要在cmake命令后面添加 `-DCMAKE_BUILD_TYPE=Debug` 参数
+
+**Windows下并没有make命令，除了使用VS构建之外，还有别的方法吗？**
+> 有的，需要执行类似命令`"C:\Program Files\CMake\bin\cmake.EXE" --build d:/codes/easemob/yq/emclient-unity/Unity_SDK/build --config Debug --target ALL_BUILD -j 10 --`
+
+**为什么使用vscode打开项目，没有cmake工具提示呢，我已经安装了cmake插件**
+> cmake插件只有检测到当前项目根目录中有`CMakeLists.txt`文件才能生效。
