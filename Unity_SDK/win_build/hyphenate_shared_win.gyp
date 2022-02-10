@@ -50,6 +50,7 @@
                          'libsqlite3.lib',
                          'zlib.lib',
                          'easemob.lib',
+                         '%(AdditionalDependencies)',
                         ],
                        'library_dirs': [
                            '<(emclient-linux-path)/3rd_party/platform/win/depends/curl_7.40.0-x64-static-md/lib',

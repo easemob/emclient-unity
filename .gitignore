@@ -1,5 +1,7 @@
 **/build
 **/build_release
+**/build_shared
+**/build_static
 **/xcuserdata
 # **/*.xcuserdatad
 **/Temp
