@@ -29,6 +29,8 @@
 
     首先，生成动态库版本，而不是framework版本。
     其次，目前构建bundle需要额外处理，需要执行`Unity_SDK/mac_build/build_bundle.sh`脚本才能正常生成bundle。
+    脚本执行命令示例:
+    ```sh build_bundle.sh --version "1.0.0" --type "Debug|Release"```
     **注意** 执行的时候需要在脚本所在目录执行脚本。
 
 ## 建议构建方式
