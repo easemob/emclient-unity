@@ -11,6 +11,7 @@ xcodebuild -workspace mac.xcworkspace -scheme hyphenateCWrapper -configuration D
 
 mkdir Debug/hyphenateCWrapper.bundle/Contents/lib
 cp -fr ./lib/* Debug/hyphenateCWrapper.bundle/Contents/lib/
+rm -rf Debug/hyphenateCWrapper.bundle/Contents/lib/*.framework
 
 install_name_tool -change /usr/lib/libc++.1.dylib Assets/ChatSDK/Plugins/macOS/hyphenateCWrapper.bundle/Contents/lib/libc++.1.dylib Debug/hyphenateCWrapper.bundle/Contents/MacOS/hyphenateCWrapper
 install_name_tool -change /usr/lib/libSystem.B.dylib Assets/ChatSDK/Plugins/macOS/hyphenateCWrapper.bundle/Contents/lib/libSystem.B.dylib Debug/hyphenateCWrapper.bundle/Contents/MacOS/hyphenateCWrapper
