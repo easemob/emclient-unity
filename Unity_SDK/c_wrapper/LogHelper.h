@@ -48,10 +48,10 @@ public:
         struct tm nowTm;
 #ifdef _WIN32
 	    localtime_s(&nowTm, &now);
-        nowTm.tm_mon++;
 #else
         localtime_r(&now, &nowTm);
 #endif
+        nowTm.tm_mon++;
         fprintf(f, "[%d/%d/%d %d:%d:%d]: ", nowTm.tm_year + 1900, nowTm.tm_mon, nowTm.tm_mday,
                 nowTm.tm_hour, nowTm.tm_min, nowTm.tm_sec);
     }
