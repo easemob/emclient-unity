@@ -85,7 +85,7 @@ public class Login : MonoBehaviour
 
     void InitEaseMobSDK() {
 
-        Options options = new Options("easemob-demo#easeim");
+        Options options = new Options("easemob-demo#unitytest");
         options.AutoLogin = false;
         options.UsingHttpsOnly = true;
         options.DebugMode = true;

@@ -152,6 +152,7 @@ endif(MACOS)
 
 # https://cmake.org/cmake/help/latest/variable/CMAKE_MSVC_RUNTIME_LIBRARY.html
 if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
+  add_definitions(-DDEBUG)
   if(WINDOWS AND MSVC)
     if(HC_BUILD_SHARED_LIBS)
       set(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>DLL)
