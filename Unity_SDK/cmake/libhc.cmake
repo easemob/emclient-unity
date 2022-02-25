@@ -55,25 +55,48 @@ if(MACOS)
       PUBLIC AGORACHAT_EXPORT)
     set_property(TARGET libhyphenateCWrapper PROPERTY POSITION_INDEPENDENT_CODE
                                                       TRUE)
-    set_target_properties(
-      libhyphenateCWrapper
-      PROPERTIES FRAMEWORK TRUE
-                 FRAMEWORK_VERSION A
-                 MACOSX_FRAMEWORK_IDENTIFIER com.easemob.unity
-                 MACOSX_FRAMEWORK_INFO_PLIST
-                 ${HC_ROOT_DIR}/cmake/macos/Info.plist
-                 INSTALL_RPATH "."
-                 INSTALL_NAME_DIR @rpath
-                 PUBLIC_HEADER "${hyphenateCWrapper_HEADERS_FILES}"
-                 VERSION ${PROJECT_VERSION}
-                 OUTPUT_NAME HyphenateCWrapper
-                 DEBUG_POSTFIX "${HC_POSTFIX}")
+    if(MAC_DYNAMIC_GENERATE_TYPE STREQUAL "Dynamic")
+      # 不生效 set_target_properties( libhyphenateCWrapper PROPERTIES BUNDLE TRUE
+      # MACOSX_BUNDLE_INFO_PLIST ${HC_ROOT_DIR}/cmake/macos/Bundle.plist.in
+      # MACOSX_BUNDLE_BUNDLE_NAME "hyphenateCWrapper"
+      # MACOSX_BUNDLE_BUNDLE_VERSION 1.0.0 MACOSX_BUNDLE_COPYRIGHT "Copyright ©
+      # 2021 easemob. All rights reserved." MACOSX_BUNDLE_GUI_IDENTIFIER
+      # "com.easemob.hyphenateCWrapper" MACOSX_BUNDLE_INFO_STRING
+      # "https://www.easemob.com/" INSTALL_RPATH "." INSTALL_NAME_DIR @rpath
+      # PUBLIC_HEADER "${hyphenateCWrapper_HEADERS_FILES}" VERSION
+      # ${PROJECT_VERSION} OUTPUT_NAME hyphenateCWrapper DEBUG_POSTFIX
+      # "${HC_POSTFIX}")
+      set_target_properties(
+        libhyphenateCWrapper
+        PROPERTIES VERSION ${PROJECT_VERSION}
+                   OUTPUT_NAME hyphenateCWrapper
+                   DEBUG_POSTFIX "${HC_POSTFIX}")
+    elseif(MAC_DYNAMIC_GENERATE_TYPE STREQUAL "Framework")
+      set_target_properties(
+        libhyphenateCWrapper
+        PROPERTIES FRAMEWORK TRUE
+                   MACOSX_FRAMEWORK_INFO_PLIST
+                   ${HC_ROOT_DIR}/cmake/macos/Framework.plist.in
+                   INSTALL_RPATH "."
+                   FRAMEWORK_VERSION A
+                   MACOSX_FRAMEWORK_IDENTIFIER "com.easemob.hyphenateCWrapper"
+                   MACOSX_FRAMEWORK_NAME "hyphenateCWrapper"
+                   MACOSX_BUNDLE_COPYRIGHT
+                   "Copyright © 2021 easemob. All rights reserved."
+                   INSTALL_NAME_DIR @rpath
+                   PUBLIC_HEADER "${hyphenateCWrapper_HEADERS_FILES}"
+                   VERSION ${PROJECT_VERSION}
+                   OUTPUT_NAME hyphenateCWrapper
+                   DEBUG_POSTFIX "${HC_POSTFIX}")
+    else()
+      message(FATAL_ERROR "Not support this type. ${MAC_DYNAMIC_GENERATE_TYPE}")
+    endif(MAC_DYNAMIC_GENERATE_TYPE STREQUAL "Dynamic")
   else(HC_BUILD_SHARED_LIBS)
     target_compile_definitions(libhyphenateCWrapper PUBLIC HYPHENATE_API)
     set_target_properties(
       libhyphenateCWrapper
       PROPERTIES VERSION ${PROJECT_VERSION}
-                 OUTPUT_NAME libhyphenateCWrapper
+                 OUTPUT_NAME hyphenateCWrapper
                  DEBUG_POSTFIX "${HC_POSTFIX}")
   endif(HC_BUILD_SHARED_LIBS)
 endif(MACOS)

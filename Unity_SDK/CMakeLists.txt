@@ -2,14 +2,16 @@
 # `-DHC_BUILD_SHARED_LIBS=ON` or OFF : 控制生成静态库还是动态库，默认是静态库 执行命令示例： "C:\Program
 # Files\CMake\bin\cmake.EXE" --no-warn-unused-cli
 # -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE
+# -DMAC_DYNAMIC_GENERATE_TYPE=Dynamic or Framework
 # -Hd:/codes/gyp/emclient-unity/Unity_SDK/win_build
 # -Bd:/codes/gyp/emclient-unity/Unity_SDK/win_build/build -G "Visual Studio 16
 # 2019" -T host=x86 -A x64
+# `-DCMAKE_BUILD_TYPE=Debug` or Release
 
 cmake_minimum_required(VERSION 3.15.0 FATAL_ERROR)
 project(
   hyphenateCWrapper
-  VERSION 0.1.0
+  VERSION 1.0.0
   LANGUAGES C CXX)
 
 if(NOT CORE_ROOT_DIRS)
@@ -67,6 +69,9 @@ set(sdkcore_ROOT_DIR ${CORE_ROOT_DIRS})
 set(HC_SHARED_OR_STATIC "STATIC")
 if(HC_BUILD_SHARED_LIBS)
   set(HC_SHARED_OR_STATIC "SHARED")
+  if(NOT MAC_DYNAMIC_GENERATE_TYPE)
+    set(MAC_DYNAMIC_GENERATE_TYPE "Dynamic")
+  endif(NOT MAC_DYNAMIC_GENERATE_TYPE)
 else(HC_BUILD_SHARED_LIBS)
   set(HC_SHARED_OR_STATIC "STATIC")
 endif(HC_BUILD_SHARED_LIBS)
@@ -147,6 +152,7 @@ endif(MACOS)
 
 # https://cmake.org/cmake/help/latest/variable/CMAKE_MSVC_RUNTIME_LIBRARY.html
 if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
+  add_definitions(-DDEBUG)
   if(WINDOWS AND MSVC)
     if(HC_BUILD_SHARED_LIBS)
       set(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>DLL)
@@ -211,3 +217,15 @@ enable_testing()
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
+
+
+message(STATUS CORE_ROOT_DIRS="${CORE_ROOT_DIRS}")
+message(STATUS HC_ROOT_DIR="${HC_ROOT_DIR}")
+message(STATUS CMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}")
+message(STATUS HC_BUILD_SHARED_LIBS="${HC_BUILD_SHARED_LIBS}")
+message(STATUS sdkcore_BUILD_SHARED_LIBS="${sdkcore_BUILD_SHARED_LIBS}")
+message(STATUS sdkcore_ROOT_DIR="${sdkcore_ROOT_DIR}")
+message(STATUS HC_ENABLE_COMPILE_WARNING="${HC_ENABLE_COMPILE_WARNING}")
+message(STATUS HC_SHARED_OR_STATIC="${HC_SHARED_OR_STATIC}")
+message(STATUS MAC_DYNAMIC_GENERATE_TYPE="${MAC_DYNAMIC_GENERATE_TYPE}")
+message(STATUS CMAKE_SYSTEM_NAME="${CMAKE_SYSTEM_NAME}")

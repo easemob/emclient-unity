@@ -1,5 +1,7 @@
 **/build
-**/xcuserdata
+**/build_release
+**/build_shared
+**/build_static
 **/xcuserdata
 # **/*.xcuserdatad
 **/Temp
@@ -44,7 +46,7 @@ Thumbs.db
 # ========== #
 *.a
 *.zip
-*.framework
+#*.framework
 documents/
 **/xcshareddata
 **/xcuserdata
@@ -53,7 +55,7 @@ documents/
 # ========== #
 # mac ignore #
 # ========== #
-*.bundle
+#*.bundle
 
 easemob.log
 easemobDB/
@@ -110,3 +112,4 @@ sysinfo.txt
 *.pdb
 .vscode
 *.code-workspace
+!Unity_SDK/mac_build/lib/LDAP.framework

@@ -490,6 +490,9 @@ TextMessageTO::TextMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
     auto body = (EMTextMessageBody *)_message->bodies().front().get();
     this->BodyType = body->type(); //TODO: only 1st body type determined
     this->body.Content = body->text().c_str();
+
+    //Bug fix: User Empty_str to replace "", avoid error from PtrToStructure at c# side
+    if (strlen(this->body.Content) == 0) this->body.Content = const_cast<char*>(EMPTY_STR.c_str());
 }
 
 //LocationMessageTO
@@ -499,6 +502,9 @@ LocationMessageTO::LocationMessageTO(const EMMessagePtr &_message):MessageTO(_me
     this->body.Latitude = body->latitude();
     this->body.Longitude = body->longitude();
     this->body.Address = body->address().c_str();
+
+    //Bug fix: User Empty_str to replace "", avoid error from PtrToStructure at c# side
+    if (strlen(this->body.Address) == 0) this->body.Address = const_cast<char*>(EMPTY_STR.c_str());
 }
 
 //CmdMessageTO
@@ -507,6 +513,9 @@ CmdMessageTO::CmdMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
     this->BodyType = body->type(); //TODO: only 1st body type determined
     this->body.Action = body->action().c_str();
     this->body.DeliverOnlineOnly = body->isDeliverOnlineOnly();
+
+    //Bug fix: User Empty_str to replace "", avoid error from PtrToStructure at c# side
+    if (strlen(this->body.Action) == 0) this->body.Action = const_cast<char*>(EMPTY_STR.c_str());
 }
 
 //FileMessageTO
@@ -519,6 +528,12 @@ FileMessageTO::FileMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
     this->body.LocalPath = body->localPath().c_str();
     this->body.RemotePath = body->remotePath().c_str();
     this->body.Secret = body->secretKey().c_str();
+
+    //Bug fix: User Empty_str to replace "", avoid error from PtrToStructure at c# side
+    if (strlen(this->body.DisplayName) == 0) this->body.DisplayName = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.LocalPath) == 0) this->body.LocalPath = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.RemotePath) == 0) this->body.RemotePath = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.Secret) == 0) this->body.Secret = const_cast<char*>(EMPTY_STR.c_str());
 }
 
 //ImageMessageTO
@@ -538,6 +553,15 @@ ImageMessageTO::ImageMessageTO(const EMMessagePtr &_message):MessageTO(_message)
     this->body.ThumbnaiSecret = body->thumbnailSecretKey().c_str();
     this->body.ThumbnaiRemotePath = body->thumbnailRemotePath().c_str();
     this->body.ThumbnailLocalPath = body->thumbnailLocalPath().c_str();
+
+    //Bug fix: User Empty_str to replace "", avoid error from PtrToStructure at c# side
+    if (strlen(this->body.DisplayName) == 0) this->body.DisplayName = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.LocalPath) == 0) this->body.LocalPath = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.RemotePath) == 0) this->body.RemotePath = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.Secret) == 0) this->body.Secret = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.ThumbnaiSecret) == 0) this->body.ThumbnaiSecret = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.ThumbnaiRemotePath) == 0) this->body.ThumbnaiRemotePath = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.ThumbnailLocalPath) == 0) this->body.ThumbnailLocalPath = const_cast<char*>(EMPTY_STR.c_str());
 }
 
 VoiceMessageTO::VoiceMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
@@ -550,6 +574,12 @@ VoiceMessageTO::VoiceMessageTO(const EMMessagePtr &_message):MessageTO(_message)
     this->body.RemotePath = body->remotePath().c_str();
     this->body.Secret = body->secretKey().c_str();
     this->body.Duration = body->duration();
+
+    //Bug fix: User Empty_str to replace "", avoid error from PtrToStructure at c# side
+    if (strlen(this->body.DisplayName) == 0) this->body.DisplayName = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.LocalPath) == 0) this->body.LocalPath = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.RemotePath) == 0) this->body.RemotePath = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.Secret) == 0) this->body.Secret = const_cast<char*>(EMPTY_STR.c_str());
 }
 
 VideoMessageTO::VideoMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
@@ -567,6 +597,15 @@ VideoMessageTO::VideoMessageTO(const EMMessagePtr &_message):MessageTO(_message)
     this->body.Duration = body->duration();
     this->body.FileSize = body->fileLength();
     this->body.DownStatus = body->downloadStatus();
+
+    //Bug fix: User Empty_str to replace "", avoid error from PtrToStructure at c# side
+    if (strlen(this->body.LocalPath) == 0) this->body.LocalPath = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.DisplayName) == 0) this->body.DisplayName = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.Secret) == 0) this->body.Secret = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.RemotePath) == 0) this->body.RemotePath = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.ThumbnaiLocationPath) == 0) this->body.ThumbnaiLocationPath = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.ThumbnaiRemotePath) == 0) this->body.ThumbnaiRemotePath = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.ThumbnaiSecret) == 0) this->body.ThumbnaiSecret = const_cast<char*>(EMPTY_STR.c_str());
 }
 
 CustomMessageTO::CustomMessageTO(const EMMessagePtr &_message):MessageTO(_message) {

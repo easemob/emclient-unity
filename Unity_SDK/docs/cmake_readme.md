@@ -17,6 +17,7 @@
     **`HC_BUILD_SHARED_LIBS`**：默认构建动态库（Windows是动态库，MacOS是framework），可以设置为`OFF`则构建静态库（Windows是`.dll`，MacOS是`.a`）  
     **`CMAKE_BUILD_TYPE`**: 默认构建调试版本，可选值为`Debug` 和`Release`  
     **`HC_ENABLE_COMPILE_WARNING`**： 默认禁止警告，可以设置`ON`打开警告  
+    **`MAC_DYNAMIC_GENERATE_TYPE`**: 默认`Dynamic`，可以设置`Framework`
 
 ## 构建工程
     ```
@@ -24,6 +25,14 @@
     cmake .. -G Xcode # (macOS)
     cmake .. -G "Visual Studio 16 2019" # (Windows)
     ```
+## 构建bundle
+
+    首先，生成动态库版本，而不是framework版本。
+    其次，目前构建bundle需要额外处理，需要执行`Unity_SDK/mac_build/build_bundle.sh`脚本才能正常生成bundle。
+    脚本执行命令示例:
+    ```sh build_bundle.sh --version "1.0.0" --type "Debug|Release"```
+    **注意** 执行的时候需要在脚本所在目录执行脚本。
+
 ## 建议构建方式
 **采用以下方式进行构建，省去手动输入命令。**
 
@@ -42,3 +51,14 @@
 
     目前，仅支持windows平台和macOS平台。
     其他平台，后续开放。
+
+## QA
+
+**使用cmake命令遇到报错："STREQUAL" Debug or Release等字样**
+> 需要在cmake命令后面添加 `-DCMAKE_BUILD_TYPE=Debug` 参数
+
+**Windows下并没有make命令，除了使用VS构建之外，还有别的方法吗？**
+> 有的，需要执行类似命令`"C:\Program Files\CMake\bin\cmake.EXE" --build d:/codes/easemob/yq/emclient-unity/Unity_SDK/build --config Debug --target ALL_BUILD -j 10 --`
+
+**为什么使用vscode打开项目，没有cmake工具提示呢，我已经安装了cmake插件**
+> cmake插件只有检测到当前项目根目录中有`CMakeLists.txt`文件才能生效。

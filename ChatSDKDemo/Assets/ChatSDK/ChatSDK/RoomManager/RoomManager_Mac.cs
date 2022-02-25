@@ -249,7 +249,7 @@ namespace ChatSDK
                     }
                     else
                     {
-                        Debug.LogError("Incorrect delegate parameters returned.");
+                        Debug.Log("No room info returned.");
                     }
 
                 },
