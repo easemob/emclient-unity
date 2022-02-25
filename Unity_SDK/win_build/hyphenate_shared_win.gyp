@@ -43,18 +43,19 @@
             'link_settings': {
              'conditions': [
                  ['OS=="win"', {
-                      'libraries': [                    
+                      'libraries': [
+                         'libcrypto.lib',
+                         'libssl.lib',
                          'libcurl.lib',
-                         'libeay32.lib',
-                         'ssleay32.lib',
                          'libsqlite3.lib',
                          'zlib.lib',
                          'easemob.lib',
+                         'crypt32.lib',
                          '%(AdditionalDependencies)',
                         ],
                        'library_dirs': [
-                           '<(emclient-linux-path)/3rd_party/platform/win/depends/curl_7.40.0-x64-static-md/lib',
-                           '<(emclient-linux-path)/3rd_party/platform/win/depends/openssl_1.0.2l-x64-static-md/lib',
+                           '<(emclient-linux-path)/3rd_party/platform/win/depends/curl_7.80.0-x64-static-md/lib',
+                           '<(emclient-linux-path)/3rd_party/platform/win/depends/openssl_1.1.1l-x64-static-md/lib',
                            '<(emclient-linux-path)/3rd_party/platform/win/depends/sqlite_3.34.1-x64-static-md/lib',
                            '<(emclient-linux-path)/3rd_party/platform/win/depends/zlib_1.2.11-x64-static-md/lib',
                            '%(AddtionalLibrayDirectories)',

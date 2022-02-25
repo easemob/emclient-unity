@@ -46,7 +46,7 @@ Thumbs.db
 # ========== #
 *.a
 *.zip
-*.framework
+#*.framework
 documents/
 **/xcshareddata
 **/xcuserdata
@@ -55,7 +55,7 @@ documents/
 # ========== #
 # mac ignore #
 # ========== #
-*.bundle
+#*.bundle
 
 easemob.log
 easemobDB/
