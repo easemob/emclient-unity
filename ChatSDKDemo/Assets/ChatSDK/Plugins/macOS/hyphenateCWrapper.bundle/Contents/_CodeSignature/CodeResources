@@ -8,17 +8,37 @@
 		<data>
 		3vpyjFWlZfTGaNS9S5PxnMRL+9I=
 		</data>
-		<key>Resources/easemob.framework/Versions/A/Resources/libcrypto.1.0.0.dylib</key>
-		<data>
-		Pg8sfzO+Dy3RAhZ58iPGa+D3Gjk=
-		</data>
 		<key>Resources/easemob.framework/Versions/A/_CodeSignature/CodeResources</key>
 		<data>
-		vnIMv0bdGP7wfaWvsFMrTApxfo0=
+		8VrvgS36wIrB6MVlgfWx66TlBso=
 		</data>
 		<key>Resources/easemob.framework/Versions/A/easemob</key>
 		<data>
-		9fPpG1+w954zwAvkmv13xCXzlXY=
+		a7hBYjRnSG3PD2G/ycpYVrKL8jk=
+		</data>
+		<key>Resources/lib/libc++.1.dylib</key>
+		<data>
+		iJexKJXosfOckBCnJh/UGM1MR2k=
+		</data>
+		<key>Resources/lib/libcrypto.1.1.dylib</key>
+		<data>
+		jI7GNM03yx1gnbOLcv7dy1T51d0=
+		</data>
+		<key>Resources/lib/libcurl.4.dylib</key>
+		<data>
+		c5+mGYAd7SY+ZwKA5829J4X/CDE=
+		</data>
+		<key>Resources/lib/libsqlite3.0.dylib</key>
+		<data>
+		t/ADV64+HWgC/TMEga3s8BmLCnk=
+		</data>
+		<key>Resources/lib/libssl.1.1.dylib</key>
+		<data>
+		5EmMTu6zK7FGLmMNR8Ck4IoIkq8=
+		</data>
+		<key>Resources/lib/libz.1.2.11.dylib</key>
+		<data>
+		w+2BUWSdf0hcAnAC2msYjnSCbqA=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -39,37 +59,26 @@
 			S1UepsTzIpCI0/pkD7ptGImb7N3/Ke0ASwz3aP6xtmg=
 			</data>
 		</dict>
-		<key>Resources/easemob.framework/Versions/A/Resources/libcrypto.1.0.0.dylib</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			Pg8sfzO+Dy3RAhZ58iPGa+D3Gjk=
-			</data>
-			<key>hash2</key>
-			<data>
-			q3dWNXAq6ctarjqJfaRAcQz/Obdg1cttlGFBqD0rHdQ=
-			</data>
-		</dict>
 		<key>Resources/easemob.framework/Versions/A/_CodeSignature/CodeResources</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			vnIMv0bdGP7wfaWvsFMrTApxfo0=
+			8VrvgS36wIrB6MVlgfWx66TlBso=
 			</data>
 			<key>hash2</key>
 			<data>
-			HPrTZLl4Wan/cqnJy9KhfUBY4Kogt45HFf1b8gOkJ9Y=
+			Nq1epfVaXHxpOBdpsendww2Zw3s2Y1So0vBkdVcuTzo=
 			</data>
 		</dict>
 		<key>Resources/easemob.framework/Versions/A/easemob</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			9fPpG1+w954zwAvkmv13xCXzlXY=
+			a7hBYjRnSG3PD2G/ycpYVrKL8jk=
 			</data>
 			<key>hash2</key>
 			<data>
-			E2x1aWIjFBCXV17rN4z4UIXGFl1IeZ3sIOE3ExqGDmE=
+			8KracGCcLn2VSBvdFROfmNvKqCmL2ubP5qAQbs/qfOI=
 			</data>
 		</dict>
 		<key>Resources/easemob.framework/Versions/Current</key>
@@ -81,6 +90,72 @@
 		<dict>
 			<key>symlink</key>
 			<string>Versions/Current/easemob</string>
+		</dict>
+		<key>Resources/lib/libc++.1.dylib</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			iJexKJXosfOckBCnJh/UGM1MR2k=
+			</data>
+			<key>hash2</key>
+			<data>
+			teCicEg3zJOXoNqbgAOjW4IKTJo1+3co7Nw7zLrc9eA=
+			</data>
+		</dict>
+		<key>Resources/lib/libcrypto.1.1.dylib</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			jI7GNM03yx1gnbOLcv7dy1T51d0=
+			</data>
+			<key>hash2</key>
+			<data>
+			qMO+ytLkn45kuBHakW1YZz4aIpYQFFWGUswzWo1mup0=
+			</data>
+		</dict>
+		<key>Resources/lib/libcurl.4.dylib</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			c5+mGYAd7SY+ZwKA5829J4X/CDE=
+			</data>
+			<key>hash2</key>
+			<data>
+			C90rhf1SxBet6mn3ivltewxlxjC8eV4RES34n3Hhwrs=
+			</data>
+		</dict>
+		<key>Resources/lib/libsqlite3.0.dylib</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			t/ADV64+HWgC/TMEga3s8BmLCnk=
+			</data>
+			<key>hash2</key>
+			<data>
+			oxzrire/pHaHdzubSd0wuvnpfP8czLSliNSaZrut8TY=
+			</data>
+		</dict>
+		<key>Resources/lib/libssl.1.1.dylib</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			5EmMTu6zK7FGLmMNR8Ck4IoIkq8=
+			</data>
+			<key>hash2</key>
+			<data>
+			X+cwj7yHJIWzhlYDCqJoGjqlfM9UdNtPLY/oTYrQlJE=
+			</data>
+		</dict>
+		<key>Resources/lib/libz.1.2.11.dylib</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			w+2BUWSdf0hcAnAC2msYjnSCbqA=
+			</data>
+			<key>hash2</key>
+			<data>
+			0Oy5L/Pz06qSdYqvZW2D2oxMzsBB1Ju49+6DsWVPTTc=
+			</data>
 		</dict>
 	</dict>
 	<key>rules</key>

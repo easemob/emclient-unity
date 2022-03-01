@@ -536,6 +536,7 @@
 				905C27CC262EC3A50097F7C2 /* Frameworks */,
 				905C27CD262EC3A50097F7C2 /* Resources */,
 				D7CBE9FC2668B0D900226550 /* Embed Frameworks */,
+				D606B00827CC7E9000B57524 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -588,6 +589,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		D606B00827CC7E9000B57524 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\ncd $SRCROOT/..\n./cplib.sh\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		905C27CB262EC3A50097F7C2 /* Sources */ = {

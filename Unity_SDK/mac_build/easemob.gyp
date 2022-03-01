@@ -5,7 +5,7 @@
         'msvs_RuntimeLibrary': '3', #md:2, mdd:3, mt:0, mtd:1
         'ENABLE_CALL': '0',
         'USE_SQLCIPHER':'0',
-        'emclient-linux-path':'../../../emclient-linux_unity'
+        'emclient-linux-path':'../../../emclient-linux'
     },
 
     'target_defaults': {
@@ -105,7 +105,9 @@
                 '<(emclient-linux-path)/3rd_party/rapidjson/include',
                 '<(emclient-linux-path)/3rd_party/curlcpp/include',
                 '<(emclient-linux-path)/3rd_party/protobuf',
-                '<(emclient-linux-path)/3rd_party/openssl/include',
+                #'<(emclient-linux-path)/3rd_party/openssl/include',
+                '<(emclient-linux-path)/3rd_party/platform/darwin/depends/openssl_1.1.1l_share_intel/include',
+                '<(emclient-linux-path)/3rd_party/platform/darwin/depends/curl_7.80.0_share_intel/include',
                 '<(emclient-linux-path)/protocol',
                 '<(emclient-linux-path)/protocol/generated',
                 '<(emclient-linux-path)/3rd_party/md5',
@@ -225,13 +227,13 @@
                 '<(emclient-linux-path)/protocol/generated/conferencebody.pb.cc',
                 '<(emclient-linux-path)/protocol/generated/statisticsbody.pb.cc',
             ],
-            'mac_bundle_resources': [
-                 '<(emclient-linux-path)/3rd_party/platform/darwin/lib/libcrypto.1.0.0.dylib',
+            #'mac_bundle_resources': [
+            #     '<(emclient-linux-path)/3rd_party/platform/darwin/lib/libcrypto.1.0.0.dylib',
             #    '<(emclient-linux-path)/3rd_party/platform/darwin/lib/libcurl.4.dylib',
             #    '<(emclient-linux-path)/3rd_party/platform/darwin/lib/libssl.1.0.0.dylib',
             #    #'<(emclient-linux-path)/3rd_party/platform/darwin/lib/libz.dylib',
             #    # '<(emclient-linux-path)/3rd_party/platform/darwin/lib/libsqlite3.dylib',
-            ],
+            #],
             'ldflags': [
                 # Needed by protocol
                 '-pthread',
@@ -259,11 +261,12 @@
                 ['USE_SQLCIPHER!=1 and OS=="mac"',{
                     'link_settings': {
                         'libraries': [
-                            'libsqlite3.dylib',
+                            'libsqlite3.0.dylib',
                         ],
                         'library_dirs': [
-                           '<(emclient-linux-path)/3rd_party/platform/darwin/lib',
-                           '/usr/local/lib',
+                           #'<(emclient-linux-path)/3rd_party/platform/darwin/lib',
+                           '<(emclient-linux-path)/3rd_party/platform/darwin/depends/sqlite_3.34.1_share_intel/lib',
+                           #'/usr/local/lib',
                        ],
                     },
                 }],
@@ -286,15 +289,19 @@
                'conditions': [
                    ['OS=="mac"', {
                        'libraries': [
-                           #'libsqlite3.dylib',
                            #'libsqlcipher.dylib',
-                           'libcurl.dylib',
-                           'libz.dylib',
-                           'libcrypto.1.0.0.dylib',
+                           'libcurl.4.dylib',
+                           'libz.1.2.11.dylib',
+                           'libcrypto.1.1.dylib',
+                           'libssl.1.1.dylib',
                        ],
                        'library_dirs': [
-                           '<(emclient-linux-path)/3rd_party/platform/darwin/lib',
+                           #'<(emclient-linux-path)/3rd_party/platform/darwin/lib',
                            # '/usr/local/lib',
+                           '<(emclient-linux-path)/3rd_party/platform/darwin/depends/zlib_1.2.11_share_intel/lib',
+                           '<(emclient-linux-path)/3rd_party/platform/darwin/depends/openssl_1.1.1l_share_intel/lib',
+                           '<(emclient-linux-path)/3rd_party/platform/darwin/depends/curl_7.80.0_share_intel/lib',
+                           '<(emclient-linux-path)/3rd_party/platform/darwin/depends/sqlite_3.34.1_share_intel/lib', 
                        ],
                    }],
                  ],
