@@ -11,7 +11,6 @@
 #include "emchatconfigs.h"
 #include "emclient.h"
 #include "empushconfigs.h"
-#include "empushmanager_interface.h"
 #include "models.h"
 #include "push_manager.h"
 #include "tool.h"

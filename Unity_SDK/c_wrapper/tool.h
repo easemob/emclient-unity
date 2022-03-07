@@ -23,6 +23,10 @@ bool MandatoryCheck(const char* ptr1, const char* ptr2, const char* ptr3, EMErro
 
 std::string OptionalStrParamCheck(const char* ptr);
 
+#ifndef _WIN32
+std::string GetMacUuid();
+#endif
+
 template<typename T>
 static std::string convert2String(const T &from)
 {
