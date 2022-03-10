@@ -133,7 +133,7 @@ class ConnectionListener : public EMConnectionListener
 {
 public:
     ConnectionListener(FUNC_OnConnected connected, FUNC_OnDisconnected disconnected, FUNC_OnPong pong) : onConnected(connected), onDisconnected(disconnected), onPonged(pong){}
-    void onConnect() override {
+    void onConnect(const std::string& info) override {
         LOG("Connection established.");
         if(onConnected)
             onConnected();

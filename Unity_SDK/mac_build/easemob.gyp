@@ -184,6 +184,8 @@
                 '<(emclient-linux-path)/src/empushconfigs.cpp',
                 '<(emclient-linux-path)/src/empushmanager.cpp',
                 '<(emclient-linux-path)/src/emuserinfomanager.cpp',
+                '<(emclient-linux-path)/src/emtranslatemanager.cpp',
+                '<(emclient-linux-path)/src/emtranslateresult.cpp',
                 # Add protocol source files
                 '<(emclient-linux-path)/protocol/emconnectionfactory.cpp',
                 '<(emclient-linux-path)/protocol/emconnectiontcpbase.cpp',

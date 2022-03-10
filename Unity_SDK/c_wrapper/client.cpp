@@ -57,10 +57,10 @@ EMChatConfigsPtr ConfigsFromOptions(Options *options) {
     bool enableDNSConfig = options->EnableDNSConfig;
     LOG("Options with DNSURL=%s, IMServer=%s, IMPort=%d, RestServer=%s, EnableDNSConfig=%s", dnsURL, imServer, imPort, restServer, enableDNSConfig ? "true" : "false");
     configs->setDnsURL(options->DNSURL);
-    configs->privateConfigs().chatServer() = options->IMServer;
-    configs->privateConfigs().restServer() = options->RestServer;
-    configs->privateConfigs().chatPort() = options->IMPort;
-    configs->privateConfigs().enableDns() = options->EnableDNSConfig;
+    configs->privateConfigs()->chatServer() = options->IMServer;
+    configs->privateConfigs()->restServer() = options->RestServer;
+    configs->privateConfigs()->chatPort() = options->IMPort;
+    configs->privateConfigs()->enableDnsConfig(options->EnableDNSConfig);
     configs->setAutoAcceptFriend(options->AcceptInvitationAlways);
     configs->setAutoAcceptGroup(options->AutoAcceptGroupInvitation);
     configs->setRequireReadAck(options->RequireAck);
