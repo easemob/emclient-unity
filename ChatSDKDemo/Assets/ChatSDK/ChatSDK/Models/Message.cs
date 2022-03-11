@@ -28,6 +28,11 @@ namespace ChatSDK
         public string To = "";
 
         /// <summary>
+        /// 消息撤回人
+        /// </summary>
+        public string RecallBy = "";
+
+        /// <summary>
         /// 消息类型
         /// </summary>
         public MessageType MessageType;
@@ -133,9 +138,9 @@ namespace ChatSDK
             return CreateSendMessage(username, new MessageBody.VoiceBody(localPath, displayName: displayName, fileSize: fileSize, duration: duration));
         }
 
-        static public Message CreateLocationSendMessage(string username, double latitude, double longitude, string address = "")
+        static public Message CreateLocationSendMessage(string username, double latitude, double longitude, string address = "", string buildingName = "")
         {
-            return CreateSendMessage(username, new MessageBody.LocationBody(latitude: latitude, longitude: longitude, address: address));
+            return CreateSendMessage(username, new MessageBody.LocationBody(latitude: latitude, longitude: longitude, address: address, buildName: buildingName));
         }
 
         static public Message CreateCmdSendMessage(string username, string action, bool deliverOnlineOnly = false)

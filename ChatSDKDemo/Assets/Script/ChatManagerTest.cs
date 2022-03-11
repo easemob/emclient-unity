@@ -186,7 +186,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     void SendLocBtnAction()
     {
         InputAlertConfig config = new InputAlertConfig((dict) => {
-            Message msg = Message.CreateLocationSendMessage(dict["to"], 139.33, 130.55, dict["address"]);
+            Message msg = Message.CreateLocationSendMessage(dict["to"], 139.33, 130.55, dict["address"], dict["buildingName"]);
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
                 onSuccess: () => {
                     UIManager.SuccessAlert(transform);
@@ -199,6 +199,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
         config.AddField("to");
         config.AddField("address");
+        config.AddField("buildingName");
         UIManager.DefaultInputAlert(transform, config);
     }
     void ResendBtnAction()

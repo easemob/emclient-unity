@@ -28,6 +28,7 @@ HYPHENATE_API void ConversationManager_MarkAllMessagesAsRead(void *client, const
 HYPHENATE_API void ConversationManager_MarkMessageAsRead(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, const char * messageId);
 HYPHENATE_API void ConversationManager_SetExtField(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, const char * ext);
 HYPHENATE_API int  ConversationManager_UnreadMessagesCount(void *client, const char * conversationId, EMConversation::EMConversationType conversationType);
+HYPHENATE_API int  ConversationManager_MessagesCount(void *client, const char * conversationId, EMConversation::EMConversationType conversationType);
 HYPHENATE_API bool ConversationManager_UpdateMessage(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, void *mto, EMMessageBody::EMMessageBodyType type);
 
 #ifdef __cplusplus

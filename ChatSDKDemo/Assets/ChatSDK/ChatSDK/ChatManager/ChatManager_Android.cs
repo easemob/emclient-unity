@@ -128,6 +128,16 @@ namespace ChatSDK
         {
             return wrapper.Call<bool>("updateChatMessage", message.ToJson().ToString());
         }
+
+        public override void RemoveMessagesBeforeTimestamp(long timeStamp, CallBack callback = null)
+        {
+            //TO-DO
+        }
+
+        public override void DeleteConversationFromServe(string conversationId, ConversationType conversationType, bool isDeleteServerMessages, CallBack callback = null)
+        {
+            //TO-DO
+        }
     }
     
 }

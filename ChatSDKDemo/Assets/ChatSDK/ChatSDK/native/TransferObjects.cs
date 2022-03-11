@@ -58,13 +58,14 @@ namespace ChatSDK
             public double Latitude;
             public double Longitude;
             public string Address;
+            public string BuildingName;
 
             public LocationMessageBodyTO(in Message message)
             {
                 if (message.Body.Type == MessageBodyType.LOCATION)
                 {
                     var body = message.Body as LocationBody;
-                    (Latitude, Longitude, Address) = (body.Latitude, body.Longitude, body.Address);
+                    (Latitude, Longitude, Address, BuildingName) = (body.Latitude, body.Longitude, body.Address, body.BuildingName);
                 }
                 else
                 {
@@ -404,6 +405,7 @@ namespace ChatSDK
         public string ConversationId;
         public string From;
         public string To;
+        public string RecallBy;
         public MessageType Type;
         public MessageDirection Direction;
         public MessageStatus Status;
@@ -418,8 +420,8 @@ namespace ChatSDK
         public MessageBodyType BodyType;
 
         protected MessageTO(in Message message) =>
-            (MsgId, ConversationId, From, To, Type, Direction, Status, HasReadAck, HasDeliverAck, AttributesValues, LocalTime, ServerTime, BodyType)
-                = (message.MsgId, message.ConversationId, message.From, message.To, message.MessageType, message.Direction,
+            (MsgId, ConversationId, From, To, RecallBy, Type, Direction, Status, HasReadAck, HasDeliverAck, AttributesValues, LocalTime, ServerTime, BodyType)
+                = (message.MsgId, message.ConversationId, message.From, message.To, message.RecallBy, message.MessageType, message.Direction,
                 message.Status, message.HasReadAck, message.HasDeliverAck, TransformTool.JsonStringFromAttributes(message.Attributes), message.LocalTime,
                 message.ServerTime, message.Body.Type);
 

@@ -1,3 +1,11 @@
+# NOTE: Important!!!
+# In order to copy libraries to CORRECT location, some location settings in preference items of xcode must be set:
+#   Xcode Preference->Tab Locations->Advanced->Build Location: 
+#	Custom -- Relative to Workspace
+#       	Products -- Build/Products
+#		Intermediates -- Build/Intermediate.noindex
+
+
 #path1
 mkdir -p build/Products/Debug/hyphenateCWrapper.bundle/Contents/Resources/lib
 cp -a ../../../emclient-linux/3rd_party/platform/darwin/depends/zlib_1.2.11_share_intel/lib/* build/Products/Debug/hyphenateCWrapper.bundle/Contents/Resources/lib/

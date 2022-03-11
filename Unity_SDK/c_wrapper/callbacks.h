@@ -9,6 +9,7 @@
 #include "emerror.h"
 #include "emmessagebody.h"
 #include "emcontactlistener.h"
+#include "emconnectioncallback_listener.h"
 
 using namespace easemob;
 
@@ -154,6 +155,17 @@ private:
     FUNC_OnConnected onConnected;
     FUNC_OnDisconnected onDisconnected;
     FUNC_OnPong onPonged;
+};
+
+//This class should be implemented in platform based code part, not here!!
+class ConnectionCallbackListener : public EMConnectionCallbackListener
+{
+public:
+    ConnectionCallbackListener(){}
+    
+    bool onVerifyServerCert(const std::vector<std::string>& certschain,std::string domain = "") override {
+        return true;
+    }
 };
 
 class ChatManagerListener : public EMChatManagerListener

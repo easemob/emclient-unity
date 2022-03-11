@@ -598,5 +598,53 @@ namespace ChatSDK
             Marshal.FreeCoTaskMem(mtoPtr);
             return ret;
         }
+
+        public override  void RemoveMessagesBeforeTimestamp(long timeStamp, CallBack callback = null)
+        {
+            int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
+
+            ChatAPINative.ChatManager_RemoveMessagesBeforeTimestamp(client, callbackId, timeStamp,
+                (int cbId) =>
+                {
+                    try
+                    {
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
+                    }
+                    catch (NullReferenceException nre)
+                    {
+                        Debug.LogWarning($"NullReferenceException: {nre.StackTrace}");
+                    }
+
+                },
+                (int code, string desc, int cbId) =>
+                {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                }
+                );
+        }
+
+        public override void DeleteConversationFromServe(string conversationId, ConversationType conversationType, bool isDeleteServerMessages, CallBack callback = null)
+        {
+            int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
+
+            ChatAPINative.ChatManager_DeleteConversationFromServer(client, callbackId, conversationId, conversationType, isDeleteServerMessages,
+                (int cbId) =>
+                {
+                    try
+                    {
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
+                    }
+                    catch (NullReferenceException nre)
+                    {
+                        Debug.LogWarning($"NullReferenceException: {nre.StackTrace}");
+                    }
+
+                },
+                (int code, string desc, int cbId) =>
+                {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                }
+                );
+        }
     }
 }

@@ -7,6 +7,7 @@ namespace ChatSDK
 {
     //IConnectionDelegate
     internal delegate void OnDisconnected(int info);
+
     //IChatManagerDelegate
     internal delegate void OnMessagesReceived([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] messages,
         [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] MessageBodyType[] types, int size);

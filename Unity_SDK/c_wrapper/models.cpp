@@ -36,7 +36,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
         case EMMessageBody::LOCATION:
         {
             auto lm = static_cast<LocationMessageTO *>(mto);
-            messageBody = EMMessageBodyPtr(new EMLocationMessageBody(lm->body.Latitude, lm->body.Longitude, lm->body.Address));
+            messageBody = EMMessageBodyPtr(new EMLocationMessageBody(lm->body.Latitude, lm->body.Longitude, lm->body.Address, lm->body.BuildingName));
             from = lm->From;
             to = lm->To;
             msgId = lm->MsgId;
@@ -458,6 +458,8 @@ MessageTO::MessageTO(const EMMessagePtr &_message) {
     this->ConversationId = _message->conversationId().c_str();
     this->From = _message->from().c_str();
     this->To = _message->to().c_str();
+    this->RecallBy = _message->recallBy().c_str();
+    if (strlen(this->RecallBy) == 0) this->RecallBy = EMPTY_STR.c_str();
     this->Type = _message->chatType();
     this->Direction = _message->msgDirection();
     this->Status = _message->status();
@@ -502,6 +504,7 @@ LocationMessageTO::LocationMessageTO(const EMMessagePtr &_message):MessageTO(_me
     this->body.Latitude = body->latitude();
     this->body.Longitude = body->longitude();
     this->body.Address = body->address().c_str();
+    this->body.BuildingName = body->buildingName().c_str();
 
     //Bug fix: User Empty_str to replace "", avoid error from PtrToStructure at c# side
     if (strlen(this->body.Address) == 0) this->body.Address = const_cast<char*>(EMPTY_STR.c_str());

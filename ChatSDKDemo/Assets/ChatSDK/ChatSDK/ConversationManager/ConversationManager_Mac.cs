@@ -392,6 +392,16 @@ namespace ChatSDK
             return ChatAPINative.ConversationManager_UnreadMessagesCount(client, conversationId, conversationType);
         }
 
+        public override int MessagesCount(string conversationId, ConversationType conversationType)
+        {
+            if (null == conversationId || 0 == conversationId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return -1;
+            }
+            return ChatAPINative.ConversationManager_MessagesCount(client, conversationId, conversationType);
+        }
+
         public override bool UpdateMessage(string conversationId, ConversationType conversationType, Message message)
         {
             if (null == conversationId || 0 == conversationId.Length || null == message)

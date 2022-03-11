@@ -82,8 +82,9 @@ EMChatConfigsPtr ConfigsFromOptions(Options *options) {
     return configs;
 }
 
-EMClient *gClient = NULL;
-EMConnectionListener *gConnectionListener = NULL;
+EMClient *gClient = nullptr;
+EMConnectionListener *gConnectionListener = nullptr;
+EMConnectionCallbackListener *gConnectionCallbackListener = nullptr;
 
 HYPHENATE_API void* Client_InitWithOptions(Options *options, FUNC_OnConnected onConnected, FUNC_OnDisconnected onDisconnected, FUNC_OnPong onPong)
 {
@@ -92,7 +93,7 @@ HYPHENATE_API void* Client_InitWithOptions(Options *options, FUNC_OnConnected on
     G_AUTO_LOGIN = options->AutoLogin;
     
     // singleton client handle
-    if(gClient == nullptr) {
+    if(nullptr == gClient) {
         EMChatConfigsPtr configs = ConfigsFromOptions(options);
         gClient = EMClient::create(configs);
         LOG("Emclient created.");
@@ -104,10 +105,16 @@ HYPHENATE_API void* Client_InitWithOptions(Options *options, FUNC_OnConnected on
         }
     }
     
-    if(gConnectionListener == NULL) { //only set once
+    if(nullptr == gConnectionListener) { //only set once
         gConnectionListener = new ConnectionListener(onConnected, onDisconnected, onPong);
         gClient->addConnectionListener(gConnectionListener);
         LOG("New connection listener and hook it.");
+    }
+    
+    if(nullptr == gConnectionCallbackListener) { //only set once
+        gConnectionCallbackListener = new ConnectionCallbackListener();
+        gClient->addConnectionCallbackListener(gConnectionCallbackListener);
+        LOG("New connection callback listener and hook it.");
     }
     
     return gClient;
@@ -187,6 +194,11 @@ HYPHENATE_API void Client_ClearResource(void *client) {
     LOG("Connection listener removed.");
     delete gConnectionListener;
     gConnectionListener = nullptr;
+    
+    CLIENT->removeConnectionCallbackListener(gConnectionCallbackListener);
+    LOG("Connection callback listener removed.");
+    delete gConnectionCallbackListener;
+    gConnectionCallbackListener = nullptr;
 
     LOG("Clear resource completed----------");
 }

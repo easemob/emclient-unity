@@ -133,6 +133,12 @@ namespace ChatSDK {
             return wrapper.Call<bool>("updateConversationMessage", conversationId, TransformTool.ConversationTypeToInt(conversationType), message.ToJson().ToString());
         }
 
+        public override int MessagesCount(string conversationId, ConversationType conversationType)
+        {
+            //TODO: need implement
+            return 0;
+        }
+
         private string SearchDirectionToString(MessageSearchDirection direction) {
             if (direction == MessageSearchDirection.UP)
             {

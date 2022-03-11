@@ -107,6 +107,12 @@ namespace ChatSDK{
 		[DllImport(MyLibName)]
 		internal static extern bool ChatManager_UpdateMessage(IntPtr client, IntPtr mto, MessageBodyType type);
 
+		[DllImport(MyLibName)]
+		internal static extern void ChatManager_RemoveMessagesBeforeTimestamp(IntPtr client, int callbackId, long timestamp, OnSuccess onSuccess, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void ChatManager_DeleteConversationFromServer(IntPtr client, int callbackId, string conversationId, ConversationType conversationType, bool isDeleteServerMessages, OnSuccess onSuccess, OnErrorV2 onError);
+
 		/** GroupManager Stub **/
 		[DllImport(MyLibName)]
 		internal static extern void GroupManager_AddListener(IntPtr client, OnInvitationReceived onInvitationReceived,
@@ -433,6 +439,9 @@ namespace ChatSDK{
 
 		[DllImport(MyLibName)]
 		internal static extern int ConversationManager_UnreadMessagesCount(IntPtr client, string conversationId, ConversationType converationType);
+
+		[DllImport(MyLibName)]
+		internal static extern int ConversationManager_MessagesCount(IntPtr client, string conversationId, ConversationType converationType);
 
 		[DllImport(MyLibName)]
 		internal static extern bool ConversationManager_UpdateMessage(IntPtr client, string conversationId, ConversationType converationType, IntPtr mto, MessageBodyType type);

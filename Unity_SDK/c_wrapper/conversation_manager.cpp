@@ -346,6 +346,15 @@ HYPHENATE_API int ConversationManager_UnreadMessagesCount(void *client, const ch
     return conversationPtr->unreadMessagesCount();
 }
 
+HYPHENATE_API int  ConversationManager_MessagesCount(void *client, const char * conversationId, EMConversation::EMConversationType conversationType)
+{
+    if(!MandatoryCheck(conversationId))
+        return 0;
+
+    EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(conversationId, conversationType, true);
+    return conversationPtr->messagesCount();
+}
+
 HYPHENATE_API bool ConversationManager_UpdateMessage(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, void *mto, EMMessageBody::EMMessageBodyType type)
 {
     if(!MandatoryCheck(conversationId))

@@ -531,6 +531,46 @@ HYPHENATE_API bool ChatManager_UpdateMessage(void *client, void *mto, EMMessageB
     return conversationPtr->updateMessage(messagePtr);
 }
 
+HYPHENATE_API void ChatManager_RemoveMessagesBeforeTimestamp(void *client, int callbackId, int64_t timeStamp,  FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+{
+    std::thread t([=](){
+        EMError error;
+        bool ret = CLIENT->getChatManager().removeMessagesBeforeTimestamp(timeStamp);
+        if(false == ret) {
+            LOG("RemoveMessagesBeforeTimestamp failed, ts:%d", timeStamp);
+            error.mErrorCode = EMError::DATABASE_ERROR;
+            error.mDescription = "Remove messages error";
+            if(onError) onError(error.mErrorCode,error.mDescription.c_str(), callbackId);
+            return;
+        }
+        LOG("RemoveMessagesBeforeTimestamp successfully.");
+        if(onSuccess) onSuccess(callbackId);
+    });
+    t.detach();
+}
+
+HYPHENATE_API void ChatManager_DeleteConversationFromServer(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType conversationType, bool isDeleteServerMessages, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+{
+    EMError error;
+    if(!MandatoryCheck(conversationId, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+    std::string conversationIdStr = conversationId;
+    
+    std::thread t([=](){
+        EMErrorPtr error = CLIENT->getChatManager().deleteConversationFromServer(conversationIdStr, conversationType, isDeleteServerMessages);
+        if(EMError::EM_NO_ERROR != error->mErrorCode) {
+            LOG("DeleteConversationFromServer failed for conversation id:%s", conversationIdStr.c_str());
+            if(onError) onError(error->mErrorCode,error->mDescription.c_str(), callbackId);
+            return;
+        }
+        LOG("DeleteConversationFromServer successfully for conversation id:%s", conversationIdStr.c_str());
+        if(onSuccess) onSuccess(callbackId);
+    });
+    t.detach();
+}
+
 void ChatManager_RemoveListener(void*client)
 {
     CLIENT->getChatManager().clearListeners();
