@@ -64,6 +64,11 @@ namespace ChatSDK
     internal delegate void OnFriendRequestAccepted(string username);
     internal delegate void OnFriendRequestDeclined(string username);
 
+    //IMultiDeviceDelegate
+    internal delegate void onContactMultiDevicesEvent(MultiDevicesOperation operation, string target, string ext);
+    internal delegate void onGroupMultiDevicesEvent(MultiDevicesOperation operation, string target, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] string[] usernames, int size);
+    internal delegate void undisturbMultiDevicesEvent(string data);
+
     internal sealed class ConnectionHub
     {
         //events handler
@@ -105,6 +110,34 @@ namespace ChatSDK
                 //        listener.OnPong();
                 //    }
                 //});
+            };
+        }
+    }
+
+    internal sealed class MultiDevicesHub
+    {
+        internal onContactMultiDevicesEvent onContactMultiDevicesEvent;
+        internal onGroupMultiDevicesEvent onGroupMultiDevicesEvent;
+        internal undisturbMultiDevicesEvent undisturbMultiDevicesEvent;
+
+        internal MultiDevicesHub()
+        {
+            onContactMultiDevicesEvent = (MultiDevicesOperation operation, string target, string ext) =>
+            {
+                Debug.Log("onContactMultiDevicesEvent received.");
+                //TODO
+            };
+
+            onGroupMultiDevicesEvent = (MultiDevicesOperation operation, string target, string[] usernames, int size) =>
+            {
+                Debug.Log("onGroupMultiDevicesEvent received.");
+                //TODO
+            };
+
+            undisturbMultiDevicesEvent = (string data) =>
+            {
+                Debug.Log("undisturbMultiDevicesEvent received.");
+                //TODO
             };
         }
     }

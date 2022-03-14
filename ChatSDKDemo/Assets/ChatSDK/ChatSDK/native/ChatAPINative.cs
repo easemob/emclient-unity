@@ -25,6 +25,9 @@ namespace ChatSDK{
 		internal static extern IntPtr Client_InitWithOptions(Options options, Action onConnect, OnDisconnected onDisconnect, Action onPong);
 
 		[DllImport(MyLibName)]
+		internal static extern IntPtr Client_AddMultiDeviceListener(onContactMultiDevicesEvent mdContactEvent, onGroupMultiDevicesEvent mdGroupEvent, undisturbMultiDevicesEvent mdUbEvent);
+
+		[DllImport(MyLibName)]
 		internal static extern void Client_Login(IntPtr client, int callbackId, OnSuccess onSuccess, OnErrorV2 onError, string username, string pwdOrToken, bool isToken = false);
 
 		[DllImport(MyLibName)]

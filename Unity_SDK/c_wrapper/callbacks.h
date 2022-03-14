@@ -27,6 +27,11 @@ using namespace easemob;
     typedef void(__stdcall *FUNC_OnDisconnected)(int);
     typedef void(__stdcall *FUNC_OnPong)();
 
+    //MultiDevice Listener
+    typedef void(__stdcall *FUNC_onContactMultiDevicesEvent)(EMMultiDevicesListener::MultiDevicesOperation operation, const char* target, const char* ext);
+    typedef void(__stdcall *FUNC_onGroupMultiDevicesEvent)(EMMultiDevicesListener::MultiDevicesOperation operation, const char* target, const char * usernames[], int size);
+    typedef void(__stdcall *FUNC_undisturbMultiDevicesEvent)(const char* data);
+
     //ChatManager Listeners
     typedef void (__stdcall *FUNC_OnMessagesReceived)(void * messages[],
                                                       EMMessageBody::EMMessageBodyType types[], int size);
@@ -83,6 +88,11 @@ using namespace easemob;
     typedef void(*FUNC_OnConnected)();
     typedef void(*FUNC_OnDisconnected)(int);
     typedef void(*FUNC_OnPong)();
+
+    //MultiDevice Listener
+    typedef void(*FUNC_onContactMultiDevicesEvent)(EMMultiDevicesListener::MultiDevicesOperation operation, const char* target, const char* ext);
+    typedef void(*FUNC_onGroupMultiDevicesEvent)(EMMultiDevicesListener::MultiDevicesOperation operation, const char* target, const char * usernames[], int size);
+    typedef void(*FUNC_undisturbMultiDevicesEvent)(const char* data);
 
     //ChatManager Listener
     typedef void (*FUNC_OnMessagesReceived)(void * messages[],EMMessageBody::EMMessageBodyType types[],int size);
@@ -155,6 +165,45 @@ private:
     FUNC_OnConnected onConnected;
     FUNC_OnDisconnected onDisconnected;
     FUNC_OnPong onPonged;
+};
+
+class MultiDevicesListener : public EMMultiDevicesListener
+{
+public:
+    MultiDevicesListener(FUNC_onContactMultiDevicesEvent contactFuncHandle, FUNC_onGroupMultiDevicesEvent groupFuncHandle, FUNC_undisturbMultiDevicesEvent undisturbFuncHandle) :
+    onContactMultiDevicesEventHandle(contactFuncHandle), onGroupMultiDevicesEventedHandle(groupFuncHandle), undisturbMultiDevicesEventedHandle(undisturbFuncHandle){}
+    
+    void onContactMultiDevicesEvent(MultiDevicesOperation operation, const std::string& target, const std::string& ext) override {
+        LOG("Receive onContactMultiDevicesEvent.");
+        if(onContactMultiDevicesEventHandle)
+            onContactMultiDevicesEventHandle(operation, target.c_str(), ext.c_str());
+    }
+    
+    void onGroupMultiDevicesEvent(MultiDevicesOperation operation, const std::string& target, const std::vector<std::string>& usernames) override {
+        LOG("Receive onGroupMultiDevicesEvent with user size:%d.", usernames.size());
+        if(onGroupMultiDevicesEventedHandle) {
+            int size = (int)usernames.size();
+            
+            const char** userarray = new const char*[size];
+            for(size_t i=0; i<size; i++) {
+                userarray[i] = usernames[i].c_str();
+            }
+            
+            onGroupMultiDevicesEventedHandle(operation, target.c_str(), userarray, size);
+            delete []userarray;
+        }
+    }
+    
+    void undisturbMultiDevicesEvent(const std::string& data) override {
+        LOG("Receive undisturbMultiDevicesEvent.");
+        if(undisturbMultiDevicesEventedHandle) {
+            undisturbMultiDevicesEventedHandle(data.c_str());
+        }
+    }
+private:
+    FUNC_onContactMultiDevicesEvent onContactMultiDevicesEventHandle;
+    FUNC_onGroupMultiDevicesEvent onGroupMultiDevicesEventedHandle;
+    FUNC_undisturbMultiDevicesEvent undisturbMultiDevicesEventedHandle;
 };
 
 //This class should be implemented in platform based code part, not here!!

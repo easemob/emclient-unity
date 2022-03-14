@@ -5,6 +5,7 @@
 #include "emlogininfo.h"
 #include "emchatconfigs.h"
 #include "emchatprivateconfigs.h"
+#include "emmultidevices_listener.h"
 #include "emclient.h"
 #include "contact_manager.h"
 #include "group_manager.h"
@@ -85,6 +86,7 @@ EMChatConfigsPtr ConfigsFromOptions(Options *options) {
 EMClient *gClient = nullptr;
 EMConnectionListener *gConnectionListener = nullptr;
 EMConnectionCallbackListener *gConnectionCallbackListener = nullptr;
+EMMultiDevicesListener *gMultiDevicesListener = nullptr;
 
 HYPHENATE_API void* Client_InitWithOptions(Options *options, FUNC_OnConnected onConnected, FUNC_OnDisconnected onDisconnected, FUNC_OnPong onPong)
 {
@@ -118,6 +120,18 @@ HYPHENATE_API void* Client_InitWithOptions(Options *options, FUNC_OnConnected on
     }
     
     return gClient;
+}
+
+// Must be called afer Client_InitWithOptions!
+HYPHENATE_API void Client_AddMultiDeviceListener(FUNC_onContactMultiDevicesEvent contactEventFunc,
+                                                 FUNC_onGroupMultiDevicesEvent groupEventFunc,
+                                                 FUNC_undisturbMultiDevicesEvent undisturbEventFunc)
+{
+    if(nullptr == gMultiDevicesListener) { // only set once
+        gMultiDevicesListener = new MultiDevicesListener(contactEventFunc, groupEventFunc, undisturbEventFunc);
+        gClient->addMultiDevicesListener(gMultiDevicesListener);
+        LOG("New multi device listener and hook it.");
+    }
 }
 
 HYPHENATE_API void Client_Login(void *client, int callbackId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, const char *username, const char *pwdOrToken, bool isToken)
@@ -199,6 +213,11 @@ HYPHENATE_API void Client_ClearResource(void *client) {
     LOG("Connection callback listener removed.");
     delete gConnectionCallbackListener;
     gConnectionCallbackListener = nullptr;
+    
+    CLIENT->removeMultiDevicesListener(gMultiDevicesListener);
+    LOG("Multi device listener removed.");
+    delete gMultiDevicesListener;
+    gMultiDevicesListener = nullptr;
 
     LOG("Clear resource completed----------");
 }

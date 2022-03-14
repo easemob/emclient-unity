@@ -7,6 +7,7 @@ namespace ChatSDK
     internal sealed class Client_Mac : IClient
     {
         private ConnectionHub connectionHub;
+        private MultiDevicesHub multiDeviceHub;
 
         internal IntPtr client = IntPtr.Zero;
         private string currentUserName;
@@ -51,6 +52,11 @@ namespace ChatSDK
             {
                 connectionHub = new ConnectionHub(this); //init only once
             }
+
+            if(multiDeviceHub == null)
+            {
+                multiDeviceHub = new MultiDevicesHub(); //init only once
+            }
             
             // keep only 1 client left
             if(client != IntPtr.Zero)
@@ -62,6 +68,9 @@ namespace ChatSDK
             
             client = ChatAPINative.Client_InitWithOptions(options, connectionHub.OnConnected, connectionHub.OnDisconnected, connectionHub.OnPong);
             Debug.Log($"InitWithOptions completed.");
+
+            ChatAPINative.Client_AddMultiDeviceListener(multiDeviceHub.onContactMultiDevicesEvent, multiDeviceHub.onGroupMultiDevicesEvent, multiDeviceHub.undisturbMultiDevicesEvent);
+            Debug.Log("AddMultiDeviceListener completed.");
         }
 
         public override void Login(string username, string pwdOrToken, bool isToken = false, CallBack callback = null)

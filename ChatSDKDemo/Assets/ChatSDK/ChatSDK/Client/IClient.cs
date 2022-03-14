@@ -240,5 +240,30 @@ namespace ChatSDK
             }
         }
 
+        /// <summary>
+        /// 添加多设备回调监听
+        /// </summary>
+        /// <param name="multiDeviceDelegate">实现监听的对象</param>
+        public void AddMultiDeviceDelegate(IMultiDeviceDelegate multiDeviceDelegate)
+        {
+            if (!CallbackManager.Instance().multiDeviceListener.delegater.Contains(multiDeviceDelegate))
+            {
+                CallbackManager.Instance().multiDeviceListener.delegater.Add(multiDeviceDelegate);
+            }
+        }
+
+        /// <summary>
+        /// 移除多设备回调监听
+        /// </summary>
+        /// <param name="multiDeviceDelegate">实现监听的对象</param>
+        public void DeleteMultiDeviceDelegate(IMultiDeviceDelegate multiDeviceDelegate)
+        {
+            if (CallbackManager.IsQuit()) return;
+            if (CallbackManager.Instance().multiDeviceListener.delegater.Contains(multiDeviceDelegate))
+            {
+                CallbackManager.Instance().multiDeviceListener.delegater.Remove(multiDeviceDelegate);
+            }
+        }
+
     }
 }
