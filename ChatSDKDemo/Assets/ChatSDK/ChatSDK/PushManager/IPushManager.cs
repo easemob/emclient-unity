@@ -78,6 +78,13 @@ namespace ChatSDK
         /// <param name="noDisturb">是否免打扰</param>
         /// <param name="handle">返回结果</param>
         void SetGroupToDisturb(string groupId, bool noDisturb, CallBack handle = null);
+
+        /// <summary>
+        /// 将push结果发送给服务器
+        /// </summary>
+        /// <param name="parameters">json格式的push结果</param>
+        /// <param name="handle">返回结果</param>
+        void ReportPushAction(string parameters, CallBack handle = null);
     }
 
 }

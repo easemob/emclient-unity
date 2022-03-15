@@ -163,5 +163,23 @@ namespace ChatSDK
                     ChatCallbackObject.CallBackOnError(cbId, code, desc);
                 });
         }
+
+        public void ReportPushAction(string parameters, CallBack handle = null)
+        {
+            if (null == parameters || 0 == parameters.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.PushManager_ReportPushAction(client, callbackId, parameters,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
+        }
     }
 }

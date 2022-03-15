@@ -478,6 +478,9 @@ namespace ChatSDK{
 		internal static extern void PushManager_UpdatePushNickName(IntPtr client, int callbackId, string nickname, OnSuccess onSuccess, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
+		internal static extern void PushManager_ReportPushAction(IntPtr client, int callbackId, string parameters, OnSuccess onSuccess, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
 		internal static extern void UserInfoManager_UpdateOwnInfo(IntPtr client, int callbackId, IntPtr userInfo, OnSuccess onSuccess, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
