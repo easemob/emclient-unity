@@ -66,7 +66,7 @@ namespace ChatSDK
                 StartLog("unmanaged_dll.log");
             }
             
-            client = ChatAPINative.Client_InitWithOptions(options, connectionHub.OnConnected, connectionHub.OnDisconnected, connectionHub.OnPong);
+            client = ChatAPINative.Client_InitWithOptions(options, connectionHub.OnConnected, connectionHub.OnDisconnected, connectionHub.OnPong, connectionHub.OnTokenNotification);
             Debug.Log($"InitWithOptions completed.");
 
             ChatAPINative.Client_AddMultiDeviceListener(multiDeviceHub.onContactMultiDevicesEvent, multiDeviceHub.onGroupMultiDevicesEvent, multiDeviceHub.undisturbMultiDevicesEvent);
@@ -146,6 +146,65 @@ namespace ChatSDK
                 }
                 );
             return result;
+        }
+
+        public override void LoginWithAgoraToken(string username, string token, CallBack callback = null)
+        {
+            int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
+            if (client != IntPtr.Zero)
+            {
+
+                currentUserName = username;
+
+                OnLoginSuccess = (int cbId) =>
+                {
+                    isLoggedIn = true;
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                };
+                OnLoginError = (int code, string desc, int cbId) =>
+                {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                };
+                ChatAPINative.Client_LoginWithAgoraToken(client, callbackId, OnLoginSuccess, OnLoginError, username, token);
+            }
+            else
+            {
+                Debug.LogError("::InitWithOptions() not called yet.");
+            }
+        }
+
+        public override void RenewAgoraToken(string token)
+        {
+            if (client != IntPtr.Zero)
+            {
+                ChatAPINative.Client_RenewAgoraToken(client, token);
+            }
+            else
+            {
+                Debug.LogError("::InitWithOptions() not called yet.");
+            }
+        }
+
+        public override void AutoLogin(CallBack callback = null)
+        {
+            int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
+            if (client != IntPtr.Zero)
+            {
+                OnLoginSuccess = (int cbId) =>
+                {
+                    isLoggedIn = true;
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                };
+                OnLoginError = (int code, string desc, int cbId) =>
+                {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                };
+                ChatAPINative.Client_AutoLogin(client, callbackId, OnLoginSuccess, OnLoginError);
+            }
+            else
+            {
+                Debug.LogError("::InitWithOptions() not called yet.");
+            }
         }
 
         internal override void StartLog(string logFilePath)

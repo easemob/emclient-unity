@@ -206,6 +206,26 @@ namespace ChatSDK
         /// <returns>token</returns>
         public abstract string AccessToken();
 
+        /// <summary>
+        /// 使用声网token登录环信
+        /// </summary>
+        /// <param name="username">环信id</param>
+        /// <param name="token">声网token</param>
+        /// <param name="handle">执行结果</param>
+        public abstract void LoginWithAgoraToken(string username, string token, CallBack handle = null);
+
+        /// <summary>
+        /// 更新声网token
+        /// </summary>
+        /// <param name="token">声网token</param>
+        public abstract void RenewAgoraToken(string token);
+
+        /// <summary>
+        /// 自动登录环信
+        /// </summary>
+        /// <param name="handle">执行结果</param>
+        public abstract void AutoLogin(CallBack handle = null);
+
         internal abstract void StartLog(string logFilePath);
 
         internal abstract void StopLog();

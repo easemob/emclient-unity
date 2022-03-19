@@ -69,5 +69,10 @@ namespace ChatSDK
         {
             wrapper.Call("updatePushNickname", nickname, handle?.callbackId);
         }
+
+        public void ReportPushAction(string parameters, CallBack handle = null)
+        {
+            //TODO: add code
+        }
     }
 }

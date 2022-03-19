@@ -78,6 +78,11 @@ namespace ChatSDK
             obj.Add("nickname", nickname);
             ChatAPIIOS.PushManager_HandleMethodCall("updatePushNickname", obj.ToString(), handle?.callbackId);
         }
+
+        public void ReportPushAction(string parameters, CallBack handle = null)
+        {
+            //TODO: add code
+        }
     }
 
 }

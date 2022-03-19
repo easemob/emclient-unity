@@ -386,8 +386,9 @@
 				HEADER_SEARCH_PATHS = (
 					"../../../../emclient-linux/include/**",
 					"../../../../emclient-linux/protocol/**",
-					"../../../../emclient-linux/3rd_party/protobuf/",
+					"../../../../emclient-linux/3rd_party/protobuf",
 					"../../../../emclient-linux/3rd_party/platform/darwin/depends/openssl_1.1.1l_share_intel/include",
+					"../../../../emclient-linux/3rd_party/rapidjson/include",
 				);
 				INFOPLIST_FILE = hyphenateCWrapper/Info.plist;
 				INSTALL_PATH = "";
@@ -414,8 +415,9 @@
 				HEADER_SEARCH_PATHS = (
 					"../../../../emclient-linux/include/**",
 					"../../../../emclient-linux/protocol/**",
-					"../../../../emclient-linux/3rd_party/protobuf/",
+					"../../../../emclient-linux/3rd_party/protobuf",
 					"../../../../emclient-linux/3rd_party/platform/darwin/depends/openssl_1.1.1l_share_intel/include",
+					"../../../../emclient-linux/3rd_party/rapidjson/include",
 				);
 				INFOPLIST_FILE = hyphenateCWrapper/Info.plist;
 				INSTALL_PATH = "";

@@ -25,6 +25,7 @@
                 '<(emclient-linux-path)/include/message',
                 '<(emclient-linux-path)/include/utils',
                 '<(emclient-linux-path)/include',
+                '<(emclient-linux-path)/3rd_party/rapidjson/include',
             ],
             'sources': [
             # Add our source files

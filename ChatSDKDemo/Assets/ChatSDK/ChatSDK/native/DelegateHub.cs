@@ -8,6 +8,8 @@ namespace ChatSDK
     //IConnectionDelegate
     internal delegate void OnDisconnected(int info);
 
+    internal delegate void OnTokenNotificationed(int info, string desc);
+
     //IChatManagerDelegate
     internal delegate void OnMessagesReceived([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] messages,
         [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] MessageBodyType[] types, int size);
@@ -75,6 +77,7 @@ namespace ChatSDK
         internal Action OnConnected;
         internal OnDisconnected OnDisconnected;
         internal Action OnPong;
+        internal OnTokenNotificationed OnTokenNotification;
 
         internal ConnectionHub(IClient client)
         {
@@ -111,6 +114,17 @@ namespace ChatSDK
                 //    }
                 //});
             };
+            OnTokenNotification = (int info, string desc) =>
+            {
+                Debug.Log($"token notification received, with errid:{info}, desc:{desc}");
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IConnectionDelegate listener in CallbackManager.Instance().connectionListener.delegater)
+                    {
+                        listener.OnTokenNotificationed(info, desc);
+                    }
+                });
+            };
+
         }
     }
 

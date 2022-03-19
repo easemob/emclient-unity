@@ -22,7 +22,7 @@ namespace ChatSDK{
 		internal static extern void Client_CreateAccount(IntPtr client, int callbackId, OnSuccess onSuccess, OnErrorV2 onError, string username, string password);
 
 		[DllImport(MyLibName)]
-		internal static extern IntPtr Client_InitWithOptions(Options options, Action onConnect, OnDisconnected onDisconnect, Action onPong);
+		internal static extern IntPtr Client_InitWithOptions(Options options, Action onConnect, OnDisconnected onDisconnect, Action onPong, OnTokenNotificationed onTokenNotify);
 
 		[DllImport(MyLibName)]
 		internal static extern IntPtr Client_AddMultiDeviceListener(onContactMultiDevicesEvent mdContactEvent, onGroupMultiDevicesEvent mdGroupEvent, undisturbMultiDevicesEvent mdUbEvent);
@@ -44,6 +44,15 @@ namespace ChatSDK{
 
 		[DllImport(MyLibName)]
 		internal static extern void Client_ClearResource(IntPtr client);
+
+		[DllImport(MyLibName)]
+		internal static extern void Client_LoginWithAgoraToken(IntPtr client, int callbackId, OnSuccess onSuccess, OnErrorV2 onError, string username, string agoraToken);
+
+		[DllImport(MyLibName)]
+		internal static extern void Client_RenewAgoraToken(IntPtr client, string agoraToken);
+
+		[DllImport(MyLibName)]
+		internal static extern void Client_AutoLogin(IntPtr client, int callbackId, OnSuccess onSuccess, OnErrorV2 onError);
 
 		/** ChatManager Stub **/
 		[DllImport(MyLibName)]

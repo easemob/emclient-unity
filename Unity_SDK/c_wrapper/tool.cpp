@@ -1,6 +1,13 @@
 #ifndef _WIN32
 #include <unistd.h>
 #endif
+
+#include <time.h>
+#include <signal.h>
+#include <sys/time.h>
+#include <math.h>
+#include "utils/emencryptutils.h"
+#include "utils/emutils.h"
 #include "tool.h"
 
 bool MandatoryCheck(const void* ptr, EMError& error) {
@@ -84,6 +91,153 @@ bool MandatoryCheck(const char* ptr1, const char* ptr2, const char* ptr3, EMErro
 
 std::string OptionalStrParamCheck(const char* ptr) {
     return (nullptr == ptr)?"":ptr;
+}
+
+std::string GetLeftValue(const std::string& str)
+{
+    if (str.size() == 0) return "";
+    std::string::size_type pos;
+    pos = str.find("=");
+    if (std::string::npos == pos) return "";
+    return std::string(str, 0, pos - 0);
+}
+
+std::string GetRightValue(const std::string& str)
+{
+    if (str.size() == 0) return "";
+    std::string::size_type pos;
+    pos = str.find("=");
+    if (std::string::npos == pos) return "";
+    if (pos == str.size() - 1) return "";
+    return std::string(str, pos+1, str.size() - pos - 1);
+}
+
+void StartTimer(int interval, TIMER_FUNC timer_func)
+{
+    StopTimer();
+    
+    struct itimerval tick;
+    signal(SIGALRM, timer_func);
+    
+    memset(&tick, 0, sizeof(tick));
+    
+    //timeout to run first time
+    tick.it_value.tv_sec = interval;
+    tick.it_value.tv_usec = 0;
+    
+    //after first, the interval time for clock
+    tick.it_interval.tv_sec = interval;
+    tick.it_interval.tv_usec = 0;
+    
+    if (setitimer(ITIMER_REAL, &tick, NULL) < 0) {
+        LOG("Error: start timer for token failed.");
+        return;
+    }
+}
+
+void StopTimer()
+{
+    struct itimerval tick;
+    memset(&tick, 0, sizeof(tick));
+    if (setitimer(ITIMER_REAL, &tick, NULL) < 0) {
+        LOG("ERROR: stop timer for token failed.");
+        return;
+    }
+}
+
+void EncryptAndSaveToFile(const std::string& plainMsg, const std::string& key, std::string fn)
+{
+    if (plainMsg.size() == 0 || key.size() == 0) {
+        LOG("Error: invalid input parameters for SaveAndEncrypt.");
+        return;
+    }
+    
+    // get file name
+    std::string fileName = "";
+    if (fn.size() != 0)
+        fileName = fn;
+    else {
+        fileName = "./sdkdata/easemobDB/.atconfig";
+#ifdef _WIN32
+        fileName = ".\sdkdata\easemobDB\.atconfig";
+#endif
+    }
+    
+    // open file
+    FILE* f = nullptr;
+    f = fopen(fileName.c_str(), "w");
+    
+    // clear old contents
+    fseek(f, 0, SEEK_END);
+    long fsize = ftell(f);
+    if (fsize > 0) {
+        fclose(f);
+        truncate(fileName.c_str(), 0);
+        f = fopen(fileName.c_str(), "wb");
+    }
+    
+    // get encrypt key
+    EMEncryptUtils* encrypt = EMEncryptUtils::createInstance();
+    unsigned char bytes[16];
+    EMEncryptCalculateUtil::getAESKey(key, key, bytes, encrypt);
+    
+    // encrypt
+    std::string ret = encrypt->aesEncrypt(plainMsg, bytes, 16);
+    
+    // save result
+    fwrite(ret.c_str(), ret.size(), 1, f);
+    fclose(f);
+    
+    delete encrypt;
+}
+
+std::string DecryptAndGetFromFile(const std::string& key, std::string fn)
+{
+    if (key.size() == 0) {
+        LOG("Error: empty key for decrypt.");
+        return "";
+    }
+    
+    // get file name
+    std::string fileName = "";
+    if (fn.size() != 0)
+        fileName = fn;
+    else {
+        fileName = "./sdkdata/easemobDB/.atconfig";
+#ifdef _WIN32
+        fileName = ".\sdkdata\easemobDB\.atconfig";
+#endif
+    }
+    
+    // open file
+    FILE* f = nullptr;
+    f = fopen(fileName.c_str(), "r");
+    
+    // check size
+    fseek(f, 0, SEEK_END);
+    long fsize = ftell(f);
+    if (0 == fsize) {
+        LOG("Error: empty file for decrypt.");
+        return "";
+    }
+    fseek(f, 0, SEEK_SET);
+    
+    // get Decrypt key
+    EMEncryptUtils* encrypt = EMEncryptUtils::createInstance();
+    unsigned char bytes[16];
+    EMEncryptCalculateUtil::getAESKey(key, key, bytes, encrypt);
+    
+    char content[fsize];
+    fread(content,fsize, 1, f);
+    std::string encryptedData(content, fsize);
+    
+    // Decrypt
+    std::string ret = encrypt->aesDecrypt(encryptedData, bytes, 16);
+    
+    fclose(f);
+    delete encrypt;
+    
+    return ret;
 }
 
 #ifndef _WIN32

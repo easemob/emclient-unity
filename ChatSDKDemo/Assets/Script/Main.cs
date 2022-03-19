@@ -140,4 +140,9 @@ public class Main : MonoBehaviour, IConnectionDelegate
         }
     }
 
+    public void OnTokenNotificationed(int i, string desc)
+    {
+        UIManager.DefaultAlert(transform, $"OnTokenNotificationed, c:{i}, desc:{desc}");
+    }
+
 }

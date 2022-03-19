@@ -26,6 +26,7 @@ using namespace easemob;
     typedef void(__stdcall *FUNC_OnConnected)();
     typedef void(__stdcall *FUNC_OnDisconnected)(int);
     typedef void(__stdcall *FUNC_OnPong)();
+    typedef void(__stdcall *FUNC_onTokenNotification)(int, const char *);
 
     //MultiDevice Listener
     typedef void(__stdcall *FUNC_onContactMultiDevicesEvent)(EMMultiDevicesListener::MultiDevicesOperation operation, const char* target, const char* ext);
@@ -88,6 +89,7 @@ using namespace easemob;
     typedef void(*FUNC_OnConnected)();
     typedef void(*FUNC_OnDisconnected)(int);
     typedef void(*FUNC_OnPong)();
+    typedef void(*FUNC_onTokenNotification)(int, const char *);
 
     //MultiDevice Listener
     typedef void(*FUNC_onContactMultiDevicesEvent)(EMMultiDevicesListener::MultiDevicesOperation operation, const char* target, const char* ext);
@@ -143,7 +145,9 @@ using namespace easemob;
 class ConnectionListener : public EMConnectionListener
 {
 public:
-    ConnectionListener(FUNC_OnConnected connected, FUNC_OnDisconnected disconnected, FUNC_OnPong pong) : onConnected(connected), onDisconnected(disconnected), onPonged(pong){}
+    ConnectionListener(FUNC_OnConnected connected, FUNC_OnDisconnected disconnected, FUNC_OnPong pong, FUNC_onTokenNotification tokenNotified) :
+                        onConnected(connected), onDisconnected(disconnected), onPonged(pong), onTokenNotificationed(tokenNotified){}
+    
     void onConnect(const std::string& info) override {
         LOG("Connection established.");
         if(onConnected)
@@ -161,10 +165,17 @@ public:
             onPonged();
     }
     
+    void onTokenNotification(EMErrorPtr error) override {
+        LOG("Token notification.");
+        if(onTokenNotificationed)
+            onTokenNotificationed(error->mErrorCode, error->mDescription.c_str());
+    }
+    
 private:
     FUNC_OnConnected onConnected;
     FUNC_OnDisconnected onDisconnected;
     FUNC_OnPong onPonged;
+    FUNC_onTokenNotification onTokenNotificationed;
 };
 
 class MultiDevicesListener : public EMMultiDevicesListener
