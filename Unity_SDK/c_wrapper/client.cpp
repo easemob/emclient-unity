@@ -24,7 +24,6 @@ using namespace easemob;
 extern "C"
 {
 #define CLIENT static_cast<EMClient *>(client)
-#define CALLBACK static_cast<Callback *>(callback)
 }
 
 static bool G_DEBUG_MODE = false;
@@ -132,9 +131,12 @@ int GetTokenCheckInterval(int availablePeriod)
     return TOKEN_CHECK_INTERVAL;
 }
 
+#ifndef _WIN32
 void TokenCheck(int signo)
+#else
+VOID CALLBACK TokenCheck(PVOID lpParam, BOOLEAN TimerOrWaitFired)
+#endif
 {
-    // TODO: need add mutex?
     // Note: No need mutex for locking global_autologin_config。
     // Since if timer is running, means still in login status.
     // global_autologin_config noly can be changed from logout status
@@ -176,6 +178,7 @@ void TokenCheck(int signo)
         }
     }
 }
+
 
 void SaveAutoLoginConfigToFile()
 {

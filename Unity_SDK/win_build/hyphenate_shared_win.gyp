@@ -25,7 +25,9 @@
                 '<(emclient-linux-path)/include/message',
                 '<(emclient-linux-path)/include/utils',
                 '<(emclient-linux-path)/include',
+                '<(emclient-linux-path)/3rd_party/protobuf',
                 '<(emclient-linux-path)/3rd_party/rapidjson/include',
+                '<(emclient-linux-path)/3rd_party/platform/win/depends/openssl_1.1.1l-x64-static-md/include',
             ],
             'sources': [
             # Add our source files
@@ -48,7 +50,7 @@
                          'libcrypto.lib',
                          'libssl.lib',
                          'libcurl.lib',
-                         'libsqlite3.lib',
+                         'libsqlcipher.lib',
                          'zlib.lib',
                          'easemob.lib',
                          'crypt32.lib',
@@ -59,6 +61,7 @@
                            '<(emclient-linux-path)/3rd_party/platform/win/depends/openssl_1.1.1l-x64-static-md/lib',
                            '<(emclient-linux-path)/3rd_party/platform/win/depends/sqlite_3.34.1-x64-static-md/lib',
                            '<(emclient-linux-path)/3rd_party/platform/win/depends/zlib_1.2.11-x64-static-md/lib',
+                           '<(emclient-linux-path)/3rd_party/platform/win/depends/sqlcipher_4.4.3-x64-static-md/lib',
                            '%(AddtionalLibrayDirectories)',
                        ],
                        'defines': [

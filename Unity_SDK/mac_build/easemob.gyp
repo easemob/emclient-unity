@@ -308,7 +308,6 @@
                            '<(emclient-linux-path)/3rd_party/platform/darwin/depends/zlib_1.2.11_share_intel/lib',
                            '<(emclient-linux-path)/3rd_party/platform/darwin/depends/openssl_1.1.1l_share_intel/lib',
                            '<(emclient-linux-path)/3rd_party/platform/darwin/depends/curl_7.80.0_share_intel/lib',
-                           '<(emclient-linux-path)/3rd_party/platform/darwin/depends/sqlite_3.34.1_share_intel/lib', 
                        ],
                    }],
                  ],

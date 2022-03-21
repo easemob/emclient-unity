@@ -1,10 +1,12 @@
 #ifndef _WIN32
-#include <unistd.h>
+    #include <unistd.h>
+    #include <sys/time.h>
+#else
+    #include <windows.h>
 #endif
 
 #include <time.h>
 #include <signal.h>
-#include <sys/time.h>
 #include <math.h>
 #include "utils/emencryptutils.h"
 #include "utils/emutils.h"
@@ -112,6 +114,7 @@ std::string GetRightValue(const std::string& str)
     return std::string(str, pos+1, str.size() - pos - 1);
 }
 
+#ifndef _WIN32
 void StartTimer(int interval, TIMER_FUNC timer_func)
 {
     StopTimer();
@@ -145,6 +148,43 @@ void StopTimer()
     }
 }
 
+#else
+
+HANDLE hTimerQueue;
+HANDLE hTimerQueueTimer;
+void StartTimer(int interval, WAITORTIMERCALLBACK timer_func)
+{
+    StopTimer();
+    if (NULL == hTimerQueue && NULL == hTimerQueueTimer)
+        {
+            hTimerQueue = CreateTimerQueue();
+            if (hTimerQueue != NULL)
+            {
+                if (!CreateTimerQueueTimer(&hTimerQueueTimer, hTimerQueue, timer_func, NULL, interval, interval, WT_EXECUTEDEFAULT))
+                {
+                    hTimerQueue = NULL;
+                    hTimerQueueTimer = NULL;
+                }
+            }
+            else
+            {
+                hTimerQueue = NULL;
+                hTimerQueueTimer = NULL;
+            }
+        }
+}
+
+void StopTimer()
+{
+    if (NULL != hTimerQueueTimer)
+        DeleteTimerQueueTimer(hTimerQueue, hTimerQueueTimer, INVALID_HANDLE_VALUE);
+    if (NULL != hTimerQueue)
+        DeleteTimerQueueEx(hTimerQueue, INVALID_HANDLE_VALUE);
+    hTimerQueueTimer = NULL;
+    hTimerQueue = NULL;
+}
+#endif
+
 void EncryptAndSaveToFile(const std::string& plainMsg, const std::string& key, std::string fn)
 {
     if (plainMsg.size() == 0 || key.size() == 0) {
@@ -159,7 +199,7 @@ void EncryptAndSaveToFile(const std::string& plainMsg, const std::string& key, s
     else {
         fileName = "./sdkdata/easemobDB/.atconfig";
 #ifdef _WIN32
-        fileName = ".\sdkdata\easemobDB\.atconfig";
+        fileName = "./sdkdata/easemobDB/.atconfig";
 #endif
     }
     
@@ -172,7 +212,11 @@ void EncryptAndSaveToFile(const std::string& plainMsg, const std::string& key, s
     long fsize = ftell(f);
     if (fsize > 0) {
         fclose(f);
+#ifndef _WIN32
         truncate(fileName.c_str(), 0);
+#else
+        DeleteFileA(fileName.c_str());
+#endif
         f = fopen(fileName.c_str(), "wb");
     }
     
@@ -205,7 +249,7 @@ std::string DecryptAndGetFromFile(const std::string& key, std::string fn)
     else {
         fileName = "./sdkdata/easemobDB/.atconfig";
 #ifdef _WIN32
-        fileName = ".\sdkdata\easemobDB\.atconfig";
+        fileName = "./sdkdata/easemobDB/.atconfig";
 #endif
     }
     
@@ -227,7 +271,7 @@ std::string DecryptAndGetFromFile(const std::string& key, std::string fn)
     unsigned char bytes[16];
     EMEncryptCalculateUtil::getAESKey(key, key, bytes, encrypt);
     
-    char content[fsize];
+    char* content = new char[fsize];
     fread(content,fsize, 1, f);
     std::string encryptedData(content, fsize);
     
@@ -236,7 +280,7 @@ std::string DecryptAndGetFromFile(const std::string& key, std::string fn)
     
     fclose(f);
     delete encrypt;
-    
+    delete []content;
     return ret;
 }
 
