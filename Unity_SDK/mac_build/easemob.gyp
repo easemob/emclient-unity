@@ -4,7 +4,7 @@
         'standalone': 0,
         'msvs_RuntimeLibrary': '3', #md:2, mdd:3, mt:0, mtd:1
         'ENABLE_CALL': '0',
-        'USE_SQLCIPHER':'0',
+        'USE_SQLCIPHER':'1',
         'emclient-linux-path':'../../../emclient-linux'
     },
 

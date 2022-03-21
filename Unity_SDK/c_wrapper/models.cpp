@@ -12,6 +12,7 @@
 #include "tool.h"
 
 std::string EMPTY_STR = " ";
+std::string DISPLAY_NAME_STR = " "; // used to save display name temprarily
 
 EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bool buildReceiveMsg)
 {
@@ -459,7 +460,7 @@ MessageTO::MessageTO(const EMMessagePtr &_message) {
     this->From = _message->from().c_str();
     this->To = _message->to().c_str();
     this->RecallBy = _message->recallBy().c_str();
-    if (strlen(this->RecallBy) == 0) this->RecallBy = EMPTY_STR.c_str();
+    
     this->Type = _message->chatType();
     this->Direction = _message->msgDirection();
     this->Status = _message->status();
@@ -467,6 +468,12 @@ MessageTO::MessageTO(const EMMessagePtr &_message) {
     this->HasReadAck = _message->isReadAcked();
     this->LocalTime = _message->localTime();
     this->ServerTime = _message->timestamp();
+    
+    if (strlen(this->MsgId) == 0) this->MsgId =  const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->ConversationId) == 0) this->ConversationId =  const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->From) == 0) this->From =  const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->To) == 0) this->To =  const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->RecallBy) == 0) this->RecallBy =  const_cast<char*>(EMPTY_STR.c_str());
     
     char* p = nullptr;
     std::string str = GetAttrsStringFromMessage(_message);
@@ -525,7 +532,10 @@ CmdMessageTO::CmdMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
 FileMessageTO::FileMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
     auto body = (EMFileMessageBody *)_message->bodies().front().get();
     this->BodyType = body->type(); //TODO: only 1st body type determined
-    this->body.DisplayName = body->displayName().c_str();
+    
+    DISPLAY_NAME_STR = body->displayName();
+    this->body.DisplayName = DISPLAY_NAME_STR.c_str();
+    
     this->body.DownStatus = body->downloadStatus();
     this->body.FileSize = body->fileLength();
     this->body.LocalPath = body->localPath().c_str();
@@ -543,7 +553,10 @@ FileMessageTO::FileMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
 ImageMessageTO::ImageMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
     auto body = (EMImageMessageBody *)_message->bodies().front().get();
     this->BodyType = body->type(); //TODO: only 1st body type determined
-    this->body.DisplayName = body->displayName().c_str();
+
+    DISPLAY_NAME_STR = body->displayName();
+    this->body.DisplayName = DISPLAY_NAME_STR.c_str();
+    
     this->body.DownStatus = body->downloadStatus();
     this->body.FileSize = body->fileLength();
     this->body.LocalPath = body->localPath().c_str();
@@ -565,12 +578,16 @@ ImageMessageTO::ImageMessageTO(const EMMessagePtr &_message):MessageTO(_message)
     if (strlen(this->body.ThumbnaiSecret) == 0) this->body.ThumbnaiSecret = const_cast<char*>(EMPTY_STR.c_str());
     if (strlen(this->body.ThumbnaiRemotePath) == 0) this->body.ThumbnaiRemotePath = const_cast<char*>(EMPTY_STR.c_str());
     if (strlen(this->body.ThumbnailLocalPath) == 0) this->body.ThumbnailLocalPath = const_cast<char*>(EMPTY_STR.c_str());
+     
 }
 
 VoiceMessageTO::VoiceMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
     auto body = (EMVoiceMessageBody *)_message->bodies().front().get();
     this->BodyType = body->type(); //TODO: only 1st body type determined
-    this->body.DisplayName = body->displayName().c_str();
+    
+    DISPLAY_NAME_STR = body->displayName();
+    this->body.DisplayName = DISPLAY_NAME_STR.c_str();
+    
     this->body.DownStatus = body->downloadStatus();
     this->body.FileSize = body->fileLength();
     this->body.LocalPath = body->localPath().c_str();
@@ -589,7 +606,10 @@ VideoMessageTO::VideoMessageTO(const EMMessagePtr &_message):MessageTO(_message)
     auto body = (EMVideoMessageBody *)_message->bodies().front().get();
     this->BodyType = body->type();
     this->body.LocalPath = body->localPath().c_str();
-    this->body.DisplayName = body->displayName().c_str();
+    
+    DISPLAY_NAME_STR = body->displayName();
+    this->body.DisplayName = DISPLAY_NAME_STR.c_str();
+    
     this->body.Secret = body->secretKey().c_str();
     this->body.RemotePath = body->remotePath().c_str();
     this->body.ThumbnaiLocationPath = body->thumbnailLocalPath().c_str();
