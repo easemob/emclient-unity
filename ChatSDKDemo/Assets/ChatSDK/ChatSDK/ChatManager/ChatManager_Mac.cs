@@ -623,7 +623,7 @@ namespace ChatSDK
                 );
         }
 
-        public override void DeleteConversationFromServe(string conversationId, ConversationType conversationType, bool isDeleteServerMessages, CallBack callback = null)
+        public override void DeleteConversationFromServer(string conversationId, ConversationType conversationType, bool isDeleteServerMessages, CallBack callback = null)
         {
             int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
 

@@ -189,7 +189,7 @@ namespace ChatSDK
             //TO-DO
         }
 
-        public override void DeleteConversationFromServe(string conversationId, ConversationType conversationType, bool isDeleteServerMessages, CallBack callback = null)
+        public override void DeleteConversationFromServer(string conversationId, ConversationType conversationType, bool isDeleteServerMessages, CallBack callback = null)
         {
             //TO-DO
         }
