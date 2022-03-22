@@ -162,10 +162,8 @@ namespace ChatSDK
         }
 
         /// <summary>
-        /// 使用声网token登录环信服务器
+        /// 自动登录
         /// </summary>
-        /// <param name="username">环信id</param>
-        /// <param name="token">声网token</param>
         /// <param name="handle">结果回调</param>
         public void AutoLogin(CallBack handle = null)
         {
