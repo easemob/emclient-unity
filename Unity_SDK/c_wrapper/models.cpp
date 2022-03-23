@@ -12,6 +12,7 @@
 #include "tool.h"
 
 std::string EMPTY_STR = " ";
+std::string DISPLAY_NAME_STR = " "; // used to save display name temprarily
 
 EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bool buildReceiveMsg)
 {
@@ -466,6 +467,11 @@ MessageTO::MessageTO(const EMMessagePtr &_message) {
     this->LocalTime = _message->localTime();
     this->ServerTime = _message->timestamp();
     
+    if (strlen(this->MsgId) == 0) this->MsgId =  const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->ConversationId) == 0) this->ConversationId =  const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->From) == 0) this->From =  const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->To) == 0) this->To =  const_cast<char*>(EMPTY_STR.c_str());
+    
     char* p = nullptr;
     std::string str = GetAttrsStringFromMessage(_message);
     
@@ -522,7 +528,10 @@ CmdMessageTO::CmdMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
 FileMessageTO::FileMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
     auto body = (EMFileMessageBody *)_message->bodies().front().get();
     this->BodyType = body->type(); //TODO: only 1st body type determined
-    this->body.DisplayName = body->displayName().c_str();
+    
+    DISPLAY_NAME_STR = body->displayName();
+    this->body.DisplayName = DISPLAY_NAME_STR.c_str();
+    
     this->body.DownStatus = body->downloadStatus();
     this->body.FileSize = body->fileLength();
     this->body.LocalPath = body->localPath().c_str();
@@ -540,7 +549,10 @@ FileMessageTO::FileMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
 ImageMessageTO::ImageMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
     auto body = (EMImageMessageBody *)_message->bodies().front().get();
     this->BodyType = body->type(); //TODO: only 1st body type determined
-    this->body.DisplayName = body->displayName().c_str();
+
+    DISPLAY_NAME_STR = body->displayName();
+    this->body.DisplayName = DISPLAY_NAME_STR.c_str();
+    
     this->body.DownStatus = body->downloadStatus();
     this->body.FileSize = body->fileLength();
     this->body.LocalPath = body->localPath().c_str();
@@ -567,7 +579,10 @@ ImageMessageTO::ImageMessageTO(const EMMessagePtr &_message):MessageTO(_message)
 VoiceMessageTO::VoiceMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
     auto body = (EMVoiceMessageBody *)_message->bodies().front().get();
     this->BodyType = body->type(); //TODO: only 1st body type determined
-    this->body.DisplayName = body->displayName().c_str();
+    
+    DISPLAY_NAME_STR = body->displayName();
+    this->body.DisplayName = DISPLAY_NAME_STR.c_str();
+    
     this->body.DownStatus = body->downloadStatus();
     this->body.FileSize = body->fileLength();
     this->body.LocalPath = body->localPath().c_str();
@@ -586,7 +601,10 @@ VideoMessageTO::VideoMessageTO(const EMMessagePtr &_message):MessageTO(_message)
     auto body = (EMVideoMessageBody *)_message->bodies().front().get();
     this->BodyType = body->type();
     this->body.LocalPath = body->localPath().c_str();
-    this->body.DisplayName = body->displayName().c_str();
+    
+    DISPLAY_NAME_STR = body->displayName();
+    this->body.DisplayName = DISPLAY_NAME_STR.c_str();
+    
     this->body.Secret = body->secretKey().c_str();
     this->body.RemotePath = body->remotePath().c_str();
     this->body.ThumbnaiLocationPath = body->thumbnailLocalPath().c_str();

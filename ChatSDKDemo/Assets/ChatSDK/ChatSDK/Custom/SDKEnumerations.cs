@@ -168,11 +168,6 @@
         public enum DownLoadStatus
         {
             /// <summary>
-            /// 准备
-            /// </summary>
-            PENDING,
-
-            /// <summary>
             /// 下载中
             /// </summary>
             DOWNLOADING,
@@ -185,7 +180,12 @@
             /// <summary>
             /// 下载失败
             /// </summary>
-            FAILED,    
+            FAILED,
+
+            /// <summary>
+            /// 准备
+            /// </summary>
+            PENDING
         };
     }
 
