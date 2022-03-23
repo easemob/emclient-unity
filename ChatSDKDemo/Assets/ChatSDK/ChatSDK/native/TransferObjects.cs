@@ -174,7 +174,14 @@ namespace ChatSDK
 
         public override IMessageBody UnmarshallBody()
         {
-            return new MessageBody.FileBody(Body.LocalPath, Body.DisplayName, Body.FileSize);
+            MessageBody.FileBody fb = new MessageBody.FileBody();
+            fb.LocalPath = Body.LocalPath;
+            fb.DisplayName = Body.DisplayName;
+            fb.Secret = Body.Secret;
+            fb.RemotePath = Body.RemotePath;
+            fb.FileSize = Body.FileSize;
+            fb.DownStatus = Body.DownStatus;
+            return fb;
         }
     }
 
@@ -231,7 +238,21 @@ namespace ChatSDK
 
         public override IMessageBody UnmarshallBody()
         {
-            return new MessageBody.ImageBody(Body.LocalPath,Body.DisplayName,Body.FileSize,Body.Original,Body.Width,Body.Height);
+            MessageBody.ImageBody ib = new MessageBody.ImageBody();
+            ib.LocalPath = Body.LocalPath;
+            ib.DisplayName = Body.DisplayName;
+            ib.Secret = Body.Secret;
+            ib.RemotePath = Body.RemotePath;
+            ib.ThumbnailLocalPath = Body.ThumbnailLocalPath;
+            ib.ThumbnaiRemotePath = Body.ThumbnaiRemotePath;
+            ib.ThumbnaiSecret = Body.ThumbnaiSecret;
+            ib.Height = Body.Height;
+            ib.Width = Body.Width;
+            ib.FileSize = Body.FileSize;
+            ib.DownStatus = Body.DownStatus;
+            ib.ThumbnaiDownStatus = Body.ThumbnaiDownStatus;
+            ib.Original = Body.Original;
+            return ib;
         }
     }
 
@@ -278,7 +299,15 @@ namespace ChatSDK
 
         public override IMessageBody UnmarshallBody()
         {
-            return new MessageBody.VoiceBody(Body.LocalPath, Body.DisplayName, Body.Duration, Body.FileSize);
+            MessageBody.VoiceBody voi = new MessageBody.VoiceBody();
+            voi.LocalPath = Body.LocalPath;
+            voi.DisplayName = Body.DisplayName;
+            voi.Secret = Body.Secret;
+            voi.RemotePath = Body.RemotePath;
+            voi.FileSize = Body.FileSize;
+            voi.DownStatus = Body.DownStatus;
+            voi.Duration = Body.Duration;
+            return voi;
         }
     }
 
@@ -340,7 +369,20 @@ namespace ChatSDK
 
         public override IMessageBody UnmarshallBody()
         {
-            return new MessageBody.VideoBody(Body.LocalPath, Body.DisplayName, Body.Duration, Body.FileSize, Body.ThumbnaiLocationPath, Body.Width, Body.Height);
+            MessageBody.VideoBody vid = new MessageBody.VideoBody();
+            vid.LocalPath = Body.LocalPath;
+            vid.DisplayName = Body.DisplayName;
+            vid.Secret = Body.Secret;
+            vid.RemotePath = Body.RemotePath;
+            vid.ThumbnaiLocationPath = Body.ThumbnaiLocationPath;
+            vid.ThumbnaiRemotePath = Body.ThumbnaiRemotePath;
+            vid.ThumbnaiSecret = Body.ThumbnaiSecret;
+            vid.Height = Body.Height;
+            vid.Width = Body.Width;
+            vid.Duration = Body.Duration;
+            vid.FileSize = Body.FileSize;
+            vid.DownStatus = Body.DownStatus;
+            return vid;
         }
     }
 

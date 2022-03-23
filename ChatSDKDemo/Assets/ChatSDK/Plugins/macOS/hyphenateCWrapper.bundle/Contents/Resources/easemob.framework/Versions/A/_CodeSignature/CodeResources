@@ -8,10 +8,6 @@
 		<data>
 		3vpyjFWlZfTGaNS9S5PxnMRL+9I=
 		</data>
-		<key>Resources/libcrypto.1.0.0.dylib</key>
-		<data>
-		Pg8sfzO+Dy3RAhZ58iPGa+D3Gjk=
-		</data>
 	</dict>
 	<key>files2</key>
 	<dict>
@@ -24,17 +20,6 @@
 			<key>hash2</key>
 			<data>
 			S1UepsTzIpCI0/pkD7ptGImb7N3/Ke0ASwz3aP6xtmg=
-			</data>
-		</dict>
-		<key>Resources/libcrypto.1.0.0.dylib</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			Pg8sfzO+Dy3RAhZ58iPGa+D3Gjk=
-			</data>
-			<key>hash2</key>
-			<data>
-			q3dWNXAq6ctarjqJfaRAcQz/Obdg1cttlGFBqD0rHdQ=
 			</data>
 		</dict>
 	</dict>
