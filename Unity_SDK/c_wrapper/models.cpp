@@ -515,6 +515,7 @@ LocationMessageTO::LocationMessageTO(const EMMessagePtr &_message):MessageTO(_me
 
     //Bug fix: User Empty_str to replace "", avoid error from PtrToStructure at c# side
     if (strlen(this->body.Address) == 0) this->body.Address = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.BuildingName) == 0) this->body.BuildingName = const_cast<char*>(EMPTY_STR.c_str());
 }
 
 //CmdMessageTO
