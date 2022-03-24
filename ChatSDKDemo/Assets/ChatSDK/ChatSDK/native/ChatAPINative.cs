@@ -52,7 +52,7 @@ namespace ChatSDK{
 		internal static extern void Client_RenewAgoraToken(IntPtr client, string agoraToken);
 
 		[DllImport(MyLibName)]
-		internal static extern void Client_AutoLogin(IntPtr client, int callbackId, OnSuccess onSuccess, OnErrorV2 onError);
+		internal static extern void Client_AutoLogin(IntPtr client, int callbackId, OnSuccessResult onSuccess, OnErrorV2 onError);
 
 		/** ChatManager Stub **/
 		[DllImport(MyLibName)]

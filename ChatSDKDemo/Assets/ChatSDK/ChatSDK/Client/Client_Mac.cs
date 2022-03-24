@@ -190,16 +190,24 @@ namespace ChatSDK
             int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
             if (client != IntPtr.Zero)
             {
-                OnLoginSuccess = (int cbId) =>
+                ChatAPINative.Client_AutoLogin(client, callbackId,
+                onSuccess: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
                 {
-                    isLoggedIn = true;
-                    ChatCallbackObject.CallBackOnSuccess(cbId);
-                };
-                OnLoginError = (int code, string desc, int cbId) =>
-                {
+                    if (DataType.String == dType && 1 == dSize)
+                    {
+                        var username = Marshal.PtrToStringAnsi(data[0]);
+                        isLoggedIn = true;
+                        currentUserName = username;
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
+                    }
+                    else
+                    {
+                        Debug.LogError($"AutoLogin user information expected.");
+                    }
+                },
+                onError: (int code, string desc, int cbId) => {
                     ChatCallbackObject.CallBackOnError(cbId, code, desc);
-                };
-                ChatAPINative.Client_AutoLogin(client, callbackId, OnLoginSuccess, OnLoginError);
+                });
             }
             else
             {

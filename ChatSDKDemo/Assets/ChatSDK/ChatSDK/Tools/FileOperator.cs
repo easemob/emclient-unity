@@ -10,8 +10,20 @@ namespace ChatSDK
         StreamReader reader;
         List<string> allData;
 
+        string tokenfn;
+        string appkeyfn;
+
         public FileOperator()
         {
+            tokenfn = Application.dataPath + "/token.conf";
+            appkeyfn = Application.dataPath + "/appkey.conf";
+
+            if (allData == null)
+                allData = new List<string>();
+
+
+            CreateEmptyFile(tokenfn);
+            CreateEmptyFile(appkeyfn);
         }
 
         private static FileOperator _FileOperator
@@ -29,9 +41,19 @@ namespace ChatSDK
             return _FileOperator;
         }
 
+        public string GetTokenConfFile()
+        {
+            return tokenfn;
+        }
+
+        public string GetAppkeyConfFile()
+        {
+            return appkeyfn;
+        }
+
         public void Test()
         {
-            FileInfo file = new FileInfo(Application.dataPath + "/token.conf");
+            FileInfo file = new FileInfo(tokenfn);
             if (file.Exists)
             {
                 file.Delete();
@@ -39,20 +61,32 @@ namespace ChatSDK
             }
             for (int i=0; i<4; i++)
             {
-                WriteData("record data: " + i);
+                WriteData(tokenfn, "record data: " + i);
             }
 
             allData = new List<string>();
-            ReadData();
+            ReadData(tokenfn);
             for (int i=0; i<allData.Count; i++)
             {
                 Debug.Log("read data: " + allData[i]);
             }
         }
 
-        public void WriteData(string data)
+        public void CreateEmptyFile(string fn)
         {
-            FileInfo file = new FileInfo(Application.dataPath + "/token.conf");
+            FileInfo file = new FileInfo(fn);
+            if (!file.Exists)
+            {
+                writer = file.CreateText();
+                writer.WriteLine("");
+                writer.Dispose();
+                writer.Close();
+            }
+        }
+
+        public void WriteData(string fn, string data)
+        {
+            FileInfo file = new FileInfo(fn);
             if (!file.Exists)
             {
                 writer = file.CreateText();
@@ -67,12 +101,9 @@ namespace ChatSDK
             writer.Close();
         }
         
-        public List<string> ReadData()
+        public string ReadData(string fn)
         {
-            if(allData == null)
-                allData = new List<string>();
-
-            FileInfo file = new FileInfo(Application.dataPath + "/token.conf");
+            FileInfo file = new FileInfo(fn);
             reader = file.OpenText();
 
             string str;
@@ -84,9 +115,17 @@ namespace ChatSDK
             {
                 Debug.Log("No data!");
             }
+            //string data = "";
+            //if (allData.Count != 0)
+            //{
+            //   data = allData[0];
+            //}
+            string data = allData[0];
+            allData.Clear();
+            reader.DiscardBufferedData();
             reader.Dispose();
             reader.Close();
-            return allData;
+            return data;
         }
 
     }

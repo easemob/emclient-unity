@@ -120,16 +120,25 @@ public class Main : MonoBehaviour, IConnectionDelegate
 
     void NewTokenAction()
     {
-        //Read from file
+        string token = "12345";
+
+#if UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+
+        //Read token from file
         FileOperator foper = FileOperator.GetInstance();
-        List<string> tokens = foper.ReadData(); // should be only one element
-        if (tokens.Count == 0)
+        string tokenFromFile = foper.ReadData(foper.GetTokenConfFile()); // should be only one element
+
+        if (tokenFromFile.Length == 0)
         {
             UIManager.DefaultAlert(transform, "Empty agora token!");
             return;
+        } else
+        {
+            token = tokenFromFile;
         }
+#endif
 
-        SDKClient.Instance.RenewAgoraToken(tokens[0]);
+        SDKClient.Instance.RenewAgoraToken(token);
         UIManager.DefaultAlert(transform, "Renew agora token complete.");
     }
 

@@ -22,7 +22,7 @@ HYPHENATE_API void Client_LoginToken(void *client, FUNC_OnSuccess_With_Result on
 HYPHENATE_API void Client_ClearResource(void *client);
 HYPHENATE_API void Client_LoginWithAgoraToken(void *client, int callbackId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, const char *username, const char *agoraToken);
 HYPHENATE_API void Client_RenewAgoraToken(void *client, const char *agoraToken);
-HYPHENATE_API void Client_AutoLogin(void *client, int callbackId, FUNC_OnSuccess onSuccess, FUNC_OnError onError);
+HYPHENATE_API void Client_AutoLogin(void *client, int callbackId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError);
 #ifdef __cplusplus
 }
 #endif //__cplusplus

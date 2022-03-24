@@ -160,7 +160,7 @@ void StartTimer(int interval, WAITORTIMERCALLBACK timer_func)
             hTimerQueue = CreateTimerQueue();
             if (hTimerQueue != NULL)
             {
-                if (!CreateTimerQueueTimer(&hTimerQueueTimer, hTimerQueue, timer_func, NULL, interval, interval, WT_EXECUTEDEFAULT))
+                if (!CreateTimerQueueTimer(&hTimerQueueTimer, hTimerQueue, timer_func, NULL, interval*1000, interval*1000, WT_EXECUTEDEFAULT))
                 {
                     hTimerQueue = NULL;
                     hTimerQueueTimer = NULL;

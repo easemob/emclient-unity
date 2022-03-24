@@ -59,7 +59,7 @@ void SetTokenInAutoLogin(const std::string& username, const std::string& token, 
     // current using easemob token to login, not agora token!
     if(global_autologin_config.expireTS.size() > 0) {
         time_t nowTS = time(NULL); // second
-        int64_t expireTsInt = std::stol(global_autologin_config.expireTS.c_str()); // milli-second
+        int64_t expireTsInt = atoll(global_autologin_config.expireTS.c_str()); // milli-second
         
         global_autologin_config.expireTsInt = (int)(expireTsInt/1000); // second
         global_autologin_config.availablePeriod = global_autologin_config.expireTsInt - nowTS;
@@ -152,8 +152,8 @@ VOID CALLBACK TokenCheck(PVOID lpParam, BOOLEAN TimerOrWaitFired)
         error->mDescription = "Token was expired.";
         
         StopTimer();
-        gConnectionListener->onTokenNotification(error);
         Client_Logout(gClient, -1, NULL, false);
+        gConnectionListener->onTokenNotification(error);
     }
     else { // Not expired
         
@@ -166,8 +166,8 @@ VOID CALLBACK TokenCheck(PVOID lpParam, BOOLEAN TimerOrWaitFired)
             gConnectionListener->onTokenNotification(error);
             
             //reset timer trigger point
-            if (TOKEN_CHECK_INTERVAL > remainTS) {
-                TOKEN_CHECK_INTERVAL = (int)remainTS;
+            if (TOKEN_CHECK_INTERVAL >= remainTS) {
+                TOKEN_CHECK_INTERVAL = (int)remainTS + 1;
                 StartTimer(TOKEN_CHECK_INTERVAL, TokenCheck);
             }
             
@@ -263,7 +263,7 @@ void GetAutoLoginConfigFromFile()
     
     if (global_autologin_config.expireTS.size() > 0) {
         time_t nowTS = time(NULL); // second
-        int64_t expireTsInt = std::stol(global_autologin_config.expireTS.c_str()); // milli-second
+        int64_t expireTsInt = atol(global_autologin_config.expireTS.c_str()); // milli-second
         
         global_autologin_config.expireTsInt = (int)(expireTsInt/1000); // second
         global_autologin_config.availablePeriod = global_autologin_config.expireTsInt - nowTS;
@@ -508,6 +508,8 @@ HYPHENATE_API void Client_LoginWithAgoraToken(void *client, int callbackId, FUNC
     std::string usernameStr = username;
     std::string agoraTokenStr = agoraToken;
     
+    LOG("Agora token:%s", agoraTokenStr.c_str());
+    
     std::string response;
     CLIENT->getChatTokenbyAgoraToken(agoraTokenStr, response, error);
     
@@ -567,6 +569,8 @@ HYPHENATE_API void Client_RenewAgoraToken(void *client, const char *agoraToken)
     std::string agoraTokenStr = agoraToken;
     std::string response;
     
+    LOG("Renew agora token:%s", agoraTokenStr.c_str());
+    
     EMError error;
     CLIENT->getChatTokenbyAgoraToken(agoraTokenStr, response, error);
     
@@ -593,7 +597,7 @@ HYPHENATE_API void Client_RenewAgoraToken(void *client, const char *agoraToken)
     LOG("renewToken complete");
 }
 
-HYPHENATE_API void Client_AutoLogin(void *client, int callbackId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+HYPHENATE_API void Client_AutoLogin(void *client, int callbackId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     if (true == G_LOGIN_STATUS) {
         LOG("Already in login status, cannot execute autologin.");
@@ -635,7 +639,10 @@ HYPHENATE_API void Client_AutoLogin(void *client, int callbackId, FUNC_OnSuccess
             if(global_autologin_config.availablePeriod > 0)
                 StartTimer(GetTokenCheckInterval((int)global_autologin_config.availablePeriod), TokenCheck);
             
-            if(onSuccess) onSuccess(callbackId);
+            if(onSuccess) {
+                const char* data[1] = {global_autologin_config.userName.c_str()};
+                onSuccess((void **)data, DataType::String, 1, callbackId);
+            }
         }else{
             LOG("AutoLogin failed, code=%d, desc=%s", error->mErrorCode, error->mDescription.c_str());
             if(onError) onError(error->mErrorCode, error->mDescription.c_str(), callbackId);
