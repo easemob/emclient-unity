@@ -128,9 +128,10 @@ void StartTimer(int interval, TIMER_FUNC timer_func)
     tick.it_value.tv_sec = interval;
     tick.it_value.tv_usec = 0;
     
-    //after first, the interval time for clock
+    //the interval time for clock
     tick.it_interval.tv_sec = interval;
     tick.it_interval.tv_usec = 0;
+    
     
     if (setitimer(ITIMER_REAL, &tick, NULL) < 0) {
         LOG("Error: start timer for token failed.");
@@ -150,39 +151,49 @@ void StopTimer()
 
 #else
 
-HANDLE hTimerQueue;
-HANDLE hTimerQueueTimer;
-void StartTimer(int interval, WAITORTIMERCALLBACK timer_func)
+int PARAM_INTERVAL = 0;
+int RUN_INTERVAL = 0;
+bool ISRUN = false;
+bool STOP = false;
+
+void StartTimer(int interval, TIMER_FUNC timer_func)
 {
-    StopTimer();
-    if (NULL == hTimerQueue && NULL == hTimerQueueTimer)
-        {
-            hTimerQueue = CreateTimerQueue();
-            if (hTimerQueue != NULL)
-            {
-                if (!CreateTimerQueueTimer(&hTimerQueueTimer, hTimerQueue, timer_func, NULL, interval*1000, interval*1000, WT_EXECUTEDEFAULT))
-                {
-                    hTimerQueue = NULL;
-                    hTimerQueueTimer = NULL;
-                }
+    PARAM_INTERVAL = interval;
+    if (ISRUN) return;
+
+    std::thread t([=]() {
+        RUN_INTERVAL = PARAM_INTERVAL;
+        int tick_count = 0;
+        while (!STOP) {
+            ISRUN = true;
+            Sleep(1 * 1000);
+            tick_count++;
+
+            if (STOP) {
+                break; // if STOP is true, stop at once
             }
-            else
-            {
-                hTimerQueue = NULL;
-                hTimerQueueTimer = NULL;
+
+            if (tick_count == RUN_INTERVAL) { // timer fired
+                timer_func(0);
+                tick_count = 0; // restart count
+            }
+
+            if (RUN_INTERVAL != PARAM_INTERVAL) { // change interval
+                RUN_INTERVAL = PARAM_INTERVAL;
+                tick_count = 0; // restart count
+                continue;
             }
         }
+        ISRUN = false;
+        });
+    t.detach();
 }
 
 void StopTimer()
 {
-    if (NULL != hTimerQueueTimer)
-        DeleteTimerQueueTimer(hTimerQueue, hTimerQueueTimer, INVALID_HANDLE_VALUE);
-    if (NULL != hTimerQueue)
-        DeleteTimerQueueEx(hTimerQueue, INVALID_HANDLE_VALUE);
-    hTimerQueueTimer = NULL;
-    hTimerQueue = NULL;
+    STOP = true;
 }
+
 #endif
 
 void EncryptAndSaveToFile(const std::string& plainMsg, const std::string& key, std::string fn)

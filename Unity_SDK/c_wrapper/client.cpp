@@ -131,11 +131,7 @@ int GetTokenCheckInterval(int availablePeriod)
     return TOKEN_CHECK_INTERVAL;
 }
 
-#ifndef _WIN32
 void TokenCheck(int signo)
-#else
-VOID CALLBACK TokenCheck(PVOID lpParam, BOOLEAN TimerOrWaitFired)
-#endif
 {
     // Note: No need mutex for locking global_autologin_config。
     // Since if timer is running, means still in login status.
@@ -150,10 +146,10 @@ VOID CALLBACK TokenCheck(PVOID lpParam, BOOLEAN TimerOrWaitFired)
         LOG("Token was expired.");
         EMErrorPtr error(new EMError(EMError::TOKEN_EXPIRED));
         error->mDescription = "Token was expired.";
-        
+     
         StopTimer();
-        Client_Logout(gClient, -1, NULL, false);
         gConnectionListener->onTokenNotification(error);
+        Client_Logout(gClient, -1, NULL, false);
     }
     else { // Not expired
         
@@ -165,15 +161,16 @@ VOID CALLBACK TokenCheck(PVOID lpParam, BOOLEAN TimerOrWaitFired)
             error->mDescription.append(" seconds.");
             gConnectionListener->onTokenNotification(error);
             
-            //reset timer trigger point
-            if (TOKEN_CHECK_INTERVAL >= remainTS) {
-                TOKEN_CHECK_INTERVAL = (int)remainTS + 1;
+            // reset timer trigger point and only trigger once
+            // so no need to stop timer when expired!!
+            if (abs(TOKEN_CHECK_INTERVAL - remainTS) <= 3 ||
+                TOKEN_CHECK_INTERVAL > remainTS) {
+                TOKEN_CHECK_INTERVAL = (int)remainTS + 2;
                 StartTimer(TOKEN_CHECK_INTERVAL, TokenCheck);
+                LOG("Change timer with interval %d", TOKEN_CHECK_INTERVAL);
             }
             
         } else { // still has enough time before expire
-            // no nothing
-            //TODO: need to remove, just for testing
             LOG("Token is still valid. remain: (%d) secs.", remainTS);
         }
     }
@@ -263,7 +260,7 @@ void GetAutoLoginConfigFromFile()
     
     if (global_autologin_config.expireTS.size() > 0) {
         time_t nowTS = time(NULL); // second
-        int64_t expireTsInt = atol(global_autologin_config.expireTS.c_str()); // milli-second
+        int64_t expireTsInt = atoll(global_autologin_config.expireTS.c_str()); // milli-second
         
         global_autologin_config.expireTsInt = (int)(expireTsInt/1000); // second
         global_autologin_config.availablePeriod = global_autologin_config.expireTsInt - nowTS;
@@ -408,7 +405,7 @@ HYPHENATE_API void Client_Login(void *client, int callbackId, FUNC_OnSuccess onS
             else
                 SetPasswdInAutoLogin(usernameStr, pwdOrTokenStr);
             SaveAutoLoginConfigToFile();
-            
+
             if(onSuccess) onSuccess(callbackId);
             
         }else{
@@ -431,6 +428,7 @@ HYPHENATE_API void Client_Logout(void *client, int callbackId, FUNC_OnSuccess on
             LOG("Execute logout action.");
             CLIENT->logout();
             G_LOGIN_STATUS = false;
+
             StopTimer();
             if(onSuccess) onSuccess(callbackId);
         } else {
@@ -463,6 +461,7 @@ HYPHENATE_API void Client_ClearResource(void *client) {
     }
     
     LOG("Clear resource begin--------------");
+    
     CLIENT->clearResource();
     
     // set flag for next replay

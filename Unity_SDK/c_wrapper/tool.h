@@ -36,11 +36,10 @@ std::string GetRightValue(const std::string& str);
 
 #ifndef _WIN32
 void StartTimer(int interval, TIMER_FUNC timer_func);
-void StopTimer();
 #else
-void StartTimer(int interval, WAITORTIMERCALLBACK timer_func);
-void StopTimer();
+void StartTimer(int interval, TIMER_FUNC timer_func);
 #endif
+void StopTimer();
 
 void EncryptAndSaveToFile(const std::string& plainMsg, const std::string& key, std::string fn="");
 std::string DecryptAndGetFromFile(const std::string& key, std::string fn="");
