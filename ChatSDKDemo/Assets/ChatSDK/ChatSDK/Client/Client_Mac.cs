@@ -28,6 +28,12 @@ namespace ChatSDK
 
         public override void CreateAccount(string username, string password, CallBack callback = null)
         {
+            if (null == username || username.Length == 0 || null == password || password.Length == 0)
+            {
+                Debug.LogError("Username or passwd cannot be empty!");
+                return;
+            }
+
             int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
             if (client != IntPtr.Zero)
             {
@@ -75,6 +81,11 @@ namespace ChatSDK
 
         public override void Login(string username, string pwdOrToken, bool isToken = false, CallBack callback = null)
         {
+            if(null == username || username.Length == 0 || null == pwdOrToken || pwdOrToken.Length == 0)
+            {
+                Debug.LogError("Username or passwd cannot be empty!");
+                return;
+            }
             int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
             if (client != IntPtr.Zero) {
 
@@ -150,6 +161,12 @@ namespace ChatSDK
 
         public override void LoginWithAgoraToken(string username, string token, CallBack callback = null)
         {
+            if (null == username || username.Length == 0 || null == token || token.Length == 0)
+            {
+                Debug.LogError("Username or token cannot be empty!");
+                return;
+            }
+
             int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
             if (client != IntPtr.Zero)
             {

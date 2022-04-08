@@ -89,6 +89,12 @@ namespace ChatSDK
         /// <returns>消息对象</returns>
         static public Message CreateReceiveMessage()
         {
+            if (null == SDKClient.Instance.CurrentUsername || SDKClient.Instance.CurrentUsername.Length == 0)
+            {
+                // invalid input, return null
+                return null;
+            }
+
             Message msg = new Message()
             {
                 Direction = MessageDirection.RECEIVE,
@@ -101,6 +107,12 @@ namespace ChatSDK
 
         static public Message CreateSendMessage(string to, IMessageBody body, MessageDirection direction = MessageDirection.SEND, bool hasRead = true)
         {
+            if (null == SDKClient.Instance.CurrentUsername || SDKClient.Instance.CurrentUsername.Length == 0 || null == to || to.Length == 0)
+            {
+                // invalid input, return null
+                return null;
+            }
+
             Message msg = new Message(body: body)
             {
                 Direction = direction,
@@ -109,7 +121,7 @@ namespace ChatSDK
                 From = SDKClient.Instance.CurrentUsername,
                 ConversationId = to,
             };
-
+           
             return msg;
         }
 

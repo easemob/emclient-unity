@@ -544,7 +544,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
                 return;
             }
 
-            int ts = int.Parse(tsStr);
+            long ts = long.Parse(tsStr);
             SDKClient.Instance.ChatManager.RemoveMessagesBeforeTimestamp(ts, new CallBack(
                 onSuccess: () => {
                     UIManager.SuccessAlert(transform);
