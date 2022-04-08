@@ -76,10 +76,12 @@ namespace ChatSDK
             //TODO: add code
         }
 
+        /*
         public override void AutoLogin(CallBack callback = null)
         {
             //TODO: add code
         }
+        */
 
         internal override void StartLog(string logFilePath)
         {

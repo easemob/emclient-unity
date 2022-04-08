@@ -220,12 +220,6 @@ namespace ChatSDK
         /// <param name="token">声网token</param>
         public abstract void RenewAgoraToken(string token);
 
-        /// <summary>
-        /// 自动登录环信
-        /// </summary>
-        /// <param name="handle">执行结果</param>
-        public abstract void AutoLogin(CallBack handle = null);
-
         internal abstract void StartLog(string logFilePath);
 
         internal abstract void StopLog();

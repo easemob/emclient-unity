@@ -202,6 +202,7 @@ namespace ChatSDK
             }
         }
 
+        /*
         public override void AutoLogin(CallBack callback = null)
         {
             int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
@@ -231,6 +232,7 @@ namespace ChatSDK
                 Debug.LogError("::InitWithOptions() not called yet.");
             }
         }
+        */
 
         internal override void StartLog(string logFilePath)
         {
