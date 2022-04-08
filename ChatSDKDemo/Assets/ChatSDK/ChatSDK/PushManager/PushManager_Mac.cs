@@ -141,7 +141,7 @@ namespace ChatSDK
             ChatCallbackObject.CallBackOnError(callbackId, -1, "Not Supported.");
         }
 
-        public void UpdateAPNSPuthToken(string token, CallBack handle = null)
+        public void UpdateAPNSPushToken(string token, CallBack handle = null)
         {
             handle?.ClearCallback();
         }

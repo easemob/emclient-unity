@@ -53,7 +53,7 @@ namespace ChatSDK
         /// </summary>
         /// <param name="token">苹果deviceToken</param>
         /// <param name="handle">返回结果</param>
-        void UpdateAPNSPuthToken(string token, CallBack handle = null);
+        void UpdateAPNSPushToken(string token, CallBack handle = null);
 
         /// <summary>
         /// 设置推送免打扰

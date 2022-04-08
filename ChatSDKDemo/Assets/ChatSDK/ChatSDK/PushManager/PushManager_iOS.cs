@@ -65,7 +65,7 @@ namespace ChatSDK
             handle?.ClearCallback();
         }
 
-        public void UpdateAPNSPuthToken(string token, CallBack handle = null)
+        public void UpdateAPNSPushToken(string token, CallBack handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("deviceToken", token);
