@@ -19,7 +19,7 @@ namespace ChatSDK
 
         // Mac 不需要推送，直接返回；
 
-        public List<string> GetNoDisturbGroups() {
+        public override List<string> GetNoDisturbGroups() {
             var list = new List<string>();
             ChatAPINative.PushManager_GetIgnoredGroupIds(client,
                 (IntPtr[] array, DataType dType, int size, int cbId) =>
@@ -41,7 +41,7 @@ namespace ChatSDK
             return list;
         }
 
-        public PushConfig GetPushConfig()
+        public override PushConfig GetPushConfig()
         {
             PushConfig pushConfig = null;
             ChatAPINative.PushManager_GetPushConfig(client,
@@ -60,7 +60,7 @@ namespace ChatSDK
             return pushConfig;
         }
 
-        public void GetPushConfigFromServer(ValueCallBack<PushConfig> handle = null)
+        public override void GetPushConfigFromServer(ValueCallBack<PushConfig> handle = null)
         {
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
@@ -83,7 +83,7 @@ namespace ChatSDK
                 });
         }
 
-        public void SetGroupToDisturb(string groupId, bool noDisturb, CallBack handle = null)
+        public override void SetGroupToDisturb(string groupId, bool noDisturb, CallBack handle = null)
         {
             if (null == groupId || 0 == groupId.Length)
             {
@@ -101,7 +101,7 @@ namespace ChatSDK
                 });
         }
 
-        public void SetNoDisturb(bool noDisturb, int startTime = 0, int endTime = 24, CallBack handle = null)
+        public override void SetNoDisturb(bool noDisturb, int startTime = 0, int endTime = 24, CallBack handle = null)
         {
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
@@ -114,7 +114,7 @@ namespace ChatSDK
                 });
         }
 
-        public void SetPushStyle(PushStyle pushStyle, CallBack handle = null)
+        public override void SetPushStyle(PushStyle pushStyle, CallBack handle = null)
         {
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
@@ -127,26 +127,26 @@ namespace ChatSDK
                 });
         }
 
-        public void UpdateFCMPushToken(string token, CallBack handle = null)
+        public override void UpdateFCMPushToken(string token, CallBack handle = null)
         {
             //不支持
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
             ChatCallbackObject.CallBackOnError(callbackId, -1, "Not Supported.");
         }
 
-        public void UpdateHMSPushToken(string token, CallBack handle = null)
+        public override void UpdateHMSPushToken(string token, CallBack handle = null)
         {
             //不支持
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
             ChatCallbackObject.CallBackOnError(callbackId, -1, "Not Supported.");
         }
 
-        public void UpdateAPNSPushToken(string token, CallBack handle = null)
+        public override void UpdateAPNSPushToken(string token, CallBack handle = null)
         {
             handle?.ClearCallback();
         }
 
-        public void UpdatePushNickName(string nickname, CallBack handle = null)
+        public override void UpdatePushNickName(string nickname, CallBack handle = null)
         {
             if (null == nickname || 0 == nickname.Length)
             {
@@ -164,7 +164,7 @@ namespace ChatSDK
                 });
         }
 
-        public void ReportPushAction(string parameters, CallBack handle = null)
+        internal override void ReportPushAction(string parameters, CallBack handle = null)
         {
             if (null == parameters || 0 == parameters.Length)
             {
