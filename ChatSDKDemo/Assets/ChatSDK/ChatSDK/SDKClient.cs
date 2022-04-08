@@ -162,15 +162,6 @@ namespace ChatSDK
         }
 
         /// <summary>
-        /// 自动登录
-        /// </summary>
-        /// <param name="handle">结果回调</param>
-        public void AutoLogin(CallBack handle = null)
-        {
-            _Sdk.AutoLogin(handle);
-        }
-
-        /// <summary>
         /// 退出环信登录
         /// </summary>
         /// <param name="unbindDeviceToken">解除推送绑定</param>

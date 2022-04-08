@@ -133,8 +133,10 @@ public class Login : MonoBehaviour
         );
     }
 
+ 
     void AutoLoginBtnAction()
     {
+        /*
         SDKClient.Instance.AutoLogin(
             handle: new CallBack(
 
@@ -157,6 +159,7 @@ public class Login : MonoBehaviour
                 }
             )
         );
+        */
     }
 
     void InitEaseMobSDK() {
