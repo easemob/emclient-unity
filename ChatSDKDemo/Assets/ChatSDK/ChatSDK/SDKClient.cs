@@ -142,6 +142,26 @@ namespace ChatSDK
         }
 
         /// <summary>
+        /// 使用声网token登录环信服务器
+        /// </summary>
+        /// <param name="username">环信id</param>
+        /// <param name="token">声网token</param>
+        /// <param name="handle">结果回调</param>
+        public void LoginWithAgoraToken(string username, string token, CallBack handle = null)
+        {
+            _Sdk.LoginWithAgoraToken(username, token, handle);
+        }
+
+        /// <summary>
+        /// 使用声网token刷新有效期
+        /// </summary>
+        /// <param name="token">声网token</param>
+        public void RenewAgoraToken(string token)
+        {
+            _Sdk.RenewAgoraToken(token);
+        }
+
+        /// <summary>
         /// 退出环信登录
         /// </summary>
         /// <param name="unbindDeviceToken">解除推送绑定</param>

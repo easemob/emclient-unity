@@ -238,11 +238,17 @@ namespace ChatSDK
             /// </summary>
             public string Address;
 
-            public LocationBody(double latitude, double longitude, string address = "")
+            /// <summary>
+            /// 建筑物信息
+            /// </summary>
+            public string BuildingName;
+
+            public LocationBody(double latitude, double longitude, string address = "", string buildName = "")
             {
                 Latitude = latitude;
                 Longitude = longitude;
                 Address = address;
+                BuildingName = buildName;
                 Type = MessageBodyType.LOCATION;
             }
 
@@ -257,6 +263,10 @@ namespace ChatSDK
                 jo.Add("longitude", Longitude);
                 if (Address != null) {
                     jo.Add("address", Address);
+                }
+                if (BuildingName != null)
+                {
+                    jo.Add("buildingName", BuildingName);
                 }
 
                 return jo;

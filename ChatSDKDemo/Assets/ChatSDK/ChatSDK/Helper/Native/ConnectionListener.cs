@@ -36,5 +36,18 @@ namespace ChatSDK {
                 });
             }
         }
+
+        internal void OnTokenNoficationed(string i, string desc)
+        {
+            if (delegater != null)
+            {
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IConnectionDelegate connectionDelegate in delegater)
+                    {
+                        connectionDelegate.OnTokenNotificationed(int.Parse(i), desc);
+                    }
+                });
+            }
+        }
     }
 }

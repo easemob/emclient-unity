@@ -173,6 +173,12 @@ namespace ChatSDK {
             return int.Parse(countString);
         }
 
+        public override int MessagesCount(string conversationId, ConversationType conversationType)
+        {
+            //TODO: need implement
+            return 0;
+        }
+
         public override bool UpdateMessage(string conversationId, ConversationType conversationType, Message message)
         {
             JSONObject obj = new JSONObject();

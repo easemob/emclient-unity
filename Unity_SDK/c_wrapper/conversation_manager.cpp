@@ -1,5 +1,5 @@
 //
-//  contact_manager.cpp
+//  conversation_manager.cpp
 //  hyphenateCWrapper
 //
 //  Created by Qiang Yu on 2021/8/2.
@@ -344,6 +344,15 @@ HYPHENATE_API int ConversationManager_UnreadMessagesCount(void *client, const ch
 
     EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(conversationId, conversationType, true);
     return conversationPtr->unreadMessagesCount();
+}
+
+HYPHENATE_API int  ConversationManager_MessagesCount(void *client, const char * conversationId, EMConversation::EMConversationType conversationType)
+{
+    if(!MandatoryCheck(conversationId))
+        return 0;
+
+    EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(conversationId, conversationType, true);
+    return conversationPtr->messagesCount();
 }
 
 HYPHENATE_API bool ConversationManager_UpdateMessage(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, void *mto, EMMessageBody::EMMessageBodyType type)

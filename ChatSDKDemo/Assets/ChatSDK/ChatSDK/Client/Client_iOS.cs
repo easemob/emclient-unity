@@ -66,6 +66,23 @@ namespace ChatSDK
             return jo["accessToken"].Value;
         }
 
+        public override void LoginWithAgoraToken(string username, string token, CallBack handle = null)
+        {
+            //TODO: add code
+        }
+
+        public override void RenewAgoraToken(string token)
+        {
+            //TODO: add code
+        }
+
+        /*
+        public override void AutoLogin(CallBack callback = null)
+        {
+            //TODO: add code
+        }
+        */
+
         internal override void StartLog(string logFilePath)
         {
             throw new System.NotImplementedException();

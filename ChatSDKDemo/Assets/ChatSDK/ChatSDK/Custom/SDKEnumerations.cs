@@ -294,4 +294,42 @@
         ATTRIBUTEVALUE,
         NULLOBJ
     }
+
+    /// <summary>
+    /// 多设备操作类型
+    /// </summary>
+    public enum MultiDevicesOperation
+    {
+        UNKNOW                          = -1,
+        CONTACT_REMOVE                  = 2,
+        CONTACT_ACCEPT                  = 3,
+        CONTACT_DECLINE                 = 4,
+        CONTACT_BAN                     = 5, 
+        CONTACT_ALLOW                   = 6, 
+
+        GROUP_CREATE                    = 10,
+        GROUP_DESTROY                   = 11,
+        GROUP_JOIN                      = 12,
+        GROUP_LEAVE                     = 13,
+        GROUP_APPLY                     = 14,
+        GROUP_APPLY_ACCEPT              = 15, 
+        GROUP_APPLY_DECLINE             = 16,
+        GROUP_INVITE                    = 17,
+        GROUP_INVITE_ACCEPT             = 18,
+        GROUP_INVITE_DECLINE            = 19,
+        GROUP_KICK                      = 20,
+        GROUP_BAN                       = 21,
+        GROUP_ALLOW                     = 22,
+        GROUP_BLOCK                     = 23,
+        GROUP_UNBLOCK                   = 24,
+        GROUP_ASSIGN_OWNER              = 25,
+        GROUP_ADD_ADMIN                 = 26,
+        GROUP_REMOVE_ADMIN              = 27,
+        GROUP_ADD_MUTE                  = 28,
+        GROUP_REMOVE_MUTE               = 29,
+        GROUP_ADD_USER_WHITE_LIST       = 30,
+        GROUP_REMOVE_USER_WHITE_LIST    = 31,
+        GROUP_ALL_BAN                   = 32,
+        GROUP_REMOVE_ALL_BAN            = 33,
+    }
 }

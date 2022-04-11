@@ -206,6 +206,20 @@ namespace ChatSDK
         /// <returns>token</returns>
         public abstract string AccessToken();
 
+        /// <summary>
+        /// 使用声网token登录环信
+        /// </summary>
+        /// <param name="username">环信id</param>
+        /// <param name="token">声网token</param>
+        /// <param name="handle">执行结果</param>
+        public abstract void LoginWithAgoraToken(string username, string token, CallBack handle = null);
+
+        /// <summary>
+        /// 更新声网token
+        /// </summary>
+        /// <param name="token">声网token</param>
+        public abstract void RenewAgoraToken(string token);
+
         internal abstract void StartLog(string logFilePath);
 
         internal abstract void StopLog();
@@ -237,6 +251,31 @@ namespace ChatSDK
             if (CallbackManager.Instance().connectionListener.delegater.Contains(connectionDelegate))
             {
                 CallbackManager.Instance().connectionListener.delegater.Remove(connectionDelegate);
+            }
+        }
+
+        /// <summary>
+        /// 添加多设备回调监听
+        /// </summary>
+        /// <param name="multiDeviceDelegate">实现监听的对象</param>
+        public void AddMultiDeviceDelegate(IMultiDeviceDelegate multiDeviceDelegate)
+        {
+            if (!CallbackManager.Instance().multiDeviceListener.delegater.Contains(multiDeviceDelegate))
+            {
+                CallbackManager.Instance().multiDeviceListener.delegater.Add(multiDeviceDelegate);
+            }
+        }
+
+        /// <summary>
+        /// 移除多设备回调监听
+        /// </summary>
+        /// <param name="multiDeviceDelegate">实现监听的对象</param>
+        public void DeleteMultiDeviceDelegate(IMultiDeviceDelegate multiDeviceDelegate)
+        {
+            if (CallbackManager.IsQuit()) return;
+            if (CallbackManager.Instance().multiDeviceListener.delegater.Contains(multiDeviceDelegate))
+            {
+                CallbackManager.Instance().multiDeviceListener.delegater.Remove(multiDeviceDelegate);
             }
         }
 

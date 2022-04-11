@@ -7,6 +7,7 @@ namespace ChatSDK
     internal sealed class Client_Mac : IClient
     {
         private ConnectionHub connectionHub;
+        private MultiDevicesHub multiDeviceHub;
 
         internal IntPtr client = IntPtr.Zero;
         private string currentUserName;
@@ -27,6 +28,12 @@ namespace ChatSDK
 
         public override void CreateAccount(string username, string password, CallBack callback = null)
         {
+            if (null == username || username.Length == 0 || null == password || password.Length == 0)
+            {
+                Debug.LogError("Username or passwd cannot be empty!");
+                return;
+            }
+
             int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
             if (client != IntPtr.Zero)
             {
@@ -51,6 +58,11 @@ namespace ChatSDK
             {
                 connectionHub = new ConnectionHub(this); //init only once
             }
+
+            if(multiDeviceHub == null)
+            {
+                multiDeviceHub = new MultiDevicesHub(); //init only once
+            }
             
             // keep only 1 client left
             if(client != IntPtr.Zero)
@@ -60,12 +72,20 @@ namespace ChatSDK
                 StartLog("unmanaged_dll.log");
             }
             
-            client = ChatAPINative.Client_InitWithOptions(options, connectionHub.OnConnected, connectionHub.OnDisconnected, connectionHub.OnPong);
+            client = ChatAPINative.Client_InitWithOptions(options, connectionHub.OnConnected, connectionHub.OnDisconnected, connectionHub.OnPong, connectionHub.OnTokenNotification);
             Debug.Log($"InitWithOptions completed.");
+
+            ChatAPINative.Client_AddMultiDeviceListener(multiDeviceHub.onContactMultiDevicesEvent, multiDeviceHub.onGroupMultiDevicesEvent, multiDeviceHub.undisturbMultiDevicesEvent);
+            Debug.Log("AddMultiDeviceListener completed.");
         }
 
         public override void Login(string username, string pwdOrToken, bool isToken = false, CallBack callback = null)
         {
+            if(null == username || username.Length == 0 || null == pwdOrToken || pwdOrToken.Length == 0)
+            {
+                Debug.LogError("Username or passwd cannot be empty!");
+                return;
+            }
             int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
             if (client != IntPtr.Zero) {
 
@@ -138,6 +158,81 @@ namespace ChatSDK
                 );
             return result;
         }
+
+        public override void LoginWithAgoraToken(string username, string token, CallBack callback = null)
+        {
+            if (null == username || username.Length == 0 || null == token || token.Length == 0)
+            {
+                Debug.LogError("Username or token cannot be empty!");
+                return;
+            }
+
+            int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
+            if (client != IntPtr.Zero)
+            {
+
+                currentUserName = username;
+
+                OnLoginSuccess = (int cbId) =>
+                {
+                    isLoggedIn = true;
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                };
+                OnLoginError = (int code, string desc, int cbId) =>
+                {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                };
+                ChatAPINative.Client_LoginWithAgoraToken(client, callbackId, OnLoginSuccess, OnLoginError, username, token);
+            }
+            else
+            {
+                Debug.LogError("::InitWithOptions() not called yet.");
+            }
+        }
+
+        public override void RenewAgoraToken(string token)
+        {
+            if (client != IntPtr.Zero)
+            {
+                ChatAPINative.Client_RenewAgoraToken(client, token);
+            }
+            else
+            {
+                Debug.LogError("::InitWithOptions() not called yet.");
+            }
+        }
+
+        /*
+        public override void AutoLogin(CallBack callback = null)
+        {
+            int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
+            if (client != IntPtr.Zero)
+            {
+                ChatAPINative.Client_AutoLogin(client, callbackId,
+                onSuccess: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
+                {
+                    if (DataType.String == dType && 1 == dSize)
+                    {
+                        var username = Marshal.PtrToStringAnsi(data[0]);
+                        isLoggedIn = true;
+                        currentUserName = username;
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
+                    }
+                    else
+                    {
+                        Debug.LogError($"AutoLogin user information expected.");
+                    }
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
+            }
+            else
+            {
+                Debug.LogError("::InitWithOptions() not called yet.");
+            }
+        }
+        */
 
         internal override void StartLog(string logFilePath)
         {

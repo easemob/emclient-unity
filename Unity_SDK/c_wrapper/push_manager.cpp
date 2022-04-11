@@ -1,5 +1,5 @@
 //
-//  contact_manager.cpp
+//  push_manager.cpp
 //  hyphenateCWrapper
 //
 //  Created by Qiang Yu on 2021/8/3.
@@ -11,7 +11,6 @@
 #include "emchatconfigs.h"
 #include "emclient.h"
 #include "empushconfigs.h"
-#include "empushmanager_interface.h"
 #include "models.h"
 #include "push_manager.h"
 #include "tool.h"
@@ -199,12 +198,35 @@ HYPHENATE_API void PushManager_UpdatePushNickName(void *client, int callbackId, 
     
     std::thread t([=](){
         EMError error;
-        CLIENT->getPushManager().updatePushNickName(nickname, error);
+        CLIENT->getPushManager().updatePushNickName(nicknameStr, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("PushManager_UpdatePushNickName execution succeeds, nickname: %s", nicknameStr.c_str());
             if(onSuccess) onSuccess(callbackId);
         }else{
             LOG("PushManager_UpdatePushNickName execution failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        }
+    });
+    t.detach();
+}
+
+HYPHENATE_API void PushManager_ReportPushAction(void *client, int callbackId, const char * parameters, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+{
+    EMError error;
+    if(!MandatoryCheck(parameters, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+    std::string parametersStr = parameters;
+    
+    std::thread t([=](){
+        EMError error;
+        CLIENT->getPushManager().reportPushAction(parametersStr, error);
+        if(EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("PushManager_ReportPushAction execution succeeds, parameters: %s", parametersStr.c_str());
+            if(onSuccess) onSuccess(callbackId);
+        }else{
+            LOG("PushManager_ReportPushAction execution failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });

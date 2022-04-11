@@ -139,6 +139,21 @@ namespace ChatSDK
         public abstract bool UpdateMessage(Message message);
 
         /// <summary>
+        /// 删除指定时间戳之前的消息
+        /// </summary>
+        /// <param name="timeStamp">要更新的消息</param>
+        /// <param name="handle">执行结果</param>
+        public abstract void RemoveMessagesBeforeTimestamp(long timeStamp, CallBack handle = null);
+
+        /// <summary>
+        /// 删除服务器段会话信息
+        /// </summary>
+        /// <param name="conversationId">要删除的会话id</param>
+        /// <param name="conversationType">要删除的会话类型</param>
+        /// <param name="isDeleteServerMessages">是否删除服务器端该会话的消息</param>
+        public abstract void DeleteConversationFromServer(string conversationId, ConversationType conversationType, bool isDeleteServerMessages, CallBack handle = null);
+
+        /// <summary>
         /// 添加消息监听
         /// </summary>
         /// <param name="chatManagerDelegate">实现IChatManagerDelegate的对象</param>

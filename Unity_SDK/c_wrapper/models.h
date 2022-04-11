@@ -112,6 +112,7 @@ struct LocationMessageBodyTO {
     double Latitude;
     double Longitude;
     const char * Address;
+    const char * BuildingName;
 };
 
 struct CmdMessageBodyTO {
@@ -181,6 +182,7 @@ public:
     const char * ConversationId;
     const char * From;
     const char * To;
+    const char * RecallBy;
     EMMessage::EMChatType Type;
     EMMessage::EMMessageDirection Direction;
     EMMessage::EMMessageStatus Status;

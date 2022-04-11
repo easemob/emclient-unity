@@ -37,7 +37,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
         case EMMessageBody::LOCATION:
         {
             auto lm = static_cast<LocationMessageTO *>(mto);
-            messageBody = EMMessageBodyPtr(new EMLocationMessageBody(lm->body.Latitude, lm->body.Longitude, lm->body.Address));
+            messageBody = EMMessageBodyPtr(new EMLocationMessageBody(lm->body.Latitude, lm->body.Longitude, lm->body.Address, lm->body.BuildingName));
             from = lm->From;
             to = lm->To;
             msgId = lm->MsgId;
@@ -459,6 +459,8 @@ MessageTO::MessageTO(const EMMessagePtr &_message) {
     this->ConversationId = _message->conversationId().c_str();
     this->From = _message->from().c_str();
     this->To = _message->to().c_str();
+    this->RecallBy = _message->recallBy().c_str();
+    
     this->Type = _message->chatType();
     this->Direction = _message->msgDirection();
     this->Status = _message->status();
@@ -471,6 +473,7 @@ MessageTO::MessageTO(const EMMessagePtr &_message) {
     if (strlen(this->ConversationId) == 0) this->ConversationId =  const_cast<char*>(EMPTY_STR.c_str());
     if (strlen(this->From) == 0) this->From =  const_cast<char*>(EMPTY_STR.c_str());
     if (strlen(this->To) == 0) this->To =  const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->RecallBy) == 0) this->RecallBy =  const_cast<char*>(EMPTY_STR.c_str());
     
     char* p = nullptr;
     std::string str = GetAttrsStringFromMessage(_message);
@@ -508,9 +511,11 @@ LocationMessageTO::LocationMessageTO(const EMMessagePtr &_message):MessageTO(_me
     this->body.Latitude = body->latitude();
     this->body.Longitude = body->longitude();
     this->body.Address = body->address().c_str();
+    this->body.BuildingName = body->buildingName().c_str();
 
     //Bug fix: User Empty_str to replace "", avoid error from PtrToStructure at c# side
     if (strlen(this->body.Address) == 0) this->body.Address = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.BuildingName) == 0) this->body.BuildingName = const_cast<char*>(EMPTY_STR.c_str());
 }
 
 //CmdMessageTO
@@ -574,6 +579,7 @@ ImageMessageTO::ImageMessageTO(const EMMessagePtr &_message):MessageTO(_message)
     if (strlen(this->body.ThumbnaiSecret) == 0) this->body.ThumbnaiSecret = const_cast<char*>(EMPTY_STR.c_str());
     if (strlen(this->body.ThumbnaiRemotePath) == 0) this->body.ThumbnaiRemotePath = const_cast<char*>(EMPTY_STR.c_str());
     if (strlen(this->body.ThumbnailLocalPath) == 0) this->body.ThumbnailLocalPath = const_cast<char*>(EMPTY_STR.c_str());
+     
 }
 
 VoiceMessageTO::VoiceMessageTO(const EMMessagePtr &_message):MessageTO(_message) {

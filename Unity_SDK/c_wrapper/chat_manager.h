@@ -41,6 +41,8 @@ HYPHENATE_API void ChatManager_LoadMoreMessages(void *client, FUNC_OnSuccess_Wit
 HYPHENATE_API void ChatManager_SendReadAckForConversation(void *client, int callbackId, const char * conversationId, FUNC_OnSuccess onSuccess, FUNC_OnError onError);
 HYPHENATE_API void ChatManager_SendReadAckForMessage(void *client,int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError);
 HYPHENATE_API bool ChatManager_UpdateMessage(void *client, void *mto, EMMessageBody::EMMessageBodyType type);
+HYPHENATE_API void ChatManager_RemoveMessagesBeforeTimestamp(void *client, int callbackId, int64_t timeStamp, FUNC_OnSuccess onSuccess, FUNC_OnError onError);
+HYPHENATE_API void ChatManager_DeleteConversationFromServer(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType conversationType, bool isDeleteServerMessages, FUNC_OnSuccess onSuccess, FUNC_OnError onError);
 #ifdef __cplusplus
 }
 #endif //__cplusplus

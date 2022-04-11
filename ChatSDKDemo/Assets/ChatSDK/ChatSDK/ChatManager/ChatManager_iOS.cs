@@ -183,5 +183,15 @@ namespace ChatSDK
             JSONObject jsonObject = JSON.Parse(jsonString).AsObject;
             return jsonObject["isLoggedIn"].AsBool;
         }
+
+        public override void RemoveMessagesBeforeTimestamp(long timeStamp, CallBack callback = null)
+        {
+            //TO-DO
+        }
+
+        public override void DeleteConversationFromServer(string conversationId, ConversationType conversationType, bool isDeleteServerMessages, CallBack callback = null)
+        {
+            //TO-DO
+        }
     }
 }
