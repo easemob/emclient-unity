@@ -114,23 +114,32 @@ HYPHENATE_API void ChatManager_SendMessage(void *client, int callbackId, FUNC_On
     int64_t ts = messagePtr->timestamp();
     AddTsMsgItem(ts, (MessageTO*)mto, messagePtr);
     
+    std::string msgId = messagePtr->msgId();
+    AddProgressItem(msgId);
+    
     EMCallbackPtr callbackPtr(new EMCallback(gCallbackObserverHandle,
                                              [=]()->bool {
                                                 LOG("Message sent succeeds.");
                                                 UpdateTsMsgMap(ts);
                                                 if(onSuccess) onSuccess(callbackId);
                                                 DeleteTsMsgItem(ts);
+                                                DeleteProgressItem(msgId);
                                                 return true;
                                              },
                                              [=](const easemob::EMErrorPtr error)->bool{
                                                 LOG("Message sent failed with code=%d.", error->mErrorCode);
                                                 if(onError) onError(error->mErrorCode,error->mDescription.c_str(), callbackId);
                                                 DeleteTsMsgItem(ts);
+                                                DeleteProgressItem(msgId);
                                                 return true;
                                              },
                                              [=](int progress){
                                                 LOG("Message send in progress %d percent.", progress);
-                                                if(onProgress) onProgress(progress, callbackId);
+                                                int last_progress = GetLastProgress(msgId);
+                                                if(progress - last_progress >= 5) {
+                                                    if(onProgress) onProgress(progress, callbackId);
+                                                    UpdateProgressMap(msgId, progress);
+                                                }
                                                 return;
                                              }));
     messagePtr->setCallback(callbackPtr);
