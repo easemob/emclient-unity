@@ -118,6 +118,10 @@ namespace ChatSDK
                 (int code, string desc, int cbId) =>
                 {
                     ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                },
+                (int progress, int cbId) =>
+                {
+                    ChatCallbackObject.CallBackOnProgress(cbId, progress);
                 }
                 );
         }
@@ -147,6 +151,10 @@ namespace ChatSDK
                 (int code, string desc, int cbId) =>
                 {
                     ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                },
+                (int progress, int cbId) =>
+                {
+                    ChatCallbackObject.CallBackOnProgress(cbId, progress);
                 }
                 );
         }
@@ -384,6 +392,10 @@ namespace ChatSDK
                  (int code, string desc, int cbId) =>
                  {
                      ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                 },
+                 (int progress, int cbId) =>
+                 {
+                     ChatCallbackObject.CallBackOnProgress(cbId, progress);
                  }
                  );
         }
@@ -549,6 +561,10 @@ namespace ChatSDK
                         chatMac.DeleteFromMsgMap(ts, cbId);
                     }
                     ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                },
+                (int progress, int cbId) =>
+                {
+                    ChatCallbackObject.CallBackOnProgress(cbId, progress);
                 },
                 mtoPtr, message.Body.Type);
 

@@ -121,9 +121,12 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
                 onSuccess: () => {
                     UIManager.TitleAlert(transform, "成功", msg.MsgId);
                 },
+                onProgress: (progress) => {
+                    UIManager.TitleAlert(transform, "发送进度", progress.ToString());
+                },
                 onError:(code, desc) => {
                     UIManager.ErrorAlert(transform, code, msg.MsgId);
-                }               
+                }            
             ));
         });
 
@@ -242,7 +245,10 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
             SDKClient.Instance.ChatManager.RecallMessage(dict["msgId"], new CallBack(
                 onSuccess: () => {
-                    UIManager.SuccessAlert(transform);
+                    UIManager.TitleAlert(transform, "成功", "回撤成功");
+                },
+                onProgress: (progress) => {
+                    UIManager.TitleAlert(transform, "回撤进度", progress.ToString());
                 },
                 onError: (code, desc) => {
                     UIManager.ErrorAlert(transform, code, desc);
@@ -307,6 +313,45 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     }
     void DownLoadAttachmentBtnAction()
     {
+        // Download Attachment
+        /*InputAlertConfig config = new InputAlertConfig((dict) => {
+
+            SDKClient.Instance.ChatManager.DownloadAttachment(dict["msgId"], new CallBack(
+                onSuccess: () => {
+                    UIManager.TitleAlert(transform, "下载附件成功", "完成"); ;
+                },
+                onProgress: (progress) => {
+                    UIManager.TitleAlert(transform, "下载附件进度", progress.ToString());
+                },
+                onError: (code, desc) => {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+
+        });
+        
+
+        // Download Attatchment
+        InputAlertConfig config = new InputAlertConfig((dict) => {
+
+            SDKClient.Instance.ChatManager.DownloadThumbnail(dict["msgId"], new CallBack(
+                onSuccess: () => {
+                    UIManager.TitleAlert(transform, "下载缩略图成功", "完成"); ;
+                },
+                onProgress: (progress) => {
+                    UIManager.TitleAlert(transform, "下载缩略图进度", progress.ToString());
+                },
+                onError: (code, desc) => {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+
+        });
+        */
+
+        //config.AddField("msgId");
+        //UIManager.DefaultInputAlert(transform, config);
+
         UIManager.UnfinishedAlert(transform);
         Debug.Log("DownLoadAttachmentBtnAction");
     }

@@ -20,6 +20,9 @@ std::mutex tsMsgLocker;
 std::map<int64_t, MessageTO*> tsMsgTOMap;
 std::map<int64_t, EMMessagePtr> tsMsgPtrMap;
 
+std::mutex progressMsgLocker;
+std::map<std::string, int> progressMap;
+
 static EMCallbackObserverHandle gCallbackObserverHandle;
 
 EMChatManagerListener *gChatManagerListener = nullptr;
@@ -64,7 +67,43 @@ void UpdateTsMsgMap(int64_t ts)
     LOG("after update, msgid: %s -> %s", msgId.c_str(), it->second->MsgId);
 }
 
-HYPHENATE_API void ChatManager_SendMessage(void *client, int callbackId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, void *mto, EMMessageBody::EMMessageBodyType type) {
+void AddProgressItem(std::string msgId)
+{
+    std::lock_guard<std::mutex> maplocker(progressMsgLocker);
+    progressMap[msgId] = 0;
+}
+
+void DeleteProgressItem(std::string msgId)
+{
+    std::lock_guard<std::mutex> maplocker(progressMsgLocker);
+    auto it = progressMap.find(msgId);
+    if(progressMap.end() != it) {
+        progressMap.erase(it);
+    }
+}
+
+void UpdateProgressMap(std::string msgId, int progress)
+{
+    std::lock_guard<std::mutex> maplocker(progressMsgLocker);
+    
+    auto it = progressMap.find(msgId);
+    if(progressMap.end() == it) {
+        return;
+    }
+    it->second = progress;
+}
+
+int GetLastProgress(std::string msgId)
+{
+    std::lock_guard<std::mutex> maplocker(progressMsgLocker);
+    auto it = progressMap.find(msgId);
+    if(progressMap.end() == it) {
+        return 0;
+    }
+    return it->second;
+}
+
+HYPHENATE_API void ChatManager_SendMessage(void *client, int callbackId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, FUNC_OnProgress onProgress, void *mto, EMMessageBody::EMMessageBodyType type) {
     EMError error;
     if(!MandatoryCheck(mto, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -88,6 +127,11 @@ HYPHENATE_API void ChatManager_SendMessage(void *client, int callbackId, FUNC_On
                                                 if(onError) onError(error->mErrorCode,error->mDescription.c_str(), callbackId);
                                                 DeleteTsMsgItem(ts);
                                                 return true;
+                                             },
+                                             [=](int progress){
+                                                LOG("Message send in progress %d percent.", progress);
+                                                if(onProgress) onProgress(progress, callbackId);
+                                                return;
                                              }));
     messagePtr->setCallback(callbackPtr);
     CLIENT->getChatManager().sendMessage(messagePtr);
@@ -195,7 +239,7 @@ HYPHENATE_API void ChatManager_RemoveConversation(void *client, const char * con
     LOG("Remove conversation completed.");
 }
 
-HYPHENATE_API void ChatManager_DownloadMessageAttachments(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+HYPHENATE_API void ChatManager_DownloadMessageAttachments(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, FUNC_OnProgress onProgress)
 {
     EMError error;
     if(!MandatoryCheck(messageId, error)) {
@@ -211,22 +255,38 @@ HYPHENATE_API void ChatManager_DownloadMessageAttachments(void *client, int call
         if(onError) onError(error.mErrorCode,error.mDescription.c_str(), callbackId);
         return;
     }
+    
+    std::string msgId(messageId);
+    AddProgressItem(msgId);
+    
     EMCallbackPtr callbackPtr(new EMCallback(gCallbackObserverHandle,
                                              [=]()->bool {
                                                 LOG("Download message attachment succeeds.");
                                                 if(onSuccess) onSuccess(callbackId);
+                                                DeleteProgressItem(msgId);
                                                 return true;
                                              },
                                              [=](const easemob::EMErrorPtr error)->bool{
                                                 LOG("Download message attachment failed with code=%d.", error->mErrorCode);
                                                 if(onError) onError(error->mErrorCode,error->mDescription.c_str(), callbackId);
+                                                DeleteProgressItem(msgId);
                                                 return true;
-                                             }));
+                                             },
+                                             [=](int progress){
+                                                LOG("Download message attachment in progress %d percent.", progress);
+                                                int last_progress = GetLastProgress(msgId);
+                                                if(progress - last_progress >= 5) {
+                                                    if(onProgress) onProgress(progress, callbackId);
+                                                    UpdateProgressMap(msgId, progress);
+                                                }
+                                                return;
+                                             }
+                                             ));
     messagePtr->setCallback(callbackPtr);
     CLIENT->getChatManager().downloadMessageAttachments(messagePtr);
 }
 
-HYPHENATE_API void ChatManager_DownloadMessageThumbnail(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+HYPHENATE_API void ChatManager_DownloadMessageThumbnail(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, FUNC_OnProgress onProgress)
 {
     EMError error;
     if(!MandatoryCheck(messageId, error)) {
@@ -243,17 +303,33 @@ HYPHENATE_API void ChatManager_DownloadMessageThumbnail(void *client, int callba
         if(onError) onError(error.mErrorCode,error.mDescription.c_str(), callbackId);
         return;
     }
+    
+    std::string msgId(messageId);
+    AddProgressItem(msgId);
+    
     EMCallbackPtr callbackPtr(new EMCallback(gCallbackObserverHandle,
                                              [=]()->bool {
                                                 LOG("Download message thumbnail succeeds.");
                                                 if(onSuccess) onSuccess(callbackId);
+                                                DeleteProgressItem(msgId);
                                                 return true;
                                              },
                                              [=](const easemob::EMErrorPtr error)->bool{
                                                 LOG("Download message thumbnail failed with code=%d.", error->mErrorCode);
                                                 if(onError) onError(error->mErrorCode,error->mDescription.c_str(), callbackId);
+                                                DeleteProgressItem(msgId);
                                                 return true;
-                                             }));
+                                             },
+                                             [=](int progress){
+                                                LOG("Download message thumbnail in progress %d percent.", progress);
+                                                int last_progress = GetLastProgress(msgId);
+                                                if(progress - last_progress >= 5) {
+                                                    if(onProgress) onProgress(progress, callbackId);
+                                                    UpdateProgressMap(msgId, progress);
+                                                }
+                                                return;
+                                             }
+                                             ));
     messagePtr->setCallback(callbackPtr);
     CLIENT->getChatManager().downloadMessageThumbnail(messagePtr);
 }
@@ -366,7 +442,7 @@ HYPHENATE_API bool ChatManager_MarkAllConversationsAsRead(void *client)
     return ret;
 }
 
-HYPHENATE_API void ChatManager_RecallMessage(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+HYPHENATE_API void ChatManager_RecallMessage(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, FUNC_OnProgress onProgress)
 {
     EMError error;
     if(!MandatoryCheck(messageId, error)) {
@@ -394,6 +470,11 @@ HYPHENATE_API void ChatManager_RecallMessage(void *client, int callbackId, const
                                                 LOG("Recall message failed with code=%d.", error->mErrorCode);
                                                 if(onError) onError(error->mErrorCode,error->mDescription.c_str(), callbackId);
                                                 return true;
+                                             },
+                                             [=](int progress){
+                                                LOG("Recall message in progress %d percent.", progress);
+                                                if(onProgress) onProgress(progress, callbackId);
+                                                return;
                                              }));
     messagePtr->setCallback(callbackPtr);
     CLIENT->getChatManager().recallMessage(messagePtr, error);

@@ -56,7 +56,7 @@ namespace ChatSDK{
 
 		/** ChatManager Stub **/
 		[DllImport(MyLibName)]
-		internal static extern void ChatManager_SendMessage(IntPtr client, int callbackId, OnSuccess onSuccess, OnErrorV2 onError, IntPtr mto, MessageBodyType type);
+		internal static extern void ChatManager_SendMessage(IntPtr client, int callbackId, OnSuccess onSuccess, OnErrorV2 onError, OnProgressV2 onProgress ,IntPtr mto, MessageBodyType type);
 		
 		[DllImport(MyLibName)]
 		internal static extern void ChatManager_AddListener(IntPtr client, OnMessagesReceived onMessagesReceived,
@@ -74,10 +74,10 @@ namespace ChatSDK{
 		internal static extern void ChatManager_RemoveConversation(IntPtr client, string conversationId, bool isRemoveMessages);
 
 		[DllImport(MyLibName)]
-		internal static extern void ChatManager_DownloadMessageAttachments(IntPtr client, int callbackId, string messageId, OnSuccess onSuccess, OnErrorV2 onError);
+		internal static extern void ChatManager_DownloadMessageAttachments(IntPtr client, int callbackId, string messageId, OnSuccess onSuccess, OnErrorV2 onError, OnProgressV2 onProgress);
 
 		[DllImport(MyLibName)]
-		internal static extern void ChatManager_DownloadMessageThumbnail(IntPtr client, int callbackId, string messageId, OnSuccess onSuccess, OnErrorV2 onError);
+		internal static extern void ChatManager_DownloadMessageThumbnail(IntPtr client, int callbackId, string messageId, OnSuccess onSuccess, OnErrorV2 onError, OnProgressV2 onProgress);
 
 		[DllImport(MyLibName)]
 		internal static extern bool ChatManager_ConversationWithType(IntPtr client, string conversationId, ConversationType type, bool createIfNotExist);
@@ -101,7 +101,7 @@ namespace ChatSDK{
 		internal static extern bool ChatManager_MarkAllConversationsAsRead(IntPtr client);
 
 		[DllImport(MyLibName)]
-		internal static extern void ChatManager_RecallMessage(IntPtr client, int callbackId, string messageId, OnSuccess onSuccess, OnErrorV2 onError);
+		internal static extern void ChatManager_RecallMessage(IntPtr client, int callbackId, string messageId, OnSuccess onSuccess, OnErrorV2 onError, OnProgressV2 onProgress);
 
 		[DllImport(MyLibName)]
 		internal static extern int ChatManager_ResendMessage(IntPtr client, int callbackId, string messageId, OnSuccessResult onSuccessResult, OnSuccess onSuccess, OnErrorV2 onError);

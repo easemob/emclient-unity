@@ -108,5 +108,13 @@ namespace ChatSDK
                 myhandle?.Error(code, desc);
             });
         }
+
+        static public void CallBackOnProgress(int cbId, int progress)
+        {
+            ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
+                myhandle?.Progress(progress);
+            });
+        }
     }
 }
