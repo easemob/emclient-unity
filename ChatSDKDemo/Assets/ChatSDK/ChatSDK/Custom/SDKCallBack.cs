@@ -11,7 +11,7 @@ namespace ChatSDK
     internal delegate void OnErrorV2(int code, string desc, int callbackId);
     internal delegate void OnProgressV2(int progress, int callbackId);
 
-    public delegate void OnSuccess(int callbackId);
+    internal delegate void OnSuccess(int callbackId);
 
     /// <summary>
     /// 执行错误

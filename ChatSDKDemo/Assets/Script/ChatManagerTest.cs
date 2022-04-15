@@ -116,10 +116,12 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     {
         InputAlertConfig config = new InputAlertConfig((dict)=> {
             Message msg = Message.CreateTextSendMessage(dict["to"], dict["content"]);
-           
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
                 onSuccess: () => {
                     UIManager.TitleAlert(transform, "成功", msg.MsgId);
+
+                    //Message msg1 = SDKClient.Instance.ChatManager.LoadMessage(msg.MsgId);
+                    //Debug.Log($"body content:{msg1.MsgId}");
                 },
                 onProgress: (progress) => {
                     UIManager.TitleAlert(transform, "发送进度", progress.ToString());
@@ -318,7 +320,23 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
             SDKClient.Instance.ChatManager.DownloadAttachment(dict["msgId"], new CallBack(
                 onSuccess: () => {
-                    UIManager.TitleAlert(transform, "下载附件成功", "完成"); ;
+                    UIManager.TitleAlert(transform, "下载附件成功", "完成");
+
+                    //Message msg = SDKClient.Instance.ChatManager.LoadMessage("Message ID");
+                    //if (msg != null)
+                    //{
+                    //    if (msg.Body.Type == ChatSDK.MessageBodyType.VIDEO) {
+                    //        ChatSDK.MessageBody.VideoBody vb = (ChatSDK.MessageBody.VideoBody)msg.Body;
+
+                           //从本地获取短视频文件路径
+                    //        string imgLocalUri = vb.LocalPath;
+                    //    }
+
+                    //}
+                    // else
+                    //{
+                    //     Debug.Log($"未找到消息");
+                    //}
                 },
                 onProgress: (progress) => {
                     UIManager.TitleAlert(transform, "下载附件进度", progress.ToString());
@@ -330,7 +348,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
         });
         
-
+        
         // Download Attatchment
         InputAlertConfig config = new InputAlertConfig((dict) => {
 

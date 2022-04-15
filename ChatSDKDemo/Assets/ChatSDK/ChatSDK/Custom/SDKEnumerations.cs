@@ -270,11 +270,6 @@
         Summary, 
     }
 
-    public enum COMMON_ERR_CODE
-    {
-        ERROR_NULL_PTR = -7
-    }
-
     /// <summary>
     /// Message中属性类型
     /// STRVECTOR 对应 List<string>类型

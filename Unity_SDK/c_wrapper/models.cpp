@@ -186,6 +186,74 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
 
 }
 
+void UpdateMessageTO(void *mto, EMMessagePtr msg)
+{
+    vector<EMMessageBodyPtr> bodies = msg->bodies();
+    if(bodies.size() == 0)
+        return;
+    
+    EMMessageBodyPtr body = bodies[0];
+    
+    // general messageTO setting
+    auto amto = static_cast<MessageTO *>(mto);
+    amto->MsgId = msg->msgId().c_str();
+    amto->ServerTime = msg->timestamp();
+    
+    switch(body->type()) {
+        case EMMessageBody::TEXT:
+        {
+            //auto tm = static_cast<TextMessageTO *>(mto);
+        }
+            break;
+        case EMMessageBody::LOCATION:
+        {
+            //auto lm = static_cast<LocationMessageTO *>(mto);
+        }
+            break;
+        case EMMessageBody::COMMAND:
+        {
+            //auto cm = static_cast<CmdMessageTO *>(mto);
+        }
+            break;
+        case EMMessageBody::FILE:
+        {
+            //auto fm = static_cast<FileMessageTO *>(mto);
+            //EMFileMessageBodyPtr fmptr = std::dynamic_pointer_cast<EMFileMessageBody>(body);
+            //fm->body.LocalPath = fmptr->localPath().c_str();
+            //fm->body.DisplayName = fmptr->displayName().c_str();
+
+        }
+            break;
+        case EMMessageBody::IMAGE:
+        {
+            //auto im = static_cast<ImageMessageTO *>(mto);
+            //auto body = new EMImageMessageBody(im->body.LocalPath, im->body.ThumbnailLocalPath);
+
+        }
+            break;
+        case EMMessageBody::VOICE:
+        {
+            //auto vm = static_cast<VoiceMessageTO *>(mto);
+            //auto body = new EMVoiceMessageBody(vm->body.LocalPath, vm->body.Duration);
+
+        }
+            break;
+        case EMMessageBody::VIDEO:
+        {
+            //auto im = static_cast<VideoMessageTO *>(mto);
+            //auto body = new EMVideoMessageBody(im->body.LocalPath, im->body.ThumbnaiLocationPath);
+
+
+        }
+            break;
+        case EMMessageBody::CUSTOM:
+        {
+            //auto im = static_cast<CustomMessageTO *>(mto);
+        }
+            break;
+    }
+}
+
 /*
  attrs may looks like(most quote symbol are removed, and all items in {} are string):
  {

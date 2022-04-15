@@ -105,7 +105,23 @@ namespace ChatSDK
             }
         }
 
-       
+        public void AddMultiDeviceDelegate(IMultiDeviceDelegate multiDeviceDelegate)
+        {
+            if (!CallbackManager.Instance().multiDeviceListener.delegater.Contains(multiDeviceDelegate))
+            {
+                CallbackManager.Instance().multiDeviceListener.delegater.Add(multiDeviceDelegate);
+            }
+        }
+
+        public void DeleteMultiDeviceDelegate(IMultiDeviceDelegate multiDeviceDelegate)
+        {
+            if (CallbackManager.IsQuit()) return;
+            if (CallbackManager.Instance().multiDeviceListener.delegater.Contains(multiDeviceDelegate))
+            {
+                CallbackManager.Instance().multiDeviceListener.delegater.Remove(multiDeviceDelegate);
+            }
+        }
+
         /// <summary>
         /// 初始化sdk
         /// </summary>

@@ -58,7 +58,7 @@ namespace ChatSDK
         /// <param name="maxUserCount">用户上限</param>
         /// <param name="members">邀请用户</param>
         /// <param name="handle">结果回调</param>
-        public abstract void CreateRoom(string subject, string descriptions = null, string welcomeMsg = null, int maxUserCount = 300, List<string> members = null, ValueCallBack<Room> handle = null);
+        public abstract void CreateRoom(string name, string descriptions = null, string welcomeMsg = null, int maxUserCount = 300, List<string> members = null, ValueCallBack<Room> handle = null);
 
         /// <summary>
         /// 销毁聊天室
