@@ -158,6 +158,11 @@ bool STOP = false;
 
 void StartTimer(int interval, TIMER_FUNC timer_func)
 {
+    if (interval <= 0) {
+        LOG("ERROR: StartTimer failed since interval is invalid:%d.", interval);
+        return;
+    }
+
     PARAM_INTERVAL = interval;
     if (ISRUN) return;
 

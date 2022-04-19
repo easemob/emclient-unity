@@ -49,25 +49,49 @@ EMConnectionCallbackListener *gConnectionCallbackListener = nullptr;
 EMMultiDevicesListener *gMultiDevicesListener = nullptr;
 EMChatConfigsPtr configs;
 
-void SetTokenInAutoLogin(const std::string& username, const std::string& token, const std::string expireTS) {
+bool SetTokenInAutoLogin(const std::string& username, const std::string& token, const std::string expireTS) {
+
+    if (username.size() == 0 || token.size() == 0) {
+        LOG("Error: SetTokenInAutoLogin failed due to empty username or token!");
+        return false;
+    }
+
+    if (expireTS.size() > 0) {
+
+        int64_t expireTsInt = atoll(expireTS.c_str()); // milli-second
+        expireTsInt = expireTsInt / 1000; // second
+
+        time_t nowTS = time(NULL);
+
+        int64_t availablePeriod = expireTsInt - nowTS;
+        // no available time or expireTs is same with last time, then no need to update related fields
+        if (availablePeriod <= 0 ) {
+            LOG("Error: SetTokenInAutoLogin failed due to expired expireTS! nowTS:%ld, expireTS:%ld", nowTS, expireTsInt);
+            return false;
+        }
+
+        //expireTs is same with last time, then no need to update related fields
+        if (global_autologin_config.expireTsInt == expireTsInt) {
+            LOG("SetTokenInAutoLogin failed due to same expireTS!");
+            return false;
+        }
+
+        global_autologin_config.expireTS = expireTS;
+        global_autologin_config.expireTsInt = expireTsInt;
+        global_autologin_config.availablePeriod = availablePeriod;
+    } 
+    else {
+        // Note: if expireTS is empty, but token is not, means
+        // current using easemob token to login, not agora token!
+        global_autologin_config.expireTS = "";
+        global_autologin_config.expireTsInt = 0;
+        global_autologin_config.availablePeriod = 0;
+    }
+
     global_autologin_config.userName = username;
     global_autologin_config.passwd = "";
     global_autologin_config.token = token;
-    global_autologin_config.expireTS = expireTS;
-    
-    // Note: if expireTS is empty, but token is not, means
-    // current using easemob token to login, not agora token!
-    if(global_autologin_config.expireTS.size() > 0) {
-        time_t nowTS = time(NULL); // second
-        int64_t expireTsInt = atoll(global_autologin_config.expireTS.c_str()); // milli-second
-        
-        global_autologin_config.expireTsInt = (int)(expireTsInt/1000); // second
-        global_autologin_config.availablePeriod = global_autologin_config.expireTsInt - nowTS;
-        
-        if(global_autologin_config.availablePeriod < 0) {
-            LOG("Error: SetTokenInAutoLogin availablePeriod is less than zero!");
-        }
-    }
+    return true;
 }
 
 void SetPasswdInAutoLogin(const std::string& username, const std::string& passwd) {
@@ -595,8 +619,13 @@ HYPHENATE_API void Client_RenewAgoraToken(void *client, const char *agoraToken)
         return;
     }
     
+    // Check expireTS first, then renewToken
+    if (!SetTokenInAutoLogin(global_autologin_config.userName, token, expireTS)) {
+        LOG("Error: Client_RenewAgoraToken failed due to failure of SetTokenInAutoLogin.");
+        return;
+    }
+
     CLIENT->renewToken(token);
-    SetTokenInAutoLogin(global_autologin_config.userName, token, expireTS);
     SaveAutoLoginConfigToFile();
     
     StartTimer(GetTokenCheckInterval((int)global_autologin_config.availablePeriod), TokenCheck);
