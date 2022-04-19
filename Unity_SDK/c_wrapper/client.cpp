@@ -453,6 +453,13 @@ HYPHENATE_API void Client_LoginToken(void *client, FUNC_OnSuccess_With_Result on
     if(onSuccess) onSuccess((void **)data, DataType::String, 1, -1);
 }
 
+HYPHENATE_API bool Client_isConnected(void* client) {
+    return CLIENT->isConnected();
+}
+HYPHENATE_API bool Client_isLoggedIn(void* client) {
+    return CLIENT->isLoggedIn();
+}
+
 // this function must be executed after logout!!!
 HYPHENATE_API void Client_ClearResource(void *client) {
     if(true == G_LOGIN_STATUS) {

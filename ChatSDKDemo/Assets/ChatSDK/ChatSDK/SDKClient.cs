@@ -77,7 +77,7 @@ namespace ChatSDK
         /// 当前是否连接到服务器
         /// </summary>
 
-        public bool IsConnected { get => _Sdk.IsConnected; }
+        public bool IsConnected { get => _Sdk.IsConnected(); }
 
         /// <summary>
         /// 当前用户的token

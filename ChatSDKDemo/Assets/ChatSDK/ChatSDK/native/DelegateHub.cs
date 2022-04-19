@@ -85,7 +85,6 @@ namespace ChatSDK
             OnConnected = () =>
             {
                 Debug.Log("Connection established.");
-                client.IsConnected = true;
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IConnectionDelegate listener in CallbackManager.Instance().connectionListener.delegater)
                     {
@@ -96,7 +95,6 @@ namespace ChatSDK
             OnDisconnected = (int info) =>
             {
                 Debug.Log("Connection discontinued.");
-                client.IsConnected = false;
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IConnectionDelegate listener in CallbackManager.Instance().connectionListener.delegater)
                     {
