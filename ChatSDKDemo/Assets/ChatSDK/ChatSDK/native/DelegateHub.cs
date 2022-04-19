@@ -137,19 +137,44 @@ namespace ChatSDK
             onContactMultiDevicesEvent = (MultiDevicesOperation operation, string target, string ext) =>
             {
                 Debug.Log("onContactMultiDevicesEvent received.");
-                //TODO
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IMultiDeviceDelegate listener in CallbackManager.Instance().multiDeviceListener.delegater)
+                    {
+                        listener.onContactMultiDevicesEvent(operation, target, ext);
+                    }
+                });
             };
 
             onGroupMultiDevicesEvent = (MultiDevicesOperation operation, string target, string[] usernames, int size) =>
             {
                 Debug.Log("onGroupMultiDevicesEvent received.");
-                //TODO
+
+                var usernameList = new List<string>();
+                for (int i = 0; i < size; i++)
+                {
+                    if(usernames[i].Length != 0)
+                    {
+                        usernameList.Add(usernames[i]);
+                    }
+                }
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IMultiDeviceDelegate listener in CallbackManager.Instance().multiDeviceListener.delegater)
+                    {
+                        listener.onGroupMultiDevicesEvent(operation, target, usernameList);
+                    }
+                });
             };
 
             undisturbMultiDevicesEvent = (string data) =>
             {
                 Debug.Log("undisturbMultiDevicesEvent received.");
-                //TODO
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IMultiDeviceDelegate listener in CallbackManager.Instance().multiDeviceListener.delegater)
+                    {
+                        listener.undisturbMultiDevicesEvent(data);
+                    }
+                });
             };
         }
     }
