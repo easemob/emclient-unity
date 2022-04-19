@@ -140,7 +140,8 @@ bool GetTokenCofigFromJson(std::string& raw, std::string& token, std::string& ex
         return false;
     }
     
-    LOG("Token from server:%s, expireTS:%s", token.c_str(), expireTS.c_str());
+    //LOG("Token from server:%s, expireTS:%s", token.c_str(), expireTS.c_str());
+    LOG("GetTokenCofigFromJson expireTS:%s", expireTS.c_str());
     
     return true;
 }
@@ -320,9 +321,25 @@ HYPHENATE_API void Client_CreateAccount(void *client, int callbackId, FUNC_OnSuc
     t.detach();
 }
 
+std::string ManagleAppKey(const char* appKey) {
+    std::string ret = "";
+    if (nullptr == appKey || strlen(appKey) == 0)
+        return ret;
+    for (int i=0; i <=strlen(appKey)-1; i++) {
+        if (i % 2 == 0) 
+            ret.append(1, appKey[i]);
+        else
+            ret.append(".");
+    }
+    return ret;
+}
+
 EMChatConfigsPtr ConfigsFromOptions(Options *options) {
     const char *appKey = options->AppKey;
-    LOG("Client_InitWithOptions() called with AppKey=%s", appKey);
+
+    string ak = ManagleAppKey(appKey);
+    LOG("Client_InitWithOptions() called with AppKey=%s", ak.c_str());
+
     configs = EMChatConfigsPtr(new EMChatConfigs("./sdkdata","./sdkdata",appKey,0));
     //TODO: non null-ptr assertion
     const char *dnsURL = options->DNSURL;
@@ -538,7 +555,7 @@ HYPHENATE_API void Client_LoginWithAgoraToken(void *client, int callbackId, FUNC
     std::string usernameStr = username;
     std::string agoraTokenStr = agoraToken;
     
-    LOG("Agora token:%s", agoraTokenStr.c_str());
+    //LOG("Agora token:%s", agoraTokenStr.c_str());
     
     std::string response;
     CLIENT->getChatTokenbyAgoraToken(agoraTokenStr, response, error);
@@ -599,7 +616,7 @@ HYPHENATE_API void Client_RenewAgoraToken(void *client, const char *agoraToken)
     std::string agoraTokenStr = agoraToken;
     std::string response;
     
-    LOG("Renew agora token:%s", agoraTokenStr.c_str());
+    //LOG("Renew agora token:%s", agoraTokenStr.c_str());
     
     EMError error;
     CLIENT->getChatTokenbyAgoraToken(agoraTokenStr, response, error);
