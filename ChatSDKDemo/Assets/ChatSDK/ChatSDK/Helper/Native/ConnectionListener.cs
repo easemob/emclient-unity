@@ -38,26 +38,29 @@ namespace ChatSDK {
             }
         }
 
-        internal void OnTokenNoficationed(string i, string desc)
-        {
+        internal void OnTokenExpired(string i) {
             if (delegater != null)
             {
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IConnectionDelegate connectionDelegate in delegater)
                     {
-                        connectionDelegate.OnTokenNotificationed(int.Parse(i), desc);
+                        connectionDelegate.OnTokenExpired();
                     }
                 });
             }
         }
 
-
-        internal void OnTokenNoficationedFromMobile(string jsonString) {
-            JSONNode jo = JSON.Parse(jsonString);
-            string code = jo["code"].Value;
-            string desc = jo["desc"].Value;
-            OnTokenNoficationed(code, desc);
-
+        internal void OnTokenWillExpire(string i) {
+            if (delegater != null)
+            {
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IConnectionDelegate connectionDelegate in delegater)
+                    {
+                        connectionDelegate.OnTokenWillExpire();
+                    }
+                });
+            }
         }
+
     }
 }

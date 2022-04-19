@@ -51,18 +51,12 @@
 
 
 - (void)tokenWillExpire:(int)aErrorCode {
-    NSDictionary *info = @{@"code": @(aErrorCode), @"desc":@"token will expire"};
-    UnitySendMessage(Connection_Obj,
-                     "OnTokenNotificationed",
-                     [Transfrom JsonObjectToCSString:info]);
+    UnitySendMessage(Connection_Obj,"OnTokenWillExpire", "");
 }
 
 
 - (void)tokenDidExpire:(int)aErrorCode {
-    NSDictionary *info = @{@"code": @(aErrorCode), @"desc":@"Token expired"};
-    UnitySendMessage(Connection_Obj,
-                     "OnTokenNotificationed",
-                     [Transfrom JsonObjectToCSString:info]);
+    UnitySendMessage(Connection_Obj, "OnTokenExpired", "");
 }
 
 
