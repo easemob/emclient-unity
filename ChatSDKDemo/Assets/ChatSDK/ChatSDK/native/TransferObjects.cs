@@ -662,7 +662,7 @@ namespace ChatSDK
         string StringV;
         List<string> StringVecV;
         string JsonStringV;
-        Dictionary<string, AttributeValue> AttributeV;
+        //Dictionary<string, AttributeValue> AttributeV;
 
         public static AttributeValue Of(in object value, AttributeValueType type)
         {
@@ -699,10 +699,11 @@ namespace ChatSDK
             {
                 return Of((List<string>)value);
             }
+            /*
             else if (type == AttributeValueType.ATTRIBUTEVALUE)
             {
                 return Of((Dictionary<string, AttributeValue>)value);
-            }
+            }*/
             else
             {
                 return null;
@@ -793,6 +794,7 @@ namespace ChatSDK
             return result;
         }
 
+        /*
         public static AttributeValue Of(in Dictionary<string, AttributeValue> value)
         {
             var result = new AttributeValue
@@ -801,7 +803,7 @@ namespace ChatSDK
                 AttributeV = value
             };
             return result;
-        }
+        }*/
 
         public object GetAttributeValue(AttributeValueType type)
         {
@@ -841,10 +843,11 @@ namespace ChatSDK
             {
                 return StringVecV;
             }
+            /*
             else if (type == AttributeValueType.ATTRIBUTEVALUE)
             {
                 return AttributeV;
-            }
+            }*/
             else
             {
                 return null;
@@ -909,7 +912,7 @@ namespace ChatSDK
                     _type = "jstr";
                     value = JsonStringV;
                     break;
-
+                /*
                 case AttributeValueType.ATTRIBUTEVALUE:
                     _type = "attr";
                     jo_attr = new JSONObject();
@@ -919,7 +922,7 @@ namespace ChatSDK
                     }
                     value = ""; // here use JSONObject, not string
                     break;
-
+                */
                 default:
                     throw new NotImplementedException();
             }
@@ -1019,6 +1022,7 @@ namespace ChatSDK
                     result.VType = AttributeValueType.JSONSTRING;
                     result.JsonStringV = value;
                     break;
+                    /*
                 case "attr":
                     result.VType = AttributeValueType.ATTRIBUTEVALUE;
                     result.AttributeV = new Dictionary<string, AttributeValue>();
@@ -1046,6 +1050,7 @@ namespace ChatSDK
                         result.AttributeV.Add(k, FromJsonObject(jo_attr[k]));
                     }
                     break;
+                    */
                 default:
                     break;
             }
@@ -1086,6 +1091,7 @@ namespace ChatSDK
                 case AttributeValueType.JSONSTRING:
                     Debug.Log($"type: {AttributeValueType.JSONSTRING.ToString()}, value is {value.JsonStringV.ToString()}");
                     break;
+                /*
                 case AttributeValueType.ATTRIBUTEVALUE:
                     Debug.Log($"type: {AttributeValueType.ATTRIBUTEVALUE.ToString()}");
                     foreach (var dict_item in value.AttributeV)
@@ -1094,6 +1100,7 @@ namespace ChatSDK
                         PrintAttribute(dict_item.Value);
                     }
                     break;
+                */
                 default:
                     break;
             }
@@ -1202,7 +1209,7 @@ namespace ChatSDK
             list2.Add("level2-array3");
             Message.SetAttribute(level2_map, "level2-list", list2, AttributeValueType.STRVECTOR);
 
-            Message.SetAttribute(level2_map, "level2-attr", level3_map, AttributeValueType.ATTRIBUTEVALUE);
+            //Message.SetAttribute(level2_map, "level2-attr", level3_map, AttributeValueType.ATTRIBUTEVALUE);
             
             // make level1
             Dictionary<string, AttributeValue> level1_map = new Dictionary<string, AttributeValue>();
@@ -1245,7 +1252,7 @@ namespace ChatSDK
             list1.Add("level1-array3");
             Message.SetAttribute(level1_map, "level1-list", list1, AttributeValueType.STRVECTOR);
 
-            Message.SetAttribute(level1_map, "level1-attr", level2_map, AttributeValueType.ATTRIBUTEVALUE);
+            //Message.SetAttribute(level1_map, "level1-attr", level2_map, AttributeValueType.ATTRIBUTEVALUE);
 
             msg.Attributes = level1_map;
 
