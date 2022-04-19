@@ -49,12 +49,57 @@
     [self onDisconnected:1];
 }
 
+
+- (void)tokenWillExpire:(int)aErrorCode {
+    NSDictionary *info = @{@"code": @(aErrorCode), @"desc":@"token will expire"};
+    UnitySendMessage(Connection_Obj,
+                     "OnTokenNotificationed",
+                     [Transfrom JsonObjectToCSString:info]);
+}
+
+
+- (void)tokenDidExpire:(int)aErrorCode {
+    NSDictionary *info = @{@"code": @(aErrorCode), @"desc":@"Token expired"};
+    UnitySendMessage(Connection_Obj,
+                     "OnTokenNotificationed",
+                     [Transfrom JsonObjectToCSString:info]);
+}
+
+
 - (void)onDisconnected:(int)code {
     UnitySendMessage(Connection_Obj, "OnDisconnected", [Transfrom NSStringToCSString:[NSString stringWithFormat:@"%d",code]]);
 }
 
 - (void)onConnected {
     UnitySendMessage(Connection_Obj, "OnConnected", "");
+}
+
+
+#pragma mark - EMMultiDevicesDelegate
+- (void)multiDevicesContactEventDidReceive:(EMMultiDevicesEvent)aEvent
+                                  username:(NSString *)aUsername
+                                       ext:(NSString *)aExt {
+    NSDictionary *info = @{@"event": @(aEvent), @"username":aUsername, @"ext":aExt};
+    UnitySendMessage(MultiDevicesListener_Obj,
+                     "OnContactMultiDevicesEvent",
+                     [Transfrom JsonObjectToCSString:info]);
+}
+
+
+- (void)multiDevicesGroupEventDidReceive:(EMMultiDevicesEvent)aEvent
+                                 groupId:(NSString *)aGroupId
+                                     ext:(id)aExt {
+    NSArray *usernames = aExt;
+    NSDictionary *info = @{@"event": @(aEvent), @"groupId":aGroupId, @"usernames":[Transfrom NSStringFromJsonObject:usernames]};
+    UnitySendMessage(MultiDevicesListener_Obj,
+                     "OnGroupMultiDevicesEvent",
+                     [Transfrom JsonObjectToCSString:info]);
+}
+
+- (void)multiDevicesUndisturbEventNotifyFormOtherDeviceData:(NSString *)undisturbData {
+    UnitySendMessage(MultiDevicesListener_Obj,
+                     "OndisturbMultiDevicesEvent",
+                     [Transfrom NSStringToCSString:undisturbData]);
 }
 
 @end

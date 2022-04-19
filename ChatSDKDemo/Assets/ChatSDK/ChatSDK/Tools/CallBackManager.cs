@@ -13,6 +13,7 @@ namespace ChatSDK {
         static string Callback_Obj = "unity_chat_callback_obj";
 
         static string Connection_Obj = "unity_chat_emclient_connection_obj";
+        static string MultiDevicesListener_Obj = "unity_chat_emclient_multi_devices_obj";
         static string ChatManagerListener_Obj = "unity_chat_emclient_chatmanager_delegate_obj";
         static string ContactManagerListener_Obj = "unity_chat_emclient_contactmanager_delegate_obj";
         static string GroupManagerListener_Obj = "unity_chat_emclient_groupmanager_delegate_obj";

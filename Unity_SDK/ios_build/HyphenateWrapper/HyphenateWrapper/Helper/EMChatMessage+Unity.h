@@ -9,8 +9,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface EMMessage (Unity)
-+ (EMMessage *)fromJson:(NSDictionary *)aJson;
+@interface EMChatMessage (Unity)
++ (EMChatMessage *)fromJson:(NSDictionary *)aJson;
 - (NSDictionary *)toJson;
 @end
 

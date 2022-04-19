@@ -69,11 +69,18 @@ namespace ChatSDK
         public override void LoginWithAgoraToken(string username, string token, CallBack handle = null)
         {
             //TODO: add code
+            JSONObject obj = new JSONObject();
+            obj.Add("username", username);
+            obj.Add("token", token);
+            ChatAPIIOS.Client_HandleMethodCall("loginWithAgoraToken", obj.ToString(), handle?.callbackId);
         }
 
         public override void RenewAgoraToken(string token)
         {
             //TODO: add code
+            JSONObject obj = new JSONObject();
+            obj.Add("token", token);
+            ChatAPIIOS.Client_HandleMethodCall("renewToken", obj.ToString());
         }
 
         /*
@@ -85,17 +92,17 @@ namespace ChatSDK
 
         internal override void StartLog(string logFilePath)
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
         }
 
         internal override void StopLog()
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
         }
 
         public override void ClearResource()
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
         }
 
     }

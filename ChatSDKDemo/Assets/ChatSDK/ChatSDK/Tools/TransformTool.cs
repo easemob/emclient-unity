@@ -522,5 +522,15 @@ namespace ChatSDK
         {
             return new UserInfo(jsonString);
         }
+
+
+        static internal List<string> StringListFromStringArray(string[] ary) {
+            List<string> list = new List<string>();
+            for (int i = 0; i < ary.Length; i++) {
+                list.Add(ary[i]);
+            }
+
+            return list;
+        }
     }
 }

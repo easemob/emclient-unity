@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using SimpleJSON;
 using UnityEngine;
 
 namespace ChatSDK {
@@ -48,6 +49,15 @@ namespace ChatSDK {
                     }
                 });
             }
+        }
+
+
+        internal void OnTokenNoficationedFromMobile(string jsonString) {
+            JSONNode jo = JSON.Parse(jsonString);
+            string code = jo["code"].Value;
+            string desc = jo["desc"].Value;
+            OnTokenNoficationed(code, desc);
+
         }
     }
 }

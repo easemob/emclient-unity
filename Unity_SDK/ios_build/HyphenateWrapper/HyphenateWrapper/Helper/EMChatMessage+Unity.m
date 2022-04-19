@@ -5,12 +5,12 @@
 //  Created by 杜洁鹏 on 2021/6/7.
 //
 
-#import "EMMessage+Unity.h"
+#import "EMChatMessage+Unity.h"
 #import "Transfrom.h"
 
-@implementation EMMessage (Unity)
+@implementation EMChatMessage (Unity)
 
-+ (EMMessage *)fromJson:(NSDictionary *)aJson
++ (EMChatMessage *)fromJson:(NSDictionary *)aJson
 {
     NSString *bodyType = aJson[@"bodyType"];
     NSString *bodyString = aJson[@"body"];
@@ -32,13 +32,13 @@
     
     NSDictionary *dict = nil;
     if (![aJson[@"attributes"] isKindOfClass:[NSNull class]]) {
-        // TODO:
+        dict = [EMChatMessage extFromAttributeString:aJson[@"attributes"]];
     }
-    EMMessage *msg = [[EMMessage alloc] initWithConversationID:conversationId
-                                                          from:from
-                                                            to:to
-                                                          body:body
-                                                           ext:dict];
+    EMChatMessage *msg = [[EMChatMessage alloc] initWithConversationID:conversationId
+                                                                  from:from
+                                                                    to:to
+                                                                  body:body
+                                                                   ext:dict];
     if (aJson[@"msgId"]) {
         msg.messageId = aJson[@"msgId"];
     }
@@ -68,13 +68,13 @@
     ret[@"hasDeliverAck"] = @(self.isDeliverAcked);
     ret[@"hasReadAck"] = @(self.isReadAcked);
     ret[@"serverTime"] = @(self.timestamp);
-    ret[@"attributes"] = self.ext ?: @{};
     ret[@"localTime"] = @(self.localTime);
     ret[@"status"] = @([self statusToInt:self.status]);
     ret[@"chatType"] = @([self chatTypeToInt:self.chatType]);
     ret[@"direction"] = self.direction == EMMessageDirectionSend ? @"send" : @"rec";
     ret[@"bodyType"] = [self.body typeToString];
     ret[@"body"] = [Transfrom NSStringFromJsonObject:[self.body toJson]];
+    ret[@"attributes"] = [EMChatMessage extToAttributeString:self.ext];
     
     return ret;
 }
@@ -166,6 +166,103 @@
             break;
     }
     return type;
+}
+
++ (NSDictionary *)extFromAttributeString:(NSString *)str {
+    if (str.length == 0) {
+        return nil;
+    }
+    
+    NSMutableDictionary *ret = [NSMutableDictionary dictionary];
+    
+    NSDictionary *tmpDict = [Transfrom NSStringToJsonObject:str];
+    
+    for (NSString *key in tmpDict.allKeys) {
+        NSDictionary *valueDict = tmpDict[key];
+        NSString *type = valueDict[@"type"];
+        NSString *value = valueDict[@"value"];
+        if ([type isEqualToString:@"b"]) {
+            if ([value.lowercaseString isEqualToString:@"false"]) {
+                ret[key] = @(NO);
+            }else {
+                ret[key] = @(YES);
+            }
+        }
+        else if ([type isEqualToString:@"i"]) {
+            ret[key] = @([value intValue]);
+        }
+        else if ([type isEqualToString:@"ui"]) {
+            ret[key] = @([value intValue]);
+        }
+        else if ([type isEqualToString:@"l"]) {
+            ret[key] = @([value longLongValue]);
+        }
+        else if ([type isEqualToString:@"f"]) {
+            ret[key] = @([value floatValue]);
+        }
+        else if ([type isEqualToString:@"d"]) {
+            ret[key] = @([value doubleValue]);
+        }
+        else if ([type isEqualToString:@"str"]) {
+            ret[key] = value;
+        }
+        else if ([type isEqualToString:@"strv"]) {
+            ret[key] = value;
+        }
+        else if ([type isEqualToString:@"jstr"]) {
+            NSDictionary *infoDict = [Transfrom NSStringToJsonObject:value];
+            ret[key] = infoDict;
+        }
+    }
+    
+    return ret;
+}
+
++ (NSString *)extToAttributeString:(NSDictionary *)ext {
+    if (ext.allKeys.count == 0) {
+        return nil;
+    }
+    
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    for (NSString *key in ext.allKeys) {
+        id value = ext[key];
+        if ([value isKindOfClass:[NSNumber class]]) {
+            if (strcmp([value objCType], @encode(float)) == 0)
+            {
+                dict[key] = @{@"type":@"f",@"value":value};
+            }
+            else if (strcmp([value objCType], @encode(double)) == 0)
+            {
+                dict[key] = @{@"type":@"d",@"value":value};
+            }
+            else if (strcmp([value objCType], @encode(int)) == 0)
+            {
+                dict[key] = @{@"type":@"i",@"value":value};
+            }
+            else if (strcmp([value objCType], @encode(BOOL)) == 0)
+            {
+                dict[key] = @{@"type":@"b",@"value":value};
+            }
+            else if (strcmp([value objCType], @encode(long)) == 0)
+            {
+                dict[key] = @{@"type":@"l",@"value":value};
+            }
+        }
+        else if ([value isKindOfClass:[NSString class]]) {
+            dict[key] = @{@"type":@"str",@"value":value};
+        }
+        else if ([value isKindOfClass:[NSArray class]]) {
+            dict[key] = @{@"type":@"strv", @"value": value};
+        }
+        else if ([value isKindOfClass:[NSDictionary class]]) {
+            NSString *str = [Transfrom NSStringFromJsonObject:value];
+            dict[key] = @{@"type":@"jstr", @"value":str};
+        }
+    }
+    
+    NSString *ret = [Transfrom NSStringFromJsonObject:dict];
+    
+    return ret;
 }
 
 @end
@@ -302,9 +399,11 @@
     double latitude = [aJson[@"latitude"] doubleValue];
     double longitude = [aJson[@"longitude"] doubleValue];
     NSString *address = aJson[@"address"];
+    NSString *buildingName = aJson[@"buildingName"];
     EMLocationMessageBody *ret  = [[EMLocationMessageBody alloc] initWithLatitude:latitude
                                                                         longitude:longitude
-                                                                          address:address];
+                                                                          address:address
+                                                                     buildingName:buildingName];
     return ret;
 }
 
@@ -313,6 +412,7 @@
     ret[@"address"] = self.address;
     ret[@"latitude"] = @(self.latitude);
     ret[@"longitude"] = @(self.longitude);
+    ret[@"buildingName"] = self.buildingName;
     return ret;
 }
 
@@ -375,7 +475,7 @@
 - (NSDictionary *)toJson {
     NSMutableDictionary *ret = [[super toJson] mutableCopy];
     ret[@"event"] = self.event;
-    ret[@"params"] = self.ext;
+    ret[@"params"] = self.customExt;
     return ret;
 }
 
