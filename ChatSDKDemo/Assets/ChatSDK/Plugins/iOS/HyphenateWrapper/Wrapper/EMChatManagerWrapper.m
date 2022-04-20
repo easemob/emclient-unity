@@ -8,7 +8,7 @@
 #import "EMChatManagerWrapper.h"
 #import <HyphenateChat/HyphenateChat.h>
 #import "EMConversation+Unity.h"
-#import "EMMessage+Unity.h"
+#import "EMChatMessage+Unity.h"
 #import "EMCursorResult+Unity.h"
 #import "Transfrom.h"
 #import "EMChatListener.h"
@@ -58,7 +58,7 @@
         return;
     }
     
-    EMMessage *msg =[EMClient.sharedClient.chatManager getMessageWithMessageId:msgId];
+    EMChatMessage *msg =[EMClient.sharedClient.chatManager getMessageWithMessageId:msgId];
     if (!msg) {
         error = [[EMError alloc] initWithDescription:@"Message not found" code: EMErrorMessageInvalid];
         [self onError:callbackId error:error];
@@ -68,7 +68,7 @@
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.chatManager downloadMessageAttachment:msg progress:^(int progress) {
         [self onProgress:progress callbackId:callId];
-    } completion:^(EMMessage *message, EMError *error) {
+    } completion:^(EMChatMessage *message, EMError *error) {
         if (error) {
             [self onError:callId error:error];
         }else {
@@ -87,7 +87,7 @@
         return;
     }
     
-    EMMessage *msg =[EMClient.sharedClient.chatManager getMessageWithMessageId:msgId];
+    EMChatMessage *msg =[EMClient.sharedClient.chatManager getMessageWithMessageId:msgId];
     if (!msg) {
         error = [[EMError alloc] initWithDescription:@"Message not found" code: EMErrorMessageInvalid];
         [self onError:callbackId error:error];
@@ -97,7 +97,7 @@
     __block NSString *callId = callbackId;
     [EMClient.sharedClient.chatManager downloadMessageThumbnail:msg progress:^(int progress) {
         [self onProgress:progress callbackId:callId];
-    } completion:^(EMMessage *message, EMError *error) {
+    } completion:^(EMChatMessage *message, EMError *error) {
         if (error) {
             [self onError:callId error:error];
         }else {
@@ -189,7 +189,7 @@
     NSMutableArray *msgs = [NSMutableArray array];
     
     for (NSDictionary *jsonObject in jsonObjectList) {
-        EMMessage *msg = [EMMessage fromJson:jsonObject];
+        EMChatMessage *msg = [EMChatMessage fromJson:jsonObject];
         [msgs addObject:msg];
     }
     
@@ -222,7 +222,7 @@
         return nil;
     }
     
-    EMMessage *msg = [EMClient.sharedClient.chatManager getMessageWithMessageId:msgId];
+    EMChatMessage *msg = [EMClient.sharedClient.chatManager getMessageWithMessageId:msgId];
     if (!msg) {
         return nil;
     }
@@ -271,7 +271,7 @@
     
     __block NSString *callId = callbackId;
     
-    EMMessage *msg = [EMClient.sharedClient.chatManager getMessageWithMessageId:msgId];
+    EMChatMessage *msg = [EMClient.sharedClient.chatManager getMessageWithMessageId:msgId];
     if (!msg) {
         EMError *aError = [[EMError alloc] initWithDescription:@"message not found" code:EMErrorMessageInvalid];
         [self onError:callbackId error:aError];
@@ -281,7 +281,7 @@
                                             progress:^(int progress)
      {
         [self onProgress:progress callbackId:callId];
-    } completion:^(EMMessage *message, EMError *error) {
+    } completion:^(EMChatMessage *message, EMError *error) {
         if (error) {
             [self onError:callId error:error];
         }else {
@@ -311,7 +311,7 @@
             [self onError:callId error:aError];
         }else {
             NSMutableArray *ary = [NSMutableArray array];
-            for (EMMessage *msg in aMessages) {
+            for (EMChatMessage *msg in aMessages) {
                 [ary addObject:[Transfrom NSStringFromJsonObject:[msg toJson]]];
             }
             [self onSuccess:@"List<EMMessage>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:ary]];
@@ -345,12 +345,12 @@
         return nil;
     }
     __block NSString *callId = callbackId;
-    EMMessage *msg = [EMMessage fromJson:param] ;
+    EMChatMessage *msg = [EMChatMessage fromJson:param] ;
     [EMClient.sharedClient.chatManager sendMessage:msg
                                           progress:^(int progress)
     {
         [self onProgress:progress callbackId:callId];
-    } completion:^(EMMessage *message, EMError *error) {
+    } completion:^(EMChatMessage *message, EMError *error) {
         if (error) {
             [self onError:callId error:error];
         }else {
@@ -369,7 +369,7 @@
         return;
     }
     __block NSString *callId = callbackId;
-    EMMessage *msg = [EMClient.sharedClient.chatManager getMessageWithMessageId:msgId];
+    EMChatMessage *msg = [EMClient.sharedClient.chatManager getMessageWithMessageId:msgId];
     if (!msg) {
         EMError *aError = [[EMError alloc] initWithDescription:@"Message not found" code: EMErrorMessageInvalid];
         [self onError:callbackId error:aError];
@@ -392,9 +392,9 @@
         if (!msgId) {
             break;
         }
-        EMMessage *msg = [EMMessage fromJson:param];
+        EMChatMessage *msg = [EMChatMessage fromJson:param];
         dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-        [EMClient.sharedClient.chatManager updateMessage:msg completion:^(EMMessage *aMessage, EMError *aError) {
+        [EMClient.sharedClient.chatManager updateMessage:msg completion:^(EMChatMessage *aMessage, EMError *aError) {
             ret = aError ? YES : NO;
             dispatch_semaphore_signal(semaphore);
         }];

@@ -255,8 +255,8 @@
             dict[key] = @{@"type":@"strv", @"value": value};
         }
         else if ([value isKindOfClass:[NSDictionary class]]) {
-            NSString *str = [Transfrom NSStringFromJsonObject:value];
-            dict[key] = @{@"type":@"jstr", @"value":str};
+//            NSString *str = [Transfrom NSStringFromJsonObject:value];
+            dict[key] = @{@"type":@"jstr", @"value":value};
         }
     }
     

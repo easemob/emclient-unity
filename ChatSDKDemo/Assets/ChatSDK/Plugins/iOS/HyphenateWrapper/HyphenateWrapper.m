@@ -22,6 +22,10 @@ void Client_HandleMethodCall(const char* methodName, const char* jsonString, con
         [EMClientWrapper.instance login:dic callbackId:callId];
     }else if ([method isEqualToString:@"logout"]) {
         [EMClientWrapper.instance logout:dic callbackId:callId];
+    }else if ([method isEqualToString:@"loginWithAgoraToken"]) {
+        [EMClientWrapper.instance loginWithAgoraToken:dic callbackId:callId];
+    }else if ([method isEqualToString:@"renewToken"]) {
+        [EMClientWrapper.instance renewToken:dic callbackId:callId];
     }
 }
 
