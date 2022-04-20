@@ -129,20 +129,45 @@ public class EMMessageHelper {
             Iterator iterator = data.keys();
             while (iterator.hasNext()) {
                 String key = iterator.next().toString();
-                Object result = data.get(key);
-                if (result.getClass().getSimpleName().equals("Integer")) {
-                    message.setAttribute(key, (Integer) result);
-                } else if (result.getClass().getSimpleName().equals("Boolean")) {
-                    message.setAttribute(key, (Boolean) result);
-                } else if (result.getClass().getSimpleName().equals("Long")) {
-                    message.setAttribute(key, (Long) result);
-                } else if (result.getClass().getSimpleName().equals("JSONObject")) {
-                    message.setAttribute(key, (JSONObject) result);
-                } else if (result.getClass().getSimpleName().equals("JSONArray")) {
-                    message.setAttribute(key, (JSONArray) result);
-                } else {
-                    message.setAttribute(key, data.getString(key));
+                JSONObject result = data.getJSONObject(key);
+                String valueType = result.getString("type");
+                String value = result.getString("value");
+                if (valueType.equals("b")) {
+                    if (value.toLowerCase().equals("false")) {
+                        message.setAttribute(key, false);
+                    }else {
+                        message.setAttribute(key, true);
+                    }
+                }else if (valueType.equals("i")) {
+                    message.setAttribute(key,Integer.valueOf(value));
+                }else if (valueType.equals("ui")) {
+                    message.setAttribute(key, Integer.valueOf(value));
+                }else if (valueType.equals("l")) {
+                    message.setAttribute(key, Long.valueOf(value));
+                }else if (valueType.equals("str")) {
+                    message.setAttribute(key, value);
+                }else if (valueType.equals("strv")) {
+                    
+                }else if (valueType.equals("jstr")) {
+
                 }
+
+
+
+
+//                if (result.getClass().getSimpleName().equals("Integer")) {
+//                    message.setAttribute(key, (Integer) result);
+//                } else if (result.getClass().getSimpleName().equals("Boolean")) {
+//                    message.setAttribute(key, (Boolean) result);
+//                } else if (result.getClass().getSimpleName().equals("Long")) {
+//                    message.setAttribute(key, (Long) result);
+//                } else if (result.getClass().getSimpleName().equals("JSONObject")) {
+//                    message.setAttribute(key, (JSONObject) result);
+//                } else if (result.getClass().getSimpleName().equals("JSONArray")) {
+//                    message.setAttribute(key, (JSONArray) result);
+//                } else {
+//                    message.setAttribute(key, data.getString(key));
+//                }
             }
         }
         return message;

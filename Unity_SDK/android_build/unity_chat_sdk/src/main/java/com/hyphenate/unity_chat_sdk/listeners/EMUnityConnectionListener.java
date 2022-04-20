@@ -21,4 +21,14 @@ public class EMUnityConnectionListener implements EMConnectionListener {
         Log.e("unity_sdk","连接断开 " + i);
         UnityPlayer.UnitySendMessage(EMSDKMethod.Connection_Obj, "OnDisconnected", String.valueOf(i));
     }
+
+    @Override
+    public void onTokenExpired() {
+        UnityPlayer.UnitySendMessage(EMSDKMethod.Connection_Obj, "OnTokenExpired", String.valueOf(108));
+    }
+
+    @Override
+    public void onTokenWillExpire() {
+        UnityPlayer.UnitySendMessage(EMSDKMethod.Connection_Obj, "OnTokenWillExpire", String.valueOf(109));
+    }
 }
