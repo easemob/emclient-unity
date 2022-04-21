@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using SimpleJSON;
+using UnityEngine;
 
 namespace ChatSDK
 {
@@ -263,6 +264,7 @@ namespace ChatSDK
 
         internal Message(string jsonString)
         {
+            Debug.Log($"jsonString : {jsonString}");
             if (jsonString != null)
             {
                 JSONNode jn = JSON.Parse(jsonString);
@@ -281,7 +283,8 @@ namespace ChatSDK
                     Status = MessageStatusFromInt(jo["status"].AsInt);
                     MessageType = MessageTypeFromInt(jo["chatType"].AsInt);
                     Direction = MessageDirectionFromString(jo["direction"].Value);
-                    Attributes = TransformTool.JsonStringToAttributes(jo["attributes"].Value);
+                    Debug.Log($"111 : ?? {jo["attributes"]}");
+                    Attributes = TransformTool.JsonStringToAttributes(jo["attributes"].ToString());
                     Body = IMessageBody.Constructor(jo["body"].Value, jo["bodyType"].Value);
                 }
             }

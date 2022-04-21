@@ -1,13 +1,13 @@
-/*!
+/**
  *  \~chinese
  *  @header EMVoiceMessageBody.h
- *  @abstract 语音消息体
+ *  @abstract 语音消息体。
  *  @author Hyphenate
  *  @version 3.00
  *
  *  \~english
  *  @header EMVoiceMessageBody.h
- *  @abstract Voice message body
+ *  @abstract The voice message body.
  *  @author Hyphenate
  *  @version 3.00
  */
@@ -16,21 +16,21 @@
 
 #import "EMFileMessageBody.h"
 
-/*!
+/**
  *  \~chinese 
- *  语音消息体
+ *  语音消息体。
  *
  *  \~english
- *  Voice message body
+ *  The voice message body.
  */
 @interface EMVoiceMessageBody : EMFileMessageBody
 
-/*!
+/**
  *  \~chinese 
- *  语音时长, 秒为单位
+ *  语音时长，单位为秒。SDK 没有规定取值范围，用户可以根据需求设置。
  *
  *  \~english 
- *  Voice duration, in seconds
+ *  The voice duration, in seconds. You can customize the length accordingly.
  */
 @property (nonatomic) int duration;
 

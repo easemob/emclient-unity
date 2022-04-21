@@ -1,4 +1,4 @@
-/*!
+/**
  *  \~chinese
  *  @header EMLocationMessageBody.h
  *  @abstract 位置消息体
@@ -16,42 +16,73 @@
 
 #import "EMMessageBody.h"
 
-/*!
+/**
  *  \~chinese
- *  位置消息体
+ *  位置消息体。
  *
  *  \~english
- *  Location message body
+ *  The location message body.
  */
 @interface EMLocationMessageBody : EMMessageBody
 
-/*!
+/**
  *  \~chinese
- *  纬度
+ *  纬度。
  *
  *  \~english
- *  Location latitude
+ *  The location latitude.
  */
 @property (nonatomic) double latitude;
 
-/*!
+/**
  *  \~chinese
- *  经度
+ *  经度。
  *
  *  \~english
- *  Loctaion longitude
+ *  The location longitude.
  */
 @property (nonatomic) double longitude;
 
-/*!
+/**
  *  \~chinese
- *  地址信息
+ *  地址信息。
  *
  *  \~english
- *  Address
+ *  The address.
  */
 @property (nonatomic, copy) NSString *address;
 
+/**
+ *  \~chinese
+ *  建筑物名称
+ *
+ *  \~english
+ *  buildingName
+ */
+@property (nonatomic, copy) NSString *buildingName;
+
+/**
+ *  \~chinese
+ *  初始化位置消息体
+ *
+ *  @param aLatitude   纬度。
+ *  @param aLongitude  经度。
+ *  @param aAddress    地理位置信息。
+ *  
+ *  @result 位置消息体实例。
+ *
+ *  \~english
+ *  Initializes a location message body instance.
+ *
+ *  @param aLatitude   The latitude.
+ *  @param aLongitude  The longitude.
+ *  @param aAddress    The address.
+ *
+ *  @result The location message body instance.
+ */
+- (instancetype)initWithLatitude:(double)aLatitude
+                       longitude:(double)aLongitude
+                         address:(NSString *)aAddress;
 /*!
  *  \~chinese
  *  初始化位置消息体
@@ -59,7 +90,8 @@
  *  @param aLatitude   纬度
  *  @param aLongitude  经度
  *  @param aAddress    地理位置信息
- *  
+ *  @param aBuildingName    建筑物名称
+ *
  *  @result 位置消息体实例
  *
  *  \~english
@@ -68,11 +100,13 @@
  *  @param aLatitude   Latitude
  *  @param aLongitude  Longitude
  *  @param aAddress    Address
+ *  @param aBuildingName    BuildingName
  *
  *  @result Location message body instance
  */
 - (instancetype)initWithLatitude:(double)aLatitude
                        longitude:(double)aLongitude
-                         address:(NSString *)aAddress;
+                         address:(NSString *)aAddress
+                    buildingName:(NSString *)aBuildingName;
 
 @end

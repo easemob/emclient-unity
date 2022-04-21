@@ -11,4 +11,4 @@
 
 #define EM_DEPRECATED_IOS(_hyphenateIntro, _hyphenateDep, ...) __attribute__((deprecated("")))
 
-#endif /* EMCommonDefs_h */
+#endif /** EMCommonDefs_h */

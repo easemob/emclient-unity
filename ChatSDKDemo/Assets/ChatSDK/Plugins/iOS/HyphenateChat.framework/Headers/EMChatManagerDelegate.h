@@ -1,28 +1,29 @@
-/*!
+/**
  *  \~chinese
  *  @header EMChatManagerDelegate.h
- *  @abstract 聊天相关代理协议类
+ *  @abstract 聊天相关代理协议类。
  *  @author Hyphenate
  *  @version 3.00
  *
  *  \~english
  *  @header EMChatManagerDelegate.h
- *  @abstract This protocol defines chat related callbacks
+ *  @abstract This protocol defines chat related callbacks.
  *  @author Hyphenate
  *  @version 3.00
  */
 
 #import <Foundation/Foundation.h>
+#import "EMRecallMessageInfo.h"
 
-@class EMMessage;
+@class EMChatMessage;
 @class EMError;
 
-/*!
+/**
  *  \~chinese
- *  聊天相关代理协议类
+ *  聊天相关回调的协议类。
  *
  *  \~english
- *  Chat related callbacks
+ *  The chat related callbacks.
  */
 @protocol EMChatManagerDelegate <NSObject>
 
@@ -30,269 +31,312 @@
 
 #pragma mark - Conversation
 
-/*!
+/**
  *  \~chinese
- *  会话列表发生变化代理
+ *  会话列表发生变化的回调。
  *
- *  @param aConversationList  会话列表<EMConversation>
+ *  @param aConversationList  会话列表。 <EMConversation>
  *
  *  \~english
- *  Delegate method will be invoked when the conversation list has changed
+ *  Occurs when the conversation list changes.
  *
- *  @param aConversationList  Conversation  NSArray<EMConversation>
+ *  @param aConversationList  The conversation NSArray. <EMConversation>
  */
 - (void)conversationListDidUpdate:(NSArray *)aConversationList;
 
 #pragma mark - Message
 
-/*!
+/**
  *  \~chinese
- *  收到消息代理
+ *  收到消息的回调。
  *
- *  @param aMessages  消息列表<EMMessage>
+ *  @param aMessages  消息列表。
  *
  *  \~english
- *  Invoked when receiving new messages
+ *  Occurs when the SDK receives new messages.
  *
- *  @param aMessages  Receivecd message NSArray<EMMessage>
+ *  @param aMessages  The received messages. An NSArray of the <EMMessage> objects.
  */
 - (void)messagesDidReceive:(NSArray *)aMessages;
 
-/*!
+/**
  *  \~chinese
- *  收到Cmd消息代理
+ *  收到 CMD 消息代理。
  *
- *  @param aCmdMessages  Cmd消息列表<EMMessage>
+ *  @param aCmdMessages  CMD 消息列表。 
  *
  *  \~english
- *  Invoked when receiving command messages
+ *  Occurs when receiving command messages.
  *
- *  @param aCmdMessages  Command message NSArray<EMMessage>
+ *  @param aCmdMessages  The command message NSArray. 
  */
 - (void)cmdMessagesDidReceive:(NSArray *)aCmdMessages;
 
-/*!
+/**
  *  \~chinese
- *  收到已读回执代理
+ *  收到已读回执代理。
  *
- *  @param aMessages  已读消息列表<EMMessage>
+ *  @param aMessages  已读消息列表。 
  *
  *  \~english
- *  Invoked when receiving read acknowledgement in message list
+ *  Occurs when receiving read acknowledgement in message list.
  *
- *  @param aMessages  Acknowledged message NSArray<EMMessage>
+ *  @param aMessages  The read messages.
  */
 - (void)messagesDidRead:(NSArray *)aMessages;
 
-/*!
+/**
  *  \~chinese
- *  收到群消息已读回执代理
+ *  收到群消息已读回执代理。
  *
- *  @param aMessages  已读消息列表<EMGroupMessageAck>
+ *  @param aMessages  已读消息列表。
  *
  *  \~english
- *  Invoked when receiving read acknowledgement in message list
+ *  Occurs when the SDK receives read receipts for group messages.
  *
- *  @param aMessages  Acknowledged message NSArray<EMGroupMessageAck>
+ *  @param aMessages  The acknowledged message NSArray.
+ * 
+ *
  */
-- (void)groupMessageDidRead:(EMMessage *)aMessage
+- (void)groupMessageDidRead:(EMChatMessage *)aMessage
                   groupAcks:(NSArray *)aGroupAcks;
 
-/*!
+/**
  *  \~chinese
- *  所有群已读消息发生变化代理
+ *  当前用户所在群已读消息数量发生变化的回调。
  *
  *  \~english
- *  All group read messages count have changed
+ *  Occurs when the current group read messages count changed.
  *
  */
 - (void)groupMessageAckHasChanged;
 
 /**
  * \~chinese
- * 收到会话已读回调代理
+ * 收到会话已读回调代理。
  *
- * @param from  CHANNEL_ACK 发送方
- * @param to      CHANNEL_ACK 接收方
+ * @param from  会话已读回执的发送方。
+ * @param to    CHANNEL_ACK 接收方。
  *
- *  发送会话已读是我方多设备：
- *     则from参数值是“我方登录”id，to参数值是“会话方”会话id，此会话“会话方”发送的消息会全部置为已读isRead为YES
- *  发送会话已读是会话方：
- *     则from参数值是“会话方”会话id，to参数值是“我方登录”id，此会话“我方”发送的消息的isReadAck会全部置为YES
- *  注：此会话既会话方id所代表的会话
+ *  发送会话已读的是我方多设备：
+ *     则 from 参数值是“我方登录” ID，to 参数值是“会话方”会话 ID，此会话“会话方”发送的消息会全部置为已读 isRead 为 YES。
+ *  发送会话已读的是会话方：
+ *     则 from 参数值是“会话方”会话 ID，to 参数值是“我方登录” ID，此会话“我方”发送的消息的 isReadAck 会全部置为 YES。
+ *  注：此会话既会话方 ID 所代表的会话。
  *
  * \~english
- * received conversation read ack
- * @param from  the username who send channel_ack
- * @param to      the username who receive channel_ack
+ * Occurs when receiving the conversation read receipt.
+ * @param from  The username who send channel_ack.
+ * @param to    The username who receive channel_ack.
  *
- *  send conversaion read is our multiple devices:
- *       the value of the "FROM" parameter is current login ID, and the value of the "to" parameter is the conversaion ID. All the messages sent by the conversaion are set to read： "isRead" is set to YES.
- *  send conversaion read is The other party:
- *       the value of the "FROM" parameter is the conversaion ID, and the value of the "to" parameter is current login ID. The "isReaAck" of messages sent by login id in this session will all be set to YES.
- *  Note: This convsersaion is the convsersaion represented by the convsersaion id.
+ *  If the conversaion readack is from the current login ID's multiple devices:
+ *       The value of the "FROM" parameter is current login ID, and the value of the "to" parameter is the conversation ID. All the messages sent by the conversation are set to read： "isRead" is set to YES.
+ *  If the send conversation readack is from the conversation ID's device:
+ *       The value of the "FROM" parameter is the conversation ID, and the value of the "to" parameter is current login ID. The "isReaAck" of messages sent by login ID in this session will all be set to YES.
+ *  Note: This conversation is the conversation represented by the conversation ID.
  *
  *
  */
 - (void)onConversationRead:(NSString *)from to:(NSString *)to;
 
-/*!
+/**
  *  \~chinese
- *  收到消息送达回执代理
+ *  发送方收到消息已送达的回调。
  *
- *  @param aMessages  送达消息列表<EMMessage>
- *
+ *  @param aMessages  送达消息列表。 
+ * 
  *  \~english
- *  Invoked when receiving delivered acknowledgement in message list
+ *  Occurs when receiving delivered acknowledgement in message list.
  *
- *  @param aMessages  Acknowledged message NSArray<EMMessage>
+ *  @param aMessages  The acknowledged message NSArray. 
  */
 - (void)messagesDidDeliver:(NSArray *)aMessages;
 
-/*!
+/**
  *  \~chinese
- *  收到消息撤回代理
+ *  收到消息撤回代理。
  *
- *  @param aMessages  撤回消息列表<EMMessage>
+ *  @param aMessages  撤回消息列表。 
  *
  *  \~english
- * Delegate method will be invoked when receiving recall for message list
+ * Occurs when receiving recall for message list.
  *
- *  @param aMessages  Recall message NSArray<EMMessage>
+ *  @param aMessages  The recall message NSArray. 
  */
-- (void)messagesDidRecall:(NSArray *)aMessages;
+- (void)messagesInfoDidRecall:(NSArray<EMRecallMessageInfo *> *)aRecallMessagesInfo;
 
-/*!
+/**
  *  \~chinese
- *  消息状态发生变化代理
+ *  消息状态发生变化的回调。消息状态包括消息创建，发送，发送成功，发送失败。
  *
- *  需要给发送消息的callback参数传入nil，此回调才会生效
+ *  需要给发送消息的 callback 参数传入 nil，此回调才会生效。
  *
- *  @param aMessage  状态发生变化的消息
- *  @param aError    出错信息
+ *  @param aMessage  状态发生变化的消息。
+ *  @param aError    出错信息。
  *
  *  \~english
- *  Invoked when message status has changed
+ *  Occurs when message status has changed. You need to set the parameter as nil.
  *
- *  @param aMessage  Message whose status has changed
- *  @param aError    Error info
+ *  @param aMessage  The message whose status has changed.
+ *  @param aError    The error information.
  */
-- (void)messageStatusDidChange:(EMMessage *)aMessage
+- (void)messageStatusDidChange:(EMChatMessage *)aMessage
                          error:(EMError *)aError;
 
-/*!
+/**
  *  \~chinese
- *  消息附件状态发生改变代理
+ *  消息附件状态发生改变代理。
  *
- *  @param aMessage  附件状态发生变化的消息
- *  @param aError    错误信息
+ *  @param aMessage  附件状态发生变化的消息。
+ *  @param aError    错误信息。
  *
  *  \~english
- *  Invoked when message attachment status has changed
+ *  Occurs when message attachment status changed.
  *
- *  @param aMessage  Message attachment status has changed
- *  @param aError    Error
+ *  @param aMessage  The message attachment status has changed.
+ *  @param aError    The error information.
  */
-- (void)messageAttachmentStatusDidChange:(EMMessage *)aMessage
+- (void)messageAttachmentStatusDidChange:(EMChatMessage *)aMessage
                                    error:(EMError *)aError;
 
 
 #pragma mark - Deprecated methods
 
-/*!
+/**
  *  \~chinese
- *  会话列表发生变化代理
+ *  收到消息撤回代理。
  *
- *  @param aConversationList  会话列表<EMConversation>
+ *  @param aMessages  撤回消息列表<EMChatMessage>
  *
  *  \~english
- *  The conversation list has changed
+ *  Delegate method will be invoked when receiving recall for message list.
  *
- *  @param aConversationList  Conversation NSArray<EMConversation>
+ *  @param aMessages  Recall message NSArray<EMChatMessage>
+ */
+- (void)messagesDidRecall:(NSArray *)aMessages __deprecated_msg("Use -messagesInfoDidRecall: instead");
+
+/*!
+ *  \~chinese
+ *  会话列表发生变化代理。
+ *  
+ *  已废弃，请用 {@link conversationListDidUpdate:} 代替。
+ *
+ *  @param aConversationList  会话列表。
+ *
+ *  \~english
+ *  Occurs when the conversation list changed.
+ * 
+ *  Deprecated. Please use  {@link conversationListDidUpdate:}  instead.
+ *
+ *  @param aConversationList  The conversation NSArray. 
  */
 - (void)didUpdateConversationList:(NSArray *)aConversationList __deprecated_msg("Use -conversationListDidUpdate: instead");
 
-/*!
+/**
  *  \~chinese
- *  收到消息代理
+ *  收到消息代理。
+ * 
+ *  已废弃，请用 {@link messagesDidReceive:} 代替。
  *
- *  @param aMessages  消息列表<EMMessage>
+ *  @param aMessages  消息列表。
  *
  *  \~english
- *  Received messages
+ *  Occurs when received messages.
+ * 
+ *  Deprecated. Please use  {@link messagesDidReceive:}  instead.
  *
- *  @param aMessages  Message NSArray<EMMessage>
+ *  @param aMessages The message NSArray. 
  */
 - (void)didReceiveMessages:(NSArray *)aMessages __deprecated_msg("Use -messagesDidReceive: instead");
 
-/*!
+/**
  *  \~chinese
- *  收到Cmd消息代理
+ *  收到 CMD 消息代理。
+ * 
+ *  已废弃，请用 {@link cmdMessagesDidReceive:} 代替。
  *
- *  @param aCmdMessages  Cmd消息列表<EMMessage>
+ *  @param aCmdMessages  CMD 消息列表。
  *
  *  \~english
- *  Received cmd messages
+ *  Occurs when received cmd messages.
+ * 
+ *  Deprecated. Please use  {@link cmdMessagesDidReceive:}  instead.
  *
- *  @param aCmdMessages  Cmd message NSArray<EMMessage>
+ *  @param aCmdMessages  Cmd message NSArray. 
  */
 - (void)didReceiveCmdMessages:(NSArray *)aCmdMessages __deprecated_msg("Use -cmdMessagesDidReceive: instead");
 
-/*!
+/**
  *  \~chinese
- *  收到已读回执代理
+ *  收到已读回执代理。
+ * 
+ *  已废弃，请用 {@link messagesDidRead:} 代替。
  *
- *  @param aMessages  已读消息列表<EMMessage>
+ *  @param aMessages  已读消息列表。
  *
  *  \~english
- *  Received read acks
+ *  Occurs when receives read acks.
+ * 
+ *  Deprecated. Please use  {@link messagesDidRead:}  instead.
  *
- *  @param aMessages  Read acked message NSArray<EMMessage>
+ *  @param aMessages  Read acked message NSArray. 
  */
 - (void)didReceiveHasReadAcks:(NSArray *)aMessages __deprecated_msg("Use -messagesDidRead: instead");
 
-/*!
+/**
  *  \~chinese
- *  收到消息送达回执代理
+ *  收到消息送达回执代理。
+ * 
+ *  已废弃，请用 {@link messagesDidDeliver:} 代替。
  *
- *  @param aMessages  送达消息列表<EMMessage>
+ *  @param aMessages  送达消息列表。
  *
  *  \~english
- *  Received deliver acks
+ *  Occurs when receives deliver acks.
+ * 
+ *  Deprecated. Please use  {@link messagesDidDeliver:}  instead.
  *
- *  @param aMessages  Deliver acked message NSArray<EMMessage>
+ *  @param aMessages  The deliver acked message NSArray. 
  */
 - (void)didReceiveHasDeliveredAcks:(NSArray *)aMessages __deprecated_msg("Use -messagesDidDeliver: instead");
 
-/*!
+/**
  *  \~chinese
- *  消息状态发生变化代理
+ *  消息状态发生变化代理。
+ * 
+ *  已废弃，请用 {@link messageStatusDidChange:error:} 代替。
  *
- *  @param aMessage  状态发生变化的消息
- *  @param aError    出错信息
+ *  @param aMessage  状态发生变化的消息。
+ *  @param aError    出错信息。
  *
  *  \~english
- *  Message status has changed
+ *  Occurs when message status changed.
+ * 
+ *  Deprecated. Please use  {@link messageStatusDidChange:error:}  instead.
  *
- *  @param aMessage  Message whose status changed
- *  @param aError    Error info
+ *  @param aMessage  Message whose status changed.
+ *  @param aError    The error information.
  */
-- (void)didMessageStatusChanged:(EMMessage *)aMessage
+- (void)didMessageStatusChanged:(EMChatMessage *)aMessage
                           error:(EMError *)aError __deprecated_msg("Use -messageStatusDidChange:error: instead");
 
-/*!
+/**
  *  \~chinese
- *  消息附件状态发生改变代理
+ *  消息附件状态发生改变代理。
+ * 
+ *  已废弃，请用 {@link messageAttachmentStatusDidChange:error:} 代替。
  *  
- *  @param aMessage  附件状态发生变化的消息
- *  @param aError    错误信息
+ *  @param aMessage  附件状态发生变化的消息。
+ *  @param aError    错误信息。
  *
  *  \~english
- *  Attachment status has changed
+ *  Occurs when the attachment status has changed.
+ * 
+ *  Deprecated. Please use  {@link messageAttachmentStatusDidChange:error: }  instead.
  *
- *  @param aMessage  Message whose attachment status changed
- *  @param aError    Error
+ *  @param aMessage  Message whose attachment status changed.
+ *  @param aError    The error information.
  */
-- (void)didMessageAttachmentsStatusChanged:(EMMessage *)aMessage
+- (void)didMessageAttachmentsStatusChanged:(EMChatMessage *)aMessage
                                      error:(EMError *)aError __deprecated_msg("Use -messageAttachmentStatusDidChange:error: instead");
 @end

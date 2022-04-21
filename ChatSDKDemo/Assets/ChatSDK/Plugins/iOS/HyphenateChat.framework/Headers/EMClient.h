@@ -1,4 +1,4 @@
-/*!
+/**
  *  @header EMClient.h
  *  @abstract SDK Client
  *  @author Hyphenate
@@ -8,481 +8,572 @@
 #import <Foundation/Foundation.h>
 
 #import "EMClientDelegate.h"
+#import "EMError.h"
 #import "EMMultiDevicesDelegate.h"
 #import "EMOptions.h"
 #import "EMPushOptions.h"
-#import "EMError.h"
 
 #import "IEMChatManager.h"
+#import "IEMChatroomManager.h"
 #import "IEMContactManager.h"
 #import "IEMGroupManager.h"
-#import "IEMChatroomManager.h"
 #import "IEMPushManager.h"
 #import "IEMUserInfoManager.h"
+#import "IEMTranslateManager.h"
 
 #import "EMDeviceConfig.h"
+#import "EMLocalNotificationManager.h"
+#import "EMTranslationResult.h"
 
-/*!
+/**
  *  \~chinese
- *  服务检查枚举类型
+ *  检查类型的枚举。
+ *  开发者可以根据需求来调用 `serviceCheckWithUsername` 方法进行检查。该方法为异步方法，如果出现报错，可以确认错误信息。
  *
  *  \~english
- *  Type of server check
+ *  This enum lists the server diagnostic tests which are run for the current user when you call EMClient::serviceCheckWithUsername. This is an asynchronous method. If there is an error, check the error code to know the error information.
  */
-typedef enum {
-    EMServerCheckAccountValidation = 0,     /*! \~chinese 账号检查类型  \~english Valid account */
-    EMServerCheckGetDNSListFromServer,      /*! \~chinese 获取服务列表检查类型  \~english Check get dns from server */
-    EMServerCheckGetTokenFromServer,        /*! \~chinese 获取token检查类型  \~english Check get token from server */
-    EMServerCheckDoLogin,                   /*! \~chinese 登录检查类型  \~english Check login mode */
-    EMServerCheckDoLogout,                  /*! \~chinese 登出检查类型  \~english Check logout mode */
-} EMServerCheckType;
+typedef NS_ENUM(NSInteger, EMServerCheckType) {
+  EMServerCheckAccountValidation = 0, /** \~chinese 账号检查类型，账号是否有效的检查。  \~English The check of the account validity. */
+  EMServerCheckGetDNSListFromServer,  /** \~chinese 获取服务列表检查类型  \~english The check of getting DNS from the server. */
+  EMServerCheckGetTokenFromServer,    /** \~chinese 获取 token 检查类型  \~english The check of getting the token from the server. */
+  EMServerCheckDoLogin,               /** \~chinese 登录检查类型  \~english The check of the login mode. */
+  EMServerCheckDoLogout,              /** \~chinese 登出检查类型  \~english The check of the logout mode. */
+};
 
-/*!
+/**
  * \~chinese
- *  IM SDK的入口，负责登录登出及连接管理等，由此可以获得其他模块的入口，例如：群组模块
+ *  该类为 SDK 的入口类，负责登录登出及连接管理等，由此可以获得其他模块的入口，例如：群组模块。
  *  [EMClient sharedClient].groupManager;
  *
  * \~english
- *  IM SDK Client, entrance of SDK, used to login, logout, and get access IM modules, such as
+ *  The EMClient, which is the entry point of the Chat SDK. You can log in, log out, and access other functionalities such as group and chatroom with this class.
  *  [EMClient sharedClient].groupManager;
  */
 @interface EMClient : NSObject
 {
-    EMPushOptions *_pushOptions;
+  EMPushOptions *_pushOptions;
 }
 
-/*!
+/**
  *  \~chinese
- *  SDK版本号
+ *  SDK 版本号。
  *
  *  \~english
- *  SDK version
+ *  The SDK version number.
  */
-@property (nonatomic, strong, readonly) NSString *version;
+@property(nonatomic, strong, readonly) NSString *version;
 
-/*!
+/**
  *  \~chinese
- *  当前登录账号
+ *  当前登录账号。
  *
  *  \~english
- *  Current logged in user's username
+ *  The ID of the user currently logged into your chat app.
  */
-@property (nonatomic, strong, readonly) NSString *currentUsername;
+@property(nonatomic, strong, readonly) NSString *currentUsername;
 
-/*!
+/**
  *  \~chinese
- *  SDK的设置选项
+ *  SDK 的设置选项。
  *
  *  \~english
- *  SDK setting options
+ *  The SDK setting options. For example, whether to use https by default.
  */
-@property (nonatomic, strong, readonly) EMOptions *options;
+@property(nonatomic, strong, readonly) EMOptions *options;
 
-
-/*!
+/**
  *  \~chinese
- *  聊天模块
+ *  聊天模块。
  *
  *  \~english
- *  Chat Management
+ *  The chat manager module.
  */
-@property (nonatomic, strong, readonly) id<IEMChatManager> chatManager;
+@property(nonatomic, strong, readonly) id<IEMChatManager> chatManager;
 
-/*!
+/**
  *  \~chinese
- *  好友模块
+ *  好友模块。
  *
  *  \~english
- *  Contact Management
+ *  The contact manager module.
  */
-@property (nonatomic, strong, readonly) id<IEMContactManager> contactManager;
+@property(nonatomic, strong, readonly) id<IEMContactManager> contactManager;
 
-/*!
+/**
  *  \~chinese
- *  群组模块
+ *  群组模块。
  *
  *  \~english
- *  Group Management
+ *  The group manager module.
  */
-@property (nonatomic, strong, readonly) id<IEMGroupManager> groupManager;
+@property(nonatomic, strong, readonly) id<IEMGroupManager> groupManager;
 
-/*!
+/**
  *  \~chinese
- *  聊天室模块
+ *  聊天室模块。
  *
  *  \~english
- *  Chat Room Management
+ *  The chat room manager module.
  */
-@property (nonatomic, strong, readonly) id<IEMChatroomManager> roomManager;
+@property(nonatomic, strong, readonly) id<IEMChatroomManager> roomManager;
 
-
-/*!
+/**
  *  \~chinese
- *  推送模块
+ *  推送模块。
  *
  *  \~english
- *  push Management
+ *   The push manager module.
  */
-@property (nonatomic, strong, readonly) id<IEMPushManager> pushManager;
-/*!
+@property(nonatomic, strong, readonly) id<IEMPushManager> pushManager;
+/**
  *  \~chinese
- *  SDK是否自动登录上次登录的账号
+ *  是否让用户自动使用上次登录的账号登录。如果因密码错误或账号异常等原因登录失败，则该参数会被重置为 NO；如果你想使用自动登录，则需要重新将该参数设为 YES。
  *
  *  \~english
- *  If SDK will automatically log into with previously logged in session. If the current login failed, then isAutoLogin attribute will be reset to NO, you need to set it back to YES in order to allow automatic login
- *  1. password changed
- *  2. deactivate, forced logout, etc
+ *  Whether to let a user automatically log in to the chat server with the username used in the previous session. If the login fails, for example, because of a wrong password or the username deactivated, the isAutoLogin parameter is reset to NO, and you need to set it back to YES to allow automatic login.
+ *
  */
-@property (nonatomic, readonly) BOOL isAutoLogin;
+@property(nonatomic, readonly) BOOL isAutoLogin;
 
-/*!
+/**
  *  \~chinese
- *  用户是否已登录
+ *  用户是否已登录。
  *
  *  \~english
- *  If a user logged in
+ *  Returns `true` if the current user is logged in.
  */
-@property (nonatomic, readonly) BOOL isLoggedIn;
+@property(nonatomic, readonly) BOOL isLoggedIn;
 
-/*!
+/**
  *  \~chinese
- *  是否连上聊天服务器
+ *  SDK 是否连上聊天服务器。
  *
  *  \~english
- *  Whether connection  to Hyphenate IM server
+ *  Whether the SDK is connected to the chat server.
  */
-@property (nonatomic, readonly) BOOL isConnected;
+@property(nonatomic, readonly) BOOL isConnected;
 
-
-/*!
+/**
  *  \~chinese
- *  当前用户访问环信服务器使用的token
+ *  当前用户访问聊天服务器使用的 token。用户第一次登陆的时候需要用用户 ID 和密码登陆，成功时返回 token，以后即可用 token 登陆。
  *
  *  \~english
- *  Current user hyphenate token
+ *  The token for accessing the current chat.
  */
-@property (nonatomic, readonly) NSString *accessUserToken;
+@property(nonatomic, readonly) NSString *accessUserToken;
 
-/*!
+/**
  *  \~chinese
- *  用户属性模块
+ *  用户属性模块。
  *
  *  \~english
- *  User attribute related
+ *  The user attributes manager module.
  */
-@property (nonatomic, strong, readonly) id<IEMUserInfoManager> userInfoManager;
+@property(nonatomic, strong, readonly) id<IEMUserInfoManager> userInfoManager;
 
-/*!
+
+@property (nonatomic, strong, readonly) id<IEMTranslateManager> translateManager;
+
+/**
  *  \~chinese
- *  获取SDK实例
+ *  Client 类是 chat 的入口，在调用任何其他方法前，需要先调用该方法创建一个 Client 实例。
  *
  *  \~english
- *  Get SDK singleton instance
+ *  Creates a Client instance. The Client class is the entry to the Chat SDK. You need to call this method to create a Client instance before calling any other method.
  */
 + (instancetype)sharedClient;
 
-
 #pragma mark - Delegate
 
-/*!
+/**
  *  \~chinese
- *  添加回调代理
+ *  添加回调代理。
  *
- *  @param aDelegate  要添加的代理
- *  @param aQueue     执行代理方法的队列
+ *  @param aDelegate  要添加的代理。
+ *  @param aQueue     执行代理方法的队列。
  *
  *  \~english
- *  Add delegate
+ *  Add the EMClientDelegate, so when the delegate event occurs, the delegate will call the methods automatically in <EMClientDelegate>.
  *
- *  @param aDelegate  Delegate
- *  @param aQueue     (optional) The queue of calling delegate methods. Pass in nil to run on main thread.
- */
+ *  @param aDelegate  The delegate that you want to add: ClientDelegate.
+ *  @param aQueue     (optional) The queue of calling delegate methods. If you want to run the app on the main thread, set this parameter as nil. */
 - (void)addDelegate:(id<EMClientDelegate>)aDelegate
       delegateQueue:(dispatch_queue_t)aQueue;
 
-/*!
+/**
  *  \~chinese
- *  移除回调代理
+ *  移除回调代理。
  *
- *  @param aDelegate  要移除的代理
+ *  @param aDelegate  要移除的代理。
  *
  *  \~english
- *  Remove delegate
+ *  Remove the delegate.
  *
- *  @param aDelegate  Delegate
+ *  @param aDelegate  The delegate that you want to remove.
  */
 - (void)removeDelegate:(id)aDelegate;
 
-/*!
+/**
  *  \~chinese
- *  添加多设备回调代理
+ *  添加多设备回调代理。
  *
- *  @param aDelegate  要添加的代理
- *  @param aQueue     执行代理方法的队列
+ *  @param aDelegate  要添加的代理。
+ *  @param aQueue     执行代理方法的队列。
  *
  *  \~english
- *  Add multi-device delegate
+ *  Add the multi-device delegate.
  *
- *  @param aDelegate  Delegate
- *  @param aQueue     The queue of calling delegate methods
+ *  @param aDelegate  The delegate that you want to add: MultiDevicesDelegate.
+ *  @param aQueue     The queue of calling delegate methods.
  */
 - (void)addMultiDevicesDelegate:(id<EMMultiDevicesDelegate>)aDelegate
                   delegateQueue:(dispatch_queue_t)aQueue;
 
-/*!
+/**
  *  \~chinese
- *  移除多设备回调代理
+ *  移除多设备回调代理。
  *
- *  @param aDelegate  要移除的代理
+ *  @param aDelegate  要移除的代理。
  *
  *  \~english
- *  Remove multi devices delegate
+ *  Remove the multi-device delegate.
  *
- *  @param aDelegate  Delegate
+ *  @param aDelegate  The multi-device delegate that you want to delete.
  */
 - (void)removeMultiDevicesDelegate:(id<EMMultiDevicesDelegate>)aDelegate;
 
 #pragma mark - Initialize SDK
 
-/*!
+/**
  *  \~chinese
- *  初始化SDK
+ *  初始化 SDK。
  *
- *  @param aOptions  SDK配置项
+ *  @param aOptions  SDK 配置项。
  *
- *  @result EMError 错误信息
+ *  @result EMError 错误信息，包含调用失败的原因。
  *
  *  \~english
- *  Initialize the SDK
+ *  Initialize the SDK.
  *
- *  @param aOptions SDK setting options
+ *  @param aOptions   The SDK setting options: Options..
  *
- *  @result EMError error
+ *  @Result EMError   A description of the issue that caused this call to fail.
  */
 - (EMError *)initializeSDKWithOptions:(EMOptions *)aOptions;
 
-
 #pragma mark - Change AppKey
 
-/*!
+/**
  *  \~chinese
- *  修改appkey，注意只有在未登录状态才能修改appkey
+ *  修改 app key，注意只有在未登录状态才能修改 app key。修改 app key 是为了方便你切换其他 app key，切换后可以使用切换后的 app key 测试，除了登出外，没有其他的限制。
  *
- *  @param aAppkey  appkey
+ *  @param aAppkey   The app key.
  *
- *  @result EMError 错误信息
+ *  @result EMError  错误信息，包含调用失败的原因。
  *
  *  \~english
- *  Change appkey. Can only change appkey when the user is logged out
+ *  Update the unique identifier used to access server.
  *
- *  @param aAppkey  appkey
+ *  You retrieve the new app key from server. As this key controls all access to server for your app, you can only update the key when the current user is logged out.
  *
- *  @result EMError error
+ *  @param aAppkey  The app key.
+ *
+ *  @Result A description of the issue that caused this call to fail.
  */
 - (EMError *)changeAppkey:(NSString *)aAppkey;
 
-
 #pragma mark - User Registeration
 
-/*!
+/**
  *  \~chinese
- *  注册用户
+ *  注册用户。不推荐使用，建议后台通过 REST 注册。
  *
- *  同步方法，会阻塞当前线程. 不推荐使用，建议后台通过REST注册
+ *  同步方法，会阻塞当前线程.
  *
- *  @param aUsername  用户名
- *  @param aPassword  密码
+ *  @param aUsername  用户名，长度不超过 64 个字符。请确保你对该参数设值。支持的字符包括英文字母（a-z），数字（0-9），下划线（_），英文横线（-），英文句号（.）。该参数不区分大小写，大写字母会被自动转为小写字母。如果使用正则表达式设置该参数，则可以将表达式写为：^[a-zA-Z0-9_-]+$。
+ *  @param aPassword  密码，长度不超过 64 个字符。请确保你对该参数设值。
  *
- *  @result EMError 错误信息
+ *  @result EMError 错误信息，包含调用失败的原因。
  *
  *  \~english
- *  Register a new IM user
+ *  Register a new user with your chat network.
  *
- *  To ensure good reliability, registering new IM user via REST API from developer backend is highly recommended
+ *  After you call `initializeSDKWithOptions` and register your app in console, the app has access to all the features registered inside your chat network. You add and remove users inside your chat network; depending on how you implement your app, you control the people each user can see inside your network.
  *
- *  @param aUsername  Username
- *  @param aPassword  Password
+ *  This is a synchronous method and blocks the current thread. To ensure registration reliability, we recommend using the REST API to register new chat users.
  *
- *  @result EMError error
+ *  @param aUsername  The username. The maximum length is 64 characters. Ensure that you set this parameter. Supported characters include the 26 English letters (a-z), the ten numbers (0-9), the underscore (_), the hyphen (-), and the English period (.). This parameter is case insensitive, and upper-case letters are automatically changed to low-case ones. If you want to set this parameter as a regular expression, set it as ^[a-zA-Z0-9_-]+$.
+ *  @param aPassword   The password. The maximum length is 64 characters. Ensure that you set this parameter.
+ *
+ *  @result A description of the issue that caused this call to fail.
  */
 - (EMError *)registerWithUsername:(NSString *)aUsername
                          password:(NSString *)aPassword;
 
-/*!
+/**
  *  \~chinese
- *  注册用户
+ *  注册用户。
  *
- *  不推荐使用，建议后台通过REST注册
+ *  不推荐使用，建议后台通过 REST 注册。
  *
- *  @param aUsername        用户名
- *  @param aPassword        密码
- *  @param aCompletionBlock 完成的回调
+ *  异步方法。
+ *
+ *  @param aUsername  用户名，长度不超过 64 个字符。请确保你对该参数设值。支持的字符包括英文字母（a-z），数字（0-9），下划线（_），英文横线（-），英文句号（.）。该参数不区分大小写，大写字母会被自动转为小写字母。如果使用正则表达式设置该参数，则可以将表达式写为：^[a-zA-Z0-9_-]+$。
+ *  @param aPassword  密码，长度不超过 64 个字符。请确保你对该参数设值。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  Register a new IM user
+ *  Register a new user with your chat network.
  *
- *  To ensure good reliability, registering new IM user via REST API from developer backend is highly recommended
+ *  This is an asynchronous method.
  *
- *  @param aUsername        Username
- *  @param aPassword        Password
- *  @param aCompletionBlock The callback of completion block
+ *  After you call `initializeSDKWithOptions` and register your app in console, the app has access to all the features registered inside your chat network. You add and remove users inside your chat network; depending on how you implement your app, you control the people each user can see inside your network.
+ *
+ *  To ensure registration reliability, we recommend using the REST API to register new chat users.
+ *
+ *  @param aUsername        The username. The maximum length is 64 characters. Ensure that you set this parameter. Supported characters include the 26 English letters (a-z), the ten numbers (0-9), the underscore (_), the hyphen (-), and the English period (.). This parameter is case insensitive, and upper-case letters are automatically changed to low-case ones. If you want to set this parameter as a regular expression, set it as ^[a-zA-Z0-9_-]+$.
+ *  @param aPassword        The password. The maximum length is 64 characters. Ensure that you set this parameter.
+ *  @param aCompletionBlock The completion block, which contains the username and the error message if the method fails.
  *
  */
 - (void)registerWithUsername:(NSString *)aUsername
                     password:(NSString *)aPassword
                   completion:(void (^)(NSString *aUsername, EMError *aError))aCompletionBlock;
 
-
 #pragma mark - Login
 
-/*!
+/**
  *  \~chinese
- *  从服务器获取token
+ *  从服务器获取 token。
  *
- *  @param aUsername        用户名
- *  @param aPassword        密码
- *  @param aCompletionBlock 完成的回调
+ *  异步方法。
+ *
+ *  @param aUsername        用户名。
+ *  @param aPassword        密码。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  Get the token from the server
+ *  Fetches the token from the server.
  *
- *  @param aUsername        Username
- *  @param aPassword        Password
- *  @param aCompletionBlock The callback of completion block
+ *  This is an asynchronous method.
+ *
+ *  @param aUsername     The username.
+ *  @param aPassword     The password.
+ *  @param aCompletionBlock The completion block, which contains the token and the error message if the method fails.
  *
  */
 - (void)fetchTokenWithUsername:(NSString *)aUsername
                       password:(NSString *)aPassword
                     completion:(void (^)(NSString *aToken, EMError *aError))aCompletionBlock;
 
-/*!
+/**
  *  \~chinese
- *  密码登录
+ *  用户使用密码登录服务器。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aUsername  用户名 不可为空，可以是字母/数字/下划线/横线/英文句号，正则为"^[a-zA-Z0-9_-]+$"，
- *                 其他的都不允许。如果是大写字母会自动转成小写。长度不可超过64个字符长度。
- *  @param aPassword  密码  不可为空，长度不可超过64个字符长度。
+ *  @param aUsername  用户名，长度不超过 64 个字符。请确保你对该参数设值。支持的字符包括英文字母（a-z），数字（0-9），下划线（_），英文横线（-），英文句号（.）。该参数不区分大小写，大写字母会被自动转为小写字母。如果使用正则表达式设置该参数，则可以将表达式写为：^[a-zA-Z0-9_-]+$。
+ *  @param aPassword  密码，长度不超过 64 个字符。请确保你对该参数设值。
  *
- *  @result EMError 错误信息
+ *  @result EMError 错误信息，包含调用失败的原因。
  *
  *  \~english
- *  Login with password
+ *  A user logs in to the chat server with a password.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aUsername  Username It cannot be empty, it can be letters/numbers/underscores/horizontals/periods. The regular expression is "^[a-zA-Z0-9_-]+$". Nothing else is allowed. If it is an uppercase letter, it will be automatically converted to lowercase. The length cannot exceed 64 characters in length
+ *  @param aUsername  The username. The maximum length is 64 characters. Ensure that you set this parameter. Supported characters include the 26 English letters (a-z), the ten numbers (0-9), the underscore (_), the hyphen (-), and the English period (.). This parameter is case insensitive, and upper-case letters are automatically changed to low-case ones. If you want to set this parameter as a regular expression, set it as ^[a-zA-Z0-9_-]+$.
+ *  @param aPassword  The password. The maximum length is 64 characters. Ensure that you set this parameter.
  *
- *
- *  @param aPassword  Password  Cannot be empty, and the length cannot exceed 64 characters in length
- *
- *  @result EMError error
+ *  @result Returns nil on success, and the description of the issue that cause the call to fail.
  */
 - (EMError *)loginWithUsername:(NSString *)aUsername
                       password:(NSString *)aPassword;
 
-/*!
+/**
  *  \~chinese
- *  密码登录
+ *  用户使用密码登录聊天服务器。
  *
- *  @param aUsername        用户名
- *  @param aPassword        密码
- *  @param aCompletionBlock 完成的回调
+ *  异步方法。
+ *
+ *  @param aUsername        用户名，长度不超过 64 个字符。请确保你对该参数设值。支持的字符包括英文字母（a-z），数字（0-9），下划线（_），英文横线（-），英文句号（.）。该参数不区分大小写，大写字母会被自动转为小写字母。如果使用正则表达式设置该参数，则可以将表达式写为：^[a-zA-Z0-9_-]+$。
+ *  @param aPassword        密码，长度不超过 64 个字符。请确保你对该参数设值。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  Login with password
+ *  A user logs in to the chat server with a password.
  *
- *  @param aUsername        Username
- *  @param aPassword        Password
- *  @param aCompletionBlock The callback of completion block
+ *  This is an asynchronous method.
+ *
+ *  @param aUsername        The username. The maximum length is 64 characters. Ensure that you set this parameter. Supported characters include the 26 English letters (a-z), the ten numbers (0-9), the underscore (_), the hyphen (-), and the English period (.). This parameter is case insensitive, and upper-case letters are automatically changed to low-case ones. If you want to set this parameter as a regular expression, set it as ^[a-zA-Z0-9_-]+$.
+ *  @param aPassword        The password. The maximum length is 64 characters. Ensure that you set this parameter.
+ *  @param aCompletionBlock The completion block, which contains the username and the error message if the method fails.
  *
  */
 - (void)loginWithUsername:(NSString *)aUsername
                  password:(NSString *)aPassword
                completion:(void (^)(NSString *aUsername, EMError *aError))aCompletionBlock;
 
-/*!
+/**
  *  \~chinese
- *  token登录，不支持自动登录
+ *  用户使用 token 登录。该方法支持自动登录。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aUsername  用户名
- *  @param aToken     Token
+ *  @param aUsername  用户名，长度不超过 64 个字符。请确保你对该参数设值。支持的字符包括英文字母（a-z），数字（0-9），下划线（_），英文横线（-），英文句号（.）。该参数不区分大小写，大写字母会被自动转为小写字母。如果使用正则表达式设置该参数，则可以将表达式写为：^[a-zA-Z0-9_-]+$。
+ *  @param aToken     The token。
  *
- *  @result EMError 错误信息
+ *  @result EMError 错误信息，包含调用失败的原因。
  *
  *  \~english
- *  Login with token. Does not support automatic login
+ *  A user logs in to the chat server with a token. This method does not support automatic login.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aUsername  Username
- *  @param aToken     Token
+ *  @param aUsername  The username. The maximum length is 64 characters. Ensure that you set this parameter. Supported characters include the 26 English letters (a-z), the ten numbers (0-9), the underscore (_), the hyphen (-), and the English period (.). This parameter is case insensitive, and upper-case letters are automatically changed to low-case ones. If you want to set this parameter as a regular expression, set it as ^[a-zA-Z0-9_-]+$.
+ *  @param aToken     The token for user logging in to Chat server.
  *
- *  @result EMError error
+ *  @result Returns nil on success, and the description of the issue that cause the call to fail.
  */
 - (EMError *)loginWithUsername:(NSString *)aUsername
                          token:(NSString *)aToken;
 
-/*!
+/**
  *  \~chinese
- *  token登录，不支持自动登录
+ *  用户使用 token 登录。该方法支持自动登录。
  *
- *  @param aUsername        用户名
- *  @param aToken           Token
- *  @param aCompletionBlock 完成的回调
+ *  异步方法。
+ *
+ *  @param aUsername        用户名，长度不超过 64 个字符。请确保你对该参数设值。支持的字符包括英文字母（a-z），数字（0-9），下划线（_），英文横线（-），英文句号（.）。该参数不区分大小写，大写字母会被自动转为小写字母。如果使用正则表达式设置该参数，则可以将表达式写为：^[a-zA-Z0-9_-]+$。
+ *  @param aToken           The token。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  Login with token. Does not support automatic login
+ *  A user logs in to the chat server with a token. This method support automatic login.
  *
- *  @param aUsername        Username
- *  @param aToken           Token
- *  @param aCompletionBlock The callback of completion block
+ *  This is an asynchronous method.
+ *
+ *  @param aUsername        The username. The maximum length is 64 characters. Ensure that you set this parameter. Supported characters include the 26 English letters (a-z), the ten numbers (0-9), the underscore (_), the hyphen (-), and the English period (.). This parameter is case insensitive, and upper-case letters are automatically changed to low-case ones. If you want to set this parameter as a regular expression, set it as ^[a-zA-Z0-9_-]+$.
+ *  @param aToken           The token for logging in to the chat server.
+ *  @param aCompletionBlock The completion block, which contains the username and the error message if the method fails.
  *
  */
 - (void)loginWithUsername:(NSString *)aUsername
                     token:(NSString *)aToken
                completion:(void (^)(NSString *aUsername, EMError *aError))aCompletionBlock;
 
-#pragma mark - Logout
-
-/*!
+/**
  *  \~chinese
- *  登出
+ *  声网 Agora Chat user token 登录。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aIsUnbindDeviceToken 是否解除device token的绑定，解除绑定后设备不会再收到消息推送
- *         如果传入YES, 解除绑定失败，将返回error
+ *  @param aUsername    用户名
+ *  @param aAgoraToken  声网 Agora Chat user token。
  *
- *  @result EMError 错误信息
+ *  @result 成功返回 nil，如果有错误会返回错误原因。
  *
  *  \~english
- *  Logout
+ *  A user logs in to the chat server with Agora Chat user token. Supports automatic login.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aIsUnbindDeviceToken Unbind device token to disable Apple Push Notification Service
+ *  @param aUsername    The username.
+ *  @param aAgoraToken  The Agora Chat user token.
  *
- *  @result EMError error
+ *  @result Returns nil on success, and the description of the issue that cause the call to fail.
+ */
+- (EMError *)loginWithUsername:(NSString *)aUsername
+                    agoraToken:(NSString *)aAgoraToken;
+
+/**
+ *  \~chinese
+ *  声网 Agora Chat user token 登录。
+ *
+ *  @param aUsername        用户名。
+ *  @param aAgoraToken      声网 Agora Chat user token。
+ *  @param aCompletionBlock 完成的回调，如果有错误会返回错误原因。
+ *
+ *  \~english
+ *  A user logs in to the chat server with Agora Chat user token. Supports automatic login.
+ *
+ *
+ *  @param aUsername        The username.
+ *  @param aAgoraToken      The Agora Chat user token.
+ *  @param aCompletionBlock The callback of completion block, which contains the description of the cause to the issue if the method fails.
+ *
+ */
+- (void)loginWithUsername:(NSString *)aUsername
+               agoraToken:(NSString *)aAgoraToken
+               completion:(void (^)(NSString *aUsername, EMError *aError))aCompletionBlock;
+
+/**
+ *  \~chinese
+ *  当用户在声网 token 登录状态时，且在 EMClientDelegate 回调中收到 token 即将过期/已经过期事件的回调通知，可以调用这个 API 来更新 token，避免因 token 失效产生的未知问题。
+ *
+ *  同步方法，会阻塞当前线程。
+ *
+ *  @param newAgoraToken 新声网 token。
+ *
+ *  @result 返回结果，如果有错误会返回错误信息。
+ *
+ *  \~english
+ *  Renews the token when the current token expires.
+ *
+ *  The token expires after a period of time once the token schema is enabled when:
+ *  - The SDK triggers the onTokenPrivilegeWillExpire callback, or
+ *  - The onConnectionStateChanged callback reports the CONNECTION_CHANGED_TOKEN_EXPIRED(9) error.
+ *
+ *  The app should retrieve a new token from the server and call this method to renew it. Failure to do so results in the SDK disconnecting from the server.
+ *
+ *  This is a synchronous method and blocks the current thread.
+ *
+ *  @param newAgoraToken The new Agora Chat token。
+ *
+ *  @result The result which contains the description of the cause to the failure if call fails.
+ */
+- (EMError *)renewToken:(NSString *)newAgoraToken;
+
+#pragma mark - Logout
+
+/**
+ *  \~chinese
+ *  用户登出聊天服务器。
+ *
+ *  同步方法，会阻塞当前线程。
+ *
+ *  @param aIsUnbindDeviceToken 是否解除账号与设备绑定。YES 表示解除绑定。成功解绑后，用户登出账号后设备将不再收到消息推送。如果你将该参数设为 YES，但解绑失败，则 SDK 会返回错误信息，包含调用失败的原因。
+ *
+ *  @result EMError 错误信息，包含失败原因。
+ *
+ *  \~english
+ *  A user logs out of the chat server.
+ *
+ *  This is a synchronous method and blocks the current thread.
+ *
+ *  @param aIsUnbindDeviceToken Whether to unbind the username from the device(Set to YES to unbind the user currently logged into the app from this device). That stops the user device receiving push notifications from the Apple Push Notifications service.
+ *
+ *  @result A description of the issue that caused this call to fail.
  */
 - (EMError *)logout:(BOOL)aIsUnbindDeviceToken;
 
-/*!
+/**
  *  \~chinese
- *  登出
+ *  登出聊天服务器。
  *
- *  @param aIsUnbindDeviceToken 是否解除device token的绑定，解除绑定后设备不会再收到消息推送
- *         如果传入YES, 解除绑定失败，将返回error
- *  @param aCompletionBlock 完成的回调
+ *  异步方法。
+ *
+ *  @param aIsUnbindDeviceToken 是否解除账号与设备绑定。YES 表示解除绑定。成功解绑后，用户登出账号后设备将不再收到消息推送。如果你将该参数设为 YES，但解绑失败，则 SDK 会返回错误信息，包含调用失败的原因。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  Logout
+ *  A user logs out of the chat server.
  *
- *  @param aIsUnbindDeviceToken     Whether to unbind the device token, the device will no longer receive push notifications after unbinding, If YES is passed in, unbinding fails and error will be returned
- *  @param aCompletionBlock         The callback of completion block
+ *  This is an asynchronous method.
+ *
+ *  @param aIsUnbindDeviceToken     Whether to unbind the username from the device. If you unbind the username from the device (setting this parameter as YES) and logs out, the device no longer receives messages from the Apple Push Notification Service.
+ *  @param aCompletionBlock         The completion block, which contains the token and the error message if the method fails.
  *
  */
 - (void)logout:(BOOL)aIsUnbindDeviceToken
@@ -490,332 +581,370 @@ typedef enum {
 
 #pragma mark - PushKit
 
-/*!
+/**
  *  \~chinese
- *  绑定PushKit token
+ *  绑定 PushKit token。
  *
- *  同步方法，会阻塞当前线程
+ *  这里是苹果的 PushKit 推送服务，服务于 VOIP 类型的推送。
  *
- *  @param aPushToken  要绑定的token
+ *  同步方法，会阻塞当前线程。
  *
- *  @result EMError 错误信息
+ *  @param aPushToken  要绑定的 token。
+ *
+ *  @result EMError 错误信息，包含调用失败的原因。
  *
  *  \~english
- *  Pushkit token binding is required to enable Apple PushKit Service
+ *  Use the pushkit token to bind the user and the device, which is required to enable Apple PushKit Service.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aPushToken  pushkit token to bind
+ *  @param aPushToken      The pushkit token to bind.
  *
- *  @result EMError error
+ *  @result A description of the issue that caused this call to fail.
  */
 - (EMError *)bindPushKitToken:(NSData *)aPushToken;
 
-/*!
+/**
  *  \~chinese
- *  绑定PushKit token
+ *  注册 PushKit token。
  *
- *  @param aPushToken  要绑定的token
- *  @param aCompletionBlock 完成的回调
+ *  这里是苹果的 PushKit 推送服务，服务于 VOIP 类型的推送。
+ *
+ *  异步方法。
+ *
+ *  @param aPushToken  要绑定的 token。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  Pushkit token binding is required to enable Apple PushKit Service
+ *  Register a pushkit token, this is required to enable Apple PushKit Service, which is for VOIP CALL.
  *
- *  @param aPushToken  pushkit token to bind
- *  @param aCompletionBlock     The callback block of completion
+ *  This is an asynchronous method.
+ *
+ *  @param aPushToken           The pushkit token to bind.
+ *  @param aCompletionBlock     The completion block, which contains the error message if the method fails.
  */
 - (void)registerPushKitToken:(NSData *)aPushToken
                   completion:(void (^)(EMError *aError))aCompletionBlock;
 
-/*!
+/**
  *  \~chinese
- *  解除PushKit token绑定
+ *  解除 PushKit token 绑定，与解除注册 `unRegisterPushKitTokenWithCompletion` 方法作用一致。
  *
- *  同步方法，会阻塞当前线程
+ *  这里是苹果的 PushKit 推送服务，服务于 VOIP 类型的推送。
  *
- *  @result EMError 错误信息
+ *  同步方法，会阻塞当前线程。
+ *
+ *  @result EMError 错误信息，包含调用失败的原因。
  *
  *  \~english
- *  Disable Apple PushKit Service
+ *  Unbind the Apple PushKit token.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @result EMError error
+ *  @result A description of the issue that caused this call to fail.
  */
 - (EMError *)unBindPushKitToken;
 
-/*!
+/**
  *  \~chinese
- *  解除PushKit token绑定
+ *  解除 PushKit token 注册，与解除绑定 `unBindPushKitToken` 方法作用一致。
+ *
+ *  异步方法。
+ *
+ *  这里是苹果的 PushKit 推送服务，服务于 VOIP 类型的推送。
  *
  *  \~english
- *  Disable Apple PushKit Service
+ *  Unregister the Apple PushKit token.
  *
- *  @param aCompletionBlock     The callback block of completion
+ *  @param aCompletionBlock     The completion block, which contains the error message if the method fails.
  */
 - (void)unRegisterPushKitTokenWithCompletion:(void (^)(EMError *aError))aCompletionBlock;
 
 #pragma mark - APNs
 
-/*!
+/**
  *  \~chinese
- *  绑定device token
+ *  绑定 device token。
  *
- *  同步方法，会阻塞当前线程
+ *  Device token 用于苹果 APNS 推送。
  *
- *  @param aDeviceToken  要绑定的token
+ *  同步方法，会阻塞当前线程。
  *
- *  @result EMError 错误信息
+ *  @param aDeviceToken  要绑定的 token。
+ *
+ *  @result EMError 错误信息，包含调用失败的原因。
  *
  *  \~english
- *  Device token binding is required to enable Apple Push Notification Service
+ *  Device token binding is required to enable Apple Push Notification Service.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aDeviceToken  Device token to bind
+ *  @param aDeviceToken  Device token to bind.
  *
- *  @result EMError error
+ *  @Result Returns nil on success, and the description of the issue that cause the call to fail.
  */
 - (EMError *)bindDeviceToken:(NSData *)aDeviceToken;
 
-/*!
+/**
  *  \~chinese
- *  绑定device token
+ *  注册 device token。
  *
- *  @param aDeviceToken     要绑定的token
- *  @param aCompletionBlock 完成的回调
+ *  Device token 用于苹果 APNS 推送。
+ *
+ *  异步方法。
+ *
+ *  @param aDeviceToken     要绑定的 token。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  Device token binding is required to enable Apple push notification service
+ *  Device token binding is required to enable Apple push notification service.
  *
- *  @param aDeviceToken         Device token to bind
- *  @param aCompletionBlock     The callback block of completion
+ *  @param aDeviceToken         The device token to bind.
+ *  @param aCompletionBlock     The completion block, which contains the error message if the method fails.
  */
 - (void)registerForRemoteNotificationsWithDeviceToken:(NSData *)aDeviceToken
                                            completion:(void (^)(EMError *aError))aCompletionBlock;
 
-
 #pragma mark - Log
 
-/*!
+/**
  *  \~chinese
- *  上传日志到服务器
+ *  上传日志到服务器。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @result EMError 错误信息
+ *  @result 成功返回 nil，调用失败返回 error 其中包含调用失败的原因。
  *
  *  \~english
- *  Upload debugging log to server
+ *  Upload the log to the chat server.
+ *  The information in the debug log is used by our engineers to fix errors and improve system performance.
+ *  Make sure to use the `EMLog` class.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @result EMError error
+ *  @result Returns nil on success, and error on failure which contains the description of the issue that cause the call to fail.
  */
 - (EMError *)uploadLogToServer;
 
-/*!
+/**
  *  \~chinese
- *  上传日志到服务器
+ *  上传日志到服务器。
  *
- *  @param aCompletionBlock 完成的回调
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  Upload debugging log to server
+ *  Upload debugging log to server.
  *
- *  @param aCompletionBlock     The callback of completion block
+ *  @param aCompletionBlock     The completion block, which contains the token and the error message if the method fails.
  */
 - (void)uploadDebugLogToServerWithCompletion:(void (^)(EMError *aError))aCompletionBlock;
 
-/*!
+/**
  *  \~chinese
- *  将日志文件压缩成.gz文件，返回gz文件路径。强烈建议方法完成之后删除该压缩文件
+ *  将日志文件压缩成 .gz 文件，返回 gz 文件路径。强烈建议方法完成之后删除该压缩文件。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param pError 错误信息
+ *  @param pError 错误信息，包含调用失败的原因。
  *
- *  @result NSString 文件路径
+ *  @result NSString 文件路径。
  *
  *  \~english
- *  Compress the log file into a .gz file and return the gz file path. Recommend delete the gz file if file is no longer used
+ *  Compress the debug log into a gzip archive.
+ *  Best practice is to delete this debug archive as soon as it is no longer used.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param pError Error
+ *  @param pError  A description of the issue that caused this call to fail.
  *
- *  @result NSString  Filepath
+ *  @result NSString The full filepath to the debug archive.
  */
 - (NSString *)getLogFilesPath:(EMError **)pError;
 
-/*!
+/**
  *  \~chinese
- *  将日志文件压缩成.gz文件，返回gz文件路径。强烈建议方法完成之后删除该压缩文件
+ *  将日志文件压缩成 .gz 文件，返回 gz 文件路径。强烈建议方法完成之后删除该压缩文件。
  *
- *  @param aCompletionBlock 完成的回调
+ *  异步方法。
+ *
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  Compress the log file into a .gz file and return the gz file path. Recommend delete the gz file if file is no longer used
+ *  Compresses the log files in the format of .gz and returns the path of the compressed file. Recommends deleting the compressed file when it is no longer used.
  *
- *  @param aCompletionBlock     The callback of completion block
+ *  This is an asynchronous method.
+ *
+ *  @param aCompletionBlock     The completion block, which contains the token and the error message if the method fails.
  */
 - (void)getLogFilesPathWithCompletion:(void (^)(NSString *aPath, EMError *aError))aCompletionBlock;
 
-/*!
-*  \~chinese
-*  输出日志信息到日志文件，需要在SDK初始化之后调用
-*
-*  @param aLog 要输出的日志信息
-*
-*  \~english
-*  Output log info to log file.You can call this method after the SDK has been initialized.
-*
-*  @param aLog The log info
-*/
-- (void)log:(NSString*)aLog;
+/**
+ *  \~chinese
+ *  输出日志信息到日志文件，需要在 SDK 初始化之后调用。
+ *
+ *  同步方法，会阻塞当前线程。
+ *
+ *  @param aLog 要输出的日志信息。
+ *
+ *  \~english
+ *  Output log info to log file. You can call this method after the SDK has been initialized.
+ *
+ *  This is a synchronous method and blocks the current thread.
+ *
+ *  @param aLog The log info.
+ */
+- (void)log:(NSString *)aLog;
 
 #pragma mark - Multi Devices
 
-/*!
+/**
  *  \~chinese
- *  从服务器获取所有已经登录的设备信息
+ *  从服务器获取所有已经登录的设备信息。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aUsername        用户名
- *  @param aPassword        密码
- *  @param pError           错误信息
+ *  @param aUsername        用户名。
+ *  @param aPassword        密码。
+ *  @param pError           错误信息，包含调用失败的原因。
  *
- *  @result NSArray 所有已经登录的设备信息列表<EMDeviceConfig>
+ *  @result  所有已经登录的设备信息列表，由 <EMDeviceConfig> 对象组成的数组。
  *
  *  \~english
- *  Get all the device information <EMDeviceConfig> that logged in to the server
+ *  Retrieve the array of devices the user is currently logged into.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aUsername        Username
- *  @param aPassword        Password
- *  @param pError           Error
+ *  @param aUsername      The username.
+ *  @param aPassword      The password.
+ *  @param pError         A description of the issue that caused this call to fail.
  *
- *  @result NSArray Information of logged in device <EMDeviceConfig>
+ *  @result  The information of the logged in devices, an array of <EMDeviceConfig> objects.
  */
 - (NSArray *)getLoggedInDevicesFromServerWithUsername:(NSString *)aUsername
                                              password:(NSString *)aPassword
                                                 error:(EMError **)pError;
 
-/*!
+/**
  *  \~chinese
- *  从服务器获取所有已经登录的设备信息
+ *  从服务器获取所有已经登录的设备信息。
  *
- *  @param aUsername        用户名
- *  @param aPassword        密码
- *  @param aCompletionBlock 完成的回调
+ *  异步方法。
+ *
+ *  @param aUsername        用户名。
+ *  @param aPassword        密码。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  Get all the device information <EMDeviceConfig> that logged in to the server
+ *  Get all the device information <EMDeviceConfig> that logged in to the server.
  *
- *  @param aUsername        Username
- *  @param aPassword        Password
- *  @param aCompletionBlock The callback block of completion
+ *  This is an asynchronous method.
+ *
+ *  @param aUsername     The username.
+ *  @param aPassword     The password.
+ *  @param aCompletionBlock     The completion block, which contains the list and the error message if the method fails.
  *
  */
 - (void)getLoggedInDevicesFromServerWithUsername:(NSString *)aUsername
                                         password:(NSString *)aPassword
                                       completion:(void (^)(NSArray *aList, EMError *aError))aCompletionBlock;
 
-/*!
+/**
  *  \~chinese
- *  强制指定的设备登出
+ *  强制指定的设备登出。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aUsername        用户名
- *  @param aPassword        密码
- *  @param aDevice          设备信息
+ *  @param aUsername        用户名。
+ *  @param aPassword        密码。
+ *  @param aResource        要登出的设备，可以通过 `getLoggedInDevicesFromServerWithUsername` 方法获取。
  *
- *  @result 错误信息
+ *  @result 返回方法调用结果，如果有错误会返回错误原因。
  *
  *  \~english
- *  Force logout the specified device
+ *  Kick a single user from your app installed on a specific device.
  *
- *  device information can be obtained from getLoggedInDevicesFromServerWithUsername:password:error:
+ *  This is a synchronous method and blocks the current thread.
  *
- *  Synchronization method will block the current thread
+ *  @param aUsername     The username.
+ *  @param aPassword     The password.
+ *  @param aResource     The device to log `aUsername` out from. Call `getLoggedInDevicesFromServerWithUsername` to retrieve the list of devices `aUsername` is currently logged into.
  *
- *  @param aUsername        Username
- *  @param aPassword        Password
- *  @param aResource        device resource
- *
- *  @result Error
+ *  @result Returns nil on success, and the description of the issue that cause the call to fail.
  */
 - (EMError *)kickDeviceWithUsername:(NSString *)aUsername
                            password:(NSString *)aPassword
                            resource:(NSString *)aResource;
 
-
-
-/*!
+/**
  *  \~chinese
- *  强制指定的设备登出
+ *  强制指定的设备登出。
  *
- *  @param aUsername        用户名
- *  @param aPassword        密码
- *  @param aDevice          设备信息
- *  @param aCompletionBlock 完成的回调
+ *  异步方法。
+ *
+ *  @param aUsername        用户名。
+ *  @param aPassword        密码。
+ *  @param aResource        设备信息。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  Force logout the specified device
+ *  Kick a single user from your app installed on a specific device.
  *
- *  device information can be obtained from getLoggedInDevicesFromServerWithUsername:password:error:
+ *  The device information can be obtained from `getLoggedInDevicesFromServerWithUsername`.
  *
- *  @param aUsername        Username
- *  @param aPassword        Password
- *  @param aResource        device resource
- *  @param aCompletionBlock The callback block of completion
+ *  This is an asynchronous method.
+ *
+ *  @param aUsername     The username.
+ *  @param aPassword     The password.
+ *  @param aResource     The device to be logged out of. You can get the logged in devices through `getLoggedInDevicesFromServerWithUsername`.
+ *  @param aCompletionBlock The completion block, which contains the error message if the method fails.
  */
 - (void)kickDeviceWithUsername:(NSString *)aUsername
                       password:(NSString *)aPassword
                       resource:(NSString *)aResource
                     completion:(void (^)(EMError *aError))aCompletionBlock;
 
-/*!
+/**
  *  \~chinese
- *  强制所有的登录设备登出
+ *  强制所有的登录设备登出。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aUsername        用户名
- *  @param aPassword        密码
+ *  @param aUsername        用户名。
+ *  @param aPassword        密码。
  *
- *  @result EMError 错误信息
+ *  @result 返回结果，如果失败会包含调用失败的原因。
  *
  *  \~english
- *  Force logout all logged in device for the specified user
+ *  Kicks a user from your app installed on all the devices.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aUsername        Username
- *  @param aPassword        Password
+ *  @param aUsername     The username.
+ *  @param aPassword     The password.
  *
- *  @result EMError error
+ *  @result  Returns nil on success, and the description of the issue that cause the call to fail.
  */
 - (EMError *)kickAllDevicesWithUsername:(NSString *)aUsername
                                password:(NSString *)aPassword;
 
-/*!
+/**
  *  \~chinese
- *  强制所有的登录设备登出
+ *  强制所有的登录设备登出。
  *
- *  @param aUsername        用户名
- *  @param aPassword        密码
- *  @param aCompletionBlock 完成的回调
+ *  异步方法。
+ *
+ *  @param aUsername        用户名。
+ *  @param aPassword        密码。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  Force all logged in device to logout.
+ *  Kicks a single user from your app installed on all the devices.
  *
- *  @param aUsername        Username
- *  @param aPassword        Password
- *  @param aCompletionBlock The callback block of completion
+ *  This is an asynchronous method.
+ *
+ *  @param aUsername      The username.
+ *  @param aPassword      The password.
+ *  @param aCompletionBlock The completion block, which contains the error message if the method fails.
  */
 - (void)kickAllDevicesWithUsername:(NSString *)aUsername
                           password:(NSString *)aPassword
@@ -823,239 +952,279 @@ typedef enum {
 
 #pragma mark - iOS
 
-/*!
+/**
  *  \~chinese
- *  iOS专用，数据迁移到SDK3.0
+ *  iOS 专用，数据迁移到 SDK3.0。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  升级到SDK3.0版本需要调用该方法，开发者需要等该方法执行完后再进行数据库相关操作
+ *  升级到 SDK3.0 版本需要调用该方法，开发者需要等该方法执行完后再进行数据库相关操作。
  *
- *  @result BOOL 是否迁移成功
+ *  @result BOOL 是否迁移成功。
  *
  *  \~english
- *  Migrate the IM database to the latest SDK version
+ *  Migrate the chat database to the latest SDK version.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @result BOOL Return YES for success
+ *  @result   Returns YES for success and the description of the cause if the method fails.
  */
 - (BOOL)migrateDatabaseToLatestSDK;
 
-/*!
+/**
  *  \~chinese
- *  iOS专用，程序进入后台时，需要调用此方法断开连接
+ *  iOS 专用，程序进入后台时，需要调用此方法断开连接。
  *
  *  @param aApplication  UIApplication
  *
  *  \~english
- *  Disconnect from server when app enters background
+ *  Disconnects from the chat server when the app is switched to background.
  *
  *  @param aApplication  UIApplication
  */
 - (void)applicationDidEnterBackground:(id)aApplication;
 
-/*!
+/**
  *  \~chinese
- *  iOS专用，程序进入前台时，需要调用此方法进行重连
+ *  iOS 专用，程序进入前台时，需要调用此方法进行重连。
  *
- *  @param aApplication  UIApplication
+ *  @param aApplication  当前应用程序实例。
  *
  *  \~english
- *  Reconnect to server when app enters foreground
+ *  Reconnect to the server when your app returns to foreground mode.
  *
- *  @param aApplication  UIApplication
+ *  @param aApplication  The current application instance.
  */
 - (void)applicationWillEnterForeground:(id)aApplication;
 
-/*!
+/**
  *  \~chinese
- *  iOS专用，程序在前台收到APNS时，需要调用此方法
+ *  iOS 专用，程序在前台收到 APNS 时，需要调用此方法。
  *
- *  @param application  UIApplication
- *  @param userInfo     推送内容
+ *  @param application  当前应用程序实例。
+ *  @param userInfo     推送内容。
  *
  *  \~english
- *  Invoked when receiving APNS in foreground
+ *  Occurs when your app is running in the foreground and the device receives an Apple Push Notification (APN).
  *
- *  @param application  UIApplication
- *  @param userInfo     Push content
+ *  @param application  The current application instance.
+ *  @param userInfo     The push content.
  */
 - (void)application:(id)application didReceiveRemoteNotification:(NSDictionary *)userInfo;
 
 #pragma mark - Service Check
 
-/*!
+/**
  *  \~chinese
- *  服务诊断接口，根据EMServerCheckType枚举的顺序依次诊断当前服务，并回调给开发者
- *  如果已经登录，默认使用登录账号
+ *  服务诊断接口，根据 EMServerCheckType 枚举的顺序依次诊断当前服务，并回调给开发者。
+ *  如果已经登录，默认使用登录账号。
  *
- *  @param aUsername    用户名
- *  @param aPassword    密码
- *  @param aCompletionBlock 完成的回调
+ *  异步方法。
+ *
+ *  @param aUsername    用户名。
+ *  @param aPassword    密码。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  Make a diagnose for service, Diagnosis of current services according to the order of EMServerCheckType enumeration, and callback for the developer
- *  If you have logged in, use the default login account
+ *  Run the server diagnostic tests for Agora Chat for a specific user.
+ *  These tests are run in the order defined by EMServerCheckType.
+ *  If the user is logged in, the login account is used by default.
  *
- *  @param aUsername    username
- *  @param aPassword    password
- *  @param aCompletionBlock The callback block of completion
+ *  This is an asynchronous method.
+ *
+ *  @param aUsername    The username.
+ *  @param aPassword    The password.
+ *  @param aCompletionBlock The completion block, which contains the error message if the method fails.
  */
 - (void)serviceCheckWithUsername:(NSString *)aUsername
                         password:(NSString *)aPassword
                       completion:(void (^)(EMServerCheckType aType, EMError *aError))aCompletionBlock;
 
 #pragma mark - EM_DEPRECATED_IOS 3.7.2
-/*!
+/**
  *  \~chinese
- *  推送设置
+ *  推送设置。
+ *
+ *  已废弃，请用 {@link IEMPushManager::pushOptions} 代替。
  *
  *  \~english
- *  Apple Push Notification Service setting
+ *  Apple Push Notification Service setting.
+ *
+ *  Deprecated, please use  {@link IEMPushManager::pushOptions}  instead.
  */
-@property (nonatomic, strong, readonly) EMPushOptions *pushOptions EM_DEPRECATED_IOS(3_1_0, 3_7_2, "Use -[IEMPushManager.pushOptions] instead");
+@property(nonatomic, strong, readonly) EMPushOptions *pushOptions EM_DEPRECATED_IOS(3_1_0, 3_7_2, "Use -IEMPushManager::pushOptions instead");
 
-
-/*!
+/**
  *  \~chinese
- *  设置推送消息显示的昵称
+ *  设置推送消息显示的昵称。
  *
- *  同步方法，会阻塞当前线程
+ *  已废弃，请用 {@link IEMPushManager::updatePushDisplayName:} 代替。
  *
- *  @param aNickname  要设置的昵称
+ *  同步方法，会阻塞当前线程。
  *
- *  @result 错误信息
+ *  @param aNickname  要设置的昵称。
+ *
+ *  @result 错误信息，包含调用失败的原因。
  *
  *  \~english
- *  Set display name for Apple Push Notification message
+ *  Set the display name for the Apple Push Notification messages.
  *
- *  Synchronization method will block the current thread
+ *  Deprecated, please use  {@link IEMPushManager::updatePushDisplayName:}  instead.
  *
- *  @param aNickname  Display name
+ *  This is a synchronous method and blocks the current thread.
+ *
+ *  @param aNickname  The display name in notification.
  *
  *  @result Error
  */
-- (EMError *)setApnsNickname:(NSString *)aNickname EM_DEPRECATED_IOS(3_1_0, 3_7_2, "Use -[IEMPushManager:setApnsNickname:] instead");
+- (EMError *)setApnsNickname:(NSString *)aNickname EM_DEPRECATED_IOS(3_1_0, 3_7_2, "Use -IEMPushManager::updatePushDisplayName: instead");
 
-/*!
+/**
  *  \~chinese
- *  设置推送的显示名
+ *  设置推送的显示名。
+ *
+ *  已废弃，请用 {@link IEMPushManager::updatePushDisplayName:completion:} 代替。
  *
  *  @param aDisplayName     推送显示名
- *  @param aCompletionBlock 完成的回调
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  Set display name for the push notification
+ *  Set the display name for the push notification.
  *
- *  @param aDisplayName     Display name of push
- *  @param aCompletionBlock The callback block of completion
+ *  Deprecated, please use  {@link IEMPushManager::updatePushDisplayName:completion:}  instead.
+ *
+ *  @param aDisplayName     The display name of push notification.
+ *  @param aCompletionBlock The completion block, which contains the error message if the method fails.
  *
  */
 - (void)updatePushNotifiationDisplayName:(NSString *)aDisplayName
-                              completion:(void (^)(NSString *aDisplayName, EMError *aError))aCompletionBlock EM_DEPRECATED_IOS(3_1_0, 3_7_2, "Use -[IEMPushManager:updatePushNotifiationDisplayName:completion:] instead");
+                              completion:(void (^)(NSString *aDisplayName, EMError *aError))aCompletionBlock EM_DEPRECATED_IOS(3_1_0, 3_7_2, "Use -IEMPushManager::updatePushDisplayName:completion: instead");
 
-/*!
+/**
  *  \~chinese
- *  从服务器获取推送属性
+ *  从服务器获取推送设置。
  *
- *  同步方法，会阻塞当前线程
+ *  已废弃，请用  {@link IEMPushManager::getPushOptionsFromServerWithError:} 代替。
  *
- *  @param pError  错误信息
+ *  同步方法，会阻塞当前线程。
  *
- *  @result EMPushOptions 推送属性
+ *  @param pError  错误信息，包含调用失败的原因。
+ *
+ *  @result EMPushOptions 推送设置。
  *
  *  \~english
- *  Get Apple Push Notification Service options from the server
+ *  Get Apple Push Notification Service options from the server.
  *
- *  Synchronization method will block the current thread
+ *  Deprecated, please use  {@link IEMPushManager::getPushOptionsFromServerWithError:}  instead.
  *
- *  @param pError  Error
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @result EMPushOptions  Apple Push Notification Service options
+ *  @param pError  A description of the issue that caused this call to fail.
+ *
+ *  @result EMPushOptions  The Apple Push Notification Service options.
  */
-- (EMPushOptions *)getPushOptionsFromServerWithError:(EMError **)pError EM_DEPRECATED_IOS(3_1_0, 3_7_2, "Use -[IEMPushManager:getPushOptionsFromServerWithError:] instead");
+- (EMPushOptions *)getPushOptionsFromServerWithError:(EMError **)pError EM_DEPRECATED_IOS(3_1_0, 3_7_2, "Use -IEMPushManager::getPushOptionsFromServerWithError: instead");
 
-/*!
+/**
  *  \~chinese
- *  从服务器获取推送属性
+ *  从服务器获取推送设置。
  *
- *  @param aCompletionBlock 完成的回调
+ *  已废弃，请用 {@link IEMPushManager::getPushNotificationOptionsFromServerWithCompletion:} 代替。
+ *
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  Get Apple Push Notification Service options from the server
+ *  Get Apple Push Notification Service options from the server.
  *
- *  @param aCompletionBlock The callback of completion block
+ *  Deprecated, please use  {@link IEMPushManager::getPushNotificationOptionsFromServerWithCompletion:}  instead.
+ *
+ *  @param aCompletionBlock The completion block, which contains the push options and the error message if the method fails.
  */
-- (void)getPushNotificationOptionsFromServerWithCompletion:(void (^)(EMPushOptions *aOptions, EMError *aError))aCompletionBlock EM_DEPRECATED_IOS(3_1_0, 3_7_2, "Use -[IEMPushManager:getPushNotificationOptionsFromServerWithCompletion:] instead");
+- (void)getPushNotificationOptionsFromServerWithCompletion:(void (^)(EMPushOptions *aOptions, EMError *aError))aCompletionBlock EM_DEPRECATED_IOS(3_1_0, 3_7_2, "Use -IEMPushManager::getPushNotificationOptionsFromServerWithCompletion: instead");
 
-/*!
+/**
  *  \~chinese
- *  更新推送设置到服务器
+ *  更新推送设置到服务器。
  *
- *  同步方法，会阻塞当前线程
+ *  已废弃。
  *
- *  @result EMError 错误信息
+ *  同步方法，会阻塞当前线程。
+ *
+ *  @result EMError 错误信息，包含调用失败的原因。
  *
  *  \~english
- *  Update Apple Push Notification Service options to the server
+ *  Update Apple Push Notification Service options to the server.
  *
- *  Synchronization method will block the current thread
+ *  Deprecated.
  *
- *  @result EMError error
+ *  This is a synchronous method and blocks the current thread.
+ *
+ *  @result A description of the issue that caused this call to fail.
  */
 - (EMError *)updatePushOptionsToServer EM_DEPRECATED_IOS(3_1_0, 3_7_2, "");
 
-/*!
+/**
  *  \~chinese
- *  更新推送设置到服务器
+ *  更新推送设置到服务器。
  *
- *  @param aCompletionBlock 完成的回调
+ *  已废弃。
+ *
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  Update Apple Push Notification Service options to the server
+ *  Update Apple Push Notification Service options to the server.
  *
- *  @param aCompletionBlock The callback block of completion
+ *  Deprecated.
+ *
+ *  @param aCompletionBlock The completion block, which contains the error message if the method fails.
  */
 - (void)updatePushNotificationOptionsToServerWithCompletion:(void (^)(EMError *aError))aCompletionBlock EM_DEPRECATED_IOS(3_1_0, 3_7_2, "");
 
 #pragma mark - EM_DEPRECATED_IOS 3.2.3
 
-/*!
+/**
  *  \~chinese
- *  添加回调代理
+ *  添加回调代理。
  *
- *  @param aDelegate  要添加的代理
+ *  已废弃，请用 {@link  addDelegate:delegateQueue:} 代替。
+ *
+ *  @param aDelegate  要添加的代理。
  *
  *  \~english
- *  Add delegate
+ *  Adds the SDK delegate.
+ *
+ *  Deprecated, please use  {@link addDelegate:delegateQueue:}  instead.
  *
  *  @param aDelegate  Delegate
  */
-- (void)addDelegate:(id<EMClientDelegate>)aDelegate EM_DEPRECATED_IOS(3_1_0, 3_2_2, "Use -[IEMCallManager addDelegate:delegateQueue:] instead");
+- (void)addDelegate:(id<EMClientDelegate>)aDelegate EM_DEPRECATED_IOS(3_1_0, 3_2_2, "Use - addDelegate:delegateQueue: instead");
 
 #pragma mark - EM_DEPRECATED_IOS < 3.2.3
 
-/*!
+/**
  *  \~chinese
- *  注册用户
+ *  注册用户。
  *
- *  不推荐使用，建议后台通过REST注册
+ *  不推荐使用，建议后台通过 REST 注册。
  *
- *  @param aUsername        用户名
+ *  已废弃，请用 {@link registerWithUsername:password:completion:} 代替。
+ *
+ *  @param aUsername  用户名，长度不超过 64 个字符。请确保你对该参数设值。支持的字符包括英文字母（a-z），数字（0-9），下划线（_），英文横线（-），英文句号（.）。该参数不区分大小写，大写字母会被自动转为小写字母。如果使用正则表达式设置该参数，则可以将表达式写为：^[a-zA-Z0-9_-]+$。
  *  @param aPassword        密码
  *  @param aSuccessBlock    成功的回调
  *  @param aFailureBlock    失败的回调
  *
  *  \~english
- *  Register a new user
+ *  Register a new user.
  *
- *  To enhance the reliability, registering new IM user through REST API from backend is highly recommended
+ *  To enhance the reliability, registering new chat user through REST API from backend is highly recommended.
  *
- *  @param aUsername        Username
- *  @param aPassword        Password
- *  @param aSuccessBlock    The callback block of success
- *  @param aFailureBlock    The callback block of failure
+ *  Deprecated，please use  {@link registerWithUsername:password:completion:}  instead.
+ *
+ *  @param aUsername        The username. The maximum length is 64 characters. Ensure that you set this parameter. Supported characters include the 26 English letters (a-z), the ten numbers (0-9), the underscore (_), the hyphen (-), and the English period (.). This parameter is case insensitive, and upper-case letters are automatically changed to low-case ones. If you want to set this parameter as a regular expression, set it as ^[a-zA-Z0-9_-]+$.
+ *  @param aPassword        The password.
+ *  @param aSuccessBlock    The callback block of success.
+ *  @param aFailureBlock    The callback block of failure,  which contains the error message if the method fails.
  *
  */
 - (void)asyncRegisterWithUsername:(NSString *)aUsername
@@ -1063,23 +1232,26 @@ typedef enum {
                           success:(void (^)())aSuccessBlock
                           failure:(void (^)(EMError *aError))aFailureBlock EM_DEPRECATED_IOS(3_1_0, 3_2_2, "Use -registerWithUsername:password:completion: instead");
 
-
-/*!
+/**
  *  \~chinese
- *  登录
+ *  用户登录聊天服务器。
  *
- *  @param aUsername        用户名
- *  @param aPassword        密码
- *  @param aSuccessBlock    成功的回调
- *  @param aFailureBlock    失败的回调
+ *  已废弃，请用 {@link loginWithUsername:password:completion:} 代替。
+ *
+ *  @param aUsername        用户名。
+ *  @param aPassword        密码。
+ *  @param aSuccessBlock    成功的回调。
+ *  @param aFailureBlock    失败的回调。
  *
  *  \~english
- *  Login
+ *  A user logs in the chat server.
  *
- *  @param aUsername        Username
- *  @param aPassword        Password
- *  @param aSuccessBlock    The callback block of success
- *  @param aFailureBlock    The callback block of failure
+ *  Deprecated, please use  {@link loginWithUsername:password:completion:}  instead.
+ *
+ *  @param aUsername       The username.
+ *  @param aPassword       The password.
+ *  @param aSuccessBlock    The callback block of success.
+ *  @param aFailureBlock    The callback block of failure,  which contains the error message if the method fails.
  *
  */
 - (void)asyncLoginWithUsername:(NSString *)aUsername
@@ -1087,185 +1259,217 @@ typedef enum {
                        success:(void (^)())aSuccessBlock
                        failure:(void (^)(EMError *aError))aFailureBlock EM_DEPRECATED_IOS(3_1_0, 3_2_2, "Use -loginWithUsername:password:completion: instead");
 
-/*!
+/**
  *  \~chinese
- *  登出
+ *  登出聊天服务器。
  *
- *  @param aIsUnbindDeviceToken 是否解除device token的绑定，解除绑定后设备不会再收到消息推送
- *         如果传入YES, 解除绑定失败，将返回error
- *  @param aSuccessBlock    成功的回调
- *  @param aFailureBlock    失败的回调
+ *  已废弃，请用 {@link logout:completion:} 代替。
+ *
+ *  @param aIsUnbindDeviceToken 是否解除账号与设备绑定。YES 表示解除绑定。成功解绑后，用户登出账号后设备将不再收到消息推送。如果你将该参数设为 YES，但解绑失败，则 SDK 会返回错误信息，包含调用失败的原因。
+ *  @param aSuccessBlock    成功的回调。
+ *  @param aFailureBlock    失败的回调。
  *
  *  \~english
- *  Logout
+ *  A user logs out of the chat server.
  *
- *  @param aIsUnbindDeviceToken Unbind device token to disable the Apple Push Notification Service
- *  @param aSuccessBlock    The callback block of success
- *  @param aFailureBlock    The callback block of failure
+ *  Deprecated, please use  {@link logout:completion:}  instead.
+ *
+ *  @param aIsUnbindDeviceToken Unbind device token to disable the Apple Push Notification Service.
+ *  @param aSuccessBlock    The callback block of success.
+ *  @param aFailureBlock    The callback block of failure,  which contains the error message if the method fails.
  */
 - (void)asyncLogout:(BOOL)aIsUnbindDeviceToken
             success:(void (^)())aSuccessBlock
             failure:(void (^)(EMError *aError))aFailureBlock EM_DEPRECATED_IOS(3_1_0, 3_2_2, "Use -logout:completion: instead");
 
-
-/*!
+/**
  *  \~chinese
- *  绑定device token
+ *  绑定 device token。
  *
- *  @param aDeviceToken     要绑定的token
- *  @param aSuccessBlock    成功的回调
- *  @param aFailureBlock    失败的回调
+ *  已废弃，请用 {@link registerForRemoteNotificationsWithDeviceToken:completion:} 代替。
+ *
+ *  @param aDeviceToken     要绑定的 token。
+ *  @param aSuccessBlock    成功的回调。
+ *  @param aFailureBlock    失败的回调。
  *
  *  \~english
- *  Bind device token
+ *  Bind the device token.
+ *
+ *  Deprecated, please use  {@link registerForRemoteNotificationsWithDeviceToken:completion:}  instead.
  *
  *  @param aDeviceToken     Device token to bind
  *  @param aSuccessBlock    The callback block of success
- *  @param aFailureBlock    The callback block of failure
+ *  @param aFailureBlock    The callback block of failure,  which contains the error message if the method fails.
  */
 - (void)asyncBindDeviceToken:(NSData *)aDeviceToken
                      success:(void (^)())aSuccessBlock
                      failure:(void (^)(EMError *aError))aFailureBlock EM_DEPRECATED_IOS(3_1_0, 3_2_2, "Use -registerForRemoteNotificationsWithDeviceToken:completion: instead");
 
-/*!
+/**
  *  \~chinese
- *  设置推送消息显示的昵称
+ *  设置推送消息显示的昵称。
  *
- *  @param aNickname             要设置显示的昵称
- *  @param aSuccessBlock    成功的回调
- *  @param aFailureBlock    失败的回调
+ *  已废弃，请用 {@link IEMPushManager::updatePushDisplayName:completion:}  代替。
+ *
+ *  @param aNickname        要设置显示的昵称。
+ *  @param aSuccessBlock    成功的回调。
+ *  @param aFailureBlock    失败的回调。
  *
  *  \~english
- *  Set display name for push notification
+ *  Set the display name used by Apple Push Notification service (APNs).
  *
- *  @param aNickname        Push Notification display name
- *  @param aSuccessBlock    The callback block of success
- *  @param aFailureBlock    The callback block of failure
+ *  Deprecated, please use  {@link IEMPushManager::updatePushDisplayName:completion:}  instead.
+ *
+ *  @param aNickname        The push Notification display name.
+ *  @param aSuccessBlock    The callback block of success.
+ *  @param aFailureBlock    The callback block of failure,  which contains the error message if the method fails.
  *
  */
 - (void)asyncSetApnsNickname:(NSString *)aNickname
                      success:(void (^)())aSuccessBlock
-                     failure:(void (^)(EMError *aError))aFailureBlock EM_DEPRECATED_IOS(3_1_0, 3_2_2, "Use -updatePushNotifiationDisplayName:copletion: instead");
+                     failure:(void (^)(EMError *aError))aFailureBlock EM_DEPRECATED_IOS(3_1_0, 3_2_2, "Use -IEMPushManager::updatePushDisplayName:completion: instead");
 
-/*!
+/**
  *  \~chinese
- *  从服务器获取推送属性
+ *  从服务器获取推送属性。
  *
- *  @param aSuccessBlock    成功的回调
- *  @param aFailureBlock    失败的回调
+ *  已废弃，请用 {@link getPushNotificationOptionsFromServerWithCompletion:} 代替。
+ *
+ *  @param aSuccessBlock    成功的回调。
+ *  @param aFailureBlock    失败的回调。
  *
  *  \~english
- *  Get apns options from the server
+ *  Get APNS options from the server.
  *
- *  @param aSuccessBlock    The callback block of success
- *  @param aFailureBlock    The callback block of failure
+ *  Deprecated, please use  {@link getPushNotificationOptionsFromServerWithCompletion:}  instead.
+ *
+ *  @param aSuccessBlock    The callback block of success.
+ *  @param aFailureBlock    The callback block of failure,  which contains the error message if the method fails.
  */
 - (void)asyncGetPushOptionsFromServer:(void (^)(EMPushOptions *aOptions))aSuccessBlock
-                              failure:(void (^)(EMError *aError))aFailureBlock EM_DEPRECATED_IOS(3_1_0, 3_2_2, "Use -getPushOptionsFromServerWithCompletion: instead");
+                              failure:(void (^)(EMError *aError))aFailureBlock EM_DEPRECATED_IOS(3_1_0, 3_2_2, "Use -getPushNotificationOptionsFromServerWithCompletion: instead");
 
-/*!
+/**
  *  \~chinese
- *  更新推送设置到服务器
+ *  更新推送设置到服务器。
+ *
+ *  已废弃，请用 {@link updatePushNotificationOptionsToServerWithCompletion:} 代替。
  *
  *  @param aSuccessBlock    成功的回调
  *  @param aFailureBlock    失败的回调
  *
  *  \~english
- *  Update APNS options to the server
+ *  Update APNS options to the server.
+ *
+ *  Deprecated, please use  {@link updatePushNotificationOptionsToServerWithCompletion:}  instead.
  *
  *  @param aSuccessBlock    The callback block of success
- *  @param aFailureBlock    The callback block of failure
+ *  @param aFailureBlock    The callback block of failure,  which contains the error message if the method fails.
  *
  */
 - (void)asyncUpdatePushOptionsToServer:(void (^)())aSuccessBlock
                                failure:(void (^)(EMError *aError))aFailureBlock EM_DEPRECATED_IOS(3_1_0, 3_2_2, "Use -updatePushNotificationOptionsToServerWithCompletion: instead");
 
-/*!
+/**
  *  \~chinese
- *  上传日志到服务器
+ *  上传日志到服务器。
  *
- *  @param aSuccessBlock    成功的回调
- *  @param aFailureBlock    失败的回调
+ *  已废弃，请用 {@link uploadDebugLogToServerWithCompletion:} 代替。
+ *
+ *  @param aSuccessBlock    成功的回调。
+ *  @param aFailureBlock    失败的回调。
  *
  *  \~english
- *  Upload log to server
+ *  Upload the log to server.
+ *
+ *  Deprecated, please use  {@link uploadDebugLogToServerWithCompletion:}  instead.
  *
  *  @param aSuccessBlock    The callback block of success
- *  @param aFailureBlock    The callback block of failure
+ *  @param aFailureBlock    The callback block of failure,  which contains the error message if the method fails.
  */
 - (void)asyncUploadLogToServer:(void (^)())aSuccessBlock
                        failure:(void (^)(EMError *aError))aFailureBlock EM_DEPRECATED_IOS(3_1_0, 3_2_2, "Use -uploadDebugLogToServerWithCompletion: instead");
 
-/*!
+/**
  *  \~chinese
- *  iOS专用，数据迁移到SDK3.0
+ *  iOS 专用，数据迁移到 SDK3.0。
  *
- *  同步方法，会阻塞当前线程
+ *  已废弃，请用 {@link migrateDatabaseToLatestSDK} 代替。
  *
- *  升级到SDK3.0版本需要调用该方法，开发者需要等该方法执行完后再进行数据库相关操作
+ *  同步方法，会阻塞当前线程。
  *
- *  @result 是否迁移成功
+ *  升级到 SDK3.0 版本需要调用该方法，开发者需要等该方法执行完后再进行数据库相关操作。
+ *
+ *  @result 是否迁移成功。
  *
  *  \~english
- *  iOS-specific, data migration to SDK3.0
+ *  iOS-specific, data migration to SDK 3.0.
  *
- *  Synchronization method will block the current thread
+ *  Deprecated, please use  {@link migrateDatabaseToLatestSDK}  instead.
  *
- *  It's needed to call this method when update to SDK3.0, developers need to wait this method complete before DB related operations
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @result Whether migration successful
+ *  It's needed to call this method when update to SDK3.0, developers need to wait this method complete before DB related operations.
+ *
+ *  @result Whether migration successful.
  */
 - (BOOL)dataMigrationTo3 EM_DEPRECATED_IOS(3_1_0, 3_2_2, "Use -migrateDatabaseToLatestSDK instead");
 
-
-/*!
+/**
  *  \~chinese
- *  强制指定的设备登出
+ *  强制指定的设备登出。
  *
- *  同步方法，会阻塞当前线程
+ *  已废弃，请用 {@link kickDeviceWithUsername:password:resource:} 代替。
  *
- *  @param aDevice          设备信息
- *  @param aUsername        用户名
- *  @param aPassword        密码
+ *  同步方法，会阻塞当前线程。
  *
- *  @result EMError 错误信息
+ *  @param aDevice          设备信息。
+ *  @param aUsername        用户名。
+ *  @param aPassword        密码。
+ *
+ *  @result EMError 错误信息，包含调用失败的原因。
  *
  *  \~english
- *  Force logout the specified device
+ *  Kick a single user from your app installed on a specific device.
  *
- *  device information can be obtained from getLoggedInDevicesFromServerWithUsername:password:error:
+ *  The device information can be obtained from `getLoggedInDevicesFromServerWithUsername`.
  *
- *  Synchronization method will block the current thread
+ *  Deprecated, please use  {@link kickDeviceWithUsername:password:resource:}  instead.
  *
- *  @param aDevice          device information <EMDeviceConfig>
- *  @param aUsername        Username
- *  @param aPassword        Password
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @result EMError error
+ *  @param aDevice       The information of the logged in devices.
+ *  @param aUsername     The username.
+ *  @param aPassword      The password.
+ *
+ *  @result A description of the issue that caused this call to fail.
  */
 - (EMError *)kickDevice:(EMDeviceConfig *)aDevice
                username:(NSString *)aUsername
                password:(NSString *)aPassword EM_DEPRECATED_IOS(3_1_0, 3_2_2, "Use - kickDeviceWithUsername:password:resource: instead");
 
-
-/*!
+/**
  *  \~chinese
- *  强制指定的设备登出
+ *  强制指定的设备登出。
  *
- *  @param aDevice          设备信息
- *  @param aUsername        用户名
- *  @param aPassword        密码
- *  @param aCompletionBlock 完成的回调
+ *  已废弃，请用 {@link kickDeviceWithUsername:password:resource:completion:} 代替。
+ *
+ *  @param aDevice          设备信息。
+ *  @param aUsername        用户名。
+ *  @param aPassword        密码。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  Force logout the specified device
+ *  Force logout the specified device.
  *
- *  device information can be obtained from getLoggedInDevicesFromServerWithUsername:password:error:
+ *  Deprecated, please use  {@link kickDeviceWithUsername:password:resource:completion:}  instead.
  *
- *  @param aDevice          device information <EMDeviceConfig>
- *  @param aUsername        Username
- *  @param aPassword        Password
- *  @param aCompletionBlock The callback block of completion
+ *  The device information can be obtained from `getLoggedInDevicesFromServerWithUsername:password:error:`.
+ *
+ *  @param aDevice       The information of the logged in devices.
+ *  @param aUsername     The username.
+ *  @param aPassword      The password.
+ *  @param aCompletionBlock The completion block, which contains the error message if the method fails.
  */
 - (void)kickDevice:(EMDeviceConfig *)aDevice
           username:(NSString *)aUsername

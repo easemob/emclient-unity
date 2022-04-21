@@ -1,4 +1,3 @@
-//
 //  HyphenateChat.h
 //  HyphenateChat
 //
@@ -8,10 +7,16 @@
 
 #import <UIKit/UIKit.h>
 
-//! Project version number for HyphenateChat.
+/**
+  *  \~chinese 
+  *  即时通讯项目版本号。
+  *
+  *  \~english
+  *  The project version number of Chat.
+  */
 FOUNDATION_EXPORT double HyphenateChatVersionNumber;
 
-//! Project version string for HyphenateChat.
+// The project version string of Chat.
 FOUNDATION_EXPORT const unsigned char HyphenateChatVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <HyphenateChat/PublicHeader.h>

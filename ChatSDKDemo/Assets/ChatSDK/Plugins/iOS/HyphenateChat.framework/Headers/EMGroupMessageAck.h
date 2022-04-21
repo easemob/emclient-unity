@@ -10,57 +10,57 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/*!
+/**
  *  \~chinese
- *  群组消息的确认类
+ *  群组消息的回执。
  *
  *  \~english
- *  Apple Push Notification Service setting options
+ *  The group message receipt.
  */
 @interface EMGroupMessageAck : NSObject
 
-/*!
+/**
  *  \~chinese
- *  群组消息ID
+ *  群组消息 ID。
  *
  *  \~english
- *  Group message id
+ *  The group message ID.
  */
 @property (nonatomic, copy) NSString *messageId;
 
-/*!
+/**
  *  \~chinese
- *  群组消息发送者
+ *  群组消息发送者。
  *
  *  \~english
- *  Group message sender
+ *  The user that sends the group message.
  */
 @property (nonatomic, copy) NSString *from;
 
-/*!
+/**
  *  \~chinese
- *  群组消息内容
+ *  群组消息内容。
  *
  *  \~english
- *  Group message content
+ *  The group message content.
  */
 @property (nonatomic, copy) NSString *content;
 
-/*!
+/**
  *  \~chinese
- *  群组消息已读消息数量
+ *  群组消息已读人数。
  *
  *  \~english
- *  Group message has read count
+ *  The number of group members that have read the group message.
  */
 @property (nonatomic) int readCount;
 
-/*!
+/**
  *  \~chinese
- *  群组消息时间戳
+ *  群组消息回执发送的 Unix 时间戳。
  *
  *  \~english
- *  Group message timestamp
+ *  The Unix timestamp for group message ack.
  */
 @property (nonatomic) long long timestamp;
 

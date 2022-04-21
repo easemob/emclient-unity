@@ -218,7 +218,7 @@
     return ret;
 }
 
-+ (NSString *)extToAttributeString:(NSDictionary *)ext {
++ (NSDictionary *)extToAttributeString:(NSDictionary *)ext {
     if (ext.allKeys.count == 0) {
         return nil;
     }
@@ -227,25 +227,29 @@
     for (NSString *key in ext.allKeys) {
         id value = ext[key];
         if ([value isKindOfClass:[NSNumber class]]) {
-            if (strcmp([value objCType], @encode(float)) == 0)
+            const char * objCType = [((NSNumber*)value) objCType];
+            if (strcmp(objCType, @encode(float)) == 0)
             {
                 dict[key] = @{@"type":@"f",@"value":value};
             }
-            else if (strcmp([value objCType], @encode(double)) == 0)
+            else if (strcmp(objCType, @encode(double)) == 0)
             {
                 dict[key] = @{@"type":@"d",@"value":value};
             }
-            else if (strcmp([value objCType], @encode(int)) == 0)
+            else if (strcmp(objCType, @encode(int)) == 0)
             {
                 dict[key] = @{@"type":@"i",@"value":value};
             }
-            else if (strcmp([value objCType], @encode(BOOL)) == 0)
-            {
-                dict[key] = @{@"type":@"b",@"value":value};
-            }
-            else if (strcmp([value objCType], @encode(long)) == 0)
+//            else if (strcmp(objCType, @encode(BOOL)) == 0)
+//            {
+//                dict[key] = @{@"type":@"b",@"value":value};
+//            }
+            else if (strcmp(objCType, @encode(long)) == 0)
             {
                 dict[key] = @{@"type":@"l",@"value":value};
+            }
+            else {
+                dict[key] = @{@"type":@"b",@"value":value};
             }
         }
         else if ([value isKindOfClass:[NSString class]]) {
@@ -255,14 +259,13 @@
             dict[key] = @{@"type":@"strv", @"value": value};
         }
         else if ([value isKindOfClass:[NSDictionary class]]) {
-//            NSString *str = [Transfrom NSStringFromJsonObject:value];
-            dict[key] = @{@"type":@"jstr", @"value":value4  };
+            dict[key] = @{@"type":@"jstr", @"value":value};
         }
     }
     
-    NSString *ret = [Transfrom NSStringFromJsonObject:dict];
+//    NSString *ret = [Transfrom NSStringFromJsonObject:dict];
     
-    return ret;
+    return dict;
 }
 
 @end

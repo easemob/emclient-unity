@@ -1,45 +1,52 @@
-/*!
+/**
  *  \~chinese
  *  @header EMDeviceConfig.h
- *  @abstract 已登录设备的信息类
+ *  @abstract 已登录设备的信息类。
  *  @author Hyphenate
  *  @version 3.00
  *
  *  \~english
  *  @header EMDeviceConfig.h
- *  @abstract The info of logged in device
+ *  @abstract The information of the device.
  *  @author Hyphenate
  *  @version 3.00
  */
 
 #import <Foundation/Foundation.h>
 
-@interface EMDeviceConfig : NSObject
-
-/*!
+/**
  *  \~chinese
- *  设备资源描述
+ *  登录设备配置信息。
  *
  *  \~english
- *  Device resources
+ *  The configurations of the device that the user logs into.
+ */
+@interface EMDeviceConfig : NSObject
+
+/**
+ *  \~chinese
+ *  设备资源描述。
+ *
+ *  \~english
+ *  The device resources.
  */
 @property (nonatomic, readonly) NSString *resource;
 
-/*!
+/**
  *  \~chinese
- *  设备的UUID
+ *  设备的 UUID。
  *
  *  \~english
- *  Device UUID
+ *  The device UUID.
  */
 @property (nonatomic, readonly) NSString *deviceUUID;
 
-/*!
+/**
  *  \~chinese
- *  设备名称
+ *  设备名称。
  *
  *  \~english
- *  Device name
+ *  The device name.
  */
 @property (nonatomic, readonly) NSString *deviceName;
 

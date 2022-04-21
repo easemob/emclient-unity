@@ -1,13 +1,13 @@
-/*!
+/**
  *  \~chinese
  *  @header EMPushOptions.h
- *  @abstract 消息推送的设置选项
+ *  @abstract 消息推送的设置选项。
  *  @author Hyphenate
  *  @version 3.00
  *
  *  \~english
  *  @header EMPushOptions.h
- *  @abstract Setting options of Apple Push Notification
+ *  @abstract The setting options of Apple Push Notification.
  *  @author Hyphenate
  *  @version 3.00
  */
@@ -23,78 +23,109 @@
 #define kPushNoDisturbingEndH @"notification_no_disturbing_end"
 #define kPushNoDisturbingEndM @"notification_no_disturbing_endM"
 
-/*!
+/**
  *  \~chinese 
- *  推送消息的显示风格类型
+ *  推送消息的显示风格类型。
  *
  *  \~english 
- *  Display style of push message
+ *  The display style of push message.
  */
 typedef enum {
-    EMPushDisplayStyleSimpleBanner = 0, /*! 
+    EMPushDisplayStyleSimpleBanner = 0, /**
                                          *  \~chinese
-                                         *  简单显示"您有一条新消息"
+                                         *  简单显示"您有一条新消息"。
                                          *
                                          *  \~english
-                                         *  Simply show "You have a new message"
+                                         *  A simple banner that displays "You have a new message".
                                          */
-    EMPushDisplayStyleMessageSummary,   /*! 
+    EMPushDisplayStyleMessageSummary,   /**
                                          *  \~chinese 
-                                         *  显示消息内容
+                                         *  显示消息内容。
                                          * 
                                          *  \~english 
-                                         *  Show message's content
+                                         *  Displays the message's content.
                                          */
 } EMPushDisplayStyle;
 
 
-/*!
+/**
  *  \~chinese 
- *  消息推送的设置选项
+ *  推送通知服务（APNs）的设置。
  *
  *  \~english 
- *  Apple Push Notification Service setting options
+ *  The options for Apple Push Notification service (APNs).
  */
 @interface EMPushOptions : NSObject
 
-/*!
+/**
  *  \~chinese 
- *  推送消息显示的昵称
+ *  推送消息显示的昵称。
  *
  *  \~english 
- *  User's nickname to be displayed in apple push notification service messages
+ *  The user's nickname to be displayed in the notification.
  */
 @property (nonatomic, strong, readonly) NSString *displayName;
 
-/*!
+/**
  *  \~chinese 
- *  推送消息显示的类型
+ *  推送消息显示的类型。
  *
  *  \~english 
- *  Display style of notification message
+ *  The display style of the notification.
  */
 @property (nonatomic, readonly) EMPushDisplayStyle displayStyle;
 
 
-/*!
+/**
  *  \~chinese 
+ *  消息推送免打扰开始时间，小时，暂时只支持整点（小时），24 小时制。
+ *
+ *  \~english 
+ *  The no-disturbing mode start time (in hour).
+ */
+@property (nonatomic, readonly) NSInteger silentModeStart;
+
+/**
+ *  \~chinese 
+ *  消息推送免打扰结束时间，小时，暂时只支持整点（小时）。
+ *
+ *  \~english 
+ *  The no-disturbing mode end time (in hour).
+ */
+@property (nonatomic, readonly) NSInteger silentModeEnd;
+
+/**
+ *  \~chinese
+ *  是否开启消息免打扰。
+ *
+ *  \~english
+ *  Whether to enable the Do Not Disturb mode.
+ */
+
+@property (nonatomic, readonly) BOOL silentModeEnabled;
+
+#pragma mark - EM_DEPRECATED_IOS 3.8.8
+/**
+ *  \~chinese
  *  消息推送免打扰开始时间，小时，暂时只支持整点（小时）
  *
- *  \~english 
+ *  \~english
  *  No disturbing mode start time (in hour)
  */
-@property (nonatomic, readonly) NSInteger noDisturbingStartH;
+@property (nonatomic, readonly) NSInteger noDisturbingStartH
+__deprecated_msg("Use silentModeStart instead");
 
-/*!
- *  \~chinese 
+/**
+ *  \~chinese
  *  消息推送免打扰结束时间，小时，暂时只支持整点（小时）
  *
- *  \~english 
+ *  \~english
  *  No disturbing mode end time (in hour)
  */
-@property (nonatomic, readonly) NSInteger noDisturbingEndH;
+@property (nonatomic, readonly) NSInteger noDisturbingEndH
+__deprecated_msg("Use silentModeEnd instead");
 
-/*!
+/**
  *  \~chinese
  *  是否开启消息免打扰
  *
@@ -102,17 +133,21 @@ typedef enum {
  *  Whether enable messages do not disturb
  */
 
-@property (nonatomic, readonly) BOOL isNoDisturbEnable;
-
+@property (nonatomic, readonly) BOOL isNoDisturbEnable
+__deprecated_msg("Use silentModeEnabled instead");
 
 #pragma mark - EM_DEPRECATED_IOS
 
-/*!
+/**
  *  \~chinese
- *  推送消息显示的昵称
+ *  推送消息显示的昵称。
+ * 
+ *  已废弃，请用 {@link displayName} 代替。
  *
  *  \~english
- *  User's nickname to be displayed in apple push notification service messages
+ *  The user's nickname to be displayed in apple push notification service messages.
+ * 
+ *  Deprecated. Please use  {@link displayName}  instead.
  */
 @property (nonatomic, copy) NSString *nickname EM_DEPRECATED_IOS(3_1_0, 3_2_2, "Use - displayName instead");
 

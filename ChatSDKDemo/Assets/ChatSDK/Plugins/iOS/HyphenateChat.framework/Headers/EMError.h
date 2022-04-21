@@ -1,13 +1,13 @@
-/*!
+/**
  *  \~chinese
  *  @header EMError.h
- *  @abstract SDK定义的错误类
+ *  @abstract SDK 定义的错误类。
  *  @author Hyphenate
  *  @version 3.00
  *
  *  \~english
  *  @header EMError.h
- *  @abstract SDK defined error
+ *  @abstract The SDK defined error.
  *  @author Hyphenate
  *  @version 3.00
  */
@@ -16,72 +16,72 @@
 
 #import "EMErrorCode.h"
 
-/*!
+/**
  *  \~chinese 
- *  SDK定义的错误类
+ *  SDK 定义的错误类。
  *
  *  \~english 
- *  SDK defined error
+ *  The error defined by the SDK.
  */
 @interface EMError : NSObject
 
-/*!
+/**
  *  \~chinese 
- *  错误码
+ *  错误码。
  *
  *  \~english 
- *  Error code
+ *  The error code.
  */
 @property (nonatomic) EMErrorCode code;
 
-/*!
+/**
  *  \~chinese 
- *  错误描述
+ *  错误描述。
  *
  *  \~english 
- *  Error description
+ *  The error description.
  */
 @property (nonatomic, copy) NSString *errorDescription;
 
 
 #pragma mark - Internal SDK
 
-/*!
+/**
  *  \~chinese 
- *  初始化错误实例
+ *  初始化错误实例。
  *
- *  @param aDescription  错误描述
- *  @param aCode         错误码
+ *  @param aDescription  错误描述。
+ *  @param aCode         错误码。
  *
- *  @result 错误实例
+ *  @result 错误实例。
  *
  *  \~english
- *  Initialize an error instance
+ *  Initializes an error instance.
  *
- *  @param aDescription  Error description
- *  @param aCode         Error code
+ *  @param aDescription  The Error description.
+ *  @param aCode         The Error code.
  *
- *  @result Error instance
+ *  @result The Error instance.
  */
 - (instancetype)initWithDescription:(NSString *)aDescription
                                code:(EMErrorCode)aCode;
 
-/*!
+/**
  *  \~chinese 
- *  创建错误实例
+ *  创建错误实例。
  *
- *  @param aDescription  错误描述
- *  @param aCode         错误码
+ *  @param aDescription  错误描述。
+ *  @param aCode         错误码。
  *
- *  @result 错误实例
+ *  @result 错误实例。
  *
  *  \~english
- *  Create a error instance
+ *  Creates an error instance.
  *
- *  @param aDescription  Error description
- *  @param aCode         Error code
+ *  @param aDescription  The Error description.
+ *  @param aCode         The Error code.
  *
- *  @result Error instance
+ *  @result The Error instance.
  */
 + (instancetype)errorWithDescription:(NSString *)aDescription
                                 code:(EMErrorCode)aCode;

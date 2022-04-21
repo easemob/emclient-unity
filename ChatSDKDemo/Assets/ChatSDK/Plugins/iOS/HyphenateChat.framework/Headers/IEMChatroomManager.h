@@ -1,13 +1,13 @@
-/*!
+/**
  *  \~chinese
  *  @header IEMChatroomManager.h
- *  @abstract 聊天室相关操作协议类
+ *  @abstract 聊天室相关操作协议类。
  *  @author Hyphenate
  *  @version 3.00
  *
  *  \~english
  *  @header IEMChatroomManager.h
- *  @abstract This protocol defines the chat room operations
+ *  @abstract This protocol defines the chat room operations.
  *  @author Hyphenate
  *  @version 3.00
  */
@@ -24,12 +24,12 @@
 
 @class EMError;
 
-/*!
+/**
  *  \~chinese
- *  聊天室相关操作
+ *  管理聊天室的类。
  *
  *  \~english
- *  Chatroom operations
+ *  A class that manages the chatrooms.
  */
 @protocol IEMChatroomManager <NSObject>
 
@@ -37,78 +37,82 @@
 
 #pragma mark - Delegate
 
-/*!
+/**
  *  \~chinese
- *  添加回调代理
+ *  添加回调代理。
  *
- *  @param aDelegate  要添加的代理
- *  @param aQueue     代理执行的队列
+ *  @param aDelegate  要添加的代理。
+ *  @param aQueue     代理执行的队列。
  *
  *  \~english
- *  Add delegate
+ *  Adds the SDK delegate.
  *
- *  @param aDelegate  Delegate to be added
- *  @param aQueue     (optional) The queue of calling delegate methods. Pass in nil to run on main thread.
+ *  @param aDelegate  The delegate that you want to add: ChatroomManagerDelegate.
+ *  @param aQueue     (Optional) The queue of calling the delegate methods. To run the app on the main thread, set this parameter as nil.
  */
 - (void)addDelegate:(id<EMChatroomManagerDelegate>)aDelegate
       delegateQueue:(dispatch_queue_t)aQueue;
 
-/*!
+/**
  *  \~chinese
- *  移除回调代理
+ *  移除回调代理。
  *
- *  @param aDelegate  要移除的代理
+ *  @param aDelegate  要移除的代理。
  *
  *  \~english
- *  Remove delegate
+ *  Removes the delegate.
  *
- *  @param aDelegate  Delegate to be removed
+ *  @param aDelegate  The delegate that you want to remove.
  */
 - (void)removeDelegate:(id<EMChatroomManagerDelegate>)aDelegate;
 
 #pragma mark - Fetch Chatrooms
 
-/*!
+/**
  *  \~chinese
- *  从服务器获取指定数目的聊天室
+ *  从服务器获取指定数目的聊天室。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aPageNum         获取第几页
- *  @param aPageSize        获取多少条
- *  @param pError           出错信息
+ *  @param aPageNum         获取第几页。
+ *  @param aPageSize        获取多少条。
+ *  @param pError           出错信息。
  *
- *  @result EMPageResult  聊天室列表在此搜索结果的list
+ *  @result 获取的聊天室列表，详见 EMPageResult。
  *
  *  \~english
- *  Get pagesize number chatroom from server.
+ *  Gets the specified number of chat rooms from the server.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aPageNum         Page number
- *  @param aPageSize        Page size
- *  @param pError   Error
+ *  @param aPageNum         The page number.
+ *  @param aPageSize        The page size.
+ *  @param pError           The error information if the method fails: Error.
  *
- *  @result EMPageResult  Chatroom list is in the object's list
+ *  @result The chat room list. See EMPageResult.
  */
 - (EMPageResult *)getChatroomsFromServerWithPage:(NSInteger)aPageNum
                                         pageSize:(NSInteger)aPageSize
                                            error:(EMError **)pError;
 
-/*!
+/**
  *  \~chinese
- *  从服务器获取指定数目的聊天室
+ *  从服务器获取指定数目的聊天室。
+ * 
+ *  异步方法。
  *
- *  @param aPageNum             获取第几页
- *  @param aPageSize            获取多少条
- *  @param aCompletionBlock      完成的回调
+ *  @param aPageNum             获取第几页。
+ *  @param aPageSize            获取多少条。
+ *  @param aCompletionBlock      该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  Get all the chatrooms from server
+ *  Gets the specified number of chat rooms from the server.
+ * 
+ *  This is an asynchronous method.
  *
- *  @param aPageNum         Page number
- *  @param aPageSize        Page size
- *  @param aCompletionBlock     The callback block of completion
+ *  @param aPageNum         The page number.
+ *  @param aPageSize        The page size.
+ *  @param aCompletionBlock     The completion block, which contains the error message if the method call fails.
  *
  */
 
@@ -118,34 +122,34 @@
 
 #pragma mark - Create
 
-/*!
+/**
  *  \~chinese
- *  创建聊天室
+ *  创建聊天室。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aSubject             名称
- *  @param aDescription         描述
- *  @param aInvitees            成员（不包括创建者自己）
- *  @param aMessage             邀请消息
- *  @param aMaxMembersCount     聊天室最大成员数
- *  @param pError               出错信息
+ *  @param aSubject             聊天室主题。
+ *  @param aDescription         聊天室描述。
+ *  @param aInvitees            聊天室的成员，不包括聊天室创建者自己。
+ *  @param aMessage             加入聊天室的邀请内容。
+ *  @param aMaxMembersCount     聊天室最大成员数。
+ *  @param pError               出错信息。
  *
- *  @result EMChatroom   创建的聊天室
+ *  @result    创建的聊天室，详见 EMChatroom。
  *
  *  \~english
- *  Create a chatroom
+ *  Creates a chatroom.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aSubject             Subject
- *  @param aDescription         Description
- *  @param aInvitees            Members, without creater
- *  @param aMessage             Invitation message
- *  @param aMaxMembersCount     Max members count
- *  @param pError               Error
+ *  @param aSubject             The subject of the chatroom.
+ *  @param aDescription         The description of the chatroom.
+ *  @param aInvitees            The members of the chatroom. Do not include the creator.
+ *  @param aMessage             The invitation message.
+ *  @param aMaxMembersCount     The maximum number of members in the chatroom.
+ *  @param pError               The error information if the method fails: Error.
  *
- *  @result EMChatroom  Created chatroom
+ *  @result    The create chatroom. See EMChatroom.
  */
 - (EMChatroom *)createChatroomWithSubject:(NSString *)aSubject
                               description:(NSString *)aDescription
@@ -154,27 +158,31 @@
                           maxMembersCount:(NSInteger)aMaxMembersCount
                                     error:(EMError **)pError;
 
-/*!
+/**
  *  \~chinese
- *  创建聊天室
+ *  创建一个聊天室。
+ * 
+ *  异步方法。
  *
- *  @param aSubject                  名称
- *  @param aDescription             聊天室描述
- *  @param aInvitees                聊天室成员（不包括创建者自己）
- *  @param aMessage                 邀请消息
- *  @param aMaxMembersCount         聊天室最大成员数
- *  @param aCompletionBlock         完成的回调
+ *  @param aSubject                 聊天室主题。
+ *  @param aDescription             聊天室描述。
+ *  @param aInvitees                聊天室的成员，不包括聊天室创建者自己。
+ *  @param aMessage                 加入聊天室的邀请内容。
+ *  @param aMaxMembersCount         聊天室最大成员数。
+ *  @param aCompletionBlock         该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *
  *  \~english
- *  Create a chatroom
+ *  Creates a chatroom.
+ * 
+ *  This is an asynchronous method.
  *
- *  @param aSubject                 Group subject
- *  @param aDescription             Group description
- *  @param aInvitees                Group members, without creater
- *  @param aMessage                 Invitation message
- *  @param aMaxMembersCount         Max members count
- *  @param aCompletionBlock         The callback block of completion
+ *  @param aSubject                 The subject of the chatroom.
+ *  @param aDescription             The description of the chatroom.
+ *  @param aInvitees                The members of the chatroom. Do not include the creator.
+ *  @param aMessage                 The invitation message.
+ *  @param aMaxMembersCount         The maximum number of members in the chatroom.
+ *  @param aCompletionBlock         The completion block, which contains the error message if the method call fails.
  *
  */
 - (void)createChatroomWithSubject:(NSString *)aSubject
@@ -186,121 +194,143 @@
 
 #pragma mark - Edit Chatroom
 
-/*!
+/**
  *  \~chinese
- *  加入聊天室
+ *  加入一个聊天室。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aChatroomId  聊天室的ID
- *  @param pError       返回的错误信息
+ *  @param aChatroomId  聊天室的 ID。
+ *  @param pError       返回的错误信息。
  *
- *  @result EMChatroom 所加入的聊天室
+ *  @result  所加入的聊天室，详见 EMChatroom。
  *
  *  \~english
- *  Join a chatroom
+ *  Joins a chatroom.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aChatroomId  Chatroom id
- *  @param pError       Error
+ *  @param aChatroomId  The chatroom ID.
+ *  @param pError       The error information if the method fails: Error.
  *
- *  @result EMChatroom Joined chatroom
+ *  @result  The chatroom instance.
  */
 - (EMChatroom *)joinChatroom:(NSString *)aChatroomId
                        error:(EMError **)pError;
 
-/*!
+/**
  *  \~chinese
- *  加入聊天室
+ *  加入聊天室。
+ * 
+ *  异步方法。
  *
- *  @param aChatroomId      聊天室的ID
- *  @param aCompletionBlock      完成的回调
+ *  @param aChatroomId           聊天室的 ID。
+ *  @param aCompletionBlock      该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *
  *  \~english
- *  Join a chatroom
+ *  Joins a chatroom.
+ * 
+ *  This is an asynchronous method.
  *
- *  @param aChatroomId      Chatroom id
- *  @param aCompletionBlock     The callback block of completion
+ *  @param aChatroomId          The chatroom ID.
+ *  @param aCompletionBlock     The completion block, which contains the error message if the method call fails.
  *
  */
 - (void)joinChatroom:(NSString *)aChatroomId
           completion:(void (^)(EMChatroom *aChatroom, EMError *aError))aCompletionBlock;
 
-/*!
+/**
  *  \~chinese
- *  退出聊天室
+ *  退出聊天室。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aChatroomId  聊天室ID
- *  @param pError       错误信息
+ *  @param aChatroomId  聊天室 ID。
+ *  @param pError       错误信息。
  *
  *
  *  \~english
- *  Leave a chatroom
+ *  Leaves a chatroom.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aChatroomId  Chatroom id
- *  @param pError       Error
+ *  @param aChatroomId  The chatroom ID.
+ *  @param pError       The error information if the method fails: Error.
  *
  */
 - (void)leaveChatroom:(NSString *)aChatroomId
                 error:(EMError **)pError;
 
-/*!
+/**
  *  \~chinese
- *  退出聊天室
+ *  退出聊天室。
+ * 
+ *  异步方法。
  *
- *  @param aChatroomId          聊天室ID
- *  @param aCompletionBlock      完成的回调
+ *  @param aChatroomId          聊天室 ID。
+ *  @param aCompletionBlock     该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *
  *  \~english
- *  Leave a chatroom
+ *  Leaves a chatroom.
+ * 
+ *  This is an asynchronous method.
  *
- *  @param aChatroomId      Chatroom id
- *  @param aCompletionBlock     The callback block of completion
+ *  @param aChatroomId          The chatroom ID.
+ *  @param aCompletionBlock     The completion block, which contains the error message if the method call fails.
  *
  */
 - (void)leaveChatroom:(NSString *)aChatroomId
            completion:(void (^)(EMError *aError))aCompletionBlock;
 
-/*!
+/**
  *  \~chinese
- *  解散聊天室, 需要owner权限
+ *  解散聊天室。
+ * 
+ *  仅聊天室所有者可以解散聊天室。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aChatroomId  聊天室ID
+ *  @param aChatroomId  聊天室 ID。
  *
- *  @result EMError   错误信息, 成功返回nil
+ *  @result   - 如果方法调用成功，返回 nil。
+ *            - 如果方法调用失败，返回错误信息。详见 EMError。
  *
  *  \~english
- *  Destroy a group, owner‘s authority is required
+ *  Dismisses a chatroom. 
+ * 
+ *  Only the owner of a chatroom has the privilege to dismiss it.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aChatroomId  Chatroom id
+ *  @param aChatroomId  The chatroom ID.
  *
- *  @result EMError   Error, return nil if success
+ *  @result  - `nil` if the method call succeeds. 
+ *           - Error information if the method call fails. See EMError.
  */
 - (EMError *)destroyChatroom:(NSString *)aChatroomId;
 
-/*!
+/**
  *  \~chinese
- *  解散聊天室, 需要owner权限
+ *  解散聊天室。
+ * 
+ *  仅聊天室所有者可以解散聊天室。
+ * 
+ *  异步方法。
  *
- *  @param aChatroomId      聊天室ID
- *  @param aCompletionBlock 完成的回调
+ *  @param aChatroomId      聊天室 ID。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  Destroy a group, owner‘s authority is required
+ *  Dismisses a chatroom.
+ * 
+ *  Only the owner of a chatroom has the privilege to dismiss it.
+ * 
+ *  This is an asynchronous method.
  *
- *  @param aChatroomId      Chatroom id
- *  @param aCompletionBlock The callback block of completion
+ *  @param aChatroomId      The chatroom ID.
+ *  @param aCompletionBlock The completion block, which contains the error message if the method call fails.
  *
  */
 - (void)destroyChatroom:(NSString *)aChatroomId
@@ -308,67 +338,75 @@
 
 #pragma mark - Fetch
 
-/*!
+/**
  *  \~chinese
- *  获取聊天室详情
+ *  获取指定的聊天室。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aChatroomId           聊天室ID
- *  @param pError                错误信息
+ *  @param aChatroomId           聊天室 ID。
+ *  @param pError                错误信息。
  *
- *  @result  EMChatroom  聊天室
+ *  @result  聊天室实例，详见 EMChatroom。
  *
  *  \~english
- *  Fetch chatroom's specification
+ *  Fetches the specific chatroom.
  *
- *  Synchronization method, will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aChatroomId           Chatroom id
- *  @param pError                Error
+ *  @param aChatroomId           The chatroom ID.
+ *  @param pError                The error information if the method fails: Error.
  *
- *  @result EMChatroom   Chatroom instance
+ *  @result The chatroom instance. See EMChatroom.
  */
 - (EMChatroom *)getChatroomSpecificationFromServerWithId:(NSString *)aChatroomId
                                                    error:(EMError **)pError;
 
-/*!
+/**
  *  \~chinese
- *  获取聊天室详情
+ *  获取聊天室详情。
  *
- *  @param aChatroomId           聊天室ID
- *  @param aCompletionBlock      完成的回调
+ *  异步方法。
+ * 
+ *  @param aChatroomId           聊天室 ID
+ *  @param aCompletionBlock      该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  Fetch chat room specifications
+ *  Fetches the chat room specifications.
+ * 
+ *  This is an asynchronous method.
  *
- *  @param aChatroomId           Chatroom id
- *  @param aCompletionBlock      The callback block of completion
+ *  @param aChatroomId           The chatroom ID.
+ *  @param aCompletionBlock      The completion block, which contains the error message if the method call fails.
  *
  */
 - (void)getChatroomSpecificationFromServerWithId:(NSString *)aChatroomId
                                       completion:(void (^)(EMChatroom *aChatroom, EMError *aError))aCompletionBlock;
 
-/*!
+/**
  *  \~chinese
- *  获取聊天室成员列表
+ *  获取聊天室成员列表。
+ * 
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aChatroomId      聊天室ID
- *  @param aCursor          游标，首次调用传空
- *  @param aPageSize        获取多少条
- *  @param pError           错误信息
+ *  @param aChatroomId      聊天室 ID。
+ *  @param aCursor          游标，首次调用传空。
+ *  @param aPageSize        获取多少条。
+ *  @param pError           错误信息。
  *
- *  @result    列表和游标
+ *  @result   聊天室成员列表和游标。
  *
  *  \~english
- *  Get the list of chatroom members from the server
+ *  Gets the list of chatroom members from the server.
+ * 
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aChatroomId      Chatroom id
- *  @param aCursor          Cursor, input nil the first time
- *  @param aPageSize        Page size
- *  @param pError           Error
+ *  @param aChatroomId      The chatroom ID.
+ *  @param aCursor          The cursor. Set this parameter as nil when you call this method for the first time.
+ *  @param aPageSize        The page size.
+ *  @param pError           The error information if the method fails: Error.
  *
- *  @result    List and cursor
+ *  @result    The list of chatroom members and the cursor.
  *
  */
 - (EMCursorResult *)getChatroomMemberListFromServerWithId:(NSString *)aChatroomId
@@ -376,23 +414,27 @@
                                                  pageSize:(NSInteger)aPageSize
                                                     error:(EMError **)pError;
 
-/*!
+/**
  *  \~chinese
- *  获取聊天室成员列表
+ *  获取聊天室成员列表。
+ * 
+ *  异步方法。
  *
- *  @param aChatroomId      聊天室ID
- *  @param aCursor          游标，首次调用传空
- *  @param aPageSize        获取多少条
- *  @param aCompletionBlock 完成的回调
+ *  @param aChatroomId      聊天室 ID。
+ *  @param aCursor          游标，首次调用传空。
+ *  @param aPageSize        获取多少条。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *
  *  \~english
- *  Get the list of chatroom members from the server
+ *  Gets the list of chatroom members from the server.
+ * 
+ *  This is an asynchronous method.
  *
- *  @param aChatroomId      Chatroom id
- *  @param aCursor          Cursor, input nil the first time
- *  @param aPageSize        Page size
- *  @param aCompletionBlock The callback block of completion
+ *  @param aChatroomId      The chatroom ID.
+ *  @param aCursor          The cursor. Set this parameter as nil when you call this method for the first time.
+ *  @param aPageSize        The page size.
+ *  @param aCompletionBlock The completion block, which contains the error message if the method call fails.
  *
  */
 - (void)getChatroomMemberListFromServerWithId:(NSString *)aChatroomId
@@ -400,23 +442,31 @@
                                      pageSize:(NSInteger)aPageSize
                                    completion:(void (^)(EMCursorResult *aResult, EMError *aError))aCompletionBlock;
 
-/*!
+/**
  *  \~chinese
- *  获取聊天室黑名单列表, 需要owner/admin权限
+ *  获取聊天室黑名单列表。
+ * 
+ *  仅聊天室所有者或者管理员可以获取黑名单。
+ * 
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aChatroomId      聊天室ID
- *  @param aPageNum         获取第几页
- *  @param aPageSize        获取多少条
- *  @param pError           错误信息
+ *  @param aChatroomId      聊天室 ID。
+ *  @param aPageNum         获取第几页。
+ *  @param aPageSize        获取多少条。
+ *  @param pError           错误信息。
  *
  *
  *  \~english
- *  Get the blacklist of chatroom from the server, need owner / admin permissions
+ *  Gets the blocklist of chatroom from the server. 
+ * 
+ *  Only the chatroom owner or admin can call this method.
+ * 
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aChatroomId      Chatroom id
- *  @param aPageNum         Page number
- *  @param aPageSize        Page size
- *  @param pError           Error
+ *  @param aChatroomId      The chatroom ID.
+ *  @param aPageNum         The page number.
+ *  @param aPageSize        The page size.
+ *  @param pError           The error information if the method fails: Error.
  *
  */
 - (NSArray *)getChatroomBlacklistFromServerWithId:(NSString *)aChatroomId
@@ -424,23 +474,31 @@
                                          pageSize:(NSInteger)aPageSize
                                             error:(EMError **)pError;
 
-/*!
+/**
  *  \~chinese
- *  获取聊天室黑名单列表, 需要owner/admin权限
+ *  获取聊天室黑名单列表。
+ * 
+ *  仅聊天室所有者或者管理员可以获取黑名单。
+ * 
+ *  异步方法。
  *
- *  @param aChatroomId      聊天室ID
- *  @param aPageNum         获取第几页
- *  @param aPageSize        获取多少条
- *  @param aCompletionBlock 完成的回调
+ *  @param aChatroomId      聊天室 ID。
+ *  @param aPageNum         获取第几页。
+ *  @param aPageSize        获取多少条。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *
  *  \~english
- *  Get chatroom's blacklist, need owner / admin permissions
+ *  Gets the chatroom's blocklist. 
+ * 
+ *  Only the chatroom owner or admin can call this method.
+ * 
+ *  This is an asynchronous method.
  *
- *  @param aChatroomId      Chatroom id
- *  @param aPageNum         Page number
- *  @param aPageSize        Page size
- *  @param aCompletionBlock The callback block of completion
+ *  @param aChatroomId      The chatroom ID.
+ *  @param aPageNum         The page number.
+ *  @param aPageSize        The page size.
+ *  @param aCompletionBlock The completion block, which contains the error message if the method call fails.
  *
  */
 - (void)getChatroomBlacklistFromServerWithId:(NSString *)aChatroomId
@@ -448,27 +506,31 @@
                                     pageSize:(NSInteger)aPageSize
                                   completion:(void (^)(NSArray *aList, EMError *aError))aCompletionBlock;
 
-/*!
+/**
  *  \~chinese
- *  获取聊天室被禁言列表
+ *  获取聊天室被禁言列表。
  *
- *  聊天室创建者和管理员可调用
+ *  仅聊天室所有者和管理员可调用此方法。
+ * 
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aChatroomId      聊天室ID
- *  @param aPageNum         获取第几页
- *  @param aPageSize        获取多少条
- *  @param pError           错误信息
+ *  @param aChatroomId      聊天室 ID。
+ *  @param aPageNum         获取第几页。
+ *  @param aPageSize        获取多少条。
+ *  @param pError           错误信息。
  *
  *
  *  \~english
- *  Get the mutes of chatroom from the server
+ *  Gets the list of members who are muted in the chatroom from the server.
  *
- *  Chatroom manager and the chatroom administrator allow the operate
+ *  Only the chatroom owner or admin can call this method.
+ * 
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aChatroomId      Chatroom id
- *  @param aPageNum         Page number
- *  @param aPageSize        Page size
- *  @param pError           Error
+ *  @param aChatroomId      The chatroom ID.
+ *  @param aPageNum         The page number.
+ *  @param aPageSize        The page size.
+ *  @param pError           The error information if the method fails: Error.
  *
  */
 - (NSArray *)getChatroomMuteListFromServerWithId:(NSString *)aChatroomId
@@ -476,27 +538,31 @@
                                         pageSize:(NSInteger)aPageSize
                                            error:(EMError **)pError;
 
-/*!
+/**
  *  \~chinese
- *  获取聊天室被禁言列表
+ *  获取聊天室被禁言列表。
  *
- *  聊天室创建者和管理员可调用
+ *  仅聊天室所有者和管理员可调用此方法。
+ * 
+ *  异步方法。
  *
- *  @param aChatroomId      聊天室ID
- *  @param aPageNum         获取第几页
- *  @param aPageSize        获取多少条
- *  @param aCompletionBlock 完成的回调
+ *  @param aChatroomId      聊天室 ID。
+ *  @param aPageNum         获取第几页。
+ *  @param aPageSize        获取多少条。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *
  *  \~english
- *  Get the mutes of chatroom from the server
+ *  Gets the list of members who were muted in the chatroom from the server.
  *
- *  Chatroom manager and the chatroom administrator allow the operate
+ *  Only the chatroom owner or admin can call this method.
+ * 
+ *  This is an asynchronous method.
  *
- *  @param aChatroomId      Chatroom id
- *  @param aPageNum         Page number
- *  @param aPageSize        Page size
- *  @param aCompletionBlock The callback block of completion
+ *  @param aChatroomId      The chatroom ID.
+ *  @param aPageNum         The page number.
+ *  @param aPageSize        The page size.
+ *  @param aCompletionBlock The completion block, which contains the error message if the method call fails.
  *
  */
 - (void)getChatroomMuteListFromServerWithId:(NSString *)aChatroomId
@@ -505,111 +571,142 @@
                                  completion:(void (^)(NSArray *aList, EMError *aError))aCompletionBlock;
 
 
-/*!
+/**
  *  \~chinese
- *  获取聊天室白名单列表
+ *  获取聊天室白名单列表。
+ * 
+ *  仅聊天室所有者和管理员可调用此方法。
+ * 
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aChatroomId      聊天室ID
- *  @param pError           错误信息
+ *  @param aChatroomId      聊天室 ID。
+ *  @param pError           错误信息。
  *
  *
  *  \~english
- *  Get the whitelist of chatroom from the server
+ *  Gets the allowlist of a chatroom from the server.
+ * 
+ *  Only the chatroom owner or admin can call this method.
+ * 
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aChatroomId      Chatroom id
- *  @param pError           Error
+ *  @param aChatroomId      The chatroom ID.
+ *  @param pError           The error information if the method fails: Error.
  *
  */
 - (NSArray *)getChatroomWhiteListFromServerWithId:(NSString *)aChatroomId
                                             error:(EMError **)pError;
 
 
-/*!
+/**
  *  \~chinese
- *  获取聊天室白名单列表
+ *  获取聊天室白名单列表。
+ * 
+ *  仅聊天室所有者和管理员可调用此方法。
+ * 
+ *  异步方法。
  *
- *  @param aChatroomId      聊天室ID
- *  @param aCompletionBlock 完成的回调
+ *  @param aChatroomId      聊天室 ID。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *
  *  \~english
- *  Get the whitelist of chatroom from the server
+ *  Gets the allowlist of a chatroom from the server.
+ * 
+ *  Only the chatroom owner or admin can call this method.
+ * 
+ *  This is an asynchronous method.
  *
- *  @param aChatroomId      Chatroom id
- *  @param aCompletionBlock The callback block of completion
+ *  @param aChatroomId      The chatroom ID.
+ *  @param aCompletionBlock The completion block, which contains the error message if the method call fails.
  *
  */
 - (void)getChatroomWhiteListFromServerWithId:(NSString *)aChatroomId
                                   completion:(void (^)(NSArray *aList, EMError *aError))aCompletionBlock;
 
-/*!
+/**
  *  \~chinese
- *  查看自己是否在聊天室白名单中
+ *  查看当前用户是否在聊天室白名单中。
+ * 
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aChatroomId      聊天室ID
- *  @param pError           错误信息
+ *  @param aChatroomId      聊天室 ID。
+ *  @param pError           错误信息。
  *
  *
  *  \~english
- *  Gets whether the member is on the whitelist
+ *  Checks whether the current user is on the allowlist.
+ * 
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aChatroomId      Chatroom id
- *  @param pError           Error
+ *  @param aChatroomId      The chatroom ID.
+ *  @param pError           The error information if the method fails: Error.
  *
  */
 - (BOOL)isMemberInWhiteListFromServerWithChatroomId:(NSString *)aChatroomId
                                               error:(EMError **)pError;
 
-/*!
+/**
  *  \~chinese
- *  查看自己是否在聊天室白名单中
+ *  查看当前用户是否在聊天室白名单中。
+ * 
+ *  异步方法。
  *
- *  @param aChatroomId      聊天室ID
- *  @param aCompletionBlock 完成的回调
+ *  @param aChatroomId      聊天室 ID。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *
  *  \~english
- *  Gets whether the member is on the whitelist
+ *  Checks whether the current user is on the allowlist.
+ * 
+ *  This is an asynchronous method.
  *
- *  @param aChatroomId      Chatroom id
- *  @param aCompletionBlock The callback block of completion
+ *  @param aChatroomId      The chatroom ID.
+ *  @param aCompletionBlock The completion block, which contains the error message if the method call fails.
  *
  */
 - (void)isMemberInWhiteListFromServerWithChatroomId:(NSString *)aChatroomId
                                          completion:(void (^)(BOOL inWhiteList, EMError *aError))aCompletionBlock;
-/*!
+/**
  *  \~chinese
- *  获取聊天室公告
+ *  获取聊天室公告。
+ * 
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aChatroomId      聊天室ID
- *  @param pError           错误信息
+ *  @param aChatroomId      聊天室 ID。
+ *  @param pError           错误信息。
  *
- *  @result    聊天室公告
+ *  @result    聊天室公告。
  *
  *  \~english
- *  Get the announcement of chatroom from the server
+ *  Gets the announcement of a chatroom from the server.
+ * 
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aChatroomId      Chatroom id
- *  @param pError           error
+ *  @param aChatroomId      The chatroom ID.
+ *  @param pError           The error information if the method fails: Error.
  *
- *  @result    The announcement of chatroom
+ *  @result    The announcement of chatroom.
  */
 - (NSString *)getChatroomAnnouncementWithId:(NSString *)aChatroomId
                                       error:(EMError **)pError;
 
-/*!
+/**
  *  \~chinese
- *  获取聊天室公告
+ *  获取聊天室公告。
+ * 
+ *  异步方法。
  *
- *  @param aChatroomId      聊天室ID
- *  @param aCompletionBlock 完成的回调
- *
+ *  @param aChatroomId      聊天室 ID。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  Get the announcement of chatroom from the server
+ *  Gets the announcement of a chatroom from the server.
+ * 
+ *  This is an asynchronous method.
  *
- *  @param aChatroomId      Chatroom id
- *  @param aCompletionBlock The callback block of completion
+ *  @param aChatroomId      The chatroom ID.
+ *  @param aCompletionBlock The completion block, which contains the error message if the method call fails.
  *
  */
 - (void)getChatroomAnnouncementWithId:(NSString *)aChatroomId
@@ -617,192 +714,240 @@
 
 #pragma mark - Edit
 
-/*!
+/**
  *  \~chinese
- *  更改聊天室主题, 需要owner权限
+ *  更改聊天室主题。
+ * 
+ *  仅聊天室所有者有权限调用此方法。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aSubject     新主题
- *  @param aChatroomId  聊天室ID
- *  @param pError       错误信息
+ *  @param aSubject     新聊天室主题。
+ *  @param aChatroomId  聊天室 ID。
+ *  @param pError       错误信息。
  *
- *  @result    聊天室对象
+ *  @result    聊天室实例。
  *
  *  \~english
- *  Change chatroom subject, owner‘s authority is required
+ *  Changes the chatroom‘s subject. 
+ * 
+ *  Only the chatroom owner can call this method.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aSubject     New subject
- *  @param aChatroomId  Chatroom id
- *  @param pError       Error
+ *  @param aSubject     The new subject of the chatroom.
+ *  @param aChatroomId  The chatroom ID.
+ *  @param pError       The error information if the method fails: Error.
  *
- *  @result    Chatroom instance
+ *  @result    The chatroom instance.
  */
 - (EMChatroom *)updateSubject:(NSString *)aSubject
                   forChatroom:(NSString *)aChatroomId
                         error:(EMError **)pError;
 
-/*!
+/**
  *  \~chinese
- *  更改聊天室主题, 需要owner权限
+ *  更改聊天室主题。
+ * 
+ *  仅聊天室所有者有权限调用此方法。
+ * 
+ *  异步方法。
  *
- *  @param aSubject         新主题
- *  @param aChatroomId      聊天室ID
- *  @param aCompletionBlock 完成的回调
+ *  @param aSubject         聊天室新主题。
+ *  @param aChatroomId      聊天室 ID。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *
  *  \~english
- *  Change the chatroom subject, owner‘s authority is required
+ *  Changes the chatroom subject. 
+ * 
+ *  Only the chatroom owner can call this method.
+ * 
+ *  This is an asynchronous method.
  *
- *  @param aSubject         New subject
- *  @param aChatroomId      Chatroom id
- *  @param aCompletionBlock The callback block of completion
+ *  @param aSubject         The new subject of the chatroom.
+ *  @param aChatroomId      The chatroom ID.
+ *  @param aCompletionBlock The completion block, which contains the error message if the method call fails.
  *
  */
 - (void)updateSubject:(NSString *)aSubject
           forChatroom:(NSString *)aChatroomId
            completion:(void (^)(EMChatroom *aChatroom, EMError *aError))aCompletionBlock;
 
-/*!
+/**
  *  \~chinese
- *  更改聊天室说明信息, 需要owner权限
+ *  更改聊天室说明信息。
+ * 
+ *  仅聊天室所有者有权限调用此方法。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aDescription 说明信息
- *  @param aChatroomId  聊天室ID
- *  @param pError       错误信息
+ *  @param aDescription 说明信息。
+ *  @param aChatroomId  聊天室 ID。
+ *  @param pError       错误信息。
  *
- *  @result    聊天室对象
+ *  @result    聊天室实例。
  *
  *  \~english
- *  Change chatroom description, owner‘s authority is required
+ *  Changes chatroom description. 
+ * 
+ *  Only the chatroom owner can call this method.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aDescription New description
- *  @param aChatroomId  Chatroom id
- *  @param pError       Error
+ *  @param aDescription The new description.
+ *  @param aChatroomId  The chatroom ID.
+ *  @param pError       The error information if the method fails: Error.
  *
- *  @result    Chatroom
+ *  @result    The chatroom instance.
  */
 - (EMChatroom *)updateDescription:(NSString *)aDescription
                       forChatroom:(NSString *)aChatroomId
                             error:(EMError **)pError;
 
-/*!
+/**
  *  \~chinese
- *  更改聊天室说明信息, 需要owner权限
+ *  更改聊天室说明信息。
+ * 
+ *  仅聊天室所有者有权限调用此方法。
+ * 
+ *  异步方法。
  *
- *  @param aDescription     说明信息
- *  @param aChatroomId      聊天室ID
- *  @param aCompletionBlock 完成的回调
+ *  @param aDescription     说明信息。
+ *  @param aChatroomId      聊天室 ID。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *
  *  \~english
- *  Change the chatroom description, owner‘s authority is required
+ *  Changes the chatroom's description. 
+ * 
+ *  Only the chatroom owner can call this method.
+ * 
+ *  This is an asynchronous method.
  *
- *  @param aDescription     New description
- *  @param aChatroomId      Chatroom id
- *  @param aCompletionBlock The callback block of completion
+ *  @param aDescription     The new description.
+ *  @param aChatroomId      The chatroom ID.
+ *  @param aCompletionBlock The completion block, which contains the error message if the method call fails.
  *
  */
 - (void)updateDescription:(NSString *)aDescription
               forChatroom:(NSString *)aChatroomId
                completion:(void (^)(EMChatroom *aChatroom, EMError *aError))aCompletionBlock;
 
-/*!
+/**
  *  \~chinese
- *  将成员移出聊天室, 需要owner/admin权限
+ *  将成员移出聊天室。
+ * 
+ *  仅聊天室所有者和管理员可调用此方法。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aMembers     要移出的用户列表
- *  @param aChatroomId  聊天室ID
- *  @param pError       错误信息
+ *  @param aMembers     要移出的用户列表。
+ *  @param aChatroomId  聊天室 ID。
+ *  @param pError       错误信息。
  *
- *  @result    聊天室实例
+ *  @result    聊天室实例。
  *
  *  \~english
- *  Remove members from a chatroom, required owner‘s authority
+ *  Removes members from a chatroom. 
+ * 
+ *  Only the chatroom owner or admin can call this method.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aMembers     Users to be removed
- *  @param aChatroomId  Chatroom id
- *  @param pError       Error
+ *  @param aMembers     The users to be removed from the chatroom.
+ *  @param aChatroomId  The chatroom ID.
+ *  @param pError       The error information if the method fails: Error.
  *
- *  @result    Chatroom instance
+ *  @result    The chatroom instance.
  */
 - (EMChatroom *)removeMembers:(NSArray *)aMembers
                  fromChatroom:(NSString *)aChatroomId
                         error:(EMError **)pError;
 
-/*!
+/**
  *  \~chinese
- *  将成员移出聊天室, 需要owner/admin权限
+ *  将成员移出聊天室。
+ * 
+ *  仅聊天室所有者和管理员可调用此方法。
+ * 
+ *  异步方法。
  *
- *  @param aMembers         要移出的用户列表
- *  @param aChatroomId      聊天室ID
- *  @param aCompletionBlock 完成的回调
+ *  @param aMembers         要移出的用户列表。
+ *  @param aChatroomId      聊天室 ID。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *
  *  \~english
- *  Remove members from a group, owner‘s authority is required
+ *  Removes members from a chatroom. 
+ * 
+ *  Only the chatroom owner or admin can call this method.
+ * 
+ *  This is an asynchronous method. 
  *
- *  @param aMembers         Users to be removed
- *  @param aChatroomId      Chatroom id
- *  @param aCompletionBlock The callback block of completion
+ *  @param aMembers         The users to be removed from the chatroom.
+ *  @param aChatroomId      The chatroom ID.
+ *  @param aCompletionBlock The completion block, which contains the error message if the method call fails.
  *
  */
 - (void)removeMembers:(NSArray *)aMembers
          fromChatroom:(NSString *)aChatroomId
            completion:(void (^)(EMChatroom *aChatroom, EMError *aError))aCompletionBlock;
 
-/*!
+/**
  *  \~chinese
- *  加人到聊天室黑名单, 需要owner权限
+ *  将用户加入聊天室黑名单。
+ * 
+ *  仅聊天室所有者有权限调用此方法。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aMembers     要加入黑名单的用户
- *  @param aChatroomId  聊天室ID
- *  @param pError       错误信息
+ *  @param aMembers     要加入黑名单的用户。
+ *  @param aChatroomId  聊天室 ID。
+ *  @param pError       错误信息。
  *
- *  @result    聊天室实例
+ *  @result    聊天室实例。
  *
  *  \~english
- *  Add users to chatroom blacklist, required owner‘s authority
+ *  Adds users to the chatroom's blocklist. 
+ * 
+ *  Only the chatroom owner can call this method.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aMembers     Users to be added
- *  @param aChatroomId  Chatroom id
- *  @param pError       Error
+ *  @param aMembers     The users to be added to the blocklist.
+ *  @param aChatroomId  The chatroom ID.
+ *  @param pError       The error information if the method fails: Error.
  *
- *  @result    Chatroom instance
+ *  @result    The chatroom instance.
  */
 - (EMChatroom *)blockMembers:(NSArray *)aMembers
                 fromChatroom:(NSString *)aChatroomId
                        error:(EMError **)pError;
 
-/*!
+/**
  *  \~chinese
- *  加人到聊天室黑名单, 需要owner权限
+ *  将用户加入聊天室黑名单。
+ * 
+ *  仅聊天室所有者有权限调用此方法。
+ * 
+ *  异步方法。
  *
- *  @param aMembers         要加入黑名单的用户
- *  @param aChatroomId      聊天室ID
- *  @param aCompletionBlock 完成的回调
+ *  @param aMembers         要加入黑名单的用户。
+ *  @param aChatroomId      聊天室 ID。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *
  *  \~english
- *  Add users to chatroom blacklist, owner‘s authority is required
+ *  Adds users to the chatroom's blocklist. 
+ * 
+ *  Only the chatroom owner can call this method.
+ * 
+ *  This is an asynchronous method.
  *
- *  @param aMembers         Users to be added
- *  @param aChatroomId      Chatroom id
- *  @param aCompletionBlock The callback block of completion
+ *  @param aMembers         The users to be added to the chatroom.
+ *  @param aChatroomId      The chatroom ID.
+ *  @param aCompletionBlock The completion block, which contains the error message if the method call fails.
  *
  */
 - (void)blockMembers:(NSArray *)aMembers
@@ -810,192 +955,240 @@
           completion:(void (^)(EMChatroom *aChatroom, EMError *aError))aCompletionBlock;
 
 
-/*!
+/**
  *  \~chinese
- *  从聊天室黑名单中减人, 需要owner权限
+ *  从聊天室黑名单中移除用户。
+ * 
+ *  仅聊天室所有者有权限调用此方法。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aMembers     要从黑名单中移除的用户名列表
- *  @param aChatroomId  聊天室ID
+ *  @param aMembers     要从黑名单中移除的用户名列表。
+ *  @param aChatroomId  聊天室 ID。
  *  @param pError       错误信息
  *
- *  @result    聊天室对象
+ *  @result    聊天室实例。
  *
  *  \~english
- *  Remove users from chatroom blacklist, required owner‘s authority
+ *  Removes users from chatroom blocklist.
+ * 
+ *  Only the chatroom owner can call this method.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aMembers     Users to be removed
- *  @param aChatroomId  Chatroom id
- *  @param pError       Error
+ *  @param aMembers     The users to be removed from the blocklist.
+ *  @param aChatroomId  The chatroom ID.
+ *  @param pError       The error information if the method fails: Error.
  *
- *  @result    Chatroom instance
+ *  @result    The chatroom instance.
  */
 - (EMChatroom *)unblockMembers:(NSArray *)aMembers
                   fromChatroom:(NSString *)aChatroomId
                          error:(EMError **)pError;
 
-/*!
+/**
  *  \~chinese
- *  从聊天室黑名单中移除, 需要owner权限
+ *  从聊天室黑名单中移除。
+ * 
+ *  仅聊天室所有者有权限调用此方法。
+ * 
+ *  异步方法。
  *
- *  @param aMembers         要从黑名单中移除的用户名列表
- *  @param aChatroomId      聊天室ID
- *  @param aCompletionBlock 完成的回调
+ *  @param aMembers         要从黑名单中移除的用户名列表。
+ *  @param aChatroomId      聊天室 ID。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *
  *  \~english
- *  Remove users from chatroom blacklist, owner‘s authority is required
- *
- *  @param aMembers         Users to be removed
- *  @param aChatroomId      Chatroom id
- *  @param aCompletionBlock The callback block of completion
+ *  Removes users from the chatroom blocklist. 
+ * 
+ *  Only the chatroom owner can call this method.
+ * 
+ *  This is an asynchronous method.
+ * 
+ *  @param aMembers         The users to be removed from the blocklist.
+ *  @param aChatroomId      The chatroom ID.
+ *  @param aCompletionBlock The completion block, which contains the error message if the method call fails.
  *
  */
 - (void)unblockMembers:(NSArray *)aMembers
           fromChatroom:(NSString *)aChatroomId
             completion:(void (^)(EMChatroom *aChatroom, EMError *aError))aCompletionBlock;
 
-/*!
+/**
  *  \~chinese
- *  变更聊天室所有者，需要Owner权限
+ *  变更聊天室所有者。
+ * 
+ *  仅聊天室所有者可调用此方法。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aChatroomId  聊天室ID
- *  @param aNewOwner    新Owner
- *  @param pError       错误信息
+ *  @param aChatroomId  聊天室 ID。
+ *  @param aNewOwner    新聊天室所有者。
+ *  @param pError       错误信息。
  *
- *  @result    聊天室实例
+ *  @result    聊天室实例。
  *
  *  \~english
- *  Change chatroom owner, need Owner permissions
+ *  Changes the chatroom owner. 
+ * 
+ *  Only the chatroom owner can call this method.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aChatroomId  Chatroom id
- *  @param aNewOwner    New owner
- *  @param pError       Error
+ *  @param aChatroomId  The chatroom ID.
+ *  @param aNewOwner    The new owner.
+ *  @param pError       The error information if the method fails: Error.
  *
- *  @result EMChatroom   Chatroom instance
+ *  @result The chatroom instance. See EMChatroom.
  */
 - (EMChatroom *)updateChatroomOwner:(NSString *)aChatroomId
                            newOwner:(NSString *)aNewOwner
                               error:(EMError **)pError;
 
-/*!
+/**
  *  \~chinese
- *  变更聊天室所有者，需要Owner权限
+ *  变更聊天室所有者。
+ * 
+ *  仅聊天室所有者可调用此方法。
+ * 
+ *  异步方法。
  *
- *  @param aChatroomId      聊天室ID
- *  @param aNewOwner        新Owner
- *  @param aCompletionBlock 完成的回调
+ *  @param aChatroomId      聊天室 ID。
+ *  @param aNewOwner        新聊天室所有者。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *
  *  \~english
- *  Change chatroom owner, need Owner permissions
+ *  Changes the chatroom owner. 
+ * 
+ *  Only the chatroom owner can call this method.
+ * 
+ *  This is an asynchronous method.
  *
- *  @param aChatroomId      Chatroom id
- *  @param aNewOwner        New owner
- *  @param aCompletionBlock The callback block of completion
+ *  @param aChatroomId      The chatroom ID.
+ *  @param aNewOwner        The new owner.
+ *  @param aCompletionBlock The completion block, which contains the error message if the method call fails.
  *
  */
 - (void)updateChatroomOwner:(NSString *)aChatroomId
                    newOwner:(NSString *)aNewOwner
                  completion:(void (^)(EMChatroom *aChatroom, EMError *aError))aCompletionBlock;
 
-/*!
+/**
  *  \~chinese
- *  添加聊天室管理员，需要Owner权限
+ *  添加聊天室管理员。
+ * 
+ *  仅聊天室所有者可调用此方法。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aAdmin       要添加的管理员
- *  @param aChatroomId  聊天室ID
- *  @param pError       错误信息
+ *  @param aAdmin       要添加的管理员。
+ *  @param aChatroomId  聊天室 ID。
+ *  @param pError       错误信息。
  *
- *  @result    聊天室实例
+ *  @result    聊天室实例，详见 EMChatroom。
  *
  *  \~english
- *  Add chatroom admin, need Owner permissions
+ *  Adds a chatroom admin. 
+ * 
+ *  Only the chatroom owner can call this method.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aAdmin       Admin
- *  @param aChatroomId  Chatroom id
- *  @param pError       Error
+ *  @param aAdmin       The new admin.
+ *  @param aChatroomId  The chatroom ID.
+ *  @param pError       The error information if the method fails: Error.
  *
- *  @result  EMChatroom  Chatroom instance
+ *  @result  The chatroom instance. See EMChatroom.
  */
 - (EMChatroom *)addAdmin:(NSString *)aAdmin
               toChatroom:(NSString *)aChatroomId
                    error:(EMError **)pError;
 
-/*!
+/**
  *  \~chinese
- *  添加聊天室管理员，需要Owner权限
+ *  添加聊天室管理员。
+ * 
+ *  仅聊天室所有者可调用此方法。
+ * 
+ *  异步方法。
  *
- *  @param aAdmin           要添加的聊天室管理员
- *  @param aChatroomId      聊天室ID
- *  @param aCompletionBlock 完成的回调
+ *  @param aAdmin           要添加的聊天室管理员。
+ *  @param aChatroomId      聊天室 ID。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *
  *  \~english
- *  Add chatroom admin, need Owner permissions
+ *  Adds a chatroom admin. 
+ * 
+ *  Only the chatroom owner can call this method.
+ * 
+ *  This is an asynchronous method.
  *
- *  @param aAdmin           Admin
- *  @param aChatroomId      Chatroom id
- *  @param aCompletionBlock The callback block of completion
+ *  @param aAdmin           The new admin.
+ *  @param aChatroomId      The chatroom ID.
+ *  @param aCompletionBlock The completion block, which contains the error message if the method call fails.
  *
  */
 - (void)addAdmin:(NSString *)aAdmin
       toChatroom:(NSString *)aChatroomId
       completion:(void (^)(EMChatroom *aChatroomp, EMError *aError))aCompletionBlock;
 
-/*!
+/**
  *  \~chinese
- *  移除聊天室管理员，需要Owner权限
+ *  移除聊天室管理员。
+ * 
+ *  仅聊天室所有者可调用此方法。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aAdmin       要移除的聊天室管理员
- *  @param aChatroomId  聊天室ID
+ *  @param aAdmin       要移除的聊天室管理员。
+ *  @param aChatroomId  聊天室 ID。
  *  @param pError       错误信息
  *
- *  @result  EMChatroom  聊天室实例
+ *  @result  聊天室实例，详见 EMChatroom。
  *
  *  \~english
- *  Remove chatroom admin, need Owner permissions
+ *  Removes a chatroom admin. 
+ * 
+ *  Only the chatroom owner can call this method.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aAdmin       Admin
- *  @param aChatroomId  Chatroom id
- *  @param pError       Error
+ *  @param aAdmin       The admin to be removed.
+ *  @param aChatroomId  The chatroom ID.
+ *  @param pError       The error information if the method fails: Error.
  *
- *  @result EMChatroom   Chatroom instance
+ *  @result The chatroom instance. See EMChatroom.
  */
 - (EMChatroom *)removeAdmin:(NSString *)aAdmin
                fromChatroom:(NSString *)aChatroomId
                       error:(EMError **)pError;
 
-/*!
+/**
  *  \~chinese
- *  移除聊天室管理员，需要Owner权限
+ *  移除聊天室管理员。
+ * 
+ *  仅聊天室所有者可调用此方法。
+ * 
+ *  异步方法。
  *
- *  @param aAdmin           要添加的聊天室管理员
- *  @param aChatroomId      聊天室ID
- *  @param aCompletionBlock 完成的回调
+ *  @param aAdmin           要添加的聊天室管理员。
+ *  @param aChatroomId      聊天室 ID。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *
  *  \~english
- *  Remove chatroom admin, need Owner permissions
+ *  Removes a chatroom admin. 
+ * 
+ *  Only the chatroom owner and admin can call this method.
+ * 
+ *  This is an asynchronous method.
  *
- *  @param aAdmin           Admin
- *  @param aChatroomId      Chatroom id
- *  @param aCompletionBlock The callback block of completion
+ *  @param aAdmin           The admin to be removed.
+ *  @param aChatroomId      The chatroom ID.
+ *  @param aCompletionBlock The completion block, which contains the error message if the method call fails.
  *
  */
 - (void)removeAdmin:(NSString *)aAdmin
@@ -1003,54 +1196,64 @@
          completion:(void (^)(EMChatroom *aChatroom, EMError *aError))aCompletionBlock;
 
 
-/*!
+/**
  *  \~chinese
- *  将一组成员禁言，需要Owner / Admin权限
+ *  将一组成员禁言。
+ * 
+ *  仅聊天室所有者和管理员可调用此方法。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aMuteMembers         要禁言的成员列表<NSString>
+ *  @param aMuteMembers         要禁言的成员列表。
  *  @param aMuteMilliseconds    禁言时长
- *  @param aChatroomId          聊天室ID
+ *  @param aChatroomId          聊天室 ID。
  *  @param pError               错误信息
  *
- *  @result EMChatroom   聊天室实例
+ *  @result  聊天室实例，详见 EMChatroom。
  *
  *  \~english
- *  Mute chatroom members, need Owner / Admin permissions
+ *  Mutes chatroom members.
+ * 
+ *  Only the chatroom owner or admin can call this method.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aMuteMembers         The list of mute, type is <NSString>
- *  @param aMuteMilliseconds    Muted time duration in millisecond
- *  @param aChatroomId          Chatroom id
- *  @param pError               Error
+ *  @param aMuteMembers         The list of members to mute.
+ *  @param aMuteMilliseconds    Muted time duration in millisecond.
+ *  @param aChatroomId          The chatroom ID.
+ *  @param pError               The error information if the method fails: Error.
  *
- *  @result  EMChatroom  Chatroom instance
+ *  @result  The chatroom instance. See EMChatroom.
  */
 - (EMChatroom *)muteMembers:(NSArray *)aMuteMembers
            muteMilliseconds:(NSInteger)aMuteMilliseconds
                fromChatroom:(NSString *)aChatroomId
                       error:(EMError **)pError;
 
-/*!
+/**
  *  \~chinese
- *  将一组成员禁言，需要Owner / Admin权限
+ *  将一组成员禁言。
+ * 
+ *  仅聊天室所有者和管理员可调用此方法。
+ * 
+ *  异步方法。
  *
- *  @param aMuteMembers         要禁言的成员列表<NSString>
+ *  @param aMuteMembers         要禁言的成员列表。
  *  @param aMuteMilliseconds    禁言时长
- *  @param aChatroomId          聊天室ID
- *  @param aCompletionBlock     完成的回调
+ *  @param aChatroomId          聊天室 ID。
+ *  @param aCompletionBlock     该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  Mute chatroom members, need Owner / Admin permissions
+ *  Mutes chatroom members.
+ * 
+ *  Only the chatroom owner or admin can call this method.
  *
- *  Synchronization method will block the current thread
+ *  This is an asynchronous method.
  *
- *  @param aMuteMembers         The list of mute, type is <NSString>
+ *  @param aMuteMembers         The list of mute.
  *  @param aMuteMilliseconds    Muted time duration in millisecond
- *  @param aChatroomId          Chatroom id
- *  @param aCompletionBlock     The callback block of completion
+ *  @param aChatroomId          The chatroom ID.
+ *  @param aCompletionBlock     The completion block, which contains the error message if the method call fails.
  *
  */
 - (void)muteMembers:(NSArray *)aMuteMembers
@@ -1058,49 +1261,59 @@
        fromChatroom:(NSString *)aChatroomId
          completion:(void (^)(EMChatroom *aChatroom, EMError *aError))aCompletionBlock;
 
-/*!
+/**
  *  \~chinese
- *  解除禁言，需要Owner / Admin权限
+ *  解除禁言。
+ * 
+ *  仅聊天室所有者和管理员可调用此方法。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aMuteMembers     被解除的列表<NSString>
- *  @param aChatroomId      聊天室ID
+ *  @param aMuteMembers     解除禁言的用户列表。
+ *  @param aChatroomId      聊天室 ID。
  *  @param pError           错误信息
  *
- *  @result EMChatroom   聊天室实例
+ *  @result 聊天室实例，详见 EMChatroom。
  *
  *  \~english
- *  Unmute chatroom members, need Owner / Admin permissions
+ *  Unmutes chatroom members.
+ * 
+ *  Only the chatroom owner or admin can call this method.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aMembers         The list of unmute, type is <NSString>
- *  @param aChatroomId      Chatroom id
- *  @param pError           Error
+ *  @param aMembers         The list of members to unmute.
+ *  @param aChatroomId      The chatroom ID.
+ *  @param pError           The error information if the method fails: Error.
  *
- *  @result EMChatroom   Chatroom instance
+ *  @result The chatroom instance. See EMChatroom.
  */
 - (EMChatroom *)unmuteMembers:(NSArray *)aMembers
                  fromChatroom:(NSString *)aChatroomId
                         error:(EMError **)pError;
 
-/*!
+/**
  *  \~chinese
- *  解除禁言，需要Owner / Admin权限
+ *  解除禁言。
+ * 
+ *  仅聊天室所有者和管理员可调用此方法。
+ * 
+ *  异步方法。
  *
- *  @param aMuteMembers     被解除的列表<NSString>
- *  @param aChatroomId      聊天室ID
- *  @param aCompletionBlock 完成的回调
+ *  @param aMuteMembers     被解除的列表
+ *  @param aChatroomId      聊天室 ID。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  Unmute chatroom members, need Owner / Admin permissions
+ *  Unmutes chatroom members.
+ * 
+ *  Only the chatroom owner or admin can call this method.
  *
- *  Synchronization method will block the current thread
+ *  This is an asynchronous method.
  *
- *  @param aMembers         The list of unmute, type is <NSString>
- *  @param aChatroomId      Chatroom id
- *  @param aCompletionBlock The callback block of completion
+ *  @param aMembers         The list of unmute.
+ *  @param aChatroomId      The chatroom ID.
+ *  @param aCompletionBlock The completion block, which contains the error message if the method call fails.
  *
  */
 - (void)unmuteMembers:(NSArray *)aMembers
@@ -1109,224 +1322,286 @@
 
 
 
-/*!
+/**
  *  \~chinese
- *  设置全员禁言，需要Owner / Admin权限
+ *  设置全员禁言。
+ * 
+ *  仅聊天室所有者和管理员可调用此方法。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aChatroomId      聊天室ID
+ *  @param aChatroomId      聊天室 ID。
  *  @param pError           错误信息
  *
- *  @result EMChatroom   聊天室实例
+ *  @result 聊天室实例，详见 EMChatroom。
  *
  *  \~english
- *  mute all members, need Owner / Admin permissions
+ *  Mutes all members.
+ * 
+ *  Only the chatroom owner or admin can call this method.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aChatroomId      Chatroom id
- *  @param pError           Error
+ *  @param aChatroomId      The chatroom ID.
+ *  @param pError           The error information if the method fails: Error.
  *
- *  @result EMChatroom   Chatroom instance
+ *  @result The chatroom instance. See EMChatroom.
  */
 - (EMChatroom *)muteAllMembersFromChatroom:(NSString *)aChatroomId
                                      error:(EMError **)pError;
 
-/*!
+/**
  *  \~chinese
- *  设置全员禁言，需要Owner / Admin权限
+ *  设置全员禁言。
+ * 
+ *  仅聊天室所有者和管理员可调用此方法。
+ * 
+ *  异步方法。
  *
- *  @param aChatroomId      聊天室ID
- *  @param aCompletionBlock 完成的回调
+ *  @param aChatroomId      聊天室 ID。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  mute all members, need Owner / Admin permissions
- *
- *  @param aChatroomId      Chatroom id
- *  @param aCompletionBlock The callback block of completion
+ *  Mutes all members. 
+ * 
+ *  Only the chatroom owner or admin can call this method.
+ * 
+ *  This is an asynchronous method.
+ * 
+ *  @param aChatroomId      The chatroom ID.
+ *  @param aCompletionBlock The completion block, which contains the error message if the method call fails.
  *
  */
 - (void)muteAllMembersFromChatroom:(NSString *)aChatroomId
                         completion:(void(^)(EMChatroom *aChatroom, EMError *aError))aCompletionBlock;
 
 
-/*!
+/**
  *  \~chinese
- *  解除全员禁言，需要Owner / Admin权限
+ *  解除全员禁言。
+ * 
+ *  仅聊天室所有者和管理员可调用此方法。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aChatroomId      聊天室ID
+ *  @param aChatroomId      聊天室 ID。
  *  @param pError           错误信息
  *
- *  @result EMChatroom   聊天室实例
+ *  @result 聊天室实例，详见 EMChatroom。
  *
  *  \~english
- *  unmute all members, need Owner / Admin permissions
+ *  Unmute all members.
+ * 
+ *  Only the chatroom owner or admin can call this method.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aChatroomId      Chatroom id
- *  @param pError           Error
+ *  @param aChatroomId      The chatroom ID.
+ *  @param pError           The error information if the method fails: Error.
  *
- *  @result EMChatroom   Chatroom instance
+ *  @result The chatroom instance. See EMChatroom.
  */
 - (EMChatroom *)unmuteAllMembersFromChatroom:(NSString *)aChatroomId
                                        error:(EMError **)pError;
 
 
-/*!
+/**
  *  \~chinese
- *  解除全员禁言，需要Owner / Admin权限
+ *  解除全员禁言。
+ * 
+ *  仅聊天室所有者和管理员可调用此方法。
+ * 
+ *  异步方法。
  *
- *  @param aChatroomId      聊天室ID
- *  @param aCompletionBlock 完成的回调
+ *  @param aChatroomId      聊天室 ID。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  unmute all members, need Owner / Admin permissions
+ *  Unmute all members.
+ * 
+ *  Only the chatroom owner or admin can call this method.
+ * 
+ *  This is an asynchronous method.
  *
- *  @param aChatroomId      Chatroom id
- *  @param aCompletionBlock The callback block of completion
+ *  @param aChatroomId      The chatroom ID.
+ *  @param aCompletionBlock The completion block, which contains the error message if the method call fails.
  *
  */
 - (void)unmuteAllMembersFromChatroom:(NSString *)aChatroomId
                           completion:(void(^)(EMChatroom *aChatroom, EMError *aError))aCompletionBlock;
 
 
-/*!
+/**
  *  \~chinese
- *  添加白名单，需要Owner / Admin权限
+ *  添加白名单。
+ * 
+ *  仅聊天室所有者和管理员可调用此方法。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aMuteMembers     被添加的列表<NSString>
- *  @param aChatroomId      聊天室ID
+ *  @param aMembers         被添加的列表。
+ *  @param aChatroomId      聊天室 ID。
  *  @param pError           错误信息
  *
- *  @result EMChatroom   聊天室实例
+ *  @result 聊天室实例，详见 EMChatroom。
  *
  *  \~english
- *  add white list members, need Owner / Admin permissions
+ *  Adds users to the allowlist.
+ * 
+ *  Only the chatroom owner and admin can call this method.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aMembers         The list of whitelist, type is <NSString>
- *  @param aChatroomId      Chatroom id
- *  @param pError           Error
+ *  @param aMembers         The members to be added to the allowlist.
+ *  @param aChatroomId      The chatroom ID.
+ *  @param pError           The error information if the method fails: Error.
  *
- *  @result EMChatroom   Chatroom instance
+ *  @result The chatroom instance. See EMChatroom.
  */
 - (EMChatroom *)addWhiteListMembers:(NSArray *)aMembers
                        fromChatroom:(NSString *)aChatroomId
                               error:(EMError **)pError;
 
-/*!
+/**
  *  \~chinese
- *  添加白名单，需要Owner / Admin权限
+ *  添加白名单。
+ * 
+ *  仅聊天室所有者和管理员可调用此方法。
+ * 
+ *  异步方法。
  *
- *  @param aMembers         被添加的列表<NSString>
- *  @param aChatroomId      聊天室ID
- *  @param aCompletionBlock 完成的回调
+ *  @param aMembers         被添加的列表。
+ *  @param aChatroomId      聊天室 ID。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  add white list members, need Owner / Admin permissions
+ *  Adds members to the allowlist.
+ * 
+ *  Only the chatroom owner and admin can call this method.
+ * 
+ *  This is an asynchronous method.
  *
- *  @param aMembers         The list of whitelist, type is <NSString>
- *  @param aChatroomId      Chatroom id
- *  @param aCompletionBlock The callback block of completion
+ *  @param aMembers         The members to be added to the allowlist.
+ *  @param aChatroomId      The chatroom ID.
+ *  @param aCompletionBlock The completion block, which contains the error message if the method call fails.
  *
  */
 - (void)addWhiteListMembers:(NSArray *)aMembers
                fromChatroom:(NSString *)aChatroomId
                  completion:(void (^)(EMChatroom *aChatroom, EMError *aError))aCompletionBlock;
 
-/*!
+/**
  *  \~chinese
- *  移除白名单，需要Owner / Admin权限
+ *  移除白名单。
+ * 
+ *  仅聊天室所有者和管理员可调用此方法。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aMuteMembers     被添加的列表<NSString>
- *  @param aChatroomId      聊天室ID
- *  @param pError           错误信息
+ *  @param aMuteMembers     被移除的列表。
+ *  @param aChatroomId      聊天室 ID。
+ *  @param pError           错误信息。
  *
- *  @result EMChatroom   聊天室实例
+ *  @result 聊天室实例，详见 EMChatroom。
  *
  *  \~english
- *  remove white list members, need Owner / Admin permissions
+ *  Removes the members of the allowlist.
+ * 
+ *  Only the chatroom owner or admin can call this method.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aMembers         The remove list of whitelist, type is <NSString>
- *  @param aChatroomId      Chatroom id
- *  @param pError           Error
+ *  @param aMembers         The members to be removed from the allowlist.
+ *  @param aChatroomId      The chatroom ID.
+ *  @param pError           The error information if the method fails: Error.
  *
- *  @result  EMChatroom  Chatroom instance
+ *  @result   The chatroom instance. See EMChatroom.
  */
 - (EMChatroom *)removeWhiteListMembers:(NSArray *)aMembers
                           fromChatroom:(NSString *)aChatroomId
                                  error:(EMError **)pError;
 
-/*!
+/**
  *  \~chinese
- *  移除白名单，需要Owner / Admin权限
+ *  移除白名单。
+ * 
+ *  仅聊天室所有者和管理员可调用此方法。
+ * 
+ *  异步方法。
  *
- *  @param aMembers         被移除的列表<NSString>
- *  @param aChatroomId      聊天室ID
- *  @param aCompletionBlock 完成的回调
+ *  @param aMembers         被移除的列表。
+ *  @param aChatroomId      聊天室 ID。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  remove white list members, need Owner / Admin permissions
+ *  Removes members from the allowlist.
+ * 
+ *  Only the chatroom owner or admin can call this method.
+ * 
+ *  This is an asynchronous method.
  *
- *  @param aMembers         The remove list of whitelist, type is <NSString>
- *  @param aChatroomId      Chatroom id
- *  @param aCompletionBlock The callback block of completion
+ *  @param aMembers         The members to be removed from the allowlist.
+ *  @param aChatroomId      The chatroom ID.
+ *  @param aCompletionBlock The completion block, which contains the error message if the method call fails.
  *
  */
 - (void)removeWhiteListMembers:(NSArray *)aMembers
                   fromChatroom:(NSString *)aChatroomId
                     completion:(void (^)(EMChatroom *aChatroom, EMError *aError))aCompletionBlock;
 
-/*!
+/**
  *  \~chinese
- *  修改聊天室公告，需要Owner / Admin权限
+ *  修改聊天室公告。
+ * 
+ *  仅聊天室所有者和管理员可调用此方法。
+ * 
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aChatroomId      聊天室ID
- *  @param aAnnouncement    群公告
- *  @param pError           错误信息
+ *  @param aChatroomId      聊天室 ID。
+ *  @param aAnnouncement    群公告。
+ *  @param pError           错误信息。
  *
- *  @result EMChatroom   聊天室实例
+ *  @result   聊天室实例，详见 EMChatroom。
  *
  *  \~english
- *  Change the announcement of chatroom, need Owner / Admin permissions
+ *  Changes the announcement of the chatroom.
+ * 
+ *  Only the chatroom owner or admin can call this method.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aChatroomId      Chatroom id
- *  @param aAnnouncement    announcement of chatroom
- *  @param pError           error
+ *  @param aChatroomId      The chatroom ID.
+ *  @param aAnnouncement    The announcement of the chatroom.
+ *  @param pError           The error information if the method fails: Error.
  *
- *  @result EMChatroom   Chatroom instance
+ *  @result  The chatroom instance. See EMChatroom.
  */
 - (EMChatroom *)updateChatroomAnnouncementWithId:(NSString *)aChatroomId
                                     announcement:(NSString *)aAnnouncement
                                            error:(EMError **)pError;
 
-/*!
+/**
  *  \~chinese
- *  修改聊天室公告，需要Owner / Admin权限
+ *  修改聊天室公告。
+ * 
+ *  仅聊天室所有者和管理员可调用此方法。
+ * 
+ *  异步方法。
  *
- *  @param aChatroomId      聊天室ID
- *  @param aAnnouncement    群公告
- *  @param aCompletionBlock 完成的回调
+ *  @param aChatroomId      聊天室 ID。
+ *  @param aAnnouncement    群公告。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  Change the announcement of chatroom, need Owner / Admin permissions
+ *  Changes the announcement of chatroom.
+ * 
+ *  Only the chatroom owner or admin can call this method.
+ * 
+ *  This is an asynchronous method.
  *
- *  @param aChatroomId      Chatroom id
- *  @param aAnnouncement    announcement of chatroom
- *  @param aCompletionBlock The callback block of completion
+ *  @param aChatroomId      The chatroom ID.
+ *  @param aAnnouncement    The announcement of the chatroom.
+ *  @param aCompletionBlock The completion block, which contains the error message if the method call fails.
  *
  */
 - (void)updateChatroomAnnouncementWithId:(NSString *)aChatroomId
@@ -1335,159 +1610,191 @@
 
 #pragma mark - EM_DEPRECATED_IOS 3.3.0
 
-/*!
+/**
  *  \~chinese
- *  获取聊天室详情
+ *  获取聊天室详情。
+ * 
+ *  已废弃，请用 {@link IEMChatroomManager getChatroomSpecificationFromServerWithId:error:} 代替。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aChatroomId           聊天室ID
- *  @param aIncludeMembersList   是否获取成员列表，为YES时，返回200个成员
- *  @param pError                错误信息
+ *  @param aChatroomId           聊天室 ID。
+ *  @param aIncludeMembersList   是否获取成员列表，为 YES 时，一次性返回 200 个以内成员。
+ *  @param pError                错误信息。
  *
- *  @result EMChatroom   聊天室
+ *  @result 聊天室实例，详见 EMChatroom。
  *
  *  \~english
- *  Fetch chatroom's specification
+ *  Fetches the chatroom's specification.
+ * 
+ *  Deprecated, please use  {@link IEMChatroomManager getChatroomSpecificationFromServerWithId:error:}  instead.
  *
- *  Synchronization method, will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aChatroomId           Chatroom id
- *  @param aIncludeMembersList   Whether to get member list，When YES, returns 200 members
- *  @param pError                Error
+ *  @param aChatroomId           The chatroom ID.
+ *  @param aIncludeMembersList   Whether to get the member list. If you set the parameter as YES, it will return no more than 200 members. 
+ *  @param pError                The error information if the method fails: Error.
  *
- *  @result EMChatroom   Chatroom instance
+ *  @result The chatroom instance. See EMChatroom.
  */
 - (EMChatroom *)fetchChatroomInfo:(NSString *)aChatroomId
                includeMembersList:(BOOL)aIncludeMembersList
-                            error:(EMError **)pError EM_DEPRECATED_IOS(3_1_0, 3_3_0, "Use -[IEMChatroomManager getChatroomSpecificationFromServerWithId:error:] instead");
+                            error:(EMError **)pError EM_DEPRECATED_IOS(3_1_0, 3_3_0, "Use -IEMChatroomManager getChatroomSpecificationFromServerWithId:error: instead");
 
-/*!
+/**
  *  \~chinese
- *  获取聊天室详情
+ *  获取聊天室详情。
+ * 
+ *  已废弃，请用 {@link IEMChatroomManager getChatroomSpecificationFromServerWithId:completion:} 代替。
  *
- *  @param aChatroomId           聊天室ID
- *  @param aIncludeMembersList   是否获取成员列表，为YES时，返回200个成员
- *  @param aCompletionBlock      完成的回调
+ *  @param aChatroomId           聊天室 ID。
+ *  @param aIncludeMembersList   是否获取成员列表，为 YES 时，返回 200 个成员
+ *  @param aCompletionBlock      该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  Fetch chat room specifications
+ *  Fetches chat room specifications.
+ * 
+ *  Deprecated, please use  {@link IEMChatroomManager getChatroomSpecificationFromServerWithId:completion:}  instead.
  *
- *  @param aChatroomId           Chatroom id
- *  @param aIncludeMembersList   Whether to get member list，When YES, returns 200 members
- *  @param aCompletionBlock      The callback block of completion
+ *  @param aChatroomId           The chatroom ID.
+ *  @param aIncludeMembersList   Whether to get the member list. If you set the parameter as YES, it will return 200 members.
+ *  @param aCompletionBlock      The completion block, which contains the error message if the method call fails.
  *
  */
 - (void)getChatroomSpecificationFromServerByID:(NSString *)aChatroomId
                             includeMembersList:(BOOL)aIncludeMembersList
-                                    completion:(void (^)(EMChatroom *aChatroom, EMError *aError))aCompletionBlock EM_DEPRECATED_IOS(3_1_0, 3_3_0, "Use -[IEMChatroomManager getChatroomSpecificationFromServerWithId:completion:] instead");
+                                    completion:(void (^)(EMChatroom *aChatroom, EMError *aError))aCompletionBlock EM_DEPRECATED_IOS(3_1_0, 3_3_0, "Use -IEMChatroomManager getChatroomSpecificationFromServerWithId:completion: instead");
 
 #pragma mark - EM_DEPRECATED_IOS 3.2.3
 
-/*!
+/**
  *  \~chinese
- *  添加回调代理
+ *  添加回调代理。
  *
- *  @param aDelegate  要添加的代理
+ *  已废弃，请用 {@link IEMChatroomManager addDelegate:delegateQueue:} 代替。
+ * 
+ *  @param aDelegate  要添加的代理。
  *
  *  \~english
- *  Add delegate
+ *  Adds delegate.
+ * 
+ *  Deprecated, please use  {@link IEMChatroomManager addDelegate:delegateQueue:}  instead.
  *
- *  @param aDelegate  Delegate
+ *  @param aDelegate  The delegate you want to add.
  */
-- (void)addDelegate:(id<EMChatroomManagerDelegate>)aDelegate EM_DEPRECATED_IOS(3_1_0, 3_2_2, "Use -[IEMChatroomManager addDelegate:delegateQueue:] instead");
+- (void)addDelegate:(id<EMChatroomManagerDelegate>)aDelegate EM_DEPRECATED_IOS(3_1_0, 3_2_2, "Use -IEMChatroomManager addDelegate:delegateQueue: instead");
 
 #pragma mark - EM_DEPRECATED_IOS < 3.2.3
 
-/*!
+/**
  *  \~chinese
- *  从服务器获取所有的聊天室
+ *  从服务器获取所有的聊天室。
  *
- *  同步方法，会阻塞当前线程
+ *  已废弃，请用 {@link getChatroomsFromServerWithPage} 代替。
+ * 
+ *  同步方法，会阻塞当前线程。
  *
- *  @param pError   出错信息
+ *  @param pError   出错信息。
  *
- *  @result 聊天室列表<EMChatroom>
+ *  @result 聊天室列表，详见 <EMChatroom>。
  *
  *  \~english
- *  Get all the chatrooms from server
+ *  Gets all the chatrooms from the server.
  *
- *  Synchronization method will block the current thread
+ *  Deprecated, please use  {@link getChatroomsFromServerWithPage}  instead.
+ * 
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param pError   Error
+ *  @param pError   The error information if the method fails: Error.
  *
- *  @result Chat room NSArray<EMChatroom>
+ *  @result         The chat room list.
  */
 - (NSArray *)getAllChatroomsFromServerWithError:(EMError **)pError __deprecated_msg("Use -getChatroomsFromServerWithPage instead");
 
-/*!
+/**
  *  \~chinese
- *  从服务器获取所有的聊天室
+ *  从服务器获取所有的聊天室。
+ * 
+ *  已废弃，请用 {@link getChatroomsFromServerWithPage} 代替。
  *
- *  @param aCompletionBlock      完成的回调
+ *  @param aCompletionBlock      该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  Get all the chatrooms from server
+ *  Gets all the chatrooms from server.
+ * 
+ *  Deprecated, please use  {@link getChatroomsFromServerWithPage}  instead.
  *
- *  @param aCompletionBlock     The callback block of completion
+ *  @param aCompletionBlock     The completion block, which contains the error message if the method call fails.
  *
  */
 - (void)getAllChatroomsFromServerWithCompletion:(void (^)(NSArray *aList, EMError *aError))aCompletionBlock __deprecated_msg("Use -getChatroomsFromServerWithPage instead");
 
-/*!
+/**
  *  \~chinese
- *  从服务器获取所有的聊天室
+ *  从服务器获取所有的聊天室。
+ * 
+ *  已废弃，请用 {@link getAllChatroomsFromServerWithCompletion} 代替。
  *
- *  @param aSuccessBlock         成功的回调
- *  @param aFailureBlock         失败的回调
+ *  @param aSuccessBlock         成功的回调。
+ *  @param aFailureBlock         失败的回调。
  *
  *  \~english
- *  Get all the chatrooms from server
+ *  Gets all the chatrooms from the server.
  *
- *  @param aSuccessBlock         The callback block of success
- *  @param aFailureBlock         The callback block of failure
+ *  Deprecated, please use  {@link getAllChatroomsFromServerWithCompletion}  instead.
+ * 
+ *  @param aSuccessBlock         The callback block of success.
+ *  @param aFailureBlock         The callback block of failure, which contains the error message if the method fails.
  *
  */
 - (void)asyncGetAllChatroomsFromServer:(void (^)(NSArray *aList))aSuccessBlock
                                failure:(void (^)(EMError *aError))aFailureBlock __deprecated_msg("Use -getAllChatroomsFromServerWithCompletion: instead");
 
-/*!
+/**
  *  \~chinese
- *  加入聊天室
+ *  加入一个聊天室。
+ * 
+ *  已废弃，请用 {@link joinChatroom:completion:} 代替。
  *
- *  @param aChatroomId      聊天室的ID
- *  @param aSuccessBlock    成功的回调
- *  @param aFailureBlock    失败的回调
+ *  @param aChatroomId      聊天室的 ID。
+ *  @param aSuccessBlock    成功的回调。
+ *  @param aFailureBlock    失败的回调。
  *
  *
  *  \~english
- *  Join a chatroom
+ *  Joins a chatroom.
+ * 
+ *  Deprecated, please use  {@link joinChatroom:completion:}  instead.
  *
- *  @param aChatroomId      Chatroom id
- *  @param aSuccessBlock    The callback block of success
- *  @param aFailureBlock    The callback block of failure
+ *  @param aChatroomId      The chatroom ID.
+ *  @param aSuccessBlock    The callback block of success.
+ *  @param aFailureBlock    The callback block of failure, which contains the error message if the method fails.
  *
  */
 - (void)asyncJoinChatroom:(NSString *)aChatroomId
                   success:(void (^)(EMChatroom *aRoom))aSuccessBlock
                   failure:(void (^)(EMError *aError))aFailureBlock __deprecated_msg("Use -joinChatroom:completion: instead");
 
-/*!
+/**
  *  \~chinese
- *  退出聊天室
+ *  退出聊天室。
+ * 
+ *  已废弃，请用 {@link leaveChatroom:completion:} 代替。
  *
- *  @param aChatroomId          聊天室ID
- *  @param aSuccessBlock        成功的回调
- *  @param aFailureBlock        失败的回调
+ *  @param aChatroomId          聊天室 ID。
+ *  @param aSuccessBlock        成功的回调。
+ *  @param aFailureBlock        失败的回调。
  *
- *  @result 退出的聊天室
+ *  @result 退出的聊天室。
  *
  *  \~english
- *  Leave a chatroom
+ *  Leaves a chatroom.
+ * 
+ *  Deprecated, please use  {@link leaveChatroom:completion:}  instead.
  *
- *  @param aChatroomId      Chatroom id
- *  @param aSuccessBlock    The callback block of success
- *  @param aFailureBlock    The callback block of failure
+ *  @param aChatroomId      The chatroom ID.
+ *  @param aSuccessBlock    The callback block of success.
+ *  @param aFailureBlock    The callback block of failure, which contains the error message if the method fails.
  *
  *  @result Leaved chatroom
  */
@@ -1495,22 +1802,26 @@
                    success:(void (^)(EMChatroom *aRoom))aSuccessBlock
                    failure:(void (^)(EMError *aError))aFailureBlock __deprecated_msg("Use -leaveChatroom:completion: instead");
 
-/*!
+/**
  *  \~chinese
- *  获取聊天室详情
+ *  获取聊天室详情。
+ * 
+ *  已废弃，请用 {@link getChatroomSpecificationFromServerByID:includeMembersList:completion:} 代替。
  *
- *  @param aChatroomId           聊天室ID
- *  @param aIncludeMembersList   是否获取成员列表
- *  @param aSuccessBlock         成功的回调
- *  @param aFailureBlock         失败的回调
+ *  @param aChatroomId           聊天室 ID。
+ *  @param aIncludeMembersList   是否获取成员列表。
+ *  @param aSuccessBlock         成功的回调。
+ *  @param aFailureBlock         失败的回调。
  *
  *  \~english
- *  Fetch chatroom's specification
+ *  Fetches chatroom's specification.
+ * 
+ *  Deprecated, please use  {@link getChatroomSpecificationFromServerByID:includeMembersList:completion:}  instead.
  *
- *  @param aChatroomId           Chatroom id
- *  @param aIncludeMembersList   Whether get member list
- *  @param aSuccessBlock         The callback block of success
- *  @param aFailureBlock         The callback block of failure
+ *  @param aChatroomId           The chatroom ID.
+ *  @param aIncludeMembersList   Whether to get member list.
+ *  @param aSuccessBlock         The callback block of success.
+ *  @param aFailureBlock         The callback block of failure, which contains the error message if the method fails.
  *
  */
 - (void)asyncFetchChatroomInfo:(NSString *)aChatroomId

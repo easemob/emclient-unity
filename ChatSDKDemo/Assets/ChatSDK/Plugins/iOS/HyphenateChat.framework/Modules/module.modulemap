@@ -4,3 +4,8 @@ framework module HyphenateChat {
   export *
   module * { export * }
 }
+
+module HyphenateChat.Swift {
+    header "HyphenateChat-Swift.h"
+    requires objc
+}

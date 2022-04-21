@@ -1,13 +1,13 @@
-/*!
+/**
  *  \~chinese
  *  @header EMTextMessageBody.h
- *  @abstract 文本消息体
+ *  @abstract 文本消息体。
  *  @author Hyphenate
  *  @version 3.00
  *
  *  \~english
  *  @header EMTextMessageBody.h
- *  @abstract Text message body
+ *  @abstract The text message body.
  *  @author Hyphenate
  *  @version 3.00
  */
@@ -16,38 +16,38 @@
 
 #import "EMMessageBody.h"
 
-/*!
+/**
  *  \~chinese 
- *  文本消息体
+ *  文本消息体。
  *
  *  \~english 
- *  Text message body
+ *  The text message body.   
  */
 @interface EMTextMessageBody : EMMessageBody
 
-/*!
+/**
  *  \~chinese 
- *  文本内容
+ *  文本内容。
  *
  *  \~english 
- *  Text content
+ *  The text content.
  */
 @property (nonatomic, copy, readonly) NSString *text;
  
-/*!
+/**
  *  \~chinese 
- *  初始化文本消息体
+ *  初始化文本消息体。
  *
- *  @param aText   文本内容
+ *  @param aText   文本内容。
  *  
- *  @result 文本消息体实例
+ *  @result 文本消息体实例。
  *
  *  \~english
- *  Initialize a text message body instance
+ *  Initializes a text message body instance.
  *
- *  @param aText   Text content
+ *  @param aText   The text content.
  *
- *  @result Text message body instance
+ *  @result The text message body instance.
  */
 - (instancetype)initWithText:(NSString *)aText;
 

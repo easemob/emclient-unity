@@ -1,4 +1,4 @@
-/*!
+/**
  *  \~chinese
  *  @header EMMessageBody.h
  *  @abstract 消息体类型的基类
@@ -15,40 +15,40 @@
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CGGeometry.h>
 
-/*!
+/**
  *  \~chinese 
- *  消息体枚举类型
+ *  消息体类型。
  *
  *  \~english
- *  Message body type
+ *  The enum of message body types.
  */
 typedef enum {
-    EMMessageBodyTypeText   = 1,    /*! \~chinese 文本类型 \~english Text type*/
-    EMMessageBodyTypeImage,         /*! \~chinese 图片类型 \~english Image type*/
-    EMMessageBodyTypeVideo,         /*! \~chinese 视频类型 \~english Video type*/
-    EMMessageBodyTypeLocation,      /*! \~chinese 位置类型 \~english Location type*/
-    EMMessageBodyTypeVoice,         /*! \~chinese 语音类型 \~english Voice type*/
-    EMMessageBodyTypeFile,          /*! \~chinese 文件类型 \~english File type*/
-    EMMessageBodyTypeCmd,           /*! \~chinese 命令类型 \~english Command type*/
-    EMMessageBodyTypeCustom,        /*! \~chinese 自定义类型 \~english Custom type*/
+    EMMessageBodyTypeText   = 1,    /** \~chinese 文本消息。 \~english A text message.*/
+    EMMessageBodyTypeImage,         /** \~chinese 图片消息。 \~english An image message.*/
+    EMMessageBodyTypeVideo,         /** \~chinese 视频消息。 \~english A video message.*/
+    EMMessageBodyTypeLocation,      /** \~chinese 位置消息。 \~english A location message.*/
+    EMMessageBodyTypeVoice,         /** \~chinese 语音消息。 \~english A voice message.*/
+    EMMessageBodyTypeFile,          /** \~chinese 文件消息。 \~english A file message.*/
+    EMMessageBodyTypeCmd,           /** \~chinese 指令消息。 \~english A command message.*/
+    EMMessageBodyTypeCustom,        /** \~chinese 自定义消息。\~english A custom message.*/
 } EMMessageBodyType;
 
-/*!
+/**
  *  \~chinese 
- *  消息体
- *  不直接使用，由子类继承实现
+ *  消息体。
+ *  不直接使用，由子类继承实现。
  *
  *  \~english 
- *  Message body
+ *  The message body.
  */
 @interface EMMessageBody : NSObject
 
-/*!
+/**
  *  \~chinese 
- *  消息体类型
+ *  消息体类型。
  *
  *  \~english 
- *  Message body type
+ *  The message body type.
  */
 @property (nonatomic, readonly) EMMessageBodyType type;
 

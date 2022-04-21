@@ -8,40 +8,104 @@
 
 #import <Foundation/Foundation.h>
 
-/*!
+/**
  *  \~chinese
- *  用户属性枚举类型
+ *  用户属性枚举类型。
  *
  *
  *  \~english
- *  UserInfo Enumerated type
+ *  The user information type.
  */
 typedef NS_ENUM(NSInteger, EMUserInfoType) {
-    EMUserInfoTypeNickName = 0, /*! *\~chinese 用户昵称 类型 *\~english User nickname type */
-    EMUserInfoTypeAvatarURL,    /*! *\~chinese 用户头像地址类型  *\~english User avatar address type*/
-    EMUserInfoTypePhone,        /*! *\~chinese 用户联系方式类型 *\~english User contact type */
-    EMUserInfoTypeMail,         /*! *\~chinese 用户邮箱地址类型 *\~english User email address type */
-    EMUserInfoTypeGender,       /*! *\~chinese 用户性别类型    *\~english User gender type */
-    EMUserInfoTypeSign,         /*! *\~chinese 用户签名类型 *\~english User signature type */
-    EMUserInfoTypeBirth,        /*! *\~chinese 用户生日类型 *\~english User birthday type */
-    EMUserInfoTypeExt = 100,    /*! *\~chinese 扩展字段类型 *\~english Extension field type */
+    EMUserInfoTypeNickName = 0, /** \~chinese 用户昵称。 *\~english The user nickname. */
+    EMUserInfoTypeAvatarURL,    /** \~chinese 用户头像地址。  *\~english The user avatar address.*/
+    EMUserInfoTypePhone,        /** \~chinese 用户联系方式。 *\~english The user contact. */
+    EMUserInfoTypeMail,         /** \~chinese 用户邮箱地址。 *\~english The user email address. */
+    EMUserInfoTypeGender,       /** \~chinese 用户性别。    *\~english The user gender. */
+    EMUserInfoTypeSign,         /** \~chinese 用户签名。 *\~english The user signature. */
+    EMUserInfoTypeBirth,        /** \~chinese 用户生日。 *\~english The user birthday. */
+    EMUserInfoTypeExt = 100,    /** \~chinese 扩展字段。 *\~english The extension field. */
 };
-/*!
+/**
  *  \~chinese
- *  用户属性信息
+ *  用户属性信息。
  *
  *  \~english
- *  UserInfo class
+ *  The userInfo class.
  */
 @interface EMUserInfo : NSObject<NSCopying>
-@property (nonatomic,copy) NSString *userId; /*! *\~chinese 用户环信Id *\~english user's id */
-@property (nonatomic,copy) NSString *nickName; /*! *\~chinese 用户昵称 *\~english user's nickname */
-@property (nonatomic,copy) NSString *avatarUrl; /*! *\~chinese 用户头像地址 *\~english user's avatar file uri */
-@property (nonatomic,copy) NSString *mail; /*! *\~chinese 用户邮箱地址 *\~english user's mail  address */
 
-@property (nonatomic,copy) NSString *phone; /*! *\~chinese 用户联系方式 *\~english user's phone  number */
-@property (nonatomic) NSInteger gender; /*! *\~chinese 用户性别，0为未设置 *\~english user's gender  */
-@property (nonatomic,copy) NSString* sign; /*! *\~chinese 用户签名 *\~english user's sign info */
-@property (nonatomic,copy) NSString* birth; /*! *\~chinese 用户生日 *\~english user's birth */
-@property (nonatomic,copy) NSString *ext; /*! *\~chinese 扩展字段 *\~english extention info */
+/**
+ *  \~chinese 用户 ID。
+ *
+ *  \~english The user ID.
+ */
+@property (nonatomic,copy) NSString *userId;
+
+/**
+ *  \~chinese 用户昵称。
+ *
+ *  \~english The user's nickname.
+ */
+@property (nonatomic,copy) NSString *nickname;
+
+/**
+ *  \~chinese 用户头像地址。
+ *
+ *  \~english The user's avatar file uri.
+ */
+@property (nonatomic,copy) NSString *avatarUrl;
+
+/**
+ *  \~chinese 用户邮箱地址。
+ *
+ *  \~english The user's mail address.
+ */
+@property (nonatomic,copy) NSString *mail;
+
+/**
+ *  \~chinese 用户联系方式。
+ *
+ *  \~english The user's phone number.
+ */
+@property (nonatomic,copy) NSString *phone;
+
+/**
+ *  \~chinese 用户性别，0 为未设置。SDK 没有取值限制，你可以自己定义取值，例如指定 1：男；2：女。
+ *
+ *  \~english The user's gender. If you didn't set, the default value is 0.  For example you can set 1 for male and 2 for female.
+ */
+@property (nonatomic) NSInteger gender;
+
+/**
+ *  \~chinese 用户签名。
+ *
+ *  \~english The user's personal status.
+ */
+@property (nonatomic,copy) NSString* sign;
+
+/**
+ *  \~chinese 用户生日。
+ *
+ *  \~english The user's birth date.
+ */
+@property (nonatomic,copy) NSString* birth;
+
+/**
+ *  \~chinese 扩展字段。
+ *
+ *  \~english The extention information.
+ */
+@property (nonatomic,copy) NSString *ext;
+
+#pragma mark - EM_DEPRECATED_IOS 3.8.8
+
+/**
+ *  \~chinese 用户昵称。
+ *
+ *  \~english The user's nickname.
+ */
+@property (nonatomic,copy) NSString *nickName
+__deprecated_msg("Use nickname instead");
+
 @end

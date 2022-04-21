@@ -1,62 +1,62 @@
-/*!
+/**
  *  \~chinese
  *  @header EMPageResult.h
- *  @abstract 分段结果类
+ *  @abstract 分段结果类。
  *  @author Hyphenate
  *  @version 3.00
  *
  *  \~english
  *  @header EMPageResult.h
- *  @abstract Subsection result
+ *  @abstract The subsection result.
  *  @author Hyphenate
  *  @version 3.00
  */
 
 #import <Foundation/Foundation.h>
 
-/*!
+/**
  *  \~chinese
- *  分段结果类
+ *  分段结果类，用于封装服务器返回的数据。
  *
  *  \~english
- *  Sub-section result
+ *  The sub-section result.
  */
 @interface EMPageResult : NSObject
 
-/*!
+/**
  *  \~chinese
- *  结果列表<id>
+ *  结果列表。
  *
  *  \~english
- *  Result list<id>
+ *  The result list.
  */
 @property (nonatomic, strong) NSArray *list;
 
-/*!
+/**
  *  \~chinese
- *  获取当前列表数目
+ *  当前列表数目。
  *
  *  \~english
- *  The count of current list
+ *  The count of the current list.
  */
 @property (nonatomic) NSInteger count;
 
-/*!
+/**
  *  \~chinese
- *  创建实例
+ *  创建实例。
  *
- *  @param aList    结果列表<id>
- *  @param aCount   获取当前列表数目
+ *  @param aList    结果列表。
+ *  @param aCount   获取当前列表数目。
  *
- *  @result 分段结果的实例
+ *  @result 分段结果的实例。
  *
  *  \~english
- *  Get result instance
+ *  Gets the result instance.
  *
- *  @param aList    Result list<id>
- *  @param aCount   The count of current list
+ *  @param aList    The result list. 
+ *  @param aCount   The count of current list.
  *
- *  @result An instance of cursor result
+ *  @result         The instance of cursor result.
  */
 + (instancetype)pageResultWithList:(NSArray *)aList
                           andCount:(NSInteger)aCount;

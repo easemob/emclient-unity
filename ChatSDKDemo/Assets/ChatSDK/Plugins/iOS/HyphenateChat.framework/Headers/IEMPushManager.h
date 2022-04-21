@@ -12,290 +12,310 @@
 #import "EMError.h"
 
 NS_ASSUME_NONNULL_BEGIN
-/*!
+/**
  *  \~chinese
  *  @header IEMPushManager.h
- *  @abstract 推送相关的管理协议类
+ *  @abstract 推送相关的管理协议类。
  *  @author Hyphenate
  *  @version 3.00
  *
  *  \~english
  *  @header IEMPushManager.h
- *  @abstract Push related management protocol class
+ *  @abstract The push related management protocol class.
  *  @author Hyphenate
  *  @version 3.00
  */
 
 @protocol IEMPushManager <NSObject>
 
-/*!
+/**
  *  \~chinese
- *  消息推送配置选项
+ *  消息推送配置选项。
  *
  *  \~english
- *  Message push configuration options
+ *  The message push configuration options.
  *
  */
 @property (nonatomic, strong, readonly) EMPushOptions *pushOptions;
 
-/*!
+/**
  *  \~chinese
- *  从内存中获取屏蔽了推送的用户ID列表
+ *  从内存中获取屏蔽了推送的用户 ID 列表。
  *
  *
  *  \~english
- *  Get the list of uids which have disabled Apple Push Notification Service
+ *  Gets the list of user ID which have blocked the push notification.
  */
 @property (nonatomic, strong, readonly) NSArray *noPushUIds;
 
-/*!
+/**
  *  \~chinese
- *  从内存中获取屏蔽了推送的群组ID列表
+ *  从内存中获取屏蔽了推送的群组 ID 列表。
+ *
  *
  *  \~english
- *  Get the list of groups which have disabled Apple Push Notification Service
- *
+ *  Gets the list of groups which have blocked the push notification.
  */
 @property (nonatomic, strong, readonly) NSArray *noPushGroups;
 
-/*!
+/**
  *  \~chinese
- *  开启离线推送
+ *  开启离线推送。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @result EMError 错误信息
+ *  @result  错误信息，详见 EMError。
  *
  *  \~english
- *  Enable APNS
+ *  Turns on the push notification.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @result EMError error
+ *  @result   The error information if the method fails: Error.
  */
 - (EMError *)enableOfflinePush;
 
 
-/*!
+/**
  *  \~chinese
- *  关闭离线推送
+ *  关闭离线推送。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aStartHour    开始时间
- *  @param aEndHour      结束时间
+ *  @param aStartHour    开始时间。
+ *  @param aEndHour      结束时间。
  *
- *  @result EMError  错误信息
+ *  @result  错误信息，详见 EMError。
  *
  *  \~english
- *  Disable Apns
+ *  Turns off the push notification.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aStartHour    start time
- *  @param aEndHour      end time
+ *  @param aStartHour    The begin time.
+ *  @param aEndHour      The end time.
  *
- *  @result EMError error
+ *  @result     The error information if the method fails: Error.
  */
 - (EMError *)disableOfflinePushStart:(int)aStartHour end:(int)aEndHour;
 
-/*!
+/**
  *  \~chinese
- *  设置群组是否接收推送
+ *  设置群组是否接收推送。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aGroupIds    群组id
- *  @param disable      是否接收推送
+ *  @param aGroupIds    群组 ID。
+ *  @param disable      是否接收推送。
  *
- *  @result  EMError    错误信息
+ *  @result      错误信息，详见 EMError。
  *
  *  \~english
- *  Disable groups APNS
+ *  Sets wether to turn on or turn off the push notification.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aGroupIds    group ids
- *  @param disable      disable
+ *  @param aGroupIds    The group IDs.
+ *  @param disable      Turn off.
  *
- *  @result EMError  error
+ *  @result    The error information if the method fails: Error.
  */
 - (EMError *)updatePushServiceForGroups:(NSArray *)aGroupIds
                             disablePush:(BOOL)disable;
 
 
-/*!
+/**
  *  \~chinese
- *  设置群组是否接收推送
+ *  设置群组是否接收推送。
+ * 
+ *  异步方法。
  *
- *  @param aGroupIds            群组id
- *  @param disable              是否接收推送
- *  @param aCompletionBlock     完成的回调
+ *  @param aGroupIds            群组 ID。
+ *  @param disable              是否接收推送。
+ *  @param aCompletionBlock     该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  Set display style for the push notification
+ *  Sets the display style for the push notification.
+ * 
+ *  This is an asynchronous method.
  *
- *  @param aGroupIds            group ids
- *  @param disable              disable
- *  @param aCompletionBlock     The callback block of completion
+ *  @param aGroupIds            The group IDs.
+ *  @param disable              Turn off.
+ *  @param aCompletionBlock     The completion block, which contains the error message if the method fails..
  */
 - (void)updatePushServiceForGroups:(NSArray *)aGroupIds
                        disablePush:(BOOL)disable
-                        completion:(nonnull void (^)(EMError * _Nonnull aError))aCompletionBlock;
+                        completion:(nonnull void (^)(EMError * aError))aCompletionBlock;
 
-/*!
+/**
   *  \~chinese
-  *  设置是否接收联系人消息推送
+  *  设置是否接收联系人消息推送。
   *
-  *  同步方法，会阻塞当前线程
+  *  同步方法，会阻塞当前线程。
   *
-  *  @param aUIds        用户环信id
-  *  @param disable      是否接收推送
+  *  @param aUIds        用户 ID。
+  *  @param disable      是否不接收推送。默认值是 NO，表示接收推送；设置 YES，表示不接收推送。
   *
-  *  @result             错误信息
+  *  @result             错误信息。
   *
   *  \~english
-  *  Disable uids Apns
+  *  Sets whether to receive push notification of the specific contacts.
   *
-  *  Synchronization method will block the current thread
+  *  This is a synchronous method and blocks the current thread.
   *
-  *  @param aUIds        user ids
-  *  @param disable      disable
+  *  @param aUIds        The user IDs of the contacts.
+  *  @param disable      Whether to receive the push notification.// to do
   *
-  *  @result Error
+  *  @result    The error information if the method fails: Error.
   */
 - (EMError *)updatePushServiceForUsers:(NSArray *)aUIds
                             disablePush:(BOOL)disable;
 
- /*!
+ /**
   *  \~chinese
-  *  设置是否接收联系人消息推送
+  *  设置是否接收联系人消息推送。
+  * 
+  *  异步方法。
   *
-  *  @param aUIds                用户环信id
-  *  @param disable              是否接收推送
-  *  @param aCompletionBlock     完成的回调
+  *  @param aUIds                用户 ID。
+  *  @param disable              是否不接收推送。默认值是 NO，表示接收推送；设置 YES，表示不接收推送。
+  *  @param aCompletionBlock     该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
   *
   *  \~english
-  *  Set display style for the push notification
+  *  Sets whether to receive the push notification of the contacts.
+  * 
+  *  This is an asynchronous method.
   *
-  *  @param aUIds                user ids
-  *  @param disable              disable
-  *  @param aCompletionBlock     The callback block of completion
+  *  @param aUIds                The user IDs of the contacts.
+  *  @param disable              Whether to receive the push notification.
+  *  @param aCompletionBlock     The completion block, which contains the error message if the method fails.
   */
 - (void)updatePushServiceForUsers:(NSArray *)aUIds
                         disablePush:(BOOL)disable
-                        completion:(nonnull void (^)(EMError * _Nonnull aError))aCompletionBlock;
+                        completion:(nonnull void (^)(EMError * aError))aCompletionBlock;
 
-/*!
+/**
  *  \~chinese
- *  设置推送消息显示的样式
+ *  设置推送消息显示的样式。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param pushDisplayStyle  要设置的推送样式
+ *  @param pushDisplayStyle  要设置的推送样式。
  *
- *  @result EMError 错误信息
+ *  @result  错误信息，详见 EMError。
  *
  *  \~english
- *  Set display style for Apple Push Notification message
+ *  Sets the display style for the push notification.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param pushDisplayStyle  Display style
+ *  @param pushDisplayStyle  The display style of the push notification.
  *
- *  @result EMError error
+ *  @result    The error information if the method fails: Error.
  */
 - (EMError *)updatePushDisplayStyle:(EMPushDisplayStyle)pushDisplayStyle;
 
 
-/*!
+/**
  *  \~chinese
- *  设置推送的显示名
+ *  设置推送的显示名。
+ * 
+ *  异步方法。
  *
- *  @param pushDisplayStyle     推送显示样式
- *  @param aCompletionBlock     完成的回调
+ *  @param pushDisplayStyle     推送显示样式。
+ *  @param aCompletionBlock     该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  Set display style for the push notification
+ *  Sets the display style for the push notification.
+ * 
+ *  This is an asynchronous method.
  *
- *  @param pushDisplayStyle     Display style of push
- *  @param aCompletionBlock     The callback block of completion
+ *  @param pushDisplayStyle     The display style of the push notification.
+ *  @param aCompletionBlock     The completion block, which contains the error message if the method fails.
  */
 - (void)updatePushDisplayStyle:(EMPushDisplayStyle)pushDisplayStyle
-                    completion:(nonnull void (^)(EMError * _Nonnull))aCompletionBlock;
+                    completion:(nonnull void (^)(EMError * aError))aCompletionBlock;
 
 
-/*!
+/**
  *  \~chinese
- *  设置推送消息显示的昵称
+ *  设置推送消息显示的昵称。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param aNickname  要设置的昵称
+ *  @param aNickname  要设置的昵称。
  *
- *  @result EMError 错误信息
+ *  @result  错误信息，详见 EMError。
  *
  *  \~english
- *  Set display name for Apple Push Notification message
+ *  Sets the display name of the push notification.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param aNickname  Display name
+ *  @param aNickname  The display name of the push notification.
  *
- *  @result EMError error
+ *  @result    The error information if the method fails: Error.
  */
 - (EMError *)updatePushDisplayName:(NSString *)aDisplayName;
 
-/*!
+/**
  *  \~chinese
- *  设置推送的显示的昵称
+ *  设置推送的显示的昵称。
+ * 
+ *  异步方法。
  *
- *  @param aDisplayName     推送显示的昵称
- *  @param aCompletionBlock 完成的回调
+ *  @param aDisplayName     推送显示的昵称。
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  Set display name for the push notification
+ *  Sets the display name of the push notification.
+ * 
+ *  This is an asynchronous method.
  *
- *  @param aDisplayName     Display name of push
- *  @param aCompletionBlock The callback block of completion
+ *  @param aDisplayName     The display name of the push notification.
+ *  @param aCompletionBlock The completion block, which contains the error message if the method fails.
  *
  */
-- (void)updatePushDisplayName:(NSString *)aDisplayName
-                   completion:(void (^)(NSString *aDisplayName, EMError *aError))aCompletionBlock;
+- (void)updatePushDisplayName:(NSString * _Nonnull)aDisplayName
+                   completion:(void (^)(NSString * _Nonnull aDisplayName, EMError *aError))aCompletionBlock;
 
 
 
-/*!
+/**
  *  \~chinese
- *  从服务器获取推送属性
+ *  从服务器获取推送属性。
  *
- *  同步方法，会阻塞当前线程
+ *  同步方法，会阻塞当前线程。
  *
- *  @param pError  错误信息
+ *  @param pError  错误信息。
  *
- *  @result EMPushOptions 推送属性
+ *  @result   推送属性，详见 EMPushOptions。
  *
  *  \~english
- *  Get Apple Push Notification Service options from the server
+ *  Gets the push options from the server.
  *
- *  Synchronization method will block the current thread
+ *  This is a synchronous method and blocks the current thread.
  *
- *  @param pError  error
+ *  @param pError  The error information if the method fails: Error.
  *
- *  @result EMPushOptions  Apple Push Notification Service options
+ *  @result    The push options. See EMPushOptions.
  */
 - (EMPushOptions *)getPushOptionsFromServerWithError:(EMError *_Nullable *_Nullable)pError;
 
-/*!
+/**
  *  \~chinese
- *  从服务器获取推送属性
+ *  从服务器获取推送属性。
+ * 
+ *  异步方法。
  *
- *  @param aCompletionBlock 完成的回调
+ *  @param aCompletionBlock 该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
  *
  *  \~english
- *  Get Apple Push Notification Service options from the server
+ *  Gets the push options from the server.
+ * 
+ *  This is an asynchronous method.
  *
- *  @param aCompletionBlock The callback of completion block
+ *  @param aCompletionBlock The completion block, which contains the error message if the method fails.
  */
 - (void)getPushNotificationOptionsFromServerWithCompletion:(void (^)(EMPushOptions *aOptions, EMError *aError))aCompletionBlock;
 

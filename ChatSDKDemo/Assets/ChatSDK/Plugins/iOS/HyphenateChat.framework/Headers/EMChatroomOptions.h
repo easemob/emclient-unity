@@ -8,21 +8,21 @@
 
 #import <Foundation/Foundation.h>
 
-/*!
+/**
  *  \~chinese
- *  @abstract 聊天室的设置选项
+ *  @abstract 聊天室的设置选项。
  *
  *  \~english
- *  Setting options of Apple Push Notification
+ *  The options of a chatroom.
  */
 @interface EMChatroomOptions : NSObject
 
-/*!
+/**
  *  \~chinese
- *  聊天室的最大成员数(3 - 5000，默认是200)
+ *  聊天室的最大成员数。取值范围 [3,5000]，默认值 200。
  *
  *  \~english
- *  The max chat room capacity (3 - 5000, the default is 200)
+ *  The maximum number of members in a chatroom. The value range is [3,5000], and the default value is 200.
  */
 @property (nonatomic) NSInteger maxUsersCount;
 

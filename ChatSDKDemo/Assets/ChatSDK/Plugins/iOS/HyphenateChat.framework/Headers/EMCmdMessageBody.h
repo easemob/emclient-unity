@@ -1,13 +1,13 @@
-/*!
+/**
  *  \~chinese
  *  @header EMCmdMessageBody.h
- *  @abstract 命令消息体对象
+ *  @abstract 命令消息体对象。
  *  @author Hyphenate
  *  @version 3.00
  *
  *  \~english
  *  @header EMCmdMessageBody.h
- *  @abstract Command message body object
+ *  @abstract The command message body object.
  *  @author Hyphenate
  *  @version 3.00
  */
@@ -16,62 +16,59 @@
 
 #import "EMMessageBody.h"
 
-/*!
+/**
  *  \~chinese 
- *  命令消息体对象
+ *  命令消息体对象。
  *
  *  \~english
- *  Command message body
+ *  The command message body.
  */
 @interface EMCmdMessageBody : EMMessageBody
 
-/*!
+/**
  *  \~chinese
- *  命令内容
+ *  命令内容。
  *
  *  \~english
- *  Command content
+ *  The command content.
  */
 @property (nonatomic, copy) NSString *action;
 
-/*!
+/**
  *  \~chinese
- *  命令参数，只是为了兼容老版本，应该使用EMMessage的扩展属性来代替
+ *  命令参数，已废弃，只是为了兼容老版本，应该使用 `EMMessage` 的扩展属性来代替。
  *
  *  \~english
- *  Command parameters, only compatible with old sdk versions. For SDK version 3.0+, use EMMessage's ext property instead
+ *  The command parameters, only to compatible with old sdk versions. For SDK version 3.0+, please use `EMMessage`'s ext property instead.
  */
 @property (nonatomic, copy) NSArray *params __deprecated_msg("");
 
-/*!
+/**
  *  \~chinese
- *  是否只投递在线用户，默认NO
+ *  是否只投递在线用户。默认为否，同时投递给在线和离线用户；设置为 YES 则只投递在线用户。
+ *  一般来说，用户不在线时有需要接收的消息，服务器会把消息放到离线队列，等用户上线后，再由 SDK 从离线队列中把消息拉走，对用户来说就是“收到了离线期间的消息”。但针对设置了 `isDeliverOnlineOnly` 的 cmd 消息，服务器不会写到离线队列，这样用户再上线后就不会取到了，从而达到 “只投递在线” 的效果。
  *
  *  \~english
- *  If this cmd msg is deliver to the online users only, default is NO.
+ *  Whether this cmd msg is delivered to the online users only. The default value is NO. Set this parameter as YES and the msg is delivered to the online users only, so the offline users won't receive the msg when they log in later.
  */
 @property (nonatomic) BOOL isDeliverOnlineOnly;
 
-/*!
+/**
  *  \~chinese
- *  初始化命令消息体
- *  用户自己定义的字符串，接收到后，解析出自己定义的字符串，就知道某件事情发过来了。
- *  ex. 用户要做位置共享，这里的字符串就可以是"loc",解析出"loc"后，就知道这条消息是位置共享的消息了，之后其他信息可以放到.ext属性中去解析。
- *  ex. 用户如果需要做”阅后即焚“功能，这里就可以自己写一个字符串，如”Snap“，之后.ext里带上要删除的messageid，接收方收到后，就可以删除对应的message，到达阅后即焚的效果
- *
- *  @param aAction  命令内容
+ *  初始化命令消息体。
+ *  `EMMessage` 的 `ext` 属性是用户自己定义的关键字，接收后，解析出自定义的字符串，可以自行处理。
  *  
- *  @result 命令消息体实例
+ *  @param aAction  命令内容。
+ *  
+ *  @result 命令消息体实例。
  *
  *  \~english
- *  Construct command message body
- *  Developer self-defined command string that can be used for specifing custom action/command.
- *  ex. Share a location: mark the action with "location" string, then the parser knows that it's a command message about location sharing and find more attributes stored in extension property .ext.
- *  ex. Self-destructive message like Snapchat: mark the action ”selfDestructive“ and add the messageId of the message to be destruct and expiration time as part of .ext
+ *  The construct command message body.
+ *  Developer self-defined command string that can be used for specifing custom action/command. See `ext` in `EMMessage`.
+ *  
+ *  @param aAction  The self-defined command string content.
  *
- *  @param aAction  Self-defined command string content
- *
- *  @result Instance of command message body
+ *  @result The instance of command message body.
  */
 - (instancetype)initWithAction:(NSString *)aAction;
 

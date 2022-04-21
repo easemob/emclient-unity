@@ -1,13 +1,13 @@
-/*!
+/**
  *  \~chinese
  *  @header EMGroup.h
- *  @abstract 群组模型类
+ *  @abstract 群组模型类。
  *  @author Hyphenate
  *  @version 3.00
  *
  *  \~english
  *  @header EMGroup.h
- *  @abstract Group model
+ *  @abstract The group model.
  *  @author Hyphenate
  *  @version 3.00
  */
@@ -17,308 +17,358 @@
 #import "EMCommonDefs.h"
 #import "EMGroupOptions.h"
 
-/*!
+/**
  *  \~chinese
- *  群组枚举类型
+ *  群组权限类型。
  *
  *  \~english
- *  Group permission type
+ *  The group permission type.
  */
 typedef enum{
-    EMGroupPermissionTypeNone   = -1,    /*! \~chinese 未知类型 \~english Unknown type*/
-    EMGroupPermissionTypeMember = 0,     /*! \~chinese 普通成员类型  \~english Normal member type*/
-    EMGroupPermissionTypeAdmin,          /*! \~chinese 群组管理员类型 \~english Group admin type*/
-    EMGroupPermissionTypeOwner,          /*! \~chinese 群主类型 \~english Group owner  type*/
+    EMGroupPermissionTypeNone   = -1,    /** \~chinese 未知类型。 \~english The unknown type.*/
+    EMGroupPermissionTypeMember = 0,     /** \~chinese 普通成员。  \~english The group member.*/
+    EMGroupPermissionTypeAdmin,          /** \~chinese 群组管理员。 \~english The group admin.*/
+    EMGroupPermissionTypeOwner,          /** \~chinese 群主。 \~english The group owner.*/
 }EMGroupPermissionType;
 
-/*!
+/**
  *  \~chinese 
- *  群组
+ *  群组。
  *
  *  \~english
- *  Group
+ *  The group.
  */
 @interface EMGroup : NSObject
 
-/*!
+/**
  *  \~chinese
- *  群组ID
+ *  群组 ID。
  *
  *  \~english
- *  Group id
+ *  The group ID.
  */
 @property (nonatomic, copy, readonly) NSString *groupId;
 
-/*!
+/**
 *  \~chinese
-*  群组的名称，需要获取群详情
+*  群组的名称，需要先通过 `getGroupSpecificationFromServerWithId` 方法获取群详情。
 *
 *  \~english
-*  Subject of the group, require fetch group's detail first
+*  The subject of the group. To get the value of this member, you need to call `getGroupSpecificationFromServerWithId` to get the group details first.
 */
 @property (nonatomic, copy, readonly) NSString *groupName;
 
-/*!
+/**
  *  \~chinese
- *  群组的描述，需要获取群详情
+ *  群组的描述，需要先通过 `getGroupSpecificationFromServerWithId` 获取群组详情。
  *
  *  \~english
- *  Description of the group, require fetch group's detail first
+ *  The description of the group. To get the value of this member, you need to call `getGroupSpecificationFromServerWithId` first.
  */
 @property (nonatomic, copy, readonly) NSString *description;
 
-/*!
+/**
  *  \~chinese
- *  群组的公告，需要获取群公告
+ *  群组的公告，需要先通过 getGroupAnnouncementWithId 方法获取群公告。
  *
  *  \~english
- *  Announcement of the group, require fetch group's announcement first
+ *  The announcement of the group. To get the value of this member, you need to call `getGroupAnnouncementWithId` first.
  */
 @property (nonatomic, copy, readonly) NSString *announcement;
 
-/*!
+/**
  *  \~chinese
- *  群组属性配置，需要获取群详情
+ *  群组属性配置，需要先通过 getGroupSpecificationFromServerWithId 获取群组详情。
  *
  *  \~english
- *  Setting options of group, require fetch group's detail first
+ *  The setting options of group. To get the value of this member, you need to call `getGroupSpecificationFromServerWithId` first.
  */
-@property (nonatomic, strong, readonly) EMGroupOptions *setting;
+@property (nonatomic, strong, readonly) EMGroupOptions *settings;
 
-/*!
+/**
  *  \~chinese
- *  群组的所有者，拥有群的最高权限，需要获取群详情
+ *  群组的所有者，拥有群的最高权限，需要先通过 `getGroupSpecificationFromServerWithId` 获取群组详情。
  *
- *  群组的所有者只有一人
+ *  群组的所有者只有一人。
  *
  *  \~english
- *  Owner of the group, has the highest authority of the group, require fetch group's detail first
+ *  The owner of the group who has the highest privilege of the group. To get the value of this member, you need to call `getGroupSpecificationFromServerWithId` first.
  *
- *  Each group only has one owner
+ *  Each chat group has only one owner.
  */
 @property (nonatomic, copy, readonly) NSString *owner;
 
-/*!
+/**
  *  \~chinese
- *  群组的管理者，拥有群的管理权限，需要获取群详情
+ *  群组的管理者，拥有群的管理权限，需要先通过 getGroupSpecificationFromServerWithId 获取群组详情。
  *
  *
  *  \~english
- *  Admins of the group, have group management authority, require fetch group's detail first
+ *  The admins of the group who have the group management authority. To get the value of this member, you need to call `getGroupSpecificationFromServerWithId` first.
  *
  */
 @property (nonatomic, copy, readonly) NSArray *adminList;
 
-/*!
+/**
  *  \~chinese
- *  群组的成员列表，需要获取群详情
+ *  群组的成员列表，需要先通过 getGroupSpecificationFromServerWithId 获取群组详情。
  *
  *  \~english
- *  Member list of the group, require fetch group's detail first
+ *  The member list of the group. To get the value of this member, you need to call `getGroupSpecificationFromServerWithId` first.
  */
 @property (nonatomic, copy, readonly) NSArray *memberList;
 
-/*!
+/**
  *  \~chinese
- *  群组的黑名单，需要先调用获取群黑名单方法
+ *  群组的黑名单，需要先调用 getGroupSpecificationFromServerWithId 方法获取群详情。
  *
- *  需要owner权限才能查看，非owner返回nil
+ *  该方法只有群主才有权限调用。否则 SDK 返回空值 nil 。
  *
  *  \~english
- *  Group's blacklist of blocked users, require call get blackList method first
+ *  The blocklist of the chat group. To get the value of this member, you need to call `getGroupSpecificationFromServerWithId` first.
  *
- *  Need owner's authority to access, return nil if user is not the group owner.
+ *  Only the group owner can call this method. Otherwise, the SDK returns nil.
  */
 @property (nonatomic, strong, readonly) NSArray *blacklist;
 
-/*!
+/**
  *  \~chinese
- *  群组的被禁言列表
+ *  群组的被禁言列表。
  *
- *  需要admin 或者 owner权限才能查看，否则返回nil
+ *  该方法只有管理员或者群主才有权限调用。否则 SDK 返回空值 nil 。
  *
  *  \~english
- *  List of muted members
+ *  The list of muted members.
  *
- *  Need admin's or owner's authority to access, return nil if user is not the group owner or admin.
+ *  Only the group owner or admin can call this method. Otherwise, the SDK returns nil.
  */
 @property (nonatomic, strong, readonly) NSArray *muteList;
 
 
-/*!
+/**
  *  \~chinese
- *  聊天室的白名单列表<NSString>
+ *  聊天室的白名单列表。
  *
- *  需要owner权限才能查看，非owner返回nil
+ *  该方法只有群主才能调用，否则 SDK 返回空值 nil。
  *
  *  \~english
- *  List of whitelist members<NSString>
+ *  The allowlist of the chat group. 
  *
- *  Need owner's authority to access, return nil if user is not the group owner.
+ *  Only the group owner can call this method. Otherwise, the SDK returns nil.
  */
 @property (nonatomic, strong, readonly) NSArray *whiteList;
 
-/*!
+/**
  *  \~chinese
- *  群共享文件列表
+ *  群共享文件列表。
  *
  *  \~english
- *  List of group shared file
+ *  The list of group shared files.
  */
 @property (nonatomic, strong, readonly) NSArray *sharedFileList;
 
-/*!
+/**
  *  \~chinese
- *  群组是否接收消息推送通知
+ *  群组是否接收消息推送通知。
  *
  *  \~english
- *  Whether use Apple Push Notification Service  for group
+ *  Whether to enable the push notification service for the group.
  */
 @property (nonatomic, readonly) BOOL isPushNotificationEnabled;
 
-/*!
+/**
  *  \~chinese
- *  此群是否为公开群，需要获取群详情
+ *  此群是否为公开群，需要先通过 `getGroupSpecificationFromServerWithId` 获取群组详情。
  *
  *  \~english
- *  Whether is a public group, require fetch group's detail first
+ *  Whether the group is a public group. To get the value of this member, you need to call `getGroupSpecificationFromServerWithId` first.
  */
 @property (nonatomic, readonly) BOOL isPublic;
 
-/*!
+/**
  *  \~chinese
- *  是否屏蔽群消息
+ *  是否屏蔽群消息。
  *
  *  \~english
- *  Whether block the current group‘s messages
+ *  Whether to block the current group‘s messages.
  */
 @property (nonatomic, readonly) BOOL isBlocked;
 
-/*!
+/**
  *  \~chinese
- *  当前登录账号的群成员类型
+ *  当前登录账号的群成员类型。
  *
  *  \~english
- *  The group membership type of the current login account
+ *  The group membership type of the current login account.
  */
 @property (nonatomic, readonly) EMGroupPermissionType permissionType;
 
-/*!
+/**
  *  \~chinese
- *  群组的所有成员(包含owner、admins和members)
+ *  群组的所有成员(包含群主、管理员和普通成员）。
  *
  *  \~english
- *  All occupants of the group, includes the group owner and admins and all other group members
+ *  All occupants of the group, including the group owner, admins, and all other group members.
  */
-@property (nonatomic, strong, readonly) NSArray *occupants;
+@property (nonatomic, strong, readonly) NSArray *users;
 
-/*!
+/**
  *  \~chinese
- *  群组当前的成员数量，需要获取群详情, 包括owner, admins, members
+ *  群组当前的成员数量，包括群主、群管理员和普通成员。该方法需要先通过 getGroupSpecificationFromServerWithId 获取群组详情。
  *
  *  \~english
- *  The total number of group occupants, require fetch group's detail first, include owner, admins, members
+ *  The total number of group occupants, including the owner, admins, and all other group members. To get the value of this member, you need to call getGroupSpecificationFromServerWithId first. 
  */
 @property (nonatomic, readonly) NSInteger occupantsCount;
 
 /**
  *  \~chinese
- *  群组成员是否全部被禁言
+ *  群组成员是否全部被禁言。
  *
  *  \~english
- *  The group is all members muted.
+ *  Whether all the group members are muted.
  */
 @property (nonatomic, readonly) BOOL isMuteAllMembers;
 
-/*!
+/**
  *  \~chinese
- *  获取群组实例，如果不存在则创建
+ *  获取群组实例，如果不存在则创建。
  *
- *  @param aGroupId    群组ID
+ *  @param aGroupId    群组 ID。
  *
- *  @result 群组实例
+ *  @result 群组实例。
  *
  *  \~english
- *  Get group instance, create a instance if it does not exist
+ *  Gets the group instance. Creates an instance if it does not exist.
  *
- *  @param aGroupId  Group id
+ *  @param aGroupId  The group ID.
  *
- *  @result Group instance
+ *  @result The group instance.
  */
 + (instancetype)groupWithId:(NSString *)aGroupId;
 
-#pragma mark - EM_DEPRECATED_IOS 3.3.0
-
-/*!
+#pragma mark - EM_DEPRECATED_IOS 3.8.8
+/**
  *  \~chinese
- *  群组的成员列表，需要获取群详情
+ *  群组属性配置，需要先通过 getGroupSpecificationFromServerWithId 获取群组详情。
+ * 
+ *  已废弃，请用 {@link settings} 代替。
  *
  *  \~english
- *  Member list of the group,require fetch group's detail first
+ *  Setting options of group, require fetch group's detail first.
+ * 
+ *  Deprecated. Please use  {@link settings}  instead.
+ */
+@property (nonatomic, strong, readonly) EMGroupOptions *setting __deprecated_msg("Use settings instead");
+
+/**
+ *  \~chinese
+ *  群组的所有成员(包含owner、admins和members)。
+ * 
+ *  已废弃，请用 {@link users} 代替。
+ *
+ *  \~english
+ *  All occupants of the group, includes the group owner and admins and all other group members.
+ * 
+ *  Deprecated. Please use  {@link users}  instead.
+ */
+@property (nonatomic, strong, readonly) NSArray *occupants
+__deprecated_msg("Use users instead");
+
+
+
+#pragma mark - EM_DEPRECATED_IOS 3.3.0
+
+/**
+ *  \~chinese
+ *  群组的成员列表，需要先通过 `getGroupSpecificationFromServerWithId` 获取群组详情。
+ * 
+ *  已废弃，请用 {@link memberList} 代替。
+ *
+ *  \~english
+ *  The member list of the group. Needs to fetch the group's detail first.
+ * 
+ *  Deprecated. Please use  {@link memberList}  instead.
  */
 @property (nonatomic, copy, readonly) NSArray *members EM_DEPRECATED_IOS(3_1_0, 3_3_0, "Use -memberList instead");
 
-/*!
+/**
  *  \~chinese
- *  群组的黑名单，需要先调用获取群黑名单方法
+ *  群组的黑名单，需要先通过 getGroupSpecificationFromServerWithId 获取群组详情。
  *
- *  需要owner权限才能查看，非owner返回nil
+ *  该方法只有群主才能调用，否则 SDK 返回空值 nil。
+ * 
+ *  已废弃，请用 {@link blacklist} 代替。
  *
  *  \~english
- *  Group‘s blacklist of blocked users,require call fetch blackList method first
+ *  Group‘s blocklist of blocked users. Needs to fetch the blockList method first.
  *
- *  Need owner's authority to access, return nil if user is not the group owner.
+ *  Needs the owner's authority to access. Returns nil if user is not the group owner.
+ * 
+ *  Deprecated. Please use  {@link blacklist}  instead.
  */
 @property (nonatomic, strong, readonly) NSArray *blackList EM_DEPRECATED_IOS(3_1_0, 3_3_0, "Use -blacklist instead");
 
-/*!
+/**
  *  \~chinese
- *  群组当前的成员数量，需要获取群详情, 包括owner, admins, members
+ *  群组当前的成员数量，需要获取群详情, 包括群主、管理员和普通成员。
+ * 
+ *  已废弃，请用 {@link occupantsCount} 代替。
  *
  *  \~english
- *  The total number of group members, require fetch group's detail first, include owner, admins, members
+ *  The total number of group members, including the owner, admins, members. Needs to fetch the group's detail first.
+ * 
+ *  Deprecated. Please use  {@link occupantsCount}  instead.
  */
 @property (nonatomic, readonly) NSInteger membersCount EM_DEPRECATED_IOS(3_1_0, 3_3_0, "Use -occupantsCount instead");
 
-/*!
+/**
  *  \~chinese
- *  群组的主题，需要获取群详情
+ *  群组的主题，需要先通过 getGroupSpecificationFromServerWithId 获取群组详情。
+ * 
+ *  已废弃，请用 {@link groupName} 代替。
  *
  *  \~english
- *  Subject of the group, require fetch group's detail first
+ *  The subject of the group. To get the value of this member, you need to call getGroupSpecificationFromServerWithId first.
+ * 
+ *  Deprecated. Please use  {@link groupName}  instead.
  */
 @property (nonatomic, copy, readonly) NSString *subject EM_DEPRECATED_IOS(3_1_0, 3_6_2, "Use -groupName instead");
 
 #pragma mark - EM_DEPRECATED_IOS < 3.2.3
 
-/*!
+/**
  *  \~chinese
- *  初始化群组实例
+ *  初始化群组实例。
  *
- *  请使用+groupWithId:方法
+ *  已废弃，请使用  {@link groupWithId:}  方法代替。
  *
- *  @result nil
+ *  @result 空值
  *
  *  \~english
- *  Initialize a group instance
+ *  Initializes a group instance.
  *
- *  Please use [+groupWithId:]
+ *  Deprecated. Please use  {@link groupWithId:}  instead.
  *
- *  @result nil
+ *  @result nil.
  */
 - (instancetype)init __deprecated_msg("Use +groupWithId: instead");
 
 
-/*!
+/**
  *  \~chinese
- *  群组的黑名单，需要先调用获取群黑名单方法
+ *  群组的黑名单，需要先调用获取群黑名单方法。
+ * 
+ *  已废弃，请使用  {@link blackList}  方法代替。
  *
- *  需要owner权限才能查看，非owner返回nil
+ *  该方法只有群主才能调用，否则 SDK 返回空值 nil。
  *
  *  \~english
- *  Group‘s blacklist of blocked users, require call fetch blackList method first
+ *  The group‘s blocklist of blocked users. To get the value of this member, you need to call getGroupSpecificationFromServerWithId first.
+ * 
+ *  Deprecated. Please use  {@link blackList}  instead.
  *
- *  Need owner's authority to access, return nil if user is not the group owner.
+ *  Needs owner's authority. Returns nil if the user is not the group owner.
  */
 @property (nonatomic, strong, readonly) NSArray *bans __deprecated_msg("Use - blackList instead");
 

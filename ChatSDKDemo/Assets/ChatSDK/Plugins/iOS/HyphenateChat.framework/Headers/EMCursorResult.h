@@ -1,4 +1,4 @@
-/*!
+/**
  *  \~chinese 
  *  @header     EMCursorResult.h
  *  @abstract   分段结果对象
@@ -14,49 +14,52 @@
 
 #import <Foundation/Foundation.h>
 
-/*!
+/**
  *  \~chinese 
- *  分段结果对象  用于显示对话，群聊等查询结果
+ *  分段显示结果对象。
+ * 
+ *  用于显示对话，群聊等查询结果。
  *
  *  \~english
- *  Sub-section Used to display query results such as conversations and group chats
+ * 
+ *  The EmCursorResult interface, which displays query results such as conversations and group chats.
  */
 @interface EMCursorResult : NSObject
 
-/*!
+/**
  *  \~chinese
- *  结果列表<id>
+ *  结果列表。
  *
  *  \~english
- *  Result list<id>
+ *  The result list.
  */
 @property (nonatomic, strong) NSArray *list;
 
-/*!
+/**
  *  \~chinese
- *  获取下一段结果的游标
+ *  获取下一段结果的游标。
  *
  *  \~english
- *  The cursor of next section
+ *  The cursor for retrieving the result of the next section.
  */
 @property (nonatomic, copy) NSString *cursor;
 
-/*!
+/**
  *  \~chinese
- *  创建实例
+ *  创建实例。
  *
- *  @param aList    结果列表<id>
- *  @param aCusror  获取下一段结果的游标
+ *  @param aList    结果列表。
+ *  @param aCursor  获取下一段结果的游标。
  *
- *  @result 分段结果的实例
+ *  @result 分段结果的实例。
  *
  *  \~english
- *  Get result instance
+ *  Gets the result instance.
  *
- *  @param aList    Result list<id>
- *  @param aCusror  The cursor of next section
+ *  @param aList    The result list.
+ *  @param aCusror  The cursor for retrieving the result of the next section.
  *
- *  @result An instance of cursor result
+ *  @result An instance of the cursor result.
  */
 + (instancetype)cursorResultWithList:(NSArray *)aList
                            andCursor:(NSString *)aCusror;
