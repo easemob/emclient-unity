@@ -11,6 +11,7 @@
 #include "utils/emencryptutils.h"
 #include "utils/emutils.h"
 #include "tool.h"
+#include "json.hpp"
 
 bool MandatoryCheck(const void* ptr, EMError& error) {
     if(nullptr == ptr) {
@@ -93,6 +94,68 @@ bool MandatoryCheck(const char* ptr1, const char* ptr2, const char* ptr3, EMErro
 
 std::string OptionalStrParamCheck(const char* ptr) {
     return (nullptr == ptr)?"":ptr;
+}
+
+std::string JsonStringFromVector(std::vector<std::string>& vec) {
+    std::string ret = "";
+    if(vec.size() == 0) return ret;
+    
+    nlohmann::json j(vec);
+    return j.dump();
+}
+
+std::string JsonStringFromMap(std::map<std::string, std::string>& map) {
+    std::string ret = "";
+    if(map.size() == 0) return ret;
+    
+    nlohmann::json j(map);
+    return j.dump();
+}
+
+std::vector<std::string> JsonStringToVector(std::string& jstr) {
+    
+    std::vector<std::string> vec;
+    if(jstr.length() < 3) return vec;
+    
+    nlohmann::json j;
+    try
+    {
+        j = nlohmann::json::parse(jstr.c_str());
+    }
+    catch(std::exception)
+    {
+        LOG("Parse json failed, parsed jstr: %s", jstr.c_str());
+        return vec;
+    }
+
+    vec = j.get<std::vector<std::string>>();
+    return vec;
+}
+
+std::map<std::string, std::string> JsonStringToMap(std::string& jstr) {
+    
+    std::map<std::string, std::string> map;
+    if(jstr.length() < 3) return map;
+    
+    nlohmann::json j;
+    try
+    {
+        j = nlohmann::json::parse(jstr.c_str());
+    }
+    catch(std::exception)
+    {
+        LOG("Parse json failed, parsed jstr: %s", jstr.c_str());
+        return map;
+    }
+
+    for(auto it=j.begin(); it!=j.end(); it++) {
+        std::pair<std::string, std::string> kv{it.key().c_str(), it.value().get<std::string>().c_str()};
+        map.insert(kv);
+    }
+    
+    // or using: map = j.get<std::map<std::string, std::string>>();
+    
+    return map;
 }
 
 std::string GetLeftValue(const std::string& str)

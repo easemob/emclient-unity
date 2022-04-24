@@ -196,6 +196,26 @@ namespace ChatSDK
             /// </summary>
             public string Text;
 
+            /**
+              * \~chinese
+              * 翻译目标语种。
+              *
+              * \~english
+              * Target languages.
+              * 
+              */
+            public List<string> TargetLanguages;
+
+            /**
+              * \~chinese
+              * 翻译语种与翻译结果。
+              *
+              * \~english
+              * Target languages and tranlations.
+              * 
+              */
+            public Dictionary<string, string> Translations;
+
             public TextBody(string text)
             {
                 Text = text;
@@ -211,6 +231,7 @@ namespace ChatSDK
                 JSONObject jo = new JSONObject();
                 if (Text != null) {
                     jo.Add("content", Text);
+                    //TODO: translation
                 }
                 
                 return jo;

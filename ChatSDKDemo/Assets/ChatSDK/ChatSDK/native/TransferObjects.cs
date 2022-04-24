@@ -16,6 +16,8 @@ namespace ChatSDK
         struct TextMessageBodyTO
         {
             public string Content;
+            public string TargetLanguages; // json format
+            public string Translations; // json format
 
             public TextMessageBodyTO(in Message message)
             {
@@ -23,6 +25,8 @@ namespace ChatSDK
                 {
                     var body = message.Body as TextBody;
                     Content = body.Text;
+                    TargetLanguages = TransformTool.JsonStringFromStringList(body.TargetLanguages);
+                    Translations = TransformTool.JsonStringFromDictionary(body.Translations);
                 }
                 else
                 {
@@ -47,7 +51,10 @@ namespace ChatSDK
             // change EMPTY_STR(" ")  to ""
             if (Body.Content.CompareTo(" ") == 0) Body.Content = "";
 
-            return new MessageBody.TextBody(Body.Content);
+            MessageBody.TextBody textBody = new MessageBody.TextBody(Body.Content);
+            textBody.TargetLanguages = TransformTool.JsonStringToStringList(Body.TargetLanguages);
+            textBody.Translations = TransformTool.JsonStringToDictionary(Body.Translations);
+            return textBody;
         }
 
     }
@@ -1499,6 +1506,14 @@ namespace ChatSDK
     {
         public string NextPageCursor;
         public DataType Type;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct SupportedLanuagesTO
+    {
+        public string LanguageCode;
+        public string LanguageName;
+        public string LanguageNativeName;
     }
 
     [StructLayout(LayoutKind.Sequential)]

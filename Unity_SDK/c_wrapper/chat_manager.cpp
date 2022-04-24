@@ -661,6 +661,52 @@ HYPHENATE_API void ChatManager_DeleteConversationFromServer(void *client, int ca
     t.detach();
 }
 
+HYPHENATE_API void ChatManager_FetchSupportLanguages(void *client, int callbackId, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnError onError)
+{
+    std::thread t([=](){
+        std::vector<std::tuple<std::string,std::string,std::string>> languages;
+        
+        EMErrorPtr error = CLIENT->getChatManager().fetchSupportLanguages(languages);
+        
+        if(EMError::EM_NO_ERROR != error->mErrorCode) {
+            LOG("ChatManager_FetchSupportLanguages failed");
+            if(onError) onError(error->mErrorCode,error->mDescription.c_str(), callbackId);
+            return;
+        }
+        
+        LOG("ChatManager_FetchSupportLanguages successfully");
+        if(onSuccessResult) {
+            if (languages.size() == 0) {
+                onSuccessResult(nullptr, DataType::ListOfString, 0, callbackId);
+                return;
+            }
+            
+            SupportLanguagesTO** data = new SupportLanguagesTO*[languages.size()];
+            SupportLanguagesTO* localData = new SupportLanguagesTO[languages.size()];
+            
+            for(int i=0; i<languages.size(); i++) {
+                
+                SupportLanguagesTO slto;
+                slto.languageCode = std::get<0>(languages[i]).c_str();
+                slto.languageName = std::get<1>(languages[i]).c_str();
+                slto.languageNativeName = std::get<2>(languages[i]).c_str();
+                
+                localData[i] = slto;
+                data[i] = &(localData[i]);
+            }
+            onSuccessResult((void**)data, DataType::ListOfString, (int)languages.size(), callbackId);
+            delete[]data;
+            delete[]localData;
+        }
+    });
+    t.detach();
+}
+
+HYPHENATE_API void ChatManager_TranslateMessage(void *client, int callbackId, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnError onError)
+{
+    //need to update messageTO with EMMessage
+}
+
 void ChatManager_RemoveListener(void*client)
 {
     CLIENT->getChatManager().clearListeners();

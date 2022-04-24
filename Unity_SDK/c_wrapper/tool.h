@@ -31,6 +31,11 @@ bool MandatoryCheck(const char* ptr1, const char* ptr2, const char* ptr3, EMErro
 
 std::string OptionalStrParamCheck(const char* ptr);
 
+std::string JsonStringFromVector(std::vector<std::string>& vec);
+std::string JsonStringFromMap(std::map<std::string, std::string>& map);
+std::vector<std::string> JsonStringToVector(std::string& jstr);
+std::map<std::string, std::string> JsonStringToMap(std::string& jstr);
+
 std::string GetLeftValue(const std::string& str);
 std::string GetRightValue(const std::string& str);
 

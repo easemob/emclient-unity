@@ -106,6 +106,8 @@ struct AttributeValue
 //C# side: class TextMessageBodyTO
 struct TextMessageBodyTO {
     const char * Content;
+    const char * TargetLanguages;
+    const char * Translations;
 };
 
 //C# side: class LocationMessageBodyTo
@@ -450,6 +452,13 @@ struct UserInfo
     
     static std::map<std::string, UserInfo> FromResponse(std::string json, std::map<UserInfoType, std::string>& utypeMap);
     static std::map<std::string, UserInfoTO> Convert2TO(std::map<std::string, UserInfo>& userInfoMap);
+};
+
+struct SupportLanguagesTO
+{
+    const char* languageCode;
+    const char* languageName;
+    const char* languageNativeName;
 };
 
 struct TOArray
