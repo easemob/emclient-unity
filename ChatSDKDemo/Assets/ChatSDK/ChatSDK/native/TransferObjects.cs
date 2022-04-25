@@ -46,14 +46,41 @@ namespace ChatSDK
 
         }
 
+        public override void UpdateMsgBody(Message msg)
+        {
+            if (null == msg || msg.Body.Type != MessageBodyType.TXT)
+                return;
+
+            TextBody tb = (TextBody)msg.Body;
+
+            if (Body.TargetLanguages.Length > 3)
+            {
+                tb.TargetLanguages = TransformTool.JsonStringToStringList(Body.TargetLanguages);
+            }
+
+
+            if (Body.Translations.Length > 3)
+            {
+                tb.Translations = TransformTool.JsonStringToDictionary(Body.Translations);
+            }
+        }
+
         public override IMessageBody UnmarshallBody()
         {
             // change EMPTY_STR(" ")  to ""
             if (Body.Content.CompareTo(" ") == 0) Body.Content = "";
 
             MessageBody.TextBody textBody = new MessageBody.TextBody(Body.Content);
-            textBody.TargetLanguages = TransformTool.JsonStringToStringList(Body.TargetLanguages);
-            textBody.Translations = TransformTool.JsonStringToDictionary(Body.Translations);
+
+            if (Body.TargetLanguages.Length > 3)
+                textBody.TargetLanguages = TransformTool.JsonStringToStringList(Body.TargetLanguages);
+            else
+                textBody.TargetLanguages = new List<string>();
+
+            if (Body.Translations.Length > 3)
+                textBody.Translations = TransformTool.JsonStringToDictionary(Body.Translations);
+            else
+                textBody.Translations = new Dictionary<string, string>();
             return textBody;
         }
 
@@ -95,6 +122,12 @@ namespace ChatSDK
         {
 
         }
+
+        public override void UpdateMsgBody(Message msg)
+        {
+            // do nothing
+        }
+
 
         public override IMessageBody UnmarshallBody()
         {
@@ -140,6 +173,11 @@ namespace ChatSDK
         public CmdMessageTO()
         {
 
+        }
+
+        public override void UpdateMsgBody(Message msg)
+        {
+            // do nothing
         }
 
         public override IMessageBody UnmarshallBody()
@@ -189,6 +227,23 @@ namespace ChatSDK
         public FileMessageTO()
         {
 
+        }
+
+        public override void UpdateMsgBody(Message msg)
+        {
+            if (null == msg || msg.Body.Type != MessageBodyType.FILE)
+                return;
+
+            FileBody fb = (FileBody)msg.Body;
+
+            // change EMPTY_STR(" ")  to ""
+            if (Body.DisplayName.CompareTo(" ") != 0)   fb.DisplayName = Body.DisplayName;
+            if (Body.LocalPath.CompareTo(" ") != 0)     fb.LocalPath = Body.LocalPath;
+            if (Body.RemotePath.CompareTo(" ") != 0)    fb.RemotePath = Body.RemotePath;
+            if (Body.Secret.CompareTo(" ") != 0)        fb.Secret = Body.Secret;
+
+            fb.FileSize = Body.FileSize;
+            fb.DownStatus = Body.DownStatus;
         }
 
         public override IMessageBody UnmarshallBody()
@@ -262,6 +317,27 @@ namespace ChatSDK
 
         }
 
+        public override void UpdateMsgBody(Message msg)
+        {
+            if (null == msg || msg.Body.Type != MessageBodyType.IMAGE)
+                return;
+
+            ImageBody ib = (ImageBody)msg.Body;
+
+            // change EMPTY_STR(" ")  to ""
+            if (Body.DisplayName.CompareTo(" ") != 0)           ib.DisplayName = Body.DisplayName;
+            if (Body.LocalPath.CompareTo(" ") != 0)             ib.LocalPath = Body.LocalPath;
+            if (Body.RemotePath.CompareTo(" ") != 0)            ib.RemotePath = Body.RemotePath;
+            if (Body.Secret.CompareTo(" ") != 0)                ib.Secret = Body.Secret;
+            if (Body.ThumbnaiSecret.CompareTo(" ") != 0)        ib.ThumbnaiSecret = Body.ThumbnaiSecret;
+            if (Body.ThumbnaiRemotePath.CompareTo(" ") != 0)    ib.ThumbnaiRemotePath = Body.ThumbnaiRemotePath;
+            if (Body.ThumbnailLocalPath.CompareTo(" ") != 0)    ib.ThumbnailLocalPath = Body.ThumbnailLocalPath;
+
+            ib.FileSize = Body.FileSize;
+            ib.DownStatus = Body.DownStatus;
+            ib.ThumbnaiDownStatus = Body.ThumbnaiDownStatus;
+        }
+
         public override IMessageBody UnmarshallBody()
         {
             MessageBody.ImageBody ib = new MessageBody.ImageBody();
@@ -331,6 +407,24 @@ namespace ChatSDK
         public VoiceMessageTO()
         {
 
+        }
+
+        public override void UpdateMsgBody(Message msg)
+        {
+            if (null == msg || msg.Body.Type != MessageBodyType.VOICE)
+                return;
+
+            VoiceBody vob = (VoiceBody)msg.Body;
+
+            // change EMPTY_STR(" ")  to ""
+            if (Body.DisplayName.CompareTo(" ") != 0)   vob.DisplayName = Body.DisplayName;
+            if (Body.LocalPath.CompareTo(" ") != 0)     vob.LocalPath = Body.LocalPath;
+            if (Body.RemotePath.CompareTo(" ") != 0)    vob.RemotePath = Body.RemotePath;
+            if (Body.Secret.CompareTo(" ") != 0)        vob.Secret = Body.Secret;
+
+            vob.FileSize = Body.FileSize;
+            vob.DownStatus = Body.DownStatus;
+            vob.Duration = Body.Duration;
         }
 
         public override IMessageBody UnmarshallBody()
@@ -410,6 +504,27 @@ namespace ChatSDK
         
         }
 
+        public override void UpdateMsgBody(Message msg)
+        {
+            if (null == msg || msg.Body.Type != MessageBodyType.VIDEO)
+                return;
+
+            VideoBody vib = (VideoBody)msg.Body;
+
+            // change EMPTY_STR(" ")  to ""
+            if (Body.DisplayName.CompareTo(" ") != 0)           vib.DisplayName = Body.DisplayName;
+            if (Body.LocalPath.CompareTo(" ") != 0)             vib.LocalPath = Body.LocalPath;
+            if (Body.RemotePath.CompareTo(" ") != 0)            vib.RemotePath = Body.RemotePath;
+            if (Body.Secret.CompareTo(" ") != 0)                vib.Secret = Body.Secret;
+            if (Body.ThumbnaiSecret.CompareTo(" ") != 0)        vib.ThumbnaiSecret = Body.ThumbnaiSecret;
+            if (Body.ThumbnaiRemotePath.CompareTo(" ") != 0)    vib.ThumbnaiRemotePath = Body.ThumbnaiRemotePath;
+            if (Body.ThumbnaiLocationPath.CompareTo(" ") != 0)  vib.ThumbnaiLocationPath = Body.ThumbnaiLocationPath;
+            
+            vib.FileSize = Body.FileSize;
+            vib.DownStatus = Body.DownStatus;
+            vib.Duration = Body.Duration;
+        }
+
         public override IMessageBody UnmarshallBody()
         {
             MessageBody.VideoBody vid = new MessageBody.VideoBody();
@@ -478,6 +593,11 @@ namespace ChatSDK
         public CustomMessageTO()
         {
 
+        }
+
+        public override void UpdateMsgBody(Message msg)
+        {
+           // do nothing
         }
 
         public override IMessageBody UnmarshallBody()
@@ -619,6 +739,13 @@ namespace ChatSDK
         }
 
         public abstract IMessageBody UnmarshallBody();
+        public abstract void UpdateMsgBody(Message msg);
+
+        internal void UpdateMsg(Message msg)
+        {
+            msg.MsgId = MsgId;
+            UpdateMsgBody(msg);
+        }
 
         internal Message Unmarshall()
         {

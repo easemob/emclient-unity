@@ -81,7 +81,8 @@ namespace ChatSDK
         {
             ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                 ValueCallBack<T> myhandle = (ValueCallBack<T>)CallbackManager.Instance().GetCallBackHandle(cbId);
-                myhandle?.OnSuccessValue((T)obj);
+                if (null != myhandle && null != myhandle.OnSuccessValue)
+                    myhandle?.OnSuccessValue((T)obj);
             });
         }
 
@@ -89,7 +90,8 @@ namespace ChatSDK
         {
             ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                 ValueCallBack<T> myhandle = (ValueCallBack<T>)CallbackManager.Instance().GetCallBackHandle(cbId);
-                myhandle?.Error(code, desc);
+                if (null != myhandle && null != myhandle.Error)
+                    myhandle.Error(code, desc);
             });
         }
 
@@ -97,7 +99,8 @@ namespace ChatSDK
         {
             ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                 var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
-                myhandle?.Success();
+                if (null != myhandle && null != myhandle.Success)
+                    myhandle.Success();
             });
         }
 
@@ -105,7 +108,8 @@ namespace ChatSDK
         {
             ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                 var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
-                myhandle?.Error(code, desc);
+                if (null != myhandle && null != myhandle.Error)
+                    myhandle.Error(code, desc);
             });
         }
 
@@ -113,7 +117,8 @@ namespace ChatSDK
         {
             ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                 var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
-                myhandle?.Progress(progress);
+                if(null != myhandle && null != myhandle.Progress)
+                    myhandle.Progress(progress);
             });
         }
     }

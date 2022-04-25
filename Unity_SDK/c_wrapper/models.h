@@ -25,7 +25,7 @@ using namespace easemob;
 const int ARRAY_SIZE_LIMITATION = 200;
 
 EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bool buildReceiveMsg=false);
-void UpdateMessageTO(void *mto, EMMessagePtr msg);
+void UpdateMessageTO(void *mto, EMMessagePtr msg, void* localMto);
 void SetMessageAttrs(EMMessagePtr msg, string attrs);
 std::string GetAttrsStringFromMessage(EMMessagePtr msg);
 
@@ -125,7 +125,7 @@ struct CmdMessageBodyTO {
 
 struct FileMessageBodyTO {
     const char * LocalPath;
-    const char *DisplayName;
+    const char * DisplayName;
     const char * Secret;
     const char * RemotePath;
     int64_t FileSize;
@@ -207,6 +207,16 @@ public:
     //virtual ~MessageTO();
 protected:
     MessageTO(const EMMessagePtr &message);
+};
+
+struct MessageTOLocal {
+    std::string MsgId;
+    EMMessageBody::EMMessageBodyType BodyType;
+    
+    // text body fields
+    std::string Content;
+    std::string TargetLanguages; // json string
+    std::string Translations; // json string
 };
 
 class TextMessageTO : public MessageTO

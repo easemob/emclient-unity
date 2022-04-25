@@ -186,8 +186,13 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
 
 }
 
-void UpdateMessageTO(void *mto, EMMessagePtr msg)
+void UpdateMessageTO(void *mto, EMMessagePtr msg, void* localMto)
 {
+    if(nullptr == msg || nullptr == localMto) {
+        LOG("Invalid mto or localMto parameter");
+        return;
+    }
+    
     vector<EMMessageBodyPtr> bodies = msg->bodies();
     if(bodies.size() == 0)
         return;
@@ -199,10 +204,31 @@ void UpdateMessageTO(void *mto, EMMessagePtr msg)
     amto->MsgId = msg->msgId().c_str();
     amto->ServerTime = msg->timestamp();
     
+    MessageTOLocal* lmto = (MessageTOLocal*)localMto;
+    lmto->MsgId = amto->MsgId;
+    lmto->BodyType = body->type();
+    
     switch(body->type()) {
         case EMMessageBody::TEXT:
         {
-            //auto tm = static_cast<TextMessageTO *>(mto);
+            auto tm = static_cast<TextMessageTO *>(mto);
+            EMTextMessageBodyPtr tbody = dynamic_pointer_cast<EMTextMessageBody>(body);
+            
+            if(tbody->getTargetLanguages().size() > 0) {
+                std::vector<string> vec = tbody->getTargetLanguages();
+                lmto->TargetLanguages = JsonStringFromVector(vec);
+                tm->body.TargetLanguages = lmto->TargetLanguages.c_str();
+            } else {
+                tm->body.TargetLanguages = EMPTY_STR.c_str();
+            }
+            
+            if(tbody->getTranslations().size() > 0) {
+                std::map<std::string, std::string> map = tbody->getTranslations();
+                lmto->Translations = JsonStringFromMap(map);
+                tm->body.Translations = lmto->Translations.c_str();
+            } else {
+                tm->body.Translations = EMPTY_STR.c_str();
+            }
         }
             break;
         case EMMessageBody::LOCATION:
@@ -217,33 +243,96 @@ void UpdateMessageTO(void *mto, EMMessagePtr msg)
             break;
         case EMMessageBody::FILE:
         {
-            //auto fm = static_cast<FileMessageTO *>(mto);
-            //EMFileMessageBodyPtr fmptr = std::dynamic_pointer_cast<EMFileMessageBody>(body);
-            //fm->body.LocalPath = fmptr->localPath().c_str();
-            //fm->body.DisplayName = fmptr->displayName().c_str();
-
+            auto fm = static_cast<FileMessageTO *>(mto);
+            EMFileMessageBodyPtr fmptr = std::dynamic_pointer_cast<EMFileMessageBody>(body);
+            
+            fm->body.LocalPath = fmptr->localPath().c_str();
+            fm->body.DisplayName = fmptr->displayName().c_str();
+            fm->body.Secret = fmptr->secretKey().c_str();
+            fm->body.RemotePath = fmptr->remotePath().c_str();
+            fm->body.FileSize = fmptr->fileLength();
+            fm->body.DownStatus = fmptr->downloadStatus();
+            
+            if (strlen(fm->body.LocalPath) == 0) fm->body.LocalPath =  const_cast<char*>(EMPTY_STR.c_str());
+            if (strlen(fm->body.DisplayName) == 0) fm->body.DisplayName =  const_cast<char*>(EMPTY_STR.c_str());
+            if (strlen(fm->body.Secret) == 0) fm->body.Secret =  const_cast<char*>(EMPTY_STR.c_str());
+            if (strlen(fm->body.RemotePath) == 0) fm->body.RemotePath =  const_cast<char*>(EMPTY_STR.c_str());
         }
             break;
         case EMMessageBody::IMAGE:
         {
-            //auto im = static_cast<ImageMessageTO *>(mto);
-            //auto body = new EMImageMessageBody(im->body.LocalPath, im->body.ThumbnailLocalPath);
-
+            auto im = static_cast<ImageMessageTO *>(mto);
+            EMImageMessageBodyPtr imptr = std::dynamic_pointer_cast<EMImageMessageBody>(body);
+            
+            im->body.LocalPath = imptr->localPath().c_str();
+            im->body.DisplayName = imptr->displayName().c_str();
+            im->body.Secret = imptr->secretKey().c_str();
+            im->body.RemotePath = imptr->remotePath().c_str();
+            
+            im->body.ThumbnailLocalPath	= imptr->thumbnailLocalPath().c_str();
+            im->body.ThumbnaiRemotePath = imptr->thumbnailRemotePath().c_str();
+            im->body.ThumbnaiSecret = imptr->thumbnailSecretKey().c_str();
+            
+            im->body.FileSize = imptr->fileLength();
+            im->body.DownStatus = imptr->downloadStatus();
+            im->body.ThumbnaiDownStatus = imptr->thumbnailDownloadStatus();
+            
+            if (strlen(im->body.LocalPath) == 0) im->body.LocalPath =  const_cast<char*>(EMPTY_STR.c_str());
+            if (strlen(im->body.DisplayName) == 0) im->body.DisplayName =  const_cast<char*>(EMPTY_STR.c_str());
+            if (strlen(im->body.Secret) == 0) im->body.Secret =  const_cast<char*>(EMPTY_STR.c_str());
+            if (strlen(im->body.RemotePath) == 0) im->body.RemotePath =  const_cast<char*>(EMPTY_STR.c_str());
+            if (strlen(im->body.ThumbnailLocalPath) == 0) im->body.ThumbnailLocalPath =  const_cast<char*>(EMPTY_STR.c_str());
+            if (strlen(im->body.ThumbnaiRemotePath) == 0) im->body.ThumbnaiRemotePath =  const_cast<char*>(EMPTY_STR.c_str());
+            if (strlen(im->body.ThumbnaiSecret) == 0) im->body.ThumbnaiSecret =  const_cast<char*>(EMPTY_STR.c_str());
         }
             break;
         case EMMessageBody::VOICE:
         {
-            //auto vm = static_cast<VoiceMessageTO *>(mto);
-            //auto body = new EMVoiceMessageBody(vm->body.LocalPath, vm->body.Duration);
+            auto vm = static_cast<VoiceMessageTO *>(mto);
+            
+            EMVoiceMessageBodyPtr vomptr = std::dynamic_pointer_cast<EMVoiceMessageBody>(body);
+            
+            vm->body.LocalPath = vomptr->localPath().c_str();
+            vm->body.DisplayName = vomptr->displayName().c_str();
+            vm->body.Secret = vomptr->secretKey().c_str();
+            vm->body.RemotePath = vomptr->remotePath().c_str();
+            
+            vm->body.FileSize = vomptr->fileLength();
+            vm->body.DownStatus = vomptr->downloadStatus();
+            vm->body.Duration = vomptr->duration();
+            
+            if (strlen(vm->body.LocalPath) == 0) vm->body.LocalPath =  const_cast<char*>(EMPTY_STR.c_str());
+            if (strlen(vm->body.DisplayName) == 0) vm->body.DisplayName =  const_cast<char*>(EMPTY_STR.c_str());
+            if (strlen(vm->body.Secret) == 0) vm->body.Secret =  const_cast<char*>(EMPTY_STR.c_str());
+            if (strlen(vm->body.RemotePath) == 0) vm->body.RemotePath =  const_cast<char*>(EMPTY_STR.c_str());
 
         }
             break;
         case EMMessageBody::VIDEO:
         {
-            //auto im = static_cast<VideoMessageTO *>(mto);
-            //auto body = new EMVideoMessageBody(im->body.LocalPath, im->body.ThumbnaiLocationPath);
-
-
+            auto vm = static_cast<VideoMessageTO *>(mto);
+            EMVideoMessageBodyPtr vimptr = std::dynamic_pointer_cast<EMVideoMessageBody>(body);
+            
+            vm->body.LocalPath = vimptr->localPath().c_str();
+            vm->body.DisplayName = vimptr->displayName().c_str();
+            vm->body.Secret = vimptr->secretKey().c_str();
+            vm->body.RemotePath = vimptr->remotePath().c_str();
+            
+            vm->body.ThumbnaiLocationPath = vimptr->thumbnailLocalPath().c_str();
+            vm->body.ThumbnaiRemotePath = vimptr->thumbnailRemotePath().c_str();
+            vm->body.ThumbnaiSecret = vimptr->thumbnailLocalPath().c_str();
+            
+            vm->body.FileSize = vimptr->fileLength();
+            vm->body.DownStatus = vimptr->downloadStatus();
+            vm->body.Duration = vimptr->duration();
+            
+            if (strlen(vm->body.LocalPath) == 0) vm->body.LocalPath =  const_cast<char*>(EMPTY_STR.c_str());
+            if (strlen(vm->body.DisplayName) == 0) vm->body.DisplayName =  const_cast<char*>(EMPTY_STR.c_str());
+            if (strlen(vm->body.Secret) == 0) vm->body.Secret =  const_cast<char*>(EMPTY_STR.c_str());
+            if (strlen(vm->body.RemotePath) == 0) vm->body.RemotePath =  const_cast<char*>(EMPTY_STR.c_str());
+            if (strlen(vm->body.ThumbnaiLocationPath) == 0) vm->body.ThumbnaiLocationPath =  const_cast<char*>(EMPTY_STR.c_str());
+            if (strlen(vm->body.ThumbnaiRemotePath) == 0) vm->body.ThumbnaiRemotePath =  const_cast<char*>(EMPTY_STR.c_str());
+            if (strlen(vm->body.ThumbnaiSecret) == 0) vm->body.ThumbnaiSecret =  const_cast<char*>(EMPTY_STR.c_str());
         }
             break;
         case EMMessageBody::CUSTOM:
@@ -567,6 +656,31 @@ TextMessageTO::TextMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
     auto body = (EMTextMessageBody *)_message->bodies().front().get();
     this->BodyType = body->type(); //TODO: only 1st body type determined
     this->body.Content = body->text().c_str();
+    
+    std::string targetLanguages;
+    if(body->getTargetLanguages().size() > 0) {
+        std::vector<string> vec = body->getTargetLanguages();
+        targetLanguages = JsonStringFromVector(vec);
+        
+    } else {
+        targetLanguages = EMPTY_STR;
+    }
+    char* p = new char[targetLanguages.size() + 1];
+    p[targetLanguages.size()] = '\0';
+    strncpy(p, targetLanguages.c_str(), targetLanguages.size());
+    this->body.TargetLanguages = p;
+    
+    std::string translations;
+    if(body->getTranslations().size() > 0) {
+        std::map<std::string, std::string> map = body->getTranslations();
+        translations = JsonStringFromMap(map);
+    } else {
+        translations = EMPTY_STR;
+    }
+    p = new char[translations.size() + 1];
+    p[translations.size()] = '\0';
+    strncpy(p, translations.c_str(), translations.size());
+    this->body.Translations = p;
 
     //Bug fix: User Empty_str to replace "", avoid error from PtrToStructure at c# side
     if (strlen(this->body.Content) == 0) this->body.Content = const_cast<char*>(EMPTY_STR.c_str());
@@ -736,6 +850,15 @@ void MessageTO::FreeResource(MessageTO * mto)
     }
     
     switch(mto->BodyType) {
+        case EMMessageBody::TEXT:
+        {
+            TextMessageTO* tmto = (TextMessageTO*)mto;
+            if(nullptr != tmto->body.TargetLanguages)
+                delete tmto->body.TargetLanguages;
+            if(nullptr != tmto->body.Translations)
+                delete tmto->body.Translations;
+        }
+            break;
         case EMMessageBody::CUSTOM:
         {
             CustomMessageTO* cmto = (CustomMessageTO*)mto;

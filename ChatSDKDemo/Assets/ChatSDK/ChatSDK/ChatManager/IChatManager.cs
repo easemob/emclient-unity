@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System;
 
 namespace ChatSDK
 {
@@ -152,6 +153,11 @@ namespace ChatSDK
         /// <param name="conversationType">要删除的会话类型</param>
         /// <param name="isDeleteServerMessages">是否删除服务器端该会话的消息</param>
         public abstract void DeleteConversationFromServer(string conversationId, ConversationType conversationType, bool isDeleteServerMessages, CallBack handle = null);
+
+
+        public abstract void FetchSupportLanguages(ValueCallBack<List<SupportLanguages>> handle = null);
+
+        public abstract void TranslateMessage(ref Message message, List<string> targetLanguages, CallBack handle = null);
 
         /// <summary>
         /// 添加消息监听

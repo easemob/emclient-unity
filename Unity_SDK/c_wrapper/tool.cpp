@@ -400,7 +400,7 @@ std::string GetMacUuid() {
     string::size_type pos1 = line.rfind("\"");
     if(line.npos == pos1) {
         if (line.size() == 36) {
-            LOG("uuid is %s", line.c_str()); // 128 bit for Uuid + four "-", is 36byte
+            //LOG("uuid is %s", line.c_str()); // 128 bit for Uuid + four "-", is 36byte
             in.close();
             return line;
         } else {
@@ -419,7 +419,7 @@ std::string GetMacUuid() {
         LOG("uuid content is not correct: %s", uuid.c_str());
         return std::string();
     }
-    LOG("uuid is %s", uuid.c_str());
+    //LOG("uuid is %s", uuid.c_str());
     in.close();
     
     if(isTempPath)

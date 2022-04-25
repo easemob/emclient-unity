@@ -150,6 +150,27 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     {
         UIManager.UnfinishedAlert(transform);
         Debug.Log("SendVideoBtnAction");
+
+        /*InputAlertConfig config = new InputAlertConfig((dict) => {
+            Message msg = Message.CreateVideoSendMessage(dict["to"], "/Users/yuqiang/Test/resource/video.mp4", "", "", 425507);
+
+            SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
+                onSuccess: () => {
+                    ChatSDK.MessageBody.VideoBody vb = (ChatSDK.MessageBody.VideoBody)msg.Body;
+                    UIManager.TitleAlert(transform, "成功", msg.MsgId);
+                },
+                onProgress: (progress) => {
+                    UIManager.TitleAlert(transform, "发送进度", progress.ToString());
+                },
+                onError: (code, desc) => {
+                    UIManager.ErrorAlert(transform, code, msg.MsgId);
+                }
+            ));
+        });
+
+        config.AddField("to");
+        UIManager.DefaultInputAlert(transform, config);
+        */
     }
     void SendVoiceBtnAction()
     {

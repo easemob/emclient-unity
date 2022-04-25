@@ -131,6 +131,12 @@ namespace ChatSDK{
 		[DllImport(MyLibName)]
 		internal static extern void ChatManager_DeleteConversationFromServer(IntPtr client, int callbackId, string conversationId, ConversationType conversationType, bool isDeleteServerMessages, OnSuccess onSuccess, OnErrorV2 onError);
 
+		[DllImport(MyLibName)]
+		internal static extern void ChatManager_FetchSupportLanguages(IntPtr client, int callbackId, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void ChatManager_TranslateMessage(IntPtr client, int callbackId, IntPtr mto, MessageBodyType type, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 5)] string[] targetLanguages, int size, OnSuccess onSuccess, OnErrorV2 onError);
+
 		/** GroupManager Stub **/
 		[DllImport(MyLibName)]
 		internal static extern void GroupManager_AddListener(IntPtr client, OnInvitationReceived onInvitationReceived,
