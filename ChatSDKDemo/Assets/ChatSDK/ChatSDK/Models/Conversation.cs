@@ -169,6 +169,14 @@ namespace ChatSDK {
             manager.LoadMessagesWithTime(Id, Type, startTime, endTime, count, handle);
         }
 
+        /// <summary>
+        /// 获取会话中消息数
+        /// </summary>
+        /// <returns>消息数</returns>
+        public int MessagesCount() {
+            return manager.MessagesCount(Id, Type);
+        }
+
 
         internal Conversation(string jsonString) {
             if (jsonString != null) {

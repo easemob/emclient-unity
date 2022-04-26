@@ -116,6 +116,10 @@ void ChatManager_HandleMethodCall(const char* methodName, const char* jsonString
         [EMClientWrapper.instance.chatManager ackMessageRead:dic callbackId:callId];
     }else if ([method isEqualToString:@"searchChatMsgFromDB"]) {
         [EMClientWrapper.instance.chatManager searchChatMsgFromDB:dic callbackId:callId];
+    }else if ([method isEqualToString:@"removeMessageBeforeTimestamp"]) {
+        [EMClientWrapper.instance.chatManager removeMessagesBeforeTimestamp:dic callbackId:callId];
+    }else if ([method isEqualToString:@"deleteConversationFromServer"]) {
+        [EMClientWrapper.instance.chatManager deleteConversationFromServer:dic callbackId:callId];
     }
 }
 
@@ -386,7 +390,6 @@ const char* Conversation_GetMethodCall(const char* methodName, const char* jsonS
     id jsonObject = nil;
     if ([method isEqualToString:@"getUnreadMsgCount"]) {
         jsonObject = [EMClientWrapper.instance.conversationWrapper getUnreadMsgCount:dic];
-        
     }else if ([method isEqualToString:@"getLatestMessage"]) {
         jsonObject = [EMClientWrapper.instance.conversationWrapper getLatestMessage:dic];
     }else if ([method isEqualToString:@"getLatestMessageFromOthers"]) {
@@ -405,6 +408,8 @@ const char* Conversation_GetMethodCall(const char* methodName, const char* jsonS
         jsonObject = [EMClientWrapper.instance.conversationWrapper clearAllMessages:dic];
     }else if ([method isEqualToString:@"loadMsgWithId"]) {
         jsonObject = [EMClientWrapper.instance.conversationWrapper loadMsgWithId:dic];
+    }else if ([method isEqualToString:@""]) {
+        jsonObject = [EMClientWrapper.instance.conversationWrapper messageCount:dic];
     }
     
     const char *csStr = [Transfrom JsonObjectToCSString:jsonObject];

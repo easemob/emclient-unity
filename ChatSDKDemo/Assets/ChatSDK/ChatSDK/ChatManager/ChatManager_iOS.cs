@@ -186,12 +186,18 @@ namespace ChatSDK
 
         public override void RemoveMessagesBeforeTimestamp(long timeStamp, CallBack callback = null)
         {
-            //TO-DO
+            JSONObject obj = new JSONObject();
+            obj.Add("timestamp", timeStamp);
+            ChatAPIIOS.ChatManager_HandleMethodCall("removeMessageBeforeTimestamp", obj.ToString(), callback?.callbackId);
         }
 
         public override void DeleteConversationFromServer(string conversationId, ConversationType conversationType, bool isDeleteServerMessages, CallBack callback = null)
         {
-            //TO-DO
+            JSONObject obj = new JSONObject();
+            obj.Add("convId", conversationId);
+            obj.Add("convType", TransformTool.ConversationTypeToInt(conversationType));
+            obj.Add("isDeleteServerMessages", isDeleteServerMessages);
+            ChatAPIIOS.ChatManager_HandleMethodCall("deleteConversationFromServer", obj.ToString(), callback?.callbackId);
         }
     }
 }

@@ -405,4 +405,41 @@
     return @{@"ret":@(ret)};
 }
 
+- (void)removeMessagesBeforeTimestamp:(NSDictionary *)param
+                         callbackId:(NSString *)callbackId {
+    NSNumber *nTimestamp = param[@"timestamp"];
+    NSInteger timestamp = [nTimestamp integerValue];
+    [EMClient.sharedClient.chatManager deleteMessagesBefore:timestamp completion:^(EMError *error) {
+        if (aError) {
+            [self onError:callId error:aError];
+        }else {
+            [self onSuccess:nil callbackId:callId userInfo:nil];
+        }
+    }];
+}
+- (void)deleteConversationFromServer:(NSDictionary *)param
+                        callbackId:(NSString *)calllbackId {
+    
+    NSString *convId = param[@"convId"];
+    if (!convId) {
+        EMError *error = [[EMError alloc] initWithDescription:@"conversationId is invalid" code: EMErrorMessageInvalid];
+        [self onError:callbackId error:error];
+        return;
+    }
+    
+    EMConversationType type = [EMConversation typeFromInt:[param[@"convType"] intValue]];
+    BOOL deleteMessages = [param[@"isDeleteServerMessages"] boolValue];
+    [EMClient.sharedClient.chatManager deleteServerConversation:convId
+                                               conversationType:type
+                                         isDeleteServerMessages:deleteMessages
+                                                     completion:^(NSString *aConversationId, EMError *aError)
+     {
+        if (aError) {
+            [self onError:callId error:aError];
+        }else {
+            [self onSuccess:nil callbackId:callId userInfo:nil];
+        }
+    }];
+}
+
 @end

@@ -131,6 +131,16 @@
     return ret;
 }
 
+- (NSDictionary *)messageCount:(NSDictionary *)param {
+    __block NSDictionary *ret = nil;
+    [self getConversationWithParam:param
+                        completion:^(EMConversation *conversation) {
+        ret = @{@"count": @(conversation.messagesCount)};
+    }];
+    
+    return ret;
+}
+
 - (NSDictionary *)updateConversationMessage:(NSDictionary *)param
 {
     __block NSDictionary *ret = nil;
@@ -316,6 +326,8 @@
         }
     }];
 }
+
+
 
 - (EMMessageSearchDirection)searchDirectionFromString:(NSString *)aDirection {
     return [aDirection isEqualToString:@"up"] ? EMMessageSearchDirectionUp : EMMessageSearchDirectionDown;
