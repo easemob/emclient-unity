@@ -118,7 +118,7 @@ namespace ChatSDK {
             obj.Add("convId", conversationId);
             obj.Add("convType", TransformTool.ConversationTypeToInt(conversationType));
             obj.Add("type", TransformTool.MessageBodyTypeToString(bodyType));
-            obj.Add("sender", sender);
+            obj.Add("sender", sender ?? "");
             obj.Add("count", count);
             obj.Add("timestamp", timestamp);
             obj.Add("direction", direction == MessageSearchDirection.UP ? "up" : "down");

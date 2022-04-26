@@ -444,7 +444,8 @@ public class ConversationManagerTest : MonoBehaviour
             return;
         }
 
-        int count = SDKClient.Instance.ConversationManager.MessagesCount(conversationId, convType);
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
+        int count = conv.MessagesCount();
         UIManager.DefaultAlert(transform, $"messagecount:{count}");
 
         Debug.Log("MessagesCountBtnAction");

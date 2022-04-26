@@ -410,15 +410,15 @@
     NSNumber *nTimestamp = param[@"timestamp"];
     NSInteger timestamp = [nTimestamp integerValue];
     [EMClient.sharedClient.chatManager deleteMessagesBefore:timestamp completion:^(EMError *error) {
-        if (aError) {
-            [self onError:callId error:aError];
+        if (error) {
+            [self onError:callbackId error:error];
         }else {
-            [self onSuccess:nil callbackId:callId userInfo:nil];
+            [self onSuccess:nil callbackId:callbackId userInfo:nil];
         }
     }];
 }
 - (void)deleteConversationFromServer:(NSDictionary *)param
-                        callbackId:(NSString *)calllbackId {
+                        callbackId:(NSString *)callbackId {
     
     NSString *convId = param[@"convId"];
     if (!convId) {
@@ -435,9 +435,9 @@
                                                      completion:^(NSString *aConversationId, EMError *aError)
      {
         if (aError) {
-            [self onError:callId error:aError];
+            [self onError:callbackId error:aError];
         }else {
-            [self onSuccess:nil callbackId:callId userInfo:nil];
+            [self onSuccess:nil callbackId:callbackId userInfo:nil];
         }
     }];
 }
