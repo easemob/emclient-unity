@@ -65,7 +65,7 @@
     __block NSString *msgId = param[@"msgId"];
     [self getConversationWithParam:param
                         completion:^(EMConversation *conversation)
-     {  
+     {
         EMError *error = nil;
         [conversation markMessageAsReadWithId:msgId error:&error];
     }];
@@ -206,6 +206,9 @@
     long long timeStamp = [param[@"timeStamp"] longLongValue];
     int count = [param[@"count"] intValue];
     NSString *sender = param[@"sender"];
+    if (sender.length == 0) {
+        sender = nil;
+    }
     EMMessageSearchDirection direction = [self searchDirectionFromString:param[@"direction"]];
     
     [self getConversationWithParam:param

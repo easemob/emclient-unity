@@ -408,7 +408,7 @@ const char* Conversation_GetMethodCall(const char* methodName, const char* jsonS
         jsonObject = [EMClientWrapper.instance.conversationWrapper clearAllMessages:dic];
     }else if ([method isEqualToString:@"loadMsgWithId"]) {
         jsonObject = [EMClientWrapper.instance.conversationWrapper loadMsgWithId:dic];
-    }else if ([method isEqualToString:@""]) {
+    }else if ([method isEqualToString:@"messageCount"]) {
         jsonObject = [EMClientWrapper.instance.conversationWrapper messageCount:dic];
     }
     
