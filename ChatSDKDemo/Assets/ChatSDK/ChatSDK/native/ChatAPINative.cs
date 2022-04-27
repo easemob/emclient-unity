@@ -516,6 +516,28 @@ namespace ChatSDK{
 			int userSize, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.I4, SizeParamIndex = 5)] int[] userinfoTypes,
 			int typeSize, OnSuccessResult onSuccessResult, OnErrorV2 onError);
 
+		//PresenceManager
+		[DllImport(MyLibName)]
+		internal static extern void PresenceManager_AddListener(IntPtr client, OnPresenceUpdated onPresenceUpdated);
+
+		[DllImport(MyLibName)]
+		internal static extern void PresenceManager_PublishPresence(IntPtr client, int callbackId, int presenceStatus, string ext, OnSuccess onSuccess, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void PresenceManager_SubscribePresences(IntPtr client, int callbackId,
+			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 3)] string[] members, int size, long expiry, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void PresenceManager_UnsubscribePresences(IntPtr client, int callbackId,
+			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 3)] string[] members, int size, OnSuccess onSuccess, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void PresenceManager_FetchSubscribedMembers(IntPtr client, int callbackId, int pageNum, int pageSize, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void PresenceManager_FetchPresenceStatus(IntPtr client, int callbackId,
+			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 3)] string[] members, int size, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+
 		#endregion native API import
 	}
 }

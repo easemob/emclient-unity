@@ -36,6 +36,7 @@ namespace ChatSDK
         private IPushManager pushImp = null;
         private IConversationManager conversationImp = null;
         private IUserInfoManager userInfoImp = null;
+        private IPresenceManager presenceImp = null;
 
         /// <summary>
         /// 获取聊天管理对象
@@ -151,6 +152,19 @@ namespace ChatSDK
             userInfoImp = new UserInfoManager_Mac(instance);
 #endif
             return userInfoImp;
+        }
+
+        internal IPresenceManager PresenceManager()
+        {
+            if (presenceImp != null) { return presenceImp; }
+#if UNITY_ANDROID
+            presenceImp = new PresenceManager_Android();
+#elif UNITY_IOS
+            presenceImp = new PresenceManager_iOS();
+#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+            presenceImp = new PresenceManager_Mac(instance);
+#endif
+            return presenceImp;
         }
 
         /// <summary>

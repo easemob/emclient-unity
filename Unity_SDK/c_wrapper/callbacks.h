@@ -77,6 +77,9 @@ using namespace easemob;
     typedef void (__stdcall *FUNC_OnChatRoomDestroyed)(const char * roomId, const char * roomName);
     typedef void (__stdcall *FUNC_OnRemovedFromChatRoom)(const char * roomId, const char * roomName, const char * participant);
     typedef void (__stdcall *FUNC_OnMemberExitedFromRoom)(const char * roomId, const char * roomName, const char * member);
+
+    //PresenceManager Listener
+    typedef void (__stdcall *FUNC_OnPresenceUpdated)(void * presences[], int size);
 #else
     //Callback
     typedef void(*FUNC_OnSuccess)(int callbackId);
@@ -139,6 +142,9 @@ using namespace easemob;
     typedef void (*FUNC_OnContactInvited)(const char * username, const char * reason);
     typedef void (*FUNC_OnFriendRequestAccepted)(const char * username);
     typedef void (*FUNC_OnFriendRequestDeclined)(const char * username);
+
+    //PresenceManager Listener
+    typedef void (*FUNC_OnPresenceUpdated)(void * presences[], int size);
 
 #endif
 
@@ -793,6 +799,37 @@ private:
     FUNC_OnContactInvited onContactInvited_;
     FUNC_OnFriendRequestAccepted onFriendRequestAccepted_;
     FUNC_OnFriendRequestDeclined OnFriendRequestDeclined_;
+};
+
+class PresenceManagerListener : public EMPresenceManagerListener
+{
+public:
+    PresenceManagerListener(FUNC_OnPresenceUpdated _onPresenceUpdated){}
+    
+    void onPresenceUpdated(const std::vector<EMPresencePtr>& presence) override {
+        size_t size = presence.size();
+        LOG("receive onPresenceUpdated, presence count: %d!", size);
+        
+        if(0 == size) {
+            onPresenceUpdated_(nullptr, 0);
+        } else {
+            
+            PresenceTO** data = new PresenceTO*[size];
+            PresenceTOWrapper* dataLocal = new PresenceTOWrapper[size];
+            
+            for(size_t i=0; i<size; i++) {
+                PresenceTOWrapper ptoWrapper = PresenceTOWrapper::FromPresence(presence[i]);
+                dataLocal[i] = ptoWrapper;
+                data[i] = &(dataLocal[i].presenceTO);
+            }
+            onPresenceUpdated_((void **)data, (int)size);
+            delete []data;
+            delete []dataLocal;
+        }
+    }
+
+private:
+    FUNC_OnPresenceUpdated onPresenceUpdated_;
 };
 
 #endif // _CALLBACKS_H_

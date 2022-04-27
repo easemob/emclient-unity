@@ -54,6 +54,16 @@ std::string GetMacUuid();
 #endif
 
 template<typename T>
+std::string JsonStringFromSet(std::set<T>& set)
+{
+    std::string ret = "";
+    if(set.size() == 0) return ret;
+    
+    nlohmann::json j(set);
+    return j.dump();
+}
+
+template<typename T>
 static std::string convert2String(const T &from)
 {
     std::stringstream stream;

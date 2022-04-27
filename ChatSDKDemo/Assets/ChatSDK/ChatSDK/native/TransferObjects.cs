@@ -1643,6 +1643,56 @@ namespace ChatSDK
         public string LanguageNativeName;
     }
 
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct PresenceTO
+    {
+        public string Publisher;
+        public IntPtr DeviceJson;
+        public IntPtr StatusJson;
+        public IntPtr Ext;
+        long LatestTime;
+        long ExpiryTime;
+
+        internal Presence Unmarshall()
+        {
+            var result = new Presence();
+
+            result.Publisher = Publisher;
+            result.LatestTime = LatestTime;
+            result.ExpiryTime = ExpiryTime;
+
+            result.Ext = Marshal.PtrToStringAnsi(Ext);
+            if (result.Ext.CompareTo(" ") == 0) result.Ext = "";
+
+            string deviceJson = Marshal.PtrToStringAnsi(DeviceJson);
+            string statusJson = Marshal.PtrToStringAnsi(StatusJson);
+
+            result.StatusList = new List<PresenceDeviceStatus>();
+            if (deviceJson.Length > 3 && statusJson.Length > 3)
+            {
+                Dictionary<string, string> deviceMap = TransformTool.JsonStringToDictionary(deviceJson);
+                Dictionary<string, string> statusMap = TransformTool.JsonStringToDictionary(statusJson);
+
+                foreach(var it in deviceMap)
+                {
+                    PresenceDeviceStatus pds = new PresenceDeviceStatus();
+
+                    if (statusMap.ContainsKey(it.Key) == false)
+                    {
+                        Debug.LogError($"Cannot find {it.Key} in statusMap.");
+                        continue;
+                    }
+
+                    pds.DeviceId = it.Value;
+                    pds.Status = statusMap[it.Key];
+                    result.StatusList.Add(pds);
+                }
+            }
+            return result;
+        }
+    }
+
     [StructLayout(LayoutKind.Sequential)]
     public class TOItem
     {

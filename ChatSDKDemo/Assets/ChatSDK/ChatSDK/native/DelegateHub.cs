@@ -66,10 +66,13 @@ namespace ChatSDK
     internal delegate void OnFriendRequestAccepted(string username);
     internal delegate void OnFriendRequestDeclined(string username);
 
-    //IMultiDeviceDelegate
+    //IMultiDeviceDelegate 
     internal delegate void onContactMultiDevicesEvent(MultiDevicesOperation operation, string target, string ext);
     internal delegate void onGroupMultiDevicesEvent(MultiDevicesOperation operation, string target, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] string[] usernames, int size);
     internal delegate void undisturbMultiDevicesEvent(string data);
+
+    //IPresenceManagerDelegate
+    internal delegate void OnPresenceUpdated([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] IntPtr[] presences, int size);
 
     internal sealed class ConnectionHub
     {
@@ -779,6 +782,35 @@ namespace ChatSDK
                     }
                 });
             };
+        }
+    }
+
+    internal sealed class PresenceManagerHub
+    {
+        internal OnPresenceUpdated onPresenceUpdated;
+
+        internal PresenceManagerHub()
+        {
+            onPresenceUpdated = (IntPtr[] presences, int size) =>
+            {
+                Debug.Log("onPresenceUpdated received.");
+
+                List<Presence> list = new List<Presence>();
+                for (int i=0; i<size; i++)
+                {
+                    PresenceTO pto = Marshal.PtrToStructure<PresenceTO>(presences[i]);
+                    Presence presence = pto.Unmarshall();
+                    list.Add(presence);
+                }
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IPresenceManagerDelegate listener in CallbackManager.Instance().presenceManagerListener.delegater)
+                    {
+                        listener.OnPresenceUpdated(list);
+                    }
+                });
+            };
+
         }
     }
 }

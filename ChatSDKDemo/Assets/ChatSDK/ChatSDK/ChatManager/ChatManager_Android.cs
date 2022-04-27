@@ -138,6 +138,16 @@ namespace ChatSDK
         {
             //TO-DO
         }
+
+        public override void FetchSupportLanguages(ValueCallBack<List<SupportLanguages>> handle = null)
+        {
+            //TO-DO
+        }
+
+        public override void TranslateMessage(ref Message message, List<string> targetLanguages, CallBack handle = null)
+        {
+            //TO-DO
+        }
     }
     
 }

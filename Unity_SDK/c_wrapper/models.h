@@ -18,6 +18,7 @@
 #include "emcustommessagebody.h"
 #include "emmucsetting.h"
 #include "empushconfigs.h"
+#include "empresence.h"
 #include "json.hpp"
 
 using namespace easemob;
@@ -469,6 +470,26 @@ struct SupportLanguagesTO
     const char* languageCode;
     const char* languageName;
     const char* languageNativeName;
+};
+
+struct PresenceTO
+{
+    const char* publisher;
+    const char* deviceList; // json string
+    const char* statusList; // json string
+    const char* ext;
+    int64_t     latestTime;
+    int64_t     expiryTime;
+};
+
+struct PresenceTOWrapper
+{
+    PresenceTO presenceTO;
+    std::string deviceListJson;
+    std::string statusListJson;
+    std::string ext;
+    
+    static PresenceTOWrapper FromPresence(EMPresencePtr presencePtr);
 };
 
 struct TOArray

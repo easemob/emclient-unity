@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		45668E162816B3DF00224FAD /* presence_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 45668E152816B3DF00224FAD /* presence_manager.cpp */; };
 		D64BF41F26AAE9CD00223225 /* contact_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64BF41E26AAE9CD00223225 /* contact_manager.cpp */; };
 		D64E944A26CB697500257D21 /* tool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64E944826CB697400257D21 /* tool.cpp */; };
 		D6F257DD273A1B8600AE0637 /* userinfo_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D6F257DB273A1B8500AE0637 /* userinfo_manager.cpp */; };
@@ -36,6 +37,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		45668E142816B3B900224FAD /* presence_manager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = presence_manager.h; sourceTree = "<group>"; };
+		45668E152816B3DF00224FAD /* presence_manager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = presence_manager.cpp; sourceTree = "<group>"; };
 		905C27CF262EC3A50097F7C2 /* hyphenateCWrapper.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = hyphenateCWrapper.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		905C27D2262EC3A50097F7C2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D64BF41D26AAE9CD00223225 /* contact_manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = contact_manager.h; sourceTree = "<group>"; };
@@ -144,6 +147,8 @@
 				D79C40F42695D1CE004818E5 /* group_manager.h */,
 				D7AFD64E269B278B008ABC57 /* room_manager.cpp */,
 				D7AFD650269B27B0008ABC57 /* room_manager.h */,
+				45668E142816B3B900224FAD /* presence_manager.h */,
+				45668E152816B3DF00224FAD /* presence_manager.cpp */,
 			);
 			name = c_wrapper;
 			path = ../../../c_wrapper;
@@ -243,6 +248,7 @@
 				D6F6450626B945B4007D0FE2 /* push_manager.cpp in Sources */,
 				D6F257DD273A1B8600AE0637 /* userinfo_manager.cpp in Sources */,
 				D64BF41F26AAE9CD00223225 /* contact_manager.cpp in Sources */,
+				45668E162816B3DF00224FAD /* presence_manager.cpp in Sources */,
 				D64E944A26CB697500257D21 /* tool.cpp in Sources */,
 				D79C40F32695D1A2004818E5 /* group_manager.cpp in Sources */,
 				D742F1C5266843CA00B80C18 /* hyphenateCWrapper.cpp in Sources */,

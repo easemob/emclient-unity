@@ -18,6 +18,7 @@ namespace ChatSDK {
         static string GroupManagerListener_Obj = "unity_chat_emclient_groupmanager_delegate_obj";
         static string RoomManagerListener_Obj = "unity_chat_emclient_roommanager_delegate_obj";
         static string MultiDeviceListener_Obj = "unity_chat_emclient_multidevice_delegate_obj";
+        static string PresenceManagerListener_Obj = "unity_chat_emclient_presencemanager_delegate_obj";
 
 
         internal ConnectionListener connectionListener;
@@ -26,6 +27,7 @@ namespace ChatSDK {
         internal GroupManagerListener groupManagerListener;
         internal RoomManagerListener roomManagerListener;
         internal MultiDeviceListener multiDeviceListener;
+        internal PresenceManagerListener presenceManagerListener;
 
         internal int CurrentId { get; private set; }
 
@@ -92,6 +94,7 @@ namespace ChatSDK {
             IClient.Instance.ChatManager().ClearDelegates();
             IClient.Instance.GroupManager().ClearDelegates();
             IClient.Instance.RoomManager().ClearDelegates();
+            IClient.Instance.PresenceManager().ClearDelegates();
             CallbackManager.Instance().multiDeviceListener.delegater.Clear();
             CallbackManager.Instance().CleanAllCallback();
             IClient.Instance.ClearResource();
@@ -235,6 +238,18 @@ namespace ChatSDK {
                 DontDestroyOnLoad(mdGameObj);
                 multiDeviceListener = mdGameObj.AddComponent<MultiDeviceListener>();
                 multiDeviceListener.delegater = new List<IMultiDeviceDelegate>();
+            }
+            catch (Exception)
+            {
+                Debug.Log($"DontDestroyOnLoad triggered.");
+            }
+
+            GameObject presenceGameObj = new GameObject(PresenceManagerListener_Obj);
+            try
+            {
+                DontDestroyOnLoad(presenceGameObj);
+                presenceManagerListener = presenceGameObj.AddComponent<PresenceManagerListener>();
+                presenceManagerListener.delegater = new List<IPresenceManagerDelegate>();
             }
             catch (Exception)
             {
