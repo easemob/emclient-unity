@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -26,7 +26,7 @@
 		9068A3482670719F0022B90F /* EMPageResult+Unity.m in Sources */ = {isa = PBXBuildFile; fileRef = 9068A3472670719F0022B90F /* EMPageResult+Unity.m */; };
 		9068A34B267072490022B90F /* EMChatroom+Unity.m in Sources */ = {isa = PBXBuildFile; fileRef = 9068A34A267072490022B90F /* EMChatroom+Unity.m */; };
 		9068A34E2670A5360022B90F /* EMRoomListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 9068A34D2670A5360022B90F /* EMRoomListener.m */; };
-		907464E3280D0EA800AAF5A3 /* HyphenateChat.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 907464E2280D0EA800AAF5A3 /* HyphenateChat.xcframework */; };
+		90823A74281038C300D8431F /* HyphenateChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90823A73281038C300D8431F /* HyphenateChat.framework */; };
 		90A30047266B790900BB3A19 /* EMWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 90A30046266B790900BB3A19 /* EMWrapper.m */; };
 		90A3004C266BA9DC00BB3A19 /* EMClientListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 90A3004B266BA9DC00BB3A19 /* EMClientListener.m */; };
 		90A3004F266BB03600BB3A19 /* EMContactListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 90A3004E266BB03600BB3A19 /* EMContactListener.m */; };
@@ -90,6 +90,7 @@
 		9068A34C2670A5360022B90F /* EMRoomListener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EMRoomListener.h; sourceTree = "<group>"; };
 		9068A34D2670A5360022B90F /* EMRoomListener.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EMRoomListener.m; sourceTree = "<group>"; };
 		907464E2280D0EA800AAF5A3 /* HyphenateChat.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = HyphenateChat.xcframework; sourceTree = "<group>"; };
+		90823A73281038C300D8431F /* HyphenateChat.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HyphenateChat.framework; sourceTree = "<group>"; };
 		90A30045266B790900BB3A19 /* EMWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EMWrapper.h; sourceTree = "<group>"; };
 		90A30046266B790900BB3A19 /* EMWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EMWrapper.m; sourceTree = "<group>"; };
 		90A30048266B7AD800BB3A19 /* EMMethod.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EMMethod.h; sourceTree = "<group>"; };
@@ -113,7 +114,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				907464E3280D0EA800AAF5A3 /* HyphenateChat.xcframework in Frameworks */,
+				90823A74281038C300D8431F /* HyphenateChat.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -233,6 +234,7 @@
 		90D7B1AD26677907008CA320 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				90823A73281038C300D8431F /* HyphenateChat.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

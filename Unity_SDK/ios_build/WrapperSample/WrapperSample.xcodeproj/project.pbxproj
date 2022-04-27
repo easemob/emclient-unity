@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		9010D17426679D7B00750494 /* libHyphenateWrapper.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9010D17326679D7B00750494 /* libHyphenateWrapper.a */; };
-		902CC1F7266B5C0E002F9A50 /* HyphenateChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 902CC1F5266B5C0B002F9A50 /* HyphenateChat.framework */; };
-		902CC1F8266B5C0E002F9A50 /* HyphenateChat.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 902CC1F5266B5C0B002F9A50 /* HyphenateChat.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		90D7B19426677871008CA320 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 90D7B19326677871008CA320 /* AppDelegate.m */; };
 		90D7B19A26677871008CA320 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 90D7B19926677871008CA320 /* ViewController.m */; };
 		90D7B19D26677871008CA320 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 90D7B19B26677871008CA320 /* Main.storyboard */; };
@@ -25,7 +23,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				902CC1F8266B5C0E002F9A50 /* HyphenateChat.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -34,7 +31,6 @@
 
 /* Begin PBXFileReference section */
 		9010D17326679D7B00750494 /* libHyphenateWrapper.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libHyphenateWrapper.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		902CC1F5266B5C0B002F9A50 /* HyphenateChat.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HyphenateChat.framework; sourceTree = "<group>"; };
 		902CC1FC266B5C7C002F9A50 /* HyphenateWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HyphenateWrapper.h; sourceTree = "<group>"; };
 		90D7B18F26677871008CA320 /* WrapperSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WrapperSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		90D7B19226677871008CA320 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -54,7 +50,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9010D17426679D7B00750494 /* libHyphenateWrapper.a in Frameworks */,
-				902CC1F7266B5C0E002F9A50 /* HyphenateChat.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,7 +83,6 @@
 		90D7B18626677871008CA320 = {
 			isa = PBXGroup;
 			children = (
-				902CC1F5266B5C0B002F9A50 /* HyphenateChat.framework */,
 				90D7B19126677871008CA320 /* WrapperSample */,
 				90D7B19026677871008CA320 /* Products */,
 				9010D17226679D7B00750494 /* Frameworks */,

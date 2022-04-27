@@ -147,7 +147,7 @@ namespace ChatSDK
             obj.Add("keywords", keywords);
             obj.Add("from", from ?? "");
             obj.Add("count", maxCount);
-            obj.Add("timestamp", timestamp);
+            obj.Add("timestamp", timestamp.ToString());
             obj.Add("direction", direction == MessageSearchDirection.UP ? "up" : "down");
             string jsonString = ChatAPIIOS.ChatManager_GetMethodCall("searchChatMsgFromDB", obj.ToString());
             return TransformTool.JsonStringToMessageList(jsonString);
@@ -187,7 +187,7 @@ namespace ChatSDK
         public override void RemoveMessagesBeforeTimestamp(long timeStamp, CallBack callback = null)
         {
             JSONObject obj = new JSONObject();
-            obj.Add("timestamp", timeStamp);
+            obj.Add("timestamp", timeStamp.ToString());
             ChatAPIIOS.ChatManager_HandleMethodCall("removeMessageBeforeTimestamp", obj.ToString(), callback?.callbackId);
         }
 

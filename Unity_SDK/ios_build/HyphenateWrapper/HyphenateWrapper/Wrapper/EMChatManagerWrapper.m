@@ -29,22 +29,12 @@
 }
 
 - (id)deleteConversation:(NSDictionary *)param {
-    NSString *conversationId = param[@"conversationId"];
+    NSString *conversationId = param[@"convId"];
     if (!conversationId) {
         return nil;
     }
     BOOL deleteMessages = [param[@"deleteMessages"] boolValue];
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    __block BOOL ret = NO;
-    
-    [EMClient.sharedClient.chatManager deleteConversation:conversationId
-                                         isDeleteMessages:deleteMessages
-                                               completion:^(NSString *aConversationId, EMError *aError)
-     {
-        ret = aError ? YES:NO;
-        dispatch_semaphore_signal(semaphore);
-    }];
-    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    BOOL ret = [EMClient.sharedClient.chatManager deleteConversation:conversationId deleteMessages:deleteMessages];
     return @{@"ret":@(ret)};
 }
 
@@ -180,7 +170,7 @@
 
 - (id)importMessages:(NSDictionary *)param {
     
-    __block BOOL ret = NO;
+    BOOL ret = NO;
     
     NSArray *jsonObjectList = param[@"list"];
     if (!jsonObjectList || jsonObjectList.count == 0) {
@@ -193,12 +183,7 @@
         [msgs addObject:msg];
     }
     
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    [EMClient.sharedClient.chatManager importMessages:msgs completion:^(EMError *aError) {
-        ret = aError ? YES : NO;
-        dispatch_semaphore_signal(semaphore);
-    }];
-    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    ret = [EMClient.sharedClient.chatManager importMessages:msgs];
     return @{@"ret":@(ret)};
 }
 
@@ -386,22 +371,9 @@
 
 - (id)updateChatMessage:(NSDictionary *)param {
     
-    __block BOOL ret = NO;
-    do {
-        NSString *msgId = param[@"msgId"];
-        if (!msgId) {
-            break;
-        }
-        EMChatMessage *msg = [EMChatMessage fromJson:param];
-        dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-        [EMClient.sharedClient.chatManager updateMessage:msg completion:^(EMChatMessage *aMessage, EMError *aError) {
-            ret = aError ? YES : NO;
-            dispatch_semaphore_signal(semaphore);
-        }];
-        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-        
-    } while (0);
-    
+    BOOL ret = NO;
+    EMChatMessage *msg = [EMChatMessage fromJson:param];
+    ret = [EMClient.sharedClient.chatManager updateMessage:msg];
     return @{@"ret":@(ret)};
 }
 

@@ -320,15 +320,12 @@ namespace ChatSDK
 
         static internal Dictionary<string, AttributeValue> JsonStringToAttributes(string jsonString)
         {
-            Debug.Log($"111122222 {jsonString}");
             Dictionary<string, AttributeValue> ret = new Dictionary<string, AttributeValue>();
 
             // Json at least has { and } two characters
             if (null == jsonString || jsonString.Length <= 2) return ret;
-            Debug.Log("311111");
             JSONNode jn = JSON.Parse(jsonString);
             if (null == jn) return ret;
-            Debug.Log("aaaaaa");
             JSONNode jo = jn.AsObject;
             foreach (string k in jo.Keys)
             {

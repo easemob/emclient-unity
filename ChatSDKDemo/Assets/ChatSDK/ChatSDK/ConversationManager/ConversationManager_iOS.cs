@@ -64,8 +64,12 @@ namespace ChatSDK {
             JSONObject obj = new JSONObject();
             obj.Add("convId", conversationId);
             obj.Add("convType", TransformTool.ConversationTypeToInt(conversationType));
-            string ret = ChatAPIIOS.Conversation_GetMethodCall("getLatestMessage", obj.ToString());
-            return new Message(ret);
+            string jsonString = ChatAPIIOS.Conversation_GetMethodCall("getLatestMessage", obj.ToString());
+            if (jsonString == null || jsonString.Length == 0)
+            {
+                return null;
+            }
+            return new Message(jsonString);
         }
 
         internal override Message LastReceivedMessage(string conversationId, ConversationType conversationType)
@@ -74,6 +78,10 @@ namespace ChatSDK {
             obj.Add("convId", conversationId);
             obj.Add("convType", TransformTool.ConversationTypeToInt(conversationType));
             string ret = ChatAPIIOS.Conversation_GetMethodCall("getLatestMessageFromOthers", obj.ToString());
+            if (ret == null || ret.Length == 0)
+            {
+                return null;
+            }
             return new Message(ret);
         }
 
@@ -84,6 +92,10 @@ namespace ChatSDK {
             obj.Add("convType", TransformTool.ConversationTypeToInt(conversationType));
             obj.Add("msgId", messageId);
             string ret = ChatAPIIOS.Conversation_GetMethodCall("loadMsgWithId", obj.ToString());
+            if (ret == null || ret.Length == 0)
+            {
+                return null;
+            }
             return new Message(ret);
         }
 
@@ -107,7 +119,7 @@ namespace ChatSDK {
             obj.Add("keywords", keywords ?? "");
             obj.Add("sender", sender ?? "");
             obj.Add("count", count);
-            obj.Add("timestamp", timestamp);
+            obj.Add("timestamp", timestamp.ToString());
             obj.Add("direction", direction == MessageSearchDirection.UP ? "up" : "down");
             ChatAPIIOS.Conversation_HandleMethodCall("loadMsgWithKeywords", obj.ToString(), callback?.callbackId);
         }
@@ -120,7 +132,7 @@ namespace ChatSDK {
             obj.Add("type", TransformTool.MessageBodyTypeToString(bodyType));
             obj.Add("sender", sender ?? "");
             obj.Add("count", count);
-            obj.Add("timestamp", timestamp);
+            obj.Add("timestamp", timestamp.ToString());
             obj.Add("direction", direction == MessageSearchDirection.UP ? "up" : "down");
             ChatAPIIOS.Conversation_HandleMethodCall("loadMsgWithMsgType", obj.ToString(), callback?.callbackId);
         }
@@ -130,8 +142,8 @@ namespace ChatSDK {
             JSONObject obj = new JSONObject();
             obj.Add("convId", conversationId);
             obj.Add("convType", TransformTool.ConversationTypeToInt(conversationType));
-            obj.Add("startTime", startTime);
-            obj.Add("endTime", endTime);
+            obj.Add("startTime", startTime.ToString());
+            obj.Add("endTime", endTime.ToString());
             obj.Add("count", count);
             ChatAPIIOS.Conversation_HandleMethodCall("loadMsgWithTime", obj.ToString(), callback?.callbackId);
         }
