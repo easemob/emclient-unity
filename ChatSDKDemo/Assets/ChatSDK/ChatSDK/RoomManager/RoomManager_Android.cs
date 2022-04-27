@@ -130,5 +130,15 @@ namespace ChatSDK
         {
             //TODO: Add code
         }
+
+        public override void AddWhiteListMembers(string roomId, List<string> members, CallBack handle = null)
+        {
+            //TODO: Add code
+        }
+
+        public override void RemoveWhiteListMembers(string roomId, List<string> members, CallBack handle = null)
+        {
+            //TODO: Add code
+        }
     }
 }

@@ -182,6 +182,10 @@ namespace ChatSDK
 
         public abstract void UnMuteAllRoomMembers(string roomId, ValueCallBack<Room> handle = null);
 
+        public abstract void AddWhiteListMembers(string roomId, List<string> members, CallBack handle = null);
+
+        public abstract void RemoveWhiteListMembers(string roomId, List<string> members, CallBack handle = null);
+
         /// <summary>
         /// 添加聊天室监听
         /// </summary>

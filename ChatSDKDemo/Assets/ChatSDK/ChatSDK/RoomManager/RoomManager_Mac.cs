@@ -719,5 +719,71 @@ namespace ChatSDK
                     ChatCallbackObject.ValueCallBackOnError<Room>(cbId, code, desc);
                 });
         }
+
+        public override void AddWhiteListMembers(string roomId, List<string> members, CallBack handle = null)
+        {
+            if (null == roomId || 0 == roomId.Length || null == members || 0 == members.Count)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            //turn List<string> into array
+            int size = 0;
+            var membersArray = new string[0];
+            if (null != members && members.Count > 0)
+            {
+                size = members.Count;
+                membersArray = new string[size];
+                int i = 0;
+                foreach (string member in members)
+                {
+                    membersArray[i] = member;
+                    i++;
+                }
+            }
+
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.RoomManager_AddWhiteListMembers(client, callbackId, roomId, membersArray, size,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
+        }
+
+        public override void RemoveWhiteListMembers(string roomId, List<string> members, CallBack handle = null)
+        {
+            if (null == roomId || 0 == roomId.Length || null == members || 0 == members.Count)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            //turn List<string> into array
+            int size = 0;
+            var membersArray = new string[0];
+            if (null != members && members.Count > 0)
+            {
+                size = members.Count;
+                membersArray = new string[size];
+                int i = 0;
+                foreach (string member in members)
+                {
+                    membersArray[i] = member;
+                    i++;
+                }
+            }
+
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.RoomManager_RemoveWhiteListMembers(client, callbackId, roomId, membersArray, size,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
+        }
     }
 }

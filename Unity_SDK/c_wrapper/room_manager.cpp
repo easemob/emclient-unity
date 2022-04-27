@@ -750,6 +750,64 @@ HYPHENATE_API void RoomManager_UnMuteAllChatroomMembers(void *client, int callba
     t.detach();
 }
 
+HYPHENATE_API void RoomManager_AddWhiteListMembers(void * client, int callbackId, const char * roomId, const char * memberArray[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+{
+    EMError error;
+    if(nullptr == roomId || 0 == size) {
+        error.setErrorCode(EMError::GENERAL_ERROR);
+        error.mDescription = "Mandatory parameter is null!";
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+    EMMucMemberList memberList;
+    for(int i=0; i<size; i++) {
+        memberList.push_back(memberArray[i]);
+    }
+    std::string roomIdStr = roomId;
+    
+    std::thread t([=](){
+        EMError error;
+        EMChatroomPtr chatRoomPtr = CLIENT->getChatroomManager().addWhiteListMembers(roomIdStr, memberList, error);
+        if(EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("RoomManager_AddWhiteListMembers successfully, roomId=%s", roomIdStr.c_str());
+            if(onSuccess) onSuccess(callbackId);
+        }else{
+            LOG("RoomManager_AddWhiteListMembers failed, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        }
+    });
+    t.detach();
+}
+
+HYPHENATE_API void RoomManager_RemoveWhiteListMembers(void * client, int callbackId, const char * roomId, const char * memberArray[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+{
+    EMError error;
+    if(nullptr == roomId || 0 == size) {
+        error.setErrorCode(EMError::GENERAL_ERROR);
+        error.mDescription = "Mandatory parameter is null!";
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+    EMMucMemberList memberList;
+    for(int i=0; i<size; i++) {
+        memberList.push_back(memberArray[i]);
+    }
+    std::string roomIdStr = roomId;
+    
+    std::thread t([=](){
+        EMError error;
+        EMChatroomPtr chatRoomPtr = CLIENT->getChatroomManager().removeWhiteListMembers(roomIdStr, memberList, error);
+        if(EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("RoomManager_RemoveWhiteListMembers successfully, roomId=%s", roomIdStr.c_str());
+            if(onSuccess) onSuccess(callbackId);
+        }else{
+            LOG("RoomManager_RemoveWhiteListMembers failed, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        }
+    });
+    t.detach();
+}
+
 void RoomManager_RemoveListener(void*client)
 {
     CLIENT->getChatroomManager().clearListeners();
