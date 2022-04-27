@@ -179,5 +179,15 @@ namespace ChatSDK
             obj.Add("announcement", announcement);
             ChatAPIIOS.RoomManager_HandleMethodCall("updateChatRoomAnnouncement", obj.ToString(), handle?.callbackId);
         }
+
+        public override void MuteAllRoomMembers(string roomId, ValueCallBack<Room> handle = null)
+        {
+            //TODO: Add code
+        }
+
+        public override void UnMuteAllRoomMembers(string roomId, ValueCallBack<Room> handle = null)
+        {
+            //TODO: Add code
+        }
     }
 }

@@ -680,6 +680,76 @@ HYPHENATE_API void RoomManager_UpdateChatroomAnnouncement(void *client, int call
     t.detach();
 }
 
+HYPHENATE_API void RoomManager_MuteAllChatroomMembers(void *client, int callbackId, const char * roomId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+{
+    EMError error;
+    if(!MandatoryCheck(roomId, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+    std::string roomIdStr = roomId;
+    
+    std::thread t([=](){
+        EMError error;
+        EMChatroomPtr chatRoomPtr = CLIENT->getChatroomManager().muteAllChatroomMembers(roomIdStr, error);
+        if(EMError::EM_NO_ERROR == error.mErrorCode) {
+            //success
+            LOG("RoomManager_MuteAllChatroomMembers succeeds: roomId:%s", roomIdStr.c_str());
+            if(onSuccess) {
+                if(chatRoomPtr) {
+                    RoomTO *data[1];
+                    data[0] = {RoomTO::FromEMChatRoom(chatRoomPtr)};
+                    onSuccess((void **)data, DataType::Room, 1, callbackId);
+                    delete (RoomTO*)data[0];
+                    LOG("RoomManager_MuteAllChatroomMembers return room with id:%s", roomIdStr.c_str());
+                } else {
+                    onSuccess(nullptr, DataType::Room, 0, callbackId);
+                    LOG("RoomManager_MuteAllChatroomMembers NO room returned");
+                }
+            }
+        }else{
+            LOG("RoomManager_MuteAllChatroomMembers failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        }
+    });
+    t.detach();
+}
+                                                      
+HYPHENATE_API void RoomManager_UnMuteAllChatroomMembers(void *client, int callbackId, const char * roomId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+{
+    EMError error;
+    if(!MandatoryCheck(roomId, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+    std::string roomIdStr = roomId;
+    
+    std::thread t([=](){
+        EMError error;
+        EMChatroomPtr chatRoomPtr = CLIENT->getChatroomManager().unmuteAllChatroomMembers(roomIdStr, error);
+        if(EMError::EM_NO_ERROR == error.mErrorCode) {
+            //success
+            LOG("RoomManager_UnMuteAllChatroomMembers succeeds: roomId:%s", roomIdStr.c_str());
+            if(onSuccess) {
+                if(chatRoomPtr) {
+                    RoomTO *data[1];
+                    data[0] = {RoomTO::FromEMChatRoom(chatRoomPtr)};
+                    onSuccess((void **)data, DataType::Room, 1, callbackId);
+                    delete (RoomTO*)data[0];
+                    LOG("RoomManager_UnMuteAllChatroomMembers return room with id:%s", roomIdStr.c_str());
+                } else {
+                    onSuccess(nullptr, DataType::Room, 0, callbackId);
+                    LOG("RoomManager_UnMuteAllChatroomMembers NO room returned");
+                }
+            }
+        }else{
+            LOG("RoomManager_UnMuteAllChatroomMembers failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        }
+    });
+    t.detach();
+}
+
 void RoomManager_RemoveListener(void*client)
 {
     CLIENT->getChatroomManager().clearListeners();

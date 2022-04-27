@@ -376,6 +376,12 @@ namespace ChatSDK{
 		[DllImport(MyLibName)]
 		internal static extern void RoomManager_UpdateChatroomAnnouncement(IntPtr client, int callbackId, string roomId, string newAnnouncement, OnSuccess onSuccess, OnErrorV2 onError);
 
+		[DllImport(MyLibName)]
+		internal static extern void RoomManager_MuteAllChatroomMembers(IntPtr client, int callbackId, string roomId, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void RoomManager_UnMuteAllChatroomMembers(IntPtr client, int callbackId, string roomId, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+
 		/** ContactManager Stub **/
 		[DllImport(MyLibName)]
 		internal static extern void ContactManager_AddListener(IntPtr client, OnContactAdd onContactAdd,OnContactDeleted onContactDeleted,
