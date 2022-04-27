@@ -124,6 +124,11 @@ namespace ChatSDK
             wrapper.Call("ackMessageRead", messageId, handle?.callbackId);
         }
 
+        public override void SendReadAckForGroupMessage(string messageId, string ackContent, CallBack callback = null)
+        {
+            //TODO: Add code
+        }
+
         public override bool UpdateMessage(Message message)
         {
             return wrapper.Call<bool>("updateChatMessage", message.ToJson().ToString());

@@ -123,6 +123,9 @@ namespace ChatSDK{
 		internal static extern void ChatManager_SendReadAckForMessage(IntPtr client, int callbackId, string messageId, OnSuccess onSuccess, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
+		internal static extern void ChatManager_SendReadAckForGroupMessage(IntPtr client, int callbackId, string messageId, string ackContent, OnSuccess onSuccess, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
 		internal static extern bool ChatManager_UpdateMessage(IntPtr client, IntPtr mto, MessageBodyType type);
 
 		[DllImport(MyLibName)]

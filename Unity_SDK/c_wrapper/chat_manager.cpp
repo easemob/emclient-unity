@@ -622,6 +622,35 @@ HYPHENATE_API void ChatManager_SendReadAckForMessage(void *client, int callbackI
     t.detach();
 }
 
+HYPHENATE_API void ChatManager_SendReadAckForGroupMessage(void *client,int callbackId, const char * messageId, const char* ackContent, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+{
+    EMError error;
+    if(!MandatoryCheck(messageId, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+    
+    std::string messageIdStr = messageId;
+    std::string ackContentStr = ackContent;
+    
+    std::thread t([=](){
+        EMError error;
+        EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(messageIdStr);
+        if(nullptr == messagePtr) {
+            
+            LOG("Cannot find message with message id:%s", messageIdStr.c_str());
+            error.mErrorCode = EMError::MESSAGE_INVALID;
+            error.mDescription = "Invalid message.";
+            if(onError) onError(error.mErrorCode,error.mDescription.c_str(), callbackId);
+            return;
+        }
+        CLIENT->getChatManager().sendReadAckForGroupMessage(messagePtr, ackContentStr);
+        LOG("Send read ack for group message:%s successfully.", messageIdStr.c_str());
+        if(onSuccess) onSuccess(callbackId);
+    });
+    t.detach();
+}
+
 HYPHENATE_API bool ChatManager_UpdateMessage(void *client, void *mto, EMMessageBody::EMMessageBodyType type)
 {
     if(!MandatoryCheck(mto))

@@ -600,6 +600,35 @@ namespace ChatSDK
                 );
         }
 
+        public override void SendReadAckForGroupMessage(string messageId, string ackContent, CallBack callback = null)
+        {
+            if (null == messageId || 0 == messageId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
+
+            ChatAPINative.ChatManager_SendReadAckForMessage(client, callbackId, messageId,
+                (int cbId) =>
+                {
+                    try
+                    {
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
+                    }
+                    catch (NullReferenceException nre)
+                    {
+                        Debug.LogWarning($"NullReferenceException: {nre.StackTrace}");
+                    }
+
+                },
+                (int code, string desc, int cbId) =>
+                {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                }
+                );
+        }
+
         public override bool UpdateMessage(Message message)
         {
             if (null == message)

@@ -132,6 +132,8 @@ namespace ChatSDK
         /// <param name="handle">执行结果</param>
         public abstract void SendMessageReadAck(string messageId, CallBack handle = null);
 
+        public abstract void SendReadAckForGroupMessage(string messageId, string ackContent, CallBack callback = null);
+
         /// <summary>
         /// 更新消息
         /// </summary>

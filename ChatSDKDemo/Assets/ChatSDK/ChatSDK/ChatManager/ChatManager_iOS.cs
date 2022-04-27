@@ -174,6 +174,11 @@ namespace ChatSDK
             ChatAPIIOS.ChatManager_GetMethodCall("ackMessageRead", obj.ToString(), handle?.callbackId);
         }
 
+        public override void SendReadAckForGroupMessage(string messageId, string ackContent, CallBack callback = null)
+        {
+            //TODO: Add code
+        }
+
         public override bool UpdateMessage(Message message)
         {
             string jsonString = ChatAPIIOS.ChatManager_GetMethodCall("updateChatMessage", message.ToJson().ToString());
