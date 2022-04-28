@@ -19,6 +19,8 @@ HYPHENATE_API void Client_Logout(void *client, int callbackId, FUNC_OnSuccess on
 HYPHENATE_API void Client_StartLog(const char *logFilePath);
 HYPHENATE_API void Client_StopLog();
 HYPHENATE_API void Client_LoginToken(void *client, FUNC_OnSuccess_With_Result onSuccess);
+HYPHENATE_API bool Client_isConnected(void* client);
+HYPHENATE_API bool Client_isLoggedIn(void* client);
 HYPHENATE_API void Client_ClearResource(void *client);
 HYPHENATE_API void Client_LoginWithAgoraToken(void *client, int callbackId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, const char *username, const char *agoraToken);
 HYPHENATE_API void Client_RenewAgoraToken(void *client, const char *agoraToken);

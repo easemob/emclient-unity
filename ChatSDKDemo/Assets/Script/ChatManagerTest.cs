@@ -118,33 +118,19 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     {
         InputAlertConfig config = new InputAlertConfig((dict) => {
             Message msg = Message.CreateTextSendMessage(dict["to"], dict["content"]);
-            msg.Attributes = new Dictionary<string, AttributeValue>();
-            msg.Attributes.Add("name", AttributeValue.Of("hello", AttributeValueType.STRING));
-            msg.Attributes.Add("bool", AttributeValue.Of(false, AttributeValueType.BOOL));
-            msg.Attributes.Add("count", AttributeValue.Of(100, AttributeValueType.INT32));
-            msg.Attributes.Add("double", AttributeValue.Of(3.5d, AttributeValueType.DOUBLE));
-            msg.Attributes.Add("float", AttributeValue.Of(3.5f, AttributeValueType.FLOAT));
-
-
-            JSONObject obj = new JSONObject();
-            //obj.Add("convId", "conv");
-            obj.Add("deleteMessages", false);
-            msg.Attributes.Add("jsonStr", AttributeValue.Of(obj.ToString(), AttributeValueType.JSONSTRING));
-
-
-            List<string> strList = new List<string>();
-            strList.Add("a");
-            strList.Add("b");
-            strList.Add("c");
-
-            msg.Attributes.Add("list", AttributeValue.Of(strList,  AttributeValueType.STRVECTOR));
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
-                    onSuccess: () => {
-                        UIManager.TitleAlert(transform, "成功", msg.MsgId);
-                    },
-                    onError: (code, desc) => {
-                        UIManager.ErrorAlert(transform, code, msg.MsgId);
-                    }
+                onSuccess: () => {
+                    UIManager.TitleAlert(transform, "成功", msg.MsgId);
+
+                    //Message msg1 = SDKClient.Instance.ChatManager.LoadMessage(msg.MsgId);
+                    //Debug.Log($"body content:{msg1.MsgId}");
+                },
+                onProgress: (progress) => {
+                    UIManager.TitleAlert(transform, "发送进度", progress.ToString());
+                },
+                onError:(code, desc) => {
+                    UIManager.ErrorAlert(transform, code, msg.MsgId);
+                }            
             ));
         });
 
@@ -275,9 +261,11 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
             }
 
             SDKClient.Instance.ChatManager.RecallMessage(dict["msgId"], new CallBack(
-                onSuccess: () =>
-                {
-                    UIManager.SuccessAlert(transform);
+                onSuccess: () => {
+                    UIManager.TitleAlert(transform, "成功", "回撤成功");
+                },
+                onProgress: (progress) => {
+                    UIManager.TitleAlert(transform, "回撤进度", progress.ToString());
                 },
                 onError: (code, desc) =>
                 {
@@ -347,6 +335,61 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     }
     void DownLoadAttachmentBtnAction()
     {
+        // Download Attachment
+        /*InputAlertConfig config = new InputAlertConfig((dict) => {
+
+            SDKClient.Instance.ChatManager.DownloadAttachment(dict["msgId"], new CallBack(
+                onSuccess: () => {
+                    UIManager.TitleAlert(transform, "下载附件成功", "完成");
+
+                    //Message msg = SDKClient.Instance.ChatManager.LoadMessage("Message ID");
+                    //if (msg != null)
+                    //{
+                    //    if (msg.Body.Type == ChatSDK.MessageBodyType.VIDEO) {
+                    //        ChatSDK.MessageBody.VideoBody vb = (ChatSDK.MessageBody.VideoBody)msg.Body;
+
+                           //从本地获取短视频文件路径
+                    //        string imgLocalUri = vb.LocalPath;
+                    //    }
+
+                    //}
+                    // else
+                    //{
+                    //     Debug.Log($"未找到消息");
+                    //}
+                },
+                onProgress: (progress) => {
+                    UIManager.TitleAlert(transform, "下载附件进度", progress.ToString());
+                },
+                onError: (code, desc) => {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+
+        });
+        
+        
+        // Download Attatchment
+        InputAlertConfig config = new InputAlertConfig((dict) => {
+
+            SDKClient.Instance.ChatManager.DownloadThumbnail(dict["msgId"], new CallBack(
+                onSuccess: () => {
+                    UIManager.TitleAlert(transform, "下载缩略图成功", "完成"); ;
+                },
+                onProgress: (progress) => {
+                    UIManager.TitleAlert(transform, "下载缩略图进度", progress.ToString());
+                },
+                onError: (code, desc) => {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+
+        });
+        */
+
+        //config.AddField("msgId");
+        //UIManager.DefaultInputAlert(transform, config);
+
         UIManager.UnfinishedAlert(transform);
         Debug.Log("DownLoadAttachmentBtnAction");
     }

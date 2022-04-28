@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace ChatSDK
 {
+  
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public class TextMessageTO : MessageTO
     {
@@ -43,6 +44,9 @@ namespace ChatSDK
 
         public override IMessageBody UnmarshallBody()
         {
+            // change EMPTY_STR(" ")  to ""
+            if (Body.Content.CompareTo(" ") == 0) Body.Content = "";
+
             return new MessageBody.TextBody(Body.Content);
         }
 
@@ -87,7 +91,11 @@ namespace ChatSDK
 
         public override IMessageBody UnmarshallBody()
         {
-            return new MessageBody.LocationBody(Body.Latitude, Body.Longitude, Body.Address);
+            // change EMPTY_STR(" ")  to ""
+            if (Body.Address.CompareTo(" ") == 0)       Body.Address = "";
+            if (Body.BuildingName.CompareTo(" ") == 0)  Body.BuildingName = "";
+
+            return new MessageBody.LocationBody(Body.Latitude, Body.Longitude, Body.Address, Body.BuildingName);
         }
     }
 
@@ -129,6 +137,9 @@ namespace ChatSDK
 
         public override IMessageBody UnmarshallBody()
         {
+            // change EMPTY_STR(" ")  to ""
+            if (Body.Action.CompareTo(" ") == 0) Body.Action = "";
+
             return new MessageBody.CmdBody(Body.Action, Body.DeliverOnlineOnly);
         }
     }
@@ -182,6 +193,13 @@ namespace ChatSDK
             fb.RemotePath = Body.RemotePath;
             fb.FileSize = Body.FileSize;
             fb.DownStatus = Body.DownStatus;
+
+            // change EMPTY_STR(" ")  to ""
+            if (fb.DisplayName.CompareTo(" ") == 0) fb.DisplayName = "";
+            if (fb.LocalPath.CompareTo(" ") == 0)   fb.LocalPath = "";
+            if (fb.RemotePath.CompareTo(" ") == 0)  fb.RemotePath = "";
+            if (fb.Secret.CompareTo(" ") == 0)      fb.Secret = "";
+
             return fb;
         }
     }
@@ -253,6 +271,16 @@ namespace ChatSDK
             ib.DownStatus = Body.DownStatus;
             ib.ThumbnaiDownStatus = Body.ThumbnaiDownStatus;
             ib.Original = Body.Original;
+
+            // change EMPTY_STR(" ")  to ""
+            if (ib.DisplayName.CompareTo(" ") == 0)         ib.DisplayName = "";
+            if (ib.LocalPath.CompareTo(" ") == 0)           ib.LocalPath = "";
+            if (ib.RemotePath.CompareTo(" ") == 0)          ib.RemotePath = "";
+            if (ib.Secret.CompareTo(" ") == 0)              ib.Secret = "";
+            if (ib.ThumbnaiSecret.CompareTo(" ") == 0)      ib.ThumbnaiSecret = "";
+            if (ib.ThumbnaiRemotePath.CompareTo(" ") == 0)  ib.ThumbnaiRemotePath = "";
+            if (ib.ThumbnailLocalPath.CompareTo(" ") == 0)  ib.ThumbnailLocalPath = "";
+
             return ib;
         }
     }
@@ -308,6 +336,13 @@ namespace ChatSDK
             voi.FileSize = Body.FileSize;
             voi.DownStatus = Body.DownStatus;
             voi.Duration = Body.Duration;
+
+            // change EMPTY_STR(" ")  to ""
+            if (voi.DisplayName.CompareTo(" ") == 0)    voi.DisplayName = "";
+            if (voi.LocalPath.CompareTo(" ") == 0)      voi.LocalPath = "";
+            if (voi.RemotePath.CompareTo(" ") == 0)     voi.RemotePath = "";
+            if (voi.Secret.CompareTo(" ") == 0)         voi.Secret = "";
+
             return voi;
         }
     }
@@ -383,6 +418,16 @@ namespace ChatSDK
             vid.Duration = Body.Duration;
             vid.FileSize = Body.FileSize;
             vid.DownStatus = Body.DownStatus;
+
+            // change EMPTY_STR(" ")  to ""
+            if (vid.LocalPath.CompareTo(" ") == 0)              vid.LocalPath = "";
+            if (vid.DisplayName.CompareTo(" ") == 0)            vid.DisplayName = "";
+            if (vid.Secret.CompareTo(" ") == 0)                 vid.Secret = "";
+            if (vid.RemotePath.CompareTo(" ") == 0)             vid.RemotePath = "";
+            if (vid.ThumbnaiLocationPath.CompareTo(" ") == 0)   vid.ThumbnaiLocationPath = "";
+            if (vid.ThumbnaiRemotePath.CompareTo(" ") == 0)     vid.ThumbnaiRemotePath = "";
+            if (vid.ThumbnaiSecret.CompareTo(" ") == 0)         vid.ThumbnaiSecret = "";
+
             return vid;
         }
     }
@@ -576,6 +621,7 @@ namespace ChatSDK
                 ConversationId = ConversationId,
                 From = From,
                 To = To,
+                RecallBy = RecallBy,
                 MessageType = Type,
                 Direction = Direction,
                 Status = Status,
@@ -585,6 +631,14 @@ namespace ChatSDK
                 HasDeliverAck = HasDeliverAck,
                 HasReadAck = HasReadAck,
             };
+
+            // change EMPTY_STR(" ")  to ""
+            if (result.MsgId.CompareTo(" ") == 0)           result.MsgId = "";
+            if (result.ConversationId.CompareTo(" ") == 0)  result.ConversationId = "";
+            if (result.To.CompareTo(" ") == 0)              result.To = "";
+            if (result.MsgId.CompareTo(" ") == 0)           result.MsgId = "";
+            if (result.RecallBy.CompareTo(" ") == 0)        result.RecallBy = "";
+
             result.Body = UnmarshallBody();
             return result;
         }
@@ -608,7 +662,7 @@ namespace ChatSDK
         string StringV;
         List<string> StringVecV;
         string JsonStringV;
-        Dictionary<string, AttributeValue> AttributeV;
+        //Dictionary<string, AttributeValue> AttributeV;
 
         public static AttributeValue Of(in object value, AttributeValueType type)
         {
@@ -645,10 +699,11 @@ namespace ChatSDK
             {
                 return Of((List<string>)value);
             }
+            /*
             else if (type == AttributeValueType.ATTRIBUTEVALUE)
             {
                 return Of((Dictionary<string, AttributeValue>)value);
-            }
+            }*/
             else
             {
                 return null;
@@ -739,6 +794,7 @@ namespace ChatSDK
             return result;
         }
 
+        /*
         public static AttributeValue Of(in Dictionary<string, AttributeValue> value)
         {
             var result = new AttributeValue
@@ -747,7 +803,7 @@ namespace ChatSDK
                 AttributeV = value
             };
             return result;
-        }
+        }*/
 
         public object GetAttributeValue(AttributeValueType type)
         {
@@ -787,10 +843,11 @@ namespace ChatSDK
             {
                 return StringVecV;
             }
+            /*
             else if (type == AttributeValueType.ATTRIBUTEVALUE)
             {
                 return AttributeV;
-            }
+            }*/
             else
             {
                 return null;
@@ -855,7 +912,7 @@ namespace ChatSDK
                     _type = "jstr";
                     value = JsonStringV;
                     break;
-
+                /*
                 case AttributeValueType.ATTRIBUTEVALUE:
                     _type = "attr";
                     jo_attr = new JSONObject();
@@ -865,7 +922,7 @@ namespace ChatSDK
                     }
                     value = ""; // here use JSONObject, not string
                     break;
-
+                */
                 default:
                     throw new NotImplementedException();
             }
@@ -965,6 +1022,7 @@ namespace ChatSDK
                     result.VType = AttributeValueType.JSONSTRING;
                     result.JsonStringV = value;
                     break;
+                    /*
                 case "attr":
                     result.VType = AttributeValueType.ATTRIBUTEVALUE;
                     result.AttributeV = new Dictionary<string, AttributeValue>();
@@ -992,6 +1050,7 @@ namespace ChatSDK
                         result.AttributeV.Add(k, FromJsonObject(jo_attr[k]));
                     }
                     break;
+                    */
                 default:
                     break;
             }
@@ -1032,6 +1091,7 @@ namespace ChatSDK
                 case AttributeValueType.JSONSTRING:
                     Debug.Log($"type: {AttributeValueType.JSONSTRING.ToString()}, value is {value.JsonStringV.ToString()}");
                     break;
+                /*
                 case AttributeValueType.ATTRIBUTEVALUE:
                     Debug.Log($"type: {AttributeValueType.ATTRIBUTEVALUE.ToString()}");
                     foreach (var dict_item in value.AttributeV)
@@ -1040,6 +1100,7 @@ namespace ChatSDK
                         PrintAttribute(dict_item.Value);
                     }
                     break;
+                */
                 default:
                     break;
             }
@@ -1148,7 +1209,7 @@ namespace ChatSDK
             list2.Add("level2-array3");
             Message.SetAttribute(level2_map, "level2-list", list2, AttributeValueType.STRVECTOR);
 
-            Message.SetAttribute(level2_map, "level2-attr", level3_map, AttributeValueType.ATTRIBUTEVALUE);
+            //Message.SetAttribute(level2_map, "level2-attr", level3_map, AttributeValueType.ATTRIBUTEVALUE);
             
             // make level1
             Dictionary<string, AttributeValue> level1_map = new Dictionary<string, AttributeValue>();
@@ -1191,7 +1252,7 @@ namespace ChatSDK
             list1.Add("level1-array3");
             Message.SetAttribute(level1_map, "level1-list", list1, AttributeValueType.STRVECTOR);
 
-            Message.SetAttribute(level1_map, "level1-attr", level2_map, AttributeValueType.ATTRIBUTEVALUE);
+            //Message.SetAttribute(level1_map, "level1-attr", level2_map, AttributeValueType.ATTRIBUTEVALUE);
 
             msg.Attributes = level1_map;
 
@@ -1247,6 +1308,12 @@ namespace ChatSDK
                 MessageBlocked = MessageBlocked,
                 IsAllMemberMuted = IsAllMemberMuted
             };
+
+            // change EMPTY_STR(" ")  to ""
+            if (result.Description.CompareTo(" ") == 0)    result.Description = "";
+            if (result.Annoumcement.CompareTo(" ") == 0)   result.Annoumcement = "";
+            if (result.Options.Ext.CompareTo(" ") == 0)    result.Options.Ext = "";
+
             var memberList = new List<string>();
             IntPtr current = MemberList;
             for(int i=0; i<MemberCount; i++)

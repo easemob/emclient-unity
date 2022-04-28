@@ -11,8 +11,6 @@ namespace ChatSDK
 
         internal IntPtr client = IntPtr.Zero;
         private string currentUserName;
-        private bool isLoggedIn;
-        private bool isConnected;
 
         //events
         public event OnSuccess OnLoginSuccess;
@@ -93,7 +91,6 @@ namespace ChatSDK
 
                 OnLoginSuccess = (int cbId) =>
                 {
-                    isLoggedIn = true;
                     ChatCallbackObject.CallBackOnSuccess(cbId);
                 };
                 OnLoginError = (int code, string desc, int cbId) =>
@@ -114,7 +111,6 @@ namespace ChatSDK
                 OnLogoutSuccess = (int cbId) =>
                 {
                     currentUserName = "";
-                    isLoggedIn = false;
                     ChatCallbackObject.CallBackOnSuccess(cbId);
                 };
                 ChatAPINative.Client_Logout(client, callbackId, OnLogoutSuccess, unbindDeviceToken);
@@ -129,15 +125,14 @@ namespace ChatSDK
             return currentUserName;
         }
 
-        public override bool IsConnected
+        public override bool IsConnected()
         {
-            get => isConnected;
-            internal set => isConnected = value;
+            return ChatAPINative.Client_isConnected(client);
         }
 
         public override bool IsLoggedIn()
         {
-            return isLoggedIn;
+            return ChatAPINative.Client_isLoggedIn(client);
         }
 
         public override string AccessToken()
@@ -175,7 +170,6 @@ namespace ChatSDK
 
                 OnLoginSuccess = (int cbId) =>
                 {
-                    isLoggedIn = true;
                     ChatCallbackObject.CallBackOnSuccess(cbId);
                 };
                 OnLoginError = (int code, string desc, int cbId) =>

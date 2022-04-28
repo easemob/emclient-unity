@@ -25,6 +25,7 @@ using namespace easemob;
 const int ARRAY_SIZE_LIMITATION = 200;
 
 EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bool buildReceiveMsg=false);
+void UpdateMessageTO(void *mto, EMMessagePtr msg);
 void SetMessageAttrs(EMMessagePtr msg, string attrs);
 std::string GetAttrsStringFromMessage(EMMessagePtr msg);
 

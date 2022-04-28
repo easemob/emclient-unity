@@ -192,7 +192,7 @@ namespace ChatSDK
         /// <summary>
         /// 获取当前是否链接到环信服务器
         /// </summary>
-        public abstract bool IsConnected { get; internal set; }
+        public abstract bool IsConnected();
 
         /// <summary>
         /// 获取是否已经登录

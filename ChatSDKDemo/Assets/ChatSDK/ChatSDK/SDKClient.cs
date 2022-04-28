@@ -77,7 +77,7 @@ namespace ChatSDK
         /// 当前是否连接到服务器
         /// </summary>
 
-        public bool IsConnected { get => _Sdk.IsConnected; }
+        public bool IsConnected { get => _Sdk.IsConnected(); }
 
         /// <summary>
         /// 当前用户的token
@@ -105,7 +105,23 @@ namespace ChatSDK
             }
         }
 
-       
+        public void AddMultiDeviceDelegate(IMultiDeviceDelegate multiDeviceDelegate)
+        {
+            if (!CallbackManager.Instance().multiDeviceListener.delegater.Contains(multiDeviceDelegate))
+            {
+                CallbackManager.Instance().multiDeviceListener.delegater.Add(multiDeviceDelegate);
+            }
+        }
+
+        public void DeleteMultiDeviceDelegate(IMultiDeviceDelegate multiDeviceDelegate)
+        {
+            if (CallbackManager.IsQuit()) return;
+            if (CallbackManager.Instance().multiDeviceListener.delegater.Contains(multiDeviceDelegate))
+            {
+                CallbackManager.Instance().multiDeviceListener.delegater.Remove(multiDeviceDelegate);
+            }
+        }
+
         /// <summary>
         /// 初始化sdk
         /// </summary>
