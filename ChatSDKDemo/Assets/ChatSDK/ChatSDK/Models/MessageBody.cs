@@ -55,6 +55,7 @@ namespace ChatSDK
                     ((MessageBody.LocationBody)body).Latitude = jo["latitude"].AsDouble;
                     ((MessageBody.LocationBody)body).Longitude = jo["longitude"].AsDouble;
                     ((MessageBody.LocationBody)body).Address = jo["address"].Value;
+                    ((MessageBody.LocationBody)body).BuildingName = jo["buildingName"].Value;
                 }
             }
             else if (type == "cmd")

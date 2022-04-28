@@ -166,9 +166,14 @@ public class Main : MonoBehaviour, IConnectionDelegate
         }
     }
 
-    public void OnTokenNotificationed(int i, string desc)
+
+    public void OnTokenExpired()
     {
-        UIManager.DefaultAlert(transform, $"OnTokenNotificationed, c:{i}, desc:{desc}");
+        UIManager.DefaultAlert(transform, $"OnTokenExpired");
     }
 
+    public void OnTokenWillExpire()
+    {
+        UIManager.DefaultAlert(transform, $"OnTokenWillExpire");
+    }
 }

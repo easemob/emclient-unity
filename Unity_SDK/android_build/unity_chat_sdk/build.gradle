@@ -30,7 +30,7 @@ android {
 
 dependencies {
     implementation files('libs/classes.jar')
-    implementation files('libs/hyphenatechat_3.8.4.jar')
+    implementation files('libs/hyphenatechat_3.9.0.jar')
 }
 
 task makeJar(type: Jar) {

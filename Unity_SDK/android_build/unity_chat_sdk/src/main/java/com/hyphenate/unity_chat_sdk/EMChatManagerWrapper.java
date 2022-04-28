@@ -307,4 +307,13 @@ public class EMChatManagerWrapper extends EMWrapper  {
         EMClient.getInstance().chatManager().updateMessage(msg);
         return true;
     }
+
+    private void removeMessageBeforeTimestamp(long timeStamp, String callbackId) throws JSONException {
+        EMClient.getInstance().chatManager().deleteMessagesBeforeTimestamp(timeStamp, new EMUnityCallback(callbackId));
+    }
+
+    private void deleteConversationFromServer(String conversationId, int conversatinType, boolean deleteMessage, String callbackId) throws JSONException {
+        EMConversation.EMConversationType type = EMConversationHelper.typeFromInt(conversatinType);
+        EMClient.getInstance().chatManager().deleteConversationFromServer(conversationId, type, deleteMessage, new EMUnityCallback(callbackId));
+    }
 }

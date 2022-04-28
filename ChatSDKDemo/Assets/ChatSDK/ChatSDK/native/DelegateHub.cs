@@ -118,7 +118,11 @@ namespace ChatSDK
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IConnectionDelegate listener in CallbackManager.Instance().connectionListener.delegater)
                     {
-                        listener.OnTokenNotificationed(info, desc);
+                        if (info == 108) {
+                            listener.OnTokenExpired();
+                        } else if (info == 109){
+                            listener.OnTokenWillExpire();
+                        }
                     }
                 });
             };

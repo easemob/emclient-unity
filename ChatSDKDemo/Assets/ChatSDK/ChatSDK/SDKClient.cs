@@ -50,7 +50,7 @@ namespace ChatSDK
         /// <summary>
         /// 用户信息管理类
         /// </summary>
-        internal IUserInfoManager UserInfoManager { get => _Sdk.UserInfoManager(); }
+        public IUserInfoManager UserInfoManager { get => _Sdk.UserInfoManager(); }
 
         /// <summary>
         /// 获取sdk配置信息

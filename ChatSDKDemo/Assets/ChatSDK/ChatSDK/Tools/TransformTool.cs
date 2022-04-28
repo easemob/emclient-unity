@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using SimpleJSON;
+using UnityEngine;
 
 namespace ChatSDK
 {
@@ -323,10 +324,8 @@ namespace ChatSDK
 
             // Json at least has { and } two characters
             if (null == jsonString || jsonString.Length <= 2) return ret;
-
             JSONNode jn = JSON.Parse(jsonString);
             if (null == jn) return ret;
-
             JSONNode jo = jn.AsObject;
             foreach (string k in jo.Keys)
             {
@@ -521,6 +520,16 @@ namespace ChatSDK
         static internal UserInfo JsonStringToUserInfo(string jsonString)
         {
             return new UserInfo(jsonString);
+        }
+
+
+        static internal List<string> StringListFromStringArray(string[] ary) {
+            List<string> list = new List<string>();
+            for (int i = 0; i < ary.Length; i++) {
+                list.Add(ary[i]);
+            }
+
+            return list;
         }
     }
 }

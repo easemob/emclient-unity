@@ -1,0 +1,64 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.5.2 (swiftlang-1300.0.47.5 clang-1300.0.29.30)
+// swift-module-flags: -target arm64-apple-ios10.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name HyphenateChat
+@_exported import HyphenateChat
+import Swift
+import _Concurrency
+extension HyphenateChat.EMClient {
+  public static var share: HyphenateChat.EMClient {
+    get
+  }
+}
+extension HyphenateChat.EMConversationType {
+  public static var chat: HyphenateChat.EMConversationType {
+    get
+  }
+  public static var groupChat: HyphenateChat.EMConversationType {
+    get
+  }
+  public static var chatRoom: HyphenateChat.EMConversationType {
+    get
+  }
+}
+extension HyphenateChat.EMMessageBodyType {
+  public static var text: HyphenateChat.EMMessageBodyType {
+    get
+  }
+  public static var image: HyphenateChat.EMMessageBodyType {
+    get
+  }
+  public static var video: HyphenateChat.EMMessageBodyType {
+    get
+  }
+  public static var location: HyphenateChat.EMMessageBodyType {
+    get
+  }
+  public static var voice: HyphenateChat.EMMessageBodyType {
+    get
+  }
+  public static var file: HyphenateChat.EMMessageBodyType {
+    get
+  }
+  public static var cmd: HyphenateChat.EMMessageBodyType {
+    get
+  }
+  public static var custom: HyphenateChat.EMMessageBodyType {
+    get
+  }
+}
+public enum EMMessageBaseBody {
+  case text(_: Swift.String)
+  case image(_: Swift.String, _: Swift.String)
+  case video(_: Swift.String, _: Swift.String)
+  case location(_: Swift.Double, _: Swift.Double, _: Foundation.NSString, _: Foundation.NSString)
+  case voice(_: Swift.String, _: Swift.String)
+  case file(_: Swift.String, _: Swift.String)
+  case cmd(_: Swift.String)
+  case custom(_: Foundation.NSString, customExt: Foundation.NSDictionary)
+}
+extension HyphenateChat.EMChatMessage {
+  public var swiftBody: HyphenateChat.EMMessageBaseBody {
+    get
+  }
+  public convenience init(conversationId: Swift.String, from: Swift.String, to: Swift.String, body: HyphenateChat.EMMessageBaseBody!, ext: [Swift.AnyHashable : Any]!)
+}
