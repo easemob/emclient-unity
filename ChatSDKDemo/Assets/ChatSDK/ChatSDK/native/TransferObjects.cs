@@ -952,7 +952,7 @@ namespace ChatSDK
 
             string typeString = jo["type"];
             JSONNode jvalue = jo["value"];
-
+            Debug.Log("abbb");
             string value = null;
             if ("strv" != typeString && "attr" != typeString)
             {

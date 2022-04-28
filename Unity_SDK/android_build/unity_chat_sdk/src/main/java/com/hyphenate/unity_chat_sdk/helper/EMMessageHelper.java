@@ -14,6 +14,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -124,24 +126,41 @@ public class EMMessageHelper {
         message.setStatus(statusFromInt(json.getInt("status")));
         message.setChatType(chatTypeFromInt(json.getInt("chatType")));
         message.setMsgId(json.getString("msgId"));
-        if (!json.isNull("attributes") && null != json.getJSONObject("attributes")) {
-            JSONObject data = json.getJSONObject("attributes");
-            Iterator iterator = data.keys();
+        if (json.has("attributes")) {
+            String paramString = json.getString("attributes");
+            JSONObject jsonObject = new JSONObject(paramString);
+            Iterator iterator = jsonObject.keys();
             while (iterator.hasNext()) {
                 String key = iterator.next().toString();
-                Object result = data.get(key);
-                if (result.getClass().getSimpleName().equals("Integer")) {
-                    message.setAttribute(key, (Integer) result);
-                } else if (result.getClass().getSimpleName().equals("Boolean")) {
-                    message.setAttribute(key, (Boolean) result);
-                } else if (result.getClass().getSimpleName().equals("Long")) {
-                    message.setAttribute(key, (Long) result);
-                } else if (result.getClass().getSimpleName().equals("JSONObject")) {
-                    message.setAttribute(key, (JSONObject) result);
-                } else if (result.getClass().getSimpleName().equals("JSONArray")) {
-                    message.setAttribute(key, (JSONArray) result);
-                } else {
-                    message.setAttribute(key, data.getString(key));
+                JSONObject result = jsonObject.getJSONObject(key);
+                String valueType = result.getString("type");
+
+                if (valueType.equals("b")) {
+                    String value = result.getString("value");
+                    if (value.equalsIgnoreCase("false")) {
+                        message.setAttribute(key, false);
+                    }else {
+                        message.setAttribute(key, true);
+                    }
+                }else if (valueType.equals("i")) {
+                    String value = result.getString("value");
+                    message.setAttribute(key,Integer.valueOf(value));
+                }else if (valueType.equals("ui")) {
+                    String value = result.getString("value");
+                    message.setAttribute(key, Integer.valueOf(value));
+                }else if (valueType.equals("l")) {
+                    String value = result.getString("value");
+                    message.setAttribute(key, Long.valueOf(value));
+                }else if (valueType.equals("str")) {
+                    String value = result.getString("value");
+                    message.setAttribute(key, value);
+                }else if (valueType.equals("strv")) {
+                    JSONArray jsonArray = result.getJSONArray("value");
+                    message.setAttribute(key, jsonArray);
+                }else if (valueType.equals("jstr")) {
+                    String str = result.getString("value");
+                    JSONObject jo = new JSONObject(str);
+                    message.setAttribute(key, jo);
                 }
             }
         }
@@ -198,8 +217,60 @@ public class EMMessageHelper {
         data.put("bodyType",type);
 
         if (message.ext().size() > 0 && null != message.ext()) {
-            data.put("attributes", message.ext());
+            Map<String, Object> ext = message.ext();
+            JSONObject jo = new JSONObject();
+            for (Map.Entry<String, Object> enter: ext.entrySet()) {
+                String key = enter.getKey();
+                Object value = enter.getValue();
+                JSONObject js = new JSONObject();
+                if (value instanceof String) {
+                    boolean hasSet = false;
+                    try{
+                        String str = value.toString();
+                        JSONArray tj = new JSONArray(str);
+                        js.put("type", "strv");
+                        js.put("value", tj);
+                        hasSet = true;
+                    }catch (JSONException e) {
+                    }
+                    if(hasSet == false) {
+                        try{
+                            String str = value.toString();
+                            JSONObject tj = new JSONObject(str);
+                            js.put("type", "jstr");
+                            js.put("value", tj);
+                            hasSet = true;
+                        }catch (JSONException e) {
+                        }
+                    }
+
+
+                    if (hasSet == false) {
+                        js.put("type", "str");
+                        js.put("value", value);
+                    }
+
+                }else if (value instanceof Integer) {
+                    js.put("type", "i");
+                    js.put("value", value);
+                }else if (value instanceof Float) {
+                    js.put("type", "f");
+                    js.put("value", value);
+                }else if (value instanceof Double) {
+                    js.put("type", "d");
+                    js.put("value", value);
+                }else if (value instanceof Long) {
+                    js.put("type", "l");
+                    js.put("value", value);
+                }else if (value instanceof Boolean) {
+                    js.put("type", "b");
+                    js.put("value", value);
+                }
+                jo.put(key, js);
+            }
+            data.put("attributes", jo);
         }
+
         data.put("from", message.getFrom());
         data.put("to", message.getTo());
         data.put("hasReadAck", message.isAcked());

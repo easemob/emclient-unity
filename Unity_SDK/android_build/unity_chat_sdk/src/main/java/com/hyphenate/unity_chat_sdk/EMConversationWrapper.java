@@ -253,6 +253,14 @@ public class EMConversationWrapper extends EMWrapper{
         return conversation.getUnreadMsgCount();
     }
 
+    private int messageCount(String conversationId, int conversationType) {
+        if (conversationId == null || conversationId.length() == 0) {
+            return 0;
+        }
+        EMConversation conversation = getConversation(conversationId, conversationType);
+        return conversation.getAllMsgCount();
+    }
+
     private boolean updateConversationMessage(String conversationId, int conversationType, String messageString) throws JSONException {
         if (conversationId == null || conversationId.length() == 0 || messageString == null || messageString.length() == 0) {
             return false;
@@ -267,6 +275,7 @@ public class EMConversationWrapper extends EMWrapper{
 
         EMConversation.EMConversationType type = EMConversationHelper.typeFromInt(conType);
         EMConversation conversation = EMClient.getInstance().chatManager().getConversation(conversationId, type, true);
+
         return conversation;
     }
 

@@ -56,12 +56,12 @@ namespace ChatSDK
 
         public override void LoginWithAgoraToken(string username, string token, CallBack handle = null)
         {
-            //TODO: add code
+            wrapper.Call("loginWithAgoraToken", username, token, handle?.callbackId);
         }
 
         public override void RenewAgoraToken(string token)
         {
-            //TODO: add code
+            wrapper.Call("renewToken", token, null);
         }
 
         /*
