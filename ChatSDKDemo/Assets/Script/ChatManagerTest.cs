@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 using ChatSDK;
+using SimpleJSON;
+using UnityEngine.UI;
 
 public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 {
@@ -35,6 +36,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     private Button updateMessageBtn;
     private Button removeMessagesBeforeTimestampBtn;
     private Button deleteConversationFromServerBtn;
+    private Button deleteConversationBtn;
 
     private void Awake()
     {
@@ -70,9 +72,9 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         updateMessageBtn = transform.Find("Scroll View/Viewport/Content/UpdateMessageBtn").GetComponent<Button>();
         removeMessagesBeforeTimestampBtn = transform.Find("Scroll View/Viewport/Content/RemoveMessagesBeforeTimestampBtn").GetComponent<Button>();
         deleteConversationFromServerBtn = transform.Find("Scroll View/Viewport/Content/DeleteConversationFromServerBtn").GetComponent<Button>();
+        deleteConversationBtn = transform.Find("Scroll View/Viewport/Content/DeleteLocalConversationAndMessage").GetComponent<Button>();
 
-
-        sendTextBtn.onClick.AddListener(SendTextBtnAction); 
+        sendTextBtn.onClick.AddListener(SendTextBtnAction);
         sendImageBtn.onClick.AddListener(SendImageBtnAction);
         sendFileBtn.onClick.AddListener(SendFileBtnAction);
         sendVideoBtn.onClick.AddListener(SendVideoBtnAction);
@@ -97,7 +99,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         updateMessageBtn.onClick.AddListener(UpdateMessageBtnAction);
         removeMessagesBeforeTimestampBtn.onClick.AddListener(RemoveMessagesBeforeTimestampBtnAction);
         deleteConversationFromServerBtn.onClick.AddListener(DeleteConversationFromServerBtnAction);
-
+        deleteConversationBtn.onClick.AddListener(DeleteLocalConversationAndMessage);
         SDKClient.Instance.ChatManager.AddChatManagerDelegate(this);
     }
 
@@ -114,16 +116,35 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
     void SendTextBtnAction()
     {
-        InputAlertConfig config = new InputAlertConfig((dict)=> {
+        InputAlertConfig config = new InputAlertConfig((dict) => {
             Message msg = Message.CreateTextSendMessage(dict["to"], dict["content"]);
-           
+            msg.Attributes = new Dictionary<string, AttributeValue>();
+            msg.Attributes.Add("name", AttributeValue.Of("hello", AttributeValueType.STRING));
+            msg.Attributes.Add("bool", AttributeValue.Of(false, AttributeValueType.BOOL));
+            msg.Attributes.Add("count", AttributeValue.Of(100, AttributeValueType.INT32));
+            msg.Attributes.Add("double", AttributeValue.Of(3.5d, AttributeValueType.DOUBLE));
+            msg.Attributes.Add("float", AttributeValue.Of(3.5f, AttributeValueType.FLOAT));
+
+
+            JSONObject obj = new JSONObject();
+            //obj.Add("convId", "conv");
+            obj.Add("deleteMessages", false);
+            msg.Attributes.Add("jsonStr", AttributeValue.Of(obj.ToString(), AttributeValueType.JSONSTRING));
+
+
+            List<string> strList = new List<string>();
+            strList.Add("a");
+            strList.Add("b");
+            strList.Add("c");
+
+            msg.Attributes.Add("list", AttributeValue.Of(strList,  AttributeValueType.STRVECTOR));
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
-                onSuccess: () => {
-                    UIManager.TitleAlert(transform, "成功", msg.MsgId);
-                },
-                onError:(code, desc) => {
-                    UIManager.ErrorAlert(transform, code, msg.MsgId);
-                }               
+                    onSuccess: () => {
+                        UIManager.TitleAlert(transform, "成功", msg.MsgId);
+                    },
+                    onError: (code, desc) => {
+                        UIManager.ErrorAlert(transform, code, msg.MsgId);
+                    }
             ));
         });
 
@@ -154,13 +175,16 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
     void SendCmdBtnAction()
     {
-        InputAlertConfig config = new InputAlertConfig((dict) => {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
             Message msg = Message.CreateCmdSendMessage(dict["to"], dict["action"]);
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
-                onSuccess: () => {
+                onSuccess: () =>
+                {
                     UIManager.SuccessAlert(transform);
                 },
-                onError: (code, desc) => {
+                onError: (code, desc) =>
+                {
                     UIManager.ErrorAlert(transform, code, desc);
                 }
             ));
@@ -173,13 +197,16 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     }
     void SendCustomBtnAction()
     {
-        InputAlertConfig config = new InputAlertConfig((dict) => {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
             Message msg = Message.CreateCustomSendMessage(dict["to"], dict["custom"]);
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
-                onSuccess: () => {
+                onSuccess: () =>
+                {
                     UIManager.SuccessAlert(transform);
                 },
-                onError: (code, desc) => {
+                onError: (code, desc) =>
+                {
                     UIManager.ErrorAlert(transform, code, desc);
                 }
             ));
@@ -191,13 +218,16 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     }
     void SendLocBtnAction()
     {
-        InputAlertConfig config = new InputAlertConfig((dict) => {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
             Message msg = Message.CreateLocationSendMessage(dict["to"], 139.33, 130.55, dict["address"], dict["buildingName"]);
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
-                onSuccess: () => {
+                onSuccess: () =>
+                {
                     UIManager.SuccessAlert(transform);
                 },
-                onError: (code, desc) => {
+                onError: (code, desc) =>
+                {
                     UIManager.ErrorAlert(transform, code, desc);
                 }
             ));
@@ -210,18 +240,21 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     }
     void ResendBtnAction()
     {
-        InputAlertConfig config = new InputAlertConfig((dict) => {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
             string msgid = dict["msgId"];
-            if(null == msgid || 0 == msgid.Length)
+            if (null == msgid || 0 == msgid.Length)
             {
                 UIManager.DefaultAlert(transform, "缺少必要参数");
                 return;
             }
             SDKClient.Instance.ChatManager.ResendMessage(dict["msgId"], new CallBack(
-                onSuccess: () => {
+                onSuccess: () =>
+                {
                     UIManager.SuccessAlert(transform);
                 },
-                onError: (code, desc) => {
+                onError: (code, desc) =>
+                {
                     UIManager.ErrorAlert(transform, code, desc);
                 }
             ));
@@ -232,7 +265,8 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     }
     void RecallBtnAction()
     {
-        InputAlertConfig config = new InputAlertConfig((dict) => {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
             string msgid = dict["msgId"];
             if (null == msgid || 0 == msgid.Length)
             {
@@ -241,10 +275,12 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
             }
 
             SDKClient.Instance.ChatManager.RecallMessage(dict["msgId"], new CallBack(
-                onSuccess: () => {
+                onSuccess: () =>
+                {
                     UIManager.SuccessAlert(transform);
                 },
-                onError: (code, desc) => {
+                onError: (code, desc) =>
+                {
                     UIManager.ErrorAlert(transform, code, desc);
                 }
             ));
@@ -255,7 +291,8 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     }
     void GetConversationBtnAction()
     {
-        InputAlertConfig config = new InputAlertConfig((dict) => {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
             string cid = dict["conversationId"];
             string chatType = dict["type(0/1/2)"];
             if (null == cid || 0 == cid.Length || null == chatType || 0 == chatType.Length)
@@ -266,7 +303,8 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
             ConversationType type = ConversationType.Chat;
             int iType = int.Parse(dict["type(0/1/2)"]);
-            switch (iType) {
+            switch (iType)
+            {
                 case 0:
                     type = ConversationType.Chat;
                     break;
@@ -282,10 +320,11 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
             {
                 UIManager.SuccessAlert(transform);
             }
-            else {
+            else
+            {
                 UIManager.DefaultAlert(transform, "未找到会话");
             }
-            
+
         });
 
         config.AddField("conversationId");
@@ -294,10 +333,11 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     }
     void LoadAllConverstaionsBtnAction()
     {
-        List<Conversation>list = SDKClient.Instance.ChatManager.LoadAllConversations();
+        List<Conversation> list = SDKClient.Instance.ChatManager.LoadAllConversations();
 
         List<string> strList = new List<string>();
-        foreach (var conv in list) {
+        foreach (var conv in list)
+        {
             strList.Add(conv.Id);
         }
         string str = string.Join(",", strList.ToArray());
@@ -312,7 +352,8 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     }
     void FetchHistoryMessagesBtnAction()
     {
-        InputAlertConfig config = new InputAlertConfig((dict) => {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
             string conversationId = dict["ConversationId"];
             string chatType = dict["ConversationType(0/1/2)"];
             string count = dict["LoadCount"];
@@ -340,8 +381,9 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
             int loadCount = int.Parse(dict["LoadCount"]);
 
             SDKClient.Instance.ChatManager.FetchHistoryMessagesFromServer(conversationId, type, startId, loadCount, new ValueCallBack<CursorResult<Message>>(
-                onSuccess: (result) => {
-                    if(0 == result.Data.Count)
+                onSuccess: (result) =>
+                {
+                    if (0 == result.Data.Count)
                     {
                         UIManager.DefaultAlert(transform, "No history messages.");
                         return;
@@ -354,7 +396,8 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
                     string str = string.Join(",", strList.ToArray());
                     UIManager.DefaultAlert(transform, str);
                 },
-                onError:(code, desc) => {
+                onError: (code, desc) =>
+                {
                     UIManager.ErrorAlert(transform, code, desc);
                 }
             ));
@@ -413,10 +456,11 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
             {
                 UIManager.SuccessAlert(transform);
             }
-            else {
+            else
+            {
                 UIManager.DefaultAlert(transform, "未找到消息");
             }
-            
+
         });
 
         config.AddField("id");
@@ -428,7 +472,8 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     void MarkAllConversationAsReadBtnAction()
     {
         bool ret = SDKClient.Instance.ChatManager.MarkAllConversationsAsRead();
-        if (ret) {
+        if (ret)
+        {
             int unreadCount = SDKClient.Instance.ChatManager.GetUnreadMessageCount();
             UIManager.DefaultAlert(transform, $"设置成功，当前未读数为: {unreadCount}");
         }
@@ -482,10 +527,12 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
             }
 
             SDKClient.Instance.ChatManager.SendConversationReadAck(dict["id"], new CallBack(
-                onSuccess: () => {
+                onSuccess: () =>
+                {
                     UIManager.SuccessAlert(transform);
                 },
-                onError:(code, desc) => {
+                onError: (code, desc) =>
+                {
                     UIManager.ErrorAlert(transform, code, desc);
                 }
             ));
@@ -511,10 +558,12 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
             //int count = int.Parse(dict["LoadCount"]);
             SDKClient.Instance.ChatManager.SendMessageReadAck(dict["id"], new CallBack(
-                onSuccess: () => {
+                onSuccess: () =>
+                {
                     UIManager.SuccessAlert(transform);
                 },
-                onError: (code, desc) => {
+                onError: (code, desc) =>
+                {
                     UIManager.ErrorAlert(transform, code, desc);
                 }
             ));
@@ -545,11 +594,14 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
             }
 
             long ts = long.Parse(tsStr);
+            Debug.Log($"time: {ts}");
             SDKClient.Instance.ChatManager.RemoveMessagesBeforeTimestamp(ts, new CallBack(
-                onSuccess: () => {
+                onSuccess: () =>
+                {
                     UIManager.SuccessAlert(transform);
                 },
-                onError: (code, desc) => {
+                onError: (code, desc) =>
+                {
                     UIManager.ErrorAlert(transform, code, desc);
                 }
             ));
@@ -565,7 +617,8 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
     void DeleteConversationFromServerBtnAction()
     {
-        InputAlertConfig config = new InputAlertConfig((dict) => {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
             string conversationId = dict["ConversationId"];
             string chatType = dict["ConversationType(0/1/2)"];
             if (null == conversationId || 0 == conversationId.Length || null == chatType || 0 == chatType.Length)
@@ -590,10 +643,12 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
             }
 
             SDKClient.Instance.ChatManager.DeleteConversationFromServer(conversationId, type, true, new CallBack(
-                onSuccess: () => {
+                onSuccess: () =>
+                {
                     UIManager.SuccessAlert(transform);
                 },
-                onError: (code, desc) => {
+                onError: (code, desc) =>
+                {
                     UIManager.ErrorAlert(transform, code, desc);
                 }
             ));
@@ -604,6 +659,33 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
         UIManager.DefaultInputAlert(transform, config);
         Debug.Log("DeleteConversationFromServerBtnAction");
+    }
+
+
+    void DeleteLocalConversationAndMessage() {
+
+
+        InputAlertConfig config = new InputAlertConfig("根据会话id删除会话以及消息", (dict) =>
+        {
+            string idStr = dict["id"];
+            if (null == idStr || 0 == idStr.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
+            bool ret = SDKClient.Instance.ChatManager.DeleteConversation(idStr);
+            if (ret == true) {
+                UIManager.SuccessAlert(transform);
+            } else {
+                UIManager.ErrorAlert(transform, 0, "删除失败");
+            }
+
+        });
+
+        config.AddField("id");
+
+        UIManager.DefaultInputAlert(transform, config);
     }
 
     // Start is called before the first frame update
@@ -623,8 +705,50 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
         List<string> list = new List<string>();
 
-        foreach (var msg in messages) {
+        foreach (var msg in messages)
+        {
             list.Add(msg.MsgId);
+            foreach (string key in msg.Attributes.Keys) {
+                AttributeValue a = msg.Attributes[key];
+                switch (a.GetAttributeValueType()) {
+                    case AttributeValueType.BOOL:
+                        {
+                            Debug.Log($"{key}|BOOL: {a.GetAttributeValue(AttributeValueType.BOOL)}");
+                        }
+                        break;
+                    case AttributeValueType.INT64:
+                        {
+                            Debug.Log($"{key}|INT64: {a.GetAttributeValue(AttributeValueType.INT64)}");
+                        }
+                        break;
+                    case AttributeValueType.FLOAT:
+                        {
+                            Debug.Log($"{key}|FLOAT: {a.GetAttributeValue(AttributeValueType.FLOAT)}");
+                        }
+                        break;
+                    case AttributeValueType.DOUBLE:
+                        {
+                            Debug.Log($"{key}|DOUBLE: {a.GetAttributeValue(AttributeValueType.DOUBLE)}");
+                        }
+                        break;
+                    case AttributeValueType.STRING:
+                        {
+                            Debug.Log($"{key}|STRING: {a.GetAttributeValue(AttributeValueType.STRING)}");
+                        }
+                        break;
+                    case AttributeValueType.STRVECTOR:
+                        {
+                            Debug.Log($"{key}|STRVECTOR: {a.GetAttributeValue(AttributeValueType.STRVECTOR)}");
+                        }
+                        break;
+                    case AttributeValueType.JSONSTRING:
+                        {
+                            Debug.Log($"{key}|JSONSTRING: {a.GetAttributeValue(AttributeValueType.JSONSTRING)}");
+                        }
+                        break;
+                }
+            }
+        
         }
 
         string str = string.Join(",", list.ToArray());

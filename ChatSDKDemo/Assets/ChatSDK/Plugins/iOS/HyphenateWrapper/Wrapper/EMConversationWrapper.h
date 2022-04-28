@@ -28,6 +28,8 @@
 
 - (NSDictionary *)appendMessage:(NSDictionary *)param;
 
+- (NSDictionary *)messageCount:(NSDictionary *)param;
+
 - (NSDictionary *)updateConversationMessage:(NSDictionary *)param;
 
 - (NSDictionary *)removeMessage:(NSDictionary *)param;

@@ -142,6 +142,39 @@ static EMClientWrapper *_instance;
     }];
 }
 
+- (void)loginWithAgoraToken:(NSDictionary *)param
+                 callbackId:(NSString *)callbackId {
+    __weak EMClientWrapper * weakSelf = self;
+    __block NSString *callId = callbackId;
+    NSString *username = param[@"username"];
+    NSString *agoraToken = param[@"token"];
+    [EMClient.sharedClient loginWithUsername:username
+                                  agoraToken:agoraToken
+                                  completion:^(NSString *aUsername, EMError *aError)
+     {
+        if (!aError) {
+            [weakSelf onSuccess:nil callbackId:callId userInfo:nil];
+        }else {
+            [weakSelf onError:callId error:aError];
+        }
+    }];
+}
+- (void)renewToken:(NSDictionary *)param
+        callbackId:(NSString *)callbackId {
+    __weak EMClientWrapper * weakSelf = self;
+    __block NSString *callId = callbackId;
+    NSString *token = param[@"token"];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        EMError *aError = [EMClient.sharedClient renewToken:token];
+        if (!aError) {
+            [weakSelf onSuccess:nil callbackId:callId userInfo:nil];
+        }else {
+            [weakSelf onError:callId error:aError];
+        }
+    });
+    
+}
+
 - (void)registerManagers {
     _chatManager = [[EMChatManagerWrapper alloc] init];
     _contactManager = [[EMContactManagerWrapper alloc] init];

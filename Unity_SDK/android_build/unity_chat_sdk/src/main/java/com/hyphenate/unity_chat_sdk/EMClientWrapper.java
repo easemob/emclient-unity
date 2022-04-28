@@ -12,6 +12,7 @@ import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.unity_chat_sdk.helper.EMOptionsHelper;
 import com.hyphenate.unity_chat_sdk.listeners.EMUnityCallback;
 import com.hyphenate.unity_chat_sdk.listeners.EMUnityConnectionListener;
+import com.hyphenate.unity_chat_sdk.listeners.EMUnityMultiDevicesListener;
 import com.unity3d.player.UnityPlayer;
 
 import org.json.JSONException;
@@ -53,8 +54,8 @@ public class EMClientWrapper extends EMWrapper {
         emOptions.setUseFCM(false);
         EMClient.getInstance().init(context, emOptions);
         EMClient.getInstance().setDebugMode(jo.getBoolean("debug_mode"));
-//        EMClient.getInstance().setDebugMode(true);
         EMClient.getInstance().addConnectionListener(new EMUnityConnectionListener());
+        EMClient.getInstance().addMultiDeviceListener(new EMUnityMultiDevicesListener());
     }
 
     public void createAccount(String username, String password, String callbackId) {
@@ -100,6 +101,18 @@ public class EMClientWrapper extends EMWrapper {
         }else {
             EMClient.getInstance().loginWithToken(username, pwdOrToken, new EMUnityCallback(callbackId));
         }
+    }
+
+    public void loginWithAgoraToken(String username, String token, String callbackId) {
+        EMClient.getInstance().loginWithAgoraToken(username, token, new EMUnityCallback(callbackId));
+    }
+
+    public void renewToken(String newToken, String callbackId) {
+        asyncRunnable(()->{
+            EMClient.getInstance().renewToken(newToken);
+            onSuccess(null, callbackId,null);
+        });
+
     }
 
     public void logout(boolean unbindDeviceToken, String callbackId) {
