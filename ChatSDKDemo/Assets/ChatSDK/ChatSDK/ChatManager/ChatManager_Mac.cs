@@ -118,6 +118,10 @@ namespace ChatSDK
                 (int code, string desc, int cbId) =>
                 {
                     ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                },
+                (int progress, int cbId) =>
+                {
+                    ChatCallbackObject.CallBackOnProgress(cbId, progress);
                 }
                 );
         }
@@ -147,6 +151,10 @@ namespace ChatSDK
                 (int code, string desc, int cbId) =>
                 {
                     ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                },
+                (int progress, int cbId) =>
+                {
+                    ChatCallbackObject.CallBackOnProgress(cbId, progress);
                 }
                 );
         }
@@ -384,6 +392,10 @@ namespace ChatSDK
                  (int code, string desc, int cbId) =>
                  {
                      ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                 },
+                 (int progress, int cbId) =>
+                 {
+                     ChatCallbackObject.CallBackOnProgress(cbId, progress);
                  }
                  );
         }
@@ -550,6 +562,10 @@ namespace ChatSDK
                     }
                     ChatCallbackObject.CallBackOnError(cbId, code, desc);
                 },
+                (int progress, int cbId) =>
+                {
+                    ChatCallbackObject.CallBackOnProgress(cbId, progress);
+                },
                 mtoPtr, message.Body.Type);
 
             //Marshal.FreeCoTaskMem(mtoPtr); // will be freed in DeleteFromMsgMap
@@ -597,6 +613,54 @@ namespace ChatSDK
             bool ret = ChatAPINative.ChatManager_UpdateMessage(client, mtoPtr, message.Body.Type);
             Marshal.FreeCoTaskMem(mtoPtr);
             return ret;
+        }
+
+        public override  void RemoveMessagesBeforeTimestamp(long timeStamp, CallBack callback = null)
+        {
+            int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
+
+            ChatAPINative.ChatManager_RemoveMessagesBeforeTimestamp(client, callbackId, timeStamp,
+                (int cbId) =>
+                {
+                    try
+                    {
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
+                    }
+                    catch (NullReferenceException nre)
+                    {
+                        Debug.LogWarning($"NullReferenceException: {nre.StackTrace}");
+                    }
+
+                },
+                (int code, string desc, int cbId) =>
+                {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                }
+                );
+        }
+
+        public override void DeleteConversationFromServer(string conversationId, ConversationType conversationType, bool isDeleteServerMessages, CallBack callback = null)
+        {
+            int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
+
+            ChatAPINative.ChatManager_DeleteConversationFromServer(client, callbackId, conversationId, conversationType, isDeleteServerMessages,
+                (int cbId) =>
+                {
+                    try
+                    {
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
+                    }
+                    catch (NullReferenceException nre)
+                    {
+                        Debug.LogWarning($"NullReferenceException: {nre.StackTrace}");
+                    }
+
+                },
+                (int code, string desc, int cbId) =>
+                {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                }
+                );
         }
     }
 }

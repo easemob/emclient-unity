@@ -16,8 +16,6 @@ namespace ChatSDK
         public List<string> BlockList { get; internal set; }
         public List<Mute> MuteList { get; internal set; }
 
-        public bool AllMemberMuted { get; internal set; }
-
         public int MaxUsers { get; internal set; }
         public string Owner { get; internal set; }
         public bool IsAllMemberMuted { get; internal set; }

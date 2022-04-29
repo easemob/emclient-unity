@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using SimpleJSON;
+using UnityEngine;
 
 namespace ChatSDK
 {
@@ -26,6 +27,11 @@ namespace ChatSDK
         /// 消息接收方Id
         /// </summary>
         public string To = "";
+
+        /// <summary>
+        /// 消息撤回人
+        /// </summary>
+        public string RecallBy = "";
 
         /// <summary>
         /// 消息类型
@@ -84,6 +90,12 @@ namespace ChatSDK
         /// <returns>消息对象</returns>
         static public Message CreateReceiveMessage()
         {
+            if (null == SDKClient.Instance.CurrentUsername || SDKClient.Instance.CurrentUsername.Length == 0)
+            {
+                // invalid input, return null
+                return null;
+            }
+
             Message msg = new Message()
             {
                 Direction = MessageDirection.RECEIVE,
@@ -96,6 +108,12 @@ namespace ChatSDK
 
         static public Message CreateSendMessage(string to, IMessageBody body, MessageDirection direction = MessageDirection.SEND, bool hasRead = true)
         {
+            if (null == SDKClient.Instance.CurrentUsername || SDKClient.Instance.CurrentUsername.Length == 0 || null == to || to.Length == 0)
+            {
+                // invalid input, return null
+                return null;
+            }
+
             Message msg = new Message(body: body)
             {
                 Direction = direction,
@@ -104,7 +122,7 @@ namespace ChatSDK
                 From = SDKClient.Instance.CurrentUsername,
                 ConversationId = to,
             };
-
+           
             return msg;
         }
 
@@ -133,9 +151,9 @@ namespace ChatSDK
             return CreateSendMessage(username, new MessageBody.VoiceBody(localPath, displayName: displayName, fileSize: fileSize, duration: duration));
         }
 
-        static public Message CreateLocationSendMessage(string username, double latitude, double longitude, string address = "")
+        static public Message CreateLocationSendMessage(string username, double latitude, double longitude, string address = "", string buildingName = "")
         {
-            return CreateSendMessage(username, new MessageBody.LocationBody(latitude: latitude, longitude: longitude, address: address));
+            return CreateSendMessage(username, new MessageBody.LocationBody(latitude: latitude, longitude: longitude, address: address, buildName: buildingName));
         }
 
         static public Message CreateCmdSendMessage(string username, string action, bool deliverOnlineOnly = false)
@@ -246,6 +264,7 @@ namespace ChatSDK
 
         internal Message(string jsonString)
         {
+            Debug.Log($"jsonString : {jsonString}");
             if (jsonString != null)
             {
                 JSONNode jn = JSON.Parse(jsonString);
@@ -264,7 +283,8 @@ namespace ChatSDK
                     Status = MessageStatusFromInt(jo["status"].AsInt);
                     MessageType = MessageTypeFromInt(jo["chatType"].AsInt);
                     Direction = MessageDirectionFromString(jo["direction"].Value);
-                    //Attributes = TransformTool.JsonStringToAttributes(jo["attributes"].Value);
+                    Debug.Log($"111 : ?? {jo["attributes"]}");
+                    Attributes = TransformTool.JsonStringToAttributes(jo["attributes"].ToString());
                     Body = IMessageBody.Constructor(jo["body"].Value, jo["bodyType"].Value);
                 }
             }
@@ -285,7 +305,7 @@ namespace ChatSDK
             jo.Add("status", MessageStatusToInt(Status));
             jo.Add("chatType", MessageTypeToInt(MessageType));
             jo.Add("direction", MessageDirectionToString(Direction));
-            //jo.Add("attributes", TransformTool.JsonStringFromAttributes(Attributes));
+            jo.Add("attributes", TransformTool.JsonStringFromAttributes(Attributes));
             jo.Add("body", Body.ToJson().ToString());
             jo.Add("bodyType", Body.TypeString());
             return jo;

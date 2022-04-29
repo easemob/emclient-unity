@@ -44,6 +44,7 @@ HYPHENATE_API void UserInfoManager_UpdateOwnInfo(void *client, int callbackId, v
         j[UserInfoTypeMap[PHONE]]       = uto->phoneNumber;
         j[UserInfoTypeMap[GENDER]]      = uto->gender;
         j[UserInfoTypeMap[SIGN]]        = uto->signature;
+        j[UserInfoTypeMap[BIRTH]]       = uto->birth;
         j[UserInfoTypeMap[EXT]]         = uto->ext;
         jstr = j.dump();
     }
@@ -164,7 +165,7 @@ HYPHENATE_API void UserInfoManager_FetchUserInfoByUserId(void *client, int callb
                     // userinfoToMap will point to userinfoMap
                     userinfoToMap = UserInfo::Convert2TO(userinfoMap);
 
-                    const UserInfoTO* data[userinfoToMap.size()];
+                    const UserInfoTO** data = new const UserInfoTO*[userinfoToMap.size()];
                     int foundCount = 0;
                     
                     for(auto it : userv) {
@@ -176,6 +177,7 @@ HYPHENATE_API void UserInfoManager_FetchUserInfoByUserId(void *client, int callb
                     
                     LOG("UserInfoManager_FetchUserInfoByUserId succeeds, user count=%d", foundCount);
                     onSuccess((void **)data, DataType::ListOfGroup, foundCount, callbackId);
+		    delete []data;
                 } else {
                     LOG("UserInfoManager_FetchUserInfoByUserId cannot get any data from server");
                     onSuccess(nullptr, DataType::ListOfGroup, 0, callbackId);
@@ -240,7 +242,7 @@ HYPHENATE_API void UserInfoManager_FetchUserInfoByAttribute(void *client, int ca
                     // userinfoToMap will point to userinfoMap
                     userinfoToMap = UserInfo::Convert2TO(userinfoMap);
                     
-                    const UserInfoTO* data[userinfoToMap.size()];
+                    const UserInfoTO** data = new const UserInfoTO*[userinfoToMap.size()];
                     int foundCount = 0;
                     for(auto it : userv) {
                         auto found = userinfoToMap.find(it);
@@ -251,6 +253,7 @@ HYPHENATE_API void UserInfoManager_FetchUserInfoByAttribute(void *client, int ca
                     
                     LOG("UserInfoManager_FetchUserInfoByAttribute succeeds, user count=%d", foundCount);
                     onSuccess((void **)data, DataType::ListOfGroup, foundCount, callbackId);
+		    delete []data;
                 } else {
                     LOG("UserInfoManager_FetchUserInfoByAttribute cannot get any data from server");
                     onSuccess(nullptr, DataType::ListOfGroup, 0, callbackId);

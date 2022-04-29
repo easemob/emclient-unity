@@ -15,7 +15,7 @@ public class PushManagerTest : MonoBehaviour
     private Button UpdatePushNickNameBtn;
     private Button UpdateHMSPushTokenBtn;
     private Button UpdateFCMPushTokenBtn;
-    private Button UpdateAPNSPuthTokenBtn;
+    private Button UpdateAPNSPushTokenBtn;
     private Button SetNoDisturbBtn;
     private Button SetPushStyleBtn;
     private Button SetGroupToDisturbBtn;
@@ -34,7 +34,7 @@ public class PushManagerTest : MonoBehaviour
         UpdatePushNickNameBtn = transform.Find("Scroll View/Viewport/Content/UpdatePushNickNameBtn").GetComponent<Button>();
         UpdateHMSPushTokenBtn = transform.Find("Scroll View/Viewport/Content/UpdateHMSPushTokenBtn").GetComponent<Button>();
         UpdateFCMPushTokenBtn = transform.Find("Scroll View/Viewport/Content/UpdateFCMPushTokenBtn").GetComponent<Button>();
-        UpdateAPNSPuthTokenBtn = transform.Find("Scroll View/Viewport/Content/UpdateAPNSPuthTokenBtn").GetComponent<Button>();
+        UpdateAPNSPushTokenBtn = transform.Find("Scroll View/Viewport/Content/UpdateAPNSPuthTokenBtn").GetComponent<Button>();
         SetNoDisturbBtn = transform.Find("Scroll View/Viewport/Content/SetNoDisturbBtn").GetComponent<Button>();
         SetPushStyleBtn = transform.Find("Scroll View/Viewport/Content/SetPushStyleBtn").GetComponent<Button>();
         SetGroupToDisturbBtn = transform.Find("Scroll View/Viewport/Content/SetGroupToDisturbBtn").GetComponent<Button>();
@@ -45,7 +45,7 @@ public class PushManagerTest : MonoBehaviour
         UpdatePushNickNameBtn.onClick.AddListener(UpdatePushNickNameBtnAction);
         UpdateHMSPushTokenBtn.onClick.AddListener(UpdateHMSPushTokenBtnAction);
         UpdateFCMPushTokenBtn.onClick.AddListener(UpdateFCMPushTokenBtnAction);
-        UpdateAPNSPuthTokenBtn.onClick.AddListener(UpdateAPNSPuthTokenBtnAction);
+        UpdateAPNSPushTokenBtn.onClick.AddListener(UpdateAPNSPushTokenBtnAction);
         SetNoDisturbBtn.onClick.AddListener(SetNoDisturbBtnAction);
         SetPushStyleBtn.onClick.AddListener(SetPushStyleBtnAction);
         SetGroupToDisturbBtn.onClick.AddListener(SetGroupToDisturbBtnAction);
@@ -118,7 +118,7 @@ public class PushManagerTest : MonoBehaviour
     void UpdateFCMPushTokenBtnAction() {
         UIManager.UnfinishedAlert(transform);
     }
-    void UpdateAPNSPuthTokenBtnAction() {
+    void UpdateAPNSPushTokenBtnAction() {
         UIManager.UnfinishedAlert(transform);
     }
     void SetNoDisturbBtnAction() {

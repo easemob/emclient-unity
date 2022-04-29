@@ -31,7 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)createAccount:(NSDictionary *)param callbackId:(NSString *)callbackId;
 - (void)login:(NSDictionary *)param callbackId:(NSString *)callbackId;
 - (void)logout:(NSDictionary *)param callbackId:(NSString *)callbackId;
-
+- (void)loginWithAgoraToken:(NSDictionary *)param callbackId:(NSString *)callbackId;
+- (void)renewToken:(NSDictionary *)param callbackId:(NSString *)callbackId;
 @end
 
 NS_ASSUME_NONNULL_END

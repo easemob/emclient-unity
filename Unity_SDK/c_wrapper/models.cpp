@@ -11,6 +11,9 @@
 #include "json.hpp"
 #include "tool.h"
 
+std::string EMPTY_STR = " ";
+std::string DISPLAY_NAME_STR = " "; // used to save display name temprarily
+
 EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bool buildReceiveMsg)
 {
     //compose message body
@@ -21,7 +24,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
         case EMMessageBody::TEXT:
         {
             auto tm = static_cast<TextMessageTO *>(mto);
-            LOG("Message id from MTO is: %s", tm->MsgId);
+            LOG("Message id from MTO is: id:%s", tm->MsgId);
             //create message body
             messageBody = EMMessageBodyPtr(new EMTextMessageBody(std::string(tm->body.Content)));
             from = tm->From;
@@ -34,7 +37,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
         case EMMessageBody::LOCATION:
         {
             auto lm = static_cast<LocationMessageTO *>(mto);
-            messageBody = EMMessageBodyPtr(new EMLocationMessageBody(lm->body.Latitude, lm->body.Longitude, lm->body.Address));
+            messageBody = EMMessageBodyPtr(new EMLocationMessageBody(lm->body.Latitude, lm->body.Longitude, lm->body.Address, lm->body.BuildingName));
             from = lm->From;
             to = lm->To;
             msgId = lm->MsgId;
@@ -183,6 +186,74 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
 
 }
 
+void UpdateMessageTO(void *mto, EMMessagePtr msg)
+{
+    vector<EMMessageBodyPtr> bodies = msg->bodies();
+    if(bodies.size() == 0)
+        return;
+    
+    EMMessageBodyPtr body = bodies[0];
+    
+    // general messageTO setting
+    auto amto = static_cast<MessageTO *>(mto);
+    amto->MsgId = msg->msgId().c_str();
+    amto->ServerTime = msg->timestamp();
+    
+    switch(body->type()) {
+        case EMMessageBody::TEXT:
+        {
+            //auto tm = static_cast<TextMessageTO *>(mto);
+        }
+            break;
+        case EMMessageBody::LOCATION:
+        {
+            //auto lm = static_cast<LocationMessageTO *>(mto);
+        }
+            break;
+        case EMMessageBody::COMMAND:
+        {
+            //auto cm = static_cast<CmdMessageTO *>(mto);
+        }
+            break;
+        case EMMessageBody::FILE:
+        {
+            //auto fm = static_cast<FileMessageTO *>(mto);
+            //EMFileMessageBodyPtr fmptr = std::dynamic_pointer_cast<EMFileMessageBody>(body);
+            //fm->body.LocalPath = fmptr->localPath().c_str();
+            //fm->body.DisplayName = fmptr->displayName().c_str();
+
+        }
+            break;
+        case EMMessageBody::IMAGE:
+        {
+            //auto im = static_cast<ImageMessageTO *>(mto);
+            //auto body = new EMImageMessageBody(im->body.LocalPath, im->body.ThumbnailLocalPath);
+
+        }
+            break;
+        case EMMessageBody::VOICE:
+        {
+            //auto vm = static_cast<VoiceMessageTO *>(mto);
+            //auto body = new EMVoiceMessageBody(vm->body.LocalPath, vm->body.Duration);
+
+        }
+            break;
+        case EMMessageBody::VIDEO:
+        {
+            //auto im = static_cast<VideoMessageTO *>(mto);
+            //auto body = new EMVideoMessageBody(im->body.LocalPath, im->body.ThumbnaiLocationPath);
+
+
+        }
+            break;
+        case EMMessageBody::CUSTOM:
+        {
+            //auto im = static_cast<CustomMessageTO *>(mto);
+        }
+            break;
+    }
+}
+
 /*
  attrs may looks like(most quote symbol are removed, and all items in {} are string):
  {
@@ -227,7 +298,11 @@ void SetMessageAttr(EMMessagePtr msg, std::string& key, nlohmann::json& j)
     }
     
     if(type.compare("b") == 0) {
+#ifdef _WIN32
+        if(_stricmp(value.c_str(), "false") == 0) {
+#else
         if(strcasecmp(value.c_str(), "false") == 0) {
+#endif
             LOG("Set type bool: value: false");
             msg->setAttribute(key, false);
         }
@@ -452,6 +527,8 @@ MessageTO::MessageTO(const EMMessagePtr &_message) {
     this->ConversationId = _message->conversationId().c_str();
     this->From = _message->from().c_str();
     this->To = _message->to().c_str();
+    this->RecallBy = _message->recallBy().c_str();
+    
     this->Type = _message->chatType();
     this->Direction = _message->msgDirection();
     this->Status = _message->status();
@@ -459,6 +536,12 @@ MessageTO::MessageTO(const EMMessagePtr &_message) {
     this->HasReadAck = _message->isReadAcked();
     this->LocalTime = _message->localTime();
     this->ServerTime = _message->timestamp();
+    
+    if (strlen(this->MsgId) == 0) this->MsgId =  const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->ConversationId) == 0) this->ConversationId =  const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->From) == 0) this->From =  const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->To) == 0) this->To =  const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->RecallBy) == 0) this->RecallBy =  const_cast<char*>(EMPTY_STR.c_str());
     
     char* p = nullptr;
     std::string str = GetAttrsStringFromMessage(_message);
@@ -484,6 +567,9 @@ TextMessageTO::TextMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
     auto body = (EMTextMessageBody *)_message->bodies().front().get();
     this->BodyType = body->type(); //TODO: only 1st body type determined
     this->body.Content = body->text().c_str();
+
+    //Bug fix: User Empty_str to replace "", avoid error from PtrToStructure at c# side
+    if (strlen(this->body.Content) == 0) this->body.Content = const_cast<char*>(EMPTY_STR.c_str());
 }
 
 //LocationMessageTO
@@ -493,6 +579,11 @@ LocationMessageTO::LocationMessageTO(const EMMessagePtr &_message):MessageTO(_me
     this->body.Latitude = body->latitude();
     this->body.Longitude = body->longitude();
     this->body.Address = body->address().c_str();
+    this->body.BuildingName = body->buildingName().c_str();
+
+    //Bug fix: User Empty_str to replace "", avoid error from PtrToStructure at c# side
+    if (strlen(this->body.Address) == 0) this->body.Address = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.BuildingName) == 0) this->body.BuildingName = const_cast<char*>(EMPTY_STR.c_str());
 }
 
 //CmdMessageTO
@@ -501,25 +592,40 @@ CmdMessageTO::CmdMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
     this->BodyType = body->type(); //TODO: only 1st body type determined
     this->body.Action = body->action().c_str();
     this->body.DeliverOnlineOnly = body->isDeliverOnlineOnly();
+
+    //Bug fix: User Empty_str to replace "", avoid error from PtrToStructure at c# side
+    if (strlen(this->body.Action) == 0) this->body.Action = const_cast<char*>(EMPTY_STR.c_str());
 }
 
 //FileMessageTO
 FileMessageTO::FileMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
     auto body = (EMFileMessageBody *)_message->bodies().front().get();
     this->BodyType = body->type(); //TODO: only 1st body type determined
-    this->body.DisplayName = body->displayName().c_str();
+    
+    DISPLAY_NAME_STR = body->displayName();
+    this->body.DisplayName = DISPLAY_NAME_STR.c_str();
+    
     this->body.DownStatus = body->downloadStatus();
     this->body.FileSize = body->fileLength();
     this->body.LocalPath = body->localPath().c_str();
     this->body.RemotePath = body->remotePath().c_str();
     this->body.Secret = body->secretKey().c_str();
+
+    //Bug fix: User Empty_str to replace "", avoid error from PtrToStructure at c# side
+    if (strlen(this->body.DisplayName) == 0) this->body.DisplayName = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.LocalPath) == 0) this->body.LocalPath = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.RemotePath) == 0) this->body.RemotePath = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.Secret) == 0) this->body.Secret = const_cast<char*>(EMPTY_STR.c_str());
 }
 
 //ImageMessageTO
 ImageMessageTO::ImageMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
     auto body = (EMImageMessageBody *)_message->bodies().front().get();
     this->BodyType = body->type(); //TODO: only 1st body type determined
-    this->body.DisplayName = body->displayName().c_str();
+
+    DISPLAY_NAME_STR = body->displayName();
+    this->body.DisplayName = DISPLAY_NAME_STR.c_str();
+    
     this->body.DownStatus = body->downloadStatus();
     this->body.FileSize = body->fileLength();
     this->body.LocalPath = body->localPath().c_str();
@@ -532,25 +638,47 @@ ImageMessageTO::ImageMessageTO(const EMMessagePtr &_message):MessageTO(_message)
     this->body.ThumbnaiSecret = body->thumbnailSecretKey().c_str();
     this->body.ThumbnaiRemotePath = body->thumbnailRemotePath().c_str();
     this->body.ThumbnailLocalPath = body->thumbnailLocalPath().c_str();
+
+    //Bug fix: User Empty_str to replace "", avoid error from PtrToStructure at c# side
+    if (strlen(this->body.DisplayName) == 0) this->body.DisplayName = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.LocalPath) == 0) this->body.LocalPath = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.RemotePath) == 0) this->body.RemotePath = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.Secret) == 0) this->body.Secret = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.ThumbnaiSecret) == 0) this->body.ThumbnaiSecret = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.ThumbnaiRemotePath) == 0) this->body.ThumbnaiRemotePath = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.ThumbnailLocalPath) == 0) this->body.ThumbnailLocalPath = const_cast<char*>(EMPTY_STR.c_str());
+     
 }
 
 VoiceMessageTO::VoiceMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
     auto body = (EMVoiceMessageBody *)_message->bodies().front().get();
     this->BodyType = body->type(); //TODO: only 1st body type determined
-    this->body.DisplayName = body->displayName().c_str();
+    
+    DISPLAY_NAME_STR = body->displayName();
+    this->body.DisplayName = DISPLAY_NAME_STR.c_str();
+    
     this->body.DownStatus = body->downloadStatus();
     this->body.FileSize = body->fileLength();
     this->body.LocalPath = body->localPath().c_str();
     this->body.RemotePath = body->remotePath().c_str();
     this->body.Secret = body->secretKey().c_str();
     this->body.Duration = body->duration();
+
+    //Bug fix: User Empty_str to replace "", avoid error from PtrToStructure at c# side
+    if (strlen(this->body.DisplayName) == 0) this->body.DisplayName = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.LocalPath) == 0) this->body.LocalPath = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.RemotePath) == 0) this->body.RemotePath = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.Secret) == 0) this->body.Secret = const_cast<char*>(EMPTY_STR.c_str());
 }
 
 VideoMessageTO::VideoMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
     auto body = (EMVideoMessageBody *)_message->bodies().front().get();
     this->BodyType = body->type();
     this->body.LocalPath = body->localPath().c_str();
-    this->body.DisplayName = body->displayName().c_str();
+    
+    DISPLAY_NAME_STR = body->displayName();
+    this->body.DisplayName = DISPLAY_NAME_STR.c_str();
+    
     this->body.Secret = body->secretKey().c_str();
     this->body.RemotePath = body->remotePath().c_str();
     this->body.ThumbnaiLocationPath = body->thumbnailLocalPath().c_str();
@@ -561,6 +689,15 @@ VideoMessageTO::VideoMessageTO(const EMMessagePtr &_message):MessageTO(_message)
     this->body.Duration = body->duration();
     this->body.FileSize = body->fileLength();
     this->body.DownStatus = body->downloadStatus();
+
+    //Bug fix: User Empty_str to replace "", avoid error from PtrToStructure at c# side
+    if (strlen(this->body.LocalPath) == 0) this->body.LocalPath = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.DisplayName) == 0) this->body.DisplayName = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.Secret) == 0) this->body.Secret = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.RemotePath) == 0) this->body.RemotePath = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.ThumbnaiLocationPath) == 0) this->body.ThumbnaiLocationPath = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.ThumbnaiRemotePath) == 0) this->body.ThumbnaiRemotePath = const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->body.ThumbnaiSecret) == 0) this->body.ThumbnaiSecret = const_cast<char*>(EMPTY_STR.c_str());
 }
 
 CustomMessageTO::CustomMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
@@ -574,14 +711,19 @@ CustomMessageTO::CustomMessageTO(const EMMessagePtr &_message):MessageTO(_messag
         j[ext[i].first] = ext[i].second;
     }
     
+    std::string str;
     if(ext.size() > 0){
-        std::string str = j.dump();
-        // need to be freed in FreeResource function
-        char* p = new char[str.size() + 1];
-        p[str.size()] = '\0';
-        strncpy(p, str.c_str(), str.size());
-        this->body.CustomParams = p;
+        str = j.dump();
     }
+    else {
+        str = EMPTY_STR; // Make sure PtrToStructure can be successful.
+    }
+
+    // need to be freed in FreeResource function
+    char* p = new char[str.size() + 1];
+    p[str.size()] = '\0';
+    strncpy(p, str.c_str(), str.size());
+    this->body.CustomParams = p;
 }
 
 void MessageTO::FreeResource(MessageTO * mto)
@@ -659,7 +801,12 @@ MessageTO * MessageTO::FromEMMessage(const EMMessagePtr &_message)
 }
 
 GroupOptions GroupOptions::FromMucSetting(EMMucSettingPtr setting) {
-    return GroupOptions {.Ext=setting->extension().c_str(), .MaxCount=setting->maxUserCount(), .InviteNeedConfirm = setting->inviteNeedConfirm(), .Style=setting->style()};
+    GroupOptions go;
+    go.Ext = setting->extension().c_str();
+    go.MaxCount = setting->maxUserCount();
+    go.InviteNeedConfirm = setting->inviteNeedConfirm();
+    go.Style = setting->style();
+    return go;
 }
 
 GroupTO::~GroupTO()
@@ -698,7 +845,6 @@ GroupTO::~GroupTO()
     MuteList = NULL;
 }
 
-std::string EMPTY_STR = " ";
 GroupTO * GroupTO::FromEMGroup(EMGroupPtr &group)
 {
     GroupTO *gto = new GroupTO();
@@ -761,14 +907,20 @@ GroupTO * GroupTO::FromEMGroup(EMGroupPtr &group)
 
     if (gto->MuteCount <= 0) {
         gto->MuteList = new Mute[1];
-        gto->MuteList[0] = Mute{.Member = EMPTY_STR.c_str(), .Duration=1000};
+	    Mute mute;
+	    mute.Member = EMPTY_STR.c_str();
+	    mute.Duration = 1000;
+	    gto->MuteList[0] = mute;
     } else {
         i=0;
         gto->MuteList = new Mute[gto->MuteCount];
+	    Mute m;
         for(auto mute : group->groupMutes()) {
             char *memberStr = new char[mute.first.size()+1];
             std::strncpy(memberStr, mute.first.c_str(), mute.first.size()+1);
-            gto->MuteList[i] = Mute{.Member = memberStr, .Duration=mute.second};
+	        m.Member = memberStr;
+	        m.Duration = mute.second;
+	        gto->MuteList[i] = m;
             i++;
         }
     }
@@ -871,10 +1023,13 @@ RoomTO * RoomTO::FromEMChatRoom(EMChatroomPtr &room)
     }
     i=0;
     rto->MuteList = new Mute[rto->MuteCount];
+    Mute m;
     for(auto mute : room->chatroomMutes()) {
         char *memberStr = new char[mute.first.size()+1];
         std::strcpy(memberStr, mute.first.c_str());
-        rto->MuteList[i] = Mute{.Member = memberStr, .Duration=mute.second};
+	    m.Member = memberStr;
+	    m.Duration = mute.second;
+	    rto->MuteList[i] = m;
         i++;
     }
     
@@ -921,7 +1076,7 @@ GroupReadAckTO * GroupReadAckTO::FromGroupReadAck(EMGroupReadAckPtr&  groupReadA
     groupReadAckTO->from = groupReadAckPtr->from.c_str();
     groupReadAckTO->content = groupReadAckPtr->content.c_str();
     groupReadAckTO->count = groupReadAckPtr->count;
-    groupReadAckTO->timestamp = (long)groupReadAckPtr->timestamp;
+    groupReadAckTO->timestamp = groupReadAckPtr->timestamp;
     return groupReadAckTO;
 }
 
@@ -1058,8 +1213,6 @@ std::map<std::string, UserInfoTO> UserInfo::Convert2TO(std::map<std::string, Use
     std::map<std::string, UserInfoTO> userinfoToMap;
     if (userInfoMap.size() == 0) return userinfoToMap;
     
-    LOG("origin address of nickName is %x", userInfoMap["yqtest"].nickName.c_str());
-    
     // DO not use "for(auto it : userInfoMap)" !!, since the "it" will be a copied value from userInfoMap
     // Not a poiter to userInfoMap!!
     for (auto it = userInfoMap.begin(); it != userInfoMap.end(); it++) {
@@ -1075,6 +1228,6 @@ std::map<std::string, UserInfoTO> UserInfo::Convert2TO(std::map<std::string, Use
         uto.userId      = it->second.userId.c_str();
         userinfoToMap[it->first] = uto;
     }
-    LOG("address of second is %x", &(userinfoToMap["yqtest"]));
+    
     return userinfoToMap;
 }

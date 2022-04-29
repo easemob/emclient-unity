@@ -43,14 +43,10 @@ namespace ChatSDK
             return jo["getCurrentUsername"].Value;
         }
 
-        public override bool IsConnected {
-            get {
-                string jsonString = ChatAPIIOS.Client_GetMethodCall("isConnected");
-                JSONObject jsonObject = JSON.Parse(jsonString).AsObject;
-                return jsonObject["isConnected"].AsBool;
-            }
-
-            internal set => IsConnected = value;            
+        public override bool IsConnected() {
+            string jsonString = ChatAPIIOS.Client_GetMethodCall("isConnected");
+            JSONObject jsonObject = JSON.Parse(jsonString).AsObject;
+            return jsonObject["isConnected"].AsBool;
         }
 
         public override bool IsLoggedIn() {
@@ -66,19 +62,43 @@ namespace ChatSDK
             return jo["accessToken"].Value;
         }
 
+        public override void LoginWithAgoraToken(string username, string token, CallBack handle = null)
+        {
+            //TODO: add code
+            JSONObject obj = new JSONObject();
+            obj.Add("username", username);
+            obj.Add("token", token);
+            ChatAPIIOS.Client_HandleMethodCall("loginWithAgoraToken", obj.ToString(), handle?.callbackId);
+        }
+
+        public override void RenewAgoraToken(string token)
+        {
+            //TODO: add code
+            JSONObject obj = new JSONObject();
+            obj.Add("token", token);
+            ChatAPIIOS.Client_HandleMethodCall("renewToken", obj.ToString());
+        }
+
+        /*
+        public override void AutoLogin(CallBack callback = null)
+        {
+            //TODO: add code
+        }
+        */
+
         internal override void StartLog(string logFilePath)
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
         }
 
         internal override void StopLog()
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
         }
 
         public override void ClearResource()
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
         }
 
     }

@@ -1,4 +1,6 @@
-﻿namespace ChatSDK
+﻿using UnityEngine;
+
+namespace ChatSDK
 {
     internal abstract class IClient
     {
@@ -17,7 +19,7 @@
                     instance = new Client_Android();
 #elif UNITY_IOS
                     instance = new Client_iOS();
-#elif UNITY_STANDALONE_OSX
+#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
                     instance = new Client_Mac();
 #endif
                     _initialized = true;
@@ -47,7 +49,7 @@
             chatImp = new ChatManager_Android();
 #elif UNITY_IOS
             chatImp = new ChatManager_iOS();
-#elif UNITY_STANDALONE_OSX
+#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
             chatImp = new ChatManager_Mac(instance);
 #endif
             return chatImp;
@@ -65,7 +67,7 @@
             contactImp = new ContactManager_Android();
 #elif UNITY_IOS
             contactImp = new ContactManager_iOS();
-#elif UNITY_STANDALONE_OSX
+#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
             contactImp = new ContactManager_Mac(instance);
 #endif
             return contactImp;
@@ -83,7 +85,7 @@
             groupImp = new GroupManager_Android();
 #elif UNITY_IOS
             groupImp = new GroupManager_iOS();
-#elif UNITY_STANDALONE_OSX
+#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
             groupImp = new GroupManager_Mac(instance);
 #endif
             return groupImp;
@@ -101,7 +103,7 @@
             roomImp = new RoomManager_Android();
 #elif UNITY_IOS
             roomImp = new RoomManager_iOS();
-#elif UNITY_STANDALONE_OSX
+#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
             roomImp = new RoomManager_Mac(instance);
 #endif
             return roomImp;
@@ -119,7 +121,7 @@
             pushImp = new PushManager_Android();
 #elif UNITY_IOS
             pushImp = new PushManager_iOS();
-#elif UNITY_STANDALONE_OSX
+#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
             pushImp = new PushManager_Mac(instance);
 #endif
             return pushImp;
@@ -132,7 +134,7 @@
             conversationImp = new ConversationManager_Android();
 #elif UNITY_IOS
             conversationImp = new ConversationManager_iOS();
-#elif UNITY_STANDALONE_OSX
+#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
             conversationImp = new ConversationManager_Mac(instance);
 #endif
             return conversationImp;
@@ -145,7 +147,7 @@
             userInfoImp = new UserInfoManager_Android();
 #elif UNITY_IOS
             userInfoImp = new UserInfoManager_iOS();
-#elif UNITY_STANDALONE_OSX
+#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
             userInfoImp = new UserInfoManager_Mac(instance);
 #endif
             return userInfoImp;
@@ -190,7 +192,7 @@
         /// <summary>
         /// 获取当前是否链接到环信服务器
         /// </summary>
-        public abstract bool IsConnected { get; internal set; }
+        public abstract bool IsConnected();
 
         /// <summary>
         /// 获取是否已经登录
@@ -203,6 +205,20 @@
         /// </summary>
         /// <returns>token</returns>
         public abstract string AccessToken();
+
+        /// <summary>
+        /// 使用声网token登录环信
+        /// </summary>
+        /// <param name="username">环信id</param>
+        /// <param name="token">声网token</param>
+        /// <param name="handle">执行结果</param>
+        public abstract void LoginWithAgoraToken(string username, string token, CallBack handle = null);
+
+        /// <summary>
+        /// 更新声网token
+        /// </summary>
+        /// <param name="token">声网token</param>
+        public abstract void RenewAgoraToken(string token);
 
         internal abstract void StartLog(string logFilePath);
 
@@ -235,6 +251,31 @@
             if (CallbackManager.Instance().connectionListener.delegater.Contains(connectionDelegate))
             {
                 CallbackManager.Instance().connectionListener.delegater.Remove(connectionDelegate);
+            }
+        }
+
+        /// <summary>
+        /// 添加多设备回调监听
+        /// </summary>
+        /// <param name="multiDeviceDelegate">实现监听的对象</param>
+        public void AddMultiDeviceDelegate(IMultiDeviceDelegate multiDeviceDelegate)
+        {
+            if (!CallbackManager.Instance().multiDeviceListener.delegater.Contains(multiDeviceDelegate))
+            {
+                CallbackManager.Instance().multiDeviceListener.delegater.Add(multiDeviceDelegate);
+            }
+        }
+
+        /// <summary>
+        /// 移除多设备回调监听
+        /// </summary>
+        /// <param name="multiDeviceDelegate">实现监听的对象</param>
+        public void DeleteMultiDeviceDelegate(IMultiDeviceDelegate multiDeviceDelegate)
+        {
+            if (CallbackManager.IsQuit()) return;
+            if (CallbackManager.Instance().multiDeviceListener.delegater.Contains(multiDeviceDelegate))
+            {
+                CallbackManager.Instance().multiDeviceListener.delegater.Remove(multiDeviceDelegate);
             }
         }
 

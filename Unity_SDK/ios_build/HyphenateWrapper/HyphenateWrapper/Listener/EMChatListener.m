@@ -8,7 +8,7 @@
 #import "EMChatListener.h"
 #import "EMMethod.h"
 #import "Transfrom.h"
-#import "EMMessage+Unity.h"
+#import "EMChatMessage+Unity.h"
 #import "HyphenateWrapper.h"
 #import "EMGroupMessageAck+Unity.h"
 
@@ -20,7 +20,7 @@
 
 - (void)messagesDidReceive:(NSArray *)aMessages {
     NSMutableArray *array = [NSMutableArray array];
-    for(EMMessage *msg in aMessages) {
+    for(EMChatMessage *msg in aMessages) {
         NSString *jsonString = [Transfrom NSStringFromJsonObject:[msg toJson]];
         [array addObject:jsonString];
     }
@@ -29,7 +29,7 @@
 
 - (void)cmdMessagesDidReceive:(NSArray *)aCmdMessages {
     NSMutableArray *array = [NSMutableArray array];
-    for(EMMessage *msg in aCmdMessages) {
+    for(EMChatMessage *msg in aCmdMessages) {
         NSString *jsonString = [Transfrom NSStringFromJsonObject:[msg toJson]];
         [array addObject:jsonString];
     }
@@ -38,14 +38,14 @@
 
 - (void)messagesDidRead:(NSArray *)aMessages {
     NSMutableArray *array = [NSMutableArray array];
-    for(EMMessage *msg in aMessages) {
+    for(EMChatMessage *msg in aMessages) {
         NSString *jsonString = [Transfrom NSStringFromJsonObject:[msg toJson]];
         [array addObject:jsonString];
     }
     UnitySendMessage(ChatListener_Obj, "OnMessageRead", [Transfrom JsonObjectToCSString:array]);
 }
 
-- (void)groupMessageDidRead:(EMMessage *)aMessage
+- (void)groupMessageDidRead:(EMChatMessage *)aMessage
                   groupAcks:(NSArray *)aGroupAcks {
     NSMutableArray *array = [NSMutableArray array];
     for(EMGroupMessageAck *ack in aGroupAcks) {
@@ -66,7 +66,7 @@
 
 - (void)messagesDidDeliver:(NSArray *)aMessages {
     NSMutableArray *array = [NSMutableArray array];
-    for(EMMessage *msg in aMessages) {
+    for(EMChatMessage *msg in aMessages) {
         NSString *jsonString = [Transfrom NSStringFromJsonObject:[msg toJson]];
         [array addObject:jsonString];
     }
@@ -75,19 +75,19 @@
 
 - (void)messagesDidRecall:(NSArray *)aMessages {
     NSMutableArray *array = [NSMutableArray array];
-    for(EMMessage *msg in aMessages) {
+    for(EMChatMessage *msg in aMessages) {
         NSString *jsonString = [Transfrom NSStringFromJsonObject:[msg toJson]];
         [array addObject:jsonString];
     }
     UnitySendMessage(ChatListener_Obj, "OnMessageRecalled", [Transfrom JsonObjectToCSString:array]);
 }
 
-- (void)messageStatusDidChange:(EMMessage *)aMessage
+- (void)messageStatusDidChange:(EMChatMessage *)aMessage
                          error:(EMError *)aError {
     
 }
 
-- (void)messageAttachmentStatusDidChange:(EMMessage *)aMessage
+- (void)messageAttachmentStatusDidChange:(EMChatMessage *)aMessage
                                    error:(EMError *)aError {
     
 }

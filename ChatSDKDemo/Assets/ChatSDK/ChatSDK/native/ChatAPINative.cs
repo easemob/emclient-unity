@@ -22,7 +22,10 @@ namespace ChatSDK{
 		internal static extern void Client_CreateAccount(IntPtr client, int callbackId, OnSuccess onSuccess, OnErrorV2 onError, string username, string password);
 
 		[DllImport(MyLibName)]
-		internal static extern IntPtr Client_InitWithOptions(Options options, Action onConnect, OnDisconnected onDisconnect, Action onPong);
+		internal static extern IntPtr Client_InitWithOptions(Options options, Action onConnect, OnDisconnected onDisconnect, Action onPong, OnTokenNotificationed onTokenNotify);
+
+		[DllImport(MyLibName)]
+		internal static extern void Client_AddMultiDeviceListener(onContactMultiDevicesEvent mdContactEvent, onGroupMultiDevicesEvent mdGroupEvent, undisturbMultiDevicesEvent mdUbEvent);
 
 		[DllImport(MyLibName)]
 		internal static extern void Client_Login(IntPtr client, int callbackId, OnSuccess onSuccess, OnErrorV2 onError, string username, string pwdOrToken, bool isToken = false);
@@ -40,11 +43,26 @@ namespace ChatSDK{
 		internal static extern void Client_LoginToken(IntPtr client, OnSuccessResult onSuccess);
 
 		[DllImport(MyLibName)]
+		internal static extern bool Client_isConnected(IntPtr client);
+
+		[DllImport(MyLibName)]
+		internal static extern bool Client_isLoggedIn(IntPtr client);
+
+		[DllImport(MyLibName)]
 		internal static extern void Client_ClearResource(IntPtr client);
+
+		[DllImport(MyLibName)]
+		internal static extern void Client_LoginWithAgoraToken(IntPtr client, int callbackId, OnSuccess onSuccess, OnErrorV2 onError, string username, string agoraToken);
+
+		[DllImport(MyLibName)]
+		internal static extern void Client_RenewAgoraToken(IntPtr client, string agoraToken);
+
+		[DllImport(MyLibName)]
+		internal static extern void Client_AutoLogin(IntPtr client, int callbackId, OnSuccessResult onSuccess, OnErrorV2 onError);
 
 		/** ChatManager Stub **/
 		[DllImport(MyLibName)]
-		internal static extern void ChatManager_SendMessage(IntPtr client, int callbackId, OnSuccess onSuccess, OnErrorV2 onError, IntPtr mto, MessageBodyType type);
+		internal static extern void ChatManager_SendMessage(IntPtr client, int callbackId, OnSuccess onSuccess, OnErrorV2 onError, OnProgressV2 onProgress ,IntPtr mto, MessageBodyType type);
 		
 		[DllImport(MyLibName)]
 		internal static extern void ChatManager_AddListener(IntPtr client, OnMessagesReceived onMessagesReceived,
@@ -62,10 +80,10 @@ namespace ChatSDK{
 		internal static extern void ChatManager_RemoveConversation(IntPtr client, string conversationId, bool isRemoveMessages);
 
 		[DllImport(MyLibName)]
-		internal static extern void ChatManager_DownloadMessageAttachments(IntPtr client, int callbackId, string messageId, OnSuccess onSuccess, OnErrorV2 onError);
+		internal static extern void ChatManager_DownloadMessageAttachments(IntPtr client, int callbackId, string messageId, OnSuccess onSuccess, OnErrorV2 onError, OnProgressV2 onProgress);
 
 		[DllImport(MyLibName)]
-		internal static extern void ChatManager_DownloadMessageThumbnail(IntPtr client, int callbackId, string messageId, OnSuccess onSuccess, OnErrorV2 onError);
+		internal static extern void ChatManager_DownloadMessageThumbnail(IntPtr client, int callbackId, string messageId, OnSuccess onSuccess, OnErrorV2 onError, OnProgressV2 onProgress);
 
 		[DllImport(MyLibName)]
 		internal static extern bool ChatManager_ConversationWithType(IntPtr client, string conversationId, ConversationType type, bool createIfNotExist);
@@ -89,7 +107,7 @@ namespace ChatSDK{
 		internal static extern bool ChatManager_MarkAllConversationsAsRead(IntPtr client);
 
 		[DllImport(MyLibName)]
-		internal static extern void ChatManager_RecallMessage(IntPtr client, int callbackId, string messageId, OnSuccess onSuccess, OnErrorV2 onError);
+		internal static extern void ChatManager_RecallMessage(IntPtr client, int callbackId, string messageId, OnSuccess onSuccess, OnErrorV2 onError, OnProgressV2 onProgress);
 
 		[DllImport(MyLibName)]
 		internal static extern int ChatManager_ResendMessage(IntPtr client, int callbackId, string messageId, OnSuccessResult onSuccessResult, OnSuccess onSuccess, OnErrorV2 onError);
@@ -106,6 +124,12 @@ namespace ChatSDK{
 
 		[DllImport(MyLibName)]
 		internal static extern bool ChatManager_UpdateMessage(IntPtr client, IntPtr mto, MessageBodyType type);
+
+		[DllImport(MyLibName)]
+		internal static extern void ChatManager_RemoveMessagesBeforeTimestamp(IntPtr client, int callbackId, long timestamp, OnSuccess onSuccess, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void ChatManager_DeleteConversationFromServer(IntPtr client, int callbackId, string conversationId, ConversationType conversationType, bool isDeleteServerMessages, OnSuccess onSuccess, OnErrorV2 onError);
 
 		/** GroupManager Stub **/
 		[DllImport(MyLibName)]
@@ -435,6 +459,9 @@ namespace ChatSDK{
 		internal static extern int ConversationManager_UnreadMessagesCount(IntPtr client, string conversationId, ConversationType converationType);
 
 		[DllImport(MyLibName)]
+		internal static extern int ConversationManager_MessagesCount(IntPtr client, string conversationId, ConversationType converationType);
+
+		[DllImport(MyLibName)]
 		internal static extern bool ConversationManager_UpdateMessage(IntPtr client, string conversationId, ConversationType converationType, IntPtr mto, MessageBodyType type);
 
 		//PushManager
@@ -464,6 +491,9 @@ namespace ChatSDK{
 
 		[DllImport(MyLibName)]
 		internal static extern void PushManager_UpdatePushNickName(IntPtr client, int callbackId, string nickname, OnSuccess onSuccess, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void PushManager_ReportPushAction(IntPtr client, int callbackId, string parameters, OnSuccess onSuccess, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
 		internal static extern void UserInfoManager_UpdateOwnInfo(IntPtr client, int callbackId, IntPtr userInfo, OnSuccess onSuccess, OnErrorV2 onError);

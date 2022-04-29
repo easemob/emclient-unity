@@ -6,7 +6,7 @@
 //
 
 #import "EMConversation+Unity.h"
-#import "EMMessage+Unity.h"
+#import "EMChatMessage+Unity.h"
 
 @implementation EMConversation (Unity)
 - (NSDictionary *)toJson {

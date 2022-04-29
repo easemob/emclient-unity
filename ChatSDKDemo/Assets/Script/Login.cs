@@ -23,6 +23,7 @@ public class Login : MonoBehaviour
         m_PasswordText = transform.Find("Panel/Password/Text").GetComponent<Text>();
         m_LoginBtn = transform.Find("Panel/LoginBtn").GetComponent<Button>();
         m_RegisterBtn = transform.Find("Panel/RegisterBtn").GetComponent<Button>();
+        
 
         m_LoginBtn.onClick.AddListener(LoginAction);
         m_RegisterBtn.onClick.AddListener(RegisterAction);
@@ -83,9 +84,98 @@ public class Login : MonoBehaviour
         );
     }
 
-    void InitEaseMobSDK() {
+    void LoginWithAgoraTokenAction()
+    {
+        string token = "12345";
 
-        Options options = new Options("easemob-demo#easeim");
+#if UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+
+        //Read agora token from file
+        FileOperator foper = FileOperator.GetInstance();
+        string tokenFromFile = foper.ReadData(foper.GetTokenConfFile()); // should be only one element
+
+        if(tokenFromFile.Length == 0)
+        {
+            UIManager.DefaultAlert(transform, "Empty agora token!");
+            return;
+        } else
+        {
+            token = tokenFromFile;
+        }
+#endif
+
+        SDKClient.Instance.LoginWithAgoraToken(m_UsernameText.text, token,
+            handle: new CallBack(
+
+                onSuccess: () =>
+                {
+                    Debug.Log("login with agora token succeed");
+                    SceneManager.LoadSceneAsync("Main");
+                },
+
+                onError: (code, desc) =>
+                {
+                    if (code == 200)
+                    {
+                        SceneManager.LoadSceneAsync("Main");
+                    }
+                    else
+                    {
+                        UIManager.DefaultAlert(transform, "login failed, code: " + code);
+                    }
+                }
+            )
+        );
+    }
+
+ 
+    void AutoLoginBtnAction()
+    {
+        /*
+        SDKClient.Instance.AutoLogin(
+            handle: new CallBack(
+
+                onSuccess: () =>
+                {
+                    Debug.Log("Auto loginin");
+                    SceneManager.LoadSceneAsync("Main");
+                },
+
+                onError: (code, desc) =>
+                {
+                    if (code == 200)
+                    {
+                        SceneManager.LoadSceneAsync("Main");
+                    }
+                    else
+                    {
+                        UIManager.DefaultAlert(transform, "AutoLogin failed, code: " + code);
+                    }
+                }
+            )
+        );
+        */
+    }
+
+    void InitEaseMobSDK() {
+        //default appkey
+        string appkey = "easemob-demo#easeim";
+
+#if UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+
+        //Read appkey from file
+        FileOperator foper = FileOperator.GetInstance();
+        string appkeyFromFile = foper.ReadData(foper.GetAppkeyConfFile()); // should be only one element
+
+        if (appkeyFromFile.Length != 0)
+        {
+            Debug.Log($"appkey from file: {appkeyFromFile}");
+            appkey = appkeyFromFile;
+        }
+#endif
+
+        //Options options = new Options("81446724#514456");
+        Options options = new Options(appkey);
         options.AutoLogin = false;
         options.UsingHttpsOnly = true;
         options.DebugMode = true;

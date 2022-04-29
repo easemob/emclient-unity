@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using SimpleJSON;
 using UnityEngine;
 
 namespace ChatSDK {
@@ -36,5 +37,30 @@ namespace ChatSDK {
                 });
             }
         }
+
+        internal void OnTokenExpired(string i) {
+            if (delegater != null)
+            {
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IConnectionDelegate connectionDelegate in delegater)
+                    {
+                        connectionDelegate.OnTokenExpired();
+                    }
+                });
+            }
+        }
+
+        internal void OnTokenWillExpire(string i) {
+            if (delegater != null)
+            {
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IConnectionDelegate connectionDelegate in delegater)
+                    {
+                        connectionDelegate.OnTokenWillExpire();
+                    }
+                });
+            }
+        }
+
     }
 }

@@ -20,6 +20,7 @@ public class Main : MonoBehaviour, IConnectionDelegate
     private Button CurrentUsernameBtn;
     private Button AccessTokenBtn;
     private Button LogoutBtn;
+    private Button m_NewTokenBtn;
 
 
     private void Awake()
@@ -38,6 +39,7 @@ public class Main : MonoBehaviour, IConnectionDelegate
         CurrentUsernameBtn = transform.Find("Panel/Panel/CurrentUsernameBtn").GetComponent<Button>();
         AccessTokenBtn = transform.Find("Panel/Panel/AccessTokenBtn").GetComponent<Button>();
         LogoutBtn = transform.Find("Panel/LogoutBtn").GetComponent<Button>();
+        m_NewTokenBtn = transform.Find("Panel/NewTokenBtn").GetComponent<Button>();
 
         ChatBtn.onClick.AddListener(ChatBtnAction);
         ContactBtn.onClick.AddListener(ContactBtnAction);
@@ -50,6 +52,7 @@ public class Main : MonoBehaviour, IConnectionDelegate
         CurrentUsernameBtn.onClick.AddListener(CurrentUsernameBtnAction);
         AccessTokenBtn.onClick.AddListener(AccessTokenBtnAction);
         LogoutBtn.onClick.AddListener(LogoutBtnAction);
+        m_NewTokenBtn.onClick.AddListener(NewTokenAction);
 
         SDKClient.Instance.AddConnectionDelegate(this);
     }
@@ -115,6 +118,29 @@ public class Main : MonoBehaviour, IConnectionDelegate
         SceneManager.LoadSceneAsync("Login");
     }
 
+    void NewTokenAction()
+    {
+        string token = "12345";
+
+#if UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+
+        //Read token from file
+        FileOperator foper = FileOperator.GetInstance();
+        string tokenFromFile = foper.ReadData(foper.GetTokenConfFile()); // should be only one element
+
+        if (tokenFromFile.Length == 0)
+        {
+            UIManager.DefaultAlert(transform, "Empty agora token!");
+            return;
+        } else
+        {
+            token = tokenFromFile;
+        }
+#endif
+
+        SDKClient.Instance.RenewAgoraToken(token);
+        UIManager.DefaultAlert(transform, "Renew agora token complete.");
+    }
 
     void Start()
     {
@@ -140,4 +166,14 @@ public class Main : MonoBehaviour, IConnectionDelegate
         }
     }
 
+
+    public void OnTokenExpired()
+    {
+        UIManager.DefaultAlert(transform, $"OnTokenExpired");
+    }
+
+    public void OnTokenWillExpire()
+    {
+        UIManager.DefaultAlert(transform, $"OnTokenWillExpire");
+    }
 }

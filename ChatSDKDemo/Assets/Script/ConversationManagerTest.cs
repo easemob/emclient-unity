@@ -30,6 +30,7 @@ public class ConversationManagerTest : MonoBehaviour
     private Button LoadMessagesWithKeywordBtn;
     private Button LoadMessagesWithTimeBtn;
     private Button LoadMessagesWithMsgTypeBtn;
+    private Button MessagesCountBtn;
 
     private string conversationId {
         get => conversationText.text;
@@ -93,6 +94,7 @@ public class ConversationManagerTest : MonoBehaviour
         LoadMessagesWithKeywordBtn = transform.Find("Scroll View/Viewport/Content/LoadMessagesWithKeywordBtn").GetComponent<Button>();
         LoadMessagesWithTimeBtn = transform.Find("Scroll View/Viewport/Content/LoadMessagesWithTimeBtn").GetComponent<Button>();
         LoadMessagesWithMsgTypeBtn = transform.Find("Scroll View/Viewport/Content/LoadMessagesWithMsgTypeBtn").GetComponent<Button>();
+        MessagesCountBtn = transform.Find("Scroll View/Viewport/Content/MessagesCountBtn").GetComponent<Button>();
 
 
         LastMessageBtn.onClick.AddListener(LastMessageBtnAction);
@@ -112,6 +114,7 @@ public class ConversationManagerTest : MonoBehaviour
         LoadMessagesWithKeywordBtn.onClick.AddListener(LoadMessagesWithKeywordBtnAction);
         LoadMessagesWithTimeBtn.onClick.AddListener(LoadMessagesWithTimeBtnAction);
         LoadMessagesWithMsgTypeBtn.onClick.AddListener(LoadMessagesWithMsgTypeBtnAction);
+        MessagesCountBtn.onClick.AddListener(MessagesCountBtnAction);
     }
 
 
@@ -431,6 +434,21 @@ public class ConversationManagerTest : MonoBehaviour
             }
         ));
         Debug.Log("LoadMessagesWithMsgTypeBtnAction");
+    }
+
+    void MessagesCountBtnAction()
+    {
+        if (null == conversationId || 0 == conversationId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
+
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
+        int count = conv.MessagesCount();
+        UIManager.DefaultAlert(transform, $"messagecount:{count}");
+
+        Debug.Log("MessagesCountBtnAction");
     }
 
     // Start is called before the first frame update
