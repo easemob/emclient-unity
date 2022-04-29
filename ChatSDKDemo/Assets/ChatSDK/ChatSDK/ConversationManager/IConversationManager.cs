@@ -12,6 +12,7 @@ namespace ChatSDK
         public abstract Dictionary<string, string> GetExt(string conversationId, ConversationType conversationType);
         public abstract void SetExt(string conversationId, ConversationType conversationType, Dictionary<string, string> ext);
         public abstract int UnReadCount(string conversationId, ConversationType conversationType);
+        public abstract int MessagesCount(string conversationId, ConversationType conversationType);
 
         public abstract void MarkMessageAsRead(string conversationId, ConversationType conversationType, string messageId);
         public abstract void MarkAllMessageAsRead(string conversationId, ConversationType conversationType);

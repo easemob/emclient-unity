@@ -7,6 +7,9 @@ namespace ChatSDK
 {
     //IConnectionDelegate
     internal delegate void OnDisconnected(int info);
+
+    internal delegate void OnTokenNotificationed(int info, string desc);
+
     //IChatManagerDelegate
     internal delegate void OnMessagesReceived([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] messages,
         [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] MessageBodyType[] types, int size);
@@ -63,12 +66,21 @@ namespace ChatSDK
     internal delegate void OnFriendRequestAccepted(string username);
     internal delegate void OnFriendRequestDeclined(string username);
 
+    //IMultiDeviceDelegate 
+    internal delegate void onContactMultiDevicesEvent(MultiDevicesOperation operation, string target, string ext);
+    internal delegate void onGroupMultiDevicesEvent(MultiDevicesOperation operation, string target, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] string[] usernames, int size);
+    internal delegate void undisturbMultiDevicesEvent(string data);
+
+    //IPresenceManagerDelegate
+    internal delegate void OnPresenceUpdated([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] IntPtr[] presences, int size);
+
     internal sealed class ConnectionHub
     {
         //events handler
         internal Action OnConnected;
         internal OnDisconnected OnDisconnected;
         internal Action OnPong;
+        internal OnTokenNotificationed OnTokenNotification;
 
         internal ConnectionHub(IClient client)
         {
@@ -76,7 +88,6 @@ namespace ChatSDK
             OnConnected = () =>
             {
                 Debug.Log("Connection established.");
-                client.IsConnected = true;
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IConnectionDelegate listener in CallbackManager.Instance().connectionListener.delegater)
                     {
@@ -87,7 +98,6 @@ namespace ChatSDK
             OnDisconnected = (int info) =>
             {
                 Debug.Log("Connection discontinued.");
-                client.IsConnected = false;
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IConnectionDelegate listener in CallbackManager.Instance().connectionListener.delegater)
                     {
@@ -104,6 +114,70 @@ namespace ChatSDK
                 //        listener.OnPong();
                 //    }
                 //});
+            };
+            OnTokenNotification = (int info, string desc) =>
+            {
+                Debug.Log($"token notification received, with errid:{info}, desc:{desc}");
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IConnectionDelegate listener in CallbackManager.Instance().connectionListener.delegater)
+                    {
+                        listener.OnTokenNotificationed(info, desc);
+                    }
+                });
+            };
+
+        }
+    }
+
+    internal sealed class MultiDevicesHub
+    {
+        internal onContactMultiDevicesEvent onContactMultiDevicesEvent;
+        internal onGroupMultiDevicesEvent onGroupMultiDevicesEvent;
+        internal undisturbMultiDevicesEvent undisturbMultiDevicesEvent;
+
+        internal MultiDevicesHub()
+        {
+            onContactMultiDevicesEvent = (MultiDevicesOperation operation, string target, string ext) =>
+            {
+                Debug.Log("onContactMultiDevicesEvent received.");
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IMultiDeviceDelegate listener in CallbackManager.Instance().multiDeviceListener.delegater)
+                    {
+                        listener.onContactMultiDevicesEvent(operation, target, ext);
+                    }
+                });
+            };
+
+            onGroupMultiDevicesEvent = (MultiDevicesOperation operation, string target, string[] usernames, int size) =>
+            {
+                Debug.Log("onGroupMultiDevicesEvent received.");
+
+                var usernameList = new List<string>();
+                for (int i = 0; i < size; i++)
+                {
+                    if(usernames[i].Length != 0)
+                    {
+                        usernameList.Add(usernames[i]);
+                    }
+                }
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IMultiDeviceDelegate listener in CallbackManager.Instance().multiDeviceListener.delegater)
+                    {
+                        listener.onGroupMultiDevicesEvent(operation, target, usernameList);
+                    }
+                });
+            };
+
+            undisturbMultiDevicesEvent = (string data) =>
+            {
+                Debug.Log("undisturbMultiDevicesEvent received.");
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IMultiDeviceDelegate listener in CallbackManager.Instance().multiDeviceListener.delegater)
+                    {
+                        listener.undisturbMultiDevicesEvent(data);
+                    }
+                });
             };
         }
     }
@@ -708,6 +782,35 @@ namespace ChatSDK
                     }
                 });
             };
+        }
+    }
+
+    internal sealed class PresenceManagerHub
+    {
+        internal OnPresenceUpdated onPresenceUpdated;
+
+        internal PresenceManagerHub()
+        {
+            onPresenceUpdated = (IntPtr[] presences, int size) =>
+            {
+                Debug.Log("onPresenceUpdated received.");
+
+                List<Presence> list = new List<Presence>();
+                for (int i=0; i<size; i++)
+                {
+                    PresenceTO pto = Marshal.PtrToStructure<PresenceTO>(presences[i]);
+                    Presence presence = pto.Unmarshall();
+                    list.Add(presence);
+                }
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IPresenceManagerDelegate listener in CallbackManager.Instance().presenceManagerListener.delegater)
+                    {
+                        listener.OnPresenceUpdated(list);
+                    }
+                });
+            };
+
         }
     }
 }

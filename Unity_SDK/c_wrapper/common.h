@@ -9,11 +9,13 @@
 extern "C"
 {
 #define CLIENT static_cast<EMClient *>(client)
-#define CALLBACK static_cast<Callback *>(callback)
 }
 
 #if defined(_WIN32)
+
+#ifndef AGORACHAT_EXPORT
 #define AGORACHAT_EXPORT
+#endif
 
 #elif defined(__APPLE__)
 

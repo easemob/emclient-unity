@@ -543,11 +543,12 @@ HYPHENATE_API void GroupManager_FetchGroupBans(void *client, int callbackId, con
             LOG("GroupManager_FetchGroupBans succeeds, groupid: %s, banlist size:%d", groupIdStr.c_str(), banList.size());
             if(onSuccess) {
                 size_t size = banList.size();
-                const char * data[size];
+                const char** data = new const char*[size];
                 for(size_t i=0; i<size; i++) {
                     data[i] = banList[i].c_str();
                 }
                 onSuccess((void **)data, DataType::String, (int)size, callbackId);
+		delete []data;
             }
         }else{
             LOG("GroupManager_FetchGroupBans failed, groupid=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
@@ -573,7 +574,7 @@ HYPHENATE_API void GroupManager_FetchGroupSharedFiles(void *client, int callback
             LOG("GroupManager_fetchGroupSharedFiles succeeds, groupid: %s, sharedlist size: %d", groupIdStr.c_str(), fileList.size());
             if(onSuccess) {
                 size_t size = fileList.size();
-                GroupSharedFileTO * data[size];
+                GroupSharedFileTO** data = new GroupSharedFileTO*[size];
                 for(size_t i=0; i<size; i++) {
                     data[i] = GroupSharedFileTO::FromEMGroupSharedFile(fileList[i]);
                     LOG("share file %d, id=%s, name=%s", i, data[i]->FileId, data[i]->FileName);
@@ -582,6 +583,7 @@ HYPHENATE_API void GroupManager_FetchGroupSharedFiles(void *client, int callback
                 for(size_t i=0; i<size; i++) {
                     GroupSharedFileTO::DeleteGroupSharedFileTO(data[i]);
                 }
+		delete []data;
             }
         }else{
             LOG("GroupManager_fetchGroupSharedFiles failed, groupid=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
@@ -613,12 +615,13 @@ HYPHENATE_API void GroupManager_FetchGroupMembers(void *client, int callbackId, 
                 //items
                 int size = (int)msgCursorResult.result().size();
                 LOG("GroupManager_FetchGroupMembers successfully, member size: %d", size);
-                const char *data[size];
+                const char** data = new const char*[size];
                 for(int i=0; i<size; i++) {
                     data[i] = msgCursorResult.result().at(i).c_str();
                     LOG("member %d: %s", i, data[i]);
                 }
                 onSuccess((void *)&cursorResultTo, (void **)data, DataType::CursorResult, size, callbackId);
+		delete []data;
             }
         }else{
             LOG("GroupManager_FetchGroupMembers failed, groupId=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
@@ -644,11 +647,12 @@ HYPHENATE_API void GroupManager_FetchGroupMutes(void *client, int callbackId, co
             LOG("GroupManager_FetchGroupMutes succeeds, groupid: %s, mutelist size:%d", groupIdStr.c_str(), muteList.size());
             if(onSuccess) {
                 size_t size = muteList.size();
-                const char * data[size];
+                const char** data = new const char*[size];
                 for(size_t i=0; i<size; i++) {
                     data[i] = muteList[i].first.c_str();
                 }
                 onSuccess((void **)data, DataType::String, (int)size, callbackId);
+		delete []data;
             }
         }else{
             LOG("GroupManager_FetchGroupMutes failed, groupid=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
@@ -696,7 +700,7 @@ HYPHENATE_API void GroupManager_GetGroupsWithoutNotice(void *client, int callbac
             int count = 0;
             if(onSuccess) {
                 size_t size = groupList.size();
-                const char * data[size];
+                const char** data = new const char*[size];
                 for(size_t i=0; i<size; i++) {
                     if(groupList[i]->isPushEnabled() == false) {
                         data[count] = groupList[i]->groupId().c_str();
@@ -705,6 +709,7 @@ HYPHENATE_API void GroupManager_GetGroupsWithoutNotice(void *client, int callbac
                 }
                 LOG("Found groups without notice successfully, num=%d", count);
                 onSuccess((void **)data, DataType::String, (int)count, callbackId);
+		delete []data;
             }
         }else{
             LOG("Cannot load groups with code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
@@ -730,12 +735,13 @@ HYPHENATE_API void GroupManager_FetchGroupWhiteList(void *client, int callbackId
             LOG("GroupManager_FetchGroupWhiteList succeeds, groupid: %s, memberlist size:%d", groupIdStr.c_str(), memberList.size());
             if(onSuccess) {
                 size_t size = memberList.size();
-                const char * data[size];
+                const char** data = new const char*[size];
                 
                 for(size_t i=0; i<size; i++) {
                     data[i] = memberList[i].c_str();
                 }
                 onSuccess((void **)data, DataType::String, (int)size, callbackId);
+		delete []data;
             }
         }else{
             LOG("GroupManager_FetchGroupWhiteList failed, groupid=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
@@ -751,7 +757,7 @@ HYPHENATE_API void GroupManager_LoadAllMyGroupsFromDB(void *client, FUNC_OnSucce
     int size = (int)groupList.size();
     LOG("LoadAllMyGroupsFromDB successfully, group num:%d", size);
     
-    GroupTO *data[size];
+    GroupTO**data = new GroupTO*[size];
     for(size_t i=0; i<size; i++) {
         data[i] = GroupTO::FromEMGroup(groupList[i]);
     }
@@ -759,6 +765,7 @@ HYPHENATE_API void GroupManager_LoadAllMyGroupsFromDB(void *client, FUNC_OnSucce
     for(size_t i=0; i<size; i++) {
         delete (GroupTO*)data[i];
     }
+    delete []data;
 }
 
 HYPHENATE_API void GroupManager_FetchAllMyGroupsWithPage(void *client, int callbackId, int pageNum, int pageSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
@@ -770,7 +777,7 @@ HYPHENATE_API void GroupManager_FetchAllMyGroupsWithPage(void *client, int callb
             LOG("GroupManager_FetchAllMyGroupsWithPage succeeds, return group size: %d", groupList.size());
             if(onSuccess) {
                 size_t size = groupList.size();
-                GroupTO * data[size];
+                GroupTO** data = new GroupTO*[size];
                 for(size_t i=0; i<size; i++) {
                     data[i] = GroupTO::FromEMGroup(groupList[i]);
                     data[i]->LogInfo();
@@ -779,6 +786,7 @@ HYPHENATE_API void GroupManager_FetchAllMyGroupsWithPage(void *client, int callb
                 for(size_t i=0; i<size; i++) {
                     delete (GroupTO*)data[i];
                 }
+		delete []data;
             }
         }else{
             LOG("GroupManager_FetchAllMyGroupsWithPage failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
@@ -808,7 +816,7 @@ HYPHENATE_API void GroupManager_FetchPublicGroupsWithCursor(void *client, int ca
                 cursorResultTo.Type = DataType::ListOfGroup;
                 //items
                 size_t size = cursorResult.result().size();
-                GroupInfoTO* data[size];
+                GroupInfoTO** data = new GroupInfoTO*[size];
                 for(size_t i=0; i<size; i++) {
                     EMGroupPtr groupPtr = std::dynamic_pointer_cast<EMGroup>(cursorResult.result().at(i));
                     LOG("%d Public group id is: %s, group name: %s", i, groupPtr->groupId().c_str(), groupPtr->groupSubject().c_str());
@@ -824,6 +832,7 @@ HYPHENATE_API void GroupManager_FetchPublicGroupsWithCursor(void *client, int ca
                 for(size_t i=0; i<size; i++) {
                     delete (GroupInfoTO*)data[i];
                 }
+		delete []data;
             }
         }else{
             if(onError) {

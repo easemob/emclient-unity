@@ -61,7 +61,7 @@ namespace ChatSDK
         /// <summary>
         /// 获取sdk版本号
         /// </summary>
-        public string SdkVersion { get => "2.2.3"; }
+        public string SdkVersion { get => "3.0.0"; }
 
         /// <summary>
         /// 获取当前登录的环信id
@@ -77,7 +77,7 @@ namespace ChatSDK
         /// 当前是否连接到服务器
         /// </summary>
 
-        public bool IsConnected { get => _Sdk.IsConnected; }
+        public bool IsConnected { get => _Sdk.IsConnected(); }
 
         /// <summary>
         /// 当前用户的token
@@ -105,7 +105,23 @@ namespace ChatSDK
             }
         }
 
-       
+        public void AddMultiDeviceDelegate(IMultiDeviceDelegate multiDeviceDelegate)
+        {
+            if (!CallbackManager.Instance().multiDeviceListener.delegater.Contains(multiDeviceDelegate))
+            {
+                CallbackManager.Instance().multiDeviceListener.delegater.Add(multiDeviceDelegate);
+            }
+        }
+
+        public void DeleteMultiDeviceDelegate(IMultiDeviceDelegate multiDeviceDelegate)
+        {
+            if (CallbackManager.IsQuit()) return;
+            if (CallbackManager.Instance().multiDeviceListener.delegater.Contains(multiDeviceDelegate))
+            {
+                CallbackManager.Instance().multiDeviceListener.delegater.Remove(multiDeviceDelegate);
+            }
+        }
+
         /// <summary>
         /// 初始化sdk
         /// </summary>
@@ -139,6 +155,26 @@ namespace ChatSDK
         public void Login(string username, string pwdOrToken, bool isToken = false, CallBack handle = null)
         {
             _Sdk.Login(username, pwdOrToken, isToken, handle);
+        }
+
+        /// <summary>
+        /// 使用声网token登录环信服务器
+        /// </summary>
+        /// <param name="username">环信id</param>
+        /// <param name="token">声网token</param>
+        /// <param name="handle">结果回调</param>
+        public void LoginWithAgoraToken(string username, string token, CallBack handle = null)
+        {
+            _Sdk.LoginWithAgoraToken(username, token, handle);
+        }
+
+        /// <summary>
+        /// 使用声网token刷新有效期
+        /// </summary>
+        /// <param name="token">声网token</param>
+        public void RenewAgoraToken(string token)
+        {
+            _Sdk.RenewAgoraToken(token);
         }
 
         /// <summary>
