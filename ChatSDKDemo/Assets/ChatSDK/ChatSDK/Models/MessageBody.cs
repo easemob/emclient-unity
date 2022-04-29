@@ -196,6 +196,26 @@ namespace ChatSDK
             /// </summary>
             public string Text;
 
+            /**
+              * \~chinese
+              * 翻译目标语种。
+              *
+              * \~english
+              * Target languages.
+              * 
+              */
+            public List<string> TargetLanguages;
+
+            /**
+              * \~chinese
+              * 翻译语种与翻译结果。
+              *
+              * \~english
+              * Target languages and tranlations.
+              * 
+              */
+            public Dictionary<string, string> Translations;
+
             public TextBody(string text)
             {
                 Text = text;
@@ -211,6 +231,7 @@ namespace ChatSDK
                 JSONObject jo = new JSONObject();
                 if (Text != null) {
                     jo.Add("content", Text);
+                    //TODO: translation
                 }
                 
                 return jo;
@@ -238,11 +259,17 @@ namespace ChatSDK
             /// </summary>
             public string Address;
 
-            public LocationBody(double latitude, double longitude, string address = "")
+            /// <summary>
+            /// 建筑物信息
+            /// </summary>
+            public string BuildingName;
+
+            public LocationBody(double latitude, double longitude, string address = "", string buildName = "")
             {
                 Latitude = latitude;
                 Longitude = longitude;
                 Address = address;
+                BuildingName = buildName;
                 Type = MessageBodyType.LOCATION;
             }
 
@@ -257,6 +284,10 @@ namespace ChatSDK
                 jo.Add("longitude", Longitude);
                 if (Address != null) {
                     jo.Add("address", Address);
+                }
+                if (BuildingName != null)
+                {
+                    jo.Add("buildingName", BuildingName);
                 }
 
                 return jo;

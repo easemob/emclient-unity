@@ -1,5 +1,7 @@
 **/build
-**/xcuserdata
+**/build_release
+**/build_shared
+**/build_static
 **/xcuserdata
 # **/*.xcuserdatad
 **/Temp
@@ -19,12 +21,13 @@ obj/
 *.userprefs
 *.pidb
 *.suo
-/*.sln
 *.user
 *.unityproj
 *.booproj
-
-**/Release
+**/obj/
+**/.vs/
+*.sln
+*.vcxproj
 
 # ============ #
 # OS generated #
@@ -43,7 +46,7 @@ Thumbs.db
 # ========== #
 *.a
 *.zip
-*.framework
+#*.framework
 documents/
 **/xcshareddata
 **/xcuserdata
@@ -52,14 +55,16 @@ documents/
 # ========== #
 # mac ignore #
 # ========== #
-*.bundle
+#*.bundle
 
 easemob.log
 easemobDB/
+easemobDBPW/
 easemobLog/
 DerivedData/
 appdata/
 sdkdata/
+Debug/
 
 **/UserPrefs
 **/.vs
@@ -83,7 +88,6 @@ ExportedObj/
 .consulo/
 *.csproj
 *.unityproj
-*.sln
 *.suo
 *.tmp
 *.user
@@ -106,3 +110,8 @@ sysinfo.txt
 **/change_all.sh
 **/change_all.sh.meta
 *.meta
+**/unmanaged_dll.log
+*.pdb
+.vscode
+*.code-workspace
+!Unity_SDK/mac_build/lib/LDAP.framework

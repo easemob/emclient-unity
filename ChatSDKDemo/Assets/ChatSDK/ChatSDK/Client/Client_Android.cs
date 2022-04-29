@@ -39,9 +39,9 @@ namespace ChatSDK
             return wrapper.Call<string>("currentUsername");
         }
 
-        public override bool IsConnected {
-            get => wrapper.Call<bool>("isConnected");
-            internal set {}
+        public override bool IsConnected() 
+        {
+            return wrapper.Call<bool>("isConnected");
         }
 
         public override bool IsLoggedIn()
@@ -53,6 +53,23 @@ namespace ChatSDK
         {
             return wrapper.Call<string>("accessToken");
         }
+
+        public override void LoginWithAgoraToken(string username, string token, CallBack handle = null)
+        {
+            //TODO: add code
+        }
+
+        public override void RenewAgoraToken(string token)
+        {
+            //TODO: add code
+        }
+
+        /*
+        public override void AutoLogin(CallBack callback = null)
+        {
+            //TODO: add code
+        }
+        */
 
         internal override void StartLog(string logFilePath)
         {

@@ -6,64 +6,121 @@
 //  Copyright © 2021 easemob. All rights reserved.
 //
 #include <thread>
+#include <mutex>
 #include "chat_manager.h"
 #include "emclient.h"
 #include "emmessagebody.h"
 #include "tool.h"
 
-typedef std::map<int64_t, MessageTO*>::iterator TsMsgIter;
-typedef std::map<int64_t, EMMessagePtr>::iterator TsMsgPtrIter;
+typedef std::map<std::string, MessageTO*>::iterator TsMsgIter;
+typedef std::map<std::string, EMMessagePtr>::iterator TsMsgPtrIter;
 
-std::mutex tsMsgLocker;
+std::mutex msgLocker;
 //MessgeTO must be freed at C# side!
-std::map<int64_t, MessageTO*> tsMsgTOMap;
-std::map<int64_t, EMMessagePtr> tsMsgPtrMap;
+std::map<std::string, MessageTO*> msgTOMap;
+std::map<std::string, EMMessagePtr> msgPtrMap;
+std::map<std::string, MessageTOLocal> msgTOLocalMap;
+
+std::mutex progressMsgLocker;
+std::map<std::string, int> progressMap;
 
 static EMCallbackObserverHandle gCallbackObserverHandle;
 
 EMChatManagerListener *gChatManagerListener = nullptr;
 
-void AddTsMsgItem(int64_t ts,  MessageTO* mto, EMMessagePtr msgPtr)
+void AddMsgItem(std::string msgId,  MessageTO* mto, EMMessagePtr msgPtr)
 {
-    std::lock_guard<std::mutex> maplocker(tsMsgLocker);
-    tsMsgTOMap[ts] = mto;
-    tsMsgPtrMap[ts] = msgPtr;
+    std::lock_guard<std::mutex> maplocker(msgLocker);
+    msgTOMap[msgId] = mto;
+    msgPtrMap[msgId] = msgPtr;
+    
+    MessageTOLocal toLocal;
+    msgTOLocalMap[msgId] = toLocal;
 }
 
-void DeleteTsMsgItem(int64_t ts)
+void DeleteMsgItem(std::string msgId)
 {
-    std::lock_guard<std::mutex> maplocker(tsMsgLocker);
-    auto it = tsMsgTOMap.find(ts);
-    if(tsMsgTOMap.end() != it) {
-        tsMsgTOMap.erase(it);
+    std::lock_guard<std::mutex> maplocker(msgLocker);
+    auto it = msgTOMap.find(msgId);
+    if(msgTOMap.end() != it) {
+        msgTOMap.erase(it);
     }
     
-    auto itPtr = tsMsgPtrMap.find(ts);
-    if(tsMsgPtrMap.end() != itPtr) {
-        tsMsgPtrMap.erase(itPtr);
+    auto itPtr = msgPtrMap.find(msgId);
+    if(msgPtrMap.end() != itPtr) {
+        msgPtrMap.erase(itPtr);
+    }
+    
+    auto itl = msgTOLocalMap.find(msgId);
+    if (msgTOLocalMap.end() != itl) {
+        msgTOLocalMap.erase(itl);
     }
 }
 
-void UpdateTsMsgMap(int64_t ts)
+void UpdateMsgMap(std::string msgId)
 {
-    LOG("UpdateTsMsgMap ts:%ld", ts);
-    std::lock_guard<std::mutex> maplocker(tsMsgLocker);
+    LOG("UpdateMsgMap msgId:%s", msgId.c_str());
+    std::lock_guard<std::mutex> maplocker(msgLocker);
     
-    auto it = tsMsgTOMap.find(ts);
-    if(tsMsgTOMap.end() == it) {
+    auto it = msgTOMap.find(msgId);
+    if(msgTOMap.end() == it) {
         return;
     }
     
-    auto itPtr = tsMsgPtrMap.find(ts);
-    if(tsMsgPtrMap.end() == itPtr) {
+    auto itPtr = msgPtrMap.find(msgId);
+    if(msgPtrMap.end() == itPtr) {
         return;
     }
-    std::string msgId = it->second->MsgId;
-    it->second->MsgId = itPtr->second->msgId().c_str();
-    LOG("after update, msgid: %s -> %s", msgId.c_str(), it->second->MsgId);
+    
+    auto itl = msgTOLocalMap.find(msgId);
+    if(msgTOLocalMap.end() == itl) {
+        return;
+    }
+    
+    std::string beforeMsgId = it->second->MsgId;
+    
+    UpdateMessageTO((void*)it->second, itPtr->second, (void*)&itl->second);
+    
+    LOG("after update, msgid: %s -> %s", beforeMsgId.c_str(), it->second->MsgId);
 }
 
-HYPHENATE_API void ChatManager_SendMessage(void *client, int callbackId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, void *mto, EMMessageBody::EMMessageBodyType type) {
+void AddProgressItem(std::string msgId)
+{
+    std::lock_guard<std::mutex> maplocker(progressMsgLocker);
+    progressMap[msgId] = 0;
+}
+
+void DeleteProgressItem(std::string msgId)
+{
+    std::lock_guard<std::mutex> maplocker(progressMsgLocker);
+    auto it = progressMap.find(msgId);
+    if(progressMap.end() != it) {
+        progressMap.erase(it);
+    }
+}
+
+void UpdateProgressMap(std::string msgId, int progress)
+{
+    std::lock_guard<std::mutex> maplocker(progressMsgLocker);
+    
+    auto it = progressMap.find(msgId);
+    if(progressMap.end() == it) {
+        return;
+    }
+    it->second = progress;
+}
+
+int GetLastProgress(std::string msgId)
+{
+    std::lock_guard<std::mutex> maplocker(progressMsgLocker);
+    auto it = progressMap.find(msgId);
+    if(progressMap.end() == it) {
+        return 0;
+    }
+    return it->second;
+}
+
+HYPHENATE_API void ChatManager_SendMessage(void *client, int callbackId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, FUNC_OnProgress onProgress, void *mto, EMMessageBody::EMMessageBodyType type) {
     EMError error;
     if(!MandatoryCheck(mto, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -71,22 +128,35 @@ HYPHENATE_API void ChatManager_SendMessage(void *client, int callbackId, FUNC_On
     }
     
     EMMessagePtr messagePtr = BuildEMMessage(mto, type);
-    int64_t ts = messagePtr->timestamp();
-    AddTsMsgItem(ts, (MessageTO*)mto, messagePtr);
+    std::string msgId = messagePtr->msgId();
+    
+    AddMsgItem(msgId, (MessageTO*)mto, messagePtr);
+    AddProgressItem(msgId);
     
     EMCallbackPtr callbackPtr(new EMCallback(gCallbackObserverHandle,
                                              [=]()->bool {
                                                 LOG("Message sent succeeds.");
-                                                UpdateTsMsgMap(ts);
+                                                UpdateMsgMap(msgId);
                                                 if(onSuccess) onSuccess(callbackId);
-                                                DeleteTsMsgItem(ts);
+                                                DeleteMsgItem(msgId);
+                                                DeleteProgressItem(msgId);
                                                 return true;
                                              },
                                              [=](const easemob::EMErrorPtr error)->bool{
                                                 LOG("Message sent failed with code=%d.", error->mErrorCode);
                                                 if(onError) onError(error->mErrorCode,error->mDescription.c_str(), callbackId);
-                                                DeleteTsMsgItem(ts);
+                                                DeleteMsgItem(msgId);
+                                                DeleteProgressItem(msgId);
                                                 return true;
+                                             },
+                                             [=](int progress){
+                                                LOG("Message send in progress %d percent.", progress);
+                                                int last_progress = GetLastProgress(msgId);
+                                                if(progress - last_progress >= 5) {
+                                                    if(onProgress) onProgress(progress, callbackId);
+                                                    UpdateProgressMap(msgId, progress);
+                                                }
+                                                return;
                                              }));
     messagePtr->setCallback(callbackPtr);
     CLIENT->getChatManager().sendMessage(messagePtr);
@@ -134,7 +204,7 @@ HYPHENATE_API void ChatManager_FetchHistoryMessages(void *client, int callbackId
             //items
             int size = (int)msgCursorResult.result().size();
             LOG("fetchHistoryMessages history message count:%d", size);
-            TOItem* data[size];
+            TOItem** data = new TOItem*[size];
             for(int i=0; i<size; i++) {
                 MessageTO *mto = MessageTO::FromEMMessage(msgCursorResult.result().at(i));
                 TOItem* item = new TOItem(mto->BodyType, mto);
@@ -148,6 +218,8 @@ HYPHENATE_API void ChatManager_FetchHistoryMessages(void *client, int callbackId
                 delete (MessageTO*)data[i]->Data;
                 delete (TOItem*)data[i];
             }
+	    //delete array
+	    delete []data;
         } else {
             LOG("fetchHistoryMessages history message failed, error id:%d, desc::%s", error.mErrorCode, error.mDescription.c_str());
             onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -165,7 +237,7 @@ HYPHENATE_API void ChatManager_GetConversationsFromServer(void *client, int call
             if (onSuccess) {
                 int size = (int)conversationList.size();
                 LOG("%d conversation found.", size);
-                ConversationTO *data[size];
+                ConversationTO**data = new ConversationTO*[size];
                 for(size_t i=0; i<size; i++) {
                     data[i] = ConversationTO::FromEMConversation(conversationList.at(i));
                     LOG("GetConversation %d, id=%s, type=%d, extfiled=%s",i, data[i]->ConverationId, data[i]->type, data[i]->ExtField);
@@ -175,6 +247,7 @@ HYPHENATE_API void ChatManager_GetConversationsFromServer(void *client, int call
                 for(size_t i=0; i<size; i++) {
                     delete (ConversationTO*)data[i];
                 }
+		delete []data;
             }
         }else{
             if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -191,7 +264,7 @@ HYPHENATE_API void ChatManager_RemoveConversation(void *client, const char * con
     LOG("Remove conversation completed.");
 }
 
-HYPHENATE_API void ChatManager_DownloadMessageAttachments(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+HYPHENATE_API void ChatManager_DownloadMessageAttachments(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, FUNC_OnProgress onProgress)
 {
     EMError error;
     if(!MandatoryCheck(messageId, error)) {
@@ -207,22 +280,38 @@ HYPHENATE_API void ChatManager_DownloadMessageAttachments(void *client, int call
         if(onError) onError(error.mErrorCode,error.mDescription.c_str(), callbackId);
         return;
     }
+    
+    std::string msgId(messageId);
+    AddProgressItem(msgId);
+    
     EMCallbackPtr callbackPtr(new EMCallback(gCallbackObserverHandle,
                                              [=]()->bool {
                                                 LOG("Download message attachment succeeds.");
                                                 if(onSuccess) onSuccess(callbackId);
+                                                DeleteProgressItem(msgId);
                                                 return true;
                                              },
                                              [=](const easemob::EMErrorPtr error)->bool{
                                                 LOG("Download message attachment failed with code=%d.", error->mErrorCode);
                                                 if(onError) onError(error->mErrorCode,error->mDescription.c_str(), callbackId);
+                                                DeleteProgressItem(msgId);
                                                 return true;
-                                             }));
+                                             },
+                                             [=](int progress){
+                                                LOG("Download message attachment in progress %d percent.", progress);
+                                                int last_progress = GetLastProgress(msgId);
+                                                if(progress - last_progress >= 5) {
+                                                    if(onProgress) onProgress(progress, callbackId);
+                                                    UpdateProgressMap(msgId, progress);
+                                                }
+                                                return;
+                                             }
+                                             ));
     messagePtr->setCallback(callbackPtr);
     CLIENT->getChatManager().downloadMessageAttachments(messagePtr);
 }
 
-HYPHENATE_API void ChatManager_DownloadMessageThumbnail(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+HYPHENATE_API void ChatManager_DownloadMessageThumbnail(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, FUNC_OnProgress onProgress)
 {
     EMError error;
     if(!MandatoryCheck(messageId, error)) {
@@ -239,17 +328,33 @@ HYPHENATE_API void ChatManager_DownloadMessageThumbnail(void *client, int callba
         if(onError) onError(error.mErrorCode,error.mDescription.c_str(), callbackId);
         return;
     }
+    
+    std::string msgId(messageId);
+    AddProgressItem(msgId);
+    
     EMCallbackPtr callbackPtr(new EMCallback(gCallbackObserverHandle,
                                              [=]()->bool {
                                                 LOG("Download message thumbnail succeeds.");
                                                 if(onSuccess) onSuccess(callbackId);
+                                                DeleteProgressItem(msgId);
                                                 return true;
                                              },
                                              [=](const easemob::EMErrorPtr error)->bool{
                                                 LOG("Download message thumbnail failed with code=%d.", error->mErrorCode);
                                                 if(onError) onError(error->mErrorCode,error->mDescription.c_str(), callbackId);
+                                                DeleteProgressItem(msgId);
                                                 return true;
-                                             }));
+                                             },
+                                             [=](int progress){
+                                                LOG("Download message thumbnail in progress %d percent.", progress);
+                                                int last_progress = GetLastProgress(msgId);
+                                                if(progress - last_progress >= 5) {
+                                                    if(onProgress) onProgress(progress, callbackId);
+                                                    UpdateProgressMap(msgId, progress);
+                                                }
+                                                return;
+                                             }
+                                             ));
     messagePtr->setCallback(callbackPtr);
     CLIENT->getChatManager().downloadMessageThumbnail(messagePtr);
 }
@@ -306,7 +411,7 @@ HYPHENATE_API void ChatManager_LoadAllConversationsFromDB(void *client, FUNC_OnS
     EMConversationList conversationList = CLIENT->getChatManager().loadAllConversationsFromDB();
     
     int size = (int)conversationList.size();
-    ConversationTO* data[size];
+    ConversationTO** data = new ConversationTO*[size];
     LOG("Found conversations %d in Db", size);
     for(size_t i=0; i<size; i++) {
         data[i] = ConversationTO::FromEMConversation(conversationList.at(i));
@@ -317,6 +422,7 @@ HYPHENATE_API void ChatManager_LoadAllConversationsFromDB(void *client, FUNC_OnS
     for(size_t i=0; i<size; i++) {
         delete (ConversationTO*)data[i];
     }
+    delete []data;
 }
 
 HYPHENATE_API void ChatManager_GetMessage(void *client, const char * messageId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
@@ -361,7 +467,7 @@ HYPHENATE_API bool ChatManager_MarkAllConversationsAsRead(void *client)
     return ret;
 }
 
-HYPHENATE_API void ChatManager_RecallMessage(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+HYPHENATE_API void ChatManager_RecallMessage(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, FUNC_OnProgress onProgress)
 {
     EMError error;
     if(!MandatoryCheck(messageId, error)) {
@@ -389,6 +495,11 @@ HYPHENATE_API void ChatManager_RecallMessage(void *client, int callbackId, const
                                                 LOG("Recall message failed with code=%d.", error->mErrorCode);
                                                 if(onError) onError(error->mErrorCode,error->mDescription.c_str(), callbackId);
                                                 return true;
+                                             },
+                                             [=](int progress){
+                                                LOG("Recall message in progress %d percent.", progress);
+                                                if(onProgress) onProgress(progress, callbackId);
+                                                return;
                                              }));
     messagePtr->setCallback(callbackPtr);
     CLIENT->getChatManager().recallMessage(messagePtr, error);
@@ -435,7 +546,7 @@ HYPHENATE_API void ChatManager_ResendMessage(void *client, int callbackId, const
     delete item;
 }
 
-HYPHENATE_API void ChatManager_LoadMoreMessages(void *client, FUNC_OnSuccess_With_Result onSuccess, const char * keywords, long timestamp, int maxcount, const char * from, EMConversation::EMMessageSearchDirection direction)
+HYPHENATE_API void ChatManager_LoadMoreMessages(void *client, FUNC_OnSuccess_With_Result onSuccess, const char * keywords, int64_t timestamp, int maxcount, const char * from, EMConversation::EMMessageSearchDirection direction)
 {
     std::string keywordsStr = OptionalStrParamCheck(keywords);
     std::string fromStr = OptionalStrParamCheck(from);
@@ -446,7 +557,7 @@ HYPHENATE_API void ChatManager_LoadMoreMessages(void *client, FUNC_OnSuccess_Wit
     }
     LOG("Found %d messages with ts:%ld, kw:%s, from:%s, maxc:%d, direct:%d", messageList.size(), timestamp, keywordsStr.c_str(), fromStr.c_str(), maxcount, direction);
     int size = (int)messageList.size();
-    TOItem* data[size];
+    TOItem** data = new TOItem*[size];
     for(size_t i=0; i<size; i++) {
         MessageTO* mto = MessageTO::FromEMMessage(messageList[i]);
         TOItem* item = new TOItem((int)messageList[i]->bodies()[0]->type(), mto);
@@ -458,6 +569,7 @@ HYPHENATE_API void ChatManager_LoadMoreMessages(void *client, FUNC_OnSuccess_Wit
         delete (MessageTO*)data[i]->Data;
         delete (TOItem*)data[i];
     }
+    delete []data;
 }
 
 HYPHENATE_API void ChatManager_SendReadAckForConversation(void *client, int callbackId, const char * conversationId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
@@ -510,6 +622,35 @@ HYPHENATE_API void ChatManager_SendReadAckForMessage(void *client, int callbackI
     t.detach();
 }
 
+HYPHENATE_API void ChatManager_SendReadAckForGroupMessage(void *client,int callbackId, const char * messageId, const char* ackContent, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+{
+    EMError error;
+    if(!MandatoryCheck(messageId, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+    
+    std::string messageIdStr = messageId;
+    std::string ackContentStr = ackContent;
+    
+    std::thread t([=](){
+        EMError error;
+        EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(messageIdStr);
+        if(nullptr == messagePtr) {
+            
+            LOG("Cannot find message with message id:%s", messageIdStr.c_str());
+            error.mErrorCode = EMError::MESSAGE_INVALID;
+            error.mDescription = "Invalid message.";
+            if(onError) onError(error.mErrorCode,error.mDescription.c_str(), callbackId);
+            return;
+        }
+        CLIENT->getChatManager().sendReadAckForGroupMessage(messagePtr, ackContentStr);
+        LOG("Send read ack for group message:%s successfully.", messageIdStr.c_str());
+        if(onSuccess) onSuccess(callbackId);
+    });
+    t.detach();
+}
+
 HYPHENATE_API bool ChatManager_UpdateMessage(void *client, void *mto, EMMessageBody::EMMessageBodyType type)
 {
     if(!MandatoryCheck(mto))
@@ -523,6 +664,126 @@ HYPHENATE_API bool ChatManager_UpdateMessage(void *client, void *mto, EMMessageB
         return false;
     }
     return conversationPtr->updateMessage(messagePtr);
+}
+
+HYPHENATE_API void ChatManager_RemoveMessagesBeforeTimestamp(void *client, int callbackId, int64_t timeStamp,  FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+{
+    std::thread t([=](){
+        EMError error;
+        bool ret = CLIENT->getChatManager().removeMessagesBeforeTimestamp(timeStamp);
+        if(false == ret) {
+            LOG("RemoveMessagesBeforeTimestamp failed, ts:%d", timeStamp);
+            error.mErrorCode = EMError::DATABASE_ERROR;
+            error.mDescription = "Remove messages error";
+            if(onError) onError(error.mErrorCode,error.mDescription.c_str(), callbackId);
+            return;
+        }
+        LOG("RemoveMessagesBeforeTimestamp successfully.");
+        if(onSuccess) onSuccess(callbackId);
+    });
+    t.detach();
+}
+
+HYPHENATE_API void ChatManager_DeleteConversationFromServer(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType conversationType, bool isDeleteServerMessages, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+{
+    EMError error;
+    if(!MandatoryCheck(conversationId, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+    std::string conversationIdStr = conversationId;
+    
+    std::thread t([=](){
+        EMErrorPtr error = CLIENT->getChatManager().deleteConversationFromServer(conversationIdStr, conversationType, isDeleteServerMessages);
+        if(EMError::EM_NO_ERROR != error->mErrorCode) {
+            LOG("DeleteConversationFromServer failed for conversation id:%s", conversationIdStr.c_str());
+            if(onError) onError(error->mErrorCode,error->mDescription.c_str(), callbackId);
+            return;
+        }
+        LOG("DeleteConversationFromServer successfully for conversation id:%s", conversationIdStr.c_str());
+        if(onSuccess) onSuccess(callbackId);
+    });
+    t.detach();
+}
+
+HYPHENATE_API void ChatManager_FetchSupportLanguages(void *client, int callbackId, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnError onError)
+{
+    std::thread t([=](){
+        std::vector<std::tuple<std::string,std::string,std::string>> languages;
+        
+        EMErrorPtr error = CLIENT->getChatManager().fetchSupportLanguages(languages);
+        
+        if(EMError::EM_NO_ERROR != error->mErrorCode) {
+            LOG("ChatManager_FetchSupportLanguages failed");
+            if(onError) onError(error->mErrorCode,error->mDescription.c_str(), callbackId);
+            return;
+        }
+        
+        LOG("ChatManager_FetchSupportLanguages successfully");
+        if(onSuccessResult) {
+            if (languages.size() == 0) {
+                onSuccessResult(nullptr, DataType::ListOfString, 0, callbackId);
+                return;
+            }
+            
+            SupportLanguagesTO** data = new SupportLanguagesTO*[languages.size()];
+            SupportLanguagesTO* localData = new SupportLanguagesTO[languages.size()];
+            
+            for(int i=0; i<languages.size(); i++) {
+                
+                SupportLanguagesTO slto;
+                slto.languageCode = std::get<0>(languages[i]).c_str();
+                slto.languageName = std::get<1>(languages[i]).c_str();
+                slto.languageNativeName = std::get<2>(languages[i]).c_str();
+                
+                localData[i] = slto;
+                data[i] = &(localData[i]);
+            }
+            onSuccessResult((void**)data, DataType::ListOfString, (int)languages.size(), callbackId);
+            delete[]data;
+            delete[]localData;
+        }
+    });
+    t.detach();
+}
+
+HYPHENATE_API void ChatManager_TranslateMessage(void *client, int callbackId, void *mto, EMMessageBody::EMMessageBodyType type, const char * targetLanguages[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+{
+    EMError error;
+    
+    if(!MandatoryCheck(mto) || size <= 0) {
+        error.setErrorCode(EMError::GENERAL_ERROR);
+        error.mDescription = "Mandatory parameter is null!";
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+    
+    EMMessagePtr messagePtr = BuildEMMessage(mto, type);
+    std::string msgId = messagePtr->msgId();
+    
+    std::vector<std::string> vec;
+    for(int i=0; i<size; i++){
+        vec.push_back(targetLanguages[i]);
+    }
+    
+    AddMsgItem(msgId, (MessageTO*)mto, messagePtr);
+    
+    std::thread t([=](){
+        for(int i=0; i<size; i++) {
+            LOG("ChatManager_TranslateMessage, language: %s", vec[i].c_str());
+        }
+        
+        EMErrorPtr error = CLIENT->getChatManager().translateMessage(messagePtr, vec);
+        if(EMError::EM_NO_ERROR == error->mErrorCode) {
+            UpdateMsgMap(msgId);
+            if(onSuccess) onSuccess(callbackId);
+            DeleteMsgItem(msgId);
+        }else{
+            if(onError) onError(error->mErrorCode, error->mDescription.c_str(), callbackId);
+            DeleteMsgItem(msgId);
+        }
+    });
+    t.detach();
 }
 
 void ChatManager_RemoveListener(void*client)

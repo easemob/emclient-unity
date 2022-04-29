@@ -9,6 +9,7 @@
 #include "emerror.h"
 #include "emmessagebody.h"
 #include "emcontactlistener.h"
+#include "emconnectioncallback_listener.h"
 
 using namespace easemob;
 
@@ -24,16 +25,23 @@ using namespace easemob;
     //Connection Listeners
     typedef void(__stdcall *FUNC_OnConnected)();
     typedef void(__stdcall *FUNC_OnDisconnected)(int);
+    typedef void(__stdcall *FUNC_OnPong)();
+    typedef void(__stdcall *FUNC_onTokenNotification)(int, const char *);
+
+    //MultiDevice Listener
+    typedef void(__stdcall *FUNC_onContactMultiDevicesEvent)(EMMultiDevicesListener::MultiDevicesOperation operation, const char* target, const char* ext);
+    typedef void(__stdcall *FUNC_onGroupMultiDevicesEvent)(EMMultiDevicesListener::MultiDevicesOperation operation, const char* target, const char * usernames[], int size);
+    typedef void(__stdcall *FUNC_undisturbMultiDevicesEvent)(const char* data);
 
     //ChatManager Listeners
     typedef void (__stdcall *FUNC_OnMessagesReceived)(void * messages[],
                                                       EMMessageBody::EMMessageBodyType types[], int size);
-    typedef void (__stdcall *FUNC_OnCmdMessagesReceived)(void * messages[], int size);
-    typedef void (__stdcall *FUNC_OnMessagesRead)(void * messages[], int size);
-    typedef void (__stdcall *FUNC_OnMessagesDelivered)(void * messages[], int size);
-    typedef void (__stdcall *FUNC_OnMessagesRecalled)(void * messages[], int size);
+    typedef void (__stdcall *FUNC_OnCmdMessagesReceived)(void * messages[], EMMessageBody::EMMessageBodyType types[], int size);
+    typedef void (__stdcall *FUNC_OnMessagesRead)(void * messages[], EMMessageBody::EMMessageBodyType types[], int size);
+    typedef void (__stdcall *FUNC_OnMessagesDelivered)(void * messages[], EMMessageBody::EMMessageBodyType types[], int size);
+    typedef void (__stdcall *FUNC_OnMessagesRecalled)(void * messages[], EMMessageBody::EMMessageBodyType types[], int size);
     typedef void (__stdcall *FUNC_OnReadAckForGroupMessageUpdated)();
-    typedef void (__stdcall *FUNC_OnGroupMessageRead)(GroupReadAck acks[], int size);
+    typedef void (__stdcall *FUNC_OnGroupMessageRead)(void* acks[], int size);
     typedef void (__stdcall *FUNC_OnConversationsUpdate)();
     typedef void (__stdcall *FUNC_OnConversationRead)(const char * from, const char * to);
 
@@ -55,13 +63,23 @@ using namespace easemob;
     typedef void (__stdcall *FUNC_OnMemberJoined)(const char * groupId, const char * member);
     typedef void (__stdcall *FUNC_OnMemberExited)(const char * groupId, const char * member);
     typedef void (__stdcall *FUNC_OnAnnouncementChanged)(const char * groupId, const char * announcement);
-    typedef void (__stdcall *FUNC_OnSharedFileAdded)(const char * groupId, GroupSharedFileTO sharedFile);
+    typedef void (__stdcall *FUNC_OnSharedFileAdded)(const char * groupId, void* sharedFile[], int size);
     typedef void (__stdcall *FUNC_OnSharedFileDeleted)(const char * groupId, const char * fileId);
 
+    //ContactManager Listener
+    typedef void (__stdcall *FUNC_OnContactAdded)(const char* username);
+    typedef void (__stdcall *FUNC_OnContactDeleted)(const char* username);
+    typedef void (__stdcall *FUNC_OnContactInvited)(const char* username, const char* reason);
+    typedef void (__stdcall *FUNC_OnFriendRequestAccepted)(const char* username);
+    typedef void (__stdcall *FUNC_OnFriendRequestDeclined)(const char* username);
+
     //RoomManager Listener
-    typedef void (__stdcall *FUNC_OnChatRoomDestroyed)(__stdcall const char * roomId, const char * roomName);
-    typedef void (__stdcall *FUNC_OnRemovedFromChatRoom)(__stdcall const char * roomId, const char * roomName, const char * participant);
+    typedef void (__stdcall *FUNC_OnChatRoomDestroyed)(const char * roomId, const char * roomName);
+    typedef void (__stdcall *FUNC_OnRemovedFromChatRoom)(const char * roomId, const char * roomName, const char * participant);
     typedef void (__stdcall *FUNC_OnMemberExitedFromRoom)(const char * roomId, const char * roomName, const char * member);
+
+    //PresenceManager Listener
+    typedef void (__stdcall *FUNC_OnPresenceUpdated)(void * presences[], int size);
 #else
     //Callback
     typedef void(*FUNC_OnSuccess)(int callbackId);
@@ -74,6 +92,12 @@ using namespace easemob;
     typedef void(*FUNC_OnConnected)();
     typedef void(*FUNC_OnDisconnected)(int);
     typedef void(*FUNC_OnPong)();
+    typedef void(*FUNC_onTokenNotification)(int, const char *);
+
+    //MultiDevice Listener
+    typedef void(*FUNC_onContactMultiDevicesEvent)(EMMultiDevicesListener::MultiDevicesOperation operation, const char* target, const char* ext);
+    typedef void(*FUNC_onGroupMultiDevicesEvent)(EMMultiDevicesListener::MultiDevicesOperation operation, const char* target, const char * usernames[], int size);
+    typedef void(*FUNC_undisturbMultiDevicesEvent)(const char* data);
 
     //ChatManager Listener
     typedef void (*FUNC_OnMessagesReceived)(void * messages[],EMMessageBody::EMMessageBodyType types[],int size);
@@ -119,13 +143,18 @@ using namespace easemob;
     typedef void (*FUNC_OnFriendRequestAccepted)(const char * username);
     typedef void (*FUNC_OnFriendRequestDeclined)(const char * username);
 
+    //PresenceManager Listener
+    typedef void (*FUNC_OnPresenceUpdated)(void * presences[], int size);
+
 #endif
 
 class ConnectionListener : public EMConnectionListener
 {
 public:
-    ConnectionListener(FUNC_OnConnected connected, FUNC_OnDisconnected disconnected, FUNC_OnPong pong) : onConnected(connected), onDisconnected(disconnected), onPonged(pong){}
-    void onConnect() override {
+    ConnectionListener(FUNC_OnConnected connected, FUNC_OnDisconnected disconnected, FUNC_OnPong pong, FUNC_onTokenNotification tokenNotified) :
+                        onConnected(connected), onDisconnected(disconnected), onPonged(pong), onTokenNotificationed(tokenNotified){}
+    
+    void onConnect(const std::string& info) override {
         LOG("Connection established.");
         if(onConnected)
             onConnected();
@@ -142,10 +171,67 @@ public:
             onPonged();
     }
     
+    void onTokenNotification(EMErrorPtr error) override {
+        LOG("Token notification.");
+        if(onTokenNotificationed)
+            onTokenNotificationed(error->mErrorCode, error->mDescription.c_str());
+    }
+    
 private:
     FUNC_OnConnected onConnected;
     FUNC_OnDisconnected onDisconnected;
     FUNC_OnPong onPonged;
+    FUNC_onTokenNotification onTokenNotificationed;
+};
+
+class MultiDevicesListener : public EMMultiDevicesListener
+{
+public:
+    MultiDevicesListener(FUNC_onContactMultiDevicesEvent contactFuncHandle, FUNC_onGroupMultiDevicesEvent groupFuncHandle, FUNC_undisturbMultiDevicesEvent undisturbFuncHandle) :
+    onContactMultiDevicesEventHandle(contactFuncHandle), onGroupMultiDevicesEventedHandle(groupFuncHandle), undisturbMultiDevicesEventedHandle(undisturbFuncHandle){}
+    
+    void onContactMultiDevicesEvent(MultiDevicesOperation operation, const std::string& target, const std::string& ext) override {
+        LOG("Receive onContactMultiDevicesEvent.");
+        if(onContactMultiDevicesEventHandle)
+            onContactMultiDevicesEventHandle(operation, target.c_str(), ext.c_str());
+    }
+    
+    void onGroupMultiDevicesEvent(MultiDevicesOperation operation, const std::string& target, const std::vector<std::string>& usernames) override {
+        LOG("Receive onGroupMultiDevicesEvent with user size:%d.", usernames.size());
+        if(onGroupMultiDevicesEventedHandle) {
+            int size = (int)usernames.size();
+            
+            const char** userarray = new const char*[size];
+            for(size_t i=0; i<size; i++) {
+                userarray[i] = usernames[i].c_str();
+            }
+            
+            onGroupMultiDevicesEventedHandle(operation, target.c_str(), userarray, size);
+            delete []userarray;
+        }
+    }
+    
+    void undisturbMultiDevicesEvent(const std::string& data) override {
+        LOG("Receive undisturbMultiDevicesEvent.");
+        if(undisturbMultiDevicesEventedHandle) {
+            undisturbMultiDevicesEventedHandle(data.c_str());
+        }
+    }
+private:
+    FUNC_onContactMultiDevicesEvent onContactMultiDevicesEventHandle;
+    FUNC_onGroupMultiDevicesEvent onGroupMultiDevicesEventedHandle;
+    FUNC_undisturbMultiDevicesEvent undisturbMultiDevicesEventedHandle;
+};
+
+//This class should be implemented in platform based code part, not here!!
+class ConnectionCallbackListener : public EMConnectionCallbackListener
+{
+public:
+    ConnectionCallbackListener(){}
+    
+    bool onVerifyServerCert(const std::vector<std::string>& certschain,std::string domain = "") override {
+        return true;
+    }
 };
 
 class ChatManagerListener : public EMChatManagerListener
@@ -157,8 +243,8 @@ public:
         size_t size = messages.size();
         LOG("%d messages received!", size);
         
-        void * result[size];
-        EMMessageBody::EMMessageBodyType types[size];
+        void** result = new void*[size];
+        EMMessageBody::EMMessageBodyType* types = new EMMessageBody::EMMessageBodyType[size];
         int i = 0;
         for(EMMessagePtr message : messages) {
             MessageTO *mto = MessageTO::FromEMMessage(message);
@@ -171,18 +257,21 @@ public:
             onMessagesReceived(result, types, (int)size);
         }
         //release memory manually
-        for(void * message : result) {
+        for(size_t i=0; i<size; i++) {
+	    void* message = result[i];
             MessageTO::FreeResource((MessageTO*)message);
             delete (MessageTO *)message;
         }
+	delete []result;
+	delete []types;
     }
     
     void onReceiveCmdMessages(const EMMessageList &messages) override {
         LOG("%d cmd messages received!", messages.size());
         
         size_t size = messages.size();
-        void * result[size];
-        EMMessageBody::EMMessageBodyType types[size];
+        void** result = new void*[size];
+        EMMessageBody::EMMessageBodyType* types = new EMMessageBody::EMMessageBodyType[size];
         int i = 0;
         for(EMMessagePtr message : messages) {
             MessageTO *mto = MessageTO::FromEMMessage(message);
@@ -195,18 +284,21 @@ public:
             onCmdMessagesReceived(result, types, (int)size);
         }
         //release memory manually
-        for(void * message : result) {
+        for(size_t i=0; i<size; i++) {
+	    void* message = result[i];
             MessageTO::FreeResource((MessageTO*)message);
             delete (MessageTO *)message;
         }
+	delete []result;
+	delete []types;
     }
     
     void onReceiveHasReadAcks(const EMMessageList &messages) override{
         LOG("%d messages read!", messages.size());
         
         size_t size = messages.size();
-        void * result[size];
-        EMMessageBody::EMMessageBodyType types[size];
+        void** result = new void*[size];
+        EMMessageBody::EMMessageBodyType* types = new EMMessageBody::EMMessageBodyType[size];
         int i = 0;
         for(EMMessagePtr message : messages) {
             MessageTO *mto = MessageTO::FromEMMessage(message);
@@ -214,23 +306,30 @@ public:
             types[i] = mto->BodyType;
             i++;
         }
+
+        //just for testing
+        LOG("result address: %x, mto address: %x", &result, result[0]);
+
         if(onMessagesRead) {
             LOG("Call onMessagesRead delegate in managed side...");
             onMessagesRead(result, types, (int)size);
         }
         //release memory manually
-        for(void * message : result) {
+        for(size_t i=0; i<size; i++) {
+	        void* message = result[i];
             MessageTO::FreeResource((MessageTO*)message);
             delete (MessageTO *)message;
         }
+	delete []result;
+	delete []types;
     }
     
     void onReceiveHasDeliveredAcks(const EMMessageList &messages) override{
         LOG("%d messages delivered!", messages.size());
         
         size_t size = messages.size();
-        void * result[size];
-        EMMessageBody::EMMessageBodyType types[size];
+        void** result = new void*[size];
+        EMMessageBody::EMMessageBodyType* types = new EMMessageBody::EMMessageBodyType[size];
         int i = 0;
         for(EMMessagePtr message : messages) {
             MessageTO *mto = MessageTO::FromEMMessage(message);
@@ -243,18 +342,21 @@ public:
             onMessagesDelivered(result, types, (int)size);
         }
         //release memory manually
-        for(void * message : result) {
+        for(size_t i=0; i<size; i++) {
+	    void* message = result[i];
             MessageTO::FreeResource((MessageTO*)message);
             delete (MessageTO *)message;
         }
+	delete []result;
+	delete []types;
     }
     
     void onReceiveRecallMessages(const EMMessageList &messages) override {
         LOG("%d messages recalled!", messages.size());
         
         size_t size = messages.size();
-        void * result[size];
-        EMMessageBody::EMMessageBodyType types[size];
+        void** result = new void*[size];
+        EMMessageBody::EMMessageBodyType* types = new EMMessageBody::EMMessageBodyType[size];
         int i = 0;
         for(EMMessagePtr message : messages) {
             MessageTO *mto = MessageTO::FromEMMessage(message);
@@ -267,10 +369,13 @@ public:
             onMessagesRecalled(result, types, (int)size);
         }
         //release memory manually
-        for(void * message : result) {
+        for(size_t i=0; i<size; i++) {
+	    void* message = result[i];
             MessageTO::FreeResource((MessageTO*)message);
             delete (MessageTO *)message;
         }
+	delete []result;
+	delete []types;
     }
     
     void onUpdateGroupAcks() override {
@@ -284,7 +389,7 @@ public:
         LOG("%d group messages read!", acks.size());
         
         size_t size = acks.size();
-        void * result[size];
+        void** result = new void*[size];
         int i = 0;
         for(EMGroupReadAckPtr ack : acks) {
             GroupReadAckTO *gto = GroupReadAckTO::FromGroupReadAck(ack);
@@ -296,9 +401,11 @@ public:
             onGroupMessageRead(result, (int)size);
         }
         //release memory manually
-        for(void * gto : result) {
+        for(size_t i=0; i<size; i++) {
+	    void* gto = result[i];
             delete (GroupReadAckTO *)gto;
         }
+	delete []result;
     }
     
     void onUpdateConversationList(const EMConversationList &conversations) override {
@@ -405,13 +512,18 @@ public:
         if(onMuteListAdded) {
             int size = (int)mutes.size();
             //convert vector to array
-            const char * muteArray[size];
+            const char** muteArray = new const char*[size];
             for(size_t i=0; i<mutes.size(); i++) {
                 char * ptr = new char[mutes[i].size()+1];
                 strncpy(ptr, mutes[i].c_str(), mutes.size()+1);
                 muteArray[i] = ptr;
             }
             onMuteListAdded(group->groupId().c_str(), muteArray, size, (int)muteExpire);
+            //bug fix for memory leak
+            for (size_t i=0; i<mutes.size(); i++) {
+                delete muteArray[i];
+            }
+            delete []muteArray;
         }
     }
 
@@ -420,13 +532,18 @@ public:
         if(onMuteListRemoved) {
             int size = (int)mutes.size();
             //convert vector to array
-            const char * muteArray[size];
+            const char** muteArray = new const char*[size];
             for(size_t i=0; i<mutes.size(); i++) {
                 char * ptr = new char[mutes[i].size()+1];
                 strncpy(ptr, mutes[i].c_str(), mutes.size()+1);
                 muteArray[i] = ptr;
             }
             onMuteListRemoved(group->groupId().c_str(), muteArray, size);
+            //bug fix for memory leak
+            for (size_t i=0; i<mutes.size(); i++) {
+                delete muteArray[i];
+            }
+            delete []muteArray;
         }
     }
        
@@ -559,39 +676,47 @@ public:
     void onAddMutesFromChatroom(const EMChatroomPtr chatroom, const std::vector<std::string> &mutes, int64_t muteExpire) override {
         if(onMuteListAdded) {
             size_t size = mutes.size();
-            const char * data[size];
+            const char** data = new const char*[size];
             for(size_t i=0; i<size; i++) {
                 char* ptr = new char[mutes[i].size()+1];
                 strncpy(ptr, mutes[i].c_str(), mutes[i].size()+1);
                 data[i] = ptr;
             }
             onMuteListAdded(chatroom->chatroomId().c_str(), data, (int)size, (int)muteExpire);
+            for (size_t i=0; i<size; i++) {
+                delete data[i];
+            }
+            delete []data;
         }
     }
 
     void onRemoveMutesFromChatroom(const EMChatroomPtr chatroom, const std::vector<std::string> &mutes) override {
         if(onMuteListRemoved) {
             size_t size = mutes.size();
-            const char * data[size];
+            const char** data = new const char*[size];
             for(size_t i=0; i<size; i++) {
                 char* ptr = new char[mutes[i].size()+1];
                 strncpy(ptr, mutes[i].c_str(), mutes[i].size()+1);
                 data[i] = ptr;
             }
             onMuteListRemoved(chatroom->chatroomId().c_str(), data, (int)size);
+            for (size_t i=0; i<size; i++) {
+                delete data[i];
+            }
+            delete []data;
         }
     }
 
     void onAddWhiteListMembersFromChatroom(const easemob::EMChatroomPtr chatroom, const std::vector<std::string> &members) override {
-        
+        //no corresponding delegate defined in API
     }
     
     void onRemoveWhiteListMembersFromChatroom(const easemob::EMChatroomPtr chatroom, const std::vector<std::string> &members) override {
-        
+        //no corresponding delegate defined in API
     }
     
     void onAllMemberMuteChangedFromChatroom(const easemob::EMChatroomPtr chatroom, bool isAllMuted) override {
-        
+        //no corresponding delegate defined in API
     }
     
     void onAddAdminFromChatroom(const EMChatroomPtr chatroom, const std::string &admin) override {
@@ -639,37 +764,31 @@ public:
     
     void onContactAdded(const std::string &username) override {
         LOG("receive contactadded from user %s!", username.c_str());
-        if(onContactAdded_)
-        {
+        if(onContactAdded_) {
             onContactAdded_(username.c_str());
         }
-            
     }
     void onContactDeleted(const std::string &username) override {
         LOG("receive contactdeleted from user %s!", username.c_str());
-        if(onContactDeleted_)
-        {
+        if(onContactDeleted_) {
             onContactDeleted_(username.c_str());
         }
     }
     void onContactInvited(const std::string &username, std::string &reason) override {
         LOG("receive contactinvited from user %s with reason %s!", username.c_str(), reason.c_str());
-        if(onContactInvited_)
-        {
+        if(onContactInvited_) {
             onContactInvited_(username.c_str(), reason.c_str());
         }
     }
     void onContactAgreed(const std::string &username) override {
         LOG("receive contactagreed from user %s!", username.c_str());
-        if(onFriendRequestAccepted_)
-        {
+        if(onFriendRequestAccepted_) {
             onFriendRequestAccepted_(username.c_str());
         }
     }
     void onContactRefused(const std::string &username) override {
         LOG("receive contactrefused from user %s!", username.c_str());
-        if(OnFriendRequestDeclined_)
-        {
+        if(OnFriendRequestDeclined_) {
             OnFriendRequestDeclined_(username.c_str());
         }
     }
@@ -680,6 +799,37 @@ private:
     FUNC_OnContactInvited onContactInvited_;
     FUNC_OnFriendRequestAccepted onFriendRequestAccepted_;
     FUNC_OnFriendRequestDeclined OnFriendRequestDeclined_;
+};
+
+class PresenceManagerListener : public EMPresenceManagerListener
+{
+public:
+    PresenceManagerListener(FUNC_OnPresenceUpdated _onPresenceUpdated){}
+    
+    void onPresenceUpdated(const std::vector<EMPresencePtr>& presence) override {
+        size_t size = presence.size();
+        LOG("receive onPresenceUpdated, presence count: %d!", size);
+        
+        if(0 == size) {
+            onPresenceUpdated_(nullptr, 0);
+        } else {
+            
+            PresenceTO** data = new PresenceTO*[size];
+            PresenceTOWrapper* dataLocal = new PresenceTOWrapper[size];
+            
+            for(size_t i=0; i<size; i++) {
+                PresenceTOWrapper ptoWrapper = PresenceTOWrapper::FromPresence(presence[i]);
+                dataLocal[i] = ptoWrapper;
+                data[i] = &(dataLocal[i].presenceTO);
+            }
+            onPresenceUpdated_((void **)data, (int)size);
+            delete []data;
+            delete []dataLocal;
+        }
+    }
+
+private:
+    FUNC_OnPresenceUpdated onPresenceUpdated_;
 };
 
 #endif // _CALLBACKS_H_

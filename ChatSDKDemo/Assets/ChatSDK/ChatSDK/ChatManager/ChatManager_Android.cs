@@ -124,9 +124,34 @@ namespace ChatSDK
             wrapper.Call("ackMessageRead", messageId, handle?.callbackId);
         }
 
+        public override void SendReadAckForGroupMessage(string messageId, string ackContent, CallBack callback = null)
+        {
+            //TODO: Add code
+        }
+
         public override bool UpdateMessage(Message message)
         {
             return wrapper.Call<bool>("updateChatMessage", message.ToJson().ToString());
+        }
+
+        public override void RemoveMessagesBeforeTimestamp(long timeStamp, CallBack callback = null)
+        {
+            //TO-DO
+        }
+
+        public override void DeleteConversationFromServer(string conversationId, ConversationType conversationType, bool isDeleteServerMessages, CallBack callback = null)
+        {
+            //TO-DO
+        }
+
+        public override void FetchSupportLanguages(ValueCallBack<List<SupportLanguages>> handle = null)
+        {
+            //TO-DO
+        }
+
+        public override void TranslateMessage(ref Message message, List<string> targetLanguages, CallBack handle = null)
+        {
+            //TO-DO
         }
     }
     

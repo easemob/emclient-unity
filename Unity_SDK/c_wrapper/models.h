@@ -18,6 +18,7 @@
 #include "emcustommessagebody.h"
 #include "emmucsetting.h"
 #include "empushconfigs.h"
+#include "empresence.h"
 #include "json.hpp"
 
 using namespace easemob;
@@ -25,6 +26,7 @@ using namespace easemob;
 const int ARRAY_SIZE_LIMITATION = 200;
 
 EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bool buildReceiveMsg=false);
+void UpdateMessageTO(void *mto, EMMessagePtr msg, void* localMto);
 void SetMessageAttrs(EMMessagePtr msg, string attrs);
 std::string GetAttrsStringFromMessage(EMMessagePtr msg);
 
@@ -58,7 +60,7 @@ struct GroupReadAck
     char * MsgId;
     char * From;
     char * Content;
-    long Timestamp;
+    int64_t Timestamp;
     int Count;
 };
 
@@ -89,8 +91,8 @@ union AttributeValueUnion {
     unsigned short UShortV;
     int Int32V;
     unsigned int UInt32V;
-    long Int64V;
-    unsigned long UInt64V;
+    int64_t Int64V;
+    uint64_t UInt64V;
     float FloatV;
     double DoubleV;
     char *StringV;
@@ -105,6 +107,8 @@ struct AttributeValue
 //C# side: class TextMessageBodyTO
 struct TextMessageBodyTO {
     const char * Content;
+    const char * TargetLanguages;
+    const char * Translations;
 };
 
 //C# side: class LocationMessageBodyTo
@@ -112,6 +116,7 @@ struct LocationMessageBodyTO {
     double Latitude;
     double Longitude;
     const char * Address;
+    const char * BuildingName;
 };
 
 struct CmdMessageBodyTO {
@@ -121,10 +126,10 @@ struct CmdMessageBodyTO {
 
 struct FileMessageBodyTO {
     const char * LocalPath;
-    const char *DisplayName;
+    const char * DisplayName;
     const char * Secret;
     const char * RemotePath;
-    long FileSize;
+    int64_t FileSize;
     EMFileMessageBody::EMDownloadStatus DownStatus;
 };
 
@@ -138,7 +143,7 @@ struct ImageMessageBodyTO {
     const char * ThumbnaiSecret;
     double Height;
     double Width;
-    long FileSize;
+    int64_t FileSize;
     EMFileMessageBody::EMDownloadStatus DownStatus;
     EMFileMessageBody::EMDownloadStatus ThumbnaiDownStatus;
     bool Original;
@@ -149,7 +154,7 @@ struct VoiceMessageBodyTO {
     const char * DisplayName;
     const char * Secret;
     const char * RemotePath;
-    long FileSize;
+    int64_t FileSize;
     EMFileMessageBody::EMDownloadStatus DownStatus;
     int Duration;
 };
@@ -165,7 +170,7 @@ struct VideoMessageBodyTO {
     double Height;
     double Width;
     int Duration;
-    long FileSize;
+    int64_t FileSize;
     EMFileMessageBody::EMDownloadStatus DownStatus;
 };
 
@@ -181,6 +186,7 @@ public:
     const char * ConversationId;
     const char * From;
     const char * To;
+    const char * RecallBy;
     EMMessage::EMChatType Type;
     EMMessage::EMMessageDirection Direction;
     EMMessage::EMMessageStatus Status;
@@ -188,8 +194,8 @@ public:
     bool HasReadAck;
 
     const char * AttributesValues;
-    long LocalTime;
-    long ServerTime;
+    int64_t LocalTime;
+    int64_t ServerTime;
     
     EMMessageBody::EMMessageBodyType BodyType;
     MessageTO();
@@ -202,6 +208,16 @@ public:
     //virtual ~MessageTO();
 protected:
     MessageTO(const EMMessagePtr &message);
+};
+
+struct MessageTOLocal {
+    std::string MsgId;
+    EMMessageBody::EMMessageBodyType BodyType;
+    
+    // text body fields
+    std::string Content;
+    std::string TargetLanguages; // json string
+    std::string Translations; // json string
 };
 
 class TextMessageTO : public MessageTO
@@ -307,8 +323,8 @@ struct GroupSharedFileTO
     const char * FileName;
     const char * FileId;
     const char * FileOwner;
-    long CreateTime;
-    long FileSize;
+    int64_t CreateTime;
+    int64_t FileSize;
     
     static GroupSharedFileTO * FromEMGroupSharedFile(const EMMucSharedFilePtr &sharedFile);
     static void DeleteGroupSharedFileTO(GroupSharedFileTO* gto);
@@ -385,7 +401,7 @@ struct GroupReadAckTO
     const char * from;
     const char * content;
     int count;
-    long timestamp;
+    int64_t timestamp;
     
     static GroupReadAckTO * FromGroupReadAck(EMGroupReadAckPtr&  groupReadAckPtr);
 };
@@ -447,6 +463,33 @@ struct UserInfo
     
     static std::map<std::string, UserInfo> FromResponse(std::string json, std::map<UserInfoType, std::string>& utypeMap);
     static std::map<std::string, UserInfoTO> Convert2TO(std::map<std::string, UserInfo>& userInfoMap);
+};
+
+struct SupportLanguagesTO
+{
+    const char* languageCode;
+    const char* languageName;
+    const char* languageNativeName;
+};
+
+struct PresenceTO
+{
+    const char* publisher;
+    const char* deviceList; // json string
+    const char* statusList; // json string
+    const char* ext;
+    int64_t     latestTime;
+    int64_t     expiryTime;
+};
+
+struct PresenceTOWrapper
+{
+    PresenceTO presenceTO;
+    std::string deviceListJson;
+    std::string statusListJson;
+    std::string ext;
+    
+    static PresenceTOWrapper FromPresence(EMPresencePtr presencePtr);
 };
 
 struct TOArray

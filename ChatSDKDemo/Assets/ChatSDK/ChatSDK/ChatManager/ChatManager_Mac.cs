@@ -12,9 +12,9 @@ namespace ChatSDK
         private ChatManagerHub chatManagerHub;
 
         System.Object msgMapLocker;
-        Dictionary<long, IntPtr> msgPtrMap;
-        Dictionary<long, Message> msgMap;
-        Dictionary<int, long> cbId2TsMap;
+        Dictionary<string, IntPtr> msgPtrMap;
+        Dictionary<string, Message> msgMap;
+        Dictionary<int, string> cbId2MsgIdMap;
 
         //manager level events
         
@@ -31,53 +31,53 @@ namespace ChatSDK
                 chatManagerHub.OnMessagesRecalled, chatManagerHub.OnReadAckForGroupMessageUpdated, chatManagerHub.OnGroupMessageRead,
                 chatManagerHub.OnConversationsUpdate, chatManagerHub.OnConversationRead);
 
-            msgPtrMap = new Dictionary<long, IntPtr>();
-            msgMap = new Dictionary<long, Message>();
-            cbId2TsMap = new Dictionary<int, long>();
+            msgPtrMap = new Dictionary<string, IntPtr>();
+            msgMap = new Dictionary<string, Message>();
+            cbId2MsgIdMap = new Dictionary<int, string>();
             msgMapLocker = new System.Object();  
         }
 
-        public void AddMsgMap(long ts, IntPtr msgPtr, Message msg, int cbId)
+        public void AddMsgMap(string localmsgId, IntPtr msgPtr, Message msg, int cbId)
         {
             lock(msgMapLocker)
             {
-                msgPtrMap.Add(ts, msgPtr);
-                msgMap.Add(ts, msg);
-                cbId2TsMap.Add(cbId, ts);
+                msgPtrMap.Add(localmsgId, msgPtr);
+                msgMap.Add(localmsgId, msg);
+                cbId2MsgIdMap.Add(cbId, localmsgId);
             }
         }
 
-        public void UpdatedMsgId(long ts)
+        public void UpdatedMsg(string localmsgId)
         {
             lock (msgMapLocker)
             {
-                if (msgPtrMap.ContainsKey(ts) && msgMap.ContainsKey(ts))
+                if (msgPtrMap.ContainsKey(localmsgId) && msgMap.ContainsKey(localmsgId))
                 {
-                    var intPtr = msgPtrMap[ts];
-                    var messageTO = Marshal.PtrToStructure<MessageTO>(intPtr);
-                    var msg = msgMap[ts];
-                    msg.MsgId = messageTO.MsgId;
+                    var msg = msgMap[localmsgId];
+                    var intPtr = msgPtrMap[localmsgId];
+                    var messageTO = MessageTO.FromIntPtr(intPtr, msg.Body.Type);
+                    messageTO.UpdateMsg(msg);
                 }
             }
         }
 
-        public void DeleteFromMsgMap(long ts, int cbId)
+        public void DeleteFromMsgMap(string localmsgId, int cbId)
         {
             lock (msgMapLocker)
             {
-                if(msgPtrMap.ContainsKey(ts))
+                if(msgPtrMap.ContainsKey(localmsgId))
                 {
-                    IntPtr intPtr = msgPtrMap[ts];
-                    msgPtrMap.Remove(ts);
+                    IntPtr intPtr = msgPtrMap[localmsgId];
+                    msgPtrMap.Remove(localmsgId);
                     Marshal.FreeCoTaskMem(intPtr);
                 }
-                if (msgMap.ContainsKey(ts))
+                if (msgMap.ContainsKey(localmsgId))
                 {
-                    msgMap.Remove(ts);
+                    msgMap.Remove(localmsgId);
                 }
-                if (cbId2TsMap.ContainsKey(cbId))
+                if (cbId2MsgIdMap.ContainsKey(cbId))
                 {
-                    cbId2TsMap.Remove(cbId);
+                    cbId2MsgIdMap.Remove(cbId);
                 }
             }
         }
@@ -118,6 +118,10 @@ namespace ChatSDK
                 (int code, string desc, int cbId) =>
                 {
                     ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                },
+                (int progress, int cbId) =>
+                {
+                    ChatCallbackObject.CallBackOnProgress(cbId, progress);
                 }
                 );
         }
@@ -147,6 +151,10 @@ namespace ChatSDK
                 (int code, string desc, int cbId) =>
                 {
                     ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                },
+                (int progress, int cbId) =>
+                {
+                    ChatCallbackObject.CallBackOnProgress(cbId, progress);
                 }
                 );
         }
@@ -384,6 +392,10 @@ namespace ChatSDK
                  (int code, string desc, int cbId) =>
                  {
                      ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                 },
+                 (int progress, int cbId) =>
+                 {
+                     ChatCallbackObject.CallBackOnProgress(cbId, progress);
                  }
                  );
         }
@@ -518,7 +530,7 @@ namespace ChatSDK
 
             IntPtr mtoPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(mto));
             Marshal.StructureToPtr(mto, mtoPtr, false);
-            AddMsgMap(mto.LocalTime, mtoPtr, message, callbackId);
+            AddMsgMap(message.MsgId, mtoPtr, message, callbackId);
             
             ChatAPINative.ChatManager_SendMessage(client, callbackId, 
                 (int cbId) =>
@@ -526,11 +538,11 @@ namespace ChatSDK
                     try
                     {
                         ChatManager_Mac chatMac = (ChatManager_Mac)SDKClient.Instance.ChatManager;
-                        if (chatMac.cbId2TsMap.ContainsKey(cbId))
+                        if (chatMac.cbId2MsgIdMap.ContainsKey(cbId))
                         {
-                            long ts = chatMac.cbId2TsMap[cbId];
-                            chatMac.UpdatedMsgId(ts);
-                            chatMac.DeleteFromMsgMap(ts, cbId);
+                            string msgId = chatMac.cbId2MsgIdMap[cbId];
+                            chatMac.UpdatedMsg(msgId);
+                            chatMac.DeleteFromMsgMap(msgId, cbId);
                         }
                         ChatCallbackObject.CallBackOnSuccess(cbId);
                     }
@@ -543,12 +555,16 @@ namespace ChatSDK
                 (int code, string desc, int cbId) =>
                 {
                     ChatManager_Mac chatMac = (ChatManager_Mac)SDKClient.Instance.ChatManager;
-                    if (chatMac.cbId2TsMap.ContainsKey(cbId))
+                    if (chatMac.cbId2MsgIdMap.ContainsKey(cbId))
                     {
-                        long ts = chatMac.cbId2TsMap[cbId];
-                        chatMac.DeleteFromMsgMap(ts, cbId);
+                        string msgId = chatMac.cbId2MsgIdMap[cbId];
+                        chatMac.DeleteFromMsgMap(msgId, cbId);
                     }
                     ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                },
+                (int progress, int cbId) =>
+                {
+                    ChatCallbackObject.CallBackOnProgress(cbId, progress);
                 },
                 mtoPtr, message.Body.Type);
 
@@ -556,6 +572,35 @@ namespace ChatSDK
         }
 
         public override void SendMessageReadAck(string messageId, CallBack callback = null)
+        {
+            if (null == messageId || 0 == messageId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
+
+            ChatAPINative.ChatManager_SendReadAckForMessage(client, callbackId, messageId,
+                (int cbId) =>
+                {
+                    try
+                    {
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
+                    }
+                    catch (NullReferenceException nre)
+                    {
+                        Debug.LogWarning($"NullReferenceException: {nre.StackTrace}");
+                    }
+
+                },
+                (int code, string desc, int cbId) =>
+                {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                }
+                );
+        }
+
+        public override void SendReadAckForGroupMessage(string messageId, string ackContent, CallBack callback = null)
         {
             if (null == messageId || 0 == messageId.Length)
             {
@@ -597,6 +642,134 @@ namespace ChatSDK
             bool ret = ChatAPINative.ChatManager_UpdateMessage(client, mtoPtr, message.Body.Type);
             Marshal.FreeCoTaskMem(mtoPtr);
             return ret;
+        }
+
+        public override  void RemoveMessagesBeforeTimestamp(long timeStamp, CallBack callback = null)
+        {
+            int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
+
+            ChatAPINative.ChatManager_RemoveMessagesBeforeTimestamp(client, callbackId, timeStamp,
+                (int cbId) =>
+                {
+                    try
+                    {
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
+                    }
+                    catch (NullReferenceException nre)
+                    {
+                        Debug.LogWarning($"NullReferenceException: {nre.StackTrace}");
+                    }
+
+                },
+                (int code, string desc, int cbId) =>
+                {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                }
+                );
+        }
+
+        public override void DeleteConversationFromServer(string conversationId, ConversationType conversationType, bool isDeleteServerMessages, CallBack callback = null)
+        {
+            int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
+
+            ChatAPINative.ChatManager_DeleteConversationFromServer(client, callbackId, conversationId, conversationType, isDeleteServerMessages,
+                (int cbId) =>
+                {
+                    try
+                    {
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
+                    }
+                    catch (NullReferenceException nre)
+                    {
+                        Debug.LogWarning($"NullReferenceException: {nre.StackTrace}");
+                    }
+
+                },
+                (int code, string desc, int cbId) =>
+                {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                }
+                );
+        }
+
+        public override void FetchSupportLanguages(ValueCallBack<List<SupportLanguages>> handle = null)
+        {
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.ChatManager_FetchSupportLanguages(client, callbackId,
+                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
+                {
+                    List<SupportLanguages> supportList = new List<SupportLanguages>();
+                    if (DataType.ListOfString == dType && dSize > 0)
+                    {
+                        for (int i = 0; i < dSize; i++)
+                        {
+                            var supportItem = Marshal.PtrToStructure<SupportLanguages>(data[i]);
+                            supportList.Add(supportItem);
+                        }
+                        ChatCallbackObject.ValueCallBackOnSuccess<List<SupportLanguages>>(cbId, supportList);
+                    }
+                    else
+                    {
+                        Debug.LogError($"Supported languages information expected.");
+                    }
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.ValueCallBackOnError<List<SupportLanguages>>(cbId, code, desc);
+                });
+        }
+
+        public override void TranslateMessage(ref Message message, List<string> targetLanguages, CallBack handle = null)
+        {
+            MessageTO mto = MessageTO.FromMessage(message);
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            IntPtr mtoPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(mto));
+            Marshal.StructureToPtr(mto, mtoPtr, false);
+            AddMsgMap(message.MsgId, mtoPtr, message, callbackId);
+
+
+            int size = targetLanguages.Count;
+            string[] tlArray = new string[size];
+            int i = 0;
+            foreach (string tl in targetLanguages)
+            {
+                tlArray[i] = tl;
+                i++;
+            }
+
+            ChatAPINative.ChatManager_TranslateMessage(client, callbackId, mtoPtr, message.Body.Type, tlArray, size,
+                (int cbId) =>
+                {
+                    try
+                    {
+                        ChatManager_Mac chatMac = (ChatManager_Mac)SDKClient.Instance.ChatManager;
+                        if (chatMac.cbId2MsgIdMap.ContainsKey(cbId))
+                        {
+                            string msgId = chatMac.cbId2MsgIdMap[cbId];
+                            chatMac.UpdatedMsg(msgId);
+                            chatMac.DeleteFromMsgMap(msgId, cbId);
+                        }
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
+                    }
+                    catch (NullReferenceException nre)
+                    {
+                        Debug.LogWarning($"NullReferenceException: {nre.StackTrace}");
+                    }
+
+                },
+                (int code, string desc, int cbId) =>
+                {
+                    ChatManager_Mac chatMac = (ChatManager_Mac)SDKClient.Instance.ChatManager;
+                    if (chatMac.cbId2MsgIdMap.ContainsKey(cbId))
+                    {
+                        string msgId = chatMac.cbId2MsgIdMap[cbId];
+                        chatMac.DeleteFromMsgMap(msgId, cbId);
+                    }
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                }
+               );
+
         }
     }
 }

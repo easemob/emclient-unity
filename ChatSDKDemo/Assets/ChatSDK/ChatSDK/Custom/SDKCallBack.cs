@@ -9,9 +9,9 @@ namespace ChatSDK
     internal delegate void OnSuccessResultV2(IntPtr header, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] IntPtr[] data, DataType dType, int size, int callbackId);
     internal delegate void OnSuccessResult([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)]IntPtr[] data, DataType dType, int size, int callbackId);
     internal delegate void OnErrorV2(int code, string desc, int callbackId);
+    internal delegate void OnProgressV2(int progress, int callbackId);
 
-    
-    public delegate void OnSuccess(int callbackId);
+    internal delegate void OnSuccess(int callbackId);
 
     /// <summary>
     /// 执行错误

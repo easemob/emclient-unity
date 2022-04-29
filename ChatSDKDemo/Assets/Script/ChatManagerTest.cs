@@ -33,6 +33,8 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     private Button sendConversationAckBtn;
     private Button sendMessageReadAckBtn;
     private Button updateMessageBtn;
+    private Button removeMessagesBeforeTimestampBtn;
+    private Button deleteConversationFromServerBtn;
 
     private void Awake()
     {
@@ -66,9 +68,11 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         sendConversationAckBtn = transform.Find("Scroll View/Viewport/Content/SendConversationAckBtn").GetComponent<Button>();
         sendMessageReadAckBtn = transform.Find("Scroll View/Viewport/Content/SendMessageReadAckBtn").GetComponent<Button>();
         updateMessageBtn = transform.Find("Scroll View/Viewport/Content/UpdateMessageBtn").GetComponent<Button>();
+        removeMessagesBeforeTimestampBtn = transform.Find("Scroll View/Viewport/Content/RemoveMessagesBeforeTimestampBtn").GetComponent<Button>();
+        deleteConversationFromServerBtn = transform.Find("Scroll View/Viewport/Content/DeleteConversationFromServerBtn").GetComponent<Button>();
 
 
-        sendTextBtn.onClick.AddListener(SendTextBtnAction);
+        sendTextBtn.onClick.AddListener(SendTextBtnAction); 
         sendImageBtn.onClick.AddListener(SendImageBtnAction);
         sendFileBtn.onClick.AddListener(SendFileBtnAction);
         sendVideoBtn.onClick.AddListener(SendVideoBtnAction);
@@ -91,6 +95,8 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         sendConversationAckBtn.onClick.AddListener(SendConversationAckBtnAction);
         sendMessageReadAckBtn.onClick.AddListener(SendMessageReadAckBtnAction);
         updateMessageBtn.onClick.AddListener(UpdateMessageBtnAction);
+        removeMessagesBeforeTimestampBtn.onClick.AddListener(RemoveMessagesBeforeTimestampBtnAction);
+        deleteConversationFromServerBtn.onClick.AddListener(DeleteConversationFromServerBtnAction);
 
         SDKClient.Instance.ChatManager.AddChatManagerDelegate(this);
     }
@@ -110,14 +116,19 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     {
         InputAlertConfig config = new InputAlertConfig((dict)=> {
             Message msg = Message.CreateTextSendMessage(dict["to"], dict["content"]);
-           
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
                 onSuccess: () => {
                     UIManager.TitleAlert(transform, "成功", msg.MsgId);
+
+                    //Message msg1 = SDKClient.Instance.ChatManager.LoadMessage(msg.MsgId);
+                    //Debug.Log($"body content:{msg1.MsgId}");
+                },
+                onProgress: (progress) => {
+                    UIManager.TitleAlert(transform, "发送进度", progress.ToString());
                 },
                 onError:(code, desc) => {
                     UIManager.ErrorAlert(transform, code, msg.MsgId);
-                }               
+                }            
             ));
         });
 
@@ -139,6 +150,27 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     {
         UIManager.UnfinishedAlert(transform);
         Debug.Log("SendVideoBtnAction");
+
+        /*InputAlertConfig config = new InputAlertConfig((dict) => {
+            Message msg = Message.CreateVideoSendMessage(dict["to"], "/Users/yuqiang/Test/resource/video.mp4", "", "", 425507);
+
+            SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
+                onSuccess: () => {
+                    ChatSDK.MessageBody.VideoBody vb = (ChatSDK.MessageBody.VideoBody)msg.Body;
+                    UIManager.TitleAlert(transform, "成功", msg.MsgId);
+                },
+                onProgress: (progress) => {
+                    UIManager.TitleAlert(transform, "发送进度", progress.ToString());
+                },
+                onError: (code, desc) => {
+                    UIManager.ErrorAlert(transform, code, msg.MsgId);
+                }
+            ));
+        });
+
+        config.AddField("to");
+        UIManager.DefaultInputAlert(transform, config);
+        */
     }
     void SendVoiceBtnAction()
     {
@@ -186,7 +218,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     void SendLocBtnAction()
     {
         InputAlertConfig config = new InputAlertConfig((dict) => {
-            Message msg = Message.CreateLocationSendMessage(dict["to"], 139.33, 130.55, dict["address"]);
+            Message msg = Message.CreateLocationSendMessage(dict["to"], 139.33, 130.55, dict["address"], dict["buildingName"]);
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
                 onSuccess: () => {
                     UIManager.SuccessAlert(transform);
@@ -199,6 +231,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
         config.AddField("to");
         config.AddField("address");
+        config.AddField("buildingName");
         UIManager.DefaultInputAlert(transform, config);
     }
     void ResendBtnAction()
@@ -235,7 +268,10 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
             SDKClient.Instance.ChatManager.RecallMessage(dict["msgId"], new CallBack(
                 onSuccess: () => {
-                    UIManager.SuccessAlert(transform);
+                    UIManager.TitleAlert(transform, "成功", "回撤成功");
+                },
+                onProgress: (progress) => {
+                    UIManager.TitleAlert(transform, "回撤进度", progress.ToString());
                 },
                 onError: (code, desc) => {
                     UIManager.ErrorAlert(transform, code, desc);
@@ -300,6 +336,61 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     }
     void DownLoadAttachmentBtnAction()
     {
+        // Download Attachment
+        /*InputAlertConfig config = new InputAlertConfig((dict) => {
+
+            SDKClient.Instance.ChatManager.DownloadAttachment(dict["msgId"], new CallBack(
+                onSuccess: () => {
+                    UIManager.TitleAlert(transform, "下载附件成功", "完成");
+
+                    //Message msg = SDKClient.Instance.ChatManager.LoadMessage("Message ID");
+                    //if (msg != null)
+                    //{
+                    //    if (msg.Body.Type == ChatSDK.MessageBodyType.VIDEO) {
+                    //        ChatSDK.MessageBody.VideoBody vb = (ChatSDK.MessageBody.VideoBody)msg.Body;
+
+                           //从本地获取短视频文件路径
+                    //        string imgLocalUri = vb.LocalPath;
+                    //    }
+
+                    //}
+                    // else
+                    //{
+                    //     Debug.Log($"未找到消息");
+                    //}
+                },
+                onProgress: (progress) => {
+                    UIManager.TitleAlert(transform, "下载附件进度", progress.ToString());
+                },
+                onError: (code, desc) => {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+
+        });
+        
+        
+        // Download Attatchment
+        InputAlertConfig config = new InputAlertConfig((dict) => {
+
+            SDKClient.Instance.ChatManager.DownloadThumbnail(dict["msgId"], new CallBack(
+                onSuccess: () => {
+                    UIManager.TitleAlert(transform, "下载缩略图成功", "完成"); ;
+                },
+                onProgress: (progress) => {
+                    UIManager.TitleAlert(transform, "下载缩略图进度", progress.ToString());
+                },
+                onError: (code, desc) => {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+
+        });
+        */
+
+        //config.AddField("msgId");
+        //UIManager.DefaultInputAlert(transform, config);
+
         UIManager.UnfinishedAlert(transform);
         Debug.Log("DownLoadAttachmentBtnAction");
     }
@@ -524,6 +615,79 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     {
         UIManager.UnfinishedAlert(transform);
         Debug.Log("UpdateMessageBtnAction");
+    }
+
+    void RemoveMessagesBeforeTimestampBtnAction()
+    {
+        InputAlertConfig config = new InputAlertConfig("移除时间戳之前消息", (dict) =>
+        {
+            string tsStr = dict["ts"];
+            if (null == tsStr || 0 == tsStr.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
+            long ts = long.Parse(tsStr);
+            SDKClient.Instance.ChatManager.RemoveMessagesBeforeTimestamp(ts, new CallBack(
+                onSuccess: () => {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) => {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+
+        });
+
+        config.AddField("ts");
+
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("RemoveMessagesBeforeTimestampBtnAction");
+    }
+
+    void DeleteConversationFromServerBtnAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) => {
+            string conversationId = dict["ConversationId"];
+            string chatType = dict["ConversationType(0/1/2)"];
+            if (null == conversationId || 0 == conversationId.Length || null == chatType || 0 == chatType.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
+            ConversationType type = ConversationType.Chat;
+            int iType = int.Parse(dict["ConversationType(0/1/2)"]);
+            switch (iType)
+            {
+                case 0:
+                    type = ConversationType.Chat;
+                    break;
+                case 1:
+                    type = ConversationType.Group;
+                    break;
+                case 2:
+                    type = ConversationType.Room;
+                    break;
+            }
+
+            SDKClient.Instance.ChatManager.DeleteConversationFromServer(conversationId, type, true, new CallBack(
+                onSuccess: () => {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) => {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("ConversationId");
+        config.AddField("ConversationType(0/1/2)");
+
+        UIManager.DefaultInputAlert(transform, config);
+        Debug.Log("DeleteConversationFromServerBtnAction");
     }
 
     // Start is called before the first frame update
