@@ -61,7 +61,7 @@ HYPHENATE_API void GroupManager_UnMuteAllMembers(void *client, int callbackId, c
 HYPHENATE_API void GroupManager_UnmuteGroupMembers(void *client, int callbackId, const char * groupId, const char * members[], int size, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError);
 HYPHENATE_API void GroupManager_UpdateGroupAnnouncement(void *client, int callbackId, const char * groupId, const char * newAnnouncement, FUNC_OnSuccess onSuccess, FUNC_OnError onError);
 HYPHENATE_API void GroupManager_ChangeGroupExtension(void *client, int callbackId, const char * groupId, const char * newExtension, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError);
-HYPHENATE_API void GroupManager_UploadGroupSharedFile(void *client, int callbackId, const char * groupId, const char * filePath, FUNC_OnSuccess onSuccess, FUNC_OnError onError);
+HYPHENATE_API void GroupManager_UploadGroupSharedFile(void *client, int callbackId, const char * groupId, const char * filePath, FUNC_OnSuccess onSuccess, FUNC_OnError onError, FUNC_OnProgress onProgress);
 #ifdef __cplusplus
 }
 #endif //__cplusplus

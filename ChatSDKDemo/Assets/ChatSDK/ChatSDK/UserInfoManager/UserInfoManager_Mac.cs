@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
 using UnityEngine;
+#endif
 
 namespace ChatSDK
 {
@@ -116,6 +118,7 @@ namespace ChatSDK
 						for (int j=0; j<size; j++)
                         {
 							UserInfo ui = Marshal.PtrToStructure<UserInfo>(array[j]);
+							ui.Unmarshall();
 							userinfoMap.Add(ui.userId, ui);
                         }
 						if(0 == userinfoMap.Count)
@@ -177,6 +180,7 @@ namespace ChatSDK
 						for (int j = 0; j < size; j++)
 						{
 							UserInfo ui = Marshal.PtrToStructure<UserInfo>(array[j]);
+							ui.Unmarshall();
 							userinfoMap.Add(ui.userId, ui);
 						}
 						if (0 == userinfoMap.Count)

@@ -1,12 +1,25 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using SimpleJSON;
+
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
 using UnityEngine;
+#endif
 
 namespace ChatSDK
 {
     internal class TransformTool
     {
+
+        static internal string GetUnicodeStringFromUTF8(string utf8Str)
+        {
+            string ret = Encoding.UTF8.GetString(Encoding.Unicode.GetBytes(utf8Str));
+            int index = ret.IndexOf('\0');
+            if (index > 0)
+                ret = ret.Substring(0, index);
+            return ret;
+        }
 
         static internal List<string> JsonStringToStringList(string jsonString)
         {

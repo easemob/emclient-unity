@@ -1,4 +1,6 @@
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
 using UnityEngine;
+#endif
 using System;
 using System.Runtime.InteropServices;
 

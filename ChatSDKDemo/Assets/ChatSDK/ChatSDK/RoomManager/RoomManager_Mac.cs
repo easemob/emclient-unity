@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
 using UnityEngine;
+#endif
 
 namespace ChatSDK
 {
@@ -236,10 +238,11 @@ namespace ChatSDK
             ChatAPINative.RoomManager_FetchChatroomsWithPage(client, callbackId, pageNum, pageSize,
                 (IntPtr[] data, DataType dType, int size, int cbId) => {
                     Debug.Log($"FetchPublicRoomsFromServer callback with dType={dType}, size={size}.");
+
+                    var result = new PageResult<Room>();
+                    result.Data = new List<Room>();
                     if (DataType.Room == dType && size > 0)
                     {
-                        var result = new PageResult<Room>();
-                        result.Data = new List<Room>();
                         for(int i=0; i<size; i++)
                         {
                             var roomTO = Marshal.PtrToStructure<RoomTO>(data[i]);
@@ -249,7 +252,12 @@ namespace ChatSDK
                     }
                     else
                     {
-                        Debug.Log("No room info returned.");
+                        if (0 == size)
+                        {
+                            ChatCallbackObject.ValueCallBackOnSuccess<PageResult<Room>>(cbId, result);
+                        }
+                        else
+                            Debug.Log("No room info returned.");
                     }
 
                 },
@@ -272,8 +280,10 @@ namespace ChatSDK
                     Debug.Log($"FetchRoomAnnouncement callback with dType={dType}, size={size}.");
                     if (DataType.String == dType && 1 == size)
                     {
-                        string result = Marshal.PtrToStringAnsi(data[0]);
-                        string str = new string(result.ToCharArray());
+                        var result = Marshal.PtrToStringUni(data[0]);
+                        var announcement = TransformTool.GetUnicodeStringFromUTF8(result);
+
+                        string str = new string(announcement.ToCharArray());
                         ChatCallbackObject.ValueCallBackOnSuccess<string>(cbId, str);
                     }
                     else
@@ -310,7 +320,12 @@ namespace ChatSDK
                     }
                     else
                     {
-                        Debug.LogError($"Room information expected.");
+                        if(0 == dSize)
+                        {
+                            ChatCallbackObject.ValueCallBackOnSuccess<List<string>>(cbId, banList);
+                        }
+                        else
+                            Debug.LogError($"Room information expected.");
                     }
                 },
                 onError: (int code, string desc, int cbId) => {
@@ -411,7 +426,12 @@ namespace ChatSDK
                     }
                     else
                     {
-                        Debug.LogError($"Room information expected.");
+                        if(0 == dSize)
+                        {
+                            ChatCallbackObject.ValueCallBackOnSuccess<List<string>>(cbId, muteList);
+                        }
+                        else
+                            Debug.LogError($"Room information expected.");
                     }
                 },
                 onError: (int code, string desc, int cbId) => {

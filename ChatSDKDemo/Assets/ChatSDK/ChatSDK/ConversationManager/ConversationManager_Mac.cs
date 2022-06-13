@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
 using UnityEngine;
+#endif
 
 namespace ChatSDK
 {
+
     internal class ConversationManager_Mac : IConversationManager
     {
         internal IntPtr client;
@@ -15,7 +18,6 @@ namespace ChatSDK
                 client = clientMac.client;
             }
         }
-
 
         internal override bool AppendMessage(string conversationId, ConversationType converationType, Message message)
         {

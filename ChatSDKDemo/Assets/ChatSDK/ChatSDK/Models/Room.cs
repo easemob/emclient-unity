@@ -11,6 +11,8 @@ namespace ChatSDK
         public string Description { get; internal set; }
         public string Announcement { get; internal set; }
 
+        public int MemberCount { get; internal set; }
+
         public List<string> AdminList { get; internal set; }
         public List<string> MemberList { get; internal set; }
         public List<string> BlockList { get; internal set; }
@@ -37,6 +39,7 @@ namespace ChatSDK
                     Name = jo["name"].Value;
                     Description = jo["desc"].Value;
                     Announcement = jo["announcement"].Value;
+                    MemberCount = jo["memberCount"].AsInt;
                     AdminList = TransformTool.JsonStringToStringList(jo["adminList"].Value);
                     MemberList = TransformTool.JsonStringToStringList(jo["memberList"].Value);
                     BlockList = TransformTool.JsonStringToStringList(jo["blockList"].Value);

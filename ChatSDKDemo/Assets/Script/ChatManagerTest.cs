@@ -750,6 +750,11 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
         foreach (var msg in messages)
         {
+            if(msg.Body.Type == MessageBodyType.TXT)
+            {
+                ChatSDK.MessageBody.TextBody tb = (ChatSDK.MessageBody.TextBody)msg.Body;
+                Debug.Log($"text message body: {tb.Text}");
+            }
             list.Add(msg.MsgId);
             foreach (string key in msg.Attributes.Keys) {
                 AttributeValue a = msg.Attributes[key];

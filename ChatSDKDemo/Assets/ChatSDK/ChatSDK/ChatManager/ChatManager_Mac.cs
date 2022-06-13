@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Runtime.InteropServices;
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
 using UnityEngine;
+#endif
 
 namespace ChatSDK
 {
