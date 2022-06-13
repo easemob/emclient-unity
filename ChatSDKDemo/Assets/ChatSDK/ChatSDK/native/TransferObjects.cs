@@ -782,19 +782,15 @@ namespace ChatSDK
             return messages;
         }
 
-<<<<<<< HEAD
-        public abstract IMessageBody UnmarshallBody();
-        public abstract void UpdateMsgBody(Message msg);
+        public virtual IMessageBody UnmarshallBody() { return null; }
+        public virtual void UpdateMsgBody(Message msg) { }
 
         internal void UpdateMsg(Message msg)
         {
             msg.MsgId = MsgId;
             UpdateMsgBody(msg);
         }
-=======
-        //public abstract IMessageBody UnmarshallBody();
-        public virtual IMessageBody UnmarshallBody() { return null; }
->>>>>>> dev_windows_3.9.0
+
 
         internal Message Unmarshall()
         {
