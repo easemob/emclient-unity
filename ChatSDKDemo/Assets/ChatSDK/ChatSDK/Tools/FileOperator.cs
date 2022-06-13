@@ -1,6 +1,9 @@
 ﻿using System.IO;
 using System.Collections.Generic;
+
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
 using UnityEngine;
+#endif
 
 namespace ChatSDK
 {
@@ -15,8 +18,14 @@ namespace ChatSDK
 
         public FileOperator()
         {
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
             tokenfn = Application.dataPath + "/token.conf";
             appkeyfn = Application.dataPath + "/appkey.conf";
+#else
+            //TODO: which path should be used?
+            tokenfn = "./token.conf";
+            appkeyfn ="./appkey.conf";
+#endif
 
             if (allData == null)
                 allData = new List<string>();

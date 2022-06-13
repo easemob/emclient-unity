@@ -8,7 +8,7 @@
 #import "EMConversationWrapper.h"
 #import "EMConversation+Unity.h"
 #import "Transfrom.h"
-#import "EMMessage+Unity.h"
+#import "EMChatMessage+Unity.h"
 
 @implementation EMConversationWrapper
 - (void)getConversationWithParam:(NSDictionary *)param
@@ -42,7 +42,7 @@
     [self getConversationWithParam:param
                         completion:^(EMConversation *conversation)
      {
-        EMMessage *msg =conversation.latestMessage;
+        EMChatMessage *msg = conversation.latestMessage;
         ret = msg.toJson;
     }];
     return ret;
@@ -54,7 +54,7 @@
     [self getConversationWithParam:param
                         completion:^(EMConversation *conversation)
      {
-        EMMessage *msg =conversation.lastReceivedMessage;
+        EMChatMessage *msg =conversation.lastReceivedMessage;
         ret = msg.toJson;
     }];
     return ret;
@@ -65,7 +65,7 @@
     __block NSString *msgId = param[@"msgId"];
     [self getConversationWithParam:param
                         completion:^(EMConversation *conversation)
-     {  
+     {
         EMError *error = nil;
         [conversation markMessageAsReadWithId:msgId error:&error];
     }];
@@ -106,7 +106,7 @@
                         completion:^(EMConversation *conversation)
      {
         NSDictionary *msgDict = [Transfrom NSStringToJsonObject:param[@"msg"]];
-        EMMessage *msg = [EMMessage fromJson:msgDict];
+        EMChatMessage *msg = [EMChatMessage fromJson:msgDict];
         
         EMError *error = nil;
         [conversation insertMessage:msg error:&error];
@@ -122,12 +122,22 @@
                         completion:^(EMConversation *conversation)
      {
         NSDictionary *msgDict = [Transfrom NSStringToJsonObject:param[@"msg"]];
-        EMMessage *msg = [EMMessage fromJson:msgDict];
+        EMChatMessage *msg = [EMChatMessage fromJson:msgDict];
         
         EMError *error = nil;
         [conversation appendMessage:msg error:&error];
         ret = @{@"ret": @(error == nil)};
     }];
+    return ret;
+}
+
+- (NSDictionary *)messageCount:(NSDictionary *)param {
+    __block NSDictionary *ret = nil;
+    [self getConversationWithParam:param
+                        completion:^(EMConversation *conversation) {
+        ret = @{@"count": @(conversation.messagesCount)};
+    }];
+    
     return ret;
 }
 
@@ -138,7 +148,7 @@
                         completion:^(EMConversation *conversation)
      {
         NSDictionary *msgDict = [Transfrom NSStringToJsonObject:param[@"msg"]];
-        EMMessage *msg = [EMMessage fromJson:msgDict];
+        EMChatMessage *msg = [EMChatMessage fromJson:msgDict];
         
         EMError *error = nil;
         [conversation updateMessageChange:msg error:&error];
@@ -183,7 +193,7 @@
                         completion:^(EMConversation *conversation)
      {
         EMError *error = nil;
-        EMMessage *msg = [conversation loadMessageWithId:msgId error:&error];
+        EMChatMessage *msg = [conversation loadMessageWithId:msgId error:&error];
         ret = msg.toJson;
     }];
     return ret;
@@ -196,6 +206,9 @@
     long long timeStamp = [param[@"timeStamp"] longLongValue];
     int count = [param[@"count"] intValue];
     NSString *sender = param[@"sender"];
+    if (sender.length == 0) {
+        sender = nil;
+    }
     EMMessageSearchDirection direction = [self searchDirectionFromString:param[@"direction"]];
     
     [self getConversationWithParam:param
@@ -213,7 +226,7 @@
                     [self onError:callId error:aError];
                 }else {
                     NSMutableArray *ary = [NSMutableArray array];
-                    for (EMMessage *msg in aMessages) {
+                    for (EMChatMessage *msg in aMessages) {
                         [ary addObject:[Transfrom NSStringFromJsonObject:[msg toJson]]];
                     }
                     [self onSuccess:@"List<EMMessage>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:ary]];
@@ -243,7 +256,7 @@
                     [self onError:callId error:aError];
                 }else {
                     NSMutableArray *ary = [NSMutableArray array];
-                    for (EMMessage *msg in aMessages) {
+                    for (EMChatMessage *msg in aMessages) {
                         [ary addObject:[Transfrom NSStringFromJsonObject:[msg toJson]]];
                     }
                     [self onSuccess:@"List<EMMessage>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:ary]];
@@ -277,7 +290,7 @@
                     [self onError:callId error:aError];
                 }else {
                     NSMutableArray *ary = [NSMutableArray array];
-                    for (EMMessage *msg in aMessages) {
+                    for (EMChatMessage *msg in aMessages) {
                         [ary addObject:[Transfrom NSStringFromJsonObject:[msg toJson]]];
                     }
                     [self onSuccess:@"List<EMMessage>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:ary]];
@@ -307,7 +320,7 @@
                     [self onError:callId error:aError];
                 }else {
                     NSMutableArray *ary = [NSMutableArray array];
-                    for (EMMessage *msg in aMessages) {
+                    for (EMChatMessage *msg in aMessages) {
                         [ary addObject:[Transfrom NSStringFromJsonObject:[msg toJson]]];
                     }
                     [self onSuccess:@"List<EMMessage>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:ary]];
@@ -316,6 +329,8 @@
         }
     }];
 }
+
+
 
 - (EMMessageSearchDirection)searchDirectionFromString:(NSString *)aDirection {
     return [aDirection isEqualToString:@"up"] ? EMMessageSearchDirectionUp : EMMessageSearchDirectionDown;

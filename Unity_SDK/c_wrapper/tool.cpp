@@ -177,6 +177,76 @@ std::string GetRightValue(const std::string& str)
     return std::string(str, pos+1, str.size() - pos - 1);
 }
 
+std::string GetUTF8FromUnicode(const char* src)
+{
+    if (nullptr == src)
+        return std::string("");
+
+    std::string dst = std::string(src);
+
+#ifdef _WIN32
+    EMStringUtil::Unicode_to_UTF8((const wchar_t*)src, dst);
+#endif
+
+    return dst;
+}
+
+std::string UTF8toANSI(std::string& strUTF8)
+{
+    std::string strAnsi = strUTF8;
+
+#ifdef _WIN32
+    UINT nLen = MultiByteToWideChar(CP_UTF8, NULL, strUTF8.c_str(), -1, NULL, NULL);
+    WCHAR* wszBuffer = new WCHAR[nLen + 1];
+    nLen = MultiByteToWideChar(CP_UTF8, NULL, strUTF8.c_str(), -1, wszBuffer, nLen);
+    wszBuffer[nLen] = 0;
+
+    nLen = WideCharToMultiByte(CP_ACP, NULL, wszBuffer, -1, NULL, NULL, NULL, NULL);
+    CHAR* szBuffer = new CHAR[nLen + 1];
+    nLen = WideCharToMultiByte(CP_ACP, NULL, wszBuffer, -1, szBuffer, nLen, NULL, NULL);
+    szBuffer[nLen] = 0;
+
+    strAnsi = szBuffer;
+
+    delete[]szBuffer;
+    delete[]wszBuffer;
+#endif
+    return strAnsi;
+}
+
+std::string ANSItoUTF8(std::string& strAnsi)
+{
+    std::string strUTF8 = strAnsi;
+
+#ifdef _WIN32
+    UINT nLen = MultiByteToWideChar(CP_ACP, NULL, strAnsi.c_str(), -1, NULL, NULL);
+    WCHAR* wszBuffer = new WCHAR[nLen + 1];
+    nLen = MultiByteToWideChar(CP_ACP, NULL, strAnsi.c_str(), -1, wszBuffer, nLen);
+    wszBuffer[nLen] = 0;
+
+    nLen = WideCharToMultiByte(CP_UTF8, NULL, wszBuffer, -1, NULL, NULL, NULL, NULL);
+    CHAR* szBuffer = new CHAR[nLen + 1];
+    nLen = WideCharToMultiByte(CP_UTF8, NULL, wszBuffer, -1, szBuffer, nLen, NULL, NULL);
+    szBuffer[nLen] = 0;
+
+    strUTF8 = szBuffer;
+
+    delete[]wszBuffer;
+    delete[]szBuffer;
+#endif
+    return strUTF8;
+}
+
+char* GetPointer(const char* src)
+{
+    if (nullptr == src) return nullptr;
+
+    char* p = new char[strlen(src) + 1];
+    memset(p, 0, strlen(src) + 1);
+    strncpy(p, src, strlen(src));
+    return p;
+}
+
 #ifndef _WIN32
 void StartTimer(int interval, TIMER_FUNC timer_func)
 {

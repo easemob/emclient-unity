@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
 using UnityEngine;
+#endif
 
 namespace ChatSDK
 {
-    public class ConversationManager_Mac : IConversationManager
+
+    internal class ConversationManager_Mac : IConversationManager
     {
-        private IntPtr client;
+        internal IntPtr client;
         internal ConversationManager_Mac(IClient _client)
         {
             if (_client is Client_Mac clientMac)
@@ -16,8 +19,7 @@ namespace ChatSDK
             }
         }
 
-
-        public override bool AppendMessage(string conversationId, ConversationType converationType, Message message)
+        internal override bool AppendMessage(string conversationId, ConversationType converationType, Message message)
         {
             if (null == conversationId || 0 == conversationId.Length)
             {
@@ -32,7 +34,7 @@ namespace ChatSDK
             return ret;
         }
 
-        public override bool DeleteAllMessages(string conversationId, ConversationType conversationType)
+        internal override bool DeleteAllMessages(string conversationId, ConversationType conversationType)
         {
             if (null == conversationId || 0 == conversationId.Length)
             {
@@ -42,7 +44,7 @@ namespace ChatSDK
             return ChatAPINative.ConversationManager_ClearAllMessages(client, conversationId, conversationType);
         }
 
-        public override bool DeleteMessage(string conversationId, ConversationType conversationType, string messageId)
+        internal override bool DeleteMessage(string conversationId, ConversationType conversationType, string messageId)
         {
             if (null == conversationId || 0 == conversationId.Length)
             {
@@ -52,7 +54,7 @@ namespace ChatSDK
             return ChatAPINative.ConversationManager_RemoveMessage(client, conversationId, conversationType, messageId);
         }
 
-        public override Dictionary<string, string> GetExt(string conversationId, ConversationType conversationType)
+        internal override Dictionary<string, string> GetExt(string conversationId, ConversationType conversationType)
         {
             if (null == conversationId || 0 == conversationId.Length)
             {
@@ -83,7 +85,7 @@ namespace ChatSDK
                 return new Dictionary<string, string>(); // return empty dict
         }
 
-        public override bool InsertMessage(string conversationId, ConversationType conversationType, Message message)
+        internal override bool InsertMessage(string conversationId, ConversationType conversationType, Message message)
         {
             if (null == conversationId || 0 == conversationId.Length)
             {
@@ -98,7 +100,7 @@ namespace ChatSDK
             return ret;
         }
 
-        public override Message LastMessage(string conversationId, ConversationType conversationType)
+        internal override Message LastMessage(string conversationId, ConversationType conversationType)
         {
             if (null == conversationId || 0 == conversationId.Length)
             {
@@ -129,7 +131,7 @@ namespace ChatSDK
             return msg;
         }
 
-        public override Message LastReceivedMessage(string conversationId, ConversationType conversationType)
+        internal override Message LastReceivedMessage(string conversationId, ConversationType conversationType)
         {
             if (null == conversationId || 0 == conversationId.Length)
             {
@@ -160,7 +162,7 @@ namespace ChatSDK
             return msg;
         }
 
-        public override Message LoadMessage(string conversationId, ConversationType conversationType, string messageId)
+        internal override Message LoadMessage(string conversationId, ConversationType conversationType, string messageId)
         {
             if (null == conversationId || 0 == conversationId.Length)
             {
@@ -191,7 +193,7 @@ namespace ChatSDK
             return msg;
         }
 
-        public override void LoadMessages(string conversationId, ConversationType conversationType, string startMessageId = "", int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callback = null)
+        internal override void LoadMessages(string conversationId, ConversationType conversationType, string startMessageId = "", int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callback = null)
         {
             if (null == conversationId || 0 == conversationId.Length)
             {
@@ -231,7 +233,7 @@ namespace ChatSDK
                 });
         }
 
-        public override void LoadMessagesWithKeyword(string conversationId, ConversationType conversationType, string keywords = "", string sender = "", long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callback = null)
+        internal override void LoadMessagesWithKeyword(string conversationId, ConversationType conversationType, string keywords = "", string sender = "", long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callback = null)
         {
             if (null == conversationId || 0 == conversationId.Length)
             {
@@ -271,7 +273,7 @@ namespace ChatSDK
                 });
         }
 
-        public override void LoadMessagesWithMsgType(string conversationId, ConversationType conversationType, MessageBodyType bodyType, string sender, long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callback = null)
+        internal override void LoadMessagesWithMsgType(string conversationId, ConversationType conversationType, MessageBodyType bodyType, string sender, long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callback = null)
         {
             if (null == conversationId || 0 == conversationId.Length)
             {
@@ -311,7 +313,7 @@ namespace ChatSDK
                 });
         }
 
-        public override void LoadMessagesWithTime(string conversationId, ConversationType conversationType, long startTime, long endTime, int count = 20, ValueCallBack<List<Message>> callback = null)
+        internal override void LoadMessagesWithTime(string conversationId, ConversationType conversationType, long startTime, long endTime, int count = 20, ValueCallBack<List<Message>> callback = null)
         {
             if (null == conversationId || 0 == conversationId.Length)
             {
@@ -351,7 +353,7 @@ namespace ChatSDK
                 });
         }
 
-        public override void MarkAllMessageAsRead(string conversationId, ConversationType conversationType)
+        internal override void MarkAllMessageAsRead(string conversationId, ConversationType conversationType)
         {
             if (null == conversationId || 0 == conversationId.Length)
             {
@@ -361,7 +363,7 @@ namespace ChatSDK
             ChatAPINative.ConversationManager_MarkAllMessagesAsRead(client, conversationId, conversationType);
         }
 
-        public override void MarkMessageAsRead(string conversationId, ConversationType conversationType, string messageId)
+        internal override void MarkMessageAsRead(string conversationId, ConversationType conversationType, string messageId)
         {
             if (null == conversationId || null == messageId || 0 == conversationId.Length || 0 == messageId.Length)
             {
@@ -371,7 +373,7 @@ namespace ChatSDK
             ChatAPINative.ConversationManager_MarkMessageAsRead(client, conversationId, conversationType, messageId);
         }
 
-        public override void SetExt(string conversationId, ConversationType conversationType, Dictionary<string, string> ext)
+        internal override void SetExt(string conversationId, ConversationType conversationType, Dictionary<string, string> ext)
         {
             if (null == conversationId || 0 == conversationId.Length || null == ext || 0 == ext.Count)
             {
@@ -382,7 +384,7 @@ namespace ChatSDK
             ChatAPINative.ConversationManager_SetExtField(client, conversationId, conversationType, extStr);
         }
 
-        public override int UnReadCount(string conversationId, ConversationType conversationType)
+        internal override int UnReadCount(string conversationId, ConversationType conversationType)
         {
             if (null == conversationId || 0 == conversationId.Length)
             {
@@ -392,7 +394,7 @@ namespace ChatSDK
             return ChatAPINative.ConversationManager_UnreadMessagesCount(client, conversationId, conversationType);
         }
 
-        public override int MessagesCount(string conversationId, ConversationType conversationType)
+        internal override int MessagesCount(string conversationId, ConversationType conversationType)
         {
             if (null == conversationId || 0 == conversationId.Length)
             {
@@ -402,7 +404,7 @@ namespace ChatSDK
             return ChatAPINative.ConversationManager_MessagesCount(client, conversationId, conversationType);
         }
 
-        public override bool UpdateMessage(string conversationId, ConversationType conversationType, Message message)
+        internal override bool UpdateMessage(string conversationId, ConversationType conversationType, Message message)
         {
             if (null == conversationId || 0 == conversationId.Length || null == message)
             {

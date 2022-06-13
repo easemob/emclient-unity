@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
 using UnityEngine;
+#endif
 
 namespace ChatSDK
 {
@@ -293,9 +295,10 @@ namespace ChatSDK
             ChatAPINative.GroupManager_FetchIsMemberInWhiteList(client, callbackId, groupId,
                 onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
                 {
-                    if (DataType.Bool == dType && 1 == dSize)
+                    if (DataType.Bool == dType)
                     {
-                        int result = (int)data[0];
+                        // useing dSize as the result
+                        int result = dSize;
                         if (result != 0)
                             ChatCallbackObject.ValueCallBackOnSuccess<bool>(cbId, true);
                         else
@@ -442,11 +445,13 @@ namespace ChatSDK
                 {
                     if (DataType.String == dType && 1 == dSize)
                     {
-                        
-                        var result = Marshal.PtrToStringAnsi(data[0]);
-                        // result maybe release before handle is processed in queue.
+                        var result = Marshal.PtrToStringUni(data[0]);
+
+                        var announcement = TransformTool.GetUnicodeStringFromUTF8(result);
+
+                        // announcement maybe release before handle is processed in queue.
                         // so here alloc a string to store the value.
-                        string str = new string(result.ToCharArray());
+                        string str = new string(announcement.ToCharArray());
                         ChatCallbackObject.ValueCallBackOnSuccess<string>(cbId, str);
                     }
                     else
@@ -484,7 +489,10 @@ namespace ChatSDK
                     else
                     {
                         if (0 == dSize)
+                        {
                             Debug.Log("No member in BlockList.");
+                            ChatCallbackObject.ValueCallBackOnSuccess<List<string>>(cbId, banList);
+                        } 
                         else
                             Debug.LogError($"Group information expected.");
                     }
@@ -601,7 +609,8 @@ namespace ChatSDK
                     else
                     {
                         if (0 == dSize)
-                            Debug.Log("No member in muteList.");
+                            ChatCallbackObject.ValueCallBackOnSuccess<List<string>>(cbId, muteList);
+                            //Debug.Log("No member in muteList.");
                         else
                             Debug.LogError($"Group information expected.");
                     }
@@ -753,7 +762,12 @@ namespace ChatSDK
                   }
                   else
                   {
-                      Debug.LogError($"Group information expected.");
+                      if(0 == dSize)
+                      {
+                          ChatCallbackObject.ValueCallBackOnSuccess<List<Group>>(cbId, groupList);
+                      }
+                      else
+                        Debug.LogError($"Group information expected.");
                   }
               },
               onError: (int code, string desc, int cbId) => {
@@ -784,9 +798,7 @@ namespace ChatSDK
                             for (int i = 0; i < itemSize; i++)
                             {
                                 var item = Marshal.PtrToStructure<GroupInfoTO>(array[i]);
-                                var groupInfo = new GroupInfo();
-                                groupInfo.GroupId = item.GroupId;
-                                groupInfo.GroupName = item.GroupName;
+                                var groupInfo = item.GroupInfo();
                                 result.Data.Add(groupInfo);
                             }
                             ChatCallbackObject.ValueCallBackOnSuccess<CursorResult<GroupInfo>>(cbId, result);
@@ -1112,12 +1124,8 @@ namespace ChatSDK
                     if (DataType.Group == dType && 1 == dSize)
                     {
                         var result = Marshal.PtrToStructure<GroupTO>(data[0]);
-                        ChatCallbackObject.CallBackOnSuccess(cbId);
                     }
-                    else
-                    {
-                        Debug.LogError($"Group information expected.");
-                    }
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
                 },
                 onError: (int code, string desc, int cbId) => {
                     ChatCallbackObject.CallBackOnError(cbId, code, desc);
@@ -1184,10 +1192,11 @@ namespace ChatSDK
                 },
                 onError: (int code, string desc, int cbId) => {
                     ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                },
+                onProgress: (int progress, int cbId) =>
+                {
+                    ChatCallbackObject.CallBackOnProgress(cbId, progress);
                 });
         }
-
-
-
     }
 }

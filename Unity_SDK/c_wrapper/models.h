@@ -381,6 +381,7 @@ struct RoomTO
     char ** AdminList;
     char ** BlockList;
     Mute * MuteList;
+    int MemberListCount;
     int MemberCount;
     int AdminCount;
     int BlockCount;
@@ -389,6 +390,8 @@ struct RoomTO
     int MaxUsers;
     bool IsAllMemberMuted;
     
+    ~RoomTO();
+
     static RoomTO * FromEMChatRoom(EMChatroomPtr &room);
     
     void LogInfo();

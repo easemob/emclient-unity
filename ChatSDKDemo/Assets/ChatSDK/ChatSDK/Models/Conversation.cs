@@ -127,7 +127,7 @@ namespace ChatSDK {
         /// <param name="count">获取数量</param>
         /// <param name="direction">获取消息的方向</param>
         /// <param name="handle">返回结果</param>
-        public void LoadMessagesWithMsgType(MessageBodyType type, string sender = null, int timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> handle = null)
+        public void LoadMessagesWithMsgType(MessageBodyType type, string sender = null, long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> handle = null)
         {
             manager.LoadMessagesWithMsgType(Id, Type, type, sender, timestamp, count, direction, handle);
         }
@@ -152,7 +152,7 @@ namespace ChatSDK {
         /// <param name="count">获取数量</param>
         /// <param name="direction">获取消息的方向</param>
         /// <param name="handle">返回结果</param>
-        public void LoadMessagesWithKeyword(string keywords, string sender = null, int timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> handle = null)
+        public void LoadMessagesWithKeyword(string keywords, string sender = null, long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> handle = null)
         {
             manager.LoadMessagesWithKeyword(Id, Type, keywords, sender, timestamp, count, direction, handle);
         }
@@ -167,6 +167,14 @@ namespace ChatSDK {
         public void LoadMessagesWithTime(long startTime, long endTime, int count = 20, ValueCallBack<List<Message>> handle = null)
         {
             manager.LoadMessagesWithTime(Id, Type, startTime, endTime, count, handle);
+        }
+
+        /// <summary>
+        /// 获取会话中消息数
+        /// </summary>
+        /// <returns>消息数</returns>
+        public int MessagesCount() {
+            return manager.MessagesCount(Id, Type);
         }
 
 

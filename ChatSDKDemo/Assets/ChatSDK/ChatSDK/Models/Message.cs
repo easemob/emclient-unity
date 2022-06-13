@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using SimpleJSON;
 
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+using UnityEngine;
+#endif
+
 namespace ChatSDK
 {
     public class Message
@@ -263,6 +267,7 @@ namespace ChatSDK
 
         internal Message(string jsonString)
         {
+            Debug.Log($"jsonString : {jsonString}");
             if (jsonString != null)
             {
                 JSONNode jn = JSON.Parse(jsonString);
@@ -281,12 +286,14 @@ namespace ChatSDK
                     Status = MessageStatusFromInt(jo["status"].AsInt);
                     MessageType = MessageTypeFromInt(jo["chatType"].AsInt);
                     Direction = MessageDirectionFromString(jo["direction"].Value);
-                    //Attributes = TransformTool.JsonStringToAttributes(jo["attributes"].Value);
+                    Debug.Log($"111 : ?? {jo["attributes"]}");
+                    Attributes = TransformTool.JsonStringToAttributes(jo["attributes"].ToString());
                     Body = IMessageBody.Constructor(jo["body"].Value, jo["bodyType"].Value);
                 }
             }
         }
 
+        //public JSONObject ToJson()
         internal JSONObject ToJson()
         {
             JSONObject jo = new JSONObject();
@@ -302,7 +309,7 @@ namespace ChatSDK
             jo.Add("status", MessageStatusToInt(Status));
             jo.Add("chatType", MessageTypeToInt(MessageType));
             jo.Add("direction", MessageDirectionToString(Direction));
-            //jo.Add("attributes", TransformTool.JsonStringFromAttributes(Attributes));
+            jo.Add("attributes", TransformTool.JsonStringFromAttributes(Attributes));
             jo.Add("body", Body.ToJson().ToString());
             jo.Add("bodyType", Body.TypeString());
             return jo;

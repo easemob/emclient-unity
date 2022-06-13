@@ -13,6 +13,7 @@
 #include "models.h"
 #include "callbacks.h"
 #include "emerror.h"
+#include "utils/emutils.h"
 
 using namespace easemob;
 
@@ -38,6 +39,11 @@ std::map<std::string, std::string> JsonStringToMap(std::string& jstr);
 
 std::string GetLeftValue(const std::string& str);
 std::string GetRightValue(const std::string& str);
+
+char* GetPointer(const char* src);
+std::string GetUTF8FromUnicode(const char* src);
+std::string UTF8toANSI(std::string& strUTF8);
+std::string ANSItoUTF8(std::string& strAnsi);
 
 #ifndef _WIN32
 void StartTimer(int interval, TIMER_FUNC timer_func);

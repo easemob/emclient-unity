@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using ChatSDK.MessageBody;
 using SimpleJSON;
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
 using UnityEngine;
+#endif
 
 namespace ChatSDK
 {
@@ -15,6 +17,7 @@ namespace ChatSDK
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
         struct TextMessageBodyTO
         {
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string Content;
             public string TargetLanguages; // json format
             public string Translations; // json format
@@ -67,8 +70,10 @@ namespace ChatSDK
 
         public override IMessageBody UnmarshallBody()
         {
+            string unicodeStr = TransformTool.GetUnicodeStringFromUTF8(Body.Content);
+
             // change EMPTY_STR(" ")  to ""
-            if (Body.Content.CompareTo(" ") == 0) Body.Content = "";
+            Body.Content = (unicodeStr.CompareTo(" ") == 0) ? "" : unicodeStr;
 
             MessageBody.TextBody textBody = new MessageBody.TextBody(Body.Content);
 
@@ -95,7 +100,9 @@ namespace ChatSDK
         {
             public double Latitude;
             public double Longitude;
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string Address;
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string BuildingName;
 
             public LocationMessageBodyTO(in Message message)
@@ -103,7 +110,10 @@ namespace ChatSDK
                 if (message.Body.Type == MessageBodyType.LOCATION)
                 {
                     var body = message.Body as LocationBody;
-                    (Latitude, Longitude, Address, BuildingName) = (body.Latitude, body.Longitude, body.Address, body.BuildingName);
+                    Latitude = body.Latitude;
+                    Longitude = body.Longitude;
+                    Address = body.Address;
+                    BuildingName = body.BuildingName;
                 }
                 else
                 {
@@ -131,9 +141,13 @@ namespace ChatSDK
 
         public override IMessageBody UnmarshallBody()
         {
+            string address = TransformTool.GetUnicodeStringFromUTF8(Body.Address);
+            string building = TransformTool.GetUnicodeStringFromUTF8(Body.BuildingName);
+
             // change EMPTY_STR(" ")  to ""
-            if (Body.Address.CompareTo(" ") == 0)       Body.Address = "";
-            if (Body.BuildingName.CompareTo(" ") == 0)  Body.BuildingName = "";
+
+            Body.Address = (address.CompareTo(" ") == 0) ? "" : address;
+            Body.BuildingName = (building.CompareTo(" ") == 0) ? "" : building;
 
             return new MessageBody.LocationBody(Body.Latitude, Body.Longitude, Body.Address, Body.BuildingName);
         }
@@ -155,7 +169,8 @@ namespace ChatSDK
                 if (message.Body.Type == MessageBodyType.CMD)
                 {
                     var body = message.Body as CmdBody;
-                    (Action, DeliverOnlineOnly) = (body.Action, body.DeliverOnlineOnly);
+                    Action = body.Action;
+                    DeliverOnlineOnly = body.DeliverOnlineOnly;
                 }
                 else
                 {
@@ -208,8 +223,12 @@ namespace ChatSDK
                 if (message.Body.Type == MessageBodyType.FILE)
                 {
                     var body = message.Body as FileBody;
-                    (LocalPath, DisplayName, Secret, RemotePath, FileSize, DownStatus) =
-                        (body.LocalPath, body.DisplayName, body.Secret ?? "", body.RemotePath ?? "", body.FileSize, body.DownStatus);
+                    LocalPath = body.LocalPath;
+                    DisplayName = body.DisplayName;
+                    Secret = body.Secret ?? "";
+                    RemotePath = body.RemotePath ?? "";
+                    FileSize = body.FileSize;
+                    DownStatus = body.DownStatus;
                 }
                 else
                 {
@@ -293,11 +312,19 @@ namespace ChatSDK
                 if (message.Body.Type == MessageBodyType.IMAGE)
                 {
                     var body = message.Body as ImageBody;
-                    (LocalPath, DisplayName, Secret, RemotePath, FileSize, DownStatus, ThumbnailLocalPath, ThumbnaiRemotePath, ThumbnaiSecret, Height, Width, ThumbnaiDownStatus, Original) =
-                        (body.LocalPath, body.DisplayName ?? "", body.Secret ?? "", body.RemotePath ?? "", body.FileSize, body.DownStatus,
-                        body.ThumbnailLocalPath ?? "", body.ThumbnaiRemotePath ?? "", body.ThumbnaiSecret ?? "", body.Height, body.Width,
-                        body.ThumbnaiDownStatus, body.Original);
-                    
+                    LocalPath = body.LocalPath;
+                    DisplayName = body.DisplayName ?? "";
+                    Secret = body.Secret ?? "";
+                    RemotePath = body.RemotePath ?? "";
+                    FileSize = body.FileSize;
+                    DownStatus = body.DownStatus;
+                    ThumbnailLocalPath = body.ThumbnailLocalPath ?? "";
+                    ThumbnaiRemotePath = body.ThumbnaiRemotePath ?? "";
+                    ThumbnaiSecret = body.ThumbnaiSecret ?? "";
+                    Height = body.Height;
+                    Width = body.Width;
+                    ThumbnaiDownStatus = body.ThumbnaiDownStatus;
+                    Original = body.Original;
                 }
                 else
                 {
@@ -388,8 +415,13 @@ namespace ChatSDK
                 if (message.Body.Type == MessageBodyType.VOICE)
                 {
                     var body = message.Body as VoiceBody;
-                    (LocalPath, DisplayName, Secret, RemotePath, FileSize, DownStatus, Duration) =
-                        (body.LocalPath, body.DisplayName ?? "", body.Secret ?? "", body.RemotePath ?? "", body.FileSize, body.DownStatus, body.Duration);
+                    LocalPath = body.LocalPath;
+                    DisplayName = body.DisplayName ?? "";
+                    Secret = body.Secret ?? "";
+                    RemotePath = body.RemotePath ?? "";
+                    FileSize = body.FileSize;
+                    DownStatus = body.DownStatus;
+                    Duration = body.Duration;
                 }
                 else
                 {
@@ -613,7 +645,7 @@ namespace ChatSDK
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-    public abstract class MessageTO
+    public class MessageTO
     {
         public string MsgId;
         public string ConversationId;
@@ -633,11 +665,23 @@ namespace ChatSDK
         public long ServerTime;
         public MessageBodyType BodyType;
 
-        protected MessageTO(in Message message) =>
-            (MsgId, ConversationId, From, To, RecallBy, Type, Direction, Status, HasReadAck, HasDeliverAck, AttributesValues, LocalTime, ServerTime, BodyType)
-                = (message.MsgId, message.ConversationId, message.From, message.To, message.RecallBy, message.MessageType, message.Direction,
-                message.Status, message.HasReadAck, message.HasDeliverAck, TransformTool.JsonStringFromAttributes(message.Attributes), message.LocalTime,
-                message.ServerTime, message.Body.Type);
+        protected MessageTO(in Message message)
+        {
+            MsgId = message.MsgId;
+            ConversationId = message.ConversationId;
+            From = message.From;
+            To = message.To;
+            RecallBy = message.RecallBy;
+            Type = message.MessageType;
+            Direction = message.Direction;
+            Status = message.Status;
+            HasReadAck = message.HasReadAck;
+            HasDeliverAck = message.HasDeliverAck;
+            AttributesValues = TransformTool.JsonStringFromAttributes(message.Attributes);
+            LocalTime = message.LocalTime;
+            ServerTime = message.ServerTime;
+            BodyType = message.Body.Type;
+        }
 
         protected MessageTO()
         {
@@ -738,6 +782,7 @@ namespace ChatSDK
             return messages;
         }
 
+<<<<<<< HEAD
         public abstract IMessageBody UnmarshallBody();
         public abstract void UpdateMsgBody(Message msg);
 
@@ -746,6 +791,10 @@ namespace ChatSDK
             msg.MsgId = MsgId;
             UpdateMsgBody(msg);
         }
+=======
+        //public abstract IMessageBody UnmarshallBody();
+        public virtual IMessageBody UnmarshallBody() { return null; }
+>>>>>>> dev_windows_3.9.0
 
         internal Message Unmarshall()
         {
@@ -1086,7 +1135,7 @@ namespace ChatSDK
 
             string typeString = jo["type"];
             JSONNode jvalue = jo["value"];
-
+            Debug.Log("abbb");
             string value = null;
             if ("strv" != typeString && "attr" != typeString)
             {
@@ -1405,10 +1454,18 @@ namespace ChatSDK
     public struct GroupTO
     {
         public string GroupId;
+
+        [MarshalAs(UnmanagedType.LPTStr)]
         public string Name;
+
+        [MarshalAs(UnmanagedType.LPTStr)]
         public string Description;
+
         public string Owner;
+
+        [MarshalAs(UnmanagedType.LPTStr)]
         public string Announcement;
+
         public IntPtr MemberList;
         public IntPtr AdminList;
         public IntPtr BlockList;
@@ -1442,10 +1499,15 @@ namespace ChatSDK
                 MessageBlocked = MessageBlocked,
                 IsAllMemberMuted = IsAllMemberMuted
             };
+            string name = TransformTool.GetUnicodeStringFromUTF8(Name);
+            string desc = TransformTool.GetUnicodeStringFromUTF8(Description);
+            string announcement = TransformTool.GetUnicodeStringFromUTF8(Announcement);
+
+            result.Name = (name.CompareTo(" ") == 0) ? "" : name;
+            result.Description = (desc.CompareTo(" ") == 0) ? "" : desc;
+            result.Annoumcement = (announcement.CompareTo(" ") == 0) ? "" : announcement;
 
             // change EMPTY_STR(" ")  to ""
-            if (result.Description.CompareTo(" ") == 0)    result.Description = "";
-            if (result.Annoumcement.CompareTo(" ") == 0)   result.Annoumcement = "";
             if (result.Options.Ext.CompareTo(" ") == 0)    result.Options.Ext = "";
 
             var memberList = new List<string>();
@@ -1498,11 +1560,24 @@ namespace ChatSDK
     public class GroupInfoTO
     {
         public string GroupId;
+
+        [MarshalAs(UnmanagedType.LPTStr)]
         public string GroupName;
 
         public GroupInfoTO()
         {
 
+        }
+
+        internal GroupInfo GroupInfo()
+        {
+            var groupInfo = new GroupInfo();
+            groupInfo.GroupId = GroupId;
+
+            string name = TransformTool.GetUnicodeStringFromUTF8(GroupName);
+            groupInfo.GroupName = name;
+
+            return groupInfo;
         }
     }
 
@@ -1510,14 +1585,23 @@ namespace ChatSDK
     public struct RoomTO
     {
         public string RoomId;
+
+        [MarshalAs(UnmanagedType.LPTStr)]
         public string Name;
+
+        [MarshalAs(UnmanagedType.LPTStr)]
         public string Description;
+
         public string Owner;
+
+        [MarshalAs(UnmanagedType.LPTStr)]
         public string Announcement;
+
         public IntPtr MemberList;
         public IntPtr AdminList;
         public IntPtr BlockList;
         public IntPtr MuteList;
+        public int MemberListCount;
         public int MemberCount;
         public int AdminCount;
         public int BlockCount;
@@ -1536,13 +1620,23 @@ namespace ChatSDK
                 Description = Description,
                 Owner = Owner,
                 Announcement = Announcement,
+                MemberCount = MemberCount,
                 PermissionType = PermissionType,
                 MaxUsers = MaxUsers,
                 IsAllMemberMuted = IsAllMemberMuted
             };
+
+            string name = TransformTool.GetUnicodeStringFromUTF8(Name);
+            string desc = TransformTool.GetUnicodeStringFromUTF8(Description);
+            string announcement = TransformTool.GetUnicodeStringFromUTF8(Announcement);
+
+            result.Name = (name.CompareTo(" ") == 0) ? "" : name;
+            result.Description = (desc.CompareTo(" ") == 0) ? "" : desc;
+            result.Announcement = (announcement.CompareTo(" ") == 0) ? "" : announcement;
+
             var memberList = new List<string>();
             IntPtr current = MemberList;
-            for (int i = 0; i < MemberCount; i++)
+            for (int i = 0; i < MemberListCount; i++)
             {
                 IntPtr memberPtr = Marshal.PtrToStructure<IntPtr>(current);
                 string m = Marshal.PtrToStringAnsi(memberPtr);

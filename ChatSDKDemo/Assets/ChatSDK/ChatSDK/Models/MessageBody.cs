@@ -55,6 +55,7 @@ namespace ChatSDK
                     ((MessageBody.LocationBody)body).Latitude = jo["latitude"].AsDouble;
                     ((MessageBody.LocationBody)body).Longitude = jo["longitude"].AsDouble;
                     ((MessageBody.LocationBody)body).Address = jo["address"].Value;
+                    ((MessageBody.LocationBody)body).BuildingName = jo["buildingName"].Value;
                 }
             }
             else if (type == "cmd")
@@ -188,7 +189,6 @@ namespace ChatSDK
         /// <summary>
         /// 文字消息
         /// </summary>
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class TextBody : IMessageBody
         {
             /// <summary>
@@ -246,7 +246,6 @@ namespace ChatSDK
         /// <summary>
         /// 位置消息
         /// </summary>
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class LocationBody : IMessageBody
         {
             /// <summary>
@@ -302,7 +301,6 @@ namespace ChatSDK
         /// <summary>
         /// 文件消息
         /// </summary>
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class FileBody : IMessageBody
         {
             /// <summary>
@@ -386,7 +384,6 @@ namespace ChatSDK
         /// <summary>
         /// 图片消息
         /// </summary>
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class ImageBody : FileBody
         {
 
@@ -488,7 +485,6 @@ namespace ChatSDK
         /// <summary>
         /// 音频消息
         /// </summary>
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class VoiceBody : FileBody
         {
             /// <summary>
@@ -544,7 +540,6 @@ namespace ChatSDK
         /// <summary>
         /// 视频消息
         /// </summary>
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class VideoBody : FileBody
         {
             /// <summary>
@@ -632,7 +627,6 @@ namespace ChatSDK
         /// <summary>
         /// Cmd消息
         /// </summary>
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class CmdBody : IMessageBody
         {
             /// <summary>
@@ -678,7 +672,6 @@ namespace ChatSDK
         /// <summary>
         /// 自定义消息
         /// </summary>
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class CustomBody : IMessageBody
         {
             /// <summary>

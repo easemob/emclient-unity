@@ -1,11 +1,25 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using SimpleJSON;
+
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+using UnityEngine;
+#endif
 
 namespace ChatSDK
 {
     internal class TransformTool
     {
+
+        static internal string GetUnicodeStringFromUTF8(string utf8Str)
+        {
+            string ret = Encoding.UTF8.GetString(Encoding.Unicode.GetBytes(utf8Str));
+            int index = ret.IndexOf('\0');
+            if (index > 0)
+                ret = ret.Substring(0, index);
+            return ret;
+        }
 
         static internal List<string> JsonStringToStringList(string jsonString)
         {
@@ -323,10 +337,8 @@ namespace ChatSDK
 
             // Json at least has { and } two characters
             if (null == jsonString || jsonString.Length <= 2) return ret;
-
             JSONNode jn = JSON.Parse(jsonString);
             if (null == jn) return ret;
-
             JSONNode jo = jn.AsObject;
             foreach (string k in jo.Keys)
             {
@@ -521,6 +533,16 @@ namespace ChatSDK
         static internal UserInfo JsonStringToUserInfo(string jsonString)
         {
             return new UserInfo(jsonString);
+        }
+
+
+        static internal List<string> StringListFromStringArray(string[] ary) {
+            List<string> list = new List<string>();
+            for (int i = 0; i < ary.Length; i++) {
+                list.Add(ary[i]);
+            }
+
+            return list;
         }
     }
 }

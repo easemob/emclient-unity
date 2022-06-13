@@ -136,12 +136,12 @@ namespace ChatSDK
 
         public override void RemoveMessagesBeforeTimestamp(long timeStamp, CallBack callback = null)
         {
-            //TO-DO
+            wrapper.Call("removeMessageBeforeTimestamp", timeStamp, callback?.callbackId);
         }
 
         public override void DeleteConversationFromServer(string conversationId, ConversationType conversationType, bool isDeleteServerMessages, CallBack callback = null)
         {
-            //TO-DO
+            wrapper.Call("deleteConversationFromServer", conversationId, TransformTool.ConversationTypeToInt(conversationType), isDeleteServerMessages, callback?.callbackId);
         }
 
         public override void FetchSupportLanguages(ValueCallBack<List<SupportLanguages>> handle = null)
