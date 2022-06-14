@@ -280,7 +280,11 @@ namespace ChatSDK
                     Debug.Log($"FetchRoomAnnouncement callback with dType={dType}, size={size}.");
                     if (DataType.String == dType && 1 == size)
                     {
+#if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
+                        var result = Marshal.PtrToStringAnsi(data[0]);
+#else
                         var result = Marshal.PtrToStringUni(data[0]);
+#endif
                         var announcement = TransformTool.GetUnicodeStringFromUTF8(result);
 
                         string str = new string(announcement.ToCharArray());
