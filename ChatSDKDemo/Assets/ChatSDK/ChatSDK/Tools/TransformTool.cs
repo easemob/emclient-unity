@@ -14,10 +14,14 @@ namespace ChatSDK
 
         static internal string GetUnicodeStringFromUTF8(string utf8Str)
         {
+#if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
+            string ret = utf8Str;
+#else
             string ret = Encoding.UTF8.GetString(Encoding.Unicode.GetBytes(utf8Str));
             int index = ret.IndexOf('\0');
             if (index > 0)
                 ret = ret.Substring(0, index);
+#endif
             return ret;
         }
 
