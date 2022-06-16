@@ -75,7 +75,7 @@ namespace ChatSDK
             client = ChatAPINative.Client_InitWithOptions(options, connectionHub.OnConnected, connectionHub.OnDisconnected, connectionHub.OnPong, connectionHub.OnTokenNotification);
             Debug.Log($"InitWithOptions completed.");
 
-            ChatAPINative.Client_AddMultiDeviceListener(multiDeviceHub.onContactMultiDevicesEvent, multiDeviceHub.onGroupMultiDevicesEvent, multiDeviceHub.undisturbMultiDevicesEvent);
+            ChatAPINative.Client_AddMultiDeviceListener(multiDeviceHub.onContactMultiDevicesEvent, multiDeviceHub.onGroupMultiDevicesEvent, multiDeviceHub.undisturbMultiDevicesEvent, multiDeviceHub.onThreadMultiDevicesEvent);
             Debug.Log("AddMultiDeviceListener completed.");
         }
 

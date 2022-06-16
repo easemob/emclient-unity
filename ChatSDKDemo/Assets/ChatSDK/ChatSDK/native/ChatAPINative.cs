@@ -25,7 +25,7 @@ namespace ChatSDK{
 		internal static extern IntPtr Client_InitWithOptions(Options options, Action onConnect, OnDisconnected onDisconnect, Action onPong, OnTokenNotificationed onTokenNotify);
 
 		[DllImport(MyLibName)]
-		internal static extern void Client_AddMultiDeviceListener(onContactMultiDevicesEvent mdContactEvent, onGroupMultiDevicesEvent mdGroupEvent, undisturbMultiDevicesEvent mdUbEvent);
+		internal static extern void Client_AddMultiDeviceListener(onContactMultiDevicesEvent mdContactEvent, onGroupMultiDevicesEvent mdGroupEvent, undisturbMultiDevicesEvent mdUbEvent, onThreadMultiDevicesEvent mdThreadEvent);
 
 		[DllImport(MyLibName)]
 		internal static extern void Client_Login(IntPtr client, int callbackId, OnSuccess onSuccess, OnErrorV2 onError, string username, string pwdOrToken, bool isToken = false);
@@ -71,7 +71,8 @@ namespace ChatSDK{
 				OnConversationsUpdate onConversationsUpdate, OnConversationRead onConversationRead);
 
 		[DllImport(MyLibName)]
-		internal static extern void ChatManager_FetchHistoryMessages(IntPtr client, int callbackId, string conversationId, ConversationType type, string startMessageId, int count, OnSuccessResultV2 onSuccessResult, OnErrorV2 onError);
+		internal static extern void ChatManager_FetchHistoryMessages(IntPtr client, int callbackId, string conversationId, 
+			ConversationType type, string startMessageId, int count, MessageSearchDirection direction, OnSuccessResultV2 onSuccessResult, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
 		internal static extern void ChatManager_GetConversationsFromServer(IntPtr client, int callbackId, OnSuccessResult onSuccessResult, OnErrorV2 onError);

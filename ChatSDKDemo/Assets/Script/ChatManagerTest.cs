@@ -444,7 +444,9 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
             string startId = dict["StartMsgId"];
             int loadCount = int.Parse(dict["LoadCount"]);
 
-            SDKClient.Instance.ChatManager.FetchHistoryMessagesFromServer(conversationId, type, startId, loadCount, new ValueCallBack<CursorResult<Message>>(
+            MessageSearchDirection direction = MessageSearchDirection.UP;
+
+            SDKClient.Instance.ChatManager.FetchHistoryMessagesFromServer(conversationId, type, startId, loadCount, direction, new ValueCallBack<CursorResult<Message>>(
                 onSuccess: (result) =>
                 {
                     if (0 == result.Data.Count)

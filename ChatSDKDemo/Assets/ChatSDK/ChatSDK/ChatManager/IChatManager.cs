@@ -35,7 +35,7 @@ namespace ChatSDK
         /// <param name="startMessageId">起始消息id</param>
         /// <param name="count">返回数量</param>
         /// <param name="handle">返回结果</param>
-        public abstract void FetchHistoryMessagesFromServer(string conversationId, ConversationType type = ConversationType.Chat, string startMessageId = null, int count = 20, ValueCallBack<CursorResult<Message>> handle = null);
+        public abstract void FetchHistoryMessagesFromServer(string conversationId, ConversationType type = ConversationType.Chat, string startMessageId = null, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack < CursorResult<Message>> handle = null);
 
         /// <summary>
         /// 获取会话

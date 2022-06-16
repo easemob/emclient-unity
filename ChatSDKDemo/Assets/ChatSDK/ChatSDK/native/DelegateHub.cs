@@ -72,6 +72,7 @@ namespace ChatSDK
     internal delegate void onContactMultiDevicesEvent(MultiDevicesOperation operation, string target, string ext);
     internal delegate void onGroupMultiDevicesEvent(MultiDevicesOperation operation, string target, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] string[] usernames, int size);
     internal delegate void undisturbMultiDevicesEvent(string data);
+    internal delegate void onThreadMultiDevicesEvent(MultiDevicesOperation operation, string target, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] string[] usernames, int size);
 
     //IPresenceManagerDelegate
     internal delegate void OnPresenceUpdated([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] IntPtr[] presences, int size);
@@ -140,6 +141,7 @@ namespace ChatSDK
         internal onContactMultiDevicesEvent onContactMultiDevicesEvent;
         internal onGroupMultiDevicesEvent onGroupMultiDevicesEvent;
         internal undisturbMultiDevicesEvent undisturbMultiDevicesEvent;
+        internal onThreadMultiDevicesEvent onThreadMultiDevicesEvent;
 
         internal MultiDevicesHub()
         {
@@ -182,6 +184,27 @@ namespace ChatSDK
                     foreach (IMultiDeviceDelegate listener in CallbackManager.Instance().multiDeviceListener.delegater)
                     {
                         listener.undisturbMultiDevicesEvent(data);
+                    }
+                });
+            };
+
+            onThreadMultiDevicesEvent = (MultiDevicesOperation operation, string target, string[] usernames, int size) =>
+            {
+                Debug.Log("onThreadMultiDevicesEvent received.");
+
+                var usernameList = new List<string>();
+                for (int i = 0; i < size; i++)
+                {
+                    if (usernames[i].Length != 0)
+                    {
+                        usernameList.Add(usernames[i]);
+                    }
+                }
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IMultiDeviceDelegate listener in CallbackManager.Instance().multiDeviceListener.delegater)
+                    {
+                        listener.onThreadMultiDevicesEvent(operation, target, usernameList);
                     }
                 });
             };

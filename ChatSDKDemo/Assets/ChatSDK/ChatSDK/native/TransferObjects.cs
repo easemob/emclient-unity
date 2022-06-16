@@ -1747,23 +1747,14 @@ namespace ChatSDK
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct SupportedLanuagesTO
-    {
-        public string LanguageCode;
-        public string LanguageName;
-        public string LanguageNativeName;
-    }
-
-
-    [StructLayout(LayoutKind.Sequential)]
     public struct PresenceTO
     {
-        public string Publisher;
-        public IntPtr DeviceJson;
-        public IntPtr StatusJson;
-        public IntPtr Ext;
-        long LatestTime;
-        long ExpiryTime;
+        internal string Publisher;
+        internal IntPtr DeviceJson;
+        internal IntPtr StatusJson;
+        internal IntPtr Ext;
+        internal long LatestTime;
+        internal long ExpiryTime;
 
         internal Presence Unmarshall()
         {
@@ -1801,6 +1792,23 @@ namespace ChatSDK
                 }
             }
             return result;
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct SupportLanguagesTO
+    {
+        internal string LanguageCode;
+        internal string LanguageName;
+        [MarshalAs(UnmanagedType.LPTStr)]
+        internal string LanguageNativeName;
+        public SupportLanguages SupportLanguagesInfo()
+        {
+            var supportLanguages = new SupportLanguages();
+            supportLanguages.LanguageCode = LanguageCode;
+            supportLanguages.LanguageName = LanguageName;
+            supportLanguages.LanguageNativeName = TransformTool.GetUnicodeStringFromUTF8(LanguageNativeName);
+            return supportLanguages;
         }
     }
 

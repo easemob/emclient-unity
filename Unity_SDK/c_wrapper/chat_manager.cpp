@@ -181,7 +181,8 @@ HYPHENATE_API void ChatManager_AddListener(void *client,
     }
 }
 
-HYPHENATE_API void ChatManager_FetchHistoryMessages(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType type, const char * startMessageId, int count, FUNC_OnSuccess_With_Result_V2 onSuccess, FUNC_OnError onError)
+HYPHENATE_API void ChatManager_FetchHistoryMessages(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType type, 
+    const char * startMessageId, int count, EMConversation::EMMessageSearchDirection direction, FUNC_OnSuccess_With_Result_V2 onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if(!MandatoryCheck(conversationId, error)) {
@@ -194,7 +195,7 @@ HYPHENATE_API void ChatManager_FetchHistoryMessages(void *client, int callbackId
     
     std::thread t([=](){
         EMError error;
-        EMCursorResultRaw<EMMessagePtr> msgCursorResult = CLIENT->getChatManager().fetchHistoryMessages(conversationIdStr, type, error, count, startMessageIdStr);
+        EMCursorResultRaw<EMMessagePtr> msgCursorResult = CLIENT->getChatManager().fetchHistoryMessages(conversationIdStr, type, error, startMessageIdStr, count, direction);
         
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             //header

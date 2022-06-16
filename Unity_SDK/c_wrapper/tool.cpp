@@ -106,7 +106,7 @@ std::string JsonStringFromVector(std::vector<std::string>& vec) {
     if (vec.size() == 0) return std::string("");
 
     StringBuffer strBuf;
-    Writer<rapidjson::StringBuffer> writer(strBuf);
+    Writer<StringBuffer> writer(strBuf);
 
     writer.StartArray();
     for (int i = 0; i < vec.size(); i++) {
@@ -123,7 +123,7 @@ std::string JsonStringFromMap(std::map<std::string, std::string>& map) {
     if (map.size() == 0) return std::string("");
 
     StringBuffer strBuf;
-    Writer<rapidjson::StringBuffer> writer(strBuf);
+    Writer<StringBuffer> writer(strBuf);
 
     writer.StartObject();
     for (auto it : map) {

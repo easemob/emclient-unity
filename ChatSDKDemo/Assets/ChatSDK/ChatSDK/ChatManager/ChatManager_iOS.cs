@@ -36,8 +36,9 @@ namespace ChatSDK
             ChatAPIIOS.ChatManager_HandleMethodCall("downloadThumbnail", obj.ToString(), handle?.callbackId);
         }
 
-        public override void FetchHistoryMessagesFromServer(string conversationId, ConversationType type, string startMessageId = null, int count = 20, ValueCallBack<CursorResult<Message>> handle = null)
+        public override void FetchHistoryMessagesFromServer(string conversationId, ConversationType type, string startMessageId = null, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack < CursorResult<Message>> handle = null)
         {
+            //TODO: need to add direction
             JSONObject obj = new JSONObject();
             obj.Add("convId", conversationId);
             obj.Add("convType", TransformTool.ConversationTypeToInt(type));

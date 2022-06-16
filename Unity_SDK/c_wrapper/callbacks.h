@@ -10,6 +10,7 @@
 #include "emmessagebody.h"
 #include "emcontactlistener.h"
 #include "emconnectioncallback_listener.h"
+#include "empresencemanager_listener.h"
 
 using namespace easemob;
 
@@ -32,6 +33,7 @@ using namespace easemob;
     typedef void(__stdcall *FUNC_onContactMultiDevicesEvent)(EMMultiDevicesListener::MultiDevicesOperation operation, const char* target, const char* ext);
     typedef void(__stdcall *FUNC_onGroupMultiDevicesEvent)(EMMultiDevicesListener::MultiDevicesOperation operation, const char* target, const char * usernames[], int size);
     typedef void(__stdcall *FUNC_undisturbMultiDevicesEvent)(const char* data);
+    typedef void(__stdcall *FUNC_onThreadMultiDevicesEvent)(EMMultiDevicesListener::MultiDevicesOperation operation, const char* target, const char* usernames[], int size);
 
     //ChatManager Listeners
     typedef void (__stdcall *FUNC_OnMessagesReceived)(void * messages[],
@@ -98,6 +100,7 @@ using namespace easemob;
     typedef void(*FUNC_onContactMultiDevicesEvent)(EMMultiDevicesListener::MultiDevicesOperation operation, const char* target, const char* ext);
     typedef void(*FUNC_onGroupMultiDevicesEvent)(EMMultiDevicesListener::MultiDevicesOperation operation, const char* target, const char * usernames[], int size);
     typedef void(*FUNC_undisturbMultiDevicesEvent)(const char* data);
+    typedef void(*FUNC_onThreadMultiDevicesEvent)(EMMultiDevicesListener::MultiDevicesOperation operation, const char* target, const char* usernames[], int size);
 
     //ChatManager Listener
     typedef void (*FUNC_OnMessagesReceived)(void * messages[],EMMessageBody::EMMessageBodyType types[],int size);
@@ -187,8 +190,8 @@ private:
 class MultiDevicesListener : public EMMultiDevicesListener
 {
 public:
-    MultiDevicesListener(FUNC_onContactMultiDevicesEvent contactFuncHandle, FUNC_onGroupMultiDevicesEvent groupFuncHandle, FUNC_undisturbMultiDevicesEvent undisturbFuncHandle) :
-    onContactMultiDevicesEventHandle(contactFuncHandle), onGroupMultiDevicesEventedHandle(groupFuncHandle), undisturbMultiDevicesEventedHandle(undisturbFuncHandle){}
+    MultiDevicesListener(FUNC_onContactMultiDevicesEvent contactFuncHandle, FUNC_onGroupMultiDevicesEvent groupFuncHandle, FUNC_undisturbMultiDevicesEvent undisturbFuncHandle, FUNC_onThreadMultiDevicesEvent threadFuncHandle) :
+    onContactMultiDevicesEventHandle(contactFuncHandle), onGroupMultiDevicesEventedHandle(groupFuncHandle), undisturbMultiDevicesEventedHandle(undisturbFuncHandle), onThreadMultiDevicesEventHandle(threadFuncHandle){}
     
     void onContactMultiDevicesEvent(MultiDevicesOperation operation, const std::string& target, const std::string& ext) override {
         LOG("Receive onContactMultiDevicesEvent.");
@@ -210,6 +213,21 @@ public:
             delete []userarray;
         }
     }
+
+    void onThreadMultiDevicesEvent(MultiDevicesOperation operation, const std::string& target, const std::vector<std::string>& usernames) override {
+        LOG("Receive onThreadMultiDevicesEvent with user size:%d.", usernames.size());
+        if (onThreadMultiDevicesEventHandle) {
+            int size = (int)usernames.size();
+
+            const char** userarray = new const char* [size];
+            for (size_t i = 0; i < size; i++) {
+                userarray[i] = usernames[i].c_str();
+            }
+
+            onThreadMultiDevicesEventHandle(operation, target.c_str(), userarray, size);
+            delete[]userarray;
+        }
+    }
     
     void undisturbMultiDevicesEvent(const std::string& data) override {
         LOG("Receive undisturbMultiDevicesEvent.");
@@ -221,6 +239,7 @@ private:
     FUNC_onContactMultiDevicesEvent onContactMultiDevicesEventHandle;
     FUNC_onGroupMultiDevicesEvent onGroupMultiDevicesEventedHandle;
     FUNC_undisturbMultiDevicesEvent undisturbMultiDevicesEventedHandle;
+    FUNC_onThreadMultiDevicesEvent onThreadMultiDevicesEventHandle;
 };
 
 //This class should be implemented in platform based code part, not here!!

@@ -13,7 +13,6 @@ namespace ChatSDK
     * Support languages of translation function.
     * 
     */
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public class SupportLanguages
     {
         /**

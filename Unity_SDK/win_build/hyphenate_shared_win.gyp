@@ -41,7 +41,8 @@
             '<(emclient-unity-path)/Unity_SDK/c_wrapper/push_manager.cpp',
             '<(emclient-unity-path)/Unity_SDK/c_wrapper/room_manager.cpp',
             '<(emclient-unity-path)/Unity_SDK/c_wrapper/tool.cpp',
-            '<(emclient-unity-path)/Unity_SDK/c_wrapper/userinfo_manager.cpp'
+            '<(emclient-unity-path)/Unity_SDK/c_wrapper/userinfo_manager.cpp',
+            '<(emclient-unity-path)/Unity_SDK/c_wrapper/presence_manager.cpp'
             ],
             'link_settings': {
              'conditions': [

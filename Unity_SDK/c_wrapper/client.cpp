@@ -413,10 +413,11 @@ HYPHENATE_API void* Client_InitWithOptions(Options *options, FUNC_OnConnected on
 // Must be called afer Client_InitWithOptions!
 HYPHENATE_API void Client_AddMultiDeviceListener(FUNC_onContactMultiDevicesEvent contactEventFunc,
                                                  FUNC_onGroupMultiDevicesEvent groupEventFunc,
-                                                 FUNC_undisturbMultiDevicesEvent undisturbEventFunc)
+                                                 FUNC_undisturbMultiDevicesEvent undisturbEventFunc,
+                                                 FUNC_onThreadMultiDevicesEvent threadEventFunc)
 {
     if(nullptr == gMultiDevicesListener) { // only set once
-        gMultiDevicesListener = new MultiDevicesListener(contactEventFunc, groupEventFunc, undisturbEventFunc);
+        gMultiDevicesListener = new MultiDevicesListener(contactEventFunc, groupEventFunc, undisturbEventFunc, threadEventFunc);
         gClient->addMultiDevicesListener(gMultiDevicesListener);
         LOG("New multi device listener and hook it.");
     }

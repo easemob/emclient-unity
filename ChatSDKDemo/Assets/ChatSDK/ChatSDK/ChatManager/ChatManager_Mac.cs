@@ -161,7 +161,7 @@ namespace ChatSDK
                 );
         }
 
-        public override void FetchHistoryMessagesFromServer(string conversationId, ConversationType type, string startMessageId = null, int count = 20, ValueCallBack<CursorResult<Message>> handle = null)
+        public override void FetchHistoryMessagesFromServer(string conversationId, ConversationType type, string startMessageId = null, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack < CursorResult<Message>> handle = null)
         {
             if (null == conversationId || 0 == conversationId.Length)
             {
@@ -170,7 +170,7 @@ namespace ChatSDK
             }
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
-            ChatAPINative.ChatManager_FetchHistoryMessages(client, callbackId, conversationId, type, startMessageId, count,
+            ChatAPINative.ChatManager_FetchHistoryMessages(client, callbackId, conversationId, type, startMessageId, count, direction, 
 
                 (IntPtr header, IntPtr[] array, DataType dType, int size, int cbId) => {
                     Debug.Log($"FetchHistoryMessages callback with dType={dType}, size={size}."); 
