@@ -611,7 +611,7 @@ namespace ChatSDK
             }
             int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
 
-            ChatAPINative.ChatManager_SendReadAckForMessage(client, callbackId, messageId,
+            ChatAPINative.ChatManager_SendReadAckForGroupMessage(client, callbackId, messageId, ackContent,
                 (int cbId) =>
                 {
                     try
@@ -706,8 +706,9 @@ namespace ChatSDK
                     {
                         for (int i = 0; i < dSize; i++)
                         {
-                            var supportItem = Marshal.PtrToStructure<SupportLanguages>(data[i]);
-                            supportList.Add(supportItem);
+                            var supportItem = Marshal.PtrToStructure<SupportLanguagesTO>(data[i]);
+                            SupportLanguages spl = supportItem.SupportLanguagesInfo();
+                            supportList.Add(spl);
                         }
                         ChatCallbackObject.ValueCallBackOnSuccess<List<SupportLanguages>>(cbId, supportList);
                     }

@@ -20,6 +20,7 @@ namespace ChatSDK
             [MarshalAs(UnmanagedType.LPTStr)]
             public string Content;
             public string TargetLanguages; // json format
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string Translations; // json format
 
             public TextMessageBodyTO(in Message message)
@@ -49,6 +50,22 @@ namespace ChatSDK
 
         }
 
+        internal Dictionary<string, string> GetUnicodeDicFromUTF8Dict(Dictionary<string, string> inDict)
+        {
+            Dictionary<string, string> outDict = new Dictionary<string, string>();
+
+            if (0 == inDict.Count) return outDict;
+            
+            foreach(var it in inDict)
+            {
+                string key = it.Key;
+                string value = TransformTool.GetUnicodeStringFromUTF8(it.Value);
+                outDict[key] = value;
+            }
+
+            return outDict;
+        }
+
         public override void UpdateMsgBody(Message msg)
         {
             if (null == msg || msg.Body.Type != MessageBodyType.TXT)
@@ -64,7 +81,8 @@ namespace ChatSDK
 
             if (Body.Translations.Length > 3)
             {
-                tb.Translations = TransformTool.JsonStringToDictionary(Body.Translations);
+                Dictionary<string, string> dict = TransformTool.JsonStringToDictionary(Body.Translations);
+                tb.Translations = GetUnicodeDicFromUTF8Dict(dict);
             }
         }
 
@@ -83,7 +101,10 @@ namespace ChatSDK
                 textBody.TargetLanguages = new List<string>();
 
             if (Body.Translations.Length > 3)
-                textBody.Translations = TransformTool.JsonStringToDictionary(Body.Translations);
+            {
+                Dictionary<string, string> dict = TransformTool.JsonStringToDictionary(Body.Translations);
+                textBody.Translations = GetUnicodeDicFromUTF8Dict(dict);
+            }                
             else
                 textBody.Translations = new Dictionary<string, string>();
             return textBody;

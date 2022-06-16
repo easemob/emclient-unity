@@ -11,7 +11,13 @@
 #include "utils/emencryptutils.h"
 #include "utils/emutils.h"
 #include "tool.h"
-#include "json.hpp"
+
+#ifndef RAPIDJSON_NAMESPACE
+#define RAPIDJSON_NAMESPACE easemob
+#endif
+#include "rapidjson/document.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/prettywriter.h"
 
 bool MandatoryCheck(const void* ptr, EMError& error) {
     if(nullptr == ptr) {
@@ -97,64 +103,68 @@ std::string OptionalStrParamCheck(const char* ptr) {
 }
 
 std::string JsonStringFromVector(std::vector<std::string>& vec) {
-    std::string ret = "";
-    if(vec.size() == 0) return ret;
-    
-    nlohmann::json j(vec);
-    return j.dump();
+    if (vec.size() == 0) return std::string("");
+
+    StringBuffer strBuf;
+    Writer<rapidjson::StringBuffer> writer(strBuf);
+
+    writer.StartArray();
+    for (int i = 0; i < vec.size(); i++) {
+        writer.String(vec[i].c_str());
+    }
+    writer.EndArray();
+
+    std::string data = strBuf.GetString();
+
+    return data;
 }
 
 std::string JsonStringFromMap(std::map<std::string, std::string>& map) {
-    std::string ret = "";
-    if(map.size() == 0) return ret;
-    
-    nlohmann::json j(map);
-    return j.dump();
+    if (map.size() == 0) return std::string("");
+
+    StringBuffer strBuf;
+    Writer<rapidjson::StringBuffer> writer(strBuf);
+
+    writer.StartObject();
+    for (auto it : map) {
+        writer.Key(it.first.c_str());
+        writer.String(it.second.c_str());
+    }
+    writer.EndObject();
+
+    std::string data = strBuf.GetString();
+    return data;
 }
 
 std::vector<std::string> JsonStringToVector(std::string& jstr) {
-    
     std::vector<std::string> vec;
-    if(jstr.length() < 3) return vec;
-    
-    nlohmann::json j;
-    try
-    {
-        j = nlohmann::json::parse(jstr.c_str());
-    }
-    catch(std::exception)
-    {
-        LOG("Parse json failed, parsed jstr: %s", jstr.c_str());
-        return vec;
-    }
+    if (jstr.length() < 3) return vec;
 
-    vec = j.get<std::vector<std::string>>();
+    Document d;
+    if (!d.Parse(jstr.data()).HasParseError()) {
+        if (d.IsArray() == true) {
+            int size = d.Size();
+            for (int i = 0; i < size; i++) {
+                vec.push_back(d[i].GetString());
+            }
+        }
+    }
     return vec;
 }
 
 std::map<std::string, std::string> JsonStringToMap(std::string& jstr) {
-    
     std::map<std::string, std::string> map;
-    if(jstr.length() < 3) return map;
-    
-    nlohmann::json j;
-    try
-    {
-        j = nlohmann::json::parse(jstr.c_str());
-    }
-    catch(std::exception)
-    {
-        LOG("Parse json failed, parsed jstr: %s", jstr.c_str());
-        return map;
-    }
+    if (jstr.length() < 3) return map;
 
-    for(auto it=j.begin(); it!=j.end(); it++) {
-        std::pair<std::string, std::string> kv{it.key().c_str(), it.value().get<std::string>().c_str()};
-        map.insert(kv);
+    Document d;
+    if (!d.Parse(jstr.data()).HasParseError()) {
+        for (auto iter = d.MemberBegin(); iter != d.MemberEnd(); ++iter) {
+            auto key = iter->name.GetString();
+            auto value = iter->value.GetString();
+
+            map.insert(std::pair<std::string, std::string>(key, value));
+        }
     }
-    
-    // or using: map = j.get<std::map<std::string, std::string>>();
-    
     return map;
 }
 
