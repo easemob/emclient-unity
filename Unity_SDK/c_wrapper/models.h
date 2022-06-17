@@ -192,6 +192,7 @@ public:
     EMMessage::EMMessageStatus Status;
     bool HasDeliverAck;
     bool HasReadAck;
+    bool IsNeedGroupAck;
 
     const char * AttributesValues;
     int64_t LocalTime;

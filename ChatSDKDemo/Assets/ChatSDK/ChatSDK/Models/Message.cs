@@ -71,6 +71,8 @@ namespace ChatSDK
         /// </summary>
         public bool HasReadAck = false;
 
+        public bool IsNeedGroupAck = false;
+
         /// <summary>
         /// 消息体
         /// </summary>

@@ -27,6 +27,10 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
     std::string from, to, msgId, attrs;
     EMMessage::EMChatType msgType = EMMessage::EMChatType::SINGLE;
     EMMessageBodyPtr messageBody;
+
+    auto wraper_mto = static_cast<MessageTO*>(mto);
+    bool isNeedGroupAck = wraper_mto->IsNeedGroupAck;
+
     switch(type) {
         case EMMessageBody::TEXT:
         {
@@ -189,10 +193,12 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
     if(buildReceiveMsg) {
         EMMessagePtr messagePtr = EMMessage::createReceiveMessage(to, from, messageBody, msgType, msgId);
         SetMessageAttrs(messagePtr, attrs);
+        messagePtr->setIsNeedGroupAck(isNeedGroupAck);
         return messagePtr;
     } else {
         EMMessagePtr messagePtr = EMMessage::createSendMessage(from, to, messageBody, msgType);
         messagePtr->setMsgId(msgId);
+        messagePtr->setIsNeedGroupAck(isNeedGroupAck);
         SetMessageAttrs(messagePtr, attrs);
         return messagePtr;
     }
@@ -894,6 +900,7 @@ MessageTO * MessageTO::FromEMMessage(const EMMessagePtr &_message)
     //TODO: assume that only 1 body in _message->bodies
     MessageTO * message;
     auto body = _message->bodies().front();
+    bool isNeedGroupAck = _message->isNeedGroupAck();
     switch(body->type()) {
         case EMMessageBody::TEXT:
         {
@@ -937,7 +944,8 @@ MessageTO * MessageTO::FromEMMessage(const EMMessagePtr &_message)
             break;
         default:
             message = NULL;
-    }    
+    }
+    message->IsNeedGroupAck = isNeedGroupAck;
     return message;
 }
 

@@ -680,6 +680,8 @@ namespace ChatSDK
         public bool HasDeliverAck;
         [MarshalAs(UnmanagedType.U1)]
         public bool HasReadAck;
+        [MarshalAs(UnmanagedType.U1)]
+        public bool IsNeedGroupAck;
 
         public string AttributesValues;
         public long LocalTime;
@@ -698,6 +700,7 @@ namespace ChatSDK
             Status = message.Status;
             HasReadAck = message.HasReadAck;
             HasDeliverAck = message.HasDeliverAck;
+            IsNeedGroupAck = message.IsNeedGroupAck;
             AttributesValues = TransformTool.JsonStringFromAttributes(message.Attributes);
             LocalTime = message.LocalTime;
             ServerTime = message.ServerTime;
@@ -830,6 +833,7 @@ namespace ChatSDK
                 ServerTime = ServerTime,
                 HasDeliverAck = HasDeliverAck,
                 HasReadAck = HasReadAck,
+                IsNeedGroupAck = IsNeedGroupAck
             };
 
             // change EMPTY_STR(" ")  to ""
