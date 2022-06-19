@@ -73,6 +73,9 @@ namespace ChatSDK
 
         public bool IsNeedGroupAck = false;
 
+        public bool IsRead = false;
+        public bool MessageOnlineState = false;
+
         /// <summary>
         /// 消息体
         /// </summary>
@@ -291,6 +294,7 @@ namespace ChatSDK
                     Debug.Log($"111 : ?? {jo["attributes"]}");
                     Attributes = TransformTool.JsonStringToAttributes(jo["attributes"].ToString());
                     Body = IMessageBody.Constructor(jo["body"].Value, jo["bodyType"].Value);
+                    //TODO: need to add IsNeedGroupAck, IsRead and MessageOnlineState
                 }
             }
         }
@@ -298,6 +302,7 @@ namespace ChatSDK
         //public JSONObject ToJson()
         internal JSONObject ToJson()
         {
+            //TODO: need to add IsNeedGroupAck
             JSONObject jo = new JSONObject();
             jo.Add("from", From);
             jo.Add("to", To);

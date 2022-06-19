@@ -645,6 +645,8 @@ MessageTO::MessageTO(const EMMessagePtr &_message) {
     this->LocalTime = _message->localTime();
     this->ServerTime = _message->timestamp();
     this->IsNeedGroupAck = _message->isNeedGroupAck();
+    this->IsRead = _message->isRead();
+    this->MessageOnlineState = _message->messageOnlineState();
     
     if (strlen(this->MsgId) == 0) this->MsgId =  const_cast<char*>(EMPTY_STR.c_str());
     if (strlen(this->ConversationId) == 0) this->ConversationId =  const_cast<char*>(EMPTY_STR.c_str());

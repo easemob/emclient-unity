@@ -682,6 +682,10 @@ namespace ChatSDK
         public bool HasReadAck;
         [MarshalAs(UnmanagedType.U1)]
         public bool IsNeedGroupAck;
+        [MarshalAs(UnmanagedType.U1)]
+        public bool IsRead;
+        [MarshalAs(UnmanagedType.U1)]
+        public bool MessageOnlineState;
 
         public string AttributesValues;
         public long LocalTime;
@@ -833,7 +837,9 @@ namespace ChatSDK
                 ServerTime = ServerTime,
                 HasDeliverAck = HasDeliverAck,
                 HasReadAck = HasReadAck,
-                IsNeedGroupAck = IsNeedGroupAck
+                IsNeedGroupAck = IsNeedGroupAck,
+                IsRead = IsRead,
+                MessageOnlineState = MessageOnlineState
             };
 
             // change EMPTY_STR(" ")  to ""

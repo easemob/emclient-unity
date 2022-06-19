@@ -183,6 +183,8 @@ public:
     bool HasDeliverAck;
     bool HasReadAck;
     bool IsNeedGroupAck;
+    bool IsRead;
+    bool MessageOnlineState;
 
     const char * AttributesValues;
     int64_t LocalTime;
