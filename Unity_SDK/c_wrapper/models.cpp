@@ -1294,7 +1294,7 @@ void RoomTO::LogInfo()
     LOG("IsAllMemberMuted: %p %d", &IsAllMemberMuted, IsAllMemberMuted);
 }
 
-GroupReadAckTO * GroupReadAckTO::FromGroupReadAck(EMGroupReadAckPtr&  groupReadAckPtr)
+GroupReadAckTO * GroupReadAckTO::FromGroupReadAck(const EMGroupReadAckPtr&  groupReadAckPtr)
 {
     GroupReadAckTO *groupReadAckTO = new GroupReadAckTO();
     groupReadAckTO->metaId = groupReadAckPtr->meta_id.c_str();

@@ -17,6 +17,8 @@ namespace ChatSDK
 #if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
             string ret = utf8Str;
 #else
+            if (utf8Str.Length == 0) return utf8Str;
+
             string ret = Encoding.UTF8.GetString(Encoding.Unicode.GetBytes(utf8Str));
             int index = ret.IndexOf('\0');
             if (index > 0)

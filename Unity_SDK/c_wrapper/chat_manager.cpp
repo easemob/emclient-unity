@@ -632,7 +632,7 @@ HYPHENATE_API void ChatManager_SendReadAckForGroupMessage(void *client,int callb
     }
     
     std::string messageIdStr = messageId;
-    std::string ackContentStr = ackContent;
+    std::string ackContentStr = GetUTF8FromUnicode(ackContent);
     
     std::thread t([=](){
         EMError error;
@@ -784,6 +784,58 @@ HYPHENATE_API void ChatManager_TranslateMessage(void *client, int callbackId, vo
             DeleteMsgItem(msgId);
         }
     });
+    t.detach();
+}
+
+HYPHENATE_API void ChatManager_FetchGroupReadAcks(void* client, int callbackId, const char* messageId, const char* groupId, int pageSize, const char* startAckId, FUNC_OnSuccess_With_Result_V2 onSuccess, FUNC_OnError onError)
+{
+    EMError error;
+
+    if (!MandatoryCheck(messageId, groupId) || pageSize <= 0) {
+        error.setErrorCode(EMError::GENERAL_ERROR);
+        error.mDescription = "Mandatory parameter is null!";
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+
+    std::string msgId = messageId;
+    std::string gid = groupId;
+    std::string startAckIdStr = OptionalStrParamCheck(startAckId);
+
+    std::thread t([=]() {
+        EMError error;
+        int totalCount = 0;
+        EMCursorResultRaw<EMGroupReadAckPtr> msgCursorResult = CLIENT->getChatManager().fetchGroupReadAcks(msgId, groupId, error, pageSize, &totalCount, startAckIdStr);
+
+        if (EMError::EM_NO_ERROR == error.mErrorCode) {
+            //header
+            CursorResultTOV2 cursorResultTo;
+            cursorResultTo.NextPageCursor = msgCursorResult.nextPageCursor().c_str();
+            cursorResultTo.Type = DataType::ListOfGroup;
+            //items
+            int size = (int)msgCursorResult.result().size();
+            LOG("ChatManager_FetchGroupReadAcks group ack count:%d", size);
+            TOItem** data = new TOItem * [size];
+            for (int i = 0; i < size; i++) {
+                GroupReadAckTO* gkto = GroupReadAckTO::FromGroupReadAck(msgCursorResult.result().at(i));
+                TOItem* item = new TOItem(DataType::Group, gkto);
+                LOG("group ack %d: metaid=%s, msgid=%s, from=%s", i, gkto->metaId, gkto->msgId, gkto->from);
+                data[i] = item;
+            }
+            onSuccess((void*)&cursorResultTo, (void**)data, DataType::CursorResult, size, callbackId);
+            //free memory
+            for (int i = 0; i < size; i++) {
+                delete (MessageTO*)data[i]->Data;
+                delete (TOItem*)data[i];
+            }
+            //delete array
+            delete[]data;
+        }
+        else {
+            LOG("ChatManager_FetchGroupReadAcks failed, error id:%d, desc::%s", error.mErrorCode, error.mDescription.c_str());
+            onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        }
+        });
     t.detach();
 }
 

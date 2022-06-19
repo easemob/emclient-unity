@@ -189,7 +189,7 @@ std::string GetRightValue(const std::string& str)
 
 std::string GetUTF8FromUnicode(const char* src)
 {
-    if (nullptr == src)
+    if (nullptr == src || strlen(src) == 0)
         return std::string("");
 
     std::string dst = std::string(src);

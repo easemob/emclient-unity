@@ -215,5 +215,11 @@ namespace ChatSDK
         {
             //TO-DO
         }
+
+
+        public override void FetchGroupReadAcks(string messageId, string groupId, int pageSize = 20, string startAckId = null, ValueCallBack<CursorResult<GroupReadAck>> handle = null)
+        {
+            //TO-DO  
+        }
     }
 }

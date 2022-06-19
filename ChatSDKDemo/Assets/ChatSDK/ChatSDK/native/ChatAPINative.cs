@@ -124,7 +124,7 @@ namespace ChatSDK{
 		internal static extern void ChatManager_SendReadAckForMessage(IntPtr client, int callbackId, string messageId, OnSuccess onSuccess, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
-		internal static extern void ChatManager_SendReadAckForGroupMessage(IntPtr client, int callbackId, string messageId, string ackContent, OnSuccess onSuccess, OnErrorV2 onError);
+		internal static extern void ChatManager_SendReadAckForGroupMessage(IntPtr client, int callbackId, string messageId, [In, MarshalAs(UnmanagedType.LPTStr)] string ackContent, OnSuccess onSuccess, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
 		internal static extern bool ChatManager_UpdateMessage(IntPtr client, IntPtr mto, MessageBodyType type);
@@ -140,6 +140,10 @@ namespace ChatSDK{
 
 		[DllImport(MyLibName)]
 		internal static extern void ChatManager_TranslateMessage(IntPtr client, int callbackId, IntPtr mto, MessageBodyType type, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 5)] string[] targetLanguages, int size, OnSuccess onSuccess, OnErrorV2 onError);
+		
+		[DllImport(MyLibName)]
+		internal static extern void ChatManager_FetchGroupReadAcks(IntPtr client, int callbackId, string messageId,
+			string groupId, int pageSize, string startAckId, OnSuccessResultV2 onSuccessResult = null, OnErrorV2 onError = null);
 
 		/** GroupManager Stub **/
 		[DllImport(MyLibName)]

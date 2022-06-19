@@ -1706,6 +1706,7 @@ namespace ChatSDK
         public string AckId;
         public string MsgId;
         public string From;
+        [MarshalAs(UnmanagedType.LPTStr)]
         public string Content;
         public int Count;
         public long Timestamp;
@@ -1717,15 +1718,13 @@ namespace ChatSDK
 
         internal GroupReadAck Unmarshall()
         {
-            var result = new GroupReadAck()
-            {
-                AckId = AckId,
-                MsgId = MsgId,
-                From = From,
-                Content = Content,
-                Count = Count,
-                Timestamp = Timestamp
-            };
+            var result = new GroupReadAck();
+            result.AckId = AckId;
+            result.MsgId = MsgId;
+            result.From = From;
+            result.Content = TransformTool.GetUnicodeStringFromUTF8(Content);
+            result.Count = Count;
+            result.Timestamp = Timestamp;
             return result;
         }
     }

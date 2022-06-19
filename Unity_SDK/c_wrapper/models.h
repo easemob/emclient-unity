@@ -54,16 +54,6 @@ struct Options
     bool IsAutoDownload;
 };
 
-struct GroupReadAck
-{
-    char * AckId;
-    char * MsgId;
-    char * From;
-    char * Content;
-    int64_t Timestamp;
-    int Count;
-};
-
 enum class AttributeValueType
 {
     BOOL,
@@ -407,7 +397,7 @@ struct GroupReadAckTO
     int count;
     int64_t timestamp;
     
-    static GroupReadAckTO * FromGroupReadAck(EMGroupReadAckPtr&  groupReadAckPtr);
+    static GroupReadAckTO * FromGroupReadAck(const EMGroupReadAckPtr&  groupReadAckPtr);
 };
 
 struct ConversationTO
@@ -515,7 +505,7 @@ struct TOItem
     int Type;
     void * Data;
     
-    TOItem(){}
+    TOItem() { Type = 0; Data = nullptr; }
     TOItem(int type, void* data): Type(type), Data(data){}
 };
 

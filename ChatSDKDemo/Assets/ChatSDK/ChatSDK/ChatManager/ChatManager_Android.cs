@@ -32,7 +32,7 @@ namespace ChatSDK
             wrapper.Call("downloadThumbnail", messageId, handle?.callbackId);
         }
 
-        public override void FetchHistoryMessagesFromServer(string conversationId, ConversationType type, string startMessageId = null, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack < CursorResult<Message>> handle = null)
+        public override void FetchHistoryMessagesFromServer(string conversationId, ConversationType type, string startMessageId = null, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<CursorResult<Message>> handle = null)
         {
             //TODO: need to add direction
             wrapper.Call("fetchHistoryMessages", conversationId, TransformTool.ConversationTypeToInt(type), startMessageId, count, handle?.callbackId);
@@ -153,6 +153,11 @@ namespace ChatSDK
         public override void TranslateMessage(ref Message message, List<string> targetLanguages, CallBack handle = null)
         {
             //TO-DO
+        }
+
+        public override void FetchGroupReadAcks(string messageId, string groupId, int pageSize = 20, string startAckId = null, ValueCallBack<CursorResult<GroupReadAck>> handle = null)
+        {
+            //TO-DO  
         }
     }
     

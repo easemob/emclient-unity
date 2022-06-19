@@ -774,5 +774,58 @@ namespace ChatSDK
                );
 
         }
+
+        public override void FetchGroupReadAcks(string messageId, string groupId, int pageSize = 20, string startAckId = null, ValueCallBack<CursorResult<GroupReadAck>> handle = null)
+        {
+            if (null == messageId || 0 == messageId.Length || null == groupId || 0 == groupId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.ChatManager_FetchGroupReadAcks(client, callbackId, messageId, groupId, pageSize, startAckId,
+
+                (IntPtr header, IntPtr[] array, DataType dType, int size, int cbId) => {
+                    Debug.Log($"FetchGroupReadAcks callback with dType={dType}, size={size}.");
+                    if (DataType.CursorResult == dType)
+                    {
+                    //header
+                    var cursorResultTO = Marshal.PtrToStructure<CursorResultTOV2>(header);
+                        if (cursorResultTO.Type == DataType.ListOfGroup)
+                        {
+                            var result = new CursorResult<GroupReadAck>();
+                            result.Cursor = cursorResultTO.NextPageCursor;
+
+                            //items
+                            for (int i = 0; i < size; i++)
+                            {
+                                TOItem item = Marshal.PtrToStructure<TOItem>(array[i]);
+                                GroupReadAckTO gkto = Marshal.PtrToStructure<GroupReadAckTO>(item.Data);
+                                GroupReadAck gk = gkto.Unmarshall();
+                                if (null != gk)
+                                {
+                                    result.Data.Add(gk);
+                                }
+                            }
+                            ChatCallbackObject.ValueCallBackOnSuccess<CursorResult<GroupReadAck>>(cbId, result);
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException("Invalid return type from native ChatManager_FetchHistoryMessages(), please check native c wrapper code.");
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError("Incorrect delegate parameters returned.");
+                    }
+                },
+
+                (int code, string desc, int cbId) => {
+                    Debug.LogError($"FetchHistoryMessages failed with code={code},desc={desc}");
+                    ChatCallbackObject.ValueCallBackOnError<CursorResult<Message>>(cbId, code, desc);
+                });
+        }
     }
+
 }
