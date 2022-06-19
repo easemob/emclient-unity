@@ -222,6 +222,7 @@ void UpdateMessageTO(void *mto, EMMessagePtr msg, void* localMto)
     auto amto = static_cast<MessageTO *>(mto);
     amto->MsgId = msg->msgId().c_str();
     amto->ServerTime = msg->timestamp();
+    amto->Status = msg->status();
     
     MessageTOLocal* lmto = (MessageTOLocal*)localMto;
     lmto->MsgId = amto->MsgId;
@@ -643,6 +644,7 @@ MessageTO::MessageTO(const EMMessagePtr &_message) {
     this->HasReadAck = _message->isReadAcked();
     this->LocalTime = _message->localTime();
     this->ServerTime = _message->timestamp();
+    this->IsNeedGroupAck = _message->isNeedGroupAck();
     
     if (strlen(this->MsgId) == 0) this->MsgId =  const_cast<char*>(EMPTY_STR.c_str());
     if (strlen(this->ConversationId) == 0) this->ConversationId =  const_cast<char*>(EMPTY_STR.c_str());
@@ -900,7 +902,6 @@ MessageTO * MessageTO::FromEMMessage(const EMMessagePtr &_message)
     //TODO: assume that only 1 body in _message->bodies
     MessageTO * message;
     auto body = _message->bodies().front();
-    bool isNeedGroupAck = _message->isNeedGroupAck();
     switch(body->type()) {
         case EMMessageBody::TEXT:
         {
@@ -945,7 +946,6 @@ MessageTO * MessageTO::FromEMMessage(const EMMessagePtr &_message)
         default:
             message = NULL;
     }
-    message->IsNeedGroupAck = isNeedGroupAck;
     return message;
 }
 
