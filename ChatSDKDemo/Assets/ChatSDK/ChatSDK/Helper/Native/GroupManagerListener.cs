@@ -350,6 +350,21 @@ namespace ChatSDK {
                 });
             }
         }
+
+        internal void OnAddWhiteListMembersFromGroup(string jsonString)
+        {
+            // TODO
+        }
+
+        internal void OnRemoveWhiteListMembersFromGroup(string jsonString)
+        {
+            // TODO
+        }
+
+        internal void OnAllMemberMuteChangedFromGroup(string jsonString)
+        {
+            // TODO
+        }
     }
 
 }

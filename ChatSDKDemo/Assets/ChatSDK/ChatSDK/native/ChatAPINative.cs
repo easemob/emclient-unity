@@ -153,7 +153,8 @@ namespace ChatSDK{
 				OnGroupDestroyed onGroupDestroyed, OnAutoAcceptInvitationFromGroup onAutoAcceptInvitationFromGroup, OnMuteListAdded onMuteListAdded,
 				OnMuteListRemoved onMuteListRemoved, OnAdminAdded onAdminAdded, OnAdminRemoved onAdminRemoved, OnOwnerChanged onOwnerChanged,
 				OnMemberJoined onMemberJoined, OnMemberExited onMemberExited, OnAnnouncementChanged onAnnouncementChanged, OnSharedFileAdded onSharedFileAdded,
-				OnSharedFileDeleted onSharedFileDeleted);
+				OnSharedFileDeleted onSharedFileDeleted, OnAddWhiteListMembersFromGroup onAddWhiteListMembersFromGroup,
+				OnRemoveWhiteListMembersFromGroup onRemoveWhiteListMembersFromGroup, OnAllMemberMuteChangedFromGroup onAllMemberMuteChangedFromGroup);
 
 		[DllImport(MyLibName)]
 		internal static extern void GroupManager_CreateGroup(IntPtr client, int callbackId, 

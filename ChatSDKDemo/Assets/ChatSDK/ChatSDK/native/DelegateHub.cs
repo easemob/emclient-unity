@@ -55,6 +55,9 @@ namespace ChatSDK
     internal delegate void OnSharedFileAdded(string groupId,
         [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] sharedFile, int size);
     internal delegate void OnSharedFileDeleted(string groupId, string fileId);
+    internal delegate void OnAddWhiteListMembersFromGroup(string groupId, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] string[] whiteList, int size );
+    internal delegate void OnRemoveWhiteListMembersFromGroup(string groupId, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] string[] whiteList, int size);
+    internal delegate void OnAllMemberMuteChangedFromGroup(string groupId, bool isAllMuted);
 
     //IRoomManagerDelegate, most of them are duplicated as IGroupManagerDelegate
     internal delegate void OnChatRoomDestroyed(string roomId, [MarshalAs(UnmanagedType.LPTStr)] string roomName);
@@ -374,7 +377,9 @@ namespace ChatSDK
         internal OnAnnouncementChanged OnAnnouncementChanged;
         internal OnSharedFileAdded OnSharedFileAdded;
         internal OnSharedFileDeleted OnSharedFileDeleted;
-
+        internal OnAddWhiteListMembersFromGroup OnAddWhiteListMembersFromGroup;
+        internal OnRemoveWhiteListMembersFromGroup OnRemoveWhiteListMembersFromGroup;
+        internal OnAllMemberMuteChangedFromGroup OnAllMemberMuteChangedFromGroup;
 
         internal GroupManagerHub()
         {
@@ -621,7 +626,53 @@ namespace ChatSDK
                     }
                 });
             };
-        }
+
+            OnAddWhiteListMembersFromGroup = (string groupId, string[] whiteList, int size) =>
+            {
+                Debug.Log($"OnAddWhiteListMembersFromGroup, group[Id={groupId}], whiteList num:{size}");
+
+                var wl = new List<string>(size);
+                for (int i = 0; i < size; i++)
+                {
+                    wl.Add(whiteList[i]);
+                }
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate listener in CallbackManager.Instance().groupManagerListener.delegater)
+                    {
+                        listener.OnAddWhiteListMembersFromGroup(groupId, wl);
+                    }
+                });
+            };
+            OnRemoveWhiteListMembersFromGroup = (string groupId, string[] whiteList, int size) =>
+            {
+                Debug.Log($"OnRemoveWhiteListMembersFromGroup, group[Id={groupId}], whiteList num:{size}");
+
+                var wl = new List<string>(size);
+                for (int i = 0; i < size; i++)
+                {
+                    wl.Add(whiteList[i]);
+                }
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate listener in CallbackManager.Instance().groupManagerListener.delegater)
+                    {
+                        listener.OnRemoveWhiteListMembersFromGroup(groupId, wl);
+                    }
+                });
+            };
+            OnAllMemberMuteChangedFromGroup = (string groupId, bool isAllMuted) =>
+            {
+                Debug.Log($"OnAllMemberMuteChangedFromGroup, group[Id={groupId}], isAllMuted:{isAllMuted}");
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate listener in CallbackManager.Instance().groupManagerListener.delegater)
+                    {
+                        listener.OnAllMemberMuteChangedFromGroup(groupId, isAllMuted);
+                    }
+                });
+            };
+    }
     }
 
     internal sealed class RoomManagerHub

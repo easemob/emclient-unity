@@ -28,7 +28,8 @@ namespace ChatSDK
                 groupManagerHub.OnGroupDestroyed, groupManagerHub.OnAutoAcceptInvitationFromGroup, groupManagerHub.OnMuteListAdded,
                 groupManagerHub.OnMuteListRemoved, groupManagerHub.OnAdminAdded, groupManagerHub.OnAdminRemoved, groupManagerHub.OnOwnerChanged,
                 groupManagerHub.OnMemberJoined, groupManagerHub.OnMemberExited, groupManagerHub.OnAnnouncementChanged, groupManagerHub.OnSharedFileAdded,
-                groupManagerHub.OnSharedFileDeleted);
+                groupManagerHub.OnSharedFileDeleted, groupManagerHub.OnAddWhiteListMembersFromGroup, groupManagerHub.OnRemoveWhiteListMembersFromGroup,
+                groupManagerHub.OnAllMemberMuteChangedFromGroup);
         }
 
         public override void applyJoinToGroup(string groupId, string reason, CallBack handle = null)

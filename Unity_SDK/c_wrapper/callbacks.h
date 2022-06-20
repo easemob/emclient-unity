@@ -67,6 +67,9 @@ using namespace easemob;
     typedef void (__stdcall *FUNC_OnAnnouncementChanged)(const char * groupId, const char * announcement);
     typedef void (__stdcall *FUNC_OnSharedFileAdded)(const char * groupId, void* sharedFile[], int size);
     typedef void (__stdcall *FUNC_OnSharedFileDeleted)(const char * groupId, const char * fileId);
+    typedef void (__stdcall *FUNC_OnAddWhiteListMembersFromGroup)(const char* groupId, const char* whiteList[], int size);
+    typedef void (__stdcall *FUNC_OnRemoveWhiteListMembersFromGroup)(const char* groupId, const char* whiteList[], int size);
+    typedef void (__stdcall *FUNC_OnAllMemberMuteChangedFromGroup)(const char* groupId, bool isAllMuted);
 
     //ContactManager Listener
     typedef void (__stdcall *FUNC_OnContactAdded)(const char* username);
@@ -133,6 +136,9 @@ using namespace easemob;
     typedef void (*FUNC_OnAnnouncementChanged)(const char * groupId, const char * announcement);
     typedef void (*FUNC_OnSharedFileAdded)(const char * groupId, void * sharedFile[], int size);
     typedef void (*FUNC_OnSharedFileDeleted)(const char * groupId, const char * fileId);
+    typedef void (*FUNC_OnAddWhiteListMembersFromGroup)(const char* groupId, const char* whiteList[], int size);
+    typedef void (*FUNC_OnRemoveWhiteListMembersFromGroup)(const char* groupId, const char* whiteList[], int size);
+    typedef void (*FUNC_OnAllMemberMuteChangedFromGroup)(const char* groupId, bool isAllMuted);
 
     //RoomManager Listener
     typedef void (*FUNC_OnChatRoomDestroyed)(const char * roomId, const char * roomName);
@@ -457,7 +463,22 @@ private:
 class GroupManagerListener : public EMGroupManagerListener
 {
 public:
-    GroupManagerListener(void * client, FUNC_OnInvitationReceived onInvitationReceived, FUNC_OnRequestToJoinReceived onRequestToJoinReceived, FUNC_OnRequestToJoinAccepted onRequestToJoinAccepted, FUNC_OnRequestToJoinDeclined onRequestToJoinDeclined, FUNC_OnInvitationAccepted onInvitationAccepted, FUNC_OnInvitationDeclined onInvitationDeclined, FUNC_OnUserRemoved onUserRemoved, FUNC_OnGroupDestroyed onGroupDestroyed, FUNC_OnAutoAcceptInvitationFromGroup onAutoAcceptInvitationFromGroupCB, FUNC_OnMuteListAdded onMuteListAdded, FUNC_OnMuteListRemoved onMuteListRemoved, FUNC_OnAdminAdded onAdminAdded, FUNC_OnAdminRemoved onAdminRemoved, FUNC_OnOwnerChanged onOwnerChanged, FUNC_OnMemberJoined onMemberJoined, FUNC_OnMemberExited onMemberExited, FUNC_OnAnnouncementChanged onAnnouncementChanged, FUNC_OnSharedFileAdded onSharedFileAdded, FUNC_OnSharedFileDeleted onSharedFileDeleted):client(client),onInvitationReceived(onInvitationReceived),onRequestToJoinReceived(onRequestToJoinReceived),onRequestToJoinAccepted(onRequestToJoinAccepted),onRequestToJoinDeclined(onRequestToJoinDeclined),onInvitationAccepted(onInvitationAccepted),onInvitationDeclined(onInvitationDeclined),onUserRemoved(onUserRemoved),onGroupDestroyed(onGroupDestroyed),onAutoAcceptInvitationFromGroupCB(onAutoAcceptInvitationFromGroupCB),onMuteListAdded(onMuteListAdded),onMuteListRemoved(onMuteListRemoved),onAdminAdded(onAdminAdded),onAdminRemoved(onAdminRemoved),onOwnerChanged(onOwnerChanged),onMemberJoined(onMemberJoined),onMemberExited(onMemberExited),onAnnouncementChanged(onAnnouncementChanged),onSharedFileAdded(onSharedFileAdded),onSharedFileDeleted(onSharedFileDeleted) {}
+    GroupManagerListener(void * client, FUNC_OnInvitationReceived onInvitationReceived, FUNC_OnRequestToJoinReceived onRequestToJoinReceived, 
+        FUNC_OnRequestToJoinAccepted onRequestToJoinAccepted, FUNC_OnRequestToJoinDeclined onRequestToJoinDeclined, FUNC_OnInvitationAccepted onInvitationAccepted, 
+        FUNC_OnInvitationDeclined onInvitationDeclined, FUNC_OnUserRemoved onUserRemoved, FUNC_OnGroupDestroyed onGroupDestroyed, 
+        FUNC_OnAutoAcceptInvitationFromGroup onAutoAcceptInvitationFromGroupCB, FUNC_OnMuteListAdded onMuteListAdded, FUNC_OnMuteListRemoved onMuteListRemoved, 
+        FUNC_OnAdminAdded onAdminAdded, FUNC_OnAdminRemoved onAdminRemoved, FUNC_OnOwnerChanged onOwnerChanged, FUNC_OnMemberJoined onMemberJoined, 
+        FUNC_OnMemberExited onMemberExited, FUNC_OnAnnouncementChanged onAnnouncementChanged, FUNC_OnSharedFileAdded onSharedFileAdded, 
+        FUNC_OnSharedFileDeleted onSharedFileDeleted, FUNC_OnAddWhiteListMembersFromGroup onAddWhiteListMembersFromGroup,
+        FUNC_OnRemoveWhiteListMembersFromGroup onRemoveWhiteListMembersFromGroup, FUNC_OnAllMemberMuteChangedFromGroup onAllMemberMuteChangedFromGroup)
+        :client(client),onInvitationReceived(onInvitationReceived),onRequestToJoinReceived(onRequestToJoinReceived),
+        onRequestToJoinAccepted(onRequestToJoinAccepted),onRequestToJoinDeclined(onRequestToJoinDeclined),onInvitationAccepted(onInvitationAccepted),
+        onInvitationDeclined(onInvitationDeclined),onUserRemoved(onUserRemoved),onGroupDestroyed(onGroupDestroyed),
+        onAutoAcceptInvitationFromGroupCB(onAutoAcceptInvitationFromGroupCB),onMuteListAdded(onMuteListAdded),
+        onMuteListRemoved(onMuteListRemoved),onAdminAdded(onAdminAdded),onAdminRemoved(onAdminRemoved),onOwnerChanged(onOwnerChanged),
+        onMemberJoined(onMemberJoined),onMemberExited(onMemberExited),onAnnouncementChanged(onAnnouncementChanged),onSharedFileAdded(onSharedFileAdded),
+        onSharedFileDeleted(onSharedFileDeleted), onAddWhiteListMembersFromGroup_(onAddWhiteListMembersFromGroup),
+        onRemoveWhiteListMembersFromGroup_(onRemoveWhiteListMembersFromGroup), onAllMemberMuteChangedFromGroup_(onAllMemberMuteChangedFromGroup){}
     
     void onReceiveInviteFromGroup(const std::string groupId, const std::string& inviter, const std::string& inviteMessage) override {
         if(onInvitationReceived) {
@@ -659,6 +680,10 @@ private:
     FUNC_OnAnnouncementChanged onAnnouncementChanged;
     FUNC_OnSharedFileAdded onSharedFileAdded;
     FUNC_OnSharedFileDeleted onSharedFileDeleted;
+    FUNC_OnAddWhiteListMembersFromGroup onAddWhiteListMembersFromGroup_;
+    FUNC_OnRemoveWhiteListMembersFromGroup onRemoveWhiteListMembersFromGroup_;
+    FUNC_OnAllMemberMuteChangedFromGroup onAllMemberMuteChangedFromGroup_;
+
 };
 
 class RoomManagerListener : public EMChatroomManagerListener
