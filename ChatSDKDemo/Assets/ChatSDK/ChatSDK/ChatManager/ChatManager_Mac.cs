@@ -648,6 +648,12 @@ namespace ChatSDK
 
         public override  void RemoveMessagesBeforeTimestamp(long timeStamp, CallBack callback = null)
         {
+            if (timeStamp < 0)
+            {
+                Debug.LogError("timeStamp is negtive!");
+                return;
+            }
+
             int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
 
             ChatAPINative.ChatManager_RemoveMessagesBeforeTimestamp(client, callbackId, timeStamp,
@@ -672,6 +678,12 @@ namespace ChatSDK
 
         public override void DeleteConversationFromServer(string conversationId, ConversationType conversationType, bool isDeleteServerMessages, CallBack callback = null)
         {
+            if (null == conversationId || 0 == conversationId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+
             int callbackId = (null != callback) ? int.Parse(callback.callbackId) : -1;
 
             ChatAPINative.ChatManager_DeleteConversationFromServer(client, callbackId, conversationId, conversationType, isDeleteServerMessages,
@@ -724,6 +736,12 @@ namespace ChatSDK
 
         public override void TranslateMessage(ref Message message, List<string> targetLanguages, CallBack handle = null)
         {
+            if(targetLanguages.Count == 0)
+            {
+                Debug.LogError("targetLanguages is empty!");
+                return;
+            }
+
             MessageTO mto = MessageTO.FromMessage(message);
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
@@ -825,6 +843,36 @@ namespace ChatSDK
                     Debug.LogError($"FetchHistoryMessages failed with code={code},desc={desc}");
                     ChatCallbackObject.ValueCallBackOnError<CursorResult<Message>>(cbId, code, desc);
                 });
+        }
+
+        public override void ReportMessage(string messageId, string tag, string reason, CallBack handle = null)
+        {
+            if (null == messageId || 0 == messageId.Length || null == tag || 0 == tag.Length
+                || null == reason || 0 == reason.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.ChatManager_ReportMessage(client, callbackId, messageId, tag, reason,
+                (int cbId) =>
+                {
+                    try
+                    {
+                        ChatCallbackObject.CallBackOnSuccess(cbId);
+                    }
+                    catch (NullReferenceException nre)
+                    {
+                        Debug.LogWarning($"NullReferenceException: {nre.StackTrace}");
+                    }
+
+                },
+                (int code, string desc, int cbId) =>
+                {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                }
+                );
         }
     }
 

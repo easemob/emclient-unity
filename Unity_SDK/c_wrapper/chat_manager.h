@@ -48,6 +48,7 @@ HYPHENATE_API void ChatManager_DeleteConversationFromServer(void *client, int ca
 HYPHENATE_API void ChatManager_FetchSupportLanguages(void *client, int callbackId, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnError onError);
 HYPHENATE_API void ChatManager_TranslateMessage(void *client, int callbackId, void *mto, EMMessageBody::EMMessageBodyType type, const char * targetLanguages[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError);
 HYPHENATE_API void ChatManager_FetchGroupReadAcks(void* client, int callbackId, const char* messageId, const char* groupId, int pageSize, const char* startAckId, FUNC_OnSuccess_With_Result_V2 onSuccess, FUNC_OnError onError);
+HYPHENATE_API void ChatManager_ReportMessage(void* client, int callbackId, const char* messageId, const char* tag, const char* reason, FUNC_OnSuccess onSuccess, FUNC_OnError onError);
 #ifdef __cplusplus
 }
 #endif //__cplusplus

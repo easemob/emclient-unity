@@ -145,6 +145,11 @@ namespace ChatSDK{
 		internal static extern void ChatManager_FetchGroupReadAcks(IntPtr client, int callbackId, string messageId,
 			string groupId, int pageSize, string startAckId, OnSuccessResultV2 onSuccessResult = null, OnErrorV2 onError = null);
 
+		[DllImport(MyLibName)]
+		internal static extern void ChatManager_ReportMessage(IntPtr client, int callbackId, string messageId,
+			[In, MarshalAs(UnmanagedType.LPTStr)] string tag, [In, MarshalAs(UnmanagedType.LPTStr)] string reason, 
+			OnSuccess onSuccess = null, OnErrorV2 onError = null);
+
 		/** GroupManager Stub **/
 		[DllImport(MyLibName)]
 		internal static extern void GroupManager_AddListener(IntPtr client, OnInvitationReceived onInvitationReceived,

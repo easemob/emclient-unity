@@ -839,6 +839,32 @@ HYPHENATE_API void ChatManager_FetchGroupReadAcks(void* client, int callbackId, 
     t.detach();
 }
 
+HYPHENATE_API void ChatManager_ReportMessage(void* client, int callbackId, const char* messageId, const char* tag, const char* reason, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+{
+    EMError error;
+    if (!MandatoryCheck(messageId, tag, reason, error)) {
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+
+    std::string messageIdStr = messageId;
+    std::string tagStr = GetUTF8FromUnicode(tag);
+    std::string reasonStr = GetUTF8FromUnicode(reason);
+
+    std::thread t([=]() {
+        EMError error;
+        CLIENT->getChatManager().reportMessage(messageIdStr, tagStr, reasonStr, error);
+        if (EMError::EM_NO_ERROR != error.mErrorCode) {
+            LOG("ChatManager_ReportMessage failed for messageId id:%s", messageIdStr.c_str());
+            if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+            return;
+        }
+        LOG("ChatManager_ReportMessage successfully for messageId:%s", messageIdStr.c_str());
+        if (onSuccess) onSuccess(callbackId);
+        });
+    t.detach();
+}
+
 void ChatManager_RemoveListener(void*client)
 {
     CLIENT->getChatManager().clearListeners();

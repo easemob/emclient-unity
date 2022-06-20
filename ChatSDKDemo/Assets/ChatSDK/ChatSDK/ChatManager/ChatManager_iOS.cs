@@ -208,18 +208,23 @@ namespace ChatSDK
 
         public override void FetchSupportLanguages(ValueCallBack<List<SupportLanguages>> handle = null)
         {
-            //TO-DO
+            //TODO
         }
 
         public override void TranslateMessage(ref Message message, List<string> targetLanguages, CallBack handle = null)
         {
-            //TO-DO
+            //TODO
         }
 
 
         public override void FetchGroupReadAcks(string messageId, string groupId, int pageSize = 20, string startAckId = null, ValueCallBack<CursorResult<GroupReadAck>> handle = null)
         {
-            //TO-DO  
+            //TODO  
+        }
+
+        public override void ReportMessage(string messageId, string tag, string reason, CallBack handle = null)
+        {
+            //TODO
         }
     }
 }

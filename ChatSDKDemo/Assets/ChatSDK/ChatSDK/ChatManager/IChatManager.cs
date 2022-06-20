@@ -163,6 +163,8 @@ namespace ChatSDK
 
         public abstract void FetchGroupReadAcks(string messageId, string groupId, int pageSize = 20, string startAckId = null, ValueCallBack<CursorResult<GroupReadAck>> handle = null);
 
+        public abstract void ReportMessage(string messageId, string tag, string reason, CallBack handle = null);
+
         /// <summary>
         /// 添加消息监听
         /// </summary>
