@@ -13,6 +13,45 @@
 static EMCallbackObserverHandle gCallbackObserverHandle;
 EMGroupManagerListener *gGroupManagerListener = nullptr;
 
+std::mutex progressGroupLocker;
+std::map<std::string, int> progressGroupMap;
+
+void AddGroupProgressItem(std::string id)
+{
+    std::lock_guard<std::mutex> maplocker(progressGroupLocker);
+    progressGroupMap[id] = 0;
+}
+
+void DeleteGroupProgressItem(std::string id)
+{
+    std::lock_guard<std::mutex> maplocker(progressGroupLocker);
+    auto it = progressGroupMap.find(id);
+    if (progressGroupMap.end() != it) {
+        progressGroupMap.erase(it);
+    }
+}
+
+void UpdateGroupProgressMap(std::string id, int progress)
+{
+    std::lock_guard<std::mutex> maplocker(progressGroupLocker);
+
+    auto it = progressGroupMap.find(id);
+    if (progressGroupMap.end() == it) {
+        return;
+    }
+    it->second = progress;
+}
+
+int GetGroupLastProgress(std::string id)
+{
+    std::lock_guard<std::mutex> maplocker(progressGroupLocker);
+    auto it = progressGroupMap.find(id);
+    if (progressGroupMap.end() == it) {
+        return 0;
+    }
+    return it->second;
+}
+
 HYPHENATE_API void GroupManager_AddListener(void *client,FUNC_OnInvitationReceived onInvitationReceived, FUNC_OnRequestToJoinReceived onRequestToJoinReceived, FUNC_OnRequestToJoinAccepted onRequestToJoinAccepted, FUNC_OnRequestToJoinDeclined onRequestToJoinDeclined, FUNC_OnInvitationAccepted onInvitationAccepted, FUNC_OnInvitationDeclined onInvitationDeclined, FUNC_OnUserRemoved onUserRemoved, FUNC_OnGroupDestroyed onGroupDestroyed, FUNC_OnAutoAcceptInvitationFromGroup onAutoAcceptInvitationFromGroup, FUNC_OnMuteListAdded onMuteListAdded, FUNC_OnMuteListRemoved onMuteListRemoved, FUNC_OnAdminAdded onAdminAdded, FUNC_OnAdminRemoved onAdminRemoved, FUNC_OnOwnerChanged onOwnerChanged, FUNC_OnMemberJoined onMemberJoined, FUNC_OnMemberExited onMemberExited, FUNC_OnAnnouncementChanged onAnnouncementChanged, FUNC_OnSharedFileAdded onSharedFileAdded, FUNC_OnSharedFileDeleted onSharedFileDeleted)
 {
     if(nullptr == gGroupManagerListener) { //only set once!
@@ -35,9 +74,9 @@ HYPHENATE_API void GroupManager_CreateGroup(void *client, int callbackId, const 
     for(int i=0; i<size; i++) {
         memberList.push_back(inviteMembers[i]);
     }
-    std::string groupNameStr = groupName;
-    std::string descStr = OptionalStrParamCheck(desc);
-    std::string inviteReasonStr = OptionalStrParamCheck(inviteReason);
+    std::string groupNameStr = GetUTF8FromUnicode(groupName);
+    std::string descStr = GetUTF8FromUnicode(OptionalStrParamCheck(desc).c_str());
+    std::string inviteReasonStr = GetUTF8FromUnicode(OptionalStrParamCheck(inviteReason).c_str());
     
     std::thread t([=](){
         EMError error;
@@ -64,7 +103,8 @@ HYPHENATE_API void GroupManager_ChangeGroupName(void *client, int callbackId, co
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
-    std::string groupNameStr = groupName;
+
+    std::string groupNameStr = GetUTF8FromUnicode(groupName);
     std::string groupIdStr = groupId;
     
     std::thread t([=](){
@@ -351,7 +391,7 @@ HYPHENATE_API void GroupManager_ChangeGroupDescription(void *client, int callbac
         return;
     }
     std::string groupIdStr = groupId;
-    std::string descStr = desc;
+    std::string descStr = GetUTF8FromUnicode(desc);
     
     std::thread t([=](){
         EMError error;
@@ -410,16 +450,14 @@ HYPHENATE_API void GroupManager_FetchIsMemberInWhiteList(void *client, int callb
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("GroupManager_FetchIsMemberInWhiteList succeeds, groupid: %s", groupIdStr.c_str());
             if(onSuccess) {
-                //convert bool to int
-                int *boolInt = new int;
-                int *data[1] = {boolInt};
+                int ret = 0;
+
                 if(result) {
-                    *(data[0]) = 1; // 1 - true
+                    ret = 1; // 1 - true
                 }else{
-                    *(data[0]) = 0; // 0 - false
+                    ret = 0; // 0 - false
                 }
-                onSuccess((void **)data, DataType::Bool, 1, callbackId);
-                delete boolInt;
+                onSuccess(nullptr, DataType::Bool, ret, callbackId);
             }
         }else{
             LOG("GroupManager_FetchIsMemberInWhiteList failed, groupid=%s, code=%d, desc=%s", groupIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
@@ -438,7 +476,7 @@ HYPHENATE_API void GroupManager_DeclineInvitationFromGroup(void *client, int cal
     }
     std::string groupIdStr = groupId;
     std::string usernameStr = OptionalStrParamCheck(username);
-    std::string reasonStr = OptionalStrParamCheck(reason);
+    std::string reasonStr = GetUTF8FromUnicode(OptionalStrParamCheck(reason).c_str());
     
     std::thread t([=](){
         EMError error;
@@ -463,7 +501,7 @@ HYPHENATE_API void GroupManager_DeclineJoinGroupApplication(void *client, int ca
     }
     std::string groupIdStr = groupId;
     std::string usernameStr = OptionalStrParamCheck(username);
-    std::string reasonStr = OptionalStrParamCheck(reason);
+    std::string reasonStr = GetUTF8FromUnicode(OptionalStrParamCheck(reason).c_str());
     
     std::thread t([=](){
         EMError error;
@@ -1042,8 +1080,8 @@ HYPHENATE_API void GroupManager_ApplyJoinPublicGroup(void *client, int callbackI
         return;
     }
     std::string groupIdStr = groupId;
-    std::string nickNameStr = OptionalStrParamCheck(nickName);
-    std::string messageStr = OptionalStrParamCheck(message);
+    std::string nickNameStr = GetUTF8FromUnicode(OptionalStrParamCheck(nickName).c_str());
+    std::string messageStr = GetUTF8FromUnicode(OptionalStrParamCheck(message).c_str());
     
     std::thread t([=](){
         EMError error;
@@ -1181,7 +1219,7 @@ HYPHENATE_API void GroupManager_UpdateGroupAnnouncement(void *client, int callba
         return;
     }
     std::string groupIdStr = groupId;
-    std::string newAnnouncementStr = newAnnouncement;
+    std::string newAnnouncementStr = GetUTF8FromUnicode(newAnnouncement);
     
     std::thread t([=](){
         EMError error;
@@ -1226,26 +1264,56 @@ HYPHENATE_API void GroupManager_ChangeGroupExtension(void *client, int callbackI
     t.detach();
 }
 
-HYPHENATE_API void GroupManager_UploadGroupSharedFile(void *client, int callbackId, const char * groupId, const char * filePath, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+HYPHENATE_API void GroupManager_UploadGroupSharedFile(void *client, int callbackId, const char * groupId, const char * filePath, FUNC_OnSuccess onSuccess, FUNC_OnError onError, FUNC_OnProgress onProgress)
 {
     EMError error;
     if(!MandatoryCheck(groupId, filePath, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
-    EMCallbackPtr callbackPtr(new EMCallback(gCallbackObserverHandle,
-                                             [=]()->bool {
-                                                LOG("Upload group shared file succeeds.");
-                                                if(onSuccess) onSuccess(callbackId);
-                                                return true;
-                                             },
-                                             [=](const easemob::EMErrorPtr error)->bool{
-                                                LOG("Failed to upload group shared file failed with code=%d.", error->mErrorCode);
-                                                if(onError) onError(error->mErrorCode,error->mDescription.c_str(), callbackId);
-                                                return true;
-                                             }));
-    
-    CLIENT->getGroupManager().uploadGroupSharedFile(groupId, filePath, callbackPtr, error);
+
+    std::string processId = std::to_string(callbackId);
+    std::string groupIdStr = groupId;
+    std::string filePathStr = filePath;
+
+    AddGroupProgressItem(processId);
+
+    std::thread t([=]() {
+        EMError error;
+
+        EMCallbackPtr callbackPtr(new EMCallback(gCallbackObserverHandle,
+            [=]()->bool {
+                return true;
+            },
+            [=](const easemob::EMErrorPtr error)->bool {
+                return false;
+            },
+            [=](int progress) {
+                LOG("Upload in progress %d percent.", progress);
+                int last_progress = GetGroupLastProgress(processId);
+                if (progress - last_progress >= 5) {
+                    if (onProgress) onProgress(progress, callbackId);
+                    UpdateGroupProgressMap(processId, progress);
+                }
+                return;
+            }));
+
+        CLIENT->getGroupManager().uploadGroupSharedFile(groupIdStr, filePathStr, callbackPtr, error);
+
+        if (EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("Upload group shared file succeeds.");
+            DeleteGroupProgressItem(processId);
+            if (onSuccess) onSuccess(callbackId);
+            return;
+        }
+        else {
+            LOG("Failed to upload group shared file failed with code=%d.", error.mErrorCode);
+            DeleteGroupProgressItem(processId);
+            if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+            return;
+        }
+    });
+    t.detach();
 }
 
 void GroupManager_RemoveListener(void*client)

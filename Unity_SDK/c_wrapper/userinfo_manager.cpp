@@ -9,7 +9,13 @@
 #include "userinfo_manager.h"
 #include "emclient.h"
 #include "tool.h"
-#include "json.hpp"
+
+#ifndef RAPIDJSON_NAMESPACE
+#define RAPIDJSON_NAMESPACE easemob
+#endif
+#include "rapidjson/document.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/prettywriter.h"
 
 std::map<UserInfoType, std::string> UserInfoTypeMap =
                                     {
@@ -23,6 +29,85 @@ std::map<UserInfoType, std::string> UserInfoTypeMap =
                                         {EXT,           "ext"}
                                     };
 
+void TestParseUserInfoResponseFromServer()
+{
+    StringBuffer strBuf;
+    Writer<StringBuffer> writer(strBuf);
+
+    writer.StartObject();
+    {
+            writer.Key("user1");
+            writer.StartObject();
+            {
+                writer.Key("nickname");
+                std::string str = "我的昵称";
+                writer.String(str.c_str());
+
+                writer.Key("avatarurl");
+                writer.String("nick.com");
+
+                writer.Key("mail");
+                writer.String("mail.nick.com");
+
+                writer.Key("phone");
+                writer.String("12345678998");
+
+                writer.Key("gender");
+                writer.Int(1);
+
+                writer.Key("sign");
+                writer.String("this is sign 1");
+
+                writer.Key("birth");
+                writer.String("2022-01-01");
+
+                writer.Key("ext");
+                writer.String("this is ext 1");
+            }
+            writer.EndObject();
+
+            writer.Key("user2");
+            writer.StartObject();
+            {
+                writer.Key("nickname");
+                std::string str = "mynickname";
+                writer.String(str.c_str());
+
+                writer.Key("avatarurl");
+                writer.String("ava.com");
+
+                writer.Key("mail");
+                writer.String("mail.ava.com");
+
+                writer.Key("phone");
+                writer.String("98765432123");
+
+                writer.Key("gender");
+                writer.Int(0);
+
+                writer.Key("sign");
+                writer.String("this is sign 2");
+
+                writer.Key("birth");
+                writer.String("2002-01-01");
+
+                writer.Key("ext");
+                writer.String("this is ext 2");
+            }
+            writer.EndObject();
+    }
+    writer.EndObject();
+
+    string jstr = strBuf.GetString();
+
+    std::map<std::string, UserInfo> userinfoMap;
+
+    // save all strings into userinfoMap
+    userinfoMap = UserInfo::FromResponse(jstr, UserInfoTypeMap);
+
+    return;
+}
+
 HYPHENATE_API void UserInfoManager_UpdateOwnInfo(void *client, int callbackId, void* userInfo, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
@@ -30,27 +115,59 @@ HYPHENATE_API void UserInfoManager_UpdateOwnInfo(void *client, int callbackId, v
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
-    
+
     UserInfoTO* uto = static_cast<UserInfoTO*>(userInfo);
+    std::string nickNameUtf8 = GetUTF8FromUnicode(uto->nickName);
+    //std::string nickNameAnsi = UTF8toANSI(nickNameUtf8);
     
-    nlohmann::json j;
-    std::string jstr = "";
-    try {
-        // TO-DO: check it is ok or not for ""
-        // TO-DO: check it is ok without birth? and userId?
-        j[UserInfoTypeMap[NICKNAME]]    = uto->nickName;
-        j[UserInfoTypeMap[AVATAR_URL]]  = uto->avatarUrl;
-        j[UserInfoTypeMap[EMAIL]]       = uto->email;
-        j[UserInfoTypeMap[PHONE]]       = uto->phoneNumber;
-        j[UserInfoTypeMap[GENDER]]      = uto->gender;
-        j[UserInfoTypeMap[SIGN]]        = uto->signature;
-        j[UserInfoTypeMap[BIRTH]]       = uto->birth;
-        j[UserInfoTypeMap[EXT]]         = uto->ext;
-        jstr = j.dump();
+    StringBuffer strBuf;
+    Writer<StringBuffer> writer(strBuf);
+
+    writer.StartObject();
+
+    if (nickNameUtf8.length() > 0) {
+        writer.Key(UserInfoTypeMap[NICKNAME].c_str());
+        writer.String(nickNameUtf8.c_str());
     }
-    catch(std::exception) {
-        LOG("Make json failed, exit from UserInfoManager_UpdateOwnInfo");
+    
+    if (strlen(uto->avatarUrl) > 0) {
+        writer.Key(UserInfoTypeMap[AVATAR_URL].c_str());
+        writer.String(uto->avatarUrl);
     }
+
+    if (strlen(uto->email) > 0) {
+        writer.Key(UserInfoTypeMap[EMAIL].c_str());
+        writer.String(uto->email);
+    }
+
+    if (strlen(uto->phoneNumber) > 0) {
+        writer.Key(UserInfoTypeMap[PHONE].c_str());
+        writer.String(uto->phoneNumber);
+    }
+
+    if (0 == uto->gender || 1 == uto->gender) {
+        writer.Key(UserInfoTypeMap[GENDER].c_str());
+        writer.Int(uto->gender);
+    }
+
+    if (strlen(uto->signature) > 0) {
+        writer.Key(UserInfoTypeMap[SIGN].c_str());
+        writer.String(uto->signature);
+    }
+
+    if (strlen(uto->birth) > 0) {
+        writer.Key(UserInfoTypeMap[BIRTH].c_str());
+        writer.String(uto->birth);
+    }
+
+    if (strlen(uto->ext) > 0) {
+        writer.Key(UserInfoTypeMap[EXT].c_str());
+        writer.String(uto->ext);
+    }
+
+    writer.EndObject();
+
+    string jstr = strBuf.GetString();
 
     if (jstr.length() <= 2) {
         error.setErrorCode(EMError::GENERAL_ERROR);
@@ -91,7 +208,7 @@ HYPHENATE_API void UserInfoManager_UpdateOwnInfoByAttribute(void *client, int ca
     
     nlohmann::json j;
     std::string jstr = "";
-    std::string attr = value;
+    std::string attr = GetUTF8FromUnicode(value);
     try {
         // TO-DO: check it is ok or not for ""
         j[UserInfoTypeMap[(UserInfoType)userinfoType]] = attr;
@@ -177,7 +294,7 @@ HYPHENATE_API void UserInfoManager_FetchUserInfoByUserId(void *client, int callb
                     
                     LOG("UserInfoManager_FetchUserInfoByUserId succeeds, user count=%d", foundCount);
                     onSuccess((void **)data, DataType::ListOfGroup, foundCount, callbackId);
-		    delete []data;
+		            delete []data;
                 } else {
                     LOG("UserInfoManager_FetchUserInfoByUserId cannot get any data from server");
                     onSuccess(nullptr, DataType::ListOfGroup, 0, callbackId);

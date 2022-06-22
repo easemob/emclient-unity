@@ -100,9 +100,9 @@ HYPHENATE_API void RoomManager_CreateRoom(void *client, int callbackId, const ch
     for(int i=0; i<size; i++) {
         memberList.push_back(memberArray[i]);
     }
-    std::string subjectStr = subject;
-    std::string descStr = OptionalStrParamCheck(desc);
-    std::string welcomMsgStr = OptionalStrParamCheck(welcomMsg);
+    std::string subjectStr = GetUTF8FromUnicode(subject);
+    std::string descStr = GetUTF8FromUnicode(OptionalStrParamCheck(desc).c_str());
+    std::string welcomMsgStr = GetUTF8FromUnicode(OptionalStrParamCheck(welcomMsg).c_str());
     
     std::thread t([=](){
         EMError error;
@@ -130,7 +130,7 @@ HYPHENATE_API void RoomManager_ChangeRoomSubject(void *client, int callbackId, c
         return;
     }
     std::string roomIdStr = roomId;
-    std::string newSubjectStr = newSubject;
+    std::string newSubjectStr = GetUTF8FromUnicode(newSubject);
     
     std::thread t([=](){
         EMError error;
@@ -217,7 +217,7 @@ HYPHENATE_API void RoomManager_ChangeChatroomDescription(void * client, int call
         return;
     }
     std::string roomIdStr = roomId;
-    std::string newDescriptionStr = newDescription;
+    std::string newDescriptionStr = GetUTF8FromUnicode(newDescription);
     
     std::thread t([=](){
         EMError error;
@@ -664,7 +664,7 @@ HYPHENATE_API void RoomManager_UpdateChatroomAnnouncement(void *client, int call
         return;
     }
     std::string roomIdStr = roomId;
-    std::string newAnnouncementStr = newAnnouncement;
+    std::string newAnnouncementStr = GetUTF8FromUnicode(newAnnouncement);
     
     std::thread t([=](){
         EMError error;

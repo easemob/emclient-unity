@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
 using UnityEngine;
+#endif
 
 namespace ChatSDK
 {
@@ -143,7 +145,9 @@ namespace ChatSDK
 
         public override void UpdateAPNSPushToken(string token, CallBack handle = null)
         {
-            handle?.ClearCallback();
+            //不支持
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+            ChatCallbackObject.CallBackOnError(callbackId, -1, "Not Supported.");
         }
 
         public override void UpdatePushNickName(string nickname, CallBack handle = null)

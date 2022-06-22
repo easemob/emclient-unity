@@ -11,6 +11,13 @@
 #include "json.hpp"
 #include "tool.h"
 
+#ifndef RAPIDJSON_NAMESPACE
+#define RAPIDJSON_NAMESPACE easemob
+#endif
+#include "rapidjson/document.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/prettywriter.h"
+
 std::string EMPTY_STR = " ";
 std::string DISPLAY_NAME_STR = " "; // used to save display name temprarily
 
@@ -26,7 +33,11 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             auto tm = static_cast<TextMessageTO *>(mto);
             LOG("Message id from MTO is: id:%s", tm->MsgId);
             //create message body
-            messageBody = EMMessageBodyPtr(new EMTextMessageBody(std::string(tm->body.Content)));
+
+            //convert from Unicode to UTF8
+            std::string content = GetUTF8FromUnicode(tm->body.Content);
+
+            messageBody = EMMessageBodyPtr(new EMTextMessageBody(content));
             from = tm->From;
             to = tm->To;
             msgId = tm->MsgId;
@@ -37,7 +48,9 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
         case EMMessageBody::LOCATION:
         {
             auto lm = static_cast<LocationMessageTO *>(mto);
-            messageBody = EMMessageBodyPtr(new EMLocationMessageBody(lm->body.Latitude, lm->body.Longitude, lm->body.Address, lm->body.BuildingName));
+            std::string addr = GetUTF8FromUnicode(lm->body.Address);
+            std::string building = GetUTF8FromUnicode(lm->body.BuildingName);
+            messageBody = EMMessageBodyPtr(new EMLocationMessageBody(lm->body.Latitude, lm->body.Longitude, addr, building));
             from = lm->From;
             to = lm->To;
             msgId = lm->MsgId;
@@ -527,7 +540,6 @@ MessageTO::MessageTO(const EMMessagePtr &_message) {
     this->ConversationId = _message->conversationId().c_str();
     this->From = _message->from().c_str();
     this->To = _message->to().c_str();
-    this->RecallBy = _message->recallBy().c_str();
     
     this->Type = _message->chatType();
     this->Direction = _message->msgDirection();
@@ -541,7 +553,11 @@ MessageTO::MessageTO(const EMMessagePtr &_message) {
     if (strlen(this->ConversationId) == 0) this->ConversationId =  const_cast<char*>(EMPTY_STR.c_str());
     if (strlen(this->From) == 0) this->From =  const_cast<char*>(EMPTY_STR.c_str());
     if (strlen(this->To) == 0) this->To =  const_cast<char*>(EMPTY_STR.c_str());
-    if (strlen(this->RecallBy) == 0) this->RecallBy =  const_cast<char*>(EMPTY_STR.c_str());
+
+    if (strlen(_message->recallBy().c_str()) == 0) 
+        this->RecallBy =  const_cast<char*>(EMPTY_STR.c_str());
+    else
+        this->RecallBy = GetPointer(_message->recallBy().c_str());
     
     char* p = nullptr;
     std::string str = GetAttrsStringFromMessage(_message);
@@ -731,9 +747,11 @@ void MessageTO::FreeResource(MessageTO * mto)
     if(nullptr == mto)
         return;
     
-    if (nullptr != mto->AttributesValues) {
+    if (nullptr != mto->AttributesValues) 
         delete mto->AttributesValues;
-    }
+
+    if (nullptr != mto->RecallBy && mto->RecallBy != EMPTY_STR.c_str())
+        delete mto->RecallBy;
     
     switch(mto->BodyType) {
         case EMMessageBody::CUSTOM:
@@ -802,7 +820,10 @@ MessageTO * MessageTO::FromEMMessage(const EMMessagePtr &_message)
 
 GroupOptions GroupOptions::FromMucSetting(EMMucSettingPtr setting) {
     GroupOptions go;
-    go.Ext = setting->extension().c_str();
+
+    go.Ext = nullptr;
+
+    go.Ext = GetPointer(setting->extension().c_str());
     go.MaxCount = setting->maxUserCount();
     go.InviteNeedConfirm = setting->inviteNeedConfirm();
     go.Style = setting->style();
@@ -843,6 +864,9 @@ GroupTO::~GroupTO()
     }
     delete MuteList;
     MuteList = NULL;
+
+    if (nullptr != Options.Ext && Options.Ext != EMPTY_STR.c_str())
+        delete Options.Ext;
 }
 
 GroupTO * GroupTO::FromEMGroup(EMGroupPtr &group)
@@ -926,12 +950,13 @@ GroupTO * GroupTO::FromEMGroup(EMGroupPtr &group)
     }
     
     if(group->groupSetting()) {
-        LOG("groupSetting exist, groupid:%s, ext:%s, ext len:%d", gto->GroupId,
-            group->groupSetting()->extension().c_str(), strlen(group->groupSetting()->extension().c_str()));
         gto->Options = GroupOptions::FromMucSetting(group->groupSetting());
-        //FromMucSetting cannot set Ext address correctly(byte NOT alianed?), here set again!
-        gto->Options.Ext = group->groupSetting()->extension().c_str();
-        if(strlen(gto->Options.Ext) == 0) gto->Options.Ext = EMPTY_STR.c_str();
+
+        if(nullptr == gto->Options.Ext || strlen(gto->Options.Ext) == 0) gto->Options.Ext = EMPTY_STR.c_str();
+
+        LOG("groupSetting exist, groupid:%s, ext:%s, ext len:%d", gto->GroupId,
+            gto->Options.Ext, strlen(gto->Options.Ext));
+
     } else {
         LOG("groupSetting is NOT exist, so not set group setting, groupid:%s", gto->GroupId);
     }
@@ -995,42 +1020,75 @@ RoomTO * RoomTO::FromEMChatRoom(EMChatroomPtr &room)
     rto->Owner = room->owner().c_str();
     rto->Announcement = room->chatroomAnnouncement().c_str();
     
-    rto->MemberCount = (int)room->chatroomMembers().size();
+    rto->MemberCount = room->chatroomMemberCount();
+
+    rto->MemberListCount = (int)room->chatroomMembers().size();
     rto->AdminCount = (int)room->chatroomAdmins().size();
     rto->BlockCount = (int)room->chatroomBans().size();
     rto->MuteCount = (int)room->chatroomMutes().size();
     
     int i = 0;
-    rto->MemberList = new char *[rto->MemberCount];
-    for(std::string member : room->chatroomMembers()) {
-        rto->MemberList[i] = new char[member.size()+1];
-        std::strcpy(rto->MemberList[i], member.c_str());
-        i++;
+    if (rto->MemberListCount <= 0) {
+        rto->MemberList = new char* [1];
+        rto->MemberList[0] = const_cast<char*>(EMPTY_STR.c_str());
     }
-    i=0;
-    rto->AdminList = new char *[rto->AdminCount];
-    for(std::string admin : room->chatroomAdmins()) {
-        rto->AdminList[i] = new char[admin.size()+1];
-        std::strcpy(rto->AdminList[i], admin.c_str());
-        i++;
+    else {
+        rto->MemberList = new char* [rto->MemberCount];
+        for (std::string member : room->chatroomMembers()) {
+            rto->MemberList[i] = new char[member.size() + 1];
+            std::strcpy(rto->MemberList[i], member.c_str());
+            i++;
+        }
     }
-    i=0;
-    rto->BlockList = new char *[rto->BlockCount];
-    for(std::string block : room->chatroomBans()) {
-        rto->BlockList[i] = new char[block.size()+1];
-        std::strcpy(rto->BlockList[i], block.c_str());
-        i++;
+    
+    if (rto->AdminCount <= 0) {
+        rto->AdminList = new char* [1];
+        rto->AdminList[0] = const_cast<char*>(EMPTY_STR.c_str());
     }
-    i=0;
-    rto->MuteList = new Mute[rto->MuteCount];
-    Mute m;
-    for(auto mute : room->chatroomMutes()) {
-        char *memberStr = new char[mute.first.size()+1];
-        std::strcpy(memberStr, mute.first.c_str());
-	    m.Member = memberStr;
-	    m.Duration = mute.second;
-	    rto->MuteList[i] = m;
-        i++;
+    else {
+        i = 0;
+        rto->AdminList = new char* [rto->AdminCount];
+        for (std::string admin : room->chatroomAdmins()) {
+            rto->AdminList[i] = new char[admin.size() + 1];
+            std::strcpy(rto->AdminList[i], admin.c_str());
+            i++;
+        }
+    }
+
+    if (rto->BlockCount <= 0) {
+        rto->BlockList = new char* [1];
+        rto->BlockList[0] = const_cast<char*>(EMPTY_STR.c_str());
+    }
+    else
+    {
+        i = 0;
+        rto->BlockList = new char* [rto->BlockCount];
+        for (std::string block : room->chatroomBans()) {
+            rto->BlockList[i] = new char[block.size() + 1];
+            std::strcpy(rto->BlockList[i], block.c_str());
+            i++;
+        }
+    }
+
+    if (rto->MuteCount <= 0) {
+        rto->MuteList = new Mute[1];
+        Mute mute;
+        mute.Member = EMPTY_STR.c_str();
+        mute.Duration = 1000;
+        rto->MuteList[0] = mute;
+    }
+    else {
+        i = 0;
+        rto->MuteList = new Mute[rto->MuteCount];
+        Mute m;
+        for (auto mute : room->chatroomMutes()) {
+            char* memberStr = new char[mute.first.size() + 1];
+            std::strcpy(memberStr, mute.first.c_str());
+            m.Member = memberStr;
+            m.Duration = mute.second;
+            rto->MuteList[i] = m;
+            i++;
+        }
     }
     
     rto->PermissionType = room->chatroomMemberType();
@@ -1040,6 +1098,42 @@ RoomTO * RoomTO::FromEMChatRoom(EMChatroomPtr &room)
     rto->IsAllMemberMuted = room->isMucAllMembersMuted();
     
     return rto;
+}
+
+RoomTO::~RoomTO()
+{
+    if (MemberListCount > 0) {
+        for (int i = 0; i < MemberListCount; i++) {
+            delete (char*)MemberList[i];
+        }
+    }
+    delete MemberList;
+    MemberList = NULL;
+
+
+    if (AdminCount > 0) {
+        for (int i = 0; i < AdminCount; i++) {
+            delete (char*)AdminList[i];
+        }
+    }
+    delete AdminList;
+    AdminList = NULL;
+
+    if (BlockCount > 0) {
+        for (int i = 0; i < BlockCount; i++) {
+            delete (char*)BlockList[i];
+        }
+    }
+    delete BlockList;
+    BlockList = NULL;
+
+    if (MuteCount > 0) {
+        for (int i = 0; i < MuteCount; i++) {
+            delete (char*)MuteList[i].Member;
+        }
+    }
+    delete MuteList;
+    MuteList = NULL;
 }
 
 void RoomTO::LogInfo()
@@ -1056,6 +1150,7 @@ void RoomTO::LogInfo()
     LOG("BlockList address: %p %p", &BlockList, BlockList);
     LOG("MuteList address: %p %p", &MuteList, MuteList);
 
+    LOG("MemberListCount: %p %d", &MemberListCount, MemberListCount);
     LOG("MemberCount: %p %d", &MemberCount, MemberCount);
     LOG("AdminCount: %p %d", &AdminCount, AdminCount);
     LOG("BlockCount: %p %d", &BlockCount, BlockCount);
@@ -1126,9 +1221,9 @@ PushConfigTO * PushConfigTO::FromEMPushConfig(EMPushConfigsPtr&  pushConfigPtr)
     PushConfigTO* pushConfigTO = new PushConfigTO();
     
     if(pushConfigPtr->getDisplayStatus() == easemob::EMPushConfigs::EMPushNoDisturbStatus::Close)
-        pushConfigTO->NoDisturb = true;
-    else
         pushConfigTO->NoDisturb = false;
+    else
+        pushConfigTO->NoDisturb = true;
 
     pushConfigTO->NoDisturbStartHour = pushConfigPtr->getNoDisturbingStartHour();
     pushConfigTO->NoDisturbEndHour = pushConfigPtr->getNoDisturbingEndHour();
@@ -1137,73 +1232,55 @@ PushConfigTO * PushConfigTO::FromEMPushConfig(EMPushConfigsPtr&  pushConfigPtr)
     return pushConfigTO;
 }
 
-
+//refer to 批量获取用户属性 in: https://docs-im.easemob.com/ccim/rest/userprofile 
 std::map<std::string, UserInfo> UserInfo::FromResponse(std::string json, std::map<UserInfoType, std::string>& utypeMap)
 {
     std::map<std::string, UserInfo> userinfoMap;
     if (json.length() <= 2) return userinfoMap;
     
-    nlohmann::json j;
-    try {
-        j = nlohmann::json::parse(json);
-    }
-    catch(std::exception) {
-        LOG("Failed to parse response from server to json.");
-        return userinfoMap;
-    }
-    
-    for(auto it=j.begin(); it!=j.end(); it++) {
-        std::string user = it.key();
-        nlohmann::json u = it.value();
-        
-        if (u.is_null() || u.empty() || !u.is_object()) continue;
+    Document d;
+    if (!d.Parse(json.data()).HasParseError()) {
 
-        UserInfo ui;
-        if (u.count(utypeMap[NICKNAME]) > 0 && u.at(utypeMap[NICKNAME]).is_string())
-            ui.nickName = u.at(utypeMap[NICKNAME]).get<std::string>();
-        else
-            ui.nickName = "";
-        
-        if (u.count(utypeMap[AVATAR_URL]) > 0 && u.at(utypeMap[AVATAR_URL]).is_string())
-            ui.avatarUrl = u.at(utypeMap[AVATAR_URL]).get<std::string>();
-        else
-            ui.avatarUrl = "";
-        
-        if (u.count(utypeMap[EMAIL]) > 0 && u.at(utypeMap[EMAIL]).is_string())
-            ui.email = u.at(utypeMap[EMAIL]).get<std::string>();
-        else
-            ui.email = "";
-        
-        if (u.count(utypeMap[PHONE]) > 0 && u.at(utypeMap[PHONE]).is_string())
-            ui.phoneNumber = u.at(utypeMap[PHONE]).get<std::string>();
-        else
-            ui.phoneNumber = "";
-        
-        if (u.count(utypeMap[SIGN]) > 0 && u.at(utypeMap[SIGN]).is_string())
-            ui.signature = u.at(utypeMap[SIGN]).get<std::string>();
-        else
-            ui.signature = "";
-        
-        if (u.count(utypeMap[BIRTH]) > 0 && u.at(utypeMap[BIRTH]).is_string())
-            ui.birth = u.at(utypeMap[BIRTH]).get<std::string>();
-        else
-            ui.birth = "";
-        
-        if (u.count(utypeMap[EXT]) > 0 && u.at(utypeMap[EXT]).is_string())
-            ui.ext = u.at(utypeMap[EXT]).get<std::string>();
-        else
-            ui.ext = "";
-        
-        if (u.count(utypeMap[GENDER]) > 0 && u.at(utypeMap[GENDER]).is_string()) {
-            std::string str = u.at(utypeMap[GENDER]).get<std::string>();
-            ui.gender = std::stoi(str);
+        for (auto iter = d.MemberBegin(); iter != d.MemberEnd(); ++iter) {
+
+            auto key = iter->name.GetString();
+            const Value& objItem = iter->value;
+
+            if (objItem.IsObject()) {
+
+                UserInfo ui;
+
+                if (objItem.HasMember(utypeMap[NICKNAME].c_str()) && objItem[utypeMap[NICKNAME].c_str()].IsString())
+                    ui.nickName = objItem[utypeMap[NICKNAME].c_str()].GetString();
+
+                if (objItem.HasMember(utypeMap[AVATAR_URL].c_str()) && objItem[utypeMap[AVATAR_URL].c_str()].IsString())
+                    ui.avatarUrl = objItem[utypeMap[AVATAR_URL].c_str()].GetString();
+
+                if (objItem.HasMember(utypeMap[EMAIL].c_str()) && objItem[utypeMap[EMAIL].c_str()].IsString())
+                    ui.email = objItem[utypeMap[EMAIL].c_str()].GetString();
+
+                if (objItem.HasMember(utypeMap[PHONE].c_str()) && objItem[utypeMap[PHONE].c_str()].IsString())
+                    ui.phoneNumber = objItem[utypeMap[PHONE].c_str()].GetString();
+
+                if (objItem.HasMember(utypeMap[SIGN].c_str()) && objItem[utypeMap[SIGN].c_str()].IsString())
+                    ui.signature = objItem[utypeMap[SIGN].c_str()].GetString();
+
+                if (objItem.HasMember(utypeMap[BIRTH].c_str()) && objItem[utypeMap[BIRTH].c_str()].IsString())
+                    ui.birth = objItem[utypeMap[BIRTH].c_str()].GetString();
+
+                if (objItem.HasMember(utypeMap[EXT].c_str()) && objItem[utypeMap[EXT].c_str()].IsString())
+                    ui.ext = objItem[utypeMap[EXT].c_str()].GetString();
+
+                if (objItem.HasMember(utypeMap[GENDER].c_str()) && objItem[utypeMap[GENDER].c_str()].IsString()) {
+                    std::string gender_str = objItem[utypeMap[GENDER].c_str()].GetString();
+                    if (gender_str.compare("0") == 0 || gender_str.compare("1") == 0)
+                        ui.gender = std::stoi(gender_str);
+                }
+                
+                ui.userId = key;
+                userinfoMap[key] = ui;
+            }
         }
-        else
-            ui.gender = 0;
-
-        ui.userId = user;
-        
-        userinfoMap[user] = ui;
     }
     return userinfoMap;
 }

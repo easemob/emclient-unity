@@ -103,9 +103,15 @@ HYPHENATE_API void PushManager_UpdatePushNoDisturbing(void *client, int callback
 {
     std::thread t([=](){
         EMError error;
+
+        EMPushConfigs::EMPushDisplayStyle style = EMPushConfigs::EMPushDisplayStyle::SimpleBanner;
+        EMPushConfigs::EMPushNoDisturbStatus status = EMPushConfigs::EMPushNoDisturbStatus::Day;
+
         EMPushConfigsPtr pushConfigPtr = CLIENT->getPushManager().getPushConfigs();
-        EMPushConfigs::EMPushDisplayStyle style = pushConfigPtr->getDisplayStyle();
-        EMPushConfigs::EMPushNoDisturbStatus status = pushConfigPtr->getDisplayStatus();
+        if (nullptr != pushConfigPtr) {
+            style = pushConfigPtr->getDisplayStyle();
+            status = pushConfigPtr->getDisplayStatus();
+        }
         
         if(noDisturb)
             status = EMPushConfigs::EMPushNoDisturbStatus::Custom; //to-do: is this right to set Day?
@@ -194,7 +200,7 @@ HYPHENATE_API void PushManager_UpdatePushNickName(void *client, int callbackId, 
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
-    std::string nicknameStr = nickname;
+    std::string nicknameStr = GetUTF8FromUnicode(nickname);
     
     std::thread t([=](){
         EMError error;

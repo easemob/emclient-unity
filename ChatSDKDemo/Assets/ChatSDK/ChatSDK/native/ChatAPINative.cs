@@ -142,11 +142,15 @@ namespace ChatSDK{
 				OnSharedFileDeleted onSharedFileDeleted);
 
 		[DllImport(MyLibName)]
-		internal static extern void GroupManager_CreateGroup(IntPtr client, int callbackId, string groupName, GroupOptions options, string desc,
-			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 6)]string[] inviteMembers = null, int size = 0, string inviteReason = null, OnSuccessResult onSuccessResult = null, OnErrorV2 onError = null);
+		internal static extern void GroupManager_CreateGroup(IntPtr client, int callbackId, 
+			[In, MarshalAs(UnmanagedType.LPTStr)] string groupName, GroupOptions options, 
+			[In, MarshalAs(UnmanagedType.LPTStr)] string desc,
+			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 6)]string[] inviteMembers = null, 
+			int size = 0, [In, MarshalAs(UnmanagedType.LPTStr)] string inviteReason = null, 
+			OnSuccessResult onSuccessResult = null, OnErrorV2 onError = null);
 
 		[DllImport(MyLibName)]
-		internal static extern void GroupManager_ChangeGroupName(IntPtr client, int callbackId, string groupId, string groupName, OnSuccess onSuccess, OnErrorV2 onError);
+		internal static extern void GroupManager_ChangeGroupName(IntPtr client, int callbackId, string groupId, [In, MarshalAs(UnmanagedType.LPTStr)] string groupName, OnSuccess onSuccess, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
 		internal static extern void GroupManager_DestoryGroup(IntPtr client, int callbackId, string groupId, OnSuccess onSuccess, OnErrorV2 onError);
@@ -188,7 +192,7 @@ namespace ChatSDK{
 			OnSuccess onSuccess, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
-		internal static extern void GroupManager_ChangeGroupDescription(IntPtr client, int callbackId, string groupId, string desc, OnSuccess onSuccess, OnErrorV2 onError);
+		internal static extern void GroupManager_ChangeGroupDescription(IntPtr client, int callbackId, string groupId, [In, MarshalAs(UnmanagedType.LPTStr)] string desc, OnSuccess onSuccess, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
 		internal static extern void GroupManager_TransferGroupOwner(IntPtr client, int callbackId, string groupId, string newOwner, OnSuccessResult onSuccessResult = null, OnErrorV2 onError = null);
@@ -197,10 +201,10 @@ namespace ChatSDK{
 		internal static extern void GroupManager_FetchIsMemberInWhiteList(IntPtr client, int callbackId, string groupId, OnSuccessResult onSuccessResult = null, OnErrorV2 onError = null);
 
 		[DllImport(MyLibName)]
-		internal static extern void GroupManager_DeclineInvitationFromGroup(IntPtr client, int callbackId, string groupId, string username, string reason, OnSuccess onSuccess, OnErrorV2 onError);
+		internal static extern void GroupManager_DeclineInvitationFromGroup(IntPtr client, int callbackId, string groupId, string username, [In, MarshalAs(UnmanagedType.LPTStr)] string reason, OnSuccess onSuccess, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
-		internal static extern void GroupManager_DeclineJoinGroupApplication(IntPtr client, int callbackId, string groupId, string username, string reason, OnSuccess onSuccess, OnErrorV2 onError);
+		internal static extern void GroupManager_DeclineJoinGroupApplication(IntPtr client, int callbackId, string groupId, string username, [In, MarshalAs(UnmanagedType.LPTStr)] string reason, OnSuccess onSuccess, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
 		internal static extern void GroupManager_DownloadGroupSharedFile(IntPtr client, int callbackId, string groupId, string filePath, string fileId, OnSuccess onSuccess, OnErrorV2 onError);
@@ -264,7 +268,7 @@ namespace ChatSDK{
 			OnSuccess onSuccess, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
-		internal static extern void GroupManager_ApplyJoinPublicGroup(IntPtr client, int callbackId, string groupId, string nickName, string message, OnSuccess onSuccess, OnErrorV2 onError);
+		internal static extern void GroupManager_ApplyJoinPublicGroup(IntPtr client, int callbackId, string groupId, [In, MarshalAs(UnmanagedType.LPTStr)] string nickName, [In, MarshalAs(UnmanagedType.LPTStr)] string message, OnSuccess onSuccess, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
 		internal static extern void GroupManager_UnblockGroupMessage(IntPtr client, int callbackId, string groupId, OnSuccess onSuccess, OnErrorV2 onError);
@@ -283,13 +287,13 @@ namespace ChatSDK{
 			OnSuccessResult onSuccessResult = null, OnErrorV2 onError = null);
 
 		[DllImport(MyLibName)]
-		internal static extern void GroupManager_UpdateGroupAnnouncement(IntPtr client, int callbackId, string groupId, string newAnnouncement, OnSuccess onSuccess, OnErrorV2 onError);
+		internal static extern void GroupManager_UpdateGroupAnnouncement(IntPtr client, int callbackId, string groupId, [In, MarshalAs(UnmanagedType.LPTStr)] string newAnnouncement, OnSuccess onSuccess, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
 		internal static extern void GroupManager_ChangeGroupExtension(IntPtr client, int callbackId, string groupId, string newExtension, OnSuccessResult onSuccessResult = null, OnErrorV2 onError = null);
 
 		[DllImport(MyLibName)]
-		internal static extern void GroupManager_UploadGroupSharedFile(IntPtr client, int callbackId, string groupId, string filePath, OnSuccess onSuccess, OnErrorV2 onError);
+		internal static extern void GroupManager_UploadGroupSharedFile(IntPtr client, int callbackId, string groupId, string filePath, OnSuccess onSuccess, OnErrorV2 onError, OnProgressV2 onProgress = null);
 
 		/** RoomManager Stub **/
 		[DllImport(MyLibName)]
@@ -305,12 +309,16 @@ namespace ChatSDK{
 			int size = 0, OnSuccessResult onSuccessResult = null, OnErrorV2 onError = null);
 
 		[DllImport(MyLibName)]
-		internal static extern void RoomManager_CreateRoom(IntPtr client, int callbackId, string subject, string descriptionsc, string welcomeMsg, int maxUserCount = 300,
-			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 7)] string[] memberArray = null, int size = 0,
+		internal static extern void RoomManager_CreateRoom(IntPtr client, int callbackId, 
+			[In, MarshalAs(UnmanagedType.LPTStr)] string subject, 
+			[In, MarshalAs(UnmanagedType.LPTStr)] string descriptionsc, 
+			[In, MarshalAs(UnmanagedType.LPTStr)] string welcomeMsg, int maxUserCount = 300,
+			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 7)] string[] memberArray = null, 
+			int size = 0,
 			OnSuccessResult onSuccessResult = null, OnErrorV2 onError = null);
 
 		[DllImport(MyLibName)]
-		internal static extern void RoomManager_ChangeRoomSubject(IntPtr client, int callbackId, string roomId, string newSubject, OnSuccessResult onSuccessResult = null, OnErrorV2 onError = null);
+		internal static extern void RoomManager_ChangeRoomSubject(IntPtr client, int callbackId, string roomId, [In, MarshalAs(UnmanagedType.LPTStr)] string newSubject, OnSuccessResult onSuccessResult = null, OnErrorV2 onError = null);
 
 		[DllImport(MyLibName)]
 		internal static extern void RoomManager_RemoveRoomMembers(IntPtr client, int callbackId, string roomId, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 4)] string[] memberArray = null,
@@ -320,7 +328,7 @@ namespace ChatSDK{
 		internal static extern void RoomManager_TransferChatroomOwner(IntPtr client, int callbackId, string roomId, string newOwner, OnSuccessResult onSuccessResult = null, OnErrorV2 onError = null);
 
 		[DllImport(MyLibName)]
-		internal static extern void RoomManager_ChangeChatroomDescription(IntPtr client, int callbackId, string roomId, string newDescription, OnSuccessResult onSuccessResult = null, OnErrorV2 onError = null);
+		internal static extern void RoomManager_ChangeChatroomDescription(IntPtr client, int callbackId, string roomId, [In, MarshalAs(UnmanagedType.LPTStr)] string newDescription, OnSuccessResult onSuccessResult = null, OnErrorV2 onError = null);
 
 		[DllImport(MyLibName)]
 		internal static extern void RoomManager_DestroyChatroom(IntPtr client, int callbackId, string roomId, OnSuccess onSuccess, OnErrorV2 onError);
@@ -368,7 +376,7 @@ namespace ChatSDK{
 			int size, OnSuccess onSuccess, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
-		internal static extern void RoomManager_UpdateChatroomAnnouncement(IntPtr client, int callbackId, string roomId, string newAnnouncement, OnSuccess onSuccess, OnErrorV2 onError);
+		internal static extern void RoomManager_UpdateChatroomAnnouncement(IntPtr client, int callbackId, string roomId, [In, MarshalAs(UnmanagedType.LPTStr)] string newAnnouncement, OnSuccess onSuccess, OnErrorV2 onError);
 
 		/** ContactManager Stub **/
 		[DllImport(MyLibName)]
@@ -490,7 +498,7 @@ namespace ChatSDK{
 		internal static extern void PushManager_UpdateHMSPushToken(IntPtr client, int callbackId, string token, OnSuccess onSuccess, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
-		internal static extern void PushManager_UpdatePushNickName(IntPtr client, int callbackId, string nickname, OnSuccess onSuccess, OnErrorV2 onError);
+		internal static extern void PushManager_UpdatePushNickName(IntPtr client, int callbackId, [In, MarshalAs(UnmanagedType.LPTStr)] string nickname, OnSuccess onSuccess, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
 		internal static extern void PushManager_ReportPushAction(IntPtr client, int callbackId, string parameters, OnSuccess onSuccess, OnErrorV2 onError);
@@ -499,7 +507,7 @@ namespace ChatSDK{
 		internal static extern void UserInfoManager_UpdateOwnInfo(IntPtr client, int callbackId, IntPtr userInfo, OnSuccess onSuccess, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
-		internal static extern void UserInfoManager_UpdateOwnInfoByAttribute(IntPtr client, int callbackId, int userInfoType, string value, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+		internal static extern void UserInfoManager_UpdateOwnInfoByAttribute(IntPtr client, int callbackId, int userInfoType, [In, MarshalAs(UnmanagedType.LPTStr)] string value, OnSuccessResult onSuccessResult, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
 		internal static extern void UserInfoManager_FetchUserInfoByUserId(IntPtr client, int callbackId, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 3)] string[] users,

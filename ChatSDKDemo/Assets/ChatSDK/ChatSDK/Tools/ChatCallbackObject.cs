@@ -1,16 +1,22 @@
 ﻿using System;
+
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
 using UnityEngine;
+#endif
 
 namespace ChatSDK
 {
     internal sealed class ChatCallbackObject
     {
         private static string _GameObjectName = "chatCallbackObject";
+
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
         private GameObject _CallbackGameObject
         {
             get;
             set;
         }
+#endif
 
         private static ChatCallbackObject _ChatCallbackObject
         {
@@ -38,6 +44,7 @@ namespace ChatSDK
             InitGameObject(gameObjectName);
         }
 
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
         public void Release()
         {
             if (!ReferenceEquals(_CallbackGameObject, null))
@@ -76,12 +83,38 @@ namespace ChatSDK
                 callbackQueue = null;
             }
         }
+#else
+        public void Release()
+        {
+            if (!ReferenceEquals(_CallbackQueue, null))
+            {
+                _CallbackQueue.ClearQueue();
+            }
+            _CallbackQueue = null;
+        }
+
+        private void InitGameObject(string gameObjectName)
+        {
+            DeInitGameObject(gameObjectName);
+            _CallbackQueue = new ChatCallbackQueue();
+        }
+
+        private void DeInitGameObject(string gameObjectName)
+        {
+            if (!ReferenceEquals(_CallbackQueue, null))
+            {
+                _CallbackQueue.ClearQueue();
+            }
+            _CallbackQueue = null;
+        }
+#endif
 
         static public void ValueCallBackOnSuccess<T>(int cbId, object obj)
         {
             ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                 ValueCallBack<T> myhandle = (ValueCallBack<T>)CallbackManager.Instance().GetCallBackHandle(cbId);
-                myhandle?.OnSuccessValue((T)obj);
+                if(null != myhandle && null != myhandle.OnSuccessValue)
+                    myhandle.OnSuccessValue((T)obj);
             });
         }
 
@@ -89,7 +122,8 @@ namespace ChatSDK
         {
             ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                 ValueCallBack<T> myhandle = (ValueCallBack<T>)CallbackManager.Instance().GetCallBackHandle(cbId);
-                myhandle?.Error(code, desc);
+                if(null != myhandle && null != myhandle.Error)
+                    myhandle.Error(code, desc);
             });
         }
 
@@ -97,15 +131,17 @@ namespace ChatSDK
         {
             ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                 var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
-                myhandle?.Success();
+                if(null != myhandle && null != myhandle.Success)
+                    myhandle.Success();
             });
         }
 
         static public void CallBackOnError(int cbId, int code, string desc)
         {
             ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
-                myhandle?.Error(code, desc);
+                var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId); 
+                if(null != myhandle && null != myhandle.Error)
+                    myhandle.Error(code, desc);
             });
         }
 
@@ -113,7 +149,8 @@ namespace ChatSDK
         {
             ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                 var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
-                myhandle?.Progress(progress);
+                if(null != myhandle && null != myhandle.Progress)
+                    myhandle.Progress(progress);
             });
         }
     }

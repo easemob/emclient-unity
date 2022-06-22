@@ -1,5 +1,8 @@
 ﻿using System.Threading.Tasks;
+
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
 using UnityEngine;
+#endif
 
 namespace ChatSDK
 {
@@ -61,7 +64,7 @@ namespace ChatSDK
         /// <summary>
         /// 获取sdk版本号
         /// </summary>
-        public string SdkVersion { get => "3.0.0"; }
+        public string SdkVersion { get => "1.0.2"; }
 
         /// <summary>
         /// 获取当前登录的环信id
