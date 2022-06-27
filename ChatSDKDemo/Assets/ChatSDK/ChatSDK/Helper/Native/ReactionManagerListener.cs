@@ -4,14 +4,14 @@ using UnityEngine;
 namespace ChatSDK
 {
 #if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
-    internal sealed class PresenceManagerListener : MonoBehaviour
+    internal sealed class ReactionManagerListener : MonoBehaviour
 #else
-    internal sealed class PresenceManagerListener
+    internal sealed class ReactionManagerListener
 #endif
     {
-        internal List<IPresenceManagerDelegate> delegater;
+        internal List<IReactionManagerDelegate> delegater;
 
-        internal void OnPresenceUpdated(List<Presence> presences)
+        internal void MessageReactionDidChange(List<MessageReactionChange> list)
         {
             //TODO: Add code for processing json string from IOS/Android SDK
         }

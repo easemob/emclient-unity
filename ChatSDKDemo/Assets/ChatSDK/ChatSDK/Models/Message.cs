@@ -86,6 +86,19 @@ namespace ChatSDK
         /// </summary>
         public Dictionary<string, AttributeValue> Attributes;
 
+        public List<MessageReaction> ReactionList;
+        public Dictionary<string, MessageReaction> ReactionMap;
+
+        internal void SetReactionMap()
+        {
+            if (null == ReactionList || ReactionList.Count == 0) return;
+
+            ReactionMap.Clear();
+            foreach (var it in ReactionList)
+            {
+                ReactionMap[it.Rection] = it;  //TODO: is it work?
+            }
+        }
 
         public Message(IMessageBody body = null)
         {

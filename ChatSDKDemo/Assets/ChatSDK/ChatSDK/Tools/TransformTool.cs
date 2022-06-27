@@ -377,6 +377,35 @@ namespace ChatSDK
             return list;
         }
 
+        static internal List<string> JsonArrayToStringList(JSONNode jn)
+        {
+            List<string> list = new List<string>();
+            if (null == jn) return list;
+
+            JSONObject jo = jn.AsObject;
+            if (!jo.IsArray) return list;
+
+            foreach (JSONNode v in jo.AsArray)
+            {
+                if (v.IsString)
+                {
+                    list.Add(v.Value);
+                }
+            }
+            return list;
+        }
+
+        static internal JSONArray JsonObjectFromStringList(List<string> list)
+        {
+            if (list == null) return null;
+            JSONArray ja = new JSONArray();
+            foreach (string str in list)
+            {
+                ja.Add(str);
+            }
+            return ja;
+        }
+
         static internal JSONArray JsonObjectFromMessageList(List<Message> list)
         {
             if (list == null) return null;

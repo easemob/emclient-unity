@@ -165,6 +165,11 @@ namespace ChatSDK
 
         public abstract void ReportMessage(string messageId, string tag, string reason, CallBack handle = null);
 
+        public abstract void AddReaction(string messageId, string reaction, CallBack handle = null);
+        public abstract void RemoveReaction(string messageId, string reaction, CallBack handle = null);
+        public abstract void GetReactionList(List<string> messageIdList, string messageType, string groupId, ValueCallBack<Dictionary<string, List<MessageReaction>>> handle = null);
+        public abstract void GetReactionDetail(string messageId, string reaction, string cursor = null, int pageSize = 20, ValueCallBack<MessageReaction> handle = null);
+
         /// <summary>
         /// 添加消息监听
         /// </summary>
@@ -190,9 +195,31 @@ namespace ChatSDK
             }
         }
 
+        public void AddReactionManagerDelegate(IReactionManagerDelegate reactionManagerDelegate)
+        {
+            if (!CallbackManager.Instance().reactionManagerListener.delegater.Contains(reactionManagerDelegate))
+            {
+                CallbackManager.Instance().reactionManagerListener.delegater.Add(reactionManagerDelegate);
+            }
+        }
+
+        /// <summary>
+        /// 移除聊天监听
+        /// </summary>
+        /// <param name="chatManagerDelegate"></param>
+        public void RemoveReactionManagerDelegate(IReactionManagerDelegate reactionManagerDelegate)
+        {
+            if (CallbackManager.IsQuit()) return;
+            if (CallbackManager.Instance().reactionManagerListener.delegater.Contains(reactionManagerDelegate))
+            {
+                CallbackManager.Instance().reactionManagerListener.delegater.Remove(reactionManagerDelegate);
+            }
+        }
+
         internal void ClearDelegates()
         {
             CallbackManager.Instance().chatManagerListener.delegater.Clear();
+            CallbackManager.Instance().reactionManagerListener.delegater.Clear();
         }
 
     }

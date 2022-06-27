@@ -80,6 +80,9 @@ namespace ChatSDK
     //IPresenceManagerDelegate
     internal delegate void OnPresenceUpdated([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] IntPtr[] presences, int size);
 
+    //IReactionManagerDelegate
+    internal delegate void MessageReactionDidChange([MarshalAs(UnmanagedType.LPTStr)] string json);
+
     internal sealed class ConnectionHub
     {
         //events handler
@@ -911,6 +914,29 @@ namespace ChatSDK
                     foreach (IPresenceManagerDelegate listener in CallbackManager.Instance().presenceManagerListener.delegater)
                     {
                         listener.OnPresenceUpdated(list);
+                    }
+                });
+            };
+
+        }
+    }
+
+    internal sealed class ReactionManagerHub
+    {
+        internal MessageReactionDidChange messageReactionDidChange;
+
+        internal ReactionManagerHub()
+        {
+            messageReactionDidChange = (string json) =>
+            {
+                Debug.Log("messageReactionDidChange received.");
+
+                List<MessageReactionChange> list = MessageReactionChange.ListFromJson(json);
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IReactionManagerDelegate listener in CallbackManager.Instance().reactionManagerListener.delegater)
+                    {
+                        listener.MessageReactionDidChange(list);
                     }
                 });
             };

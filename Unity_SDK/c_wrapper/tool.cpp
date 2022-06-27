@@ -249,7 +249,7 @@ std::string ANSItoUTF8(std::string& strAnsi)
 
 char* GetPointer(const char* src)
 {
-    if (nullptr == src) return nullptr;
+    if (nullptr == src || strlen(src) == 0) return nullptr;
 
     char* p = new char[strlen(src) + 1];
     memset(p, 0, strlen(src) + 1);

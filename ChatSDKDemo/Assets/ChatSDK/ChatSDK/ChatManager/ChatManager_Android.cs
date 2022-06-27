@@ -164,6 +164,22 @@ namespace ChatSDK
         {
             //TODO
         }
+        public override void AddReaction(string messageId, string reaction, CallBack handle = null)
+        {
+            //TODO
+        }
+        public override void RemoveReaction(string messageId, string reaction, CallBack handle = null)
+        {
+            //TODO
+        }
+        public override void GetReactionList(List<string> messageIdList, string messageType, string groupId, ValueCallBack<Dictionary<string, List<MessageReaction>>> handle = null)
+        {
+            //TODO
+        }
+        public override void GetReactionDetail(string messageId, string reaction, string cursor = null, int pageSize = 20, ValueCallBack<MessageReaction> handle = null)
+        {
+            //TODO
+        }
     }
     
 }

@@ -25,6 +25,7 @@ namespace ChatSDK {
         static string RoomManagerListener_Obj = "unity_chat_emclient_roommanager_delegate_obj";
         static string MultiDeviceListener_Obj = "unity_chat_emclient_multidevice_delegate_obj";
         static string PresenceManagerListener_Obj = "unity_chat_emclient_presencemanager_delegate_obj";
+        static string ReactionManagerListener_Obj = "unity_chat_emclient_reactionmanager_delegate_obj";
 
 
         internal ConnectionListener connectionListener;
@@ -34,6 +35,7 @@ namespace ChatSDK {
         internal RoomManagerListener roomManagerListener;
         internal MultiDeviceListener multiDeviceListener;
         internal PresenceManagerListener presenceManagerListener;
+        internal ReactionManagerListener reactionManagerListener;
 
         internal int CurrentId { get; private set; }
 
@@ -275,6 +277,18 @@ namespace ChatSDK {
             {
                 Debug.Log($"DontDestroyOnLoad triggered.");
             }
+
+            GameObject reactionManagerObject = new GameObject(ReactionManagerListener_Obj);
+            try
+            {
+                DontDestroyOnLoad(reactionManagerObject);
+                reactionManagerListener = reactionManagerObject.AddComponent<ReactionManagerListener>();
+                reactionManagerListener.delegater = new List<IReactionManagerDelegate>();
+            }
+            catch (Exception)
+            {
+                Debug.Log($"DontDestroyOnLoad triggered.");
+            }
         }
 #else
         internal void SetupAllListeners()
@@ -296,6 +310,9 @@ namespace ChatSDK {
 
             multiDeviceListener = new MultiDeviceListener();
             multiDeviceListener.delegater = new List<IMultiDeviceDelegate>();
+
+            reactionManagerListener = new ReactionManagerListener();
+            reactionManagerListener.delegater = new List<IReactionManagerDelegate>();
         }
 #endif
         public void OnSuccess(string jsonString) {
@@ -337,6 +354,7 @@ namespace ChatSDK {
             {
                 string value = jo["type"].Value;
                 JSONNode responseValue = jo["value"];
+                //TODO: add new type for presencemanager and reactionmanager
                 if (value == "List<String>")
                 {
                     List<string> result = null;

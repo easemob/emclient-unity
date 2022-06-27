@@ -11,6 +11,7 @@
 #include "emcontactlistener.h"
 #include "emconnectioncallback_listener.h"
 #include "empresencemanager_listener.h"
+#include "emreactionmanager_listener.h"
 
 using namespace easemob;
 
@@ -85,6 +86,9 @@ using namespace easemob;
 
     //PresenceManager Listener
     typedef void (__stdcall *FUNC_OnPresenceUpdated)(void * presences[], int size);
+
+    //ReactionManager Listener
+    typedef void(__stdcall* FUNC_MessageReactionDidChange)(const char* json);
 #else
     //Callback
     typedef void(*FUNC_OnSuccess)(int callbackId);
@@ -154,6 +158,9 @@ using namespace easemob;
 
     //PresenceManager Listener
     typedef void (*FUNC_OnPresenceUpdated)(void * presences[], int size);
+
+    //ReactionManager Listener
+    typedef void(*FUNC_MessageReactionDidChange)(const char* json);
 
 #endif
 
@@ -804,7 +811,10 @@ private:
 class ContactManagerListener : public EMContactListener
 {
 public:
-    ContactManagerListener(FUNC_OnContactAdded _onContactAdded, FUNC_OnContactDeleted _onContactDeleted, FUNC_OnContactInvited _onContactInvited, FUNC_OnFriendRequestAccepted _onFriendRequestAccepted, FUNC_OnFriendRequestDeclined _OnFriendRequestDeclined):onContactAdded_(_onContactAdded),onContactDeleted_(_onContactDeleted),onContactInvited_(_onContactInvited),onFriendRequestAccepted_(_onFriendRequestAccepted),OnFriendRequestDeclined_(_OnFriendRequestDeclined){}
+    ContactManagerListener(FUNC_OnContactAdded _onContactAdded, FUNC_OnContactDeleted _onContactDeleted, FUNC_OnContactInvited _onContactInvited, 
+        FUNC_OnFriendRequestAccepted _onFriendRequestAccepted, FUNC_OnFriendRequestDeclined _OnFriendRequestDeclined):
+        onContactAdded_(_onContactAdded),onContactDeleted_(_onContactDeleted),onContactInvited_(_onContactInvited),
+        onFriendRequestAccepted_(_onFriendRequestAccepted),OnFriendRequestDeclined_(_OnFriendRequestDeclined){}
     
     void onContactAdded(const std::string &username) override {
         LOG("receive contactadded from user %s!", username.c_str());
@@ -848,7 +858,8 @@ private:
 class PresenceManagerListener : public EMPresenceManagerListener
 {
 public:
-    PresenceManagerListener(FUNC_OnPresenceUpdated _onPresenceUpdated){}
+    PresenceManagerListener(FUNC_OnPresenceUpdated _onPresenceUpdated) : 
+        onPresenceUpdated_(_onPresenceUpdated){}
     
     void onPresenceUpdated(const std::vector<EMPresencePtr>& presence) override {
         size_t size = presence.size();
@@ -874,6 +885,23 @@ public:
 
 private:
     FUNC_OnPresenceUpdated onPresenceUpdated_;
+};
+
+class ReactionManagerListener : public EMReactionManagerListener
+{
+public:
+    ReactionManagerListener(FUNC_MessageReactionDidChange _messageReactionDidChange) :
+        messageReactionDidChange_(_messageReactionDidChange) {}
+
+    void messageReactionDidChange(EMMessageReactionChangeList list) override {
+        size_t size = list.size();
+        LOG("receive messageReactionDidChange, reactionChange count: %d!", size);
+
+        std::string json = MessageReactionChangeTO::ToJson(list);
+        messageReactionDidChange_(json.c_str());
+    }
+private:
+    FUNC_MessageReactionDidChange messageReactionDidChange_;
 };
 
 #endif // _CALLBACKS_H_

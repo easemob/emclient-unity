@@ -19,7 +19,16 @@
 #include "emmucsetting.h"
 #include "empushconfigs.h"
 #include "empresence.h"
+#include "emmessagereaction.h"
+#include "emmessagereactionchange.h"
 #include "json.hpp"
+
+#ifndef RAPIDJSON_NAMESPACE
+#define RAPIDJSON_NAMESPACE easemob
+#endif
+#include "rapidjson/document.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/prettywriter.h"
 
 using namespace easemob;
 
@@ -189,6 +198,7 @@ public:
     const char * AttributesValues;
     int64_t LocalTime;
     int64_t ServerTime;
+    const char* ReactionList;
     
     EMMessageBody::EMMessageBodyType BodyType;
     MessageTO();
@@ -486,6 +496,22 @@ struct PresenceTOWrapper
     std::string ext;
     
     static PresenceTOWrapper FromPresence(EMPresencePtr presencePtr);
+};
+
+struct MessageReactionTO
+{
+    static std::string ToJson(EMMessageReactionPtr reaction);
+    static std::string ToJson(EMMessageReactionList list);
+    static std::string ToJson(EMMessage& msg);
+    static std::string ToJson(std::map<std::string, EMMessageReactionList> map);
+    static void ListToJsonWriter(Writer<StringBuffer>& writer, EMMessageReactionList list);
+};
+
+struct MessageReactionChangeTO
+{
+    static std::string ToJson(EMMessageReactionChangePtr reactionChangePtr);
+    static std::string ToJson(EMMessageReactionChangeList list);
+    static void ToJsonWriter(Writer<StringBuffer>& writer, EMMessageReactionChangePtr reactionChangePtr);
 };
 
 struct TOArray

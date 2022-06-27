@@ -8,15 +8,9 @@
 #include "LogHelper.h"
 #include "models.h"
 #include "emgroup.h"
+#include "emmessageencoder.h"
 #include "json.hpp"
 #include "tool.h"
-
-#ifndef RAPIDJSON_NAMESPACE
-#define RAPIDJSON_NAMESPACE easemob
-#endif
-#include "rapidjson/document.h"
-#include "rapidjson/stringbuffer.h"
-#include "rapidjson/prettywriter.h"
 
 std::string EMPTY_STR = " ";
 std::string DISPLAY_NAME_STR = " "; // used to save display name temprarily
@@ -30,6 +24,10 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
 
     auto wraper_mto = static_cast<MessageTO*>(mto);
     bool isNeedGroupAck = wraper_mto->IsNeedGroupAck;
+
+    EMMessageReactionList reaction_list;
+    if (nullptr != wraper_mto->ReactionList && strlen(wraper_mto->ReactionList) != 0) 
+        EMMessageReactionList reaction_list = EMMessageEncoder::decodeReactionListFromJson(GetUTF8FromUnicode(wraper_mto->ReactionList));
 
     switch(type) {
         case EMMessageBody::TEXT:
@@ -194,12 +192,16 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
         EMMessagePtr messagePtr = EMMessage::createReceiveMessage(to, from, messageBody, msgType, msgId);
         SetMessageAttrs(messagePtr, attrs);
         messagePtr->setIsNeedGroupAck(isNeedGroupAck);
+        if (reaction_list.size() > 0)
+            messagePtr->setReactionList(reaction_list);
         return messagePtr;
     } else {
         EMMessagePtr messagePtr = EMMessage::createSendMessage(from, to, messageBody, msgType);
         messagePtr->setMsgId(msgId);
         messagePtr->setIsNeedGroupAck(isNeedGroupAck);
         SetMessageAttrs(messagePtr, attrs);
+        if (reaction_list.size() > 0)
+            messagePtr->setReactionList(reaction_list);
         return messagePtr;
     }
 
@@ -647,11 +649,14 @@ MessageTO::MessageTO(const EMMessagePtr &_message) {
     this->IsNeedGroupAck = _message->isNeedGroupAck();
     this->IsRead = _message->isRead();
     this->MessageOnlineState = _message->messageOnlineState();
+
+    this->ReactionList = GetPointer(MessageReactionTO::ToJson(*_message.get()).c_str());
     
     if (strlen(this->MsgId) == 0) this->MsgId =  const_cast<char*>(EMPTY_STR.c_str());
     if (strlen(this->ConversationId) == 0) this->ConversationId =  const_cast<char*>(EMPTY_STR.c_str());
     if (strlen(this->From) == 0) this->From =  const_cast<char*>(EMPTY_STR.c_str());
     if (strlen(this->To) == 0) this->To =  const_cast<char*>(EMPTY_STR.c_str());
+    if (strlen(this->ReactionList) == 0) this->ReactionList = const_cast<char*>(EMPTY_STR.c_str());
 
     if (strlen(_message->recallBy().c_str()) == 0) 
         this->RecallBy =  const_cast<char*>(EMPTY_STR.c_str());
@@ -707,6 +712,9 @@ TextMessageTO::TextMessageTO(const EMMessagePtr &_message):MessageTO(_message) {
     p[translations.size()] = '\0';
     strncpy(p, translations.c_str(), translations.size());
     this->body.Translations = p;
+
+    if (strlen(p) > 3)
+        LOG("Translations is %s", p);
 
     //Bug fix: User Empty_str to replace "", avoid error from PtrToStructure at c# side
     if (strlen(this->body.Content) == 0) this->body.Content = const_cast<char*>(EMPTY_STR.c_str());
@@ -877,6 +885,9 @@ void MessageTO::FreeResource(MessageTO * mto)
     if (nullptr != mto->RecallBy && mto->RecallBy != EMPTY_STR.c_str())
         delete mto->RecallBy;
     
+    if (nullptr != mto->ReactionList && mto->ReactionList != EMPTY_STR.c_str())
+        delete mto->ReactionList;
+
     switch(mto->BodyType) {
         case EMMessageBody::TEXT:
         {
@@ -1484,3 +1495,91 @@ std::map<std::string, UserInfoTO> UserInfo::Convert2TO(std::map<std::string, Use
     
     return ptoWrapper;
 }
+
+ void MessageReactionChangeTO::ToJsonWriter(Writer<StringBuffer>& writer, EMMessageReactionChangePtr reactionChangePtr)
+ {
+     writer.StartObject();
+     {
+         writer.Key("from");
+         writer.String(reactionChangePtr->from().c_str());
+         writer.Key("to");
+         writer.String(reactionChangePtr->to().c_str());
+         writer.Key("messageId");
+         writer.String(reactionChangePtr->messageId().c_str());
+         writer.Key("reactionList");
+         writer.String(MessageReactionTO::ToJson(reactionChangePtr->reactionList()).c_str());
+     }
+     writer.EndObject();
+ }
+
+ std::string MessageReactionChangeTO::ToJson(EMMessageReactionChangePtr reactionChangePtr)
+ {
+     if (nullptr == reactionChangePtr) return std::string();
+
+     StringBuffer s;
+     Writer<StringBuffer> writer(s);
+     ToJsonWriter(writer, reactionChangePtr);
+     return s.GetString();
+ }
+
+ std::string MessageReactionChangeTO::ToJson(EMMessageReactionChangeList list)
+ {
+     if (list.size() == 0) return std::string();
+
+     StringBuffer s;
+     Writer<StringBuffer> writer(s);
+     writer.StartArray();
+     for (auto it : list) 
+     {
+         ToJsonWriter(writer, it);
+     }
+     writer.EndArray();
+     return s.GetString();
+ }
+
+
+ std::string MessageReactionTO::ToJson(EMMessageReactionPtr reaction)
+ {
+     if (nullptr == reaction) return "";
+
+     StringBuffer s;
+     Writer<StringBuffer> writer(s);
+     EMMessageEncoder::encodeReactionToJsonWriter(writer, reaction);
+     return s.GetString();
+ }
+
+ std::string MessageReactionTO::ToJson(EMMessageReactionList list)
+ {
+     return EMMessageEncoder::encodeReactionToJson(list);
+ }
+
+ std::string MessageReactionTO::ToJson(EMMessage& msg)
+ {
+     return EMMessageEncoder::encodeReactionToJson(msg);
+ }
+
+ std::string MessageReactionTO::ToJson(std::map<std::string, EMMessageReactionList> map)
+ {
+     if (map.size() == 0) return std::string();
+
+     StringBuffer s;
+     Writer<StringBuffer> writer(s);
+     writer.StartObject();
+     for (auto it : map) {
+         writer.Key(it.first.c_str());
+         ListToJsonWriter(writer, it.second);
+     }
+     writer.EndObject();
+     return s.GetString();
+ }
+
+ void MessageReactionTO::ListToJsonWriter(Writer<StringBuffer>& writer, EMMessageReactionList list)
+ {
+     if (list.size() == 0) return;
+
+     writer.StartArray();
+     for (EMMessageReactionPtr reaction : list) {
+         EMMessageEncoder::encodeReactionToJsonWriter(writer, reaction);
+     }
+     writer.EndArray();
+ }

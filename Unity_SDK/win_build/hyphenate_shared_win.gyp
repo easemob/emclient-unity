@@ -28,6 +28,7 @@
                 '<(emclient-linux-path)/3rd_party/protobuf',
                 '<(emclient-linux-path)/3rd_party/rapidjson/include',
                 '<(emclient-linux-path)/3rd_party/platform/win/depends/openssl_1.1.1l-x64-static-md/include',
+                '<(emclient-linux-path)/3rd_party/platform/win/depends/sqlcipher_4.4.3-x64-static-md/include',
             ],
             'sources': [
             # Add our source files

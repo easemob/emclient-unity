@@ -143,12 +143,28 @@ namespace ChatSDK{
 		
 		[DllImport(MyLibName)]
 		internal static extern void ChatManager_FetchGroupReadAcks(IntPtr client, int callbackId, string messageId,
-			string groupId, int pageSize, string startAckId, OnSuccessResultV2 onSuccessResult = null, OnErrorV2 onError = null);
+			string groupId, int pageSize, string startAckId, OnSuccessResultV2 onSuccessResult, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
 		internal static extern void ChatManager_ReportMessage(IntPtr client, int callbackId, string messageId,
 			[In, MarshalAs(UnmanagedType.LPTStr)] string tag, [In, MarshalAs(UnmanagedType.LPTStr)] string reason, 
-			OnSuccess onSuccess = null, OnErrorV2 onError = null);
+			OnSuccess onSuccess, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void ChatManager_AddReaction(IntPtr client, int callbackId, string messageId,
+			[In, MarshalAs(UnmanagedType.LPTStr)] string reaction, OnSuccess onSuccess, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void ChatManager_RemoveReaction(IntPtr client, int callbackId, string messageId,
+			[In, MarshalAs(UnmanagedType.LPTStr)] string reaction, OnSuccess onSuccess, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void ChatManager_GetReactionList(IntPtr client, int callbackId, string messageIdList,
+			string messageType, string groupId, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void ChatManager_GetReactionDetail(IntPtr client, int callbackId, string messageId, 
+			[In, MarshalAs(UnmanagedType.LPTStr)] string reaction, string cursor, long pageSize, OnSuccessResultV2 onSuccessResult, OnErrorV2 onError);
 
 		/** GroupManager Stub **/
 		[DllImport(MyLibName)]

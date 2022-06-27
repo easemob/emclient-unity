@@ -690,6 +690,7 @@ namespace ChatSDK
         public string AttributesValues;
         public long LocalTime;
         public long ServerTime;
+        public string ReactionList;
         public MessageBodyType BodyType;
 
         protected MessageTO(in Message message)
@@ -708,6 +709,7 @@ namespace ChatSDK
             AttributesValues = TransformTool.JsonStringFromAttributes(message.Attributes);
             LocalTime = message.LocalTime;
             ServerTime = message.ServerTime;
+            ReactionList = MessageReaction.ListToJson(message.ReactionList);
             BodyType = message.Body.Type;
         }
 
@@ -839,8 +841,11 @@ namespace ChatSDK
                 HasReadAck = HasReadAck,
                 IsNeedGroupAck = IsNeedGroupAck,
                 IsRead = IsRead,
-                MessageOnlineState = MessageOnlineState
+                MessageOnlineState = MessageOnlineState,
+                ReactionList = MessageReaction.ListFromJson(TransformTool.GetUnicodeStringFromUTF8(ReactionList))
             };
+
+            result.SetReactionMap();
 
             // change EMPTY_STR(" ")  to ""
             if (result.MsgId.CompareTo(" ") == 0)           result.MsgId = "";

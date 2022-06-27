@@ -24,7 +24,8 @@ HYPHENATE_API void ChatManager_AddListener(void *client,
                                        FUNC_OnReadAckForGroupMessageUpdated onReadAckForGroupMessageUpdated,
                                        FUNC_OnGroupMessageRead onGroupMessageRead,
                                        FUNC_OnConversationsUpdate onConversationsUpdate,
-                                       FUNC_OnConversationRead onConversationRead
+                                       FUNC_OnConversationRead onConversationRead,
+                                       FUNC_MessageReactionDidChange messageReactionDidChange
                                        );
 
 HYPHENATE_API void ChatManager_RemoveConversation(void *client, const char * conversationId, bool isRemoveMessages);
@@ -49,6 +50,11 @@ HYPHENATE_API void ChatManager_FetchSupportLanguages(void *client, int callbackI
 HYPHENATE_API void ChatManager_TranslateMessage(void *client, int callbackId, void *mto, EMMessageBody::EMMessageBodyType type, const char * targetLanguages[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError);
 HYPHENATE_API void ChatManager_FetchGroupReadAcks(void* client, int callbackId, const char* messageId, const char* groupId, int pageSize, const char* startAckId, FUNC_OnSuccess_With_Result_V2 onSuccess, FUNC_OnError onError);
 HYPHENATE_API void ChatManager_ReportMessage(void* client, int callbackId, const char* messageId, const char* tag, const char* reason, FUNC_OnSuccess onSuccess, FUNC_OnError onError);
+
+HYPHENATE_API void ChatManager_AddReaction(void* client, int callbackId, const char* messageId, const char* reaction, FUNC_OnSuccess onSuccess, FUNC_OnError onError);
+HYPHENATE_API void ChatManager_RemoveReaction(void* client, int callbackId, const char* messageId, const char* reaction, FUNC_OnSuccess onSuccess, FUNC_OnError onError);
+HYPHENATE_API void ChatManager_GetReactionList(void* client, int callbackId, const char* messageIdList, const char* messageType, const char* groupId, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnError onError);
+HYPHENATE_API void ChatManager_GetReactionDetail(void* client, int callbackId, const char* messageId, const char* reaction, const char* cursor, uint64_t pageSize, FUNC_OnSuccess_With_Result_V2 onSuccessResult, FUNC_OnError onError);
 #ifdef __cplusplus
 }
 #endif //__cplusplus
