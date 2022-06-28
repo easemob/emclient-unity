@@ -491,6 +491,7 @@ struct PresenceTO
 struct PresenceTOWrapper
 {
     PresenceTO presenceTO;
+    std::string publisher;
     std::string deviceListJson;
     std::string statusListJson;
     std::string ext;
@@ -512,6 +513,18 @@ struct MessageReactionChangeTO
     static std::string ToJson(EMMessageReactionChangePtr reactionChangePtr);
     static std::string ToJson(EMMessageReactionChangeList list);
     static void ToJsonWriter(Writer<StringBuffer>& writer, EMMessageReactionChangePtr reactionChangePtr);
+};
+
+struct SilentModeParamTO
+{
+    static EMSilentModeParamPtr FromJson(std::string json);
+};
+
+struct SilentModeItemTO
+{
+    static std::string ToJson(EMSilentModeItemPtr ptr);
+    static std::string ToJson(std::map<std::string, EMSilentModeItemPtr> map);
+    static void ToJsonWriter(Writer<StringBuffer>& writer, EMSilentModeItemPtr itemPtr);
 };
 
 struct TOArray

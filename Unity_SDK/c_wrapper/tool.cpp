@@ -19,6 +19,12 @@
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/prettywriter.h"
 
+void ParameterError(EMError& error)
+{
+    error.setErrorCode(EMError::GENERAL_ERROR);
+    error.mDescription = "Mandatory parameter is invalid!";
+}
+
 bool MandatoryCheck(const void* ptr, EMError& error) {
     if(nullptr == ptr) {
         error.setErrorCode(EMError::GENERAL_ERROR);

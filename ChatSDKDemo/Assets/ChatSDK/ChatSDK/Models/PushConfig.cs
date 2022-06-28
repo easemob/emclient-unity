@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using SimpleJSON;
 using System.Runtime.InteropServices;
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+using UnityEngine;
+#endif
 
 namespace ChatSDK {
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
@@ -75,5 +79,99 @@ namespace ChatSDK {
         }
     }
 
+
+    public class SilentModeTime
+    {
+        public int hours;
+        public int minutes;
+    }
+
+    public class SilentModeParam
+    {
+        public SilentModeParamType ParamType;
+        public int SilentModeDuration;
+        public PushRemindType RemindType;
+        public SilentModeTime SilentModeStartTime;
+        public SilentModeTime SilentModeEndTime;
+
+        internal string ToJson()
+        {
+            JSONObject jo = new JSONObject();
+            jo.Add("paramType", (int)ParamType);
+            jo.Add("duration",  SilentModeDuration);
+            jo.Add("type", (int)RemindType);
+            jo.Add("startHour", SilentModeStartTime.hours);
+            jo.Add("startMin", SilentModeStartTime.minutes);
+            jo.Add("endHour", SilentModeEndTime.hours);
+            jo.Add("endMin", SilentModeEndTime.minutes);
+            return jo.ToString();
+        }
+    }
+
+    public class SilentModeItem
+    {
+        public long ExpireTimestamp;
+        public PushRemindType RemindType;
+        public SilentModeTime SilentModeStartTime;
+        public SilentModeTime SilentModeEndTime;
+        public string ConvId;
+        public ConversationType ConvType;
+
+        static internal SilentModeItem FromJsonObject(JSONNode jn)
+        {
+            SilentModeItem ret = null;
+            if (!jn.IsNull && jn.IsObject)
+            {
+                SilentModeItem item = new SilentModeItem();
+                JSONObject jo = jn.AsObject;
+                if (!jo["expireTS"].IsNull)         item.ExpireTimestamp = long.Parse(jo["expireTS"].Value);
+                if (!jo["type"].IsNull)             item.RemindType = (PushRemindType)jo["type"].AsInt;
+                if (!jo["startHour"].IsNull)        item.SilentModeStartTime.hours = jo["startHour"].AsInt;
+                if (!jo["startMin"].IsNull)         item.SilentModeStartTime.minutes = jo["startMin"].AsInt;
+                if (!jo["endHour"].IsNull)          item.SilentModeStartTime.hours = jo["endHour"].AsInt;
+                if (!jo["endMin"].IsNull)           item.SilentModeStartTime.minutes = jo["endMin"].AsInt;
+                if (!jo["conversationId"].IsNull)   item.ConvId = jo["conversationId"].Value;
+                if (!jo["conversationType"].IsNull) item.ConvType = (ConversationType)jo["conversationType"].AsInt;
+            }
+            return ret;
+        }
+
+        static internal SilentModeItem FromJson(string json)
+        {
+            if (null == json || json.Length == 0) return null;
+
+            Debug.Log($"FromJson json : {json}");
+            SilentModeItem ret = null;
+            if (null != json && json.Length > 0)
+            {
+                JSONNode jn = JSON.Parse(json);
+                ret = FromJsonObject(jn);
+            }
+            return ret;
+        }
+
+        static internal Dictionary<string, SilentModeItem> MapFromJson(string json)
+        {
+            Dictionary<string, SilentModeItem> dict = new Dictionary<string, SilentModeItem>();
+            if (null == json || json.Length == 0) return dict;
+            Debug.Log($"FromJson json : {json}");
+
+            if (null != json && json.Length > 0)
+            {
+                JSONNode jn = JSON.Parse(json);
+                if (null == jn) return dict;
+
+                JSONObject jo = jn.AsObject;
+
+                foreach (string s in jo.Keys)
+                {
+                    SilentModeItem item = FromJsonObject(jo[s]);
+                    if (null != item)
+                        dict.Add(s, item);
+                }
+            }
+            return dict;
+        }
+    }
 }
 

@@ -1456,11 +1456,13 @@ std::map<std::string, UserInfoTO> UserInfo::Convert2TO(std::map<std::string, Use
  PresenceTOWrapper PresenceTOWrapper::FromPresence(EMPresencePtr presencePtr)
 {
     PresenceTOWrapper ptoWrapper;
+    ptoWrapper.publisher.clear();
     ptoWrapper.deviceListJson.clear();
     ptoWrapper.statusListJson.clear();
     ptoWrapper.ext.clear();
     
-    ptoWrapper.presenceTO.publisher = presencePtr->getPublisher().c_str();
+    ptoWrapper.publisher = presencePtr->getPublisher();
+    ptoWrapper.presenceTO.publisher = ptoWrapper.publisher.c_str();
     
     // go through status list
     std::set<std::pair<std::string,int>> devices = presencePtr->getStatusList();
@@ -1582,4 +1584,113 @@ std::map<std::string, UserInfoTO> UserInfo::Convert2TO(std::map<std::string, Use
          EMMessageEncoder::encodeReactionToJsonWriter(writer, reaction);
      }
      writer.EndArray();
+ }
+
+static const std::string SilentModeParamType = "paramType";
+static const std::string SilentModeRemindType = "type";
+static const std::string SilentModeDuration = "duration";
+static const std::string SilentModeIntervalStartHour = "startHour";
+static const std::string SilentModeIntervalStartMin = "startMin";
+static const std::string SilentModeIntervalEndHour = "endHour";
+static const std::string SilentModeIntervalEndMin = "endMin";
+static const std::string SilentModeExpireTS = "expireTS";
+static const std::string SilentModeConvId = "conversationId";
+static const std::string SilentModeConvType = "conversationType";
+
+ EMSilentModeParamPtr SilentModeParamTO::FromJson(std::string json)
+ {
+#ifdef RUN_IN_ARM
+     typedef GenericDocument<UTF8<>, CrtAllocator> Document;
+#endif
+     Document d;
+     d.Parse(json.c_str());
+
+     if (d.HasParseError() || !d.IsObject()) {
+         LOG("SilentModeParamTO::FromJson failed, json:%s", json.c_str());
+         return nullptr;
+     }
+     else {
+         EMSilentModeParamPtr ptr = std::shared_ptr<EMSilentModeParam>(new easemob::EMSilentModeParam());
+
+         if (d.HasMember(SilentModeParamType.c_str()) && d[SilentModeParamType.c_str()].IsInt())
+             ptr->mParamType = (EMPushConfigs::EMSilentModeParamType)(d[SilentModeParamType.c_str()].GetInt());
+
+         if (d.HasMember(SilentModeDuration.c_str()) && d[SilentModeDuration.c_str()].IsInt())
+             ptr->mSilentModeDuration = d[SilentModeDuration.c_str()].GetInt();
+
+         if (d.HasMember(SilentModeRemindType.c_str()) && d[SilentModeRemindType.c_str()].IsInt())
+             ptr->mRemindType = (EMPushConfigs::EMPushRemindType)(d[SilentModeRemindType.c_str()].GetInt());
+
+         if (d.HasMember(SilentModeIntervalStartHour.c_str()) && d[SilentModeIntervalStartHour.c_str()].IsInt())
+             ptr->mSilentModeStartTime->hours = d[SilentModeIntervalStartHour.c_str()].GetInt();
+
+         if (d.HasMember(SilentModeIntervalStartMin.c_str()) && d[SilentModeIntervalStartMin.c_str()].IsInt())
+             ptr->mSilentModeStartTime->minutes = d[SilentModeIntervalStartMin.c_str()].GetInt();
+
+         if (d.HasMember(SilentModeIntervalEndHour.c_str()) && d[SilentModeIntervalEndHour.c_str()].IsInt())
+             ptr->mSilentModeEndTime->hours = d[SilentModeIntervalEndHour.c_str()].GetInt();
+
+         if (d.HasMember(SilentModeIntervalEndMin.c_str()) && d[SilentModeIntervalEndMin.c_str()].IsInt())
+             ptr->mSilentModeEndTime->minutes = d[SilentModeIntervalEndMin.c_str()].GetInt();
+
+         return ptr;
+     }
+ }
+
+ std::string SilentModeItemTO::ToJson(EMSilentModeItemPtr ptr)
+ {
+     if (nullptr == ptr) return std::string();
+
+     StringBuffer s;
+     Writer<StringBuffer> writer(s);
+
+     ToJsonWriter(writer, ptr);
+     return s.GetString();
+ }
+
+ std::string SilentModeItemTO::ToJson(std::map<std::string, EMSilentModeItemPtr> map)
+ {
+     if (map.size() == 0) return std::string();
+
+     StringBuffer s;
+     Writer<StringBuffer> writer(s);
+
+     writer.StartObject();
+     for (auto it : map) {
+         writer.Key(it.first.c_str());
+         ToJsonWriter(writer, it.second);
+     }
+     writer.EndObject();
+     return s.GetString();
+ }
+
+ void SilentModeItemTO::ToJsonWriter(Writer<StringBuffer>& writer, EMSilentModeItemPtr itemPtr)
+ {
+     writer.StartObject();
+     {
+         writer.Key(SilentModeExpireTS.c_str());
+         writer.Int64(itemPtr->mExpireTimestamp);
+
+         writer.Key(SilentModeRemindType.c_str());
+         writer.Int(itemPtr->mRemindType);
+
+         writer.Key(SilentModeIntervalStartHour.c_str());
+         writer.Int(itemPtr->mSilentModeStartTime->hours);
+
+         writer.Key(SilentModeIntervalStartMin.c_str());
+         writer.Int(itemPtr->mSilentModeStartTime->minutes);
+
+         writer.Key(SilentModeIntervalEndHour.c_str());
+         writer.Int(itemPtr->mSilentModeEndTime->hours);
+
+         writer.Key(SilentModeIntervalEndMin.c_str());
+         writer.Int(itemPtr->mSilentModeEndTime->minutes);
+
+         writer.Key(SilentModeConvId.c_str());
+         writer.String(itemPtr->mConversationID.c_str());
+
+         writer.Key(SilentModeConvType.c_str());
+         writer.Int(itemPtr->mRemindType);
+     }
+     writer.EndObject();
  }

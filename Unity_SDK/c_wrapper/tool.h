@@ -19,6 +19,8 @@ using namespace easemob;
 
 typedef void (*TIMER_FUNC)(int);
 
+void ParameterError(EMError& error);
+
 bool MandatoryCheck(const void* ptr, EMError& error);
 bool MandatoryCheck(const char* ptr, EMError& error);
 bool MandatoryCheck(const char* ptr);

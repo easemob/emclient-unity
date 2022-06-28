@@ -326,4 +326,19 @@
         GROUP_ALL_BAN                   = 32,
         GROUP_REMOVE_ALL_BAN            = 33,
     }
+
+    public enum SilentModeParamType
+    {
+        RemindType = 0,
+        Duration,
+        Interval,
+    }
+
+    public enum PushRemindType
+    {
+        Default = 0,
+        All,
+        MentionOnly,
+        None,
+    }
 }

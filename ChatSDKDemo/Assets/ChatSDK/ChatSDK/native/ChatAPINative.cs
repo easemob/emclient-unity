@@ -554,6 +554,28 @@ namespace ChatSDK{
 		internal static extern void PushManager_ReportPushAction(IntPtr client, int callbackId, string parameters, OnSuccess onSuccess, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
+		internal static extern void PushManager_SetSilentModeForAll(IntPtr client, int callbackId, string parameters, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void PushManager_GetSilentModeForAll(IntPtr client, int callbackId, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void PushManager_SetSilentModeForConversation(IntPtr client, int callbackId, string convId, ConversationType converationType, string parameters, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void PushManager_GetSilentModeForConversation(IntPtr client, int callbackId, string convId, ConversationType converationType, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void PushManager_GetSilentModeForConversations(IntPtr client, int callbackId, string parameters, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void PushManager_SetPreferredNotificationLanguage(IntPtr client, int callbackId, string parameters, OnSuccess onSuccess, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void PushManager_GetPreferredNotificationLanguage(IntPtr client, int callbackId, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+
+		//UserInfoManager
+		[DllImport(MyLibName)]
 		internal static extern void UserInfoManager_UpdateOwnInfo(IntPtr client, int callbackId, IntPtr userInfo, OnSuccess onSuccess, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]

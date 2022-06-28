@@ -45,21 +45,21 @@ namespace ChatSDK
             {
                 MessageReaction reaction = new MessageReaction();
                 JSONObject jo = jn.AsObject;
-                reaction.Rection = jo["reaction"].Value;
-                reaction.Count = jo["count"].AsInt;
-                reaction.UserList = TransformTool.JsonArrayToStringList(jo["userList"]);
-                reaction.State = jo["state"].AsBool;
+                if (!jo["reaction"].IsNull) reaction.Rection = jo["reaction"].Value;
+                if (!jo["count"].IsNull)    reaction.Count = jo["count"].AsInt;
+                if (!jo["userList"].IsNull) reaction.UserList = TransformTool.JsonArrayToStringList(jo["userList"]);
+                if (!jo["state"].IsNull)    reaction.State = jo["state"].AsBool;
                 ret = reaction;
             }
             return ret;
         }
 
         static internal MessageReaction FromJson(string json)
-        {
-            Debug.Log($"FromJson json : {json}");
+        {            
             MessageReaction ret = null;
             if (null != json && json.Length > 0)
             {
+                Debug.Log($"FromJson json : {json}");
                 JSONNode jn = JSON.Parse(json);
                 ret = FromJsonObject(jn);
             }
@@ -86,10 +86,10 @@ namespace ChatSDK
 
         static internal List<MessageReaction> ListFromJson(string json)
         {
-            Debug.Log($"ListFromJson json : {json}");
-
             if (null == json || json.Length == 0) 
                 return new List<MessageReaction>();
+
+            Debug.Log($"ListFromJson json : {json}");
 
             JSONNode jsonArray = JSON.Parse(json);
             return ListFromJsonObject(jsonArray);
@@ -97,10 +97,11 @@ namespace ChatSDK
 
         static internal Dictionary<string, List<MessageReaction>> MapFromJson(string json)
         {
-            Debug.Log($"MapFromJson json : {json}");
             Dictionary<string, List<MessageReaction>> dict = new Dictionary<string, List<MessageReaction>>();
             if (null == json || json.Length == 0)
                 return dict;
+
+            Debug.Log($"MapFromJson json : {json}");
 
             JSONNode jn = JSON.Parse(json);
             if (null == jn) return dict;

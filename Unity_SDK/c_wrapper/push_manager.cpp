@@ -238,3 +238,205 @@ HYPHENATE_API void PushManager_ReportPushAction(void *client, int callbackId, co
     });
     t.detach();
 }
+
+HYPHENATE_API void PushManager_SetSilentModeForAll(void* client, int callbackId, const char* param, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnError onError)
+{
+    EMError error;
+    if (!MandatoryCheck(param, error)) {
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+
+    std::string paramStr = param;
+    EMSilentModeParamPtr ptr = SilentModeParamTO::FromJson(paramStr);
+    if (nullptr == ptr) {
+        ParameterError(error);
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+
+    std::thread t([=]() {
+        EMError error;
+        EMSilentModeItemPtr ret = CLIENT->getPushManager().setSilentModeForAll(ptr, error);
+        if (EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("PushManager_SetSilentModeForAll successfully");
+            if (onSuccessResult) {
+                std::string jstr = SilentModeItemTO::ToJson(ret);
+                const char* data[1] = { jstr.c_str() };
+                onSuccessResult((void**)data, DataType::String, 1, callbackId);
+            }
+        }
+        else {
+            LOG("PushManager_SetSilentModeForAll failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
+            if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        }
+    });
+    t.detach();
+}
+
+HYPHENATE_API void PushManager_GetSilentModeForAll(void* client, int callbackId, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnError onError)
+{
+    std::thread t([=]() {
+        EMError error;
+        EMSilentModeItemPtr ret = CLIENT->getPushManager().getSilentModeForAll(error);
+        if (EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("PushManager_GetSilentModeForAll successfully");
+            if (onSuccessResult) {
+                std::string jstr = SilentModeItemTO::ToJson(ret);
+                const char* data[1] = { jstr.c_str() };
+                onSuccessResult((void**)data, DataType::String, 1, callbackId);
+            }
+        }
+        else {
+            LOG("PushManager_GetSilentModeForAll failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
+            if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        }
+    });
+    t.detach();
+}
+
+HYPHENATE_API void PushManager_SetSilentModeForConversation(void* client, int callbackId, const char* convId, EMConversation::EMConversationType type, const char* param, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnError onError)
+{
+    EMError error;
+    if (!MandatoryCheck(convId, param, error)) {
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+
+    std::string paramStr = param;
+    EMSilentModeParamPtr ptr = SilentModeParamTO::FromJson(paramStr);
+    if (nullptr == ptr) {
+        ParameterError(error);
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+
+    std::string covIdStr = convId;
+
+    std::thread t([=]() {
+        EMError error;
+        EMSilentModeItemPtr ret = CLIENT->getPushManager().setSilentModeForConversation(covIdStr, type, ptr, error);
+        if (EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("PushManager_SetSilentModeForConversation successfully");
+            if (onSuccessResult) {
+                std::string jstr = SilentModeItemTO::ToJson(ret);
+                const char* data[1] = { jstr.c_str() };
+                onSuccessResult((void**)data, DataType::String, 1, callbackId);
+            }
+        }
+        else {
+            LOG("PushManager_SetSilentModeForConversation failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
+            if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        }
+    });
+    t.detach();
+}
+
+HYPHENATE_API void PushManager_GetSilentModeForConversation(void* client, int callbackId, const char* convId, EMConversation::EMConversationType type, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnError onError)
+{
+    EMError error;
+    if (!MandatoryCheck(convId, error)) {
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+
+    std::string covIdStr = convId;
+
+    std::thread t([=]() {
+        EMError error;
+        EMSilentModeItemPtr ret = CLIENT->getPushManager().getSilentModeForConversation(covIdStr, type, error);
+        if (EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("PushManager_GetSilentModeForConversation successfully");
+            if (onSuccessResult) {
+                std::string jstr = SilentModeItemTO::ToJson(ret);
+                const char* data[1] = { jstr.c_str() };
+                onSuccessResult((void**)data, DataType::String, 1, callbackId);
+            }
+        }
+        else {
+            LOG("PushManager_GetSilentModeForConversation failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
+            if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        }
+    });
+    t.detach();
+}
+
+HYPHENATE_API void PushManager_GetSilentModeForConversations(void* client, int callbackId, const char* param, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnError onError)
+{
+    EMError error;
+    if (!MandatoryCheck(param, error)) {
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+
+    std::string paramStr = param;
+    std::map<std::string, std::string> map = JsonStringToMap(paramStr);
+    if (map.size() == 0) {
+        ParameterError(error);
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+
+    std::thread t([=]() {
+        EMError error;
+        std::map<std::string, EMSilentModeItemPtr> ret = CLIENT->getPushManager().getSilentModeForConversations(map, error);
+        if (EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("PushManager_GetSilentModeForConversations successfully");
+            if (onSuccessResult) {
+                std::string jstr = SilentModeItemTO::ToJson(ret);
+                const char* data[1] = { jstr.c_str() };
+                onSuccessResult((void**)data, DataType::String, 1, callbackId);
+            }
+        }
+        else {
+            LOG("PushManager_GetSilentModeForConversations failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
+            if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        }
+    });
+    t.detach();
+}
+
+HYPHENATE_API void PushManager_SetPreferredNotificationLanguage(void* client, int callbackId, const char* laguangeCode, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+{
+    EMError error;
+    if (!MandatoryCheck(laguangeCode, error)) {
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+
+    std::string laguangeCodeStr = laguangeCode;
+
+    std::thread t([=]() {
+        EMError error;
+        CLIENT->getPushManager().setPreferredNotificationLanguage(laguangeCodeStr, error);
+        if (EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("PushManager_SetPreferredNotificationLanguage successfully");
+           if (onSuccess) onSuccess(callbackId);
+        }
+        else {
+            LOG("PushManager_SetPreferredNotificationLanguage failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
+            if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        }
+        });
+    t.detach();
+}
+
+HYPHENATE_API void PushManager_GetPreferredNotificationLanguage(void* client, int callbackId, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnError onError)
+{
+    std::thread t([=]() {
+        EMError error;
+        std::string ret = CLIENT->getPushManager().getPreferredNotificationLanguage(error);
+        if (EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("PushManager_GetPreferredNotificationLanguage successfully");
+            if (onSuccessResult) {
+                const char* data[1] = { ret.c_str() };
+                onSuccessResult((void**)data, DataType::String, 1, callbackId);
+            }
+        }
+        else {
+            LOG("PushManager_GetPreferredNotificationLanguage failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
+            if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        }
+        });
+    t.detach();
+}
