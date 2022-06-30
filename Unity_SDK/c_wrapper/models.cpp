@@ -12,6 +12,13 @@
 #include "json.hpp"
 #include "tool.h"
 
+#ifndef RAPIDJSON_NAMESPACE
+#define RAPIDJSON_NAMESPACE easemob
+#endif
+#include "rapidjson/document.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/prettywriter.h"
+
 std::string EMPTY_STR = " ";
 std::string DISPLAY_NAME_STR = " "; // used to save display name temprarily
 
@@ -910,6 +917,98 @@ void MessageTO::FreeResource(MessageTO * mto)
     }
 }
 
+void MessageTO::BodyToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg)
+{
+    if (nullptr == msg) return;
+
+
+}
+
+void MessageTO::ToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg)
+{
+    if (nullptr == msg) return;
+
+    writer.StartObject();
+    {
+        writer.Key("MsgId");
+        writer.String(msg->msgId().c_str());
+
+        writer.Key("ConversationId");
+        writer.String(msg->conversationId().c_str());
+
+        writer.Key("From");
+        writer.String(msg->from().c_str());
+
+        writer.Key("To");
+        writer.String(msg->to().c_str());
+
+        writer.Key("RecallBy");
+        writer.String(msg->recallBy().c_str());
+
+        writer.Key("Type");
+        writer.Int((int)msg->chatType());
+
+        writer.Key("Direction");
+        writer.Int((int)msg->msgDirection());
+
+        writer.Key("Status");
+        writer.Int((int)msg->status());
+
+        writer.Key("HasDeliverAck");
+        writer.Bool(msg->isDeliverAcked());
+
+        writer.Key("HasReadAck");
+        writer.Bool(msg->isReadAcked());
+
+        writer.Key("IsNeedGroupAck");
+        writer.Bool(msg->isNeedGroupAck());
+
+        writer.Key("IsRead");
+        writer.Bool(msg->isRead());
+
+        writer.Key("MessageOnlineState");
+        writer.Bool(msg->messageOnlineState());
+
+        writer.Key("AttributesValues");
+        AttributesValue::ToJsonWriter(writer, msg);
+
+        writer.Key("LocalTime");
+        writer.Int64(msg->localTime());
+
+        writer.Key("ServerTime");
+        writer.Int64(msg->timestamp());
+
+        writer.Key("ReactionList");
+        MessageReactionTO::ListToJsonWriter(writer, msg->reactionList());
+
+        writer.Key("IsThread");
+        writer.Bool(msg->isThread());
+        
+        writer.Key("MucParentId");
+        writer.String(msg->mucParentId().c_str());
+
+        writer.Key("MsgParentId");
+        writer.String(msg->msgParentId().c_str());
+
+        if (nullptr != msg->threadOverview()) {
+            writer.Key("ThreadOverview");
+            ThreadEventTO::ListToJsonWriter(writer, msg->threadOverview());
+        }
+
+        writer.Key("BodyType");
+        writer.Int((int)msg->bodies().front()->type());
+
+        writer.Key("Body");
+        BodyToJsonWriter(writer, msg);
+    }
+    writer.EndObject();
+}
+
+std::string MessageTO::ToJson(EMMessagePtr msg)
+{
+    return std::string();
+}
+
 MessageTO * MessageTO::FromEMMessage(const EMMessagePtr &_message)
 {
     //TODO: assume that only 1 body in _message->bodies
@@ -1599,9 +1698,6 @@ static const std::string SilentModeConvType = "conversationType";
 
  EMSilentModeParamPtr SilentModeParamTO::FromJson(std::string json)
  {
-#ifdef RUN_IN_ARM
-     typedef GenericDocument<UTF8<>, CrtAllocator> Document;
-#endif
      Document d;
      d.Parse(json.c_str());
 

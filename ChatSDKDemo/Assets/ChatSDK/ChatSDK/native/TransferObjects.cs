@@ -861,22 +861,22 @@ namespace ChatSDK
 
     public class AttributeValue
     {
-        AttributeValueType VType;
+        private AttributeValueType VType;
 
-        bool BoolV;
-        sbyte CharV;
-        char UCharV;
-        short ShortV;
-        ushort UShortV;
-        int Int32V;
-        uint UInt32V;
-        long Int64V;
-        ulong UInt64V;
-        float FloatV;
-        double DoubleV;
-        string StringV;
-        List<string> StringVecV;
-        string JsonStringV;
+        private bool BoolV;
+        private sbyte CharV;
+        private char UCharV;
+        private short ShortV;
+        private ushort UShortV;
+        private int Int32V;
+        private uint UInt32V;
+        private long Int64V;
+        private ulong UInt64V;
+        private float FloatV;
+        private double DoubleV;
+        private string StringV;
+        private List<string> StringVecV;
+        private string JsonStringV;
         //Dictionary<string, AttributeValue> AttributeV;
 
         public static AttributeValue Of(in object value, AttributeValueType type)
@@ -925,7 +925,7 @@ namespace ChatSDK
             }
         }
 
-        public static AttributeValue Of(in bool value)
+        internal static AttributeValue Of(in bool value)
         {
             var result = new AttributeValue
             {
@@ -934,7 +934,7 @@ namespace ChatSDK
             };
             return result;
         }
-        public static AttributeValue Of(in int value)
+        internal static AttributeValue Of(in int value)
         {
             var result = new AttributeValue
             {
@@ -944,7 +944,7 @@ namespace ChatSDK
             return result;
         }
 
-        public static AttributeValue Of(in uint value)
+        internal static AttributeValue Of(in uint value)
         {
             var result = new AttributeValue
             {
@@ -954,7 +954,7 @@ namespace ChatSDK
             return result;
         }
 
-        public static AttributeValue Of(in long value)
+        internal static AttributeValue Of(in long value)
         {
             var result = new AttributeValue
             {
@@ -963,7 +963,7 @@ namespace ChatSDK
             };
             return result;
         }
-        public static AttributeValue Of(in float value)
+        internal static AttributeValue Of(in float value)
         {
             var result = new AttributeValue
             {
@@ -973,7 +973,7 @@ namespace ChatSDK
             return result;
         }
 
-        public static AttributeValue Of(in double value)
+        internal static AttributeValue Of(in double value)
         {
             var result = new AttributeValue
             {
@@ -983,7 +983,7 @@ namespace ChatSDK
             return result;
         }
 
-        public static AttributeValue Of(in string value, AttributeValueType type)
+        internal static AttributeValue Of(in string value, AttributeValueType type)
         {
             var result = new AttributeValue();
             if (AttributeValueType.JSONSTRING == type)
@@ -999,7 +999,7 @@ namespace ChatSDK
             return result;
         }
 
-        public static AttributeValue Of(in List<string> value)
+        internal static AttributeValue Of(in List<string> value)
         {
             var result = new AttributeValue
             {
@@ -1010,7 +1010,7 @@ namespace ChatSDK
         }
 
         /*
-        public static AttributeValue Of(in Dictionary<string, AttributeValue> value)
+        internal static AttributeValue Of(in Dictionary<string, AttributeValue> value)
         {
             var result = new AttributeValue
             {
@@ -1075,7 +1075,7 @@ namespace ChatSDK
             return VType;
         }
 
-        public JSONObject ToJsonObject()
+        internal JSONObject ToJsonObject()
         {
             JSONObject jo = new JSONObject();
             string _type;
@@ -1167,7 +1167,6 @@ namespace ChatSDK
 
             string typeString = jo["type"];
             JSONNode jvalue = jo["value"];
-            Debug.Log("abbb");
             string value = null;
             if ("strv" != typeString && "attr" != typeString)
             {
@@ -1272,7 +1271,7 @@ namespace ChatSDK
             return result;
         }
 
-        public static void PrintAttribute(AttributeValue value)
+        internal static void PrintAttribute(AttributeValue value)
         {
             switch (value.GetAttributeValueType())
             {
@@ -1321,7 +1320,7 @@ namespace ChatSDK
             }
         }
 
-        public static void ToAndFromTest(Dictionary<string, AttributeValue> attriMap)
+        internal static void ToAndFromTest(Dictionary<string, AttributeValue> attriMap)
         {
             // to json string
             JSONObject jo = new JSONObject();
@@ -1342,7 +1341,7 @@ namespace ChatSDK
             }
         }
 
-        public static void ParseAttributeExample(Message msg)
+        internal static void ParseAttributeExample(Message msg)
         {
             if (null == msg) return;
             if (null == msg.Attributes || msg.Attributes.Count == 0) return;
@@ -1353,7 +1352,7 @@ namespace ChatSDK
             }
         }
 
-        public static void MakeMsgAttributesExample(Message msg)
+        internal static void MakeMsgAttributesExample(Message msg)
         {
             if (null == msg) return;
 

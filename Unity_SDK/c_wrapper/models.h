@@ -199,6 +199,11 @@ public:
     int64_t LocalTime;
     int64_t ServerTime;
     const char* ReactionList;
+
+    bool IsThread;
+    const char* MucParentId;
+    const char* MsgParentId;
+    const char* ThreadOverview;
     
     EMMessageBody::EMMessageBodyType BodyType;
     MessageTO();
@@ -207,8 +212,12 @@ public:
     //since can not use destory function
     //so here add a function to free related resource
     static void FreeResource(MessageTO * mto);
-    
     //virtual ~MessageTO();
+
+    static void BodyToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg);
+    static void ToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg);
+    static std::string ToJson(EMMessagePtr msg);
+
 protected:
     MessageTO(const EMMessagePtr &message);
 };
