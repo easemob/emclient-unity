@@ -108,6 +108,14 @@ std::string OptionalStrParamCheck(const char* ptr) {
     return (nullptr == ptr)?"":ptr;
 }
 
+std::string JsonStringFromObject(const Value& obj)
+{
+    StringBuffer s;
+    Writer<StringBuffer> writer(s);
+    obj.Accept(writer);
+    return s.GetString();
+}
+
 std::string JsonStringFromVector(std::vector<std::string>& vec) {
     if (vec.size() == 0) return std::string("");
 
@@ -195,7 +203,9 @@ std::string GetRightValue(const std::string& str)
 
 std::string GetUTF8FromUnicode(const char* src)
 {
-    if (nullptr == src || strlen(src) == 0)
+    // Here cannot add judgement of strlen(src) == 0
+    // since unicode maybe is 00 xx!!
+    if (nullptr == src)
         return std::string("");
 
     std::string dst = std::string(src);

@@ -63,44 +63,15 @@ struct Options
     bool IsAutoDownload;
 };
 
-enum class AttributeValueType
-{
-    BOOL,
-    CHAR,
-    UCHAR,
-    SHORT,
-    USHORT,
-    INT32,
-    UINT32,
-    INT64,
-    UINT64,
-    FLOAT,
-    DOUBLE,
-    STRING,
-    STRVECTOR,
-    JSONSTRING,
-    NULLOBJ
-};
 
-union AttributeValueUnion {
-    bool BoolV;
-    unsigned char CharV;
-    char UCharV;
-    short ShortV;
-    unsigned short UShortV;
-    int Int32V;
-    unsigned int UInt32V;
-    int64_t Int64V;
-    uint64_t UInt64V;
-    float FloatV;
-    double DoubleV;
-    char *StringV;
-};
-
-struct AttributeValue
+struct GroupReadAck
 {
-    AttributeValueType VType;
-    AttributeValueUnion Value;
+    char * AckId;
+    char * MsgId;
+    char * From;
+    char * Content;
+    int64_t Timestamp;
+    int Count;
 };
 
 //C# side: class TextMessageBodyTO
@@ -534,6 +505,16 @@ struct SilentModeItemTO
     static std::string ToJson(EMSilentModeItemPtr ptr);
     static std::string ToJson(std::map<std::string, EMSilentModeItemPtr> map);
     static void ToJsonWriter(Writer<StringBuffer>& writer, EMSilentModeItemPtr itemPtr);
+};
+
+struct AttributesValue
+{
+    static void ToJsonWriter(Writer<StringBuffer>& writer, EMAttributeValuePtr attribute);
+    static void ToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg);
+    static std::string ToJson(EMMessagePtr msg);
+
+    static void SetMessageAttr(EMMessagePtr msg, std::string& key, const Value& jnode);
+    static void SetMessageAttrs(EMMessagePtr msg, std::string json);
 };
 
 struct TOArray

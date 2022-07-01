@@ -283,7 +283,7 @@
         FLOAT,
         DOUBLE,
         STRING,
-        STRVECTOR,
+        //STRVECTOR,
         JSONSTRING,
         //ATTRIBUTEVALUE,
         NULLOBJ
