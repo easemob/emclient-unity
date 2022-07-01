@@ -10,6 +10,7 @@
 #include "emgroup.h"
 #include "json.hpp"
 #include "tool.h"
+#include "emjsonstring.h"
 
 #ifndef RAPIDJSON_NAMESPACE
 #define RAPIDJSON_NAMESPACE easemob
@@ -42,7 +43,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = tm->To;
             msgId = tm->MsgId;
             msgType = tm->Type;
-            attrs = tm->AttributesValues;
+            attrs = GetUTF8FromUnicode(tm->AttributesValues);
         }
             break;
         case EMMessageBody::LOCATION:
@@ -55,7 +56,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = lm->To;
             msgId = lm->MsgId;
             msgType = lm->Type;
-            attrs = lm->AttributesValues;
+            attrs = GetUTF8FromUnicode(lm->AttributesValues);
         }
             break;
         case EMMessageBody::COMMAND:
@@ -68,14 +69,14 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = cm->To;
             msgId = cm->MsgId;
             msgType = cm->Type;
-            attrs = cm->AttributesValues;
+            attrs = GetUTF8FromUnicode(cm->AttributesValues);
         }
             break;
         case EMMessageBody::FILE:
         {
             auto fm = static_cast<FileMessageTO *>(mto);
             auto body = new EMFileMessageBody(fm->body.LocalPath);
-            body->setDisplayName(fm->body.DisplayName);
+            body->setDisplayName(GetUTF8FromUnicode(fm->body.DisplayName));
             body->setSecretKey(fm->body.Secret);
             body->setRemotePath(fm->body.RemotePath);
             body->setFileLength(fm->body.FileSize);
@@ -85,7 +86,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = fm->To;
             msgId = fm->MsgId;
             msgType = fm->Type;
-            attrs = fm->AttributesValues;
+            attrs = GetUTF8FromUnicode(fm->AttributesValues);
         }
             break;
         case EMMessageBody::IMAGE:
@@ -95,7 +96,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             body->setSecretKey(im->body.Secret);
             body->setFileLength(im->body.FileSize);
             body->setDownloadStatus(im->body.DownStatus);
-            body->setDisplayName(im->body.DisplayName);
+            body->setDisplayName(GetUTF8FromUnicode(im->body.DisplayName));
             body->setRemotePath(im->body.ThumbnaiRemotePath);
             body->setThumbnailSecretKey(im->body.ThumbnaiSecret);
             body->setThumbnailRemotePath(im->body.ThumbnaiRemotePath);
@@ -106,14 +107,14 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = im->To;
             msgId = im->MsgId;
             msgType = im->Type;
-            attrs = im->AttributesValues;
+            attrs = GetUTF8FromUnicode(im->AttributesValues);
         }
             break;
         case EMMessageBody::VOICE:
         {
             auto vm = static_cast<VoiceMessageTO *>(mto);
             auto body = new EMVoiceMessageBody(vm->body.LocalPath, vm->body.Duration);
-            body->setDisplayName(vm->body.DisplayName);
+            body->setDisplayName(GetUTF8FromUnicode(vm->body.DisplayName));
             body->setSecretKey(vm->body.Secret);
             body->setRemotePath(vm->body.RemotePath);
             body->setFileLength(vm->body.FileSize);
@@ -123,77 +124,68 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = vm->To;
             msgId = vm->MsgId;
             msgType = vm->Type;
-            attrs = vm->AttributesValues;
+            attrs = GetUTF8FromUnicode(vm->AttributesValues);
         }
             break;
         case EMMessageBody::VIDEO:
         {
-            auto im = static_cast<VideoMessageTO *>(mto);
-            auto body = new EMVideoMessageBody(im->body.LocalPath, im->body.ThumbnaiLocationPath);
+            auto vi = static_cast<VideoMessageTO *>(mto);
+            auto body = new EMVideoMessageBody(vi->body.LocalPath, vi->body.ThumbnaiLocationPath);
 
-            body->setSecretKey(im->body.Secret);
-            body->setFileLength(im->body.FileSize);
-            body->setDownloadStatus(im->body.DownStatus);
-            body->setDisplayName(im->body.DisplayName);
-            body->setRemotePath(im->body.ThumbnaiRemotePath);
+            body->setSecretKey(vi->body.Secret);
+            body->setFileLength(vi->body.FileSize);
+            body->setDownloadStatus(vi->body.DownStatus);
+            body->setDisplayName(GetUTF8FromUnicode(vi->body.DisplayName));
+            body->setRemotePath(vi->body.ThumbnaiRemotePath);
             
-            body->setThumbnailSecretKey(im->body.ThumbnaiSecret);
-            body->setThumbnailRemotePath(im->body.ThumbnaiRemotePath);
-            body->setThumbnailDownloadStatus(im->body.DownStatus);
+            body->setThumbnailSecretKey(vi->body.ThumbnaiSecret);
+            body->setThumbnailRemotePath(vi->body.ThumbnaiRemotePath);
+            body->setThumbnailDownloadStatus(vi->body.DownStatus);
             //TODO: same with FileLength?
-            body->setSize(im->body.FileSize);
-            body->setDuration(im->body.Duration);
+            body->setSize(vi->body.FileSize);
+            body->setDuration(vi->body.Duration);
             
             //TODO: add ThumbnailDisplayName field later
             messageBody = EMMessageBodyPtr(body);
-            from = im->From;
-            to = im->To;
-            msgId = im->MsgId;
-            msgType = im->Type;
-            attrs = im->AttributesValues;
+            from = vi->From;
+            to = vi->To;
+            msgId = vi->MsgId;
+            msgType = vi->Type;
+            attrs = GetUTF8FromUnicode(vi->AttributesValues);
         }
             break;
         case EMMessageBody::CUSTOM:
         {
-            auto im = static_cast<CustomMessageTO *>(mto);
-            auto body = new EMCustomMessageBody(im->body.CustomEvent);
+            auto cm = static_cast<CustomMessageTO *>(mto);
+            auto body = new EMCustomMessageBody(GetUTF8FromUnicode(cm->body.CustomEvent));
             
-            if(nullptr !=  im->body.CustomParams && strlen(im->body.CustomParams) > 0) {
-                LOG("json string is:%s", im->body.CustomParams);
-                
-                nlohmann::json j = nlohmann::json::parse(im->body.CustomParams);
-                easemob::EMCustomMessageBody::EMCustomExts ext;
-                for(auto it=j.begin(); it!=j.end(); it++) {
-                    std::string str = it.value().get<std::string>();
-                    LOG("custom message ext str is: %s", str.c_str());
-                    std::pair<std::string, std::string> kv{it.key().c_str(), str};
-                    ext.push_back(kv);
-                }
-                if (ext.size() > 0)
-                    body->setExts(ext);
+            std::map < std::string, std::string > map = JsonStringToMap(GetUTF8FromUnicode(cm->body.CustomParams));
+            easemob::EMCustomMessageBody::EMCustomExts ext;
+            for (auto it : map) {
+                std::pair<std::string, std::string> kv{ it.first, it.second };
+                ext.push_back(kv);
             }
-            else {
-                LOG("Empty json string for CustomerParams.");
-            }
+            if (ext.size() > 0)
+                body->setExts(ext);
 
             messageBody = EMMessageBodyPtr(body);
-            from = im->From;
-            to = im->To;
-            msgId = im->MsgId;
-            msgType = im->Type;
-            attrs = im->AttributesValues;
+            from = cm->From;
+            to = cm->To;
+            msgId = cm->MsgId;
+            msgType = cm->Type;
+            attrs = GetUTF8FromUnicode(cm->AttributesValues);
         }
             break;
     }
     LOG("Message created: From->%s, To->%s.", from.c_str(), to.c_str());
     if(buildReceiveMsg) {
         EMMessagePtr messagePtr = EMMessage::createReceiveMessage(to, from, messageBody, msgType, msgId);
-        SetMessageAttrs(messagePtr, attrs);
+        AttributesValue::SetMessageAttrs(messagePtr, attrs);
         return messagePtr;
     } else {
         EMMessagePtr messagePtr = EMMessage::createSendMessage(from, to, messageBody, msgType);
         messagePtr->setMsgId(msgId);
-        SetMessageAttrs(messagePtr, attrs);
+        AttributesValue::SetMessageAttrs(messagePtr, attrs);
         return messagePtr;
     }
 
@@ -560,7 +552,7 @@ MessageTO::MessageTO(const EMMessagePtr &_message) {
         this->RecallBy = GetPointer(_message->recallBy().c_str());
     
     char* p = nullptr;
-    std::string str = GetAttrsStringFromMessage(_message);
+    std::string str = AttributesValue::ToJson(_message);
     
     //LOG("Got attributes from others: %s", str.c_str());
     
@@ -1308,3 +1300,274 @@ std::map<std::string, UserInfoTO> UserInfo::Convert2TO(std::map<std::string, Use
     
     return userinfoToMap;
 }
+
+ void AttributesValue::ToJsonWriter(Writer<StringBuffer>& writer, EMAttributeValuePtr attribute)
+ {
+     if (nullptr == attribute) return;
+
+     writer.StartObject();
+     if (attribute->is<bool>()) {
+         writer.Key("type");
+         writer.String("b");
+
+         writer.Key("value");
+         if (attribute->value<bool>())
+             writer.String("True");
+         else
+             writer.String("False");
+     }
+     else if (attribute->is<char>()) {
+         writer.Key("type");
+         writer.String("c");
+         writer.Key("value");
+         writer.String(convert2String<char>(attribute->value<char>()).c_str());
+     }
+     else if (attribute->is<unsigned char>()) {
+         writer.Key("type");
+         writer.String("uc");
+         writer.Key("value");
+         writer.String(convert2String<unsigned char>(attribute->value<unsigned char>()).c_str());
+     }
+     else if (attribute->is<short>()) {
+         writer.Key("type");
+         writer.String("s");
+         writer.Key("value");
+         writer.String(convert2String<short>(attribute->value<short>()).c_str());
+     }
+     else if (attribute->is<unsigned short>()) {
+         writer.Key("type");
+         writer.String("us");
+         writer.Key("value");
+         writer.String(convert2String<unsigned short>(attribute->value<unsigned short>()).c_str());
+     }
+     else if (attribute->is<int32_t>()) {
+         writer.Key("type");
+         writer.String("i");
+         writer.Key("value");
+         writer.String(convert2String<int32_t>(attribute->value<int32_t>()).c_str());
+     }
+     else if (attribute->is<uint32_t>()) {
+         writer.Key("type");
+         writer.String("ui");
+         writer.Key("value");
+         writer.String(convert2String<uint32_t>(attribute->value<uint32_t>()).c_str());
+     }
+     else if (attribute->is<int64_t>()) {
+         writer.Key("type");
+         writer.String("l");
+         writer.Key("value");
+         writer.String(convert2String<int64_t>(attribute->value<int64_t>()).c_str());
+     }
+     else if (attribute->is<uint64_t>()) {
+         writer.Key("type");
+         writer.String("ul");
+         writer.Key("value");
+         writer.String(convert2String<uint64_t>(attribute->value<uint64_t>()).c_str());
+     }
+     else if (attribute->is<float>()) {
+         writer.Key("type");
+         writer.String("f");
+         writer.Key("value");
+         writer.String(convert2String<float>(attribute->value<float>()).c_str());
+     }
+     else if (attribute->is<double>()) {
+         writer.Key("type");
+         writer.String("d");
+         writer.Key("value");
+         writer.String(convert2String<double>(attribute->value<double>()).c_str());
+     }
+     else if (attribute->is<std::string>()) {
+         writer.Key("type");
+         writer.String("str");
+         writer.Key("value");
+         writer.String(attribute->value<std::string>().c_str());
+         //Note: here not support to parse str value further
+     }
+     else if (attribute->is<std::vector<std::string>>()) {
+         writer.Key("type");
+         writer.String("strv");
+         writer.Key("value");
+         writer.String(JsonStringFromVector(attribute->value<std::vector<std::string>>()).c_str());
+     }
+     else if (attribute->is<EMJsonString>()) {
+         writer.Key("type");
+         writer.String("jstr");
+         writer.Key("value");
+         writer.String(attribute->value<EMJsonString>().c_str());
+     }
+     else {
+         LOG("Error type in message attributes!");
+     }
+     writer.EndObject();
+ }
+
+ void AttributesValue::ToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg)
+ {
+     if (nullptr == msg) return;
+
+     std::map<std::string, EMAttributeValuePtr> ext = msg->ext();
+     if (ext.size() == 0) return;
+
+     for (auto it : ext) {
+         std::string key = it.first;
+         EMAttributeValuePtr attribute = it.second;
+         writer.Key(key.c_str());
+         ToJsonWriter(writer, attribute);
+     }
+ }
+
+ std::string AttributesValue::ToJson(EMMessagePtr msg)
+ {
+     StringBuffer s;
+     Writer<StringBuffer> writer(s);
+     writer.StartObject();
+     ToJsonWriter(writer, msg);
+     writer.EndObject();
+     string jstr = s.GetString();
+     return jstr;
+ }
+
+ /*
+ attrs may looks like(most quote symbol are removed, and all items in {} are string):
+ {
+    name1: {type:b, value:true},
+    name2: {type:c, value:11},
+    name3: {type:uc, value:a},
+    name4: {type:s, value:-123},
+    name5: {type:us, value:123},
+    name6: {type:i, value:-456},
+    name7: {type:ui, value:456},
+    name8: {type:l, value:-123456},
+    name9: {type:ul, value:123456},
+    name10:{type:f, value:1.23},
+    name11:{type:d, value:1.23456},
+    name12:{type:str, value:"a string"},
+    name13:{type:strv, value:["str1", "str2", "str3"]},
+    name14:{type:jstr, value:"a json string"},
+    name15:{type:attr, value:{ --- not support any more!!
+        name1: {type:b, value:true},
+        name2: {type:c, value:11},
+        ...
+        name15: {type:attr, value:{
+            name1: {type:b, value:true},
+            ...
+            name15:{type:str, value:"end"}
+        }}
+    }}
+
+ }
+ */
+ void AttributesValue::SetMessageAttr(EMMessagePtr msg, std::string& key, const Value& jnode)
+ {
+     if (nullptr == msg || key.length() == 0 || jnode.IsNull())
+         return;
+
+     if (!jnode.HasMember("type") || !jnode["type"].IsString()) return;
+     std::string type = jnode["type"].GetString();
+     
+     if (!jnode.HasMember("value")) return;
+
+     std::string v = "";
+     if (jnode["value"].IsString())
+        v = jnode["value"].GetString();
+
+     else if (jnode["value"].IsArray())
+        v = JsonStringFromObject(jnode["value"]);
+
+     if (type.compare("b") == 0) {
+#ifdef _WIN32
+         if (_stricmp(v.c_str(), "false") == 0) {
+#else
+         if (strcasecmp(v.c_str(), "false") == 0) {
+#endif
+             LOG("Set type bool: value: false");
+             msg->setAttribute(key, false);
+         }
+         else {
+             LOG("Set type bool: value: true");
+             msg->setAttribute(key, true);
+         }
+      }
+     else if (type.compare("c") == 0) {
+         //unsupported in emmessage
+     }
+     else if (type.compare("uc") == 0) {
+         //unsupported in emmessage
+     }
+     else if (type.compare("s") == 0) {
+         //unsupported in emmessage
+     }
+     else if (type.compare("us") == 0) {
+         //unsupported in emmessage
+     }
+     else if (type.compare("i") == 0) {
+         int i = convertFromString<int32_t>(v);
+         msg->setAttribute(key, i);
+         LOG("Set type: int32_t, value:%d ", i);
+     }
+     else if (type.compare("ui") == 0) {
+         uint32_t ui = convertFromString<uint32_t>(v);
+         msg->setAttribute(key, ui);
+         LOG("Set type: uint32_t, value:%u", ui);
+     }
+     else if (type.compare("l") == 0) {
+         int64_t l = convertFromString<int64_t>(v);
+         msg->setAttribute(key, l);
+         LOG("Set type: int64_t, value:%lld", l);
+     }
+     else if (type.compare("ul") == 0) {
+         //unsupported in emmessage
+     }
+     else if (type.compare("f") == 0) {
+         float f = convertFromString<float>(v);
+         msg->setAttribute(key, f);
+         LOG("Set type: float, value:%f", f);
+     }
+     else if (type.compare("d") == 0) {
+         double d = convertFromString<double>(v);
+         msg->setAttribute(key, d);
+         LOG("Set type: double, value:%f", d);
+     }
+     else if (type.compare("str") == 0) {
+         msg->setAttribute(key, v);
+         LOG("Set type: string, value:%s", v.c_str());
+     }
+     else if (type.compare("strv") == 0) {
+         EMJsonString json(v);
+         msg->setAttribute(key, json);
+         LOG("Set type: strv, value:%s", json.c_str());
+     }
+     else if (type.compare("jstr") == 0) {
+         EMJsonString json(v);
+         msg->setAttribute(key, json);
+         LOG("Set type: EMJsonString, value:%s", json.c_str());
+     }
+     /*else if (type.compare("attr") == 0) {
+         EMJsonString json(value.GetString());
+         msg->setAttribute(key, json);
+         LOG("Set type: attr, value:%s", attributeStr.c_str());
+     }*/
+     else {
+         LOG("Error attribute type %s", type.c_str());
+     }
+ }
+
+ void AttributesValue::SetMessageAttrs(EMMessagePtr msg, std::string json)
+ {
+     // Json: as least has { and } two characters
+     if (nullptr == msg || json.length() <= 2) return;
+
+     Document d;
+     if (!d.Parse(json.data()).HasParseError()) {
+
+         for (auto iter = d.MemberBegin(); iter != d.MemberEnd(); ++iter) {
+
+             std::string key = iter->name.GetString();
+             const Value& obj = iter->value;
+
+             if (obj.IsObject()) {
+                 SetMessageAttr(msg, key, obj);
+             }
+         }
+     }
+ }

@@ -20,6 +20,13 @@
 #include "empushconfigs.h"
 #include "json.hpp"
 
+#ifndef RAPIDJSON_NAMESPACE
+#define RAPIDJSON_NAMESPACE easemob
+#endif
+#include "rapidjson/document.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/prettywriter.h"
+
 using namespace easemob;
 
 const int ARRAY_SIZE_LIMITATION = 200;
@@ -61,46 +68,6 @@ struct GroupReadAck
     char * Content;
     int64_t Timestamp;
     int Count;
-};
-
-enum class AttributeValueType
-{
-    BOOL,
-    CHAR,
-    UCHAR,
-    SHORT,
-    USHORT,
-    INT32,
-    UINT32,
-    INT64,
-    UINT64,
-    FLOAT,
-    DOUBLE,
-    STRING,
-    STRVECTOR,
-    JSONSTRING,
-    NULLOBJ
-};
-
-union AttributeValueUnion {
-    bool BoolV;
-    unsigned char CharV;
-    char UCharV;
-    short ShortV;
-    unsigned short UShortV;
-    int Int32V;
-    unsigned int UInt32V;
-    int64_t Int64V;
-    uint64_t UInt64V;
-    float FloatV;
-    double DoubleV;
-    char *StringV;
-};
-
-struct AttributeValue
-{
-    AttributeValueType VType;
-    AttributeValueUnion Value;
 };
 
 //C# side: class TextMessageBodyTO
@@ -453,6 +420,16 @@ struct UserInfo
     
     static std::map<std::string, UserInfo> FromResponse(std::string json, std::map<UserInfoType, std::string>& utypeMap);
     static std::map<std::string, UserInfoTO> Convert2TO(std::map<std::string, UserInfo>& userInfoMap);
+};
+
+struct AttributesValue
+{
+    static void ToJsonWriter(Writer<StringBuffer>& writer, EMAttributeValuePtr attribute);
+    static void ToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg);
+    static std::string ToJson(EMMessagePtr msg);
+
+    static void SetMessageAttr(EMMessagePtr msg, std::string& key, const Value& jnode);
+    static void SetMessageAttrs(EMMessagePtr msg, std::string json);
 };
 
 struct TOArray

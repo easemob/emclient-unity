@@ -166,6 +166,7 @@ namespace ChatSDK
         struct FileMessageBodyTO
         {
             public string LocalPath;
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string DisplayName;
             public string Secret;
             public string RemotePath;
@@ -206,7 +207,7 @@ namespace ChatSDK
         {
             MessageBody.FileBody fb = new MessageBody.FileBody();
             fb.LocalPath = Body.LocalPath;
-            fb.DisplayName = Body.DisplayName;
+            fb.DisplayName = TransformTool.GetUnicodeStringFromUTF8(Body.DisplayName);
             fb.Secret = Body.Secret;
             fb.RemotePath = Body.RemotePath;
             fb.FileSize = Body.FileSize;
@@ -230,6 +231,7 @@ namespace ChatSDK
         struct ImageMessageBodyTO
         {
             public string LocalPath;
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string DisplayName;
             public string Secret;
             public string RemotePath;
@@ -285,7 +287,7 @@ namespace ChatSDK
         {
             MessageBody.ImageBody ib = new MessageBody.ImageBody();
             ib.LocalPath = Body.LocalPath;
-            ib.DisplayName = Body.DisplayName;
+            ib.DisplayName = TransformTool.GetUnicodeStringFromUTF8(Body.DisplayName);
             ib.Secret = Body.Secret;
             ib.RemotePath = Body.RemotePath;
             ib.ThumbnailLocalPath = Body.ThumbnailLocalPath;
@@ -319,6 +321,7 @@ namespace ChatSDK
         struct VoiceMessageBodyTO
         {
             public string LocalPath;
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string DisplayName;
             public string Secret;
             public string RemotePath;
@@ -361,7 +364,7 @@ namespace ChatSDK
         {
             MessageBody.VoiceBody voi = new MessageBody.VoiceBody();
             voi.LocalPath = Body.LocalPath;
-            voi.DisplayName = Body.DisplayName;
+            voi.DisplayName = TransformTool.GetUnicodeStringFromUTF8(Body.DisplayName);
             voi.Secret = Body.Secret;
             voi.RemotePath = Body.RemotePath;
             voi.FileSize = Body.FileSize;
@@ -386,6 +389,7 @@ namespace ChatSDK
         struct VideoMessageBodyTO
         {
             public string LocalPath;
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string DisplayName;
             public string Secret;
             public string RemotePath;
@@ -438,7 +442,7 @@ namespace ChatSDK
         {
             MessageBody.VideoBody vid = new MessageBody.VideoBody();
             vid.LocalPath = Body.LocalPath;
-            vid.DisplayName = Body.DisplayName;
+            vid.DisplayName = TransformTool.GetUnicodeStringFromUTF8(Body.DisplayName);
             vid.Secret = Body.Secret;
             vid.RemotePath = Body.RemotePath;
             vid.ThumbnaiLocationPath = Body.ThumbnaiLocationPath;
@@ -470,7 +474,9 @@ namespace ChatSDK
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
         struct CustomMessageBodyTO
         {
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string CustomEvent;
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string CustomParams; //corresponding to Dictionary<string, string>
 
             public CustomMessageBodyTO(in Message message)
@@ -509,10 +515,11 @@ namespace ChatSDK
             Dictionary<string, string> dict;
             // valid json format: {a:b}
             if (null != Body.CustomParams && Body.CustomParams.Length > 3)
-                dict = TransformTool.JsonStringToDictionary(Body.CustomParams);
+                dict = TransformTool.JsonStringToDictionary(TransformTool.GetUnicodeStringFromUTF8(Body.CustomParams));
             else
                 dict = new Dictionary<string, string>(); // empty dict
-            return new MessageBody.CustomBody(Body.CustomEvent, dict);
+
+            return new MessageBody.CustomBody(TransformTool.GetUnicodeStringFromUTF8(Body.CustomEvent), dict);
         }
     }
 
@@ -532,6 +539,7 @@ namespace ChatSDK
         [MarshalAs(UnmanagedType.U1)]
         public bool HasReadAck;
 
+        [MarshalAs(UnmanagedType.LPTStr)]
         public string AttributesValues;
         public long LocalTime;
         public long ServerTime;
@@ -669,7 +677,7 @@ namespace ChatSDK
                 MessageType = Type,
                 Direction = Direction,
                 Status = Status,
-                Attributes = TransformTool.JsonStringToAttributes(AttributesValues),
+                Attributes = TransformTool.JsonStringToAttributes(TransformTool.GetUnicodeStringFromUTF8(AttributesValues)),
                 LocalTime = LocalTime,
                 ServerTime = ServerTime,
                 HasDeliverAck = HasDeliverAck,
@@ -690,25 +698,25 @@ namespace ChatSDK
 
     public class AttributeValue
     {
-        AttributeValueType VType;
+        private AttributeValueType VType;
 
-        bool BoolV;
-        sbyte CharV;
-        char UCharV;
-        short ShortV;
-        ushort UShortV;
-        int Int32V;
-        uint UInt32V;
-        long Int64V;
-        ulong UInt64V;
-        float FloatV;
-        double DoubleV;
-        string StringV;
-        List<string> StringVecV;
-        string JsonStringV;
+        private bool BoolV;
+        private sbyte CharV;
+        private char UCharV;
+        private short ShortV;
+        private ushort UShortV;
+        private int Int32V;
+        private uint UInt32V;
+        private long Int64V;
+        private ulong UInt64V;
+        private float FloatV;
+        private double DoubleV;
+        private string StringV;
+        private List<string> StringVecV;
+        private string JsonStringV;
         //Dictionary<string, AttributeValue> AttributeV;
 
-        public static AttributeValue Of(in object value, AttributeValueType type)
+        internal static AttributeValue Of(in object value, AttributeValueType type)
         {
             if (type == AttributeValueType.BOOL)
             {
@@ -739,11 +747,11 @@ namespace ChatSDK
             {
                 return Of((string)value, type);
             }
+            /*
             else if (type == AttributeValueType.STRVECTOR)
             {
                 return Of((List<string>)value);
             }
-            /*
             else if (type == AttributeValueType.ATTRIBUTEVALUE)
             {
                 return Of((Dictionary<string, AttributeValue>)value);
@@ -754,7 +762,7 @@ namespace ChatSDK
             }
         }
 
-        public static AttributeValue Of(in bool value)
+        internal static AttributeValue Of(in bool value)
         {
             var result = new AttributeValue
             {
@@ -763,7 +771,7 @@ namespace ChatSDK
             };
             return result;
         }
-        public static AttributeValue Of(in int value)
+        internal static AttributeValue Of(in int value)
         {
             var result = new AttributeValue
             {
@@ -773,7 +781,7 @@ namespace ChatSDK
             return result;
         }
 
-        public static AttributeValue Of(in uint value)
+        internal static AttributeValue Of(in uint value)
         {
             var result = new AttributeValue
             {
@@ -783,7 +791,7 @@ namespace ChatSDK
             return result;
         }
 
-        public static AttributeValue Of(in long value)
+        internal static AttributeValue Of(in long value)
         {
             var result = new AttributeValue
             {
@@ -792,7 +800,7 @@ namespace ChatSDK
             };
             return result;
         }
-        public static AttributeValue Of(in float value)
+        internal static AttributeValue Of(in float value)
         {
             var result = new AttributeValue
             {
@@ -802,7 +810,7 @@ namespace ChatSDK
             return result;
         }
 
-        public static AttributeValue Of(in double value)
+        internal static AttributeValue Of(in double value)
         {
             var result = new AttributeValue
             {
@@ -812,7 +820,7 @@ namespace ChatSDK
             return result;
         }
 
-        public static AttributeValue Of(in string value, AttributeValueType type)
+        internal static AttributeValue Of(in string value, AttributeValueType type)
         {
             var result = new AttributeValue();
             if (AttributeValueType.JSONSTRING == type)
@@ -828,7 +836,8 @@ namespace ChatSDK
             return result;
         }
 
-        public static AttributeValue Of(in List<string> value)
+        /*
+        internal static AttributeValue Of(in List<string> value)
         {
             var result = new AttributeValue
             {
@@ -838,7 +847,6 @@ namespace ChatSDK
             return result;
         }
 
-        /*
         public static AttributeValue Of(in Dictionary<string, AttributeValue> value)
         {
             var result = new AttributeValue
@@ -849,7 +857,7 @@ namespace ChatSDK
             return result;
         }*/
 
-        public object GetAttributeValue(AttributeValueType type)
+        internal object GetAttributeValue(AttributeValueType type)
         {
             if (type == AttributeValueType.BOOL)
             {
@@ -883,11 +891,11 @@ namespace ChatSDK
             {
                 return JsonStringV;
             }
+            /*
             else if (type == AttributeValueType.STRVECTOR)
             {
                 return StringVecV;
             }
-            /*
             else if (type == AttributeValueType.ATTRIBUTEVALUE)
             {
                 return AttributeV;
@@ -899,12 +907,16 @@ namespace ChatSDK
         }
 
 
-        public AttributeValueType GetAttributeValueType()
+        internal AttributeValueType GetAttributeValueType()
         {
             return VType;
         }
 
+#if DEBUG
         public JSONObject ToJsonObject()
+#else
+        internal JSONObject ToJsonObject()
+#endif
         {
             JSONObject jo = new JSONObject();
             string _type;
@@ -941,7 +953,7 @@ namespace ChatSDK
                     _type = "str";
                     value = StringV;
                     break;
-
+                /*
                 case AttributeValueType.STRVECTOR:
                     _type = "strv";
                     array = new JSONArray();
@@ -951,7 +963,7 @@ namespace ChatSDK
                     }
                     value = ""; // here use JSONObject, not string
                     break;
-
+                */
                 case AttributeValueType.JSONSTRING:
                     _type = "jstr";
                     value = JsonStringV;
@@ -996,7 +1008,6 @@ namespace ChatSDK
 
             string typeString = jo["type"];
             JSONNode jvalue = jo["value"];
-            Debug.Log("abbb");
             string value = null;
             if ("strv" != typeString && "attr" != typeString)
             {
@@ -1033,6 +1044,7 @@ namespace ChatSDK
                     result.VType = AttributeValueType.STRING;
                     result.StringV = value;
                     break;
+                /*
                 case "strv":
                     result.VType = AttributeValueType.STRVECTOR;
                     result.StringVecV = new List<string>();
@@ -1062,6 +1074,7 @@ namespace ChatSDK
                         count++;
                     }
                     break;
+                */
                 case "jstr":
                     result.VType = AttributeValueType.JSONSTRING;
                     result.JsonStringV = value;
@@ -1101,7 +1114,7 @@ namespace ChatSDK
             return result;
         }
 
-        public static void PrintAttribute(AttributeValue value)
+        internal static void PrintAttribute(AttributeValue value)
         {
             switch (value.GetAttributeValueType())
             {
@@ -1126,12 +1139,14 @@ namespace ChatSDK
                 case AttributeValueType.STRING:
                     Debug.Log($"type: {AttributeValueType.STRING.ToString()}, value is {value.StringV.ToString()}");
                     break;
+                /*
                 case AttributeValueType.STRVECTOR:
                     foreach (var item_print in value.StringVecV)
                     {
                         Debug.Log($"type: {AttributeValueType.STRVECTOR.ToString()}, array: {item_print}");
                     }
                     break;
+                */
                 case AttributeValueType.JSONSTRING:
                     Debug.Log($"type: {AttributeValueType.JSONSTRING.ToString()}, value is {value.JsonStringV.ToString()}");
                     break;
@@ -1150,7 +1165,7 @@ namespace ChatSDK
             }
         }
 
-        public static void ToAndFromTest(Dictionary<string, AttributeValue> attriMap)
+        internal static void ToAndFromTest(Dictionary<string, AttributeValue> attriMap)
         {
             // to json string
             JSONObject jo = new JSONObject();
@@ -1171,7 +1186,7 @@ namespace ChatSDK
             }
         }
 
-        public static void ParseAttributeExample(Message msg)
+        internal static void ParseAttributeExample(Message msg)
         {
             if (null == msg) return;
             if (null == msg.Attributes || msg.Attributes.Count == 0) return;
@@ -1182,7 +1197,11 @@ namespace ChatSDK
             }
         }
 
+#if DEBUG
         public static void MakeMsgAttributesExample(Message msg)
+#else
+        internal static void MakeMsgAttributesExample(Message msg)
+#endif
         {
             if (null == msg) return;
 
@@ -1214,12 +1233,13 @@ namespace ChatSDK
             string jstr = "a level3 json string";
             Message.SetAttribute(level3_map, "level3-jstring", jstr, AttributeValueType.JSONSTRING);
 
+            /*
             List<string> list3 = new List<string>();
             list3.Add("level3-array1");
             list3.Add("level3-array2");
             list3.Add("level3-array3");
             Message.SetAttribute(level3_map, "level3-list", list3, AttributeValueType.STRVECTOR);
-
+            */
             // make level2
             Dictionary<string, AttributeValue> level2_map = new Dictionary<string, AttributeValue>();
 
@@ -1247,12 +1267,13 @@ namespace ChatSDK
             jstr = "a level2 json string";
             Message.SetAttribute(level2_map, "level2-jstring", jstr, AttributeValueType.JSONSTRING);
 
+            /*
             List<string> list2 = new List<string>();
             list2.Add("level2-array1");
             list2.Add("level2-array2");
             list2.Add("level2-array3");
             Message.SetAttribute(level2_map, "level2-list", list2, AttributeValueType.STRVECTOR);
-
+            */
             //Message.SetAttribute(level2_map, "level2-attr", level3_map, AttributeValueType.ATTRIBUTEVALUE);
             
             // make level1
@@ -1260,7 +1281,6 @@ namespace ChatSDK
 
             //string jstr = "a level1 json string";
             //msg.SetAttribute(level1_map, "level1-jstring", jstr, AttributeValueType.JSONSTRING);
-
             
             bool b1 = true;
             Message.SetAttribute(level1_map, "level1-bool", b1, AttributeValueType.BOOL);
@@ -1281,26 +1301,43 @@ namespace ChatSDK
             double d1 = 1.23456D;
             Message.SetAttribute(level1_map, "level1-double", d1, AttributeValueType.DOUBLE);
             
-            string str1 = "a level1 string";
-            Message.SetAttribute(level1_map, "level1-string", str1, AttributeValueType.STRING);
+            string str1 = "这是中文字符串的内容，Content in Chinese.";
+            Message.SetAttribute(level1_map, "level1-string-中文", str1, AttributeValueType.STRING);
 
             string str2 = "a level1 string1-jasldjfasdlfjasdlfjasdlfjasofasudf9asdf7as9d6fas98d6f9asd7f9asd7fs9af7as97fa9s8dsa97fasd890f7asd98fuzxd9f87zuxd09f7ad098f7uyas89df07asd09f8as7df0as";
-            Message.SetAttribute(level1_map, "level1-string1", str2, AttributeValueType.STRING);
+            Message.SetAttribute(level1_map, "level1-string-en", str2, AttributeValueType.STRING);
             
-            string jstr1 = "a level1 json string";
-            Message.SetAttribute(level1_map, "level1-jstring", jstr1, AttributeValueType.JSONSTRING);
-            
+            // this is not reasonable json string, so failed to send!!
+            //string jstr1 = "a level1 json string";
+            //Message.SetAttribute(level1_map, "level1-jstring", jstr1, AttributeValueType.JSONSTRING);
+
+            Dictionary<string, string> dictionary = new Dictionary<string, string>();
+            dictionary.Add("key1", "value1");
+            dictionary.Add("key2", "value2");
+            dictionary.Add("钥匙3", "值three");
+
+            string jstr2 = TransformTool.JsonStringFromDictionary(dictionary);
+            Message.SetAttribute(level1_map, "level1-jstring-dict", jstr2, AttributeValueType.JSONSTRING);
+
+            List<string> list1 = new List<string>();
+            list1.Add("level1-array1");
+            list1.Add("level1-array2");
+            list1.Add("level1-数组3");
+            string jstr3 = TransformTool.JsonStringFromStringList(list1);
+            Message.SetAttribute(level1_map, "level1-list-vector", jstr3, AttributeValueType.JSONSTRING);
+
+            /*
             List<string> list1 = new List<string>();
             list1.Add("level1-array1");
             list1.Add("level1-array2");
             list1.Add("level1-array3");
             Message.SetAttribute(level1_map, "level1-list", list1, AttributeValueType.STRVECTOR);
-
+            */
             //Message.SetAttribute(level1_map, "level1-attr", level2_map, AttributeValueType.ATTRIBUTEVALUE);
 
             msg.Attributes = level1_map;
 
-            ToAndFromTest(msg.Attributes);
+            //ToAndFromTest(msg.Attributes);
         }
     }
 
