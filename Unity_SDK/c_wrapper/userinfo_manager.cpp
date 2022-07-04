@@ -31,8 +31,8 @@ std::map<UserInfoType, std::string> UserInfoTypeMap =
 
 void TestParseUserInfoResponseFromServer()
 {
-    StringBuffer strBuf;
-    Writer<StringBuffer> writer(strBuf);
+    StringBuffer s;
+    Writer<StringBuffer> writer(s);
 
     writer.StartObject();
     {
@@ -98,7 +98,7 @@ void TestParseUserInfoResponseFromServer()
     }
     writer.EndObject();
 
-    string jstr = strBuf.GetString();
+    string jstr = s.GetString();
 
     std::map<std::string, UserInfo> userinfoMap;
 
@@ -120,8 +120,8 @@ HYPHENATE_API void UserInfoManager_UpdateOwnInfo(void *client, int callbackId, v
     std::string nickNameUtf8 = GetUTF8FromUnicode(uto->nickName);
     //std::string nickNameAnsi = UTF8toANSI(nickNameUtf8);
     
-    StringBuffer strBuf;
-    Writer<StringBuffer> writer(strBuf);
+    StringBuffer s;
+    Writer<StringBuffer> writer(s);
 
     writer.StartObject();
 
@@ -167,7 +167,7 @@ HYPHENATE_API void UserInfoManager_UpdateOwnInfo(void *client, int callbackId, v
 
     writer.EndObject();
 
-    string jstr = strBuf.GetString();
+    string jstr = s.GetString();
 
     if (jstr.length() <= 2) {
         error.setErrorCode(EMError::GENERAL_ERROR);

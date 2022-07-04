@@ -37,6 +37,7 @@ std::string OptionalStrParamCheck(const char* ptr);
 std::string JsonStringFromObject(const Value& obj);
 std::string JsonStringFromVector(std::vector<std::string>& vec);
 std::string JsonStringFromMap(std::map<std::string, std::string>& map);
+std::string JsonStringFromCursorResult(const EMCursorResultRaw<std::string>& cusorResult);
 std::vector<std::string> JsonStringToVector(std::string& jstr);
 std::map<std::string, std::string> JsonStringToMap(std::string& jstr);
 

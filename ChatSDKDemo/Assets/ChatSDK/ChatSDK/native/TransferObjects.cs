@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using ChatSDK.MessageBody;
 using SimpleJSON;
@@ -402,7 +403,7 @@ namespace ChatSDK
             ib.FileSize = Body.FileSize;
             ib.DownStatus = Body.DownStatus;
             ib.ThumbnaiDownStatus = Body.ThumbnaiDownStatus;
-            ib.Original = Body.Original;
+            //ib.Original = Body.Original;
 
             // change EMPTY_STR(" ")  to ""
             if (ib.DisplayName.CompareTo(" ") == 0)         ib.DisplayName = "";

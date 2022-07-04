@@ -412,6 +412,7 @@ namespace ChatSDK
             /// </summary>
             public bool Original;
 
+
             /// <summary>
             /// 下载状态
             /// </summary>

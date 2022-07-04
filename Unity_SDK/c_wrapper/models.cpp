@@ -189,7 +189,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
     LOG("Message created: From->%s, To->%s.", from.c_str(), to.c_str());
     if(buildReceiveMsg) {
         EMMessagePtr messagePtr = EMMessage::createReceiveMessage(to, from, messageBody, msgType, msgId);
-        AttributesValue::SetMessageAttrs(messagePtr, attrs);
+        AttributesValueTO::SetMessageAttrs(messagePtr, attrs);
         messagePtr->setIsNeedGroupAck(isNeedGroupAck);
         if (reaction_list.size() > 0)
             messagePtr->setReactionList(reaction_list);
@@ -198,7 +198,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
         EMMessagePtr messagePtr = EMMessage::createSendMessage(from, to, messageBody, msgType);
         messagePtr->setMsgId(msgId);
         messagePtr->setIsNeedGroupAck(isNeedGroupAck);
-        AttributesValue::SetMessageAttrs(messagePtr, attrs);
+        AttributesValueTO::SetMessageAttrs(messagePtr, attrs);
         if (reaction_list.size() > 0)
             messagePtr->setReactionList(reaction_list);
         return messagePtr;
@@ -662,11 +662,10 @@ MessageTO::MessageTO(const EMMessagePtr &_message) {
     else
         this->RecallBy = GetPointer(_message->recallBy().c_str());
     
-    char* p = nullptr;
-    std::string str = AttributesValue::ToJson(_message);
+    std::string str = AttributesValueTO::ToJson(_message);
     
     //LOG("Got attributes from others: %s", str.c_str());
-    
+    char* p = nullptr;
     if (str.length() > 0) {
         p = new char[str.size() + 1];
         p[str.size()] = '\0';
@@ -679,6 +678,12 @@ MessageTO::MessageTO(const EMMessagePtr &_message) {
         p[1] = '\0';
     }
     this->AttributesValues = p;
+
+    this->IsThread = _message->isThread();
+    this->MucParentId = _message->mucParentId().c_str();
+    this->MsgParentId = _message->msgParentId().c_str();
+
+    //this->ThreadOverview = ThreadEventTO::ToJson(msg->threadOverview());
 }
 
 //TextMessageTO
@@ -913,7 +918,203 @@ void MessageTO::BodyToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg)
 {
     if (nullptr == msg) return;
 
+    writer.StartObject();
+    auto body = msg->bodies().front();    
+    switch (body->type()) {
+        case EMMessageBody::TEXT:
+        {
+            EMTextMessageBodyPtr ptr = dynamic_pointer_cast<EMTextMessageBody>(body);
+            writer.Key("Content");
+            writer.String(ptr->text().c_str());
 
+            writer.Key("TargetLanguages");
+            writer.String(ptr->text().c_str());
+
+            writer.Key("Translations");
+            writer.String(ptr->text().c_str());
+        }
+        break;
+        case EMMessageBody::LOCATION:
+        {
+            EMLocationMessageBodyPtr ptr = dynamic_pointer_cast<EMLocationMessageBody>(body);
+            writer.Key("Latitude");
+            writer.Double(ptr->latitude());
+
+            writer.Key("Longitude");
+            writer.Double(ptr->longitude());
+
+            writer.Key("Address");
+            writer.String(ptr->address().c_str());
+
+            writer.Key("BuildingName");
+            writer.String(ptr->buildingName().c_str());
+        }
+        break;
+        case EMMessageBody::COMMAND:
+        {
+            EMCmdMessageBodyPtr ptr = dynamic_pointer_cast<EMCmdMessageBody>(body);
+
+            writer.Key("Action");
+            writer.String(ptr->action().c_str());
+
+            writer.Key("DeliverOnlineOnly");
+            writer.Bool(ptr->isDeliverOnlineOnly());
+        }
+        break;
+        case EMMessageBody::FILE:
+        {
+            EMFileMessageBodyPtr ptr = dynamic_pointer_cast<EMFileMessageBody>(body);
+            writer.Key("LocalPath");
+            writer.String(ptr->localPath().c_str());
+
+            writer.Key("DisplayName");
+            writer.String(ptr->displayName().c_str());
+
+            writer.Key("Secret");
+            writer.String(ptr->secretKey().c_str());
+
+            writer.Key("RemotePath");
+            writer.String(ptr->remotePath().c_str());
+
+            writer.Key("FileSize");
+            writer.Int64(ptr->fileLength());
+
+            writer.Key("DownStatus");
+            writer.Int((int)ptr->downloadStatus());
+        }
+        break;
+        case EMMessageBody::IMAGE:
+        {
+            EMImageMessageBodyPtr ptr = dynamic_pointer_cast<EMImageMessageBody>(body);
+            writer.Key("LocalPath");
+            writer.String(ptr->localPath().c_str());
+
+            writer.Key("DisplayName");
+            writer.String(ptr->displayName().c_str());
+
+            writer.Key("Secret");
+            writer.String(ptr->secretKey().c_str());
+
+            writer.Key("RemotePath");
+            writer.String(ptr->remotePath().c_str());
+
+            writer.Key("ThumbnailLocalPath");
+            writer.String(ptr->thumbnailLocalPath().c_str());
+
+            writer.Key("ThumbnaiRemotePath");
+            writer.String(ptr->thumbnailRemotePath().c_str());
+
+            writer.Key("ThumbnaiSecret");
+            writer.String(ptr->thumbnailSecretKey().c_str());
+
+            writer.Key("Height");
+            writer.Double(ptr->size().mHeight);
+
+            writer.Key("Width");
+            writer.Double(ptr->size().mWidth);
+
+            writer.Key("FileSize");
+            writer.Int64(ptr->fileLength());
+
+            writer.Key("DownStatus");
+            writer.Int((int)ptr->downloadStatus());
+
+            writer.Key("ThumbnaiDownStatus");
+            writer.Int((int)ptr->thumbnailDownloadStatus());
+
+            // Not find original related !!!
+            //writer.Key("Original");
+            //writer.Bool((int)ptr->downloadStatus());
+        }
+        break;
+        case EMMessageBody::VOICE:
+        {
+            EMVoiceMessageBodyPtr ptr = dynamic_pointer_cast<EMVoiceMessageBody>(body);
+            writer.Key("LocalPath");
+            writer.String(ptr->localPath().c_str());
+
+            writer.Key("DisplayName");
+            writer.String(ptr->displayName().c_str());
+
+            writer.Key("Secret");
+            writer.String(ptr->secretKey().c_str());
+
+            writer.Key("RemotePath");
+            writer.String(ptr->remotePath().c_str());
+
+            writer.Key("FileSize");
+            writer.Int64(ptr->fileLength());
+
+            writer.Key("DownStatus");
+            writer.Int((int)ptr->downloadStatus());
+
+            writer.Key("Duration");
+            writer.Int(ptr->duration());
+        }
+        break;
+        case EMMessageBody::VIDEO:
+        {
+            EMVideoMessageBodyPtr ptr = dynamic_pointer_cast<EMVideoMessageBody>(body);
+            writer.Key("LocalPath");
+            writer.String(ptr->localPath().c_str());
+
+            writer.Key("DisplayName");
+            writer.String(ptr->displayName().c_str());
+
+            writer.Key("Secret");
+            writer.String(ptr->secretKey().c_str());
+
+            writer.Key("RemotePath");
+            writer.String(ptr->remotePath().c_str());
+
+            writer.Key("ThumbnailLocalPath");
+            writer.String(ptr->thumbnailLocalPath().c_str());
+
+            writer.Key("ThumbnaiRemotePath");
+            writer.String(ptr->thumbnailRemotePath().c_str());
+
+            writer.Key("ThumbnaiSecret");
+            writer.String(ptr->thumbnailSecretKey().c_str());
+
+            writer.Key("Height");
+            writer.Double(ptr->size().mHeight);
+
+            writer.Key("Width");
+            writer.Double(ptr->size().mWidth);
+
+            writer.Key("Duration");
+            writer.Int(ptr->duration());
+
+            writer.Key("FileSize");
+            writer.Int64(ptr->fileLength());
+
+            writer.Key("DownStatus");
+            writer.Int((int)ptr->downloadStatus());
+        }
+        break;
+        case EMMessageBody::CUSTOM:
+        {
+            EMCustomMessageBodyPtr ptr = dynamic_pointer_cast<EMCustomMessageBody>(body);
+            writer.Key("CustomEvent");
+            writer.String(ptr->event().c_str());
+
+            writer.Key("CustomParams");
+            writer.StartObject();
+
+            EMCustomMessageBody::EMCustomExts exts = ptr->exts();
+            for (auto it : exts) {
+                writer.Key(it.first.c_str());
+                writer.String(it.second.c_str());
+            }
+            writer.EndObject();
+        }
+        break;
+        default:
+        {
+            //message = NULL;
+        }
+    }
+    writer.EndObject();
 }
 
 void MessageTO::ToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg)
@@ -962,7 +1163,7 @@ void MessageTO::ToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg)
         writer.Bool(msg->messageOnlineState());
 
         writer.Key("AttributesValues");
-        AttributesValue::ToJsonWriter(writer, msg);
+        AttributesValueTO::ToJsonWriter(writer, msg);
 
         writer.Key("LocalTime");
         writer.Int64(msg->localTime());
@@ -984,7 +1185,7 @@ void MessageTO::ToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg)
 
         if (nullptr != msg->threadOverview()) {
             writer.Key("ThreadOverview");
-            ThreadEventTO::ListToJsonWriter(writer, msg->threadOverview());
+            //ThreadEventTO::ListToJsonWriter(writer, msg->threadOverview());
         }
 
         writer.Key("BodyType");
@@ -998,7 +1199,13 @@ void MessageTO::ToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg)
 
 std::string MessageTO::ToJson(EMMessagePtr msg)
 {
-    return std::string();
+    if (nullptr == msg) return std::string();
+
+    StringBuffer s;
+    Writer<StringBuffer> writer(s);
+
+    ToJsonWriter(writer, msg);
+    return s.GetString();
 }
 
 MessageTO * MessageTO::FromEMMessage(const EMMessagePtr &_message)
@@ -1589,23 +1796,7 @@ std::map<std::string, UserInfoTO> UserInfo::Convert2TO(std::map<std::string, Use
     return ptoWrapper;
 }
 
- void MessageReactionChangeTO::ToJsonWriter(Writer<StringBuffer>& writer, EMMessageReactionChangePtr reactionChangePtr)
- {
-     writer.StartObject();
-     {
-         writer.Key("from");
-         writer.String(reactionChangePtr->from().c_str());
-         writer.Key("to");
-         writer.String(reactionChangePtr->to().c_str());
-         writer.Key("messageId");
-         writer.String(reactionChangePtr->messageId().c_str());
-         writer.Key("reactionList");
-         writer.String(MessageReactionTO::ToJson(reactionChangePtr->reactionList()).c_str());
-     }
-     writer.EndObject();
-}
-
- void AttributesValue::ToJsonWriter(Writer<StringBuffer>& writer, EMAttributeValuePtr attribute)
+ void AttributesValueTO::ToJsonWriter(Writer<StringBuffer>& writer, EMAttributeValuePtr attribute)
  {
      if (nullptr == attribute) return;
 
@@ -1705,6 +1896,21 @@ std::map<std::string, UserInfoTO> UserInfo::Convert2TO(std::map<std::string, Use
      writer.EndObject();
  }
 
+ void MessageReactionChangeTO::ToJsonWriter(Writer<StringBuffer>& writer, EMMessageReactionChangePtr reactionChangePtr)
+ {
+     writer.StartObject();
+     {
+         writer.Key("from");
+         writer.String(reactionChangePtr->from().c_str());
+         writer.Key("to");
+         writer.String(reactionChangePtr->to().c_str());
+         writer.Key("messageId");
+         writer.String(reactionChangePtr->messageId().c_str());
+         writer.Key("reactionList");
+         writer.String(MessageReactionTO::ToJson(reactionChangePtr->reactionList()).c_str());
+     }
+     writer.EndObject();
+ }
 
  std::string MessageReactionChangeTO::ToJson(EMMessageReactionChangePtr reactionChangePtr)
  {
@@ -1826,14 +2032,14 @@ static const std::string SilentModeConvType = "conversationType";
      }
  }
 
- std::string SilentModeItemTO::ToJson(EMSilentModeItemPtr ptr)
+ std::string SilentModeItemTO::ToJson(EMSilentModeItemPtr itemPtr)
  {
-     if (nullptr == ptr) return std::string();
+     if (nullptr == itemPtr) return std::string();
 
      StringBuffer s;
      Writer<StringBuffer> writer(s);
 
-     ToJsonWriter(writer, ptr);
+     ToJsonWriter(writer, itemPtr);
      return s.GetString();
  }
 
@@ -1883,8 +2089,8 @@ static const std::string SilentModeConvType = "conversationType";
      }
      writer.EndObject();
  }
-=======
- void AttributesValue::ToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg)
+
+ void AttributesValueTO::ToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg)
  {
      if (nullptr == msg) return;
 
@@ -1899,7 +2105,7 @@ static const std::string SilentModeConvType = "conversationType";
      }
  }
 
- std::string AttributesValue::ToJson(EMMessagePtr msg)
+ std::string AttributesValueTO::ToJson(EMMessagePtr msg)
  {
      StringBuffer s;
      Writer<StringBuffer> writer(s);
@@ -1940,7 +2146,7 @@ static const std::string SilentModeConvType = "conversationType";
 
  }
  */
- void AttributesValue::SetMessageAttr(EMMessagePtr msg, std::string& key, const Value& jnode)
+ void AttributesValueTO::SetMessageAttr(EMMessagePtr msg, std::string& key, const Value& jnode)
  {
      if (nullptr == msg || key.length() == 0 || jnode.IsNull())
          return;
@@ -2035,7 +2241,7 @@ static const std::string SilentModeConvType = "conversationType";
      }
  }
 
- void AttributesValue::SetMessageAttrs(EMMessagePtr msg, std::string json)
+ void AttributesValueTO::SetMessageAttrs(EMMessagePtr msg, std::string json)
  {
      // Json: as least has { and } two characters
      if (nullptr == msg || json.length() <= 2) return;
@@ -2053,4 +2259,112 @@ static const std::string SilentModeConvType = "conversationType";
              }
          }
      }
+ }
+
+ void ThreadEventTO::ToJsonWriter(Writer<StringBuffer>& writer, EMThreadEventPtr threadEventPtr)
+ {
+     if (nullptr == threadEventPtr) return;
+
+     writer.StartObject();
+     {
+         writer.Key("tId");
+         writer.String(threadEventPtr->threadId().c_str());
+
+         writer.Key("MessageId");
+         writer.String(threadEventPtr->threadMessageId().c_str());
+
+         writer.Key("ParentId");
+         writer.String(threadEventPtr->parentId().c_str());
+            
+         writer.Key("Owner");
+         writer.String(threadEventPtr->owner().c_str());
+
+         writer.Key("Name");
+         writer.String(threadEventPtr->threadName().c_str());
+
+         writer.Key("From");
+         writer.String(threadEventPtr->fromId().c_str());
+
+         writer.Key("To");
+         writer.String(threadEventPtr->toId().c_str());
+
+         writer.Key("Operation");
+         writer.String(threadEventPtr->threadOperation().c_str());
+
+         writer.Key("MessageCount");
+         writer.Int(threadEventPtr->membersCount());
+
+         writer.Key("MembersCount");
+         writer.Int(threadEventPtr->messageCount());
+
+         writer.Key("CreateTimestap");
+         writer.Int64(threadEventPtr->createTimestamp());
+
+         writer.Key("UpdateTimestamp");
+         writer.Int64(threadEventPtr->updateTimestamp());
+
+         writer.Key("Timestamp");
+         writer.Int64(threadEventPtr->timestamp());
+
+         if (nullptr != threadEventPtr->lastMessage())
+         {
+             writer.Key("LastMessage");
+             MessageTO::ToJsonWriter(writer, threadEventPtr->lastMessage());
+         }
+     }
+     writer.EndObject();
+ }
+
+ std::string ThreadEventTO::ToJson(EMThreadEventPtr threadEventPtr)
+ {
+     if (nullptr != threadEventPtr) return std::string();
+
+     StringBuffer s;
+     Writer<StringBuffer> writer(s);
+     ToJsonWriter(writer, threadEventPtr);
+     std::string data = s.GetString();
+     return data;
+ }
+
+ std::string ThreadEventTO::ToJson(EMCursorResultRaw<EMThreadEventPtr> cusorResult)
+ {
+     StringBuffer s;
+     Writer<StringBuffer> writer(s);
+
+     writer.StartObject();
+     {
+         writer.Key("NextPageCursor");
+         writer.String(cusorResult.nextPageCursor().c_str());
+
+         writer.Key("Result");
+         std::vector<EMThreadEventPtr> vec = cusorResult.result();
+         writer.StartArray();
+         for (int i = 0; i < vec.size(); i++) {
+             EMThreadEventPtr ptr = vec[i];
+             ToJsonWriter(writer, ptr);
+         }
+         writer.EndArray();
+     }
+     writer.EndObject();
+     
+     std::string data = s.GetString();
+     return data;
+ }
+
+ std::string ThreadEventTO::ToJson(std::map<std::string, EMMessagePtr> map)
+ {
+     if (map.size() == 0) return std::string();
+
+     StringBuffer s;
+     Writer<StringBuffer> writer(s);
+
+     writer.StartObject();
+     for (auto it : map) {
+         writer.Key(it.first.c_str());
+         MessageTO::ToJsonWriter(writer, it.second);
+     }
+     writer.EndObject();
+
+     std::string data = s.GetString();
+     return data;
  }

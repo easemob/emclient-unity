@@ -502,12 +502,12 @@ struct SilentModeParamTO
 
 struct SilentModeItemTO
 {
-    static std::string ToJson(EMSilentModeItemPtr ptr);
+    static std::string ToJson(EMSilentModeItemPtr itemPtr);
     static std::string ToJson(std::map<std::string, EMSilentModeItemPtr> map);
     static void ToJsonWriter(Writer<StringBuffer>& writer, EMSilentModeItemPtr itemPtr);
 };
 
-struct AttributesValue
+struct AttributesValueTO
 {
     static void ToJsonWriter(Writer<StringBuffer>& writer, EMAttributeValuePtr attribute);
     static void ToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg);
@@ -515,6 +515,14 @@ struct AttributesValue
 
     static void SetMessageAttr(EMMessagePtr msg, std::string& key, const Value& jnode);
     static void SetMessageAttrs(EMMessagePtr msg, std::string json);
+};
+
+struct ThreadEventTO
+{
+    static void ToJsonWriter(Writer<StringBuffer>& writer, EMThreadEventPtr threadEventPtr);
+    static std::string ToJson(EMThreadEventPtr threadEventPtr);
+    static std::string ToJson(EMCursorResultRaw<EMThreadEventPtr> cusorResult);
+    static std::string ToJson(std::map<std::string, EMMessagePtr> map);
 };
 
 struct TOArray

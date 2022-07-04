@@ -119,8 +119,8 @@ std::string JsonStringFromObject(const Value& obj)
 std::string JsonStringFromVector(std::vector<std::string>& vec) {
     if (vec.size() == 0) return std::string("");
 
-    StringBuffer strBuf;
-    Writer<StringBuffer> writer(strBuf);
+    StringBuffer s;
+    Writer<StringBuffer> writer(s);
 
     writer.StartArray();
     for (int i = 0; i < vec.size(); i++) {
@@ -128,7 +128,7 @@ std::string JsonStringFromVector(std::vector<std::string>& vec) {
     }
     writer.EndArray();
 
-    std::string data = strBuf.GetString();
+    std::string data = s.GetString();
 
     return data;
 }
@@ -136,8 +136,8 @@ std::string JsonStringFromVector(std::vector<std::string>& vec) {
 std::string JsonStringFromMap(std::map<std::string, std::string>& map) {
     if (map.size() == 0) return std::string("");
 
-    StringBuffer strBuf;
-    Writer<StringBuffer> writer(strBuf);
+    StringBuffer s;
+    Writer<StringBuffer> writer(s);
 
     writer.StartObject();
     for (auto it : map) {
@@ -146,7 +146,27 @@ std::string JsonStringFromMap(std::map<std::string, std::string>& map) {
     }
     writer.EndObject();
 
-    std::string data = strBuf.GetString();
+    std::string data = s.GetString();
+    return data;
+}
+
+std::string JsonStringFromCursorResult(const EMCursorResultRaw<std::string>& cusorResult)
+{
+    StringBuffer s;
+    Writer<StringBuffer> writer(s);
+
+    writer.StartObject();
+
+    writer.Key("NextPageCursor");
+    writer.String(cusorResult.nextPageCursor().c_str());
+
+    writer.Key("Result");
+    std::vector<std::string> vec = cusorResult.result();
+    JsonStringFromVector(vec);
+
+    writer.EndObject();
+
+    std::string data = s.GetString();
     return data;
 }
 
