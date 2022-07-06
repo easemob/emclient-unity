@@ -26,6 +26,7 @@ namespace ChatSDK {
         static string MultiDeviceListener_Obj = "unity_chat_emclient_multidevice_delegate_obj";
         static string PresenceManagerListener_Obj = "unity_chat_emclient_presencemanager_delegate_obj";
         static string ReactionManagerListener_Obj = "unity_chat_emclient_reactionmanager_delegate_obj";
+        static string ThreadManagerListener_Obj = "unity_chat_emclient_threadmanager_delegate_obj";
 
 
         internal ConnectionListener connectionListener;
@@ -36,6 +37,7 @@ namespace ChatSDK {
         internal MultiDeviceListener multiDeviceListener;
         internal PresenceManagerListener presenceManagerListener;
         internal ReactionManagerListener reactionManagerListener;
+        internal ThreadManagerListener threadManagerListener;
 
         internal int CurrentId { get; private set; }
 
@@ -103,6 +105,7 @@ namespace ChatSDK {
             IClient.Instance.GroupManager().ClearDelegates();
             IClient.Instance.RoomManager().ClearDelegates();
             IClient.Instance.PresenceManager().ClearDelegates();
+            IClient.Instance.ThreadManager().ClearDelegates();
             CallbackManager.Instance().multiDeviceListener.delegater.Clear();
             CallbackManager.Instance().CleanAllCallback();
             IClient.Instance.ClearResource();
@@ -289,6 +292,18 @@ namespace ChatSDK {
             {
                 Debug.Log($"DontDestroyOnLoad triggered.");
             }
+
+            GameObject threadManagerObject = new GameObject(ThreadManagerListener_Obj);
+            try
+            {
+                DontDestroyOnLoad(threadManagerObject);
+                threadManagerListener = threadManagerObject.AddComponent<ThreadManagerListener>();
+                threadManagerListener.delegater = new List<IThreadManagerDelegate>();
+            }
+            catch (Exception)
+            {
+                Debug.Log($"DontDestroyOnLoad triggered.");
+            }
         }
 #else
         internal void SetupAllListeners()
@@ -311,8 +326,14 @@ namespace ChatSDK {
             multiDeviceListener = new MultiDeviceListener();
             multiDeviceListener.delegater = new List<IMultiDeviceDelegate>();
 
+            presenceManagerListener = new PresenceManagerListener();
+            presenceManagerListener.delegater = new List<IPresenceManagerDelegate>();
+
             reactionManagerListener = new ReactionManagerListener();
             reactionManagerListener.delegater = new List<IReactionManagerDelegate>();
+
+            threadManagerListener = new ThreadManagerListener();
+            threadManagerListener.delegater = new List<IThreadManagerDelegate>();
         }
 #endif
         public void OnSuccess(string jsonString) {

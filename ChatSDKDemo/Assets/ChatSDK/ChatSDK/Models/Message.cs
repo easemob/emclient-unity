@@ -72,7 +72,6 @@ namespace ChatSDK
         public bool HasReadAck = false;
 
         public bool IsNeedGroupAck = false;
-
         public bool IsRead = false;
         public bool MessageOnlineState = false;
 
@@ -88,6 +87,11 @@ namespace ChatSDK
 
         public List<MessageReaction> ReactionList;
         public Dictionary<string, MessageReaction> ReactionMap;
+
+        public bool IsThread = false;
+        public string MucParentId;
+        public string MsgParentId;
+        public ThreadEvent ThreadOverview;
 
         internal void SetReactionMap()
         {
@@ -307,7 +311,22 @@ namespace ChatSDK
                     Debug.Log($"111 : ?? {jo["attributes"]}");
                     Attributes = TransformTool.JsonStringToAttributes(jo["attributes"].ToString());
                     Body = IMessageBody.Constructor(jo["body"].Value, jo["bodyType"].Value);
-                    //TODO: need to add IsNeedGroupAck, IsRead and MessageOnlineState
+
+                    RecallBy = jo["recallBy"].Value;
+                    IsNeedGroupAck = jo["isNeedGroupAck"].AsBool;
+                    IsRead = jo["isRead"].AsBool;
+                    MessageOnlineState = jo["messageOnlineState"].AsBool;
+
+                    ReactionList = MessageReaction.ListFromJson(jo["reactionList"].ToString());
+                    SetReactionMap();
+
+                    IsThread = jo["isThread"].AsBool;
+                    MucParentId = jo["mucParentId"].Value;
+                    MsgParentId = jo["msgParentId"].Value;
+                    if (jo["threadOverview"].IsNull)
+                        ThreadOverview = null;
+                    else
+                        ThreadOverview = ThreadEvent.FromJson(jo["threadOverview"].ToString());
                 }
             }
         }
@@ -315,7 +334,6 @@ namespace ChatSDK
         //public JSONObject ToJson()
         internal JSONObject ToJson()
         {
-            //TODO: need to add IsNeedGroupAck
             JSONObject jo = new JSONObject();
             jo.Add("from", From);
             jo.Add("to", To);
@@ -332,6 +350,19 @@ namespace ChatSDK
             jo.Add("attributes", TransformTool.JsonStringFromAttributes(Attributes));
             jo.Add("body", Body.ToJson().ToString());
             jo.Add("bodyType", Body.TypeString());
+
+            jo.Add("recallBy", RecallBy);
+            jo.Add("isNeedGroupAck", IsNeedGroupAck);
+            jo.Add("isRead", IsRead);
+            jo.Add("messageOnlineState", MessageOnlineState);
+
+            jo.Add("reactionList", MessageReaction.ListToJson(ReactionList));
+
+            jo.Add("isThread", IsThread);
+            jo.Add("mucParentId", MucParentId);
+            jo.Add("msgParentId", MsgParentId);
+            if(null != ThreadOverview)
+                jo.Add("threadOverview", ThreadOverview.ToJson());
             return jo;
         }
 

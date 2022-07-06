@@ -83,6 +83,14 @@ namespace ChatSDK
     //IReactionManagerDelegate
     internal delegate void MessageReactionDidChange([MarshalAs(UnmanagedType.LPTStr)] string json);
 
+    //IThreadManagerDelegate
+    internal delegate void OnCreatThread([MarshalAs(UnmanagedType.LPTStr)] string json);
+    internal delegate void OnUpdateMyThread([MarshalAs(UnmanagedType.LPTStr)] string json);
+    internal delegate void OnThreadNotifyChange([MarshalAs(UnmanagedType.LPTStr)] string json);
+    internal delegate void OnLeaveThread([MarshalAs(UnmanagedType.LPTStr)] string json, int i);
+    internal delegate void OnMemberJoinedThread([MarshalAs(UnmanagedType.LPTStr)] string json);
+    internal delegate void OnMemberLeaveThread([MarshalAs(UnmanagedType.LPTStr)] string json);
+
     internal sealed class ConnectionHub
     {
         //events handler
@@ -937,6 +945,105 @@ namespace ChatSDK
                     foreach (IReactionManagerDelegate listener in CallbackManager.Instance().reactionManagerListener.delegater)
                     {
                         listener.MessageReactionDidChange(list);
+                    }
+                });
+            };
+
+        }
+    }
+
+    internal sealed class ThreadManagerHub
+    {
+        internal OnCreatThread OnCreatThread_;
+        internal OnUpdateMyThread OnUpdateMyThread_;
+        internal OnThreadNotifyChange OnThreadNotifyChange_;
+        internal OnLeaveThread OnLeaveThread_;
+        internal OnMemberJoinedThread OnMemberJoinedThread_;
+        internal OnMemberLeaveThread OnMemberLeaveThread_;
+
+        internal ThreadManagerHub()
+        {
+            OnCreatThread_ = (string json) =>
+            {
+                Debug.Log("OnCreatThread received.");
+
+                ThreadEvent thread = ThreadEvent.FromJson(json);
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
+                    {
+                        listener.OnCreatThread(thread);
+                    }
+                });
+            };
+
+            OnUpdateMyThread_ = (string json) =>
+            {
+                Debug.Log("OnUpdateMyThread received.");
+
+                ThreadEvent thread = ThreadEvent.FromJson(json);
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
+                    {
+                        listener.OnUpdateMyThread(thread);
+                    }
+                });
+            };
+
+            OnThreadNotifyChange_ = (string json) =>
+            {
+                Debug.Log("OnThreadNotifyChange received.");
+
+                ThreadEvent thread = ThreadEvent.FromJson(json);
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
+                    {
+                        listener.OnThreadNotifyChange(thread);
+                    }
+                });
+            };
+
+            OnLeaveThread_ = (string json, int i) =>
+            {
+                Debug.Log("OnLeaveThread received.");
+
+                ThreadEvent thread = ThreadEvent.FromJson(json);
+                ThreadLeaveReason reason = ThreadEvent.ThreadLeaveReasonFromInt(i);
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
+                    {
+                        listener.OnLeaveThread(thread, reason);
+                    }
+                });
+            };
+
+            OnMemberJoinedThread_ = (string json) =>
+            {
+                Debug.Log("OnMemberJoinedThread received.");
+
+                ThreadEvent thread = ThreadEvent.FromJson(json);
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
+                    {
+                        listener.OnMemberJoinedThread(thread);
+                    }
+                });
+            };
+
+            OnMemberLeaveThread_ = (string json) =>
+            {
+                Debug.Log("OnMemberLeaveThread received.");
+
+                ThreadEvent thread = ThreadEvent.FromJson(json);
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
+                    {
+                        listener.OnMemberLeaveThread(thread);
                     }
                 });
             };

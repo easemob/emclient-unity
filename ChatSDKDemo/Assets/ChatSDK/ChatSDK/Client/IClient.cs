@@ -41,6 +41,7 @@ namespace ChatSDK
         private IConversationManager conversationImp = null;
         private IUserInfoManager userInfoImp = null;
         private IPresenceManager presenceImp = null;
+        private IThreadManager threadImp = null;
 
         /// <summary>
         /// 获取聊天管理对象
@@ -183,6 +184,19 @@ namespace ChatSDK
             presenceImp = new PresenceManager_Mac(instance);
 #endif
             return presenceImp;
+        }
+
+        internal IThreadManager ThreadManager()
+        {
+            if (threadImp != null) { return threadImp; }
+#if UNITY_ANDROID
+            threadImp = new ThreadManager_Android();
+#elif UNITY_IOS
+            threadImp = new ThreadManager_iOS();
+#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+            threadImp = new ThreadManager_Mac(instance);
+#endif
+            return threadImp;
         }
 
         /// <summary>

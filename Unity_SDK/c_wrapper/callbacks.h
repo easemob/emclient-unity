@@ -12,6 +12,7 @@
 #include "emconnectioncallback_listener.h"
 #include "empresencemanager_listener.h"
 #include "emreactionmanager_listener.h"
+#include "emthreadmanager_listener.h"
 
 using namespace easemob;
 
@@ -89,6 +90,15 @@ using namespace easemob;
 
     //ReactionManager Listener
     typedef void(__stdcall* FUNC_MessageReactionDidChange)(const char* json);
+
+    //ThreadManager Listener
+    typedef void(__stdcall* FUNC_OnCreatThread)(const char* json);
+    typedef void(__stdcall* FUNC_OnUpdateMyThread)(const char* json);
+    typedef void(__stdcall* FUNC_OnThreadNotifyChange)(const char* json);
+    typedef void(__stdcall* FUNC_OnLeaveThread)(const char* json, int reason);
+    typedef void(__stdcall* FUNC_OnMemberJoinedThread)(const char* json);
+    typedef void(__stdcall* FUNC_OnMemberLeave)(const char* json);
+
 #else
     //Callback
     typedef void(*FUNC_OnSuccess)(int callbackId);
@@ -161,6 +171,14 @@ using namespace easemob;
 
     //ReactionManager Listener
     typedef void(*FUNC_MessageReactionDidChange)(const char* json);
+
+    //ThreadManager Listener
+    typedef void(*FUNC_OnCreatThread)(const char* json);
+    typedef void(*FUNC_OnUpdateMyThread)(const char* json);
+    typedef void(*FUNC_OnThreadNotifyChange)(const char* json);
+    typedef void(*FUNC_OnLeaveThread)(const char* json, int reason);
+    typedef void(*FUNC_OnMemberJoinedThread)(const char* json);
+    typedef void(*FUNC_OnMemberLeave)(const char* json);
 
 #endif
 
@@ -866,7 +884,8 @@ public:
         LOG("receive onPresenceUpdated, presence count: %d!", size);
         
         if(0 == size) {
-            onPresenceUpdated_(nullptr, 0);
+            if(onPresenceUpdated_)
+                onPresenceUpdated_(nullptr, 0);
         } else {
             
             PresenceTO** data = new PresenceTO*[size];
@@ -877,7 +896,8 @@ public:
                 dataLocal[i] = ptoWrapper;
                 data[i] = &(dataLocal[i].presenceTO);
             }
-            onPresenceUpdated_((void **)data, (int)size);
+            if(onPresenceUpdated_)
+                onPresenceUpdated_((void **)data, (int)size);
             delete []data;
             delete []dataLocal;
         }
@@ -898,10 +918,70 @@ public:
         LOG("receive messageReactionDidChange, reactionChange count: %d!", size);
 
         std::string json = MessageReactionChangeTO::ToJson(list);
-        messageReactionDidChange_(json.c_str());
+        if(messageReactionDidChange_)
+            messageReactionDidChange_(json.c_str());
     }
 private:
     FUNC_MessageReactionDidChange messageReactionDidChange_;
 };
 
+class ThreadManagerListener : public EMThreadManagerListener
+{
+public:
+    ThreadManagerListener(FUNC_OnCreatThread OnCreatThread, FUNC_OnUpdateMyThread OnUpdateMyThread, FUNC_OnThreadNotifyChange OnThreadNotifyChange,
+        FUNC_OnLeaveThread OnLeaveThread, FUNC_OnMemberJoinedThread OnMemberJoined, FUNC_OnMemberLeave OnMemberLeave) :
+        OnCreatThread_(OnCreatThread), OnUpdateMyThread_(OnUpdateMyThread), OnThreadNotifyChange_(OnThreadNotifyChange),
+        OnLeaveThread_(OnLeaveThread), OnMemberJoined_(OnMemberJoined), OnMemberLeave_(OnMemberLeave) {}
+
+    void onCreatThread(const EMThreadEventPtr event) override {
+        LOG("receive EMThreadEventPtr");
+        std::string json = ThreadEventTO::ToJson(event);
+        if (OnCreatThread_)
+            OnCreatThread_(json.c_str());
+    }
+
+    void onUpdateMyThread(const EMThreadEventPtr event) override {
+        LOG("receive onUpdateMyThread");
+        std::string json = ThreadEventTO::ToJson(event);
+        if (OnUpdateMyThread_)
+            OnUpdateMyThread_(json.c_str());
+    }
+
+    void onThreadNotifyChange(const EMThreadEventPtr event) override {
+        LOG("receive onThreadNotifyChange");
+        std::string json = ThreadEventTO::ToJson(event);
+        if (OnThreadNotifyChange_)
+            OnThreadNotifyChange_(json.c_str());
+    }
+
+    void onLeaveThread(const EMThreadEventPtr event, EMThreadLeaveReason reason) override {
+        LOG("receive onLeaveThread");
+        std::string json = ThreadEventTO::ToJson(event);
+        int i = ThreadEventTO::ThreadLeaveReasonToInt(reason);
+        if (OnLeaveThread_)
+            OnLeaveThread_(json.c_str(), i);
+    }
+
+    void onMemberJoined(const EMThreadEventPtr event) override {
+        LOG("receive onMemberJoined");
+        std::string json = ThreadEventTO::ToJson(event);
+        if (OnMemberJoined_)
+            OnMemberJoined_(json.c_str());
+    }
+
+    void onMemberLeave(const EMThreadEventPtr event) override {
+        LOG("receive onMemberLeave");
+        std::string json = ThreadEventTO::ToJson(event);
+        if (OnMemberLeave_)
+            OnMemberLeave_(json.c_str());
+    }
+
+private:
+    FUNC_OnCreatThread OnCreatThread_;
+    FUNC_OnUpdateMyThread OnUpdateMyThread_;
+    FUNC_OnThreadNotifyChange OnThreadNotifyChange_;
+    FUNC_OnLeaveThread OnLeaveThread_;
+    FUNC_OnMemberJoinedThread OnMemberJoined_;
+    FUNC_OnMemberLeave OnMemberLeave_;
+};
 #endif // _CALLBACKS_H_

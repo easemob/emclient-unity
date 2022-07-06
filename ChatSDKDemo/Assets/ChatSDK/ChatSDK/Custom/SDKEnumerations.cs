@@ -341,4 +341,11 @@
         MentionOnly,
         None,
     }
+
+    public enum ThreadLeaveReason
+    {
+        LEAVE = 0,
+        BE_KICKED,
+        DESTROYED,
+    }
 }

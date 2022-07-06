@@ -807,11 +807,11 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
                             Debug.Log($"{key}|STRING: {a.GetAttributeValue(AttributeValueType.STRING)}");
                         }
                         break;
-                    case AttributeValueType.STRVECTOR:
+                    /*case AttributeValueType.STRVECTOR:
                         {
                             Debug.Log($"{key}|STRVECTOR: {a.GetAttributeValue(AttributeValueType.STRVECTOR)}");
                         }
-                        break;
+                        break;*/
                     case AttributeValueType.JSONSTRING:
                         {
                             Debug.Log($"{key}|JSONSTRING: {a.GetAttributeValue(AttributeValueType.JSONSTRING)}");

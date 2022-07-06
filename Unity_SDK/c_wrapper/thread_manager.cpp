@@ -17,7 +17,25 @@
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/prettywriter.h"
 
-HYPHENATE_API void Threadanager_GetThreadWithThreadId(void* client, int callbackId, const char* threadId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+ThreadManagerListener* gThreadListener = nullptr;
+
+HYPHENATE_API void ThreadManager_AddListener(void* client,
+    FUNC_OnCreatThread OnCreatThread,
+    FUNC_OnUpdateMyThread OnUpdateMyThread,
+    FUNC_OnThreadNotifyChange OnThreadNotifyChange,
+    FUNC_OnLeaveThread OnLeaveThread,
+    FUNC_OnMemberJoinedThread OnMemberJoined,
+    FUNC_OnMemberLeave OnMemberLeave
+)
+{
+    if (nullptr == gThreadListener) { //only set once!
+        gThreadListener = new ThreadManagerListener(OnCreatThread, OnUpdateMyThread, OnThreadNotifyChange, OnLeaveThread, OnMemberJoined, OnMemberLeave);
+        CLIENT->getThreadManager().addListener(gThreadListener);
+        LOG("New ThreadManager listener and hook it.");
+    }
+}
+
+HYPHENATE_API void ThreadManager_GetThreadWithThreadId(void* client, int callbackId, const char* threadId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if (!MandatoryCheck(threadId, error)) {
@@ -30,7 +48,7 @@ HYPHENATE_API void Threadanager_GetThreadWithThreadId(void* client, int callback
         EMError error;
         EMThreadEventPtr result = CLIENT->getThreadManager().getThreadWithThreadId(threadIdStr, error);
         if (EMError::EM_NO_ERROR == error.mErrorCode) {
-            LOG("Threadanager_GetThreadWithThreadId succeeds: group:%s", threadIdStr.c_str());
+            LOG("ThreadManager_GetThreadWithThreadId succeeds: group:%s", threadIdStr.c_str());
             if (onSuccess) {
                 std::string json = ThreadEventTO::ToJson(result);
                 const char* data[1] = { json.c_str() };
@@ -38,7 +56,7 @@ HYPHENATE_API void Threadanager_GetThreadWithThreadId(void* client, int callback
             }
         }
         else {
-            LOG("Threadanager_GetThreadWithThreadId failed: threadId=%s, code=%d, desc=%s", threadIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
+            LOG("ThreadManager_GetThreadWithThreadId failed: threadId=%s, code=%d, desc=%s", threadIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
         });
@@ -75,7 +93,7 @@ HYPHENATE_API void ThreadManager_CreateThread(void* client, int callbackId, cons
     t.detach();
 }
 
-HYPHENATE_API void Threadanager_JoinThread(void* client, int callbackId, const char* threadId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+HYPHENATE_API void ThreadManager_JoinThread(void* client, int callbackId, const char* threadId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if (!MandatoryCheck(threadId, error)) {
@@ -89,7 +107,7 @@ HYPHENATE_API void Threadanager_JoinThread(void* client, int callbackId, const c
         EMError error;
         EMThreadEventPtr result = CLIENT->getThreadManager().joinThread(threadIdStr, error);
         if (EMError::EM_NO_ERROR == error.mErrorCode) {
-            LOG("Threadanager_JoinThread succeeds: group:%s", threadIdStr.c_str());
+            LOG("ThreadManager_JoinThread succeeds: group:%s", threadIdStr.c_str());
             if (onSuccess) {
                 std::string json = ThreadEventTO::ToJson(result);
                 const char* data[1] = { json.c_str() };
@@ -97,14 +115,14 @@ HYPHENATE_API void Threadanager_JoinThread(void* client, int callbackId, const c
             }
         }
         else {
-            LOG("Threadanager_JoinThread failed: threadId=%s, code=%d, desc=%s", threadIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
+            LOG("ThreadManager_JoinThread failed: threadId=%s, code=%d, desc=%s", threadIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
         });
     t.detach();
 }
 
-HYPHENATE_API void Threadanager_LeaveThread(void* client, int callbackId, const char* threadId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+HYPHENATE_API void ThreadManager_LeaveThread(void* client, int callbackId, const char* threadId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if (!MandatoryCheck(threadId, error)) {
@@ -118,20 +136,20 @@ HYPHENATE_API void Threadanager_LeaveThread(void* client, int callbackId, const 
         EMError error;
         CLIENT->getThreadManager().leaveThread(threadIdStr, error);
         if (EMError::EM_NO_ERROR == error.mErrorCode) {
-            LOG("Threadanager_JoinThread succeeds: group:%s", threadIdStr.c_str());
+            LOG("ThreadManager_LeaveThread succeeds: group:%s", threadIdStr.c_str());
             if (onSuccess) {
                 onSuccess(callbackId);
             }
         }
         else {
-            LOG("Threadanager_JoinThread failed: threadId=%s, code=%d, desc=%s", threadIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
+            LOG("ThreadManager_LeaveThread failed: threadId=%s, code=%d, desc=%s", threadIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
         });
     t.detach();
 }
 
-HYPHENATE_API void Threadanager_DestroyThread(void* client, int callbackId, const char* threadId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+HYPHENATE_API void ThreadManager_DestroyThread(void* client, int callbackId, const char* threadId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if (!MandatoryCheck(threadId, error)) {
@@ -145,20 +163,20 @@ HYPHENATE_API void Threadanager_DestroyThread(void* client, int callbackId, cons
         EMError error;
         CLIENT->getThreadManager().destroyThread(threadIdStr, error);
         if (EMError::EM_NO_ERROR == error.mErrorCode) {
-            LOG("Threadanager_DestroyThread succeeds: group:%s", threadIdStr.c_str());
+            LOG("ThreadManager_DestroyThread succeeds: group:%s", threadIdStr.c_str());
             if (onSuccess) {
                 onSuccess(callbackId);
             }
         }
         else {
-            LOG("Threadanager_DestroyThread failed: threadId=%s, code=%d, desc=%s", threadIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
+            LOG("ThreadManager_DestroyThread failed: threadId=%s, code=%d, desc=%s", threadIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
         });
     t.detach();
 }
 
-HYPHENATE_API void Threadanager_RemoveThreadMember(void* client, int callbackId, const char* threadId, const char* username, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+HYPHENATE_API void ThreadManager_RemoveThreadMember(void* client, int callbackId, const char* threadId, const char* username, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if (!MandatoryCheck(threadId, username, error)) {
@@ -173,20 +191,20 @@ HYPHENATE_API void Threadanager_RemoveThreadMember(void* client, int callbackId,
         EMError error;
         CLIENT->getThreadManager().removeThreadMember(threadIdStr, usernameStr, error);
         if (EMError::EM_NO_ERROR == error.mErrorCode) {
-            LOG("Threadanager_RemoveThreadMember succeeds: group:%s", threadIdStr.c_str());
+            LOG("ThreadManager_RemoveThreadMember succeeds: group:%s", threadIdStr.c_str());
             if (onSuccess) {
                 onSuccess(callbackId);
             }
         }
         else {
-            LOG("Threadanager_RemoveThreadMember failed: threadId=%s, code=%d, desc=%s", threadIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
+            LOG("ThreadManager_RemoveThreadMember failed: threadId=%s, code=%d, desc=%s", threadIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
         });
     t.detach();
 }
 
-HYPHENATE_API void Threadanager_ChangeThreadSubject(void* client, int callbackId, const char* threadId, const char* newSubject, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+HYPHENATE_API void ThreadManager_ChangeThreadSubject(void* client, int callbackId, const char* threadId, const char* newSubject, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if (!MandatoryCheck(threadId, newSubject, error)) {
@@ -201,20 +219,20 @@ HYPHENATE_API void Threadanager_ChangeThreadSubject(void* client, int callbackId
         EMError error;
         CLIENT->getThreadManager().changeThreadSubject(threadIdStr, newSubjectStr, error);
         if (EMError::EM_NO_ERROR == error.mErrorCode) {
-            LOG("Threadanager_ChangeThreadSubject succeeds: group:%s", threadIdStr.c_str());
+            LOG("ThreadManager_ChangeThreadSubject succeeds: group:%s", threadIdStr.c_str());
             if (onSuccess) {
                 onSuccess(callbackId);
             }
         }
         else {
-            LOG("Threadanager_ChangeThreadSubject failed: threadId=%s, code=%d, desc=%s", threadIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
+            LOG("ThreadManager_ChangeThreadSubject failed: threadId=%s, code=%d, desc=%s", threadIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
         });
     t.detach();
 }
 
-HYPHENATE_API void Threadanager_FetchThreadMembers(void* client, int callbackId, const char* threadId, const char* cursor, int pageSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+HYPHENATE_API void ThreadManager_FetchThreadMembers(void* client, int callbackId, const char* threadId, const char* cursor, int pageSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if (!MandatoryCheck(threadId, error)) {
@@ -229,7 +247,7 @@ HYPHENATE_API void Threadanager_FetchThreadMembers(void* client, int callbackId,
         EMError error;
         EMCursorResultRaw<std::string> result = CLIENT->getThreadManager().fetchThreadMembers(threadIdStr, cursorStr, pageSize, error);
         if (EMError::EM_NO_ERROR == error.mErrorCode) {
-            LOG("Threadanager_FetchThreadMembers succeeds: group:%s", threadIdStr.c_str());
+            LOG("ThreadManager_FetchThreadMembers succeeds: group:%s", threadIdStr.c_str());
             if (onSuccess) {
                 std::string json = JsonStringFromCursorResult(result);
                 const char* data[1] = { json.c_str() };
@@ -237,14 +255,14 @@ HYPHENATE_API void Threadanager_FetchThreadMembers(void* client, int callbackId,
             }
         }
         else {
-            LOG("Threadanager_FetchThreadMembers failed: threadId=%s, code=%d, desc=%s", threadIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
+            LOG("ThreadManager_FetchThreadMembers failed: threadId=%s, code=%d, desc=%s", threadIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
         });
     t.detach();
 }
 
-HYPHENATE_API void Threadanager_FetchThreadListOfGroup(void* client, int callbackId, const char* cursor, int pageSize, const char* groupId, bool joined, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+HYPHENATE_API void ThreadManager_FetchThreadListOfGroup(void* client, int callbackId, const char* cursor, int pageSize, const char* groupId, bool joined, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if (!MandatoryCheck(groupId, error)) {
@@ -259,7 +277,7 @@ HYPHENATE_API void Threadanager_FetchThreadListOfGroup(void* client, int callbac
         EMError error;
         EMCursorResultRaw<EMThreadEventPtr> result = CLIENT->getThreadManager().fetchThreadListOfGroup(cursorStr, pageSize, groupIdStr, joined, error);
         if (EMError::EM_NO_ERROR == error.mErrorCode) {
-            LOG("Threadanager_FetchThreadMembers succeeds");
+            LOG("ThreadManager_FetchThreadListOfGroup succeeds");
             if (onSuccess) {
                 std::string json = ThreadEventTO::ToJson(result);
                 const char* data[1] = { json.c_str() };
@@ -267,14 +285,14 @@ HYPHENATE_API void Threadanager_FetchThreadListOfGroup(void* client, int callbac
             }
         }
         else {
-            LOG("Threadanager_FetchThreadMembers failed: code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
+            LOG("ThreadManager_FetchThreadListOfGroup failed: code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
             if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
         });
     t.detach();
 }
 
-HYPHENATE_API void Threadanager_FetchMineJoinedThreadList(void* client, int callbackId, const char* cursor, int pageSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+HYPHENATE_API void ThreadManager_FetchMineJoinedThreadList(void* client, int callbackId, const char* cursor, int pageSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     std::string cursorStr = OptionalStrParamCheck(cursor);
 
@@ -282,7 +300,7 @@ HYPHENATE_API void Threadanager_FetchMineJoinedThreadList(void* client, int call
         EMError error;
         EMCursorResultRaw<EMThreadEventPtr> result = CLIENT->getThreadManager().fetchMineJoinedThreadList(cursorStr, pageSize, error);
         if (EMError::EM_NO_ERROR == error.mErrorCode) {
-            LOG("Threadanager_FetchMineJoinedThreadList succeeds");
+            LOG("ThreadManager_FetchMineJoinedThreadList succeeds");
             if (onSuccess) {
                 std::string json = ThreadEventTO::ToJson(result);
                 const char* data[1] = { json.c_str() };
@@ -290,14 +308,14 @@ HYPHENATE_API void Threadanager_FetchMineJoinedThreadList(void* client, int call
             }
         }
         else {
-            LOG("Threadanager_FetchMineJoinedThreadList failed: code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
+            LOG("ThreadManager_FetchMineJoinedThreadList failed: code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
             if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
         });
     t.detach();
 }
 
-HYPHENATE_API void Threadanager_GetThreadDetail(void* client, int callbackId, const char* threadId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+HYPHENATE_API void ThreadManager_GetThreadDetail(void* client, int callbackId, const char* threadId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     EMError error;
     if (!MandatoryCheck(threadId, error)) {
@@ -310,7 +328,7 @@ HYPHENATE_API void Threadanager_GetThreadDetail(void* client, int callbackId, co
         EMError error;
         EMThreadEventPtr result = CLIENT->getThreadManager().getThreadDetail(threadIdStr, error);
         if (EMError::EM_NO_ERROR == error.mErrorCode) {
-            LOG("Threadanager_GetThreadDetail succeeds: group:%s", threadIdStr.c_str());
+            LOG("ThreadManager_GetThreadDetail succeeds: group:%s", threadIdStr.c_str());
             if (onSuccess) {
                 std::string json = ThreadEventTO::ToJson(result);
                 const char* data[1] = { json.c_str() };
@@ -318,14 +336,14 @@ HYPHENATE_API void Threadanager_GetThreadDetail(void* client, int callbackId, co
             }
         }
         else {
-            LOG("Threadanager_GetThreadDetail failed: threadId=%s, code=%d, desc=%s", threadIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
+            LOG("ThreadManager_GetThreadDetail failed: threadId=%s, code=%d, desc=%s", threadIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
         });
     t.detach();
 }
 
-HYPHENATE_API void Threadanager_GetLastMessageAccordingThreads(void* client, int callbackId, const char* threadIds[], int size, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+HYPHENATE_API void ThreadManager_GetLastMessageAccordingThreads(void* client, int callbackId, const char* threadIds[], int size, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     std::vector<std::string> vec;
     for (int i = 0; i < size; i++) {
@@ -336,7 +354,7 @@ HYPHENATE_API void Threadanager_GetLastMessageAccordingThreads(void* client, int
         EMError error;
         std::map<std::string, EMMessagePtr> result = CLIENT->getThreadManager().getLastMessageAccordingThreads(vec, error);
         if (EMError::EM_NO_ERROR == error.mErrorCode) {
-            LOG("Threadanager_GetLastMessageAccordingThreads succeeds");
+            LOG("ThreadManager_GetLastMessageAccordingThreads succeeds");
             if (onSuccess) {
                 std::string json = ThreadEventTO::ToJson(result);
                 const char* data[1] = { json.c_str() };
@@ -344,7 +362,7 @@ HYPHENATE_API void Threadanager_GetLastMessageAccordingThreads(void* client, int
             }
         }
         else {
-            LOG("Threadanager_GetLastMessageAccordingThreads failed: code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
+            LOG("ThreadManager_GetLastMessageAccordingThreads failed: code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
             if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
         });

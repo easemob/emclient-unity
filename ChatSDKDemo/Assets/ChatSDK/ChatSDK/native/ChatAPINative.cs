@@ -612,6 +612,49 @@ namespace ChatSDK{
 		internal static extern void PresenceManager_FetchPresenceStatus(IntPtr client, int callbackId,
 			[MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 3)] string[] members, int size, OnSuccessResult onSuccessResult, OnErrorV2 onError);
 
+		//ThreadManager
+
+		[DllImport(MyLibName)]
+		internal static extern void ThreadManager_AddListener(IntPtr client, OnCreatThread onCreatThread,
+		OnUpdateMyThread onUpdateMyThread, OnThreadNotifyChange onThreadNotifyChange, OnLeaveThread onLeaveThread,
+		OnMemberJoinedThread onMemberJoinedThread, OnMemberLeaveThread onMemberLeaveThread);
+
+		[DllImport(MyLibName)]
+		internal static extern void ThreadManager_GetThreadWithThreadId(IntPtr client, int callbackId, string threadId, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void ThreadManager_CreateThread(IntPtr client, int callbackId, [In, MarshalAs(UnmanagedType.LPTStr)] string threadName, string msgId, string groupId, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void ThreadManager_JoinThread(IntPtr client, int callbackId, string threadId, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void ThreadManager_LeaveThread(IntPtr client, int callbackId, string threadId, OnSuccess onSuccess, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void ThreadManager_DestroyThread(IntPtr client, int callbackId, string threadId, OnSuccess onSuccess, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void ThreadManager_RemoveThreadMember(IntPtr client, int callbackId, string threadId, string username, OnSuccess onSuccess, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void ThreadManager_ChangeThreadSubject(IntPtr client, int callbackId, string threadId, [In, MarshalAs(UnmanagedType.LPTStr)] string newSubject, OnSuccess onSuccess, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void ThreadManager_FetchThreadMembers(IntPtr client, int callbackId, string threadId, string cursor, int pageSize, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void ThreadManager_FetchThreadListOfGroup(IntPtr client, int callbackId, string cursor, int pageSize, string groupId, bool joined, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void ThreadManager_FetchMineJoinedThreadList(IntPtr client, int callbackId, string cursor, int pageSize, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void ThreadManager_GetThreadDetail(IntPtr client, int callbackId, string threadId, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void ThreadManager_GetLastMessageAccordingThreads(IntPtr client, int callbackId, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 3)] string[] threadIds, int size, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+
 		#endregion native API import
 	}
 }

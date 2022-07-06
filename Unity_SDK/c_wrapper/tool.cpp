@@ -157,12 +157,12 @@ std::string JsonStringFromCursorResult(const EMCursorResultRaw<std::string>& cus
 
     writer.StartObject();
 
-    writer.Key("NextPageCursor");
+    writer.Key("cusor");
     writer.String(cusorResult.nextPageCursor().c_str());
 
-    writer.Key("Result");
-    std::vector<std::string> vec = cusorResult.result();
-    JsonStringFromVector(vec);
+    writer.Key("list");
+    std::vector<std::string> vec = cusorResult.result();    
+    writer.String(JsonStringFromVector(vec).c_str());
 
     writer.EndObject();
 

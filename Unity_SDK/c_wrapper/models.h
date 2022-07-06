@@ -21,6 +21,7 @@
 #include "empresence.h"
 #include "emmessagereaction.h"
 #include "emmessagereactionchange.h"
+#include "emthreadmanager_interface.h"
 #include "json.hpp"
 
 #ifndef RAPIDJSON_NAMESPACE
@@ -185,9 +186,33 @@ public:
     static void FreeResource(MessageTO * mto);
     //virtual ~MessageTO();
 
+    static int MsgTypeToInt(EMMessage::EMChatType type);
+    static EMMessage::EMChatType MsgTypeFromInt(int i);
+
+    static int StatusToInt(EMMessage::EMMessageStatus status);
+    static EMMessage::EMMessageStatus StatusFromInt(int i);
+
+    static std::string MessageDirectionToString(EMMessage::EMMessageDirection direction);
+    static EMMessage::EMMessageDirection MessageDirectionFromString(std::string str);
+
+    static std::string BodyTypeToString(EMMessageBody::EMMessageBodyType btype);
+    static EMMessageBody::EMMessageBodyType BodyTypeFromString(std::string str);
+
+    static int DownLoadStatusToInt(EMFileMessageBody::EMDownloadStatus download_status);
+    static EMFileMessageBody::EMDownloadStatus DownLoadStatusFromInt(int i);
+
+    static std::string CustomExtsToJson(EMCustomMessageBody::EMCustomExts& exts);
+    static EMCustomMessageBody::EMCustomExts CustomExtsFromJson(std::string json);
+
     static void BodyToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg);
+    static std::string BodyToJson(EMMessagePtr msg);
     static void ToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg);
     static std::string ToJson(EMMessagePtr msg);
+
+    static EMMessageBodyPtr BodyFromJsonObject(const Value& jnode);
+    static EMMessageBodyPtr BodyFromJson(std::string json);
+    static EMMessagePtr FromJsonObject(const Value& jnode);
+    static EMMessagePtr FromJson(std::string json);
 
 protected:
     MessageTO(const EMMessagePtr &message);
@@ -486,6 +511,11 @@ struct MessageReactionTO
     static std::string ToJson(EMMessage& msg);
     static std::string ToJson(std::map<std::string, EMMessageReactionList> map);
     static void ListToJsonWriter(Writer<StringBuffer>& writer, EMMessageReactionList list);
+
+    static EMMessageReactionPtr FromJsonObject(const Value& jnode);
+    static EMMessageReactionList ListFromJsonObject(const Value& jnode);
+    static EMMessageReactionList ListFromJson(std::string json);
+
 };
 
 struct MessageReactionChangeTO
@@ -514,6 +544,7 @@ struct AttributesValueTO
     static std::string ToJson(EMMessagePtr msg);
 
     static void SetMessageAttr(EMMessagePtr msg, std::string& key, const Value& jnode);
+    static void SetMessageAttrs(EMMessagePtr msg, const Value& jnode);
     static void SetMessageAttrs(EMMessagePtr msg, std::string json);
 };
 
@@ -522,7 +553,13 @@ struct ThreadEventTO
     static void ToJsonWriter(Writer<StringBuffer>& writer, EMThreadEventPtr threadEventPtr);
     static std::string ToJson(EMThreadEventPtr threadEventPtr);
     static std::string ToJson(EMCursorResultRaw<EMThreadEventPtr> cusorResult);
+    static std::string ToJson(std::vector<EMThreadEventPtr>& vec);
     static std::string ToJson(std::map<std::string, EMMessagePtr> map);
+    static EMThreadEventPtr FromJsonObject(const Value& jnode);
+    static EMThreadEventPtr FromJson(std::string json);
+
+    static EMThreadLeaveReason ThreadLeaveReasonFromInt(int i);
+    static int ThreadLeaveReasonToInt(EMThreadLeaveReason reason);
 };
 
 struct TOArray
