@@ -279,6 +279,8 @@ namespace WinSDKTest
             functions_IChatManager.Add(menu_index, "ChatManagerUpdateMessage"); menu_index++;
             functions_IChatManager.Add(menu_index, "RemoveMessagesBeforeTimestamp"); menu_index++;
             functions_IChatManager.Add(menu_index, "DeleteConversationFromServer"); menu_index++;
+            functions_IChatManager.Add(menu_index, "FetchSupportLanguages"); menu_index++;
+            functions_IChatManager.Add(menu_index, "TranslateMessage"); menu_index++;
             level2_menus.Add("IChatManager", functions_IChatManager);
         }
 
@@ -440,6 +442,19 @@ namespace WinSDKTest
             param.Add(menu_index, "conversationType (0:Chat, 1:Group, 2:Room)"); menu_index++;
             param.Add(menu_index, "isDeleteServerMessages (int 0:false; 1:true)"); menu_index++;
             level3_menus.Add("DeleteConversationFromServer", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "No params"); menu_index++;
+            level3_menus.Add("FetchSupportLanguages", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "to (string)"); menu_index++;
+            param.Add(menu_index, "text (string)"); menu_index++;
+            param.Add(menu_index, "lang1 (string)"); menu_index++;
+            param.Add(menu_index, "lang2 (string)"); menu_index++;
+            level3_menus.Add("TranslateMessage", new Dictionary<int, string>(param));
             param.Clear();
         }
 
@@ -1268,7 +1283,10 @@ namespace WinSDKTest
 
         public void InitAll(string appkey)
         {
-            Options options = new Options("easemob-demo#easeim");
+            //Options options = new Options("easemob-demo#easeim");
+            //Options options = new Options("easemob-demo#unitytest");
+            //Options options = new Options("5101220107132865#test"); // 北京沙箱测试环境，不好用
+            Options options = new Options("41117440#383391"); // 线上环境, demo中的token
             if (appkey.Length > 0 && appkey.Contains("#") == true)
                 options.AppKey = appkey;
 
@@ -1987,7 +2005,7 @@ namespace WinSDKTest
                     count = i;
             }
 
-            SDKClient.Instance.ChatManager.FetchHistoryMessagesFromServer(conversationId, type, startMessageId, count, new ValueCallBack<CursorResult<Message>>(
+            SDKClient.Instance.ChatManager.FetchHistoryMessagesFromServer(conversationId, type, startMessageId, count, MessageSearchDirection.UP, new ValueCallBack<CursorResult<Message>>(
                 onSuccess: (result) =>
                 {
                     if (0 == result.Data.Count)
@@ -2646,6 +2664,54 @@ namespace WinSDKTest
             ));
         }
 
+        public void CallFunc_IChatManager_FetchSupportLanguages()
+        {
+            SDKClient.Instance.ChatManager.FetchSupportLanguages(new ValueCallBack<List<SupportLanguages>>(
+             onSuccess: (list) =>
+             {
+                 Console.WriteLine($"FetchSupportLanguages found total: {list.Count}");
+                 foreach (var lang in list)
+                 {
+                     Console.WriteLine($"code: {lang.LanguageCode}, name:{lang.LanguageName}, nativename:{lang.LanguageNativeName}");
+                 }
+             },
+             onError: (code, desc) =>
+             {
+                 Console.WriteLine($"FetchSupportLanguages failed, code:{code}, desc:{desc}");
+             }
+            ));
+        }
+
+        public void CallFunc_IChatManager_TranslateMessage()
+        {
+            string to = GetParamValueFromContext(0);
+            string text = GetParamValueFromContext(1);
+            string lang1 = GetParamValueFromContext(2);
+            string lang2 = GetParamValueFromContext(3);
+
+            Message msg = Message.CreateTextSendMessage(to, text);
+
+            List<string> targetLanguages = new List<string>();
+            targetLanguages.Add(lang1);
+            targetLanguages.Add(lang2);
+
+            SDKClient.Instance.ChatManager.TranslateMessage(ref msg, targetLanguages, new CallBack(
+             onSuccess: () =>
+             {
+                 Console.WriteLine($"TranslateMessage success.");
+                 TextBody tb = (TextBody)msg.Body;
+                 foreach(var it in tb.Translations)
+                 {
+                     Console.WriteLine($"Translate, lang:{it.Key}, result:{it.Value}");
+                 }
+                 
+             },
+             onError: (code, desc) =>
+             {
+                 Console.WriteLine($"TranslateMessage failed, code:{code}, desc:{desc}");
+             }
+            ));
+        }
 
         public void CallFunc_IChatManager()
         {
@@ -2808,6 +2874,18 @@ namespace WinSDKTest
             if (select_context.level2_item.CompareTo("DeleteConversationFromServer") == 0)
             {
                 CallFunc_IChatManager_DeleteConversationFromServer();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("FetchSupportLanguages") == 0)
+            {
+                CallFunc_IChatManager_FetchSupportLanguages();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("TranslateMessage") == 0)
+            {
+                CallFunc_IChatManager_TranslateMessage();
                 return;
             }
         }
@@ -6632,6 +6710,12 @@ namespace WinSDKTest
 
     class GroupManagerDelegate : IGroupManagerDelegate
     {
+        public void OnAddWhiteListMembersFromGroup(string groupId, List<string> whiteList)
+        {
+            string str = string.Join(",", whiteList.ToArray());
+            Console.WriteLine($"OnAddWhiteListMembersFromGroup: gid: {groupId}; whiteList:{str}");
+        }
+
         public void OnAdminAddedFromGroup(string groupId, string administrator)
         {
             Console.WriteLine($"OnAdminAddedFromGroup: gid: {groupId}; admin:{administrator}");
@@ -6640,6 +6724,11 @@ namespace WinSDKTest
         public void OnAdminRemovedFromGroup(string groupId, string administrator)
         {
             Console.WriteLine($"OnAdminRemovedFromGroup: gid: {groupId}; admin:{administrator}");
+        }
+
+        public void OnAllMemberMuteChangedFromGroup(string groupId, bool isAllMuted)
+        {
+            Console.WriteLine($"OnAdminRemovedFromGroup: gid: {groupId}; isAllMuted:{isAllMuted}");
         }
 
         public void OnAnnouncementChangedFromGroup(string groupId, string announcement)
@@ -6705,6 +6794,11 @@ namespace WinSDKTest
             Console.WriteLine($"OnOwnerChangedFromGroup: gid: {groupId}; newOwner:{newOwner}; oldOwner:{oldOwner}");
         }
 
+        public void OnRemoveWhiteListMembersFromGroup(string groupId, List<string> whiteList)
+        {
+            throw new NotImplementedException();
+        }
+
         public void OnRequestToJoinAcceptedFromGroup(string groupId, string groupName, string accepter)
         {
             Console.WriteLine($"OnRequestToJoinAcceptedFromGroup: gid: {groupId}; newOwner:{groupName}; oldOwner:{accepter}");
@@ -6747,6 +6841,15 @@ namespace WinSDKTest
         {
             Console.WriteLine($"onGroupMultiDevicesEvent: operation: {operation}; target:{target}");
             foreach(var it in usernames)
+            {
+                Console.WriteLine($"username: {it}");
+            }
+        }
+
+        public void onThreadMultiDevicesEvent(MultiDevicesOperation operation, string target, List<string> usernames)
+        {
+            Console.WriteLine($"onThreadMultiDevicesEvent: operation: {operation}; target:{target}");
+            foreach (var it in usernames)
             {
                 Console.WriteLine($"username: {it}");
             }

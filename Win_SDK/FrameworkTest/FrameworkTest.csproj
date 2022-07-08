@@ -56,4 +56,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>cd $(ProjectDir)
+xcopy /Y /S ..\FrameworkLib\bin\Debug\chatsdk.dll bin\Debug\
+
+xcopy /Y /S ..\..\Unity_SDK\win_build\build_shared\Debug\hyphenateCWrapper.dll bin\Debug\</PostBuildEvent>
+  </PropertyGroup>
 </Project>

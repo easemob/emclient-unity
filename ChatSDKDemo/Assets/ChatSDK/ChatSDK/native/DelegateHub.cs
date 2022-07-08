@@ -967,7 +967,7 @@ namespace ChatSDK
             {
                 Debug.Log("OnCreatThread received.");
 
-                ThreadEvent thread = ThreadEvent.FromJson(json);
+                ThreadEvent thread = ThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
@@ -981,7 +981,7 @@ namespace ChatSDK
             {
                 Debug.Log("OnUpdateMyThread received.");
 
-                ThreadEvent thread = ThreadEvent.FromJson(json);
+                ThreadEvent thread = ThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
@@ -995,7 +995,7 @@ namespace ChatSDK
             {
                 Debug.Log("OnThreadNotifyChange received.");
 
-                ThreadEvent thread = ThreadEvent.FromJson(json);
+                ThreadEvent thread = ThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
@@ -1009,7 +1009,7 @@ namespace ChatSDK
             {
                 Debug.Log("OnLeaveThread received.");
 
-                ThreadEvent thread = ThreadEvent.FromJson(json);
+                ThreadEvent thread = ThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
                 ThreadLeaveReason reason = ThreadEvent.ThreadLeaveReasonFromInt(i);
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
@@ -1024,7 +1024,7 @@ namespace ChatSDK
             {
                 Debug.Log("OnMemberJoinedThread received.");
 
-                ThreadEvent thread = ThreadEvent.FromJson(json);
+                ThreadEvent thread = ThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
@@ -1038,7 +1038,7 @@ namespace ChatSDK
             {
                 Debug.Log("OnMemberLeaveThread received.");
 
-                ThreadEvent thread = ThreadEvent.FromJson(json);
+                ThreadEvent thread = ThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
