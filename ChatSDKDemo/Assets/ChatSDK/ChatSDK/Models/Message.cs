@@ -283,7 +283,6 @@ namespace ChatSDK
                     Status = MessageStatusFromInt(jo["status"].AsInt);
                     MessageType = MessageTypeFromInt(jo["chatType"].AsInt);
                     Direction = MessageDirectionFromString(jo["direction"].Value);
-                    Debug.Log($"111 : ?? {jo["attributes"]}");
                     Attributes = TransformTool.JsonStringToAttributes(jo["attributes"].ToString());
                     Body = IMessageBody.Constructor(jo["body"].Value, jo["bodyType"].Value);
                 }
@@ -305,7 +304,10 @@ namespace ChatSDK
             jo.Add("status", MessageStatusToInt(Status));
             jo.Add("chatType", MessageTypeToInt(MessageType));
             jo.Add("direction", MessageDirectionToString(Direction));
-            jo.Add("attributes", TransformTool.JsonStringFromAttributes(Attributes));
+            string strAttr = TransformTool.JsonStringFromAttributes(Attributes);
+            if (strAttr != null) {
+                jo.Add("attributes", strAttr);
+            }
             jo.Add("body", Body.ToJson().ToString());
             jo.Add("bodyType", Body.TypeString());
             return jo;
