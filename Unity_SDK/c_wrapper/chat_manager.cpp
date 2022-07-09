@@ -12,6 +12,8 @@
 #include "emmessagebody.h"
 #include "tool.h"
 
+extern EMClient* gClient;
+
 typedef std::map<int64_t, MessageTO*>::iterator TsMsgIter;
 typedef std::map<int64_t, EMMessagePtr>::iterator TsMsgPtrIter;
 
@@ -104,6 +106,9 @@ int GetLastProgress(std::string msgId)
 }
 
 HYPHENATE_API void ChatManager_SendMessage(void *client, int callbackId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, FUNC_OnProgress onProgress, void *mto, EMMessageBody::EMMessageBodyType type) {
+    
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+    
     EMError error;
     if(!MandatoryCheck(mto, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -158,6 +163,8 @@ HYPHENATE_API void ChatManager_AddListener(void *client,
                                        FUNC_OnConversationRead onConversationRead
                                        )
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
     if(nullptr == gChatManagerListener) { //only set once!
         gChatManagerListener = new ChatManagerListener(onMessagesReceived, onCmdMessagesReceived, onMessagesRead, onMessagesDelivered, onMessagesRecalled, onReadAckForGroupMessageUpdated, onGroupMessageRead, onConversationsUpdate, onConversationRead);
         CLIENT->getChatManager().addListener(gChatManagerListener);
@@ -167,6 +174,8 @@ HYPHENATE_API void ChatManager_AddListener(void *client,
 
 HYPHENATE_API void ChatManager_FetchHistoryMessages(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType type, const char * startMessageId, int count, FUNC_OnSuccess_With_Result_V2 onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(conversationId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -214,6 +223,8 @@ HYPHENATE_API void ChatManager_FetchHistoryMessages(void *client, int callbackId
 
 HYPHENATE_API void ChatManager_GetConversationsFromServer(void *client, int callbackId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     std::thread t([=](){
         EMError error;
         EMConversationList conversationList = CLIENT->getChatManager().getConversationsFromServer(error);
@@ -242,6 +253,8 @@ HYPHENATE_API void ChatManager_GetConversationsFromServer(void *client, int call
 
 HYPHENATE_API void ChatManager_RemoveConversation(void *client, const char * conversationId, bool isRemoveMessages)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
     if(!MandatoryCheck(conversationId))
         return;
     CLIENT->getChatManager().removeConversation(conversationId, isRemoveMessages);
@@ -250,6 +263,8 @@ HYPHENATE_API void ChatManager_RemoveConversation(void *client, const char * con
 
 HYPHENATE_API void ChatManager_DownloadMessageAttachments(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, FUNC_OnProgress onProgress)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(messageId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -297,6 +312,8 @@ HYPHENATE_API void ChatManager_DownloadMessageAttachments(void *client, int call
 
 HYPHENATE_API void ChatManager_DownloadMessageThumbnail(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, FUNC_OnProgress onProgress)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(messageId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -345,6 +362,8 @@ HYPHENATE_API void ChatManager_DownloadMessageThumbnail(void *client, int callba
 
 HYPHENATE_API bool ChatManager_ConversationWithType(void *client, const char * conversationId, EMConversation::EMConversationType type, bool createIfNotExist)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return false;
+
     if(!MandatoryCheck(conversationId))
         return false;
     EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(conversationId, type, createIfNotExist);
@@ -360,6 +379,8 @@ HYPHENATE_API bool ChatManager_ConversationWithType(void *client, const char * c
 
 HYPHENATE_API int ChatManager_GetUnreadMessageCount(void *client)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return -1;
+
     EMError error;
     int count = 0;
     //get conversations
@@ -376,6 +397,8 @@ HYPHENATE_API int ChatManager_GetUnreadMessageCount(void *client)
 
 HYPHENATE_API bool ChatManager_InsertMessages(void *client, void * messageList[], EMMessageBody::EMMessageBodyType typeList[], int size)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return false;
+
     EMMessageList list;
     //convert TO to EMMessagePtr
     for(int i=0; i<size; i++) {
@@ -392,6 +415,8 @@ HYPHENATE_API bool ChatManager_InsertMessages(void *client, void * messageList[]
 
 HYPHENATE_API void ChatManager_LoadAllConversationsFromDB(void *client, FUNC_OnSuccess_With_Result onSuccess)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
     EMConversationList conversationList = CLIENT->getChatManager().loadAllConversationsFromDB();
     
     int size = (int)conversationList.size();
@@ -411,6 +436,8 @@ HYPHENATE_API void ChatManager_LoadAllConversationsFromDB(void *client, FUNC_OnS
 
 HYPHENATE_API void ChatManager_GetMessage(void *client, const char * messageId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(-1, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(messageId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), -1);
@@ -435,6 +462,8 @@ HYPHENATE_API void ChatManager_GetMessage(void *client, const char * messageId, 
 
 HYPHENATE_API bool ChatManager_MarkAllConversationsAsRead(void *client)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return false;
+
     bool ret = true;
     EMError error;
     EMConversationList conversationList = CLIENT->getChatManager().getConversationsFromServer(error);
@@ -453,6 +482,8 @@ HYPHENATE_API bool ChatManager_MarkAllConversationsAsRead(void *client)
 
 HYPHENATE_API void ChatManager_RecallMessage(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, FUNC_OnProgress onProgress)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(messageId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -491,6 +522,8 @@ HYPHENATE_API void ChatManager_RecallMessage(void *client, int callbackId, const
 
 HYPHENATE_API void ChatManager_ResendMessage(void *client, int callbackId, const char * messageId, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(messageId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -532,6 +565,8 @@ HYPHENATE_API void ChatManager_ResendMessage(void *client, int callbackId, const
 
 HYPHENATE_API void ChatManager_LoadMoreMessages(void *client, FUNC_OnSuccess_With_Result onSuccess, const char * keywords, int64_t timestamp, int maxcount, const char * from, EMConversation::EMMessageSearchDirection direction)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
     std::string keywordsStr = OptionalStrParamCheck(keywords);
     std::string fromStr = OptionalStrParamCheck(from);
     EMMessageList messageList = CLIENT->getChatManager().loadMoreMessages(timestamp, keywordsStr, maxcount, fromStr, direction);
@@ -558,6 +593,8 @@ HYPHENATE_API void ChatManager_LoadMoreMessages(void *client, FUNC_OnSuccess_Wit
 
 HYPHENATE_API void ChatManager_SendReadAckForConversation(void *client, int callbackId, const char * conversationId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(conversationId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -581,6 +618,8 @@ HYPHENATE_API void ChatManager_SendReadAckForConversation(void *client, int call
 
 HYPHENATE_API void ChatManager_SendReadAckForMessage(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(messageId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -608,6 +647,8 @@ HYPHENATE_API void ChatManager_SendReadAckForMessage(void *client, int callbackI
 
 HYPHENATE_API bool ChatManager_UpdateMessage(void *client, void *mto, EMMessageBody::EMMessageBodyType type)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return false;
+
     if(!MandatoryCheck(mto))
         return false;
     EMMessagePtr messagePtr = BuildEMMessage(mto, type, true);
@@ -623,6 +664,8 @@ HYPHENATE_API bool ChatManager_UpdateMessage(void *client, void *mto, EMMessageB
 
 HYPHENATE_API void ChatManager_RemoveMessagesBeforeTimestamp(void *client, int callbackId, int64_t timeStamp,  FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     std::thread t([=](){
         EMError error;
         bool ret = CLIENT->getChatManager().removeMessagesBeforeTimestamp(timeStamp);
@@ -641,6 +684,8 @@ HYPHENATE_API void ChatManager_RemoveMessagesBeforeTimestamp(void *client, int c
 
 HYPHENATE_API void ChatManager_DeleteConversationFromServer(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType conversationType, bool isDeleteServerMessages, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(conversationId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -663,6 +708,8 @@ HYPHENATE_API void ChatManager_DeleteConversationFromServer(void *client, int ca
 
 void ChatManager_RemoveListener(void*client)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
     CLIENT->getChatManager().clearListeners();
     if(nullptr != gChatManagerListener) {
         delete gChatManagerListener;

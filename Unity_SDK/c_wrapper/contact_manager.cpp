@@ -10,6 +10,8 @@
 #include "emclient.h"
 #include "tool.h"
 
+extern EMClient* gClient;
+
 ContactManagerListener *gContactListener = nullptr;
 
 HYPHENATE_API void ContactManager_AddListener(void *client,
@@ -20,6 +22,8 @@ HYPHENATE_API void ContactManager_AddListener(void *client,
                                         FUNC_OnFriendRequestDeclined OnFriendRequestDeclined
                                         )
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
     if(nullptr == gContactListener) { //only set once!
         gContactListener = new ContactManagerListener(onContactAdded, onContactDeleted, onContactInvited, onFriendRequestAccepted, OnFriendRequestDeclined);
         CLIENT->getContactManager().registerContactListener(gContactListener);
@@ -29,6 +33,8 @@ HYPHENATE_API void ContactManager_AddListener(void *client,
 
 HYPHENATE_API void ContactManager_AddContact(void *client, int callbackId, const char* username, const char* reason, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(username, error)) {
         if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -53,6 +59,8 @@ HYPHENATE_API void ContactManager_AddContact(void *client, int callbackId, const
 
 HYPHENATE_API void ContactManager_DeleteContact(void *client, int callbackId, const char* username, bool keepConversation, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(username, error)) {
         if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -76,6 +84,8 @@ HYPHENATE_API void ContactManager_DeleteContact(void *client, int callbackId, co
 
 HYPHENATE_API void ContactManager_GetContactsFromServer(void *client, int callbackId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     std::thread t([=](){
         EMError error;
         vector<std::string> vec = CLIENT->getContactManager().getContactsFromServer(error);
@@ -98,6 +108,8 @@ HYPHENATE_API void ContactManager_GetContactsFromServer(void *client, int callba
 
 HYPHENATE_API void ContactManager_GetContactsFromDB(void *client, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(-1, onError)) return;
+
     EMError error;
     vector<std::string> vec = CLIENT->getContactManager().getContactsFromDB(error);
     if(EMError::EM_NO_ERROR == error.mErrorCode) {
@@ -118,6 +130,8 @@ HYPHENATE_API void ContactManager_GetContactsFromDB(void *client, FUNC_OnSuccess
 
 HYPHENATE_API void ContactManager_AddToBlackList(void *client, int callbackId, const char* username, bool both, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(username, error)) {
         if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -141,6 +155,8 @@ HYPHENATE_API void ContactManager_AddToBlackList(void *client, int callbackId, c
 
 HYPHENATE_API void ContactManager_RemoveFromBlackList(void *client, int callbackId, const char* username,FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(username, error)) {
         if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -164,6 +180,8 @@ HYPHENATE_API void ContactManager_RemoveFromBlackList(void *client, int callback
 
 HYPHENATE_API void ContactManager_GetBlackListFromServer(void *client, int callbackId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     std::thread t([=](){
         EMError error;
         vector<std::string> vec = CLIENT->getContactManager().getBlackListFromServer(error);
@@ -186,6 +204,8 @@ HYPHENATE_API void ContactManager_GetBlackListFromServer(void *client, int callb
 
 HYPHENATE_API void ContactManager_AcceptInvitation(void *client, int callbackId, const char* username,FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(username, error)) {
         if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -209,6 +229,8 @@ HYPHENATE_API void ContactManager_AcceptInvitation(void *client, int callbackId,
 
 HYPHENATE_API void ContactManager_DeclineInvitation(void *client, int callbackId, const char* username,FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(username, error)) {
         if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -232,6 +254,8 @@ HYPHENATE_API void ContactManager_DeclineInvitation(void *client, int callbackId
 
 HYPHENATE_API void ContactManager_GetSelfIdsOnOtherPlatform(void *client, int callbackId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     std::thread t([=](){
         EMError error;
         vector<std::string> vec = CLIENT->getContactManager().getSelfIdsOnOtherPlatform(error);
@@ -254,6 +278,8 @@ HYPHENATE_API void ContactManager_GetSelfIdsOnOtherPlatform(void *client, int ca
 
 void ContactManager_RemoveListener(void*client)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
     if(nullptr != gContactListener)
     {
         CLIENT->getContactManager().removeContactListener(gContactListener);

@@ -12,6 +12,22 @@
 #include "utils/emutils.h"
 #include "tool.h"
 
+extern EMClient* gClient;
+
+bool CheckClientInitOrNot(int callbackId, FUNC_OnError onError)
+{
+    EMError error;
+
+    if (nullptr == gClient) {
+        LOG("Error: Sdk is not initialized!");
+        error.setErrorCode(EMError::GENERAL_ERROR);
+        error.mDescription = "Sdk is not initialized!";
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return false;
+    }
+    return true;
+}
+
 bool MandatoryCheck(const void* ptr, EMError& error) {
     if(nullptr == ptr) {
         error.setErrorCode(EMError::GENERAL_ERROR);

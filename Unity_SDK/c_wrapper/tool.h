@@ -18,6 +18,8 @@ using namespace easemob;
 
 typedef void (*TIMER_FUNC)(int);
 
+bool CheckClientInitOrNot(int callbackId, FUNC_OnError onError);
+
 bool MandatoryCheck(const void* ptr, EMError& error);
 bool MandatoryCheck(const char* ptr, EMError& error);
 bool MandatoryCheck(const char* ptr);
