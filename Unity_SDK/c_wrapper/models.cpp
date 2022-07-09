@@ -1156,7 +1156,7 @@ std::map<std::string, UserInfo> UserInfo::FromResponse(std::string json, std::ma
         std::string user = it.key();
         nlohmann::json u = it.value();
         
-        if (u.is_null() || u.empty() || !u.is_object()) continue;
+        if (u.is_null() || !u.is_object()) continue;
 
         UserInfo ui;
         if (u.count(utypeMap[NICKNAME]) > 0 && u.at(utypeMap[NICKNAME]).is_string())

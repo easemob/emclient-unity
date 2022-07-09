@@ -60,7 +60,7 @@ public class Login : MonoBehaviour
                         SceneManager.LoadSceneAsync("Main");
                     }
                     else {
-                        UIManager.DefaultAlert(transform, "login failed, code: " + code);
+                        UIManager.DefaultAlert(transform, "login failed, code: " + code + "; desc:" + desc);
                     }
                     //UIManager.DefaultAlert(transform, "login failed, code: " + code);
                 }
