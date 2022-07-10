@@ -81,8 +81,8 @@ namespace ChatSDK
 
             if (Body.Translations.Length > 3)
             {
-                Dictionary<string, string> dict = TransformTool.JsonStringToDictionary(Body.Translations);
-                tb.Translations = GetUnicodeDicFromUTF8Dict(dict);
+                Dictionary<string, string> dict = TransformTool.JsonStringToDictionary(TransformTool.GetUnicodeStringFromUTF8(Body.Translations));
+                tb.Translations = dict;
             }
         }
 
@@ -699,6 +699,15 @@ namespace ChatSDK
         public long LocalTime;
         public long ServerTime;
         public string ReactionList;
+
+        [MarshalAs(UnmanagedType.U1)]
+        public bool IsThread;
+        public string MucParentId;
+        public string MsgParentId;
+        [MarshalAs(UnmanagedType.LPTStr)]
+        public string ThreadOverview;
+
+
         public MessageBodyType BodyType;
 
         protected MessageTO(in Message message)

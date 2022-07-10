@@ -48,6 +48,12 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             std::string content = GetUTF8FromUnicode(tm->body.Content);
 
             messageBody = EMMessageBodyPtr(new EMTextMessageBody(content));
+
+            std::vector<std::string> target_languages = JsonStringToVector(std::string(tm->body.TargetLanguages));
+            EMTextMessageBody* tb = (EMTextMessageBody*)messageBody.get();
+            if (target_languages.size() > 0)
+                tb->setTargetLanguages(target_languages);
+
             from = tm->From;
             to = tm->To;
             msgId = tm->MsgId;
