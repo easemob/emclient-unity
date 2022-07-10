@@ -360,7 +360,7 @@ HYPHENATE_API void ConversationManager_MarkMessageAsRead(void *client, const cha
 
 HYPHENATE_API void ConversationManager_SetExtField(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, const char * ext)
 {
-    if (!CheckClientInitOrNot(-1, false)) return;
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
 
     if(!MandatoryCheck(conversationId, ext))
         return;
