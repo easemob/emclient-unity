@@ -12,11 +12,12 @@ namespace ChatSDK
            
         }
 
-        public override bool DeleteConversation(string conversationId, bool deleteMessages)
+        public override bool DeleteConversation(string conversationId, bool deleteMessages, bool isThread)
         {
             JSONObject obj = new JSONObject();
             obj.Add("convId", conversationId);
             obj.Add("deleteMessages", deleteMessages);
+            obj.Add("isThread", isThread);
             string ret = ChatAPIIOS.ChatManager_GetMethodCall("deleteConversation", obj.ToString());
             JSONNode jn = JSON.Parse(ret);
             return jn["ret"].AsBool;
@@ -48,12 +49,13 @@ namespace ChatSDK
             ChatAPIIOS.ChatManager_HandleMethodCall("fetchHistoryMessages", jsonString, handle?.callbackId);
         }
 
-        public override Conversation GetConversation(string conversationId, ConversationType type, bool createIfNeed = true)
+        public override Conversation GetConversation(string conversationId, ConversationType type, bool createIfNeed = true, bool isThread = false)
         {
             JSONObject obj = new JSONObject();
             obj.Add("convId", conversationId);
             obj.Add("convType", TransformTool.ConversationTypeToInt(type));
             obj.Add("createIfNeed", createIfNeed);
+            obj.Add("isThread", isThread);
             string jsonString = ChatAPIIOS.ChatManager_GetMethodCall("getConversation", obj.ToString());
             if (jsonString == null || jsonString.Length == 0)
             {

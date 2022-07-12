@@ -265,11 +265,11 @@ HYPHENATE_API void ChatManager_GetConversationsFromServer(void *client, int call
     t.detach();
 }
 
-HYPHENATE_API void ChatManager_RemoveConversation(void *client, const char * conversationId, bool isRemoveMessages)
+HYPHENATE_API void ChatManager_RemoveConversation(void *client, const char * conversationId, bool isRemoveMessages, bool isThread)
 {
     if(!MandatoryCheck(conversationId))
         return;
-    CLIENT->getChatManager().removeConversation(conversationId, isRemoveMessages);
+    CLIENT->getChatManager().removeConversation(conversationId, isRemoveMessages, isThread);
     LOG("Remove conversation completed.");
 }
 
@@ -368,11 +368,12 @@ HYPHENATE_API void ChatManager_DownloadMessageThumbnail(void *client, int callba
     CLIENT->getChatManager().downloadMessageThumbnail(messagePtr);
 }
 
-HYPHENATE_API bool ChatManager_ConversationWithType(void *client, const char * conversationId, EMConversation::EMConversationType type, bool createIfNotExist)
+HYPHENATE_API bool ChatManager_ConversationWithType(void *client, const char * conversationId, EMConversation::EMConversationType type, 
+                                                    bool createIfNotExist, bool isThread)
 {
     if(!MandatoryCheck(conversationId))
         return false;
-    EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(conversationId, type, createIfNotExist);
+    EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(conversationId, type, createIfNotExist, isThread);
     //verify sharedptr
     if(conversationPtr) {
         LOG("Get converation with id=%s", conversationId);

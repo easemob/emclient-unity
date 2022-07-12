@@ -177,6 +177,11 @@ namespace ChatSDK {
             return manager.MessagesCount(Id, Type);
         }
 
+        public bool IsThread()
+        {
+            return manager.IsThread(Id, Type);
+        }
+
 
         internal Conversation(string jsonString) {
             if (jsonString != null) {

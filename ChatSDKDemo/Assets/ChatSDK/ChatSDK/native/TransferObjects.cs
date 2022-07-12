@@ -102,8 +102,8 @@ namespace ChatSDK
 
             if (Body.Translations.Length > 3)
             {
-                Dictionary<string, string> dict = TransformTool.JsonStringToDictionary(Body.Translations);
-                textBody.Translations = GetUnicodeDicFromUTF8Dict(dict);
+                Dictionary<string, string> dict = TransformTool.JsonStringToDictionary(TransformTool.GetUnicodeStringFromUTF8(Body.Translations));
+                textBody.Translations = dict;
             }                
             else
                 textBody.Translations = new Dictionary<string, string>();

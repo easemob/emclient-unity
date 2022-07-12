@@ -84,14 +84,14 @@ namespace ChatSDK
             }
         }
 
-        public override bool DeleteConversation(string conversationId, bool deleteMessages)
+        public override bool DeleteConversation(string conversationId, bool deleteMessages, bool isThread)
         {
             if (null == conversationId || 0 == conversationId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return false;
             }
-            ChatAPINative.ChatManager_RemoveConversation(client, conversationId, deleteMessages);
+            ChatAPINative.ChatManager_RemoveConversation(client, conversationId, deleteMessages, isThread);
             return true;
         }
 
@@ -212,14 +212,14 @@ namespace ChatSDK
                 });
         }
 
-        public override Conversation GetConversation(string conversationId, ConversationType type, bool createIfNeed = true)
+        public override Conversation GetConversation(string conversationId, ConversationType type, bool createIfNeed = true, bool isThread = false)
         {
             if (null == conversationId || 0 == conversationId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return null;
             }
-            bool conversationExist = ChatAPINative.ChatManager_ConversationWithType(client, conversationId, type, createIfNeed);
+            bool conversationExist = ChatAPINative.ChatManager_ConversationWithType(client, conversationId, type, createIfNeed, isThread);
             Debug.Log($"conversationExist is {conversationExist}");
             if (conversationExist || createIfNeed)
                 return new Conversation(conversationId, type);

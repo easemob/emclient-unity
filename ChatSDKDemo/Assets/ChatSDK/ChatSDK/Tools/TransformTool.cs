@@ -339,7 +339,9 @@ namespace ChatSDK
         {
             if (jsonString == null || jsonString.Length == 0) return null;
             Dictionary<string, string> ret = new Dictionary<string, string>();
-            JSONObject jo = JSON.Parse(jsonString).AsObject;
+            JSONNode jn = JSON.Parse(jsonString);
+            if (null == jn || jn.IsNull) return ret;
+            JSONObject jo = jn.AsObject;
             foreach (string s in jo.Keys)
             {
                 ret.Add(s, jo[s]);

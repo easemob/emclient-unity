@@ -11,7 +11,7 @@ namespace ChatSDK
         /// <param name="conversationId">会话id</param>
         /// <param name="deleteMessages">是否同时删除会话中的消息</param>
         /// <returns></returns>
-        public abstract bool DeleteConversation(string conversationId, bool deleteMessages = true);
+        public abstract bool DeleteConversation(string conversationId, bool deleteMessages = true, bool isThread = false);
 
         /// <summary>
         ///下载消息附件
@@ -44,7 +44,7 @@ namespace ChatSDK
         /// <param name="type">会话类型</param>
         /// <param name="createIfNeed">db中不存在时是否创建</param>
         /// <returns>会话对象</returns>
-        public abstract Conversation GetConversation(string conversationId, ConversationType type = ConversationType.Chat, bool createIfNeed = true);
+        public abstract Conversation GetConversation(string conversationId, ConversationType type = ConversationType.Chat, bool createIfNeed = true, bool isThread = false);
 
         /// <summary>
         /// 从服务器获取会话列表

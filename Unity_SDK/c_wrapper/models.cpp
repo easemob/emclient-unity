@@ -657,7 +657,7 @@ MessageTO::MessageTO(const EMMessagePtr &_message) {
     if (strlen(this->ConversationId) == 0) this->ConversationId =  const_cast<char*>(EMPTY_STR.c_str());
     if (strlen(this->From) == 0) this->From =  const_cast<char*>(EMPTY_STR.c_str());
     if (strlen(this->To) == 0) this->To =  const_cast<char*>(EMPTY_STR.c_str());
-    if (strlen(this->ReactionList) == 0) this->ReactionList = const_cast<char*>(EMPTY_STR.c_str());
+    if (nullptr == this->ReactionList || strlen(this->ReactionList) == 0) this->ReactionList = const_cast<char*>(EMPTY_STR.c_str());
 
     if (strlen(_message->recallBy().c_str()) == 0) 
         this->RecallBy =  const_cast<char*>(EMPTY_STR.c_str());
@@ -666,26 +666,16 @@ MessageTO::MessageTO(const EMMessagePtr &_message) {
     
     std::string str = AttributesValueTO::ToJson(_message);
     
-    //LOG("Got attributes from others: %s", str.c_str());
-    char* p = nullptr;
-    if (str.length() > 0) {
-        p = new char[str.size() + 1];
-        p[str.size()] = '\0';
-        strncpy(p, str.c_str(), str.size());
-    } else {
-        // pass a space to AttributesValues
-        // make sure PtrToStructure can be success
-        p = new char[2];
-        p[0] = ' ';
-        p[1] = '\0';
-    }
-    this->AttributesValues = p;
+    this->AttributesValues = GetPointer(str.c_str());
+    if (nullptr == this->AttributesValues || strlen(this->AttributesValues) == 0) this->AttributesValues = const_cast<char*>(EMPTY_STR.c_str());
 
     this->IsThread = _message->isThread();
     this->MucParentId = _message->mucParentId().c_str();
     this->MsgParentId = _message->msgParentId().c_str();
 
-    //this->ThreadOverview = ThreadEventTO::ToJson(msg->threadOverview());
+    str = ThreadEventTO::ToJson(_message->threadOverview());
+    this->ThreadOverview = GetPointer(str.c_str());
+    if (nullptr == this->ThreadOverview || strlen(this->ThreadOverview) == 0) this->ThreadOverview = const_cast<char*>(EMPTY_STR.c_str());
 }
 
 //TextMessageTO
@@ -882,7 +872,7 @@ void MessageTO::FreeResource(MessageTO * mto)
     if(nullptr == mto)
         return;
     
-    if (nullptr != mto->AttributesValues) 
+    if (nullptr != mto->AttributesValues && mto->AttributesValues != EMPTY_STR.c_str())
         delete mto->AttributesValues;
 
     if (nullptr != mto->RecallBy && mto->RecallBy != EMPTY_STR.c_str())
@@ -890,6 +880,9 @@ void MessageTO::FreeResource(MessageTO * mto)
     
     if (nullptr != mto->ReactionList && mto->ReactionList != EMPTY_STR.c_str())
         delete mto->ReactionList;
+
+    if (nullptr != mto->ThreadOverview && mto->ThreadOverview != EMPTY_STR.c_str())
+        delete mto->ThreadOverview;
 
     switch(mto->BodyType) {
         case EMMessageBody::TEXT:

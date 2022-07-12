@@ -78,7 +78,7 @@ namespace ChatSDK{
 		internal static extern void ChatManager_GetConversationsFromServer(IntPtr client, int callbackId, OnSuccessResult onSuccessResult, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
-		internal static extern void ChatManager_RemoveConversation(IntPtr client, string conversationId, bool isRemoveMessages);
+		internal static extern void ChatManager_RemoveConversation(IntPtr client, string conversationId, bool isRemoveMessages, bool isThread);
 
 		[DllImport(MyLibName)]
 		internal static extern void ChatManager_DownloadMessageAttachments(IntPtr client, int callbackId, string messageId, OnSuccess onSuccess, OnErrorV2 onError, OnProgressV2 onProgress);
@@ -87,7 +87,7 @@ namespace ChatSDK{
 		internal static extern void ChatManager_DownloadMessageThumbnail(IntPtr client, int callbackId, string messageId, OnSuccess onSuccess, OnErrorV2 onError, OnProgressV2 onProgress);
 
 		[DllImport(MyLibName)]
-		internal static extern bool ChatManager_ConversationWithType(IntPtr client, string conversationId, ConversationType type, bool createIfNotExist);
+		internal static extern bool ChatManager_ConversationWithType(IntPtr client, string conversationId, ConversationType type, bool createIfNotExist, bool isThread);
 
 		[DllImport(MyLibName)]
 		internal static extern int ChatManager_GetUnreadMessageCount(IntPtr client);
@@ -521,6 +521,9 @@ namespace ChatSDK{
 
 		[DllImport(MyLibName)]
 		internal static extern bool ConversationManager_UpdateMessage(IntPtr client, string conversationId, ConversationType converationType, IntPtr mto, MessageBodyType type);
+
+		[DllImport(MyLibName)]
+		internal static extern bool ConversationManager_IsThread(IntPtr client, string conversationId, ConversationType converationType);
 
 		//PushManager
 		[DllImport(MyLibName)]

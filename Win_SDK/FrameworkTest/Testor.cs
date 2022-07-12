@@ -281,6 +281,7 @@ namespace WinSDKTest
             functions_IChatManager.Add(menu_index, "DeleteConversationFromServer"); menu_index++;
             functions_IChatManager.Add(menu_index, "FetchSupportLanguages"); menu_index++;
             functions_IChatManager.Add(menu_index, "TranslateMessage"); menu_index++;
+            functions_IChatManager.Add(menu_index, "ReportMessage"); menu_index++;
             level2_menus.Add("IChatManager", functions_IChatManager);
         }
 
@@ -455,6 +456,13 @@ namespace WinSDKTest
             param.Add(menu_index, "lang1 (string)"); menu_index++;
             param.Add(menu_index, "lang2 (string)"); menu_index++;
             level3_menus.Add("TranslateMessage", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "messageId (string)"); menu_index++;
+            param.Add(menu_index, "tag (string)"); menu_index++;
+            param.Add(menu_index, "reason (string)"); menu_index++;
+            level3_menus.Add("ReportMessage", new Dictionary<int, string>(param));
             param.Clear();
         }
 
@@ -1285,7 +1293,7 @@ namespace WinSDKTest
         {
             //Options options = new Options("easemob-demo#easeim");
             //Options options = new Options("easemob-demo#unitytest");
-            //Options options = new Options("5101220107132865#test"); // 北京沙箱测试环境，不好用
+            //Options options = new Options("5101220107132865#test"); // 北京沙箱测试环境，无法正常登录
             Options options = new Options("41117440#383391"); // 线上环境, demo中的token
             if (appkey.Length > 0 && appkey.Contains("#") == true)
                 options.AppKey = appkey;
@@ -2713,6 +2721,24 @@ namespace WinSDKTest
             ));
         }
 
+        public void CallFunc_IChatManager_ReportMessage()
+        {
+            string msgId = GetParamValueFromContext(0);
+            string tag = GetParamValueFromContext(1);
+            string reason = GetParamValueFromContext(2);            
+
+            SDKClient.Instance.ChatManager.ReportMessage(msgId, tag, reason, new CallBack(
+                onSuccess: () =>
+                {
+                    Console.WriteLine($"ReportMessage success.");
+                },
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"ReportMessage failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
         public void CallFunc_IChatManager()
         {
             if (select_context.level2_item.CompareTo("DeleteConversation") == 0)
@@ -2886,6 +2912,12 @@ namespace WinSDKTest
             if (select_context.level2_item.CompareTo("TranslateMessage") == 0)
             {
                 CallFunc_IChatManager_TranslateMessage();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("ReportMessage") == 0)
+            {
+                CallFunc_IChatManager_ReportMessage();
                 return;
             }
         }
@@ -6492,10 +6524,10 @@ namespace WinSDKTest
                 Console.WriteLine($"servertime: {it.ServerTime}");
                 Console.WriteLine($"HasDeliverAck: {it.HasDeliverAck}");
                 Console.WriteLine($"HasReadAck: {it.HasReadAck}");
-                foreach(var it1 in it.Attributes)
-                {
-                    Console.WriteLine($"attribute item: key:{it1.Key}; value:{it1.Value}");
-                }
+                //foreach(var it1 in it.Attributes)
+                //{
+                //    Console.WriteLine($"attribute item: key:{it1.Key}; value:{it1.Value}");
+                //}
                 if(it.Body.Type == MessageBodyType.TXT)
                 {
                     TextBody tb = (TextBody)it.Body;

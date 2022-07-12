@@ -17,9 +17,9 @@ namespace ChatSDK
             }
         }
 
-        public override bool DeleteConversation(string conversationId, bool deleteMessages)
+        public override bool DeleteConversation(string conversationId, bool deleteMessages, bool isThread)
         {
-            return wrapper.Call<bool>("deleteConversation", conversationId, deleteMessages);
+            return wrapper.Call<bool>("deleteConversation", conversationId, deleteMessages, isThread);
         }
 
         public override void DownloadAttachment(string messageId, CallBack handle = null)
@@ -38,9 +38,9 @@ namespace ChatSDK
             wrapper.Call("fetchHistoryMessages", conversationId, TransformTool.ConversationTypeToInt(type), startMessageId, count, handle?.callbackId);
         }
 
-        public override Conversation GetConversation(string conversationId, ConversationType type, bool createIfNeed = true)
+        public override Conversation GetConversation(string conversationId, ConversationType type, bool createIfNeed = true, bool isThread = false)
         {
-            string jsonString = wrapper.Call<string>("getConversation", conversationId, TransformTool.ConversationTypeToInt(type), createIfNeed);
+            string jsonString = wrapper.Call<string>("getConversation", conversationId, TransformTool.ConversationTypeToInt(type), createIfNeed, isThread);
             if (jsonString == null || jsonString.Length == 0) {
                 return null;
             }
