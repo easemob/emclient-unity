@@ -1328,9 +1328,9 @@ namespace WinSDKTest
             int menu_index = 1;
             functions_IPresenceManager.Add(menu_index, "PublishPresence"); menu_index++;
             functions_IPresenceManager.Add(menu_index, "SubscribePresences"); menu_index++;
-            functions_IPresenceManager.Add(menu_index, "unsubscribePresences"); menu_index++;
-            functions_IPresenceManager.Add(menu_index, "fetchSubscribedMembers"); menu_index++;
-            functions_IPresenceManager.Add(menu_index, "fetchPresenceStatus"); menu_index++;
+            functions_IPresenceManager.Add(menu_index, "UnsubscribePresences"); menu_index++;
+            functions_IPresenceManager.Add(menu_index, "FetchSubscribedMembers"); menu_index++;
+            functions_IPresenceManager.Add(menu_index, "FetchPresenceStatus"); menu_index++;
             level2_menus.Add("IPresenceManager", functions_IPresenceManager);
         }
 
@@ -1432,6 +1432,9 @@ namespace WinSDKTest
 
             InitLevel2Menus_IUserInfoManager();
             InitLevel3Menus_IUserInfoManager();
+
+            InitLevel2Menus_IPresenceManager();
+            InitLevel3Menus_IPresenceManager();
         }
 
          /*
@@ -6660,7 +6663,7 @@ namespace WinSDKTest
             }
         }
 
-        public void CallFunc_IUserInfoManager_PublishPresence()
+        public void CallFunc_IPresenceManager_PublishPresence()
         {
             int presenceStatus = GetIntFromString(GetParamValueFromContext(0));
             string ext = GetParamValueFromContext(1);
@@ -6675,7 +6678,7 @@ namespace WinSDKTest
             ));
         }
 
-        public void CallFunc_IUserInfoManager_SubscribePresences()
+        public void CallFunc_IPresenceManager_SubscribePresences()
         {
             string member1 = GetParamValueFromContext(0);
             string member2 = GetParamValueFromContext(1);
@@ -6710,7 +6713,7 @@ namespace WinSDKTest
             ));
         }
 
-        public void CallFunc_IUserInfoManager_UnsubscribePresences()
+        public void CallFunc_IPresenceManager_UnsubscribePresences()
         {
             string member1 = GetParamValueFromContext(0);
             string member2 = GetParamValueFromContext(1);
@@ -6730,7 +6733,7 @@ namespace WinSDKTest
             ));
         }
 
-        public void CallFunc_IUserInfoManager_FetchSubscribedMembers()
+        public void CallFunc_IPresenceManager_FetchSubscribedMembers()
         {
             int pageNum = GetIntFromString(GetParamValueFromContext(0));
             int pageSize = GetIntFromString(GetParamValueFromContext(1));
@@ -6749,7 +6752,7 @@ namespace WinSDKTest
             ));
         }
 
-        public void CallFunc_IUserInfoManager_FetchPresenceStatus()
+        public void CallFunc_IPresenceManager_FetchPresenceStatus()
         {
             string member1 = GetParamValueFromContext(0);
             string member2 = GetParamValueFromContext(1);
@@ -6787,31 +6790,31 @@ namespace WinSDKTest
         {
             if (select_context.level2_item.CompareTo("PublishPresence") == 0)
             {
-                CallFunc_IUserInfoManager_PublishPresence();
+                CallFunc_IPresenceManager_PublishPresence();
                 return;
             }
 
             if (select_context.level2_item.CompareTo("SubscribePresences") == 0)
             {
-                CallFunc_IUserInfoManager_SubscribePresences();
+                CallFunc_IPresenceManager_SubscribePresences();
                 return;
             }
 
             if (select_context.level2_item.CompareTo("UnsubscribePresences") == 0)
             {
-                CallFunc_IUserInfoManager_UnsubscribePresences();
+                CallFunc_IPresenceManager_UnsubscribePresences();
                 return;
             }
 
             if (select_context.level2_item.CompareTo("FetchSubscribedMembers") == 0)
             {
-                CallFunc_IUserInfoManager_FetchSubscribedMembers();
+                CallFunc_IPresenceManager_FetchSubscribedMembers();
                 return;
             }
 
             if (select_context.level2_item.CompareTo("FetchPresenceStatus") == 0)
             {
-                CallFunc_IUserInfoManager_FetchPresenceStatus();
+                CallFunc_IPresenceManager_FetchPresenceStatus();
                 return;
             }
         }
