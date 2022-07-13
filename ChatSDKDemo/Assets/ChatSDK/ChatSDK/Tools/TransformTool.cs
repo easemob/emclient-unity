@@ -1,12 +1,70 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using SimpleJSON;
+using System.Runtime.InteropServices;
+
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
 using UnityEngine;
+#endif
 
 namespace ChatSDK
 {
     internal class TransformTool
     {
+
+        static internal string PtrToString(IntPtr ptr)
+        {
+#if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
+            string ret = Marshal.PtrToStringAnsi(ptr);
+            return ret;
+#else
+            string ret = Marshal.PtrToStringUni(ptr);
+            return GetUnicodeStringFromUTF8(ret);
+#endif 
+        }
+
+        static internal string GetUnicodeStringFromUTF8(string utf8Str)
+        {
+#if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
+            string ret = utf8Str;
+#else
+            if (utf8Str.Length == 0) return utf8Str;
+
+            string ret = Encoding.UTF8.GetString(Encoding.Unicode.GetBytes(utf8Str));
+            int index = ret.IndexOf('\0');
+            if (index > 0)
+                ret = ret.Substring(0, index);
+#endif
+            return ret;
+        }
+
+        static internal string[] GetArrayFromList(List<string> list)
+        {
+            int size = list.Count;
+            string[] a = new string[size];
+
+            int i = 0;
+            foreach (string it in list)
+            {
+                a[i] = it;
+                i++;
+            }
+            return a;
+        }
+
+        static internal void DeleteEmptyStringFromList(ref List<string> list)
+        {
+            if (list.Count == 0) return;
+            List<string> new_list = new List<string>();
+
+            foreach (string it in list)
+            {
+                if (it.Length > 0)
+                    new_list.Add(it);
+            }
+            list = new_list;
+        }
 
         static internal List<string> JsonStringToStringList(string jsonString)
         {
@@ -294,7 +352,9 @@ namespace ChatSDK
         {
             if (jsonString == null || jsonString.Length == 0) return null;
             Dictionary<string, string> ret = new Dictionary<string, string>();
-            JSONObject jo = JSON.Parse(jsonString).AsObject;
+            JSONNode jn = JSON.Parse(jsonString);
+            if (null == jn || jn.IsNull) return ret;
+            JSONObject jo = jn.AsObject;
             foreach (string s in jo.Keys)
             {
                 ret.Add(s, jo[s]);
@@ -356,6 +416,34 @@ namespace ChatSDK
             }
 
             return list;
+        }
+
+        static internal List<string> JsonArrayToStringList(JSONNode jn)
+        {
+            List<string> list = new List<string>();
+            if (null == jn) return list;
+
+            if (!jn.IsArray) return list;
+
+            foreach (JSONNode v in jn.AsArray)
+            {
+                if (v.IsString)
+                {
+                    list.Add(v.Value);
+                }
+            }
+            return list;
+        }
+
+        static internal JSONArray JsonObjectFromStringList(List<string> list)
+        {
+            if (list == null) return null;
+            JSONArray ja = new JSONArray();
+            foreach (string str in list)
+            {
+                ja.Add(str);
+            }
+            return ja;
         }
 
         static internal JSONArray JsonObjectFromMessageList(List<Message> list)

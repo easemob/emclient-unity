@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System;
 
 namespace ChatSDK
 {
@@ -10,7 +11,7 @@ namespace ChatSDK
         /// <param name="conversationId">会话id</param>
         /// <param name="deleteMessages">是否同时删除会话中的消息</param>
         /// <returns></returns>
-        public abstract bool DeleteConversation(string conversationId, bool deleteMessages = true);
+        public abstract bool DeleteConversation(string conversationId, bool deleteMessages = true, bool isThread = false);
 
         /// <summary>
         ///下载消息附件
@@ -34,7 +35,7 @@ namespace ChatSDK
         /// <param name="startMessageId">起始消息id</param>
         /// <param name="count">返回数量</param>
         /// <param name="handle">返回结果</param>
-        public abstract void FetchHistoryMessagesFromServer(string conversationId, ConversationType type = ConversationType.Chat, string startMessageId = null, int count = 20, ValueCallBack<CursorResult<Message>> handle = null);
+        public abstract void FetchHistoryMessagesFromServer(string conversationId, ConversationType type = ConversationType.Chat, string startMessageId = null, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack < CursorResult<Message>> handle = null);
 
         /// <summary>
         /// 获取会话
@@ -43,7 +44,7 @@ namespace ChatSDK
         /// <param name="type">会话类型</param>
         /// <param name="createIfNeed">db中不存在时是否创建</param>
         /// <returns>会话对象</returns>
-        public abstract Conversation GetConversation(string conversationId, ConversationType type = ConversationType.Chat, bool createIfNeed = true);
+        public abstract Conversation GetConversation(string conversationId, ConversationType type = ConversationType.Chat, bool createIfNeed = true, bool isThread = false);
 
         /// <summary>
         /// 从服务器获取会话列表
@@ -131,6 +132,8 @@ namespace ChatSDK
         /// <param name="handle">执行结果</param>
         public abstract void SendMessageReadAck(string messageId, CallBack handle = null);
 
+        public abstract void SendReadAckForGroupMessage(string messageId, string ackContent, CallBack callback = null);
+
         /// <summary>
         /// 更新消息
         /// </summary>
@@ -152,6 +155,20 @@ namespace ChatSDK
         /// <param name="conversationType">要删除的会话类型</param>
         /// <param name="isDeleteServerMessages">是否删除服务器端该会话的消息</param>
         public abstract void DeleteConversationFromServer(string conversationId, ConversationType conversationType, bool isDeleteServerMessages, CallBack handle = null);
+
+
+        public abstract void FetchSupportLanguages(ValueCallBack<List<SupportLanguages>> handle = null);
+
+        public abstract void TranslateMessage(ref Message message, List<string> targetLanguages, CallBack handle = null);
+
+        public abstract void FetchGroupReadAcks(string messageId, string groupId, int pageSize = 20, string startAckId = null, ValueCallBack<CursorResult<GroupReadAck>> handle = null);
+
+        public abstract void ReportMessage(string messageId, string tag, string reason, CallBack handle = null);
+
+        public abstract void AddReaction(string messageId, string reaction, CallBack handle = null);
+        public abstract void RemoveReaction(string messageId, string reaction, CallBack handle = null);
+        public abstract void GetReactionList(List<string> messageIdList, ConversationType chatType, string groupId, ValueCallBack<Dictionary<string, List<MessageReaction>>> handle = null);
+        public abstract void GetReactionDetail(string messageId, string reaction, string cursor = null, int pageSize = 20, ValueCallBack<CursorResult<MessageReaction>> handle = null);
 
         /// <summary>
         /// 添加消息监听
@@ -178,9 +195,31 @@ namespace ChatSDK
             }
         }
 
+        public void AddReactionManagerDelegate(IReactionManagerDelegate reactionManagerDelegate)
+        {
+            if (!CallbackManager.Instance().reactionManagerListener.delegater.Contains(reactionManagerDelegate))
+            {
+                CallbackManager.Instance().reactionManagerListener.delegater.Add(reactionManagerDelegate);
+            }
+        }
+
+        /// <summary>
+        /// 移除聊天监听
+        /// </summary>
+        /// <param name="chatManagerDelegate"></param>
+        public void RemoveReactionManagerDelegate(IReactionManagerDelegate reactionManagerDelegate)
+        {
+            if (CallbackManager.IsQuit()) return;
+            if (CallbackManager.Instance().reactionManagerListener.delegater.Contains(reactionManagerDelegate))
+            {
+                CallbackManager.Instance().reactionManagerListener.delegater.Remove(reactionManagerDelegate);
+            }
+        }
+
         internal void ClearDelegates()
         {
             CallbackManager.Instance().chatManagerListener.delegater.Clear();
+            CallbackManager.Instance().reactionManagerListener.delegater.Clear();
         }
 
     }

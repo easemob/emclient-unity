@@ -53,7 +53,9 @@ namespace ChatSDK
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public class UserInfo
     {
+        [MarshalAs(UnmanagedType.LPTStr)]
         public string nickName = "";
+
         public string avatarUrl = "";
         public string email = "";
         public string phoneNumber = "";
@@ -63,11 +65,17 @@ namespace ChatSDK
         public string ext = "";
         public int gender = 0;
 
-        internal UserInfo()
+        public UserInfo()
         {
             //default constructor
         }
 
+        internal void Unmarshall()
+        {
+            nickName = TransformTool.GetUnicodeStringFromUTF8(nickName);
+        }
+
+        //public UserInfo(string jsonString)
         internal UserInfo(string jsonString)
         {
             if (jsonString != null)
@@ -120,6 +128,7 @@ namespace ChatSDK
             }
         }
 
+        //public JSONObject ToJson()
         internal JSONObject ToJson()
         {
             JSONObject jo = new JSONObject();

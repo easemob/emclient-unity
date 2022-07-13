@@ -100,9 +100,9 @@ HYPHENATE_API void RoomManager_CreateRoom(void *client, int callbackId, const ch
     for(int i=0; i<size; i++) {
         memberList.push_back(memberArray[i]);
     }
-    std::string subjectStr = subject;
-    std::string descStr = OptionalStrParamCheck(desc);
-    std::string welcomMsgStr = OptionalStrParamCheck(welcomMsg);
+    std::string subjectStr = GetUTF8FromUnicode(subject);
+    std::string descStr = GetUTF8FromUnicode(OptionalStrParamCheck(desc).c_str());
+    std::string welcomMsgStr = GetUTF8FromUnicode(OptionalStrParamCheck(welcomMsg).c_str());
     
     std::thread t([=](){
         EMError error;
@@ -130,7 +130,7 @@ HYPHENATE_API void RoomManager_ChangeRoomSubject(void *client, int callbackId, c
         return;
     }
     std::string roomIdStr = roomId;
-    std::string newSubjectStr = newSubject;
+    std::string newSubjectStr = GetUTF8FromUnicode(newSubject);
     
     std::thread t([=](){
         EMError error;
@@ -217,7 +217,7 @@ HYPHENATE_API void RoomManager_ChangeChatroomDescription(void * client, int call
         return;
     }
     std::string roomIdStr = roomId;
-    std::string newDescriptionStr = newDescription;
+    std::string newDescriptionStr = GetUTF8FromUnicode(newDescription);
     
     std::thread t([=](){
         EMError error;
@@ -664,7 +664,7 @@ HYPHENATE_API void RoomManager_UpdateChatroomAnnouncement(void *client, int call
         return;
     }
     std::string roomIdStr = roomId;
-    std::string newAnnouncementStr = newAnnouncement;
+    std::string newAnnouncementStr = GetUTF8FromUnicode(newAnnouncement);
     
     std::thread t([=](){
         EMError error;
@@ -674,6 +674,134 @@ HYPHENATE_API void RoomManager_UpdateChatroomAnnouncement(void *client, int call
             if(onSuccess) onSuccess(callbackId);
         }else{
             LOG("Update announcement failed, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        }
+    });
+    t.detach();
+}
+
+HYPHENATE_API void RoomManager_MuteAllChatroomMembers(void *client, int callbackId, const char * roomId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+{
+    EMError error;
+    if(!MandatoryCheck(roomId, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+    std::string roomIdStr = roomId;
+    
+    std::thread t([=](){
+        EMError error;
+        EMChatroomPtr chatRoomPtr = CLIENT->getChatroomManager().muteAllChatroomMembers(roomIdStr, error);
+        if(EMError::EM_NO_ERROR == error.mErrorCode) {
+            //success
+            LOG("RoomManager_MuteAllChatroomMembers succeeds: roomId:%s", roomIdStr.c_str());
+            if(onSuccess) {
+                if(chatRoomPtr) {
+                    RoomTO *data[1];
+                    data[0] = {RoomTO::FromEMChatRoom(chatRoomPtr)};
+                    onSuccess((void **)data, DataType::Room, 1, callbackId);
+                    delete (RoomTO*)data[0];
+                    LOG("RoomManager_MuteAllChatroomMembers return room with id:%s", roomIdStr.c_str());
+                } else {
+                    onSuccess(nullptr, DataType::Room, 0, callbackId);
+                    LOG("RoomManager_MuteAllChatroomMembers NO room returned");
+                }
+            }
+        }else{
+            LOG("RoomManager_MuteAllChatroomMembers failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        }
+    });
+    t.detach();
+}
+                                                      
+HYPHENATE_API void RoomManager_UnMuteAllChatroomMembers(void *client, int callbackId, const char * roomId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+{
+    EMError error;
+    if(!MandatoryCheck(roomId, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+    std::string roomIdStr = roomId;
+    
+    std::thread t([=](){
+        EMError error;
+        EMChatroomPtr chatRoomPtr = CLIENT->getChatroomManager().unmuteAllChatroomMembers(roomIdStr, error);
+        if(EMError::EM_NO_ERROR == error.mErrorCode) {
+            //success
+            LOG("RoomManager_UnMuteAllChatroomMembers succeeds: roomId:%s", roomIdStr.c_str());
+            if(onSuccess) {
+                if(chatRoomPtr) {
+                    RoomTO *data[1];
+                    data[0] = {RoomTO::FromEMChatRoom(chatRoomPtr)};
+                    onSuccess((void **)data, DataType::Room, 1, callbackId);
+                    delete (RoomTO*)data[0];
+                    LOG("RoomManager_UnMuteAllChatroomMembers return room with id:%s", roomIdStr.c_str());
+                } else {
+                    onSuccess(nullptr, DataType::Room, 0, callbackId);
+                    LOG("RoomManager_UnMuteAllChatroomMembers NO room returned");
+                }
+            }
+        }else{
+            LOG("RoomManager_UnMuteAllChatroomMembers failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        }
+    });
+    t.detach();
+}
+
+HYPHENATE_API void RoomManager_AddWhiteListMembers(void * client, int callbackId, const char * roomId, const char * memberArray[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+{
+    EMError error;
+    if(nullptr == roomId || 0 == size) {
+        error.setErrorCode(EMError::GENERAL_ERROR);
+        error.mDescription = "Mandatory parameter is null!";
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+    EMMucMemberList memberList;
+    for(int i=0; i<size; i++) {
+        memberList.push_back(memberArray[i]);
+    }
+    std::string roomIdStr = roomId;
+    
+    std::thread t([=](){
+        EMError error;
+        EMChatroomPtr chatRoomPtr = CLIENT->getChatroomManager().addWhiteListMembers(roomIdStr, memberList, error);
+        if(EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("RoomManager_AddWhiteListMembers successfully, roomId=%s", roomIdStr.c_str());
+            if(onSuccess) onSuccess(callbackId);
+        }else{
+            LOG("RoomManager_AddWhiteListMembers failed, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
+            if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        }
+    });
+    t.detach();
+}
+
+HYPHENATE_API void RoomManager_RemoveWhiteListMembers(void * client, int callbackId, const char * roomId, const char * memberArray[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+{
+    EMError error;
+    if(nullptr == roomId || 0 == size) {
+        error.setErrorCode(EMError::GENERAL_ERROR);
+        error.mDescription = "Mandatory parameter is null!";
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+    EMMucMemberList memberList;
+    for(int i=0; i<size; i++) {
+        memberList.push_back(memberArray[i]);
+    }
+    std::string roomIdStr = roomId;
+    
+    std::thread t([=](){
+        EMError error;
+        EMChatroomPtr chatRoomPtr = CLIENT->getChatroomManager().removeWhiteListMembers(roomIdStr, memberList, error);
+        if(EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("RoomManager_RemoveWhiteListMembers successfully, roomId=%s", roomIdStr.c_str());
+            if(onSuccess) onSuccess(callbackId);
+        }else{
+            LOG("RoomManager_RemoveWhiteListMembers failed, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });

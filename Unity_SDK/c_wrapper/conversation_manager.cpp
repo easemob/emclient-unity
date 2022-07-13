@@ -364,3 +364,12 @@ HYPHENATE_API bool ConversationManager_UpdateMessage(void *client, const char * 
     EMMessagePtr messagePtr = BuildEMMessage(mto, type);
     return conversationPtr->updateMessage(messagePtr);
 }
+
+HYPHENATE_API bool ConversationManager_IsThread(void* client, const char* conversationId, EMConversation::EMConversationType conversationType)
+{
+    if (!MandatoryCheck(conversationId))
+        return false;
+
+    EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(conversationId, conversationType, true);
+    return conversationPtr->isThread();
+}

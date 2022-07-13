@@ -28,6 +28,7 @@
                 '<(emclient-linux-path)/3rd_party/protobuf',
                 '<(emclient-linux-path)/3rd_party/rapidjson/include',
                 '<(emclient-linux-path)/3rd_party/platform/win/depends/openssl_1.1.1l-x64-static-md/include',
+                '<(emclient-linux-path)/3rd_party/platform/win/depends/sqlcipher_4.4.3-x64-static-md/include',
             ],
             'sources': [
             # Add our source files
@@ -41,7 +42,9 @@
             '<(emclient-unity-path)/Unity_SDK/c_wrapper/push_manager.cpp',
             '<(emclient-unity-path)/Unity_SDK/c_wrapper/room_manager.cpp',
             '<(emclient-unity-path)/Unity_SDK/c_wrapper/tool.cpp',
-            '<(emclient-unity-path)/Unity_SDK/c_wrapper/userinfo_manager.cpp'
+            '<(emclient-unity-path)/Unity_SDK/c_wrapper/userinfo_manager.cpp',
+            '<(emclient-unity-path)/Unity_SDK/c_wrapper/presence_manager.cpp',
+            '<(emclient-unity-path)/Unity_SDK/c_wrapper/thread_manager.cpp'
             ],
             'link_settings': {
              'conditions': [

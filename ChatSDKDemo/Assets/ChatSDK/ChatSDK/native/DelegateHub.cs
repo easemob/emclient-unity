@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
 using UnityEngine;
+#endif
 
 namespace ChatSDK
 {
@@ -33,15 +35,15 @@ namespace ChatSDK
     internal delegate void OnConversationRead(string from, string to);
 
     //IGroupManagerDelegate
-    internal delegate void OnInvitationReceived(string groupId, string groupName, string inviter, string reason);
-    internal delegate void OnRequestToJoinReceived(string groupId, string groupName, string applicant, string reason);
-    internal delegate void OnRequestToJoinAccepted(string groupId, string groupName, string accepter);
-    internal delegate void OnRequestToJoinDeclined(string groupId, string groupName, string decliner, string reason);
+    internal delegate void OnInvitationReceived(string groupId, [MarshalAs(UnmanagedType.LPTStr)] string groupName, string inviter, string reason);
+    internal delegate void OnRequestToJoinReceived(string groupId, [MarshalAs(UnmanagedType.LPTStr)] string groupName, string applicant, string reason);
+    internal delegate void OnRequestToJoinAccepted(string groupId, [MarshalAs(UnmanagedType.LPTStr)] string groupName, string accepter);
+    internal delegate void OnRequestToJoinDeclined(string groupId, [MarshalAs(UnmanagedType.LPTStr)] string groupName, string decliner, string reason);
     internal delegate void OnInvitationAccepted(string groupId, string invitee, string reason);
     internal delegate void OnInvitationDeclined(string groupId, string invitee, string reason);
-    internal delegate void OnUserRemoved(string groupId, string groupName);
-    internal delegate void OnGroupDestroyed(string groupId, string groupName);
-    internal delegate void OnAutoAcceptInvitationFromGroup(string groupId, string inviter, string inviteMessage);
+    internal delegate void OnUserRemoved(string groupId, [MarshalAs(UnmanagedType.LPTStr)] string groupName);
+    internal delegate void OnGroupDestroyed(string groupId, [MarshalAs(UnmanagedType.LPTStr)] string groupName);
+    internal delegate void OnAutoAcceptInvitationFromGroup(string groupId, string inviter, [MarshalAs(UnmanagedType.LPTStr)] string inviteMessage);
     internal delegate void OnMuteListAdded(string groupId, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] string[] mutes, int size, int muteExpire);
     internal delegate void OnMuteListRemoved(string groupId, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] string[] mutes, int size);
     internal delegate void OnAdminAdded(string groupId, string administrator);
@@ -49,15 +51,18 @@ namespace ChatSDK
     internal delegate void OnOwnerChanged(string groupId, string newOwner, string oldOwner);
     internal delegate void OnMemberJoined(string groupId, string member);
     internal delegate void OnMemberExited(string groupId, string member);
-    internal delegate void OnAnnouncementChanged(string groupId, string announcement);
+    internal delegate void OnAnnouncementChanged(string groupId, [MarshalAs(UnmanagedType.LPTStr)] string announcement);
     internal delegate void OnSharedFileAdded(string groupId,
         [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] sharedFile, int size);
     internal delegate void OnSharedFileDeleted(string groupId, string fileId);
+    internal delegate void OnAddWhiteListMembersFromGroup(string groupId, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] string[] whiteList, int size );
+    internal delegate void OnRemoveWhiteListMembersFromGroup(string groupId, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] string[] whiteList, int size);
+    internal delegate void OnAllMemberMuteChangedFromGroup(string groupId, bool isAllMuted);
 
     //IRoomManagerDelegate, most of them are duplicated as IGroupManagerDelegate
-    internal delegate void OnChatRoomDestroyed(string roomId, string roomName);
-    internal delegate void OnRemovedFromChatRoom(string roomId, string roomName, string participant);
-    internal delegate void OnMemberExitedFromRoom(string roomId, string roomName, string member);
+    internal delegate void OnChatRoomDestroyed(string roomId, [MarshalAs(UnmanagedType.LPTStr)] string roomName);
+    internal delegate void OnRemovedFromChatRoom(string roomId, [MarshalAs(UnmanagedType.LPTStr)] string roomName, string participant);
+    internal delegate void OnMemberExitedFromRoom(string roomId, [MarshalAs(UnmanagedType.LPTStr)] string roomName, string member);
 
     //IContactManagerDelegate
     internal delegate void OnContactAdd(string username);
@@ -66,10 +71,25 @@ namespace ChatSDK
     internal delegate void OnFriendRequestAccepted(string username);
     internal delegate void OnFriendRequestDeclined(string username);
 
-    //IMultiDeviceDelegate
+    //IMultiDeviceDelegate 
     internal delegate void onContactMultiDevicesEvent(MultiDevicesOperation operation, string target, string ext);
     internal delegate void onGroupMultiDevicesEvent(MultiDevicesOperation operation, string target, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] string[] usernames, int size);
     internal delegate void undisturbMultiDevicesEvent(string data);
+    internal delegate void onThreadMultiDevicesEvent(MultiDevicesOperation operation, string target, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] string[] usernames, int size);
+
+    //IPresenceManagerDelegate
+    internal delegate void OnPresenceUpdated([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] IntPtr[] presences, int size);
+
+    //IReactionManagerDelegate
+    internal delegate void MessageReactionDidChange([MarshalAs(UnmanagedType.LPTStr)] string json);
+
+    //IThreadManagerDelegate
+    internal delegate void OnCreatThread([MarshalAs(UnmanagedType.LPTStr)] string json);
+    internal delegate void OnUpdateMyThread([MarshalAs(UnmanagedType.LPTStr)] string json);
+    internal delegate void OnThreadNotifyChange([MarshalAs(UnmanagedType.LPTStr)] string json);
+    internal delegate void OnLeaveThread([MarshalAs(UnmanagedType.LPTStr)] string json, int i);
+    internal delegate void OnMemberJoinedThread([MarshalAs(UnmanagedType.LPTStr)] string json);
+    internal delegate void OnMemberLeaveThread([MarshalAs(UnmanagedType.LPTStr)] string json);
 
     internal sealed class ConnectionHub
     {
@@ -135,6 +155,7 @@ namespace ChatSDK
         internal onContactMultiDevicesEvent onContactMultiDevicesEvent;
         internal onGroupMultiDevicesEvent onGroupMultiDevicesEvent;
         internal undisturbMultiDevicesEvent undisturbMultiDevicesEvent;
+        internal onThreadMultiDevicesEvent onThreadMultiDevicesEvent;
 
         internal MultiDevicesHub()
         {
@@ -177,6 +198,27 @@ namespace ChatSDK
                     foreach (IMultiDeviceDelegate listener in CallbackManager.Instance().multiDeviceListener.delegater)
                     {
                         listener.undisturbMultiDevicesEvent(data);
+                    }
+                });
+            };
+
+            onThreadMultiDevicesEvent = (MultiDevicesOperation operation, string target, string[] usernames, int size) =>
+            {
+                Debug.Log("onThreadMultiDevicesEvent received.");
+
+                var usernameList = new List<string>();
+                for (int i = 0; i < size; i++)
+                {
+                    if (usernames[i].Length != 0)
+                    {
+                        usernameList.Add(usernames[i]);
+                    }
+                }
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IMultiDeviceDelegate listener in CallbackManager.Instance().multiDeviceListener.delegater)
+                    {
+                        listener.onThreadMultiDevicesEvent(operation, target, usernameList);
                     }
                 });
             };
@@ -346,50 +388,60 @@ namespace ChatSDK
         internal OnAnnouncementChanged OnAnnouncementChanged;
         internal OnSharedFileAdded OnSharedFileAdded;
         internal OnSharedFileDeleted OnSharedFileDeleted;
-
+        internal OnAddWhiteListMembersFromGroup OnAddWhiteListMembersFromGroup;
+        internal OnRemoveWhiteListMembersFromGroup OnRemoveWhiteListMembersFromGroup;
+        internal OnAllMemberMuteChangedFromGroup OnAllMemberMuteChangedFromGroup;
 
         internal GroupManagerHub()
         {
             OnInvitationReceived = (string groupId, string groupName, string inviter, string reason) =>
             {
-                Debug.Log($"OnInvitationReceived, group[Id={groupId},Name={groupName}] invitation received from {inviter}, reason: {reason}");
+                var name = TransformTool.GetUnicodeStringFromUTF8(groupName);
+
+                Debug.Log($"OnInvitationReceived, group[Id={groupId},Name={name}] invitation received from {inviter}, reason: {reason}");
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IGroupManagerDelegate listener in CallbackManager.Instance().groupManagerListener.delegater)
                     {
-                        listener.OnInvitationReceivedFromGroup(groupId, groupName, inviter, reason);
+                        listener.OnInvitationReceivedFromGroup(groupId, name, inviter, reason);
                     }
                 });
             };
 
             OnRequestToJoinReceived = (string groupId, string groupName, string applicant, string reason) =>
             {
-                Debug.Log($"ROnRequestToJoinReceived, group[Id={groupId},Name={groupName}], applicant:{applicant}, reason: {reason}");
+                var name = TransformTool.GetUnicodeStringFromUTF8(groupName);
+
+                Debug.Log($"ROnRequestToJoinReceived, group[Id={groupId},Name={name}], applicant:{applicant}, reason: {reason}");
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IGroupManagerDelegate listener in CallbackManager.Instance().groupManagerListener.delegater)
                     {
-                        listener.OnRequestToJoinReceivedFromGroup(groupId, groupName, applicant, reason);
+                        listener.OnRequestToJoinReceivedFromGroup(groupId, name, applicant, reason);
                     }
                 });
             };
 
             OnRequestToJoinAccepted = (string groupId, string groupName, string accepter) =>
             {
-                Debug.Log($"OnRequestToJoinAccepted, group[Id={groupId},Name={groupName}], accepter: {accepter}");
+                var name = TransformTool.GetUnicodeStringFromUTF8(groupName);
+
+                Debug.Log($"OnRequestToJoinAccepted, group[Id={groupId},Name={name}], accepter: {accepter}");
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IGroupManagerDelegate listener in CallbackManager.Instance().groupManagerListener.delegater)
                     {
-                        listener.OnRequestToJoinAcceptedFromGroup(groupId, groupName, accepter);
+                        listener.OnRequestToJoinAcceptedFromGroup(groupId, name, accepter);
                     }
                 });
             };
 
             OnRequestToJoinDeclined = (string groupId, string groupName, string decliner, string reason) =>
             {
-                Debug.Log($"OnRequestToJoinDeclined, group[Id={groupId},Name={groupName}], decliner: {decliner}, reason:{reason}");
+                var name = TransformTool.GetUnicodeStringFromUTF8(groupName);
+
+                Debug.Log($"OnRequestToJoinDeclined, group[Id={groupId},Name={name}], decliner: {decliner}, reason:{reason}");
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IGroupManagerDelegate listener in CallbackManager.Instance().groupManagerListener.delegater)
                     {
-                        listener.OnRequestToJoinDeclinedFromGroup(groupId, groupName, decliner, reason);
+                        listener.OnRequestToJoinDeclinedFromGroup(groupId, name, decliner, reason);
                     }
                 });
             };
@@ -418,34 +470,40 @@ namespace ChatSDK
 
             OnUserRemoved = (string groupId, string groupName) =>
             {
-                Debug.Log($"OnUserRemoved, group[Id={groupId}, Name={groupName}]");
+                var name = TransformTool.GetUnicodeStringFromUTF8(groupName);
+
+                Debug.Log($"OnUserRemoved, group[Id={groupId}, Name={name}]");
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IGroupManagerDelegate listener in CallbackManager.Instance().groupManagerListener.delegater)
                     {
-                        listener.OnUserRemovedFromGroup(groupId, groupName);
+                        listener.OnUserRemovedFromGroup(groupId, name);
                     }
                 });
             };
 
             OnGroupDestroyed = (string groupId, string groupName) =>
             {
-                Debug.Log($"OnGroupDestroyed, group[Id={groupId}, Name={groupName}]");
+                var name = TransformTool.GetUnicodeStringFromUTF8(groupName);
+
+                Debug.Log($"OnGroupDestroyed, group[Id={groupId}, Name={name}]");
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IGroupManagerDelegate listener in CallbackManager.Instance().groupManagerListener.delegater)
                     {
-                        listener.OnDestroyedFromGroup(groupId, groupName);
+                        listener.OnDestroyedFromGroup(groupId, name);
                     }
                 });
             };
 
             OnAutoAcceptInvitationFromGroup = (string groupId, string inviter, string inviteMessage) =>
             {
-                Debug.Log($"OnAutoAcceptInvitationFromGroup, group[Id={groupId}], inviter:{inviter}, inviteMessage:{inviteMessage}");
+                var inviteMsg = TransformTool.GetUnicodeStringFromUTF8(inviteMessage);
+
+                Debug.Log($"OnAutoAcceptInvitationFromGroup, group[Id={groupId}], inviter:{inviter}, inviteMessage:{inviteMsg}");
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IGroupManagerDelegate listener in CallbackManager.Instance().groupManagerListener.delegater)
                     {
-                        listener.OnAutoAcceptInvitationFromGroup(groupId, inviter, inviteMessage);
+                        listener.OnAutoAcceptInvitationFromGroup(groupId, inviter, inviteMsg);
                     }
                 });
             };
@@ -543,11 +601,13 @@ namespace ChatSDK
 
             OnAnnouncementChanged = (string groupId, string announcement) =>
             {
-                Debug.Log($"OnAnnouncementChanged, group[Id={groupId}], announcement:{announcement}");
+                var announ = TransformTool.GetUnicodeStringFromUTF8(announcement);
+
+                Debug.Log($"OnAnnouncementChanged, group[Id={groupId}], announcement:{announ}");
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IGroupManagerDelegate listener in CallbackManager.Instance().groupManagerListener.delegater)
                     {
-                        listener.OnAnnouncementChangedFromGroup(groupId, announcement);
+                        listener.OnAnnouncementChangedFromGroup(groupId, announ);
                     }
                 });
             };
@@ -577,7 +637,53 @@ namespace ChatSDK
                     }
                 });
             };
-        }
+
+            OnAddWhiteListMembersFromGroup = (string groupId, string[] whiteList, int size) =>
+            {
+                Debug.Log($"OnAddWhiteListMembersFromGroup, group[Id={groupId}], whiteList num:{size}");
+
+                var wl = new List<string>(size);
+                for (int i = 0; i < size; i++)
+                {
+                    wl.Add(whiteList[i]);
+                }
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate listener in CallbackManager.Instance().groupManagerListener.delegater)
+                    {
+                        listener.OnAddWhiteListMembersFromGroup(groupId, wl);
+                    }
+                });
+            };
+            OnRemoveWhiteListMembersFromGroup = (string groupId, string[] whiteList, int size) =>
+            {
+                Debug.Log($"OnRemoveWhiteListMembersFromGroup, group[Id={groupId}], whiteList num:{size}");
+
+                var wl = new List<string>(size);
+                for (int i = 0; i < size; i++)
+                {
+                    wl.Add(whiteList[i]);
+                }
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate listener in CallbackManager.Instance().groupManagerListener.delegater)
+                    {
+                        listener.OnRemoveWhiteListMembersFromGroup(groupId, wl);
+                    }
+                });
+            };
+            OnAllMemberMuteChangedFromGroup = (string groupId, bool isAllMuted) =>
+            {
+                Debug.Log($"OnAllMemberMuteChangedFromGroup, group[Id={groupId}], isAllMuted:{isAllMuted}");
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate listener in CallbackManager.Instance().groupManagerListener.delegater)
+                    {
+                        listener.OnAllMemberMuteChangedFromGroup(groupId, isAllMuted);
+                    }
+                });
+            };
+    }
     }
 
     internal sealed class RoomManagerHub
@@ -598,11 +704,13 @@ namespace ChatSDK
 
             OnChatRoomDestroyed = (string roomId, string roomName) =>
             {
-                Debug.Log($"OnChatRoomDestroyed, roomId {roomId}, roomName {roomName}.");
+                var name = TransformTool.GetUnicodeStringFromUTF8(roomName);
+
+                Debug.Log($"OnChatRoomDestroyed, roomId {roomId}, roomName {name}.");
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IRoomManagerDelegate listener in CallbackManager.Instance().roomManagerListener.delegater)
                     {
-                        listener.OnDestroyedFromRoom(roomId, roomName);
+                        listener.OnDestroyedFromRoom(roomId, name);
                     }
                 });
             };
@@ -620,22 +728,26 @@ namespace ChatSDK
 
             OnMemberExited = (string roomId, string roomName, string member) =>
             {
-                Debug.Log($"OnMemberExited, roomId {roomId}, member {member}.");
+                var name = TransformTool.GetUnicodeStringFromUTF8(roomName);
+
+                Debug.Log($"OnMemberExited, roomId {roomId}, roomName {name}, member {member}.");
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IRoomManagerDelegate listener in CallbackManager.Instance().roomManagerListener.delegater)
                     {
-                        listener.OnMemberExitedFromRoom(roomId, roomName, member);
+                        listener.OnMemberExitedFromRoom(roomId, name, member);
                     }
                 });
             };
 
             OnRemovedFromChatRoom = (string roomId, string roomName, string participant) =>
             {
-                Debug.Log($"OnRemovedFromChatRoom, roomId {roomId}, roomName {roomName}, paticipant {participant}.");
+                var name = TransformTool.GetUnicodeStringFromUTF8(roomName);
+
+                Debug.Log($"OnRemovedFromChatRoom, roomId {roomId}, roomName {name}, paticipant {participant}.");
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IRoomManagerDelegate listener in CallbackManager.Instance().roomManagerListener.delegater)
                     {
-                        listener.OnRemovedFromRoom(roomId, roomName, participant);
+                        listener.OnRemovedFromRoom(roomId, name, participant);
                     }
                 });
             };
@@ -707,11 +819,13 @@ namespace ChatSDK
 
             OnAnnouncementChanged = (string roomId, string announcement) =>
             {
-                Debug.Log($"OnAnnouncementChanged, roomId {roomId}, announcement {announcement}");
+                var announ = TransformTool.GetUnicodeStringFromUTF8(announcement);
+
+                Debug.Log($"OnAnnouncementChanged, roomId {roomId}, announcement {announ}");
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IRoomManagerDelegate listener in CallbackManager.Instance().roomManagerListener.delegater)
                     {
-                        listener.OnAnnouncementChangedFromRoom(roomId, announcement);
+                        listener.OnAnnouncementChangedFromRoom(roomId, announ);
                     }
                 });
             };
@@ -783,6 +897,157 @@ namespace ChatSDK
                     }
                 });
             };
+        }
+    }
+
+    internal sealed class PresenceManagerHub
+    {
+        internal OnPresenceUpdated onPresenceUpdated;
+
+        internal PresenceManagerHub()
+        {
+            onPresenceUpdated = (IntPtr[] presences, int size) =>
+            {
+                Debug.Log("onPresenceUpdated received.");
+
+                List<Presence> list = new List<Presence>();
+                for (int i=0; i<size; i++)
+                {
+                    PresenceTO pto = Marshal.PtrToStructure<PresenceTO>(presences[i]);
+                    Presence presence = pto.Unmarshall();
+                    list.Add(presence);
+                }
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IPresenceManagerDelegate listener in CallbackManager.Instance().presenceManagerListener.delegater)
+                    {
+                        listener.OnPresenceUpdated(list);
+                    }
+                });
+            };
+
+        }
+    }
+
+    internal sealed class ReactionManagerHub
+    {
+        internal MessageReactionDidChange messageReactionDidChange;
+
+        internal ReactionManagerHub()
+        {
+            messageReactionDidChange = (string json) =>
+            {
+                Debug.Log("messageReactionDidChange received.");
+
+                List<MessageReactionChange> list = MessageReactionChange.ListFromJson(TransformTool.GetUnicodeStringFromUTF8(json));
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IReactionManagerDelegate listener in CallbackManager.Instance().reactionManagerListener.delegater)
+                    {
+                        listener.MessageReactionDidChange(list);
+                    }
+                });
+            };
+
+        }
+    }
+
+    internal sealed class ThreadManagerHub
+    {
+        internal OnCreatThread OnCreatThread_;
+        internal OnUpdateMyThread OnUpdateMyThread_;
+        internal OnThreadNotifyChange OnThreadNotifyChange_;
+        internal OnLeaveThread OnLeaveThread_;
+        internal OnMemberJoinedThread OnMemberJoinedThread_;
+        internal OnMemberLeaveThread OnMemberLeaveThread_;
+
+        internal ThreadManagerHub()
+        {
+            OnCreatThread_ = (string json) =>
+            {
+                Debug.Log("OnCreatThread received.");
+
+                ThreadEvent thread = ThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
+                    {
+                        listener.OnCreatThread(thread);
+                    }
+                });
+            };
+
+            OnUpdateMyThread_ = (string json) =>
+            {
+                Debug.Log("OnUpdateMyThread received.");
+
+                ThreadEvent thread = ThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
+                    {
+                        listener.OnUpdateMyThread(thread);
+                    }
+                });
+            };
+
+            OnThreadNotifyChange_ = (string json) =>
+            {
+                Debug.Log("OnThreadNotifyChange received.");
+
+                ThreadEvent thread = ThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
+                    {
+                        listener.OnThreadNotifyChange(thread);
+                    }
+                });
+            };
+
+            OnLeaveThread_ = (string json, int i) =>
+            {
+                Debug.Log("OnLeaveThread received.");
+
+                ThreadEvent thread = ThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
+                ThreadLeaveReason reason = ThreadEvent.ThreadLeaveReasonFromInt(i);
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
+                    {
+                        listener.OnLeaveThread(thread, reason);
+                    }
+                });
+            };
+
+            OnMemberJoinedThread_ = (string json) =>
+            {
+                Debug.Log("OnMemberJoinedThread received.");
+
+                ThreadEvent thread = ThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
+                    {
+                        listener.OnMemberJoinedThread(thread);
+                    }
+                });
+            };
+
+            OnMemberLeaveThread_ = (string json) =>
+            {
+                Debug.Log("OnMemberLeaveThread received.");
+
+                ThreadEvent thread = ThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
+                    {
+                        listener.OnMemberLeaveThread(thread);
+                    }
+                });
+            };
+
         }
     }
 }

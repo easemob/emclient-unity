@@ -283,7 +283,7 @@
         FLOAT,
         DOUBLE,
         STRING,
-        STRVECTOR,
+        //STRVECTOR,
         JSONSTRING,
         //ATTRIBUTEVALUE,
         NULLOBJ
@@ -325,5 +325,27 @@
         GROUP_REMOVE_USER_WHITE_LIST    = 31,
         GROUP_ALL_BAN                   = 32,
         GROUP_REMOVE_ALL_BAN            = 33,
+    }
+
+    public enum SilentModeParamType
+    {
+        RemindType = 0,
+        Duration,
+        Interval,
+    }
+
+    public enum PushRemindType
+    {
+        Default = 0,
+        All,
+        MentionOnly,
+        None,
+    }
+
+    public enum ThreadLeaveReason
+    {
+        LEAVE = 0,
+        BE_KICKED,
+        DESTROYED,
     }
 }

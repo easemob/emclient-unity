@@ -30,6 +30,7 @@ namespace ChatSDK
         /// </summary>
         public string Ext;
 
+        //public GroupOptions(string jsonString)
         internal GroupOptions(string jsonString)
         {
             if (jsonString != null)

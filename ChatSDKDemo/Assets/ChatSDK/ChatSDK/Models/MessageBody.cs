@@ -22,6 +22,8 @@ namespace ChatSDK
                 {
                     JSONObject jo = jn.AsObject;
                     ((MessageBody.TextBody)body).Text = jo["content"];
+                    ((MessageBody.TextBody)body).TargetLanguages = TransformTool.JsonStringToStringList(jo["targetLanguages"]);
+                    ((MessageBody.TextBody)body).Translations = TransformTool.JsonStringToDictionary(jo["translations"]);
                 }
             }
             else if (type == "img")
@@ -92,7 +94,7 @@ namespace ChatSDK
                     ((MessageBody.FileBody)body).DisplayName = jo["displayName"].Value;
                     ((MessageBody.FileBody)body).RemotePath = jo["remotePath"].Value;
                     ((MessageBody.FileBody)body).Secret = jo["secret"].Value;
-                    ((MessageBody.FileBody)body).FileSize = jo["displayName"].AsInt;
+                    ((MessageBody.FileBody)body).FileSize = jo["displayName"].AsInt; //TODO: bug?
                     ((MessageBody.FileBody)body).DownStatus = body.DownLoadStatusFromInt(jo["fileStatus"].AsInt);
                 }
             }
@@ -189,13 +191,32 @@ namespace ChatSDK
         /// <summary>
         /// 文字消息
         /// </summary>
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class TextBody : IMessageBody
         {
             /// <summary>
             /// 消息内容
             /// </summary>
             public string Text;
+
+            /**
+              * \~chinese
+              * 翻译目标语种。
+              *
+              * \~english
+              * Target languages.
+              * 
+              */
+            public List<string> TargetLanguages;
+
+            /**
+              * \~chinese
+              * 翻译语种与翻译结果。
+              *
+              * \~english
+              * Target languages and tranlations.
+              * 
+              */
+            public Dictionary<string, string> Translations;
 
             public TextBody(string text)
             {
@@ -212,6 +233,8 @@ namespace ChatSDK
                 JSONObject jo = new JSONObject();
                 if (Text != null) {
                     jo.Add("content", Text);
+                    jo.Add("targetLanguages", TransformTool.JsonStringFromStringList(TargetLanguages));
+                    jo.Add("translations", TransformTool.JsonStringFromDictionary(Translations));
                 }
                 
                 return jo;
@@ -226,7 +249,6 @@ namespace ChatSDK
         /// <summary>
         /// 位置消息
         /// </summary>
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class LocationBody : IMessageBody
         {
             /// <summary>
@@ -282,7 +304,6 @@ namespace ChatSDK
         /// <summary>
         /// 文件消息
         /// </summary>
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class FileBody : IMessageBody
         {
             /// <summary>
@@ -366,7 +387,6 @@ namespace ChatSDK
         /// <summary>
         /// 图片消息
         /// </summary>
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class ImageBody : FileBody
         {
 
@@ -394,6 +414,7 @@ namespace ChatSDK
             /// 是否发送原图
             /// </summary>
             public bool Original;
+
 
             /// <summary>
             /// 下载状态
@@ -468,7 +489,6 @@ namespace ChatSDK
         /// <summary>
         /// 音频消息
         /// </summary>
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class VoiceBody : FileBody
         {
             /// <summary>
@@ -524,7 +544,6 @@ namespace ChatSDK
         /// <summary>
         /// 视频消息
         /// </summary>
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class VideoBody : FileBody
         {
             /// <summary>
@@ -612,7 +631,6 @@ namespace ChatSDK
         /// <summary>
         /// Cmd消息
         /// </summary>
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class CmdBody : IMessageBody
         {
             /// <summary>
@@ -658,7 +676,6 @@ namespace ChatSDK
         /// <summary>
         /// 自定义消息
         /// </summary>
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class CustomBody : IMessageBody
         {
             /// <summary>
