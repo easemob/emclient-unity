@@ -206,5 +206,11 @@ namespace ChatSDK {
             JSONNode jn = JSON.Parse(ret);
             return jn["ret"].AsBool;
         }
+
+        internal override bool IsThread(string conversationId, ConversationType conversationType)
+        {
+            //TODO: Add code here.
+            return false;
+        }
     }
 }

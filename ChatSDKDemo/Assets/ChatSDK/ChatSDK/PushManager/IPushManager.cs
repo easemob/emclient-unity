@@ -79,12 +79,21 @@ namespace ChatSDK
         /// <param name="handle">返回结果</param>
         public abstract void SetGroupToDisturb(string groupId, bool noDisturb, CallBack handle = null);
 
+        public abstract void SetSilentModeForAll(SilentModeParam param, ValueCallBack<SilentModeItem> handle = null);
+        public abstract void GetSilentModeForAll(ValueCallBack<SilentModeItem> handle = null);
+        public abstract void SetSilentModeForConversation(string conversationId, ConversationType type, SilentModeParam param, ValueCallBack<SilentModeItem> handle = null);
+        public abstract void GetSilentModeForConversation(string conversationId, ConversationType type, ValueCallBack<SilentModeItem> handle = null);
+        public abstract void GetSilentModeForConversations(Dictionary<string, string> conversations, ValueCallBack<Dictionary<string, SilentModeItem>> handle = null);
+        public abstract void SetPreferredNotificationLanguage(string languageCode, CallBack handle = null);
+        public abstract void GetPreferredNotificationLanguage(ValueCallBack<string> handle = null);
+
         /// <summary>
         /// 将push结果发送给服务器
         /// </summary>
         /// <param name="parameters">json格式的push结果</param>
         /// <param name="handle">返回结果</param>
         internal abstract void ReportPushAction(string parameters, CallBack handle = null);
+
     }
 
 }

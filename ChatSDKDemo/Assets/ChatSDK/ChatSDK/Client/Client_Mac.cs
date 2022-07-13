@@ -1,4 +1,6 @@
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
 using UnityEngine;
+#endif
 using System;
 using System.Runtime.InteropServices;
 
@@ -73,7 +75,7 @@ namespace ChatSDK
             client = ChatAPINative.Client_InitWithOptions(options, connectionHub.OnConnected, connectionHub.OnDisconnected, connectionHub.OnPong, connectionHub.OnTokenNotification);
             Debug.Log($"InitWithOptions completed.");
 
-            ChatAPINative.Client_AddMultiDeviceListener(multiDeviceHub.onContactMultiDevicesEvent, multiDeviceHub.onGroupMultiDevicesEvent, multiDeviceHub.undisturbMultiDevicesEvent);
+            ChatAPINative.Client_AddMultiDeviceListener(multiDeviceHub.onContactMultiDevicesEvent, multiDeviceHub.onGroupMultiDevicesEvent, multiDeviceHub.undisturbMultiDevicesEvent, multiDeviceHub.onThreadMultiDevicesEvent);
             Debug.Log("AddMultiDeviceListener completed.");
         }
 

@@ -14,7 +14,11 @@
 		</data>
 		<key>Resources/easemob.framework/Versions/A/easemob</key>
 		<data>
-		Y8ZM1CsV9ox7hCRGJdjYSSVmOo0=
+<<<<<<< HEAD
+		D58iaOs3w0VZzCPeLLNQwvJihB8=
+=======
+		ydcHbwCZ+4iOvPP15Ln58VPhJrQ=
+>>>>>>> pingban2
 		</data>
 		<key>Resources/lib/libc++.1.dylib</key>
 		<data>
@@ -78,11 +82,19 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			Y8ZM1CsV9ox7hCRGJdjYSSVmOo0=
+<<<<<<< HEAD
+			D58iaOs3w0VZzCPeLLNQwvJihB8=
 			</data>
 			<key>hash2</key>
 			<data>
-			SkMnZP4X6PHnNGm6kpCNAuVlrnJT3R3ZhTAJe9GrzJs=
+			7sSaH+rSwO1v20NQj1uybfDKRRElrhSITNrwF4pugrU=
+=======
+			ydcHbwCZ+4iOvPP15Ln58VPhJrQ=
+			</data>
+			<key>hash2</key>
+			<data>
+			WFT98M2WbDh9ytKXhh8DhZpVLR4AopzGn9VV+RsyVqg=
+>>>>>>> pingban2
 			</data>
 		</dict>
 		<key>Resources/easemob.framework/Versions/Current</key>

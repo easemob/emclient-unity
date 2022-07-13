@@ -152,5 +152,11 @@ namespace ChatSDK
         /// <param name="groupId">群组id</param>
         /// <param name="fileId">移除文件id</param>
         void OnSharedFileDeletedFromGroup(string groupId, string fileId);
+
+        void OnAddWhiteListMembersFromGroup(string groupId, List<string> whiteList);
+        void OnRemoveWhiteListMembersFromGroup(string groupId, List<string> whiteList);
+        void OnAllMemberMuteChangedFromGroup(string groupId, bool isAllMuted);
+
+
     }
 }

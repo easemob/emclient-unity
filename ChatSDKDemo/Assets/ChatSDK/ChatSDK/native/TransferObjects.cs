@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using ChatSDK.MessageBody;
 using SimpleJSON;
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
 using UnityEngine;
+#endif
 
 namespace ChatSDK
 {
@@ -15,7 +17,11 @@ namespace ChatSDK
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
         struct TextMessageBodyTO
         {
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string Content;
+            public string TargetLanguages; // json format
+            [MarshalAs(UnmanagedType.LPTStr)]
+            public string Translations; // json format
 
             public TextMessageBodyTO(in Message message)
             {
@@ -23,6 +29,8 @@ namespace ChatSDK
                 {
                     var body = message.Body as TextBody;
                     Content = body.Text;
+                    TargetLanguages = TransformTool.JsonStringFromStringList(body.TargetLanguages);
+                    Translations = TransformTool.JsonStringFromDictionary(body.Translations);
                 }
                 else
                 {
@@ -42,12 +50,64 @@ namespace ChatSDK
 
         }
 
+        internal Dictionary<string, string> GetUnicodeDicFromUTF8Dict(Dictionary<string, string> inDict)
+        {
+            Dictionary<string, string> outDict = new Dictionary<string, string>();
+
+            if (0 == inDict.Count) return outDict;
+            
+            foreach(var it in inDict)
+            {
+                string key = it.Key;
+                string value = TransformTool.GetUnicodeStringFromUTF8(it.Value);
+                outDict[key] = value;
+            }
+
+            return outDict;
+        }
+
+        public override void UpdateMsgBody(Message msg)
+        {
+            if (null == msg || msg.Body.Type != MessageBodyType.TXT)
+                return;
+
+            TextBody tb = (TextBody)msg.Body;
+
+            if (Body.TargetLanguages.Length > 3)
+            {
+                tb.TargetLanguages = TransformTool.JsonStringToStringList(Body.TargetLanguages);
+            }
+
+
+            if (Body.Translations.Length > 3)
+            {
+                Dictionary<string, string> dict = TransformTool.JsonStringToDictionary(TransformTool.GetUnicodeStringFromUTF8(Body.Translations));
+                tb.Translations = dict;
+            }
+        }
+
         public override IMessageBody UnmarshallBody()
         {
-            // change EMPTY_STR(" ")  to ""
-            if (Body.Content.CompareTo(" ") == 0) Body.Content = "";
+            string unicodeStr = TransformTool.GetUnicodeStringFromUTF8(Body.Content);
 
-            return new MessageBody.TextBody(Body.Content);
+            // change EMPTY_STR(" ")  to ""
+            Body.Content = (unicodeStr.CompareTo(" ") == 0) ? "" : unicodeStr;
+
+            MessageBody.TextBody textBody = new MessageBody.TextBody(Body.Content);
+
+            if (Body.TargetLanguages.Length > 3)
+                textBody.TargetLanguages = TransformTool.JsonStringToStringList(Body.TargetLanguages);
+            else
+                textBody.TargetLanguages = new List<string>();
+
+            if (Body.Translations.Length > 3)
+            {
+                Dictionary<string, string> dict = TransformTool.JsonStringToDictionary(TransformTool.GetUnicodeStringFromUTF8(Body.Translations));
+                textBody.Translations = dict;
+            }                
+            else
+                textBody.Translations = new Dictionary<string, string>();
+            return textBody;
         }
 
     }
@@ -61,7 +121,9 @@ namespace ChatSDK
         {
             public double Latitude;
             public double Longitude;
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string Address;
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string BuildingName;
 
             public LocationMessageBodyTO(in Message message)
@@ -69,7 +131,10 @@ namespace ChatSDK
                 if (message.Body.Type == MessageBodyType.LOCATION)
                 {
                     var body = message.Body as LocationBody;
-                    (Latitude, Longitude, Address, BuildingName) = (body.Latitude, body.Longitude, body.Address, body.BuildingName);
+                    Latitude = body.Latitude;
+                    Longitude = body.Longitude;
+                    Address = body.Address;
+                    BuildingName = body.BuildingName;
                 }
                 else
                 {
@@ -89,11 +154,21 @@ namespace ChatSDK
 
         }
 
+        public override void UpdateMsgBody(Message msg)
+        {
+            // do nothing
+        }
+
+
         public override IMessageBody UnmarshallBody()
         {
+            string address = TransformTool.GetUnicodeStringFromUTF8(Body.Address);
+            string building = TransformTool.GetUnicodeStringFromUTF8(Body.BuildingName);
+
             // change EMPTY_STR(" ")  to ""
-            if (Body.Address.CompareTo(" ") == 0)       Body.Address = "";
-            if (Body.BuildingName.CompareTo(" ") == 0)  Body.BuildingName = "";
+
+            Body.Address = (address.CompareTo(" ") == 0) ? "" : address;
+            Body.BuildingName = (building.CompareTo(" ") == 0) ? "" : building;
 
             return new MessageBody.LocationBody(Body.Latitude, Body.Longitude, Body.Address, Body.BuildingName);
         }
@@ -115,7 +190,8 @@ namespace ChatSDK
                 if (message.Body.Type == MessageBodyType.CMD)
                 {
                     var body = message.Body as CmdBody;
-                    (Action, DeliverOnlineOnly) = (body.Action, body.DeliverOnlineOnly);
+                    Action = body.Action;
+                    DeliverOnlineOnly = body.DeliverOnlineOnly;
                 }
                 else
                 {
@@ -135,6 +211,11 @@ namespace ChatSDK
 
         }
 
+        public override void UpdateMsgBody(Message msg)
+        {
+            // do nothing
+        }
+
         public override IMessageBody UnmarshallBody()
         {
             // change EMPTY_STR(" ")  to ""
@@ -152,6 +233,7 @@ namespace ChatSDK
         struct FileMessageBodyTO
         {
             public string LocalPath;
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string DisplayName;
             public string Secret;
             public string RemotePath;
@@ -163,8 +245,12 @@ namespace ChatSDK
                 if (message.Body.Type == MessageBodyType.FILE)
                 {
                     var body = message.Body as FileBody;
-                    (LocalPath, DisplayName, Secret, RemotePath, FileSize, DownStatus) =
-                        (body.LocalPath, body.DisplayName, body.Secret ?? "", body.RemotePath ?? "", body.FileSize, body.DownStatus);
+                    LocalPath = body.LocalPath;
+                    DisplayName = body.DisplayName;
+                    Secret = body.Secret ?? "";
+                    RemotePath = body.RemotePath ?? "";
+                    FileSize = body.FileSize;
+                    DownStatus = body.DownStatus;
                 }
                 else
                 {
@@ -184,11 +270,28 @@ namespace ChatSDK
 
         }
 
+        public override void UpdateMsgBody(Message msg)
+        {
+            if (null == msg || msg.Body.Type != MessageBodyType.FILE)
+                return;
+
+            FileBody fb = (FileBody)msg.Body;
+
+            // change EMPTY_STR(" ")  to ""
+            if (Body.DisplayName.CompareTo(" ") != 0)   fb.DisplayName = Body.DisplayName;
+            if (Body.LocalPath.CompareTo(" ") != 0)     fb.LocalPath = Body.LocalPath;
+            if (Body.RemotePath.CompareTo(" ") != 0)    fb.RemotePath = Body.RemotePath;
+            if (Body.Secret.CompareTo(" ") != 0)        fb.Secret = Body.Secret;
+
+            fb.FileSize = Body.FileSize;
+            fb.DownStatus = Body.DownStatus;
+        }
+
         public override IMessageBody UnmarshallBody()
         {
             MessageBody.FileBody fb = new MessageBody.FileBody();
             fb.LocalPath = Body.LocalPath;
-            fb.DisplayName = Body.DisplayName;
+            fb.DisplayName = TransformTool.GetUnicodeStringFromUTF8(Body.DisplayName);
             fb.Secret = Body.Secret;
             fb.RemotePath = Body.RemotePath;
             fb.FileSize = Body.FileSize;
@@ -212,6 +315,7 @@ namespace ChatSDK
         struct ImageMessageBodyTO
         {
             public string LocalPath;
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string DisplayName;
             public string Secret;
             public string RemotePath;
@@ -231,11 +335,19 @@ namespace ChatSDK
                 if (message.Body.Type == MessageBodyType.IMAGE)
                 {
                     var body = message.Body as ImageBody;
-                    (LocalPath, DisplayName, Secret, RemotePath, FileSize, DownStatus, ThumbnailLocalPath, ThumbnaiRemotePath, ThumbnaiSecret, Height, Width, ThumbnaiDownStatus, Original) =
-                        (body.LocalPath, body.DisplayName ?? "", body.Secret ?? "", body.RemotePath ?? "", body.FileSize, body.DownStatus,
-                        body.ThumbnailLocalPath ?? "", body.ThumbnaiRemotePath ?? "", body.ThumbnaiSecret ?? "", body.Height, body.Width,
-                        body.ThumbnaiDownStatus, body.Original);
-                    
+                    LocalPath = body.LocalPath;
+                    DisplayName = body.DisplayName ?? "";
+                    Secret = body.Secret ?? "";
+                    RemotePath = body.RemotePath ?? "";
+                    FileSize = body.FileSize;
+                    DownStatus = body.DownStatus;
+                    ThumbnailLocalPath = body.ThumbnailLocalPath ?? "";
+                    ThumbnaiRemotePath = body.ThumbnaiRemotePath ?? "";
+                    ThumbnaiSecret = body.ThumbnaiSecret ?? "";
+                    Height = body.Height;
+                    Width = body.Width;
+                    ThumbnaiDownStatus = body.ThumbnaiDownStatus;
+                    Original = body.Original;
                 }
                 else
                 {
@@ -255,11 +367,32 @@ namespace ChatSDK
 
         }
 
+        public override void UpdateMsgBody(Message msg)
+        {
+            if (null == msg || msg.Body.Type != MessageBodyType.IMAGE)
+                return;
+
+            ImageBody ib = (ImageBody)msg.Body;
+
+            // change EMPTY_STR(" ")  to ""
+            if (Body.DisplayName.CompareTo(" ") != 0)           ib.DisplayName = Body.DisplayName;
+            if (Body.LocalPath.CompareTo(" ") != 0)             ib.LocalPath = Body.LocalPath;
+            if (Body.RemotePath.CompareTo(" ") != 0)            ib.RemotePath = Body.RemotePath;
+            if (Body.Secret.CompareTo(" ") != 0)                ib.Secret = Body.Secret;
+            if (Body.ThumbnaiSecret.CompareTo(" ") != 0)        ib.ThumbnaiSecret = Body.ThumbnaiSecret;
+            if (Body.ThumbnaiRemotePath.CompareTo(" ") != 0)    ib.ThumbnaiRemotePath = Body.ThumbnaiRemotePath;
+            if (Body.ThumbnailLocalPath.CompareTo(" ") != 0)    ib.ThumbnailLocalPath = Body.ThumbnailLocalPath;
+
+            ib.FileSize = Body.FileSize;
+            ib.DownStatus = Body.DownStatus;
+            ib.ThumbnaiDownStatus = Body.ThumbnaiDownStatus;
+        }
+
         public override IMessageBody UnmarshallBody()
         {
             MessageBody.ImageBody ib = new MessageBody.ImageBody();
             ib.LocalPath = Body.LocalPath;
-            ib.DisplayName = Body.DisplayName;
+            ib.DisplayName = TransformTool.GetUnicodeStringFromUTF8(Body.DisplayName);
             ib.Secret = Body.Secret;
             ib.RemotePath = Body.RemotePath;
             ib.ThumbnailLocalPath = Body.ThumbnailLocalPath;
@@ -270,7 +403,7 @@ namespace ChatSDK
             ib.FileSize = Body.FileSize;
             ib.DownStatus = Body.DownStatus;
             ib.ThumbnaiDownStatus = Body.ThumbnaiDownStatus;
-            ib.Original = Body.Original;
+            //ib.Original = Body.Original;
 
             // change EMPTY_STR(" ")  to ""
             if (ib.DisplayName.CompareTo(" ") == 0)         ib.DisplayName = "";
@@ -293,6 +426,7 @@ namespace ChatSDK
         struct VoiceMessageBodyTO
         {
             public string LocalPath;
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string DisplayName;
             public string Secret;
             public string RemotePath;
@@ -305,8 +439,13 @@ namespace ChatSDK
                 if (message.Body.Type == MessageBodyType.VOICE)
                 {
                     var body = message.Body as VoiceBody;
-                    (LocalPath, DisplayName, Secret, RemotePath, FileSize, DownStatus, Duration) =
-                        (body.LocalPath, body.DisplayName ?? "", body.Secret ?? "", body.RemotePath ?? "", body.FileSize, body.DownStatus, body.Duration);
+                    LocalPath = body.LocalPath;
+                    DisplayName = body.DisplayName ?? "";
+                    Secret = body.Secret ?? "";
+                    RemotePath = body.RemotePath ?? "";
+                    FileSize = body.FileSize;
+                    DownStatus = body.DownStatus;
+                    Duration = body.Duration;
                 }
                 else
                 {
@@ -326,11 +465,29 @@ namespace ChatSDK
 
         }
 
+        public override void UpdateMsgBody(Message msg)
+        {
+            if (null == msg || msg.Body.Type != MessageBodyType.VOICE)
+                return;
+
+            VoiceBody vob = (VoiceBody)msg.Body;
+
+            // change EMPTY_STR(" ")  to ""
+            if (Body.DisplayName.CompareTo(" ") != 0)   vob.DisplayName = Body.DisplayName;
+            if (Body.LocalPath.CompareTo(" ") != 0)     vob.LocalPath = Body.LocalPath;
+            if (Body.RemotePath.CompareTo(" ") != 0)    vob.RemotePath = Body.RemotePath;
+            if (Body.Secret.CompareTo(" ") != 0)        vob.Secret = Body.Secret;
+
+            vob.FileSize = Body.FileSize;
+            vob.DownStatus = Body.DownStatus;
+            vob.Duration = Body.Duration;
+        }
+
         public override IMessageBody UnmarshallBody()
         {
             MessageBody.VoiceBody voi = new MessageBody.VoiceBody();
             voi.LocalPath = Body.LocalPath;
-            voi.DisplayName = Body.DisplayName;
+            voi.DisplayName = TransformTool.GetUnicodeStringFromUTF8(Body.DisplayName);
             voi.Secret = Body.Secret;
             voi.RemotePath = Body.RemotePath;
             voi.FileSize = Body.FileSize;
@@ -355,6 +512,7 @@ namespace ChatSDK
         struct VideoMessageBodyTO
         {
             public string LocalPath;
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string DisplayName;
             public string Secret;
             public string RemotePath;
@@ -403,11 +561,32 @@ namespace ChatSDK
         
         }
 
+        public override void UpdateMsgBody(Message msg)
+        {
+            if (null == msg || msg.Body.Type != MessageBodyType.VIDEO)
+                return;
+
+            VideoBody vib = (VideoBody)msg.Body;
+
+            // change EMPTY_STR(" ")  to ""
+            if (Body.DisplayName.CompareTo(" ") != 0)           vib.DisplayName = Body.DisplayName;
+            if (Body.LocalPath.CompareTo(" ") != 0)             vib.LocalPath = Body.LocalPath;
+            if (Body.RemotePath.CompareTo(" ") != 0)            vib.RemotePath = Body.RemotePath;
+            if (Body.Secret.CompareTo(" ") != 0)                vib.Secret = Body.Secret;
+            if (Body.ThumbnaiSecret.CompareTo(" ") != 0)        vib.ThumbnaiSecret = Body.ThumbnaiSecret;
+            if (Body.ThumbnaiRemotePath.CompareTo(" ") != 0)    vib.ThumbnaiRemotePath = Body.ThumbnaiRemotePath;
+            if (Body.ThumbnaiLocationPath.CompareTo(" ") != 0)  vib.ThumbnaiLocationPath = Body.ThumbnaiLocationPath;
+            
+            vib.FileSize = Body.FileSize;
+            vib.DownStatus = Body.DownStatus;
+            vib.Duration = Body.Duration;
+        }
+
         public override IMessageBody UnmarshallBody()
         {
             MessageBody.VideoBody vid = new MessageBody.VideoBody();
             vid.LocalPath = Body.LocalPath;
-            vid.DisplayName = Body.DisplayName;
+            vid.DisplayName = TransformTool.GetUnicodeStringFromUTF8(Body.DisplayName);
             vid.Secret = Body.Secret;
             vid.RemotePath = Body.RemotePath;
             vid.ThumbnaiLocationPath = Body.ThumbnaiLocationPath;
@@ -439,7 +618,9 @@ namespace ChatSDK
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
         struct CustomMessageBodyTO
         {
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string CustomEvent;
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string CustomParams; //corresponding to Dictionary<string, string>
 
             public CustomMessageBodyTO(in Message message)
@@ -473,20 +654,26 @@ namespace ChatSDK
 
         }
 
+        public override void UpdateMsgBody(Message msg)
+        {
+           // do nothing
+        }
+
         public override IMessageBody UnmarshallBody()
         {
             Dictionary<string, string> dict;
             // valid json format: {a:b}
             if (null != Body.CustomParams && Body.CustomParams.Length > 3)
-                dict = TransformTool.JsonStringToDictionary(Body.CustomParams);
+                dict = TransformTool.JsonStringToDictionary(TransformTool.GetUnicodeStringFromUTF8(Body.CustomParams));
             else
                 dict = new Dictionary<string, string>(); // empty dict
-            return new MessageBody.CustomBody(Body.CustomEvent, dict);
+
+            return new MessageBody.CustomBody(TransformTool.GetUnicodeStringFromUTF8(Body.CustomEvent), dict);
         }
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-    public abstract class MessageTO
+    public class MessageTO
     {
         public string MsgId;
         public string ConversationId;
@@ -500,17 +687,48 @@ namespace ChatSDK
         public bool HasDeliverAck;
         [MarshalAs(UnmanagedType.U1)]
         public bool HasReadAck;
+        [MarshalAs(UnmanagedType.U1)]
+        public bool IsNeedGroupAck;
+        [MarshalAs(UnmanagedType.U1)]
+        public bool IsRead;
+        [MarshalAs(UnmanagedType.U1)]
+        public bool MessageOnlineState;
 
+        [MarshalAs(UnmanagedType.LPTStr)]
         public string AttributesValues;
         public long LocalTime;
         public long ServerTime;
+        public string ReactionList;
+
+        [MarshalAs(UnmanagedType.U1)]
+        public bool IsThread;
+        public string MucParentId;
+        public string MsgParentId;
+        [MarshalAs(UnmanagedType.LPTStr)]
+        public string ThreadOverview;
+
+
         public MessageBodyType BodyType;
 
-        protected MessageTO(in Message message) =>
-            (MsgId, ConversationId, From, To, RecallBy, Type, Direction, Status, HasReadAck, HasDeliverAck, AttributesValues, LocalTime, ServerTime, BodyType)
-                = (message.MsgId, message.ConversationId, message.From, message.To, message.RecallBy, message.MessageType, message.Direction,
-                message.Status, message.HasReadAck, message.HasDeliverAck, TransformTool.JsonStringFromAttributes(message.Attributes), message.LocalTime,
-                message.ServerTime, message.Body.Type);
+        protected MessageTO(in Message message)
+        {
+            MsgId = message.MsgId;
+            ConversationId = message.ConversationId;
+            From = message.From;
+            To = message.To;
+            RecallBy = message.RecallBy;
+            Type = message.MessageType;
+            Direction = message.Direction;
+            Status = message.Status;
+            HasReadAck = message.HasReadAck;
+            HasDeliverAck = message.HasDeliverAck;
+            IsNeedGroupAck = message.IsNeedGroupAck;
+            AttributesValues = TransformTool.JsonStringFromAttributes(message.Attributes);
+            LocalTime = message.LocalTime;
+            ServerTime = message.ServerTime;
+            ReactionList = MessageReaction.ListToJson(message.ReactionList);
+            BodyType = message.Body.Type;
+        }
 
         protected MessageTO()
         {
@@ -611,7 +829,15 @@ namespace ChatSDK
             return messages;
         }
 
-        public abstract IMessageBody UnmarshallBody();
+        public virtual IMessageBody UnmarshallBody() { return null; }
+        public virtual void UpdateMsgBody(Message msg) { }
+
+        internal void UpdateMsg(Message msg)
+        {
+            msg.MsgId = MsgId;
+            UpdateMsgBody(msg);
+        }
+
 
         internal Message Unmarshall()
         {
@@ -625,12 +851,18 @@ namespace ChatSDK
                 MessageType = Type,
                 Direction = Direction,
                 Status = Status,
-                Attributes = TransformTool.JsonStringToAttributes(AttributesValues),
+                Attributes = TransformTool.JsonStringToAttributes(TransformTool.GetUnicodeStringFromUTF8(AttributesValues)),
                 LocalTime = LocalTime,
                 ServerTime = ServerTime,
                 HasDeliverAck = HasDeliverAck,
                 HasReadAck = HasReadAck,
+                IsNeedGroupAck = IsNeedGroupAck,
+                IsRead = IsRead,
+                MessageOnlineState = MessageOnlineState,
+                ReactionList = MessageReaction.ListFromJson(TransformTool.GetUnicodeStringFromUTF8(ReactionList))
             };
+
+            result.SetReactionMap();
 
             // change EMPTY_STR(" ")  to ""
             if (result.MsgId.CompareTo(" ") == 0)           result.MsgId = "";
@@ -646,25 +878,25 @@ namespace ChatSDK
 
     public class AttributeValue
     {
-        AttributeValueType VType;
+        private AttributeValueType VType;
 
-        bool BoolV;
-        sbyte CharV;
-        char UCharV;
-        short ShortV;
-        ushort UShortV;
-        int Int32V;
-        uint UInt32V;
-        long Int64V;
-        ulong UInt64V;
-        float FloatV;
-        double DoubleV;
-        string StringV;
-        List<string> StringVecV;
-        string JsonStringV;
+        private bool BoolV;
+        private sbyte CharV;
+        private char UCharV;
+        private short ShortV;
+        private ushort UShortV;
+        private int Int32V;
+        private uint UInt32V;
+        private long Int64V;
+        private ulong UInt64V;
+        private float FloatV;
+        private double DoubleV;
+        private string StringV;
+        private List<string> StringVecV;
+        private string JsonStringV;
         //Dictionary<string, AttributeValue> AttributeV;
 
-        public static AttributeValue Of(in object value, AttributeValueType type)
+        internal static AttributeValue Of(in object value, AttributeValueType type)
         {
             if (type == AttributeValueType.BOOL)
             {
@@ -695,11 +927,11 @@ namespace ChatSDK
             {
                 return Of((string)value, type);
             }
+            /*
             else if (type == AttributeValueType.STRVECTOR)
             {
                 return Of((List<string>)value);
             }
-            /*
             else if (type == AttributeValueType.ATTRIBUTEVALUE)
             {
                 return Of((Dictionary<string, AttributeValue>)value);
@@ -710,7 +942,7 @@ namespace ChatSDK
             }
         }
 
-        public static AttributeValue Of(in bool value)
+        internal static AttributeValue Of(in bool value)
         {
             var result = new AttributeValue
             {
@@ -719,7 +951,7 @@ namespace ChatSDK
             };
             return result;
         }
-        public static AttributeValue Of(in int value)
+        internal static AttributeValue Of(in int value)
         {
             var result = new AttributeValue
             {
@@ -729,7 +961,7 @@ namespace ChatSDK
             return result;
         }
 
-        public static AttributeValue Of(in uint value)
+        internal static AttributeValue Of(in uint value)
         {
             var result = new AttributeValue
             {
@@ -739,7 +971,7 @@ namespace ChatSDK
             return result;
         }
 
-        public static AttributeValue Of(in long value)
+        internal static AttributeValue Of(in long value)
         {
             var result = new AttributeValue
             {
@@ -748,7 +980,7 @@ namespace ChatSDK
             };
             return result;
         }
-        public static AttributeValue Of(in float value)
+        internal static AttributeValue Of(in float value)
         {
             var result = new AttributeValue
             {
@@ -758,7 +990,7 @@ namespace ChatSDK
             return result;
         }
 
-        public static AttributeValue Of(in double value)
+        internal static AttributeValue Of(in double value)
         {
             var result = new AttributeValue
             {
@@ -768,7 +1000,7 @@ namespace ChatSDK
             return result;
         }
 
-        public static AttributeValue Of(in string value, AttributeValueType type)
+        internal static AttributeValue Of(in string value, AttributeValueType type)
         {
             var result = new AttributeValue();
             if (AttributeValueType.JSONSTRING == type)
@@ -784,7 +1016,8 @@ namespace ChatSDK
             return result;
         }
 
-        public static AttributeValue Of(in List<string> value)
+        /*
+        internal static AttributeValue Of(in List<string> value)
         {
             var result = new AttributeValue
             {
@@ -794,8 +1027,7 @@ namespace ChatSDK
             return result;
         }
 
-        /*
-        public static AttributeValue Of(in Dictionary<string, AttributeValue> value)
+        internal static AttributeValue Of(in Dictionary<string, AttributeValue> value)
         {
             var result = new AttributeValue
             {
@@ -805,7 +1037,7 @@ namespace ChatSDK
             return result;
         }*/
 
-        public object GetAttributeValue(AttributeValueType type)
+        internal object GetAttributeValue(AttributeValueType type)
         {
             if (type == AttributeValueType.BOOL)
             {
@@ -839,11 +1071,11 @@ namespace ChatSDK
             {
                 return JsonStringV;
             }
+            /*
             else if (type == AttributeValueType.STRVECTOR)
             {
                 return StringVecV;
             }
-            /*
             else if (type == AttributeValueType.ATTRIBUTEVALUE)
             {
                 return AttributeV;
@@ -855,12 +1087,16 @@ namespace ChatSDK
         }
 
 
-        public AttributeValueType GetAttributeValueType()
+        internal AttributeValueType GetAttributeValueType()
         {
             return VType;
         }
 
+#if DEBUG
         public JSONObject ToJsonObject()
+#else
+        internal JSONObject ToJsonObject()
+#endif
         {
             JSONObject jo = new JSONObject();
             string _type;
@@ -897,7 +1133,7 @@ namespace ChatSDK
                     _type = "str";
                     value = StringV;
                     break;
-
+                /*
                 case AttributeValueType.STRVECTOR:
                     _type = "strv";
                     array = new JSONArray();
@@ -907,7 +1143,7 @@ namespace ChatSDK
                     }
                     value = ""; // here use JSONObject, not string
                     break;
-
+                */
                 case AttributeValueType.JSONSTRING:
                     _type = "jstr";
                     value = JsonStringV;
@@ -952,7 +1188,6 @@ namespace ChatSDK
 
             string typeString = jo["type"];
             JSONNode jvalue = jo["value"];
-            Debug.Log("abbb");
             string value = null;
             if ("strv" != typeString && "attr" != typeString)
             {
@@ -989,6 +1224,7 @@ namespace ChatSDK
                     result.VType = AttributeValueType.STRING;
                     result.StringV = value;
                     break;
+                /*
                 case "strv":
                     result.VType = AttributeValueType.STRVECTOR;
                     result.StringVecV = new List<string>();
@@ -1018,6 +1254,7 @@ namespace ChatSDK
                         count++;
                     }
                     break;
+                */
                 case "jstr":
                     result.VType = AttributeValueType.JSONSTRING;
                     result.JsonStringV = value;
@@ -1057,7 +1294,7 @@ namespace ChatSDK
             return result;
         }
 
-        public static void PrintAttribute(AttributeValue value)
+        internal static void PrintAttribute(AttributeValue value)
         {
             switch (value.GetAttributeValueType())
             {
@@ -1082,12 +1319,14 @@ namespace ChatSDK
                 case AttributeValueType.STRING:
                     Debug.Log($"type: {AttributeValueType.STRING.ToString()}, value is {value.StringV.ToString()}");
                     break;
+                /*
                 case AttributeValueType.STRVECTOR:
                     foreach (var item_print in value.StringVecV)
                     {
                         Debug.Log($"type: {AttributeValueType.STRVECTOR.ToString()}, array: {item_print}");
                     }
                     break;
+                */
                 case AttributeValueType.JSONSTRING:
                     Debug.Log($"type: {AttributeValueType.JSONSTRING.ToString()}, value is {value.JsonStringV.ToString()}");
                     break;
@@ -1106,7 +1345,7 @@ namespace ChatSDK
             }
         }
 
-        public static void ToAndFromTest(Dictionary<string, AttributeValue> attriMap)
+        internal static void ToAndFromTest(Dictionary<string, AttributeValue> attriMap)
         {
             // to json string
             JSONObject jo = new JSONObject();
@@ -1127,7 +1366,7 @@ namespace ChatSDK
             }
         }
 
-        public static void ParseAttributeExample(Message msg)
+        internal static void ParseAttributeExample(Message msg)
         {
             if (null == msg) return;
             if (null == msg.Attributes || msg.Attributes.Count == 0) return;
@@ -1138,7 +1377,11 @@ namespace ChatSDK
             }
         }
 
+#if DEBUG
         public static void MakeMsgAttributesExample(Message msg)
+#else
+        internal static void MakeMsgAttributesExample(Message msg)
+#endif
         {
             if (null == msg) return;
 
@@ -1170,12 +1413,13 @@ namespace ChatSDK
             string jstr = "a level3 json string";
             Message.SetAttribute(level3_map, "level3-jstring", jstr, AttributeValueType.JSONSTRING);
 
+            /*
             List<string> list3 = new List<string>();
             list3.Add("level3-array1");
             list3.Add("level3-array2");
             list3.Add("level3-array3");
             Message.SetAttribute(level3_map, "level3-list", list3, AttributeValueType.STRVECTOR);
-
+            */
             // make level2
             Dictionary<string, AttributeValue> level2_map = new Dictionary<string, AttributeValue>();
 
@@ -1203,12 +1447,13 @@ namespace ChatSDK
             jstr = "a level2 json string";
             Message.SetAttribute(level2_map, "level2-jstring", jstr, AttributeValueType.JSONSTRING);
 
+            /*
             List<string> list2 = new List<string>();
             list2.Add("level2-array1");
             list2.Add("level2-array2");
             list2.Add("level2-array3");
             Message.SetAttribute(level2_map, "level2-list", list2, AttributeValueType.STRVECTOR);
-
+            */
             //Message.SetAttribute(level2_map, "level2-attr", level3_map, AttributeValueType.ATTRIBUTEVALUE);
             
             // make level1
@@ -1216,7 +1461,6 @@ namespace ChatSDK
 
             //string jstr = "a level1 json string";
             //msg.SetAttribute(level1_map, "level1-jstring", jstr, AttributeValueType.JSONSTRING);
-
             
             bool b1 = true;
             Message.SetAttribute(level1_map, "level1-bool", b1, AttributeValueType.BOOL);
@@ -1237,26 +1481,43 @@ namespace ChatSDK
             double d1 = 1.23456D;
             Message.SetAttribute(level1_map, "level1-double", d1, AttributeValueType.DOUBLE);
             
-            string str1 = "a level1 string";
-            Message.SetAttribute(level1_map, "level1-string", str1, AttributeValueType.STRING);
+            string str1 = "这是中文字符串的内容，Content in Chinese.";
+            Message.SetAttribute(level1_map, "level1-string-中文", str1, AttributeValueType.STRING);
 
             string str2 = "a level1 string1-jasldjfasdlfjasdlfjasdlfjasofasudf9asdf7as9d6fas98d6f9asd7f9asd7fs9af7as97fa9s8dsa97fasd890f7asd98fuzxd9f87zuxd09f7ad098f7uyas89df07asd09f8as7df0as";
-            Message.SetAttribute(level1_map, "level1-string1", str2, AttributeValueType.STRING);
+            Message.SetAttribute(level1_map, "level1-string-en", str2, AttributeValueType.STRING);
             
-            string jstr1 = "a level1 json string";
-            Message.SetAttribute(level1_map, "level1-jstring", jstr1, AttributeValueType.JSONSTRING);
-            
+            // this is not reasonable json string, so failed to send!!
+            //string jstr1 = "a level1 json string";
+            //Message.SetAttribute(level1_map, "level1-jstring", jstr1, AttributeValueType.JSONSTRING);
+
+            Dictionary<string, string> dictionary = new Dictionary<string, string>();
+            dictionary.Add("key1", "value1");
+            dictionary.Add("key2", "value2");
+            dictionary.Add("钥匙3", "值three");
+
+            string jstr2 = TransformTool.JsonStringFromDictionary(dictionary);
+            Message.SetAttribute(level1_map, "level1-jstring-dict", jstr2, AttributeValueType.JSONSTRING);
+
+            List<string> list1 = new List<string>();
+            list1.Add("level1-array1");
+            list1.Add("level1-array2");
+            list1.Add("level1-数组3");
+            string jstr3 = TransformTool.JsonStringFromStringList(list1);
+            Message.SetAttribute(level1_map, "level1-list-vector", jstr3, AttributeValueType.JSONSTRING);
+
+            /*
             List<string> list1 = new List<string>();
             list1.Add("level1-array1");
             list1.Add("level1-array2");
             list1.Add("level1-array3");
             Message.SetAttribute(level1_map, "level1-list", list1, AttributeValueType.STRVECTOR);
-
+            */
             //Message.SetAttribute(level1_map, "level1-attr", level2_map, AttributeValueType.ATTRIBUTEVALUE);
 
             msg.Attributes = level1_map;
 
-            ToAndFromTest(msg.Attributes);
+            //ToAndFromTest(msg.Attributes);
         }
     }
 
@@ -1271,10 +1532,18 @@ namespace ChatSDK
     public struct GroupTO
     {
         public string GroupId;
+
+        [MarshalAs(UnmanagedType.LPTStr)]
         public string Name;
+
+        [MarshalAs(UnmanagedType.LPTStr)]
         public string Description;
+
         public string Owner;
+
+        [MarshalAs(UnmanagedType.LPTStr)]
         public string Announcement;
+
         public IntPtr MemberList;
         public IntPtr AdminList;
         public IntPtr BlockList;
@@ -1308,10 +1577,15 @@ namespace ChatSDK
                 MessageBlocked = MessageBlocked,
                 IsAllMemberMuted = IsAllMemberMuted
             };
+            string name = TransformTool.GetUnicodeStringFromUTF8(Name);
+            string desc = TransformTool.GetUnicodeStringFromUTF8(Description);
+            string announcement = TransformTool.GetUnicodeStringFromUTF8(Announcement);
+
+            result.Name = (name.CompareTo(" ") == 0) ? "" : name;
+            result.Description = (desc.CompareTo(" ") == 0) ? "" : desc;
+            result.Annoumcement = (announcement.CompareTo(" ") == 0) ? "" : announcement;
 
             // change EMPTY_STR(" ")  to ""
-            if (result.Description.CompareTo(" ") == 0)    result.Description = "";
-            if (result.Annoumcement.CompareTo(" ") == 0)   result.Annoumcement = "";
             if (result.Options.Ext.CompareTo(" ") == 0)    result.Options.Ext = "";
 
             var memberList = new List<string>();
@@ -1364,11 +1638,24 @@ namespace ChatSDK
     public class GroupInfoTO
     {
         public string GroupId;
+
+        [MarshalAs(UnmanagedType.LPTStr)]
         public string GroupName;
 
         public GroupInfoTO()
         {
 
+        }
+
+        internal GroupInfo GroupInfo()
+        {
+            var groupInfo = new GroupInfo();
+            groupInfo.GroupId = GroupId;
+
+            string name = TransformTool.GetUnicodeStringFromUTF8(GroupName);
+            groupInfo.GroupName = name;
+
+            return groupInfo;
         }
     }
 
@@ -1376,14 +1663,23 @@ namespace ChatSDK
     public struct RoomTO
     {
         public string RoomId;
+
+        [MarshalAs(UnmanagedType.LPTStr)]
         public string Name;
+
+        [MarshalAs(UnmanagedType.LPTStr)]
         public string Description;
+
         public string Owner;
+
+        [MarshalAs(UnmanagedType.LPTStr)]
         public string Announcement;
+
         public IntPtr MemberList;
         public IntPtr AdminList;
         public IntPtr BlockList;
         public IntPtr MuteList;
+        public int MemberListCount;
         public int MemberCount;
         public int AdminCount;
         public int BlockCount;
@@ -1402,13 +1698,23 @@ namespace ChatSDK
                 Description = Description,
                 Owner = Owner,
                 Announcement = Announcement,
+                MemberCount = MemberCount,
                 PermissionType = PermissionType,
                 MaxUsers = MaxUsers,
                 IsAllMemberMuted = IsAllMemberMuted
             };
+
+            string name = TransformTool.GetUnicodeStringFromUTF8(Name);
+            string desc = TransformTool.GetUnicodeStringFromUTF8(Description);
+            string announcement = TransformTool.GetUnicodeStringFromUTF8(Announcement);
+
+            result.Name = (name.CompareTo(" ") == 0) ? "" : name;
+            result.Description = (desc.CompareTo(" ") == 0) ? "" : desc;
+            result.Announcement = (announcement.CompareTo(" ") == 0) ? "" : announcement;
+
             var memberList = new List<string>();
             IntPtr current = MemberList;
-            for (int i = 0; i < MemberCount; i++)
+            for (int i = 0; i < MemberListCount; i++)
             {
                 IntPtr memberPtr = Marshal.PtrToStructure<IntPtr>(current);
                 string m = Marshal.PtrToStringAnsi(memberPtr);
@@ -1457,6 +1763,7 @@ namespace ChatSDK
         public string AckId;
         public string MsgId;
         public string From;
+        [MarshalAs(UnmanagedType.LPTStr)]
         public string Content;
         public int Count;
         public long Timestamp;
@@ -1468,15 +1775,13 @@ namespace ChatSDK
 
         internal GroupReadAck Unmarshall()
         {
-            var result = new GroupReadAck()
-            {
-                AckId = AckId,
-                MsgId = MsgId,
-                From = From,
-                Content = Content,
-                Count = Count,
-                Timestamp = Timestamp
-            };
+            var result = new GroupReadAck();
+            result.AckId = AckId;
+            result.MsgId = MsgId;
+            result.From = From;
+            result.Content = TransformTool.GetUnicodeStringFromUTF8(Content);
+            result.Count = Count;
+            result.Timestamp = Timestamp;
             return result;
         }
     }
@@ -1499,6 +1804,72 @@ namespace ChatSDK
     {
         public string NextPageCursor;
         public DataType Type;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct PresenceTO
+    {
+        internal string Publisher;
+        internal IntPtr DeviceJson;
+        internal IntPtr StatusJson;
+        internal IntPtr Ext;
+        internal long LatestTime;
+        internal long ExpiryTime;
+
+        internal Presence Unmarshall()
+        {
+            var result = new Presence();
+
+            result.Publisher = Publisher;
+            result.LatestTime = LatestTime;
+            result.ExpiryTime = ExpiryTime;
+
+            result.Ext = Marshal.PtrToStringAnsi(Ext);
+            if (result.Ext.CompareTo(" ") == 0) result.Ext = "";
+
+            string deviceJson = Marshal.PtrToStringAnsi(DeviceJson);
+            string statusJson = Marshal.PtrToStringAnsi(StatusJson);
+
+            result.StatusList = new List<PresenceDeviceStatus>();
+            if (deviceJson.Length > 3 && statusJson.Length > 3)
+            {
+                Dictionary<string, string> deviceMap = TransformTool.JsonStringToDictionary(deviceJson);
+                Dictionary<string, string> statusMap = TransformTool.JsonStringToDictionary(statusJson);
+
+                foreach(var it in deviceMap)
+                {
+                    PresenceDeviceStatus pds = new PresenceDeviceStatus();
+
+                    if (statusMap.ContainsKey(it.Key) == false)
+                    {
+                        Debug.LogError($"Cannot find {it.Key} in statusMap.");
+                        continue;
+                    }
+
+                    pds.DeviceId = it.Value;
+                    pds.Status = statusMap[it.Key];
+                    result.StatusList.Add(pds);
+                }
+            }
+            return result;
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct SupportLanguagesTO
+    {
+        internal string LanguageCode;
+        internal string LanguageName;
+        [MarshalAs(UnmanagedType.LPTStr)]
+        internal string LanguageNativeName;
+        public SupportLanguages SupportLanguagesInfo()
+        {
+            var supportLanguages = new SupportLanguages();
+            supportLanguages.LanguageCode = LanguageCode;
+            supportLanguages.LanguageName = LanguageName;
+            supportLanguages.LanguageNativeName = TransformTool.GetUnicodeStringFromUTF8(LanguageNativeName);
+            return supportLanguages;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential)]

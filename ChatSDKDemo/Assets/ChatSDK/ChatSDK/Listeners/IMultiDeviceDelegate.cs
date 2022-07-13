@@ -26,6 +26,8 @@ namespace ChatSDK
         /// </summary>
         /// <param name="data">非打扰事件数据</param>
         void undisturbMultiDevicesEvent(string data);
+
+        void onThreadMultiDevicesEvent(MultiDevicesOperation operation, string target, List<string> usernames);
     }
 
 }

@@ -17,9 +17,9 @@ namespace ChatSDK
             }
         }
 
-        public override bool DeleteConversation(string conversationId, bool deleteMessages)
+        public override bool DeleteConversation(string conversationId, bool deleteMessages, bool isThread)
         {
-            return wrapper.Call<bool>("deleteConversation", conversationId, deleteMessages);
+            return wrapper.Call<bool>("deleteConversation", conversationId, deleteMessages, isThread);
         }
 
         public override void DownloadAttachment(string messageId, CallBack handle = null)
@@ -32,14 +32,15 @@ namespace ChatSDK
             wrapper.Call("downloadThumbnail", messageId, handle?.callbackId);
         }
 
-        public override void FetchHistoryMessagesFromServer(string conversationId, ConversationType type, string startMessageId = null, int count = 20, ValueCallBack<CursorResult<Message>> handle = null)
+        public override void FetchHistoryMessagesFromServer(string conversationId, ConversationType type, string startMessageId = null, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<CursorResult<Message>> handle = null)
         {
+            //TODO: need to add direction
             wrapper.Call("fetchHistoryMessages", conversationId, TransformTool.ConversationTypeToInt(type), startMessageId, count, handle?.callbackId);
         }
 
-        public override Conversation GetConversation(string conversationId, ConversationType type, bool createIfNeed = true)
+        public override Conversation GetConversation(string conversationId, ConversationType type, bool createIfNeed = true, bool isThread = false)
         {
-            string jsonString = wrapper.Call<string>("getConversation", conversationId, TransformTool.ConversationTypeToInt(type), createIfNeed);
+            string jsonString = wrapper.Call<string>("getConversation", conversationId, TransformTool.ConversationTypeToInt(type), createIfNeed, isThread);
             if (jsonString == null || jsonString.Length == 0) {
                 return null;
             }
@@ -124,6 +125,11 @@ namespace ChatSDK
             wrapper.Call("ackMessageRead", messageId, handle?.callbackId);
         }
 
+        public override void SendReadAckForGroupMessage(string messageId, string ackContent, CallBack callback = null)
+        {
+            //TODO: Add code
+        }
+
         public override bool UpdateMessage(Message message)
         {
             return wrapper.Call<bool>("updateChatMessage", message.ToJson().ToString());
@@ -137,6 +143,42 @@ namespace ChatSDK
         public override void DeleteConversationFromServer(string conversationId, ConversationType conversationType, bool isDeleteServerMessages, CallBack callback = null)
         {
             wrapper.Call("deleteConversationFromServer", conversationId, TransformTool.ConversationTypeToInt(conversationType), isDeleteServerMessages, callback?.callbackId);
+        }
+
+        public override void FetchSupportLanguages(ValueCallBack<List<SupportLanguages>> handle = null)
+        {
+            //TODO
+        }
+
+        public override void TranslateMessage(ref Message message, List<string> targetLanguages, CallBack handle = null)
+        {
+            //TODO
+        }
+
+        public override void FetchGroupReadAcks(string messageId, string groupId, int pageSize = 20, string startAckId = null, ValueCallBack<CursorResult<GroupReadAck>> handle = null)
+        {
+            //TODO  
+        }
+
+        public override void ReportMessage(string messageId, string tag, string reason, CallBack handle = null)
+        {
+            //TODO
+        }
+        public override void AddReaction(string messageId, string reaction, CallBack handle = null)
+        {
+            //TODO
+        }
+        public override void RemoveReaction(string messageId, string reaction, CallBack handle = null)
+        {
+            //TODO
+        }
+        public override void GetReactionList(List<string> messageIdList, ConversationType chatType, string groupId, ValueCallBack<Dictionary<string, List<MessageReaction>>> handle = null)
+        {
+            //TODO
+        }
+        public override void GetReactionDetail(string messageId, string reaction, string cursor = null, int pageSize = 20, ValueCallBack<CursorResult<MessageReaction>> handle = null)
+        {
+            //TODO
         }
     }
     

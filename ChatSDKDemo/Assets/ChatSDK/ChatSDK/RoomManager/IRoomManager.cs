@@ -178,6 +178,14 @@ namespace ChatSDK
         /// <param name="handle">结果回调</param>
         public abstract void UpdateRoomAnnouncement(string roomId, string announcement, CallBack handle = null);
 
+        public abstract void MuteAllRoomMembers(string roomId, ValueCallBack<Room> handle = null);
+
+        public abstract void UnMuteAllRoomMembers(string roomId, ValueCallBack<Room> handle = null);
+
+        public abstract void AddWhiteListMembers(string roomId, List<string> members, CallBack handle = null);
+
+        public abstract void RemoveWhiteListMembers(string roomId, List<string> members, CallBack handle = null);
+
         /// <summary>
         /// 添加聊天室监听
         /// </summary>

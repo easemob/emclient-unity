@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using SimpleJSON;
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
 using UnityEngine;
 using UnityEditor;
+#endif
 
 namespace ChatSDK {
 
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
     internal class CallbackManager : MonoBehaviour
+#else
+    internal class CallbackManager
+#endif
     {
         private static bool isQuitting = false;
 
@@ -18,6 +24,9 @@ namespace ChatSDK {
         static string GroupManagerListener_Obj = "unity_chat_emclient_groupmanager_delegate_obj";
         static string RoomManagerListener_Obj = "unity_chat_emclient_roommanager_delegate_obj";
         static string MultiDeviceListener_Obj = "unity_chat_emclient_multidevice_delegate_obj";
+        static string PresenceManagerListener_Obj = "unity_chat_emclient_presencemanager_delegate_obj";
+        static string ReactionManagerListener_Obj = "unity_chat_emclient_reactionmanager_delegate_obj";
+        static string ThreadManagerListener_Obj = "unity_chat_emclient_threadmanager_delegate_obj";
 
 
         internal ConnectionListener connectionListener;
@@ -26,6 +35,9 @@ namespace ChatSDK {
         internal GroupManagerListener groupManagerListener;
         internal RoomManagerListener roomManagerListener;
         internal MultiDeviceListener multiDeviceListener;
+        internal PresenceManagerListener presenceManagerListener;
+        internal ReactionManagerListener reactionManagerListener;
+        internal ThreadManagerListener threadManagerListener;
 
         internal int CurrentId { get; private set; }
 
@@ -92,6 +104,8 @@ namespace ChatSDK {
             IClient.Instance.ChatManager().ClearDelegates();
             IClient.Instance.GroupManager().ClearDelegates();
             IClient.Instance.RoomManager().ClearDelegates();
+            IClient.Instance.PresenceManager().ClearDelegates();
+            IClient.Instance.ThreadManager().ClearDelegates();
             CallbackManager.Instance().multiDeviceListener.delegater.Clear();
             CallbackManager.Instance().CleanAllCallback();
             IClient.Instance.ClearResource();
@@ -107,6 +121,7 @@ namespace ChatSDK {
             return isQuitting;
         }
 
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
         internal static CallbackManager Instance()
         {
 
@@ -128,6 +143,18 @@ namespace ChatSDK {
 
             return _getInstance;
         }
+#else
+        internal static CallbackManager Instance()
+        {
+            if (_getInstance == null)
+            {
+                _getInstance = new CallbackManager();
+                _getInstance.SetupAllListeners();
+            }
+
+            return _getInstance;
+        }
+#endif
 
         internal void AddCallback(int callbackId, CallBack callback) {
             dictionary.Add(callbackId.ToString(), callback);
@@ -165,6 +192,7 @@ namespace ChatSDK {
             return dictionary[callbackId.ToString()];
         }
 
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
         internal void SetupAllListeners()
         {
             GameObject connectionObject = new GameObject(Connection_Obj);
@@ -240,8 +268,74 @@ namespace ChatSDK {
             {
                 Debug.Log($"DontDestroyOnLoad triggered.");
             }
-        }
 
+            GameObject presenceGameObj = new GameObject(PresenceManagerListener_Obj);
+            try
+            {
+                DontDestroyOnLoad(presenceGameObj);
+                presenceManagerListener = presenceGameObj.AddComponent<PresenceManagerListener>();
+                presenceManagerListener.delegater = new List<IPresenceManagerDelegate>();
+            }
+            catch (Exception)
+            {
+                Debug.Log($"DontDestroyOnLoad triggered.");
+            }
+
+            GameObject reactionManagerObject = new GameObject(ReactionManagerListener_Obj);
+            try
+            {
+                DontDestroyOnLoad(reactionManagerObject);
+                reactionManagerListener = reactionManagerObject.AddComponent<ReactionManagerListener>();
+                reactionManagerListener.delegater = new List<IReactionManagerDelegate>();
+            }
+            catch (Exception)
+            {
+                Debug.Log($"DontDestroyOnLoad triggered.");
+            }
+
+            GameObject threadManagerObject = new GameObject(ThreadManagerListener_Obj);
+            try
+            {
+                DontDestroyOnLoad(threadManagerObject);
+                threadManagerListener = threadManagerObject.AddComponent<ThreadManagerListener>();
+                threadManagerListener.delegater = new List<IThreadManagerDelegate>();
+            }
+            catch (Exception)
+            {
+                Debug.Log($"DontDestroyOnLoad triggered.");
+            }
+        }
+#else
+        internal void SetupAllListeners()
+        {
+            connectionListener = new ConnectionListener();
+            connectionListener.delegater = new List<IConnectionDelegate>();
+
+            chatManagerListener = new ChatManagerListener();
+            chatManagerListener.delegater = new List<IChatManagerDelegate>();
+
+            contactManagerListener = new ContactManagerListener();
+            contactManagerListener.delegater = new List<IContactManagerDelegate>();
+
+            groupManagerListener = new GroupManagerListener();
+            groupManagerListener.delegater = new List<IGroupManagerDelegate>();
+
+            roomManagerListener = new RoomManagerListener();
+            roomManagerListener.delegater = new List<IRoomManagerDelegate>();
+
+            multiDeviceListener = new MultiDeviceListener();
+            multiDeviceListener.delegater = new List<IMultiDeviceDelegate>();
+
+            presenceManagerListener = new PresenceManagerListener();
+            presenceManagerListener.delegater = new List<IPresenceManagerDelegate>();
+
+            reactionManagerListener = new ReactionManagerListener();
+            reactionManagerListener.delegater = new List<IReactionManagerDelegate>();
+
+            threadManagerListener = new ThreadManagerListener();
+            threadManagerListener.delegater = new List<IThreadManagerDelegate>();
+        }
+#endif
         public void OnSuccess(string jsonString) {
 
             if (jsonString == null) return;
@@ -281,6 +375,7 @@ namespace ChatSDK {
             {
                 string value = jo["type"].Value;
                 JSONNode responseValue = jo["value"];
+                //TODO: add new type for presencemanager and reactionmanager
                 if (value == "List<String>")
                 {
                     List<string> result = null;

@@ -21,6 +21,15 @@ HYPHENATE_API void PushManager_UpdateFCMPushToken(void *client, int callbackId, 
 HYPHENATE_API void PushManager_UpdateHMSPushToken(void *client, int callbackId, const char * token, FUNC_OnSuccess onSuccess, FUNC_OnError onError);
 HYPHENATE_API void PushManager_UpdatePushNickName(void *client, int callbackId, const char * nickname, FUNC_OnSuccess onSuccess, FUNC_OnError onError);
 HYPHENATE_API void PushManager_ReportPushAction(void *client, int callbackId, const char * parameters, FUNC_OnSuccess onSuccess, FUNC_OnError onError);
+
+HYPHENATE_API void PushManager_SetSilentModeForAll(void* client, int callbackId, const char* param, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnError onError);
+HYPHENATE_API void PushManager_GetSilentModeForAll(void* client, int callbackId, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnError onError);
+HYPHENATE_API void PushManager_SetSilentModeForConversation(void* client, int callbackId, const char* convId, EMConversation::EMConversationType type, const char* param, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnError onError);
+HYPHENATE_API void PushManager_GetSilentModeForConversation(void* client, int callbackId, const char* convId, EMConversation::EMConversationType type, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnError onError);
+HYPHENATE_API void PushManager_GetSilentModeForConversations(void* client, int callbackId, const char* param, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnError onError);
+HYPHENATE_API void PushManager_SetPreferredNotificationLanguage(void* client, int callbackId, const char* laguangeCode, FUNC_OnSuccess onSuccess, FUNC_OnError onError);
+HYPHENATE_API void PushManager_GetPreferredNotificationLanguage(void* client, int callbackId, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnError onError);
+
 #ifdef __cplusplus
 }
 #endif //__cplusplus

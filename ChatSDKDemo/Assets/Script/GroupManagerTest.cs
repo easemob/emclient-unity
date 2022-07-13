@@ -1293,4 +1293,25 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
     {
         UIManager.DefaultAlert(transform, $"回调 {groupId}群组共享文件被移除");
     }
+
+    public void OnAddWhiteListMembersFromGroup(string groupId, List<string> whiteList)
+    {
+        string str = "";
+        if (whiteList.Count > 0)
+            str = string.Join(",", whiteList.ToArray());
+        UIManager.DefaultAlert(transform, $"回调 {groupId} 添加成员至白名单{str}");
+    }
+
+    public void OnRemoveWhiteListMembersFromGroup(string groupId, List<string> whiteList)
+    {
+        string str = "";
+        if (whiteList.Count > 0)
+            str = string.Join(",", whiteList.ToArray());
+        UIManager.DefaultAlert(transform, $"回调 {groupId} 将成员移出白名单{str}");
+    }
+
+    public void OnAllMemberMuteChangedFromGroup(string groupId, bool isAllMuted)
+    {
+        UIManager.DefaultAlert(transform, $"回调 {groupId} 所有群成员禁言变化{isAllMuted}");
+    }
 }

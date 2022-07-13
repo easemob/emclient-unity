@@ -152,6 +152,27 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     {
         UIManager.UnfinishedAlert(transform);
         Debug.Log("SendVideoBtnAction");
+
+        /*InputAlertConfig config = new InputAlertConfig((dict) => {
+            Message msg = Message.CreateVideoSendMessage(dict["to"], "/Users/yuqiang/Test/resource/video.mp4", "", "", 425507);
+
+            SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
+                onSuccess: () => {
+                    ChatSDK.MessageBody.VideoBody vb = (ChatSDK.MessageBody.VideoBody)msg.Body;
+                    UIManager.TitleAlert(transform, "成功", msg.MsgId);
+                },
+                onProgress: (progress) => {
+                    UIManager.TitleAlert(transform, "发送进度", progress.ToString());
+                },
+                onError: (code, desc) => {
+                    UIManager.ErrorAlert(transform, code, msg.MsgId);
+                }
+            ));
+        });
+
+        config.AddField("to");
+        UIManager.DefaultInputAlert(transform, config);
+        */
     }
     void SendVoiceBtnAction()
     {
@@ -423,7 +444,9 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
             string startId = dict["StartMsgId"];
             int loadCount = int.Parse(dict["LoadCount"]);
 
-            SDKClient.Instance.ChatManager.FetchHistoryMessagesFromServer(conversationId, type, startId, loadCount, new ValueCallBack<CursorResult<Message>>(
+            MessageSearchDirection direction = MessageSearchDirection.UP;
+
+            SDKClient.Instance.ChatManager.FetchHistoryMessagesFromServer(conversationId, type, startId, loadCount, direction, new ValueCallBack<CursorResult<Message>>(
                 onSuccess: (result) =>
                 {
                     if (0 == result.Data.Count)
@@ -750,6 +773,11 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
         foreach (var msg in messages)
         {
+            if(msg.Body.Type == MessageBodyType.TXT)
+            {
+                ChatSDK.MessageBody.TextBody tb = (ChatSDK.MessageBody.TextBody)msg.Body;
+                Debug.Log($"text message body: {tb.Text}");
+            }
             list.Add(msg.MsgId);
             foreach (string key in msg.Attributes.Keys) {
                 AttributeValue a = msg.Attributes[key];
@@ -779,11 +807,11 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
                             Debug.Log($"{key}|STRING: {a.GetAttributeValue(AttributeValueType.STRING)}");
                         }
                         break;
-                    case AttributeValueType.STRVECTOR:
+                    /*case AttributeValueType.STRVECTOR:
                         {
                             Debug.Log($"{key}|STRVECTOR: {a.GetAttributeValue(AttributeValueType.STRVECTOR)}");
                         }
-                        break;
+                        break;*/
                     case AttributeValueType.JSONSTRING:
                         {
                             Debug.Log($"{key}|JSONSTRING: {a.GetAttributeValue(AttributeValueType.JSONSTRING)}");

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
 using UnityEngine;
+#endif
 
 namespace ChatSDK
 {
@@ -143,7 +145,9 @@ namespace ChatSDK
 
         public override void UpdateAPNSPushToken(string token, CallBack handle = null)
         {
-            handle?.ClearCallback();
+            //不支持
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+            ChatCallbackObject.CallBackOnError(callbackId, -1, "Not Supported.");
         }
 
         public override void UpdatePushNickName(string nickname, CallBack handle = null)
@@ -161,6 +165,159 @@ namespace ChatSDK
                 },
                 onError: (int code, string desc, int cbId) => {
                     ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
+        }
+
+        public override void SetSilentModeForAll(SilentModeParam param, ValueCallBack<SilentModeItem> handle = null)
+        {
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            // param content will be checked in native sdk
+            string json = param.ToJson();
+
+            ChatAPINative.PushManager_SetSilentModeForAll(client, callbackId, json,
+                onSuccessResult: (IntPtr[] array, DataType dType, int size, int cbId) => {
+                    Debug.Log($"SetSilentModeForAll callback with dType={dType}, size={size}");
+
+                    var ret = Marshal.PtrToStringAnsi(array[0]);
+                    SilentModeItem item = SilentModeItem.FromJson(ret);
+                    ChatCallbackObject.ValueCallBackOnSuccess<SilentModeItem>(cbId, item);
+
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.ValueCallBackOnError<PushConfig>(cbId, code, desc);
+                });
+        }
+
+        public override void GetSilentModeForAll(ValueCallBack<SilentModeItem> handle = null)
+        {
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.PushManager_GetSilentModeForAll(client, callbackId,
+                onSuccessResult: (IntPtr[] array, DataType dType, int size, int cbId) => {
+                    Debug.Log($"GetSilentModeForAll callback with dType={dType}, size={size}");
+
+                    var json = Marshal.PtrToStringAnsi(array[0]);
+                    SilentModeItem item = SilentModeItem.FromJson(json);
+                    ChatCallbackObject.ValueCallBackOnSuccess<SilentModeItem>(cbId, item);
+
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.ValueCallBackOnError<PushConfig>(cbId, code, desc);
+                });
+        }
+
+        public override void SetSilentModeForConversation(string conversationId, ConversationType type, SilentModeParam param, ValueCallBack<SilentModeItem> handle = null)
+        {
+            if (null == conversationId || 0 == conversationId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            // param content will be checked in native sdk
+            string json = param.ToJson();
+
+            ChatAPINative.PushManager_SetSilentModeForConversation(client, callbackId, conversationId, type, json,
+                onSuccessResult: (IntPtr[] array, DataType dType, int size, int cbId) => {
+                    Debug.Log($"SetSilentModeForConversation callback with dType={dType}, size={size}");
+
+                    var ret = Marshal.PtrToStringAnsi(array[0]);
+                    SilentModeItem item = SilentModeItem.FromJson(ret);
+                    ChatCallbackObject.ValueCallBackOnSuccess<SilentModeItem>(cbId, item);
+
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.ValueCallBackOnError<PushConfig>(cbId, code, desc);
+                });
+        }
+
+        public override void GetSilentModeForConversation(string conversationId, ConversationType type,ValueCallBack<SilentModeItem> handle = null)
+        {
+            if (null == conversationId || 0 == conversationId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.PushManager_GetSilentModeForConversation(client, callbackId, conversationId, type,
+                onSuccessResult: (IntPtr[] array, DataType dType, int size, int cbId) => {
+                    Debug.Log($"GetSilentModeForConversation callback with dType={dType}, size={size}");
+
+                    var json = Marshal.PtrToStringAnsi(array[0]);
+                    SilentModeItem item = SilentModeItem.FromJson(json);
+                    ChatCallbackObject.ValueCallBackOnSuccess<SilentModeItem>(cbId, item);
+
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.ValueCallBackOnError<PushConfig>(cbId, code, desc);
+                });
+        }
+
+        public override void GetSilentModeForConversations(Dictionary<string, string> conversations, ValueCallBack<Dictionary<string, SilentModeItem>> handle = null)
+        {
+            if (conversations.Count == 0)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            // param content will be checked in native sdk
+            string json = TransformTool.JsonStringFromDictionary(conversations);
+
+            ChatAPINative.PushManager_GetSilentModeForConversations(client, callbackId, json,
+                onSuccessResult: (IntPtr[] array, DataType dType, int size, int cbId) => {
+                    Debug.Log($"GetSilentModeForConversations callback with dType={dType}, size={size}");
+
+                    var ret = Marshal.PtrToStringAnsi(array[0]);
+                    Dictionary<string, SilentModeItem> dict = SilentModeItem.MapFromJson(ret);
+                    ChatCallbackObject.ValueCallBackOnSuccess<Dictionary<string, SilentModeItem>>(cbId, dict);
+
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.ValueCallBackOnError<PushConfig>(cbId, code, desc);
+                });
+        }
+
+        public override void SetPreferredNotificationLanguage(string languageCode, CallBack handle = null)
+        {
+            if (null == languageCode || languageCode.Length == 0)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return;
+            }
+
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.PushManager_SetPreferredNotificationLanguage(client, callbackId, languageCode,
+                onSuccess: (int cbId) => {
+                    ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
+        }
+
+        public override void GetPreferredNotificationLanguage(ValueCallBack<string> handle = null)
+        {
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.PushManager_GetPreferredNotificationLanguage(client, callbackId,
+                onSuccessResult: (IntPtr[] array, DataType dType, int size, int cbId) => {
+                    Debug.Log($"GetSilentModeForConversations callback with dType={dType}, size={size}");
+
+                    var language = Marshal.PtrToStringAnsi(array[0]);
+                    ChatCallbackObject.ValueCallBackOnSuccess<string>(cbId, language);
+
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.ValueCallBackOnError<PushConfig>(cbId, code, desc);
                 });
         }
 

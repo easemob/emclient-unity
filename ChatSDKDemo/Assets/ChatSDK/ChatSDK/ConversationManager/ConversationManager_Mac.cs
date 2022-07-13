@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
 using UnityEngine;
+#endif
 
 namespace ChatSDK
 {
+
     internal class ConversationManager_Mac : IConversationManager
     {
         internal IntPtr client;
@@ -15,7 +18,6 @@ namespace ChatSDK
                 client = clientMac.client;
             }
         }
-
 
         internal override bool AppendMessage(string conversationId, ConversationType converationType, Message message)
         {
@@ -414,6 +416,17 @@ namespace ChatSDK
             Marshal.StructureToPtr(mto, mtoPtr, false);
             bool ret = ChatAPINative.ConversationManager_UpdateMessage(client, conversationId, conversationType, mtoPtr, message.Body.Type);
             Marshal.FreeCoTaskMem(mtoPtr);
+            return ret;
+        }
+
+        internal override bool IsThread(string conversationId, ConversationType conversationType)
+        {
+            if (null == conversationId || 0 == conversationId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return false;
+            }
+            bool ret = ChatAPINative.ConversationManager_IsThread(client, conversationId, conversationType);
             return ret;
         }
     }

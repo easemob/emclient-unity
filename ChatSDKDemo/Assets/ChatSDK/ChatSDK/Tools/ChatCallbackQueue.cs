@@ -1,10 +1,17 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
 using System.Collections.Generic;
+
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+using UnityEngine;
+#endif
 
 namespace ChatSDK
 {
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
     internal sealed class ChatCallbackQueue : MonoBehaviour
+#else
+    internal sealed class ChatCallbackQueue
+#endif
     {
 
         private Queue<Action> queue = new Queue<Action>();
@@ -19,6 +26,7 @@ namespace ChatSDK
 
         public void EnQueue(Action action)
         {
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
             lock (queue)
             {
                 if (queue.Count >= 250)
@@ -27,6 +35,13 @@ namespace ChatSDK
                 }
                 queue.Enqueue(action);
             }
+#else
+            if (action != null)
+            {
+                action();
+            }
+            action = null;
+#endif
         }
 
         private Action DeQueue()

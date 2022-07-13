@@ -70,6 +70,35 @@ namespace ChatSDK
             wrapper.Call("updatePushNickname", nickname, handle?.callbackId);
         }
 
+        public override void SetSilentModeForAll(SilentModeParam param, ValueCallBack<SilentModeItem> handle = null)
+        {
+            //TODO
+        }
+        public override void GetSilentModeForAll(ValueCallBack<SilentModeItem> handle = null)
+        {
+            //TODO
+        }
+        public override void SetSilentModeForConversation(string conversationId, ConversationType type, SilentModeParam param, ValueCallBack<SilentModeItem> handle = null)
+        {
+            //TODO
+        }
+        public override void GetSilentModeForConversation(string conversationId, ConversationType type, ValueCallBack<SilentModeItem> handle = null)
+        {
+            //TODO
+        }
+        public override void GetSilentModeForConversations(Dictionary<string, string> conversations, ValueCallBack<Dictionary<string, SilentModeItem>> handle = null)
+        {
+            //TODO
+        }
+        public override void SetPreferredNotificationLanguage(string languageCode, CallBack handle = null)
+        {
+            //TODO
+        }
+        public override void GetPreferredNotificationLanguage(ValueCallBack<string> handle = null)
+        {
+            //TODO
+        }
+
         internal override void ReportPushAction(string parameters, CallBack handle = null)
         {
             //TODO: add code

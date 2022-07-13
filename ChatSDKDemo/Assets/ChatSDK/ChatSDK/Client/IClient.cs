@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+using UnityEngine;
+#endif
 
 namespace ChatSDK
 {
@@ -21,6 +23,8 @@ namespace ChatSDK
                     instance = new Client_iOS();
 #elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
                     instance = new Client_Mac();
+#else
+                    instance = new Client_Mac();
 #endif
                     _initialized = true;
                 }
@@ -36,6 +40,8 @@ namespace ChatSDK
         private IPushManager pushImp = null;
         private IConversationManager conversationImp = null;
         private IUserInfoManager userInfoImp = null;
+        private IPresenceManager presenceImp = null;
+        private IThreadManager threadImp = null;
 
         /// <summary>
         /// 获取聊天管理对象
@@ -50,6 +56,8 @@ namespace ChatSDK
 #elif UNITY_IOS
             chatImp = new ChatManager_iOS();
 #elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+            chatImp = new ChatManager_Mac(instance);
+#else
             chatImp = new ChatManager_Mac(instance);
 #endif
             return chatImp;
@@ -69,6 +77,8 @@ namespace ChatSDK
             contactImp = new ContactManager_iOS();
 #elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
             contactImp = new ContactManager_Mac(instance);
+#else
+            contactImp = new ContactManager_Mac(instance);
 #endif
             return contactImp;
         }
@@ -86,6 +96,8 @@ namespace ChatSDK
 #elif UNITY_IOS
             groupImp = new GroupManager_iOS();
 #elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+            groupImp = new GroupManager_Mac(instance);
+#else
             groupImp = new GroupManager_Mac(instance);
 #endif
             return groupImp;
@@ -105,6 +117,8 @@ namespace ChatSDK
             roomImp = new RoomManager_iOS();
 #elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
             roomImp = new RoomManager_Mac(instance);
+#else
+            roomImp = new RoomManager_Mac(instance);
 #endif
             return roomImp;
         }
@@ -123,6 +137,8 @@ namespace ChatSDK
             pushImp = new PushManager_iOS();
 #elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
             pushImp = new PushManager_Mac(instance);
+#else
+            pushImp = new PushManager_Mac(instance);
 #endif
             return pushImp;
         }
@@ -135,6 +151,8 @@ namespace ChatSDK
 #elif UNITY_IOS
             conversationImp = new ConversationManager_iOS();
 #elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+            conversationImp = new ConversationManager_Mac(instance);
+#else
             conversationImp = new ConversationManager_Mac(instance);
 #endif
             return conversationImp;
@@ -149,8 +167,40 @@ namespace ChatSDK
             userInfoImp = new UserInfoManager_iOS();
 #elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
             userInfoImp = new UserInfoManager_Mac(instance);
+#else
+            userInfoImp = new UserInfoManager_Mac(instance);
 #endif
             return userInfoImp;
+        }
+
+        internal IPresenceManager PresenceManager()
+        {
+            if (presenceImp != null) { return presenceImp; }
+#if UNITY_ANDROID
+            presenceImp = new PresenceManager_Android();
+#elif UNITY_IOS
+            presenceImp = new PresenceManager_iOS();
+#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+            presenceImp = new PresenceManager_Mac(instance);
+#else
+            presenceImp = new PresenceManager_Mac(instance);
+#endif
+            return presenceImp;
+        }
+
+        internal IThreadManager ThreadManager()
+        {
+            if (threadImp != null) { return threadImp; }
+#if UNITY_ANDROID
+            threadImp = new ThreadManager_Android();
+#elif UNITY_IOS
+            threadImp = new ThreadManager_iOS();
+#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+            threadImp = new ThreadManager_Mac(instance);
+#else
+            threadImp = new ThreadManager_Mac(instance);
+#endif
+            return threadImp;
         }
 
         /// <summary>

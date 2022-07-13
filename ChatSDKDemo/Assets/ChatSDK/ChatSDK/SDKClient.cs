@@ -1,5 +1,8 @@
 ﻿using System.Threading.Tasks;
+
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
 using UnityEngine;
+#endif
 
 namespace ChatSDK
 {
@@ -52,6 +55,10 @@ namespace ChatSDK
         /// </summary>
         public IUserInfoManager UserInfoManager { get => _Sdk.UserInfoManager(); }
 
+        public IPresenceManager PresenceManager { get => _Sdk.PresenceManager(); }
+
+        public IThreadManager ThreadManager { get => _Sdk.ThreadManager(); }
+
         /// <summary>
         /// 获取sdk配置信息
         /// </summary>
@@ -61,7 +68,7 @@ namespace ChatSDK
         /// <summary>
         /// 获取sdk版本号
         /// </summary>
-        public string SdkVersion { get => "3.0.0"; }
+        public string SdkVersion { get => "1.0.2"; }
 
         /// <summary>
         /// 获取当前登录的环信id
@@ -206,6 +213,10 @@ namespace ChatSDK
             _Sdk.GroupManager();
             _Sdk.RoomManager();
             _Sdk.ConversationManager();
+            _Sdk.UserInfoManager();
+            _Sdk.PushManager();
+            _Sdk.PresenceManager();
+            _Sdk.ThreadManager();
         }
     }
 }
