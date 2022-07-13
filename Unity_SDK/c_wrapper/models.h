@@ -500,7 +500,10 @@ struct PresenceTOWrapper
     std::string deviceListJson;
     std::string statusListJson;
     std::string ext;
+    int64_t     latestTime;
+    int64_t     expiryTime;
     
+    void FromLocalWrapper();
     static PresenceTOWrapper FromPresence(EMPresencePtr presencePtr);
 };
 

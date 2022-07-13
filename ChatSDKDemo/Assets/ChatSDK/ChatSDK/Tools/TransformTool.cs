@@ -53,6 +53,19 @@ namespace ChatSDK
             return a;
         }
 
+        static internal void DeleteEmptyStringFromList(ref List<string> list)
+        {
+            if (list.Count == 0) return;
+            List<string> new_list = new List<string>();
+
+            foreach (string it in list)
+            {
+                if (it.Length > 0)
+                    new_list.Add(it);
+            }
+            list = new_list;
+        }
+
         static internal List<string> JsonStringToStringList(string jsonString)
         {
             if (jsonString == null) return null;
@@ -410,10 +423,9 @@ namespace ChatSDK
             List<string> list = new List<string>();
             if (null == jn) return list;
 
-            JSONObject jo = jn.AsObject;
-            if (!jo.IsArray) return list;
+            if (!jn.IsArray) return list;
 
-            foreach (JSONNode v in jo.AsArray)
+            foreach (JSONNode v in jn.AsArray)
             {
                 if (v.IsString)
                 {

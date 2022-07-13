@@ -2438,6 +2438,19 @@ std::map<std::string, UserInfoTO> UserInfo::Convert2TO(std::map<std::string, Use
     return userinfoToMap;
 }
 
+void PresenceTOWrapper::FromLocalWrapper()
+{
+    presenceTO.publisher = publisher.c_str();
+
+    presenceTO.deviceList = deviceListJson.c_str();
+    presenceTO.statusList = statusListJson.c_str();
+
+    presenceTO.ext = ext.c_str();
+
+    presenceTO.latestTime = latestTime;
+    presenceTO.expiryTime = expiryTime;
+}
+
  PresenceTOWrapper PresenceTOWrapper::FromPresence(EMPresencePtr presencePtr)
 {
     PresenceTOWrapper ptoWrapper;
@@ -2447,7 +2460,6 @@ std::map<std::string, UserInfoTO> UserInfo::Convert2TO(std::map<std::string, Use
     ptoWrapper.ext.clear();
     
     ptoWrapper.publisher = presencePtr->getPublisher();
-    ptoWrapper.presenceTO.publisher = ptoWrapper.publisher.c_str();
     
     // go through status list
     std::set<std::pair<std::string,int>> devices = presencePtr->getStatusList();
@@ -2467,18 +2479,14 @@ std::map<std::string, UserInfoTO> UserInfo::Convert2TO(std::map<std::string, Use
         ptoWrapper.deviceListJson = JsonStringFromMap(deviceMap);
         ptoWrapper.statusListJson = JsonStringFromMap(statusMap);
     }
-    ptoWrapper.presenceTO.deviceList = ptoWrapper.deviceListJson.c_str();
-    ptoWrapper.presenceTO.statusList = ptoWrapper.statusListJson.c_str();
     
     if(presencePtr->getExt().length() == 0) {
         ptoWrapper.ext = EMPTY_STR;
     } else {
         ptoWrapper.ext = presencePtr->getExt();
     }
-    ptoWrapper.presenceTO.ext = ptoWrapper.ext.c_str();
-    
-    ptoWrapper.presenceTO.latestTime = presencePtr->getLatestTime();
-    ptoWrapper.presenceTO.expiryTime = presencePtr->getExpiryTime();
+    ptoWrapper.latestTime = presencePtr->getLatestTime();
+    ptoWrapper.expiryTime = presencePtr->getExpiryTime();
     
     return ptoWrapper;
 }

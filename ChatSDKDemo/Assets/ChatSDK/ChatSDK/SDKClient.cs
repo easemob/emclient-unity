@@ -55,6 +55,10 @@ namespace ChatSDK
         /// </summary>
         public IUserInfoManager UserInfoManager { get => _Sdk.UserInfoManager(); }
 
+        public IPresenceManager PresenceManager { get => _Sdk.PresenceManager(); }
+
+        public IThreadManager ThreadManager { get => _Sdk.ThreadManager(); }
+
         /// <summary>
         /// 获取sdk配置信息
         /// </summary>
@@ -209,6 +213,10 @@ namespace ChatSDK
             _Sdk.GroupManager();
             _Sdk.RoomManager();
             _Sdk.ConversationManager();
+            _Sdk.UserInfoManager();
+            _Sdk.PushManager();
+            _Sdk.PresenceManager();
+            _Sdk.ThreadManager();
         }
     }
 }

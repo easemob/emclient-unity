@@ -237,11 +237,11 @@ namespace ChatSDK
         {
             //TODO
         }
-        public override void GetReactionList(List<string> messageIdList, string messageType, string groupId, ValueCallBack<Dictionary<string, List<MessageReaction>>> handle = null)
+        public override void GetReactionList(List<string> messageIdList, ConversationType chatType, string groupId, ValueCallBack<Dictionary<string, List<MessageReaction>>> handle = null)
         {
             //TODO
         }
-        public override void GetReactionDetail(string messageId, string reaction, string cursor = null, int pageSize = 20, ValueCallBack<MessageReaction> handle = null)
+        public override void GetReactionDetail(string messageId, string reaction, string cursor = null, int pageSize = 20, ValueCallBack<CursorResult<MessageReaction>> handle = null)
         {
             //TODO
         }

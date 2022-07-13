@@ -25,7 +25,7 @@ namespace ChatSDK
             ChatAPINative.PresenceManager_AddListener(client, presenceManagerHub.onPresenceUpdated);
         }
 
-		public override void publishPresence(int presenceStatus, string ext = "", CallBack handle = null)
+		public override void PublishPresence(int presenceStatus, string ext = "", CallBack handle = null)
 		{
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
             ChatAPINative.PresenceManager_PublishPresence(client, callbackId, presenceStatus, ext,

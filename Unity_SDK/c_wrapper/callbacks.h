@@ -892,8 +892,8 @@ public:
             PresenceTOWrapper* dataLocal = new PresenceTOWrapper[size];
             
             for(size_t i=0; i<size; i++) {
-                PresenceTOWrapper ptoWrapper = PresenceTOWrapper::FromPresence(presence[i]);
-                dataLocal[i] = ptoWrapper;
+                dataLocal[i] = PresenceTOWrapper::FromPresence(presence[i]);
+                dataLocal[i].FromLocalWrapper();
                 data[i] = &(dataLocal[i].presenceTO);
             }
             if(onPresenceUpdated_)

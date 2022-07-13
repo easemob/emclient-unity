@@ -167,8 +167,8 @@ namespace ChatSDK
 
         public abstract void AddReaction(string messageId, string reaction, CallBack handle = null);
         public abstract void RemoveReaction(string messageId, string reaction, CallBack handle = null);
-        public abstract void GetReactionList(List<string> messageIdList, string messageType, string groupId, ValueCallBack<Dictionary<string, List<MessageReaction>>> handle = null);
-        public abstract void GetReactionDetail(string messageId, string reaction, string cursor = null, int pageSize = 20, ValueCallBack<MessageReaction> handle = null);
+        public abstract void GetReactionList(List<string> messageIdList, ConversationType chatType, string groupId, ValueCallBack<Dictionary<string, List<MessageReaction>>> handle = null);
+        public abstract void GetReactionDetail(string messageId, string reaction, string cursor = null, int pageSize = 20, ValueCallBack<CursorResult<MessageReaction>> handle = null);
 
         /// <summary>
         /// 添加消息监听

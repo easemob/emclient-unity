@@ -12,6 +12,7 @@ namespace ChatSDK
     {
         private IntPtr client;
         private ChatManagerHub chatManagerHub;
+        private ReactionManagerHub reactionManagerHub;
 
         System.Object msgMapLocker;
         Dictionary<string, IntPtr> msgPtrMap;
@@ -27,11 +28,13 @@ namespace ChatSDK
                 client = clientMac.client;
             }
             chatManagerHub = new ChatManagerHub();
+            reactionManagerHub = new ReactionManagerHub();
+
             //registered listeners
             ChatAPINative.ChatManager_AddListener(client, chatManagerHub.OnMessagesReceived,
                 chatManagerHub.OnCmdMessagesReceived, chatManagerHub.OnMessagesRead, chatManagerHub.OnMessagesDelivered,
                 chatManagerHub.OnMessagesRecalled, chatManagerHub.OnReadAckForGroupMessageUpdated, chatManagerHub.OnGroupMessageRead,
-                chatManagerHub.OnConversationsUpdate, chatManagerHub.OnConversationRead);
+                chatManagerHub.OnConversationsUpdate, chatManagerHub.OnConversationRead, reactionManagerHub.messageReactionDidChange);
 
             msgPtrMap = new Dictionary<string, IntPtr>();
             msgMap = new Dictionary<string, Message>();
@@ -932,18 +935,21 @@ namespace ChatSDK
                 );
         }
 
-        public override void GetReactionList(List<string> messageIdList, string messageType, string groupId, ValueCallBack<Dictionary<string, List<MessageReaction>>> handle = null)
+        public override void GetReactionList(List<string> messageIdList, ConversationType chatType, string groupId, ValueCallBack<Dictionary<string, List<MessageReaction>>> handle = null)
         {
-            if (messageIdList.Count == 0 || null == messageType || 0 == messageType.Length || null == groupId || 0 == groupId.Length)
+            if (messageIdList.Count == 0)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
-            string idList = TransformTool.JsonObjectFromStringList(messageIdList);
+            TransformTool.DeleteEmptyStringFromList(ref messageIdList);
+            string idList = TransformTool.JsonStringFromStringList(messageIdList);
 
-            ChatAPINative.ChatManager_GetReactionList(client, callbackId, idList, messageType, groupId,
+            string ctype = (ConversationType.Group == chatType) ? "groupchat" : "chat";
+
+            ChatAPINative.ChatManager_GetReactionList(client, callbackId, idList, ctype, groupId,
 
                 (IntPtr[] array, DataType dType, int size, int cbId) => {
                     Debug.Log($"GetReactionList callback with dType={dType}, size={size}.");
@@ -971,7 +977,7 @@ namespace ChatSDK
                 });
         }
 
-        public override void GetReactionDetail(string messageId, string reaction, string cursor = null, int pageSize = 20, ValueCallBack<MessageReaction> handle = null)
+        public override void GetReactionDetail(string messageId, string reaction, string cursor = null, int pageSize = 20, ValueCallBack<CursorResult<MessageReaction>> handle = null)
         {
             if (null == messageId || 0 == messageId.Length || null == reaction || 0 == reaction.Length)
             {
@@ -998,7 +1004,7 @@ namespace ChatSDK
 #endif
                    var messageReation = MessageReaction.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
                    result.Data = new List<MessageReaction>();
-                   result.Data.Add(messageReation);
+                   if (null != messageReation) result.Data.Add(messageReation);
                    ChatCallbackObject.ValueCallBackOnSuccess<CursorResult<MessageReaction>>(cbId, result);
                },
 

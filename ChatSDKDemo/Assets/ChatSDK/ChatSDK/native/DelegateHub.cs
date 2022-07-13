@@ -939,7 +939,7 @@ namespace ChatSDK
             {
                 Debug.Log("messageReactionDidChange received.");
 
-                List<MessageReactionChange> list = MessageReactionChange.ListFromJson(json);
+                List<MessageReactionChange> list = MessageReactionChange.ListFromJson(TransformTool.GetUnicodeStringFromUTF8(json));
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IReactionManagerDelegate listener in CallbackManager.Instance().reactionManagerListener.delegater)

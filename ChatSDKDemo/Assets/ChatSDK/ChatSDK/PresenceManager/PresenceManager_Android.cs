@@ -15,7 +15,7 @@ namespace ChatSDK
 			}
 		}
 
-		public override void publishPresence(int presenceStatus, string ext = "", CallBack handle = null)
+		public override void PublishPresence(int presenceStatus, string ext = "", CallBack handle = null)
 		{
 			//TODO: Add code for PresenceManager_Android
 		}

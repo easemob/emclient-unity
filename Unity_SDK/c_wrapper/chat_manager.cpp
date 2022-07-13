@@ -927,7 +927,7 @@ HYPHENATE_API void ChatManager_RemoveReaction(void* client, int callbackId, cons
 HYPHENATE_API void ChatManager_GetReactionList(void* client, int callbackId, const char* messageIdList, const char* messageType, const char* groupId, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnError onError)
 {
     EMError error;
-    if (!MandatoryCheck(messageIdList, messageType, groupId, error)) {
+    if (!MandatoryCheck(messageIdList, messageType, error)) {
         if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }

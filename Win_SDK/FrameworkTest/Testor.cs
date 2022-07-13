@@ -176,7 +176,8 @@ namespace WinSDKTest
             level1_menus.Add(menu_index, "IGroupManager"); menu_index++;
             level1_menus.Add(menu_index, "IPushManager"); menu_index++;
             level1_menus.Add(menu_index, "IRoomManager"); menu_index++;
-            level1_menus.Add(menu_index, "IUserInfoManager");
+            level1_menus.Add(menu_index, "IUserInfoManager"); menu_index++;
+            level1_menus.Add(menu_index, "IPresenceManager");
         }
 
         internal void InitLevel2Menus_IClient()
@@ -282,6 +283,10 @@ namespace WinSDKTest
             functions_IChatManager.Add(menu_index, "FetchSupportLanguages"); menu_index++;
             functions_IChatManager.Add(menu_index, "TranslateMessage"); menu_index++;
             functions_IChatManager.Add(menu_index, "ReportMessage"); menu_index++;
+            functions_IChatManager.Add(menu_index, "AddReaction"); menu_index++;
+            functions_IChatManager.Add(menu_index, "RemoveReaction"); menu_index++;
+            functions_IChatManager.Add(menu_index, "GetReactionList"); menu_index++;
+            functions_IChatManager.Add(menu_index, "GetReactionDetail"); menu_index++;
             level2_menus.Add("IChatManager", functions_IChatManager);
         }
 
@@ -463,6 +468,34 @@ namespace WinSDKTest
             param.Add(menu_index, "tag (string)"); menu_index++;
             param.Add(menu_index, "reason (string)"); menu_index++;
             level3_menus.Add("ReportMessage", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "messageId (string)"); menu_index++;
+            param.Add(menu_index, "reaction (string)"); menu_index++;
+            level3_menus.Add("AddReaction", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "messageId (string)"); menu_index++;
+            param.Add(menu_index, "reaction (string)"); menu_index++;
+            level3_menus.Add("RemoveReaction", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "messageId1 (string)"); menu_index++;
+            param.Add(menu_index, "messageId2 (string)"); menu_index++;
+            param.Add(menu_index, "chatType (int 0-Chat;1-Group;2-Room)"); menu_index++;
+            param.Add(menu_index, "groupId (string)"); menu_index++;
+            level3_menus.Add("GetReactionList", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "messageId (string)"); menu_index++;
+            param.Add(menu_index, "reaction (string)"); menu_index++;
+            param.Add(menu_index, "cursor (string)"); menu_index++;
+            param.Add(menu_index, "pageSize (int)"); menu_index++;
+            level3_menus.Add("GetReactionDetail", new Dictionary<int, string>(param));
             param.Clear();
         }
 
@@ -1289,6 +1322,53 @@ namespace WinSDKTest
             param.Clear();
         }
 
+        internal void InitLevel2Menus_IPresenceManager()
+        {
+            Dictionary<int, string> functions_IPresenceManager = new Dictionary<int, string>();
+            int menu_index = 1;
+            functions_IPresenceManager.Add(menu_index, "PublishPresence"); menu_index++;
+            functions_IPresenceManager.Add(menu_index, "SubscribePresences"); menu_index++;
+            functions_IPresenceManager.Add(menu_index, "unsubscribePresences"); menu_index++;
+            functions_IPresenceManager.Add(menu_index, "fetchSubscribedMembers"); menu_index++;
+            functions_IPresenceManager.Add(menu_index, "fetchPresenceStatus"); menu_index++;
+            level2_menus.Add("IPresenceManager", functions_IPresenceManager);
+        }
+
+        internal void InitLevel3Menus_IPresenceManager()
+        {
+            Dictionary<int, string> param = new Dictionary<int, string>();
+            int menu_index = 1;
+            param.Add(menu_index, "presenceStatus (int)"); menu_index++;
+            param.Add(menu_index, "ext (string)"); menu_index++;
+            level3_menus.Add("PublishPresence", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "member1 (string)"); menu_index++;
+            param.Add(menu_index, "member2 (string)"); menu_index++;
+            param.Add(menu_index, "expiry (long)"); menu_index++;
+            level3_menus.Add("SubscribePresences", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "member1 (string)"); menu_index++;
+            param.Add(menu_index, "member2 (string)"); menu_index++;
+            level3_menus.Add("UnsubscribePresences", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "pageNum (int)"); menu_index++;
+            param.Add(menu_index, "pageSize (int)"); menu_index++;
+            level3_menus.Add("FetchSubscribedMembers", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "member1 (string)"); menu_index++;
+            param.Add(menu_index, "member2 (string)"); menu_index++;
+            level3_menus.Add("FetchPresenceStatus", new Dictionary<int, string>(param));
+            param.Clear();
+        }
+
         public void InitAll(string appkey)
         {
             //Options options = new Options("easemob-demo#easeim");
@@ -1320,6 +1400,12 @@ namespace WinSDKTest
 
             RoomManagerDelegate roomManagerDelegate = new RoomManagerDelegate();
             SDKClient.Instance.RoomManager.AddRoomManagerDelegate(roomManagerDelegate);
+
+            ReactionManagerDelegate reactionManagerDelegate = new ReactionManagerDelegate();
+            SDKClient.Instance.ChatManager.AddReactionManagerDelegate(reactionManagerDelegate);
+
+            PresenceManagerDelegate presenceManagerDelegate = new PresenceManagerDelegate();
+            SDKClient.Instance.PresenceManager.AddPresenceManagerDelegate(presenceManagerDelegate);
 
             InitLevel1Menus();
 
@@ -2739,6 +2825,105 @@ namespace WinSDKTest
             ));
         }
 
+        public void CallFunc_IChatManager_AddReaction()
+        {
+            string msg_id = GetParamValueFromContext(0);
+            string reaction = GetParamValueFromContext(1);
+
+            SDKClient.Instance.ChatManager.AddReaction(msg_id, reaction, new CallBack(
+             onSuccess: () =>
+             {
+                 Console.WriteLine($"AddReaction success.");
+             },
+             onError: (code, desc) =>
+             {
+                 Console.WriteLine($"AddReaction failed, code:{code}, desc:{desc}");
+             }
+            ));
+        }
+
+        public void CallFunc_IChatManager_RemoveReaction()
+        {
+            string msg_id = GetParamValueFromContext(0);
+            string reaction = GetParamValueFromContext(1);
+
+            SDKClient.Instance.ChatManager.RemoveReaction(msg_id, reaction, new CallBack(
+             onSuccess: () =>
+             {
+                 Console.WriteLine($"RemoveReaction success.");
+             },
+             onError: (code, desc) =>
+             {
+                 Console.WriteLine($"RemoveReaction failed, code:{code}, desc:{desc}");
+             }
+            ));
+        }
+
+        public void CallFunc_IChatManager_GetReactionList()
+        {
+            string msg_id1 = GetParamValueFromContext(0);
+            string msg_id2 = GetParamValueFromContext(1);
+
+            int chatType = GetIntFromString(GetParamValueFromContext(2));
+            ConversationType ctype = ConversationType.Chat;
+            if (1 == chatType) ctype = ConversationType.Group;
+            
+            string groupId = GetParamValueFromContext(3);
+
+            List<string> id_list = new List<string>();
+            id_list.Add(msg_id1);
+            id_list.Add(msg_id2);
+
+            SDKClient.Instance.ChatManager.GetReactionList(id_list, ctype, groupId, new ValueCallBack<Dictionary<string, List<MessageReaction>>>(
+            onSuccess: (dict) =>
+            {
+                Console.WriteLine($"GetReactionList success with contact num: {dict.Count}.");
+                foreach (var it in dict)
+                {
+                    Console.WriteLine($"======================");
+                    Console.WriteLine($"msgid: {it.Key}");
+                    List<MessageReaction> rl = it.Value;
+                    foreach (var lit in rl)
+                    {
+                        Console.WriteLine($"-----------------");
+                        string userlist = string.Join(",", lit.UserList.ToArray());
+                        Console.WriteLine($"reaction: Reaction:{lit.Rection},count:{lit.Count},userlist:{userlist}; state:{lit.State}");
+                    }
+                }
+            },
+            onError: (code, desc) =>
+            {
+                Console.WriteLine($"GetReactionList failed, code:{code}, desc:{desc}");
+            }
+            ));
+        }
+
+        public void CallFunc_IChatManager_GetReactionDetail()
+        {
+            string msg_id = GetParamValueFromContext(0);
+            string reaction = GetParamValueFromContext(1);
+            string cursor = GetParamValueFromContext(2);
+            int pageSize = GetIntFromString(GetParamValueFromContext(3));
+
+
+            SDKClient.Instance.ChatManager.GetReactionDetail(msg_id, reaction, cursor, pageSize, new ValueCallBack<CursorResult<MessageReaction>>(
+            onSuccess: (ret) =>
+            {
+                Console.WriteLine($"GetReactionDetail success");
+                if (ret.Data.Count > 0)
+                {
+                    MessageReaction mr = ret.Data[0];
+                    string userlist = string.Join(",", mr.UserList.ToArray());
+                    Console.WriteLine($"cursor: {ret.Cursor}; reaction: Reaction:{mr.Rection},count:{mr.Count},userlist:{userlist}; state:{mr.State}");
+                }
+            },
+            onError: (code, desc) =>
+            {
+                Console.WriteLine($"GetReactionDetail failed, code:{code}, desc:{desc}");
+            }
+            ));
+        }
+
         public void CallFunc_IChatManager()
         {
             if (select_context.level2_item.CompareTo("DeleteConversation") == 0)
@@ -2918,6 +3103,30 @@ namespace WinSDKTest
             if (select_context.level2_item.CompareTo("ReportMessage") == 0)
             {
                 CallFunc_IChatManager_ReportMessage();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("AddReaction") == 0)
+            {
+                CallFunc_IChatManager_AddReaction();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("RemoveReaction") == 0)
+            {
+                CallFunc_IChatManager_RemoveReaction();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("GetReactionList") == 0)
+            {
+                CallFunc_IChatManager_GetReactionList();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("GetReactionDetail") == 0)
+            {
+                CallFunc_IChatManager_GetReactionDetail();
                 return;
             }
         }
@@ -6451,6 +6660,162 @@ namespace WinSDKTest
             }
         }
 
+        public void CallFunc_IUserInfoManager_PublishPresence()
+        {
+            int presenceStatus = GetIntFromString(GetParamValueFromContext(0));
+            string ext = GetParamValueFromContext(1);
+
+            SDKClient.Instance.PresenceManager.PublishPresence(presenceStatus, ext, new CallBack(
+                onSuccess: () => {
+                    Console.WriteLine($"PublishPresence success.");
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"PublishPresence failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IUserInfoManager_SubscribePresences()
+        {
+            string member1 = GetParamValueFromContext(0);
+            string member2 = GetParamValueFromContext(1);
+            long expiry = GetLongFromString(GetParamValueFromContext(2));
+
+            List<string> mem_list = new List<string>();
+            mem_list.Add(member1);
+            mem_list.Add(member2);
+
+            SDKClient.Instance.PresenceManager.SubscribePresences(mem_list, expiry, new ValueCallBack<List<Presence>>(
+                onSuccess: (list) =>
+                {
+                    Console.WriteLine($"SubscribePresences, presence list num:{list.Count}");
+                    foreach (var it in list)
+                    {
+                        List<PresenceDeviceStatus> status_list = it.StatusList;
+                        string str = "";
+                        foreach(var sit in status_list)
+                        {
+                            str += "deviceId:" + sit.DeviceId + ";";
+                            str += "status:" + sit.Status + ";";
+                        }
+                        Console.WriteLine($"-------------------");
+                        Console.WriteLine($"Publisher:{it.Publisher}; Ext:{it.Ext}; lastestTime:{it.LatestTime}; ExpireTime:{it.ExpiryTime}");
+                        Console.WriteLine($"preseceDeviceStatus:{str}");
+                    }
+                },
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"SubscribePresences failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IUserInfoManager_UnsubscribePresences()
+        {
+            string member1 = GetParamValueFromContext(0);
+            string member2 = GetParamValueFromContext(1);
+            long expiry = GetLongFromString(GetParamValueFromContext(2));
+
+            List<string> mem_list = new List<string>();
+            mem_list.Add(member1);
+            mem_list.Add(member2);
+
+            SDKClient.Instance.PresenceManager.UnsubscribePresences(mem_list, new CallBack(
+                onSuccess: () => {
+                    Console.WriteLine($"UnsubscribePresences success.");
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"UnsubscribePresences failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IUserInfoManager_FetchSubscribedMembers()
+        {
+            int pageNum = GetIntFromString(GetParamValueFromContext(0));
+            int pageSize = GetIntFromString(GetParamValueFromContext(1));
+
+            SDKClient.Instance.PresenceManager.FetchSubscribedMembers(pageNum, pageSize, new ValueCallBack<List<string>>(
+                onSuccess: (list) =>
+                {
+                    Console.WriteLine($"FetchSubscribedMembers, presence list num:{list.Count}");
+                    string str = string.Join(",", list.ToArray());
+                    Console.WriteLine($"members:{str}");
+                },
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"SubscribePresences failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IUserInfoManager_FetchPresenceStatus()
+        {
+            string member1 = GetParamValueFromContext(0);
+            string member2 = GetParamValueFromContext(1);
+
+            List<string> mem_list = new List<string>();
+            mem_list.Add(member1);
+            mem_list.Add(member2);
+
+            SDKClient.Instance.PresenceManager.FetchPresenceStatus(mem_list, new ValueCallBack<List<Presence>>(
+                onSuccess: (list) =>
+                {
+                    Console.WriteLine($"FetchPresenceStatus, presence list num:{list.Count}");
+                    foreach (var it in list)
+                    {
+                        List<PresenceDeviceStatus> status_list = it.StatusList;
+                        string str = "";
+                        foreach (var sit in status_list)
+                        {
+                            str += "deviceId:" + sit.DeviceId + ";";
+                            str += "status:" + sit.Status + ";";
+                        }
+                        Console.WriteLine($"-------------------");
+                        Console.WriteLine($"Publisher:{it.Publisher}; Ext:{it.Ext}; lastestTime:{it.LatestTime}; ExpireTime:{it.ExpiryTime}");
+                        Console.WriteLine($"preseceDeviceStatus:{str}");
+                    }
+                },
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"FetchPresenceStatus failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IPresenceManager()
+        {
+            if (select_context.level2_item.CompareTo("PublishPresence") == 0)
+            {
+                CallFunc_IUserInfoManager_PublishPresence();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("SubscribePresences") == 0)
+            {
+                CallFunc_IUserInfoManager_SubscribePresences();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("UnsubscribePresences") == 0)
+            {
+                CallFunc_IUserInfoManager_UnsubscribePresences();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("FetchSubscribedMembers") == 0)
+            {
+                CallFunc_IUserInfoManager_FetchSubscribedMembers();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("FetchPresenceStatus") == 0)
+            {
+                CallFunc_IUserInfoManager_FetchPresenceStatus();
+                return;
+            }
+        }
+
         public void CallFunc()
         {
             if(select_context.level1_item.CompareTo("IClient") == 0)
@@ -6498,6 +6863,12 @@ namespace WinSDKTest
             if (select_context.level1_item.CompareTo("IUserInfoManager") == 0)
             {
                 CallFunc_IUserInfoManager();
+                return;
+            }
+
+            if (select_context.level1_item.CompareTo("IPresenceManager") == 0)
+            {
+                CallFunc_IPresenceManager();
                 return;
             }
 
@@ -6951,6 +7322,50 @@ namespace WinSDKTest
         public void OnRemovedFromRoom(string roomId, string roomName, string participant)
         {
             Console.WriteLine($"OnRemovedFromRoom: roomId: {roomId}; roomName:{roomName}; participant:{participant}");
+        }
+    }
+
+    class ReactionManagerDelegate : IReactionManagerDelegate
+    {
+        public void MessageReactionDidChange(List<MessageReactionChange> list)
+        {
+            Console.WriteLine($"MessageReactionDidChange, reaction list count: {list.Count}");
+            if (list.Count == 0) return;
+            foreach(var it in list)
+            {
+                Console.WriteLine($"---------------");
+                MessageReactionChange mrc = it;
+                Console.WriteLine($"from: {mrc.From}; to: {mrc.To},msgId:{mrc.MessageId}");
+                foreach(var rit in mrc.ReactionList)
+                {
+                    MessageReaction mr = rit;
+                    string userlist = string.Join(",", mr.UserList.ToArray());
+                    Console.WriteLine($"reaction: Reaction:{mr.Rection},count:{mr.Count},userlist:{userlist}; state:{mr.State}");
+                }
+                
+            }
+            
+        }
+    }
+
+    class PresenceManagerDelegate : IPresenceManagerDelegate
+    {
+        public void OnPresenceUpdated(List<Presence> presences)
+        {
+            Console.WriteLine($"OnPresenceUpdated, presences list count: {presences.Count}");
+            foreach (var it in presences)
+            {
+                List<PresenceDeviceStatus> status_list = it.StatusList;
+                string str = "";
+                foreach (var sit in status_list)
+                {
+                    str += "deviceId:" + sit.DeviceId + ";";
+                    str += "status:" + sit.Status + ";";
+                }
+                Console.WriteLine($"-------------------");
+                Console.WriteLine($"Publisher:{it.Publisher}; Ext:{it.Ext}; lastestTime:{it.LatestTime}; ExpireTime:{it.ExpiryTime}");
+                Console.WriteLine($"preseceDeviceStatus:{str}");
+            }
         }
     }
 }

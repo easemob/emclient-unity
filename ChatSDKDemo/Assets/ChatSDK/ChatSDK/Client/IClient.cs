@@ -182,6 +182,8 @@ namespace ChatSDK
             presenceImp = new PresenceManager_iOS();
 #elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
             presenceImp = new PresenceManager_Mac(instance);
+#else
+            presenceImp = new PresenceManager_Mac(instance);
 #endif
             return presenceImp;
         }
@@ -194,6 +196,8 @@ namespace ChatSDK
 #elif UNITY_IOS
             threadImp = new ThreadManager_iOS();
 #elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+            threadImp = new ThreadManager_Mac(instance);
+#else
             threadImp = new ThreadManager_Mac(instance);
 #endif
             return threadImp;
