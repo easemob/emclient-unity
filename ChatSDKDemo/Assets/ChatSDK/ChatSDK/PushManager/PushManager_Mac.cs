@@ -185,7 +185,7 @@ namespace ChatSDK
 
                 },
                 onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.ValueCallBackOnError<PushConfig>(cbId, code, desc);
+                    ChatCallbackObject.ValueCallBackOnError<SilentModeItem>(cbId, code, desc);
                 });
         }
 
@@ -203,7 +203,7 @@ namespace ChatSDK
 
                 },
                 onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.ValueCallBackOnError<PushConfig>(cbId, code, desc);
+                    ChatCallbackObject.ValueCallBackOnError<SilentModeItem>(cbId, code, desc);
                 });
         }
 
@@ -230,7 +230,7 @@ namespace ChatSDK
 
                 },
                 onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.ValueCallBackOnError<PushConfig>(cbId, code, desc);
+                    ChatCallbackObject.ValueCallBackOnError<SilentModeItem>(cbId, code, desc);
                 });
         }
 
@@ -254,7 +254,7 @@ namespace ChatSDK
 
                 },
                 onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.ValueCallBackOnError<PushConfig>(cbId, code, desc);
+                    ChatCallbackObject.ValueCallBackOnError<SilentModeItem>(cbId, code, desc);
                 });
         }
 
@@ -281,7 +281,7 @@ namespace ChatSDK
 
                 },
                 onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.ValueCallBackOnError<PushConfig>(cbId, code, desc);
+                    ChatCallbackObject.ValueCallBackOnError<Dictionary<string, SilentModeItem>>(cbId, code, desc);
                 });
         }
 

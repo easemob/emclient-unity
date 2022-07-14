@@ -1064,6 +1064,13 @@ namespace WinSDKTest
             functions_IPushManager.Add(menu_index, "SetPushStyle"); menu_index++;
             functions_IPushManager.Add(menu_index, "SetGroupToDisturb"); menu_index++;
             //functions_IPushManager.Add(menu_index, "ReportPushAction"); menu_index++;
+            functions_IPushManager.Add(menu_index, "SetSilentModeForAll"); menu_index++;
+            functions_IPushManager.Add(menu_index, "GetSilentModeForAll"); menu_index++;
+            functions_IPushManager.Add(menu_index, "SetSilentModeForConversation"); menu_index++;
+            functions_IPushManager.Add(menu_index, "GetSilentModeForConversation"); menu_index++;
+            functions_IPushManager.Add(menu_index, "GetSilentModeForConversations"); menu_index++;
+            functions_IPushManager.Add(menu_index, "SetPreferredNotificationLanguage"); menu_index++;
+            functions_IPushManager.Add(menu_index, "GetPreferredNotificationLanguage"); menu_index++;
             level2_menus.Add("IPushManager", functions_IPushManager);
         }
 
@@ -1126,6 +1133,57 @@ namespace WinSDKTest
             menu_index = 1;
             param.Add(menu_index, "parameters (string)"); menu_index++;
             level3_menus.Add("ReportPushAction", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "paramType (int: 0-RemindType; 1-Duration; 2-Interval)"); menu_index++;
+            param.Add(menu_index, "duration (int)"); menu_index++;
+            param.Add(menu_index, "remindType (int: 0-Default; 1-All; 2-MentionOnly; 3-None)"); menu_index++;
+            param.Add(menu_index, "startHour (int)"); menu_index++;
+            param.Add(menu_index, "startMin (int)"); menu_index++;
+            param.Add(menu_index, "endHour (int)"); menu_index++;
+            param.Add(menu_index, "endMin (int)"); menu_index++;
+            level3_menus.Add("SetSilentModeForAll", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "No params"); menu_index++;
+            level3_menus.Add("GetSilentModeForAll", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "convId (string)"); menu_index++;
+            param.Add(menu_index, "convType (int)"); menu_index++;
+            param.Add(menu_index, "paramType (int: 0-RemindType; 1-Duration; 2-Interval)"); menu_index++;
+            param.Add(menu_index, "duration (int)"); menu_index++;
+            param.Add(menu_index, "remindType (int: 0-Default; 1-All; 2-MentionOnly; 3-None)"); menu_index++;
+            param.Add(menu_index, "startHour (int)"); menu_index++;
+            param.Add(menu_index, "startMin (int)"); menu_index++;
+            param.Add(menu_index, "endHour (int)"); menu_index++;
+            param.Add(menu_index, "endMin (int)"); menu_index++;
+            level3_menus.Add("SetSilentModeForConversation", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "convId (string)"); menu_index++;
+            param.Add(menu_index, "convType (int)"); menu_index++;
+            level3_menus.Add("GetSilentModeForConversation", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "userlist (string)"); menu_index++;
+            param.Add(menu_index, "grouplist (string)"); menu_index++;
+            level3_menus.Add("GetSilentModeForConversations", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "languageCode (string)"); menu_index++;
+            level3_menus.Add("SetPreferredNotificationLanguage", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "No params"); menu_index++;
+            level3_menus.Add("GetPreferredNotificationLanguage", new Dictionary<int, string>(param));
             param.Clear();
         }
 
@@ -5911,6 +5969,160 @@ namespace WinSDKTest
             ));
         }
 
+        public void CallFunc_IPushManager_SetSilentModeForAll()
+        {
+            int paramType = GetIntFromString(GetParamValueFromContext(0));
+            int duration = GetIntFromString(GetParamValueFromContext(1));
+            int type = GetIntFromString(GetParamValueFromContext(2));
+            int startHour = GetIntFromString(GetParamValueFromContext(3));
+            int startMin = GetIntFromString(GetParamValueFromContext(4));
+            int endHour = GetIntFromString(GetParamValueFromContext(5));
+            int endMin = GetIntFromString(GetParamValueFromContext(6));
+
+            SilentModeParam param = new SilentModeParam();
+            param.ParamType = (SilentModeParamType)paramType;
+            param.SilentModeDuration = duration;
+            param.RemindType = (PushRemindType)type;
+            param.SilentModeStartTime = new SilentModeTime();
+            param.SilentModeStartTime.hours = startHour;
+            param.SilentModeStartTime.minutes = startMin;
+            param.SilentModeEndTime = new SilentModeTime();
+            param.SilentModeEndTime.hours = endHour;
+            param.SilentModeEndTime.minutes = endMin;
+
+            SDKClient.Instance.PushManager.SetSilentModeForAll(param, new ValueCallBack<SilentModeItem>(
+                onSuccess: (item) => {
+                    Console.WriteLine($"SetSilentModeForAll success.");
+                    Console.WriteLine($"expireTS:{item.ExpireTimestamp};rtype:{item.RemindType};startHour:{item.SilentModeStartTime.hours};startMin:{item.SilentModeStartTime.minutes}");
+                    Console.WriteLine($"endHour:{item.SilentModeEndTime.hours};endMin:{item.SilentModeEndTime.minutes};covId:{item.ConvId};covType:{item.ConvType}");
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"SetSilentModeForAll failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IPushManager_GetSilentModeForAll()
+        {
+            SDKClient.Instance.PushManager.GetSilentModeForAll(new ValueCallBack<SilentModeItem>(
+                onSuccess: (item) => {
+                    Console.WriteLine($"GetSilentModeForAll success.");
+                    Console.WriteLine($"expireTS:{item.ExpireTimestamp};rtype:{item.RemindType};startHour:{item.SilentModeStartTime.hours};startMin:{item.SilentModeStartTime.minutes}");
+                    Console.WriteLine($"endHour:{item.SilentModeEndTime.hours};endMin:{item.SilentModeEndTime.minutes};covId:{item.ConvId};covType:{item.ConvType}");
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"GetSilentModeForAll failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IPushManager_SetSilentModeForConversation()
+        {
+            string convId = GetParamValueFromContext(0);
+            ConversationType convType = (ConversationType)GetIntFromString(GetParamValueFromContext(1));
+            int paramType = GetIntFromString(GetParamValueFromContext(2));
+            int duration = GetIntFromString(GetParamValueFromContext(3));
+            int type = GetIntFromString(GetParamValueFromContext(4));
+            int startHour = GetIntFromString(GetParamValueFromContext(5));
+            int startMin = GetIntFromString(GetParamValueFromContext(6));
+            int endHour = GetIntFromString(GetParamValueFromContext(7));
+            int endMin = GetIntFromString(GetParamValueFromContext(8));
+
+            SilentModeParam param = new SilentModeParam();
+            param.ParamType = (SilentModeParamType)paramType;
+            param.SilentModeDuration = duration;
+            param.RemindType = (PushRemindType)type;
+            param.SilentModeStartTime = new SilentModeTime();
+            param.SilentModeStartTime.hours = startHour;
+            param.SilentModeStartTime.minutes = startMin;
+            param.SilentModeEndTime = new SilentModeTime();
+            param.SilentModeEndTime.hours = endHour;
+            param.SilentModeEndTime.minutes = endMin;
+
+            SDKClient.Instance.PushManager.SetSilentModeForConversation(convId, convType, param, new ValueCallBack<SilentModeItem>(
+                onSuccess: (item) => {
+                    Console.WriteLine($"SetSilentModeForConversation success.");
+                    Console.WriteLine($"expireTS:{item.ExpireTimestamp};rtype:{item.RemindType};startHour:{item.SilentModeStartTime.hours};startMin:{item.SilentModeStartTime.minutes}");
+                    Console.WriteLine($"endHour:{item.SilentModeEndTime.hours};endMin:{item.SilentModeEndTime.minutes};covId:{item.ConvId};covType:{item.ConvType}");
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"SetSilentModeForConversation failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IPushManager_GetSilentModeForConversation()
+        {
+            string convId = GetParamValueFromContext(0);
+            ConversationType convType = (ConversationType)GetIntFromString(GetParamValueFromContext(1));
+
+            SDKClient.Instance.PushManager.GetSilentModeForConversation(convId, convType, new ValueCallBack<SilentModeItem>(
+                onSuccess: (item) => {
+                    Console.WriteLine($"GetSilentModeForConversation success.");
+                    Console.WriteLine($"expireTS:{item.ExpireTimestamp};rtype:{item.RemindType};startHour:{item.SilentModeStartTime.hours};startMin:{item.SilentModeStartTime.minutes}");
+                    Console.WriteLine($"endHour:{item.SilentModeEndTime.hours};endMin:{item.SilentModeEndTime.minutes};covId:{item.ConvId};covType:{item.ConvType}");
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"GetSilentModeForConversation failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IPushManager_GetSilentModeForConversations()
+        {
+            string userlist = GetParamValueFromContext(0);
+            string grouplist = GetParamValueFromContext(1);
+
+            //{"user":"user1,user2","group":"group1,group2"}
+            Dictionary<string, string> conversations = new Dictionary<string, string>();
+            conversations["user"] = userlist;
+            conversations["group"] = grouplist;
+
+            SDKClient.Instance.PushManager.GetSilentModeForConversations(conversations, new ValueCallBack<Dictionary<string, SilentModeItem>>(
+                onSuccess: (dict) => {
+                    Console.WriteLine($"GetSilentModeForConversations success.");
+                    foreach (var it in dict)
+                    {
+                        string name = it.Key;
+                        SilentModeItem item = it.Value;
+                        Console.WriteLine($"name:{name}-------------------------------------");
+                        Console.WriteLine($"expireTS:{item.ExpireTimestamp};rtype:{item.RemindType};startHour:{item.SilentModeStartTime.hours};startMin:{item.SilentModeStartTime.minutes}");
+                        Console.WriteLine($"endHour:{item.SilentModeEndTime.hours};endMin:{item.SilentModeEndTime.minutes};covId:{item.ConvId};covType:{item.ConvType}");
+                    }
+                    
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"GetSilentModeForConversations failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IPushManager_SetPreferredNotificationLanguage()
+        {
+            string languageCode = GetParamValueFromContext(0);
+
+            SDKClient.Instance.PushManager.SetPreferredNotificationLanguage(languageCode, new CallBack(
+                onSuccess: () => {
+                    Console.WriteLine($"SetPreferredNotificationLanguage success.");                    
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"SetPreferredNotificationLanguage failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IPushManager_GetPreferredNotificationLanguage()
+        {
+            SDKClient.Instance.PushManager.GetPreferredNotificationLanguage(new ValueCallBack<string>(
+                onSuccess: (str) => {
+                    Console.WriteLine($"GetPreferredNotificationLanguage success. lang:{str}");
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"GetPreferredNotificationLanguage failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
         public void CallFunc_IPushManager()
         {
             if (select_context.level2_item.CompareTo("GetNoDisturbGroups") == 0)
@@ -5970,6 +6182,48 @@ namespace WinSDKTest
             if (select_context.level2_item.CompareTo("SetGroupToDisturb") == 0)
             {
                 CallFunc_IPushManager_SetGroupToDisturb();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("SetSilentModeForAll") == 0)
+            {
+                CallFunc_IPushManager_SetSilentModeForAll();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("GetSilentModeForAll") == 0)
+            {
+                CallFunc_IPushManager_GetSilentModeForAll();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("SetSilentModeForConversation") == 0)
+            {
+                CallFunc_IPushManager_SetSilentModeForConversation();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("GetSilentModeForConversation") == 0)
+            {
+                CallFunc_IPushManager_GetSilentModeForConversation();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("GetSilentModeForConversations") == 0)
+            {
+                CallFunc_IPushManager_GetSilentModeForConversations();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("SetPreferredNotificationLanguage") == 0)
+            {
+                CallFunc_IPushManager_SetPreferredNotificationLanguage();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("GetPreferredNotificationLanguage") == 0)
+            {
+                CallFunc_IPushManager_GetPreferredNotificationLanguage();
                 return;
             }
         }

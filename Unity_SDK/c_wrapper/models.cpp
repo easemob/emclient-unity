@@ -2626,17 +2626,33 @@ static const std::string SilentModeConvType = "conversationType";
          if (d.HasMember(SilentModeRemindType.c_str()) && d[SilentModeRemindType.c_str()].IsInt())
              ptr->mRemindType = (EMPushConfigs::EMPushRemindType)(d[SilentModeRemindType.c_str()].GetInt());
 
-         if (d.HasMember(SilentModeIntervalStartHour.c_str()) && d[SilentModeIntervalStartHour.c_str()].IsInt())
+         if (d.HasMember(SilentModeIntervalStartHour.c_str()) && d[SilentModeIntervalStartHour.c_str()].IsInt()) {
+             if (nullptr == ptr->mSilentModeStartTime) {
+                 ptr->mSilentModeStartTime = EMSilentModeTimePtr(new EMSilentModeTime());
+             }
              ptr->mSilentModeStartTime->hours = d[SilentModeIntervalStartHour.c_str()].GetInt();
+         }
 
-         if (d.HasMember(SilentModeIntervalStartMin.c_str()) && d[SilentModeIntervalStartMin.c_str()].IsInt())
+         if (d.HasMember(SilentModeIntervalStartMin.c_str()) && d[SilentModeIntervalStartMin.c_str()].IsInt()) {
+             if (nullptr == ptr->mSilentModeStartTime) {
+                 ptr->mSilentModeStartTime = EMSilentModeTimePtr(new EMSilentModeTime());
+             }
              ptr->mSilentModeStartTime->minutes = d[SilentModeIntervalStartMin.c_str()].GetInt();
+         }
 
-         if (d.HasMember(SilentModeIntervalEndHour.c_str()) && d[SilentModeIntervalEndHour.c_str()].IsInt())
+         if (d.HasMember(SilentModeIntervalEndHour.c_str()) && d[SilentModeIntervalEndHour.c_str()].IsInt()) {
+             if (nullptr == ptr->mSilentModeEndTime) {
+                 ptr->mSilentModeEndTime = EMSilentModeTimePtr(new EMSilentModeTime());
+             }
              ptr->mSilentModeEndTime->hours = d[SilentModeIntervalEndHour.c_str()].GetInt();
+         }
 
-         if (d.HasMember(SilentModeIntervalEndMin.c_str()) && d[SilentModeIntervalEndMin.c_str()].IsInt())
+         if (d.HasMember(SilentModeIntervalEndMin.c_str()) && d[SilentModeIntervalEndMin.c_str()].IsInt()) {
+             if (nullptr == ptr->mSilentModeEndTime) {
+                 ptr->mSilentModeEndTime = EMSilentModeTimePtr(new EMSilentModeTime());
+             }
              ptr->mSilentModeEndTime->minutes = d[SilentModeIntervalEndMin.c_str()].GetInt();
+         }
 
          return ptr;
      }
@@ -2695,7 +2711,7 @@ static const std::string SilentModeConvType = "conversationType";
          writer.String(itemPtr->mConversationID.c_str());
 
          writer.Key(SilentModeConvType.c_str());
-         writer.Int(itemPtr->mRemindType);
+         writer.Int(itemPtr->mConversationType);
      }
      writer.EndObject();
  }
