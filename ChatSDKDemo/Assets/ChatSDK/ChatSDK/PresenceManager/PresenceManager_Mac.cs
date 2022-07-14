@@ -132,17 +132,17 @@ namespace ChatSDK
                        {
                            string jstr = Marshal.PtrToStringAnsi(data[0]);
                            List<string> members = TransformTool.JsonStringToStringList(jstr);
-                           ChatCallbackObject.ValueCallBackOnSuccess<List<Presence>>(cbId, members);
+                           ChatCallbackObject.ValueCallBackOnSuccess<List<string>>(cbId, members);
                        }
                        else
                        {
                            Debug.Log($"Subscribed members information expected.");
                            List<string> members = new List<string>();
-                           ChatCallbackObject.ValueCallBackOnSuccess<List<Presence>>(cbId, members);
+                           ChatCallbackObject.ValueCallBackOnSuccess<List<string>>(cbId, members);
                        }
                    },
                   onError: (int code, string desc, int cbId) => {
-                      ChatCallbackObject.ValueCallBackOnError<List<Presence>>(cbId, code, desc);
+                      ChatCallbackObject.ValueCallBackOnError<List<string>>(cbId, code, desc);
                   });
         }
 

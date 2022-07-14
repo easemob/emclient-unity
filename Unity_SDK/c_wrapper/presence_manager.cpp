@@ -49,7 +49,8 @@ HYPHENATE_API void PresenceManager_SubscribePresences(void * client, int callbac
     
     std::vector<std::string> memberList;
     for(int i=0; i<size; i++){
-        memberList.push_back(members[i]);
+        if (nullptr != members[i] && strlen(members[i]) != 0)
+            memberList.push_back(members[i]);
     }
     
     std::thread t([=](){
@@ -99,7 +100,8 @@ HYPHENATE_API void PresenceManager_UnsubscribePresences(void * client, int callb
     
     std::vector<std::string> memberList;
     for(int i=0; i<size; i++){
-        memberList.push_back(members[i]);
+        if(nullptr != members[i] && strlen(members[i]) != 0)
+            memberList.push_back(members[i]);
     }
     
     std::thread t([=](){
@@ -159,7 +161,8 @@ HYPHENATE_API void PresenceManager_FetchPresenceStatus(void * client, int callba
     
     std::vector<std::string> memberList;
     for(int i=0; i<size; i++){
-        memberList.push_back(members[i]);
+        if (nullptr != members[i] && strlen(members[i]) != 0)
+            memberList.push_back(members[i]);
     }
     
     std::thread t([=](){
