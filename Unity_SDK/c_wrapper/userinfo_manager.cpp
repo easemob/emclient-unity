@@ -11,6 +11,8 @@
 #include "tool.h"
 #include "json.hpp"
 
+extern EMClient* gClient;
+
 std::map<UserInfoType, std::string> UserInfoTypeMap =
                                     {
                                         {NICKNAME,      "nickname"},
@@ -25,6 +27,8 @@ std::map<UserInfoType, std::string> UserInfoTypeMap =
 
 HYPHENATE_API void UserInfoManager_UpdateOwnInfo(void *client, int callbackId, void* userInfo, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(userInfo, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -79,6 +83,8 @@ HYPHENATE_API void UserInfoManager_UpdateOwnInfo(void *client, int callbackId, v
 
 HYPHENATE_API void UserInfoManager_UpdateOwnInfoByAttribute(void *client, int callbackId, int userinfoType, const char* value, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     auto it = UserInfoTypeMap.find((UserInfoType)userinfoType); // TO-DO: userinfoType is not UserInfoType, then? 
     // value can be empty?
@@ -130,6 +136,8 @@ HYPHENATE_API void UserInfoManager_UpdateOwnInfoByAttribute(void *client, int ca
 
 HYPHENATE_API void UserInfoManager_FetchUserInfoByUserId(void *client, int callbackId, const char * users[], int size, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(nullptr == users || size <= 0) {
         error.setErrorCode(EMError::GENERAL_ERROR);
@@ -193,6 +201,8 @@ HYPHENATE_API void UserInfoManager_FetchUserInfoByUserId(void *client, int callb
 
 HYPHENATE_API void UserInfoManager_FetchUserInfoByAttribute(void *client, int callbackId, const char * users[], int userSize, int userinfoTypes[], int typeSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(nullptr == users || userSize <= 0 || typeSize <= 0) {
         error.setErrorCode(EMError::GENERAL_ERROR);

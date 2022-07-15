@@ -13,6 +13,8 @@
 
 using namespace easemob;
 
+extern EMClient* gClient;
+
 //callback entries definition
 #if defined(_WIN32)
     //Callback

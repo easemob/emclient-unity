@@ -60,7 +60,7 @@ public class Login : MonoBehaviour
                         SceneManager.LoadSceneAsync("Main");
                     }
                     else {
-                        UIManager.DefaultAlert(transform, "login failed, code: " + code);
+                        UIManager.DefaultAlert(transform, "login failed, code: " + code + "; desc:" + desc);
                     }
                     //UIManager.DefaultAlert(transform, "login failed, code: " + code);
                 }
@@ -159,7 +159,8 @@ public class Login : MonoBehaviour
 
     void InitEaseMobSDK() {
         //default appkey
-        string appkey = "easemob-demo#easeim";
+        //string appkey = "easemob-demo#easeim";
+        string appkey = "easemob-demo#unitytest";
 
 #if UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
 

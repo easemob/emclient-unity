@@ -17,7 +17,8 @@ std::string DISPLAY_NAME_STR = " "; // used to save display name temprarily
 EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bool buildReceiveMsg)
 {
     //compose message body
-    std::string from, to, msgId, attrs;
+    std::string from, to, msgId;
+    std::string attrs = "";
     EMMessage::EMChatType msgType = EMMessage::EMChatType::SINGLE;
     EMMessageBodyPtr messageBody;
     switch(type) {
@@ -31,7 +32,8 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = tm->To;
             msgId = tm->MsgId;
             msgType = tm->Type;
-            attrs = tm->AttributesValues;
+            if (nullptr != tm->AttributesValues)
+                attrs = tm->AttributesValues;
         }
             break;
         case EMMessageBody::LOCATION:
@@ -42,7 +44,8 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = lm->To;
             msgId = lm->MsgId;
             msgType = lm->Type;
-            attrs = lm->AttributesValues;
+            if (nullptr != lm->AttributesValues)
+                attrs = lm->AttributesValues;
         }
             break;
         case EMMessageBody::COMMAND:
@@ -55,7 +58,8 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = cm->To;
             msgId = cm->MsgId;
             msgType = cm->Type;
-            attrs = cm->AttributesValues;
+            if (nullptr != cm->AttributesValues)
+                attrs = cm->AttributesValues;
         }
             break;
         case EMMessageBody::FILE:
@@ -72,7 +76,8 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = fm->To;
             msgId = fm->MsgId;
             msgType = fm->Type;
-            attrs = fm->AttributesValues;
+            if (nullptr != fm->AttributesValues)
+                attrs = fm->AttributesValues;
         }
             break;
         case EMMessageBody::IMAGE:
@@ -93,7 +98,8 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = im->To;
             msgId = im->MsgId;
             msgType = im->Type;
-            attrs = im->AttributesValues;
+            if (nullptr != im->AttributesValues)
+                attrs = im->AttributesValues;
         }
             break;
         case EMMessageBody::VOICE:
@@ -110,7 +116,8 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = vm->To;
             msgId = vm->MsgId;
             msgType = vm->Type;
-            attrs = vm->AttributesValues;
+            if (nullptr != vm->AttributesValues)
+                attrs = vm->AttributesValues;
         }
             break;
         case EMMessageBody::VIDEO:
@@ -137,7 +144,8 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = im->To;
             msgId = im->MsgId;
             msgType = im->Type;
-            attrs = im->AttributesValues;
+            if (nullptr != im->AttributesValues)
+                attrs = im->AttributesValues;
         }
             break;
         case EMMessageBody::CUSTOM:
@@ -168,7 +176,8 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = im->To;
             msgId = im->MsgId;
             msgType = im->Type;
-            attrs = im->AttributesValues;
+            if (nullptr != im->AttributesValues)
+                attrs = im->AttributesValues;
         }
             break;
     }
@@ -1156,7 +1165,7 @@ std::map<std::string, UserInfo> UserInfo::FromResponse(std::string json, std::ma
         std::string user = it.key();
         nlohmann::json u = it.value();
         
-        if (u.is_null() || u.empty() || !u.is_object()) continue;
+        if (u.is_null() || !u.is_object()) continue;
 
         UserInfo ui;
         if (u.count(utypeMap[NICKNAME]) > 0 && u.at(utypeMap[NICKNAME]).is_string())

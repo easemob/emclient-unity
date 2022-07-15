@@ -10,11 +10,15 @@
 #include "emclient.h"
 #include "tool.h"
 
+extern EMClient* gClient;
+
 static EMCallbackObserverHandle gCallbackObserverHandle;
 EMGroupManagerListener *gGroupManagerListener = nullptr;
 
 HYPHENATE_API void GroupManager_AddListener(void *client,FUNC_OnInvitationReceived onInvitationReceived, FUNC_OnRequestToJoinReceived onRequestToJoinReceived, FUNC_OnRequestToJoinAccepted onRequestToJoinAccepted, FUNC_OnRequestToJoinDeclined onRequestToJoinDeclined, FUNC_OnInvitationAccepted onInvitationAccepted, FUNC_OnInvitationDeclined onInvitationDeclined, FUNC_OnUserRemoved onUserRemoved, FUNC_OnGroupDestroyed onGroupDestroyed, FUNC_OnAutoAcceptInvitationFromGroup onAutoAcceptInvitationFromGroup, FUNC_OnMuteListAdded onMuteListAdded, FUNC_OnMuteListRemoved onMuteListRemoved, FUNC_OnAdminAdded onAdminAdded, FUNC_OnAdminRemoved onAdminRemoved, FUNC_OnOwnerChanged onOwnerChanged, FUNC_OnMemberJoined onMemberJoined, FUNC_OnMemberExited onMemberExited, FUNC_OnAnnouncementChanged onAnnouncementChanged, FUNC_OnSharedFileAdded onSharedFileAdded, FUNC_OnSharedFileDeleted onSharedFileDeleted)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
     if(nullptr == gGroupManagerListener) { //only set once!
         gGroupManagerListener = new GroupManagerListener(client, onInvitationReceived,  onRequestToJoinReceived, onRequestToJoinAccepted, onRequestToJoinDeclined, onInvitationAccepted, onInvitationDeclined, onUserRemoved, onGroupDestroyed, onAutoAcceptInvitationFromGroup, onMuteListAdded, onMuteListRemoved, onAdminAdded, onAdminRemoved, onOwnerChanged, onMemberJoined, onMemberExited, onAnnouncementChanged, onSharedFileAdded, onSharedFileDeleted);
         CLIENT->getGroupManager().addListener(gGroupManagerListener);
@@ -24,6 +28,8 @@ HYPHENATE_API void GroupManager_AddListener(void *client,FUNC_OnInvitationReceiv
 
 HYPHENATE_API void GroupManager_CreateGroup(void *client, int callbackId, const char * groupName, GroupOptions * options, const char * desc, const char * inviteMembers[], int size, const char * inviteReason, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupName, options, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -59,6 +65,8 @@ HYPHENATE_API void GroupManager_CreateGroup(void *client, int callbackId, const 
 
 HYPHENATE_API void GroupManager_ChangeGroupName(void *client, int callbackId, const char * groupId, const char * groupName, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupName, groupId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -83,6 +91,8 @@ HYPHENATE_API void GroupManager_ChangeGroupName(void *client, int callbackId, co
 
 HYPHENATE_API void GroupManager_DestoryGroup(void *client, int callbackId, const char * groupId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -106,6 +116,8 @@ HYPHENATE_API void GroupManager_DestoryGroup(void *client, int callbackId, const
 
 HYPHENATE_API void GroupManager_AddMembers(void *client, int callbackId, const char * groupId, const char * members[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
          if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -137,6 +149,8 @@ HYPHENATE_API void GroupManager_AddMembers(void *client, int callbackId, const c
 
 HYPHENATE_API void GroupManager_RemoveMembers(void *client, int callbackId, const char * groupId, const char * members[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
          if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -164,6 +178,8 @@ HYPHENATE_API void GroupManager_RemoveMembers(void *client, int callbackId, cons
 
 HYPHENATE_API void GroupManager_AddAdmin(void *client, int callbackId, const char * groupId, const char * admin, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, admin, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -192,6 +208,8 @@ HYPHENATE_API void GroupManager_AddAdmin(void *client, int callbackId, const cha
 
 HYPHENATE_API void GroupManager_GetGroupWithId(void *client, const char * groupId, FUNC_OnSuccess_With_Result onSuccess)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
     if(!MandatoryCheck(groupId)) {
         onSuccess(nullptr, DataType::Group, 0, -1);
         return;
@@ -215,6 +233,8 @@ HYPHENATE_API void GroupManager_GetGroupWithId(void *client, const char * groupI
 
 HYPHENATE_API void GroupManager_AcceptInvitationFromGroup(void *client, int callbackId, const char * groupId, const char * inviter, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -244,6 +264,8 @@ HYPHENATE_API void GroupManager_AcceptInvitationFromGroup(void *client, int call
 
 HYPHENATE_API void GroupManager_AcceptJoinGroupApplication(void *client, int callbackId, const char * groupId, const char * username, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, username, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -268,6 +290,8 @@ HYPHENATE_API void GroupManager_AcceptJoinGroupApplication(void *client, int cal
 
 HYPHENATE_API void GroupManager_AddWhiteListMembers(void *client, int callbackId, const char * groupId, const char * members[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -295,6 +319,8 @@ HYPHENATE_API void GroupManager_AddWhiteListMembers(void *client, int callbackId
 
 HYPHENATE_API void GroupManager_BlockGroupMessage(void *client, int callbackId, const char * groupId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -318,6 +344,8 @@ HYPHENATE_API void GroupManager_BlockGroupMessage(void *client, int callbackId, 
 
 HYPHENATE_API void GroupManager_BlockGroupMembers(void *client, int callbackId, const char * groupId, const char * members[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -345,6 +373,8 @@ HYPHENATE_API void GroupManager_BlockGroupMembers(void *client, int callbackId, 
 
 HYPHENATE_API void GroupManager_ChangeGroupDescription(void *client, int callbackId, const char * groupId, const char * desc, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, desc, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -369,6 +399,8 @@ HYPHENATE_API void GroupManager_ChangeGroupDescription(void *client, int callbac
 
 HYPHENATE_API void GroupManager_TransferGroupOwner(void *client, int callbackId, const char * groupId, const char * newOwner, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, newOwner, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -397,6 +429,8 @@ HYPHENATE_API void GroupManager_TransferGroupOwner(void *client, int callbackId,
 
 HYPHENATE_API void GroupManager_FetchIsMemberInWhiteList(void *client, int callbackId, const char * groupId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -431,6 +465,8 @@ HYPHENATE_API void GroupManager_FetchIsMemberInWhiteList(void *client, int callb
 
 HYPHENATE_API void GroupManager_DeclineInvitationFromGroup(void *client, int callbackId, const char * groupId, const char * username, const char * reason, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -456,6 +492,9 @@ HYPHENATE_API void GroupManager_DeclineInvitationFromGroup(void *client, int cal
 
 HYPHENATE_API void GroupManager_DeclineJoinGroupApplication(void *client, int callbackId, const char * groupId, const char * username, const char * reason, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -481,6 +520,8 @@ HYPHENATE_API void GroupManager_DeclineJoinGroupApplication(void *client, int ca
 
 HYPHENATE_API void GroupManager_DownloadGroupSharedFile(void *client, int callbackId, const char * groupId, const char * filePath, const char * fileId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, filePath, fileId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -503,6 +544,9 @@ HYPHENATE_API void GroupManager_DownloadGroupSharedFile(void *client, int callba
 
 HYPHENATE_API void GroupManager_FetchGroupAnnouncement(void *client, int callbackId, const char * groupId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -529,6 +573,8 @@ HYPHENATE_API void GroupManager_FetchGroupAnnouncement(void *client, int callbac
 
 HYPHENATE_API void GroupManager_FetchGroupBans(void *client, int callbackId, const char * groupId, int pageNum, int pageSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -560,6 +606,8 @@ HYPHENATE_API void GroupManager_FetchGroupBans(void *client, int callbackId, con
 
 HYPHENATE_API void GroupManager_FetchGroupSharedFiles(void *client, int callbackId, const char * groupId, int pageNum, int pageSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -595,6 +643,8 @@ HYPHENATE_API void GroupManager_FetchGroupSharedFiles(void *client, int callback
 
 HYPHENATE_API void GroupManager_FetchGroupMembers(void *client, int callbackId, const char * groupId, int pageSize, const char * cursor, FUNC_OnSuccess_With_Result_V2 onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -633,6 +683,8 @@ HYPHENATE_API void GroupManager_FetchGroupMembers(void *client, int callbackId, 
 
 HYPHENATE_API void GroupManager_FetchGroupMutes(void *client, int callbackId, const char * groupId, int pageNum, int pageSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -664,6 +716,8 @@ HYPHENATE_API void GroupManager_FetchGroupMutes(void *client, int callbackId, co
 
 HYPHENATE_API void GroupManager_FetchGroupSpecification(void *client, int callbackId, const char * groupId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -691,6 +745,8 @@ HYPHENATE_API void GroupManager_FetchGroupSpecification(void *client, int callba
 
 HYPHENATE_API void GroupManager_GetGroupsWithoutNotice(void *client, int callbackId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     std::thread t([=](){
         EMError error;
         error.setErrorCode(EMError::EM_NO_ERROR); //loadAllMyGroupsFromDB no error result
@@ -721,6 +777,8 @@ HYPHENATE_API void GroupManager_GetGroupsWithoutNotice(void *client, int callbac
 
 HYPHENATE_API void GroupManager_FetchGroupWhiteList(void *client, int callbackId, const char * groupId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -753,6 +811,8 @@ HYPHENATE_API void GroupManager_FetchGroupWhiteList(void *client, int callbackId
 
 HYPHENATE_API void GroupManager_LoadAllMyGroupsFromDB(void *client, FUNC_OnSuccess_With_Result onSuccess)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
     EMGroupList groupList = CLIENT->getGroupManager().loadAllMyGroupsFromDB();
     int size = (int)groupList.size();
     LOG("LoadAllMyGroupsFromDB successfully, group num:%d", size);
@@ -770,6 +830,8 @@ HYPHENATE_API void GroupManager_LoadAllMyGroupsFromDB(void *client, FUNC_OnSucce
 
 HYPHENATE_API void GroupManager_FetchAllMyGroupsWithPage(void *client, int callbackId, int pageNum, int pageSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     std::thread t([=](){
         EMError error;
         EMGroupList groupList = CLIENT->getGroupManager().fetchAllMyGroupsWithPage(pageNum, pageSize, error);
@@ -798,6 +860,8 @@ HYPHENATE_API void GroupManager_FetchAllMyGroupsWithPage(void *client, int callb
 
 HYPHENATE_API void GroupManager_FetchPublicGroupsWithCursor(void *client, int callbackId, int pageSize, const char * cursor, FUNC_OnSuccess_With_Result_V2 onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     std::string cursorStr = OptionalStrParamCheck(cursor);
     
     std::thread t([=](){
@@ -846,6 +910,8 @@ HYPHENATE_API void GroupManager_FetchPublicGroupsWithCursor(void *client, int ca
 
 HYPHENATE_API void GroupManager_JoinPublicGroup(void *client, int callbackId, const char * groupId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -869,6 +935,8 @@ HYPHENATE_API void GroupManager_JoinPublicGroup(void *client, int callbackId, co
 
 HYPHENATE_API void GroupManager_LeaveGroup(void *client, int callbackId, const char * groupId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -892,6 +960,8 @@ HYPHENATE_API void GroupManager_LeaveGroup(void *client, int callbackId, const c
 
 HYPHENATE_API void GroupManager_MuteAllGroupMembers(void *client, int callbackId, const char * groupId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -924,6 +994,8 @@ HYPHENATE_API void GroupManager_MuteAllGroupMembers(void *client, int callbackId
 
 HYPHENATE_API void GroupManager_MuteGroupMembers(void *client, int callbackId, const char * groupId, const char * members[], int size, int muteDuration, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -956,6 +1028,8 @@ HYPHENATE_API void GroupManager_MuteGroupMembers(void *client, int callbackId, c
 
 HYPHENATE_API void GroupManager_RemoveGroupAdmin(void *client, int callbackId, const char * groupId, const char * admin, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, admin, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -985,6 +1059,8 @@ HYPHENATE_API void GroupManager_RemoveGroupAdmin(void *client, int callbackId, c
 
 HYPHENATE_API void GroupManager_DeleteGroupSharedFile(void *client, int callbackId, const char * groupId, const char * fileId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, fileId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -1009,6 +1085,8 @@ HYPHENATE_API void GroupManager_DeleteGroupSharedFile(void *client, int callback
 
 HYPHENATE_API void GroupManager_RemoveWhiteListMembers(void *client, int callbackId, const char * groupId, const char * members[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -1036,6 +1114,8 @@ HYPHENATE_API void GroupManager_RemoveWhiteListMembers(void *client, int callbac
 
 HYPHENATE_API void GroupManager_ApplyJoinPublicGroup(void *client, int callbackId, const char * groupId, const char * nickName, const char * message, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -1061,6 +1141,8 @@ HYPHENATE_API void GroupManager_ApplyJoinPublicGroup(void *client, int callbackI
 
 HYPHENATE_API void GroupManager_UnblockGroupMessage(void *client, int callbackId, const char * groupId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -1084,6 +1166,8 @@ HYPHENATE_API void GroupManager_UnblockGroupMessage(void *client, int callbackId
 
 HYPHENATE_API void GroupManager_UnblockGroupMembers(void *client, int callbackId, const char * groupId, const char * members[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -1111,6 +1195,8 @@ HYPHENATE_API void GroupManager_UnblockGroupMembers(void *client, int callbackId
 
 HYPHENATE_API void GroupManager_UnMuteAllMembers(void *client, int callbackId, const char * groupId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -1144,6 +1230,8 @@ HYPHENATE_API void GroupManager_UnMuteAllMembers(void *client, int callbackId, c
 
 HYPHENATE_API void GroupManager_UnmuteGroupMembers(void *client, int callbackId, const char * groupId, const char * members[], int size, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -1175,6 +1263,8 @@ HYPHENATE_API void GroupManager_UnmuteGroupMembers(void *client, int callbackId,
 
 HYPHENATE_API void GroupManager_UpdateGroupAnnouncement(void *client, int callbackId, const char * groupId, const char * newAnnouncement, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, newAnnouncement, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -1199,6 +1289,8 @@ HYPHENATE_API void GroupManager_UpdateGroupAnnouncement(void *client, int callba
 
 HYPHENATE_API void GroupManager_ChangeGroupExtension(void *client, int callbackId, const char * groupId, const char * newExtension, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, newExtension, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -1228,6 +1320,8 @@ HYPHENATE_API void GroupManager_ChangeGroupExtension(void *client, int callbackI
 
 HYPHENATE_API void GroupManager_UploadGroupSharedFile(void *client, int callbackId, const char * groupId, const char * filePath, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, filePath, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -1250,6 +1344,8 @@ HYPHENATE_API void GroupManager_UploadGroupSharedFile(void *client, int callback
 
 void GroupManager_RemoveListener(void*client)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
     CLIENT->getGroupManager().clearListeners();
     if(nullptr != gGroupManagerListener) {
         delete gGroupManagerListener;
