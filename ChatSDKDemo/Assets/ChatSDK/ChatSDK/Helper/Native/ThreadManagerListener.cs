@@ -31,7 +31,7 @@ namespace ChatSDK
         {
 
         }
-        void OnMemberJoinedThread(ThreadEvent evthreadEventent)
+        void OnMemberJoinedThread(ThreadEvent threadEvent)
         {
 
         }

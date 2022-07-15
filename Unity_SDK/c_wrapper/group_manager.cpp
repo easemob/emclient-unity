@@ -85,7 +85,7 @@ HYPHENATE_API void GroupManager_CreateGroup(void *client, int callbackId, const 
         memberList.push_back(inviteMembers[i]);
     }
     std::string groupNameStr = GetUTF8FromUnicode(groupName);
-    std::string descStr = GetUTF8FromUnicode(OptionalStrParamCheck(desc).c_str());
+    std::string descStr = OptionalStrParamCheck(GetUTF8FromUnicode(desc).c_str());
     std::string inviteReasonStr = GetUTF8FromUnicode(OptionalStrParamCheck(inviteReason).c_str());
     
     std::thread t([=](){

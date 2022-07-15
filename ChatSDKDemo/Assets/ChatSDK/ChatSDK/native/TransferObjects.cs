@@ -728,6 +728,11 @@ namespace ChatSDK
             ServerTime = message.ServerTime;
             ReactionList = MessageReaction.ListToJson(message.ReactionList);
             BodyType = message.Body.Type;
+            IsThread = message.IsThread;
+            MucParentId = message.MucParentId;
+            MsgParentId = message.MsgParentId;
+            if (null != message.ThreadOverview)
+                ThreadOverview = message.ThreadOverview.ToJson();
         }
 
         protected MessageTO()

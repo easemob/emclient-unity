@@ -32,6 +32,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
 
     auto wraper_mto = static_cast<MessageTO*>(mto);
     bool isNeedGroupAck = wraper_mto->IsNeedGroupAck;
+    bool isThread = wraper_mto->IsThread;
 
     EMMessageReactionList reaction_list;
     if (nullptr != wraper_mto->ReactionList) 
@@ -193,6 +194,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
         EMMessagePtr messagePtr = EMMessage::createReceiveMessage(from, to, messageBody, msgType, msgId);
         AttributesValueTO::SetMessageAttrs(messagePtr, attrs);
         messagePtr->setIsNeedGroupAck(isNeedGroupAck);
+        messagePtr->setIsThread(isThread);
         if (reaction_list.size() > 0)
             messagePtr->setReactionList(reaction_list);
         return messagePtr;
@@ -201,6 +203,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
         messagePtr->setMsgId(msgId);
         messagePtr->setIsNeedGroupAck(isNeedGroupAck);
         AttributesValueTO::SetMessageAttrs(messagePtr, attrs);
+        messagePtr->setIsThread(isThread);
         if (reaction_list.size() > 0)
             messagePtr->setReactionList(reaction_list);
         return messagePtr;
@@ -3025,12 +3028,12 @@ static const std::string SilentModeConvType = "conversationType";
          writer.String(threadEventPtr->threadOperation().c_str());
 
          writer.Key("messageCount");
-         writer.Int(threadEventPtr->membersCount());
-
-         writer.Key("membersCount");
          writer.Int(threadEventPtr->messageCount());
 
-         writer.Key("createTimestap");
+         writer.Key("membersCount");
+         writer.Int(threadEventPtr->membersCount());
+
+         writer.Key("createTimestamp");
          writer.Int64(threadEventPtr->createTimestamp());
 
          writer.Key("updateTimestamp");
@@ -3050,7 +3053,7 @@ static const std::string SilentModeConvType = "conversationType";
 
  std::string ThreadEventTO::ToJson(EMThreadEventPtr threadEventPtr)
  {
-     if (nullptr != threadEventPtr) return std::string();
+     if (nullptr == threadEventPtr) return std::string();
 
      StringBuffer s;
      Writer<StringBuffer> writer(s);

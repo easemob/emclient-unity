@@ -54,6 +54,7 @@ namespace ChatSDK
 
         static internal ThreadEvent FromJsonObject(JSONNode jn)
         {
+            if (null == jn) return null;
             if (!jn.IsNull && jn.IsObject)
             {
                 ThreadEvent thread = new ThreadEvent();

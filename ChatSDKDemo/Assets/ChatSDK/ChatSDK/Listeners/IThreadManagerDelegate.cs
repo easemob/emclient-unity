@@ -8,7 +8,7 @@ namespace ChatSDK
         void OnUpdateMyThread(ThreadEvent threadEvent);
         void OnThreadNotifyChange(ThreadEvent threadEvent);
         void OnLeaveThread(ThreadEvent threadEvent, ThreadLeaveReason reason);
-        void OnMemberJoinedThread(ThreadEvent evthreadEventent);
+        void OnMemberJoinedThread(ThreadEvent threadEvent);
         void OnMemberLeaveThread(ThreadEvent threadEvent);
     }
 }

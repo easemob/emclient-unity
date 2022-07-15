@@ -323,10 +323,11 @@ namespace ChatSDK
                     IsThread = jo["isThread"].AsBool;
                     MucParentId = jo["mucParentId"].Value;
                     MsgParentId = jo["msgParentId"].Value;
-                    if (jo["threadOverview"].IsNull)
-                        ThreadOverview = null;
+                    if (null != jo["threadOverview"] && jo["threadOverview"].IsString)
+                        ThreadOverview = ThreadEvent.FromJson(jo["threadOverview"].ToString());                    
                     else
-                        ThreadOverview = ThreadEvent.FromJson(jo["threadOverview"].ToString());
+                        ThreadOverview = null;
+
                 }
             }
         }
