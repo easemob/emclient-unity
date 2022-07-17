@@ -1,4 +1,4 @@
-#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE || UNITY_EDITOR
 using UnityEngine;
 #endif
 
@@ -176,11 +176,11 @@ namespace ChatSDK
         internal IPresenceManager PresenceManager()
         {
             if (presenceImp != null) { return presenceImp; }
-#if UNITY_ANDROID
+#if UNITY_ANDROID && !UNITY_EDITOR
             presenceImp = new PresenceManager_Android();
-#elif UNITY_IOS
+#elif UNITY_IOS && !UNITY_EDITOR
             presenceImp = new PresenceManager_iOS();
-#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+#elif UNITY_STANDALONE || UNITY_EDITOR
             presenceImp = new PresenceManager_Mac(instance);
 #else
             presenceImp = new PresenceManager_Mac(instance);
@@ -191,11 +191,11 @@ namespace ChatSDK
         internal IThreadManager ThreadManager()
         {
             if (threadImp != null) { return threadImp; }
-#if UNITY_ANDROID
+#if UNITY_ANDROID && !UNITY_EDITOR
             threadImp = new ThreadManager_Android();
-#elif UNITY_IOS
+#elif UNITY_IOS && !UNITY_EDITOR
             threadImp = new ThreadManager_iOS();
-#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+#elif UNITY_STANDALONE || UNITY_EDITOR
             threadImp = new ThreadManager_Mac(instance);
 #else
             threadImp = new ThreadManager_Mac(instance);
