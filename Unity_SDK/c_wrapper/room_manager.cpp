@@ -803,7 +803,7 @@ HYPHENATE_API void RoomManager_AddWhiteListMembers(void * client, int callbackId
 {
     EMError error;
     if(nullptr == roomId || 0 == size) {
-        error.setErrorCode(EMError::GENERAL_ERROR);
+        error.setErrorCode(EMError::INVALID_PARAM);
         error.mDescription = "Mandatory parameter is null!";
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
@@ -832,7 +832,7 @@ HYPHENATE_API void RoomManager_RemoveWhiteListMembers(void * client, int callbac
 {
     EMError error;
     if(nullptr == roomId || 0 == size) {
-        error.setErrorCode(EMError::GENERAL_ERROR);
+        error.setErrorCode(EMError::INVALID_PARAM);
         error.mDescription = "Mandatory parameter is null!";
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;

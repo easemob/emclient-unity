@@ -806,7 +806,7 @@ HYPHENATE_API void ChatManager_TranslateMessage(void *client, int callbackId, vo
     EMError error;
     
     if(!MandatoryCheck(mto) || size <= 0) {
-        error.setErrorCode(EMError::GENERAL_ERROR);
+        error.setErrorCode(EMError::INVALID_PARAM);
         error.mDescription = "Mandatory parameter is null!";
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
@@ -845,7 +845,7 @@ HYPHENATE_API void ChatManager_FetchGroupReadAcks(void* client, int callbackId, 
     EMError error;
 
     if (!MandatoryCheck(messageId, groupId) || pageSize <= 0) {
-        error.setErrorCode(EMError::GENERAL_ERROR);
+        error.setErrorCode(EMError::INVALID_PARAM);
         error.mDescription = "Mandatory parameter is null!";
         if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;

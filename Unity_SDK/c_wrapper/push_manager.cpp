@@ -271,11 +271,6 @@ HYPHENATE_API void PushManager_SetSilentModeForAll(void* client, int callbackId,
 
     std::string paramStr = param;
     EMSilentModeParamPtr ptr = SilentModeParamTO::FromJson(paramStr);
-    if (nullptr == ptr) {
-        ParameterError(error);
-        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
-        return;
-    }
 
     std::thread t([=]() {
         EMError error;
@@ -327,12 +322,6 @@ HYPHENATE_API void PushManager_SetSilentModeForConversation(void* client, int ca
 
     std::string paramStr = param;
     EMSilentModeParamPtr ptr = SilentModeParamTO::FromJson(paramStr);
-    if (nullptr == ptr) {
-        ParameterError(error);
-        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
-        return;
-    }
-
     std::string covIdStr = convId;
 
     std::thread t([=]() {
@@ -393,11 +382,6 @@ HYPHENATE_API void PushManager_GetSilentModeForConversations(void* client, int c
 
     std::string paramStr = param;
     std::map<std::string, std::string> map = JsonStringToMap(paramStr);
-    if (map.size() == 0) {
-        ParameterError(error);
-        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
-        return;
-    }
 
     std::thread t([=]() {
         EMError error;

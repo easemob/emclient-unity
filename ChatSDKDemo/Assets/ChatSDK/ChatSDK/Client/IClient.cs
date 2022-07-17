@@ -25,8 +25,6 @@ namespace ChatSDK
                     instance = new Client_Mac();
 #else
                     instance = new Client_Mac();
-#else
-                    instance = new Client_Mac();
 #endif
                     _initialized = true;
                 }
@@ -61,8 +59,6 @@ namespace ChatSDK
             chatImp = new ChatManager_Mac(instance);
 #else
             chatImp = new ChatManager_Mac(instance);
-#else
-            chatImp = new ChatManager_Mac(instance);
 #endif
             return chatImp;
         }
@@ -80,8 +76,6 @@ namespace ChatSDK
 #elif UNITY_IOS && !UNITY_EDITOR
             contactImp = new ContactManager_iOS();
 #elif UNITY_STANDALONE || UNITY_EDITOR
-            contactImp = new ContactManager_Mac(instance);
-#else
             contactImp = new ContactManager_Mac(instance);
 #else
             contactImp = new ContactManager_Mac(instance);
@@ -105,8 +99,6 @@ namespace ChatSDK
             groupImp = new GroupManager_Mac(instance);
 #else
             groupImp = new GroupManager_Mac(instance);
-#else
-            groupImp = new GroupManager_Mac(instance);
 #endif
             return groupImp;
         }
@@ -124,8 +116,6 @@ namespace ChatSDK
 #elif UNITY_IOS && !UNITY_EDITOR
             roomImp = new RoomManager_iOS();
 #elif UNITY_STANDALONE || UNITY_EDITOR
-            roomImp = new RoomManager_Mac(instance);
-#else
             roomImp = new RoomManager_Mac(instance);
 #else
             roomImp = new RoomManager_Mac(instance);
@@ -149,8 +139,6 @@ namespace ChatSDK
             pushImp = new PushManager_Mac(instance);
 #else
             pushImp = new PushManager_Mac(instance);
-#else
-            pushImp = new PushManager_Mac(instance);
 #endif
             return pushImp;
         }
@@ -166,8 +154,6 @@ namespace ChatSDK
             conversationImp = new ConversationManager_Mac(instance);
 #else
             conversationImp = new ConversationManager_Mac(instance);
-#else
-            conversationImp = new ConversationManager_Mac(instance);
 #endif
             return conversationImp;
         }
@@ -180,8 +166,6 @@ namespace ChatSDK
 #elif UNITY_IOS && !UNITY_EDITOR
             userInfoImp = new UserInfoManager_iOS();
 #elif UNITY_STANDALONE || UNITY_EDITOR
-            userInfoImp = new UserInfoManager_Mac(instance);
-#else
             userInfoImp = new UserInfoManager_Mac(instance);
 #else
             userInfoImp = new UserInfoManager_Mac(instance);
