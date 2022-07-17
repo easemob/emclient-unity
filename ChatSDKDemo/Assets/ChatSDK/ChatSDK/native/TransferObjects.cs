@@ -232,10 +232,12 @@ namespace ChatSDK
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
         struct FileMessageBodyTO
         {
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string LocalPath;
             [MarshalAs(UnmanagedType.LPTStr)]
             public string DisplayName;
             public string Secret;
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string RemotePath;
             public long FileSize;
             public DownLoadStatus DownStatus;
@@ -278,9 +280,9 @@ namespace ChatSDK
             FileBody fb = (FileBody)msg.Body;
 
             // change EMPTY_STR(" ")  to ""
-            if (Body.DisplayName.CompareTo(" ") != 0)   fb.DisplayName = Body.DisplayName;
-            if (Body.LocalPath.CompareTo(" ") != 0)     fb.LocalPath = Body.LocalPath;
-            if (Body.RemotePath.CompareTo(" ") != 0)    fb.RemotePath = Body.RemotePath;
+            if (Body.DisplayName.CompareTo(" ") != 0)   fb.DisplayName = TransformTool.GetUnicodeStringFromUTF8(Body.DisplayName);
+            if (Body.LocalPath.CompareTo(" ") != 0)     fb.LocalPath = TransformTool.GetUnicodeStringFromUTF8(Body.LocalPath);
+            if (Body.RemotePath.CompareTo(" ") != 0)    fb.RemotePath = TransformTool.GetUnicodeStringFromUTF8(Body.RemotePath);
             if (Body.Secret.CompareTo(" ") != 0)        fb.Secret = Body.Secret;
 
             fb.FileSize = Body.FileSize;
@@ -290,10 +292,10 @@ namespace ChatSDK
         public override IMessageBody UnmarshallBody()
         {
             MessageBody.FileBody fb = new MessageBody.FileBody();
-            fb.LocalPath = Body.LocalPath;
+            fb.LocalPath = TransformTool.GetUnicodeStringFromUTF8(Body.LocalPath);
             fb.DisplayName = TransformTool.GetUnicodeStringFromUTF8(Body.DisplayName);
             fb.Secret = Body.Secret;
-            fb.RemotePath = Body.RemotePath;
+            fb.RemotePath = TransformTool.GetUnicodeStringFromUTF8(Body.RemotePath);
             fb.FileSize = Body.FileSize;
             fb.DownStatus = Body.DownStatus;
 
@@ -314,12 +316,16 @@ namespace ChatSDK
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
         struct ImageMessageBodyTO
         {
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string LocalPath;
             [MarshalAs(UnmanagedType.LPTStr)]
             public string DisplayName;
             public string Secret;
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string RemotePath;
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string ThumbnailLocalPath;
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string ThumbnaiRemotePath;
             public string ThumbnaiSecret;
             public double Height;
@@ -375,13 +381,13 @@ namespace ChatSDK
             ImageBody ib = (ImageBody)msg.Body;
 
             // change EMPTY_STR(" ")  to ""
-            if (Body.DisplayName.CompareTo(" ") != 0)           ib.DisplayName = Body.DisplayName;
-            if (Body.LocalPath.CompareTo(" ") != 0)             ib.LocalPath = Body.LocalPath;
-            if (Body.RemotePath.CompareTo(" ") != 0)            ib.RemotePath = Body.RemotePath;
+            if (Body.DisplayName.CompareTo(" ") != 0)           ib.DisplayName = TransformTool.GetUnicodeStringFromUTF8(Body.DisplayName);
+            if (Body.LocalPath.CompareTo(" ") != 0)             ib.LocalPath = TransformTool.GetUnicodeStringFromUTF8(Body.LocalPath);
+            if (Body.RemotePath.CompareTo(" ") != 0)            ib.RemotePath = TransformTool.GetUnicodeStringFromUTF8(Body.RemotePath);
             if (Body.Secret.CompareTo(" ") != 0)                ib.Secret = Body.Secret;
             if (Body.ThumbnaiSecret.CompareTo(" ") != 0)        ib.ThumbnaiSecret = Body.ThumbnaiSecret;
-            if (Body.ThumbnaiRemotePath.CompareTo(" ") != 0)    ib.ThumbnaiRemotePath = Body.ThumbnaiRemotePath;
-            if (Body.ThumbnailLocalPath.CompareTo(" ") != 0)    ib.ThumbnailLocalPath = Body.ThumbnailLocalPath;
+            if (Body.ThumbnaiRemotePath.CompareTo(" ") != 0)    ib.ThumbnaiRemotePath = TransformTool.GetUnicodeStringFromUTF8(Body.ThumbnaiRemotePath);
+            if (Body.ThumbnailLocalPath.CompareTo(" ") != 0)    ib.ThumbnailLocalPath = TransformTool.GetUnicodeStringFromUTF8(Body.ThumbnailLocalPath);
 
             ib.FileSize = Body.FileSize;
             ib.DownStatus = Body.DownStatus;
@@ -391,12 +397,12 @@ namespace ChatSDK
         public override IMessageBody UnmarshallBody()
         {
             MessageBody.ImageBody ib = new MessageBody.ImageBody();
-            ib.LocalPath = Body.LocalPath;
+            ib.LocalPath = TransformTool.GetUnicodeStringFromUTF8(Body.LocalPath);
             ib.DisplayName = TransformTool.GetUnicodeStringFromUTF8(Body.DisplayName);
             ib.Secret = Body.Secret;
-            ib.RemotePath = Body.RemotePath;
-            ib.ThumbnailLocalPath = Body.ThumbnailLocalPath;
-            ib.ThumbnaiRemotePath = Body.ThumbnaiRemotePath;
+            ib.RemotePath = TransformTool.GetUnicodeStringFromUTF8(Body.RemotePath);
+            ib.ThumbnailLocalPath = TransformTool.GetUnicodeStringFromUTF8(Body.ThumbnailLocalPath);
+            ib.ThumbnaiRemotePath = TransformTool.GetUnicodeStringFromUTF8(Body.ThumbnaiRemotePath);
             ib.ThumbnaiSecret = Body.ThumbnaiSecret;
             ib.Height = Body.Height;
             ib.Width = Body.Width;
@@ -425,10 +431,12 @@ namespace ChatSDK
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
         struct VoiceMessageBodyTO
         {
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string LocalPath;
             [MarshalAs(UnmanagedType.LPTStr)]
             public string DisplayName;
             public string Secret;
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string RemotePath;
             public long FileSize;
             public DownLoadStatus DownStatus;
@@ -473,9 +481,9 @@ namespace ChatSDK
             VoiceBody vob = (VoiceBody)msg.Body;
 
             // change EMPTY_STR(" ")  to ""
-            if (Body.DisplayName.CompareTo(" ") != 0)   vob.DisplayName = Body.DisplayName;
-            if (Body.LocalPath.CompareTo(" ") != 0)     vob.LocalPath = Body.LocalPath;
-            if (Body.RemotePath.CompareTo(" ") != 0)    vob.RemotePath = Body.RemotePath;
+            if (Body.DisplayName.CompareTo(" ") != 0)   vob.DisplayName = TransformTool.GetUnicodeStringFromUTF8(Body.DisplayName);
+            if (Body.LocalPath.CompareTo(" ") != 0)     vob.LocalPath = TransformTool.GetUnicodeStringFromUTF8(Body.LocalPath);
+            if (Body.RemotePath.CompareTo(" ") != 0)    vob.RemotePath = TransformTool.GetUnicodeStringFromUTF8(Body.RemotePath);
             if (Body.Secret.CompareTo(" ") != 0)        vob.Secret = Body.Secret;
 
             vob.FileSize = Body.FileSize;
@@ -486,10 +494,10 @@ namespace ChatSDK
         public override IMessageBody UnmarshallBody()
         {
             MessageBody.VoiceBody voi = new MessageBody.VoiceBody();
-            voi.LocalPath = Body.LocalPath;
+            voi.LocalPath = TransformTool.GetUnicodeStringFromUTF8(Body.LocalPath);
             voi.DisplayName = TransformTool.GetUnicodeStringFromUTF8(Body.DisplayName);
             voi.Secret = Body.Secret;
-            voi.RemotePath = Body.RemotePath;
+            voi.RemotePath = TransformTool.GetUnicodeStringFromUTF8(Body.RemotePath);
             voi.FileSize = Body.FileSize;
             voi.DownStatus = Body.DownStatus;
             voi.Duration = Body.Duration;
@@ -511,12 +519,16 @@ namespace ChatSDK
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
         struct VideoMessageBodyTO
         {
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string LocalPath;
             [MarshalAs(UnmanagedType.LPTStr)]
             public string DisplayName;
             public string Secret;
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string RemotePath;
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string ThumbnaiLocationPath;
+            [MarshalAs(UnmanagedType.LPTStr)]
             public string ThumbnaiRemotePath;
             public string ThumbnaiSecret;
             public double Height;
@@ -569,13 +581,13 @@ namespace ChatSDK
             VideoBody vib = (VideoBody)msg.Body;
 
             // change EMPTY_STR(" ")  to ""
-            if (Body.DisplayName.CompareTo(" ") != 0)           vib.DisplayName = Body.DisplayName;
-            if (Body.LocalPath.CompareTo(" ") != 0)             vib.LocalPath = Body.LocalPath;
-            if (Body.RemotePath.CompareTo(" ") != 0)            vib.RemotePath = Body.RemotePath;
+            if (Body.DisplayName.CompareTo(" ") != 0)           vib.DisplayName = TransformTool.GetUnicodeStringFromUTF8(Body.DisplayName);
+            if (Body.LocalPath.CompareTo(" ") != 0)             vib.LocalPath = TransformTool.GetUnicodeStringFromUTF8(Body.LocalPath);
+            if (Body.RemotePath.CompareTo(" ") != 0)            vib.RemotePath = TransformTool.GetUnicodeStringFromUTF8(Body.RemotePath);
             if (Body.Secret.CompareTo(" ") != 0)                vib.Secret = Body.Secret;
             if (Body.ThumbnaiSecret.CompareTo(" ") != 0)        vib.ThumbnaiSecret = Body.ThumbnaiSecret;
-            if (Body.ThumbnaiRemotePath.CompareTo(" ") != 0)    vib.ThumbnaiRemotePath = Body.ThumbnaiRemotePath;
-            if (Body.ThumbnaiLocationPath.CompareTo(" ") != 0)  vib.ThumbnaiLocationPath = Body.ThumbnaiLocationPath;
+            if (Body.ThumbnaiRemotePath.CompareTo(" ") != 0)    vib.ThumbnaiRemotePath = TransformTool.GetUnicodeStringFromUTF8(Body.ThumbnaiRemotePath);
+            if (Body.ThumbnaiLocationPath.CompareTo(" ") != 0)  vib.ThumbnaiLocationPath = TransformTool.GetUnicodeStringFromUTF8(Body.ThumbnaiLocationPath);
             
             vib.FileSize = Body.FileSize;
             vib.DownStatus = Body.DownStatus;
@@ -585,12 +597,12 @@ namespace ChatSDK
         public override IMessageBody UnmarshallBody()
         {
             MessageBody.VideoBody vid = new MessageBody.VideoBody();
-            vid.LocalPath = Body.LocalPath;
+            vid.LocalPath = TransformTool.GetUnicodeStringFromUTF8(Body.LocalPath);
             vid.DisplayName = TransformTool.GetUnicodeStringFromUTF8(Body.DisplayName);
             vid.Secret = Body.Secret;
-            vid.RemotePath = Body.RemotePath;
-            vid.ThumbnaiLocationPath = Body.ThumbnaiLocationPath;
-            vid.ThumbnaiRemotePath = Body.ThumbnaiRemotePath;
+            vid.RemotePath = TransformTool.GetUnicodeStringFromUTF8(Body.RemotePath);
+            vid.ThumbnaiLocationPath = TransformTool.GetUnicodeStringFromUTF8(Body.ThumbnaiLocationPath);
+            vid.ThumbnaiRemotePath = TransformTool.GetUnicodeStringFromUTF8(Body.ThumbnaiRemotePath);
             vid.ThumbnaiSecret = Body.ThumbnaiSecret;
             vid.Height = Body.Height;
             vid.Width = Body.Width;

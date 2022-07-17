@@ -98,10 +98,10 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
         case EMMessageBody::FILE:
         {
             auto fm = static_cast<FileMessageTO *>(mto);
-            auto body = new EMFileMessageBody(fm->body.LocalPath);
+            auto body = new EMFileMessageBody(GetUTF8FromUnicode(fm->body.LocalPath));
             body->setDisplayName(GetUTF8FromUnicode(fm->body.DisplayName));
             body->setSecretKey(fm->body.Secret);
-            body->setRemotePath(fm->body.RemotePath);
+            body->setRemotePath(GetUTF8FromUnicode(fm->body.RemotePath));
             body->setFileLength(fm->body.FileSize);
             body->setDownloadStatus(fm->body.DownStatus);
             messageBody = EMMessageBodyPtr(body);
@@ -117,14 +117,14 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
         case EMMessageBody::IMAGE:
         {
             auto im = static_cast<ImageMessageTO *>(mto);
-            auto body = new EMImageMessageBody(im->body.LocalPath, im->body.ThumbnailLocalPath);
+            auto body = new EMImageMessageBody(GetUTF8FromUnicode(im->body.LocalPath), GetUTF8FromUnicode(im->body.ThumbnailLocalPath));
             body->setSecretKey(im->body.Secret);
             body->setFileLength(im->body.FileSize);
             body->setDownloadStatus(im->body.DownStatus);
             body->setDisplayName(GetUTF8FromUnicode(im->body.DisplayName));
             body->setRemotePath(im->body.ThumbnaiRemotePath);
             body->setThumbnailSecretKey(im->body.ThumbnaiSecret);
-            body->setThumbnailRemotePath(im->body.ThumbnaiRemotePath);
+            body->setThumbnailRemotePath(GetUTF8FromUnicode(im->body.ThumbnaiRemotePath));
             body->setThumbnailDownloadStatus(im->body.ThumbnaiDownStatus);
             //TODO: add ThumbnailDisplayName field later
             messageBody = EMMessageBodyPtr(body);
@@ -140,10 +140,10 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
         case EMMessageBody::VOICE:
         {
             auto vm = static_cast<VoiceMessageTO *>(mto);
-            auto body = new EMVoiceMessageBody(vm->body.LocalPath, vm->body.Duration);
+            auto body = new EMVoiceMessageBody(GetUTF8FromUnicode(vm->body.LocalPath), vm->body.Duration);
             body->setDisplayName(GetUTF8FromUnicode(vm->body.DisplayName));
             body->setSecretKey(vm->body.Secret);
-            body->setRemotePath(vm->body.RemotePath);
+            body->setRemotePath(GetUTF8FromUnicode(vm->body.RemotePath));
             body->setFileLength(vm->body.FileSize);
             body->setDownloadStatus(vm->body.DownStatus);
             messageBody = EMMessageBodyPtr(body);
@@ -159,16 +159,16 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
         case EMMessageBody::VIDEO:
         {
             auto vi = static_cast<VideoMessageTO *>(mto);
-            auto body = new EMVideoMessageBody(vi->body.LocalPath, vi->body.ThumbnaiLocationPath);
+            auto body = new EMVideoMessageBody(GetUTF8FromUnicode(vi->body.LocalPath), GetUTF8FromUnicode(vi->body.ThumbnaiLocationPath));
 
             body->setSecretKey(vi->body.Secret);
             body->setFileLength(vi->body.FileSize);
             body->setDownloadStatus(vi->body.DownStatus);
             body->setDisplayName(GetUTF8FromUnicode(vi->body.DisplayName));
-            body->setRemotePath(vi->body.ThumbnaiRemotePath);
+            body->setRemotePath(GetUTF8FromUnicode(vi->body.ThumbnaiRemotePath));
             
             body->setThumbnailSecretKey(vi->body.ThumbnaiSecret);
-            body->setThumbnailRemotePath(vi->body.ThumbnaiRemotePath);
+            body->setThumbnailRemotePath(GetUTF8FromUnicode(vi->body.ThumbnaiRemotePath));
             body->setThumbnailDownloadStatus(vi->body.DownStatus);
             //TODO: same with FileLength?
             body->setSize(vi->body.FileSize);
