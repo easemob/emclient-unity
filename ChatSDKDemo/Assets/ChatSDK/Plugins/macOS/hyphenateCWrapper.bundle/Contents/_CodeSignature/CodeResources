@@ -14,7 +14,11 @@
 		</data>
 		<key>Resources/easemob.framework/Versions/A/easemob</key>
 		<data>
+<<<<<<< HEAD
 		ydcHbwCZ+4iOvPP15Ln58VPhJrQ=
+=======
+		0BrvRlJXMYdzxQoWsI7jfsdGdWM=
+>>>>>>> 3.9.0.1
 		</data>
 		<key>Resources/lib/libc++.1.dylib</key>
 		<data>
@@ -78,11 +82,19 @@
 		<dict>
 			<key>hash</key>
 			<data>
+<<<<<<< HEAD
 			ydcHbwCZ+4iOvPP15Ln58VPhJrQ=
 			</data>
 			<key>hash2</key>
 			<data>
 			WFT98M2WbDh9ytKXhh8DhZpVLR4AopzGn9VV+RsyVqg=
+=======
+			0BrvRlJXMYdzxQoWsI7jfsdGdWM=
+			</data>
+			<key>hash2</key>
+			<data>
+			GM1ssbiS3btPGlpc+nN0IWZbdQG3ZFV7T/1rZtmSf3s=
+>>>>>>> 3.9.0.1
 			</data>
 		</dict>
 		<key>Resources/easemob.framework/Versions/Current</key>

@@ -26,7 +26,8 @@ std::string DISPLAY_NAME_STR = " "; // used to save display name temprarily
 EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bool buildReceiveMsg)
 {
     //compose message body
-    std::string from, to, msgId, attrs;
+    std::string from, to, msgId;
+    std::string attrs = "";
     EMMessage::EMChatType msgType = EMMessage::EMChatType::SINGLE;
     EMMessageBodyPtr messageBody;
 
@@ -59,7 +60,9 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = tm->To;
             msgId = tm->MsgId;
             msgType = tm->Type;
-            attrs = GetUTF8FromUnicode(tm->AttributesValues);
+
+            if (nullptr != tm->AttributesValues)
+            	attrs = GetUTF8FromUnicode(tm->AttributesValues);
         }
             break;
         case EMMessageBody::LOCATION:
@@ -72,7 +75,9 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = lm->To;
             msgId = lm->MsgId;
             msgType = lm->Type;
-            attrs = GetUTF8FromUnicode(lm->AttributesValues);
+
+            if (nullptr != lm->AttributesValues)
+            	attrs = GetUTF8FromUnicode(lm->AttributesValues);
         }
             break;
         case EMMessageBody::COMMAND:
@@ -85,7 +90,9 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = cm->To;
             msgId = cm->MsgId;
             msgType = cm->Type;
-            attrs = GetUTF8FromUnicode(cm->AttributesValues);
+
+            if (nullptr != cm->AttributesValues)
+            	attrs = GetUTF8FromUnicode(cm->AttributesValues);
         }
             break;
         case EMMessageBody::FILE:
@@ -102,7 +109,9 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = fm->To;
             msgId = fm->MsgId;
             msgType = fm->Type;
-            attrs = GetUTF8FromUnicode(fm->AttributesValues);
+
+            if (nullptr != fm->AttributesValues)
+            	attrs = GetUTF8FromUnicode(fm->AttributesValues);
         }
             break;
         case EMMessageBody::IMAGE:
@@ -123,7 +132,9 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = im->To;
             msgId = im->MsgId;
             msgType = im->Type;
-            attrs = GetUTF8FromUnicode(im->AttributesValues);
+
+            if (nullptr != im->AttributesValues)
+            	attrs = GetUTF8FromUnicode(im->AttributesValues);
         }
             break;
         case EMMessageBody::VOICE:
@@ -140,7 +151,9 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = vm->To;
             msgId = vm->MsgId;
             msgType = vm->Type;
-            attrs = GetUTF8FromUnicode(vm->AttributesValues);
+
+            if (nullptr != vm->AttributesValues)
+            	attrs = GetUTF8FromUnicode(vm->AttributesValues);
         }
             break;
         case EMMessageBody::VIDEO:
@@ -163,11 +176,14 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             
             //TODO: add ThumbnailDisplayName field later
             messageBody = EMMessageBodyPtr(body);
+
             from = vi->From;
             to = vi->To;
             msgId = vi->MsgId;
             msgType = vi->Type;
-            attrs = GetUTF8FromUnicode(vi->AttributesValues);
+
+            if (nullptr != vi->AttributesValues)
+            	attrs = GetUTF8FromUnicode(vi->AttributesValues);
         }
             break;
         case EMMessageBody::CUSTOM:
@@ -181,11 +197,14 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
                 body->setExts(exts);
 
             messageBody = EMMessageBodyPtr(body);
+
             from = cm->From;
             to = cm->To;
             msgId = cm->MsgId;
             msgType = cm->Type;
-            attrs = GetUTF8FromUnicode(cm->AttributesValues);
+
+            if (nullptr != cm->AttributesValues)
+            	attrs = GetUTF8FromUnicode(cm->AttributesValues);
         }
             break;
     }

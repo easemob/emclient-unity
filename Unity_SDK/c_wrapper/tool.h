@@ -21,6 +21,8 @@ typedef void (*TIMER_FUNC)(int);
 
 void ParameterError(EMError& error);
 
+bool CheckClientInitOrNot(int callbackId, FUNC_OnError onError);
+
 bool MandatoryCheck(const void* ptr, EMError& error);
 bool MandatoryCheck(const char* ptr, EMError& error);
 bool MandatoryCheck(const char* ptr);

@@ -29,22 +29,12 @@
 }
 
 - (id)deleteConversation:(NSDictionary *)param {
-    NSString *conversationId = param[@"conversationId"];
+    NSString *conversationId = param[@"convId"];
     if (!conversationId) {
         return nil;
     }
     BOOL deleteMessages = [param[@"deleteMessages"] boolValue];
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    __block BOOL ret = NO;
-    
-    [EMClient.sharedClient.chatManager deleteConversation:conversationId
-                                         isDeleteMessages:deleteMessages
-                                               completion:^(NSString *aConversationId, EMError *aError)
-     {
-        ret = aError ? YES:NO;
-        dispatch_semaphore_signal(semaphore);
-    }];
-    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    BOOL ret = [EMClient.sharedClient.chatManager deleteConversation:conversationId deleteMessages:deleteMessages];
     return @{@"ret":@(ret)};
 }
 

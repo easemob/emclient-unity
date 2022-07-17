@@ -19,10 +19,25 @@
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/prettywriter.h"
 
+extern EMClient* gClient;
 void ParameterError(EMError& error)
 {
     error.setErrorCode(EMError::GENERAL_ERROR);
     error.mDescription = "Mandatory parameter is invalid!";
+}
+
+bool CheckClientInitOrNot(int callbackId, FUNC_OnError onError)
+{
+    EMError error;
+
+    if (nullptr == gClient) {
+        LOG("Error: Sdk is not initialized!");
+        error.setErrorCode(EMError::GENERAL_ERROR);
+        error.mDescription = "Sdk is not initialized!";
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return false;
+    }
+    return true;
 }
 
 bool MandatoryCheck(const void* ptr, EMError& error) {
