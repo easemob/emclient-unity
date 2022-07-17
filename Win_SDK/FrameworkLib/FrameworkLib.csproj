@@ -109,11 +109,11 @@
     <Compile Include="Assets\ChatSDK\ChatSDK\Tools\ChatCallbackQueue.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\Tools\DebugLog.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\Tools\FileOperator.cs" />
+    <Compile Include="Assets\ChatSDK\ChatSDK\Tools\SimpleJSON.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\Tools\TransformTool.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\UserInfoManager\IUserInfoManager.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\UserInfoManager\UserInfoManager_Mac.cs" />
     <Compile Include="Assets\ChatSDK\Scripts\Editor\IOSBuildSetting.cs" />
-    <Compile Include="Assets\ThirdLibs\SimpleJSON.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
