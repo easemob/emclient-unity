@@ -97,10 +97,50 @@ namespace WinSDKTest
             if (null != msg.ThreadOverview)
                 Utils.PrintThreadEvent(msg.ThreadOverview);
 
-            if (msg.Body.Type == MessageBodyType.TXT)
+            switch (msg.Body.Type)
             {
-                TextBody tb = (TextBody)msg.Body;
-                Console.WriteLine($"message text content: {tb.Text}");
+                case MessageBodyType.TXT:
+                    {
+                        TextBody b = (TextBody)msg.Body;
+                        Console.WriteLine($"message text content: {b.Text}");
+                    }
+                    break;
+                case MessageBodyType.FILE:
+                    {
+                        FileBody b = (FileBody)msg.Body;
+                        Console.WriteLine($"DisplayName: {b.DisplayName}");
+                        Console.WriteLine($"LocalPath: {b.LocalPath}");
+                        Console.WriteLine($"RemotePath: {b.RemotePath}");
+                    }
+                    break;
+                case MessageBodyType.IMAGE:
+                    {
+                        ImageBody b = (ImageBody)msg.Body;
+                        Console.WriteLine($"DisplayName: {b.DisplayName}");
+                        Console.WriteLine($"LocalPath: {b.LocalPath}");
+                        Console.WriteLine($"RemotePath: {b.RemotePath}");
+                        Console.WriteLine($"ThumbnailLocalPath: {b.ThumbnailLocalPath}");
+                        Console.WriteLine($"ThumbnaiRemotePath: {b.ThumbnaiRemotePath}");
+                    }
+                    break;
+                case MessageBodyType.VIDEO:
+                    {
+                        VideoBody b = (VideoBody)msg.Body;
+                        Console.WriteLine($"DisplayName: {b.DisplayName}");
+                        Console.WriteLine($"LocalPath: {b.LocalPath}");
+                        Console.WriteLine($"RemotePath: {b.RemotePath}");
+                        Console.WriteLine($"ThumbnailLocalPath: {b.ThumbnaiLocationPath}");
+                        Console.WriteLine($"ThumbnaiRemotePath: {b.ThumbnaiRemotePath}");
+                    }
+                    break;
+                case MessageBodyType.VOICE:
+                    {
+                        VoiceBody b = (VoiceBody)msg.Body;
+                        Console.WriteLine($"DisplayName: {b.DisplayName}");
+                        Console.WriteLine($"LocalPath: {b.LocalPath}");
+                        Console.WriteLine($"RemotePath: {b.RemotePath}");
+                    }
+                    break;
             }
             Console.WriteLine($"===========================");
         }
@@ -7653,30 +7693,10 @@ namespace WinSDKTest
         public void OnMessagesReceived(List<Message> messages)
         {
             Console.WriteLine("OnMessagesReceived");
-            foreach(var it in messages)
+            foreach (var it in messages)
             {
                 Console.WriteLine($"===========================");
-                Console.WriteLine($"message id: {it.MsgId}");
-                Console.WriteLine($"cov id: {it.ConversationId}");
-                Console.WriteLine($"From: {it.From}");
-                Console.WriteLine($"To: {it.To}");
-                Console.WriteLine($"RecallBy: {it.RecallBy}");
-                Console.WriteLine($"message type: {it.MessageType}");
-                Console.WriteLine($"diection: {it.Direction}");
-                Console.WriteLine($"status: {it.Status}");
-                Console.WriteLine($"localtime: {it.LocalTime}");
-                Console.WriteLine($"servertime: {it.ServerTime}");
-                Console.WriteLine($"HasDeliverAck: {it.HasDeliverAck}");
-                Console.WriteLine($"HasReadAck: {it.HasReadAck}");
-                //foreach(var it1 in it.Attributes)
-                //{
-                //    Console.WriteLine($"attribute item: key:{it1.Key}; value:{it1.Value}");
-                //}
-                if(it.Body.Type == MessageBodyType.TXT)
-                {
-                    TextBody tb = (TextBody)it.Body;
-                    Console.WriteLine($"message text content: {tb.Text}");
-                }
+                Utils.PrintMessage(it);
                 Console.WriteLine($"===========================");
             }
         }
