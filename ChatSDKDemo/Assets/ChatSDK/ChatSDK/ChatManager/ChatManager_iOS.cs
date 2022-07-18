@@ -44,6 +44,7 @@ namespace ChatSDK
             obj.Add("convId", conversationId);
             obj.Add("convType", TransformTool.ConversationTypeToInt(type));
             obj.Add("startMsgId", startMessageId ?? "");
+            obj.Add("direction", direction == MessageSearchDirection.UP ? 0 : 1);
             obj.Add("count", count);
             string jsonString = obj.ToString();
             ChatAPIIOS.ChatManager_HandleMethodCall("fetchHistoryMessages", jsonString, handle?.callbackId);
@@ -179,7 +180,11 @@ namespace ChatSDK
 
         public override void SendReadAckForGroupMessage(string messageId, string ackContent, CallBack callback = null)
         {
-            //TODO: Add code
+            //TODO: test
+            JSONObject obj = new JSONObject();
+            obj.Add("msgId", messageId);
+            obj.Add("content", ackContent);
+            ChatAPIIOS.ChatManager_HandleMethodCall("sendReadAckForGroupMessage", obj.ToString(), callback?.callbackId);
         }
 
         public override bool UpdateMessage(Message message)

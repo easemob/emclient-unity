@@ -114,6 +114,8 @@ void ChatManager_HandleMethodCall(const char* methodName, const char* jsonString
         [EMClientWrapper.instance.chatManager ackConversationRead:dic callbackId:callId];
     }else if ([method isEqualToString:@"ackMessageRead"]) {
         [EMClientWrapper.instance.chatManager ackMessageRead:dic callbackId:callId];
+    }else if ([method isEqualToString:@"sendReadAckFromGroupMessage"]) {
+        [EMClientWrapper.instance.chatManager sendReadAckForGroupMessage:dic callbackId:callId];
     }else if ([method isEqualToString:@"searchChatMsgFromDB"]) {
         [EMClientWrapper.instance.chatManager searchChatMsgFromDB:dic callbackId:callId];
     }else if ([method isEqualToString:@"removeMessageBeforeTimestamp"]) {

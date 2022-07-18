@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		900F7BED26785A5F007B5576 /* EMConversationWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 900F7BEC26785A5F007B5576 /* EMConversationWrapper.m */; };
+		90167804288525640059F474 /* libDownloadSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 90167803288525600059F474 /* libDownloadSDK.a */; };
 		902CC1EA266B5148002F9A50 /* EMPushManagerWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 902CC1DB266B5148002F9A50 /* EMPushManagerWrapper.m */; };
 		902CC1EB266B5148002F9A50 /* EMChatManagerWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 902CC1DC266B5148002F9A50 /* EMChatManagerWrapper.m */; };
 		902CC1EC266B5148002F9A50 /* EMContactManagerWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 902CC1DF266B5148002F9A50 /* EMContactManagerWrapper.m */; };
@@ -37,6 +38,16 @@
 		90D7B8012759FE5200FD1C72 /* EMUserInfo+Unity.m in Sources */ = {isa = PBXBuildFile; fileRef = 90D7B8002759FE5200FD1C72 /* EMUserInfo+Unity.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		90167802288525600059F474 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 901677FE288525600059F474 /* DownloadSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 901677F02885252A0059F474;
+			remoteInfo = DownloadSDK;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		90D7B176266774C9008CA320 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -53,6 +64,8 @@
 /* Begin PBXFileReference section */
 		900F7BEB26785A5F007B5576 /* EMConversationWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EMConversationWrapper.h; sourceTree = "<group>"; };
 		900F7BEC26785A5F007B5576 /* EMConversationWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EMConversationWrapper.m; sourceTree = "<group>"; };
+		901677FE288525600059F474 /* DownloadSDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = DownloadSDK.xcodeproj; sourceTree = "<group>"; };
+		9016780C288526C70059F474 /* downloadSDK.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = downloadSDK.sh; sourceTree = "<group>"; };
 		902CC1DB266B5148002F9A50 /* EMPushManagerWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EMPushManagerWrapper.m; sourceTree = "<group>"; };
 		902CC1DC266B5148002F9A50 /* EMChatManagerWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EMChatManagerWrapper.m; sourceTree = "<group>"; };
 		902CC1DD266B5148002F9A50 /* EMClientWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EMClientWrapper.h; sourceTree = "<group>"; };
@@ -89,7 +102,6 @@
 		9068A34A267072490022B90F /* EMChatroom+Unity.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "EMChatroom+Unity.m"; sourceTree = "<group>"; };
 		9068A34C2670A5360022B90F /* EMRoomListener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EMRoomListener.h; sourceTree = "<group>"; };
 		9068A34D2670A5360022B90F /* EMRoomListener.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EMRoomListener.m; sourceTree = "<group>"; };
-		907464E2280D0EA800AAF5A3 /* HyphenateChat.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = HyphenateChat.xcframework; sourceTree = "<group>"; };
 		90823A73281038C300D8431F /* HyphenateChat.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HyphenateChat.framework; sourceTree = "<group>"; };
 		90A30045266B790900BB3A19 /* EMWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EMWrapper.h; sourceTree = "<group>"; };
 		90A30046266B790900BB3A19 /* EMWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EMWrapper.m; sourceTree = "<group>"; };
@@ -114,6 +126,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				90167804288525640059F474 /* libDownloadSDK.a in Frameworks */,
 				90823A74281038C300D8431F /* HyphenateChat.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -121,6 +134,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		901677DF288523170059F474 /* Dependence */ = {
+			isa = PBXGroup;
+			children = (
+				9016780C288526C70059F474 /* downloadSDK.sh */,
+				901677FE288525600059F474 /* DownloadSDK.xcodeproj */,
+			);
+			path = Dependence;
+			sourceTree = "<group>";
+		};
+		901677FF288525600059F474 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				90167803288525600059F474 /* libDownloadSDK.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		902CC1DA266B5148002F9A50 /* Wrapper */ = {
 			isa = PBXGroup;
 			children = (
@@ -203,7 +233,7 @@
 		90D7B16F266774C9008CA320 = {
 			isa = PBXGroup;
 			children = (
-				907464E2280D0EA800AAF5A3 /* HyphenateChat.xcframework */,
+				901677DF288523170059F474 /* Dependence */,
 				90D7B17A266774C9008CA320 /* HyphenateWrapper */,
 				90D7B179266774C9008CA320 /* Products */,
 				90D7B1AD26677907008CA320 /* Frameworks */,
@@ -283,12 +313,28 @@
 			mainGroup = 90D7B16F266774C9008CA320;
 			productRefGroup = 90D7B179266774C9008CA320 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 901677FF288525600059F474 /* Products */;
+					ProjectRef = 901677FE288525600059F474 /* DownloadSDK.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				90D7B177266774C9008CA320 /* HyphenateWrapper */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		90167803288525600059F474 /* libDownloadSDK.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libDownloadSDK.a;
+			remoteRef = 90167802288525600059F474 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
 		90D7B174266774C9008CA320 /* Sources */ = {

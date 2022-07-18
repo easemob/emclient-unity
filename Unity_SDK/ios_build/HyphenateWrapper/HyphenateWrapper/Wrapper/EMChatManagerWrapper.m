@@ -109,6 +109,11 @@
     EMConversationType type = [EMConversation typeFromInt:[param[@"convType"] intValue]];
     NSString *startMsgId = param[@"startMsgId"];
     int count = [param[@"count"] intValue];
+    int iDirection = [param[@"direction"] intValue];
+    EMMessageSearchDirection direction = iDirection == 0 ? EMMessageSearchDirectionUp : EMMessageSearchDirectionDown;
+    
+   
+    
     [EMClient.sharedClient.chatManager asyncFetchHistoryMessagesFromServer:conversationId
                                                           conversationType:type
                                                             startMessageId:startMsgId
@@ -361,6 +366,32 @@
         return;
     }
     [EMClient.sharedClient.chatManager sendMessageReadAck:msgId toUser:msg.from completion:^(EMError *aError) {
+        if (aError) {
+            [self onError:callId error:aError];
+        }else {
+            [self onSuccess:nil callbackId:callId userInfo:nil];
+        }
+    }];
+}
+
+- (void)sendReadAckForGroupMessage:(NSDictionary *)param callbackId:(NSString *)callbackId {
+    NSString *msgId = param[@"msgId"];
+
+    if (!msgId) {
+        EMError *error = [[EMError alloc] initWithDescription:@"messageId is invalid" code: EMErrorMessageInvalid];
+        [self onError:callbackId error:error];
+        return;
+    }
+    
+    NSString *content = param[@"content"];
+    EMChatMessage *msg = [EMClient.sharedClient.chatManager getMessageWithMessageId:msgId];
+    if (!msg) {
+        EMError *aError = [[EMError alloc] initWithDescription:@"Message not found" code: EMErrorMessageInvalid];
+        [self onError:callbackId error:aError];
+        return;
+    }
+    __block NSString *callId = callbackId;
+    [EMClient.sharedClient.chatManager sendGroupMessageReadAck:msgId toGroup:msg.conversationId content:content completion:^(EMError *aError) {
         if (aError) {
             [self onError:callId error:aError];
         }else {
