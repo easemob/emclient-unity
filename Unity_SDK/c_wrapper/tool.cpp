@@ -19,15 +19,25 @@
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/prettywriter.h"
 
-void ParameterError(EMError& error)
+extern EMClient* gClient;
+
+bool CheckClientInitOrNot(int callbackId, FUNC_OnError onError)
 {
-    error.setErrorCode(EMError::GENERAL_ERROR);
-    error.mDescription = "Mandatory parameter is invalid!";
+    EMError error;
+
+    if (nullptr == gClient) {
+        LOG("Error: Sdk is not initialized!");
+        error.setErrorCode(EMError::GENERAL_ERROR);
+        error.mDescription = "Sdk is not initialized!";
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return false;
+    }
+    return true;
 }
 
 bool MandatoryCheck(const void* ptr, EMError& error) {
     if(nullptr == ptr) {
-        error.setErrorCode(EMError::GENERAL_ERROR);
+        error.setErrorCode(EMError::INVALID_PARAM);
         error.mDescription = "Mandatory parameter is null!";
         return false;
     } else {
@@ -37,7 +47,7 @@ bool MandatoryCheck(const void* ptr, EMError& error) {
 
 bool MandatoryCheck(const char* ptr, EMError& error) {
     if(nullptr == ptr || strlen(ptr) == 0) {
-        error.setErrorCode(EMError::GENERAL_ERROR);
+        error.setErrorCode(EMError::INVALID_PARAM);
         error.mDescription = "Mandatory parameter is null!";
         return false;
     } else {
@@ -66,7 +76,7 @@ bool MandatoryCheck(const void* ptr) {
 bool MandatoryCheck(const char* ptr1, void* ptr2, EMError& error)
 {
     if(nullptr == ptr1 || nullptr == ptr2 || strlen(ptr1) == 0) {
-        error.setErrorCode(EMError::GENERAL_ERROR);
+        error.setErrorCode(EMError::INVALID_PARAM);
         error.mDescription = "Mandatory parameter is null!";
         return false;
     } else {
@@ -76,7 +86,7 @@ bool MandatoryCheck(const char* ptr1, void* ptr2, EMError& error)
 
 bool MandatoryCheck(const char* ptr1, const char* ptr2, EMError& error) {
     if(nullptr == ptr1 || nullptr == ptr2 || strlen(ptr1) == 0 || strlen(ptr2) == 0) {
-        error.setErrorCode(EMError::GENERAL_ERROR);
+        error.setErrorCode(EMError::INVALID_PARAM);
         error.mDescription = "Mandatory parameter is null!";
         return false;
     } else {
@@ -96,7 +106,7 @@ bool MandatoryCheck(const char* ptr1, const char* ptr2) {
 bool MandatoryCheck(const char* ptr1, const char* ptr2, const char* ptr3, EMError& error) {
     if(nullptr == ptr1 || nullptr == ptr2 || nullptr == ptr3 ||
        strlen(ptr1) == 0 || strlen(ptr2) == 0 || strlen(ptr3) == 0) {
-        error.setErrorCode(EMError::GENERAL_ERROR);
+        error.setErrorCode(EMError::INVALID_PARAM);
         error.mDescription = "Mandatory parameter is null!";
         return false;
     } else {

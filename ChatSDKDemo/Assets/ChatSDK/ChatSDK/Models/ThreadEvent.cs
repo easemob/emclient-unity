@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using SimpleJSON;
 
-#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE || UNITY_EDITOR
 using UnityEngine;
 #endif
 
@@ -54,6 +54,7 @@ namespace ChatSDK
 
         static internal ThreadEvent FromJsonObject(JSONNode jn)
         {
+            if (null == jn) return null;
             if (!jn.IsNull && jn.IsObject)
             {
                 ThreadEvent thread = new ThreadEvent();

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using SimpleJSON;
 
-#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE || UNITY_EDITOR
 using UnityEngine;
 #endif
 
@@ -308,7 +308,6 @@ namespace ChatSDK
                     Status = MessageStatusFromInt(jo["status"].AsInt);
                     MessageType = MessageTypeFromInt(jo["chatType"].AsInt);
                     Direction = MessageDirectionFromString(jo["direction"].Value);
-                    Debug.Log($"111 : ?? {jo["attributes"]}");
                     Attributes = TransformTool.JsonStringToAttributes(jo["attributes"].ToString());
                     Body = IMessageBody.Constructor(jo["body"].Value, jo["bodyType"].Value);
 
@@ -323,10 +322,11 @@ namespace ChatSDK
                     IsThread = jo["isThread"].AsBool;
                     MucParentId = jo["mucParentId"].Value;
                     MsgParentId = jo["msgParentId"].Value;
-                    if (jo["threadOverview"].IsNull)
-                        ThreadOverview = null;
+                    if (null != jo["threadOverview"] && jo["threadOverview"].IsString)
+                        ThreadOverview = ThreadEvent.FromJson(jo["threadOverview"].ToString());                    
                     else
-                        ThreadOverview = ThreadEvent.FromJson(jo["threadOverview"].ToString());
+                        ThreadOverview = null;
+
                 }
             }
         }
@@ -347,7 +347,10 @@ namespace ChatSDK
             jo.Add("status", MessageStatusToInt(Status));
             jo.Add("chatType", MessageTypeToInt(MessageType));
             jo.Add("direction", MessageDirectionToString(Direction));
-            jo.Add("attributes", TransformTool.JsonStringFromAttributes(Attributes));
+            string strAttr = TransformTool.JsonStringFromAttributes(Attributes);
+            if (strAttr != null) {
+                jo.Add("attributes", strAttr);
+            }
             jo.Add("body", Body.ToJson().ToString());
             jo.Add("bodyType", Body.TypeString());
 

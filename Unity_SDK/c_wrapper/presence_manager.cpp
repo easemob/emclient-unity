@@ -42,14 +42,15 @@ HYPHENATE_API void PresenceManager_SubscribePresences(void * client, int callbac
 {
     EMError error;
     if(nullptr == members || size <= 0) {
-        error.setErrorCode(EMError::GENERAL_ERROR);
+        error.setErrorCode(EMError::INVALID_PARAM);
         error.mDescription = "Mandatory parameter is null!";
         return;
     }
     
     std::vector<std::string> memberList;
     for(int i=0; i<size; i++){
-        memberList.push_back(members[i]);
+        if (nullptr != members[i] && strlen(members[i]) != 0)
+            memberList.push_back(members[i]);
     }
     
     std::thread t([=](){
@@ -92,14 +93,15 @@ HYPHENATE_API void PresenceManager_UnsubscribePresences(void * client, int callb
 {
     EMError error;
     if(nullptr == members || size <= 0) {
-        error.setErrorCode(EMError::GENERAL_ERROR);
+        error.setErrorCode(EMError::INVALID_PARAM);
         error.mDescription = "Mandatory parameter is null!";
         return;
     }
     
     std::vector<std::string> memberList;
     for(int i=0; i<size; i++){
-        memberList.push_back(members[i]);
+        if(nullptr != members[i] && strlen(members[i]) != 0)
+            memberList.push_back(members[i]);
     }
     
     std::thread t([=](){
@@ -152,14 +154,15 @@ HYPHENATE_API void PresenceManager_FetchPresenceStatus(void * client, int callba
 {
     EMError error;
     if(nullptr == members || size <= 0) {
-        error.setErrorCode(EMError::GENERAL_ERROR);
+        error.setErrorCode(EMError::INVALID_PARAM);
         error.mDescription = "Mandatory parameter is null!";
         return;
     }
     
     std::vector<std::string> memberList;
     for(int i=0; i<size; i++){
-        memberList.push_back(members[i]);
+        if (nullptr != members[i] && strlen(members[i]) != 0)
+            memberList.push_back(members[i]);
     }
     
     std::thread t([=](){

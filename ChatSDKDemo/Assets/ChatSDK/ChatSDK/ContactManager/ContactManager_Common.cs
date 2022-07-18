@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE || UNITY_EDITOR
 using UnityEngine;
 #endif
 
 namespace ChatSDK
 {
-    internal sealed class ContactManager_Mac : IContactManager
+    internal sealed class ContactManager_Common : IContactManager
     {
         private IntPtr client;
         private ContactManagerHub contactManagerHub;
 
-        internal ContactManager_Mac(IClient _client)
+        internal ContactManager_Common(IClient _client)
         {
-            if(_client is Client_Mac clientMac)
+            if(_client is Client_Common clientCommon)
             {
-                client = clientMac.client;
+                client = clientCommon.client;
             }
             //register listeners
             contactManagerHub = new ContactManagerHub();

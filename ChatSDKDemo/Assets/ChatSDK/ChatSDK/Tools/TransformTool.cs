@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using SimpleJSON;
 using System.Runtime.InteropServices;
 
-#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE || UNITY_EDITOR
 using UnityEngine;
 #endif
 
@@ -314,31 +314,11 @@ namespace ChatSDK
             return jo.ToString();
         }
 
-        /*
-        static internal string JsonStringFromAttributes(Dictionary<string, AttributeValue> attributes = null)
-        {
-            
-            JSONObject jo = new JSONObject();
-            if (attributes != null)
-            {
-                var keys = attributes.Keys;
-                foreach (var key in keys)
-                {
-                    if (!attributes.TryGetValue(key, out AttributeValue value)) {
-                        value = new AttributeValue();
-                    }
-                    jo[key] = value.ToJsonString();
-                }
-            }
-                
-            return jo.ToString();
-            
-        }*/
 
         static internal string JsonStringFromAttributes(Dictionary<string, AttributeValue> attributes = null)
         {
             if (null == attributes || 0 == attributes.Count)
-                return "";
+                return null;
 
             JSONObject jo = new JSONObject();
             foreach (var item in attributes)
