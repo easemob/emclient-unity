@@ -7,16 +7,16 @@ using UnityEngine;
 
 namespace ChatSDK
 {
-	internal sealed class PresenceManager_Mac : IPresenceManager
+	internal sealed class PresenceManager_Common : IPresenceManager
 	{
 		private IntPtr client;
         private PresenceManagerHub presenceManagerHub;
 
-        internal PresenceManager_Mac(IClient _client)
+        internal PresenceManager_Common(IClient _client)
 		{
-			if (_client is Client_Mac clientMac)
+			if (_client is Client_Common clientCommon)
 			{
-				client = clientMac.client;
+				client = clientCommon.client;
 			}
 
             presenceManagerHub = new PresenceManagerHub();

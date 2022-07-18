@@ -7,16 +7,16 @@ using UnityEngine;
 
 namespace ChatSDK
 {
-    internal sealed class ThreadManager_Mac : IThreadManager
+    internal sealed class ThreadManager_Common : IThreadManager
     {
         private IntPtr client;
         private ThreadManagerHub threadManagerHub;
 
-        internal ThreadManager_Mac(IClient _client)
+        internal ThreadManager_Common(IClient _client)
         {
-            if (_client is Client_Mac clientMac)
+            if (_client is Client_Common clientCommon)
             {
-                client = clientMac.client;
+                client = clientCommon.client;
             }
             //register listeners
             threadManagerHub = new ThreadManagerHub();

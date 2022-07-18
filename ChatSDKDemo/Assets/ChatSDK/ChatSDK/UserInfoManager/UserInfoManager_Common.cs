@@ -7,15 +7,15 @@ using UnityEngine;
 
 namespace ChatSDK
 {
-	internal sealed class UserInfoManager_Mac : IUserInfoManager
+	internal sealed class UserInfoManager_Common : IUserInfoManager
 	{
 		private IntPtr client;
 
-		internal UserInfoManager_Mac(IClient _client)
+		internal UserInfoManager_Common(IClient _client)
 		{
-			if (_client is Client_Mac clientMac)
+			if (_client is Client_Common clientCommon)
 			{
-				client = clientMac.client;
+				client = clientCommon.client;
 			}
 		}
 

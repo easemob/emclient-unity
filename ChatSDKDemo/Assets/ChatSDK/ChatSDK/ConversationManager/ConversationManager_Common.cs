@@ -8,14 +8,14 @@ using UnityEngine;
 namespace ChatSDK
 {
 
-    internal class ConversationManager_Mac : IConversationManager
+    internal class ConversationManager_Common : IConversationManager
     {
         internal IntPtr client;
-        internal ConversationManager_Mac(IClient _client)
+        internal ConversationManager_Common(IClient _client)
         {
-            if (_client is Client_Mac clientMac)
+            if (_client is Client_Common clientCommon)
             {
-                client = clientMac.client;
+                client = clientCommon.client;
             }
         }
 

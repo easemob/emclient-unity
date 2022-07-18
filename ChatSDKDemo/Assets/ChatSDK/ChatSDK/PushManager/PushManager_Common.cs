@@ -7,15 +7,15 @@ using UnityEngine;
 
 namespace ChatSDK
 {
-    internal sealed class PushManager_Mac : IPushManager
+    internal sealed class PushManager_Common : IPushManager
     {
         private IntPtr client;
 
-        internal PushManager_Mac(IClient _client)
+        internal PushManager_Common(IClient _client)
         {
-            if (_client is Client_Mac clientMac)
+            if (_client is Client_Common clientCommon)
             {
-                client = clientMac.client;
+                client = clientCommon.client;
             }
         }
 

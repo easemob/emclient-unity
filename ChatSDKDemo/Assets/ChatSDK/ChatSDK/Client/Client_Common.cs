@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace ChatSDK
 {
-    internal sealed class Client_Mac : IClient
+    internal sealed class Client_Common : IClient
     {
         private ConnectionHub connectionHub;
         private MultiDevicesHub multiDeviceHub;
@@ -21,7 +21,7 @@ namespace ChatSDK
         public event OnErrorV2 OnRegistrationError;
         public event OnSuccess OnLogoutSuccess;
 
-        public Client_Mac() {
+        public Client_Common() {
             // start log service
             StartLog("unmanaged_dll.log");
         }
