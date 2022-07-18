@@ -270,10 +270,6 @@ namespace ChatSDK
         /// <param name="token">声网token</param>
         public abstract void RenewAgoraToken(string token);
 
-        internal abstract void StartLog(string logFilePath);
-
-        internal abstract void StopLog();
-
         /// <summary>
         /// 释放资源
         /// </summary>
