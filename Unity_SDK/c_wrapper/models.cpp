@@ -26,12 +26,14 @@ std::string DISPLAY_NAME_STR = " "; // used to save display name temprarily
 EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bool buildReceiveMsg)
 {
     //compose message body
-    std::string from, to, msgId, attrs;
+    std::string from, to, msgId;
+    std::string attrs = "";
     EMMessage::EMChatType msgType = EMMessage::EMChatType::SINGLE;
     EMMessageBodyPtr messageBody;
 
     auto wraper_mto = static_cast<MessageTO*>(mto);
     bool isNeedGroupAck = wraper_mto->IsNeedGroupAck;
+    bool isThread = wraper_mto->IsThread;
 
     EMMessageReactionList reaction_list;
     if (nullptr != wraper_mto->ReactionList) 
@@ -58,7 +60,9 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = tm->To;
             msgId = tm->MsgId;
             msgType = tm->Type;
-            attrs = GetUTF8FromUnicode(tm->AttributesValues);
+
+            if (nullptr != tm->AttributesValues)
+            	attrs = GetUTF8FromUnicode(tm->AttributesValues);
         }
             break;
         case EMMessageBody::LOCATION:
@@ -71,7 +75,9 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = lm->To;
             msgId = lm->MsgId;
             msgType = lm->Type;
-            attrs = GetUTF8FromUnicode(lm->AttributesValues);
+
+            if (nullptr != lm->AttributesValues)
+            	attrs = GetUTF8FromUnicode(lm->AttributesValues);
         }
             break;
         case EMMessageBody::COMMAND:
@@ -84,16 +90,18 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = cm->To;
             msgId = cm->MsgId;
             msgType = cm->Type;
-            attrs = GetUTF8FromUnicode(cm->AttributesValues);
+
+            if (nullptr != cm->AttributesValues)
+            	attrs = GetUTF8FromUnicode(cm->AttributesValues);
         }
             break;
         case EMMessageBody::FILE:
         {
             auto fm = static_cast<FileMessageTO *>(mto);
-            auto body = new EMFileMessageBody(fm->body.LocalPath);
+            auto body = new EMFileMessageBody(GetUTF8FromUnicode(fm->body.LocalPath));
             body->setDisplayName(GetUTF8FromUnicode(fm->body.DisplayName));
             body->setSecretKey(fm->body.Secret);
-            body->setRemotePath(fm->body.RemotePath);
+            body->setRemotePath(GetUTF8FromUnicode(fm->body.RemotePath));
             body->setFileLength(fm->body.FileSize);
             body->setDownloadStatus(fm->body.DownStatus);
             messageBody = EMMessageBodyPtr(body);
@@ -101,20 +109,22 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = fm->To;
             msgId = fm->MsgId;
             msgType = fm->Type;
-            attrs = GetUTF8FromUnicode(fm->AttributesValues);
+
+            if (nullptr != fm->AttributesValues)
+            	attrs = GetUTF8FromUnicode(fm->AttributesValues);
         }
             break;
         case EMMessageBody::IMAGE:
         {
             auto im = static_cast<ImageMessageTO *>(mto);
-            auto body = new EMImageMessageBody(im->body.LocalPath, im->body.ThumbnailLocalPath);
+            auto body = new EMImageMessageBody(GetUTF8FromUnicode(im->body.LocalPath), GetUTF8FromUnicode(im->body.ThumbnailLocalPath));
             body->setSecretKey(im->body.Secret);
             body->setFileLength(im->body.FileSize);
             body->setDownloadStatus(im->body.DownStatus);
             body->setDisplayName(GetUTF8FromUnicode(im->body.DisplayName));
             body->setRemotePath(im->body.ThumbnaiRemotePath);
             body->setThumbnailSecretKey(im->body.ThumbnaiSecret);
-            body->setThumbnailRemotePath(im->body.ThumbnaiRemotePath);
+            body->setThumbnailRemotePath(GetUTF8FromUnicode(im->body.ThumbnaiRemotePath));
             body->setThumbnailDownloadStatus(im->body.ThumbnaiDownStatus);
             //TODO: add ThumbnailDisplayName field later
             messageBody = EMMessageBodyPtr(body);
@@ -122,16 +132,18 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = im->To;
             msgId = im->MsgId;
             msgType = im->Type;
-            attrs = GetUTF8FromUnicode(im->AttributesValues);
+
+            if (nullptr != im->AttributesValues)
+            	attrs = GetUTF8FromUnicode(im->AttributesValues);
         }
             break;
         case EMMessageBody::VOICE:
         {
             auto vm = static_cast<VoiceMessageTO *>(mto);
-            auto body = new EMVoiceMessageBody(vm->body.LocalPath, vm->body.Duration);
+            auto body = new EMVoiceMessageBody(GetUTF8FromUnicode(vm->body.LocalPath), vm->body.Duration);
             body->setDisplayName(GetUTF8FromUnicode(vm->body.DisplayName));
             body->setSecretKey(vm->body.Secret);
-            body->setRemotePath(vm->body.RemotePath);
+            body->setRemotePath(GetUTF8FromUnicode(vm->body.RemotePath));
             body->setFileLength(vm->body.FileSize);
             body->setDownloadStatus(vm->body.DownStatus);
             messageBody = EMMessageBodyPtr(body);
@@ -139,22 +151,24 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             to = vm->To;
             msgId = vm->MsgId;
             msgType = vm->Type;
-            attrs = GetUTF8FromUnicode(vm->AttributesValues);
+
+            if (nullptr != vm->AttributesValues)
+            	attrs = GetUTF8FromUnicode(vm->AttributesValues);
         }
             break;
         case EMMessageBody::VIDEO:
         {
             auto vi = static_cast<VideoMessageTO *>(mto);
-            auto body = new EMVideoMessageBody(vi->body.LocalPath, vi->body.ThumbnaiLocationPath);
+            auto body = new EMVideoMessageBody(GetUTF8FromUnicode(vi->body.LocalPath), GetUTF8FromUnicode(vi->body.ThumbnaiLocationPath));
 
             body->setSecretKey(vi->body.Secret);
             body->setFileLength(vi->body.FileSize);
             body->setDownloadStatus(vi->body.DownStatus);
             body->setDisplayName(GetUTF8FromUnicode(vi->body.DisplayName));
-            body->setRemotePath(vi->body.ThumbnaiRemotePath);
+            body->setRemotePath(GetUTF8FromUnicode(vi->body.ThumbnaiRemotePath));
             
             body->setThumbnailSecretKey(vi->body.ThumbnaiSecret);
-            body->setThumbnailRemotePath(vi->body.ThumbnaiRemotePath);
+            body->setThumbnailRemotePath(GetUTF8FromUnicode(vi->body.ThumbnaiRemotePath));
             body->setThumbnailDownloadStatus(vi->body.DownStatus);
             //TODO: same with FileLength?
             body->setSize(vi->body.FileSize);
@@ -162,11 +176,14 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
             
             //TODO: add ThumbnailDisplayName field later
             messageBody = EMMessageBodyPtr(body);
+
             from = vi->From;
             to = vi->To;
             msgId = vi->MsgId;
             msgType = vi->Type;
-            attrs = GetUTF8FromUnicode(vi->AttributesValues);
+
+            if (nullptr != vi->AttributesValues)
+            	attrs = GetUTF8FromUnicode(vi->AttributesValues);
         }
             break;
         case EMMessageBody::CUSTOM:
@@ -180,11 +197,14 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
                 body->setExts(exts);
 
             messageBody = EMMessageBodyPtr(body);
+
             from = cm->From;
             to = cm->To;
             msgId = cm->MsgId;
             msgType = cm->Type;
-            attrs = GetUTF8FromUnicode(cm->AttributesValues);
+
+            if (nullptr != cm->AttributesValues)
+            	attrs = GetUTF8FromUnicode(cm->AttributesValues);
         }
             break;
     }
@@ -193,6 +213,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
         EMMessagePtr messagePtr = EMMessage::createReceiveMessage(from, to, messageBody, msgType, msgId);
         AttributesValueTO::SetMessageAttrs(messagePtr, attrs);
         messagePtr->setIsNeedGroupAck(isNeedGroupAck);
+        messagePtr->setIsThread(isThread);
         if (reaction_list.size() > 0)
             messagePtr->setReactionList(reaction_list);
         return messagePtr;
@@ -201,6 +222,7 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
         messagePtr->setMsgId(msgId);
         messagePtr->setIsNeedGroupAck(isNeedGroupAck);
         AttributesValueTO::SetMessageAttrs(messagePtr, attrs);
+        messagePtr->setIsThread(isThread);
         if (reaction_list.size() > 0)
             messagePtr->setReactionList(reaction_list);
         return messagePtr;
@@ -2626,17 +2648,33 @@ static const std::string SilentModeConvType = "conversationType";
          if (d.HasMember(SilentModeRemindType.c_str()) && d[SilentModeRemindType.c_str()].IsInt())
              ptr->mRemindType = (EMPushConfigs::EMPushRemindType)(d[SilentModeRemindType.c_str()].GetInt());
 
-         if (d.HasMember(SilentModeIntervalStartHour.c_str()) && d[SilentModeIntervalStartHour.c_str()].IsInt())
+         if (d.HasMember(SilentModeIntervalStartHour.c_str()) && d[SilentModeIntervalStartHour.c_str()].IsInt()) {
+             if (nullptr == ptr->mSilentModeStartTime) {
+                 ptr->mSilentModeStartTime = EMSilentModeTimePtr(new EMSilentModeTime());
+             }
              ptr->mSilentModeStartTime->hours = d[SilentModeIntervalStartHour.c_str()].GetInt();
+         }
 
-         if (d.HasMember(SilentModeIntervalStartMin.c_str()) && d[SilentModeIntervalStartMin.c_str()].IsInt())
+         if (d.HasMember(SilentModeIntervalStartMin.c_str()) && d[SilentModeIntervalStartMin.c_str()].IsInt()) {
+             if (nullptr == ptr->mSilentModeStartTime) {
+                 ptr->mSilentModeStartTime = EMSilentModeTimePtr(new EMSilentModeTime());
+             }
              ptr->mSilentModeStartTime->minutes = d[SilentModeIntervalStartMin.c_str()].GetInt();
+         }
 
-         if (d.HasMember(SilentModeIntervalEndHour.c_str()) && d[SilentModeIntervalEndHour.c_str()].IsInt())
+         if (d.HasMember(SilentModeIntervalEndHour.c_str()) && d[SilentModeIntervalEndHour.c_str()].IsInt()) {
+             if (nullptr == ptr->mSilentModeEndTime) {
+                 ptr->mSilentModeEndTime = EMSilentModeTimePtr(new EMSilentModeTime());
+             }
              ptr->mSilentModeEndTime->hours = d[SilentModeIntervalEndHour.c_str()].GetInt();
+         }
 
-         if (d.HasMember(SilentModeIntervalEndMin.c_str()) && d[SilentModeIntervalEndMin.c_str()].IsInt())
+         if (d.HasMember(SilentModeIntervalEndMin.c_str()) && d[SilentModeIntervalEndMin.c_str()].IsInt()) {
+             if (nullptr == ptr->mSilentModeEndTime) {
+                 ptr->mSilentModeEndTime = EMSilentModeTimePtr(new EMSilentModeTime());
+             }
              ptr->mSilentModeEndTime->minutes = d[SilentModeIntervalEndMin.c_str()].GetInt();
+         }
 
          return ptr;
      }
@@ -2695,7 +2733,7 @@ static const std::string SilentModeConvType = "conversationType";
          writer.String(itemPtr->mConversationID.c_str());
 
          writer.Key(SilentModeConvType.c_str());
-         writer.Int(itemPtr->mRemindType);
+         writer.Int(itemPtr->mConversationType);
      }
      writer.EndObject();
  }
@@ -3009,12 +3047,12 @@ static const std::string SilentModeConvType = "conversationType";
          writer.String(threadEventPtr->threadOperation().c_str());
 
          writer.Key("messageCount");
-         writer.Int(threadEventPtr->membersCount());
-
-         writer.Key("membersCount");
          writer.Int(threadEventPtr->messageCount());
 
-         writer.Key("createTimestap");
+         writer.Key("membersCount");
+         writer.Int(threadEventPtr->membersCount());
+
+         writer.Key("createTimestamp");
          writer.Int64(threadEventPtr->createTimestamp());
 
          writer.Key("updateTimestamp");
@@ -3034,7 +3072,7 @@ static const std::string SilentModeConvType = "conversationType";
 
  std::string ThreadEventTO::ToJson(EMThreadEventPtr threadEventPtr)
  {
-     if (nullptr != threadEventPtr) return std::string();
+     if (nullptr == threadEventPtr) return std::string();
 
      StringBuffer s;
      Writer<StringBuffer> writer(s);

@@ -49,6 +49,101 @@ namespace WinSDKTest
 
             return list;
         }
+
+        static public void PrintThreadEvent(ThreadEvent thread)
+        {
+            Console.WriteLine($"Tid:{thread.Tid}; msgId:{thread.MessageId}; parentId:{thread.ParentId}; owner:{thread.Owner}");
+            Console.WriteLine($"Name:{thread.Name}; From:{thread.From}; To:{thread.To}; Operation:{thread.Operation}; MessageCount:{thread.MessageCount}");
+            Console.WriteLine($"MembersCount:{thread.MembersCount}; CreateTimestamp:{thread.CreateTimestamp}; UpdateTimestamp:{thread.UpdateTimestamp}");
+            Console.WriteLine($"Timestamp:{thread.Timestamp};");
+        }
+
+        static public void PrintMessage(Message msg)
+        {
+            Console.WriteLine($"===========================");
+            Console.WriteLine($"message id: {msg.MsgId}");
+            Console.WriteLine($"cov id: {msg.ConversationId}");
+            Console.WriteLine($"From: {msg.From}");
+            Console.WriteLine($"To: {msg.To}");
+            Console.WriteLine($"RecallBy: {msg.RecallBy}");
+            Console.WriteLine($"message type: {msg.MessageType}");
+            Console.WriteLine($"diection: {msg.Direction}");
+            Console.WriteLine($"status: {msg.Status}");
+            Console.WriteLine($"localtime: {msg.LocalTime}");
+            Console.WriteLine($"servertime: {msg.ServerTime}");
+            Console.WriteLine($"HasDeliverAck: {msg.HasDeliverAck}");
+            Console.WriteLine($"HasReadAck: {msg.HasReadAck}");
+            Console.WriteLine($"IsNeedGroupAck: {msg.IsNeedGroupAck}");
+            Console.WriteLine($"IsRead: {msg.IsRead}");
+            Console.WriteLine($"MessageOnlineState: {msg.MessageOnlineState}");
+            Console.WriteLine($"IsThread: {msg.IsThread}");
+            Console.WriteLine($"MucParentId: {msg.MucParentId}");
+            Console.WriteLine($"MsgParentId: {msg.MsgParentId}");
+            foreach (var it in msg.Attributes)
+            {
+                AttributeValue attr = it.Value;
+                string jstr = attr.ToJsonObject().ToString();
+                Console.WriteLine($"----------------------------");
+                Console.WriteLine($"attribute item: key:{it.Key}; value:{jstr}");
+            }
+
+            foreach (var it in msg.ReactionList)
+            {
+                Console.WriteLine($"----------------------------");
+                Console.WriteLine($"reaction:{it.Rection};count:{it.Count};state:{it.State}");
+                Console.WriteLine("$userList:{TransformTool.JsonObjectFromStringList(it.UserList)}");
+            }
+
+            if (null != msg.ThreadOverview)
+                Utils.PrintThreadEvent(msg.ThreadOverview);
+
+            switch (msg.Body.Type)
+            {
+                case MessageBodyType.TXT:
+                    {
+                        TextBody b = (TextBody)msg.Body;
+                        Console.WriteLine($"message text content: {b.Text}");
+                    }
+                    break;
+                case MessageBodyType.FILE:
+                    {
+                        FileBody b = (FileBody)msg.Body;
+                        Console.WriteLine($"DisplayName: {b.DisplayName}");
+                        Console.WriteLine($"LocalPath: {b.LocalPath}");
+                        Console.WriteLine($"RemotePath: {b.RemotePath}");
+                    }
+                    break;
+                case MessageBodyType.IMAGE:
+                    {
+                        ImageBody b = (ImageBody)msg.Body;
+                        Console.WriteLine($"DisplayName: {b.DisplayName}");
+                        Console.WriteLine($"LocalPath: {b.LocalPath}");
+                        Console.WriteLine($"RemotePath: {b.RemotePath}");
+                        Console.WriteLine($"ThumbnailLocalPath: {b.ThumbnailLocalPath}");
+                        Console.WriteLine($"ThumbnaiRemotePath: {b.ThumbnaiRemotePath}");
+                    }
+                    break;
+                case MessageBodyType.VIDEO:
+                    {
+                        VideoBody b = (VideoBody)msg.Body;
+                        Console.WriteLine($"DisplayName: {b.DisplayName}");
+                        Console.WriteLine($"LocalPath: {b.LocalPath}");
+                        Console.WriteLine($"RemotePath: {b.RemotePath}");
+                        Console.WriteLine($"ThumbnailLocalPath: {b.ThumbnaiLocationPath}");
+                        Console.WriteLine($"ThumbnaiRemotePath: {b.ThumbnaiRemotePath}");
+                    }
+                    break;
+                case MessageBodyType.VOICE:
+                    {
+                        VoiceBody b = (VoiceBody)msg.Body;
+                        Console.WriteLine($"DisplayName: {b.DisplayName}");
+                        Console.WriteLine($"LocalPath: {b.LocalPath}");
+                        Console.WriteLine($"RemotePath: {b.RemotePath}");
+                    }
+                    break;
+            }
+            Console.WriteLine($"===========================");
+        }
     }
 
     /*
@@ -149,6 +244,8 @@ namespace WinSDKTest
             return ret;
         }
 
+       
+
         public Testor()
         {
             select_context = new SelectContext();
@@ -177,7 +274,8 @@ namespace WinSDKTest
             level1_menus.Add(menu_index, "IPushManager"); menu_index++;
             level1_menus.Add(menu_index, "IRoomManager"); menu_index++;
             level1_menus.Add(menu_index, "IUserInfoManager"); menu_index++;
-            level1_menus.Add(menu_index, "IPresenceManager");
+            level1_menus.Add(menu_index, "IPresenceManager"); menu_index++;
+            level1_menus.Add(menu_index, "IThreadManager"); menu_index++;
         }
 
         internal void InitLevel2Menus_IClient()
@@ -380,6 +478,8 @@ namespace WinSDKTest
             menu_index = 1;
             param.Add(menu_index, "to (string)"); menu_index++;
             param.Add(menu_index, "text (string)"); menu_index++;
+            param.Add(menu_index, "chattype (int: 0-chat;1-group;2-room)"); menu_index++;
+            param.Add(menu_index, "isthread (bool)"); menu_index++;
             level3_menus.Add("SendTxtMessage", new Dictionary<int, string>(param));
             param.Clear();
 
@@ -1064,6 +1164,13 @@ namespace WinSDKTest
             functions_IPushManager.Add(menu_index, "SetPushStyle"); menu_index++;
             functions_IPushManager.Add(menu_index, "SetGroupToDisturb"); menu_index++;
             //functions_IPushManager.Add(menu_index, "ReportPushAction"); menu_index++;
+            functions_IPushManager.Add(menu_index, "SetSilentModeForAll"); menu_index++;
+            functions_IPushManager.Add(menu_index, "GetSilentModeForAll"); menu_index++;
+            functions_IPushManager.Add(menu_index, "SetSilentModeForConversation"); menu_index++;
+            functions_IPushManager.Add(menu_index, "GetSilentModeForConversation"); menu_index++;
+            functions_IPushManager.Add(menu_index, "GetSilentModeForConversations"); menu_index++;
+            functions_IPushManager.Add(menu_index, "SetPreferredNotificationLanguage"); menu_index++;
+            functions_IPushManager.Add(menu_index, "GetPreferredNotificationLanguage"); menu_index++;
             level2_menus.Add("IPushManager", functions_IPushManager);
         }
 
@@ -1126,6 +1233,57 @@ namespace WinSDKTest
             menu_index = 1;
             param.Add(menu_index, "parameters (string)"); menu_index++;
             level3_menus.Add("ReportPushAction", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "paramType (int: 0-RemindType; 1-Duration; 2-Interval)"); menu_index++;
+            param.Add(menu_index, "duration (int)"); menu_index++;
+            param.Add(menu_index, "remindType (int: 0-Default; 1-All; 2-MentionOnly; 3-None)"); menu_index++;
+            param.Add(menu_index, "startHour (int)"); menu_index++;
+            param.Add(menu_index, "startMin (int)"); menu_index++;
+            param.Add(menu_index, "endHour (int)"); menu_index++;
+            param.Add(menu_index, "endMin (int)"); menu_index++;
+            level3_menus.Add("SetSilentModeForAll", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "No params"); menu_index++;
+            level3_menus.Add("GetSilentModeForAll", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "convId (string)"); menu_index++;
+            param.Add(menu_index, "convType (int)"); menu_index++;
+            param.Add(menu_index, "paramType (int: 0-RemindType; 1-Duration; 2-Interval)"); menu_index++;
+            param.Add(menu_index, "duration (int)"); menu_index++;
+            param.Add(menu_index, "remindType (int: 0-Default; 1-All; 2-MentionOnly; 3-None)"); menu_index++;
+            param.Add(menu_index, "startHour (int)"); menu_index++;
+            param.Add(menu_index, "startMin (int)"); menu_index++;
+            param.Add(menu_index, "endHour (int)"); menu_index++;
+            param.Add(menu_index, "endMin (int)"); menu_index++;
+            level3_menus.Add("SetSilentModeForConversation", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "convId (string)"); menu_index++;
+            param.Add(menu_index, "convType (int)"); menu_index++;
+            level3_menus.Add("GetSilentModeForConversation", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "userlist (string)"); menu_index++;
+            param.Add(menu_index, "grouplist (string)"); menu_index++;
+            level3_menus.Add("GetSilentModeForConversations", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "languageCode (string)"); menu_index++;
+            level3_menus.Add("SetPreferredNotificationLanguage", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "No params"); menu_index++;
+            level3_menus.Add("GetPreferredNotificationLanguage", new Dictionary<int, string>(param));
             param.Clear();
         }
 
@@ -1328,9 +1486,9 @@ namespace WinSDKTest
             int menu_index = 1;
             functions_IPresenceManager.Add(menu_index, "PublishPresence"); menu_index++;
             functions_IPresenceManager.Add(menu_index, "SubscribePresences"); menu_index++;
-            functions_IPresenceManager.Add(menu_index, "unsubscribePresences"); menu_index++;
-            functions_IPresenceManager.Add(menu_index, "fetchSubscribedMembers"); menu_index++;
-            functions_IPresenceManager.Add(menu_index, "fetchPresenceStatus"); menu_index++;
+            functions_IPresenceManager.Add(menu_index, "UnsubscribePresences"); menu_index++;
+            functions_IPresenceManager.Add(menu_index, "FetchSubscribedMembers"); menu_index++;
+            functions_IPresenceManager.Add(menu_index, "FetchPresenceStatus"); menu_index++;
             level2_menus.Add("IPresenceManager", functions_IPresenceManager);
         }
 
@@ -1366,6 +1524,100 @@ namespace WinSDKTest
             param.Add(menu_index, "member1 (string)"); menu_index++;
             param.Add(menu_index, "member2 (string)"); menu_index++;
             level3_menus.Add("FetchPresenceStatus", new Dictionary<int, string>(param));
+            param.Clear();
+        }
+
+        internal void InitLevel2Menus_IThreadManager()
+        {
+            Dictionary<int, string> functions_IThreadManager = new Dictionary<int, string>();
+            int menu_index = 1;
+            functions_IThreadManager.Add(menu_index, "GetThreadWithThreadId"); menu_index++;
+            functions_IThreadManager.Add(menu_index, "CreateThread"); menu_index++;
+            functions_IThreadManager.Add(menu_index, "JoinThread"); menu_index++;
+            functions_IThreadManager.Add(menu_index, "LeaveThread"); menu_index++;
+            functions_IThreadManager.Add(menu_index, "DestroyThread"); menu_index++;
+            functions_IThreadManager.Add(menu_index, "RemoveThreadMember"); menu_index++;
+            functions_IThreadManager.Add(menu_index, "ChangeThreadSubject"); menu_index++;
+            functions_IThreadManager.Add(menu_index, "FetchThreadMembers"); menu_index++;
+            functions_IThreadManager.Add(menu_index, "FetchThreadListOfGroup"); menu_index++;
+            functions_IThreadManager.Add(menu_index, "FetchMineJoinedThreadList"); menu_index++;
+            functions_IThreadManager.Add(menu_index, "GetThreadDetail"); menu_index++;
+            functions_IThreadManager.Add(menu_index, "GetLastMessageAccordingThreads"); menu_index++;
+            level2_menus.Add("IThreadManager", functions_IThreadManager);
+        }
+
+        internal void InitLevel3Menus_IThreadManager()
+        {
+            Dictionary<int, string> param = new Dictionary<int, string>();
+            int menu_index = 1;
+            param.Add(menu_index, "threadId (string)"); menu_index++;
+            level3_menus.Add("GetThreadWithThreadId", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "threadName (string)"); menu_index++;
+            param.Add(menu_index, "msgId (string)"); menu_index++;
+            param.Add(menu_index, "groupId (string)"); menu_index++;
+            level3_menus.Add("CreateThread", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "threadId (string)"); menu_index++;
+            level3_menus.Add("JoinThread", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "threadId (string)"); menu_index++;
+            level3_menus.Add("LeaveThread", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "threadId (string)"); menu_index++;
+            level3_menus.Add("DestroyThread", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "threadId (string)"); menu_index++;
+            param.Add(menu_index, "username (string)"); menu_index++;
+            level3_menus.Add("RemoveThreadMember", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "threadId (string)"); menu_index++;
+            param.Add(menu_index, "newSubject (string)"); menu_index++;
+            level3_menus.Add("ChangeThreadSubject", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "threadId (string)"); menu_index++;
+            param.Add(menu_index, "curor (string)"); menu_index++;
+            param.Add(menu_index, "pageSize (int)"); menu_index++;
+            level3_menus.Add("FetchThreadMembers", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "groupId (string)"); menu_index++;
+            param.Add(menu_index, "joined (string)"); menu_index++;
+            param.Add(menu_index, "curor (string)"); menu_index++;
+            param.Add(menu_index, "pageSize (int)"); menu_index++;
+            level3_menus.Add("FetchThreadListOfGroup", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "curor (string)"); menu_index++;
+            param.Add(menu_index, "pageSize (int)"); menu_index++;
+            level3_menus.Add("FetchMineJoinedThreadList", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "threadId (string)"); menu_index++;
+            level3_menus.Add("GetThreadDetail", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "threadId1 (string)"); menu_index++;
+            param.Add(menu_index, "threadId2 (string)"); menu_index++;
+            level3_menus.Add("GetLastMessageAccordingThreads", new Dictionary<int, string>(param));
             param.Clear();
         }
 
@@ -1407,6 +1659,9 @@ namespace WinSDKTest
             PresenceManagerDelegate presenceManagerDelegate = new PresenceManagerDelegate();
             SDKClient.Instance.PresenceManager.AddPresenceManagerDelegate(presenceManagerDelegate);
 
+            ThreadManagerDelegate threadManagerDelegate = new ThreadManagerDelegate();
+            SDKClient.Instance.ThreadManager.AddThreadManagerDelegate(threadManagerDelegate);
+
             InitLevel1Menus();
 
             InitLevel2Menus_IClient();
@@ -1432,6 +1687,12 @@ namespace WinSDKTest
 
             InitLevel2Menus_IUserInfoManager();
             InitLevel3Menus_IUserInfoManager();
+
+            InitLevel2Menus_IPresenceManager();
+            InitLevel3Menus_IPresenceManager();
+
+            InitLevel2Menus_IThreadManager();
+            InitLevel3Menus_IThreadManager();
         }
 
          /*
@@ -2127,7 +2388,7 @@ namespace WinSDKTest
                         Console.WriteLine($"HasReadAck: {msg.HasReadAck}");
                         foreach (var it1 in msg.Attributes)
                         {
-                            Console.WriteLine($"attribute item: key:{it1.Key}; value:{it1.Value}");
+                            //Console.WriteLine($"attribute item: key:{it1.Key}; value:{it1.Value}");
                         }
                         if (msg.Body.Type == MessageBodyType.TXT)
                         {
@@ -2397,7 +2658,12 @@ namespace WinSDKTest
             else
                 text = GetParamValueFromContext(1);
 
+            MessageType msg_type = (MessageType)GetIntFromString(GetParamValueFromContext(2));
+            bool is_thread = GetParamValueFromContext(3).CompareTo("true") == 0 ? true : false;
+
             Message msg = Message.CreateTextSendMessage(to, text);
+            msg.MessageType = msg_type;
+            msg.IsThread = is_thread;
 
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
                 onSuccess: () => {
@@ -5908,6 +6174,160 @@ namespace WinSDKTest
             ));
         }
 
+        public void CallFunc_IPushManager_SetSilentModeForAll()
+        {
+            int paramType = GetIntFromString(GetParamValueFromContext(0));
+            int duration = GetIntFromString(GetParamValueFromContext(1));
+            int type = GetIntFromString(GetParamValueFromContext(2));
+            int startHour = GetIntFromString(GetParamValueFromContext(3));
+            int startMin = GetIntFromString(GetParamValueFromContext(4));
+            int endHour = GetIntFromString(GetParamValueFromContext(5));
+            int endMin = GetIntFromString(GetParamValueFromContext(6));
+
+            SilentModeParam param = new SilentModeParam();
+            param.ParamType = (SilentModeParamType)paramType;
+            param.SilentModeDuration = duration;
+            param.RemindType = (PushRemindType)type;
+            param.SilentModeStartTime = new SilentModeTime();
+            param.SilentModeStartTime.hours = startHour;
+            param.SilentModeStartTime.minutes = startMin;
+            param.SilentModeEndTime = new SilentModeTime();
+            param.SilentModeEndTime.hours = endHour;
+            param.SilentModeEndTime.minutes = endMin;
+
+            SDKClient.Instance.PushManager.SetSilentModeForAll(param, new ValueCallBack<SilentModeItem>(
+                onSuccess: (item) => {
+                    Console.WriteLine($"SetSilentModeForAll success.");
+                    Console.WriteLine($"expireTS:{item.ExpireTimestamp};rtype:{item.RemindType};startHour:{item.SilentModeStartTime.hours};startMin:{item.SilentModeStartTime.minutes}");
+                    Console.WriteLine($"endHour:{item.SilentModeEndTime.hours};endMin:{item.SilentModeEndTime.minutes};covId:{item.ConvId};covType:{item.ConvType}");
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"SetSilentModeForAll failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IPushManager_GetSilentModeForAll()
+        {
+            SDKClient.Instance.PushManager.GetSilentModeForAll(new ValueCallBack<SilentModeItem>(
+                onSuccess: (item) => {
+                    Console.WriteLine($"GetSilentModeForAll success.");
+                    Console.WriteLine($"expireTS:{item.ExpireTimestamp};rtype:{item.RemindType};startHour:{item.SilentModeStartTime.hours};startMin:{item.SilentModeStartTime.minutes}");
+                    Console.WriteLine($"endHour:{item.SilentModeEndTime.hours};endMin:{item.SilentModeEndTime.minutes};covId:{item.ConvId};covType:{item.ConvType}");
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"GetSilentModeForAll failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IPushManager_SetSilentModeForConversation()
+        {
+            string convId = GetParamValueFromContext(0);
+            ConversationType convType = (ConversationType)GetIntFromString(GetParamValueFromContext(1));
+            int paramType = GetIntFromString(GetParamValueFromContext(2));
+            int duration = GetIntFromString(GetParamValueFromContext(3));
+            int type = GetIntFromString(GetParamValueFromContext(4));
+            int startHour = GetIntFromString(GetParamValueFromContext(5));
+            int startMin = GetIntFromString(GetParamValueFromContext(6));
+            int endHour = GetIntFromString(GetParamValueFromContext(7));
+            int endMin = GetIntFromString(GetParamValueFromContext(8));
+
+            SilentModeParam param = new SilentModeParam();
+            param.ParamType = (SilentModeParamType)paramType;
+            param.SilentModeDuration = duration;
+            param.RemindType = (PushRemindType)type;
+            param.SilentModeStartTime = new SilentModeTime();
+            param.SilentModeStartTime.hours = startHour;
+            param.SilentModeStartTime.minutes = startMin;
+            param.SilentModeEndTime = new SilentModeTime();
+            param.SilentModeEndTime.hours = endHour;
+            param.SilentModeEndTime.minutes = endMin;
+
+            SDKClient.Instance.PushManager.SetSilentModeForConversation(convId, convType, param, new ValueCallBack<SilentModeItem>(
+                onSuccess: (item) => {
+                    Console.WriteLine($"SetSilentModeForConversation success.");
+                    Console.WriteLine($"expireTS:{item.ExpireTimestamp};rtype:{item.RemindType};startHour:{item.SilentModeStartTime.hours};startMin:{item.SilentModeStartTime.minutes}");
+                    Console.WriteLine($"endHour:{item.SilentModeEndTime.hours};endMin:{item.SilentModeEndTime.minutes};covId:{item.ConvId};covType:{item.ConvType}");
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"SetSilentModeForConversation failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IPushManager_GetSilentModeForConversation()
+        {
+            string convId = GetParamValueFromContext(0);
+            ConversationType convType = (ConversationType)GetIntFromString(GetParamValueFromContext(1));
+
+            SDKClient.Instance.PushManager.GetSilentModeForConversation(convId, convType, new ValueCallBack<SilentModeItem>(
+                onSuccess: (item) => {
+                    Console.WriteLine($"GetSilentModeForConversation success.");
+                    Console.WriteLine($"expireTS:{item.ExpireTimestamp};rtype:{item.RemindType};startHour:{item.SilentModeStartTime.hours};startMin:{item.SilentModeStartTime.minutes}");
+                    Console.WriteLine($"endHour:{item.SilentModeEndTime.hours};endMin:{item.SilentModeEndTime.minutes};covId:{item.ConvId};covType:{item.ConvType}");
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"GetSilentModeForConversation failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IPushManager_GetSilentModeForConversations()
+        {
+            string userlist = GetParamValueFromContext(0);
+            string grouplist = GetParamValueFromContext(1);
+
+            //{"user":"user1,user2","group":"group1,group2"}
+            Dictionary<string, string> conversations = new Dictionary<string, string>();
+            conversations["user"] = userlist;
+            conversations["group"] = grouplist;
+
+            SDKClient.Instance.PushManager.GetSilentModeForConversations(conversations, new ValueCallBack<Dictionary<string, SilentModeItem>>(
+                onSuccess: (dict) => {
+                    Console.WriteLine($"GetSilentModeForConversations success.");
+                    foreach (var it in dict)
+                    {
+                        string name = it.Key;
+                        SilentModeItem item = it.Value;
+                        Console.WriteLine($"name:{name}-------------------------------------");
+                        Console.WriteLine($"expireTS:{item.ExpireTimestamp};rtype:{item.RemindType};startHour:{item.SilentModeStartTime.hours};startMin:{item.SilentModeStartTime.minutes}");
+                        Console.WriteLine($"endHour:{item.SilentModeEndTime.hours};endMin:{item.SilentModeEndTime.minutes};covId:{item.ConvId};covType:{item.ConvType}");
+                    }
+                    
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"GetSilentModeForConversations failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IPushManager_SetPreferredNotificationLanguage()
+        {
+            string languageCode = GetParamValueFromContext(0);
+
+            SDKClient.Instance.PushManager.SetPreferredNotificationLanguage(languageCode, new CallBack(
+                onSuccess: () => {
+                    Console.WriteLine($"SetPreferredNotificationLanguage success.");                    
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"SetPreferredNotificationLanguage failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IPushManager_GetPreferredNotificationLanguage()
+        {
+            SDKClient.Instance.PushManager.GetPreferredNotificationLanguage(new ValueCallBack<string>(
+                onSuccess: (str) => {
+                    Console.WriteLine($"GetPreferredNotificationLanguage success. lang:{str}");
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"GetPreferredNotificationLanguage failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
         public void CallFunc_IPushManager()
         {
             if (select_context.level2_item.CompareTo("GetNoDisturbGroups") == 0)
@@ -5967,6 +6387,48 @@ namespace WinSDKTest
             if (select_context.level2_item.CompareTo("SetGroupToDisturb") == 0)
             {
                 CallFunc_IPushManager_SetGroupToDisturb();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("SetSilentModeForAll") == 0)
+            {
+                CallFunc_IPushManager_SetSilentModeForAll();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("GetSilentModeForAll") == 0)
+            {
+                CallFunc_IPushManager_GetSilentModeForAll();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("SetSilentModeForConversation") == 0)
+            {
+                CallFunc_IPushManager_SetSilentModeForConversation();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("GetSilentModeForConversation") == 0)
+            {
+                CallFunc_IPushManager_GetSilentModeForConversation();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("GetSilentModeForConversations") == 0)
+            {
+                CallFunc_IPushManager_GetSilentModeForConversations();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("SetPreferredNotificationLanguage") == 0)
+            {
+                CallFunc_IPushManager_SetPreferredNotificationLanguage();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("GetPreferredNotificationLanguage") == 0)
+            {
+                CallFunc_IPushManager_GetPreferredNotificationLanguage();
                 return;
             }
         }
@@ -6660,7 +7122,7 @@ namespace WinSDKTest
             }
         }
 
-        public void CallFunc_IUserInfoManager_PublishPresence()
+        public void CallFunc_IPresenceManager_PublishPresence()
         {
             int presenceStatus = GetIntFromString(GetParamValueFromContext(0));
             string ext = GetParamValueFromContext(1);
@@ -6675,7 +7137,7 @@ namespace WinSDKTest
             ));
         }
 
-        public void CallFunc_IUserInfoManager_SubscribePresences()
+        public void CallFunc_IPresenceManager_SubscribePresences()
         {
             string member1 = GetParamValueFromContext(0);
             string member2 = GetParamValueFromContext(1);
@@ -6710,7 +7172,7 @@ namespace WinSDKTest
             ));
         }
 
-        public void CallFunc_IUserInfoManager_UnsubscribePresences()
+        public void CallFunc_IPresenceManager_UnsubscribePresences()
         {
             string member1 = GetParamValueFromContext(0);
             string member2 = GetParamValueFromContext(1);
@@ -6730,7 +7192,7 @@ namespace WinSDKTest
             ));
         }
 
-        public void CallFunc_IUserInfoManager_FetchSubscribedMembers()
+        public void CallFunc_IPresenceManager_FetchSubscribedMembers()
         {
             int pageNum = GetIntFromString(GetParamValueFromContext(0));
             int pageSize = GetIntFromString(GetParamValueFromContext(1));
@@ -6749,7 +7211,7 @@ namespace WinSDKTest
             ));
         }
 
-        public void CallFunc_IUserInfoManager_FetchPresenceStatus()
+        public void CallFunc_IPresenceManager_FetchPresenceStatus()
         {
             string member1 = GetParamValueFromContext(0);
             string member2 = GetParamValueFromContext(1);
@@ -6787,31 +7249,376 @@ namespace WinSDKTest
         {
             if (select_context.level2_item.CompareTo("PublishPresence") == 0)
             {
-                CallFunc_IUserInfoManager_PublishPresence();
+                CallFunc_IPresenceManager_PublishPresence();
                 return;
             }
 
             if (select_context.level2_item.CompareTo("SubscribePresences") == 0)
             {
-                CallFunc_IUserInfoManager_SubscribePresences();
+                CallFunc_IPresenceManager_SubscribePresences();
                 return;
             }
 
             if (select_context.level2_item.CompareTo("UnsubscribePresences") == 0)
             {
-                CallFunc_IUserInfoManager_UnsubscribePresences();
+                CallFunc_IPresenceManager_UnsubscribePresences();
                 return;
             }
 
             if (select_context.level2_item.CompareTo("FetchSubscribedMembers") == 0)
             {
-                CallFunc_IUserInfoManager_FetchSubscribedMembers();
+                CallFunc_IPresenceManager_FetchSubscribedMembers();
                 return;
             }
 
             if (select_context.level2_item.CompareTo("FetchPresenceStatus") == 0)
             {
-                CallFunc_IUserInfoManager_FetchPresenceStatus();
+                CallFunc_IPresenceManager_FetchPresenceStatus();
+                return;
+            }
+        }
+
+        public void CallFunc_IThreadManager_GetThreadWithThreadId()
+        {
+            string tid = GetParamValueFromContext(0);
+
+            SDKClient.Instance.ThreadManager.GetThreadWithThreadId(tid, new ValueCallBack<ThreadEvent>(
+                onSuccess: (thread) =>
+                {
+                    Console.WriteLine($"GetThreadWithThreadId sucess");
+                    if(null != thread)
+                    {
+                        Utils.PrintThreadEvent(thread);
+                        if (null != thread.LastMessage)
+                        {
+                            Utils.PrintMessage(thread.LastMessage);
+                        }
+                    }
+                },
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"SubscribePresences failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IThreadManager_CreateThread()
+        {
+            string tname = GetParamValueFromContext(0);
+            string msgId = GetParamValueFromContext(1);
+            string gid = GetParamValueFromContext(2);
+
+            SDKClient.Instance.ThreadManager.CreateThread(tname, msgId, gid, new ValueCallBack<ThreadEvent>(
+                onSuccess: (thread) =>
+                {
+                    Console.WriteLine($"CreateThread sucess");
+                    if (null != thread)
+                    {
+                        Utils.PrintThreadEvent(thread);
+                        if (null != thread.LastMessage)
+                        {
+                            Utils.PrintMessage(thread.LastMessage);
+                        }
+                    }
+                },
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"CreateThread failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IThreadManager_JoinThread()
+        {
+            string tid = GetParamValueFromContext(0);
+
+            SDKClient.Instance.ThreadManager.JoinThread(tid, new ValueCallBack<ThreadEvent>(
+                onSuccess: (thread) =>
+                {
+                    Console.WriteLine($"JoinThread sucess");
+                    if (null != thread)
+                    {
+                       Utils.PrintThreadEvent(thread);
+                        if (null != thread.LastMessage)
+                        {
+                            Utils.PrintMessage(thread.LastMessage);
+                        }
+                    }
+                },
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"JoinThread failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IThreadManager_LeaveThread()
+        {
+            string tid = GetParamValueFromContext(0);
+
+            SDKClient.Instance.ThreadManager.LeaveThread(tid, new CallBack(
+                onSuccess: () =>
+                {
+                    Console.WriteLine($"LeaveThread sucess");
+                },
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"LeaveThread failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IThreadManager_DestroyThread()
+        {
+            string tid = GetParamValueFromContext(0);
+
+            SDKClient.Instance.ThreadManager.DestroyThread(tid, new CallBack(
+                onSuccess: () =>
+                {
+                    Console.WriteLine($"DestroyThread sucess");
+                },
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"DestroyThread failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IThreadManager_RemoveThreadMember()
+        {
+            string tid = GetParamValueFromContext(0);
+            string uname = GetParamValueFromContext(1);
+
+            SDKClient.Instance.ThreadManager.RemoveThreadMember(tid, uname, new CallBack(
+                onSuccess: () =>
+                {
+                    Console.WriteLine($"RemoveThreadMember sucess");
+                },
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"RemoveThreadMember failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IThreadManager_ChangeThreadSubject()
+        {
+            string tid = GetParamValueFromContext(0);
+            string subject = GetParamValueFromContext(1);
+
+            SDKClient.Instance.ThreadManager.ChangeThreadSubject(tid, subject, new CallBack(
+                onSuccess: () =>
+                {
+                    Console.WriteLine($"ChangeThreadSubject sucess");
+                },
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"ChangeThreadSubject failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IThreadManager_FetchThreadMembers()
+        {
+            string tid = GetParamValueFromContext(0);
+            string cursor = GetParamValueFromContext(1);
+            int page_size = GetIntFromString(GetParamValueFromContext(2));
+
+            SDKClient.Instance.ThreadManager.FetchThreadMembers(tid, cursor, page_size, new ValueCallBack<CursorResult<string>>(
+                onSuccess: (cursor_result) =>
+                {
+                    Console.WriteLine($"FetchThreadMembers sucess");
+                    if(null != cursor_result)
+                    {
+                        string str = string.Join(",", cursor_result.Data);
+                        Console.WriteLine($"cursor:{cursor_result.Cursor}; data:{str}");
+                    }
+                },
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"FetchThreadMembers failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IThreadManager_FetchThreadListOfGroup()
+        {
+            string tid = GetParamValueFromContext(0);
+            bool joined = GetParamValueFromContext(1).CompareTo("true")==0 ? true : false;
+            string cursor = GetParamValueFromContext(2);
+            int page_size = GetIntFromString(GetParamValueFromContext(3));
+
+            SDKClient.Instance.ThreadManager.FetchThreadListOfGroup(tid, joined, cursor, page_size, new ValueCallBack<CursorResult<ThreadEvent>>(
+                onSuccess: (cursor_result) =>
+                {
+                    Console.WriteLine($"FetchThreadListOfGroup sucess");
+                    if (null != cursor_result)
+                    {
+                        Console.WriteLine($"cursor:{cursor_result.Cursor}");
+                        foreach(var it in cursor_result.Data)
+                        {
+                            Console.WriteLine($"--------------------------------");
+                            Utils.PrintThreadEvent(it);
+                        }
+                    }
+                },
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"FetchThreadListOfGroup failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IThreadManager_FetchMineJoinedThreadList()
+        {
+            string cursor = GetParamValueFromContext(0);
+            int page_size = GetIntFromString(GetParamValueFromContext(1));
+
+            SDKClient.Instance.ThreadManager.FetchMineJoinedThreadList(cursor, page_size, new ValueCallBack<CursorResult<ThreadEvent>>(
+                onSuccess: (cursor_result) =>
+                {
+                    Console.WriteLine($"FetchMineJoinedThreadList sucess");
+                    if (null != cursor_result)
+                    {
+                        Console.WriteLine($"cursor:{cursor_result.Cursor}");
+                        foreach (var it in cursor_result.Data)
+                        {
+                            Console.WriteLine($"--------------------------------");
+                            Utils.PrintThreadEvent(it);
+                        }
+                    }
+                },
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"FetchMineJoinedThreadList failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IThreadManager_GetThreadDetail()
+        {
+            string tid = GetParamValueFromContext(0);
+
+            SDKClient.Instance.ThreadManager.GetThreadDetail(tid, new ValueCallBack<ThreadEvent>(
+                onSuccess: (thread) =>
+                {
+                    Console.WriteLine($"GetThreadDetail sucess");
+                    if (null != thread)
+                    {
+                        Utils.PrintThreadEvent(thread);
+                        if (null != thread.LastMessage)
+                        {
+                            Utils.PrintMessage(thread.LastMessage);
+                        }
+                    }
+                },
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"GetThreadDetail failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IThreadManager_GetLastMessageAccordingThreads()
+        {
+            string tid1 = GetParamValueFromContext(0);
+            string tid2 = GetParamValueFromContext(1);
+
+            List<string> list = new List<string>();
+            list.Add(tid1);
+            list.Add(tid2);
+
+            SDKClient.Instance.ThreadManager.GetLastMessageAccordingThreads(list, new ValueCallBack<Dictionary<string, Message>>(
+                onSuccess: (dict) =>
+                {
+                    Console.WriteLine($"GetLastMessageAccordingThreads sucess");
+
+                    foreach (var it in dict)
+                    {
+                        Console.WriteLine($"--------------------------------");
+                        Console.WriteLine($"tid: {it.Key}");
+                        Utils.PrintMessage(it.Value);
+                    }
+                    
+                },
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"GetLastMessageAccordingThreads failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IThreadManager()
+        {
+            if (select_context.level2_item.CompareTo("GetThreadWithThreadId") == 0)
+            {
+                CallFunc_IThreadManager_GetThreadWithThreadId();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("CreateThread") == 0)
+            {
+                CallFunc_IThreadManager_CreateThread();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("JoinThread") == 0)
+            {
+                CallFunc_IThreadManager_JoinThread();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("LeaveThread") == 0)
+            {
+                CallFunc_IThreadManager_LeaveThread();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("DestroyThread") == 0)
+            {
+                CallFunc_IThreadManager_DestroyThread();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("RemoveThreadMember") == 0)
+            {
+                CallFunc_IThreadManager_RemoveThreadMember();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("ChangeThreadSubject") == 0)
+            {
+                CallFunc_IThreadManager_ChangeThreadSubject();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("FetchThreadMembers") == 0)
+            {
+                CallFunc_IThreadManager_FetchThreadMembers();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("FetchThreadListOfGroup") == 0)
+            {
+                CallFunc_IThreadManager_FetchThreadListOfGroup();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("FetchMineJoinedThreadList") == 0)
+            {
+                CallFunc_IThreadManager_FetchMineJoinedThreadList();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("GetThreadDetail") == 0)
+            {
+                CallFunc_IThreadManager_GetThreadDetail();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("GetLastMessageAccordingThreads") == 0)
+            {
+                CallFunc_IThreadManager_GetLastMessageAccordingThreads();
                 return;
             }
         }
@@ -6872,6 +7679,12 @@ namespace WinSDKTest
                 return;
             }
 
+            if (select_context.level1_item.CompareTo("IThreadManager") == 0)
+            {
+                CallFunc_IThreadManager();
+                return;
+            }
+
         }
     }
 
@@ -6880,30 +7693,10 @@ namespace WinSDKTest
         public void OnMessagesReceived(List<Message> messages)
         {
             Console.WriteLine("OnMessagesReceived");
-            foreach(var it in messages)
+            foreach (var it in messages)
             {
                 Console.WriteLine($"===========================");
-                Console.WriteLine($"message id: {it.MsgId}");
-                Console.WriteLine($"cov id: {it.ConversationId}");
-                Console.WriteLine($"From: {it.From}");
-                Console.WriteLine($"To: {it.To}");
-                Console.WriteLine($"RecallBy: {it.RecallBy}");
-                Console.WriteLine($"message type: {it.MessageType}");
-                Console.WriteLine($"diection: {it.Direction}");
-                Console.WriteLine($"status: {it.Status}");
-                Console.WriteLine($"localtime: {it.LocalTime}");
-                Console.WriteLine($"servertime: {it.ServerTime}");
-                Console.WriteLine($"HasDeliverAck: {it.HasDeliverAck}");
-                Console.WriteLine($"HasReadAck: {it.HasReadAck}");
-                //foreach(var it1 in it.Attributes)
-                //{
-                //    Console.WriteLine($"attribute item: key:{it1.Key}; value:{it1.Value}");
-                //}
-                if(it.Body.Type == MessageBodyType.TXT)
-                {
-                    TextBody tb = (TextBody)it.Body;
-                    Console.WriteLine($"message text content: {tb.Text}");
-                }
+                Utils.PrintMessage(it);
                 Console.WriteLine($"===========================");
             }
         }
@@ -7366,6 +8159,46 @@ namespace WinSDKTest
                 Console.WriteLine($"Publisher:{it.Publisher}; Ext:{it.Ext}; lastestTime:{it.LatestTime}; ExpireTime:{it.ExpiryTime}");
                 Console.WriteLine($"preseceDeviceStatus:{str}");
             }
+        }
+    }
+
+    class ThreadManagerDelegate : IThreadManagerDelegate
+    {
+        
+        public void OnCreatThread(ThreadEvent threadEvent)
+        {
+            Console.WriteLine($"OnCreatThread received");
+            Utils.PrintThreadEvent(threadEvent);
+        }
+
+        public void OnLeaveThread(ThreadEvent threadEvent, ThreadLeaveReason reason)
+        {
+            Console.WriteLine($"OnLeaveThread received with reason:{reason}");
+            Utils.PrintThreadEvent(threadEvent);
+        }
+
+        public void OnMemberJoinedThread(ThreadEvent threadEvent)
+        {
+            Console.WriteLine($"OnMemberJoinedThread received");
+            Utils.PrintThreadEvent(threadEvent);
+        }
+
+        public void OnMemberLeaveThread(ThreadEvent threadEvent)
+        {
+            Console.WriteLine($"OnMemberLeaveThread received");
+            Utils.PrintThreadEvent(threadEvent);
+        }
+
+        public void OnThreadNotifyChange(ThreadEvent threadEvent)
+        {
+            Console.WriteLine($"OnThreadNotifyChange received");
+            Utils.PrintThreadEvent(threadEvent);
+        }
+
+        public void OnUpdateMyThread(ThreadEvent threadEvent)
+        {
+            Console.WriteLine($"OnUpdateMyThread received");
+            Utils.PrintThreadEvent(threadEvent);
         }
     }
 }

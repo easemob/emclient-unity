@@ -17,6 +17,8 @@
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/prettywriter.h"
 
+extern EMClient* gClient;
+
 std::map<UserInfoType, std::string> UserInfoTypeMap =
                                     {
                                         {NICKNAME,      "nickname"},
@@ -110,6 +112,8 @@ void TestParseUserInfoResponseFromServer()
 
 HYPHENATE_API void UserInfoManager_UpdateOwnInfo(void *client, int callbackId, void* userInfo, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(userInfo, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -168,13 +172,6 @@ HYPHENATE_API void UserInfoManager_UpdateOwnInfo(void *client, int callbackId, v
     writer.EndObject();
 
     string jstr = s.GetString();
-
-    if (jstr.length() <= 2) {
-        error.setErrorCode(EMError::GENERAL_ERROR);
-        error.mDescription = "Convert userinfo to json failed !";
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
-        return;
-    }
     LOG("Json from userinfo: %s", jstr.c_str());
     
     std::string nickname = uto->nickName;
@@ -196,11 +193,13 @@ HYPHENATE_API void UserInfoManager_UpdateOwnInfo(void *client, int callbackId, v
 
 HYPHENATE_API void UserInfoManager_UpdateOwnInfoByAttribute(void *client, int callbackId, int userinfoType, const char* value, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     auto it = UserInfoTypeMap.find((UserInfoType)userinfoType); // TO-DO: userinfoType is not UserInfoType, then? 
     // value can be empty?
     if(nullptr == value || UserInfoTypeMap.end() == it) {
-        error.setErrorCode(EMError::GENERAL_ERROR);
+        error.setErrorCode(EMError::INVALID_PARAM);
         error.mDescription = "Mandatory parameter is null!";
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
@@ -218,12 +217,6 @@ HYPHENATE_API void UserInfoManager_UpdateOwnInfoByAttribute(void *client, int ca
         LOG("Make json failed, exit from UserInfoManager_UpdateOwnInfoByAttribute");
     }
 
-    if (jstr.length() <= 2) {
-        error.setErrorCode(EMError::GENERAL_ERROR);
-        error.mDescription = "Convert userinfo to json failed !";
-        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
-        return;
-    }
     LOG("Json from attribute: %s", jstr.c_str());
     
     std::thread t([=](){
@@ -247,9 +240,11 @@ HYPHENATE_API void UserInfoManager_UpdateOwnInfoByAttribute(void *client, int ca
 
 HYPHENATE_API void UserInfoManager_FetchUserInfoByUserId(void *client, int callbackId, const char * users[], int size, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(nullptr == users || size <= 0) {
-        error.setErrorCode(EMError::GENERAL_ERROR);
+        error.setErrorCode(EMError::INVALID_PARAM);
         error.mDescription = "Mandatory parameter is null!";
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
@@ -310,9 +305,11 @@ HYPHENATE_API void UserInfoManager_FetchUserInfoByUserId(void *client, int callb
 
 HYPHENATE_API void UserInfoManager_FetchUserInfoByAttribute(void *client, int callbackId, const char * users[], int userSize, int userinfoTypes[], int typeSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(nullptr == users || userSize <= 0 || typeSize <= 0) {
-        error.setErrorCode(EMError::GENERAL_ERROR);
+        error.setErrorCode(EMError::INVALID_PARAM);
         error.mDescription = "Mandatory parameter is null!";
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
@@ -336,7 +333,7 @@ HYPHENATE_API void UserInfoManager_FetchUserInfoByAttribute(void *client, int ca
         attrv.push_back(UserInfoTypeMap[(UserInfoType)userinfoTypes[i]]);
     }
     if (attrv.size() == 0) {
-        error.setErrorCode(EMError::GENERAL_ERROR);
+        error.setErrorCode(EMError::INVALID_PARAM);
         error.mDescription = "No qulified attribute type parameter!";
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;

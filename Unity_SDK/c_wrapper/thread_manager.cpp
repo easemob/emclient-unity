@@ -347,7 +347,8 @@ HYPHENATE_API void ThreadManager_GetLastMessageAccordingThreads(void* client, in
 {
     std::vector<std::string> vec;
     for (int i = 0; i < size; i++) {
-        vec.push_back(threadIds[i]);
+        if(nullptr != threadIds[i] && strlen(threadIds[i]) != 0)
+            vec.push_back(threadIds[i]);
     }
 
     std::thread t([=]() {

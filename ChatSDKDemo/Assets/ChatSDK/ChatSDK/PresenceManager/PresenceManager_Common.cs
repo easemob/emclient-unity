@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE || UNITY_EDITOR
 using UnityEngine;
 #endif
 
 namespace ChatSDK
 {
-	internal sealed class PresenceManager_Mac : IPresenceManager
+	internal sealed class PresenceManager_Common : IPresenceManager
 	{
 		private IntPtr client;
         private PresenceManagerHub presenceManagerHub;
 
-        internal PresenceManager_Mac(IClient _client)
+        internal PresenceManager_Common(IClient _client)
 		{
-			if (_client is Client_Mac clientMac)
+			if (_client is Client_Common clientCommon)
 			{
-				client = clientMac.client;
+				client = clientCommon.client;
 			}
 
             presenceManagerHub = new PresenceManagerHub();
@@ -132,17 +132,17 @@ namespace ChatSDK
                        {
                            string jstr = Marshal.PtrToStringAnsi(data[0]);
                            List<string> members = TransformTool.JsonStringToStringList(jstr);
-                           ChatCallbackObject.ValueCallBackOnSuccess<List<Presence>>(cbId, members);
+                           ChatCallbackObject.ValueCallBackOnSuccess<List<string>>(cbId, members);
                        }
                        else
                        {
                            Debug.Log($"Subscribed members information expected.");
                            List<string> members = new List<string>();
-                           ChatCallbackObject.ValueCallBackOnSuccess<List<Presence>>(cbId, members);
+                           ChatCallbackObject.ValueCallBackOnSuccess<List<string>>(cbId, members);
                        }
                    },
                   onError: (int code, string desc, int cbId) => {
-                      ChatCallbackObject.ValueCallBackOnError<List<Presence>>(cbId, code, desc);
+                      ChatCallbackObject.ValueCallBackOnError<List<string>>(cbId, code, desc);
                   });
         }
 

@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE || UNITY_EDITOR
 using UnityEngine;
 #endif
 
 namespace ChatSDK
 {
-#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE || UNITY_EDITOR
     internal sealed class PresenceManagerListener : MonoBehaviour
 #else
     internal sealed class PresenceManagerListener

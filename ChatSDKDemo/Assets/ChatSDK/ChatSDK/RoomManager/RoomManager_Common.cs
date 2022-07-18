@@ -2,24 +2,24 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE || UNITY_EDITOR
 using UnityEngine;
 #endif
 
 namespace ChatSDK
 {
-    internal sealed class RoomManager_Mac : IRoomManager
+    internal sealed class RoomManager_Common : IRoomManager
     {
         private IntPtr client;
         private RoomManagerHub roomManagerHub;
 
         //manager level events
 
-        internal RoomManager_Mac(IClient _client)
+        internal RoomManager_Common(IClient _client)
         {
-            if (_client is Client_Mac clientMac)
+            if (_client is Client_Common clientCommon)
             {
-                client = clientMac.client;
+                client = clientCommon.client;
             }
             roomManagerHub = new RoomManagerHub();
             //registered listeners

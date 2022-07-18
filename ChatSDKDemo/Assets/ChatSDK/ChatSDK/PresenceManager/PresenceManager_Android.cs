@@ -9,9 +9,9 @@ namespace ChatSDK
 
 		internal PresenceManager_Android(IClient _client)
 		{
-			if (_client is Client_Mac clientMac)
+			if (_client is Client_Common clientCommon)
 			{
-				client = clientMac.client;
+				client = clientCommon.client;
 			}
 		}
 

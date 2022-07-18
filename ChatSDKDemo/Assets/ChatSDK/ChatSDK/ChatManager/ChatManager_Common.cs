@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Runtime.InteropServices;
-#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE || UNITY_EDITOR
 using UnityEngine;
 #endif
 
 namespace ChatSDK
 {
-    internal sealed class ChatManager_Mac : IChatManager
+    internal sealed class ChatManager_Common : IChatManager
     {
         private IntPtr client;
         private ChatManagerHub chatManagerHub;
@@ -21,11 +21,11 @@ namespace ChatSDK
 
         //manager level events
 
-        internal ChatManager_Mac(IClient _client)
+        internal ChatManager_Common(IClient _client)
         {
-            if (_client is Client_Mac clientMac)
+            if (_client is Client_Common clientCommon)
             {
-                client = clientMac.client;
+                client = clientCommon.client;
             }
             chatManagerHub = new ChatManagerHub();
             reactionManagerHub = new ReactionManagerHub();
@@ -542,12 +542,12 @@ namespace ChatSDK
                 {
                     try
                     {
-                        ChatManager_Mac chatMac = (ChatManager_Mac)SDKClient.Instance.ChatManager;
-                        if (chatMac.cbId2MsgIdMap.ContainsKey(cbId))
+                        ChatManager_Common chatCommon = (ChatManager_Common)SDKClient.Instance.ChatManager;
+                        if (chatCommon.cbId2MsgIdMap.ContainsKey(cbId))
                         {
-                            string msgId = chatMac.cbId2MsgIdMap[cbId];
-                            chatMac.UpdatedMsg(msgId);
-                            chatMac.DeleteFromMsgMap(msgId, cbId);
+                            string msgId = chatCommon.cbId2MsgIdMap[cbId];
+                            chatCommon.UpdatedMsg(msgId);
+                            chatCommon.DeleteFromMsgMap(msgId, cbId);
                         }
                         ChatCallbackObject.CallBackOnSuccess(cbId);
                     }
@@ -559,11 +559,11 @@ namespace ChatSDK
                 },
                 (int code, string desc, int cbId) =>
                 {
-                    ChatManager_Mac chatMac = (ChatManager_Mac)SDKClient.Instance.ChatManager;
-                    if (chatMac.cbId2MsgIdMap.ContainsKey(cbId))
+                    ChatManager_Common chatCommon = (ChatManager_Common)SDKClient.Instance.ChatManager;
+                    if (chatCommon.cbId2MsgIdMap.ContainsKey(cbId))
                     {
-                        string msgId = chatMac.cbId2MsgIdMap[cbId];
-                        chatMac.DeleteFromMsgMap(msgId, cbId);
+                        string msgId = chatCommon.cbId2MsgIdMap[cbId];
+                        chatCommon.DeleteFromMsgMap(msgId, cbId);
                     }
                     ChatCallbackObject.CallBackOnError(cbId, code, desc);
                 },
@@ -767,12 +767,12 @@ namespace ChatSDK
                 {
                     try
                     {
-                        ChatManager_Mac chatMac = (ChatManager_Mac)SDKClient.Instance.ChatManager;
-                        if (chatMac.cbId2MsgIdMap.ContainsKey(cbId))
+                        ChatManager_Common chatCommon = (ChatManager_Common)SDKClient.Instance.ChatManager;
+                        if (chatCommon.cbId2MsgIdMap.ContainsKey(cbId))
                         {
-                            string msgId = chatMac.cbId2MsgIdMap[cbId];
-                            chatMac.UpdatedMsg(msgId);
-                            chatMac.DeleteFromMsgMap(msgId, cbId);
+                            string msgId = chatCommon.cbId2MsgIdMap[cbId];
+                            chatCommon.UpdatedMsg(msgId);
+                            chatCommon.DeleteFromMsgMap(msgId, cbId);
                         }
                         ChatCallbackObject.CallBackOnSuccess(cbId);
                     }
@@ -784,11 +784,11 @@ namespace ChatSDK
                 },
                 (int code, string desc, int cbId) =>
                 {
-                    ChatManager_Mac chatMac = (ChatManager_Mac)SDKClient.Instance.ChatManager;
-                    if (chatMac.cbId2MsgIdMap.ContainsKey(cbId))
+                    ChatManager_Common chatCommon = (ChatManager_Common)SDKClient.Instance.ChatManager;
+                    if (chatCommon.cbId2MsgIdMap.ContainsKey(cbId))
                     {
-                        string msgId = chatMac.cbId2MsgIdMap[cbId];
-                        chatMac.DeleteFromMsgMap(msgId, cbId);
+                        string msgId = chatCommon.cbId2MsgIdMap[cbId];
+                        chatCommon.DeleteFromMsgMap(msgId, cbId);
                     }
                     ChatCallbackObject.CallBackOnError(cbId, code, desc);
                 }

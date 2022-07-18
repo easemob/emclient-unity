@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE || UNITY_EDITOR
 using UnityEngine;
 #endif
 
 namespace ChatSDK
 {
 
-    internal class ConversationManager_Mac : IConversationManager
+    internal class ConversationManager_Common : IConversationManager
     {
         internal IntPtr client;
-        internal ConversationManager_Mac(IClient _client)
+        internal ConversationManager_Common(IClient _client)
         {
-            if (_client is Client_Mac clientMac)
+            if (_client is Client_Common clientCommon)
             {
-                client = clientMac.client;
+                client = clientCommon.client;
             }
         }
 

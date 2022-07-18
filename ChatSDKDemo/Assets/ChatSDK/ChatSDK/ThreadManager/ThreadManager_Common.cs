@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE || UNITY_EDITOR
 using UnityEngine;
 #endif
 
 namespace ChatSDK
 {
-    internal sealed class ThreadManager_Mac : IThreadManager
+    internal sealed class ThreadManager_Common : IThreadManager
     {
         private IntPtr client;
         private ThreadManagerHub threadManagerHub;
 
-        internal ThreadManager_Mac(IClient _client)
+        internal ThreadManager_Common(IClient _client)
         {
-            if (_client is Client_Mac clientMac)
+            if (_client is Client_Common clientCommon)
             {
-                client = clientMac.client;
+                client = clientCommon.client;
             }
             //register listeners
             threadManagerHub = new ThreadManagerHub();

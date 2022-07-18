@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using SimpleJSON;
 using System.Runtime.InteropServices;
-#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE || UNITY_EDITOR
 using UnityEngine;
 #endif
 
@@ -122,16 +122,18 @@ namespace ChatSDK {
             SilentModeItem ret = null;
             if (!jn.IsNull && jn.IsObject)
             {
-                SilentModeItem item = new SilentModeItem();
+                ret = new SilentModeItem();
+                ret.SilentModeStartTime = new SilentModeTime();
+                ret.SilentModeEndTime = new SilentModeTime();
                 JSONObject jo = jn.AsObject;
-                if (!jo["expireTS"].IsNull)         item.ExpireTimestamp = long.Parse(jo["expireTS"].Value);
-                if (!jo["type"].IsNull)             item.RemindType = (PushRemindType)jo["type"].AsInt;
-                if (!jo["startHour"].IsNull)        item.SilentModeStartTime.hours = jo["startHour"].AsInt;
-                if (!jo["startMin"].IsNull)         item.SilentModeStartTime.minutes = jo["startMin"].AsInt;
-                if (!jo["endHour"].IsNull)          item.SilentModeStartTime.hours = jo["endHour"].AsInt;
-                if (!jo["endMin"].IsNull)           item.SilentModeStartTime.minutes = jo["endMin"].AsInt;
-                if (!jo["conversationId"].IsNull)   item.ConvId = jo["conversationId"].Value;
-                if (!jo["conversationType"].IsNull) item.ConvType = (ConversationType)jo["conversationType"].AsInt;
+                if (!jo["expireTS"].IsNull)         ret.ExpireTimestamp = long.Parse(jo["expireTS"].Value);
+                if (!jo["type"].IsNull)             ret.RemindType = (PushRemindType)jo["type"].AsInt;
+                if (!jo["startHour"].IsNull)        ret.SilentModeStartTime.hours = jo["startHour"].AsInt;
+                if (!jo["startMin"].IsNull)         ret.SilentModeStartTime.minutes = jo["startMin"].AsInt;
+                if (!jo["endHour"].IsNull)          ret.SilentModeEndTime.hours = jo["endHour"].AsInt;
+                if (!jo["endMin"].IsNull)           ret.SilentModeEndTime.minutes = jo["endMin"].AsInt;
+                if (!jo["conversationId"].IsNull)   ret.ConvId = jo["conversationId"].Value;
+                if (!jo["conversationType"].IsNull) ret.ConvType = (ConversationType)jo["conversationType"].AsInt;
             }
             return ret;
         }
