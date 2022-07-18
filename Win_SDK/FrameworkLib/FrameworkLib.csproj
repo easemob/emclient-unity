@@ -41,17 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\ChatSDK\ChatSDK\ChatManager\ChatManager_Common.cs" />
+    <Compile Include="Assets\ChatSDK\ChatSDK\ChatManager\ChatManager_Mac.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\ChatManager\IChatManager.cs" />
-    <Compile Include="Assets\ChatSDK\ChatSDK\Client\Client_Common.cs" />
+    <Compile Include="Assets\ChatSDK\ChatSDK\Client\Client_Mac.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\Client\IClient.cs" />
-    <Compile Include="Assets\ChatSDK\ChatSDK\ContactManager\ContactManager_Common.cs" />
+    <Compile Include="Assets\ChatSDK\ChatSDK\ContactManager\ContactManager_Mac.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\ContactManager\IContactManager.cs" />
-    <Compile Include="Assets\ChatSDK\ChatSDK\ConversationManager\ConversationManager_Common.cs" />
+    <Compile Include="Assets\ChatSDK\ChatSDK\ConversationManager\ConversationManager_Mac.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\ConversationManager\IConversationManager.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\Custom\SDKCallBack.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\Custom\SDKEnumerations.cs" />
-    <Compile Include="Assets\ChatSDK\ChatSDK\GroupManager\GroupManager_Common.cs" />
+    <Compile Include="Assets\ChatSDK\ChatSDK\GroupManager\GroupManager_Mac.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\GroupManager\IGroupManager.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\Helper\Native\ChatManagerListener.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\Helper\Native\ConnectionListener.cs" />
@@ -96,14 +96,14 @@
     <Compile Include="Assets\ChatSDK\ChatSDK\native\DelegateHub.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\native\TransferObjects.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\PresenceManager\IPresenceManager.cs" />
-    <Compile Include="Assets\ChatSDK\ChatSDK\PresenceManager\PresenceManager_Common.cs" />
+    <Compile Include="Assets\ChatSDK\ChatSDK\PresenceManager\PresenceManager_Mac.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\PushManager\IPushManager.cs" />
-    <Compile Include="Assets\ChatSDK\ChatSDK\PushManager\PushManager_Common.cs" />
+    <Compile Include="Assets\ChatSDK\ChatSDK\PushManager\PushManager_Mac.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\RoomManager\IRoomManager.cs" />
-    <Compile Include="Assets\ChatSDK\ChatSDK\RoomManager\RoomManager_Common.cs" />
+    <Compile Include="Assets\ChatSDK\ChatSDK\RoomManager\RoomManager_Mac.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\SDKClient.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\ThreadManager\IThreadManager.cs" />
-    <Compile Include="Assets\ChatSDK\ChatSDK\ThreadManager\ThreadManager_Common.cs" />
+    <Compile Include="Assets\ChatSDK\ChatSDK\ThreadManager\ThreadManager_Mac.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\Tools\CallBackManager.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\Tools\ChatCallbackObject.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\Tools\ChatCallbackQueue.cs" />
@@ -112,7 +112,7 @@
     <Compile Include="Assets\ChatSDK\ChatSDK\Tools\SimpleJSON.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\Tools\TransformTool.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\UserInfoManager\IUserInfoManager.cs" />
-    <Compile Include="Assets\ChatSDK\ChatSDK\UserInfoManager\UserInfoManager_Common.cs" />
+    <Compile Include="Assets\ChatSDK\ChatSDK\UserInfoManager\UserInfoManager_Mac.cs" />
     <Compile Include="Assets\ChatSDK\Scripts\Editor\IOSBuildSetting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
