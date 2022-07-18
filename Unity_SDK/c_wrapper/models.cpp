@@ -51,7 +51,8 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
 
             messageBody = EMMessageBodyPtr(new EMTextMessageBody(content));
 
-            std::vector<std::string> target_languages = JsonStringToVector(std::string(tm->body.TargetLanguages));
+            std::string target_langs = std::string(tm->body.TargetLanguages);
+            std::vector<std::string> target_languages = JsonStringToVector(target_langs);
             EMTextMessageBody* tb = (EMTextMessageBody*)messageBody.get();
             if (target_languages.size() > 0)
                 tb->setTargetLanguages(target_languages);
@@ -1174,10 +1175,12 @@ void MessageTO::BodyToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg)
             writer.String(ptr->text().c_str()); //null or emtpy, then?
 
             writer.Key("targetLanguages");
-            writer.String(JsonStringFromVector(ptr->getTargetLanguages()).c_str());
+            std::vector<std::string> vec = ptr->getTargetLanguages();
+            writer.String(JsonStringFromVector(vec).c_str());
 
             writer.Key("translations");
-            writer.String(JsonStringFromMap(ptr->getTranslations()).c_str());
+            std::map<std::string, std::string> map = ptr->getTranslations();
+            writer.String(JsonStringFromMap(map).c_str());
         }
         break;
         case EMMessageBody::LOCATION:
@@ -2824,7 +2827,8 @@ static const std::string SilentModeConvType = "conversationType";
          writer.Key("type");
          writer.String("strv");
          writer.Key("value");
-         writer.String(JsonStringFromVector(attribute->value<std::vector<std::string>>()).c_str());
+         std::vector<std::string> vec = attribute->value<std::vector<std::string>>();
+         writer.String(JsonStringFromVector(vec).c_str());
      }
      else if (attribute->is<EMJsonString>()) {
          writer.Key("type");
