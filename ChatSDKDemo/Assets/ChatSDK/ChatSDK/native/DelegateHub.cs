@@ -939,7 +939,11 @@ namespace ChatSDK
             {
                 Debug.Log("messageReactionDidChange received.");
 
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+                List<MessageReactionChange> list = MessageReactionChange.ListFromJson(json);
+#else
                 List<MessageReactionChange> list = MessageReactionChange.ListFromJson(TransformTool.GetUnicodeStringFromUTF8(json));
+#endif
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IReactionManagerDelegate listener in CallbackManager.Instance().reactionManagerListener.delegater)
@@ -967,7 +971,11 @@ namespace ChatSDK
             {
                 Debug.Log("OnCreatThread received.");
 
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+                ThreadEvent thread = ThreadEvent.FromJson(json);
+#else
                 ThreadEvent thread = ThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
+#endif
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
@@ -981,7 +989,11 @@ namespace ChatSDK
             {
                 Debug.Log("OnUpdateMyThread received.");
 
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+                ThreadEvent thread = ThreadEvent.FromJson(json);
+#else
                 ThreadEvent thread = ThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
+#endif
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
@@ -995,7 +1007,11 @@ namespace ChatSDK
             {
                 Debug.Log("OnThreadNotifyChange received.");
 
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+                ThreadEvent thread = ThreadEvent.FromJson(json);
+#else
                 ThreadEvent thread = ThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
+#endif
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
@@ -1009,7 +1025,11 @@ namespace ChatSDK
             {
                 Debug.Log("OnLeaveThread received.");
 
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+                ThreadEvent thread = ThreadEvent.FromJson(json);
+#else
                 ThreadEvent thread = ThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
+#endif
                 ThreadLeaveReason reason = ThreadEvent.ThreadLeaveReasonFromInt(i);
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
@@ -1024,7 +1044,11 @@ namespace ChatSDK
             {
                 Debug.Log("OnMemberJoinedThread received.");
 
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+                ThreadEvent thread = ThreadEvent.FromJson(json);
+#else
                 ThreadEvent thread = ThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
+#endif
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
@@ -1038,7 +1062,11 @@ namespace ChatSDK
             {
                 Debug.Log("OnMemberLeaveThread received.");
 
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+                ThreadEvent thread = ThreadEvent.FromJson(json);
+#else
                 ThreadEvent thread = ThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
+#endif
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)

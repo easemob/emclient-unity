@@ -86,16 +86,6 @@ namespace ChatSDK
         }
         */
 
-        internal override void StartLog(string logFilePath)
-        {
-            //throw new System.NotImplementedException();
-        }
-
-        internal override void StopLog()
-        {
-            //throw new System.NotImplementedException();
-        }
-
         public override void ClearResource()
         {
             //throw new System.NotImplementedException();

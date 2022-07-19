@@ -140,16 +140,87 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     }
     void SendImageBtnAction()
     {
+        SDKClient.Instance.ThreadManager.CreateThread("我的thread", "1033288267207805704", "187147300700161", new ValueCallBack<ThreadEvent>(
+            onSuccess: (thread) =>
+            {
+                Debug.Log($"CreateThread sucess");
+                if (null != thread)
+                {
+
+                    Debug.Log($"Tid:{thread.Tid}; msgId:{thread.MessageId}; parentId:{thread.ParentId}; owner:{thread.Owner}");
+                    Debug.Log($"Name:{thread.Name}; From:{thread.From}; To:{thread.To}; Operation:{thread.Operation}; MessageCount:{thread.MessageCount}");
+                    Debug.Log($"MembersCount:{thread.MembersCount}; CreateTimestamp:{thread.CreateTimestamp}; UpdateTimestamp:{thread.UpdateTimestamp}");
+                    Debug.Log($"Timestamp:{thread.Timestamp};");
+                    if (null != thread.LastMessage)
+                    {
+                        //Utils.PrintMessage(thread.LastMessage);
+                    }
+                }
+            },
+            onError: (code, desc) =>
+            {
+                Debug.Log($"CreateThread failed, code:{code}, desc:{desc}");
+            }
+        ));
+
+        return;
+
+
         UIManager.UnfinishedAlert(transform);
         Debug.Log("SendImageBtnAction");
     }
     void SendFileBtnAction()
     {
+        InputAlertConfig config = new InputAlertConfig((dict) => {
+            SDKClient.Instance.ThreadManager.DestroyThread(dict["threadId"], new CallBack(
+                onSuccess: () =>
+                {
+                Debug.Log($"DestroyThread sucess");
+                },
+                onError: (code, desc) =>
+                {
+                Debug.Log($"DestroyThread failed, code:{code}, desc:{desc}");
+                }
+                ));
+        });
+
+        config.AddField("threadId");
+        UIManager.DefaultInputAlert(transform, config);
+
+        return;
+
         UIManager.UnfinishedAlert(transform);
         Debug.Log("SendFileBtnAction");
     }
     void SendVideoBtnAction()
     {
+
+        SDKClient.Instance.ThreadManager.FetchMineJoinedThreadList("", 10, new ValueCallBack<CursorResult<ThreadEvent>>(
+            onSuccess: (cursor_result) =>
+            {
+                Debug.Log($"FetchMineJoinedThreadList sucess");
+                if (null != cursor_result)
+                {
+                    Debug.Log($"cursor:{cursor_result.Cursor}");
+                    foreach (var it in cursor_result.Data)
+                    {
+                        ThreadEvent thread = it;
+                        Debug.Log($"--------------------------------");
+                        Debug.Log($"Tid:{thread.Tid}; msgId:{thread.MessageId}; parentId:{thread.ParentId}; owner:{thread.Owner}");
+                        Debug.Log($"Name:{thread.Name}; From:{thread.From}; To:{thread.To}; Operation:{thread.Operation}; MessageCount:{thread.MessageCount}");
+                        Debug.Log($"MembersCount:{thread.MembersCount}; CreateTimestamp:{thread.CreateTimestamp}; UpdateTimestamp:{thread.UpdateTimestamp}");
+                        Debug.Log($"Timestamp:{thread.Timestamp};");
+                    }
+                }
+            },
+            onError: (code, desc) =>
+            {
+                Debug.Log($"FetchMineJoinedThreadList failed, code:{code}, desc:{desc}");
+            }
+        ));
+
+        return;
+
         UIManager.UnfinishedAlert(transform);
         Debug.Log("SendVideoBtnAction");
 
@@ -176,6 +247,30 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     }
     void SendVoiceBtnAction()
     {
+        SDKClient.Instance.ChatManager.FetchGroupReadAcks("1033288267207805704", "187147300700161", 20, "", new ValueCallBack<CursorResult<GroupReadAck>>(
+                onSuccess: (result) =>
+                {
+                    if (0 == result.Data.Count)
+                    {
+                        UIManager.DefaultAlert(transform, "No group ack messages.");
+                        return;
+                    }
+                    List<string> strList = new List<string>();
+                    foreach (var msg in result.Data)
+                    {
+                        strList.Add(msg.AckId);
+                    }
+                    string str = string.Join(",", strList.ToArray());
+                    UIManager.DefaultAlert(transform, str);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+
+        return;
+
         UIManager.UnfinishedAlert(transform);
         Debug.Log("SendVoiceBtnAction");
     }

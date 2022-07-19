@@ -810,6 +810,7 @@ namespace ChatSDK
                 (IntPtr header, IntPtr[] array, DataType dType, int size, int cbId) => {
                     Debug.Log($"FetchGroupReadAcks callback with dType={dType}, size={size}.");
                     var result = new CursorResult<GroupReadAck>();
+                    result.Data = new List<GroupReadAck>();
                     if (DataType.CursorResult == dType)
                     {
                         //header
