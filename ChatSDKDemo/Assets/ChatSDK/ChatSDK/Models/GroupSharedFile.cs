@@ -4,36 +4,64 @@ using SimpleJSON;
 namespace ChatSDK
 {
 
-    /// <summary>
-    /// 群共享文件
-    /// </summary>
+    /**
+     * \~chinese
+     * 共享文件信息类。
+     * 
+     * 例如：通过 {@link IGroupManager#GetGroupFileListFromServer(String, int, int, ValueCallBack)} 接口获取群共享文件的相关信息。
+     *
+     * \~english
+     * The shared file information class, which defines how to manage shared files.
+     * 
+     * For example, you can get information about a group shared file by using {@link IGroupManager#GetGroupFileListFromServer(String, int, int, ValueCallBack)}.
+     * 
+     */
     [StructLayout(LayoutKind.Sequential)]
     public class GroupSharedFile
     {
-
-        /// <summary>
-        /// 文件名称
-        /// </summary>
+        /**
+         * \~chinese
+         * 共享文件的名称。
+         *
+         * \~english
+         * The name of the shared file.
+         */
         public string FileName { get; internal set; }
 
-        /// <summary>
-        /// 文件id
-        /// </summary>
+        /**
+         * \~chinese
+         * 共享文件的 ID。
+         *
+         * \~english
+         * The ID of the shared file.
+         */
         public string FileId { get; internal set; }
 
-        /// <summary>
-        /// 上传用户
-        /// </summary>
+        /**
+         * \~chinese
+         * 上传共享文件的成员的用户 ID。
+         *
+         * \~english
+         * The user ID of the member who uploads the shared file.
+         */
         public string FileOwner { get; internal set; }
 
-        /// <summary>
-        /// 上传时间
-        /// </summary>
+        /**
+         * \~chinese
+         * 共享文件更新的 Unix 时间戳，单位为毫秒。
+         *
+         * \~english
+         * The Unix timestamp for updating the shared file. The unit is millisecond.
+         */
         public long CreateTime { get; internal set; }
 
-        /// <summary>
-        /// 文件大小
-        /// </summary>
+        /**
+         * \~chinese
+         * 共享文件的大小，单位为字节。
+         *
+         * \~english
+         * The size of the shared file, in bytes.
+         */
         public long FileSize { get; internal set; }
 
         internal GroupSharedFile(string jsonString)

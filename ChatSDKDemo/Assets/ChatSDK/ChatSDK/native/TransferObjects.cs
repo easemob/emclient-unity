@@ -1586,7 +1586,7 @@ namespace ChatSDK
                 Name = Name,
                 Description = Description,
                 Owner = Owner,
-                Annoumcement = Announcement,
+                Announcement = Announcement,
                 Options = Options,
                 MemberCount = MemberCount,
                 PermissionType = PermissionType,
@@ -1600,7 +1600,7 @@ namespace ChatSDK
 
             result.Name = (name.CompareTo(" ") == 0) ? "" : name;
             result.Description = (desc.CompareTo(" ") == 0) ? "" : desc;
-            result.Annoumcement = (announcement.CompareTo(" ") == 0) ? "" : announcement;
+            result.Announcement = (announcement.CompareTo(" ") == 0) ? "" : announcement;
 
             // change EMPTY_STR(" ")  to ""
             if (result.Options.Ext.CompareTo(" ") == 0)    result.Options.Ext = "";

@@ -8,21 +8,214 @@ using UnityEngine;
 
 namespace ChatSDK
 {
+
+    /**
+     *  \~chinese
+     *  子区对象类。
+     *
+     *  \~english
+     *  The message thread object class.
+     */
+
     public class ThreadEvent
     {
+        /**
+         * \~chinese
+         * 获取子区 ID。
+         *
+         * @return 子区 ID。
+         *
+         * \~english
+         * Gets the message thread ID.
+         *
+         * @return The message thread ID.
+         */
         public string Tid;
+
+        /**
+         * \~chinese
+         * 获取父消息 ID。
+         *
+         * @return 父消息 ID。
+         *
+         * \~english
+         * Gets the ID of the parent message.
+         *
+         * @return The ID of the parent message.
+         */
         public string MessageId;
+
+        /**
+         * \~chinese
+         * 获取子区所在的群组 ID。
+         *
+         * @return  群组 ID。
+         *
+         * \~english
+         * Gets the group ID to which the message thread belongs.
+         *
+         * @return The group ID.
+         */
         public string ParentId;
+
+        /**
+         * \~chinese
+         * 获取子区创建者。
+         *
+         * 获取子区详情和子区列表的时候返回此属性值。
+         *
+         * @return 子区创建者的用户 ID。
+         *
+         * \~english
+         * Gets the message thread creator.
+         *
+         * This message thread creator is returned when you get the message thread details and message thread list.
+         *
+         * @return The user ID of the message thread creator.
+         */
+
         public string Owner;
+
+        /**
+         * \~chinese
+         * 获取子区名称。
+         *
+         * @return 子区名称。
+         *
+         * \~english
+         * Gets the message thread name.
+         *
+         * @return The message thread name.
+         */
         public string Name;
+
+        /**
+        * \~chinese
+        * 获取子区发送方。
+        *
+        * @return 子区发送方。
+        *
+        * \~english
+        * Gets thread sender.
+        *
+        * @return The thread sender.
+        */
         public string From;
+
+        /**
+        * \~chinese
+        * 获取子区接收方。
+        *
+        * @return 子区接收方。
+        *
+        * \~english
+        * Gets thread sender.
+        *
+        * @return The thread sender.
+        */
         public string To;
+
+        /**
+        * \~chinese
+        * 获取子区操作内容。
+        *
+        * @return 子区操作内容。
+        *
+        * \~english
+        * Gets thread operation.
+        *
+        * @return The thread operation.
+        */
         public string Operation;
+
+        /**
+         * \~chinese
+         * 获取子区的消息数。
+         *
+         * 获取子区的消息数之前，需先调用 {@link IThreadManager#GetThreadDetail} 方法获取子区详情。
+         *
+         * @return 消息数。
+         *
+         * \~english
+         * Get the number of messages in a message thread.
+         *
+         * To get the number of messages in a message thread, you need to first call {@link IThreadManager#GetThreadDetail} to get details of the message thread.
+         *
+         * @return The message count.
+         */
         public int MessageCount;
+
+        /**
+         * \~chinese
+         * 获取子区成员数量。
+         *
+         * 获取子区成员数量之前，需先调用 {@link IThreadManager#GetThreadDetail} 方法获取子区详情。
+         *
+         * @return 子区成员数量。
+         *
+         * \~english
+         * Gets the number of members in the message thread.
+         *
+         * To get the member count, you need to first call {@link IThreadManager#GetThreadDetail} to get details of the message thread.
+         *
+         * @return  The number of members in the message thread.
+         */
         public int MembersCount;
+
+        /**
+         * \~chinese
+         * 获取子区创建的 Unix 时间戳，单位为毫秒。
+         *
+         * @return  子区创建的 Unix 时间戳。
+         *
+         * \~english
+         * Gets the Unix timestamp when the message thread is created. The unit is millisecond.
+         *
+         * @return The Unix timestamp when the message thread is created.
+         */
         public long CreateTimestamp;
+
+        /**
+         * \~chinese
+         * 获取子区更新的 Unix 时间戳，单位为毫秒。
+         *
+         * @return  子区更新的 Unix 时间戳。
+         *
+         * \~english
+         * Gets the Unix timestamp when the message thread is updated. The unit is millisecond.
+         *
+         * @return The Unix timestamp when the message thread is updated.
+         */
         public long UpdateTimestamp;
+
+        /**
+         * \~chinese
+         * 获取子区事件的 Unix 时间戳，单位为毫秒。
+         *
+         * @return  子区事件的 Unix 时间戳。
+         *
+         * \~english
+         * Gets the Unix timestamp of event on the message thread. The unit is millisecond.
+         *
+         * @return The Unix timestamp of event on thread.
+         */
         public long Timestamp;
+
+        /**
+         * \~chinese
+         * 获取最近的子区消息。
+         *
+         * 获取该属性的值之前，需先调用 {@link IThreadManager#GetThreadDetail} 方法获取子区详情。
+         *
+         * @return 最近的子区消息。
+         *
+         * \~english
+         * Get the last reply in the message thread.
+         *
+         * To get the last reply in the message thread, you need to first call {@link IThreadManager#GetThreadDetail} to get details of the message thread.
+         *
+         * @return The last reply in the message thread.
+         */
         public Message LastMessage;
 
         internal JSONObject ToJsonObject()

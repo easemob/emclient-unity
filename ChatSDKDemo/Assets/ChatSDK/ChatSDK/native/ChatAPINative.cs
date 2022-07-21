@@ -618,7 +618,7 @@ namespace ChatSDK{
 		//ThreadManager
 
 		[DllImport(MyLibName)]
-		internal static extern void ThreadManager_AddListener(IntPtr client, OnCreatThread onCreatThread,
+		internal static extern void ThreadManager_AddListener(IntPtr client, OnCreateThread onCreateThread,
 		OnUpdateMyThread onUpdateMyThread, OnThreadNotifyChange onThreadNotifyChange, OnLeaveThread onLeaveThread,
 		OnMemberJoinedThread onMemberJoinedThread, OnMemberLeaveThread onMemberLeaveThread);
 

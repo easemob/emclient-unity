@@ -14,7 +14,7 @@ namespace ChatSDK
         internal List<IThreadManagerDelegate> delegater;
 
         //TODO: Add code for following callback functions
-        internal void OnCreatThread(ThreadEvent threadEvent)
+        internal void OnCreateThread(ThreadEvent threadEvent)
         {
             
         }

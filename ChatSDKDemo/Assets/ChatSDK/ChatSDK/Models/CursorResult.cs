@@ -4,20 +4,36 @@ using System;
 
 namespace ChatSDK
 {
-    /// <summary>
-    /// SDK游标
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /**
+     * \~chinese
+     * 包含游标及分页结果的泛型类。
+     * 
+     * 做为分页获取数据的返回对象。
+     * 
+     * \~english
+     * The generic class which contains the cursor and pagination result.
+     * 
+     * The class instance is returned when you make a paginated query.
+     * 
+     */
     public class CursorResult<T>
     {
-        /// <summary>
-        /// 游标
-        /// </summary>
+        /**
+	     * \~chinese
+	     * 游标。
+	     *
+	     * \~english
+	     * The cursor.
+	     */
         public string Cursor { get; internal set; }
 
-        /// <summary>
-        /// 列表
-        /// </summary>
+        /**
+        * \~chinese
+        * 数据列表。
+        *
+        * \~english
+        * The data list.
+        */
         public List<T> Data { get; internal set; }
     }
 
