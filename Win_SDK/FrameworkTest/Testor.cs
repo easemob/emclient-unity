@@ -65,7 +65,7 @@ namespace WinSDKTest
             Console.WriteLine($"cov id: {msg.ConversationId}");
             Console.WriteLine($"From: {msg.From}");
             Console.WriteLine($"To: {msg.To}");
-            Console.WriteLine($"RecallBy: {msg.RecallBy}");
+            //Console.WriteLine($"RecallBy: {msg.RecallBy}");
             Console.WriteLine($"message type: {msg.MessageType}");
             Console.WriteLine($"diection: {msg.Direction}");
             Console.WriteLine($"status: {msg.Status}");
@@ -2383,7 +2383,7 @@ namespace WinSDKTest
                         Console.WriteLine($"cov id: {msg.ConversationId}");
                         Console.WriteLine($"From: {msg.From}");
                         Console.WriteLine($"To: {msg.To}");
-                        Console.WriteLine($"RecallBy: {msg.RecallBy}");
+                        //Console.WriteLine($"RecallBy: {msg.RecallBy}");
                         Console.WriteLine($"message type: {msg.MessageType}");
                         Console.WriteLine($"diection: {msg.Direction}");
                         Console.WriteLine($"status: {msg.Status}");
@@ -5103,7 +5103,7 @@ namespace WinSDKTest
                     Console.WriteLine($"Name: {group.Name}");
                     Console.WriteLine($"Description: {group.Description}");
                     Console.WriteLine($"Owner: {group.Owner}");
-                    Console.WriteLine($"Annoumcement: {group.Annoumcement}");
+                    Console.WriteLine($"Annoumcement: {group.Announcement}");
                     Console.WriteLine($"MemberCount: {group.MemberCount}");
                     string members = string.Join(",", group.MemberList.ToArray());
                     string admins = string.Join(",", group.AdminList.ToArray());
@@ -5175,7 +5175,7 @@ namespace WinSDKTest
                 Console.WriteLine($"Name: {group.Name}");
                 Console.WriteLine($"Description: {group.Description}");
                 Console.WriteLine($"Owner: {group.Owner}");
-                Console.WriteLine($"Annoumcement: {group.Annoumcement}");
+                Console.WriteLine($"Annoumcement: {group.Announcement}");
                 Console.WriteLine($"MemberCount: {group.MemberCount}");
                 string members = string.Join(",", group.MemberList.ToArray());
                 string admins = string.Join(",", group.AdminList.ToArray());
@@ -5213,7 +5213,7 @@ namespace WinSDKTest
                     Console.WriteLine($"Name: {group.Name}");
                     Console.WriteLine($"Description: {group.Description}");
                     Console.WriteLine($"Owner: {group.Owner}");
-                    Console.WriteLine($"Annoumcement: {group.Annoumcement}");
+                    Console.WriteLine($"Annoumcement: {group.Announcement}");
                     Console.WriteLine($"MemberCount: {group.MemberCount}");
                     string members = string.Join(",", group.MemberList.ToArray());
                     string admins = string.Join(",", group.AdminList.ToArray());
@@ -5261,7 +5261,7 @@ namespace WinSDKTest
                         Console.WriteLine($"Name: {group.Name}");
                         Console.WriteLine($"Description: {group.Description}");
                         Console.WriteLine($"Owner: {group.Owner}");
-                        Console.WriteLine($"Annoumcement: {group.Annoumcement}");
+                        Console.WriteLine($"Annoumcement: {group.Announcement}");
                         Console.WriteLine($"MemberCount: {group.MemberCount}");
                         string members = string.Join(",", group.MemberList.ToArray());
                         string admins = string.Join(",", group.AdminList.ToArray());
@@ -7716,7 +7716,7 @@ namespace WinSDKTest
                 Console.WriteLine($"cov id: {it.ConversationId}");
                 Console.WriteLine($"From: {it.From}");
                 Console.WriteLine($"To: {it.To}");
-                Console.WriteLine($"RecallBy: {it.RecallBy}");
+                //Console.WriteLine($"RecallBy: {it.RecallBy}");
                 Console.WriteLine($"message type: {it.MessageType}");
                 Console.WriteLine($"diection: {it.Direction}");
                 Console.WriteLine($"status: {it.Status}");
@@ -7742,7 +7742,7 @@ namespace WinSDKTest
                 Console.WriteLine($"cov id: {it.ConversationId}");
                 Console.WriteLine($"From: {it.From}");
                 Console.WriteLine($"To: {it.To}");
-                Console.WriteLine($"RecallBy: {it.RecallBy}");
+                //Console.WriteLine($"RecallBy: {it.RecallBy}");
                 Console.WriteLine($"message type: {it.MessageType}");
                 Console.WriteLine($"diection: {it.Direction}");
                 Console.WriteLine($"status: {it.Status}");
@@ -7773,7 +7773,7 @@ namespace WinSDKTest
                 Console.WriteLine($"cov id: {it.ConversationId}");
                 Console.WriteLine($"From: {it.From}");
                 Console.WriteLine($"To: {it.To}");
-                Console.WriteLine($"RecallBy: {it.RecallBy}");
+                //Console.WriteLine($"RecallBy: {it.RecallBy}");
                 Console.WriteLine($"message type: {it.MessageType}");
                 Console.WriteLine($"diection: {it.Direction}");
                 Console.WriteLine($"status: {it.Status}");
@@ -7804,7 +7804,7 @@ namespace WinSDKTest
                 Console.WriteLine($"cov id: {it.ConversationId}");
                 Console.WriteLine($"From: {it.From}");
                 Console.WriteLine($"To: {it.To}");
-                Console.WriteLine($"RecallBy: {it.RecallBy}");
+                //Console.WriteLine($"RecallBy: {it.RecallBy}");
                 Console.WriteLine($"message type: {it.MessageType}");
                 Console.WriteLine($"diection: {it.Direction}");
                 Console.WriteLine($"status: {it.Status}");
@@ -8170,7 +8170,7 @@ namespace WinSDKTest
     class ThreadManagerDelegate : IThreadManagerDelegate
     {
         
-        public void OnCreatThread(ThreadEvent threadEvent)
+        public void OnCreateThread(ThreadEvent threadEvent)
         {
             Console.WriteLine($"OnCreatThread received");
             Utils.PrintThreadEvent(threadEvent);

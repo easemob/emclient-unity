@@ -207,12 +207,37 @@ namespace ChatSDK {
         {
             JSONObject jo = new JSONObject();
             jo.Add("paramType", (int)ParamType);
-            jo.Add("duration",  SilentModeDuration);
-            jo.Add("type", (int)RemindType);
-            jo.Add("startHour", SilentModeStartTime.hours);
-            jo.Add("startMin", SilentModeStartTime.minutes);
-            jo.Add("endHour", SilentModeEndTime.hours);
-            jo.Add("endMin", SilentModeEndTime.minutes);
+            if(SilentModeParamType.RemindType == ParamType)
+            {
+                jo.Add("type", (int)RemindType);
+            } 
+            else if(SilentModeParamType.Duration == ParamType)
+            {
+                jo.Add("duration", SilentModeDuration);
+            } 
+            else if (SilentModeParamType.Interval == ParamType)
+            {
+                if (null != SilentModeStartTime)
+                {
+                    jo.Add("startHour", SilentModeStartTime.hours);
+                    jo.Add("startMin", SilentModeStartTime.minutes);
+                } 
+                else
+                {
+                    jo.Add("startHour", 0);
+                    jo.Add("startMin", 0);
+                }
+                if (null != SilentModeEndTime)
+                {
+                    jo.Add("endHour", SilentModeEndTime.hours);
+                    jo.Add("endMin", SilentModeEndTime.minutes);
+                }
+                else
+                {
+                    jo.Add("endHour", 0);
+                    jo.Add("endMin", 0);
+                }
+            }
             return jo.ToString();
         }
     }
