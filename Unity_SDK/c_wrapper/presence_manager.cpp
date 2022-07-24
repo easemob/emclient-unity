@@ -22,7 +22,7 @@ HYPHENATE_API void PresenceManager_AddListener(void *client, FUNC_OnPresenceUpda
 
 HYPHENATE_API void PresenceManager_PublishPresence(void * client, int callbackId, int presenceStatus, const char* ext, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
-    std::string extStr = ext;
+    std::string extStr = GetUTF8FromUnicode(ext);
     
     std::thread t([=](){
         EMErrorPtr error = CLIENT->getPresenceManager().publishPresence(presenceStatus, extStr);

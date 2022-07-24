@@ -598,7 +598,7 @@ namespace ChatSDK{
 		internal static extern void PresenceManager_AddListener(IntPtr client, OnPresenceUpdated onPresenceUpdated);
 
 		[DllImport(MyLibName)]
-		internal static extern void PresenceManager_PublishPresence(IntPtr client, int callbackId, int presenceStatus, string ext, OnSuccess onSuccess, OnErrorV2 onError);
+		internal static extern void PresenceManager_PublishPresence(IntPtr client, int callbackId, int presenceStatus, [In, MarshalAs(UnmanagedType.LPTStr)] string ext, OnSuccess onSuccess, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
 		internal static extern void PresenceManager_SubscribePresences(IntPtr client, int callbackId,

@@ -140,26 +140,31 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     }
     void SendImageBtnAction()
     {
-        SDKClient.Instance.ThreadManager.CreateThread("我的thread", "1033288267207805704", "187147300700161", new ValueCallBack<ThreadEvent>(
-            onSuccess: (thread) =>
-            {
-                Debug.Log($"CreateThread sucess");
-                if (null != thread)
-                {
+        List<string> mem_list = new List<string>();
+        mem_list.Add("yqtest1");
+        mem_list.Add("hehe");
 
-                    Debug.Log($"Tid:{thread.Tid}; msgId:{thread.MessageId}; parentId:{thread.ParentId}; owner:{thread.Owner}");
-                    Debug.Log($"Name:{thread.Name}; From:{thread.From}; To:{thread.To}; Operation:{thread.Operation}; MessageCount:{thread.MessageCount}");
-                    Debug.Log($"MembersCount:{thread.MembersCount}; CreateTimestamp:{thread.CreateTimestamp}; UpdateTimestamp:{thread.UpdateTimestamp}");
-                    Debug.Log($"Timestamp:{thread.Timestamp};");
-                    if (null != thread.LastMessage)
+        SDKClient.Instance.PresenceManager.FetchPresenceStatus(mem_list, new ValueCallBack<List<Presence>>(
+            onSuccess: (list) =>
+            {
+                Debug.Log($"FetchPresenceStatus, presence list num:{list.Count}");
+                foreach (var it in list)
+                {
+                    List<PresenceDeviceStatus> status_list = it.StatusList;
+                    string str = "";
+                    foreach (var sit in status_list)
                     {
-                        //Utils.PrintMessage(thread.LastMessage);
+                        str += "deviceId:" + sit.DeviceId + ";";
+                        str += "status:" + sit.Status + ";";
                     }
+                    Debug.Log($"-------------------");
+                    Debug.Log($"Publisher:{it.Publisher}; Ext:{it.Ext}; lastestTime:{it.LatestTime}; ExpireTime:{it.ExpiryTime}");
+                    Debug.Log($"preseceDeviceStatus:{str}");
                 }
             },
             onError: (code, desc) =>
             {
-                Debug.Log($"CreateThread failed, code:{code}, desc:{desc}");
+                Debug.Log($"FetchPresenceStatus failed, code:{code}, desc:{desc}");
             }
         ));
 

@@ -1841,7 +1841,8 @@ namespace ChatSDK
             result.LatestTime = LatestTime;
             result.ExpiryTime = ExpiryTime;
 
-            result.Ext = Marshal.PtrToStringAnsi(Ext);
+            //result.Ext = Marshal.PtrToStringAnsi(Ext);
+            result.Ext = TransformTool.PtrToString(Ext);
             if (result.Ext.CompareTo(" ") == 0) result.Ext = "";
 
             string deviceJson = Marshal.PtrToStringAnsi(DeviceJson);

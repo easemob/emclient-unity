@@ -44,10 +44,6 @@ public class Login : MonoBehaviour
     }
 
     void LoginAction() {
-        LoginWithAgoraTokenAction();
-        return;
-
-
         SDKClient.Instance.Login(m_UsernameText.text, m_PasswordText.text,
             handle: new CallBack(
 
@@ -163,9 +159,9 @@ public class Login : MonoBehaviour
 
     void InitEaseMobSDK() {
         //default appkey
-        //string appkey = "easemob-demo#easeim";
+        string appkey = "easemob-demo#easeim";
         //string appkey = "easemob-demo#unitytest";
-        string appkey = "41117440#383391";
+        //string appkey = "41117440#383391";
 
 #if UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
 
