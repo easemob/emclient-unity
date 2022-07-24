@@ -13,6 +13,7 @@
       'default_configuration': '<(default_config_type)',
       'defines': [
         'AGORACHAT_EXPORT',
+        'SKIP_FPA',
       ],
     },
     'targets': [

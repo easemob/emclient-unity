@@ -18,6 +18,7 @@
                ],
                'defines': [
                     'DLL_EXPORT',
+                    'SKIP_FPA',
                ],
                 'msbuild_toolset': 'v120_xp',
                 'msvs_settings': {
@@ -44,6 +45,7 @@
                ],
                'defines': [
                     'DLL_EXPORT',
+                    'SKIP_FPA',
                ],
                 'msbuild_toolset': 'v120_xp',
                 'msvs_settings': {
