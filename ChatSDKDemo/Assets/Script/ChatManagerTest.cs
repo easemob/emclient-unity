@@ -140,33 +140,20 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     }
     void SendImageBtnAction()
     {
-        List<string> mem_list = new List<string>();
-        mem_list.Add("yqtest1");
-        mem_list.Add("hehe");
-
-        SDKClient.Instance.PresenceManager.FetchPresenceStatus(mem_list, new ValueCallBack<List<Presence>>(
-            onSuccess: (list) =>
-            {
-                Debug.Log($"FetchPresenceStatus, presence list num:{list.Count}");
-                foreach (var it in list)
-                {
-                    List<PresenceDeviceStatus> status_list = it.StatusList;
-                    string str = "";
-                    foreach (var sit in status_list)
-                    {
-                        str += "deviceId:" + sit.DeviceId + ";";
-                        str += "status:" + sit.Status + ";";
-                    }
-                    Debug.Log($"-------------------");
-                    Debug.Log($"Publisher:{it.Publisher}; Ext:{it.Ext}; lastestTime:{it.LatestTime}; ExpireTime:{it.ExpiryTime}");
-                    Debug.Log($"preseceDeviceStatus:{str}");
-                }
-            },
-            onError: (code, desc) =>
-            {
-                Debug.Log($"FetchPresenceStatus failed, code:{code}, desc:{desc}");
-            }
-        ));
+        SDKClient.Instance.ChatManager.FetchSupportLanguages(new ValueCallBack<List<SupportLanguages>>(
+             onSuccess: (list) =>
+             {
+                 Debug.Log($"FetchSupportLanguages found total: {list.Count}");
+                 foreach (var lang in list)
+                 {
+                     Debug.Log($"code: {lang.LanguageCode}, name:{lang.LanguageName}, nativename:{lang.LanguageNativeName}");
+                 }
+             },
+             onError: (code, desc) =>
+             {
+                 Debug.Log($"FetchSupportLanguages failed, code:{code}, desc:{desc}");
+             }
+            ));
 
         return;
 

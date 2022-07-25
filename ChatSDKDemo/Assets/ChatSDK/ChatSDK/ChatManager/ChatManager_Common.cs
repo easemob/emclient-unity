@@ -832,7 +832,7 @@ namespace ChatSDK
                         }
                         else
                         {
-                            Debug.LogError("Invalid return type from native ChatManager_FetchHistoryMessages(), please check native c wrapper code.");
+                            Debug.LogError("Invalid return type from native FetchGroupReadAcks(), please check native c wrapper code.");
                         }
                     }
                     else
@@ -843,8 +843,8 @@ namespace ChatSDK
                 },
 
                 (int code, string desc, int cbId) => {
-                    Debug.LogError($"FetchHistoryMessages failed with code={code},desc={desc}");
-                    ChatCallbackObject.ValueCallBackOnError<CursorResult<Message>>(cbId, code, desc);
+                    Debug.LogError($"FetchGroupReadAcks failed with code={code},desc={desc}");
+                    ChatCallbackObject.ValueCallBackOnError<CursorResult<GroupReadAck>>(cbId, code, desc);
                 });
         }
 
