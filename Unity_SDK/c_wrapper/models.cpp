@@ -2427,7 +2427,7 @@ std::map<std::string, UserInfo> UserInfo::FromResponse(std::string json, std::ma
 
                 if (objItem.HasMember(utypeMap[GENDER].c_str()) && objItem[utypeMap[GENDER].c_str()].IsString()) {
                     std::string gender_str = objItem[utypeMap[GENDER].c_str()].GetString();
-                    if (gender_str.compare("0") == 0 || gender_str.compare("1") == 0)
+                    if (gender_str.compare("0") == 0 || gender_str.compare("1") == 0 || gender_str.compare("2") == 0)
                         ui.gender = std::stoi(gender_str);
                 }
                 
