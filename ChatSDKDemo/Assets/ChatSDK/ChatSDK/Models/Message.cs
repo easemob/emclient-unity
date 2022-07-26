@@ -358,8 +358,6 @@ namespace ChatSDK
             jo.Add("isRead", IsRead);
             jo.Add("messageOnlineState", MessageOnlineState);
 
-            jo.Add("reactionList", MessageReaction.ListToJson(ReactionList));
-
             jo.Add("isThread", IsThread);
             
             return jo;
