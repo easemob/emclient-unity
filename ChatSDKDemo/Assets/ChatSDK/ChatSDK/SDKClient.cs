@@ -50,6 +50,8 @@ namespace ChatSDK
         /// </summary>
         internal IConversationManager ConversationManager { get => _Sdk.ConversationManager(); }
 
+        internal IMessageManager MessageManager { get => _Sdk.MessageManager();  }
+
         /// <summary>
         /// 用户信息管理类
         /// </summary>
@@ -57,7 +59,7 @@ namespace ChatSDK
 
         public IPresenceManager PresenceManager { get => _Sdk.PresenceManager(); }
 
-        public IThreadManager ThreadManager { get => _Sdk.ThreadManager(); }
+        public IChatThreadManager ThreadManager { get => _Sdk.ThreadManager(); }
 
         /// <summary>
         /// 获取sdk配置信息

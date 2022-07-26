@@ -6,9 +6,9 @@
 //
 
 #import "EMConversationWrapper.h"
-#import "EMConversation+Unity.h"
+#import "EMConversation+Helper.h"
 #import "Transfrom.h"
-#import "EMChatMessage+Unity.h"
+#import "EMChatMessage+Helper.h"
 
 @implementation EMConversationWrapper
 - (void)getConversationWithParam:(NSDictionary *)param

@@ -12,7 +12,6 @@ namespace ChatSDK
     {
         private IntPtr client;
         private ChatManagerHub chatManagerHub;
-        private ReactionManagerHub reactionManagerHub;
 
         System.Object msgMapLocker;
         Dictionary<string, IntPtr> msgPtrMap;
@@ -28,13 +27,12 @@ namespace ChatSDK
                 client = clientCommon.client;
             }
             chatManagerHub = new ChatManagerHub();
-            reactionManagerHub = new ReactionManagerHub();
 
             //registered listeners
             ChatAPINative.ChatManager_AddListener(client, chatManagerHub.OnMessagesReceived,
                 chatManagerHub.OnCmdMessagesReceived, chatManagerHub.OnMessagesRead, chatManagerHub.OnMessagesDelivered,
                 chatManagerHub.OnMessagesRecalled, chatManagerHub.OnReadAckForGroupMessageUpdated, chatManagerHub.OnGroupMessageRead,
-                chatManagerHub.OnConversationsUpdate, chatManagerHub.OnConversationRead, reactionManagerHub.messageReactionDidChange);
+                chatManagerHub.OnConversationsUpdate, chatManagerHub.OnConversationRead);
 
             msgPtrMap = new Dictionary<string, IntPtr>();
             msgMap = new Dictionary<string, Message>();
@@ -709,23 +707,23 @@ namespace ChatSDK
                 );
         }
 
-        public override void FetchSupportLanguages(ValueCallBack<List<SupportLanguages>> handle = null)
+        public override void FetchSupportLanguages(ValueCallBack<List<SupportLanguage>> handle = null)
         {
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
             ChatAPINative.ChatManager_FetchSupportLanguages(client, callbackId,
                 onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
                 {
-                    List<SupportLanguages> supportList = new List<SupportLanguages>();
+                    List<SupportLanguage> supportList = new List<SupportLanguage>();
                     if (DataType.ListOfString == dType && dSize > 0)
                     {
                         for (int i = 0; i < dSize; i++)
                         {
                             var supportItem = Marshal.PtrToStructure<SupportLanguagesTO>(data[i]);
-                            SupportLanguages spl = supportItem.SupportLanguagesInfo();
+                            SupportLanguage spl = supportItem.SupportLanguagesInfo();
                             supportList.Add(spl);
                         }
-                        ChatCallbackObject.ValueCallBackOnSuccess<List<SupportLanguages>>(cbId, supportList);
+                        ChatCallbackObject.ValueCallBackOnSuccess<List<SupportLanguage>>(cbId, supportList);
                     }
                     else
                     {
@@ -733,7 +731,7 @@ namespace ChatSDK
                     }
                 },
                 onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.ValueCallBackOnError<List<SupportLanguages>>(cbId, code, desc);
+                    ChatCallbackObject.ValueCallBackOnError<List<SupportLanguage>>(cbId, code, desc);
                 });
         }
 

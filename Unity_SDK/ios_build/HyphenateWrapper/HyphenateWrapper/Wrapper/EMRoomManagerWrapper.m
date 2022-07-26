@@ -7,10 +7,10 @@
 
 #import "EMRoomManagerWrapper.h"
 #import <HyphenateChat/HyphenateChat.h>
-#import "EMPageResult+Unity.h"
+#import "EMPageResult+Helper.h"
 #import "Transfrom.h"
-#import "EMChatroom+Unity.h"
-#import "EMCursorResult+Unity.h"
+#import "EMChatroom+Helper.h"
+#import "EMCursorResult+Helper.h"
 #import "EMRoomListener.h"
 
 @interface EMRoomManagerWrapper () <EMChatroomManagerDelegate>

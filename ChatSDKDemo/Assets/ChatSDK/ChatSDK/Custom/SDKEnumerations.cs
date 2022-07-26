@@ -342,10 +342,8 @@
         None,
     }
 
-    public enum ThreadLeaveReason
+    public enum ChatThreadOperation
     {
-        LEAVE = 0,
-        BE_KICKED,
-        DESTROYED,
+        UnKnown = 0, Create, Update, Delete, Update_Msg,
     }
 }

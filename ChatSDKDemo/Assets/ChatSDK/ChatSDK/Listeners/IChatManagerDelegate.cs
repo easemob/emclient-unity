@@ -55,5 +55,7 @@ namespace ChatSDK
         /// <param name="from"></param>
         /// <param name="to"></param>
         void OnConversationRead(string from, string to);
+
+        void MessageReactionDidChange(List<MessageReactionChange> list);
     }
 }

@@ -7,8 +7,8 @@
 
 #import "EMGroupManagerWrapper.h"
 #import <HyphenateChat/HyphenateChat.h>
-#import "EMGroup+Unity.h"
-#import "EMCursorResult+Unity.h"
+#import "EMGroup+Helper.h"
+#import "EMCursorResult+Helper.h"
 #import "Transfrom.h"
 #import "EMGroupListener.h"
 

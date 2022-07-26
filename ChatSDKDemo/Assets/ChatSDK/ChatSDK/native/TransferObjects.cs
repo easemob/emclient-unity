@@ -741,10 +741,6 @@ namespace ChatSDK
             ReactionList = MessageReaction.ListToJson(message.ReactionList);
             BodyType = message.Body.Type;
             IsThread = message.IsThread;
-            MucParentId = message.MucParentId;
-            MsgParentId = message.MsgParentId;
-            if (null != message.ThreadOverview)
-                ThreadOverview = message.ThreadOverview.ToJson();
         }
 
         protected MessageTO()
@@ -876,10 +872,12 @@ namespace ChatSDK
                 IsNeedGroupAck = IsNeedGroupAck,
                 IsRead = IsRead,
                 MessageOnlineState = MessageOnlineState,
-                ReactionList = MessageReaction.ListFromJson(TransformTool.GetUnicodeStringFromUTF8(ReactionList))
+                //TODO： need remove;
+                //ReactionList = MessageReaction.ListFromJson(TransformTool.GetUnicodeStringFromUTF8(ReactionList))
             };
 
-            result.SetReactionMap();
+            //TODO： need remove;
+            //result.SetReactionMap();
 
             // change EMPTY_STR(" ")  to ""
             if (result.MsgId.CompareTo(" ") == 0)           result.MsgId = "";
@@ -1841,8 +1839,8 @@ namespace ChatSDK
             result.LatestTime = LatestTime;
             result.ExpiryTime = ExpiryTime;
 
-            result.Ext = Marshal.PtrToStringAnsi(Ext);
-            if (result.Ext.CompareTo(" ") == 0) result.Ext = "";
+            result.statusDescription = Marshal.PtrToStringAnsi(Ext);
+            if (result.statusDescription.CompareTo(" ") == 0) result.statusDescription = "";
 
             string deviceJson = Marshal.PtrToStringAnsi(DeviceJson);
             string statusJson = Marshal.PtrToStringAnsi(StatusJson);
@@ -1864,7 +1862,8 @@ namespace ChatSDK
                     }
 
                     pds.DeviceId = it.Value;
-                    pds.Status = statusMap[it.Key];
+                    // TODO change type.
+                    //pds.Status = statusMap[it.Key];
                     result.StatusList.Add(pds);
                 }
             }
@@ -1879,13 +1878,13 @@ namespace ChatSDK
         internal string LanguageName;
         [MarshalAs(UnmanagedType.LPTStr)]
         internal string LanguageNativeName;
-        public SupportLanguages SupportLanguagesInfo()
+        public SupportLanguage SupportLanguagesInfo()
         {
-            var supportLanguages = new SupportLanguages();
-            supportLanguages.LanguageCode = LanguageCode;
-            supportLanguages.LanguageName = LanguageName;
-            supportLanguages.LanguageNativeName = TransformTool.GetUnicodeStringFromUTF8(LanguageNativeName);
-            return supportLanguages;
+            var supportLanguage = new SupportLanguage();
+            supportLanguage.LanguageCode = LanguageCode;
+            supportLanguage.LanguageName = LanguageName;
+            supportLanguage.LanguageNativeName = TransformTool.GetUnicodeStringFromUTF8(LanguageNativeName);
+            return supportLanguage;
         }
     }
 

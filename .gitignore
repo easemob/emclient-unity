@@ -131,5 +131,7 @@ sysinfo.txt
 *.code-workspace
 !Unity_SDK/mac_build/lib/LDAP.framework
 
+**/HyphenateChat.framework
+**/*.meta
 
 
