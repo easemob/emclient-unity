@@ -931,6 +931,14 @@ namespace ChatSDK
 
     internal sealed class ThreadManagerHub
     {
+        // TODO: 需要改为这4个callback
+        /*
+        internal OnChatThreadCreate OnCreatThread_;
+        internal OnChatThreadUpdate OnUpdateMyThread_;
+        internal OnChatThreadDestroy OnThreadNotifyChange_;
+        internal OnUserKickOutOfChatThread OnLeaveThread_;
+        */
+
         internal OnCreatThread OnCreatThread_;
         internal OnUpdateMyThread OnUpdateMyThread_;
         internal OnThreadNotifyChange OnThreadNotifyChange_;

@@ -12,32 +12,9 @@ namespace ChatSDK
 #endif
     {
         internal List<IChatThreadManagerDelegate> delegater;
-
-        //TODO: Add code for following callback functions
-        internal void OnCreatThread(ChatThreadEvent threadEvent)
-        {
-            
-        }
-
-        void OnUpdateMyThread(ChatThreadEvent threadEvent)
-        {
-
-        }
-        void OnThreadNotifyChange(ChatThreadEvent threadEvent)
-        {
-
-        }
-        void OnLeaveThread(ChatThreadEvent threadEvent, ThreadLeaveReason reason)
-        {
-
-        }
-        void OnMemberJoinedThread(ChatThreadEvent threadEvent)
-        {
-
-        }
-        void OnMemberLeaveThread(ChatThreadEvent threadEvent)
-        {
-
-        }
+        internal void OnChatThreadCreate(ChatThreadEvent threadEvent) { }
+        internal void OnChatThreadUpdate(ChatThreadEvent threadEvent) { }
+        internal void OnChatThreadDestroy(ChatThreadEvent threadEvent) { }
+        internal void OnUserKickOutOfChatThread(ChatThreadEvent threadEvent) { }
     }
 }

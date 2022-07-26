@@ -15,16 +15,12 @@ namespace ChatSDK
         public string ParentId;
         public string Owner;
         public string Name;
-        public string From;
-        public string To;
-        public string Operation;
         public int MessageCount;
         public int MembersCount;
-        public long CreateTimestamp;
-        public long UpdateTimestamp;
-        public long Timestamp;
+        public long CreateAt;
         public Message LastMessage;
 
+        // TODO: 不需要TOJSON吧。
         internal JSONObject ToJsonObject()
         {
             JSONObject jo = new JSONObject();
@@ -33,14 +29,9 @@ namespace ChatSDK
             jo.Add("parentId", ParentId);
             jo.Add("owner", Owner);
             jo.Add("name", Name);
-            jo.Add("from", From);
-            jo.Add("to", To);
-            jo.Add("operation", Operation);
             jo.Add("messageCount", MessageCount);
             jo.Add("membersCount", MembersCount);
-            jo.Add("createTimestamp", CreateTimestamp.ToString());
-            jo.Add("udateTimestamp", UpdateTimestamp.ToString());
-            jo.Add("timestamp", Timestamp.ToString());
+            jo.Add("createTimestamp", CreateAt.ToString());
             if (null != LastMessage)
                 jo.Add("lastMessage", LastMessage.ToJson().ToString());
 
@@ -64,14 +55,9 @@ namespace ChatSDK
                 thread.ParentId = jo["parentId"].Value;
                 thread.Owner = jo["owner"].Value;
                 thread.Name = jo["name"].Value;
-                thread.From = jo["from"].Value;
-                thread.To = jo["to"].Value;
-                thread.Operation = jo["operation"].Value;
                 thread.MessageCount = jo["messageCount"].AsInt;
                 thread.MembersCount = jo["membersCount"].AsInt;
-                thread.CreateTimestamp = long.Parse(jo["createTimestamp"].Value);
-                thread.UpdateTimestamp = long.Parse(jo["updateTimestamp"].Value);
-                thread.Timestamp = long.Parse(jo["timestamp"].Value);
+                thread.CreateAt = long.Parse(jo["createTimestamp"].Value);
                 if (!jo["lastMessage"].IsNull && jo["lastMessage"].IsString)
                     thread.LastMessage = new Message(jo["lastMessage"].Value);
                 return thread;
@@ -145,51 +131,5 @@ namespace ChatSDK
             return dict;
         }
 
-        static internal int ThreadLeaveReasonToInt(ThreadLeaveReason reason)
-        {
-            int ret = 0;
-            switch (reason)
-            {
-                case ThreadLeaveReason.LEAVE:
-                    {
-                        ret = 0;
-                        break;
-                    }
-                case ThreadLeaveReason.BE_KICKED:
-                    {
-                        ret = 1;
-                        break;
-                    }
-                case ThreadLeaveReason.DESTROYED:
-                    {
-                        ret = 2;
-                        break;
-                    }
-            }
-            return ret;
-        }
-        static internal ThreadLeaveReason ThreadLeaveReasonFromInt(int i)
-        {
-            ThreadLeaveReason ret = ThreadLeaveReason.LEAVE;
-            switch (i)
-            {
-                case 0:
-                    {
-                        ret = ThreadLeaveReason.LEAVE;
-                        break;
-                    }
-                case 1:
-                    {
-                        ret = ThreadLeaveReason.BE_KICKED;
-                        break;
-                    }
-                case 2:
-                    {
-                        ret = ThreadLeaveReason.DESTROYED;
-                        break;
-                    }
-            }
-            return ret;
-        }
     }
 }
