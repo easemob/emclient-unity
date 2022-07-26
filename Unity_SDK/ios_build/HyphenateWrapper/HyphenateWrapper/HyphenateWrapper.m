@@ -122,6 +122,22 @@ void ChatManager_HandleMethodCall(const char* methodName, const char* jsonString
         [EMClientWrapper.instance.chatManager removeMessagesBeforeTimestamp:dic callbackId:callId];
     }else if ([method isEqualToString:@"deleteConversationFromServer"]) {
         [EMClientWrapper.instance.chatManager deleteConversationFromServer:dic callbackId:callId];
+    }else if ([method isEqualToString:@"fetchSupportLanguages"]) {
+        [EMClientWrapper.instance.chatManager fetchSupportLanguages:dic callbackId:callId];
+    }else if ([method isEqualToString:@"translateMessage"]) {
+        [EMClientWrapper.instance.chatManager translateMessage:dic callbackId:callId];
+    }else if ([method isEqualToString:@"fetchGroupReadAcks"]) {
+        [EMClientWrapper.instance.chatManager fetchGroupReadAcks:dic callbackId:callId];
+    }else if ([method isEqualToString:@"reportMessage"]) {
+        [EMClientWrapper.instance.chatManager reportMessage:dic callbackId:callId];
+    }else if ([method isEqualToString:@"addReaction"]) {
+        [EMClientWrapper.instance.chatManager addReaction:dic callbackId:callId];
+    }else if ([method isEqualToString:@"removeReaction"]) {
+        [EMClientWrapper.instance.chatManager removeReaction:dic callbackId:callId];
+    }else if ([method isEqualToString:@"getReactionList"]) {
+        [EMClientWrapper.instance.chatManager getReactionList:dic callbackId:callId];
+    }else if ([method isEqualToString:@"getReactionDetail"]) {
+        [EMClientWrapper.instance.chatManager getReactionDetail:dic callbackId:callId];
     }
 }
 

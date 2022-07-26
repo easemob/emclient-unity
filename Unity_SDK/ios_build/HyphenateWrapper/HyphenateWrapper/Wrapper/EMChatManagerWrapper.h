@@ -31,6 +31,14 @@ NS_ASSUME_NONNULL_BEGIN
 - (id)updateChatMessage:(NSDictionary *)param;
 - (void)removeMessagesBeforeTimestamp:(NSDictionary *)param callbackId:(NSString *)callbackId;
 - (void)deleteConversationFromServer:(NSDictionary *)param callbackId:(NSString *)callbackId;
+- (void)fetchSupportLanguages:(NSDictionary *)param callbackId:(NSString *)callbackId;
+- (void)translateMessage:(NSDictionary *)param callbackId:(NSString *)callbackId;
+- (void)fetchGroupReadAcks:(NSDictionary *)param callbackId:(NSString *)callbackId;
+- (void)reportMessage:(NSDictionary *)param callbackId:(NSString *)callbackId;
+- (void)addReaction:(NSDictionary *)param callbackId:(NSString *)callbackId;
+- (void)removeReaction:(NSDictionary *)param callbackId:(NSString *)callbackId;
+- (void)getReactionList:(NSDictionary *)param callbackId:(NSString *)callbackId;
+- (void)getReactionDetail:(NSDictionary *)param callbackId:(NSString *)callbackId;
 
 @end
 

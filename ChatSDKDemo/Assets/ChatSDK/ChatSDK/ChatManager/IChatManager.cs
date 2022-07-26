@@ -157,7 +157,7 @@ namespace ChatSDK
         public abstract void DeleteConversationFromServer(string conversationId, ConversationType conversationType, bool isDeleteServerMessages, CallBack handle = null);
 
 
-        public abstract void FetchSupportLanguages(ValueCallBack<List<SupportLanguages>> handle = null);
+        public abstract void FetchSupportLanguages(ValueCallBack<List<SupportLanguage>> handle = null);
 
         public abstract void TranslateMessage(ref Message message, List<string> targetLanguages, CallBack handle = null);
 
@@ -195,31 +195,9 @@ namespace ChatSDK
             }
         }
 
-        public void AddReactionManagerDelegate(IReactionManagerDelegate reactionManagerDelegate)
-        {
-            if (!CallbackManager.Instance().reactionManagerListener.delegater.Contains(reactionManagerDelegate))
-            {
-                CallbackManager.Instance().reactionManagerListener.delegater.Add(reactionManagerDelegate);
-            }
-        }
-
-        /// <summary>
-        /// 移除聊天监听
-        /// </summary>
-        /// <param name="chatManagerDelegate"></param>
-        public void RemoveReactionManagerDelegate(IReactionManagerDelegate reactionManagerDelegate)
-        {
-            if (CallbackManager.IsQuit()) return;
-            if (CallbackManager.Instance().reactionManagerListener.delegater.Contains(reactionManagerDelegate))
-            {
-                CallbackManager.Instance().reactionManagerListener.delegater.Remove(reactionManagerDelegate);
-            }
-        }
-
         internal void ClearDelegates()
         {
             CallbackManager.Instance().chatManagerListener.delegater.Clear();
-            CallbackManager.Instance().reactionManagerListener.delegater.Clear();
         }
 
     }

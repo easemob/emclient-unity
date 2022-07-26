@@ -1,16 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using SimpleJSON;
 
 namespace ChatSDK
 {
     public class PresenceDeviceStatus
     {
         public string DeviceId;
-        public string Status;
+        public int Status;
 
         internal PresenceDeviceStatus()
         {
-            // Default constructor, No need to add any code
+           
+        }
+
+        internal PresenceDeviceStatus(JSONObject json) {
+            foreach (string key in json.Keys) {
+                DeviceId = key;
+                Status = json[key].AsInt;
+            }
         }
     }
 
@@ -18,7 +25,7 @@ namespace ChatSDK
     {
         public string Publisher { get; internal set; }
         public List<PresenceDeviceStatus> StatusList { get; internal set; }
-        public string Ext { get; internal set; }
+        public string statusDescription { get; internal set; }
         public long LatestTime { get; internal set; }
         public long ExpiryTime { get; internal set; }
 
@@ -27,9 +34,19 @@ namespace ChatSDK
             // Default constructor, No need to add any code
         }
 
-        internal Presence(string jsonString)
+        internal Presence(JSONObject json)
         {
-            //TODO: Add code for using jsonString to create Presence object
+            Publisher = json["publisher"].Value;
+            statusDescription = json["statusDescription"].Value;
+            LatestTime = json["lastTime"].AsInt;
+            ExpiryTime = json["expiryTime"].AsInt;
+            StatusList = new List<PresenceDeviceStatus>();
+            if (json["statusDetails"].IsArray) {
+                JSONArray ary = json["statusDetails"].AsArray;
+                foreach (JSONObject jo in ary) {
+                    StatusList.Add(new PresenceDeviceStatus(jo));
+                }
+            }
         }
 
     }

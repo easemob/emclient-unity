@@ -348,4 +348,9 @@
         BE_KICKED,
         DESTROYED,
     }
+
+    public enum ChatThreadOperation
+    {
+        UnKnown = 0, Create, Update, Delete, Update_Msg,
+    }
 }

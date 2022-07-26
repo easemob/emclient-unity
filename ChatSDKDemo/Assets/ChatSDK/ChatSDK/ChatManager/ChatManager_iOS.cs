@@ -180,7 +180,6 @@ namespace ChatSDK
 
         public override void SendReadAckForGroupMessage(string messageId, string ackContent, CallBack callback = null)
         {
-            //TODO: test
             JSONObject obj = new JSONObject();
             obj.Add("msgId", messageId);
             obj.Add("content", ackContent);
@@ -213,42 +212,78 @@ namespace ChatSDK
             ChatAPIIOS.ChatManager_HandleMethodCall("deleteConversationFromServer", obj.ToString(), callback?.callbackId);
         }
 
-        public override void FetchSupportLanguages(ValueCallBack<List<SupportLanguages>> handle = null)
+        public override void FetchSupportLanguages(ValueCallBack<List<SupportLanguage>> handle = null)
         {
-            //TODO
+            ChatAPIIOS.ChatManager_HandleMethodCall("fetchSupportLanguages",null, handle?.callbackId);
         }
 
         public override void TranslateMessage(ref Message message, List<string> targetLanguages, CallBack handle = null)
         {
-            //TODO
+            // TODO  
+            JSONObject obj = new JSONObject();
+            obj.Add("message", message.ToJson());
+            obj.Add("languages", TransformTool.JsonStringFromStringList(targetLanguages));
+            ChatAPIIOS.ChatManager_HandleMethodCall("translateMessage", obj.ToString(), handle?.callbackId);
         }
 
 
         public override void FetchGroupReadAcks(string messageId, string groupId, int pageSize = 20, string startAckId = null, ValueCallBack<CursorResult<GroupReadAck>> handle = null)
         {
-            //TODO  
+            JSONObject obj = new JSONObject();
+            obj.Add("msg_id", messageId);
+            obj.Add("pageSize", pageSize);
+            obj.Add("groupId", groupId);
+            obj.Add("ack_id", startAckId);
+            ChatAPIIOS.ChatManager_HandleMethodCall("fetchGroupReadAcks", obj.ToString(), handle?.callbackId);
         }
 
         public override void ReportMessage(string messageId, string tag, string reason, CallBack handle = null)
         {
-            //TODO
+            JSONObject obj = new JSONObject();
+            obj.Add("msgId", messageId);
+            obj.Add("tag", tag);
+            obj.Add("reason", reason);
+            ChatAPIIOS.ChatManager_HandleMethodCall("reportMessage", obj.ToString(), handle?.callbackId);
         }
 
         public override void AddReaction(string messageId, string reaction, CallBack handle = null)
         {
-            //TODO
+            JSONObject obj = new JSONObject();
+            obj.Add("msgId", messageId);
+            obj.Add("reaction", reaction);
+            ChatAPIIOS.ChatManager_HandleMethodCall("addReaction", obj.ToString(), handle?.callbackId);
         }
         public override void RemoveReaction(string messageId, string reaction, CallBack handle = null)
         {
-            //TODO
+            JSONObject obj = new JSONObject();
+            obj.Add("msgId", messageId);
+            obj.Add("reaction", reaction);
+            ChatAPIIOS.ChatManager_HandleMethodCall("removeReaction", obj.ToString(), handle?.callbackId);
         }
         public override void GetReactionList(List<string> messageIdList, ConversationType chatType, string groupId, ValueCallBack<Dictionary<string, List<MessageReaction>>> handle = null)
         {
-            //TODO
-        }
+            JSONObject obj = new JSONObject();
+            obj.Add("msgIds",TransformTool.JsonStringFromStringList(messageIdList));
+            obj.Add("groupId", groupId);
+            if (chatType == ConversationType.Chat) {
+                obj.Add("type", 0);
+            } else if (chatType == ConversationType.Group)
+            {
+                obj.Add("type", 1);
+            } else if (chatType == ConversationType.Room)
+            {
+                obj.Add("type", 2);
+            }
+            ChatAPIIOS.ChatManager_HandleMethodCall("getReactionList", obj.ToString(), handle?.callbackId);
+        } 
         public override void GetReactionDetail(string messageId, string reaction, string cursor = null, int pageSize = 20, ValueCallBack<CursorResult<MessageReaction>> handle = null)
         {
-            //TODO
+            JSONObject obj = new JSONObject();
+            obj.Add("msgId", messageId);
+            obj.Add("reaction", reaction);
+            obj.Add("cursor", cursor);
+            obj.Add("pageSize", pageSize);
+            ChatAPIIOS.ChatManager_HandleMethodCall("getReactionDetail", obj.ToString(), handle?.callbackId);
         }
     }
 }

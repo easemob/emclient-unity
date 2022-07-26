@@ -39,9 +39,10 @@ namespace ChatSDK
         private IRoomManager roomImp = null;
         private IPushManager pushImp = null;
         private IConversationManager conversationImp = null;
+        private IMessageManager messageManagerImp = null;
         private IUserInfoManager userInfoImp = null;
         private IPresenceManager presenceImp = null;
-        private IThreadManager threadImp = null;
+        private IChatThreadManager threadImp = null;
 
         /// <summary>
         /// 获取聊天管理对象
@@ -158,6 +159,22 @@ namespace ChatSDK
             return conversationImp;
         }
 
+        internal IMessageManager MessageManager() {
+            if (messageManagerImp != null) { return messageManagerImp; }
+            
+#if UNITY_ANDROID && !UNITY_EDITOR
+            messageManagerImp = new MessageManager_Android();
+#elif UNITY_IOS && !UNITY_EDITOR
+            messageManagerImp = new MessageManager_iOS();
+#elif UNITY_STANDALONE || UNITY_EDITOR
+            messageManagerImp = new MessageManager_Common();
+#else
+            messageManagerImp = new MessageManager_Common();
+#endif
+            
+            return messageManagerImp;
+        }
+
         internal IUserInfoManager UserInfoManager()
         {
             if (userInfoImp != null) { return userInfoImp; }
@@ -188,18 +205,20 @@ namespace ChatSDK
             return presenceImp;
         }
 
-        internal IThreadManager ThreadManager()
+        internal IChatThreadManager ThreadManager()
         {
             if (threadImp != null) { return threadImp; }
+
 #if UNITY_ANDROID && !UNITY_EDITOR
-            threadImp = new ThreadManager_Android();
+            threadImp = new ChatThreadManager_Android();
 #elif UNITY_IOS && !UNITY_EDITOR
-            threadImp = new ThreadManager_iOS();
+            threadImp = new ChatThreadManager_iOS();
 #elif UNITY_STANDALONE || UNITY_EDITOR
-            threadImp = new ThreadManager_Common(instance);
+            threadImp = new ChatThreadManager_Common(instance);
 #else
-            threadImp = new ThreadManager_Common(instance);
+            threadImp = new ChatThreadManager_Common(instance);
 #endif
+
             return threadImp;
         }
 

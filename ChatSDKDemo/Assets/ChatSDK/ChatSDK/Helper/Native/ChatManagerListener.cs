@@ -139,5 +139,12 @@ namespace ChatSDK {
                 });
             }
         }
+
+        internal void MessageReactionDidChange(List<MessageReactionChange> list) {
+
+            if (delegater != null) {
+
+            }
+        }
     }
 }

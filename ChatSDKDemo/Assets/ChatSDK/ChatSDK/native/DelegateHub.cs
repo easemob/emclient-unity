@@ -929,29 +929,6 @@ namespace ChatSDK
         }
     }
 
-    internal sealed class ReactionManagerHub
-    {
-        internal MessageReactionDidChange messageReactionDidChange;
-
-        internal ReactionManagerHub()
-        {
-            messageReactionDidChange = (string json) =>
-            {
-                Debug.Log("messageReactionDidChange received.");
-
-                List<MessageReactionChange> list = MessageReactionChange.ListFromJson(TransformTool.GetUnicodeStringFromUTF8(json));
-
-                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                    foreach (IReactionManagerDelegate listener in CallbackManager.Instance().reactionManagerListener.delegater)
-                    {
-                        listener.MessageReactionDidChange(list);
-                    }
-                });
-            };
-
-        }
-    }
-
     internal sealed class ThreadManagerHub
     {
         internal OnCreatThread OnCreatThread_;
@@ -967,12 +944,12 @@ namespace ChatSDK
             {
                 Debug.Log("OnCreatThread received.");
 
-                ThreadEvent thread = ThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
+                ChatThreadEvent thread = ChatThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                    foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
+                    foreach (IChatThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
                     {
-                        listener.OnCreatThread(thread);
+                        listener.OnChatThreadCreate(thread);
                     }
                 });
             };
@@ -981,12 +958,12 @@ namespace ChatSDK
             {
                 Debug.Log("OnUpdateMyThread received.");
 
-                ThreadEvent thread = ThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
+                ChatThreadEvent thread = ChatThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                    foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
+                    foreach (IChatThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
                     {
-                        listener.OnUpdateMyThread(thread);
+                        listener.OnChatThreadUpdate(thread);
                     }
                 });
             };
@@ -995,41 +972,79 @@ namespace ChatSDK
             {
                 Debug.Log("OnThreadNotifyChange received.");
 
-                ThreadEvent thread = ThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
+                ChatThreadEvent thread = ChatThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                    foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
+                    foreach (IChatThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
                     {
-                        listener.OnThreadNotifyChange(thread);
+
+                    /*
+                     virtual void onThreadNotifyChange(const easemob::EMThreadEventPtr event) {
+                        EMChatThreadEvent *threadEvent = [EMChatThreadEvent threadEventWithCoreImpl:event];
+                        if (!threadEvent.chatThread.threadId || !threadEvent.chatThread.threadName) {
+                            return;
+                        }
+                        if (event->threadOperation() == "create") {
+                            [mListenerDelegates onChatThreadCreate:threadEvent];
+                        } else if (event->threadOperation() == "delete") {
+                            [mListenerDelegates onChatThreadDestroy:threadEvent];
+                        } else if (event->threadOperation() == "update" || event->threadOperation() == "update_msg") {
+                        [mListenerDelegates onChatThreadUpdate:threadEvent];
+                        }
+                    }
+                    */
+
                     }
                 });
-            };
+             };
 
             OnLeaveThread_ = (string json, int i) =>
             {
+
+                /*
+                virtual void onLeaveThread(const easemob::EMThreadEventPtr event,easemob::EMThreadLeaveReason reason)
+                {
+                        EMChatThreadEvent* threadEvent = [EMChatThreadEvent threadEventWithCoreImpl:event];
+                if (!threadEvent.chatThread.threadId) {
+                    return;
+                }
+                switch (reason) {
+                    case easemob::EMThreadLeaveReason::BE_KICKED:
+                        [mListenerDelegates onUserKickOutOfChatThread:threadEvent];
+                        break;
+                    default:
+                        break;
+                }
+                }
+                */
+
+
+                /*
                 Debug.Log("OnLeaveThread received.");
 
-                ThreadEvent thread = ThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
-                ThreadLeaveReason reason = ThreadEvent.ThreadLeaveReasonFromInt(i);
+                ChatThreadEvent thread = ChatThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
+                ThreadLeaveReason reason = ChatThreadEvent.ThreadLeaveReasonFromInt(i);
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
                     {
                         listener.OnLeaveThread(thread, reason);
                     }
+                
                 });
+                */
             };
 
             OnMemberJoinedThread_ = (string json) =>
             {
                 Debug.Log("OnMemberJoinedThread received.");
 
-                ThreadEvent thread = ThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
+                ChatThreadEvent thread = ChatThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                    foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
+                foreach (IChatThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
                     {
-                        listener.OnMemberJoinedThread(thread);
+                        //listener.OnMemberJoinedThread(thread);
                     }
                 });
             };
@@ -1038,12 +1053,12 @@ namespace ChatSDK
             {
                 Debug.Log("OnMemberLeaveThread received.");
 
-                ThreadEvent thread = ThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
+                ChatThreadEvent thread = ChatThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                    foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
+                    foreach (IChatThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
                     {
-                        listener.OnMemberLeaveThread(thread);
+                        //listener.OnMemberLeaveThread(thread);
                     }
                 });
             };

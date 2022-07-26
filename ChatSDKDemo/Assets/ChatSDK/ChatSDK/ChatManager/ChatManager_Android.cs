@@ -145,7 +145,7 @@ namespace ChatSDK
             wrapper.Call("deleteConversationFromServer", conversationId, TransformTool.ConversationTypeToInt(conversationType), isDeleteServerMessages, callback?.callbackId);
         }
 
-        public override void FetchSupportLanguages(ValueCallBack<List<SupportLanguages>> handle = null)
+        public override void FetchSupportLanguages(ValueCallBack<List<SupportLanguage>> handle = null)
         {
             //TODO
         }

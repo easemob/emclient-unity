@@ -74,7 +74,18 @@ namespace ChatSDK
         public bool IsNeedGroupAck = false;
         public bool IsRead = false;
         public bool MessageOnlineState = false;
-
+        public int GroupAckCount {
+            get {
+                if (IsNeedGroupAck)
+                {
+                    return SDKClient.Instance.MessageManager.GetGroupAckCount(MsgId);
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        }
         /// <summary>
         /// 消息体
         /// </summary>
@@ -85,24 +96,20 @@ namespace ChatSDK
         /// </summary>
         public Dictionary<string, AttributeValue> Attributes;
 
-        public List<MessageReaction> ReactionList;
-        public Dictionary<string, MessageReaction> ReactionMap;
-
-        public bool IsThread = false;
-        public string MucParentId;
-        public string MsgParentId;
-        public ThreadEvent ThreadOverview;
-
-        internal void SetReactionMap()
-        {
-            if (null == ReactionList || ReactionList.Count == 0) return;
-
-            ReactionMap.Clear();
-            foreach (var it in ReactionList)
-            {
-                ReactionMap[it.Rection] = it;  //TODO: is it work?
+        public List<MessageReaction> ReactionList {
+            get {
+                return SDKClient.Instance.MessageManager.GetReactionList(MsgId);
             }
         }
+        
+        public bool IsThread = false;
+   
+        public ChatThread ChatThread {
+            get {
+                return SDKClient.Instance.MessageManager.GetChatThread(MsgId);
+            }
+        }
+
 
         public Message(IMessageBody body = null)
         {
@@ -316,22 +323,14 @@ namespace ChatSDK
                     IsRead = jo["isRead"].AsBool;
                     MessageOnlineState = jo["messageOnlineState"].AsBool;
 
-                    ReactionList = MessageReaction.ListFromJson(jo["reactionList"].ToString());
-                    SetReactionMap();
 
                     IsThread = jo["isThread"].AsBool;
-                    MucParentId = jo["mucParentId"].Value;
-                    MsgParentId = jo["msgParentId"].Value;
-                    if (null != jo["threadOverview"] && jo["threadOverview"].IsString)
-                        ThreadOverview = ThreadEvent.FromJson(jo["threadOverview"].ToString());                    
-                    else
-                        ThreadOverview = null;
 
                 }
             }
         }
 
-        //public JSONObject ToJson()
+  
         internal JSONObject ToJson()
         {
             JSONObject jo = new JSONObject();
@@ -362,10 +361,7 @@ namespace ChatSDK
             jo.Add("reactionList", MessageReaction.ListToJson(ReactionList));
 
             jo.Add("isThread", IsThread);
-            jo.Add("mucParentId", MucParentId);
-            jo.Add("msgParentId", MsgParentId);
-            if(null != ThreadOverview)
-                jo.Add("threadOverview", ThreadOverview.ToJson());
+            
             return jo;
         }
 
