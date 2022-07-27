@@ -81,6 +81,8 @@ namespace ChatSDK
          */
         internal IConversationManager ConversationManager { get => _Sdk.ConversationManager(); }
 
+        internal IMessageManager MessageManager { get => _Sdk.MessageManager();  }
+
         /**
          * \~chinese
          * 用户信息管理器实例。
@@ -105,9 +107,8 @@ namespace ChatSDK
          *
          * \~english
          * The thread manager instance.
-         */
-        public IThreadManager ThreadManager { get => _Sdk.ThreadManager(); }
-		
+         */	
+		public IChatThreadManager ThreadManager { get => _Sdk.ThreadManager(); }
         /**
          * \~chinese
          * SDK选项。

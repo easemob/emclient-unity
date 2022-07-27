@@ -50,9 +50,10 @@ namespace ChatSDK
         private IRoomManager roomImp = null;
         private IPushManager pushImp = null;
         private IConversationManager conversationImp = null;
+        private IMessageManager messageManagerImp = null;
         private IUserInfoManager userInfoImp = null;
         private IPresenceManager presenceImp = null;
-        private IThreadManager threadImp = null;
+        private IChatThreadManager threadImp = null;
 
         /**
         * \~chinese
@@ -215,6 +216,7 @@ namespace ChatSDK
             return conversationImp;
         }
 
+
         /**
         * \~chinese
         * 获取用户信息管理器实例。
@@ -240,6 +242,33 @@ namespace ChatSDK
 #endif
             return userInfoImp;
         }
+		
+        /**
+        * \~chinese
+        * 获取消息管理器实例。
+        * 
+        * @return   消息管理器实例对象。
+        *
+        * \~english
+        * Gets message manager instance.
+        *
+        * @return   The message manager instance object.
+        */		
+        internal IMessageManager MessageManager() {
+            if (messageManagerImp != null) { return messageManagerImp; }
+            
+#if UNITY_ANDROID && !UNITY_EDITOR
+            messageManagerImp = new MessageManager_Android();
+#elif UNITY_IOS && !UNITY_EDITOR
+            messageManagerImp = new MessageManager_iOS();
+#elif UNITY_STANDALONE || UNITY_EDITOR
+            messageManagerImp = new MessageManager_Common();
+#else
+            messageManagerImp = new MessageManager_Common();
+#endif
+            
+            return messageManagerImp;
+        }		
 
         /**
         * \~chinese
@@ -278,18 +307,21 @@ namespace ChatSDK
         *
         * @return   The thread information manager instance object.
         */
-        internal IThreadManager ThreadManager()
+
+        internal IChatThreadManager ThreadManager()
         {
             if (threadImp != null) { return threadImp; }
+
 #if UNITY_ANDROID && !UNITY_EDITOR
-            threadImp = new ThreadManager_Android();
+            threadImp = new ChatThreadManager_Android();
 #elif UNITY_IOS && !UNITY_EDITOR
-            threadImp = new ThreadManager_iOS();
+            threadImp = new ChatThreadManager_iOS();
 #elif UNITY_STANDALONE || UNITY_EDITOR
-            threadImp = new ThreadManager_Common(instance);
+            threadImp = new ChatThreadManager_Common(instance);
 #else
-            threadImp = new ThreadManager_Common(instance);
+            threadImp = new ChatThreadManager_Common(instance);
 #endif
+
             return threadImp;
         }
         /**

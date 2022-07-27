@@ -183,6 +183,7 @@ namespace ChatSDK
             return result;
         }
 
+
         static internal PageResult<Room> JsonStringToRoomPageResult(string jsonString)
         {
             PageResult<Room> result = null;
@@ -598,6 +599,105 @@ namespace ChatSDK
             }
 
             return list;
+        }
+
+        static internal List<SupportLanguage> JsonStringToSupportLanguageList(string jsonString)
+        {
+            if (jsonString == null || jsonString.Length == 0) return null;
+            List<SupportLanguage> list = new List<SupportLanguage>();
+            JSONNode jsonArray = JSON.Parse(jsonString);
+            if (jsonArray != null && jsonArray.IsArray)
+            {
+                foreach (JSONNode v in jsonArray.AsArray)
+                {
+                    if (v.IsString)
+                    {
+                        SupportLanguage language = new SupportLanguage(v.Value);
+                        list.Add(language);
+                    }
+                }
+            }
+
+            return list;
+        }
+
+        static internal CursorResult<GroupReadAck> JsonStringToGroupReadAckResult(string jsonString) {
+            CursorResult<GroupReadAck> result = null;
+            if (jsonString != null)
+            {
+                result = new CursorResult<GroupReadAck>();
+
+                JSONNode jsonObject = JSON.Parse(jsonString);
+
+                result.Cursor = jsonObject["cursor"].Value;
+
+                List<GroupReadAck> list = new List<GroupReadAck>();
+
+                if (jsonObject["list"].IsString)
+                {
+
+                    JSONArray jsonArray = JSON.Parse(jsonObject["list"].Value).AsArray;
+
+                    foreach (JSONNode obj in jsonArray)
+                    {
+                        if (obj.IsString)
+                        {
+                            list.Add(new GroupReadAck(obj.Value));
+                        }
+                    }
+                }
+
+                result.Data = list;
+            }
+            return result;
+        }
+
+        static internal CursorResult<MessageReaction> JsonStringToMessageReactionResult(string jsonString) {
+            CursorResult<MessageReaction> result = null;
+            if (jsonString != null)
+            {
+                result = new CursorResult<MessageReaction>();
+
+                JSONNode jsonObject = JSON.Parse(jsonString);
+
+                result.Cursor = jsonObject["cursor"].Value;
+
+                List<MessageReaction> list = new List<MessageReaction>();
+
+                if (jsonObject["list"].IsString)
+                {
+
+                    JSONArray jsonArray = JSON.Parse(jsonObject["list"].Value).AsArray;
+
+                    foreach (JSONNode obj in jsonArray)
+                    {
+                        if (obj.IsString)
+                        {
+                            list.Add(MessageReaction.FromJson(obj.Value));
+                        }
+                    }
+                }
+
+                result.Data = list;
+            }
+            return result;
+        }
+
+        static internal Dictionary<string, List<MessageReaction>> JsonStringToReactionMap(string jsonString) {
+
+            Dictionary<string, List<MessageReaction>> ret = new Dictionary<string, List<MessageReaction>>();
+
+            JSONNode jn = JSON.Parse(jsonString);
+            if (null == jn) return ret;
+
+            JSONObject jo = jn.AsObject;
+
+            foreach (string s in jo.Keys)
+            {
+                ret.Add(s, MessageReaction.ListFromJsonObject(jo[s]));
+            }
+
+            return ret;
         }
     }
 }

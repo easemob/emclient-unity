@@ -15,7 +15,7 @@ namespace ChatSDK
 			}
 		}
 
-		public override void PublishPresence(int presenceStatus, string ext = "", CallBack handle = null)
+		public override void PublishPresence(string description, CallBack handle = null)
 		{
 			//TODO: Add code for PresenceManager_iOS
 		}

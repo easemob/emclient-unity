@@ -13,7 +13,7 @@ namespace ChatSDK
     * Support languages of translation function.
     * 
     */
-    public class SupportLanguages
+    public class SupportLanguage
     {
         /**
         *  \~chinese
@@ -44,12 +44,23 @@ namespace ChatSDK
         public string LanguageNativeName { get; internal set; }
 
 
-        internal SupportLanguages()
+        internal SupportLanguage()
         {
 
         }
 
+        internal SupportLanguage(string jsonString) {
+            if (jsonString != null)
+            {
+                JSONNode jn = JSON.Parse(jsonString);
+                if (!jn.IsNull)
+                {
+                    LanguageCode = jn["code"].Value;
+                    LanguageName = jn["name"].Value;
+                    LanguageNativeName = jn["nativeName"].Value;
+                }
+            }
+        }
     }
-
 }
 

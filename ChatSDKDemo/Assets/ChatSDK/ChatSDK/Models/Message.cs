@@ -211,6 +211,29 @@ namespace ChatSDK
          * - `false`: No.
          */
         public bool MessageOnlineState = false;
+		
+        /**
+         * \~chinese
+         * 获取群组消息回执数。
+         * @return  群组消息回执数。
+         *
+         * \~english
+         * Get group ack count.
+         * @return group ack count.
+         */		
+        public int GroupAckCount {
+            get {
+                if (IsNeedGroupAck)
+                {
+                    return SDKClient.Instance.MessageManager.GetGroupAckCount(MsgId);
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        }		
+
 
         /**
          * \~chinese
@@ -231,28 +254,21 @@ namespace ChatSDK
          * 
          */
         public Dictionary<string, AttributeValue> Attributes;
-
         /**
          * \~chinese
-         * 获取 Reaction 列表。
+         * 获取Reaction列表。
          * @return  Reaction 列表。
-         *
+		 *
          * \~english
-         * Gets the list of Reactions.
+         * Get the list of Reaction.
+		 *
          * @return The list of Reactions.
          */
-        public List<MessageReaction> ReactionList;
-
-        /**
-         * \~chinese
-         * 获取 Reaction 字典。
-         * @return  Reaction 字典。
-         *
-         * \~english
-         * Gets the dictionary of Reactions.
-         * @return The dictionary of Reactions.
-         */
-        public Dictionary<string, MessageReaction> ReactionMap;
+        public List<MessageReaction> ReactionList {
+            get {
+                return SDKClient.Instance.MessageManager.GetReactionList(MsgId);
+            }
+        }
 
         /**
          * \~chinese
@@ -262,41 +278,26 @@ namespace ChatSDK
          * Sets and get whether the message is in a thread.
          */
         public bool IsThread = false;
-
-        /**
+		
+		/**
          * \~chinese
-         * 获取子区所在的群组 ID。
-         *
-         * @return  群组 ID。
+         * 获取子区内容。
          *
          * \~english
-         * Gets the group ID to which the message thread belongs.
-         *
-         * @return The group ID.
-         */
-        public string MucParentId;
-
-        /**
-         * \~chinese
-         * 获取父消息 ID。
-         *
-         * \~english
-         * Get the ID of the parent message.
+         * Get thread on current message.
          *
          */
-        public string MsgParentId;
-        public ThreadEvent ThreadOverview;
-
-        internal void SetReactionMap()
-        {
-            if (null == ReactionList || ReactionList.Count == 0) return;
-
-            ReactionMap.Clear();
-            foreach (var it in ReactionList)
-            {
-                ReactionMap[it.Rection] = it;  //TODO: is it work?
+        public ChatThread ChatThread {
+            get {
+                return SDKClient.Instance.MessageManager.GetChatThread(MsgId);
             }
         }
+		
+
+
+
+
+
 
         public Message(IMessageBody body = null)
         {
@@ -734,20 +735,14 @@ namespace ChatSDK
                     IsRead = jo["isRead"].AsBool;
                     MessageOnlineState = jo["messageOnlineState"].AsBool;
 
-                    ReactionList = MessageReaction.ListFromJson(jo["reactionList"].ToString());
-                    SetReactionMap();
 
                     IsThread = jo["isThread"].AsBool;
-                    MucParentId = jo["mucParentId"].Value;
-                    MsgParentId = jo["msgParentId"].Value;
-                    if (null != jo["threadOverview"] && jo["threadOverview"].IsString)
-                        ThreadOverview = ThreadEvent.FromJson(jo["threadOverview"].ToString());
-                    else
-                        ThreadOverview = null;
+
 
                 }
             }
         }
+
 
         internal JSONObject ToJson()
         {
@@ -776,13 +771,8 @@ namespace ChatSDK
             jo.Add("isRead", IsRead);
             jo.Add("messageOnlineState", MessageOnlineState);
 
-            jo.Add("reactionList", MessageReaction.ListToJson(ReactionList));
-
             jo.Add("isThread", IsThread);
-            jo.Add("mucParentId", MucParentId);
-            jo.Add("msgParentId", MsgParentId);
-            if(null != ThreadOverview)
-                jo.Add("threadOverview", ThreadOverview.ToJson());
+            
             return jo;
         }
 

@@ -974,31 +974,47 @@
         None,
     }
 
-    public enum ThreadLeaveReason
+    public enum ChatThreadOperation
     {
 	    /**
         * \～chinese
-        * 主动离开子区。
+        * 未知操作，缺省值。
         *
         \~english
-        * Leave thread by self.
-        */
-        LEAVE = 0,
+        * Unkonw operation, default value.
+        */	
+		UnKnown = 0,
 	    /**
         * \～chinese
-        * 被踢出子区。
+        * 创建子区。
         *
         \~english
-        * Kicked from thread.
+        * Create thread.
         */
-        BE_KICKED,
+        Create,
 	    /**
         * \～chinese
-        * 子区被销毁。
+        * 更新子区。
         *
         \~english
-        * The thread is destoryed.
+        * Update thread.
         */
-        DESTROYED,
+        Update,
+	    /**
+        * \～chinese
+        * 删除子区。
+        *
+        \~english
+        * Delete thread.
+        */
+        Delete,
+	    /**
+        * \～chinese
+        * 子区消息更新。
+        *
+        \~english
+        * Thread message updated.
+        */		
+		Update_Msg,
     }
 }

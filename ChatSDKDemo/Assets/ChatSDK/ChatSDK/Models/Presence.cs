@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using SimpleJSON;
 
 namespace ChatSDK
 {
@@ -22,6 +22,7 @@ namespace ChatSDK
          */
         public string DeviceId;
 
+
         /**
          * \~chinese
          * 在线设备状态
@@ -29,11 +30,18 @@ namespace ChatSDK
          * \~english
          * The presence device status
          */
-        public string Status;
+        public int Status;
 
         internal PresenceDeviceStatus()
         {
-            // Default constructor, No need to add any code
+           
+        }
+
+        internal PresenceDeviceStatus(JSONObject json) {
+            foreach (string key in json.Keys) {
+                DeviceId = key;
+                Status = json[key].AsInt;
+            }
         }
     }
 
@@ -74,19 +82,20 @@ namespace ChatSDK
 
         public List<PresenceDeviceStatus> StatusList { get; internal set; }
 
+
         /**
          * \~chinese
-         * 获取在线状态扩展信息。
+         * 获取状态描述信息。
          *
-         * @return 在线状态扩展信息。
+         * @return 状态描述信息。
          *
          * \~english
-         * Gets the presence extension information.
+         * Gets the presence status description information.
          *
-         * @return The presence extension information.
+         * @return The presence status description information.
          */
 
-        public string Ext { get; internal set; }
+        public string statusDescription { get; internal set; }
 
         /**
          *  \~chinese
@@ -99,7 +108,6 @@ namespace ChatSDK
          *
          *  @return The Unix timestamp when the presence state is updated. The unit is second.
          */
-
         public long LatestTime { get; internal set; }
 
         /**
@@ -121,9 +129,19 @@ namespace ChatSDK
             // Default constructor, No need to add any code
         }
 
-        internal Presence(string jsonString)
+        internal Presence(JSONObject json)
         {
-            //TODO: Add code for using jsonString to create Presence object
+            Publisher = json["publisher"].Value;
+            statusDescription = json["statusDescription"].Value;
+            LatestTime = json["lastTime"].AsInt;
+            ExpiryTime = json["expiryTime"].AsInt;
+            StatusList = new List<PresenceDeviceStatus>();
+            if (json["statusDetails"].IsArray) {
+                JSONArray ary = json["statusDetails"].AsArray;
+                foreach (JSONObject jo in ary) {
+                    StatusList.Add(new PresenceDeviceStatus(jo));
+                }
+            }
         }
 
     }

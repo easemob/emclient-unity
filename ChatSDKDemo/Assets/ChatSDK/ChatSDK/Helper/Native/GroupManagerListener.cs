@@ -353,17 +353,53 @@ namespace ChatSDK {
 
         internal void OnAddWhiteListMembersFromGroup(string jsonString)
         {
-            // TODO
+            if (delegater != null)
+            {
+                JSONNode jo = JSON.Parse(jsonString);
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnAddWhiteListMembersFromGroup(
+                            jo["groupId"].Value,
+                            TransformTool.JsonStringToStringList(jo["list"].Value)
+                        );
+                    }
+                });
+            }
         }
 
         internal void OnRemoveWhiteListMembersFromGroup(string jsonString)
         {
-            // TODO
+            if (delegater != null)
+            {
+                JSONNode jo = JSON.Parse(jsonString);
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnRemoveWhiteListMembersFromGroup(
+                            jo["groupId"].Value,
+                            TransformTool.JsonStringToStringList(jo["list"].Value)
+                        );
+                    }
+                });
+            }
         }
 
         internal void OnAllMemberMuteChangedFromGroup(string jsonString)
         {
-            // TODO
+            if (delegater != null)
+            {
+                JSONNode jo = JSON.Parse(jsonString);
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnAllMemberMuteChangedFromGroup(
+                            jo["groupId"].Value,
+                            jo["muted"].AsBool
+                        );
+                    }
+                });
+            }
         }
     }
 

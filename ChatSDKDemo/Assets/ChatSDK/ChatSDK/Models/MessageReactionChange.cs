@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using SimpleJSON;
 
 #if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE || UNITY_EDITOR
@@ -18,31 +17,22 @@ namespace ChatSDK
      */
     public class MessageReactionChange
     {
-        /**
-         * \~chinese
-         * Reaction父消息发送方
-         * 
-         * \~english
-         * Reaction's parent message sender
-         */
-        public string From;
 
         /**
          * \~chinese
-         * Reaction父消息接收方
+         * Reaction 会话id
          * 
          * \~english
-         * Reaction's parent message receiver
+         * Reaction conversationId
          */
-        public string To;
-
+        public string ConversationId;
         /**
          * \~chinese
          * Reaction父消息ID
          * 
          * \~english
          * Reaction parent message ID
-         */
+         */		
         public string MessageId;
 
         /**
@@ -60,8 +50,7 @@ namespace ChatSDK
             {
                 MessageReactionChange reactionChange = new MessageReactionChange();
                 JSONObject jo = jn.AsObject;
-                reactionChange.From = jo["from"].Value;
-                reactionChange.To = jo["to"].Value;
+                reactionChange.ConversationId = jo["conversationId"].Value;
                 reactionChange.MessageId = jo["messageId"].Value;
                 reactionChange.ReactionList = MessageReaction.ListFromJsonObject(jo["reactionList"]);
                 return reactionChange;

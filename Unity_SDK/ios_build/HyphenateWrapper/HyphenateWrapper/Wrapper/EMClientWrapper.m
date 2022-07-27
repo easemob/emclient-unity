@@ -7,7 +7,7 @@
 
 #import "EMClientWrapper.h"
 #import <HyphenateChat/HyphenateChat.h>
-#import "EMOptions+Unity.h"
+#import "EMOptions+Helper.h"
 #import "EMClientListener.h"
 
 @interface EMClientWrapper ()

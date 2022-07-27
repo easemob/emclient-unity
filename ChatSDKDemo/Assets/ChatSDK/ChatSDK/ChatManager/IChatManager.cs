@@ -228,6 +228,7 @@ namespace ChatSDK
 	     */
         public abstract List<Conversation> LoadAllConversations();
 
+<<<<<<< HEAD
 		/**
 	     * \~chinese
 	     *  将本地数据库中的指定消息加载到内存。
@@ -501,7 +502,7 @@ namespace ChatSDK
          * Fetches all languages what the translate service supports.
          * @param callBack The result callback，see {@link #ValueCallBack()}.
          */
-        public abstract void FetchSupportLanguages(ValueCallBack<List<SupportLanguages>> handle = null);
+        public abstract void FetchSupportLanguages(ValueCallBack<List<SupportLanguage>> handle = null);
 
         /**
          * \~chinese
@@ -709,6 +710,7 @@ namespace ChatSDK
             }
         }
 
+<<<<<<< HEAD
 		/**
 		 * \~chinese
 		 * 注册Reaction监听器。
@@ -759,9 +761,11 @@ namespace ChatSDK
 		 *
 		 */
 		internal void ClearDelegates()
+=======
+        internal void ClearDelegates()
+>>>>>>> upstream/dev
         {
             CallbackManager.Instance().chatManagerListener.delegater.Clear();
-            CallbackManager.Instance().reactionManagerListener.delegater.Clear();
         }
 
     }

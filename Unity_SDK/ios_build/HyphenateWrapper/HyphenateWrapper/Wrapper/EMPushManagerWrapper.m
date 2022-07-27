@@ -7,7 +7,7 @@
 
 #import "EMPushManagerWrapper.h"
 #import <HyphenateChat/HyphenateChat.h>
-#import "EMPushOptions+Unity.h"
+#import "EMPushOptions+Helper.h"
 #import "Transfrom.h"
 
 @implementation EMPushManagerWrapper

@@ -12,9 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface EMUserInfoManagerWrapper : EMWrapper
 
 - (void)updateOwnUserInfo:(NSDictionary *)param callbackId:(NSString *)callbackId;
-
 - (void)updateOwnUserInfoWithType:(NSDictionary *)param callbackId:(NSString *)callbackId;
-
 - (void)fetchUserInfoById:(NSDictionary *)param callbackId:(NSString *)callbackId;
 
 @end

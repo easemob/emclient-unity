@@ -929,150 +929,98 @@ namespace ChatSDK
         }
     }
 
-    internal sealed class ReactionManagerHub
-    {
-        internal MessageReactionDidChange messageReactionDidChange;
-
-        internal ReactionManagerHub()
-        {
-            messageReactionDidChange = (string json) =>
-            {
-                Debug.Log("messageReactionDidChange received.");
-
-#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
-                List<MessageReactionChange> list = MessageReactionChange.ListFromJson(json);
-#else
-                List<MessageReactionChange> list = MessageReactionChange.ListFromJson(TransformTool.GetUnicodeStringFromUTF8(json));
-#endif
-
-                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                    foreach (IReactionManagerDelegate listener in CallbackManager.Instance().reactionManagerListener.delegater)
-                    {
-                        listener.MessageReactionDidChange(list);
-                    }
-                });
-            };
-
-        }
-    }
 
     internal sealed class ThreadManagerHub
     {
-        internal OnCreateThread OnCreateThread_;
-        internal OnUpdateMyThread OnUpdateMyThread_;
-        internal OnThreadNotifyChange OnThreadNotifyChange_;
-        internal OnLeaveThread OnLeaveThread_;
-        internal OnMemberJoinedThread OnMemberJoinedThread_;
-        internal OnMemberLeaveThread OnMemberLeaveThread_;
+        // TODO: 需要改为这4个callback
+        /*
+        internal OnChatThreadCreate OnCreatThread_;
+        internal OnChatThreadUpdate OnUpdateMyThread_;
+        internal OnChatThreadDestroy OnThreadNotifyChange_;
+        internal OnUserKickOutOfChatThread OnLeaveThread_;
+        */
+
+        internal OnChatThreadCreate OnChatThreadCreate_;
+        internal OnChatThreadUpdate OnChatThreadUpdate_;
+        internal OnChatThreadDestroy OnChatThreadDestroy_;
+        internal OnUserKickOutOfChatThread OnUserKickOutOfChatThread_;
+
 
         internal ThreadManagerHub()
         {
-            OnCreateThread_ = (string json) =>
+            OnChatThreadCreate_ = (string json) =>
             {
-                Debug.Log("OnCreateThread received.");
+                Debug.Log("OnChatThreadCreate received.");
+
 
 #if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
-                ThreadEvent thread = ThreadEvent.FromJson(json);
+                ChatThreadEvent thread = ChatThreadEvent.FromJson(json);
 #else
-                ThreadEvent thread = ThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
+                ChatThreadEvent thread = ChatThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
 #endif
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                    foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
+                    foreach (IChatThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
                     {
-                        listener.OnCreateThread(thread);
+                        listener.OnChatThreadCreate(thread);
                     }
                 });
             };
 
             OnUpdateMyThread_ = (string json) =>
             {
-                Debug.Log("OnUpdateMyThread received.");
-                return;
+                Debug.Log("OnChatThreadUpdate received.");
 #if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
-                ThreadEvent thread = ThreadEvent.FromJson(json);
+                ChatThreadEvent thread = ChatThreadEvent.FromJson(json);
 #else
-                ThreadEvent thread = ThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
+                ChatThreadEvent thread = ChatThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
 #endif
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                    foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
+                    foreach (IChatThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
                     {
-                        //listener.OnUpdateMyThread(thread);
+
+                        listener.OnChatThreadUpdate(thread);
                     }
                 });
             };
 
-            OnThreadNotifyChange_ = (string json) =>
+            OnChatThreadDestroy_ = (string json) =>
             {
-                Debug.Log("OnThreadNotifyChange received.");
+                Debug.Log("OnChatThreadDestroy received.");
 
 #if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
-                ThreadEvent thread = ThreadEvent.FromJson(json);
+                ChatThreadEvent thread = ChatThreadEvent.FromJson(json);
 #else
-                ThreadEvent thread = ThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
+                ChatThreadEvent thread = ChatThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
 #endif
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                    foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
+                    foreach (IChatThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
                     {
-                        listener.OnThreadNotifyChange(thread);
+						listener.OnChatThreadDestroy(thread);
                     }
                 });
-            };
+             };
 
-            OnLeaveThread_ = (string json, int i) =>
+            OnUserKickOutOfChatThread_ = (string json, int i) =>
             {
-                Debug.Log("OnLeaveThread received.");
+
+                Debug.Log("OnUserKickOutOfChatThread received.");
+
 
 #if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
-                ThreadEvent thread = ThreadEvent.FromJson(json);
+                ChatThreadEvent thread = ChatThreadEvent.FromJson(json);
 #else
-                ThreadEvent thread = ThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
-#endif
-                ThreadLeaveReason reason = ThreadEvent.ThreadLeaveReasonFromInt(i);
-
-                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                    foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
-                    {
-                        listener.OnLeaveThread(thread, reason);
-                    }
-                });
-            };
-
-            OnMemberJoinedThread_ = (string json) =>
-            {
-                Debug.Log("OnMemberJoinedThread received.");
-
-#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
-                ThreadEvent thread = ThreadEvent.FromJson(json);
-#else
-                ThreadEvent thread = ThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
+                ChatThreadEvent thread = ChatThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
 #endif
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
                     {
-                        listener.OnMemberJoinedThread(thread);
+                        listener.OnUserKickOutOfChatThread(thread);
                     }
-                });
-            };
-
-            OnMemberLeaveThread_ = (string json) =>
-            {
-                Debug.Log("OnMemberLeaveThread received.");
-
-#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
-                ThreadEvent thread = ThreadEvent.FromJson(json);
-#else
-                ThreadEvent thread = ThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
-#endif
-
-                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                    foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
-                    {
-                        listener.OnMemberLeaveThread(thread);
-                    }
+                
                 });
             };
 

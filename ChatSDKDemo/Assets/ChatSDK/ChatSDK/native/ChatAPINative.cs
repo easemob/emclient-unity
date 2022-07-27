@@ -68,7 +68,7 @@ namespace ChatSDK{
 		internal static extern void ChatManager_AddListener(IntPtr client, OnMessagesReceived onMessagesReceived,
 				OnCmdMessagesReceived onCmdMessagesReceived, OnMessagesRead onMessagesRead, OnMessagesDelivered onMessagesDelivered,
 				OnMessagesRecalled onMessagesRecalled, OnReadAckForGroupMessageUpdated onReadAckForGroupMessageUpdated, OnGroupMessageRead onGroupMessageRead,
-				OnConversationsUpdate onConversationsUpdate, OnConversationRead onConversationRead, MessageReactionDidChange messageReactionDidChange);
+				OnConversationsUpdate onConversationsUpdate, OnConversationRead onConversationRead);
 
 		[DllImport(MyLibName)]
 		internal static extern void ChatManager_FetchHistoryMessages(IntPtr client, int callbackId, string conversationId, 

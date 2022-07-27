@@ -25,7 +25,6 @@ namespace ChatSDK {
         static string RoomManagerListener_Obj = "unity_chat_emclient_roommanager_delegate_obj";
         static string MultiDeviceListener_Obj = "unity_chat_emclient_multidevice_delegate_obj";
         static string PresenceManagerListener_Obj = "unity_chat_emclient_presencemanager_delegate_obj";
-        static string ReactionManagerListener_Obj = "unity_chat_emclient_reactionmanager_delegate_obj";
         static string ThreadManagerListener_Obj = "unity_chat_emclient_threadmanager_delegate_obj";
 
 
@@ -36,8 +35,7 @@ namespace ChatSDK {
         internal RoomManagerListener roomManagerListener;
         internal MultiDeviceListener multiDeviceListener;
         internal PresenceManagerListener presenceManagerListener;
-        internal ReactionManagerListener reactionManagerListener;
-        internal ThreadManagerListener threadManagerListener;
+        internal ChatThreadManagerListener threadManagerListener;
 
         internal int CurrentId { get; private set; }
 
@@ -281,24 +279,12 @@ namespace ChatSDK {
                 Debug.Log($"DontDestroyOnLoad triggered.");
             }
 
-            GameObject reactionManagerObject = new GameObject(ReactionManagerListener_Obj);
-            try
-            {
-                DontDestroyOnLoad(reactionManagerObject);
-                reactionManagerListener = reactionManagerObject.AddComponent<ReactionManagerListener>();
-                reactionManagerListener.delegater = new List<IReactionManagerDelegate>();
-            }
-            catch (Exception)
-            {
-                Debug.Log($"DontDestroyOnLoad triggered.");
-            }
-
             GameObject threadManagerObject = new GameObject(ThreadManagerListener_Obj);
             try
             {
                 DontDestroyOnLoad(threadManagerObject);
-                threadManagerListener = threadManagerObject.AddComponent<ThreadManagerListener>();
-                threadManagerListener.delegater = new List<IThreadManagerDelegate>();
+                threadManagerListener = threadManagerObject.AddComponent<ChatThreadManagerListener>();
+                threadManagerListener.delegater = new List<IChatThreadManagerDelegate>();
             }
             catch (Exception)
             {
@@ -328,9 +314,6 @@ namespace ChatSDK {
 
             presenceManagerListener = new PresenceManagerListener();
             presenceManagerListener.delegater = new List<IPresenceManagerDelegate>();
-
-            reactionManagerListener = new ReactionManagerListener();
-            reactionManagerListener.delegater = new List<IReactionManagerDelegate>();
 
             threadManagerListener = new ThreadManagerListener();
             threadManagerListener.delegater = new List<IThreadManagerDelegate>();
@@ -651,12 +634,6 @@ namespace ChatSDK {
                 else if (value == "OnMessageSuccess")
                 {
                     Message msg = new Message(responseValue.Value);
-
-                    foreach (var info in tempMsgDict)
-                    {
-                        Debug.Log($"key -- {info.Key}");
-                    }
-
                     Message sendMsg = tempMsgDict[msg.LocalTime.ToString()];
                     sendMsg.MsgId = msg.MsgId;
                     sendMsg.Body = msg.Body;
@@ -673,7 +650,8 @@ namespace ChatSDK {
                     tempMsgDict.Remove(msg.LocalTime.ToString());
                     OnError(jsonString);
                 }
-                else if (value == "Map<String, UserInfo>") {
+                else if (value == "Map<String, UserInfo>")
+                {
 
                     ValueCallBack<Dictionary<string, UserInfo>> valueCallBack = (ValueCallBack<Dictionary<string, UserInfo>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
@@ -687,7 +665,95 @@ namespace ChatSDK {
                                 result[key] = new UserInfo(obj[key].Value);
                             }
                         }
-                        
+
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
+                        {
+                            valueCallBack.OnSuccessValue(result);
+                        });
+                    }
+                    dictionary.Remove(callbackId);
+                }
+                else if (value == "List<SupportLanguage>")
+                {
+                    ValueCallBack<List<SupportLanguage>> valueCallBack = (ValueCallBack<List<SupportLanguage>>)dictionary[callbackId];
+                    if (valueCallBack.OnSuccessValue != null)
+                    {
+                        List<SupportLanguage> result = null;
+                        if (responseValue != null)
+                        {
+                            result = TransformTool.JsonStringToSupportLanguageList(responseValue.Value);
+                        }
+
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
+                        {
+                            valueCallBack.OnSuccessValue(result);
+                        });
+                    }
+                    dictionary.Remove(callbackId);
+                }
+                else if (value == "CursorResult<GroupReadAck>")
+                {
+                    CursorResult<GroupReadAck> result = null;
+                    if (responseValue != null)
+                    {
+                        result = TransformTool.JsonStringToGroupReadAckResult(responseValue.Value);
+                    }
+
+                    ValueCallBack<CursorResult<GroupReadAck>> valueCallBack = (ValueCallBack<CursorResult<GroupReadAck>>)dictionary[callbackId];
+                    if (valueCallBack.OnSuccessValue != null)
+                    {
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
+                        {
+                            valueCallBack.OnSuccessValue(result);
+                        });
+                    }
+                    dictionary.Remove(callbackId);
+                }
+                else if (value == "CursorResult<MessageReaction>")
+                {
+                    CursorResult<MessageReaction> result = null;
+                    if (responseValue != null)
+                    {
+                        result = TransformTool.JsonStringToMessageReactionResult(responseValue.Value);
+                    }
+
+                    ValueCallBack<CursorResult<MessageReaction>> valueCallBack = (ValueCallBack<CursorResult<MessageReaction>>)dictionary[callbackId];
+                    if (valueCallBack.OnSuccessValue != null)
+                    {
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
+                        {
+                            valueCallBack.OnSuccessValue(result);
+                        });
+                    }
+                    dictionary.Remove(callbackId);
+                }
+                else if (value == "EMMessage")
+                {
+                    Message result = null;
+                    if (responseValue != null)
+                    {
+                        result = new Message(responseValue.Value);
+                    }
+
+                    ValueCallBack<Message> valueCallBack = (ValueCallBack<Message>)dictionary[callbackId];
+                    if (valueCallBack.OnSuccessValue != null)
+                    {
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
+                        {
+                            valueCallBack.OnSuccessValue(result);
+                        });
+                    }
+                    dictionary.Remove(callbackId);
+                }
+                else if (value == "Dictionary<string, List<MessageReaction>>") {
+                    Dictionary<string, List<MessageReaction>> result = null;
+                    if (responseValue != null)
+                    {
+                        result = TransformTool.JsonStringToReactionMap(responseValue.Value);
+                    }
+                    ValueCallBack<Dictionary<string, List<MessageReaction>>> valueCallBack = (ValueCallBack<Dictionary<string, List<MessageReaction>>>)dictionary[callbackId];
+                    if (valueCallBack.OnSuccessValue != null)
+                    {
                         ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
                         {
                             valueCallBack.OnSuccessValue(result);

@@ -150,5 +150,7 @@ namespace ChatSDK
 	     * @param to   The ID of the user who receives the read receipt.
 	     */
         void OnConversationRead(string from, string to);
+
+        void MessageReactionDidChange(List<MessageReactionChange> list);
     }
 }
