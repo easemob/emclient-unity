@@ -84,12 +84,10 @@ namespace ChatSDK
     internal delegate void MessageReactionDidChange([MarshalAs(UnmanagedType.LPTStr)] string json);
 
     //IThreadManagerDelegate
-    internal delegate void OnCreatThread([MarshalAs(UnmanagedType.LPTStr)] string json);
-    internal delegate void OnUpdateMyThread([MarshalAs(UnmanagedType.LPTStr)] string json);
-    internal delegate void OnThreadNotifyChange([MarshalAs(UnmanagedType.LPTStr)] string json);
-    internal delegate void OnLeaveThread([MarshalAs(UnmanagedType.LPTStr)] string json, int i);
-    internal delegate void OnMemberJoinedThread([MarshalAs(UnmanagedType.LPTStr)] string json);
-    internal delegate void OnMemberLeaveThread([MarshalAs(UnmanagedType.LPTStr)] string json);
+    internal delegate void OnChatThreadCreate([MarshalAs(UnmanagedType.LPTStr)] string json);
+    internal delegate void OnChatThreadUpdate([MarshalAs(UnmanagedType.LPTStr)] string json);
+    internal delegate void OnChatThreadDestroy([MarshalAs(UnmanagedType.LPTStr)] string json);
+    internal delegate void OnUserKickOutOfChatThread([MarshalAs(UnmanagedType.LPTStr)] string json);
 
     internal sealed class ConnectionHub
     {
@@ -929,30 +927,27 @@ namespace ChatSDK
         }
     }
 
+
     internal sealed class ThreadManagerHub
     {
-        // TODO: 需要改为这4个callback
-        /*
-        internal OnChatThreadCreate OnCreatThread_;
-        internal OnChatThreadUpdate OnUpdateMyThread_;
-        internal OnChatThreadDestroy OnThreadNotifyChange_;
-        internal OnUserKickOutOfChatThread OnLeaveThread_;
-        */
+        internal OnChatThreadCreate OnChatThreadCreate_;
+        internal OnChatThreadUpdate OnChatThreadUpdate_;
+        internal OnChatThreadDestroy OnChatThreadDestroy_;
+        internal OnUserKickOutOfChatThread OnUserKickOutOfChatThread_;
 
-        internal OnCreatThread OnCreatThread_;
-        internal OnUpdateMyThread OnUpdateMyThread_;
-        internal OnThreadNotifyChange OnThreadNotifyChange_;
-        internal OnLeaveThread OnLeaveThread_;
-        internal OnMemberJoinedThread OnMemberJoinedThread_;
-        internal OnMemberLeaveThread OnMemberLeaveThread_;
 
         internal ThreadManagerHub()
         {
-            OnCreatThread_ = (string json) =>
+            OnChatThreadCreate_ = (string json) =>
             {
-                Debug.Log("OnCreatThread received.");
+                Debug.Log("OnChatThreadCreate received.");
 
+
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+                ChatThreadEvent thread = ChatThreadEvent.FromJson(json);
+#else
                 ChatThreadEvent thread = ChatThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
+#endif
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IChatThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
@@ -962,112 +957,58 @@ namespace ChatSDK
                 });
             };
 
-            OnUpdateMyThread_ = (string json) =>
+            OnChatThreadUpdate_ = (string json) =>
             {
-                Debug.Log("OnUpdateMyThread received.");
-
+                Debug.Log("OnChatThreadUpdate received.");
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+                ChatThreadEvent thread = ChatThreadEvent.FromJson(json);
+#else
                 ChatThreadEvent thread = ChatThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
+#endif
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IChatThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
                     {
+
                         listener.OnChatThreadUpdate(thread);
                     }
                 });
             };
 
-            OnThreadNotifyChange_ = (string json) =>
+            OnChatThreadDestroy_ = (string json) =>
             {
-                Debug.Log("OnThreadNotifyChange received.");
+                Debug.Log("OnChatThreadDestroy received.");
 
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+                ChatThreadEvent thread = ChatThreadEvent.FromJson(json);
+#else
                 ChatThreadEvent thread = ChatThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
+#endif
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IChatThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
                     {
-
-                    /*
-                     virtual void onThreadNotifyChange(const easemob::EMThreadEventPtr event) {
-                        EMChatThreadEvent *threadEvent = [EMChatThreadEvent threadEventWithCoreImpl:event];
-                        if (!threadEvent.chatThread.threadId || !threadEvent.chatThread.threadName) {
-                            return;
-                        }
-                        if (event->threadOperation() == "create") {
-                            [mListenerDelegates onChatThreadCreate:threadEvent];
-                        } else if (event->threadOperation() == "delete") {
-                            [mListenerDelegates onChatThreadDestroy:threadEvent];
-                        } else if (event->threadOperation() == "update" || event->threadOperation() == "update_msg") {
-                        [mListenerDelegates onChatThreadUpdate:threadEvent];
-                        }
-                    }
-                    */
-
+						listener.OnChatThreadDestroy(thread);
                     }
                 });
              };
 
-            OnLeaveThread_ = (string json, int i) =>
+            OnUserKickOutOfChatThread_ = (string json) =>
             {
+                Debug.Log("OnUserKickOutOfChatThread received.");
 
-                /*
-                virtual void onLeaveThread(const easemob::EMThreadEventPtr event,easemob::EMThreadLeaveReason reason)
-                {
-                        EMChatThreadEvent* threadEvent = [EMChatThreadEvent threadEventWithCoreImpl:event];
-                if (!threadEvent.chatThread.threadId) {
-                    return;
-                }
-                switch (reason) {
-                    case easemob::EMThreadLeaveReason::BE_KICKED:
-                        [mListenerDelegates onUserKickOutOfChatThread:threadEvent];
-                        break;
-                    default:
-                        break;
-                }
-                }
-                */
-
-
-                /*
-                Debug.Log("OnLeaveThread received.");
-
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+                ChatThreadEvent thread = ChatThreadEvent.FromJson(json);
+#else
                 ChatThreadEvent thread = ChatThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
-                ThreadLeaveReason reason = ChatThreadEvent.ThreadLeaveReasonFromInt(i);
-
-                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                    foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
-                    {
-                        listener.OnLeaveThread(thread, reason);
-                    }
-                
-                });
-                */
-            };
-
-            OnMemberJoinedThread_ = (string json) =>
-            {
-                Debug.Log("OnMemberJoinedThread received.");
-
-                ChatThreadEvent thread = ChatThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
-
-                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                foreach (IChatThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
-                    {
-                        //listener.OnMemberJoinedThread(thread);
-                    }
-                });
-            };
-
-            OnMemberLeaveThread_ = (string json) =>
-            {
-                Debug.Log("OnMemberLeaveThread received.");
-
-                ChatThreadEvent thread = ChatThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
+#endif
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IChatThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
                     {
-                        //listener.OnMemberLeaveThread(thread);
+                        listener.OnUserKickOutOfChatThread(thread);
                     }
+                
                 });
             };
 

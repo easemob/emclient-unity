@@ -230,12 +230,12 @@ namespace ChatSDK
         }
         */
 
-        internal override void StartLog(string logFilePath)
+        internal void StartLog(string logFilePath)
         {
             ChatAPINative.Client_StartLog(logFilePath);
         }
 
-        internal override void StopLog()
+        internal void StopLog()
         {
             ChatAPINative.Client_StopLog();
         }

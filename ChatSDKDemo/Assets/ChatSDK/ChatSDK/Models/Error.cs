@@ -2,19 +2,31 @@
 
 namespace ChatSDK {
 
-    /// <summary>
-    /// 错误信息
-    /// </summary>
+    /**
+     * \~chinese
+     * 错误信息类。
+     *
+     * \~english
+     * The error information class.
+     */
     public class Error
     {
-        /// <summary>
-        /// 错误码
-        /// </summary>
+        /**
+         * \~chinese
+         * 错误码。
+         *
+         * \~english
+         * The error code.
+         */
         public int Code { get; internal set; }
 
-        /// <summary>
-        /// 错误描述
-        /// </summary>
+        /**
+         * \~chinese
+         * 错误描述。
+         *
+         * \~english
+         * The error description.
+         */
         public string Desc { get; internal set; }
 
         internal Error(int code, string desc)

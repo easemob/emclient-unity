@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		456508C128854A18009B38BD /* thread_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 456508C028854A18009B38BD /* thread_manager.cpp */; };
 		45668E162816B3DF00224FAD /* presence_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 45668E152816B3DF00224FAD /* presence_manager.cpp */; };
 		D64BF41F26AAE9CD00223225 /* contact_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64BF41E26AAE9CD00223225 /* contact_manager.cpp */; };
 		D64E944A26CB697500257D21 /* tool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D64E944826CB697400257D21 /* tool.cpp */; };
@@ -37,6 +38,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		456508BF28854A18009B38BD /* thread_manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thread_manager.h; sourceTree = "<group>"; };
+		456508C028854A18009B38BD /* thread_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = thread_manager.cpp; sourceTree = "<group>"; };
 		45668E142816B3B900224FAD /* presence_manager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = presence_manager.h; sourceTree = "<group>"; };
 		45668E152816B3DF00224FAD /* presence_manager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = presence_manager.cpp; sourceTree = "<group>"; };
 		905C27CF262EC3A50097F7C2 /* hyphenateCWrapper.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = hyphenateCWrapper.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -120,6 +123,8 @@
 		D742F1BD266843CA00B80C18 /* c_wrapper */ = {
 			isa = PBXGroup;
 			children = (
+				456508C028854A18009B38BD /* thread_manager.cpp */,
+				456508BF28854A18009B38BD /* thread_manager.h */,
 				D6F257DB273A1B8500AE0637 /* userinfo_manager.cpp */,
 				D6F257DC273A1B8500AE0637 /* userinfo_manager.h */,
 				D6D07D6526E0F0E900E0129D /* json.hpp */,
@@ -256,6 +261,7 @@
 				D7AFD64F269B278B008ABC57 /* room_manager.cpp in Sources */,
 				D6F6450326B81E2B007D0FE2 /* conversation_manager.cpp in Sources */,
 				D715B7BE268C83ED00EE75D6 /* models.cpp in Sources */,
+				456508C128854A18009B38BD /* thread_manager.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

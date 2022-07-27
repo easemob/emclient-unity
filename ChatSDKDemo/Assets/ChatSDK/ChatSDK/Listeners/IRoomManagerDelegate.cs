@@ -1,80 +1,183 @@
 ﻿using System.Collections.Generic;
 namespace ChatSDK
 {
+    /**
+         * \~chinese
+         * 聊天管理器回调接口。
+         * 
+         * \~english
+         * 
+         * The chat manager callback interface.
+         */
     public interface IRoomManagerDelegate
     {
-        /// <summary>
-        /// 聊天室被解散
-        /// </summary>
-        /// <param name="roomId">聊天室id</param>
-        /// <param name="roomName">聊天室名称</param>
+        /**
+         * \~chinese
+         * 聊天室被解散。
+         * 
+         * @param roomId        聊天室 ID。
+         * @param roomName      聊天室名称。
+         *
+         * \~english
+         * Occurs when the chat room is destroyed.
+         * 
+         * @param roomId        The chat room ID.
+         * @param roomName      The chat room name.
+         */
         void OnDestroyedFromRoom(string roomId, string roomName);
 
-        /// <summary>
-        /// 用户加入聊天室，需要环信后台开通才能收到
-        /// </summary>
-        /// <param name="roomId">聊天室id</param>
-        /// <param name="participant">加入用户的环信id</param>
+        /**
+        * \~chinese
+        * 聊天室加入新成员事件。
+        * 
+        * @param roomId        聊天室 ID。
+        * @param participant   新成员的 ID。
+        *
+        * \~english
+        * Occurs when a user joins the chat room.
+        * 
+        * @param roomId        The chat room ID.
+        * @param participant   The user ID of the new member.
+        */
         void OnMemberJoinedFromRoom(string roomId, string participant);
 
-        /// <summary>
-        /// 用户离开聊天室
-        /// </summary>
-        /// <param name="roomId">聊天室id</param>
-        /// <param name="roomName">聊天室名称</param>
-        /// <param name="participant">离开用户环信id</param>
+        /**
+         * \~chinese
+         * 聊天室成员主动退出事件。
+         * 
+         * @param roomId        聊天室 ID。
+         * @param roomName      聊天室名称。
+         * @param participant   退出的成员 ID。
+         * 
+         * \~english
+         * Occurs when a member voluntarily leaves the chat room.
+         * 
+         * @param roomId       The chat room ID.
+         * @param roomName     The name of the chat room.
+         * @param participant  The user ID of the member who leaves the chat room.
+         */
         void OnMemberExitedFromRoom(string roomId, string roomName, string participant);
 
-        /// <summary>
-        /// 被聊天室移除，被移除人才可以收到
-        /// </summary>
-        /// <param name="roomId">聊天室id</param>
-        /// <param name="roomName">聊天室名称</param>
-        /// <param name="participant">被移除人环信id</param>
+        /**
+         * \~chinese
+         * 聊天室成员被移除。
+         *
+         * @param reason        用户被移出聊天室的原因：
+         *                      - xxx BE_KICKED：该用户被聊天室管理员移除；
+         *                      - xxxBE_KICKED_FOR_OFFINE：该用户由于当前设备断网被服务器移出聊天室。
+         * 
+         * @param roomId        聊天室 ID。
+         * @param roomName      聊天室名称。
+         * @param participant   被移除人员 ID。
+         *
+         * \~english
+         * Occurs when a member is removed from a chat room.
+         *
+         * @param reason        The reason why the user is removed from the chat room:
+         *                      - xxx BE_KICKED: The user is removed by the chat room owner.
+         *                      - xxxBE_KICKED_FOR_OFFINE: The user is disconnected from the server, probably due to network interruptions.
+         * @param roomId        The chat room ID.
+         * @param roomName      The name of the chat room.
+         * @param participant   The user ID of the member that is removed from a chat room.
+         */
         void OnRemovedFromRoom(string roomId, string roomName, string participant);
 
-        /// <summary>
-        /// 用户被加入禁言列表
-        /// </summary>
-        /// <param name="roomId">聊天室id</param>
-        /// <param name="mutes">被禁言用户环信id</param>
-        /// <param name="expireTime">禁言时长(暂不可用)</param>
+        /**
+         * \~chinese
+         * 有成员被禁言。
+         *
+         * 禁言期间成员不能发送消息。
+         *
+         * @param chatRoomId    聊天室 ID。
+         * @param mutes         禁言的成员。
+         * @param expireTime    禁言有效期，单位为毫秒。
+         *
+         * \~english
+         * Occurs when a chat room member is added to the mute list.
+         *
+         * The muted members cannot send messages during the mute duration.
+         *
+         * @param chatRoomId    The chat room ID.
+         * @param mutes         The user ID(s) of the muted member(s).
+         * @param expireTime    The mute duration in milliseconds.
+         */
         void OnMuteListAddedFromRoom(string roomId, List<string> mutes, long expireTime);
 
-        /// <summary>
-        /// 用户从禁言列表中被移除
-        /// </summary>
-        /// <param name="roomId">聊天室id</param>
-        /// <param name="mutes">被移除用户id</param>
+        /**
+         * \~chinese
+         * 有成员从禁言列表中移除。
+         *
+         * @param chatRoomId    聊天室 ID。
+         * @param mutes         从禁言列表中移除的成员名单。
+         *
+         * \~english
+         * Occurs when a chat room member is removed from the mute list.
+         *
+         * @param chatRoomId    The chat room ID.
+         * @param mutes         The user ID(s) of member(s) that is removed from the mute list of the chat room.
+         */
         void OnMuteListRemovedFromRoom(string roomId, List<string> mutes);
 
-        /// <summary>
-        /// 用户被设置为聊天室管理员
-        /// </summary>
-        /// <param name="roomId">聊天室id</param>
-        /// <param name="admin">管理员id</param>
+        /**
+         * \~chinese
+         * 有成员设置为管理员权限。
+         *
+         * @param roomId        聊天室 ID。
+         * @param admin         设置为管理员的成员。
+         *
+         * \~english
+         * Occurs when a regular chat room member is set as an admin.
+         *
+         * @param  roomId       The chat room ID.
+         * @param  admin        The user ID of the member who is set as an admin.
+         */
         void OnAdminAddedFromRoom(string roomId, string admin);
 
-        /// <summary>
-        /// 管理员被移除
-        /// </summary>
-        /// <param name="roomId">聊天室id</param>
-        /// <param name="admin">被移除管理员id</param>
+        /**
+         * \~chinese
+         * 移除管理员权限。
+         *
+         * @param  roomId       聊天室 ID。
+         * @param  admin        被移除的管理员。
+         *
+         * \~english
+         * Occurs when an admin is demoted to a regular member.
+         *
+         * @param  roomId       The chat room ID.
+         * @param  admin        The user ID of the admin whose administrative permissions are removed.
+         */
         void OnAdminRemovedFromRoom(string roomId, string admin);
 
-        /// <summary>
-        /// 聊天室创建人将聊天室转给其他人
-        /// </summary>
-        /// <param name="roomId">聊天室id</param>
-        /// <param name="newOwner">聊天室新拥有者</param>
-        /// <param name="oldOwner">聊天室旧拥有者</param>
+        /**
+         * \~chinese
+         * 转移聊天室的所有权。
+         *
+         * @param roomId        聊天室 ID。
+         * @param newOwner      新的聊天室所有者。
+         * @param oldOwner      原聊天室所有者。
+         *
+         * \~english
+         * Occurs when the chat room ownership is transferred.
+         *
+         * @param roomId        The chat room ID.
+         * @param newOwner      The user ID of the new chat room owner.
+         * @param oldOwner      The user ID of the previous chat room owner.
+         */
         void OnOwnerChangedFromRoom(string roomId, string newOwner, string oldOwner);
 
-        /// <summary>
-        /// 聊天室描述变更
-        /// </summary>
-        /// <param name="roomId">聊天室id</param>
-        /// <param name="announcement">新的描述</param>
+        /**
+         * \~chinese
+         * 聊天室公告更新事件。
+         *
+         * @param roomId        聊天室 ID。
+         * @param announcement  更新的聊天室公告。
+         *
+         * \~english
+         * Occurs when the chat room announcement is updated.
+         *
+         * @param roomId        The chat room ID.
+         * @param announcement  The updated announcement.
+         */
         void OnAnnouncementChangedFromRoom(string roomId, string announcement);
     }
 }

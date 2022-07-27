@@ -20,8 +20,8 @@ namespace ChatSDK
             }
             //register listeners
             threadManagerHub = new ThreadManagerHub();
-            ChatAPINative.ThreadManager_AddListener(client, threadManagerHub.OnCreatThread_, threadManagerHub.OnUpdateMyThread_,
-                threadManagerHub.OnThreadNotifyChange_, threadManagerHub.OnLeaveThread_, threadManagerHub.OnMemberJoinedThread_, threadManagerHub.OnMemberLeaveThread_);
+            ChatAPINative.ThreadManager_AddListener(client, threadManagerHub.OnChatThreadCreate_, threadManagerHub.OnChatThreadUpdate_,
+                threadManagerHub.OnChatThreadDestroy_, threadManagerHub.OnUserKickOutOfChatThread_);
         }
 
         public override void ChangeThreadSubject(string threadId, string newSubject, CallBack handle = null)

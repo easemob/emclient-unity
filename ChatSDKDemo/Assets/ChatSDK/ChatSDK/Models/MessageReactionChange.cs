@@ -7,11 +7,41 @@ using UnityEngine;
 
 namespace ChatSDK
 {
+
+    /**
+     * \~chinese
+     * 消息 Reaction 变更实体类
+     * 
+     * \~english
+     * The message reaction change entity class
+     */
     public class MessageReactionChange
     {
+
+        /**
+         * \~chinese
+         * Reaction 会话id
+         * 
+         * \~english
+         * Reaction conversationId
+         */
         public string ConversationId;
+        /**
+         * \~chinese
+         * Reaction父消息ID
+         * 
+         * \~english
+         * Reaction parent message ID
+         */		
         public string MessageId;
 
+        /**
+         * \~chinese
+         * Reaction 列表
+         * 
+         * \~english
+         * Reaction list
+         */
         public List<MessageReaction> ReactionList;
 
         static internal MessageReactionChange FromJsonObject(JSONNode jn)

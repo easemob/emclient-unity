@@ -12,12 +12,10 @@ extern "C"
 #endif //__cplusplus
 
 HYPHENATE_API void ThreadManager_AddListener(void* client,
-    FUNC_OnCreatThread OnCreatThread,
-    FUNC_OnUpdateMyThread OnUpdateMyThread,
-    FUNC_OnThreadNotifyChange OnThreadNotifyChange,
-    FUNC_OnLeaveThread OnLeaveThread,
-    FUNC_OnMemberJoinedThread OnMemberJoined,
-    FUNC_OnMemberLeave OnMemberLeave
+    FUNC_OnChatThreadCreate OnChatThreadCreate,
+    FUNC_OnChatThreadUpdate OnChatThreadUpdate,
+    FUNC_OnChatThreadDestroy OnChatThreadDestroy,
+    FUNC_OnUserKickOutOfChatThread OnUserKickOutOfChatThread
 );
 
 HYPHENATE_API void ThreadManager_GetThreadWithThreadId(void *client, int callbackId, const char* threadId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError);

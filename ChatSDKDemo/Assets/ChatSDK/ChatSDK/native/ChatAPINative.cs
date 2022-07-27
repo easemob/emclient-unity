@@ -598,7 +598,7 @@ namespace ChatSDK{
 		internal static extern void PresenceManager_AddListener(IntPtr client, OnPresenceUpdated onPresenceUpdated);
 
 		[DllImport(MyLibName)]
-		internal static extern void PresenceManager_PublishPresence(IntPtr client, int callbackId, int presenceStatus, string ext, OnSuccess onSuccess, OnErrorV2 onError);
+		internal static extern void PresenceManager_PublishPresence(IntPtr client, int callbackId, int presenceStatus, [In, MarshalAs(UnmanagedType.LPTStr)] string ext, OnSuccess onSuccess, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
 		internal static extern void PresenceManager_SubscribePresences(IntPtr client, int callbackId,
@@ -618,9 +618,8 @@ namespace ChatSDK{
 		//ThreadManager
 
 		[DllImport(MyLibName)]
-		internal static extern void ThreadManager_AddListener(IntPtr client, OnCreatThread onCreatThread,
-		OnUpdateMyThread onUpdateMyThread, OnThreadNotifyChange onThreadNotifyChange, OnLeaveThread onLeaveThread,
-		OnMemberJoinedThread onMemberJoinedThread, OnMemberLeaveThread onMemberLeaveThread);
+		internal static extern void ThreadManager_AddListener(IntPtr client, OnChatThreadCreate onChatThreadCreate,
+		OnChatThreadUpdate onChatThreadUpdate, OnChatThreadDestroy onChatThreadDestroy, OnUserKickOutOfChatThread nnUserKickOutOfChatThread);
 
 		[DllImport(MyLibName)]
 		internal static extern void ThreadManager_GetThreadWithThreadId(IntPtr client, int callbackId, string threadId, OnSuccessResult onSuccessResult, OnErrorV2 onError);

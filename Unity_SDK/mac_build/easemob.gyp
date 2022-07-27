@@ -18,6 +18,7 @@
                ],
                'defines': [
                     'DLL_EXPORT',
+                    'SKIP_FPA',
                ],
                 'msbuild_toolset': 'v120_xp',
                 'msvs_settings': {
@@ -44,6 +45,7 @@
                ],
                'defines': [
                     'DLL_EXPORT',
+                    'SKIP_FPA',
                ],
                 'msbuild_toolset': 'v120_xp',
                 'msvs_settings': {
@@ -105,6 +107,8 @@
                 '<(emclient-linux-path)/3rd_party/rapidjson/include',
                 '<(emclient-linux-path)/3rd_party/curlcpp/include',
                 '<(emclient-linux-path)/3rd_party/protobuf',
+                '<(emclient-linux-path)/3rd_party/ap/include',
+                '<(emclient-linux-path)/3rd_party/fpa/include',
                 '<(emclient-linux-path)/3rd_party/md5',
                 #'<(emclient-linux-path)/3rd_party/openssl/include',
                 '<(emclient-linux-path)/3rd_party/platform/darwin/depends/openssl_1.1.1l_share_intel/include',
@@ -169,6 +173,7 @@
                 '<(emclient-linux-path)/src/message/emtextmessagebody.cpp',
                 '<(emclient-linux-path)/src/message/emvideomessagebody.cpp',
                 '<(emclient-linux-path)/src/message/emvoicemessagebody.cpp',
+                '<(emclient-linux-path)/src/message/emmessagereaction.cpp',
                 '<(emclient-linux-path)/src/sqlite.cpp',
                 '<(emclient-linux-path)/src/utils/emhttprequest.cpp',
                 '<(emclient-linux-path)/src/utils/emlog.cpp',
@@ -188,6 +193,16 @@
                 '<(emclient-linux-path)/src/emtranslateresult.cpp',
                 '<(emclient-linux-path)/src/empresence.cpp',
                 '<(emclient-linux-path)/src/empresencemanager.cpp',
+                '<(emclient-linux-path)/src/emfpamanager.cpp',
+                '<(emclient-linux-path)/src/emmessagereactionchange.cpp',
+                '<(emclient-linux-path)/src/empresence.cpp',
+                '<(emclient-linux-path)/src/empresencemanager.cpp',
+                '<(emclient-linux-path)/src/emreactionmanager.cpp',
+                '<(emclient-linux-path)/src/emreportservice.cpp',
+                '<(emclient-linux-path)/src/emrequestreport.cpp',
+                '<(emclient-linux-path)/src/emthread.cpp',
+                '<(emclient-linux-path)/src/emthreadevent.cpp',
+                '<(emclient-linux-path)/src/emthreadmanager.cpp',
                 # Add protocol source files
                 '<(emclient-linux-path)/protocol/emconnectionfactory.cpp',
                 '<(emclient-linux-path)/protocol/emconnectiontcpbase.cpp',
@@ -221,6 +236,7 @@
                 '<(emclient-linux-path)/protocol/testserver.cpp',
                 '<(emclient-linux-path)/protocol/provision.cpp',
                 '<(emclient-linux-path)/protocol/basenode.cpp',
+                '<(emclient-linux-path)/protocol/roamconfig.cpp',
                 '<(emclient-linux-path)/protocol/emcompressionzlib.cpp',
                 '<(emclient-linux-path)/protocol/generated/jid.pb.cc',
                 '<(emclient-linux-path)/protocol/generated/keyvalue.pb.cc',
@@ -230,6 +246,9 @@
                 '<(emclient-linux-path)/protocol/generated/rosterbody.pb.cc',
                 '<(emclient-linux-path)/protocol/generated/conferencebody.pb.cc',
                 '<(emclient-linux-path)/protocol/generated/statisticsbody.pb.cc',
+                '<(emclient-linux-path)/protocol/generated/argusdata.pb.cc',
+                '<(emclient-linux-path)/protocol/generated/argussdkapi.pb.cc',
+                '<(emclient-linux-path)/protocol/generated/argussdkinit.pb.cc',
             ],
             #'mac_bundle_resources': [
             #     '<(emclient-linux-path)/3rd_party/platform/darwin/lib/libcrypto.1.0.0.dylib',
