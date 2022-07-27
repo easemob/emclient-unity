@@ -151,6 +151,17 @@ namespace ChatSDK
 	     */
         void OnConversationRead(string from, string to);
 
-        void MessageReactionDidChange(List<MessageReactionChange> list);
+		/**
+         * \~chinese
+         * Reaction发生变化。
+         *
+         * @param list 改变的reaction列表。
+         *
+         *  \~english
+         * Occurs when the reactions changed.
+         *
+         * @param list The changed reaction list.
+         */
+		void MessageReactionDidChange(List<MessageReactionChange> list);
     }
 }

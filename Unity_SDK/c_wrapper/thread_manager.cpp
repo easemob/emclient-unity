@@ -20,16 +20,14 @@
 ThreadManagerListener* gThreadListener = nullptr;
 
 HYPHENATE_API void ThreadManager_AddListener(void* client,
-    FUNC_OnCreatThread OnCreatThread,
-    FUNC_OnUpdateMyThread OnUpdateMyThread,
-    FUNC_OnThreadNotifyChange OnThreadNotifyChange,
-    FUNC_OnLeaveThread OnLeaveThread,
-    FUNC_OnMemberJoinedThread OnMemberJoined,
-    FUNC_OnMemberLeave OnMemberLeave
+    FUNC_OnChatThreadCreate OnChatThreadCreate,
+    FUNC_OnChatThreadUpdate OnChatThreadUpdate,
+    FUNC_OnChatThreadDestroy OnChatThreadDestroy,
+    FUNC_OnUserKickOutOfChatThread OnUserKickOutOfChatThread
 )
 {
     if (nullptr == gThreadListener) { //only set once!
-        gThreadListener = new ThreadManagerListener(OnCreatThread, OnUpdateMyThread, OnThreadNotifyChange, OnLeaveThread, OnMemberJoined, OnMemberLeave);
+        gThreadListener = new ThreadManagerListener(OnChatThreadCreate, OnChatThreadUpdate, OnChatThreadDestroy, OnUserKickOutOfChatThread);
         CLIENT->getThreadManager().addListener(gThreadListener);
         LOG("New ThreadManager listener and hook it.");
     }

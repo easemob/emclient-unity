@@ -84,12 +84,10 @@ namespace ChatSDK
     internal delegate void MessageReactionDidChange([MarshalAs(UnmanagedType.LPTStr)] string json);
 
     //IThreadManagerDelegate
-    internal delegate void OnCreateThread([MarshalAs(UnmanagedType.LPTStr)] string json);
-    internal delegate void OnUpdateMyThread([MarshalAs(UnmanagedType.LPTStr)] string json);
-    internal delegate void OnThreadNotifyChange([MarshalAs(UnmanagedType.LPTStr)] string json);
-    internal delegate void OnLeaveThread([MarshalAs(UnmanagedType.LPTStr)] string json, int i);
-    internal delegate void OnMemberJoinedThread([MarshalAs(UnmanagedType.LPTStr)] string json);
-    internal delegate void OnMemberLeaveThread([MarshalAs(UnmanagedType.LPTStr)] string json);
+    internal delegate void OnChatThreadCreate([MarshalAs(UnmanagedType.LPTStr)] string json);
+    internal delegate void OnChatThreadUpdate([MarshalAs(UnmanagedType.LPTStr)] string json);
+    internal delegate void OnChatThreadDestroy([MarshalAs(UnmanagedType.LPTStr)] string json);
+    internal delegate void OnUserKickOutOfChatThread([MarshalAs(UnmanagedType.LPTStr)] string json);
 
     internal sealed class ConnectionHub
     {
@@ -932,14 +930,6 @@ namespace ChatSDK
 
     internal sealed class ThreadManagerHub
     {
-        // TODO: 需要改为这4个callback
-        /*
-        internal OnChatThreadCreate OnCreatThread_;
-        internal OnChatThreadUpdate OnUpdateMyThread_;
-        internal OnChatThreadDestroy OnThreadNotifyChange_;
-        internal OnUserKickOutOfChatThread OnLeaveThread_;
-        */
-
         internal OnChatThreadCreate OnChatThreadCreate_;
         internal OnChatThreadUpdate OnChatThreadUpdate_;
         internal OnChatThreadDestroy OnChatThreadDestroy_;
@@ -967,7 +957,7 @@ namespace ChatSDK
                 });
             };
 
-            OnUpdateMyThread_ = (string json) =>
+            OnChatThreadUpdate_ = (string json) =>
             {
                 Debug.Log("OnChatThreadUpdate received.");
 #if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
@@ -1003,11 +993,9 @@ namespace ChatSDK
                 });
              };
 
-            OnUserKickOutOfChatThread_ = (string json, int i) =>
+            OnUserKickOutOfChatThread_ = (string json) =>
             {
-
                 Debug.Log("OnUserKickOutOfChatThread received.");
-
 
 #if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
                 ChatThreadEvent thread = ChatThreadEvent.FromJson(json);
@@ -1016,7 +1004,7 @@ namespace ChatSDK
 #endif
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
-                    foreach (IThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
+                    foreach (IChatThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
                     {
                         listener.OnUserKickOutOfChatThread(thread);
                     }

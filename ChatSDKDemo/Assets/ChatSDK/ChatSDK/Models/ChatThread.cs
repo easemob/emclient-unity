@@ -8,8 +8,6 @@ using UnityEngine;
 
 namespace ChatSDK
 {
-<<<<<<< HEAD:ChatSDKDemo/Assets/ChatSDK/ChatSDK/Models/ThreadEvent.cs
-
     /**
      *  \~chinese
      *  子区对象类。
@@ -17,11 +15,7 @@ namespace ChatSDK
      *  \~english
      *  The message thread object class.
      */
-
-    public class ThreadEvent
-=======
     public class ChatThread
->>>>>>> upstream/dev:ChatSDKDemo/Assets/ChatSDK/ChatSDK/Models/ChatThread.cs
     {
         /**
          * \~chinese
@@ -92,46 +86,6 @@ namespace ChatSDK
          * @return The message thread name.
          */
         public string Name;
-<<<<<<< HEAD:ChatSDKDemo/Assets/ChatSDK/ChatSDK/Models/ThreadEvent.cs
-
-        /**
-        * \~chinese
-        * 获取子区发送方。
-        *
-        * @return 子区发送方。
-        *
-        * \~english
-        * Gets thread sender.
-        *
-        * @return The thread sender.
-        */
-        public string From;
-
-        /**
-        * \~chinese
-        * 获取子区接收方。
-        *
-        * @return 子区接收方。
-        *
-        * \~english
-        * Gets thread sender.
-        *
-        * @return The thread sender.
-        */
-        public string To;
-
-        /**
-        * \~chinese
-        * 获取子区操作内容。
-        *
-        * @return 子区操作内容。
-        *
-        * \~english
-        * Gets thread operation.
-        *
-        * @return The thread operation.
-        */
-        public string Operation;
 
         /**
          * \~chinese
@@ -148,8 +102,6 @@ namespace ChatSDK
          *
          * @return The message count.
          */
-=======
->>>>>>> upstream/dev:ChatSDKDemo/Assets/ChatSDK/ChatSDK/Models/ChatThread.cs
         public int MessageCount;
 
         /**
@@ -168,9 +120,8 @@ namespace ChatSDK
          * @return  The number of members in the message thread.
          */
         public int MembersCount;
-<<<<<<< HEAD:ChatSDKDemo/Assets/ChatSDK/ChatSDK/Models/ThreadEvent.cs
 
-        /**
+         /**
          * \~chinese
          * 获取子区创建的 Unix 时间戳，单位为毫秒。
          *
@@ -181,33 +132,7 @@ namespace ChatSDK
          *
          * @return The Unix timestamp when the message thread is created.
          */
-        public long CreateTimestamp;
-
-        /**
-         * \~chinese
-         * 获取子区更新的 Unix 时间戳，单位为毫秒。
-         *
-         * @return  子区更新的 Unix 时间戳。
-         *
-         * \~english
-         * Gets the Unix timestamp when the message thread is updated. The unit is millisecond.
-         *
-         * @return The Unix timestamp when the message thread is updated.
-         */
-        public long UpdateTimestamp;
-
-        /**
-         * \~chinese
-         * 获取子区事件的 Unix 时间戳，单位为毫秒。
-         *
-         * @return  子区事件的 Unix 时间戳。
-         *
-         * \~english
-         * Gets the Unix timestamp of event on the message thread. The unit is millisecond.
-         *
-         * @return The Unix timestamp of event on thread.
-         */
-        public long Timestamp;
+        public long CreateAt;
 
         /**
          * \~chinese
@@ -224,9 +149,6 @@ namespace ChatSDK
          *
          * @return The last reply in the message thread.
          */
-=======
-        public long CreateAt;
->>>>>>> upstream/dev:ChatSDKDemo/Assets/ChatSDK/ChatSDK/Models/ChatThread.cs
         public Message LastMessage;
 
         // TODO: 不需要TOJSON吧。

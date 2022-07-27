@@ -20,15 +20,15 @@ namespace ChatSDK
         *
         * @param conversationId 会话 ID。
         * @param deleteMessages 是否同时删除本地历史消息：
-	*                       - `true` ：是；
-	*                       - `false` ：否。
-	* @param isThread       删除会话是否是子区会话。
-	*                       - `true` 是子区会话；
-	*                       - `false` 不是子区会话。
-	*
-        * @return               会话是否成功删除：
-	*                       - `true` ：是；
-	*                       - `false` ：否。
+		*                       - `true` ：是；
+		*                       - `false` ：否。
+		* @param isThread       删除会话是否是子区会话。
+		*                       - `true` 是子区会话；
+		*                       - `false` 不是子区会话。
+		*
+			* @return               会话是否成功删除：
+		*                       - `true` ：是；
+		*                       - `false` ：否。
         *
         * \~english
         * Deletes a conversation from the local database.
@@ -38,14 +38,14 @@ namespace ChatSDK
         * @param conversationId     The conversation ID.
         * @param deleteMessages 	Whether to delete local historical messages with the conversation.
         *                           - `true`: Yes.
-	*                           - `false`: No.
-	* @param isThread          The conversation to be deleted is thread or not.
-	*                          - `true` : is thread;
-	*                          - `true` : is not thread;
-	*
-        * @return 					Whether the conversation is successfully deleted:
-	*                           - `true`: Yes. 
-	*                           - `false`: No.
+		*                           - `false`: No.
+		* @param isThread          The conversation to be deleted is thread or not.
+		*                          - `true` : is thread;
+		*                          - `true` : is not thread;
+		*
+			* @return 					Whether the conversation is successfully deleted:
+		*                           - `true`: Yes. 
+		*                           - `false`: No.
         */
         public abstract bool DeleteConversation(string conversationId, bool deleteMessages = true,  bool isThread = false);
 
@@ -228,7 +228,6 @@ namespace ChatSDK
 	     */
         public abstract List<Conversation> LoadAllConversations();
 
-<<<<<<< HEAD
 		/**
 	     * \~chinese
 	     *  将本地数据库中的指定消息加载到内存。
@@ -710,60 +709,7 @@ namespace ChatSDK
             }
         }
 
-<<<<<<< HEAD
-		/**
-		 * \~chinese
-		 * 注册Reaction监听器。
-		 * 
-		 * @param reactionManagerDelegate 	要注册的Reaction监听器，继承自 {@link IReactionManagerDelegate}。
-		 *
-		 * \~english
-		 * Adds a Reaction listener.
-		 *
-		 * @param reactionManagerDelegate 	The reaction manager listener to add. It is inherited from {@link IReactionManagerDelegate}.
-		 * 
-		 */
-        public void AddReactionManagerDelegate(IReactionManagerDelegate reactionManagerDelegate)
-        {
-            if (!CallbackManager.Instance().reactionManagerListener.delegater.Contains(reactionManagerDelegate))
-            {
-                CallbackManager.Instance().reactionManagerListener.delegater.Add(reactionManagerDelegate);
-            }
-        }
-
-		 /**
-		 * 移除Reaction监听器。
-		 *
-		 * @param reactionManagerDelegate 	要移除的Reaction监听器，继承自 {@link reactionManagerDelegate}。
-		 *
-		 * \~english
-		 * Removes a reaction manager listener.
-		 *
-		 * @param reactionManagerDelegate 	The reaction manager listener to remove. It is inherited from {@link IReactionManagerDelegate}.
-		 * 
-		 */
-
-        public void RemoveReactionManagerDelegate(IReactionManagerDelegate reactionManagerDelegate)
-        {
-            if (CallbackManager.IsQuit()) return;
-            if (CallbackManager.Instance().reactionManagerListener.delegater.Contains(reactionManagerDelegate))
-            {
-                CallbackManager.Instance().reactionManagerListener.delegater.Remove(reactionManagerDelegate);
-            }
-        }
-
-		/**
-		 * \~chinese
-		 * 清除所有聊天管理器监听器。
-		 *
-		 * \~english
-		 * Clears all chat manager listeners.
-		 *
-		 */
 		internal void ClearDelegates()
-=======
-        internal void ClearDelegates()
->>>>>>> upstream/dev
         {
             CallbackManager.Instance().chatManagerListener.delegater.Clear();
         }

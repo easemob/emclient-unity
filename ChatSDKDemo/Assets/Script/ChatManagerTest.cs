@@ -140,7 +140,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     }
     void SendImageBtnAction()
     {
-        SDKClient.Instance.ChatManager.FetchSupportLanguages(new ValueCallBack<List<SupportLanguages>>(
+        SDKClient.Instance.ChatManager.FetchSupportLanguages(new ValueCallBack<List<SupportLanguage>>(
              onSuccess: (list) =>
              {
                  Debug.Log($"FetchSupportLanguages found total: {list.Count}");
@@ -187,7 +187,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     void SendVideoBtnAction()
     {
 
-        SDKClient.Instance.ThreadManager.FetchMineJoinedThreadList("", 10, new ValueCallBack<CursorResult<ThreadEvent>>(
+        SDKClient.Instance.ThreadManager.FetchMineJoinedThreadList("", 10, new ValueCallBack<CursorResult<ChatThread>>(
             onSuccess: (cursor_result) =>
             {
                 Debug.Log($"FetchMineJoinedThreadList sucess");
@@ -196,12 +196,11 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
                     Debug.Log($"cursor:{cursor_result.Cursor}");
                     foreach (var it in cursor_result.Data)
                     {
-                        ThreadEvent thread = it;
+                        ChatThread thread = it;
                         Debug.Log($"--------------------------------");
                         Debug.Log($"Tid:{thread.Tid}; msgId:{thread.MessageId}; parentId:{thread.ParentId}; owner:{thread.Owner}");
-                        Debug.Log($"Name:{thread.Name}; From:{thread.From}; To:{thread.To}; Operation:{thread.Operation}; MessageCount:{thread.MessageCount}");
-                        Debug.Log($"MembersCount:{thread.MembersCount}; CreateTimestamp:{thread.CreateTimestamp}; UpdateTimestamp:{thread.UpdateTimestamp}");
-                        Debug.Log($"Timestamp:{thread.Timestamp};");
+                        Debug.Log($"Name:{thread.Name};  MessageCount:{thread.MessageCount}");
+                        Debug.Log($"MembersCount:{thread.MembersCount}; CreateTimestamp:{thread.CreateAt}");
                     }
                 }
             },
@@ -952,5 +951,10 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     public void OnConversationRead(string from, string to)
     {
         UIManager.DefaultAlert(transform, $"OnConversationRead, from: {from}, to: {to}");
+    }
+
+    public void MessageReactionDidChange(List<MessageReactionChange> list)
+    {
+        throw new System.NotImplementedException();
     }
 }

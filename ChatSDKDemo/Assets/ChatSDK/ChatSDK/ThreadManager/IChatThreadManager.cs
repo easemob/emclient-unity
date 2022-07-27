@@ -4,8 +4,6 @@ namespace ChatSDK
 {
     public abstract class IChatThreadManager
     {
-<<<<<<< HEAD:ChatSDKDemo/Assets/ChatSDK/ChatSDK/ThreadManager/IThreadManager.cs
-
         /**
          * \~chinese
          * 根据子区id获取本地子区信息。
@@ -27,7 +25,7 @@ namespace ChatSDK
          *                     - If success, {@link ValueCallBack#onSuccess(Object)} is triggered to return the result {@link CursorResult}, including the message thread member list and the cursor for the next query.
          *                     - If a failure occurs, {@link ValueCallBack#onError(int, String)} is triggered to return an error.
          */
-        public abstract void GetThreadWithThreadId(string threadId, ValueCallBack<ThreadEvent> handle = null);
+        public abstract void GetThreadWithThreadId(string threadId, ValueCallBack<ChatThread> handle = null);
         /**
          * \~chinese
          * 创建子区。
@@ -74,7 +72,7 @@ namespace ChatSDK
          *                    - If success, {@link EMValueCallBack#onSuccess(Object)} is triggered to return the new message thread object;
          *                    - If a failure occurs, {@link EMValueCallBack#onError(int, String)} is triggered to return an error.
          */
-        public abstract void CreateThread(string threadName, string msgId, string groupId, ValueCallBack<ThreadEvent> handle = null);
+        public abstract void CreateThread(string threadName, string msgId, string groupId, ValueCallBack<ChatThread> handle = null);
 
         /**
          * \~chinese
@@ -115,7 +113,7 @@ namespace ChatSDK
          *                     - If a failure occurs, {@link ValueCallBack#onError(int, String)} is triggered to return an error.
          *                       If you join a message thread repeatedly, the SDK will return an error related to USER_ALREADY_EXIST.
          */
-        public abstract void JoinThread(string threadId, ValueCallBack<ThreadEvent> handle = null);
+        public abstract void JoinThread(string threadId, ValueCallBack<ChatThread> handle = null);
 
         /**
         * \~chinese
@@ -154,12 +152,6 @@ namespace ChatSDK
         *                     - If success, {@link CallBack#onSuccess()} is triggered;
         *                     - If a failure occurs, {@link CallBack#onError(int, String)} is triggered to return an error.
         */
-
-=======
-        public abstract void GetThreadWithThreadId(string threadId, ValueCallBack<ChatThread> handle = null);
-	    public abstract void CreateThread(string threadName, string msgId, string groupId, ValueCallBack<ChatThread> handle = null);
-        public abstract void JoinThread(string threadId, ValueCallBack<ChatThread> handle = null);
->>>>>>> upstream/dev:ChatSDKDemo/Assets/ChatSDK/ChatSDK/ThreadManager/IChatThreadManager.cs
         public abstract void LeaveThread(string threadId, CallBack handle = null);
 
         /**
@@ -294,7 +286,6 @@ namespace ChatSDK
          *                     - If a failure occurs, {@link ValueCallBack#onError(int, String)} is triggered to return an error.
          */
         public abstract void FetchThreadMembers(string threadId, string cursor = null, int pageSize = 20, ValueCallBack<CursorResult<string>> handle = null);
-<<<<<<< HEAD:ChatSDKDemo/Assets/ChatSDK/ChatSDK/ThreadManager/IThreadManager.cs
 
         /**
         * \~chinese
@@ -322,7 +313,7 @@ namespace ChatSDK
         *                  - If a failure occurs, {@link ValueCallBack#onError(int, String)} is triggered to return an error.
         */
 
-        public abstract void FetchThreadListOfGroup(string groupId, bool joined, string cursor = null, int pageSize = 20, ValueCallBack<CursorResult<ThreadEvent>> handle = null);
+        public abstract void FetchThreadListOfGroup(string groupId, bool joined, string cursor = null, int pageSize = 20, ValueCallBack<CursorResult<ChatThread>> handle = null);
 
         /**
          * \~chinese
@@ -346,7 +337,7 @@ namespace ChatSDK
          *                  - If a failure occurs, {@link ValueCallBack#onError(int, String)} is triggered to return an error.
          */
 
-        public abstract void FetchMineJoinedThreadList(string cursor = null, int pageSize = 20, ValueCallBack<CursorResult<ThreadEvent>> handle = null);
+        public abstract void FetchMineJoinedThreadList(string cursor = null, int pageSize = 20, ValueCallBack<CursorResult<ChatThread>> handle = null);
         
         /**
          * \~chinese
@@ -365,7 +356,7 @@ namespace ChatSDK
          *                       - If success, {@link ValueCallBack#onSuccess(Object)} is triggered to return the message thread details;
          *                       - If a failure occurs, {@link ValueCallBack#onError(int, String)} is triggered to return an error.
          */
-        public abstract void GetThreadDetail(string threadId, ValueCallBack<ThreadEvent> handle = null);
+        public abstract void GetThreadDetail(string threadId, ValueCallBack<ChatThread> handle = null);
 
         /**
          * \~chinese
@@ -401,15 +392,7 @@ namespace ChatSDK
          *
          * @param threadManagerDelegate The message thread event listener to add.
          */
-        public void AddThreadManagerDelegate(IThreadManagerDelegate threadManagerDelegate)
-=======
-        public abstract void FetchThreadListOfGroup(string groupId, bool joined, string cursor = null, int pageSize = 20, ValueCallBack<CursorResult<ChatThread>> handle = null);
-        public abstract void FetchMineJoinedThreadList(string cursor = null, int pageSize = 20, ValueCallBack<CursorResult<ChatThread>> handle = null);
-        public abstract void GetThreadDetail(string threadId, ValueCallBack<ChatThread> handle = null);
-        public abstract void GetLastMessageAccordingThreads(List<string> threadIds, ValueCallBack<Dictionary<string, Message>> handle = null);
-
         public void AddThreadManagerDelegate(IChatThreadManagerDelegate threadManagerDelegate)
->>>>>>> upstream/dev:ChatSDKDemo/Assets/ChatSDK/ChatSDK/ThreadManager/IChatThreadManager.cs
         {
             if (!CallbackManager.Instance().threadManagerListener.delegater.Contains(threadManagerDelegate))
             {
@@ -417,7 +400,6 @@ namespace ChatSDK
             }
         }
 
-<<<<<<< HEAD:ChatSDKDemo/Assets/ChatSDK/ChatSDK/ThreadManager/IThreadManager.cs
         /**
          * \~chinese
          * 移除子区事件监听器。
@@ -433,10 +415,7 @@ namespace ChatSDK
          *
          * @param listener  The message thread event listener to remove.
          */
-        public void RemoveThreadManagerDelegate(IThreadManagerDelegate threadManagerDelegate)
-=======
         public void RemoveThreadManagerDelegate(IChatThreadManagerDelegate threadManagerDelegate)
->>>>>>> upstream/dev:ChatSDKDemo/Assets/ChatSDK/ChatSDK/ThreadManager/IChatThreadManager.cs
         {
             if (CallbackManager.IsQuit()) return;
             if (CallbackManager.Instance().threadManagerListener.delegater.Contains(threadManagerDelegate))
