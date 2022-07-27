@@ -866,4 +866,9 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     {
         UIManager.DefaultAlert(transform, $"OnConversationRead, from: {from}, to: {to}");
     }
+
+    public void MessageReactionDidChange(List<MessageReactionChange> list)
+    {
+        throw new System.NotImplementedException();
+    }
 }
