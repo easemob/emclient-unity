@@ -10,7 +10,7 @@ namespace ChatSDK
         public abstract void LeaveThread(string threadId, CallBack handle = null);
         public abstract void DestroyThread(string threadId, CallBack handle = null);
         public abstract void RemoveThreadMember(string threadId, string username, CallBack handle = null);
-        public abstract void ChangeThreadSubject(string threadId, string newSubject, CallBack handle = null);
+        public abstract void ChangeThreadName(string threadId, string newName, CallBack handle = null);
         public abstract void FetchThreadMembers(string threadId, string cursor = null, int pageSize = 20, ValueCallBack<CursorResult<string>> handle = null);
         public abstract void FetchThreadListOfGroup(string groupId, bool joined, string cursor = null, int pageSize = 20, ValueCallBack<CursorResult<ChatThread>> handle = null);
         public abstract void FetchMineJoinedThreadList(string cursor = null, int pageSize = 20, ValueCallBack<CursorResult<ChatThread>> handle = null);

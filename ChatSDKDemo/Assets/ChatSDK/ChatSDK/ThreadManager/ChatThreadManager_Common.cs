@@ -24,11 +24,11 @@ namespace ChatSDK
                 threadManagerHub.OnThreadNotifyChange_, threadManagerHub.OnLeaveThread_, threadManagerHub.OnMemberJoinedThread_, threadManagerHub.OnMemberLeaveThread_);
         }
 
-        public override void ChangeThreadSubject(string threadId, string newSubject, CallBack handle = null)
+        public override void ChangeThreadName(string threadId, string newName, CallBack handle = null)
         {
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
-            ChatAPINative.ThreadManager_ChangeThreadSubject(client, callbackId, threadId, newSubject ?? "",
+            ChatAPINative.ThreadManager_ChangeThreadSubject(client, callbackId, threadId, newName ?? "",
                 onSuccess: (int cbId) => {
                     ChatCallbackObject.CallBackOnSuccess(cbId);
                 },

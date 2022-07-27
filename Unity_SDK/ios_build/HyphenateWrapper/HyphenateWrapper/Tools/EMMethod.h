@@ -13,4 +13,5 @@ static char *const ContactListener_Obj = "unity_chat_emclient_contactmanager_del
 static char *const GroupListener_Obj = "unity_chat_emclient_groupmanager_delegate_obj";
 static char *const RoomListener_Obj = "unity_chat_emclient_roommanager_delegate_obj";
 static char *const ChatListener_Obj = "unity_chat_emclient_chatmanager_delegate_obj";
+static char *const PresenceListener_Obj = "unity_chat_emclient_presencemanager_delegate_obj";
 

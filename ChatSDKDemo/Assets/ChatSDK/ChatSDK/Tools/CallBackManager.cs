@@ -745,13 +745,27 @@ namespace ChatSDK {
                     }
                     dictionary.Remove(callbackId);
                 }
-                else if (value == "Dictionary<string, List<MessageReaction>>") {
+                else if (value == "Dictionary<string, List<MessageReaction>>")
+                {
                     Dictionary<string, List<MessageReaction>> result = null;
                     if (responseValue != null)
                     {
                         result = TransformTool.JsonStringToReactionMap(responseValue.Value);
                     }
                     ValueCallBack<Dictionary<string, List<MessageReaction>>> valueCallBack = (ValueCallBack<Dictionary<string, List<MessageReaction>>>)dictionary[callbackId];
+                    if (valueCallBack.OnSuccessValue != null)
+                    {
+                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
+                        {
+                            valueCallBack.OnSuccessValue(result);
+                        });
+                    }
+                    dictionary.Remove(callbackId);
+                }
+                else if (value == "List<EMPresence>")
+                {
+                    List<Presence> result = TransformTool.JsonStringToPresenceList(responseValue.Value);
+                    ValueCallBack<List<Presence>> valueCallBack = (ValueCallBack<List<Presence>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
                     {
                         ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>

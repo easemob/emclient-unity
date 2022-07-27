@@ -13,9 +13,18 @@ namespace ChatSDK
     {
         internal List<IPresenceManagerDelegate> delegater;
 
-        internal void OnPresenceUpdated(List<Presence> presences)
+        internal void OnPresenceUpdated(string jsonString)
         {
-            //TODO: Add code for processing json string from IOS/Android SDK
+            if (delegater != null)
+            {
+                List<Presence> list = TransformTool.JsonStringToPresenceList(jsonString);
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IPresenceManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnPresenceUpdated(list);
+                    }
+                });
+            }
         }
     }
 }

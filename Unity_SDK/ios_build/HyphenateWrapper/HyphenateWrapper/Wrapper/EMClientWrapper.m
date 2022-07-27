@@ -183,6 +183,7 @@ static EMClientWrapper *_instance;
     _pushManager = [[EMPushManagerWrapper alloc] init];
     _conversationWrapper = [[EMConversationWrapper alloc] init];
     _userInfoManager = [[EMUserInfoManagerWrapper alloc] init];
+    _presenceManager = [[EMPresenceManagerWrapper  alloc] init];
 }
 
 
