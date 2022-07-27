@@ -12,9 +12,56 @@ namespace ChatSDK
 #endif
     {
         internal List<IChatThreadManagerDelegate> delegater;
-        internal void OnChatThreadCreate(ChatThreadEvent threadEvent) { }
-        internal void OnChatThreadUpdate(ChatThreadEvent threadEvent) { }
-        internal void OnChatThreadDestroy(ChatThreadEvent threadEvent) { }
-        internal void OnUserKickOutOfChatThread(ChatThreadEvent threadEvent) { }
+        internal void OnChatThreadCreate(string jsonString) {
+            if (delegater != null)
+            {
+                ChatThreadEvent chatThreadEvent = ChatThreadEvent.FromJson(jsonString);
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IChatThreadManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnChatThreadCreate(chatThreadEvent);
+                    }
+                });
+            }
+        }
+
+        internal void OnChatThreadUpdate(string jsonString) {
+            if (delegater != null)
+            {
+                ChatThreadEvent chatThreadEvent = ChatThreadEvent.FromJson(jsonString);
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IChatThreadManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnChatThreadUpdate(chatThreadEvent);
+                    }
+                });
+            }
+        }
+
+        internal void OnChatThreadDestroy(string jsonString) {
+            if (delegater != null)
+            {
+                ChatThreadEvent chatThreadEvent = ChatThreadEvent.FromJson(jsonString);
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IChatThreadManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnChatThreadDestroy(chatThreadEvent);
+                    }
+                });
+            }
+        }
+
+        internal void OnUserKickOutOfChatThread(string jsonString) {
+            if (delegater != null)
+            {
+                ChatThreadEvent chatThreadEvent = ChatThreadEvent.FromJson(jsonString);
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IChatThreadManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnUserKickOutOfChatThread(chatThreadEvent);
+                    }
+                });
+            }
+        }
     }
 }

@@ -6,28 +6,6 @@ namespace ChatSDK
     {
         /**
          * \~chinese
-         * 根据子区id获取本地子区信息。
-         *
-         * 子区所属群组的所有成员均可调用该方法。
-         *
-         * @param threadId  子区 ID。
-         * @param handle    结果回调：
-         *                      - 成功时回调 {@link ValueCallBack#onSuccess(Object)}，返回获取结果 {@link CursorResult}，包含成员列表以及用于下次获取数据的游标；
-         *                      - 失败时回调 {@link ValueCallBack#onError(int, String)}，返回错误信息。
-         *
-         * \~chinese
-         * Gets a local thread basing on thread id.
-         *
-         * Each member of the group to which the message thread belongs can call this method.
-         *
-         * @param threadId   The message thread ID.
-         * @param handle     The result callback:
-         *                     - If success, {@link ValueCallBack#onSuccess(Object)} is triggered to return the result {@link CursorResult}, including the message thread member list and the cursor for the next query.
-         *                     - If a failure occurs, {@link ValueCallBack#onError(int, String)} is triggered to return an error.
-         */
-        public abstract void GetThreadWithThreadId(string threadId, ValueCallBack<ChatThread> handle = null);
-        /**
-         * \~chinese
          * 创建子区。
          *
          * 子区所属群组的所有成员均可调用该方法。

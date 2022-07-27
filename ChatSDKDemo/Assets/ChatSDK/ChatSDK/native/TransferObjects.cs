@@ -728,7 +728,6 @@ namespace ChatSDK
             ConversationId = message.ConversationId;
             From = message.From;
             To = message.To;
-            RecallBy = message.RecallBy;
             Type = message.MessageType;
             Direction = message.Direction;
             Status = message.Status;
@@ -860,7 +859,6 @@ namespace ChatSDK
                 ConversationId = ConversationId,
                 From = From,
                 To = To,
-                RecallBy = RecallBy,
                 MessageType = Type,
                 Direction = Direction,
                 Status = Status,
@@ -884,7 +882,6 @@ namespace ChatSDK
             if (result.ConversationId.CompareTo(" ") == 0)  result.ConversationId = "";
             if (result.To.CompareTo(" ") == 0)              result.To = "";
             if (result.MsgId.CompareTo(" ") == 0)           result.MsgId = "";
-            if (result.RecallBy.CompareTo(" ") == 0)        result.RecallBy = "";
 
             result.Body = UnmarshallBody();
             return result;

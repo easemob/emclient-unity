@@ -14,7 +14,7 @@
 #import "EMPushManagerWrapper.h"
 #import "EMConversationWrapper.h"
 #import "EMUserInfoManagerWrapper.h"
-#import "EMPresenceManagerWrapper.h""
+#import "EMPresenceManagerWrapper.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

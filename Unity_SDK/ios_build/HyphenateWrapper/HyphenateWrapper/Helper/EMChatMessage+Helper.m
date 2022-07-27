@@ -54,6 +54,7 @@
     msg.isDeliverAcked = [aJson[@"hasDeliverAck"] boolValue];
     msg.isRead = [aJson[@"isRead"] boolValue];
     msg.isNeedGroupAck = [aJson[@"isNeedGroupAck"] boolValue];
+    msg.isChatThreadMessage = [aJson[@"isThread"] boolValue];
 //    msg.onlineState = [aJson[@"messageOnlineState"] boolValue];
     return msg;
 }
@@ -78,6 +79,7 @@
     ret[@"attributes"] = [EMChatMessage extToAttributeString:self.ext];
     ret[@"isNeedGroupAck"] = @(self.isNeedGroupAck);
     ret[@"messageOnlineState"] = @(self.onlineState);
+    ret[@"isThread"] = @(self.isChatThreadMessage);
     
 
     return ret;

@@ -58,8 +58,6 @@ namespace ChatSDK
         public string To = "";
 
 
-        internal string RecallBy = "";
-
         /**
 	     * \~chinese
          * 消息类型。
@@ -723,22 +721,15 @@ namespace ChatSDK
                     ServerTime = long.Parse(jo["serverTime"].Value);
                     ConversationId = jo["conversationId"].Value;
                     MsgId = jo["msgId"].Value;
-                    HasReadAck = jo["hasRead"].AsBool;
                     Status = MessageStatusFromInt(jo["status"].AsInt);
                     MessageType = MessageTypeFromInt(jo["chatType"].AsInt);
                     Direction = MessageDirectionFromString(jo["direction"].Value);
                     Attributes = TransformTool.JsonStringToAttributes(jo["attributes"].ToString());
                     Body = IMessageBody.Constructor(jo["body"].Value, jo["bodyType"].Value);
-
-                    RecallBy = jo["recallBy"].Value;
                     IsNeedGroupAck = jo["isNeedGroupAck"].AsBool;
                     IsRead = jo["isRead"].AsBool;
                     MessageOnlineState = jo["messageOnlineState"].AsBool;
-
-
                     IsThread = jo["isThread"].AsBool;
-
-
                 }
             }
         }
@@ -766,7 +757,6 @@ namespace ChatSDK
             jo.Add("body", Body.ToJson().ToString());
             jo.Add("bodyType", Body.TypeString());
 
-            jo.Add("recallBy", RecallBy);
             jo.Add("isNeedGroupAck", IsNeedGroupAck);
             jo.Add("isRead", IsRead);
             jo.Add("messageOnlineState", MessageOnlineState);
