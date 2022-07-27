@@ -452,7 +452,26 @@ void UserInfoManager_MethodCall(const char* methodName, const char* jsonString, 
     }
 }
 
+void PresenceManager_HandleMethodCall(const char* methodName, const char* jsonString, const char* callbackId) {
+    NSString *method = [Transfrom NSStringFromCString:methodName];
+    NSDictionary *dic = [Transfrom JsonObjectFromCSString:jsonString];
+    NSString *callId = [Transfrom NSStringFromCString:callbackId];
+    if([method isEqualToString:@"publishPresence"]) {
+        [EMClientWrapper.instance.presenceManager publishPresence:dic callbackId:callId];
+    } else if ([method isEqualToString:@"subscribePresences"]) {
+        [EMClientWrapper.instance.presenceManager subscribePresences:dic callbackId:callId];
+    } else if ([method isEqualToString:@"unsubscribePresences"]) {
+        [EMClientWrapper.instance.presenceManager unsubscribePresences:dic callbackId:callId];
+    } else if ([method isEqualToString:@"fetchSubscribedMembers"]) {
+        [EMClientWrapper.instance.presenceManager fetchSubscribedMembers:dic callbackId:callId];
+    } else if ([method isEqualToString:@"fetchPresenceStatus"]) {
+        [EMClientWrapper.instance.presenceManager fetchPresenceStatus:dic callbackId:callId];
+    }
+}
 
-const char* UserInfoManager_GetMethodCall(const char* methodName, const char* jsonString, const char* callbackId){
-    return NULL;
+void ChatThreadManager_HandleMethodCall(const char* methodName, const char* jsonString, const char* callbackId) {
+    NSString *method = [Transfrom NSStringFromCString:methodName];
+    NSDictionary *dic = [Transfrom JsonObjectFromCSString:jsonString];
+    NSString *callId = [Transfrom NSStringFromCString:callbackId];
+   
 }

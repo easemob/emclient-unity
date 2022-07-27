@@ -237,7 +237,7 @@ namespace ChatSDK
          * 你可通过设置 {@link IThreadManagerDelegate} 监听子区事件。
          *
          * @param threadId        子区 ID。
-         * @param newSubject      子区的新名称。长度不超过 64 个字符。
+         * @param newName      子区的新名称。长度不超过 64 个字符。
          * @param handle          结果回调：
          *                        - 成功时回调 {@link CallBack#onSuccess()}；
          *                        - 失败时回调 {@link CallBack#onError(int, String)}，返回错误信息。
@@ -252,12 +252,12 @@ namespace ChatSDK
          * You can listen for message thread events by setting {@link IThreadManagerDelegate}.
          *
          * @param threadId      The message thread ID.
-         * @param newSubject    The new message thread name. It can contain a maximum of 64 characters.
+         * @param newName       The new message thread name. It can contain a maximum of 64 characters.
          * @param handle        The result callback:
          *                      - If success, {@link CallBack#onSuccess()} is triggered.
          *                      - If a failure occurs, {@link CallBack#onError(int, String)} is triggered to return an error.
          */
-        public abstract void ChangeThreadSubject(string threadId, string newSubject, CallBack handle = null);
+        public abstract void ChangeThreadName(string threadId, string newName, CallBack handle = null);
 
         /**
          * \~chinese

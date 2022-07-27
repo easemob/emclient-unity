@@ -699,5 +699,18 @@ namespace ChatSDK
 
             return ret;
         }
+
+        static internal List<Presence> JsonStringToPresenceList(string jsonString) {
+            List<Presence> ret = new List<Presence>();
+            JSONNode jn = JSON.Parse(jsonString);
+            if (null == jn || !jn.IsArray) return ret;
+
+            JSONArray jAry = jn.AsArray;
+            foreach (JSONNode item in jAry) {
+                ret.Add(new Presence(item.AsObject));
+            }
+            return ret;
+        }
+        
     }
 }

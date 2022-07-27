@@ -63,6 +63,12 @@ namespace ChatSDK
         [DllImport(MyLibName)]
         internal extern static string PushManager_GetMethodCall(string methodName, string jsonString = null, string callbackId = null);
 
+        [DllImport(MyLibName)]
+        internal extern static string PresenceManager_HandleMethodCall(string methodName, string jsonString = null, string callbackId = null);
+
+        [DllImport(MyLibName)]
+        internal extern static string ChatThreadManager_HandleMethodCall(string methodName, string jsonString = null, string callbackId = null);
+
         #endregion iOS API import
     }
 }

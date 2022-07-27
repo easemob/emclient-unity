@@ -5,7 +5,7 @@ namespace ChatSDK
 {
     internal sealed class ChatThreadManager_Android : IChatThreadManager
     {
-        public override void ChangeThreadSubject(string threadId, string newSubject, CallBack handle = null)
+        public override void ChangeThreadName(string threadId, string newName, CallBack handle = null)
         {
             throw new NotImplementedException();
         }

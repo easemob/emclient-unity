@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		90026D3F2890D7FC0064C16A /* EMPresenceManagerWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 90026D3E2890D7FC0064C16A /* EMPresenceManagerWrapper.m */; };
 		900F7BED26785A5F007B5576 /* EMConversationWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 900F7BEC26785A5F007B5576 /* EMConversationWrapper.m */; };
 		90167804288525640059F474 /* libDownloadSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 90167803288525600059F474 /* libDownloadSDK.a */; };
 		90167812288537860059F474 /* EMTranslateLanguage+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 90167810288537860059F474 /* EMTranslateLanguage+Helper.m */; };
@@ -19,6 +20,7 @@
 		902CC1EE266B5148002F9A50 /* EMClientWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 902CC1E4266B5148002F9A50 /* EMClientWrapper.m */; };
 		902CC1EF266B5148002F9A50 /* EMGroupManagerWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 902CC1E5266B5148002F9A50 /* EMGroupManagerWrapper.m */; };
 		902CC1F0266B5148002F9A50 /* Transfrom.m in Sources */ = {isa = PBXBuildFile; fileRef = 902CC1E9266B5148002F9A50 /* Transfrom.m */; };
+		903E2C8C2890EE5F007C6D65 /* EMThreadManagerWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 903E2C8B2890EE5F007C6D65 /* EMThreadManagerWrapper.m */; };
 		9068A330266E35DC0022B90F /* EMOptions+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9068A32F266E35DC0022B90F /* EMOptions+Helper.m */; };
 		9068A333266E368C0022B90F /* EMConversation+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9068A332266E368C0022B90F /* EMConversation+Helper.m */; };
 		9068A336266E36E60022B90F /* EMChatMessage+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9068A335266E36E60022B90F /* EMChatMessage+Helper.m */; };
@@ -67,6 +69,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		90026D3D2890D7FC0064C16A /* EMPresenceManagerWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EMPresenceManagerWrapper.h; sourceTree = "<group>"; };
+		90026D3E2890D7FC0064C16A /* EMPresenceManagerWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EMPresenceManagerWrapper.m; sourceTree = "<group>"; };
 		900F7BEB26785A5F007B5576 /* EMConversationWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EMConversationWrapper.h; sourceTree = "<group>"; };
 		900F7BEC26785A5F007B5576 /* EMConversationWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EMConversationWrapper.m; sourceTree = "<group>"; };
 		901677FE288525600059F474 /* DownloadSDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = DownloadSDK.xcodeproj; sourceTree = "<group>"; };
@@ -92,6 +96,8 @@
 		902CC1E6266B5148002F9A50 /* EMContactManagerWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EMContactManagerWrapper.h; sourceTree = "<group>"; };
 		902CC1E8266B5148002F9A50 /* Transfrom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Transfrom.h; sourceTree = "<group>"; };
 		902CC1E9266B5148002F9A50 /* Transfrom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Transfrom.m; sourceTree = "<group>"; };
+		903E2C8A2890EE5F007C6D65 /* EMThreadManagerWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EMThreadManagerWrapper.h; sourceTree = "<group>"; };
+		903E2C8B2890EE5F007C6D65 /* EMThreadManagerWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EMThreadManagerWrapper.m; sourceTree = "<group>"; };
 		9068A32E266E35DC0022B90F /* EMOptions+Helper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EMOptions+Helper.h"; sourceTree = "<group>"; };
 		9068A32F266E35DC0022B90F /* EMOptions+Helper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "EMOptions+Helper.m"; sourceTree = "<group>"; };
 		9068A331266E368C0022B90F /* EMConversation+Helper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EMConversation+Helper.h"; sourceTree = "<group>"; };
@@ -170,6 +176,8 @@
 		902CC1DA266B5148002F9A50 /* Wrapper */ = {
 			isa = PBXGroup;
 			children = (
+				90026D3D2890D7FC0064C16A /* EMPresenceManagerWrapper.h */,
+				90026D3E2890D7FC0064C16A /* EMPresenceManagerWrapper.m */,
 				902CC1E1266B5148002F9A50 /* EMPushManagerWrapper.h */,
 				902CC1DB266B5148002F9A50 /* EMPushManagerWrapper.m */,
 				902CC1E2266B5148002F9A50 /* EMChatManagerWrapper.h */,
@@ -188,6 +196,8 @@
 				900F7BEC26785A5F007B5576 /* EMConversationWrapper.m */,
 				90D7B7F92759D7DE00FD1C72 /* EMUserInfoManagerWrapper.h */,
 				90D7B7FA2759D7DE00FD1C72 /* EMUserInfoManagerWrapper.m */,
+				903E2C8A2890EE5F007C6D65 /* EMThreadManagerWrapper.h */,
+				903E2C8B2890EE5F007C6D65 /* EMThreadManagerWrapper.m */,
 			);
 			path = Wrapper;
 			sourceTree = "<group>";
@@ -392,7 +402,9 @@
 				90A30047266B790900BB3A19 /* EMWrapper.m in Sources */,
 				9068A34B267072490022B90F /* EMChatroom+Helper.m in Sources */,
 				902CC1EC266B5148002F9A50 /* EMContactManagerWrapper.m in Sources */,
+				90026D3F2890D7FC0064C16A /* EMPresenceManagerWrapper.m in Sources */,
 				9068A333266E368C0022B90F /* EMConversation+Helper.m in Sources */,
+				903E2C8C2890EE5F007C6D65 /* EMThreadManagerWrapper.m in Sources */,
 				90167815288538F90059F474 /* NSArray+Helper.m in Sources */,
 				9068A3482670719F0022B90F /* EMPageResult+Helper.m in Sources */,
 				902CC1EA266B5148002F9A50 /* EMPushManagerWrapper.m in Sources */,
