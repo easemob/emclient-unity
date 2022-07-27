@@ -140,16 +140,78 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     }
     void SendImageBtnAction()
     {
+        SDKClient.Instance.ChatManager.FetchSupportLanguages(new ValueCallBack<List<SupportLanguage>>(
+             onSuccess: (list) =>
+             {
+                 Debug.Log($"FetchSupportLanguages found total: {list.Count}");
+                 foreach (var lang in list)
+                 {
+                     Debug.Log($"code: {lang.LanguageCode}, name:{lang.LanguageName}, nativename:{lang.LanguageNativeName}");
+                 }
+             },
+             onError: (code, desc) =>
+             {
+                 Debug.Log($"FetchSupportLanguages failed, code:{code}, desc:{desc}");
+             }
+            ));
+
+        return;
+
+
         UIManager.UnfinishedAlert(transform);
         Debug.Log("SendImageBtnAction");
     }
     void SendFileBtnAction()
     {
+        InputAlertConfig config = new InputAlertConfig((dict) => {
+            SDKClient.Instance.ThreadManager.DestroyThread(dict["threadId"], new CallBack(
+                onSuccess: () =>
+                {
+                Debug.Log($"DestroyThread sucess");
+                },
+                onError: (code, desc) =>
+                {
+                Debug.Log($"DestroyThread failed, code:{code}, desc:{desc}");
+                }
+                ));
+        });
+
+        config.AddField("threadId");
+        UIManager.DefaultInputAlert(transform, config);
+
+        return;
+
         UIManager.UnfinishedAlert(transform);
         Debug.Log("SendFileBtnAction");
     }
     void SendVideoBtnAction()
     {
+
+        SDKClient.Instance.ThreadManager.FetchMineJoinedThreadList("", 10, new ValueCallBack<CursorResult<ChatThread>>(
+            onSuccess: (cursor_result) =>
+            {
+                Debug.Log($"FetchMineJoinedThreadList sucess");
+                if (null != cursor_result)
+                {
+                    Debug.Log($"cursor:{cursor_result.Cursor}");
+                    foreach (var it in cursor_result.Data)
+                    {
+                        ChatThread thread = it;
+                        Debug.Log($"--------------------------------");
+                        Debug.Log($"Tid:{thread.Tid}; msgId:{thread.MessageId}; parentId:{thread.ParentId}; owner:{thread.Owner}");
+                        Debug.Log($"Name:{thread.Name};  MessageCount:{thread.MessageCount}");
+                        Debug.Log($"MembersCount:{thread.MembersCount}; CreateTimestamp:{thread.CreateAt}");
+                    }
+                }
+            },
+            onError: (code, desc) =>
+            {
+                Debug.Log($"FetchMineJoinedThreadList failed, code:{code}, desc:{desc}");
+            }
+        ));
+
+        return;
+
         UIManager.UnfinishedAlert(transform);
         Debug.Log("SendVideoBtnAction");
 
@@ -176,6 +238,30 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     }
     void SendVoiceBtnAction()
     {
+        SDKClient.Instance.ChatManager.FetchGroupReadAcks("1033288267207805704", "187147300700161", 20, "", new ValueCallBack<CursorResult<GroupReadAck>>(
+                onSuccess: (result) =>
+                {
+                    if (0 == result.Data.Count)
+                    {
+                        UIManager.DefaultAlert(transform, "No group ack messages.");
+                        return;
+                    }
+                    List<string> strList = new List<string>();
+                    foreach (var msg in result.Data)
+                    {
+                        strList.Add(msg.AckId);
+                    }
+                    string str = string.Join(",", strList.ToArray());
+                    UIManager.DefaultAlert(transform, str);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+
+        return;
+
         UIManager.UnfinishedAlert(transform);
         Debug.Log("SendVoiceBtnAction");
     }

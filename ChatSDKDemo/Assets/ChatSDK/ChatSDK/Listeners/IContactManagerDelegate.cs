@@ -1,37 +1,81 @@
 ﻿using System;
 namespace ChatSDK
 {
+    /**
+         * \~chinese
+         * 联系人管理器回调接口。
+         * 
+         * \~english
+         * The contact manager callback interface.
+         * 
+         */
     public interface IContactManagerDelegate
     {
-        /// <summary>
-        /// 添加好友回调
-        /// </summary>
-        /// <param name="username">好友id</param>
+        /**
+         * \~chinese
+         * 添加联系人回调。
+         *
+         * @param username 添加的联系人。
+         * 
+         * \~english
+         * Occurs when a user is added as a contact.
+         *
+         * @param username   The user ID of the new contact.
+         */
         void OnContactAdded(string username);
 
-        /// <summary>
-        /// 删除好友回调
-        /// </summary>
-        /// <param name="username">好友id</param>
+        /**
+         * \~chinese
+         * 删除联系人回调。
+         * @param username 删除的联系人。
+
+         *
+         * \~english
+         * Occurs when a user is removed from a contact list.
+         * 
+         * @param username    The user ID of the removed contact.
+         */
         void OnContactDeleted(string username);
 
-        /// <summary>
-        /// 收到好友申请
-        /// </summary>
-        /// <param name="username">申请id</param>
-        /// <param name="reason">申请原因</param>
+        /**
+         * \~chinese
+         * 收到好友邀请回调。
+         *
+         * @param username 发起好友请求的用户。
+         * @param reason   邀请消息。
+         *
+         * \~english
+         * Occurs when a user receives a friend request.
+         *
+         * @param username    The ID of the user who initiates the friend request.
+         * @param reason      The invitation message. 
+         */
         void OnContactInvited(string username, string reason);
 
-        /// <summary>
-        /// 发出的好友申请被对方同意
-        /// </summary>
-        /// <param name="username">对方id</param>
+        /**
+        * \~chinese
+        * 好友请求被接受。
+        *
+        * @param username 发起好友请求的用户。
+        *
+        * \~english
+        * Occurs when a friend request is approved.
+        *
+        * @param username The ID of the user who initiates the friend request.
+        */
         void OnFriendRequestAccepted(string username);
 
-        /// <summary>
-        /// 发出的好友申请被对方拒绝
-        /// </summary>
-        /// <param name="username">对方id</param>
+        /**
+         * \~chinese
+         * 好友请求被拒绝。
+         *
+         * @param username 发起好友请求的用户。
+         *
+         * \~english
+         * Occurs when a friend request is declined.
+         *
+         * @param username The ID of the user who initiates the friend request.
+         */
         void OnFriendRequestDeclined(string username);
     }
 }

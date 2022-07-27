@@ -2,181 +2,563 @@
 
 namespace ChatSDK
 {
-
-    /// <summary>
-    /// 聊天室管理类
-    /// </summary>
+/**
+	     * \~chinese
+	     * 聊天管理器抽象类。
+		 * 
+	     * \~english
+	     * The abstract class for the chat manager.
+		 * 
+	     */
     public abstract class IRoomManager
     {
-
-        /// <summary>
-        /// 添加管理员，群主可以操作
-        /// </summary>
-        /// <param name="roomId">聊天室id</param>
-        /// <param name="memberId">管理员id</param>
-        /// <param name="handle">结果回调</param>
+        /**
+	     * \~chinese
+	     * 添加聊天室管理员。
+		  * 
+	     * 仅聊天室所有者可调用此方法。
+	     *
+	     * 异步方法。
+	     *
+	     * @param chatRoomId	聊天室 ID。
+	     * @param memberId		要添加的管理员的 ID。
+	     * @param handle        操作结果回调，详见 {@link CallBack}。
+	     *
+	     * \~english
+	     * Adds a chat room admin.
+		 * 
+	     * Only the chat room owner can call this method.
+	     *
+	     * This is an asynchronous method.
+	     *
+	     * @param chatRoomId	The chat room ID.
+	     * @param memberId		The user ID of the chat room admin to be added.
+	     * @param handle        The operation result callback. See {@link CallBack}.
+	     */
         public abstract void AddRoomAdmin(string roomId, string memberId, CallBack handle = null);
 
-        /// <summary>
-        /// 将用户添加到黑名单
-        /// </summary>
-        /// <param name="roomId">聊天室id</param>
-        /// <param name="members">黑名单id</param>
-        /// <param name="handle">结果回调</param>
+        /**
+	     * \~chinese
+	     * 将成员添加到聊天室黑名单。
+		 * 
+	     * 仅聊天室所有者和管理员可调用此方法。
+		 * 
+	     * **注意**
+		 * 
+	     * - 成员加入黑名单的同时，将被服务器移出聊天室。
+	     * - 可通过 {@link IRoomManagerDelegate#OnRemovedFromRoom( String, String, String)} 回调通知。
+	     * - 加入黑名单的成员禁止再次加入到聊天室。
+	     *
+	     * 异步方法。
+	     *
+	     * @param roomId	    聊天室 ID。
+	     * @param members		要加入黑名单的成员列表。
+	     * @param handle        操作结果回调，详见 {@link CallBack}。
+	     *
+	     * \~english
+	     * Adds members to the block list of the chat room.
+		 * 
+	     * Only the chat room owner or admin can call this method.
+		 * 
+	     * **Note**
+		 * 
+	     * - A member, once added to block list of the chat room, will be removed from the chat room by the server.
+	     * - After being added to the chat room block list, the member is notified via the {@link IRoomManagerDelegate#OnRemovedFromRoom( String, String, String)} callback.
+	     * - Members on the block list cannot rejoin the chat room.
+	     *
+	     * This is an asynchronous method.
+	     *
+	     * @param roomId	    The chat room ID.
+	     * @param members		The list of members to be added to block list of the chat room.
+	     * @param handle        The operation result callback. See {@link CallBack}.
+	     */       
         public abstract void BlockRoomMembers(string roomId, List<string> members, CallBack handle = null);
 
-        /// <summary>
-        /// 转移聊天室
-        /// </summary>
-        /// <param name="roomId">聊天室id</param>
-        /// <param name="newOwner">新创建者id</param>
-        /// <param name="handle">结果回调</param>
+        /**
+	     * \~chinese
+	     * 转让聊天室的所有权。
+		 * 
+	     * 仅聊天室所有者可调用此方法。
+	     *
+	     * 异步方法。
+	     *
+	     * @param roomId	    聊天室 ID。
+	     * @param newOwner		新的聊天室所有者 ID。
+	     * @param handle        操作结果回调，详见 {@link CallBack}。
+	     *
+	     * \~english
+	     * Transfers the chat room ownership.
+		 * 
+	     * Only the chat room owner can call this method.
+	     *
+	     * This is an asynchronous method.
+	     *
+	     * @param chatRoomId	The chat room ID.
+	     * @param newOwner		The user ID of the new chat room owner.
+	     * @param handle        The operation result callback. See {@link CallBack}.
+	     */
         public abstract void ChangeRoomOwner(string roomId, string newOwner, CallBack handle = null);
 
-        /// <summary>
-        /// 修改聊天室描述
-        /// </summary>
-        /// <param name="roomId">聊天室id</param>
-        /// <param name="newDescription">新描述</param>
-        /// <param name="handle">结果回调</param>
+        /**
+	     * \~chinese
+	     * 修改聊天室描述信息。
+		 * 
+	     * 仅聊天室所有者可调用此方法。
+	     *
+	     * 异步方法。
+	     *
+	     * @param roomId		    聊天室 ID。
+	     * @param newDescription	新的聊天室描述。
+	     * @param handle            操作结果回调，详见 {@link CallBack}。
+	     *
+	     * \~english
+	     * Modifies the chat room description.
+		 * 
+	     * Only the chat room owner can call this method.
+	     *
+	     * This is an asynchronous method.
+	     *
+	     * @param roomId		    The chat room ID.
+	     * @param newDescription	The new description of the chat room.
+	     * @param handle            The operation result callback. See {@link CallBack}.
+	     */
         public abstract void ChangeRoomDescription(string roomId, string newDescription, CallBack handle = null);
 
-        /// <summary>
-        /// 修改聊天室名称
-        /// </summary>
-        /// <param name="roomId">聊天室id</param>
-        /// <param name="newName">新名称</param>
-        /// <param name="handle">结果回调</param>
+        /**
+	     * \~chinese
+	     * 修改聊天室名称。
+		 * 
+	     * 仅聊天室所有者可调用此方法。
+	     *
+	     * 异步方法。
+	     *
+	     * @param roomId	    聊天室 ID。
+	     * @param newName	    聊天室新名称。
+	     * @param handle        操作结果回调，详见 {@link CallBack}。
+	     *
+	     * \~english
+	     * Changes the chat room name.
+		 * 
+	     * Only the chat room owner can call this method.
+	     *
+	     * This is an asynchronous method.
+	     *
+	     * @param roomId	    The chat room ID.
+	     * @param newName	    The new name of the chat room.
+	     * @param handle        The operation result callback. See {@link CallBack}.
+	     */
         public abstract void ChangeRoomName(string roomId, string newName, CallBack handle = null);
 
-        /// <summary>
-        /// 创建聊天室
-        /// </summary>
-        /// <param name="subject">名称</param>
-        /// <param name="descriptions">描述</param>
-        /// <param name="welcomeMsg">欢迎信息</param>
-        /// <param name="maxUserCount">用户上限</param>
-        /// <param name="members">邀请用户</param>
-        /// <param name="handle">结果回调</param>
+        /**
+	     * \~chinese
+	     * 创建聊天室。
+	     *
+	     * 异步方法。
+	     *
+	     * @param name              聊天室名称。
+	     * @param description       聊天室描述。
+	     * @param welcomeMsg        邀请成员加入聊天室的消息。
+	     * @param maxUserCount      允许加入聊天室的最大成员数。
+	     * @param members           邀请加入聊天室的成员列表。
+	     * @param handle            操作结果回调，详见 {@link CallBack}。
+	     *
+	     * \~english
+	     * Creates a chat room.
+	     *
+	     * This is an asynchronous method.
+	     *
+	     * @param name              The chat room name.
+	     * @param description       The chat room description.
+	     * @param welcomeMsg        A welcome message inviting members to join the chat room.
+	     * @param maxUserCount      The maximum number of members allowed to join the chat room.
+	     * @param members           The list of members invited to join the chat room.
+	     * @param handle			The operation result callback. See {@link CallBack}.
+	     */        
         public abstract void CreateRoom(string name, string descriptions = null, string welcomeMsg = null, int maxUserCount = 300, List<string> members = null, ValueCallBack<Room> handle = null);
 
-        /// <summary>
-        /// 销毁聊天室
-        /// </summary>
-        /// <param name="roomId">聊天室id</param>
-        /// <param name="handle">结果回调</param>
-        public abstract void DestroyRoom(string roomId, CallBack handle = null);
+		/**
+		 * \~chinese
+		 * 销毁聊天室。
+		 * 
+		 * 仅聊天室所有者可调用此方法。
+		 *
+		 * 异步方法。
+		 *
+		 * @param roomId		聊天室 ID。
+		 * @param handle        操作结果回调，详见 {@link CallBack}。
+		 *
+		 * \~english
+		 * Destroys a chat room.
+		 * 
+		 * Only the chat room owner can call this method.
+		 *
+		 * This is an asynchronous method.
+		 *
+		 * @param roomId		The chat room ID.
+		 * @param handle		The operation result callback. See {@link CallBack}.
+		 */
+		public abstract void DestroyRoom(string roomId, CallBack handle = null);
 
-        /// <summary>
-        /// 获取聊天室列表
-        /// </summary>
-        /// <param name="pageNum">页码</param>
-        /// <param name="pageSize">每页数量</param>
-        /// <param name="handle">结果回调</param>
-        public abstract void FetchPublicRoomsFromServer(int pageNum = 1, int pageSize = 200, ValueCallBack<PageResult<Room>> handle = null);
+		/**
+		 * \~chinese
+		 * 以分页方式从服务器获取聊天室。
+		 * 
+		 * 对于数据量未知且很大的情况，你可以设置 `pageNum` 和 `pageSize` 分页获取数据。
+		 *
+		 * 异步方法。
+		 *
+		 * @param pageNum 	当前页数，从 1 开始。
+		 * @param pageSize 	每页期望返回的记录数。如当前在最后一页，返回的数量小于该参数的值。
+		 * @param handle    操作结果回调，详见 {@link CallBack}。
+		 * 
+		 *
+		 * \~english
+		 * Gets chat room data from the server with pagination.
+		 * 
+		 * For a large but unknown quantity of data, you can get data with pagination by specifying `pageNum` and `pageSize`.
+		 *
+		 * This is an asynchronous method.
+		 *
+		 * @param pageNum 	The page number, starting from 1.
+		 * @param pageSize 	The number of records that you expect to get on each page. For the last page, the number of returned records is less than the parameter value.
+		 * @param handle	The operation result callback. See {@link CallBack}.
+		 * 
+		 */		
+		public abstract void FetchPublicRoomsFromServer(int pageNum = 1, int pageSize = 200, ValueCallBack<PageResult<Room>> handle = null);
 
-        /// <summary>
-        /// 获取聊天室公告
-        /// </summary>
-        /// <param name="roomId">聊天室id</param>
-        /// <param name="handle">结果回调</param>
-        public abstract void FetchRoomAnnouncement(string roomId, ValueCallBack<string> handle = null);
+		/**
+		 * \~chinese
+		 * 从服务器获取聊天室公告内容。
+		 *
+		 * 异步方法。
+		 *
+		 * @param roomId 		聊天室 ID。
+		 * @param handle		操作结果回调，详见 {@link CallBack}。
+		 *
+		 * \~english
+		 * Gets the chat room announcement from the server.
+		 * 
+		 * This is an asynchronous method.
+		 * 
+		 * @param roomId 		The chat room ID.
+		 * @param handle		The operation result callback. See {@link CallBack}.
+		 */
+		public abstract void FetchRoomAnnouncement(string roomId, ValueCallBack<string> handle = null);
 
-        /// <summary>
-        /// 获取聊天室黑名单
-        /// </summary>
-        /// <param name="roomId">聊天室id</param>
-        /// <param name="pageNum">页码</param>
-        /// <param name="pageSize">每页数量</param>
-        /// <param name="handle">结果回调</param>
-        public abstract void FetchRoomBlockList(string roomId, int pageNum = 1, int pageSize = 200, ValueCallBack<List<string>> handle = null);
+		/**
+		 * \~chinese
+		 * 以分页的形式获取聊天室黑名单列表。
+		 * 
+		 * 对于数据量未知且很大的情况，你可以设置 `pageSize` 和 `cursor` 分页获取数据。
+		 * 
+		 * 仅聊天室所有者或管理员可调用此方法。
+		 *
+		 * 异步方法。
+		 *
+		 * @param roomId		聊天室 ID。
+		 * @param pageNum		当前页码，从 1 开始。
+		 * @param pageSize		每页期望返回的黑名单上的用户数。如果当前在最后一页，返回的数量小于该参数的值。
+		 * @param handle		操作结果回调，详见 {@link CallBack}。
+		 * 
+		 *
+		 * \~english
+		 * Gets the block list of the chat room with pagination.
+         *
+         * For a large but unknown quantity of data, you can get data with pagination by specifying `pageSize` and `cursor`.
+		 *
+		 * Only the chat room owner or admin can call this method.
+		 *
+		 * This is an asynchronous method.
+		 *
+		 * @param roomId		The chat room ID.
+		 * @param pageNum		The page number, starting from 1. 
+		 * @param pageSize		The number of users on the block list that you expect to get on each page. For the last page, the number of returned users is less than the parameter value.
+		 * @param handle		The operation result callback. See {@link CallBack}.
+		 *
+		 */
+		public abstract void FetchRoomBlockList(string roomId, int pageNum = 1, int pageSize = 200, ValueCallBack<List<string>> handle = null);
 
-        /// <summary>
-        /// 获取聊天室详情
-        /// </summary>
-        /// <param name="roomId">聊天室id</param>
-        /// <param name="handle">结果回调</param>
-        public abstract void FetchRoomInfoFromServer(string roomId, ValueCallBack<Room> handle = null);
+		/**
+		 * \~chinese
+		 * 从服务器获取聊天室详情，默认不取成员列表。
+		 *
+		 * 异步方法。
+		 *
+		 * @param roomId	聊天室 ID。
+		 * @param handle	操作结果回调，返回聊天室信息或错误描述，详见 {@link ValueCallBack}。
+		 *
+		 * \~english
+		 * Gets details of a chat room from the server, excluding the member list by default.
+		 *
+		 * This is an asynchronous method.
+		 *
+		 * @param roomId	The chat room ID.
+		 * @param handle	The operation callback. If success, the chat room instance is returned; otherwise, an error is returned. See {@link ValueCallBack}.
+		 */
+		public abstract void FetchRoomInfoFromServer(string roomId, ValueCallBack<Room> handle = null);
 
-        /// <summary>
-        /// 获取聊天室成员
-        /// </summary>
-        /// <param name="roomId">聊天室id</param>
-        /// <param name="cursor">游标</param>
-        /// <param name="pageSize">每页数量</param>
-        /// <param name="handle">结果回调</param>
-        public abstract void FetchRoomMembers(string roomId, string cursor = "", int pageSize = 200, ValueCallBack<CursorResult<string>> handle = null);
+		/**
+		 * \~chinese
+		 * 以分页方式获取聊天室成员列表。
+		 * 
+		 * 对于数据量未知且很大的情况，你可以设置 `pageSize` 和 `cursor` 分页获取数据。
+		 *
+		 * 异步方法。
+		 *
+		 * @param roomId		聊天室 ID。
+		 * @param cursor		从该游标位置开始取数据。首次调用 `cursor` 传空值，SDK 按照用户加入聊天室时间的倒序获取数据，即从最新数据开始获取。服务器返回的数据中包含 `cursor` 字段，该字段保存在本地，下次调用接口时，可以将更新的 `cursor` 传入作为开始获取数据的位置。
+		 * @param pageSize		每页期望返回的成员数。如果当前为最后一页，返回的数据量小于该参数的值；
+		 * @param handle		操作结果回调，成功则返回聊天室成员列表，失败则返回错误描述，详见 {@link ValueCallBack}。
+		 * 
+		 *  
+		 * \~english
+		 * Gets the chat room member list with pagination.
 
-        /// <summary>
-        /// 获取聊天室禁言列表
-        /// </summary>
-        /// <param name="roomId">聊天室id</param>
-        /// <param name="pageSize">每页数量</param>
-        /// <param name="pageNum">页码</param>
-        /// <param name="handle">结果回调</param>
-        public abstract void FetchRoomMuteList(string roomId, int pageSize = 200, int pageNum = 1, ValueCallBack<List<string>> handle = null);
+		 * For a large but unknown quantity of data, you can get data with pagination by specifying `pageSize` and `cursor`.
+		 *
+		 * This is an asynchronous method.
+		 *
+		 * @param roomId		The chat room ID.
+		 * @param cursor		The cursor position from which to start to get data.
+		 *                      At the first method call, if you set `cursor` as `null`, the SDK gets the data in the reverse chronological order of when users joined the chat room. 
+		 *                      Amid the returned data (CursorResult), `cursor` is a field saved locally and the updated cursor can be passed as the position from which to start to get data for the next query.
+		 * @param pageSize		The number of members that you expect to get on each page. For the last page, the number of returned members is less than the parameter value.
+		 * @param handle		The operation callback. If success, the chat room member list is returned; otherwise, an error is returned. See {@link ValueCallBack}.
+		 * 
+		 */		
+		public abstract void FetchRoomMembers(string roomId, string cursor = "", int pageSize = 200, ValueCallBack<CursorResult<string>> handle = null);
 
-        /// <summary>
-        /// 加入聊天室
-        /// </summary>
-        /// <param name="roomId">聊天室id</param>
-        /// <param name="handle">结果回调</param>
-        public abstract void JoinRoom(string roomId, ValueCallBack<Room> handle = null);
+		/**
+		 * \~chinese
+		 * 以分页方式获取聊天室禁言列表。
+         * 
+         * 对于数据量未知且很大的情况，你可以设置 `pageSize` 和 `cursor` 分页获取数据。
+		 * 
+		 * 仅聊天室所有者和管理员可调用此方法。
+		 *
+		 * 异步方法。
+		 *
+		 * @param roomId		聊天室 ID。
+		 * @param pageNum		当前页码，从 1 开始。
+		 * @param pageSize		每页返回的禁言成员数。如果当前为最后一页，返回的数量小于该参数的值。
+		 * @param handle		操作结果回调，成功则返回聊天室禁言列表，失败返回错误描述，详见 {@link ValueCallBack}。
+         * 
+		 *
+		 * \~english
+		 * Gets the list of members who are muted in the chat room.
+		 *
+         * For a large but unknown quantity of data, you can get data with pagination by specifying `pageSize` and `cursor`.
+         * 
+		 * Only the chat room owner or admin can call this method.
+		 *
+		 * This is an asynchronous method.
+		 *
+		 * @param roomId		The chat room ID.
+		 * @param pageNum		The page number, starting from 1.
+		 * @param pageSize		The number of muted members that you expect to get on each page. For the last page, the actual number of returned members is less than the parameter value.
+		 * @param handle		The operation callback. If success, the chat room mute list is returned; otherwise, an error is returned. See {@link ValueCallBack}.
+		 * 
+		 */		
+		public abstract void FetchRoomMuteList(string roomId, int pageSize = 200, int pageNum = 1, ValueCallBack<List<string>> handle = null);
 
-        /// <summary>
-        /// 离开聊天室
-        /// </summary>
-        /// <param name="roomId">聊天室id</param>
-        /// <param name="handle">结果回调</param>
-        public abstract void LeaveRoom(string roomId, CallBack handle = null);
+		/**
+		 * \~chinese
+		 * 加入聊天室。
+		 * 
+		 * 退出聊天室调用 {@link #LeaveRoom(String, CallBack)}。
+		 *
+		 * 异步方法。
+		 *
+		 * @param roomId 	聊天室 ID。
+		 * @param handle	操作结果回调，成功则返回加入的聊天室对象，失败则返回错误信息，详见 {@link ValueCallBack}。
+		 * 
+		 * \~english
+		 * Joins the chat room.
+		 * 
+		 * To exit the chat room, you can call {@link #LeaveRoom(String, CallBack)}.
+		 *
+		 * This is an asynchronous method.
+		 *
+		 * @param roomId 	The ID of the chat room to join.
+		 * @param handle	The operation callback. If success, the chat room instance is returned; otherwise, an error is returned. See {@link ValueCallBack}.
+		 */		
+		public abstract void JoinRoom(string roomId, ValueCallBack<Room> handle = null);
 
-        /// <summary>
-        /// 禁言聊天室成员
-        /// </summary>
-        /// <param name="roomId">聊天室id</param>
-        /// <param name="members">禁言用户</param>
-        /// <param name="handle">结果回调</param>
-        public abstract void MuteRoomMembers(string roomId, List<string> members, CallBack handle = null);
+		/**
+		 * \~chinese
+		 * 离开聊天室。
+		 * 
+		 * 利用 {@link #JoinRoom(String, ValueCallBack)} 加入聊天室后，离开时调用此方法。
+		 *
+		 * 异步方法。
+		 *
+		 * @param roomId 	聊天室 ID。
+		 * @param handle	操作结果回调，详见 {@link CallBack}。
+		 *
+		 * \~english
+		 * Leaves a chat room.
+		 * 
+		 * After joining a chat room via {@link #JoinRoom(String, ValueCallBack)}, the member can call `LeaveRoom` to leave the chat room.
+		 *
+		 * This is an asynchronous method.
+		 *
+		 * @param roomId 	The ID of the chat room to leave.
+		 * @param handle	The operation callback. See {@link CallBack}.
+		 * 
+		 */		
+		public abstract void LeaveRoom(string roomId, CallBack handle = null);
 
-        /// <summary>
-        /// 移除聊天室管理员
-        /// </summary>
-        /// <param name="roomId">聊天室id</param>
-        /// <param name="adminId">管理员id</param>
-        /// <param name="handle">结果回调</param>
-        public abstract void RemoveRoomAdmin(string roomId, string adminId, CallBack handle = null);
+		/**
+		 * \~chinese
+		 * 禁止聊天室成员发言。
+		 * 
+		 * 仅聊天室所有者和管理员可调用此方法。
+		 *
+		 * 异步方法。
+		 *
+		 * @param roomId	聊天室 ID。
+		 * @param members   要禁言的用户列表。
+		 * @param handle	操作结果回调，详见 {@link CallBack}。
+		 *
+		 * \~english
+		 * Mutes members in a chat room.
+		 * 
+		 * Only the chat room owner or admin can call this method.
+		 *
+		 * This is an asynchronous method.
+		 *
+		 * @param roomId	The chat room ID.
+		 * @param members 	The list of members to be muted.
+		 * @param handle	The operation callback. See {@link CallBack}.
+		 */		
+		public abstract void MuteRoomMembers(string roomId, List<string> members, CallBack handle = null);
 
-        /// <summary>
-        /// 移除聊天室成员
-        /// </summary>
-        /// <param name="roomId">聊天室id</param>
-        /// <param name="members">成员id</param>
-        /// <param name="handle">结果回调</param>
-        public abstract void DeleteRoomMembers(string roomId, List<string> members, CallBack handle = null);
+		/**
+		 * \~chinese
+		 * 移除聊天室管理员权限。
+		 * 
+		 * 仅聊天室所有者可调用此方法。
+		 *
+		 * 异步方法。
+		 *
+		 * @param roomId		聊天室 ID。
+		 * @param adminId		要移除管理员权限的 ID。
+		 * @param handle		操作结果回调，详见 {@link CallBack}。
+		 *
+		 * \~english
+		 * Removes the administrative privileges of a chat room admin.
+		 * 
+		 * Only the chat room owner can call this method.
+		 *
+		 * This is an asynchronous method.
+		 *
+		 * @param roomId		The chat room ID.
+		 * @param adminId		The user ID of the admin whose administrative privileges are to be removed.
+		 * @param handle		The operation callback. See {@link CallBack}.
+		 */		
+		public abstract void RemoveRoomAdmin(string roomId, string adminId, CallBack handle = null);
 
-        /// <summary>
-        /// 移除黑名单
-        /// </summary>
-        /// <param name="roomId">聊天室id</param>
-        /// <param name="members">黑名单id</param>
-        /// <param name="handle">结果回调</param>
-        public abstract void UnBlockRoomMembers(string roomId, List<string> members, CallBack handle = null);
+		/**
+		 * \~chinese
+		 * 将成员移出聊天室。
+		 * 
+		 * 仅聊天室所有者和管理员可调用此方法。
+		 *
+		 * 异步方法。
+		 *
+		 * @param roomId		聊天室 ID。
+		 * @param members		要移出聊天室的用户列表。
+		 * @param handle		操作结果回调，详见 {@link CallBack}。
+		 *
+		 * \~english
+		 * Removes members from a chat room.
+		 * 
+		 * Only the chat room owner or admin can call this method.
+		 *
+		 * This is an asynchronous method.
+		 *
+		 * @param roomId		The chat room ID.
+		 * @param members		The list of members to be removed from the chat room.
+		 * @param handle		The operation callback. See {@link CallBack}.
+		 */
+		public abstract void DeleteRoomMembers(string roomId, List<string> members, CallBack handle = null);
 
-        /// <summary>
-        /// 移除禁言列表
-        /// </summary>
-        /// <param name="roomId">聊天室id</param>
-        /// <param name="members">用户id</param>
-        /// <param name="handle">结果回调</param>
-        public abstract void UnMuteRoomMembers(string roomId, List<string> members, CallBack handle = null);
+		/**
+		 * \~chinese
+		 * 从聊天室黑名单中移除成员。
+		 * 
+		 * 仅聊天室所有者或管理员可调用此方法。
+		 *
+		 * 异步方法。
+		 *
+		 * @param roomId		聊天室 ID。
+		 * @param members		要移除黑名单的成员列表。
+		 * @param handle		操作结果回调，详见 {@link CallBack}。
+		 *
+		 * \~english
+		 * Removes members from the block list of the chat room.
+		 * 
+		 * Only the chat room owner or admin can call this method.
+		 *
+		 * This is an asynchronous method.
+		 *
+		 * @param roomId		The chat room ID.
+		 * @param members		The list of members to be removed from the block list of the chat room.
+		 * @param handle		The operation callback. See {@link CallBack}.
+		 */
+		public abstract void UnBlockRoomMembers(string roomId, List<string> members, CallBack handle = null);
 
-        /// <summary>
-        /// 更新聊天室公告
-        /// </summary>
-        /// <param name="roomId">聊天室id</param>
-        /// <param name="announcement"></param>
-        /// <param name="handle">结果回调</param>
-        public abstract void UpdateRoomAnnouncement(string roomId, string announcement, CallBack handle = null);
+		/**
+		 * \~chinese
+		 * 解除禁言。
+		 * 
+		 * 仅聊天室所有者和管理员可调用此方法。
+		 *
+		 * 异步方法。
+		 *
+		 * @param roomId		聊天室 ID。
+		 * @param members		要解除禁言的用户列表。
+		 * @param handle		操作结果回调，详见 {@link CallBack}。
+		 *
+		 * \~english
+		 * Unmutes members in a chat room.
+		 * 
+		 * Only the chat room owner or admin can call this method.
+		 *
+		 * This is an asynchronous method.
+		 *
+		 * @param roomId		The chat room ID.
+		 * @param members		The list of members to be unmuted.
+		 * @param handle		The operation callback. See {@link CallBack}.
+		 * 
+		 */		
+		public abstract void UnMuteRoomMembers(string roomId, List<string> members, CallBack handle = null);
+
+		/**
+		 * \~chinese
+		 * 更新聊天室公告。
+		 * 
+		 * 仅聊天室所有者和管理员可调用此方法。
+		 *
+		 * 异步方法。
+		 *
+		 * @param roomId 		聊天室 ID。
+		 * @param announcement 	公告内容。
+		 * @param handle		操作结果回调，详见 {@link CallBack}。
+		 *
+		 * \~english
+		 * Updates the chat room announcement.
+		 * 
+		 * Only the chat room owner or admin can call this method.
+		 *
+		 * This is an asynchronous method.
+		 *
+		 * @param roomId 		The chat room ID.
+		 * @param announcement 	The announcement content.
+		 * @param handle		The operation callback. See {@link CallBack}.
+		 * 
+		 */
+		public abstract void UpdateRoomAnnouncement(string roomId, string announcement, CallBack handle = null);
 
         public abstract void MuteAllRoomMembers(string roomId, ValueCallBack<Room> handle = null);
 
@@ -186,11 +568,19 @@ namespace ChatSDK
 
         public abstract void RemoveWhiteListMembers(string roomId, List<string> members, CallBack handle = null);
 
-        /// <summary>
-        /// 添加聊天室监听
-        /// </summary>
-        /// <param name="roomManagerDelegate"></param>
-        public void AddRoomManagerDelegate(IRoomManagerDelegate roomManagerDelegate)
+		/**
+		 * \~chinese
+		 * 注册聊天室监听器。
+		 *
+		 * @param roomManagerDelegate 		要注册的聊天室监听器，继承自 {@link IRoomManagerDelegate}。
+		 *
+		 * \~english
+		 * Adds a chat room listener.
+		 *
+		 * @param roomManagerDelegate 		The chat room listener to add. It is inherited from {@link IRoomManagerDelegate}.
+		 * 
+		 */
+		public void AddRoomManagerDelegate(IRoomManagerDelegate roomManagerDelegate)
         {
             if (!CallbackManager.Instance().roomManagerListener.delegater.Contains(roomManagerDelegate))
             {
@@ -198,11 +588,19 @@ namespace ChatSDK
             }
         }
 
-        /// <summary>
-        /// 移除聊天室监听
-        /// </summary>
-        /// <param name="roomManagerDelegate"></param>
-        public void RemoveRoomManagerDelegate(IRoomManagerDelegate roomManagerDelegate)
+		/**
+		 * \~chinese
+		 * 移除聊天室监听器。
+		 *
+		 * @param roomManagerDelegate 		要移除的聊天室监听器，继承自 {@link IRoomManagerDelegate}。
+		 *
+		 * \~english
+		 * Removes a chat room listenter.
+		 *
+		 * @param roomManagerDelegate 		The chat room listener to remove. It is inherited from {@link IRoomManagerDelegate}.
+		 * 
+		 */
+		public void RemoveRoomManagerDelegate(IRoomManagerDelegate roomManagerDelegate)
         {
             if (CallbackManager.IsQuit()) return;
             if (CallbackManager.Instance().roomManagerListener.delegater.Contains(roomManagerDelegate))

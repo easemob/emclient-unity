@@ -3,30 +3,60 @@ using System.Collections.Generic;
 
 namespace ChatSDK
 {
+    /**
+         * \~chinese
+         * 连接回调接口。
+         *
+         * \~english
+         * The connection callback interface.
+         */
     public interface IConnectionDelegate
     {
-        /// <summary>
-        /// 连接回调
-        /// </summary>
+        /**
+         * \~chinese
+         * SDK 成功连接到 chat 服务器时触发的回调。
+         *
+         * \~english
+         * Occurs when the SDK successfully connects to the chat server.
+         */
         void OnConnected();
 
-        /// <summary>
-        /// 断开连接回调
-        /// </summary>
-        /// <param name="i">断开连接错误号</param>
+        /**
+         * \~chinese
+         * SDK 与 chat 服务器断开连接时触发的回调。
+         *
+         * 断开连接的原因可能是你主动退出登录或网络中断。
+         * 
+         * @param i 断开连接的错误码。
+         *
+         * \~english
+         * Occurs when the SDK disconnects from the chat server.
+         * 
+         * The SDK disconnects from the chat server when you log out of the app or a network interruption occurs.
+         * 
+         * @param i The error code for the disconnection.
+         * 
+         */
         void OnDisconnected(int i);
 
-
-        /// <summary>
-        /// Token过期通知
-        /// </summary>
+        /**
+        * \~chinese
+        * Token 过期回调。
+        *  
+        * \~english
+        * Occurs when token is expired.
+        */
         void OnTokenExpired();
+		
+        /**
+        * \~chinese
+        * Token 即将过期回调。
+        *  
+        * \~english
+        * Occurs when token will expired.
+        */
+		void OnTokenWillExpire();
 
-
-        /// <summary>
-        /// Token将要过期通知
-        /// </summary>
-        void OnTokenWillExpire();
     }
 
 }

@@ -149,7 +149,7 @@ HYPHENATE_API void UserInfoManager_UpdateOwnInfo(void *client, int callbackId, v
         writer.String(uto->phoneNumber);
     }
 
-    if (0 == uto->gender || 1 == uto->gender) {
+    if (0 == uto->gender || 1 == uto->gender || 2 == uto->gender) {
         writer.Key(UserInfoTypeMap[GENDER].c_str());
         writer.Int(uto->gender);
     }

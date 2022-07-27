@@ -65,7 +65,7 @@ namespace WinSDKTest
             Console.WriteLine($"cov id: {msg.ConversationId}");
             Console.WriteLine($"From: {msg.From}");
             Console.WriteLine($"To: {msg.To}");
-            Console.WriteLine($"RecallBy: {msg.RecallBy}");
+            //Console.WriteLine($"RecallBy: {msg.RecallBy}");
             Console.WriteLine($"message type: {msg.MessageType}");
             Console.WriteLine($"diection: {msg.Direction}");
             Console.WriteLine($"status: {msg.Status}");
@@ -355,6 +355,7 @@ namespace WinSDKTest
             functions_IChatManager.Add(menu_index, "DownloadAttachment"); menu_index++;
             functions_IChatManager.Add(menu_index, "DownloadThumbnail"); menu_index++;
             functions_IChatManager.Add(menu_index, "FetchHistoryMessagesFromServer"); menu_index++;
+            functions_IChatManager.Add(menu_index, "FetchGroupReadAcks"); menu_index++;
             functions_IChatManager.Add(menu_index, "GetConversation"); menu_index++;
             functions_IChatManager.Add(menu_index, "GetConversationsFromServer"); menu_index++;
             functions_IChatManager.Add(menu_index, "GetUnreadMessageCount"); menu_index++;
@@ -366,6 +367,8 @@ namespace WinSDKTest
             functions_IChatManager.Add(menu_index, "ResendMessage"); menu_index++;
             functions_IChatManager.Add(menu_index, "SearchMsgFromDB"); menu_index++;
             functions_IChatManager.Add(menu_index, "SendConversationReadAck"); menu_index++;
+            functions_IChatManager.Add(menu_index, "SendReadAckForGroupMessage"); menu_index++;
+            functions_IChatManager.Add(menu_index, "SendMessageReadAck"); menu_index++;
             functions_IChatManager.Add(menu_index, "SendTxtMessage"); menu_index++;
             functions_IChatManager.Add(menu_index, "SendImageMessage"); menu_index++;
             functions_IChatManager.Add(menu_index, "SendFileMessage"); menu_index++;
@@ -412,6 +415,14 @@ namespace WinSDKTest
             param.Add(menu_index, "startMessageId (string, default is empty string)"); menu_index++;
             param.Add(menu_index, "count (int)"); menu_index++;
             level3_menus.Add("FetchHistoryMessagesFromServer", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "messageId (string)"); menu_index++;
+            param.Add(menu_index, "groupId (string)"); menu_index++;
+            param.Add(menu_index, "pageSize (int)"); menu_index++;
+            param.Add(menu_index, "startAckId (string)"); menu_index++;
+            level3_menus.Add("FetchGroupReadAcks", new Dictionary<int, string>(param));
             param.Clear();
 
             menu_index = 1;
@@ -473,6 +484,12 @@ namespace WinSDKTest
             menu_index = 1;
             param.Add(menu_index, "conversationId (string)"); menu_index++;
             level3_menus.Add("SendConversationReadAck", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "messageId (string)"); menu_index++;
+            param.Add(menu_index, "ackContent (string)"); menu_index++;
+            level3_menus.Add("SendReadAckForGroupMessage", new Dictionary<int, string>(param));
             param.Clear();
 
             menu_index = 1;
@@ -1633,6 +1650,15 @@ namespace WinSDKTest
             options.AutoLogin = false;
             options.UsingHttpsOnly = true;
             options.DebugMode = true;
+
+            //options.RestServer = "a1.easemob.com";
+            //options.IMServer = "182.92.23.113";
+            //options.IMPort = 12016;
+            //options.RestServer = "39.97.9.52:80";
+            //options.IMServer = "47.94.121.20";
+            //options.IMPort = 12016;
+            //options.EnableDNSConfig = false;
+
             SDKClient.Instance.InitWithOptions(options);
 
             ChatManagerDelegate chatManagerDelegate = new ChatManagerDelegate();
@@ -2378,7 +2404,7 @@ namespace WinSDKTest
                         Console.WriteLine($"cov id: {msg.ConversationId}");
                         Console.WriteLine($"From: {msg.From}");
                         Console.WriteLine($"To: {msg.To}");
-                        Console.WriteLine($"RecallBy: {msg.RecallBy}");
+                        //Console.WriteLine($"RecallBy: {msg.RecallBy}");
                         Console.WriteLine($"message type: {msg.MessageType}");
                         Console.WriteLine($"diection: {msg.Direction}");
                         Console.WriteLine($"status: {msg.Status}");
@@ -2401,6 +2427,40 @@ namespace WinSDKTest
                 onError: (code, desc) =>
                 {
                     Console.WriteLine($"FetchHistoryMessagesFromServer failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IChatManager_FetchGroupReadAcks()
+        {
+            string messageId = GetParamValueFromContext(0);
+            string groupId = GetParamValueFromContext(1);
+            int pageSize = GetIntFromString(GetParamValueFromContext(2));
+            string startAckId = GetParamValueFromContext(3);
+
+            SDKClient.Instance.ChatManager.FetchGroupReadAcks(messageId, groupId, pageSize, startAckId, new ValueCallBack<CursorResult<GroupReadAck>>(
+                onSuccess: (result) =>
+                {
+                    if (0 == result.Data.Count)
+                    {
+                        Console.WriteLine("No group acks.");
+                        return;
+                    }
+                    Console.WriteLine($"FetchGroupReadAcks: found {result.Data.Count} messages");
+                    foreach (var msg in result.Data)
+                    {
+                        Console.WriteLine($"===========================");
+                        Console.WriteLine($"AckId: {msg.AckId}");
+                        Console.WriteLine($"MsgId: {msg.MsgId}");
+                        Console.WriteLine($"From: {msg.From}");
+                        Console.WriteLine($"Content: {msg.Content}");
+                        Console.WriteLine($"Timestamp: {msg.Timestamp}");
+                        Console.WriteLine($"===========================");
+                    }
+                },
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"FetchGroupReadAcks failed, code:{code}, desc:{desc}");
                 }
             ));
         }
@@ -2643,6 +2703,23 @@ namespace WinSDKTest
             ));
         }
 
+        public void CallFunc_IChatManager_SendReadAckForGroupMessage()
+        {
+            string messageId = GetParamValueFromContext(0);
+            string ackContent = GetParamValueFromContext(1);
+
+            SDKClient.Instance.ChatManager.SendReadAckForGroupMessage(messageId, ackContent, new CallBack(
+                onSuccess: () =>
+                {
+                    Console.WriteLine($"SendReadAckForGroupMessage success.");
+                },
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"SendReadAckForGroupMessage failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
         public void CallFunc_IChatManager_SendTxtMessage(string _to="", string _text="")
         {
             string to = "";
@@ -2664,6 +2741,7 @@ namespace WinSDKTest
             Message msg = Message.CreateTextSendMessage(to, text);
             msg.MessageType = msg_type;
             msg.IsThread = is_thread;
+            msg.IsNeedGroupAck = true;
 
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
                 onSuccess: () => {
@@ -3216,6 +3294,12 @@ namespace WinSDKTest
                 return;
             }
 
+            if (select_context.level2_item.CompareTo("FetchGroupReadAcks") == 0)
+            {
+                CallFunc_IChatManager_FetchGroupReadAcks();
+                return;
+            }
+
             if (select_context.level2_item.CompareTo("GetConversation") == 0)
             {
                 CallFunc_IChatManager_GetConversation();
@@ -3279,6 +3363,12 @@ namespace WinSDKTest
             if (select_context.level2_item.CompareTo("SendConversationReadAck") == 0)
             {
                 CallFunc_IChatManager_SendConversationReadAck();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("SendReadAckForGroupMessage") == 0)
+            {
+                CallFunc_IChatManager_SendReadAckForGroupMessage();
                 return;
             }
 
@@ -5098,7 +5188,7 @@ namespace WinSDKTest
                     Console.WriteLine($"Name: {group.Name}");
                     Console.WriteLine($"Description: {group.Description}");
                     Console.WriteLine($"Owner: {group.Owner}");
-                    Console.WriteLine($"Annoumcement: {group.Annoumcement}");
+                    Console.WriteLine($"Annoumcement: {group.Announcement}");
                     Console.WriteLine($"MemberCount: {group.MemberCount}");
                     string members = string.Join(",", group.MemberList.ToArray());
                     string admins = string.Join(",", group.AdminList.ToArray());
@@ -5170,7 +5260,7 @@ namespace WinSDKTest
                 Console.WriteLine($"Name: {group.Name}");
                 Console.WriteLine($"Description: {group.Description}");
                 Console.WriteLine($"Owner: {group.Owner}");
-                Console.WriteLine($"Annoumcement: {group.Annoumcement}");
+                Console.WriteLine($"Annoumcement: {group.Announcement}");
                 Console.WriteLine($"MemberCount: {group.MemberCount}");
                 string members = string.Join(",", group.MemberList.ToArray());
                 string admins = string.Join(",", group.AdminList.ToArray());
@@ -5208,7 +5298,7 @@ namespace WinSDKTest
                     Console.WriteLine($"Name: {group.Name}");
                     Console.WriteLine($"Description: {group.Description}");
                     Console.WriteLine($"Owner: {group.Owner}");
-                    Console.WriteLine($"Annoumcement: {group.Annoumcement}");
+                    Console.WriteLine($"Annoumcement: {group.Announcement}");
                     Console.WriteLine($"MemberCount: {group.MemberCount}");
                     string members = string.Join(",", group.MemberList.ToArray());
                     string admins = string.Join(",", group.AdminList.ToArray());
@@ -5256,7 +5346,7 @@ namespace WinSDKTest
                         Console.WriteLine($"Name: {group.Name}");
                         Console.WriteLine($"Description: {group.Description}");
                         Console.WriteLine($"Owner: {group.Owner}");
-                        Console.WriteLine($"Annoumcement: {group.Annoumcement}");
+                        Console.WriteLine($"Annoumcement: {group.Announcement}");
                         Console.WriteLine($"MemberCount: {group.MemberCount}");
                         string members = string.Join(",", group.MemberList.ToArray());
                         string admins = string.Join(",", group.AdminList.ToArray());
@@ -7711,7 +7801,7 @@ namespace WinSDKTest
                 Console.WriteLine($"cov id: {it.ConversationId}");
                 Console.WriteLine($"From: {it.From}");
                 Console.WriteLine($"To: {it.To}");
-                Console.WriteLine($"RecallBy: {it.RecallBy}");
+                //Console.WriteLine($"RecallBy: {it.RecallBy}");
                 Console.WriteLine($"message type: {it.MessageType}");
                 Console.WriteLine($"diection: {it.Direction}");
                 Console.WriteLine($"status: {it.Status}");
@@ -7737,7 +7827,7 @@ namespace WinSDKTest
                 Console.WriteLine($"cov id: {it.ConversationId}");
                 Console.WriteLine($"From: {it.From}");
                 Console.WriteLine($"To: {it.To}");
-                Console.WriteLine($"RecallBy: {it.RecallBy}");
+                //Console.WriteLine($"RecallBy: {it.RecallBy}");
                 Console.WriteLine($"message type: {it.MessageType}");
                 Console.WriteLine($"diection: {it.Direction}");
                 Console.WriteLine($"status: {it.Status}");
@@ -7768,7 +7858,7 @@ namespace WinSDKTest
                 Console.WriteLine($"cov id: {it.ConversationId}");
                 Console.WriteLine($"From: {it.From}");
                 Console.WriteLine($"To: {it.To}");
-                Console.WriteLine($"RecallBy: {it.RecallBy}");
+                //Console.WriteLine($"RecallBy: {it.RecallBy}");
                 Console.WriteLine($"message type: {it.MessageType}");
                 Console.WriteLine($"diection: {it.Direction}");
                 Console.WriteLine($"status: {it.Status}");
@@ -7799,7 +7889,7 @@ namespace WinSDKTest
                 Console.WriteLine($"cov id: {it.ConversationId}");
                 Console.WriteLine($"From: {it.From}");
                 Console.WriteLine($"To: {it.To}");
-                Console.WriteLine($"RecallBy: {it.RecallBy}");
+                //Console.WriteLine($"RecallBy: {it.RecallBy}");
                 Console.WriteLine($"message type: {it.MessageType}");
                 Console.WriteLine($"diection: {it.Direction}");
                 Console.WriteLine($"status: {it.Status}");
@@ -8165,7 +8255,7 @@ namespace WinSDKTest
     class ThreadManagerDelegate : IThreadManagerDelegate
     {
         
-        public void OnCreatThread(ThreadEvent threadEvent)
+        public void OnCreateThread(ThreadEvent threadEvent)
         {
             Console.WriteLine($"OnCreatThread received");
             Utils.PrintThreadEvent(threadEvent);

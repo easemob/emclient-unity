@@ -4,6 +4,14 @@ using SimpleJSON;
 
 namespace ChatSDK
 {
+    /**
+      * \~chinese
+      * 消息体抽象类。
+      * 
+      * \~english
+      * The message body abstract class.
+      * 
+      */
     public abstract class IMessageBody
     {
 
@@ -11,6 +19,21 @@ namespace ChatSDK
         internal abstract JSONObject ToJson();
         internal abstract string TypeString();
 
+        /**
+          * \~chinese
+          * IMessageBody 构造方法。
+          * 
+          * @param jsonString   JSON 格式的消息内容。
+          * @param type         消息类型。
+          * @return             IMessageBody 实例。
+          * 
+          * \~english
+          * The IMessageBody constructor.
+          * 
+          * @param jsonString   The message content in the JSON format.
+          * @param type         The message type.
+          * @return             The IMessageBody instance.
+          */
         public static IMessageBody Constructor(string jsonString, string type)
         {
             IMessageBody body = null;
@@ -183,19 +206,32 @@ namespace ChatSDK
         }
     }
 
-    /// <summary>
-    /// 消息体
-    /// </summary>
+    /**
+     * \~chinese
+     * 消息体。
+     * 
+     * \~english
+     * The message body.
+     * 
+     */
     namespace MessageBody
     {
-        /// <summary>
-        /// 文字消息
-        /// </summary>
+        /**
+         * \~chinese
+         * 文本消息体。
+         *
+         * \~english
+         * The text message body.
+         */
         public class TextBody : IMessageBody
         {
-            /// <summary>
-            /// 消息内容
-            /// </summary>
+            /**
+             * \~chinese
+             * 文本消息内容。
+             *
+             * \~english
+             * The text message content.
+             */
             public string Text;
 
             /**
@@ -218,6 +254,17 @@ namespace ChatSDK
               */
             public Dictionary<string, string> Translations;
 
+            /**
+             * \~chinese
+             * 文本消息构造方法。
+             * 
+             * @param text  文本消息体。
+             *
+             * \~english
+             * The text message constructor.
+             * 
+             * @param text  The text message body.
+             */
             public TextBody(string text)
             {
                 Text = text;
@@ -246,26 +293,59 @@ namespace ChatSDK
             }
         }
 
-        /// <summary>
-        /// 位置消息
-        /// </summary>
+        /**
+         * \~chinese
+         * 位置消息体。
+         *
+         * \~english
+         * The location message body.
+         */
         public class LocationBody : IMessageBody
         {
-            /// <summary>
-            /// 经纬度坐标
-            /// </summary>
+            /**
+             * \~chinese
+             * 经纬度坐标。
+             *
+             * \~english
+             * The latitue and longitude.
+             */
             public double Latitude, Longitude;
 
-            /// <summary>
-            /// 地址信息
-            /// </summary>
+            /**
+             * \~chinese
+             * 地址信息。
+             *
+             * \~english
+             * The address.
+             */
             public string Address;
 
-            /// <summary>
-            /// 建筑物信息
-            /// </summary>
+            /**
+             * \~chinese
+             * 建筑物名称。
+             *
+             * \~english
+             * The building name.
+             */
             public string BuildingName;
 
+            /**
+             * \~chinese
+             * 位置消息体构造方法。
+             * 
+             * @param latitue 纬度。
+             * @param longitude 经度。
+             * @param address 地址信息。
+             * @param buildName 建筑物名称。
+             *
+             * \~english
+             * The location message body constructor.
+             * 
+             * @param latitue The latitue.
+             * @param longitude The longitude.
+             * @param address The address.
+             * @param buildName The building name.
+             */
             public LocationBody(double latitude, double longitude, string address = "", string buildName = "")
             {
                 Latitude = latitude;
@@ -301,41 +381,84 @@ namespace ChatSDK
             }
         }
 
-        /// <summary>
-        /// 文件消息
-        /// </summary>
+        /**
+         * \~chinese
+         * 文件消息体。
+         *
+         * \~english
+         * The file message body.
+         */
         public class FileBody : IMessageBody
         {
-            /// <summary>
-            /// 本地路径
-            /// </summary>
+            /**
+             * \~chinese
+             * 文件的本地路径。
+             *
+             * \~english
+             * The local path of the file.
+             */
             public string LocalPath;
 
-            /// <summary>
-            /// 文件名称
-            /// </summary>
+            /**
+             * \~chinese
+             * 文件显示名称。
+             *
+             * \~english
+             * The display name of the file.
+             */
             public string DisplayName;
 
-            /// <summary>
-            /// 环信验证信息
-            /// </summary>
+            /**
+             * \~chinese
+             * 文件下载密钥。
+             *
+             * \~english
+             * The secret for downloading the file.
+             */
             public string Secret;
 
-            /// <summary>
-            /// 文件URL
-            /// </summary>
+            /**
+             * \~chinese
+             * 文件在服务器上的保存路径。
+             *
+             * \~english
+             * The URL where the file is located on the server.
+             */
             public string RemotePath;
 
-            /// <summary>
-            /// 文件大小
-            /// </summary>
+            /**
+             * \~chinese
+             * 文件大小，单位为字节。
+             *
+             * \~english
+             * The file size in bytes.
+             */
             public long FileSize;
 
-            /// <summary>
-            /// 下载状态
-            /// </summary>
+            /**
+             * \~chinese
+             * 文件下载状态。
+             *
+             * \~english
+             * The file download status.
+             */
             public DownLoadStatus DownStatus = DownLoadStatus.PENDING;
 
+            /**
+             * \~chinese
+             * 文件消息体构造方法。
+             * 
+             * @param localPath     文件的本地路径。
+             * @param displayName   文件的显示名称。
+             * @param fileSize      文件大小，单位为字节。
+             *
+             * \~english
+             * The file message body constructor.
+             * 
+             * @param localPath     The local path of the file.
+             * @param displayName   The display name of the file.
+             * @param fileSize      The file size in bytes.
+             */
             public FileBody(string localPath, string displayName = "", long fileSize = 0)
             {
                 LocalPath = localPath;
@@ -384,43 +507,95 @@ namespace ChatSDK
 
         }
 
-        /// <summary>
-        /// 图片消息
-        /// </summary>
+        /**
+         * \~chinese
+         * 图片消息体。
+         *
+         * \~english
+         * The image message body.
+         */
         public class ImageBody : FileBody
         {
-
-            /// <summary>
-            /// 缩略图本地路径，只有接收方才有
-            /// </summary>
+            /**
+             * \~chinese
+             * 缩略图的本地路径。
+             *
+             * \~english
+             * The local path of the thumbnail.
+             */
             public string ThumbnailLocalPath;
 
-            /// <summary>
-            /// 缩略图URL,只有接收方才有
-            /// </summary>
+            /**
+             * \~chinese
+             * 缩略图在服务器上的保存路径。
+             *
+             * \~english
+             * The URL where the thumbnail is located on the server.
+             */
             public string ThumbnaiRemotePath;
 
-            /// <summary>
-            /// 缩略图验证信息，只有接收方才有
-            /// </summary>
+            /**
+             * \~chinese
+             * 缩略图的下载密钥。
+             *
+             * \~english
+             * The secret for downloading the thumbnail.
+             */
             public string ThumbnaiSecret;
 
-            /// <summary>
-            /// 文件宽高
-            /// </summary>
+            /**
+             * \~chinese
+             * 图片文件的宽度和高度，单位为像素。
+             *
+             * \~english
+             * The width and height of the image file, in pixels.
+             */
             public double Height, Width;
 
-            /// <summary>
-            /// 是否发送原图
-            /// </summary>
+            /**
+             * \~chinese
+             * 是否发送原图。
+             * - `true`: 发送原图和缩略图。
+             * - (默认） `false`: 若图片小于 100 KB，发送原图和缩略图；若图片大于等于 100 KB, 发送压缩后的图片和压缩后图片的缩略图。
+             *
+             * \~english
+             * Whether to send the original image.
+             * - `true`: Yes. 
+             * - (Default) `false`: No. If the image is smaller than 100 KB, the SDK sends the original image and its thumbnail. If the image is equal to or greater than 100 KB, the SDK will compress it before sending the compressed image and the thumbnail of the compressed image.
+             */
             public bool Original;
 
-
-            /// <summary>
-            /// 下载状态
-            /// </summary>
+            /**
+             * \~chinese
+             * 图片的下载状态。
+             *
+             * \~english
+             * The image download status.
+             */
             public DownLoadStatus ThumbnaiDownStatus = DownLoadStatus.PENDING;
 
+            /**
+             * \~chinese
+             * 图片消息体构造方法。
+             * 
+             * @param localPath     图片的本地路径。
+             * @param displayName   图片的显示名称。
+             * @param fileSize      图片大小，单位为字节。
+             * @param original      是否发送原图。
+             * @param width         图片宽度，单位为像素。 
+             * @param height        图片高度，单位为像素。
+             *
+             * \~english
+             * The image message body constructor.
+             * 
+             * @param localPath     The local path of the image.
+             * @param displayName   The display name of the image.
+             * @param fileSize      The image size in bytes.
+             * @param original      Whether to send the original image.
+             * @param width         The image width in pixels.
+             * @param Height        The image height in pixels.
+             * 
+             */
             public ImageBody(string localPath, string displayName, long fileSize = 0, bool original = false, double width = 0, double height = 0) : base(localPath, displayName, fileSize)
             {
                 Original = original;
@@ -486,15 +661,41 @@ namespace ChatSDK
             }
         }
 
-        /// <summary>
-        /// 音频消息
-        /// </summary>
+        /**
+         * \~chinese
+         * 音频消息体。
+         *
+         * \~english
+         * The voice message body.
+         */
         public class VoiceBody : FileBody
         {
-            /// <summary>
-            /// 消息时长
-            /// </summary>
+            /**
+             * \~chinese
+             * 音频时长，单位为秒。
+             *
+             * \~english
+             * The voice duration in seconds.
+             */
             public int Duration;
+            /**
+             * \~chinese
+             * 音频消息体构造方法。
+             * 
+             * @param localPath     音频消息的本地路径。
+             * @param displayName   音频消息的显示名称。
+             * @param duration      音频时长，单位为秒。
+             * @param fileSize      音频文件大小，单位为字节。
+             *
+             * \~english
+             * The voice message body constructor.
+             * 
+             * @param localPath     The local path of the voice message.
+             * @param displayName   The display name of the voice message.
+             * @param duration      The voice duration in seconds.
+             * @param fileSize      The size of the voice file, in bytes.
+             * 
+             */
             public VoiceBody(string localPath, string displayName, int duration, long fileSize = 0) : base(localPath, displayName, fileSize)
             {
                 Duration = duration;
@@ -541,32 +742,84 @@ namespace ChatSDK
             }
         }
 
-        /// <summary>
-        /// 视频消息
-        /// </summary>
+        /**
+         * \~chinese
+         * 视频消息体。
+         *
+         * \~english
+         * The video message body.
+         */
         public class VideoBody : FileBody
         {
-            /// <summary>
-            /// 缩略图本地路径，只有接收方有
-            /// </summary>
+            /**
+             * \~chinese
+             * 视频缩略图的本地路径。
+             *
+             * \~english
+             * The local path of the video thumbnail.
+             */
             public string ThumbnaiLocationPath;
 
-            /// <summary>
-            /// 缩略图URL，只有接收方有
-            /// </summary>
+            /**
+             * \~chinese
+             * 视频缩略图在服务器端的存储路径。
+             *
+             * \~english
+             * The URL of the video thumbnail.
+             */
             public string ThumbnaiRemotePath;
 
-            /// <summary>
-            /// 缩略图验证信息，只有接收方有
-            /// </summary>
+            /**
+             * \~chinese
+             * 缩略图下载密钥。
+             *
+             * \~english
+             * The secret for downloading the thumbnail.
+             */
             public string ThumbnaiSecret;
 
-            /// <summary>
-            /// 视频宽高
-            /// </summary>
+            /**
+             * \~chinese
+             * 视频的宽度和高度，单位为像素。
+             *
+             * \~english
+             * The height and width of the video, in pixels.
+             */
             public double Height, Width;
+
+            /**
+             * \~chinese
+             * 视频时长，单位为秒。
+             *
+             * \~english
+             * The video duration in seconds.
+             */
             public int Duration;
 
+            /**
+             * \~chinese
+             * 视频消息体构造方法。
+             * 
+             * @param localPath     视频消息的本地路径。
+             * @param displayName   视频文件的显示名称。
+             * @param duration      视频时长，单位为秒。
+             * @param fileSize      视频的文件大小，单位为字节。
+             * @param thumbnailLocalPath 视频缩略图的本地路径。
+             * @param width         视频宽度，单位为像素。 
+             * @param height        视频高度，单位为像素。
+             *
+             * \~english
+             * The video message body constructor.
+             * 
+             * @param localPath     The local path of the video message.
+             * @param displayName   The display name of the video file.
+             * @param duration      The video duration in seconds.
+             * @param fileSize      The size of the video file, in bytes.
+             * @param thumbnailLocalPath The local path of the video thumbnail.
+             * @param width         The video width in pixels.
+             * @param Height        The video height in pixels.
+             * 
+             */
             public VideoBody(string localPath, string displayName, int duration, long fileSize = 0, string thumbnailLocalPath = "", double width = 0, double height = 0) : base(localPath, displayName, fileSize)
             {
                 Duration = duration;
@@ -628,21 +881,51 @@ namespace ChatSDK
             }
         }
 
-        /// <summary>
-        /// Cmd消息
-        /// </summary>
+        /**
+         * \~chinese
+         * 命令消息体。
+         *
+         * \~english
+         * The command message body.
+         */
         public class CmdBody : IMessageBody
         {
-            /// <summary>
-            /// 消息Action信息
-            /// </summary>
+            /**
+             * \~chinese
+             * 命令内容。
+             *
+             * \~english
+             * The command action.
+             */
             public string Action;
 
-            /// <summary>
-            /// 是否只发在线
-            /// </summary>
+            /**
+             * \~chinese
+             * 当前命令消息是否只投递在线用户。
+             *
+             * \~english
+             * Whether this command message is delivered only to online users.
+             */
             public bool DeliverOnlineOnly;
 
+            /** 
+             * \~chinese
+             * 命令消息体构造方法。
+             * 
+             * @param action                命令内容。
+             * @param deliverOnlineOnly     当前命令消息是否只投递在线用户。
+             *                              - `true`：只投在线用户。
+             *                              - （默认） `false`：不管用户是否在线均投递。
+             *
+             * \~english
+             * The command message body constructor.
+             * 
+             * @param action                The command action.
+             * @param deliverOnlineOnly     Whether this command message is delivered only to online users.
+             *                              - `true`: Yes.
+             *                              - (Default) `false`: No. The command message is delivered to users, regardless of their online or offline status.
+             * 
+             */
             public CmdBody(string action, bool deliverOnlineOnly = false)
             {
                 Action = action;
@@ -673,22 +956,48 @@ namespace ChatSDK
             }
         }
 
-        /// <summary>
-        /// 自定义消息
-        /// </summary>
+        /**
+         * \~chinese
+         * 自定义消息体。
+         *
+         * \~english
+         * The custom message body.
+         */
         public class CustomBody : IMessageBody
         {
-            /// <summary>
-            /// 自定义事件
-            /// </summary>
+            /**
+             * \~chinese
+             * 自定义事件。
+             *
+             * \~english
+             * The custom event.
+             */
             public string CustomEvent;
             //TODO: Dictionary<string,string> -> string[][] in marshalling
 
-            /// <summary>
-            /// 自定义Params
-            /// </summary>
+            /**
+             * \~chinese
+             * 自定义消息的键值对。
+             *
+             * \~english
+             * The custom params map.
+             */
             public Dictionary<string, string> CustomParams;
 
+            /**
+             * \~chinese
+             * 自定义消息体构造方法。
+             * 
+             * @param customEvent      自定义事件。
+             * @param customParams     自定义消息的键值对。
+             *
+             * \~english
+             * The constructor for the custom message body.
+             * 
+             * @param customEvent      The custom event.
+             * @param customParams     The custom params map.
+             * 
+             */
             public CustomBody(string customEvent, Dictionary<string, string> customParams = null)
             {
                 CustomEvent = customEvent;
