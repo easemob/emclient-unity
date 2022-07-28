@@ -46,6 +46,13 @@ HYPHENATE_API void ChatManager_SendReadAckForGroupMessage(void *client,int callb
 HYPHENATE_API bool ChatManager_UpdateMessage(void *client, void *mto, EMMessageBody::EMMessageBodyType type);
 HYPHENATE_API void ChatManager_RemoveMessagesBeforeTimestamp(void *client, int callbackId, int64_t timeStamp, FUNC_OnSuccess onSuccess, FUNC_OnError onError);
 HYPHENATE_API void ChatManager_DeleteConversationFromServer(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType conversationType, bool isDeleteServerMessages, FUNC_OnSuccess onSuccess, FUNC_OnError onError);
+
+HYPHENATE_API int  ChatManager_GetGroupAckCount(const char* messageId);
+HYPHENATE_API bool ChatManager_GetHasDeliverAck(const char* messageId);
+HYPHENATE_API bool ChatManager_GetHasReadAck(const char* messageId);
+HYPHENATE_API void ChatManager_GetReactionListForMsg(const char* messageId, char* buf, int len);
+HYPHENATE_API void ChatManager_GetChatThreadForMsg(const char* messageId, char* buf, int len);
+
 HYPHENATE_API void ChatManager_FetchSupportLanguages(void *client, int callbackId, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnError onError);
 HYPHENATE_API void ChatManager_TranslateMessage(void *client, int callbackId, void *mto, EMMessageBody::EMMessageBodyType type, const char * targetLanguages[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError);
 HYPHENATE_API void ChatManager_FetchGroupReadAcks(void* client, int callbackId, const char* messageId, const char* groupId, int pageSize, const char* startAckId, FUNC_OnSuccess_With_Result_V2 onSuccess, FUNC_OnError onError);

@@ -672,6 +672,8 @@ HYPHENATE_API void ChatManager_SendReadAckForMessage(void *client, int callbackI
 
 HYPHENATE_API void ChatManager_SendReadAckForGroupMessage(void *client,int callbackId, const char * messageId, const char* ackContent, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(messageId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -762,6 +764,8 @@ HYPHENATE_API void ChatManager_DeleteConversationFromServer(void *client, int ca
 
 HYPHENATE_API void ChatManager_FetchSupportLanguages(void *client, int callbackId, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     std::thread t([=](){
         std::vector<std::tuple<std::string,std::string,std::string>> languages;
         
@@ -803,6 +807,8 @@ HYPHENATE_API void ChatManager_FetchSupportLanguages(void *client, int callbackI
 
 HYPHENATE_API void ChatManager_TranslateMessage(void *client, int callbackId, void *mto, EMMessageBody::EMMessageBodyType type, const char * targetLanguages[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     
     if(!MandatoryCheck(mto) || size <= 0) {
@@ -842,6 +848,8 @@ HYPHENATE_API void ChatManager_TranslateMessage(void *client, int callbackId, vo
 
 HYPHENATE_API void ChatManager_FetchGroupReadAcks(void* client, int callbackId, const char* messageId, const char* groupId, int pageSize, const char* startAckId, FUNC_OnSuccess_With_Result_V2 onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
 
     if (!MandatoryCheck(messageId, groupId) || pageSize <= 0) {
@@ -894,6 +902,8 @@ HYPHENATE_API void ChatManager_FetchGroupReadAcks(void* client, int callbackId, 
 
 HYPHENATE_API void ChatManager_ReportMessage(void* client, int callbackId, const char* messageId, const char* tag, const char* reason, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if (!MandatoryCheck(messageId, tag, reason, error)) {
         if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -920,6 +930,8 @@ HYPHENATE_API void ChatManager_ReportMessage(void* client, int callbackId, const
 
 HYPHENATE_API void ChatManager_AddReaction(void* client, int callbackId, const char* messageId, const char* reaction, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if (!MandatoryCheck(messageId, reaction, error)) {
         if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -945,6 +957,9 @@ HYPHENATE_API void ChatManager_AddReaction(void* client, int callbackId, const c
 
 HYPHENATE_API void ChatManager_RemoveReaction(void* client, int callbackId, const char* messageId, const char* reaction, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if (!MandatoryCheck(messageId, reaction, error)) {
         if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -970,6 +985,8 @@ HYPHENATE_API void ChatManager_RemoveReaction(void* client, int callbackId, cons
 
 HYPHENATE_API void ChatManager_GetReactionList(void* client, int callbackId, const char* messageIdList, const char* messageType, const char* groupId, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if (!MandatoryCheck(messageIdList, messageType, error)) {
         if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -1002,6 +1019,8 @@ HYPHENATE_API void ChatManager_GetReactionList(void* client, int callbackId, con
 
 HYPHENATE_API void ChatManager_GetReactionDetail(void* client, int callbackId, const char* messageId, const char* reaction, const char* cursor, uint64_t pageSize, FUNC_OnSuccess_With_Result_V2 onSuccessResult, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if (!MandatoryCheck(messageId, reaction, error)) {
         if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -1037,6 +1056,103 @@ HYPHENATE_API void ChatManager_GetReactionDetail(void* client, int callbackId, c
         }
     });
     t.detach();
+}
+
+HYPHENATE_API int  ChatManager_GetGroupAckCount(const char* messageId)
+{
+    if (!CheckClientInitOrNot(-1, nullptr)) return 0;
+
+    if (nullptr == messageId || strlen(messageId) == 0) return 0;
+
+    EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(messageId);
+    if (nullptr == messagePtr) {
+        LOG("Cannot find the message with id %s in ChatManager_GetGroupAckCount", messageId);
+        return 0;
+    }
+    else {
+        return (int)messagePtr->groupAckCount();
+    }
+}
+HYPHENATE_API bool ChatManager_GetHasDeliverAck(const char* messageId)
+{
+    if (!CheckClientInitOrNot(-1, nullptr)) return false;
+
+    if (nullptr == messageId || strlen(messageId) == 0) return false;
+
+    EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(messageId);
+    if (nullptr == messagePtr) {
+        LOG("Cannot find the message with id %s in ChatManager_GetHasDeliverAck", messageId);
+        return 0;
+    }
+    else {
+        return (int)messagePtr->isDeliverAcked();
+    }
+}
+
+HYPHENATE_API bool ChatManager_GetHasReadAck(const char* messageId)
+{
+    if (!CheckClientInitOrNot(-1, nullptr)) return false;
+
+    if (nullptr == messageId || strlen(messageId) == 0) return false;
+
+    EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(messageId);
+    if (nullptr == messagePtr) {
+        LOG("Cannot find the message with id %s in ChatManager_GetHasReadAck", messageId);
+        return 0;
+    }
+    else {
+        return (int)messagePtr->isReadAcked();
+    }
+}
+
+HYPHENATE_API void ChatManager_GetReactionListForMsg(const char* messageId, char* buf, int len)
+{
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
+    if (nullptr == messageId || strlen(messageId) == 0) return;
+
+    EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(messageId);
+    if (nullptr == messagePtr) {
+        LOG("Cannot find the message with id %s in ChatManager_GetReactionListForMsg", messageId);
+        return;
+    }
+    else {
+        EMMessageReactionList& rl = messagePtr->reactionList();
+        std::string json = MessageReactionTO::ToJson(rl);
+        if (json.length() > len) {
+            LOG("Error: reactionlist json size %d is bigger than buffer %d", json.length(), len);
+            return;
+        } 
+        else {
+            strcpy(buf, json.c_str());
+            return;
+        }
+    }
+}
+
+HYPHENATE_API void ChatManager_GetChatThreadForMsg(const char* messageId, char* buf, int len)
+{
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
+    if (nullptr == messageId || strlen(messageId) == 0) return;
+
+    EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(messageId);
+    if (nullptr == messagePtr) {
+        LOG("Cannot find the message with id %s in ChatManager_GetReactionListForMsg", messageId);
+        return;
+    }
+    else {
+        EMThreadEventPtr t = messagePtr->threadOverview();
+        std::string json = ChatThread::ToJson(t);
+        if (json.length() > len) {
+            LOG("Error: threadoverview json size %d is bigger than buffer %d", json.length(), len);
+            return;
+        }
+        else {
+            strcpy(buf, json.c_str());
+            return;
+        }
+    }
 }
 
 void ChatManager_RemoveListener(void*client)

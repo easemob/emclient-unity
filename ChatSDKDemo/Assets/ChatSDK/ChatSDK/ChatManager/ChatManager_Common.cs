@@ -12,6 +12,7 @@ namespace ChatSDK
     {
         private IntPtr client;
         private ChatManagerHub chatManagerHub;
+        private ReactionManagerHub reactionManagerHub;
 
         System.Object msgMapLocker;
         Dictionary<string, IntPtr> msgPtrMap;
@@ -27,12 +28,13 @@ namespace ChatSDK
                 client = clientCommon.client;
             }
             chatManagerHub = new ChatManagerHub();
+            reactionManagerHub = new ReactionManagerHub();
 
             //registered listeners
             ChatAPINative.ChatManager_AddListener(client, chatManagerHub.OnMessagesReceived,
                 chatManagerHub.OnCmdMessagesReceived, chatManagerHub.OnMessagesRead, chatManagerHub.OnMessagesDelivered,
                 chatManagerHub.OnMessagesRecalled, chatManagerHub.OnReadAckForGroupMessageUpdated, chatManagerHub.OnGroupMessageRead,
-                chatManagerHub.OnConversationsUpdate, chatManagerHub.OnConversationRead);
+                chatManagerHub.OnConversationsUpdate, chatManagerHub.OnConversationRead, reactionManagerHub.messageReactionDidChange);
 
             msgPtrMap = new Dictionary<string, IntPtr>();
             msgMap = new Dictionary<string, Message>();

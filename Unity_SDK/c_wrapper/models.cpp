@@ -696,7 +696,7 @@ MessageTO::MessageTO(const EMMessagePtr &_message) {
     this->MucParentId = _message->mucParentId().c_str();
     this->MsgParentId = _message->msgParentId().c_str();
 
-    str = ThreadEventTO::ToJson(_message->threadOverview());
+    str = ChatThread::ToJson(_message->threadOverview());
     this->ThreadOverview = GetPointer(str.c_str());
     if (nullptr == this->ThreadOverview || strlen(this->ThreadOverview) == 0) this->ThreadOverview = const_cast<char*>(EMPTY_STR.c_str());
 }
@@ -1424,22 +1424,8 @@ void MessageTO::ToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg)
         writer.Key("serverTime");
         writer.String(std::to_string(msg->timestamp()).c_str());
 
-        writer.Key("reactionList");
-        writer.String(MessageReactionTO::ToJson(msg->reactionList()).c_str());
-
         writer.Key("isThread");
         writer.Bool(msg->isThread());
-        
-        writer.Key("mucParentId");
-        writer.String(msg->mucParentId().c_str());
-
-        writer.Key("msgParentId");
-        writer.String(msg->msgParentId().c_str());
-
-        if (nullptr != msg->threadOverview()) {
-            writer.Key("threadOverview");
-            writer.String(ThreadEventTO::ToJson(msg->threadOverview()).c_str());
-        }
 
         writer.Key("bodyType");
         writer.String(BodyTypeToString(msg->bodies().front()->type()).c_str());
@@ -1899,29 +1885,9 @@ EMMessagePtr MessageTO::FromJsonObject(const Value& jnode)
         msg->setTimestamp(i);
     }
 
-    if (jnode.HasMember("reactionList") && jnode["reactionList"].IsString()) {
-        EMMessageReactionList reaction_list = MessageReactionTO::ListFromJson(jnode["reactionList"].GetString());
-        msg->setReactionList(reaction_list);
-    }
-
     if (jnode.HasMember("isThread") && jnode["isThread"].IsBool()) {
         bool b = jnode["isThread"].GetBool();
         msg->setIsThread(b);
-    }
-
-    if (jnode.HasMember("mucParentId") && jnode["mucParentId"].IsString()) {
-        std::string str = jnode["mucParentId"].GetString();
-        msg->setMucParentId(str);
-    }
-
-    if (jnode.HasMember("msgParentId") && jnode["msgParentId"].IsString()) {
-        std::string str = jnode["msgParentId"].GetString();
-        msg->setMsgParentId(str);
-    }
-
-    if (jnode.HasMember("threadOverview") && jnode["threadOverview"].IsString()) {
-        EMThreadEventPtr thread = ThreadEventTO::FromJson(jnode["threadOverview"].GetString());
-        msg->setThreadOverview(thread);
     }
 
     return msg;
@@ -2516,14 +2482,16 @@ void PresenceTOWrapper::FromLocalWrapper()
     return ptoWrapper;
 }
 
- void MessageReactionChangeTO::ToJsonWriter(Writer<StringBuffer>& writer, EMMessageReactionChangePtr reactionChangePtr)
+ void MessageReactionChangeTO::ToJsonWriter(Writer<StringBuffer>& writer, EMMessageReactionChangePtr reactionChangePtr, std::string curname)
  {
+     std::string covId = reactionChangePtr->to();
+     if (covId.compare(curname) == 0)
+         covId = reactionChangePtr->from();
+
      writer.StartObject();
      {
-         writer.Key("from");
-         writer.String(reactionChangePtr->from().c_str());
-         writer.Key("to");
-         writer.String(reactionChangePtr->to().c_str());
+         writer.Key("conversationId");
+         writer.String(covId.c_str());
          writer.Key("messageId");
          writer.String(reactionChangePtr->messageId().c_str());
          writer.Key("reactionList");
@@ -2532,17 +2500,17 @@ void PresenceTOWrapper::FromLocalWrapper()
      writer.EndObject();
  }
 
- std::string MessageReactionChangeTO::ToJson(EMMessageReactionChangePtr reactionChangePtr)
+ std::string MessageReactionChangeTO::ToJson(EMMessageReactionChangePtr reactionChangePtr, std::string curname)
  {
      if (nullptr == reactionChangePtr) return std::string();
 
      StringBuffer s;
      Writer<StringBuffer> writer(s);
-     ToJsonWriter(writer, reactionChangePtr);
+     ToJsonWriter(writer, reactionChangePtr, curname);
      return s.GetString();
  }
 
- std::string MessageReactionChangeTO::ToJson(EMMessageReactionChangeList list)
+ std::string MessageReactionChangeTO::ToJson(EMMessageReactionChangeList list, std::string curname)
  {
      if (list.size() == 0) return std::string();
 
@@ -2551,7 +2519,7 @@ void PresenceTOWrapper::FromLocalWrapper()
      writer.StartArray();
      for (auto it : list) 
      {
-         ToJsonWriter(writer, it);
+         ToJsonWriter(writer, it, curname);
      }
      writer.EndArray();
      return s.GetString();
@@ -3020,7 +2988,40 @@ static const std::string SilentModeConvType = "conversationType";
      }
  }
 
- void ThreadEventTO::ToJsonWriter(Writer<StringBuffer>& writer, EMThreadEventPtr threadEventPtr)
+ int ChatThreadEvent::ThreadOperationToInt(const std::string& operation)
+ {
+     if (operation.compare("create") == 0)
+         return 1;
+     if (operation.compare("update") == 0)
+         return 2;
+     if (operation.compare("delete") == 0)
+         return 3;
+     if (operation.compare("update_msg") == 0)
+         return 4;
+     return 0;
+ }
+
+ std::string ChatThreadEvent::ToJson(EMThreadEventPtr threadEventPtr)
+ {
+     if (nullptr == threadEventPtr) return std::string();
+
+     StringBuffer s;
+     Writer<StringBuffer> writer(s);
+
+     writer.Key("from");
+     writer.String(threadEventPtr->fromId().c_str());
+
+     writer.Key("operation");
+     writer.Int(ThreadOperationToInt(threadEventPtr->threadOperation()));
+
+     writer.Key("chatThread");
+     ChatThread::ToJsonWriter(writer, threadEventPtr);
+
+     std::string data = s.GetString();
+     return data;
+ }
+
+ void ChatThread::ToJsonWriter(Writer<StringBuffer>& writer, EMThreadEventPtr threadEventPtr)
  {
      if (nullptr == threadEventPtr) return;
 
@@ -3041,15 +3042,6 @@ static const std::string SilentModeConvType = "conversationType";
          writer.Key("name");
          writer.String(threadEventPtr->threadName().c_str());
 
-         writer.Key("from");
-         writer.String(threadEventPtr->fromId().c_str());
-
-         writer.Key("to");
-         writer.String(threadEventPtr->toId().c_str());
-
-         writer.Key("operation");
-         writer.String(threadEventPtr->threadOperation().c_str());
-
          writer.Key("messageCount");
          writer.Int(threadEventPtr->messageCount());
 
@@ -3058,12 +3050,6 @@ static const std::string SilentModeConvType = "conversationType";
 
          writer.Key("createTimestamp");
          writer.Int64(threadEventPtr->createTimestamp());
-
-         writer.Key("updateTimestamp");
-         writer.Int64(threadEventPtr->updateTimestamp());
-
-         writer.Key("timestamp");
-         writer.Int64(threadEventPtr->timestamp());
 
          if (nullptr != threadEventPtr->lastMessage())
          {
@@ -3074,7 +3060,7 @@ static const std::string SilentModeConvType = "conversationType";
      writer.EndObject();
  }
 
- std::string ThreadEventTO::ToJson(EMThreadEventPtr threadEventPtr)
+ std::string ChatThread::ToJson(EMThreadEventPtr threadEventPtr)
  {
      if (nullptr == threadEventPtr) return std::string();
 
@@ -3085,7 +3071,7 @@ static const std::string SilentModeConvType = "conversationType";
      return data;
  }
 
- std::string ThreadEventTO::ToJson(EMCursorResultRaw<EMThreadEventPtr> cusorResult)
+ std::string ChatThread::ToJson(EMCursorResultRaw<EMThreadEventPtr> cusorResult)
  {
      StringBuffer s;
      Writer<StringBuffer> writer(s);
@@ -3105,7 +3091,7 @@ static const std::string SilentModeConvType = "conversationType";
      return data;
  }
 
- std::string ThreadEventTO::ToJson(std::vector<EMThreadEventPtr>& vec)
+ std::string ChatThread::ToJson(std::vector<EMThreadEventPtr>& vec)
  {
      if (vec.size() == 0) return std::string();
 
@@ -3122,7 +3108,7 @@ static const std::string SilentModeConvType = "conversationType";
      return data;
  }
 
- std::string ThreadEventTO::ToJson(std::map<std::string, EMMessagePtr> map)
+ std::string ChatThread::ToJson(std::map<std::string, EMMessagePtr> map)
  {
      if (map.size() == 0) return std::string();
 
@@ -3140,7 +3126,7 @@ static const std::string SilentModeConvType = "conversationType";
      return data;
  }
 
- EMThreadEventPtr ThreadEventTO::FromJsonObject(const Value& jnode)
+ EMThreadEventPtr ChatThread::FromJsonObject(const Value& jnode)
  {
      if (jnode.IsNull()) return nullptr;
 
@@ -3171,21 +3157,6 @@ static const std::string SilentModeConvType = "conversationType";
          thread->setThreadName(str);
      }
 
-     if (jnode.HasMember("from") && jnode["from"].IsString()) {
-         std::string str = jnode["from"].GetString();
-         thread->setThreadFrom(str);
-     }
-
-     if (jnode.HasMember("to") && jnode["to"].IsString()) {
-         std::string str = jnode["to"].GetString();
-         thread->setThreadTo(str);
-     }
-
-     if (jnode.HasMember("operation") && jnode["operation"].IsString()) {
-         std::string str = jnode["operation"].GetString();
-         thread->setThreadOperation(str);
-     }
-
      if (jnode.HasMember("messageCount") && jnode["messageCount"].IsInt()) {
          int i = jnode["messageCount"].GetInt();
          thread->setMessageCount(i);
@@ -3201,16 +3172,6 @@ static const std::string SilentModeConvType = "conversationType";
          thread->setCreateTimestamp(i);
      }
 
-     if (jnode.HasMember("updateTimestamp") && jnode["updateTimestamp"].IsInt64()) {
-         int64_t i = jnode["updateTimestamp"].GetInt64();
-         thread->setUpdateTimestamp(i);
-     }
-
-     if (jnode.HasMember("timestamp") && jnode["timestamp"].IsInt64()) {
-         int64_t i = jnode["timestamp"].GetInt64();
-         thread->setTimestamp(i);
-     }
-
      if (jnode.HasMember("lastMessage") && jnode["lastMessage"].IsString()) {
          EMMessagePtr msg = MessageTO::FromJson(jnode["lastMessage"].GetString());
          if (nullptr != msg)
@@ -3220,7 +3181,7 @@ static const std::string SilentModeConvType = "conversationType";
      return thread;
  }
 
- EMThreadEventPtr ThreadEventTO::FromJson(std::string json)
+ EMThreadEventPtr ChatThread::FromJson(std::string json)
  {
      Document d;
      d.Parse(json.c_str());
@@ -3229,7 +3190,7 @@ static const std::string SilentModeConvType = "conversationType";
      return FromJsonObject(d);
  }
 
- EMThreadLeaveReason ThreadEventTO::ThreadLeaveReasonFromInt(int i)
+ EMThreadLeaveReason ChatThread::ThreadLeaveReasonFromInt(int i)
  {
      EMThreadLeaveReason ret = EMThreadLeaveReason::LEAVE;
      switch (i)
@@ -3248,7 +3209,7 @@ static const std::string SilentModeConvType = "conversationType";
      return ret;
  }
 
- int ThreadEventTO::ThreadLeaveReasonToInt(EMThreadLeaveReason reason)
+ int ChatThread::ThreadLeaveReasonToInt(EMThreadLeaveReason reason)
  {
      int ret = 0;
      switch (reason)
@@ -3266,3 +3227,4 @@ static const std::string SilentModeConvType = "conversationType";
 
      return ret;
  }
+

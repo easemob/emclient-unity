@@ -523,9 +523,9 @@ struct MessageReactionTO
 
 struct MessageReactionChangeTO
 {
-    static std::string ToJson(EMMessageReactionChangePtr reactionChangePtr);
-    static std::string ToJson(EMMessageReactionChangeList list);
-    static void ToJsonWriter(Writer<StringBuffer>& writer, EMMessageReactionChangePtr reactionChangePtr);
+    static std::string ToJson(EMMessageReactionChangePtr reactionChangePtr, std::string curname);
+    static std::string ToJson(EMMessageReactionChangeList list, std::string curname);
+    static void ToJsonWriter(Writer<StringBuffer>& writer, EMMessageReactionChangePtr reactionChangePtr, std::string curname);
 };
 
 struct SilentModeParamTO
@@ -551,7 +551,13 @@ struct AttributesValueTO
     static void SetMessageAttrs(EMMessagePtr msg, std::string json);
 };
 
-struct ThreadEventTO
+struct ChatThreadEvent
+{
+    static std::string ToJson(EMThreadEventPtr threadEventPtr);
+    static int ThreadOperationToInt(const std::string& operation );
+};
+
+struct ChatThread
 {
     static void ToJsonWriter(Writer<StringBuffer>& writer, EMThreadEventPtr threadEventPtr);
     static std::string ToJson(EMThreadEventPtr threadEventPtr);
