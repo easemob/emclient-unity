@@ -170,12 +170,8 @@ public:
     const char * AttributesValues;
     int64_t LocalTime;
     int64_t ServerTime;
-    const char* ReactionList;
 
     bool IsThread;
-    const char* MucParentId;
-    const char* MsgParentId;
-    const char* ThreadOverview;
     
     EMMessageBody::EMMessageBodyType BodyType;
     MessageTO();

@@ -50,12 +50,20 @@ namespace WinSDKTest
             return list;
         }
 
-        static public void PrintThreadEvent(ThreadEvent thread)
+        static public void PrintThread(ChatThread thread)
         {
             Console.WriteLine($"Tid:{thread.Tid}; msgId:{thread.MessageId}; parentId:{thread.ParentId}; owner:{thread.Owner}");
-            Console.WriteLine($"Name:{thread.Name}; From:{thread.From}; To:{thread.To}; Operation:{thread.Operation}; MessageCount:{thread.MessageCount}");
-            Console.WriteLine($"MembersCount:{thread.MembersCount}; CreateTimestamp:{thread.CreateTimestamp}; UpdateTimestamp:{thread.UpdateTimestamp}");
-            Console.WriteLine($"Timestamp:{thread.Timestamp};");
+            Console.WriteLine($"Name:{thread.Name};MessageCount:{thread.MessageCount}");
+            Console.WriteLine($"MembersCount:{thread.MembersCount}; CreateTimestamp:{thread.CreateAt}");
+            if (null != thread.LastMessage)
+                PrintMessage(thread.LastMessage);
+        }
+
+        static public void PrintThreadEvent(ChatThreadEvent threadEvent)
+        {
+            ChatThread thread = threadEvent.ChatThread;
+            Console.WriteLine($"From: {threadEvent.From}; operation:{threadEvent.Operation}");
+            PrintThread(thread);
         }
 
         static public void PrintMessage(Message msg)
@@ -77,8 +85,6 @@ namespace WinSDKTest
             Console.WriteLine($"IsRead: {msg.IsRead}");
             Console.WriteLine($"MessageOnlineState: {msg.MessageOnlineState}");
             Console.WriteLine($"IsThread: {msg.IsThread}");
-            Console.WriteLine($"MucParentId: {msg.MucParentId}");
-            Console.WriteLine($"MsgParentId: {msg.MsgParentId}");
             foreach (var it in msg.Attributes)
             {
                 AttributeValue attr = it.Value;
@@ -93,9 +99,6 @@ namespace WinSDKTest
                 Console.WriteLine($"reaction:{it.Rection};count:{it.Count};state:{it.State}");
                 Console.WriteLine("$userList:{TransformTool.JsonObjectFromStringList(it.UserList)}");
             }
-
-            if (null != msg.ThreadOverview)
-                Utils.PrintThreadEvent(msg.ThreadOverview);
 
             switch (msg.Body.Type)
             {
@@ -276,6 +279,7 @@ namespace WinSDKTest
             level1_menus.Add(menu_index, "IUserInfoManager"); menu_index++;
             level1_menus.Add(menu_index, "IPresenceManager"); menu_index++;
             level1_menus.Add(menu_index, "IThreadManager"); menu_index++;
+            level1_menus.Add(menu_index, "IMessageManager"); menu_index++;
         }
 
         internal void InitLevel2Menus_IClient()
@@ -1513,7 +1517,6 @@ namespace WinSDKTest
         {
             Dictionary<int, string> param = new Dictionary<int, string>();
             int menu_index = 1;
-            param.Add(menu_index, "presenceStatus (int)"); menu_index++;
             param.Add(menu_index, "ext (string)"); menu_index++;
             level3_menus.Add("PublishPresence", new Dictionary<int, string>(param));
             param.Clear();
@@ -1638,6 +1641,47 @@ namespace WinSDKTest
             param.Clear();
         }
 
+        internal void InitLevel2Menus_IMessageManager()
+        {
+            Dictionary<int, string> functions_IMessageManager = new Dictionary<int, string>();
+            int menu_index = 1;
+            functions_IMessageManager.Add(menu_index, "GetGroupAckCount"); menu_index++;
+            functions_IMessageManager.Add(menu_index, "GetHasDeliverAck"); menu_index++;
+            functions_IMessageManager.Add(menu_index, "GetHasReadAck"); menu_index++;
+            functions_IMessageManager.Add(menu_index, "MessageGetReactionList"); menu_index++;
+            functions_IMessageManager.Add(menu_index, "GetChatThread"); menu_index++;
+            level2_menus.Add("IMessageManager", functions_IMessageManager);
+        }
+
+        internal void InitLevel3Menus_IMessageManager()
+        {
+            Dictionary<int, string> param = new Dictionary<int, string>();
+            int menu_index = 1;
+            param.Add(menu_index, "messageId (string)"); menu_index++;
+            level3_menus.Add("GetGroupAckCount", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "messageId (string)"); menu_index++;
+            level3_menus.Add("GetHasDeliverAck", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "messageId (string)"); menu_index++;
+            level3_menus.Add("GetHasReadAck", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "messageId (string)"); menu_index++;
+            level3_menus.Add("MessageGetReactionList", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "messageId (string)"); menu_index++;
+            level3_menus.Add("GetChatThread", new Dictionary<int, string>(param));
+            param.Clear();
+        }
+
         public void InitAll(string appkey)
         {
             //Options options = new Options("easemob-demo#easeim");
@@ -1679,9 +1723,6 @@ namespace WinSDKTest
             RoomManagerDelegate roomManagerDelegate = new RoomManagerDelegate();
             SDKClient.Instance.RoomManager.AddRoomManagerDelegate(roomManagerDelegate);
 
-            ReactionManagerDelegate reactionManagerDelegate = new ReactionManagerDelegate();
-            SDKClient.Instance.ChatManager.AddReactionManagerDelegate(reactionManagerDelegate);
-
             PresenceManagerDelegate presenceManagerDelegate = new PresenceManagerDelegate();
             SDKClient.Instance.PresenceManager.AddPresenceManagerDelegate(presenceManagerDelegate);
 
@@ -1719,6 +1760,9 @@ namespace WinSDKTest
 
             InitLevel2Menus_IThreadManager();
             InitLevel3Menus_IThreadManager();
+
+            InitLevel2Menus_IMessageManager();
+            InitLevel3Menus_IMessageManager();
         }
 
          /*
@@ -3104,7 +3148,7 @@ namespace WinSDKTest
 
         public void CallFunc_IChatManager_FetchSupportLanguages()
         {
-            SDKClient.Instance.ChatManager.FetchSupportLanguages(new ValueCallBack<List<SupportLanguages>>(
+            SDKClient.Instance.ChatManager.FetchSupportLanguages(new ValueCallBack<List<SupportLanguage>>(
              onSuccess: (list) =>
              {
                  Console.WriteLine($"FetchSupportLanguages found total: {list.Count}");
@@ -7217,7 +7261,7 @@ namespace WinSDKTest
             int presenceStatus = GetIntFromString(GetParamValueFromContext(0));
             string ext = GetParamValueFromContext(1);
 
-            SDKClient.Instance.PresenceManager.PublishPresence(presenceStatus, ext, new CallBack(
+            SDKClient.Instance.PresenceManager.PublishPresence( ext, new CallBack(
                 onSuccess: () => {
                     Console.WriteLine($"PublishPresence success.");
                 },
@@ -7251,7 +7295,7 @@ namespace WinSDKTest
                             str += "status:" + sit.Status + ";";
                         }
                         Console.WriteLine($"-------------------");
-                        Console.WriteLine($"Publisher:{it.Publisher}; Ext:{it.Ext}; lastestTime:{it.LatestTime}; ExpireTime:{it.ExpiryTime}");
+                        Console.WriteLine($"Publisher:{it.Publisher}; statusDescription:{it.statusDescription}; lastestTime:{it.LatestTime}; ExpireTime:{it.ExpiryTime}");
                         Console.WriteLine($"preseceDeviceStatus:{str}");
                     }
                 },
@@ -7324,7 +7368,7 @@ namespace WinSDKTest
                             str += "status:" + sit.Status + ";";
                         }
                         Console.WriteLine($"-------------------");
-                        Console.WriteLine($"Publisher:{it.Publisher}; Ext:{it.Ext}; lastestTime:{it.LatestTime}; ExpireTime:{it.ExpiryTime}");
+                        Console.WriteLine($"Publisher:{it.Publisher}; statusDescription:{it.statusDescription}; lastestTime:{it.LatestTime}; ExpireTime:{it.ExpiryTime}");
                         Console.WriteLine($"preseceDeviceStatus:{str}");
                     }
                 },
@@ -7372,13 +7416,13 @@ namespace WinSDKTest
         {
             string tid = GetParamValueFromContext(0);
 
-            SDKClient.Instance.ThreadManager.GetThreadWithThreadId(tid, new ValueCallBack<ThreadEvent>(
+            SDKClient.Instance.ThreadManager.GetThreadWithThreadId(tid, new ValueCallBack<ChatThread>(
                 onSuccess: (thread) =>
                 {
                     Console.WriteLine($"GetThreadWithThreadId sucess");
                     if(null != thread)
                     {
-                        Utils.PrintThreadEvent(thread);
+                        Utils.PrintThread(thread);
                         if (null != thread.LastMessage)
                         {
                             Utils.PrintMessage(thread.LastMessage);
@@ -7398,13 +7442,13 @@ namespace WinSDKTest
             string msgId = GetParamValueFromContext(1);
             string gid = GetParamValueFromContext(2);
 
-            SDKClient.Instance.ThreadManager.CreateThread(tname, msgId, gid, new ValueCallBack<ThreadEvent>(
+            SDKClient.Instance.ThreadManager.CreateThread(tname, msgId, gid, new ValueCallBack<ChatThread>(
                 onSuccess: (thread) =>
                 {
                     Console.WriteLine($"CreateThread sucess");
                     if (null != thread)
                     {
-                        Utils.PrintThreadEvent(thread);
+                        Utils.PrintThread(thread);
                         if (null != thread.LastMessage)
                         {
                             Utils.PrintMessage(thread.LastMessage);
@@ -7422,13 +7466,13 @@ namespace WinSDKTest
         {
             string tid = GetParamValueFromContext(0);
 
-            SDKClient.Instance.ThreadManager.JoinThread(tid, new ValueCallBack<ThreadEvent>(
+            SDKClient.Instance.ThreadManager.JoinThread(tid, new ValueCallBack<ChatThread>(
                 onSuccess: (thread) =>
                 {
                     Console.WriteLine($"JoinThread sucess");
                     if (null != thread)
                     {
-                       Utils.PrintThreadEvent(thread);
+                       Utils.PrintThread(thread);
                         if (null != thread.LastMessage)
                         {
                             Utils.PrintMessage(thread.LastMessage);
@@ -7496,7 +7540,7 @@ namespace WinSDKTest
             string tid = GetParamValueFromContext(0);
             string subject = GetParamValueFromContext(1);
 
-            SDKClient.Instance.ThreadManager.ChangeThreadSubject(tid, subject, new CallBack(
+            SDKClient.Instance.ThreadManager.ChangeThreadName(tid, subject, new CallBack(
                 onSuccess: () =>
                 {
                     Console.WriteLine($"ChangeThreadSubject sucess");
@@ -7538,7 +7582,7 @@ namespace WinSDKTest
             string cursor = GetParamValueFromContext(2);
             int page_size = GetIntFromString(GetParamValueFromContext(3));
 
-            SDKClient.Instance.ThreadManager.FetchThreadListOfGroup(tid, joined, cursor, page_size, new ValueCallBack<CursorResult<ThreadEvent>>(
+            SDKClient.Instance.ThreadManager.FetchThreadListOfGroup(tid, joined, cursor, page_size, new ValueCallBack<CursorResult<ChatThread>>(
                 onSuccess: (cursor_result) =>
                 {
                     Console.WriteLine($"FetchThreadListOfGroup sucess");
@@ -7548,7 +7592,7 @@ namespace WinSDKTest
                         foreach(var it in cursor_result.Data)
                         {
                             Console.WriteLine($"--------------------------------");
-                            Utils.PrintThreadEvent(it);
+                            Utils.PrintThread(it);
                         }
                     }
                 },
@@ -7564,7 +7608,7 @@ namespace WinSDKTest
             string cursor = GetParamValueFromContext(0);
             int page_size = GetIntFromString(GetParamValueFromContext(1));
 
-            SDKClient.Instance.ThreadManager.FetchMineJoinedThreadList(cursor, page_size, new ValueCallBack<CursorResult<ThreadEvent>>(
+            SDKClient.Instance.ThreadManager.FetchMineJoinedThreadList(cursor, page_size, new ValueCallBack<CursorResult<ChatThread>>(
                 onSuccess: (cursor_result) =>
                 {
                     Console.WriteLine($"FetchMineJoinedThreadList sucess");
@@ -7574,7 +7618,7 @@ namespace WinSDKTest
                         foreach (var it in cursor_result.Data)
                         {
                             Console.WriteLine($"--------------------------------");
-                            Utils.PrintThreadEvent(it);
+                            Utils.PrintThread(it);
                         }
                     }
                 },
@@ -7589,13 +7633,13 @@ namespace WinSDKTest
         {
             string tid = GetParamValueFromContext(0);
 
-            SDKClient.Instance.ThreadManager.GetThreadDetail(tid, new ValueCallBack<ThreadEvent>(
+            SDKClient.Instance.ThreadManager.GetThreadDetail(tid, new ValueCallBack<ChatThread>(
                 onSuccess: (thread) =>
                 {
                     Console.WriteLine($"GetThreadDetail sucess");
                     if (null != thread)
                     {
-                        Utils.PrintThreadEvent(thread);
+                        Utils.PrintThread(thread);
                         if (null != thread.LastMessage)
                         {
                             Utils.PrintMessage(thread.LastMessage);
@@ -7713,6 +7757,135 @@ namespace WinSDKTest
             }
         }
 
+        public void CallFunc_IMessageManager_GetGroupAckCount()
+        {
+            string messageId = GetParamValueFromContext(0);
+
+            Message msg = SDKClient.Instance.ChatManager.LoadMessage(messageId);
+            if(null == msg)
+            {
+                Console.WriteLine($"Cannot find the message with id:{messageId}");
+                return;
+            }
+
+            int count = msg.GroupAckCount;
+            Console.WriteLine($"GroupAckCount is {count} with id:{messageId}");
+        }
+
+        public void CallFunc_IMessageManager_GetHasDeliverAck()
+        {
+            Console.WriteLine($"GetHasDeliverAck API is not export in Message yet");
+            return;
+            /*
+            string messageId = GetParamValueFromContext(0);
+
+            Message msg = SDKClient.Instance.ChatManager.LoadMessage(messageId);
+            if (null == msg)
+            {
+                Console.WriteLine($"Cannot find the message with id:{messageId}");
+                return;
+            }
+
+            bool has_delivery_ack = msg.GetHasDeliverAck;
+            Console.WriteLine($"has_delivery_ack is {has_delivery_ack} with id:{messageId}");
+            */
+        }
+
+        public void CallFunc_IMessageManager_GetHasReadAck()
+        {
+            Console.WriteLine($"GetHasReadAck API is not export in Message yet");
+            return;
+            /*
+            string messageId = GetParamValueFromContext(0);
+
+            Message msg = SDKClient.Instance.ChatManager.LoadMessage(messageId);
+            if (null == msg)
+            {
+                Console.WriteLine($"Cannot find the message with id:{messageId}");
+                return;
+            }
+
+            bool has_read_ack = msg.GetHasReadAck;
+            Console.WriteLine($"has_read_ack is {has_read_ack} with id:{messageId}");
+            */
+        }
+
+        public void CallFunc_IMessageManager_GetReactionList()
+        {
+            string messageId = GetParamValueFromContext(0);
+
+            Message msg = SDKClient.Instance.ChatManager.LoadMessage(messageId);
+            if (null == msg)
+            {
+                Console.WriteLine($"Cannot find the message with id:{messageId}");
+                return;
+            }
+
+            List<MessageReaction> list = msg.ReactionList;
+            Console.WriteLine($"Reaction list count is {list.Count} with id:{messageId}");
+            foreach (var lit in list)
+            {
+                Console.WriteLine($"-----------------");
+                string userlist = string.Join(",", lit.UserList.ToArray());
+                Console.WriteLine($"reaction: Reaction:{lit.Rection},count:{lit.Count},userlist:{userlist}; state:{lit.State}");
+            }
+        }
+
+        public void CallFunc_IMessageManager_GetChatThread()
+        {
+            string messageId = GetParamValueFromContext(0);
+
+            Message msg = SDKClient.Instance.ChatManager.LoadMessage(messageId);
+            if (null == msg)
+            {
+                Console.WriteLine($"Cannot find the message with id:{messageId}");
+                return;
+            }
+
+            ChatThread athread = msg.ChatThread;
+            if(null == athread)
+            {
+                Console.WriteLine($"None thread is found with id:{messageId}");
+            }
+            else
+            {
+                Utils.PrintThread(athread);
+            }
+        }
+
+        public void CallFunc_IMessageManager()
+        {
+            if (select_context.level2_item.CompareTo("GetGroupAckCount") == 0)
+            {
+                CallFunc_IMessageManager_GetGroupAckCount();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("GetHasDeliverAck") == 0)
+            {
+                CallFunc_IMessageManager_GetHasDeliverAck();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("GetHasReadAck") == 0)
+            {
+                CallFunc_IMessageManager_GetHasReadAck();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("MessageGetReactionList") == 0)
+            {
+                CallFunc_IMessageManager_GetReactionList();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("GetChatThread") == 0)
+            {
+                CallFunc_IMessageManager_GetChatThread();
+                return;
+            }
+        }
+
         public void CallFunc()
         {
             if(select_context.level1_item.CompareTo("IClient") == 0)
@@ -7772,6 +7945,12 @@ namespace WinSDKTest
             if (select_context.level1_item.CompareTo("IThreadManager") == 0)
             {
                 CallFunc_IThreadManager();
+                return;
+            }
+
+            if (select_context.level1_item.CompareTo("IMessageManager") == 0)
+            {
+                CallFunc_IMessageManager();
                 return;
             }
 
@@ -7940,7 +8119,25 @@ namespace WinSDKTest
         {
             Console.WriteLine("OnConversationRead");
         }
-      
+
+        public void MessageReactionDidChange(List<MessageReactionChange> list)
+        {
+            Console.WriteLine($"MessageReactionDidChange, reaction list count: {list.Count}");
+            if (list.Count == 0) return;
+            foreach (var it in list)
+            {
+                Console.WriteLine($"---------------");
+                MessageReactionChange mrc = it;
+                Console.WriteLine($"convId: {mrc.ConversationId}, msgId:{mrc.MessageId}");
+                foreach (var rit in mrc.ReactionList)
+                {
+                    MessageReaction mr = rit;
+                    string userlist = string.Join(",", mr.UserList.ToArray());
+                    Console.WriteLine($"reaction: Reaction:{mr.Rection},count:{mr.Count},userlist:{userlist}; state:{mr.State}");
+                }
+
+            }
+        }
     }
 
     class ConnectionDelegate : IConnectionDelegate
@@ -8208,29 +8405,6 @@ namespace WinSDKTest
         }
     }
 
-    class ReactionManagerDelegate : IReactionManagerDelegate
-    {
-        public void MessageReactionDidChange(List<MessageReactionChange> list)
-        {
-            Console.WriteLine($"MessageReactionDidChange, reaction list count: {list.Count}");
-            if (list.Count == 0) return;
-            foreach(var it in list)
-            {
-                Console.WriteLine($"---------------");
-                MessageReactionChange mrc = it;
-                Console.WriteLine($"from: {mrc.From}; to: {mrc.To},msgId:{mrc.MessageId}");
-                foreach(var rit in mrc.ReactionList)
-                {
-                    MessageReaction mr = rit;
-                    string userlist = string.Join(",", mr.UserList.ToArray());
-                    Console.WriteLine($"reaction: Reaction:{mr.Rection},count:{mr.Count},userlist:{userlist}; state:{mr.State}");
-                }
-                
-            }
-            
-        }
-    }
-
     class PresenceManagerDelegate : IPresenceManagerDelegate
     {
         public void OnPresenceUpdated(List<Presence> presences)
@@ -8246,48 +8420,35 @@ namespace WinSDKTest
                     str += "status:" + sit.Status + ";";
                 }
                 Console.WriteLine($"-------------------");
-                Console.WriteLine($"Publisher:{it.Publisher}; Ext:{it.Ext}; lastestTime:{it.LatestTime}; ExpireTime:{it.ExpiryTime}");
+                Console.WriteLine($"Publisher:{it.Publisher}; statusDescription:{it.statusDescription}; lastestTime:{it.LatestTime}; ExpireTime:{it.ExpiryTime}");
                 Console.WriteLine($"preseceDeviceStatus:{str}");
             }
         }
     }
 
-    class ThreadManagerDelegate : IThreadManagerDelegate
+    class ThreadManagerDelegate : IChatThreadManagerDelegate
     {
-        
-        public void OnCreateThread(ThreadEvent threadEvent)
+        public void OnChatThreadDestroy(ChatThreadEvent threadEvent)
+        {
+            Console.WriteLine($"OnChatThreadDestroy received");
+            Utils.PrintThreadEvent(threadEvent);
+        }
+
+        public void OnChatThreadUpdate(ChatThreadEvent threadEvent)
+        {
+            Console.WriteLine($"OnChatThreadUpdate received");
+            Utils.PrintThreadEvent(threadEvent);
+        }
+
+        public void OnChatThreadCreate(ChatThreadEvent threadEvent)
         {
             Console.WriteLine($"OnCreatThread received");
             Utils.PrintThreadEvent(threadEvent);
         }
 
-        public void OnLeaveThread(ThreadEvent threadEvent, ThreadLeaveReason reason)
+        public void OnUserKickOutOfChatThread(ChatThreadEvent threadEvent)
         {
-            Console.WriteLine($"OnLeaveThread received with reason:{reason}");
-            Utils.PrintThreadEvent(threadEvent);
-        }
-
-        public void OnMemberJoinedThread(ThreadEvent threadEvent)
-        {
-            Console.WriteLine($"OnMemberJoinedThread received");
-            Utils.PrintThreadEvent(threadEvent);
-        }
-
-        public void OnMemberLeaveThread(ThreadEvent threadEvent)
-        {
-            Console.WriteLine($"OnMemberLeaveThread received");
-            Utils.PrintThreadEvent(threadEvent);
-        }
-
-        public void OnThreadNotifyChange(ThreadEvent threadEvent)
-        {
-            Console.WriteLine($"OnThreadNotifyChange received");
-            Utils.PrintThreadEvent(threadEvent);
-        }
-
-        public void OnUpdateMyThread(ThreadEvent threadEvent)
-        {
-            Console.WriteLine($"OnUpdateMyThread received");
+            Console.WriteLine($"OnUserKickOutOfChatThread received");
             Utils.PrintThreadEvent(threadEvent);
         }
     }

@@ -35,10 +35,6 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
     bool isNeedGroupAck = wraper_mto->IsNeedGroupAck;
     bool isThread = wraper_mto->IsThread;
 
-    EMMessageReactionList reaction_list;
-    if (nullptr != wraper_mto->ReactionList) 
-        reaction_list = MessageReactionTO::ListFromJson(GetUTF8FromUnicode(wraper_mto->ReactionList));
-
     switch(type) {
         case EMMessageBody::TEXT:
         {
@@ -215,8 +211,6 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
         AttributesValueTO::SetMessageAttrs(messagePtr, attrs);
         messagePtr->setIsNeedGroupAck(isNeedGroupAck);
         messagePtr->setIsThread(isThread);
-        if (reaction_list.size() > 0)
-            messagePtr->setReactionList(reaction_list);
         return messagePtr;
     } else {
         EMMessagePtr messagePtr = EMMessage::createSendMessage(from, to, messageBody, msgType);
@@ -224,8 +218,6 @@ EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bo
         messagePtr->setIsNeedGroupAck(isNeedGroupAck);
         AttributesValueTO::SetMessageAttrs(messagePtr, attrs);
         messagePtr->setIsThread(isThread);
-        if (reaction_list.size() > 0)
-            messagePtr->setReactionList(reaction_list);
         return messagePtr;
     }
 
@@ -673,14 +665,11 @@ MessageTO::MessageTO(const EMMessagePtr &_message) {
     this->IsNeedGroupAck = _message->isNeedGroupAck();
     this->IsRead = _message->isRead();
     this->MessageOnlineState = _message->messageOnlineState();
-
-    this->ReactionList = GetPointer(MessageReactionTO::ToJson(*_message.get()).c_str());
     
     if (strlen(this->MsgId) == 0) this->MsgId =  const_cast<char*>(EMPTY_STR.c_str());
     if (strlen(this->ConversationId) == 0) this->ConversationId =  const_cast<char*>(EMPTY_STR.c_str());
     if (strlen(this->From) == 0) this->From =  const_cast<char*>(EMPTY_STR.c_str());
     if (strlen(this->To) == 0) this->To =  const_cast<char*>(EMPTY_STR.c_str());
-    if (nullptr == this->ReactionList || strlen(this->ReactionList) == 0) this->ReactionList = const_cast<char*>(EMPTY_STR.c_str());
 
     if (strlen(_message->recallBy().c_str()) == 0) 
         this->RecallBy =  const_cast<char*>(EMPTY_STR.c_str());
@@ -693,12 +682,6 @@ MessageTO::MessageTO(const EMMessagePtr &_message) {
     if (nullptr == this->AttributesValues || strlen(this->AttributesValues) == 0) this->AttributesValues = const_cast<char*>(EMPTY_STR.c_str());
 
     this->IsThread = _message->isThread();
-    this->MucParentId = _message->mucParentId().c_str();
-    this->MsgParentId = _message->msgParentId().c_str();
-
-    str = ChatThread::ToJson(_message->threadOverview());
-    this->ThreadOverview = GetPointer(str.c_str());
-    if (nullptr == this->ThreadOverview || strlen(this->ThreadOverview) == 0) this->ThreadOverview = const_cast<char*>(EMPTY_STR.c_str());
 }
 
 //TextMessageTO
@@ -900,12 +883,6 @@ void MessageTO::FreeResource(MessageTO * mto)
 
     if (nullptr != mto->RecallBy && mto->RecallBy != EMPTY_STR.c_str())
         delete mto->RecallBy;
-    
-    if (nullptr != mto->ReactionList && mto->ReactionList != EMPTY_STR.c_str())
-        delete mto->ReactionList;
-
-    if (nullptr != mto->ThreadOverview && mto->ThreadOverview != EMPTY_STR.c_str())
-        delete mto->ThreadOverview;
 
     switch(mto->BodyType) {
         case EMMessageBody::TEXT:
@@ -3008,14 +2985,19 @@ static const std::string SilentModeConvType = "conversationType";
      StringBuffer s;
      Writer<StringBuffer> writer(s);
 
-     writer.Key("from");
-     writer.String(threadEventPtr->fromId().c_str());
+     writer.StartObject();
+     {
+         writer.Key("from");
+         writer.String(threadEventPtr->fromId().c_str());
 
-     writer.Key("operation");
-     writer.Int(ThreadOperationToInt(threadEventPtr->threadOperation()));
+         writer.Key("operation");
+         writer.Int(ThreadOperationToInt(threadEventPtr->threadOperation()));
 
-     writer.Key("chatThread");
-     ChatThread::ToJsonWriter(writer, threadEventPtr);
+         writer.Key("chatThread");
+         ChatThread::ToJsonWriter(writer, threadEventPtr);
+
+     }
+     writer.EndObject();
 
      std::string data = s.GetString();
      return data;
