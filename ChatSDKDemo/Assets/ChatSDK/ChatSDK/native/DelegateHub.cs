@@ -394,7 +394,7 @@ namespace ChatSDK
         {
             OnInvitationReceived = (string groupId, string groupName, string inviter, string reason) =>
             {
-                var name = TransformTool.GetUnicodeStringFromUTF8(groupName);
+                var name = TransformTool.GetUnicodeStringFromUTF8InCallBack(groupName);
 
                 Debug.Log($"OnInvitationReceived, group[Id={groupId},Name={name}] invitation received from {inviter}, reason: {reason}");
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
@@ -407,7 +407,7 @@ namespace ChatSDK
 
             OnRequestToJoinReceived = (string groupId, string groupName, string applicant, string reason) =>
             {
-                var name = TransformTool.GetUnicodeStringFromUTF8(groupName);
+                var name = TransformTool.GetUnicodeStringFromUTF8InCallBack(groupName);
 
                 Debug.Log($"ROnRequestToJoinReceived, group[Id={groupId},Name={name}], applicant:{applicant}, reason: {reason}");
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
@@ -420,7 +420,7 @@ namespace ChatSDK
 
             OnRequestToJoinAccepted = (string groupId, string groupName, string accepter) =>
             {
-                var name = TransformTool.GetUnicodeStringFromUTF8(groupName);
+                var name = TransformTool.GetUnicodeStringFromUTF8InCallBack(groupName);
 
                 Debug.Log($"OnRequestToJoinAccepted, group[Id={groupId},Name={name}], accepter: {accepter}");
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
@@ -433,7 +433,7 @@ namespace ChatSDK
 
             OnRequestToJoinDeclined = (string groupId, string groupName, string decliner, string reason) =>
             {
-                var name = TransformTool.GetUnicodeStringFromUTF8(groupName);
+                var name = TransformTool.GetUnicodeStringFromUTF8InCallBack(groupName);
 
                 Debug.Log($"OnRequestToJoinDeclined, group[Id={groupId},Name={name}], decliner: {decliner}, reason:{reason}");
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
@@ -468,7 +468,7 @@ namespace ChatSDK
 
             OnUserRemoved = (string groupId, string groupName) =>
             {
-                var name = TransformTool.GetUnicodeStringFromUTF8(groupName);
+                var name = TransformTool.GetUnicodeStringFromUTF8InCallBack(groupName);
 
                 Debug.Log($"OnUserRemoved, group[Id={groupId}, Name={name}]");
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
@@ -481,7 +481,7 @@ namespace ChatSDK
 
             OnGroupDestroyed = (string groupId, string groupName) =>
             {
-                var name = TransformTool.GetUnicodeStringFromUTF8(groupName);
+                var name = TransformTool.GetUnicodeStringFromUTF8InCallBack(groupName);
 
                 Debug.Log($"OnGroupDestroyed, group[Id={groupId}, Name={name}]");
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
@@ -494,7 +494,7 @@ namespace ChatSDK
 
             OnAutoAcceptInvitationFromGroup = (string groupId, string inviter, string inviteMessage) =>
             {
-                var inviteMsg = TransformTool.GetUnicodeStringFromUTF8(inviteMessage);
+                var inviteMsg = TransformTool.GetUnicodeStringFromUTF8InCallBack(inviteMessage);
 
                 Debug.Log($"OnAutoAcceptInvitationFromGroup, group[Id={groupId}], inviter:{inviter}, inviteMessage:{inviteMsg}");
 
@@ -599,7 +599,7 @@ namespace ChatSDK
 
             OnAnnouncementChanged = (string groupId, string announcement) =>
             {
-                var announ = TransformTool.GetUnicodeStringFromUTF8(announcement);
+                var announ = TransformTool.GetUnicodeStringFromUTF8InCallBack(announcement);
 
                 Debug.Log($"OnAnnouncementChanged, group[Id={groupId}], announcement:{announ}");
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
@@ -702,7 +702,7 @@ namespace ChatSDK
 
             OnChatRoomDestroyed = (string roomId, string roomName) =>
             {
-                var name = TransformTool.GetUnicodeStringFromUTF8(roomName);
+                var name = TransformTool.GetUnicodeStringFromUTF8InCallBack(roomName);
 
                 Debug.Log($"OnChatRoomDestroyed, roomId {roomId}, roomName {name}.");
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
@@ -726,7 +726,7 @@ namespace ChatSDK
 
             OnMemberExited = (string roomId, string roomName, string member) =>
             {
-                var name = TransformTool.GetUnicodeStringFromUTF8(roomName);
+                var name = TransformTool.GetUnicodeStringFromUTF8InCallBack(roomName);
 
                 Debug.Log($"OnMemberExited, roomId {roomId}, roomName {name}, member {member}.");
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
@@ -739,7 +739,7 @@ namespace ChatSDK
 
             OnRemovedFromChatRoom = (string roomId, string roomName, string participant) =>
             {
-                var name = TransformTool.GetUnicodeStringFromUTF8(roomName);
+                var name = TransformTool.GetUnicodeStringFromUTF8InCallBack(roomName);
 
                 Debug.Log($"OnRemovedFromChatRoom, roomId {roomId}, roomName {name}, paticipant {participant}.");
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
@@ -817,7 +817,7 @@ namespace ChatSDK
 
             OnAnnouncementChanged = (string roomId, string announcement) =>
             {
-                var announ = TransformTool.GetUnicodeStringFromUTF8(announcement);
+                var announ = TransformTool.GetUnicodeStringFromUTF8InCallBack(announcement);
 
                 Debug.Log($"OnAnnouncementChanged, roomId {roomId}, announcement {announ}");
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
@@ -936,13 +936,7 @@ namespace ChatSDK
             messageReactionDidChange = (string json) =>
             {
                 Debug.Log("messageReactionDidChange received.");
-
-#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
-                List<MessageReactionChange> list = MessageReactionChange.ListFromJson(json);
-#else
-                List<MessageReactionChange> list = MessageReactionChange.ListFromJson(TransformTool.GetUnicodeStringFromUTF8(json));
-#endif
-
+                List<MessageReactionChange> list = MessageReactionChange.ListFromJson(TransformTool.GetUnicodeStringFromUTF8InCallBack(json));
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IChatManagerDelegate listener in CallbackManager.Instance().chatManagerListener.delegater)
                     {
@@ -965,14 +959,7 @@ namespace ChatSDK
             OnChatThreadCreate_ = (string json) =>
             {
                 Debug.Log("OnChatThreadCreate received.");
-
-
-#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
-                ChatThreadEvent thread = ChatThreadEvent.FromJson(json);
-#else
-                ChatThreadEvent thread = ChatThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
-#endif
-
+                ChatThreadEvent thread = ChatThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8InCallBack(json));
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IChatThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
                     {
@@ -984,12 +971,7 @@ namespace ChatSDK
             OnChatThreadUpdate_ = (string json) =>
             {
                 Debug.Log("OnChatThreadUpdate received.");
-#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
-                ChatThreadEvent thread = ChatThreadEvent.FromJson(json);
-#else
-                ChatThreadEvent thread = ChatThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
-#endif
-
+                ChatThreadEvent thread = ChatThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8InCallBack(json));
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IChatThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
                     {
@@ -1002,13 +984,7 @@ namespace ChatSDK
             OnChatThreadDestroy_ = (string json) =>
             {
                 Debug.Log("OnChatThreadDestroy received.");
-
-#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
-                ChatThreadEvent thread = ChatThreadEvent.FromJson(json);
-#else
-                ChatThreadEvent thread = ChatThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
-#endif
-
+                ChatThreadEvent thread = ChatThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8InCallBack(json));
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IChatThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
                     {
@@ -1020,13 +996,7 @@ namespace ChatSDK
             OnUserKickOutOfChatThread_ = (string json) =>
             {
                 Debug.Log("OnUserKickOutOfChatThread received.");
-
-#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
-                ChatThreadEvent thread = ChatThreadEvent.FromJson(json);
-#else
-                ChatThreadEvent thread = ChatThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8(json));
-#endif
-
+                ChatThreadEvent thread = ChatThreadEvent.FromJson(TransformTool.GetUnicodeStringFromUTF8InCallBack(json));
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IChatThreadManagerDelegate listener in CallbackManager.Instance().threadManagerListener.delegater)
                     {

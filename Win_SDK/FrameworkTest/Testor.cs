@@ -3177,7 +3177,7 @@ namespace WinSDKTest
             targetLanguages.Add(lang1);
             targetLanguages.Add(lang2);
 
-            SDKClient.Instance.ChatManager.TranslateMessage(ref msg, targetLanguages, new ValueCallBack<Message>(
+            SDKClient.Instance.ChatManager.TranslateMessage(msg, targetLanguages, new ValueCallBack<Message>(
              onSuccess: (dmsg) =>
              {
                  Console.WriteLine($"TranslateMessage success.");
