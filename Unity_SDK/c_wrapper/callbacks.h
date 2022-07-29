@@ -13,6 +13,7 @@
 #include "empresencemanager_listener.h"
 #include "emreactionmanager_listener.h"
 #include "emthreadmanager_listener.h"
+#include "emlogininfo.h"
 
 using namespace easemob;
 
@@ -951,7 +952,10 @@ public:
         size_t size = list.size();
         LOG("receive messageReactionDidChange, reactionChange count: %d!", size);
 
-        std::string json = MessageReactionChangeTO::ToJson(list);
+        const EMLoginInfo& loginInfo = CLIENT->getLoginInfo();
+        std::string curname = loginInfo.loginUser();
+
+        std::string json = MessageReactionChangeTO::ToJson(list, curname);
         if(messageReactionDidChange_)
             messageReactionDidChange_(json.c_str());
     }
@@ -992,7 +996,7 @@ public:
             return;
         }
 
-        std::string json = ThreadEventTO::ToJson(event);
+        std::string json = ChatThreadEvent::ToJson(event);
 
         if (event->threadOperation().compare("create") == 0) {
 
@@ -1020,7 +1024,7 @@ public:
 
     void onLeaveThread(const EMThreadEventPtr event, EMThreadLeaveReason reason) override {
         LOG("receive onLeaveThread");
-        std::string json = ThreadEventTO::ToJson(event);
+        std::string json = ChatThreadEvent::ToJson(event);
 
         switch (reason)
         {

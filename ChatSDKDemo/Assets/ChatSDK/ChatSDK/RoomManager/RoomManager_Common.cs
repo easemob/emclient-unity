@@ -62,19 +62,8 @@ namespace ChatSDK
                 return;
             }
             //turn List<string> into array
-            int size = 0;
-            var membersArray = new string[0];
-            if (null != members && members.Count > 0)
-            {
-                size = members.Count;
-                membersArray = new string[size];
-                int i = 0;
-                foreach (string member in members)
-                {
-                    membersArray[i] = member;
-                    i++;
-                }
-            }
+            int size = members.Count;
+            var membersArray = members.ToArray();
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
             ChatAPINative.RoomManager_BlockChatroomMembers(client, callbackId, roomId, membersArray, size,
@@ -180,19 +169,8 @@ namespace ChatSDK
                 return;
             }
             //turn List<string> into array
-            int size = 0;
-            var membersArray = new string[0];
-            if (members != null && members.Count > 0)
-            {
-                size = members.Count;
-                membersArray = new string[size];
-                int i = 0;
-                foreach (string member in members)
-                {
-                    membersArray[i] = member;
-                    i++;
-                }
-            }
+            int size = members.Count;
+            var membersArray = members.ToArray();
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
             ChatAPINative.RoomManager_CreateRoom(client, callbackId, subject, description, welcomeMsg, maxUserCount, membersArray, size,
@@ -503,21 +481,9 @@ namespace ChatSDK
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            //turn List<string> into array
-            int size = 0;
-            var membersArray = new string[0];
-            if (null != members && members.Count > 0)
-            {
-                size = members.Count;
-                membersArray = new string[size];
-                int i = 0;
-                foreach (string member in members)
-                {
-                    membersArray[i] = member;
-                    i++;
-                }
-            }
 
+            int size = members.Count;
+            var membersArray = members.ToArray();
             int muteDuration = -1; // no this parameter for API?
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
@@ -569,19 +535,8 @@ namespace ChatSDK
                 return;
             }
             //turn List<string> into array
-            int size = 0;
-            var membersArray = new string[0];
-            if (null != members && members.Count > 0)
-            {
-                size = members.Count;
-                membersArray = new string[size];
-                int i = 0;
-                foreach (string member in members)
-                {
-                    membersArray[i] = member;
-                    i++;
-                }
-            }
+            int size = members.Count;
+            var membersArray = members.ToArray();
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
             ChatAPINative.RoomManager_RemoveRoomMembers(client, callbackId, roomId, membersArray, size,
@@ -600,20 +555,9 @@ namespace ChatSDK
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            //turn List<string> into array
-            int size = 0;
-            var membersArray = new string[0];
-            if (null != members && members.Count > 0)
-            {
-                size = members.Count;
-                membersArray = new string[size];
-                int i = 0;
-                foreach (string member in members)
-                {
-                    membersArray[i] = member;
-                    i++;
-                }
-            }
+            
+            int size = members.Count;
+            var membersArray = members.ToArray();
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
             ChatAPINative.RoomManager_UnblockChatroomMembers(client, callbackId, roomId, membersArray, size,
@@ -633,19 +577,8 @@ namespace ChatSDK
                 return;
             }
             //turn List<string> into array
-            int size = 0;
-            var membersArray = new string[0];
-            if (null != members && members.Count > 0)
-            {
-                size = members.Count;
-                membersArray = new string[size];
-                int i = 0;
-                foreach (string member in members)
-                {
-                    membersArray[i] = member;
-                    i++;
-                }
-            }
+            int size = members.Count;
+            var membersArray = members.ToArray();
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
             ChatAPINative.RoomManager_UnmuteChatroomMembers(client, callbackId, roomId, membersArray, size,
@@ -752,20 +685,8 @@ namespace ChatSDK
                 return;
             }
             //turn List<string> into array
-            int size = 0;
-            var membersArray = new string[0];
-            if (null != members && members.Count > 0)
-            {
-                size = members.Count;
-                membersArray = new string[size];
-                int i = 0;
-                foreach (string member in members)
-                {
-                    membersArray[i] = member;
-                    i++;
-                }
-            }
-
+            int size = members.Count;
+            var membersArray = members.ToArray();
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
             ChatAPINative.RoomManager_AddWhiteListMembers(client, callbackId, roomId, membersArray, size,
@@ -785,20 +706,8 @@ namespace ChatSDK
                 return;
             }
             //turn List<string> into array
-            int size = 0;
-            var membersArray = new string[0];
-            if (null != members && members.Count > 0)
-            {
-                size = members.Count;
-                membersArray = new string[size];
-                int i = 0;
-                foreach (string member in members)
-                {
-                    membersArray[i] = member;
-                    i++;
-                }
-            }
-
+            int size = members.Count;
+            var membersArray = members.ToArray();
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
             ChatAPINative.RoomManager_RemoveWhiteListMembers(client, callbackId, roomId, membersArray, size,

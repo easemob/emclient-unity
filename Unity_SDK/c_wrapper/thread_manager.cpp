@@ -17,6 +17,8 @@
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/prettywriter.h"
 
+extern EMClient* gClient;
+
 ThreadManagerListener* gThreadListener = nullptr;
 
 HYPHENATE_API void ThreadManager_AddListener(void* client,
@@ -26,6 +28,8 @@ HYPHENATE_API void ThreadManager_AddListener(void* client,
     FUNC_OnUserKickOutOfChatThread OnUserKickOutOfChatThread
 )
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
     if (nullptr == gThreadListener) { //only set once!
         gThreadListener = new ThreadManagerListener(OnChatThreadCreate, OnChatThreadUpdate, OnChatThreadDestroy, OnUserKickOutOfChatThread);
         CLIENT->getThreadManager().addListener(gThreadListener);
@@ -35,6 +39,8 @@ HYPHENATE_API void ThreadManager_AddListener(void* client,
 
 HYPHENATE_API void ThreadManager_GetThreadWithThreadId(void* client, int callbackId, const char* threadId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if (!MandatoryCheck(threadId, error)) {
         if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -48,7 +54,7 @@ HYPHENATE_API void ThreadManager_GetThreadWithThreadId(void* client, int callbac
         if (EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("ThreadManager_GetThreadWithThreadId succeeds: group:%s", threadIdStr.c_str());
             if (onSuccess) {
-                std::string json = ThreadEventTO::ToJson(result);
+                std::string json = ChatThread::ToJson(result);
                 const char* data[1] = { json.c_str() };
                 onSuccess((void**)data, DataType::String, 1, callbackId);
             }
@@ -63,6 +69,8 @@ HYPHENATE_API void ThreadManager_GetThreadWithThreadId(void* client, int callbac
 
 HYPHENATE_API void ThreadManager_CreateThread(void* client, int callbackId, const char* threadName, const char* msgId, const char* groupId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if (!MandatoryCheck(threadName, msgId, groupId, error)) {
         if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -78,7 +86,7 @@ HYPHENATE_API void ThreadManager_CreateThread(void* client, int callbackId, cons
         if (EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("ThreadManager_CreateThread succeeds: group:%s", threadNameStr.c_str());
             if (onSuccess) {
-                std::string json = ThreadEventTO::ToJson(result);
+                std::string json = ChatThread::ToJson(result);
                 const char* data[1] = { json.c_str() };
                 onSuccess((void**)data, DataType::String, 1, callbackId);
             }
@@ -93,6 +101,8 @@ HYPHENATE_API void ThreadManager_CreateThread(void* client, int callbackId, cons
 
 HYPHENATE_API void ThreadManager_JoinThread(void* client, int callbackId, const char* threadId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if (!MandatoryCheck(threadId, error)) {
         if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -107,7 +117,7 @@ HYPHENATE_API void ThreadManager_JoinThread(void* client, int callbackId, const 
         if (EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("ThreadManager_JoinThread succeeds: group:%s", threadIdStr.c_str());
             if (onSuccess) {
-                std::string json = ThreadEventTO::ToJson(result);
+                std::string json = ChatThread::ToJson(result);
                 const char* data[1] = { json.c_str() };
                 onSuccess((void**)data, DataType::String, 1, callbackId);
             }
@@ -122,6 +132,8 @@ HYPHENATE_API void ThreadManager_JoinThread(void* client, int callbackId, const 
 
 HYPHENATE_API void ThreadManager_LeaveThread(void* client, int callbackId, const char* threadId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if (!MandatoryCheck(threadId, error)) {
         if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -149,6 +161,8 @@ HYPHENATE_API void ThreadManager_LeaveThread(void* client, int callbackId, const
 
 HYPHENATE_API void ThreadManager_DestroyThread(void* client, int callbackId, const char* threadId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if (!MandatoryCheck(threadId, error)) {
         if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -176,6 +190,8 @@ HYPHENATE_API void ThreadManager_DestroyThread(void* client, int callbackId, con
 
 HYPHENATE_API void ThreadManager_RemoveThreadMember(void* client, int callbackId, const char* threadId, const char* username, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if (!MandatoryCheck(threadId, username, error)) {
         if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -204,6 +220,8 @@ HYPHENATE_API void ThreadManager_RemoveThreadMember(void* client, int callbackId
 
 HYPHENATE_API void ThreadManager_ChangeThreadSubject(void* client, int callbackId, const char* threadId, const char* newSubject, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if (!MandatoryCheck(threadId, newSubject, error)) {
         if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -232,6 +250,8 @@ HYPHENATE_API void ThreadManager_ChangeThreadSubject(void* client, int callbackI
 
 HYPHENATE_API void ThreadManager_FetchThreadMembers(void* client, int callbackId, const char* threadId, const char* cursor, int pageSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if (!MandatoryCheck(threadId, error)) {
         if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -262,6 +282,8 @@ HYPHENATE_API void ThreadManager_FetchThreadMembers(void* client, int callbackId
 
 HYPHENATE_API void ThreadManager_FetchThreadListOfGroup(void* client, int callbackId, const char* cursor, int pageSize, const char* groupId, bool joined, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if (!MandatoryCheck(groupId, error)) {
         if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -277,7 +299,7 @@ HYPHENATE_API void ThreadManager_FetchThreadListOfGroup(void* client, int callba
         if (EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("ThreadManager_FetchThreadListOfGroup succeeds");
             if (onSuccess) {
-                std::string json = ThreadEventTO::ToJson(result);
+                std::string json = ChatThread::ToJson(result);
                 const char* data[1] = { json.c_str() };
                 onSuccess((void**)data, DataType::String, 1, callbackId);
             }
@@ -292,6 +314,8 @@ HYPHENATE_API void ThreadManager_FetchThreadListOfGroup(void* client, int callba
 
 HYPHENATE_API void ThreadManager_FetchMineJoinedThreadList(void* client, int callbackId, const char* cursor, int pageSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     std::string cursorStr = OptionalStrParamCheck(cursor);
 
     std::thread t([=]() {
@@ -300,7 +324,7 @@ HYPHENATE_API void ThreadManager_FetchMineJoinedThreadList(void* client, int cal
         if (EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("ThreadManager_FetchMineJoinedThreadList succeeds");
             if (onSuccess) {
-                std::string json = ThreadEventTO::ToJson(result);
+                std::string json = ChatThread::ToJson(result);
                 const char* data[1] = { json.c_str() };
                 onSuccess((void**)data, DataType::String, 1, callbackId);
             }
@@ -315,6 +339,8 @@ HYPHENATE_API void ThreadManager_FetchMineJoinedThreadList(void* client, int cal
 
 HYPHENATE_API void ThreadManager_GetThreadDetail(void* client, int callbackId, const char* threadId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if (!MandatoryCheck(threadId, error)) {
         if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -328,7 +354,7 @@ HYPHENATE_API void ThreadManager_GetThreadDetail(void* client, int callbackId, c
         if (EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("ThreadManager_GetThreadDetail succeeds: group:%s", threadIdStr.c_str());
             if (onSuccess) {
-                std::string json = ThreadEventTO::ToJson(result);
+                std::string json = ChatThread::ToJson(result);
                 const char* data[1] = { json.c_str() };
                 onSuccess((void**)data, DataType::String, 1, callbackId);
             }
@@ -343,6 +369,8 @@ HYPHENATE_API void ThreadManager_GetThreadDetail(void* client, int callbackId, c
 
 HYPHENATE_API void ThreadManager_GetLastMessageAccordingThreads(void* client, int callbackId, const char* threadIds[], int size, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     std::vector<std::string> vec;
     for (int i = 0; i < size; i++) {
         if(nullptr != threadIds[i] && strlen(threadIds[i]) != 0)
@@ -355,7 +383,7 @@ HYPHENATE_API void ThreadManager_GetLastMessageAccordingThreads(void* client, in
         if (EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("ThreadManager_GetLastMessageAccordingThreads succeeds");
             if (onSuccess) {
-                std::string json = ThreadEventTO::ToJson(result);
+                std::string json = ChatThread::ToJson(result);
                 const char* data[1] = { json.c_str() };
                 onSuccess((void**)data, DataType::String, 1, callbackId);
             }

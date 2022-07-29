@@ -594,7 +594,7 @@
      */
     public enum MultiDevicesOperation
     {
-        UNKNOW                          = -1,
+        UNKNOWN = -1,
         /**
          * \~chinese
          * 当前用户在其他设备上删除好友。

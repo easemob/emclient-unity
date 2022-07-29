@@ -315,8 +315,8 @@ namespace ChatSDK {
             presenceManagerListener = new PresenceManagerListener();
             presenceManagerListener.delegater = new List<IPresenceManagerDelegate>();
 
-            threadManagerListener = new ThreadManagerListener();
-            threadManagerListener.delegater = new List<IThreadManagerDelegate>();
+            threadManagerListener = new ChatThreadManagerListener();
+            threadManagerListener.delegater = new List<IChatThreadManagerDelegate>();
         }
 #endif
         public void OnSuccess(string jsonString) {
