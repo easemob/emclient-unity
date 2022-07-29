@@ -30,7 +30,7 @@ android {
 
 dependencies {
     implementation files('libs/classes.jar')
-    implementation files('libs/hyphenatechat_3.9.0.jar')
+    implementation files('libs/hyphenatechat_3.9.4.jar')
 }
 
 task makeJar(type: Jar) {
@@ -39,4 +39,9 @@ task makeJar(type: Jar) {
     from('build/intermediates/javac/release/')
 }
 
+task downloadSDK(type:Exec){
+    commandLine 'bash', '-c', "./downloadSDK.sh"
+}
+
+build.dependsOn(downloadSDK)
 makeJar.dependsOn(build)
