@@ -83,7 +83,7 @@ namespace ChatSDK
     //IReactionManagerDelegate
     internal delegate void MessageReactionDidChange([MarshalAs(UnmanagedType.LPTStr)] string json);
 
-    //IThreadManagerDelegate
+    //IChatThreadManagerDelegate
     internal delegate void OnChatThreadCreate([MarshalAs(UnmanagedType.LPTStr)] string json);
     internal delegate void OnChatThreadUpdate([MarshalAs(UnmanagedType.LPTStr)] string json);
     internal delegate void OnChatThreadDestroy([MarshalAs(UnmanagedType.LPTStr)] string json);
