@@ -97,14 +97,7 @@ namespace ChatSDK
 			}
 
 			int idSize = idList.Count;
-			string[] idArray = new string[idSize];
-			int i = 0;
-			foreach (string id in idList)
-			{
-				idArray[i] = id;
-				i++;
-			}
-
+			var idArray = idList.ToArray();
 			int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
 			ChatAPINative.UserInfoManager_FetchUserInfoByUserId(client, callbackId, idArray, idSize,
@@ -149,23 +142,16 @@ namespace ChatSDK
 			}
 
 			int idSize = idList.Count;
-			string[] idArray = new string[idSize];
-			int i = 0;
-			foreach (string id in idList)
-			{
-				idArray[i] = id;
-				i++;
-			}
+			var idArray = idList.ToArray();
 
 			int attrSize = attrs.Count;
-			int[] attrArray = new int[attrSize];
-			i = 0;
+			var attrArray = new int[attrSize];
+			int i = 0;
 			foreach (UserInfoType attr in attrs)
 			{
 				attrArray[i] = (int)attr;
 				i++;
 			}
-
 
 			int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 

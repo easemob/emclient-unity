@@ -739,9 +739,9 @@ namespace ChatSDK
 
         public override void TranslateMessage(Message message, List<string> targetLanguages, ValueCallBack<Message>handle = null)
         {
-            if (targetLanguages.Count == 0)
+            if (null == targetLanguages || targetLanguages.Count == 0)
             {
-                Debug.LogError("targetLanguages is empty!");
+                Debug.LogError("targetLanguages is valid!");
                 return;
             }
 
@@ -752,7 +752,7 @@ namespace ChatSDK
             Marshal.StructureToPtr(mto, mtoPtr, false);
 
             int size = targetLanguages.Count;
-            string[] tlArray = targetLanguages.ToArray();
+            var tlArray = targetLanguages.ToArray();
 
             ChatAPINative.ChatManager_TranslateMessage(client, callbackId, mtoPtr, message.Body.Type, tlArray, size,
                 (IntPtr[] data, DataType dType, int dSize, int cbId) =>
