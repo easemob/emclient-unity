@@ -150,7 +150,7 @@ namespace ChatSDK
             //TODO
         }
 
-        public override void TranslateMessage(ref Message message, List<string> targetLanguages, CallBack handle = null)
+        public override void TranslateMessage(Message message, List<string> targetLanguages, ValueCallBack<Message> handle = null)
         {
             //TODO
         }

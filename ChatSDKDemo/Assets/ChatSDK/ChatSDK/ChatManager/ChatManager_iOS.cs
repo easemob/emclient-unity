@@ -217,9 +217,9 @@ namespace ChatSDK
             ChatAPIIOS.ChatManager_HandleMethodCall("fetchSupportLanguages",null, handle?.callbackId);
         }
 
-        public override void TranslateMessage(ref Message message, List<string> targetLanguages, CallBack handle = null)
+        public override void TranslateMessage(Message message, List<string> targetLanguages, ValueCallBack<Message> handle = null)
         {
-            // TODO  
+            // TODO : Callback to ValueCallBack
             JSONObject obj = new JSONObject();
             obj.Add("message", message.ToJson());
             obj.Add("languages", TransformTool.JsonStringFromStringList(targetLanguages));

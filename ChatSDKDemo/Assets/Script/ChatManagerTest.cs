@@ -140,20 +140,28 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     }
     void SendImageBtnAction()
     {
-        SDKClient.Instance.ChatManager.FetchSupportLanguages(new ValueCallBack<List<SupportLanguage>>(
-             onSuccess: (list) =>
+        Message msg = Message.CreateTextSendMessage("yqtest1", "今天天气不错");
+
+        List<string> targetLanguages = new List<string>();
+        targetLanguages.Add("lzh");
+        targetLanguages.Add("ja");
+        targetLanguages.Add("en");
+
+        SDKClient.Instance.ChatManager.TranslateMessage(msg, targetLanguages, new ValueCallBack<Message>(
+         onSuccess: (dmsg) =>
+         {
+             Debug.Log($"TranslateMessage success.");
+             ChatSDK.MessageBody.TextBody tb = (ChatSDK.MessageBody.TextBody)dmsg.Body;
+             foreach (var it in tb.Translations)
              {
-                 Debug.Log($"FetchSupportLanguages found total: {list.Count}");
-                 foreach (var lang in list)
-                 {
-                     Debug.Log($"code: {lang.LanguageCode}, name:{lang.LanguageName}, nativename:{lang.LanguageNativeName}");
-                 }
-             },
-             onError: (code, desc) =>
-             {
-                 Debug.Log($"FetchSupportLanguages failed, code:{code}, desc:{desc}");
+                 Debug.Log($"Translate, lang:{it.Key}, result:{it.Value}");
              }
-            ));
+         },
+         onError: (code, desc) =>
+         {
+             Debug.Log($"TranslateMessage failed, code:{code}, desc:{desc}");
+         }
+        ));
 
         return;
 

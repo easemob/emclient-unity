@@ -140,7 +140,7 @@ namespace ChatSDK{
 		internal static extern void ChatManager_FetchSupportLanguages(IntPtr client, int callbackId, OnSuccessResult onSuccessResult, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
-		internal static extern void ChatManager_TranslateMessage(IntPtr client, int callbackId, IntPtr mto, MessageBodyType type, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 5)] string[] targetLanguages, int size, OnSuccess onSuccess, OnErrorV2 onError);
+		internal static extern void ChatManager_TranslateMessage(IntPtr client, int callbackId, IntPtr mto, MessageBodyType type, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 5)] string[] targetLanguages, int size, OnSuccessResult onSuccessResult, OnErrorV2 onError);
 		
 		[DllImport(MyLibName)]
 		internal static extern void ChatManager_FetchGroupReadAcks(IntPtr client, int callbackId, string messageId,

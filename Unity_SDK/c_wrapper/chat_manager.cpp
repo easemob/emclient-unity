@@ -805,7 +805,7 @@ HYPHENATE_API void ChatManager_FetchSupportLanguages(void *client, int callbackI
     t.detach();
 }
 
-HYPHENATE_API void ChatManager_TranslateMessage(void *client, int callbackId, void *mto, EMMessageBody::EMMessageBodyType type, const char * targetLanguages[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+HYPHENATE_API void ChatManager_TranslateMessage(void *client, int callbackId, void *mto, EMMessageBody::EMMessageBodyType type, const char * targetLanguages[], int size, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     if (!CheckClientInitOrNot(callbackId, onError)) return;
 
@@ -819,28 +819,22 @@ HYPHENATE_API void ChatManager_TranslateMessage(void *client, int callbackId, vo
     }
     
     EMMessagePtr messagePtr = BuildEMMessage(mto, type);
-    std::string msgId = messagePtr->msgId();
     
     std::vector<std::string> vec;
     for(int i=0; i<size; i++){
         vec.push_back(targetLanguages[i]);
+        LOG("ChatManager_TranslateMessage, language: %s", targetLanguages[i]);
     }
     
-    AddMsgItem(msgId, (MessageTO*)mto, messagePtr);
-    
     std::thread t([=](){
-        for(int i=0; i<size; i++) {
-            LOG("ChatManager_TranslateMessage, language: %s", vec[i].c_str());
-        }
-        
         EMErrorPtr error = CLIENT->getChatManager().translateMessage(messagePtr, vec);
         if(EMError::EM_NO_ERROR == error->mErrorCode) {
-            UpdateMsgMap(msgId);
-            if(onSuccess) onSuccess(callbackId);
-            DeleteMsgItem(msgId);
+            std::string json = MessageTO::ToJson(messagePtr);
+            const char* data[1] = { json.c_str() };
+            onSuccess((void**)data, DataType::String, 1, callbackId);
         }else{
+            LOG("ChatManager_TranslateMessage failed, error id:%d, desc::%s", error->mErrorCode, error->mDescription.c_str());
             if(onError) onError(error->mErrorCode, error->mDescription.c_str(), callbackId);
-            DeleteMsgItem(msgId);
         }
     });
     t.detach();
