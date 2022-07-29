@@ -134,4 +134,4 @@ sysinfo.txt
 **/HyphenateChat.framework
 **/*.meta
 **/hyphenateCWrapper.bundle
-
+**/hyphenateCWrapper.dll
