@@ -12,6 +12,7 @@ namespace ChatSDK
     {
         private IntPtr client;
         private ChatManagerHub chatManagerHub;
+        private ReactionManagerHub reactionManagerHub;
 
         System.Object msgMapLocker;
         Dictionary<string, IntPtr> msgPtrMap;
@@ -27,12 +28,13 @@ namespace ChatSDK
                 client = clientCommon.client;
             }
             chatManagerHub = new ChatManagerHub();
+            reactionManagerHub = new ReactionManagerHub();
 
             //registered listeners
             ChatAPINative.ChatManager_AddListener(client, chatManagerHub.OnMessagesReceived,
                 chatManagerHub.OnCmdMessagesReceived, chatManagerHub.OnMessagesRead, chatManagerHub.OnMessagesDelivered,
                 chatManagerHub.OnMessagesRecalled, chatManagerHub.OnReadAckForGroupMessageUpdated, chatManagerHub.OnGroupMessageRead,
-                chatManagerHub.OnConversationsUpdate, chatManagerHub.OnConversationRead);
+                chatManagerHub.OnConversationsUpdate, chatManagerHub.OnConversationRead, reactionManagerHub.messageReactionDidChange);
 
             msgPtrMap = new Dictionary<string, IntPtr>();
             msgMap = new Dictionary<string, Message>();
@@ -712,7 +714,7 @@ namespace ChatSDK
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
             ChatAPINative.ChatManager_FetchSupportLanguages(client, callbackId,
-                onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
+                (IntPtr[] data, DataType dType, int dSize, int cbId) =>
                 {
                     List<SupportLanguage> supportList = new List<SupportLanguage>();
                     if (DataType.ListOfString == dType && dSize > 0)
@@ -735,11 +737,11 @@ namespace ChatSDK
                 });
         }
 
-        public override void TranslateMessage(ref Message message, List<string> targetLanguages, CallBack handle = null)
+        public override void TranslateMessage(Message message, List<string> targetLanguages, ValueCallBack<Message>handle = null)
         {
-            if (targetLanguages.Count == 0)
+            if (null == targetLanguages || targetLanguages.Count == 0)
             {
-                Debug.LogError("targetLanguages is empty!");
+                Debug.LogError("targetLanguages is valid!");
                 return;
             }
 
@@ -748,47 +750,20 @@ namespace ChatSDK
 
             IntPtr mtoPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(mto));
             Marshal.StructureToPtr(mto, mtoPtr, false);
-            AddMsgMap(message.MsgId, mtoPtr, message, callbackId);
-
 
             int size = targetLanguages.Count;
-            string[] tlArray = new string[size];
-            int i = 0;
-            foreach (string tl in targetLanguages)
-            {
-                tlArray[i] = tl;
-                i++;
-            }
+            var tlArray = targetLanguages.ToArray();
 
             ChatAPINative.ChatManager_TranslateMessage(client, callbackId, mtoPtr, message.Body.Type, tlArray, size,
-                (int cbId) =>
+                (IntPtr[] data, DataType dType, int dSize, int cbId) =>
                 {
-                    try
-                    {
-                        ChatManager_Common chatCommon = (ChatManager_Common)SDKClient.Instance.ChatManager;
-                        if (chatCommon.cbId2MsgIdMap.ContainsKey(cbId))
-                        {
-                            string msgId = chatCommon.cbId2MsgIdMap[cbId];
-                            chatCommon.UpdatedMsg(msgId);
-                            chatCommon.DeleteFromMsgMap(msgId, cbId);
-                        }
-                        ChatCallbackObject.CallBackOnSuccess(cbId);
-                    }
-                    catch (NullReferenceException nre)
-                    {
-                        Debug.LogWarning($"NullReferenceException: {nre.StackTrace}");
-                    }
-
+                    string json = TransformTool.PtrToString(data[0]);
+                    Message msg = new Message(json);
+                    ChatCallbackObject.ValueCallBackOnSuccess<Message>(cbId, msg);
                 },
                 (int code, string desc, int cbId) =>
                 {
-                    ChatManager_Common chatCommon = (ChatManager_Common)SDKClient.Instance.ChatManager;
-                    if (chatCommon.cbId2MsgIdMap.ContainsKey(cbId))
-                    {
-                        string msgId = chatCommon.cbId2MsgIdMap[cbId];
-                        chatCommon.DeleteFromMsgMap(msgId, cbId);
-                    }
-                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                    ChatCallbackObject.ValueCallBackOnError<Message>(cbId, code, desc);
                 }
                );
 

@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using System;
+using System.Text;
 
 namespace ChatSDK{
 	public sealed class ChatAPINative
@@ -68,7 +69,7 @@ namespace ChatSDK{
 		internal static extern void ChatManager_AddListener(IntPtr client, OnMessagesReceived onMessagesReceived,
 				OnCmdMessagesReceived onCmdMessagesReceived, OnMessagesRead onMessagesRead, OnMessagesDelivered onMessagesDelivered,
 				OnMessagesRecalled onMessagesRecalled, OnReadAckForGroupMessageUpdated onReadAckForGroupMessageUpdated, OnGroupMessageRead onGroupMessageRead,
-				OnConversationsUpdate onConversationsUpdate, OnConversationRead onConversationRead);
+				OnConversationsUpdate onConversationsUpdate, OnConversationRead onConversationRead, MessageReactionDidChange messageReactionDidChange);
 
 		[DllImport(MyLibName)]
 		internal static extern void ChatManager_FetchHistoryMessages(IntPtr client, int callbackId, string conversationId, 
@@ -139,7 +140,7 @@ namespace ChatSDK{
 		internal static extern void ChatManager_FetchSupportLanguages(IntPtr client, int callbackId, OnSuccessResult onSuccessResult, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
-		internal static extern void ChatManager_TranslateMessage(IntPtr client, int callbackId, IntPtr mto, MessageBodyType type, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 5)] string[] targetLanguages, int size, OnSuccess onSuccess, OnErrorV2 onError);
+		internal static extern void ChatManager_TranslateMessage(IntPtr client, int callbackId, IntPtr mto, MessageBodyType type, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 5)] string[] targetLanguages, int size, OnSuccessResult onSuccessResult, OnErrorV2 onError);
 		
 		[DllImport(MyLibName)]
 		internal static extern void ChatManager_FetchGroupReadAcks(IntPtr client, int callbackId, string messageId,
@@ -165,6 +166,21 @@ namespace ChatSDK{
 		[DllImport(MyLibName)]
 		internal static extern void ChatManager_GetReactionDetail(IntPtr client, int callbackId, string messageId, 
 			[In, MarshalAs(UnmanagedType.LPTStr)] string reaction, string cursor, long pageSize, OnSuccessResultV2 onSuccessResult, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern int ChatManager_GetGroupAckCount(string messageId);
+
+		[DllImport(MyLibName)]
+		internal static extern bool ChatManager_GetHasDeliverAck(string messageId);
+
+		[DllImport(MyLibName)]
+		internal static extern bool ChatManager_GetHasReadAck(string messageId);
+
+		[DllImport(MyLibName)]
+		internal static extern void ChatManager_GetReactionListForMsg(string messageId, [Out,MarshalAs(UnmanagedType.LPTStr)]StringBuilder buf, int len);
+
+		[DllImport(MyLibName)]
+		internal static extern void ChatManager_GetChatThreadForMsg(string messageId, [Out, MarshalAs(UnmanagedType.LPTStr)] StringBuilder buf, int len);
 
 		/** GroupManager Stub **/
 		[DllImport(MyLibName)]
@@ -656,7 +672,6 @@ namespace ChatSDK{
 
 		[DllImport(MyLibName)]
 		internal static extern void ThreadManager_GetLastMessageAccordingThreads(IntPtr client, int callbackId, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr, SizeParamIndex = 3)] string[] threadIds, int size, OnSuccessResult onSuccessResult, OnErrorV2 onError);
-
 		#endregion native API import
 	}
 }

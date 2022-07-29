@@ -88,6 +88,11 @@ namespace WinSDKTest
         );
         }
 
+        public void MessageReactionDidChange(List<MessageReactionChange> list)
+        {
+            throw new NotImplementedException();
+        }
+
         public void OnCmdMessagesReceived(List<Message> messages)
         {
             throw new NotImplementedException();

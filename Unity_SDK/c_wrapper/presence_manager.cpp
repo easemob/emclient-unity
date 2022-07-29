@@ -9,10 +9,14 @@
 #include "tool.h"
 #include "presence_manager.h"
 
+extern EMClient* gClient;
+
 EMPresenceManagerListener *gPresenceManagerListener = nullptr;
 
 HYPHENATE_API void PresenceManager_AddListener(void *client, FUNC_OnPresenceUpdated onPresenceUpdated)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
     if(nullptr == gPresenceManagerListener) { //only set once!
         gPresenceManagerListener = new PresenceManagerListener(onPresenceUpdated);
         CLIENT->getPresenceManager().addListener(gPresenceManagerListener);
@@ -22,6 +26,8 @@ HYPHENATE_API void PresenceManager_AddListener(void *client, FUNC_OnPresenceUpda
 
 HYPHENATE_API void PresenceManager_PublishPresence(void * client, int callbackId, int presenceStatus, const char* ext, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     std::string extStr = GetUTF8FromUnicode(ext);
     
     std::thread t([=](){
@@ -40,6 +46,8 @@ HYPHENATE_API void PresenceManager_PublishPresence(void * client, int callbackId
 
 HYPHENATE_API void PresenceManager_SubscribePresences(void * client, int callbackId, const char * members[], int size, int64_t expiry, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(nullptr == members || size <= 0) {
         error.setErrorCode(EMError::INVALID_PARAM);
@@ -91,6 +99,8 @@ HYPHENATE_API void PresenceManager_SubscribePresences(void * client, int callbac
 
 HYPHENATE_API void PresenceManager_UnsubscribePresences(void * client, int callbackId, const char * members[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(nullptr == members || size <= 0) {
         error.setErrorCode(EMError::INVALID_PARAM);
@@ -120,6 +130,8 @@ HYPHENATE_API void PresenceManager_UnsubscribePresences(void * client, int callb
 
 HYPHENATE_API void PresenceManager_FetchSubscribedMembers(void * client, int callbackId, int pageNum, int pageSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     std::thread t([=](){
         
         std::vector<std::string> members;
@@ -152,6 +164,8 @@ HYPHENATE_API void PresenceManager_FetchSubscribedMembers(void * client, int cal
 
 HYPHENATE_API void PresenceManager_FetchPresenceStatus(void * client, int callbackId, const char * members[], int size, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(nullptr == members || size <= 0) {
         error.setErrorCode(EMError::INVALID_PARAM);

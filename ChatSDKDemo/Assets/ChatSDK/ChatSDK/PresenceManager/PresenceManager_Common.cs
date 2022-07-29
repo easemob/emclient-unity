@@ -42,7 +42,7 @@ namespace ChatSDK
 
 		public override void SubscribePresences(List<string> members, long expiry, ValueCallBack<List<Presence>> handle = null)
         {
-            if(members.Count == 0)
+            if(null == members || members.Count == 0)
             {
                 Debug.Log("Empty member list. Just quit.");
                 return;
@@ -51,13 +51,7 @@ namespace ChatSDK
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
             int size = members.Count;
-            string[] memberArray = new string[size];
-            int i = 0;
-            foreach (string member in members)
-            {
-                memberArray[i] = member;
-                i++;
-            }
+            var memberArray = members.ToArray();
 
             ChatAPINative.PresenceManager_SubscribePresences(client, callbackId, memberArray, size, expiry,
                    onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
@@ -85,7 +79,7 @@ namespace ChatSDK
 
 		public override void UnsubscribePresences(List<string> members, CallBack handle = null)
         {
-            if (members.Count == 0)
+            if (null == members || members.Count == 0)
             {
                 Debug.Log("Empty member list. Just quit");
                 return;
@@ -94,13 +88,7 @@ namespace ChatSDK
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
             int size = members.Count;
-            string[] memberArray = new string[size];
-            int i = 0;
-            foreach (string member in members)
-            {
-                memberArray[i] = member;
-                i++;
-            }
+            var memberArray = members.ToArray();
 
             ChatAPINative.PresenceManager_UnsubscribePresences(client, callbackId, memberArray, size,
                  (int cbId) =>
@@ -148,7 +136,7 @@ namespace ChatSDK
 
         public override void FetchPresenceStatus(List<string> members, ValueCallBack<List<Presence>> handle = null)
         {
-            if (members.Count == 0)
+            if (null == members || members.Count == 0)
             {
                 Debug.Log("Empty member list. Just quit.");
                 return;
@@ -157,13 +145,7 @@ namespace ChatSDK
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
             int size = members.Count;
-            string[] memberArray = new string[size];
-            int i = 0;
-            foreach (string member in members)
-            {
-                memberArray[i] = member;
-                i++;
-            }
+            var memberArray = members.ToArray();
 
             ChatAPINative.PresenceManager_FetchPresenceStatus(client, callbackId, memberArray, size,
                    onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) =>

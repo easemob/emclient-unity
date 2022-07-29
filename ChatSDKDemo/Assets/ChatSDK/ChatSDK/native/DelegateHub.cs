@@ -927,14 +927,38 @@ namespace ChatSDK
         }
     }
 
+    internal sealed class ReactionManagerHub
+    {
+        internal MessageReactionDidChange messageReactionDidChange;
 
+        internal ReactionManagerHub()
+        {
+            messageReactionDidChange = (string json) =>
+            {
+                Debug.Log("messageReactionDidChange received.");
+
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+                List<MessageReactionChange> list = MessageReactionChange.ListFromJson(json);
+#else
+                List<MessageReactionChange> list = MessageReactionChange.ListFromJson(TransformTool.GetUnicodeStringFromUTF8(json));
+#endif
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IChatManagerDelegate listener in CallbackManager.Instance().chatManagerListener.delegater)
+                    {
+                        listener.MessageReactionDidChange(list);
+                    }
+                });
+            };
+
+        }
+    }
     internal sealed class ThreadManagerHub
     {
         internal OnChatThreadCreate OnChatThreadCreate_;
         internal OnChatThreadUpdate OnChatThreadUpdate_;
         internal OnChatThreadDestroy OnChatThreadDestroy_;
         internal OnUserKickOutOfChatThread OnUserKickOutOfChatThread_;
-
 
         internal ThreadManagerHub()
         {

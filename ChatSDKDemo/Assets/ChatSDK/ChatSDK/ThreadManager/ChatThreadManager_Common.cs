@@ -125,11 +125,11 @@ namespace ChatSDK
                 (IntPtr[] data, DataType dType, int size, int cbId) =>
                 {
                     string json = TransformTool.PtrToString(data[0]);
-                    ChatThreadEvent thread = ChatThreadEvent.FromJson(json);
-                    ChatCallbackObject.ValueCallBackOnSuccess<ChatThreadEvent>(cbId, thread);
+                    ChatThread thread = ChatThread.FromJson(json);
+                    ChatCallbackObject.ValueCallBackOnSuccess<ChatThread>(cbId, thread);
                 },
                 onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.ValueCallBackOnError<ChatThreadEvent>(cbId, code, desc);
+                    ChatCallbackObject.ValueCallBackOnError<ChatThread>(cbId, code, desc);
                 });
         }
 
@@ -141,7 +141,7 @@ namespace ChatSDK
                 (IntPtr[] data, DataType dType, int size, int cbId) =>
                 {
                     string json = TransformTool.PtrToString(data[0]);
-                    ChatThreadEvent thread = ChatThreadEvent.FromJson(json);
+                    ChatThread thread = ChatThread.FromJson(json);
                     ChatCallbackObject.ValueCallBackOnSuccess<ChatThread>(cbId, thread);
                 },
                 onError: (int code, string desc, int cbId) => {

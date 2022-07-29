@@ -516,7 +516,7 @@ namespace ChatSDK
          * @param languages The list of the target languages.
          * @param callBack The result callback，see {@link #CallBack()}.
          */
-        public abstract void TranslateMessage(ref Message message, List<string> targetLanguages, CallBack handle = null);
+        public abstract void TranslateMessage(Message message, List<string> targetLanguages, ValueCallBack<Message> handle = null);
 
         /**
          * \~chinese

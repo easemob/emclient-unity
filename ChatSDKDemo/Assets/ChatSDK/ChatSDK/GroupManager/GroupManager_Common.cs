@@ -133,13 +133,8 @@ namespace ChatSDK
                 return;
             }
             int size = members.Count;
-            string[] memberArray = new string[size];
-            int i = 0;
-            foreach (string member in members)
-            {
-                memberArray[i] = member;
-                i++;
-            }
+            var memberArray = members.ToArray();
+
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
             ChatAPINative.GroupManager_AddMembers(client, callbackId, groupId, memberArray, size,
@@ -159,13 +154,7 @@ namespace ChatSDK
                 return;
             }
             int size = members.Count;
-            string[] memberArray = new string[size];
-            int i = 0;
-            foreach (string member in members)
-            {
-                memberArray[i] = member;
-                i++;
-            }
+            var memberArray = members.ToArray();
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
             ChatAPINative.GroupManager_AddWhiteListMembers(client, callbackId, groupId, memberArray, size,
@@ -203,13 +192,7 @@ namespace ChatSDK
                 return;
             }
             int size = members.Count;
-            string[] memberArray = new string[size];
-            int i = 0;
-            foreach (string member in members)
-            {
-                memberArray[i] = member;
-                i++;
-            }
+            var memberArray = members.ToArray();
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
             ChatAPINative.GroupManager_BlockGroupMembers(client, callbackId, groupId, memberArray, size,
@@ -317,25 +300,14 @@ namespace ChatSDK
 
         public override void CreateGroup(string groupName, GroupOptions options, string desc, List<string> inviteMembers = null, string inviteReason = null, ValueCallBack<Group> handle = null)
         {
-            if (null == groupName || 0 == groupName.Length || null == options)
+            if (null == groupName || 0 == groupName.Length || null == options )
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return;
             }
-            //turn List<string> into array
+
             int size = 0;
-            var membersArray = new string[0];
-            if (null != inviteMembers && inviteMembers.Count > 0)
-            {
-                size = inviteMembers.Count;
-                membersArray = new string[size];
-                int i = 0;
-                foreach (string member in inviteMembers)
-                {
-                    membersArray[i] = member;
-                    i++;
-                }
-            }
+            var membersArray = inviteMembers?.ToArray();
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
             ChatAPINative.GroupManager_CreateGroup(client, callbackId, groupName, options, desc, membersArray, size, inviteReason,
@@ -901,13 +873,7 @@ namespace ChatSDK
                 return;
             }
             int size = members.Count;
-            string[] memberArray = new string[size];
-            int i = 0;
-            foreach (string member in members)
-            {
-                memberArray[i] = member;
-                i++;
-            }
+            var memberArray = members.ToArray();
 
             //to-do: need to add this into API function??
             int muteDuration = -1;
@@ -988,13 +954,7 @@ namespace ChatSDK
             }
 
             int size = members.Count;
-            string[] memberArray = new string[size];
-            int i = 0;
-            foreach (string member in members)
-            {
-                memberArray[i] = member;
-                i++;
-            }
+            var memberArray = members.ToArray();
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
             ChatAPINative.GroupManager_RemoveMembers(client, callbackId, groupId, memberArray, size,
@@ -1014,13 +974,7 @@ namespace ChatSDK
                 return;
             }
             int size = members.Count;
-            string[] memberArray = new string[size];
-            int i = 0;
-            foreach (string member in members)
-            {
-                memberArray[i] = member;
-                i++;
-            }
+            var memberArray = members.ToArray();
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
             ChatAPINative.GroupManager_RemoveWhiteListMembers(client, callbackId, groupId, memberArray, size,
@@ -1058,13 +1012,7 @@ namespace ChatSDK
                 return;
             }
             int size = members.Count;
-            string[] memberArray = new string[size];
-            int i = 0;
-            foreach (string member in members)
-            {
-                memberArray[i] = member;
-                i++;
-            }
+            var memberArray = members.ToArray();
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
             ChatAPINative.GroupManager_UnblockGroupMembers(client, callbackId, groupId, memberArray, size,
@@ -1114,13 +1062,7 @@ namespace ChatSDK
                 return;
             }
             int size = members.Count;
-            string[] memberArray = new string[size];
-            int i = 0;
-            foreach (string member in members)
-            {
-                memberArray[i] = member;
-                i++;
-            }
+            var memberArray = members.ToArray();
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
             ChatAPINative.GroupManager_UnmuteGroupMembers(client, callbackId, groupId, memberArray, size,

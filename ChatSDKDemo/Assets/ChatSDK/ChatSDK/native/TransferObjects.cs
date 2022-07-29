@@ -710,15 +710,9 @@ namespace ChatSDK
         public string AttributesValues;
         public long LocalTime;
         public long ServerTime;
-        public string ReactionList;
 
         [MarshalAs(UnmanagedType.U1)]
         public bool IsThread;
-        public string MucParentId;
-        public string MsgParentId;
-        [MarshalAs(UnmanagedType.LPTStr)]
-        public string ThreadOverview;
-
 
         public MessageBodyType BodyType;
 
@@ -737,7 +731,6 @@ namespace ChatSDK
             AttributesValues = TransformTool.JsonStringFromAttributes(message.Attributes);
             LocalTime = message.LocalTime;
             ServerTime = message.ServerTime;
-            ReactionList = MessageReaction.ListToJson(message.ReactionList);
             BodyType = message.Body.Type;
             IsThread = message.IsThread;
         }
@@ -870,12 +863,7 @@ namespace ChatSDK
                 IsNeedGroupAck = IsNeedGroupAck,
                 IsRead = IsRead,
                 MessageOnlineState = MessageOnlineState,
-                //TODO： need remove;
-                //ReactionList = MessageReaction.ListFromJson(TransformTool.GetUnicodeStringFromUTF8(ReactionList))
             };
-
-            //TODO： need remove;
-            //result.SetReactionMap();
 
             // change EMPTY_STR(" ")  to ""
             if (result.MsgId.CompareTo(" ") == 0)           result.MsgId = "";
@@ -1849,7 +1837,7 @@ namespace ChatSDK
                 Dictionary<string, string> deviceMap = TransformTool.JsonStringToDictionary(deviceJson);
                 Dictionary<string, string> statusMap = TransformTool.JsonStringToDictionary(statusJson);
 
-                foreach(var it in deviceMap)
+                foreach (var it in deviceMap)
                 {
                     PresenceDeviceStatus pds = new PresenceDeviceStatus();
 
@@ -1860,8 +1848,7 @@ namespace ChatSDK
                     }
 
                     pds.DeviceId = it.Value;
-                    // TODO change type.
-                    //pds.Status = statusMap[it.Key];
+                    pds.Status = int.Parse(statusMap[it.Key]);
                     result.StatusList.Add(pds);
                 }
             }
