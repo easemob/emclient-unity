@@ -67,7 +67,7 @@ namespace ChatSDK
     //IContactManagerDelegate
     internal delegate void OnContactAdd(string username);
     internal delegate void OnContactDeleted(string username);
-    internal delegate void OnContactInvited(string username, string reason);
+    internal delegate void OnContactInvited(string username, [MarshalAs(UnmanagedType.LPTStr)]string reason);
     internal delegate void OnFriendRequestAccepted(string username);
     internal delegate void OnFriendRequestDeclined(string username);
 
@@ -865,11 +865,12 @@ namespace ChatSDK
 
             OnContactInvited = (string username, string reason) =>
             {
-                Debug.Log($"Name={username}] invite you with reason:{reason}.");
+                string _reason = TransformTool.GetUnicodeStringFromUTF8InCallBack(reason);
+                Debug.Log($"Name={username}] invite you with reason:{_reason}.");
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IContactManagerDelegate listener in CallbackManager.Instance().contactManagerListener.delegater)
                     {
-                        listener.OnContactInvited(username, reason);
+                        listener.OnContactInvited(username, _reason);
                     }
                 });
             };
