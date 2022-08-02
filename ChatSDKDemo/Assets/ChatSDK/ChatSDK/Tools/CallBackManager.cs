@@ -358,7 +358,6 @@ namespace ChatSDK {
             {
                 string value = jo["type"].Value;
                 JSONNode responseValue = jo["value"];
-                //TODO: add new type for presencemanager and reactionmanager
                 if (value == "List<String>")
                 {
                     List<string> result = null;

@@ -1,39 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
+
 
 namespace ChatSDK
 {
 	internal sealed class PresenceManager_Android : IPresenceManager
 	{
-		private IntPtr client;
 
-		internal PresenceManager_Android(IClient _client)
+		private AndroidJavaObject wrapper;
+
+		public PresenceManager_Android()
 		{
-			if (_client is Client_Common clientCommon)
+			using (AndroidJavaClass aj = new AndroidJavaClass("com.hyphenate.unity_chat_sdk.EMPresenceManagerWrapper"))
 			{
-				client = clientCommon.client;
+				wrapper = aj.CallStatic<AndroidJavaObject>("wrapper");
 			}
 		}
 
 		public override void PublishPresence(string description, CallBack handle = null)
 		{
-			//TODO: Add code for PresenceManager_Android
+			wrapper.Call("publishPresence", description, handle?.callbackId);
 		}
 		public override void SubscribePresences(List<string> members, long expiry, ValueCallBack<List<Presence>> handle = null)
 		{
-			//TODO: Add code for PresenceManager_Android
+			wrapper.Call("subscribePresences", TransformTool.JsonStringFromStringList(members), handle?.callbackId);
 		}
 		public override void UnsubscribePresences(List<string> members, CallBack handle = null)
 		{
-			//TODO: Add code for PresenceManager_Android
+			wrapper.Call("unsubscribePresences", TransformTool.JsonStringFromStringList(members), handle?.callbackId);
 		}
 		public override void FetchSubscribedMembers(int pageNum, int pageSize, ValueCallBack<List<string>> handle = null)
 		{
-			//TODO: Add code for PresenceManager_Android
+			wrapper.Call("fetchSubscribedMembers", pageNum, pageSize, handle?.callbackId);
 		}
 		public override void FetchPresenceStatus(List<string> members, ValueCallBack<List<Presence>> handle = null)
 		{
-			//TODO: Add code for PresenceManager_Android
+			wrapper.Call("fetchPresenceStatus", TransformTool.JsonStringFromStringList(members), handle?.callbackId);
 		}
 
 	}
