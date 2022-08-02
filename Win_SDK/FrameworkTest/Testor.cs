@@ -1684,10 +1684,10 @@ namespace WinSDKTest
 
         public void InitAll(string appkey)
         {
-            //Options options = new Options("easemob-demo#easeim");
+            Options options = new Options("easemob-demo#easeim");
             //Options options = new Options("easemob-demo#unitytest");
             //Options options = new Options("5101220107132865#test"); // 北京沙箱测试环境，无法正常登录
-            Options options = new Options("41117440#383391"); // 线上环境, demo中的token
+            //Options options = new Options("41117440#383391"); // 线上环境, demo中的token
             if (appkey.Length > 0 && appkey.Contains("#") == true)
                 options.AppKey = appkey;
 
