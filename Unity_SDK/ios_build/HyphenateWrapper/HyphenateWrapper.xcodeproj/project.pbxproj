@@ -24,6 +24,7 @@
 		903E2C9228913AF5007C6D65 /* EMChatThreadListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 903E2C9128913AF5007C6D65 /* EMChatThreadListener.m */; };
 		903E2C9628913C3D007C6D65 /* EMChatThreadEvent+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 903E2C9528913C3D007C6D65 /* EMChatThreadEvent+Helper.m */; };
 		903E2C9928913C65007C6D65 /* EMChatThread+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 903E2C9728913C65007C6D65 /* EMChatThread+Helper.m */; };
+		906010BF28937D4C00244CE6 /* EMMessageWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 906010BE28937D4C00244CE6 /* EMMessageWrapper.m */; };
 		9068A330266E35DC0022B90F /* EMOptions+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9068A32F266E35DC0022B90F /* EMOptions+Helper.m */; };
 		9068A333266E368C0022B90F /* EMConversation+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9068A332266E368C0022B90F /* EMConversation+Helper.m */; };
 		9068A336266E36E60022B90F /* EMChatMessage+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9068A335266E36E60022B90F /* EMChatMessage+Helper.m */; };
@@ -107,6 +108,8 @@
 		903E2C9528913C3D007C6D65 /* EMChatThreadEvent+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "EMChatThreadEvent+Helper.m"; sourceTree = "<group>"; };
 		903E2C9728913C65007C6D65 /* EMChatThread+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "EMChatThread+Helper.m"; sourceTree = "<group>"; };
 		903E2C9828913C65007C6D65 /* EMChatThread+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "EMChatThread+Helper.h"; sourceTree = "<group>"; };
+		906010BD28937D4C00244CE6 /* EMMessageWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EMMessageWrapper.h; sourceTree = "<group>"; };
+		906010BE28937D4C00244CE6 /* EMMessageWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EMMessageWrapper.m; sourceTree = "<group>"; };
 		9068A32E266E35DC0022B90F /* EMOptions+Helper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EMOptions+Helper.h"; sourceTree = "<group>"; };
 		9068A32F266E35DC0022B90F /* EMOptions+Helper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "EMOptions+Helper.m"; sourceTree = "<group>"; };
 		9068A331266E368C0022B90F /* EMConversation+Helper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EMConversation+Helper.h"; sourceTree = "<group>"; };
@@ -207,6 +210,8 @@
 				90D7B7FA2759D7DE00FD1C72 /* EMUserInfoManagerWrapper.m */,
 				903E2C8A2890EE5F007C6D65 /* EMThreadManagerWrapper.h */,
 				903E2C8B2890EE5F007C6D65 /* EMThreadManagerWrapper.m */,
+				906010BD28937D4C00244CE6 /* EMMessageWrapper.h */,
+				906010BE28937D4C00244CE6 /* EMMessageWrapper.m */,
 			);
 			path = Wrapper;
 			sourceTree = "<group>";
@@ -404,6 +409,7 @@
 				90F0ECC4288E86B6008558F3 /* EMMessageReactionChange+Helper.m in Sources */,
 				903E2C9628913C3D007C6D65 /* EMChatThreadEvent+Helper.m in Sources */,
 				902CC1F0266B5148002F9A50 /* Transfrom.m in Sources */,
+				906010BF28937D4C00244CE6 /* EMMessageWrapper.m in Sources */,
 				900F7BED26785A5F007B5576 /* EMConversationWrapper.m in Sources */,
 				902CC1EE266B5148002F9A50 /* EMClientWrapper.m in Sources */,
 				90D7B17D266774C9008CA320 /* HyphenateWrapper.m in Sources */,

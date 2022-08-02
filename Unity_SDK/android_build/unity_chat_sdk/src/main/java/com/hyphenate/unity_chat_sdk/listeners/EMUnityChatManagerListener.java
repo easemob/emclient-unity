@@ -6,15 +6,19 @@ import com.hyphenate.EMConversationListener;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMGroupReadAck;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMMessageReactionChange;
 import com.hyphenate.unity_chat_sdk.helper.EMGroupReadAckHelper;
 import com.hyphenate.unity_chat_sdk.helper.EMMessageHelper;
+import com.hyphenate.unity_chat_sdk.helper.EMMessageReactionChangeHelper;
 import com.unity3d.player.UnityPlayer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import util.EMSDKMethod;
 
@@ -132,5 +136,28 @@ public class EMUnityChatManagerListener implements EMMessageListener, EMConversa
         } catch (JSONException jsonException) {
             jsonException.printStackTrace();
         }
+    }
+
+    @Override
+    public void onReactionChanged(List<EMMessageReactionChange> list) {
+        Log.d("unity_sdk","onReactionChanged");
+        JSONArray jsonArray = new JSONArray();
+        for (EMMessageReactionChange change: list) {
+            Map<String, Object> map = EMMessageReactionChangeHelper.toJson(change);
+            JSONObject jo = new JSONObject();
+            Iterator it = map.keySet().iterator();
+            while (it.hasNext()) {
+                String key = (String) it.next();
+                try {
+                    jo.put(key, map.get(key));
+                }catch (JSONException ignore) {
+
+                }
+            }
+            if (jo.length() > 0) {
+                jsonArray.put(jo);
+            }
+        }
+        UnityPlayer.UnitySendMessage(EMSDKMethod.ChatListener_Obj, "MessageReactionDidChange", jsonArray.toString());
     }
 }

@@ -5,7 +5,9 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCursorResult;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMGroupInfo;
+import com.hyphenate.chat.EMGroupReadAck;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMMessageReaction;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,6 +43,14 @@ public class EMCursorResultHelper {
 
             if (obj instanceof EMGroupInfo) {
                 jsonArray.put(EMGroupInfoHelper.toJson((EMGroupInfo) obj).toString());
+            }
+
+            if (obj instanceof EMGroupReadAck) {
+                jsonArray.put(EMGroupReadAckHelper.toJson((EMGroupReadAck) obj).toString());
+            }
+
+            if (obj instanceof EMMessageReaction) {
+                jsonArray.put(EMMessageReactionHelper.toJson((EMMessageReaction) obj).toString());
             }
         }
         data.put("list", jsonArray.toString());

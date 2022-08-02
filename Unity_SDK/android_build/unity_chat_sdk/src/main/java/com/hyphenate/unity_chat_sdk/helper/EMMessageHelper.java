@@ -24,8 +24,8 @@ public class EMMessageHelper {
     public static EMMessage fromJson(JSONObject json) throws JSONException {
         EMMessage message = null;
         String bodyString = json.getString("body");
-        JSONObject bodyJson = new JSONObject(bodyString);
         String type = json.getString("bodyType");
+        JSONObject bodyJson = new JSONObject(bodyString);
         if (json.getString("direction").equals("send")) {
             switch (type) {
                 case "txt": {
@@ -113,19 +113,24 @@ public class EMMessageHelper {
                 break;
             }
         }
-        message.setTo(json.getString("to"));
         message.setFrom(json.getString("from"));
-        message.setAcked(json.getBoolean("hasReadAck"));
-        if (statusFromInt(json.getInt("status")) == EMMessage.Status.SUCCESS) {
-            message.setUnread(!json.getBoolean("hasRead"));
+        message.setTo(json.getString("to"));
+        message.setMsgId(json.getString("msgId"));
+        if (json.has("direction")){
+            message.setDirection(json.getString("direction").equals("send") ?  EMMessage.Direct.SEND : EMMessage.Direct.RECEIVE );
         }
-        message.setDeliverAcked(json.getBoolean("hasDeliverAck"));
+        message.setChatType(chatTypeFromInt(json.getInt("chatType")));
+        message.setStatus(statusFromInt(json.getInt("status")));
         message.setLocalTime(Long.parseLong(json.getString("localTime")));
         message.setMsgTime(Long.parseLong(json.getString("serverTime")));
+        if (statusFromInt(json.getInt("status")) == EMMessage.Status.SUCCESS) {
+            message.setUnread(!json.getBoolean("isRead"));
+        }
+        message.setAcked(json.getBoolean("hasReadAck"));
+        message.setDeliverAcked(json.getBoolean("hasDeliverAck"));
+        message.setIsNeedGroupAck(json.getBoolean("isNeedGroupAck"));
+        message.setIsChatThreadMessage(json.getBoolean("isThread"));
 
-        message.setStatus(statusFromInt(json.getInt("status")));
-        message.setChatType(chatTypeFromInt(json.getInt("chatType")));
-        message.setMsgId(json.getString("msgId"));
         if (json.has("attributes")) {
             String paramString = json.getString("attributes");
             JSONObject jsonObject = new JSONObject(paramString);
@@ -214,7 +219,7 @@ public class EMMessageHelper {
             }
             break;
         }
-        data.put("bodyType",type);
+
 
         if (message.ext().size() > 0 && null != message.ext()) {
             Map<String, Object> ext = message.ext();
@@ -272,22 +277,26 @@ public class EMMessageHelper {
         }
 
         data.put("from", message.getFrom());
+        data.put("msgId", message.getMsgId());
         data.put("to", message.getTo());
-        data.put("hasReadAck", message.isAcked());
+        data.put("conversationId", message.conversationId());
+        data.put("isRead", !message.isUnread());
         data.put("hasDeliverAck", message.isDelivered());
-        data.put("localTime", String.valueOf(message.localTime()));
+        data.put("hasReadAck", message.isAcked());
         data.put("serverTime", String.valueOf(message.getMsgTime()));
-        data.put("status", statusToInt(message.status()));
+        data.put("localTime", String.valueOf(message.localTime()));
         data.put("chatType", chatTypeToInt(message.getChatType()));
         data.put("direction", message.direct() == EMMessage.Direct.SEND ? "send" : "rec");
-        data.put("conversationId", message.conversationId());
-        data.put("msgId", message.getMsgId());
-        data.put("hasRead", !message.isUnread());
+        data.put("bodyType",type);
+        data.put("status", statusToInt(message.status()));
+        data.put("isNeedGroupAck", message.isNeedGroupAck());
+        data.put("messageOnlineState", message.isOnlineState());
+        data.put("isThread", message.isChatThreadMessage());
 
         return data;
     }
 
-    private static EMMessage.ChatType chatTypeFromInt(int type) {
+    public static EMMessage.ChatType chatTypeFromInt(int type) {
         switch (type) {
             case 0:
                 return EMMessage.ChatType.Chat;
@@ -299,7 +308,7 @@ public class EMMessageHelper {
         return EMMessage.ChatType.Chat;
     }
 
-    private static int chatTypeToInt(EMMessage.ChatType type) {
+    public static int chatTypeToInt(EMMessage.ChatType type) {
         switch (type) {
             case Chat:
                 return 0;
