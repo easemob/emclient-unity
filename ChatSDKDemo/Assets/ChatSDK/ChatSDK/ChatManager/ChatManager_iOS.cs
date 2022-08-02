@@ -260,17 +260,17 @@ namespace ChatSDK
             obj.Add("reaction", reaction);
             ChatAPIIOS.ChatManager_HandleMethodCall("removeReaction", obj.ToString(), handle?.callbackId);
         }
-        public override void GetReactionList(List<string> messageIdList, ConversationType chatType, string groupId, ValueCallBack<Dictionary<string, List<MessageReaction>>> handle = null)
+        public override void GetReactionList(List<string> messageIdList, MessageType chatType, string groupId, ValueCallBack<Dictionary<string, List<MessageReaction>>> handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("msgIds",TransformTool.JsonStringFromStringList(messageIdList));
             obj.Add("groupId", groupId);
-            if (chatType == ConversationType.Chat) {
+            if (chatType == MessageType.Chat) {
                 obj.Add("type", 0);
-            } else if (chatType == ConversationType.Group)
+            } else if (chatType == MessageType.Group)
             {
                 obj.Add("type", 1);
-            } else if (chatType == ConversationType.Room)
+            } else if (chatType == MessageType.Room)
             {
                 obj.Add("type", 2);
             }
