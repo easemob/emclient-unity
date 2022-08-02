@@ -172,7 +172,7 @@ namespace ChatSDK
         {
             //TODO
         }
-        public override void GetReactionList(List<string> messageIdList, ConversationType chatType, string groupId, ValueCallBack<Dictionary<string, List<MessageReaction>>> handle = null)
+        public override void GetReactionList(List<string> messageIdList, MessageType chatType, string groupId, ValueCallBack<Dictionary<string, List<MessageReaction>>> handle = null)
         {
             //TODO
         }

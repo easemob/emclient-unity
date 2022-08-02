@@ -3253,8 +3253,8 @@ namespace WinSDKTest
             string msg_id2 = GetParamValueFromContext(1);
 
             int chatType = GetIntFromString(GetParamValueFromContext(2));
-            ConversationType ctype = ConversationType.Chat;
-            if (1 == chatType) ctype = ConversationType.Group;
+            MessageType ctype = MessageType.Chat;
+            if (1 == chatType) ctype = MessageType.Group;
             
             string groupId = GetParamValueFromContext(3);
 
@@ -3923,8 +3923,8 @@ namespace WinSDKTest
 
             Dictionary<string, string> dict = new Dictionary<string, string>();
             dict.Add("key1", "value1");
-            dict.Add("key2", "value2");
-            dict.Add("key3", "value3");
+            dict.Add("一个钥匙2", "一个值全是中文");
+            dict.Add("key钥匙3", "value英文和中文混合值3");
 
             conv.Ext = dict;
             Console.WriteLine($"SetExt comppleted.");
