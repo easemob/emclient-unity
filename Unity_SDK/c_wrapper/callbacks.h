@@ -579,7 +579,7 @@ public:
             const char** muteArray = new const char* [size];
             for (size_t i = 0; i < mutes.size(); i++) {
                 char* ptr = new char[mutes[i].size() + 1];
-                strncpy(ptr, mutes[i].c_str(), mutes.size() + 1);
+                strncpy(ptr, mutes[i].c_str(), mutes[i].size() + 1);
                 muteArray[i] = ptr;
             }
             onMuteListAdded(group->groupId().c_str(), muteArray, size, (int)muteExpire);
@@ -599,7 +599,7 @@ public:
             const char** muteArray = new const char* [size];
             for (size_t i = 0; i < mutes.size(); i++) {
                 char* ptr = new char[mutes[i].size() + 1];
-                strncpy(ptr, mutes[i].c_str(), mutes.size() + 1);
+                strncpy(ptr, mutes[i].c_str(), mutes[i].size() + 1);
                 muteArray[i] = ptr;
             }
             onMuteListRemoved(group->groupId().c_str(), muteArray, size);
@@ -620,7 +620,7 @@ public:
            const char** memArray = new const char* [size];
            for (size_t i = 0; i < members.size(); i++) {
                char* ptr = new char[members[i].size() + 1];
-               strncpy(ptr, members[i].c_str(), members.size() + 1);
+               strncpy(ptr, members[i].c_str(), members[i].size() + 1);
                memArray[i] = ptr;
            }
 
@@ -642,7 +642,7 @@ public:
             const char** memArray = new const char* [size];
             for (size_t i = 0; i < members.size(); i++) {
                 char* ptr = new char[members[i].size() + 1];
-                strncpy(ptr, members[i].c_str(), members.size() + 1);
+                strncpy(ptr, members[i].c_str(), members[i].size() + 1);
                 memArray[i] = ptr;
             }
 
