@@ -552,4 +552,58 @@
     }];
 }
 
+- (void)muteAllRoomMembers:(NSDictionary *)param callbackId:(NSString *)callbackId {
+    NSString *roomId = param[@"roomId"];
+    __weak EMRoomManagerWrapper * weakSelf = self;
+    [EMClient.sharedClient.roomManager muteAllMembersFromChatroom:roomId completion:^(EMChatroom * _Nullable aChatroom, EMError * _Nullable aError) {
+        if (aError) {
+            [weakSelf onError:callbackId error:aError];
+        }else {
+            [weakSelf onSuccess:@"Room" callbackId:callbackId userInfo:nil];
+        }
+    }];
+}
+
+- (void)unMuteAllRoomMembers:(NSDictionary *)param callbackId:(NSString *)callbackId {
+    NSString *roomId = param[@"roomId"];
+    __weak EMRoomManagerWrapper * weakSelf = self;
+    [EMClient.sharedClient.roomManager unmuteAllMembersFromChatroom:roomId completion:^(EMChatroom * _Nullable aChatroom, EMError * _Nullable aError) {
+        if (aError) {
+            [weakSelf onError:callbackId error:aError];
+        }else {
+            [weakSelf onSuccess:@"Room" callbackId:callbackId userInfo:nil];
+        }
+    }];
+}
+
+- (void)addWhiteListMembers:(NSDictionary *)param callbackId:(NSString *)callbackId {
+    NSString *roomId = param[@"roomId"];
+    NSArray *members = [Transfrom NSStringToJsonObject:param[@"members"]];
+    __weak EMRoomManagerWrapper * weakSelf = self;
+    [EMClient.sharedClient.roomManager addWhiteListMembers:members
+                                              fromChatroom:roomId
+                                                completion:^(EMChatroom * _Nullable aChatroom, EMError * _Nullable aError) {
+        if (aError) {
+            [weakSelf onError:callbackId error:aError];
+        }else {
+            [weakSelf onSuccess:nil callbackId:callbackId userInfo:nil];
+        }
+    }];
+}
+
+- (void)removeWhiteListMembers:(NSDictionary *)param callbackId:(NSString *)callbackId {
+    NSString *roomId = param[@"roomId"];
+    NSArray *members = [Transfrom NSStringToJsonObject:param[@"members"]];
+    __weak EMRoomManagerWrapper * weakSelf = self;
+    [EMClient.sharedClient.roomManager  removeWhiteListMembers:members
+                                                  fromChatroom:roomId
+                                                    completion:^(EMChatroom * _Nullable aChatroom, EMError * _Nullable aError) {
+        if (aError) {
+            [weakSelf onError:callbackId error:aError];
+        }else {
+            [weakSelf onSuccess:nil callbackId:callbackId userInfo:nil];
+        }
+    }];
+}
+
 @end
