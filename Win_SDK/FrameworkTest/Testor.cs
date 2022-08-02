@@ -8279,7 +8279,11 @@ namespace WinSDKTest
 
         public void OnRemoveWhiteListMembersFromGroup(string groupId, List<string> whiteList)
         {
-            throw new NotImplementedException();
+            Console.WriteLine($"OnRemoveWhiteListMembersFromGroup: gid: {groupId}");
+            foreach (var it in whiteList)
+            {
+                Console.WriteLine($"white item: {it}");
+            }
         }
 
         public void OnRequestToJoinAcceptedFromGroup(string groupId, string groupName, string accepter)

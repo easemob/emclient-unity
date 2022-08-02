@@ -1028,7 +1028,7 @@ HYPHENATE_API void ChatManager_GetReactionDetail(void* client, int callbackId, c
     std::thread t([=]() {
         EMError error;
         std::string outCursor = "";
-        EMMessageReactionPtr ret = CLIENT->getReactionManager().getReactionDetail(messageId, reactionStr, cursorStr, pageSize, outCursor, error);
+        EMMessageReactionPtr ret = CLIENT->getReactionManager().getReactionDetail(messageIdStr, reactionStr, cursorStr, pageSize, outCursor, error);
         if (EMError::EM_NO_ERROR == error.mErrorCode) {
 
             //header
