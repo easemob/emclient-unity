@@ -909,7 +909,7 @@ namespace ChatSDK
                 );
         }
 
-        public override void GetReactionList(List<string> messageIdList, ConversationType chatType, string groupId, ValueCallBack<Dictionary<string, List<MessageReaction>>> handle = null)
+        public override void GetReactionList(List<string> messageIdList, MessageType chatType, string groupId, ValueCallBack<Dictionary<string, List<MessageReaction>>> handle = null)
         {
             if (messageIdList.Count == 0)
             {
@@ -921,7 +921,7 @@ namespace ChatSDK
             TransformTool.DeleteEmptyStringFromList(ref messageIdList);
             string idList = TransformTool.JsonStringFromStringList(messageIdList);
 
-            string ctype = (ConversationType.Group == chatType) ? "groupchat" : "chat";
+            string ctype = (MessageType.Group == chatType) ? "groupchat" : "chat";
 
             ChatAPINative.ChatManager_GetReactionList(client, callbackId, idList, ctype, groupId,
 

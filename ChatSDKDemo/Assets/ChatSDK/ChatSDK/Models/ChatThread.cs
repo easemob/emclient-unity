@@ -91,14 +91,14 @@ namespace ChatSDK
          * \~chinese
          * 获取子区的消息数。
          *
-         * 获取子区的消息数之前，需先调用 {@link IThreadManager#GetThreadDetail} 方法获取子区详情。
+         * 获取子区的消息数之前，需先调用 {@link IChatThreadManager#GetThreadDetail} 方法获取子区详情。
          *
          * @return 消息数。
          *
          * \~english
          * Get the number of messages in a message thread.
          *
-         * To get the number of messages in a message thread, you need to first call {@link IThreadManager#GetThreadDetail} to get details of the message thread.
+         * To get the number of messages in a message thread, you need to first call {@link IChatThreadManager#GetThreadDetail} to get details of the message thread.
          *
          * @return The message count.
          */
@@ -108,14 +108,14 @@ namespace ChatSDK
          * \~chinese
          * 获取子区成员数量。
          *
-         * 获取子区成员数量之前，需先调用 {@link IThreadManager#GetThreadDetail} 方法获取子区详情。
+         * 获取子区成员数量之前，需先调用 {@link IChatThreadManager#GetThreadDetail} 方法获取子区详情。
          *
          * @return 子区成员数量。
          *
          * \~english
          * Gets the number of members in the message thread.
          *
-         * To get the member count, you need to first call {@link IThreadManager#GetThreadDetail} to get details of the message thread.
+         * To get the member count, you need to first call {@link IChatThreadManager#GetThreadDetail} to get details of the message thread.
          *
          * @return  The number of members in the message thread.
          */
@@ -138,14 +138,14 @@ namespace ChatSDK
          * \~chinese
          * 获取最近的子区消息。
          *
-         * 获取该属性的值之前，需先调用 {@link IThreadManager#GetThreadDetail} 方法获取子区详情。
+         * 获取该属性的值之前，需先调用 {@link IChatThreadManager#GetThreadDetail} 方法获取子区详情。
          *
          * @return 最近的子区消息。
          *
          * \~english
          * Get the last reply in the message thread.
          *
-         * To get the last reply in the message thread, you need to first call {@link IThreadManager#GetThreadDetail} to get details of the message thread.
+         * To get the last reply in the message thread, you need to first call {@link IChatThreadManager#GetThreadDetail} to get details of the message thread.
          *
          * @return The last reply in the message thread.
          */
