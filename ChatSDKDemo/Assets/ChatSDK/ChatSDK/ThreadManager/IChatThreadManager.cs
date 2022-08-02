@@ -34,8 +34,8 @@ namespace ChatSDK
          *
          * 子区创建成功后，会出现如下情况：
          *
-         * - 单设备登录时，子区所属群组的所有成员均会收到回调 {@link IThreadManagerDelegate#OnCreateThread(ThreadEvent)}。
-         *   你可通过设置 {@link IThreadManagerDelegate} 监听相关事件。
+         * - 单设备登录时，子区所属群组的所有成员均会收到回调 {@link IChatThreadManagerDelegate#OnChatThreadCreate(ChatThreadEvent)}。
+         *   你可通过设置 {@link IChatThreadManagerDelegate} 监听相关事件。
          *
          * - 多端多设备登录时，各设备会收到事件回调 {@link IMultiDeviceDelegate#onThreadMultiDevicesEvent(MultiDevicesOperation, String, List)}。
          *   该回调方法中第一个参数表示子区事件，例如，子区创建事件为 {@link MultiDevicesOperation#THREAD_CREATE}。
@@ -56,7 +56,7 @@ namespace ChatSDK
          *
          * Upon the creation of a message thread, the following will occur:
          *
-         * - In a single-device login scenario, each member of the group to which the message thread belongs will receive the {@link IThreadManagerDelegate#OnCreateThread(ThreadEvent)} callback.
+         * - In a single-device login scenario, each member of the group to which the message thread belongs will receive the {@link IChatThreadManagerDelegate#OnChatThreadCreate(ChatThreadEvent)} callback.
          *   You can listen for message thread events by setting {@link EMChatThreadChangeListener}.
          *
          * - In a multi-device login scenario, the devices will receive the {@link IMultiDeviceDelegate#onThreadMultiDevicesEvent(MultiDevicesOperation, String, List)} callback.
@@ -90,7 +90,7 @@ namespace ChatSDK
          *
          * @param threadId 子区 ID。
          * @param handle   结果回调：
-         *                     - 成功时回调 {@link ValueCallBack#onSuccess(Object)}，返回子区详情 {@link ThreadEvent}，详情中不含成员数量；
+         *                     - 成功时回调 {@link ValueCallBack#onSuccess(Object)}，返回子区详情 {@link ChatThread}，详情中不含成员数量；
          *                     - 失败时回调 {@link ValueCallBack#onError(int, String)}，返回错误信息。
          *                       重复加入会报错，错误内容为USER_ALREADY_EXIST。
          *
@@ -109,7 +109,7 @@ namespace ChatSDK
          *
          * @param threadId   The message thread ID.
          * @param handle     The result callback:
-         *                     - If success, {@link ValueCallBack#onSuccess(Object)} is triggered to return the message thread details {@link ThreadEvent} which do not include the member count.
+         *                     - If success, {@link ValueCallBack#onSuccess(Object)} is triggered to return the message thread details {@link ChatThread} which do not include the member count.
          *                     - If a failure occurs, {@link ValueCallBack#onError(int, String)} is triggered to return an error.
          *                       If you join a message thread repeatedly, the SDK will return an error related to USER_ALREADY_EXIST.
          */
@@ -198,9 +198,9 @@ namespace ChatSDK
         *
         * 只有子区所属群主、群管理员及子区创建者可调用该方法。
         *
-        * 被移出的成员会收到 {@link IThreadManagerDelegate#OnMemberLeaveThread(ThreadEvent)} 回调。
+        * 被移出的成员会收到 {@link IChatThreadManagerDelegate#OnUserKickOutOfChatThread(ChatThreadEvent)} 回调。
         *
-        * 你可通过设置 {@link IThreadManagerDelegate} 监听子区事件。
+        * 你可通过设置 {@link IChatThreadManagerDelegate} 监听子区事件。
         *
         *
         * @param threadId  子区 ID。
@@ -214,9 +214,9 @@ namespace ChatSDK
         *
         * Only the owner or admins of the group where the message thread belongs and the message thread creator can call this method.
         *
-        * The removed member will receive the {@link IThreadManagerDelegate#OnMemberLeaveThread(ThreadEvent)} callback.
+        * The removed member will receive the {@link IChatThreadManagerDelegate#OnUserKickOutOfChatThread(ChatThreadEvent)} callback.
         *
-        * You can listen for message thread events by setting {@link IThreadManagerDelegate}.
+        * You can listen for message thread events by setting {@link IChatThreadManagerDelegate}.
         *
         * @param threadId  The message thread ID.
         * @param username  The user ID of the member to be removed from the message thread.
@@ -232,9 +232,9 @@ namespace ChatSDK
          *
          * 只有子区所属群主、群管理员及子区创建者可调用该方法。
          *
-         * 子区所属群组的成员会收到 {@link IThreadManagerDelegate#OnUpdateMyThread(ThreadEvent)} 回调。
+         * 子区所属群组的成员会收到 {@link IChatThreadManagerDelegate#OnChatThreadUpdate(ChatThreadEvent)} 回调。
          *
-         * 你可通过设置 {@link IThreadManagerDelegate} 监听子区事件。
+         * 你可通过设置 {@link IChatThreadManagerDelegate} 监听子区事件。
          *
          * @param threadId        子区 ID。
          * @param newName      子区的新名称。长度不超过 64 个字符。
@@ -247,9 +247,9 @@ namespace ChatSDK
          *
          * Only the owner or admins of the group where the message thread belongs and the message thread creator can call this method.
          *
-         * Each member of the group to which the message thread belongs will receive the {@link IThreadManagerDelegate#OnUpdateMyThread(ThreadEvent)} callback.
+         * Each member of the group to which the message thread belongs will receive the {@link IChatThreadManagerDelegate#OnChatThreadUpdate(ChatThreadEvent)} callback.
          *
-         * You can listen for message thread events by setting {@link IThreadManagerDelegate}.
+         * You can listen for message thread events by setting {@link IChatThreadManagerDelegate}.
          *
          * @param threadId      The message thread ID.
          * @param newName       The new message thread name. It can contain a maximum of 64 characters.

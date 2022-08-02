@@ -2130,7 +2130,7 @@ RoomTO * RoomTO::FromEMChatRoom(EMChatroomPtr &room)
         rto->MemberList[0] = const_cast<char*>(EMPTY_STR.c_str());
     }
     else {
-        rto->MemberList = new char* [rto->MemberCount];
+        rto->MemberList = new char* [rto->MemberListCount];
         for (std::string member : room->chatroomMembers()) {
             rto->MemberList[i] = new char[member.size() + 1];
             std::strcpy(rto->MemberList[i], member.c_str());
@@ -2564,17 +2564,6 @@ void PresenceTOWrapper::FromLocalWrapper()
      return EMMessageEncoder::decodeReactionListFromJson(json);
  }
 
-static const std::string SilentModeParamType = "paramType";
-static const std::string SilentModeRemindType = "type";
-static const std::string SilentModeDuration = "duration";
-static const std::string SilentModeIntervalStartHour = "startHour";
-static const std::string SilentModeIntervalStartMin = "startMin";
-static const std::string SilentModeIntervalEndHour = "endHour";
-static const std::string SilentModeIntervalEndMin = "endMin";
-static const std::string SilentModeExpireTS = "expireTS";
-static const std::string SilentModeConvId = "conversationId";
-static const std::string SilentModeConvType = "conversationType";
-
  EMSilentModeParamPtr SilentModeParamTO::FromJson(std::string json)
  {
      Document d;
@@ -2587,41 +2576,41 @@ static const std::string SilentModeConvType = "conversationType";
      else {
          EMSilentModeParamPtr ptr = std::shared_ptr<EMSilentModeParam>(new easemob::EMSilentModeParam());
 
-         if (d.HasMember(SilentModeParamType.c_str()) && d[SilentModeParamType.c_str()].IsInt())
-             ptr->mParamType = (EMPushConfigs::EMSilentModeParamType)(d[SilentModeParamType.c_str()].GetInt());
+         if (d.HasMember("paramType") && d["paramType"].IsInt())
+             ptr->mParamType = (EMPushConfigs::EMSilentModeParamType)(d["paramType"].GetInt());
 
-         if (d.HasMember(SilentModeDuration.c_str()) && d[SilentModeDuration.c_str()].IsInt())
-             ptr->mSilentModeDuration = d[SilentModeDuration.c_str()].GetInt();
+         if (d.HasMember("duration") && d["duration"].IsInt())
+             ptr->mSilentModeDuration = d["duration"].GetInt();
 
-         if (d.HasMember(SilentModeRemindType.c_str()) && d[SilentModeRemindType.c_str()].IsInt())
-             ptr->mRemindType = (EMPushConfigs::EMPushRemindType)(d[SilentModeRemindType.c_str()].GetInt());
+         if (d.HasMember("type") && d["type"].IsInt())
+             ptr->mRemindType = (EMPushConfigs::EMPushRemindType)(d["type"].GetInt());
 
-         if (d.HasMember(SilentModeIntervalStartHour.c_str()) && d[SilentModeIntervalStartHour.c_str()].IsInt()) {
+         if (d.HasMember("startHour") && d["startHour"].IsInt()) {
              if (nullptr == ptr->mSilentModeStartTime) {
                  ptr->mSilentModeStartTime = EMSilentModeTimePtr(new EMSilentModeTime());
              }
-             ptr->mSilentModeStartTime->hours = d[SilentModeIntervalStartHour.c_str()].GetInt();
+             ptr->mSilentModeStartTime->hours = d["startHour"].GetInt();
          }
 
-         if (d.HasMember(SilentModeIntervalStartMin.c_str()) && d[SilentModeIntervalStartMin.c_str()].IsInt()) {
+         if (d.HasMember("startMin") && d["startMin"].IsInt()) {
              if (nullptr == ptr->mSilentModeStartTime) {
                  ptr->mSilentModeStartTime = EMSilentModeTimePtr(new EMSilentModeTime());
              }
-             ptr->mSilentModeStartTime->minutes = d[SilentModeIntervalStartMin.c_str()].GetInt();
+             ptr->mSilentModeStartTime->minutes = d["startMin"].GetInt();
          }
 
-         if (d.HasMember(SilentModeIntervalEndHour.c_str()) && d[SilentModeIntervalEndHour.c_str()].IsInt()) {
+         if (d.HasMember("endHour") && d["endHour"].IsInt()) {
              if (nullptr == ptr->mSilentModeEndTime) {
                  ptr->mSilentModeEndTime = EMSilentModeTimePtr(new EMSilentModeTime());
              }
-             ptr->mSilentModeEndTime->hours = d[SilentModeIntervalEndHour.c_str()].GetInt();
+             ptr->mSilentModeEndTime->hours = d["endHour"].GetInt();
          }
 
-         if (d.HasMember(SilentModeIntervalEndMin.c_str()) && d[SilentModeIntervalEndMin.c_str()].IsInt()) {
+         if (d.HasMember("endMin") && d["endMin"].IsInt()) {
              if (nullptr == ptr->mSilentModeEndTime) {
                  ptr->mSilentModeEndTime = EMSilentModeTimePtr(new EMSilentModeTime());
              }
-             ptr->mSilentModeEndTime->minutes = d[SilentModeIntervalEndMin.c_str()].GetInt();
+             ptr->mSilentModeEndTime->minutes = d["endMin"].GetInt();
          }
 
          return ptr;
@@ -2659,28 +2648,28 @@ static const std::string SilentModeConvType = "conversationType";
  {
      writer.StartObject();
      {
-         writer.Key(SilentModeExpireTS.c_str());
+         writer.Key("expireTS");
          writer.Int64(itemPtr->mExpireTimestamp);
 
-         writer.Key(SilentModeRemindType.c_str());
+         writer.Key("type");
          writer.Int(itemPtr->mRemindType);
 
-         writer.Key(SilentModeIntervalStartHour.c_str());
+         writer.Key("startHour");
          writer.Int(itemPtr->mSilentModeStartTime->hours);
 
-         writer.Key(SilentModeIntervalStartMin.c_str());
+         writer.Key("startMin");
          writer.Int(itemPtr->mSilentModeStartTime->minutes);
 
-         writer.Key(SilentModeIntervalEndHour.c_str());
+         writer.Key("endHour");
          writer.Int(itemPtr->mSilentModeEndTime->hours);
 
-         writer.Key(SilentModeIntervalEndMin.c_str());
+         writer.Key("endMin");
          writer.Int(itemPtr->mSilentModeEndTime->minutes);
 
-         writer.Key(SilentModeConvId.c_str());
+         writer.Key("conversationId");
          writer.String(itemPtr->mConversationID.c_str());
 
-         writer.Key(SilentModeConvType.c_str());
+         writer.Key("conversationType");
          writer.Int(itemPtr->mConversationType);
      }
      writer.EndObject();
