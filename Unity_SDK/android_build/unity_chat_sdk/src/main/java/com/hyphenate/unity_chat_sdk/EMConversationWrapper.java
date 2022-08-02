@@ -147,7 +147,7 @@ public class EMConversationWrapper extends EMWrapper{
         }  catch (JSONException e) {
             e.printStackTrace();
         }
-        onSuccess("List<EMMessage>", callbackId, ret);
+        onSuccess("List<Message>", callbackId, ret);
     }
 
     private void loadMsgWithKeywords(String conversationId, int conversationType, String keywords, String sender, long timestamp, int count, String directionString, String callbackId) {
@@ -168,7 +168,7 @@ public class EMConversationWrapper extends EMWrapper{
             e.printStackTrace();
         }
 
-        onSuccess("List<EMMessage>", callbackId, ret);
+        onSuccess("List<Message>", callbackId, ret);
     }
 
     private void loadMsgWithMsgType(String conversationId, int conversationType, String typeString, String sender, long timestamp, int count, String directionString, String callbackId) {
@@ -199,7 +199,7 @@ public class EMConversationWrapper extends EMWrapper{
         }  catch (JSONException e) {
             e.printStackTrace();
         }
-        onSuccess("List<EMMessage>", callbackId, ret);
+        onSuccess("List<Message>", callbackId, ret);
     }
 
     private void loadMsgWithTime(String conversationId, int conversationType, long startTime, long endTime, int count, String callbackId ) throws JSONException {
@@ -218,7 +218,7 @@ public class EMConversationWrapper extends EMWrapper{
         }  catch (JSONException e) {
             e.printStackTrace();
         }
-        onSuccess("List<EMMessage>", callbackId, ret);
+        onSuccess("List<Message>", callbackId, ret);
     }
 
     private void markAllMessagesAsRead(String conversationId, int conversationType) throws JSONException {
@@ -269,6 +269,14 @@ public class EMConversationWrapper extends EMWrapper{
         EMMessage message = EMMessageHelper.fromJson(new JSONObject(messageString));
         conversation.updateMessage(message);
         return true;
+    }
+
+    private boolean isThread(String conversationId, int conversationType) throws JSONException {
+        if (conversationId == null || conversationId.length() == 0) {
+            return false;
+        }
+        EMConversation conversation = getConversation(conversationId, conversationType);
+        return conversation.isChatThread();
     }
 
     private EMConversation getConversation(String conversationId, int conType ){

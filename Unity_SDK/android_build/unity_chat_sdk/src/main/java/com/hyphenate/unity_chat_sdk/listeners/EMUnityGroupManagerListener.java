@@ -2,7 +2,9 @@ package com.hyphenate.unity_chat_sdk.listeners;
 
 import android.util.Log;
 
+import com.hyphenate.EMChatThreadChangeListener;
 import com.hyphenate.EMGroupChangeListener;
+import com.hyphenate.chat.EMChatThreadEvent;
 import com.hyphenate.chat.EMMucSharedFile;
 import com.hyphenate.unity_chat_sdk.helper.EMMucSharedFileHelper;
 import com.hyphenate.unity_chat_sdk.helper.EMTransformHelper;

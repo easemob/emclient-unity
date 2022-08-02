@@ -39,7 +39,6 @@ namespace ChatSDK
 
         public override void FetchHistoryMessagesFromServer(string conversationId, ConversationType type, string startMessageId = null, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack < CursorResult<Message>> handle = null)
         {
-            //TODO: need to add direction
             JSONObject obj = new JSONObject();
             obj.Add("convId", conversationId);
             obj.Add("convType", TransformTool.ConversationTypeToInt(type));
@@ -50,13 +49,28 @@ namespace ChatSDK
             ChatAPIIOS.ChatManager_HandleMethodCall("fetchHistoryMessages", jsonString, handle?.callbackId);
         }
 
-        public override Conversation GetConversation(string conversationId, ConversationType type, bool createIfNeed = true, bool isThread = false)
+        public override Conversation GetConversation(string conversationId, ConversationType type, bool createIfNeed = true)
         {
             JSONObject obj = new JSONObject();
             obj.Add("convId", conversationId);
             obj.Add("convType", TransformTool.ConversationTypeToInt(type));
             obj.Add("createIfNeed", createIfNeed);
-            obj.Add("isThread", isThread);
+            obj.Add("isThread", false);
+            string jsonString = ChatAPIIOS.ChatManager_GetMethodCall("getConversation", obj.ToString());
+            if (jsonString == null || jsonString.Length == 0)
+            {
+                return null;
+            }
+            return new Conversation(jsonString);
+        }
+
+        public override Conversation GetThreadConversation(string threadId)
+        {
+            JSONObject obj = new JSONObject();
+            obj.Add("convId", threadId);
+            obj.Add("convType", TransformTool.ConversationTypeToInt(ConversationType.Group));
+            obj.Add("createIfNeed", true);
+            obj.Add("isThread", true);
             string jsonString = ChatAPIIOS.ChatManager_GetMethodCall("getConversation", obj.ToString());
             if (jsonString == null || jsonString.Length == 0)
             {
@@ -219,7 +233,6 @@ namespace ChatSDK
 
         public override void TranslateMessage(Message message, List<string> targetLanguages, ValueCallBack<Message> handle = null)
         {
-            // TODO : Callback to ValueCallBack
             JSONObject obj = new JSONObject();
             obj.Add("message", message.ToJson());
             obj.Add("languages", TransformTool.JsonStringFromStringList(targetLanguages));

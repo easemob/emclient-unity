@@ -1,6 +1,7 @@
 package com.hyphenate.unity_chat_sdk.helper;
 
 import com.hyphenate.chat.EMChatRoom;
+import com.hyphenate.chat.EMChatThread;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCursorResult;
 import com.hyphenate.chat.EMGroup;
@@ -51,6 +52,10 @@ public class EMCursorResultHelper {
 
             if (obj instanceof EMMessageReaction) {
                 jsonArray.put(EMMessageReactionHelper.toJson((EMMessageReaction) obj).toString());
+            }
+
+            if (obj instanceof EMChatThread) {
+                jsonArray.put(EMChatThreadHelper.toJson((EMChatThread) obj).toString());
             }
         }
         data.put("list", jsonArray.toString());

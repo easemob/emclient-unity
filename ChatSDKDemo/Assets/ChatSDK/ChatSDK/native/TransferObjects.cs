@@ -1792,6 +1792,7 @@ namespace ChatSDK
         public string ConverationId;
         public ConversationType Type;
         public string ExtField;
+        public bool isThread;
 
         public ConversationTO()
         {

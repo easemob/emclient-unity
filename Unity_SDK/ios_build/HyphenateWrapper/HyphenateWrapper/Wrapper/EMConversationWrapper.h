@@ -24,6 +24,7 @@
 - (NSDictionary *)removeMessage:(NSDictionary *)param;
 - (NSDictionary *)clearAllMessages:(NSDictionary *)param;
 - (NSDictionary *)loadMsgWithId:(NSDictionary *)param;
+- (NSDictionary *)isThread:(NSDictionary *)param;
 - (void)loadMsgWithMsgType:(NSDictionary *)param callbackId:(NSString *)callbackId;
 - (void)loadMsgWithStartId:(NSDictionary *)param callbackId:(NSString *)callbackId;
 - (void)loadMsgWithKeywords:(NSDictionary *)param callbackId:(NSString *)callbackId;

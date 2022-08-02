@@ -215,17 +215,32 @@ namespace ChatSDK
                 });
         }
 
-        public override Conversation GetConversation(string conversationId, ConversationType type, bool createIfNeed = true, bool isThread = false)
+        public override Conversation GetConversation(string conversationId, ConversationType type, bool createIfNeed = true)
         {
             if (null == conversationId || 0 == conversationId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return null;
             }
-            bool conversationExist = ChatAPINative.ChatManager_ConversationWithType(client, conversationId, type, createIfNeed, isThread);
+            bool conversationExist = ChatAPINative.ChatManager_ConversationWithType(client, conversationId, type, createIfNeed, false);
             Debug.Log($"conversationExist is {conversationExist}");
             if (conversationExist || createIfNeed)
-                return new Conversation(conversationId, type);
+                return new Conversation(conversationId, type, false);
+            else
+                return null;
+        }
+
+        public override Conversation GetThreadConversation(string threadId)
+        {
+            if (null == threadId || 0 == threadId.Length)
+            {
+                Debug.LogError("Mandatory parameter is null!");
+                return null;
+            }
+            bool conversationExist = ChatAPINative.ChatManager_ConversationWithType(client, threadId, ConversationType.Group, true, true);
+            Debug.Log($"conversationExist is {conversationExist}");
+            if (conversationExist)
+                return new Conversation(threadId, ConversationType.Group, true);
             else
                 return null;
         }
@@ -245,7 +260,7 @@ namespace ChatSDK
                         {
                             ConversationTO conversationTO = Marshal.PtrToStructure<ConversationTO>(array[i]);
 
-                            Conversation conversation = new Conversation(conversationTO.ConverationId, conversationTO.Type);
+                            Conversation conversation = new Conversation(conversationTO.ConverationId, conversationTO.Type, conversationTO.isThread);
                             //ExtField maybe empty
                             if (conversationTO.ExtField.Length > 0)
                                 conversation.Ext = TransformTool.JsonStringToDictionary(conversationTO.ExtField); //to-do:ext is a json string?
@@ -312,7 +327,7 @@ namespace ChatSDK
                         {
                             ConversationTO conversationTO = Marshal.PtrToStructure<ConversationTO>(array[i]);
 
-                            Conversation conversation = new Conversation(conversationTO.ConverationId, conversationTO.Type);
+                            Conversation conversation = new Conversation(conversationTO.ConverationId, conversationTO.Type, conversationTO.isThread);
                             //ExtField maybe empty
                             if (conversationTO.ExtField.Length > 0)
                                 conversation.Ext = TransformTool.JsonStringToDictionary(conversationTO.ExtField); //to-do:ext is a json string?

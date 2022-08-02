@@ -141,6 +141,8 @@
     return ret;
 }
 
+
+
 - (NSDictionary *)updateConversationMessage:(NSDictionary *)param
 {
     __block NSDictionary *ret = nil;
@@ -167,6 +169,17 @@
         EMError *error = nil;
         [conversation deleteMessageWithId:msgId error:&error];
         ret = @{@"ret": @(error == nil)};
+    }];
+    return ret;
+}
+
+- (NSDictionary *)isThread:(NSDictionary *)param {
+    __block NSDictionary *ret = nil;
+    [self getConversationWithParam:param
+                        completion:^(EMConversation *conversation)
+     {
+        EMError *error = nil;
+        ret = @{@"ret": @(conversation.isChatThread)};
     }];
     return ret;
 }
@@ -229,7 +242,7 @@
                     for (EMChatMessage *msg in aMessages) {
                         [ary addObject:[Transfrom NSStringFromJsonObject:[msg toJson]]];
                     }
-                    [self onSuccess:@"List<EMMessage>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:ary]];
+                    [self onSuccess:@"List<Message>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:ary]];
                 }
             }];
         }
@@ -259,7 +272,7 @@
                     for (EMChatMessage *msg in aMessages) {
                         [ary addObject:[Transfrom NSStringFromJsonObject:[msg toJson]]];
                     }
-                    [self onSuccess:@"List<EMMessage>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:ary]];
+                    [self onSuccess:@"List<Message>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:ary]];
                 }
             }];
         }
@@ -293,7 +306,7 @@
                     for (EMChatMessage *msg in aMessages) {
                         [ary addObject:[Transfrom NSStringFromJsonObject:[msg toJson]]];
                     }
-                    [self onSuccess:@"List<EMMessage>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:ary]];
+                    [self onSuccess:@"List<Message>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:ary]];
                 }
             }];
         }
@@ -323,7 +336,7 @@
                     for (EMChatMessage *msg in aMessages) {
                         [ary addObject:[Transfrom NSStringFromJsonObject:[msg toJson]]];
                     }
-                    [self onSuccess:@"List<EMMessage>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:ary]];
+                    [self onSuccess:@"List<Message>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:ary]];
                 }
             }];
         }

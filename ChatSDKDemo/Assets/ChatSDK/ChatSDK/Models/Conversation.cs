@@ -39,6 +39,19 @@ namespace ChatSDK {
          */
         public ConversationType Type { get; }
 
+
+        /**
+         * \~chinese
+         * 判断该会话是否为子区会话。
+         * @return 是否为子区会话。
+         *
+         * \~english
+         * Check a conversation is thread or not.
+         * @return a conversation is thread or not.
+         */
+        public bool IsThread { get; internal set; }
+
+
         /**
          * \~chinese
          * 获取指定会话的最新消息。
@@ -427,20 +440,6 @@ namespace ChatSDK {
             return manager.MessagesCount(Id, Type);
         }
 
-	/**
-	 * \~chinese
-	 * 判断该会话是否为子区会话。
-	 * @return 是否为子区会话。
-	 *
-	 * \~english
-	 * Check a conversation is thread or not.
-	 * @return a conversation is thread or not.
-	 */
-        public bool IsThread()
-        {
-            return manager.IsThread(Id, Type);
-        }
-
 
         internal Conversation(string jsonString) {
             if (jsonString != null) {
@@ -450,14 +449,16 @@ namespace ChatSDK {
                     JSONObject jo = jn.AsObject;
                     Id = jo["con_id"].Value;
                     Type = typeFromInt(jo["type"].AsInt);
+                    IsThread = jo["isThread"].AsBool;
                 }
             } 
         }
 
-        internal Conversation(string id, ConversationType type)
+        internal Conversation(string id, ConversationType type, bool isThread)
         {
             Id = id;
             Type = type;
+            IsThread = isThread;
         }
 
 

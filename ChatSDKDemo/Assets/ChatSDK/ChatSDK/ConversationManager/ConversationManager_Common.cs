@@ -419,15 +419,5 @@ namespace ChatSDK
             return ret;
         }
 
-        internal override bool IsThread(string conversationId, ConversationType conversationType)
-        {
-            if (null == conversationId || 0 == conversationId.Length)
-            {
-                Debug.LogError("Mandatory parameter is null!");
-                return false;
-            }
-            bool ret = ChatAPINative.ConversationManager_IsThread(client, conversationId, conversationType);
-            return ret;
-        }
     }
 }

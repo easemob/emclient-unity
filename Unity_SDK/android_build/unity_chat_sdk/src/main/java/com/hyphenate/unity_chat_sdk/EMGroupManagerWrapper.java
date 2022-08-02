@@ -62,7 +62,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             return;
         }
 
-        EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("EMGroup", callbackId) {
+        EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("Group", callbackId) {
             @Override
             public void onSuccess(EMGroup object) {
                 try {
@@ -94,7 +94,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             return;
         }
 
-        EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("EMGroup", callbackId) {
+        EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("Group", callbackId) {
             @Override
             public void onSuccess(EMGroup object) {
                 sendEmptyCallback();
@@ -173,7 +173,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             return;
         }
 
-        EMUnityValueCallback<EMGroup> callback  = new EMUnityValueCallback<EMGroup>("EMGroup",callbackId) {
+        EMUnityValueCallback<EMGroup> callback  = new EMUnityValueCallback<EMGroup>("Group",callbackId) {
             @Override
             public void onSuccess(EMGroup group) {
                 sendEmptyCallback();
@@ -212,7 +212,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
 
         String[] allMembers = EMTransformHelper.jsonStringToStringArray(memberListString);
 
-        EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("EMGroup", callbackId) {
+        EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("Group", callbackId) {
             @Override
             public void onSuccess(EMGroup object) {
                 try {
@@ -319,7 +319,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             return;
         }
 
-        EMUnityValueCallback<List<EMMucSharedFile>> callBack = new EMUnityValueCallback<List<EMMucSharedFile>>("List<EMMucSharedFile>", callbackId) {
+        EMUnityValueCallback<List<EMMucSharedFile>> callBack = new EMUnityValueCallback<List<EMMucSharedFile>>("List<MucSharedFile>", callbackId) {
             @Override
             public void onSuccess(List<EMMucSharedFile> object) {
                 try {
@@ -344,7 +344,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             return;
         }
 
-        EMUnityValueCallback<EMCursorResult<String>> callback = new EMUnityValueCallback<EMCursorResult<String>>("EMCursorResult<String>", callbackId) {
+        EMUnityValueCallback<EMCursorResult<String>> callback = new EMUnityValueCallback<EMCursorResult<String>>("CursorResult<String>", callbackId) {
             @Override
             public void onSuccess(EMCursorResult<String> stringEMCursorResult) {
                 try {
@@ -388,7 +388,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             return;
         }
 
-        EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("EMGroup", callbackId) {
+        EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("Group", callbackId) {
             @Override
             public void onSuccess(EMGroup object) {
                 try {
@@ -453,7 +453,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             return;
         }
 
-        EMUnityValueCallback<List<EMGroup>> callback = new EMUnityValueCallback<List<EMGroup>>("List<EMGroup>", callbackId) {
+        EMUnityValueCallback<List<EMGroup>> callback = new EMUnityValueCallback<List<EMGroup>>("List<Group>", callbackId) {
             @Override
             public void onSuccess(List<EMGroup> emGroups) {
                 sendJsonObjectToUnity(EMTransformHelper.jsonArrayFromGroupList(emGroups).toString());
@@ -470,7 +470,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             return;
         }
 
-        EMUnityValueCallback callback = new EMUnityValueCallback<EMCursorResult<EMGroupInfo>>("EMCursorResult<EMGroupInfo>", callbackId) {
+        EMUnityValueCallback callback = new EMUnityValueCallback<EMCursorResult<EMGroupInfo>>("CursorResult<GroupInfo>", callbackId) {
             @Override
             public void onSuccess(EMCursorResult<EMGroupInfo> emGroupInfoEMCursorResult) {
                 try {
@@ -515,7 +515,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             return;
         }
 
-        EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("EMGroup", callbackId) {
+        EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("Group", callbackId) {
             @Override
             public void onSuccess(EMGroup group) {
                 sendEmptyCallback();
@@ -534,7 +534,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
 
         List<String> list = EMTransformHelper.jsonStringToStringList(jsonString);
 
-        EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("EMGroup",callbackId) {
+        EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("Group",callbackId) {
             @Override
             public void onSuccess(EMGroup object) {
                 sendEmptyCallback();
@@ -552,7 +552,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             return;
         }
 
-        EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("EMGroup", callbackId) {
+        EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("Group", callbackId) {
             @Override
             public void onSuccess(EMGroup group) {
                 sendEmptyCallback();
@@ -628,7 +628,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             return;
         }
 
-        EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("EMGroup", callbackId) {
+        EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("Group", callbackId) {
             @Override
             public void onSuccess(EMGroup group) {
                 sendEmptyCallback();
@@ -645,7 +645,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
             return;
         }
 
-        EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("EMGroup",callbackId) {
+        EMUnityValueCallback<EMGroup> callBack = new EMUnityValueCallback<EMGroup>("Group",callbackId) {
             @Override
             public void onSuccess(EMGroup object) {
                 sendEmptyCallback();
