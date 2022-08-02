@@ -12,11 +12,9 @@
 
 + (EMChatMessage *)fromJson:(NSDictionary *)aJson
 {
-    NSString *bodyType = aJson[@"bodyType"];
     NSString *bodyString = aJson[@"body"];
-    
+    NSString *bodyType = aJson[@"bodyType"];
     NSDictionary *bodyDict = [Transfrom NSStringToJsonObject:bodyString];
-    
     EMMessageBody *body = [EMMessageBody fromJson:bodyDict bodyType:bodyType];
     if (!body) {
         return nil;
@@ -50,10 +48,11 @@
     msg.status = [msg statusFromInt:[aJson[@"status"] intValue]];
     msg.localTime = [aJson[@"localTime"] longLongValue];
     msg.timestamp = [aJson[@"serverTime"] longLongValue];
+    msg.isRead = [aJson[@"isRead"] boolValue];
     msg.isReadAcked = [aJson[@"hasReadAck"] boolValue];
     msg.isDeliverAcked = [aJson[@"hasDeliverAck"] boolValue];
-    msg.isRead = [aJson[@"isRead"] boolValue];
     msg.isNeedGroupAck = [aJson[@"isNeedGroupAck"] boolValue];
+    msg.isChatThreadMessage = [aJson[@"isThread"] boolValue];
 //    msg.onlineState = [aJson[@"messageOnlineState"] boolValue];
     return msg;
 }
@@ -78,8 +77,8 @@
     ret[@"attributes"] = [EMChatMessage extToAttributeString:self.ext];
     ret[@"isNeedGroupAck"] = @(self.isNeedGroupAck);
     ret[@"messageOnlineState"] = @(self.onlineState);
+    ret[@"isThread"] = @(self.isChatThreadMessage);
     
-
     return ret;
 }
 
@@ -376,12 +375,16 @@
 @implementation EMTextMessageBody (Unity)
 
 + (EMMessageBody *)fromJson:(NSDictionary *)aJson bodyType:(NSString *)type{
-    return [[EMTextMessageBody alloc] initWithText:aJson[@"content"]];
+    EMTextMessageBody *body = [[EMTextMessageBody alloc] initWithText:aJson[@"content"]];
+    body.targetLanguages = aJson[@"targetLanguages"];
+    return body;
 }
 
 - (NSDictionary *)toJson {
     NSMutableDictionary *ret = [[super toJson] mutableCopy];
     ret[@"content"] = self.text;
+    ret[@"targetLanguages"] = self.targetLanguages;
+    ret[@"translations"] = self.translations;
     return ret;
 }
 
@@ -605,6 +608,10 @@
 
 - (NSDictionary *)toJson {
     NSMutableDictionary *ret = [[super toJson] mutableCopy];
+    ret[@"localPath"] = self.localPath;
+    ret[@"displayName"] = self.displayName;
+    ret[@"remotePath"] = self.remotePath;
+    ret[@"secret"] = self.secretKey;
     ret[@"thumbnailLocalPath"] = self.thumbnailLocalPath;
     ret[@"thumbnailRemotePath"] = self.thumbnailRemotePath;
     ret[@"thumbnailSecret"] = self.thumbnailSecretKey;
@@ -612,12 +619,8 @@
     ret[@"fileStatus"] = @([self downloadStatusToInt:self.downloadStatus]);
     ret[@"width"] = @(self.size.width);
     ret[@"height"] = @(self.size.height);
+    ret[@"sendOriginalImage"] = self.compressionRatio == 1.0 ? @(YES) : @(NO);
     ret[@"fileSize"] = @(self.fileLength);
-    ret[@"remotePath"] = self.remotePath;
-    ret[@"secret"] = self.secretKey;
-    ret[@"displayName"] = self.displayName;
-    ret[@"localPath"] = self.localPath;
-    ret[@"sendOriginalImage"] = self.compressionRatio == 1.0 ? @(true) : @(false);
     return ret;
 }
 
@@ -647,6 +650,9 @@
     ret.thumbnailSecretKey = aJson[@"thumbnailSecret"];
     ret.thumbnailDownloadStatus = [ret downloadStatusFromInt:[aJson[@"thumbnailStatus"] intValue]];
     ret.thumbnailSize = CGSizeMake([aJson[@"width"] floatValue], [aJson[@"height"] floatValue]);
+    ret.remotePath = aJson[@"remotePath"];
+    ret.secretKey = aJson[@"secret"];
+    ret.downloadStatus = [ret downloadStatusFromInt:[aJson[@"fileStatus"] intValue]];
     return ret;
 }
 
@@ -655,12 +661,10 @@
     ret[@"duration"] = @(self.duration);
     ret[@"thumbnailLocalPath"] = self.thumbnailLocalPath;
     ret[@"thumbnailRemotePath"] = self.thumbnailRemotePath;
-    ret[@"thumbnailSecretKey"] = self.thumbnailSecretKey;
+    ret[@"thumbnailSecret"] = self.thumbnailSecretKey;
     ret[@"thumbnailStatus"] = @([self downloadStatusToInt:self.thumbnailDownloadStatus]);
     ret[@"width"] = @(self.thumbnailSize.width);
     ret[@"height"] = @(self.thumbnailSize.height);
-    ret[@"fileSize"] = @(self.fileLength);
-    ret[@"displayName"] = self.displayName;
     ret[@"duration"] = @(self.duration);
     return ret;
 }
@@ -685,6 +689,7 @@
     NSString *displayName = aJson[@"displayName"];
     EMVoiceMessageBody *ret = [[EMVoiceMessageBody alloc] initWithLocalPath:path displayName:displayName];
     ret.duration = [aJson[@"duration"] intValue];
+    ret.secretKey = aJson[@"secret"];
     ret.downloadStatus = [ret downloadStatusFromInt:[aJson[@"fileStatus"] intValue]];
     return ret;
 }
@@ -692,10 +697,6 @@
 - (NSDictionary *)toJson {
     NSMutableDictionary *ret = [[super toJson] mutableCopy];
     ret[@"duration"] = @(self.duration);
-    ret[@"displayName"] = self.displayName;
-    ret[@"localPath"] = self.localPath;
-    ret[@"fileSize"] = @(self.fileLength);
-    ret[@"fileStatus"] = @([self downloadStatusToInt:self.downloadStatus]);;
     return ret;
 }
 

@@ -14,7 +14,8 @@
 #import "EMPushManagerWrapper.h"
 #import "EMConversationWrapper.h"
 #import "EMUserInfoManagerWrapper.h"
-#import "EMPresenceManagerWrapper.h""
+#import "EMPresenceManagerWrapper.h"
+#import "EMThreadManagerWrapper.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -27,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) EMConversationWrapper *conversationWrapper;
 @property (nonatomic, strong) EMUserInfoManagerWrapper *userInfoManager;
 @property (nonatomic, strong) EMPresenceManagerWrapper *presenceManager;
+@property (nonatomic, strong) EMThreadManagerWrapper *chatThreadManager;
 
 + (EMClientWrapper *)instance;
 - (void)initWithOptions:(NSDictionary *)param;

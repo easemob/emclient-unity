@@ -21,6 +21,10 @@
 		902CC1EF266B5148002F9A50 /* EMGroupManagerWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 902CC1E5266B5148002F9A50 /* EMGroupManagerWrapper.m */; };
 		902CC1F0266B5148002F9A50 /* Transfrom.m in Sources */ = {isa = PBXBuildFile; fileRef = 902CC1E9266B5148002F9A50 /* Transfrom.m */; };
 		903E2C8C2890EE5F007C6D65 /* EMThreadManagerWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 903E2C8B2890EE5F007C6D65 /* EMThreadManagerWrapper.m */; };
+		903E2C9228913AF5007C6D65 /* EMChatThreadListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 903E2C9128913AF5007C6D65 /* EMChatThreadListener.m */; };
+		903E2C9628913C3D007C6D65 /* EMChatThreadEvent+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 903E2C9528913C3D007C6D65 /* EMChatThreadEvent+Helper.m */; };
+		903E2C9928913C65007C6D65 /* EMChatThread+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 903E2C9728913C65007C6D65 /* EMChatThread+Helper.m */; };
+		906010BF28937D4C00244CE6 /* EMMessageWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 906010BE28937D4C00244CE6 /* EMMessageWrapper.m */; };
 		9068A330266E35DC0022B90F /* EMOptions+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9068A32F266E35DC0022B90F /* EMOptions+Helper.m */; };
 		9068A333266E368C0022B90F /* EMConversation+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9068A332266E368C0022B90F /* EMConversation+Helper.m */; };
 		9068A336266E36E60022B90F /* EMChatMessage+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9068A335266E36E60022B90F /* EMChatMessage+Helper.m */; };
@@ -98,6 +102,14 @@
 		902CC1E9266B5148002F9A50 /* Transfrom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Transfrom.m; sourceTree = "<group>"; };
 		903E2C8A2890EE5F007C6D65 /* EMThreadManagerWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EMThreadManagerWrapper.h; sourceTree = "<group>"; };
 		903E2C8B2890EE5F007C6D65 /* EMThreadManagerWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EMThreadManagerWrapper.m; sourceTree = "<group>"; };
+		903E2C9028913AF5007C6D65 /* EMChatThreadListener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EMChatThreadListener.h; sourceTree = "<group>"; };
+		903E2C9128913AF5007C6D65 /* EMChatThreadListener.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EMChatThreadListener.m; sourceTree = "<group>"; };
+		903E2C9428913C3D007C6D65 /* EMChatThreadEvent+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "EMChatThreadEvent+Helper.h"; sourceTree = "<group>"; };
+		903E2C9528913C3D007C6D65 /* EMChatThreadEvent+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "EMChatThreadEvent+Helper.m"; sourceTree = "<group>"; };
+		903E2C9728913C65007C6D65 /* EMChatThread+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "EMChatThread+Helper.m"; sourceTree = "<group>"; };
+		903E2C9828913C65007C6D65 /* EMChatThread+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "EMChatThread+Helper.h"; sourceTree = "<group>"; };
+		906010BD28937D4C00244CE6 /* EMMessageWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EMMessageWrapper.h; sourceTree = "<group>"; };
+		906010BE28937D4C00244CE6 /* EMMessageWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EMMessageWrapper.m; sourceTree = "<group>"; };
 		9068A32E266E35DC0022B90F /* EMOptions+Helper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EMOptions+Helper.h"; sourceTree = "<group>"; };
 		9068A32F266E35DC0022B90F /* EMOptions+Helper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "EMOptions+Helper.m"; sourceTree = "<group>"; };
 		9068A331266E368C0022B90F /* EMConversation+Helper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EMConversation+Helper.h"; sourceTree = "<group>"; };
@@ -198,6 +210,8 @@
 				90D7B7FA2759D7DE00FD1C72 /* EMUserInfoManagerWrapper.m */,
 				903E2C8A2890EE5F007C6D65 /* EMThreadManagerWrapper.h */,
 				903E2C8B2890EE5F007C6D65 /* EMThreadManagerWrapper.m */,
+				906010BD28937D4C00244CE6 /* EMMessageWrapper.h */,
+				906010BE28937D4C00244CE6 /* EMMessageWrapper.m */,
 			);
 			path = Wrapper;
 			sourceTree = "<group>";
@@ -217,6 +231,10 @@
 		902CC1F1266B54B9002F9A50 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				903E2C9828913C65007C6D65 /* EMChatThread+Helper.h */,
+				903E2C9728913C65007C6D65 /* EMChatThread+Helper.m */,
+				903E2C9428913C3D007C6D65 /* EMChatThreadEvent+Helper.h */,
+				903E2C9528913C3D007C6D65 /* EMChatThreadEvent+Helper.m */,
 				90F0ECC7288E9DC6008558F3 /* EMPresence+Helper.h */,
 				90F0ECC6288E9DC6008558F3 /* EMPresence+Helper.m */,
 				90167817288557100059F474 /* EMMessageReaction+Helper.h */,
@@ -255,6 +273,8 @@
 			children = (
 				90A3004A266BA9DC00BB3A19 /* EMClientListener.h */,
 				90A3004B266BA9DC00BB3A19 /* EMClientListener.m */,
+				903E2C9028913AF5007C6D65 /* EMChatThreadListener.h */,
+				903E2C9128913AF5007C6D65 /* EMChatThreadListener.m */,
 				90A3004D266BB03600BB3A19 /* EMContactListener.h */,
 				90A3004E266BB03600BB3A19 /* EMContactListener.m */,
 				9068A33A266E3DF40022B90F /* EMChatListener.h */,
@@ -332,7 +352,7 @@
 		90D7B170266774C9008CA320 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1250;
+				LastUpgradeCheck = 1340;
 				TargetAttributes = {
 					90D7B177266774C9008CA320 = {
 						CreatedOnToolsVersion = 12.5;
@@ -387,7 +407,9 @@
 				90D7B7FB2759D7DE00FD1C72 /* EMUserInfoManagerWrapper.m in Sources */,
 				9068A33F266E457A0022B90F /* EMPushOptions+Helper.m in Sources */,
 				90F0ECC4288E86B6008558F3 /* EMMessageReactionChange+Helper.m in Sources */,
+				903E2C9628913C3D007C6D65 /* EMChatThreadEvent+Helper.m in Sources */,
 				902CC1F0266B5148002F9A50 /* Transfrom.m in Sources */,
+				906010BF28937D4C00244CE6 /* EMMessageWrapper.m in Sources */,
 				900F7BED26785A5F007B5576 /* EMConversationWrapper.m in Sources */,
 				902CC1EE266B5148002F9A50 /* EMClientWrapper.m in Sources */,
 				90D7B17D266774C9008CA320 /* HyphenateWrapper.m in Sources */,
@@ -397,6 +419,7 @@
 				90167812288537860059F474 /* EMTranslateLanguage+Helper.m in Sources */,
 				90A3004F266BB03600BB3A19 /* EMContactListener.m in Sources */,
 				90F0ECC8288E9DC6008558F3 /* EMPresence+Helper.m in Sources */,
+				903E2C9228913AF5007C6D65 /* EMChatThreadListener.m in Sources */,
 				9068A342266E4D890022B90F /* EMGroup+Helper.m in Sources */,
 				9068A336266E36E60022B90F /* EMChatMessage+Helper.m in Sources */,
 				90A30047266B790900BB3A19 /* EMWrapper.m in Sources */,
@@ -405,6 +428,7 @@
 				90026D3F2890D7FC0064C16A /* EMPresenceManagerWrapper.m in Sources */,
 				9068A333266E368C0022B90F /* EMConversation+Helper.m in Sources */,
 				903E2C8C2890EE5F007C6D65 /* EMThreadManagerWrapper.m in Sources */,
+				903E2C9928913C65007C6D65 /* EMChatThread+Helper.m in Sources */,
 				90167815288538F90059F474 /* NSArray+Helper.m in Sources */,
 				9068A3482670719F0022B90F /* EMPageResult+Helper.m in Sources */,
 				902CC1EA266B5148002F9A50 /* EMPushManagerWrapper.m in Sources */,
@@ -540,7 +564,7 @@
 					"$(PROJECT_DIR)",
 				);
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/HyphenateChat.framework\"/**";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -560,7 +584,7 @@
 					"$(PROJECT_DIR)",
 				);
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/HyphenateChat.framework\"/**";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;

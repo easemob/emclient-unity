@@ -2,7 +2,9 @@ package com.hyphenate.unity_chat_sdk.listeners;
 
 import android.util.Log;
 
+import com.hyphenate.EMChatThreadChangeListener;
 import com.hyphenate.EMGroupChangeListener;
+import com.hyphenate.chat.EMChatThreadEvent;
 import com.hyphenate.chat.EMMucSharedFile;
 import com.hyphenate.unity_chat_sdk.helper.EMMucSharedFileHelper;
 import com.hyphenate.unity_chat_sdk.helper.EMTransformHelper;
@@ -176,8 +178,8 @@ public class EMUnityGroupManagerListener implements EMGroupChangeListener {
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("groupId", groupId);
-            jsonObject.put("whitelist", EMTransformHelper.jsonArrayFromStringList(whitelist).toString());
-            UnityPlayer.UnitySendMessage(EMSDKMethod.GroupListener_Obj, "OnWhiteListAdded", jsonObject.toString());
+            jsonObject.put("list", EMTransformHelper.jsonArrayFromStringList(whitelist).toString());
+            UnityPlayer.UnitySendMessage(EMSDKMethod.GroupListener_Obj, "OnAddWhiteListMembersFromGroup", jsonObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -189,8 +191,8 @@ public class EMUnityGroupManagerListener implements EMGroupChangeListener {
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("groupId", groupId);
-            jsonObject.put("whitelist", EMTransformHelper.jsonArrayFromStringList(whitelist).toString());
-            UnityPlayer.UnitySendMessage(EMSDKMethod.GroupListener_Obj, "OnWhiteListRemoved", jsonObject.toString());
+            jsonObject.put("list", EMTransformHelper.jsonArrayFromStringList(whitelist).toString());
+            UnityPlayer.UnitySendMessage(EMSDKMethod.GroupListener_Obj, "OnRemoveWhiteListMembersFromGroup", jsonObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -202,8 +204,8 @@ public class EMUnityGroupManagerListener implements EMGroupChangeListener {
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("groupId", groupId);
-            jsonObject.put("isMuted", isMuted);
-            UnityPlayer.UnitySendMessage(EMSDKMethod.GroupListener_Obj, "OnAllMemberMuteStateChanged", jsonObject.toString());
+            jsonObject.put("muted", isMuted);
+            UnityPlayer.UnitySendMessage(EMSDKMethod.GroupListener_Obj, "OnAllMemberMuteChangedFromGroup", jsonObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }

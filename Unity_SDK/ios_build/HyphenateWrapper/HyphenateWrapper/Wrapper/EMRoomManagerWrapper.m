@@ -47,7 +47,7 @@
         if (aError) {
             [weakSelf onError:callId error:aError];
         }else {
-            [weakSelf onSuccess:@"EMPageResult<EMChatRoom>" callbackId:callId userInfo:[aResult toJson]];
+            [weakSelf onSuccess:@"PageResult<ChatRoom>" callbackId:callId userInfo:[aResult toJson]];
         }
     }];
 }
@@ -77,7 +77,7 @@
         if (aError) {
             [weakSelf onError:callId error:aError];
         }else {
-            [weakSelf onSuccess:@"EMChatRoom" callbackId:callId userInfo:[aChatroom toJson]];
+            [weakSelf onSuccess:@"ChatRoom" callbackId:callId userInfo:[aChatroom toJson]];
         }
     }];
 }
@@ -99,7 +99,7 @@
         if (aError) {
             [weakSelf onError:callId error:aError];
         }else {
-            [weakSelf onSuccess:@"EMChatRoom" callbackId:callId userInfo:[aChatroom toJson]];
+            [weakSelf onSuccess:@"ChatRoom" callbackId:callId userInfo:[aChatroom toJson]];
         }
     }];
 }
@@ -163,7 +163,7 @@
         if (aError) {
             [weakSelf onError:callId error:aError];
         }else {
-            [weakSelf onSuccess:@"EMChatRoom" callbackId:callId userInfo:[aChatroom toJson]];
+            [weakSelf onSuccess:@"ChatRoom" callbackId:callId userInfo:[aChatroom toJson]];
         }
         
     }];
@@ -178,7 +178,7 @@
     
     EMChatroom *chatroom = [EMChatroom chatroomWithId:param[@"roomId"]];
     if (chatroom) {
-        [self onSuccess:@"EMChatRoom" callbackId:callbackId userInfo:[chatroom toJson]];
+        [self onSuccess:@"ChatRoom" callbackId:callbackId userInfo:[chatroom toJson]];
     }else {
         EMError *aError = [EMError errorWithDescription:@"Room not found" code:EMErrorMessageInvalid];
         [self onError:callbackId error:aError];
@@ -206,7 +206,7 @@
         if (aError) {
             [weakSelf onError:callId error:aError];
         }else {
-            [weakSelf onSuccess:@"EMCursorResult<String>" callbackId:callId userInfo:[aResult toJson]];
+            [weakSelf onSuccess:@"CursorResult<String>" callbackId:callId userInfo:[aResult toJson]];
         }
     }];
 }

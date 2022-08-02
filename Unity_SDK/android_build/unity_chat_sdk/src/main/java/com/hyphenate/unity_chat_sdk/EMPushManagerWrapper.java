@@ -35,7 +35,7 @@ public class EMPushManagerWrapper extends EMWrapper {
         asyncRunnable(()->{
             try {
                 EMPushConfigs configs = EMClient.getInstance().pushManager().getPushConfigsFromServer();
-                onSuccess("EMPushConfigs", callbackId, EMPushConfigHelper.toJson(configs).toString());
+                onSuccess("PushConfigs", callbackId, EMPushConfigHelper.toJson(configs).toString());
             } catch (HyphenateException e) {
                 onError(callbackId, e);
             } catch (JSONException e) {}

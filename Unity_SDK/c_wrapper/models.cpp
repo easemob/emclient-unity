@@ -2278,6 +2278,7 @@ ConversationTO * ConversationTO::FromEMConversation(EMConversationPtr&  conversa
     conversationTO->ConverationId = conversationPtr->conversationId().c_str();
     conversationTO->type = conversationPtr->conversationType();
     conversationTO->ExtField = conversationPtr->extField().c_str();
+    conversationTO->isThread = conversationPtr->isThread();
     return conversationTO;
 }
 

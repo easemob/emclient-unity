@@ -48,7 +48,7 @@
         if (error) {
             [weakSelf onError:callbackId error:error];
         }else {
-            [weakSelf onSuccess:@"List<EMPresence>" callbackId:callbackId userInfo:[presences toJsonArray]];
+            [weakSelf onSuccess:@"List<Presence>" callbackId:callbackId userInfo:[presences toJsonArray]];
         }
     }];
 }
@@ -87,7 +87,7 @@
         if (error) {
             [weakSelf onError:callbackId error:error];
         }else {
-            [weakSelf onSuccess:@"List<EMPresence>" callbackId:callbackId userInfo:[presences toJsonArray]];
+            [weakSelf onSuccess:@"List<Presence>" callbackId:callbackId userInfo:[presences toJsonArray]];
         }
     }];
 }

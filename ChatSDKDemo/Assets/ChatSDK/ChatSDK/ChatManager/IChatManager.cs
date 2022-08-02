@@ -145,13 +145,28 @@ namespace ChatSDK
 	     * @param createIfNeed      Whether to automatically create a conversation if the conversation is not found. 
 	     *                          - `true`: Yes.
 	     *                          - `false`: No.
-	     * @param isThread          The conversation to be gotten is thread or not.
-	     *                          - `true` : is thread;
-	     *                          - `true` : is not thread;
 	     * @return 		            The conversation found. Returns `null` if the conversation is not found.
 	     */
-        public abstract Conversation GetConversation(string conversationId, ConversationType type = ConversationType.Chat, bool createIfNeed = true, bool isThread = false);
+        public abstract Conversation GetConversation(string conversationId, ConversationType type = ConversationType.Chat, bool createIfNeed = true);
 
+		/**
+	     * \~chinese
+	     * 获取本地指定子区会话对象。
+	     * 
+	     * @param threadId			子区 ID。
+	     * 
+	     * @return                  根据指定会话 ID 获取子区会话对象。
+	     *
+	     * \~english
+	     * Gets the local thread conversation object.
+	     * 
+	     * The SDK wil return `null` if the conversation is not found.
+	     *
+	     * @param threadId 			The threadId ID.
+	     * 
+	     * @return 		            The conversation found. Returns `null` if the conversation is not found.
+	     */
+		public abstract Conversation GetThreadConversation(string threadId);
 
         /**
 	     * \~chinese

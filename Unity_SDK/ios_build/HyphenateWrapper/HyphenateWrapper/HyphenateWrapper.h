@@ -36,7 +36,7 @@ void UserInfoManager_MethodCall(const char* methodName, const char* jsonString, 
 
 void PresenceManager_HandleMethodCall(const char* methodName, const char* jsonString, const char* callbackId);
 
-
+void ChatThreadManager_HandleMethodCall(const char* methodName, const char* jsonString, const char* callbackId);
 
 extern void UnitySendMessage(const char *,const char *, const char *);
 #ifdef __cplusplus

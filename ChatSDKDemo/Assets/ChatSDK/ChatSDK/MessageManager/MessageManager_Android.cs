@@ -4,10 +4,6 @@ namespace ChatSDK
 {
     internal class MessageManager_Android : IMessageManager
     {
-        internal MessageManager_Android()
-        {
-        }
-
         internal override int GetGroupAckCount(string messageId)
         {
             throw new System.NotImplementedException();

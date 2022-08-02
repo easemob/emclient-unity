@@ -119,7 +119,7 @@
         * \~english
         * The one-to-one chat.
         */
-        Chat,
+        Chat = 0,
 
         /**
         * \~chinese

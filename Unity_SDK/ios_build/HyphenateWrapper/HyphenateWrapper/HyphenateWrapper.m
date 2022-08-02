@@ -428,6 +428,8 @@ const char* Conversation_GetMethodCall(const char* methodName, const char* jsonS
         jsonObject = [EMClientWrapper.instance.conversationWrapper loadMsgWithId:dic];
     }else if ([method isEqualToString:@"messageCount"]) {
         jsonObject = [EMClientWrapper.instance.conversationWrapper messageCount:dic];
+    }else if ([method isEqualToString:@"isThread"]) {
+        jsonObject = [EMClientWrapper.instance.conversationWrapper isThread:dic];
     }
     
     const char *csStr = [Transfrom JsonObjectToCSString:jsonObject];
@@ -473,5 +475,27 @@ void ChatThreadManager_HandleMethodCall(const char* methodName, const char* json
     NSString *method = [Transfrom NSStringFromCString:methodName];
     NSDictionary *dic = [Transfrom JsonObjectFromCSString:jsonString];
     NSString *callId = [Transfrom NSStringFromCString:callbackId];
-   
+    if([method isEqualToString:@"changeThreadName"]) {
+        [EMClientWrapper.instance.chatThreadManager changeThreadName:dic callbackId:callId];
+    } else if ([method isEqualToString:@"createThread"]) {
+        [EMClientWrapper.instance.chatThreadManager createThread:dic callbackId:callId];
+    } else if ([method isEqualToString:@"destroyThread"]) {
+        [EMClientWrapper.instance.chatThreadManager destroyThread:dic callbackId:callId];
+    } else if ([method isEqualToString:@"fetchMineJoinedThreadList"]) {
+        [EMClientWrapper.instance.chatThreadManager fetchMineJoinedThreadList:dic callbackId:callId];
+    } else if ([method isEqualToString:@"fetchThreadListOfGroup"]) {
+        [EMClientWrapper.instance.chatThreadManager fetchThreadListOfGroup:dic callbackId:callId];
+    } else if ([method isEqualToString:@"fetchThreadMembers"]) {
+        [EMClientWrapper.instance.chatThreadManager fetchThreadMembers:dic callbackId:callId];
+    } else if ([method isEqualToString:@"getLastMessageAccordingThreads"]) {
+        [EMClientWrapper.instance.chatThreadManager getLastMessageAccordingThreads:dic callbackId:callId];
+    } else if ([method isEqualToString:@"getThreadDetail"]) {
+        [EMClientWrapper.instance.chatThreadManager getThreadDetail:dic callbackId:callId];
+    } else if ([method isEqualToString:@"joinThread"]) {
+        [EMClientWrapper.instance.chatThreadManager joinThread:dic callbackId:callId];
+    } else if ([method isEqualToString:@"leaveThread"]) {
+        [EMClientWrapper.instance.chatThreadManager leaveThread:dic callbackId:callId];
+    } else if ([method isEqualToString:@"removeThreadMember"]) {
+        [EMClientWrapper.instance.chatThreadManager removeThreadMember:dic callbackId:callId];
+    }
 }
