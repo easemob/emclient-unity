@@ -376,7 +376,7 @@ namespace ChatSDK {
                     }
                     dictionary.Remove(callbackId);
                 }
-                else if (value == "List<EMGroup>")
+                else if (value == "List<Group>")
                 {
                     List<Group> result = null;
                     if (responseValue != null)
@@ -394,7 +394,7 @@ namespace ChatSDK {
                     }
                     dictionary.Remove(callbackId);
                 }
-                else if (value == "EMCursorResult<EMGroupInfo>")
+                else if (value == "CursorResult<GroupInfo>")
                 {
                     CursorResult<GroupInfo> result = null;
                     if (responseValue != null)
@@ -412,7 +412,7 @@ namespace ChatSDK {
                     }
                     dictionary.Remove(callbackId);
                 }
-                else if (value == "EMCursorResult<String>")
+                else if (value == "CursorResult<String>")
                 {
                     CursorResult<string> result = null;
                     if (responseValue != null)
@@ -430,7 +430,7 @@ namespace ChatSDK {
                     }
                     dictionary.Remove(callbackId);
                 }
-                else if (value == "EMCursorResult<EMMessage>")
+                else if (value == "CursorResult<Message>")
                 {
                     CursorResult<Message> result = null;
                     if (responseValue != null)
@@ -448,7 +448,7 @@ namespace ChatSDK {
                     }
                     dictionary.Remove(callbackId);
                 }
-                else if (value == "List<EMMucSharedFile>")
+                else if (value == "List<MucSharedFile>")
                 {
                     List<GroupSharedFile> result = null;
                     if (responseValue != null)
@@ -466,7 +466,7 @@ namespace ChatSDK {
                     }
                     dictionary.Remove(callbackId);
                 }
-                else if (value == "EMGroup")
+                else if (value == "Group")
                 {
                     Group result = null;
                     if (responseValue != null && responseValue.IsString)
@@ -483,7 +483,7 @@ namespace ChatSDK {
                     }
                     dictionary.Remove(callbackId);
                 }
-                else if (value == "EMPageResult<EMChatRoom>")
+                else if (value == "PageResult<ChatRoom>")
                 {
                     PageResult<Room> result = null;
                     if (responseValue != null && responseValue.IsString)
@@ -519,7 +519,7 @@ namespace ChatSDK {
                     }
                     dictionary.Remove(callbackId);
                 }
-                else if (value == "List<EMConversation>")
+                else if (value == "List<Conversation>")
                 {
                     List<Conversation> result = null;
                     if (responseValue != null && responseValue.IsString)
@@ -537,7 +537,7 @@ namespace ChatSDK {
                     }
                     dictionary.Remove(callbackId);
                 }
-                else if (value == "EMChatRoom")
+                else if (value == "ChatRoom")
                 {
                     Room result = null;
                     if (responseValue != null && responseValue.IsString)
@@ -554,7 +554,7 @@ namespace ChatSDK {
                     }
                     dictionary.Remove(callbackId);
                 }
-                else if (value == "EMPushConfigs")
+                else if (value == "PushConfigs")
                 {
                     PushConfig result = null;
                     if (responseValue != null && responseValue.IsString)
@@ -613,7 +613,7 @@ namespace ChatSDK {
                     }
                     dictionary.Remove(callbackId);
                 }
-                else if (value == "List<EMMessage>")
+                else if (value == "List<Message>")
                 {
                     ValueCallBack<List<Message>> valueCallBack = (ValueCallBack<List<Message>>)dictionary[callbackId];
                     if (valueCallBack.OnSuccessValue != null)
@@ -727,7 +727,7 @@ namespace ChatSDK {
                     }
                     dictionary.Remove(callbackId);
                 }
-                else if (value == "EMMessage")
+                else if (value == "Message")
                 {
                     Message result = null;
                     if (responseValue != null)
@@ -762,7 +762,7 @@ namespace ChatSDK {
                     }
                     dictionary.Remove(callbackId);
                 }
-                else if (value == "List<EMPresence>")
+                else if (value == "List<Presence>")
                 {
                     List<Presence> result = TransformTool.JsonStringToPresenceList(responseValue.Value);
                     ValueCallBack<List<Presence>> valueCallBack = (ValueCallBack<List<Presence>>)dictionary[callbackId];
@@ -774,6 +774,55 @@ namespace ChatSDK {
                         });
                     }
                     dictionary.Remove(callbackId);
+                }
+                else if (value == "ChatThread")
+                {
+                    ValueCallBack<ChatThread> valueCallBack = (ValueCallBack<ChatThread>)dictionary[callbackId];
+                    if (valueCallBack != null)
+                    {
+                        ChatThread result = null;
+                        if (responseValue != null)
+                        {
+                            result = ChatThread.FromJson(responseValue.Value);
+                            if (valueCallBack.OnSuccessValue != null)
+                            {
+                                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
+                                {
+                                    valueCallBack.OnSuccessValue(result);
+                                });
+                            }
+                            dictionary.Remove(callbackId);
+                        }
+                    }
+                }
+                else if (value == "Dictionary<string, Message>")
+                {
+                    ValueCallBack<Dictionary<string, Message>> valueCallBack = (ValueCallBack<Dictionary<string, Message>>)dictionary[callbackId];
+                    if (valueCallBack != null)
+                    {
+                        if (valueCallBack.OnSuccessValue != null)
+                        {
+                            ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
+                            {
+                                valueCallBack.OnSuccessValue(ChatThread.DictFromJson(responseValue.Value));
+                            });
+                        }
+                        dictionary.Remove(callbackId);
+                    }
+                }
+                else if (value == "CursorResult<ChatThread>") {
+                    ValueCallBack<CursorResult<ChatThread>> valueCallBack = (ValueCallBack<CursorResult<ChatThread>>)dictionary[callbackId];
+                    if (valueCallBack != null)
+                    {
+                        if (valueCallBack.OnSuccessValue != null)
+                        {
+                            ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
+                            {
+                                valueCallBack.OnSuccessValue(ChatThread.CursorThreadFromJson(responseValue.Value));
+                            });
+                        }
+                        dictionary.Remove(callbackId);
+                    }
                 }
             }
         }

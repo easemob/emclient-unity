@@ -148,10 +148,5 @@ namespace ChatSDK {
             }
         }
 
-        internal override bool IsThread(string conversationId, ConversationType conversationType)
-        {
-            //TODO: Add code here.
-            return false;
-        }
     }
 }

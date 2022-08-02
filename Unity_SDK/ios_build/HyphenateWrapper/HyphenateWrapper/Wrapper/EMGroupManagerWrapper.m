@@ -64,7 +64,7 @@
             for (EMGroup *group in aList) {
                 [list addObject:[Transfrom NSStringFromJsonObject:[group toJson]]];
             }
-            [weakSelf onSuccess:@"List<EMGroup>" callbackId:callId userInfo:list];
+            [weakSelf onSuccess:@"List<Group>" callbackId:callId userInfo:list];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -84,7 +84,7 @@
                                                                  completion:^(EMCursorResult *aResult, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMCursorResult<EMGroupInfo>" callbackId:callId userInfo:[aResult toJson]];
+            [weakSelf onSuccess:@"CursorResult<GroupInfo>" callbackId:callId userInfo:[aResult toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -111,7 +111,7 @@
                                                     completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
+            [weakSelf onSuccess:@"Group" callbackId:callbackId userInfo:[aGroup toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -130,7 +130,7 @@
                                                                    completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
+            [weakSelf onSuccess:@"Group" callbackId:callbackId userInfo:[aGroup toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -151,7 +151,7 @@
                                                                 completion:^(EMCursorResult *aResult, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMCursorResult<String>" callbackId:callId userInfo:[aResult toJson]];
+            [weakSelf onSuccess:@"CursorResult<String>" callbackId:callId userInfo:[aResult toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -259,7 +259,7 @@
             }
             
             
-            [weakSelf onSuccess:@"List<EMMucSharedFile>" callbackId:callId userInfo:array];
+            [weakSelf onSuccess:@"List<MucSharedFile>" callbackId:callId userInfo:array];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -875,7 +875,7 @@
                                                        completion:^(EMGroup *aGroup, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"EMGroup" callbackId:callbackId userInfo:[aGroup toJson]];
+            [weakSelf onSuccess:@"Group" callbackId:callbackId userInfo:[aGroup toJson]];
         }else {
             [weakSelf onError:callId error:aError];
         }

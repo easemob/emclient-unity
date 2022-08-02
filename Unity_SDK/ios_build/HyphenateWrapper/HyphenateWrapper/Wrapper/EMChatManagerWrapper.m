@@ -126,7 +126,7 @@
         if (aError) {
             [self onError:callId error:aError];
         }else {
-            [self onSuccess:@"EMCursorResult<EMMessage>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:[aResult toJson]]];
+            [self onSuccess:@"CursorResult<Message>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:[aResult toJson]]];
         }
     }];
 }
@@ -159,7 +159,7 @@
             for (EMConversation *conv in aCoversations) {
                 [jsonList addObject:[Transfrom NSStringFromJsonObject:[conv toJson]]];
             }
-            [self onSuccess:@"List<EMConversation>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:jsonList]];
+            [self onSuccess:@"List<Conversation>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:jsonList]];
         }
     }];
 }
@@ -307,7 +307,7 @@
             for (EMChatMessage *msg in aMessages) {
                 [ary addObject:[Transfrom NSStringFromJsonObject:[msg toJson]]];
             }
-            [self onSuccess:@"List<EMMessage>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:ary]];
+            [self onSuccess:@"List<Message>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:ary]];
         }
     }];
 }
@@ -471,7 +471,7 @@
         if (error) {
             [weakSelf onError:callbackId error:error];
         }else {
-            [weakSelf onSuccess:@"EMMessage" callbackId:callbackId userInfo:[message toJson]];
+            [weakSelf onSuccess:@"Message" callbackId:callbackId userInfo:[message toJson]];
         }
     }];
 }

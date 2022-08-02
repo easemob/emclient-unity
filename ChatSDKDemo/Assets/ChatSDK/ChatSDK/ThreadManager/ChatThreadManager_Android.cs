@@ -45,11 +45,6 @@ namespace ChatSDK
             throw new NotImplementedException();
         }
 
-        public override void GetThreadWithThreadId(string threadId, ValueCallBack<ChatThread> handle = null)
-        {
-            throw new NotImplementedException();
-        }
-
         public override void JoinThread(string threadId, ValueCallBack<ChatThread> handle = null)
         {
             throw new NotImplementedException();

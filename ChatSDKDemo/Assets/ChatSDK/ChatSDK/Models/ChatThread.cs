@@ -151,29 +151,6 @@ namespace ChatSDK
          */
         public Message LastMessage;
 
-        // TODO: 不需要TOJSON吧。
-        internal JSONObject ToJsonObject()
-        {
-            JSONObject jo = new JSONObject();
-            jo.Add("tId", Tid);
-            jo.Add("messageId", MessageId);
-            jo.Add("parentId", ParentId);
-            jo.Add("owner", Owner);
-            jo.Add("name", Name);
-            jo.Add("messageCount", MessageCount);
-            jo.Add("membersCount", MembersCount);
-            jo.Add("createTimestamp", CreateAt.ToString());
-            if (null != LastMessage)
-                jo.Add("lastMessage", LastMessage.ToJson().ToString());
-
-            return jo;
-        }
-
-        internal string ToJson()
-        {
-            return ToJsonObject().ToString();
-        }
-
         static internal ChatThread FromJsonObject(JSONNode jn)
         {
             if (null == jn) return null;

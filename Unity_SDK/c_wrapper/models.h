@@ -418,7 +418,7 @@ struct ConversationTO
     const char * ConverationId;
     EMConversation::EMConversationType type;
     const char * ExtField;
-    
+    bool isThread;
     static ConversationTO * FromEMConversation(EMConversationPtr&  conversationPtr);
 };
 

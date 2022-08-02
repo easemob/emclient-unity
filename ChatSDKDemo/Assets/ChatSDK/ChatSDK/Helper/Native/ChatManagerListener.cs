@@ -140,10 +140,15 @@ namespace ChatSDK {
             }
         }
 
-        internal void MessageReactionDidChange(List<MessageReactionChange> list) {
-
+        internal void MessageReactionDidChange(string jsonString) {
             if (delegater != null) {
-
+                List<MessageReactionChange> list = MessageReactionChange.ListFromJson(jsonString);
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IChatManagerDelegate delegater in delegater)
+                    {
+                        delegater.MessageReactionDidChange(list);
+                    }
+                });
             }
         }
     }

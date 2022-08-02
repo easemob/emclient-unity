@@ -1,36 +1,55 @@
 ﻿using System.Collections.Generic;
+using SimpleJSON;
 
 namespace ChatSDK
 {
     internal class MessageManager_iOS : IMessageManager
     {
-        internal MessageManager_iOS()
-        {
-        }
 
         internal override int GetGroupAckCount(string messageId)
         {
-            throw new System.NotImplementedException();
+            JSONObject obj = new JSONObject();
+            obj.Add("messageId", messageId);
+            string jsonString = ChatAPIIOS.MessageManager_GetMethodCall("getGroupAckCount", obj.ToString());
+            Dictionary<string, string> dict = TransformTool.JsonStringToDictionary(jsonString);
+            string countString = dict["count"];
+            return int.Parse(countString);
         }
 
         internal override bool GetHasDeliverAck(string messageId)
         {
-            throw new System.NotImplementedException();
+            JSONObject obj = new JSONObject();
+            obj.Add("messageId", messageId);
+            string jsonString = ChatAPIIOS.MessageManager_GetMethodCall("getHasDeliverAck", obj.ToString());
+            JSONNode jn = JSON.Parse(jsonString);
+            return jn["hasDeliverAck"].AsBool;
         }
 
         internal override bool GetHasReadAck(string messageId)
         {
-            throw new System.NotImplementedException();
+            JSONObject obj = new JSONObject();
+            obj.Add("messageId", messageId);
+            string jsonString = ChatAPIIOS.MessageManager_GetMethodCall("getHasReadAck", obj.ToString());
+            JSONNode jn = JSON.Parse(jsonString);
+            return jn["hasReadAcked"].AsBool;
         }
 
-        internal override List<MessageReaction> GetReactionList(string MessageId)
+        internal override List<MessageReaction> GetReactionList(string messageId)
         {
-            throw new System.NotImplementedException();
+            JSONObject obj = new JSONObject();
+            obj.Add("messageId", messageId);
+            string jsonString = ChatAPIIOS.MessageManager_GetMethodCall("getReactionList", obj.ToString());
+            JSONNode jn = JSON.Parse(jsonString);
+            return MessageReaction.ListFromJsonObject(jn["reactionList"]);
         }
 
         internal override ChatThread GetChatThread(string messageId)
         {
-            throw new System.NotImplementedException();
+            JSONObject obj = new JSONObject();
+            obj.Add("messageId", messageId);
+            string jsonString = ChatAPIIOS.MessageManager_GetMethodCall("getChatThread", obj.ToString());
+            JSONNode jn = JSON.Parse(jsonString);
+            return ChatThread.FromJsonObject(jn["chatThread"]);
         }
     }
 

@@ -471,21 +471,5 @@ namespace ChatSDK
          */
         internal abstract void LoadMessagesWithTime(string conversationId, ConversationType conversationType, long startTime, long endTime, int count = 20, ValueCallBack<List<Message>> callback = null);
 
-        /**
-         * \~chinese
-         * 判断会话是否为子区会话。
-         *
-         * @param conversationId    消息所属会话的 ID。
-         * @param conversationType  消息所属会话的类型，详见 {@link ConversationType}。
-         * @param return            返回会话是否为子区会话。
-         *
-         * \~english
-         * Check a conversation is thread or not.
-         *
-         * @param conversationId    The ID of the conversation to which the messages belong.
-         * @param conversationType  The type of the conversation to which the messages belong. See {@link ConversationType}.
-         * @return                  Return the coversation is thread or not.
-         */
-        internal abstract bool IsThread(string conversationId, ConversationType conversationType);
     }
 }

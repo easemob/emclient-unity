@@ -184,6 +184,7 @@ static EMClientWrapper *_instance;
     _conversationWrapper = [[EMConversationWrapper alloc] init];
     _userInfoManager = [[EMUserInfoManagerWrapper alloc] init];
     _presenceManager = [[EMPresenceManagerWrapper  alloc] init];
+    _chatThreadManager = [[EMThreadManagerWrapper alloc] init];
 }
 
 

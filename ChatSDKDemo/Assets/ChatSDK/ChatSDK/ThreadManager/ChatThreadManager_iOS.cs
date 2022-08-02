@@ -75,13 +75,6 @@ namespace ChatSDK
             ChatAPIIOS.ChatThreadManager_HandleMethodCall("getThreadDetail", json.ToString(), handle?.callbackId);
         }
 
-        public override void GetThreadWithThreadId(string threadId, ValueCallBack<ChatThread> handle = null)
-        {
-            JSONObject json = new JSONObject();
-            json.Add("threadId", threadId);
-            ChatAPIIOS.ChatThreadManager_HandleMethodCall("getThreadWithThreadId", json.ToString(), handle?.callbackId);
-        }
-
         public override void JoinThread(string threadId, ValueCallBack<ChatThread> handle = null)
         {
             JSONObject json = new JSONObject();

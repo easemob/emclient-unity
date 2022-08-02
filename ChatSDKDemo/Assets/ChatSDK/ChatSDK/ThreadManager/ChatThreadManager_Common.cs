@@ -133,22 +133,6 @@ namespace ChatSDK
                 });
         }
 
-        public override void GetThreadWithThreadId(string threadId, ValueCallBack<ChatThread> handle = null)
-        {
-            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
-
-            ChatAPINative.ThreadManager_GetThreadWithThreadId(client, callbackId, threadId,
-                (IntPtr[] data, DataType dType, int size, int cbId) =>
-                {
-                    string json = TransformTool.PtrToString(data[0]);
-                    ChatThread thread = ChatThread.FromJson(json);
-                    ChatCallbackObject.ValueCallBackOnSuccess<ChatThread>(cbId, thread);
-                },
-                onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.ValueCallBackOnError<ChatThread>(cbId, code, desc);
-                });
-        }
-
         public override void JoinThread(string threadId, ValueCallBack<ChatThread> handle = null)
         {
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;

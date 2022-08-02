@@ -11,7 +11,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface EMThreadManagerWrapper : EMWrapper
-- (void)getThreadWithThreadId:(NSDictionary *)param callbackId:(NSString *)callbackId;
 - (void)createThread:(NSDictionary *)param callbackId:(NSString *)callbackId;
 - (void)joinThread:(NSDictionary *)param callbackId:(NSString *)callbackId;
 - (void)leaveThread:(NSDictionary *)param callbackId:(NSString *)callbackId;
