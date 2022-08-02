@@ -2130,7 +2130,7 @@ RoomTO * RoomTO::FromEMChatRoom(EMChatroomPtr &room)
         rto->MemberList[0] = const_cast<char*>(EMPTY_STR.c_str());
     }
     else {
-        rto->MemberList = new char* [rto->MemberCount];
+        rto->MemberList = new char* [rto->MemberListCount];
         for (std::string member : room->chatroomMembers()) {
             rto->MemberList[i] = new char[member.size() + 1];
             std::strcpy(rto->MemberList[i], member.c_str());
