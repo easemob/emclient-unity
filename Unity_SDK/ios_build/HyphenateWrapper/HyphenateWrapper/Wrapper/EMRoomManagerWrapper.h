@@ -32,6 +32,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)chatRoomMuteMembers:(NSDictionary *)param callbackId:(NSString *)callbackId;
 - (void)chatRoomUnmuteMembers:(NSDictionary *)param callbackId:(NSString *)callbackId;
 - (void)updateChatroomAnnouncement:(NSDictionary *)param callbackId:(NSString *)callbackId;
+- (void)muteAllRoomMembers:(NSDictionary *)param callbackId:(NSString *)callbackId;
+- (void)unMuteAllRoomMembers:(NSDictionary *)param callbackId:(NSString *)callbackId;
+- (void)addWhiteListMembers:(NSDictionary *)param callbackId:(NSString *)callbackId;
+- (void)removeWhiteListMembers:(NSDictionary *)param callbackId:(NSString *)callbackId;
 @end
 
 NS_ASSUME_NONNULL_END

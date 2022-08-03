@@ -123,22 +123,22 @@ namespace ChatSDK
 
         public override void MuteAllRoomMembers(string roomId, ValueCallBack<Room> handle = null)
         {
-            //TODO: Add code
+            wrapper.Call("muteAllRoomMembers", roomId, handle?.callbackId);
         }
 
         public override void UnMuteAllRoomMembers(string roomId, ValueCallBack<Room> handle = null)
         {
-            //TODO: Add code
+            wrapper.Call("unMuteAllRoomMembers", roomId, handle?.callbackId);
         }
 
         public override void AddWhiteListMembers(string roomId, List<string> members, CallBack handle = null)
         {
-            //TODO: Add code
+            wrapper.Call("addWhiteListMembers", roomId, TransformTool.JsonStringFromStringList(members), handle?.callbackId);
         }
 
         public override void RemoveWhiteListMembers(string roomId, List<string> members, CallBack handle = null)
         {
-            //TODO: Add code
+            wrapper.Call("removeWhiteListMembers", roomId, TransformTool.JsonStringFromStringList(members), handle?.callbackId);
         }
     }
 }

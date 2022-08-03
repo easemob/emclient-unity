@@ -358,7 +358,6 @@ namespace ChatSDK {
             {
                 string value = jo["type"].Value;
                 JSONNode responseValue = jo["value"];
-                //TODO: add new type for presencemanager and reactionmanager
                 if (value == "List<String>")
                 {
                     List<string> result = null;
@@ -556,21 +555,21 @@ namespace ChatSDK {
                 }
                 else if (value == "PushConfigs")
                 {
-                    PushConfig result = null;
-                    if (responseValue != null && responseValue.IsString)
-                    {
-                        result = new PushConfig(responseValue.Value);
-                    }
+                    //PushConfig result = null;
+                    //if (responseValue != null && responseValue.IsString)
+                    //{
+                    //    result = new PushConfig(responseValue.Value);
+                    //}
 
-                    ValueCallBack<PushConfig> valueCallBack = (ValueCallBack<PushConfig>)dictionary[callbackId];
-                    if (valueCallBack.OnSuccessValue != null)
-                    {
-                        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
-                        {
-                            valueCallBack.OnSuccessValue(result);
-                        });
-                    }
-                    dictionary.Remove(callbackId);
+                    //ValueCallBack<PushConfig> valueCallBack = (ValueCallBack<PushConfig>)dictionary[callbackId];
+                    //if (valueCallBack.OnSuccessValue != null)
+                    //{
+                    //    ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
+                    //    {
+                    //        valueCallBack.OnSuccessValue(result);
+                    //    });
+                    //}
+                    //dictionary.Remove(callbackId);
                 }
                 else if (value == "bool")
                 {

@@ -454,4 +454,54 @@ public class EMChatRoomManagerWrapper extends EMWrapper {
         });
     }
 
+    private void muteAllRoomMembers(String roomId, String callbackId) {
+        EMClient.getInstance().chatroomManager().muteAllMembers(roomId, new EMUnityValueCallback<EMChatRoom>("Room", callbackId) {
+            @Override
+            public void onSuccess(EMChatRoom emChatRoom) {
+                try {
+                    sendJsonObjectToUnity(EMChatRoomHelper.toJson(emChatRoom).toString());
+                }catch (JSONException ignored) {}
+
+            }
+        });
+    }
+
+    private void unMuteAllRoomMembers(String roomId, String callbackId) {
+        EMClient.getInstance().chatroomManager().unmuteAllMembers(roomId, new EMUnityValueCallback<EMChatRoom>("Room", callbackId) {
+            @Override
+            public void onSuccess(EMChatRoom emChatRoom) {
+                try {
+                    sendJsonObjectToUnity(EMChatRoomHelper.toJson(emChatRoom).toString());
+                }catch (JSONException ignored) {}
+            }
+        });
+    }
+
+    private void addWhiteListMembers(String roomId, String jsonArrayStr, String callbackId) throws JSONException{
+        JSONArray jsonArray = new JSONArray(jsonArrayStr);
+        ArrayList<String> list = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            list.add(jsonArray.getString(i));
+        }
+        EMClient.getInstance().chatroomManager().addToChatRoomWhiteList(roomId, list, new EMUnityValueCallback<EMChatRoom>(null, callbackId){
+            @Override
+            public void onSuccess(EMChatRoom emChatRoom) {
+                sendEmptyCallback();
+            }
+        });
+    }
+
+    private void removeWhiteListMembers(String roomId, String jsonArrayStr, String callbackId) throws JSONException {
+        JSONArray jsonArray = new JSONArray(jsonArrayStr);
+        ArrayList<String> list = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            list.add(jsonArray.getString(i));
+        }
+        EMClient.getInstance().chatroomManager().removeFromChatRoomWhiteList(roomId, list, new EMUnityValueCallback<EMChatRoom>(null, callbackId){
+            @Override
+            public void onSuccess(EMChatRoom emChatRoom) {
+                sendEmptyCallback();
+            }
+        });
+    }
 }

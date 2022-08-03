@@ -48,7 +48,6 @@ namespace ChatSDK
         private IContactManager contactImp = null;
         private IGroupManager groupImp = null;
         private IRoomManager roomImp = null;
-        private IPushManager pushImp = null;
         private IConversationManager conversationImp = null;
         private IMessageManager messageManagerImp = null;
         private IUserInfoManager userInfoImp = null;
@@ -163,32 +162,7 @@ namespace ChatSDK
             return roomImp;
         }
 
-        /**
-        * \~chinese
-        * 获取推送管理器实例。
-        * 
-        * @return   推送管理器实例对象。
-        *
-        * \~english
-        * Gets a push manager instance.
-        *
-        * @return   The push manager instance object.
-        */
-        public IPushManager PushManager()
-        {
-            if (_initialized == false) return null;
-            if (pushImp != null) { return pushImp; }
-#if UNITY_ANDROID && !UNITY_EDITOR
-            pushImp = new PushManager_Android();
-#elif UNITY_IOS && !UNITY_EDITOR
-            pushImp = new PushManager_iOS();
-#elif UNITY_STANDALONE || UNITY_EDITOR
-            pushImp = new PushManager_Common(instance);
-#else
-            pushImp = new PushManager_Common(instance);
-#endif
-            return pushImp;
-        }
+
 
         /**
         * \~chinese

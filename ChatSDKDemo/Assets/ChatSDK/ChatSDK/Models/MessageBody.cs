@@ -117,7 +117,6 @@ namespace ChatSDK
                     ((MessageBody.FileBody)body).DisplayName = jo["displayName"].Value;
                     ((MessageBody.FileBody)body).RemotePath = jo["remotePath"].Value;
                     ((MessageBody.FileBody)body).Secret = jo["secret"].Value;
-                    ((MessageBody.FileBody)body).FileSize = jo["displayName"].AsInt; //TODO: bug?
                     ((MessageBody.FileBody)body).DownStatus = body.DownLoadStatusFromInt(jo["fileStatus"].AsInt);
                 }
             }
