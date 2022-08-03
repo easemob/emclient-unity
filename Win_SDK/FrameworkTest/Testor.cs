@@ -106,6 +106,12 @@ namespace WinSDKTest
                     {
                         TextBody b = (TextBody)msg.Body;
                         Console.WriteLine($"message text content: {b.Text}");
+                        string str = string.Join(",", b.TargetLanguages.ToArray());
+                        Console.WriteLine($"message targent languages: {str}");
+                        foreach(var it in b.Translations)
+                        {
+                            Console.WriteLine($"lang: {it.Key} and result:{it.Value}");
+                        }
                     }
                     break;
                 case MessageBodyType.FILE:
@@ -1684,8 +1690,8 @@ namespace WinSDKTest
 
         public void InitAll(string appkey)
         {
-            Options options = new Options("easemob-demo#easeim");
-            //Options options = new Options("easemob-demo#unitytest");
+            //Options options = new Options("easemob-demo#easeim");
+            Options options = new Options("easemob-demo#unitytest");
             //Options options = new Options("5101220107132865#test"); // 北京沙箱测试环境，无法正常登录
             //Options options = new Options("41117440#383391"); // 线上环境, demo中的token
             if (appkey.Length > 0 && appkey.Contains("#") == true)
@@ -2786,6 +2792,11 @@ namespace WinSDKTest
             msg.MessageType = msg_type;
             msg.IsThread = is_thread;
             msg.IsNeedGroupAck = true;
+
+            ChatSDK.MessageBody.TextBody tb = (ChatSDK.MessageBody.TextBody)msg.Body;
+            tb.TargetLanguages = new List<string>();
+            tb.TargetLanguages.Add("en");
+            tb.TargetLanguages.Add("ja");
 
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
                 onSuccess: () => {

@@ -1675,6 +1675,12 @@ class Utils
                 {
                     ChatSDK.MessageBody.TextBody b = (ChatSDK.MessageBody.TextBody)msg.Body;
                     Debug.Log($"message text content: {b.Text}");
+                    string str = string.Join(",", b.TargetLanguages.ToArray());
+                    Debug.Log($"message targent languages: {str}");
+                    foreach (var it in b.Translations)
+                    {
+                        Debug.Log($"lang: {it.Key} and result:{it.Value}");
+                    }
                 }
                 break;
             case MessageBodyType.FILE:
