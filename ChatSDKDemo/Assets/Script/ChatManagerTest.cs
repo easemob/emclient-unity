@@ -921,6 +921,48 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         UIManager.DefaultAlert(transform, $"OnMessagesReceived: {str}");
     }
 
+    public void IChatManager_FetchGroupReadAcks()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string messageId = dict["messageId"];
+            string groupId = dict["groupId"];
+            int pageSize = 10;
+            string startAckId = dict["startAckId"];
+
+            SDKClient.Instance.ChatManager.FetchGroupReadAcks(messageId, groupId, pageSize, startAckId, new ValueCallBack<CursorResult<GroupReadAck>>(
+                onSuccess: (result) =>
+                {
+                    if (0 == result.Data.Count)
+                    {
+                        Debug.Log("No group acks.");
+                        return;
+                    }
+                    Debug.Log($"FetchGroupReadAcks: found {result.Data.Count} messages");
+                    foreach (var msg in result.Data)
+                    {
+                        Debug.Log($"===========================");
+                        Debug.Log($"AckId: {msg.AckId}");
+                        Debug.Log($"MsgId: {msg.MsgId}");
+                        Debug.Log($"From: {msg.From}");
+                        Debug.Log($"Content: {msg.Content}");
+                        Debug.Log($"Timestamp: {msg.Timestamp}");
+                        Debug.Log($"===========================");
+                    }
+                },
+                onError: (code, desc) =>
+                {
+                    Debug.Log($"FetchGroupReadAcks failed, code:{code}, desc:{desc}");
+                }
+            ));
+        });
+
+        config.AddField("messageId");
+        config.AddField("groupId");
+        config.AddField("startAckId");
+        UIManager.DefaultInputAlert(transform, config);
+    }
+
     public void IChatManager_FetchSupportLanguages()
     {
         SDKClient.Instance.ChatManager.FetchSupportLanguages(new ValueCallBack<List<SupportLanguage>>(
@@ -959,6 +1001,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
              {
                  Debug.Log($"TranslateMessage success.");
                  ChatSDK.MessageBody.TextBody tb = (ChatSDK.MessageBody.TextBody)dmsg.Body;
+                 Debug.Log($"orgigin text is: {tb.Text}");
                  foreach (var it in tb.Translations)
                  {
                      Debug.Log($"Translate, lang:{it.Key}, result:{it.Value}");

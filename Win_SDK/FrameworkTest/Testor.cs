@@ -2791,7 +2791,7 @@ namespace WinSDKTest
             Message msg = Message.CreateTextSendMessage(to, text);
             msg.MessageType = msg_type;
             msg.IsThread = is_thread;
-            msg.IsNeedGroupAck = true;
+            //msg.IsNeedGroupAck = true;
 
             ChatSDK.MessageBody.TextBody tb = (ChatSDK.MessageBody.TextBody)msg.Body;
             tb.TargetLanguages = new List<string>();
@@ -3193,6 +3193,7 @@ namespace WinSDKTest
              {
                  Console.WriteLine($"TranslateMessage success.");
                  TextBody tb = (TextBody)dmsg.Body;
+                 Console.WriteLine($"orgigin text is: {tb.Text}");
                  foreach(var it in tb.Translations)
                  {
                      Console.WriteLine($"Translate, lang:{it.Key}, result:{it.Value}");
