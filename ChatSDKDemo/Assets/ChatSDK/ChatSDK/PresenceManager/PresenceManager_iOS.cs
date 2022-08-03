@@ -6,15 +6,6 @@ namespace ChatSDK
 {
 	internal sealed class PresenceManager_iOS : IPresenceManager
 	{
-		private IntPtr client;
-
-		internal PresenceManager_iOS(IClient _client)
-		{
-			if (_client is Client_Common clientCommon)
-			{
-				client = clientCommon.client;
-			}
-		}
 
 		public override void PublishPresence(string description, CallBack handle = null)
 		{

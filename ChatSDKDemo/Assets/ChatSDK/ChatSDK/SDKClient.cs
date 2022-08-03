@@ -63,14 +63,7 @@ namespace ChatSDK
          */
         public IRoomManager RoomManager { get => _Sdk.RoomManager(); }
 
-        /**
-         * \~chinese
-         * 推送管理器实例。
-         *
-         * \~english
-         * The push manager instance.
-         */
-        public IPushManager PushManager { get => _Sdk.PushManager(); }
+      
 
         /**
          * \~chinese
@@ -455,7 +448,6 @@ namespace ChatSDK
             _Sdk.RoomManager();
             _Sdk.ConversationManager();
             _Sdk.UserInfoManager();
-            _Sdk.PushManager();
             _Sdk.PresenceManager();
             _Sdk.ThreadManager();
         }
