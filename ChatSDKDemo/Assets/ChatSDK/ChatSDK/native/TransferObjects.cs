@@ -1738,12 +1738,12 @@ namespace ChatSDK
                 blockList.Add(b);
                 current = (IntPtr)((long)current + Marshal.SizeOf(current));
             }
-            var muteList = new List<Mute>();
+            var muteList = new List<string>();
             current = MuteList;
             for (int i = 0; i < MuteCount; i++)
             {
                 Mute m = Marshal.PtrToStructure<Mute>(current);
-                muteList.Add(m);
+                muteList.Add(m.Member);
                 current = (IntPtr)((long)current + Marshal.SizeOf(current));
             }
 
