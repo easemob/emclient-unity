@@ -106,7 +106,7 @@ namespace ChatSDK
          * To get the mute list of the chat room from the server, you can call `{@link IRoomManager#FetchRoomMuteList(String, int, int, ValueCallBack)}`.
          *
          */
-        public List<Mute> MuteList { get; internal set; }
+        public List<string> MuteList { get; internal set; }
 
         /**
          * \~chinese
@@ -185,8 +185,7 @@ namespace ChatSDK
                     AdminList = TransformTool.JsonStringToStringList(jo["adminList"].Value);
                     MemberList = TransformTool.JsonStringToStringList(jo["memberList"].Value);
                     BlockList = TransformTool.JsonStringToStringList(jo["blockList"].Value);
-                    // TODO: dujiepeng
-                    //MuteList = TransformTool.JsonStringToStringList(jo["muteList"].Value);
+                    MuteList = TransformTool.JsonStringToStringList(jo["muteList"].Value);
                     MaxUsers = jo["maxUsers"].AsInt;
                     Owner = jo["owner"].Value;
                     IsAllMemberMuted = jo["isAllMemberMuted"].AsBool;
