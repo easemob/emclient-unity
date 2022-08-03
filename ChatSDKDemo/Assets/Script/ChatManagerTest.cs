@@ -1656,7 +1656,21 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
     public void MessageReactionDidChange(List<MessageReactionChange> list)
     {
-        throw new System.NotImplementedException();
+        Debug.Log($"MessageReactionDidChange, reaction list count: {list.Count}");
+        if (list.Count == 0) return;
+        foreach (var it in list)
+        {
+            Debug.Log($"---------------");
+            MessageReactionChange mrc = it;
+            Debug.Log($"convId: {mrc.ConversationId}, msgId:{mrc.MessageId}");
+            foreach (var rit in mrc.ReactionList)
+            {
+                MessageReaction mr = rit;
+                string userlist = string.Join(",", mr.UserList.ToArray());
+                Debug.Log($"reaction: Reaction:{mr.Rection},count:{mr.Count},userlist:{userlist}; state:{mr.State}");
+            }
+
+        }
     }
 }
 
