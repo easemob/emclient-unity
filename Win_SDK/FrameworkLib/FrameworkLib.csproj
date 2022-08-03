@@ -89,7 +89,6 @@
     <Compile Include="Assets\ChatSDK\ChatSDK\Models\Options.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\Models\PageResult.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\Models\Presence.cs" />
-    <Compile Include="Assets\ChatSDK\ChatSDK\Models\PushConfig.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\Models\Room.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\Models\Translation.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\Models\UserInfo.cs" />
@@ -98,8 +97,6 @@
     <Compile Include="Assets\ChatSDK\ChatSDK\native\TransferObjects.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\PresenceManager\IPresenceManager.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\PresenceManager\PresenceManager_Common.cs" />
-    <Compile Include="Assets\ChatSDK\ChatSDK\PushManager\IPushManager.cs" />
-    <Compile Include="Assets\ChatSDK\ChatSDK\PushManager\PushManager_Common.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\RoomManager\IRoomManager.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\RoomManager\RoomManager_Common.cs" />
     <Compile Include="Assets\ChatSDK\ChatSDK\SDKClient.cs" />
