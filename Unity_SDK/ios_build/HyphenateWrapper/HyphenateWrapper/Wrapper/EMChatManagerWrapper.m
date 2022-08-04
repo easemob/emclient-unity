@@ -449,7 +449,7 @@
 }
 
 - (void)fetchSupportLanguages:(NSDictionary *)param callbackId:(NSString *)callbackId {
-    __weak typeof(self) weakSelf = self;
+    __weak EMChatManagerWrapper * weakSelf = self;
     [EMClient.sharedClient.chatManager fetchSupportedLangurages:^(NSArray<EMTranslateLanguage *> * _Nullable languages, EMError * _Nullable aError) {
         if (aError) {
             [weakSelf onError:callbackId error:aError];
@@ -463,7 +463,7 @@
     EMChatMessage *msg = [EMChatMessage fromJson:param[@"message"]];
     NSArray *languages = param[@"languages"];
     
-    __weak typeof(self) weakSelf = self;
+    __weak EMChatManagerWrapper * weakSelf = self;
     [EMClient.sharedClient.chatManager translateMessage:msg
                                         targetLanguages:languages
                                              completion:^(EMChatMessage *message, EMError *error)
@@ -479,7 +479,7 @@
     NSString *msgId = param[@"msg_id"];
     int pageSize = [param[@"pageSize"] intValue];
     NSString *ackId = param[@"ack_id"];
-    __weak typeof(self) weakSelf = self;
+    __weak EMChatManagerWrapper * weakSelf = self;
     EMChatMessage *msg = [EMClient.sharedClient.chatManager getMessageWithMessageId:msgId];
     EMError *e = nil;
     do {
@@ -516,7 +516,7 @@
     NSString *msgId = param[@"msgId"];
     NSString *tag = param[@"tag"];
     NSString *reason = param[@"reason"];
-    __weak typeof(self) weakSelf = self;
+    __weak EMChatManagerWrapper * weakSelf = self;
     [EMClient.sharedClient.chatManager reportMessageWithId:msgId
                                                        tag:tag
                                                     reason:reason
@@ -533,7 +533,7 @@
 - (void)addReaction:(NSDictionary *)param callbackId:(NSString *)callbackId {
     NSString *reaction = param[@"reaction"];
     NSString *msgId = param[@"msgId"];
-    __weak typeof(self) weakSelf = self;
+    __weak EMChatManagerWrapper * weakSelf = self;
     [EMClient.sharedClient.chatManager addReaction:reaction
                                          toMessage:msgId
                                         completion:^(EMError * error)
@@ -548,7 +548,7 @@
 - (void)removeReaction:(NSDictionary *)param callbackId:(NSString *)callbackId {
     NSString *reaction = param[@"reaction"];
     NSString *msgId = param[@"msgId"];
-    __weak typeof(self) weakSelf = self;
+    __weak EMChatManagerWrapper * weakSelf = self;
     [EMClient.sharedClient.chatManager removeReaction:reaction
                                           fromMessage:msgId
                                         completion:^(EMError * error)
@@ -565,7 +565,7 @@
     NSArray *msgIds = param[@"msgIds"];
     NSString *groupId = param[@"groupId"];
     EMChatType type = [EMChatMessage chatTypeFromInt:[param[@"chatType"] intValue]];
-    __weak typeof(self) weakSelf = self;
+    __weak EMChatManagerWrapper * weakSelf = self;
     [EMClient.sharedClient.chatManager getReactionList:msgIds
                                                 groupId:groupId
                                                chatType:type
@@ -594,7 +594,7 @@
     NSString *reaction = param[@"reaction"];
     NSString *cursor = param[@"cursor"];
     int pageSize = [param[@"pageSize"] intValue];
-    __weak typeof(self) weakSelf = self;
+    __weak EMChatManagerWrapper * weakSelf = self;
     [EMClient.sharedClient.chatManager getReactionDetail:msgId
                                                 reaction:reaction
                                                   cursor:cursor

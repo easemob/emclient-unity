@@ -26,12 +26,14 @@ public class EMMessageBodyHelper {
         EMTextMessageBody body = new EMTextMessageBody(content);
         if (json.has("targetLanguages")) {
             ArrayList<String> list = new ArrayList<>();
-            JSONArray jsonArray = json.getJSONArray("targetLanguages");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                String str = jsonArray.getString(i);
-                list.add(str);
+            JSONArray jsonArray = json.optJSONArray("targetLanguages");
+            if (jsonArray != null) {
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    String str = jsonArray.getString(i);
+                    list.add(str);
+                }
+                body.setTargetLanguages(list);
             }
-            body.setTargetLanguages(list);
         }
         return body;
     }
