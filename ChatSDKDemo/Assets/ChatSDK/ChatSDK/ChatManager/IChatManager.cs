@@ -39,15 +39,12 @@ namespace ChatSDK
         * @param deleteMessages 	Whether to delete local historical messages with the conversation.
         *                           - `true`: Yes.
 		*                           - `false`: No.
-		* @param isThread          The conversation to be deleted is thread or not.
-		*                          - `true` : is thread;
-		*                          - `true` : is not thread;
 		*
 			* @return 					Whether the conversation is successfully deleted:
 		*                           - `true`: Yes. 
 		*                           - `false`: No.
         */
-        public abstract bool DeleteConversation(string conversationId, bool deleteMessages = true,  bool isThread = false);
+        public abstract bool DeleteConversation(string conversationId, bool deleteMessages = true);
 
         /**
 	     * \~chinese

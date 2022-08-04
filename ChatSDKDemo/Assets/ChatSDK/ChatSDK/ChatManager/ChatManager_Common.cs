@@ -87,14 +87,14 @@ namespace ChatSDK
             }
         }
 
-        public override bool DeleteConversation(string conversationId, bool deleteMessages, bool isThread)
+        public override bool DeleteConversation(string conversationId, bool deleteMessages)
         {
             if (null == conversationId || 0 == conversationId.Length)
             {
                 Debug.LogError("Mandatory parameter is null!");
                 return false;
             }
-            ChatAPINative.ChatManager_RemoveConversation(client, conversationId, deleteMessages, isThread);
+            ChatAPINative.ChatManager_RemoveConversation(client, conversationId, deleteMessages, false);
             return true;
         }
 

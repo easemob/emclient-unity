@@ -8,7 +8,7 @@
 #import "EMGroupListener.h"
 #import "Transfrom.h"
 #import "EMMethod.h"
-#import "EMGroup+Unity.h"
+#import "EMGroup+Helper.h"
 #import "HyphenateWrapper.h"
 
 @implementation EMGroupListener
@@ -206,5 +206,28 @@
     UnitySendMessage(GroupListener_Obj, "OnSharedFileDeleted", [Transfrom JsonObjectToCSString:map]);
 }
 
+- (void)groupWhiteListDidUpdate:(EMGroup *)aGroup addedWhiteListMembers:(NSArray<NSString *> *)aMembers {
+    NSDictionary *map = @{
+        @"groupId":aGroup.groupId,
+        @"list":[Transfrom NSStringFromJsonObject:aMembers]
+    };
+    UnitySendMessage(GroupListener_Obj, "OnAddWhiteListMembersFromGroup", [Transfrom JsonObjectToCSString:map]);
+}
+
+- (void)groupWhiteListDidUpdate:(EMGroup *)aGroup removedWhiteListMembers:(NSArray<NSString *> *)aMembers {
+    NSDictionary *map = @{
+        @"groupId":aGroup.groupId,
+        @"list":[Transfrom NSStringFromJsonObject:aMembers]
+    };
+    UnitySendMessage(GroupListener_Obj, "OnRemoveWhiteListMembersFromGroup", [Transfrom JsonObjectToCSString:map]);
+}
+
+- (void)groupAllMemberMuteChanged:(EMGroup *)aGroup isAllMemberMuted:(BOOL)aMuted {
+    NSDictionary *map = @{
+        @"groupId":aGroup.groupId,
+        @"muted":@(aMuted)
+    };
+    UnitySendMessage(GroupListener_Obj, "OnAllMemberMuteChangedFromGroup", [Transfrom JsonObjectToCSString:map]);
+}
 
 @end

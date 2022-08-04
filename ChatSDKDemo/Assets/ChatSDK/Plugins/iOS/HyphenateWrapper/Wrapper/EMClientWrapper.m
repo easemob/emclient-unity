@@ -7,7 +7,7 @@
 
 #import "EMClientWrapper.h"
 #import <HyphenateChat/HyphenateChat.h>
-#import "EMOptions+Unity.h"
+#import "EMOptions+Helper.h"
 #import "EMClientListener.h"
 
 @interface EMClientWrapper ()
@@ -183,6 +183,9 @@ static EMClientWrapper *_instance;
     _pushManager = [[EMPushManagerWrapper alloc] init];
     _conversationWrapper = [[EMConversationWrapper alloc] init];
     _userInfoManager = [[EMUserInfoManagerWrapper alloc] init];
+    _presenceManager = [[EMPresenceManagerWrapper  alloc] init];
+    _chatThreadManager = [[EMThreadManagerWrapper alloc] init];
+    _messageWrapper = [[EMMessageWrapper alloc] init];
 }
 
 

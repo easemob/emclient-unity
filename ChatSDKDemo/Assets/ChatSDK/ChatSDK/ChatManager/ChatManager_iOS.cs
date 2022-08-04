@@ -12,12 +12,11 @@ namespace ChatSDK
            
         }
 
-        public override bool DeleteConversation(string conversationId, bool deleteMessages, bool isThread)
+        public override bool DeleteConversation(string conversationId, bool deleteMessages)
         {
             JSONObject obj = new JSONObject();
             obj.Add("convId", conversationId);
             obj.Add("deleteMessages", deleteMessages);
-            obj.Add("isThread", isThread);
             string ret = ChatAPIIOS.ChatManager_GetMethodCall("deleteConversation", obj.ToString());
             JSONNode jn = JSON.Parse(ret);
             return jn["ret"].AsBool;

@@ -441,6 +441,32 @@ const char* Conversation_GetMethodCall(const char* methodName, const char* jsonS
     return ret;
 }
 
+const char* MessageManager_GetMethodCall(const char* methodName, const char* jsonString, const char* callbackId) {
+    NSString *method = [Transfrom NSStringFromCString:methodName];
+    NSDictionary *dic = [Transfrom JsonObjectFromCSString:jsonString];
+    char* ret = NULL;
+    id jsonObject = nil;
+    if ([method isEqualToString:@"getGroupAckCount"]) {
+        jsonObject = [EMClientWrapper.instance.messageWrapper getGroupAckCount:dic];
+    }else if ([method isEqualToString:@"getHasDeliverAck"]) {
+        jsonObject = [EMClientWrapper.instance.messageWrapper getHasDeliverAck:dic];
+    }else if ([method isEqualToString:@"getHasReadAck"]) {
+        jsonObject = [EMClientWrapper.instance.messageWrapper getHasReadAck:dic];
+    }else if ([method isEqualToString:@"getReactionList"]) {
+        jsonObject = [EMClientWrapper.instance.messageWrapper getReactionList:dic];
+    }else if ([method isEqualToString:@"getChatThread"]) {
+        jsonObject = [EMClientWrapper.instance.messageWrapper getChatThread:dic];
+    }
+    
+    const char *csStr = [Transfrom JsonObjectToCSString:jsonObject];
+    if (csStr != NULL) {
+        ret = (char*)malloc(strlen(csStr) +1);
+        strcpy(ret, csStr);
+    }
+    
+    return ret;
+}
+
 void UserInfoManager_MethodCall(const char* methodName, const char* jsonString, const char* callbackId) {
     NSString *method = [Transfrom NSStringFromCString:methodName];
     NSDictionary *dic = [Transfrom JsonObjectFromCSString:jsonString];
@@ -452,6 +478,10 @@ void UserInfoManager_MethodCall(const char* methodName, const char* jsonString, 
     } else if([method isEqualToString:@"updateOwnByAttribute"]) {
         [EMClientWrapper.instance.userInfoManager updateOwnUserInfoWithType:dic callbackId:callId];
     }
+}
+
+void UserInfoManager_GetMethodCall(const char* methodName, const char* jsonString, const char* callbackId) {
+    
 }
 
 void PresenceManager_HandleMethodCall(const char* methodName, const char* jsonString, const char* callbackId) {

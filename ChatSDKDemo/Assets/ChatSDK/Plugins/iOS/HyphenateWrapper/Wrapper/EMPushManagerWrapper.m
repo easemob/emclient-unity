@@ -7,7 +7,7 @@
 
 #import "EMPushManagerWrapper.h"
 #import <HyphenateChat/HyphenateChat.h>
-#import "EMPushOptions+Unity.h"
+#import "EMPushOptions+Helper.h"
 #import "Transfrom.h"
 
 @implementation EMPushManagerWrapper
@@ -37,7 +37,7 @@
         if (aError) {
             [weakSelf onError:callId error:aError];
         }else {
-            [weakSelf onSuccess:@"EMPushConfigs" callbackId:callId userInfo:[aOptions toJson]];
+            [weakSelf onSuccess:@"PushConfigs" callbackId:callId userInfo:[aOptions toJson]];
         }
     }] ;
 }
