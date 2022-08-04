@@ -114,12 +114,30 @@ void ChatManager_HandleMethodCall(const char* methodName, const char* jsonString
         [EMClientWrapper.instance.chatManager ackConversationRead:dic callbackId:callId];
     }else if ([method isEqualToString:@"ackMessageRead"]) {
         [EMClientWrapper.instance.chatManager ackMessageRead:dic callbackId:callId];
+    }else if ([method isEqualToString:@"sendReadAckFromGroupMessage"]) {
+        [EMClientWrapper.instance.chatManager sendReadAckForGroupMessage:dic callbackId:callId];
     }else if ([method isEqualToString:@"searchChatMsgFromDB"]) {
         [EMClientWrapper.instance.chatManager searchChatMsgFromDB:dic callbackId:callId];
     }else if ([method isEqualToString:@"removeMessageBeforeTimestamp"]) {
         [EMClientWrapper.instance.chatManager removeMessagesBeforeTimestamp:dic callbackId:callId];
     }else if ([method isEqualToString:@"deleteConversationFromServer"]) {
         [EMClientWrapper.instance.chatManager deleteConversationFromServer:dic callbackId:callId];
+    }else if ([method isEqualToString:@"fetchSupportLanguages"]) {
+        [EMClientWrapper.instance.chatManager fetchSupportLanguages:dic callbackId:callId];
+    }else if ([method isEqualToString:@"translateMessage"]) {
+        [EMClientWrapper.instance.chatManager translateMessage:dic callbackId:callId];
+    }else if ([method isEqualToString:@"fetchGroupReadAcks"]) {
+        [EMClientWrapper.instance.chatManager fetchGroupReadAcks:dic callbackId:callId];
+    }else if ([method isEqualToString:@"reportMessage"]) {
+        [EMClientWrapper.instance.chatManager reportMessage:dic callbackId:callId];
+    }else if ([method isEqualToString:@"addReaction"]) {
+        [EMClientWrapper.instance.chatManager addReaction:dic callbackId:callId];
+    }else if ([method isEqualToString:@"removeReaction"]) {
+        [EMClientWrapper.instance.chatManager removeReaction:dic callbackId:callId];
+    }else if ([method isEqualToString:@"getReactionList"]) {
+        [EMClientWrapper.instance.chatManager getReactionList:dic callbackId:callId];
+    }else if ([method isEqualToString:@"getReactionDetail"]) {
+        [EMClientWrapper.instance.chatManager getReactionDetail:dic callbackId:callId];
     }
 }
 
@@ -410,6 +428,34 @@ const char* Conversation_GetMethodCall(const char* methodName, const char* jsonS
         jsonObject = [EMClientWrapper.instance.conversationWrapper loadMsgWithId:dic];
     }else if ([method isEqualToString:@"messageCount"]) {
         jsonObject = [EMClientWrapper.instance.conversationWrapper messageCount:dic];
+    }else if ([method isEqualToString:@"isThread"]) {
+        jsonObject = [EMClientWrapper.instance.conversationWrapper isThread:dic];
+    }
+    
+    const char *csStr = [Transfrom JsonObjectToCSString:jsonObject];
+    if (csStr != NULL) {
+        ret = (char*)malloc(strlen(csStr) +1);
+        strcpy(ret, csStr);
+    }
+    
+    return ret;
+}
+
+const char* MessageManager_GetMethodCall(const char* methodName, const char* jsonString, const char* callbackId) {
+    NSString *method = [Transfrom NSStringFromCString:methodName];
+    NSDictionary *dic = [Transfrom JsonObjectFromCSString:jsonString];
+    char* ret = NULL;
+    id jsonObject = nil;
+    if ([method isEqualToString:@"getGroupAckCount"]) {
+        jsonObject = [EMClientWrapper.instance.messageWrapper getGroupAckCount:dic];
+    }else if ([method isEqualToString:@"getHasDeliverAck"]) {
+        jsonObject = [EMClientWrapper.instance.messageWrapper getHasDeliverAck:dic];
+    }else if ([method isEqualToString:@"getHasReadAck"]) {
+        jsonObject = [EMClientWrapper.instance.messageWrapper getHasReadAck:dic];
+    }else if ([method isEqualToString:@"getReactionList"]) {
+        jsonObject = [EMClientWrapper.instance.messageWrapper getReactionList:dic];
+    }else if ([method isEqualToString:@"getChatThread"]) {
+        jsonObject = [EMClientWrapper.instance.messageWrapper getChatThread:dic];
     }
     
     const char *csStr = [Transfrom JsonObjectToCSString:jsonObject];
@@ -434,7 +480,52 @@ void UserInfoManager_MethodCall(const char* methodName, const char* jsonString, 
     }
 }
 
+void UserInfoManager_GetMethodCall(const char* methodName, const char* jsonString, const char* callbackId) {
+    
+}
 
-const char* UserInfoManager_GetMethodCall(const char* methodName, const char* jsonString, const char* callbackId){
-    return NULL;
+void PresenceManager_HandleMethodCall(const char* methodName, const char* jsonString, const char* callbackId) {
+    NSString *method = [Transfrom NSStringFromCString:methodName];
+    NSDictionary *dic = [Transfrom JsonObjectFromCSString:jsonString];
+    NSString *callId = [Transfrom NSStringFromCString:callbackId];
+    if([method isEqualToString:@"publishPresence"]) {
+        [EMClientWrapper.instance.presenceManager publishPresence:dic callbackId:callId];
+    } else if ([method isEqualToString:@"subscribePresences"]) {
+        [EMClientWrapper.instance.presenceManager subscribePresences:dic callbackId:callId];
+    } else if ([method isEqualToString:@"unsubscribePresences"]) {
+        [EMClientWrapper.instance.presenceManager unsubscribePresences:dic callbackId:callId];
+    } else if ([method isEqualToString:@"fetchSubscribedMembers"]) {
+        [EMClientWrapper.instance.presenceManager fetchSubscribedMembers:dic callbackId:callId];
+    } else if ([method isEqualToString:@"fetchPresenceStatus"]) {
+        [EMClientWrapper.instance.presenceManager fetchPresenceStatus:dic callbackId:callId];
+    }
+}
+
+void ChatThreadManager_HandleMethodCall(const char* methodName, const char* jsonString, const char* callbackId) {
+    NSString *method = [Transfrom NSStringFromCString:methodName];
+    NSDictionary *dic = [Transfrom JsonObjectFromCSString:jsonString];
+    NSString *callId = [Transfrom NSStringFromCString:callbackId];
+    if([method isEqualToString:@"changeThreadName"]) {
+        [EMClientWrapper.instance.chatThreadManager changeThreadName:dic callbackId:callId];
+    } else if ([method isEqualToString:@"createThread"]) {
+        [EMClientWrapper.instance.chatThreadManager createThread:dic callbackId:callId];
+    } else if ([method isEqualToString:@"destroyThread"]) {
+        [EMClientWrapper.instance.chatThreadManager destroyThread:dic callbackId:callId];
+    } else if ([method isEqualToString:@"fetchMineJoinedThreadList"]) {
+        [EMClientWrapper.instance.chatThreadManager fetchMineJoinedThreadList:dic callbackId:callId];
+    } else if ([method isEqualToString:@"fetchThreadListOfGroup"]) {
+        [EMClientWrapper.instance.chatThreadManager fetchThreadListOfGroup:dic callbackId:callId];
+    } else if ([method isEqualToString:@"fetchThreadMembers"]) {
+        [EMClientWrapper.instance.chatThreadManager fetchThreadMembers:dic callbackId:callId];
+    } else if ([method isEqualToString:@"getLastMessageAccordingThreads"]) {
+        [EMClientWrapper.instance.chatThreadManager getLastMessageAccordingThreads:dic callbackId:callId];
+    } else if ([method isEqualToString:@"getThreadDetail"]) {
+        [EMClientWrapper.instance.chatThreadManager getThreadDetail:dic callbackId:callId];
+    } else if ([method isEqualToString:@"joinThread"]) {
+        [EMClientWrapper.instance.chatThreadManager joinThread:dic callbackId:callId];
+    } else if ([method isEqualToString:@"leaveThread"]) {
+        [EMClientWrapper.instance.chatThreadManager leaveThread:dic callbackId:callId];
+    } else if ([method isEqualToString:@"removeThreadMember"]) {
+        [EMClientWrapper.instance.chatThreadManager removeThreadMember:dic callbackId:callId];
+    }
 }

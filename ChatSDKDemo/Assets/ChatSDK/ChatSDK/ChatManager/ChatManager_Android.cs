@@ -17,9 +17,9 @@ namespace ChatSDK
             }
         }
 
-        public override bool DeleteConversation(string conversationId, bool deleteMessages, bool isThread)
+        public override bool DeleteConversation(string conversationId, bool deleteMessages)
         {
-            return wrapper.Call<bool>("deleteConversation", conversationId, deleteMessages, isThread);
+            return wrapper.Call<bool>("deleteConversation", conversationId, deleteMessages);
         }
 
         public override void DownloadAttachment(string messageId, CallBack handle = null)
