@@ -22,11 +22,8 @@ namespace ChatSDK
         * @param deleteMessages 是否同时删除本地历史消息：
 		*                       - `true` ：是；
 		*                       - `false` ：否。
-		* @param isThread       删除会话是否是子区会话。
-		*                       - `true` 是子区会话；
-		*                       - `false` 不是子区会话。
 		*
-			* @return               会话是否成功删除：
+		* @return               会话是否成功删除：
 		*                       - `true` ：是；
 		*                       - `false` ：否。
         *
