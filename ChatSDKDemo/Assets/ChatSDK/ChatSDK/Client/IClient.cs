@@ -517,9 +517,7 @@ namespace ChatSDK
          */
         public abstract void RenewAgoraToken(string token);
 
-        /// <summary>
-        /// 释放资源
-        /// </summary>
+
         public abstract void ClearResource();
 
         /**

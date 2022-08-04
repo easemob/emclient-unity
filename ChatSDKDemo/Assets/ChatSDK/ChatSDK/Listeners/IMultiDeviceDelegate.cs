@@ -59,6 +59,21 @@ namespace ChatSDK
          */
         void undisturbMultiDevicesEvent(string data);
 
+        /**
+         * \~chinese
+         * 多端多设备子区事件回调。
+         *
+         * @param operation     群组事件，详见 {@link MultiDevicesOperation}。
+         * @param target        群组 ID。
+         * @param usernames     操作目标 ID 列表。
+         *
+         * \~english
+         * The callback for a multi-device thread event.
+         *
+         * @param operation     The group event. See {@link MultiDevicesOperation}.
+         * @param target        The group ID.
+         * @param usernames     The target user ID(s) of the operation.
+         */
         void onThreadMultiDevicesEvent(MultiDevicesOperation operation, string target, List<string> usernames);
     }
 

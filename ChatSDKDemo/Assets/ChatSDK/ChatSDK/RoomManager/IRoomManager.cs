@@ -560,12 +560,106 @@ namespace ChatSDK
 		 */
 		public abstract void UpdateRoomAnnouncement(string roomId, string announcement, CallBack handle = null);
 
+        /**
+         * \~chinese
+         * 设置全员禁言。
+         * 仅聊天室所有者和管理员可调用此方法。
+         * 聊天室拥有者、管理员及加入白名单的用户不受影响。
+         *
+         * 异步方法。
+         *
+         * @param roomId      聊天室 ID。
+         * @param handle      结果回调，成功时回调 {@link ValueCallBack#onSuccess(Object)}，
+         *                    失败时回调 {@link ValueCallBack#onError(int, String)}。
+         *
+         * \~english
+         * Mutes all members.
+         * Only the chat room owner or admin can call this method.
+         * This method does not work for the chat room owner, admin, and members added to the allow list.
+         *
+         * This is an asynchronous method.
+         *
+         * @param roomId    The chat room ID.
+         * @param handle    The completion callback. If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
+         *                  if this call fails, calls {@link ValueCallBack#onError(int, String)}.
+         */
         public abstract void MuteAllRoomMembers(string roomId, ValueCallBack<Room> handle = null);
 
+        /**
+         * \~chinese
+         * 解除所有成员的禁言状态。
+         * 仅聊天室所有者和管理员可调用此方法。
+         *
+         * 异步方法。
+         *
+         * @param roomId    聊天室 ID。
+         * @param handle    结果回调，成功时回调 {@link ValueCallBack#onSuccess(Object)}，
+         *                  失败时回调 {@link ValueCallBack#onError(int, String)}。
+         *
+         * \~english
+         * Unmutes all members.
+         * Only the chat room owner or admin can call this method.
+         *
+         * This is an asynchronous method.
+         *
+         * @param roomId    The chat room ID.
+         * @param handle    The completion callback. If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
+         *                  If this call fails, calls {@link ValueCallBack#onError(int, String)}.
+         */
         public abstract void UnMuteAllRoomMembers(string roomId, ValueCallBack<Room> handle = null);
 
+        /**
+         * \~chinese
+         * 将成员添加到白名单。
+         * 仅聊天室所有者或管理员可调用此方法。
+         * 聊天室拥有者或者管理员执行 {@link #MuteAllMembers} 时，加入白名单的成员不受影响。
+         *
+         * 异步方法。
+         *
+         * @param roomId      聊天室 ID。
+         * @param members     加入白名单的成员列表。
+         * @param handle      结果回调，成功时回调 {@link ValueCallBack#onSuccess(Object)}，
+         *                    失败时回调 {@link ValueCallBack#onError(int, String)}。
+         *
+         * \~english
+         * Adds members to the allowlist.
+         * Only the chat room owner or admin can call this method.
+         * For members added to the allowlist, {@link #MuteAllMembers}, when executed by the chat room owner or admin, does not work.
+         *
+         * This is an asynchronous method.
+         *
+         * @param roomId       The chat room ID.
+         * @param members      The list of members to be added to the allowlist.
+         * @param handle       The completion callback. If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
+         *                     if this call fails, calls {@link ValueCallBack#onError(int, String)}.
+         */
         public abstract void AddWhiteListMembers(string roomId, List<string> members, CallBack handle = null);
 
+        /**
+         * \~chinese
+         * 将成员从白名单移除。
+         * 仅聊天室所有者和管理员可调用此方法。
+         * 成员从白名单移除后，将受到 {@link #MuteAllMembers} 功能的影响。
+         *
+         * 异步方法。
+         *
+         * @param roomId         聊天室 ID。
+         * @param members        移除白名单的用户列表。
+         * @param handle         结果回调，成功时回调 {@link ValueCallBack#onSuccess(Object)}，
+         *                       失败时回调 {@link ValueCallBack#onError(int, String)}。
+         *
+         * \~english
+         * Removes members from the blocklist.
+         * Only the chat room owner or admin can call this method.
+         * For members removed from the blocklist, {@link #MuteAllMembers(String, EMValueCallBack)} works.
+         *
+         * This is an asynchronous method.
+         *
+         * @param roomId        The chat room ID.
+         * @param members       The list of members to be removed from the blocklist.
+         * @param handle        The completion callback. If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
+         *                     if this call fails, calls {@link ValueCallBack#onError(int, String)}.
+         */
         public abstract void RemoveWhiteListMembers(string roomId, List<string> members, CallBack handle = null);
 
 		/**
