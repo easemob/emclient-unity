@@ -139,3 +139,7 @@ sysinfo.txt
 **/*.framework
 **/*.a
 **/*.so
+
+# windows sdk
+*.nuget
+*.dll
