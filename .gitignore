@@ -135,3 +135,7 @@ sysinfo.txt
 **/*.meta
 **/hyphenateCWrapper.bundle
 **/hyphenateCWrapper.dll
+**/*.jar
+**/*.framework
+**/*.a
+**/*.so
