@@ -376,7 +376,7 @@
 
 + (EMMessageBody *)fromJson:(NSDictionary *)aJson bodyType:(NSString *)type{
     EMTextMessageBody *body = [[EMTextMessageBody alloc] initWithText:aJson[@"content"]];
-    body.targetLanguages = aJson[@"targetLanguages"];
+    body.targetLanguages = [Transfrom NSStringToJsonObject:aJson[@"targetLanguages"]];
     return body;
 }
 

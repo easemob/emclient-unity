@@ -64,10 +64,10 @@ namespace ChatSDK
         internal extern static string PushManager_GetMethodCall(string methodName, string jsonString = null, string callbackId = null);
 
         [DllImport(MyLibName)]
-        internal extern static string PresenceManager_HandleMethodCall(string methodName, string jsonString = null, string callbackId = null);
+        internal extern static void PresenceManager_HandleMethodCall(string methodName, string jsonString = null, string callbackId = null);
 
         [DllImport(MyLibName)]
-        internal extern static string ChatThreadManager_HandleMethodCall(string methodName, string jsonString = null, string callbackId = null);
+        internal extern static void ChatThreadManager_HandleMethodCall(string methodName, string jsonString = null, string callbackId = null);
 
         [DllImport(MyLibName)]
         internal extern static string MessageManager_GetMethodCall(string methodName, string jsonString = null, string callbackId = null);

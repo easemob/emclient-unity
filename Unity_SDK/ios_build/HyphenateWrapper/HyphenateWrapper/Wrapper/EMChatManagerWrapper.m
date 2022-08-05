@@ -138,14 +138,25 @@
     if (!convId) {
         return nil;
     }
-    
+    BOOL isThread = [param[@"isThread"] boolValue];
     EMConversationType type = [EMConversation typeFromInt:[param[@"convType"] intValue]];
     BOOL createIfNeed = [param[@"createIfNeed"] boolValue];
-    EMConversation *con = [EMClient.sharedClient.chatManager getConversation:convId type:type createIfNotExist:createIfNeed];
-    if (!con) {
-        return nil;
+    if (!isThread) {
+        EMConversation *con = [EMClient.sharedClient.chatManager getConversation:convId type:type createIfNotExist:createIfNeed];
+        if (!con) {
+            return nil;
+        }
+        return [con toJson];
+    }else {
+        EMConversation *con = [EMClient.sharedClient.chatManager getConversation:convId
+                                                                            type:EMConversationTypeGroupChat
+                                                                createIfNotExist:YES
+                                                                        isThread:YES];
+        if (!con) {
+            return nil;
+        }
+        return [con toJson];
     }
-    return [con toJson];
 }
 
 - (void)getConversationsFromServer:(NSDictionary *)param callbackId:(NSString *)callbackId {
