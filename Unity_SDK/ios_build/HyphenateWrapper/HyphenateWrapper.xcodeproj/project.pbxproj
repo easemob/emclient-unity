@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		90026D3F2890D7FC0064C16A /* EMPresenceManagerWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 90026D3E2890D7FC0064C16A /* EMPresenceManagerWrapper.m */; };
+		90089E15289CDB1700D43CEA /* HyphenateWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 90089E14289CDB1700D43CEA /* HyphenateWrapper.m */; };
 		900F7BED26785A5F007B5576 /* EMConversationWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 900F7BEC26785A5F007B5576 /* EMConversationWrapper.m */; };
-		90167804288525640059F474 /* libDownloadSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 90167803288525600059F474 /* libDownloadSDK.a */; };
 		90167812288537860059F474 /* EMTranslateLanguage+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 90167810288537860059F474 /* EMTranslateLanguage+Helper.m */; };
 		90167815288538F90059F474 /* NSArray+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 90167813288538F90059F474 /* NSArray+Helper.m */; };
 		90167819288557100059F474 /* EMMessageReaction+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 90167818288557100059F474 /* EMMessageReaction+Helper.m */; };
@@ -40,7 +40,6 @@
 		90A30047266B790900BB3A19 /* EMWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 90A30046266B790900BB3A19 /* EMWrapper.m */; };
 		90A3004C266BA9DC00BB3A19 /* EMClientListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 90A3004B266BA9DC00BB3A19 /* EMClientListener.m */; };
 		90A3004F266BB03600BB3A19 /* EMContactListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 90A3004E266BB03600BB3A19 /* EMContactListener.m */; };
-		90D7B17D266774C9008CA320 /* HyphenateWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 90D7B17C266774C9008CA320 /* HyphenateWrapper.m */; };
 		90D7B17E266774C9008CA320 /* HyphenateWrapper.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 90D7B17B266774C9008CA320 /* HyphenateWrapper.h */; };
 		90D7B7FB2759D7DE00FD1C72 /* EMUserInfoManagerWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 90D7B7FA2759D7DE00FD1C72 /* EMUserInfoManagerWrapper.m */; };
 		90D7B7FE2759F11A00FD1C72 /* EMGroupMessageAck+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 90D7B7FC2759F11A00FD1C72 /* EMGroupMessageAck+Helper.m */; };
@@ -48,16 +47,6 @@
 		90F0ECC4288E86B6008558F3 /* EMMessageReactionChange+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F0ECC3288E86B6008558F3 /* EMMessageReactionChange+Helper.m */; };
 		90F0ECC8288E9DC6008558F3 /* EMPresence+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F0ECC6288E9DC6008558F3 /* EMPresence+Helper.m */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		90167802288525600059F474 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 901677FE288525600059F474 /* DownloadSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 901677F02885252A0059F474;
-			remoteInfo = DownloadSDK;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		90D7B176266774C9008CA320 /* CopyFiles */ = {
@@ -75,10 +64,12 @@
 /* Begin PBXFileReference section */
 		90026D3D2890D7FC0064C16A /* EMPresenceManagerWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EMPresenceManagerWrapper.h; sourceTree = "<group>"; };
 		90026D3E2890D7FC0064C16A /* EMPresenceManagerWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EMPresenceManagerWrapper.m; sourceTree = "<group>"; };
+		90089D73289CD35B00D43CEA /* libDownloadSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libDownloadSDK.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		90089D75289CD36D00D43CEA /* libDownloadSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libDownloadSDK.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		90089D77289CD3A000D43CEA /* libDownloadSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libDownloadSDK.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		90089E14289CDB1700D43CEA /* HyphenateWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HyphenateWrapper.m; sourceTree = "<group>"; };
 		900F7BEB26785A5F007B5576 /* EMConversationWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EMConversationWrapper.h; sourceTree = "<group>"; };
 		900F7BEC26785A5F007B5576 /* EMConversationWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EMConversationWrapper.m; sourceTree = "<group>"; };
-		901677FE288525600059F474 /* DownloadSDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = DownloadSDK.xcodeproj; sourceTree = "<group>"; };
-		9016780C288526C70059F474 /* downloadSDK.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = downloadSDK.sh; sourceTree = "<group>"; };
 		90167810288537860059F474 /* EMTranslateLanguage+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "EMTranslateLanguage+Helper.m"; sourceTree = "<group>"; };
 		90167811288537860059F474 /* EMTranslateLanguage+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "EMTranslateLanguage+Helper.h"; sourceTree = "<group>"; };
 		90167813288538F90059F474 /* NSArray+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Helper.m"; sourceTree = "<group>"; };
@@ -142,7 +133,6 @@
 		90A3004E266BB03600BB3A19 /* EMContactListener.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EMContactListener.m; sourceTree = "<group>"; };
 		90D7B178266774C9008CA320 /* libHyphenateWrapper.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libHyphenateWrapper.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		90D7B17B266774C9008CA320 /* HyphenateWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HyphenateWrapper.h; sourceTree = "<group>"; };
-		90D7B17C266774C9008CA320 /* HyphenateWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HyphenateWrapper.m; sourceTree = "<group>"; };
 		90D7B7F92759D7DE00FD1C72 /* EMUserInfoManagerWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EMUserInfoManagerWrapper.h; sourceTree = "<group>"; };
 		90D7B7FA2759D7DE00FD1C72 /* EMUserInfoManagerWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EMUserInfoManagerWrapper.m; sourceTree = "<group>"; };
 		90D7B7FC2759F11A00FD1C72 /* EMGroupMessageAck+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "EMGroupMessageAck+Helper.m"; sourceTree = "<group>"; };
@@ -160,7 +150,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				90167804288525640059F474 /* libDownloadSDK.a in Frameworks */,
 				90823A74281038C300D8431F /* HyphenateChat.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -168,23 +157,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		901677DF288523170059F474 /* Dependence */ = {
-			isa = PBXGroup;
-			children = (
-				9016780C288526C70059F474 /* downloadSDK.sh */,
-				901677FE288525600059F474 /* DownloadSDK.xcodeproj */,
-			);
-			path = Dependence;
-			sourceTree = "<group>";
-		};
-		901677FF288525600059F474 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				90167803288525600059F474 /* libDownloadSDK.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		902CC1DA266B5148002F9A50 /* Wrapper */ = {
 			isa = PBXGroup;
 			children = (
@@ -290,7 +262,6 @@
 		90D7B16F266774C9008CA320 = {
 			isa = PBXGroup;
 			children = (
-				901677DF288523170059F474 /* Dependence */,
 				90D7B17A266774C9008CA320 /* HyphenateWrapper */,
 				90D7B179266774C9008CA320 /* Products */,
 				90D7B1AD26677907008CA320 /* Frameworks */,
@@ -308,12 +279,12 @@
 		90D7B17A266774C9008CA320 /* HyphenateWrapper */ = {
 			isa = PBXGroup;
 			children = (
+				90D7B17B266774C9008CA320 /* HyphenateWrapper.h */,
+				90089E14289CDB1700D43CEA /* HyphenateWrapper.m */,
 				90A30049266BA9BB00BB3A19 /* Listener */,
 				902CC1F1266B54B9002F9A50 /* Helper */,
 				902CC1E7266B5148002F9A50 /* Tools */,
 				902CC1DA266B5148002F9A50 /* Wrapper */,
-				90D7B17B266774C9008CA320 /* HyphenateWrapper.h */,
-				90D7B17C266774C9008CA320 /* HyphenateWrapper.m */,
 			);
 			path = HyphenateWrapper;
 			sourceTree = "<group>";
@@ -321,6 +292,9 @@
 		90D7B1AD26677907008CA320 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				90089D77289CD3A000D43CEA /* libDownloadSDK.a */,
+				90089D75289CD36D00D43CEA /* libDownloadSDK.a */,
+				90089D73289CD35B00D43CEA /* libDownloadSDK.a */,
 				90823A73281038C300D8431F /* HyphenateChat.framework */,
 			);
 			name = Frameworks;
@@ -329,9 +303,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		90D7B177266774C9008CA320 /* HyphenateWrapper */ = {
+		90D7B177266774C9008CA320 /* libHyphenateWrapper */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 90D7B181266774C9008CA320 /* Build configuration list for PBXNativeTarget "HyphenateWrapper" */;
+			buildConfigurationList = 90D7B181266774C9008CA320 /* Build configuration list for PBXNativeTarget "libHyphenateWrapper" */;
 			buildPhases = (
 				90D7B174266774C9008CA320 /* Sources */,
 				90D7B175266774C9008CA320 /* Frameworks */,
@@ -341,7 +315,7 @@
 			);
 			dependencies = (
 			);
-			name = HyphenateWrapper;
+			name = libHyphenateWrapper;
 			productName = HyphenateWrapper;
 			productReference = 90D7B178266774C9008CA320 /* libHyphenateWrapper.a */;
 			productType = "com.apple.product-type.library.static";
@@ -370,28 +344,12 @@
 			mainGroup = 90D7B16F266774C9008CA320;
 			productRefGroup = 90D7B179266774C9008CA320 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 901677FF288525600059F474 /* Products */;
-					ProjectRef = 901677FE288525600059F474 /* DownloadSDK.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
-				90D7B177266774C9008CA320 /* HyphenateWrapper */,
+				90D7B177266774C9008CA320 /* libHyphenateWrapper */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		90167803288525600059F474 /* libDownloadSDK.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libDownloadSDK.a;
-			remoteRef = 90167802288525600059F474 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
 		90D7B174266774C9008CA320 /* Sources */ = {
@@ -399,6 +357,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9068A345267062110022B90F /* EMGroupListener.m in Sources */,
+				90089E15289CDB1700D43CEA /* HyphenateWrapper.m in Sources */,
 				902CC1EB266B5148002F9A50 /* EMChatManagerWrapper.m in Sources */,
 				9068A330266E35DC0022B90F /* EMOptions+Helper.m in Sources */,
 				902CC1ED266B5148002F9A50 /* EMRoomManagerWrapper.m in Sources */,
@@ -412,7 +371,6 @@
 				906010BF28937D4C00244CE6 /* EMMessageWrapper.m in Sources */,
 				900F7BED26785A5F007B5576 /* EMConversationWrapper.m in Sources */,
 				902CC1EE266B5148002F9A50 /* EMClientWrapper.m in Sources */,
-				90D7B17D266774C9008CA320 /* HyphenateWrapper.m in Sources */,
 				90167819288557100059F474 /* EMMessageReaction+Helper.m in Sources */,
 				90A3004C266BA9DC00BB3A19 /* EMClientListener.m in Sources */,
 				90D7B7FE2759F11A00FD1C72 /* EMGroupMessageAck+Helper.m in Sources */,
@@ -558,6 +516,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 499WYUV8Q2;
+				EXECUTABLE_PREFIX = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/HyphenateChat.framework\"",
@@ -578,6 +537,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 499WYUV8Q2;
+				EXECUTABLE_PREFIX = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/HyphenateChat.framework\"",
@@ -605,7 +565,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		90D7B181266774C9008CA320 /* Build configuration list for PBXNativeTarget "HyphenateWrapper" */ = {
+		90D7B181266774C9008CA320 /* Build configuration list for PBXNativeTarget "libHyphenateWrapper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				90D7B182266774C9008CA320 /* Debug */,

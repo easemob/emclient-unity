@@ -116,6 +116,12 @@ public class EMChatManagerWrapper extends EMWrapper  {
         return EMConversationHelper.toJson(conversation).toString();
     }
 
+    private String getThreadConversation(String conversationId) throws JSONException {
+        EMConversation conversation = EMClient.getInstance().chatManager().getConversation(conversationId, EMConversation.EMConversationType.GroupChat, true, true);
+        if (conversation == null) return null;
+        return EMConversationHelper.toJson(conversation).toString();
+    }
+
     private void getConversationsFromServer(String callbackId) {
         asyncRunnable(() -> {
             try {

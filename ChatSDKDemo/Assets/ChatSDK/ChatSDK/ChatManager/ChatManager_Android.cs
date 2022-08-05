@@ -39,7 +39,7 @@ namespace ChatSDK
 
         public override Conversation GetConversation(string conversationId, ConversationType type, bool createIfNeed = true)
         {
-            string jsonString = wrapper.Call<string>("getConversation", conversationId, TransformTool.ConversationTypeToInt(type), createIfNeed, false);
+            string jsonString = wrapper.Call<string>("getConversation", conversationId, TransformTool.ConversationTypeToInt(type), createIfNeed);
             if (jsonString == null || jsonString.Length == 0) {
                 return null;
             }
@@ -49,7 +49,7 @@ namespace ChatSDK
 
         public override Conversation GetThreadConversation(string threadId)
         {
-            string jsonString = wrapper.Call<string>("getConversation", threadId, TransformTool.ConversationTypeToInt(ConversationType.Group), true, false);
+            string jsonString = wrapper.Call<string>("getThreadConversation", threadId);
             if (jsonString == null || jsonString.Length == 0)
             {
                 return null;
