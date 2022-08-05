@@ -141,5 +141,5 @@ sysinfo.txt
 **/*.so
 
 # windows sdk
-*.nuget
+*.nupkg
 *.dll

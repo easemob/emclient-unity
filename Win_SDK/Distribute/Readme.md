@@ -1,3 +1,18 @@
+Build steps:
+
+1. Make sure the follow directory exist:
+	.\lib\net48
+	.\lib\net452
+	.\lib\net462
+	.\lib\net472
+	.\runtimes\x64\native
+
+2. Make sure chatsdk.dll is built with Release mode.
+3. Make sure hyphenateCWrapper.dll is built with Release mode.
+4. Run bat script: build.bat
+5. Check related nuget package is generated in current directory.
+
+Releases:
 
 agora_chat_sdk.1.0.2-beta.nupkg:
 --  created based on Unity stable 3.9.0
