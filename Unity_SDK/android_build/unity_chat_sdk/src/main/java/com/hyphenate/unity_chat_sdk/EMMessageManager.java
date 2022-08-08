@@ -40,12 +40,12 @@ public class EMMessageManager extends EMWrapper {
         return msg.isAcked();
     }
 
-    private String getReactionList(String messageId) {
+    private String getReactionList(String messageId) throws JSONException{
 
         HashMap<String, ArrayList> ret = new HashMap<>();
 
         EMMessage msg = getMessage(messageId);
-        ArrayList<Map<String, Object>> list = new ArrayList<>();
+        ArrayList<JSONObject> list = new ArrayList<>();
         if (msg != null) {
             List<EMMessageReaction> reactions = msg.getMessageReaction();
             for (int i = 0; i < reactions.size(); i++) {
