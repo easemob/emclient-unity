@@ -32,7 +32,7 @@ public class EMChatThreadManagerWrapper {
     }
 
     private void createThread(String threadName, String msgId, String groupId, String callbackId) {
-        EMClient.getInstance().chatThreadManager().createChatThread(threadName, msgId, groupId, new EMUnityValueCallback<EMChatThread>("ChatThread", callbackId) {
+        EMClient.getInstance().chatThreadManager().createChatThread(groupId, msgId, threadName, new EMUnityValueCallback<EMChatThread>("ChatThread", callbackId) {
             @Override
             public void onSuccess(EMChatThread thread) {
                 try {
