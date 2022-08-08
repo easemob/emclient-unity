@@ -3,13 +3,14 @@ package com.hyphenate.unity_chat_sdk.helper;
 import com.hyphenate.chat.EMChatThread;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class EMChatThreadHelper {
-    public static Map<String, Object> toJson(EMChatThread thread) throws JSONException {
-        Map<String, Object> data = new HashMap<>();
+    public static JSONObject toJson(EMChatThread thread) throws JSONException {
+        JSONObject data = new JSONObject();
         data.put("threadId", thread.getChatThreadId());
         if (thread.getChatThreadName() != null) {
             data.put("threadName", thread.getChatThreadName());
