@@ -51,11 +51,11 @@ public class EMCursorResultHelper {
             }
 
             if (obj instanceof EMMessageReaction) {
-                jsonArray.put(EMMessageReactionHelper.toJson((EMMessageReaction) obj).toString());
+                jsonArray.put(EMMessageReactionHelper.toJson((EMMessageReaction) obj));
             }
 
             if (obj instanceof EMChatThread) {
-                jsonArray.put(EMChatThreadHelper.toJson((EMChatThread) obj).toString());
+                jsonArray.put(EMChatThreadHelper.toJson((EMChatThread) obj));
             }
         }
         data.put("list", jsonArray.toString());
