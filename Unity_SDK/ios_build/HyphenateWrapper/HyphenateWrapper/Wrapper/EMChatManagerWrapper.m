@@ -358,7 +358,7 @@
         if (error) {
             [self onError:callId error:error];
         }else {
-            [self onSuccess:nil callbackId:callId userInfo:nil];
+            [self onSuccess:@"OnMessageSuccess" callbackId:callId userInfo:[message toJson]];
         }
     }];
     return [msg toJson];
