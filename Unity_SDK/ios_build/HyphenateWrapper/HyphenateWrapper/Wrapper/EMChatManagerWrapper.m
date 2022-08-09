@@ -573,9 +573,9 @@
 }
 
 - (void)getReactionList:(NSDictionary *)param callbackId:(NSString *)callbackId {
-    NSArray *msgIds = param[@"msgIds"];
+    NSArray *msgIds = [Transfrom NSStringToJsonObject:param[@"msgIds"]];
     NSString *groupId = param[@"groupId"];
-    EMChatType type = [EMChatMessage chatTypeFromInt:[param[@"chatType"] intValue]];
+    EMChatType type = [EMChatMessage chatTypeFromInt:[param[@"type"] intValue]];
     __weak EMChatManagerWrapper * weakSelf = self;
     [EMClient.sharedClient.chatManager getReactionList:msgIds
                                                 groupId:groupId
