@@ -293,8 +293,9 @@ namespace ChatSDK
             JSONObject obj = new JSONObject();
             obj.Add("msgId", messageId);
             obj.Add("reaction", reaction);
-            obj.Add("cursor", cursor);
+            obj.Add("cursor", cursor ?? "");
             obj.Add("pageSize", pageSize);
+            Debug.Log($"messageId: {obj.ToString()}");
             ChatAPIIOS.ChatManager_HandleMethodCall("getReactionDetail", obj.ToString(), handle?.callbackId);
         }
     }
