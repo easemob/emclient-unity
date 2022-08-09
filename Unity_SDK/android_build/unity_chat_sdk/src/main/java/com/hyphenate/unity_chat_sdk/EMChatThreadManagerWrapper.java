@@ -129,7 +129,7 @@ public class EMChatThreadManagerWrapper {
                 while (it.hasNext()) {
                     String key = (String) it.next();
                     try {
-                        jsonObject.put(key, EMMessageHelper.toJson(stringEMMessageMap.get(key)));
+                        jsonObject.put(key, EMMessageHelper.toJson(stringEMMessageMap.get(key)).toString());
                     } catch (JSONException ignored) { }
                 }
                 sendJsonObjectToUnity(jsonObject.toString());
