@@ -19,7 +19,7 @@ namespace ChatSDK
 
         public override void ChangeThreadName(string threadId, string newName, CallBack handle = null)
         {
-            wrapper.Call("createThread", threadId, newName, handle?.callbackId);
+            wrapper.Call("changeThreadName", threadId, newName, handle?.callbackId);
         }
 
         public override void CreateThread(string threadName, string msgId, string groupId, ValueCallBack<ChatThread> handle = null)
@@ -59,7 +59,7 @@ namespace ChatSDK
 
         public override void JoinThread(string threadId, ValueCallBack<ChatThread> handle = null)
         {
-            wrapper.Call("createThread", threadId, handle?.callbackId);
+            wrapper.Call("joinThread", threadId, handle?.callbackId);
         }
 
         public override void LeaveThread(string threadId, CallBack handle = null)
