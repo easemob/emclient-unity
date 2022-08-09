@@ -421,19 +421,21 @@ public class EMChatManagerWrapper extends EMWrapper  {
         EMClient.getInstance().chatManager().asyncGetReactionList(list, type, groupId, new EMUnityValueCallback<Map<String, java.util.List<EMMessageReaction>>>("Dictionary<string, List<MessageReaction>>", callbackId){
             @Override
             public void onSuccess(Map<String, List<EMMessageReaction>> stringListMap) {
-                Map<String, ArrayList<JSONObject>> map = new HashMap<>();
+                JSONObject ret = new JSONObject();
                 for (Map.Entry<String, List<EMMessageReaction>> entry: stringListMap.entrySet()) {
-                    ArrayList<JSONObject> list = new ArrayList<>();
+                    JSONArray jsonArray = new JSONArray();
                     for (EMMessageReaction reaction: entry.getValue()) {
                         try {
-                            list.add(EMMessageReactionHelper.toJson(reaction));
+                            jsonArray.put(EMMessageReactionHelper.toJson(reaction));
                         }catch (JSONException ignored) {
 
                         }
                     }
-                    map.put(entry.getKey(), list);
+                    try{
+                        ret.put(entry.getKey(), jsonArray);
+                    }catch (JSONException ignored) {}
                 }
-                sendJsonObjectToUnity(map.toString());
+                sendJsonObjectToUnity(ret.toString());
             }
         });
     }
