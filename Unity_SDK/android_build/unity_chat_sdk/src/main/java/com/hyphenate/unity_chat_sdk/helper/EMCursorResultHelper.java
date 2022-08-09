@@ -52,7 +52,7 @@ public class EMCursorResultHelper {
                 }
 
                 if (obj instanceof EMMessageReaction) {
-                    jsonArray.put(EMMessageReactionHelper.toJson((EMMessageReaction) obj));
+                    jsonArray.put(EMMessageReactionHelper.toJson((EMMessageReaction) obj).toString());
                 }
 
                 if (obj instanceof EMChatThread) {
