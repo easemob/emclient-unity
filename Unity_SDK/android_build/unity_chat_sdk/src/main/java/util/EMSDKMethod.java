@@ -16,4 +16,6 @@ public class EMSDKMethod {
 
     public static final String ChatListener_Obj = "unity_chat_emclient_chatmanager_delegate_obj";
 
+    public static final String ChatThreadListener_Obj = "unity_chat_emclient_threadmanager_delegate_obj";
+
 }
