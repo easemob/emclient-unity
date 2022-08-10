@@ -367,11 +367,13 @@ public class EMChatManagerWrapper extends EMWrapper  {
         EMClient.getInstance().chatManager().fetchSupportLanguages(new EMUnityValueCallback<List<EMLanguage>>("List<SupportLanguage>", callbackId){
             @Override
             public void onSuccess(List<EMLanguage> emLanguages) {
-                ArrayList<Map> list = new ArrayList<>();
-                for (EMLanguage l: emLanguages) {
-                    list.add(EMLanguageHelper.toJson(l));
-                }
-                sendJsonObjectToUnity(list.toString());
+                JSONArray jsonArray = new JSONArray();
+                try{
+                    for (EMLanguage l: emLanguages) {
+                        jsonArray.put(EMLanguageHelper.toJson(l).toString());
+                    }
+                }catch (JSONException ignored){}
+                sendJsonObjectToUnity(jsonArray.toString());
             }
         });
     }
