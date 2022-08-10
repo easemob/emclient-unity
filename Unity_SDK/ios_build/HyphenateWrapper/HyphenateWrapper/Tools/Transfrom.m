@@ -35,7 +35,7 @@
     return [self NSStringToJsonObject:str];
 }
 
-+ (const char*)JsonObjectToCSString:(NSDictionary *)aDict {
++ (const char*)JsonObjectToCSString:(id)aDict {
     if (aDict == nil) {
         return NULL;
     }

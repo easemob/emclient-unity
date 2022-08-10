@@ -29,16 +29,14 @@
     ret = @{@"hasReadAcked": @(msg.isReadAcked)};
     return ret;
 }
-- (NSDictionary *)getReactionList:(NSDictionary *)param {
+- (NSArray *)getReactionList:(NSDictionary *)param {
     NSDictionary *ret = nil;
     EMChatMessage *msg = [self getMessage:param];
     NSMutableArray *ary = [NSMutableArray array];
     for (EMMessageReaction *reaction in msg.reactionList) {
         [ary addObject:[reaction toJson]];
     }
-    if (ary) {
-        ret = @{@"reactionList":ary};
-    }
+    
     return ret;
 }
 - (NSDictionary *)getChatThread:(NSDictionary *)param {

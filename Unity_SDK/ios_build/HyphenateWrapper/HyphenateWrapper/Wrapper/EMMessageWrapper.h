@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSDictionary *)getGroupAckCount:(NSDictionary *)param;
 - (NSDictionary *)getHasDeliverAck:(NSDictionary *)param;
 - (NSDictionary *)getHasReadAck:(NSDictionary *)param;
-- (NSDictionary *)getReactionList:(NSDictionary *)param;
+- (NSArray *)getReactionList:(NSDictionary *)param;
 - (NSDictionary *)getChatThread:(NSDictionary *)param;
 @end
 
