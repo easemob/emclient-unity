@@ -465,7 +465,7 @@
         if (aError) {
             [weakSelf onError:callbackId error:aError];
         }else {
-            [weakSelf onSuccess:@"List<SupportLanguage>" callbackId:callbackId userInfo:[languages toJsonArray]];
+            [weakSelf onSuccess:@"List<SupportLanguage>" callbackId:callbackId userInfo:[languages toJsonStringArray]];
         }
     }];
 }

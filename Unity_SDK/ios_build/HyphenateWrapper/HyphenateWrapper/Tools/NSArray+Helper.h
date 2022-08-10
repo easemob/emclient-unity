@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSArray (Helper)
 - (NSArray *)toJsonArray;
+- (NSArray *)toJsonStringArray;
 @end
 
 NS_ASSUME_NONNULL_END
