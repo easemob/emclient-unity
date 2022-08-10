@@ -46,7 +46,7 @@ public class EMMessageBodyHelper {
             for (String item: body.getTargetLanguages()){
                 jsonArray.put(item);
             }
-            data.put("targetLanguages", jsonArray);
+            data.put("targetLanguages", jsonArray.toString());
         }
 
         if (body.getTranslations() != null) {
@@ -54,7 +54,7 @@ public class EMMessageBodyHelper {
             for (EMTextMessageBody.EMTranslationInfo info : body.getTranslations()) {
                 jsonObject.put(info.languageCode, info.translationText);
             }
-            data.put("translations", jsonObject);
+            data.put("translations", jsonObject.toString());
         }
 
         return data;
