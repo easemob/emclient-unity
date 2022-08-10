@@ -245,7 +245,7 @@ namespace ChatSDK
             obj.Add("msg_id", messageId);
             obj.Add("pageSize", pageSize);
             obj.Add("groupId", groupId);
-            obj.Add("ack_id", startAckId);
+            obj.Add("ack_id", startAckId ?? "");
             ChatAPIIOS.ChatManager_HandleMethodCall("fetchGroupReadAcks", obj.ToString(), handle?.callbackId);
         }
 
