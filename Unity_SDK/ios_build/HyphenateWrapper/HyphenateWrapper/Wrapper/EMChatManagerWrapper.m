@@ -472,7 +472,7 @@
 
 - (void)translateMessage:(NSDictionary *)param callbackId:(NSString *)callbackId {
     EMChatMessage *msg = [EMChatMessage fromJson:param[@"message"]];
-    NSArray *languages = param[@"languages"];
+    NSArray *languages = [Transfrom NSStringToJsonObject:param[@"languages"]];
     
     __weak EMChatManagerWrapper * weakSelf = self;
     [EMClient.sharedClient.chatManager translateMessage:msg
