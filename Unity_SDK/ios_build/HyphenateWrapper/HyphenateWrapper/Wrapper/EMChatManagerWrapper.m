@@ -592,7 +592,7 @@
                 for (EMMessageReaction *reaction in ary) {
                     [list addObject:[reaction toJson]];
                 }
-                dictionary[key] = [Transfrom NSStringFromJsonObject:list];
+                dictionary[key] = list;
             }
             [weakSelf onSuccess:@"Dictionary<string, List<MessageReaction>>"
                      callbackId:callbackId
