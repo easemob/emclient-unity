@@ -23,7 +23,7 @@ namespace ChatSDK
 		}
 		public override void SubscribePresences(List<string> members, long expiry, ValueCallBack<List<Presence>> handle = null)
 		{
-			wrapper.Call("subscribePresences", TransformTool.JsonStringFromStringList(members), handle?.callbackId);
+			wrapper.Call("subscribePresences", TransformTool.JsonStringFromStringList(members), expiry, handle?.callbackId);
 		}
 		public override void UnsubscribePresences(List<string> members, CallBack handle = null)
 		{

@@ -13,7 +13,7 @@
     NSMutableDictionary *ret = [NSMutableDictionary dictionary];
     ret[@"from"] = self.from;
     ret[@"operation"] = @([self getIntOperation]);
-    ret[@"thread"] = [self.chatThread toJson];
+    ret[@"chatThread"] = [self.chatThread toJson];
     return ret;
 }
 

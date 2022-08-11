@@ -72,7 +72,7 @@ namespace ChatSDK {
             }
         }
 
-        internal void OnReadAckForGroupMessageUpdated()
+        internal void OnReadAckForGroupMessageUpdated(string jsonString)
         {
             if (delegater != null)
             {

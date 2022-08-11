@@ -245,7 +245,7 @@ namespace ChatSDK
             obj.Add("msg_id", messageId);
             obj.Add("pageSize", pageSize);
             obj.Add("groupId", groupId);
-            obj.Add("ack_id", startAckId);
+            obj.Add("ack_id", startAckId ?? "");
             ChatAPIIOS.ChatManager_HandleMethodCall("fetchGroupReadAcks", obj.ToString(), handle?.callbackId);
         }
 
@@ -293,8 +293,9 @@ namespace ChatSDK
             JSONObject obj = new JSONObject();
             obj.Add("msgId", messageId);
             obj.Add("reaction", reaction);
-            obj.Add("cursor", cursor);
+            obj.Add("cursor", cursor ?? "");
             obj.Add("pageSize", pageSize);
+            Debug.Log($"messageId: {obj.ToString()}");
             ChatAPIIOS.ChatManager_HandleMethodCall("getReactionDetail", obj.ToString(), handle?.callbackId);
         }
     }

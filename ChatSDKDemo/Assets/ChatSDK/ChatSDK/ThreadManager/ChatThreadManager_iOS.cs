@@ -33,7 +33,7 @@ namespace ChatSDK
         public override void FetchMineJoinedThreadList(string cursor = null, int pageSize = 20, ValueCallBack<CursorResult<ChatThread>> handle = null)
         {
             JSONObject json = new JSONObject();
-            json.Add("cursor", cursor);
+            json.Add("cursor", cursor ?? "");
             json.Add("pageSize", pageSize);
             ChatAPIIOS.ChatThreadManager_HandleMethodCall("fetchMineJoinedThreadList", json.ToString(), handle?.callbackId);
         }
@@ -43,7 +43,7 @@ namespace ChatSDK
             JSONObject json = new JSONObject();
             json.Add("groupId", groupId);
             json.Add("joined", joined);
-            json.Add("cursor", cursor);
+            json.Add("cursor", cursor ?? "");
             json.Add("pageSize", pageSize);
             ChatAPIIOS.ChatThreadManager_HandleMethodCall("fetchThreadListOfGroup", json.ToString(), handle?.callbackId);
         }

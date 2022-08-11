@@ -9,6 +9,7 @@ import com.hyphenate.unity_chat_sdk.helper.EMChatThreadHelper;
 import com.hyphenate.unity_chat_sdk.helper.EMMessageHelper;
 import com.hyphenate.unity_chat_sdk.helper.EMMessageReactionHelper;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -40,20 +41,17 @@ public class EMMessageManager extends EMWrapper {
         return msg.isAcked();
     }
 
-    private String getReactionList(String messageId) {
-
-        HashMap<String, ArrayList> ret = new HashMap<>();
+    private String getReactionList(String messageId) throws JSONException{
 
         EMMessage msg = getMessage(messageId);
-        ArrayList<Map<String, Object>> list = new ArrayList<>();
+        JSONArray jsonArray = new JSONArray();
         if (msg != null) {
             List<EMMessageReaction> reactions = msg.getMessageReaction();
             for (int i = 0; i < reactions.size(); i++) {
-                list.add(EMMessageReactionHelper.toJson(reactions.get(i)));
+                jsonArray.put(EMMessageReactionHelper.toJson(reactions.get(i)));
             }
         }
-        ret.put("reactionList", list);
-        return ret.toString();
+        return jsonArray.toString();
     }
 
     private String getChatThread(String messageId) {

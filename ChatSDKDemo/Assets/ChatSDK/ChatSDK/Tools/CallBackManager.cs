@@ -815,9 +815,11 @@ namespace ChatSDK {
                     {
                         if (valueCallBack.OnSuccessValue != null)
                         {
+                            CursorResult<ChatThread> result = ChatThread.CursorThreadFromJson(responseValue.Value);
+
                             ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
                             {
-                                valueCallBack.OnSuccessValue(ChatThread.CursorThreadFromJson(responseValue.Value));
+                                valueCallBack.OnSuccessValue(result);
                             });
                         }
                         dictionary.Remove(callbackId);

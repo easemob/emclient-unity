@@ -84,7 +84,7 @@
                                                                  completion:^(EMCursorResult *aResult, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"CursorResult<GroupInfo>" callbackId:callId userInfo:[aResult toJson]];
+            [weakSelf onSuccess:@"CursorResult<GroupInfo>" callbackId:callId userInfo:[aResult toJsonString]];
         }else {
             [weakSelf onError:callId error:aError];
         }
@@ -151,7 +151,7 @@
                                                                 completion:^(EMCursorResult *aResult, EMError *aError)
      {
         if (!aError) {
-            [weakSelf onSuccess:@"CursorResult<String>" callbackId:callId userInfo:[aResult toJson]];
+            [weakSelf onSuccess:@"CursorResult<String>" callbackId:callId userInfo:[aResult toJsonString]];
         }else {
             [weakSelf onError:callId error:aError];
         }

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using SimpleJSON;
+
 
 namespace ChatSDK
 {
@@ -167,7 +167,7 @@ namespace ChatSDK
 
         public override void FetchGroupReadAcks(string messageId, string groupId, int pageSize = 20, string startAckId = null, ValueCallBack<CursorResult<GroupReadAck>> handle = null)
         {
-            wrapper.Call("fetchGroupReadAcks", messageId, pageSize, startAckId, handle?.callbackId);
+            wrapper.Call("fetchGroupReadAcks", messageId, pageSize, startAckId ?? "", handle?.callbackId);
         }
 
         public override void ReportMessage(string messageId, string tag, string reason, CallBack handle = null)

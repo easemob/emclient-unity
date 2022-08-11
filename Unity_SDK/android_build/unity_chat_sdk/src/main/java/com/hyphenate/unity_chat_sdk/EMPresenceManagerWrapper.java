@@ -46,22 +46,13 @@ public class EMPresenceManagerWrapper extends EMWrapper {
             @Override
             public void onSuccess(List<EMPresence> emPresences) {
                 JSONArray jsonArray1 = new JSONArray();
-                for (EMPresence presence: emPresences) {
-                    JSONObject jsonObject = new JSONObject();
-                    Map<String, Object> map = EMPresenceHelper.toJson(presence);
-                    Iterator<String> it = map.keySet().iterator();
-                    while (it.hasNext()) {
-                        String key = (String) it.next();
-                        try {
-                            jsonObject.put(key, map.get(key));
-                        } catch (JSONException ignored) {
-
-                        }
-                    }
-                    if (jsonObject.length() > 0) {
+                try {
+                    for (EMPresence presence: emPresences) {
+                        JSONObject jsonObject = EMPresenceHelper.toJson(presence);
                         jsonArray1.put(jsonObject);
                     }
-                }
+                }catch (JSONException ignored) {}
+
                sendJsonObjectToUnity(jsonArray1.toString());
             }
         });
@@ -91,22 +82,12 @@ public class EMPresenceManagerWrapper extends EMWrapper {
             @Override
             public void onSuccess(List<EMPresence> emPresences) {
                 JSONArray jsonArray1 = new JSONArray();
-                for (EMPresence presence: emPresences) {
-                    JSONObject jsonObject = new JSONObject();
-                    Map<String, Object> map = EMPresenceHelper.toJson(presence);
-                    Iterator<String> it = map.keySet().iterator();
-                    while (it.hasNext()) {
-                        String key = (String) it.next();
-                        try {
-                            jsonObject.put(key, map.get(key));
-                        } catch (JSONException ignored) {
-
-                        }
-                    }
-                    if (jsonObject.length() > 0) {
+                try {
+                    for (EMPresence presence: emPresences) {
+                        JSONObject jsonObject= EMPresenceHelper.toJson(presence);
                         jsonArray1.put(jsonObject);
                     }
-                }
+                }catch (JSONException ignored) {}
                 sendJsonObjectToUnity(jsonArray1.toString());
             }
         });
