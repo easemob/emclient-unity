@@ -82,7 +82,7 @@ public class EMUnityChatManagerListener implements EMMessageListener, EMConversa
     @Override
     public void onReadAckForGroupMessageUpdated() {
         Log.d("unity_sdk","onReadAckForGroupMessageUpdated");
-        UnityPlayer.UnitySendMessage(EMSDKMethod.ChatListener_Obj, "OnReadAckForGroupMessageUpdated", null);
+        UnityPlayer.UnitySendMessage(EMSDKMethod.ChatListener_Obj, "OnReadAckForGroupMessageUpdated", "");
     }
 
     @Override
