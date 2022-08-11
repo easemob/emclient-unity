@@ -75,7 +75,7 @@
         if (error) {
             [weakSelf onError:callbackId error:error];
         }else {
-            [weakSelf onSuccess:@"List<String>" callbackId:callbackId userInfo:[members toJsonArray]];
+            [weakSelf onSuccess:@"List<String>" callbackId:callbackId userInfo:members];
         }
     }];
 }
