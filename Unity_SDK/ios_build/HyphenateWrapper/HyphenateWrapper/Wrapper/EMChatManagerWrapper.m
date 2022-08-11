@@ -126,7 +126,7 @@
         if (aError) {
             [self onError:callId error:aError];
         }else {
-            [self onSuccess:@"CursorResult<Message>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:[aResult toJson]]];
+            [self onSuccess:@"CursorResult<Message>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:[aResult toJsonString]]];
         }
     }];
 }
@@ -518,7 +518,7 @@
         }else {
             [weakSelf onSuccess:@"CursorResult<GroupReadAck>"
                      callbackId:callbackId
-                       userInfo:[aResult toJson]];
+                       userInfo:[aResult toJsonString]];
         }
     }];
 }
@@ -622,7 +622,7 @@
         }else {
             [weakSelf onSuccess:@"CursorResult<MessageReaction>"
                      callbackId:callbackId
-                       userInfo:[cursorResult toJson]];
+                       userInfo:[cursorResult toJsonString]];
         }
     }];
 }
