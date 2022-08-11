@@ -39,6 +39,10 @@ namespace ChatSDK
             JSONObject obj = new JSONObject();
             obj.Add("messageId", messageId);
             string jsonString = ChatAPIIOS.MessageManager_GetMethodCall("getReactionList", obj.ToString());
+            if (jsonString == null || jsonString.Length == 0)
+            {
+                return null;
+            }
             JSONNode jn = JSON.Parse(jsonString);
             return MessageReaction.ListFromJsonObject(jn["reactionList"]);
         }
@@ -48,6 +52,10 @@ namespace ChatSDK
             JSONObject obj = new JSONObject();
             obj.Add("messageId", messageId);
             string jsonString = ChatAPIIOS.MessageManager_GetMethodCall("getChatThread", obj.ToString());
+            if (jsonString == null || jsonString.Length == 0)
+            {
+                return null;
+            }
             JSONNode jn = JSON.Parse(jsonString);
             return ChatThread.FromJsonObject(jn["chatThread"]);
         }

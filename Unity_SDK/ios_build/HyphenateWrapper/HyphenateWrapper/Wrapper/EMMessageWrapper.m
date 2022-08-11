@@ -30,14 +30,13 @@
     return ret;
 }
 - (NSArray *)getReactionList:(NSDictionary *)param {
-    NSDictionary *ret = nil;
     EMChatMessage *msg = [self getMessage:param];
     NSMutableArray *ary = [NSMutableArray array];
     for (EMMessageReaction *reaction in msg.reactionList) {
         [ary addObject:[reaction toJson]];
     }
     
-    return ret;
+    return ary;
 }
 - (NSDictionary *)getChatThread:(NSDictionary *)param {
     NSDictionary *ret = nil;
