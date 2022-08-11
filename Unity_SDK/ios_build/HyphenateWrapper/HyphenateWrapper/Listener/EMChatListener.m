@@ -58,7 +58,7 @@
 }
 
 - (void)groupMessageAckHasChanged {
-    UnitySendMessage(ChatListener_Obj, "OnReadAckForGroupMessageUpdated", NULL);
+    UnitySendMessage(ChatListener_Obj, "OnReadAckForGroupMessageUpdated", "");
 }
 
 - (void)onConversationRead:(NSString *)from to:(NSString *)to {
