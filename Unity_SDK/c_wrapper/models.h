@@ -18,14 +18,25 @@
 #include "emcustommessagebody.h"
 #include "emmucsetting.h"
 #include "empushconfigs.h"
+#include "empresence.h"
+#include "emmessagereaction.h"
+#include "emmessagereactionchange.h"
+#include "emthreadmanager_interface.h"
 #include "json.hpp"
+
+#ifndef RAPIDJSON_NAMESPACE
+#define RAPIDJSON_NAMESPACE easemob
+#endif
+#include "rapidjson/document.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/prettywriter.h"
 
 using namespace easemob;
 
 const int ARRAY_SIZE_LIMITATION = 200;
 
 EMMessagePtr BuildEMMessage(void *mto, EMMessageBody::EMMessageBodyType type, bool buildReceiveMsg=false);
-void UpdateMessageTO(void *mto, EMMessagePtr msg);
+void UpdateMessageTO(void *mto, EMMessagePtr msg, void* localMto);
 void SetMessageAttrs(EMMessagePtr msg, string attrs);
 std::string GetAttrsStringFromMessage(EMMessagePtr msg);
 
@@ -53,6 +64,7 @@ struct Options
     bool IsAutoDownload;
 };
 
+
 struct GroupReadAck
 {
     char * AckId;
@@ -63,49 +75,11 @@ struct GroupReadAck
     int Count;
 };
 
-enum class AttributeValueType
-{
-    BOOL,
-    CHAR,
-    UCHAR,
-    SHORT,
-    USHORT,
-    INT32,
-    UINT32,
-    INT64,
-    UINT64,
-    FLOAT,
-    DOUBLE,
-    STRING,
-    STRVECTOR,
-    JSONSTRING,
-    NULLOBJ
-};
-
-union AttributeValueUnion {
-    bool BoolV;
-    unsigned char CharV;
-    char UCharV;
-    short ShortV;
-    unsigned short UShortV;
-    int Int32V;
-    unsigned int UInt32V;
-    int64_t Int64V;
-    uint64_t UInt64V;
-    float FloatV;
-    double DoubleV;
-    char *StringV;
-};
-
-struct AttributeValue
-{
-    AttributeValueType VType;
-    AttributeValueUnion Value;
-};
-
 //C# side: class TextMessageBodyTO
 struct TextMessageBodyTO {
     const char * Content;
+    const char * TargetLanguages;
+    const char * Translations;
 };
 
 //C# side: class LocationMessageBodyTo
@@ -123,7 +97,7 @@ struct CmdMessageBodyTO {
 
 struct FileMessageBodyTO {
     const char * LocalPath;
-    const char *DisplayName;
+    const char * DisplayName;
     const char * Secret;
     const char * RemotePath;
     int64_t FileSize;
@@ -189,10 +163,15 @@ public:
     EMMessage::EMMessageStatus Status;
     bool HasDeliverAck;
     bool HasReadAck;
+    bool IsNeedGroupAck;
+    bool IsRead;
+    bool MessageOnlineState;
 
     const char * AttributesValues;
     int64_t LocalTime;
     int64_t ServerTime;
+
+    bool IsThread;
     
     EMMessageBody::EMMessageBodyType BodyType;
     MessageTO();
@@ -201,10 +180,48 @@ public:
     //since can not use destory function
     //so here add a function to free related resource
     static void FreeResource(MessageTO * mto);
-    
     //virtual ~MessageTO();
+
+    static int MsgTypeToInt(EMMessage::EMChatType type);
+    static EMMessage::EMChatType MsgTypeFromInt(int i);
+
+    static int StatusToInt(EMMessage::EMMessageStatus status);
+    static EMMessage::EMMessageStatus StatusFromInt(int i);
+
+    static std::string MessageDirectionToString(EMMessage::EMMessageDirection direction);
+    static EMMessage::EMMessageDirection MessageDirectionFromString(std::string str);
+
+    static std::string BodyTypeToString(EMMessageBody::EMMessageBodyType btype);
+    static EMMessageBody::EMMessageBodyType BodyTypeFromString(std::string str);
+
+    static int DownLoadStatusToInt(EMFileMessageBody::EMDownloadStatus download_status);
+    static EMFileMessageBody::EMDownloadStatus DownLoadStatusFromInt(int i);
+
+    static std::string CustomExtsToJson(EMCustomMessageBody::EMCustomExts& exts);
+    static EMCustomMessageBody::EMCustomExts CustomExtsFromJson(std::string json);
+
+    static void BodyToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg);
+    static std::string BodyToJson(EMMessagePtr msg);
+    static void ToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg);
+    static std::string ToJson(EMMessagePtr msg);
+
+    static EMMessageBodyPtr BodyFromJsonObject(const Value& jnode);
+    static EMMessageBodyPtr BodyFromJson(std::string json);
+    static EMMessagePtr FromJsonObject(const Value& jnode);
+    static EMMessagePtr FromJson(std::string json);
+
 protected:
     MessageTO(const EMMessagePtr &message);
+};
+
+struct MessageTOLocal {
+    std::string MsgId;
+    EMMessageBody::EMMessageBodyType BodyType;
+    
+    // text body fields
+    std::string Content;
+    std::string TargetLanguages; // json string
+    std::string Translations; // json string
 };
 
 class TextMessageTO : public MessageTO
@@ -368,6 +385,7 @@ struct RoomTO
     char ** AdminList;
     char ** BlockList;
     Mute * MuteList;
+    int MemberListCount;
     int MemberCount;
     int AdminCount;
     int BlockCount;
@@ -376,6 +394,8 @@ struct RoomTO
     int MaxUsers;
     bool IsAllMemberMuted;
     
+    ~RoomTO();
+
     static RoomTO * FromEMChatRoom(EMChatroomPtr &room);
     
     void LogInfo();
@@ -390,7 +410,7 @@ struct GroupReadAckTO
     int count;
     int64_t timestamp;
     
-    static GroupReadAckTO * FromGroupReadAck(EMGroupReadAckPtr&  groupReadAckPtr);
+    static GroupReadAckTO * FromGroupReadAck(const EMGroupReadAckPtr&  groupReadAckPtr);
 };
 
 struct ConversationTO
@@ -398,7 +418,7 @@ struct ConversationTO
     const char * ConverationId;
     EMConversation::EMConversationType type;
     const char * ExtField;
-    
+    bool isThread;
     static ConversationTO * FromEMConversation(EMConversationPtr&  conversationPtr);
 };
 
@@ -452,6 +472,101 @@ struct UserInfo
     static std::map<std::string, UserInfoTO> Convert2TO(std::map<std::string, UserInfo>& userInfoMap);
 };
 
+struct SupportLanguagesTO
+{
+    const char* languageCode;
+    const char* languageName;
+    const char* languageNativeName;
+};
+
+struct PresenceTO
+{
+    const char* publisher;
+    const char* deviceList; // json string
+    const char* statusList; // json string
+    const char* ext;
+    int64_t     latestTime;
+    int64_t     expiryTime;
+};
+
+struct PresenceTOWrapper
+{
+    PresenceTO presenceTO;
+    std::string publisher;
+    std::string deviceListJson;
+    std::string statusListJson;
+    std::string ext;
+    int64_t     latestTime;
+    int64_t     expiryTime;
+    
+    void FromLocalWrapper();
+    static PresenceTOWrapper FromPresence(EMPresencePtr presencePtr);
+};
+
+struct MessageReactionTO
+{
+    static std::string ToJson(EMMessageReactionPtr reaction);
+    static std::string ToJson(EMMessageReactionList list);
+    static std::string ToJson(EMMessage& msg);
+    static std::string ToJson(std::map<std::string, EMMessageReactionList> map);
+    static void ListToJsonWriter(Writer<StringBuffer>& writer, EMMessageReactionList list);
+
+    static EMMessageReactionPtr FromJsonObject(const Value& jnode);
+    static EMMessageReactionList ListFromJsonObject(const Value& jnode);
+    static EMMessageReactionList ListFromJson(std::string json);
+
+};
+
+struct MessageReactionChangeTO
+{
+    static std::string ToJson(EMMessageReactionChangePtr reactionChangePtr, std::string curname);
+    static std::string ToJson(EMMessageReactionChangeList list, std::string curname);
+    static void ToJsonWriter(Writer<StringBuffer>& writer, EMMessageReactionChangePtr reactionChangePtr, std::string curname);
+};
+
+struct SilentModeParamTO
+{
+    static EMSilentModeParamPtr FromJson(std::string json);
+};
+
+struct SilentModeItemTO
+{
+    static std::string ToJson(EMSilentModeItemPtr itemPtr);
+    static std::string ToJson(std::map<std::string, EMSilentModeItemPtr> map);
+    static void ToJsonWriter(Writer<StringBuffer>& writer, EMSilentModeItemPtr itemPtr);
+};
+
+struct AttributesValueTO
+{
+    static void ToJsonWriter(Writer<StringBuffer>& writer, EMAttributeValuePtr attribute);
+    static void ToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg);
+    static std::string ToJson(EMMessagePtr msg);
+
+    static void SetMessageAttr(EMMessagePtr msg, std::string& key, const Value& jnode);
+    static void SetMessageAttrs(EMMessagePtr msg, const Value& jnode);
+    static void SetMessageAttrs(EMMessagePtr msg, std::string json);
+};
+
+struct ChatThreadEvent
+{
+    static std::string ToJson(EMThreadEventPtr threadEventPtr);
+    static int ThreadOperationToInt(const std::string& operation );
+};
+
+struct ChatThread
+{
+    static void ToJsonWriter(Writer<StringBuffer>& writer, EMThreadEventPtr threadEventPtr);
+    static std::string ToJson(EMThreadEventPtr threadEventPtr);
+    static std::string ToJson(EMCursorResultRaw<EMThreadEventPtr> cusorResult);
+    static std::string ToJson(std::vector<EMThreadEventPtr>& vec);
+    static std::string ToJson(std::map<std::string, EMMessagePtr> map);
+    static EMThreadEventPtr FromJsonObject(const Value& jnode);
+    static EMThreadEventPtr FromJson(std::string json);
+
+    static EMThreadLeaveReason ThreadLeaveReasonFromInt(int i);
+    static int ThreadLeaveReasonToInt(EMThreadLeaveReason reason);
+};
+
 struct TOArray
 {
     DataType Type;
@@ -471,7 +586,7 @@ struct TOItem
     int Type;
     void * Data;
     
-    TOItem(){}
+    TOItem() { Type = 0; Data = nullptr; }
     TOItem(int type, void* data): Type(type), Data(data){}
 };
 

@@ -133,7 +133,7 @@ public class EMChatRoomManagerWrapper extends EMWrapper {
 
             try {
                 EMChatRoom room = EMClient.getInstance().chatroomManager().createChatRoom(subject, description, welcomeMessage, maxUserCount, membersList);
-                onSuccess("EMChatRoom", callbackId, EMChatRoomHelper.toJson(room).toString());
+                onSuccess("ChatRoom", callbackId, EMChatRoomHelper.toJson(room).toString());
             } catch (HyphenateException e) {
                 onError(callbackId, e);
             } catch (JSONException e) {
@@ -168,7 +168,7 @@ public class EMChatRoomManagerWrapper extends EMWrapper {
             return;
         }
 
-        EMUnityValueCallback<EMPageResult<EMChatRoom>> callback = new EMUnityValueCallback<EMPageResult<EMChatRoom>>("EMPageResult<EMChatRoom>", callbackId) {
+        EMUnityValueCallback<EMPageResult<EMChatRoom>> callback = new EMUnityValueCallback<EMPageResult<EMChatRoom>>("PageResult<ChatRoom>", callbackId) {
             @Override
             public void onSuccess(EMPageResult<EMChatRoom> emChatRoomEMPageResult) {
                 try {
@@ -231,7 +231,7 @@ public class EMChatRoomManagerWrapper extends EMWrapper {
         asyncRunnable(() -> {
             try {
                 EMChatRoom room = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(roomId);
-                onSuccess("EMChatRoom", callbackId, EMChatRoomHelper.toJson(room).toString());
+                onSuccess("ChatRoom", callbackId, EMChatRoomHelper.toJson(room).toString());
             } catch (HyphenateException e) {
                 onError(callbackId, e);
             } catch (JSONException e) {
@@ -251,7 +251,7 @@ public class EMChatRoomManagerWrapper extends EMWrapper {
         asyncRunnable(() -> {
             try {
                 EMCursorResult<String> cursorResult = EMClient.getInstance().chatroomManager().fetchChatRoomMembers(roomId, cursor, pageSize);
-                onSuccess( "EMCursorResult<String>", callbackId, EMCursorResultHelper.toJson(cursorResult).toString());
+                onSuccess( "CursorResult<String>", callbackId, EMCursorResultHelper.toJson(cursorResult).toString());
             } catch (HyphenateException e) {
                 onError(callbackId, e);
             } catch (JSONException e) {
@@ -286,7 +286,7 @@ public class EMChatRoomManagerWrapper extends EMWrapper {
 
         asyncRunnable(() -> {
             List<EMChatRoom> list = EMClient.getInstance().chatroomManager().getAllChatRooms();
-            onSuccess("List<EMChatRoom>", callbackId, EMTransformHelper.jsonArrayFromChatRoomList(list).toString());
+            onSuccess("List<ChatRoom>", callbackId, EMTransformHelper.jsonArrayFromChatRoomList(list).toString());
         });
     }
 
@@ -312,7 +312,7 @@ public class EMChatRoomManagerWrapper extends EMWrapper {
             return;
         }
 
-        EMUnityValueCallback<EMChatRoom> callBack = new EMUnityValueCallback<EMChatRoom>("EMChatRoom", callbackId) {
+        EMUnityValueCallback<EMChatRoom> callBack = new EMUnityValueCallback<EMChatRoom>("ChatRoom", callbackId) {
             @Override
             public void onSuccess(EMChatRoom object) {
                 try {
@@ -454,4 +454,54 @@ public class EMChatRoomManagerWrapper extends EMWrapper {
         });
     }
 
+    private void muteAllRoomMembers(String roomId, String callbackId) {
+        EMClient.getInstance().chatroomManager().muteAllMembers(roomId, new EMUnityValueCallback<EMChatRoom>("Room", callbackId) {
+            @Override
+            public void onSuccess(EMChatRoom emChatRoom) {
+                try {
+                    sendJsonObjectToUnity(EMChatRoomHelper.toJson(emChatRoom).toString());
+                }catch (JSONException ignored) {}
+
+            }
+        });
+    }
+
+    private void unMuteAllRoomMembers(String roomId, String callbackId) {
+        EMClient.getInstance().chatroomManager().unmuteAllMembers(roomId, new EMUnityValueCallback<EMChatRoom>("Room", callbackId) {
+            @Override
+            public void onSuccess(EMChatRoom emChatRoom) {
+                try {
+                    sendJsonObjectToUnity(EMChatRoomHelper.toJson(emChatRoom).toString());
+                }catch (JSONException ignored) {}
+            }
+        });
+    }
+
+    private void addWhiteListMembers(String roomId, String jsonArrayStr, String callbackId) throws JSONException{
+        JSONArray jsonArray = new JSONArray(jsonArrayStr);
+        ArrayList<String> list = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            list.add(jsonArray.getString(i));
+        }
+        EMClient.getInstance().chatroomManager().addToChatRoomWhiteList(roomId, list, new EMUnityValueCallback<EMChatRoom>(null, callbackId){
+            @Override
+            public void onSuccess(EMChatRoom emChatRoom) {
+                sendEmptyCallback();
+            }
+        });
+    }
+
+    private void removeWhiteListMembers(String roomId, String jsonArrayStr, String callbackId) throws JSONException {
+        JSONArray jsonArray = new JSONArray(jsonArrayStr);
+        ArrayList<String> list = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            list.add(jsonArray.getString(i));
+        }
+        EMClient.getInstance().chatroomManager().removeFromChatRoomWhiteList(roomId, list, new EMUnityValueCallback<EMChatRoom>(null, callbackId){
+            @Override
+            public void onSuccess(EMChatRoom emChatRoom) {
+                sendEmptyCallback();
+            }
+        });
+    }
 }

@@ -1,19 +1,24 @@
 package com.hyphenate.unity_chat_sdk;
 
-import android.os.Debug;
-import android.os.Message;
+
 import android.util.Log;
 
-import com.hyphenate.chat.EMChatRoom;
+
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMCursorResult;
+import com.hyphenate.chat.EMGroupReadAck;
+import com.hyphenate.chat.EMLanguage;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMMessageReaction;
 import com.hyphenate.exceptions.HyphenateException;
-import com.hyphenate.unity_chat_sdk.helper.EMChatRoomHelper;
+
 import com.hyphenate.unity_chat_sdk.helper.EMConversationHelper;
 import com.hyphenate.unity_chat_sdk.helper.EMCursorResultHelper;
+
+import com.hyphenate.unity_chat_sdk.helper.EMLanguageHelper;
 import com.hyphenate.unity_chat_sdk.helper.EMMessageHelper;
+import com.hyphenate.unity_chat_sdk.helper.EMMessageReactionHelper;
 import com.hyphenate.unity_chat_sdk.listeners.EMUnityCallback;
 import com.hyphenate.unity_chat_sdk.listeners.EMUnityChatManagerListener;
 import com.hyphenate.unity_chat_sdk.listeners.EMUnityValueCallback;
@@ -24,7 +29,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EMChatManagerWrapper extends EMWrapper  {
     static public EMChatManagerWrapper wrapper() {
@@ -66,7 +73,7 @@ public class EMChatManagerWrapper extends EMWrapper  {
         }
     }
 
-    private void fetchHistoryMessages(String conversationId, final int type, String startMessageId, int count,String callbackId) {
+    private void fetchHistoryMessages(String conversationId, final int type, String startMessageId, int count, int iDirection, String callbackId) {
         asyncRunnable(()->{
             EMConversation.EMConversationType conversationType = EMConversation.EMConversationType.Chat;
             if (type == 0) {
@@ -83,10 +90,10 @@ public class EMChatManagerWrapper extends EMWrapper  {
                 return;
             }
 
+            EMConversation.EMSearchDirection direction = iDirection == 0 ? EMConversation.EMSearchDirection.UP : EMConversation.EMSearchDirection.DOWN;
             try {
-                EMCursorResult<EMMessage> cursorResult = EMClient.getInstance().chatManager().fetchHistoryMessages(conversationId,
-                        conversationType, count, startMessageId);
-                onSuccess("EMCursorResult<EMMessage>", callbackId, EMCursorResultHelper.toJson(cursorResult).toString());
+                EMCursorResult<EMMessage> cursorResult = EMClient.getInstance().chatManager().fetchHistoryMessages(conversationId, conversationType, count, startMessageId, direction);
+                onSuccess("CursorResult<Message>", callbackId, EMCursorResultHelper.toJson(cursorResult).toString());
             } catch (HyphenateException e) {
                 onError(callbackId, e);
             } catch (JSONException ignored) {
@@ -109,6 +116,12 @@ public class EMChatManagerWrapper extends EMWrapper  {
         return EMConversationHelper.toJson(conversation).toString();
     }
 
+    private String getThreadConversation(String conversationId) throws JSONException {
+        EMConversation conversation = EMClient.getInstance().chatManager().getConversation(conversationId, EMConversation.EMConversationType.GroupChat, true, true);
+        if (conversation == null) return null;
+        return EMConversationHelper.toJson(conversation).toString();
+    }
+
     private void getConversationsFromServer(String callbackId) {
         asyncRunnable(() -> {
             try {
@@ -121,7 +134,7 @@ public class EMChatManagerWrapper extends EMWrapper  {
                 for (EMConversation conversation : list) {
                     jsonArray.put(EMConversationHelper.toJson(conversation).toString());
                 }
-                onSuccess("List<EMConversation>", callbackId, jsonArray.toString());
+                onSuccess("List<Conversation>", callbackId, jsonArray.toString());
             } catch (HyphenateException e) {
                 onError(callbackId, e);
             } catch (JSONException ignored){
@@ -231,7 +244,7 @@ public class EMChatManagerWrapper extends EMWrapper  {
             jsonArray.put(EMMessageHelper.toJson(msg).toString());
         }
 
-        onSuccess("List<EMMessage>", callbackId, jsonArray.toString());
+        onSuccess("List<Message>", callbackId, jsonArray.toString());
     }
 
     private void ackConversationRead(String conversationId,  String callbackId){
@@ -242,6 +255,26 @@ public class EMChatManagerWrapper extends EMWrapper  {
             }
             try {
                 EMClient.getInstance().chatManager().ackConversationRead(conversationId);
+                onSuccess(null, callbackId, null);
+            } catch (HyphenateException e) {
+                onError(callbackId, e);
+            }
+        });
+    }
+
+    private void sendReadAckForGroupMessage(String msgId, String content, String callbackId) {
+        asyncRunnable(() -> {
+            if (msgId == null || msgId.length() == 0) {
+                onError(callbackId, new HyphenateException(500, "messageId is invalid"));
+                return ;
+            }
+            EMMessage msg = EMClient.getInstance().chatManager().getMessage(msgId);
+            if (msg == null) {
+                onError(callbackId, new HyphenateException(500, "messageId is invalid"));
+                return ;
+            }
+            try {
+                EMClient.getInstance().chatManager().ackGroupMessageRead(msg.conversationId(), msgId, content);
                 onSuccess(null, callbackId, null);
             } catch (HyphenateException e) {
                 onError(callbackId, e);
@@ -315,5 +348,110 @@ public class EMChatManagerWrapper extends EMWrapper  {
     private void deleteConversationFromServer(String conversationId, int conversatinType, boolean deleteMessage, String callbackId) throws JSONException {
         EMConversation.EMConversationType type = EMConversationHelper.typeFromInt(conversatinType);
         EMClient.getInstance().chatManager().deleteConversationFromServer(conversationId, type, deleteMessage, new EMUnityCallback(callbackId));
+    }
+
+    private void fetchGroupReadAcks(String messageId, int pageSize, String ackId, String callbackId) {
+        asyncRunnable(()->{
+            try {
+                EMCursorResult<EMGroupReadAck> cursorResult = EMClient.getInstance().chatManager().fetchGroupReadAcks(messageId, pageSize, ackId);
+                onSuccess("CursorResult<GroupReadAck>", callbackId, EMCursorResultHelper.toJson(cursorResult).toString());
+            } catch (HyphenateException e) {
+                onError(callbackId, e);
+            } catch (JSONException ignored) {
+
+            }
+        });
+    }
+
+    private void fetchSupportLanguages(String callbackId) {
+        EMClient.getInstance().chatManager().fetchSupportLanguages(new EMUnityValueCallback<List<EMLanguage>>("List<SupportLanguage>", callbackId){
+            @Override
+            public void onSuccess(List<EMLanguage> emLanguages) {
+                JSONArray jsonArray = new JSONArray();
+                try{
+                    for (EMLanguage l: emLanguages) {
+                        jsonArray.put(EMLanguageHelper.toJson(l).toString());
+                    }
+                }catch (JSONException ignored){}
+                sendJsonObjectToUnity(jsonArray.toString());
+            }
+        });
+    }
+
+    private void translateMessage(String jsonString, String targetLanguages , String callbackId) throws JSONException {
+        EMMessage msg = EMMessageHelper.fromJson(new JSONObject(jsonString));
+        JSONArray jAry = new JSONArray(targetLanguages);
+        ArrayList<String> list = new ArrayList<>();
+        for (int i = 0; i < jAry.length(); i++) {
+            String s = jAry.getString(i);
+            list.add(s);
+        }
+        EMClient.getInstance().chatManager().translateMessage(msg, list, new EMUnityValueCallback<EMMessage>("Message", callbackId){
+            @Override
+            public void onSuccess(EMMessage msg) {
+                try {
+                    String ret = EMMessageHelper.toJson(msg).toString();
+                    sendJsonObjectToUnity(ret);
+                } catch (JSONException e) {
+
+                }
+            }
+        });
+    }
+
+    private void reportMessage(String messageId, String tag, String reason, String callbackId) {
+        EMClient.getInstance().chatManager().asyncReportMessage(messageId, tag, reason, new EMUnityCallback(callbackId));
+    }
+
+    public void addReaction(String msgId, String reaction, String callbackId) throws JSONException {
+        EMClient.getInstance().chatManager().asyncAddReaction(msgId, reaction, new EMUnityCallback(callbackId));
+    }
+
+    private void removeReaction(String msgId, String reaction, String callbackId) throws JSONException {
+        EMClient.getInstance().chatManager().asyncRemoveReaction(msgId, reaction, new EMUnityCallback(callbackId));
+    }
+
+    public void getReactionList(String msgListJsonString, int iMessageType, String groupId, String callbackId) throws JSONException{
+        JSONArray jAry = new JSONArray(msgListJsonString);
+        ArrayList<String> list = new ArrayList<>();
+        for (int i = 0; i < jAry.length(); i++) {
+            String s = jAry.getString(i);
+            list.add(s);
+        }
+
+        EMMessage.ChatType type = EMMessageHelper.chatTypeFromInt(iMessageType);
+        EMClient.getInstance().chatManager().asyncGetReactionList(list, type, groupId, new EMUnityValueCallback<Map<String, java.util.List<EMMessageReaction>>>("Dictionary<string, List<MessageReaction>>", callbackId){
+            @Override
+            public void onSuccess(Map<String, List<EMMessageReaction>> stringListMap) {
+                JSONObject ret = new JSONObject();
+                for (Map.Entry<String, List<EMMessageReaction>> entry: stringListMap.entrySet()) {
+                    JSONArray jsonArray = new JSONArray();
+                    for (EMMessageReaction reaction: entry.getValue()) {
+                        try {
+                            jsonArray.put(EMMessageReactionHelper.toJson(reaction));
+                        }catch (JSONException ignored) {
+
+                        }
+                    }
+                    try{
+                        ret.put(entry.getKey(), jsonArray);
+                    }catch (JSONException ignored) {}
+                }
+                sendJsonObjectToUnity(ret.toString());
+            }
+        });
+    }
+
+    private void getReactionDetail(String messageId, String reaction, String cursor, int pageSize, String callbackId) {
+        EMClient.getInstance().chatManager().asyncGetReactionDetail(messageId, reaction, cursor, pageSize, new EMUnityValueCallback<EMCursorResult<EMMessageReaction>>("CursorResult<MessageReaction>", callbackId) {
+            @Override
+            public void onSuccess(EMCursorResult<EMMessageReaction> emMessageReactionEMCursorResult) {
+                try {
+                    sendJsonObjectToUnity(EMCursorResultHelper.toJson(emMessageReactionEMCursorResult).toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }

@@ -4,105 +4,295 @@ using System.Runtime.InteropServices;
 
 namespace ChatSDK
 {
+    /**
+     * \~chinese
+     * 聊天设置类，用于定义 SDK 的各种参数和选项，例如，是否自动接受加好友邀请以及是否自动下载缩略图。
+     * 
+     * \~english
+     * The chat setting class that defines parameters and options of the SDK, including whether to automatically accept friend invitations and whether to automatically download the thumbnail.
+     */
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public class Options
     {
-        /// <summary>
-        /// AppKey,需要到Console中获取
-        /// </summary>
+        /**
+	     * \~chinese
+	     * 创建 App 时在 console 后台上注册的 App 唯一识别符，即 App Key。
+	     * 
+	     * \~english
+	     * The App Key you get from the console when creating a chat app. It is the unique identifier of your app.
+	     */
         public string AppKey = "";
+
+        /**
+	     * \~chinese
+	     * DNS 服务器的地址。
+	     *
+	     * \~english
+	     * The URL of the DNS server.
+	     */
         public string DNSURL = "";
+
+        /**
+	     * \~chinese
+	     * IM 消息服务器地址。
+         * 
+         * 该地址在进行私有部署时实现数据隔离和数据安全时使用。
+         * 
+         * 如有需求，请联系商务。
+         * 
+	     *
+	     * \~english
+	     * The address of the IM server.
+         * 
+         * This address is used when you implement data isolation and data security during private deployment.
+         * 
+         * If you need the address, contact our business manager.
+         * 
+	     */
         public string IMServer = "";
+
+        /**
+	     * \~chinese
+	     * REST 服务器地址。
+         * 
+         * 该地址在进行私有部署时实现数据隔离和数据安全时使用。
+         * 
+         * 如有需求，请联系商务。
+	     * 
+	     * \~english
+	     * The address of the REST server. 
+         * 
+         * This address is used when you implement data isolation and data security during private deployment.
+         * 
+         * If you need the address, contact our business manager.
+	     */
         public string RestServer = "";
+
+        /**
+	     * \~chinese
+	     * IM 消息服务器的自定义端口号。
+         * 
+         * 该端口在进行私有部署时实现数据隔离和数据安全时使用。
+         * 
+         * 如有需求，请联系商务。
+	     *
+	     * \~english
+	     * The custom port of the IM server.
+         * 
+         * This port is used when you implement data isolation and data security during private deployment.
+         * 
+         * If you need the port, contact our business manager.
+	     */
         public int IMPort = 0;
 
+        /**
+	     * \~chinese
+	     * 设置是否开启 DNS。
+	     * - （默认） `true`：开启。
+	     * - `false`：关闭。私有部署时需要关闭。
+	     *
+	     * \~english
+	     * Whether to enable DNS.
+	     * - (Default) `true`: Yes.
+	     * - `false`: No. DNS should be disabled for private deployment.
+	     */
         [MarshalAs(UnmanagedType.U1)]
         public bool EnableDNSConfig = true;
 
-        /// <summary>
-        /// Debug模式，会输出日志
-        /// </summary>
+        /**
+         * \~chinese
+         * 是否输出调试信息。
+         * - `true`: SDK 会在日志里输出调试信息。
+         * - （默认） `false`: SDK 不输出调试信息。
+         *
+         * \~english
+         * Whether to output the debug information. 
+         * - `true`: Yes. The debug information will be output as logs.
+         * - (Default) `false`: No.
+         */
         [MarshalAs(UnmanagedType.U1)]
         public bool DebugMode = false;
 
-        /// <summary>
-        /// 自定登录，再下次初始化时，SDK会直接登录上次未退出的账号，默认开启
-        /// </summary>
+        /**
+	     * \~chinese
+	     * 是否开启自动登录。
+	     * -（默认） `true`：开启；
+	     * - `false`：关闭。
+	     * 
+	     * \~english
+	     * Whether to enable automatic login.
+	     * - (Default) `true`: Yes.
+	     * - `false`: No.
+	     */
         [MarshalAs(UnmanagedType.U1)]
         public bool AutoLogin = true;
 
-        /// <summary>
-        /// 自动同意好友申请，当您在线时，如果有好友申请会自动同意，不在线时，等上线后自动同意, 默认开启
-        /// </summary>
+        /**
+	     * \~chinese
+	     * 是否自动接受加好友邀请。
+         * - `true`：是。
+	     * - （默认） `false`：否。
+         * 
+	     * \~english
+	     * Whether to automatically accept friend invitations from other users. 
+         * - `true`: Yes.
+	     * - (Default) `false`: No.
+	     */
         [MarshalAs(UnmanagedType.U1)]
         public bool AcceptInvitationAlways = false;
 
-        /// <summary>
-        /// 自动同意群组邀请，当您在线时，如果有好友申请会自动同意，不在线时，等上线后自动同意，默认开启
-        /// </summary>
+        /**
+	     * \~chinese
+	     * 是否自动接受群组邀请。
+         * - （默认） `true`：是。
+	     * - `false`：否。
+	     *
+	     * \~english
+	     * Whether to accept group invitations automatically. 
+         * - (Default) `true`: Yes.
+	     * - `false`: No.
+	     */
         [MarshalAs(UnmanagedType.U1)]
         public bool AutoAcceptGroupInvitation = false;
 
-
-
-        /// <summary>
-        /// 已读回执，允许您发送已读回执，默认开启
-        /// </summary>
+        /**
+	     * \~chinese
+	     * 是否需要接收方发送已读回执。
+	     * - （默认） `true`：是；
+	     * - `false`：否。
+	     * 
+	     * \~english
+	     * Whether to require the read receipt. 
+	     * - (Default) `true`: Yes; 
+	     * - `false`: No.
+	     */
         [MarshalAs(UnmanagedType.U1)]
         public bool RequireAck = true;
 
-        /// <summary>
-        /// 已送达回执，接收到消息时自动向消息发送方发送已送达回执，只对单聊消息有效，默认关闭
-        /// </summary>
+        /**
+	     * \~chinese
+	     * 是否需要接收方发送送达回执。
+	     * -（默认）`true`：是；
+	     * - `false`：否。
+	     * 
+	     * \~english
+	     * Whether to require the delivery receipt.
+	     * - (Default) `true`: Yes; 
+	     * - `false`: No.
+	     */
         [MarshalAs(UnmanagedType.U1)]
         public bool RequireDeliveryAck = false;
 
-        /// <summary>
-        /// 离开群组时是否删除对应群组消息，默认开启
-        /// </summary>
+        /**
+	     * \~chinese
+         * 是否在退出（主动或被动）群组时删除该群组中在内存和本地数据库中的历史消息。
+	     * - （默认） `true`: 是；
+         * - `false`: 否 
+         * 
+         * \~english
+	     * Whether to delete the historical group messages in the memory and local database when leaving the group (either voluntarily or passively). 
+	     * - (Default) `true`: Yes;
+	     * - `false`: No.
+         */
         [MarshalAs(UnmanagedType.U1)]
         public bool DeleteMessagesAsExitGroup = true;
 
-        /// <summary>
-        /// 离开聊天室时是否删除对应消息，默认开启
-        /// </summary>
+        /**
+	     * \~chinese
+         * 是否在退出（主动或被动）聊天室时删除该聊天室在内存和本地数据库中的历史消息。
+	     * - （默认） `true`: 是；
+         * - `false`：否
+         * 
+         * \~english
+	     * Whether to delete the historical messages of the chat room in the memory and local database when leaving the chat room (either voluntarily or passively).
+	     * - (Default)` true`: Yes.
+	     * - `false`: No.
+         */
         [MarshalAs(UnmanagedType.U1)]
         public bool DeleteMessagesAsExitRoom = true;
 
-        /// <summary>
-        /// 是否允许聊天室拥有者离开聊天室，默认开启
-        /// </summary>
+        /**
+	     * \~chinese
+         * 是否允许聊天室所有者离开聊天室。
+	     * - （默认） `true`: 允许。离开聊天室后，聊天室所有者除了接收不到该聊天室的消息，其他权限不变。
+         * - `false`: 不允许。 
+         * 
+         * \~english
+	     * Whether to allow the chat room owner to leave the chat room.
+	     * - (Default) `true`: Yes. When leaving the chat room, the chat room owner still has all privileges, except for receive messages in the chat room.
+	     * - `false`: No.
+         */
         [MarshalAs(UnmanagedType.U1)]
         public bool IsRoomOwnerLeaveAllowed = true;
 
-        /// <summary>
-        /// 获取本地消息时按照服务器时间排序，默认开启
-        /// </summary>
+        /**
+	     * \~chinese
+	     * 是否按服务器收到消息时间的倒序对消息排序。
+	     * - （默认） `true`：是；
+	     * - `false`：否。按消息创建时间的倒序排序。
+	     * 
+	     * \~english
+	     * Whether to sort the messages in the reverse chronological order of the time when they are received by the server.
+	     * - (Default) `true`: Yes;
+	     * - `false`: No. Messages are sorted in the reverse chronological order of the time when they are created.
+	     */
         [MarshalAs(UnmanagedType.U1)]
         public bool SortMessageByServerTime = true;
 
-        /// <summary>
-        /// 只是用Https,默认关闭
-        /// </summary>
+        /**
+	     * \~chinese
+	     * 是否只通过 HTTPS 进行 REST 操作。
+	     * - （默认） `true`：是；
+	     * - `false`：否。支持 HTTPS 和 HTTP。
+	     *
+	     * \~english
+	     * Whether only HTTPS is used for REST operations.
+	     * - (Default) `true`: Only HTTPS is supported.
+	     * - `false`: Both HTTP and HTTPS are allowed. 
+	     */
         [MarshalAs(UnmanagedType.U1)]
         public bool UsingHttpsOnly = false;
 
-        /// <summary>
-        /// 使用环信附件存储服务，默认开启
-        /// </summary>
+        /**
+	     * \~chinese
+	     * 是否自动将消息附件上传到聊天服务器。
+	     * -（默认）`true`：是；
+	     * - `false`：否。。
+	     *
+	     * \~english
+	     * Whether to upload the message attachments automatically to the chat server.
+	     * - (Default)`true`: Yes;
+	     * - `false`: No.
+	     */
         [MarshalAs(UnmanagedType.U1)]
         public bool ServerTransfer = true;
 
-        /// <summary>
-        /// 自动下载语音和缩略图，默认开启
-        /// </summary>
+        /**
+	     * \~chinese
+	     * 是否自动下载缩略图。
+	     * - （默认） `true`：是；
+	     * - `false`：否。
+	     *
+	     * \~english
+	     * Whether to automatically download the thumbnail.
+	     * - (Default) `true`: Yes;
+	     * - `false`: No.
+	     * 
+	     */
         [MarshalAs(UnmanagedType.U1)]
         public bool IsAutoDownload = true;
 
-        /// <summary>
-        /// 初始化Options
-        /// </summary>
-        /// <param name="appKey">AppKey,需要到Console中获取</param>
+        /**
+        * \~chinese
+        * Options 构造方法。
+        * 
+        * @param appKey  App Key。
+        *
+        * \~english
+        * The options constructor.
+        * 
+        * @param appKey  The App Key.
+        */
         public Options(string appKey)
         {
             AppKey = appKey;
@@ -197,77 +387,5 @@ namespace ChatSDK
         // HuaWei
         private bool enableHWPush = false;
 
-
-        /// <summary>
-        /// 开启魅族推送
-        /// </summary>
-        /// <param name="appId">魅族 APP ID</param>
-        /// <param name="appKey">魅族 APP KEY</param>
-        public void EnableMeiZuPush(string appId, string appKey)
-        {
-            enableMZPush = true;
-            this.mZAppId = appId;
-            this.mZAppKey = appKey;
-        }
-
-        /// <summary>
-        /// 开启OPPO推送
-        /// </summary>
-        /// <param name="key">OPPO KEY</param>
-        /// <param name="secret">OPPO SECRET</param>
-        public void EnableOPPOPush(string key, string secret)
-        {
-            enableOPPOPush = true;
-            this.oPPOAppKey = key;
-            this.oPPOAppSecret = secret;
-        }
-
-        /// <summary>
-        /// 开启VIVO推送
-        /// </summary>
-        public void EnableVivoPush()
-        {
-            enableVivoPush = true;
-        }
-
-        /// <summary>
-        /// 开启小米推送
-        /// </summary>
-        /// <param name="miAppId">小米 APP ID</param>
-        /// <param name="miAppKey">小米 APP KEY</param>
-        public void EnableMiPush(string miAppId, string miAppKey)
-        {
-            enableMiPush = true;
-            this.miAppId = miAppId;
-            this.miAppKey = miAppKey;
-        }
-
-        /// <summary>
-        /// 开启FCM推送
-        /// </summary>
-        /// <param name="fcmId">FCM ID</param>
-        public void EnableFCMPush(string fcmId)
-        {
-            enableFCMPush = true;
-            this.fCMId = fcmId;
-        }
-
-        /// <summary>
-        /// 开启APNs推送
-        /// </summary>
-        /// <param name="apnsCerName">推送证书名称</param>
-        public void EnableApplePush(string apnsCerName)
-        {
-            enableAPNs = true;
-            this.aPNsCerName = apnsCerName;
-        }
-
-        /// <summary>
-        /// 开启华为推送
-        /// </summary>
-        public void EnableHuaWeiPush()
-        {
-            enableHWPush = true;
-        }
     }
 }

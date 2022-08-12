@@ -8,7 +8,7 @@
 
 extern "C"
 {
-#define CLIENT static_cast<EMClient *>(client)
+#define CLIENT static_cast<EMClient *>(gClient)
 }
 
 #if defined(_WIN32)

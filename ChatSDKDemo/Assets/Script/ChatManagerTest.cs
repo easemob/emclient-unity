@@ -140,21 +140,136 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     }
     void SendImageBtnAction()
     {
+        Message msg = Message.CreateTextSendMessage("yqtest1", "今天天气不错");
+
+        List<string> targetLanguages = new List<string>();
+        targetLanguages.Add("lzh");
+        targetLanguages.Add("ja");
+        targetLanguages.Add("en");
+
+        SDKClient.Instance.ChatManager.TranslateMessage(msg, targetLanguages, new ValueCallBack<Message>(
+         onSuccess: (dmsg) =>
+         {
+             Debug.Log($"TranslateMessage success.");
+             ChatSDK.MessageBody.TextBody tb = (ChatSDK.MessageBody.TextBody)dmsg.Body;
+             foreach (var it in tb.Translations)
+             {
+                 Debug.Log($"Translate, lang:{it.Key}, result:{it.Value}");
+             }
+         },
+         onError: (code, desc) =>
+         {
+             Debug.Log($"TranslateMessage failed, code:{code}, desc:{desc}");
+         }
+        ));
+
+        return;
+
+
         UIManager.UnfinishedAlert(transform);
         Debug.Log("SendImageBtnAction");
     }
     void SendFileBtnAction()
     {
+        InputAlertConfig config = new InputAlertConfig((dict) => {
+            SDKClient.Instance.ThreadManager.DestroyThread(dict["threadId"], new CallBack(
+                onSuccess: () =>
+                {
+                Debug.Log($"DestroyThread sucess");
+                },
+                onError: (code, desc) =>
+                {
+                Debug.Log($"DestroyThread failed, code:{code}, desc:{desc}");
+                }
+                ));
+        });
+
+        config.AddField("threadId");
+        UIManager.DefaultInputAlert(transform, config);
+
+        return;
+
         UIManager.UnfinishedAlert(transform);
         Debug.Log("SendFileBtnAction");
     }
     void SendVideoBtnAction()
     {
+
+        SDKClient.Instance.ThreadManager.FetchMineJoinedThreadList("", 10, new ValueCallBack<CursorResult<ChatThread>>(
+            onSuccess: (cursor_result) =>
+            {
+                Debug.Log($"FetchMineJoinedThreadList sucess");
+                if (null != cursor_result)
+                {
+                    Debug.Log($"cursor:{cursor_result.Cursor}");
+                    foreach (var it in cursor_result.Data)
+                    {
+                        ChatThread thread = it;
+                        Debug.Log($"--------------------------------");
+                        Debug.Log($"Tid:{thread.Tid}; msgId:{thread.MessageId}; parentId:{thread.ParentId}; owner:{thread.Owner}");
+                        Debug.Log($"Name:{thread.Name};  MessageCount:{thread.MessageCount}");
+                        Debug.Log($"MembersCount:{thread.MembersCount}; CreateTimestamp:{thread.CreateAt}");
+                    }
+                }
+            },
+            onError: (code, desc) =>
+            {
+                Debug.Log($"FetchMineJoinedThreadList failed, code:{code}, desc:{desc}");
+            }
+        ));
+
+        return;
+
         UIManager.UnfinishedAlert(transform);
         Debug.Log("SendVideoBtnAction");
+
+        /*InputAlertConfig config = new InputAlertConfig((dict) => {
+            Message msg = Message.CreateVideoSendMessage(dict["to"], "/Users/yuqiang/Test/resource/video.mp4", "", "", 425507);
+
+            SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
+                onSuccess: () => {
+                    ChatSDK.MessageBody.VideoBody vb = (ChatSDK.MessageBody.VideoBody)msg.Body;
+                    UIManager.TitleAlert(transform, "成功", msg.MsgId);
+                },
+                onProgress: (progress) => {
+                    UIManager.TitleAlert(transform, "发送进度", progress.ToString());
+                },
+                onError: (code, desc) => {
+                    UIManager.ErrorAlert(transform, code, msg.MsgId);
+                }
+            ));
+        });
+
+        config.AddField("to");
+        UIManager.DefaultInputAlert(transform, config);
+        */
     }
     void SendVoiceBtnAction()
     {
+        SDKClient.Instance.ChatManager.FetchGroupReadAcks("1033288267207805704", "187147300700161", 20, "", new ValueCallBack<CursorResult<GroupReadAck>>(
+                onSuccess: (result) =>
+                {
+                    if (0 == result.Data.Count)
+                    {
+                        UIManager.DefaultAlert(transform, "No group ack messages.");
+                        return;
+                    }
+                    List<string> strList = new List<string>();
+                    foreach (var msg in result.Data)
+                    {
+                        strList.Add(msg.AckId);
+                    }
+                    string str = string.Join(",", strList.ToArray());
+                    UIManager.DefaultAlert(transform, str);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+
+        return;
+
         UIManager.UnfinishedAlert(transform);
         Debug.Log("SendVoiceBtnAction");
     }
@@ -423,7 +538,9 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
             string startId = dict["StartMsgId"];
             int loadCount = int.Parse(dict["LoadCount"]);
 
-            SDKClient.Instance.ChatManager.FetchHistoryMessagesFromServer(conversationId, type, startId, loadCount, new ValueCallBack<CursorResult<Message>>(
+            MessageSearchDirection direction = MessageSearchDirection.UP;
+
+            SDKClient.Instance.ChatManager.FetchHistoryMessagesFromServer(conversationId, type, startId, loadCount, direction, new ValueCallBack<CursorResult<Message>>(
                 onSuccess: (result) =>
                 {
                     if (0 == result.Data.Count)
@@ -750,6 +867,11 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
         foreach (var msg in messages)
         {
+            if(msg.Body.Type == MessageBodyType.TXT)
+            {
+                ChatSDK.MessageBody.TextBody tb = (ChatSDK.MessageBody.TextBody)msg.Body;
+                Debug.Log($"text message body: {tb.Text}");
+            }
             list.Add(msg.MsgId);
             foreach (string key in msg.Attributes.Keys) {
                 AttributeValue a = msg.Attributes[key];
@@ -779,11 +901,11 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
                             Debug.Log($"{key}|STRING: {a.GetAttributeValue(AttributeValueType.STRING)}");
                         }
                         break;
-                    case AttributeValueType.STRVECTOR:
+                    /*case AttributeValueType.STRVECTOR:
                         {
                             Debug.Log($"{key}|STRVECTOR: {a.GetAttributeValue(AttributeValueType.STRVECTOR)}");
                         }
-                        break;
+                        break;*/
                     case AttributeValueType.JSONSTRING:
                         {
                             Debug.Log($"{key}|JSONSTRING: {a.GetAttributeValue(AttributeValueType.JSONSTRING)}");
@@ -837,5 +959,10 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     public void OnConversationRead(string from, string to)
     {
         UIManager.DefaultAlert(transform, $"OnConversationRead, from: {from}, to: {to}");
+    }
+
+    public void MessageReactionDidChange(List<MessageReactionChange> list)
+    {
+        throw new System.NotImplementedException();
     }
 }

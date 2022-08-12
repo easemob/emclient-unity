@@ -1,9 +1,17 @@
 ﻿using System.Collections.Generic;
 using SimpleJSON;
+
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE || UNITY_EDITOR
 using UnityEngine;
+#endif
 
 namespace ChatSDK {
+
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE || UNITY_EDITOR
     internal sealed class GroupManagerListener : MonoBehaviour
+#else
+    internal sealed class GroupManagerListener
+#endif
     {
 
         internal List<IGroupManagerDelegate> delegater;
@@ -338,6 +346,57 @@ namespace ChatSDK {
                             jo["groupId"].Value,
                             jo["fileId"].Value
                             );
+                    }
+                });
+            }
+        }
+
+        internal void OnAddWhiteListMembersFromGroup(string jsonString)
+        {
+            if (delegater != null)
+            {
+                JSONNode jo = JSON.Parse(jsonString);
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnAddWhiteListMembersFromGroup(
+                            jo["groupId"].Value,
+                            TransformTool.JsonStringToStringList(jo["list"].Value)
+                        );
+                    }
+                });
+            }
+        }
+
+        internal void OnRemoveWhiteListMembersFromGroup(string jsonString)
+        {
+            if (delegater != null)
+            {
+                JSONNode jo = JSON.Parse(jsonString);
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnRemoveWhiteListMembersFromGroup(
+                            jo["groupId"].Value,
+                            TransformTool.JsonStringToStringList(jo["list"].Value)
+                        );
+                    }
+                });
+            }
+        }
+
+        internal void OnAllMemberMuteChangedFromGroup(string jsonString)
+        {
+            if (delegater != null)
+            {
+                JSONNode jo = JSON.Parse(jsonString);
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IGroupManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnAllMemberMuteChangedFromGroup(
+                            jo["groupId"].Value,
+                            jo["muted"].AsBool
+                        );
                     }
                 });
             }

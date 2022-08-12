@@ -30,6 +30,7 @@ HYPHENATE_API void ConversationManager_SetExtField(void *client, const char * co
 HYPHENATE_API int  ConversationManager_UnreadMessagesCount(void *client, const char * conversationId, EMConversation::EMConversationType conversationType);
 HYPHENATE_API int  ConversationManager_MessagesCount(void *client, const char * conversationId, EMConversation::EMConversationType conversationType);
 HYPHENATE_API bool ConversationManager_UpdateMessage(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, void *mto, EMMessageBody::EMMessageBodyType type);
+HYPHENATE_API bool ConversationManager_IsThread(void* client, const char* conversationId, EMConversation::EMConversationType conversationType);
 
 #ifdef __cplusplus
 }

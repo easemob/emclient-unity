@@ -10,10 +10,12 @@ import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chat.EMVideoMessageBody;
 import com.hyphenate.chat.EMVoiceMessageBody;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -22,12 +24,39 @@ public class EMMessageBodyHelper {
     public static EMTextMessageBody textBodyFromJson(JSONObject json) throws JSONException {
         String content = json.getString("content");
         EMTextMessageBody body = new EMTextMessageBody(content);
+        if (json.has("targetLanguages")) {
+            ArrayList<String> list = new ArrayList<>();
+            JSONArray jsonArray = json.optJSONArray("targetLanguages");
+            if (jsonArray != null) {
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    String str = jsonArray.getString(i);
+                    list.add(str);
+                }
+                body.setTargetLanguages(list);
+            }
+        }
         return body;
     }
 
     public static JSONObject textBodyToJson(EMTextMessageBody body) throws JSONException {
         JSONObject data = new JSONObject();
         data.put("content", body.getMessage());
+        if (body.getTargetLanguages() != null) {
+            JSONArray jsonArray = new JSONArray();
+            for (String item: body.getTargetLanguages()){
+                jsonArray.put(item);
+            }
+            data.put("targetLanguages", jsonArray.toString());
+        }
+
+        if (body.getTranslations() != null) {
+            JSONObject jsonObject = new JSONObject();
+            for (EMTextMessageBody.EMTranslationInfo info : body.getTranslations()) {
+                jsonObject.put(info.languageCode, info.translationText);
+            }
+            data.put("translations", jsonObject.toString());
+        }
+
         return data;
     }
 
@@ -39,7 +68,11 @@ public class EMMessageBodyHelper {
             address = json.getString("address");
         }
 
-        EMLocationMessageBody body = new EMLocationMessageBody(address, latitude, longitude);
+        String buildingName = null;
+        if (json.has("buildingName")) {
+            buildingName = json.getString("buildingName");
+        }
+        EMLocationMessageBody body = new EMLocationMessageBody(address, latitude, longitude, buildingName);
         return body;
     }
 
@@ -49,6 +82,9 @@ public class EMMessageBodyHelper {
         data.put("longitude", body.getLongitude());
         if (body.getAddress() != null) {
             data.put("address", body.getAddress());
+        }
+        if (body.getBuildingName() != null) {
+            data.put("buildingName", body.getBuildingName());
         }
 
         return data;
@@ -102,7 +138,7 @@ public class EMMessageBodyHelper {
             data.put("event", body.event());
         }
         if (params.length() > 0) {
-            data.put("params", params.toString());
+            data.put("params", params);
         }
 
         return data;
@@ -216,7 +252,7 @@ public class EMMessageBodyHelper {
         if (body.getThumbnailSecret() != null) {
             data.put("thumbnailSecret", body.getThumbnailSecret());
         }
-
+        data.put("thumbnailStatus", downloadStatusToInt(body.thumbnailDownloadStatus()));
         data.put("fileStatus", downloadStatusToInt(body.downloadStatus()));
         data.put("height", body.getHeight());
         data.put("width", body.getWidth());
@@ -231,20 +267,22 @@ public class EMMessageBodyHelper {
         int duration = json.getInt("duration");
         int fileSize = json.getInt("fileSize");
         EMVideoMessageBody body = new EMVideoMessageBody(localPath, "", duration, fileSize);
-
-        if (json.has("thumbnailRemotePath")){
-            body.setThumbnailUrl(json.getString("thumbnailRemotePath"));
+        if (json.has("displayName")) {
+            body.setFileName(json.getString("displayName"));
         }
-
         if (json.has("thumbnailLocalPath")) {
             body.setLocalThumb(json.getString("thumbnailLocalPath"));
+        }
+        if (json.has("thumbnailRemotePath")){
+            body.setThumbnailUrl(json.getString("thumbnailRemotePath"));
         }
         if (json.has("thumbnailSecret")) {
             body.setThumbnailSecret(json.getString("thumbnailSecret"));
         }
-        if (json.has("displayName")) {
-            body.setFileName(json.getString("displayName"));
+        if (json.has("thumbnailStatus")) {
+            // android 目前没有暴露set方法。
         }
+
         if (json.has("remotePath")) {
             body.setRemoteUrl(json.getString("remotePath"));
         }
@@ -255,7 +293,6 @@ public class EMMessageBodyHelper {
         if(json.has("fileSize")) {
             body.setFileLength(json.getInt("fileSize"));
         }
-
 
         body.setDownloadStatus(downloadStatusFromInt(json.getInt("fileStatus")));
         int width = json.getInt("height");
@@ -269,6 +306,11 @@ public class EMMessageBodyHelper {
         if (body.getLocalUrl() != null) {
             data.put("localPath", body.getLocalUrl());
         }
+        if (body.getFileName() != null) {
+            data.put("displayName", body.getFileName());
+        }
+        data.put("duration", body.getDuration());
+        data.put("fileSize", body.getVideoFileLength());
         if (body.getLocalThumbUri() != null) {
             data.put("thumbnailLocalPath", body.getLocalThumbUri());
         }
@@ -278,9 +320,9 @@ public class EMMessageBodyHelper {
         if (body.getThumbnailSecret() != null) {
             data.put("thumbnailSecret", body.getThumbnailSecret());
         }
-        if (body.getFileName() != null) {
-            data.put("displayName", body.getFileName());
-        }
+        data.put("thumbnailStatus", downloadStatusToInt(body.thumbnailDownloadStatus()));
+        data.put("height", body.getThumbnailHeight());
+        data.put("width", body.getThumbnailWidth());
         if (body.getRemoteUrl() !=  null) {
             data.put("remotePath", body.getRemoteUrl());
         }
@@ -288,10 +330,6 @@ public class EMMessageBodyHelper {
             data.put("secret", body.getSecret());
         }
         data.put("fileStatus", downloadStatusToInt(body.downloadStatus()));
-        data.put("duration", body.getDuration());
-        data.put("fileSize", body.getVideoFileLength());
-        data.put("height", body.getThumbnailHeight());
-        data.put("width", body.getThumbnailWidth());
 
         return data;
     }

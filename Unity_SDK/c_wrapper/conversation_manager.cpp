@@ -11,8 +11,12 @@
 #include "emmessagebody.h"
 #include "tool.h"
 
+extern EMClient* gClient;
+
 HYPHENATE_API bool ConversationManager_AppendMessage(void *client, const char * conversationId, EMConversation::EMConversationType converationType, void *mto, EMMessageBody::EMMessageBodyType type)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return false;
+
     if(!MandatoryCheck(conversationId))
        return false;
     
@@ -23,6 +27,8 @@ HYPHENATE_API bool ConversationManager_AppendMessage(void *client, const char * 
 
 HYPHENATE_API bool ConversationManager_ClearAllMessages(void *client, const char * conversationId, EMConversation::EMConversationType converationType)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return false;
+
     if(!MandatoryCheck(conversationId))
        return false;
     
@@ -32,6 +38,8 @@ HYPHENATE_API bool ConversationManager_ClearAllMessages(void *client, const char
 
 HYPHENATE_API bool ConversationManager_RemoveMessage(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, const char * messageId)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return false;
+
     if(!MandatoryCheck(conversationId))
        return false;
     
@@ -41,6 +49,8 @@ HYPHENATE_API bool ConversationManager_RemoveMessage(void *client, const char * 
 
 HYPHENATE_API void ConversationManager_ExtField(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, FUNC_OnSuccess_With_Result onSuccess)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
     if(!MandatoryCheck(conversationId)) {
         onSuccess(nullptr, DataType::String, 0, -1);
         return;
@@ -61,6 +71,8 @@ HYPHENATE_API void ConversationManager_ExtField(void *client, const char * conve
 
 HYPHENATE_API bool ConversationManager_InsertMessage(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, void *mto, EMMessageBody::EMMessageBodyType type)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return false;
+
     if(!MandatoryCheck(conversationId))
        return false;
     
@@ -71,6 +83,8 @@ HYPHENATE_API bool ConversationManager_InsertMessage(void *client, const char * 
 
 HYPHENATE_API void ConversationManager_LatestMessage(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, FUNC_OnSuccess_With_Result onSuccess)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
     if(!MandatoryCheck(conversationId)) {
         onSuccess(nullptr, DataType::ListOfMessage, -1, -1);
         return;
@@ -99,6 +113,8 @@ HYPHENATE_API void ConversationManager_LatestMessage(void *client, const char * 
 
 HYPHENATE_API void ConversationManager_LatestMessageFromOthers(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, FUNC_OnSuccess_With_Result onSuccess)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
     if(!MandatoryCheck(conversationId)) {
         onSuccess(nullptr, DataType::ListOfMessage, -1, -1);
         return;
@@ -127,6 +143,8 @@ HYPHENATE_API void ConversationManager_LatestMessageFromOthers(void *client, con
 
 HYPHENATE_API void ConversationManager_LoadMessage(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, const char * messageId, FUNC_OnSuccess_With_Result onSuccess)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
     if(!MandatoryCheck(conversationId, messageId)) {
         onSuccess(nullptr, DataType::ListOfMessage, -1, -1);
         return;
@@ -155,6 +173,8 @@ HYPHENATE_API void ConversationManager_LoadMessage(void *client, const char * co
 
 HYPHENATE_API void ConversationManager_LoadMessages(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType conversationType, const char * startMessageId, int count, EMConversation::EMMessageSearchDirection direction, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(conversationId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -195,6 +215,8 @@ HYPHENATE_API void ConversationManager_LoadMessages(void *client, int callbackId
 
 HYPHENATE_API void ConversationManager_LoadMessagesWithKeyword(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType conversationType, const char * keywords, const char * sender, int64_t timestamp, int count, EMConversation::EMMessageSearchDirection direction, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(conversationId, keywords, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -235,6 +257,8 @@ HYPHENATE_API void ConversationManager_LoadMessagesWithKeyword(void *client, int
 
 HYPHENATE_API void ConversationManager_LoadMessagesWithMsgType(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType conversationType, EMMessageBody::EMMessageBodyType type, int64_t timestamp, int count, const char * sender, EMConversation::EMMessageSearchDirection direction, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(conversationId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -274,6 +298,8 @@ HYPHENATE_API void ConversationManager_LoadMessagesWithMsgType(void *client, int
 
 HYPHENATE_API void ConversationManager_LoadMessagesWithTime(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType conversationType, int64_t startTimeStamp, int64_t endTimeStamp, int count, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(conversationId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -312,6 +338,8 @@ HYPHENATE_API void ConversationManager_LoadMessagesWithTime(void *client, int ca
 
 HYPHENATE_API void ConversationManager_MarkAllMessagesAsRead(void *client, const char * conversationId, EMConversation::EMConversationType conversationType)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
     if(!MandatoryCheck(conversationId))
         return;
 
@@ -321,6 +349,8 @@ HYPHENATE_API void ConversationManager_MarkAllMessagesAsRead(void *client, const
 
 HYPHENATE_API void ConversationManager_MarkMessageAsRead(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, const char * messageId)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
     if(!MandatoryCheck(conversationId, messageId))
         return;
     
@@ -330,6 +360,8 @@ HYPHENATE_API void ConversationManager_MarkMessageAsRead(void *client, const cha
 
 HYPHENATE_API void ConversationManager_SetExtField(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, const char * ext)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
     if(!MandatoryCheck(conversationId, ext))
         return;
 
@@ -339,6 +371,8 @@ HYPHENATE_API void ConversationManager_SetExtField(void *client, const char * co
 
 HYPHENATE_API int ConversationManager_UnreadMessagesCount(void *client, const char * conversationId, EMConversation::EMConversationType conversationType)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return -1;
+
     if(!MandatoryCheck(conversationId))
         return 0;
 
@@ -348,6 +382,8 @@ HYPHENATE_API int ConversationManager_UnreadMessagesCount(void *client, const ch
 
 HYPHENATE_API int  ConversationManager_MessagesCount(void *client, const char * conversationId, EMConversation::EMConversationType conversationType)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return -1;
+
     if(!MandatoryCheck(conversationId))
         return 0;
 
@@ -357,10 +393,21 @@ HYPHENATE_API int  ConversationManager_MessagesCount(void *client, const char * 
 
 HYPHENATE_API bool ConversationManager_UpdateMessage(void *client, const char * conversationId, EMConversation::EMConversationType conversationType, void *mto, EMMessageBody::EMMessageBodyType type)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return false;
+
     if(!MandatoryCheck(conversationId))
         return false;
 
     EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(conversationId, conversationType, true);
     EMMessagePtr messagePtr = BuildEMMessage(mto, type);
     return conversationPtr->updateMessage(messagePtr);
+}
+
+HYPHENATE_API bool ConversationManager_IsThread(void* client, const char* conversationId, EMConversation::EMConversationType conversationType)
+{
+    if (!MandatoryCheck(conversationId))
+        return false;
+
+    EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(conversationId, conversationType, true);
+    return conversationPtr->isThread();
 }

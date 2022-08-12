@@ -8,9 +8,11 @@
 #import "EMChatListener.h"
 #import "EMMethod.h"
 #import "Transfrom.h"
-#import "EMChatMessage+Unity.h"
+#import "EMChatMessage+Helper.h"
 #import "HyphenateWrapper.h"
-#import "EMGroupMessageAck+Unity.h"
+#import "EMGroupMessageAck+Helper.h"
+#import "EMMessageReactionChange+Helper.h"
+#import "NSArray+Helper.h"
 
 @implementation EMChatListener
 
@@ -56,7 +58,7 @@
 }
 
 - (void)groupMessageAckHasChanged {
-    UnitySendMessage(ChatListener_Obj, "OnReadAckForGroupMessageUpdated", NULL);
+    UnitySendMessage(ChatListener_Obj, "OnReadAckForGroupMessageUpdated", "");
 }
 
 - (void)onConversationRead:(NSString *)from to:(NSString *)to {
@@ -91,6 +93,11 @@
                                    error:(EMError *)aError {
     
 }
+
+- (void)messageReactionDidChange:(NSArray<EMMessageReactionChange *> *)changes {
+    UnitySendMessage(ChatListener_Obj, "MessageReactionDidChange", [Transfrom JsonObjectToCSString:[changes toJsonArray]]);
+}
+
 
 
 @end

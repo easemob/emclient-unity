@@ -12,13 +12,15 @@
 #include "emmessagebody.h"
 #include "tool.h"
 
-typedef std::map<int64_t, MessageTO*>::iterator TsMsgIter;
-typedef std::map<int64_t, EMMessagePtr>::iterator TsMsgPtrIter;
+extern EMClient* gClient;
+typedef std::map<std::string, MessageTO*>::iterator TsMsgIter;
+typedef std::map<std::string, EMMessagePtr>::iterator TsMsgPtrIter;
 
-std::mutex tsMsgLocker;
+std::mutex msgLocker;
 //MessgeTO must be freed at C# side!
-std::map<int64_t, MessageTO*> tsMsgTOMap;
-std::map<int64_t, EMMessagePtr> tsMsgPtrMap;
+std::map<std::string, MessageTO*> msgTOMap;
+std::map<std::string, EMMessagePtr> msgPtrMap;
+std::map<std::string, MessageTOLocal> msgTOLocalMap;
 
 std::mutex progressMsgLocker;
 std::map<std::string, int> progressMap;
@@ -26,45 +28,62 @@ std::map<std::string, int> progressMap;
 static EMCallbackObserverHandle gCallbackObserverHandle;
 
 EMChatManagerListener *gChatManagerListener = nullptr;
+EMReactionManagerListener* gReactionManagerListener = nullptr;
 
-void AddTsMsgItem(int64_t ts,  MessageTO* mto, EMMessagePtr msgPtr)
+void AddMsgItem(std::string msgId,  MessageTO* mto, EMMessagePtr msgPtr)
 {
-    std::lock_guard<std::mutex> maplocker(tsMsgLocker);
-    tsMsgTOMap[ts] = mto;
-    tsMsgPtrMap[ts] = msgPtr;
+    std::lock_guard<std::mutex> maplocker(msgLocker);
+    msgTOMap[msgId] = mto;
+    msgPtrMap[msgId] = msgPtr;
+    
+    MessageTOLocal toLocal;
+    msgTOLocalMap[msgId] = toLocal;
 }
 
-void DeleteTsMsgItem(int64_t ts)
+void DeleteMsgItem(std::string msgId)
 {
-    std::lock_guard<std::mutex> maplocker(tsMsgLocker);
-    auto it = tsMsgTOMap.find(ts);
-    if(tsMsgTOMap.end() != it) {
-        tsMsgTOMap.erase(it);
+    std::lock_guard<std::mutex> maplocker(msgLocker);
+    auto it = msgTOMap.find(msgId);
+    if(msgTOMap.end() != it) {
+        msgTOMap.erase(it);
     }
     
-    auto itPtr = tsMsgPtrMap.find(ts);
-    if(tsMsgPtrMap.end() != itPtr) {
-        tsMsgPtrMap.erase(itPtr);
+    auto itPtr = msgPtrMap.find(msgId);
+    if(msgPtrMap.end() != itPtr) {
+        msgPtrMap.erase(itPtr);
+    }
+    
+    auto itl = msgTOLocalMap.find(msgId);
+    if (msgTOLocalMap.end() != itl) {
+        msgTOLocalMap.erase(itl);
     }
 }
 
-void UpdateTsMsgMap(int64_t ts)
+void UpdateMsgMap(std::string msgId)
 {
-    LOG("UpdateTsMsgMap ts:%ld", ts);
-    std::lock_guard<std::mutex> maplocker(tsMsgLocker);
+    LOG("UpdateMsgMap msgId:%s", msgId.c_str());
+    std::lock_guard<std::mutex> maplocker(msgLocker);
     
-    auto it = tsMsgTOMap.find(ts);
-    if(tsMsgTOMap.end() == it) {
+    auto it = msgTOMap.find(msgId);
+    if(msgTOMap.end() == it) {
         return;
     }
     
-    auto itPtr = tsMsgPtrMap.find(ts);
-    if(tsMsgPtrMap.end() == itPtr) {
+    auto itPtr = msgPtrMap.find(msgId);
+    if(msgPtrMap.end() == itPtr) {
         return;
     }
-    std::string msgId = it->second->MsgId;
-    it->second->MsgId = itPtr->second->msgId().c_str();
-    LOG("after update, msgid: %s -> %s", msgId.c_str(), it->second->MsgId);
+    
+    auto itl = msgTOLocalMap.find(msgId);
+    if(msgTOLocalMap.end() == itl) {
+        return;
+    }
+    
+    std::string beforeMsgId = it->second->MsgId;
+    
+    UpdateMessageTO((void*)it->second, itPtr->second, (void*)&itl->second);
+    
+    LOG("after update, msgid: %s -> %s", beforeMsgId.c_str(), it->second->MsgId);
 }
 
 void AddProgressItem(std::string msgId)
@@ -104,6 +123,9 @@ int GetLastProgress(std::string msgId)
 }
 
 HYPHENATE_API void ChatManager_SendMessage(void *client, int callbackId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, FUNC_OnProgress onProgress, void *mto, EMMessageBody::EMMessageBodyType type) {
+    
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+    
     EMError error;
     if(!MandatoryCheck(mto, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -111,25 +133,24 @@ HYPHENATE_API void ChatManager_SendMessage(void *client, int callbackId, FUNC_On
     }
     
     EMMessagePtr messagePtr = BuildEMMessage(mto, type);
-    int64_t ts = messagePtr->timestamp();
-    AddTsMsgItem(ts, (MessageTO*)mto, messagePtr);
-    
     std::string msgId = messagePtr->msgId();
+    
+    AddMsgItem(msgId, (MessageTO*)mto, messagePtr);
     AddProgressItem(msgId);
     
     EMCallbackPtr callbackPtr(new EMCallback(gCallbackObserverHandle,
                                              [=]()->bool {
                                                 LOG("Message sent succeeds.");
-                                                UpdateTsMsgMap(ts);
+                                                UpdateMsgMap(msgId);
                                                 if(onSuccess) onSuccess(callbackId);
-                                                DeleteTsMsgItem(ts);
+                                                DeleteMsgItem(msgId);
                                                 DeleteProgressItem(msgId);
                                                 return true;
                                              },
                                              [=](const easemob::EMErrorPtr error)->bool{
                                                 LOG("Message sent failed with code=%d.", error->mErrorCode);
                                                 if(onError) onError(error->mErrorCode,error->mDescription.c_str(), callbackId);
-                                                DeleteTsMsgItem(ts);
+                                                DeleteMsgItem(msgId);
                                                 DeleteProgressItem(msgId);
                                                 return true;
                                              },
@@ -155,18 +176,30 @@ HYPHENATE_API void ChatManager_AddListener(void *client,
                                        FUNC_OnReadAckForGroupMessageUpdated onReadAckForGroupMessageUpdated,
                                        FUNC_OnGroupMessageRead onGroupMessageRead,
                                        FUNC_OnConversationsUpdate onConversationsUpdate,
-                                       FUNC_OnConversationRead onConversationRead
+                                       FUNC_OnConversationRead onConversationRead,
+                                       FUNC_MessageReactionDidChange messageReactionDidChange
                                        )
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
     if(nullptr == gChatManagerListener) { //only set once!
         gChatManagerListener = new ChatManagerListener(onMessagesReceived, onCmdMessagesReceived, onMessagesRead, onMessagesDelivered, onMessagesRecalled, onReadAckForGroupMessageUpdated, onGroupMessageRead, onConversationsUpdate, onConversationRead);
         CLIENT->getChatManager().addListener(gChatManagerListener);
         LOG("New ChatManager listener and hook it.");
     }
+
+    if (nullptr == gReactionManagerListener) {
+        gReactionManagerListener = new ReactionManagerListener(messageReactionDidChange);
+        CLIENT->getReactionManager().addListener(gReactionManagerListener);
+        LOG("New ReactionManager listener and hook it.");
+    }
 }
 
-HYPHENATE_API void ChatManager_FetchHistoryMessages(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType type, const char * startMessageId, int count, FUNC_OnSuccess_With_Result_V2 onSuccess, FUNC_OnError onError)
+HYPHENATE_API void ChatManager_FetchHistoryMessages(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType type, 
+    const char * startMessageId, int count, EMConversation::EMMessageSearchDirection direction, FUNC_OnSuccess_With_Result_V2 onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(conversationId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -178,7 +211,7 @@ HYPHENATE_API void ChatManager_FetchHistoryMessages(void *client, int callbackId
     
     std::thread t([=](){
         EMError error;
-        EMCursorResultRaw<EMMessagePtr> msgCursorResult = CLIENT->getChatManager().fetchHistoryMessages(conversationIdStr, type, error, count, startMessageIdStr);
+        EMCursorResultRaw<EMMessagePtr> msgCursorResult = CLIENT->getChatManager().fetchHistoryMessages(conversationIdStr, type, error, startMessageIdStr, count, direction);
         
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             //header
@@ -214,6 +247,8 @@ HYPHENATE_API void ChatManager_FetchHistoryMessages(void *client, int callbackId
 
 HYPHENATE_API void ChatManager_GetConversationsFromServer(void *client, int callbackId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     std::thread t([=](){
         EMError error;
         EMConversationList conversationList = CLIENT->getChatManager().getConversationsFromServer(error);
@@ -240,16 +275,20 @@ HYPHENATE_API void ChatManager_GetConversationsFromServer(void *client, int call
     t.detach();
 }
 
-HYPHENATE_API void ChatManager_RemoveConversation(void *client, const char * conversationId, bool isRemoveMessages)
+HYPHENATE_API void ChatManager_RemoveConversation(void *client, const char * conversationId, bool isRemoveMessages, bool isThread)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
     if(!MandatoryCheck(conversationId))
         return;
-    CLIENT->getChatManager().removeConversation(conversationId, isRemoveMessages);
+    CLIENT->getChatManager().removeConversation(conversationId, isRemoveMessages, isThread);
     LOG("Remove conversation completed.");
 }
 
 HYPHENATE_API void ChatManager_DownloadMessageAttachments(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, FUNC_OnProgress onProgress)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(messageId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -297,6 +336,8 @@ HYPHENATE_API void ChatManager_DownloadMessageAttachments(void *client, int call
 
 HYPHENATE_API void ChatManager_DownloadMessageThumbnail(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, FUNC_OnProgress onProgress)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(messageId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -343,11 +384,14 @@ HYPHENATE_API void ChatManager_DownloadMessageThumbnail(void *client, int callba
     CLIENT->getChatManager().downloadMessageThumbnail(messagePtr);
 }
 
-HYPHENATE_API bool ChatManager_ConversationWithType(void *client, const char * conversationId, EMConversation::EMConversationType type, bool createIfNotExist)
+HYPHENATE_API bool ChatManager_ConversationWithType(void *client, const char * conversationId, EMConversation::EMConversationType type, 
+                                                    bool createIfNotExist, bool isThread)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return false;
+
     if(!MandatoryCheck(conversationId))
         return false;
-    EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(conversationId, type, createIfNotExist);
+    EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(conversationId, type, createIfNotExist, isThread);
     //verify sharedptr
     if(conversationPtr) {
         LOG("Get converation with id=%s", conversationId);
@@ -360,6 +404,8 @@ HYPHENATE_API bool ChatManager_ConversationWithType(void *client, const char * c
 
 HYPHENATE_API int ChatManager_GetUnreadMessageCount(void *client)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return -1;
+
     EMError error;
     int count = 0;
     //get conversations
@@ -376,6 +422,8 @@ HYPHENATE_API int ChatManager_GetUnreadMessageCount(void *client)
 
 HYPHENATE_API bool ChatManager_InsertMessages(void *client, void * messageList[], EMMessageBody::EMMessageBodyType typeList[], int size)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return false;
+
     EMMessageList list;
     //convert TO to EMMessagePtr
     for(int i=0; i<size; i++) {
@@ -392,6 +440,8 @@ HYPHENATE_API bool ChatManager_InsertMessages(void *client, void * messageList[]
 
 HYPHENATE_API void ChatManager_LoadAllConversationsFromDB(void *client, FUNC_OnSuccess_With_Result onSuccess)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
     EMConversationList conversationList = CLIENT->getChatManager().loadAllConversationsFromDB();
     
     int size = (int)conversationList.size();
@@ -411,6 +461,8 @@ HYPHENATE_API void ChatManager_LoadAllConversationsFromDB(void *client, FUNC_OnS
 
 HYPHENATE_API void ChatManager_GetMessage(void *client, const char * messageId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(-1, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(messageId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), -1);
@@ -435,6 +487,8 @@ HYPHENATE_API void ChatManager_GetMessage(void *client, const char * messageId, 
 
 HYPHENATE_API bool ChatManager_MarkAllConversationsAsRead(void *client)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return false;
+
     bool ret = true;
     EMError error;
     EMConversationList conversationList = CLIENT->getChatManager().getConversationsFromServer(error);
@@ -453,6 +507,8 @@ HYPHENATE_API bool ChatManager_MarkAllConversationsAsRead(void *client)
 
 HYPHENATE_API void ChatManager_RecallMessage(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, FUNC_OnProgress onProgress)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(messageId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -491,6 +547,8 @@ HYPHENATE_API void ChatManager_RecallMessage(void *client, int callbackId, const
 
 HYPHENATE_API void ChatManager_ResendMessage(void *client, int callbackId, const char * messageId, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(messageId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -532,6 +590,8 @@ HYPHENATE_API void ChatManager_ResendMessage(void *client, int callbackId, const
 
 HYPHENATE_API void ChatManager_LoadMoreMessages(void *client, FUNC_OnSuccess_With_Result onSuccess, const char * keywords, int64_t timestamp, int maxcount, const char * from, EMConversation::EMMessageSearchDirection direction)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
     std::string keywordsStr = OptionalStrParamCheck(keywords);
     std::string fromStr = OptionalStrParamCheck(from);
     EMMessageList messageList = CLIENT->getChatManager().loadMoreMessages(timestamp, keywordsStr, maxcount, fromStr, direction);
@@ -558,6 +618,8 @@ HYPHENATE_API void ChatManager_LoadMoreMessages(void *client, FUNC_OnSuccess_Wit
 
 HYPHENATE_API void ChatManager_SendReadAckForConversation(void *client, int callbackId, const char * conversationId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(conversationId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -581,6 +643,8 @@ HYPHENATE_API void ChatManager_SendReadAckForConversation(void *client, int call
 
 HYPHENATE_API void ChatManager_SendReadAckForMessage(void *client, int callbackId, const char * messageId, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(messageId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -606,8 +670,41 @@ HYPHENATE_API void ChatManager_SendReadAckForMessage(void *client, int callbackI
     t.detach();
 }
 
+HYPHENATE_API void ChatManager_SendReadAckForGroupMessage(void *client,int callbackId, const char * messageId, const char* ackContent, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+{
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
+    EMError error;
+    if(!MandatoryCheck(messageId, error)) {
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+    
+    std::string messageIdStr = messageId;
+    std::string ackContentStr = GetUTF8FromUnicode(ackContent);
+    
+    std::thread t([=](){
+        EMError error;
+        EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(messageIdStr);
+        if(nullptr == messagePtr) {
+            
+            LOG("Cannot find message with message id:%s", messageIdStr.c_str());
+            error.mErrorCode = EMError::MESSAGE_INVALID;
+            error.mDescription = "Invalid message.";
+            if(onError) onError(error.mErrorCode,error.mDescription.c_str(), callbackId);
+            return;
+        }
+        CLIENT->getChatManager().sendReadAckForGroupMessage(messagePtr, ackContentStr);
+        LOG("Send read ack for group message:%s successfully.", messageIdStr.c_str());
+        if(onSuccess) onSuccess(callbackId);
+    });
+    t.detach();
+}
+
 HYPHENATE_API bool ChatManager_UpdateMessage(void *client, void *mto, EMMessageBody::EMMessageBodyType type)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return false;
+
     if(!MandatoryCheck(mto))
         return false;
     EMMessagePtr messagePtr = BuildEMMessage(mto, type, true);
@@ -623,6 +720,8 @@ HYPHENATE_API bool ChatManager_UpdateMessage(void *client, void *mto, EMMessageB
 
 HYPHENATE_API void ChatManager_RemoveMessagesBeforeTimestamp(void *client, int callbackId, int64_t timeStamp,  FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     std::thread t([=](){
         EMError error;
         bool ret = CLIENT->getChatManager().removeMessagesBeforeTimestamp(timeStamp);
@@ -641,6 +740,8 @@ HYPHENATE_API void ChatManager_RemoveMessagesBeforeTimestamp(void *client, int c
 
 HYPHENATE_API void ChatManager_DeleteConversationFromServer(void *client, int callbackId, const char * conversationId, EMConversation::EMConversationType conversationType, bool isDeleteServerMessages, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(conversationId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -661,12 +762,405 @@ HYPHENATE_API void ChatManager_DeleteConversationFromServer(void *client, int ca
     t.detach();
 }
 
+HYPHENATE_API void ChatManager_FetchSupportLanguages(void *client, int callbackId, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnError onError)
+{
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
+    std::thread t([=](){
+        std::vector<std::tuple<std::string,std::string,std::string>> languages;
+        
+        EMErrorPtr error = CLIENT->getChatManager().fetchSupportLanguages(languages);
+        
+        if(EMError::EM_NO_ERROR != error->mErrorCode) {
+            LOG("ChatManager_FetchSupportLanguages failed");
+            if(onError) onError(error->mErrorCode,error->mDescription.c_str(), callbackId);
+            return;
+        }
+        
+        LOG("ChatManager_FetchSupportLanguages successfully");
+        if(onSuccessResult) {
+            if (languages.size() == 0) {
+                onSuccessResult(nullptr, DataType::ListOfString, 0, callbackId);
+                return;
+            }
+            
+            SupportLanguagesTO** data = new SupportLanguagesTO*[languages.size()];
+            SupportLanguagesTO* localData = new SupportLanguagesTO[languages.size()];
+            
+            for(int i=0; i<languages.size(); i++) {
+                
+                SupportLanguagesTO slto;
+                slto.languageCode = std::get<0>(languages[i]).c_str();
+                slto.languageName = std::get<1>(languages[i]).c_str();
+                slto.languageNativeName = std::get<2>(languages[i]).c_str();
+                
+                localData[i] = slto;
+                data[i] = &(localData[i]);
+            }
+            onSuccessResult((void**)data, DataType::ListOfString, (int)languages.size(), callbackId);
+            delete[]data;
+            delete[]localData;
+        }
+    });
+    t.detach();
+}
+
+HYPHENATE_API void ChatManager_TranslateMessage(void *client, int callbackId, void *mto, EMMessageBody::EMMessageBodyType type, const char * targetLanguages[], int size, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+{
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
+    EMError error;
+    
+    if(!MandatoryCheck(mto) || size <= 0) {
+        error.setErrorCode(EMError::INVALID_PARAM);
+        error.mDescription = "Mandatory parameter is null!";
+        if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+    
+    EMMessagePtr messagePtr = BuildEMMessage(mto, type);
+    
+    std::vector<std::string> vec;
+    for(int i=0; i<size; i++){
+        vec.push_back(targetLanguages[i]);
+        LOG("ChatManager_TranslateMessage, language: %s", targetLanguages[i]);
+    }
+    
+    std::thread t([=](){
+        EMErrorPtr error = CLIENT->getChatManager().translateMessage(messagePtr, vec);
+        if(EMError::EM_NO_ERROR == error->mErrorCode) {
+            std::string json = MessageTO::ToJson(messagePtr);
+            const char* data[1] = { json.c_str() };
+            onSuccess((void**)data, DataType::String, 1, callbackId);
+        }else{
+            LOG("ChatManager_TranslateMessage failed, error id:%d, desc::%s", error->mErrorCode, error->mDescription.c_str());
+            if(onError) onError(error->mErrorCode, error->mDescription.c_str(), callbackId);
+        }
+    });
+    t.detach();
+}
+
+HYPHENATE_API void ChatManager_FetchGroupReadAcks(void* client, int callbackId, const char* messageId, const char* groupId, int pageSize, const char* startAckId, FUNC_OnSuccess_With_Result_V2 onSuccess, FUNC_OnError onError)
+{
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
+    EMError error;
+
+    if (!MandatoryCheck(messageId, groupId) || pageSize <= 0) {
+        error.setErrorCode(EMError::INVALID_PARAM);
+        error.mDescription = "Mandatory parameter is null!";
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+
+    std::string msgId = messageId;
+    std::string gid = groupId;
+    std::string startAckIdStr = OptionalStrParamCheck(startAckId);
+
+    std::thread t([=]() {
+        EMError error;
+        int totalCount = 0;
+        EMCursorResultRaw<EMGroupReadAckPtr> msgCursorResult = CLIENT->getChatManager().fetchGroupReadAcks(msgId, groupId, error, pageSize, &totalCount, startAckIdStr);
+
+        if (EMError::EM_NO_ERROR == error.mErrorCode) {
+            //header
+            CursorResultTOV2 cursorResultTo;
+            cursorResultTo.NextPageCursor = msgCursorResult.nextPageCursor().c_str();
+            cursorResultTo.Type = DataType::ListOfGroup;
+            //items
+            int size = (int)msgCursorResult.result().size();
+            LOG("ChatManager_FetchGroupReadAcks group ack count:%d", size);
+            TOItem** data = new TOItem * [size];
+            for (int i = 0; i < size; i++) {
+                GroupReadAckTO* gkto = GroupReadAckTO::FromGroupReadAck(msgCursorResult.result().at(i));
+                TOItem* item = new TOItem(DataType::Group, gkto);
+                LOG("group ack %d: metaid=%s, msgid=%s, from=%s", i, gkto->metaId, gkto->msgId, gkto->from);
+                data[i] = item;
+            }
+            onSuccess((void*)&cursorResultTo, (void**)data, DataType::CursorResult, size, callbackId);
+            //free memory
+            for (int i = 0; i < size; i++) {
+                delete (MessageTO*)data[i]->Data;
+                delete (TOItem*)data[i];
+            }
+            //delete array
+            delete[]data;
+        }
+        else {
+            LOG("ChatManager_FetchGroupReadAcks failed, error id:%d, desc::%s", error.mErrorCode, error.mDescription.c_str());
+            onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        }
+        });
+    t.detach();
+}
+
+HYPHENATE_API void ChatManager_ReportMessage(void* client, int callbackId, const char* messageId, const char* tag, const char* reason, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+{
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
+    EMError error;
+    if (!MandatoryCheck(messageId, tag, reason, error)) {
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+
+    std::string messageIdStr = messageId;
+    std::string tagStr = GetUTF8FromUnicode(tag);
+    std::string reasonStr = GetUTF8FromUnicode(reason);
+
+    std::thread t([=]() {
+        EMError error;
+        CLIENT->getChatManager().reportMessage(messageIdStr, tagStr, reasonStr, error);
+        if (EMError::EM_NO_ERROR != error.mErrorCode) {
+            LOG("ChatManager_ReportMessage failed for messageId id:%s", messageIdStr.c_str());
+            if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+            return;
+        }
+        LOG("ChatManager_ReportMessage successfully for messageId:%s", messageIdStr.c_str());
+        if (onSuccess) onSuccess(callbackId);
+        });
+    t.detach();
+}
+
+HYPHENATE_API void ChatManager_AddReaction(void* client, int callbackId, const char* messageId, const char* reaction, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+{
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
+    EMError error;
+    if (!MandatoryCheck(messageId, reaction, error)) {
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+
+    std::string messageIdStr = messageId;
+    std::string reactionStr = GetUTF8FromUnicode(reaction);
+
+    std::thread t([=]() {
+        EMError error;
+        CLIENT->getReactionManager().addReaction(messageIdStr, reactionStr, error);
+        if (EMError::EM_NO_ERROR != error.mErrorCode) {
+            LOG("ChatManager_AddReaction failed for messageId id:%s", messageIdStr.c_str());
+            if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+            return;
+        }
+        LOG("ChatManager_AddReaction successfully for messageId:%s", messageIdStr.c_str());
+        if (onSuccess) onSuccess(callbackId);
+    });
+    t.detach();
+}
+
+HYPHENATE_API void ChatManager_RemoveReaction(void* client, int callbackId, const char* messageId, const char* reaction, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+{
+
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
+    EMError error;
+    if (!MandatoryCheck(messageId, reaction, error)) {
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+
+    std::string messageIdStr = messageId;
+    std::string reactionStr = GetUTF8FromUnicode(reaction);
+
+    std::thread t([=]() {
+        EMError error;
+        CLIENT->getReactionManager().removeReaction(messageIdStr, reactionStr, error);
+        if (EMError::EM_NO_ERROR != error.mErrorCode) {
+            LOG("ChatManager_RemoveReaction failed for messageId id:%s", messageIdStr.c_str());
+            if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+            return;
+        }
+        LOG("ChatManager_RemoveReaction successfully for messageId:%s", messageIdStr.c_str());
+        if (onSuccess) onSuccess(callbackId);
+        });
+    t.detach();
+}
+
+HYPHENATE_API void ChatManager_GetReactionList(void* client, int callbackId, const char* messageIdList, const char* messageType, const char* groupId, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnError onError)
+{
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
+    EMError error;
+    if (!MandatoryCheck(messageIdList, messageType, error)) {
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+
+    std::string messageIdListStr = messageIdList;
+    std::vector<std::string> vec = JsonStringToVector(messageIdListStr);
+    std::string messageTypeStr = messageType;
+    std::string groupIdStr = groupId;
+
+    std::thread t([=]() {
+        EMError error;
+        std::map<std::string, EMMessageReactionList> map = CLIENT->getReactionManager().getReactionList(vec, messageTypeStr, groupIdStr, error);
+        if (EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("ChatManager_GetReactionList successfully");
+            if (onSuccessResult) {
+                std::string jstr = MessageReactionTO::ToJson(map);
+                const char* data[1] = { jstr.c_str() };
+                onSuccessResult((void**)data, DataType::String, 1, callbackId);
+            }
+        }
+        else {
+            LOG("ChatManager_GetReactionList failed");
+            if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        }
+     });
+    t.detach();
+}
+
+HYPHENATE_API void ChatManager_GetReactionDetail(void* client, int callbackId, const char* messageId, const char* reaction, const char* cursor, uint64_t pageSize, FUNC_OnSuccess_With_Result_V2 onSuccessResult, FUNC_OnError onError)
+{
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
+    EMError error;
+    if (!MandatoryCheck(messageId, reaction, error)) {
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+
+    std::string messageIdStr = messageId;
+    std::string reactionStr = GetUTF8FromUnicode(reaction);
+    std::string cursorStr = OptionalStrParamCheck(cursor);
+
+    std::thread t([=]() {
+        EMError error;
+        std::string outCursor = "";
+        EMMessageReactionPtr ret = CLIENT->getReactionManager().getReactionDetail(messageId, reactionStr, cursorStr, pageSize, outCursor, error);
+        if (EMError::EM_NO_ERROR == error.mErrorCode) {
+
+            //header
+            CursorResultTOV2 cursorResultTo;
+            cursorResultTo.NextPageCursor = outCursor.c_str();
+            cursorResultTo.Type = DataType::String;
+
+            //items
+            LOG("ChatManager_GetReactionDetail successfully, for messageId:%s and reaction: %s", messageIdStr.c_str(), reactionStr.c_str());
+            if (onSuccessResult) {
+                std::string jstr = MessageReactionTO::ToJson(ret);
+                const char* data[1] = { jstr.c_str() };
+                onSuccessResult((void*)&cursorResultTo, (void**)data, DataType::CursorResult, 1, callbackId);
+            }
+        }
+        else {
+            LOG("ChatManager_GetReactionDetail failed for messageId:%s and reaction:%s", messageIdStr.c_str(), reactionStr.c_str());
+            if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        }
+    });
+    t.detach();
+}
+
+HYPHENATE_API int  ChatManager_GetGroupAckCount(const char* messageId)
+{
+    if (!CheckClientInitOrNot(-1, nullptr)) return 0;
+
+    if (nullptr == messageId || strlen(messageId) == 0) return 0;
+
+    EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(messageId);
+    if (nullptr == messagePtr) {
+        LOG("Cannot find the message with id %s in ChatManager_GetGroupAckCount", messageId);
+        return 0;
+    }
+    else {
+        return (int)messagePtr->groupAckCount();
+    }
+}
+HYPHENATE_API bool ChatManager_GetHasDeliverAck(const char* messageId)
+{
+    if (!CheckClientInitOrNot(-1, nullptr)) return false;
+
+    if (nullptr == messageId || strlen(messageId) == 0) return false;
+
+    EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(messageId);
+    if (nullptr == messagePtr) {
+        LOG("Cannot find the message with id %s in ChatManager_GetHasDeliverAck", messageId);
+        return 0;
+    }
+    else {
+        return (int)messagePtr->isDeliverAcked();
+    }
+}
+
+HYPHENATE_API bool ChatManager_GetHasReadAck(const char* messageId)
+{
+    if (!CheckClientInitOrNot(-1, nullptr)) return false;
+
+    if (nullptr == messageId || strlen(messageId) == 0) return false;
+
+    EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(messageId);
+    if (nullptr == messagePtr) {
+        LOG("Cannot find the message with id %s in ChatManager_GetHasReadAck", messageId);
+        return 0;
+    }
+    else {
+        return (int)messagePtr->isReadAcked();
+    }
+}
+
+HYPHENATE_API void ChatManager_GetReactionListForMsg(const char* messageId, char* buf, int len)
+{
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
+    if (nullptr == messageId || strlen(messageId) == 0) return;
+
+    EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(messageId);
+    if (nullptr == messagePtr) {
+        LOG("Cannot find the message with id %s in ChatManager_GetReactionListForMsg", messageId);
+        return;
+    }
+    else {
+        EMMessageReactionList& rl = messagePtr->reactionList();
+        std::string json = MessageReactionTO::ToJson(rl);
+        if (json.length() > len) {
+            LOG("Error: reactionlist json size %d is bigger than buffer %d", json.length(), len);
+            return;
+        } 
+        else {
+            strcpy(buf, json.c_str());
+            return;
+        }
+    }
+}
+
+HYPHENATE_API void ChatManager_GetChatThreadForMsg(const char* messageId, char* buf, int len)
+{
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
+    if (nullptr == messageId || strlen(messageId) == 0) return;
+
+    EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(messageId);
+    if (nullptr == messagePtr) {
+        LOG("Cannot find the message with id %s in ChatManager_GetReactionListForMsg", messageId);
+        return;
+    }
+    else {
+        EMThreadEventPtr t = messagePtr->threadOverview();
+        std::string json = ChatThread::ToJson(t);
+        if (json.length() > len) {
+            LOG("Error: threadoverview json size %d is bigger than buffer %d", json.length(), len);
+            return;
+        }
+        else {
+            strcpy(buf, json.c_str());
+            return;
+        }
+    }
+}
+
 void ChatManager_RemoveListener(void*client)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
     CLIENT->getChatManager().clearListeners();
     if(nullptr != gChatManagerListener) {
         delete gChatManagerListener;
         gChatManagerListener = nullptr;
+    }
+    if (nullptr != gReactionManagerListener) {
+        delete gReactionManagerListener;
+        gReactionManagerListener = nullptr;
     }
     LOG("ChatManager listener removed.");
 }

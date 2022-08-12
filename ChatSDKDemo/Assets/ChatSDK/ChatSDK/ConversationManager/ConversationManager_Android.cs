@@ -147,5 +147,6 @@ namespace ChatSDK {
                 return "down";
             }
         }
+
     }
 }

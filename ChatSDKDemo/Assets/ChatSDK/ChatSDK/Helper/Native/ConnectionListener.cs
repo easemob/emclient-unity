@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using SimpleJSON;
+
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE || UNITY_EDITOR
 using UnityEngine;
+#endif
 
 namespace ChatSDK {
 
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE || UNITY_EDITOR
     internal sealed class ConnectionListener : MonoBehaviour
+#else
+    internal sealed class ConnectionListener
+#endif
     {
 
         internal List<IConnectionDelegate> delegater;

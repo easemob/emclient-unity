@@ -179,5 +179,35 @@ namespace ChatSDK
             obj.Add("announcement", announcement);
             ChatAPIIOS.RoomManager_HandleMethodCall("updateChatRoomAnnouncement", obj.ToString(), handle?.callbackId);
         }
+
+        public override void MuteAllRoomMembers(string roomId, ValueCallBack<Room> handle = null)
+        {
+            JSONObject obj = new JSONObject();
+            obj.Add("roomId", roomId);
+            ChatAPIIOS.RoomManager_HandleMethodCall("muteAllRoomMembers", obj.ToString(), handle?.callbackId);
+        }
+
+        public override void UnMuteAllRoomMembers(string roomId, ValueCallBack<Room> handle = null)
+        {
+            JSONObject obj = new JSONObject();
+            obj.Add("roomId", roomId);
+            ChatAPIIOS.RoomManager_HandleMethodCall("unMuteAllRoomMembers", obj.ToString(), handle?.callbackId);
+        }
+
+        public override void AddWhiteListMembers(string roomId, List<string> members, CallBack handle = null)
+        {
+            JSONObject obj = new JSONObject();
+            obj.Add("roomId", roomId);
+            obj.Add("members", TransformTool.JsonStringFromStringList(members));
+            ChatAPIIOS.RoomManager_HandleMethodCall("addWhiteListMembers", obj.ToString(), handle?.callbackId);
+        }
+
+        public override void RemoveWhiteListMembers(string roomId, List<string> members, CallBack handle = null)
+        {
+            JSONObject obj = new JSONObject();
+            obj.Add("roomId", roomId);
+            obj.Add("members", TransformTool.JsonStringFromStringList(members));
+            ChatAPIIOS.RoomManager_HandleMethodCall("removeWhiteListMembers", obj.ToString(), handle?.callbackId);
+        }
     }
 }

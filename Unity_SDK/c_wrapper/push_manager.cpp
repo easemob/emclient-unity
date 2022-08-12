@@ -15,8 +15,12 @@
 #include "push_manager.h"
 #include "tool.h"
 
+extern EMClient* gClient;
+
 HYPHENATE_API void PushManager_GetIgnoredGroupIds(void *client, FUNC_OnSuccess_With_Result onSuccess)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
     EMPushConfigsPtr configPtr = CLIENT->getPushManager().getPushConfigs();
     if(!configPtr) {
         LOG("Cannot get any push config ");
@@ -36,6 +40,8 @@ HYPHENATE_API void PushManager_GetIgnoredGroupIds(void *client, FUNC_OnSuccess_W
 
 HYPHENATE_API void PushManager_GetPushConfig(void *client, FUNC_OnSuccess_With_Result onSuccess)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
     EMPushConfigsPtr configPtr = CLIENT->getPushManager().getPushConfigs();
     if(!configPtr) {
         //DataType has no suitable enum value for this.
@@ -52,6 +58,8 @@ HYPHENATE_API void PushManager_GetPushConfig(void *client, FUNC_OnSuccess_With_R
 
 HYPHENATE_API void PushManager_GetUserConfigsFromServer(void *client, int callbackId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     std::thread t([=](){
         EMError error;
         EMPushConfigsPtr configPtr = CLIENT->getPushManager().getUserConfigsFromServer(error);
@@ -78,6 +86,8 @@ HYPHENATE_API void PushManager_GetUserConfigsFromServer(void *client, int callba
 
 HYPHENATE_API void PushManager_IgnoreGroupPush(void *client, int callbackId, const char * groupId, bool noDisturb, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(groupId, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -101,11 +111,19 @@ HYPHENATE_API void PushManager_IgnoreGroupPush(void *client, int callbackId, con
 
 HYPHENATE_API void PushManager_UpdatePushNoDisturbing(void *client, int callbackId, bool noDisturb, int startTime, int endTime, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     std::thread t([=](){
         EMError error;
+
+        EMPushConfigs::EMPushDisplayStyle style = EMPushConfigs::EMPushDisplayStyle::SimpleBanner;
+        EMPushConfigs::EMPushNoDisturbStatus status = EMPushConfigs::EMPushNoDisturbStatus::Day;
+
         EMPushConfigsPtr pushConfigPtr = CLIENT->getPushManager().getPushConfigs();
-        EMPushConfigs::EMPushDisplayStyle style = pushConfigPtr->getDisplayStyle();
-        EMPushConfigs::EMPushNoDisturbStatus status = pushConfigPtr->getDisplayStatus();
+        if (nullptr != pushConfigPtr) {
+            style = pushConfigPtr->getDisplayStyle();
+            status = pushConfigPtr->getDisplayStatus();
+        }
         
         if(noDisturb)
             status = EMPushConfigs::EMPushNoDisturbStatus::Custom; //to-do: is this right to set Day?
@@ -126,6 +144,8 @@ HYPHENATE_API void PushManager_UpdatePushNoDisturbing(void *client, int callback
 
 HYPHENATE_API void PushManager_UpdatePushDisplayStyle(void *client, int callbackId, EMPushConfigs::EMPushDisplayStyle style, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     std::thread t([=](){
         EMError error;
         CLIENT->getPushManager().updatePushDisplayStyle(style, error);
@@ -143,6 +163,8 @@ HYPHENATE_API void PushManager_UpdatePushDisplayStyle(void *client, int callback
 
 HYPHENATE_API void PushManager_UpdateFCMPushToken(void *client, int callbackId, const char * token, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(token, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -166,6 +188,8 @@ HYPHENATE_API void PushManager_UpdateFCMPushToken(void *client, int callbackId, 
 
 HYPHENATE_API void PushManager_UpdateHMSPushToken(void *client, int callbackId, const char * token, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(token, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -189,12 +213,14 @@ HYPHENATE_API void PushManager_UpdateHMSPushToken(void *client, int callbackId, 
 
 HYPHENATE_API void PushManager_UpdatePushNickName(void *client, int callbackId, const char * nickname, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(nickname, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         return;
     }
-    std::string nicknameStr = nickname;
+    std::string nicknameStr = GetUTF8FromUnicode(nickname);
     
     std::thread t([=](){
         EMError error;
@@ -212,6 +238,8 @@ HYPHENATE_API void PushManager_UpdatePushNickName(void *client, int callbackId, 
 
 HYPHENATE_API void PushManager_ReportPushAction(void *client, int callbackId, const char * parameters, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     EMError error;
     if(!MandatoryCheck(parameters, error)) {
         if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
@@ -230,5 +258,191 @@ HYPHENATE_API void PushManager_ReportPushAction(void *client, int callbackId, co
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
+    t.detach();
+}
+
+HYPHENATE_API void PushManager_SetSilentModeForAll(void* client, int callbackId, const char* param, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnError onError)
+{
+    EMError error;
+    if (!MandatoryCheck(param, error)) {
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+
+    std::string paramStr = param;
+    EMSilentModeParamPtr ptr = SilentModeParamTO::FromJson(paramStr);
+
+    std::thread t([=]() {
+        EMError error;
+        EMSilentModeItemPtr ret = CLIENT->getPushManager().setSilentModeForAll(ptr, error);
+        if (EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("PushManager_SetSilentModeForAll successfully");
+            if (onSuccessResult) {
+                std::string jstr = SilentModeItemTO::ToJson(ret);
+                const char* data[1] = { jstr.c_str() };
+                onSuccessResult((void**)data, DataType::String, 1, callbackId);
+            }
+        }
+        else {
+            LOG("PushManager_SetSilentModeForAll failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
+            if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        }
+    });
+    t.detach();
+}
+
+HYPHENATE_API void PushManager_GetSilentModeForAll(void* client, int callbackId, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnError onError)
+{
+    std::thread t([=]() {
+        EMError error;
+        EMSilentModeItemPtr ret = CLIENT->getPushManager().getSilentModeForAll(error);
+        if (EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("PushManager_GetSilentModeForAll successfully");
+            if (onSuccessResult) {
+                std::string jstr = SilentModeItemTO::ToJson(ret);
+                const char* data[1] = { jstr.c_str() };
+                onSuccessResult((void**)data, DataType::String, 1, callbackId);
+            }
+        }
+        else {
+            LOG("PushManager_GetSilentModeForAll failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
+            if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        }
+    });
+    t.detach();
+}
+
+HYPHENATE_API void PushManager_SetSilentModeForConversation(void* client, int callbackId, const char* convId, EMConversation::EMConversationType type, const char* param, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnError onError)
+{
+    EMError error;
+    if (!MandatoryCheck(convId, param, error)) {
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+
+    std::string paramStr = param;
+    EMSilentModeParamPtr ptr = SilentModeParamTO::FromJson(paramStr);
+    std::string covIdStr = convId;
+
+    std::thread t([=]() {
+        EMError error;
+        EMSilentModeItemPtr ret = CLIENT->getPushManager().setSilentModeForConversation(covIdStr, type, ptr, error);
+        if (EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("PushManager_SetSilentModeForConversation successfully");
+            if (onSuccessResult) {
+                std::string jstr = SilentModeItemTO::ToJson(ret);
+                const char* data[1] = { jstr.c_str() };
+                onSuccessResult((void**)data, DataType::String, 1, callbackId);
+            }
+        }
+        else {
+            LOG("PushManager_SetSilentModeForConversation failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
+            if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        }
+    });
+    t.detach();
+}
+
+HYPHENATE_API void PushManager_GetSilentModeForConversation(void* client, int callbackId, const char* convId, EMConversation::EMConversationType type, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnError onError)
+{
+    EMError error;
+    if (!MandatoryCheck(convId, error)) {
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+
+    std::string covIdStr = convId;
+
+    std::thread t([=]() {
+        EMError error;
+        EMSilentModeItemPtr ret = CLIENT->getPushManager().getSilentModeForConversation(covIdStr, type, error);
+        if (EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("PushManager_GetSilentModeForConversation successfully");
+            if (onSuccessResult) {
+                std::string jstr = SilentModeItemTO::ToJson(ret);
+                const char* data[1] = { jstr.c_str() };
+                onSuccessResult((void**)data, DataType::String, 1, callbackId);
+            }
+        }
+        else {
+            LOG("PushManager_GetSilentModeForConversation failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
+            if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        }
+    });
+    t.detach();
+}
+
+HYPHENATE_API void PushManager_GetSilentModeForConversations(void* client, int callbackId, const char* param, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnError onError)
+{
+    EMError error;
+    if (!MandatoryCheck(param, error)) {
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+
+    std::string paramStr = param;
+    std::map<std::string, std::string> map = JsonStringToMap(paramStr);
+
+    std::thread t([=]() {
+        EMError error;
+        std::map<std::string, EMSilentModeItemPtr> ret = CLIENT->getPushManager().getSilentModeForConversations(map, error);
+        if (EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("PushManager_GetSilentModeForConversations successfully");
+            if (onSuccessResult) {
+                std::string jstr = SilentModeItemTO::ToJson(ret);
+                const char* data[1] = { jstr.c_str() };
+                onSuccessResult((void**)data, DataType::String, 1, callbackId);
+            }
+        }
+        else {
+            LOG("PushManager_GetSilentModeForConversations failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
+            if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        }
+    });
+    t.detach();
+}
+
+HYPHENATE_API void PushManager_SetPreferredNotificationLanguage(void* client, int callbackId, const char* laguangeCode, FUNC_OnSuccess onSuccess, FUNC_OnError onError)
+{
+    EMError error;
+    if (!MandatoryCheck(laguangeCode, error)) {
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+
+    std::string laguangeCodeStr = laguangeCode;
+
+    std::thread t([=]() {
+        EMError error;
+        CLIENT->getPushManager().setPreferredNotificationLanguage(laguangeCodeStr, error);
+        if (EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("PushManager_SetPreferredNotificationLanguage successfully");
+           if (onSuccess) onSuccess(callbackId);
+        }
+        else {
+            LOG("PushManager_SetPreferredNotificationLanguage failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
+            if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        }
+        });
+    t.detach();
+}
+
+HYPHENATE_API void PushManager_GetPreferredNotificationLanguage(void* client, int callbackId, FUNC_OnSuccess_With_Result onSuccessResult, FUNC_OnError onError)
+{
+    std::thread t([=]() {
+        EMError error;
+        std::string ret = CLIENT->getPushManager().getPreferredNotificationLanguage(error);
+        if (EMError::EM_NO_ERROR == error.mErrorCode) {
+            LOG("PushManager_GetPreferredNotificationLanguage successfully");
+            if (onSuccessResult) {
+                const char* data[1] = { ret.c_str() };
+                onSuccessResult((void**)data, DataType::String, 1, callbackId);
+            }
+        }
+        else {
+            LOG("PushManager_GetPreferredNotificationLanguage failed, code=%d, desc=%s", error.mErrorCode, error.mDescription.c_str());
+            if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        }
+        });
     t.detach();
 }

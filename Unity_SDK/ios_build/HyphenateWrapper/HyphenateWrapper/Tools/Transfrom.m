@@ -2,11 +2,11 @@
 //  Transfrom.m
 //  UnityFramework
 //
-//  Created by 杜洁鹏 on 2021/6/5.
+//  Created by djp on 2021/6/5.
 //
 
 #import "Transfrom.h"
-#import "EMConversation+Unity.h"
+#import "EMConversation+Helper.h"
 
 
 @implementation Transfrom
@@ -35,7 +35,7 @@
     return [self NSStringToJsonObject:str];
 }
 
-+ (const char*)JsonObjectToCSString:(NSDictionary *)aDict {
++ (const char*)JsonObjectToCSString:(id)aDict {
     if (aDict == nil) {
         return NULL;
     }

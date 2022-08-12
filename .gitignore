@@ -29,6 +29,19 @@ obj/
 *.sln
 *.vcxproj
 
+# =========================== #
+# Visual Studio / Win SDK     #
+# =========================== #
+!Win_SDK/Win_SDK.sln
+FrameworkLib/
+FrameworkTest/*
+!FrameworkTest/Properties
+!FrameworkTest/App.config
+!FrameworkTest/FrameworkTest.csproj
+!FrameworkTest/FrameworkTest.csproj.user
+!FrameworkTest/*.cs
+
+
 # ============ #
 # OS generated #
 # ============ #
@@ -65,6 +78,8 @@ DerivedData/
 appdata/
 sdkdata/
 Debug/
+token.conf
+appkey.conf
 
 **/UserPrefs
 **/.vs
@@ -115,3 +130,12 @@ sysinfo.txt
 .vscode
 *.code-workspace
 !Unity_SDK/mac_build/lib/LDAP.framework
+
+**/HyphenateChat.framework
+**/*.meta
+**/hyphenateCWrapper.bundle
+**/hyphenateCWrapper.dll
+**/*.jar
+**/*.framework
+**/*.a
+**/*.so

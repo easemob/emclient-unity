@@ -1,10 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using SimpleJSON;
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE || UNITY_EDITOR
 using UnityEngine;
+#endif
 
 namespace ChatSDK {
+
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
     internal sealed class ChatManagerListener : MonoBehaviour
+#else
+    internal sealed class ChatManagerListener
+#endif
     {
         internal List<IChatManagerDelegate> delegater;
 
@@ -65,7 +72,7 @@ namespace ChatSDK {
             }
         }
 
-        internal void OnReadAckForGroupMessageUpdated()
+        internal void OnReadAckForGroupMessageUpdated(string jsonString)
         {
             if (delegater != null)
             {
@@ -128,6 +135,18 @@ namespace ChatSDK {
                     foreach (IChatManagerDelegate delegater in delegater)
                     {
                         delegater.OnConversationRead(dict["from"], dict["to"]);
+                    }
+                });
+            }
+        }
+
+        internal void MessageReactionDidChange(string jsonString) {
+            if (delegater != null) {
+                List<MessageReactionChange> list = MessageReactionChange.ListFromJson(jsonString);
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IChatManagerDelegate delegater in delegater)
+                    {
+                        delegater.MessageReactionDidChange(list);
                     }
                 });
             }

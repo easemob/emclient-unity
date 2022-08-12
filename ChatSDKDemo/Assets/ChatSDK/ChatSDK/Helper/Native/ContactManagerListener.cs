@@ -1,10 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using SimpleJSON;
+
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE || UNITY_EDITOR
 using UnityEngine;
+#endif
 
 namespace ChatSDK {
+
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE || UNITY_EDITOR
     internal sealed class ContactManagerListener : MonoBehaviour
+#else
+    internal sealed class ContactManagerListener
+#endif
     {
         internal List<IContactManagerDelegate> delegater;
 

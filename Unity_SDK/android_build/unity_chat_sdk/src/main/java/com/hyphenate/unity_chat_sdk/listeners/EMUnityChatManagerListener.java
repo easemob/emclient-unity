@@ -6,15 +6,19 @@ import com.hyphenate.EMConversationListener;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMGroupReadAck;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMMessageReactionChange;
 import com.hyphenate.unity_chat_sdk.helper.EMGroupReadAckHelper;
 import com.hyphenate.unity_chat_sdk.helper.EMMessageHelper;
+import com.hyphenate.unity_chat_sdk.helper.EMMessageReactionChangeHelper;
 import com.unity3d.player.UnityPlayer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import util.EMSDKMethod;
 
@@ -78,7 +82,7 @@ public class EMUnityChatManagerListener implements EMMessageListener, EMConversa
     @Override
     public void onReadAckForGroupMessageUpdated() {
         Log.d("unity_sdk","onReadAckForGroupMessageUpdated");
-        UnityPlayer.UnitySendMessage(EMSDKMethod.ChatListener_Obj, "OnReadAckForGroupMessageUpdated", null);
+        UnityPlayer.UnitySendMessage(EMSDKMethod.ChatListener_Obj, "OnReadAckForGroupMessageUpdated", "");
     }
 
     @Override
@@ -132,5 +136,18 @@ public class EMUnityChatManagerListener implements EMMessageListener, EMConversa
         } catch (JSONException jsonException) {
             jsonException.printStackTrace();
         }
+    }
+
+    @Override
+    public void onReactionChanged(List<EMMessageReactionChange> list)  {
+        Log.d("unity_sdk","onReactionChanged");
+        JSONArray jsonArray = new JSONArray();
+        for (EMMessageReactionChange change: list) {
+            try{
+                JSONObject jsonObject = EMMessageReactionChangeHelper.toJson(change);
+                jsonArray.put(jsonObject);
+            }catch (JSONException ignored) { }
+        }
+        UnityPlayer.UnitySendMessage(EMSDKMethod.ChatListener_Obj, "MessageReactionDidChange", jsonArray.toString());
     }
 }

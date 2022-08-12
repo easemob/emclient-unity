@@ -120,5 +120,25 @@ namespace ChatSDK
         {
             wrapper.Call("updateChatRoomAnnouncement", roomId, announcement, handle?.callbackId);
         }
+
+        public override void MuteAllRoomMembers(string roomId, ValueCallBack<Room> handle = null)
+        {
+            wrapper.Call("muteAllRoomMembers", roomId, handle?.callbackId);
+        }
+
+        public override void UnMuteAllRoomMembers(string roomId, ValueCallBack<Room> handle = null)
+        {
+            wrapper.Call("unMuteAllRoomMembers", roomId, handle?.callbackId);
+        }
+
+        public override void AddWhiteListMembers(string roomId, List<string> members, CallBack handle = null)
+        {
+            wrapper.Call("addWhiteListMembers", roomId, TransformTool.JsonStringFromStringList(members), handle?.callbackId);
+        }
+
+        public override void RemoveWhiteListMembers(string roomId, List<string> members, CallBack handle = null)
+        {
+            wrapper.Call("removeWhiteListMembers", roomId, TransformTool.JsonStringFromStringList(members), handle?.callbackId);
+        }
     }
 }

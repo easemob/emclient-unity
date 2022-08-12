@@ -36,12 +36,13 @@ namespace ChatSDK
             ChatAPIIOS.ChatManager_HandleMethodCall("downloadThumbnail", obj.ToString(), handle?.callbackId);
         }
 
-        public override void FetchHistoryMessagesFromServer(string conversationId, ConversationType type, string startMessageId = null, int count = 20, ValueCallBack<CursorResult<Message>> handle = null)
+        public override void FetchHistoryMessagesFromServer(string conversationId, ConversationType type, string startMessageId = null, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack < CursorResult<Message>> handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("convId", conversationId);
             obj.Add("convType", TransformTool.ConversationTypeToInt(type));
             obj.Add("startMsgId", startMessageId ?? "");
+            obj.Add("direction", direction == MessageSearchDirection.UP ? 0 : 1);
             obj.Add("count", count);
             string jsonString = obj.ToString();
             ChatAPIIOS.ChatManager_HandleMethodCall("fetchHistoryMessages", jsonString, handle?.callbackId);
@@ -53,6 +54,22 @@ namespace ChatSDK
             obj.Add("convId", conversationId);
             obj.Add("convType", TransformTool.ConversationTypeToInt(type));
             obj.Add("createIfNeed", createIfNeed);
+            obj.Add("isThread", false);
+            string jsonString = ChatAPIIOS.ChatManager_GetMethodCall("getConversation", obj.ToString());
+            if (jsonString == null || jsonString.Length == 0)
+            {
+                return null;
+            }
+            return new Conversation(jsonString);
+        }
+
+        public override Conversation GetThreadConversation(string threadId)
+        {
+            JSONObject obj = new JSONObject();
+            obj.Add("convId", threadId);
+            obj.Add("convType", TransformTool.ConversationTypeToInt(ConversationType.Group));
+            obj.Add("createIfNeed", true);
+            obj.Add("isThread", true);
             string jsonString = ChatAPIIOS.ChatManager_GetMethodCall("getConversation", obj.ToString());
             if (jsonString == null || jsonString.Length == 0)
             {
@@ -174,6 +191,14 @@ namespace ChatSDK
             ChatAPIIOS.ChatManager_GetMethodCall("ackMessageRead", obj.ToString(), handle?.callbackId);
         }
 
+        public override void SendReadAckForGroupMessage(string messageId, string ackContent, CallBack callback = null)
+        {
+            JSONObject obj = new JSONObject();
+            obj.Add("msgId", messageId);
+            obj.Add("content", ackContent);
+            ChatAPIIOS.ChatManager_HandleMethodCall("sendReadAckForGroupMessage", obj.ToString(), callback?.callbackId);
+        }
+
         public override bool UpdateMessage(Message message)
         {
             string jsonString = ChatAPIIOS.ChatManager_GetMethodCall("updateChatMessage", message.ToJson().ToString());
@@ -198,6 +223,80 @@ namespace ChatSDK
             obj.Add("convType", TransformTool.ConversationTypeToInt(conversationType));
             obj.Add("isDeleteServerMessages", isDeleteServerMessages);
             ChatAPIIOS.ChatManager_HandleMethodCall("deleteConversationFromServer", obj.ToString(), callback?.callbackId);
+        }
+
+        public override void FetchSupportLanguages(ValueCallBack<List<SupportLanguage>> handle = null)
+        {
+            ChatAPIIOS.ChatManager_HandleMethodCall("fetchSupportLanguages",null, handle?.callbackId);
+        }
+
+        public override void TranslateMessage(Message message, List<string> targetLanguages, ValueCallBack<Message> handle = null)
+        {
+            JSONObject obj = new JSONObject();
+            obj.Add("message", message.ToJson());
+            obj.Add("languages", TransformTool.JsonStringFromStringList(targetLanguages));
+            ChatAPIIOS.ChatManager_HandleMethodCall("translateMessage", obj.ToString(), handle?.callbackId);
+        }
+
+
+        public override void FetchGroupReadAcks(string messageId, string groupId, int pageSize = 20, string startAckId = null, ValueCallBack<CursorResult<GroupReadAck>> handle = null)
+        {
+            JSONObject obj = new JSONObject();
+            obj.Add("msg_id", messageId);
+            obj.Add("pageSize", pageSize);
+            obj.Add("groupId", groupId);
+            obj.Add("ack_id", startAckId ?? "");
+            ChatAPIIOS.ChatManager_HandleMethodCall("fetchGroupReadAcks", obj.ToString(), handle?.callbackId);
+        }
+
+        public override void ReportMessage(string messageId, string tag, string reason, CallBack handle = null)
+        {
+            JSONObject obj = new JSONObject();
+            obj.Add("msgId", messageId);
+            obj.Add("tag", tag);
+            obj.Add("reason", reason);
+            ChatAPIIOS.ChatManager_HandleMethodCall("reportMessage", obj.ToString(), handle?.callbackId);
+        }
+
+        public override void AddReaction(string messageId, string reaction, CallBack handle = null)
+        {
+            JSONObject obj = new JSONObject();
+            obj.Add("msgId", messageId);
+            obj.Add("reaction", reaction);
+            ChatAPIIOS.ChatManager_HandleMethodCall("addReaction", obj.ToString(), handle?.callbackId);
+        }
+        public override void RemoveReaction(string messageId, string reaction, CallBack handle = null)
+        {
+            JSONObject obj = new JSONObject();
+            obj.Add("msgId", messageId);
+            obj.Add("reaction", reaction);
+            ChatAPIIOS.ChatManager_HandleMethodCall("removeReaction", obj.ToString(), handle?.callbackId);
+        }
+        public override void GetReactionList(List<string> messageIdList, MessageType chatType, string groupId, ValueCallBack<Dictionary<string, List<MessageReaction>>> handle = null)
+        {
+            JSONObject obj = new JSONObject();
+            obj.Add("msgIds",TransformTool.JsonStringFromStringList(messageIdList));
+            obj.Add("groupId", groupId);
+            if (chatType == MessageType.Chat) {
+                obj.Add("type", 0);
+            } else if (chatType == MessageType.Group)
+            {
+                obj.Add("type", 1);
+            } else if (chatType == MessageType.Room)
+            {
+                obj.Add("type", 2);
+            }
+            ChatAPIIOS.ChatManager_HandleMethodCall("getReactionList", obj.ToString(), handle?.callbackId);
+        } 
+        public override void GetReactionDetail(string messageId, string reaction, string cursor = null, int pageSize = 20, ValueCallBack<CursorResult<MessageReaction>> handle = null)
+        {
+            JSONObject obj = new JSONObject();
+            obj.Add("msgId", messageId);
+            obj.Add("reaction", reaction);
+            obj.Add("cursor", cursor ?? "");
+            obj.Add("pageSize", pageSize);
+            Debug.Log($"messageId: {obj.ToString()}");
+            ChatAPIIOS.ChatManager_HandleMethodCall("getReactionDetail", obj.ToString(), handle?.callbackId);
         }
     }
 }

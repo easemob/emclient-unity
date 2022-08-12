@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using SimpleJSON;
+
 
 namespace ChatSDK
 {
@@ -32,15 +32,26 @@ namespace ChatSDK
             wrapper.Call("downloadThumbnail", messageId, handle?.callbackId);
         }
 
-        public override void FetchHistoryMessagesFromServer(string conversationId, ConversationType type, string startMessageId = null, int count = 20, ValueCallBack<CursorResult<Message>> handle = null)
+        public override void FetchHistoryMessagesFromServer(string conversationId, ConversationType type, string startMessageId = null, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<CursorResult<Message>> handle = null)
         {
-            wrapper.Call("fetchHistoryMessages", conversationId, TransformTool.ConversationTypeToInt(type), startMessageId, count, handle?.callbackId);
+            wrapper.Call("fetchHistoryMessages", conversationId, TransformTool.ConversationTypeToInt(type), startMessageId, count, direction == MessageSearchDirection.UP ? 0 : 1, handle?.callbackId);
         }
 
         public override Conversation GetConversation(string conversationId, ConversationType type, bool createIfNeed = true)
         {
             string jsonString = wrapper.Call<string>("getConversation", conversationId, TransformTool.ConversationTypeToInt(type), createIfNeed);
             if (jsonString == null || jsonString.Length == 0) {
+                return null;
+            }
+
+            return new Conversation(jsonString);
+        }
+
+        public override Conversation GetThreadConversation(string threadId)
+        {
+            string jsonString = wrapper.Call<string>("getThreadConversation", threadId);
+            if (jsonString == null || jsonString.Length == 0)
+            {
                 return null;
             }
 
@@ -124,6 +135,11 @@ namespace ChatSDK
             wrapper.Call("ackMessageRead", messageId, handle?.callbackId);
         }
 
+        public override void SendReadAckForGroupMessage(string messageId, string ackContent, CallBack callback = null)
+        {
+            wrapper.Call("sendReadAckForGroupMessage", messageId, ackContent, callback?.callbackId);
+        }
+
         public override bool UpdateMessage(Message message)
         {
             return wrapper.Call<bool>("updateChatMessage", message.ToJson().ToString());
@@ -137,6 +153,42 @@ namespace ChatSDK
         public override void DeleteConversationFromServer(string conversationId, ConversationType conversationType, bool isDeleteServerMessages, CallBack callback = null)
         {
             wrapper.Call("deleteConversationFromServer", conversationId, TransformTool.ConversationTypeToInt(conversationType), isDeleteServerMessages, callback?.callbackId);
+        }
+
+        public override void FetchSupportLanguages(ValueCallBack<List<SupportLanguage>> handle = null)
+        {
+            wrapper.Call("fetchSupportLanguages", handle?.callbackId);
+        }
+
+        public override void TranslateMessage(Message message, List<string> targetLanguages, ValueCallBack<Message> handle = null)
+        {
+            wrapper.Call("translateMessage", message.ToJson().ToString(), TransformTool.JsonStringFromStringList(targetLanguages), handle?.callbackId);
+        }
+
+        public override void FetchGroupReadAcks(string messageId, string groupId, int pageSize = 20, string startAckId = null, ValueCallBack<CursorResult<GroupReadAck>> handle = null)
+        {
+            wrapper.Call("fetchGroupReadAcks", messageId, pageSize, startAckId ?? "", handle?.callbackId);
+        }
+
+        public override void ReportMessage(string messageId, string tag, string reason, CallBack handle = null)
+        {
+            wrapper.Call("reportMessage", messageId, tag, reason, handle?.callbackId);
+        }
+        public override void AddReaction(string messageId, string reaction, CallBack handle = null)
+        {
+            wrapper.Call("addReaction", messageId, reaction, handle?.callbackId);
+        }
+        public override void RemoveReaction(string messageId, string reaction, CallBack handle = null)
+        {
+            wrapper.Call("removeReaction", messageId, reaction, handle?.callbackId);
+        }
+        public override void GetReactionList(List<string> messageIdList, MessageType chatType, string groupId, ValueCallBack<Dictionary<string, List<MessageReaction>>> handle = null)
+        {
+            wrapper.Call("getReactionList", TransformTool.JsonStringFromStringList(messageIdList), (int)chatType, groupId, handle?.callbackId);
+        }
+        public override void GetReactionDetail(string messageId, string reaction, string cursor = null, int pageSize = 20, ValueCallBack<CursorResult<MessageReaction>> handle = null)
+        {
+            wrapper.Call("getReactionDetail", messageId, reaction, cursor ?? "", pageSize, handle?.callbackId);
         }
     }
     

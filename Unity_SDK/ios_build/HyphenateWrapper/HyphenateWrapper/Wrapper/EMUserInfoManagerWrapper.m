@@ -7,7 +7,7 @@
 
 #import "EMUserInfoManagerWrapper.h"
 #import <HyphenateChat/HyphenateChat.h>
-#import "EMUserInfo+Unity.h"
+#import "EMUserInfo+Helper.h"
 #import "Transfrom.h"
 
 @implementation EMUserInfoManagerWrapper

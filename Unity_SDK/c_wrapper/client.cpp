@@ -21,11 +21,6 @@
 
 using namespace easemob;
 
-extern "C"
-{
-#define CLIENT static_cast<EMClient *>(client)
-}
-
 static bool G_DEBUG_MODE = false;
 static bool G_AUTO_LOGIN = true;
 static bool G_LOGIN_STATUS = false;
@@ -303,6 +298,8 @@ void GetAutoLoginConfigFromFile()
 
 HYPHENATE_API void Client_CreateAccount(void *client, int callbackId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, const char *username, const char *password)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     std::string usernameStr = username;
     std::string passwordStr = password;
     
@@ -413,10 +410,13 @@ HYPHENATE_API void* Client_InitWithOptions(Options *options, FUNC_OnConnected on
 // Must be called afer Client_InitWithOptions!
 HYPHENATE_API void Client_AddMultiDeviceListener(FUNC_onContactMultiDevicesEvent contactEventFunc,
                                                  FUNC_onGroupMultiDevicesEvent groupEventFunc,
-                                                 FUNC_undisturbMultiDevicesEvent undisturbEventFunc)
+                                                 FUNC_undisturbMultiDevicesEvent undisturbEventFunc,
+                                                 FUNC_onThreadMultiDevicesEvent threadEventFunc)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
     if(nullptr == gMultiDevicesListener) { // only set once
-        gMultiDevicesListener = new MultiDevicesListener(contactEventFunc, groupEventFunc, undisturbEventFunc);
+        gMultiDevicesListener = new MultiDevicesListener(contactEventFunc, groupEventFunc, undisturbEventFunc, threadEventFunc);
         gClient->addMultiDevicesListener(gMultiDevicesListener);
         LOG("New multi device listener and hook it.");
     }
@@ -424,6 +424,8 @@ HYPHENATE_API void Client_AddMultiDeviceListener(FUNC_onContactMultiDevicesEvent
 
 HYPHENATE_API void Client_Login(void *client, int callbackId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, const char *username, const char *pwdOrToken, bool isToken)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     if (true == G_LOGIN_STATUS) {
         LOG("Already in login status, no need to login again.");
         return;
@@ -459,6 +461,8 @@ HYPHENATE_API void Client_Login(void *client, int callbackId, FUNC_OnSuccess onS
 
 HYPHENATE_API void Client_Logout(void *client, int callbackId, FUNC_OnSuccess onSuccess, bool unbindDeviceToken)
 {
+    if (!CheckClientInitOrNot(callbackId, nullptr)) return;
+
     if (false == G_LOGIN_STATUS) {
         LOG("Already in logout status.");
         return;
@@ -488,6 +492,8 @@ HYPHENATE_API void Client_StopLog() {
 }
 
 HYPHENATE_API void Client_LoginToken(void *client, FUNC_OnSuccess_With_Result onSuccess) {
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
     const EMLoginInfo& loginInfo = CLIENT->getLoginInfo();
     const char* data[1];
     data[0] = loginInfo.loginToken().c_str();
@@ -495,14 +501,18 @@ HYPHENATE_API void Client_LoginToken(void *client, FUNC_OnSuccess_With_Result on
 }
 
 HYPHENATE_API bool Client_isConnected(void* client) {
+    if (!CheckClientInitOrNot(-1, nullptr)) return false;
     return CLIENT->isConnected();
 }
 HYPHENATE_API bool Client_isLoggedIn(void* client) {
+    if (!CheckClientInitOrNot(-1, nullptr)) return false;
     return CLIENT->isLoggedIn();
 }
 
 // this function must be executed after logout!!!
 HYPHENATE_API void Client_ClearResource(void *client) {
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
     if(true == G_LOGIN_STATUS) {
         LOG("Still in login status, cannot clear resource.");
         return;
@@ -541,6 +551,8 @@ HYPHENATE_API void Client_ClearResource(void *client) {
 
 HYPHENATE_API void Client_LoginWithAgoraToken(void *client, int callbackId, FUNC_OnSuccess onSuccess, FUNC_OnError onError, const char *username, const char *agoraToken)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     if (true == G_LOGIN_STATUS) {
         LOG("Already in login status, no need to login again.");
         return;
@@ -604,6 +616,8 @@ HYPHENATE_API void Client_LoginWithAgoraToken(void *client, int callbackId, FUNC
 
 HYPHENATE_API void Client_RenewAgoraToken(void *client, const char *agoraToken)
 {
+    if (!CheckClientInitOrNot(-1, nullptr)) return;
+
     if (false == G_LOGIN_STATUS) {
         LOG("Not in login status, cannot execute renew token action.");
         return;
@@ -651,6 +665,8 @@ HYPHENATE_API void Client_RenewAgoraToken(void *client, const char *agoraToken)
 
 HYPHENATE_API void Client_AutoLogin(void *client, int callbackId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
+    if (!CheckClientInitOrNot(callbackId, onError)) return;
+
     if (true == G_LOGIN_STATUS) {
         LOG("Already in login status, cannot execute autologin.");
         return;

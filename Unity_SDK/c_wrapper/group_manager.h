@@ -17,7 +17,8 @@ HYPHENATE_API void GroupManager_AddListener(void *client,FUNC_OnInvitationReceiv
                                         FUNC_OnGroupDestroyed, FUNC_OnAutoAcceptInvitationFromGroup, FUNC_OnMuteListAdded,
                                         FUNC_OnMuteListRemoved, FUNC_OnAdminAdded, FUNC_OnAdminRemoved, FUNC_OnOwnerChanged,
                                         FUNC_OnMemberJoined, FUNC_OnMemberExited, FUNC_OnAnnouncementChanged, FUNC_OnSharedFileAdded,
-                                        FUNC_OnSharedFileDeleted);
+                                        FUNC_OnSharedFileDeleted, FUNC_OnAddWhiteListMembersFromGroup, FUNC_OnRemoveWhiteListMembersFromGroup,
+                                        FUNC_OnAllMemberMuteChangedFromGroup);
 HYPHENATE_API void GroupManager_CreateGroup(void *client, int callbackId, const char * groupName, GroupOptions *options, const char * desc, const char * inviteMembers[], int size, const char * inviteReason, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError);
 HYPHENATE_API void GroupManager_ChangeGroupName(void *client, int callbackId, const char * groupId, const char * groupName, FUNC_OnSuccess onSuccess, FUNC_OnError onError);
 HYPHENATE_API void GroupManager_DestoryGroup(void *client, int callbackId, const char * groupId, FUNC_OnSuccess onSuccess, FUNC_OnError onError);
@@ -61,7 +62,7 @@ HYPHENATE_API void GroupManager_UnMuteAllMembers(void *client, int callbackId, c
 HYPHENATE_API void GroupManager_UnmuteGroupMembers(void *client, int callbackId, const char * groupId, const char * members[], int size, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError);
 HYPHENATE_API void GroupManager_UpdateGroupAnnouncement(void *client, int callbackId, const char * groupId, const char * newAnnouncement, FUNC_OnSuccess onSuccess, FUNC_OnError onError);
 HYPHENATE_API void GroupManager_ChangeGroupExtension(void *client, int callbackId, const char * groupId, const char * newExtension, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError);
-HYPHENATE_API void GroupManager_UploadGroupSharedFile(void *client, int callbackId, const char * groupId, const char * filePath, FUNC_OnSuccess onSuccess, FUNC_OnError onError);
+HYPHENATE_API void GroupManager_UploadGroupSharedFile(void *client, int callbackId, const char * groupId, const char * filePath, FUNC_OnSuccess onSuccess, FUNC_OnError onError, FUNC_OnProgress onProgress);
 #ifdef __cplusplus
 }
 #endif //__cplusplus
