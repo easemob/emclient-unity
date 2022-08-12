@@ -67,7 +67,6 @@ namespace ChatSDK
 
         static internal ChatThreadEvent FromJson(string json)
         {
-            Debug.Log($"FromJson json : {json}");
             if (null != json && json.Length > 0)
             {
                 JSONNode jn = JSON.Parse(json);

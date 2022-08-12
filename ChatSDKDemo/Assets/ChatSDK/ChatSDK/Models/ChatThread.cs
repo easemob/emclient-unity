@@ -176,7 +176,6 @@ namespace ChatSDK
 
         static internal ChatThread FromJson(string json)
         {
-            Debug.Log($"FromJson json : {json}");
             if (null != json && json.Length > 0)
             {
                 JSONNode jn = JSON.Parse(json);
@@ -188,8 +187,6 @@ namespace ChatSDK
 
         static internal CursorResult<ChatThread> CursorThreadFromJson(string json)
         {
-            Debug.Log($"CursorThreadFromJson json : {json}");
-
             CursorResult<ChatThread> cursorResult = new CursorResult<ChatThread>();
             cursorResult.Data = new List<ChatThread>();
 
@@ -220,7 +217,6 @@ namespace ChatSDK
 
         static internal Dictionary<string, Message> DictFromJson(string json)
         {
-            Debug.Log($"DictFromJson json : {json}");
             Dictionary<string, Message> dict = new Dictionary<string, Message>();
 
             if (null != json && json.Length > 0)
