@@ -18,7 +18,7 @@ namespace ChatSDK
         private Options _Options;
         private static SDKClient _instance;
         private IClient _Sdk;
-
+        public static bool IsInit { get; internal set; }
         public static SDKClient Instance
         {
             get
@@ -439,6 +439,7 @@ namespace ChatSDK
         private SDKClient()
         {
             _Sdk = IClient.Instance;
+            IsInit = true;
         }
 
         private void registerManagers() {
