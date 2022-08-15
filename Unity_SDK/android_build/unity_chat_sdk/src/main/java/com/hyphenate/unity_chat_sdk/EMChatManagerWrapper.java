@@ -367,11 +367,13 @@ public class EMChatManagerWrapper extends EMWrapper  {
         EMClient.getInstance().chatManager().fetchSupportLanguages(new EMUnityValueCallback<List<EMLanguage>>("List<SupportLanguage>", callbackId){
             @Override
             public void onSuccess(List<EMLanguage> emLanguages) {
-                ArrayList<Map> list = new ArrayList<>();
-                for (EMLanguage l: emLanguages) {
-                    list.add(EMLanguageHelper.toJson(l));
-                }
-                sendJsonObjectToUnity(list.toString());
+                JSONArray jsonArray = new JSONArray();
+                try{
+                    for (EMLanguage l: emLanguages) {
+                        jsonArray.put(EMLanguageHelper.toJson(l).toString());
+                    }
+                }catch (JSONException ignored){}
+                sendJsonObjectToUnity(jsonArray.toString());
             }
         });
     }
@@ -421,15 +423,21 @@ public class EMChatManagerWrapper extends EMWrapper  {
         EMClient.getInstance().chatManager().asyncGetReactionList(list, type, groupId, new EMUnityValueCallback<Map<String, java.util.List<EMMessageReaction>>>("Dictionary<string, List<MessageReaction>>", callbackId){
             @Override
             public void onSuccess(Map<String, List<EMMessageReaction>> stringListMap) {
-                Map<String, ArrayList< Map<String, Object>>> map = new HashMap<>();
+                JSONObject ret = new JSONObject();
                 for (Map.Entry<String, List<EMMessageReaction>> entry: stringListMap.entrySet()) {
-                    ArrayList< Map<String, Object>> list = new ArrayList<>();
+                    JSONArray jsonArray = new JSONArray();
                     for (EMMessageReaction reaction: entry.getValue()) {
-                        list.add(EMMessageReactionHelper.toJson(reaction));
+                        try {
+                            jsonArray.put(EMMessageReactionHelper.toJson(reaction));
+                        }catch (JSONException ignored) {
+
+                        }
                     }
-                    map.put(entry.getKey(), list);
+                    try{
+                        ret.put(entry.getKey(), jsonArray);
+                    }catch (JSONException ignored) {}
                 }
-                sendJsonObjectToUnity(map.toString());
+                sendJsonObjectToUnity(ret.toString());
             }
         });
     }

@@ -126,7 +126,7 @@
         if (aError) {
             [self onError:callId error:aError];
         }else {
-            [self onSuccess:@"CursorResult<Message>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:[aResult toJson]]];
+            [self onSuccess:@"CursorResult<Message>" callbackId:callId userInfo:[Transfrom NSStringFromJsonObject:[aResult toJsonString]]];
         }
     }];
 }
@@ -358,7 +358,7 @@
         if (error) {
             [self onError:callId error:error];
         }else {
-            [self onSuccess:nil callbackId:callId userInfo:nil];
+            [self onSuccess:@"OnMessageSuccess" callbackId:callId userInfo:[message toJson]];
         }
     }];
     return [msg toJson];
@@ -465,14 +465,14 @@
         if (aError) {
             [weakSelf onError:callbackId error:aError];
         }else {
-            [weakSelf onSuccess:@"List<SupportLanguage>" callbackId:callbackId userInfo:[languages toJsonArray]];
+            [weakSelf onSuccess:@"List<SupportLanguage>" callbackId:callbackId userInfo:[languages toJsonStringArray]];
         }
     }];
 }
 
 - (void)translateMessage:(NSDictionary *)param callbackId:(NSString *)callbackId {
     EMChatMessage *msg = [EMChatMessage fromJson:param[@"message"]];
-    NSArray *languages = param[@"languages"];
+    NSArray *languages = [Transfrom NSStringToJsonObject:param[@"languages"]];
     
     __weak EMChatManagerWrapper * weakSelf = self;
     [EMClient.sharedClient.chatManager translateMessage:msg
@@ -518,7 +518,7 @@
         }else {
             [weakSelf onSuccess:@"CursorResult<GroupReadAck>"
                      callbackId:callbackId
-                       userInfo:[aResult toJson]];
+                       userInfo:[aResult toJsonString]];
         }
     }];
 }
@@ -573,9 +573,9 @@
 }
 
 - (void)getReactionList:(NSDictionary *)param callbackId:(NSString *)callbackId {
-    NSArray *msgIds = param[@"msgIds"];
+    NSArray *msgIds = [Transfrom NSStringToJsonObject:param[@"msgIds"]];
     NSString *groupId = param[@"groupId"];
-    EMChatType type = [EMChatMessage chatTypeFromInt:[param[@"chatType"] intValue]];
+    EMChatType type = [EMChatMessage chatTypeFromInt:[param[@"type"] intValue]];
     __weak EMChatManagerWrapper * weakSelf = self;
     [EMClient.sharedClient.chatManager getReactionList:msgIds
                                                 groupId:groupId
@@ -622,7 +622,7 @@
         }else {
             [weakSelf onSuccess:@"CursorResult<MessageReaction>"
                      callbackId:callbackId
-                       userInfo:[cursorResult toJson]];
+                       userInfo:[cursorResult toJsonString]];
         }
     }];
 }

@@ -706,7 +706,6 @@ namespace ChatSDK
 
         internal Message(string jsonString)
         {
-            Debug.Log($"jsonString : {jsonString}");
             if (jsonString != null)
             {
                 JSONNode jn = JSON.Parse(jsonString);

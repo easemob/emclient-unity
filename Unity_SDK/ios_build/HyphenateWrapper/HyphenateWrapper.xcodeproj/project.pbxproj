@@ -6,6 +6,20 @@
 	objectVersion = 50;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		90089E51289D078100D43CEA /* download_sdk */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 90089E52289D078100D43CEA /* Build configuration list for PBXAggregateTarget "download_sdk" */;
+			buildPhases = (
+				90089E55289D078600D43CEA /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = download_sdk;
+			productName = download_sdk;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		90026D3F2890D7FC0064C16A /* EMPresenceManagerWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 90026D3E2890D7FC0064C16A /* EMPresenceManagerWrapper.m */; };
 		90089E15289CDB1700D43CEA /* HyphenateWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 90089E14289CDB1700D43CEA /* HyphenateWrapper.m */; };
@@ -40,7 +54,7 @@
 		90A30047266B790900BB3A19 /* EMWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 90A30046266B790900BB3A19 /* EMWrapper.m */; };
 		90A3004C266BA9DC00BB3A19 /* EMClientListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 90A3004B266BA9DC00BB3A19 /* EMClientListener.m */; };
 		90A3004F266BB03600BB3A19 /* EMContactListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 90A3004E266BB03600BB3A19 /* EMContactListener.m */; };
-		90D7B17E266774C9008CA320 /* HyphenateWrapper.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 90D7B17B266774C9008CA320 /* HyphenateWrapper.h */; };
+		90D7B17E266774C9008CA320 /* HyphenateWrapper.h in Copy Files */ = {isa = PBXBuildFile; fileRef = 90D7B17B266774C9008CA320 /* HyphenateWrapper.h */; };
 		90D7B7FB2759D7DE00FD1C72 /* EMUserInfoManagerWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 90D7B7FA2759D7DE00FD1C72 /* EMUserInfoManagerWrapper.m */; };
 		90D7B7FE2759F11A00FD1C72 /* EMGroupMessageAck+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 90D7B7FC2759F11A00FD1C72 /* EMGroupMessageAck+Helper.m */; };
 		90D7B8012759FE5200FD1C72 /* EMUserInfo+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 90D7B8002759FE5200FD1C72 /* EMUserInfo+Helper.m */; };
@@ -49,14 +63,15 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		90D7B176266774C9008CA320 /* CopyFiles */ = {
+		90D7B176266774C9008CA320 /* Copy Files */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = "include/$(PRODUCT_NAME)";
+			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
-				90D7B17E266774C9008CA320 /* HyphenateWrapper.h in CopyFiles */,
+				90D7B17E266774C9008CA320 /* HyphenateWrapper.h in Copy Files */,
 			);
+			name = "Copy Files";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -309,7 +324,7 @@
 			buildPhases = (
 				90D7B174266774C9008CA320 /* Sources */,
 				90D7B175266774C9008CA320 /* Frameworks */,
-				90D7B176266774C9008CA320 /* CopyFiles */,
+				90D7B176266774C9008CA320 /* Copy Files */,
 			);
 			buildRules = (
 			);
@@ -328,6 +343,9 @@
 			attributes = {
 				LastUpgradeCheck = 1340;
 				TargetAttributes = {
+					90089E51289D078100D43CEA = {
+						CreatedOnToolsVersion = 13.4.1;
+					};
 					90D7B177266774C9008CA320 = {
 						CreatedOnToolsVersion = 12.5;
 					};
@@ -347,9 +365,30 @@
 			projectRoot = "";
 			targets = (
 				90D7B177266774C9008CA320 /* libHyphenateWrapper */,
+				90089E51289D078100D43CEA /* download_sdk */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		90089E55289D078600D43CEA /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "${SRCROOT}/downloadSDK.sh\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		90D7B174266774C9008CA320 /* Sources */ = {
@@ -399,6 +438,22 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		90089E53289D078100D43CEA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		90089E54289D078100D43CEA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		90D7B17F266774C9008CA320 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -523,7 +578,7 @@
 					"$(PROJECT_DIR)",
 				);
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/HyphenateChat.framework\"/**";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -544,7 +599,7 @@
 					"$(PROJECT_DIR)",
 				);
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/HyphenateChat.framework\"/**";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -556,6 +611,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		90089E52289D078100D43CEA /* Build configuration list for PBXAggregateTarget "download_sdk" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				90089E53289D078100D43CEA /* Debug */,
+				90089E54289D078100D43CEA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		90D7B173266774C9008CA320 /* Build configuration list for PBXProject "HyphenateWrapper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

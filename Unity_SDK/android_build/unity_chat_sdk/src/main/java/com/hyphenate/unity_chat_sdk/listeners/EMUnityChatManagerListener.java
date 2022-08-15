@@ -82,7 +82,7 @@ public class EMUnityChatManagerListener implements EMMessageListener, EMConversa
     @Override
     public void onReadAckForGroupMessageUpdated() {
         Log.d("unity_sdk","onReadAckForGroupMessageUpdated");
-        UnityPlayer.UnitySendMessage(EMSDKMethod.ChatListener_Obj, "OnReadAckForGroupMessageUpdated", null);
+        UnityPlayer.UnitySendMessage(EMSDKMethod.ChatListener_Obj, "OnReadAckForGroupMessageUpdated", "");
     }
 
     @Override
@@ -139,24 +139,14 @@ public class EMUnityChatManagerListener implements EMMessageListener, EMConversa
     }
 
     @Override
-    public void onReactionChanged(List<EMMessageReactionChange> list) {
+    public void onReactionChanged(List<EMMessageReactionChange> list)  {
         Log.d("unity_sdk","onReactionChanged");
         JSONArray jsonArray = new JSONArray();
         for (EMMessageReactionChange change: list) {
-            Map<String, Object> map = EMMessageReactionChangeHelper.toJson(change);
-            JSONObject jo = new JSONObject();
-            Iterator it = map.keySet().iterator();
-            while (it.hasNext()) {
-                String key = (String) it.next();
-                try {
-                    jo.put(key, map.get(key));
-                }catch (JSONException ignore) {
-
-                }
-            }
-            if (jo.length() > 0) {
-                jsonArray.put(jo);
-            }
+            try{
+                JSONObject jsonObject = EMMessageReactionChangeHelper.toJson(change);
+                jsonArray.put(jsonObject);
+            }catch (JSONException ignored) { }
         }
         UnityPlayer.UnitySendMessage(EMSDKMethod.ChatListener_Obj, "MessageReactionDidChange", jsonArray.toString());
     }

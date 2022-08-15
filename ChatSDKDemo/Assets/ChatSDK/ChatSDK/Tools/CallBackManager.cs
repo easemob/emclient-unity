@@ -59,8 +59,18 @@ namespace ChatSDK {
 
         static bool Quit()
         {
-            IClient.Instance.Logout(false);
-            CallbackManager.Instance().ClearResource();
+
+            if (SDKClient.IsInit)
+            {
+                if (SDKClient.Instance.IsLoggedIn)
+                {
+                    SDKClient.Instance.Logout(false);
+                }
+                if (CallbackManager._getInstance != null)
+                {
+                    CallbackManager.Instance().ClearResource();
+                }
+            }
             Debug.Log("Quit...");
             return true;
         }
@@ -87,10 +97,17 @@ namespace ChatSDK {
 
         private void OnApplicationQuit()
         {
-            if (SDKClient.Instance.IsLoggedIn) {
-                SDKClient.Instance.Logout(false);
+            if (SDKClient.IsInit)
+            {
+                if (SDKClient.Instance.IsLoggedIn)
+                {
+                    SDKClient.Instance.Logout(false);
+                }
+                if (CallbackManager._getInstance != null)
+                {
+                    CallbackManager.Instance().ClearResource();
+                }
             }
-            CallbackManager.Instance().ClearResource();
             Debug.Log("Quit...");
         }
 
@@ -815,9 +832,11 @@ namespace ChatSDK {
                     {
                         if (valueCallBack.OnSuccessValue != null)
                         {
+                            CursorResult<ChatThread> result = ChatThread.CursorThreadFromJson(responseValue.Value);
+
                             ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
                             {
-                                valueCallBack.OnSuccessValue(ChatThread.CursorThreadFromJson(responseValue.Value));
+                                valueCallBack.OnSuccessValue(result);
                             });
                         }
                         dictionary.Remove(callbackId);

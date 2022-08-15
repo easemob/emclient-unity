@@ -21,20 +21,12 @@ public class EMUnityPresenceManagerListener implements EMPresenceListener {
     @Override
     public void onPresenceUpdated(List<EMPresence> list)  {
         JSONArray jsonArray = new JSONArray();
-        for (EMPresence presence : list) {
-            Map<String, Object> map = EMPresenceHelper.toJson(presence);
-            Iterator it = map.keySet().iterator();
-            JSONObject jsonObject = new JSONObject();
-            while (it.hasNext()) {
-                String key = (String) it.next();
-                try {
-                    jsonObject.put(key , map.get(key));
-                }catch (JSONException ignored) {}
-            }
-            if (jsonObject.length() > 0) {
+        try {
+            for (EMPresence presence : list) {
+                JSONObject jsonObject  = EMPresenceHelper.toJson(presence);
                 jsonArray.put(jsonObject);
             }
-        }
+        }catch (JSONException ignored) {}
         Log.d("unity_sdk","onPresenceUpdated");
         UnityPlayer.UnitySendMessage(EMSDKMethod.ChatListener_Obj, "OnPresenceUpdated", jsonArray.toString());
     }

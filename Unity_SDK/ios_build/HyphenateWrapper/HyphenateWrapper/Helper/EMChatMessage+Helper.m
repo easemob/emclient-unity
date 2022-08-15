@@ -383,8 +383,8 @@
 - (NSDictionary *)toJson {
     NSMutableDictionary *ret = [[super toJson] mutableCopy];
     ret[@"content"] = self.text;
-    ret[@"targetLanguages"] = self.targetLanguages;
-    ret[@"translations"] = self.translations;
+    ret[@"targetLanguages"] = [Transfrom NSStringFromJsonObject:self.targetLanguages];
+    ret[@"translations"] = [Transfrom NSStringFromJsonObject:self.translations];
     return ret;
 }
 

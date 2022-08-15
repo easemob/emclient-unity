@@ -6,6 +6,7 @@
 //
 
 #import "EMMessageReaction+Helper.h"
+#import "Transfrom.h"
 
 @implementation EMMessageReaction (Helper)
 
@@ -14,7 +15,7 @@
         @"reaction": self.reaction,
         @"count": @(self.count),
         @"state": @(self.isAddedBySelf),
-        @"userList": self.userList,
+        @"userList": [Transfrom NSStringFromJsonObject:self.userList],
     };
 }
 
