@@ -22,7 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -59,14 +59,19 @@
   <PropertyGroup>
     <PostBuildEvent>cd $(ProjectDir)
 
+
 xcopy /Y /S ..\FrameworkLib\bin\Debug\chatsdk.dll bin\Debug\
 
 
-xcopy /Y /S ..\..\Unity_SDK\win_build\build_shared\Debug\hyphenateCWrapper.dll bin\Debug\
+
+xcopy /Y /S ..\..\Unity_SDK\win_build\build_shared\Debug_32\hyphenateCWrapper.dll bin\Debug\
+
 
 xcopy /Y /S bin\Debug\chatsdk.dll D:\workspace\test\testWinSDK_new_features\Debug\
 
+
 xcopy /Y /S bin\Debug\hyphenateCWrapper.dll D:\workspace\test\testWinSDK_new_features\Debug\
+
 
 xcopy /Y /S bin\Debug\FrameworkTest.exe D:\workspace\test\testWinSDK_new_features\Debug\another.exe</PostBuildEvent>
   </PropertyGroup>

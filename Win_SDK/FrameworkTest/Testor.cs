@@ -108,9 +108,12 @@ namespace WinSDKTest
                         Console.WriteLine($"message text content: {b.Text}");
                         string str = string.Join(",", b.TargetLanguages.ToArray());
                         Console.WriteLine($"message targent languages: {str}");
-                        foreach(var it in b.Translations)
+                        if (null != b.Translations)
                         {
-                            Console.WriteLine($"lang: {it.Key} and result:{it.Value}");
+                            foreach (var it in b.Translations)
+                            {
+                                Console.WriteLine($"lang: {it.Key} and result:{it.Value}");
+                            }
                         }
                     }
                     break;
