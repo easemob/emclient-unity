@@ -6,6 +6,7 @@ Build steps:
 	.\lib\net462
 	.\lib\net472
 	.\runtimes\x64\native
+	.\runtimes\x86\native
 
 2. Make sure chatsdk.dll is built with Release mode.
 3. Make sure hyphenateCWrapper.dll is built with Release mode.

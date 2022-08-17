@@ -14,4 +14,11 @@
             <Link>%(Filename)%(Extension)</Link>
         </Content>
     </ItemGroup>
+    
+    <ItemGroup Condition=" '$(Platform)' == 'x86' ">
+        <Content Include="$(MSBuildThisFileDirectory)..\..\runtimes\x86\native\**">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <Link>%(Filename)%(Extension)</Link>
+        </Content>
+    </ItemGroup>
 </Project>
