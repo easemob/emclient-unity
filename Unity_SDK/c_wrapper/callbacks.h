@@ -504,10 +504,10 @@ public:
         onSharedFileDeleted(onSharedFileDeleted), onAddWhiteListMembersFromGroup_(onAddWhiteListMembersFromGroup),
         onRemoveWhiteListMembersFromGroup_(onRemoveWhiteListMembersFromGroup), onAllMemberMuteChangedFromGroup_(onAllMemberMuteChangedFromGroup){}
     
-    void onReceiveInviteFromGroup(const std::string groupId, const std::string& inviter, const std::string& inviteMessage) override {
+    void onReceiveInviteFromGroup(const std::string groupId, const std::string groupName, const std::string& inviter, const std::string& inviteMessage) override {
         if(onInvitationReceived) {
             auto group = CLIENT->getGroupManager().groupWithId(groupId);
-            auto groupName = group->groupSubject();
+            //auto groupName = group->groupSubject();
             onInvitationReceived(groupId.c_str(), groupName.c_str(), inviter.c_str(), inviteMessage.c_str());
         }
     }
