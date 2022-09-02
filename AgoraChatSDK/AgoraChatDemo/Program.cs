@@ -7,7 +7,7 @@ namespace AgoraChatDemo
         public static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-            var sdk = new SDKClient();
+            var sdk = SDKClient.Instance;
         }
     }
 }

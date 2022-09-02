@@ -2,8 +2,14 @@
 {
     public class RoomManager
     {
-        public RoomManager()
+        internal RoomManager(NativeListener listener)
         {
+            listener.roomManagerEvent += NativeEventHandle;
+        }
+
+        void NativeEventHandle(string method, string jsonString)
+        {
+
         }
     }
 }
