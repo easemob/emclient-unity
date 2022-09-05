@@ -2,8 +2,14 @@
 {
     public class GroupManager
     {
-        public GroupManager()
+        internal GroupManager(NativeListener listener)
         {
+            listener.groupManagerEvent += NativeEventHandle;
+        }
+
+        void NativeEventHandle(string method, string jsonString)
+        {
+
         }
     }
 }

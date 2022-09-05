@@ -2,8 +2,14 @@
 {
     public class PresenceManager
     {
-        public PresenceManager()
+        internal PresenceManager(NativeListener listener)
         {
+            listener.presenceManagerEvent += NativeEventHandle;
+        }
+
+        void NativeEventHandle(string method, string jsonString)
+        {
+
         }
     }
 }

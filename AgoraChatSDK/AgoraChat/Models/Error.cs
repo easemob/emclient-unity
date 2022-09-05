@@ -1,12 +1,12 @@
 ﻿namespace AgoraChat
 {
     /**
-         * \~chinese
-         * 错误信息类。
-         *
-         * \~english
-         * The error information class.
-         */
+    * \~chinese
+    * 错误信息类。
+    *
+    * \~english
+    * The error information class.
+    */
     public class Error
     {
         /**
