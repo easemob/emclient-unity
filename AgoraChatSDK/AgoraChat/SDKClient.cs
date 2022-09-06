@@ -143,5 +143,12 @@
         {
             _clientImpl.CleanUp();
         }
+
+        //TO-DO: need to remove, just for testing
+        public void TestCallBack(string manager, string method, string jstr)
+        {
+            _clientImpl.nativeListener.nativeListenerEvent(manager, method, jstr);
+        }
+
     }
 }
