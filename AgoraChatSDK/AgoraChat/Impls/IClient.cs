@@ -19,8 +19,9 @@
 
         internal IClient() 
         {
+            //TO-DO: need to uncomment this line after testing!
             // 将 listener 和 native 挂钩
-            nativeListener.AddNaitveListener();
+            //nativeListener.AddNaitveListener();
           
             chatManager = new ChatManager(nativeListener);
             contactManager = new ContactManager(nativeListener);

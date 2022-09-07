@@ -1,4 +1,5 @@
 ﻿using AgoraChat.SimpleJSON;
+using System;
 
 namespace AgoraChat
 {
@@ -47,47 +48,61 @@ namespace AgoraChat
 
         public CallbackManager callbackManager;
 
+        internal CallbackQueue_ThreadMode queue;
+
         public NativeListener() {
+
             callbackManager = new CallbackManager();
+
+            queue = new CallbackQueue_ThreadMode();
+            queue.Start();
+
             nativeListenerEvent = (string listener, string method, string jsonString) =>
             {
-                if (listener == "chatManagerListener")
-                {
-                    chatManagerEvent(method, jsonString);
-                }
-                else if (listener == "contactManagerListener")
-                {
-                    contactManagerEvent(method, jsonString);
-                }
-                else if (listener == "groupManagerListener")
-                {
-                    groupManagerEvent(method, jsonString);
-                }
-                else if (listener == "roomManagerListener")
-                {
-                    roomManagerEvent(method, jsonString);
-                }
-                else if (listener == "presenceManagerListener")
-                {
-                    presenceManagerEvent(method, jsonString);
-                }
-                else if (listener == "chatThreadManagerListener")
-                {
-                    chatThreadManagerEvent(method, jsonString);
-                }
-                else if (listener == "connectionListener")
-                {
-                    connectionEvent(method, jsonString);
-                }
-                else if (listener == "multiDeviceListener")
-                {
-                    multiDeviceEvent(method, jsonString);
-                }
-                else if (listener == "callback")
-                {
-                    callbackManager.CallAction(method, jsonString);
-                }
+                queue.EnQueue(() => {
+                    if (listener == "chatManagerListener")
+                    {
+                        chatManagerEvent(method, jsonString);
+                    }
+                    else if (listener == "contactManagerListener")
+                    {
+                        contactManagerEvent(method, jsonString);
+                    }
+                    else if (listener == "groupManagerListener")
+                    {
+                        groupManagerEvent(method, jsonString);
+                    }
+                    else if (listener == "roomManagerListener")
+                    {
+                        roomManagerEvent(method, jsonString);
+                    }
+                    else if (listener == "presenceManagerListener")
+                    {
+                        presenceManagerEvent(method, jsonString);
+                    }
+                    else if (listener == "chatThreadManagerListener")
+                    {
+                        chatThreadManagerEvent(method, jsonString);
+                    }
+                    else if (listener == "connectionListener")
+                    {
+                        connectionEvent(method, jsonString);
+                    }
+                    else if (listener == "multiDeviceListener")
+                    {
+                        multiDeviceEvent(method, jsonString);
+                    }
+                    else if (listener == "callback")
+                    {
+                        callbackManager.CallAction(method, jsonString);
+                    }
+                });
             };
+        }
+
+        ~NativeListener()
+        {
+            queue.Stop();
         }
 
         public void AddNaitveListener() {

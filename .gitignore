@@ -144,3 +144,7 @@ sysinfo.txt
 **/Plugins/iOS/
 **/ProjectSettings/
 **/.vsconfig
+
+# windows sdk
+*.nupkg
+*.dll
