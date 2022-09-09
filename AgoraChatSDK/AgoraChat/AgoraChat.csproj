@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E427CC20-7A4A-484F-A69F-15125A6566E9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>AgoraChat</RootNamespace>
+    <AssemblyName>AgoraChat</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Enumerations.cs" />
+    <Compile Include="SDKClient.cs" />
+    <Compile Include="Native\CWrapperNative.cs" />
+    <Compile Include="Managers\PresenceManager.cs" />
+    <Compile Include="Managers\ChatThreadManager.cs" />
+    <Compile Include="Managers\GroupManager.cs" />
+    <Compile Include="Managers\MessageManager.cs" />
+    <Compile Include="Managers\ChatManager.cs" />
+    <Compile Include="Managers\RoomManager.cs" />
+    <Compile Include="Managers\ConversationManager.cs" />
+    <Compile Include="Managers\ContactManager.cs" />
+    <Compile Include="Managers\UserInfoManager.cs" />
+    <Compile Include="Models\Conversation.cs" />
+    <Compile Include="Models\GroupSharedFile.cs" />
+    <Compile Include="Models\MessageBody.cs" />
+    <Compile Include="Models\GroupReadAck.cs" />
+    <Compile Include="Models\Message.cs" />
+    <Compile Include="Models\Presence.cs" />
+    <Compile Include="Models\ChatThreadEvent.cs" />
+    <Compile Include="Models\Options.cs" />
+    <Compile Include="Models\ChatThread.cs" />
+    <Compile Include="Models\BaseModel.cs" />
+    <Compile Include="Models\GroupInfo.cs" />
+    <Compile Include="Models\DeviceInfo.cs" />
+    <Compile Include="Models\Error.cs" />
+    <Compile Include="Models\MessageReaction.cs" />
+    <Compile Include="Models\PageResult.cs" />
+    <Compile Include="Models\SupportLanguage.cs" />
+    <Compile Include="Models\CursorResult.cs" />
+    <Compile Include="Models\PresenceDeviceStatus.cs" />
+    <Compile Include="Models\Room.cs" />
+    <Compile Include="Models\GroupOptions.cs" />
+    <Compile Include="Models\UserInfo.cs" />
+    <Compile Include="Models\MessageReactionChange.cs" />
+    <Compile Include="Models\Group.cs" />
+    <Compile Include="Custom\CallbackManager.cs" />
+    <Compile Include="Custom\Callbacks.cs" />
+    <Compile Include="Third Party\SimpleJSON.cs" />
+    <Compile Include="Helper\Extensions.cs" />
+    <Compile Include="Native\NativeListener.cs" />
+    <Compile Include="Impls\IClient.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>
