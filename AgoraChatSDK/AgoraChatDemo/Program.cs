@@ -21,6 +21,15 @@ namespace AgoraChatDemo
             ));
             SDKClient.Instance.TestCallBack("callback", "0", "error");
 
+
+            SDKClient.Instance.ChatManager.Test_Call(new CallBack(
+                onSuccess: () => { Console.WriteLine("Test_Call success."); },
+                onProgress: (i) => { Console.WriteLine($"Test_Call progress.{i}"); },
+                onError: (i, desc) => { Console.WriteLine($"Test_Call error, code:{i}; desc:{desc}."); }
+            ));
+
+            SDKClient.Instance.ChatManager.Test_Get();
+
             Console.WriteLine("Press any key to end.");
             Console.ReadKey();
         }

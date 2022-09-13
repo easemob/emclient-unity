@@ -26,6 +26,7 @@ namespace AgoraChat
             if(item != null)
             {
                 item.callbackAction(jsonString, item.callback);
+                callbackMap.Remove(callbackId); // delete the callback after triggered
             }
         }
     }
