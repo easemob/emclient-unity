@@ -28,6 +28,8 @@ obj/
 **/.vs/
 *.sln
 *.vcxproj
+*.vcxproj.users
+*.vcxproj.filters
 
 # =========================== #
 # Visual Studio / Win SDK     #
