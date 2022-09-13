@@ -1,5 +1,5 @@
-#include "cwrapper.h"
-#include "cwrapper_import.h"
+#include "CWrapper.h"
+#include "CWrapper_import.h"
 
 NativeListenerEvent gCallback = nullptr;
 
