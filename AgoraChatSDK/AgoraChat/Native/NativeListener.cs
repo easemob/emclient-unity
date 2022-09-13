@@ -1,9 +1,10 @@
 ﻿using AgoraChat.SimpleJSON;
 using System;
+using System.Runtime.InteropServices;
 
 namespace AgoraChat
 {
-    internal delegate void NativeListenerEvent(string listener, string method, string jsonString);
+    internal delegate void NativeListenerEvent(string listener, string method, [Out, MarshalAs(UnmanagedType.LPTStr)] string jsonString);
 
     internal delegate void ChatManagerHandle(string method, string jsonString);
 
