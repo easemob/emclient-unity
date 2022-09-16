@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace AgoraChat
 {
-    internal delegate void NativeListenerEvent(string listener, string method, [Out, MarshalAs(UnmanagedType.LPTStr)] string jsonString);
+    internal delegate void NativeListenerEvent(string listener, string method, [MarshalAs(UnmanagedType.LPTStr)] string jsonString);
 
     internal delegate void ChatManagerHandle(string method, string jsonString);
 
@@ -49,18 +49,18 @@ namespace AgoraChat
 
         public CallbackManager callbackManager;
 
-        internal CallbackQueue_ThreadMode queue;
+        internal CallbackQueue_Worker queue_worker;
 
         public NativeListener() {
 
             callbackManager = new CallbackManager();
 
-            queue = new CallbackQueue_ThreadMode();
-            queue.Start();
+            queue_worker = CallbackQueue_Worker.Instance();
+            queue_worker.StartRun();
 
             nativeListenerEvent = (string listener, string method, string jsonString) =>
             {
-                queue.EnQueue(() => {
+                queue_worker.EnQueue(() => {
                     if (listener == "chatManagerListener")
                     {
                         chatManagerEvent(method, jsonString);
@@ -103,7 +103,7 @@ namespace AgoraChat
 
         ~NativeListener()
         {
-            queue.Stop();
+            queue_worker.Stop();
         }
 
         public void AddNaitveListener() {

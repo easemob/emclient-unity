@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using UnityEngine;
 
 namespace AgoraChat
 {
@@ -46,19 +47,29 @@ namespace AgoraChat
         }
     }
 
+#if _WIN32
     internal class CallbackQueue_ThreadMode
     {
         Task worker;
         bool turn_on;
-
         CallbackQueue queue = new CallbackQueue();
+
+        private static CallbackQueue_ThreadMode instance;
+        internal static CallbackQueue_ThreadMode Instance()
+        {
+            if (null == instance)
+            {
+                instance = new CallbackQueue_ThreadMode();
+            }
+            return instance;
+        }
 
         public void EnQueue(Action action)
         {
             queue.EnQueue(action);
         }
 
-        public void Start()
+        public void StartRun()
         {
             queue.ClearQueue();
             turn_on = true;
@@ -66,7 +77,13 @@ namespace AgoraChat
             worker.Start();
         }
 
-        public void Process()
+        public void Stop()
+        {
+            turn_on = false;
+            queue.ClearQueue();
+        }
+
+        private void Process()
         {
             while(turn_on)
             {
@@ -79,30 +96,47 @@ namespace AgoraChat
                 Thread.Sleep(20); // avoid running too fast
             }
         }
-
-        public void Stop()
-        {
-            turn_on = false;
-            queue.ClearQueue();
-        }
     }
 
-#if Unity
-    internal class CallbackQueue_UnityMode : MonoBehaviour
+#else
+    internal sealed class CallbackQueue_UnityMode : MonoBehaviour
     {
         CallbackQueue queue = new CallbackQueue();
+
+        static string callback_queue_name = "CallbackQueue_UnityMode";
+        private static bool application_is_quitting = false;
+        private static CallbackQueue_UnityMode instance;
+        internal static CallbackQueue_UnityMode Instance()
+        {
+            if(application_is_quitting == true)
+            {
+                return null;
+            }
+            if (null == instance)
+            {
+                GameObject callback_gameobj = new GameObject(callback_queue_name);
+                DontDestroyOnLoad(callback_gameobj);
+                instance = callback_gameobj.AddComponent<CallbackQueue_UnityMode>();
+            }
+            return instance;
+        }
 
         public void EnQueue(Action action)
         {
             queue.EnQueue(action);
         }
 
-        public void Start()
+        public void StartRun()
         {
             queue.ClearQueue();
         }
 
-        public void Process()
+        public void Stop()
+        {
+            queue.ClearQueue();
+        }
+
+        private void Process()
         {
             Action action = queue.DeQueue();
             if (null != action)
@@ -110,11 +144,6 @@ namespace AgoraChat
                 action();
             }
             action = null;
-        }
-
-        public void Stop()
-        {
-            queue.ClearQueue();
         }
 
         void Awake()
@@ -130,7 +159,42 @@ namespace AgoraChat
         void OnDestory()
         {
             queue.ClearQueue();
+            application_is_quitting = true;
         }
     }
-#endif 
+#endif
+
+    internal class CallbackQueue_Worker
+    {
+#if _WIN32
+        CallbackQueue_ThreadMode callback_queue_ = CallbackQueue_ThreadMode.Instance();
+#else
+        CallbackQueue_UnityMode callback_queue_ = CallbackQueue_UnityMode.Instance();
+#endif
+
+        private static CallbackQueue_Worker instance;
+        internal static CallbackQueue_Worker Instance()
+        {
+            if (null == instance)
+            {
+                instance = new CallbackQueue_Worker();
+            }
+            return instance;
+        }
+
+        public void EnQueue(Action action)
+        {
+            callback_queue_.EnQueue(action);
+        }
+
+        public void StartRun()
+        {
+            callback_queue_.StartRun();
+        }
+
+        public void Stop()
+        {
+            callback_queue_.Stop();
+        }
+    }
 }
