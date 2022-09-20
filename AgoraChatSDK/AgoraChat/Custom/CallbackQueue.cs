@@ -4,7 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+
+#if _WIN32
+#else
 using UnityEngine;
+#endif
 
 namespace AgoraChat
 {
