@@ -52,6 +52,9 @@ HYPHENATE_API void RoomManager_MuteAllChatroomMembers(void *client, int callback
 HYPHENATE_API void RoomManager_UnMuteAllChatroomMembers(void *client, int callbackId, const char * roomId, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError);
 HYPHENATE_API void RoomManager_AddWhiteListMembers(void * client, int callbackId, const char * roomId, const char * memberArray[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError);
 HYPHENATE_API void RoomManager_RemoveWhiteListMembers(void * client, int callbackId, const char * roomId, const char * memberArray[], int size, FUNC_OnSuccess onSuccess, FUNC_OnError onError);
+HYPHENATE_API void RoomManager_AddChatRoomMetaData(void* client, int callbackId, const char* roomId, const char* extJson, bool forced, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError);
+HYPHENATE_API void RoomManager_FetchChatRoomMetaFromSever(void* client, int callbackId, const char* roomId, const char* keys, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError);
+HYPHENATE_API void RoomManager_RemoveChatRoomMetaFromSever(void* client, int callbackId, const char* roomId, const char* keys, bool forced, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError);
 #ifdef __cplusplus
 }
 #endif //__cplusplus

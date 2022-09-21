@@ -455,13 +455,13 @@ namespace ChatSDK{
 		internal static extern void RoomManager_UnMuteAllChatroomMembers(IntPtr client, int callbackId, string roomId, OnSuccessResult onSuccessResult, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
-		internal static extern void RoomManager_AddChatRoomMetaData(IntPtr client, int callbackId, string roomId, string extJson, bool forced, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+		internal static extern void RoomManager_AddChatRoomMetaData(IntPtr client, int callbackId, string roomId, [In, MarshalAs(UnmanagedType.LPTStr)] string extJson, bool forced, OnSuccessResult onSuccessResult, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
-		internal static extern void RoomManager_FetchChatRoomMetaFromSever(IntPtr client, int callbackId, string roomId, string keys, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+		internal static extern void RoomManager_FetchChatRoomMetaFromSever(IntPtr client, int callbackId, string roomId, [In, MarshalAs(UnmanagedType.LPTStr)] string keys, OnSuccessResult onSuccessResult, OnErrorV2 onError);
 
 		[DllImport(MyLibName)]
-		internal static extern void RoomManager_RemoveChatRoomMetaFromSever(IntPtr client, int callbackId, string roomId, string keys, bool forced, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+		internal static extern void RoomManager_RemoveChatRoomMetaFromSever(IntPtr client, int callbackId, string roomId, [In, MarshalAs(UnmanagedType.LPTStr)] string keys, bool forced, OnSuccessResult onSuccessResult, OnErrorV2 onError);
 
 
 		/** ContactManager Stub **/
