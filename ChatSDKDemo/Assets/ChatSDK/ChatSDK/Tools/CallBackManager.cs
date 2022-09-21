@@ -176,6 +176,12 @@ namespace ChatSDK {
             CurrentId++;
         }
 
+        internal void AddCallbackResult(int callbackId, CallBackResult callback)
+        {
+            dictionary.Add(callbackId.ToString(), callback);
+            CurrentId++;
+        }
+
         internal void AddValueCallback<T>(int callbackId, ValueCallBack<T> valueCallBack)
         {
             dictionary.Add(callbackId.ToString(), valueCallBack);

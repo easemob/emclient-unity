@@ -209,5 +209,20 @@ namespace ChatSDK
             obj.Add("members", TransformTool.JsonStringFromStringList(members));
             ChatAPIIOS.RoomManager_HandleMethodCall("removeWhiteListMembers", obj.ToString(), handle?.callbackId);
         }
+
+        public override void AddAttributes(string roomId, Dictionary<string, string> kv, bool forced, CallBackResult handle = null)
+        {
+            //TODO: add code here.
+        }
+
+        public override void FetchAttributes(string roomId, List<string> keys, ValueCallBack<Dictionary<string, string>> handle = null)
+        {
+            //TODO: add code here.
+        }
+
+        public override void RemoveAttributes(string roomId, List<string> keys, bool forced, CallBackResult handle = null)
+        {
+            //TODO: add code here.
+        }
     }
 }

@@ -189,5 +189,15 @@ namespace ChatSDK {
                 });
             }
         }
+
+        internal void OnChatroomAttributesChanged(string jsonString)
+        {
+            //TODO: add code here.
+        }
+
+        internal void OnChatroomAttributesRemoved(string jsonString)
+        {
+            //TODO: add code here.
+        }
     }
 }

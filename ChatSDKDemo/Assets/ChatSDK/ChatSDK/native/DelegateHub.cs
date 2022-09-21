@@ -63,6 +63,8 @@ namespace ChatSDK
     internal delegate void OnChatRoomDestroyed(string roomId, [MarshalAs(UnmanagedType.LPTStr)] string roomName);
     internal delegate void OnRemovedFromChatRoom(string roomId, [MarshalAs(UnmanagedType.LPTStr)] string roomName, string participant);
     internal delegate void OnMemberExitedFromRoom(string roomId, [MarshalAs(UnmanagedType.LPTStr)] string roomName, string member);
+    internal delegate void OnChatroomAttributesChanged(string roomId, [MarshalAs(UnmanagedType.LPTStr)] string ext, string from);
+    internal delegate void OnChatroomAttributesRemoved(string roomId, [MarshalAs(UnmanagedType.LPTStr)] string ext, string from);
 
     //IContactManagerDelegate
     internal delegate void OnContactAdd(string username);
@@ -696,6 +698,8 @@ namespace ChatSDK
         internal OnAdminRemoved OnAdminRemoved;
         internal OnOwnerChanged OnOwnerChanged;
         internal OnAnnouncementChanged OnAnnouncementChanged;
+        internal OnChatroomAttributesChanged OnChatroomAttributesChanged;
+        internal OnChatroomAttributesRemoved OnChatroomAttributesRemoved;
 
         internal RoomManagerHub()
         {
@@ -824,6 +828,39 @@ namespace ChatSDK
                     foreach (IRoomManagerDelegate listener in CallbackManager.Instance().roomManagerListener.delegater)
                     {
                         listener.OnAnnouncementChangedFromRoom(roomId, announ);
+                    }
+                });
+            };
+
+            OnChatroomAttributesChanged = (string roomId, string ext, string from) =>
+            {
+                var json = TransformTool.GetUnicodeStringFromUTF8InCallBack(ext);
+                Debug.Log($"OnChatroomAttributesChanged, roomId {roomId}, ext {json}");
+
+                Dictionary<string, string> kv = TransformTool.JsonStringToDictionary(json);
+                if (null == kv) kv = new Dictionary<string, string>();
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IRoomManagerDelegate listener in CallbackManager.Instance().roomManagerListener.delegater)
+                    {
+                        listener.OnChatroomAttributesChanged(roomId, kv, from);
+                    }
+                });
+
+            };
+
+            OnChatroomAttributesRemoved = (string roomId, string ext, string from) =>
+            {
+                var json = TransformTool.GetUnicodeStringFromUTF8InCallBack(ext);
+                Debug.Log($"OnChatroomAttributesRemoved, roomId {roomId}, ext {json}");
+
+                Dictionary<string, string> kv = TransformTool.JsonStringToDictionary(json);
+                if (null == kv) kv = new Dictionary<string, string>();
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IRoomManagerDelegate listener in CallbackManager.Instance().roomManagerListener.delegater)
+                    {
+                        listener.OnChatroomAttributesRemoved(roomId, kv, from);
                     }
                 });
             };

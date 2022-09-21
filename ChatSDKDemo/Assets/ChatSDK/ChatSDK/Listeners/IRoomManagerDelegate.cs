@@ -179,5 +179,39 @@ namespace ChatSDK
          * @param announcement  The updated announcement.
          */
         void OnAnnouncementChangedFromRoom(string roomId, string announcement);
+
+        /**
+         * \~chinese
+         * 聊天室属性更新事件。
+         *
+         * @param roomId        聊天室 ID。
+         * @param kv            更新的属性。
+         * @param from          更新动作发起人。
+         *
+         * \~english
+         * Occurs when the chat room announcement is updated.
+         *
+         * @param roomId        The chat room ID.
+         * @param kv            The updated properties.
+         * @param from          The operator to do update.
+         */
+        void OnChatroomAttributesChanged(string roomId, Dictionary<string, string> kv, string from);
+
+        /**
+         * \~chinese
+         * 聊天室属性移除事件。
+         *
+         * @param roomId        聊天室 ID。
+         * @param kv            移除的属性。
+         * @param from          移除动作发起人。
+         *
+         * \~english
+         * Occurs when the chat room announcement is updated.
+         *
+         * @param roomId        The chat room ID.
+         * @param kv            The removed properties.
+         * @param from          The operator to do remove.
+         */
+        void OnChatroomAttributesRemoved(string roomId, Dictionary<string, string> kv, string from);
     }
 }

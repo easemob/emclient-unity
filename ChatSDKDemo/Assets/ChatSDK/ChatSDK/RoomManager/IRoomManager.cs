@@ -663,6 +663,85 @@ namespace ChatSDK
         public abstract void RemoveWhiteListMembers(string roomId, List<string> members, CallBack handle = null);
 
 		/**
+         * \~chinese
+         * 添加聊天室属性。
+         * 聊天室成员均可调用此方法。
+         *
+         * 异步方法。
+         *
+         * @param roomId         聊天室 ID。
+         * @param kv			 新增的属性。
+         * @forced               是否强制执行此操作。
+         * @param handle         结果回调，成功时回调 {@link CallBackResult#OnSuccessResult(Dictionary<string, string>)}，
+         *                       失败时回调 {@link CallBackResult#onError(int, String)}。
+         *
+         * \~english
+         * Add chat room properties.
+         * All members in the chatroom owner can call this API.
+         *
+         * This is an asynchronous method.
+         *
+         * @param roomId        The chat room ID.
+         * @param kv			The added chatroom properties.
+         * @forced              Whether forced.
+         * @param handle        The completion callback. If this call succeeds, calls {@link CallBackResult#OnSuccessResult(Dictionary<string, string>)};
+         *                      if this call fails, calls {@link CallBackResult#onError(int, String)}.
+         */
+		public abstract void AddAttributes(string roomId, Dictionary<string, string> kv, bool forced = false, CallBackResult handle = null);
+
+		/**
+         * \~chinese
+         * 获取聊天室属性。
+         * 聊天室成员均可调用此方法。
+         *
+         * 异步方法。
+         *
+         * @param roomId         聊天室 ID。
+         * @param keys			 待获取属性的键值。
+         * @param handle         结果回调，成功时回调 {@link ValueCallBack#OnSuccessValue(Dictionary<string, string>)}，
+         *                       失败时回调 {@link ValueCallBack#onError(int, String)}。
+         *
+         * \~english
+         * Add chat room properties.
+         * All members in the chatroom owner can call this API.
+         *
+         * This is an asynchronous method.
+         *
+         * @param roomId        The chat room ID.
+         * @param keys			The keys used to fetch properties.
+         * @param handle        The completion callback. If this call succeeds, calls {@link ValueCallBack#OnSuccessValue(Dictionary<string, string>)};
+         *                      if this call fails, calls {@link ValueCallBack#onError(int, String)}.
+         */
+		public abstract void FetchAttributes(string roomId, List<string> keys, ValueCallBack<Dictionary<string, string>> handle = null);
+
+		/**
+         * \~chinese
+         * 移除聊天室属性。
+         * 聊天室成员均可调用此方法。
+         *
+         * 异步方法。
+         *
+         * @param roomId         聊天室 ID。
+         * @param keys			 待属性属性的键值。
+         * @forced               是否强制执行此操作。
+         * @param handle         结果回调，成功时回调 {@link CallBackResult#OnSuccessResult(Dictionary<string, string>)}，
+         *                       失败时回调 {@link CallBackResult#onError(int, String)}。
+         *
+         * \~english
+         * Remove chat room properties.
+         * All members in the chatroom owner can call this API.
+         *
+         * This is an asynchronous method.
+         *
+         * @param roomId        The chat room ID.
+         * @param keys			The keys used to remove properties.
+         * @forced              Whether forced.
+         * @param handle        The completion callback. If this call succeeds, calls {@link CallBackResult#OnSuccessResult(Dictionary<string, string>)};
+         *                      if this call fails, calls {@link CallBackResult#onError(int, String)}.
+         */
+		public abstract void RemoveAttributes(string roomId, List<string> keys, bool forced = false, CallBackResult handle = null);
+
+		/**
 		 * \~chinese
 		 * 注册聊天室监听器。
 		 *
