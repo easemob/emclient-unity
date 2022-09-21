@@ -670,4 +670,13 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
         UIManager.DefaultAlert(this.transform, $"回调 OnAnnouncementChangedFromRoom: {roomId} , {announcement}");
     }
 
+    void IRoomManagerDelegate.OnChatroomAttributesChanged(string roomId, Dictionary<string, string> kv, string from)
+    {
+        UIManager.DefaultAlert(this.transform, $"回调 OnChatroomAttributesChanged: {roomId} , {kv.Count}");
+    }
+
+    void IRoomManagerDelegate.OnChatroomAttributesRemoved(string roomId, Dictionary<string, string> kv, string from)
+    {
+        UIManager.DefaultAlert(this.transform, $"回调 OnChatroomAttributesRemoved: {roomId} , {kv.Count}");
+    }
 }

@@ -22,11 +22,8 @@ namespace ChatSDK
         * @param deleteMessages 是否同时删除本地历史消息：
 		*                       - `true` ：是；
 		*                       - `false` ：否。
-		* @param isThread       删除会话是否是子区会话。
-		*                       - `true` 是子区会话；
-		*                       - `false` 不是子区会话。
 		*
-			* @return               会话是否成功删除：
+		* @return               会话是否成功删除：
 		*                       - `true` ：是；
 		*                       - `false` ：否。
         *
@@ -520,13 +517,13 @@ namespace ChatSDK
          * 翻译消息。
          * @param message 消息对象。
          * @param languages 要翻译的目标语言 code 列表。
-         * @param callBack 完成的回调，详见 {@link #CallBack()}。
+         * @param ValuecallBack 完成的回调，详见 {@link #ValueCallBack()}。
          *
          * \~english
          * Translates a message.
          * @param message The message object.
          * @param languages The list of the target languages.
-         * @param callBack The result callback，see {@link #CallBack()}.
+         * @param ValuecallBack The result callback，see {@link #ValueCallBack()}.
          */
         public abstract void TranslateMessage(Message message, List<string> targetLanguages, ValueCallBack<Message> handle = null);
 
@@ -638,7 +635,7 @@ namespace ChatSDK
          * 异步方法。
          *
          * @param messageIdList 消息 ID。
-         * @param chatType      会话类型，仅支持单聊（ {@link ConversationType.Chat} ）和群聊（{@link ConversationType.Group}）。
+         * @param chatType      会话类型，仅支持单聊（ {@link MessageType.Chat} ）和群聊（{@link MessageType.Group}）。
          * @param groupId       群组 ID，该参数只在群聊生效。
          * @param callback      处理结果回调，包含消息 ID 对应的 Reaction 列表（EMMessageReaction 的用户列表为概要数据，只包含前三个用户信息）。
          *
@@ -648,7 +645,7 @@ namespace ChatSDK
          * This is an asynchronous method.
          *
          * @param messageIdList  The message ID.
-         * @param chatType       The chat type. Only one-to-one chat ({@link ConversationType.Chat} and group chat ({@link ConversationType.Group}) are allowed.
+         * @param chatType       The chat type. Only one-to-one chat ({@link MessageType.Chat} and group chat ({@link MessageType.Group}) are allowed.
          * @param groupId        The group ID, which is invalid only when the chat type is group chat.
          * @param callback       The result callback, which contains the Reaction list under the specified message ID（The user list of EMMessageReaction is the summary data, which only contains the information of the first three users）.
          */

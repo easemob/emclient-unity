@@ -25,7 +25,8 @@ namespace ChatSDK
             //registered listeners
             ChatAPINative.RoomManager_AddListener(client, roomManagerHub.OnChatRoomDestroyed, roomManagerHub.OnMemberJoined,
                 roomManagerHub.OnMemberExited, roomManagerHub.OnRemovedFromChatRoom, roomManagerHub.OnMuteListAdded, roomManagerHub.OnMuteListRemoved,
-                roomManagerHub.OnAdminAdded, roomManagerHub.OnAdminRemoved, roomManagerHub.OnOwnerChanged, roomManagerHub.OnAnnouncementChanged);
+                roomManagerHub.OnAdminAdded, roomManagerHub.OnAdminRemoved, roomManagerHub.OnOwnerChanged, roomManagerHub.OnAnnouncementChanged,
+                roomManagerHub.OnChatroomAttributesChanged, roomManagerHub.OnChatroomAttributesRemoved);
         }
 
         public override void AddRoomAdmin(string roomId, string memberId, CallBack handle = null)
@@ -713,6 +714,76 @@ namespace ChatSDK
             ChatAPINative.RoomManager_RemoveWhiteListMembers(client, callbackId, roomId, membersArray, size,
                 onSuccess: (int cbId) => {
                     ChatCallbackObject.CallBackOnSuccess(cbId);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
+        }
+
+        public override void AddAttributes(string roomId, Dictionary<string, string> kv, bool forced, CallBackResult handle = null)
+        {
+            string json = "";
+            if(kv.Count > 0)
+                json = TransformTool.JsonStringFromDictionary(kv);
+
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.RoomManager_AddChatRoomMetaData(client, callbackId, roomId, json, forced,
+                onSuccessResult: (IntPtr[] data, DataType dType, int size, int cbId) => {
+
+                    string str = TransformTool.PtrToString(data[0]);
+
+                    Dictionary<string, string> failInfo = TransformTool.JsonStringToDictionary(str);
+
+                    int errcode = size;
+
+                    ChatCallbackObject.CallBackResultOnSuccess(cbId, failInfo);
+                },
+                onError: (int code, string desc, int cbId) => {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
+        }
+
+        public override void FetchAttributes(string roomId, List<string> keys, ValueCallBack<Dictionary<string, string>> handle = null)
+        {
+            string json = "";
+            if(keys.Count > 0)
+                json = TransformTool.JsonStringFromStringList(keys);
+
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.RoomManager_FetchChatRoomMetaFromSever(client, callbackId, roomId, json,
+                onSuccessResult: (IntPtr[] data, DataType dType, int size, int cbId) =>
+                {
+                    string str = TransformTool.PtrToString(data[0]);
+
+                    Dictionary<string, string> kv = TransformTool.JsonStringToDictionary(str);
+
+                    ChatCallbackObject.ValueCallBackOnSuccess<Dictionary<string, string>>(cbId, kv);
+                },
+                onError: (int code, string desc, int cbId) =>
+                {
+                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                });
+        }
+
+        public override void RemoveAttributes(string roomId, List<string> keys, bool forced, CallBackResult handle = null)
+        {
+            string json = "";
+            if(keys.Count > 0)
+                json = TransformTool.JsonStringFromStringList(keys);
+            int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
+
+            ChatAPINative.RoomManager_RemoveChatRoomMetaFromSever(client, callbackId, roomId, json, forced,
+                onSuccessResult: (IntPtr[] data, DataType dType, int size, int cbId) => {
+
+                    string str = TransformTool.PtrToString(data[0]);
+
+                    Dictionary<string, string> failInfo = TransformTool.JsonStringToDictionary(str);
+
+                    int errcode = size;
+
+                    ChatCallbackObject.CallBackResultOnSuccess(cbId, failInfo);
                 },
                 onError: (int code, string desc, int cbId) => {
                     ChatCallbackObject.CallBackOnError(cbId, code, desc);

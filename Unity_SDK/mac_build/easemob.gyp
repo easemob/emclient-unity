@@ -74,7 +74,7 @@
         'cflags_cc': [
             '-Wall',
           #  '-Os',
-            '-std=c++11',
+            '-std=c++14',
             '-fPIC',
         ],
         'xcode_settings': {
@@ -111,7 +111,8 @@
                 '<(emclient-linux-path)/3rd_party/fpa/include',
                 '<(emclient-linux-path)/3rd_party/md5',
                 #'<(emclient-linux-path)/3rd_party/openssl/include',
-                '<(emclient-linux-path)/3rd_party/platform/darwin/depends/openssl_1.1.1l_share_intel/include',
+                #'<(emclient-linux-path)/3rd_party/platform/darwin/depends/openssl_1.1.1l_share_intel/include',
+                '<(emclient-linux-path)/3rd_party/platform/darwin/depends/boringssl_1.1.1g_header/include',
                 '<(emclient-linux-path)/3rd_party/platform/darwin/depends/curl_7.80.0_share_intel/include',
                 '<(emclient-linux-path)/protocol',
                 '<(emclient-linux-path)/protocol/generated',
@@ -182,6 +183,7 @@
                 '<(emclient-linux-path)/src/utils/emfilecompressor.cpp',
                 '<(emclient-linux-path)/src/utils/emencryptutils.cpp',
                 '<(emclient-linux-path)/src/utils/emcryptoadapter.cpp',
+                '<(emclient-linux-path)/src/utils/emaestool.cpp',
                 '<(emclient-linux-path)/src/emchatroom.cpp',
                 '<(emclient-linux-path)/src/emchatroommanager.cpp',
                 '<(emclient-linux-path)/src/emmuc.cpp',
@@ -203,6 +205,8 @@
                 '<(emclient-linux-path)/src/emthread.cpp',
                 '<(emclient-linux-path)/src/emthreadevent.cpp',
                 '<(emclient-linux-path)/src/emthreadmanager.cpp',
+                '<(emclient-linux-path)/src/emhttprequestmonitor.cpp',
+
                 # Add protocol source files
                 '<(emclient-linux-path)/protocol/emconnectionfactory.cpp',
                 '<(emclient-linux-path)/protocol/emconnectiontcpbase.cpp',
@@ -320,14 +324,17 @@
                    ['OS=="mac"', {
                        'libraries': [
                            #'libsqlcipher.dylib',
+                           'Security.framework',
                            'libcurl.4.dylib',
                            'libz.1.2.11.dylib',
-                           'libcrypto.1.1.dylib',
-                           'libssl.1.1.dylib',
+                           'libagora_fpa_sdk.a',
+                           #'libcrypto.1.1.dylib',
+                           #'libssl.1.1.dylib',
                        ],
                        'library_dirs': [
                            '<(emclient-linux-path)/3rd_party/platform/darwin/depends/zlib_1.2.11_share_intel/lib',
-                           '<(emclient-linux-path)/3rd_party/platform/darwin/depends/openssl_1.1.1l_share_intel/lib',
+                           #'<(emclient-linux-path)/3rd_party/platform/darwin/depends/openssl_1.1.1l_share_intel/lib',
+                           '<(emclient-linux-path)/3rd_party/platform/darwin/depends/fpa_1.2.0_static_intel/lib',
                            '<(emclient-linux-path)/3rd_party/platform/darwin/depends/curl_7.80.0_share_intel/lib',
                        ],
                    }],

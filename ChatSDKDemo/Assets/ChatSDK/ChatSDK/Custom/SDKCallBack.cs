@@ -1,20 +1,26 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Collections.Generic;
 #if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE || UNITY_EDITOR
 using UnityEngine;
 #endif
 
 namespace ChatSDK
 {
-    // ValueCallback<T>
-    internal delegate void OnSuccessResultV2(IntPtr header, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] IntPtr[] data, DataType dType, int size, int callbackId);
-    internal delegate void OnSuccessResult([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)]IntPtr[] data, DataType dType, int size, int callbackId);
-    internal delegate void OnErrorV2(int code, string desc, int callbackId);
-    internal delegate void OnProgressV2(int progress, int callbackId);
 
-    
-    internal delegate void OnSuccess(int callbackId);
+	/**
+	* \~chinese
+	* 执行带结果的成功回调。
+	*
+	* @param failInfo  错误信息。
+	*
+	* \~english
+	* The callback for a method execution success with result.
+	*
+	* @param desc      The error information.
+	*/
+	public delegate void OnSuccessWithResult(Dictionary<string, string> failInfo);
 
     /**
 	* \~chinese
@@ -122,14 +128,53 @@ namespace ChatSDK
             Debug.Log($"CallBack ${callbackId} finalized!");
         }
     }
-    /**
+
+	public class CallBackResult
+	{
+		/**
+		* \~chinese
+		* 带结果的成功回调。
+		*
+		* \~english
+		* The success callback with result.
+		*
+		*/
+		public OnSuccessWithResult SuccessResult;
+
+		/**
+		* \~chinese
+		* 错误回调。
+		*
+		* \~english
+		* The error callback.
+		*
+		*/
+		public OnError Error;
+
+		internal string callbackId;
+
+		public CallBackResult(OnSuccessWithResult onSuccessResult = null, OnError onError = null)
+		{
+			SuccessResult = onSuccessResult;
+			Error = onError;
+			callbackId = CallbackManager.Instance().CurrentId.ToString();
+			CallbackManager.Instance().AddCallbackResult(CallbackManager.Instance().CurrentId, this);
+		}
+
+		~CallBackResult()
+		{
+			Debug.Log($"CallBack ${callbackId} finalized!");
+		}
+	}
+
+	/**
 	* \~chinese
 	* 带有返回值的回调类。
 	* 
 	* \~english
 	* The class of callbacks with a return value.
 	*/
-    public class ValueCallBack<T> : CallBack
+	public class ValueCallBack<T> : CallBack
     {
 	  /**
 	   * \~chinese

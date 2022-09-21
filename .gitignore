@@ -28,6 +28,8 @@ obj/
 **/.vs/
 *.sln
 *.vcxproj
+*.vcxproj.users
+*.vcxproj.filters
 
 # =========================== #
 # Visual Studio / Win SDK     #
@@ -139,3 +141,7 @@ sysinfo.txt
 **/*.framework
 **/*.a
 **/*.so
+
+# windows sdk
+*.nupkg
+*.dll

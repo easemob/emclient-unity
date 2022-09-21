@@ -352,8 +352,51 @@ namespace ChatSDK
 		 * @param fileId  The ID of the removed shared file.
 		 */
 		void OnSharedFileDeletedFromGroup(string groupId, string fileId);
+
+		/**
+		 * \~chinese
+		 * 添加白名单回调。
+		 *
+		 * @param groupId       群组 ID。
+		 * @param whitelist     要添加的成员列表。
+		 *
+		 * \~english
+		 * Occurs when one or more group members are added to the allowlist.
+		 *
+		 * @param groupId       The group ID.
+		 * @param whitelist     The member(s) added to the allowlist.
+		 */
         void OnAddWhiteListMembersFromGroup(string groupId, List<string> whiteList);
+
+		/**
+		 * \~chinese
+		 * 移除白名单回调。
+		 *
+		 * @param groupId       群组 ID。
+		 * @param whitelist     从白名单中移除的成员列表
+		 *
+		 * \~english
+		 * Occurs when one or more members are removed from the allowlist.
+		 *
+		 * @param groupId       The group ID.
+		 * @param whitelist     Member(s) removed from the allowlist.
+		 */
         void OnRemoveWhiteListMembersFromGroup(string groupId, List<string> whiteList);
+
+		/**
+		 * \~chinese
+		 * 全员禁言状态变化回调。
+		 *
+		 * @param groupId       群组 ID。
+		 * @param isAllMuted    是否开启了全员禁言。
+		 *
+		 * \~english
+		 * Occurs when all group members are muted or unmuted.
+		 *
+		 * @param groupId       The group ID.
+		 * @param isAllMuted    Whether all group members are muted or unmuted. true: all group members are muted; false: all group members are unmuted.
+		 */
+
         void OnAllMemberMuteChangedFromGroup(string groupId, bool isAllMuted);
 
 

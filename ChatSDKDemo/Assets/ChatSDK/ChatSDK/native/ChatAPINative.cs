@@ -3,6 +3,14 @@ using System;
 using System.Text;
 
 namespace ChatSDK{
+
+	internal delegate void OnSuccessResultV2(IntPtr header, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] IntPtr[] data, DataType dType, int size, int callbackId);
+	internal delegate void OnSuccessResult([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] data, DataType dType, int size, int callbackId);
+	internal delegate void OnErrorV2(int code, string desc, int callbackId);
+	internal delegate void OnProgressV2(int progress, int callbackId);
+	internal delegate void OnSuccess(int callbackId);
+
+
 	public sealed class ChatAPINative
 	{
 
@@ -17,6 +25,7 @@ namespace ChatSDK{
         public const string MyLibName = "hyphenateCWrapper";
 //#endif
 #endif
+
 		/** Client Stub **/
 		[DllImport(MyLibName)]
 
@@ -351,7 +360,8 @@ namespace ChatSDK{
 		[DllImport(MyLibName)]
 		internal static extern void RoomManager_AddListener(IntPtr client, OnChatRoomDestroyed onChatRoomDestroyed, OnMemberJoined onMemberJoined,
 				OnMemberExitedFromRoom onMemberExited, OnRemovedFromChatRoom onRemovedFromChatRoom, OnMuteListAdded onMuteListAdded, OnMuteListRemoved onMuteListRemoved,
-				OnAdminAdded onAdminAdded, OnAdminRemoved onAdminRemoved, OnOwnerChanged onOwnerChanged, OnAnnouncementChanged onAnnouncementChanged);
+				OnAdminAdded onAdminAdded, OnAdminRemoved onAdminRemoved, OnOwnerChanged onOwnerChanged, OnAnnouncementChanged onAnnouncementChanged,
+				OnChatroomAttributesChanged onChatroomAttributesChanged, OnChatroomAttributesRemoved onChatroomAttributesRemoved);
 
 		[DllImport(MyLibName)]
 		internal static extern void RoomManager_AddRoomAdmin(IntPtr client, int callbackId, string roomId, string memberId, OnSuccessResult onSuccessResult = null, OnErrorV2 onError = null);
@@ -443,6 +453,16 @@ namespace ChatSDK{
 
 		[DllImport(MyLibName)]
 		internal static extern void RoomManager_UnMuteAllChatroomMembers(IntPtr client, int callbackId, string roomId, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void RoomManager_AddChatRoomMetaData(IntPtr client, int callbackId, string roomId, string extJson, bool forced, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void RoomManager_FetchChatRoomMetaFromSever(IntPtr client, int callbackId, string roomId, string keys, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+
+		[DllImport(MyLibName)]
+		internal static extern void RoomManager_RemoveChatRoomMetaFromSever(IntPtr client, int callbackId, string roomId, string keys, bool forced, OnSuccessResult onSuccessResult, OnErrorV2 onError);
+
 
 		/** ContactManager Stub **/
 		[DllImport(MyLibName)]

@@ -106,6 +106,15 @@ namespace WinSDKTest
                     {
                         TextBody b = (TextBody)msg.Body;
                         Console.WriteLine($"message text content: {b.Text}");
+                        string str = string.Join(",", b.TargetLanguages.ToArray());
+                        Console.WriteLine($"message targent languages: {str}");
+                        if (null != b.Translations)
+                        {
+                            foreach (var it in b.Translations)
+                            {
+                                Console.WriteLine($"lang: {it.Key} and result:{it.Value}");
+                            }
+                        }
                     }
                     break;
                 case MessageBodyType.FILE:
@@ -1684,8 +1693,8 @@ namespace WinSDKTest
 
         public void InitAll(string appkey)
         {
-            Options options = new Options("easemob-demo#easeim");
-            //Options options = new Options("easemob-demo#unitytest");
+            //Options options = new Options("easemob-demo#easeim");
+            Options options = new Options("easemob-demo#unitytest");
             //Options options = new Options("5101220107132865#test"); // 北京沙箱测试环境，无法正常登录
             //Options options = new Options("41117440#383391"); // 线上环境, demo中的token
             if (appkey.Length > 0 && appkey.Contains("#") == true)
@@ -2785,7 +2794,12 @@ namespace WinSDKTest
             Message msg = Message.CreateTextSendMessage(to, text);
             msg.MessageType = msg_type;
             msg.IsThread = is_thread;
-            msg.IsNeedGroupAck = true;
+            //msg.IsNeedGroupAck = true;
+
+            ChatSDK.MessageBody.TextBody tb = (ChatSDK.MessageBody.TextBody)msg.Body;
+            tb.TargetLanguages = new List<string>();
+            tb.TargetLanguages.Add("en");
+            tb.TargetLanguages.Add("ja");
 
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
                 onSuccess: () => {
@@ -3182,6 +3196,7 @@ namespace WinSDKTest
              {
                  Console.WriteLine($"TranslateMessage success.");
                  TextBody tb = (TextBody)dmsg.Body;
+                 Console.WriteLine($"orgigin text is: {tb.Text}");
                  foreach(var it in tb.Translations)
                  {
                      Console.WriteLine($"Translate, lang:{it.Key}, result:{it.Value}");
@@ -6163,6 +6178,7 @@ namespace WinSDKTest
 
         public void CallFunc_IPushManager_GetNoDisturbGroups()
         {
+            /*
             List<string> list = SDKClient.Instance.PushManager.GetNoDisturbGroups();
             if (list.Count > 0)
             {
@@ -6176,11 +6192,12 @@ namespace WinSDKTest
             {
                 Console.WriteLine($"GetNoDisturbGroups done, list is empty");
             }
-
+            */
         }
 
         public void CallFunc_IPushManager_GetPushConfig()
         {
+            /*
             PushConfig config = SDKClient.Instance.PushManager.GetPushConfig();
             if (null != config)
             {
@@ -6191,10 +6208,12 @@ namespace WinSDKTest
             {
                 Console.WriteLine("GetPushConfig done, PushConfig is null.");
             }
+            */
         }
 
         public void CallFunc_IPushManager_GetPushConfigFromServer()
         {
+            /*
             SDKClient.Instance.PushManager.GetPushConfigFromServer(new ValueCallBack<PushConfig>(
                 onSuccess: (config) => {
                     if (null != config)
@@ -6211,10 +6230,12 @@ namespace WinSDKTest
                      Console.WriteLine($"GetPushConfigFromServer failed, code:{code}, desc:{desc}");
                  }
             ));
+            */
         }
 
         public void CallFunc_IPushManager_UpdatePushNickName()
         {
+            /*
             string nk = GetParamValueFromContext(0);
             SDKClient.Instance.PushManager.UpdatePushNickName(nk, new CallBack(
                 onSuccess: () => {
@@ -6224,10 +6245,12 @@ namespace WinSDKTest
                     Console.WriteLine($"UpdatePushNickName failed, code:{code}, desc:{desc}");
                 }
             ));
+            */
         }
 
         public void CallFunc_IPushManager_UpdateHMSPushToken()
         {
+            /*
             string nk = GetParamValueFromContext(0);
             SDKClient.Instance.PushManager.UpdateHMSPushToken(nk, new CallBack(
                 onSuccess: () => {
@@ -6237,10 +6260,12 @@ namespace WinSDKTest
                     Console.WriteLine($"UpdateHMSPushToken failed, code:{code}, desc:{desc}");
                 }
             ));
+            */
         }
 
         public void CallFunc_IPushManager_UpdateFCMPushToken()
         {
+            /*
             string nk = GetParamValueFromContext(0);
             SDKClient.Instance.PushManager.UpdateFCMPushToken(nk, new CallBack(
                 onSuccess: () => {
@@ -6250,10 +6275,12 @@ namespace WinSDKTest
                     Console.WriteLine($"UpdateFCMPushToken failed, code:{code}, desc:{desc}");
                 }
             ));
+            */
         }
 
         public void CallFunc_IPushManager_UpdateAPNSPushToken()
         {
+            /*
             string nk = GetParamValueFromContext(0);
             SDKClient.Instance.PushManager.UpdateAPNSPushToken(nk, new CallBack(
                 onSuccess: () => {
@@ -6263,10 +6290,12 @@ namespace WinSDKTest
                     Console.WriteLine($"UpdateAPNSPushToken failed, code:{code}, desc:{desc}");
                 }
             ));
+            */
         }
 
         public void CallFunc_IPushManager_SetNoDisturb()
         {
+            /*
             int noDisturb = GetIntFromString(GetParamValueFromContext(0));
             int startTime = GetIntFromString(GetParamValueFromContext(1));
             int endTime = GetIntFromString(GetParamValueFromContext(2));
@@ -6279,10 +6308,12 @@ namespace WinSDKTest
                     Console.WriteLine($"SetNoDisturb failed, code:{code}, desc:{desc}");
                 }
             ));
+            */
         }
 
         public void CallFunc_IPushManager_SetPushStyle()
         {
+            /*
             int pushStyle = GetIntFromString(GetParamValueFromContext(0));
             SDKClient.Instance.PushManager.SetPushStyle(pushStyle == 0 ? PushStyle.Simple : PushStyle.Summary, new CallBack(
                 onSuccess: () => {
@@ -6292,10 +6323,12 @@ namespace WinSDKTest
                     Console.WriteLine($"SetPushStyle failed, code:{code}, desc:{desc}");
                 }
             ));
+            */
         }
 
         public void CallFunc_IPushManager_SetGroupToDisturb()
         {
+            /*
             string groupId = GetParamValueFromContext(0);
             int noDisturb = GetIntFromString(GetParamValueFromContext(1));
             SDKClient.Instance.PushManager.SetGroupToDisturb(groupId, noDisturb == 0 ? false : true, new CallBack(
@@ -6306,10 +6339,12 @@ namespace WinSDKTest
                     Console.WriteLine($"SetGroupToDisturb failed, code:{code}, desc:{desc}");
                 }
             ));
+            */
         }
 
         public void CallFunc_IPushManager_SetSilentModeForAll()
         {
+            /*
             int paramType = GetIntFromString(GetParamValueFromContext(0));
             int duration = GetIntFromString(GetParamValueFromContext(1));
             int type = GetIntFromString(GetParamValueFromContext(2));
@@ -6339,10 +6374,12 @@ namespace WinSDKTest
                     Console.WriteLine($"SetSilentModeForAll failed, code:{code}, desc:{desc}");
                 }
             ));
+            */
         }
 
         public void CallFunc_IPushManager_GetSilentModeForAll()
         {
+            /*
             SDKClient.Instance.PushManager.GetSilentModeForAll(new ValueCallBack<SilentModeItem>(
                 onSuccess: (item) => {
                     Console.WriteLine($"GetSilentModeForAll success.");
@@ -6353,10 +6390,12 @@ namespace WinSDKTest
                     Console.WriteLine($"GetSilentModeForAll failed, code:{code}, desc:{desc}");
                 }
             ));
+            */
         }
 
         public void CallFunc_IPushManager_SetSilentModeForConversation()
         {
+            /*
             string convId = GetParamValueFromContext(0);
             ConversationType convType = (ConversationType)GetIntFromString(GetParamValueFromContext(1));
             int paramType = GetIntFromString(GetParamValueFromContext(2));
@@ -6388,10 +6427,12 @@ namespace WinSDKTest
                     Console.WriteLine($"SetSilentModeForConversation failed, code:{code}, desc:{desc}");
                 }
             ));
+            */
         }
 
         public void CallFunc_IPushManager_GetSilentModeForConversation()
         {
+            /*
             string convId = GetParamValueFromContext(0);
             ConversationType convType = (ConversationType)GetIntFromString(GetParamValueFromContext(1));
 
@@ -6405,10 +6446,12 @@ namespace WinSDKTest
                     Console.WriteLine($"GetSilentModeForConversation failed, code:{code}, desc:{desc}");
                 }
             ));
+            */
         }
 
         public void CallFunc_IPushManager_GetSilentModeForConversations()
         {
+            /*
             string userlist = GetParamValueFromContext(0);
             string grouplist = GetParamValueFromContext(1);
 
@@ -6434,10 +6477,12 @@ namespace WinSDKTest
                     Console.WriteLine($"GetSilentModeForConversations failed, code:{code}, desc:{desc}");
                 }
             ));
+            */
         }
 
         public void CallFunc_IPushManager_SetPreferredNotificationLanguage()
         {
+            /*
             string languageCode = GetParamValueFromContext(0);
 
             SDKClient.Instance.PushManager.SetPreferredNotificationLanguage(languageCode, new CallBack(
@@ -6448,10 +6493,12 @@ namespace WinSDKTest
                     Console.WriteLine($"SetPreferredNotificationLanguage failed, code:{code}, desc:{desc}");
                 }
             ));
+            */
         }
 
         public void CallFunc_IPushManager_GetPreferredNotificationLanguage()
         {
+            /*
             SDKClient.Instance.PushManager.GetPreferredNotificationLanguage(new ValueCallBack<string>(
                 onSuccess: (str) => {
                     Console.WriteLine($"GetPreferredNotificationLanguage success. lang:{str}");
@@ -6460,6 +6507,7 @@ namespace WinSDKTest
                     Console.WriteLine($"GetPreferredNotificationLanguage failed, code:{code}, desc:{desc}");
                 }
             ));
+            */
         }
 
         public void CallFunc_IPushManager()
@@ -7414,6 +7462,8 @@ namespace WinSDKTest
 
         public void CallFunc_IThreadManager_GetThreadWithThreadId()
         {
+            //this API is already deleted!!!
+            /*
             string tid = GetParamValueFromContext(0);
 
             SDKClient.Instance.ThreadManager.GetThreadWithThreadId(tid, new ValueCallBack<ChatThread>(
@@ -7434,6 +7484,7 @@ namespace WinSDKTest
                     Console.WriteLine($"SubscribePresences failed, code:{code}, desc:{desc}");
                 }
             ));
+            */
         }
 
         public void CallFunc_IThreadManager_CreateThread()
@@ -8279,7 +8330,11 @@ namespace WinSDKTest
 
         public void OnRemoveWhiteListMembersFromGroup(string groupId, List<string> whiteList)
         {
-            throw new NotImplementedException();
+            Console.WriteLine($"OnRemoveWhiteListMembersFromGroup: gid: {groupId}");
+            foreach (var it in whiteList)
+            {
+                Console.WriteLine($"white item: {it}");
+            }
         }
 
         public void OnRequestToJoinAcceptedFromGroup(string groupId, string groupName, string accepter)

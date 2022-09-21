@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 #if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE || UNITY_EDITOR
 using UnityEngine;
@@ -133,6 +134,15 @@ namespace ChatSDK
                 var myhandle = (CallBack)CallbackManager.Instance().GetCallBackHandle(cbId);
                 if(null != myhandle && null != myhandle.Success)
                     myhandle.Success();
+            });
+        }
+
+        static public void CallBackResultOnSuccess(int cbId, Dictionary<string, string> failInfo)
+        {
+            ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                var myhandle = (CallBackResult)CallbackManager.Instance().GetCallBackHandle(cbId);
+                if (null != myhandle && null != myhandle.SuccessResult)
+                    myhandle.SuccessResult(failInfo);
             });
         }
 

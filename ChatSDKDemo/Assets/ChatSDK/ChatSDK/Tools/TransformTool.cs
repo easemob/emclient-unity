@@ -262,17 +262,20 @@ namespace ChatSDK
 
                 List<string> list = new List<string>();
 
-                JSONArray jsonArray = JSON.Parse(jsonObject["list"].Value).AsArray;
-
-                foreach (JSONNode obj in jsonArray)
+                JSONNode jn = JSON.Parse(jsonObject["list"].Value);
+                if (null != jn && jn.IsArray)
                 {
-                    if (obj.IsString)
+                    JSONArray jsonArray = jn.AsArray;
+
+                    foreach (JSONNode obj in jsonArray)
                     {
-                        list.Add(obj.Value);
+                        if (obj.IsString)
+                        {
+                            list.Add(obj.Value);
+                        }
+
                     }
-
                 }
-
                 result.Data = list;
             }
             return result;
@@ -292,16 +295,19 @@ namespace ChatSDK
 
                 List<Message> list = new List<Message>();
 
-                JSONArray jsonArray = JSON.Parse(jsonObject["list"].Value).AsArray;
-
-                foreach (JSONNode obj in jsonArray)
+                JSONNode jn = JSON.Parse(jsonObject["list"].Value);
+                if (null != jn && jn.IsArray)
                 {
-                    if (obj.IsString)
+                    JSONArray jsonArray = jn.AsArray;
+
+                    foreach (JSONNode obj in jsonArray)
                     {
-                        list.Add(new Message(obj.Value));
+                        if (obj.IsString)
+                        {
+                            list.Add(new Message(obj.Value));
+                        }
                     }
                 }
-
                 result.Data = list;
             }
             return result;

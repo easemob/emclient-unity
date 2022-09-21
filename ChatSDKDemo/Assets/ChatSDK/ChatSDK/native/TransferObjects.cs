@@ -1791,6 +1791,7 @@ namespace ChatSDK
         public string ConverationId;
         public ConversationType Type;
         public string ExtField;
+        [MarshalAs(UnmanagedType.U1)]
         public bool isThread;
 
         public ConversationTO()

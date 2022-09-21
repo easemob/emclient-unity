@@ -504,10 +504,10 @@ public:
         onSharedFileDeleted(onSharedFileDeleted), onAddWhiteListMembersFromGroup_(onAddWhiteListMembersFromGroup),
         onRemoveWhiteListMembersFromGroup_(onRemoveWhiteListMembersFromGroup), onAllMemberMuteChangedFromGroup_(onAllMemberMuteChangedFromGroup){}
     
-    void onReceiveInviteFromGroup(const std::string groupId, const std::string& inviter, const std::string& inviteMessage) override {
+    void onReceiveInviteFromGroup(const std::string groupId, const std::string groupName, const std::string& inviter, const std::string& inviteMessage) override {
         if(onInvitationReceived) {
             auto group = CLIENT->getGroupManager().groupWithId(groupId);
-            auto groupName = group->groupSubject();
+            //auto groupName = group->groupSubject();
             onInvitationReceived(groupId.c_str(), groupName.c_str(), inviter.c_str(), inviteMessage.c_str());
         }
     }
@@ -579,7 +579,7 @@ public:
             const char** muteArray = new const char* [size];
             for (size_t i = 0; i < mutes.size(); i++) {
                 char* ptr = new char[mutes[i].size() + 1];
-                strncpy(ptr, mutes[i].c_str(), mutes.size() + 1);
+                strncpy(ptr, mutes[i].c_str(), mutes[i].size() + 1);
                 muteArray[i] = ptr;
             }
             onMuteListAdded(group->groupId().c_str(), muteArray, size, (int)muteExpire);
@@ -599,7 +599,7 @@ public:
             const char** muteArray = new const char* [size];
             for (size_t i = 0; i < mutes.size(); i++) {
                 char* ptr = new char[mutes[i].size() + 1];
-                strncpy(ptr, mutes[i].c_str(), mutes.size() + 1);
+                strncpy(ptr, mutes[i].c_str(), mutes[i].size() + 1);
                 muteArray[i] = ptr;
             }
             onMuteListRemoved(group->groupId().c_str(), muteArray, size);
@@ -620,7 +620,7 @@ public:
            const char** memArray = new const char* [size];
            for (size_t i = 0; i < members.size(); i++) {
                char* ptr = new char[members[i].size() + 1];
-               strncpy(ptr, members[i].c_str(), members.size() + 1);
+               strncpy(ptr, members[i].c_str(), members[i].size() + 1);
                memArray[i] = ptr;
            }
 
@@ -642,7 +642,7 @@ public:
             const char** memArray = new const char* [size];
             for (size_t i = 0; i < members.size(); i++) {
                 char* ptr = new char[members[i].size() + 1];
-                strncpy(ptr, members[i].c_str(), members.size() + 1);
+                strncpy(ptr, members[i].c_str(), members[i].size() + 1);
                 memArray[i] = ptr;
             }
 
