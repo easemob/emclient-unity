@@ -19,12 +19,15 @@ EMChatroomManagerListener *gRoomManagerListener = nullptr;
 HYPHENATE_API void RoomManager_AddListener(void *client, FUNC_OnChatRoomDestroyed onChatRoomDestroyed, FUNC_OnMemberJoined onMemberJoined,
                                        FUNC_OnMemberExitedFromRoom onMemberExited,FUNC_OnRemovedFromChatRoom onRemovedFromChatRoom,
                                        FUNC_OnMuteListAdded onMuteListAdded, FUNC_OnMuteListRemoved onMuteListRemoved,FUNC_OnAdminAdded onAdminAdded,
-                                       FUNC_OnAdminRemoved onAdminRemoved, FUNC_OnOwnerChanged onOwnerChanged, FUNC_OnAnnouncementChanged onAnnouncementChanged)
+                                       FUNC_OnAdminRemoved onAdminRemoved, FUNC_OnOwnerChanged onOwnerChanged, FUNC_OnAnnouncementChanged onAnnouncementChanged,
+                                       FUNC_OnChatroomAttributesChanged onChatroomAttributesChanged, FUNC_OnChatroomAttributesRemoved onChatroomAttributesRemoved)
 {
     if (!CheckClientInitOrNot(-1, nullptr)) return;
 
     if(nullptr == gRoomManagerListener) { //only set once!
-        gRoomManagerListener = new RoomManagerListener(client, onChatRoomDestroyed,  onMemberJoined, onMemberExited, onRemovedFromChatRoom, onMuteListAdded, onMuteListRemoved, onAdminAdded, onAdminRemoved, onOwnerChanged, onAnnouncementChanged);
+        gRoomManagerListener = new RoomManagerListener(client, onChatRoomDestroyed,  onMemberJoined,
+            onMemberExited, onRemovedFromChatRoom, onMuteListAdded, onMuteListRemoved, onAdminAdded,
+            onAdminRemoved, onOwnerChanged, onAnnouncementChanged, onChatroomAttributesChanged, onChatroomAttributesRemoved);
        CLIENT->getChatroomManager().addListener(gRoomManagerListener);
         LOG("New RoomManager listener and hook it.");
     }
