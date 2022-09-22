@@ -875,10 +875,14 @@ HYPHENATE_API void RoomManager_AddChatRoomMetaData(void* client, int callbackId,
         std::string failInfo = CLIENT->getChatroomManager().addChatRoomMetaData(roomIdStr, extJsonStr, error, forced);
         if (EMError::EM_NO_ERROR == error.mErrorCode || EMError::PARTIAL_SUCCESS == error.mErrorCode) {
             if (onSuccess) {
-                const char** data = new const char* [1];
-                data[0] = failInfo.c_str();
-                onSuccess((void**)data, DataType::String, error.mErrorCode, callbackId);
-                delete[]data;
+
+                if (EMError::PARTIAL_SUCCESS == error.mErrorCode) {
+                    const char* data[1] = { failInfo.c_str() };
+                    onSuccess((void**)data, DataType::String, 1, callbackId);
+                }
+                else {
+                    onSuccess(nullptr, DataType::String, 0, callbackId);
+                }
             }
         }
         else {
@@ -904,12 +908,10 @@ HYPHENATE_API void RoomManager_FetchChatRoomMetaFromSever(void* client, int call
         EMError error;
 
         std::string properties = CLIENT->getChatroomManager().fetchChatRoomMetaFromSever(roomIdStr, vec, error);
-        if (EMError::EM_NO_ERROR == error.mErrorCode || EMError::PARTIAL_SUCCESS == error.mErrorCode) {
+        if (EMError::EM_NO_ERROR == error.mErrorCode) {
             if (onSuccess) {
-                const char** data = new const char* [1];
-                data[0] = properties.c_str();
-                onSuccess((void**)data, DataType::String, error.mErrorCode, callbackId);
-                delete[]data;
+                const char* data[1] = { properties.c_str() };
+                onSuccess((void**)data, DataType::String, 1, callbackId);
             }
         }
         else {
@@ -936,10 +938,13 @@ HYPHENATE_API void RoomManager_RemoveChatRoomMetaFromSever(void* client, int cal
         std::string failInfo = CLIENT->getChatroomManager().removeChatRoomMetaFromSever(roomIdStr, vec, error, forced);
         if (EMError::EM_NO_ERROR == error.mErrorCode || EMError::PARTIAL_SUCCESS == error.mErrorCode) {
             if (onSuccess) {
-                const char** data = new const char* [1];
-                data[0] = failInfo.c_str();
-                onSuccess((void**)data, DataType::String, error.mErrorCode, callbackId);
-                delete[]data;
+                if (EMError::PARTIAL_SUCCESS == error.mErrorCode) {
+                    const char* data[1] = { failInfo.c_str() };
+                    onSuccess((void**)data, DataType::String, 1, callbackId);
+                }
+                else {
+                    onSuccess(nullptr, DataType::String, 0, callbackId);
+                }
             }
         }
         else {

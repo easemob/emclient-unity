@@ -210,7 +210,7 @@ namespace ChatSDK
             ChatAPIIOS.RoomManager_HandleMethodCall("removeWhiteListMembers", obj.ToString(), handle?.callbackId);
         }
 
-        public override void AddAttributes(string roomId, Dictionary<string, string> kv, bool forced, CallBackResult handle = null)
+        public override void AddAttributes(string roomId, Dictionary<string, string> kv, bool deleteWhenExit, bool forced, CallBackResult handle = null)
         {
             //TODO: add code here.
         }

@@ -155,6 +155,15 @@ namespace ChatSDK
             });
         }
 
+        static public void CallBackResultOnError(int cbId, int code, string desc)
+        {
+            ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                var myhandle = (CallBackResult)CallbackManager.Instance().GetCallBackHandle(cbId);
+                if (null != myhandle && null != myhandle.Error)
+                    myhandle.Error(code, desc);
+            });
+        }
+
         static public void CallBackOnProgress(int cbId, int progress)
         {
             ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {

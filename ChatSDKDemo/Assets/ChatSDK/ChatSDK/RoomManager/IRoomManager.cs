@@ -671,6 +671,7 @@ namespace ChatSDK
          *
          * @param roomId         聊天室 ID。
          * @param kv			 新增的属性。
+         * @param deleteWhenExit 用户退出聊天室时是否删除相关属性。
          * @forced               是否强制执行此操作。
          * @param handle         结果回调，成功时回调 {@link CallBackResult#OnSuccessResult(Dictionary<string, string>)}，
          *                       失败时回调 {@link CallBackResult#onError(int, String)}。
@@ -683,11 +684,12 @@ namespace ChatSDK
          *
          * @param roomId        The chat room ID.
          * @param kv			The added chatroom properties.
+         * @deleteWhenExit      Delete related properties when user exit the room.
          * @forced              Whether forced.
          * @param handle        The completion callback. If this call succeeds, calls {@link CallBackResult#OnSuccessResult(Dictionary<string, string>)};
          *                      if this call fails, calls {@link CallBackResult#onError(int, String)}.
          */
-		public abstract void AddAttributes(string roomId, Dictionary<string, string> kv, bool forced = false, CallBackResult handle = null);
+		public abstract void AddAttributes(string roomId, Dictionary<string, string> kv, bool deleteWhenExit = true, bool forced = false, CallBackResult handle = null);
 
 		/**
          * \~chinese

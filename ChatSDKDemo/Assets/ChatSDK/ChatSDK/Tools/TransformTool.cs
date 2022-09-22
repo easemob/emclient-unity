@@ -352,10 +352,13 @@ namespace ChatSDK
 
         static internal Dictionary<string, string> JsonStringToDictionary(string jsonString)
         {
-            if (jsonString == null || jsonString.Length == 0) return null;
             Dictionary<string, string> ret = new Dictionary<string, string>();
+
+            if (jsonString == null || jsonString.Length == 0) return ret;
+
             JSONNode jn = JSON.Parse(jsonString);
             if (null == jn || jn.IsNull) return ret;
+
             JSONObject jo = jn.AsObject;
             foreach (string s in jo.Keys)
             {

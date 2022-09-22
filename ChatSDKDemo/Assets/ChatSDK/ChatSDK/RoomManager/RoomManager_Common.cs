@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SimpleJSON;
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -720,42 +721,83 @@ namespace ChatSDK
                 });
         }
 
-        public override void AddAttributes(string roomId, Dictionary<string, string> kv, bool forced, CallBackResult handle = null)
+        internal string GetJsonForAttributeParam(Dictionary<string, string> kvs, bool deleteWhenExit)
         {
             string json = "";
-            if(kv.Count > 0)
-                json = TransformTool.JsonStringFromDictionary(kv);
+            if (null != kvs && kvs.Count > 0)
+            {
+                JSONObject jdict = new JSONObject();
+                foreach (var kv in kvs)
+                {
+                    if(!string.IsNullOrEmpty(kv.Key) && !string.IsNullOrEmpty(kv.Value))
+                    {
+                        jdict[kv.Key] = kv.Value;
+                    }
+                }
+
+                if(jdict.Count > 0)
+                {
+                    JSONObject jo = new JSONObject();
+                    jo["metaData"] = jdict;
+
+                    string auto_delete = "DELETE";
+                    if (false == deleteWhenExit) auto_delete = "NO_DELETE";
+                    jo["autoDelete"] = auto_delete;
+
+                    json = jo.ToString();
+                }
+            }
+            return json;
+        }
+
+        internal string GetJsonForAttributeParam(List<string> keys)
+        {
+            string json = "";
+            if (null != keys && keys.Count > 0)
+            {
+                JSONArray ja = new JSONArray();
+                foreach (string str in keys)
+                {
+                    if(!string.IsNullOrEmpty(str))
+                        ja.Add(str);
+                }
+                json = ja.ToString();
+            }
+            return json;
+        }
+
+        public override void AddAttributes(string roomId, Dictionary<string, string> kv, bool deleteWhenExit, bool forced, CallBackResult handle = null)
+        {
+            string json = GetJsonForAttributeParam(kv, deleteWhenExit);
 
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
             ChatAPINative.RoomManager_AddChatRoomMetaData(client, callbackId, roomId, json, forced,
                 onSuccessResult: (IntPtr[] data, DataType dType, int size, int cbId) => {
 
-                    string str = TransformTool.PtrToString(data[0]);
+                    string str = "";
+                    if (1 == size) str = TransformTool.PtrToString(data[0]);
 
                     Dictionary<string, string> failInfo = TransformTool.JsonStringToDictionary(str);
-
-                    int errcode = size;
 
                     ChatCallbackObject.CallBackResultOnSuccess(cbId, failInfo);
                 },
                 onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                    ChatCallbackObject.CallBackResultOnError(cbId, code, desc);
                 });
         }
 
         public override void FetchAttributes(string roomId, List<string> keys, ValueCallBack<Dictionary<string, string>> handle = null)
         {
-            string json = "";
-            if(keys.Count > 0)
-                json = TransformTool.JsonStringFromStringList(keys);
+            string json = GetJsonForAttributeParam(keys);
 
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
             ChatAPINative.RoomManager_FetchChatRoomMetaFromSever(client, callbackId, roomId, json,
                 onSuccessResult: (IntPtr[] data, DataType dType, int size, int cbId) =>
                 {
-                    string str = TransformTool.PtrToString(data[0]);
+                    string str = "";
+                    if(1 == size) str = TransformTool.PtrToString(data[0]);
 
                     Dictionary<string, string> kv = TransformTool.JsonStringToDictionary(str);
 
@@ -769,24 +811,22 @@ namespace ChatSDK
 
         public override void RemoveAttributes(string roomId, List<string> keys, bool forced, CallBackResult handle = null)
         {
-            string json = "";
-            if(keys.Count > 0)
-                json = TransformTool.JsonStringFromStringList(keys);
+            string json = GetJsonForAttributeParam(keys);
+
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
             ChatAPINative.RoomManager_RemoveChatRoomMetaFromSever(client, callbackId, roomId, json, forced,
                 onSuccessResult: (IntPtr[] data, DataType dType, int size, int cbId) => {
 
-                    string str = TransformTool.PtrToString(data[0]);
+                    string str = "";
+                    if(1 == size) str = TransformTool.PtrToString(data[0]);
 
                     Dictionary<string, string> failInfo = TransformTool.JsonStringToDictionary(str);
-
-                    int errcode = size;
 
                     ChatCallbackObject.CallBackResultOnSuccess(cbId, failInfo);
                 },
                 onError: (int code, string desc, int cbId) => {
-                    ChatCallbackObject.CallBackOnError(cbId, code, desc);
+                    ChatCallbackObject.CallBackResultOnError(cbId, code, desc);
                 });
         }
     }
