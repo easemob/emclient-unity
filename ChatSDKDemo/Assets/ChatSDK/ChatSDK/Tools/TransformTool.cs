@@ -100,18 +100,170 @@ namespace ChatSDK
             return ret;
         }
 
-        static internal string JsonStringFromStringList(List<string> list)
+        /*
+         * return json string looking like:
+         * {
+         *      "metaData":{"key":"value"},
+         *      "autoDelete":"NO_DELETE"
+         * }
+         */
+        static internal string JsonStringFromRoomAttribute(Dictionary<string, string> kvs, bool deleteWhenExit)
         {
-            JSONArray ja = new JSONArray();
-            if (list != null)
+            string json = "";
+            if (null != kvs && kvs.Count > 0)
             {
-                foreach (string str in list)
+                JSONObject jdict = new JSONObject();
+                foreach (var kv in kvs)
                 {
-                    ja.Add(str);
+                    if (!string.IsNullOrEmpty(kv.Key) && !string.IsNullOrEmpty(kv.Value))
+                    {
+                        jdict[kv.Key] = kv.Value;
+                    }
+                }
+
+                if (jdict.Count > 0)
+                {
+                    JSONObject jo = new JSONObject();
+                    jo["metaData"] = jdict;
+
+                    string auto_delete = "DELETE";
+                    if (false == deleteWhenExit) auto_delete = "NO_DELETE";
+                    jo["autoDelete"] = auto_delete;
+
+                    json = jo.ToString();
                 }
             }
+            return json;
+        }
 
-            return ja.ToString();
+        /*
+         * input json string looks like:
+         * {
+         *  "result":
+         *   {
+         *      "successKeys":["xxx", "xxx"],
+         *      "errorKeys":
+         *      {
+         *          "xxx":"desc xxx",
+         *          "xxx":"desc xxx",
+         *      },
+         *   },
+         *   "is_forced":True,
+         *   "properties:"
+         *   {
+         *      "xxx": "xxx",
+         *      "xxx": "xxx",
+         *   },
+         *   "operator": "xxx"
+         * }
+         */
+        static internal Dictionary<string,string> JsonStringToRoomSuccessAttribute(string json)
+        {
+            Dictionary<string, string> success_props = new Dictionary<string, string>();
+            List<string> successKeys = new List<string>();
+            Dictionary<string, string> properties = new Dictionary<string, string>();
+
+            if (!string.IsNullOrEmpty(json))
+            {
+                JSONNode jn = JSON.Parse(json);
+                if(null != jn)
+                {
+                    //get list from "successKeys" in json
+                    if (jn["result"].IsObject)
+                    {
+                        JSONObject j_ret = jn["result"].AsObject;
+                        if (j_ret["successKeys"].IsArray)
+                        {
+                            JSONArray j_successkeys = j_ret["successKeys"].AsArray;
+                            foreach (JSONNode it in j_successkeys)
+                            {
+                                successKeys.Add(it.Value);
+                            }
+                        }
+                    }
+
+                    // get dictionary from "properties" in json
+                    if (jn["properties"].IsObject)
+                    {
+                        JSONObject j_prop = jn["properties"].AsObject;
+                        foreach (string it in j_prop.Keys)
+                        {
+                            properties[it] = j_prop[it];
+                        }
+                    }
+
+                    // generate success properties dictionary
+                    foreach(var it in successKeys)
+                    {
+                        if (properties.ContainsKey(it))
+                        {
+                            success_props[it] = properties[it];
+                        }
+                    }
+                }
+            }
+            return success_props;
+        }
+
+        /*
+         * input json string looks like:
+         * {
+         *  "result":
+         *   {
+         *      "successKeys":["xxx", "xxx"],
+         *      "errorKeys":
+         *      {
+         *          "xxx":"desc xxx",
+         *          "xxx":"desc xxx",
+         *      },
+         *   },
+         *   "keys:" ["xxx","xxx"],
+         *   "is_forced": True,
+         *   "auto_delete": False,
+         *   "operator": "xxx"
+         * }
+         */
+        static internal List<string> JsonStringToRoomSuccessKeys(string json)
+        {
+            List<string> successKeys = new List<string>();
+
+            if (!string.IsNullOrEmpty(json))
+            {
+                JSONNode jn = JSON.Parse(json);
+                if (null != jn)
+                {
+                    //get list from "successKeys" in json
+                    if (jn["result"].IsObject)
+                    {
+                        JSONObject j_ret = jn["result"].AsObject;
+                        if (j_ret["successKeys"].IsArray)
+                        {
+                            JSONArray j_successkeys = j_ret["successKeys"].AsArray;
+                            foreach (JSONNode it in j_successkeys)
+                            {
+                                successKeys.Add(it.Value);
+                            }
+                        }
+                    }
+                }
+            }
+            return successKeys;
+        }
+
+        static internal string JsonStringFromStringList(List<string> list)
+        {
+            string json = "";
+            if (null != list && list.Count > 0)
+            {
+                JSONArray ja = new JSONArray();
+                foreach (string str in list)
+                {
+                    if (!string.IsNullOrEmpty(str))
+                        ja.Add(str);
+                }
+                json = ja.ToString();
+            }
+            return json;
         }
 
         static internal List<Group> JsonStringToGroupList(string jsonString)

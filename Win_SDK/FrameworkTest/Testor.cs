@@ -8588,16 +8588,16 @@ namespace WinSDKTest
             Console.WriteLine($"OnRemovedFromRoom: roomId: {roomId}; roomName:{roomName}; participant:{participant}");
         }
 
-        void IRoomManagerDelegate.OnChatroomAttributesChanged(string roomId, Dictionary<string, string> kv, string from)
+        public void OnChatroomAttributesChanged(string roomId, Dictionary<string, string> kv, string from)
         {
             string kv_str = string.Join(",", kv.ToArray());
-            Console.WriteLine($"OnChatroomAttributesChanged: roomId: {roomId}; kv:{kv_str}; from:{from}");
+            Console.WriteLine($"OnChatroomAttributesChanged: roomId: {roomId}; changed attributes:{kv_str}; from:{from}");
         }
 
-        void IRoomManagerDelegate.OnChatroomAttributesRemoved(string roomId, Dictionary<string, string> kv, string from)
+        public void OnChatroomAttributesRemoved(string roomId, List<string> keys, string from)
         {
-            string kv_str = string.Join(",", kv.ToArray());
-            Console.WriteLine($"OnChatroomAttributesRemoved: roomId: {roomId}; kv:{kv_str}; from:{from}");
+            string kv_str = string.Join(",", keys.ToArray());
+            Console.WriteLine($"OnChatroomAttributesRemoved: roomId: {roomId}; removed keys:{kv_str}; from:{from}");
         }
     }
 

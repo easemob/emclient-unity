@@ -837,8 +837,7 @@ namespace ChatSDK
                 var json = TransformTool.GetUnicodeStringFromUTF8InCallBack(ext);
                 Debug.Log($"OnChatroomAttributesChanged, roomId {roomId}, ext {json}");
 
-                Dictionary<string, string> kv = TransformTool.JsonStringToDictionary(json);
-                if (null == kv) kv = new Dictionary<string, string>();
+                Dictionary<string, string> kv = TransformTool.JsonStringToRoomSuccessAttribute(json);
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IRoomManagerDelegate listener in CallbackManager.Instance().roomManagerListener.delegater)
@@ -854,13 +853,12 @@ namespace ChatSDK
                 var json = TransformTool.GetUnicodeStringFromUTF8InCallBack(ext);
                 Debug.Log($"OnChatroomAttributesRemoved, roomId {roomId}, ext {json}");
 
-                Dictionary<string, string> kv = TransformTool.JsonStringToDictionary(json);
-                if (null == kv) kv = new Dictionary<string, string>();
+                List<string> keys = TransformTool.JsonStringToRoomSuccessKeys(json);
 
                 ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                     foreach (IRoomManagerDelegate listener in CallbackManager.Instance().roomManagerListener.delegater)
                     {
-                        listener.OnChatroomAttributesRemoved(roomId, kv, from);
+                        listener.OnChatroomAttributesRemoved(roomId, keys, from);
                     }
                 });
             };

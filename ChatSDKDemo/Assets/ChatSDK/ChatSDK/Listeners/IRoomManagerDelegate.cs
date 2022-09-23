@@ -202,16 +202,16 @@ namespace ChatSDK
          * 聊天室属性移除事件。
          *
          * @param roomId        聊天室 ID。
-         * @param kv            移除的属性。
+         * @param keys          移除属性的关键字列表。
          * @param from          移除动作发起人。
          *
          * \~english
          * Occurs when the chat room announcement is updated.
          *
          * @param roomId        The chat room ID.
-         * @param kv            The removed properties.
+         * @param keys          The removed keys of properties.
          * @param from          The operator to do remove.
          */
-        void OnChatroomAttributesRemoved(string roomId, Dictionary<string, string> kv, string from);
+        void OnChatroomAttributesRemoved(string roomId, List<string> keys, string from);
     }
 }
