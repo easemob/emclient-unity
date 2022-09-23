@@ -699,7 +699,7 @@ namespace ChatSDK
          * 异步方法。
          *
          * @param roomId         聊天室 ID。
-         * @param keys			 待获取属性的键值。
+         * @param keys			 待获取属性的键值。如果未指定任何key值，则表示获取所有属性。
          * @param handle         结果回调，成功时回调 {@link ValueCallBack#OnSuccessValue(Dictionary<string, string>)}，
          *                       失败时回调 {@link ValueCallBack#onError(int, String)}。
          *
@@ -710,7 +710,7 @@ namespace ChatSDK
          * This is an asynchronous method.
          *
          * @param roomId        The chat room ID.
-         * @param keys			The keys used to fetch properties.
+         * @param keys			The keys used to fetch properties. If not set any special keys, then will fetch all properties.
          * @param handle        The completion callback. If this call succeeds, calls {@link ValueCallBack#OnSuccessValue(Dictionary<string, string>)};
          *                      if this call fails, calls {@link ValueCallBack#onError(int, String)}.
          */
