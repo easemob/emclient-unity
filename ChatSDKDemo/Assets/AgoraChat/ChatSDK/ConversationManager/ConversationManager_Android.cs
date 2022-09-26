@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using SimpleJSON;
 
 namespace AgoraChat {
     internal class ConversationManager_Android : IConversationManager

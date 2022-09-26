@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using SimpleJSON;
+﻿using System.Collections.Generic;
 
 #if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE || UNITY_EDITOR
 using UnityEngine;

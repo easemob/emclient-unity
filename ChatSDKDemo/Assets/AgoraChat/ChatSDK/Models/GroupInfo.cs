@@ -1,5 +1,4 @@
-﻿using System;
-using SimpleJSON;
+﻿using SimpleJSON;
 using System.Runtime.InteropServices;
 
 namespace AgoraChat {

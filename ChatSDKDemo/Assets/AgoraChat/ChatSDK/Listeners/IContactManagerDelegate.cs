@@ -1,5 +1,4 @@
-﻿using System;
-namespace AgoraChat
+﻿namespace AgoraChat
 {
     /**
          * \~chinese

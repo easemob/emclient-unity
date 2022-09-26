@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using SimpleJSON;
-using UnityEngine;
 
 namespace AgoraChat
 {
