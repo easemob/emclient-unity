@@ -334,8 +334,8 @@ std::string ManagleAppKey(const char* appKey) {
 EMChatConfigsPtr ConfigsFromOptions(Options *options) {
     const char *appKey = options->AppKey;
 
-    string ak = ManagleAppKey(appKey);
-    LOG("Client_InitWithOptions() called with AppKey=%s", ak.c_str());
+    //string ak = ManagleAppKey(appKey);
+    //LOG("Client_InitWithOptions() called with AppKey=%s", ak.c_str());
 
     configs = EMChatConfigsPtr(new EMChatConfigs("./sdkdata","./sdkdata",appKey,0));
     //TODO: non null-ptr assertion

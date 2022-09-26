@@ -24,7 +24,7 @@ namespace ChatSDK
 
         public Client_Common() {
             // start log service
-            StartLog("unmanaged_dll.log");
+            //StartLog("unmanaged_dll.log");
         }
 
         public override void CreateAccount(string username, string password, CallBack callback = null)
@@ -73,13 +73,14 @@ namespace ChatSDK
             }
             
             // keep only 1 client left
+            /*
             if(client != IntPtr.Zero)
             {
                 //stop log service
                 StopLog();
                 StartLog("unmanaged_dll.log");
             }
-            
+            */
             client = ChatAPINative.Client_InitWithOptions(options, connectionHub.OnConnected, connectionHub.OnDisconnected, connectionHub.OnPong, connectionHub.OnTokenNotification);
             Debug.Log($"InitWithOptions completed.");
 
@@ -240,6 +241,7 @@ namespace ChatSDK
         }
         */
 
+        /*
         internal void StartLog(string logFilePath)
         {
             ChatAPINative.Client_StartLog(logFilePath);
@@ -248,7 +250,7 @@ namespace ChatSDK
         internal void StopLog()
         {
             ChatAPINative.Client_StopLog();
-        }
+        }*/
 
         public override void ClearResource()
         {

@@ -43,11 +43,11 @@ namespace ChatSDK{
 		[DllImport(MyLibName)]
 		internal static extern void Client_Logout(IntPtr client, int callbackId, OnSuccess onSuccess, bool unbindDeviceToken);
 
-		[DllImport(MyLibName)]
-		internal static extern void Client_StartLog(string logFilePath);
+		//[DllImport(MyLibName)]
+		//internal static extern void Client_StartLog(string logFilePath);
 
-		[DllImport(MyLibName)]
-		internal static extern void Client_StopLog();
+		//[DllImport(MyLibName)]
+		//internal static extern void Client_StopLog();
 
 		[DllImport(MyLibName)]
 		internal static extern void Client_LoginToken(IntPtr client, OnSuccessResult onSuccess);
