@@ -2,7 +2,7 @@
 using UnityEngine;
 
 
-namespace ChatSDK
+namespace AgoraChat
 {
     internal sealed class ChatManager_Android : IChatManager
     {

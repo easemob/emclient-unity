@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using SimpleJSON;
 using UnityEngine;
 
-namespace ChatSDK
+namespace AgoraChat
 {
     internal sealed class GroupManager_iOS : IGroupManager
     {

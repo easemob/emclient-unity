@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 #endif
 
-namespace ChatSDK
+namespace AgoraChat
 {
 
 	/**

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
-namespace ChatSDK {
+namespace AgoraChat {
 
 
     public class UserInfoManager_iOS : IUserInfoManager

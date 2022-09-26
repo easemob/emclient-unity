@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ChatSDK
+namespace AgoraChat
 {
     public abstract class IChatThreadManager
     {

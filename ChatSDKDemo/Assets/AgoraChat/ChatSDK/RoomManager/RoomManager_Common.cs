@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 #endif
 
-namespace ChatSDK
+namespace AgoraChat
 {
     internal sealed class RoomManager_Common : IRoomManager
     {

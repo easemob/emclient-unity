@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 using UnityEngine;
 #endif
 
-namespace ChatSDK
+namespace AgoraChat
 {
     internal class TransformTool
     {

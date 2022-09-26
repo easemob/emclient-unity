@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System;
 
-namespace ChatSDK
+namespace AgoraChat
 {
     /**
      * \~chinese

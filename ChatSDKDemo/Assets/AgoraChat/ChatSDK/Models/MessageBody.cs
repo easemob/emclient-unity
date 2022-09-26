@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using SimpleJSON;
 
-namespace ChatSDK
+namespace AgoraChat
 {
     /**
       * \~chinese

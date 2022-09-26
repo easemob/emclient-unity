@@ -1,4 +1,4 @@
-﻿namespace ChatSDK
+﻿namespace AgoraChat
 {
      /**
     * \~chinese

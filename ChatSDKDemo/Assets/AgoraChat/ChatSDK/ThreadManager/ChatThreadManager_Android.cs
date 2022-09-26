@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace ChatSDK
+namespace AgoraChat
 {
     internal sealed class ChatThreadManager_Android : IChatThreadManager
     {

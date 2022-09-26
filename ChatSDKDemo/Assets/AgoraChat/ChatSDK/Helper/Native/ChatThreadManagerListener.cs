@@ -3,7 +3,7 @@
 using UnityEngine;
 #endif
 
-namespace ChatSDK
+namespace AgoraChat
 {
 #if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE || UNITY_EDITOR
     internal sealed class ChatThreadManagerListener : MonoBehaviour

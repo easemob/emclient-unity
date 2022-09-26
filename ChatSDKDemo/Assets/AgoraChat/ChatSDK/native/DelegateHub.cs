@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using UnityEngine;
 #endif
 
-namespace ChatSDK
+namespace AgoraChat
 {
     //IConnectionDelegate
     internal delegate void OnDisconnected(int info);

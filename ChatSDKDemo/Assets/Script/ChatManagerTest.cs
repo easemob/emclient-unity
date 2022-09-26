@@ -1,4 +1,4 @@
-﻿using ChatSDK;
+﻿using AgoraChat;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -151,7 +151,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
          onSuccess: (dmsg) =>
          {
              Debug.Log($"TranslateMessage success.");
-             ChatSDK.MessageBody.TextBody tb = (ChatSDK.MessageBody.TextBody)dmsg.Body;
+             AgoraChat.MessageBody.TextBody tb = (AgoraChat.MessageBody.TextBody)dmsg.Body;
              foreach (var it in tb.Translations)
              {
                  Debug.Log($"Translate, lang:{it.Key}, result:{it.Value}");
@@ -228,7 +228,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
                 onSuccess: () => {
-                    ChatSDK.MessageBody.VideoBody vb = (ChatSDK.MessageBody.VideoBody)msg.Body;
+                    AgoraChat.MessageBody.VideoBody vb = (AgoraChat.MessageBody.VideoBody)msg.Body;
                     UIManager.TitleAlert(transform, "成功", msg.MsgId);
                 },
                 onProgress: (progress) => {
@@ -460,8 +460,8 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
                     //Message msg = SDKClient.Instance.ChatManager.LoadMessage("Message ID");
                     //if (msg != null)
                     //{
-                    //    if (msg.Body.Type == ChatSDK.MessageBodyType.VIDEO) {
-                    //        ChatSDK.MessageBody.VideoBody vb = (ChatSDK.MessageBody.VideoBody)msg.Body;
+                    //    if (msg.Body.Type == AgoraChat.MessageBodyType.VIDEO) {
+                    //        AgoraChat.MessageBody.VideoBody vb = (AgoraChat.MessageBody.VideoBody)msg.Body;
 
                            //从本地获取短视频文件路径
                     //        string imgLocalUri = vb.LocalPath;
@@ -869,7 +869,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         {
             if(msg.Body.Type == MessageBodyType.TXT)
             {
-                ChatSDK.MessageBody.TextBody tb = (ChatSDK.MessageBody.TextBody)msg.Body;
+                AgoraChat.MessageBody.TextBody tb = (AgoraChat.MessageBody.TextBody)msg.Body;
                 Debug.Log($"text message body: {tb.Text}");
             }
             list.Add(msg.MsgId);
@@ -1000,7 +1000,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
              onSuccess: (dmsg) =>
              {
                  Debug.Log($"TranslateMessage success.");
-                 ChatSDK.MessageBody.TextBody tb = (ChatSDK.MessageBody.TextBody)dmsg.Body;
+                 AgoraChat.MessageBody.TextBody tb = (AgoraChat.MessageBody.TextBody)dmsg.Body;
                  Debug.Log($"orgigin text is: {tb.Text}");
                  foreach (var it in tb.Translations)
                  {
@@ -1730,7 +1730,7 @@ class Utils
         {
             case MessageBodyType.TXT:
                 {
-                    ChatSDK.MessageBody.TextBody b = (ChatSDK.MessageBody.TextBody)msg.Body;
+                    AgoraChat.MessageBody.TextBody b = (AgoraChat.MessageBody.TextBody)msg.Body;
                     Debug.Log($"message text content: {b.Text}");
                     string str = string.Join(",", b.TargetLanguages.ToArray());
                     Debug.Log($"message targent languages: {str}");
@@ -1742,7 +1742,7 @@ class Utils
                 break;
             case MessageBodyType.FILE:
                 {
-                    ChatSDK.MessageBody.FileBody b = (ChatSDK.MessageBody.FileBody)msg.Body;
+                    AgoraChat.MessageBody.FileBody b = (AgoraChat.MessageBody.FileBody)msg.Body;
                     Debug.Log($"DisplayName: {b.DisplayName}");
                     Debug.Log($"LocalPath: {b.LocalPath}");
                     Debug.Log($"RemotePath: {b.RemotePath}");
@@ -1750,7 +1750,7 @@ class Utils
                 break;
             case MessageBodyType.IMAGE:
                 {
-                    ChatSDK.MessageBody.ImageBody b = (ChatSDK.MessageBody.ImageBody)msg.Body;
+                    AgoraChat.MessageBody.ImageBody b = (AgoraChat.MessageBody.ImageBody)msg.Body;
                     Debug.Log($"DisplayName: {b.DisplayName}");
                     Debug.Log($"LocalPath: {b.LocalPath}");
                     Debug.Log($"RemotePath: {b.RemotePath}");
@@ -1760,7 +1760,7 @@ class Utils
                 break;
             case MessageBodyType.VIDEO:
                 {
-                    ChatSDK.MessageBody.VideoBody b = (ChatSDK.MessageBody.VideoBody)msg.Body;
+                    AgoraChat.MessageBody.VideoBody b = (AgoraChat.MessageBody.VideoBody)msg.Body;
                     Debug.Log($"DisplayName: {b.DisplayName}");
                     Debug.Log($"LocalPath: {b.LocalPath}");
                     Debug.Log($"RemotePath: {b.RemotePath}");
@@ -1770,7 +1770,7 @@ class Utils
                 break;
             case MessageBodyType.VOICE:
                 {
-                    ChatSDK.MessageBody.VoiceBody b = (ChatSDK.MessageBody.VoiceBody)msg.Body;
+                    AgoraChat.MessageBody.VoiceBody b = (AgoraChat.MessageBody.VoiceBody)msg.Body;
                     Debug.Log($"DisplayName: {b.DisplayName}");
                     Debug.Log($"LocalPath: {b.LocalPath}");
                     Debug.Log($"RemotePath: {b.RemotePath}");

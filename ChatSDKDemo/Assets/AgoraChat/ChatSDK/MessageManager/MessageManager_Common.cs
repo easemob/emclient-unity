@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 
-namespace ChatSDK {
+namespace AgoraChat {
     internal class MessageManager_Common : IMessageManager
     {
         internal MessageManager_Common()

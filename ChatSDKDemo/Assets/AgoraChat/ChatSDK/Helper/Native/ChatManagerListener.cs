@@ -5,7 +5,7 @@ using SimpleJSON;
 using UnityEngine;
 #endif
 
-namespace ChatSDK {
+namespace AgoraChat {
 
 #if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
     internal sealed class ChatManagerListener : MonoBehaviour

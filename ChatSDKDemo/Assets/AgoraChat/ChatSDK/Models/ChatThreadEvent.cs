@@ -6,7 +6,7 @@ using SimpleJSON;
 using UnityEngine;
 #endif
 
-namespace ChatSDK
+namespace AgoraChat
 {
     public class ChatThreadEvent
     {

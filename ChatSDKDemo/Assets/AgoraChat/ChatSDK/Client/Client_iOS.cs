@@ -3,7 +3,7 @@ using UnityEngine;
 using SimpleJSON;
 using System.Collections.Generic;
 
-namespace ChatSDK
+namespace AgoraChat
 {
 
     internal sealed class Client_iOS : IClient

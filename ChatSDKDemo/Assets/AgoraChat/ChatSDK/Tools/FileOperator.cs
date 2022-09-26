@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 #endif
 
-namespace ChatSDK
+namespace AgoraChat
 {
     internal sealed class FileOperator
     {

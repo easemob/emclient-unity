@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ChatSDK {
+namespace AgoraChat {
     public class UserInfoManager_Android : IUserInfoManager
     {
         private AndroidJavaObject wrapper;

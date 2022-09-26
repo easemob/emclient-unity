@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace ChatSDK
+namespace AgoraChat
 {
     internal sealed class Client_Android : IClient
     {

@@ -1,6 +1,6 @@
 ﻿using SimpleJSON;
 
-namespace ChatSDK
+namespace AgoraChat
 {
     /**
      * \~chinese

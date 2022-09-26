@@ -2,7 +2,7 @@
 using System;
 using System.Text;
 
-namespace ChatSDK{
+namespace AgoraChat{
 
 	internal delegate void OnSuccessResultV2(IntPtr header, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] IntPtr[] data, DataType dType, int size, int callbackId);
 	internal delegate void OnSuccessResult([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] data, DataType dType, int size, int callbackId);

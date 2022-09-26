@@ -64,7 +64,7 @@ public class BL_BuildPostProcess
 #if UNITY_2019_1_OR_NEWER
         target = proj.GetUnityMainTargetGuid();
 #endif
-        const string defaultLocationInProj = "ChatSDK/Plugins/iOS";
+        const string defaultLocationInProj = "AgoraChat/Plugins/iOS";
 
         const string HypheanteChatFrameworkName = "HyphenateChat.framework";
 

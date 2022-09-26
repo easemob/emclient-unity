@@ -4,7 +4,7 @@
 using UnityEngine;
 #endif
 
-namespace ChatSDK
+namespace AgoraChat
 {
     /**
      * \~chinese

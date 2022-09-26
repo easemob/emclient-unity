@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using SimpleJSON;
 
-namespace ChatSDK
+namespace AgoraChat
 {
     internal sealed class GroupManager_Android : IGroupManager
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using SimpleJSON;
 
-namespace ChatSDK {
+namespace AgoraChat {
     /**
      * \~chinese
      * 会话类，用于定义单聊会话、群聊会话和聊天室会话。

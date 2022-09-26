@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using UnityEngine;
 #endif
 
-namespace ChatSDK
+namespace AgoraChat
 {
     internal sealed class ChatManager_Common : IChatManager
     {

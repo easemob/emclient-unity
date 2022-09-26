@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace ChatSDK
+namespace AgoraChat
 {
     internal class MessageManager_Android : IMessageManager
     {

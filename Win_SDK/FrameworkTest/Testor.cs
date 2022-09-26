@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
-using ChatSDK;
-using ChatSDK.MessageBody;
+using AgoraChat;
+using AgoraChat.MessageBody;
 
 namespace WinSDKTest
 {
@@ -2825,7 +2825,7 @@ namespace WinSDKTest
             msg.IsThread = is_thread;
             //msg.IsNeedGroupAck = true;
 
-            ChatSDK.MessageBody.TextBody tb = (ChatSDK.MessageBody.TextBody)msg.Body;
+            AgoraChat.MessageBody.TextBody tb = (AgoraChat.MessageBody.TextBody)msg.Body;
             tb.TargetLanguages = new List<string>();
             tb.TargetLanguages.Add("en");
             tb.TargetLanguages.Add("ja");

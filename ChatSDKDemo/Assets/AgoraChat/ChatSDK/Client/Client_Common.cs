@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 using System.Runtime.InteropServices;
 
-namespace ChatSDK
+namespace AgoraChat
 {
     internal sealed class Client_Common : IClient
     {

@@ -2,7 +2,7 @@
 using UnityEngine;
 #endif
 
-namespace ChatSDK
+namespace AgoraChat
 {
     internal abstract class IClient
     {

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-namespace ChatSDK
+namespace AgoraChat
 {
     /**
     * \~chinese

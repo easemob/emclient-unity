@@ -2,7 +2,7 @@
 using SimpleJSON;
 using System.Runtime.InteropServices;
 
-namespace ChatSDK
+namespace AgoraChat
 {
 
     /**

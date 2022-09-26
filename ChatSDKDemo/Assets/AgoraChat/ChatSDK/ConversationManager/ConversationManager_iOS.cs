@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using SimpleJSON;
 
 
-namespace ChatSDK {
+namespace AgoraChat {
     internal class ConversationManager_iOS : IConversationManager
     {
         internal override bool AppendMessage(string conversationId, ConversationType conversationType, Message message)
