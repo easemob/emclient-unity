@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using ChatSDK;
+using AgoraChat;
 
 public class Main : MonoBehaviour, IConnectionDelegate
 {

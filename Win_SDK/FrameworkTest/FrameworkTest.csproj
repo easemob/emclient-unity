@@ -22,16 +22,17 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>true</Prefer32Bit>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -75,7 +76,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="chatsdk">
-      <HintPath>..\FrameworkLib\bin\x86\Debug\chatsdk.dll</HintPath>
+      <HintPath>..\FrameworkLib\bin\Debug\chatsdk.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -96,7 +97,16 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>cd $(ProjectDir)
+
+xcopy /Y /S ..\FrameworkLib\bin\Debug\chatsdk.dll bin\Debug\
+
+xcopy /Y /S ..\..\Unity_SDK\win_build\build_shared\Debug\hyphenateCWrapper.dll bin\Debug\
+
+xcopy /Y /S bin\Debug\chatsdk.dll D:\workspace\test\testWinSDK_new_features\Debug\
+
+xcopy /Y /S bin\Debug\hyphenateCWrapper.dll D:\workspace\test\testWinSDK_new_features\Debug\
+
+xcopy /Y /S bin\Debug\FrameworkTest.exe D:\workspace\test\testWinSDK_new_features\Debug\another.exe</PostBuildEvent>
   </PropertyGroup>
 </Project>
