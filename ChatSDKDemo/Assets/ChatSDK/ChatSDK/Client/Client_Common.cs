@@ -13,6 +13,7 @@ namespace ChatSDK
 
         internal IntPtr client = IntPtr.Zero;
         private string currentUserName;
+        private bool nativesdk_inited = false;
 
         //events
         public event OnSuccess OnLoginSuccess;
@@ -54,6 +55,13 @@ namespace ChatSDK
         public override void InitWithOptions(Options options)
         {
             ChatCallbackObject.GetInstance();
+
+            if (true == nativesdk_inited)
+            {
+                Debug.Log("Already initiated sdk, no need to init again.");
+                return;
+            }
+
             if(connectionHub == null)
             {
                 connectionHub = new ConnectionHub(this); //init only once
@@ -77,6 +85,8 @@ namespace ChatSDK
 
             ChatAPINative.Client_AddMultiDeviceListener(multiDeviceHub.onContactMultiDevicesEvent, multiDeviceHub.onGroupMultiDevicesEvent, multiDeviceHub.undisturbMultiDevicesEvent, multiDeviceHub.onThreadMultiDevicesEvent);
             Debug.Log("AddMultiDeviceListener completed.");
+
+            nativesdk_inited = true;
         }
 
         public override void Login(string username, string pwdOrToken, bool isToken = false, CallBack callback = null)
@@ -243,6 +253,7 @@ namespace ChatSDK
         public override void ClearResource()
         {
             ChatAPINative.Client_ClearResource(client);
+            nativesdk_inited = false;
         }
 
     }
