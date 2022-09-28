@@ -136,7 +136,7 @@ namespace AgoraChat
             });
         }
 
-        static public void CallBackResultOnSuccess(int cbId, Dictionary<string, string> failInfo)
+        static public void CallBackResultOnSuccess(int cbId, Dictionary<string, int> failInfo)
         {
             ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
                 var myhandle = (CallBackResult)CallbackManager.Instance().GetCallBackHandle(cbId);

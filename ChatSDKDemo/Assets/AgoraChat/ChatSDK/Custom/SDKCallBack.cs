@@ -19,7 +19,7 @@ namespace AgoraChat
 	*
 	* @param desc      The error information.
 	*/
-	public delegate void OnSuccessWithResult(Dictionary<string, string> failInfo);
+	public delegate void OnSuccessWithResult(Dictionary<string, int> failInfo);
 
     /**
 	* \~chinese

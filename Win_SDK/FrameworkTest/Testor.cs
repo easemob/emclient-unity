@@ -7145,7 +7145,7 @@ namespace WinSDKTest
             kv[key2] = val2;
 
             SDKClient.Instance.RoomManager.AddAttributes(roomId, kv, auto_delete, forced, new CallBackResult(
-                onSuccessResult: (Dictionary<string, string> dict) => {
+                onSuccessResult: (Dictionary<string, int> dict) => {
                     if(dict.Count == 0)
                         Console.WriteLine($"AddAttributes success.");
                     else
@@ -7196,7 +7196,7 @@ namespace WinSDKTest
             keys.Add(key2);
 
             SDKClient.Instance.RoomManager.RemoveAttributes(roomId, keys, forced, new CallBackResult(
-                onSuccessResult: (Dictionary<string, string> dict) => {
+                onSuccessResult: (Dictionary<string, int> dict) => {
                     if (dict.Count == 0)
                         Console.WriteLine($"RemoveAttributes success.");
                     else
