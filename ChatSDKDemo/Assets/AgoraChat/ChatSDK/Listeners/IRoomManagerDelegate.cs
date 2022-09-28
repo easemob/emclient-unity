@@ -183,35 +183,43 @@ namespace AgoraChat
 
         /**
          * \~chinese
-         * 聊天室属性更新事件。
+         * 聊天室自定义属性（key-value）有更新。
          *
-         * @param roomId        聊天室 ID。
-         * @param kv            更新的属性。
-         * @param from          更新动作发起人。
+         * 聊天室所有成员会收到该事件。
+         *
+         * @param chatRoomId   聊天室 ID。
+         * @param kv           聊天室自定义属性。
+         * @param from         操作者的用户 ID。
          *
          * \~english
-         * Occurs when the chat room attribute is changed.
+         * The custom chat room attribute(s) is/are updated.
          *
-         * @param roomId        The chat room ID.
-         * @param kv            The updated properties.
-         * @param from          The operator to do update.
+         * All chat room members receive this event.
+         *
+         * @param chatRoomId   The chat room ID.
+         * @param kv           The map of custom chat room attributes.
+         * @param from         The user ID of the operator.
          */
         void OnChatroomAttributesChanged(string roomId, Dictionary<string, string> kv, string from);
 
         /**
          * \~chinese
-         * 聊天室属性移除事件。
+         * 聊天室自定义属性被移除。
          *
-         * @param roomId        聊天室 ID。
-         * @param keys          移除属性的关键字列表。
-         * @param from          移除动作发起人。
+         * 聊天室所有成员会收到该事件。
+         *
+         * @param chatRoomId   聊天室 ID。
+         * @param keys         聊天室自定义属性关键字列表。
+         * @param from         操作者用户 ID。
          *
          * \~english
-         * Occurs when the chat room attribute is removeed.
+         * The custom chat room attribute(s) is/are removed.
          *
-         * @param roomId        The chat room ID.
-         * @param keys          The removed keys of properties.
-         * @param from          The operator to do remove.
+         * All chat room members receive this event.
+         *
+         * @param chatRoomId   The chat room ID.
+         * @param keys         The list of custom chat room attribute keys.
+         * @param from         The user ID of the operator.
          */
         void OnChatroomAttributesRemoved(string roomId, List<string> keys, string from);
     }
