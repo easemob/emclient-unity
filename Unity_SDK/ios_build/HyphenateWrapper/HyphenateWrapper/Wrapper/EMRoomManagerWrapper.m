@@ -623,7 +623,6 @@
             [weakSelf onError:callbackId error:error];
         }else {
             [weakSelf onSuccess:nil callbackId:callbackId userInfo:tmp];
-        }
     };
     
     if (forced) {
@@ -635,6 +634,10 @@
             block(aError, failureKeys);
         }];
     }
+}
+
+- (void)fetchAttributes:(NSDictionary *)param callbackId:(NSString *)callbackId {
+    
 }
 
 - (void)removeChatRoomAttributes:(NSDictionary *)param callbackId:(NSString *)callbackId {

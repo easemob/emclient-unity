@@ -37,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)addWhiteListMembers:(NSDictionary *)param callbackId:(NSString *)callbackId;
 - (void)removeWhiteListMembers:(NSDictionary *)param callbackId:(NSString *)callbackId;
 - (void)setChatRoomAttributes:(NSDictionary *)param callbackId:(NSString *)callbackId;
+- (void)fetchAttributes:(NSDictionary *)param callbackId:(NSString *)callbackId;
 - (void)removeChatRoomAttributes:(NSDictionary *)param callbackId:(NSString *)callbackId;
 @end
 

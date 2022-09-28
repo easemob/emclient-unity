@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
-using ChatSDK;
-using ChatSDK.MessageBody;
+using AgoraChat;
+using AgoraChat.MessageBody;
 
 namespace WinSDKTest
 {
@@ -1342,6 +1342,9 @@ namespace WinSDKTest
             functions_IRoomManager.Add(menu_index, "UnBlockRoomMembers"); menu_index++;
             functions_IRoomManager.Add(menu_index, "UnMuteRoomMembers"); menu_index++;
             functions_IRoomManager.Add(menu_index, "UpdateRoomAnnouncement"); menu_index++;
+            functions_IRoomManager.Add(menu_index, "AddAttributes"); menu_index++;
+            functions_IRoomManager.Add(menu_index, "FetchAttributes"); menu_index++;
+            functions_IRoomManager.Add(menu_index, "RemoveAttributes"); menu_index++;
             level2_menus.Add("IRoomManager", functions_IRoomManager);
         }
 
@@ -1479,6 +1482,32 @@ namespace WinSDKTest
             param.Add(menu_index, "roomId (string)"); menu_index++;
             param.Add(menu_index, "announcement (string)"); menu_index++;
             level3_menus.Add("UpdateRoomAnnouncement", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "roomId (string)"); menu_index++;
+            param.Add(menu_index, "key1 (string)"); menu_index++;
+            param.Add(menu_index, "val1 (string)"); menu_index++;
+            param.Add(menu_index, "key2 (string)"); menu_index++;
+            param.Add(menu_index, "val2 (string)"); menu_index++;
+            param.Add(menu_index, "autodelete (int 0:false; 1:true)"); menu_index++;
+            param.Add(menu_index, "forced (int 0:false; 1:true)"); menu_index++;
+            level3_menus.Add("AddAttributes", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "roomId (string)"); menu_index++;
+            param.Add(menu_index, "key1 (string)"); menu_index++;
+            param.Add(menu_index, "key2 (string)"); menu_index++;
+            level3_menus.Add("FetchAttributes", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "roomId (string)"); menu_index++;
+            param.Add(menu_index, "key1 (string)"); menu_index++;
+            param.Add(menu_index, "key2 (string)"); menu_index++;
+            param.Add(menu_index, "forced (int 0:false; 1:true)"); menu_index++;
+            level3_menus.Add("RemoveAttributes", new Dictionary<int, string>(param));
             param.Clear();
         }
 
@@ -1696,7 +1725,7 @@ namespace WinSDKTest
             //Options options = new Options("easemob-demo#easeim");
             Options options = new Options("easemob-demo#unitytest");
             //Options options = new Options("5101220107132865#test"); // 北京沙箱测试环境，无法正常登录
-            //Options options = new Options("41117440#383391"); // 线上环境, demo中的token
+           //Options options = new Options("41117440#383391"); // 线上环境, demo中的token
             if (appkey.Length > 0 && appkey.Contains("#") == true)
                 options.AppKey = appkey;
 
@@ -2796,7 +2825,7 @@ namespace WinSDKTest
             msg.IsThread = is_thread;
             //msg.IsNeedGroupAck = true;
 
-            ChatSDK.MessageBody.TextBody tb = (ChatSDK.MessageBody.TextBody)msg.Body;
+            AgoraChat.MessageBody.TextBody tb = (AgoraChat.MessageBody.TextBody)msg.Body;
             tb.TargetLanguages = new List<string>();
             tb.TargetLanguages.Add("en");
             tb.TargetLanguages.Add("ja");
@@ -7101,6 +7130,88 @@ namespace WinSDKTest
             ));
         }
 
+        public void CallFunc_IRoomManager_AddAttributes()
+        {
+            string roomId = GetParamValueFromContext(0);
+            string key1 = GetParamValueFromContext(1);
+            string val1 = GetParamValueFromContext(2);
+            string key2 = GetParamValueFromContext(3);
+            string val2 = GetParamValueFromContext(4);
+            bool auto_delete = GetIntFromString(GetParamValueFromContext(5)) == 0 ? false : true;
+            bool forced = GetIntFromString(GetParamValueFromContext(6)) == 0 ? false:true;
+
+            Dictionary<string, string> kv = new Dictionary<string, string>();
+            kv[key1] = val1;
+            kv[key2] = val2;
+
+            SDKClient.Instance.RoomManager.AddAttributes(roomId, kv, auto_delete, forced, new CallBackResult(
+                onSuccessResult: (Dictionary<string, string> dict) => {
+                    if(dict.Count == 0)
+                        Console.WriteLine($"AddAttributes success.");
+                    else
+                    {
+                        Console.WriteLine($"AddAttributes partial sucess.");
+                        string str = string.Join(",", dict.ToArray());
+                        Console.WriteLine($"failed keys are:{str}.");
+                    }
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"AddAttributes failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IRoomManager_FetchAttributes()
+        {
+            string roomId = GetParamValueFromContext(0);
+            string key1 = GetParamValueFromContext(1);
+            string key2 = GetParamValueFromContext(2);
+
+            List<string> keys = new List<string>();
+            keys.Add(key1);
+            keys.Add(key2);
+
+            SDKClient.Instance.RoomManager.FetchAttributes(roomId, keys, new ValueCallBack<Dictionary<string, string>>(
+                onSuccess: (Dictionary<string, string> dict) => {
+                    Console.WriteLine($"FetchAttributes sucess.");
+                    string str = string.Join(",", dict.ToArray());
+                    Console.WriteLine($"fetch contents are:{str}.");
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"FetchAttributes failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IRoomManager_RemoveAttributes()
+        {
+            string roomId = GetParamValueFromContext(0);
+            string key1 = GetParamValueFromContext(1);
+            string key2 = GetParamValueFromContext(2);
+            int forced_int = GetIntFromString(GetParamValueFromContext(3));
+            bool forced = (0 == forced_int) ? false : true;
+
+            List<string> keys = new List<string>();
+            keys.Add(key1);
+            keys.Add(key2);
+
+            SDKClient.Instance.RoomManager.RemoveAttributes(roomId, keys, forced, new CallBackResult(
+                onSuccessResult: (Dictionary<string, string> dict) => {
+                    if (dict.Count == 0)
+                        Console.WriteLine($"RemoveAttributes success.");
+                    else
+                    {
+                        Console.WriteLine($"RemoveAttributes partial sucess.");
+                        string str = string.Join(",", dict.ToArray());
+                        Console.WriteLine($"failed keys are:{str}.");
+                    }
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"RemoveAttributes failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
         public void CallFunc_IRoomManager()
         {
             if (select_context.level2_item.CompareTo("AddRoomAdmin") == 0)
@@ -7226,6 +7337,24 @@ namespace WinSDKTest
             if (select_context.level2_item.CompareTo("UpdateRoomAnnouncement") == 0)
             {
                 CallFunc_IRoomManager_UpdateRoomAnnouncement();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("AddAttributes") == 0)
+            {
+                CallFunc_IRoomManager_AddAttributes();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("FetchAttributes") == 0)
+            {
+                CallFunc_IRoomManager_FetchAttributes();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("RemoveAttributes") == 0)
+            {
+                CallFunc_IRoomManager_RemoveAttributes();
                 return;
             }
         }
@@ -8457,6 +8586,18 @@ namespace WinSDKTest
         public void OnRemovedFromRoom(string roomId, string roomName, string participant)
         {
             Console.WriteLine($"OnRemovedFromRoom: roomId: {roomId}; roomName:{roomName}; participant:{participant}");
+        }
+
+        public void OnChatroomAttributesChanged(string roomId, Dictionary<string, string> kv, string from)
+        {
+            string kv_str = string.Join(",", kv.ToArray());
+            Console.WriteLine($"OnChatroomAttributesChanged: roomId: {roomId}; changed attributes:{kv_str}; from:{from}");
+        }
+
+        public void OnChatroomAttributesRemoved(string roomId, List<string> keys, string from)
+        {
+            string kv_str = string.Join(",", keys.ToArray());
+            Console.WriteLine($"OnChatroomAttributesRemoved: roomId: {roomId}; removed keys:{kv_str}; from:{from}");
         }
     }
 

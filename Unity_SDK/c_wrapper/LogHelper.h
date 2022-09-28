@@ -72,7 +72,8 @@ public:
 };
 
 #ifdef DEBUG
-#define LOG(fmt, ...) LogHelper::getInstance().writeLog(fmt, ##__VA_ARGS__)
+//#define LOG(fmt, ...) LogHelper::getInstance().writeLog(fmt, ##__VA_ARGS__)
+#define LOG(fmt, ...)
 #else
 #define LOG(fmt, ...)
 #endif //DEBUG LOG

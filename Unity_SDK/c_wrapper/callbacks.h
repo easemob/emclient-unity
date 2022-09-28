@@ -87,6 +87,8 @@ extern EMClient* gClient;
     typedef void (__stdcall *FUNC_OnChatRoomDestroyed)(const char * roomId, const char * roomName);
     typedef void (__stdcall *FUNC_OnRemovedFromChatRoom)(const char * roomId, const char * roomName, const char * participant);
     typedef void (__stdcall *FUNC_OnMemberExitedFromRoom)(const char * roomId, const char * roomName, const char * member);
+    typedef void (__stdcall *FUNC_OnChatroomAttributesChanged)(const char* roomId, const char* ext, const char* from);
+    typedef void (__stdcall *FUNC_OnChatroomAttributesRemoved)(const char* roomId, const char* ext, const char* from);
 
     //PresenceManager Listener
     typedef void (__stdcall *FUNC_OnPresenceUpdated)(void * presences[], int size);
@@ -159,6 +161,8 @@ extern EMClient* gClient;
     typedef void (*FUNC_OnChatRoomDestroyed)(const char * roomId, const char * roomName);
     typedef void (*FUNC_OnRemovedFromChatRoom)(const char * roomId, const char * roomName, const char * participant);
     typedef void (*FUNC_OnMemberExitedFromRoom)(const char * roomId, const char * roomName, const char * member);
+    typedef void (*FUNC_OnChatroomAttributesChanged)(const char* roomId, const char* ext, const char* from);
+    typedef void (*FUNC_OnChatroomAttributesRemoved)(const char* roomId, const char* ext, const char* from);
 
     //ContactManager Listener
     typedef void (*FUNC_OnContactAdded)(const char * username);
@@ -751,7 +755,12 @@ class RoomManagerListener : public EMChatroomManagerListener
 public:
     RoomManagerListener(void * client, FUNC_OnChatRoomDestroyed onChatRoomDestroyed, FUNC_OnMemberJoined onMemberJoined, FUNC_OnMemberExitedFromRoom onMemberExited,
                         FUNC_OnRemovedFromChatRoom onRemovedFromChatRoom, FUNC_OnMuteListAdded onMuteListAdded, FUNC_OnMuteListRemoved onMuteListRemoved,
-                        FUNC_OnAdminAdded onAdminAdded, FUNC_OnAdminRemoved onAdminRemoved, FUNC_OnOwnerChanged onOwnerChanged, FUNC_OnAnnouncementChanged onAnnouncementChanged ):client(client), onChatRoomDestroyed(onChatRoomDestroyed), onMemberJoined(onMemberJoined), onMemberExited(onMemberExited), onRemovedFromChatRoom(onRemovedFromChatRoom), onMuteListAdded(onMuteListAdded), onMuteListRemoved(onMuteListRemoved), onAdminAdded(onAdminAdded), onAdminRemoved(onAdminRemoved), onOwnerChanged(onOwnerChanged), onAnnouncementChanged(onAnnouncementChanged) {}
+                        FUNC_OnAdminAdded onAdminAdded, FUNC_OnAdminRemoved onAdminRemoved, FUNC_OnOwnerChanged onOwnerChanged, FUNC_OnAnnouncementChanged onAnnouncementChanged,
+                        FUNC_OnChatroomAttributesChanged _onChatroomAttributesChanged, FUNC_OnChatroomAttributesRemoved _onChatroomAttributesRemoved):
+                        client(client), onChatRoomDestroyed(onChatRoomDestroyed), onMemberJoined(onMemberJoined), onMemberExited(onMemberExited), onRemovedFromChatRoom(onRemovedFromChatRoom), 
+                        onMuteListAdded(onMuteListAdded), onMuteListRemoved(onMuteListRemoved), onAdminAdded(onAdminAdded), onAdminRemoved(onAdminRemoved),
+                        onOwnerChanged(onOwnerChanged), onAnnouncementChanged(onAnnouncementChanged), onChatroomAttributesChanged_(_onChatroomAttributesChanged),
+                        onChatroomAttributesRemoved_(_onChatroomAttributesRemoved){}
     
     void  onMemberJoinedChatroom(const EMChatroomPtr chatroom, const std::string &member) override {
         if(onMemberJoined) {
@@ -846,6 +855,18 @@ public:
             onAnnouncementChanged(chatroom->chatroomId().c_str(), announcement.c_str());
         }
     }
+
+    void onChatroomAttributesChanged(const std::string chatroomId, const std::string& ext, std::string from) override {
+        if (onChatroomAttributesChanged_) {
+            onChatroomAttributesChanged_(chatroomId.c_str(), ext.c_str(), from.c_str());
+        }
+    }
+
+    void onChatroomAttributesRemoved(const std::string chatroomId, const std::string& ext, std::string from) override {
+        if (onChatroomAttributesRemoved_) {
+            onChatroomAttributesRemoved_(chatroomId.c_str(), ext.c_str(), from.c_str());
+        }
+    }
     
 private:
     void * client;
@@ -859,6 +880,8 @@ private:
     FUNC_OnAdminRemoved onAdminRemoved;
     FUNC_OnOwnerChanged onOwnerChanged;
     FUNC_OnAnnouncementChanged onAnnouncementChanged;
+    FUNC_OnChatroomAttributesChanged onChatroomAttributesChanged_;
+    FUNC_OnChatroomAttributesRemoved onChatroomAttributesRemoved_;
 };
 
 class ContactManagerListener : public EMContactListener
