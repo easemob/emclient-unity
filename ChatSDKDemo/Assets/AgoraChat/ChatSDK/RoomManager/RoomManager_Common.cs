@@ -731,7 +731,7 @@ namespace AgoraChat
                     string str = "";
                     if (1 == size) str = TransformTool.PtrToString(data[0]);
 
-                    Dictionary<string, string> failInfo = TransformTool.JsonStringToDictionary(str);
+                    Dictionary<string, int> failInfo = TransformTool.JsonStringToDictionaryStringAndInt(str);
 
                     ChatCallbackObject.CallBackResultOnSuccess(cbId, failInfo);
                 },
@@ -774,7 +774,7 @@ namespace AgoraChat
                     string str = "";
                     if(1 == size) str = TransformTool.PtrToString(data[0]);
 
-                    Dictionary<string, string> failInfo = TransformTool.JsonStringToDictionary(str);
+                    Dictionary<string, int> failInfo = TransformTool.JsonStringToDictionaryStringAndInt(str);
 
                     ChatCallbackObject.CallBackResultOnSuccess(cbId, failInfo);
                 },
