@@ -52,7 +52,7 @@
     NSDictionary *map = @{
         @"roomId":aChatroom.chatroomId,
         @"list":[Transfrom NSStringFromJsonObject:aMutes],
-        @"expireTime":[NSString stringWithFormat:@"%ld", aMuteExpire]
+        @"expireTime":[NSString stringWithFormat:@"%ld", (long)aMuteExpire]
     };
     UnitySendMessage(RoomListener_Obj, "OnMuteListAdded", [Transfrom JsonObjectToCSString:map]);
 }
@@ -104,4 +104,19 @@
     UnitySendMessage(RoomListener_Obj, "OnAnnouncementChanged", [Transfrom JsonObjectToCSString:map]);
 }
 
+- (void)chatroomSpecificationDidUpdate:(EMChatroom *)aChatroom {
+    
+}
+
+- (void)chatroomAttributesDidUpdated:(NSString *)roomId
+                        attributeMap:(NSDictionary<NSString *,NSString *> *)attributeMap
+                                from:(NSString *)fromId {
+    
+}
+
+- (void)chatroomAttributesDidRemoved:(NSString *)roomId
+                          attributes:(NSArray<__kindof NSString *> *)attributes
+                                from:(NSString *)fromId {
+    
+}
 @end

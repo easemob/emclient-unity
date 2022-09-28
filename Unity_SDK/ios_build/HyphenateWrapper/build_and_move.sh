@@ -6,6 +6,4 @@ mv build/Release-iphoneos/* ../../../ChatSDKDemo/Assets/ChatSDK/Plugins/iOS/
 
 cp -R HyphenateChat.framework ../../../ChatSDKDemo/Assets/ChatSDK/Plugins/iOS/HyphenateChat.framework
 
-rm -rf build
-
 open ../../../ChatSDKDemo/Assets/ChatSDK/Plugins/iOS/
