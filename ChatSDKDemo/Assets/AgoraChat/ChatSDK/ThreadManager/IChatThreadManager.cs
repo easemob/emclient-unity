@@ -270,7 +270,7 @@ namespace AgoraChat
         * 分页从服务器端获取指定群组的子区列表。
         *
         * @param groupId       父 ID，即群组 ID。
-        * @param joined        是否加入的子区。  
+        * @param joined        是否是当前用户加入的子区。  
         * @param cursor        开始取数据的游标位置。首次获取数据时传 `null` 或空字符串，按子区创建时间的倒序获取数据。
         * @param pageSize      每页期望返回的子区数。取值范围为 [1,50]。
         * @param callBack      结果回调：
@@ -283,7 +283,7 @@ namespace AgoraChat
         * This method gets data from the server.
         *
         * @param groupId   The parent ID, which is the group ID.       
-        * @param joined    The threads are joined or not.
+        * @param joined    Whether the current user has joined the thread.
         * @param cursor    The position from which to start getting data. At the first method call, if you set `cursor` to `null` or an empty string, the SDK will get data in the reverse chronological order of when message threads are created.
         * @param pageSize  The number of message threads that you expect to get on each page. The value range is [1,50].
         * @param callBack  The result callback:
@@ -301,7 +301,7 @@ namespace AgoraChat
          * @param pageSize    每页期望返回的子区数。取值范围为 [1,50]。
          * @param callBack    结果回调：
          *                       - 成功时回调 {@link ValueCallBack#onSuccess(Object)}，返回分页获取结果 {@link CursorResult}，包含子区列表以及用于下次获取数据的游标；
-         *                        - 失败时回调 {@link ValueCallBack#onError(int, String)}，返回错误信息。
+         *                       - 失败时回调 {@link ValueCallBack#onError(int, String)}，返回错误信息。
          *
          * \~english
          * Uses the pagination to get the list of message threads that the current user has joined.

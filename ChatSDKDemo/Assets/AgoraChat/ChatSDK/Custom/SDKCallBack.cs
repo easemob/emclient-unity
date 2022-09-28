@@ -115,7 +115,6 @@ namespace AgoraChat
             callbackId = CallbackManager.Instance().CurrentId.ToString();
             CallbackManager.Instance().AddCallback(CallbackManager.Instance().CurrentId, this);
         }
-
         internal void ClearCallback()
         {
             Error(0, null);

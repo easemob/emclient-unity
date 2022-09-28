@@ -190,7 +190,7 @@ namespace AgoraChat
          * @param from          更新动作发起人。
          *
          * \~english
-         * Occurs when the chat room announcement is updated.
+         * Occurs when the chat room attribute is changed.
          *
          * @param roomId        The chat room ID.
          * @param kv            The updated properties.
@@ -207,7 +207,7 @@ namespace AgoraChat
          * @param from          移除动作发起人。
          *
          * \~english
-         * Occurs when the chat room announcement is updated.
+         * Occurs when the chat room attribute is removeed.
          *
          * @param roomId        The chat room ID.
          * @param keys          The removed keys of properties.

@@ -563,7 +563,9 @@ namespace AgoraChat
         /**
          * \~chinese
          * 设置全员禁言。
+         * 
          * 仅聊天室所有者和管理员可调用此方法。
+         * 
          * 聊天室拥有者、管理员及加入白名单的用户不受影响。
          *
          * 异步方法。
@@ -580,8 +582,9 @@ namespace AgoraChat
          * This is an asynchronous method.
          *
          * @param roomId    The chat room ID.
-         * @param handle    The completion callback. If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
-         *                  if this call fails, calls {@link ValueCallBack#onError(int, String)}.
+         * @param handle    The completion callback. 
+		 *                  - If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
+         *                  - If this call fails, calls {@link ValueCallBack#onError(int, String)}.
          */
         public abstract void MuteAllRoomMembers(string roomId, ValueCallBack<Room> handle = null);
 
@@ -603,16 +606,19 @@ namespace AgoraChat
          * This is an asynchronous method.
          *
          * @param roomId    The chat room ID.
-         * @param handle    The completion callback. If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
-         *                  If this call fails, calls {@link ValueCallBack#onError(int, String)}.
+         * @param handle    The completion callback. 
+		 *                  - If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
+         *                  - If this call fails, calls {@link ValueCallBack#onError(int, String)}.
          */
         public abstract void UnMuteAllRoomMembers(string roomId, ValueCallBack<Room> handle = null);
 
         /**
          * \~chinese
          * 将成员添加到白名单。
+		 * 
          * 仅聊天室所有者或管理员可调用此方法。
-         * 聊天室拥有者或者管理员执行 {@link #MuteAllMembers} 时，加入白名单的成员不受影响。
+		 * 
+         * 聊天室所有者或者管理员执行 {@link #MuteAllMembers} 时，加入白名单的成员不受影响。
          *
          * 异步方法。
          *
@@ -622,23 +628,28 @@ namespace AgoraChat
          *                    失败时回调 {@link ValueCallBack#onError(int, String)}。
          *
          * \~english
-         * Adds members to the allowlist.
+         * Adds members to the allow list.
+		 * 
          * Only the chat room owner or admin can call this method.
-         * For members added to the allowlist, {@link #MuteAllMembers}, when executed by the chat room owner or admin, does not work.
+		 * 
+         * A call to the {@link #MuteAllMembers} method by the chat room owner or admin does not affect members on the allow list.
          *
          * This is an asynchronous method.
          *
          * @param roomId       The chat room ID.
-         * @param members      The list of members to be added to the allowlist.
-         * @param handle       The completion callback. If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
-         *                     if this call fails, calls {@link ValueCallBack#onError(int, String)}.
+         * @param members      The list of members to be added to the allow list.
+         * @param handle       The completion callback. 
+		 *                     - If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
+         *                     - If this call fails, calls {@link ValueCallBack#onError(int, String)}.
          */
         public abstract void AddWhiteListMembers(string roomId, List<string> members, CallBack handle = null);
 
         /**
          * \~chinese
          * 将成员从白名单移除。
+		 * 
          * 仅聊天室所有者和管理员可调用此方法。
+		 * 
          * 成员从白名单移除后，将受到 {@link #MuteAllMembers} 功能的影响。
          *
          * 异步方法。
@@ -649,16 +660,19 @@ namespace AgoraChat
          *                       失败时回调 {@link ValueCallBack#onError(int, String)}。
          *
          * \~english
-         * Removes members from the blocklist.
+         * Removes members from the block list.
+		 * 
          * Only the chat room owner or admin can call this method.
-         * For members removed from the blocklist, {@link #MuteAllMembers(String, EMValueCallBack)} works.
+		 * 
+         * When members are removed from the block list, a call to the method {@link #MuteAllMembers(String, EMValueCallBack)} will also mute them.
          *
          * This is an asynchronous method.
          *
          * @param roomId        The chat room ID.
-         * @param members       The list of members to be removed from the blocklist.
-         * @param handle        The completion callback. If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
-         *                     if this call fails, calls {@link ValueCallBack#onError(int, String)}.
+         * @param members       The list of members to be removed from the block list.
+         * @param handle        The completion callback. 
+		 *                      - If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
+         *                      - If this call fails, calls {@link ValueCallBack#onError(int, String)}.
          */
         public abstract void RemoveWhiteListMembers(string roomId, List<string> members, CallBack handle = null);
 
@@ -770,7 +784,7 @@ namespace AgoraChat
 		 * @param roomManagerDelegate 		要移除的聊天室监听器，继承自 {@link IRoomManagerDelegate}。
 		 *
 		 * \~english
-		 * Removes a chat room listenter.
+		 * Removes a chat room listener.
 		 *
 		 * @param roomManagerDelegate 		The chat room listener to remove. It is inherited from {@link IRoomManagerDelegate}.
 		 * 

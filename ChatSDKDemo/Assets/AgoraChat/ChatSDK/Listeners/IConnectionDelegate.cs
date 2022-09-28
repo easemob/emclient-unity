@@ -1,6 +1,6 @@
 ﻿namespace AgoraChat
 {
-    /**
+        /**
          * \~chinese
          * 连接回调接口。
          *
@@ -36,21 +36,21 @@
          */
         void OnDisconnected(int i);
 
-        /**
+       /**
         * \~chinese
         * Token 过期回调。
         *  
         * \~english
-        * Occurs when token is expired.
+        * Occurs when the token has expired.
         */
         void OnTokenExpired();
 		
-        /**
+       /**
         * \~chinese
         * Token 即将过期回调。
         *  
         * \~english
-        * Occurs when token will expired.
+        * Occurs when the token is about to expire.
         */
 		void OnTokenWillExpire();
 

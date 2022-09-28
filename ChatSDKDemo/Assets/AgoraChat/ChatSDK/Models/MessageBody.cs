@@ -552,14 +552,16 @@ namespace AgoraChat
 
             /**
              * \~chinese
-             * 是否发送原图。
-             * - `true`: 发送原图和缩略图。
-             * - (默认） `false`: 若图片小于 100 KB，发送原图和缩略图；若图片大于等于 100 KB, 发送压缩后的图片和压缩后图片的缩略图。
+             * 设置发送图片时是否发送原图。
+             * - `true`：发送原图。
+             * - （默认）`false`：若图片小于 100 KB，发送原图；若图片大于等于 100 KB, 发送压缩后的图片。
+             * 对于 Windows、Unity Mac 或 Unity Windows，SDK 暂不支持压缩功能，只支持原图发送。
              *
              * \~english
              * Whether to send the original image.
-             * - `true`: Yes. 
-             * - (Default) `false`: No. If the image is smaller than 100 KB, the SDK sends the original image and its thumbnail. If the image is equal to or greater than 100 KB, the SDK will compress it before sending the compressed image and the thumbnail of the compressed image.
+             * - `true`: Yes.
+             * - (Default) `false`: If the image is smaller than 100 KB, the SDK sends the original image. If the image is equal to or greater than 100 KB, the SDK will compress it before sending the compressed image.
+             * For the Windows, Unity Mac, or Unity Windows, the SDK can only send the original image as the compression is not supported. 
              */
             public bool Original;
 

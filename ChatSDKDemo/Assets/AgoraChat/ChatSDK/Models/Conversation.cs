@@ -432,7 +432,7 @@ namespace AgoraChat {
 	 * @return 会话的全部消息数量。
 	 *
 	 * \~english
-	 * Gets all messages count in this conversation in the local database.
+	 * Gets the count of all messages in this conversation in the local database.
 	 * @return The count of all the messages in this conversation.
 	 */
         public int MessagesCount() {

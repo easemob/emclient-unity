@@ -112,7 +112,7 @@ namespace AgoraChat
          * \~english
          * The nickname of the user.
          */
-		 [MarshalAs(UnmanagedType.LPTStr)]
+        [MarshalAs(UnmanagedType.LPTStr)]
         public string nickName = "";
         /**
          * \~chinese
@@ -252,7 +252,6 @@ namespace AgoraChat
             }
         }
 
-        //public JSONObject ToJson()
         internal JSONObject ToJson()
         {
             JSONObject jo = new JSONObject();

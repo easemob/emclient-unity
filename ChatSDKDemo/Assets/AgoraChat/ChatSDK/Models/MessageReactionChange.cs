@@ -10,37 +10,37 @@ namespace AgoraChat
 
     /**
      * \~chinese
-     * 消息 Reaction 变更实体类
+     * 消息 Reaction 变更实体类。
      * 
      * \~english
-     * The message reaction change entity class
+     * The message Reaction change entity class.
      */
     public class MessageReactionChange
     {
 
         /**
          * \~chinese
-         * Reaction 会话id
+         * Reaction 会话 ID。
          * 
          * \~english
-         * Reaction conversationId
+         * The conversation ID.
          */
         public string ConversationId;
         /**
          * \~chinese
-         * Reaction父消息ID
+         * Reaction 父消息 ID。
          * 
          * \~english
-         * Reaction parent message ID
+         * The parent message ID of the Reaction.
          */		
         public string MessageId;
 
         /**
          * \~chinese
-         * Reaction 列表
+         * Reaction 列表。
          * 
          * \~english
-         * Reaction list
+         * The Reaction list.
          */
         public List<MessageReaction> ReactionList;
 

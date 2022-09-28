@@ -212,8 +212,8 @@ namespace AgoraChat
          * @return  群组消息回执数。
          *
          * \~english
-         * Get group ack count.
-         * @return group ack count.
+         * Gets the group ack count.
+         * @return The group ack count.
          */		
         public int GroupAckCount {
             get {
@@ -250,11 +250,11 @@ namespace AgoraChat
         public Dictionary<string, AttributeValue> Attributes;
         /**
          * \~chinese
-         * 获取Reaction列表。
+         * 获取 Reaction 列表。
          * @return  Reaction 列表。
 		 *
          * \~english
-         * Get the list of Reaction.
+         * Gets the list of Reaction.
 		 *
          * @return The list of Reactions.
          */
@@ -269,16 +269,16 @@ namespace AgoraChat
          * 设置及获取是否是 Thread 消息。
 		 *
          * \~english
-         * Sets and get whether the message is in a thread.
+         * Sets and gets whether the message is in a thread.
          */
         public bool IsThread = false;
 		
 		/**
          * \~chinese
-         * 获取子区内容。
+         * 获取子区概览信息。
          *
          * \~english
-         * Get thread on current message.
+         * Gets the Chat Thread overview information,
          *
          */
         public ChatThread ChatThread {
@@ -416,6 +416,8 @@ namespace AgoraChat
          * @param original              是否发送原图。
          *                              - `true`: 发送原图。
          *                              - (默认） `false`: 发送缩略图。若图片超过 100 KB，SDK 会先压缩图片，然后发送缩略图。
+         *                              对于 Windows、Unity Mac 或 Unity Windows，SDK 暂不支持压缩功能，只支持原图发送。
+         * 
          * @param width                 图片宽度，单位为像素。
          * @param heigh                 图片高度，单位为像素。
          * 
@@ -429,6 +431,7 @@ namespace AgoraChat
          * @param original              Whether to send the original image.
          *                              - `true`: Yes. 
          *                              - (Default) `false`: No. The thumbnail is sent. For an image greater than 100 KB, the SDK will compress it before sending its thumbnail.
+         *                              For the Windows, Unity Mac, or Unity Windows, the SDK can only send the original image as the compression is not supported. 
          * @param width                 The image width in pixels.
          * @param heigh                 The image height in pixels.
          * 

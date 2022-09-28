@@ -144,7 +144,7 @@ namespace AgoraChat
 		 *
 	     *   Upon receiving this event, the SDK sets the `isAcked` attribute of the messages in the conversation to `true` in the local database.
 	     * 
-		 *- In the multi-device login scenario, when one device sends a read receipt for a conversation, the server will set the number of unread messages of this conversation to `0`.
+		 * - In the multi-device login scenario, when one device sends a read receipt for a conversation, the server will set the number of unread messages of this conversation to `0`.
 		 *  In this case, the callback occurs on the other devices where the SDK will set `isRead` attribute of the messages in the conversation to `true` in the local database.
 	     * 
 		 * @param from The ID of the user who sends the read receipt.
@@ -154,9 +154,9 @@ namespace AgoraChat
 
 		/**
          * \~chinese
-         * Reaction发生变化。
+         * Reaction 发生变化。
          *
-         * @param list 改变的reaction列表。
+         * @param list 改变的 Reaction 列表。
          *
          *  \~english
          * Occurs when the reactions changed.

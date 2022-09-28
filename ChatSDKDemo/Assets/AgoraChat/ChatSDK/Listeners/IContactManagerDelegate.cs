@@ -1,13 +1,13 @@
 ﻿namespace AgoraChat
 {
     /**
-         * \~chinese
-         * 联系人管理器回调接口。
-         * 
-         * \~english
-         * The contact manager callback interface.
-         * 
-         */
+     * \~chinese
+     * 联系人管理器回调接口。
+     * 
+     * \~english
+     * The contact manager callback interface.
+     * 
+     */
     public interface IContactManagerDelegate
     {
         /**
