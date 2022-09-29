@@ -694,7 +694,7 @@ namespace AgoraChat
          * @param deleteWhenExit 当前成员退出聊天室是否自动删除该聊天室中其设置的所有聊天室自定义属性。
          * 							- （默认）`true`:是。
 		 *							- `false`:否。
-         * @forced               是否覆盖其他成员设置的属性。
+         * @forced               是否覆盖其他成员设置的同名属性。
          * @param handle         结果回调，成功时回调 {@link CallBackResult#OnSuccessResult(Dictionary<string, int>)}，
          *                       失败时回调 {@link CallBackResult#onError(int, String)}。
          *
@@ -716,7 +716,7 @@ namespace AgoraChat
          * @deleteWhenExit      Whether to delete the chat room attributes set by the member when he or she exits the chat room.
          * 							- (Default)`true`:Yes.
 		 *							- `false`: No.
-         * @forced              Whether to overwrite the attributes set by others.
+         * @forced              Whether to overwrite the attributes with same key name set by others.
          * @param handle        The completion callback. If this call succeeds, calls {@link CallBackResult#OnSuccessResult(Dictionary<string, int>)};
          *                      if this call fails, calls {@link CallBackResult#onError(int, String)}.
          */
@@ -755,8 +755,8 @@ namespace AgoraChat
          * 异步方法。
          *
          * @param roomId         聊天室 ID。
-         * @param keys			 待属性属性的键值。
-         * @forced               是否强制删除其他用户所设置的属性。
+         * @param keys           待删除属性的键值。
+         * @forced               是否强制删除其他用户所设置的同名属性。
          * @param handle         结果回调，成功时回调 {@link CallBackResult#OnSuccessResult(Dictionary<string, int>)}，
          *                       失败时回调 {@link CallBackResult#onError(int, String)}。
          *
@@ -768,7 +768,7 @@ namespace AgoraChat
          *
          * @param roomId        The chat room ID.
          * @param keys			The keys used to remove properties.
-         * @forced              Whether force to remove attributes set by others.
+         * @forced              Whether force to remove attributes with same key name set by others.
          * @param handle        The completion callback. If this call succeeds, calls {@link CallBackResult#OnSuccessResult(Dictionary<string, int>)};
          *                      if this call fails, calls {@link CallBackResult#onError(int, String)}.
          */
