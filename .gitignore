@@ -147,3 +147,5 @@ sysinfo.txt
 *.nupkg
 *.dll
 **/ProjectSettings/
+**/Logs/
+**/Packages/

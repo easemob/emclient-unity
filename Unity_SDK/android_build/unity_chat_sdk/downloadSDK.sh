@@ -15,7 +15,7 @@ if [ ! -f ${FILE} ]; then
   rm -rf libs
   unzip -d ${SDK_NAME} ${SDK_NAME}.zip
   mv ${SDK_NAME}/libs libs
-  mv classes.jar libs/classes.jar
+  cp classes.jar libs/classes.jar
   rm -rf ${SDK_NAME}.zip
   rm -rf ${SDK_NAME}
 fi
