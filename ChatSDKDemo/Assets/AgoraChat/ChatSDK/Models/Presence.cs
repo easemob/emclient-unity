@@ -6,29 +6,28 @@ namespace AgoraChat
 
     /**
      * \~chinese
-     * 在线设备状态类
+     * 在线设备状态类。
      *
      * \~english
-     * The presence device status class
+     * The presence class for the online device.
      */
     public class PresenceDeviceStatus
     {
         /**
          * \~chinese
-         * 在线设备Id
+         * 在线设备 ID。
          *
          * \~english
-         * The presence device Id.
+         * The ID of the online device.
          */
         public string DeviceId;
 
-
         /**
          * \~chinese
-         * 在线设备状态
+         * 在线设备状态。
          *
          * \~english
-         * The presence device status
+         * The presence state of the online device.
          */
         public int Status;
 
@@ -60,6 +59,7 @@ namespace AgoraChat
          * 获取在线状态发布者的用户 ID。
          *
          * @return 在线状态发布者的用户 ID。
+         * 
          * \~english
          * Gets the user ID of the presence publisher.
          *
@@ -70,7 +70,7 @@ namespace AgoraChat
 
         /**
          * \~chinese
-         * 获取当前在线状态的详情。当前在线状态详情由键值对组成，其中 key 表示在线状态发布者使用的设备平台，如“ios”、“android”、“linux”、“windows”或“webbim”，value 表示发布者的当前在线状态。
+         * 获取当前在线状态的详情。当前在线状态详情由键值对组成，其中 key 表示在线状态发布者使用的设备平台，如 “ios”、“android”、“linux”、“windows” 或 “webim”，value 表示发布者的当前在线状态。
          *
          * @return 当前在线状态详情。
          *
@@ -126,7 +126,7 @@ namespace AgoraChat
 
         internal Presence()
         {
-            // Default constructor, No need to add any code
+            // The default constructor. It is unnecessary to add any code.
         }
 
         internal Presence(JSONObject json)

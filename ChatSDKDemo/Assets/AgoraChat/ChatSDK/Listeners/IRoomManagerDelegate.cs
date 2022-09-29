@@ -63,20 +63,9 @@ namespace AgoraChat
          * \~chinese
          * 聊天室成员被移除。
          *
-         * @param reason        用户被移出聊天室的原因：
-         *                      - xxx BE_KICKED：该用户被聊天室管理员移除；
-         *                      - xxxBE_KICKED_FOR_OFFINE：该用户由于当前设备断网被服务器移出聊天室。
-         * 
-         * @param roomId        聊天室 ID。
-         * @param roomName      聊天室名称。
-         * @param participant   被移除人员 ID。
-         *
          * \~english
          * Occurs when a member is removed from a chat room.
          *
-         * @param reason        The reason why the user is removed from the chat room:
-         *                      - xxx BE_KICKED: The user is removed by the chat room owner.
-         *                      - xxxBE_KICKED_FOR_OFFINE: The user is disconnected from the server, probably due to network interruptions.
          * @param roomId        The chat room ID.
          * @param roomName      The name of the chat room.
          * @param participant   The user ID of the member that is removed from a chat room.
@@ -183,35 +172,43 @@ namespace AgoraChat
 
         /**
          * \~chinese
-         * 聊天室属性更新事件。
+         * 聊天室自定义属性（key-value）有更新。
          *
-         * @param roomId        聊天室 ID。
-         * @param kv            更新的属性。
-         * @param from          更新动作发起人。
+         * 聊天室所有成员会收到该事件。
+         *
+         * @param chatRoomId   聊天室 ID。
+         * @param kv           更新的聊天室自定义属性。
+         * @param from         操作者的用户 ID。
          *
          * \~english
-         * Occurs when the chat room announcement is updated.
+         * The custom chat room attribute(s) is/are updated.
          *
-         * @param roomId        The chat room ID.
-         * @param kv            The updated properties.
-         * @param from          The operator to do update.
+         * All chat room members receive this event.
+         *
+         * @param chatRoomId   The chat room ID.
+         * @param kv           The map of custom chat room attributes that are updated.
+         * @param from         The user ID of the operator.
          */
         void OnChatroomAttributesChanged(string roomId, Dictionary<string, string> kv, string from);
 
         /**
          * \~chinese
-         * 聊天室属性移除事件。
+         * 聊天室自定义属性被移除。
          *
-         * @param roomId        聊天室 ID。
-         * @param keys          移除属性的关键字列表。
-         * @param from          移除动作发起人。
+         * 聊天室所有成员会收到该事件。
+         *
+         * @param chatRoomId   聊天室 ID。
+         * @param keys         被移除的聊天室自定义属性 key 列表。
+         * @param from         操作者用户 ID。
          *
          * \~english
-         * Occurs when the chat room announcement is updated.
+         * The custom chat room attribute(s) is/are removed.
          *
-         * @param roomId        The chat room ID.
-         * @param keys          The removed keys of properties.
-         * @param from          The operator to do remove.
+         * All chat room members receive this event.
+         *
+         * @param chatRoomId   The chat room ID.
+         * @param keys         The list of keys of custom chat room attributes that are removed.
+         * @param from         The user ID of the operator.
          */
         void OnChatroomAttributesRemoved(string roomId, List<string> keys, string from);
     }

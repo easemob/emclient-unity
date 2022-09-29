@@ -563,7 +563,9 @@ namespace AgoraChat
         /**
          * \~chinese
          * 设置全员禁言。
+         * 
          * 仅聊天室所有者和管理员可调用此方法。
+         * 
          * 聊天室拥有者、管理员及加入白名单的用户不受影响。
          *
          * 异步方法。
@@ -580,14 +582,16 @@ namespace AgoraChat
          * This is an asynchronous method.
          *
          * @param roomId    The chat room ID.
-         * @param handle    The completion callback. If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
-         *                  if this call fails, calls {@link ValueCallBack#onError(int, String)}.
+         * @param handle    The completion callback. 
+		 *                  - If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
+         *                  - If this call fails, calls {@link ValueCallBack#onError(int, String)}.
          */
         public abstract void MuteAllRoomMembers(string roomId, ValueCallBack<Room> handle = null);
 
         /**
          * \~chinese
          * 解除所有成员的禁言状态。
+		 * 
          * 仅聊天室所有者和管理员可调用此方法。
          *
          * 异步方法。
@@ -603,16 +607,19 @@ namespace AgoraChat
          * This is an asynchronous method.
          *
          * @param roomId    The chat room ID.
-         * @param handle    The completion callback. If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
-         *                  If this call fails, calls {@link ValueCallBack#onError(int, String)}.
+         * @param handle    The completion callback. 
+		 *                  - If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
+         *                  - If this call fails, calls {@link ValueCallBack#onError(int, String)}.
          */
         public abstract void UnMuteAllRoomMembers(string roomId, ValueCallBack<Room> handle = null);
 
         /**
          * \~chinese
          * 将成员添加到白名单。
+		 * 
          * 仅聊天室所有者或管理员可调用此方法。
-         * 聊天室拥有者或者管理员执行 {@link #MuteAllMembers} 时，加入白名单的成员不受影响。
+		 * 
+         * 聊天室所有者或者管理员执行 {@link #MuteAllMembers} 时，加入白名单的成员不受影响。
          *
          * 异步方法。
          *
@@ -622,23 +629,28 @@ namespace AgoraChat
          *                    失败时回调 {@link ValueCallBack#onError(int, String)}。
          *
          * \~english
-         * Adds members to the allowlist.
+         * Adds members to the allow list.
+		 * 
          * Only the chat room owner or admin can call this method.
-         * For members added to the allowlist, {@link #MuteAllMembers}, when executed by the chat room owner or admin, does not work.
+		 * 
+         * A call to the {@link #MuteAllMembers} method by the chat room owner or admin does not affect members on the allow list.
          *
          * This is an asynchronous method.
          *
          * @param roomId       The chat room ID.
-         * @param members      The list of members to be added to the allowlist.
-         * @param handle       The completion callback. If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
-         *                     if this call fails, calls {@link ValueCallBack#onError(int, String)}.
+         * @param members      The list of members to be added to the allow list.
+         * @param handle       The completion callback. 
+		 *                     - If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
+         *                     - If this call fails, calls {@link ValueCallBack#onError(int, String)}.
          */
         public abstract void AddWhiteListMembers(string roomId, List<string> members, CallBack handle = null);
 
         /**
          * \~chinese
          * 将成员从白名单移除。
+		 * 
          * 仅聊天室所有者和管理员可调用此方法。
+		 * 
          * 成员从白名单移除后，将受到 {@link #MuteAllMembers} 功能的影响。
          *
          * 异步方法。
@@ -649,68 +661,95 @@ namespace AgoraChat
          *                       失败时回调 {@link ValueCallBack#onError(int, String)}。
          *
          * \~english
-         * Removes members from the blocklist.
+         * Removes members from the block list.
+		 * 
          * Only the chat room owner or admin can call this method.
-         * For members removed from the blocklist, {@link #MuteAllMembers(String, EMValueCallBack)} works.
+		 * 
+         * When members are removed from the block list, a call to the method {@link #MuteAllMembers(String, EMValueCallBack)} will also mute them.
          *
          * This is an asynchronous method.
          *
          * @param roomId        The chat room ID.
-         * @param members       The list of members to be removed from the blocklist.
-         * @param handle        The completion callback. If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
-         *                     if this call fails, calls {@link ValueCallBack#onError(int, String)}.
+         * @param members       The list of members to be removed from the block list.
+         * @param handle        The completion callback. 
+		 *                      - If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
+         *                      - If this call fails, calls {@link ValueCallBack#onError(int, String)}.
          */
         public abstract void RemoveWhiteListMembers(string roomId, List<string> members, CallBack handle = null);
 
 		/**
          * \~chinese
-         * 添加聊天室属性。
+         * 设置聊天室属性。
+		  * 
          * 聊天室成员均可调用此方法。
          *
          * 异步方法。
          *
          * @param roomId         聊天室 ID。
-         * @param kv			 新增的属性。
-         * @param deleteWhenExit 用户退出聊天室时是否删除相关属性。
-         * @forced               是否强制执行此操作。
-         * @param handle         结果回调，成功时回调 {@link CallBackResult#OnSuccessResult(Dictionary<string, string>)}，
+         * @param kv			 新增的属性，为键值对（key-value）结构。在键值对中，key 为属性名，不超过 128 字符，value 为属性值不超过 4096 字符。
+         *                       每个聊天室最多可有 100 个属性。每个应用的聊天室属性总大小不能超过 10 GB。Key 支持以下字符集：
+         *						 - 26 个小写英文字母 a-z；
+         *						 - 26 个大写英文字母 A-Z；
+         *						 - 10 个数字 0-9；
+         *						 - “_”, “-”, “.”。
+         *						，
+         * @param deleteWhenExit 当前成员退出聊天室时是否自动删除其设置的该聊天室的所有自定义属性。
+         * 							- （默认）`true`：是。
+		 *							- `false`：否。
+         * @forced               是否覆盖其他成员设置的 key 相同的属性。
+		 * 							- `true`：是。
+		 *							- （默认）`false`：否。
+         * @param handle         结果回调，成功时回调 {@link CallBackResult#OnSuccessResult(Dictionary<string, int>)}，
          *                       失败时回调 {@link CallBackResult#onError(int, String)}。
          *
          * \~english
-         * Add chat room properties.
-         * All members in the chatroom owner can call this API.
+         * Sets custom chat room attributes.
+
+         * All members in the chat room owner can call this method.
          *
          * This is an asynchronous method.
          *
          * @param roomId        The chat room ID.
-         * @param kv			The added chatroom properties.
-         * @deleteWhenExit      Delete related properties when user exit the room.
-         * @forced              Whether forced.
-         * @param handle        The completion callback. If this call succeeds, calls {@link CallBackResult#OnSuccessResult(Dictionary<string, string>)};
+         * @param kv            The chat room attributes to add. The attributes are in key-value format. 
+         *                      In a key-value pair, the key is the attribute name that can contain 128 characters at most; the value is the attribute value that cannot exceed 4096 characters. 
+	     *                      A chat room can have a maximum of 100 custom attributes and the total length of custom chat room attributes cannot exceed 10 GB for each app. Attribute keys support the following character sets:
+         *						 - 26 lowercase English letters (a-z)
+         *						 - 26 uppercase English letters (A-Z)
+         *						 - 10 numbers (0-9)
+         *						 - "_", "-", "."
+         * @deleteWhenExit      Whether to delete the chat room attributes set by the member when he or she exits the chat room.
+         * 						- (Default)`true`: Yes.
+		 *						- `false`: No.
+         * @forced              Whether to overwrite the attributes with same key set by others.
+		 * 						- `true`: Yes.
+		 *						- (Default)`false`: No.
+         * @param handle        The completion callback. If this call succeeds, calls {@link CallBackResult#OnSuccessResult(Dictionary<string, int>)};
          *                      if this call fails, calls {@link CallBackResult#onError(int, String)}.
          */
 		public abstract void AddAttributes(string roomId, Dictionary<string, string> kv, bool deleteWhenExit = true, bool forced = false, CallBackResult handle = null);
 
 		/**
          * \~chinese
-         * 获取聊天室属性。
+         * 根据聊天室属性 key 列表获取属性列表。
+
          * 聊天室成员均可调用此方法。
          *
          * 异步方法。
          *
          * @param roomId         聊天室 ID。
-         * @param keys			 待获取属性的键值。如果未指定任何key值，则表示获取所有属性。
+         * @param keys			 待获取属性的键值。如果未指定任何 key 值，则表示获取所有属性。
          * @param handle         结果回调，成功时回调 {@link ValueCallBack#OnSuccessValue(Dictionary<string, string>)}，
          *                       失败时回调 {@link ValueCallBack#onError(int, String)}。
          *
          * \~english
-         * Add chat room properties.
-         * All members in the chatroom owner can call this API.
+         * Gets the list of custom chat room attributes based on the attribute key list.
+		 * 
+         * All members in the chat room owner can call this method.
          *
          * This is an asynchronous method.
          *
          * @param roomId        The chat room ID.
-         * @param keys			The keys used to fetch properties. If not set any special keys, then will fetch all properties.
+         * @param keys			The key list of attributes to get. If you set it as `null` or leave it empty, this method retrieves all custom attributes.
          * @param handle        The completion callback. If this call succeeds, calls {@link ValueCallBack#OnSuccessValue(Dictionary<string, string>)};
          *                      if this call fails, calls {@link ValueCallBack#onError(int, String)}.
          */
@@ -718,27 +757,29 @@ namespace AgoraChat
 
 		/**
          * \~chinese
-         * 移除聊天室属性。
+         * 根据聊天室 ID 和属性 key 列表删除聊天室自定义属性。
+		 * 
          * 聊天室成员均可调用此方法。
          *
          * 异步方法。
          *
          * @param roomId         聊天室 ID。
-         * @param keys			 待属性属性的键值。
-         * @forced               是否强制执行此操作。
-         * @param handle         结果回调，成功时回调 {@link CallBackResult#OnSuccessResult(Dictionary<string, string>)}，
+         * @param keys           待删除属性的键值。
+         * @forced               是否强制删除其他用户所设置的相同 key 的属性。
+         * @param handle         结果回调，成功时回调 {@link CallBackResult#OnSuccessResult(Dictionary<string, int>)}，
          *                       失败时回调 {@link CallBackResult#onError(int, String)}。
          *
          * \~english
-         * Remove chat room properties.
-         * All members in the chatroom owner can call this API.
+         * Removes custom chat room attributes by chat room ID and attribute key list.
+		 * 
+         * All members in the chat room can call this method.
          *
          * This is an asynchronous method.
          *
          * @param roomId        The chat room ID.
-         * @param keys			The keys used to remove properties.
-         * @forced              Whether forced.
-         * @param handle        The completion callback. If this call succeeds, calls {@link CallBackResult#OnSuccessResult(Dictionary<string, string>)};
+         * @param keys			The keys of custom chat room attributes to remove.
+         * @forced              Whether to remove attributes with same key set by others.
+         * @param handle        The completion callback. If this call succeeds, calls {@link CallBackResult#OnSuccessResult(Dictionary<string, int>)};
          *                      if this call fails, calls {@link CallBackResult#onError(int, String)}.
          */
 		public abstract void RemoveAttributes(string roomId, List<string> keys, bool forced = false, CallBackResult handle = null);
@@ -770,7 +811,7 @@ namespace AgoraChat
 		 * @param roomManagerDelegate 		要移除的聊天室监听器，继承自 {@link IRoomManagerDelegate}。
 		 *
 		 * \~english
-		 * Removes a chat room listenter.
+		 * Removes a chat room listener.
 		 *
 		 * @param roomManagerDelegate 		The chat room listener to remove. It is inherited from {@link IRoomManagerDelegate}.
 		 * 
