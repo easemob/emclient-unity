@@ -224,7 +224,7 @@ namespace AgoraChat
         * @return   消息管理器实例对象。
         *
         * \~english
-        * Gets message manager instance.
+        * Gets a message manager instance.
         *
         * @return   The message manager instance object.
         */		
@@ -570,7 +570,7 @@ namespace AgoraChat
 		 * \~english
 		 * Adds a multi-device listener.
 		 *
-		 * @param multiDeviceDelegate 		The multi-device listenser to add. It is inherited from {@link IMultiDeviceDelegate}.
+		 * @param multiDeviceDelegate 		The multi-device listener to add. It is inherited from {@link IMultiDeviceDelegate}.
 		 * 
 		 */
         public void AddMultiDeviceDelegate(IMultiDeviceDelegate multiDeviceDelegate)
@@ -590,7 +590,7 @@ namespace AgoraChat
 		 * \~english
 		 * Removes a multi-device listener.
 		 *
-		 * @param multiDeviceDelegate 		The multi-device listenser to remove. It is inherited from {@link IMultiDeviceDelegate}.
+		 * @param multiDeviceDelegate 		The multi-device listener to remove. It is inherited from {@link IMultiDeviceDelegate}.
 		 * 
 		 */
         public void DeleteMultiDeviceDelegate(IMultiDeviceDelegate multiDeviceDelegate)

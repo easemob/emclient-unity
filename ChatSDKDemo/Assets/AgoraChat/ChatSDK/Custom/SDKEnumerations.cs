@@ -581,7 +581,7 @@
          *  JSON string.
          */
         JSONSTRING,
-        //ATTRIBUTEVALUE,
+
         NULLOBJ
     }
 
@@ -690,7 +690,7 @@
          * 当前用户在其他设备接受入群申请。
          *
          * \~english
-         * The current user accepted a group request on another device.
+         * The current user accepted a group join request on another device.
          */
         GROUP_APPLY_ACCEPT = 15,
 
@@ -699,7 +699,7 @@
          * 当前用户在其他设备上拒绝入群申请。
          *
          * \~english
-         * The current user declined a group request on another device.
+         * The current user declined a group join request on another device.
          */
         GROUP_APPLY_DECLINE = 16,
 
@@ -870,7 +870,7 @@
          * 子区在其他设备上被销毁。
          *
          * \~english
-         * A thread was destoryed on another device.
+         * A thread was destroyed on another device.
          */
         THREAD_DESTROY = 41,
 
@@ -879,7 +879,7 @@
          * 在其他设备上加入子区。
          *
          * \~english
-         * Joined thread on another device.
+         * The current user joined a message thread on another device.
          */
         THREAD_JOIN = 42,
 
@@ -888,7 +888,7 @@
          * 在其他设备上加退出子区。
          *
          * \~english
-         * Left thread on another device.
+         * The current user left a message thread on another device.
          */
         THREAD_LEAVE = 43,
 
@@ -897,7 +897,7 @@
          * 子区在其他设备上有更新。
          *
          * \~english
-         * Thread updated on another device.
+         * A message thread was updated on another device.
          */
         THREAD_UPDATE = 44,
 
@@ -906,7 +906,7 @@
          * 在其他设备上被提出子区。
          *
          * \~english
-         * Kicked from thread on another device.
+         * The current user was kicked out of a message thread on another device.
          */
         THREAD_KICK = 45,
     }
@@ -946,7 +946,7 @@
          * 缺省接收全部离线消息的推送通知。
          *
          * \~english
-         * Default: Receives push notifications for all offline messages.
+         * Receives push notifications for all offline messages by default.
          * */
         Default = 0,
         /**
@@ -981,7 +981,7 @@
         * 未知操作，缺省值。
         *
         \~english
-        * Unkonw operation, default value.
+        * Unknown operation. It is the default value.
         */	
 		UnKnown = 0,
 	    /**
@@ -989,7 +989,7 @@
         * 创建子区。
         *
         \~english
-        * Create thread.
+        * A message thread is created.
         */
         Create,
 	    /**
@@ -997,7 +997,7 @@
         * 更新子区。
         *
         \~english
-        * Update thread.
+        * A message thread is updated.
         */
         Update,
 	    /**
@@ -1005,7 +1005,7 @@
         * 删除子区。
         *
         \~english
-        * Delete thread.
+        * A message thread is deleted.
         */
         Delete,
 	    /**
@@ -1013,7 +1013,7 @@
         * 子区消息更新。
         *
         \~english
-        * Thread message updated.
+        * A message in the message thread is updated.
         */		
 		Update_Msg,
     }

@@ -98,7 +98,7 @@
 		public IChatThreadManager ThreadManager { get => _Sdk.ThreadManager(); }
         /**
          * \~chinese
-         * SDK选项。
+         * SDK 选项。
          *
          * \~english
          * The SDK options.
@@ -131,9 +131,9 @@
          * - `false`：未登录。
          *
          * \~english
-         * Whether the current user is logged into the chat app.
+         * Whether the current user is logged in to the chat app.
          * - `true`: Yes.
-         * - `false`: No. The current user is not logged into the chat app yet.
+         * - `false`: No. The current user is not logged in to the chat app yet.
          */
         public bool IsLoggedIn { get => _Sdk.IsLoggedIn(); }
 
@@ -207,7 +207,7 @@
 		 * @param multiDeviceDelegate 		要注册的多设备监听器，继承自 {@link IMultiDeviceDelegate}。
 		 *
 		 * \~english
-		 * Adds a connection listener.
+		 * Adds a multi-device listener.
 		 *
 		 * @param multiDeviceDelegate 		The multi-device listener to add. It is inherited from {@link IMultiDeviceDelegate}.
 		 * 
@@ -228,7 +228,7 @@
 		 * @param multiDeviceDelegate 		要移除的多设备监听器，继承自 {@link IMultiDeviceDelegate}。
 		 *
 		 * \~english
-		 * Removes a connection listener.
+		 * Removes a multi-device listener.
 		 *
 		 * @param multiDeviceDelegate 		The multi-device listener to remove. It is inherited from {@link IMultiDeviceDelegate}.
 		 * 
@@ -333,7 +333,7 @@
          *
          * @param username 		The user ID. Ensure that you set this parameter.
          * @param pwdOrToken 	The password or token. Ensure that you set this parameter.
-         * @param isToken       Whether to log in with a token or a password. 
+         * @param isToken       Whether to log in with a token. 
          *                      - `true`：A token is used.
          *                      - (Default) `false`：A password is used.
          * @param handle 	    The login result callback. See {@link CallBack}.

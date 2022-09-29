@@ -3,16 +3,15 @@ using System;
 
 namespace AgoraChat
 {
-	 /**
+	   /**
         * \~chinese
         * 聊天管理器抽象类。
-        
         * \~english
         * The abstract class for the chat manager.
         */
     public abstract class IChatManager
     {
-        /**
+       /**
         * \~chinese
         * 删除本地数据库中的指定会话及其历史消息。
 		* 
@@ -22,7 +21,6 @@ namespace AgoraChat
         * @param deleteMessages 是否同时删除本地历史消息：
 		*                       - `true` ：是；
 		*                       - `false` ：否。
-		*
 		* @return               会话是否成功删除：
 		*                       - `true` ：是；
 		*                       - `false` ：否。
@@ -37,7 +35,7 @@ namespace AgoraChat
         *                           - `true`: Yes.
 		*                           - `false`: No.
 		*
-			* @return 					Whether the conversation is successfully deleted:
+		* @return 					Whether the conversation is successfully deleted:
 		*                           - `true`: Yes. 
 		*                           - `false`: No.
         */
@@ -83,34 +81,36 @@ namespace AgoraChat
 
         /**
 	     * \~chinese
-	     * 从服务器获取历史消息。
-	     * 
-	     * 分页获取。
+	     * 从服务器分页获取历史消息。
 	     *
 	     * 异步方法。
 	     *
 	     * @param conversationId 		会话 ID。
 	     * @param type 					会话类型，详见 {@link ConversationType}。	     
-	     * @param startMessageId 		漫游消息的开始消息 ID。如果为空，SDK 按服务器接收消息时间的倒序获取。
+	     * @param startMessageId 		查询的起始消息 ID。该参数设置后，SDK 从指定的消息 ID 开始，按消息检索方向获取。如果传入消息的 ID 为空，SDK 忽略该参数，按搜索方向查询消息。
+	     *                              - 若 `direction` 为 `UP`，SDK 从最新消息开始，按照服务器接收消息时间的逆序获取；
+         *                              - 若 `direction` 为 `DOWN`，SDK 从最早消息开始，按照服务器接收消息时间的正序获取。
 	     * @param count 				每页期望返回的的消息条数。
 	     * @param direction     		消息获取的方向。
+		 *                              - （默认）`UP`：按照服务器接收消息时间的逆序获取；
+	     *                              - `DOWN`：按照服务器接收消息时间的正序获取。
 	     * @param handle                结果回调，返回消息列表。
 	     *
 	     * \~english
-	     * Gets historical messages of the conversation from the server.
-	     * 
-	     * Historical messages of a conversation can also be obtained with pagination.
+	     * Uses the pagination to get historical messages of the conversation from the server.
 	     *
 	     * This is an asynchronous method.
 	     *
 	     * @param conversationId 		The conversation ID.
 	     * @param type 					The conversation type. See {@link ConversationType}.
-	     * @param startMessageId 		The starting message ID for the query. 
-		 *                              If `null` is passed, the SDK gets messages in the reverse chronological order of when the server received the messages.
+	     * @param startMessageId 		The starting message ID for query. After this parameter is set, the SDK retrieves messages, starting from the specified one, according to the message search direction.
+	     *                              If this parameter is set as "null" or an empty string, the SDK retrieves messages according to the message search direction while ignoring this parameter. 
+	     *                              - If `direction` is set as `UP`, the SDK retrieves messages, starting from the latest one, in the reverse chronological order of when the server receives them.
+         *                              - If `direction` is set as `DOWN`, the SDK retrieves messages, starting from the oldest one, in the chronological order of the time the server receives them.
 	     * @param count 				The number of messages that you expect to get on each page.
-	     * @param direction     		The direction in which the message is fetched. MessageSearchDirection can be set with following:
-         *                   				- `UP`: fetch messages before the timestamp of the specified message ID;
-         *                  				- `DOWN`: fetch messages after the timestamp of the specified message ID.
+	     * @param direction     		The message search direction:
+         *                   			- (Default) `UP`: The SDK retrieves messages in the reverse chronological order of when the server receives them;
+         *                  			- `DOWN`: The SDK retrieves messages in the chronological order of the time the server receives them.
 	     * @param handle				The result callback. Returns the list of obtained messages.
 	     */
         public abstract void FetchHistoryMessagesFromServer(string conversationId, ConversationType type = ConversationType.Chat, string startMessageId = null, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack < CursorResult<Message>> handle = null);
@@ -124,15 +124,10 @@ namespace AgoraChat
 	     * @param createIfNeed      本地数据库中未找到相应会话时是否自动创建。
 	     *                          - `true`：是；
 	     *                          - `false`：否。
-	     * @param isThread       获取会话是否是子区会话。
-	     *                       - `true` 是子区会话；
-	     *                       - `false` 不是子区会话。
 	     * @return                  根据指定会话 ID 找到的会话对象。未找到会话会返回空值。
 	     *
 	     * \~english
 	     * Gets the local conversation object.
-	     * 
-	     * The SDK wil return `null` if the conversation is not found.
 	     *
 	     * @param conversationId 	The conversation ID.
 	     * @param type              The conversation type. See {@link ConversationType}.
@@ -153,8 +148,6 @@ namespace AgoraChat
 	     *
 	     * \~english
 	     * Gets the local thread conversation object.
-	     * 
-	     * The SDK wil return `null` if the conversation is not found.
 	     *
 	     * @param threadId 			The threadId ID.
 	     * 
@@ -172,10 +165,8 @@ namespace AgoraChat
 	     *
 	     * \~english
 	     * Gets the all conversations from the server.
-	     * 
-	     * An empty list will be returned if no conversation is found.
 	     *
-	     * @param handle    The list of obtained coversations. See {@link ValueCallBack}.
+	     * @param handle    The list of obtained conversations. See {@link ValueCallBack}. An empty list will be returned if no conversation is found.
 	     */
         public abstract void GetConversationsFromServer(ValueCallBack<List<Conversation>> handle = null);
 
@@ -224,14 +215,14 @@ namespace AgoraChat
 	     * \~chinese
 	     * 将本地数据库中的所有会话加载到内存。
 		 * 
-	     * 一般情况下，该方法在成功登录后调用，以提升会话列表的加载速度。
+	     * 一般在登录成功后使用此方法，可以加快会话列表的加载速度。
 	     * 
 	     * @return		加载的会话列表。
 	     *
 	     * \~english
 	     * Loads all conversations from the local database into the memory.
 		 * 
-	     * To accelerate the loading, call this method immediately after the user is logged in.
+	     * Generally, this method is called upon successful login to speed up the loading of the conversation list.
 	     * 
 	     * @return      The list of loaded conversations.
 	     */
@@ -313,30 +304,27 @@ namespace AgoraChat
 
 		/**
 		 * \~chinese
-		 * 查询指定数量的本地消息。
-		 * 
-		 * **注意**
-		 * 
-		 * 若查询消息数量较大，需考虑内存消耗，每次最多可查询 200 条消息。
+		 * 查询包含特定关键字的本地消息。
 		 *
 		 * @param keywords   查找关键字，字符串类型。
-		 * @param timestamp  查询的 Unix 时间戳，单位为毫秒。
-		 * @param maxCount   查询的最大消息数。
+		 * @param timestamp  查询的起始消息 Unix 时间戳，单位为毫秒。该参数设置后，SDK 从指定时间戳的消息开始，按消息搜索方向获取。
+	 *                       如果该参数设置为负数，SDK 从当前时间开始搜索。
+		 * @param maxCount   每次获取的最大消息数。取值范围为 [1,400]。
 		 * @param from       消息来源，一般指会话 ID。
-		 * @param direction	 查询方向，详见 {@link MessageSearchDirection}。
+		 * @param direction	 消息查询方向，详见 {@link MessageSearchDirection}。
+		 * 
 		 * @return           消息列表。
 		 *
 		 * \~english
-		 * Queries local messages.
-		 * 
-		 * **Note**
-		 * If you want to query a great number of messages, pay attention to the memory consumption. A maximum number of 200 messages can be retrieved each time.
+		 * Retrieves messages with keywords in the local database.
 		 *
 		 * @param keywords   The keyword for query. The data format is String.
-		 * @param timestamp  The Unix timestamp for query, which is in milliseconds.
-		 * @param maxCount   The maximum number of messages to retrieve.
+		 * @param timestamp  The starting Unix timestamp in the message for query. The unit is millisecond. After this parameter is set, the SDK retrieves messages, starting from the specified one, according to the message search direction.
+	 *                       If you set this parameter as a negative value, the SDK retrieves messages, starting from the current time, in the descending order of the timestamp included in them.
+		 * @param maxCount   The maximum number of messages to retrieve each time. The value range is [1,400].
 		 * @param from       The message source, which is usually a conversation ID.
-		 * @param direction	 The query direction. See {@link MessageSearchDirection}.
+		 * @param direction	 The message search direction. See {@link MessageSearchDirection}.
+		 *
 		 * @return           The list of messages.
 		 */
 		public abstract List<Message> SearchMsgFromDB(string keywords, long timestamp = 0, int maxCount = 20, string from = null, MessageSearchDirection direction = MessageSearchDirection.UP);
@@ -387,6 +375,10 @@ namespace AgoraChat
 		/**
 		 * \~chinese
 		 * 发送消息已读回执。
+         * 
+		 ***Note** 
+		 * 
+		 * 该方法仅适用于单聊会话，仅在 {@link Options#RequireAck(boolean)} 为 `true` 时生效。
 		 * 
 		 * 该方法会通知服务器将此消息置为已读，消息发送方（包含多端多设备）将会收到 {@link IChatManagerDelegate#OnMessagesRead(List<Message>)} 回调。
 		 * 
@@ -396,42 +388,50 @@ namespace AgoraChat
 		 * \~english
 		 * Sends the read receipt of a message to the server.
 		 * 
-		 * After this method is called, the sever will set the message status from unread to read. 
+		 * *Note**
+         * 
+		 * - This method only takes effect if you set {@link Options#RequireAck(boolean)} as `true`.
+		 * 
+		 * - After this method is called, the sever will set the message status from unread to read. 
 		 *
-		 * The SDK triggers the {@link IChatManagerDelegate#OnMessagesRead(List<Message>)} callback on the message sender's client, notifying that the messages are read. This also applies to multi-device scenarios.
+		 * - The SDK triggers the {@link IChatManagerDelegate#OnMessagesRead(List<Message>)} callback on the message sender's client, notifying that the messages are read. This also applies to multi-device scenarios.
 		 *
 		 * @param messageId		The message ID.
-		 * @param handle		The result callback. See{@link CallBack}.
+		 * @param handle		The result callback. See {@link CallBack}.
 		 */
 		public abstract void SendMessageReadAck(string messageId, CallBack handle = null);
 
 
-        	/**
-         	* \~chinese
-         	* 发送群消息已读回执。
-         	*
-         	* 前提条件：设置了 {@link Options#RequireAck(boolean)} 和 {@link Message#IsNeedGroupAck(boolean)}。
-         	*
-         	* 参考：
-         	* 发送单聊消息已读回执，详见 {@link #SendMessageReadAck(String)} ;
-         	* 会话已读回执，详见 {@link #SendConversationReadAck(String)}。
-         	*
-         	* @param messageId     消息 ID。
-         	* @param ackContent    回执信息。`ackContent` 属性是用户自己定义的关键字，接收后，解析出自定义的字符串，可以自行处理。
-         	* @param handle		发送回执的结果回调，详见 {@link CallBack}。
-         	*
-         	* \~english
-         	* Sends the group message receipt to the server.
-         	*
-         	* You can only call the method after setting the following method: {@link Options#RequireAck(boolean)} and {@link Message#IsNeedGroupAck(boolean)}.
-         	*
-         	* Reference:
-         	* To send the one-to-one chat message receipt to server, call {@link #SendMessageReadAck(String)};
-         	* To send the conversation receipt to the server, call {@link #SendConversationReadAck(String)}.
-         	*
-         	* @param messageId     The message ID.
-         	* @param ackContent    The ack content information. Developer self-defined command string that can be used for specifying custom action/command.
-         	* @param handle		The result callback. See{@link CallBack}.
+       /**
+        * \~chinese
+        * 发送群消息已读回执。
+        *
+		* *Note**
+        *
+        * - 该方法仅在 {@link Message#IsNeedGroupAck(boolean)} 设置为 `true` 时有效；
+        *
+        * - 发送单聊消息已读回执，详见 {@link #SendMessageReadAck(String)}；
+		* 
+        * - 会话已读回执，详见 {@link #SendConversationReadAck(String)}。
+        *
+        * @param messageId     消息 ID。
+        * @param ackContent    已读回执信息。消息的接收方自定义已读回执信息，消息的发送方收到该已读回执后，解析出自定义的字符串，自行处理。
+        * @param handle		   发送回执的结果回调，详见 {@link CallBack}。
+        *
+        * \~english
+        * Sends the read receipt for a group message to the server.
+		*
+		* **Note**
+		* 
+        * - This method takes effect only if you set {@link Message#IsNeedGroupAck(boolean)} to `true`.
+        *
+        * - To send the read receipt for a one-to-one message, call {@link #SendMessageReadAck(String)}.
+        * 
+        * - To send the conversation receipt, call {@link #SendConversationReadAck(String)}.
+        *
+        * @param messageId     The message ID.
+        * @param ackContent    The read receipt information, which is a custom keyword that specifies a custom action or command.
+        * @param handle		   The result callback. See {@link CallBack}.
 	 	*/
 		public abstract void SendReadAckForGroupMessage(string messageId, string ackContent, CallBack callback = null);
 
@@ -468,7 +468,7 @@ namespace AgoraChat
 		 * \~english
 		 * Removes messages that are sent and received before the Unix timestamp from the local memory and database.
 		 *
-		 * @param timeStamp	The starting Unix timestamp for removal.
+		 * @param timeStamp	The starting Unix timestamp for removal. The unit is millisecond.
 		 * @param handle	The removal result callback. See {@link CallBack}.
 		 */
 
@@ -484,7 +484,7 @@ namespace AgoraChat
 		 * @param conversationType          会话类型，详见 {@link ConversationType}。
 		 * @param isDeleteServerMessages	是否删除会话时同时删除相应的历史消息。
 		 *                                  - `true`：是。
-		 *                                  - `false` 是。
+		 *                                  - `false`：否。
 		 * @param handle					会话删除成功与否的回调，详见 {@link CallBack}。
 		 *
 		 * \~english
@@ -497,7 +497,7 @@ namespace AgoraChat
 		 * @param isDeleteServerMessages 	Whether to delete the historical messages with the conversation.
 		 *                                  - `true`: Yes.
 		 *                                  - `false`: No.
-		 * @param handle					Callback for whether the conversation is deleted. See {@link CallBack}.
+		 * @param handle					The callback for whether the conversation is deleted. See {@link CallBack}.
 		 */
 		public abstract void DeleteConversationFromServer(string conversationId, ConversationType conversationType, bool isDeleteServerMessages, CallBack handle = null);
 
@@ -507,59 +507,58 @@ namespace AgoraChat
          * @param callBack 完成的回调，详见 {@link #ValueCallBack()}。
          *
          * \~english
-         * Fetches all languages what the translate service supports.
-         * @param callBack The result callback，see {@link #ValueCallBack()}.
+         * Gets all languages supported by the translation service.
+         * @param callBack The result callback. See {@link #ValueCallBack()}.
          */
         public abstract void FetchSupportLanguages(ValueCallBack<List<SupportLanguage>> handle = null);
 
         /**
          * \~chinese
          * 翻译消息。
-         * @param message 消息对象。
-         * @param languages 要翻译的目标语言 code 列表。
+
+         * @param message 要翻译的消息对象。
+         * @param languages 目标语言代码列表。
          * @param ValuecallBack 完成的回调，详见 {@link #ValueCallBack()}。
          *
          * \~english
          * Translates a message.
+		 * 
          * @param message The message object.
-         * @param languages The list of the target languages.
-         * @param ValuecallBack The result callback，see {@link #ValueCallBack()}.
+         * @param languages  The list of target language codes.
+         * @param ValuecallBack The result callback. See {@link #ValueCallBack()}.
          */
         public abstract void TranslateMessage(Message message, List<string> targetLanguages, ValueCallBack<Message> handle = null);
 
         /**
          * \~chinese
-         * 从服务器获取群组消息回执详情。
+         * 从服务器分页获取群组消息已读回执详情。
          *
-         * 分页获取。
-         *
-         * 参考：
          * 发送群组消息回执，详见 {@link #SendReadAckForGroupMessage}。
          *
          * 异步方法。
          *
          * @param messageId		消息 ID。
 		 * @param groupId		群组 ID。
-         * @param pageSize		每页获取群消息已读回执的条数。
-         * @param startAckId    已读回执的 ID，如果为空，从最新的回执向前开始获取。
+         * @param pageSize		每页期望返回的群消息已读数。取值范围为 [1,50]。
+         * @param startAckId    查询起始的已读回执 ID。该参数设置后，SDK 从指定的已读回执 ID 开始，按服务器接收已读回执的时间的逆序获取。
+	     *                      若该参数为空，SDK 从最新的已读回执开始按服务器接收回执时间的逆序获取。
          * @param callBack      结果回调，成功执行 {@link ValueCallBack#onSuccess(Object)}，失败执行 {@link ValueCallBack#onError(int, String)}。
          *
          * \~english
-         * Fetches the ack details for group messages from server.
+         * Uses the pagination to get read receipts for a group message from the server.
          *
-         * Fetches by page.
-         *
-         * Reference:
-         * If you want to send group message receipt, see {@link #SendReadAckForGroupMessage}.
+         * To send a read receipt for a group message, you can call {@link #SendReadAckForGroupMessage}.
          *
          * This is an asynchronous method.
          *
          * @param msgId			The message ID.
 		 * @param groupId		The group ID。
-         * @param pageSize		The number of records per page.
-         * @param startAckId    The start ID for fetch receipts, can be null. If you set it as null, the SDK will start from the server's latest receipt.
-         * @param callBack		The result callback, if successful, the SDK will execute the method {@link ValueCallBack#onSuccess(Object)},
-         *                      if the call failed, the SDK will execute the method {@link ValueCallBack#onError(int, String)}.
+         * @param pageSize		The number of read receipts for the group message that you expect to get on each page. The value range is [1,50].
+         * @param startAckId    The starting read receipt ID for query. After this parameter is set, the SDK retrieves read receipts, from the specified one, in the reverse chronological order of when the server receives them.
+	     *                      If this parameter is set as `null` or an empty string, the SDK retrieves read receipts, from the latest one, in the reverse chronological order of when the server receives them.
+         * @param callBack		The result callback:
+		 *                      - If the call succeeds, the SDK will execute the method {@link ValueCallBack#onSuccess(Object)};
+         *                      - If the call fails, the SDK will execute the method {@link ValueCallBack#onError(int, String)}.
          */
         public abstract void FetchGroupReadAcks(string messageId, string groupId, int pageSize = 20, string startAckId = null, ValueCallBack<CursorResult<GroupReadAck>> handle = null);
 
@@ -579,9 +578,9 @@ namespace AgoraChat
          *
          * @param messageId		The ID of the message to report.
          * @param tag			The report type (For example: involving pornography and terrorism).
-         * @param reason		The report Reason.
+         * @param reason		The report reason.
          *
-         * @param callBack The result callback，see {@link #CallBack()}.
+         * @param callBack      The result callback. See {@link #CallBack()}.
          */
         public abstract void ReportMessage(string messageId, string tag, string reason, CallBack handle = null);
 
@@ -596,12 +595,12 @@ namespace AgoraChat
          * @param callback  处理结果回调，详见 {@link CallBack}。
          *
          * \~english
-         * Adds a reaction.
+         * Adds a Reaction.
          *
          * This is an asynchronous method.
          *
          * @param messageId The message ID.
-         * @param reaction  The message reaction.
+         * @param reaction  The Reaction content.
          * @param callback  The result callback which contains the error information if the method fails.
          */
         public abstract void AddReaction(string messageId, string reaction, CallBack handle = null);
@@ -617,12 +616,12 @@ namespace AgoraChat
          * @param callback  处理结果回调，详见 {@link CallBack}。
          *
          * \~english
-         * Deletes a reaction.
+         * Deletes a Reaction.
          *
          * This is an asynchronous method.
          *
          * @param messageId The message ID.
-         * @param reaction  The reaction content.
+         * @param reaction  The Reaction content.
          * @param callback  The result callback which contains the error information if the method fails.
          */
 
@@ -635,7 +634,7 @@ namespace AgoraChat
          * 异步方法。
          *
          * @param messageIdList 消息 ID。
-         * @param chatType      会话类型，仅支持单聊（ {@link MessageType.Chat} ）和群聊（{@link MessageType.Group}）。
+         * @param chatType      会话类型，仅支持单聊（ {@link ConversationType.Chat} ）和群聊（{@link ConversationType.Group}）。
          * @param groupId       群组 ID，该参数只在群聊生效。
          * @param callback      处理结果回调，包含消息 ID 对应的 Reaction 列表（EMMessageReaction 的用户列表为概要数据，只包含前三个用户信息）。
          *
@@ -645,7 +644,7 @@ namespace AgoraChat
          * This is an asynchronous method.
          *
          * @param messageIdList  The message ID.
-         * @param chatType       The chat type. Only one-to-one chat ({@link MessageType.Chat} and group chat ({@link MessageType.Group}) are allowed.
+         * @param chatType       The chat type. Only one-to-one chat ({@link ConversationType.Chat} and group chat ({@link ConversationType.Group}) are allowed.
          * @param groupId        The group ID, which is invalid only when the chat type is group chat.
          * @param callback       The result callback, which contains the Reaction list under the specified message ID（The user list of EMMessageReaction is the summary data, which only contains the information of the first three users）.
          */
@@ -665,12 +664,12 @@ namespace AgoraChat
          * @param callback    处理结果回调，包含 cursor 和 MessageReaction 列表（仅使用该列表第一个数据即可）。
          *
          * \~english
-         * Gets the reaction details.
+         * Gets the Reaction details.
          *
          * This is an asynchronous method.
          *
          * @param messageId    The message ID.
-         * @param reaction     The reaction content.
+         * @param reaction     The Reaction content.
          * @param cursor       The query cursor.
          * @param pageSize     The number of Reactions you expect to get on each page.
          * @param callback     The result callback, which contains the reaction list obtained from the server and the cursor for the next query. Returns null if all the data is fetched.

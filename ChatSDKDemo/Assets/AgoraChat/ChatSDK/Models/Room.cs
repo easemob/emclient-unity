@@ -57,7 +57,7 @@ namespace AgoraChat
          * The number of online members.
          */
         public int MemberCount { get; internal set; }
-		
+
         /**
          * \~chinese
          * 聊天室的管理员列表。

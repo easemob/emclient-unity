@@ -336,7 +336,7 @@ namespace AgoraChat
 	     *                      - The maximum number of members allowed in the group. The default value is 200.
 	     *                      - The group style. See {@link GroupStyle}. 
 	     *                      - Whether to ask for permission when inviting a user to join the group. The default value is `false`, indicating that invitees are automaticall added to the group without their permission.
-	     *                      - The extention of group details.* 
+	     *                      - The extention of group details.
          * @param desc          The group description. It is optional. Pass `null` if you do not want to set this parameter.
 	     * @param inviteMembers The group member array. The group owner ID is optional. This parameter cannot be `null`.
 	     * @param inviteReason  The group joining invitation. It is optional. Pass `null` if you do not want to set this parameter.

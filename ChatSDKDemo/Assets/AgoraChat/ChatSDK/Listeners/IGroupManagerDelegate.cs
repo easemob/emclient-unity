@@ -305,7 +305,7 @@ namespace AgoraChat
 		 * Occurs when a member voluntarily leaves the group.
 		 * 
 		 * @param groupId   The group ID.
-		 * @param member  	The user ID of the member leaving the group.
+		 * @param member  	The user ID of the member who has left the group.
 		 */
 		void OnMemberExitedFromGroup(string groupId, string member);
 
@@ -356,31 +356,31 @@ namespace AgoraChat
 
 		/**
 		 * \~chinese
-		 * 添加白名单回调。
+		 * 有成员被加入群组白名单的回调。
 		 *
 		 * @param groupId       群组 ID。
 		 * @param whitelist     要添加的成员列表。
 		 *
 		 * \~english
-		 * Occurs when one or more group members are added to the allowlist.
+		 * Occurs when one or more group members are added to the group allow list.
 		 *
 		 * @param groupId       The group ID.
-		 * @param whitelist     The member(s) added to the allowlist.
+		 * @param whitelist     The member(s) added to the group allow list.
 		 */
         void OnAddWhiteListMembersFromGroup(string groupId, List<string> whiteList);
 
 		/**
 		 * \~chinese
-		 * 移除白名单回调。
+		 * 有成员被移出群组白名单回调。
 		 *
 		 * @param groupId       群组 ID。
-		 * @param whitelist     从白名单中移除的成员列表
+		 * @param whitelist     从白名单中移除的成员列表。
 		 *
 		 * \~english
-		 * Occurs when one or more members are removed from the allowlist.
+		 * Occurs when one or more members are removed from the group allow list.
 		 *
 		 * @param groupId       The group ID.
-		 * @param whitelist     Member(s) removed from the allowlist.
+		 * @param whitelist     Member(s) removed from the group allow list.
 		 */
         void OnRemoveWhiteListMembersFromGroup(string groupId, List<string> whiteList);
 
@@ -390,16 +390,18 @@ namespace AgoraChat
 		 *
 		 * @param groupId       群组 ID。
 		 * @param isAllMuted    是否开启了全员禁言。
+		 * - `true`：是；
+		 * - `false`：否。
 		 *
 		 * \~english
 		 * Occurs when all group members are muted or unmuted.
 		 *
 		 * @param groupId       The group ID.
-		 * @param isAllMuted    Whether all group members are muted or unmuted. true: all group members are muted; false: all group members are unmuted.
+		 * @param isAllMuted    Whether all group members are muted or unmuted. 
+		 * - `true`: All group members are muted; 
+		 * - `false`: All group members are unmuted.
 		 */
 
         void OnAllMemberMuteChangedFromGroup(string groupId, bool isAllMuted);
-
-
     }
 }

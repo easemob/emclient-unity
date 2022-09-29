@@ -54,7 +54,8 @@ namespace AgoraChat
          *
          * \~english
          * The callback for a multi-device do-not-disturb event.
-         * @param data     The do-not-disturb event.
+         * 
+         * @param data     The do-not-disturb event data.
          */
         void undisturbMultiDevicesEvent(string data);
 

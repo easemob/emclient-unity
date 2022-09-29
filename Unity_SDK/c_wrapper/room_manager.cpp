@@ -915,7 +915,7 @@ HYPHENATE_API void RoomManager_FetchChatRoomMetaFromSever(void* client, int call
             }
         }
         else {
-            LOG("RoomManager_AddChatRoomMetaData failed, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
+            LOG("RoomManager_FetchChatRoomMetaFromSever failed, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
         });
@@ -948,7 +948,7 @@ HYPHENATE_API void RoomManager_RemoveChatRoomMetaFromSever(void* client, int cal
             }
         }
         else {
-            LOG("RoomManager_AddChatRoomMetaData failed, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
+            LOG("RoomManager_RemoveChatRoomMetaFromSever failed, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
             if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
         });
