@@ -361,6 +361,7 @@ EMChatConfigsPtr ConfigsFromOptions(Options *options) {
     configs->setUsingHttps(options->UsingHttpsOnly);
     configs->setTransferAttachments(options->ServerTransfer);
     configs->setAutoDownloadThumbnail(options->IsAutoDownload);
+    
     //configs->setLogPath("/tmp/sdk.log");
     //configs->setEnableConsoleLog(true);
 #ifndef _WIN32

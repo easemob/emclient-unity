@@ -282,7 +282,7 @@ namespace AgoraChat
         public bool IsAutoDownload = true;
 
 
-        [MarshalAs(UnmanagedType.U1)]
+
         public int Area = AreaCode.CN;
         /**
         * \~chinese
