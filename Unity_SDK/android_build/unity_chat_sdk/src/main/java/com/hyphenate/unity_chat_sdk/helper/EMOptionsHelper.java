@@ -27,7 +27,7 @@ public class EMOptionsHelper {
         options.setAutoDownloadThumbnail(json.getBoolean("is_auto_download"));
         options.allowChatroomOwnerLeave(json.getBoolean("is_room_owner_leave_allowed"));
         options.setUsingHttpsOnly(json.getBoolean("using_https_only"));
-
+        options.setAreaCode(json.getInt("area"));
         if (json.has("enable_dns_config")) {
             if (!json.getBoolean("enable_dns_config")) {
                 options.setImPort(json.getInt("im_port"));
@@ -72,14 +72,11 @@ public class EMOptionsHelper {
         data.put("require_delivery_ack", options.getRequireDeliveryAck());
         data.put("sort_message_by_server_time", options.isSortMessageByServerTime());
         data.put("accept_invitation_always", options.getAcceptInvitationAlways());
-        data.put("auto_accept_group_invitation", options.isAutoAcceptGroupInvitation());
-        data.put("delete_messages_as_exit_group", options.isDeleteMessagesAsExitGroup());
-        data.put("delete_messages_as_exit_room", options.isDeleteMessagesAsExitChatRoom());
+        data.put("auto_accept_group_invitation", options.autoAcceptGroupInvitations());
+        data.put("delete_messages_as_exit_group", options.deleteMessagesOnLeaveGroup());
+        data.put("delete_messages_as_exit_room", options.deleteMessagesOnLeaveChatroom());
         data.put("is_auto_download", options.getAutodownloadThumbnail());
-        data.put("is_room_owner_leave_allowed", options.isChatroomOwnerLeaveAllowed());
-//         data.put("serverTransfer", "");
-//         data.put("debugModel", EMClient.getInstance().setDebugMode().);
-//        data.put("push_config", EMPushConfigHelper.toJson(options.getPushConfig()));
+        data.put("is_room_owner_leave_allowed", options.canChatroomOwnerLeave());
 
         data.put("using_https_only", options.getUsingHttpsOnly());
         data.put("enable_dns_config", options.getEnableDNSConfig());
@@ -87,7 +84,7 @@ public class EMOptionsHelper {
         data.put("im_server", options.getImServer());
         data.put("rest_server", options.getRestServer());
         data.put("dns_url", options.getDnsUrl());
-
+        data.put("area", options.getAreaCode());
         return data;
     }
 }

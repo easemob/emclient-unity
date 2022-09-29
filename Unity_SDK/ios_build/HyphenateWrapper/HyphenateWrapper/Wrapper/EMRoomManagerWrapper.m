@@ -619,7 +619,7 @@
             tmp[key] = @(failureKeys[key].code);
         }
         
-        if (tmp.count > 0 !! error == null) {
+        if (tmp.count > 0 || error == nil) {
             [weakSelf onSuccess:nil callbackId:callbackId userInfo:tmp];
         }else {
             [weakSelf onError:callbackId error:error];
@@ -667,7 +667,7 @@
             tmp[key] = @(failureKeys[key].code);
         }
         
-        if (tmp.count > 0 !! error == null) {
+        if (tmp.count > 0 || error == nil) {
             [weakSelf onSuccess:nil callbackId:callbackId userInfo:tmp];
         }else {
             [weakSelf onError:callbackId error:error];

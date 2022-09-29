@@ -1,6 +1,6 @@
 package com.hyphenate.unity_chat_sdk;
 
-import com.hyphenate.EMResultCallBack;
+
 import com.hyphenate.chat.EMChatRoom;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCursorResult;
