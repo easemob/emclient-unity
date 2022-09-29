@@ -62,6 +62,7 @@ struct Options
     bool UsingHttpsOnly;
     bool ServerTransfer;
     bool IsAutoDownload;
+    int Area;
 };
 
 

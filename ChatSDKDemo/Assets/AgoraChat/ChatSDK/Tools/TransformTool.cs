@@ -464,6 +464,11 @@ namespace AgoraChat
         static internal string JsonStringFromDictionary(Dictionary<string, string> dictionary)
         {
 
+            JSONObject jo = JsonObjectFromDictionary(dictionary);
+            return jo.ToString();
+        }
+
+        static internal JSONObject JsonObjectFromDictionary(Dictionary<string, string> dictionary) {
             JSONObject jo = new JSONObject();
             if (dictionary != null)
             {
@@ -481,7 +486,7 @@ namespace AgoraChat
                 }
             }
 
-            return jo.ToString();
+            return jo;
         }
 
         static internal string JsonStringFromDictionaryStringAndInt(Dictionary<string, int> dictionary)
@@ -507,6 +512,15 @@ namespace AgoraChat
             return jo.ToString();
         }
 
+        static internal Dictionary<string, string> JsonObjectToDictionaryStrAndStr(JSONObject jsonObject) {
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            foreach (string s in jsonObject.Keys) {
+                if (jsonObject[s].IsString) {
+                    dict[s] = jsonObject[s].Value;
+                }
+            }
+            return dict;
+        }
 
         static internal string JsonStringFromAttributes(Dictionary<string, AttributeValue> attributes = null)
         {
@@ -627,6 +641,14 @@ namespace AgoraChat
                 }
             }
             return list;
+        }
+
+        static internal JSONArray JsonArrayFromStringList(List<string> list) {
+            JSONArray ja = new JSONArray();
+            foreach (string str in list) {
+                ja.Add(str);
+            }
+            return ja;
         }
 
         static internal JSONArray JsonObjectFromStringList(List<string> list)

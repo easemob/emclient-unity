@@ -281,6 +281,9 @@ namespace AgoraChat
         [MarshalAs(UnmanagedType.U1)]
         public bool IsAutoDownload = true;
 
+
+
+        public int Area = AreaCode.CN;
         /**
         * \~chinese
         * Options 构造方法。
@@ -314,6 +317,7 @@ namespace AgoraChat
             jo["using_https_only"] = UsingHttpsOnly;
             //jo["server_transfer"] = ServerTransfer;
             jo["is_auto_download"] = IsAutoDownload;
+            jo["area"] = Area;
 
 
             jo.Add("enable_dns_config", EnableDNSConfig);

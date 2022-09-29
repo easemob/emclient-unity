@@ -2,10 +2,8 @@ xcodebuild -project HyphenateWrapper.xcodeproj -scheme libHyphenateWrapper -conf
 
 echo "build successed."
 
-mv build/Release-iphoneos/* ../../../ChatSDKDemo/Assets/ChatSDK/Plugins/iOS/
+mv build/Release-iphoneos/* ../../../ChatSDKDemo/Assets/AgoraChat/Plugins/iOS/
 
-cp -R HyphenateChat.framework ../../../ChatSDKDemo/Assets/ChatSDK/Plugins/iOS/HyphenateChat.framework
+cp -R HyphenateChat.framework ../../../ChatSDKDemo/Assets/AgoraChat/Plugins/iOS/HyphenateChat.framework
 
-rm -rf build
-
-open ../../../ChatSDKDemo/Assets/ChatSDK/Plugins/iOS/
+open ../../../ChatSDKDemo/Assets/AgoraChat/Plugins/iOS/

@@ -1,7 +1,7 @@
 # https://download-sdk.oss-cn-beijing.aliyuncs.com/downloads/easemob-sdk-3.9.4.zip
 
-FILENAME=easemob-sdk-3.9.4
-SDK_NAME=hyphenatechat_3.9.4
+FILENAME=easemob-sdk-3.9.7
+SDK_NAME=hyphenatechat_3.9.7
 
 BUILDGRADLE="build.gradle"
 SDK_PERFIX="hyphenatechat_"

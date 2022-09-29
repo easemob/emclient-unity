@@ -1,6 +1,21 @@
-SDKVERISON=3_9_4
-
+SDKVERISON=3_9_7
 FILE=HyphenateChat.framework
+LOCK=.emlock
+
+if [ ! -f ${LOCK} ]; then
+  touch ${LOCK}
+fi
+
+echo "Target: ${SDKVERISON}"
+
+for LINE in `cat ${LOCK}`
+do
+  echo "Current: ${LINE}"
+done
+
+if [ ! "$LINE" = "$SDKVERISON" ]; then
+  rm -rf ${FILE}
+fi
 
 if [ ! -d ${FILE} ]; then
   echo "$FILE not exist!! download it..."
@@ -9,3 +24,4 @@ if [ ! -d ${FILE} ]; then
   rm -rf HyphenateChat.zip
 fi
 
+echo ${SDKVERISON} > ${LOCK}

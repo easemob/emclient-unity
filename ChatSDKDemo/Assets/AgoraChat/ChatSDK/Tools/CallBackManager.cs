@@ -832,7 +832,8 @@ namespace AgoraChat {
                         dictionary.Remove(callbackId);
                     }
                 }
-                else if (value == "CursorResult<ChatThread>") {
+                else if (value == "CursorResult<ChatThread>")
+                {
                     ValueCallBack<CursorResult<ChatThread>> valueCallBack = (ValueCallBack<CursorResult<ChatThread>>)dictionary[callbackId];
                     if (valueCallBack != null)
                     {
@@ -843,6 +844,35 @@ namespace AgoraChat {
                             ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
                             {
                                 valueCallBack.OnSuccessValue(result);
+                            });
+                        }
+                        dictionary.Remove(callbackId);
+                    }
+                }
+                else if (value == "Dictionary<string, string>")
+                {
+                    ValueCallBack<Dictionary<string, string>> valueCallBack = (ValueCallBack<Dictionary<string, string>>)dictionary[callbackId];
+                    if (valueCallBack != null)
+                    {
+                        if (valueCallBack.OnSuccessValue != null)
+                        {
+                            ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
+                            {
+                                valueCallBack.OnSuccessValue(TransformTool.JsonStringToDictionary(responseValue.Value));
+                            });
+                        }
+                        dictionary.Remove(callbackId);
+                    }
+                }
+                else if (value == "Dictionary<string, int>") {
+                    CallBackResult callBackResult = (CallBackResult)dictionary[callbackId];
+                    if (callBackResult != null)
+                    {
+                        if (callBackResult.SuccessResult != null)
+                        {
+                            ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
+                            {
+                                callBackResult.SuccessResult(TransformTool.JsonStringToDictionaryStringAndInt(responseValue.Value));
                             });
                         }
                         dictionary.Remove(callbackId);

@@ -146,3 +146,4 @@ sysinfo.txt
 # windows sdk
 *.nupkg
 *.dll
+**/ProjectSettings/

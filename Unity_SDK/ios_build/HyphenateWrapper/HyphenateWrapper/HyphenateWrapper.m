@@ -336,6 +336,10 @@ void RoomManager_HandleMethodCall(const char* methodName, const char* jsonString
         [EMClientWrapper.instance.roomManager chatRoomUnmuteMembers:dic callbackId:callId];
     }else if ([method isEqualToString:@"updateChatRoomAnnouncement"]) {
         [EMClientWrapper.instance.roomManager updateChatroomAnnouncement:dic callbackId:callId];
+    }else if ([method isEqualToString:@"setChatRoomAttributes"]) {
+        [EMClientWrapper.instance.roomManager setChatRoomAttributes:dic callbackId:callId];
+    }else if ([method isEqualToString:@"removeChatRoomAttributes"]) {
+        [EMClientWrapper.instance.roomManager removeChatRoomAttributes:dic callbackId:callId];
     }
 }
 

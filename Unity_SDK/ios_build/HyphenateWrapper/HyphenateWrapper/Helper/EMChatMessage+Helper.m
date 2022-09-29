@@ -476,9 +476,9 @@
     NSString *params = aJson[@"params"];
     
     NSDictionary *dict = [Transfrom NSStringToJsonObject:params];
-    
+ 
     EMCustomMessageBody *ret = [[EMCustomMessageBody alloc] initWithEvent:aJson[@"event"]
-                                                                      ext:dict];
+                                                                customExt:dict];
     return ret;
 }
 

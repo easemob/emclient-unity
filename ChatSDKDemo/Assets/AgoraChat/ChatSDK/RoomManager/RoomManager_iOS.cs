@@ -210,17 +210,34 @@ namespace AgoraChat
 
         public override void AddAttributes(string roomId, Dictionary<string, string> kv, bool deleteWhenExit, bool forced, CallBackResult handle = null)
         {
-            //TODO: add code here.
+            JSONObject obj = new JSONObject();
+            obj.Add("roomId", roomId);
+            obj.Add("attributes", TransformTool.JsonObjectFromDictionary(kv));
+            obj.Add("autoDelete", deleteWhenExit);
+            obj.Add("forced", forced);
+            ChatAPIIOS.RoomManager_HandleMethodCall("setChatRoomAttributes", obj.ToString(), handle?.callbackId);
         }
 
         public override void FetchAttributes(string roomId, List<string> keys, ValueCallBack<Dictionary<string, string>> handle = null)
         {
-            //TODO: add code here.
+            JSONObject obj = new JSONObject();
+            obj.Add("roomId", roomId);
+            if (keys != null) {
+                obj.Add("keys", TransformTool.JsonArrayFromStringList(keys));
+            }
+            ChatAPIIOS.RoomManager_HandleMethodCall("fetchAttributes", obj.ToString(), handle?.callbackId);
         }
 
         public override void RemoveAttributes(string roomId, List<string> keys, bool forced, CallBackResult handle = null)
         {
-            //TODO: add code here.
+            JSONObject obj = new JSONObject();
+            obj.Add("roomId", roomId);
+            if (keys != null)
+            {
+                obj.Add("keys", TransformTool.JsonArrayFromStringList(keys));
+            }
+            obj.Add("forced", forced);
+            ChatAPIIOS.RoomManager_HandleMethodCall("removeChatRoomAttributes", obj.ToString(), handle?.callbackId);
         }
     }
 }
