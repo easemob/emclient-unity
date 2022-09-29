@@ -591,6 +591,7 @@ namespace AgoraChat
         /**
          * \~chinese
          * 解除所有成员的禁言状态。
+		 * 
          * 仅聊天室所有者和管理员可调用此方法。
          *
          * 异步方法。
@@ -678,45 +679,50 @@ namespace AgoraChat
 
 		/**
          * \~chinese
-         * 添加聊天室属性。
+         * 设置聊天室属性。
+		  * 
          * 聊天室成员均可调用此方法。
          *
          * 异步方法。
          *
          * @param roomId         聊天室 ID。
-         * @param kv			 新增的属性。
-         *                        其中属性中的键值用于指定属性名。属性名不能超过 128 字符。每个聊天室最多可有 100 个属性。Key 支持以下字符集：
-         *							• 26 个小写英文字母 a-z；
-         *							• 26 个大写英文字母 A-Z；
-         *							• 10 个数字 0-9；
-         *							• “_”, “-”, “.”。
-         *						 聊天室属性值不超过 4096 字符，每个应用的聊天室属性总大小不能超过 10 GB。
-         * @param deleteWhenExit 当前成员退出聊天室是否自动删除该聊天室中其设置的所有聊天室自定义属性。
-         * 							- （默认）`true`:是。
-		 *							- `false`:否。
-         * @forced               是否覆盖其他成员设置的同名属性。
+         * @param kv			 新增的属性，为键值对（key-value）结构。在键值对中，key 为属性名，不超过 128 字符，value 为属性值不超过 4096 字符。
+         *                       每个聊天室最多可有 100 个属性。每个应用的聊天室属性总大小不能超过 10 GB。Key 支持以下字符集：
+         *						 - 26 个小写英文字母 a-z；
+         *						 - 26 个大写英文字母 A-Z；
+         *						 - 10 个数字 0-9；
+         *						 - “_”, “-”, “.”。
+         *						，
+         * @param deleteWhenExit 当前成员退出聊天室时是否自动删除其设置的该聊天室的所有自定义属性。
+         * 							- （默认）`true`：是。
+		 *							- `false`：否。
+         * @forced               是否覆盖其他成员设置的 key 相同的属性。
+		 * 							- `true`：是。
+		 *							- （默认）`false`：否。
          * @param handle         结果回调，成功时回调 {@link CallBackResult#OnSuccessResult(Dictionary<string, int>)}，
          *                       失败时回调 {@link CallBackResult#onError(int, String)}。
          *
          * \~english
-         * Add chat room properties.
-         * All members in the chatroom owner can call this API.
+         * Sets custom chat room attributes.
+
+         * All members in the chat room owner can call this method.
          *
          * This is an asynchronous method.
          *
          * @param roomId        The chat room ID.
-         * @param kv            The added chatroom attributes.
-         *                        The chat room attribute key that specifies the attribute name. The attribute name can contain 128 characters at most.
-         *                          A chat room can have a maximum of 100 custom attributes. The following character sets are supported:
-         *								- 26 lowercase English letters (a-z)
-         *								- 26 uppercase English letters (A-Z)
-         *								- 10 numbers (0-9)
-         *								- "_", "-", "."
-         *							The chat room attribute value. The attribute value can contain a maximum of 4096 characters. The total length of custom chat room attributes cannot exceed 10 GB for each app.
+         * @param kv            The chat room attributes to add. The attributes are in key-value format. 
+         *                      In a key-value pair, the key is the attribute name that can contain 128 characters at most; the value is the attribute value that cannot exceed 4096 characters. 
+	     *                      A chat room can have a maximum of 100 custom attributes and the total length of custom chat room attributes cannot exceed 10 GB for each app. Attribute keys support the following character sets:
+         *						 - 26 lowercase English letters (a-z)
+         *						 - 26 uppercase English letters (A-Z)
+         *						 - 10 numbers (0-9)
+         *						 - "_", "-", "."
          * @deleteWhenExit      Whether to delete the chat room attributes set by the member when he or she exits the chat room.
-         * 							- (Default)`true`:Yes.
-		 *							- `false`: No.
-         * @forced              Whether to overwrite the attributes with same key name set by others.
+         * 						- (Default)`true`: Yes.
+		 *						- `false`: No.
+         * @forced              Whether to overwrite the attributes with same key set by others.
+		 * 						- `true`: Yes.
+		 *						- (Default)`false`: No.
          * @param handle        The completion callback. If this call succeeds, calls {@link CallBackResult#OnSuccessResult(Dictionary<string, int>)};
          *                      if this call fails, calls {@link CallBackResult#onError(int, String)}.
          */
@@ -725,23 +731,25 @@ namespace AgoraChat
 		/**
          * \~chinese
          * 根据聊天室属性 key 列表获取属性列表。
+
          * 聊天室成员均可调用此方法。
          *
          * 异步方法。
          *
          * @param roomId         聊天室 ID。
-         * @param keys			 待获取属性的键值。如果未指定任何key值，则表示获取所有属性。
+         * @param keys			 待获取属性的键值。如果未指定任何 key 值，则表示获取所有属性。
          * @param handle         结果回调，成功时回调 {@link ValueCallBack#OnSuccessValue(Dictionary<string, string>)}，
          *                       失败时回调 {@link ValueCallBack#onError(int, String)}。
          *
          * \~english
          * Gets the list of custom chat room attributes based on the attribute key list.
-         * All members in the chatroom owner can call this API.
+		 * 
+         * All members in the chat room owner can call this method.
          *
          * This is an asynchronous method.
          *
          * @param roomId        The chat room ID.
-         * @param keys			The keys used to fetch properties. If not set any special keys, then will fetch all properties.
+         * @param keys			The key list of attributes to get. If you set it as `null` or leave it empty, this method retrieves all custom attributes.
          * @param handle        The completion callback. If this call succeeds, calls {@link ValueCallBack#OnSuccessValue(Dictionary<string, string>)};
          *                      if this call fails, calls {@link ValueCallBack#onError(int, String)}.
          */
@@ -749,26 +757,28 @@ namespace AgoraChat
 
 		/**
          * \~chinese
-         * 根据聊天室 ID 和属性 key 列表删除聊天室自定义属性。。
+         * 根据聊天室 ID 和属性 key 列表删除聊天室自定义属性。
+		 * 
          * 聊天室成员均可调用此方法。
          *
          * 异步方法。
          *
          * @param roomId         聊天室 ID。
          * @param keys           待删除属性的键值。
-         * @forced               是否强制删除其他用户所设置的同名属性。
+         * @forced               是否强制删除其他用户所设置的相同 key 的属性。
          * @param handle         结果回调，成功时回调 {@link CallBackResult#OnSuccessResult(Dictionary<string, int>)}，
          *                       失败时回调 {@link CallBackResult#onError(int, String)}。
          *
          * \~english
          * Removes custom chat room attributes by chat room ID and attribute key list.
-         * All members in the chatroom owner can call this API.
+		 * 
+         * All members in the chat room can call this method.
          *
          * This is an asynchronous method.
          *
          * @param roomId        The chat room ID.
-         * @param keys			The keys used to remove properties.
-         * @forced              Whether force to remove attributes with same key name set by others.
+         * @param keys			The keys of custom chat room attributes to remove.
+         * @forced              Whether to remove attributes with same key set by others.
          * @param handle        The completion callback. If this call succeeds, calls {@link CallBackResult#OnSuccessResult(Dictionary<string, int>)};
          *                      if this call fails, calls {@link CallBackResult#onError(int, String)}.
          */
