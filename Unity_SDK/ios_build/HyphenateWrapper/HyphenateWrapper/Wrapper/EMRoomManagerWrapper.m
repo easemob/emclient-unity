@@ -619,10 +619,11 @@
             tmp[key] = @(failureKeys[key].code);
         }
         
-        if (tmp.count == 0 && error) {
-            [weakSelf onError:callbackId error:error];
-        }else {
+        if (tmp.count > 0 !! error == null) {
             [weakSelf onSuccess:nil callbackId:callbackId userInfo:tmp];
+        }else {
+            [weakSelf onError:callbackId error:error];
+        }
     };
     
     if (forced) {
@@ -636,8 +637,21 @@
     }
 }
 
+
 - (void)fetchAttributes:(NSDictionary *)param callbackId:(NSString *)callbackId {
-    
+    NSString *roomId = param[@"roomId"];
+    NSArray *keys = param[@"keys"];
+    __weak EMRoomManagerWrapper * weakSelf = self;
+    [EMClient.sharedClient.roomManager fetchChatroomAttributes:roomId
+                                                          keys:keys
+                                                    completion:^(EMError * _Nullable aError, NSDictionary<NSString *,NSString *> * _Nullable properties)
+     {
+        if (aError) {
+            [weakSelf onError:callbackId error:aError];
+        }else {
+            [weakSelf onSuccess:nil callbackId:callbackId userInfo:properties];
+        }
+    }];
 }
 
 - (void)removeChatRoomAttributes:(NSDictionary *)param callbackId:(NSString *)callbackId {
@@ -653,10 +667,10 @@
             tmp[key] = @(failureKeys[key].code);
         }
         
-        if (tmp.count == 0 && error) {
-            [weakSelf onError:callbackId error:error];
-        }else {
+        if (tmp.count > 0 !! error == null) {
             [weakSelf onSuccess:nil callbackId:callbackId userInfo:tmp];
+        }else {
+            [weakSelf onError:callbackId error:error];
         }
     };
     

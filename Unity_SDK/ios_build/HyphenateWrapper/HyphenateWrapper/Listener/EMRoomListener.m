@@ -105,18 +105,28 @@
 }
 
 - (void)chatroomSpecificationDidUpdate:(EMChatroom *)aChatroom {
-    
+
 }
 
 - (void)chatroomAttributesDidUpdated:(NSString *)roomId
                         attributeMap:(NSDictionary<NSString *,NSString *> *)attributeMap
                                 from:(NSString *)fromId {
-    
+    NSDictionary *map = @{
+        @"roomId":roomId,
+        @"attributes":attributeMap,
+        @"fromId": fromId
+    };
+    UnitySendMessage(RoomListener_Obj, "OnChatroomAttributesChanged", [Transfrom JsonObjectToCSString:map]);
 }
 
 - (void)chatroomAttributesDidRemoved:(NSString *)roomId
                           attributes:(NSArray<__kindof NSString *> *)attributes
                                 from:(NSString *)fromId {
-    
+    NSDictionary *map = @{
+        @"roomId":roomId,
+        @"keys":attributes,
+        @"fromId": fromId
+    };
+    UnitySendMessage(RoomListener_Obj, "OnChatroomAttributesRemoved", [Transfrom JsonObjectToCSString:map]);
 }
 @end

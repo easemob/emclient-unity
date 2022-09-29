@@ -1,7 +1,7 @@
 # https://download-sdk.oss-cn-beijing.aliyuncs.com/downloads/easemob-sdk-3.9.4.zip
 
-FILENAME=easemob-sdk-3.9.6.2
-SDK_NAME=hyphenatechat_3.9.6.2
+FILENAME=easemob-sdk-3.9.7
+SDK_NAME=hyphenatechat_3.9.7
 
 BUILDGRADLE="build.gradle"
 SDK_PERFIX="hyphenatechat_"
@@ -27,5 +27,3 @@ if [ $line ] ; then
     sed -i "" "$line i\\"$'\n'"    implementation files('libs/$SDK_NAME.jar')
     " ${BUILDGRADLE}
 fi
-
-gradle unity_chat_sdk

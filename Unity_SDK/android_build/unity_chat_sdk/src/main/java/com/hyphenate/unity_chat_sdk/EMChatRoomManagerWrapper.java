@@ -1,5 +1,6 @@
 package com.hyphenate.unity_chat_sdk;
 
+import com.hyphenate.EMResultCallBack;
 import com.hyphenate.chat.EMChatRoom;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCursorResult;
@@ -9,6 +10,7 @@ import com.hyphenate.unity_chat_sdk.helper.EMChatRoomHelper;
 import com.hyphenate.unity_chat_sdk.helper.EMCursorResultHelper;
 import com.hyphenate.unity_chat_sdk.helper.EMPageResultHelper;
 import com.hyphenate.unity_chat_sdk.helper.EMTransformHelper;
+import com.hyphenate.unity_chat_sdk.listeners.EMUnityResultCallback;
 import com.hyphenate.unity_chat_sdk.listeners.EMUnityRoomManagerListener;
 import com.hyphenate.unity_chat_sdk.listeners.EMUnityValueCallback;
 
@@ -17,6 +19,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -503,5 +507,76 @@ public class EMChatRoomManagerWrapper extends EMWrapper {
                 sendEmptyCallback();
             }
         });
+    }
+
+    private void fetchChatRoomAttributes(String jsonArrayStr, String callbackId) throws JSONException {
+        JSONObject param = new JSONObject(jsonArrayStr);
+        String roomId = param.getString("roomId");
+        List<String> keys = new ArrayList<>();
+        if (param.has("keys")){
+            JSONArray array = param.getJSONArray("keys");
+            for (int i = 0; i < array.length(); i++) {
+                keys.add(array.getString(i));
+            }
+        }
+
+        EMUnityValueCallback callback = new EMUnityValueCallback<Map<String, String>>("Dictionary<string, string>", callbackId);
+
+        EMClient.getInstance().chatroomManager().asyncFetchChatroomAttributesFromServer(roomId, keys, callback);
+    }
+
+    private void setChatRoomAttributes(String jsonArrayStr, String callbackId) throws JSONException {
+        JSONObject param = new JSONObject(jsonArrayStr);
+        String roomId = param.getString("roomId");
+        Map<String, String> attributes = new HashMap<>();
+        if (param.has("attributes")) {
+            JSONObject jsonObject = param.getJSONObject("attributes");
+            Iterator iterator = jsonObject.keys();
+            while (iterator.hasNext()) {
+                String key = iterator.next().toString();
+                attributes.put(key, jsonObject.getString(key));
+            }
+        }
+        boolean autoDelete = false;
+        if (param.has("autoDelete")) {
+            autoDelete = param.getBoolean("autoDelete");
+        }
+        boolean forced = false;
+        if (param.has("forced")) {
+            forced = param.getBoolean("forced");
+        }
+
+        EMUnityResultCallback callback = new EMUnityResultCallback("Dictionary<string, int>", callbackId);
+
+        if (forced) {
+            EMClient.getInstance().chatroomManager().asyncSetChatroomAttributesForced(roomId, attributes, autoDelete, callback);
+        } else {
+            EMClient.getInstance().chatroomManager().asyncSetChatroomAttributes(roomId, attributes, autoDelete, callback);
+
+        }
+    }
+
+    private void removeChatRoomAttributes(String jsonArrayStr, String callbackId) throws JSONException {
+        JSONObject param = new JSONObject(jsonArrayStr);
+        String roomId = param.getString("roomId");
+        ArrayList<String> keys = new ArrayList<String>();
+        if (param.has("keys")) {
+            JSONArray jsonArray = param.getJSONArray("keys");
+            for (int i = 0; i < jsonArray.length(); i++) {
+                keys.add(jsonArray.getString(i));
+            }
+        }
+
+        boolean forced = false;
+        if (param.has("forced")) {
+            forced = param.getBoolean("forced");
+        }
+        EMUnityResultCallback callback = new EMUnityResultCallback("Dictionary<string, int>", callbackId);
+
+        if (forced) {
+            EMClient.getInstance().chatroomManager().asyncRemoveChatRoomAttributesFromServerForced(roomId, keys, callback);
+        }else {
+            EMClient.getInstance().chatroomManager().asyncRemoveChatRoomAttributesFromServer(roomId, keys, callback);
+        }
     }
 }

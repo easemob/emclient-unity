@@ -489,6 +489,39 @@ namespace AgoraChat
             return jo;
         }
 
+        static internal string JsonStringFromDictionaryStringAndInt(Dictionary<string, int> dictionary)
+        {
+
+            JSONObject jo = new JSONObject();
+            if (dictionary != null)
+            {
+                IDictionary<string, int> sortedParams = new SortedDictionary<string, int>(dictionary);
+                IEnumerator<KeyValuePair<string, int>> dem = sortedParams.GetEnumerator();
+
+                while (dem.MoveNext())
+                {
+                    string key = dem.Current.Key;
+                    int value = dem.Current.Value;
+                    if (!string.IsNullOrEmpty(key))
+                    {
+                        jo[key] = value;
+                    }
+                }
+            }
+
+            return jo.ToString();
+        }
+
+        static internal Dictionary<string, string> JsonObjectToDictionaryStrAndStr(JSONObject jsonObject) {
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            foreach (string s in jsonObject.Keys) {
+                if (jsonObject[s].IsString) {
+                    dict[s] = jsonObject[s].Value;
+                }
+            }
+            return dict;
+        }
+
         static internal string JsonStringFromAttributes(Dictionary<string, AttributeValue> attributes = null)
         {
             if (null == attributes || 0 == attributes.Count)
@@ -515,6 +548,24 @@ namespace AgoraChat
             foreach (string s in jo.Keys)
             {
                 ret.Add(s, jo[s]);
+            }
+
+            return ret;
+        }
+
+        static internal Dictionary<string, int> JsonStringToDictionaryStringAndInt(string jsonString)
+        {
+            Dictionary<string, int> ret = new Dictionary<string, int>();
+
+            if (jsonString == null || jsonString.Length == 0) return ret;
+
+            JSONNode jn = JSON.Parse(jsonString);
+            if (null == jn || jn.IsNull) return ret;
+
+            JSONObject jo = jn.AsObject;
+            foreach (string s in jo.Keys)
+            {
+                ret.Add(s, jo[s].AsInt);
             }
 
             return ret;

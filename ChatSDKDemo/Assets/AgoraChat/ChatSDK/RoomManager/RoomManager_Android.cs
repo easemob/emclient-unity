@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using SimpleJSON;
 
 namespace AgoraChat
 {
@@ -143,17 +144,30 @@ namespace AgoraChat
 
         public override void AddAttributes(string roomId, Dictionary<string, string> kv, bool deleteWhenExit, bool forced, CallBackResult handle = null)
         {
-            //TODO: add code here.
+            JSONObject jo = new JSONObject();
+            jo.Add("roomId", roomId);
+            jo.Add("attributes", TransformTool.JsonObjectFromDictionary(kv));
+            jo.Add("autoDelete", deleteWhenExit);
+            jo.Add("forced", forced);
+            wrapper.Call("setChatRoomAttributes", jo.ToString(), handle?.callbackId);
         }
 
         public override void FetchAttributes(string roomId, List<string> keys, ValueCallBack<Dictionary<string, string>> handle = null)
         {
-            //TODO: add code here.
+            JSONObject jo = new JSONObject();
+            jo.Add("roomId", roomId);
+            if (keys != null) {
+                jo.Add("keys", TransformTool.JsonObjectFromStringList(keys));
+            }
+            wrapper.Call("fetchChatRoomAttributes", jo.ToString(), handle?.callbackId);
         }
 
         public override void RemoveAttributes(string roomId, List<string> keys, bool forced, CallBackResult handle = null)
         {
-            //TODO: add code here.
+            JSONObject jo = new JSONObject();
+            jo.Add("keys", TransformTool.JsonObjectFromStringList(keys));
+            jo.Add("forced", forced);
+            wrapper.Call("removeChatRoomAttributes", jo.ToString(), handle?.callbackId);
         }
     }
 }

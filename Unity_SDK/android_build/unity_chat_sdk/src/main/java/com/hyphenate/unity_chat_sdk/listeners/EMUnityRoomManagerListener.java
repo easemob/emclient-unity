@@ -6,10 +6,12 @@ import com.hyphenate.EMChatRoomChangeListener;
 import com.hyphenate.unity_chat_sdk.helper.EMTransformHelper;
 import com.unity3d.player.UnityPlayer;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.Map;
 
 import util.EMSDKMethod;
 
@@ -183,6 +185,42 @@ public class EMUnityRoomManagerListener implements EMChatRoomChangeListener {
             jsonObject.put("roomId", roomId);
             jsonObject.put("announcement", announcement);
             UnityPlayer.UnitySendMessage(EMSDKMethod.RoomListener_Obj, "OnAnnouncementChanged", jsonObject.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onAttributesUpdate(String chatRoomId, Map<String, String> attributeMap, String from) {
+        Log.d("chat_sdk", "onAttributesUpdate");
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("roomId", chatRoomId);
+            jsonObject.put("fromId", from);
+            JSONObject jo = new JSONObject();
+            for (Map.Entry<String, String> entry: attributeMap.entrySet()) {
+                jo.put(entry.getKey(), entry.getValue());
+            }
+            jsonObject.put("attributes", jo);
+            UnityPlayer.UnitySendMessage(EMSDKMethod.RoomListener_Obj, "OnChatroomAttributesChanged", jsonObject.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onAttributesRemoved(String chatRoomId, List<String> keyList, String from) {
+        Log.d("chat_sdk", "onAttributesUpdate");
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("roomId", chatRoomId);
+            jsonObject.put("fromId", from);
+            JSONArray ja = new JSONArray();
+            for (String str:keyList) {
+                ja.put(str);
+            }
+            jsonObject.put("keys", ja);
+            UnityPlayer.UnitySendMessage(EMSDKMethod.RoomListener_Obj, "OnChatroomAttributesRemoved", jsonObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -114,19 +114,19 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
 
         Dictionary<string, string> kv = new Dictionary<string, string>();
         kv["key1"] = "val1";
-        kv["key2"] = "一个值2";
+        kv["哈哈"] = "一个值2";
 
         bool auto_delete = true;
         bool forced = true;
 
         SDKClient.Instance.RoomManager.AddAttributes(roomId, kv, auto_delete, forced, new CallBackResult(
-            onSuccessResult: (Dictionary<string, string> dict) => {
+            onSuccessResult: (Dictionary<string, int> dict) => {
                 if (dict.Count == 0)
                     Debug.Log($"AddAttributes success.");
                 else
                 {
                     Debug.Log($"AddAttributes partial sucess.");
-                    string str = TransformTool.JsonStringFromDictionary(kv);
+                    string str = TransformTool.JsonStringFromDictionaryStringAndInt(dict);
                     Debug.Log($"failed keys are:{str}.");
                 }
             },
@@ -221,13 +221,13 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
         bool forced = true;
 
         SDKClient.Instance.RoomManager.RemoveAttributes(roomId, keys, forced, new CallBackResult(
-            onSuccessResult: (Dictionary<string, string> dict) => {
+            onSuccessResult: (Dictionary<string, int> dict) => {
                 if (dict.Count == 0)
                     Debug.Log($"RemoveAttributes success.");
                 else
                 {
                     Debug.Log($"RemoveAttributes partial sucess.");
-                    string str = TransformTool.JsonStringFromDictionary(dict);
+                    string str = TransformTool.JsonStringFromDictionaryStringAndInt(dict);
                     Debug.Log($"failed keys are:{str}.");
                 }
             },

@@ -865,18 +865,18 @@ namespace AgoraChat {
                     }
                 }
                 else if (value == "Dictionary<string, int>") {
-                    //ValueCallBack<Dictionary<string, int>> valueCallBack = (ValueCallBack<Dictionary<string, int>>)dictionary[callbackId];
-                    //if (valueCallBack != null)
-                    //{
-                    //    if (valueCallBack.OnSuccessValue != null)
-                    //    {
-                    //        ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
-                    //        {
-                    //            valueCallBack.OnSuccessValue(TransformTool.JsonStringToDictionary(responseValue.Value));
-                    //        });
-                    //    }
-                    //    dictionary.Remove(callbackId);
-                    //}
+                    CallBackResult callBackResult = (CallBackResult)dictionary[callbackId];
+                    if (callBackResult != null)
+                    {
+                        if (callBackResult.SuccessResult != null)
+                        {
+                            ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() =>
+                            {
+                                callBackResult.SuccessResult(TransformTool.JsonStringToDictionaryStringAndInt(responseValue.Value));
+                            });
+                        }
+                        dictionary.Remove(callbackId);
+                    }
                 }
             }
         }

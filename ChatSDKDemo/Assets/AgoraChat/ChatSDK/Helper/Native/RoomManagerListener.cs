@@ -191,12 +191,47 @@ namespace AgoraChat {
 
         internal void OnChatroomAttributesChanged(string jsonString)
         {
-            //TODO: add code here.
+            if (delegater != null)
+            {
+                JSONNode jo = JSON.Parse(jsonString);
+                string roomId = jo["roomId"].Value;
+                string fromId = jo["fromId"].Value;
+                Dictionary<string, string> dict = null;
+                if (jo["attributes"].IsObject) {
+                    JSONObject attrsJo = jo["attributes"].AsObject;
+                    dict = TransformTool.JsonObjectToDictionaryStrAndStr(attrsJo);
+                }
+                
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IRoomManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnChatroomAttributesChanged(roomId, dict, fromId);
+                    }
+                });
+            }
         }
 
         internal void OnChatroomAttributesRemoved(string jsonString)
         {
-            //TODO: add code here.
+            if (delegater != null)
+            {
+                JSONNode jo = JSON.Parse(jsonString);
+                string roomId = jo["roomId"].Value;
+                string fromId = jo["fromId"].Value;
+                List<string> keys = null;
+                if (jo["keys"].IsArray)
+                {
+                    JSONArray ja = jo["keys"].AsArray;
+                    keys = TransformTool.JsonArrayToStringList(ja);
+                }
+
+                ChatCallbackObject.GetInstance()._CallbackQueue.EnQueue(() => {
+                    foreach (IRoomManagerDelegate delegater in delegater)
+                    {
+                        delegater.OnChatroomAttributesRemoved(roomId, keys, fromId);
+                    }
+                });
+            }
         }
     }
 }
