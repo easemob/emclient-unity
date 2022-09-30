@@ -620,7 +620,7 @@
         }
         
         if (tmp.count > 0 || error == nil) {
-            [weakSelf onSuccess:nil callbackId:callbackId userInfo:tmp];
+            [weakSelf onSuccess:@"Dictionary<string, int>" callbackId:callbackId userInfo:tmp];
         }else {
             [weakSelf onError:callbackId error:error];
         }
@@ -649,7 +649,7 @@
         if (aError) {
             [weakSelf onError:callbackId error:aError];
         }else {
-            [weakSelf onSuccess:nil callbackId:callbackId userInfo:properties];
+            [weakSelf onSuccess:@"Dictionary<string, string>" callbackId:callbackId userInfo:properties];
         }
     }];
 }
@@ -668,7 +668,7 @@
         }
         
         if (tmp.count > 0 || error == nil) {
-            [weakSelf onSuccess:nil callbackId:callbackId userInfo:tmp];
+            [weakSelf onSuccess:@"Dictionary<string, int>" callbackId:callbackId userInfo:tmp];
         }else {
             [weakSelf onError:callbackId error:error];
         }
