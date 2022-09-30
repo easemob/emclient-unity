@@ -445,7 +445,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
         return jsonArray.toString();
     }
 
-    private void getJoinedGroupsFromServer(int pageSize, int pageNum, String callbackId) throws JSONException {
+    private void getJoinedGroupsFromServer(int pageSize, int pageNum, boolean needAffiliations, boolean needRole, String callbackId) throws JSONException {
 
         if (pageSize <= 0) {
             HyphenateException e = new HyphenateException(500, "pageSize is invalid");
@@ -459,7 +459,7 @@ public class EMGroupManagerWrapper extends EMWrapper {
                 sendJsonObjectToUnity(EMTransformHelper.jsonArrayFromGroupList(emGroups).toString());
             }
         };
-        EMClient.getInstance().groupManager().asyncGetJoinedGroupsFromServer(pageNum, pageSize, callback);
+        EMClient.getInstance().groupManager().asyncGetJoinedGroupsFromServer(pageSize, pageNum, needAffiliations, needRole, callback);
     }
 
     private void getPublicGroupsFromServer(int pageSize, String cursor, String callbackId) throws JSONException {
