@@ -100,17 +100,23 @@
     <PostBuildEvent>cd $(ProjectDir)
 
 
+
 xcopy /Y /S ..\FrameworkLib\bin\Release\chatsdk.dll bin\Release\
+
 
 
 xcopy /Y /S ..\..\Unity_SDK\win_build\build_shared\Release\hyphenateCWrapper.dll bin\Release\
 
 
 
+
+
 xcopy /Y /S bin\Release\chatsdk.dll D:\workspace\test\testWinSDK_new_features\Debug\
 
 
+
 xcopy /Y /S bin\Release\hyphenateCWrapper.dll D:\workspace\test\testWinSDK_new_features\Debug\
+
 
 
 xcopy /Y /S bin\Release\FrameworkTest.exe D:\workspace\test\testWinSDK_new_features\Debug\another.exe</PostBuildEvent>
