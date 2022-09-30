@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.Map;
 
 import util.EMSDKMethod;
 import util.ImUnitySdkPlugin;
@@ -78,11 +79,16 @@ public class EMUnityValueCallback<T> implements EMValueCallBack<T> {
                             jsonAry.put(jsonObject.toString());
                         }
                     }
-                    jo.put("type",valueType);
+
                     jo.put("value",jsonAry.toString());
-                }else if(t instanceof EMCursorResult) {
-                    // EMCursorResult 用 set object to unity 处理了
+                } else if (t instanceof Map) {
+                    JSONObject jsonObject = new JSONObject();
+                    for (Map.Entry entry: ((Map<?, ?>) t).entrySet()) {
+                        jsonObject.put((String) entry.getKey(), entry.getValue());
+                    }
+                    jo.put("value",jsonObject.toString());
                 }
+                jo.put("type",valueType);
 
                 Log.d("chat_sdk", "back: " + jo.toString());
                 UnityPlayer.UnitySendMessage(EMSDKMethod.Callback_Obj, "OnSuccessValue", jo.toString());
