@@ -63,6 +63,10 @@ namespace AgoraChat
          * \~chinese
          * 聊天室成员被移除。
          *
+         * @param roomId        聊天室 ID。
+         * @param roomName      聊天室名称。
+         * @param participant   被移除人员 ID。
+         *
          * \~english
          * Occurs when a member is removed from a chat room.
          *

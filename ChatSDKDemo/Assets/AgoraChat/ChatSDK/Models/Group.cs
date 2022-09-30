@@ -230,6 +230,18 @@ namespace AgoraChat
          */
         public bool IsAllMemberMuted { get; internal set; }
 
+        /**
+         * \~chinese
+         * 群组是否被禁用。
+         * - `true`：是；
+         * - `false`：否。
+         *
+         * \~english
+         * Whether the group is disabled.
+         * - `true`: Yes.
+         * - `false`: No.
+         *
+         */
         public bool IsDisabled { get; internal set; }
 
         /**
