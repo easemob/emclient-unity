@@ -876,13 +876,13 @@ HYPHENATE_API void GroupManager_LoadAllMyGroupsFromDB(void *client, FUNC_OnSucce
     delete []data;
 }
 
-HYPHENATE_API void GroupManager_FetchAllMyGroupsWithPage(void *client, int callbackId, int pageNum, int pageSize, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+HYPHENATE_API void GroupManager_FetchAllMyGroupsWithPage(void *client, int callbackId, int pageNum, int pageSize, bool needAffiliations, bool needRole, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
 {
     if (!CheckClientInitOrNot(callbackId, onError)) return;
 
     std::thread t([=](){
         EMError error;
-        EMGroupList groupList = CLIENT->getGroupManager().fetchAllMyGroupsWithPage(pageNum, pageSize, error);
+        EMGroupList groupList = CLIENT->getGroupManager().fetchAllMyGroupsWithPage(pageNum, pageSize, needAffiliations, needRole, error);
         if(EMError::EM_NO_ERROR == error.mErrorCode) {
             LOG("GroupManager_FetchAllMyGroupsWithPage succeeds, return group size: %d", groupList.size());
             if(onSuccess) {

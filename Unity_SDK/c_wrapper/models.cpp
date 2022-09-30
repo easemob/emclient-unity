@@ -1929,8 +1929,8 @@ GroupOptions GroupOptions::FromMucSetting(EMMucSettingPtr setting) {
 
 GroupTO::~GroupTO()
 {
-    if (MemberCount > 0) {
-        for(int i=0; i<MemberCount; i++) {
+    if (MemberListCount > 0) {
+        for(int i=0; i< MemberListCount; i++) {
             delete (char *)MemberList[i];
         }
     }
@@ -1980,18 +1980,20 @@ GroupTO * GroupTO::FromEMGroup(EMGroupPtr &group)
     if (strlen(gto->Description) == 0) gto->Description = const_cast<char*>(EMPTY_STR.c_str());
     if (strlen(gto->Announcement) == 0) gto->Announcement = const_cast<char*>(EMPTY_STR.c_str());
     
-    gto->MemberCount = (int)group->groupMembers().size();
+    gto->MemberCount = group->groupMembersCount();
+
+    gto->MemberListCount = (int)group->groupMembers().size();
     gto->AdminCount = (int)group->groupAdmins().size();
     gto->BlockCount = (int)group->groupBans().size();
     gto->MuteCount = (int)group->groupMutes().size();
     
     int i = 0;
     // Branch:xxx <=0 is used to avoid illegal sequnence error from Marshal.PtrtoStructure
-    if (gto->MemberCount <= 0) {
+    if (gto->MemberListCount <= 0) {
         gto->MemberList = new char *[1];
         gto->MemberList[0] = const_cast<char*>(EMPTY_STR.c_str());
     } else {
-        gto->MemberList = new char *[gto->MemberCount];
+        gto->MemberList = new char *[gto->MemberListCount];
         for(std::string member : group->groupMembers()) {
             gto->MemberList[i] = new char[member.size()+1];
             std::strncpy(gto->MemberList[i], member.c_str(), member.size()+1);
@@ -2062,6 +2064,7 @@ GroupTO * GroupTO::FromEMGroup(EMGroupPtr &group)
     gto->NoticeEnabled = group->isPushEnabled();
     gto->MessageBlocked = group->isMessageBlocked();
     gto->IsAllMemberMuted = group->isMucAllMembersMuted();
+    gto->IsDisabled = group->isDisabled();
     
     return gto;
 }
@@ -2077,7 +2080,7 @@ void GroupTO::LogInfo()
     LOG("Announcement: %p %p %s, len:%d", &Announcement, Announcement, Announcement, strlen(Announcement));
     
     LOG("MemberList address: %p %p", &MemberList, MemberList);
-    for(int i=0; i<MemberCount; i++) {
+    for(int i=0; i< MemberListCount; i++) {
         LOG("member %d: %s, len:%d", i, MemberList[i], strlen(MemberList[i]));
     }
     LOG("AdminList address: %p %p", &AdminList, AdminList);

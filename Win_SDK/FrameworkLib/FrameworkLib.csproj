@@ -109,6 +109,7 @@
     <Compile Include="Assets\AgoraChat\ChatSDK\Listeners\IRoomManagerDelegate.cs" />
     <Compile Include="Assets\AgoraChat\ChatSDK\MessageManager\IMessageManager.cs" />
     <Compile Include="Assets\AgoraChat\ChatSDK\MessageManager\MessageManager_Common.cs" />
+    <Compile Include="Assets\AgoraChat\ChatSDK\Models\AreaCode.cs" />
     <Compile Include="Assets\AgoraChat\ChatSDK\Models\ChatThread.cs" />
     <Compile Include="Assets\AgoraChat\ChatSDK\Models\ChatThreadEvent.cs" />
     <Compile Include="Assets\AgoraChat\ChatSDK\Models\Conversation.cs" />
