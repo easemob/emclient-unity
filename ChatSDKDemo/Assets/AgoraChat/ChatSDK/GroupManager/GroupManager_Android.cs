@@ -153,8 +153,9 @@ namespace AgoraChat
             return TransformTool.JsonStringToGroupList(jsonString);
         }
 
-        public override void FetchJoinedGroupsFromServer(int pageNum = 1, int pageSize = 200, ValueCallBack<List<Group>> handle = null)
+        public override void FetchJoinedGroupsFromServer(int pageNum = 1, int pageSize = 200, bool needAffiliations = false, bool needRole = false, ValueCallBack<List<Group>> handle = null)
         {
+            //TODO: need to add code
             wrapper.Call("getJoinedGroupsFromServer", pageSize, pageNum, handle?.callbackId);
         }
 

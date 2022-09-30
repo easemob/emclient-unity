@@ -75,8 +75,9 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="chatsdk">
-      <HintPath>..\FrameworkLib\bin\Debug\chatsdk.dll</HintPath>
+    <Reference Include="chatsdk, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\FrameworkLib\bin\Release\chatsdk.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -100,17 +101,23 @@
     <PostBuildEvent>cd $(ProjectDir)
 
 
+
 xcopy /Y /S ..\FrameworkLib\bin\Release\chatsdk.dll bin\Release\
+
 
 
 xcopy /Y /S ..\..\Unity_SDK\win_build\build_shared\Release\hyphenateCWrapper.dll bin\Release\
 
 
 
+
+
 xcopy /Y /S bin\Release\chatsdk.dll D:\workspace\test\testWinSDK_new_features\Debug\
 
 
+
 xcopy /Y /S bin\Release\hyphenateCWrapper.dll D:\workspace\test\testWinSDK_new_features\Debug\
+
 
 
 xcopy /Y /S bin\Release\FrameworkTest.exe D:\workspace\test\testWinSDK_new_features\Debug\another.exe</PostBuildEvent>

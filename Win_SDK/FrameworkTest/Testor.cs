@@ -85,13 +85,13 @@ namespace WinSDKTest
             Console.WriteLine($"IsRead: {msg.IsRead}");
             Console.WriteLine($"MessageOnlineState: {msg.MessageOnlineState}");
             Console.WriteLine($"IsThread: {msg.IsThread}");
-            foreach (var it in msg.Attributes)
+            /*foreach (var it in msg.Attributes)
             {
                 AttributeValue attr = it.Value;
                 string jstr = attr.ToJsonObject().ToString();
                 Console.WriteLine($"----------------------------");
                 Console.WriteLine($"attribute item: key:{it.Key}; value:{jstr}");
-            }
+            }*/
 
             foreach (var it in msg.ReactionList)
             {
@@ -5424,7 +5424,7 @@ namespace WinSDKTest
             else
                 size = GetIntFromString(GetParamValueFromContext(1));
 
-            SDKClient.Instance.GroupManager.FetchJoinedGroupsFromServer(num, size, handle: new ValueCallBack<List<Group>>(
+            SDKClient.Instance.GroupManager.FetchJoinedGroupsFromServer(num, size, true, true, handle: new ValueCallBack<List<Group>>(
                 onSuccess: (groupList) => {
                     int i = 1;
                     foreach (var group in groupList)
@@ -5447,10 +5447,11 @@ namespace WinSDKTest
                         Console.WriteLine($"NoticeEnabled: {group.NoticeEnabled}");
                         Console.WriteLine($"MessageBlocked: {group.MessageBlocked}");
                         Console.WriteLine($"IsAllMemberMuted: {group.IsAllMemberMuted}");
+                        Console.WriteLine($"IsDisabled: {group.IsDisabled}");
                         Console.WriteLine($"option style: {group.Options.Style}");
                         Console.WriteLine($"option MaxCount: {group.Options.MaxCount}");
                         Console.WriteLine($"option InviteNeedConfirm: {group.Options.InviteNeedConfirm}");
-                        Console.WriteLine($"option Ext: {group.Options.Ext}");
+                        Console.WriteLine($"option Ext: {group.Options.Ext}");                        
                         Console.WriteLine($"=======================================================");
                         i++;
                     }

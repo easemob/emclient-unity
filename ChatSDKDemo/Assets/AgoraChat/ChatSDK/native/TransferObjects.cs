@@ -1550,6 +1550,7 @@ namespace AgoraChat
         public IntPtr MuteList;
         public GroupOptions Options;
         public int MemberCount;
+        public int MemberListCount;
         public int AdminCount;
         public int BlockCount;
         public int MuteCount;
@@ -1560,6 +1561,8 @@ namespace AgoraChat
         public bool MessageBlocked;
         [MarshalAs(UnmanagedType.U1)]
         public bool IsAllMemberMuted;
+        [MarshalAs(UnmanagedType.U1)]
+        public bool IsDisabled;
 
         internal Group GroupInfo()
         {
@@ -1575,7 +1578,8 @@ namespace AgoraChat
                 PermissionType = PermissionType,
                 NoticeEnabled = NoticeEnabled,
                 MessageBlocked = MessageBlocked,
-                IsAllMemberMuted = IsAllMemberMuted
+                IsAllMemberMuted = IsAllMemberMuted,
+                IsDisabled = IsDisabled
             };
             string name = TransformTool.GetUnicodeStringFromUTF8(Name);
             string desc = TransformTool.GetUnicodeStringFromUTF8(Description);
@@ -1590,7 +1594,7 @@ namespace AgoraChat
 
             var memberList = new List<string>();
             IntPtr current = MemberList;
-            for(int i=0; i<MemberCount; i++)
+            for(int i=0; i< MemberListCount; i++)
             {
                 IntPtr memberPtr = Marshal.PtrToStructure<IntPtr>(current);
                 string m = Marshal.PtrToStringAnsi(memberPtr);
