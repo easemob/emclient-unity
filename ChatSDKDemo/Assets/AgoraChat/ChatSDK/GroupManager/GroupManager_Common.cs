@@ -720,11 +720,11 @@ namespace AgoraChat
             return list;
         }
 
-        public override void FetchJoinedGroupsFromServer(int pageNum = 1, int pageSize = 200, ValueCallBack<List<Group>> handle = null)
+        public override void FetchJoinedGroupsFromServer(int pageNum = 1, int pageSize = 200, bool needAffiliations = false, bool needRole = false, ValueCallBack<List<Group>> handle = null)
         {
             int callbackId = (null != handle) ? int.Parse(handle.callbackId) : -1;
 
-            ChatAPINative.GroupManager_FetchAllMyGroupsWithPage(client, callbackId, pageNum, pageSize,
+            ChatAPINative.GroupManager_FetchAllMyGroupsWithPage(client, callbackId, pageNum, pageSize, needAffiliations, needRole,
               onSuccessResult: (IntPtr[] data, DataType dType, int dSize, int cbId) =>
               {
                   List<Group> groupList = new List<Group>();

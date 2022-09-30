@@ -670,7 +670,7 @@ namespace AgoraChat
 		 * @param pageSize		The number of groups that you expect to get on each page.
 		 * @param handle		The operation callback. If success, the SDK returns the obtained group list; otherwise, an error will be returned. See {@link ValueCallBack}. 
 		 */
-		public abstract void FetchJoinedGroupsFromServer(int pageNum = 1, int pageSize = 200, ValueCallBack<List<Group>> handle = null);
+		public abstract void FetchJoinedGroupsFromServer(int pageNum = 1, int pageSize = 200, bool needAffiliations = false, bool needRole = false, ValueCallBack<List<Group>> handle = null);
 
 		/**
 		 * \~chinese

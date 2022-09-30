@@ -230,6 +230,8 @@ namespace AgoraChat
          */
         public bool IsAllMemberMuted { get; internal set; }
 
+        public bool IsDisabled { get; internal set; }
+
         /**
          * \~chinese
          * 群组选项。

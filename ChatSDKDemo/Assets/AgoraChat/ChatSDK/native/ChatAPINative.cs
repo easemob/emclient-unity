@@ -298,7 +298,7 @@ namespace AgoraChat{
 		internal static extern void GroupManager_LoadAllMyGroupsFromDB(IntPtr client, OnSuccessResult onSuccessResult);
 
 		[DllImport(MyLibName)]
-		internal static extern void GroupManager_FetchAllMyGroupsWithPage(IntPtr client, int callbackId, int pageNum, int pageSize, OnSuccessResult onSuccessResult = null, OnErrorV2 onError = null);
+		internal static extern void GroupManager_FetchAllMyGroupsWithPage(IntPtr client, int callbackId, int pageNum, int pageSize, bool needAffiliations, bool needRole, OnSuccessResult onSuccessResult = null, OnErrorV2 onError = null);
 
 		[DllImport(MyLibName)]
 		internal static extern void GroupManager_FetchPublicGroupsWithCursor(IntPtr client, int callbackId, int pageSize, string cursor, OnSuccessResultV2 onSuccessResult = null, OnErrorV2 onError = null);
