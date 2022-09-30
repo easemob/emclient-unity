@@ -155,7 +155,7 @@ namespace AgoraChat
 
         public override void FetchJoinedGroupsFromServer(int pageNum, int pageSize , bool needAffiliations = false, bool needRole = false, ValueCallBack<List<Group>> handle = null)
         {
-            wrapper.Call("getJoinedGroupsFromServer", pageSize, pageNum, handle?.callbackId);
+            wrapper.Call("getJoinedGroupsFromServer", pageSize, pageNum, needAffiliations, needRole, handle?.callbackId);
         }
 
         public override void FetchPublicGroupsFromServer(int pageSize = 200, string cursor = null, ValueCallBack<CursorResult<GroupInfo>> handle = null)

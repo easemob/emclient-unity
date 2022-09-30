@@ -231,7 +231,7 @@ namespace AgoraChat
             return list;
         }
 
-        public override void FetchJoinedGroupsFromServer(int pageNum = 1, int pageSize = 200, bool needAffiliations = false, bool needRole = false, ValueCallBack<List<Group>> handle = null)
+        public override void FetchJoinedGroupsFromServer(int pageNum , int pageSize , bool needAffiliations = false, bool needRole = false, ValueCallBack<List<Group>> handle = null)
         {
             JSONObject obj = new JSONObject();
             obj.Add("pageNum", pageNum);
