@@ -165,6 +165,7 @@ namespace AgoraChat
         public override void RemoveAttributes(string roomId, List<string> keys, bool forced, CallBackResult handle = null)
         {
             JSONObject jo = new JSONObject();
+            jo.Add("roomId", roomId);
             jo.Add("keys", TransformTool.JsonObjectFromStringList(keys));
             jo.Add("forced", forced);
             wrapper.Call("removeChatRoomAttributes", jo.ToString(), handle?.callbackId);

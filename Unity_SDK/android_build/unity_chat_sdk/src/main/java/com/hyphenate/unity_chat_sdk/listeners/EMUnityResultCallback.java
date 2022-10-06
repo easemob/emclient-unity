@@ -48,7 +48,7 @@ public class EMUnityResultCallback implements EMResultCallBack<Map<String, Integ
                 for (Map.Entry<String, Integer> entry: stringMap.entrySet()) {
                     jo.put(entry.getKey(), entry.getValue());
                 }
-
+                jo.put("type",valueType);
                 Log.d("chat_sdk", "back: " + jo.toString());
                 UnityPlayer.UnitySendMessage(EMSDKMethod.Callback_Obj, "OnSuccessValue", jo.toString());
 
@@ -58,15 +58,15 @@ public class EMUnityResultCallback implements EMResultCallBack<Map<String, Integ
         });
     }
 
-    public void onError(HyphenateException errpr) {
-        Log.d("chat_sdk", "onError callbackId -- " + callbackId + " code: " + errpr.getErrorCode() + " desc: " + errpr.getDescription());
+    public void onError(HyphenateException error) {
+        Log.d("chat_sdk", "onError callbackId -- " + callbackId + " code: " + error.getErrorCode() + " desc: " + error.getDescription());
         if (callbackId == null) return;
         ImUnitySdkPlugin.handler.post(()->{
             JSONObject jo = new JSONObject();
             try {
                 jo.put("callbackId", callbackId);
-                jo.put("code", errpr.getErrorCode());
-                jo.put("desc", errpr.getDescription());
+                jo.put("code", error.getErrorCode());
+                jo.put("desc", error.getDescription());
                 Log.d("unity_sdk",jo.toString());
                 UnityPlayer.UnitySendMessage(EMSDKMethod.Callback_Obj, "OnError", jo.toString());
             } catch (JSONException e) {

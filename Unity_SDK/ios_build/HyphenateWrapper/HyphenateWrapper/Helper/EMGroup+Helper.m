@@ -35,6 +35,7 @@
     ret[@"isAllMemberMuted"] = @(self.isMuteAllMembers);
     ret[@"options"] = [Transfrom NSStringFromJsonObject:[self.setting toJson]];
     ret[@"permissionType"] = @([EMGroup premissionTypeToInt:self.permissionType]);
+    ret[@"isDisabled"] = @(self.isDisabled);
     
     return ret;
 }

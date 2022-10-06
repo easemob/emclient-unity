@@ -34,6 +34,7 @@ namespace AgoraChat
                     this.NoticeEnabled = jo["noticeEnable"].AsBool;
                     this.MessageBlocked = jo["messageBlocked"].AsBool;
                     this.IsAllMemberMuted = jo["isAllMemberMuted"].AsBool;
+                    this.IsDisabled = jo["isDisabled"].AsBool;
                     string optionsString = jo["options"].Value;
                     if (optionsString != null)
                     {

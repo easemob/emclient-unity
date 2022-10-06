@@ -55,10 +55,14 @@
     }
     __weak EMGroupManagerWrapper * weakSelf = self;
     __block NSString *callId = callbackId;
-    [EMClient.sharedClient.groupManager getJoinedGroupsFromServerWithPage:[param[@"pageNum"] intValue]
-                                                                 pageSize:[param[@"pageSize"] intValue]
-                                                               completion:^(NSArray *aList, EMError *aError)
-     {
+    
+    int pageNum = [param[@"pageNum"] intValue];
+    int pageSize = [param[@"pageSize"] intValue];
+    BOOL needAffiliations = [param[@"needAffiliations"] boolValue];
+    BOOL needRole = [param[@"needRole"] boolValue];
+    
+    
+    [EMClient.sharedClient.groupManager getJoinedGroupsFromServerWithPage:pageNum pageSize:pageSize needMemberCount:needAffiliations needRole:needRole completion:^(NSArray<EMGroup *> * _Nullable aList, EMError * _Nullable aError) {
         if (!aError) {
             NSMutableArray *list = [NSMutableArray array];
             for (EMGroup *group in aList) {

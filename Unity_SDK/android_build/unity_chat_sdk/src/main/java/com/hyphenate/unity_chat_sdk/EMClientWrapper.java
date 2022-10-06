@@ -46,7 +46,7 @@ public class EMClientWrapper extends EMWrapper {
 
     public void init(String options) throws JSONException {
 
-        applyAuth();
+//        applyAuth();
 
         Context context = UnityPlayer.currentActivity.getApplicationContext();
         JSONObject jo = new JSONObject(options);

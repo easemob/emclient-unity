@@ -35,7 +35,7 @@ dependencies {
 
 task makeJar(type: Jar) {
     delete 'build/libs/unity_chat_sdk.jar'
-    archiveFileName = '../../../../../ChatSDKDemo/Assets/ChatSDK/Plugins/Android/libs/unity_chat_sdk.jar'
+    archiveFileName = '../../../../../ChatSDKDemo/Assets/AgoraChat/Plugins/Android/libs/unity_chat_sdk.jar'
     from('build/intermediates/javac/release/')
 }
 

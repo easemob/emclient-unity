@@ -340,6 +340,8 @@ void RoomManager_HandleMethodCall(const char* methodName, const char* jsonString
         [EMClientWrapper.instance.roomManager setChatRoomAttributes:dic callbackId:callId];
     }else if ([method isEqualToString:@"removeChatRoomAttributes"]) {
         [EMClientWrapper.instance.roomManager removeChatRoomAttributes:dic callbackId:callId];
+    }else if ([method isEqualToString:@"fetchAttributes"]) {
+        [EMClientWrapper.instance.roomManager fetchAttributes:dic callbackId:callId];
     }
 }
 

@@ -111,6 +111,9 @@
 - (void)chatroomAttributesDidUpdated:(NSString *)roomId
                         attributeMap:(NSDictionary<NSString *,NSString *> *)attributeMap
                                 from:(NSString *)fromId {
+    if (!attributeMap || attributeMap.count == 0) {
+        return;
+    }
     NSDictionary *map = @{
         @"roomId":roomId,
         @"attributes":attributeMap,
@@ -122,6 +125,9 @@
 - (void)chatroomAttributesDidRemoved:(NSString *)roomId
                           attributes:(NSArray<__kindof NSString *> *)attributes
                                 from:(NSString *)fromId {
+    if (!attributes) {
+        return;
+    }
     NSDictionary *map = @{
         @"roomId":roomId,
         @"keys":attributes,
