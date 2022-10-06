@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using ChatSDK;
+using AgoraChat;
 
 public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
 {
@@ -739,7 +738,7 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
     }
 
     void GetJoinedGroupsFromServerBtnAction() {
-        SDKClient.Instance.GroupManager.FetchJoinedGroupsFromServer(handle: new ValueCallBack<List<Group>>(
+        SDKClient.Instance.GroupManager.FetchJoinedGroupsFromServer(0, 20, true, true, handle: new ValueCallBack<List<Group>>(
             onSuccess: (groupList) => {
                 List<string> list = new List<string>();
                 foreach (var group in groupList)

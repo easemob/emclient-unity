@@ -19,12 +19,15 @@ EMChatroomManagerListener *gRoomManagerListener = nullptr;
 HYPHENATE_API void RoomManager_AddListener(void *client, FUNC_OnChatRoomDestroyed onChatRoomDestroyed, FUNC_OnMemberJoined onMemberJoined,
                                        FUNC_OnMemberExitedFromRoom onMemberExited,FUNC_OnRemovedFromChatRoom onRemovedFromChatRoom,
                                        FUNC_OnMuteListAdded onMuteListAdded, FUNC_OnMuteListRemoved onMuteListRemoved,FUNC_OnAdminAdded onAdminAdded,
-                                       FUNC_OnAdminRemoved onAdminRemoved, FUNC_OnOwnerChanged onOwnerChanged, FUNC_OnAnnouncementChanged onAnnouncementChanged)
+                                       FUNC_OnAdminRemoved onAdminRemoved, FUNC_OnOwnerChanged onOwnerChanged, FUNC_OnAnnouncementChanged onAnnouncementChanged,
+                                       FUNC_OnChatroomAttributesChanged onChatroomAttributesChanged, FUNC_OnChatroomAttributesRemoved onChatroomAttributesRemoved)
 {
     if (!CheckClientInitOrNot(-1, nullptr)) return;
 
     if(nullptr == gRoomManagerListener) { //only set once!
-        gRoomManagerListener = new RoomManagerListener(client, onChatRoomDestroyed,  onMemberJoined, onMemberExited, onRemovedFromChatRoom, onMuteListAdded, onMuteListRemoved, onAdminAdded, onAdminRemoved, onOwnerChanged, onAnnouncementChanged);
+        gRoomManagerListener = new RoomManagerListener(client, onChatRoomDestroyed,  onMemberJoined,
+            onMemberExited, onRemovedFromChatRoom, onMuteListAdded, onMuteListRemoved, onAdminAdded,
+            onAdminRemoved, onOwnerChanged, onAnnouncementChanged, onChatroomAttributesChanged, onChatroomAttributesRemoved);
        CLIENT->getChatroomManager().addListener(gRoomManagerListener);
         LOG("New RoomManager listener and hook it.");
     }
@@ -469,7 +472,7 @@ HYPHENATE_API void RoomManager_FetchChatroomMutes(void * client, int callbackId,
                     data[i] = muteList[i].first.c_str();
                 }
                 onSuccess((void **)data, DataType::String, (int)size, callbackId);
-		delete []data;
+		        delete []data;
             }
         }else{
             LOG("RoomManager_FetchChatroomMutes failed, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
@@ -854,6 +857,101 @@ HYPHENATE_API void RoomManager_RemoveWhiteListMembers(void * client, int callbac
             if(onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
         }
     });
+    t.detach();
+}
+
+HYPHENATE_API void RoomManager_AddChatRoomMetaData(void* client, int callbackId, const char* roomId, const char* extJson, bool forced, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+{
+    EMError error;
+    if (!MandatoryCheck(roomId, extJson, error)) {
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+    std::string roomIdStr = roomId;
+    std::string extJsonStr = GetUTF8FromUnicode(extJson);
+
+    std::thread t([=]() {
+        EMError error;
+        std::string failInfo = CLIENT->getChatroomManager().addChatRoomMetaData(roomIdStr, extJsonStr, error, forced);
+        if (EMError::EM_NO_ERROR == error.mErrorCode || EMError::PARTIAL_SUCCESS == error.mErrorCode) {
+            if (onSuccess) {
+
+                if (EMError::PARTIAL_SUCCESS == error.mErrorCode) {
+                    const char* data[1] = { failInfo.c_str() };
+                    onSuccess((void**)data, DataType::String, 1, callbackId);
+                }
+                else {
+                    onSuccess(nullptr, DataType::String, 0, callbackId);
+                }
+            }
+        }
+        else {
+            LOG("RoomManager_AddChatRoomMetaData failed, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
+            if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        }
+    });
+    t.detach();
+}
+
+HYPHENATE_API void RoomManager_FetchChatRoomMetaFromSever(void* client, int callbackId, const char* roomId, const char* keys, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+{
+    EMError error;
+    if (!MandatoryCheck(roomId, keys, error)) {
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+    std::string roomIdStr = roomId;
+    std::string keyStr = GetUTF8FromUnicode(keys);
+    std::vector<std::string> vec = JsonStringToVector(keyStr);
+
+    std::thread t([=]() {
+        EMError error;
+
+        std::string properties = CLIENT->getChatroomManager().fetchChatRoomMetaFromSever(roomIdStr, vec, error);
+        if (EMError::EM_NO_ERROR == error.mErrorCode) {
+            if (onSuccess) {
+                const char* data[1] = { properties.c_str() };
+                onSuccess((void**)data, DataType::String, 1, callbackId);
+            }
+        }
+        else {
+            LOG("RoomManager_FetchChatRoomMetaFromSever failed, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
+            if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        }
+        });
+    t.detach();
+}
+
+HYPHENATE_API void RoomManager_RemoveChatRoomMetaFromSever(void* client, int callbackId, const char* roomId, const char* keys, bool forced, FUNC_OnSuccess_With_Result onSuccess, FUNC_OnError onError)
+{
+    EMError error;
+    if (!MandatoryCheck(roomId, keys, error)) {
+        if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        return;
+    }
+    std::string roomIdStr = roomId;
+    std::string keyStr = GetUTF8FromUnicode(keys);
+    std::vector<std::string> vec = JsonStringToVector(keyStr);
+
+    std::thread t([=]() {
+        EMError error;
+        std::string failInfo = CLIENT->getChatroomManager().removeChatRoomMetaFromSever(roomIdStr, vec, error, forced);
+        if (EMError::EM_NO_ERROR == error.mErrorCode || EMError::PARTIAL_SUCCESS == error.mErrorCode) {
+            if (onSuccess) {
+                if (EMError::PARTIAL_SUCCESS == error.mErrorCode) {
+                    const char* data[1] = { failInfo.c_str() };
+                    onSuccess((void**)data, DataType::String, 1, callbackId);
+                }
+                else {
+                    onSuccess(nullptr, DataType::String, 0, callbackId);
+                }
+            }
+        }
+        else {
+            LOG("RoomManager_RemoveChatRoomMetaFromSever failed, roomId=%s, code=%d, desc=%s", roomIdStr.c_str(), error.mErrorCode, error.mDescription.c_str());
+            if (onError) onError(error.mErrorCode, error.mDescription.c_str(), callbackId);
+        }
+        });
     t.detach();
 }
 

@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using ChatSDK;
+using AgoraChat;
 
 public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
 {
@@ -111,6 +110,32 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
 
     void AddRoomAdminBtnAction()
     {
+        string roomId = "186601527377921";
+
+        Dictionary<string, string> kv = new Dictionary<string, string>();
+        kv["key1"] = "val1";
+        kv["哈哈"] = "一个值2";
+
+        bool auto_delete = true;
+        bool forced = true;
+
+        SDKClient.Instance.RoomManager.AddAttributes(roomId, kv, auto_delete, forced, new CallBackResult(
+            onSuccessResult: (Dictionary<string, int> dict) => {
+                if (dict.Count == 0)
+                    Debug.Log($"AddAttributes success.");
+                else
+                {
+                    Debug.Log($"AddAttributes partial sucess.");
+                    string str = TransformTool.JsonStringFromDictionaryStringAndInt(dict);
+                    Debug.Log($"failed keys are:{str}.");
+                }
+            },
+            onError: (code, desc) => {
+                Debug.Log($"AddAttributes failed, code:{code}, desc:{desc}");
+            }
+        ));
+        return;
+
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
             string id = dict["adminId"];
@@ -139,6 +164,25 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
     }
     void BlockRoomMembersBtnAction()
     {
+        string roomId = "186601527377921";
+
+        List<string> keys = new List<string>();
+        keys.Add("key1");
+        keys.Add("key2");
+
+        SDKClient.Instance.RoomManager.FetchAttributes(roomId, keys, new ValueCallBack<Dictionary<string, string>>(
+            onSuccess: (Dictionary<string, string> dict) => {
+                Debug.Log($"FetchAttributes sucess.");
+                string str = TransformTool.JsonStringFromDictionary(dict);
+                Debug.Log($"fetch contents are:{str}.");
+            },
+            onError: (code, desc) => {
+                Debug.Log($"FetchAttributes failed, code:{code}, desc:{desc}");
+            }
+        ));
+
+        return;
+
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
             string id = dict["memberId"];
@@ -169,6 +213,30 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
     }
     void ChangeOwnerBtnAction()
     {
+        string roomId = "186601527377921";
+
+        List<string> keys = new List<string>();
+        keys.Add("key1");
+        keys.Add("key2");
+        bool forced = true;
+
+        SDKClient.Instance.RoomManager.RemoveAttributes(roomId, keys, forced, new CallBackResult(
+            onSuccessResult: (Dictionary<string, int> dict) => {
+                if (dict.Count == 0)
+                    Debug.Log($"RemoveAttributes success.");
+                else
+                {
+                    Debug.Log($"RemoveAttributes partial sucess.");
+                    string str = TransformTool.JsonStringFromDictionaryStringAndInt(dict);
+                    Debug.Log($"failed keys are:{str}.");
+                }
+            },
+            onError: (code, desc) => {
+                Debug.Log($"RemoveAttributes failed, code:{code}, desc:{desc}");
+            }
+        ));
+        return;
+
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
             string nw = dict["newOwner"];
@@ -670,4 +738,15 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
         UIManager.DefaultAlert(this.transform, $"回调 OnAnnouncementChangedFromRoom: {roomId} , {announcement}");
     }
 
+    void IRoomManagerDelegate.OnChatroomAttributesChanged(string roomId, Dictionary<string, string> kv, string from)
+    {
+        string k_str = TransformTool.JsonStringFromDictionary(kv);
+        UIManager.DefaultAlert(this.transform, $"回调 OnChatroomAttributesChanged: {roomId} , {k_str}");
+    }
+
+    void IRoomManagerDelegate.OnChatroomAttributesRemoved(string roomId, List<string> keys, string from)
+    {
+        string kv_str = string.Join(",", keys.ToArray());
+        UIManager.DefaultAlert(this.transform, $"回调 OnChatroomAttributesRemoved: {roomId} , {keys.Count}");
+    }
 }

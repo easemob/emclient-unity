@@ -37,8 +37,11 @@
         return nil;
     }
     BOOL deleteMessages = [param[@"deleteMessages"] boolValue];
-    BOOL ret = [EMClient.sharedClient.chatManager deleteConversation:conversationId deleteMessages:deleteMessages];
-    return @{@"ret":@(ret)};
+    [EMClient.sharedClient.chatManager deleteConversation :conversationId
+                                         isDeleteMessages:deleteMessages
+                                               completion:nil];
+    
+    return @{@"ret":@(YES)};
 }
 
 
@@ -188,9 +191,7 @@
 }
 
 - (id)importMessages:(NSDictionary *)param {
-    
-    BOOL ret = NO;
-    
+
     NSArray *jsonObjectList = param[@"list"];
     if (!jsonObjectList || jsonObjectList.count == 0) {
         return nil;
@@ -201,9 +202,8 @@
         EMChatMessage *msg = [EMChatMessage fromJson:jsonObject];
         [msgs addObject:msg];
     }
-    
-    ret = [EMClient.sharedClient.chatManager importMessages:msgs];
-    return @{@"ret":@(ret)};
+    [EMClient.sharedClient.chatManager importMessages:msgs completion:nil];
+    return @{@"ret":@(YES)};
 }
 
 - (id)loadAllConversations:(NSDictionary *)param{
@@ -416,10 +416,9 @@
 
 - (id)updateChatMessage:(NSDictionary *)param {
     
-    BOOL ret = NO;
     EMChatMessage *msg = [EMChatMessage fromJson:param];
-    ret = [EMClient.sharedClient.chatManager updateMessage:msg];
-    return @{@"ret":@(ret)};
+    [EMClient.sharedClient.chatManager updateMessage:msg completion:nil];
+    return @{@"ret":@(YES)};
 }
 
 - (void)removeMessagesBeforeTimestamp:(NSDictionary *)param
@@ -461,7 +460,7 @@
 
 - (void)fetchSupportLanguages:(NSDictionary *)param callbackId:(NSString *)callbackId {
     __weak EMChatManagerWrapper * weakSelf = self;
-    [EMClient.sharedClient.chatManager fetchSupportedLangurages:^(NSArray<EMTranslateLanguage *> * _Nullable languages, EMError * _Nullable aError) {
+    [EMClient.sharedClient.chatManager fetchSupportedLanguages:^(NSArray<EMTranslateLanguage *> * _Nullable languages, EMError * _Nullable aError) {
         if (aError) {
             [weakSelf onError:callbackId error:aError];
         }else {

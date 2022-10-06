@@ -30,12 +30,12 @@ android {
 
 dependencies {
     implementation files('libs/classes.jar')
-    implementation files('libs/hyphenatechat_3.9.4.jar')
+    implementation files('libs/hyphenatechat_3.9.7.jar')
 }
 
 task makeJar(type: Jar) {
     delete 'build/libs/unity_chat_sdk.jar'
-    archiveFileName = '../../../../../ChatSDKDemo/Assets/ChatSDK/Plugins/Android/libs/unity_chat_sdk.jar'
+    archiveFileName = '../../../../../ChatSDKDemo/Assets/AgoraChat/Plugins/Android/libs/unity_chat_sdk.jar'
     from('build/intermediates/javac/release/')
 }
 

@@ -28,18 +28,21 @@ obj/
 **/.vs/
 *.sln
 *.vcxproj
+*.vcxproj.users
+*.vcxproj.filters
 
 # =========================== #
 # Visual Studio / Win SDK     #
 # =========================== #
 !Win_SDK/Win_SDK.sln
-FrameworkLib/
+FrameworkLib
 FrameworkTest/*
 !FrameworkTest/Properties
 !FrameworkTest/App.config
 !FrameworkTest/FrameworkTest.csproj
 !FrameworkTest/FrameworkTest.csproj.user
 !FrameworkTest/*.cs
+Release/
 
 
 # ============ #
@@ -139,3 +142,10 @@ sysinfo.txt
 **/*.framework
 **/*.a
 **/*.so
+
+# windows sdk
+*.nupkg
+*.dll
+**/ProjectSettings/
+**/Logs/
+**/Packages/

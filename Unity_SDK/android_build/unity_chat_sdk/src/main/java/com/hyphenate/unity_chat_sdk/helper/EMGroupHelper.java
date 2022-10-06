@@ -35,7 +35,7 @@ public class EMGroupHelper {
         data.put("messageBlocked", group.isMsgBlocked());
         data.put("isAllMemberMuted", group.isAllMemberMuted());
         data.put("permissionType", intTypeFromGroupPermissionType(group.getGroupPermissionType()));
-
+        data.put("isDisabled", group.isDisabled());
         EMGroupOptions options = new EMGroupOptions();
         options.extField = group.getExtension();
         options.maxUsers = group.getMaxUserCount();

@@ -62,6 +62,7 @@ struct Options
     bool UsingHttpsOnly;
     bool ServerTransfer;
     bool IsAutoDownload;
+    int Area;
 };
 
 
@@ -353,6 +354,7 @@ struct GroupTO
     Mute * MuteList;
     GroupOptions Options;
     int MemberCount;
+    int MemberListCount;
     int AdminCount;
     int BlockCount;
     int MuteCount;
@@ -360,6 +362,7 @@ struct GroupTO
     bool NoticeEnabled;
     bool MessageBlocked;
     bool IsAllMemberMuted;
+    bool IsDisabled;
     
     ~GroupTO();
     

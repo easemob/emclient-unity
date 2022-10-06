@@ -334,8 +334,8 @@ std::string ManagleAppKey(const char* appKey) {
 EMChatConfigsPtr ConfigsFromOptions(Options *options) {
     const char *appKey = options->AppKey;
 
-    string ak = ManagleAppKey(appKey);
-    LOG("Client_InitWithOptions() called with AppKey=%s", ak.c_str());
+    //string ak = ManagleAppKey(appKey);
+    //LOG("Client_InitWithOptions() called with AppKey=%s", ak.c_str());
 
     configs = EMChatConfigsPtr(new EMChatConfigs("./sdkdata","./sdkdata",appKey,0));
     //TODO: non null-ptr assertion
@@ -361,6 +361,7 @@ EMChatConfigsPtr ConfigsFromOptions(Options *options) {
     configs->setUsingHttps(options->UsingHttpsOnly);
     configs->setTransferAttachments(options->ServerTransfer);
     configs->setAutoDownloadThumbnail(options->IsAutoDownload);
+    
     //configs->setLogPath("/tmp/sdk.log");
     //configs->setEnableConsoleLog(true);
 #ifndef _WIN32
@@ -392,13 +393,31 @@ HYPHENATE_API void* Client_InitWithOptions(Options *options, FUNC_OnConnected on
         }
     }
     
-    if(nullptr == gConnectionListener) { //only set once
+    // reset first
+    if (nullptr != gConnectionListener) {
+        CLIENT->removeConnectionListener(gConnectionListener);
+        LOG("Connection listener reset.");
+        delete gConnectionListener;
+        gConnectionListener = nullptr;
+    }
+
+    // set again
+    if(nullptr == gConnectionListener) {
         gConnectionListener = new ConnectionListener(onConnected, onDisconnected, onPong, onTokenNotification);
         gClient->addConnectionListener(gConnectionListener);
         LOG("New connection listener and hook it.");
     }
+
+    // reset first
+    if (nullptr != gConnectionCallbackListener) {
+        CLIENT->removeConnectionCallbackListener(gConnectionCallbackListener);
+        LOG("Connection callback listener removed.");
+        delete gConnectionCallbackListener;
+        gConnectionCallbackListener = nullptr;
+    }
     
-    if(nullptr == gConnectionCallbackListener) { //only set once
+    // set again
+    if(nullptr == gConnectionCallbackListener) {
         gConnectionCallbackListener = new ConnectionCallbackListener();
         gClient->addConnectionCallbackListener(gConnectionCallbackListener);
         LOG("New connection callback listener and hook it.");
@@ -415,7 +434,16 @@ HYPHENATE_API void Client_AddMultiDeviceListener(FUNC_onContactMultiDevicesEvent
 {
     if (!CheckClientInitOrNot(-1, nullptr)) return;
 
-    if(nullptr == gMultiDevicesListener) { // only set once
+    //reset first
+    if (nullptr != gMultiDevicesListener) {
+        CLIENT->removeMultiDevicesListener(gMultiDevicesListener);
+        LOG("Multi device listener removed.");
+        delete gMultiDevicesListener;
+        gMultiDevicesListener = nullptr;
+    }
+
+    // set again
+    if(nullptr == gMultiDevicesListener) {
         gMultiDevicesListener = new MultiDevicesListener(contactEventFunc, groupEventFunc, undisturbEventFunc, threadEventFunc);
         gClient->addMultiDevicesListener(gMultiDevicesListener);
         LOG("New multi device listener and hook it.");

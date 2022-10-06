@@ -52,7 +52,7 @@
     NSDictionary *map = @{
         @"roomId":aChatroom.chatroomId,
         @"list":[Transfrom NSStringFromJsonObject:aMutes],
-        @"expireTime":[NSString stringWithFormat:@"%ld", aMuteExpire]
+        @"expireTime":[NSString stringWithFormat:@"%ld", (long)aMuteExpire]
     };
     UnitySendMessage(RoomListener_Obj, "OnMuteListAdded", [Transfrom JsonObjectToCSString:map]);
 }
@@ -104,4 +104,35 @@
     UnitySendMessage(RoomListener_Obj, "OnAnnouncementChanged", [Transfrom JsonObjectToCSString:map]);
 }
 
+- (void)chatroomSpecificationDidUpdate:(EMChatroom *)aChatroom {
+
+}
+
+- (void)chatroomAttributesDidUpdated:(NSString *)roomId
+                        attributeMap:(NSDictionary<NSString *,NSString *> *)attributeMap
+                                from:(NSString *)fromId {
+    if (!attributeMap || attributeMap.count == 0) {
+        return;
+    }
+    NSDictionary *map = @{
+        @"roomId":roomId,
+        @"attributes":attributeMap,
+        @"fromId": fromId
+    };
+    UnitySendMessage(RoomListener_Obj, "OnChatroomAttributesChanged", [Transfrom JsonObjectToCSString:map]);
+}
+
+- (void)chatroomAttributesDidRemoved:(NSString *)roomId
+                          attributes:(NSArray<__kindof NSString *> *)attributes
+                                from:(NSString *)fromId {
+    if (!attributes) {
+        return;
+    }
+    NSDictionary *map = @{
+        @"roomId":roomId,
+        @"keys":attributes,
+        @"fromId": fromId
+    };
+    UnitySendMessage(RoomListener_Obj, "OnChatroomAttributesRemoved", [Transfrom JsonObjectToCSString:map]);
+}
 @end
