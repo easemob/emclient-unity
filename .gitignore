@@ -41,6 +41,7 @@ FrameworkTest/*
 !FrameworkTest/FrameworkTest.csproj
 !FrameworkTest/FrameworkTest.csproj.user
 !FrameworkTest/*.cs
+Release/
 
 
 # ============ #

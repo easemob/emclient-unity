@@ -4,7 +4,7 @@
 #include "Api_decorator.h"
 
 #if defined(_WIN32)
-	typedef void(__stdcall * NativeListenerEvent)(const char* listener, const char* method, const char* jstr);
+	typedef void(__stdcall *NativeListenerEvent)(const char* listener, const char* method, const char* jstr);
 #else
 	typedef void(*NativeListenerEvent)(const char* listener, const char* method, const char* jstr);
 #endif
