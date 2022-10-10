@@ -3,10 +3,10 @@
 
 #if defined(_WIN32)
 
-	extern "C" __declspec(dllimport) void AddListener_Common(void* callback_handle);
-	extern "C" __declspec(dllimport) void CleanListener_Common();
-	extern "C" __declspec(dllimport) void NativeCall_Common(const char* manager, const char* method, const char* jstr, const char* cbid);
-	extern "C" __declspec(dllimport) int  NativeGet_Common(const char* manager, const char* method, const char* jstr, char* buf);
+	extern "C" __declspec(dllimport) void __stdcall AddListener_Common(void* callback_handle);
+	extern "C" __declspec(dllimport) void __stdcall CleanListener_Common();
+	extern "C" __declspec(dllimport) void __stdcall NativeCall_Common(const char* manager, const char* method, const char* jstr, const char* cbid);
+	extern "C" __declspec(dllimport) int  __stdcall NativeGet_Common(const char* manager, const char* method, const char* jstr, char* buf);
 
 #elif defined(__APPLE__)
 
