@@ -18,9 +18,14 @@
 
 #endif
 
-SDK_WRAPPER_API void SDK_WRAPPER_CALL AddListener_Common(void* callback_handle);
-SDK_WRAPPER_API void SDK_WRAPPER_CALL CleanListener_Common();
-SDK_WRAPPER_API void SDK_WRAPPER_CALL NativeCall_Common(const char* manager, const char* method, const char* jstr, const char* cbid);
-SDK_WRAPPER_API int  SDK_WRAPPER_CALL NativeGet_Common(const char* manager, const char* method, const char* jstr, char* buf);
+// Client =====================================================================
+SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_InitWithOptions(const char* json);
+SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_Login(const char* json);
+SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_Logout(const char* json);
+
+
+// ChatManager ================================================================
+
+SDK_WRAPPER_API int  SDK_WRAPPER_CALL ChatManager_SendMessage(const char* json);
 
 #endif

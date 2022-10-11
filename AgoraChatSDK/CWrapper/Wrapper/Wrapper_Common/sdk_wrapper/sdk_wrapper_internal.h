@@ -8,7 +8,18 @@
 	#include <cstdint>
 
 #else
-
+	#include <unistd.h>
+	#include <sys/time.h>
 #endif
+
+#ifndef RAPIDJSON_NAMESPACE
+#define RAPIDJSON_NAMESPACE easemob
+#endif
+#include "rapidjson/document.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/prettywriter.h"
+
+using namespace std;
+using namespace easemob;
 
 #endif
