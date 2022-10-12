@@ -1,11 +1,16 @@
 #ifndef _SDK_WRAPPER_MODELS_IMPL_
 #define _SDK_WRAPPER_MODELS_IMPL_
 
-#include <string>
-
 #include "message/emmessage.h"
 #include "message/emfilemessagebody.h"
 #include "message/emcustommessagebody.h"
+#include "message/emtextmessagebody.h"
+#include "message/emlocationmessagebody.h"
+#include "message/emcmdmessagebody.h"
+#include "message/emimagemessagebody.h"
+#include "message/emvideomessagebody.h"
+#include "message/emvoicemessagebody.h"
+#include "emattributevalue.h"
 #include "emchatconfigs.h"
 
 #include "sdk_wrapper_internal.h"
@@ -15,13 +20,13 @@ namespace sdk_wrapper {
 	class Options
 	{
 	public:
-		static int FromJson(const char* json, EMChatConfigsPtr config);
+		static EMChatConfigsPtr FromJson(const char* json, const char* rs, const char* wk);
 	};
 
 	class Message
 	{
 	public:
-		static int FromJson(const char* json, EMMessagePtr em_msg);
+		static EMMessagePtr FromJson(const char* json);
 		static string ToJson(EMMessagePtr em_msg);
 
 	public:
@@ -45,13 +50,24 @@ namespace sdk_wrapper {
 
 		static void BodyToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg);
 		static string BodyToJson(EMMessagePtr msg);
-		static void ToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg);
-		static string ToJson(EMMessagePtr msg);
 
 		static EMMessageBodyPtr BodyFromJsonObject(const Value& jnode);
 		static EMMessageBodyPtr BodyFromJson(std::string json);
+
+		static void ToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg);
 		static EMMessagePtr FromJsonObject(const Value& jnode);
-		static EMMessagePtr FromJson(std::string json);
+	};
+
+	class AttributesValue
+	{
+	public:
+		static void ToJsonWriter(Writer<StringBuffer>& writer, EMAttributeValuePtr attribute);
+		static void ToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg);
+		static string ToJson(EMMessagePtr msg);
+
+		static void SetMessageAttr(EMMessagePtr msg, string& key, const Value& jnode);
+		static void SetMessageAttrs(EMMessagePtr msg, const Value& jnode);
+		static void SetMessageAttrs(EMMessagePtr msg, string json);
 	};
 }
 

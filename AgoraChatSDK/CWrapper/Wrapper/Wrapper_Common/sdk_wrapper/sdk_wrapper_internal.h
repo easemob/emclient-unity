@@ -19,6 +19,8 @@
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/prettywriter.h"
 
+#include <string>
+
 using namespace std;
 using namespace easemob;
 
