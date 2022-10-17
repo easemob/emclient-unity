@@ -29,6 +29,8 @@ namespace sdk_wrapper {
 		static EMMessagePtr FromJson(const char* json);
 		static string ToJson(EMMessagePtr em_msg);
 
+		static string ToJson(EMMessageList messages);
+
 	public:
 		static int MsgTypeToInt(EMMessage::EMChatType type);
 		static EMMessage::EMChatType MsgTypeFromInt(int i);

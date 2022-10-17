@@ -18,14 +18,18 @@
 
 #endif
 
+SDK_WRAPPER_API void SDK_WRAPPER_CALL AddListener_SDKWrapper(void* callback_handle);
+SDK_WRAPPER_API void SDK_WRAPPER_CALL CleanListener_SDKWrapper();
+
 // Client =====================================================================
-SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_InitWithOptions(const char* json);
-SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_Login(const char* json);
-SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_Logout(const char* json);
+SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_InitWithOptions(const char* jstr, const char* cbid = nullptr);
+SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_AddListener();
+SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_Login(const char* jstr, const char* cbid);
+SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_Logout(const char* jstr, const char* cbid);
 
 
 // ChatManager ================================================================
-
-SDK_WRAPPER_API int  SDK_WRAPPER_CALL ChatManager_SendMessage(const char* json);
+SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_AddListener();
+SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_SendMessage(const char* jstr, const char* cbid);
 
 #endif

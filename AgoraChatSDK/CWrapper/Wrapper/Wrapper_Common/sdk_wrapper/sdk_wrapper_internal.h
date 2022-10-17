@@ -6,10 +6,15 @@
 	#define WIN32_LEAN_AND_MEAN
 	#include <windows.h>
 	#include <cstdint>
+	
+	typedef void(__stdcall* NativeListenerEvent)(const char* listener, const char* method, const char* jstr);
 
 #else
 	#include <unistd.h>
 	#include <sys/time.h>
+
+	typedef void(*NativeListenerEvent)(const char* listener, const char* method, const char* jstr);
+
 #endif
 
 #ifndef RAPIDJSON_NAMESPACE
@@ -23,5 +28,10 @@
 
 using namespace std;
 using namespace easemob;
+
+#define CLIENT static_cast<EMClient *>(gClient)
+
+const string STRING_CALLBACK_LISTENER = "callback";
+const string STRING_CLIENT_LISTENER   = "connectionListener";
 
 #endif

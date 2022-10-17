@@ -4,7 +4,7 @@
 #include "common_wrapper.h"
 #include "common_wrapper_internal.h"
 
-typedef void (*FUNC_CALL)(const char* jstr, char* buf, const char* cbid);
+typedef void (*FUNC_CALL)(const char* jstr, char* buf_or_cbid);
 
 typedef std::map<std::string, FUNC_CALL> FUNC_MAP;		// function name -> function handle
 typedef std::map<std::string, FUNC_MAP>  MANAGER_MAP;   // manager name -> function map
@@ -61,30 +61,18 @@ void CleanListener_Common()
 
 void NativeCall_Common(const char* manager, const char* method, const char* jstr, const char* cbid)
 {
-	if (!CheckClientHandle()) {
-		if (nullptr != gCallback) {
-			gCallback("callback", cbid, "client is not inited");
-		}
-		return;
-	}
-
 	FUNC_CALL func = GetFuncHandle(manager, method);
 	if (nullptr != func) {
-		func(jstr, nullptr, cbid);
+		func(jstr, const_cast<char*>(cbid));
 		return;
 	}
 }
 
 int NativeGet_Common(const char* manager, const char* method, const char* jstr, char* buf)
 {
-	if (!CheckClientHandle()) {
-		strcpy(buf, "client is not inited");
-		return -1;
-	}
-
 	FUNC_CALL func = GetFuncHandle(manager, method);
 	if (nullptr != func) {
-		func(jstr, buf, nullptr);
+		func(jstr, buf);
 	}
 
 	return 0;

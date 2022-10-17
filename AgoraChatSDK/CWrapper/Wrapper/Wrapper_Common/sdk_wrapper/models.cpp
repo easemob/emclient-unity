@@ -118,7 +118,11 @@ namespace sdk_wrapper
             configs->setAutoDownloadThumbnail(is_auto_download);
         }
 
-        //TODO: setDeviceUuid
+#ifndef _WIN32
+        std::string uuid = GetMacUuid();
+        if (uuid.size() > 0)
+            configs->setDeviceUuid(uuid);
+#endif
         return configs;
 	}
 
@@ -983,6 +987,21 @@ namespace sdk_wrapper
         Writer<StringBuffer> writer(s);
 
         ToJsonWriter(writer, msg);
+        return s.GetString();
+    }
+
+    string Message::ToJson(EMMessageList messages)
+    {
+        if (messages.size() == 0) return string();
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        writer.StartArray();
+        for (auto msg : messages) {
+            writer.String(ToJson(msg).c_str());
+        }
+        writer.EndArray();
         return s.GetString();
     }
 
