@@ -40,15 +40,22 @@ namespace AgoraChat
         */
         public string LanguageNativeName { get; internal set; }
 
-        public SupportLanguage(string jsonString): base(jsonString) {}
+        internal SupportLanguage() { }
 
-        public SupportLanguage(JSONObject jsonObject) : base(jsonObject) { }
+        internal SupportLanguage(string jsonString): base(jsonString) {}
+
+        internal SupportLanguage(JSONObject jsonObject) : base(jsonObject) { }
 
         internal override void FromJsonObject(JSONObject jsonObject)
         {
             LanguageCode = jsonObject["code"];
             LanguageName = jsonObject["name"];
             LanguageNativeName = jsonObject["nativeName"];
+        }
+
+        internal override JSONObject ToJsonObject()
+        {
+            return null;
         }
     }
 }

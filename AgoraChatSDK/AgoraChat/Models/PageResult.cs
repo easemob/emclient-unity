@@ -47,6 +47,8 @@ namespace AgoraChat
         */
         public List<T> Data { get; internal set; }
 
+        internal PageResult() { }
+
         internal PageResult(string jsonString, ItemCallback callback = null) : base(jsonString)
         {
             this.callback = callback;
@@ -74,6 +76,11 @@ namespace AgoraChat
                 }
             }
             callback = null;
+        }
+
+        internal override JSONObject ToJsonObject()
+        {
+            return null;
         }
 
         private ItemCallback callback;

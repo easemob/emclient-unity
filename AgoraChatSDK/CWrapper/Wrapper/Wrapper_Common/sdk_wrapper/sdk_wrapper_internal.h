@@ -32,6 +32,7 @@ using namespace easemob;
 #define CLIENT static_cast<EMClient *>(gClient)
 
 const string STRING_CALLBACK_LISTENER = "callback";
+const string STRING_CALLBACK_PROGRESS_LISTENER = "callbackProgress";
 const string STRING_CLIENT_LISTENER   = "connectionListener";
 
 #endif

@@ -29,6 +29,8 @@ namespace AgoraChat
          */
         public int Status;
 
+        internal PresenceDeviceStatus() { }
+
         internal PresenceDeviceStatus(string jsonString):base(jsonString) { }
 
         internal PresenceDeviceStatus(JSONObject jsonObject) : base(jsonObject) { }
@@ -37,6 +39,11 @@ namespace AgoraChat
         {
             DeviceId = jsonObject["device"];
             Status = jsonObject["status"].AsInt;
+        }
+
+        internal override JSONObject ToJsonObject()
+        {
+            return null;
         }
     }
 }

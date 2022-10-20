@@ -23,7 +23,7 @@ namespace AgoraChat
         */
         public List<T> Data { get; internal set; }
 
-        
+        internal CursorResult() { }
 
         internal CursorResult(string jsonString, ItemCallback callback = null) : base(jsonString)
         {
@@ -51,6 +51,11 @@ namespace AgoraChat
                 }
             }
             callback = null;
+        }
+
+        internal override JSONObject ToJsonObject()
+        {
+            return null;
         }
 
         private ItemCallback callback;

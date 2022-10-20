@@ -43,6 +43,8 @@ namespace AgoraChat
         */
         public ChatThread ChatThread { get; internal set; }
 
+        internal ChatThreadEvent() { }
+
         internal ChatThreadEvent(string jsonString) : base(jsonString) { }
 
         internal ChatThreadEvent(SimpleJSON.JSONObject jsonObject) : base(jsonObject) { }
@@ -52,6 +54,11 @@ namespace AgoraChat
             From = jsonObject["from"];
             Operation = (ChatThreadOperation)jsonObject["type"].AsInt;
             ChatThread = new ChatThread(jsonObject["thread"].AsObject);
+        }
+
+        internal override JSONObject ToJsonObject()
+        {
+            return null;
         }
     }
 }

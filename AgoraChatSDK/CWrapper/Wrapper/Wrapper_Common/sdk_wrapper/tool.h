@@ -34,16 +34,17 @@ static T convertFromString(const std::string& from)
 }
 
 void CallBack(const char* method, const char* jstr);
+void CallBackProgress(const char* method, const char* jstr);
 
 bool CheckClientInitOrNot(const char* cbid);
 
 string JsonStringFromObject(const Value& obj);
 
-string JsonStringFromResult(const char* cbid, const char* method, int process, int code, const char* desc, const char* type, const char* jstr);
+string JsonStringFromResult(const char* cbid, int process, int code, const char* desc, const char* jstr);
 string JsonStringFromError(const char* cbid, int code, const char* desc);
 string JsonStringFromSuccess(const char* cbid);
-string JsonStringFromErrorResult(const char* cbid, int code, const char* desc, const char* type, const char* jstr);
-string JsonStringFromSuccessResult(const char* cbid, const char* type, const char* jstr);
+string JsonStringFromErrorResult(const char* cbid, int code, const char* desc, const char* jstr);
+string JsonStringFromSuccessResult(const char* cbid, const char* jstr);
 string JsonStringFromProcess(const char* cbid, int process);
 
 string JsonStringFromVector(vector<string>& vec);

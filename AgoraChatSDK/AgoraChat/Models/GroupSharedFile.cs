@@ -60,6 +60,8 @@ namespace AgoraChat
          */
         public long FileSize { get; internal set; }
 
+        internal GroupSharedFile() { }
+
         internal GroupSharedFile(string jsonString):base(jsonString) { }
 
         internal GroupSharedFile(JSONObject jsonObject) : base(jsonObject) { }
@@ -71,6 +73,11 @@ namespace AgoraChat
             FileOwner = jsonObject["owner"];
             CreateTime = jsonObject["createTime"].AsInt;
             FileSize = jsonObject["fileSize"].AsInt;
+        }
+
+        internal override JSONObject ToJsonObject()
+        {
+            return null;
         }
     }
 }

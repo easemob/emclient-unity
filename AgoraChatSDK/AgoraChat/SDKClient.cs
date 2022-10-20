@@ -120,6 +120,79 @@
         }
 
         /**
+         * \~chinese
+         * SDK选项。
+         *
+         * \~english
+         * The SDK options.
+         */
+        public Options Options { 
+            get 
+            { //return _Options;
+                //TODO
+                return null;
+             } 
+        }
+
+        /**
+         * \~chinese
+         * SDK 版本号。
+         *
+         * \~english
+         * The SDK version.
+         */
+        public string SdkVersion { get => "1.0.5"; }
+
+
+        /**
+         * \~chinese
+         * 当前登录用户的 ID。
+         *
+         * \~english
+         * The ID of the current login user.
+         */
+        //TODO
+        public string CurrentUsername { get => "test"; }
+
+        /**
+         * \~chinese
+         * 是否已经登录。
+         * - `true`: 已登录；
+         * - `false`：未登录。
+         *
+         * \~english
+         * Whether the current user is logged into the chat app.
+         * - `true`: Yes.
+         * - `false`: No. The current user is not logged into the chat app yet.
+         */
+       //TODO
+        public bool IsLoggedIn { get => false; }
+
+        /**
+         * \~chinese
+         * SDK 是否连接到服务器。
+         * - `true`: 已连接；
+         * - `false`：未连接。
+         *
+         * \~english
+         * Whether the SDK is connected to the server.
+         * - `true`: Yes.
+         * - `false`: No.
+         */
+        //TODO
+        public bool IsConnected { get => false; }
+
+        /**
+         * \~chinese
+         * 当前用户的 token。
+         *
+         * \~english
+         * The token of the current user.
+         */
+        //TODO
+        public string AccessToken { get => ""; }
+
+        /**
         * \~chinese
         * 初始化 SDK。
         * 
@@ -136,7 +209,7 @@
         */
         public void InitWithOptions(Options options)
         {
-            
+            _clientImpl.InitWithOptions(options);
         }
 
         public void DeInit()

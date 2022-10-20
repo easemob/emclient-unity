@@ -1042,6 +1042,7 @@ namespace sdk_wrapper
         else
             msg = EMMessage::createReceiveMessage(from, to, body, msg_type, msg_id);
 
+        msg->setMsgId(msg_id);
         msg->setMsgDirection(direction);
 
         if (jnode.HasMember("conversationId") && jnode["conversationId"].IsString()) {

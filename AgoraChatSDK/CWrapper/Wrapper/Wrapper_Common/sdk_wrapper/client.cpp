@@ -37,7 +37,7 @@ namespace sdk_wrapper
         }
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_InitWithOptions(const char* jstr, const char* cbid = nullptr)
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_InitWithOptions(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         // singleton client handle
         if (nullptr == gClient) {
@@ -57,7 +57,7 @@ namespace sdk_wrapper
         ChatManager_AddListener();
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_Login(const char* jstr, const char* cbid)
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_Login(const char* jstr, const char* cbid, char* buf = nullptr)
     {
         if (!CheckClientInitOrNot(cbid)) return;        
 
@@ -67,9 +67,9 @@ namespace sdk_wrapper
         thread t([=]() {
 
             Document d; d.Parse(local_jstr.c_str());
-            string user_name    = GetJsonValue_String(d, "user_name", "");
-            string pwd_or_token = GetJsonValue_String(d, "pwd_or_token", "");
-            bool is_token       = GetJsonValue_Bool(d, "is_token", false);
+            string user_name    = GetJsonValue_String(d, "username", "");
+            string pwd_or_token = GetJsonValue_String(d, "pwdOrToken", "");
+            bool is_token       = GetJsonValue_Bool(d, "isToken", false);
 
             EMErrorPtr result;
             result = is_token ? CLIENT->loginWithToken(user_name, pwd_or_token) : CLIENT->login(user_name, pwd_or_token);
@@ -95,7 +95,7 @@ namespace sdk_wrapper
         t.detach();
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_Logout(const char* jstr, const char* cbid)
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_Logout(const char* jstr, const char* cbid, char* buf = nullptr)
     {
         if (!CheckClientInitOrNot(cbid)) return;
 

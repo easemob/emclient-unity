@@ -116,7 +116,7 @@ namespace sdk_wrapper {
         */
 	}
 
-	SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_SendMessage(const char* jstr, const char* cbid)
+	SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_SendMessage(const char* jstr, const char* cbid, char* buf)
 	{
         if (!CheckClientInitOrNot(cbid)) return;
 
@@ -130,7 +130,7 @@ namespace sdk_wrapper {
         EMCallbackPtr callback_ptr(new EMCallback(gCallbackObserverHandle,
             [=]()->bool {
                 string update_msg_json = JsonStringFromUpdatedMessage(msg_id);
-                string call_back_jstr = JsonStringFromSuccessResult(local_cbid.c_str(), "OnMessageSuccess", update_msg_json.c_str());
+                string call_back_jstr = JsonStringFromSuccessResult(local_cbid.c_str(), update_msg_json.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
                 DeleteMsgItem(msg_id);
                 DeleteProgressItem(msg_id);
@@ -138,7 +138,7 @@ namespace sdk_wrapper {
             },
             [=](const EMErrorPtr error)->bool {
                 string update_msg_json = JsonStringFromUpdatedMessage(msg_id);
-                string call_back_jstr = JsonStringFromErrorResult(local_cbid.c_str(), error->mErrorCode, error->mDescription.c_str(), "OnMessageError", update_msg_json.c_str());
+                string call_back_jstr = JsonStringFromErrorResult(local_cbid.c_str(), error->mErrorCode, error->mDescription.c_str(), update_msg_json.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
                 DeleteMsgItem(msg_id);
                 DeleteProgressItem(msg_id);
@@ -148,7 +148,7 @@ namespace sdk_wrapper {
             int last_progress = GetLastProgress(msg_id);
             if (progress - last_progress >= 5) {
                 string call_back_jstr = JsonStringFromProcess(local_cbid.c_str(), progress);
-                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+                CallBackProgress(local_cbid.c_str(), call_back_jstr.c_str());
                 UpdateProgressMap(msg_id, progress);
             }
             return;
@@ -156,6 +156,10 @@ namespace sdk_wrapper {
 
         message_ptr->setCallback(callback_ptr);
         CLIENT->getChatManager().sendMessage(message_ptr);
+
+        string updated_msg_json = JsonStringFromUpdatedMessage(msg_id);
+        if(updated_msg_json.size() > 0)
+            memcpy(buf, updated_msg_json.c_str(), updated_msg_json.size());
 	}
 }
 

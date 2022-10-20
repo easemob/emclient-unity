@@ -15,7 +15,16 @@ void CallBack(const char* method, const char* jstr)
         gCallback(STRING_CALLBACK_LISTENER.c_str(), method, jstr);
 }
 
-string JsonStringFromResult(const char* cbid, const char* method, int process, int code, const char* desc, const char* type, const char* jstr)
+void CallBackProgress(const char* method, const char* jstr)
+{
+    if (nullptr == method || strlen(method) == 0)
+        return;
+
+    if (gCallback)
+        gCallback(STRING_CALLBACK_PROGRESS_LISTENER.c_str(), method, jstr);
+}
+
+string JsonStringFromResult(const char* cbid, int process, int code, const char* desc, const char* jstr)
 {
     if (nullptr == cbid || strlen(cbid) == 0) return string();
 
@@ -26,28 +35,28 @@ string JsonStringFromResult(const char* cbid, const char* method, int process, i
     writer.Key("callbackId");
     writer.String(cbid);
 
-    writer.Key("method");
-    writer.String(method);
-
     if (process >= 0) {
         writer.Key("progress");
         writer.Int(process);
     }
 
     if (code >= 0) {
+        writer.Key("error");
+        writer.StartObject();
+
         writer.Key("code");
         writer.Int(code);
-    }
-    
-    if (nullptr != desc && strlen(desc) != 0) {
+
         writer.Key("desc");
-        writer.String(desc);
+        if (nullptr != desc && strlen(desc) != 0) {
+            writer.String(desc);
+        }
+        else {
+            writer.String("");
+        }
+
+        writer.EndObject();
     }
-    
-    if (nullptr != type && strlen(type) != 0) {
-        writer.Key("type");
-        writer.String(type);
-    }    
 
     if (nullptr != jstr && strlen(jstr) != 0) {
         writer.Key("value");
@@ -63,33 +72,33 @@ string JsonStringFromError(const char* cbid, int code, const char* desc)
 {
     if (nullptr == cbid || strlen(cbid) == 0) return string();
 
-    return JsonStringFromResult(cbid, "OnError", -1, code, desc, nullptr, nullptr);
+    return JsonStringFromResult(cbid, -1, code, desc, nullptr);
 }
 
-string JsonStringFromErrorResult(const char* cbid, int code, const char* desc, const char* type, const char* jstr)
+string JsonStringFromErrorResult(const char* cbid, int code, const char* desc, const const char* jstr)
 {
     if (nullptr == cbid || strlen(cbid) == 0) return string();
 
-    return JsonStringFromResult(cbid, "OnError", -1, code, desc, type, jstr);
+    return JsonStringFromResult(cbid, -1, code, desc, jstr);
 }
 
 string JsonStringFromSuccess(const char* cbid)
 {
     if (nullptr == cbid || strlen(cbid) == 0) return string();
 
-    return JsonStringFromResult(cbid, "OnSuccess", -1, -1, nullptr, nullptr, nullptr);
+    return JsonStringFromResult(cbid, -1, -1, nullptr, nullptr);
 }
 
-string JsonStringFromSuccessResult(const char* cbid, const char* type, const char* jstr)
+string JsonStringFromSuccessResult(const char* cbid, const char* jstr)
 {
     if (nullptr == cbid || strlen(cbid) == 0) return string();
-    return JsonStringFromResult(cbid, "OnSuccessValue", -1, -1, nullptr, type, jstr);
+    return JsonStringFromResult(cbid, -1, -1, nullptr, jstr);
 }
 
 string JsonStringFromProcess(const char* cbid, int process)
 {
     if (nullptr == cbid || strlen(cbid) == 0) return string();
-    return JsonStringFromResult(cbid, "OnProgress", process, -1, nullptr, nullptr, nullptr);
+    return JsonStringFromResult(cbid, process, -1, nullptr, nullptr);
 }
 
 bool CheckClientInitOrNot(const char* cbid)

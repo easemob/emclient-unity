@@ -6,8 +6,6 @@ namespace AgoraChat
     {
         CallbackManager callbackManager;
 
-       
-
         internal ContactManager(NativeListener nativeListener)
         {
             callbackManager = nativeListener.callbackManager;
@@ -21,10 +19,6 @@ namespace AgoraChat
 
         public void AddContact(string userId, string reason = null, CallBack callBack = null)
         {
-            callbackManager.AddCallback(callBack, (jsonString, callback) => {
-
-            });
-            CWrapperNative.NativeCall("contactManager", "addContact", null, callBack?.callbackId);
         }
 
     }
