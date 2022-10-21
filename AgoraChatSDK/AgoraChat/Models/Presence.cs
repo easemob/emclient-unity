@@ -81,13 +81,35 @@ namespace AgoraChat
 
         public long ExpiryTime { get; internal set; }
 
+        internal Presence() { }
+
         internal Presence(string jsonString):base(jsonString) { }
 
         internal Presence(JSONObject jsonObject):base(jsonObject) { }
 
-        internal override void FromJsonObject(JSONObject jsonObject)
+        internal override void FromJsonObject(JSONObject jo)
         {
-         
+            if(null != jo)
+            {
+                Publisher = jo["publisher"].Value;
+                statusDescription = jo["statusDescription"].Value;
+                LatestTime = jo["lastTime"].AsInt;
+                ExpiryTime = jo["expiryTime"].AsInt;
+                StatusList = new List<PresenceDeviceStatus>();
+                if (jo["statusDetails"].IsArray)
+                {
+                    JSONArray array = jo["statusDetails"].AsArray;
+                    foreach (JSONObject it in array)
+                    {
+                        StatusList.Add(new PresenceDeviceStatus(it));
+                    }
+                }
+            }
+        }
+
+        internal override JSONObject ToJsonObject()
+        {
+            return null;
         }
     }
 }

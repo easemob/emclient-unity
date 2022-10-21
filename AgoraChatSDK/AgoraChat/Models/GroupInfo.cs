@@ -34,6 +34,8 @@ namespace AgoraChat
 	     */
         public string GroupName { get; internal set; }
 
+        internal GroupInfo() { }
+
         internal GroupInfo(string jsonString): base(jsonString) { }
 
         internal GroupInfo(JSONObject jsonObject): base(jsonObject) { }
@@ -42,6 +44,11 @@ namespace AgoraChat
         {
             GroupId = jsonObject["groupId"];
             GroupName = jsonObject["name"];
+        }
+
+        internal override JSONObject ToJsonObject()
+        {
+            return null;
         }
     }
 }

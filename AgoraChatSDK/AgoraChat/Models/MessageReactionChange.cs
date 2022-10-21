@@ -38,6 +38,8 @@ namespace AgoraChat
          */
         public List<MessageReaction> ReactionList;
 
+        internal MessageReactionChange() { }
+
         internal MessageReactionChange(string jsonString):base(jsonString) { }
 
         internal MessageReactionChange(JSONObject jsonObject) : base(jsonObject) { }
@@ -47,6 +49,11 @@ namespace AgoraChat
             ConversationId = jsonObject["conversationId"].Value;
             MessageId = jsonObject["messageId"].Value;
             ReactionList = List.ReactionListFromJsonObject(jsonObject["reactions"]);
+        }
+
+        internal override JSONObject ToJsonObject()
+        {
+            return null;
         }
     }
 }

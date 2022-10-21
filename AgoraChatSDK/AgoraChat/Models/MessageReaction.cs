@@ -72,6 +72,8 @@ namespace AgoraChat
          */
         public bool State;
 
+        internal MessageReaction() { }
+
         internal MessageReaction(string jsonString): base(jsonString) { }
 
         internal MessageReaction(JSONObject jsonObject) : base(jsonObject) { }
@@ -82,6 +84,11 @@ namespace AgoraChat
              Count = jsonObject["count"].AsInt;
              UserList = List.StringListFromJsonObject(jsonObject["userList"]);
              State = jsonObject["isAddedBySelf"].AsBool;
+        }
+
+        internal override JSONObject ToJsonObject()
+        {
+            return null;
         }
     }
 }

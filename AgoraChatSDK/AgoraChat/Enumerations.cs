@@ -334,5 +334,249 @@
         * Messages are retrieved in the chronological order of their Unix timestamp ({@link SortMessageByServerTime}). 
         */
         DOWN
+    };
+
+    /**
+    * \~chinese
+    * 消息状态枚举。
+    *
+    *\~english
+    * The message status.
+    */
+    public enum MessageStatus
+    {
+        /**
+        * \~chinese
+        * 消息已创建。
+        *
+        *\~english
+        * The message is created.
+        */
+        CREATE,
+
+        /**
+        * \~chinese
+        * 消息正在发送。
+        *
+        *\~english
+        * The message is being delivered.
+        */
+        PROGRESS,
+
+        /**
+        * \~chinese
+        * 消息发送成功。
+        *
+        *\~english
+        * The message is successfully delivered.
+        */
+        SUCCESS,
+
+        /**
+        * \~chinese
+        * 消息发送失败。
+        *
+        *\~english
+        * The message fails to be delivered.
+        */
+        FAIL,
+    };
+
+    /**
+    * \~chinese
+    * 聊天类型枚举。
+    *
+    *\~english
+    * The chat types.
+    */
+    public enum MessageType
+    {
+        /**
+        * \~chinese
+        * 单聊。
+        *
+        * \~english
+        * The one-to-one chat.
+        */
+        Chat = 0,
+
+        /**
+        * \~chinese
+        * 群聊。
+        *
+        * \~english
+        * The group chat.
+        */
+        Group,
+
+        /**
+        * \~chinese
+        * 聊天室。
+        *
+        * \~english
+        * The chat room.
+        */
+        Room,
+    };
+
+    /**
+    * \~chinese
+    * 消息方向枚举。
+    * 
+    * \~english
+    * The message directions.
+    */
+    public enum MessageDirection
+    {
+        /**
+        \~chinese 
+        * 该消息是当前用户发送出去的。
+        *
+        * \~english 
+        * This message is sent from the current user.
+        */
+        SEND,
+
+        /**
+        * \~chinese 
+        * 该消息是当前用户接收到的。 
+        * 
+        * \~english 
+        * The message is received by the current user.
+        */
+        RECEIVE,
+    };
+
+    /**
+     * \~chinese
+     *  消息的扩展属性类型的枚举。
+     *
+     *  \~english
+     *  The extension attribute types of messages.
+     */
+    public enum AttributeValueType : byte
+    {
+        /**
+         * \~chinese
+         *  布尔类型。
+         *
+         *  \~english
+         *  Bool.
+         */
+        BOOL = 0,
+
+        /**
+         * \~chinese
+         *  有符号的 32 位整型。
+         *
+         *  \~english
+         *  Signed 32-bit int.
+         */
+        INT32,
+
+        /**
+         * \~chinese
+         *  无符号的 32 位整型。
+         *
+         *  \~english
+         *  Unsigned 32-bit int.
+         */
+        UINT32,
+
+        /**
+         * \~chinese
+         *  有符号的 64 位整型。
+         *
+         *  \~english
+         *  Signed 64-bit int.
+         */
+        INT64,
+
+        /**
+         * \~chinese
+         *  浮点类型。
+         *
+         *  \~english
+         *  Float.
+         */
+        FLOAT,
+
+        /**
+         * \~chinese
+         *  双精度类型。
+         *
+         *  \~english
+         *  Double.
+         */
+        DOUBLE,
+
+        /**
+         * \~chinese
+         *  字符串类型。
+         *
+         *  \~english
+         *  String.
+         */
+        STRING,
+        //STRVECTOR,
+        /**
+         * \~chinese
+         *  JSON 字符串类型。
+         *
+         *  \~english
+         *  JSON string.
+         */
+        JSONSTRING,
+        //ATTRIBUTEVALUE,
+        NULLOBJ
+    };
+
+    namespace MessageBody
+    {
+        /**
+        * \~chinese
+        * 消息下载状态枚举。
+        *
+        *\~english
+        * The message download status.
+        */
+        public enum DownLoadStatus
+        {
+            /**
+            * \~chinese
+            * 消息正在下载。
+            *
+            * \~english
+            * The message is being downloaded.
+            */
+            DOWNLOADING,
+
+            /**
+            * \~chinese
+            * 消息下载成功。
+            *
+            * \~english
+            * The message is successfully downloaded.
+            */
+            SUCCESS,
+
+            /**
+            * \~chinese
+            * 消息下载失败。
+            *
+            * \~english
+            * The message fails to be downloaded.
+            */
+            FAILED,
+
+            /**
+            * \~chinese
+            * 消息待下载。
+            *
+            * \~english
+            * The download is pending.
+            */
+            PENDING
+        };
     }
 }

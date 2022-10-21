@@ -10,10 +10,10 @@ namespace AgoraChat
         }
 
 
-        internal static string NativeGet(string manager, string method, SimpleJSON.JSONNode json)
+        internal static string NativeGet(string manager, string method, SimpleJSON.JSONNode json, string callbackId = null)
         {
             StringBuilder sbuilder = new StringBuilder(512);
-            _NativeGet(manager, method, json.ToString(), sbuilder);
+            _NativeGet(manager, method, json.ToString(), sbuilder, callbackId);
             return sbuilder.ToString();
         }
 
@@ -30,6 +30,6 @@ namespace AgoraChat
 
 
         [DllImport("ChatCWrapper")]
-        private extern static int _NativeGet(string manager, string method, string jsonString = null, [Out, MarshalAs(UnmanagedType.LPTStr)] StringBuilder buf = null);
+        private extern static int _NativeGet(string manager, string method, string jsonString = null, [Out, MarshalAs(UnmanagedType.LPTStr)] StringBuilder buf = null, string callbackId = null);
     }
 }

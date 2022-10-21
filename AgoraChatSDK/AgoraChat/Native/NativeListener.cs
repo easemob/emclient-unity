@@ -97,6 +97,10 @@ namespace AgoraChat
                     {
                         callbackManager.CallAction(method, jsonString);
                     }
+                    else if (listener == "callbackProgress")
+                    {
+                        callbackManager.CallActionProgress(method, jsonString);
+                    }
                 });
             };
         }

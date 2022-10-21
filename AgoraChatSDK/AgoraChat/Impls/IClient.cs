@@ -1,4 +1,7 @@
-﻿namespace AgoraChat
+﻿using AgoraChat.SimpleJSON;
+using System;
+
+namespace AgoraChat
 {
     internal class IClient
     {
@@ -17,6 +20,8 @@
 
         private CallbackManager callbackManager;
 
+        internal string NAME_CLIENT = "Client";
+
         internal IClient() 
         {
             // 将 listener 和 native 挂钩
@@ -33,6 +38,23 @@
             conversationManager = new ConversationManager();
             messageManager = new MessageManager();
 
+        }
+
+        internal void InitWithOptions(Options options)
+        {
+            JSONObject jo = options.ToJsonObject();
+            CWrapperNative.NativeCall(NAME_CLIENT, "initWithOptions", jo, null);
+        }
+
+        internal void Login(string username, string pwdOrToken, bool isToken = false, CallBack handle = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.Add("username", username);
+            jo_param.Add("pwdOrToken", pwdOrToken);
+            jo_param.Add("isToken", isToken);
+
+            callbackManager.AddCallbackAction<int>(handle, null, null);
+            CWrapperNative.NativeCall(NAME_CLIENT, "login", jo_param, (null != handle) ? handle.callbackId : null);
         }
 
         internal void CleanUp() 

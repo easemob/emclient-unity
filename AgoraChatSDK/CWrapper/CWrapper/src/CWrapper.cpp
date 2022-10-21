@@ -59,10 +59,10 @@ HYPHENATE_API void _NativeCall(const char* manager, const char* method, const ch
 #endif
 }
 
-HYPHENATE_API int  _NativeGet(const char* manager, const char* method, const char* jstr, char* buf)
+HYPHENATE_API int  _NativeGet(const char* manager, const char* method, const char* jstr, char* buf, const char* cbid)
 {
 #if defined(_WIN32)
-	return NativeGet_Common(manager, method, jstr, buf);
+	return NativeGet_Common(manager, method, jstr, buf, cbid);
 
 #elif defined(__APPLE__)
 	return NativeGet_IOS(manager, method, jstr, buf);

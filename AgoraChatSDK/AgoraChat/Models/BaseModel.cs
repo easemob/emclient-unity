@@ -1,31 +1,29 @@
-﻿namespace AgoraChat
+﻿using AgoraChat.SimpleJSON;
+
+namespace AgoraChat
 {
     public abstract class BaseModel
     {
-
         internal BaseModel() { }
 
-        internal BaseModel(string jsonString)
+        internal BaseModel(string json)
         {
-            if (jsonString.Length > 0)
+            if (json.Length > 0)
             {
-                SimpleJSON.JSONNode jn = SimpleJSON.JSON.Parse(jsonString);
-                if (jn.IsObject) {
+                JSONNode jn = JSON.Parse(json);
+                if (jn.IsObject)
+                {
                     FromJsonObject(jn.AsObject);
                 }
             }
         }
 
-        internal BaseModel(SimpleJSON.JSONObject jsonObject)
+        internal BaseModel(JSONObject jo)
         {
-            FromJsonObject(jsonObject);
+            FromJsonObject(jo);
         }
 
-        internal abstract void FromJsonObject(SimpleJSON.JSONObject jsonObject);
-    }
-
-    public interface ToJsonInterface
-    {
-        SimpleJSON.JSONObject ToJson();
+        internal abstract void FromJsonObject(JSONObject jo);
+        internal abstract JSONObject ToJsonObject();
     }
 }
