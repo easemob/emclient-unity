@@ -15,4 +15,6 @@
 
 #endif
 
+std::string GetUTF8FromUnicode(const char* src);
+
 #endif

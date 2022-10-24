@@ -38,6 +38,8 @@ namespace AgoraChat
             conversationManager = new ConversationManager();
             messageManager = new MessageManager();
 
+            callbackManager = nativeListener.callbackManager;
+
         }
 
         internal void InitWithOptions(Options options)
@@ -46,15 +48,24 @@ namespace AgoraChat
             CWrapperNative.NativeCall(NAME_CLIENT, "initWithOptions", jo, null);
         }
 
-        internal void Login(string username, string pwdOrToken, bool isToken = false, CallBack handle = null)
+        internal void Login(string username, string pwdOrToken, bool isToken = false, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("username", username);
-            jo_param.Add("pwdOrToken", pwdOrToken);
+            jo_param.Add("username", username ?? "");
+            jo_param.Add("pwdOrToken", pwdOrToken ?? "");
             jo_param.Add("isToken", isToken);
 
-            callbackManager.AddCallbackAction<int>(handle, null, null);
-            CWrapperNative.NativeCall(NAME_CLIENT, "login", jo_param, (null != handle) ? handle.callbackId : null);
+            callbackManager.AddCallbackAction<Object>(callback, null);
+            CWrapperNative.NativeCall(NAME_CLIENT, "login", jo_param, (null != callback) ? callback.callbackId : "");
+        }
+
+        internal void Logout(bool unbindDeviceToken, CallBack callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.Add("unbindDeviceToken", unbindDeviceToken);
+
+            callbackManager.AddCallbackAction<Object>(callback, null);
+            CWrapperNative.NativeCall(NAME_CLIENT, "logout", jo_param, (null != callback) ? callback.callbackId : "");
         }
 
         internal void CleanUp() 

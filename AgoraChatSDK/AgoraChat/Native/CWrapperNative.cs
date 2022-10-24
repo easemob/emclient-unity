@@ -14,7 +14,7 @@ namespace AgoraChat
         {
             StringBuilder sbuilder = new StringBuilder(512);
             _NativeGet(manager, method, json.ToString(), sbuilder, callbackId);
-            return sbuilder.ToString();
+            return Tools.GetUnicodeStringFromUTF8(sbuilder.ToString());
         }
 
 
@@ -26,10 +26,10 @@ namespace AgoraChat
         internal static extern void CleanListener();
 
         [DllImport("ChatCWrapper")]
-        private extern static void _NativeCall(string manager, string method, string jsonString = null, string callbackId = null);
+        private extern static void _NativeCall(string manager, string method, [In, MarshalAs(UnmanagedType.LPTStr)] string jsonString = null, string callbackId = null);
 
 
         [DllImport("ChatCWrapper")]
-        private extern static int _NativeGet(string manager, string method, string jsonString = null, [Out, MarshalAs(UnmanagedType.LPTStr)] StringBuilder buf = null, string callbackId = null);
+        private extern static int _NativeGet(string manager, string method, [In, MarshalAs(UnmanagedType.LPTStr)] string jsonString = null, [Out, MarshalAs(UnmanagedType.LPTStr)] StringBuilder buf = null, string callbackId = null);
     }
 }
