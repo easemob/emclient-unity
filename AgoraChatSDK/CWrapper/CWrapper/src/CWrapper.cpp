@@ -13,11 +13,8 @@ HYPHENATE_API void AddListener(NativeListenerEvent cb)
 #elif defined(__APPLE__)
 	AddListener_IOS(gCallback);
 
-#elif defined(__ANDROID__) || defined(__linux__)
-	AddListener_Andriod(gCallback);
-
 #else
-	AddListener_Common(gCallback);
+	AddListener_Common((void*)gCallback);
 
 #endif
 
@@ -33,9 +30,6 @@ HYPHENATE_API void CleanListener()
 #elif defined(__APPLE__)
 	CleanListener_IOS();
 
-#elif defined(__ANDROID__) || defined(__linux__)
-	CleanListener_Andriod();
-
 #else
 	CleanListener_Common();
 
@@ -50,9 +44,6 @@ HYPHENATE_API void _NativeCall(const char* manager, const char* method, const ch
 #elif defined(__APPLE__)
 	NativeCall_IOS(manager, method, jstr, cbid);
 
-#elif defined(__ANDROID__) || defined(__linux__)
-	NativeCall_Andriod(manager, method, jstr, cbid);
-
 #else
 	NativeCall_Common(manager, method, jstr, cbid);
 
@@ -66,10 +57,6 @@ HYPHENATE_API int  _NativeGet(const char* manager, const char* method, const cha
 
 #elif defined(__APPLE__)
 	return NativeGet_IOS(manager, method, jstr, buf);
-
-#elif defined(__ANDROID__) || defined(__linux__)
-	return NativeGet_Andriod(manager, method, jstr, buf);
-
 #else
 	return NativeGet_Common(manager, method, jstr, buf);
 

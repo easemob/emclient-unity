@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AgoraChat.SimpleJSON;
 namespace AgoraChat
 {
@@ -49,6 +50,13 @@ namespace AgoraChat
                 }
             }
             return dict;
+        }
+    }
+
+    public static class BaseModel
+    {
+        public static T FromJson<T>(JSONObject jsonObject) {
+            return (T)Activator.CreateInstance(typeof(T), jsonObject);
         }
     }
 }

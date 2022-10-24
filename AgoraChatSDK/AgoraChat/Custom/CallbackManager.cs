@@ -29,6 +29,15 @@ namespace AgoraChat
                 callbackMap.Remove(callbackId); // delete the callback after triggered
             }
         }
+
+        public void MsgCallAction(string callbackId, string jsonString) {
+            CallbackItem item = callbackMap[callbackId];
+            if (item != null)
+            {
+                item.callbackAction(jsonString, item.callback);
+                callbackMap.Remove(callbackId); // delete the callback after triggered
+            }
+        }
     }
 
     internal class CallbackItem {

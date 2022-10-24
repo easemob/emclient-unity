@@ -1,4 +1,4 @@
-﻿using AgoraChat.SimpleJSON;
+using AgoraChat.SimpleJSON;
 using System;
 using System.Runtime.InteropServices;
 
