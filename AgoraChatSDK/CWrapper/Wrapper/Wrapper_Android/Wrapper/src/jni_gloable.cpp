@@ -5,6 +5,7 @@
 #include "jni_native.h"
 
 
+
 using namespace std;
 using namespace wrapper_jni;
 
@@ -79,7 +80,7 @@ namespace wrapper_jni {
         return (*env).FindClass("com/hyphenate/javawrapper/JavaWrapper");
     }
 
-    string get_Common(const char* manager, const char* method, const char* jstr, const char* cbid)
+    int get_Common(const char* manager, const char* method, const char* jstr, char* buf, const char* cbid)
     {
         JNIEnv* env = getCurrentThreadEnv();
         jobject jObj = javaWrapper();
@@ -92,7 +93,9 @@ namespace wrapper_jni {
         jobject j4 = getJStringObject(env, cbid);
 
         jstring javaString = (jstring)(*env).CallObjectMethod(jObj, get_method, j1, j2, j3, j4);
-        return extractJString(env, javaString);
+        string str = extractJString(env, javaString);
+        memcpy(buf, str.c_str(), str.size() + 1);
+        return 0;
     }
 
     void call_Common(const char* manager, const char* method, const char* jstr, const char* cbid) {

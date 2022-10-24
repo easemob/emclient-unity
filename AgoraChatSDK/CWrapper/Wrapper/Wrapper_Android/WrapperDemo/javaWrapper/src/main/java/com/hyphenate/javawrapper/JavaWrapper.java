@@ -4,6 +4,7 @@ public  class JavaWrapper {
 
     // 用于存储nativeListener 的指针,并不在java层调用，由cWrapper进行管理，当调用callNativeListener时，去cWrapper里通过JavaWrapper获取，并转换。
     long nativeListener = 0;
+    Integer value = 100;
 
     static {
         System.loadLibrary("CWrapper");
@@ -19,8 +20,9 @@ public  class JavaWrapper {
     }
 
     public String nativeGet(String manager, String method, String jsonString, String cid) {
-        System.out.println("manager: " + manager + " method: " + method + "js: " + jsonString + "cid: " + cid);
-        return "100";
+        String str = "你好" + (value++).toString();
+        System.out.println("manager: " + manager + " method: " + method + "js: " + jsonString + "cid: " + cid + "  " + str);
+        return str;
     }
 
     static public JavaWrapper share() {
