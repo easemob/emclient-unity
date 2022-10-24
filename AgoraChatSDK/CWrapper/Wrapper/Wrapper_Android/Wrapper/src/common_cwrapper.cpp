@@ -10,7 +10,6 @@
 using namespace std;
 using namespace wrapper_jni;
 
-NativeListenerEvent gCallback;
 
 void AddListener_Common(void* callback_handle)
 {

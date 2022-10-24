@@ -58,7 +58,7 @@ HYPHENATE_API int  _NativeGet(const char* manager, const char* method, const cha
 #elif defined(__APPLE__)
 	return NativeGet_IOS(manager, method, jstr, buf);
 #else
-	return NativeGet_Common(manager, method, jstr, buf);
+	return NativeGet_Common(manager, method, jstr, buf, cbid);
 
 #endif
 }
