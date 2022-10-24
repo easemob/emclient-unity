@@ -68,8 +68,8 @@ namespace wrapper_jni {
         if(wrapperJObj == NULL) {
             JNIEnv *env = getCurrentThreadEnv();
             jclass cls = (*env).FindClass("com/hyphenate/javawrapper/JavaWrapper");
-            jmethodID mid = (*env).GetStaticMethodID(cls,"share","()Lcom/hyphenate/javawrapper/JavaWrapper;");
-            jobject jobj = (*env).CallStaticObjectMethod(cls, mid);
+            jmethodID mid = (*env).GetStaticMethodID(cls,"wrapper","(I)Lcom/hyphenate/javawrapper/EMChannel;");
+            jobject jobj = (*env).CallStaticObjectMethod(cls, mid, 0);
             wrapperJObj = (*env).NewGlobalRef(jobj);
         }
         return wrapperJObj;
@@ -77,7 +77,7 @@ namespace wrapper_jni {
 
     jclass javaWrapperClass() {
         JNIEnv *env = getCurrentThreadEnv();
-        return (*env).FindClass("com/hyphenate/javawrapper/JavaWrapper");
+        return (*env).FindClass("com/hyphenate/javawrapper/EMChannel");
     }
 
     int get_Common(const char* manager, const char* method, const char* jstr, char* buf, const char* cbid)

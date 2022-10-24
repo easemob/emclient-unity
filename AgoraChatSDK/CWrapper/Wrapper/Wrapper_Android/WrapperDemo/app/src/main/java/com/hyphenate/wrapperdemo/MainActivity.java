@@ -14,7 +14,6 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 
-import com.hyphenate.javawrapper.JavaWrapper;
 import com.hyphenate.wrapperdemo.databinding.ActivityMainBinding;
 
 import android.view.Menu;
@@ -37,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        JavaWrapper wrapper = JavaWrapper.share();
+//        JavaCWrapper wrapper = JavaCWrapper;
 
         String str = "a";
         binding.fab.setOnClickListener(new View.OnClickListener() {
