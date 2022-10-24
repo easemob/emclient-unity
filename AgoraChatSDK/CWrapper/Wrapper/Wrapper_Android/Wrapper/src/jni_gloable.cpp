@@ -95,6 +95,7 @@ namespace wrapper_jni {
         jstring javaString = (jstring)(*env).CallObjectMethod(jObj, get_method, j1, j2, j3, j4);
         string str = extractJString(env, javaString);
         memcpy(buf, str.c_str(), str.size() + 1);
+        buf[str.size()] = '\0';
         return 0;
     }
 
