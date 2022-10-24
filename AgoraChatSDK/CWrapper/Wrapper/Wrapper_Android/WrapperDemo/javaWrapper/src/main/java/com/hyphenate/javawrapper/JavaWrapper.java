@@ -1,6 +1,6 @@
 package com.hyphenate.javawrapper;
 
-public class JavaWrapper implements JavaWrapperInterface {
+public class JavaWrapper {
 
     // 用于存储nativeListener 的指针,并不在java层调用，由cWrapper进行管理，当调用callNativeListener时，去cWrapper里通过JavaWrapper获取，并转换。
     long nativeListener = 0;
