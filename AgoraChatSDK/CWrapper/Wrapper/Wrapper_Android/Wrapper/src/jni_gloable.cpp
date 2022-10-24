@@ -123,6 +123,17 @@ namespace wrapper_jni {
             (*env).SetLongField(jObj, fidNativeListener, (long)listener);
         }
     }
+
+    void clear_listener(){
+        JNIEnv *env = getCurrentThreadEnv();
+        jclass cls = javaWrapperClass();
+        jobject jObj = javaWrapper();
+        jfieldID fidNativeListener = (*env).GetFieldID(cls, "nativeListener", "J");
+        if (fidNativeListener != NULL)
+        {
+            (*env).SetLongField(jObj, fidNativeListener, 0);
+        }
+    }
 }
 
 

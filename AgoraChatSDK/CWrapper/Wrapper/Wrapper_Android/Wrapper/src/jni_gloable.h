@@ -14,4 +14,5 @@ namespace wrapper_jni {
     int get_Common(const char* manager, const char* method, const char* jstr, char* buf, const char* cbid);
     void call_Common(const char* manager, const char* method, const char* jstr, const char* cbid);
     void add_listener(void *listener);
+    void clear_listener();
 }

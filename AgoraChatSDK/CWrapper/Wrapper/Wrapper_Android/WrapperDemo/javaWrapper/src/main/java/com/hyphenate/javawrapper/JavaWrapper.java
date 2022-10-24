@@ -16,7 +16,7 @@ public class JavaWrapper implements JavaWrapperInterface {
 
     public void nativeCall(String manager, String method, String jsonString, String cid) {
 //        System.out.println("manager: " + manager + " method: " + method + "js: " + jsonString + "cid: " + cid);
-        callListener("test", "method","js");
+//        callListener("test", "method","js");
     }
 
     public String nativeGet(String manager, String method, String jsonString, String cid) {

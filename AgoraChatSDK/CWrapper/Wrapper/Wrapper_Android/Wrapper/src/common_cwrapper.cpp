@@ -18,7 +18,7 @@ void AddListener_Common(void* callback_handle)
 
 void CleanListener_Common()
 {
-
+  wrapper_jni::clear_listener();
 }
 
 void NativeCall_Common(const char* manager, const char* method, const char* jstr, const char* cbid)
