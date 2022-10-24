@@ -8,22 +8,24 @@
 extern EMClient* gClient;
 extern NativeListenerEvent gCallback;
 
-void CallBack(const char* method, const char* jstr)
+
+void CallBack(const char* listener, const char* method, const char* jstr)
 {
-    if (nullptr == method || strlen(method) == 0)
+    if (nullptr == listener || nullptr == method || strlen(method) == 0)
         return;
 
     if (gCallback)
-        gCallback(STRING_CALLBACK_LISTENER.c_str(), method, jstr);
+        gCallback(listener, method, jstr);
+}
+
+void CallBack(const char* method, const char* jstr)
+{
+    CallBack(STRING_CALLBACK_LISTENER.c_str(), method, jstr);
 }
 
 void CallBackProgress(const char* method, const char* jstr)
 {
-    if (nullptr == method || strlen(method) == 0)
-        return;
-
-    if (gCallback)
-        gCallback(STRING_CALLBACK_PROGRESS_LISTENER.c_str(), method, jstr);
+    CallBack(STRING_CALLBACK_PROGRESS_LISTENER.c_str(), method, jstr);
 }
 
 string JsonStringFromResult(const char* cbid, int process, int code, const char* desc, const char* jstr)

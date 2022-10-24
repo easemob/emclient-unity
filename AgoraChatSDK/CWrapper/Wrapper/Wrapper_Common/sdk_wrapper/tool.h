@@ -33,6 +33,7 @@ static T convertFromString(const std::string& from)
     return to;
 }
 
+void CallBack(const char* listener, const char* method, const char* jstr);
 void CallBack(const char* method, const char* jstr);
 void CallBackProgress(const char* method, const char* jstr);
 
