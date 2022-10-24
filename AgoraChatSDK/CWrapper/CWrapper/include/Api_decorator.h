@@ -22,15 +22,6 @@
 	#define AGORA_CALL
 	#define HYPHENATE_API __attribute__(visibility("default")) extern "C"
 
-#elif define(__ANDROID__) || defined(__linux__)
-
-	#define AGORA_CALL
-	#if defined(__ANDROID__) && defined(FEATURE_RTM_STANDALONE_SDK)
-		#define HYPHENATE_API extern "C"
-	#else
-		#define HYPHENATE_API __attribute__(visibility("default")) extern "C" 
-	#endif
-
 #else
 
 	#define AGORA_CALL

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AgoraChat.SimpleJSON;
 using AgoraChat.InternalSpace;
 using AgoraChat.MessageBody;
@@ -191,6 +192,13 @@ namespace AgoraChat
                 //return (T)Activator.CreateInstance(typeof(T), new object[] { true, json}); // work
                 //return (T)Activator.CreateInstance(typeof(T), jo); // NOT work
             }
+        }
+    }
+
+    public static class BaseModel
+    {
+        public static T FromJson<T>(JSONObject jsonObject) {
+            return (T)Activator.CreateInstance(typeof(T), jsonObject);
         }
     }
 }
