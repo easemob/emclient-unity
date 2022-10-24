@@ -94,9 +94,11 @@ namespace AgoraChat
          */
         public int gender = 0;
 
-        public UserInfo(string jsonString): base(jsonString) { }
+        internal UserInfo() { }
 
-        public UserInfo(JSONObject jsonObject) : base(jsonObject) { }
+        internal UserInfo(string jsonString): base(jsonString) { }
+
+        internal UserInfo(JSONObject jsonObject) : base(jsonObject) { }
 
         internal override void FromJsonObject(JSONObject jsonObject)
         {
@@ -144,6 +146,11 @@ namespace AgoraChat
             {
                 ext = jsonObject["ext"].Value;
             }
+        }
+
+        internal override JSONObject ToJsonObject()
+        {
+            return null;
         }
     }
 }

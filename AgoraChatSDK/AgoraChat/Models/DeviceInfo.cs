@@ -43,6 +43,8 @@ namespace AgoraChat
          */
         public string DeviceName { get; private set; }
 
+        internal DeviceInfo() { }
+
         internal DeviceInfo(string jsonString): base(jsonString) { }
 
         internal DeviceInfo(JSONObject jsonObject) : base(jsonObject) { }
@@ -52,6 +54,11 @@ namespace AgoraChat
             Resource = jsonObject["resource"];
             DeviceUUID = jsonObject["deviceUUID"];
             DeviceName = jsonObject["deviceName"];
+        }
+
+        internal override JSONObject ToJsonObject()
+        {
+            return null;
         }
     }
 }

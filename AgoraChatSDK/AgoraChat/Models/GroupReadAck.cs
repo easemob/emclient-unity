@@ -70,6 +70,8 @@ namespace AgoraChat
          */
         public long Timestamp { get; internal set; }
 
+        internal GroupReadAck() { }
+
         internal GroupReadAck(string jsonString):base(jsonString) { }
 
         internal GroupReadAck(JSONObject jsonObject) : base(jsonObject) { }
@@ -82,6 +84,11 @@ namespace AgoraChat
             Content = jsonObject["content"];
             Count = jsonObject["count"].AsInt;
             Timestamp = jsonObject["timestamp"].AsInt;
+        }
+
+        internal override JSONObject ToJsonObject()
+        {
+            return null;
         }
     }
 }

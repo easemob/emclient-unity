@@ -2,7 +2,7 @@
 
 namespace AgoraChat
 {
-    public class GroupOptions: BaseModel, ToJsonInterface
+    public class GroupOptions: BaseModel
     {
         /**
          * \~chinese
@@ -73,11 +73,13 @@ namespace AgoraChat
             Ext = ext;
         }
 
-        public GroupOptions(string jsonString) : base(jsonString) { }
+        internal GroupOptions() { }
 
-        public GroupOptions(JSONObject jsonObject) : base(jsonObject) { }
+        internal GroupOptions(string jsonString) : base(jsonString) { }
 
-        JSONObject ToJsonInterface.ToJson()
+        internal GroupOptions(JSONObject jsonObject) : base(jsonObject) { }
+
+        internal override JSONObject ToJsonObject()
         {
             JSONObject jsonObject = new JSONObject();
             jsonObject.Add("style", (int)Style);

@@ -194,6 +194,7 @@ namespace AgoraChat
          */
         public GroupPermissionType PermissionType { get; internal set; }
 
+        internal Group() { }
 
         internal Group(string jsonString) : base(jsonString) { }
 
@@ -215,6 +216,11 @@ namespace AgoraChat
             IsAllMemberMuted = jsonObject["groupId"];
             Options = new GroupOptions(jsonObject["options"]);
             PermissionType = (GroupPermissionType)jsonObject["permissionType"].AsInt;
+        }
+
+        internal override JSONObject ToJsonObject()
+        {
+            return null;
         }
     }
 }

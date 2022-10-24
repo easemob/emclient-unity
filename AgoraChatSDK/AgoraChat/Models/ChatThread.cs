@@ -138,6 +138,8 @@ namespace AgoraChat
          */
         public Message LastMessage;
 
+        internal ChatThread() { }
+
         internal ChatThread(string jsonString) : base(jsonString) { }
 
         internal ChatThread(JSONObject jsonObject) : base(jsonObject) { }
@@ -152,6 +154,11 @@ namespace AgoraChat
             MessageCount = jsonObject["messageCount"].AsInt;
             CreateAt = jsonObject["createAt"].AsInt;
             LastMessage = new Message(jsonObject);
+        }
+
+        internal override JSONObject ToJsonObject()
+        {
+            return null;
         }
     }
 }

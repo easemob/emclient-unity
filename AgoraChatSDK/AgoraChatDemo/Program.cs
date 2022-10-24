@@ -1,5 +1,8 @@
 ﻿using System;
 using AgoraChat;
+using AgoraChat.InternalSpace;
+using AgoraChat.MessageBody;
+
 namespace AgoraChatDemo
 {
     class MainClass
@@ -10,25 +13,17 @@ namespace AgoraChatDemo
             var sdk = SDKClient.Instance;
 
             //TO-DO: need to remove, just for testing
-            Console.WriteLine("Press any key to test.");
-            Console.ReadKey();
-            SDKClient.Instance.TestCallBack("chatManagerListener", "hello method", "hello json");
+            Message img_msg1 = Message.CreateImageSendMessage("user", "\\d\\workspace", "image displayname", 2022, true, 125, 250);
+            string img_json = img_msg1.ToJson();
+            Message img_msg12 = MyJson.FromJson<Message>(img_json);
 
-            SDKClient.Instance.ChatManager.AddCallBack(new CallBack(
-                onSuccess: () => { Console.WriteLine("Callback success."); },
-                onProgress: (i) => { Console.WriteLine($"Callback progress.{i}"); },
-                onError: (i, desc) => { Console.WriteLine($"Callback error, code:{i}; desc:{desc}."); }
-            ));
-            SDKClient.Instance.TestCallBack("callback", "0", "error");
+            Message txt_msg1 = Message.CreateTextSendMessage("send_user", "send_content");
+            string txt_json = txt_msg1.ToJson();
+            Message txt_msg2 = MyJson.FromJson<Message>(txt_json);
 
-
-            SDKClient.Instance.ChatManager.Test_Call(new CallBack(
-                onSuccess: () => { Console.WriteLine("Test_Call success."); },
-                onProgress: (i) => { Console.WriteLine($"Test_Call progress.{i}"); },
-                onError: (i, desc) => { Console.WriteLine($"Test_Call error, code:{i}; desc:{desc}."); }
-            ));
-
-            SDKClient.Instance.ChatManager.Test_Get();
+            TextBody txt_bd1 = new TextBody("this is a text message");
+            string txt_bd_json = txt_bd1.ToJson();
+            TextBody txt_bd2 = MyJson.FromJson<TextBody>(txt_bd_json);
 
             Console.WriteLine("Press any key to end.");
             Console.ReadKey();

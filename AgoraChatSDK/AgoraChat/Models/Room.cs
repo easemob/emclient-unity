@@ -164,6 +164,8 @@ namespace AgoraChat
          */
         public RoomPermissionType PermissionType { get; internal set; }
 
+        internal Room() { }
+
         internal Room(string jsonString): base(jsonString) { }
 
         internal Room(JSONObject jsonObject) : base(jsonObject) { }
@@ -183,6 +185,11 @@ namespace AgoraChat
             Owner = jsonObject["owner"].Value;
             IsAllMemberMuted = jsonObject["isAllMemberMuted"].AsBool;
             PermissionType = (RoomPermissionType)jsonObject["permissionType"].AsInt;
+        }
+
+        internal override JSONObject ToJsonObject()
+        {
+            return null;
         }
     }
 }
