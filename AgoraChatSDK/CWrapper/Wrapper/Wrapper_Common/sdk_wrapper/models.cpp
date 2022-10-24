@@ -570,16 +570,17 @@ namespace sdk_wrapper
     EMMessageBodyPtr Message::BodyFromJsonObject(const Value& jnode)
     {
         if (jnode.IsNull()) return nullptr;
-        if (jnode["BodyType"].IsNull() || !jnode["BodyType"].IsString()) return nullptr;
-        if (jnode["Body"].IsNull() || !jnode["Body"].IsString()) return nullptr;
+        if (!jnode.HasMember("bodyType") || !jnode.HasMember("body")) return nullptr;
+
+        if (!jnode["bodyType"].IsString() || !jnode["body"].IsString()) return nullptr;
 
         //Body type must have and must be string
-        EMMessageBody::EMMessageBodyType btype = BodyTypeFromString(jnode["BodyType"].GetString());
+        EMMessageBody::EMMessageBodyType btype = BodyTypeFromString(jnode["bodyType"].GetString());
 
         EMMessageBodyPtr bodyptr = nullptr;
 
         Document d;
-        d.Parse(jnode["Body"].GetString());
+        d.Parse(jnode["body"].GetString());
         if (d.HasParseError()) return nullptr;
 
         const Value& body = d;
@@ -1275,7 +1276,7 @@ namespace sdk_wrapper
 
     void AttributesValue::SetMessageAttr(EMMessagePtr msg, string& key, const Value& jnode)
     {
-        if (nullptr == msg || key.length() == 0 || jnode.IsNull())
+        if (nullptr == msg || key.length() == 0)
             return;
 
         if (!jnode.HasMember("type") || !jnode["type"].IsString()) return;
@@ -1359,7 +1360,7 @@ namespace sdk_wrapper
 
     void AttributesValue::SetMessageAttrs(EMMessagePtr msg, const Value & jnode)
     {
-        if (nullptr == msg || jnode.IsNull()) return;
+        if (nullptr == msg) return;
 
         for (auto iter = jnode.MemberBegin(); iter != jnode.MemberEnd(); ++iter) {
 

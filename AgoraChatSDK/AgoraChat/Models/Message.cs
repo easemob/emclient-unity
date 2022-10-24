@@ -13,7 +13,7 @@ namespace AgoraChat
          * \~english
          * The message ID.
          */
-        public string MsgId = ((long)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalMilliseconds)).ToString();
+        public string MsgId = ((long)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalMilliseconds) + Tools.GetRandom()).ToString();
 
         /**
          * \~chinese

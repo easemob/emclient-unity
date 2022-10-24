@@ -189,9 +189,15 @@ namespace AgoraChat
                 return "txt";
             }
 
-            internal TextBody(bool is_json, string jsonString) : base(jsonString) { }
+            internal TextBody(bool is_json, string jsonString) : base(jsonString)
+            {
+                Type = MessageBodyType.TXT;
+            }
 
-            internal TextBody(JSONObject jsonObject) : base(jsonObject) { }
+            internal TextBody(JSONObject jsonObject) : base(jsonObject)
+            {
+                Type = MessageBodyType.TXT;
+            }
 
             internal override void FromJsonObject(JSONObject jo)
             {
@@ -289,9 +295,15 @@ namespace AgoraChat
                 return "loc";
             }
 
-            internal LocationBody(string jsonString) : base(jsonString) { }
+            internal LocationBody(string jsonString) : base(jsonString)
+            {
+                Type = MessageBodyType.LOCATION;
+            }
 
-            internal LocationBody(JSONObject jsonObject) : base(jsonObject) { }
+            internal LocationBody(JSONObject jsonObject) : base(jsonObject)
+            {
+                Type = MessageBodyType.LOCATION;
+            }
 
             internal override void FromJsonObject(JSONObject jo)
             {
@@ -417,8 +429,14 @@ namespace AgoraChat
                 Type = MessageBodyType.FILE;
             }
 
-            internal FileBody(string json) : base(json) { }
-            internal FileBody(JSONObject jo) : base(jo) { }
+            internal FileBody(string json) : base(json)
+            {
+                Type = MessageBodyType.FILE;
+            }
+            internal FileBody(JSONObject jo) : base(jo)
+            {
+                Type = MessageBodyType.FILE;
+            }
 
             internal override JSONObject ToJsonObject()
             {
@@ -573,8 +591,14 @@ namespace AgoraChat
                 Type = MessageBodyType.IMAGE;
             }
 
-            internal ImageBody(string json) : base(json) { }
-            internal ImageBody(JSONObject jo) : base(jo) { }
+            internal ImageBody(string json) : base(json)
+            {
+                Type = MessageBodyType.IMAGE;
+            }
+            internal ImageBody(JSONObject jo) : base(jo)
+            {
+                Type = MessageBodyType.IMAGE;
+            }
 
             internal override JSONObject ToJsonObject()
             {
@@ -689,8 +713,14 @@ namespace AgoraChat
                 Type = MessageBodyType.VOICE;
             }
 
-            internal VoiceBody(string json) : base(json) { }
-            internal VoiceBody(JSONObject jo) : base(jo) { }
+            internal VoiceBody(string json) : base(json)
+            {
+                Type = MessageBodyType.VOICE;
+            }
+            internal VoiceBody(JSONObject jo) : base(jo)
+            {
+                Type = MessageBodyType.VOICE;
+            }
 
             internal override JSONObject ToJsonObject()
             {
@@ -829,8 +859,14 @@ namespace AgoraChat
                 Type = MessageBodyType.VIDEO;
             }
 
-            internal VideoBody(string json) : base(json) { }
-            internal VideoBody(JSONObject jo) : base(jo) { }
+            internal VideoBody(string json) : base(json)
+            {
+                Type = MessageBodyType.VIDEO;
+            }
+            internal VideoBody(JSONObject jo) : base(jo)
+            {
+                Type = MessageBodyType.VIDEO;
+            }
 
             internal override JSONObject ToJsonObject()
             {
@@ -956,8 +992,14 @@ namespace AgoraChat
                 Type = MessageBodyType.CMD;
             }
 
-            internal CmdBody(string json) : base(json) { }
-            internal CmdBody(JSONObject jo) : base(jo) { }
+            internal CmdBody(string json) : base(json)
+            {
+                Type = MessageBodyType.CMD;
+            }
+            internal CmdBody(JSONObject jo) : base(jo)
+            {
+                Type = MessageBodyType.CMD;
+            }
 
             internal override JSONObject ToJsonObject()
             {
@@ -1041,8 +1083,14 @@ namespace AgoraChat
                 Type = MessageBodyType.CUSTOM;
             }
 
-            internal CustomBody(string json) : base(json) { }
-            internal CustomBody(JSONObject jo) : base(jo) { }
+            internal CustomBody(string json) : base(json)
+            {
+                Type = MessageBodyType.CUSTOM;
+            }
+            internal CustomBody(JSONObject jo) : base(jo)
+            {
+                Type = MessageBodyType.CUSTOM;
+            }
 
             internal override JSONObject ToJsonObject()
             {
