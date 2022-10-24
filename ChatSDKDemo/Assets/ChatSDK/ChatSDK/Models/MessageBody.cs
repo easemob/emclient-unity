@@ -270,6 +270,7 @@ namespace ChatSDK
                 Type = MessageBodyType.TXT;
             }
 
+
             internal TextBody() {
                 Type = MessageBodyType.TXT;
             }

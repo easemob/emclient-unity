@@ -95,7 +95,6 @@ namespace AgoraChat
             if (item != null)
             {
                 item.callbackAction(jsonString, item.parse, item.process, item.callback);
-            }
         }
     }
 

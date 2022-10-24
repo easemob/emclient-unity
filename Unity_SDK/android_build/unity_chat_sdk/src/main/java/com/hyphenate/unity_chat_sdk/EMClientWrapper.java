@@ -24,7 +24,7 @@ import util.EMSDKMethod;
 
 public class EMClientWrapper extends EMWrapper {
 
-    static public EMClientWrapper wrapper() {
+    static public  wrapper() {
         return new EMClientWrapper();
     }
 
