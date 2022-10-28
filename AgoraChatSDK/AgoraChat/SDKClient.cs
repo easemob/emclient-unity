@@ -272,6 +272,40 @@
             _clientImpl.Logout(unbindDeviceToken, handle);
         }
 
+        /**
+		 * \~chinese
+		 * 注册连接状态监听器。
+		 *
+		 * @param connectionDelegate 		要注册的连接状态监听器，继承自 {@link IConnectionDelegate}。
+		 *
+		 * \~english
+		 * Adds a connection status listener.
+		 *
+		 * @param connectionDelegate 		The connection status listener to add. It is inherited from {@link IConnectionDelegate}.
+		 *
+		 */
+        public void AddConnectionDelegate(IConnectionDelegate connectionDelegate)
+        {
+            _clientImpl.AddConnectionDelegate(connectionDelegate);
+        }
+
+        /**
+		 * \~chinese
+		 * 移除添加连接状态监听器。
+		 *
+		 * @param connectionDelegate 		要移除的连接状态监听器，继承自 {@link IConnectionDelegate}。
+		 *
+		 * \~english
+		 * Removes a connection status listener.
+		 *
+		 * @param connectionDelegate 		The connection status listener to remove. It is inherited from {@link IConnectionDelegate}.
+		 *
+		 */
+        internal void DeleteConnectionDelegate(IConnectionDelegate connectionDelegate)
+        {
+            _clientImpl.DeleteConnectionDelegate(connectionDelegate);
+        }
+
         public void DeInit()
         {
             _clientImpl.CleanUp();

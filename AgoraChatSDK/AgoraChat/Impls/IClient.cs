@@ -1,5 +1,6 @@
 ﻿using AgoraChat.SimpleJSON;
 using System;
+using System.Collections.Generic;
 
 namespace AgoraChat
 {
@@ -14,13 +15,13 @@ namespace AgoraChat
         public PresenceManager presenceManager;
         public ChatThreadManager chatThreadManager;
         public UserInfoManager userInfoManager;
-
         public ConversationManager conversationManager;
         public MessageManager messageManager;
 
         private CallbackManager callbackManager;
 
         internal string NAME_CLIENT = "Client";
+        internal List<IConnectionDelegate> delegater;
 
         internal IClient() 
         {
@@ -34,12 +35,13 @@ namespace AgoraChat
             presenceManager = new PresenceManager(nativeListener);
             chatThreadManager = new ChatThreadManager(nativeListener);
             userInfoManager = new UserInfoManager();
-
             conversationManager = new ConversationManager();
             messageManager = new MessageManager();
 
             callbackManager = nativeListener.callbackManager;
+            delegater = new List<IConnectionDelegate>();
 
+            nativeListener.connectionEvent += NativeEventHandle;
         }
 
         internal void InitWithOptions(Options options)
@@ -71,6 +73,59 @@ namespace AgoraChat
         internal void CleanUp() 
         {
             nativeListener.RemoveNativeListener();
+        }
+
+
+        internal void AddConnectionDelegate(IConnectionDelegate connectionDelegate)
+        {
+            if (!delegater.Contains(connectionDelegate))
+            {
+                delegater.Add(connectionDelegate);
+            }
+        }
+
+        internal void DeleteConnectionDelegate(IConnectionDelegate connectionDelegate)
+        {
+            if (delegater.Contains(connectionDelegate))
+            {
+                delegater.Remove(connectionDelegate);
+            }
+        }
+
+        //TODO: add multi listener
+
+        internal void NativeEventHandle(string method, string jsonString)
+        {
+            if (delegater.Count == 0 || null == method || method.Length == 0) return;
+
+            if (method.CompareTo("OnConnected") == 0)
+            {
+                foreach (IConnectionDelegate it in delegater)
+                {
+                    it.OnConnected();
+                }
+            }
+            else if (method.CompareTo("OnDisconnected") == 0)
+            {
+                foreach (IConnectionDelegate it in delegater)
+                {
+                    it.OnDisconnected(int.Parse(jsonString));
+                }
+            }
+            else if (method.CompareTo("OnTokenExpired") == 0)
+            {
+                foreach (IConnectionDelegate it in delegater)
+                {
+                    it.OnTokenExpired();
+                }
+            }
+            else if (method.CompareTo("OnTokenExpired") == 0)
+            {
+                foreach (IConnectionDelegate it in delegater)
+                {
+                    it.OnTokenExpired();
+                }
+            }
         }
     }
 }

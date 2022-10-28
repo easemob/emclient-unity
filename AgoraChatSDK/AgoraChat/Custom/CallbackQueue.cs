@@ -15,7 +15,7 @@ namespace AgoraChat
     {
         private Queue<Action> queue = new Queue<Action>();
 
-        public void ClearQueue()
+        internal void ClearQueue()
         {
             lock(queue)
             {
@@ -23,7 +23,7 @@ namespace AgoraChat
             }
         }
 
-        public void EnQueue(Action action)
+        internal void EnQueue(Action action)
         {
             lock (queue)
             {
@@ -35,7 +35,7 @@ namespace AgoraChat
             }
         }
 
-        public Action DeQueue()
+        internal Action DeQueue()
         {
             Action action = null;
             lock (queue)
@@ -66,12 +66,12 @@ namespace AgoraChat
             return instance;
         }
 
-        public void EnQueue(Action action)
+        internal void EnQueue(Action action)
         {
             queue.EnQueue(action);
         }
 
-        public void StartRun()
+        internal void StartRun()
         {
             queue.ClearQueue();
             turn_on = true;
@@ -79,7 +79,7 @@ namespace AgoraChat
             worker.Start();
         }
 
-        public void Stop()
+        internal void Stop()
         {
             turn_on = false;
             queue.ClearQueue();
@@ -123,17 +123,17 @@ namespace AgoraChat
             return instance;
         }
 
-        public void EnQueue(Action action)
+        internal void EnQueue(Action action)
         {
             queue.EnQueue(action);
         }
 
-        public void StartRun()
+        internal void StartRun()
         {
             queue.ClearQueue();
         }
 
-        public void Stop()
+        internal void Stop()
         {
             queue.ClearQueue();
         }
@@ -184,17 +184,17 @@ namespace AgoraChat
             return instance;
         }
 
-        public void EnQueue(Action action)
+        internal void EnQueue(Action action)
         {
             callback_queue_.EnQueue(action);
         }
 
-        public void StartRun()
+        internal void StartRun()
         {
             callback_queue_.StartRun();
         }
 
-        public void Stop()
+        internal void Stop()
         {
             callback_queue_.Stop();
         }

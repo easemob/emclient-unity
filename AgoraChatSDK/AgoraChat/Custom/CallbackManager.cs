@@ -16,14 +16,14 @@ namespace AgoraChat
           
         }
 
-        public void AddCallback(CallBack callback, Action<string, Process, CallBack> action, Process process)
+        internal void AddCallback(CallBack callback, Action<string, Process, CallBack> action, Process process)
         {
             callback.callbackId = current_id.ToString();
             callbackMap[callback.callbackId] = new CallbackItem(callback, action, process);
             current_id++;
         }
 
-        public void AddCallbackAction<T>(CallBack callback, Process _process)
+        internal void AddCallbackAction<T>(CallBack callback, Process _process)
         {
             if (null == callback) return;
 
@@ -81,7 +81,7 @@ namespace AgoraChat
                 _process);
         }
 
-        public void CallAction(string callbackId, string jsonString) { 
+        internal void CallAction(string callbackId, string jsonString) { 
             CallbackItem item = callbackMap[callbackId];
             if(item != null)
             {
@@ -90,7 +90,7 @@ namespace AgoraChat
             }
         }
 
-        public void CallActionProgress(string callbackId, string jsonString)
+        internal void CallActionProgress(string callbackId, string jsonString)
         {
             CallbackItem item = callbackMap[callbackId];
             if (item != null)
@@ -101,11 +101,11 @@ namespace AgoraChat
     }
 
     internal class CallbackItem {
-        public CallBack callback;
-        public Action<string, Process, CallBack> callbackAction;
-         public Process process;
+        internal CallBack callback;
+        internal Action<string, Process, CallBack> callbackAction;
+        internal Process process;
 
-        public CallbackItem(CallBack callback, Action<string, Process, CallBack> callbackAction, Process process)
+        internal CallbackItem(CallBack callback, Action<string, Process, CallBack> callbackAction, Process process)
         {
             this.callback = callback;
             this.callbackAction = callbackAction;

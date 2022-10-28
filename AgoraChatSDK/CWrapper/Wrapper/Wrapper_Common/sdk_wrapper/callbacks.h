@@ -6,6 +6,7 @@
 
 #include "sdk_wrapper_internal.h"
 #include "models.h"
+#include "tool.h"
 
 extern NativeListenerEvent gCallback;
 
@@ -16,14 +17,12 @@ namespace sdk_wrapper {
     public:
         void onConnect(const std::string& info) override
         {
-            if (gCallback)
-                gCallback("connectionListener", "OnConnected", info.c_str());
+            CallBack(STRING_CLIENT_LISTENER.c_str(), "OnConnected", info.c_str());
         }
 
         void onDisconnect(EMErrorPtr error) override
         {
-            if (gCallback)
-                gCallback("connectionListener", "OnDisconnected", to_string(error->mErrorCode).c_str());
+            CallBack(STRING_CLIENT_LISTENER.c_str(), "OnDisconnected", to_string(error->mErrorCode).c_str());
         }
 
         void onPong() override
@@ -32,15 +31,12 @@ namespace sdk_wrapper {
 
         void onTokenNotification(EMErrorPtr error) override
         {
-            if (gCallback) {
-                if (EMError::TOKEN_EXPIRED == error->mErrorCode) {
-                    gCallback("connectionListener", "OnTokenExpired", to_string(error->mErrorCode).c_str());
-                }
-                else if (EMError::TOKEN_WILL_EXPIRE == error->mErrorCode) {
-                    gCallback("connectionListener", "OnTokenWillExpire", to_string(error->mErrorCode).c_str());
-                }
+            if (EMError::TOKEN_EXPIRED == error->mErrorCode) {
+                CallBack(STRING_CLIENT_LISTENER.c_str(), "OnTokenExpired", to_string(error->mErrorCode).c_str());
             }
-
+            else if (EMError::TOKEN_WILL_EXPIRE == error->mErrorCode) {
+                CallBack(STRING_CLIENT_LISTENER.c_str(), "OnTokenWillExpire", to_string(error->mErrorCode).c_str());
+            }
         }
     };
 
@@ -48,22 +44,18 @@ namespace sdk_wrapper {
     {
     public:
         void onReceiveMessages(const EMMessageList& messages) override {
-            if (gCallback) {
-                string json = Message::ToJson(messages);
-                if (json.size() > 0)
-                    gCallback("chatManagerListener", "OnMessageReceived", json.c_str());
-            }
+            string json = Message::ToJson(messages);
+            if (json.size() > 0)
+                CallBack(STRING_CHATMANAGER_LISTENER.c_str(), "OnMessagesReceived", json.c_str());
         }
 
         void onReceiveCmdMessages(const EMMessageList& messages) override {
         }
 
         void onReceiveHasReadAcks(const EMMessageList& messages) override {
-            if (gCallback) {
-                string json = Message::ToJson(messages);
-                if (json.size() > 0)
-                    gCallback("chatManagerListener", "OnMessageRead", json.c_str());
-            }
+            string json = Message::ToJson(messages);
+            if (json.size() > 0)
+                CallBack(STRING_CHATMANAGER_LISTENER.c_str(), "OnMessagesRead", json.c_str());
         }
 
         void onReceiveHasDeliveredAcks(const EMMessageList& messages) override {
