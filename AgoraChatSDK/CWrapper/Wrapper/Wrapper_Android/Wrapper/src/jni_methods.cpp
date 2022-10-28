@@ -10,7 +10,7 @@ using namespace wrapper_jni;
 extern "C" {
 #endif
 
-JNIEXPORT void JNICALL Java_com_hyphenate_javawrapper_JavaWrapper_callNativeListener(JNIEnv *, jobject, jstring listenerStr, jstring methodStr, jstring jsonStr)
+JNIEXPORT void JNICALL Java_com_hyphenate_javawrapper_channel_EMChannel_callListener(JNIEnv *, jobject, jstring listenerStr, jstring methodStr, jstring jsonStr)
 {
     jobject wrapperObj = javaWrapper();
     jclass cls = javaWrapperClass();

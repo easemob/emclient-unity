@@ -10,16 +10,13 @@
 using namespace std;
 using namespace wrapper_jni;
 
-NativeListenerEvent gCallback;
 
-void AddListener_Common(void* callback_handle)
-{
-  wrapper_jni::add_listener(callback_handle);
+void Init_Common(int sdkType, void* callback) {
+    wrapper_jni::init_common(sdkType, callback);
 }
 
-void CleanListener_Common()
-{
-
+void Uninit_Common() {
+    wrapper_jni::uninit_common();
 }
 
 void NativeCall_Common(const char* manager, const char* method, const char* jstr, const char* cbid)
@@ -31,7 +28,6 @@ int NativeGet_Common(const char* manager, const char* method,const char* jstr, c
 {
     return wrapper_jni::get_Common(manager, method, jstr, buf, cbid);
 }
-
 
 
 

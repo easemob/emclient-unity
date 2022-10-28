@@ -11,7 +11,9 @@ using namespace std;
 namespace wrapper_jni {
     jobject javaWrapper();
     jclass javaWrapperClass();
+
+    void init_common(int sdkType, void* listener);
+    void uninit_common();
     int get_Common(const char* manager, const char* method, const char* jstr, char* buf, const char* cbid);
     void call_Common(const char* manager, const char* method, const char* jstr, const char* cbid);
-    void add_listener(void *listener);
 }
