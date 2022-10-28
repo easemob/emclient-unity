@@ -15,6 +15,9 @@ jobject wrapperJObj = NULL;
 
 
 namespace wrapper_jni {
+
+
+
     JNIEnv* getCurrentThreadEnv()
     {
         JNIEnv *env = NULL;
@@ -65,19 +68,39 @@ namespace wrapper_jni {
     }
 
     jobject javaWrapper() {
-        if(wrapperJObj == NULL) {
-            JNIEnv *env = getCurrentThreadEnv();
-            jclass cls = (*env).FindClass("com/hyphenate/javawrapper/JavaWrapper");
-            jmethodID mid = (*env).GetStaticMethodID(cls,"wrapper","(I)Lcom/hyphenate/javawrapper/EMChannel;");
-            jobject jobj = (*env).CallStaticObjectMethod(cls, mid, 0);
-            wrapperJObj = (*env).NewGlobalRef(jobj);
-        }
         return wrapperJObj;
     }
 
     jclass javaWrapperClass() {
         JNIEnv *env = getCurrentThreadEnv();
-        return (*env).FindClass("com/hyphenate/javawrapper/EMChannel");
+        return (*env).FindClass("com/hyphenate/javawrapper/channel/EMChannel");
+    }
+
+    void init_common(int sdkType, void* listener) {
+        if(wrapperJObj == NULL) {
+            JNIEnv *env = getCurrentThreadEnv();
+            jclass cls = (*env).FindClass("com/hyphenate/javawrapper/JavaWrapper");
+            jmethodID mid = (*env).GetStaticMethodID(cls,"wrapper","(IJ)Lcom/hyphenate/javawrapper/channel/EMChannel;");
+            jobject jobj = (*env).CallStaticObjectMethod(cls, mid, sdkType, (long)listener);
+            if (jobj != NULL) 
+            {
+                wrapperJObj = (*env).NewGlobalRef(jobj);
+            }
+        }
+    }
+
+    void uninit_common() {
+        JNIEnv *env = getCurrentThreadEnv();
+        jclass cls = javaWrapperClass();
+        if(wrapperJObj != NULL) {
+            jfieldID fidNativeListener = (*env).GetFieldID(cls, "nativeListener", "J");
+            if (fidNativeListener != NULL)
+            {
+                (*env).SetLongField(wrapperJObj, fidNativeListener, 0);
+            }
+            (*env).DeleteGlobalRef(wrapperJObj);
+            wrapperJObj = NULL;
+        }
     }
 
     int get_Common(const char* manager, const char* method, const char* jstr, char* buf, const char* cbid)
@@ -113,27 +136,6 @@ namespace wrapper_jni {
         (*env).CallVoidMethod(jObj, call_method, j1, j2, j3, j4);
     }
 
-    void add_listener(void *listener) {
-        JNIEnv *env = getCurrentThreadEnv();
-        jclass cls = javaWrapperClass();
-        jobject jObj = javaWrapper();
-        jfieldID fidNativeListener = (*env).GetFieldID(cls, "nativeListener", "J");
-        if (fidNativeListener != NULL)
-        {
-            (*env).SetLongField(jObj, fidNativeListener, (long)listener);
-        }
-    }
-
-    void clear_listener(){
-        JNIEnv *env = getCurrentThreadEnv();
-        jclass cls = javaWrapperClass();
-        jobject jObj = javaWrapper();
-        jfieldID fidNativeListener = (*env).GetFieldID(cls, "nativeListener", "J");
-        if (fidNativeListener != NULL)
-        {
-            (*env).SetLongField(jObj, fidNativeListener, 0);
-        }
-    }
 }
 
 
