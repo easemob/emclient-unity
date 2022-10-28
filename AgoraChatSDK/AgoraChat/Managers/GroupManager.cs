@@ -1,4 +1,4 @@
-﻿namespace AgoraChat
+namespace AgoraChat
 {
     public class GroupManager
     {

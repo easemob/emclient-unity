@@ -1,27 +1,31 @@
 
 #include "emclient.h"
+#include "utils/emencryptutils.h"
+#include "utils/emutils.h"
 
 #include "tool.h"
 
 extern EMClient* gClient;
 extern NativeListenerEvent gCallback;
 
-void CallBack(const char* method, const char* jstr)
+
+void CallBack(const char* listener, const char* method, const char* jstr)
 {
-    if (nullptr == method || strlen(method) == 0)
+    if (nullptr == listener || nullptr == method || strlen(method) == 0)
         return;
 
     if (gCallback)
-        gCallback(STRING_CALLBACK_LISTENER.c_str(), method, jstr);
+        gCallback(listener, method, jstr);
+}
+
+void CallBack(const char* method, const char* jstr)
+{
+    CallBack(STRING_CALLBACK_LISTENER.c_str(), method, jstr);
 }
 
 void CallBackProgress(const char* method, const char* jstr)
 {
-    if (nullptr == method || strlen(method) == 0)
-        return;
-
-    if (gCallback)
-        gCallback(STRING_CALLBACK_PROGRESS_LISTENER.c_str(), method, jstr);
+    CallBack(STRING_CALLBACK_PROGRESS_LISTENER.c_str(), method, jstr);
 }
 
 string JsonStringFromResult(const char* cbid, int process, int code, const char* desc, const char* jstr)
@@ -70,34 +74,26 @@ string JsonStringFromResult(const char* cbid, int process, int code, const char*
 
 string JsonStringFromError(const char* cbid, int code, const char* desc)
 {
-    if (nullptr == cbid || strlen(cbid) == 0) return string();
-
     return JsonStringFromResult(cbid, -1, code, desc, nullptr);
 }
 
-string JsonStringFromErrorResult(const char* cbid, int code, const char* desc, const const char* jstr)
+string JsonStringFromErrorResult(const char* cbid, int code, const char* desc, const char* jstr)
 {
-    if (nullptr == cbid || strlen(cbid) == 0) return string();
-
     return JsonStringFromResult(cbid, -1, code, desc, jstr);
 }
 
 string JsonStringFromSuccess(const char* cbid)
 {
-    if (nullptr == cbid || strlen(cbid) == 0) return string();
-
     return JsonStringFromResult(cbid, -1, -1, nullptr, nullptr);
 }
 
 string JsonStringFromSuccessResult(const char* cbid, const char* jstr)
 {
-    if (nullptr == cbid || strlen(cbid) == 0) return string();
     return JsonStringFromResult(cbid, -1, -1, nullptr, jstr);
 }
 
 string JsonStringFromProcess(const char* cbid, int process)
 {
-    if (nullptr == cbid || strlen(cbid) == 0) return string();
     return JsonStringFromResult(cbid, process, -1, nullptr, nullptr);
 }
 

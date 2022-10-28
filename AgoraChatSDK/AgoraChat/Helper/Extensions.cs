@@ -47,6 +47,26 @@ namespace AgoraChat
             }
             return list;
         }
+
+        internal static List<Message> MessageListFromJson(string jsonString)
+        {
+            List<Message> list = new List<Message>();
+            if (jsonString == null || jsonString.Length == 0) return list;
+
+            JSONNode jsonArray = JSON.Parse(jsonString);
+            if (null != jsonArray && jsonArray.IsArray)
+            {
+                foreach (JSONNode it in jsonArray.AsArray)
+                {
+                    if (it.IsString)
+                    {
+                        Message conv = new Message(it.Value);
+                        list.Add(conv);
+                    }
+                }
+            }
+            return list;
+        }
     }
 
     internal static class Dictionary
@@ -192,13 +212,6 @@ namespace AgoraChat
                 //return (T)Activator.CreateInstance(typeof(T), new object[] { true, json}); // work
                 //return (T)Activator.CreateInstance(typeof(T), jo); // NOT work
             }
-        }
-    }
-
-    public static class BaseModel
-    {
-        public static T FromJson<T>(JSONObject jsonObject) {
-            return (T)Activator.CreateInstance(typeof(T), jsonObject);
         }
     }
 }

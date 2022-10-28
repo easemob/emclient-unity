@@ -152,7 +152,7 @@
          * The ID of the current login user.
          */
         //TODO
-        public string CurrentUsername { get => "test"; }
+        public string CurrentUsername { get => "yqtest"; }
 
         /**
          * \~chinese
@@ -210,6 +210,100 @@
         public void InitWithOptions(Options options)
         {
             _clientImpl.InitWithOptions(options);
+        }
+
+        /**
+         * \~chinese
+         * 使用密码或 token 登录服务器。
+         *
+         * 异步方法。
+         *
+         * @param username      用户 ID，必填。
+         * @param pwdOrToken    用户密码或者 token。 该参数必填。
+         * @param isToken       是否通过 token 登录。
+         *                      - `true`：通过 token 登录。
+         *                      - （默认） `false`：通过密码登录。
+         * @param handle        登录结果回调，详见 {@link CallBack}。
+         *
+         * \~english
+         * Logs in to the chat server with a password or token.
+         *
+         * This is an asynchronous method.
+         *
+         * @param username 		The user ID. Ensure that you set this parameter.
+         * @param pwdOrToken 	The password or token of the user. Ensure that you set this parameter.
+         * @param isToken       Whether to log in with a token or a password.
+         *                      - `true`：Log in with a token.
+         *                      - (Default) `false`：Log in with a password.
+         * @param handle 	    The login result callback. See {@link CallBack}.
+         *
+         */
+        public void Login(string username, string pwdOrToken, bool isToken = false, CallBack handle = null)
+        {
+            _clientImpl.Login(username, pwdOrToken, isToken, handle);
+        }
+
+        /**
+          * \~chinese
+          * 退出登录。
+          *
+          * 异步方法。
+          *
+          * @param unbindDeviceToken 退出时是否将设备与 token 解绑。该参数仅对移动平台有效。
+          *                           - `true`：是。
+          *                           - `false`：否。
+          *
+          * @param handle            退出结果回调，详见 {@link CallBack}。
+          *
+          * \~english
+          * Logs you out of the chat service.
+          *
+          * This is an asynchronous method.
+          *
+          * @param unbindToken Whether to unbind the device with the token upon logout. This parameter is valid only for mobile platforms.
+          * - `true`: Yes.
+          * - `false`: No.
+          *
+          * @param handle 	    The logout result callback. See {@link CallBack}.
+          *
+          */
+        public void Logout(bool unbindDeviceToken = true, CallBack handle = null)
+        {
+            _clientImpl.Logout(unbindDeviceToken, handle);
+        }
+
+        /**
+		 * \~chinese
+		 * 注册连接状态监听器。
+		 *
+		 * @param connectionDelegate 		要注册的连接状态监听器，继承自 {@link IConnectionDelegate}。
+		 *
+		 * \~english
+		 * Adds a connection status listener.
+		 *
+		 * @param connectionDelegate 		The connection status listener to add. It is inherited from {@link IConnectionDelegate}.
+		 *
+		 */
+        public void AddConnectionDelegate(IConnectionDelegate connectionDelegate)
+        {
+            _clientImpl.AddConnectionDelegate(connectionDelegate);
+        }
+
+        /**
+		 * \~chinese
+		 * 移除添加连接状态监听器。
+		 *
+		 * @param connectionDelegate 		要移除的连接状态监听器，继承自 {@link IConnectionDelegate}。
+		 *
+		 * \~english
+		 * Removes a connection status listener.
+		 *
+		 * @param connectionDelegate 		The connection status listener to remove. It is inherited from {@link IConnectionDelegate}.
+		 *
+		 */
+        internal void DeleteConnectionDelegate(IConnectionDelegate connectionDelegate)
+        {
+            _clientImpl.DeleteConnectionDelegate(connectionDelegate);
         }
 
         public void DeInit()

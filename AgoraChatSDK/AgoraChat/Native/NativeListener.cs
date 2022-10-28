@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace AgoraChat
 {
-    internal delegate void NativeListenerEvent(string listener, string method, [MarshalAs(UnmanagedType.LPTStr)] string jsonString);
+    internal delegate void NativeListenerEvent(string listener, string method, [In, MarshalAs(UnmanagedType.LPTStr)] string jsonString);
 
     internal delegate void ChatManagerHandle(string method, string jsonString);
 
@@ -61,45 +61,47 @@ namespace AgoraChat
             nativeListenerEvent = (string listener, string method, string jsonString) =>
             {
                 queue_worker.EnQueue(() => {
+                    string json = Tools.GetUnicodeStringFromUTF8(jsonString);
+
                     if (listener == "chatManagerListener")
                     {
-                        chatManagerEvent(method, jsonString);
+                        chatManagerEvent(method, json);
                     }
                     else if (listener == "contactManagerListener")
                     {
-                        contactManagerEvent(method, jsonString);
+                        contactManagerEvent(method, json);
                     }
                     else if (listener == "groupManagerListener")
                     {
-                        groupManagerEvent(method, jsonString);
+                        groupManagerEvent(method, json);
                     }
                     else if (listener == "roomManagerListener")
                     {
-                        roomManagerEvent(method, jsonString);
+                        roomManagerEvent(method, json);
                     }
                     else if (listener == "presenceManagerListener")
                     {
-                        presenceManagerEvent(method, jsonString);
+                        presenceManagerEvent(method, json);
                     }
                     else if (listener == "chatThreadManagerListener")
                     {
-                        chatThreadManagerEvent(method, jsonString);
+                        chatThreadManagerEvent(method, json);
                     }
                     else if (listener == "connectionListener")
                     {
-                        connectionEvent(method, jsonString);
+                        connectionEvent(method, json);
                     }
                     else if (listener == "multiDeviceListener")
                     {
-                        multiDeviceEvent(method, jsonString);
+                        multiDeviceEvent(method, json);
                     }
                     else if (listener == "callback")
                     {
-                        callbackManager.CallAction(method, jsonString);
+                        callbackManager.CallAction(method, json);
                     }
                     else if (listener == "callbackProgress")
                     {
-                        callbackManager.CallActionProgress(method, jsonString);
+                        callbackManager.CallActionProgress(method, json);
                     }
                 });
             };

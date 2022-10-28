@@ -55,33 +55,57 @@ bool CheckClientHandle()
 	return true;
 }
 
-void AddListener_Common(void* callback_handle)
+COMMON_WRAPPER_API void COMMON_WRAPPER_CALL AddListener_Common(void* callback_handle)
 {
 	//gCallback = (NativeListenerEvent)callback_handle;
 	AddListener_SDKWrapper(callback_handle);
 }
 
-void CleanListener_Common()
+COMMON_WRAPPER_API void COMMON_WRAPPER_CALL CleanListener_Common()
 {
 	//gCallback = nullptr;
 	CleanListener_SDKWrapper();
 }
 
-void NativeCall_Common(const char* manager, const char* method, const char* jstr, const char* cbid)
+COMMON_WRAPPER_API void COMMON_WRAPPER_CALL NativeCall_Common(const char* manager, const char* method, const char* jstr, const char* cbid)
 {
 	FUNC_CALL func = GetFuncHandle(manager, method);
 	if (nullptr != func) {
-		func(jstr, cbid, nullptr);
+		std::string json = GetUTF8FromUnicode(jstr);
+		func(json.c_str(), cbid, nullptr);
 		return;
 	}
 }
 
-int NativeGet_Common(const char* manager, const char* method, const char* jstr, char* buf, const char* cbid)
+COMMON_WRAPPER_API int  COMMON_WRAPPER_CALL NativeGet_Common(const char* manager, const char* method, const char* jstr, char* buf, const char* cbid)
 {
 	FUNC_CALL func = GetFuncHandle(manager, method);
 	if (nullptr != func) {
-		func(jstr, cbid, buf);
+		std::string json = GetUTF8FromUnicode(jstr);
+		func(json.c_str(), cbid, buf);
 	}
 
 	return 0;
+}
+
+std::string GetUTF8FromUnicode(const char* src)
+{
+	// Here cannot add judgement of strlen(src) == 0
+	// since unicode maybe is 00 xx!!
+	if (nullptr == src)
+		return std::string("");
+
+	std::string dst = std::string(src);
+
+#ifdef _WIN32
+	int len;
+	len = WideCharToMultiByte(CP_UTF8, 0, (const wchar_t*)src, -1, NULL, 0, NULL, NULL);
+	char* szUtf8 = new char[len + 1];
+	memset(szUtf8, 0, len + 1);
+	len = WideCharToMultiByte(CP_UTF8, 0, (const wchar_t*)src, -1, szUtf8, len, NULL, NULL);
+	dst = szUtf8;
+	delete szUtf8;
+#endif
+
+	return dst;
 }

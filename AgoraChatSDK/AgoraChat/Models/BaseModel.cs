@@ -11,7 +11,7 @@ namespace AgoraChat
             if (json.Length > 0)
             {
                 JSONNode jn = JSON.Parse(json);
-                if (jn.IsObject)
+                if (null != jn && jn.IsObject)
                 {
                     FromJsonObject(jn.AsObject);
                 }

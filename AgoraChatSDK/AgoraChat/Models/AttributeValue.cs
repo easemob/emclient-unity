@@ -1,4 +1,4 @@
-﻿
+
 using AgoraChat.SimpleJSON;
 using System;
 using System.Collections.Generic;
@@ -178,7 +178,6 @@ namespace AgoraChat
                 return null;
             }
         }
-
 
         internal AttributeValueType GetAttributeValueType()
         {
