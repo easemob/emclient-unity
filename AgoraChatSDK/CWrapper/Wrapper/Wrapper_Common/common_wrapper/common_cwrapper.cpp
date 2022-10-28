@@ -22,6 +22,10 @@ void InitManagerMap()
 	func_map_client["initWithOptions"] = Client_InitWithOptions;
 	func_map_client["login"] = Client_Login;
 	func_map_client["logout"] = Client_Logout;
+	func_map_client["currentUsername"] = Client_CurrentUsername;
+	func_map_client["isLoggedIn"] = Client_isLoggedIn;
+	func_map_client["isConnected"] = Client_isConnected;
+	func_map_client["accessToken"] = Client_LoginToken;
 
 	manager_map["Client"] = func_map_client;
 

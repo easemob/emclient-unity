@@ -11,6 +11,7 @@
     {
         private static SDKClient _instance;
         private IClient _clientImpl;
+
         public static SDKClient Instance
         {
             get
@@ -121,27 +122,12 @@
 
         /**
          * \~chinese
-         * SDK选项。
-         *
-         * \~english
-         * The SDK options.
-         */
-        public Options Options { 
-            get 
-            { //return _Options;
-                //TODO
-                return null;
-             } 
-        }
-
-        /**
-         * \~chinese
          * SDK 版本号。
          *
          * \~english
          * The SDK version.
          */
-        public string SdkVersion { get => "1.0.5"; }
+        public string SdkVersion { get => "1.0.8"; }
 
 
         /**
@@ -151,8 +137,7 @@
          * \~english
          * The ID of the current login user.
          */
-        //TODO
-        public string CurrentUsername { get => "yqtest"; }
+        public string CurrentUsername { get => _clientImpl.CurrentUsername(); }
 
         /**
          * \~chinese
@@ -165,8 +150,7 @@
          * - `true`: Yes.
          * - `false`: No. The current user is not logged into the chat app yet.
          */
-       //TODO
-        public bool IsLoggedIn { get => false; }
+        public bool IsLoggedIn { get => _clientImpl.IsLoggedIn(); }
 
         /**
          * \~chinese
@@ -179,8 +163,7 @@
          * - `true`: Yes.
          * - `false`: No.
          */
-        //TODO
-        public bool IsConnected { get => false; }
+        public bool IsConnected { get => _clientImpl.IsConnected(); }
 
         /**
          * \~chinese
@@ -189,8 +172,7 @@
          * \~english
          * The token of the current user.
          */
-        //TODO
-        public string AccessToken { get => ""; }
+        public string AccessToken { get => _clientImpl.AccessToken(); }
 
         /**
         * \~chinese
@@ -306,16 +288,44 @@
             _clientImpl.DeleteConnectionDelegate(connectionDelegate);
         }
 
+        /**
+          * \~chinese
+          * 注册多设备监听器。
+          *
+          * @param multiDeviceDelegate 		要注册的多设备监听器，继承自 {@link IMultiDeviceDelegate}。
+          *
+          * \~english
+          * Adds a connection listener.
+          *
+          * @param multiDeviceDelegate 		The multi-device listener to add. It is inherited from {@link IMultiDeviceDelegate}.
+          *
+          */
+
+        public void AddMultiDeviceDelegate(IMultiDeviceDelegate multiDeviceDelegate)
+        {
+            _clientImpl.AddMultiDeviceDelegate(multiDeviceDelegate);
+        }
+
+        /**
+		 * \~chinese
+		 * 移除指定的多设备监听器。
+		 *
+		 * @param multiDeviceDelegate 		要移除的多设备监听器，继承自 {@link IMultiDeviceDelegate}。
+		 *
+		 * \~english
+		 * Removes a connection listener.
+		 *
+		 * @param multiDeviceDelegate 		The multi-device listener to remove. It is inherited from {@link IMultiDeviceDelegate}.
+		 *
+		 */
+        public void DeleteMultiDeviceDelegate(IMultiDeviceDelegate multiDeviceDelegate)
+        {
+            _clientImpl.DeleteMultiDeviceDelegate(multiDeviceDelegate);
+        }
+
         public void DeInit()
         {
             _clientImpl.CleanUp();
         }
-
-        //TO-DO: need to remove, just for testing
-        public void TestCallBack(string manager, string method, string jstr)
-        {
-            _clientImpl.nativeListener.nativeListenerEvent(manager, method, jstr);
-        }
-
     }
 }

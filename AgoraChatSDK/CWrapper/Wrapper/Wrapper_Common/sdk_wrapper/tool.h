@@ -15,6 +15,13 @@
                                                         && !jnode[name].IsNull() && jnode[name].IsBool()) \
                                                         ? jnode[name].GetBool() : default_value; 
 
+
+#define JSON_STARTOBJ         StringBuffer s; \
+                              Writer<StringBuffer> writer(s); \
+                              writer.StartObject();
+
+#define JSON_ENDOBJ           writer.EndObject();
+
 template<typename T>
 static std::string convert2String(const T& from)
 {
@@ -48,10 +55,10 @@ string JsonStringFromErrorResult(const char* cbid, int code, const char* desc, c
 string JsonStringFromSuccessResult(const char* cbid, const char* jstr);
 string JsonStringFromProcess(const char* cbid, int process);
 
-string JsonStringFromVector(vector<string>& vec);
+string JsonStringFromVector(const vector<string>& vec);
 vector<string> JsonStringToVector(string& jstr);
 
-string JsonStringFromMap(map<string, string>& map);
+string JsonStringFromMap(const map<string, string>& map);
 map<string, string> JsonStringToMap(string& jstr);
 
 

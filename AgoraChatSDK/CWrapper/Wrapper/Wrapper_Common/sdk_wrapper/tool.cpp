@@ -117,7 +117,7 @@ string JsonStringFromObject(const Value& obj)
     return s.GetString();
 }
 
-string JsonStringFromVector(vector<string>& vec) {
+string JsonStringFromVector(const vector<string>& vec) {
     if (vec.size() == 0) return string("");
 
     StringBuffer s;
@@ -134,7 +134,7 @@ string JsonStringFromVector(vector<string>& vec) {
     return data;
 }
 
-string JsonStringFromMap(map<string, string>& map) {
+string JsonStringFromMap(const map<string, string>& map) {
     if (map.size() == 0) return string("");
 
     StringBuffer s;

@@ -1,6 +1,7 @@
 #include <thread>
 
 #include "emclient.h"
+#include "emconfigmanager.h"
 
 #include "tool.h"
 #include "models.h"
@@ -10,6 +11,7 @@
 
 EMClient* gClient = nullptr;
 EMConnectionListener* gConnectionListener = nullptr;
+EMMultiDevicesListener* gMultiDevicesListener = nullptr;
 
 NativeListenerEvent gCallback = nullptr;
 static bool NeedAllocResource = false;
@@ -37,6 +39,16 @@ namespace sdk_wrapper
         }
     }
 
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_AddMultiDeviceListener()
+    {
+        if (!CheckClientInitOrNot(nullptr)) return;
+
+        if (nullptr == gMultiDevicesListener) {
+            gMultiDevicesListener = new MultiDevicesListener();
+            gClient->addMultiDevicesListener(gMultiDevicesListener);
+        }
+    }
+
     SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_InitWithOptions(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         // singleton client handle
@@ -55,6 +67,53 @@ namespace sdk_wrapper
         //TODO: add other listener here
         Client_AddListener();
         ChatManager_AddListener();
+        Client_AddMultiDeviceListener();
+    }
+
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_CurrentUsername(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        JSON_STARTOBJ
+        writer.Key("getCurrentUsername");
+        writer.String(CLIENT->getLoginInfo().loginUser().c_str());
+        JSON_ENDOBJ
+
+        string json = s.GetString();
+        memcpy(buf, json.c_str(), json.size());
+    }
+
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_isLoggedIn(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+
+        JSON_STARTOBJ
+        writer.Key("isLoggedIn");
+        writer.Bool(CLIENT->isLoggedIn());
+        JSON_ENDOBJ
+
+        string json = s.GetString();
+        memcpy(buf, json.c_str(), json.size());
+    }
+
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_isConnected(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+
+        JSON_STARTOBJ
+        writer.Key("isConnected");
+        writer.Bool(CLIENT->isLoggedIn());
+        JSON_ENDOBJ
+
+        string json = s.GetString();
+        memcpy(buf, json.c_str(), json.size());
+    }
+
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_LoginToken(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        JSON_STARTOBJ
+        writer.Key("accessToken");
+        writer.String(CLIENT->getLoginInfo().loginToken().c_str());
+        JSON_ENDOBJ
+
+        string json = s.GetString();
+        memcpy(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_Login(const char* jstr, const char* cbid, char* buf = nullptr)

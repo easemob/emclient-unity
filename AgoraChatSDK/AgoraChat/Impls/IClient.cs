@@ -6,8 +6,6 @@ namespace AgoraChat
 {
     internal class IClient
     {
-        public NativeListener nativeListener = new NativeListener();
-
         public ChatManager chatManager;
         public ContactManager contactManager;
         public GroupManager groupManager;
@@ -18,10 +16,12 @@ namespace AgoraChat
         public ConversationManager conversationManager;
         public MessageManager messageManager;
 
+        internal NativeListener nativeListener = new NativeListener();
         private CallbackManager callbackManager;
 
         internal string NAME_CLIENT = "Client";
-        internal List<IConnectionDelegate> delegater;
+        internal List<IConnectionDelegate> delegater_connection;
+        internal List<IMultiDeviceDelegate> delegater_multidevice;
 
         internal IClient() 
         {
@@ -39,15 +39,45 @@ namespace AgoraChat
             messageManager = new MessageManager();
 
             callbackManager = nativeListener.callbackManager;
-            delegater = new List<IConnectionDelegate>();
+            delegater_connection = new List<IConnectionDelegate>();
+            delegater_multidevice = new List<IMultiDeviceDelegate>();
 
-            nativeListener.connectionEvent += NativeEventHandle;
+            nativeListener.connectionEvent += NativeEventHandle_Connection;
+            nativeListener.multiDeviceEvent += NativeEventHandle_MultiDevice;
         }
 
         internal void InitWithOptions(Options options)
         {
             JSONObject jo = options.ToJsonObject();
             CWrapperNative.NativeCall(NAME_CLIENT, "initWithOptions", jo, null);
+        }
+
+        internal string CurrentUsername()
+        {
+            string json = CWrapperNative.NativeGet(NAME_CLIENT, "currentUsername", null, null);
+            JSONObject jo = JSON.Parse(json).AsObject;
+            return jo["getCurrentUsername"].Value;
+        }
+
+        internal bool IsLoggedIn()
+        {
+            string json = CWrapperNative.NativeGet(NAME_CLIENT, "isLoggedIn", null, null);
+            JSONObject jo = JSON.Parse(json).AsObject;
+            return jo["isLoggedIn"].AsBool;
+        }
+
+        internal bool IsConnected()
+        {
+            string json = CWrapperNative.NativeGet(NAME_CLIENT, "isConnected", null, null);
+            JSONObject jo = JSON.Parse(json).AsObject;
+            return jo["isConnected"].AsBool;
+        }
+
+        internal string AccessToken()
+        {
+            string json = CWrapperNative.NativeGet(NAME_CLIENT, "accessToken", null, null);
+            JSONObject jo = JSON.Parse(json).AsObject;
+            return jo["accessToken"].Value;
         }
 
         internal void Login(string username, string pwdOrToken, bool isToken = false, CallBack callback = null)
@@ -75,57 +105,108 @@ namespace AgoraChat
             nativeListener.RemoveNativeListener();
         }
 
-
         internal void AddConnectionDelegate(IConnectionDelegate connectionDelegate)
         {
-            if (!delegater.Contains(connectionDelegate))
+            if (!delegater_connection.Contains(connectionDelegate))
             {
-                delegater.Add(connectionDelegate);
+                delegater_connection.Add(connectionDelegate);
             }
         }
 
         internal void DeleteConnectionDelegate(IConnectionDelegate connectionDelegate)
         {
-            if (delegater.Contains(connectionDelegate))
+            if (delegater_connection.Contains(connectionDelegate))
             {
-                delegater.Remove(connectionDelegate);
+                delegater_connection.Remove(connectionDelegate);
             }
         }
 
-        //TODO: add multi listener
-
-        internal void NativeEventHandle(string method, string jsonString)
+        internal void AddMultiDeviceDelegate(IMultiDeviceDelegate mutideviceDelegate)
         {
-            if (delegater.Count == 0 || null == method || method.Length == 0) return;
+            if (!delegater_multidevice.Contains(mutideviceDelegate))
+            {
+                delegater_multidevice.Add(mutideviceDelegate);
+            }
+        }
+
+        internal void DeleteMultiDeviceDelegate(IMultiDeviceDelegate mutideviceDelegate)
+        {
+            if (delegater_multidevice.Contains(mutideviceDelegate))
+            {
+                delegater_multidevice.Remove(mutideviceDelegate);
+            }
+        }
+
+        internal void NativeEventHandle_Connection(string method, string jsonString)
+        {
+            if (delegater_connection.Count == 0 || null == method || method.Length == 0) return;
 
             if (method.CompareTo("OnConnected") == 0)
             {
-                foreach (IConnectionDelegate it in delegater)
+                foreach (IConnectionDelegate it in delegater_connection)
                 {
                     it.OnConnected();
                 }
             }
             else if (method.CompareTo("OnDisconnected") == 0)
             {
-                foreach (IConnectionDelegate it in delegater)
+                foreach (IConnectionDelegate it in delegater_connection)
                 {
                     it.OnDisconnected(int.Parse(jsonString));
                 }
             }
             else if (method.CompareTo("OnTokenExpired") == 0)
             {
-                foreach (IConnectionDelegate it in delegater)
+                foreach (IConnectionDelegate it in delegater_connection)
                 {
                     it.OnTokenExpired();
                 }
             }
             else if (method.CompareTo("OnTokenExpired") == 0)
             {
-                foreach (IConnectionDelegate it in delegater)
+                foreach (IConnectionDelegate it in delegater_connection)
                 {
                     it.OnTokenExpired();
                 }
             }
+        }
+
+        internal void NativeEventHandle_MultiDevice(string method, string jsonString)
+        {
+            if (delegater_multidevice.Count == 0 || null == method || method.Length == 0) return;
+
+            if (method.CompareTo("OnContactMultiDevicesEvent") == 0)
+            {
+                foreach (IMultiDeviceDelegate it in delegater_multidevice)
+                {
+                    JSONNode jo = JSON.Parse(jsonString);
+                    string operationEvent = jo["event"].Value;
+                    MultiDevicesOperation operation = (MultiDevicesOperation)int.Parse(operationEvent);
+                    string username = jo["username"].Value;
+                    string ext = jo["ext"].Value;
+                    it.OnContactMultiDevicesEvent(operation, username, ext);
+                }
+            }
+            else if (method.CompareTo("OnGroupMultiDevicesEvent") == 0)
+            {
+                foreach (IMultiDeviceDelegate it in delegater_multidevice)
+                {
+                    JSONNode jo = JSON.Parse(jsonString);
+                    string operationEvent = jo["event"].Value;
+                    MultiDevicesOperation operation = (MultiDevicesOperation)int.Parse(operationEvent);
+                    string groupId = jo["groupId"].Value;
+                    List<string> usernames = List.StringListFromJson(jo["usernames"].Value);
+                    it.OnGroupMultiDevicesEvent(operation, groupId, usernames);
+                }
+            }
+            else if (method.CompareTo("UndisturbMultiDevicesEvent") == 0)
+            {
+                foreach (IMultiDeviceDelegate it in delegater_multidevice)
+                {
+                    it.UndisturbMultiDevicesEvent(jsonString);
+                }
+            }
+            //TODO: need to add OnThreadMultiDevicesEvent?
         }
     }
 }
