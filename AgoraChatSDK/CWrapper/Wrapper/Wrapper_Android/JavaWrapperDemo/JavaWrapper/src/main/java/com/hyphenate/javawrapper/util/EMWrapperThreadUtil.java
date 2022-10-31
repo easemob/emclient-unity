@@ -6,8 +6,7 @@ import android.os.Looper;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
-public class EMThreadHelper {
+public class EMWrapperThreadUtil {
     public static void asyncExecute(Runnable runnable) {
         asyncThreadPool.execute(runnable);
     }

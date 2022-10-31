@@ -6,6 +6,8 @@ namespace AgoraChat
     {
         CallbackManager callbackManager;
 
+       
+
         internal ContactManager(NativeListener nativeListener)
         {
             callbackManager = nativeListener.callbackManager;
