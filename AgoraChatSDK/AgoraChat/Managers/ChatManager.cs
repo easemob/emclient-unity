@@ -6,7 +6,7 @@ namespace AgoraChat
 {
     public class ChatManager
     {
-        CallbackManager callbackManager;
+        internal CallbackManager callbackManager;
         internal List<IChatManagerDelegate> delegater;
 
         internal string NAME_CHATMANAGER = "ChatManager";
@@ -196,7 +196,19 @@ namespace AgoraChat
             jo_param.Add("startMsgId", startMessageId ?? "");
             jo_param.Add("direction", direction == MessageSearchDirection.UP ? 0 : 1);
             jo_param.Add("count", count);
-            callbackManager.AddCallbackAction<CursorResult<Message>>(callback, null);
+
+            Process process = (_cbid, _json) =>
+            {
+                CursorResult<Message>.ItemCallback parse = (JSONObject jo) =>
+                {
+                    return new Message(jo.Value);
+                };
+
+                CursorResult<Message> cursor_result = new CursorResult<Message>(_json, parse);
+                return cursor_result;
+            };
+
+            callbackManager.AddCallbackAction<CursorResult<Message>>(callback, process);
             CWrapperNative.NativeCall(NAME_CHATMANAGER, "fetchHistoryMessages", jo_param, (null != callback) ? callback.callbackId : "");
         }
 
@@ -288,7 +300,13 @@ namespace AgoraChat
 	     */
         public void GetConversationsFromServer(ValueCallBack<List<Conversation>> callback = null)
         {
-            callbackManager.AddCallbackAction<List<Conversation>>(callback, null);
+            Process process = (_cbid, _json) =>
+            {
+                List<Conversation> list = Conversation.ListFromJson(_json);
+                return list;
+            };
+
+            callbackManager.AddCallbackAction<List<Conversation>>(callback, process);
             CWrapperNative.NativeCall(NAME_CHATMANAGER, "getConversationsFromServer", null, (null != callback) ? callback.callbackId : "");
         }
 
@@ -520,7 +538,7 @@ namespace AgoraChat
             jo_param.Add("direction", direction == MessageSearchDirection.UP ? "up" : "down");
 
             string json = CWrapperNative.NativeGet(NAME_CHATMANAGER, "searchChatMsgFromDB", jo_param, "");
-            return List.MessageListFromJson(json);
+            return List.ListFromJson<Message>(json);
         }
 
         /**
@@ -759,7 +777,12 @@ namespace AgoraChat
          */
         public void FetchSupportLanguages(ValueCallBack<List<SupportLanguage>> callback = null)
         {
-            callbackManager.AddCallbackAction<List<SupportLanguage>>(callback, null);
+            Process process = (_cbid, _json) =>
+            {
+                List<SupportLanguage> list = List.ListFromJson<SupportLanguage>(_json);
+                return list;
+            };
+            callbackManager.AddCallbackAction<List<SupportLanguage>>(callback, process);
             CWrapperNative.NativeCall(NAME_CHATMANAGER, "fetchSupportLanguages", null, (null != callback) ? callback.callbackId : "");
         }
 
@@ -782,7 +805,13 @@ namespace AgoraChat
             jo_param.Add("message", message.ToJsonObject());
             jo_param.Add("languages", JsonString.JsonStringFromStringList(targetLanguages));
 
-            callbackManager.AddCallbackAction<Message>(callback, null);
+            Process process = (_cbid, _json) =>
+            {
+                Message msg = new Message(_json);
+                return msg;
+            };
+
+            callbackManager.AddCallbackAction<Message>(callback, process);
             CWrapperNative.NativeCall(NAME_CHATMANAGER, "translateMessage", jo_param, (null != callback) ? callback.callbackId : "");
         }
 
@@ -828,7 +857,18 @@ namespace AgoraChat
             jo_param.Add("groupId", groupId);
             jo_param.Add("ack_id", startAckId ?? "");
 
-            callbackManager.AddCallbackAction<CursorResult<GroupReadAck>>(callback, null);
+            Process process = (_cbid, _json) =>
+            {
+                CursorResult<GroupReadAck>.ItemCallback parse = (JSONObject jo) =>
+                {
+                    return new GroupReadAck(jo.Value);
+                };
+
+                CursorResult<GroupReadAck> cursor_result = new CursorResult<GroupReadAck>(_json, parse);
+                return cursor_result;
+            };
+
+            callbackManager.AddCallbackAction<CursorResult<GroupReadAck>>(callback, process);
             CWrapperNative.NativeCall(NAME_CHATMANAGER, "fetchGroupReadAcks", jo_param, (null != callback) ? callback.callbackId : "");
         }
 
@@ -948,6 +988,7 @@ namespace AgoraChat
             JSONObject jo_param = new JSONObject();
             jo_param.Add("msgIds", JsonString.JsonStringFromStringList(messageIdList));
             jo_param.Add("groupId", groupId);
+
             //TODO: need to check
             if (chatType == MessageType.Group)
             {
@@ -957,7 +998,23 @@ namespace AgoraChat
             {
                 jo_param.Add("type", "chat");
             }
-            callbackManager.AddCallbackAction<Dictionary<string, List<MessageReaction>>>(callback, null);
+
+            Process process = (_cbid, _json) =>
+            {
+                Dictionary<string, List<MessageReaction>> dict = null;
+                JSONNode jn = JSON.Parse(_json);
+                if (null != jn && jn.IsObject)
+                {
+                    dict = MessageReaction.DictFromJsonObject(jn.AsObject);
+                } 
+                else
+                {
+                    dict = new Dictionary<string, List<MessageReaction>>();
+                }
+                return dict;
+            };
+
+            callbackManager.AddCallbackAction<Dictionary<string, List<MessageReaction>>>(callback, process);
             CWrapperNative.NativeCall(NAME_CHATMANAGER, "getReactionList", jo_param, (null != callback) ? callback.callbackId : "");
         }
 
@@ -992,7 +1049,18 @@ namespace AgoraChat
             jo_param.Add("cursor", cursor ?? "");
             jo_param.Add("pageSize", pageSize);
 
-            callbackManager.AddCallbackAction<CursorResult<MessageReaction>>(callback, null);
+            Process process = (_cbid, _json) =>
+            {
+                CursorResult<MessageReaction>.ItemCallback parse = (JSONObject jo) =>
+                {
+                    return new MessageReaction(jo.Value);
+                };
+
+                CursorResult<MessageReaction> cursor_result = new CursorResult<MessageReaction>(_json, parse);
+                return cursor_result;
+            };
+
+            callbackManager.AddCallbackAction<CursorResult<MessageReaction>>(callback, process);
             CWrapperNative.NativeCall(NAME_CHATMANAGER, "getReactionDetail", jo_param, (null != callback) ? callback.callbackId : "");
         }
 
@@ -1041,7 +1109,7 @@ namespace AgoraChat
 
             if (method.CompareTo("OnMessagesReceived") == 0)
             {
-                List<Message> list = List.MessageListFromJson(jsonString);
+                List<Message> list = List.ListFromJson<Message>(jsonString);
                 if(list.Count > 0)
                 {
                     foreach (IChatManagerDelegate it in delegater)
@@ -1056,7 +1124,7 @@ namespace AgoraChat
             }
             else if (method.CompareTo("OnMessagesRead") == 0)
             {
-                List<Message> list = List.MessageListFromJson(jsonString);
+                List<Message> list = List.ListFromJson<Message>(jsonString);
                 if (list.Count > 0)
                 {
                     foreach (IChatManagerDelegate it in delegater)

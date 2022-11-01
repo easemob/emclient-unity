@@ -69,4 +69,18 @@ SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_RemoveReaction(const char* jst
 SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_GetReactionList(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_GetReactionDetail(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 
+// GroupManager ================================================================
+SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_AddListener();
+SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_ApplyJoinPublicGroup(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_AcceptInvitationFromGroup(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_AcceptJoinGroupApplication(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_AddAdmin(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_AddMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_AddWhiteListMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_BlockGroupMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_BlockGroupMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_ChangeGroupDescription(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_ChangeGroupName(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_TransferGroupOwner(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_FetchIsMemberInWhiteList(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 #endif

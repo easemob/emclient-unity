@@ -15,6 +15,7 @@
 #include "emattributevalue.h"
 #include "emchatconfigs.h"
 #include "emconversation.h"
+#include "emmuc.h"
 
 #include "sdk_wrapper_internal.h"
 
@@ -110,6 +111,17 @@ namespace sdk_wrapper {
 		static EMMessageReactionPtr FromJsonObject(const Value& jnode);
 		static EMMessageReactionList ListFromJsonObject(const Value& jnode);
 		static EMMessageReactionList ListFromJson(string json);
+	};
+
+	class Group
+	{
+	public:
+		static string ToJson(EMGroupPtr group);
+		static string JsonStringFromMuteVector(const EMMucMuteList& vec);
+
+		static string SettingToJson(const EMMucSettingPtr setting);
+		static int MemberTypeToInt(EMMuc::EMMucMemberType type);
+		static int GroupStyleToInt(EMMucSetting::EMMucStyle style);
 	};
 
 	class TokenWrapper

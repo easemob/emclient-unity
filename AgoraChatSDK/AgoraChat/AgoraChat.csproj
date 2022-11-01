@@ -33,6 +33,7 @@
     <Compile Include="Custom\CallbackQueue.cs" />
     <Compile Include="Delegates\IChatManagerDelegate.cs" />
     <Compile Include="Delegates\IConnectionDelegate.cs" />
+    <Compile Include="Delegates\IGroupManagerDelegate.cs" />
     <Compile Include="Delegates\IMultiDeviceDelegate.cs" />
     <Compile Include="Helper\Tools.cs" />
     <Compile Include="Models\AttributeValue.cs" />

@@ -18,6 +18,7 @@ void InitManagerMap()
 {
 	FUNC_MAP func_map_client;
 	FUNC_MAP func_map_chat_manager;
+	FUNC_MAP func_map_group_manager;
 
 	func_map_client["initWithOptions"] = Client_InitWithOptions;
 	func_map_client["createAccount"] = Client_CreateAccount;
@@ -64,6 +65,20 @@ void InitManagerMap()
 	func_map_chat_manager["getReactionList"] = ChatManager_GetReactionList;
 	func_map_chat_manager["getReactionDetail"] = ChatManager_GetReactionDetail;
 	manager_map["ChatManager"] = func_map_chat_manager;
+
+	func_map_chat_manager["requestToJoinPublicGroup"] = GroupManager_ApplyJoinPublicGroup;
+	func_map_chat_manager["acceptInvitationFromGroup"] = GroupManager_AcceptInvitationFromGroup;
+	func_map_chat_manager["acceptJoinApplication"] = GroupManager_AcceptJoinGroupApplication;
+	func_map_chat_manager["addAdmin"] = GroupManager_AddAdmin;
+	func_map_chat_manager["addMembers"] = GroupManager_AddMembers;
+	func_map_chat_manager["addWhiteList"] = GroupManager_AddWhiteListMembers;
+	func_map_chat_manager["blockGroup"] = GroupManager_BlockGroupMessage;
+	func_map_chat_manager["blockMembers"] = GroupManager_BlockGroupMembers;
+	func_map_chat_manager["updateDescription"] = GroupManager_ChangeGroupDescription;
+	func_map_chat_manager["updateGroupSubject"] = GroupManager_ChangeGroupName;
+	func_map_chat_manager["updateGroupOwner"] = GroupManager_TransferGroupOwner;
+	func_map_chat_manager["checkIfInGroupWhiteList"] = GroupManager_FetchIsMemberInWhiteList;
+	manager_map["GroupManager"] = func_map_group_manager;
 }
 
 void CheckManagerMap()

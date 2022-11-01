@@ -285,5 +285,22 @@ namespace AgoraChat
             }
             return;
         }
+
+        internal static Dictionary<string, AttributeValue> DictFromJson(string jsonString)
+        {
+            Dictionary<string, AttributeValue> ret = new Dictionary<string, AttributeValue>();
+
+            if (null == jsonString || jsonString.Length <= 2) return ret;
+
+            JSONNode jn = JSON.Parse(jsonString);
+            if (null == jn || !jn.IsObject) return ret;
+
+            JSONObject jo = jn.AsObject;
+            foreach (string k in jo.Keys)
+            {
+                ret.Add(k, new AttributeValue(jo[k].AsObject));
+            }
+            return ret;
+        }
     }
 }

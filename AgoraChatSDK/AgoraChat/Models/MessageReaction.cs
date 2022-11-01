@@ -90,5 +90,35 @@ namespace AgoraChat
         {
             return null;
         }
+
+        internal static List<MessageReaction> ListFromJsonObject(JSONNode jsonNode)
+        {
+            List<MessageReaction> list = new List<MessageReaction>();
+            if (jsonNode != null && jsonNode.IsArray)
+            {
+                foreach (JSONNode item in jsonNode.AsArray)
+                {
+                    if (item.AsObject)
+                    {
+                        list.Add(new MessageReaction(item.AsObject));
+                    }
+                }
+            }
+            return list;
+        }
+
+        internal static Dictionary<string, List<MessageReaction>> DictFromJsonObject(JSONNode jsonNode)
+        {
+            Dictionary<string, List<MessageReaction>> dict = new Dictionary<string, List<MessageReaction>>();
+            if (jsonNode != null && jsonNode.IsObject)
+            {
+                JSONObject jo = jsonNode.AsObject;
+                foreach (string s in jo.Keys)
+                {
+                    dict.Add(s, List.ListFromJson<MessageReaction>(jo[s]));
+                }
+            }
+            return dict;
+        }
     }
 }

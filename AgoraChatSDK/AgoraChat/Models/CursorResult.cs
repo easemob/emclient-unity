@@ -59,6 +59,6 @@ namespace AgoraChat
         }
 
         private ItemCallback callback;
-        internal delegate T ItemCallback(SimpleJSON.JSONObject jsonObject);
+        internal delegate T ItemCallback(JSONObject jsonObject);
     }
 }
