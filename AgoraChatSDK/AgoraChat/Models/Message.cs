@@ -696,7 +696,7 @@ namespace AgoraChat
 
         internal Message(string jsonString) : base(jsonString) { }
 
-        public Message(JSONObject jsonObject) : base(jsonObject) { }
+        internal Message(JSONObject jsonObject) : base(jsonObject) { }
 
         internal override void FromJsonObject(JSONObject jn)
         {
@@ -758,7 +758,19 @@ namespace AgoraChat
             return jo;
         }
 
-        private MessageStatus MessageStatusFromInt(int intStatus)
+        static internal JSONArray ListToJsonObject(List<Message> messages)
+        {
+            if (null == messages || messages.Count == 0) return null;
+
+            JSONArray ja = new JSONArray();
+            foreach (var msg in messages)
+            {
+                ja.Add(msg.ToJsonObject());
+            }
+            return ja;
+        }
+
+        static private MessageStatus MessageStatusFromInt(int intStatus)
         {
             MessageStatus ret = MessageStatus.CREATE;
             switch (intStatus)
@@ -771,7 +783,7 @@ namespace AgoraChat
             return ret;
         }
 
-        private MessageType MessageTypeFromInt(int intType)
+        static private MessageType MessageTypeFromInt(int intType)
         {
             MessageType ret = MessageType.Chat;
             switch (intType)
@@ -783,7 +795,7 @@ namespace AgoraChat
             return ret;
         }
 
-        private MessageDirection MessageDirectionFromString(string stringDirection)
+        static private MessageDirection MessageDirectionFromString(string stringDirection)
         {
             if (stringDirection == "send")
             {
@@ -795,7 +807,7 @@ namespace AgoraChat
             }
         }
 
-        private int MessageStatusToInt(MessageStatus status)
+        static private int MessageStatusToInt(MessageStatus status)
         {
             int ret = 0;
             switch (status)
@@ -808,7 +820,7 @@ namespace AgoraChat
             return ret;
         }
 
-        private int MessageTypeToInt(MessageType type)
+        static private int MessageTypeToInt(MessageType type)
         {
             int ret = 0;
             switch (type)
@@ -821,7 +833,7 @@ namespace AgoraChat
             return ret;
         }
 
-        private string MessageDirectionToString(MessageDirection direction)
+        static private string MessageDirectionToString(MessageDirection direction)
         {
             if (direction == MessageDirection.SEND)
             {

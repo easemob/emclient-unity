@@ -1,10 +1,19 @@
 ﻿using AgoraChat.SimpleJSON;
 using System;
 using System.Collections.Generic;
+#if _WIN32
+#else
+using UnityEngine;
+using UnityEditor;
+#endif
 
 namespace AgoraChat
 {
+#if _WIN32
     internal class IClient
+#else
+    internal class IClient : MonoBehaviour
+#endif
     {
         public ChatManager chatManager;
         public ContactManager contactManager;
@@ -80,6 +89,16 @@ namespace AgoraChat
             return jo["accessToken"].Value;
         }
 
+        internal void CreateAccount(string username, string password, CallBack callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.Add("username", username ?? "");
+            jo_param.Add("password", password ?? "");
+
+            callbackManager.AddCallbackAction<Object>(callback, null);
+            CWrapperNative.NativeCall(NAME_CLIENT, "createAccount", jo_param, (null != callback) ? callback.callbackId : "");
+        }
+
         internal void Login(string username, string pwdOrToken, bool isToken = false, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
@@ -98,6 +117,22 @@ namespace AgoraChat
 
             callbackManager.AddCallbackAction<Object>(callback, null);
             CWrapperNative.NativeCall(NAME_CLIENT, "logout", jo_param, (null != callback) ? callback.callbackId : "");
+        }
+
+        internal void LoginWithAgoraToken(string username, string token, CallBack callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.Add("username", username);
+            jo_param.Add("token", token);
+            callbackManager.AddCallbackAction<Object>(callback, null);
+            CWrapperNative.NativeCall(NAME_CLIENT, "loginWithAgoraToken", jo_param, (null != callback) ? callback.callbackId : "");
+        }
+
+        internal void RenewAgoraToken(string token)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.Add("token", token);
+            CWrapperNative.NativeCall(NAME_CLIENT, "renewToken", jo_param, "");
         }
 
         internal void CleanUp() 
@@ -207,6 +242,80 @@ namespace AgoraChat
                 }
             }
             //TODO: need to add OnThreadMultiDevicesEvent?
+        }
+
+#if UNITY_EDITOR
+
+        [RuntimeInitializeOnLoadMethod]
+        static void InitializeOnLoadMethod()
+        {
+            EditorApplication.wantsToQuit -= Quit;
+            EditorApplication.wantsToQuit += Quit;
+
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+        }
+
+        static bool Quit()
+        {
+            if (SDKClient.Instance.IsLoggedIn)
+            {
+                SDKClient.Instance.Logout(false);
+            }
+            if (CallbackManager._getInstance != null)
+            {
+                CallbackManager.Instance().ClearResource();
+            }
+            Debug.Log("Quit...");
+            return true;
+        }
+
+        static void OnPlayModeStateChanged(PlayModeStateChange stateChange)
+        {
+            switch (stateChange)
+            {
+                case (PlayModeStateChange.EnteredPlayMode):
+                    {
+                        EditorApplication.LockReloadAssemblies();
+                        Debug.Log("Assembly Reload locked as entering play mode");
+                        break;
+                    }
+                case (PlayModeStateChange.ExitingPlayMode):
+                    {
+                        Debug.Log("Assembly Reload unlocked as exiting play mode");
+                        EditorApplication.UnlockReloadAssemblies();
+                        break;
+                    }
+            }
+        }
+#endif
+
+        private void OnApplicationQuit()
+        {
+            if (SDKClient.Instance.IsLoggedIn)
+            {
+                SDKClient.Instance.Logout(false);
+            }
+            ClearResource();
+        }
+
+        internal void ClearResource()
+        {
+            delegater_connection.Clear();
+            delegater_multidevice.Clear();
+
+            //TODO
+            /*
+            IClient.Instance.ContactManager().ClearDelegates();
+            IClient.Instance.ChatManager().ClearDelegates();
+            IClient.Instance.GroupManager().ClearDelegates();
+            IClient.Instance.RoomManager().ClearDelegates();
+            IClient.Instance.PresenceManager().ClearDelegates();
+            IClient.Instance.ThreadManager().ClearDelegates();
+            CallbackManager.Instance().CleanAllCallback();
+            */
+
+            CWrapperNative.NativeCall(NAME_CLIENT, "clearResource", null, "");
         }
     }
 }
