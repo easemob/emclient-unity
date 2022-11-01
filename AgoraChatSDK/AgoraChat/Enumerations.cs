@@ -578,5 +578,324 @@
             */
             PENDING
         };
-    }
+    };
+
+    public enum MultiDevicesOperation
+    {
+        UNKNOWN = -1,
+        /**
+         * \~chinese
+         * 当前用户在其他设备上删除好友。
+         *
+         * \~english
+         * The current user removed a contact on another device.
+         */
+        CONTACT_REMOVE = 2,
+
+        /**
+         * \~chinese
+         * 当前用户在其他设备上接受好友请求。
+         *
+         * \~english
+         * The current user accepted a friend request on another device.
+         */
+        CONTACT_ACCEPT = 3,
+
+        /**
+         * \~chinese
+         * 当前用户在其他设备上拒绝好友请求。
+         *
+         * \~english
+         * The current user declined a friend request on another device.
+         */
+        CONTACT_DECLINE = 4,
+
+        /**
+         * \~chinese
+         * 当前用户在其他设备上将好友加入黑名单。
+         *
+         * \~english
+         * The current user added a contact to the block list on another device.
+         */
+        CONTACT_BAN = 5,
+
+        /**
+         * \~chinese
+         * 当前用户在其他设备上将好友移出黑名单。
+         *
+         * \~english
+         * The current user removed a contact from the block list on another device.
+         */
+        CONTACT_ALLOW = 6,
+
+        /**
+         * \~chinese
+         * 当前用户在其他设备上创建群组。
+         *
+         * \~english
+         * The current user created a group on another device.
+         */
+        GROUP_CREATE = 10,
+
+        /**
+         * \~chinese
+         * 当前用户在其他设备上解散群组。
+         *
+         * \~english
+         * The current user destroyed a group on another device.
+         */
+        GROUP_DESTROY = 11,
+
+        /**
+         * \~chinese
+         * 当前用户在其他设备上加入群组。
+         *
+         * \~english
+         * The current user joined a group on another device.
+         */
+        GROUP_JOIN = 12,
+
+        /**
+         * \~chinese
+         * 当前用户在其他设备离开群组。
+         *
+         * \~english
+         * The current user left a group on another device.
+         */
+        GROUP_LEAVE = 13,
+
+        /**
+         * \~chinese
+         * 当前用户在其他设备上申请加入群组。
+         *
+         * \~english
+         * The current user requested to join a group on another device.
+         */
+        GROUP_APPLY = 14,
+
+        /**
+         * \~chinese
+         * 当前用户在其他设备接受入群申请。
+         *
+         * \~english
+         * The current user accepted a group request on another device.
+         */
+        GROUP_APPLY_ACCEPT = 15,
+
+        /**
+         * \~chinese
+         * 当前用户在其他设备上拒绝入群申请。
+         *
+         * \~english
+         * The current user declined a group request on another device.
+         */
+        GROUP_APPLY_DECLINE = 16,
+
+        /**
+         * \~chinese
+         * 当前用户在其他设备上邀请用户入群。
+         *
+         * \~english
+         * The current user invited a user to join the group on another device.
+         */
+        GROUP_INVITE = 17,
+
+        /**
+         * \~chinese
+         * 当前用户在其他设备上接受了入群邀请。
+         *
+         * \~english
+         * The current user accepted a group invitation on another device.
+         */
+        GROUP_INVITE_ACCEPT = 18,
+
+        /**
+         * \~chinese
+         * 当前用户在其他设备上拒绝了入群邀请。
+         *
+         * \~english
+         * The current user declined a group invitation on another device.
+         */
+        GROUP_INVITE_DECLINE = 19,
+
+        /**
+         * \~chinese
+         * 当前用户在其他设备上将成员踢出群。
+         *
+         * \~english
+         * The current user kicked a member out of a group on another device.
+         */
+        GROUP_KICK = 20,
+
+        /**
+         * \~chinese
+         * 当前用户在其他设备上将成员加入群组黑名单。
+         *
+         * \~english
+         * The current user added a member to a group block list on another device.
+         */
+        GROUP_BAN = 21,
+
+        /**
+         * \~chinese
+         * 当前用户在其他设备上将成员移除群组黑名单。
+         *
+         * \~english
+         * The current user removed a member from a group block list on another device.
+         */
+        GROUP_ALLOW = 22,
+
+        /**
+         * \~chinese
+         * 当前用户在其他设备上屏蔽群组。
+         *
+         * \~english
+         * The current user blocked a group on another device.
+         */
+        GROUP_BLOCK = 23,
+
+        /**
+         * \~chinese
+         * 当前用户在其他设备上取消群组屏蔽。
+         *
+         * \~english
+         * The current user unblocked a group on another device.
+         */
+        GROUP_UNBLOCK = 24,
+
+        /**
+         * \~chinese
+         * 当前用户在其他设备上转让群组所有权。
+         *
+         * \~english
+         * The current user transferred the group ownership on another device.
+         */
+        GROUP_ASSIGN_OWNER = 25,
+
+        /**
+         * \~chinese
+         * 当前用户在其他设备上添加管理员。
+         *
+         * \~english
+         * The current user added an admin on another device.
+         */
+        GROUP_ADD_ADMIN = 26,
+
+        /**
+         * \~chinese
+         * 当前用户在其他设备上移除管理员。
+         *
+         * \~english
+         * The current user removed an admin on another device.
+         */
+        GROUP_REMOVE_ADMIN = 27,
+
+        /**
+         * \~chinese
+         * 当前用户在其他设备上禁言成员。
+         *
+         * \~english
+         * The current user muted a member on another device.
+         */
+        GROUP_ADD_MUTE = 28,
+
+        /**
+         * \~chinese
+         * 当前用户在其他设备上解除禁言。
+         *
+         * \~english
+         * The current user unmuted a member on another device.
+         */
+        GROUP_REMOVE_MUTE = 29,
+
+        /**
+         * \~chinese
+         * 当前用户在其他设备上将群组成员添加至白名单。
+         *
+         * \~english
+         * The current user added a group member to the allow list on another device.
+         */
+        GROUP_ADD_USER_WHITE_LIST = 30,
+
+        /**
+         * \~chinese
+         * 当前用户在其他设备上将群组成员移除白名单。
+         *
+         * \~english
+         * The current user removed a group member from the allow list on another device.
+         */
+        GROUP_REMOVE_USER_WHITE_LIST = 31,
+
+        /**
+         * \~chinese
+         * 当前用户在其他设备上将所有其他群组成员禁言。
+         *
+         * \~english
+         * The current user added all other group members to the group mute list on another device.
+         */
+        GROUP_ALL_BAN = 32,
+
+        /**
+         * \~chinese
+         * 当前用户在其他设备上将所有其他群组成员解除禁言。
+         *
+         * \~english
+         * The current user removed all other group members from the group mute list on another device.
+         */
+        GROUP_REMOVE_ALL_BAN = 33,
+
+        /**
+         * \~chinese
+         * 子区在其他设备上被创建。
+         *
+         * \~english
+         * A thread was created on another device.
+         */
+        THREAD_CREATE = 40,
+
+        /**
+        * \~chinese
+        * 子区在其他设备上被销毁。
+        *
+        * \~english
+        * A thread was destoryed on another device.
+        */
+        THREAD_DESTROY = 41,
+
+        /**
+        * \~chinese
+        * 在其他设备上加入子区。
+        *
+        * \~english
+        * Joined thread on another device.
+        */
+        THREAD_JOIN = 42,
+
+        /**
+        * \~chinese
+        * 在其他设备上加退出子区。
+        *
+        * \~english
+        * Left thread on another device.
+        */
+        THREAD_LEAVE = 43,
+
+        /**
+        * \~chinese
+        * 子区在其他设备上有更新。
+        *
+        * \~english
+        * Thread updated on another device.
+        */
+        THREAD_UPDATE = 44,
+
+        /**
+        * \~chinese
+        * 在其他设备上被提出子区。
+        *
+        * \~english
+        * Kicked from thread on another device.
+        */
+        THREAD_KICK = 45,
+    };
 }

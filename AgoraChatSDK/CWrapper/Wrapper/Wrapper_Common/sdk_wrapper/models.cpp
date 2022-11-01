@@ -1,6 +1,6 @@
 #include "tool.h"
 #include "models.h"
-#include "sdk_wrapper.h"
+//#include "sdk_wrapper.h"
 
 namespace sdk_wrapper
 {
@@ -1118,6 +1118,31 @@ namespace sdk_wrapper
         return FromJsonObject(d);
     }
 
+    EMMessageList Message::ListFromJson(const char* json)
+    {
+        EMMessageList vec;
+        vec.clear();
+
+        if (nullptr == json || strlen(json) == 0) vec;
+
+        Document d;
+        d.Parse(json);
+        if (d.HasParseError()) return vec;
+
+        if (d.HasMember("list") && d["list"].IsArray()) {
+            const Value& array = d["list"];
+            size_t len = array.Size();
+
+            for (size_t i = 0; i < len; i++) {
+                EMMessagePtr msg = Message::FromJsonObject(array[i]);
+                if (nullptr != msg)
+                    vec.push_back(msg);
+            }
+        }
+
+        return vec;
+    }
+
     void AttributesValue::ToJsonWriter(Writer<StringBuffer>& writer, EMAttributeValuePtr attribute)
     {
         if (nullptr == attribute) return;
@@ -1382,6 +1407,402 @@ namespace sdk_wrapper
         if (!d.Parse(json.data()).HasParseError()) {
 
             SetMessageAttrs(msg, d);
+        }
+    }
+
+    string Conversation::ToJson(EMConversationPtr conversation)
+    {
+        if (nullptr == conversation) return string();
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+        writer.StartObject();
+
+        writer.Key("con_id");
+        writer.String(conversation->conversationId().c_str());
+
+        writer.Key("type");
+        writer.Int(ConversationTypeToInt(conversation->conversationType()));
+
+        writer.Key("isThread");
+        writer.Bool(conversation->isThread());
+
+        writer.EndObject();
+        string jstr = s.GetString();
+        return jstr;
+    }
+
+    string Conversation::ToJson(EMConversationList conversations)
+    {
+        if (conversations.size() == 0) return string();
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+        writer.StartArray();
+
+        for (auto it : conversations) {
+            writer.String(ToJson(it).c_str());
+        }
+
+        writer.EndArray();
+        string jstr = s.GetString();
+        return jstr;
+    }
+
+    int Conversation::ConversationTypeToInt(EMConversation::EMConversationType type)
+    {
+        int int_type = 0;
+        switch (type) {
+        case EMConversation::EMConversationType::CHAT: int_type = 0; break;
+        case EMConversation::EMConversationType::GROUPCHAT: int_type = 1; break;
+        case EMConversation::EMConversationType::CHATROOM: int_type = 2; break;
+        case EMConversation::EMConversationType::DISCUSSIONGROUP: int_type = 3; break;
+        case EMConversation::EMConversationType::HELPDESK: int_type = 5; break;
+        }
+        return int_type;
+    }
+
+    string SupportLanguage::ToJson(tuple<string, string, string>& lang)
+    {
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+        writer.StartObject();
+
+        writer.Key("code");
+        writer.String(get<0>(lang).c_str());
+
+        writer.Key("name");
+        writer.String(get<1>(lang).c_str());
+
+        writer.Key("nativeName");
+        writer.String(get<1>(lang).c_str());
+
+        writer.EndObject();
+        string jstr = s.GetString();
+        return jstr;
+    }
+
+    string SupportLanguage::ToJson(std::vector<std::tuple<std::string, std::string, std::string>>& langs)
+    {
+        if (langs.size() == 0) return string();
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        writer.StartArray();
+
+        for (auto it : langs) {
+            writer.String(ToJson(it).c_str());
+        }
+
+        writer.EndArray();
+
+        string jstr = s.GetString();
+        return jstr;
+    }
+
+    string GroupReadAck::ToJson(EMGroupReadAckPtr group_read_ack)
+    {
+        if (nullptr == group_read_ack) return string();
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+        writer.StartObject();
+
+        writer.Key("ackId");
+        writer.String(group_read_ack->meta_id.c_str());
+
+        writer.Key("msgId");
+        writer.String(group_read_ack->msgPtr->msgId().c_str());
+
+        writer.Key("from");
+        writer.String(group_read_ack->from.c_str());
+
+        writer.Key("content");
+        writer.String(group_read_ack->content.c_str());
+
+        writer.Key("count");
+        writer.Int(group_read_ack->count);
+
+        writer.Key("timestamp");
+        writer.Int64(group_read_ack->timestamp);
+
+        writer.EndObject();
+        string jstr = s.GetString();
+        return jstr;
+    }
+
+    string GroupReadAck::ToJson(vector<EMGroupReadAckPtr> group_read_ack_vec)
+    {
+        if (group_read_ack_vec.size() == 0) return string();
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+        writer.StartArray();
+
+        for (auto it : group_read_ack_vec) {
+            writer.String(ToJson(it).c_str());
+        }
+
+        writer.EndArray();
+        string jstr = s.GetString();
+        return jstr;
+    }
+
+    string MessageReaction::ToJson(EMMessageReactionPtr reaction)
+    {
+        if (nullptr == reaction) return "";
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+        EMMessageEncoder::encodeReactionToJsonWriter(writer, reaction);
+        return s.GetString();
+    }
+
+    string MessageReaction::ToJson(EMMessageReactionList& list)
+    {
+        return EMMessageEncoder::encodeReactionToJson(list);
+    }
+
+    string MessageReaction::ToJson(EMMessage& msg)
+    {
+        return EMMessageEncoder::encodeReactionToJson(msg);
+    }
+
+    string MessageReaction::ToJson(map<string, EMMessageReactionList>& map)
+    {
+        if (map.size() == 0) return string();
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+        writer.StartObject();
+        for (auto it : map) {
+            writer.Key(it.first.c_str());
+            ListToJsonWriter(writer, it.second);
+        }
+        writer.EndObject();
+        return s.GetString();
+    }
+
+    void MessageReaction::ListToJsonWriter(Writer<StringBuffer>& writer, EMMessageReactionList& list)
+    {
+        if (list.size() == 0) return;
+
+        writer.StartArray();
+        for (EMMessageReactionPtr reaction : list) {
+            EMMessageEncoder::encodeReactionToJsonWriter(writer, reaction);
+        }
+        writer.EndArray();
+    }
+
+    EMMessageReactionPtr MessageReaction::FromJsonObject(const Value& jnode)
+    {
+        return EMMessageEncoder::decodeReactionFromJson(jnode);
+    }
+
+    EMMessageReactionList MessageReaction::ListFromJsonObject(const Value& jnode)
+    {
+        return EMMessageEncoder::decodeReactionListFromJson(jnode);
+    }
+
+    EMMessageReactionList MessageReaction::ListFromJson(std::string json)
+    {
+        return EMMessageEncoder::decodeReactionListFromJson(json);
+    }
+
+    TokenWrapper::TokenWrapper()
+    {
+        autologin_config_.userName = "";
+        autologin_config_.passwd = "";
+        autologin_config_.token = "";
+        autologin_config_.expireTS = "";
+        autologin_config_.expireTsInt = -1;
+        autologin_config_.availablePeriod = -1;
+    }
+
+    bool TokenWrapper::GetTokenCofigFromJson(std::string& raw, std::string& token, std::string& expireTS)
+    {
+        const std::string ACCESS_TOKEN = "access_token";
+        const std::string EXPIRE_TS = "expire_timestamp";
+
+        //std::string expire_in;
+
+        int64_t expireTS_int = 0;
+
+        if (raw.length() < 3) {
+            return false;
+        }
+
+        Document d;
+        if (d.Parse(raw.c_str()).HasParseError()) {
+            return false;
+        }
+
+        if (d.HasMember(ACCESS_TOKEN.c_str())) {
+            token = d[ACCESS_TOKEN.c_str()].GetString();
+        }
+        else {
+            return false;
+        }
+
+        if (d.HasMember(EXPIRE_TS.c_str())) {
+            expireTS_int = d[EXPIRE_TS.c_str()].GetInt64();
+            expireTS = std::to_string(expireTS_int);
+        }
+        else {
+            return false;
+        }
+
+        return true;
+    }
+
+    int TokenWrapper::GetTokenCheckInterval(int pre_check_interval, int availablePeriod)
+    {
+        if (pre_check_interval > floor(availablePeriod / 2)) {
+            pre_check_interval = floor(availablePeriod / 3);
+        }
+
+        return pre_check_interval;
+    }
+
+    bool TokenWrapper::SetTokenInAutoLogin(const std::string& username, const std::string& token, const std::string expireTS)
+    {
+        if (username.size() == 0 || token.size() == 0) {
+            return false;
+        }
+
+        if (expireTS.size() > 0) {
+
+            int64_t expireTsInt = atoll(expireTS.c_str()); // milli-second
+            expireTsInt = expireTsInt / 1000; // second
+
+            time_t nowTS = time(NULL);
+
+            int64_t availablePeriod = expireTsInt - nowTS;
+            // no available time or expireTs is same with last time, then no need to update related fields
+            if (availablePeriod <= 0) {               
+                return false;
+            }
+
+            //expireTs is same with last time, then no need to update related fields
+            if (autologin_config_.expireTsInt == expireTsInt) {
+                return false;
+            }
+
+            autologin_config_.expireTS = expireTS;
+            autologin_config_.expireTsInt = expireTsInt;
+            autologin_config_.availablePeriod = availablePeriod;
+        }
+        else {
+            // Note: if expireTS is empty, but token is not, means
+            // current using easemob token to login, not agora token!
+            autologin_config_.expireTS = "";
+            autologin_config_.expireTsInt = 0;
+            autologin_config_.availablePeriod = 0;
+        }
+
+        autologin_config_.userName = username;
+        autologin_config_.passwd = "";
+        autologin_config_.token = token;
+        return true;
+    }
+
+    void TokenWrapper::SetPasswdInAutoLogin(const std::string& username, const std::string& passwd)
+    {
+        autologin_config_.userName = username;
+        autologin_config_.passwd = passwd;
+        autologin_config_.token = "";
+        autologin_config_.expireTS = "";
+        autologin_config_.expireTsInt = 0;
+        autologin_config_.availablePeriod = 0;
+    }
+
+    void TokenWrapper::SaveAutoLoginConfigToFile(const string& uuid)
+    {
+        // merge token config
+        string mergeStr = "userName";
+        mergeStr.append("=");
+        mergeStr.append(autologin_config_.userName);
+        mergeStr.append("\n");
+
+        mergeStr.append("passwd");
+        mergeStr.append("=");
+        mergeStr.append(autologin_config_.passwd);
+        mergeStr.append("\n");
+
+        mergeStr.append("token");
+        mergeStr.append("=");
+        mergeStr.append(autologin_config_.token);
+        mergeStr.append("\n");
+
+        mergeStr.append("expireTS");
+        mergeStr.append("=");
+        mergeStr.append(autologin_config_.expireTS);
+
+        EncryptAndSaveToFile(mergeStr, uuid);
+    }
+
+    void TokenWrapper::GetAutoLoginConfigFromFile(const string& uuid)
+    {
+        string mergeStr = DecryptAndGetFromFile(uuid);
+
+        // mergeStr has the format: aaa\nbbb\nccc
+        string::size_type pos, pos1;
+
+        string userName = "";
+        pos = mergeStr.find("\n");
+        if (string::npos != pos) {
+            string str = string(mergeStr, 0, pos - 0);
+            userName = GetRightValue(str);
+        }
+        else {
+            return;
+        }
+
+        string passwd = "";
+        pos = pos + 1;
+        pos1 = mergeStr.find("\n", pos);
+        if (string::npos != pos1) {
+            string str = string(mergeStr, pos, pos1 - pos);
+            passwd = GetRightValue(str);
+        }
+        else {
+            return;
+        }
+
+        string token = "";
+        pos = pos1 + 1;
+        pos1 = mergeStr.find("\n", pos);
+        if (string::npos != pos1) {
+            string str = std::string(mergeStr, pos, pos1 - pos);
+            token = GetRightValue(str);
+        }
+        else {
+            return;
+        }
+
+        pos = pos1 + 1;
+        if (pos > mergeStr.size() - 1) {
+            return;
+        }
+
+        string expireTS = "";
+        string str = std::string(mergeStr, pos, mergeStr.size() - pos);
+        expireTS = GetRightValue(str);
+
+        autologin_config_.userName = userName;
+        autologin_config_.passwd = passwd;
+        autologin_config_.token = token;
+        autologin_config_.expireTS = expireTS;
+        autologin_config_.expireTsInt = 0;
+        autologin_config_.availablePeriod = 0;
+
+        if (autologin_config_.expireTS.size() > 0) {
+            time_t nowTS = time(NULL); // second
+            int64_t expireTsInt = atoll(autologin_config_.expireTS.c_str()); // milli-second
+
+            autologin_config_.expireTsInt = (int)(expireTsInt / 1000); // second
+            autologin_config_.availablePeriod = autologin_config_.expireTsInt - nowTS;
         }
     }
 }

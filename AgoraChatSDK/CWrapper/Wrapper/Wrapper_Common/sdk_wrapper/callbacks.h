@@ -83,6 +83,49 @@ namespace sdk_wrapper {
             //TODO
         }
     };
+
+    class MultiDevicesListener : public EMMultiDevicesListener
+    {
+    public:
+        void onContactMultiDevicesEvent(MultiDevicesOperation operation, const std::string& target, const std::string& ext) override {
+
+            JSON_STARTOBJ
+            writer.Key("event");
+            writer.String(to_string((int)operation).c_str());
+            writer.Key("username");
+            writer.String(target.c_str());
+            writer.Key("ext");
+            writer.String(ext.c_str());
+            JSON_ENDOBJ
+            string json = s.GetString();
+
+            if (json.size() > 0)
+                CallBack(STRING_MULTIDEVICE_LISTENER.c_str(), "OnContactMultiDevicesEvent", json.c_str());
+        }
+
+        void onGroupMultiDevicesEvent(MultiDevicesOperation operation, const std::string& target, const std::vector<std::string>& usernames) override {
+            JSON_STARTOBJ
+            writer.Key("event");
+            writer.String(to_string((int)operation).c_str());
+            writer.Key("groupId");
+            writer.String(target.c_str());
+            writer.Key("usernames");
+            writer.String(JsonStringFromVector(usernames).c_str());
+            JSON_ENDOBJ
+            string json = s.GetString();
+
+            if (json.size() > 0)
+                CallBack(STRING_MULTIDEVICE_LISTENER.c_str(), "OnGroupMultiDevicesEvent", json.c_str());
+        }
+
+        void onThreadMultiDevicesEvent(MultiDevicesOperation operation, const std::string& target, const std::vector<std::string>& usernames) override {
+            //TODO
+        }
+
+        void undisturbMultiDevicesEvent(const std::string& data) override {
+            CallBack(STRING_MULTIDEVICE_LISTENER.c_str(), "UndisturbMultiDevicesEvent", data.c_str());
+        }
+    };
 }
 
 #endif // _CALLBACKS_H_
