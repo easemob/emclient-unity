@@ -1610,6 +1610,134 @@ namespace sdk_wrapper
         return EMMessageEncoder::decodeReactionListFromJson(json);
     }
 
+    string Group::ToJson(EMGroupPtr group)
+    {
+        if (nullptr == group) return string();
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+        writer.StartObject();
+
+        writer.Key("groupId");
+        writer.String(group->groupId().c_str());
+
+        writer.Key("name");
+        writer.String(group->groupSubject().c_str());
+
+        writer.Key("desc");
+        writer.String(group->groupDescription().c_str());
+
+        writer.Key("owner");
+        writer.String(group->groupOwner().c_str());
+
+        writer.Key("announcement");
+        writer.String(group->groupAnnouncement().c_str());
+
+        writer.Key("memberCount");
+        writer.Int(group->groupMembersCount());
+
+        writer.Key("memberList");
+        writer.String(JsonStringFromVector(group->groupMembers()).c_str());
+
+        writer.Key("adminList");
+        writer.String(JsonStringFromVector(group->groupAdmins()).c_str());
+
+        writer.Key("blockList");
+        writer.String(JsonStringFromVector(group->groupBans()).c_str());
+
+        writer.Key("muteList");
+        writer.String(JsonStringFromMuteVector(group->groupMutes()).c_str());
+
+        writer.Key("noticeEnable");
+        writer.Bool(group->isPushEnabled());
+
+        writer.Key("messageBlocked");
+        writer.Bool(group->isMessageBlocked());
+
+        writer.Key("isAllMemberMuted");
+        writer.Bool(group->groupAllMembersMuted());
+
+        writer.Key("options");
+        writer.String(SettingToJson(group->groupSetting()).c_str());
+
+        writer.Key("permissionType");
+        writer.Int(MemberTypeToInt(group->groupMemberType()));
+
+        writer.EndObject();
+        return s.GetString();
+    }
+
+    string Group::JsonStringFromMuteVector(const EMMucMuteList& vec)
+    {
+        if (vec.size() == 0) return string("");
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        writer.StartArray();
+        for (int i = 0; i < vec.size(); i++) {
+            writer.String(vec[i].first.c_str());
+        }
+        writer.EndArray();
+
+        string data = s.GetString();
+
+        return data;
+    }
+
+    string Group::SettingToJson(const EMMucSettingPtr setting)
+    {
+        if (nullptr == setting) return string();
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+        writer.StartObject();
+
+        writer.Key("style");
+        writer.Int(GroupStyleToInt(setting->style()));
+
+        writer.Key("maxCount");
+        writer.Int(setting->maxUserCount());
+
+        writer.Key("inviteNeedConfirm");
+        writer.Bool(setting->inviteNeedConfirm());
+
+        writer.Key("ext");
+        writer.String(setting->extension().c_str());
+
+        writer.EndObject();
+        return s.GetString();
+    }
+
+    int Group::MemberTypeToInt(EMMuc::EMMucMemberType type)
+    {
+        int ret = -1;
+        switch (type)
+        {
+            case EMMuc::EMMucMemberType::MUC_UNKNOWN:   ret = -1; break;
+            case EMMuc::EMMucMemberType::MUC_MEMBER:    ret = 0; break;
+            case EMMuc::EMMucMemberType::MUC_ADMIN:     ret = 1; break;
+            case EMMuc::EMMucMemberType::MUC_OWNER:     ret = 2; break;
+            default: ret = -1; break;
+        }
+        return ret;
+    }
+
+    int Group::GroupStyleToInt(EMMucSetting::EMMucStyle style)
+    {
+        int ret = 0;
+        switch (style)
+        {
+        case EMMucSetting::EMMucStyle::PRIVATE_OWNER_INVITE:   ret = 0; break;
+        case EMMucSetting::EMMucStyle::PRIVATE_MEMBER_INVITE:  ret = 1; break;
+        case EMMucSetting::EMMucStyle::PUBLIC_JOIN_APPROVAL:   ret = 2; break;
+        case EMMucSetting::EMMucStyle::PUBLIC_JOIN_OPEN:       ret = 3; break;
+        default: ret = 0; break;
+        }
+        return ret;
+    }
+
+
     TokenWrapper::TokenWrapper()
     {
         autologin_config_.userName = "";

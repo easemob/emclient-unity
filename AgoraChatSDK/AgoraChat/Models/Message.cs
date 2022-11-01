@@ -716,7 +716,7 @@ namespace AgoraChat
                     Status = MessageStatusFromInt(jo["status"].AsInt);
                     MessageType = MessageTypeFromInt(jo["chatType"].AsInt);
                     Direction = MessageDirectionFromString(jo["direction"].Value);
-                    Attributes = Dictionary.AttributesFromJson(jo["attributes"].ToString());
+                    Attributes = AttributeValue.DictFromJson(jo["attributes"].ToString());
                     Body = IMessageBody.Constructor(jo["body"].Value, jo["bodyType"].Value);
                     IsNeedGroupAck = jo["isNeedGroupAck"].AsBool;
                     IsRead = jo["isRead"].AsBool;
