@@ -85,7 +85,7 @@ namespace AgoraChat
             CallbackItem item = callbackMap[callbackId];
             if(item != null)
             {
-                item.callbackAction(jsonString, item.process, item.callback);
+                item.callbackAction?.Invoke(jsonString, item.process, item.callback);
                 callbackMap.Remove(callbackId); // delete the callback after triggered
             }
         }
@@ -95,7 +95,7 @@ namespace AgoraChat
             CallbackItem item = callbackMap[callbackId];
             if (item != null)
             {
-                item.callbackAction(jsonString, item.process, item.callback);
+                item.callbackAction?.Invoke(jsonString, item.process, item.callback);
             }
         }
     }

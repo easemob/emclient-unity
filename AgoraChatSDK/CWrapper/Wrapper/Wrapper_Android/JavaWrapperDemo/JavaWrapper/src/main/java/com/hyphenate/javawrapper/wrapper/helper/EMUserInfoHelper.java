@@ -40,6 +40,7 @@ public class EMUserInfoHelper {
     }
 
     public static JSONObject toJson(EMUserInfo userInfo) throws JSONException{
+        if (userInfo == null) return null;
         JSONObject data = new JSONObject();
         data.put("userId", userInfo.getUserId());
         data.put("nickName", userInfo.getNickname());

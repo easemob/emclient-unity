@@ -12,6 +12,7 @@ import java.util.Map;
 
 public class EMConversationHelper {
     public static JSONObject toJson(EMConversation conversation) throws JSONException{
+        if (conversation == null) return null;
         JSONObject data = new JSONObject();
         data.put("con_id", conversation.conversationId());
         data.put("type", typeToInt(conversation.getType()));
@@ -56,8 +57,7 @@ public class EMConversationHelper {
     }
 
     public static JSONObject jsonStringToMap(String content) throws JSONException {
-        if (content == null)
-            return null;
+        if (content == null) return null;
         content = content.trim();
         JSONObject result = new JSONObject();
         try {

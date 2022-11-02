@@ -22,6 +22,7 @@ public class EMGroupOptionsHelper {
     }
 
     public static JSONObject toJson(EMGroupOptions options) throws JSONException{
+        if (options == null) return null;
         JSONObject data = new JSONObject();
         data.put("maxCount", options.maxUsers);
         data.put("inviteNeedConfirm", options.inviteNeedConfirm);

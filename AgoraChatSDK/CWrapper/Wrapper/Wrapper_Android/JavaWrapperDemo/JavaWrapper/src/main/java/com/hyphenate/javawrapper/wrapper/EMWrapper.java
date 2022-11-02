@@ -13,14 +13,37 @@ public class EMWrapper {
     }
 
     public String callSDKApi(String manager, String method, String jsonString, EMWrapperCallback callback) {
+        String str = null;
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
-            if (manager.equals(EMSDKMethod.client)) {
-                clientWrapper.onMethodCall(method, jsonObject, callback);
-            }else if (manager.equals(EMSDKMethod.contactManager)) {
-                clientWrapper.contactManagerWrapper.onMethodCall(method,jsonObject, callback);
-            }else if (manager.equals(EMSDKMethod.roomManager)) {
-                clientWrapper.contactManagerWrapper.onMethodCall(method,jsonObject, callback);
+            switch (manager) {
+                case EMSDKMethod.client:
+                    str = clientWrapper.onMethodCall(method, jsonObject, callback);
+                    break;
+                case EMSDKMethod.chatManager:
+                    str = clientWrapper.chatManagerWrapper.onMethodCall(method, jsonObject, callback);
+                    break;
+                case EMSDKMethod.contactManager:
+                    str = clientWrapper.contactManagerWrapper.onMethodCall(method, jsonObject, callback);
+                    break;
+                case EMSDKMethod.roomManager:
+                    str = clientWrapper.roomManagerWrapper.onMethodCall(method, jsonObject, callback);
+                    break;
+                case EMSDKMethod.groupManager:
+                    str = clientWrapper.groupManagerWrapper.onMethodCall(method, jsonObject, callback);
+                    break;
+                case EMSDKMethod.userInfoManager:
+                    str = clientWrapper.userInfoManagerWrapper.onMethodCall(method, jsonObject, callback);
+                    break;
+                case EMSDKMethod.presenceManager:
+                    str = clientWrapper.presenceManagerWrapper.onMethodCall(method, jsonObject, callback);
+                    break;
+                case EMSDKMethod.threadManager:
+                    str = clientWrapper.chatThreadManagerWrapper.onMethodCall(method, jsonObject, callback);
+                    break;
+                case EMSDKMethod.pushManager:
+                    str = clientWrapper.pushManagerWrapper.onMethodCall(method, jsonObject, callback);
+                    break;
             }
         } catch (JSONException e) {
             try {
@@ -29,6 +52,6 @@ public class EMWrapper {
                 callback.onError(jsonObject.toString());
             }catch (JSONException ignore){}
         }
-        return "";
+        return str;
     }
 }

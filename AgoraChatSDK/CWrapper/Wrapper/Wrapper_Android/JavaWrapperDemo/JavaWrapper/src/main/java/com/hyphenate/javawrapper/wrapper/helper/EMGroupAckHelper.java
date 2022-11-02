@@ -10,6 +10,7 @@ import java.util.Map;
 
 public class EMGroupAckHelper {
     public static JSONObject toJson(EMGroupReadAck ack) throws JSONException {
+        if (ack == null) return null;
         JSONObject data = new JSONObject();
         data.put("msg_id", ack.getMsgId());
         data.put("ack_id", ack.getAckId());

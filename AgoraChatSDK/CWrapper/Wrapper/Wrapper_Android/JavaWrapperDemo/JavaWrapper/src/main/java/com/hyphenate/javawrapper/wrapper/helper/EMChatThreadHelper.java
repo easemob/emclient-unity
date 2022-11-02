@@ -10,6 +10,7 @@ import java.util.Map;
 
 public class EMChatThreadHelper {
     public static JSONObject toJson(EMChatThread thread) throws JSONException {
+        if (thread == null) return null;
         JSONObject data = new JSONObject();
         data.put("threadId", thread.getChatThreadId());
         if (thread.getChatThreadName() != null) {

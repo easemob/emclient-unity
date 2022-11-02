@@ -10,6 +10,7 @@ import java.util.Map;
 
 public class EMLanguageHelper {
     public static JSONObject toJson(EMLanguage language) throws JSONException {
+        if (language == null) return null;
         JSONObject data = new JSONObject();
         data.put("code", language.LanguageCode);
         data.put("name", language.LanguageName);

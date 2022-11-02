@@ -20,6 +20,7 @@ import java.util.Map;
 
 public class EMCursorResultHelper {
     public static JSONObject toJson(EMCursorResult result) throws JSONException {
+        if (result == null) return null;
         JSONObject data = new JSONObject();
         data.put("cursor", result.getCursor());
         JSONArray jsonList = new JSONArray();

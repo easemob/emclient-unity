@@ -16,6 +16,7 @@ import java.util.Map;
 
 public class EMPageResultHelper {
     public static JSONObject toJson(EMPageResult result) throws JSONException {
+        if (result == null) return null;
         JSONObject data = new JSONObject();
         data.put("count", result.getPageCount());
         JSONArray jsonArray = new JSONArray();

@@ -11,6 +11,7 @@ import java.util.Map;
 
 public class EMPushConfigsHelper {
     public static JSONObject toJson(EMPushConfigs pushConfigs) throws JSONException {
+        if (pushConfigs == null) return null;
         JSONObject data = new JSONObject();
         data.put("noDisturb", pushConfigs.isNoDisturbOn());
         data.put("noDisturbEndHour", pushConfigs.getNoDisturbEndHour());

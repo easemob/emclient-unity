@@ -173,6 +173,7 @@ public class EMMessageHelper {
     }
 
     public static JSONObject toJson(EMMessage message) throws JSONException{
+        if (message == null) return null;
         JSONObject data = new JSONObject();
         switch (message.getType()) {
             case TXT: {

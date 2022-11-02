@@ -6,6 +6,7 @@ import com.hyphenate.javawrapper.util.EMWrapperThreadUtil;
 import com.hyphenate.javawrapper.wrapper.helper.EMErrorHelper;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +31,7 @@ public class EMCommonValueCallback<T> implements EMValueCallBack<T> {
     @Override
     public void onError(int error, String errorMsg) {
         post(() -> {
-            Map<String, Object> data = new HashMap<>();
+            JSONObject data = new JSONObject();
             try {
                 data.put("error", EMErrorHelper.toJson(error, errorMsg));
             } catch (JSONException e) {
@@ -42,9 +43,11 @@ public class EMCommonValueCallback<T> implements EMValueCallBack<T> {
 
     public void updateObject(Object object) {
         post(()-> {
-            Map<String, Object> data = new HashMap<>();
+            JSONObject data = new JSONObject();
             if (object != null) {
-                data.put("value", object);
+                try {
+                    data.put("value", object);
+                }catch (JSONException e) {}
             }
             callback.onSuccess(data.toString());
         });

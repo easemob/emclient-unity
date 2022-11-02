@@ -11,6 +11,7 @@ import java.util.Map;
 
 public class HyphenateExceptionHelper {
     public static JSONObject toJson(HyphenateException e) throws JSONException {
+        if (e == null) return null;
         JSONObject data = new JSONObject();
         data.put("code", e.getErrorCode());
         data.put("description", e.getDescription());

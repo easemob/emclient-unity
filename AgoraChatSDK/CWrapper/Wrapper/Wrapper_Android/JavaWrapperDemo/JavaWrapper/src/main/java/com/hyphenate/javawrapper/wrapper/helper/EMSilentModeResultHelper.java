@@ -10,6 +10,7 @@ import java.util.Map;
 
 public class EMSilentModeResultHelper {
     public static JSONObject toJson(EMSilentModeResult modeResult) throws JSONException {
+        if (modeResult == null) return null;
         JSONObject data = new JSONObject();
         data.put("expireTs", modeResult.getExpireTimestamp());
         if (modeResult.getConversationId() != null) {

@@ -10,6 +10,7 @@ import java.util.Map;
 
 public class EMGroupInfoHelper {
     public static JSONObject toJson(EMGroupInfo group) throws JSONException {
+        if (group == null) return null;
         JSONObject data = new JSONObject();
         data.put("groupId", group.getGroupId());
         data.put("name", group.getGroupName());

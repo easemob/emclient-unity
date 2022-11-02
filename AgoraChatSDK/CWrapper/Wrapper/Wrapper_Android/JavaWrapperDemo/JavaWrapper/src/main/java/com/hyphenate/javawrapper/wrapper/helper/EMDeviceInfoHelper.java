@@ -10,6 +10,7 @@ import java.util.Map;
 
 public class EMDeviceInfoHelper {
     public static JSONObject toJson(EMDeviceInfo device) throws JSONException {
+        if (device == null) return null;
         JSONObject data = new JSONObject();
         data.put("resource", device.getResource());
         data.put("deviceUUID", device.getDeviceUUID());

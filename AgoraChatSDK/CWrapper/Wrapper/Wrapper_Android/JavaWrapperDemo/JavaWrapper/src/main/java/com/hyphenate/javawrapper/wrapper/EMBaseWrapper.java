@@ -11,7 +11,7 @@ import org.json.JSONObject;
 public class EMBaseWrapper {
 
     public String onMethodCall(String method, JSONObject jsonObject, EMWrapperCallback callback) throws JSONException{
-        return "";
+        return null;
     }
 
     public void post(Runnable runnable) {
@@ -23,21 +23,30 @@ public class EMBaseWrapper {
 
     public void onSuccess(Object object, EMWrapperCallback callback)  {
         post(()->{
-            JSONObject jsonObject = new JSONObject();
+                JSONObject jo = null;
             try {
+                JSONObject jsonObject = new JSONObject();
                 jsonObject.put("value", object);
-                callback.onSuccess(jsonObject.toString());
-            }catch (JSONException ignore){}
+                jo = jsonObject;
+            }catch (JSONException ignore){
+                ignore.printStackTrace();
+            }finally {
+                callback.onSuccess(jo.toString());
+            }
         });
     }
 
     public void onError(HyphenateException e, EMWrapperCallback callback)  {
         post(()->{
-            JSONObject jsonObject = new JSONObject();
+            JSONObject jo = null;
             try {
+                JSONObject jsonObject = new JSONObject();
                 jsonObject.put("error", HyphenateExceptionHelper.toJson(e));
-                callback.onError(jsonObject.toString());
-            }catch (JSONException ignore) {}
+            }catch (JSONException ignore) {
+                e.printStackTrace();
+            }finally {
+                callback.onError(jo.toString());
+            }
         });
     }
 

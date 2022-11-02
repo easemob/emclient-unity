@@ -17,6 +17,7 @@ public class EMSilentModeTimeHelper {
     }
 
     public static JSONObject toJson(EMSilentModeTime modeTime) throws JSONException{
+        if (modeTime == null) return null;
         JSONObject data = new JSONObject();
         data.put("hour", modeTime.getHour());
         data.put("minute", modeTime.getMinute());

@@ -15,40 +15,41 @@ import java.util.List;
 
 public class EMContactManagerWrapper extends EMBaseWrapper{
 
-    private EMContactListener contactListener;
-
     EMContactManagerWrapper() {
         registerEaseListener();
     }
 
     public String onMethodCall(String method, JSONObject jsonObject, EMWrapperCallback callback) throws JSONException {
+        String ret = null;
         if (EMSDKMethod.addContact.equals(method)) {
-            addContact(method, jsonObject, callback);
+            ret = addContact(jsonObject, callback);
         } else if (EMSDKMethod.deleteContact.equals(method)) {
-            deleteContact(method, jsonObject, callback);
+            ret = deleteContact(jsonObject, callback);
         } else if (EMSDKMethod.getAllContactsFromServer.equals(method)) {
-            getAllContactsFromServer(method, jsonObject, callback);
+            ret = getAllContactsFromServer(callback);
         } else if (EMSDKMethod.getAllContactsFromDB.equals(method)) {
-            getAllContactsFromDB(method, jsonObject, callback);
+            ret = getAllContactsFromDB(callback);
         } else if (EMSDKMethod.addUserToBlockList.equals(method)) {
-            addUserToBlockList(method, jsonObject, callback);
+            ret = addUserToBlockList(jsonObject, callback);
         } else if (EMSDKMethod.removeUserFromBlockList.equals(method)) {
-            removeUserFromBlockList(method, jsonObject, callback);
+            ret = removeUserFromBlockList(jsonObject, callback);
         } else if (EMSDKMethod.getBlockListFromServer.equals(method)) {
-            getBlockListFromServer(method, jsonObject, callback);
+            ret = getBlockListFromServer(callback);
         } else if (EMSDKMethod.getBlockListFromDB.equals(method)) {
-            getBlockListFromDB(method, jsonObject, callback);
+            ret = getBlockListFromDB(callback);
         } else if (EMSDKMethod.acceptInvitation.equals(method)) {
-            acceptInvitation(method, jsonObject, callback);
+            ret = acceptInvitation(jsonObject, callback);
         } else if (EMSDKMethod.declineInvitation.equals(method)) {
-            declineInvitation(method, jsonObject, callback);
+            ret = declineInvitation(jsonObject, callback);
         } else if (EMSDKMethod.getSelfIdsOnOtherPlatform.equals(method)) {
-            getSelfIdsOnOtherPlatform(method, jsonObject, callback);
+            ret = getSelfIdsOnOtherPlatform(callback);
+        } else {
+            ret = super.onMethodCall(method, jsonObject, callback);
         }
-        return null;
+        return ret;
     }
 
-    private void addContact(String method, JSONObject params, EMWrapperCallback callback) throws JSONException {
+    private String addContact(JSONObject params, EMWrapperCallback callback) throws JSONException {
         String username = params.getString("username");
         String reason = null;
         if(params.has("reason")) {
@@ -63,9 +64,10 @@ public class EMContactManagerWrapper extends EMBaseWrapper{
                 onError(e, callback);
             }
         });
+        return null;
     }
 
-    private void deleteContact(String method, JSONObject params, EMWrapperCallback callback) throws JSONException {
+    private String deleteContact(JSONObject params, EMWrapperCallback callback) throws JSONException {
         String username = params.getString("username");
         boolean keepConversation = params.getBoolean("keepConversation");
         asyncRunnable(() -> {
@@ -76,31 +78,34 @@ public class EMContactManagerWrapper extends EMBaseWrapper{
                 onError(e, callback);
             }
         });
+        return null;
     }
 
-    private void getAllContactsFromServer( String method, JSONObject params, EMWrapperCallback callback) throws JSONException {
+    private String getAllContactsFromServer(EMWrapperCallback callback) {
         asyncRunnable(() -> {
             try {
-                List contacts = EMClient.getInstance().contactManager().getAllContactsFromServer();
+                List<String> contacts = EMClient.getInstance().contactManager().getAllContactsFromServer();
                 onSuccess(EMHelper.stringListToJsonArray(contacts), callback);
             } catch (HyphenateException e) {
                 onError(e, callback);
             }
         });
+        return null;
     }
 
-    private void getAllContactsFromDB( String method, JSONObject params, EMWrapperCallback callback) throws JSONException {
+    private String getAllContactsFromDB(EMWrapperCallback callback) {
         asyncRunnable(() -> {
             try {
-                List contacts = EMClient.getInstance().contactManager().getContactsFromLocal();
+                List<String> contacts = EMClient.getInstance().contactManager().getContactsFromLocal();
                 onSuccess(EMHelper.stringListToJsonArray(contacts), callback);
             } catch (HyphenateException e) {
                 onError(e, callback);
             }
         });
+        return null;
     }
 
-    private void addUserToBlockList( String method, JSONObject params, EMWrapperCallback callback) throws JSONException {
+    private String addUserToBlockList( JSONObject params, EMWrapperCallback callback) throws JSONException {
         String username = params.getString("username");
         asyncRunnable(() -> {
             try {
@@ -110,9 +115,10 @@ public class EMContactManagerWrapper extends EMBaseWrapper{
                 onError(e, callback);
             }
         });
+        return null;
     }
 
-    private void removeUserFromBlockList( String method, JSONObject params, EMWrapperCallback callback) throws JSONException {
+    private String removeUserFromBlockList( JSONObject params, EMWrapperCallback callback) throws JSONException {
         String username = params.getString("username");
         asyncRunnable(() -> {
             try {
@@ -122,25 +128,27 @@ public class EMContactManagerWrapper extends EMBaseWrapper{
                 onError(e, callback);
             }
         });
+        return null;
     }
 
-    private void getBlockListFromServer( String method, JSONObject params, EMWrapperCallback callback) throws JSONException {
+    private String getBlockListFromServer(EMWrapperCallback callback) {
         asyncRunnable(() -> {
             try {
-                List contacts = EMClient.getInstance().contactManager().getBlackListFromServer();
+                List<String> contacts = EMClient.getInstance().contactManager().getBlackListFromServer();
                 onSuccess(EMHelper.stringListToJsonArray(contacts), callback);
             } catch (HyphenateException e) {
                 onError(e, callback);
             }
         });
+        return null;
     }
 
-    private void getBlockListFromDB( String method, JSONObject params, EMWrapperCallback callback) throws JSONException {
-        List contacts = EMClient.getInstance().contactManager().getBlackListUsernames();
-        onSuccess(EMHelper.stringListToJsonArray(contacts), callback);
+    private String getBlockListFromDB(EMWrapperCallback callback) throws JSONException{
+        List<String> contacts = EMClient.getInstance().contactManager().getBlackListUsernames();
+        return EMHelper.getReturnJsonObject(EMHelper.stringListToJsonArray(contacts)).toString();
     }
 
-    private void acceptInvitation( String method, JSONObject params, EMWrapperCallback callback) throws JSONException {
+    private String acceptInvitation( JSONObject params, EMWrapperCallback callback) throws JSONException {
         String username = params.getString("username");
         asyncRunnable(() -> {
             try {
@@ -150,9 +158,10 @@ public class EMContactManagerWrapper extends EMBaseWrapper{
                 onError(e, callback);
             }
         });
+        return null;
     }
 
-    private void declineInvitation( String method, JSONObject params, EMWrapperCallback callback) throws JSONException {
+    private String declineInvitation( JSONObject params, EMWrapperCallback callback) throws JSONException {
         String username = params.getString("username");
         asyncRunnable(() -> {
             try {
@@ -162,28 +171,30 @@ public class EMContactManagerWrapper extends EMBaseWrapper{
                 onError(e, callback);
             }
         });
+        return null;
     }
 
-    private void getSelfIdsOnOtherPlatform( String method, JSONObject params, EMWrapperCallback callback) throws JSONException {
+    private String getSelfIdsOnOtherPlatform(EMWrapperCallback callback) {
         asyncRunnable(() -> {
             try {
-                List platforms = EMClient.getInstance().contactManager().getSelfIdsOnOtherPlatform();
+                List<String> platforms = EMClient.getInstance().contactManager().getSelfIdsOnOtherPlatform();
                 onSuccess(EMHelper.stringListToJsonArray(platforms), callback);
             } catch (HyphenateException e) {
                 onError(e, callback);
             }
         });
+        return null;
     }
 
     private void registerEaseListener() {
-        contactListener = new EMContactListener() {
+        EMContactListener contactListener = new EMContactListener() {
             @Override
             public void onContactAdded(String userName) {
                 JSONObject data = new JSONObject();
                 try {
                     data.put("type", "onContactAdded");
                     data.put("username", userName);
-                    post(()-> JavaWrapper.listener.onReceive("EMContactListener", EMSDKMethod.onContactChanged, data.toString()));
+                    post(() -> JavaWrapper.listener.onReceive("EMContactListener", EMSDKMethod.onContactChanged, data.toString()));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -195,7 +206,7 @@ public class EMContactManagerWrapper extends EMBaseWrapper{
                 try {
                     data.put("type", "onContactDeleted");
                     data.put("username", userName);
-                    post(()-> JavaWrapper.listener.onReceive("EMContactListener", EMSDKMethod.onContactChanged, data.toString()));
+                    post(() -> JavaWrapper.listener.onReceive("EMContactListener", EMSDKMethod.onContactChanged, data.toString()));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -208,7 +219,7 @@ public class EMContactManagerWrapper extends EMBaseWrapper{
                     data.put("type", "onContactInvited");
                     data.put("username", userName);
                     data.put("reason", reason);
-                    post(()-> JavaWrapper.listener.onReceive("EMContactListener", EMSDKMethod.onContactChanged, data.toString()));
+                    post(() -> JavaWrapper.listener.onReceive("EMContactListener", EMSDKMethod.onContactChanged, data.toString()));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -220,7 +231,7 @@ public class EMContactManagerWrapper extends EMBaseWrapper{
                 try {
                     data.put("type", "onFriendRequestAccepted");
                     data.put("username", userName);
-                    post(()-> JavaWrapper.listener.onReceive("EMContactListener", EMSDKMethod.onContactChanged, data.toString()));
+                    post(() -> JavaWrapper.listener.onReceive("EMContactListener", EMSDKMethod.onContactChanged, data.toString()));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -232,7 +243,7 @@ public class EMContactManagerWrapper extends EMBaseWrapper{
                 try {
                     data.put("type", "onFriendRequestDeclined");
                     data.put("username", userName);
-                    post(()-> JavaWrapper.listener.onReceive("EMContactListener", EMSDKMethod.onContactChanged, data.toString()));
+                    post(() -> JavaWrapper.listener.onReceive("EMContactListener", EMSDKMethod.onContactChanged, data.toString()));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

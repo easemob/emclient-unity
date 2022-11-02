@@ -12,6 +12,7 @@ import java.util.Map;
 
 public class EMMessageReactionChangeHelper {
     public static JSONObject toJson(EMMessageReactionChange change) throws JSONException {
+        if (change == null) return null;
         JSONObject data = new JSONObject();
         data.put("conversationId", change.getConversionID());
         data.put("messageId", change.getMessageId());

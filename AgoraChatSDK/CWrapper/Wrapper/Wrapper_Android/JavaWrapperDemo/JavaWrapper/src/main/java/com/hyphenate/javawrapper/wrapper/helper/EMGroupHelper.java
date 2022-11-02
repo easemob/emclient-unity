@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 public class EMGroupHelper {
     public static JSONObject toJson(EMGroup group) throws JSONException {
+        if (group == null) return null;
         JSONObject data = new JSONObject();
         data.put("groupId", group.getGroupId());
         data.put("name", group.getGroupName());

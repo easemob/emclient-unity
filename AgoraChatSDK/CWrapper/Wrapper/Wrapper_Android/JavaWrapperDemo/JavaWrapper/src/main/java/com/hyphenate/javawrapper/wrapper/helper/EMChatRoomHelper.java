@@ -10,6 +10,7 @@ import java.util.Map;
 
 public class EMChatRoomHelper {
     public static JSONObject toJson(EMChatRoom chatRoom) throws JSONException {
+        if (chatRoom == null) return null;
         JSONObject data = new JSONObject();
         data.put("roomId", chatRoom.getId());
         data.put("name", chatRoom.getName());
