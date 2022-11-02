@@ -1,20 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using AgoraChat.SimpleJSON;
 
 namespace AgoraChat
 {
     public class ContactManager
     {
-        CallbackManager callbackManager;
+        readonly CallbackManager callbackManager;
 
        
 
         internal ContactManager(NativeListener nativeListener)
         {
             callbackManager = nativeListener.callbackManager;
-            nativeListener.contactManagerEvent += NativeEventHandle;
+            nativeListener.ContactManagerEvent += NativeEventHandle;
         }
 
-        void NativeEventHandle(string method, string jsonString)
+        internal void NativeEventHandle(string method, JSONNode jsonNode)
         {
 
         }

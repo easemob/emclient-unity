@@ -71,8 +71,8 @@ namespace AgoraChat
             FileName = jsonObject["name"];
             FileId = jsonObject["fileId"];
             FileOwner = jsonObject["owner"];
-            CreateTime = jsonObject["createTime"].AsInt;
-            FileSize = jsonObject["fileSize"].AsInt;
+            CreateTime = jsonObject["createTime"];
+            FileSize = jsonObject["fileSize"];
         }
 
         internal override JSONObject ToJsonObject()

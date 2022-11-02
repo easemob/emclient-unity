@@ -4,9 +4,20 @@ using AgoraChat.SimpleJSON;
 
 namespace AgoraChat
 {
+
+    internal static class ModelHelper {
+        internal static T CreateWithJsonObject<T>(JSONNode jsonNode) where T : BaseModel
+        {
+            if(jsonNode == null || !jsonNode.IsObject) return null;
+            BaseModel bs = (T)Activator.CreateInstance(typeof(T), true);
+            bs.FromJsonObject(jsonNode.AsObject);
+            return (T)bs;
+        }
+    }
+
     internal static class List
     {
-        internal static List<string> StringListFromJsonObject(JSONNode jsonNode)
+        internal static List<string> StringListFromJsonArray(JSONNode jsonNode)
         {
             List<string> list = new List<string>();
             if (jsonNode != null && jsonNode.IsArray)
@@ -22,32 +33,27 @@ namespace AgoraChat
             return list;
         }
 
-        internal static List<string> StringListFromJson(string json)
+        internal static List<string> StringListFromJsonString(string json)
         {
             if (json == null) return new List<string>();
             JSONNode jn = JSON.Parse(json);
-            return StringListFromJsonObject(jn);
+            return StringListFromJsonArray(jn);
         }
 
-        internal static List<T> ListFromJson<T>(string json) where T : BaseModel
+        internal static List<T> BaseModelListFromJsonObject<T>(JSONNode jn) where T : BaseModel
         {
-            List<T> list = new List<T>();
-            if (null == json || json.Length == 0) return list;
+            if (null != jn && jn.IsArray) return null;
 
-            JSONNode jsonArray = JSON.Parse(json);
-            if (null != jsonArray && jsonArray.IsArray)
+            List<T> list = new List<T>();
+
+            foreach (JSONNode it in jn.AsArray)
             {
-                foreach (JSONNode it in jsonArray.AsArray)
+                if (it.IsObject)
                 {
-                    if (it.IsString)
-                    {
-                        BaseModel bs = (T)Activator.CreateInstance(typeof(T), true);
-                        JSONObject jo = JSON.Parse(it.Value).AsObject;
-                        bs.FromJsonObject(jo);
-                        list.Add((T)bs);
-                    }
+                    list.Add(ModelHelper.CreateWithJsonObject<T>(it.AsObject));
                 }
             }
+
             return list;
         }
     }
@@ -55,30 +61,40 @@ namespace AgoraChat
 
     internal static class Dictionary
     {
-        internal static Dictionary<string, string> DictionaryFromJson(string jsonString)
+        // 因为JSONNode key 只支持string，所以此处的key必须为string类型。
+        // T: BaseModel子类
+        internal static Dictionary<string, T> BaseModelDictionaryFromJsonObject<T>(JSONNode jo) where T : BaseModel
         {
-            Dictionary<string, string> ret = new Dictionary<string, string>();
-            if (jsonString == null || jsonString.Length == 0) return ret;
-            
-            JSONNode jn = JSON.Parse(jsonString);
-            if (null == jn || jn.IsNull || !jn.IsObject) return ret;
+            if (!jo.IsObject) return null;
 
-            JSONObject jo = jn.AsObject;
+            Dictionary<string, T> ret = new Dictionary<string, T>();
+
             foreach (string s in jo.Keys)
             {
-                ret.Add(s, jo[s]);
+                ret.Add(s, ModelHelper.CreateWithJsonObject<T>(jo[s].AsObject));
             }
 
             return ret;
         }
 
-        
+        internal static Dictionary<string, string> StringDictionaryFromJsonObject(JSONNode jo) {
+
+            if (jo == null) return null;
+
+            Dictionary<string, string> ret = new Dictionary<string, string>();
+
+            foreach (string s in jo.Keys) {
+                ret.Add(s, jo[s]);
+            }
+
+            return ret;
+        }
     }
 
-    internal static class JsonString
+    internal static class JsonObject
     {
 
-        internal static string JsonStringFromStringList(List<string> list)
+        internal static JSONNode JsonArrayFromStringList(List<string> list)
         {
             JSONArray ja = new JSONArray();
             if (list != null)
@@ -89,10 +105,10 @@ namespace AgoraChat
                 }
             }
 
-            return ja.ToString();
+            return ja;
         }
 
-        internal static string JsonStringFromDictionary(Dictionary<string, string> dictionary)
+        internal static string JsonObjectFromDictionary(Dictionary<string, string> dictionary)
         {
             JSONObject jo = new JSONObject();
 
@@ -112,10 +128,10 @@ namespace AgoraChat
                 }
             }
 
-            return jo.ToString();
+            return jo;
         }
 
-        internal static string JsonStringFromAttributes(Dictionary<string, AttributeValue> attributes = null)
+        internal static JSONObject JsonObjectFromAttributes(Dictionary<string, AttributeValue> attributes = null)
         {
             if (null == attributes || 0 == attributes.Count) return null;
 
@@ -124,7 +140,7 @@ namespace AgoraChat
             {
                 jo[item.Key] = item.Value.ToJsonObject();
             }
-            return jo.ToString();
+            return jo;
         }
     }
 
@@ -146,7 +162,6 @@ namespace AgoraChat
 
                 JSONObject jo = jn.AsObject;
 
-                //set nonPublic with true, to tell CreateInstance use non-public constructor
                 BaseModel bs = (T)Activator.CreateInstance(typeof(T), true);
                 bs.FromJsonObject(jo);
                 return (T)bs;

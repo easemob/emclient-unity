@@ -53,7 +53,7 @@ namespace AgoraChat
         {
             From = jsonObject["from"];
             Operation = (ChatThreadOperation)jsonObject["type"].AsInt;
-            ChatThread = new ChatThread(jsonObject["thread"].AsObject);
+            ChatThread = ModelHelper.CreateWithJsonObject<ChatThread>(jsonObject["thread"].AsObject);
         }
 
         internal override JSONObject ToJsonObject()

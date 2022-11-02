@@ -82,8 +82,8 @@ namespace AgoraChat
             MsgId = jsonObject["msg_id"];
             From = jsonObject["from"];
             Content = jsonObject["content"];
-            Count = jsonObject["count"].AsInt;
-            Timestamp = jsonObject["timestamp"].AsInt;
+            Count = jsonObject["count"];
+            Timestamp = jsonObject["timestamp"];
         }
 
         internal override JSONObject ToJsonObject()

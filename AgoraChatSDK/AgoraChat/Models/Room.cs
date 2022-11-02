@@ -172,18 +172,18 @@ namespace AgoraChat
 
         internal override void FromJsonObject(JSONObject jsonObject)
         {
-            RoomId = jsonObject["roomId"].Value;
-            Name = jsonObject["name"].Value;
-            Description = jsonObject["desc"].Value;
-            Announcement = jsonObject["announcement"].Value;
-            MemberCount = jsonObject["memberCount"].AsInt;
-            AdminList = List.StringListFromJsonObject(jsonObject["adminList"]);
-            MemberList = List.StringListFromJsonObject(jsonObject["memberList"]);
-            BlockList = List.StringListFromJsonObject(jsonObject["blockList"]);
-            MuteList = List.StringListFromJsonObject(jsonObject["muteList"]);
-            MaxUsers = jsonObject["maxUsers"].AsInt;
-            Owner = jsonObject["owner"].Value;
-            IsAllMemberMuted = jsonObject["isAllMemberMuted"].AsBool;
+            RoomId = jsonObject["roomId"];
+            Name = jsonObject["name"];
+            Description = jsonObject["desc"];
+            Announcement = jsonObject["announcement"];
+            MemberCount = jsonObject["memberCount"];
+            AdminList = List.StringListFromJsonArray(jsonObject["adminList"]);
+            MemberList = List.StringListFromJsonArray(jsonObject["memberList"]);
+            BlockList = List.StringListFromJsonArray(jsonObject["blockList"]);
+            MuteList = List.StringListFromJsonArray(jsonObject["muteList"]);
+            MaxUsers = jsonObject["maxUsers"];
+            Owner = jsonObject["owner"];
+            IsAllMemberMuted = jsonObject["isAllMemberMuted"];
             PermissionType = (RoomPermissionType)jsonObject["permissionType"].AsInt;
         }
 

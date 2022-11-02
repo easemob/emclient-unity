@@ -207,14 +207,14 @@ namespace AgoraChat
             Description = jsonObject["desc"];
             Owner = jsonObject["owner"];
             Announcement = jsonObject["announcement"];
-            MemberCount = jsonObject["memberCount"].AsInt;
-            MemberList = List.StringListFromJsonObject(jsonObject["memberList"]);
-            AdminList = List.StringListFromJsonObject(jsonObject["adminList"]);
-            BlockList = List.StringListFromJsonObject(jsonObject["blockList"]);
-            MuteList = List.StringListFromJsonObject(jsonObject["muteList"]);
+            MemberCount = jsonObject["memberCount"];
+            MemberList = List.StringListFromJsonArray(jsonObject["memberList"]);
+            AdminList = List.StringListFromJsonArray(jsonObject["adminList"]);
+            BlockList = List.StringListFromJsonArray(jsonObject["blockList"]);
+            MuteList = List.StringListFromJsonArray(jsonObject["muteList"]);
             MessageBlocked = jsonObject["groupId"];
             IsAllMemberMuted = jsonObject["groupId"];
-            Options = new GroupOptions(jsonObject["options"]);
+            Options = ModelHelper.CreateWithJsonObject<GroupOptions>(jsonObject["options"]); 
             PermissionType = (GroupPermissionType)jsonObject["permissionType"].AsInt;
         }
 

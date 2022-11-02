@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace AgoraChat
 {
-    internal delegate Object Process(string cbid, string json);
+    internal delegate Object Process(string cbid, JSONNode jsonNode);
 
     internal class CallbackManager
     {
@@ -16,7 +16,7 @@ namespace AgoraChat
           
         }
 
-        internal void AddCallback(CallBack callback, Action<string, Process, CallBack> action, Process process)
+        internal void AddCallback(CallBack callback, Action<JSONNode, Process, CallBack> action, Process process)
         {
             callback.callbackId = current_id.ToString();
             callbackMap[callback.callbackId] = new CallbackItem(callback, action, process);
@@ -29,17 +29,15 @@ namespace AgoraChat
 
             AddCallback(
                 callback, 
-                (jstr, process, cb) => {
+                (jn, process, cb) => {
                     // parse result json
-                    if (null == jstr || jstr.Length <= 2) return;
-
-                    JSONNode jn = JSON.Parse(jstr);
                     if (null == jn || !jn.IsObject) return;
 
                     JSONObject jo = jn.AsObject;
 
                     string cbid = jo["callbackId"].Value;
                     int progress = (null != jo["progress"]) ? jo["progress"].AsInt : -1;
+                    // TODO: jsonNode or string?
                     string value = (null != jo["value"]) ? jo["value"].Value : "";
 
                     int code = -1;
@@ -90,22 +88,22 @@ namespace AgoraChat
             }
         }
 
-        internal void CallActionProgress(string callbackId, string jsonString)
+        internal void CallActionProgress(string callbackId, JSONNode jsonNode)
         {
             CallbackItem item = callbackMap[callbackId];
             if (item != null)
             {
-                item.callbackAction?.Invoke(jsonString, item.process, item.callback);
+                item.callbackAction?.Invoke(jsonNode, item.process, item.callback);
             }
         }
     }
 
     internal class CallbackItem {
         internal CallBack callback;
-        internal Action<string, Process, CallBack> callbackAction;
+        internal Action<JSONNode, Process, CallBack> callbackAction;
         internal Process process;
 
-        internal CallbackItem(CallBack callback, Action<string, Process, CallBack> callbackAction, Process process)
+        internal CallbackItem(CallBack callback, Action<JSONNode, Process, CallBack> callbackAction, Process process)
         {
             this.callback = callback;
             this.callbackAction = callbackAction;

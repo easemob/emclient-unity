@@ -37,17 +37,14 @@ namespace AgoraChat
 
         internal override void FromJsonObject(JSONObject jsonObject)
         {
-            Cursor = jsonObject["cursor"].Value;
+            Cursor = jsonObject["cursor"];
             JSONNode jn = jsonObject["list"];
             if (jn.IsArray) {
                 JSONArray jsonArray = jn.AsArray;
                 Data = new List<T>();
-                if (typeof(T).IsAssignableFrom(typeof(BaseModel)))
+                foreach (JSONObject jsonObj in jsonArray)
                 {
-                    foreach (JSONObject jsonObj in jsonArray)
-                    {
-                        Data.Add(callback(jsonObj));
-                    }
+                    Data.Add(callback(jsonObj));
                 }
             }
             callback = null;

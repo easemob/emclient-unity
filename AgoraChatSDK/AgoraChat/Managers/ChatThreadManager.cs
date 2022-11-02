@@ -1,13 +1,15 @@
-﻿namespace AgoraChat
+﻿using AgoraChat.SimpleJSON;
+
+namespace AgoraChat
 {
     public class ChatThreadManager
     {
         internal ChatThreadManager(NativeListener listener)
         {
-            listener.chatThreadManagerEvent += NativeEventHandle;
+            listener.ChatThreadManagerEvent += NativeEventHandle;
         }
 
-        void NativeEventHandle(string method, string jsonString)
+        internal void NativeEventHandle(string method, JSONNode jsonNode)
         {
 
         }

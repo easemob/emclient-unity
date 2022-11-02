@@ -59,26 +59,5 @@ namespace AgoraChat
         {
             return null;
         }
-
-        internal static List<SupportLanguage> ListFromJson(string json)
-        {
-            List<SupportLanguage> list = new List<SupportLanguage>();
-
-            if (null == json || json.Length == 0) return list;
-
-            JSONNode jsonArray = JSON.Parse(json);
-            if (jsonArray != null && jsonArray.IsArray)
-            {
-                foreach (JSONNode v in jsonArray.AsArray)
-                {
-                    if (v.IsString)
-                    {
-                        SupportLanguage conv = new SupportLanguage(v.Value);
-                        list.Add(conv);
-                    }
-                }
-            }
-            return list;
-        }
     }
 }

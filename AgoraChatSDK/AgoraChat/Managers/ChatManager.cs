@@ -17,7 +17,7 @@ namespace AgoraChat
         internal ChatManager(NativeListener listener)
         {
             callbackManager = listener.callbackManager;
-            listener.chatManagerEvent += NativeEventHandle;
+            listener.ChatManagerEvent += NativeEventHandle;
 
             delegater = new List<IChatManagerDelegate>();
 
@@ -33,20 +33,16 @@ namespace AgoraChat
             }
         }
 
-        private void UpdatedMsg(string cbid, string json)
+        private void UpdatedMsg(string cbid, JSONNode jsonNode)
         {
             lock (msgMapLocker)
             {
                 if (msgMap.ContainsKey(cbid))
                 {
                     var msg = msgMap[cbid];
-                    if (json.Length > 0)
+                    if (jsonNode != null && jsonNode.IsObject)
                     {
-                        JSONNode jn = JSON.Parse(json);
-                        if (null != jn && jn.IsObject)
-                        {
-                            msg.FromJsonObject(jn.AsObject);
-                        }
+                        msg.FromJsonObject(jsonNode.AsObject);
                     }
                 }
             }
@@ -201,10 +197,10 @@ namespace AgoraChat
             {
                 CursorResult<Message>.ItemCallback parse = (JSONObject jo) =>
                 {
-                    return new Message(jo.Value);
+                    return new Message(jo.AsObject);
                 };
 
-                CursorResult<Message> cursor_result = new CursorResult<Message>(_json, parse);
+                CursorResult<Message> cursor_result = new CursorResult<Message>(_json.AsObject, parse);
                 return cursor_result;
             };
 
@@ -302,7 +298,7 @@ namespace AgoraChat
         {
             Process process = (_cbid, _json) =>
             {
-                List<Conversation> list = Conversation.ListFromJson(_json);
+                List<Conversation> list = List.BaseModelListFromJsonObject<Conversation>(_json);
                 return list;
             };
 
@@ -390,7 +386,9 @@ namespace AgoraChat
 
             if (null == json || json.Length == 0) return new List<Conversation>();
 
-            return Conversation.ListFromJson(json);
+            JSONNode jn = JSON.Parse(json);
+
+            return List.BaseModelListFromJsonObject<Conversation>(jn);
         }
 
         /**
@@ -538,7 +536,12 @@ namespace AgoraChat
             jo_param.Add("direction", direction == MessageSearchDirection.UP ? "up" : "down");
 
             string json = CWrapperNative.NativeGet(NAME_CHATMANAGER, "searchChatMsgFromDB", jo_param, "");
-            return List.ListFromJson<Message>(json);
+            if (json != null && json.Length > 0) {
+                JSONNode jo = JSON.Parse(json);
+                return List.BaseModelListFromJsonObject<Message>(jo);
+            }
+
+            return null;
         }
 
         /**
@@ -777,9 +780,10 @@ namespace AgoraChat
          */
         public void FetchSupportLanguages(ValueCallBack<List<SupportLanguage>> callback = null)
         {
+       
             Process process = (_cbid, _json) =>
             {
-                List<SupportLanguage> list = List.ListFromJson<SupportLanguage>(_json);
+                List<SupportLanguage> list = List.BaseModelListFromJsonObject<SupportLanguage>(_json);
                 return list;
             };
             callbackManager.AddCallbackAction<List<SupportLanguage>>(callback, process);
@@ -803,11 +807,11 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("message", message.ToJsonObject());
-            jo_param.Add("languages", JsonString.JsonStringFromStringList(targetLanguages));
+            jo_param.Add("languages", JsonObject.JsonArrayFromStringList(targetLanguages));
 
             Process process = (_cbid, _json) =>
             {
-                Message msg = new Message(_json);
+                Message msg = new Message(_json.AsObject);
                 return msg;
             };
 
@@ -861,10 +865,10 @@ namespace AgoraChat
             {
                 CursorResult<GroupReadAck>.ItemCallback parse = (JSONObject jo) =>
                 {
-                    return new GroupReadAck(jo.Value);
+                    return new GroupReadAck(jo.AsObject);
                 };
 
-                CursorResult<GroupReadAck> cursor_result = new CursorResult<GroupReadAck>(_json, parse);
+                CursorResult<GroupReadAck> cursor_result = new CursorResult<GroupReadAck>(_json.AsObject, parse);
                 return cursor_result;
             };
 
@@ -986,7 +990,7 @@ namespace AgoraChat
         public void GetReactionList(List<string> messageIdList, MessageType chatType, string groupId, ValueCallBack<Dictionary<string, List<MessageReaction>>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("msgIds", JsonString.JsonStringFromStringList(messageIdList));
+            jo_param.Add("msgIds", JsonObject.JsonArrayFromStringList(messageIdList));
             jo_param.Add("groupId", groupId);
 
             //TODO: need to check
@@ -1002,10 +1006,9 @@ namespace AgoraChat
             Process process = (_cbid, _json) =>
             {
                 Dictionary<string, List<MessageReaction>> dict = null;
-                JSONNode jn = JSON.Parse(_json);
-                if (null != jn && jn.IsObject)
+                if (null != _json && _json.IsObject)
                 {
-                    dict = MessageReaction.DictFromJsonObject(jn.AsObject);
+                    dict = MessageReaction.DictFromJsonObject(_json.AsObject);
                 } 
                 else
                 {
@@ -1053,10 +1056,10 @@ namespace AgoraChat
             {
                 CursorResult<MessageReaction>.ItemCallback parse = (JSONObject jo) =>
                 {
-                    return new MessageReaction(jo.Value);
+                    return new MessageReaction(jo);
                 };
 
-                CursorResult<MessageReaction> cursor_result = new CursorResult<MessageReaction>(_json, parse);
+                CursorResult<MessageReaction> cursor_result = new CursorResult<MessageReaction>(_json.AsObject, parse);
                 return cursor_result;
             };
 
@@ -1103,18 +1106,20 @@ namespace AgoraChat
             }
         }
 
-        internal void NativeEventHandle(string method, string jsonString)
+        internal void NativeEventHandle(string method, JSONNode jsonNode)
         {
             if (delegater.Count == 0 || null == method || method.Length == 0) return;
 
             if (method.CompareTo("OnMessagesReceived") == 0)
             {
-                List<Message> list = List.ListFromJson<Message>(jsonString);
-                if(list.Count > 0)
-                {
-                    foreach (IChatManagerDelegate it in delegater)
+                if (jsonNode != null) {
+                    List<Message> list = List.BaseModelListFromJsonObject<Message>(jsonNode);
+                    if (list.Count > 0)
                     {
-                        it.OnMessagesReceived(list);
+                        foreach (IChatManagerDelegate it in delegater)
+                        {
+                            it.OnMessagesReceived(list);
+                        }
                     }
                 }
             }
@@ -1124,7 +1129,7 @@ namespace AgoraChat
             }
             else if (method.CompareTo("OnMessagesRead") == 0)
             {
-                List<Message> list = List.ListFromJson<Message>(jsonString);
+                List<Message> list = List.BaseModelListFromJsonObject<Message>(jsonNode);
                 if (list.Count > 0)
                 {
                     foreach (IChatManagerDelegate it in delegater)

@@ -82,29 +82,13 @@ namespace AgoraChat
         {
              Rection = jsonObject["reaction"];
              Count = jsonObject["count"].AsInt;
-             UserList = List.StringListFromJsonObject(jsonObject["userList"]);
+             UserList = List.StringListFromJsonArray(jsonObject["userList"]);
              State = jsonObject["isAddedBySelf"].AsBool;
         }
 
         internal override JSONObject ToJsonObject()
         {
             return null;
-        }
-
-        internal static List<MessageReaction> ListFromJsonObject(JSONNode jsonNode)
-        {
-            List<MessageReaction> list = new List<MessageReaction>();
-            if (jsonNode != null && jsonNode.IsArray)
-            {
-                foreach (JSONNode item in jsonNode.AsArray)
-                {
-                    if (item.AsObject)
-                    {
-                        list.Add(new MessageReaction(item.AsObject));
-                    }
-                }
-            }
-            return list;
         }
 
         internal static Dictionary<string, List<MessageReaction>> DictFromJsonObject(JSONNode jsonNode)
@@ -115,7 +99,7 @@ namespace AgoraChat
                 JSONObject jo = jsonNode.AsObject;
                 foreach (string s in jo.Keys)
                 {
-                    dict.Add(s, List.ListFromJson<MessageReaction>(jo[s]));
+                    dict.Add(s, List.BaseModelListFromJsonObject<MessageReaction>(jo[s]));
                 }
             }
             return dict;
