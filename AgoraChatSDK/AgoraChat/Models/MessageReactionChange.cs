@@ -48,7 +48,7 @@ namespace AgoraChat
         {
             ConversationId = jsonObject["conversationId"].Value;
             MessageId = jsonObject["messageId"].Value;
-            ReactionList = List.ReactionListFromJsonObject(jsonObject["reactions"]);
+            ReactionList = MessageReaction.ListFromJsonObject(jsonObject["reactions"]);
         }
 
         internal override JSONObject ToJsonObject()

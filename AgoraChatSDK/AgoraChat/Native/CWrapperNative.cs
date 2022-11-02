@@ -6,14 +6,14 @@ namespace AgoraChat
     public sealed class CWrapperNative
     {
         internal static void NativeCall(string manager, string method, SimpleJSON.JSONNode json, string callbackId = null) {
-            _NativeCall(manager, method, json.ToString(), callbackId);
+            _NativeCall(manager, method, json?.ToString(), callbackId ?? "");
         }
 
 
         internal static string NativeGet(string manager, string method, SimpleJSON.JSONNode json, string callbackId = null)
         {
             StringBuilder sbuilder = new StringBuilder(512);
-            _NativeGet(manager, method, json.ToString(), sbuilder, callbackId);
+            _NativeGet(manager, method, json?.ToString(), sbuilder, callbackId ?? "");
             return Tools.GetUnicodeStringFromUTF8(sbuilder.ToString());
         }
 

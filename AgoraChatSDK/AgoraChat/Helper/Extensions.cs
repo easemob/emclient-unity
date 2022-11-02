@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using AgoraChat.SimpleJSON;
-using AgoraChat.InternalSpace;
-using AgoraChat.MessageBody;
-using System;
 
 namespace AgoraChat
 {
@@ -32,42 +29,29 @@ namespace AgoraChat
             return StringListFromJsonObject(jn);
         }
 
-        internal static List<MessageReaction> ReactionListFromJsonObject(JSONNode jsonNode)
+        internal static List<T> ListFromJson<T>(string json) where T : BaseModel
         {
-            List<MessageReaction> list = new List<MessageReaction>();
-            if (jsonNode != null && jsonNode.IsArray)
-            {
-                foreach (JSONNode item in jsonNode.AsArray)
-                {
-                    if (item.AsObject)
-                    {
-                        list.Add(new MessageReaction(item.AsObject));
-                    }
-                }
-            }
-            return list;
-        }
+            List<T> list = new List<T>();
+            if (null == json || json.Length == 0) return list;
 
-        internal static List<Message> MessageListFromJson(string jsonString)
-        {
-            List<Message> list = new List<Message>();
-            if (jsonString == null || jsonString.Length == 0) return list;
-
-            JSONNode jsonArray = JSON.Parse(jsonString);
+            JSONNode jsonArray = JSON.Parse(json);
             if (null != jsonArray && jsonArray.IsArray)
             {
                 foreach (JSONNode it in jsonArray.AsArray)
                 {
                     if (it.IsString)
                     {
-                        Message conv = new Message(it.Value);
-                        list.Add(conv);
+                        BaseModel bs = (T)Activator.CreateInstance(typeof(T), true);
+                        JSONObject jo = JSON.Parse(it.Value).AsObject;
+                        bs.FromJsonObject(jo);
+                        list.Add((T)bs);
                     }
                 }
             }
             return list;
         }
     }
+
 
     internal static class Dictionary
     {
@@ -88,36 +72,7 @@ namespace AgoraChat
             return ret;
         }
 
-        internal static Dictionary<string, List<MessageReaction>> ReactionMapFromJsonObject(JSONNode jsonNode)
-        {
-            Dictionary<string, List<MessageReaction>> dict = new Dictionary<string, List<MessageReaction>>();
-            if (jsonNode != null && jsonNode.IsObject)
-            {
-                JSONObject jo = jsonNode.AsObject;
-                foreach (string s in jo.Keys)
-                {
-                    dict.Add(s, List.ReactionListFromJsonObject(jo[s]));
-                }
-            }
-            return dict;
-        }
-
-        internal static Dictionary<string, AttributeValue> AttributesFromJson(string jsonString)
-        {
-            Dictionary<string, AttributeValue> ret = new Dictionary<string, AttributeValue>();
-
-            if (null == jsonString || jsonString.Length <= 2) return ret;
-
-            JSONNode jn = JSON.Parse(jsonString);
-            if (null == jn || !jn.IsObject) return ret;
-
-            JSONObject jo = jn.AsObject;
-            foreach (string k in jo.Keys)
-            {
-                ret.Add(k, new AttributeValue(jo[k].AsObject));
-            }
-            return ret;
-        }
+        
     }
 
     internal static class JsonString

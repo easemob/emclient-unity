@@ -11,6 +11,7 @@
     {
         private static SDKClient _instance;
         private IClient _clientImpl;
+
         public static SDKClient Instance
         {
             get
@@ -121,27 +122,12 @@
 
         /**
          * \~chinese
-         * SDK选项。
-         *
-         * \~english
-         * The SDK options.
-         */
-        public Options Options { 
-            get 
-            { //return _Options;
-                //TODO
-                return null;
-             } 
-        }
-
-        /**
-         * \~chinese
          * SDK 版本号。
          *
          * \~english
          * The SDK version.
          */
-        public string SdkVersion { get => "1.0.5"; }
+        public string SdkVersion { get => "1.0.8"; }
 
 
         /**
@@ -151,8 +137,7 @@
          * \~english
          * The ID of the current login user.
          */
-        //TODO
-        public string CurrentUsername { get => "yqtest"; }
+        public string CurrentUsername { get => _clientImpl.CurrentUsername(); }
 
         /**
          * \~chinese
@@ -165,8 +150,7 @@
          * - `true`: Yes.
          * - `false`: No. The current user is not logged into the chat app yet.
          */
-       //TODO
-        public bool IsLoggedIn { get => false; }
+        public bool IsLoggedIn { get => _clientImpl.IsLoggedIn(); }
 
         /**
          * \~chinese
@@ -179,8 +163,7 @@
          * - `true`: Yes.
          * - `false`: No.
          */
-        //TODO
-        public bool IsConnected { get => false; }
+        public bool IsConnected { get => _clientImpl.IsConnected(); }
 
         /**
          * \~chinese
@@ -189,8 +172,7 @@
          * \~english
          * The token of the current user.
          */
-        //TODO
-        public string AccessToken { get => ""; }
+        public string AccessToken { get => _clientImpl.AccessToken(); }
 
         /**
         * \~chinese
@@ -210,6 +192,55 @@
         public void InitWithOptions(Options options)
         {
             _clientImpl.InitWithOptions(options);
+        }
+
+        /**
+         * \~chinese
+         * 创建账号。
+         * 
+         * 异步方法。
+         *
+         * @param username  用户 ID。该参数必填。用户 ID 不能超过 64 个字符，支持以下类型的字符：
+         * - 26 个小写英文字母 a-z
+         * - 26 个大写英文字母 A-Z
+         * - 10 个数字 0-9
+         * - "_", "-", "."
+         * 
+         * 用户 ID 不区分大小写，大写字母会自动转换为小写字母。
+         * 
+         * 用户的电子邮件地址和 UUID 不能作为用户 ID。
+         * 
+         * 可通过以下格式的正则表达式设置用户 ID：^[a-zA-Z0-9_-]+$。
+         * 
+         * @param password  密码，长度不超过 64 个字符。该参数必填。
+         * @param handle    创建结果回调，详见 {@link CallBack}。                             
+         *
+         * \~english
+         * Creates a new user.
+         *
+         * This is an asynchronous method.
+         *
+         * @param username The user ID. Ensure that you set this parameter. 
+         * 
+         * The user ID can contain a maximum of 64 characters of the following types:
+         * - 26 lowercase English letters (a-z);
+         * - 26 uppercase English letters (A-Z);
+         * - 10 numbers (0-9);
+         * - "_", "-", "."
+         * 
+         * The user ID is case-insensitive, so Aa and aa are the same user ID. 
+         * 
+         * The email address or the UUID of the user cannot be used as the user ID.
+         * 
+         * You can also set the user ID using a regular expression in the format of ^[a-zA-Z0-9_-]+$. 
+         * 
+         * @param password The password. The password can contain a maximum of 64 characters. Ensure that you set this parameter.
+         * @param handle  The creation result callback. See {@link CallBack}.          
+         *             
+         */
+        public void CreateAccount(string username, string password, CallBack handle = null)
+        {
+            _clientImpl.CreateAccount(username, password, handle);
         }
 
         /**
@@ -273,6 +304,55 @@
         }
 
         /**
+        * \~chinese
+        * 通过用户 ID 和声网 token 登录 chat 服务器。
+
+        * 通过用户 ID 和密码登录 chat 服务器，详见 {@link #Login(string, string, bool, CallBack))}。
+        *
+        * 异步方法。
+        *
+        * @param username      用户 ID，必填。
+        * @param token         声网 token，必填。
+        * @param handle        登录结果回调，详见 {@link CallBack}。 
+        *
+        * \~english
+        * Logs in to the chat server with the user ID and an Agora token.
+        * 
+        * You can also log in to the chat server with the user ID and a password. See {@link #Login(string, string, bool, CallBack)}.
+        *
+        * This an asynchronous method.
+        *
+        * @param username      The user ID. Ensure that you set this parameter.
+        * @param token         The Agora token. Ensure that you set this parameter.
+        * @param handle        The login result callback. See {@link CallBack}.
+        *
+        */
+        public void LoginWithAgoraToken(string username, string token, CallBack handle = null)
+        {
+            _clientImpl.LoginWithAgoraToken(username, token, handle);
+        }
+
+        /**
+         * \~chinese
+         * 更新声网 token。
+         * 
+         * 当用户通过声网 token 登录时，在 {@link IConnectionDelegate} 回调中收到 token 即将过期的通知时可更新 token，避免因 token 失效产生未知问题。
+         *
+         * @param token 新的声网 token。
+         *
+         * \~english
+         * Renews the Agora token.
+         * 
+         * If you log in with an Agora token and are notified by a callback method {@link IConnectionDelegate} that the token is to be expired, you can call this method to update the token to avoid unknown issues caused by an invalid token.
+         *
+         * @param token The new Agora token.
+         */
+        public void RenewAgoraToken(string token)
+        {
+            _clientImpl.RenewAgoraToken(token);
+        }
+
+        /**
 		 * \~chinese
 		 * 注册连接状态监听器。
 		 *
@@ -306,16 +386,44 @@
             _clientImpl.DeleteConnectionDelegate(connectionDelegate);
         }
 
+        /**
+          * \~chinese
+          * 注册多设备监听器。
+          *
+          * @param multiDeviceDelegate 		要注册的多设备监听器，继承自 {@link IMultiDeviceDelegate}。
+          *
+          * \~english
+          * Adds a connection listener.
+          *
+          * @param multiDeviceDelegate 		The multi-device listener to add. It is inherited from {@link IMultiDeviceDelegate}.
+          *
+          */
+
+        public void AddMultiDeviceDelegate(IMultiDeviceDelegate multiDeviceDelegate)
+        {
+            _clientImpl.AddMultiDeviceDelegate(multiDeviceDelegate);
+        }
+
+        /**
+		 * \~chinese
+		 * 移除指定的多设备监听器。
+		 *
+		 * @param multiDeviceDelegate 		要移除的多设备监听器，继承自 {@link IMultiDeviceDelegate}。
+		 *
+		 * \~english
+		 * Removes a connection listener.
+		 *
+		 * @param multiDeviceDelegate 		The multi-device listener to remove. It is inherited from {@link IMultiDeviceDelegate}.
+		 *
+		 */
+        public void DeleteMultiDeviceDelegate(IMultiDeviceDelegate multiDeviceDelegate)
+        {
+            _clientImpl.DeleteMultiDeviceDelegate(multiDeviceDelegate);
+        }
+
         public void DeInit()
         {
             _clientImpl.CleanUp();
         }
-
-        //TO-DO: need to remove, just for testing
-        public void TestCallBack(string manager, string method, string jstr)
-        {
-            _clientImpl.nativeListener.nativeListenerEvent(manager, method, jstr);
-        }
-
     }
 }
