@@ -1,13 +1,15 @@
-﻿namespace AgoraChat
+﻿using AgoraChat.SimpleJSON;
+
+namespace AgoraChat
 {
     public class RoomManager
     {
         internal RoomManager(NativeListener listener)
         {
-            listener.roomManagerEvent += NativeEventHandle;
+            listener.RoomManagerEvent += NativeEventHandle;
         }
 
-        void NativeEventHandle(string method, string jsonString)
+        internal void NativeEventHandle(string method, JSONNode jsonNode)
         {
 
         }

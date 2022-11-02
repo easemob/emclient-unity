@@ -51,8 +51,8 @@ namespace AgoraChat
             delegater_connection = new List<IConnectionDelegate>();
             delegater_multidevice = new List<IMultiDeviceDelegate>();
 
-            nativeListener.connectionEvent += NativeEventHandle_Connection;
-            nativeListener.multiDeviceEvent += NativeEventHandle_MultiDevice;
+            nativeListener.ConnectionEvent += NativeEventHandle_Connection;
+            nativeListener.MultiDeviceEvent += NativeEventHandle_MultiDevice;
         }
 
         internal void InitWithOptions(Options options)
@@ -172,7 +172,7 @@ namespace AgoraChat
             }
         }
 
-        internal void NativeEventHandle_Connection(string method, string jsonString)
+        internal void NativeEventHandle_Connection(string method, JSONNode jsonNode)
         {
             if (delegater_connection.Count == 0 || null == method || method.Length == 0) return;
 
@@ -187,7 +187,7 @@ namespace AgoraChat
             {
                 foreach (IConnectionDelegate it in delegater_connection)
                 {
-                    it.OnDisconnected(int.Parse(jsonString));
+                    it.OnDisconnected(int.Parse(jsonNode["value"]));
                 }
             }
             else if (method.CompareTo("OnTokenExpired") == 0)
@@ -206,7 +206,7 @@ namespace AgoraChat
             }
         }
 
-        internal void NativeEventHandle_MultiDevice(string method, string jsonString)
+        internal void NativeEventHandle_MultiDevice(string method, JSONNode jsonNode)
         {
             if (delegater_multidevice.Count == 0 || null == method || method.Length == 0) return;
 
@@ -214,11 +214,10 @@ namespace AgoraChat
             {
                 foreach (IMultiDeviceDelegate it in delegater_multidevice)
                 {
-                    JSONNode jo = JSON.Parse(jsonString);
-                    string operationEvent = jo["event"].Value;
+                    string operationEvent = jsonNode["event"];
                     MultiDevicesOperation operation = (MultiDevicesOperation)int.Parse(operationEvent);
-                    string username = jo["username"].Value;
-                    string ext = jo["ext"].Value;
+                    string username = jsonNode["username"];
+                    string ext = jsonNode["ext"];
                     it.OnContactMultiDevicesEvent(operation, username, ext);
                 }
             }
@@ -226,11 +225,10 @@ namespace AgoraChat
             {
                 foreach (IMultiDeviceDelegate it in delegater_multidevice)
                 {
-                    JSONNode jo = JSON.Parse(jsonString);
-                    string operationEvent = jo["event"].Value;
+                    string operationEvent = jsonNode["event"];
                     MultiDevicesOperation operation = (MultiDevicesOperation)int.Parse(operationEvent);
-                    string groupId = jo["groupId"].Value;
-                    List<string> usernames = List.StringListFromJson(jo["usernames"].Value);
+                    string groupId = jsonNode["groupId"];
+                    List<string> usernames = List.StringListFromJsonArray(jsonNode["usernames"]);
                     it.OnGroupMultiDevicesEvent(operation, groupId, usernames);
                 }
             }
@@ -238,7 +236,7 @@ namespace AgoraChat
             {
                 foreach (IMultiDeviceDelegate it in delegater_multidevice)
                 {
-                    it.UndisturbMultiDevicesEvent(jsonString);
+                    it.UndisturbMultiDevicesEvent(jsonNode["value"]);
                 }
             }
             //TODO: need to add OnThreadMultiDevicesEvent?

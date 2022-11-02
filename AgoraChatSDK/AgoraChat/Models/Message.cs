@@ -741,7 +741,7 @@ namespace AgoraChat
             jo.Add("status", MessageStatusToInt(Status));
             jo.Add("chatType", MessageTypeToInt(MessageType));
             jo.Add("direction", MessageDirectionToString(Direction));
-            string strAttr = JsonString.JsonStringFromAttributes(Attributes);
+            string strAttr = JsonObject.JsonObjectFromAttributes(Attributes)?.ToString();
             if (strAttr != null)
             {
                 jo.Add("attributes", strAttr);

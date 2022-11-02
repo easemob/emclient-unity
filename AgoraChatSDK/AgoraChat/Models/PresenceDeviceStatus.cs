@@ -38,7 +38,7 @@ namespace AgoraChat
         internal override void FromJsonObject(JSONObject jsonObject)
         {
             DeviceId = jsonObject["device"];
-            Status = jsonObject["status"].AsInt;
+            Status = jsonObject["status"];
         }
 
         internal override JSONObject ToJsonObject()

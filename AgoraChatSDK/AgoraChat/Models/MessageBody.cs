@@ -204,8 +204,8 @@ namespace AgoraChat
                 if (!jo.IsNull)
                 {
                     Text = jo["content"];
-                    TargetLanguages = List.StringListFromJson(jo["targetLanguages"]);
-                    Translations = Dictionary.DictionaryFromJson(jo["translations"]);
+                    TargetLanguages = List.StringListFromJsonArray(jo["targetLanguages"]);
+                    Translations = Dictionary.StringDictionaryFromJsonObject(jo["translations"]);
                 }
             }
 
@@ -215,8 +215,8 @@ namespace AgoraChat
                 if (Text != null)
                 {
                     jo.Add("content", Text);
-                    jo.Add("targetLanguages", JsonString.JsonStringFromStringList(TargetLanguages));
-                    jo.Add("translations", JsonString.JsonStringFromDictionary(Translations));
+                    jo.Add("targetLanguages", JsonObject.JsonArrayFromStringList(TargetLanguages));
+                    jo.Add("translations", JsonObject.JsonObjectFromDictionary(Translations));
                 }
 
                 return jo;
@@ -1102,7 +1102,7 @@ namespace AgoraChat
 
                 if (CustomParams != null)
                 {
-                    jo.Add("params", JsonString.JsonStringFromDictionary(CustomParams));
+                    jo.Add("params", JsonObject.JsonObjectFromDictionary(CustomParams));
                 }
 
                 return jo;
@@ -1113,7 +1113,7 @@ namespace AgoraChat
                 if(null != jo)
                 {
                     CustomEvent = jo["event"].Value;
-                    CustomParams = Dictionary.DictionaryFromJson(jo["params"].Value);
+                    CustomParams = Dictionary.StringDictionaryFromJsonObject(jo["params"]);
                 }
             }
         }

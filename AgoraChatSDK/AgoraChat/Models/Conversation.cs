@@ -55,36 +55,15 @@ namespace AgoraChat
         {
             if (!jo.IsNull)
             {
-                Id = jo["con_id"].Value;
+                Id = jo["con_id"];
                 Type = ConversationTypeFromInt(jo["type"].AsInt);
-                IsThread = jo["isThread"].AsBool;
+                IsThread = jo["isThread"];
             }
         }
 
         internal override JSONObject ToJsonObject()
         {
             return null;
-        }
-
-        internal static List<Conversation> ListFromJson(string json)
-        {
-            List<Conversation> list = new List<Conversation>();
-
-            if (null == json || json.Length == 0) return list;
-
-            JSONNode jsonArray = JSON.Parse(json);
-            if (jsonArray != null && jsonArray.IsArray)
-            {
-                foreach (JSONNode v in jsonArray.AsArray)
-                {
-                    if (v.IsString)
-                    {
-                        Conversation conv = new Conversation(v.Value);
-                        list.Add(conv);
-                    }
-                }
-            }
-            return list;
         }
 
         internal static int ConversationTypeToInt(ConversationType type)

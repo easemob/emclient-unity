@@ -150,10 +150,10 @@ namespace AgoraChat
             Owner = jsonObject["owner"];
             MessageId = jsonObject["msgId"];
             ParentId = jsonObject["parentId"];
-            MembersCount = jsonObject["memberCount"].AsInt;
-            MessageCount = jsonObject["messageCount"].AsInt;
+            MembersCount = jsonObject["memberCount"];
+            MessageCount = jsonObject["messageCount"];
             CreateAt = jsonObject["createAt"].AsInt;
-            LastMessage = new Message(jsonObject);
+            LastMessage = ModelHelper.CreateWithJsonObject<Message>(jsonObject["msg"].AsObject);
         }
 
         internal override JSONObject ToJsonObject()

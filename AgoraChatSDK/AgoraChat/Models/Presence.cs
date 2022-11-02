@@ -91,19 +91,11 @@ namespace AgoraChat
         {
             if(null != jo)
             {
-                Publisher = jo["publisher"].Value;
-                statusDescription = jo["statusDescription"].Value;
-                LatestTime = jo["lastTime"].AsInt;
-                ExpiryTime = jo["expiryTime"].AsInt;
-                StatusList = new List<PresenceDeviceStatus>();
-                if (jo["statusDetails"].IsArray)
-                {
-                    JSONArray array = jo["statusDetails"].AsArray;
-                    foreach (JSONObject it in array)
-                    {
-                        StatusList.Add(new PresenceDeviceStatus(it));
-                    }
-                }
+                Publisher = jo["publisher"];
+                statusDescription = jo["statusDescription"];
+                LatestTime = jo["lastTime"];
+                ExpiryTime = jo["expiryTime"];
+                StatusList = List.BaseModelListFromJsonObject<PresenceDeviceStatus>(jo["statusDetails"]);
             }
         }
 

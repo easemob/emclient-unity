@@ -6,7 +6,7 @@ namespace AgoraChat
 {
     /**
     * \~chinese
-    * Èº×é¹ÜÀíÆ÷³éÏóÀà¡£
+    * Èºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½à¡£
     *
     * \~english
     * The abstract class for the group manager.
@@ -22,24 +22,24 @@ namespace AgoraChat
         internal GroupManager(NativeListener listener)
         {
             callbackManager = listener.callbackManager;
-            listener.groupManagerEvent += NativeEventHandle;
+            listener.GroupManagerEvent += NativeEventHandle;
             delegater = new List<IGroupManagerDelegate>();
         }
 
-        void NativeEventHandle(string method, string jsonString)
-        {
+		internal void NativeEventHandle(string method, JSONNode jsonNode)
+		{
 
         }
 
         /**
          * \~chinese
-         * ÉêÇë¼ÓÈëÈº×é¡£
+         * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Èºï¿½é¡£
          *
-         * Òì²½·½·¨¡£
+         * ï¿½ì²½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
          *
-         * @param groupId	Èº×é ID¡£
-         * @param reason    ÉêÇë¼ÓÈëµÄÔ­Òò¡£
-         * @param callback  ÉêÇë½á¹û»Øµ÷£¬Ïê¼û {@link CallBack}¡£
+         * @param groupId	Èºï¿½ï¿½ IDï¿½ï¿½
+         * @param reason    ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô­ï¿½ï¿½
+         * @param callback  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ {@link CallBack}ï¿½ï¿½
          *
          * \~english
          * Requests to join a group.
@@ -62,12 +62,12 @@ namespace AgoraChat
 
         /**
 	     * \~chinese
-	     * ½ÓÊÜÈëÈºÑûÇë¡£
+	     * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Èºï¿½ï¿½ï¿½ë¡£
 	     *
-	     * Òì²½·½·¨¡£
+	     * ï¿½ì²½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	     *
-	     * @param groupId	Èº×é ID¡£
-	     * @param callback  ½ÓÊÜ½á¹û»Øµ÷£¬·µ»ØÓÃ»§Í¬ÒâÑûÇëµÄÈº×é£¬Ïê¼û {@link ValueCallBack}¡£
+	     * @param groupId	Èºï¿½ï¿½ IDï¿½ï¿½
+	     * @param callback  ï¿½ï¿½ï¿½Ü½ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½Í¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Èºï¿½é£¬ï¿½ï¿½ï¿½ {@link ValueCallBack}ï¿½ï¿½
 	     *
 	     * \~english
 	     * Accepts a group invitation.
@@ -88,15 +88,15 @@ namespace AgoraChat
 
         /**
 	     * \~chinese
-	     * Åú×¼ÈëÈºÉêÇë¡£
+	     * ï¿½ï¿½×¼ï¿½ï¿½Èºï¿½ï¿½ï¿½ë¡£
 		 * 
-         * ½öÈºÖ÷ºÍ¹ÜÀíÔ±¿Éµ÷ÓÃ´Ë·½·¨¡£ 
+         * ï¿½ï¿½Èºï¿½ï¿½ï¿½Í¹ï¿½ï¿½ï¿½Ô±ï¿½Éµï¿½ï¿½Ã´Ë·ï¿½ï¿½ï¿½ï¿½ï¿½ 
 	     *
-	     * Òì²½·½·¨¡£
+	     * ï¿½ì²½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	     *
-	     * @param groupId  	Èº×é ID¡£
-	     * @param username 	ÉêÇëÈË ID¡£
-	     * @param callback  Åú×¼½á¹û»Øµ÷£¬Ïê¼û {@link CallBack}¡£
+	     * @param groupId  	Èºï¿½ï¿½ IDï¿½ï¿½
+	     * @param username 	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ IDï¿½ï¿½
+	     * @param callback  ï¿½ï¿½×¼ï¿½ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ {@link CallBack}ï¿½ï¿½
 	     *
 	     * \~english
 	     * Approves a group request.
@@ -121,15 +121,15 @@ namespace AgoraChat
 
         /**
 	     * \~chinese
-	     * Ìí¼ÓÈº×é¹ÜÀíÔ±¡£
+	     * ï¿½ï¿½ï¿½Èºï¿½ï¿½ï¿½ï¿½ï¿½Ô±ï¿½ï¿½
 		 *
-	     * ½öÈºÖ÷¿Éµ÷ÓÃ´Ë·½·¨£¬admin ÎÞÈ¨ÏÞ¡£
+	     * ï¿½ï¿½Èºï¿½ï¿½ï¿½Éµï¿½ï¿½Ã´Ë·ï¿½ï¿½ï¿½ï¿½ï¿½admin ï¿½ï¿½È¨ï¿½Þ¡ï¿½
 	     *
-	     * Òì²½·½·¨¡£
+	     * ï¿½ì²½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
          *
-	     * @param groupId	Èº×é ID¡£
-	     * @param memberId  ÐÂÔö¼ÓµÄ¹ÜÀíÔ± ID¡£
-	     * @param callback  Ìí¼Ó½á¹û»Øµ÷£¬Ïê¼û {@link CallBack}¡£
+	     * @param groupId	Èºï¿½ï¿½ IDï¿½ï¿½
+	     * @param memberId  ï¿½ï¿½ï¿½ï¿½ï¿½ÓµÄ¹ï¿½ï¿½ï¿½Ô± IDï¿½ï¿½
+	     * @param callback  ï¿½ï¿½Ó½ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ {@link CallBack}ï¿½ï¿½
 	     *
 	     * \~english
          * Adds a group admin.
@@ -153,15 +153,15 @@ namespace AgoraChat
 
         /**
 	     * \~chinese
-	     * ÏòÈº×éÖÐÌí¼ÓÐÂ³ÉÔ±¡£
+	     * ï¿½ï¿½Èºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â³ï¿½Ô±ï¿½ï¿½
 
-	     * ½öÈºÖ÷ºÍ¹ÜÀíÔ±¿Éµ÷ÓÃ´Ë·½·¨¡£
+	     * ï¿½ï¿½Èºï¿½ï¿½ï¿½Í¹ï¿½ï¿½ï¿½Ô±ï¿½Éµï¿½ï¿½Ã´Ë·ï¿½ï¿½ï¿½ï¿½ï¿½
 	     *
-	     * Òì²½·½·¨¡£
+	     * ï¿½ì²½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	     *
-	     * @param groupId       Èº×éµÄ ID¡£
-	     * @param members       ÒªÌí¼ÓµÄÐÂ³ÉÔ±ÁÐ±í¡£
-	     * @param callback      Ìí¼Ó½á¹û»Øµ÷£¬Ïê¼û {@link CallBack}¡£
+	     * @param groupId       Èºï¿½ï¿½ï¿½ IDï¿½ï¿½
+	     * @param members       Òªï¿½ï¿½Óµï¿½ï¿½Â³ï¿½Ô±ï¿½Ð±ï¿½ï¿½
+	     * @param callback      ï¿½ï¿½Ó½ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ {@link CallBack}ï¿½ï¿½
 	     *
 	     * \~english
 	     * Adds users to the group.
@@ -178,7 +178,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("groupId", groupId);
-            jo_param.Add("members", JsonString.JsonStringFromStringList(members));
+            jo_param.Add("members", JsonObject.JsonArrayFromStringList(members));
 
             callbackManager.AddCallbackAction<Object>(callback, null);
             CWrapperNative.NativeCall(NAME_GROUPMANAGER, "addAdmin", jo_param, (null != callback) ? callback.callbackId : "");
@@ -186,15 +186,15 @@ namespace AgoraChat
 
 		/**
 	     * \~chinese
-	     * Ìí¼Ó°×Ãûµ¥¡£
+	     * ï¿½ï¿½Ó°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-	     * ½öÈºÖ÷ºÍ¹ÜÀíÔ±¿Éµ÷ÓÃ´Ë·½·¨¡£
+	     * ï¿½ï¿½Èºï¿½ï¿½ï¿½Í¹ï¿½ï¿½ï¿½Ô±ï¿½Éµï¿½ï¿½Ã´Ë·ï¿½ï¿½ï¿½ï¿½ï¿½
 	     *
-	     * Òì²½·½·¨¡£ 
+	     * ï¿½ì²½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 	     *
-	     * @param groupId 	Èº×é ID¡£
-	     * @param members 	ÒªÌí¼ÓµÄ³ÉÔ±ÁÐ±í¡£
-	     * @param callback  Ìí¼Ó½á¹û»Øµ÷£¬Ïê¼û {@link CallBack}¡£
+	     * @param groupId 	Èºï¿½ï¿½ IDï¿½ï¿½
+	     * @param members 	Òªï¿½ï¿½ÓµÄ³ï¿½Ô±ï¿½Ð±ï¿½ï¿½
+	     * @param callback  ï¿½ï¿½Ó½ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ {@link CallBack}ï¿½ï¿½
 	     *
 	     * \~english
 	     * Adds members to the allow list.
@@ -211,7 +211,7 @@ namespace AgoraChat
         {
 			JSONObject jo_param = new JSONObject();
 			jo_param.Add("groupId", groupId);
-			jo_param.Add("members", JsonString.JsonStringFromStringList(members));
+			jo_param.Add("members", JsonObject.JsonArrayFromStringList(members));
 
 			callbackManager.AddCallbackAction<Object>(callback, null);
 			CWrapperNative.NativeCall(NAME_GROUPMANAGER, "addWhiteList", jo_param, (null != callback) ? callback.callbackId : "");			
@@ -219,14 +219,14 @@ namespace AgoraChat
 
 		/**
 	     * \~chinese
-	     * ÆÁ±ÎÈºÏûÏ¢¡£
+	     * ï¿½ï¿½ï¿½ï¿½Èºï¿½ï¿½Ï¢ï¿½ï¿½
 		 * 
-	     * ÆÁ±ÎÈºÏûÏ¢µÄÓÃ»§ÈÔÊÇÈº³ÉÔ±£¬µ«ÎÞ·¨½ÓÊÕÈºÏûÏ¢¡£
+	     * ï¿½ï¿½ï¿½ï¿½Èºï¿½ï¿½Ï¢ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½Èºï¿½ï¿½Ô±ï¿½ï¿½ï¿½ï¿½ï¿½Þ·ï¿½ï¿½ï¿½ï¿½ï¿½Èºï¿½ï¿½Ï¢ï¿½ï¿½
 	     *
-	     * Òì²½·½·¨¡£
+	     * ï¿½ì²½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	     *
-	     * @param groupId	Èº×é ID¡£
-	     * @param callback  ÆÁ±Î½á¹û»Øµ÷£¬Ïê¼û {@link CallBack}¡£
+	     * @param groupId	Èºï¿½ï¿½ IDï¿½ï¿½
+	     * @param callback  ï¿½ï¿½ï¿½Î½ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ {@link CallBack}ï¿½ï¿½
 	     *
 	     *\~english
 	     * Blocks group messages.
@@ -249,17 +249,17 @@ namespace AgoraChat
 
 		/**
 	     * \~chinese
-         * ½«ÓÃ»§¼ÓÈëÈº×éºÚÃûµ¥¡£
+         * ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½Èºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		 * 
-	     * ³É¹¦µ÷ÓÃ¸Ã·½·¨ºó£¬¸ÃÓÃ»§»áÏÈ±»ÒÆ³ý³öÈº×é£¬È»ºó¼ÓÈëÈº×éºÚÃûµ¥¡£¸ÃÓÃ»§ÎÞ·¨½ÓÊÕ¡¢·¢ËÍÈºÏûÏ¢£¬Ò²ÎÞ·¨ÉêÇëÔÙ´Î¼ÓÈëÈº×é¡£
+	     * ï¿½É¹ï¿½ï¿½ï¿½ï¿½Ã¸Ã·ï¿½ï¿½ï¿½ï¿½ó£¬¸ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½È±ï¿½ï¿½Æ³ï¿½ï¿½ï¿½Èºï¿½é£¬È»ï¿½ï¿½ï¿½ï¿½ï¿½Èºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½Þ·ï¿½ï¿½ï¿½ï¿½Õ¡ï¿½ï¿½ï¿½ï¿½ï¿½Èºï¿½ï¿½Ï¢ï¿½ï¿½Ò²ï¿½Þ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ù´Î¼ï¿½ï¿½ï¿½Èºï¿½é¡£
 		 * 
-	     * ½öÈºÖ÷ºÍ¹ÜÀíÔ±¿Éµ÷ÓÃ´Ë·½·¨¡£
+	     * ï¿½ï¿½Èºï¿½ï¿½ï¿½Í¹ï¿½ï¿½ï¿½Ô±ï¿½Éµï¿½ï¿½Ã´Ë·ï¿½ï¿½ï¿½ï¿½ï¿½
 	     *
-	     * Òì²½·½·¨¡£
+	     * ï¿½ì²½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	     *
-	     * @param groupId 	Èº×éID¡£
-	     * @param members 	Òª¼ÓÈëºÚÃûµ¥µÄÓÃ»§ÁÐ±í¡£
-	     * @param callback  ²Ù×÷½á¹û»Øµ÷£¬Ïê¼û {@link CallBack}¡£
+	     * @param groupId 	Èºï¿½ï¿½IDï¿½ï¿½
+	     * @param members 	Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½Ð±ï¿½ï¿½
+	     * @param callback  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ {@link CallBack}ï¿½ï¿½
 	     *
 	     * \~english
          * Adds the user to the group block list.
@@ -278,7 +278,7 @@ namespace AgoraChat
         {
 			JSONObject jo_param = new JSONObject();
 			jo_param.Add("groupId", groupId);
-			jo_param.Add("members", JsonString.JsonStringFromStringList(members));
+			jo_param.Add("members", JsonObject.JsonArrayFromStringList(members));
 
 			callbackManager.AddCallbackAction<Object>(callback, null);
 			CWrapperNative.NativeCall(NAME_GROUPMANAGER, "blockMembers", jo_param, (null != callback) ? callback.callbackId : "");
@@ -286,15 +286,15 @@ namespace AgoraChat
 
 		/**
 	     * \~chinese
-	     * ÐÞ¸ÄÈºÃèÊö¡£
+	     * ï¿½Þ¸ï¿½Èºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		 * 
-	     * ½öÈºÖ÷ºÍ¹ÜÀíÔ±¿Éµ÷ÓÃ´Ë·½·¨¡£
+	     * ï¿½ï¿½Èºï¿½ï¿½ï¿½Í¹ï¿½ï¿½ï¿½Ô±ï¿½Éµï¿½ï¿½Ã´Ë·ï¿½ï¿½ï¿½ï¿½ï¿½
 	     *
-	     * Òì²½·½·¨¡£
+	     * ï¿½ì²½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	     *
-	     * @param groupId 	Èº×é ID¡£
-	     * @param desc 	    ÐÞ¸ÄºóµÄÈºÃèÊö¡£
-         * @param callback  ²Ù×÷½á¹û»Øµ÷£¬Ïê¼û {@link CallBack}¡£
+	     * @param groupId 	Èºï¿½ï¿½ IDï¿½ï¿½
+	     * @param desc 	    ï¿½Þ¸Äºï¿½ï¿½Èºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+         * @param callback  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ {@link CallBack}ï¿½ï¿½
 	     *
 	     * \~english
 	     * Changes the group description.
@@ -319,15 +319,15 @@ namespace AgoraChat
 
 		/**
 	     * \~chinese
-	     * ÐÞ¸ÄÈº×éÃû³Æ¡£
+	     * ï¿½Þ¸ï¿½Èºï¿½ï¿½ï¿½ï¿½ï¿½Æ¡ï¿½
 		 * 
-	     * ½öÈºÖ÷ºÍ¹ÜÀíÔ±¿Éµ÷ÓÃ´Ë·½·¨¡£
+	     * ï¿½ï¿½Èºï¿½ï¿½ï¿½Í¹ï¿½ï¿½ï¿½Ô±ï¿½Éµï¿½ï¿½Ã´Ë·ï¿½ï¿½ï¿½ï¿½ï¿½
 	     *
-	     * Òì²½·½·¨¡£
+	     * ï¿½ì²½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	     *
-	     * @param groupId 	ÐèÐÞ¸ÄÃû³ÆµÄÈº×éµÄ ID¡£
-	     * @param name 	    ÐÞ¸ÄºóµÄÈº×éÃû³Æ¡£
-	     * @param callback  ²Ù×÷½á¹û»Øµ÷£¬Ïê¼û {@link CallBack}¡£
+	     * @param groupId 	ï¿½ï¿½ï¿½Þ¸ï¿½ï¿½ï¿½ï¿½Æµï¿½Èºï¿½ï¿½ï¿½ IDï¿½ï¿½
+	     * @param name 	    ï¿½Þ¸Äºï¿½ï¿½Èºï¿½ï¿½ï¿½ï¿½ï¿½Æ¡ï¿½
+	     * @param callback  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ {@link CallBack}ï¿½ï¿½
 	     *
 	     * \~english
 	     * Changes the group name.
@@ -352,15 +352,15 @@ namespace AgoraChat
 
 		/**
 	     * \~chinese
-	     * ×ªÈÃÈº×éËùÓÐÈ¨¡£
+	     * ×ªï¿½ï¿½Èºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¨ï¿½ï¿½
 		 * 
-	     * ½öÈºÖ÷¿Éµ÷ÓÃ´Ë·½·¨¡£
+	     * ï¿½ï¿½Èºï¿½ï¿½ï¿½Éµï¿½ï¿½Ã´Ë·ï¿½ï¿½ï¿½ï¿½ï¿½
 	     *
-	     * Òì²½·½·¨¡£
+	     * ï¿½ì²½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	     *
-	     * @param groupId	Èº×é ID¡£
-	     * @param newOwner	ÐÂµÄÈºÖ÷¡£
-	     * @param callback  ²Ù×÷½á¹û»Øµ÷£¬Ïê¼û {@link CallBack}¡£
+	     * @param groupId	Èºï¿½ï¿½ IDï¿½ï¿½
+	     * @param newOwner	ï¿½Âµï¿½Èºï¿½ï¿½ï¿½ï¿½
+	     * @param callback  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ {@link CallBack}ï¿½ï¿½
 	     *
 	     * \~english
 	     * Transfers the group ownership.
@@ -385,12 +385,12 @@ namespace AgoraChat
 
 		/**
 	     * \~chinese
-	     * ¼ì²éµ±Ç°ÓÃ»§ÊÇ·ñÔÚÈº×é°×Ãûµ¥ÖÐ¡£
+	     * ï¿½ï¿½éµ±Ç°ï¿½Ã»ï¿½ï¿½Ç·ï¿½ï¿½ï¿½Èºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½
 	     *
-	     * Òì²½·½·¨¡£
+	     * ï¿½ì²½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	     *
-	     * @param groupId 	Èº×é ID¡£
-	     * @param callback  ²Ù×÷½á¹û»Øµ÷£¬Ïê¼û {@link CallBack}¡£
+	     * @param groupId 	Èºï¿½ï¿½ IDï¿½ï¿½
+	     * @param callback  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ {@link CallBack}ï¿½ï¿½
 	     *
 	     * \~english
 	     * Gets whether the current user is on the allow list of the group.

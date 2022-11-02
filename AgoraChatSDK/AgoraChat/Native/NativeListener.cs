@@ -6,46 +6,30 @@ namespace AgoraChat
 {
     internal delegate void NativeListenerEvent(string listener, string method, [In, MarshalAs(UnmanagedType.LPTStr)] string jsonString);
 
-    internal delegate void ChatManagerHandle(string method, string jsonString);
-
-    internal delegate void ContactManagerHandle(string method, string jsonString);
-
-    internal delegate void GroupManagerHandle(string method, string jsonString);
-
-    internal delegate void RoomManagerHandle(string method, string jsonString);
-
-    internal delegate void ChatThreadManagerHandle(string method, string jsonString);
-
-    internal delegate void PresenceManagerHandle(string method, string jsonString);
-
-    internal delegate void ConnectionHandle(string method, string jsonString);
-
-    internal delegate void MultiDeviceHandle(string method, string jsonString);
-
-    internal delegate void CallbackManagerHandle(string callId, string jsonString);
+    internal delegate void ManagerHandle(string method, JSONNode jsonNode);
 
     internal class NativeListener
     {
   
         public NativeListenerEvent nativeListenerEvent;
 
-        public event ChatManagerHandle chatManagerEvent;
+        public event ManagerHandle ChatManagerEvent;
 
-        public event ContactManagerHandle contactManagerEvent;
+        public event ManagerHandle ContactManagerEvent;
 
-        public event GroupManagerHandle groupManagerEvent;
+        public event ManagerHandle GroupManagerEvent;
 
-        public event RoomManagerHandle roomManagerEvent;
+        public event ManagerHandle RoomManagerEvent;
 
-        public event ChatThreadManagerHandle chatThreadManagerEvent;
+        public event ManagerHandle ChatThreadManagerEvent;
 
-        public event PresenceManagerHandle presenceManagerEvent;
+        public event ManagerHandle PresenceManagerEvent;
 
-        public event ConnectionHandle connectionEvent;
+        public event ManagerHandle ConnectionEvent;
 
-        public event MultiDeviceHandle multiDeviceEvent;
+        public event ManagerHandle MultiDeviceEvent;
 
-        public event CallbackManagerHandle callbackEvent;
+        //public event ManagerHandle CallbackEvent;
 
         public CallbackManager callbackManager;
 
@@ -60,48 +44,50 @@ namespace AgoraChat
 
             nativeListenerEvent = (string listener, string method, string jsonString) =>
             {
-                queue_worker.EnQueue(() => {
-                    string json = Tools.GetUnicodeStringFromUTF8(jsonString);
+                string json = Tools.GetUnicodeStringFromUTF8(jsonString);
+                JSONNode jsonNode = JSON.Parse(json);
 
+                queue_worker.EnQueue(() => {
+                    
                     if (listener == "chatManagerListener")
                     {
-                        chatManagerEvent(method, json);
+                        ChatManagerEvent(method, jsonNode);
                     }
                     else if (listener == "contactManagerListener")
                     {
-                        contactManagerEvent(method, json);
+                        ContactManagerEvent(method, jsonNode);
                     }
                     else if (listener == "groupManagerListener")
                     {
-                        groupManagerEvent(method, json);
+                        GroupManagerEvent(method, jsonNode);
                     }
                     else if (listener == "roomManagerListener")
                     {
-                        roomManagerEvent(method, json);
+                        RoomManagerEvent(method, jsonNode);
                     }
                     else if (listener == "presenceManagerListener")
                     {
-                        presenceManagerEvent(method, json);
+                        PresenceManagerEvent(method, jsonNode);
                     }
                     else if (listener == "chatThreadManagerListener")
                     {
-                        chatThreadManagerEvent(method, json);
+                        ChatThreadManagerEvent(method, jsonNode);
                     }
                     else if (listener == "connectionListener")
                     {
-                        connectionEvent(method, json);
+                        ConnectionEvent(method, jsonNode);
                     }
                     else if (listener == "multiDeviceListener")
                     {
-                        multiDeviceEvent(method, json);
+                        MultiDeviceEvent(method, jsonNode);
                     }
                     else if (listener == "callback")
                     {
-                        callbackManager.CallAction(method, json);
+                        callbackManager.CallAction(method, jsonNode);
                     }
                     else if (listener == "callbackProgress")
                     {
-                        callbackManager.CallActionProgress(method, json);
+                        callbackManager.CallActionProgress(method, jsonNode);
                     }
                 });
             };

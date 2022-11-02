@@ -1,13 +1,15 @@
-﻿namespace AgoraChat
+﻿using AgoraChat.SimpleJSON;
+
+namespace AgoraChat
 {
     public class PresenceManager
     {
         internal PresenceManager(NativeListener listener)
         {
-            listener.presenceManagerEvent += NativeEventHandle;
+            listener.PresenceManagerEvent += NativeEventHandle;
         }
 
-        void NativeEventHandle(string method, string jsonString)
+        internal void NativeEventHandle(string method, JSONNode jsonNode)
         {
 
         }

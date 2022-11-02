@@ -67,12 +67,9 @@ namespace AgoraChat
             {
                 JSONArray jsonArray = jn.AsArray;
                 Data = new List<T>();
-                if (typeof(T).IsAssignableFrom(typeof(BaseModel)))
+                foreach (JSONObject jsonObj in jsonArray)
                 {
-                    foreach (JSONObject jsonObj in jsonArray)
-                    {
-                        Data.Add(callback(jsonObj));
-                    }
+                    Data.Add(callback(jsonObj));
                 }
             }
             callback = null;
