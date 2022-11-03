@@ -4,6 +4,8 @@
 #include "emconnection_listener.h"
 #include "emchatmanager_listener.h"
 #include "emgroupmanager_listener.h"
+#include "emchatroommanager_listener.h"
+#include "emcontactlistener.h"
 
 #include "sdk_wrapper_internal.h"
 #include "models.h"
@@ -17,7 +19,7 @@ namespace sdk_wrapper {
     class ConnectionListener : public EMConnectionListener
     {
     public:
-        void onConnect(const std::string& info) override
+        void onConnect(const string& info) override
         {
             CallBack(STRING_CLIENT_LISTENER.c_str(), "OnConnected", info.c_str());
         }
@@ -81,7 +83,7 @@ namespace sdk_wrapper {
             //TODO
         }
 
-        void onReceiveReadAckForConversation(const std::string& fromUsername, const std::string& toUsername) override {
+        void onReceiveReadAckForConversation(const string& fromUsername, const string& toUsername) override {
             //TODO
         }
     };
@@ -89,7 +91,7 @@ namespace sdk_wrapper {
     class MultiDevicesListener : public EMMultiDevicesListener
     {
     public:
-        void onContactMultiDevicesEvent(MultiDevicesOperation operation, const std::string& target, const std::string& ext) override {
+        void onContactMultiDevicesEvent(MultiDevicesOperation operation, const string& target, const string& ext) override {
 
             JSON_STARTOBJ
             writer.Key("event");
@@ -105,26 +107,28 @@ namespace sdk_wrapper {
                 CallBack(STRING_MULTIDEVICE_LISTENER.c_str(), "OnContactMultiDevicesEvent", json.c_str());
         }
 
-        void onGroupMultiDevicesEvent(MultiDevicesOperation operation, const std::string& target, const std::vector<std::string>& usernames) override {
+        void onGroupMultiDevicesEvent(MultiDevicesOperation operation, const string& target, const vector<string>& usernames) override {
+
             JSON_STARTOBJ
             writer.Key("event");
             writer.String(to_string((int)operation).c_str());
             writer.Key("groupId");
             writer.String(target.c_str());
             writer.Key("usernames");
-            writer.String(JsonStringFromVector(usernames).c_str());
+            writer.String(MyJson::ToJson(usernames).c_str());
             JSON_ENDOBJ
+
             string json = s.GetString();
 
             if (json.size() > 0)
                 CallBack(STRING_MULTIDEVICE_LISTENER.c_str(), "OnGroupMultiDevicesEvent", json.c_str());
         }
 
-        void onThreadMultiDevicesEvent(MultiDevicesOperation operation, const std::string& target, const std::vector<std::string>& usernames) override {
+        void onThreadMultiDevicesEvent(MultiDevicesOperation operation, const string& target, const vector<string>& usernames) override {
             //TODO
         }
 
-        void undisturbMultiDevicesEvent(const std::string& data) override {
+        void undisturbMultiDevicesEvent(const string& data) override {
             CallBack(STRING_MULTIDEVICE_LISTENER.c_str(), "UndisturbMultiDevicesEvent", data.c_str());
         }
     };
@@ -132,19 +136,19 @@ namespace sdk_wrapper {
     class GroupManagerListener : public EMGroupManagerListener
     {
     public:
-        void onReceiveInviteFromGroup(const std::string groupId, const std::string groupName, const std::string& inviter, const std::string& inviteMessage) override {
+        void onReceiveInviteFromGroup(const string groupId, const string groupName, const string& inviter, const string& inviteMessage) override {
             //TODO
         }
 
-        void onReceiveInviteAcceptionFromGroup(const EMGroupPtr group, const std::string& invitee) override {
+        void onReceiveInviteAcceptionFromGroup(const EMGroupPtr group, const string& invitee) override {
             //TODO
         }
 
-        void onReceiveInviteDeclineFromGroup(const EMGroupPtr group, const std::string& invitee, const std::string& reason) override {
+        void onReceiveInviteDeclineFromGroup(const EMGroupPtr group, const string& invitee, const string& reason) override {
             //TODO
         }
 
-        void onAutoAcceptInvitationFromGroup(const EMGroupPtr group, const std::string& inviter, const std::string& inviteMessage) override {
+        void onAutoAcceptInvitationFromGroup(const EMGroupPtr group, const string& inviter, const string& inviteMessage) override {
             //TODO
         }
 
@@ -152,7 +156,7 @@ namespace sdk_wrapper {
             //TODO
         }
 
-        void onReceiveJoinGroupApplication(const EMGroupPtr group, const std::string& from, const std::string& message) override {
+        void onReceiveJoinGroupApplication(const EMGroupPtr group, const string& from, const string& message) override {
             //TODO
         }
 
@@ -160,27 +164,27 @@ namespace sdk_wrapper {
             //TODO
         }
 
-        void onReceiveRejectionFromGroup(const std::string& groupId, const std::string& reason) override {
+        void onReceiveRejectionFromGroup(const string& groupId, const string& reason) override {
             //TODO
         }
 
-        void onUpdateMyGroupList(const std::vector<EMGroupPtr>& list) override {
+        void onUpdateMyGroupList(const vector<EMGroupPtr>& list) override {
             //no corresponding delegate defined in API
         }
 
-        void onAddMutesFromGroup(const EMGroupPtr group, const std::vector<std::string>& mutes, int64_t muteExpire) override {
+        void onAddMutesFromGroup(const EMGroupPtr group, const vector<string>& mutes, int64_t muteExpire) override {
             //TODO
         }
 
-        void onRemoveMutesFromGroup(const EMGroupPtr group, const std::vector<std::string>& mutes) override {
+        void onRemoveMutesFromGroup(const EMGroupPtr group, const vector<string>& mutes) override {
             //TODO
         }
 
-        void onAddWhiteListMembersFromGroup(const easemob::EMGroupPtr Group, const std::vector<std::string>& members) override {
+        void onAddWhiteListMembersFromGroup(const easemob::EMGroupPtr Group, const vector<string>& members) override {
             //TODO
         }
 
-        void onRemoveWhiteListMembersFromGroup(const easemob::EMGroupPtr Group, const std::vector<std::string>& members) override {
+        void onRemoveWhiteListMembersFromGroup(const easemob::EMGroupPtr Group, const vector<string>& members) override {
             //TODO
         }
 
@@ -188,27 +192,27 @@ namespace sdk_wrapper {
             //TODO
         }
 
-        void onAddAdminFromGroup(const EMGroupPtr Group, const std::string& admin) override {
+        void onAddAdminFromGroup(const EMGroupPtr Group, const string& admin) override {
             //TODO
         }
 
-        void onRemoveAdminFromGroup(const EMGroupPtr group, const std::string& admin) override {
+        void onRemoveAdminFromGroup(const EMGroupPtr group, const string& admin) override {
             //TODO
         }
 
-        void onAssignOwnerFromGroup(const EMGroupPtr group, const std::string& newOwner, const std::string& oldOwner) override {
+        void onAssignOwnerFromGroup(const EMGroupPtr group, const string& newOwner, const string& oldOwner) override {
             //TODO
         }
 
-        void onMemberJoinedGroup(const EMGroupPtr group, const std::string& member) override {
+        void onMemberJoinedGroup(const EMGroupPtr group, const string& member) override {
             //TODO
         }
 
-        void onMemberLeftGroup(const EMGroupPtr group, const std::string& member) override {
+        void onMemberLeftGroup(const EMGroupPtr group, const string& member) override {
             //TODO
         }
 
-        void onUpdateAnnouncementFromGroup(const EMGroupPtr group, const std::string& announcement) override {
+        void onUpdateAnnouncementFromGroup(const EMGroupPtr group, const string& announcement) override {
             //TODO
         }
 
@@ -216,8 +220,127 @@ namespace sdk_wrapper {
             //TODO
         }
 
-        void onDeleteSharedFileFromGroup(const EMGroupPtr group, const std::string& fileId) override {
+        void onDeleteSharedFileFromGroup(const EMGroupPtr group, const string& fileId) override {
             //TODO
+        }
+    };
+
+    class RoomManagerListener : public EMChatroomManagerListener
+    {
+    public:
+
+        void  onMemberJoinedChatroom(const EMChatroomPtr chatroom, const std::string& member) override {
+            //TODO
+        }
+
+        void onLeaveChatroom(const EMChatroomPtr chatroom, EMMuc::EMMucLeaveReason reason) override {
+            //TODO
+        }
+
+        void onMemberLeftChatroom(const EMChatroomPtr chatroom, const std::string& member) override {
+            //TODO
+        }
+
+        void onAddMutesFromChatroom(const EMChatroomPtr chatroom, const std::vector<std::string>& mutes, int64_t muteExpire) override {
+            //TODO
+        }
+
+        void onRemoveMutesFromChatroom(const EMChatroomPtr chatroom, const std::vector<std::string>& mutes) override {
+            //TODO
+        }
+
+        void onAddWhiteListMembersFromChatroom(const easemob::EMChatroomPtr chatroom, const std::vector<std::string>& members) override {
+            //no corresponding delegate defined in API
+        }
+
+        void onRemoveWhiteListMembersFromChatroom(const easemob::EMChatroomPtr chatroom, const std::vector<std::string>& members) override {
+            //no corresponding delegate defined in API
+        }
+
+        void onAllMemberMuteChangedFromChatroom(const easemob::EMChatroomPtr chatroom, bool isAllMuted) override {
+            //no corresponding delegate defined in API
+        }
+
+        void onAddAdminFromChatroom(const EMChatroomPtr chatroom, const std::string& admin) override {
+            //TODO
+        }
+
+        void onRemoveAdminFromChatroom(const EMChatroomPtr chatroom, const std::string& admin) override {
+            //TODO
+        }
+
+        void onAssignOwnerFromChatroom(const EMChatroomPtr chatroom, const std::string& newOwner, const std::string& oldOwner) override {
+            //TODO
+        }
+
+        void onUpdateAnnouncementFromChatroom(const EMChatroomPtr chatroom, const std::string& announcement) override {
+            //TODO
+        }
+
+        void onChatroomAttributesChanged(const std::string chatroomId, const std::string& ext, std::string from) override {
+
+        }
+
+        void onChatroomAttributesRemoved(const std::string chatroomId, const std::string& ext, std::string from) override {
+
+        }
+    };
+
+    class ContactManagerListener : public EMContactListener
+    {
+    public:
+        void onContactAdded(const std::string& username) override {
+            //TODO
+        }
+        void onContactDeleted(const std::string& username) override {
+            //TODO
+        }
+        void onContactInvited(const std::string& username, std::string& reason) override {
+            //TODO
+        }
+        void onContactAgreed(const std::string& username) override {
+            //TODO
+        }
+        void onContactRefused(const std::string& username) override {
+            //TODO
+        }
+    };
+
+    class PresenceManagerListener : public EMPresenceManagerListener
+    {
+    public:
+
+        void onPresenceUpdated(const std::vector<EMPresencePtr>& presence) override {
+                //TODO
+        }
+    };
+
+    class ThreadManagerListener : public EMThreadManagerListener
+    {
+    public:
+        void onCreatThread(const EMThreadEventPtr event) override {
+            // Implement in onThreadNotifyChange, here no need to add anything
+        }
+
+        void onUpdateMyThread(const EMThreadEventPtr event) override {
+            // Implement in onThreadNotifyChange, here no need to add anything
+        }
+
+        void onThreadNotifyChange(const EMThreadEventPtr event) override {
+
+            //TODO: refer to old code
+        }
+
+        void onLeaveThread(const EMThreadEventPtr event, EMThreadLeaveReason reason) override {
+            //TODO
+        }
+
+        void onMemberJoined(const EMThreadEventPtr event) override {
+            // Implement in onThreadNotifyChange, here no need to add anything
+        }
+
+        void onMemberLeave(const EMThreadEventPtr event) override {
+            // Implement in onThreadNotifyChange, here no need to add anything
         }
     };
 }

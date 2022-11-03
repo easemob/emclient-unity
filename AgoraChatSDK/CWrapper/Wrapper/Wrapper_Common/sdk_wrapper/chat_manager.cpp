@@ -120,7 +120,7 @@ namespace sdk_wrapper {
 	{
         if (!CheckClientInitOrNot(cbid)) return;
 
-        EMMessagePtr message_ptr = Message::FromJson(jstr);
+        EMMessagePtr message_ptr = Message::FromJsonToMessage(jstr);
         string msg_id = message_ptr->msgId();
         string local_cbid = cbid;
 
@@ -130,7 +130,7 @@ namespace sdk_wrapper {
         EMCallbackPtr callback_ptr(new EMCallback(gCallbackObserverHandle,
             [=]()->bool {
                 string update_msg_json = JsonStringFromUpdatedMessage(msg_id);
-                string call_back_jstr = JsonStringFromSuccessResult(local_cbid.c_str(), update_msg_json.c_str());
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), update_msg_json.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
                 DeleteMsgItem(msg_id);
                 DeleteProgressItem(msg_id);
@@ -138,7 +138,7 @@ namespace sdk_wrapper {
             },
             [=](const EMErrorPtr error)->bool {
                 string update_msg_json = JsonStringFromUpdatedMessage(msg_id);
-                string call_back_jstr = JsonStringFromErrorResult(local_cbid.c_str(), error->mErrorCode, error->mDescription.c_str(), update_msg_json.c_str());
+                string call_back_jstr = MyJson::ToJsonWithErrorResult(local_cbid.c_str(), error->mErrorCode, error->mDescription.c_str(), update_msg_json.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
                 DeleteMsgItem(msg_id);
                 DeleteProgressItem(msg_id);
@@ -147,7 +147,7 @@ namespace sdk_wrapper {
             [=](int progress) {
             int last_progress = GetLastProgress(msg_id);
             if (progress - last_progress >= 5) {
-                string call_back_jstr = JsonStringFromProcess(local_cbid.c_str(), progress);
+                string call_back_jstr = MyJson::ToJsonWithProcess(local_cbid.c_str(), progress);
                 CallBackProgress(local_cbid.c_str(), call_back_jstr.c_str());
                 UpdateProgressMap(msg_id, progress);
             }
@@ -186,7 +186,7 @@ namespace sdk_wrapper {
         //verify message
         if (nullptr == messagePtr) {
             EMError error(EMError::MESSAGE_INVALID);
-            string call_back_jstr = JsonStringFromError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+            string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             return;
         }
@@ -195,13 +195,13 @@ namespace sdk_wrapper {
 
         EMCallbackPtr callbackPtr(new EMCallback(gCallbackObserverHandle,
             [=]()->bool {
-                string call_back_jstr = JsonStringFromSuccess(local_cbid.c_str());
+                string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
                 DeleteProgressItem(msg_id);
                 return true;
             },
             [=](const easemob::EMErrorPtr error)->bool {
-                string call_back_jstr = JsonStringFromError(local_cbid.c_str(), error->mErrorCode, error->mDescription.c_str());
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error->mErrorCode, error->mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
                 DeleteProgressItem(msg_id);
                 return true;
@@ -209,7 +209,7 @@ namespace sdk_wrapper {
             [=](int progress) {
                 int last_progress = GetLastProgress(msg_id);
                 if (progress - last_progress >= 5) {
-                    string call_back_jstr = JsonStringFromProcess(local_cbid.c_str(), progress);
+                    string call_back_jstr = MyJson::ToJsonWithProcess(local_cbid.c_str(), progress);
                     CallBackProgress(local_cbid.c_str(), call_back_jstr.c_str());
                     UpdateProgressMap(msg_id, progress);
                 }
@@ -233,7 +233,7 @@ namespace sdk_wrapper {
         //verify message
         if (nullptr == messagePtr) {
             EMError error(EMError::MESSAGE_INVALID);
-            string call_back_jstr = JsonStringFromError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+            string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             return;
         }
@@ -242,13 +242,13 @@ namespace sdk_wrapper {
 
         EMCallbackPtr callbackPtr(new EMCallback(gCallbackObserverHandle,
             [=]()->bool {
-                string call_back_jstr = JsonStringFromSuccess(local_cbid.c_str());
+                string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
                 DeleteProgressItem(msg_id);
                 return true;
             },
             [=](const easemob::EMErrorPtr error)->bool {
-                string call_back_jstr = JsonStringFromError(local_cbid.c_str(), error->mErrorCode, error->mDescription.c_str());
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error->mErrorCode, error->mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
                 DeleteProgressItem(msg_id);
                 return true;
@@ -256,7 +256,7 @@ namespace sdk_wrapper {
             [=](int progress) {
                 int last_progress = GetLastProgress(msg_id);
                 if (progress - last_progress >= 5) {
-                    string call_back_jstr = JsonStringFromProcess(local_cbid.c_str(), progress);
+                    string call_back_jstr = MyJson::ToJsonWithProcess(local_cbid.c_str(), progress);
                     CallBackProgress(local_cbid.c_str(), call_back_jstr.c_str());
                     UpdateProgressMap(msg_id, progress);
                 }
@@ -295,13 +295,12 @@ namespace sdk_wrapper {
 
             if (EMError::EM_NO_ERROR == error.mErrorCode) {
                 string cursor = msgCursorResult.nextPageCursor();
-                string msgs_json = Message::ToJson(msgCursorResult.result());
-                string cursor_json = JsonStringFromCursorResult(cursor, msgs_json);
-                string call_back_jstr = JsonStringFromSuccessResult(local_cbid.c_str(), cursor_json.c_str());
+                string cursor_json = CursorResult::ToJson(cursor, msgCursorResult.result());
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), cursor_json.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
             else {
-                string call_back_jstr = JsonStringFromError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
         });
@@ -343,11 +342,11 @@ namespace sdk_wrapper {
 
             if (EMError::EM_NO_ERROR == error.mErrorCode) {
                 string json = Conversation::ToJson(conversationList);
-                string call_back_jstr = JsonStringFromSuccessResult(local_cbid.c_str(), json.c_str());
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
             else {
-                string call_back_jstr = JsonStringFromError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
         });
@@ -384,7 +383,7 @@ namespace sdk_wrapper {
     {
         if (!CheckClientInitOrNot(nullptr)) return;
 
-        EMMessageList list = Message::ListFromJson(jstr);
+        EMMessageList list = Message::FromJsonToMessageList(jstr);
 
         bool ret = true;
         if (list.size() > 0) {
@@ -466,24 +465,24 @@ namespace sdk_wrapper {
         //verify message
         if (nullptr == messagePtr) {
             EMError error(EMError::MESSAGE_INVALID);
-            string call_back_jstr = JsonStringFromError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+            string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             return;
         }
 
         EMCallbackPtr callbackPtr(new EMCallback(gCallbackObserverHandle,
             [=]()->bool {
-                string call_back_jstr = JsonStringFromSuccess(local_cbid.c_str());
+                string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
                 return true;
             },
             [=](const easemob::EMErrorPtr error)->bool {
-                string call_back_jstr = JsonStringFromError(local_cbid.c_str(), error->mErrorCode, error->mDescription.c_str());
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error->mErrorCode, error->mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
                 return true;
             },
             [=](int progress) {
-                string call_back_jstr = JsonStringFromProcess(local_cbid.c_str(), progress);
+                string call_back_jstr = MyJson::ToJsonWithProcess(local_cbid.c_str(), progress);
                 CallBackProgress(local_cbid.c_str(), call_back_jstr.c_str());
                 return;
             }));
@@ -507,19 +506,19 @@ namespace sdk_wrapper {
         //verify message
         if (nullptr == messagePtr) {
             EMError error(EMError::MESSAGE_INVALID);
-            string call_back_jstr = JsonStringFromError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+            string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             return;
         }
 
         EMCallbackPtr callbackPtr(new EMCallback(gCallbackObserverHandle,
             [=]()->bool {
-                string call_back_jstr = JsonStringFromSuccess(local_cbid.c_str());
+                string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
                 return true;
             },
             [=](const easemob::EMErrorPtr error)->bool {
-                string call_back_jstr = JsonStringFromError(local_cbid.c_str(), error->mErrorCode, error->mDescription.c_str());
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error->mErrorCode, error->mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
                 return true;
             }));
@@ -571,11 +570,11 @@ namespace sdk_wrapper {
             EMError error;
             CLIENT->getChatManager().sendReadAckForConversation(conv_id, error);
             if (EMError::EM_NO_ERROR == error.mErrorCode) {
-                string call_back_jstr = JsonStringFromSuccess(local_cbid.c_str());
+                string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
             else {
-                string call_back_jstr = JsonStringFromError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
          });
@@ -596,14 +595,14 @@ namespace sdk_wrapper {
             EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(msg_id);
             if (nullptr == messagePtr) {
                 EMError error(EMError::MESSAGE_INVALID);
-                string call_back_jstr = JsonStringFromError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
                 return;
             }
 
             CLIENT->getChatManager().sendReadAckForMessage(messagePtr);
 
-            string call_back_jstr = JsonStringFromSuccess(local_cbid.c_str());
+            string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
          });
         t.detach();
@@ -624,12 +623,12 @@ namespace sdk_wrapper {
             EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(msg_id);
             if (nullptr == messagePtr) {
                 EMError error(EMError::MESSAGE_INVALID);
-                string call_back_jstr = JsonStringFromError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
                 return;
             }
             CLIENT->getChatManager().sendReadAckForGroupMessage(messagePtr, content);
-            string call_back_jstr = JsonStringFromSuccess(local_cbid.c_str());
+            string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
          });
         t.detach();
@@ -639,7 +638,7 @@ namespace sdk_wrapper {
     {
         if (!CheckClientInitOrNot(nullptr)) return;
 
-        EMMessagePtr messagePtr = Message::FromJson(jstr);
+        EMMessagePtr messagePtr = Message::FromJsonToMessage(jstr);
 
         EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(messagePtr->conversationId(), EMConversation::EMConversationType::CHAT, true);
 
@@ -676,12 +675,12 @@ namespace sdk_wrapper {
 
             if (false == ret) {
                 EMError error(EMError::DATABASE_ERROR);
-                string call_back_jstr = JsonStringFromError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
                 return;
             }
 
-            string call_back_jstr = JsonStringFromSuccess(local_cbid.c_str());
+            string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
          });
         t.detach();
@@ -705,12 +704,12 @@ namespace sdk_wrapper {
         thread t([=]() {
             EMErrorPtr error = CLIENT->getChatManager().deleteConversationFromServer(cov_id, conv_type, delete_message);
             if (EMError::EM_NO_ERROR != error->mErrorCode) {
-                string call_back_jstr = JsonStringFromError(local_cbid.c_str(), error->mErrorCode, error->mDescription.c_str());
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error->mErrorCode, error->mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
                 return;
             }
 
-            string call_back_jstr = JsonStringFromSuccess(local_cbid.c_str());
+            string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             });
         t.detach();
@@ -728,13 +727,13 @@ namespace sdk_wrapper {
             EMErrorPtr error = CLIENT->getChatManager().fetchSupportLanguages(languages);
 
             if (EMError::EM_NO_ERROR != error->mErrorCode) {
-                string call_back_jstr = JsonStringFromError(local_cbid.c_str(), error->mErrorCode, error->mDescription.c_str());
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error->mErrorCode, error->mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
                 return;
             }
 
             string json = SupportLanguage::ToJson(languages);
-            string call_back_jstr = JsonStringFromSuccessResult(local_cbid.c_str(), json.c_str());
+            string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
          });
         t.detach();
@@ -747,21 +746,21 @@ namespace sdk_wrapper {
         string local_cbid = cbid;
 
         Document d; d.Parse(jstr);
-        EMMessagePtr msg = Message::FromJsonObject(d["message"]);
+        EMMessagePtr msg = Message::FromJsonObjectToMessage(d["message"]);
 
         string langs_json = GetJsonValue_String(d, "languages", "");
-        vector<string> langs_vec = JsonStringToVector(langs_json);
+        vector<string> langs_vec = MyJson::FromJsonToVector(langs_json);
 
         thread t([=]() {
             EMErrorPtr error = CLIENT->getChatManager().translateMessage(msg, langs_vec);
             if (EMError::EM_NO_ERROR == error->mErrorCode) {
 
                 string json = Message::ToJson(msg);
-                string call_back_jstr = JsonStringFromSuccessResult(local_cbid.c_str(), json.c_str());
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
             else {
-                string call_back_jstr = JsonStringFromError(local_cbid.c_str(), error->mErrorCode, error->mDescription.c_str());
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error->mErrorCode, error->mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
          });
@@ -789,15 +788,13 @@ namespace sdk_wrapper {
             if (EMError::EM_NO_ERROR == error.mErrorCode) {
 
                 string cursor = msgCursorResult.nextPageCursor();
-                string group_acks_json = GroupReadAck::ToJson(msgCursorResult.result());
+                string json = CursorResult::ToJson(cursor, msgCursorResult.result());
 
-                string json = JsonStringFromCursorResult(cursor, group_acks_json);
-
-                string call_back_jstr = JsonStringFromSuccessResult(local_cbid.c_str(), json.c_str());
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
             else {
-                string call_back_jstr = JsonStringFromError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
         });
@@ -820,12 +817,12 @@ namespace sdk_wrapper {
             CLIENT->getChatManager().reportMessage(msg_id, tag, reason, error);
 
             if (EMError::EM_NO_ERROR != error.mErrorCode) {
-                string call_back_jstr = JsonStringFromError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
                 return;
             }
 
-            string call_back_jstr = JsonStringFromSuccess(local_cbid.c_str());
+            string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
         });
         t.detach();
@@ -846,12 +843,12 @@ namespace sdk_wrapper {
             CLIENT->getReactionManager().addReaction(msg_id, reaction, error);
 
             if (EMError::EM_NO_ERROR != error.mErrorCode) {
-                string call_back_jstr = JsonStringFromError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
                 return;
             }
 
-            string call_back_jstr = JsonStringFromSuccess(local_cbid.c_str());
+            string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
          });
         t.detach();
@@ -872,13 +869,13 @@ namespace sdk_wrapper {
             CLIENT->getReactionManager().removeReaction(msg_id, reaction, error);
             if (EMError::EM_NO_ERROR != error.mErrorCode) {
 
-                string call_back_jstr = JsonStringFromError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
 
                 return;
             }
 
-            string call_back_jstr = JsonStringFromSuccess(local_cbid.c_str());
+            string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
          });
         t.detach();
@@ -893,7 +890,7 @@ namespace sdk_wrapper {
         Document d; d.Parse(jstr);
 
         string vec_str = GetJsonValue_String(d, "msgIds", "");
-        vector<string> id_vec = JsonStringToVector(vec_str);
+        vector<string> id_vec = MyJson::FromJsonToVector(vec_str);
 
         string group_id = GetJsonValue_String(d, "groupId", "");
 
@@ -906,11 +903,11 @@ namespace sdk_wrapper {
             if (EMError::EM_NO_ERROR == error.mErrorCode) {
 
                 string json = MessageReaction::ToJson(map);
-                string call_back_jstr = JsonStringFromSuccessResult(local_cbid.c_str(), json.c_str());
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
             else {
-                string call_back_jstr = JsonStringFromError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
          });
@@ -929,23 +926,142 @@ namespace sdk_wrapper {
         string cursor = GetJsonValue_String(d, "cursor", "");
         int page_size = GetJsonValue_Int(d, "pageSize", 20);
 
-        std::thread t([=]() {
+        thread t([=]() {
             EMError error;
-            std::string outCursor = "";
+            string outCursor = "";
             EMMessageReactionPtr ret = CLIENT->getReactionManager().getReactionDetail(msg_id, reaction, cursor, page_size, outCursor, error);
             if (EMError::EM_NO_ERROR == error.mErrorCode) {
 
-                string reaction_json = MessageReaction::ToJson(ret);
-                string json = JsonStringFromCursorResult(outCursor, reaction_json);
-                string call_back_jstr = JsonStringFromSuccessResult(local_cbid.c_str(), json.c_str());
+                string json = CursorResult::ToJson(outCursor, ret);
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
             else {
-                string call_back_jstr = JsonStringFromError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
          });
         t.detach();
+    }
+
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_GetGroupAckCount(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        string msg_id = GetJsonValue_String(d, "messageId", "");
+
+        EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(msg_id);
+
+        int count = 0;
+
+        if (nullptr != messagePtr) {
+            count = messagePtr->groupAckCount();
+        }
+
+        JSON_STARTOBJ
+        writer.Key("count");
+        writer.String(to_string(count).c_str());
+        JSON_ENDOBJ
+
+       string json = s.GetString();
+        memcpy(buf, json.c_str(), json.size());
+    }
+
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_GetHasDeliverAck(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        string msg_id = GetJsonValue_String(d, "messageId", "");
+
+        EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(msg_id);
+
+        bool ret = false;
+
+        if (nullptr != messagePtr) {
+            ret = messagePtr->isDeliverAcked();
+        }
+
+        JSON_STARTOBJ
+        writer.Key("hasDeliverAck");
+        writer.Bool(ret);
+        JSON_ENDOBJ
+
+        string json = s.GetString();
+        memcpy(buf, json.c_str(), json.size());
+    }
+
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_GetHasReadAck(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        string msg_id = GetJsonValue_String(d, "messageId", "");
+
+        EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(msg_id);
+
+        bool ret = false;
+
+        if (nullptr != messagePtr) {
+            ret = messagePtr->isReadAcked();
+        }
+
+        JSON_STARTOBJ
+        writer.Key("hasReadAcked");
+        writer.Bool(ret);
+        JSON_ENDOBJ
+
+        string json = s.GetString();
+        memcpy(buf, json.c_str(), json.size());
+    }
+
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_GetReactionListForMsg(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        string msg_id = GetJsonValue_String(d, "messageId", "");
+
+        EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(msg_id);
+
+        string json = "";
+
+        if (nullptr != messagePtr) {
+
+            EMMessageReactionList& rl = messagePtr->reactionList();
+            json = MessageReaction::ToJson(rl);
+        }
+        memcpy(buf, json.c_str(), json.size());
+    }
+
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_GetChatThreadForMsg(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        string msg_id = GetJsonValue_String(d, "messageId", "");
+
+        EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(msg_id);
+
+        string json = "";
+
+        if (nullptr != messagePtr) {
+
+            EMThreadEventPtr t = messagePtr->threadOverview();
+            json = ChatThread::ToJson(t);
+        }
+        memcpy(buf, json.c_str(), json.size());
     }
 }
 

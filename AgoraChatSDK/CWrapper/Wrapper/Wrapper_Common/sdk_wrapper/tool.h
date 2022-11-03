@@ -20,6 +20,10 @@
                                                         ? jnode[name].GetInt() : default_value;
 
 
+#define GetJsonValue_Int64(jnode, name, default_value)   (!jnode.HasParseError() && !jnode.IsNull() \
+                                                        && !jnode[name].IsNull() && jnode[name].IsInt64()) \
+                                                        ? jnode[name].GetInt64() : default_value;
+
 #define JSON_STARTOBJ         StringBuffer s; \
                               Writer<StringBuffer> writer(s); \
                               writer.StartObject();
@@ -27,7 +31,7 @@
 #define JSON_ENDOBJ           writer.EndObject();
 
 template<typename T>
-static std::string convert2String(const T& from)
+static string convert2String(const T& from)
 {
     stringstream stream;
     stream << from;
@@ -35,7 +39,7 @@ static std::string convert2String(const T& from)
 }
 
 template<typename T>
-static T convertFromString(const std::string& from)
+static T convertFromString(const string& from)
 {
     stringstream stream;
     stream << from;
@@ -50,24 +54,6 @@ void CallBackProgress(const char* method, const char* jstr);
 
 bool CheckClientInitOrNot(const char* cbid);
 
-string JsonStringFromObject(const Value& obj);
-
-string JsonStringFromResult(const char* cbid, int process, int code, const char* desc, const char* jstr);
-string JsonStringFromError(const char* cbid, int code, const char* desc);
-string JsonStringFromSuccess(const char* cbid);
-string JsonStringFromErrorResult(const char* cbid, int code, const char* desc, const char* jstr);
-string JsonStringFromSuccessResult(const char* cbid, const char* jstr);
-string JsonStringFromProcess(const char* cbid, int process);
-
-string JsonStringFromVector(const vector<string>& vec);
-vector<string> JsonStringToVector(string& jstr);
-
-string JsonStringFromMap(const map<string, string>& map);
-map<string, string> JsonStringToMap(string& jstr);
-
-string JsonStringFromCursorResult(string cursor, string result);
-
-
 string GetLeftValue(const string& str);
 string GetRightValue(const string& str);
 
@@ -80,10 +66,10 @@ void StartTimer(int interval, TIMER_FUNC timer_func);
 void StopTimer();
 
 void EncryptAndSaveToFile(const string& plainMsg, const string& key, string fn = "");
-std::string DecryptAndGetFromFile(const string& key, string fn = "");
+string DecryptAndGetFromFile(const string& key, string fn = "");
 
 #ifndef _WIN32
-std::string GetMacUuid();
+string GetMacUuid();
 #endif
 
 #endif

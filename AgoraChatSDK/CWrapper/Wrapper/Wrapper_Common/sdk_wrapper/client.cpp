@@ -141,11 +141,11 @@ namespace sdk_wrapper
             EMErrorPtr result = CLIENT->createAccount(user_name, passwd);
 
             if (EMError::isNoError(result)) {
-                string call_back_jstr = JsonStringFromSuccess(local_cbid.c_str());
+                string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
             else {
-                string call_back_jstr = JsonStringFromError(local_cbid.c_str(), result->mErrorCode, result->mDescription.c_str());
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), result->mErrorCode, result->mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
 
@@ -179,11 +179,11 @@ namespace sdk_wrapper
                 SaveAutoLoginConfigToFile();
                 */
 
-                string call_back_jstr = JsonStringFromSuccess(local_cbid.c_str());
+                string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
             else {
-                string call_back_jstr = JsonStringFromError(local_cbid.c_str(), result->mErrorCode, result->mDescription.c_str());
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), result->mErrorCode, result->mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
         });
@@ -201,7 +201,7 @@ namespace sdk_wrapper
 
             //TODO: StopTimer();
 
-            string call_back_jstr = JsonStringFromSuccess(local_cbid.c_str());
+            string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
         });
         t.join();
@@ -229,7 +229,7 @@ namespace sdk_wrapper
             if (remainTS < ceil(token_wrapper.autologin_config_.availablePeriod / 2)) { // will expire
                 EMErrorPtr error(new EMError(EMError::TOKEN_WILL_EXPIRE));
                 error->mDescription = "Token will expire after ";
-                error->mDescription.append(std::to_string((int)remainTS));
+                error->mDescription.append(to_string((int)remainTS));
                 error->mDescription.append(" seconds.");
                 gConnectionListener->onTokenNotification(error);
 
@@ -263,7 +263,7 @@ namespace sdk_wrapper
         // get easemob token with agora_token
         CLIENT->getChatTokenbyAgoraToken(agora_token, response, error);
         if (EMError::EM_NO_ERROR != error.mErrorCode) {
-            string call_back_jstr = JsonStringFromError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+            string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
         }
 
@@ -274,13 +274,13 @@ namespace sdk_wrapper
         if (!token_wrapper.GetTokenCofigFromJson(response, easemob_token, expire_ts)) {
             error.mErrorCode = EMError::GENERAL_ERROR;
             error.mDescription = "Cannot get token config from response.";
-            string call_back_jstr = JsonStringFromError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+            string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             return;
         }
 
         // async login with easemob token
-        std::thread t([=]() {
+        thread t([=]() {
             EMErrorPtr error = CLIENT->loginWithToken(user_name, agora_token);
             if (EMError::EM_NO_ERROR == error->mErrorCode) {
 
@@ -290,11 +290,11 @@ namespace sdk_wrapper
                 TOKEN_CHECK_INTERVAL = 180;
                 StartTimer(token_wrapper.GetTokenCheckInterval(TOKEN_CHECK_INTERVAL, (int)token_wrapper.autologin_config_.availablePeriod), TokenCheck);
 
-                string call_back_jstr = JsonStringFromSuccess(local_cbid.c_str());
+                string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
             else {
-                string call_back_jstr = JsonStringFromError(local_cbid.c_str(), error->mErrorCode, error->mDescription.c_str());
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error->mErrorCode, error->mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
          });
@@ -316,7 +316,7 @@ namespace sdk_wrapper
         // get easemob token with agora_token
         CLIENT->getChatTokenbyAgoraToken(agora_token, response, error);
         if (EMError::EM_NO_ERROR != error.mErrorCode) {
-            string call_back_jstr = JsonStringFromError(cbid, error.mErrorCode, error.mDescription.c_str());
+            string call_back_jstr = MyJson::ToJsonWithError(cbid, error.mErrorCode, error.mDescription.c_str());
             CallBack(cbid, call_back_jstr.c_str());
         }
 
@@ -327,7 +327,7 @@ namespace sdk_wrapper
         if (!token_wrapper.GetTokenCofigFromJson(response, easemob_token, expire_ts)) {
             error.mErrorCode = EMError::GENERAL_ERROR;
             error.mDescription = "Cannot get token config from response.";
-            string call_back_jstr = JsonStringFromError(cbid, error.mErrorCode, error.mDescription.c_str());
+            string call_back_jstr = MyJson::ToJsonWithError(cbid, error.mErrorCode, error.mDescription.c_str());
             CallBack(cbid, call_back_jstr.c_str());
             return;
         }
@@ -363,7 +363,7 @@ namespace sdk_wrapper
             error.mErrorCode = EMError::GENERAL_ERROR;
             error.mDescription = "AutoLogin load token config failed";
 
-            string call_back_jstr = JsonStringFromError(cbid, error.mErrorCode, error.mDescription.c_str());
+            string call_back_jstr = MyJson::ToJsonWithError(cbid, error.mErrorCode, error.mDescription.c_str());
             CallBack(cbid, call_back_jstr.c_str());
             return;
         }
@@ -378,7 +378,7 @@ namespace sdk_wrapper
         }
 
         // async login with easemob token
-        std::thread t([=]() {
+        thread t([=]() {
 
             EMErrorPtr error = CLIENT->autoLogin(token_wrapper.autologin_config_.userName, code, isToken);
             if (EMError::EM_NO_ERROR == error->mErrorCode) {
@@ -394,11 +394,11 @@ namespace sdk_wrapper
                 JSON_ENDOBJ
 
                 string json = s.GetString();
-                string call_back_jstr = JsonStringFromSuccessResult(local_cbid.c_str(), json.c_str());
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
             else {
-                string call_back_jstr = JsonStringFromError(local_cbid.c_str(), error->mErrorCode, error->mDescription.c_str());
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error->mErrorCode, error->mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
         });
