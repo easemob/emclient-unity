@@ -2,8 +2,8 @@ package com.hyphenate.javawrapper;
 
 import android.content.Context;
 
-import com.hyphenate.javawrapper.wrapper.EMWrapper;
-import com.hyphenate.javawrapper.wrapper.EMWrapperListener;
+import com.hyphenate.wrapper.EMWrapper;
+import com.hyphenate.wrapper.EMWrapperListener;
 
 public class JavaWrapper {
     public static EMWrapper wrapper = null;

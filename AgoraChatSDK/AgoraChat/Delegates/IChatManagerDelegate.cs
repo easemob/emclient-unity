@@ -10,9 +10,9 @@ namespace AgoraChat
 	     * The chat manager callback interface.
 	     * 
 	     */
-    public interface IChatManagerDelegate  
-    {
-        /**
+	public interface IChatManagerDelegate
+	{
+		/**
          * \~chinese
 	     * 收到消息回调。
 		 * 
@@ -27,8 +27,8 @@ namespace AgoraChat
 	     * 
 	     * @param messages  The received message(s).
 	     */
-        void OnMessagesReceived(List<Message> messages);
-        /**
+		void OnMessagesReceived(List<Message> messages);
+		/**
          * \~chinese
 	     * 收到命令消息。
 		 * 
@@ -44,9 +44,9 @@ namespace AgoraChat
 	     * @param messages  The received command message(s).
 	     *
 	     */
-        void OnCmdMessagesReceived(List<Message> messages);
+		void OnCmdMessagesReceived(List<Message> messages);
 
-        /**
+		/**
          * \~chinese
          * 收到消息的已读回执回调。
          * 
@@ -57,9 +57,9 @@ namespace AgoraChat
          * 
          * @param messages  The read message(s).
          */
-        void OnMessagesRead(List<Message> messages);
+		void OnMessagesRead(List<Message> messages);
 
-        /**
+		/**
          * \~chinese
          * 收到消息的送达回执回调。
          * 
@@ -70,9 +70,9 @@ namespace AgoraChat
          * 
          * @param messages  The delivered message(s).
          */
-        void OnMessagesDelivered(List<Message> messages);
+		void OnMessagesDelivered(List<Message> messages);
 
-        /**
+		/**
  	     * \~chinese
  	     * 撤回收到消息的回调。
  	     * 
@@ -83,18 +83,18 @@ namespace AgoraChat
  	     * 
  	     * @param messages  The recalled message(s).
  	     */
-        void OnMessagesRecalled(List<Message> messages);
+		void OnMessagesRecalled(List<Message> messages);
 
-        /**
+		/**
 	     * \~chinese
 	     * 收到群组消息的读取状态更新时触发的回调。
 	     *
 	     * \~english
 	     * Occurs when the read status updates of a group message is received.
 	     */
-        void OnReadAckForGroupMessageUpdated();
+		void OnReadAckForGroupMessageUpdated();
 
-        /**
+		/**
 	     * \~chinese
 	     * 收到群组消息的已读回执的回调。
 	     * 
@@ -106,9 +106,9 @@ namespace AgoraChat
 	     * @param list The read receipt(s) for group message(s).
 	     * 
 	     */
-        void OnGroupMessageRead(List<GroupReadAck> list);
+		void OnGroupMessageRead(List<GroupReadAck> list);
 
-        /**
+		/**
         * \~chinese
         *  会话列表数量变化回调。
         *
@@ -116,9 +116,9 @@ namespace AgoraChat
         * Occurs when the number of conversations changes.
         * 
         */
-        void OnConversationsUpdate();
+		void OnConversationsUpdate();
 
-        /**
+		/**
 	     * \~chinese
 	     * 收到会话已读回调。
 	     *
@@ -144,19 +144,19 @@ namespace AgoraChat
 		 *
 	     *   Upon receiving this event, the SDK sets the `isAcked` attribute of the messages in the conversation to `true` in the local database.
 	     * 
-		 *- In the multi-device login scenario, when one device sends a read receipt for a conversation, the server will set the number of unread messages of this conversation to `0`.
+		 * - In the multi-device login scenario, when one device sends a read receipt for a conversation, the server will set the number of unread messages of this conversation to `0`.
 		 *  In this case, the callback occurs on the other devices where the SDK will set `isRead` attribute of the messages in the conversation to `true` in the local database.
 	     * 
 		 * @param from The ID of the user who sends the read receipt.
 	     * @param to   The ID of the user who receives the read receipt.
 	     */
-        void OnConversationRead(string from, string to);
+		void OnConversationRead(string from, string to);
 
 		/**
          * \~chinese
-         * Reaction发生变化。
+         * Reaction 发生变化。
          *
-         * @param list 改变的reaction列表。
+         * @param list 改变的 Reaction 列表。
          *
          *  \~english
          * Occurs when the reactions changed.
@@ -164,5 +164,5 @@ namespace AgoraChat
          * @param list The changed reaction list.
          */
 		void MessageReactionDidChange(List<MessageReactionChange> list);
-    }
+	}
 }
