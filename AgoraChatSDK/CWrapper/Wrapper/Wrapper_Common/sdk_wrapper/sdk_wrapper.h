@@ -25,6 +25,7 @@ SDK_WRAPPER_API void SDK_WRAPPER_CALL CleanListener_SDKWrapper();
 SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_InitWithOptions(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_AddListener();
 SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_AddMultiDeviceListener();
+SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_AddConnectionCallbackListener();
 SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_CreateAccount(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_Login(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_Logout(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
@@ -39,6 +40,7 @@ SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_AutoLogin(const char* jstr, const c
 
 // ChatManager ================================================================
 SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_AddListener();
+SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_AddReactionListener();
 SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_RemoveConversation(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_DownloadMessageAttachments(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_DownloadMessageThumbnail(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);

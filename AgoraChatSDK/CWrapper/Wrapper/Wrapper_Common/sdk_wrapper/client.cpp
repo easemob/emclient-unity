@@ -12,6 +12,7 @@
 EMClient* gClient = nullptr;
 EMConnectionListener* gConnectionListener = nullptr;
 EMMultiDevicesListener* gMultiDevicesListener = nullptr;
+EMConnectionCallbackListener* gConnectionCallbackListener = nullptr;
 EMChatConfigsPtr configs = nullptr;
 
 NativeListenerEvent gCallback = nullptr;
@@ -52,6 +53,16 @@ namespace sdk_wrapper
         }
     }
 
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_AddConnectionCallbackListener()
+    {
+        if (!CheckClientInitOrNot(nullptr)) return;
+
+        if (nullptr == gConnectionCallbackListener) { //only set once
+            gConnectionCallbackListener = new ConnectionCallbackListener();
+            gClient->addConnectionCallbackListener(gConnectionCallbackListener);
+        }
+    }
+
     SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_InitWithOptions(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         // singleton client handle
@@ -67,10 +78,16 @@ namespace sdk_wrapper
             }
         }
 
-        //TODO: add other listener here
         Client_AddListener();
-        ChatManager_AddListener();
         Client_AddMultiDeviceListener();
+        Client_AddConnectionCallbackListener();
+        ChatManager_AddListener();
+        ChatManager_AddReactionListener();
+        GroupManager_AddListener();
+        RoomManager_AddListener();
+        ContactManager_AddListener();
+        PresenceManager_AddListener();
+        ThreadManager_AddListener();
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_CurrentUsername(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)

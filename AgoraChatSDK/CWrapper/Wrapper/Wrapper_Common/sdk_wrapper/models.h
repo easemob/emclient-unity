@@ -12,6 +12,7 @@
 #include "message/emvoicemessagebody.h"
 #include "message/emmessageencoder.h"
 #include "emgroupmanager_interface.h"
+#include "emmessagereactionchange.h"
 
 #include "emattributevalue.h"
 #include "emchatconfigs.h"
@@ -134,7 +135,7 @@ namespace sdk_wrapper {
 	{
 	public:
 		static string ToJson(EMGroupReadAckPtr group_read_ack);
-		static string ToJson(vector<EMGroupReadAckPtr>& group_read_ack_vec);
+		static string ToJson(const vector<EMGroupReadAckPtr>& group_read_ack_vec);
 
 		static void ToJsonObject(Writer<StringBuffer>& writer, EMGroupReadAckPtr group_read_ack);
 		static void ToJsonObject(Writer<StringBuffer>& writer, const EMGroupReadAckList& group_read_ack_vec);
@@ -153,6 +154,13 @@ namespace sdk_wrapper {
 		static EMMessageReactionPtr FromJsonObjectToReaction(const Value& jnode);
 		static EMMessageReactionList FromJsonObjectToReactionList(const Value& jnode);
 		static EMMessageReactionList FromJsonToReactionList(string json);
+	};
+
+	struct MessageReactionChange
+	{
+		static std::string ToJson(EMMessageReactionChangePtr reactionChangePtr, std::string curname);
+		static std::string ToJson(EMMessageReactionChangeList list, std::string curname);
+		static void ToJsonObject(Writer<StringBuffer>& writer, EMMessageReactionChangePtr reactionChangePtr, std::string curname);
 	};
 
 	class Group

@@ -15,7 +15,7 @@ extern EMClient* gClient;
 static EMCallbackObserverHandle gCallbackObserverHandle;
 
 EMChatManagerListener* gChatManagerListener = nullptr;
-//TODO: EMReactionManagerListener* gReactionManagerListener = nullptr;
+EMReactionManagerListener* gReactionManagerListener = nullptr;
 
 mutex msg_locker;
 map<string, EMMessagePtr> msg_ptr_map;
@@ -107,14 +107,15 @@ namespace sdk_wrapper {
             gChatManagerListener = new ChatManagerListener();
             CLIENT->getChatManager().addListener(gChatManagerListener);
         }
+	}
 
-        /* TODO:
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_AddReactionListener()
+    {
         if (nullptr == gReactionManagerListener) {
-            gReactionManagerListener = new ReactionManagerListener(messageReactionDidChange);
+            gReactionManagerListener = new ReactionManagerListener();
             CLIENT->getReactionManager().addListener(gReactionManagerListener);
         }
-        */
-	}
+    }
 
 	SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_SendMessage(const char* jstr, const char* cbid, char* buf)
 	{

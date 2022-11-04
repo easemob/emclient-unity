@@ -1738,7 +1738,7 @@ namespace sdk_wrapper
         return jstr;
     }
 
-    string GroupReadAck::ToJson(vector<EMGroupReadAckPtr>& group_read_ack_vec)
+    string GroupReadAck::ToJson(const vector<EMGroupReadAckPtr>& group_read_ack_vec)
     {
         if (group_read_ack_vec.size() == 0) return string();
 
@@ -1851,6 +1851,49 @@ namespace sdk_wrapper
     EMMessageReactionList MessageReaction::FromJsonToReactionList(string json)
     {
         return EMMessageEncoder::decodeReactionListFromJson(json);
+    }
+
+    void MessageReactionChange::ToJsonObject(Writer<StringBuffer>& writer, EMMessageReactionChangePtr reactionChangePtr, std::string curname)
+    {
+        std::string covId = reactionChangePtr->to();
+        if (covId.compare(curname) == 0)
+            covId = reactionChangePtr->from();
+
+        writer.StartObject();
+        {
+            writer.Key("conversationId");
+            writer.String(covId.c_str());
+            writer.Key("messageId");
+            writer.String(reactionChangePtr->messageId().c_str());
+            writer.Key("reactionList");
+            MessageReaction::ToJsonObject(writer, reactionChangePtr->reactionList());
+        }
+        writer.EndObject();
+    }
+
+    std::string MessageReactionChange::ToJson(EMMessageReactionChangePtr reactionChangePtr, std::string curname)
+    {
+        if (nullptr == reactionChangePtr) return std::string();
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+        ToJsonObject(writer, reactionChangePtr, curname);
+        return s.GetString();
+    }
+
+    std::string MessageReactionChange::ToJson(EMMessageReactionChangeList list, std::string curname)
+    {
+        if (list.size() == 0) return std::string();
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+        writer.StartArray();
+        for (auto it : list)
+        {
+            ToJsonObject(writer, it, curname);
+        }
+        writer.EndArray();
+        return s.GetString();
     }
 
     string Group::ToJson(EMGroupPtr group)
