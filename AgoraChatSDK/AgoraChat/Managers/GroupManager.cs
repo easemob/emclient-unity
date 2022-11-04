@@ -370,16 +370,9 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("groupId", groupId);
-            Process process = (cb, jsonNode) =>
+            Process process = (_, jsonNode) =>
             {
-                if (jsonNode.IsBoolean)
-                {
-                    return jsonNode.AsBool;
-                }
-                else
-                {
-                    return false;
-                }
+                return jsonNode.IsBoolean ? jsonNode.AsBool : false;
             };
             NativeCall<bool>(SDKMethod.isMemberInWhiteListFromServer, jo_param, callback, process);
         }
@@ -438,7 +431,7 @@ namespace AgoraChat
             jo_param.Add("inviteMembers", JsonObject.JsonArrayFromStringList(inviteMembers));
             jo_param.Add("inviteReason", inviteReason);
 
-            Process process = (cid, jsonNode) =>
+            Process process = (_, jsonNode) =>
             {
                 return ModelHelper.CreateWithJsonObject<Group>(jsonNode.AsObject);
             };
@@ -591,7 +584,7 @@ namespace AgoraChat
             JSONObject jo_param = new JSONObject();
             jo_param.Add("groupId", groupId);
 
-            Process process = (cid, jsonNode) =>
+            Process process = (_, jsonNode) =>
             {
                 return jsonNode.IsString ? jsonNode.Value : null;
             };
@@ -631,7 +624,7 @@ namespace AgoraChat
             jo_param.Add("pageNum", pageNum);
             jo_param.Add("pageSize", pageSize);
 
-            Process process = (cid, jsonNode) =>
+            Process process = (_, jsonNode) =>
             {
                 return List.StringListFromJsonArray(jsonNode);
             };
@@ -675,7 +668,7 @@ namespace AgoraChat
             jo_param.Add("pageNum", pageNum);
             jo_param.Add("pageSize", pageSize);
 
-            Process process = (cid, jsonNode) =>
+            Process process = (_, jsonNode) =>
             {
                 return List.BaseModelListFromJsonArray<GroupSharedFile>(jsonNode);
             };
@@ -712,7 +705,7 @@ namespace AgoraChat
             jo_param.Add("cursor", cursor);
             jo_param.Add("pageSize", pageSize);
 
-            Process process = (cid, jsonNode) =>
+            Process process = (_, jsonNode) =>
             {
                 return new CursorResult<string>(jsonNode, (jn) =>
                 {
@@ -756,7 +749,7 @@ namespace AgoraChat
             jo_param.Add("pageNum", pageNum);
             jo_param.Add("pageSize", pageSize);
 
-            Process process = (cid, jsonNode) =>
+            Process process = (_, jsonNode) =>
             {
                 return List.StringListFromJsonArray(jsonNode);
             };
@@ -787,7 +780,7 @@ namespace AgoraChat
             JSONObject jo_param = new JSONObject();
             jo_param.Add("groupId", groupId);
 
-            Process process = (cid, jsonNode) =>
+            Process process = (_, jsonNode) =>
             {
                 return ModelHelper.CreateWithJsonObject<Group>(jsonNode);
             };
@@ -821,7 +814,7 @@ namespace AgoraChat
             JSONObject jo_param = new JSONObject();
             jo_param.Add("groupId", groupId);
 
-            Process process = (cid, jsonNode) =>
+            Process process = (_, jsonNode) =>
             {
                 return List.StringListFromJsonArray(jsonNode);
             };
@@ -909,7 +902,7 @@ namespace AgoraChat
             jo_param.Add("needAffiliations", needAffiliations);
             jo_param.Add("needRole", needRole);
 
-            Process process = (cid, jsonNode) =>
+            Process process = (_, jsonNode) =>
             {
                 return List.BaseModelListFromJsonArray<Group>(jsonNode);
             };
@@ -942,7 +935,7 @@ namespace AgoraChat
             jo_param.Add("pageSize", pageSize);
             jo_param.Add("cursor", cursor);
 
-            Process process = (cid, jsonNode) =>
+            Process process = (_, jsonNode) =>
             {
                 return new CursorResult<GroupInfo>(jsonNode, (jn) =>
                 {

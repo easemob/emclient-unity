@@ -185,15 +185,12 @@ namespace AgoraChat
             jo_param.Add("direction", direction == MessageSearchDirection.UP ? 0 : 1);
             jo_param.Add("count", count);
 
-            Process process = (_cbid, _json) =>
+            Process process = (_, jsonNode) =>
             {
-                CursorResult<Message>.ItemCallback parse = (JSONObject jo) =>
+                return new CursorResult<Message>(jsonNode, (jn) =>
                 {
-                    return ModelHelper.CreateWithJsonObject<Message>(jo);
-                };
-
-                CursorResult<Message> cursor_result = new CursorResult<Message>(_json.AsObject, parse);
-                return cursor_result;
+                    return ModelHelper.CreateWithJsonObject<Message>(jn);
+                });
             };
 
             NativeCall<CursorResult<Message>>(SDKMethod.fetchHistoryMessages, jo_param, callback, process);
@@ -287,10 +284,9 @@ namespace AgoraChat
 	     */
         public void GetConversationsFromServer(ValueCallBack<List<Conversation>> callback = null)
         {
-            Process process = (_cbid, _json) =>
+            Process process = (_, jsonNode) =>
             {
-                List<Conversation> list = List.BaseModelListFromJsonObject<Conversation>(_json);
-                return list;
+                return List.BaseModelListFromJsonArray<Conversation>(jsonNode);
             };
 
             NativeCall<List<Conversation>>(SDKMethod.getConversationsFromServer, null, callback, process);
@@ -764,10 +760,9 @@ namespace AgoraChat
         public void FetchSupportLanguages(ValueCallBack<List<SupportLanguage>> callback = null)
         {
 
-            Process process = (_cbid, _json) =>
+            Process process = (_, jsonNode) =>
             {
-                List<SupportLanguage> list = List.BaseModelListFromJsonObject<SupportLanguage>(_json);
-                return list;
+                return List.BaseModelListFromJsonArray<SupportLanguage>(jsonNode);
             };
 
             NativeCall<List<SupportLanguage>>(SDKMethod.fetchSupportedLanguages, null, callback, process);
@@ -792,9 +787,9 @@ namespace AgoraChat
             jo_param.Add("message", message.ToJsonObject());
             jo_param.Add("languages", JsonObject.JsonArrayFromStringList(targetLanguages));
 
-            Process process = (_cbid, _json) =>
+            Process process = (_, jsonNode) =>
             {
-                return ModelHelper.CreateWithJsonObject<Message>(_json.AsObject);
+                return ModelHelper.CreateWithJsonObject<Message>(jsonNode);
             };
 
             NativeCall<Message>(SDKMethod.translateMessage, jo_param, callback, process);
@@ -842,15 +837,12 @@ namespace AgoraChat
             jo_param.Add("groupId", groupId);
             jo_param.Add("ack_id", startAckId ?? "");
 
-            Process process = (_cbid, _json) =>
+            Process process = (_, jsonNode) =>
             {
-                CursorResult<GroupReadAck>.ItemCallback parse = (JSONObject jo) =>
+                return new CursorResult<GroupReadAck>(jsonNode, (jn) =>
                 {
-                    return ModelHelper.CreateWithJsonObject<GroupReadAck>(jo.AsObject);
-                };
-
-                CursorResult<GroupReadAck> cursor_result = new CursorResult<GroupReadAck>(_json.AsObject, parse);
-                return cursor_result;
+                    return ModelHelper.CreateWithJsonObject<GroupReadAck>(jn);
+                });
             };
             NativeCall<CursorResult<GroupReadAck>>(SDKMethod.asyncFetchGroupAcks, jo_param, callback, process);
         }
@@ -968,29 +960,11 @@ namespace AgoraChat
             JSONObject jo_param = new JSONObject();
             jo_param.Add("msgIds", JsonObject.JsonArrayFromStringList(messageIdList));
             jo_param.Add("groupId", groupId);
-
             //TODO: need to check
-            if (chatType == MessageType.Group)
+            jo_param.Add("type", chatType == MessageType.Group ? "groupchat" : "chat");
+            Process process = (_, jsonNode) =>
             {
-                jo_param.Add("type", "groupchat");
-            }
-            else
-            {
-                jo_param.Add("type", "chat");
-            }
-
-            Process process = (_cbid, _json) =>
-            {
-                Dictionary<string, List<MessageReaction>> dict = null;
-                if (null != _json && _json.IsObject)
-                {
-                    dict = MessageReaction.DictFromJsonObject(_json.AsObject);
-                }
-                else
-                {
-                    dict = new Dictionary<string, List<MessageReaction>>();
-                }
-                return dict;
+                return Dictionary.BaseModelDictionaryFromJsonObject<MessageReaction>(jsonNode);
             };
 
             NativeCall<Dictionary<string, List<MessageReaction>>>(SDKMethod.fetchReactionList, jo_param, callback, process);
@@ -1027,15 +1001,12 @@ namespace AgoraChat
             jo_param.Add("cursor", cursor ?? "");
             jo_param.Add("pageSize", pageSize);
 
-            Process process = (_cbid, _json) =>
+            Process process = (_, jsonNode) =>
             {
-                CursorResult<MessageReaction>.ItemCallback parse = (JSONObject jo) =>
+                return new CursorResult<MessageReaction>(jsonNode, (jn) =>
                 {
-                    return new MessageReaction(jo);
-                };
-
-                CursorResult<MessageReaction> cursor_result = new CursorResult<MessageReaction>(_json.AsObject, parse);
-                return cursor_result;
+                    return ModelHelper.CreateWithJsonObject<MessageReaction>(jn);
+                });
             };
 
             NativeCall(SDKMethod.fetchReactionDetail, jo_param, callback);
