@@ -27,6 +27,28 @@ namespace AgoraChat
         }
     }
 
+    internal static class String
+    {
+        internal static JSONNode GetReturnJsonNode(this string str)
+        {
+            JSONNode jsonNode = null;
+            do
+            {
+                if (string.IsNullOrEmpty(str)) break;
+
+                JSONNode jn = JSON.Parse(str);
+
+                if (jn.IsNull || !jn.IsObject) break;
+
+                jsonNode = jn["ret"];
+
+            } while (false);
+
+
+            return jsonNode;
+        }
+    }
+
     internal static class List
     {
         internal static List<string> StringListFromJsonArray(JSONNode jsonNode)
