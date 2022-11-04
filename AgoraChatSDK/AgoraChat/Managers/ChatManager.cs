@@ -374,7 +374,7 @@ namespace AgoraChat
 
             JSONNode jn = JSON.Parse(json);
 
-            return List.BaseModelListFromJsonObject<Conversation>(jn);
+            return List.BaseModelListFromJsonArray<Conversation>(jn);
         }
 
         /**
@@ -523,7 +523,7 @@ namespace AgoraChat
             if (json != null && json.Length > 0)
             {
                 JSONNode jo = JSON.Parse(json);
-                return List.BaseModelListFromJsonObject<Message>(jo);
+                return List.BaseModelListFromJsonArray<Message>(jo);
             }
 
             return null;
@@ -1060,7 +1060,7 @@ namespace AgoraChat
             {
                 if (jsonNode != null)
                 {
-                    List<Message> list = List.BaseModelListFromJsonObject<Message>(jsonNode);
+                    List<Message> list = List.BaseModelListFromJsonArray<Message>(jsonNode);
                     if (list.Count > 0)
                     {
                         foreach (IChatManagerDelegate it in delegater)
@@ -1076,7 +1076,7 @@ namespace AgoraChat
             }
             else if (method == SDKMethod.onMessagesRead)
             {
-                List<Message> list = List.BaseModelListFromJsonObject<Message>(jsonNode);
+                List<Message> list = List.BaseModelListFromJsonArray<Message>(jsonNode);
                 if (list.Count > 0)
                 {
                     foreach (IChatManagerDelegate it in delegater)

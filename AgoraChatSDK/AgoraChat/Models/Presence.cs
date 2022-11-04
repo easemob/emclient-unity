@@ -9,7 +9,7 @@ namespace AgoraChat
      * \~english
      * The presence property class that contains presence properties, including the publisher's user ID and current presence state, and the platform used by the online device, as well as the presence's extension information, update time, and subscription expiration time.
      */
-    public class Presence: BaseModel
+    public class Presence : BaseModel
     {
 
         /**
@@ -83,19 +83,19 @@ namespace AgoraChat
 
         internal Presence() { }
 
-        internal Presence(string jsonString):base(jsonString) { }
+        internal Presence(string jsonString) : base(jsonString) { }
 
-        internal Presence(JSONObject jsonObject):base(jsonObject) { }
+        internal Presence(JSONObject jsonObject) : base(jsonObject) { }
 
         internal override void FromJsonObject(JSONObject jo)
         {
-            if(null != jo)
+            if (null != jo)
             {
                 Publisher = jo["publisher"];
                 statusDescription = jo["statusDescription"];
                 LatestTime = jo["lastTime"];
                 ExpiryTime = jo["expiryTime"];
-                StatusList = List.BaseModelListFromJsonObject<PresenceDeviceStatus>(jo["statusDetails"]);
+                StatusList = List.BaseModelListFromJsonArray<PresenceDeviceStatus>(jo["statusDetails"]);
             }
         }
 

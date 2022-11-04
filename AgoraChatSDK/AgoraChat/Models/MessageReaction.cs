@@ -19,7 +19,7 @@ namespace AgoraChat
     *   UserList: The list of users that added the Reaction.
     *   State: Whether the current user added this Reaction.
     */
-    public class MessageReaction: BaseModel
+    public class MessageReaction : BaseModel
     {
         /**
          * \~chinese
@@ -74,16 +74,16 @@ namespace AgoraChat
 
         internal MessageReaction() { }
 
-        internal MessageReaction(string jsonString): base(jsonString) { }
+        internal MessageReaction(string jsonString) : base(jsonString) { }
 
         internal MessageReaction(JSONObject jsonObject) : base(jsonObject) { }
 
         internal override void FromJsonObject(JSONObject jsonObject)
         {
-             Rection = jsonObject["reaction"];
-             Count = jsonObject["count"].AsInt;
-             UserList = List.StringListFromJsonArray(jsonObject["userList"]);
-             State = jsonObject["isAddedBySelf"].AsBool;
+            Rection = jsonObject["reaction"];
+            Count = jsonObject["count"].AsInt;
+            UserList = List.StringListFromJsonArray(jsonObject["userList"]);
+            State = jsonObject["isAddedBySelf"].AsBool;
         }
 
         internal override JSONObject ToJsonObject()
@@ -99,7 +99,7 @@ namespace AgoraChat
                 JSONObject jo = jsonNode.AsObject;
                 foreach (string s in jo.Keys)
                 {
-                    dict.Add(s, List.BaseModelListFromJsonObject<MessageReaction>(jo[s]));
+                    dict.Add(s, List.BaseModelListFromJsonArray<MessageReaction>(jo[s]));
                 }
             }
             return dict;
