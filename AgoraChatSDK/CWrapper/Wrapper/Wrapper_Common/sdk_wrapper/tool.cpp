@@ -4,6 +4,7 @@
 #include "utils/emutils.h"
 
 #include "tool.h"
+#include "models.h"
 
 extern EMClient* gClient;
 extern NativeListenerEvent gCallback;
@@ -28,178 +29,16 @@ void CallBackProgress(const char* method, const char* jstr)
     CallBack(STRING_CALLBACK_PROGRESS_LISTENER.c_str(), method, jstr);
 }
 
-string JsonStringFromResult(const char* cbid, int process, int code, const char* desc, const char* jstr)
-{
-    if (nullptr == cbid || strlen(cbid) == 0) return string();
-
-    StringBuffer s;
-    Writer<StringBuffer> writer(s);
-    writer.StartObject();
-
-    writer.Key("callbackId");
-    writer.String(cbid);
-
-    if (process >= 0) {
-        writer.Key("progress");
-        writer.Int(process);
-    }
-
-    if (code >= 0) {
-        writer.Key("error");
-        writer.StartObject();
-
-        writer.Key("code");
-        writer.Int(code);
-
-        writer.Key("desc");
-        if (nullptr != desc && strlen(desc) != 0) {
-            writer.String(desc);
-        }
-        else {
-            writer.String("");
-        }
-
-        writer.EndObject();
-    }
-
-    if (nullptr != jstr && strlen(jstr) != 0) {
-        writer.Key("value");
-        writer.String(jstr);
-    }
-    
-    writer.EndObject();
-
-    return s.GetString();
-}
-
-string JsonStringFromError(const char* cbid, int code, const char* desc)
-{
-    return JsonStringFromResult(cbid, -1, code, desc, nullptr);
-}
-
-string JsonStringFromErrorResult(const char* cbid, int code, const char* desc, const char* jstr)
-{
-    return JsonStringFromResult(cbid, -1, code, desc, jstr);
-}
-
-string JsonStringFromSuccess(const char* cbid)
-{
-    return JsonStringFromResult(cbid, -1, -1, nullptr, nullptr);
-}
-
-string JsonStringFromSuccessResult(const char* cbid, const char* jstr)
-{
-    return JsonStringFromResult(cbid, -1, -1, nullptr, jstr);
-}
-
-string JsonStringFromProcess(const char* cbid, int process)
-{
-    return JsonStringFromResult(cbid, process, -1, nullptr, nullptr);
-}
-
 bool CheckClientInitOrNot(const char* cbid)
 {    
     if (nullptr == gClient) {
-        string call_back_jstr = JsonStringFromError(cbid, (int)EMError::GENERAL_ERROR, "Sdk is not initialized!");
+        string call_back_jstr = sdk_wrapper::MyJson::ToJsonWithError(cbid, (int)EMError::GENERAL_ERROR, "Sdk is not initialized!");
         CallBack(cbid, call_back_jstr.c_str());
         return false;
     }
     else {
         return true;
     }
-}
-
-string JsonStringFromObject(const Value& obj)
-{
-    StringBuffer s;
-    Writer<StringBuffer> writer(s);
-    obj.Accept(writer);
-    return s.GetString();
-}
-
-string JsonStringFromVector(const vector<string>& vec) {
-    if (vec.size() == 0) return string("");
-
-    StringBuffer s;
-    Writer<StringBuffer> writer(s);
-
-    writer.StartArray();
-    for (int i = 0; i < vec.size(); i++) {
-        writer.String(vec[i].c_str());
-    }
-    writer.EndArray();
-
-    string data = s.GetString();
-
-    return data;
-}
-
-string JsonStringFromMap(const map<string, string>& map) {
-    if (map.size() == 0) return string("");
-
-    StringBuffer s;
-    Writer<StringBuffer> writer(s);
-
-    writer.StartObject();
-    for (auto it : map) {
-        writer.Key(it.first.c_str());
-        writer.String(it.second.c_str());
-    }
-    writer.EndObject();
-
-    string data = s.GetString();
-    return data;
-}
-
-vector<string> JsonStringToVector(string& jstr) {
-    vector<string> vec;
-    if (jstr.length() < 3) return vec;
-
-    Document d;
-    if (!d.Parse(jstr.data()).HasParseError()) {
-        if (d.IsArray() == true) {
-            int size = d.Size();
-            for (int i = 0; i < size; i++) {
-                vec.push_back(d[i].GetString());
-            }
-        }
-    }
-    return vec;
-}
-
-map<string, string> JsonStringToMap(string& jstr) {
-    map<string, string> map;
-    if (jstr.length() < 3) return map;
-
-    Document d;
-    if (!d.Parse(jstr.data()).HasParseError()) {
-        for (auto iter = d.MemberBegin(); iter != d.MemberEnd(); ++iter) {
-            auto key = iter->name.GetString();
-            auto value = iter->value.GetString();
-
-            map.insert(pair<string, string>(key, value));
-        }
-    }
-    return map;
-}
-
-string JsonStringFromCursorResult(string cursor, string result)
-{
-    StringBuffer s;
-    Writer<StringBuffer> writer(s);
-
-    writer.StartObject();
-    {
-        writer.Key("cursor");
-        writer.String(cursor.c_str());
-
-        writer.Key("list");
-        writer.String(result.c_str());
-    }
-    writer.EndObject();
-
-    std::string data = s.GetString();
-    return data;
 }
 
 string GetLeftValue(const string& str)
@@ -272,7 +111,7 @@ void StartTimer(int interval, TIMER_FUNC timer_func)
     PARAM_INTERVAL = interval;
     if (ISRUN) return;
 
-    std::thread t([=]() {
+    thread t([=]() {
         RUN_INTERVAL = PARAM_INTERVAL;
         int tick_count = 0;
         while (!STOP) {
@@ -307,14 +146,14 @@ void StopTimer()
 
 #endif
 
-void EncryptAndSaveToFile(const std::string& plainMsg, const std::string& key, std::string fn)
+void EncryptAndSaveToFile(const string& plainMsg, const string& key, string fn)
 {
     if (plainMsg.size() == 0 || key.size() == 0) {
         return;
     }
 
     // get file name
-    std::string fileName = "";
+    string fileName = "";
     if (fn.size() != 0)
         fileName = fn;
     else {
@@ -347,7 +186,7 @@ void EncryptAndSaveToFile(const std::string& plainMsg, const std::string& key, s
     EMEncryptCalculateUtil::getAESKey(key, key, bytes, encrypt);
 
     // encrypt
-    std::string ret = encrypt->aesEncrypt(plainMsg, bytes, 16);
+    string ret = encrypt->aesEncrypt(plainMsg, bytes, 16);
 
     // save result
     fwrite(ret.c_str(), ret.size(), 1, f);
@@ -356,14 +195,14 @@ void EncryptAndSaveToFile(const std::string& plainMsg, const std::string& key, s
     delete encrypt;
 }
 
-std::string DecryptAndGetFromFile(const std::string& key, std::string fn)
+string DecryptAndGetFromFile(const string& key, string fn)
 {
     if (key.size() == 0) {
         return "";
     }
 
     // get file name
-    std::string fileName = "";
+    string fileName = "";
     if (fn.size() != 0)
         fileName = fn;
     else {
@@ -392,10 +231,10 @@ std::string DecryptAndGetFromFile(const std::string& key, std::string fn)
 
     char* content = new char[fsize];
     fread(content, fsize, 1, f);
-    std::string encryptedData(content, fsize);
+    string encryptedData(content, fsize);
 
     // Decrypt
-    std::string ret = encrypt->aesDecrypt(encryptedData, bytes, 16);
+    string ret = encrypt->aesDecrypt(encryptedData, bytes, 16);
 
     fclose(f);
     delete encrypt;
@@ -404,8 +243,8 @@ std::string DecryptAndGetFromFile(const std::string& key, std::string fn)
 }
 
 #ifndef _WIN32
-std::string GetMacUuid() {
-    std::string uuidPath = "./sdkdata/easemobDB/"; // default directory
+string GetMacUuid() {
+    string uuidPath = "./sdkdata/easemobDB/"; // default directory
     bool isTempPath = false;
 
     // check directory, maybe default directory is not created yet, then use /tmp
@@ -414,10 +253,10 @@ std::string GetMacUuid() {
         isTempPath = true;
     }
 
-    std::string uuidFile = uuidPath + ".uuid";
-    std::string genenrateUUID = "ioreg -d2 -c IOPlatformExpertDevice | grep IOPlatformUUID";
-    std::string saveUUID2File = genenrateUUID + " > " + uuidFile;
-    std::string delUUIDFile = "rm -fr " + uuidFile;
+    string uuidFile = uuidPath + ".uuid";
+    string genenrateUUID = "ioreg -d2 -c IOPlatformExpertDevice | grep IOPlatformUUID";
+    string saveUUID2File = genenrateUUID + " > " + uuidFile;
+    string delUUIDFile = "rm -fr " + uuidFile;
 
     ifstream in;
     in.open(uuidFile);
@@ -445,17 +284,17 @@ std::string GetMacUuid() {
             return line;
         }
         else {
-            return std::string();
+            return string();
         }
     }
     string::size_type pos2 = line.rfind("\"", line.length() - 2);
     if (line.npos == pos2 || (line.npos != pos2 && pos1 <= pos2)) {
-        return std::string();
+        return string();
     }
     string uuid = line.substr(pos2 + 1, pos1 - pos2 - 1);
     // 128 bit for Uuid + four "-", is 36byte
     if (uuid.size() != 36) {
-        return std::string();
+        return string();
     }
     in.close();
 

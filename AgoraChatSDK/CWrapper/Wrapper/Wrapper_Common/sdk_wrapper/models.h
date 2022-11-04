@@ -11,15 +11,44 @@
 #include "message/emvideomessagebody.h"
 #include "message/emvoicemessagebody.h"
 #include "message/emmessageencoder.h"
+#include "emgroupmanager_interface.h"
+#include "emmessagereactionchange.h"
 
 #include "emattributevalue.h"
 #include "emchatconfigs.h"
 #include "emconversation.h"
 #include "emmuc.h"
+#include "emthreadmanager_listener.h"
+#include "empresence.h"
 
 #include "sdk_wrapper_internal.h"
 
 namespace sdk_wrapper {
+
+	class MyJson
+	{
+	public:
+		static string ToJsonWithJsonObject(const Value& obj);
+
+		static string ToJsonWithResult(const char* cbid, int process, int code, const char* desc, const char* jstr);
+		static string ToJsonWithError(const char* cbid, int code, const char* desc);
+		static string ToJsonWithSuccess(const char* cbid);
+		static string ToJsonWithErrorResult(const char* cbid, int code, const char* desc, const char* jstr);
+		static string ToJsonWithSuccessResult(const char* cbid, const char* jstr);
+		static string ToJsonWithProcess(const char* cbid, int process);
+
+		static void ToJsonObject(Writer<StringBuffer>& writer, const vector<string>& vec);
+		static vector<string> FromJsonObjectToVector(const Value& jnode);
+
+		static string ToJson(const vector<string>& vec);
+		static vector<string> FromJsonToVector(string& jstr);
+
+		static void ToJsonObject(Writer<StringBuffer>& writer, const map<string, string>& map);
+		static map<string, string> FromJsonObjectToMap(const Value& jnode);
+
+		static string ToJson(const map<string, string>& map);
+		static map<string, string> FromJsonToMap(string& jstr);
+	};
 
 	class Options
 	{
@@ -30,10 +59,10 @@ namespace sdk_wrapper {
 	class Message
 	{
 	public:
-		static EMMessagePtr FromJson(const char* json);
-		static EMMessageList ListFromJson(const char* json);
-		static string ToJson(EMMessagePtr em_msg);
+		static EMMessagePtr FromJsonToMessage(const char* json);
+		static EMMessageList FromJsonToMessageList(const char* json);
 
+		static string ToJson(EMMessagePtr em_msg);
 		static string ToJson(EMMessageList messages);
 
 	public:
@@ -52,24 +81,29 @@ namespace sdk_wrapper {
 		static int DownLoadStatusToInt(EMFileMessageBody::EMDownloadStatus download_status);
 		static EMFileMessageBody::EMDownloadStatus DownLoadStatusFromInt(int i);
 
-		static string CustomExtsToJson(EMCustomMessageBody::EMCustomExts& exts);
-		static EMCustomMessageBody::EMCustomExts CustomExtsFromJson(string json);
+		static string ToJson(EMCustomMessageBody::EMCustomExts& exts);
+		static EMCustomMessageBody::EMCustomExts FromJsonToCustomExts(string json);
 
-		static void BodyToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg);
-		static string BodyToJson(EMMessagePtr msg);
+		static void ToJsonObject(Writer<StringBuffer>& writer, EMCustomMessageBody::EMCustomExts& exts);
+		static EMCustomMessageBody::EMCustomExts FromJsonObjectToCustomExts(const Value& jnode);
 
-		static EMMessageBodyPtr BodyFromJsonObject(const Value& jnode);
-		static EMMessageBodyPtr BodyFromJson(string json);
+		static void ToJsonObjectWithBody(Writer<StringBuffer>& writer, EMMessagePtr msg);
+		static string ToJsonWithBody(EMMessagePtr msg);
 
-		static void ToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg);
-		static EMMessagePtr FromJsonObject(const Value& jnode);
+		static EMMessageBodyPtr FromJsonObjectToBody(const Value& jnode);
+		static EMMessageBodyPtr FromJsonToBody(string json);
+
+		static void ToJsonObjectWithMessage(Writer<StringBuffer>& writer, EMMessagePtr msg);
+		static EMMessagePtr FromJsonObjectToMessage(const Value& jnode);
+
+		static void ToJsonObjectWithMessageList(Writer<StringBuffer>& writer, EMMessageList messages);
 	};
 
 	class AttributesValue
 	{
 	public:
-		static void ToJsonWriter(Writer<StringBuffer>& writer, EMAttributeValuePtr attribute);
-		static void ToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg);
+		static void ToJsonObjectWithAttribute(Writer<StringBuffer>& writer, EMAttributeValuePtr attribute);
+		static void ToJsonObjectWithAttributes(Writer<StringBuffer>& writer, EMMessagePtr msg);
 		static string ToJson(EMMessagePtr msg);
 
 		static void SetMessageAttr(EMMessagePtr msg, string& key, const Value& jnode);
@@ -82,12 +116,17 @@ namespace sdk_wrapper {
 	public:
 		static string ToJson(EMConversationPtr conversation);
 		static string ToJson(EMConversationList conversations);
+		static void ToJsonObject(Writer<StringBuffer>& writer, EMConversationPtr conversation);
 		static int ConversationTypeToInt(EMConversation::EMConversationType type);
+		static EMConversation::EMConversationType ConversationTypeFromInt(int i);
 	};
 
 	class SupportLanguage
 	{
 	public:
+		static void ToJsonObject(Writer<StringBuffer>& writer, tuple<string, string, string>& lang);
+		static void ToJsonObject(Writer<StringBuffer>& writer, vector<tuple<string, string, string>>& langs);
+
 		static string ToJson(tuple<string, string, string>& lang);
 		static string ToJson(vector<tuple<string, string, string>>& langs);
 	};
@@ -96,7 +135,10 @@ namespace sdk_wrapper {
 	{
 	public:
 		static string ToJson(EMGroupReadAckPtr group_read_ack);
-		static string ToJson(vector<EMGroupReadAckPtr> group_read_ack_vec);
+		static string ToJson(const vector<EMGroupReadAckPtr>& group_read_ack_vec);
+
+		static void ToJsonObject(Writer<StringBuffer>& writer, EMGroupReadAckPtr group_read_ack);
+		static void ToJsonObject(Writer<StringBuffer>& writer, const EMGroupReadAckList& group_read_ack_vec);
 	};
 
 	class MessageReaction
@@ -106,22 +148,122 @@ namespace sdk_wrapper {
 		static string ToJson(EMMessageReactionList& list);
 		static string ToJson(EMMessage& msg);
 		static string ToJson(map<string, EMMessageReactionList>& map);
-		static void ListToJsonWriter(Writer<StringBuffer>& writer, EMMessageReactionList& list);
+		static void ToJsonObject(Writer<StringBuffer>& writer, const EMMessageReactionPtr reaction);
+		static void ToJsonObject(Writer<StringBuffer>& writer, const EMMessageReactionList& list);
 
-		static EMMessageReactionPtr FromJsonObject(const Value& jnode);
-		static EMMessageReactionList ListFromJsonObject(const Value& jnode);
-		static EMMessageReactionList ListFromJson(string json);
+		static EMMessageReactionPtr FromJsonObjectToReaction(const Value& jnode);
+		static EMMessageReactionList FromJsonObjectToReactionList(const Value& jnode);
+		static EMMessageReactionList FromJsonToReactionList(string json);
+	};
+
+	struct MessageReactionChange
+	{
+		static std::string ToJson(EMMessageReactionChangePtr reactionChangePtr, std::string curname);
+		static std::string ToJson(EMMessageReactionChangeList list, std::string curname);
+		static void ToJsonObject(Writer<StringBuffer>& writer, EMMessageReactionChangePtr reactionChangePtr, std::string curname);
 	};
 
 	class Group
 	{
 	public:
 		static string ToJson(EMGroupPtr group);
-		static string JsonStringFromMuteVector(const EMMucMuteList& vec);
+		static string ToJson(const EMMucMuteList& vec);
+		static string ToJson(const EMGroupList& list);
 
-		static string SettingToJson(const EMMucSettingPtr setting);
+		static void ToJsonObject(Writer<StringBuffer>& writer, EMGroupPtr group);
+		static void ToJsonObject(Writer<StringBuffer>& writer, const EMMucMuteList& vec);
+		static void ToJsonObject(Writer<StringBuffer>& writer, const EMGroupList& list);
+
+		static string ToJson(const EMMucSettingPtr setting);
+		static EMMucSettingPtr FromJsonToMucSetting(string json);
+
+		static void JsonObject(Writer<StringBuffer>& writer, const EMMucSettingPtr setting);
+		static EMMucSettingPtr JsonObjectToMucSetting(const Value& jnode);
+
 		static int MemberTypeToInt(EMMuc::EMMucMemberType type);
+
 		static int GroupStyleToInt(EMMucSetting::EMMucStyle style);
+		static EMMucSetting::EMMucStyle GroupStyleFromInt(int i);
+	};
+
+	class GroupSharedFile
+	{
+	public:
+		static string ToJson(EMMucSharedFilePtr file);
+		static string ToJson(EMMucSharedFileList file_list);
+
+		static void ToJsonObject(Writer<StringBuffer>& writer, EMMucSharedFilePtr file);
+		static void ToJsonObject(Writer<StringBuffer>& writer, EMMucSharedFileList file_list);
+	};
+
+	class CursorResult
+	{
+	public:
+		static string ToJson(string cursor, const vector<string> list);
+		static string ToJson(string cursor, const EMMessageList& msg_list);
+		static string ToJson(string cursor, const EMGroupReadAckList& group_ack_list);
+		static string ToJson(string cursor, const EMMessageReactionPtr reaction);
+		static string ToJsonWithGroupInfo(string cursor, const EMCursorResult& result);
+		static string ToJson(string cursor, const EMCursorResultRaw<EMThreadEventPtr> cusorResult);
+	};
+
+	class Room
+	{
+	public:
+		static void ToJsonObject(Writer<StringBuffer>& writer, EMChatroomPtr room);
+		static string ToJson(EMChatroomPtr room);
+
+		static int EMMucMemberTypeToInt(EMMuc::EMMucMemberType type);
+		static EMMuc::EMMucMemberType EMMucMemberTypeFromInt(int i);
+	};
+
+	class PageResult
+	{
+	public:
+		static string ToJsonWithRoom(int count, const EMPageResult result);
+	};
+
+	class ChatThreadEvent
+	{
+	public:
+		static std::string ToJson(EMThreadEventPtr threadEventPtr);
+
+		static int ThreadOperationToInt(const std::string& operation);
+	};
+
+	class ChatThread
+	{
+	public:
+		static void ToJsonObject(Writer<StringBuffer>& writer, EMThreadEventPtr threadEventPtr);
+		static std::string ToJson(EMThreadEventPtr threadEventPtr);
+		static std::string ToJson(EMCursorResultRaw<EMThreadEventPtr> cusorResult);
+		static std::string ToJson(std::vector<EMThreadEventPtr>& vec);
+		static std::string ToJson(std::map<std::string, EMMessagePtr> map);
+		static EMThreadEventPtr FromJsonObject(const Value& jnode);
+		static EMThreadEventPtr FromJson(std::string json);
+
+		static EMThreadLeaveReason ThreadLeaveReasonFromInt(int i);
+		static int ThreadLeaveReasonToInt(EMThreadLeaveReason reason);
+	};
+
+	class PreseceDeviceStatus
+	{
+	public:
+		static void ToJsonObject(Writer<StringBuffer>& writer, const pair<string, int>& status);
+		static void ToJsonObject(Writer<StringBuffer>& writer, const set<pair<string, int>>& status_set);
+
+		static string ToJson(const pair<string, int>& status);
+		static string ToJson(const set<pair<string, int>>& status_set);
+	};
+
+	class Presence
+	{
+	public:
+		static void ToJsonObject(Writer<StringBuffer>& writer, EMPresencePtr presence);
+		static void ToJsonObject(Writer<StringBuffer>& writer, const vector<EMPresencePtr>& vec);
+
+		static string ToJson(EMPresencePtr presence);
+		static string ToJson(const vector<EMPresencePtr>& vec);
 	};
 
 	class TokenWrapper

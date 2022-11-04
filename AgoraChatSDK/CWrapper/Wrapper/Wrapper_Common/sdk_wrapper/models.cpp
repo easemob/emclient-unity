@@ -1,9 +1,185 @@
 #include "tool.h"
 #include "models.h"
-//#include "sdk_wrapper.h"
 
 namespace sdk_wrapper
 {
+    string MyJson::ToJsonWithResult(const char* cbid, int process, int code, const char* desc, const char* jstr)
+    {
+        if (nullptr == cbid || strlen(cbid) == 0) return string();
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+        writer.StartObject();
+
+        writer.Key("callbackId");
+        writer.String(cbid);
+
+        if (process >= 0) {
+            writer.Key("progress");
+            writer.Int(process);
+        }
+
+        if (code >= 0) {
+            writer.Key("error");
+            writer.StartObject();
+
+            writer.Key("code");
+            writer.Int(code);
+
+            writer.Key("desc");
+            if (nullptr != desc && strlen(desc) != 0) {
+                writer.String(desc);
+            }
+            else {
+                writer.String("");
+            }
+
+            writer.EndObject();
+        }
+
+        if (nullptr != jstr && strlen(jstr) != 0) {
+            writer.Key("value");
+            writer.String(jstr);
+        }
+
+        writer.EndObject();
+
+        return s.GetString();
+    }
+
+    string MyJson::ToJsonWithError(const char* cbid, int code, const char* desc)
+    {
+        return ToJsonWithResult(cbid, -1, code, desc, nullptr);
+    }
+
+    string MyJson::ToJsonWithErrorResult(const char* cbid, int code, const char* desc, const char* jstr)
+    {
+        return ToJsonWithResult(cbid, -1, code, desc, jstr);
+    }
+
+    string MyJson::ToJsonWithSuccess(const char* cbid)
+    {
+        return ToJsonWithResult(cbid, -1, -1, nullptr, nullptr);
+    }
+
+    string MyJson::ToJsonWithSuccessResult(const char* cbid, const char* jstr)
+    {
+        return ToJsonWithResult(cbid, -1, -1, nullptr, jstr);
+    }
+
+    string MyJson::ToJsonWithProcess(const char* cbid, int process)
+    {
+        return ToJsonWithResult(cbid, process, -1, nullptr, nullptr);
+    }
+
+    string MyJson::ToJsonWithJsonObject(const Value& obj)
+    {
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+        obj.Accept(writer);
+        return s.GetString();
+    }
+
+    void MyJson::ToJsonObject(Writer<StringBuffer>& writer, const vector<string>& vec)
+    {
+        writer.StartArray();
+        for (int i = 0; i < vec.size(); i++) {
+            writer.String(vec[i].c_str());
+        }
+        writer.EndArray();
+    }
+
+    vector<string> MyJson::FromJsonObjectToVector(const Value& jnode)
+    {
+        vector<string> vec;
+
+        if (jnode.IsArray() == true) {
+            int size = jnode.Size();
+            for (int i = 0; i < size; i++) {
+                vec.push_back(jnode[i].GetString());
+            }
+        }
+        return vec;
+    }
+
+    string MyJson::ToJson(const vector<string>& vec) {
+        if (vec.size() == 0) return string("");
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        ToJsonObject(writer, vec);
+
+        string data = s.GetString();
+
+        return data;
+    }
+
+    vector<string> MyJson::FromJsonToVector(string& jstr) {
+
+        vector<string> vec;
+        if (jstr.length() < 3) return vec;
+
+        Document d;
+        if (!d.Parse(jstr.data()).HasParseError()) {
+            return FromJsonObjectToVector(d);
+        }
+        else
+        {
+            return vec;
+        }
+    }
+
+    void MyJson::ToJsonObject(Writer<StringBuffer>& writer, const map<string, string>& map)
+    {
+        writer.StartObject();
+        for (auto it : map) {
+            writer.Key(it.first.c_str());
+            writer.String(it.second.c_str());
+        }
+        writer.EndObject();
+    }
+
+    map<string, string> MyJson::FromJsonObjectToMap(const Value& jnode)
+    {
+        map<string, string> map;
+
+        if (!jnode.IsArray()) return map;
+
+        for (auto iter = jnode.MemberBegin(); iter != jnode.MemberEnd(); ++iter) {
+            auto key = iter->name.GetString();
+            auto value = iter->value.GetString();
+
+            map.insert(pair<string, string>(key, value));
+        }
+        return map;
+    }
+
+    string MyJson::ToJson(const map<string, string>& map) {
+        if (map.size() == 0) return string("");
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        ToJsonObject(writer, map);
+
+        string data = s.GetString();
+        return data;
+    }
+
+    map<string, string> MyJson::FromJsonToMap(string& jstr) {
+        map<string, string> map;
+        if (jstr.length() < 3) return map;
+
+        Document d;
+        if (!d.Parse(jstr.data()).HasParseError()) {
+            return FromJsonObjectToMap(d);
+        }
+        return map;
+    }
+
+
+
     EMChatConfigsPtr Options::FromJson(const char* json, const char* rs, const char* wk)
 	{
         if (nullptr == json || strlen(json) == 0) return nullptr;
@@ -119,7 +295,7 @@ namespace sdk_wrapper
         }
 
 #ifndef _WIN32
-        std::string uuid = GetMacUuid();
+        string uuid = GetMacUuid();
         if (uuid.size() > 0)
             configs->setDeviceUuid(uuid);
 #endif
@@ -322,31 +498,47 @@ namespace sdk_wrapper
         return ret;
     }
 
-    string Message::CustomExtsToJson(EMCustomMessageBody::EMCustomExts& exts)
+    string Message::ToJson(EMCustomMessageBody::EMCustomExts& exts)
     {
         StringBuffer s;
         Writer<StringBuffer> writer(s);
 
+        ToJsonObject(writer, exts);
+
+        string data = s.GetString();
+        return data;
+    }
+
+    void Message::ToJsonObject(Writer<StringBuffer>& writer, EMCustomMessageBody::EMCustomExts& exts)
+    {
         writer.StartObject();
         for (auto it : exts) {
             writer.Key(it.first.c_str());
             writer.String(it.second.c_str());
         }
         writer.EndObject();
-
-        string data = s.GetString();
-        return data;
     }
 
-    EMCustomMessageBody::EMCustomExts Message::CustomExtsFromJson(string json)
+    EMCustomMessageBody::EMCustomExts Message::FromJsonToCustomExts(string json)
+    {
+        Document d;
+        d.Parse(json.c_str());
+
+        if (d.HasParseError()) {
+            EMCustomMessageBody::EMCustomExts exts;
+            return exts;
+        }
+
+        return FromJsonObjectToCustomExts(d);
+    }
+
+    EMCustomMessageBody::EMCustomExts Message::FromJsonObjectToCustomExts(const Value& jnode)
     {
         EMCustomMessageBody::EMCustomExts exts;
 
-        Document d;
-        d.Parse(json.c_str());
-        if (d.HasParseError()) return exts;
+        if (!jnode.IsArray()) return exts;
 
-        for (auto iter = d.MemberBegin(); iter != d.MemberEnd(); ++iter) {
+        for (auto iter = jnode.MemberBegin(); iter != jnode.MemberEnd(); ++iter) {
 
             string key = iter->name.GetString();
             string value = iter->value.GetString();
@@ -358,7 +550,7 @@ namespace sdk_wrapper
         return exts;
     }
 
-    void Message::BodyToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg)
+    void Message::ToJsonObjectWithBody(Writer<StringBuffer>& writer, EMMessagePtr msg)
     {
         if (nullptr == msg) return;
 
@@ -373,11 +565,11 @@ namespace sdk_wrapper
 
             writer.Key("targetLanguages");
             vector<string> vec = ptr->getTargetLanguages();
-            writer.String(JsonStringFromVector(vec).c_str());
+            MyJson::ToJsonObject(writer, vec);
 
             writer.Key("translations");
             map<string, string> map = ptr->getTranslations();
-            writer.String(JsonStringFromMap(map).c_str());
+            MyJson::ToJsonObject(writer, map);
         }
         break;
         case EMMessageBody::LOCATION:
@@ -547,7 +739,7 @@ namespace sdk_wrapper
             writer.Key("params");
 
             EMCustomMessageBody::EMCustomExts exts = ptr->exts();
-            writer.String(CustomExtsToJson(exts).c_str());
+            ToJsonObject(writer, exts);
         }
         break;
         default:
@@ -558,16 +750,16 @@ namespace sdk_wrapper
         writer.EndObject();
     }
 
-    string Message::BodyToJson(EMMessagePtr msg)
+    string Message::ToJsonWithBody(EMMessagePtr msg)
     {
         StringBuffer s;
         Writer<StringBuffer> writer(s);
-        BodyToJsonWriter(writer, msg);
+        ToJsonObjectWithBody(writer, msg);
         string data = s.GetString();
         return data;
     }
 
-    EMMessageBodyPtr Message::BodyFromJsonObject(const Value& jnode)
+    EMMessageBodyPtr Message::FromJsonObjectToBody(const Value& jnode)
     {
         if (jnode.IsNull()) return nullptr;
         if (!jnode.HasMember("bodyType") || !jnode.HasMember("body")) return nullptr;
@@ -596,14 +788,12 @@ namespace sdk_wrapper
             }
 
             if (body.HasMember("translations") && body["translations"].IsString()) {
-                string str = body["translations"].GetString();
-                vector<string> tagert_languages = JsonStringToVector(str);
+                vector<string> tagert_languages = MyJson::FromJsonObjectToVector(body["translations"]);
                 ptr->setTargetLanguages(tagert_languages);
             }
 
             if (body.HasMember("targetLanguages") && body["targetLanguages"].IsString()) {
-                string str = body["targetLanguages"].GetString();
-                map<string, string> translations = JsonStringToMap(str);
+                map<string, string> translations = MyJson::FromJsonObjectToMap(body["targetLanguages"]);//FromJsonToMap(str);
                 ptr->setTranslations(translations);
             }
 
@@ -889,8 +1079,7 @@ namespace sdk_wrapper
             EMCustomMessageBodyPtr ptr = EMCustomMessageBodyPtr(new EMCustomMessageBody(event));
 
             if (body.HasMember("params") && body["params"].IsString()) {
-                string str = body["params"].GetString();
-                EMCustomMessageBody::EMCustomExts exts = CustomExtsFromJson(str);
+                EMCustomMessageBody::EMCustomExts exts = FromJsonObjectToCustomExts(body["params"]);
                 ptr->setExts(exts);
             }
 
@@ -905,16 +1094,16 @@ namespace sdk_wrapper
         return bodyptr;
     }
 
-    EMMessageBodyPtr Message::BodyFromJson(string json)
+    EMMessageBodyPtr Message::FromJsonToBody(string json)
     {
         Document d;
         d.Parse(json.c_str());
         if (d.HasParseError()) return nullptr;
 
-        return BodyFromJsonObject(d);
+        return FromJsonObjectToBody(d);
     }
 
-    void Message::ToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg)
+    void Message::ToJsonObjectWithMessage(Writer<StringBuffer>& writer, EMMessagePtr msg)
     {
         if (nullptr == msg) return;
 
@@ -960,7 +1149,7 @@ namespace sdk_wrapper
             writer.Bool(msg->messageOnlineState());
 
             writer.Key("attributes");
-            writer.String(AttributesValue::ToJson(msg).c_str());
+            AttributesValue::ToJsonObjectWithAttributes(writer, msg);
 
             writer.Key("localTime");
             writer.String(to_string(msg->localTime()).c_str());
@@ -975,7 +1164,7 @@ namespace sdk_wrapper
             writer.String(BodyTypeToString(msg->bodies().front()->type()).c_str());
 
             writer.Key("body");
-            writer.String(BodyToJson(msg).c_str());
+            Message::ToJsonObjectWithBody(writer, msg);
         }
         writer.EndObject();
     }
@@ -987,7 +1176,7 @@ namespace sdk_wrapper
         StringBuffer s;
         Writer<StringBuffer> writer(s);
 
-        ToJsonWriter(writer, msg);
+        ToJsonObjectWithMessage(writer, msg);
         return s.GetString();
     }
 
@@ -998,15 +1187,21 @@ namespace sdk_wrapper
         StringBuffer s;
         Writer<StringBuffer> writer(s);
 
-        writer.StartArray();
-        for (auto msg : messages) {
-            writer.String(ToJson(msg).c_str());
-        }
-        writer.EndArray();
+        ToJsonObjectWithMessageList(writer, messages);
+
         return s.GetString();
     }
 
-    EMMessagePtr Message::FromJsonObject(const Value& jnode)
+    void Message::ToJsonObjectWithMessageList(Writer<StringBuffer>& writer, EMMessageList messages)
+    {
+        writer.StartArray();
+        for (auto msg : messages) {
+            ToJsonObjectWithMessage(writer, msg);
+        }
+        writer.EndArray();
+    }
+
+    EMMessagePtr Message::FromJsonObjectToMessage(const Value& jnode)
     {
         string from = "";
         if (jnode.HasMember("from") && jnode["from"].IsString()) {
@@ -1035,7 +1230,7 @@ namespace sdk_wrapper
             msg_id = jnode["msgId"].GetString();
         }
 
-        EMMessageBodyPtr body = BodyFromJsonObject(jnode);
+        EMMessageBodyPtr body = FromJsonObjectToBody(jnode);
 
         EMMessagePtr msg = nullptr;
         if (EMMessage::EMMessageDirection::SEND == direction)
@@ -1107,7 +1302,7 @@ namespace sdk_wrapper
         return msg;
     }
 
-    EMMessagePtr Message::FromJson(const char* json)
+    EMMessagePtr Message::FromJsonToMessage(const char* json)
     {
         if (nullptr == json || strlen(json) == 0) return nullptr;
 
@@ -1115,10 +1310,10 @@ namespace sdk_wrapper
         d.Parse(json);
         if (d.HasParseError()) return nullptr;
 
-        return FromJsonObject(d);
+        return FromJsonObjectToMessage(d);
     }
 
-    EMMessageList Message::ListFromJson(const char* json)
+    EMMessageList Message::FromJsonToMessageList(const char* json)
     {
         EMMessageList vec;
         vec.clear();
@@ -1134,7 +1329,7 @@ namespace sdk_wrapper
             size_t len = array.Size();
 
             for (size_t i = 0; i < len; i++) {
-                EMMessagePtr msg = Message::FromJsonObject(array[i]);
+                EMMessagePtr msg = Message::FromJsonObjectToMessage(array[i]);
                 if (nullptr != msg)
                     vec.push_back(msg);
             }
@@ -1143,7 +1338,7 @@ namespace sdk_wrapper
         return vec;
     }
 
-    void AttributesValue::ToJsonWriter(Writer<StringBuffer>& writer, EMAttributeValuePtr attribute)
+    void AttributesValue::ToJsonObjectWithAttribute(Writer<StringBuffer>& writer, EMAttributeValuePtr attribute)
     {
         if (nullptr == attribute) return;
 
@@ -1154,7 +1349,7 @@ namespace sdk_wrapper
 
             writer.Key("value");
             if (attribute->value<bool>())
-                writer.String("True");
+                writer.String("True"); //TODO: need to check
             else
                 writer.String("False");
         }
@@ -1230,7 +1425,7 @@ namespace sdk_wrapper
             writer.String("strv");
             writer.Key("value");
             vector<string> vec = attribute->value<vector<string>>();
-            writer.String(JsonStringFromVector(vec).c_str());
+            writer.String(MyJson::ToJson(vec).c_str());  //TODO: need to check
         }
         else if (attribute->is<EMJsonString>()) {
             writer.Key("type");
@@ -1243,7 +1438,7 @@ namespace sdk_wrapper
         writer.EndObject();
     }
 
-    void AttributesValue::ToJsonWriter(Writer<StringBuffer>& writer, EMMessagePtr msg)
+    void AttributesValue::ToJsonObjectWithAttributes(Writer<StringBuffer>& writer, EMMessagePtr msg)
     {
         if (nullptr == msg) return;
 
@@ -1254,7 +1449,7 @@ namespace sdk_wrapper
             string key = it.first;
             EMAttributeValuePtr attribute = it.second;
             writer.Key(key.c_str());
-            ToJsonWriter(writer, attribute);
+            ToJsonObjectWithAttribute(writer, attribute);
         }
     }
 
@@ -1263,7 +1458,7 @@ namespace sdk_wrapper
         StringBuffer s;
         Writer<StringBuffer> writer(s);
         writer.StartObject();
-        ToJsonWriter(writer, msg);
+        ToJsonObjectWithAttributes(writer, msg);
         writer.EndObject();
         string jstr = s.GetString();
         return jstr;
@@ -1314,7 +1509,7 @@ namespace sdk_wrapper
             v = jnode["value"].GetString();
 
         else if (jnode["value"].IsArray())
-            v = JsonStringFromObject(jnode["value"]);
+            v = MyJson::ToJsonWithJsonObject(jnode["value"]);
 
         if (type.compare("b") == 0) {
 #ifdef _WIN32
@@ -1410,12 +1605,8 @@ namespace sdk_wrapper
         }
     }
 
-    string Conversation::ToJson(EMConversationPtr conversation)
+    void Conversation::ToJsonObject(Writer<StringBuffer>& writer, EMConversationPtr conversation)
     {
-        if (nullptr == conversation) return string();
-
-        StringBuffer s;
-        Writer<StringBuffer> writer(s);
         writer.StartObject();
 
         writer.Key("con_id");
@@ -1428,6 +1619,15 @@ namespace sdk_wrapper
         writer.Bool(conversation->isThread());
 
         writer.EndObject();
+    }
+
+    string Conversation::ToJson(EMConversationPtr conversation)
+    {
+        if (nullptr == conversation) return string();
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+        ToJsonObject(writer, conversation);
         string jstr = s.GetString();
         return jstr;
     }
@@ -1441,7 +1641,7 @@ namespace sdk_wrapper
         writer.StartArray();
 
         for (auto it : conversations) {
-            writer.String(ToJson(it).c_str());
+            ToJsonObject(writer, it);
         }
 
         writer.EndArray();
@@ -1462,10 +1662,44 @@ namespace sdk_wrapper
         return int_type;
     }
 
+    EMConversation::EMConversationType Conversation::ConversationTypeFromInt(int i)
+    {
+        EMConversation::EMConversationType type = EMConversation::EMConversationType::CHAT;
+        switch (type)
+        {
+        case 0: type = EMConversation::EMConversationType::CHAT; break;
+        case 1: type = EMConversation::EMConversationType::GROUPCHAT; break;
+        case 2: type = EMConversation::EMConversationType::CHATROOM; break;
+        }
+        return type;
+    }
+
     string SupportLanguage::ToJson(tuple<string, string, string>& lang)
     {
         StringBuffer s;
         Writer<StringBuffer> writer(s);
+
+        ToJsonObject(writer, lang);
+
+        string jstr = s.GetString();
+        return jstr;
+    }
+
+    string SupportLanguage::ToJson(vector<tuple<string, string, string>>& langs)
+    {
+        if (langs.size() == 0) return string();
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        ToJsonObject(writer, langs);
+
+        string jstr = s.GetString();
+        return jstr;
+    }
+
+    void SupportLanguage::ToJsonObject(Writer<StringBuffer>& writer, tuple<string, string, string>& lang)
+    {
         writer.StartObject();
 
         writer.Key("code");
@@ -1478,27 +1712,17 @@ namespace sdk_wrapper
         writer.String(get<1>(lang).c_str());
 
         writer.EndObject();
-        string jstr = s.GetString();
-        return jstr;
     }
 
-    string SupportLanguage::ToJson(std::vector<std::tuple<std::string, std::string, std::string>>& langs)
+    void SupportLanguage::ToJsonObject(Writer<StringBuffer>& writer, vector<tuple<string, string, string>>& langs)
     {
-        if (langs.size() == 0) return string();
-
-        StringBuffer s;
-        Writer<StringBuffer> writer(s);
-
         writer.StartArray();
 
         for (auto it : langs) {
-            writer.String(ToJson(it).c_str());
+            ToJsonObject(writer, it);
         }
 
         writer.EndArray();
-
-        string jstr = s.GetString();
-        return jstr;
     }
 
     string GroupReadAck::ToJson(EMGroupReadAckPtr group_read_ack)
@@ -1507,6 +1731,28 @@ namespace sdk_wrapper
 
         StringBuffer s;
         Writer<StringBuffer> writer(s);
+        
+        ToJsonObject(writer, group_read_ack);
+
+        string jstr = s.GetString();
+        return jstr;
+    }
+
+    string GroupReadAck::ToJson(const vector<EMGroupReadAckPtr>& group_read_ack_vec)
+    {
+        if (group_read_ack_vec.size() == 0) return string();
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        ToJsonObject(writer, group_read_ack_vec);
+
+        string jstr = s.GetString();
+        return jstr;
+    }
+
+    void GroupReadAck::ToJsonObject(Writer<StringBuffer>& writer, EMGroupReadAckPtr group_read_ack)
+    {
         writer.StartObject();
 
         writer.Key("ackId");
@@ -1528,25 +1774,17 @@ namespace sdk_wrapper
         writer.Int64(group_read_ack->timestamp);
 
         writer.EndObject();
-        string jstr = s.GetString();
-        return jstr;
     }
 
-    string GroupReadAck::ToJson(vector<EMGroupReadAckPtr> group_read_ack_vec)
+    void GroupReadAck::ToJsonObject(Writer<StringBuffer>& writer, const EMGroupReadAckList& group_read_ack_vec)
     {
-        if (group_read_ack_vec.size() == 0) return string();
-
-        StringBuffer s;
-        Writer<StringBuffer> writer(s);
         writer.StartArray();
 
         for (auto it : group_read_ack_vec) {
-            writer.String(ToJson(it).c_str());
+            ToJsonObject(writer, it);
         }
 
         writer.EndArray();
-        string jstr = s.GetString();
-        return jstr;
     }
 
     string MessageReaction::ToJson(EMMessageReactionPtr reaction)
@@ -1578,13 +1816,18 @@ namespace sdk_wrapper
         writer.StartObject();
         for (auto it : map) {
             writer.Key(it.first.c_str());
-            ListToJsonWriter(writer, it.second);
+            ToJsonObject(writer, it.second);
         }
         writer.EndObject();
         return s.GetString();
     }
 
-    void MessageReaction::ListToJsonWriter(Writer<StringBuffer>& writer, EMMessageReactionList& list)
+    void MessageReaction::ToJsonObject(Writer<StringBuffer>& writer, const EMMessageReactionPtr reaction)
+    {
+        EMMessageEncoder::encodeReactionToJsonWriter(writer, reaction);
+    }
+
+    void MessageReaction::ToJsonObject(Writer<StringBuffer>& writer, const EMMessageReactionList& list)
     {
         if (list.size() == 0) return;
 
@@ -1595,19 +1838,62 @@ namespace sdk_wrapper
         writer.EndArray();
     }
 
-    EMMessageReactionPtr MessageReaction::FromJsonObject(const Value& jnode)
+    EMMessageReactionPtr MessageReaction::FromJsonObjectToReaction(const Value& jnode)
     {
         return EMMessageEncoder::decodeReactionFromJson(jnode);
     }
 
-    EMMessageReactionList MessageReaction::ListFromJsonObject(const Value& jnode)
+    EMMessageReactionList MessageReaction::FromJsonObjectToReactionList(const Value& jnode)
     {
         return EMMessageEncoder::decodeReactionListFromJson(jnode);
     }
 
-    EMMessageReactionList MessageReaction::ListFromJson(std::string json)
+    EMMessageReactionList MessageReaction::FromJsonToReactionList(string json)
     {
         return EMMessageEncoder::decodeReactionListFromJson(json);
+    }
+
+    void MessageReactionChange::ToJsonObject(Writer<StringBuffer>& writer, EMMessageReactionChangePtr reactionChangePtr, std::string curname)
+    {
+        std::string covId = reactionChangePtr->to();
+        if (covId.compare(curname) == 0)
+            covId = reactionChangePtr->from();
+
+        writer.StartObject();
+        {
+            writer.Key("conversationId");
+            writer.String(covId.c_str());
+            writer.Key("messageId");
+            writer.String(reactionChangePtr->messageId().c_str());
+            writer.Key("reactionList");
+            MessageReaction::ToJsonObject(writer, reactionChangePtr->reactionList());
+        }
+        writer.EndObject();
+    }
+
+    std::string MessageReactionChange::ToJson(EMMessageReactionChangePtr reactionChangePtr, std::string curname)
+    {
+        if (nullptr == reactionChangePtr) return std::string();
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+        ToJsonObject(writer, reactionChangePtr, curname);
+        return s.GetString();
+    }
+
+    std::string MessageReactionChange::ToJson(EMMessageReactionChangeList list, std::string curname)
+    {
+        if (list.size() == 0) return std::string();
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+        writer.StartArray();
+        for (auto it : list)
+        {
+            ToJsonObject(writer, it, curname);
+        }
+        writer.EndArray();
+        return s.GetString();
     }
 
     string Group::ToJson(EMGroupPtr group)
@@ -1616,6 +1902,21 @@ namespace sdk_wrapper
 
         StringBuffer s;
         Writer<StringBuffer> writer(s);
+        ToJsonObject(writer, group);
+        return s.GetString();
+    }
+
+    void Group::ToJsonObject(Writer<StringBuffer>& writer, const EMMucMuteList& vec)
+    {
+        writer.StartArray();
+        for (int i = 0; i < vec.size(); i++) {
+            writer.String(vec[i].first.c_str());
+        }
+        writer.EndArray();
+    }
+
+    void Group::ToJsonObject(Writer<StringBuffer>& writer, EMGroupPtr group)
+    {
         writer.StartObject();
 
         writer.Key("groupId");
@@ -1637,16 +1938,16 @@ namespace sdk_wrapper
         writer.Int(group->groupMembersCount());
 
         writer.Key("memberList");
-        writer.String(JsonStringFromVector(group->groupMembers()).c_str());
+        MyJson::ToJsonObject(writer, group->groupMembers());
 
         writer.Key("adminList");
-        writer.String(JsonStringFromVector(group->groupAdmins()).c_str());
+        MyJson::ToJsonObject(writer, group->groupAdmins());
 
         writer.Key("blockList");
-        writer.String(JsonStringFromVector(group->groupBans()).c_str());
+        MyJson::ToJsonObject(writer, group->groupBans());
 
         writer.Key("muteList");
-        writer.String(JsonStringFromMuteVector(group->groupMutes()).c_str());
+        ToJsonObject(writer, group->groupMutes());
 
         writer.Key("noticeEnable");
         writer.Bool(group->isPushEnabled());
@@ -1658,39 +1959,51 @@ namespace sdk_wrapper
         writer.Bool(group->groupAllMembersMuted());
 
         writer.Key("options");
-        writer.String(SettingToJson(group->groupSetting()).c_str());
+        JsonObject(writer, group->groupSetting());
 
         writer.Key("permissionType");
         writer.Int(MemberTypeToInt(group->groupMemberType()));
 
         writer.EndObject();
-        return s.GetString();
     }
 
-    string Group::JsonStringFromMuteVector(const EMMucMuteList& vec)
+    void Group::ToJsonObject(Writer<StringBuffer>& writer, const EMGroupList& list)
+    {
+        writer.StartArray();
+        for (int i = 0; i < list.size(); i++) {
+            ToJsonObject(writer, list[i]);
+        }
+        writer.EndArray();
+    }
+
+    string Group::ToJson(const EMMucMuteList& vec)
     {
         if (vec.size() == 0) return string("");
 
         StringBuffer s;
         Writer<StringBuffer> writer(s);
 
-        writer.StartArray();
-        for (int i = 0; i < vec.size(); i++) {
-            writer.String(vec[i].first.c_str());
-        }
-        writer.EndArray();
+        ToJsonObject(writer, vec);
 
         string data = s.GetString();
 
         return data;
     }
 
-    string Group::SettingToJson(const EMMucSettingPtr setting)
+    string Group::ToJson(const EMGroupList& list)
     {
-        if (nullptr == setting) return string();
+        if (list.size() == 0) return string();
 
         StringBuffer s;
         Writer<StringBuffer> writer(s);
+
+        ToJsonObject(writer, list);
+
+        return s.GetString();
+    }
+
+    void Group::JsonObject(Writer<StringBuffer>& writer, const EMMucSettingPtr setting)
+    {
         writer.StartObject();
 
         writer.Key("style");
@@ -1706,6 +2019,37 @@ namespace sdk_wrapper
         writer.String(setting->extension().c_str());
 
         writer.EndObject();
+    }
+
+    EMMucSettingPtr Group::JsonObjectToMucSetting(const Value& jnode)
+    {
+        EMMucSetting::EMMucStyle style = GroupStyleFromInt(jnode["style"].GetInt());
+        int count = jnode["maxCount"].GetInt();
+        bool invite_need_confirm = jnode["inviteNeedConfirm"].GetBool();
+        string ext = jnode["ext"].GetString();
+
+        EMMucSettingPtr setting = EMMucSettingPtr(new EMMucSetting(style, count, invite_need_confirm, ext));
+        return setting;
+    }
+
+    EMMucSettingPtr Group::FromJsonToMucSetting(string json)
+    {
+        Document d;
+        d.Parse(json.c_str());
+        if (d.HasParseError()) return nullptr;
+
+        return JsonObjectToMucSetting(d);
+    }
+
+    string Group::ToJson(const EMMucSettingPtr setting)
+    {
+        if (nullptr == setting) return string();
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        JsonObject(writer, setting);
+
         return s.GetString();
     }
 
@@ -1737,6 +2081,641 @@ namespace sdk_wrapper
         return ret;
     }
 
+    EMMucSetting::EMMucStyle Group::GroupStyleFromInt(int i)
+    {
+        EMMucSetting::EMMucStyle style = EMMucSetting::EMMucStyle::PRIVATE_OWNER_INVITE;
+
+        switch (i)
+        {
+        case 0:  style = EMMucSetting::EMMucStyle::PRIVATE_OWNER_INVITE; break;
+        case 1:  style = EMMucSetting::EMMucStyle::PRIVATE_MEMBER_INVITE; break;
+        case 2:  style = EMMucSetting::EMMucStyle::PUBLIC_JOIN_APPROVAL; break;
+        case 3:  style = EMMucSetting::EMMucStyle::PUBLIC_JOIN_OPEN; break;
+        default: style = EMMucSetting::EMMucStyle::PRIVATE_OWNER_INVITE; break;
+        }
+        return style;
+    }
+
+    void GroupSharedFile::ToJsonObject(Writer<StringBuffer>& writer, EMMucSharedFilePtr file)
+    {
+        writer.StartObject();
+
+        writer.Key("name");
+        writer.String(file->fileName().c_str());
+
+        writer.Key("fileId");
+        writer.String(file->fileId().c_str());
+
+        writer.Key("owner");
+        writer.String(file->fileOwner().c_str());
+
+        writer.Key("createTime");
+        writer.Uint64(file->create());
+
+        writer.Key("fileSize");
+        writer.Uint64(file->fileSize());
+
+        writer.EndObject();
+    }
+
+    void GroupSharedFile::ToJsonObject(Writer<StringBuffer>& writer, EMMucSharedFileList file_list)
+    {
+        writer.StartArray();
+
+        for (auto it : file_list) {
+            ToJsonObject(writer, it);
+        }
+
+        writer.EndObject();
+    }
+
+    string GroupSharedFile::ToJson(EMMucSharedFilePtr file)
+    {
+        if (nullptr == file) return string();
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        ToJsonObject(writer, file);
+
+        return s.GetString();
+    }
+
+    string GroupSharedFile::ToJson(EMMucSharedFileList file_list)
+    {
+        if (file_list.size() == 0) return string();
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        ToJsonObject(writer, file_list);
+
+        return s.GetString();
+    }
+
+    string CursorResult::ToJson(string cursor, const vector<string> list)
+    {
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        writer.StartObject();
+        {
+            writer.Key("cursor");
+            writer.String(cursor.c_str());
+
+            writer.Key("list");
+            MyJson::ToJsonObject(writer, list);
+        }
+        writer.EndObject();
+
+        string data = s.GetString();
+        return data;
+    }
+
+    string CursorResult::ToJson(string cursor, const EMMessageList& msg_list)
+    {
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        writer.StartObject();
+        {
+            writer.Key("cursor");
+            writer.String(cursor.c_str());
+
+            writer.Key("list");
+            Message::ToJsonObjectWithMessageList(writer, msg_list);
+        }
+        writer.EndObject();
+
+        string data = s.GetString();
+        return data;
+    }
+    string CursorResult::ToJson(string cursor, const EMGroupReadAckList& group_ack_list)
+    {
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        writer.StartObject();
+        {
+            writer.Key("cursor");
+            writer.String(cursor.c_str());
+
+            writer.Key("list");
+            GroupReadAck::ToJsonObject(writer, group_ack_list);
+        }
+        writer.EndObject();
+
+        string data = s.GetString();
+        return data;
+    }
+    string CursorResult::ToJson(string cursor, const EMMessageReactionPtr reaction)
+    {
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        writer.StartObject();
+        {
+            writer.Key("cursor");
+            writer.String(cursor.c_str());
+
+            writer.Key("list");
+            MessageReaction::ToJsonObject(writer, reaction);
+        }
+        writer.EndObject();
+
+        string data = s.GetString();
+        return data;
+    }
+
+    string CursorResult::ToJsonWithGroupInfo(string cursor, const EMCursorResult& result)
+    {
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        writer.StartObject();
+        {
+            writer.Key("cursor");
+            writer.String(cursor.c_str());
+
+            writer.Key("list");
+            size_t size = result.result().size();
+            writer.StartArray();
+            for (size_t i = 0; i < size; i++) {
+                EMGroupPtr groupPtr = dynamic_pointer_cast<EMGroup>(result.result().at(i));
+                Group::ToJsonObject(writer, groupPtr);
+            }
+            writer.EndArray();
+        }
+        writer.EndObject();
+
+        string data = s.GetString();
+        return data;
+    }
+
+    std::string CursorResult::ToJson(string cursor, EMCursorResultRaw<EMThreadEventPtr> cusorResult)
+    {
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        writer.StartObject();
+        {
+            writer.Key("cursor");
+            writer.String(cursor.c_str());
+
+            writer.Key("list");
+
+            std::vector<EMThreadEventPtr> vec = cusorResult.result();
+            writer.StartArray();
+            for (size_t i = 0; i < vec.size(); i++) {
+                ChatThread::ToJsonObject(writer, vec[i]);
+            }
+            writer.EndArray();
+        }
+        writer.EndObject();
+
+        std::string data = s.GetString();
+        return data;
+    }
+
+    void Room::ToJsonObject(Writer<StringBuffer>& writer, EMChatroomPtr room)
+    {
+        if (nullptr == room) return;
+
+        writer.StartObject();
+
+        writer.Key("roomId");
+        writer.String(room->chatroomId().c_str());
+
+        writer.Key("name");
+        writer.String(room->chatroomSubject().c_str());
+
+        writer.Key("desc");
+        writer.String(room->chatroomDescription().c_str());
+
+        writer.Key("announcement");
+        writer.String(room->chatroomAnnouncement().c_str());
+
+        writer.Key("memberCount");
+        writer.Int(room->chatroomMemberCount());
+
+        writer.Key("adminList");
+        MyJson::ToJsonObject(writer, room->chatroomAdmins());
+
+        writer.Key("memberList");
+        MyJson::ToJsonObject(writer, room->chatroomMembers());
+
+        writer.Key("blockList");
+        MyJson::ToJsonObject(writer, room->chatroomBans());
+
+        writer.Key("muteList");
+        Group::ToJsonObject(writer, room->chatroomMutes());
+
+        writer.Key("maxUsers");
+        writer.Int(room->chatroomMemberMaxCount());
+
+        writer.Key("owner");
+        writer.String(room->owner().c_str());
+
+        writer.Key("isAllMemberMuted");
+        writer.Bool(room->isMucAllMembersMuted());
+
+        writer.Key("permissionType");
+        writer.Int(EMMucMemberTypeToInt(room->chatroomMemberType()));
+
+        writer.EndObject();
+    }
+    string Room::ToJson(EMChatroomPtr room)
+    {
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        ToJsonObject(writer, room);
+
+        string data = s.GetString();
+        return data;
+    }
+
+    int Room::EMMucMemberTypeToInt(EMMuc::EMMucMemberType type)
+    {
+        int ret = -1;
+        switch (type)
+        {
+        case EMMuc::EMMucMemberType::MUC_MEMBER:
+            ret = 0;
+            break;
+        case EMMuc::EMMucMemberType::MUC_ADMIN:
+            ret = 1;
+            break;
+        case EMMuc::EMMucMemberType::MUC_OWNER:
+            ret = 2;
+            break;
+        case EMMuc::EMMucMemberType::MUC_UNKNOWN:
+            ret = -1;
+            break;
+        }
+
+        return ret;
+    }
+    EMMuc::EMMucMemberType Room::EMMucMemberTypeFromInt(int i)
+    {
+        EMMuc::EMMucMemberType ret = EMMuc::EMMucMemberType::MUC_UNKNOWN;
+        switch (i)
+        {
+        case 0:
+            ret = EMMuc::EMMucMemberType::MUC_MEMBER;
+            break;
+        case 1:
+            ret = EMMuc::EMMucMemberType::MUC_ADMIN;
+            break;
+        case 2:
+            ret = EMMuc::EMMucMemberType::MUC_OWNER;
+            break;
+        case -1:
+            ret = EMMuc::EMMucMemberType::MUC_UNKNOWN;
+            break;
+        }
+        return ret;
+    }
+
+    string PageResult::ToJsonWithRoom(int count, const EMPageResult result)
+    {
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        writer.StartObject();
+        {
+            writer.Key("count");
+            writer.Int(count);
+
+            writer.Key("list");
+            size_t size = result.result().size();
+            writer.StartArray();
+            for (size_t i = 0; i < size; i++) {
+                EMChatroomPtr room = dynamic_pointer_cast<EMChatroom>(result.result().at(i));
+                Room::ToJsonObject(writer, room);
+            }
+            writer.EndArray();
+        }
+        writer.EndObject();
+
+        string data = s.GetString();
+        return data;
+    }
+
+    int ChatThreadEvent::ThreadOperationToInt(const std::string& operation)
+    {
+        if (operation.compare("create") == 0)
+            return 1;
+        if (operation.compare("update") == 0)
+            return 2;
+        if (operation.compare("delete") == 0)
+            return 3;
+        if (operation.compare("update_msg") == 0)
+            return 4;
+        return 0;
+    }
+
+    std::string ChatThreadEvent::ToJson(EMThreadEventPtr threadEventPtr)
+    {
+        if (nullptr == threadEventPtr) return std::string();
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        writer.StartObject();
+        {
+            writer.Key("from");
+            writer.String(threadEventPtr->fromId().c_str());
+
+            writer.Key("operation");
+            writer.Int(ThreadOperationToInt(threadEventPtr->threadOperation()));
+
+            writer.Key("chatThread");
+            ChatThread::ToJsonObject(writer, threadEventPtr);
+
+        }
+        writer.EndObject();
+
+        std::string data = s.GetString();
+        return data;
+    }
+
+    void ChatThread::ToJsonObject(Writer<StringBuffer>& writer, EMThreadEventPtr threadEventPtr)
+    {
+        if (nullptr == threadEventPtr) return;
+
+        writer.StartObject();
+        {
+            writer.Key("tId");
+            writer.String(threadEventPtr->threadId().c_str());
+
+            writer.Key("messageId");
+            writer.String(threadEventPtr->threadMessageId().c_str());
+
+            writer.Key("parentId");
+            writer.String(threadEventPtr->parentId().c_str());
+
+            writer.Key("owner");
+            writer.String(threadEventPtr->owner().c_str());
+
+            writer.Key("name");
+            writer.String(threadEventPtr->threadName().c_str());
+
+            writer.Key("messageCount");
+            writer.Int(threadEventPtr->messageCount());
+
+            writer.Key("membersCount");
+            writer.Int(threadEventPtr->membersCount());
+
+            writer.Key("createTimestamp");
+            writer.Int64(threadEventPtr->createTimestamp());
+
+            if (nullptr != threadEventPtr->lastMessage())
+            {
+                writer.Key("lastMessage");
+                Message::ToJsonObjectWithMessage(writer, threadEventPtr->lastMessage());
+            }
+        }
+        writer.EndObject();
+    }
+
+    std::string ChatThread::ToJson(EMThreadEventPtr threadEventPtr)
+    {
+        if (nullptr == threadEventPtr) return std::string();
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+        ToJsonObject(writer, threadEventPtr);
+        std::string data = s.GetString();
+        return data;
+    }
+
+    std::string ChatThread::ToJson(std::vector<EMThreadEventPtr>& vec)
+    {
+        if (vec.size() == 0) return std::string();
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        writer.StartArray();
+        for (auto it : vec) {
+            ToJsonObject(writer, it);
+        }
+        writer.EndArray();
+
+        std::string data = s.GetString();
+        return data;
+    }
+
+    std::string ChatThread::ToJson(std::map<std::string, EMMessagePtr> map)
+    {
+        if (map.size() == 0) return std::string();
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        writer.StartObject();
+        for (auto it : map) {
+            writer.Key(it.first.c_str());
+            Message::ToJsonObjectWithMessage(writer, it.second);
+        }
+        writer.EndObject();
+
+        std::string data = s.GetString();
+        return data;
+    }
+
+    EMThreadEventPtr ChatThread::FromJsonObject(const Value& jnode)
+    {
+        if (jnode.IsNull()) return nullptr;
+
+        EMThreadEventPtr thread = EMThreadEventPtr(new EMThreadEvent());
+
+        if (jnode.HasMember("tId") && jnode["tId"].IsString()) {
+            std::string str = jnode["tId"].GetString();
+            thread->setThreadId(str);
+        }
+
+        if (jnode.HasMember("messageId") && jnode["messageId"].IsString()) {
+            std::string str = jnode["messageId"].GetString();
+            thread->setThreadMessageId(str);
+        }
+
+        if (jnode.HasMember("parentId") && jnode["parentId"].IsString()) {
+            std::string str = jnode["parentId"].GetString();
+            thread->setParentId(str);
+        }
+
+        if (jnode.HasMember("owner") && jnode["owner"].IsString()) {
+            std::string str = jnode["owner"].GetString();
+            thread->setOwner(str);
+        }
+
+        if (jnode.HasMember("name") && jnode["name"].IsString()) {
+            std::string str = jnode["name"].GetString();
+            thread->setThreadName(str);
+        }
+
+        if (jnode.HasMember("messageCount") && jnode["messageCount"].IsInt()) {
+            int i = jnode["messageCount"].GetInt();
+            thread->setMessageCount(i);
+        }
+
+        if (jnode.HasMember("membersCount") && jnode["membersCount"].IsInt()) {
+            int i = jnode["membersCount"].GetInt();
+            thread->setMembersCount(i);
+        }
+
+        if (jnode.HasMember("createTimestamp") && jnode["createTimestamp"].IsInt64()) {
+            int64_t i = jnode["createTimestamp"].GetInt64();
+            thread->setCreateTimestamp(i);
+        }
+
+        if (jnode.HasMember("lastMessage") && jnode["lastMessage"].IsObject()) {
+            EMMessagePtr msg = Message::FromJsonObjectToMessage(jnode["lastMessage"]);
+            if (nullptr != msg)
+                thread->setLastMessage(msg);
+        }
+
+        return thread;
+    }
+
+    EMThreadEventPtr ChatThread::FromJson(std::string json)
+    {
+        Document d;
+        d.Parse(json.c_str());
+        if (d.HasParseError()) return nullptr;
+
+        return FromJsonObject(d);
+    }
+
+    EMThreadLeaveReason ChatThread::ThreadLeaveReasonFromInt(int i)
+    {
+        EMThreadLeaveReason ret = EMThreadLeaveReason::LEAVE;
+        switch (i)
+        {
+        case 0:
+            ret = EMThreadLeaveReason::LEAVE;
+            break;
+        case 1:
+            ret = EMThreadLeaveReason::BE_KICKED;
+            break;
+        case 2:
+            ret = EMThreadLeaveReason::DESTROYED;
+            break;
+        }
+
+        return ret;
+    }
+
+    int ChatThread::ThreadLeaveReasonToInt(EMThreadLeaveReason reason)
+    {
+        int ret = 0;
+        switch (reason)
+        {
+        case EMThreadLeaveReason::LEAVE:
+            ret = 0;
+            break;
+        case EMThreadLeaveReason::BE_KICKED:
+            ret = 1;
+            break;
+        case EMThreadLeaveReason::DESTROYED:
+            ret = 2;
+            break;
+        }
+
+        return ret;
+    }
+
+    void PreseceDeviceStatus::ToJsonObject(Writer<StringBuffer>& writer, const pair<string, int>& status)
+    {
+        writer.Key(status.first.c_str());
+        writer.Int(status.second);
+    }
+    void PreseceDeviceStatus::ToJsonObject(Writer<StringBuffer>& writer, const set<pair<string, int>>& status_set)
+    {
+        writer.StartArray();
+
+        for (auto it : status_set) {
+            ToJsonObject(writer, it);
+        }
+
+        writer.EndArray();
+    }
+
+    string PreseceDeviceStatus::ToJson(const pair<string, int>& status)
+    {
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        ToJsonObject(writer, status);
+
+        std::string data = s.GetString();
+        return data;
+    }
+    string PreseceDeviceStatus::ToJson(const set<pair<string, int>>& status_set)
+    {
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        ToJsonObject(writer, status_set);
+
+        std::string data = s.GetString();
+        return data;
+    }
+
+    void Presence::ToJsonObject(Writer<StringBuffer>& writer, EMPresencePtr presence)
+    {
+        writer.StartObject();
+
+        writer.Key("publisher");
+        writer.String(presence->getPublisher().c_str());
+
+        writer.Key("statusDescription");
+        writer.String(presence->getExt().c_str());
+
+        writer.Key("lastTime");
+        writer.Int64(presence->getLatestTime());
+
+        writer.Key("expiryTime");
+        writer.Int64(presence->getExpiryTime());
+
+        writer.Key("statusDetails");
+        PreseceDeviceStatus::ToJsonObject(writer, presence->getStatusList());
+
+        writer.EndObject();
+    }
+    void Presence::ToJsonObject(Writer<StringBuffer>& writer, const vector<EMPresencePtr>& vec)
+    {
+        writer.StartArray();
+
+        for (auto it : vec) {
+            ToJsonObject(writer, it);
+        }
+
+        writer.EndArray();
+    }
+
+    string Presence::ToJson(EMPresencePtr presence)
+    {
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        ToJsonObject(writer, presence);
+
+        std::string data = s.GetString();
+        return data;
+    }
+    string Presence::ToJson(const vector<EMPresencePtr>& vec)
+    {
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        ToJsonObject(writer, vec);
+
+        std::string data = s.GetString();
+        return data;
+    }
 
     TokenWrapper::TokenWrapper()
     {
@@ -1748,12 +2727,12 @@ namespace sdk_wrapper
         autologin_config_.availablePeriod = -1;
     }
 
-    bool TokenWrapper::GetTokenCofigFromJson(std::string& raw, std::string& token, std::string& expireTS)
+    bool TokenWrapper::GetTokenCofigFromJson(string& raw, string& token, string& expireTS)
     {
-        const std::string ACCESS_TOKEN = "access_token";
-        const std::string EXPIRE_TS = "expire_timestamp";
+        const string ACCESS_TOKEN = "access_token";
+        const string EXPIRE_TS = "expire_timestamp";
 
-        //std::string expire_in;
+        //string expire_in;
 
         int64_t expireTS_int = 0;
 
@@ -1775,7 +2754,7 @@ namespace sdk_wrapper
 
         if (d.HasMember(EXPIRE_TS.c_str())) {
             expireTS_int = d[EXPIRE_TS.c_str()].GetInt64();
-            expireTS = std::to_string(expireTS_int);
+            expireTS = to_string(expireTS_int);
         }
         else {
             return false;
@@ -1793,7 +2772,7 @@ namespace sdk_wrapper
         return pre_check_interval;
     }
 
-    bool TokenWrapper::SetTokenInAutoLogin(const std::string& username, const std::string& token, const std::string expireTS)
+    bool TokenWrapper::SetTokenInAutoLogin(const string& username, const string& token, const string expireTS)
     {
         if (username.size() == 0 || token.size() == 0) {
             return false;
@@ -1835,7 +2814,7 @@ namespace sdk_wrapper
         return true;
     }
 
-    void TokenWrapper::SetPasswdInAutoLogin(const std::string& username, const std::string& passwd)
+    void TokenWrapper::SetPasswdInAutoLogin(const string& username, const string& passwd)
     {
         autologin_config_.userName = username;
         autologin_config_.passwd = passwd;
@@ -1902,7 +2881,7 @@ namespace sdk_wrapper
         pos = pos1 + 1;
         pos1 = mergeStr.find("\n", pos);
         if (string::npos != pos1) {
-            string str = std::string(mergeStr, pos, pos1 - pos);
+            string str = string(mergeStr, pos, pos1 - pos);
             token = GetRightValue(str);
         }
         else {
@@ -1915,7 +2894,7 @@ namespace sdk_wrapper
         }
 
         string expireTS = "";
-        string str = std::string(mergeStr, pos, mergeStr.size() - pos);
+        string str = string(mergeStr, pos, mergeStr.size() - pos);
         expireTS = GetRightValue(str);
 
         autologin_config_.userName = userName;
