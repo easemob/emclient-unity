@@ -9,7 +9,7 @@ namespace AgoraChat
     * \~english
     * The message reaction change entity class
     */
-    public class MessageReactionChange: BaseModel
+    public class MessageReactionChange : BaseModel
     {
 
         /**
@@ -40,7 +40,7 @@ namespace AgoraChat
 
         internal MessageReactionChange() { }
 
-        internal MessageReactionChange(string jsonString):base(jsonString) { }
+        internal MessageReactionChange(string jsonString) : base(jsonString) { }
 
         internal MessageReactionChange(JSONObject jsonObject) : base(jsonObject) { }
 
@@ -48,7 +48,7 @@ namespace AgoraChat
         {
             ConversationId = jsonObject["conversationId"];
             MessageId = jsonObject["messageId"];
-            ReactionList = List.BaseModelListFromJsonObject<MessageReaction>(jsonObject["reactions"]);
+            ReactionList = List.BaseModelListFromJsonArray<MessageReaction>(jsonObject["reactions"]);
         }
 
         internal override JSONObject ToJsonObject()

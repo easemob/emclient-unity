@@ -32,11 +32,11 @@ namespace AgoraChat
         internal List<IConnectionDelegate> delegater_connection;
         internal List<IMultiDeviceDelegate> delegater_multidevice;
 
-        internal IClient() 
+        internal IClient()
         {
             // 将 listener 和 native 挂钩
             nativeListener.AddNaitveListener();
-          
+
             chatManager = new ChatManager(nativeListener);
             contactManager = new ContactManager(nativeListener);
             groupManager = new GroupManager(nativeListener);
@@ -55,7 +55,8 @@ namespace AgoraChat
             nativeListener.MultiDeviceEvent += NativeEventHandle_MultiDevice;
         }
 
-        ~IClient() {
+        ~IClient()
+        {
             nativeListener.RemoveNativeListener();
             nativeListener = null;
         }
@@ -140,7 +141,7 @@ namespace AgoraChat
             CWrapperNative.NativeCall(NAME_CLIENT, "renewToken", jo_param, "");
         }
 
-        internal void CleanUp() 
+        internal void CleanUp()
         {
             nativeListener.RemoveNativeListener();
         }
@@ -223,7 +224,7 @@ namespace AgoraChat
                     MultiDevicesOperation operation = (MultiDevicesOperation)int.Parse(operationEvent);
                     string username = jsonNode["username"];
                     string ext = jsonNode["ext"];
-                    it.OnContactMultiDevicesEvent(operation, username, ext);
+                    //it.OnContactMultiDevicesEvent(operation, username, ext);
                 }
             }
             else if (method.CompareTo("OnGroupMultiDevicesEvent") == 0)
@@ -234,14 +235,14 @@ namespace AgoraChat
                     MultiDevicesOperation operation = (MultiDevicesOperation)int.Parse(operationEvent);
                     string groupId = jsonNode["groupId"];
                     List<string> usernames = List.StringListFromJsonArray(jsonNode["usernames"]);
-                    it.OnGroupMultiDevicesEvent(operation, groupId, usernames);
+                    //it.OnGroupMultiDevicesEvent(operation, groupId, usernames);
                 }
             }
             else if (method.CompareTo("UndisturbMultiDevicesEvent") == 0)
             {
                 foreach (IMultiDeviceDelegate it in delegater_multidevice)
                 {
-                    it.UndisturbMultiDevicesEvent(jsonNode["value"]);
+                    //it.UndisturbMultiDevicesEvent(jsonNode["value"]);
                 }
             }
             //TODO: need to add OnThreadMultiDevicesEvent?

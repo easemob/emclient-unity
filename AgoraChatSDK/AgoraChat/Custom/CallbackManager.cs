@@ -136,7 +136,7 @@ namespace AgoraChat
             CallbackItem item = callbackMap[callbackId];
             if (item != null)
             {
-                item.callbackAction?.Invoke(jsonString, item.process, item.callback);
+                item.callbackAction?.Invoke(jsonString, item.callback, item.process);
                 callbackMap.Remove(callbackId); // delete the callback after triggered
             }
         }
