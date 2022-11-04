@@ -1,12 +1,12 @@
 ﻿namespace AgoraChat
 {
     /**
-         * \~chinese
-         * 连接回调接口。
-         *
-         * \~english
-         * The connection callback interface.
-         */
+     * \~chinese
+     * 连接回调接口。
+     *
+     * \~english
+     * The connection callback interface.
+     */
     public interface IConnectionDelegate
     {
         /**
@@ -37,22 +37,22 @@
         void OnDisconnected(int i);
 
         /**
-        * \~chinese
-        * Token 过期回调。
-        *  
-        * \~english
-        * Occurs when token is expired.
-        */
+         * \~chinese
+         * Token 过期回调。
+         *  
+         * \~english
+         * Occurs when the token has expired.
+         */
         void OnTokenExpired();
-		
+
         /**
-        * \~chinese
-        * Token 即将过期回调。
-        *  
-        * \~english
-        * Occurs when token will expired.
-        */
-		void OnTokenWillExpire();
+         * \~chinese
+         * Token 即将过期回调。
+         *  
+         * \~english
+         * Occurs when the token is about to expire.
+         */
+        void OnTokenWillExpire();
 
     }
 

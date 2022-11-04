@@ -22,7 +22,7 @@ namespace AgoraChat
          * 
          * @param <T> The generic <T> type.
          */
-    public class PageResult<T>: BaseModel
+    public class PageResult<T> : BaseModel
     {
         /**
         * \~chinese
@@ -69,7 +69,11 @@ namespace AgoraChat
                 Data = new List<T>();
                 foreach (JSONObject jsonObj in jsonArray)
                 {
-                    Data.Add(callback(jsonObj));
+                    object ret = callback(jsonObj);
+                    if (ret != null)
+                    {
+                        Data.Add((T)ret);
+                    }
                 }
             }
             callback = null;

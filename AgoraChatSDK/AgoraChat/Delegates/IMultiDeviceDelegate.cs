@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace AgoraChat
 {
     /**
-    * \~chinese
-    * 多设备回调接口。
-    *
-    * \~english
-    * The multi-device callback interface.
-    * 
-    */
+        * \~chinese
+        * 多设备回调接口。
+        *
+        * \~english
+        * The multi-device callback interface.
+        * 
+        */
     public interface IMultiDeviceDelegate
     {
         /**
@@ -28,7 +27,7 @@ namespace AgoraChat
          * @param target    The user ID of the contact.
          * @param ext       The extension information.
          */
-        void OnContactMultiDevicesEvent(MultiDevicesOperation operation, string target, string ext);
+        void onContactMultiDevicesEvent(MultiDevicesOperation operation, string target, string ext);
 
         /**
          * \~chinese
@@ -45,7 +44,7 @@ namespace AgoraChat
          * @param target        The group ID.
          * @param usernames     The target user ID(s) of the operation.
          */
-        void OnGroupMultiDevicesEvent(MultiDevicesOperation operation, string target, List<string> usernames);
+        void onGroupMultiDevicesEvent(MultiDevicesOperation operation, string target, List<string> usernames);
 
         /**
          * \~chinese
@@ -55,11 +54,27 @@ namespace AgoraChat
          *
          * \~english
          * The callback for a multi-device do-not-disturb event.
-         * @param data     The do-not-disturb event.
+         * 
+         * @param data     The do-not-disturb event data.
          */
-        void UndisturbMultiDevicesEvent(string data);
+        void undisturbMultiDevicesEvent(string data);
 
-        void OnThreadMultiDevicesEvent(MultiDevicesOperation operation, string target, List<string> usernames);
+        /**
+         * \~chinese
+         * 多端多设备子区事件回调。
+         *
+         * @param operation     群组事件，详见 {@link MultiDevicesOperation}。
+         * @param target        群组 ID。
+         * @param usernames     操作目标 ID 列表。
+         *
+         * \~english
+         * The callback for a multi-device thread event.
+         *
+         * @param operation     The group event. See {@link MultiDevicesOperation}.
+         * @param target        The group ID.
+         * @param usernames     The target user ID(s) of the operation.
+         */
+        void onThreadMultiDevicesEvent(MultiDevicesOperation operation, string target, List<string> usernames);
     }
 
 }

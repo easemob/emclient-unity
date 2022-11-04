@@ -5,13 +5,25 @@ using AgoraChat.SimpleJSON;
 namespace AgoraChat
 {
 
-    internal static class ModelHelper {
+    internal static class ModelHelper
+    {
         internal static T CreateWithJsonObject<T>(JSONNode jsonNode) where T : BaseModel
         {
-            if(jsonNode == null || !jsonNode.IsObject) return null;
+            if (jsonNode == null || !jsonNode.IsObject) return null;
             BaseModel bs = (T)Activator.CreateInstance(typeof(T), true);
             bs.FromJsonObject(jsonNode.AsObject);
             return (T)bs;
+        }
+
+        internal static T CreateWithJsonString<T>(string jsonString) where T : BaseModel
+        {
+            if (!string.IsNullOrEmpty(jsonString))
+            {
+                JSONNode jn = JSON.Parse(jsonString);
+                return CreateWithJsonObject<T>(jn);
+            }
+
+            return null;
         }
     }
 
@@ -40,7 +52,7 @@ namespace AgoraChat
             return StringListFromJsonArray(jn);
         }
 
-        internal static List<T> BaseModelListFromJsonObject<T>(JSONNode jn) where T : BaseModel
+        internal static List<T> BaseModelListFromJsonArray<T>(JSONNode jn) where T : BaseModel
         {
             if (null != jn && jn.IsArray) return null;
 
@@ -55,6 +67,18 @@ namespace AgoraChat
             }
 
             return list;
+        }
+
+        internal static List<T> BaseModelListFromJsoString<T>(string jsonString) where T : BaseModel
+        {
+
+            if (string.IsNullOrEmpty(jsonString))
+            {
+                JSONNode jn = JSON.Parse(jsonString);
+                return BaseModelListFromJsonArray<T>(jn);
+            }
+
+            return null;
         }
     }
 
@@ -77,13 +101,15 @@ namespace AgoraChat
             return ret;
         }
 
-        internal static Dictionary<string, string> StringDictionaryFromJsonObject(JSONNode jo) {
+        internal static Dictionary<string, string> StringDictionaryFromJsonObject(JSONNode jo)
+        {
 
             if (jo == null) return null;
 
             Dictionary<string, string> ret = new Dictionary<string, string>();
 
-            foreach (string s in jo.Keys) {
+            foreach (string s in jo.Keys)
+            {
                 ret.Add(s, jo[s]);
             }
 
@@ -108,11 +134,25 @@ namespace AgoraChat
             return ja;
         }
 
+        internal static JSONNode JsonArrayFromList<T>(List<T> list) where T : BaseModel
+        {
+            if (list == null) return null;
+
+            JSONArray jsonArray = new JSONArray();
+
+            foreach (BaseModel bm in list)
+            {
+                jsonArray.Add(bm.ToJsonObject());
+            }
+
+            return jsonArray;
+        }
+
         internal static string JsonObjectFromDictionary(Dictionary<string, string> dictionary)
         {
             JSONObject jo = new JSONObject();
 
-            if (null !=  dictionary && dictionary.Count > 0)
+            if (null != dictionary && dictionary.Count > 0)
             {
                 IDictionary<string, string> sortedParams = new SortedDictionary<string, string>(dictionary);
                 IEnumerator<KeyValuePair<string, string>> dem = sortedParams.GetEnumerator();
@@ -153,7 +193,7 @@ namespace AgoraChat
                 return bs.ToJsonObject().ToString();
             }
 
-            public static T FromJson<T>(string json)where T:BaseModel
+            public static T FromJson<T>(string json) where T : BaseModel
             {
                 if (json.Length <= 0) return default(T);
 

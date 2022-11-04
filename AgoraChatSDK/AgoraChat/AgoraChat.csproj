@@ -31,10 +31,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Custom\CallbackQueue.cs" />
-    <Compile Include="Delegates\IChatManagerDelegate.cs" />
-    <Compile Include="Delegates\IConnectionDelegate.cs" />
-    <Compile Include="Delegates\IGroupManagerDelegate.cs" />
-    <Compile Include="Delegates\IMultiDeviceDelegate.cs" />
     <Compile Include="Helper\Tools.cs" />
     <Compile Include="Models\AttributeValue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -79,6 +75,19 @@
     <Compile Include="Helper\Extensions.cs" />
     <Compile Include="Native\NativeListener.cs" />
     <Compile Include="Impls\IClient.cs" />
+    <Compile Include="Delegates\IChatManagerDelegate.cs" />
+    <Compile Include="Delegates\IChatThreadManagerDelegate.cs" />
+    <Compile Include="Delegates\IConnectionDelegate.cs" />
+    <Compile Include="Delegates\IContactManagerDelegate.cs" />
+    <Compile Include="Delegates\IGroupManagerDelegate.cs" />
+    <Compile Include="Delegates\IMultiDeviceDelegate.cs" />
+    <Compile Include="Delegates\IPresenceManagerDelegate.cs" />
+    <Compile Include="Delegates\IRoomManagerDelegate.cs" />
+    <Compile Include="Managers\BaseManager.cs" />
+    <Compile Include="Helper\SDKMethod.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Delegates\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -3,7 +3,7 @@ using AgoraChat.SimpleJSON;
 
 namespace AgoraChat
 {
-    public class CursorResult<T>: BaseModel
+    public class CursorResult<T> : BaseModel
     {
         /**
 	     * \~chinese
@@ -39,12 +39,17 @@ namespace AgoraChat
         {
             Cursor = jsonObject["cursor"];
             JSONNode jn = jsonObject["list"];
-            if (jn.IsArray) {
+            if (jn.IsArray)
+            {
                 JSONArray jsonArray = jn.AsArray;
                 Data = new List<T>();
                 foreach (JSONObject jsonObj in jsonArray)
                 {
-                    Data.Add(callback(jsonObj));
+                    object ret = callback(jsonObj);
+                    if (ret != null)
+                    {
+                        Data.Add((T)ret);
+                    }
                 }
             }
             callback = null;
@@ -56,6 +61,6 @@ namespace AgoraChat
         }
 
         private ItemCallback callback;
-        internal delegate T ItemCallback(JSONObject jsonObject);
+        internal delegate T ItemCallback(JSONNode jsonNode);
     }
 }

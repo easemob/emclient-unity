@@ -10,8 +10,10 @@ namespace AgoraChat
 
     internal class NativeListener
     {
-  
+
         public NativeListenerEvent nativeListenerEvent;
+
+        public event ManagerHandle ManagerEvent;
 
         public event ManagerHandle ChatManagerEvent;
 
@@ -28,8 +30,6 @@ namespace AgoraChat
         public event ManagerHandle ConnectionEvent;
 
         public event ManagerHandle MultiDeviceEvent;
-
-        //public event ManagerHandle CallbackEvent;
 
         public CallbackManager callbackManager;
 
@@ -48,46 +48,40 @@ namespace AgoraChat
                 JSONNode jsonNode = JSON.Parse(json);
 
                 queue_worker.EnQueue(() => {
-                    
-                    if (listener == "chatManagerListener")
-                    {
-                        ChatManagerEvent(method, jsonNode);
-                    }
-                    else if (listener == "contactManagerListener")
-                    {
-                        ContactManagerEvent(method, jsonNode);
-                    }
-                    else if (listener == "groupManagerListener")
-                    {
-                        GroupManagerEvent(method, jsonNode);
-                    }
-                    else if (listener == "roomManagerListener")
-                    {
-                        RoomManagerEvent(method, jsonNode);
-                    }
-                    else if (listener == "presenceManagerListener")
-                    {
-                        PresenceManagerEvent(method, jsonNode);
-                    }
-                    else if (listener == "chatThreadManagerListener")
-                    {
-                        ChatThreadManagerEvent(method, jsonNode);
-                    }
-                    else if (listener == "connectionListener")
-                    {
-                        ConnectionEvent(method, jsonNode);
-                    }
-                    else if (listener == "multiDeviceListener")
-                    {
-                        MultiDeviceEvent(method, jsonNode);
-                    }
-                    else if (listener == "callback")
-                    {
-                        callbackManager.CallAction(method, jsonNode);
-                    }
-                    else if (listener == "callbackProgress")
-                    {
-                        callbackManager.CallActionProgress(method, jsonNode);
+                    switch (listener) {
+                        case SDKMethod.chatListener:
+                            ChatManagerEvent(method, jsonNode);
+                            break;
+                        case SDKMethod.contactListener:
+                            ContactManagerEvent(method, jsonNode);
+                            break;
+                        case SDKMethod.groupListener:
+                            GroupManagerEvent(method, jsonNode);
+                            break;
+                        case SDKMethod.roomManager:
+                            RoomManagerEvent(method, jsonNode);
+                            break;
+                        case SDKMethod.connetionListener:
+                            ConnectionEvent(method, jsonNode);
+                            break;
+                        case SDKMethod.multiDeviceListener:
+                            MultiDeviceEvent(method, jsonNode);
+                            break;
+                        case SDKMethod.presenceListener:
+                            PresenceManagerEvent(method, jsonNode);
+                            break;
+                        case SDKMethod.chatThreadListener:
+                            ChatThreadManagerEvent(method, jsonNode);
+                            break;
+                        case SDKMethod.callback:
+                            callbackManager.CallAction(method, jsonNode);
+                            break;
+                        case SDKMethod.callbackProgress:
+                            callbackManager.CallActionProgress(method, jsonNode);
+                            break;
+                        default:
+                            break;
+
                     }
                 });
             };
@@ -96,6 +90,8 @@ namespace AgoraChat
         ~NativeListener()
         {
             queue_worker.Stop();
+            nativeListenerEvent = null;
+            
         }
 
         public void AddNaitveListener() {

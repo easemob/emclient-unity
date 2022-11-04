@@ -55,6 +55,11 @@ namespace AgoraChat
             nativeListener.MultiDeviceEvent += NativeEventHandle_MultiDevice;
         }
 
+        ~IClient() {
+            nativeListener.RemoveNativeListener();
+            nativeListener = null;
+        }
+
         internal void InitWithOptions(Options options)
         {
             JSONObject jo = options.ToJsonObject();

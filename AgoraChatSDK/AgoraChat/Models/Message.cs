@@ -758,17 +758,6 @@ namespace AgoraChat
             return jo;
         }
 
-        static internal JSONArray ListToJsonObject(List<Message> messages)
-        {
-            if (null == messages || messages.Count == 0) return null;
-
-            JSONArray ja = new JSONArray();
-            foreach (var msg in messages)
-            {
-                ja.Add(msg.ToJsonObject());
-            }
-            return ja;
-        }
 
         static private MessageStatus MessageStatusFromInt(int intStatus)
         {
