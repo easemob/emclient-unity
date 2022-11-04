@@ -131,6 +131,9 @@ namespace AgoraChat
         public const string getReactionList = "getReactionList";
         public const string groupAckCount = "groupAckCount";
         public const string getChatThread = "chatThread";
+        public const string getHasDeliverAck = "getHasDeliverAck";
+        public const string getHasReadAck = "getHasReadAck";
+
 
         // EMChatRoomManager
         public const string joinChatRoom = "joinChatRoom";

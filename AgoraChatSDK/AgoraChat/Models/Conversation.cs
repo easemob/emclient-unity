@@ -56,7 +56,7 @@ namespace AgoraChat
             if (!jo.IsNull)
             {
                 Id = jo["con_id"];
-                Type = ConversationTypeFromInt(jo["type"].AsInt);
+                Type = jo["type"].AsInt.ToConversationType();
                 IsThread = jo["isThread"];
             }
         }
@@ -66,29 +66,6 @@ namespace AgoraChat
             return null;
         }
 
-        internal static int ConversationTypeToInt(ConversationType type)
-        {
-            int intType = 0;
-            switch (type)
-            {
-                case ConversationType.Chat: intType = 0; break;
-                case ConversationType.Group: intType = 1; break;
-                case ConversationType.Room: intType = 2; break;
-            }
-            return intType;
-        }
-
-        internal static ConversationType ConversationTypeFromInt(int intType)
-        {
-            ConversationType type = ConversationType.Chat;
-            switch (intType)
-            {
-                case 0: type = ConversationType.Chat; break;
-                case 1: type = ConversationType.Group; break;
-                case 2: type = ConversationType.Room; break;
-            }
-            return type;
-        }
     }
 }
 
