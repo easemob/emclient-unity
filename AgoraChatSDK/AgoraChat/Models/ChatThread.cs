@@ -2,7 +2,7 @@
 
 namespace AgoraChat
 {
-    public class ChatThread: BaseModel
+    public class ChatThread : BaseModel
     {
         /**
          * \~chinese
@@ -151,14 +151,24 @@ namespace AgoraChat
             MessageId = jsonObject["msgId"];
             ParentId = jsonObject["parentId"];
             MembersCount = jsonObject["memberCount"];
-            MessageCount = jsonObject["messageCount"];
+            MessageCount = jsonObject["msgCount"];
             CreateAt = jsonObject["createAt"].AsInt;
             LastMessage = ModelHelper.CreateWithJsonObject<Message>(jsonObject["msg"].AsObject);
         }
 
         internal override JSONObject ToJsonObject()
         {
-            return null;
+            JSONObject jo = new JSONObject();
+            jo.Add("threadId", Tid);
+            jo.Add("owner", Owner);
+            jo.Add("msgId", MessageId);
+            jo.Add("parentId", ParentId);
+            jo.Add("memberCount", MembersCount);
+            jo.Add("msgCount", MessageCount);
+            jo.Add("createAt", CreateAt);
+            jo.Add("lastMsg", LastMessage?.ToJsonObject());
+
+            return jo;
         }
     }
 }

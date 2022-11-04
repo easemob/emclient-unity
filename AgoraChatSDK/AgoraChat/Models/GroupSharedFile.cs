@@ -13,7 +13,7 @@ namespace AgoraChat
     * For example, you can get information about a group shared file by using {@link IGroupManager#GetGroupFileListFromServer(String, int, int, ValueCallBack)}.
     * 
     */
-    public class GroupSharedFile: BaseModel
+    public class GroupSharedFile : BaseModel
     {
         /**
          * \~chinese
@@ -62,7 +62,7 @@ namespace AgoraChat
 
         internal GroupSharedFile() { }
 
-        internal GroupSharedFile(string jsonString):base(jsonString) { }
+        internal GroupSharedFile(string jsonString) : base(jsonString) { }
 
         internal GroupSharedFile(JSONObject jsonObject) : base(jsonObject) { }
 
@@ -77,7 +77,13 @@ namespace AgoraChat
 
         internal override JSONObject ToJsonObject()
         {
-            return null;
+            JSONObject jo = new JSONObject();
+            jo.Add("name", FileName);
+            jo.Add("fileId", FileId);
+            jo.Add("owner", FileOwner);
+            jo.Add("createTime", CreateTime);
+            jo.Add("fileSize", FileSize);
+            return jo;
         }
     }
 }

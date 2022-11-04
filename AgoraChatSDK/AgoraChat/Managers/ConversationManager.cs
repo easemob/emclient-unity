@@ -29,16 +29,6 @@ namespace AgoraChat
             return ModelHelper.CreateWithJsonObject<Message>(jsonNode);
         }
 
-        internal Dictionary<string, string> GetExt(string conversationId, ConversationType conversationType)
-        {
-            JSONObject jo_param = new JSONObject();
-            jo_param.Add("convId", conversationId);
-            jo_param.Add("convType", conversationType.ToInt());
-            // TODO: dujiepeng 需要提供get方法？ 此处key值不对。
-            JSONNode jsonNode = NativeGet(SDKMethod.syncConversationExt, jo_param).GetReturnJsonNode();
-            return Dictionary.StringDictionaryFromJsonObject(jsonNode);
-        }
-
         internal bool SetExt(string conversationId, ConversationType conversationType, Dictionary<string, string> ext)
         {
             JSONObject jo_param = new JSONObject();

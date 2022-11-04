@@ -212,15 +212,30 @@ namespace AgoraChat
             AdminList = List.StringListFromJsonArray(jsonObject["adminList"]);
             BlockList = List.StringListFromJsonArray(jsonObject["blockList"]);
             MuteList = List.StringListFromJsonArray(jsonObject["muteList"]);
-            MessageBlocked = jsonObject["groupId"];
-            IsAllMemberMuted = jsonObject["groupId"];
-            Options = ModelHelper.CreateWithJsonObject<GroupOptions>(jsonObject["options"]); 
+            MessageBlocked = jsonObject["block"];
+            IsAllMemberMuted = jsonObject["isMuteAll"];
+            Options = ModelHelper.CreateWithJsonObject<GroupOptions>(jsonObject["options"]);
             PermissionType = (GroupPermissionType)jsonObject["permissionType"].AsInt;
         }
 
         internal override JSONObject ToJsonObject()
         {
-            return null;
+            JSONObject jo = new JSONObject();
+            jo.Add("groupId", GroupId);
+            jo.Add("name", Name);
+            jo.Add("desc", Description);
+            jo.Add("owner", Owner);
+            jo.Add("announcement", Announcement);
+            jo.Add("memberCount", MemberCount);
+            jo.Add("memberList", JsonObject.JsonArrayFromStringList(MemberList));
+            jo.Add("adminList", JsonObject.JsonArrayFromStringList(AdminList));
+            jo.Add("blockList", JsonObject.JsonArrayFromStringList(BlockList));
+            jo.Add("muteList", JsonObject.JsonArrayFromStringList(MuteList));
+            jo.Add("block", MessageBlocked);
+            jo.Add("isMuteAll", IsAllMemberMuted);
+            jo.Add("options", Options.ToJsonObject());
+            jo.Add("permissionType", PermissionType.ToInt());
+            return jo;
         }
     }
 }

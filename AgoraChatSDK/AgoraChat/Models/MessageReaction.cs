@@ -88,7 +88,12 @@ namespace AgoraChat
 
         internal override JSONObject ToJsonObject()
         {
-            return null;
+            JSONObject jo = new JSONObject();
+            jo.Add("reaction", Rection);
+            jo.Add("count", Count);
+            jo.Add("userList", JsonObject.JsonArrayFromStringList(UserList));
+            jo.Add("isAddedBySelf", State);
+            return jo;
         }
 
         internal static Dictionary<string, List<MessageReaction>> DictFromJsonObject(JSONNode jsonNode)

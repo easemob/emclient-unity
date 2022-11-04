@@ -14,7 +14,7 @@ namespace AgoraChat
      * 
      * To get basic information of a group from the server, you can call {@link IGroupManager#FetchPublicGroupsFromServer(int, String, ValueCallBack)}.
      */
-    public class GroupInfo: BaseModel
+    public class GroupInfo : BaseModel
     {
         /**
          * \~chinese
@@ -36,9 +36,9 @@ namespace AgoraChat
 
         internal GroupInfo() { }
 
-        internal GroupInfo(string jsonString): base(jsonString) { }
+        internal GroupInfo(string jsonString) : base(jsonString) { }
 
-        internal GroupInfo(JSONObject jsonObject): base(jsonObject) { }
+        internal GroupInfo(JSONObject jsonObject) : base(jsonObject) { }
 
         internal override void FromJsonObject(JSONObject jsonObject)
         {
@@ -48,7 +48,10 @@ namespace AgoraChat
 
         internal override JSONObject ToJsonObject()
         {
-            return null;
+            JSONObject jo = new JSONObject();
+            jo.Add("groupId", GroupId);
+            jo.Add("name", GroupName);
+            return jo;
         }
     }
 }
