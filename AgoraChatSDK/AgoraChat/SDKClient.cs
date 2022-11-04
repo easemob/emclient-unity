@@ -22,7 +22,8 @@
 
         private SDKClient()
         {
-            _clientImpl = new IClient();
+
+            _clientImpl = new IClient(new NativeListener());
         }
 
 
@@ -33,7 +34,7 @@
          * \~english
          * The chat manager instance.
          */
-        public ChatManager ChatManager 
+        public ChatManager ChatManager
         {
             get => _clientImpl.chatManager;
         }
@@ -45,9 +46,9 @@
          * \~english
          * The contact manager instance.
          */
-        public ContactManager ContactManager 
+        public ContactManager ContactManager
         {
-            get => _clientImpl.contactManager; 
+            get => _clientImpl.contactManager;
         }
 
         /**
@@ -57,9 +58,9 @@
          * \~english
          * The group manager instance.
          */
-        public GroupManager GroupManager 
-        { 
-            get => _clientImpl.groupManager; 
+        public GroupManager GroupManager
+        {
+            get => _clientImpl.groupManager;
         }
 
         /**
@@ -70,8 +71,8 @@
          * The chat room manager instance.
          */
         public RoomManager RoomManager
-        { 
-            get => _clientImpl.roomManager; 
+        {
+            get => _clientImpl.roomManager;
         }
 
         /**
@@ -81,9 +82,9 @@
          * \~english
          * The user information manager instance.
          */
-        public UserInfoManager UserInfoManager 
-        { 
-            get => _clientImpl.userInfoManager; 
+        public UserInfoManager UserInfoManager
+        {
+            get => _clientImpl.userInfoManager;
         }
 
         /**
@@ -93,7 +94,7 @@
          * \~english
          * The presence manager instance.
          */
-        public PresenceManager PresenceManager 
+        public PresenceManager PresenceManager
         {
             get => _clientImpl.presenceManager;
         }
@@ -105,11 +106,11 @@
          * \~english
          * The thread manager instance.
          */
-        public ChatThreadManager ThreadManager 
+        public ChatThreadManager ThreadManager
         {
-            get => _clientImpl.chatThreadManager; 
+            get => _clientImpl.chatThreadManager;
         }
-        
+
         internal ConversationManager ConversationManager
         {
             get => _clientImpl.conversationManager;
