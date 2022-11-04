@@ -109,7 +109,7 @@ namespace AgoraChat
         public const string onMessageDeliveryAck = "onMessageDeliveryAck";
 
         /// EMConversation
-        public const string getUnreadMsgCount = "getUnreadMsgCount";
+        public const string getConversationUnreadMsgCount = "getConversationUnreadMsgCount";
         public const string markAllMessagesAsRead = "markAllMessagesAsRead";
         public const string markMessageAsRead = "markMessageAsRead";
         public const string syncConversationExt = "syncConversationExt";

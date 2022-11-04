@@ -13,7 +13,7 @@ namespace AgoraChat
     public class UserInfoManager : BaseManager
     {
 
-        internal UserInfoManager(NativeListener listener) : base(listener, SDKMethod.userInfoManager)
+        internal UserInfoManager() : base(null, SDKMethod.userInfoManager)
         {
 
         }

@@ -206,6 +206,93 @@ namespace AgoraChat
         }
     }
 
+
+    internal static class ConversationTypeHelper
+    {
+        public static int ToInt(this ConversationType type)
+        {
+            switch (type)
+            {
+                case ConversationType.Chat: return 0;
+                case ConversationType.Group: return 1;
+                case ConversationType.Room: return 2;
+                default: return 0;
+            }
+        }
+
+        public static ConversationType ToConversationType(this int i)
+        {
+            switch (i)
+            {
+                case 0: return ConversationType.Chat;
+                case 1: return ConversationType.Group;
+                case 2: return ConversationType.Room;
+                default:
+                    return ConversationType.Chat;
+            }
+        }
+    }
+
+    internal static class BodyTypeHelper
+    {
+        public static int ToInt(this MessageBodyType type)
+        {
+            switch (type)
+            {
+                case MessageBodyType.TXT: return 0;
+                case MessageBodyType.IMAGE: return 1;
+                case MessageBodyType.VIDEO: return 2;
+                case MessageBodyType.LOCATION: return 3;
+                case MessageBodyType.VOICE: return 4;
+                case MessageBodyType.FILE: return 5;
+                case MessageBodyType.CMD: return 6;
+                case MessageBodyType.CUSTOM: return 7;
+                default: return 0;
+            }
+        }
+
+        public static MessageBodyType ToMessageBodyType(this int i)
+        {
+            switch (i)
+            {
+                case 0: return MessageBodyType.TXT;
+                case 1: return MessageBodyType.IMAGE;
+                case 2: return MessageBodyType.VIDEO;
+                case 3: return MessageBodyType.LOCATION;
+                case 4: return MessageBodyType.VOICE;
+                case 5: return MessageBodyType.FILE;
+                case 6: return MessageBodyType.CMD;
+                case 7: return MessageBodyType.CUSTOM;
+                default:
+                    return MessageBodyType.TXT;
+            }
+        }
+    }
+
+    internal static class MessageSearchDirectionHelper
+    {
+        public static int ToInt(this MessageSearchDirection type)
+        {
+            switch (type)
+            {
+                case MessageSearchDirection.UP: return 0;
+                case MessageSearchDirection.DOWN: return 1;
+                default: return 0;
+            }
+        }
+
+        public static MessageSearchDirection ToMessageSearchDirection(this int i)
+        {
+            switch (i)
+            {
+                case 0: return MessageSearchDirection.UP;
+                case 1: return MessageSearchDirection.DOWN;
+                default:
+                    return MessageSearchDirection.UP;
+            }
+        }
+    }
+
     namespace InternalSpace
     {
         public static class MyJson
