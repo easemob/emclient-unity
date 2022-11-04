@@ -264,7 +264,6 @@ namespace AgoraChat
         public const string fetchChatThreadDetail = "fetchChatThreadDetail";
         public const string fetchJoinedChatThreads = "fetchJoinedChatThreads";
         public const string fetchChatThreadsWithParentId = "fetchChatThreadsWithParentId";
-        public const string fetchJoinedChatThreadsWithParentId = "fetchJoinedChatThreadsWithParentId";
         public const string fetchChatThreadMember = "fetchChatThreadMember";
         public const string fetchLastMessageWithChatThreads = "fetchLastMessageWithChatThreads";
         public const string removeMemberFromChatThread = "removeMemberFromChatThread";
