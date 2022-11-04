@@ -28,11 +28,10 @@ namespace AgoraChat
             // 将 listener 和 native 挂钩
             nativeListener = listener;
             nativeListener.AddNaitveListener();
-            callbackManager = nativeListener.callbackManager;
 
+            callbackManager = nativeListener.callbackManager;
             delegater_connection = new List<IConnectionDelegate>();
             delegater_multidevice = new List<IMultiDeviceDelegate>();
-
             nativeListener.ConnectionEvent += NativeEventHandle_Connection;
             nativeListener.MultiDeviceEvent += NativeEventHandle_MultiDevice;
         }

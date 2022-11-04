@@ -8,7 +8,7 @@ namespace AgoraChat
      * \~english
      * The multi-device information class.
      */
-    public class DeviceInfo: BaseModel
+    public class DeviceInfo : BaseModel
 
     {
         /**
@@ -45,7 +45,7 @@ namespace AgoraChat
 
         internal DeviceInfo() { }
 
-        internal DeviceInfo(string jsonString): base(jsonString) { }
+        internal DeviceInfo(string jsonString) : base(jsonString) { }
 
         internal DeviceInfo(JSONObject jsonObject) : base(jsonObject) { }
 
@@ -58,7 +58,11 @@ namespace AgoraChat
 
         internal override JSONObject ToJsonObject()
         {
-            return null;
+            JSONObject jo = new JSONObject();
+            jo.Add("resource", Resource);
+            jo.Add("deviceUUID", DeviceUUID);
+            jo.Add("deviceName", DeviceName);
+            return jo;
         }
     }
 }

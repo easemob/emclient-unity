@@ -12,7 +12,7 @@ namespace AgoraChat
     * Support languages of translation function.
     * 
     */
-    public class SupportLanguage: BaseModel
+    public class SupportLanguage : BaseModel
     {
         /**
         *  \~chinese
@@ -44,7 +44,7 @@ namespace AgoraChat
 
         internal SupportLanguage() { }
 
-        internal SupportLanguage(string jsonString): base(jsonString) {}
+        internal SupportLanguage(string jsonString) : base(jsonString) { }
 
         internal SupportLanguage(JSONObject jsonObject) : base(jsonObject) { }
 
@@ -57,7 +57,12 @@ namespace AgoraChat
 
         internal override JSONObject ToJsonObject()
         {
-            return null;
+            JSONObject jo = new JSONObject();
+            jo.Add("code", LanguageCode);
+            jo.Add("name", LanguageName);
+            jo.Add("nativeName", LanguageNativeName);
+
+            return jo;
         }
     }
 }

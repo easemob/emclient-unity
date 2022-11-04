@@ -109,7 +109,7 @@ namespace AgoraChat
         public const string onMessageDeliveryAck = "onMessageDeliveryAck";
 
         /// EMConversation
-        public const string getUnreadMsgCount = "getUnreadMsgCount";
+        public const string getConversationUnreadMsgCount = "getConversationUnreadMsgCount";
         public const string markAllMessagesAsRead = "markAllMessagesAsRead";
         public const string markMessageAsRead = "markMessageAsRead";
         public const string syncConversationExt = "syncConversationExt";
@@ -131,6 +131,9 @@ namespace AgoraChat
         public const string getReactionList = "getReactionList";
         public const string groupAckCount = "groupAckCount";
         public const string getChatThread = "chatThread";
+        public const string getHasDeliverAck = "getHasDeliverAck";
+        public const string getHasReadAck = "getHasReadAck";
+
 
         // EMChatRoomManager
         public const string joinChatRoom = "joinChatRoom";
@@ -264,7 +267,6 @@ namespace AgoraChat
         public const string fetchChatThreadDetail = "fetchChatThreadDetail";
         public const string fetchJoinedChatThreads = "fetchJoinedChatThreads";
         public const string fetchChatThreadsWithParentId = "fetchChatThreadsWithParentId";
-        public const string fetchJoinedChatThreadsWithParentId = "fetchJoinedChatThreadsWithParentId";
         public const string fetchChatThreadMember = "fetchChatThreadMember";
         public const string fetchLastMessageWithChatThreads = "fetchLastMessageWithChatThreads";
         public const string removeMemberFromChatThread = "removeMemberFromChatThread";

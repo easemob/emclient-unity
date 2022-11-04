@@ -57,7 +57,10 @@ namespace AgoraChat
 
         internal override JSONObject ToJsonObject()
         {
-            return null;
+            JSONObject jo = new JSONObject();
+            jo.Add("cursor", Cursor);
+            // Note: Data type?
+            return jo;
         }
 
         private ItemCallback callback;

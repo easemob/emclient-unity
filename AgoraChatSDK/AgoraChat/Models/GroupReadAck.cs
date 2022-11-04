@@ -10,7 +10,7 @@ namespace AgoraChat
      * The class for read receipts of group messages.
      * 
      */
-    public class GroupReadAck: BaseModel
+    public class GroupReadAck : BaseModel
     {
         /**
          * \~chinese
@@ -72,7 +72,7 @@ namespace AgoraChat
 
         internal GroupReadAck() { }
 
-        internal GroupReadAck(string jsonString):base(jsonString) { }
+        internal GroupReadAck(string jsonString) : base(jsonString) { }
 
         internal GroupReadAck(JSONObject jsonObject) : base(jsonObject) { }
 
@@ -88,7 +88,14 @@ namespace AgoraChat
 
         internal override JSONObject ToJsonObject()
         {
-            return null;
+            JSONObject jo = new JSONObject();
+            jo.Add("ack_id", AckId);
+            jo.Add("msg_id", MsgId);
+            jo.Add("from", From);
+            jo.Add("content", Content);
+            jo.Add("count", Count);
+            jo.Add("timestamp", Timestamp);
+            return jo;
         }
     }
 }

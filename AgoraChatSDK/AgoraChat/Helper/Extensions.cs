@@ -206,6 +206,235 @@ namespace AgoraChat
         }
     }
 
+
+    internal static class ConversationTypeHelper
+    {
+        public static int ToInt(this ConversationType type)
+        {
+            switch (type)
+            {
+                case ConversationType.Chat: return 0;
+                case ConversationType.Group: return 1;
+                case ConversationType.Room: return 2;
+                default: return 0;
+            }
+        }
+
+        public static ConversationType ToConversationType(this int i)
+        {
+            switch (i)
+            {
+                case 0: return ConversationType.Chat;
+                case 1: return ConversationType.Group;
+                case 2: return ConversationType.Room;
+                default:
+                    return ConversationType.Chat;
+            }
+        }
+    }
+
+    internal static class BodyTypeHelper
+    {
+        public static int ToInt(this MessageBodyType type)
+        {
+            switch (type)
+            {
+                case MessageBodyType.TXT: return 0;
+                case MessageBodyType.IMAGE: return 1;
+                case MessageBodyType.VIDEO: return 2;
+                case MessageBodyType.LOCATION: return 3;
+                case MessageBodyType.VOICE: return 4;
+                case MessageBodyType.FILE: return 5;
+                case MessageBodyType.CMD: return 6;
+                case MessageBodyType.CUSTOM: return 7;
+                default: return 0;
+            }
+        }
+
+        public static MessageBodyType ToMessageBodyType(this int i)
+        {
+            switch (i)
+            {
+                case 0: return MessageBodyType.TXT;
+                case 1: return MessageBodyType.IMAGE;
+                case 2: return MessageBodyType.VIDEO;
+                case 3: return MessageBodyType.LOCATION;
+                case 4: return MessageBodyType.VOICE;
+                case 5: return MessageBodyType.FILE;
+                case 6: return MessageBodyType.CMD;
+                case 7: return MessageBodyType.CUSTOM;
+                default:
+                    return MessageBodyType.TXT;
+            }
+        }
+    }
+
+    internal static class MessageSearchDirectionHelper
+    {
+        public static int ToInt(this MessageSearchDirection type)
+        {
+            switch (type)
+            {
+                case MessageSearchDirection.UP: return 0;
+                case MessageSearchDirection.DOWN: return 1;
+                default: return 0;
+            }
+        }
+
+        public static MessageSearchDirection ToMessageSearchDirection(this int i)
+        {
+            switch (i)
+            {
+                case 0: return MessageSearchDirection.UP;
+                case 1: return MessageSearchDirection.DOWN;
+                default:
+                    return MessageSearchDirection.UP;
+            }
+        }
+    }
+
+    internal static class ChatThreadOperationHelper
+    {
+        public static int ToInt(this ChatThreadOperation type)
+        {
+            switch (type)
+            {
+                case ChatThreadOperation.UnKnown: return 0;
+                case ChatThreadOperation.Create: return 1;
+                case ChatThreadOperation.Update: return 2;
+                case ChatThreadOperation.Delete: return 3;
+                case ChatThreadOperation.Update_Msg: return 4;
+                default: return 0;
+            }
+        }
+
+        public static ChatThreadOperation ToChatThreadOperation(this int i)
+        {
+            switch (i)
+            {
+                case 0: return ChatThreadOperation.UnKnown;
+                case 1: return ChatThreadOperation.Create;
+                case 2: return ChatThreadOperation.Update;
+                case 3: return ChatThreadOperation.Delete;
+                case 4: return ChatThreadOperation.Update_Msg;
+                default:
+                    return ChatThreadOperation.UnKnown;
+            }
+        }
+    }
+
+    internal static class GroupPermissionTypeHelper
+    {
+        public static int ToInt(this GroupPermissionType type)
+        {
+            switch (type)
+            {
+                case GroupPermissionType.Member: return 0;
+                case GroupPermissionType.Admin: return 1;
+                case GroupPermissionType.Owner: return 2;
+                default: return -1;
+            }
+        }
+
+        public static GroupPermissionType ToGroupPermissionType(this int i)
+        {
+            switch (i)
+            {
+                case 0: return GroupPermissionType.Member;
+                case 1: return GroupPermissionType.Admin;
+                case 2: return GroupPermissionType.Owner;
+                default:
+                    return GroupPermissionType.Unknown;
+            }
+        }
+    }
+
+    internal static class RoomPermissionTypeHelper
+    {
+        public static int ToInt(this RoomPermissionType type)
+        {
+            switch (type)
+            {
+                case RoomPermissionType.Member: return 0;
+                case RoomPermissionType.Admin: return 1;
+                case RoomPermissionType.Owner: return 2;
+                default: return -1;
+            }
+        }
+
+        public static RoomPermissionType ToRoomPermissionType(this int i)
+        {
+            switch (i)
+            {
+                case 0: return RoomPermissionType.Member;
+                case 1: return RoomPermissionType.Admin;
+                case 2: return RoomPermissionType.Owner;
+                default:
+                    return RoomPermissionType.Unknown;
+            }
+        }
+    }
+
+
+
+    internal static class MessageStatusHelper
+    {
+        public static int ToInt(this MessageStatus type)
+        {
+            switch (type)
+            {
+                case MessageStatus.CREATE: return 0;
+                case MessageStatus.PROGRESS: return 1;
+                case MessageStatus.SUCCESS: return 2;
+                case MessageStatus.FAIL: return 3;
+                default: return 0;
+            }
+        }
+
+        public static MessageStatus ToMessageStatus(this int i)
+        {
+            switch (i)
+            {
+                case 0: return MessageStatus.CREATE;
+                case 1: return MessageStatus.PROGRESS;
+                case 2: return MessageStatus.SUCCESS;
+                case 3: return MessageStatus.FAIL;
+                default:
+                    return MessageStatus.CREATE;
+            }
+        }
+    }
+
+    internal static class MessageTypeHelper
+    {
+        public static MessageType ToMessageType(this int intType)
+        {
+            switch (intType)
+            {
+                case 0: return MessageType.Chat;
+                case 1: return MessageType.Group;
+                case 2: return MessageType.Room;
+                default:
+                    return MessageType.Chat;
+
+            }
+        }
+
+        public static int ToInt(this MessageType type)
+        {
+            switch (type)
+            {
+                case MessageType.Chat: return 0;
+                case MessageType.Group: return 1;
+                case MessageType.Room: return 2;
+                default:
+                    return 0;
+            }
+        }
+    }
+
+
+
     namespace InternalSpace
     {
         public static class MyJson

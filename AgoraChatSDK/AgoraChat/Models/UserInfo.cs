@@ -8,7 +8,7 @@ namespace AgoraChat
     * \~english
     * The user information class.
     */
-    public class UserInfo: BaseModel
+    public class UserInfo : BaseModel
     {
 
         /**
@@ -18,7 +18,7 @@ namespace AgoraChat
          * \~english
          * The nickname of the user.
          */
-        public string nickName = "";
+        public string NickName = "";
         /**
          * \~chinese
          * 用户头像的 URL。
@@ -26,7 +26,7 @@ namespace AgoraChat
          * \~english
          * The avatar URL of the user.
          */
-        public string avatarUrl = "";
+        public string AvatarUrl = "";
         /**
          * \~chinese
          * 用户的电子邮件地址。
@@ -34,7 +34,7 @@ namespace AgoraChat
          * \~english
          * The email address of the user.
          */
-        public string email = "";
+        public string Email = "";
         /**
         * \~chinese
         * 用户的电话号码。
@@ -42,7 +42,7 @@ namespace AgoraChat
         * \~english
         * The phone number of the user.
         */
-        public string phoneNumber = "";
+        public string PhoneNumber = "";
         /**
          * \~chinese
          * 用户的签名。
@@ -50,7 +50,7 @@ namespace AgoraChat
          * \~english
          * The signature of the user.
          */
-        public string signature = "";
+        public string Signature = "";
         /**
         * \~chinese
         * 用户的生日。
@@ -58,7 +58,7 @@ namespace AgoraChat
         * \~english
         * The birthday of the user.
         */
-        public string birth = "";
+        public string Birth = "";
         /**
          * \~chinese
          * 用户 ID。
@@ -66,7 +66,7 @@ namespace AgoraChat
          * \~english
          * The user ID.
          */
-        public string userId = "";
+        public string UserId = "";
         /**
         * \~chinese
         * 用户的扩展信息。
@@ -78,7 +78,7 @@ namespace AgoraChat
         * 
         * You can specify either an empty string or the custom information encapsulated as the JSON string.
         */
-        public string ext = "";
+        public string Ext = "";
         /**
          * \~chinese
          * 用户的性别。
@@ -92,11 +92,11 @@ namespace AgoraChat
          * - `1`: Male.
          * - `2`: Female.
          */
-        public int gender = 0;
+        public int Gender = 0;
 
         internal UserInfo() { }
 
-        internal UserInfo(string jsonString): base(jsonString) { }
+        internal UserInfo(string jsonString) : base(jsonString) { }
 
         internal UserInfo(JSONObject jsonObject) : base(jsonObject) { }
 
@@ -104,53 +104,64 @@ namespace AgoraChat
         {
             if (!jsonObject["nickName"].IsNull)
             {
-                nickName = jsonObject["nickName"].Value;
+                NickName = jsonObject["nickName"].Value;
             }
 
             if (!jsonObject["avatarUrl"].IsNull)
             {
-                avatarUrl = jsonObject["avatarUrl"].Value;
+                AvatarUrl = jsonObject["avatarUrl"].Value;
             }
 
             if (!jsonObject["mail"].IsNull)
             {
-                email = jsonObject["mail"].Value;
+                Email = jsonObject["mail"].Value;
             }
 
             if (!jsonObject["phone"].IsNull)
             {
-                phoneNumber = jsonObject["phone"].Value;
+                PhoneNumber = jsonObject["phone"].Value;
             }
 
             if (!jsonObject["sign"].IsNull)
             {
-                signature = jsonObject["sign"].Value;
+                Signature = jsonObject["sign"].Value;
             }
 
             if (!jsonObject["birth"].IsNull)
             {
-                birth = jsonObject["birth"].Value;
+                Birth = jsonObject["birth"].Value;
             }
 
             if (!jsonObject["userId"].IsNull)
             {
-                userId = jsonObject["userId"].Value;
+                UserId = jsonObject["userId"].Value;
             }
 
             if (!jsonObject["gender"].IsNull)
             {
-                gender = jsonObject["gender"].AsInt;
+                Gender = jsonObject["gender"].AsInt;
             }
 
             if (!jsonObject["ext"].IsNull)
             {
-                ext = jsonObject["ext"].Value;
+                Ext = jsonObject["ext"].Value;
             }
         }
 
         internal override JSONObject ToJsonObject()
         {
-            return null;
+            JSONObject jo = new JSONObject();
+            jo.Add("nickName", NickName);
+            jo.Add("avatarUrl", AvatarUrl);
+            jo.Add("mail", Email);
+            jo.Add("phone", PhoneNumber);
+            jo.Add("sign", Signature);
+            jo.Add("birth", Birth);
+            jo.Add("gender", Gender);
+            jo.Add("userId", UserId);
+            jo.Add("ext", Ext);
+
+            return jo;
         }
     }
 }

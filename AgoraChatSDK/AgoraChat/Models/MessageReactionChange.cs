@@ -46,14 +46,18 @@ namespace AgoraChat
 
         internal override void FromJsonObject(JSONObject jsonObject)
         {
-            ConversationId = jsonObject["conversationId"];
-            MessageId = jsonObject["messageId"];
+            ConversationId = jsonObject["convId"];
+            MessageId = jsonObject["msgId"];
             ReactionList = List.BaseModelListFromJsonArray<MessageReaction>(jsonObject["reactions"]);
         }
 
         internal override JSONObject ToJsonObject()
         {
-            return null;
+            JSONObject jo = new JSONObject();
+            jo.Add("convId", ConversationId);
+            jo.Add("msgId", MessageId);
+            jo.Add("reactions", JsonObject.JsonArrayFromList(ReactionList));
+            return jo;
         }
     }
 }

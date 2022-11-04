@@ -89,19 +89,22 @@ namespace AgoraChat
 
         internal override void FromJsonObject(JSONObject jo)
         {
-            if (null != jo)
-            {
-                Publisher = jo["publisher"];
-                statusDescription = jo["statusDescription"];
-                LatestTime = jo["lastTime"];
-                ExpiryTime = jo["expiryTime"];
-                StatusList = List.BaseModelListFromJsonArray<PresenceDeviceStatus>(jo["statusDetails"]);
-            }
+            Publisher = jo["publisher"];
+            statusDescription = jo["desc"];
+            LatestTime = jo["lastTime"];
+            ExpiryTime = jo["expiryTime"];
+            StatusList = List.BaseModelListFromJsonArray<PresenceDeviceStatus>(jo["detail"]);
         }
 
         internal override JSONObject ToJsonObject()
         {
-            return null;
+            JSONObject jo = new JSONObject();
+            jo.Add("publisher", Publisher);
+            jo.Add("desc", statusDescription);
+            jo.Add("lastTime", LatestTime);
+            jo.Add("expiryTime", ExpiryTime);
+            jo.Add("detail", JsonObject.JsonArrayFromList(StatusList));
+            return jo;
         }
     }
 }

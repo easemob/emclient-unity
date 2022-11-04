@@ -2,7 +2,7 @@
 
 namespace AgoraChat
 {
-    public class ChatThreadEvent: BaseModel
+    public class ChatThreadEvent : BaseModel
     {
         /**
         * \~chinese
@@ -52,13 +52,18 @@ namespace AgoraChat
         internal override void FromJsonObject(JSONObject jsonObject)
         {
             From = jsonObject["from"];
-            Operation = (ChatThreadOperation)jsonObject["type"].AsInt;
+            Operation = jsonObject["type"].AsInt.ToChatThreadOperation();
             ChatThread = ModelHelper.CreateWithJsonObject<ChatThread>(jsonObject["thread"].AsObject);
         }
 
         internal override JSONObject ToJsonObject()
         {
-            return null;
+            JSONObject jo = new JSONObject();
+            jo.Add("from", From);
+            jo.Add("type", Operation.ToInt());
+            jo.Add("thread", ChatThread.ToJsonObject());
+
+            return jo;
         }
     }
 }

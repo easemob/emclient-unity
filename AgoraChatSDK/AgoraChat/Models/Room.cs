@@ -9,7 +9,7 @@ namespace AgoraChat
      *  \~english
      *  The chat room class, which defines chat room information.
      */
-    public class Room: BaseModel
+    public class Room : BaseModel
     {
         /**
          * \~chinese
@@ -166,7 +166,7 @@ namespace AgoraChat
 
         internal Room() { }
 
-        internal Room(string jsonString): base(jsonString) { }
+        internal Room(string jsonString) : base(jsonString) { }
 
         internal Room(JSONObject jsonObject) : base(jsonObject) { }
 
@@ -183,13 +183,27 @@ namespace AgoraChat
             MuteList = List.StringListFromJsonArray(jsonObject["muteList"]);
             MaxUsers = jsonObject["maxUsers"];
             Owner = jsonObject["owner"];
-            IsAllMemberMuted = jsonObject["isAllMemberMuted"];
-            PermissionType = (RoomPermissionType)jsonObject["permissionType"].AsInt;
+            IsAllMemberMuted = jsonObject["isMuteAll"];
+            PermissionType = jsonObject["permissionType"].AsInt.ToRoomPermissionType();
         }
 
         internal override JSONObject ToJsonObject()
         {
-            return null;
+            JSONObject jo = new JSONObject();
+            jo.Add("roomId", RoomId);
+            jo.Add("name", Name);
+            jo.Add("desc", Description);
+            jo.Add("announcement", Announcement);
+            jo.Add("memberCount", MemberCount);
+            jo.Add("adminList", JsonObject.JsonArrayFromStringList(AdminList));
+            jo.Add("memberList", JsonObject.JsonArrayFromStringList(MemberList));
+            jo.Add("blockList", JsonObject.JsonArrayFromStringList(BlockList));
+            jo.Add("muteList", JsonObject.JsonArrayFromStringList(MuteList));
+            jo.Add("maxUsers", MaxUsers);
+            jo.Add("owner", Owner);
+            jo.Add("isMuteAll", IsAllMemberMuted);
+            jo.Add("permissionType", PermissionType.ToInt());
+            return jo;
         }
     }
 }

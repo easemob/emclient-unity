@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace AgoraChat
 {
     public class Message : BaseModel
-    {        
+    {
         /**
          * \~chinese
          * 消息的 ID。
@@ -713,10 +713,11 @@ namespace AgoraChat
                     ServerTime = long.Parse(jo["serverTime"].Value);
                     ConversationId = jo["conversationId"].Value;
                     MsgId = jo["msgId"].Value;
-                    Status = MessageStatusFromInt(jo["status"].AsInt);
-                    MessageType = MessageTypeFromInt(jo["chatType"].AsInt);
+                    Status = jo["status"].AsInt.ToMessageStatus();
+                    MessageType = jo["chatType"].AsInt.ToMessageType();
                     Direction = MessageDirectionFromString(jo["direction"].Value);
                     Attributes = AttributeValue.DictFromJson(jo["attributes"].ToString());
+                    // TODO: dujiepeng  body 构造方式？
                     Body = IMessageBody.Constructor(jo["body"].Value, jo["bodyType"].Value);
                     IsNeedGroupAck = jo["isNeedGroupAck"].AsBool;
                     IsRead = jo["isRead"].AsBool;
@@ -738,8 +739,8 @@ namespace AgoraChat
             jo.Add("conversationId", ConversationId);
             jo.Add("msgId", MsgId);
             jo.Add("hasRead", HasReadAck);
-            jo.Add("status", MessageStatusToInt(Status));
-            jo.Add("chatType", MessageTypeToInt(MessageType));
+            jo.Add("status", Status.ToInt());
+            jo.Add("chatType", MessageType.ToInt());
             jo.Add("direction", MessageDirectionToString(Direction));
             string strAttr = JsonObject.JsonObjectFromAttributes(Attributes)?.ToString();
             if (strAttr != null)
@@ -758,32 +759,6 @@ namespace AgoraChat
             return jo;
         }
 
-
-        static private MessageStatus MessageStatusFromInt(int intStatus)
-        {
-            MessageStatus ret = MessageStatus.CREATE;
-            switch (intStatus)
-            {
-                case 0: ret = MessageStatus.CREATE; break;
-                case 1: ret = MessageStatus.PROGRESS; break;
-                case 2: ret = MessageStatus.SUCCESS; break;
-                case 3: ret = MessageStatus.FAIL; break;
-            }
-            return ret;
-        }
-
-        static private MessageType MessageTypeFromInt(int intType)
-        {
-            MessageType ret = MessageType.Chat;
-            switch (intType)
-            {
-                case 0: ret = MessageType.Chat; break;
-                case 1: ret = MessageType.Group; break;
-                case 2: ret = MessageType.Room; break;
-            }
-            return ret;
-        }
-
         static private MessageDirection MessageDirectionFromString(string stringDirection)
         {
             if (stringDirection == "send")
@@ -796,31 +771,6 @@ namespace AgoraChat
             }
         }
 
-        static private int MessageStatusToInt(MessageStatus status)
-        {
-            int ret = 0;
-            switch (status)
-            {
-                case MessageStatus.CREATE: ret = 0; break;
-                case MessageStatus.PROGRESS: ret = 1; break;
-                case MessageStatus.SUCCESS: ret = 2; break;
-                case MessageStatus.FAIL: ret = 3; break;
-            }
-            return ret;
-        }
-
-        static private int MessageTypeToInt(MessageType type)
-        {
-            int ret = 0;
-            switch (type)
-            {
-                case MessageType.Chat: ret = 0; break;
-                case MessageType.Group: ret = 1; break;
-                case MessageType.Room: ret = 2; break;
-            }
-
-            return ret;
-        }
 
         static private string MessageDirectionToString(MessageDirection direction)
         {
@@ -832,6 +782,6 @@ namespace AgoraChat
             {
                 return "recv";
             }
-        }    
+        }
     }
 }

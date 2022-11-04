@@ -8,7 +8,7 @@ namespace AgoraChat
      * \~english
      * The presence device status class
      */
-    public class PresenceDeviceStatus: BaseModel
+    public class PresenceDeviceStatus : BaseModel
     {
         /**
         * \~chinese
@@ -31,7 +31,7 @@ namespace AgoraChat
 
         internal PresenceDeviceStatus() { }
 
-        internal PresenceDeviceStatus(string jsonString):base(jsonString) { }
+        internal PresenceDeviceStatus(string jsonString) : base(jsonString) { }
 
         internal PresenceDeviceStatus(JSONObject jsonObject) : base(jsonObject) { }
 
@@ -43,7 +43,10 @@ namespace AgoraChat
 
         internal override JSONObject ToJsonObject()
         {
-            return null;
+            JSONObject jo = new JSONObject();
+            jo.Add("device", DeviceId);
+            jo.Add("status", Status);
+            return jo;
         }
     }
 }
