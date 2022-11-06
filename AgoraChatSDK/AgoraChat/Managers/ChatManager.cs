@@ -180,7 +180,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("convId", conversationId);
-            jo_param.Add("convType", Conversation.ConversationTypeToInt(type));
+            jo_param.Add("convType", type.ToInt());
             jo_param.Add("startMsgId", startMessageId ?? "");
             jo_param.Add("direction", direction == MessageSearchDirection.UP ? 0 : 1);
             jo_param.Add("count", count);
@@ -226,7 +226,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("convId", conversationId);
-            jo_param.Add("convType", Conversation.ConversationTypeToInt(type));
+            jo_param.Add("convType", type.ToInt());
             jo_param.Add("createIfNeed", createIfNeed);
             jo_param.Add("isThread", false);
 
@@ -257,7 +257,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("convId", threadId);
-            jo_param.Add("convType", Conversation.ConversationTypeToInt(ConversationType.Group));
+            jo_param.Add("convType", ConversationType.Group.ToInt());
             jo_param.Add("createIfNeed", true);
             jo_param.Add("isThread", true);
 
@@ -743,7 +743,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("convId", conversationId);
-            jo_param.Add("convType", Conversation.ConversationTypeToInt(conversationType));
+            jo_param.Add("convType", conversationType.ToInt());
             jo_param.Add("isDeleteServerMessages", isDeleteServerMessages);
 
             NativeCall(SDKMethod.deleteRemoteConversation, jo_param, callback);
