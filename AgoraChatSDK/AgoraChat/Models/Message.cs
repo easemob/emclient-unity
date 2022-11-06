@@ -709,13 +709,13 @@ namespace AgoraChat
                     To = jo["to"].Value;
                     HasReadAck = jo["hasReadAck"].AsBool;
                     HasDeliverAck = jo["hasDeliverAck"].AsBool;
-                    LocalTime = long.Parse(jo["localTime"].Value);
-                    ServerTime = long.Parse(jo["serverTime"].Value);
+                    LocalTime = jo["localTime"].AsInt;
+                    ServerTime = jo["serverTime"].AsInt;
                     ConversationId = jo["convId"].Value;
                     MsgId = jo["msgId"].Value;
                     Status = jo["status"].AsInt.ToMessageStatus();
                     MessageType = jo["chatType"].AsInt.ToMessageType();
-                    Direction = MessageDirectionFromString(jo["direction"].Value);
+                    Direction = jo["direction"].AsInt.ToMesssageDirection();
                     Attributes = AttributeValue.DictFromJson(jo["attr"]);
                     // body:{type:iType, "body":{object}}
                     Body = ModelHelper.CreateBodyWithJsonObject(jo["body"]);
@@ -734,14 +734,14 @@ namespace AgoraChat
             jo.Add("to", To);
             jo.Add("hasReadAck", HasReadAck);
             jo.Add("hasDeliverAck", HasDeliverAck);
-            jo.Add("localTime", LocalTime.ToString());
-            jo.Add("serverTime", ServerTime.ToString());
+            jo.Add("localTime", LocalTime);
+            jo.Add("serverTime", ServerTime);
             jo.Add("convId", ConversationId);
             jo.Add("msgId", MsgId);
             jo.Add("hasRead", HasReadAck);
             jo.Add("status", Status.ToInt());
             jo.Add("chatType", MessageType.ToInt());
-            jo.Add("direction", MessageDirectionToString(Direction));
+            jo.Add("direction", Direction.ToInt());
             JSONNode jn = JsonObject.JsonObjectFromAttributes(Attributes);
             if (jn != null)
             {
@@ -756,29 +756,5 @@ namespace AgoraChat
             return jo;
         }
 
-        static private MessageDirection MessageDirectionFromString(string stringDirection)
-        {
-            if (stringDirection == "send")
-            {
-                return MessageDirection.SEND;
-            }
-            else
-            {
-                return MessageDirection.RECEIVE;
-            }
-        }
-
-
-        static private string MessageDirectionToString(MessageDirection direction)
-        {
-            if (direction == MessageDirection.SEND)
-            {
-                return "send";
-            }
-            else
-            {
-                return "recv";
-            }
-        }
     }
 }

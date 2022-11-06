@@ -245,6 +245,31 @@ namespace AgoraChat
     }
 
 
+    internal static class MessageDirectionHelper 
+    {
+        public static int ToInt(this MessageDirection direction) 
+        {
+            switch (direction)
+            {
+                case MessageDirection.SEND: return 0;
+                case MessageDirection.RECEIVE: return 1;
+                default:
+                    return 0;
+
+            }
+        }
+
+        public static MessageDirection ToMesssageDirection(this int direction)
+        {
+            switch (direction) 
+            {
+                case 0: return MessageDirection.SEND;
+                case 1: return MessageDirection.RECEIVE;
+                default: return MessageDirection.SEND;
+            }
+        }
+    }
+
     internal static class ConversationTypeHelper
     {
         public static int ToInt(this ConversationType type)
