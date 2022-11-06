@@ -95,19 +95,5 @@ namespace AgoraChat
             jo.Add("isAddedBySelf", State);
             return jo;
         }
-
-        internal static Dictionary<string, List<MessageReaction>> DictFromJsonObject(JSONNode jsonNode)
-        {
-            Dictionary<string, List<MessageReaction>> dict = new Dictionary<string, List<MessageReaction>>();
-            if (jsonNode != null && jsonNode.IsObject)
-            {
-                JSONObject jo = jsonNode.AsObject;
-                foreach (string s in jo.Keys)
-                {
-                    dict.Add(s, List.BaseModelListFromJsonArray<MessageReaction>(jo[s]));
-                }
-            }
-            return dict;
-        }
     }
 }

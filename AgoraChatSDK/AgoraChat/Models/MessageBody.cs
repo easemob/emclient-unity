@@ -6,113 +6,15 @@ using System.Collections.Generic;
 
 namespace AgoraChat
 {
-    public abstract class IMessageBody: BaseModel
+    public abstract class IMessageBody : BaseModel
     {
-        public IMessageBody(){}
+        public IMessageBody() { }
 
         internal IMessageBody(string jsonString) : base(jsonString) { }
         internal IMessageBody(JSONObject jsonObject) : base(jsonObject) { }
-
         public MessageBodyType Type;
-        internal abstract string TypeString();
-
-        /**
-          * \~chinese
-          * IMessageBody 构造方法。
-          * 
-          * @param jsonString   JSON 格式的消息内容。
-          * @param type         消息类型。
-          * @return             IMessageBody 实例。
-          * 
-          * \~english
-          * The IMessageBody constructor.
-          * 
-          * @param jsonString   The message content in the JSON format.
-          * @param type         The message type.
-          * @return             The IMessageBody instance.
-          */
-        public static IMessageBody Constructor(string jsonString, string type)
-        {
-            IMessageBody body = null;
-            if (type == "txt")
-            {
-                body = new MessageBody.TextBody(true, jsonString);
-            }
-            else if (type == "img")
-            {
-                body = new MessageBody.ImageBody(jsonString);
-            }
-            else if (type == "loc")
-            {
-                body = new MessageBody.LocationBody(jsonString);
-            }
-            else if (type == "cmd")
-            {
-                body = new MessageBody.CmdBody(jsonString);
-            }
-            else if (type == "custom")
-            {
-                body = new MessageBody.CustomBody(jsonString);
-            }
-            else if (type == "file")
-            {
-                body = new MessageBody.FileBody(jsonString);
-            }
-            else if (type == "video")
-            {
-                body = new MessageBody.VideoBody(jsonString);
-            }
-            else if (type == "voice")
-            {
-                body = new MessageBody.VoiceBody(jsonString);
-            }
-            return body;
-        }
-
-        internal int DownLoadStatusToInt(MessageBody.DownLoadStatus status)
-        {
-            int ret = 0;
-            switch (status)
-            {
-                case MessageBody.DownLoadStatus.DOWNLOADING:
-                    ret = 0;
-                    break;
-                case MessageBody.DownLoadStatus.SUCCESS:
-                    ret = 1;
-                    break;
-                case MessageBody.DownLoadStatus.FAILED:
-                    ret = 2;
-                    break;
-                case MessageBody.DownLoadStatus.PENDING:
-                    ret = 3;
-                    break;
-            }
-
-            return ret;
-        }
-
-        internal MessageBody.DownLoadStatus DownLoadStatusFromInt(int intStatus)
-        {
-            MessageBody.DownLoadStatus ret = 0;
-            switch (intStatus)
-            {
-                case 0:
-                    ret = MessageBody.DownLoadStatus.DOWNLOADING;
-                    break;
-                case 1:
-                    ret = MessageBody.DownLoadStatus.SUCCESS;
-                    break;
-                case 2:
-                    ret = MessageBody.DownLoadStatus.FAILED;
-                    break;
-                case 3:
-                    ret = MessageBody.DownLoadStatus.PENDING;
-                    break;
-            }
-
-            return ret;
-        }
     }
+ 
 
     /**
      * \~chinese
@@ -184,15 +86,6 @@ namespace AgoraChat
                 Type = MessageBodyType.TXT;
             }
 
-            internal override string TypeString()
-            {
-                return "txt";
-            }
-
-            internal TextBody(bool is_json, string jsonString) : base(jsonString)
-            {
-                Type = MessageBodyType.TXT;
-            }
 
             internal TextBody(JSONObject jsonObject) : base(jsonObject)
             {
@@ -201,23 +94,17 @@ namespace AgoraChat
 
             internal override void FromJsonObject(JSONObject jo)
             {
-                if (!jo.IsNull)
-                {
-                    Text = jo["content"];
-                    TargetLanguages = List.StringListFromJsonArray(jo["targetLanguages"]);
-                    Translations = Dictionary.StringDictionaryFromJsonObject(jo["translations"]);
-                }
+                Text = jo["content"];
+                TargetLanguages = List.StringListFromJsonArray(jo["targetLanguages"]);
+                Translations = Dictionary.StringDictionaryFromJsonObject(jo["translations"]);
             }
 
             internal override JSONObject ToJsonObject()
             {
                 JSONObject jo = new JSONObject();
-                if (Text != null)
-                {
-                    jo.Add("content", Text);
-                    jo.Add("targetLanguages", JsonObject.JsonArrayFromStringList(TargetLanguages));
-                    jo.Add("translations", JsonObject.JsonObjectFromDictionary(Translations));
-                }
+                jo.Add("content", Text);
+                jo.Add("targetLanguages", JsonObject.JsonArrayFromStringList(TargetLanguages));
+                jo.Add("translations", JsonObject.JsonObjectFromDictionary(Translations));
 
                 return jo;
             }
@@ -290,11 +177,6 @@ namespace AgoraChat
                 Type = MessageBodyType.LOCATION;
             }
 
-            internal override string TypeString()
-            {
-                return "loc";
-            }
-
             internal LocationBody(string jsonString) : base(jsonString)
             {
                 Type = MessageBodyType.LOCATION;
@@ -307,13 +189,10 @@ namespace AgoraChat
 
             internal override void FromJsonObject(JSONObject jo)
             {
-                if (!jo.IsNull)
-                {
-                    Latitude = jo["latitude"].AsDouble;
-                    Longitude = jo["longitude"].AsDouble;
-                    Address = jo["address"].Value;
-                    BuildingName = jo["buildingName"].Value;
-                }
+                Latitude = jo["latitude"].AsDouble;
+                Longitude = jo["longitude"].AsDouble;
+                Address = jo["address"].Value;
+                BuildingName = jo["buildingName"].Value;
             }
 
             internal override JSONObject ToJsonObject()
@@ -321,14 +200,8 @@ namespace AgoraChat
                 JSONObject jo = new JSONObject();
                 jo.Add("latitude", Latitude);
                 jo.Add("longitude", Longitude);
-                if (Address != null)
-                {
-                    jo.Add("address", Address);
-                }
-                if (BuildingName != null)
-                {
-                    jo.Add("buildingName", BuildingName);
-                }
+                jo.Add("address", Address);
+                jo.Add("buildingName", BuildingName);
                 return jo;
             }
         }
@@ -419,11 +292,6 @@ namespace AgoraChat
                 Type = MessageBodyType.FILE;
             }
 
-            internal override string TypeString()
-            {
-                return "file";
-            }
-
             internal FileBody()
             {
                 Type = MessageBodyType.FILE;
@@ -441,46 +309,24 @@ namespace AgoraChat
             internal override JSONObject ToJsonObject()
             {
                 JSONObject jo = new JSONObject();
-                if (LocalPath != null)
-                {
-                    jo.Add("localPath", LocalPath);
-                }
-
+                jo.Add("localPath", LocalPath);
+                jo.Add("displayName", DisplayName);
                 jo.Add("fileSize", FileSize);
-
-                if (DisplayName != null)
-                {
-                    jo.Add("displayName", DisplayName);
-                }
-
-                if (RemotePath != null)
-                {
-                    jo.Add("remotePath", RemotePath);
-                }
-                if (Secret != null)
-                {
-                    jo.Add("secret", Secret);
-                }
-
-                jo.Add("fileSize", FileSize);
-
-                jo.Add("fileStatus", DownLoadStatusToInt(DownStatus));
-
+                jo.Add("remotePath", RemotePath);
+                jo.Add("secret", Secret);
+                jo.Add("fileStatus", DownStatus.ToInt());
                 return jo;
 
             }
 
             internal override void FromJsonObject(JSONObject jo)
             {
-                if (null != jo)
-                {
-                    LocalPath = jo["localPath"].Value;
-                    FileSize = jo["fileSize"].AsInt;
-                    DisplayName = jo["displayName"].Value;
-                    RemotePath = jo["remotePath"].Value;
-                    Secret = jo["secret"].Value;
-                    DownStatus = DownLoadStatusFromInt(jo["fileStatus"].AsInt);
-                }
+                LocalPath = jo["localPath"];
+                FileSize = jo["fileSize"];
+                DisplayName = jo["displayName"];
+                RemotePath = jo["remotePath"];
+                Secret = jo["secret"];
+                DownStatus = jo["fileStatus"].AsInt.ToDownLoadStatus();
             }
         }
 
@@ -581,10 +427,6 @@ namespace AgoraChat
                 Type = MessageBodyType.IMAGE;
             }
 
-            internal override string TypeString()
-            {
-                return "img";
-            }
 
             internal ImageBody()
             {
@@ -602,47 +444,13 @@ namespace AgoraChat
 
             internal override JSONObject ToJsonObject()
             {
-                JSONObject jo = new JSONObject();
-                if (LocalPath != null)
-                {
-                    jo.Add("localPath", LocalPath);
-                }
-
-                if (DisplayName != null)
-                {
-                    jo.Add("displayName", DisplayName);
-                }
-
-                if (RemotePath != null)
-                {
-                    jo.Add("remotePath", RemotePath);
-                }
-
-                if (Secret != null)
-                {
-                    jo.Add("secret", Secret);
-                }
-
-                if (ThumbnailLocalPath != null)
-                {
-                    jo.Add("thumbnailLocalPath", ThumbnailLocalPath);
-                }
-
-                if (ThumbnaiRemotePath != null)
-                {
-                    jo.Add("thumbnailRemotePath", ThumbnaiRemotePath);
-                }
-
-                if (ThumbnaiSecret != null)
-                {
-                    jo.Add("thumbnailSecret", ThumbnaiSecret);
-                }
-
+                JSONObject jo = base.ToJsonObject();
+                jo.Add("thumbnailLocalPath", ThumbnailLocalPath);
+                jo.Add("thumbnailRemotePath", ThumbnaiRemotePath);
+                jo.Add("thumbnailSecret", ThumbnaiSecret);
                 jo.Add("height", Height);
                 jo.Add("width", Width);
                 jo.Add("sendOriginalImage", Original);
-                jo.Add("fileSize", FileSize);
-                jo.Add("fileStatus", DownLoadStatusToInt(DownStatus));
 
                 return jo;
             }
@@ -703,11 +511,6 @@ namespace AgoraChat
                 Type = MessageBodyType.VOICE;
             }
 
-            internal override string TypeString()
-            {
-                return "voice";
-            }
-
             internal VoiceBody()
             {
                 Type = MessageBodyType.VOICE;
@@ -724,29 +527,7 @@ namespace AgoraChat
 
             internal override JSONObject ToJsonObject()
             {
-                JSONObject jo = new JSONObject();
-                if (LocalPath != null)
-                {
-                    jo.Add("localPath", LocalPath);
-                }
-
-                if (DisplayName != null)
-                {
-                    jo.Add("displayName", DisplayName);
-                }
-
-                if (RemotePath != null)
-                {
-                    jo.Add("remotePath", RemotePath);
-                }
-
-                if (Secret != null)
-                {
-                    jo.Add("secret", Secret);
-                }
-
-                jo.Add("fileSize", FileSize);
-                jo.Add("fileStatus", DownLoadStatusToInt(DownStatus));
+                JSONObject jo = base.ToJsonObject();    
                 jo.Add("duration", Duration);
 
                 return jo;
@@ -755,10 +536,7 @@ namespace AgoraChat
             internal override void FromJsonObject(JSONObject jo)
             {
                 base.FromJsonObject(jo);
-                if (null != jo)
-                {
-                    Duration = jo["duration"].AsInt;
-                }
+                Duration = jo["duration"].AsInt;
             }
         }
 
@@ -849,11 +627,6 @@ namespace AgoraChat
                 Type = MessageBodyType.VIDEO;
             }
 
-            internal override string TypeString()
-            {
-                return "video";
-            }
-
             internal VideoBody()
             {
                 Type = MessageBodyType.VIDEO;
@@ -870,63 +643,26 @@ namespace AgoraChat
 
             internal override JSONObject ToJsonObject()
             {
-                JSONObject jo = new JSONObject();
-                if (LocalPath != null)
-                {
-                    jo.Add("localPath", LocalPath);
-                }
-
-                if (DisplayName != null)
-                {
-                    jo.Add("displayName", DisplayName);
-                }
-
-                if (RemotePath != null)
-                {
-                    jo.Add("remotePath", RemotePath);
-                }
-
-                if (Secret != null)
-                {
-                    jo.Add("secret", Secret);
-                }
-
-                if (ThumbnaiRemotePath != null)
-                {
-                    jo.Add("thumbnailRemotePath", ThumbnaiRemotePath);
-                }
-
-                if (ThumbnaiSecret != null)
-                {
-                    jo.Add("thumbnailSecret", ThumbnaiSecret);
-                }
-
-                if (ThumbnaiLocationPath != null)
-                {
-                    jo.Add("thumbnailLocalPath", ThumbnaiLocationPath);
-                }
-
+                JSONObject jo = base.ToJsonObject();
+                jo.Add("thumbnailRemotePath", ThumbnaiRemotePath);
+                jo.Add("thumbnailSecret", ThumbnaiSecret);
+                jo.Add("thumbnailLocalPath", ThumbnaiLocationPath);
                 jo.Add("height", Height);
                 jo.Add("width", Width);
                 jo.Add("duration", Duration);
-                jo.Add("fileSize", FileSize);
-                jo.Add("fileStatus", DownLoadStatusToInt(DownStatus));
-                //jo.Add("bodyType", "video");
+       
                 return jo;
             }
 
             internal override void FromJsonObject(JSONObject jo)
             {
                 base.FromJsonObject(jo);
-                if (null != jo)
-                {
-                    ThumbnaiRemotePath = jo["thumbnailRemotePath"].Value;
-                    ThumbnaiSecret = jo["thumbnailSecret"].Value;
-                    ThumbnaiLocationPath = jo["thumbnailLocalPath"].Value;
-                    Height = jo["height"].AsDouble;
-                    Width = jo["width"].AsDouble;
-                    Duration = jo["duration"].AsInt;
-                }
+                ThumbnaiRemotePath = jo["thumbnailRemotePath"];
+                ThumbnaiSecret = jo["thumbnailSecret"];
+                ThumbnaiLocationPath = jo["thumbnailLocalPath"];
+                Height = jo["height"].AsDouble;
+                Width = jo["width"].AsDouble;
+                Duration = jo["duration"].AsInt;
             }
         }
 
@@ -982,11 +718,6 @@ namespace AgoraChat
                 Type = MessageBodyType.CMD;
             }
 
-            internal override string TypeString()
-            {
-                return "cmd";
-            }
-
             internal CmdBody()
             {
                 Type = MessageBodyType.CMD;
@@ -1005,21 +736,15 @@ namespace AgoraChat
             {
                 JSONObject jo = new JSONObject();
                 jo.Add("deliverOnlineOnly", DeliverOnlineOnly);
-                if (Action != null)
-                {
-                    jo.Add("action", Action);
-                }
+                jo.Add("action", Action);
 
                 return jo;
             }
 
             internal override void FromJsonObject(JSONObject jo)
             {
-                if(null != jo)
-                {
-                    Action = jo["action"].Value;
-                    DeliverOnlineOnly = jo["deliverOnlineOnly"].AsBool;
-                }
+                Action = jo["action"].Value;
+                DeliverOnlineOnly = jo["deliverOnlineOnly"].AsBool;
             }
 
         }
@@ -1073,11 +798,6 @@ namespace AgoraChat
                 Type = MessageBodyType.CUSTOM;
             }
 
-            internal override string TypeString()
-            {
-                return "custom";
-            }
-
             internal CustomBody()
             {
                 Type = MessageBodyType.CUSTOM;
@@ -1095,26 +815,16 @@ namespace AgoraChat
             internal override JSONObject ToJsonObject()
             {
                 JSONObject jo = new JSONObject();
-                if (CustomEvent != null)
-                {
-                    jo.Add("event", CustomEvent);
-                }
-
-                if (CustomParams != null)
-                {
-                    jo.Add("params", JsonObject.JsonObjectFromDictionary(CustomParams));
-                }
-
+                jo.Add("event", CustomEvent);
+                jo.Add("params", JsonObject.JsonObjectFromDictionary(CustomParams));
+                
                 return jo;
             }
 
             internal override void FromJsonObject(JSONObject jo)
             {
-                if(null != jo)
-                {
-                    CustomEvent = jo["event"].Value;
-                    CustomParams = Dictionary.StringDictionaryFromJsonObject(jo["params"]);
-                }
+                CustomEvent = jo["event"].Value;
+                CustomParams = Dictionary.StringDictionaryFromJsonObject(jo["params"]);
             }
         }
     }

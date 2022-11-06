@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using AgoraChat.MessageBody;
 using AgoraChat.SimpleJSON;
 
 namespace AgoraChat
@@ -7,6 +8,43 @@ namespace AgoraChat
 
     internal static class ModelHelper
     {
+
+        internal static IMessageBody CreateBodyWithJsonObject(JSONNode jsonNode)
+        {
+            if (jsonNode.IsNull || !jsonNode.IsObject) return null;
+            IMessageBody body = null;
+            MessageBodyType type = jsonNode["type"].AsInt.ToMessageBodyType();
+            switch (type)
+            {
+                case MessageBodyType.TXT:
+                    body = CreateWithJsonObject<TextBody>(jsonNode["body"].AsObject);
+                    break;
+                case MessageBodyType.IMAGE:
+                    body = CreateWithJsonObject<ImageBody>(jsonNode["body"]);
+                    break;
+                case MessageBodyType.VIDEO:
+                    body = CreateWithJsonObject<VideoBody>(jsonNode["body"]);
+                    break;
+                case MessageBodyType.LOCATION:
+                    body = CreateWithJsonObject<LocationBody>(jsonNode["body"]);
+                    break;
+                case MessageBodyType.VOICE:
+                    body = CreateWithJsonObject<VoiceBody>(jsonNode["body"]);
+                    break;
+                case MessageBodyType.FILE:
+                    body = CreateWithJsonObject<FileBody>(jsonNode["body"]);
+                    break;
+                case MessageBodyType.CUSTOM:
+                    body = CreateWithJsonObject<CustomBody>(jsonNode["body"]);
+                    break;
+                case MessageBodyType.CMD:
+                    body = CreateWithJsonObject<CmdBody>(jsonNode["body"]);
+                    break;
+            }
+
+            return body;
+        }
+
         internal static T CreateWithJsonObject<T>(JSONNode jsonNode) where T : BaseModel
         {
             if (jsonNode == null || !jsonNode.IsObject) return null;
@@ -429,6 +467,32 @@ namespace AgoraChat
                 case MessageType.Room: return 2;
                 default:
                     return 0;
+            }
+        }
+    }
+
+    internal static class DownLoadStatusHelper {
+        public static DownLoadStatus ToDownLoadStatus(this int iType) 
+        {
+            switch (iType) {
+                case 0: return DownLoadStatus.DOWNLOADING;
+                case 1: return DownLoadStatus.SUCCESS;
+                case 2: return DownLoadStatus.FAILED;
+                case 3: return DownLoadStatus.PENDING;
+                default:
+                    return DownLoadStatus.FAILED;
+            }
+        }
+
+        public static int ToInt(this DownLoadStatus type)
+        {
+            switch (type) { 
+                case DownLoadStatus.DOWNLOADING: return 0;
+                case DownLoadStatus.SUCCESS: return 1;
+                 case DownLoadStatus.FAILED: return 2;
+                case DownLoadStatus.PENDING: return 3;
+                default:
+                    return 2;
             }
         }
     }

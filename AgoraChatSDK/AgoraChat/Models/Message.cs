@@ -711,14 +711,14 @@ namespace AgoraChat
                     HasDeliverAck = jo["hasDeliverAck"].AsBool;
                     LocalTime = long.Parse(jo["localTime"].Value);
                     ServerTime = long.Parse(jo["serverTime"].Value);
-                    ConversationId = jo["conversationId"].Value;
+                    ConversationId = jo["convId"].Value;
                     MsgId = jo["msgId"].Value;
                     Status = jo["status"].AsInt.ToMessageStatus();
                     MessageType = jo["chatType"].AsInt.ToMessageType();
                     Direction = MessageDirectionFromString(jo["direction"].Value);
-                    Attributes = AttributeValue.DictFromJson(jo["attributes"].ToString());
-                    // TODO: dujiepeng  body 构造方式？
-                    Body = IMessageBody.Constructor(jo["body"].Value, jo["bodyType"].Value);
+                    Attributes = AttributeValue.DictFromJson(jo["attr"]);
+                    // body:{type:iType, "body":{object}}
+                    Body = ModelHelper.CreateBodyWithJsonObject(jo["body"]);
                     IsNeedGroupAck = jo["isNeedGroupAck"].AsBool;
                     IsRead = jo["isRead"].AsBool;
                     MessageOnlineState = jo["messageOnlineState"].AsBool;
@@ -736,24 +736,21 @@ namespace AgoraChat
             jo.Add("hasDeliverAck", HasDeliverAck);
             jo.Add("localTime", LocalTime.ToString());
             jo.Add("serverTime", ServerTime.ToString());
-            jo.Add("conversationId", ConversationId);
+            jo.Add("convId", ConversationId);
             jo.Add("msgId", MsgId);
             jo.Add("hasRead", HasReadAck);
             jo.Add("status", Status.ToInt());
             jo.Add("chatType", MessageType.ToInt());
             jo.Add("direction", MessageDirectionToString(Direction));
-            string strAttr = JsonObject.JsonObjectFromAttributes(Attributes)?.ToString();
-            if (strAttr != null)
+            JSONNode jn = JsonObject.JsonObjectFromAttributes(Attributes);
+            if (jn != null)
             {
-                jo.Add("attributes", strAttr);
+                jo.Add("attr", jn);
             }
-            jo.Add("body", Body.ToJsonObject().ToString());
-            jo.Add("bodyType", Body.TypeString());
-
+            jo.Add("body", Body.ToJsonObject());
             jo.Add("isNeedGroupAck", IsNeedGroupAck);
             jo.Add("isRead", IsRead);
             jo.Add("messageOnlineState", MessageOnlineState);
-
             jo.Add("isThread", IsThread);
 
             return jo;
