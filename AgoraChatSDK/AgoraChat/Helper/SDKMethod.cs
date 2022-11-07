@@ -37,22 +37,6 @@ namespace AgoraChat
         public const string isLoggedInBefore = "isLoggedInBefore";
         public const string isConnected = "isConnected";
 
-        public const string onConnected = "onConnected";
-        public const string onDisconnected = "onDisconnected";
-        public const string onUserDidLoginFromOtherDevice = "onUserDidLoginFromOtherDevice";
-        public const string onUserDidRemoveFromServer = "onUserDidRemoveFromServer";
-        public const string onUserDidForbidByServer = "onUserDidForbidByServer";
-        public const string onUserDidChangePassword = "onUserDidChangePassword";
-        public const string onUserDidLoginTooManyDevice = "onUserDidLoginTooManyDevice";
-        public const string onUserKickedByOtherDevice = "onUserKickedByOtherDevice";
-        public const string onUserAuthenticationFailed = "onUserAuthenticationFailed";
-
-        public const string onMultiDeviceGroupEvent = "onMultiDeviceGroupEvent";
-        public const string onMultiDeviceContactEvent = "onMultiDeviceContactEvent";
-        public const string onMultiDeviceThreadEvent = "onMultiDeviceThreadEvent";
-        public const string onSendDataToFlutter = "onSendDataToFlutter";
-        public const string onTokenWillExpire = "onTokenWillExpire";
-        public const string onTokenDidExpire = "onTokenDidExpire";
 
         /// EMContactManager methods
         public const string addContact = "addContact";
@@ -283,7 +267,7 @@ namespace AgoraChat
 
 
 
-        // Listeners
+        // Listeners name
         public const string connetionListener = "connetionListener";
         public const string multiDeviceListener = "multiDeviceListener";
         public const string chatListener = "chatListener";
@@ -294,9 +278,6 @@ namespace AgoraChat
         public const string presenceListener = "presenceListener";
         public const string callback = "callback";
         public const string callbackProgress = "callbackProgress";
-
-
-        // Listener methods
 
         // ChatManagerDelegate
         public const string onMessagesReceived = "onMessagesReceived";
@@ -317,12 +298,26 @@ namespace AgoraChat
         public const string onUserKickOutOfChatThread = "onUserKickOutOfChatThread";
 
         // ContactManagerDelegate
-        public const string OnContactAdded = "onContactAdded";
-        public const string OnContactDeleted = "onContactDeleted";
-        public const string OnContactInvited = "onContactInvited";
-        public const string OnFriendRequestAccepted = "onFriendRequestAccepted";
-        public const string OnFriendRequestDeclined = "onFriendRequestDeclined";
+        public const string onContactAdded = "onContactAdded";
+        public const string onContactDeleted = "onContactDeleted";
+        public const string onContactInvited = "onContactInvited";
+        public const string onFriendRequestAccepted = "onFriendRequestAccepted";
+        public const string onFriendRequestDeclined = "onFriendRequestDeclined";
 
+        // MultiDeviceDelegate
+        public const string onContactMultiDevicesEvent = "onContactMultiDevicesEvent";
+        public const string onGroupMultiDevicesEvent = "onGroupMultiDevicesEvent";
+        public const string onUndisturbMultiDevicesEvent = "onUndisturbMultiDevicesEvent";
+        public const string onThreadMultiDevicesEvent = "onThreadMultiDevicesEvent";
+
+        // PresenceManagerDelegate
+        public const string onPresenceUpdated = "onPresenceUpdated";
+
+        // ConnectionDelegate
+        public const string onConnected = "onConnected";
+        public const string onDisconnected = "onDisconnected";
+        public const string onTokenExpired = "onTokenExpired";
+        public const string onTokenWillExpire = "onTokenWillExpire";
 
     }
 }

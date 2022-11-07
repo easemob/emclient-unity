@@ -27,7 +27,7 @@ namespace AgoraChat
          * @param target    The user ID of the contact.
          * @param ext       The extension information.
          */
-        void onContactMultiDevicesEvent(MultiDevicesOperation operation, string target, string ext);
+        void OnContactMultiDevicesEvent(MultiDevicesOperation operation, string target, string ext);
 
         /**
          * \~chinese
@@ -44,7 +44,7 @@ namespace AgoraChat
          * @param target        The group ID.
          * @param usernames     The target user ID(s) of the operation.
          */
-        void onGroupMultiDevicesEvent(MultiDevicesOperation operation, string target, List<string> usernames);
+        void OnGroupMultiDevicesEvent(MultiDevicesOperation operation, string target, List<string> usernames);
 
         /**
          * \~chinese
@@ -57,7 +57,7 @@ namespace AgoraChat
          * 
          * @param data     The do-not-disturb event data.
          */
-        void undisturbMultiDevicesEvent(string data);
+        void OnUndisturbMultiDevicesEvent(string data);
 
         /**
          * \~chinese
@@ -74,7 +74,7 @@ namespace AgoraChat
          * @param target        The group ID.
          * @param usernames     The target user ID(s) of the operation.
          */
-        void onThreadMultiDevicesEvent(MultiDevicesOperation operation, string target, List<string> usernames);
+        void OnThreadMultiDevicesEvent(MultiDevicesOperation operation, string target, List<string> usernames);
     }
 
 }

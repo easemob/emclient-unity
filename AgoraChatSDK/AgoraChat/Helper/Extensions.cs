@@ -244,10 +244,102 @@ namespace AgoraChat
         }
     }
 
-
-    internal static class MessageDirectionHelper 
+    internal static class MultiDevicesOperationHelper
     {
-        public static int ToInt(this MessageDirection direction) 
+        public static int ToInt(this MultiDevicesOperation operation)
+        {
+            switch (operation)
+            {
+                case MultiDevicesOperation.UNKNOWN: return -1;
+                case MultiDevicesOperation.CONTACT_REMOVE: return 2;
+                case MultiDevicesOperation.CONTACT_ACCEPT: return 3;
+                case MultiDevicesOperation.CONTACT_DECLINE: return 4;
+                case MultiDevicesOperation.CONTACT_BAN: return 5;
+                case MultiDevicesOperation.CONTACT_ALLOW: return 6;
+                case MultiDevicesOperation.GROUP_CREATE: return 10;
+                case MultiDevicesOperation.GROUP_DESTROY: return 11;
+                case MultiDevicesOperation.GROUP_JOIN: return 12;
+                case MultiDevicesOperation.GROUP_LEAVE: return 13;
+                case MultiDevicesOperation.GROUP_APPLY: return 14;
+                case MultiDevicesOperation.GROUP_APPLY_ACCEPT: return 15;
+                case MultiDevicesOperation.GROUP_APPLY_DECLINE: return 16;
+                case MultiDevicesOperation.GROUP_INVITE: return 17;
+                case MultiDevicesOperation.GROUP_INVITE_ACCEPT: return 18;
+                case MultiDevicesOperation.GROUP_INVITE_DECLINE: return 19;
+                case MultiDevicesOperation.GROUP_KICK: return 20;
+                case MultiDevicesOperation.GROUP_BAN: return 21;
+                case MultiDevicesOperation.GROUP_ALLOW: return 22;
+                case MultiDevicesOperation.GROUP_BLOCK: return 23;
+                case MultiDevicesOperation.GROUP_UNBLOCK: return 24;
+                case MultiDevicesOperation.GROUP_ASSIGN_OWNER: return 25;
+                case MultiDevicesOperation.GROUP_ADD_ADMIN: return 26;
+                case MultiDevicesOperation.GROUP_REMOVE_ADMIN: return 27;
+                case MultiDevicesOperation.GROUP_ADD_MUTE: return 28;
+                case MultiDevicesOperation.GROUP_REMOVE_MUTE: return 29;
+                case MultiDevicesOperation.GROUP_ADD_USER_WHITE_LIST: return 30;
+                case MultiDevicesOperation.GROUP_REMOVE_USER_WHITE_LIST: return 31;
+                case MultiDevicesOperation.GROUP_ALL_BAN: return 32;
+                case MultiDevicesOperation.GROUP_REMOVE_ALL_BAN: return 33;
+                case MultiDevicesOperation.THREAD_CREATE: return 40;
+                case MultiDevicesOperation.THREAD_DESTROY: return 41;
+                case MultiDevicesOperation.THREAD_JOIN: return 42;
+                case MultiDevicesOperation.THREAD_LEAVE: return 43;
+                case MultiDevicesOperation.THREAD_UPDATE: return 44;
+                case MultiDevicesOperation.THREAD_KICK: return 45;
+                default:
+                    return -1;
+            }
+        }
+
+        public static MultiDevicesOperation ToMultiDevicesOperation(this int operation)
+        {
+            switch (operation)
+            {
+                case -1: return MultiDevicesOperation.UNKNOWN;
+                case 2: return MultiDevicesOperation.CONTACT_REMOVE;
+                case 3: return MultiDevicesOperation.CONTACT_ACCEPT;
+                case 4: return MultiDevicesOperation.CONTACT_DECLINE;
+                case 5: return MultiDevicesOperation.CONTACT_BAN;
+                case 6: return MultiDevicesOperation.CONTACT_ALLOW;
+                case 10: return MultiDevicesOperation.GROUP_CREATE;
+                case 11: return MultiDevicesOperation.GROUP_DESTROY;
+                case 12: return MultiDevicesOperation.GROUP_JOIN;
+                case 13: return MultiDevicesOperation.GROUP_LEAVE;
+                case 14: return MultiDevicesOperation.GROUP_APPLY;
+                case 15: return MultiDevicesOperation.GROUP_APPLY_ACCEPT;
+                case 16: return MultiDevicesOperation.GROUP_APPLY_DECLINE;
+                case 17: return MultiDevicesOperation.GROUP_INVITE;
+                case 18: return MultiDevicesOperation.GROUP_INVITE_ACCEPT;
+                case 19: return MultiDevicesOperation.GROUP_INVITE_DECLINE;
+                case 20: return MultiDevicesOperation.GROUP_KICK;
+                case 21: return MultiDevicesOperation.GROUP_BAN;
+                case 22: return MultiDevicesOperation.GROUP_ALLOW;
+                case 23: return MultiDevicesOperation.GROUP_BLOCK;
+                case 24: return MultiDevicesOperation.GROUP_UNBLOCK;
+                case 25: return MultiDevicesOperation.GROUP_ASSIGN_OWNER;
+                case 26: return MultiDevicesOperation.GROUP_ADD_ADMIN;
+                case 27: return MultiDevicesOperation.GROUP_REMOVE_ADMIN;
+                case 28: return MultiDevicesOperation.GROUP_ADD_MUTE;
+                case 29: return MultiDevicesOperation.GROUP_REMOVE_MUTE;
+                case 30: return MultiDevicesOperation.GROUP_ADD_USER_WHITE_LIST;
+                case 31: return MultiDevicesOperation.GROUP_REMOVE_USER_WHITE_LIST;
+                case 32: return MultiDevicesOperation.GROUP_ALL_BAN;
+                case 33: return MultiDevicesOperation.GROUP_REMOVE_ALL_BAN;
+                case 40: return MultiDevicesOperation.THREAD_CREATE;
+                case 41: return MultiDevicesOperation.THREAD_DESTROY;
+                case 42: return MultiDevicesOperation.THREAD_JOIN;
+                case 43: return MultiDevicesOperation.THREAD_LEAVE;
+                case 44: return MultiDevicesOperation.THREAD_UPDATE;
+                case 45: return MultiDevicesOperation.THREAD_KICK;
+                default: return MultiDevicesOperation.UNKNOWN;
+            }
+        }
+    }
+
+
+    internal static class MessageDirectionHelper
+    {
+        public static int ToInt(this MessageDirection direction)
         {
             switch (direction)
             {
@@ -261,7 +353,7 @@ namespace AgoraChat
 
         public static MessageDirection ToMesssageDirection(this int direction)
         {
-            switch (direction) 
+            switch (direction)
             {
                 case 0: return MessageDirection.SEND;
                 case 1: return MessageDirection.RECEIVE;
@@ -496,10 +588,12 @@ namespace AgoraChat
         }
     }
 
-    internal static class DownLoadStatusHelper {
-        public static DownLoadStatus ToDownLoadStatus(this int iType) 
+    internal static class DownLoadStatusHelper
+    {
+        public static DownLoadStatus ToDownLoadStatus(this int iType)
         {
-            switch (iType) {
+            switch (iType)
+            {
                 case 0: return DownLoadStatus.DOWNLOADING;
                 case 1: return DownLoadStatus.SUCCESS;
                 case 2: return DownLoadStatus.FAILED;
@@ -511,10 +605,11 @@ namespace AgoraChat
 
         public static int ToInt(this DownLoadStatus type)
         {
-            switch (type) { 
+            switch (type)
+            {
                 case DownLoadStatus.DOWNLOADING: return 0;
                 case DownLoadStatus.SUCCESS: return 1;
-                 case DownLoadStatus.FAILED: return 2;
+                case DownLoadStatus.FAILED: return 2;
                 case DownLoadStatus.PENDING: return 3;
                 default:
                     return 2;

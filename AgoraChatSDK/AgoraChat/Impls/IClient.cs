@@ -173,70 +173,59 @@ namespace AgoraChat
         {
             if (delegater_connection.Count == 0 || null == method || method.Length == 0) return;
 
-            if (method.CompareTo("OnConnected") == 0)
+            foreach (IConnectionDelegate it in delegater_connection)
             {
-                foreach (IConnectionDelegate it in delegater_connection)
+                switch (method)
                 {
-                    it.OnConnected();
+                    case SDKMethod.onConnected:
+                        it.OnConnected();
+                        break;
+                    case SDKMethod.onDisconnected:
+
+                        break;
+                    case SDKMethod.onTokenExpired:
+                        it.OnTokenExpired();
+                        break;
+                    case SDKMethod.onTokenWillExpire:
+                        it.OnTokenWillExpire();
+                        break;
+                    default:
+                        break;
                 }
             }
-            else if (method.CompareTo("OnDisconnected") == 0)
-            {
-                foreach (IConnectionDelegate it in delegater_connection)
-                {
-                    it.OnDisconnected(int.Parse(jsonNode["value"]));
-                }
-            }
-            else if (method.CompareTo("OnTokenExpired") == 0)
-            {
-                foreach (IConnectionDelegate it in delegater_connection)
-                {
-                    it.OnTokenExpired();
-                }
-            }
-            else if (method.CompareTo("OnTokenExpired") == 0)
-            {
-                foreach (IConnectionDelegate it in delegater_connection)
-                {
-                    it.OnTokenExpired();
-                }
-            }
+
         }
 
         internal void NativeEventHandle_MultiDevice(string method, JSONNode jsonNode)
         {
             if (delegater_multidevice.Count == 0 || null == method || method.Length == 0) return;
 
-            if (method.CompareTo("OnContactMultiDevicesEvent") == 0)
+            MultiDevicesOperation operation = jsonNode["operation"].AsInt.ToMultiDevicesOperation();
+            string target = jsonNode["target"];
+            string ext = jsonNode["ext"];
+            List<string> userIds = List.StringListFromJsonArray(jsonNode["userIds"]);
+
+            foreach (IMultiDeviceDelegate it in delegater_multidevice)
             {
-                foreach (IMultiDeviceDelegate it in delegater_multidevice)
+                switch (method)
                 {
-                    string operationEvent = jsonNode["event"];
-                    MultiDevicesOperation operation = (MultiDevicesOperation)int.Parse(operationEvent);
-                    string username = jsonNode["username"];
-                    string ext = jsonNode["ext"];
-                    //it.OnContactMultiDevicesEvent(operation, username, ext);
+                    case SDKMethod.onContactMultiDevicesEvent:
+                        it.OnContactMultiDevicesEvent(operation, target, ext);
+                        break;
+                    case SDKMethod.onGroupMultiDevicesEvent:
+                        it.OnGroupMultiDevicesEvent(operation, target, userIds);
+                        break;
+                    case SDKMethod.onUndisturbMultiDevicesEvent:
+                        // TODO: dujiepeng
+                        //it.OnUndisturbMultiDevicesEvent();
+                        break;
+                    case SDKMethod.onThreadMultiDevicesEvent:
+                        it.OnThreadMultiDevicesEvent(operation, target, userIds);
+                        break;
+                    default:
+                        break;
                 }
             }
-            else if (method.CompareTo("OnGroupMultiDevicesEvent") == 0)
-            {
-                foreach (IMultiDeviceDelegate it in delegater_multidevice)
-                {
-                    string operationEvent = jsonNode["event"];
-                    MultiDevicesOperation operation = (MultiDevicesOperation)int.Parse(operationEvent);
-                    string groupId = jsonNode["groupId"];
-                    List<string> usernames = List.StringListFromJsonArray(jsonNode["usernames"]);
-                    //it.OnGroupMultiDevicesEvent(operation, groupId, usernames);
-                }
-            }
-            else if (method.CompareTo("UndisturbMultiDevicesEvent") == 0)
-            {
-                foreach (IMultiDeviceDelegate it in delegater_multidevice)
-                {
-                    //it.UndisturbMultiDevicesEvent(jsonNode["value"]);
-                }
-            }
-            //TODO: need to add OnThreadMultiDevicesEvent?
         }
 
         private void OnApplicationQuit()
