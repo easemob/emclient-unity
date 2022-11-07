@@ -59,7 +59,7 @@ namespace AgoraChat
         public void SubscribePresences(List<string> members, long expiry, ValueCallBack<List<Presence>> callback = null)
         {
             JSONObject jo_paran = new JSONObject();
-            jo_paran.Add("members", JsonObject.JsonArrayFromStringList(members));
+            jo_paran.Add("userIds", JsonObject.JsonArrayFromStringList(members));
             jo_paran.Add("expiry", expiry);
 
             Process process = (_, jsonNode) =>
@@ -86,7 +86,7 @@ namespace AgoraChat
         public void UnsubscribePresences(List<string> members, CallBack callback = null)
         {
             JSONObject jo_paran = new JSONObject();
-            jo_paran.Add("members", JsonObject.JsonArrayFromStringList(members));
+            jo_paran.Add("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall<List<Presence>>(SDKMethod.presenceUnsubscribe, jo_paran, callback);
         }
 
@@ -135,7 +135,7 @@ namespace AgoraChat
         public void FetchPresenceStatus(List<string> members, ValueCallBack<List<Presence>> callback = null)
         {
             JSONObject jo_paran = new JSONObject();
-            jo_paran.Add("members", JsonObject.JsonArrayFromStringList(members));
+            jo_paran.Add("userIds", JsonObject.JsonArrayFromStringList(members));
             Process process = (_, jsonNode) =>
             {
                 return List.BaseModelListFromJsonArray<Presence>(jsonNode);

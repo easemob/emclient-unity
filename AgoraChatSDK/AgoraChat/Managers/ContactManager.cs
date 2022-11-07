@@ -49,7 +49,7 @@ namespace AgoraChat
 
             JSONObject jo_param = new JSONObject();
             jo_param.Add("userId", userId);
-            jo_param.Add("reason", reason);
+            jo_param.Add("msg", reason);
 
             NativeCall(SDKMethod.addContact, jo_param, callback);
 
@@ -320,7 +320,7 @@ namespace AgoraChat
         {
             if (delegater.Count == 0) return;
 
-            string reason = jsonNode["reason"];
+            string reason = jsonNode["msg"];
             string userId = jsonNode["userId"];
 
             foreach (IContactManagerDelegate it in delegater)
