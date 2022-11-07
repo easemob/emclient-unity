@@ -1422,7 +1422,155 @@ namespace AgoraChat
 
         internal void NativeEventHandle(string method, JSONNode jsonNode)
         {
-            throw new System.NotImplementedException();
+            if (delegater.Count == 0) return;
+
+            string groupId = jsonNode["groupId"];
+            string groupName = jsonNode["groupName"];
+
+            foreach (IGroupManagerDelegate it in delegater)
+            {
+                switch (method)
+                {
+                    case SDKMethod.onInvitationReceivedFromGroup:
+                        {
+                            string inviter = jsonNode["inviter"];
+                            string reason = jsonNode["reason"];
+                            it.OnInvitationReceivedFromGroup(groupId, groupName, inviter, reason);
+                        }
+                        break;
+                    case SDKMethod.onRequestToJoinReceivedFromGroup:
+                        {
+                            string reason = jsonNode["reason"];
+                            string applicant = jsonNode["applicant"];
+                            it.OnRequestToJoinReceivedFromGroup(groupId, groupName, applicant, reason);
+                        }
+                        break;
+                    case SDKMethod.onRequestToJoinAcceptedFromGroup:
+                        {
+                            string accepter = jsonNode["accepter"];
+                            it.OnRequestToJoinAcceptedFromGroup(groupId, groupName, accepter);
+                        }
+                        break;
+                    case SDKMethod.onRequestToJoinDeclinedFromGroup:
+                        {
+                            string reason = jsonNode["reason"];
+                            string decliner = jsonNode["decliner"];
+                            it.OnRequestToJoinDeclinedFromGroup(groupId, groupName, decliner, reason);
+                        }
+                        break;
+                    case SDKMethod.onInvitationAcceptedFromGroup:
+                        {
+                            string reason = jsonNode["reason"];
+                            string invitee = jsonNode["invitee"];
+                            it.OnInvitationAcceptedFromGroup(groupId, invitee, reason);
+                        }
+                        break;
+                    case SDKMethod.onInvitationDeclinedFromGroup:
+                        {
+                            string reason = jsonNode["reason"];
+                            string invitee = jsonNode["invitee"];
+                            it.OnInvitationDeclinedFromGroup(groupId, invitee, reason);
+                        }
+                        break;
+                    case SDKMethod.onUserRemovedFromGroup:
+                        {
+                            it.OnUserRemovedFromGroup(groupId, groupName);
+                        }
+                        break;
+                    case SDKMethod.onDestroyedFromGroup:
+                        {
+                            it.OnDestroyedFromGroup(groupId, groupName);
+                        }
+                        break;
+                    case SDKMethod.onAutoAcceptInvitationFromGroup:
+                        {
+                            string inviter = jsonNode["inviter"];
+                            string inviteMsg = jsonNode["inviteMsg"];
+                            it.OnAutoAcceptInvitationFromGroup(groupId, inviter, inviteMsg);
+                        }
+                        break;
+                    case SDKMethod.onMuteListAddedFromGroup:
+                        {
+                            List<string> list = List.StringListFromJsonArray(jsonNode["mutes"]);
+                            int muteExpire = jsonNode["muteExpire"];
+                            it.OnMuteListAddedFromGroup(groupId, list, muteExpire);
+                        }
+                        break;
+                    case SDKMethod.onMuteListRemovedFromGroup:
+                        {
+                            List<string> list = List.StringListFromJsonArray(jsonNode["mutes"]);
+                            it.OnMuteListRemovedFromGroup(groupId, list);
+                        }
+                        break;
+                    case SDKMethod.onAdminAddedFromGroup:
+                        {
+                            string admin = jsonNode["admin"];
+                            it.OnAdminAddedFromGroup(groupId, admin);
+                        }
+                        break;
+                    case SDKMethod.onAdminRemovedFromGroup:
+                        {
+                            string admin = jsonNode["admin"];
+                            it.OnAdminRemovedFromGroup(groupId, admin);
+                        }
+                        break;
+                    case SDKMethod.onOwnerChangedFromGroup:
+                        {
+                            string newOwner = jsonNode["newOwner"];
+                            string oldOwner = jsonNode["oldOwner"];
+                            it.OnOwnerChangedFromGroup(groupId, newOwner, oldOwner);
+                        }
+                        break;
+                    case SDKMethod.onMemberJoinedFromGroup:
+                        {
+                            string member = jsonNode["member"];
+                            it.OnMemberJoinedFromGroup(groupId, member);
+                        }
+                        break;
+                    case SDKMethod.onMemberExitedFromGroup:
+                        {
+                            string member = jsonNode["member"];
+                            it.OnMemberExitedFromGroup(groupId, member);
+                        }
+                        break;
+                    case SDKMethod.onAnnouncementChangedFromGroup:
+                        {
+                            string announcement = jsonNode["announcement"];
+                            it.OnAnnouncementChangedFromGroup(groupId, announcement);
+                        }
+                        break;
+                    case SDKMethod.onSharedFileAddedFromGroup:
+                        {
+                            GroupSharedFile file = ModelHelper.CreateWithJsonObject<GroupSharedFile>(jsonNode["file"]);
+                            it.OnSharedFileAddedFromGroup(groupId, file);
+                        }
+                        break;
+                    case SDKMethod.onSharedFileDeletedFromGroup:
+                        {
+                            string fileId = jsonNode["fileId"];
+                            it.OnSharedFileDeletedFromGroup(groupId, fileId);
+                        }
+                        break;
+                    case SDKMethod.onAddWhiteListMembersFromGroup:
+                        {
+                            List<string> list = List.StringListFromJsonArray(jsonNode["whileList"]);
+                            it.OnAddWhiteListMembersFromGroup(groupId, list);
+                        }
+                        break;
+                    case SDKMethod.onRemoveWhiteListMembersFromGroup:
+                        {
+                            List<string> list = List.StringListFromJsonArray(jsonNode["whileList"]);
+                            it.OnRemoveWhiteListMembersFromGroup(groupId, list);
+                        }
+                        break;
+                    case SDKMethod.onAllMemberMuteChangedFromGroup:
+                        {
+                            bool isMuteAll = jsonNode["isMuteAll"];
+                            it.OnAllMemberMuteChangedFromGroup(groupId, isMuteAll);
+                        }
+                        break;
+                }
+            }
         }
     }
 

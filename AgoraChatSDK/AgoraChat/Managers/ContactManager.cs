@@ -318,7 +318,7 @@ namespace AgoraChat
 
         internal void NativeEventHandle(string method, JSONNode jsonNode)
         {
-            if (delegater.Count == 0 || null == method || method.Length == 0) return;
+            if (delegater.Count == 0) return;
 
             string reason = jsonNode["reason"];
             string userId = jsonNode["userId"];

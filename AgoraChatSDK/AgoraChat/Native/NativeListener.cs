@@ -35,7 +35,8 @@ namespace AgoraChat
 
         internal CallbackQueue_Worker queue_worker;
 
-        public NativeListener() {
+        public NativeListener()
+        {
 
             callbackManager = new CallbackManager();
 
@@ -44,11 +45,15 @@ namespace AgoraChat
 
             nativeListenerEvent = (string listener, string method, string jsonString) =>
             {
+                if (string.IsNullOrEmpty(method) || string.IsNullOrEmpty(listener)) return;
+
                 string json = Tools.GetUnicodeStringFromUTF8(jsonString);
                 JSONNode jsonNode = JSON.Parse(json);
 
-                queue_worker.EnQueue(() => {
-                    switch (listener) {
+                queue_worker.EnQueue(() =>
+                {
+                    switch (listener)
+                    {
                         case SDKMethod.chatListener:
                             ChatManagerEvent(method, jsonNode);
                             break;
@@ -91,14 +96,16 @@ namespace AgoraChat
         {
             queue_worker.Stop();
             nativeListenerEvent = null;
-            
+
         }
 
-        public void AddNaitveListener() {
+        public void AddNaitveListener()
+        {
             CWrapperNative.AddListener(nativeListenerEvent);
         }
 
-        public void RemoveNativeListener() {
+        public void RemoveNativeListener()
+        {
             CWrapperNative.CleanListener();
         }
     }
