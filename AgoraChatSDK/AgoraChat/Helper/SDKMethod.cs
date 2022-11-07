@@ -319,5 +319,29 @@ namespace AgoraChat
         public const string onTokenExpired = "onTokenExpired";
         public const string onTokenWillExpire = "onTokenWillExpire";
 
+        // GroupManagerDeleagate
+        public const string onInvitationReceivedFromGroup = "onInvitationReceivedFromGroup";
+        public const string onRequestToJoinReceivedFromGroup = "onRequestToJoinReceivedFromGroup";
+        public const string onRequestToJoinAcceptedFromGroup = "onRequestToJoinAcceptedFromGroup";
+        public const string onRequestToJoinDeclinedFromGroup = "onRequestToJoinDeclinedFromGroup";
+        public const string onInvitationAcceptedFromGroup = "onInvitationAcceptedFromGroup";
+        public const string onInvitationDeclinedFromGroup = "onInvitationDeclinedFromGroup";
+        public const string onUserRemovedFromGroup = "onUserRemovedFromGroup";
+        public const string onDestroyedFromGroup = "onDestroyedFromGroup";
+        public const string onAutoAcceptInvitationFromGroup = "onAutoAcceptInvitationFromGroup";
+        public const string onMuteListAddedFromGroup = "onMuteListAddedFromGroup";
+        public const string onMuteListRemovedFromGroup = "onMuteListRemovedFromGroup";
+        public const string onAdminAddedFromGroup = "onAdminAddedFromGroup";
+        public const string onAdminRemovedFromGroup = "onAdminRemovedFromGroup";
+        public const string onOwnerChangedFromGroup = "onOwnerChangedFromGroup";
+        public const string onMemberJoinedFromGroup = "onMemberJoinedFromGroup";
+        public const string onMemberExitedFromGroup = "onMemberExitedFromGroup";
+        public const string onAnnouncementChangedFromGroup = "onAnnouncementChangedFromGroup";
+        public const string onSharedFileAddedFromGroup = "onSharedFileAddedFromGroup";
+        public const string onSharedFileDeletedFromGroup = "onSharedFileDeletedFromGroup";
+        public const string onAddWhiteListMembersFromGroup = "onAddWhiteListMembersFromGroup";
+        public const string onRemoveWhiteListMembersFromGroup = "onRemoveWhiteListMembersFromGroup";
+        public const string onAllMemberMuteChangedFromGroup = "onAllMemberMuteChangedFromGroup";
+
     }
 }

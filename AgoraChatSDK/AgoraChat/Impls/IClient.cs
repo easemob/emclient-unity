@@ -171,7 +171,7 @@ namespace AgoraChat
 
         internal void NativeEventHandle_Connection(string method, JSONNode jsonNode)
         {
-            if (delegater_connection.Count == 0 || null == method || method.Length == 0) return;
+            if (delegater_connection.Count == 0) return;
 
             foreach (IConnectionDelegate it in delegater_connection)
             {
@@ -181,7 +181,7 @@ namespace AgoraChat
                         it.OnConnected();
                         break;
                     case SDKMethod.onDisconnected:
-
+                        // TODO: dujiepeng 需要定义reason?
                         break;
                     case SDKMethod.onTokenExpired:
                         it.OnTokenExpired();
@@ -198,7 +198,7 @@ namespace AgoraChat
 
         internal void NativeEventHandle_MultiDevice(string method, JSONNode jsonNode)
         {
-            if (delegater_multidevice.Count == 0 || null == method || method.Length == 0) return;
+            if (delegater_multidevice.Count == 0) return;
 
             MultiDevicesOperation operation = jsonNode["operation"].AsInt.ToMultiDevicesOperation();
             string target = jsonNode["target"];
