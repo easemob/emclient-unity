@@ -122,7 +122,7 @@ namespace AgoraChat
         // EMChatRoomManager
         internal const string joinChatRoom = "joinChatRoom";
         internal const string leaveChatRoom = "leaveChatRoom";
-        internal const string fetchinternalChatRoomsFromServer = "fetchinternalChatRoomsFromServer";
+        internal const string fetchPublicChatRoomsFromServer = "fetchPublicChatRoomsFromServer";
         internal const string fetchChatRoomInfoFromServer = "fetchChatRoomInfoFromServer";
         internal const string getChatRoom = "getChatRoom";
         internal const string getAllChatRooms = "getAllChatRooms";
@@ -161,7 +161,7 @@ namespace AgoraChat
         internal const string getJoinedGroups = "getJoinedGroups";
         internal const string getGroupsWithoutPushNotification = "getGroupsWithoutPushNotification";
         internal const string getJoinedGroupsFromServer = "getJoinedGroupsFromServer";
-        internal const string getinternalGroupsFromServer = "getinternalGroupsFromServer";
+        internal const string getPublicGroupsFromServer = "getPublicGroupsFromServer";
         internal const string createGroup = "createGroup";
         internal const string getGroupSpecificationFromServer = "getGroupSpecificationFromServer";
         internal const string getGroupMemberListFromServer = "getGroupMemberListFromServer";
@@ -196,7 +196,7 @@ namespace AgoraChat
         internal const string removeGroupSharedFile = "removeGroupSharedFile";
         internal const string updateGroupAnnouncement = "updateGroupAnnouncement";
         internal const string updateGroupExt = "updateGroupExt";
-        internal const string joininternalGroup = "joininternalGroup";
+        internal const string joinPublicGroup = "joinPublicGroup";
         internal const string requestToJoinGroup = "requestToJoinGroup";
         internal const string acceptJoinApplication = "acceptJoinApplication";
         internal const string declineJoinApplication = "declineJoinApplication";
