@@ -37,8 +37,6 @@ public class EMChatThreadManagerWrapper extends EMBaseWrapper{
             ret = fetchJoinedChatThreads(jsonObject, callback);
         } else if (EMSDKMethod.fetchChatThreadsWithParentId.equals(method)) {
             ret = fetchChatThreadsWithParentId(jsonObject, callback);
-        } else if (EMSDKMethod.fetchJoinedChatThreadsWithParentId.equals(method)) {
-            ret = fetchJoinedChatThreadsWithParentId(jsonObject, callback);
         } else if (EMSDKMethod.fetchChatThreadMember.equals(method)) {
             ret = fetchChatThreadMember(jsonObject, callback);
         } else if (EMSDKMethod.fetchLastMessageWithChatThreads.equals(method)) {
@@ -103,6 +101,16 @@ public class EMChatThreadManagerWrapper extends EMBaseWrapper{
     }
 
     private String fetchChatThreadsWithParentId(JSONObject params, EMWrapperCallback callback) throws JSONException {
+
+        boolean hasJoined = false;
+        if (params.has("joined")) {
+            hasJoined = params.getBoolean("joined");
+        }
+
+        if (hasJoined) {
+            return fetchJoinedChatThreadsWithParentId(params, callback);
+        }
+
         int pageSize = params.getInt("pageSize");
         String cursor = null;
         if (params.has("cursor")) {

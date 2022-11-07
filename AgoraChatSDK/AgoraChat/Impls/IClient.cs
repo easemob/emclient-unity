@@ -115,6 +115,8 @@ namespace AgoraChat
             NativeCall(SDKMethod.loginWithAgoraToken, jo_param, callback);
         }
 
+
+
         internal void RenewAgoraToken(string token)
         {
             JSONObject jo_param = new JSONObject();
@@ -215,7 +217,7 @@ namespace AgoraChat
                     case SDKMethod.onGroupMultiDevicesEvent:
                         it.OnGroupMultiDevicesEvent(operation, target, userIds);
                         break;
-                    case SDKMethod.onUndisturbMultiDevicesEvent:
+                    case SDKMethod.onUnDisturbMultiDevicesEvent:
                         // TODO: dujiepeng
                         //it.OnUndisturbMultiDevicesEvent();
                         break;

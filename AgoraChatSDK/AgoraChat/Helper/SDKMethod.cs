@@ -262,13 +262,13 @@ namespace AgoraChat
 
 
 
-        /// HandleAction
+        /// HandleAction ?
         public const string startCallback = "startCallback";
 
 
 
         // Listeners name
-        public const string connetionListener = "connetionListener";
+        public const string connectionListener = "connectionListener";
         public const string multiDeviceListener = "multiDeviceListener";
         public const string chatListener = "chatListener";
         public const string contactListener = "contactListener";
@@ -307,7 +307,7 @@ namespace AgoraChat
         // MultiDeviceDelegate
         public const string onContactMultiDevicesEvent = "onContactMultiDevicesEvent";
         public const string onGroupMultiDevicesEvent = "onGroupMultiDevicesEvent";
-        public const string onUndisturbMultiDevicesEvent = "onUndisturbMultiDevicesEvent";
+        public const string onUnDisturbMultiDevicesEvent = "onUnDisturbMultiDevicesEvent";
         public const string onThreadMultiDevicesEvent = "onThreadMultiDevicesEvent";
 
         // PresenceManagerDelegate
@@ -342,7 +342,9 @@ namespace AgoraChat
         public const string onAddWhiteListMembersFromGroup = "onAddWhiteListMembersFromGroup";
         public const string onRemoveWhiteListMembersFromGroup = "onRemoveWhiteListMembersFromGroup";
         public const string onAllMemberMuteChangedFromGroup = "onAllMemberMuteChangedFromGroup";
-
+        public const string onSpecificationChangedFromGroup = "onSpecificationChangedFromGroup";
+        public const string onSpecificationChanged = "onSpecificationChanged";
+        public const string onStateChangedFromGroup = "onStateChangedFromGroup";
 
         // RoomManagerDelegate
         public const string onDestroyedFromRoom = "onDestroyedFromRoom";
@@ -357,5 +359,6 @@ namespace AgoraChat
         public const string onAnnouncementChangedFromRoom = "onAnnouncementChangedFromRoom";
         public const string onChatroomAttributesChanged = "onChatroomAttributesChanged";
         public const string onChatroomAttributesRemoved = "onChatroomAttributesRemoved";
+        public const string onSpecificationChangedFromRoom = "onSpecificationChangedFromRoom";
     }
 }
