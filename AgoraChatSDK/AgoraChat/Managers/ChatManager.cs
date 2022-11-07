@@ -1072,7 +1072,17 @@ namespace AgoraChat
             }
             else if (method == SDKMethod.onCmdMessagesReceived)
             {
-                //TODO
+                if (jsonNode != null)
+                {
+                    List<Message> list = List.BaseModelListFromJsonArray<Message>(jsonNode);
+                    if (list.Count > 0)
+                    {
+                        foreach (IChatManagerDelegate it in delegater)
+                        {
+                            it.OnCmdMessagesReceived(list);
+                        }
+                    }
+                }
             }
             else if (method == SDKMethod.onMessagesRead)
             {
@@ -1087,31 +1097,82 @@ namespace AgoraChat
             }
             else if (method == SDKMethod.onMessagesDelivered)
             {
-                //TODO
+                List<Message> list = List.BaseModelListFromJsonArray<Message>(jsonNode);
+                if (list.Count > 0)
+                {
+                    foreach (IChatManagerDelegate it in delegater)
+                    {
+                        it.OnMessagesDelivered(list);
+                    }
+                }
             }
             else if (method == SDKMethod.onMessagesRecalled)
             {
-                //TODO
+                if (jsonNode != null)
+                {
+                    List<Message> list = List.BaseModelListFromJsonArray<Message>(jsonNode);
+                    if (list.Count > 0)
+                    {
+                        foreach (IChatManagerDelegate it in delegater)
+                        {
+                            it.OnMessagesRecalled(list);
+                        }
+                    }
+                }
             }
             else if (method == SDKMethod.onReadAckForGroupMessageUpdated)
             {
-                //TODO
+                foreach (IChatManagerDelegate it in delegater)
+                {
+                    it.OnReadAckForGroupMessageUpdated();
+                }
             }
             else if (method == SDKMethod.onGroupMessageRead)
             {
-                //TODO
+                if (jsonNode != null)
+                {
+                    List<GroupReadAck> list = List.BaseModelListFromJsonArray<GroupReadAck>(jsonNode);
+                    if (list.Count > 0)
+                    {
+                        foreach (IChatManagerDelegate it in delegater)
+                        {
+                            it.OnGroupMessageRead(list);
+                        }
+                    }
+                }
             }
             else if (method == SDKMethod.onConversationsUpdate)
             {
-                //TODO
+                foreach (IChatManagerDelegate it in delegater)
+                {
+                    it.OnConversationsUpdate();
+                }
             }
             else if (method == SDKMethod.onConversationRead)
             {
-                //TODO
+                if (jsonNode != null)
+                {
+                    string from = jsonNode["from"];
+                    string to = jsonNode["to"];
+                    foreach (IChatManagerDelegate it in delegater)
+                    {
+                        it.OnConversationRead(from, to);
+                    }
+                }
             }
             else if (method == SDKMethod.onMessageReactionDidChange)
             {
-                //TODO
+                if (jsonNode != null)
+                {
+                    List<MessageReactionChange> list = List.BaseModelListFromJsonArray<MessageReactionChange>(jsonNode);
+                    if (list.Count > 0)
+                    {
+                        foreach (IChatManagerDelegate it in delegater)
+                        {
+                            it.MessageReactionDidChange(list);
+                        }
+                    }
+                }
             }
         }
     }

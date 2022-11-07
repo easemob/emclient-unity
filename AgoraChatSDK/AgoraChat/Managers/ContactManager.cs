@@ -10,7 +10,7 @@ namespace AgoraChat
     * \~english
     * The contact manager class, which manages chat contacts such as adding, retrieving, and deleting contacts.
     */
-    public class ContactManager: BaseManager
+    public class ContactManager : BaseManager
     {
         internal List<IContactManagerDelegate> delegater;
 
@@ -20,8 +20,9 @@ namespace AgoraChat
             delegater = new List<IContactManagerDelegate>();
         }
 
-        ~ContactManager() {
-            
+        ~ContactManager()
+        {
+
         }
 
         /**
@@ -43,7 +44,8 @@ namespace AgoraChat
         * @param reason     	The invitation message. This parameter is optional and can be set to `null` or "".
         * @param callback	        The result callback. See {@link CallBack}.
         */
-        public void AddContact(string userId, string reason = null, CallBack callback = null) {
+        public void AddContact(string userId, string reason = null, CallBack callback = null)
+        {
 
             JSONObject jo_param = new JSONObject();
             jo_param.Add("userId", userId);
@@ -306,7 +308,7 @@ namespace AgoraChat
         public void RemoveContactManagerDelegate(IContactManagerDelegate contactManagerDelegate)
         {
             delegater.Remove(contactManagerDelegate);
-        
+
         }
 
         internal void ClearDelegates()
@@ -316,7 +318,34 @@ namespace AgoraChat
 
         internal void NativeEventHandle(string method, JSONNode jsonNode)
         {
-            
+            if (delegater.Count == 0 || null == method || method.Length == 0) return;
+
+            string reason = jsonNode["reason"];
+            string userId = jsonNode["userId"];
+
+            foreach (IContactManagerDelegate it in delegater)
+            {
+                switch (method)
+                {
+                    case SDKMethod.onContactAdded:
+                        it.OnContactAdded(userId);
+                        break;
+                    case SDKMethod.onContactDeleted:
+                        it.OnContactDeleted(userId);
+                        break;
+                    case SDKMethod.onContactInvited:
+                        it.OnContactInvited(userId, reason);
+                        break;
+                    case SDKMethod.onFriendRequestAccepted:
+                        it.OnFriendRequestAccepted(userId);
+                        break;
+                    case SDKMethod.onFriendRequestDeclined:
+                        it.OnFriendRequestDeclined(userId);
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
     }
 

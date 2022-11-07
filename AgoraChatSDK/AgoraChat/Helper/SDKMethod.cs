@@ -297,6 +297,8 @@ namespace AgoraChat
 
 
         // Listener methods
+
+        // ChatManagerDelegate
         public const string onMessagesReceived = "onMessagesReceived";
         public const string onCmdMessagesReceived = "onCmdMessagesReceived";
         public const string onMessagesRead = "onMessagesRead";
@@ -308,7 +310,19 @@ namespace AgoraChat
         public const string onConversationRead = "onConversationRead";
         public const string onMessageReactionDidChange = "messageReactionDidChange";
 
-        public const string onContactChanged = "onContactChanged";
+        // ChatThreadManagerDelegate
+        public const string onChatThreadCreate = "onChatThreadCreate";
+        public const string onChatThreadUpdate = "onChatThreadUpdate";
+        public const string onChatThreadDestroy = "onChatThreadDestroy";
+        public const string onUserKickOutOfChatThread = "onUserKickOutOfChatThread";
+
+        // ContactManagerDelegate
+        public const string OnContactAdded = "onContactAdded";
+        public const string OnContactDeleted = "onContactDeleted";
+        public const string OnContactInvited = "onContactInvited";
+        public const string OnFriendRequestAccepted = "onFriendRequestAccepted";
+        public const string OnFriendRequestDeclined = "onFriendRequestDeclined";
+
 
     }
 }
