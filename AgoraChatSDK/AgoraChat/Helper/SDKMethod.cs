@@ -316,8 +316,13 @@ namespace AgoraChat
         public const string onChatThreadDestroy = "onChatThreadDestroy";
         public const string onUserKickOutOfChatThread = "onUserKickOutOfChatThread";
 
+        // ContactManagerDelegate
+        public const string OnContactAdded = "onContactAdded";
+        public const string OnContactDeleted = "onContactDeleted";
+        public const string OnContactInvited = "onContactInvited";
+        public const string OnFriendRequestAccepted = "onFriendRequestAccepted";
+        public const string OnFriendRequestDeclined = "onFriendRequestDeclined";
 
-        public const string onContactChanged = "onContactChanged";
 
     }
 }
