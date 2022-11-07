@@ -1433,43 +1433,43 @@ namespace AgoraChat
                 {
                     case SDKMethod.onInvitationReceivedFromGroup:
                         {
-                            string inviter = jsonNode["inviter"];
+                            string userId = jsonNode["userId"];
                             string reason = jsonNode["reason"];
-                            it.OnInvitationReceivedFromGroup(groupId, groupName, inviter, reason);
+                            it.OnInvitationReceivedFromGroup(groupId, groupName, userId, reason);
                         }
                         break;
                     case SDKMethod.onRequestToJoinReceivedFromGroup:
                         {
                             string reason = jsonNode["reason"];
-                            string applicant = jsonNode["applicant"];
-                            it.OnRequestToJoinReceivedFromGroup(groupId, groupName, applicant, reason);
+                            string userId = jsonNode["userId"];
+                            it.OnRequestToJoinReceivedFromGroup(groupId, groupName, userId, reason);
                         }
                         break;
                     case SDKMethod.onRequestToJoinAcceptedFromGroup:
                         {
-                            string accepter = jsonNode["accepter"];
-                            it.OnRequestToJoinAcceptedFromGroup(groupId, groupName, accepter);
+                            string userId = jsonNode["userId"];
+                            it.OnRequestToJoinAcceptedFromGroup(groupId, groupName, userId);
                         }
                         break;
                     case SDKMethod.onRequestToJoinDeclinedFromGroup:
                         {
                             string reason = jsonNode["reason"];
-                            string decliner = jsonNode["decliner"];
-                            it.OnRequestToJoinDeclinedFromGroup(groupId, groupName, decliner, reason);
+                            string userId = jsonNode["userId"];
+                            it.OnRequestToJoinDeclinedFromGroup(groupId, groupName, userId, reason);
                         }
                         break;
                     case SDKMethod.onInvitationAcceptedFromGroup:
                         {
                             string reason = jsonNode["reason"];
-                            string invitee = jsonNode["invitee"];
-                            it.OnInvitationAcceptedFromGroup(groupId, invitee, reason);
+                            string userId = jsonNode["userId"];
+                            it.OnInvitationAcceptedFromGroup(groupId, userId, reason);
                         }
                         break;
                     case SDKMethod.onInvitationDeclinedFromGroup:
                         {
                             string reason = jsonNode["reason"];
-                            string invitee = jsonNode["invitee"];
-                            it.OnInvitationDeclinedFromGroup(groupId, invitee, reason);
+                            string userId = jsonNode["userId"];
+                            it.OnInvitationDeclinedFromGroup(groupId, userId, reason);
                         }
                         break;
                     case SDKMethod.onUserRemovedFromGroup:
@@ -1484,9 +1484,9 @@ namespace AgoraChat
                         break;
                     case SDKMethod.onAutoAcceptInvitationFromGroup:
                         {
-                            string inviter = jsonNode["inviter"];
+                            string userId = jsonNode["userId"];
                             string inviteMsg = jsonNode["inviteMsg"];
-                            it.OnAutoAcceptInvitationFromGroup(groupId, inviter, inviteMsg);
+                            it.OnAutoAcceptInvitationFromGroup(groupId, userId, inviteMsg);
                         }
                         break;
                     case SDKMethod.onMuteListAddedFromGroup:
@@ -1504,14 +1504,14 @@ namespace AgoraChat
                         break;
                     case SDKMethod.onAdminAddedFromGroup:
                         {
-                            string admin = jsonNode["admin"];
-                            it.OnAdminAddedFromGroup(groupId, admin);
+                            string userId = jsonNode["userId"];
+                            it.OnAdminAddedFromGroup(groupId, userId);
                         }
                         break;
                     case SDKMethod.onAdminRemovedFromGroup:
                         {
-                            string admin = jsonNode["admin"];
-                            it.OnAdminRemovedFromGroup(groupId, admin);
+                            string userId = jsonNode["userId"];
+                            it.OnAdminRemovedFromGroup(groupId, userId);
                         }
                         break;
                     case SDKMethod.onOwnerChangedFromGroup:
@@ -1523,14 +1523,14 @@ namespace AgoraChat
                         break;
                     case SDKMethod.onMemberJoinedFromGroup:
                         {
-                            string member = jsonNode["member"];
-                            it.OnMemberJoinedFromGroup(groupId, member);
+                            string userId = jsonNode["userId"];
+                            it.OnMemberJoinedFromGroup(groupId, userId);
                         }
                         break;
                     case SDKMethod.onMemberExitedFromGroup:
                         {
-                            string member = jsonNode["member"];
-                            it.OnMemberExitedFromGroup(groupId, member);
+                            string userId = jsonNode["userId"];
+                            it.OnMemberExitedFromGroup(groupId, userId);
                         }
                         break;
                     case SDKMethod.onAnnouncementChangedFromGroup:
