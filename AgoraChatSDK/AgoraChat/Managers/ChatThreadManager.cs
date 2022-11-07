@@ -528,7 +528,33 @@ namespace AgoraChat
 
         internal void NativeEventHandle(string method, JSONNode jsonNode)
         {
+            if (delegater.Count == 0 || null == method || method.Length == 0) return;
 
+            ChatThreadEvent threadEvent = ModelHelper.CreateWithJsonObject<ChatThreadEvent>(jsonNode);
+            if (threadEvent != null)
+            {
+                foreach (IChatThreadManagerDelegate it in delegater)
+                {
+                    switch (method)
+                    {
+                        case SDKMethod.onChatThreadCreate:
+                            it.OnChatThreadCreate(threadEvent);
+                            break;
+                        case SDKMethod.onChatThreadUpdate:
+                            it.OnChatThreadUpdate(threadEvent);
+                            break;
+                        case SDKMethod.onChatThreadDestroy:
+                            it.OnChatThreadDestroy(threadEvent);
+                            break;
+                        case SDKMethod.onUserKickOutOfChatThread:
+                            it.OnUserKickOutOfChatThread(threadEvent);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+            }
         }
     }
 }
