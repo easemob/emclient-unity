@@ -1,364 +1,364 @@
 ﻿using System;
 namespace AgoraChat
 {
-    public class SDKMethod
+    internal class SDKMethod
     {
         // client or manager
-        public const string client = "EMClient";
-        public const string chatManager = "EMChatManager";
-        public const string contactManager = "EMContactManager";
-        public const string groupManager = "EMGroupManager";
-        public const string roomManager = "EMRoomManager";
-        public const string userInfoManager = "EMUserInfoManager";
-        public const string threadManager = "EMThreadManager";
-        public const string presenceManager = "EMPresenceManager";
-        public const string pushManager = "EMPushManager";
+        internal const string client = "EMClient";
+        internal const string chatManager = "EMChatManager";
+        internal const string contactManager = "EMContactManager";
+        internal const string groupManager = "EMGroupManager";
+        internal const string roomManager = "EMRoomManager";
+        internal const string userInfoManager = "EMUserInfoManager";
+        internal const string threadManager = "EMThreadManager";
+        internal const string presenceManager = "EMPresenceManager";
+        internal const string pushManager = "EMPushManager";
 
-        public const string messageManager = "EMMessageManager";
-        public const string conversationManager = "EMConversationManager";
+        internal const string messageManager = "EMMessageManager";
+        internal const string conversationManager = "EMConversationManager";
 
         /// EMClient methods
-        public const string init = "init";
-        public const string createAccount = "createAccount";
-        public const string login = "login";
-        public const string loginWithAgoraToken = "loginWithAgoraToken";
-        public const string renewToken = "renewToken";
-        public const string logout = "logout";
-        public const string changeAppKey = "changeAppKey";
+        internal const string init = "init";
+        internal const string createAccount = "createAccount";
+        internal const string login = "login";
+        internal const string loginWithAgoraToken = "loginWithAgoraToken";
+        internal const string renewToken = "renewToken";
+        internal const string logout = "logout";
+        internal const string changeAppKey = "changeAppKey";
 
-        public const string uploadLog = "uploadLog";
-        public const string compressLogs = "compressLogs";
-        public const string kickDevice = "kickDevice";
-        public const string kickAllDevices = "kickAllDevices";
-        public const string getLoggedInDevicesFromServer = "getLoggedInDevicesFromServer";
+        internal const string uploadLog = "uploadLog";
+        internal const string compressLogs = "compressLogs";
+        internal const string kickDevice = "kickDevice";
+        internal const string kickAllDevices = "kickAllDevices";
+        internal const string getLoggedInDevicesFromServer = "getLoggedInDevicesFromServer";
 
-        public const string getToken = "getToken";
-        public const string getCurrentUser = "getCurrentUser";
-        public const string isLoggedInBefore = "isLoggedInBefore";
-        public const string isConnected = "isConnected";
+        internal const string getToken = "getToken";
+        internal const string getCurrentUser = "getCurrentUser";
+        internal const string isLoggedInBefore = "isLoggedInBefore";
+        internal const string isConnected = "isConnected";
 
 
         /// EMContactManager methods
-        public const string addContact = "addContact";
-        public const string deleteContact = "deleteContact";
-        public const string getAllContactsFromServer = "getAllContactsFromServer";
-        public const string getAllContactsFromDB = "getAllContactsFromDB";
-        public const string addUserToBlockList = "addUserToBlockList";
-        public const string removeUserFromBlockList = "removeUserFromBlockList";
-        public const string getBlockListFromServer = "getBlockListFromServer";
-        public const string getBlockListFromDB = "getBlockListFromDB";
-        public const string acceptInvitation = "acceptInvitation";
-        public const string declineInvitation = "declineInvitation";
-        public const string getSelfIdsOnOtherPlatform = "getSelfIdsOnOtherPlatform";
+        internal const string addContact = "addContact";
+        internal const string deleteContact = "deleteContact";
+        internal const string getAllContactsFromServer = "getAllContactsFromServer";
+        internal const string getAllContactsFromDB = "getAllContactsFromDB";
+        internal const string addUserToBlockList = "addUserToBlockList";
+        internal const string removeUserFromBlockList = "removeUserFromBlockList";
+        internal const string getBlockListFromServer = "getBlockListFromServer";
+        internal const string getBlockListFromDB = "getBlockListFromDB";
+        internal const string acceptInvitation = "acceptInvitation";
+        internal const string declineInvitation = "declineInvitation";
+        internal const string getSelfIdsOnOtherPlatform = "getSelfIdsOnOtherPlatform";
 
 
 
         /// EMChatManager methods
-        public const string sendMessage = "sendMessage";
-        public const string resendMessage = "resendMessage";
-        public const string ackMessageRead = "ackMessageRead";
-        public const string ackGroupMessageRead = "ackGroupMessageRead";
-        public const string ackConversationRead = "ackConversationRead";
-        public const string recallMessage = "recallMessage";
-        public const string getConversation = "getConversation";
-        public const string getThreadConversation = "getThreadConversation";
-        public const string markAllChatMsgAsRead = "markAllChatMsgAsRead";
-        public const string getUnreadMessageCount = "getUnreadMessageCount";
-        public const string updateChatMessage = "updateChatMessage";
-        public const string downloadAttachment = "downloadAttachment";
-        public const string downloadThumbnail = "downloadThumbnail";
-        public const string importMessages = "importMessages";
-        public const string loadAllConversations = "loadAllConversations";
-        public const string getConversationsFromServer = "getConversationsFromServer";
-        public const string deleteConversation = "deleteConversation";
-        public const string fetchHistoryMessages = "fetchHistoryMessages";
-        public const string searchChatMsgFromDB = "searchChatMsgFromDB";
-        public const string getMessage = "getMessage";
-        public const string asyncFetchGroupAcks = "asyncFetchGroupAcks";
-        public const string deleteRemoteConversation = "deleteRemoteConversation";
-        public const string deleteMessagesBeforeTimestamp = "deleteMessagesBeforeTimestamp";
-        public const string translateMessage = "translateMessage";
-        public const string fetchSupportedLanguages = "fetchSupportLanguages";
-        public const string addReaction = "addReaction";
-        public const string removeReaction = "removeReaction";
-        public const string fetchReactionList = "fetchReactionList";
-        public const string fetchReactionDetail = "fetchReactionDetail";
-        public const string reportMessage = "reportMessage";
+        internal const string sendMessage = "sendMessage";
+        internal const string resendMessage = "resendMessage";
+        internal const string ackMessageRead = "ackMessageRead";
+        internal const string ackGroupMessageRead = "ackGroupMessageRead";
+        internal const string ackConversationRead = "ackConversationRead";
+        internal const string recallMessage = "recallMessage";
+        internal const string getConversation = "getConversation";
+        internal const string getThreadConversation = "getThreadConversation";
+        internal const string markAllChatMsgAsRead = "markAllChatMsgAsRead";
+        internal const string getUnreadMessageCount = "getUnreadMessageCount";
+        internal const string updateChatMessage = "updateChatMessage";
+        internal const string downloadAttachment = "downloadAttachment";
+        internal const string downloadThumbnail = "downloadThumbnail";
+        internal const string importMessages = "importMessages";
+        internal const string loadAllConversations = "loadAllConversations";
+        internal const string getConversationsFromServer = "getConversationsFromServer";
+        internal const string deleteConversation = "deleteConversation";
+        internal const string fetchHistoryMessages = "fetchHistoryMessages";
+        internal const string searchChatMsgFromDB = "searchChatMsgFromDB";
+        internal const string getMessage = "getMessage";
+        internal const string asyncFetchGroupAcks = "asyncFetchGroupAcks";
+        internal const string deleteRemoteConversation = "deleteRemoteConversation";
+        internal const string deleteMessagesBeforeTimestamp = "deleteMessagesBeforeTimestamp";
+        internal const string translateMessage = "translateMessage";
+        internal const string fetchSupportedLanguages = "fetchSupportLanguages";
+        internal const string addReaction = "addReaction";
+        internal const string removeReaction = "removeReaction";
+        internal const string fetchReactionList = "fetchReactionList";
+        internal const string fetchReactionDetail = "fetchReactionDetail";
+        internal const string reportMessage = "reportMessage";
 
         /// EMMessage listener
-        public const string onMessageProgressUpdate = "onMessageProgressUpdate";
-        public const string onMessageError = "onMessageError";
-        public const string onMessageSuccess = "onMessageSuccess";
-        public const string onMessageReadAck = "onMessageReadAck";
-        public const string onMessageDeliveryAck = "onMessageDeliveryAck";
+        internal const string onMessageProgressUpdate = "onMessageProgressUpdate";
+        internal const string onMessageError = "onMessageError";
+        internal const string onMessageSuccess = "onMessageSuccess";
+        internal const string onMessageReadAck = "onMessageReadAck";
+        internal const string onMessageDeliveryAck = "onMessageDeliveryAck";
 
         /// EMConversation
-        public const string getConversationUnreadMsgCount = "getConversationUnreadMsgCount";
-        public const string markAllMessagesAsRead = "markAllMessagesAsRead";
-        public const string markMessageAsRead = "markMessageAsRead";
-        public const string syncConversationExt = "syncConversationExt";
-        public const string removeMessage = "removeMessage";
-        public const string getLatestMessage = "getLatestMessage";
-        public const string getLatestMessageFromOthers = "getLatestMessageFromOthers";
-        public const string clearAllMessages = "clearAllMessages";
-        public const string insertMessage = "insertMessage";
-        public const string appendMessage = "appendMessage";
-        public const string updateConversationMessage = "updateConversationMessage";
-        public const string loadMsgWithId = "loadMsgWithId";
-        public const string loadMsgWithStartId = "loadMsgWithStartId";
-        public const string loadMsgWithKeywords = "loadMsgWithKeywords";
-        public const string loadMsgWithMsgType = "loadMsgWithMsgType";
-        public const string loadMsgWithTime = "loadMsgWithTime";
-        public const string messageCount = "messageCount";
+        internal const string getConversationUnreadMsgCount = "getConversationUnreadMsgCount";
+        internal const string markAllMessagesAsRead = "markAllMessagesAsRead";
+        internal const string markMessageAsRead = "markMessageAsRead";
+        internal const string syncConversationExt = "syncConversationExt";
+        internal const string removeMessage = "removeMessage";
+        internal const string getLatestMessage = "getLatestMessage";
+        internal const string getLatestMessageFromOthers = "getLatestMessageFromOthers";
+        internal const string clearAllMessages = "clearAllMessages";
+        internal const string insertMessage = "insertMessage";
+        internal const string appendMessage = "appendMessage";
+        internal const string updateConversationMessage = "updateConversationMessage";
+        internal const string loadMsgWithId = "loadMsgWithId";
+        internal const string loadMsgWithStartId = "loadMsgWithStartId";
+        internal const string loadMsgWithKeywords = "loadMsgWithKeywords";
+        internal const string loadMsgWithMsgType = "loadMsgWithMsgType";
+        internal const string loadMsgWithTime = "loadMsgWithTime";
+        internal const string messageCount = "messageCount";
 
         // EMMessage method
-        public const string getReactionList = "getReactionList";
-        public const string groupAckCount = "groupAckCount";
-        public const string getChatThread = "chatThread";
-        public const string getHasDeliverAck = "getHasDeliverAck";
-        public const string getHasReadAck = "getHasReadAck";
+        internal const string getReactionList = "getReactionList";
+        internal const string groupAckCount = "groupAckCount";
+        internal const string getChatThread = "chatThread";
+        internal const string getHasDeliverAck = "getHasDeliverAck";
+        internal const string getHasReadAck = "getHasReadAck";
 
 
         // EMChatRoomManager
-        public const string joinChatRoom = "joinChatRoom";
-        public const string leaveChatRoom = "leaveChatRoom";
-        public const string fetchPublicChatRoomsFromServer = "fetchPublicChatRoomsFromServer";
-        public const string fetchChatRoomInfoFromServer = "fetchChatRoomInfoFromServer";
-        public const string getChatRoom = "getChatRoom";
-        public const string getAllChatRooms = "getAllChatRooms";
-        public const string createChatRoom = "createChatRoom";
-        public const string destroyChatRoom = "destroyChatRoom";
-        public const string changeChatRoomSubject = "changeChatRoomSubject";
-        public const string changeChatRoomDescription = "changeChatRoomDescription";
-        public const string fetchChatRoomMembers = "fetchChatRoomMembers";
-        public const string muteChatRoomMembers = "muteChatRoomMembers";
-        public const string unMuteChatRoomMembers = "unMuteChatRoomMembers";
-        public const string changeChatRoomOwner = "changeChatRoomOwner";
-        public const string addChatRoomAdmin = "addChatRoomAdmin";
-        public const string removeChatRoomAdmin = "removeChatRoomAdmin";
-        public const string fetchChatRoomMuteList = "fetchChatRoomMuteList";
-        public const string removeChatRoomMembers = "removeChatRoomMembers";
-        public const string blockChatRoomMembers = "blockChatRoomMembers";
-        public const string unBlockChatRoomMembers = "unBlockChatRoomMembers";
-        public const string fetchChatRoomBlockList = "fetchChatRoomBlockList";
-        public const string updateChatRoomAnnouncement = "updateChatRoomAnnouncement";
-        public const string fetchChatRoomAnnouncement = "fetchChatRoomAnnouncement";
+        internal const string joinChatRoom = "joinChatRoom";
+        internal const string leaveChatRoom = "leaveChatRoom";
+        internal const string fetchinternalChatRoomsFromServer = "fetchinternalChatRoomsFromServer";
+        internal const string fetchChatRoomInfoFromServer = "fetchChatRoomInfoFromServer";
+        internal const string getChatRoom = "getChatRoom";
+        internal const string getAllChatRooms = "getAllChatRooms";
+        internal const string createChatRoom = "createChatRoom";
+        internal const string destroyChatRoom = "destroyChatRoom";
+        internal const string changeChatRoomSubject = "changeChatRoomSubject";
+        internal const string changeChatRoomDescription = "changeChatRoomDescription";
+        internal const string fetchChatRoomMembers = "fetchChatRoomMembers";
+        internal const string muteChatRoomMembers = "muteChatRoomMembers";
+        internal const string unMuteChatRoomMembers = "unMuteChatRoomMembers";
+        internal const string changeChatRoomOwner = "changeChatRoomOwner";
+        internal const string addChatRoomAdmin = "addChatRoomAdmin";
+        internal const string removeChatRoomAdmin = "removeChatRoomAdmin";
+        internal const string fetchChatRoomMuteList = "fetchChatRoomMuteList";
+        internal const string removeChatRoomMembers = "removeChatRoomMembers";
+        internal const string blockChatRoomMembers = "blockChatRoomMembers";
+        internal const string unBlockChatRoomMembers = "unBlockChatRoomMembers";
+        internal const string fetchChatRoomBlockList = "fetchChatRoomBlockList";
+        internal const string updateChatRoomAnnouncement = "updateChatRoomAnnouncement";
+        internal const string fetchChatRoomAnnouncement = "fetchChatRoomAnnouncement";
 
-        public const string addMembersToChatRoomWhiteList = "addMembersToChatRoomWhiteList";
-        public const string removeMembersFromChatRoomWhiteList = "removeMembersFromChatRoomWhiteList";
-        public const string fetchChatRoomWhiteListFromServer = "fetchChatRoomWhiteListFromServer";
-        public const string isMemberInChatRoomWhiteListFromServer = "isMemberInChatRoomWhiteListFromServer";
+        internal const string addMembersToChatRoomWhiteList = "addMembersToChatRoomWhiteList";
+        internal const string removeMembersFromChatRoomWhiteList = "removeMembersFromChatRoomWhiteList";
+        internal const string fetchChatRoomWhiteListFromServer = "fetchChatRoomWhiteListFromServer";
+        internal const string isMemberInChatRoomWhiteListFromServer = "isMemberInChatRoomWhiteListFromServer";
 
-        public const string muteAllChatRoomMembers = "muteAllChatRoomMembers";
-        public const string unMuteAllChatRoomMembers = "unMuteAllChatRoomMembers";
-        public const string fetchChatRoomAttributes = "fetchChatRoomAttributes";
-        public const string setChatRoomAttributes = "setChatRoomAttributes";
-        public const string removeChatRoomAttributes = "removeChatRoomAttributes";
+        internal const string muteAllChatRoomMembers = "muteAllChatRoomMembers";
+        internal const string unMuteAllChatRoomMembers = "unMuteAllChatRoomMembers";
+        internal const string fetchChatRoomAttributes = "fetchChatRoomAttributes";
+        internal const string setChatRoomAttributes = "setChatRoomAttributes";
+        internal const string removeChatRoomAttributes = "removeChatRoomAttributes";
 
 
         /// EMGroupManager
-        public const string getGroupWithId = "getGroupWithId";
-        public const string getJoinedGroups = "getJoinedGroups";
-        public const string getGroupsWithoutPushNotification = "getGroupsWithoutPushNotification";
-        public const string getJoinedGroupsFromServer = "getJoinedGroupsFromServer";
-        public const string getPublicGroupsFromServer = "getPublicGroupsFromServer";
-        public const string createGroup = "createGroup";
-        public const string getGroupSpecificationFromServer = "getGroupSpecificationFromServer";
-        public const string getGroupMemberListFromServer = "getGroupMemberListFromServer";
-        public const string getGroupBlockListFromServer = "getGroupBlockListFromServer";
-        public const string getGroupMuteListFromServer = "getGroupMuteListFromServer";
-        public const string getGroupWhiteListFromServer = "getGroupWhiteListFromServer";
-        public const string isMemberInWhiteListFromServer = "isMemberInWhiteListFromServer";
-        public const string getGroupFileListFromServer = "getGroupFileListFromServer";
-        public const string getGroupAnnouncementFromServer = "getGroupAnnouncementFromServer";
-        public const string addMembers = "addMembers";
-        public const string inviterUser = "inviterUser";
-        public const string removeMembers = "removeMembers";
-        public const string blockMembers = "blockMembers";
-        public const string unblockMembers = "unblockMembers";
-        public const string updateGroupSubject = "updateGroupSubject";
-        public const string updateDescription = "updateDescription";
-        public const string leaveGroup = "leaveGroup";
-        public const string destroyGroup = "destroyGroup";
-        public const string blockGroup = "blockGroup";
-        public const string unblockGroup = "unblockGroup";
-        public const string updateGroupOwner = "updateGroupOwner";
-        public const string addAdmin = "addAdmin";
-        public const string removeAdmin = "removeAdmin";
-        public const string muteMembers = "muteMembers";
-        public const string unMuteMembers = "unMuteMembers";
-        public const string muteAllMembers = "muteAllMembers";
-        public const string unMuteAllMembers = "unMuteAllMembers";
-        public const string addWhiteList = "addWhiteList";
-        public const string removeWhiteList = "removeWhiteList";
-        public const string uploadGroupSharedFile = "uploadGroupSharedFile";
-        public const string downloadGroupSharedFile = "downloadGroupSharedFile";
-        public const string removeGroupSharedFile = "removeGroupSharedFile";
-        public const string updateGroupAnnouncement = "updateGroupAnnouncement";
-        public const string updateGroupExt = "updateGroupExt";
-        public const string joinPublicGroup = "joinPublicGroup";
-        public const string requestToJoinGroup = "requestToJoinGroup";
-        public const string acceptJoinApplication = "acceptJoinApplication";
-        public const string declineJoinApplication = "declineJoinApplication";
-        public const string acceptInvitationFromGroup = "acceptInvitationFromGroup";
-        public const string declineInvitationFromGroup = "declineInvitationFromGroup";
+        internal const string getGroupWithId = "getGroupWithId";
+        internal const string getJoinedGroups = "getJoinedGroups";
+        internal const string getGroupsWithoutPushNotification = "getGroupsWithoutPushNotification";
+        internal const string getJoinedGroupsFromServer = "getJoinedGroupsFromServer";
+        internal const string getinternalGroupsFromServer = "getinternalGroupsFromServer";
+        internal const string createGroup = "createGroup";
+        internal const string getGroupSpecificationFromServer = "getGroupSpecificationFromServer";
+        internal const string getGroupMemberListFromServer = "getGroupMemberListFromServer";
+        internal const string getGroupBlockListFromServer = "getGroupBlockListFromServer";
+        internal const string getGroupMuteListFromServer = "getGroupMuteListFromServer";
+        internal const string getGroupWhiteListFromServer = "getGroupWhiteListFromServer";
+        internal const string isMemberInWhiteListFromServer = "isMemberInWhiteListFromServer";
+        internal const string getGroupFileListFromServer = "getGroupFileListFromServer";
+        internal const string getGroupAnnouncementFromServer = "getGroupAnnouncementFromServer";
+        internal const string addMembers = "addMembers";
+        internal const string inviterUser = "inviterUser";
+        internal const string removeMembers = "removeMembers";
+        internal const string blockMembers = "blockMembers";
+        internal const string unblockMembers = "unblockMembers";
+        internal const string updateGroupSubject = "updateGroupSubject";
+        internal const string updateDescription = "updateDescription";
+        internal const string leaveGroup = "leaveGroup";
+        internal const string destroyGroup = "destroyGroup";
+        internal const string blockGroup = "blockGroup";
+        internal const string unblockGroup = "unblockGroup";
+        internal const string updateGroupOwner = "updateGroupOwner";
+        internal const string addAdmin = "addAdmin";
+        internal const string removeAdmin = "removeAdmin";
+        internal const string muteMembers = "muteMembers";
+        internal const string unMuteMembers = "unMuteMembers";
+        internal const string muteAllMembers = "muteAllMembers";
+        internal const string unMuteAllMembers = "unMuteAllMembers";
+        internal const string addWhiteList = "addWhiteList";
+        internal const string removeWhiteList = "removeWhiteList";
+        internal const string uploadGroupSharedFile = "uploadGroupSharedFile";
+        internal const string downloadGroupSharedFile = "downloadGroupSharedFile";
+        internal const string removeGroupSharedFile = "removeGroupSharedFile";
+        internal const string updateGroupAnnouncement = "updateGroupAnnouncement";
+        internal const string updateGroupExt = "updateGroupExt";
+        internal const string joininternalGroup = "joininternalGroup";
+        internal const string requestToJoinGroup = "requestToJoinGroup";
+        internal const string acceptJoinApplication = "acceptJoinApplication";
+        internal const string declineJoinApplication = "declineJoinApplication";
+        internal const string acceptInvitationFromGroup = "acceptInvitationFromGroup";
+        internal const string declineInvitationFromGroup = "declineInvitationFromGroup";
 
 
         /// EMPushManager
-        public const string getImPushConfig = "getImPushConfig";
-        public const string getImPushConfigFromServer = "getImPushConfigFromServer";
-        public const string enableOfflinePush = "enableOfflinePush";
-        public const string disableOfflinePush = "disableOfflinePush";
-        public const string updateImPushStyle = "updateImPushStyle";
-        public const string updatePushNickname = "updatePushNickname";
+        internal const string getImPushConfig = "getImPushConfig";
+        internal const string getImPushConfigFromServer = "getImPushConfigFromServer";
+        internal const string enableOfflinePush = "enableOfflinePush";
+        internal const string disableOfflinePush = "disableOfflinePush";
+        internal const string updateImPushStyle = "updateImPushStyle";
+        internal const string updatePushNickname = "updatePushNickname";
 
-        public const string updateGroupPushService = "updateGroupPushService";
-        public const string getNoPushGroups = "getNoPushGroups";
-        public const string updateUserPushService = "updateUserPushService";
-        public const string getNoPushUsers = "getNoPushUsers";
+        internal const string updateGroupPushService = "updateGroupPushService";
+        internal const string getNoPushGroups = "getNoPushGroups";
+        internal const string updateUserPushService = "updateUserPushService";
+        internal const string getNoPushUsers = "getNoPushUsers";
 
-        public const string updateHMSPushToken = "updateHMSPushToken";
-        public const string updateFCMPushToken = "updateFCMPushToken";
+        internal const string updateHMSPushToken = "updateHMSPushToken";
+        internal const string updateFCMPushToken = "updateFCMPushToken";
 
 
-        public const string reportPushAction = "reportPushAction";
-        public const string setConversationSilentMode = "setConversationSilentMode";
-        public const string removeConversationSilentMode = "removeConversationSilentMode";
-        public const string fetchConversationSilentMode = "fetchConversationSilentMode";
-        public const string setSilentModeForAll = "setSilentModeForAll";
-        public const string fetchSilentModeForAll = "fetchSilentModeForAll";
-        public const string fetchSilentModeForConversations = "fetchSilentModeForConversations";
-        public const string setPreferredNotificationLanguage = "setPreferredNotificationLanguage";
-        public const string fetchPreferredNotificationLanguage = "fetchPreferredNotificationLanguage";
-        public const string setPushTemplate = "setPushTemplate";
-        public const string getPushTemplate = "getPushTemplate";
+        internal const string reportPushAction = "reportPushAction";
+        internal const string setConversationSilentMode = "setConversationSilentMode";
+        internal const string removeConversationSilentMode = "removeConversationSilentMode";
+        internal const string fetchConversationSilentMode = "fetchConversationSilentMode";
+        internal const string setSilentModeForAll = "setSilentModeForAll";
+        internal const string fetchSilentModeForAll = "fetchSilentModeForAll";
+        internal const string fetchSilentModeForConversations = "fetchSilentModeForConversations";
+        internal const string setPreferredNotificationLanguage = "setPreferredNotificationLanguage";
+        internal const string fetchPreferredNotificationLanguage = "fetchPreferredNotificationLanguage";
+        internal const string setPushTemplate = "setPushTemplate";
+        internal const string getPushTemplate = "getPushTemplate";
 
         /// EMUserInfoManager 
-        public const string updateOwnUserInfo = "updateOwnUserInfo";
-        public const string updateOwnUserInfoWithType = "updateOwnUserInfoWithType";
-        public const string fetchUserInfoById = "fetchUserInfoById";
-        public const string fetchUserInfoByIdWithType = "fetchUserInfoByIdWithType";
+        internal const string updateOwnUserInfo = "updateOwnUserInfo";
+        internal const string updateOwnUserInfoWithType = "updateOwnUserInfoWithType";
+        internal const string fetchUserInfoById = "fetchUserInfoById";
+        internal const string fetchUserInfoByIdWithType = "fetchUserInfoByIdWithType";
 
         /// EMPresenceManager methods
-        public const string presenceWithDescription = "publishPresenceWithDescription";
-        public const string presenceSubscribe = "presenceSubscribe";
-        public const string presenceUnsubscribe = "presenceUnsubscribe";
-        public const string fetchSubscribedMembersWithPageNum = "fetchSubscribedMembersWithPageNum";
-        public const string fetchPresenceStatus = "fetchPresenceStatus";
+        internal const string presenceWithDescription = "publishPresenceWithDescription";
+        internal const string presenceSubscribe = "presenceSubscribe";
+        internal const string presenceUnsubscribe = "presenceUnsubscribe";
+        internal const string fetchSubscribedMembersWithPageNum = "fetchSubscribedMembersWithPageNum";
+        internal const string fetchPresenceStatus = "fetchPresenceStatus";
 
 
         /// EMChatThreadManager methods
-        public const string fetchChatThreadDetail = "fetchChatThreadDetail";
-        public const string fetchJoinedChatThreads = "fetchJoinedChatThreads";
-        public const string fetchChatThreadsWithParentId = "fetchChatThreadsWithParentId";
-        public const string fetchChatThreadMember = "fetchChatThreadMember";
-        public const string fetchLastMessageWithChatThreads = "fetchLastMessageWithChatThreads";
-        public const string removeMemberFromChatThread = "removeMemberFromChatThread";
-        public const string updateChatThreadSubject = "updateChatThreadSubject";
-        public const string createChatThread = "createChatThread";
-        public const string joinChatThread = "joinChatThread";
-        public const string leaveChatThread = "leaveChatThread";
-        public const string destroyChatThread = "destroyChatThread";
+        internal const string fetchChatThreadDetail = "fetchChatThreadDetail";
+        internal const string fetchJoinedChatThreads = "fetchJoinedChatThreads";
+        internal const string fetchChatThreadsWithParentId = "fetchChatThreadsWithParentId";
+        internal const string fetchChatThreadMember = "fetchChatThreadMember";
+        internal const string fetchLastMessageWithChatThreads = "fetchLastMessageWithChatThreads";
+        internal const string removeMemberFromChatThread = "removeMemberFromChatThread";
+        internal const string updateChatThreadSubject = "updateChatThreadSubject";
+        internal const string createChatThread = "createChatThread";
+        internal const string joinChatThread = "joinChatThread";
+        internal const string leaveChatThread = "leaveChatThread";
+        internal const string destroyChatThread = "destroyChatThread";
 
 
 
         /// HandleAction ?
-        public const string startCallback = "startCallback";
+        internal const string startCallback = "startCallback";
 
 
 
         // Listeners name
-        public const string connectionListener = "connectionListener";
-        public const string multiDeviceListener = "multiDeviceListener";
-        public const string chatListener = "chatListener";
-        public const string contactListener = "contactListener";
-        public const string groupListener = "groupListener";
-        public const string chatRoomListener = "chatRoomListener";
-        public const string chatThreadListener = "chatThreadListener";
-        public const string presenceListener = "presenceListener";
-        public const string callback = "callback";
-        public const string callbackProgress = "callbackProgress";
+        internal const string connectionListener = "connectionListener";
+        internal const string multiDeviceListener = "multiDeviceListener";
+        internal const string chatListener = "chatListener";
+        internal const string contactListener = "contactListener";
+        internal const string groupListener = "groupListener";
+        internal const string chatRoomListener = "chatRoomListener";
+        internal const string chatThreadListener = "chatThreadListener";
+        internal const string presenceListener = "presenceListener";
+        internal const string callback = "callback";
+        internal const string callbackProgress = "callbackProgress";
 
         // ChatManagerDelegate
-        public const string onMessagesReceived = "onMessagesReceived";
-        public const string onCmdMessagesReceived = "onCmdMessagesReceived";
-        public const string onMessagesRead = "onMessagesRead";
-        public const string onGroupMessageRead = "onGroupMessageRead";
-        public const string onReadAckForGroupMessageUpdated = "onReadAckForGroupMessageUpdated";
-        public const string onMessagesDelivered = "onMessagesDelivered";
-        public const string onMessagesRecalled = "onMessagesRecalled";
-        public const string onConversationsUpdate = "onConversationsUpdate";
-        public const string onConversationRead = "onConversationRead";
-        public const string onMessageReactionDidChange = "messageReactionDidChange";
+        internal const string onMessagesReceived = "onMessagesReceived";
+        internal const string onCmdMessagesReceived = "onCmdMessagesReceived";
+        internal const string onMessagesRead = "onMessagesRead";
+        internal const string onGroupMessageRead = "onGroupMessageRead";
+        internal const string onReadAckForGroupMessageUpdated = "onReadAckForGroupMessageUpdated";
+        internal const string onMessagesDelivered = "onMessagesDelivered";
+        internal const string onMessagesRecalled = "onMessagesRecalled";
+        internal const string onConversationsUpdate = "onConversationsUpdate";
+        internal const string onConversationRead = "onConversationRead";
+        internal const string onMessageReactionDidChange = "messageReactionDidChange";
 
         // ChatThreadManagerDelegate
-        public const string onChatThreadCreate = "onChatThreadCreate";
-        public const string onChatThreadUpdate = "onChatThreadUpdate";
-        public const string onChatThreadDestroy = "onChatThreadDestroy";
-        public const string onUserKickOutOfChatThread = "onUserKickOutOfChatThread";
+        internal const string onChatThreadCreate = "onChatThreadCreate";
+        internal const string onChatThreadUpdate = "onChatThreadUpdate";
+        internal const string onChatThreadDestroy = "onChatThreadDestroy";
+        internal const string onUserKickOutOfChatThread = "onUserKickOutOfChatThread";
 
         // ContactManagerDelegate
-        public const string onContactAdded = "onContactAdded";
-        public const string onContactDeleted = "onContactDeleted";
-        public const string onContactInvited = "onContactInvited";
-        public const string onFriendRequestAccepted = "onFriendRequestAccepted";
-        public const string onFriendRequestDeclined = "onFriendRequestDeclined";
+        internal const string onContactAdded = "onContactAdded";
+        internal const string onContactDeleted = "onContactDeleted";
+        internal const string onContactInvited = "onContactInvited";
+        internal const string onFriendRequestAccepted = "onFriendRequestAccepted";
+        internal const string onFriendRequestDeclined = "onFriendRequestDeclined";
 
         // MultiDeviceDelegate
-        public const string onContactMultiDevicesEvent = "onContactMultiDevicesEvent";
-        public const string onGroupMultiDevicesEvent = "onGroupMultiDevicesEvent";
-        public const string onUnDisturbMultiDevicesEvent = "onUnDisturbMultiDevicesEvent";
-        public const string onThreadMultiDevicesEvent = "onThreadMultiDevicesEvent";
+        internal const string onContactMultiDevicesEvent = "onContactMultiDevicesEvent";
+        internal const string onGroupMultiDevicesEvent = "onGroupMultiDevicesEvent";
+        internal const string onUnDisturbMultiDevicesEvent = "onUnDisturbMultiDevicesEvent";
+        internal const string onThreadMultiDevicesEvent = "onThreadMultiDevicesEvent";
 
         // PresenceManagerDelegate
-        public const string onPresenceUpdated = "onPresenceUpdated";
+        internal const string onPresenceUpdated = "onPresenceUpdated";
 
         // ConnectionDelegate
-        public const string onConnected = "onConnected";
-        public const string onDisconnected = "onDisconnected";
-        public const string onTokenExpired = "onTokenExpired";
-        public const string onTokenWillExpire = "onTokenWillExpire";
+        internal const string onConnected = "onConnected";
+        internal const string onDisconnected = "onDisconnected";
+        internal const string onTokenExpired = "onTokenExpired";
+        internal const string onTokenWillExpire = "onTokenWillExpire";
 
         // GroupManagerDeleagate
-        public const string onInvitationReceivedFromGroup = "onInvitationReceivedFromGroup";
-        public const string onRequestToJoinReceivedFromGroup = "onRequestToJoinReceivedFromGroup";
-        public const string onRequestToJoinAcceptedFromGroup = "onRequestToJoinAcceptedFromGroup";
-        public const string onRequestToJoinDeclinedFromGroup = "onRequestToJoinDeclinedFromGroup";
-        public const string onInvitationAcceptedFromGroup = "onInvitationAcceptedFromGroup";
-        public const string onInvitationDeclinedFromGroup = "onInvitationDeclinedFromGroup";
-        public const string onUserRemovedFromGroup = "onUserRemovedFromGroup";
-        public const string onDestroyedFromGroup = "onDestroyedFromGroup";
-        public const string onAutoAcceptInvitationFromGroup = "onAutoAcceptInvitationFromGroup";
-        public const string onMuteListAddedFromGroup = "onMuteListAddedFromGroup";
-        public const string onMuteListRemovedFromGroup = "onMuteListRemovedFromGroup";
-        public const string onAdminAddedFromGroup = "onAdminAddedFromGroup";
-        public const string onAdminRemovedFromGroup = "onAdminRemovedFromGroup";
-        public const string onOwnerChangedFromGroup = "onOwnerChangedFromGroup";
-        public const string onMemberJoinedFromGroup = "onMemberJoinedFromGroup";
-        public const string onMemberExitedFromGroup = "onMemberExitedFromGroup";
-        public const string onAnnouncementChangedFromGroup = "onAnnouncementChangedFromGroup";
-        public const string onSharedFileAddedFromGroup = "onSharedFileAddedFromGroup";
-        public const string onSharedFileDeletedFromGroup = "onSharedFileDeletedFromGroup";
-        public const string onAddWhiteListMembersFromGroup = "onAddWhiteListMembersFromGroup";
-        public const string onRemoveWhiteListMembersFromGroup = "onRemoveWhiteListMembersFromGroup";
-        public const string onAllMemberMuteChangedFromGroup = "onAllMemberMuteChangedFromGroup";
-        public const string onSpecificationChangedFromGroup = "onSpecificationChangedFromGroup";
-        public const string onSpecificationChanged = "onSpecificationChanged";
-        public const string onStateChangedFromGroup = "onStateChangedFromGroup";
+        internal const string onInvitationReceivedFromGroup = "onInvitationReceivedFromGroup";
+        internal const string onRequestToJoinReceivedFromGroup = "onRequestToJoinReceivedFromGroup";
+        internal const string onRequestToJoinAcceptedFromGroup = "onRequestToJoinAcceptedFromGroup";
+        internal const string onRequestToJoinDeclinedFromGroup = "onRequestToJoinDeclinedFromGroup";
+        internal const string onInvitationAcceptedFromGroup = "onInvitationAcceptedFromGroup";
+        internal const string onInvitationDeclinedFromGroup = "onInvitationDeclinedFromGroup";
+        internal const string onUserRemovedFromGroup = "onUserRemovedFromGroup";
+        internal const string onDestroyedFromGroup = "onDestroyedFromGroup";
+        internal const string onAutoAcceptInvitationFromGroup = "onAutoAcceptInvitationFromGroup";
+        internal const string onMuteListAddedFromGroup = "onMuteListAddedFromGroup";
+        internal const string onMuteListRemovedFromGroup = "onMuteListRemovedFromGroup";
+        internal const string onAdminAddedFromGroup = "onAdminAddedFromGroup";
+        internal const string onAdminRemovedFromGroup = "onAdminRemovedFromGroup";
+        internal const string onOwnerChangedFromGroup = "onOwnerChangedFromGroup";
+        internal const string onMemberJoinedFromGroup = "onMemberJoinedFromGroup";
+        internal const string onMemberExitedFromGroup = "onMemberExitedFromGroup";
+        internal const string onAnnouncementChangedFromGroup = "onAnnouncementChangedFromGroup";
+        internal const string onSharedFileAddedFromGroup = "onSharedFileAddedFromGroup";
+        internal const string onSharedFileDeletedFromGroup = "onSharedFileDeletedFromGroup";
+        internal const string onAddWhiteListMembersFromGroup = "onAddWhiteListMembersFromGroup";
+        internal const string onRemoveWhiteListMembersFromGroup = "onRemoveWhiteListMembersFromGroup";
+        internal const string onAllMemberMuteChangedFromGroup = "onAllMemberMuteChangedFromGroup";
+        internal const string onSpecificationChangedFromGroup = "onSpecificationChangedFromGroup";
+        internal const string onSpecificationChanged = "onSpecificationChanged";
+        internal const string onStateChangedFromGroup = "onStateChangedFromGroup";
 
         // RoomManagerDelegate
-        public const string onDestroyedFromRoom = "onDestroyedFromRoom";
-        public const string onMemberJoinedFromRoom = "onMemberJoinedFromRoom";
-        public const string onMemberExitedFromRoom = "onMemberExitedFromRoom";
-        public const string onRemovedFromRoom = "onRemovedFromRoom";
-        public const string onMuteListAddedFromRoom = "onMuteListAddedFromRoom";
-        public const string onMuteListRemovedFromRoom = "onMuteListRemovedFromRoom";
-        public const string onAdminAddedFromRoom = "onAdminAddedFromRoom";
-        public const string onAdminRemovedFromRoom = "onAdminRemovedFromRoom";
-        public const string onOwnerChangedFromRoom = "onOwnerChangedFromRoom";
-        public const string onAnnouncementChangedFromRoom = "onAnnouncementChangedFromRoom";
-        public const string onChatroomAttributesChanged = "onChatroomAttributesChanged";
-        public const string onChatroomAttributesRemoved = "onChatroomAttributesRemoved";
-        public const string onSpecificationChangedFromRoom = "onSpecificationChangedFromRoom";
+        internal const string onDestroyedFromRoom = "onDestroyedFromRoom";
+        internal const string onMemberJoinedFromRoom = "onMemberJoinedFromRoom";
+        internal const string onMemberExitedFromRoom = "onMemberExitedFromRoom";
+        internal const string onRemovedFromRoom = "onRemovedFromRoom";
+        internal const string onMuteListAddedFromRoom = "onMuteListAddedFromRoom";
+        internal const string onMuteListRemovedFromRoom = "onMuteListRemovedFromRoom";
+        internal const string onAdminAddedFromRoom = "onAdminAddedFromRoom";
+        internal const string onAdminRemovedFromRoom = "onAdminRemovedFromRoom";
+        internal const string onOwnerChangedFromRoom = "onOwnerChangedFromRoom";
+        internal const string onAnnouncementChangedFromRoom = "onAnnouncementChangedFromRoom";
+        internal const string onAttributesChangedFromRoom = "onAttributesChangedFromRoom";
+        internal const string onAttributesRemovedFromRoom = "onAttributesRemovedFromRoom";
+        internal const string onSpecificationChangedFromRoom = "onSpecificationChangedFromRoom";
     }
 }
