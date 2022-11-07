@@ -49,7 +49,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("roomId", roomId);
-            jo_param.Add("memberId", memberId);
+            jo_param.Add("userId", memberId);
             NativeCall(SDKMethod.addChatRoomAdmin, jo_param, callback);
         }
 
@@ -92,7 +92,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("roomId", roomId);
-            jo_param.Add("members", JsonObject.JsonArrayFromStringList(members));
+            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall(SDKMethod.blockChatRoomMembers, jo_param, callback);
         }
 
@@ -123,7 +123,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("roomId", roomId);
-            jo_param.Add("newOwner", newOwner);
+            jo_param.Add("userId", newOwner);
             NativeCall(SDKMethod.changeChatRoomOwner, jo_param, callback);
         }
 
@@ -154,7 +154,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("roomId", roomId);
-            jo_param.Add("newDescription", newDescription);
+            jo_param.Add("desc", newDescription);
             NativeCall(SDKMethod.changeChatRoomDescription, jo_param, callback);
         }
 
@@ -185,7 +185,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("roomId", roomId);
-            jo_param.Add("newName", newName);
+            jo_param.Add("name", newName);
             NativeCall(SDKMethod.changeChatRoomSubject, jo_param, callback);
         }
 
@@ -218,10 +218,10 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("name", name);
-            jo_param.Add("descriptions", descriptions);
-            jo_param.Add("welcomeMsg", welcomeMsg);
-            jo_param.Add("maxUserCount", maxUserCount);
-            jo_param.Add("members", JsonObject.JsonArrayFromStringList(members));
+            jo_param.Add("desc", descriptions);
+            jo_param.Add("msg", welcomeMsg);
+            jo_param.Add("count", maxUserCount);
+            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
 
             Process process = (_, jsonNode) =>
             {
@@ -575,7 +575,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("roomId", roomId);
-            jo_param.Add("members", JsonObject.JsonArrayFromStringList(members));
+            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall(SDKMethod.muteChatRoomMembers, jo_param, callback);
         }
 
@@ -606,7 +606,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("roomId", roomId);
-            jo_param.Add("adminId", adminId);
+            jo_param.Add("userId", adminId);
             NativeCall(SDKMethod.removeChatRoomAdmin, jo_param, callback);
         }
 
@@ -637,7 +637,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("roomId", roomId);
-            jo_param.Add("members", JsonObject.JsonArrayFromStringList(members));
+            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall(SDKMethod.removeChatRoomMembers, jo_param, callback);
         }
 
@@ -668,7 +668,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("roomId", roomId);
-            jo_param.Add("members", JsonObject.JsonArrayFromStringList(members));
+            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall(SDKMethod.unBlockChatRoomMembers, jo_param, callback);
         }
 
@@ -700,7 +700,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("roomId", roomId);
-            jo_param.Add("members", JsonObject.JsonArrayFromStringList(members));
+            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall(SDKMethod.unMuteChatRoomMembers, jo_param, callback);
         }
 
@@ -845,7 +845,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("roomId", roomId);
-            jo_param.Add("members", JsonObject.JsonArrayFromStringList(members));
+            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall<Room>(SDKMethod.addMembersToChatRoomWhiteList, jo_param, callback);
         }
 
@@ -883,7 +883,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("roomId", roomId);
-            jo_param.Add("members", JsonObject.JsonArrayFromStringList(members));
+            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall<Room>(SDKMethod.removeMembersFromChatRoomWhiteList, jo_param, callback);
         }
 
@@ -974,7 +974,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("roomId", roomId);
-            jo_param.Add("keys", JsonObject.JsonArrayFromStringList(keys));
+            jo_param.Add("list", JsonObject.JsonArrayFromStringList(keys));
 
             Process process = (_, jsonNode) =>
             {
@@ -1015,7 +1015,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("roomId", roomId);
-            jo_param.Add("keys", JsonObject.JsonArrayFromStringList(keys));
+            jo_param.Add("list", JsonObject.JsonArrayFromStringList(keys));
             // TODO: add back result?
             //NativeCall<Room>(SDKMethod.setChatRoomAttributes, jo_param, callback);
 
@@ -1069,7 +1069,7 @@ namespace AgoraChat
             if (delegater.Count == 0) return;
 
             string roomId = jsonNode["roomId"];
-            string roomName = jsonNode["roomName"];
+            string roomName = jsonNode["name"];
 
             foreach (IRoomManagerDelegate it in delegater)
             {
@@ -1100,14 +1100,14 @@ namespace AgoraChat
                         break;
                     case SDKMethod.onMuteListAddedFromRoom:
                         {
-                            List<string> list = List.StringListFromJsonArray(jsonNode["mutes"]);
+                            List<string> list = List.StringListFromJsonArray(jsonNode["userId"]);
                             int muteExpire = jsonNode["muteExpire"];
                             it.OnMuteListAddedFromRoom(roomId, list, muteExpire);
                         }
                         break;
                     case SDKMethod.onMuteListRemovedFromRoom:
                         {
-                            List<string> list = List.StringListFromJsonArray(jsonNode["mutes"]);
+                            List<string> list = List.StringListFromJsonArray(jsonNode["userId"]);
                             it.OnMuteListRemovedFromRoom(roomId, list);
                         }
                         break;

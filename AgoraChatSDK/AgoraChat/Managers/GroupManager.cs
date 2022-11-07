@@ -44,7 +44,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("groupId", groupId);
-            jo_param.Add("reason", reason);
+            jo_param.Add("msg", reason);
             NativeCall(SDKMethod.requestToJoinGroup, jo_param, callback);
         }
 
@@ -129,7 +129,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("groupId", groupId);
-            jo_param.Add("memberId", memberId);
+            jo_param.Add("userId", memberId);
             NativeCall(SDKMethod.addAdmin, jo_param, callback);
         }
 
@@ -159,7 +159,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("groupId", groupId);
-            jo_param.Add("newmembers", JsonObject.JsonArrayFromStringList(newmembers));
+            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(newmembers));
             NativeCall(SDKMethod.addMembers, jo_param, callback);
         }
 
@@ -189,7 +189,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("groupId", groupId);
-            jo_param.Add("members", JsonObject.JsonArrayFromStringList(members));
+            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall(SDKMethod.addWhiteList, jo_param, callback);
         }
 
@@ -252,7 +252,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("groupId", groupId);
-            jo_param.Add("members", JsonObject.JsonArrayFromStringList(members));
+            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall(SDKMethod.blockMembers, jo_param, callback);
         }
 
@@ -345,7 +345,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("groupId", groupId);
-            jo_param.Add("newOwner", newOwner);
+            jo_param.Add("userId", newOwner);
             NativeCall(SDKMethod.updateGroupOwner, jo_param, callback);
         }
 
@@ -425,11 +425,11 @@ namespace AgoraChat
         public void CreateGroup(string groupName, GroupOptions options, string desc = null, List<string> inviteMembers = null, string inviteReason = null, ValueCallBack<Group> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupName", groupName);
+            jo_param.Add("name", groupName);
             jo_param.Add("options", options?.ToJsonObject());
             jo_param.Add("desc", desc);
-            jo_param.Add("inviteMembers", JsonObject.JsonArrayFromStringList(inviteMembers));
-            jo_param.Add("inviteReason", inviteReason);
+            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(inviteMembers));
+            jo_param.Add("msg", inviteReason);
 
             Process process = (_, jsonNode) =>
             {
@@ -463,7 +463,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("groupId", groupId);
-            jo_param.Add("reason", reason);
+            jo_param.Add("msg", reason);
             NativeCall(SDKMethod.declineInvitationFromGroup, jo_param, callback);
         }
 
@@ -497,7 +497,7 @@ namespace AgoraChat
             JSONObject jo_param = new JSONObject();
             jo_param.Add("groupId", groupId);
             jo_param.Add("userId", userId);
-            jo_param.Add("reason", reason);
+            jo_param.Add("msg", reason);
             NativeCall(SDKMethod.declineJoinApplication, jo_param, callback);
         }
 
@@ -1048,7 +1048,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("groupId", groupId);
-            jo_param.Add("members", JsonObject.JsonArrayFromStringList(members));
+            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall(SDKMethod.muteMembers, jo_param, callback);
         }
 
@@ -1078,7 +1078,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("groupId", groupId);
-            jo_param.Add("memberId", memberId);
+            jo_param.Add("userId", memberId);
             NativeCall(SDKMethod.removeAdmin, jo_param, callback);
         }
 
@@ -1140,7 +1140,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("groupId", groupId);
-            jo_param.Add("members", JsonObject.JsonArrayFromStringList(members));
+            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall(SDKMethod.removeMembers, jo_param, callback);
         }
 
@@ -1171,7 +1171,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("groupId", groupId);
-            jo_param.Add("members", JsonObject.JsonArrayFromStringList(members));
+            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall(SDKMethod.removeWhiteList, jo_param, callback);
         }
 
@@ -1226,7 +1226,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("groupId", groupId);
-            jo_param.Add("members", JsonObject.JsonArrayFromStringList(members));
+            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall(SDKMethod.unblockMembers, jo_param, callback);
         }
 
@@ -1425,7 +1425,7 @@ namespace AgoraChat
             if (delegater.Count == 0) return;
 
             string groupId = jsonNode["groupId"];
-            string groupName = jsonNode["groupName"];
+            string groupName = jsonNode["name"];
 
             foreach (IGroupManagerDelegate it in delegater)
             {
@@ -1434,13 +1434,13 @@ namespace AgoraChat
                     case SDKMethod.onInvitationReceivedFromGroup:
                         {
                             string userId = jsonNode["userId"];
-                            string reason = jsonNode["reason"];
+                            string reason = jsonNode["msg"];
                             it.OnInvitationReceivedFromGroup(groupId, groupName, userId, reason);
                         }
                         break;
                     case SDKMethod.onRequestToJoinReceivedFromGroup:
                         {
-                            string reason = jsonNode["reason"];
+                            string reason = jsonNode["msg"];
                             string userId = jsonNode["userId"];
                             it.OnRequestToJoinReceivedFromGroup(groupId, groupName, userId, reason);
                         }
@@ -1453,21 +1453,21 @@ namespace AgoraChat
                         break;
                     case SDKMethod.onRequestToJoinDeclinedFromGroup:
                         {
-                            string reason = jsonNode["reason"];
+                            string reason = jsonNode["msg"];
                             string userId = jsonNode["userId"];
                             it.OnRequestToJoinDeclinedFromGroup(groupId, groupName, userId, reason);
                         }
                         break;
                     case SDKMethod.onInvitationAcceptedFromGroup:
                         {
-                            string reason = jsonNode["reason"];
+                            string reason = jsonNode["msg"];
                             string userId = jsonNode["userId"];
                             it.OnInvitationAcceptedFromGroup(groupId, userId, reason);
                         }
                         break;
                     case SDKMethod.onInvitationDeclinedFromGroup:
                         {
-                            string reason = jsonNode["reason"];
+                            string reason = jsonNode["msg"];
                             string userId = jsonNode["userId"];
                             it.OnInvitationDeclinedFromGroup(groupId, userId, reason);
                         }
@@ -1485,7 +1485,7 @@ namespace AgoraChat
                     case SDKMethod.onAutoAcceptInvitationFromGroup:
                         {
                             string userId = jsonNode["userId"];
-                            string inviteMsg = jsonNode["inviteMsg"];
+                            string inviteMsg = jsonNode["msg"];
                             it.OnAutoAcceptInvitationFromGroup(groupId, userId, inviteMsg);
                         }
                         break;
@@ -1553,13 +1553,13 @@ namespace AgoraChat
                         break;
                     case SDKMethod.onAddWhiteListMembersFromGroup:
                         {
-                            List<string> list = List.StringListFromJsonArray(jsonNode["whileList"]);
+                            List<string> list = List.StringListFromJsonArray(jsonNode["userIds"]);
                             it.OnAddWhiteListMembersFromGroup(groupId, list);
                         }
                         break;
                     case SDKMethod.onRemoveWhiteListMembersFromGroup:
                         {
-                            List<string> list = List.StringListFromJsonArray(jsonNode["whileList"]);
+                            List<string> list = List.StringListFromJsonArray(jsonNode["userIds"]);
                             it.OnRemoveWhiteListMembersFromGroup(groupId, list);
                         }
                         break;
