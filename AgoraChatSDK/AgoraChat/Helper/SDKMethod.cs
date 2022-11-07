@@ -343,5 +343,19 @@ namespace AgoraChat
         public const string onRemoveWhiteListMembersFromGroup = "onRemoveWhiteListMembersFromGroup";
         public const string onAllMemberMuteChangedFromGroup = "onAllMemberMuteChangedFromGroup";
 
+
+        // RoomManagerDelegate
+        public const string onDestroyedFromRoom = "onDestroyedFromRoom";
+        public const string onMemberJoinedFromRoom = "onMemberJoinedFromRoom";
+        public const string onMemberExitedFromRoom = "onMemberExitedFromRoom";
+        public const string onRemovedFromRoom = "onRemovedFromRoom";
+        public const string onMuteListAddedFromRoom = "onMuteListAddedFromRoom";
+        public const string onMuteListRemovedFromRoom = "onMuteListRemovedFromRoom";
+        public const string onAdminAddedFromRoom = "onAdminAddedFromRoom";
+        public const string onAdminRemovedFromRoom = "onAdminRemovedFromRoom";
+        public const string onOwnerChangedFromRoom = "onOwnerChangedFromRoom";
+        public const string onAnnouncementChangedFromRoom = "onAnnouncementChangedFromRoom";
+        public const string onChatroomAttributesChanged = "onChatroomAttributesChanged";
+        public const string onChatroomAttributesRemoved = "onChatroomAttributesRemoved";
     }
 }

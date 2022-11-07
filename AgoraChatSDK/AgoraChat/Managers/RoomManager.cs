@@ -1066,7 +1066,92 @@ namespace AgoraChat
 
         internal void NativeEventcallback(string method, JSONNode jsonNode)
         {
+            if (delegater.Count == 0) return;
 
+            string roomId = jsonNode["roomId"];
+            string roomName = jsonNode["roomName"];
+
+            foreach (IRoomManagerDelegate it in delegater)
+            {
+                switch (method)
+                {
+                    case SDKMethod.onDestroyedFromRoom:
+                        {
+                            it.OnDestroyedFromRoom(roomId, roomName);
+                        }
+                        break;
+                    case SDKMethod.onMemberJoinedFromRoom:
+                        {
+                            string userId = jsonNode["userId"];
+                            it.OnMemberJoinedFromRoom(roomId, userId);
+                        }
+                        break;
+                    case SDKMethod.onMemberExitedFromRoom:
+                        {
+                            string userId = jsonNode["userId"];
+                            it.OnMemberExitedFromRoom(roomId, roomName, userId);
+                        }
+                        break;
+                    case SDKMethod.onRemovedFromRoom:
+                        {
+                            string userId = jsonNode["userId"];
+                            it.OnRemovedFromRoom(roomId, roomName, userId);
+                        }
+                        break;
+                    case SDKMethod.onMuteListAddedFromRoom:
+                        {
+                            List<string> list = List.StringListFromJsonArray(jsonNode["mutes"]);
+                            int muteExpire = jsonNode["muteExpire"];
+                            it.OnMuteListAddedFromRoom(roomId, list, muteExpire);
+                        }
+                        break;
+                    case SDKMethod.onMuteListRemovedFromRoom:
+                        {
+                            List<string> list = List.StringListFromJsonArray(jsonNode["mutes"]);
+                            it.OnMuteListRemovedFromRoom(roomId, list);
+                        }
+                        break;
+                    case SDKMethod.onAdminAddedFromRoom:
+                        {
+                            string userId = jsonNode["userId"];
+                            it.OnAdminAddedFromRoom(roomId, userId);
+                        }
+                        break;
+                    case SDKMethod.onAdminRemovedFromRoom:
+                        {
+                            string userId = jsonNode["userId"];
+                            it.OnAdminRemovedFromRoom(roomId, userId);
+                        }
+                        break;
+                    case SDKMethod.onOwnerChangedFromRoom:
+                        {
+                            string newOwner = jsonNode["newOwner"];
+                            string oldOwner = jsonNode["oldOwner"];
+                            it.OnOwnerChangedFromRoom(roomId, newOwner, oldOwner);
+                        }
+                        break;
+                    case SDKMethod.onAnnouncementChangedFromRoom:
+                        {
+                            string announcement = jsonNode["announcement"];
+                            it.OnAnnouncementChangedFromRoom(roomId, announcement);
+                        }
+                        break;
+                    case SDKMethod.onChatroomAttributesChanged:
+                        {
+                            Dictionary<string, string> kv = Dictionary.StringDictionaryFromJsonObject(jsonNode["kv"]);
+                            string from = jsonNode["from"];
+                            it.OnChatroomAttributesChanged(roomId, kv, from);
+                        }
+                        break;
+                    case SDKMethod.onChatroomAttributesRemoved:
+                        {
+                            List<string> list = List.StringListFromJsonArray(jsonNode["list"]);
+                            string from = jsonNode["from"];
+                            it.OnChatroomAttributesRemoved(roomId, list, from);
+                        }
+                        break;
+                }
+            }
         }
     }
 
