@@ -553,7 +553,6 @@ namespace AgoraChat
                             break;
                     }
                 }
-
             }
         }
     }

@@ -186,7 +186,23 @@ namespace AgoraChat
 
         internal void NativeEventcallback(string method, JSONNode jsonNode)
         {
+            if (delegater.Count == 0 || null == method || method.Length == 0) return;
 
+            List<Presence> list = List.BaseModelListFromJsonArray<Presence>(jsonNode);
+            if (list != null)
+            {
+                foreach (IPresenceManagerDelegate it in delegater)
+                {
+                    switch (method)
+                    {
+                        case SDKMethod.onPresenceUpdated:
+                            it.OnPresenceUpdated(list);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
         }
     }
 }
