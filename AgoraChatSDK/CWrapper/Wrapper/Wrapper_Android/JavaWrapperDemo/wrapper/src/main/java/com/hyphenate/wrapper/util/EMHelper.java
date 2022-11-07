@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public class EMHelper {
+
     public static JSONArray stringListToJsonArray(List<String> list){
         if (list == null) {
             return null;
@@ -74,7 +75,7 @@ public class EMHelper {
     public static JSONObject getReturnJsonObject(Object jsonObject) throws JSONException{
         JSONObject jo = new JSONObject();
         if (jsonObject != null) {
-            jo.put("value", jsonObject);
+            jo.put("ret", jsonObject);
         }
         return jo;
     }

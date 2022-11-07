@@ -1101,7 +1101,7 @@ namespace AgoraChat
                     case SDKMethod.onMuteListAddedFromRoom:
                         {
                             List<string> list = List.StringListFromJsonArray(jsonNode["userId"]);
-                            int muteExpire = jsonNode["muteExpire"];
+                            int muteExpire = jsonNode["expireTime"];
                             it.OnMuteListAddedFromRoom(roomId, list, muteExpire);
                         }
                         break;

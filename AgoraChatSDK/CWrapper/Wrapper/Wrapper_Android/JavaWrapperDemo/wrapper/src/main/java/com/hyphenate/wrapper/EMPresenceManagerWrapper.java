@@ -48,8 +48,8 @@ public class EMPresenceManagerWrapper extends EMBaseWrapper{
 
     private String subscribe(JSONObject params, EMWrapperCallback callback) throws JSONException {
         List<String> members = new ArrayList<>();
-        if (params.has("members")){
-            JSONArray array = params.getJSONArray("members");
+        if (params.has("userIds")){
+            JSONArray array = params.getJSONArray("userIds");
             for (int i = 0; i < array.length(); i++) {
                 members.add(array.getString(i));
             }
@@ -130,7 +130,7 @@ public class EMPresenceManagerWrapper extends EMBaseWrapper{
                 for (EMPresence presence: presences) {
                     jsonArray.put(EMPresenceHelper.toJson(presence));
                 }
-                post(() -> EMWrapperHelper.listener.onReceive("EMPresenceListener", EMSDKMethod.onPresenceStatusChanged, jsonArray.toString()));
+                post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.presenceListener, EMSDKMethod.onPresenceUpdated, jsonArray.toString()));
             }catch (JSONException e) {
                 e.printStackTrace();
             }

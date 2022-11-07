@@ -50,6 +50,7 @@ public class EMBaseWrapper {
         });
     }
 
+
     public void onErrorCode(int code, String desc, EMWrapperCallback callback) {
         HyphenateException e = new HyphenateException(code, desc);
         onError(e, callback);
