@@ -62,6 +62,17 @@ namespace sdk_wrapper {
         }
     }
 
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_RemoveListener()
+    {
+        if (!CheckClientInitOrNot(nullptr)) return;
+
+        CLIENT->getGroupManager().clearListeners();
+        if (nullptr != gGroupManagerListener) {
+            delete gGroupManagerListener;
+            gGroupManagerListener = nullptr;
+        }
+    }
+
     SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_ApplyJoinPublicGroup(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         if (!CheckClientInitOrNot(cbid)) return;
@@ -182,7 +193,7 @@ namespace sdk_wrapper {
         thread t([=]() {
 
             EMError error;
-            CLIENT->getGroupManager().addGroupMembers(group_id, memberList, "", error); //TODO: lack of welcome message param. in signature
+            CLIENT->getGroupManager().addGroupMembers(group_id, memberList, "", error); //lack of welcome message param. in signature
 
             if (EMError::EM_NO_ERROR == error.mErrorCode) {
 
@@ -555,9 +566,8 @@ namespace sdk_wrapper {
 
             if (EMError::EM_NO_ERROR == error.mErrorCode) {
 
-                //TODO: need to check key!!
                 JSON_STARTOBJ
-                writer.Key("value");
+                writer.Key("ret");
                 writer.String(ret.c_str());
                 JSON_ENDOBJ
                 string json = s.GetString();

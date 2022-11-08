@@ -173,8 +173,8 @@ namespace sdk_wrapper {
         string start_id = GetJsonValue_String(d, "startId", "");
         int count = GetJsonValue_Int(d, "count", 20);
 
-        string direction_str = GetJsonValue_String(d, "direction", "up");
-        EMConversation::EMMessageSearchDirection direction = (direction_str == "up") ? EMConversation::EMMessageSearchDirection::UP : EMConversation::EMMessageSearchDirection::DOWN;
+        int int_direction = GetJsonValue_Int(d, "direction", 0);
+        EMConversation::EMMessageSearchDirection direction = Conversation::EMMessageSearchDirectionFromInt(int_direction);
 
         thread t([=]() {
             EMError error;
@@ -208,8 +208,8 @@ namespace sdk_wrapper {
         string timestamp = GetJsonValue_String(d, "timestamp", "0");
         int64_t ts = atol(timestamp.c_str());
 
-        string direction_str = GetJsonValue_String(d, "direction", "up");
-        EMConversation::EMMessageSearchDirection direction = (direction_str == "up") ? EMConversation::EMMessageSearchDirection::UP : EMConversation::EMMessageSearchDirection::DOWN;
+        int int_direction = GetJsonValue_Int(d, "direction", 0);
+        EMConversation::EMMessageSearchDirection direction = Conversation::EMMessageSearchDirectionFromInt(int_direction);
 
         thread t([=]() {
             EMError error;
@@ -235,8 +235,8 @@ namespace sdk_wrapper {
         int int_type = GetJsonValue_Int(d, "convType", 0);
         EMConversation::EMConversationType type = Conversation::ConversationTypeFromInt(int_type);
 
-        string type_str = GetJsonValue_String(d, "type", "txt");
-        EMMessageBody::EMMessageBodyType body_type = Message::BodyTypeFromString(type_str);
+        int int_btype = GetJsonValue_Int(d, "bodyType", 0);
+        EMMessageBody::EMMessageBodyType body_type = Message::BodyTypeFromInt(int_btype);
 
         string sender = GetJsonValue_String(d, "sender", "");
 
@@ -245,8 +245,8 @@ namespace sdk_wrapper {
         string timestamp = GetJsonValue_String(d, "timestamp", "0");
         int64_t ts = atol(timestamp.c_str());
 
-        string direction_str = GetJsonValue_String(d, "direction", "up");
-        EMConversation::EMMessageSearchDirection direction = (direction_str == "up") ? EMConversation::EMMessageSearchDirection::UP : EMConversation::EMMessageSearchDirection::DOWN;
+        int int_direction = GetJsonValue_Int(d, "direction", 0);
+        EMConversation::EMMessageSearchDirection direction = Conversation::EMMessageSearchDirectionFromInt(int_direction);
 
         thread t([=]() {
             EMError error;
@@ -355,8 +355,8 @@ namespace sdk_wrapper {
         int count = conversationPtr->unreadMessagesCount();
 
         JSON_STARTOBJ
-        writer.Key("count");
-        writer.String(to_string(count).c_str());
+        writer.Key("ret");
+        writer.Int(count);
         JSON_ENDOBJ
 
         string json = s.GetString();
@@ -378,8 +378,8 @@ namespace sdk_wrapper {
         int count = conversationPtr->messagesCount();
 
         JSON_STARTOBJ
-        writer.Key("count");
-        writer.String(to_string(count).c_str());
+        writer.Key("ret");
+        writer.Int(count);
         JSON_ENDOBJ
 
         string json = s.GetString();

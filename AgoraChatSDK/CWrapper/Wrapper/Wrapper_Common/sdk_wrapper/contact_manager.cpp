@@ -21,6 +21,18 @@ namespace sdk_wrapper {
 		}
 	}
 
+	SDK_WRAPPER_API void SDK_WRAPPER_CALL ContactManager_RemoveListener()
+	{
+		if (!CheckClientInitOrNot(nullptr)) return;
+
+		if (nullptr != gContactListener)
+		{
+			CLIENT->getContactManager().removeContactListener(gContactListener);
+			delete gContactListener;
+			gContactListener = nullptr;
+		}
+	}
+
 	SDK_WRAPPER_API void SDK_WRAPPER_CALL ContactManager_AcceptInvitation(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
 	{
 		if (!CheckClientInitOrNot(cbid)) return;
@@ -261,6 +273,22 @@ namespace sdk_wrapper {
 			}
 		});
 		t.detach();
+	}
+
+	SDK_WRAPPER_API void SDK_WRAPPER_CALL ContactManager_GetBlockListFromDB(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+	{
+		if (!CheckClientInitOrNot(cbid)) return;
+
+		EMError error;
+		vector<string> list = CLIENT->getContactManager().getBlackListFromDB(error);
+
+		string json = "";
+
+		if (EMError::EM_NO_ERROR == error.mErrorCode) {
+
+			string json = MyJson::ToJson(list);
+		}
+		memcpy(buf, json.c_str(), json.size());
 	}
 }
 

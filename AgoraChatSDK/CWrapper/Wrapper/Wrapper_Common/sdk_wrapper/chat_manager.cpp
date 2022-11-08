@@ -107,13 +107,25 @@ namespace sdk_wrapper {
             gChatManagerListener = new ChatManagerListener();
             CLIENT->getChatManager().addListener(gChatManagerListener);
         }
-	}
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_AddReactionListener()
-    {
         if (nullptr == gReactionManagerListener) {
             gReactionManagerListener = new ReactionManagerListener();
             CLIENT->getReactionManager().addListener(gReactionManagerListener);
+        }
+	}
+
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_RemoveListener()
+    {
+        if (!CheckClientInitOrNot(nullptr)) return;
+
+        CLIENT->getChatManager().clearListeners();
+        if (nullptr != gChatManagerListener) {
+            delete gChatManagerListener;
+            gChatManagerListener = nullptr;
+        }
+        if (nullptr != gReactionManagerListener) {
+            delete gReactionManagerListener;
+            gReactionManagerListener = nullptr;
         }
     }
 
@@ -284,9 +296,8 @@ namespace sdk_wrapper {
 
         string start_msg_id = GetJsonValue_String(d, "startMsgId", "");
 
-        EMConversation::EMMessageSearchDirection direction = EMConversation::EMMessageSearchDirection::UP;
         int var_direction = GetJsonValue_Int(d, "direction", 0);
-        direction = EMConversation::EMMessageSearchDirection(var_direction);
+        EMConversation::EMMessageSearchDirection direction = Conversation::EMMessageSearchDirectionFromInt(var_direction);
 
         int count = GetJsonValue_Int(d, "count", 20);
 
@@ -373,7 +384,7 @@ namespace sdk_wrapper {
 
         JSON_STARTOBJ
         writer.Key("ret");
-        writer.String(to_string(count).c_str());
+        writer.Int(count);
         JSON_ENDOBJ
 
         string json = s.GetString();
@@ -543,9 +554,8 @@ namespace sdk_wrapper {
         string timestamp_str = GetJsonValue_String(d, "timestamp", "0");
         int64_t ts = atol(timestamp_str.c_str());
 
-        EMConversation::EMMessageSearchDirection direction = EMConversation::EMMessageSearchDirection::UP;
         int var_direction = GetJsonValue_Int(d, "direction", 0);
-        direction = EMConversation::EMMessageSearchDirection(var_direction);
+        EMConversation::EMMessageSearchDirection direction = Conversation::EMMessageSearchDirectionFromInt(var_direction);
 
         EMMessageList messageList = CLIENT->getChatManager().loadMoreMessages(ts, keywords, count, from, direction);
 
@@ -895,7 +905,7 @@ namespace sdk_wrapper {
 
         string group_id = GetJsonValue_String(d, "groupId", "");
 
-        string type = GetJsonValue_String(d, "type", "groupchat"); // TODO:need to check
+        string type = GetJsonValue_String(d, "type", "groupchat"); //need to check
 
         thread t([=]() {
             EMError error;
@@ -963,8 +973,8 @@ namespace sdk_wrapper {
         }
 
         JSON_STARTOBJ
-        writer.Key("count");
-        writer.String(to_string(count).c_str());
+        writer.Key("ret");
+        writer.Int(count);
         JSON_ENDOBJ
 
        string json = s.GetString();
@@ -989,7 +999,7 @@ namespace sdk_wrapper {
         }
 
         JSON_STARTOBJ
-        writer.Key("hasDeliverAck");
+        writer.Key("ret");
         writer.Bool(ret);
         JSON_ENDOBJ
 
@@ -1015,7 +1025,7 @@ namespace sdk_wrapper {
         }
 
         JSON_STARTOBJ
-        writer.Key("hasReadAcked");
+        writer.Key("ret");
         writer.Bool(ret);
         JSON_ENDOBJ
 
