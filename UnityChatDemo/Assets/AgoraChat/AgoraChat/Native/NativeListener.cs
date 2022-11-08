@@ -1,7 +1,6 @@
 using AgoraChat.SimpleJSON;
 using System;
 using System.Runtime.InteropServices;
-using UnityEngine;
 
 namespace AgoraChat
 {
@@ -44,8 +43,6 @@ namespace AgoraChat
 
             nativeListenerEvent = (string listener, string method, string jsonString) =>
             {
-                Debug.Log($"method : {method}   listener : {listener}  jsonString : {jsonString}");
-
                 if (string.IsNullOrEmpty(method) || string.IsNullOrEmpty(listener)) return;
 
                 string json = Tools.GetUnicodeStringFromUTF8(jsonString);
