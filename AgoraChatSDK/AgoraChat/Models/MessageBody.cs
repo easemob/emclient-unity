@@ -1,6 +1,4 @@
 ﻿using AgoraChat.SimpleJSON;
-using AgoraChat.InternalSpace;
-using System;
 using System.Collections.Generic;
 
 
@@ -12,9 +10,16 @@ namespace AgoraChat
 
         internal IMessageBody(string jsonString) : base(jsonString) { }
         internal IMessageBody(JSONObject jsonObject) : base(jsonObject) { }
+
+        internal override JSONObject ToJsonObject()
+        {
+            JSONObject jo = new JSONObject();
+            jo.Add("type", Type.ToInt());
+            return jo;
+        }
         public MessageBodyType Type;
     }
- 
+
 
     /**
      * \~chinese
@@ -101,7 +106,7 @@ namespace AgoraChat
 
             internal override JSONObject ToJsonObject()
             {
-                JSONObject jo = new JSONObject();
+                JSONObject jo = base.ToJsonObject();
                 jo.Add("content", Text);
                 jo.Add("targetLanguages", JsonObject.JsonArrayFromStringList(TargetLanguages));
                 jo.Add("translations", JsonObject.JsonObjectFromDictionary(Translations));
@@ -197,7 +202,7 @@ namespace AgoraChat
 
             internal override JSONObject ToJsonObject()
             {
-                JSONObject jo = new JSONObject();
+                JSONObject jo = base.ToJsonObject();
                 jo.Add("latitude", Latitude);
                 jo.Add("longitude", Longitude);
                 jo.Add("address", Address);
@@ -308,7 +313,7 @@ namespace AgoraChat
 
             internal override JSONObject ToJsonObject()
             {
-                JSONObject jo = new JSONObject();
+                JSONObject jo = base.ToJsonObject();
                 jo.Add("localPath", LocalPath);
                 jo.Add("displayName", DisplayName);
                 jo.Add("fileSize", FileSize);
@@ -458,15 +463,12 @@ namespace AgoraChat
             internal override void FromJsonObject(JSONObject jo)
             {
                 base.FromJsonObject(jo);
-                if (null != jo)
-                {
-                    ThumbnailLocalPath = jo["thumbnailLocalPath"].Value;
-                    ThumbnaiRemotePath = jo["thumbnailRemotePath"].Value;
-                    ThumbnaiSecret = jo["thumbnailSecret"].Value;
-                    Height = jo["height"].AsDouble;
-                    Width = jo["width"].AsDouble;
-                    Original = jo["sendOriginalImage"].AsBool;
-                }
+                ThumbnailLocalPath = jo["thumbnailLocalPath"].Value;
+                ThumbnaiRemotePath = jo["thumbnailRemotePath"].Value;
+                ThumbnaiSecret = jo["thumbnailSecret"].Value;
+                Height = jo["height"].AsDouble;
+                Width = jo["width"].AsDouble;
+                Original = jo["sendOriginalImage"].AsBool;
             }
         }
 
@@ -527,7 +529,7 @@ namespace AgoraChat
 
             internal override JSONObject ToJsonObject()
             {
-                JSONObject jo = base.ToJsonObject();    
+                JSONObject jo = base.ToJsonObject();
                 jo.Add("duration", Duration);
 
                 return jo;
@@ -650,7 +652,7 @@ namespace AgoraChat
                 jo.Add("height", Height);
                 jo.Add("width", Width);
                 jo.Add("duration", Duration);
-       
+
                 return jo;
             }
 
@@ -734,7 +736,7 @@ namespace AgoraChat
 
             internal override JSONObject ToJsonObject()
             {
-                JSONObject jo = new JSONObject();
+                JSONObject jo = base.ToJsonObject();
                 jo.Add("deliverOnlineOnly", DeliverOnlineOnly);
                 jo.Add("action", Action);
 
@@ -814,10 +816,10 @@ namespace AgoraChat
 
             internal override JSONObject ToJsonObject()
             {
-                JSONObject jo = new JSONObject();
+                JSONObject jo = base.ToJsonObject();
                 jo.Add("event", CustomEvent);
                 jo.Add("params", JsonObject.JsonObjectFromDictionary(CustomParams));
-                
+
                 return jo;
             }
 
