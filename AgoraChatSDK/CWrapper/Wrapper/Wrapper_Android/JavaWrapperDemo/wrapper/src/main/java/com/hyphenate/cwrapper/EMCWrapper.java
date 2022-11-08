@@ -1,5 +1,7 @@
 package com.hyphenate.cwrapper;
 
+import android.content.Context;
+
 import com.hyphenate.wrapper.EMWrapper;
 import com.hyphenate.wrapper.EMWrapperHelper;
 import com.hyphenate.wrapper.callback.EMWrapperCallback;
@@ -8,6 +10,8 @@ import com.hyphenate.wrapper.util.EMSDKMethod;
 import org.json.JSONException;
 
 public class EMCWrapper {
+
+    long nativeListener = 0;
     static EMCWrapper cWrapper;
 
     EMWrapper wrapper;
@@ -16,12 +20,11 @@ public class EMCWrapper {
         return cWrapper;
     }
 
-    long listener = 0;
     int iType = 0;
 
     public EMCWrapper(int iType, long listener){
         this.iType = iType;
-        this.listener = listener;
+        this.nativeListener = listener;
         wrapper = new EMWrapper();
         EMWrapperHelper.listener = new EMCWrapperListener();
     }
@@ -30,7 +33,7 @@ public class EMCWrapper {
         wrapper.callSDKApi(manager, method, jsonString, new EMWrapperCallback(){
             @Override
             public void onSuccess(String jStr) {
-                EMWrapperHelper.listener.onReceive(EMSDKMethod.callback, cid, jStr);
+                EMWrapperHelper.listener.onReceive(EMSDKMethod.callback, cid, "jStr");
             }
 
             @Override

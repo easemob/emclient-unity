@@ -1,5 +1,6 @@
 package com.hyphenate.wrapper;
 
+import com.hyphenate.helper.EMUnityHelper;
 import com.hyphenate.wrapper.util.EMSDKMethod;
 import com.hyphenate.wrapper.callback.EMWrapperCallback;
 
@@ -10,6 +11,7 @@ public class EMWrapper {
     public EMClientWrapper clientWrapper;
     public EMWrapper() {
         clientWrapper = new EMClientWrapper();
+        new EMUnityHelper();
     }
 
     public String callSDKApi(String manager, String method, String jsonString, EMWrapperCallback callback) {

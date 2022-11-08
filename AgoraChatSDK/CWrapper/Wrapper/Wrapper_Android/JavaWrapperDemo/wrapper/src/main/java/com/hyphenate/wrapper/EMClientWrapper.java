@@ -101,7 +101,7 @@ public class EMClientWrapper extends EMBaseWrapper {
         JSONObject jo = param.getJSONObject("options");
         EMOptions options = EMOptionsHelper.fromJson(jo, EMWrapperHelper.context);
         EMClient.getInstance().init(EMWrapperHelper.context, options);
-        EMClient.getInstance().setDebugMode(jo.getBoolean("debugModel"));
+        EMClient.getInstance().setDebugMode(jo.getBoolean("debugMode"));
         bindingManagers();
         registerEaseListener();
         onSuccess(null, callback);
