@@ -41,26 +41,31 @@ namespace sdk_wrapper
             gConnectionListener = new ConnectionListener();
             gClient->addConnectionListener(gConnectionListener);
         }
-    }
-
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_AddMultiDeviceListener()
-    {
-        if (!CheckClientInitOrNot(nullptr)) return;
 
         if (nullptr == gMultiDevicesListener) {
             gMultiDevicesListener = new MultiDevicesListener();
             gClient->addMultiDevicesListener(gMultiDevicesListener);
         }
-    }
-
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_AddConnectionCallbackListener()
-    {
-        if (!CheckClientInitOrNot(nullptr)) return;
 
         if (nullptr == gConnectionCallbackListener) { //only set once
             gConnectionCallbackListener = new ConnectionCallbackListener();
             gClient->addConnectionCallbackListener(gConnectionCallbackListener);
         }
+    }
+
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_RemoveListener()
+    {
+        CLIENT->removeConnectionListener(gConnectionListener);
+        delete gConnectionListener;
+        gConnectionListener = nullptr;
+
+        CLIENT->removeConnectionCallbackListener(gConnectionCallbackListener);
+        delete gConnectionCallbackListener;
+        gConnectionCallbackListener = nullptr;
+
+        CLIENT->removeMultiDevicesListener(gMultiDevicesListener);
+        delete gMultiDevicesListener;
+        gMultiDevicesListener = nullptr;
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_InitWithOptions(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -71,7 +76,6 @@ namespace sdk_wrapper
             gClient = EMClient::create(configs);
         }
         else {
-            //TODO: check NeedAllocResource
             if (NeedAllocResource) {
                 gClient->allocResource();
                 NeedAllocResource = false;
@@ -79,10 +83,7 @@ namespace sdk_wrapper
         }
 
         Client_AddListener();
-        Client_AddMultiDeviceListener();
-        Client_AddConnectionCallbackListener();
         ChatManager_AddListener();
-        ChatManager_AddReactionListener();
         GroupManager_AddListener();
         RoomManager_AddListener();
         ContactManager_AddListener();
@@ -95,7 +96,7 @@ namespace sdk_wrapper
         if (!CheckClientInitOrNot(nullptr)) return;
 
         JSON_STARTOBJ
-        writer.Key("getCurrentUsername");
+        writer.Key("ret");
         writer.String(CLIENT->getLoginInfo().loginUser().c_str());
         JSON_ENDOBJ
 
@@ -108,7 +109,7 @@ namespace sdk_wrapper
         if (!CheckClientInitOrNot(nullptr)) return;
 
         JSON_STARTOBJ
-        writer.Key("isLoggedIn");
+        writer.Key("ret");
         writer.Bool(CLIENT->isLoggedIn());
         JSON_ENDOBJ
 
@@ -121,7 +122,7 @@ namespace sdk_wrapper
         if (!CheckClientInitOrNot(nullptr)) return;
 
         JSON_STARTOBJ
-        writer.Key("isConnected");
+        writer.Key("ret");
         writer.Bool(CLIENT->isLoggedIn());
         JSON_ENDOBJ
 
@@ -134,7 +135,7 @@ namespace sdk_wrapper
         if (!CheckClientInitOrNot(nullptr)) return;
 
         JSON_STARTOBJ
-        writer.Key("accessToken");
+        writer.Key("ret");
         writer.String(CLIENT->getLoginInfo().loginToken().c_str());
         JSON_ENDOBJ
 
@@ -188,13 +189,11 @@ namespace sdk_wrapper
 
             if (EMError::isNoError(result)) {
 
-                /* TODO: need to add this part for 
-                if (isToken)
-                    SetTokenInAutoLogin(usernameStr, pwdOrTokenStr, "");
+                if (is_token)
+                    token_wrapper.SetTokenInAutoLogin(user_name, pwd_or_token, "");
                 else
-                    SetPasswdInAutoLogin(usernameStr, pwdOrTokenStr);
-                SaveAutoLoginConfigToFile();
-                */
+                    token_wrapper.SetPasswdInAutoLogin(user_name, pwd_or_token);
+                //token_wrapper.SaveAutoLoginConfigToFile(); // Only used when AutoLogin API is used.
 
                 string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
@@ -216,7 +215,8 @@ namespace sdk_wrapper
         thread t([=]() {
             CLIENT->logout();
 
-            //TODO: StopTimer();
+            if(token_wrapper.autologin_config_.expireTS.size() > 0)
+                StopTimer();
 
             string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
@@ -355,7 +355,7 @@ namespace sdk_wrapper
         }
 
         CLIENT->renewToken(easemob_token);
-        //token_wrapper.SaveAutoLoginConfigToFile(configs->deviceUuid());
+        //token_wrapper.SaveAutoLoginConfigToFile(configs->deviceUuid()); //not support auto login
 
         TOKEN_CHECK_INTERVAL = 180;
         StartTimer(token_wrapper.GetTokenCheckInterval(TOKEN_CHECK_INTERVAL, (int)token_wrapper.autologin_config_.availablePeriod), TokenCheck);
@@ -406,7 +406,7 @@ namespace sdk_wrapper
                 }
 
                 JSON_STARTOBJ
-                writer.Key("username");
+                writer.Key("ret");
                 writer.String(token_wrapper.autologin_config_.userName.c_str());
                 JSON_ENDOBJ
 
@@ -422,6 +422,36 @@ namespace sdk_wrapper
         t.detach();
     }
 
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_ChangeAppKey(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        return; // No need to Implement
+    }
+
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_UploadLog(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        return; // No need to Implement
+    }
+
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_CompressLogs(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        return; // No need to Implement
+    }
+
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_KickDevice(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        //TODO
+    }
+
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_KickDevices(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        //TODO
+    }
+
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_GetLoggedInDevicesFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        //TODO
+    }
+
     SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_ClearResource(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         if (!CheckClientInitOrNot(nullptr)) return;
@@ -433,25 +463,12 @@ namespace sdk_wrapper
         CLIENT->clearResource();
         NeedAllocResource = true;
 
-        //TODO
-        // clear all listeners when replay
+        // clear all listeners when replay, need remove?
+        //Client_RemoveListener();
         //ChatManager_RemoveListener();
         //GroupManager_RemoveListener();
         //RoomManager_RemoveListener();
         //ContactManager_RemoveListener();
-
-        CLIENT->removeConnectionListener(gConnectionListener);
-        delete gConnectionListener;
-        gConnectionListener = nullptr;
-
-        //TODO
-        //CLIENT->removeConnectionCallbackListener(gConnectionCallbackListener);
-        //delete gConnectionCallbackListener;
-        //gConnectionCallbackListener = nullptr;
-
-        CLIENT->removeMultiDevicesListener(gMultiDevicesListener);
-        delete gMultiDevicesListener;
-        gMultiDevicesListener = nullptr;
     }
 }
 

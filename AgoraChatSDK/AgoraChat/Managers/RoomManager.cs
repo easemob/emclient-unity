@@ -1100,14 +1100,14 @@ namespace AgoraChat
                         break;
                     case SDKMethod.onMuteListAddedFromRoom:
                         {
-                            List<string> list = List.StringListFromJsonArray(jsonNode["userId"]);
+                            List<string> list = List.StringListFromJsonArray(jsonNode["userIds"]);
                             int muteExpire = jsonNode["muteExpire"];
                             it.OnMuteListAddedFromRoom(roomId, list, muteExpire);
                         }
                         break;
                     case SDKMethod.onMuteListRemovedFromRoom:
                         {
-                            List<string> list = List.StringListFromJsonArray(jsonNode["userId"]);
+                            List<string> list = List.StringListFromJsonArray(jsonNode["userIds"]);
                             it.OnMuteListRemovedFromRoom(roomId, list);
                         }
                         break;

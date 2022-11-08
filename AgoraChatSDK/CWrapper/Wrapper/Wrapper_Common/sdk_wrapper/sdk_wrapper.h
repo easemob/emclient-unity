@@ -24,8 +24,7 @@ SDK_WRAPPER_API void SDK_WRAPPER_CALL CleanListener_SDKWrapper();
 // Client =====================================================================
 SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_InitWithOptions(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_AddListener();
-SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_AddMultiDeviceListener();
-SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_AddConnectionCallbackListener();
+SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_RemoveListener();
 SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_CreateAccount(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_Login(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_Logout(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
@@ -38,9 +37,17 @@ SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_RenewAgoraToken(const char* jstr, c
 SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_ClearResource(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_AutoLogin(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 
+SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_ChangeAppKey(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_UploadLog(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_CompressLogs(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+
+SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_KickDevice(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_KickDevices(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_GetLoggedInDevicesFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+
 // ChatManager ================================================================
 SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_AddListener();
-SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_AddReactionListener();
+SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_RemoveListener();
 SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_RemoveConversation(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_DownloadMessageAttachments(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_DownloadMessageThumbnail(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
@@ -80,6 +87,7 @@ SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_GetChatThreadForMsg(const char
 
 // GroupManager ================================================================
 SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_AddListener();
+SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_RemoveListener();
 SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_ApplyJoinPublicGroup(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_AcceptInvitationFromGroup(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_AcceptJoinGroupApplication(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
@@ -124,9 +132,9 @@ SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_UpdateGroupAnnouncement(const
 SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_ChangeGroupExtension(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_UploadGroupSharedFile(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 
-
 // RoomManager ================================================================
 SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_AddListener();
+SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_RemoveListener();
 SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_AddRoomAdmin(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_BlockChatroomMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_TransferChatroomOwner(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
@@ -153,8 +161,19 @@ SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_UnMuteAllChatroomMembers(const
 SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_AddWhiteListMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_RemoveWhiteListMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 
+SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_FetchChatRoomWhiteListFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_IsMemberInChatRoomWhiteListFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+
+SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_FetchChatRoomAttributes(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_SetChatRoomAttributes(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_RemoveChatRoomAttributes(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+
+SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_GetChatRoom(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_GetAllChatRooms(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+
 // ContactManager ================================================================
 SDK_WRAPPER_API void SDK_WRAPPER_CALL ContactManager_AddListener();
+SDK_WRAPPER_API void SDK_WRAPPER_CALL ContactManager_RemoveListener();
 SDK_WRAPPER_API void SDK_WRAPPER_CALL ContactManager_AcceptInvitation(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API void SDK_WRAPPER_CALL ContactManager_AddContact(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API void SDK_WRAPPER_CALL ContactManager_AddToBlackList(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
@@ -165,6 +184,8 @@ SDK_WRAPPER_API void SDK_WRAPPER_CALL ContactManager_GetContactsFromServer(const
 SDK_WRAPPER_API void SDK_WRAPPER_CALL ContactManager_GetBlackListFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API void SDK_WRAPPER_CALL ContactManager_GetSelfIdsOnOtherPlatform(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API void SDK_WRAPPER_CALL ContactManager_RemoveFromBlackList(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+
+SDK_WRAPPER_API void SDK_WRAPPER_CALL ContactManager_GetBlockListFromDB(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 
 // ConversationManager ================================================================
 SDK_WRAPPER_API void SDK_WRAPPER_CALL ConversationManager_AppendMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
@@ -212,4 +233,7 @@ SDK_WRAPPER_API void SDK_WRAPPER_CALL ThreadManager_FetchMineJoinedThreadList(co
 // UserInfoManager ================================================================
 SDK_WRAPPER_API void SDK_WRAPPER_CALL UserInfoManager_FetchUserInfoByUserId(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API void SDK_WRAPPER_CALL UserInfoManager_UpdateOwnInfo(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+
+// PushManager ================================================================
+SDK_WRAPPER_API void SDK_WRAPPER_CALL PushManager_NotImplement(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 #endif

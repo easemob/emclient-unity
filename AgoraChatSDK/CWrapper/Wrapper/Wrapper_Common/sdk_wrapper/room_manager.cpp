@@ -22,6 +22,17 @@ namespace sdk_wrapper {
         }
     }
 
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_RemoveListener()
+    {
+        if (!CheckClientInitOrNot(nullptr)) return;
+
+        CLIENT->getChatroomManager().clearListeners();
+        if (nullptr != gRoomManagerListener) {
+            delete gRoomManagerListener;
+            gRoomManagerListener = nullptr;
+        }
+    }
+
     SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_AddRoomAdmin(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         if (!CheckClientInitOrNot(cbid)) return;
@@ -716,6 +727,41 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+    }
+
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_FetchChatRoomWhiteListFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        //TODO
+    }
+
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_IsMemberInChatRoomWhiteListFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        //TODO
+    }
+
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_FetchChatRoomAttributes(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        //TODO
+    }
+
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_SetChatRoomAttributes(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        //TODO
+    }
+
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_RemoveChatRoomAttributes(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        //TODO
+    }
+
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_GetChatRoom(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        //TODO: which sdk API?
+    }
+
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_GetAllChatRooms(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        //TODO: which sdk API?
     }
 }
 

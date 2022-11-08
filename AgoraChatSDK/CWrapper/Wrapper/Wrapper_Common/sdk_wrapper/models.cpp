@@ -167,7 +167,7 @@ namespace sdk_wrapper
         return data;
     }
 
-    map<string, string> MyJson::FromJsonToMap(string& jstr) {
+    map<string, string> MyJson::FromJsonToMap(const string& jstr) {
         map<string, string> map;
         if (jstr.length() < 3) return map;
 
@@ -395,63 +395,36 @@ namespace sdk_wrapper
         return direction;
     }
 
-    string Message::BodyTypeToString(EMMessageBody::EMMessageBodyType btype)
+    int Message::BodyTypeToInt(EMMessageBody::EMMessageBodyType btype)
     {
-        string stype = "txt";
         switch (btype)
         {
-        case EMMessageBody::TEXT:
-            stype = "txt";
-            break;
-        case EMMessageBody::LOCATION:
-            stype = "loc";
-            break;
-        case EMMessageBody::COMMAND:
-            stype = "cmd";
-            break;
-        case EMMessageBody::FILE:
-            stype = "file";
-            break;
-        case EMMessageBody::IMAGE:
-            stype = "img";
-            break;
-        case EMMessageBody::VOICE:
-            stype = "voice";
-            break;
-        case EMMessageBody::VIDEO:
-            stype = "video";
-            break;
-        case EMMessageBody::CUSTOM:
-            stype = "custom";
-            break;
-        default:
-            break;
+        case EMMessageBody::EMMessageBodyType::TEXT: return 0;
+        case EMMessageBody::EMMessageBodyType::IMAGE: return 1;
+        case EMMessageBody::EMMessageBodyType::VIDEO: return 2;
+        case EMMessageBody::EMMessageBodyType::LOCATION: return 3;
+        case EMMessageBody::EMMessageBodyType::VOICE: return 4;
+        case EMMessageBody::EMMessageBodyType::FILE: return 5;
+        case EMMessageBody::EMMessageBodyType::COMMAND: return 6;
+        case EMMessageBody::EMMessageBodyType::CUSTOM: return 7;
+        default: return 0;
         }
-        return stype;
     }
-
-    EMMessageBody::EMMessageBodyType Message::BodyTypeFromString(string str)
+    EMMessageBody::EMMessageBodyType Message::BodyTypeFromInt(int i)
     {
-        EMMessageBody::EMMessageBodyType btype = EMMessageBody::EMMessageBodyType::TEXT;
-        if (str.compare("txt") == 0)
-            btype = EMMessageBody::TEXT;
-        else if (str.compare("loc") == 0)
-            btype = EMMessageBody::LOCATION;
-        else if (str.compare("cmd") == 0)
-            btype = EMMessageBody::COMMAND;
-        else if (str.compare("file") == 0)
-            btype = EMMessageBody::FILE;
-        else if (str.compare("img") == 0)
-            btype = EMMessageBody::IMAGE;
-        else if (str.compare("voice") == 0)
-            btype = EMMessageBody::VOICE;
-        else if (str.compare("video") == 0)
-            btype = EMMessageBody::VIDEO;
-        else if (str.compare("custom") == 0)
-            btype = EMMessageBody::CUSTOM;
-        else
-            btype = EMMessageBody::TEXT;
-        return btype;
+        switch (i)
+        {
+        case 0: return EMMessageBody::EMMessageBodyType::TEXT;
+        case 1: return EMMessageBody::EMMessageBodyType::IMAGE;
+        case 2: return EMMessageBody::EMMessageBodyType::VIDEO;
+        case 3: return EMMessageBody::EMMessageBodyType::LOCATION;
+        case 4: return EMMessageBody::EMMessageBodyType::VOICE;
+        case 5: return EMMessageBody::EMMessageBodyType::FILE;
+        case 6: return EMMessageBody::EMMessageBodyType::COMMAND;
+        case 7: return EMMessageBody::EMMessageBodyType::CUSTOM;
+        default:
+            return EMMessageBody::EMMessageBodyType::TEXT;
+        }
     }
 
     int Message::DownLoadStatusToInt(EMFileMessageBody::EMDownloadStatus download_status)
@@ -554,198 +527,211 @@ namespace sdk_wrapper
     {
         if (nullptr == msg) return;
 
-        writer.StartObject();
         auto body = msg->bodies().front();
-        switch (body->type()) {
-        case EMMessageBody::TEXT:
+
+        EMMessageBody::EMMessageBodyType btype = body->type();
+
+        writer.StartObject();
         {
-            EMTextMessageBodyPtr ptr = dynamic_pointer_cast<EMTextMessageBody>(body);
-            writer.Key("content");
-            writer.String(ptr->text().c_str()); //null or emtpy, then?
+            writer.Key("type");
+            writer.Int(Message::BodyTypeToInt(btype));
 
-            writer.Key("targetLanguages");
-            vector<string> vec = ptr->getTargetLanguages();
-            MyJson::ToJsonObject(writer, vec);
+            writer.Key("body");
+            writer.StartObject();
+            {
+                switch (btype) {
+                    case EMMessageBody::TEXT:
+                    {
+                        EMTextMessageBodyPtr ptr = dynamic_pointer_cast<EMTextMessageBody>(body);
+                        writer.Key("content");
+                        writer.String(ptr->text().c_str()); //null or emtpy, then?
 
-            writer.Key("translations");
-            map<string, string> map = ptr->getTranslations();
-            MyJson::ToJsonObject(writer, map);
-        }
-        break;
-        case EMMessageBody::LOCATION:
-        {
-            EMLocationMessageBodyPtr ptr = dynamic_pointer_cast<EMLocationMessageBody>(body);
-            writer.Key("latitude");
-            writer.Double(ptr->latitude());
+                        writer.Key("targetLanguages");
+                        vector<string> vec = ptr->getTargetLanguages();
+                        MyJson::ToJsonObject(writer, vec);
 
-            writer.Key("longitude");
-            writer.Double(ptr->longitude());
+                        writer.Key("translations");
+                        map<string, string> map = ptr->getTranslations();
+                        MyJson::ToJsonObject(writer, map);
+                    }
+                    break;
+                    case EMMessageBody::LOCATION:
+                    {
+                        EMLocationMessageBodyPtr ptr = dynamic_pointer_cast<EMLocationMessageBody>(body);
+                        writer.Key("latitude");
+                        writer.Double(ptr->latitude());
 
-            writer.Key("address");
-            writer.String(ptr->address().c_str());
+                        writer.Key("longitude");
+                        writer.Double(ptr->longitude());
 
-            writer.Key("buildingName");
-            writer.String(ptr->buildingName().c_str());
-        }
-        break;
-        case EMMessageBody::COMMAND:
-        {
-            EMCmdMessageBodyPtr ptr = dynamic_pointer_cast<EMCmdMessageBody>(body);
+                        writer.Key("address");
+                        writer.String(ptr->address().c_str());
 
-            writer.Key("action");
-            writer.String(ptr->action().c_str());
+                        writer.Key("buildingName");
+                        writer.String(ptr->buildingName().c_str());
+                    }
+                    break;
+                    case EMMessageBody::COMMAND:
+                    {
+                        EMCmdMessageBodyPtr ptr = dynamic_pointer_cast<EMCmdMessageBody>(body);
 
-            writer.Key("deliverOnlineOnly");
-            writer.Bool(ptr->isDeliverOnlineOnly());
-        }
-        break;
-        case EMMessageBody::FILE:
-        {
-            EMFileMessageBodyPtr ptr = dynamic_pointer_cast<EMFileMessageBody>(body);
-            writer.Key("localPath");
-            writer.String(ptr->localPath().c_str());
+                        writer.Key("action");
+                        writer.String(ptr->action().c_str());
 
-            writer.Key("displayName");
-            writer.String(ptr->displayName().c_str());
+                        writer.Key("deliverOnlineOnly");
+                        writer.Bool(ptr->isDeliverOnlineOnly());
+                    }
+                    break;
+                    case EMMessageBody::FILE:
+                    {
+                        EMFileMessageBodyPtr ptr = dynamic_pointer_cast<EMFileMessageBody>(body);
+                        writer.Key("localPath");
+                        writer.String(ptr->localPath().c_str());
 
-            writer.Key("secret");
-            writer.String(ptr->secretKey().c_str());
+                        writer.Key("displayName");
+                        writer.String(ptr->displayName().c_str());
 
-            writer.Key("remotePath");
-            writer.String(ptr->remotePath().c_str());
+                        writer.Key("secret");
+                        writer.String(ptr->secretKey().c_str());
 
-            writer.Key("fileSize");
-            writer.Int64(ptr->fileLength());
+                        writer.Key("remotePath");
+                        writer.String(ptr->remotePath().c_str());
 
-            writer.Key("fileStatus");
-            writer.Int(DownLoadStatusToInt(ptr->downloadStatus()));
-        }
-        break;
-        case EMMessageBody::IMAGE:
-        {
-            EMImageMessageBodyPtr ptr = dynamic_pointer_cast<EMImageMessageBody>(body);
-            writer.Key("localPath");
-            writer.String(ptr->localPath().c_str());
+                        writer.Key("fileSize");
+                        writer.Int64(ptr->fileLength());
 
-            writer.Key("displayName");
-            writer.String(ptr->displayName().c_str());
+                        writer.Key("fileStatus");
+                        writer.Int(DownLoadStatusToInt(ptr->downloadStatus()));
+                    }
+                    break;
+                    case EMMessageBody::IMAGE:
+                    {
+                        EMImageMessageBodyPtr ptr = dynamic_pointer_cast<EMImageMessageBody>(body);
+                        writer.Key("localPath");
+                        writer.String(ptr->localPath().c_str());
 
-            writer.Key("secret");
-            writer.String(ptr->secretKey().c_str());
+                        writer.Key("displayName");
+                        writer.String(ptr->displayName().c_str());
 
-            writer.Key("remotePath");
-            writer.String(ptr->remotePath().c_str());
+                        writer.Key("secret");
+                        writer.String(ptr->secretKey().c_str());
 
-            writer.Key("thumbnailLocalPath");
-            writer.String(ptr->thumbnailLocalPath().c_str());
+                        writer.Key("remotePath");
+                        writer.String(ptr->remotePath().c_str());
 
-            writer.Key("thumbnailRemotePath");
-            writer.String(ptr->thumbnailRemotePath().c_str());
+                        writer.Key("thumbnailLocalPath");
+                        writer.String(ptr->thumbnailLocalPath().c_str());
 
-            writer.Key("thumbnailSecret");
-            writer.String(ptr->thumbnailSecretKey().c_str());
+                        writer.Key("thumbnailRemotePath");
+                        writer.String(ptr->thumbnailRemotePath().c_str());
 
-            writer.Key("height");
-            writer.Double(ptr->size().mHeight);
+                        writer.Key("thumbnailSecret");
+                        writer.String(ptr->thumbnailSecretKey().c_str());
 
-            writer.Key("width");
-            writer.Double(ptr->size().mWidth);
+                        writer.Key("height");
+                        writer.Double(ptr->size().mHeight);
 
-            writer.Key("fileSize");
-            writer.Int64(ptr->fileLength());
+                        writer.Key("width");
+                        writer.Double(ptr->size().mWidth);
 
-            writer.Key("fileStatus");
-            writer.Int(DownLoadStatusToInt(ptr->downloadStatus()));
+                        writer.Key("fileSize");
+                        writer.Int64(ptr->fileLength());
 
-            //writer.Key("ThumbnaiDownStatus");
-            //writer.Int((int)ptr->thumbnailDownloadStatus());
+                        writer.Key("fileStatus");
+                        writer.Int(DownLoadStatusToInt(ptr->downloadStatus()));
 
-            // Not find original related !!!
-            //writer.Key("Original");
-            //writer.Bool((int)ptr->downloadStatus());
-        }
-        break;
-        case EMMessageBody::VOICE:
-        {
-            EMVoiceMessageBodyPtr ptr = dynamic_pointer_cast<EMVoiceMessageBody>(body);
-            writer.Key("localPath");
-            writer.String(ptr->localPath().c_str());
+                        //writer.Key("ThumbnaiDownStatus");
+                        //writer.Int((int)ptr->thumbnailDownloadStatus());
 
-            writer.Key("displayName");
-            writer.String(ptr->displayName().c_str());
+                        // Not find original related !!!
+                        //writer.Key("Original");
+                        //writer.Bool((int)ptr->downloadStatus());
+                    }
+                    break;
+                    case EMMessageBody::VOICE:
+                    {
+                        EMVoiceMessageBodyPtr ptr = dynamic_pointer_cast<EMVoiceMessageBody>(body);
+                        writer.Key("localPath");
+                        writer.String(ptr->localPath().c_str());
 
-            writer.Key("secret");
-            writer.String(ptr->secretKey().c_str());
+                        writer.Key("displayName");
+                        writer.String(ptr->displayName().c_str());
 
-            writer.Key("remotePath");
-            writer.String(ptr->remotePath().c_str());
+                        writer.Key("secret");
+                        writer.String(ptr->secretKey().c_str());
 
-            writer.Key("fileSize");
-            writer.Int64(ptr->fileLength());
+                        writer.Key("remotePath");
+                        writer.String(ptr->remotePath().c_str());
 
-            writer.Key("fileStatus");
-            writer.Int(DownLoadStatusToInt(ptr->downloadStatus()));
+                        writer.Key("fileSize");
+                        writer.Int64(ptr->fileLength());
 
-            writer.Key("duration");
-            writer.Int(ptr->duration());
-        }
-        break;
-        case EMMessageBody::VIDEO:
-        {
-            EMVideoMessageBodyPtr ptr = dynamic_pointer_cast<EMVideoMessageBody>(body);
-            writer.Key("localPath");
-            writer.String(ptr->localPath().c_str());
+                        writer.Key("fileStatus");
+                        writer.Int(DownLoadStatusToInt(ptr->downloadStatus()));
 
-            writer.Key("displayName");
-            writer.String(ptr->displayName().c_str());
+                        writer.Key("duration");
+                        writer.Int(ptr->duration());
+                    }
+                    break;
+                    case EMMessageBody::VIDEO:
+                    {
+                        EMVideoMessageBodyPtr ptr = dynamic_pointer_cast<EMVideoMessageBody>(body);
+                        writer.Key("localPath");
+                        writer.String(ptr->localPath().c_str());
 
-            writer.Key("secret");
-            writer.String(ptr->secretKey().c_str());
+                        writer.Key("displayName");
+                        writer.String(ptr->displayName().c_str());
 
-            writer.Key("remotePath");
-            writer.String(ptr->remotePath().c_str());
+                        writer.Key("secret");
+                        writer.String(ptr->secretKey().c_str());
 
-            writer.Key("thumbnailLocalPath");
-            writer.String(ptr->thumbnailLocalPath().c_str());
+                        writer.Key("remotePath");
+                        writer.String(ptr->remotePath().c_str());
 
-            writer.Key("thumbnailRemotePath");
-            writer.String(ptr->thumbnailRemotePath().c_str());
+                        writer.Key("thumbnailLocalPath");
+                        writer.String(ptr->thumbnailLocalPath().c_str());
 
-            writer.Key("thumbnailSecret");
-            writer.String(ptr->thumbnailSecretKey().c_str());
+                        writer.Key("thumbnailRemotePath");
+                        writer.String(ptr->thumbnailRemotePath().c_str());
 
-            writer.Key("height");
-            writer.Double(ptr->size().mHeight);
+                        writer.Key("thumbnailSecret");
+                        writer.String(ptr->thumbnailSecretKey().c_str());
 
-            writer.Key("width");
-            writer.Double(ptr->size().mWidth);
+                        writer.Key("height");
+                        writer.Double(ptr->size().mHeight);
 
-            writer.Key("duration");
-            writer.Int(ptr->duration());
+                        writer.Key("width");
+                        writer.Double(ptr->size().mWidth);
 
-            writer.Key("fileSize");
-            writer.Int64(ptr->fileLength());
+                        writer.Key("duration");
+                        writer.Int(ptr->duration());
 
-            writer.Key("fileStatus");
-            writer.Int(DownLoadStatusToInt(ptr->downloadStatus()));
-        }
-        break;
-        case EMMessageBody::CUSTOM:
-        {
-            EMCustomMessageBodyPtr ptr = dynamic_pointer_cast<EMCustomMessageBody>(body);
-            writer.Key("event");
-            writer.String(ptr->event().c_str());
+                        writer.Key("fileSize");
+                        writer.Int64(ptr->fileLength());
 
-            writer.Key("params");
+                        writer.Key("fileStatus");
+                        writer.Int(DownLoadStatusToInt(ptr->downloadStatus()));
+                    }
+                    break;
+                    case EMMessageBody::CUSTOM:
+                    {
+                        EMCustomMessageBodyPtr ptr = dynamic_pointer_cast<EMCustomMessageBody>(body);
+                        writer.Key("event");
+                        writer.String(ptr->event().c_str());
 
-            EMCustomMessageBody::EMCustomExts exts = ptr->exts();
-            ToJsonObject(writer, exts);
-        }
-        break;
-        default:
-        {
-            //message = NULL;
-        }
+                        writer.Key("params");
+
+                        EMCustomMessageBody::EMCustomExts exts = ptr->exts();
+                        ToJsonObject(writer, exts);
+                    }
+                    break;
+                    default:
+                    {
+                        //message = NULL;
+                    }
+                }
+            }
+            writer.EndObject();
         }
         writer.EndObject();
     }
@@ -759,23 +745,19 @@ namespace sdk_wrapper
         return data;
     }
 
+    // body:{type:iType, "body":{object}}
     EMMessageBodyPtr Message::FromJsonObjectToBody(const Value& jnode)
     {
         if (jnode.IsNull()) return nullptr;
-        if (!jnode.HasMember("bodyType") || !jnode.HasMember("body")) return nullptr;
 
-        if (!jnode["bodyType"].IsString() || !jnode["body"].IsString()) return nullptr;
+        if (!jnode.HasMember("type") || !jnode.HasMember("body")) return nullptr;
 
-        //Body type must have and must be string
-        EMMessageBody::EMMessageBodyType btype = BodyTypeFromString(jnode["bodyType"].GetString());
+        if (!jnode["type"].IsInt() || !jnode["body"].IsObject()) return nullptr;
 
         EMMessageBodyPtr bodyptr = nullptr;
 
-        Document d;
-        d.Parse(jnode["body"].GetString());
-        if (d.HasParseError()) return nullptr;
-
-        const Value& body = d;
+        EMMessageBody::EMMessageBodyType btype = Message::BodyTypeFromInt(jnode["type"].GetInt());
+        const Value& body = jnode["body"];
 
         switch (btype) {
         case EMMessageBody::TEXT:
@@ -853,7 +835,6 @@ namespace sdk_wrapper
                 ptr->setLocalPath(str);
             }
 
-            //TODO: need to check this.
             if (body.HasMember("fileSize") && body["fileSize"].IsInt64()) {
                 int64_t fz = body["fileSize"].GetInt64();
                 ptr->setFileLength(fz);
@@ -891,7 +872,6 @@ namespace sdk_wrapper
                 ptr->setLocalPath(str);
             }
 
-            //TODO: need to check this.
             if (body.HasMember("fileSize") && body["fileSize"].IsInt64()) {
                 int64_t fz = body["fileSize"].GetInt64();
                 ptr->setFileLength(fz);
@@ -963,7 +943,6 @@ namespace sdk_wrapper
                 ptr->setLocalPath(str);
             }
 
-            //TODO: need to check this.
             if (body.HasMember("fileSize") && body["fileSize"].IsInt64()) {
                 int64_t fz = body["fileSize"].GetInt64();
                 ptr->setFileLength(fz);
@@ -1006,7 +985,6 @@ namespace sdk_wrapper
                 ptr->setLocalPath(str);
             }
 
-            //TODO: need to check this.
             if (body.HasMember("fileSize") && body["fileSize"].IsInt64()) {
                 int64_t fz = body["fileSize"].GetInt64();
                 ptr->setFileLength(fz);
@@ -1160,9 +1138,6 @@ namespace sdk_wrapper
             writer.Key("isThread");
             writer.Bool(msg->isThread());
 
-            writer.Key("bodyType");
-            writer.String(BodyTypeToString(msg->bodies().front()->type()).c_str());
-
             writer.Key("body");
             Message::ToJsonObjectWithBody(writer, msg);
         }
@@ -1230,7 +1205,7 @@ namespace sdk_wrapper
             msg_id = jnode["msgId"].GetString();
         }
 
-        EMMessageBodyPtr body = FromJsonObjectToBody(jnode);
+        EMMessageBodyPtr body = FromJsonObjectToBody(jnode["body"]);
 
         EMMessagePtr msg = nullptr;
         if (EMMessage::EMMessageDirection::SEND == direction)
@@ -1349,7 +1324,7 @@ namespace sdk_wrapper
 
             writer.Key("value");
             if (attribute->value<bool>())
-                writer.String("True"); //TODO: need to check
+                writer.String("True"); //need to check
             else
                 writer.String("False");
         }
@@ -1420,12 +1395,13 @@ namespace sdk_wrapper
             writer.String(attribute->value<string>().c_str());
             //Note: here not support to parse str value further
         }
+        //No need to support vector string
         else if (attribute->is<vector<string>>()) {
             writer.Key("type");
             writer.String("strv");
             writer.Key("value");
             vector<string> vec = attribute->value<vector<string>>();
-            writer.String(MyJson::ToJson(vec).c_str());  //TODO: need to check
+            writer.String(MyJson::ToJson(vec).c_str());
         }
         else if (attribute->is<EMJsonString>()) {
             writer.Key("type");
@@ -1672,6 +1648,25 @@ namespace sdk_wrapper
         case 2: type = EMConversation::EMConversationType::CHATROOM; break;
         }
         return type;
+    }
+
+    int Conversation::EMMessageSearchDirectionToInt(EMConversation::EMMessageSearchDirection direction)
+    {
+        switch (direction)
+        {
+        case EMConversation::EMMessageSearchDirection::UP: return 0;
+        case EMConversation::EMMessageSearchDirection::DOWN: return 1;
+        default: return 0;
+        }
+    }
+    EMConversation::EMMessageSearchDirection Conversation::EMMessageSearchDirectionFromInt(int i)
+    {
+        switch (i)
+        {
+        case 0: return EMConversation::EMMessageSearchDirection::UP;
+        case 1: return EMConversation::EMMessageSearchDirection::DOWN;
+        default: return EMConversation::EMMessageSearchDirection::UP;
+        }
     }
 
     string SupportLanguage::ToJson(tuple<string, string, string>& lang)
@@ -2715,6 +2710,94 @@ namespace sdk_wrapper
 
         std::string data = s.GetString();
         return data;
+    }
+
+    int MultiDevices::MultiDevicesOperationToInt(EMMultiDevicesListener::MultiDevicesOperation operation)
+    {
+        switch (operation)
+        {
+        case EMMultiDevicesListener::MultiDevicesOperation::UNKNOW: return -1;
+        case EMMultiDevicesListener::MultiDevicesOperation::CONTACT_REMOVE: return 2;
+        case EMMultiDevicesListener::MultiDevicesOperation::CONTACT_ACCEPT: return 3;
+        case EMMultiDevicesListener::MultiDevicesOperation::CONTACT_DECLINE: return 4;
+        case EMMultiDevicesListener::MultiDevicesOperation::CONTACT_BAN: return 5;
+        case EMMultiDevicesListener::MultiDevicesOperation::CONTACT_ALLOW: return 6;
+        case EMMultiDevicesListener::MultiDevicesOperation::GROUP_CREATE: return 10;
+        case EMMultiDevicesListener::MultiDevicesOperation::GROUP_DESTROY: return 11;
+        case EMMultiDevicesListener::MultiDevicesOperation::GROUP_JOIN: return 12;
+        case EMMultiDevicesListener::MultiDevicesOperation::GROUP_LEAVE: return 13;
+        case EMMultiDevicesListener::MultiDevicesOperation::GROUP_APPLY: return 14;
+        case EMMultiDevicesListener::MultiDevicesOperation::GROUP_APPLY_ACCEPT: return 15;
+        case EMMultiDevicesListener::MultiDevicesOperation::GROUP_APPLY_DECLINE: return 16;
+        case EMMultiDevicesListener::MultiDevicesOperation::GROUP_INVITE: return 17;
+        case EMMultiDevicesListener::MultiDevicesOperation::GROUP_INVITE_ACCEPT: return 18;
+        case EMMultiDevicesListener::MultiDevicesOperation::GROUP_INVITE_DECLINE: return 19;
+        case EMMultiDevicesListener::MultiDevicesOperation::GROUP_KICK: return 20;
+        case EMMultiDevicesListener::MultiDevicesOperation::GROUP_BAN: return 21;
+        case EMMultiDevicesListener::MultiDevicesOperation::GROUP_ALLOW: return 22;
+        case EMMultiDevicesListener::MultiDevicesOperation::GROUP_BLOCK: return 23;
+        case EMMultiDevicesListener::MultiDevicesOperation::GROUP_UNBLOCK: return 24;
+        case EMMultiDevicesListener::MultiDevicesOperation::GROUP_ASSIGN_OWNER: return 25;
+        case EMMultiDevicesListener::MultiDevicesOperation::GROUP_ADD_ADMIN: return 26;
+        case EMMultiDevicesListener::MultiDevicesOperation::GROUP_REMOVE_ADMIN: return 27;
+        case EMMultiDevicesListener::MultiDevicesOperation::GROUP_ADD_MUTE: return 28;
+        case EMMultiDevicesListener::MultiDevicesOperation::GROUP_REMOVE_MUTE: return 29;
+        case EMMultiDevicesListener::MultiDevicesOperation::GROUP_ADD_USER_WHITE_LIST: return 30;
+        case EMMultiDevicesListener::MultiDevicesOperation::GROUP_REMOVE_USER_WHITE_LIST: return 31;
+        case EMMultiDevicesListener::MultiDevicesOperation::GROUP_ALL_BAN: return 32;
+        case EMMultiDevicesListener::MultiDevicesOperation::GROUP_REMOVE_ALL_BAN: return 33;
+        case EMMultiDevicesListener::MultiDevicesOperation::THREAD_CREATE: return 40;
+        case EMMultiDevicesListener::MultiDevicesOperation::THREAD_DESTROY: return 41;
+        case EMMultiDevicesListener::MultiDevicesOperation::THREAD_JOIN: return 42;
+        case EMMultiDevicesListener::MultiDevicesOperation::THREAD_LEAVE: return 43;
+        case EMMultiDevicesListener::MultiDevicesOperation::THREAD_UPDATE: return 44;
+        case EMMultiDevicesListener::MultiDevicesOperation::THREAD_KICK: return 45;
+        default:
+            return -1;
+        }
+    }
+    EMMultiDevicesListener::MultiDevicesOperation MultiDevices::MultiDevicesOperationFromInt(int i)
+    {
+        switch (i)
+        {
+        case -1: return EMMultiDevicesListener::MultiDevicesOperation::UNKNOW;
+        case 2: return EMMultiDevicesListener::MultiDevicesOperation::CONTACT_REMOVE;
+        case 3: return EMMultiDevicesListener::MultiDevicesOperation::CONTACT_ACCEPT;
+        case 4: return EMMultiDevicesListener::MultiDevicesOperation::CONTACT_DECLINE;
+        case 5: return EMMultiDevicesListener::MultiDevicesOperation::CONTACT_BAN;
+        case 6: return EMMultiDevicesListener::MultiDevicesOperation::CONTACT_ALLOW;
+        case 10: return EMMultiDevicesListener::MultiDevicesOperation::GROUP_CREATE;
+        case 11: return EMMultiDevicesListener::MultiDevicesOperation::GROUP_DESTROY;
+        case 12: return EMMultiDevicesListener::MultiDevicesOperation::GROUP_JOIN;
+        case 13: return EMMultiDevicesListener::MultiDevicesOperation::GROUP_LEAVE;
+        case 14: return EMMultiDevicesListener::MultiDevicesOperation::GROUP_APPLY;
+        case 15: return EMMultiDevicesListener::MultiDevicesOperation::GROUP_APPLY_ACCEPT;
+        case 16: return EMMultiDevicesListener::MultiDevicesOperation::GROUP_APPLY_DECLINE;
+        case 17: return EMMultiDevicesListener::MultiDevicesOperation::GROUP_INVITE;
+        case 18: return EMMultiDevicesListener::MultiDevicesOperation::GROUP_INVITE_ACCEPT;
+        case 19: return EMMultiDevicesListener::MultiDevicesOperation::GROUP_INVITE_DECLINE;
+        case 20: return EMMultiDevicesListener::MultiDevicesOperation::GROUP_KICK;
+        case 21: return EMMultiDevicesListener::MultiDevicesOperation::GROUP_BAN;
+        case 22: return EMMultiDevicesListener::MultiDevicesOperation::GROUP_ALLOW;
+        case 23: return EMMultiDevicesListener::MultiDevicesOperation::GROUP_BLOCK;
+        case 24: return EMMultiDevicesListener::MultiDevicesOperation::GROUP_UNBLOCK;
+        case 25: return EMMultiDevicesListener::MultiDevicesOperation::GROUP_ASSIGN_OWNER;
+        case 26: return EMMultiDevicesListener::MultiDevicesOperation::GROUP_ADD_ADMIN;
+        case 27: return EMMultiDevicesListener::MultiDevicesOperation::GROUP_REMOVE_ADMIN;
+        case 28: return EMMultiDevicesListener::MultiDevicesOperation::GROUP_ADD_MUTE;
+        case 29: return EMMultiDevicesListener::MultiDevicesOperation::GROUP_REMOVE_MUTE;
+        case 30: return EMMultiDevicesListener::MultiDevicesOperation::GROUP_ADD_USER_WHITE_LIST;
+        case 31: return EMMultiDevicesListener::MultiDevicesOperation::GROUP_REMOVE_USER_WHITE_LIST;
+        case 32: return EMMultiDevicesListener::MultiDevicesOperation::GROUP_ALL_BAN;
+        case 33: return EMMultiDevicesListener::MultiDevicesOperation::GROUP_REMOVE_ALL_BAN;
+        case 40: return EMMultiDevicesListener::MultiDevicesOperation::THREAD_CREATE;
+        case 41: return EMMultiDevicesListener::MultiDevicesOperation::THREAD_DESTROY;
+        case 42: return EMMultiDevicesListener::MultiDevicesOperation::THREAD_JOIN;
+        case 43: return EMMultiDevicesListener::MultiDevicesOperation::THREAD_LEAVE;
+        case 44: return EMMultiDevicesListener::MultiDevicesOperation::THREAD_UPDATE;
+        case 45: return EMMultiDevicesListener::MultiDevicesOperation::THREAD_KICK;
+        default: return EMMultiDevicesListener::MultiDevicesOperation::UNKNOW;
+        }
     }
 
     TokenWrapper::TokenWrapper()

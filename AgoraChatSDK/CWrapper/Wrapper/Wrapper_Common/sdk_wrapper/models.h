@@ -20,6 +20,7 @@
 #include "emmuc.h"
 #include "emthreadmanager_listener.h"
 #include "empresence.h"
+#include "emmultidevices_listener.h"
 
 #include "sdk_wrapper_internal.h"
 
@@ -47,7 +48,7 @@ namespace sdk_wrapper {
 		static map<string, string> FromJsonObjectToMap(const Value& jnode);
 
 		static string ToJson(const map<string, string>& map);
-		static map<string, string> FromJsonToMap(string& jstr);
+		static map<string, string> FromJsonToMap(const string& jstr);
 	};
 
 	class Options
@@ -75,8 +76,8 @@ namespace sdk_wrapper {
 		static string MessageDirectionToString(EMMessage::EMMessageDirection direction);
 		static EMMessage::EMMessageDirection MessageDirectionFromString(string str);
 
-		static string BodyTypeToString(EMMessageBody::EMMessageBodyType btype);
-		static EMMessageBody::EMMessageBodyType BodyTypeFromString(string str);
+		static int BodyTypeToInt(EMMessageBody::EMMessageBodyType btype);
+		static EMMessageBody::EMMessageBodyType BodyTypeFromInt(int i);
 
 		static int DownLoadStatusToInt(EMFileMessageBody::EMDownloadStatus download_status);
 		static EMFileMessageBody::EMDownloadStatus DownLoadStatusFromInt(int i);
@@ -117,8 +118,12 @@ namespace sdk_wrapper {
 		static string ToJson(EMConversationPtr conversation);
 		static string ToJson(EMConversationList conversations);
 		static void ToJsonObject(Writer<StringBuffer>& writer, EMConversationPtr conversation);
+
 		static int ConversationTypeToInt(EMConversation::EMConversationType type);
 		static EMConversation::EMConversationType ConversationTypeFromInt(int i);
+
+		static int EMMessageSearchDirectionToInt(EMConversation::EMMessageSearchDirection direction);
+		static EMConversation::EMMessageSearchDirection EMMessageSearchDirectionFromInt(int i);
 	};
 
 	class SupportLanguage
@@ -264,6 +269,13 @@ namespace sdk_wrapper {
 
 		static string ToJson(EMPresencePtr presence);
 		static string ToJson(const vector<EMPresencePtr>& vec);
+	};
+
+	class MultiDevices
+	{
+	public:
+		static int MultiDevicesOperationToInt(EMMultiDevicesListener::MultiDevicesOperation operation);
+		static EMMultiDevicesListener::MultiDevicesOperation MultiDevicesOperationFromInt(int i);
 	};
 
 	class TokenWrapper
