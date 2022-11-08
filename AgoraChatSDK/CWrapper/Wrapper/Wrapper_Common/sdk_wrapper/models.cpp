@@ -2272,7 +2272,7 @@ namespace sdk_wrapper
         return data;
     }
 
-    void Room::ToJsonObject(Writer<StringBuffer>& writer, EMChatroomPtr room)
+    void Room::ToJsonObject(Writer<StringBuffer>& writer, const EMChatroomPtr room)
     {
         if (nullptr == room) return;
 
@@ -2319,12 +2319,33 @@ namespace sdk_wrapper
 
         writer.EndObject();
     }
-    string Room::ToJson(EMChatroomPtr room)
+    string Room::ToJson(const EMChatroomPtr room)
     {
         StringBuffer s;
         Writer<StringBuffer> writer(s);
 
         ToJsonObject(writer, room);
+
+        string data = s.GetString();
+        return data;
+    }
+
+    void Room::ToJsonObject(Writer<StringBuffer>& writer, const EMChatroomList room_list)
+    {
+        writer.StartArray();
+
+        for (auto it : room_list) {
+            ToJsonObject(writer, it);
+        }
+
+        writer.EndArray();
+    }
+    string Room::ToJson(const EMChatroomList room_list)
+    {
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        ToJsonObject(writer, room_list);
 
         string data = s.GetString();
         return data;
@@ -2798,6 +2819,53 @@ namespace sdk_wrapper
         case 45: return EMMultiDevicesListener::MultiDevicesOperation::THREAD_KICK;
         default: return EMMultiDevicesListener::MultiDevicesOperation::UNKNOW;
         }
+    }
+
+    void DeviceInfo::ToJsonObject(Writer<StringBuffer>& writer, const EMDeviceInfoPtr di)
+    {
+        writer.StartObject();
+
+        writer.Key("resource");
+        writer.String(di->mResource.c_str());
+
+        writer.Key("deviceUUID");
+        writer.String(di->mDeviceUUID.c_str());
+
+        writer.Key("deviceName");
+        writer.String(di->mDeviceName.c_str());
+
+        writer.EndObject();
+    }
+    string DeviceInfo::ToJson(const EMDeviceInfoPtr di)
+    {
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        ToJsonObject(writer, di);
+
+        std::string data = s.GetString();
+        return data;
+    }
+
+    void DeviceInfo::ToJsonObject(Writer<StringBuffer>& writer, const vector<EMDeviceInfoPtr> vec)
+    {
+        writer.StartArray();
+
+        for (auto it : vec) {
+            ToJsonObject(writer, it);
+        }
+
+        writer.EndArray();
+    }
+    string DeviceInfo::ToJson(const vector<EMDeviceInfoPtr> vec)
+    {
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        ToJsonObject(writer, vec);
+
+        std::string data = s.GetString();
+        return data;
     }
 
     TokenWrapper::TokenWrapper()

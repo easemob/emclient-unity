@@ -439,17 +439,86 @@ namespace sdk_wrapper
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_KickDevice(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        //TODO
+        if (!CheckClientInitOrNot(cbid)) return;
+
+        string local_jstr = jstr;
+        string local_cbid = cbid;
+
+        Document d; d.Parse(local_jstr.c_str());
+        string user_name = GetJsonValue_String(d, "username", "");
+        string password = GetJsonValue_String(d, "password", "");
+        string resource = GetJsonValue_String(d, "resource", "");
+
+        thread t([=]() {
+            EMError error;
+            CLIENT->kickDevice(user_name, password, resource, error);
+
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+                string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+         });
+        t.detach();
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_KickDevices(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        //TODO
+        if (!CheckClientInitOrNot(cbid)) return;
+
+        string local_jstr = jstr;
+        string local_cbid = cbid;
+
+        Document d; d.Parse(local_jstr.c_str());
+        string user_name = GetJsonValue_String(d, "username", "");
+        string password = GetJsonValue_String(d, "password", "");
+
+        thread t([=]() {
+            EMError error;
+            CLIENT->kickAllDevices(user_name, password, error);
+
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+                string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+        });
+        t.detach();
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_GetLoggedInDevicesFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        //TODO
+        if (!CheckClientInitOrNot(cbid)) return;
+
+        string local_jstr = jstr;
+        string local_cbid = cbid;
+
+        Document d; d.Parse(local_jstr.c_str());
+        string user_name = GetJsonValue_String(d, "username", "");
+        string password = GetJsonValue_String(d, "password", "");
+
+        thread t([=]() {
+            EMError error;
+
+            vector<EMDeviceInfoPtr> vec = CLIENT->getLoggedInDevicesFromServer(user_name, password, error);
+
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+                string json = DeviceInfo::ToJson(vec);
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+        });
+        t.detach();
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_ClearResource(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)

@@ -690,7 +690,7 @@ namespace AgoraChat
             if (null == json || json.Length == 0) return false;
 
             JSONObject jsonObject = JSON.Parse(json).AsObject;
-            return jsonObject["ret"].AsBool; // TODO: need to check with teammate
+            return jsonObject["ret"].AsBool;
         }
 
         /**

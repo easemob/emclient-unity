@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text;
-using UnityEngine;
+//using UnityEngine;
 
 namespace AgoraChat
 {
@@ -9,7 +9,7 @@ namespace AgoraChat
     {
         internal static void NativeCall(string manager, string method, SimpleJSON.JSONNode json, string callbackId = null)
         {
-            Debug.Log($"NativeCall: {manager}, {method}, {json}, {callbackId}");
+            //Debug.Log($"NativeCall: {manager}, {method}, {json}, {callbackId}");
             _NativeCall(manager, method, json?.ToString(), callbackId ?? "");
         }
 
@@ -18,7 +18,7 @@ namespace AgoraChat
         {
             StringBuilder sbuilder = new StringBuilder(512);
             _NativeGet(manager, method, json?.ToString(), sbuilder, callbackId ?? "");
-            Debug.Log($"NativeGet: {manager}, {method}, {json}, {callbackId}");
+            //Debug.Log($"NativeGet: {manager}, {method}, {json}, {callbackId}");
             return Tools.GetUnicodeStringFromUTF8(sbuilder.ToString());
         }
 

@@ -651,7 +651,7 @@ namespace sdk_wrapper {
             writer.Key("userIds");
             MyJson::ToJsonObject(writer, mutes);
 
-            writer.Key("muteExpire");
+            writer.Key("expireTime");
             writer.Int64(muteExpire);
 
             JSON_ENDOBJ

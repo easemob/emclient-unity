@@ -731,37 +731,180 @@ namespace sdk_wrapper {
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_FetchChatRoomWhiteListFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        //TODO
+        if (!CheckClientInitOrNot(cbid)) return;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        string room_id = GetJsonValue_String(d, "roomId", "");
+
+        thread t([=]() {
+            EMError error;
+            EMMucMemberList list = CLIENT->getChatroomManager().fetchChatroomWhiteList(room_id, error);
+
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+
+                string json = MyJson::ToJson(list);
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+        });
+        t.detach();
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_IsMemberInChatRoomWhiteListFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        //TODO
+        if (!CheckClientInitOrNot(cbid)) return;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        string room_id = GetJsonValue_String(d, "roomId", "");
+
+        thread t([=]() {
+            EMError error;
+            bool ret = CLIENT->getChatroomManager().fetchIsMemberInWhiteList(room_id, error);
+
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+
+                JSON_STARTOBJ
+                writer.Key("ret");
+                writer.Bool(ret);
+                JSON_ENDOBJ
+
+                string json = s.GetString();
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+        });
+        t.detach();
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_FetchChatRoomAttributes(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        //TODO
+        if (!CheckClientInitOrNot(cbid)) return;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        string room_id = GetJsonValue_String(d, "roomId", "");
+        vector<string> keys = MyJson::FromJsonObjectToVector(d["list"]);
+
+        thread t([=]() {
+            EMError error;
+            string json = CLIENT->getChatroomManager().fetchChatRoomMetaFromSever(room_id, keys, error);
+
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            });
+        t.detach();
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_SetChatRoomAttributes(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        //TODO
+        if (!CheckClientInitOrNot(cbid)) return;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);        
+        string room_id = GetJsonValue_String(d, "roomId", "");
+        string kv_json = MyJson::ToJsonWithJsonObject(d["kv"]);
+        bool delete_when_exit = GetJsonValue_Bool(d, "deleteWhenExit", true); //TODO: addChatRoomMetaData no need this param?
+        bool forced = GetJsonValue_Bool(d, "forced", true);
+
+        thread t([=]() {
+            EMError error;
+            string json = CLIENT->getChatroomManager().addChatRoomMetaData(room_id, kv_json, error, forced); //TODO: check with c# side
+
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            });
+        t.detach();
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_RemoveChatRoomAttributes(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        //TODO
+        if (!CheckClientInitOrNot(cbid)) return;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        string room_id = GetJsonValue_String(d, "roomId", "");
+        vector<string> keys = MyJson::FromJsonObjectToVector(d["list"]);
+
+        thread t([=]() {
+            EMError error;
+            string json = CLIENT->getChatroomManager().removeChatRoomMetaFromSever(room_id, keys, error);
+
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str()); //TODO: need to check with c# side
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            });
+        t.detach();
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_GetChatRoom(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        //TODO: which sdk API?
+        if (!CheckClientInitOrNot(cbid)) return;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        string room_id = GetJsonValue_String(d, "roomId", "");
+ 
+        EMError error;
+        EMChatroomPtr room = CLIENT->getChatroomManager().chatroomWithId(room_id);
+
+        string json = Room::ToJson(room);
+        memcpy(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_GetAllChatRooms(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        //TODO: which sdk API?
+        if (!CheckClientInitOrNot(cbid)) return;
+
+        string local_cbid = cbid;
+
+        thread t([=]() {
+            EMError error;
+            EMChatroomList list = CLIENT->getChatroomManager().fetchAllChatrooms(error);
+
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+                string json = Room::ToJson(list);
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+        });
+        t.detach();
     }
 }
 

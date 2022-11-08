@@ -89,7 +89,7 @@ namespace AgoraChat
 
                     string cbid = jo["callbackId"].Value;
                     int progress = (null != jo["progress"]) ? jo["progress"].AsInt : -1;
-                    // TODO: jsonNode or string?
+                    // here is json string
                     string value = (null != jo["value"]) ? jo["value"].Value : "";
 
                     int code = -1;
