@@ -18,8 +18,8 @@
 
 #endif
 
-COMMON_WRAPPER_API void COMMON_WRAPPER_CALL AddListener_Common(void* callback_handle);
-COMMON_WRAPPER_API void COMMON_WRAPPER_CALL CleanListener_Common();
+COMMON_WRAPPER_API void COMMON_WRAPPER_CALL Init_Common(int sdkType, void* callback_handle);
+COMMON_WRAPPER_API void COMMON_WRAPPER_CALL Uninit_Common();
 COMMON_WRAPPER_API void COMMON_WRAPPER_CALL NativeCall_Common(const char* manager, const char* method, const char* jstr, const char* cbid);
 COMMON_WRAPPER_API int  COMMON_WRAPPER_CALL NativeGet_Common(const char* manager, const char* method, const char* jstr, char* buf, const char* cbid);
 

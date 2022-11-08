@@ -124,6 +124,36 @@ namespace AgoraChat
             NativeCall(SDKMethod.renewToken, jo_param);
         }
 
+        internal void GetLoggedInDevicesFromServer(string username, string password, ValueCallBack<List<DeviceInfo>> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.Add("username", username);
+            jo_param.Add("password", password);
+
+            Process process = (_, jsonNode) =>
+            {
+                return List.BaseModelListFromJsonArray<DeviceInfo>(jsonNode);
+            };
+
+            NativeCall<List<DeviceInfo>>(SDKMethod.getLoggedInDevicesFromServer, jo_param, callback, process);
+        }
+
+        internal void KickDevice(string username, string password, string resource, CallBack callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.Add("username", username);
+            jo_param.Add("password", password);
+            jo_param.Add("resource", resource);
+            NativeCall(SDKMethod.kickDevice, jo_param, callback);
+        }
+
+        internal void kickAllDevices(string username, string password, CallBack callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.Add("username", username);
+            jo_param.Add("password", password);
+            NativeCall(SDKMethod.kickDevice, jo_param, callback);
+        }
 
         internal void AddConnectionDelegate(IConnectionDelegate connectionDelegate)
         {

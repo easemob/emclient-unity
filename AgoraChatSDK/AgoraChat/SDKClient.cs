@@ -1,4 +1,6 @@
-﻿namespace AgoraChat
+using System.Collections.Generic;
+
+namespace AgoraChat
 {
     /**
      * \~chinese
@@ -351,6 +353,24 @@
         public void RenewAgoraToken(string token)
         {
             _clientImpl.RenewAgoraToken(token);
+        }
+
+        //TODO: add comments
+        public void GetLoggedInDevicesFromServer(string username, string password, ValueCallBack<List<DeviceInfo>> callback = null)
+        {
+            _clientImpl.GetLoggedInDevicesFromServer(username, password, callback);
+        }
+
+        //TODO: add comments
+        public void KickDevice(string username, string password, string resource, CallBack callback = null)
+        {
+            _clientImpl.KickDevice(username, password, resource, callback);
+        }
+
+        //TODO: add comments
+        public void kickAllDevices(string username, string password, CallBack callback = null)
+        {
+            _clientImpl.kickAllDevices(username, password, callback);
         }
 
         /**
