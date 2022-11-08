@@ -16,8 +16,6 @@ jobject wrapperJObj = NULL;
 
 namespace wrapper_jni {
 
-
-
     JNIEnv* getCurrentThreadEnv()
     {
         JNIEnv *env = NULL;
@@ -73,14 +71,14 @@ namespace wrapper_jni {
 
     jclass javaWrapperClass() {
         JNIEnv *env = getCurrentThreadEnv();
-        return (*env).FindClass("com/hyphenate/javawrapper/channel/EMChannel");
+        return (*env).FindClass("com/hyphenate/cwrapper/EMCWrapper");
     }
 
     void init_common(int sdkType, void* listener) {
         if(wrapperJObj == NULL) {
             JNIEnv *env = getCurrentThreadEnv();
-            jclass cls = (*env).FindClass("com/hyphenate/javawrapper/JavaWrapper");
-            jmethodID mid = (*env).GetStaticMethodID(cls,"wrapper","(IJ)Lcom/hyphenate/javawrapper/channel/EMChannel;");
+            jclass cls = (*env).FindClass("com/hyphenate/cwrapper/EMCWrapper");
+            jmethodID mid = (*env).GetStaticMethodID(cls,"wrapper","(IJ)Lcom/hyphenate/cwrapper/EMCWrapper;");
             jobject jobj = (*env).CallStaticObjectMethod(cls, mid, sdkType, (long)listener);
             if (jobj != NULL) 
             {

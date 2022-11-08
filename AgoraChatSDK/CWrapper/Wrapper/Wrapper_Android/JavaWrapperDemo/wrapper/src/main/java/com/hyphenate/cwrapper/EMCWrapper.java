@@ -8,8 +8,20 @@ import com.hyphenate.wrapper.util.EMSDKMethod;
 import org.json.JSONException;
 
 public class EMCWrapper {
+    static EMCWrapper cWrapper;
+
     EMWrapper wrapper;
-    public EMCWrapper(int iType, long listener) {
+    public static EMCWrapper wrapper(int iType, long listener) {
+        cWrapper = new EMCWrapper(iType, listener);
+        return cWrapper;
+    }
+
+    long listener = 0;
+    int iType = 0;
+
+    public EMCWrapper(int iType, long listener){
+        this.iType = iType;
+        this.listener = listener;
         wrapper = new EMWrapper();
         EMWrapperHelper.listener = new EMCWrapperListener();
     }

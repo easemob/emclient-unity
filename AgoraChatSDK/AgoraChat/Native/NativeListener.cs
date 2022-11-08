@@ -13,8 +13,6 @@ namespace AgoraChat
 
         public NativeListenerEvent nativeListenerEvent;
 
-        public event ManagerHandle ManagerEvent;
-
         public event ManagerHandle ChatManagerEvent;
 
         public event ManagerHandle ContactManagerEvent;
@@ -101,12 +99,12 @@ namespace AgoraChat
 
         public void AddNaitveListener()
         {
-            CWrapperNative.AddListener(nativeListenerEvent);
+            CWrapperNative.Init(0, nativeListenerEvent);
         }
 
         public void RemoveNativeListener()
         {
-            CWrapperNative.CleanListener();
+            CWrapperNative.UnInit();
         }
     }
 }
