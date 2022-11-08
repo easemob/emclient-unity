@@ -266,6 +266,18 @@ namespace AgoraChat
 	     */
         public bool IsAutoDownload = true;
 
+
+        /**
+	     * \~chinese
+	     * 设置区域代号，使用边缘节点时遵循区域限制
+	     * -（默认）`GLOB`: 不限制区域。
+	     *
+	     * \~english
+	     * sets area code, will follow the area when using edge node.
+	     * - (Default)`GLOB`: glob.
+	     */
+        public AreaCode AreaCode = AreaCode.GLOB;
+
         /**
         * \~chinese
         * Options 构造方法。
@@ -331,7 +343,7 @@ namespace AgoraChat
             jo["usingHttpsOnly"] = UsingHttpsOnly;
             jo["serverTransfer"] = ServerTransfer;
             jo["isAutoDownload"] = IsAutoDownload;
-
+            jo["areaCode"] = (int)AreaCode;
 
             jo.Add("enableDnsConfig", EnableDNSConfig);
 
