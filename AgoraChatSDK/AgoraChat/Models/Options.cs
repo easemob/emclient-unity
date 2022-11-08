@@ -266,6 +266,18 @@ namespace AgoraChat
 	     */
         public bool IsAutoDownload = true;
 
+
+        /**
+	     * \~chinese
+	     * 设置区域代号，使用边缘节点时遵循区域限制
+	     * -（默认）`GLOB`: 不限制区域。
+	     *
+	     * \~english
+	     * sets area code, will follow the area when using edge node.
+	     * - (Default)`GLOB`: glob.
+	     */
+        public AreaCode AreaCode = AreaCode.GLOB;
+
         /**
         * \~chinese
         * Options 构造方法。
@@ -317,65 +329,71 @@ namespace AgoraChat
         internal override JSONObject ToJsonObject()
         {
             JSONObject jo = new JSONObject();
-            jo["app_key"] = AppKey;
-            jo["debug_mode"] = DebugMode;
-            jo["auto_login"] = AutoLogin;
-            jo["accept_invitation_always"] = AcceptInvitationAlways;
-            jo["auto_accept_group_invitation"] = AutoAcceptGroupInvitation;
-            jo["require_ack"] = RequireAck;
-            jo["require_delivery_ack"] = RequireDeliveryAck;
-            jo["delete_messages_as_exit_group"] = DeleteMessagesAsExitGroup;
-            jo["delete_messages_as_exit_room"] = DeleteMessagesAsExitRoom;
-            jo["is_room_owner_leave_allowed"] = IsRoomOwnerLeaveAllowed;
-            jo["sort_message_by_server_time"] = SortMessageByServerTime;
-            jo["using_https_only"] = UsingHttpsOnly;
-            //jo["server_transfer"] = ServerTransfer;
-            jo["is_auto_download"] = IsAutoDownload;
+            jo["appKey"] = AppKey;
+            jo["debugMode"] = DebugMode;
+            jo["autoLogin"] = AutoLogin;
+            jo["acceptInvitationAlways"] = AcceptInvitationAlways;
+            jo["autoAcceptGroupInvitation"] = AutoAcceptGroupInvitation;
+            jo["requireAck"] = RequireAck;
+            jo["requireDeliveryAck"] = RequireDeliveryAck;
+            jo["deleteMessagesAsExitGroup"] = DeleteMessagesAsExitGroup;
+            jo["deleteMessagesAsExitRoom"] = DeleteMessagesAsExitRoom;
+            jo["isRoomOwnerLeaveAllowed"] = IsRoomOwnerLeaveAllowed;
+            jo["sortMessageByServerTime"] = SortMessageByServerTime;
+            jo["usingHttpsOnly"] = UsingHttpsOnly;
+            jo["serverTransfer"] = ServerTransfer;
+            jo["isAutoDownload"] = IsAutoDownload;
+            jo["areaCode"] = (int)AreaCode;
 
-
-            jo.Add("enable_dns_config", EnableDNSConfig);
+            jo.Add("enableDnsConfig", EnableDNSConfig);
 
             if (RestServer != null)
             {
-                jo.Add("rest_server", RestServer);
+                jo.Add("restServer", RestServer);
             }
 
             if (IMServer != null)
             {
-                jo.Add("im_server", IMServer);
+                jo.Add("imServer", IMServer);
             }
 
             if (IMPort != 0)
             {
-                jo.Add("im_port", IMPort);
+                jo.Add("imPort", IMPort);
             }
 
             if (DNSURL != null)
             {
-                jo.Add("dns_url", DNSURL);
+                jo.Add("dnsUrl", DNSURL);
             }
 
-            jo.Add("mz_app_id", mZAppId);
-            jo.Add("mz_app_key", mZAppKey);
-            jo.Add("enable_mz_push", enableMZPush);
 
-            jo.Add("oppo_app_key", oPPOAppKey);
-            jo.Add("oppo_app_secret", oPPOAppSecret);
-            jo.Add("enable_oppo_push", enableOPPOPush);
+            /* 暂不支持推送
+            JSONObject pushConfig = new JSONObject();
+            pushConfig.Add("mzAppId", mZAppId);
+            pushConfig.Add("mzAppKey", mZAppKey);
+            pushConfig.Add("enableMzPush", enableMZPush);
 
-            jo.Add("mi_app_id", miAppId);
-            jo.Add("mi_app_key", miAppKey);
-            jo.Add("enable_mi_push", enableMiPush);
+            pushConfig.Add("oppoAppKey", oPPOAppKey);
+            pushConfig.Add("oppoAppSecret", oPPOAppSecret);
+            pushConfig.Add("enableOppoPush", enableOPPOPush);
 
-            jo.Add("fcm_id", fCMId);
-            jo.Add("enable_fcm_push", enableFCMPush);
+            pushConfig.Add("miAppId", miAppId);
+            pushConfig.Add("miAppKey", miAppKey);
+            pushConfig.Add("enableMiPush", enableMiPush);
 
-            jo.Add("apns_cer_name", aPNsCerName);
-            jo.Add("enable_apns", enableAPNs);
+            pushConfig.Add("fcmId", fCMId);
+            pushConfig.Add("enableFcmPush", enableFCMPush);
 
-            jo.Add("enable_hw_push", enableHWPush);
+            pushConfig.Add("apnsCerName", aPNsCerName);
+            pushConfig.Add("enableApns", enableAPNs);
 
-            jo.Add("enable_vivo_push", enableVivoPush);
+            pushConfig.Add("enableHwPush", enableHWPush);
+
+            pushConfig.Add("enableVivoPush", enableVivoPush);
+
+            jo.Add("pushConfig", pushConfig);
+            */
 
             return jo;
         }

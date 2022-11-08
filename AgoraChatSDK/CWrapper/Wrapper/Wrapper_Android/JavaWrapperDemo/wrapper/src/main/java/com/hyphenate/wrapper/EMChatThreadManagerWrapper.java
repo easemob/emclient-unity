@@ -37,8 +37,6 @@ public class EMChatThreadManagerWrapper extends EMBaseWrapper{
             ret = fetchJoinedChatThreads(jsonObject, callback);
         } else if (EMSDKMethod.fetchChatThreadsWithParentId.equals(method)) {
             ret = fetchChatThreadsWithParentId(jsonObject, callback);
-        } else if (EMSDKMethod.fetchJoinedChatThreadsWithParentId.equals(method)) {
-            ret = fetchJoinedChatThreadsWithParentId(jsonObject, callback);
         } else if (EMSDKMethod.fetchChatThreadMember.equals(method)) {
             ret = fetchChatThreadMember(jsonObject, callback);
         } else if (EMSDKMethod.fetchLastMessageWithChatThreads.equals(method)) {
@@ -103,6 +101,16 @@ public class EMChatThreadManagerWrapper extends EMBaseWrapper{
     }
 
     private String fetchChatThreadsWithParentId(JSONObject params, EMWrapperCallback callback) throws JSONException {
+
+        boolean hasJoined = false;
+        if (params.has("joined")) {
+            hasJoined = params.getBoolean("joined");
+        }
+
+        if (hasJoined) {
+            return fetchJoinedChatThreadsWithParentId(params, callback);
+        }
+
         int pageSize = params.getInt("pageSize");
         String cursor = null;
         if (params.has("cursor")) {
@@ -199,7 +207,7 @@ public class EMChatThreadManagerWrapper extends EMBaseWrapper{
 
     private String removeMemberFromChatThread(JSONObject params, EMWrapperCallback callback) throws JSONException {
         String threadId = params.getString("threadId");
-        String memberId = params.getString("memberId");
+        String memberId = params.getString("userId");
         EMClient.getInstance().chatThreadManager().removeMemberFromChatThread(threadId, memberId, new EMCommonCallback(callback));
         return null;
     }
@@ -212,7 +220,7 @@ public class EMChatThreadManagerWrapper extends EMBaseWrapper{
     }
 
     private String createChatThread(JSONObject params, EMWrapperCallback callback) throws JSONException {
-        String messageId = params.getString("messageId");
+        String messageId = params.getString("msgId");
         String name = params.getString("name");
         String parentId = params.getString("parentId");
         EMClient.getInstance().chatThreadManager().createChatThread(parentId, messageId, name, new EMCommonValueCallback<EMChatThread>(callback){
@@ -267,7 +275,7 @@ public class EMChatThreadManagerWrapper extends EMBaseWrapper{
             public void onChatThreadCreated(EMChatThreadEvent event) {
                 try {
                     JSONObject jsonObject = EMChatThreadEventHelper.toJson(event);
-                    post(() -> EMWrapperHelper.listener.onReceive("EMChatThreadChangeListener", EMSDKMethod.onChatThreadCreate, jsonObject.toString()));
+                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.chatThreadListener, EMSDKMethod.onChatThreadCreate, jsonObject.toString()));
                 }catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -277,7 +285,7 @@ public class EMChatThreadManagerWrapper extends EMBaseWrapper{
             public void onChatThreadUpdated(EMChatThreadEvent event) {
                 try {
                     JSONObject jsonObject = EMChatThreadEventHelper.toJson(event);
-                    post(() -> EMWrapperHelper.listener.onReceive("EMChatThreadChangeListener", EMSDKMethod.onChatThreadUpdate, jsonObject.toString()));
+                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.chatThreadListener, EMSDKMethod.onChatThreadUpdate, jsonObject.toString()));
                 }catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -287,7 +295,7 @@ public class EMChatThreadManagerWrapper extends EMBaseWrapper{
             public void onChatThreadDestroyed(EMChatThreadEvent event) {
                 try {
                     JSONObject jsonObject = EMChatThreadEventHelper.toJson(event);
-                    post(() -> EMWrapperHelper.listener.onReceive("EMChatThreadChangeListener", EMSDKMethod.onChatThreadDestroy, jsonObject.toString()));
+                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.chatThreadListener, EMSDKMethod.onChatThreadDestroy, jsonObject.toString()));
                 }catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -297,7 +305,7 @@ public class EMChatThreadManagerWrapper extends EMBaseWrapper{
             public void onChatThreadUserRemoved(EMChatThreadEvent event) {
                 try {
                     JSONObject jsonObject = EMChatThreadEventHelper.toJson(event);
-                    post(() -> EMWrapperHelper.listener.onReceive("EMChatThreadChangeListener", EMSDKMethod.onUserKickOutOfChatThread, jsonObject.toString()));
+                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.chatThreadListener, EMSDKMethod.onUserKickOutOfChatThread, jsonObject.toString()));
                 }catch (JSONException e) {
                     e.printStackTrace();
                 }

@@ -6,6 +6,7 @@ import com.hyphenate.wrapper.util.EMWrapperThreadUtil;
 import com.hyphenate.wrapper.helper.HyphenateExceptionHelper;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 public class EMCommonCallback implements EMCallBack {
 
@@ -23,6 +24,19 @@ public class EMCommonCallback implements EMCallBack {
     public void onSuccess()
     {
         post(()-> callback.onSuccess(null));
+    }
+
+    @Override
+    public void onProgress(int progress, String status) {
+        post(()-> {
+            try {
+                JSONObject jo = new JSONObject();
+                jo.put("progress", progress);
+                callback.onProgress(jo.toString());
+            }catch (JSONException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     @Override

@@ -1056,7 +1056,7 @@ namespace AgoraChat
         {
             if (delegater.Count == 0) return;
 
-            if (method == SDKMethod.onMessagesDelivered)
+            if (method == SDKMethod.onMessagesReceived)
             {
                 if (jsonNode != null)
                 {

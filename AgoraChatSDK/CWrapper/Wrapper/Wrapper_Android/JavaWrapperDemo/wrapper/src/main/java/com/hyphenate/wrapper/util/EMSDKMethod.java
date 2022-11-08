@@ -1,6 +1,7 @@
 package com.hyphenate.wrapper.util;
 
 public class EMSDKMethod {
+    // client or manager
     public static final String client = "EMClient";
     public static final String chatManager = "EMChatManager";
     public static final String contactManager = "EMContactManager";
@@ -34,22 +35,6 @@ public class EMSDKMethod {
     public static final String isLoggedInBefore = "isLoggedInBefore";
     public static final String isConnected = "isConnected";
 
-    public static final String onConnected = "onConnected";
-    public static final String onDisconnected = "onDisconnected";
-    public static final String onUserDidLoginFromOtherDevice = "onUserDidLoginFromOtherDevice";
-    public static final String onUserDidRemoveFromServer = "onUserDidRemoveFromServer";
-    public static final String onUserDidForbidByServer = "onUserDidForbidByServer";
-    public static final String onUserDidChangePassword = "onUserDidChangePassword";
-    public static final String onUserDidLoginTooManyDevice = "onUserDidLoginTooManyDevice";
-    public static final String onUserKickedByOtherDevice = "onUserKickedByOtherDevice";
-    public static final String onUserAuthenticationFailed = "onUserAuthenticationFailed";
-
-    public static final String onMultiDeviceGroupEvent = "onMultiDeviceGroupEvent";
-    public static final String onMultiDeviceContactEvent = "onMultiDeviceContactEvent";
-    public static final String onMultiDeviceThreadEvent = "onMultiDeviceThreadEvent";
-    public static final String onSendDataToFlutter = "onSendDataToFlutter";
-    public static final String onTokenWillExpire = "onTokenWillExpire";
-    public static final String onTokenDidExpire = "onTokenDidExpire";
 
     /// EMContactManager methods
     public static final String addContact = "addContact";
@@ -65,7 +50,6 @@ public class EMSDKMethod {
     public static final String getSelfIdsOnOtherPlatform = "getSelfIdsOnOtherPlatform";
 
 
-    public static final String onContactChanged = "onContactChanged";
 
     /// EMChatManager methods
     public static final String sendMessage = "sendMessage";
@@ -91,29 +75,13 @@ public class EMSDKMethod {
     public static final String asyncFetchGroupAcks = "asyncFetchGroupAcks";
     public static final String deleteRemoteConversation = "deleteRemoteConversation";
     public static final String deleteMessagesBeforeTimestamp = "deleteMessagesBeforeTimestamp";
-
     public static final String translateMessage = "translateMessage";
     public static final String fetchSupportedLanguages = "fetchSupportLanguages";
-
     public static final String addReaction = "addReaction";
     public static final String removeReaction = "removeReaction";
     public static final String fetchReactionList = "fetchReactionList";
     public static final String fetchReactionDetail = "fetchReactionDetail";
     public static final String reportMessage = "reportMessage";
-
-    /// EMChatManager listener
-    public static final String onMessagesReceived = "onMessagesReceived";
-    public static final String onCmdMessagesReceived = "onCmdMessagesReceived";
-    public static final String onMessagesRead = "onMessagesRead";
-    public static final String onGroupMessageRead = "onGroupMessageRead";
-    public static final String onReadAckForGroupMessageUpdated = "onReadAckForGroupMessageUpdated";
-    public static final String onMessagesDelivered = "onMessagesDelivered";
-    public static final String onMessagesRecalled = "onMessagesRecalled";
-
-    public static final String onConversationUpdate = "onConversationUpdate";
-    public static final String onConversationHasRead = "onConversationHasRead";
-
-    public static final String onMessageReactionDidChange = "messageReactionDidChange";
 
     /// EMMessage listener
     public static final String onMessageProgressUpdate = "onMessageProgressUpdate";
@@ -123,7 +91,7 @@ public class EMSDKMethod {
     public static final String onMessageDeliveryAck = "onMessageDeliveryAck";
 
     /// EMConversation
-    public static final String getUnreadMsgCount = "getUnreadMsgCount";
+    public static final String getConversationUnreadMsgCount = "getConversationUnreadMsgCount";
     public static final String markAllMessagesAsRead = "markAllMessagesAsRead";
     public static final String markMessageAsRead = "markMessageAsRead";
     public static final String syncConversationExt = "syncConversationExt";
@@ -145,6 +113,9 @@ public class EMSDKMethod {
     public static final String getReactionList = "getReactionList";
     public static final String groupAckCount = "groupAckCount";
     public static final String getChatThread = "chatThread";
+    public static final String getHasDeliverAck = "getHasDeliverAck";
+    public static final String getHasReadAck = "getHasReadAck";
+
 
     // EMChatRoomManager
     public static final String joinChatRoom = "joinChatRoom";
@@ -182,8 +153,6 @@ public class EMSDKMethod {
     public static final String setChatRoomAttributes = "setChatRoomAttributes";
     public static final String removeChatRoomAttributes = "removeChatRoomAttributes";
 
-    // EMChatRoomManagerListener
-    public static final String chatRoomChange = "onChatRoomChanged";
 
     /// EMGroupManager
     public static final String getGroupWithId = "getGroupWithId";
@@ -226,14 +195,12 @@ public class EMSDKMethod {
     public static final String updateGroupAnnouncement = "updateGroupAnnouncement";
     public static final String updateGroupExt = "updateGroupExt";
     public static final String joinPublicGroup = "joinPublicGroup";
-    public static final String requestToJoinPublicGroup = "requestToJoinPublicGroup";
+    public static final String requestToJoinGroup = "requestToJoinGroup";
     public static final String acceptJoinApplication = "acceptJoinApplication";
     public static final String declineJoinApplication = "declineJoinApplication";
     public static final String acceptInvitationFromGroup = "acceptInvitationFromGroup";
     public static final String declineInvitationFromGroup = "declineInvitationFromGroup";
 
-    /// EMGroupManagerListener
-    public static final String onGroupChanged = "onGroupChanged";
 
     /// EMPushManager
     public static final String getImPushConfig = "getImPushConfig";
@@ -277,14 +244,11 @@ public class EMSDKMethod {
     public static final String fetchSubscribedMembersWithPageNum = "fetchSubscribedMembersWithPageNum";
     public static final String fetchPresenceStatus = "fetchPresenceStatus";
 
-    /// EMPresenceManagerListener
-    public static final String onPresenceStatusChanged = "onPresenceStatusChanged";
 
     /// EMChatThreadManager methods
     public static final String fetchChatThreadDetail = "fetchChatThreadDetail";
     public static final String fetchJoinedChatThreads = "fetchJoinedChatThreads";
     public static final String fetchChatThreadsWithParentId = "fetchChatThreadsWithParentId";
-    public static final String fetchJoinedChatThreadsWithParentId = "fetchJoinedChatThreadsWithParentId";
     public static final String fetchChatThreadMember = "fetchChatThreadMember";
     public static final String fetchLastMessageWithChatThreads = "fetchLastMessageWithChatThreads";
     public static final String removeMemberFromChatThread = "removeMemberFromChatThread";
@@ -294,13 +258,103 @@ public class EMSDKMethod {
     public static final String leaveChatThread = "leaveChatThread";
     public static final String destroyChatThread = "destroyChatThread";
 
-    // EMChatThreadManagerListener
+
+
+    /// HandleAction ?
+    public static final String startCallback = "startCallback";
+
+
+
+    // Listeners name
+    public static final String connectionListener = "connectionListener";
+    public static final String multiDeviceListener = "multiDeviceListener";
+    public static final String chatListener = "chatListener";
+    public static final String contactListener = "contactListener";
+    public static final String groupListener = "groupListener";
+    public static final String chatRoomListener = "chatRoomListener";
+    public static final String chatThreadListener = "chatThreadListener";
+    public static final String presenceListener = "presenceListener";
+    public static final String callback = "callback";
+    public static final String callbackProgress = "callbackProgress";
+
+    // ChatManagerDelegate
+    public static final String onMessagesReceived = "onMessagesReceived";
+    public static final String onCmdMessagesReceived = "onCmdMessagesReceived";
+    public static final String onMessagesRead = "onMessagesRead";
+    public static final String onGroupMessageRead = "onGroupMessageRead";
+    public static final String onReadAckForGroupMessageUpdated = "onReadAckForGroupMessageUpdated";
+    public static final String onMessagesDelivered = "onMessagesDelivered";
+    public static final String onMessagesRecalled = "onMessagesRecalled";
+    public static final String onConversationsUpdate = "onConversationsUpdate";
+    public static final String onConversationRead = "onConversationRead";
+    public static final String onMessageReactionDidChange = "messageReactionDidChange";
+
+    // ChatThreadManagerDelegate
     public static final String onChatThreadCreate = "onChatThreadCreate";
     public static final String onChatThreadUpdate = "onChatThreadUpdate";
     public static final String onChatThreadDestroy = "onChatThreadDestroy";
     public static final String onUserKickOutOfChatThread = "onUserKickOutOfChatThread";
 
+    // ContactManagerDelegate
+    public static final String onContactAdded = "onContactAdded";
+    public static final String onContactDeleted = "onContactDeleted";
+    public static final String onContactInvited = "onContactInvited";
+    public static final String onFriendRequestAccepted = "onFriendRequestAccepted";
+    public static final String onFriendRequestDeclined = "onFriendRequestDeclined";
 
-    /// HandleAction
-    public static final String startCallback = "startCallback";
+    // MultiDeviceDelegate
+    public static final String onContactMultiDevicesEvent = "onContactMultiDevicesEvent";
+    public static final String onGroupMultiDevicesEvent = "onGroupMultiDevicesEvent";
+    public static final String onUnDisturbMultiDevicesEvent = "onUnDisturbMultiDevicesEvent";
+    public static final String onThreadMultiDevicesEvent = "onThreadMultiDevicesEvent";
+
+    // PresenceManagerDelegate
+    public static final String onPresenceUpdated = "onPresenceUpdated";
+
+    // ConnectionDelegate
+    public static final String onConnected = "onConnected";
+    public static final String onDisconnected = "onDisconnected";
+    public static final String onTokenExpired = "onTokenExpired";
+    public static final String onTokenWillExpire = "onTokenWillExpire";
+
+    // GroupManagerDeleagate
+    public static final String onInvitationReceivedFromGroup = "onInvitationReceivedFromGroup";
+    public static final String onRequestToJoinReceivedFromGroup = "onRequestToJoinReceivedFromGroup";
+    public static final String onRequestToJoinAcceptedFromGroup = "onRequestToJoinAcceptedFromGroup";
+    public static final String onRequestToJoinDeclinedFromGroup = "onRequestToJoinDeclinedFromGroup";
+    public static final String onInvitationAcceptedFromGroup = "onInvitationAcceptedFromGroup";
+    public static final String onInvitationDeclinedFromGroup = "onInvitationDeclinedFromGroup";
+    public static final String onUserRemovedFromGroup = "onUserRemovedFromGroup";
+    public static final String onDestroyedFromGroup = "onDestroyedFromGroup";
+    public static final String onAutoAcceptInvitationFromGroup = "onAutoAcceptInvitationFromGroup";
+    public static final String onMuteListAddedFromGroup = "onMuteListAddedFromGroup";
+    public static final String onMuteListRemovedFromGroup = "onMuteListRemovedFromGroup";
+    public static final String onAdminAddedFromGroup = "onAdminAddedFromGroup";
+    public static final String onAdminRemovedFromGroup = "onAdminRemovedFromGroup";
+    public static final String onOwnerChangedFromGroup = "onOwnerChangedFromGroup";
+    public static final String onMemberJoinedFromGroup = "onMemberJoinedFromGroup";
+    public static final String onMemberExitedFromGroup = "onMemberExitedFromGroup";
+    public static final String onAnnouncementChangedFromGroup = "onAnnouncementChangedFromGroup";
+    public static final String onSharedFileAddedFromGroup = "onSharedFileAddedFromGroup";
+    public static final String onSharedFileDeletedFromGroup = "onSharedFileDeletedFromGroup";
+    public static final String onAddWhiteListMembersFromGroup = "onAddWhiteListMembersFromGroup";
+    public static final String onRemoveWhiteListMembersFromGroup = "onRemoveWhiteListMembersFromGroup";
+    public static final String onAllMemberMuteChangedFromGroup = "onAllMemberMuteChangedFromGroup";
+    public static final String onSpecificationChangedFromGroup = "onSpecificationChangedFromGroup";
+    public static final String onStateChangedFromGroup = "onStateChangedFromGroup";
+
+    // RoomManagerDelegate
+    public static final String onDestroyedFromRoom = "onDestroyedFromRoom";
+    public static final String onMemberJoinedFromRoom = "onMemberJoinedFromRoom";
+    public static final String onMemberExitedFromRoom = "onMemberExitedFromRoom";
+    public static final String onRemovedFromRoom = "onRemovedFromRoom";
+    public static final String onMuteListAddedFromRoom = "onMuteListAddedFromRoom";
+    public static final String onMuteListRemovedFromRoom = "onMuteListRemovedFromRoom";
+    public static final String onAdminAddedFromRoom = "onAdminAddedFromRoom";
+    public static final String onAdminRemovedFromRoom = "onAdminRemovedFromRoom";
+    public static final String onOwnerChangedFromRoom = "onOwnerChangedFromRoom";
+    public static final String onAnnouncementChangedFromRoom = "onAnnouncementChangedFromRoom";
+    public static final String onAttributesChangedFromRoom = "onAttributesChangedFromRoom";
+    public static final String onAttributesRemovedFromRoom = "onAttributesRemovedFromRoom";
+    public static final String onSpecificationChangedFromRoom = "onSpecificationChangedFromRoom";
 }

@@ -1136,14 +1136,14 @@ namespace AgoraChat
                             it.OnAnnouncementChangedFromRoom(roomId, announcement);
                         }
                         break;
-                    case SDKMethod.onChatroomAttributesChanged:
+                    case SDKMethod.onAttributesChangedFromRoom:
                         {
                             Dictionary<string, string> kv = Dictionary.StringDictionaryFromJsonObject(jsonNode["kv"]);
                             string userId = jsonNode["userId"];
                             it.OnChatroomAttributesChanged(roomId, kv, userId);
                         }
                         break;
-                    case SDKMethod.onChatroomAttributesRemoved:
+                    case SDKMethod.onAttributesRemovedFromRoom:
                         {
                             List<string> list = List.StringListFromJsonArray(jsonNode["list"]);
                             string userId = jsonNode["userId"];
