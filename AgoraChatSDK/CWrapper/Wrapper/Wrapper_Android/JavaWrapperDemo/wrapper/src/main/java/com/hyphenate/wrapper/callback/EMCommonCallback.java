@@ -42,12 +42,18 @@ public class EMCommonCallback implements EMCallBack {
     @Override
     public void onError(int code, String error) {
         HyphenateException e = new HyphenateException(code, error);
+
+        String errStr = null;
+        try {
+            errStr = HyphenateExceptionHelper.toJson(e).toString();
+        } catch (JSONException jsonException) {
+            jsonException.printStackTrace();
+        }
+
+        String finalErrStr = errStr;
+        callback.onError(finalErrStr);
         post(()->{
-            try {
-                callback.onError(HyphenateExceptionHelper.toJson(e).toString());
-            } catch (JSONException jsonException) {
-                jsonException.printStackTrace();
-            }
+            callback.onError(finalErrStr);
         });
     }
 }

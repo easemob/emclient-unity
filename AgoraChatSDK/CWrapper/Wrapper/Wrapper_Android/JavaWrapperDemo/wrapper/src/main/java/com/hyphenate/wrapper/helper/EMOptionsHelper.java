@@ -26,7 +26,7 @@ public class EMOptionsHelper {
         options.setAreaCode(json.getInt("areaCode"));
         options.setUsingHttpsOnly(json.getBoolean("usingHttpsOnly"));
         options.enableDNSConfig(json.getBoolean("enableDnsConfig"));
-        if (!json.getBoolean("enableDNSConfig")) {
+        if (!json.getBoolean("enableDnsConfig")) {
             if (json.has("imPort")) {
                 options.setImPort(json.getInt("imPort"));
             }
