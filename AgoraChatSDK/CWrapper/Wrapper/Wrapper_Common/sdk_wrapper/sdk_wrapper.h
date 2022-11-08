@@ -18,8 +18,8 @@
 
 #endif
 
-SDK_WRAPPER_API void SDK_WRAPPER_CALL AddListener_SDKWrapper(void* callback_handle);
-SDK_WRAPPER_API void SDK_WRAPPER_CALL CleanListener_SDKWrapper();
+SDK_WRAPPER_API void SDK_WRAPPER_CALL Init_SDKWrapper(int sdkType, void* callback_handle);
+SDK_WRAPPER_API void SDK_WRAPPER_CALL Uninit_SDKWrapper();
 
 // Client =====================================================================
 SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_InitWithOptions(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);

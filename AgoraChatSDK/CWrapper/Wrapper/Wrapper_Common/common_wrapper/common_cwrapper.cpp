@@ -262,16 +262,16 @@ bool CheckClientHandle()
 	return true;
 }
 
-COMMON_WRAPPER_API void COMMON_WRAPPER_CALL AddListener_Common(void* callback_handle)
+COMMON_WRAPPER_API void COMMON_WRAPPER_CALL Init_Common(int sdkType, void* callback_handle)
 {
 	//gCallback = (NativeListenerEvent)callback_handle;
-	AddListener_SDKWrapper(callback_handle);
+	Init_SDKWrapper(sdkType, callback_handle);
 }
 
-COMMON_WRAPPER_API void COMMON_WRAPPER_CALL CleanListener_Common()
+COMMON_WRAPPER_API void COMMON_WRAPPER_CALL Uninit_Common()
 {
 	//gCallback = nullptr;
-	CleanListener_SDKWrapper();
+	Uninit_SDKWrapper();
 }
 
 COMMON_WRAPPER_API void COMMON_WRAPPER_CALL NativeCall_Common(const char* manager, const char* method, const char* jstr, const char* cbid)

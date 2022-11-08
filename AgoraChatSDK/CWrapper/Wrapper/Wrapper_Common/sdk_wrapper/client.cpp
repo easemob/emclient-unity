@@ -8,7 +8,7 @@
 #include "callbacks.h"
 #include "sdk_wrapper.h"
 
-
+int SDK_TYPE = -1;
 EMClient* gClient = nullptr;
 EMConnectionListener* gConnectionListener = nullptr;
 EMMultiDevicesListener* gMultiDevicesListener = nullptr;
@@ -22,14 +22,16 @@ namespace sdk_wrapper
 {
     TokenWrapper token_wrapper;
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL AddListener_SDKWrapper(void* callback_handle)
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL Init_SDKWrapper(int sdkType, void* callback_handle)
     {
+        SDK_TYPE = sdkType;
         gCallback = nullptr;
         gCallback = (NativeListenerEvent)callback_handle;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL CleanListener_SDKWrapper()
+    SDK_WRAPPER_API void SDK_WRAPPER_CALL Uninit_SDKWrapper()
     {
+        SDK_TYPE = -1;
         gCallback = nullptr;
     }
 
