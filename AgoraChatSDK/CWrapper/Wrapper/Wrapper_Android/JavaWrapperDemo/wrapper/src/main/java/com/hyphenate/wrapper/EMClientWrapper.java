@@ -160,7 +160,6 @@ public class EMClientWrapper extends EMBaseWrapper {
     }
 
     private String loginWithAgoraToken(JSONObject param, EMWrapperCallback callback) throws JSONException {
-
         String username = param.getString("userId");
         String agoraToken = param.getString("token");
         EMClient.getInstance().loginWithAgoraToken(username, agoraToken, new EMCommonCallback(callback));

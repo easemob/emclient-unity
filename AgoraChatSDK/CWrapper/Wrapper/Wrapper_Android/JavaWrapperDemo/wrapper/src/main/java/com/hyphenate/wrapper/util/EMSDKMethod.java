@@ -1,8 +1,6 @@
-using System;
-        namespace AgoraChat
-        {
-public class SDKMethod
-{
+package com.hyphenate.wrapper.util;
+
+public class EMSDKMethod {
     // client or manager
     public static final String client = "EMClient";
     public static final String chatManager = "EMChatManager";
@@ -233,7 +231,7 @@ public class SDKMethod
     public static final String setPushTemplate = "setPushTemplate";
     public static final String getPushTemplate = "getPushTemplate";
 
-    /// EMUserInfoManager
+    /// EMUserInfoManager 
     public static final String updateOwnUserInfo = "updateOwnUserInfo";
     public static final String updateOwnUserInfoWithType = "updateOwnUserInfoWithType";
     public static final String fetchUserInfoById = "fetchUserInfoById";
@@ -343,7 +341,6 @@ public class SDKMethod
     public static final String onRemoveWhiteListMembersFromGroup = "onRemoveWhiteListMembersFromGroup";
     public static final String onAllMemberMuteChangedFromGroup = "onAllMemberMuteChangedFromGroup";
     public static final String onSpecificationChangedFromGroup = "onSpecificationChangedFromGroup";
-    public static final String onSpecificationChanged = "onSpecificationChanged";
     public static final String onStateChangedFromGroup = "onStateChangedFromGroup";
 
     // RoomManagerDelegate
@@ -360,5 +357,4 @@ public class SDKMethod
     public static final String onAttributesChangedFromRoom = "onAttributesChangedFromRoom";
     public static final String onAttributesRemovedFromRoom = "onAttributesRemovedFromRoom";
     public static final String onSpecificationChangedFromRoom = "onSpecificationChangedFromRoom";
-}
 }

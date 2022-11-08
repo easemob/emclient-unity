@@ -26,12 +26,14 @@ public class EMBaseWrapper {
                 JSONObject jo = null;
             try {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("value", object);
-                jo = jsonObject;
+                if (object != null) {
+                    jsonObject.put("value", object);
+                    jo = jsonObject;
+                }
             }catch (JSONException ignore){
                 ignore.printStackTrace();
             }finally {
-                callback.onSuccess(jo.toString());
+                callback.onSuccess(jo != null ? jo.toString() : null);
             }
         });
     }

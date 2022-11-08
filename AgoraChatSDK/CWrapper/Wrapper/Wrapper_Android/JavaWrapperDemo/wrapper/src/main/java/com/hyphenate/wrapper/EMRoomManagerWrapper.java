@@ -1009,13 +1009,11 @@ public class EMRoomManagerWrapper extends EMBaseWrapper{
             @Override
             public void onAttributesUpdate(String chatRoomId, Map<String, String> attributeMap, String from) {
                 JSONObject data = new JSONObject();
-
                 try {
                     data.put("roomId", chatRoomId);
-                    data.put("type", "chatroomAttributesDidUpdated");
-                    data.put("attributes", attributeMap);
-                    data.put("fromId", from);
-                    post(() -> EMWrapperHelper.listener.onReceive("EMChatRoomChangeListener", EMSDKMethod.chatRoomChange, data.toString()));
+                    data.put("kv", attributeMap);
+                    data.put("from", from);
+                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.chatRoomListener, EMSDKMethod.onAttributesChangedFromRoom, data.toString()));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -1024,13 +1022,11 @@ public class EMRoomManagerWrapper extends EMBaseWrapper{
             @Override
             public void onAttributesRemoved(String chatRoomId, List<String> keyList, String from) {
                 JSONObject data = new JSONObject();
-
                 try {
                     data.put("roomId", chatRoomId);
-                    data.put("keys", keyList);
-                    data.put("type", "chatroomAttributesDidRemoved");
-                    data.put("fromId", from);
-                    post(() -> EMWrapperHelper.listener.onReceive("EMChatRoomChangeListener", EMSDKMethod.chatRoomChange, data.toString()));
+                    data.put("list", keyList);
+                    data.put("from", from);
+                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.chatRoomListener, EMSDKMethod.onAttributesRemovedFromRoom, data.toString()));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

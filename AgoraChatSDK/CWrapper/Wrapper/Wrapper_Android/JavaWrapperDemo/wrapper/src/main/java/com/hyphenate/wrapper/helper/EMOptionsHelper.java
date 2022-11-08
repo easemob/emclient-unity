@@ -19,13 +19,13 @@ public class EMOptionsHelper {
         options.setAcceptInvitationAlways(json.getBoolean("acceptInvitationAlways"));
         options.setAutoAcceptGroupInvitation(json.getBoolean("autoAcceptGroupInvitation"));
         options.setDeleteMessagesAsExitGroup(json.getBoolean("deleteMessagesAsExitGroup"));
-        options.setDeleteMessagesAsExitChatRoom(json.getBoolean("deleteMessagesAsExitChatRoom"));
+        options.setDeleteMessagesAsExitChatRoom(json.getBoolean("deleteMessagesAsExitRoom"));
         options.setAutoDownloadThumbnail(json.getBoolean("isAutoDownload"));
-        options.allowChatroomOwnerLeave(json.getBoolean("isChatRoomOwnerLeaveAllowed"));
+        options.allowChatroomOwnerLeave(json.getBoolean("isRoomOwnerLeaveAllowed"));
         options.setAutoTransferMessageAttachments(json.getBoolean("serverTransfer"));
         options.setAreaCode(json.getInt("areaCode"));
         options.setUsingHttpsOnly(json.getBoolean("usingHttpsOnly"));
-        options.enableDNSConfig(json.getBoolean("enableDNSConfig"));
+        options.enableDNSConfig(json.getBoolean("enableDnsConfig"));
         if (!json.getBoolean("enableDNSConfig")) {
             if (json.has("imPort")) {
                 options.setImPort(json.getInt("imPort"));

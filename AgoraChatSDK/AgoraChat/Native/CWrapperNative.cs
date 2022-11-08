@@ -5,7 +5,8 @@ namespace AgoraChat
 
     public sealed class CWrapperNative
     {
-        internal static void NativeCall(string manager, string method, SimpleJSON.JSONNode json, string callbackId = null) {
+        internal static void NativeCall(string manager, string method, SimpleJSON.JSONNode json, string callbackId = null)
+        {
             _NativeCall(manager, method, json?.ToString(), callbackId ?? "");
         }
 
@@ -19,11 +20,11 @@ namespace AgoraChat
 
 
         [DllImport("ChatCWrapper")]
-        internal static extern void AddListener(NativeListenerEvent listener);
+        internal static extern void Init(int type, NativeListenerEvent listener);
 
 
         [DllImport("ChatCWrapper")]
-        internal static extern void CleanListener();
+        internal static extern void UnInit();
 
         [DllImport("ChatCWrapper")]
         private extern static void _NativeCall(string manager, string method, [In, MarshalAs(UnmanagedType.LPTStr)] string jsonString = null, string callbackId = null);
