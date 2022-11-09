@@ -36,7 +36,7 @@ using namespace easemob;
 const string STRING_CALLBACK_LISTENER = "callback";
 const string STRING_CALLBACK_PROGRESS_LISTENER = "callbackProgress";
 
-const string STRING_CLIENT_LISTENER   = "connetionListener";
+const string STRING_CLIENT_LISTENER   = "connectionListener";
 const string STRING_CHATMANAGER_LISTENER = "chatListener";
 const string STRING_CONTACTMANAGER_LISTENER = "contactListener";
 const string STRING_GROUPMANAGER_LISTENER = "groupListener";

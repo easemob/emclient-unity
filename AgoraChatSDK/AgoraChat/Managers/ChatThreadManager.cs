@@ -32,7 +32,7 @@ namespace AgoraChat
         * @param msgId 父消息 ID。
         * @param groupId 父 ID，即群组 ID。
         *          
-        * @param handle      结果回调：
+        * @param callback      结果回调：
         *                  - 成功时回调 {@link ValueCallBack#onSuccess(Object)}，返回创建成功的子区对象；
         *                  - 失败时回调 {@link ValueCallBack#onError(int, String)}，返回错误信息。
         *
@@ -55,7 +55,7 @@ namespace AgoraChat
         * @param groupId              The parent ID, which is the group ID.
         * 
         * 
-        * @param handle      The result callback:
+        * @param callback      The result callback:
         *                    - If success, {@link EMValueCallBack#onSuccess(Object)} is triggered to return the new message thread object;
         *                    - If a failure occurs, {@link EMValueCallBack#onError(int, String)} is triggered to return an error.
         */
@@ -89,7 +89,7 @@ namespace AgoraChat
          * - 可通过设置 {@link IMultiDeviceDelegate} 监听相关事件。
          *
          * @param threadId 子区 ID。
-         * @param handle   结果回调：
+         * @param callback   结果回调：
          *                     - 成功时回调 {@link ValueCallBack#onSuccess(Object)}，返回子区详情 {@link ChatThread}，详情中不含成员数量；
          *                     - 失败时回调 {@link ValueCallBack#onError(int, String)}，返回错误信息。
          *                       重复加入会报错，错误内容为USER_ALREADY_EXIST。
@@ -108,7 +108,7 @@ namespace AgoraChat
          * - You can listen for message thread events by setting {@link IMultiDeviceDelegate}.
          *
          * @param threadId   The message thread ID.
-         * @param handle     The result callback:
+         * @param callback     The result callback:
          *                     - If success, {@link ValueCallBack#onSuccess(Object)} is triggered to return the message thread details {@link ChatThread} which do not include the member count.
          *                     - If a failure occurs, {@link ValueCallBack#onError(int, String)} is triggered to return an error.
          *                       If you join a message thread repeatedly, the SDK will return an error related to USER_ALREADY_EXIST.
@@ -140,7 +140,7 @@ namespace AgoraChat
         * - 你可通过设置 {@link IMultiDeviceDelegate} 监听相关事件；
         *
         * @param threadId     要退出的子区的 ID。
-        * @param handle       结果回调：
+        * @param callback       结果回调：
         *                     - 成功时回调 {@link CallBack#onSuccess()}；
         *                     - 失败时回调 {@link CallBack#onError(int, String)}，返回错误信息。
         *
@@ -158,7 +158,7 @@ namespace AgoraChat
         * - You can listen for message thread events by setting {@link IMultiDeviceDelegate}.
         *
         * @param threadId     The ID of the message thread that the current user wants to leave.
-        * @param handle       The result callback:
+        * @param callback       The result callback:
         *                     - If success, {@link CallBack#onSuccess()} is triggered;
         *                     - If a failure occurs, {@link CallBack#onError(int, String)} is triggered to return an error.
         */
@@ -183,7 +183,7 @@ namespace AgoraChat
         *
         *
         * @param threadId 子区 ID。
-        * @param handle     结果回调：
+        * @param callback     结果回调：
         *                     - 成功时回调 {@link CallBack#onSuccess()}；
         *                     - 失败时回调 {@link CallBack#onError(int, String)}，返回错误信息。
         *
@@ -200,7 +200,7 @@ namespace AgoraChat
         *   You can listen for message thread events by setting {@link IMultiDeviceDelegate}.
         *
         * @param threadId  The message thread ID.
-        * @param handle    The result callback:
+        * @param callback    The result callback:
         *                  - If success, {@link CallBack#onSuccess()} is triggered.
         *                   - If a failure occurs, {@link CallBack#onError(int, String)} is triggered to return an error.
         */
@@ -225,7 +225,7 @@ namespace AgoraChat
         *
         * @param threadId   子区 ID。
         * @param userId     被移出子区的成员的用户 ID。
-        * @param handle     结果回调。
+        * @param callback     结果回调。
         *                    - 成功时回调 {@link CallBack#onSuccess()}；
         *                    - 失败时回调 {@link CallBack#onError(int, String)}，返回错误信息。
         *
@@ -240,7 +240,7 @@ namespace AgoraChat
         *
         * @param threadId   The message thread ID.
         * @param userId     The user ID of the member to be removed from the message thread.
-        * @param handle     The result callback.
+        * @param callback     The result callback.
         *                     - If success, {@link CallBack#onSuccess()} is triggered.
         *                     - If a failure occurs, {@link CallBack#onError(int, String)} is triggered to return an error.
         */
@@ -264,7 +264,7 @@ namespace AgoraChat
          *
          * @param threadId        子区 ID。
          * @param newName      子区的新名称。长度不超过 64 个字符。
-         * @param handle          结果回调：
+         * @param callback          结果回调：
          *                        - 成功时回调 {@link CallBack#onSuccess()}；
          *                        - 失败时回调 {@link CallBack#onError(int, String)}，返回错误信息。
          *
@@ -279,7 +279,7 @@ namespace AgoraChat
          *
          * @param threadId      The message thread ID.
          * @param newName       The new message thread name. It can contain a maximum of 64 characters.
-         * @param handle        The result callback:
+         * @param callback        The result callback:
          *                      - If success, {@link CallBack#onSuccess()} is triggered.
          *                      - If a failure occurs, {@link CallBack#onError(int, String)} is triggered to return an error.
          */
@@ -425,7 +425,7 @@ namespace AgoraChat
          * 从服务器获取子区详情。
          *
          * @param threadId 子区 ID。
-         * @param handle     结果回调：
+         * @param callback     结果回调：
          *                     - 成功时回调 {@link ValueCallBack#onSuccess(Object)}，返回子区详情；
          *                     - 失败时回调 {@link ValueCallBack#onError(int, String)}，返回错误信息。
          *
@@ -433,7 +433,7 @@ namespace AgoraChat
          * Gets the details of the message thread from the server.
          *
          * @param threadId   The message thread ID.
-         * @param handle       The result callback:
+         * @param callback       The result callback:
          *                       - If success, {@link ValueCallBack#onSuccess(Object)} is triggered to return the message thread details;
          *                       - If a failure occurs, {@link ValueCallBack#onError(int, String)} is triggered to return an error.
          */
@@ -454,7 +454,7 @@ namespace AgoraChat
          * 从服务器批量获取指定子区中的最新一条消息。
          *
          * @param threadIds 要查询的子区 ID 列表，每次最多可传 20 个子区。
-         * @param handle    结果回调：
+         * @param callback    结果回调：
          *                     - 成功时回调 {@link ValueCallBack#onSuccess(Object)}，返回一个 Map 集合，键为子区 ID，值是对应子区最新消息；
          *                     - 失败时回调 {@link ValueCallBack#onError(int, String)}，返回错误信息。
          *
@@ -462,7 +462,7 @@ namespace AgoraChat
          * Gets the last reply in the specified message threads from the server.
          *
          * @param threadIds The list of message thread IDs to query. You can pass a maximum of 20 message thread IDs each time.
-         * @param handle    The result callback:
+         * @param callback    The result callback:
          *                    - If success, {@link ValueCallBack#onSuccess(Object)} is triggered to return a Map collection that contains key-value pairs where the key is the message thread ID and the value is the last threaded reply.
          *                    - If a failure occurs, {@link ValueCallBack#onError(int, String)} is triggered to return an error.
          */

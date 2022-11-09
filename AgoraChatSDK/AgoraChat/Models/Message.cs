@@ -339,7 +339,7 @@ namespace AgoraChat
          */
         static public Message CreateSendMessage(string to, IMessageBody body, MessageDirection direction = MessageDirection.SEND, bool hasRead = true)
         {
-            if (null == SDKClient.Instance.CurrentUsername || SDKClient.Instance.CurrentUsername.Length == 0 || null == to || to.Length == 0)
+            if (string.IsNullOrEmpty(SDKClient.Instance.CurrentUsername) || string.IsNullOrEmpty(to))
             {
                 // invalid input, return null
                 return null;

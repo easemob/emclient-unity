@@ -8,20 +8,20 @@
 #include "sdk_wrapper_internal.h"
 
 #define GetJsonValue_String(jnode, name, default_value) (!jnode.HasParseError()  && !jnode.IsNull() \
-                                                        && !jnode[name].IsNull() && jnode[name].IsString()) \
+                                                        && jnode.HasMember(name) && jnode[name].IsString()) \
                                                         ? jnode[name].GetString() : default_value; 
 
 #define GetJsonValue_Bool(jnode, name, default_value)   (!jnode.HasParseError() && !jnode.IsNull() \
-                                                        && !jnode[name].IsNull() && jnode[name].IsBool()) \
+                                                        && jnode.HasMember(name) && jnode[name].IsBool()) \
                                                         ? jnode[name].GetBool() : default_value; 
 
 #define GetJsonValue_Int(jnode, name, default_value)   (!jnode.HasParseError() && !jnode.IsNull() \
-                                                        && !jnode[name].IsNull() && jnode[name].IsInt()) \
+                                                        && jnode.HasMember(name) && jnode[name].IsInt()) \
                                                         ? jnode[name].GetInt() : default_value;
 
 
 #define GetJsonValue_Int64(jnode, name, default_value)   (!jnode.HasParseError() && !jnode.IsNull() \
-                                                        && !jnode[name].IsNull() && jnode[name].IsInt64()) \
+                                                        && jnode.HasMember(name) && jnode[name].IsInt64()) \
                                                         ? jnode[name].GetInt64() : default_value;
 
 #define JSON_STARTOBJ         StringBuffer s; \

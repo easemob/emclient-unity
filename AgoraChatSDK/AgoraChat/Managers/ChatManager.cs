@@ -431,7 +431,7 @@ namespace AgoraChat
 		 * 异步方法。
 		 *
 		 * @param messageId 要撤回消息的 ID。
-		 * @param handle    撤回结果回调，详见 {@link CallBack}。
+		 * @param callback    撤回结果回调，详见 {@link CallBack}。
 		 *
 		 *
 		 * \~english
@@ -440,7 +440,7 @@ namespace AgoraChat
 		 * This is an asynchronous method.
 		 *
 		 * @param message	The ID of the message to be recalled.
-		 * @param handle    The recall status callback. See {@link CallBack}.
+		 * @param callback    The recall status callback. See {@link CallBack}.
 		 */
         public void RecallMessage(string messageId, CallBack callback = null)
         {
@@ -585,9 +585,7 @@ namespace AgoraChat
                 return null;
             };
 
-            string cbid = (null != callback) ? callback.callbackId : message.MsgId;
-
-            AddMsgMap(cbid, message);
+            AddMsgMap(message.MsgId, message);
 
             JSONObject jo_param = message.ToJsonObject();
 
@@ -595,7 +593,7 @@ namespace AgoraChat
 
             if (json.Length > 0)
             {
-                UpdatedMsg(cbid, json);
+                UpdatedMsg(callback.callbackId, json);
             }
         }
 
@@ -637,7 +635,7 @@ namespace AgoraChat
         *
         * @param messageId     消息 ID。
         * @param ackContent    回执信息。`ackContent` 属性是用户自己定义的关键字，接收后，解析出自定义的字符串，可以自行处理。
-        * @param handle		发送回执的结果回调，详见 {@link CallBack}。
+        * @param callback		发送回执的结果回调，详见 {@link CallBack}。
         *
         * \~english
         * Sends the group message receipt to the server.
@@ -650,7 +648,7 @@ namespace AgoraChat
         *
         * @param messageId     The message ID.
         * @param ackContent    The ack content information. Developer self-defined command string that can be used for specifying custom action/command.
-        * @param handle		The result callback. See{@link CallBack}.
+        * @param callback		The result callback. See{@link CallBack}.
     */
         public void SendReadAckForGroupMessage(string messageId, string ackContent, CallBack callback = null)
         {
@@ -698,13 +696,13 @@ namespace AgoraChat
 		 * 将指定 Unix 时间戳之前收发的消息从本地内存和数据库中移除。
 		 *
 		 * @param timeStamp	移除的 Unix 时间戳，单位为毫秒。
-		 * @param handle	移除结果回调，详见 {@link CallBack}。
+		 * @param callback	移除结果回调，详见 {@link CallBack}。
 		 *
 		 * \~english
 		 * Removes messages that are sent and received before the Unix timestamp from the local memory and database.
 		 *
 		 * @param timeStamp	The starting Unix timestamp for removal.
-		 * @param handle	The removal result callback. See {@link CallBack}.
+		 * @param callback	The removal result callback. See {@link CallBack}.
 		 */
 
         public void RemoveMessagesBeforeTimestamp(long timeStamp, CallBack callback = null)
@@ -725,7 +723,7 @@ namespace AgoraChat
 		 * @param isDeleteServerMessages	是否删除会话时同时删除相应的历史消息。
 		 *                                  - `true`：是。
 		 *                                  - `false` 是。
-		 * @param handle					会话删除成功与否的回调，详见 {@link CallBack}。
+		 * @param callback					会话删除成功与否的回调，详见 {@link CallBack}。
 		 *
 		 * \~english
 		 * Deletes the specified conversation and its historical messages from the server.
@@ -737,7 +735,7 @@ namespace AgoraChat
 		 * @param isDeleteServerMessages 	Whether to delete the historical messages with the conversation.
 		 *                                  - `true`: Yes.
 		 *                                  - `false`: No.
-		 * @param handle					Callback for whether the conversation is deleted. See {@link CallBack}.
+		 * @param callback					Callback for whether the conversation is deleted. See {@link CallBack}.
 		 */
         public void DeleteConversationFromServer(string conversationId, ConversationType conversationType, bool isDeleteServerMessages, CallBack callback = null)
         {

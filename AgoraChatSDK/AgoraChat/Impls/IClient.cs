@@ -34,6 +34,8 @@ namespace AgoraChat
             delegater_multidevice = new List<IMultiDeviceDelegate>();
             nativeListener.ConnectionEvent += NativeEventHandle_Connection;
             nativeListener.MultiDeviceEvent += NativeEventHandle_MultiDevice;
+
+            SetupManagers();
         }
 
         ~IClient()
@@ -196,9 +198,9 @@ namespace AgoraChat
             roomManager = new RoomManager(nativeListener);
             presenceManager = new PresenceManager(nativeListener);
             chatThreadManager = new ChatThreadManager(nativeListener);
-            userInfoManager = new UserInfoManager();
-            conversationManager = new ConversationManager();
-            messageManager = new MessageManager();
+            userInfoManager = new UserInfoManager(nativeListener);
+            conversationManager = new ConversationManager(nativeListener);
+            messageManager = new MessageManager(nativeListener);
         }
 
         internal void NativeEventHandle_Connection(string method, JSONNode jsonNode)
