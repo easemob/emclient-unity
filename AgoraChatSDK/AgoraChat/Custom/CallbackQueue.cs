@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading;
 
-#if _WIN32
-#else
+#if !_WIN32
 using UnityEngine;
 #endif
 
+
 namespace AgoraChat
 {
- 
+
     internal class CallbackQueue
     {
         private Queue<Action> queue = new Queue<Action>();
 
         internal void ClearQueue()
         {
-            lock(queue)
+            lock (queue)
             {
                 queue.Clear();
             }
@@ -110,7 +110,7 @@ namespace AgoraChat
         private static CallbackQueue_UnityMode instance;
         internal static CallbackQueue_UnityMode Instance()
         {
-            if(application_is_quitting == true)
+            if (application_is_quitting == true)
             {
                 return null;
             }

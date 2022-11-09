@@ -846,7 +846,7 @@ namespace AgoraChat
             JSONObject jo_param = new JSONObject();
             jo_param.Add("roomId", roomId);
             jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
-            NativeCall<Room>(SDKMethod.addMembersToChatRoomWhiteList, jo_param, callback);
+            NativeCall(SDKMethod.addMembersToChatRoomWhiteList, jo_param, callback);
         }
 
         /**
@@ -884,10 +884,59 @@ namespace AgoraChat
             JSONObject jo_param = new JSONObject();
             jo_param.Add("roomId", roomId);
             jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
-            NativeCall<Room>(SDKMethod.removeMembersFromChatRoomWhiteList, jo_param, callback);
+            NativeCall(SDKMethod.removeMembersFromChatRoomWhiteList, jo_param, callback);
         }
 
-        /**
+		//TODO: add comments here
+		public void FetchWhiteListFromServer(string roomId, ValueCallBack<List<string>> callback = null)
+        {
+			JSONObject jo_param = new JSONObject();
+			jo_param.Add("roomId", roomId);
+
+			Process process = (_, jsonNode) =>
+			{
+				return List.StringListFromJsonArray(jsonNode);
+			};
+
+			NativeCall<List<string>>(SDKMethod.fetchChatRoomWhiteListFromServer, jo_param, callback, process);
+		}
+
+		//TODO: add comments here
+		public void CheckIfInRoomWhiteList(string roomId, ValueCallBack<bool> callback = null)
+        {
+			JSONObject jo_param = new JSONObject();
+			jo_param.Add("roomId", roomId);
+
+			Process process = (_, jsonNode) =>
+			{
+				return jsonNode.IsBoolean ? jsonNode.AsBool : false;
+			};
+
+			NativeCall<bool>(SDKMethod.isMemberInChatRoomWhiteListFromServer, jo_param, callback, process);
+		}
+
+		//TODO: need to add comments
+		public Room GetChatRoom(string roomId)
+		{
+			JSONObject jo_param = new JSONObject();
+			jo_param.Add("roomId", roomId);
+
+			JSONNode jsonNode = NativeGet<Room>(SDKMethod.getChatRoom, jo_param).GetReturnJsonNode();
+			return (null != jsonNode) ? new Room(jsonNode) : null;
+		}
+
+		//TODO: need to add comments
+		public void FetchAllRoomsFromServer(ValueCallBack<List<Room>> callback = null)
+		{
+			Process process = (_, jsonNode) =>
+			{
+				return List.BaseModelListFromJsonArray<Room>(jsonNode);
+			};
+
+			NativeCall<List<Room>>(SDKMethod.getAllChatRooms, null, callback, process);
+		}
+
+		/**
 		 * \~chinese
 		 * 设置聊天室属性。
 		  * 
@@ -1041,7 +1090,7 @@ namespace AgoraChat
             }
         }
 
-        /**
+		/**
 		 * \~chinese
 		 * 移除聊天室监听器。
 		 *
@@ -1100,14 +1149,14 @@ namespace AgoraChat
                         break;
                     case SDKMethod.onMuteListAddedFromRoom:
                         {
-                            List<string> list = List.StringListFromJsonArray(jsonNode["userId"]);
+                            List<string> list = List.StringListFromJsonArray(jsonNode["userIds"]);
                             int muteExpire = jsonNode["expireTime"];
                             it.OnMuteListAddedFromRoom(roomId, list, muteExpire);
                         }
                         break;
                     case SDKMethod.onMuteListRemovedFromRoom:
                         {
-                            List<string> list = List.StringListFromJsonArray(jsonNode["userId"]);
+                            List<string> list = List.StringListFromJsonArray(jsonNode["userIds"]);
                             it.OnMuteListRemovedFromRoom(roomId, list);
                         }
                         break;

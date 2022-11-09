@@ -355,7 +355,7 @@ public class ConversationManagerTest : MonoBehaviour
             return;
         }
         Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
-        conv.LoadMessages(null, count: 200, handle: new ValueCallBack<List<Message>>(
+        conv.LoadMessages(null, count: 200, callback: new ValueCallBack<List<Message>>(
             onSuccess: (list) =>
             {
                 UIManager.DefaultAlert(transform, $"获取到{list.Count}条消息");
@@ -380,7 +380,7 @@ public class ConversationManagerTest : MonoBehaviour
             }
 
             Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
-            conv.LoadMessagesWithKeyword(keyword, count: 200, handle: new ValueCallBack<List<Message>>(
+            conv.LoadMessagesWithKeyword(keyword, count: 200, callback: new ValueCallBack<List<Message>>(
                 onSuccess: (list) =>
                 {
                     UIManager.DefaultAlert(transform, $"获取到{list.Count}条消息");

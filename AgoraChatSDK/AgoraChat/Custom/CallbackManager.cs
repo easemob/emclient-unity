@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 
+
+
 namespace AgoraChat
 {
-    internal delegate Object Process(string cbid, JSONNode jsonNode);
+    internal delegate object Process(string cbid, JSONNode jsonNode);
 
     internal class CallbackManager
     {
@@ -49,10 +51,11 @@ namespace AgoraChat
                     }
 
                     // parse json value to object and process object
-                    Object obj = null;
+                    object obj = null;
                     if (value.Length > 0 && null != process)
                     {
                         JSONObject jsonNode = JSON.Parse(value).AsObject;
+                        LogPrinter.Log($"value: {code} jsonNode: {jsonNode}");
                         obj = process(cbid, jsonNode["ret"]);
                     }
 
@@ -60,6 +63,7 @@ namespace AgoraChat
                     if (null == cb) return;
                     if (-1 != code)
                     {
+                        LogPrinter.Log($"error: code: {code} desc: {desc}");
                         cb.Error?.Invoke(code, desc);
                     }
                     else if (progress >= 0)
@@ -102,7 +106,7 @@ namespace AgoraChat
                     }
 
                     // parse json value to object and process object
-                    Object obj = null;
+                    object obj = null;
                     if (value.Length > 0 && null != process)
                     {
                         obj = process(cbid, value);

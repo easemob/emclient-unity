@@ -41,7 +41,7 @@ public class EMMessageBodyHelper {
         if (body == null) return null;
         JSONObject data = new JSONObject();
         data.put("content", body.getMessage());
-        data.put("type", "txt");
+        data.put("type", 0);
         if (body.getTargetLanguages() != null) {
             data.put("targetLanguages", body.getTargetLanguages());
         }
@@ -83,7 +83,7 @@ public class EMMessageBodyHelper {
         data.put("longitude", body.getLongitude());
         data.put("buildingName", body.getBuildingName());
         data.put("address", body.getAddress());
-        data.put("type", "loc");
+        data.put("type", 3);
         return data;
     }
 
@@ -102,7 +102,7 @@ public class EMMessageBodyHelper {
         JSONObject data = new JSONObject();
         data.put("deliverOnlineOnly", body.isDeliverOnlineOnly());
         data.put("action", body.action());
-        data.put("type", "cmd");
+        data.put("type", 6);
         return data;
     }
 
@@ -128,7 +128,7 @@ public class EMMessageBodyHelper {
         JSONObject data = new JSONObject();
         data.put("event", body.event());
         data.put("params", body.getParams());
-        data.put("type", "custom");
+        data.put("type", 7);
         return data;
     }
 
@@ -163,7 +163,7 @@ public class EMMessageBodyHelper {
         data.put("remotePath", body.getRemoteUrl());
         data.put("secret", body.getSecret());
         data.put("fileStatus", downloadStatusToInt(body.downloadStatus()));
-        data.put("type", "file");
+        data.put("type", 5);
         return data;
     }
 
@@ -224,7 +224,7 @@ public class EMMessageBodyHelper {
         data.put("width", body.getWidth());
         data.put("sendOriginalImage", body.isSendOriginalImage());
         data.put("fileSize", body.getFileSize());
-        data.put("type", "img");
+        data.put("type", 1);
         return data;
     }
 
@@ -284,7 +284,7 @@ public class EMMessageBodyHelper {
         data.put("fileStatus", downloadStatusToInt(body.downloadStatus()));
         data.put("secret", body.getSecret());
         data.put("fileSize", body.getVideoFileLength());
-        data.put("type", "video");
+        data.put("type", 2);
 
         return data;
     }
@@ -320,7 +320,7 @@ public class EMMessageBodyHelper {
         data.put("remotePath", body.getRemoteUrl());
         data.put("fileStatus", downloadStatusToInt(body.downloadStatus()));
         data.put("secret", body.getSecret());
-        data.put("type", "voice");
+        data.put("type", 4);
         data.put("fileSize", body.getFileSize());
         return data;
     }

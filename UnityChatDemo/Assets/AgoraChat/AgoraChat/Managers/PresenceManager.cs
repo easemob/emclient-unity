@@ -17,6 +17,7 @@ namespace AgoraChat
 
         internal PresenceManager(NativeListener listener) : base(listener, SDKMethod.presenceManager)
         {
+
             listener.PresenceManagerEvent += NativeEventcallback;
             delegater = new List<IPresenceManagerDelegate>();
         }
@@ -186,6 +187,7 @@ namespace AgoraChat
 
         internal void NativeEventcallback(string method, JSONNode jsonNode)
         {
+            LogPrinter.Log($"presenceManager  method: {method},  jn: {jsonNode}");
             if (delegater.Count == 0) return;
 
             List<Presence> list = List.BaseModelListFromJsonArray<Presence>(jsonNode);

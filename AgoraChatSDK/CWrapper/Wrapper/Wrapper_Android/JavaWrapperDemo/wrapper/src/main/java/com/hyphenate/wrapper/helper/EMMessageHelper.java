@@ -20,91 +20,93 @@ public class EMMessageHelper {
     public static EMMessage fromJson(JSONObject json) throws JSONException {
         EMMessage message = null;
         JSONObject bodyJson = json.getJSONObject("body");
-        String type = bodyJson.getString("type");
-        if (json.getString("direction").equals("send")) {
+        int type = bodyJson.getInt("type");
+        if (json.getInt("direction") == 0) {
             switch (type) {
-                case "txt": {
+                case 0: {
                     message = EMMessage.createSendMessage(EMMessage.Type.TXT);
                     message.addBody(EMMessageBodyHelper.textBodyFromJson(bodyJson));
                 }
                 break;
-                case "img": {
+                case 1: {
                     message = EMMessage.createSendMessage(EMMessage.Type.IMAGE);
                     message.addBody(EMMessageBodyHelper.imageBodyFromJson(bodyJson));
                 }
                 break;
-                case "loc": {
+                case 3: {
                     message = EMMessage.createSendMessage(EMMessage.Type.LOCATION);
                     message.addBody(EMMessageBodyHelper.localBodyFromJson(bodyJson));
                 }
                 break;
-                case "video": {
+                case 2: {
                     message = EMMessage.createSendMessage(EMMessage.Type.VIDEO);
                     message.addBody(EMMessageBodyHelper.videoBodyFromJson(bodyJson));
                 }
                 break;
-                case "voice": {
+                case 4: {
                     message = EMMessage.createSendMessage(EMMessage.Type.VOICE);
                     message.addBody(EMMessageBodyHelper.voiceBodyFromJson(bodyJson));
                 }
                 break;
-                case "file": {
+                case 5: {
                     message = EMMessage.createSendMessage(EMMessage.Type.FILE);
                     message.addBody(EMMessageBodyHelper.fileBodyFromJson(bodyJson));
                 }
                 break;
-                case "cmd": {
+                case 6: {
                     message = EMMessage.createSendMessage(EMMessage.Type.CMD);
                     message.addBody(EMMessageBodyHelper.cmdBodyFromJson(bodyJson));
                 }
                 break;
-                case "custom": {
+                case 7: {
                     message = EMMessage.createSendMessage(EMMessage.Type.CUSTOM);
                     message.addBody(EMMessageBodyHelper.customBodyFromJson(bodyJson));
                 }
                 break;
+                default:
+                    break;
             }
             if (message != null) {
                 message.setDirection(EMMessage.Direct.SEND);
             }
         } else {
             switch (type) {
-                case "txt": {
+                case 0: {
                     message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
                     message.addBody(EMMessageBodyHelper.textBodyFromJson(bodyJson));
                 }
                 break;
-                case "img": {
+                case 1: {
                     message = EMMessage.createReceiveMessage(EMMessage.Type.IMAGE);
                     message.addBody(EMMessageBodyHelper.imageBodyFromJson(bodyJson));
                 }
                 break;
-                case "loc": {
+                case 3: {
                     message = EMMessage.createReceiveMessage(EMMessage.Type.LOCATION);
                     message.addBody(EMMessageBodyHelper.localBodyFromJson(bodyJson));
                 }
                 break;
-                case "video": {
+                case 2: {
                     message = EMMessage.createReceiveMessage(EMMessage.Type.VIDEO);
                     message.addBody(EMMessageBodyHelper.videoBodyFromJson(bodyJson));
                 }
                 break;
-                case "voice": {
+                case 4: {
                     message = EMMessage.createReceiveMessage(EMMessage.Type.VOICE);
                     message.addBody(EMMessageBodyHelper.voiceBodyFromJson(bodyJson));
                 }
                 break;
-                case "file": {
+                case 5: {
                     message = EMMessage.createReceiveMessage(EMMessage.Type.FILE);
                     message.addBody(EMMessageBodyHelper.fileBodyFromJson(bodyJson));
                 }
                 break;
-                case "cmd": {
+                case 6: {
                     message = EMMessage.createReceiveMessage(EMMessage.Type.CMD);
                     message.addBody(EMMessageBodyHelper.cmdBodyFromJson(bodyJson));
                 }
                 break;
-                case "custom": {
+                case 7: {
                     message = EMMessage.createReceiveMessage(EMMessage.Type.CUSTOM);
                     message.addBody(EMMessageBodyHelper.customBodyFromJson(bodyJson));
                 }
@@ -119,16 +121,21 @@ public class EMMessageHelper {
             message.setTo(json.getString("to"));
         }
 
+        if (json.has("isRead")) {
+            message.setUnread(!json.getBoolean("isRead"));
+        }
+
         if (json.has("from")) {
             message.setFrom(json.getString("from"));
         }
+
 
         message.setAcked(json.getBoolean("hasReadAck"));
         if (statusFromInt(json.getInt("status")) == EMMessage.Status.SUCCESS) {
             message.setUnread(!json.getBoolean("hasRead"));
         }
         message.setDeliverAcked(json.getBoolean("hasDeliverAck"));
-        message.setIsNeedGroupAck(json.getBoolean("needGroupAck"));
+        message.setIsNeedGroupAck(json.getBoolean("isNeedGroupAck"));
         if (json.has("groupAckCount")) {
             message.setGroupAckCount(json.getInt("groupAckCount"));
         }
@@ -139,15 +146,14 @@ public class EMMessageHelper {
         if (json.has("serverTime")){
             message.setMsgTime(json.getLong("serverTime"));
         }
-
         message.setStatus(statusFromInt(json.getInt("status")));
         message.setChatType(chatTypeFromInt(json.getInt("chatType")));
         if (json.has("msgId")){
             message.setMsgId(json.getString("msgId"));
         }
 
-        if(json.has("attributes")){
-            JSONObject data = json.getJSONObject("attributes");
+        if(json.has("attr")){
+            JSONObject data = json.getJSONObject("attr");
             Iterator iterator = data.keys();
             while (iterator.hasNext()) {
                 String key = iterator.next().toString();
@@ -209,7 +215,7 @@ public class EMMessageHelper {
         }
 
         if (message.ext().size() > 0 && null != message.ext()) {
-            data.put("attributes", message.ext());
+            data.put("attr", message.ext());
         }
         data.put("from", message.getFrom());
         data.put("to", message.getTo());
@@ -219,11 +225,11 @@ public class EMMessageHelper {
         data.put("serverTime", message.getMsgTime());
         data.put("status", statusToInt(message.status()));
         data.put("chatType", chatTypeToInt(message.getChatType()));
-        data.put("direction", message.direct() == EMMessage.Direct.SEND ? "send" : "rec");
-        data.put("conversationId", message.conversationId());
+        data.put("direction", message.direct() == EMMessage.Direct.SEND ? 0 : 1);
+        data.put("convId", message.conversationId());
         data.put("msgId", message.getMsgId());
-        data.put("hasRead", !message.isUnread());
-        data.put("needGroupAck", message.isNeedGroupAck());
+        data.put("isRead", !message.isUnread());
+        data.put("isNeedGroupAck", message.isNeedGroupAck());
         data.put("onlineState", message.isOnlineState());
         // 通过EMMessageWrapper获取
         // data.put("groupAckCount", message.groupAckCount());

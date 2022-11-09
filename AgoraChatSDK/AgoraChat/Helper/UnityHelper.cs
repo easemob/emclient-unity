@@ -20,7 +20,7 @@ namespace AgoraChat
     }
 
 #if UNITY_EDITOR
-
+    /*
         [RuntimeInitializeOnLoadMethod]
         static void InitializeOnLoadMethod()
         {
@@ -63,5 +63,6 @@ namespace AgoraChat
                     }
             }
         }
+    */
 #endif
 }

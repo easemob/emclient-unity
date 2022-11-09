@@ -1,8 +1,11 @@
 package com.hyphenate.wrapper.callback;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class EMWrapperCallback {
-    public void onSuccess(String jStr) {}
-    public void onError(String jStr) {}
-    public void onProgress(String jStr){}
+    public void onSuccess(Object jo) {}
+    public void onError(Object jo) {}
+    public void onProgress(int jo){}
 }
 

@@ -7,11 +7,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class HyphenateExceptionHelper {
-    public static JSONObject toJson(HyphenateException e) throws JSONException {
+    public static JSONObject toJson(HyphenateException e){
         if (e == null) return null;
         JSONObject data = new JSONObject();
-        data.put("code", e.getErrorCode());
-        data.put("description", e.getDescription());
+        try {
+            data.put("code", e.getErrorCode());
+            data.put("desc", e.getDescription());
+        } catch (JSONException jsonError) {
+            jsonError.printStackTrace();
+        }
         return data;
     }
 }
