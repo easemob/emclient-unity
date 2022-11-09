@@ -338,9 +338,9 @@ namespace AgoraChat
          * @param direction         The message loading direction. By default, the SDK loads messages in the reverse chronological order of the Unix timestamp ({@link SortMessageByServerTime}) in the message. See {@link MessageSearchDirection}.
          * @param callback          The loading result callback. If success, a list of loaded messages are returned; otherwise, an error is returned. See {@link ValueCallBack}.
          */
-        public void LoadMessagesWithMsgType(MessageBodyType type, string sender = null, long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> handle = null)
+        public void LoadMessagesWithMsgType(MessageBodyType type, string sender = null, long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callback = null)
         {
-            manager.LoadMessagesWithMsgType(Id, Type, type, sender, timestamp, count, direction, handle);
+            manager.LoadMessagesWithMsgType(Id, Type, type, sender, timestamp, count, direction, callback);
         }
 
         /**
@@ -352,7 +352,7 @@ namespace AgoraChat
          * @param startMessageId    加载的起始消息 ID。若该参数设置为 "" 或者 `null`，将从最近的消息开始加载。
          * @param count             加载的最大消息数目。默认值为 `20`。
          * @param direction         消息加载方向。默认按消息中的时间戳（{@link SortMessageByServerTime}）的倒序加载，详见 {@link MessageSearchDirection}。
-         * @param handle            加载结果回调，成功返回消息列表，失败返回错误原因，详见 {@link ValueCallBack}。
+         * @param callback            加载结果回调，成功返回消息列表，失败返回错误原因，详见 {@link ValueCallBack}。
          *
          * \~english
          * Loads the messages, starting from a specific message ID.
@@ -362,11 +362,11 @@ namespace AgoraChat
          * @param startMessageId    The starting message ID for loading. If this parameter is set as "" or `null`, the SDK will load from the latest message.
          * @param count             The maximum number of messages to load. The default value is `20`.
            @param direction         The message loading direction. By default, the SDK loads messages in the reverse chronological order of the Unix timestamp ({@link SortMessageByServerTime}) in the messages. See {@link MessageSearchDirection}.
-         * @param handle            The loading result callback. If success, a list of loaded messages are returned; otherwise, an error is returned. See {@link ValueCallBack}.
+         * @param callback            The loading result callback. If success, a list of loaded messages are returned; otherwise, an error is returned. See {@link ValueCallBack}.
          */
-        public void LoadMessages(string startMessageId = null, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> handle = null)
+        public void LoadMessages(string startMessageId = null, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callback = null)
         {
-            manager.LoadMessages(Id, Type, startMessageId ?? "", count, direction, handle);
+            manager.LoadMessages(Id, Type, startMessageId ?? "", count, direction, callback);
         }
 
         /**
@@ -394,9 +394,9 @@ namespace AgoraChat
          * @param direction         The message loading direction. By default, the SDK loads messages in the reverse chronological order of the Unix timestamp ({@link SortMessageByServerTime}) in the messages. See {@link MessageSearchDirection}.
          * @param callback          The loading result callback. If success, a list of loaded messages are returned; otherwise, an error is returned. See {@link ValueCallBack}.
          */
-        public void LoadMessagesWithKeyword(string keywords, string sender = null, long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> handle = null)
+        public void LoadMessagesWithKeyword(string keywords, string sender = null, long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callback = null)
         {
-            manager.LoadMessagesWithKeyword(Id, Type, keywords, sender, timestamp, count, direction, handle);
+            manager.LoadMessagesWithKeyword(Id, Type, keywords, sender, timestamp, count, direction, callback);
         }
 
         /**
@@ -412,7 +412,7 @@ namespace AgoraChat
          * @param startTimeStamp   查询的起始时间戳。
          * @param endTimeStamp     查询的结束时间戳。
          * @param count            加载的最大消息条数。
-         * @param handle           加载结果回调，成功返回消息列表，失败返回错误原因，详见 {@link ValueCallBack}。
+         * @param callback           加载结果回调，成功返回消息列表，失败返回错误原因，详见 {@link ValueCallBack}。
          *
          * \~english
          * Loads the messages within a period.
@@ -426,11 +426,11 @@ namespace AgoraChat
          * @param startTimeStamp    The starting Unix timestamp for query.
          * @param endTimeStamp      The ending Unix timestamp for query.
          * @param count             The maximum number of messages to load. The default value is `20`.
-         * @param handle            The loading result callback. If success, a list of loaded messages are returned; otherwise, an error is returned. See {@link ValueCallBack}.
+         * @param callback            The loading result callback. If success, a list of loaded messages are returned; otherwise, an error is returned. See {@link ValueCallBack}.
          */
-        public void LoadMessagesWithTime(long startTime, long endTime, int count = 20, ValueCallBack<List<Message>> handle = null)
+        public void LoadMessagesWithTime(long startTime, long endTime, int count = 20, ValueCallBack<List<Message>> callback = null)
         {
-            manager.LoadMessagesWithTime(Id, Type, startTime, endTime, count, handle);
+            manager.LoadMessagesWithTime(Id, Type, startTime, endTime, count, callback);
         }
 
         /**

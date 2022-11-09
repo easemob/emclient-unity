@@ -188,15 +188,17 @@ namespace sdk_wrapper
         d.Parse(json);
         if (d.HasParseError()) return nullptr;
 
-        const Value& jnode = d;
+        if (!d["options"].IsObject()) return nullptr;
+
+        const Value& jnode = d["options"];
         if (jnode.IsNull()) return nullptr;
 
         string rs_str = rs;
         string wk_str = wk;
 
         string app_key = "";
-        if (jnode.HasMember("app_key") && jnode["app_key"].IsString()) {            
-            app_key = jnode["app_key"].GetString();
+        if (jnode.HasMember("appKey") && jnode["appKey"].IsString()) {            
+            app_key = jnode["appKey"].GetString();
         }
 
         if (app_key.size() == 0) return nullptr;
@@ -204,95 +206,97 @@ namespace sdk_wrapper
         EMChatConfigsPtr configs = EMChatConfigsPtr(new EMChatConfigs(rs, wk, app_key, 0));
         configs->setAppKey(app_key);
 
-        if (jnode.HasMember("dns_url") && jnode["dns_url"].IsString()) {
-            string dns_url = jnode["dns_url"].GetString();
+        if (jnode.HasMember("dnsUrl") && jnode["dnsUrl"].IsString()) {
+            string dns_url = jnode["dnsUrl"].GetString();
             configs->setDnsURL(dns_url);
         }
 
-        if (jnode.HasMember("im_server") && jnode["im_server"].IsString()) {
-            string im_server = jnode["im_server"].GetString();
+        if (jnode.HasMember("imServer") && jnode["imServer"].IsString()) {
+            string im_server = jnode["imServer"].GetString();
             configs->privateConfigs()->chatServer() = im_server;
         }
 
-        if (jnode.HasMember("rest_server") && jnode["rest_server"].IsString()) {
-            string rest_server = jnode["rest_server"].GetString();
+        if (jnode.HasMember("restServer") && jnode["restServer"].IsString()) {
+            string rest_server = jnode["restServer"].GetString();
             configs->privateConfigs()->restServer() = rest_server;
         }
 
-        if (jnode.HasMember("im_port") && jnode["im_port"].IsInt()) {
-            int im_port = jnode["im_port"].GetInt();
+        if (jnode.HasMember("imPort") && jnode["imPort"].IsInt()) {
+            int im_port = jnode["imPort"].GetInt();
             configs->privateConfigs()->chatPort() = im_port;
         }
 
-        if (jnode.HasMember("enable_dns_config") && jnode["enable_dns_config"].IsBool()) {
-            bool enable_dns_config = jnode["enable_dns_config"].GetBool();
+        if (jnode.HasMember("enableDnsConfig") && jnode["enableDnsConfig"].IsBool()) {
+            bool enable_dns_config = jnode["enableDnsConfig"].GetBool();
             configs->privateConfigs()->enableDnsConfig(enable_dns_config);
         }
 
-        if (jnode.HasMember("debug_mode") && jnode["debug_mode"].IsBool()) {
-            bool debug_mode = jnode["debug_mode"].GetBool();
+        if (jnode.HasMember("debugMode") && jnode["debugMode"].IsBool()) {
+            bool debug_mode = jnode["debugMode"].GetBool();
             // according to old code, not set debug_mode
         }
 
-        if (jnode.HasMember("auto_login") && jnode["auto_login"].IsBool()) {
-            bool auto_login = jnode["auto_login"].GetBool();
+        if (jnode.HasMember("autoLogin") && jnode["autoLogin"].IsBool()) {
+            bool auto_login = jnode["autoLogin"].GetBool();
             // according to old code, not set auto_login
         }
 
-        if (jnode.HasMember("accept_invitation_always") && jnode["accept_invitation_always"].IsBool()) {
-            bool accept_invitation_always = jnode["accept_invitation_always"].GetBool();
+        if (jnode.HasMember("acceptInvitationAlways") && jnode["acceptInvitationAlways"].IsBool()) {
+            bool accept_invitation_always = jnode["acceptInvitationAlways"].GetBool();
             configs->setAutoAcceptFriend(accept_invitation_always);
         }
 
-        if (jnode.HasMember("auto_accept_group_invitation") && jnode["auto_accept_group_invitation"].IsBool()) {
-            bool auto_accept_group_invitation = jnode["auto_accept_group_invitation"].GetBool();
+        if (jnode.HasMember("autoAcceptGroupInvitation") && jnode["autoAcceptGroupInvitation"].IsBool()) {
+            bool auto_accept_group_invitation = jnode["autoAcceptGroupInvitation"].GetBool();
             configs->setAutoAcceptGroup(auto_accept_group_invitation);
         }
 
-        if (jnode.HasMember("require_ack") && jnode["require_ack"].IsBool()) {
-            bool require_ack = jnode["require_ack"].GetBool();
+        if (jnode.HasMember("requireAck") && jnode["requireAck"].IsBool()) {
+            bool require_ack = jnode["requireAck"].GetBool();
             configs->setRequireReadAck(require_ack);
         }
 
-        if (jnode.HasMember("require_delivery_ack") && jnode["require_delivery_ack"].IsBool()) {
-            bool require_delivery_ack = jnode["require_delivery_ack"].GetBool();
+        if (jnode.HasMember("requireDeliveryAck") && jnode["requireDeliveryAck"].IsBool()) {
+            bool require_delivery_ack = jnode["requireDeliveryAck"].GetBool();
             configs->setRequireDeliveryAck(require_delivery_ack);
         }
 
-        if (jnode.HasMember("delete_messages_as_exit_group") && jnode["delete_messages_as_exit_group"].IsBool()) {
-            bool delete_messages_as_exit_group = jnode["delete_messages_as_exit_group"].GetBool();
+        if (jnode.HasMember("deleteMessagesAsExitGroup") && jnode["deleteMessagesAsExitGroup"].IsBool()) {
+            bool delete_messages_as_exit_group = jnode["deleteMessagesAsExitGroup"].GetBool();
             configs->setDeleteMessageAsExitGroup(delete_messages_as_exit_group);
         }
 
-        if (jnode.HasMember("delete_messages_as_exit_room") && jnode["delete_messages_as_exit_room"].IsBool()) {
-            bool delete_messages_as_exit_room = jnode["delete_messages_as_exit_room"].GetBool();
+        if (jnode.HasMember("deleteMessagesAsExitRoom") && jnode["deleteMessagesAsExitRoom"].IsBool()) {
+            bool delete_messages_as_exit_room = jnode["deleteMessagesAsExitRoom"].GetBool();
             configs->setDeleteMessageAsExitChatRoom(delete_messages_as_exit_room);
         }
 
-        if (jnode.HasMember("is_room_owner_leave_allowed") && jnode["is_room_owner_leave_allowed"].IsBool()) {
-            bool is_room_owner_leave_allowed = jnode["is_room_owner_leave_allowed"].GetBool();
+        if (jnode.HasMember("isRoomOwnerLeaveAllowed") && jnode["isRoomOwnerLeaveAllowed"].IsBool()) {
+            bool is_room_owner_leave_allowed = jnode["isRoomOwnerLeaveAllowed"].GetBool();
             configs->setIsChatroomOwnerLeaveAllowed(is_room_owner_leave_allowed);
         }
 
-        if (jnode.HasMember("sort_message_by_server_time") && jnode["sort_message_by_server_time"].IsBool()) {
-            bool sort_message_by_server_time = jnode["sort_message_by_server_time"].GetBool();
+        if (jnode.HasMember("sortMessageByServerTime") && jnode["sortMessageByServerTime"].IsBool()) {
+            bool sort_message_by_server_time = jnode["sortMessageByServerTime"].GetBool();
             configs->setSortMessageByServerTime(sort_message_by_server_time);
         }
 
-        if (jnode.HasMember("using_https_only") && jnode["using_https_only"].IsBool()) {
-            bool using_https_only = jnode["using_https_only"].GetBool();
+        if (jnode.HasMember("usingHttpsOnly") && jnode["usingHttpsOnly"].IsBool()) {
+            bool using_https_only = jnode["usingHttpsOnly"].GetBool();
             configs->setUsingHttps(using_https_only);
         }
 
-        if (jnode.HasMember("server_transfer") && jnode["server_transfer"].IsBool()) {
-            bool server_transfer = jnode["server_transfer"].GetBool();
+        if (jnode.HasMember("serverTransfer") && jnode["serverTransfer"].IsBool()) {
+            bool server_transfer = jnode["serverTransfer"].GetBool();
             configs->setTransferAttachments(server_transfer);
         }
 
-        if (jnode.HasMember("is_auto_download") && jnode["is_auto_download"].IsBool()) {
-            bool is_auto_download = jnode["is_auto_download"].GetBool();
+        if (jnode.HasMember("isAutoDownload") && jnode["isAutoDownload"].IsBool()) {
+            bool is_auto_download = jnode["isAutoDownload"].GetBool();
             configs->setAutoDownloadThumbnail(is_auto_download);
         }
+
+        //TODO: need to Area code later
 
 #ifndef _WIN32
         string uuid = GetMacUuid();
@@ -375,24 +379,24 @@ namespace sdk_wrapper
         return status;
     }
 
-    string Message::MessageDirectionToString(EMMessage::EMMessageDirection direction)
+    int Message::MessageDirectionToInt(EMMessage::EMMessageDirection direction)
     {
-        string str = "send";
-
-        if (EMMessage::EMMessageDirection::RECEIVE == direction)
-            str = "recv";
-
-        return str;
+        switch (direction)
+        {
+        case EMMessage::EMMessageDirection::SEND: return 0;
+        case EMMessage::EMMessageDirection::RECEIVE: return 1;
+        default: return 0;
+        }
     }
 
-    EMMessage::EMMessageDirection Message::MessageDirectionFromString(string str)
+    EMMessage::EMMessageDirection Message::MessageDirectionFromInt(int i)
     {
-        EMMessage::EMMessageDirection direction = EMMessage::EMMessageDirection::SEND;
-
-        if (str.compare("recv") == 0)
-            direction = EMMessage::EMMessageDirection::RECEIVE;
-
-        return direction;
+        switch (i)
+        {
+        case 0: return EMMessage::EMMessageDirection::SEND;
+        case 1: return EMMessage::EMMessageDirection::RECEIVE;
+        default: return EMMessage::EMMessageDirection::SEND;
+        }
     }
 
     int Message::BodyTypeToInt(EMMessageBody::EMMessageBodyType btype)
@@ -770,13 +774,13 @@ namespace sdk_wrapper
             }
 
             if (body.HasMember("translations") && body["translations"].IsString()) {
-                vector<string> tagert_languages = MyJson::FromJsonObjectToVector(body["translations"]);
-                ptr->setTargetLanguages(tagert_languages);
+                map<string, string> translations = MyJson::FromJsonObjectToMap(body["translations"]);//FromJsonToMap(str);
+                ptr->setTranslations(translations);
             }
 
             if (body.HasMember("targetLanguages") && body["targetLanguages"].IsString()) {
-                map<string, string> translations = MyJson::FromJsonObjectToMap(body["targetLanguages"]);//FromJsonToMap(str);
-                ptr->setTranslations(translations);
+                vector<string> tagert_languages = MyJson::FromJsonObjectToVector(body["targetLanguages"]);
+                ptr->setTargetLanguages(tagert_languages);
             }
 
             bodyptr = dynamic_pointer_cast<EMMessageBody>(ptr);
@@ -1090,7 +1094,7 @@ namespace sdk_wrapper
             writer.Key("msgId");
             writer.String(msg->msgId().c_str());
 
-            writer.Key("conversationId");
+            writer.Key("convId");
             writer.String(msg->conversationId().c_str());
 
             writer.Key("from");
@@ -1106,7 +1110,7 @@ namespace sdk_wrapper
             writer.Int(MsgTypeToInt(msg->chatType()));
 
             writer.Key("direction");
-            writer.String(MessageDirectionToString(msg->msgDirection()).c_str());
+            writer.Int(MessageDirectionToInt(msg->msgDirection()));
 
             writer.Key("status");
             writer.Int(StatusToInt(msg->status()));
@@ -1126,14 +1130,17 @@ namespace sdk_wrapper
             writer.Key("messageOnlineState");
             writer.Bool(msg->messageOnlineState());
 
-            writer.Key("attributes");
-            AttributesValue::ToJsonObjectWithAttributes(writer, msg);
+            map<string, EMAttributeValuePtr> attr = msg->ext();
+            if (attr.size() > 0) {
+                writer.Key("attr");
+                AttributesValue::ToJsonObjectWithAttributes(writer, msg);
+            }
 
             writer.Key("localTime");
-            writer.String(to_string(msg->localTime()).c_str());
+            writer.Int64(msg->localTime());
 
             writer.Key("serverTime");
-            writer.String(to_string(msg->timestamp()).c_str());
+            writer.Int64(msg->timestamp());
 
             writer.Key("isThread");
             writer.Bool(msg->isThread());
@@ -1189,9 +1196,9 @@ namespace sdk_wrapper
         }
 
         EMMessage::EMMessageDirection direction = EMMessage::EMMessageDirection::SEND;
-        if (jnode.HasMember("direction") && jnode["direction"].IsString()) {
-            string str = jnode["direction"].GetString();
-            direction = MessageDirectionFromString(str);
+        if (jnode.HasMember("direction") && jnode["direction"].IsInt()) {
+            int i = jnode["direction"].GetInt();
+            direction = MessageDirectionFromInt(i);
         }
 
         EMMessage::EMChatType msg_type = EMMessage::EMChatType::SINGLE;
@@ -1216,11 +1223,12 @@ namespace sdk_wrapper
         msg->setMsgId(msg_id);
         msg->setMsgDirection(direction);
 
-        if (jnode.HasMember("conversationId") && jnode["conversationId"].IsString()) {
-            string str = jnode["conversationId"].GetString();
+        if (jnode.HasMember("convId") && jnode["convId"].IsString()) {
+            string str = jnode["convId"].GetString();
             msg->setConversationId(str);
         }
 
+        //TODO: c# side has no recallBy item
         if (jnode.HasMember("recallBy") && jnode["recallBy"].IsString()) {
             string str = jnode["recallBy"].GetString();
             msg->setRecallBy(str);
@@ -1256,16 +1264,16 @@ namespace sdk_wrapper
             msg->setMessageOnlineState(b);
         }
 
-        if (jnode.HasMember("attributes") && jnode["attributes"].IsString())
-            AttributesValue::SetMessageAttrs(msg, jnode["attributes"].GetString());
+        if (jnode.HasMember("attr") && jnode["attr"].IsObject())
+            AttributesValue::SetMessageAttrs(msg, jnode["attr"]);
 
-        if (jnode.HasMember("localTime") && jnode["localTime"].IsString()) {
-            int64_t i = convertFromString<int64_t>(jnode["localTime"].GetString());
+        if (jnode.HasMember("localTime") && jnode["localTime"].IsInt64()) {
+            int64_t i = jnode["localTime"].GetInt64();
             msg->setLocalTime(i);
         }
 
         if (jnode.HasMember("serverTime") && jnode["serverTime"].IsString()) {
-            int64_t i = convertFromString<int64_t>(jnode["serverTime"].GetString());
+            int64_t i = jnode["serverTime"].GetInt64();;
             msg->setTimestamp(i);
         }
 
@@ -2645,8 +2653,15 @@ namespace sdk_wrapper
 
     void PreseceDeviceStatus::ToJsonObject(Writer<StringBuffer>& writer, const pair<string, int>& status)
     {
-        writer.Key(status.first.c_str());
+        writer.StartObject();
+
+        writer.Key("device");
+        writer.String(status.first.c_str());
+
+        writer.Key("status");
         writer.Int(status.second);
+
+        writer.EndObject();
     }
     void PreseceDeviceStatus::ToJsonObject(Writer<StringBuffer>& writer, const set<pair<string, int>>& status_set)
     {
@@ -2687,7 +2702,7 @@ namespace sdk_wrapper
         writer.Key("publisher");
         writer.String(presence->getPublisher().c_str());
 
-        writer.Key("statusDescription");
+        writer.Key("desc");
         writer.String(presence->getExt().c_str());
 
         writer.Key("lastTime");
@@ -2696,7 +2711,7 @@ namespace sdk_wrapper
         writer.Key("expiryTime");
         writer.Int64(presence->getExpiryTime());
 
-        writer.Key("statusDetails");
+        writer.Key("detail");
         PreseceDeviceStatus::ToJsonObject(writer, presence->getStatusList());
 
         writer.EndObject();

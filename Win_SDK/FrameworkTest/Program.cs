@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ChatSDK;
+using AgoraChat;
 
 namespace WinSDKTest
 {
@@ -40,7 +40,7 @@ namespace WinSDKTest
             SDKClient.Instance.ChatManager.AddChatManagerDelegate(pro);
 
             SDKClient.Instance.Login("yqtest", "yqtest",
-            handle: new CallBack(
+            callback: new CallBack(
 
                 onSuccess: () =>
                 {
@@ -135,7 +135,7 @@ namespace WinSDKTest
             foreach (var msg in messages)
             {
                 //list.Add(msg.MsgId);
-                ChatSDK.MessageBody.TextBody tb = (ChatSDK.MessageBody.TextBody)msg.Body;
+                AgoraChat.MessageBody.TextBody tb = (AgoraChat.MessageBody.TextBody)msg.Body;
                 list.Add(tb.Text);
             }
 

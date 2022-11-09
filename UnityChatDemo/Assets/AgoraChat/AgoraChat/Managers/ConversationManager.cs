@@ -6,7 +6,7 @@ namespace AgoraChat
     internal class ConversationManager : BaseManager
     {
 
-        internal ConversationManager() : base(null, SDKMethod.conversationManager)
+        internal ConversationManager(NativeListener listener) : base(listener, SDKMethod.conversationManager)
         {
 
         }

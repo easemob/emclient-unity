@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading;
 
-#if _WIN32
-#else
+#if !_WIN32
 using UnityEngine;
 #endif
+
 
 namespace AgoraChat
 {

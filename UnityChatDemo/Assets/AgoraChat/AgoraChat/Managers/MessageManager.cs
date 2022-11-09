@@ -5,7 +5,7 @@ namespace AgoraChat
 {
     internal class MessageManager : BaseManager
     {
-        internal MessageManager() : base(null, SDKMethod.messageManager)
+        internal MessageManager(NativeListener listener) : base(listener, SDKMethod.messageManager)
         {
         }
 

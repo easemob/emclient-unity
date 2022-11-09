@@ -135,12 +135,12 @@ namespace AgoraChat
                 _process);
         }
 
-        internal void CallAction(string callbackId, JSONNode jo)
+        internal void CallAction(string callbackId, JSONNode jsonNode)
         {
             CallbackItem item = callbackMap[callbackId];
             if (item != null)
             {
-                item.callbackAction?.Invoke(jo, item.callback, item.process);
+                item.callbackAction?.Invoke(jsonNode, item.callback, item.process);
                 callbackMap.Remove(callbackId); // delete the callback after triggered
             }
         }

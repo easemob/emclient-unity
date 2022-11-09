@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
-using ChatSDK;
-using ChatSDK.MessageBody;
+using AgoraChat;
+using AgoraChat.MessageBody;
 
 namespace WinSDKTest
 {
@@ -85,13 +85,14 @@ namespace WinSDKTest
             Console.WriteLine($"IsRead: {msg.IsRead}");
             Console.WriteLine($"MessageOnlineState: {msg.MessageOnlineState}");
             Console.WriteLine($"IsThread: {msg.IsThread}");
-            foreach (var it in msg.Attributes)
+            //TODO: need to test
+            /*foreach (var it in msg.Attributes)
             {
                 AttributeValue attr = it.Value;
                 string jstr = attr.ToJsonObject().ToString();
                 Console.WriteLine($"----------------------------");
                 Console.WriteLine($"attribute item: key:{it.Key}; value:{jstr}");
-            }
+            }*/
 
             foreach (var it in msg.ReactionList)
             {
@@ -1684,8 +1685,8 @@ namespace WinSDKTest
 
         public void InitAll(string appkey)
         {
-            Options options = new Options("easemob-demo#easeim");
-            //Options options = new Options("easemob-demo#unitytest");
+            //Options options = new Options("easemob-demo#easeim");
+            Options options = new Options("easemob-demo#unitytest");
             //Options options = new Options("5101220107132865#test"); // 北京沙箱测试环境，无法正常登录
             //Options options = new Options("41117440#383391"); // 线上环境, demo中的token
             if (appkey.Length > 0 && appkey.Contains("#") == true)
@@ -2123,7 +2124,7 @@ namespace WinSDKTest
                 password = GetParamValueFromContext(1);
 
             SDKClient.Instance.CreateAccount(username, password,
-                handle: new CallBack(
+                callback: new CallBack(
 
                 onSuccess: () =>
                 {
@@ -2158,7 +2159,7 @@ namespace WinSDKTest
                 istoken = true;
 
             SDKClient.Instance.Login(username, password, istoken,
-            handle: new CallBack(
+            callback: new CallBack(
 
                 onSuccess: () =>
                 {
@@ -2183,7 +2184,7 @@ namespace WinSDKTest
         public void CallFunc_IClient_Logout()
         {
             SDKClient.Instance.Logout(false,
-                handle: new CallBack(
+                callback: new CallBack(
                 onSuccess: () =>
                 {
                     Console.WriteLine("Logout succeed");
@@ -2239,7 +2240,7 @@ namespace WinSDKTest
                 token = GetParamValueFromContext(1);
 
             SDKClient.Instance.LoginWithAgoraToken(username, token, 
-            handle: new CallBack(
+            callback: new CallBack(
 
                 onSuccess: () =>
                 {
@@ -5380,7 +5381,7 @@ namespace WinSDKTest
             else
                 size = GetIntFromString(GetParamValueFromContext(1));
 
-            SDKClient.Instance.GroupManager.FetchJoinedGroupsFromServer(num, size, handle: new ValueCallBack<List<Group>>(
+            SDKClient.Instance.GroupManager.FetchJoinedGroupsFromServer(num, size, callback: new ValueCallBack<List<Group>>(
                 onSuccess: (groupList) => {
                     int i = 1;
                     foreach (var group in groupList)
@@ -5433,7 +5434,7 @@ namespace WinSDKTest
             else
                 cursor = GetParamValueFromContext(1);
 
-            SDKClient.Instance.GroupManager.FetchPublicGroupsFromServer(size, cursor, handle: new ValueCallBack<CursorResult<GroupInfo>>(
+            SDKClient.Instance.GroupManager.FetchPublicGroupsFromServer(size, cursor, callback: new ValueCallBack<CursorResult<GroupInfo>>(
                 onSuccess: (result) => {
                     Console.WriteLine($"FetchPublicGroupsFromServer, public group num:{result.Data.Count}, cursor:{result.Cursor}");
                     foreach (var it in result.Data)
@@ -5476,7 +5477,7 @@ namespace WinSDKTest
             else
                 groupId = GetParamValueFromContext(0);
 
-            SDKClient.Instance.GroupManager.JoinPublicGroup(groupId, handle: new CallBack(
+            SDKClient.Instance.GroupManager.JoinPublicGroup(groupId, callback: new CallBack(
                 onSuccess: () => {
                     Console.WriteLine($"JoinPublicGroup success");
                 },
@@ -5496,7 +5497,7 @@ namespace WinSDKTest
             else
                 groupId = GetParamValueFromContext(0);
 
-            SDKClient.Instance.GroupManager.LeaveGroup(groupId, handle: new CallBack(
+            SDKClient.Instance.GroupManager.LeaveGroup(groupId, callback: new CallBack(
                 onSuccess: () => {
                     Console.WriteLine($"LeaveGroup success");
                 },
@@ -5516,7 +5517,7 @@ namespace WinSDKTest
             else
                 groupId = GetParamValueFromContext(0);
 
-            SDKClient.Instance.GroupManager.MuteGroupAllMembers(groupId, handle: new CallBack(
+            SDKClient.Instance.GroupManager.MuteGroupAllMembers(groupId, callback: new CallBack(
                 onSuccess: () => {
                     Console.WriteLine($"MuteGroupAllMembers success");
                 },
@@ -5552,7 +5553,7 @@ namespace WinSDKTest
             members.Add(member1);
             members.Add(member2);
 
-            SDKClient.Instance.GroupManager.MuteGroupMembers(groupId, members, handle: new CallBack(
+            SDKClient.Instance.GroupManager.MuteGroupMembers(groupId, members, callback: new CallBack(
                 onSuccess: () => {
                     Console.WriteLine($"MuteGroupMembers success");
                 },
@@ -5578,7 +5579,7 @@ namespace WinSDKTest
             else
                 memberId = GetParamValueFromContext(1);
 
-            SDKClient.Instance.GroupManager.RemoveGroupAdmin(groupId, memberId, handle: new CallBack(
+            SDKClient.Instance.GroupManager.RemoveGroupAdmin(groupId, memberId, callback: new CallBack(
                 onSuccess: () => {
                     Console.WriteLine($"RemoveGroupAdmin success");
                 },
@@ -5604,7 +5605,7 @@ namespace WinSDKTest
             else
                 fileId = GetParamValueFromContext(1);
 
-            SDKClient.Instance.GroupManager.DeleteGroupSharedFile(groupId, fileId, handle: new CallBack(
+            SDKClient.Instance.GroupManager.DeleteGroupSharedFile(groupId, fileId, callback: new CallBack(
                 onSuccess: () => {
                     Console.WriteLine($"DeleteGroupSharedFile success");
                 },
@@ -5640,7 +5641,7 @@ namespace WinSDKTest
             members.Add(member1);
             members.Add(member2);
 
-            SDKClient.Instance.GroupManager.DeleteGroupMembers(groupId, members, handle: new CallBack(
+            SDKClient.Instance.GroupManager.DeleteGroupMembers(groupId, members, callback: new CallBack(
                 onSuccess: () => {
                     Console.WriteLine($"DeleteGroupMembers success");
                 },
@@ -5676,7 +5677,7 @@ namespace WinSDKTest
             members.Add(member1);
             members.Add(member2);
 
-            SDKClient.Instance.GroupManager.RemoveGroupWhiteList(groupId, members, handle: new CallBack(
+            SDKClient.Instance.GroupManager.RemoveGroupWhiteList(groupId, members, callback: new CallBack(
                 onSuccess: () => {
                     Console.WriteLine($"RemoveGroupWhiteList success");
                 },
@@ -5696,7 +5697,7 @@ namespace WinSDKTest
             else
                 groupId = GetParamValueFromContext(0);
 
-            SDKClient.Instance.GroupManager.UnBlockGroup(groupId, handle: new CallBack(
+            SDKClient.Instance.GroupManager.UnBlockGroup(groupId, callback: new CallBack(
                 onSuccess: () => {
                     Console.WriteLine($"UnBlockGroup success");
                 },
@@ -5760,7 +5761,7 @@ namespace WinSDKTest
             else
                 groupId = GetParamValueFromContext(0);
 
-            SDKClient.Instance.GroupManager.UnMuteGroupAllMembers(groupId, handle: new CallBack(
+            SDKClient.Instance.GroupManager.UnMuteGroupAllMembers(groupId, callback: new CallBack(
                 onSuccess: () => {
                     Console.WriteLine($"UnMuteGroupAllMembers success");
                 },
@@ -6162,7 +6163,7 @@ namespace WinSDKTest
         }
 
         public void CallFunc_IPushManager_GetNoDisturbGroups()
-        {
+        {/*
             List<string> list = SDKClient.Instance.PushManager.GetNoDisturbGroups();
             if (list.Count > 0)
             {
@@ -6176,11 +6177,12 @@ namespace WinSDKTest
             {
                 Console.WriteLine($"GetNoDisturbGroups done, list is empty");
             }
-
+            */
         }
 
         public void CallFunc_IPushManager_GetPushConfig()
         {
+            /*
             PushConfig config = SDKClient.Instance.PushManager.GetPushConfig();
             if (null != config)
             {
@@ -6191,10 +6193,12 @@ namespace WinSDKTest
             {
                 Console.WriteLine("GetPushConfig done, PushConfig is null.");
             }
+            */
         }
 
         public void CallFunc_IPushManager_GetPushConfigFromServer()
         {
+            /*
             SDKClient.Instance.PushManager.GetPushConfigFromServer(new ValueCallBack<PushConfig>(
                 onSuccess: (config) => {
                     if (null != config)
@@ -6211,10 +6215,12 @@ namespace WinSDKTest
                      Console.WriteLine($"GetPushConfigFromServer failed, code:{code}, desc:{desc}");
                  }
             ));
+            */
         }
 
         public void CallFunc_IPushManager_UpdatePushNickName()
         {
+            /*
             string nk = GetParamValueFromContext(0);
             SDKClient.Instance.PushManager.UpdatePushNickName(nk, new CallBack(
                 onSuccess: () => {
@@ -6224,10 +6230,12 @@ namespace WinSDKTest
                     Console.WriteLine($"UpdatePushNickName failed, code:{code}, desc:{desc}");
                 }
             ));
+            */
         }
 
         public void CallFunc_IPushManager_UpdateHMSPushToken()
         {
+            /*
             string nk = GetParamValueFromContext(0);
             SDKClient.Instance.PushManager.UpdateHMSPushToken(nk, new CallBack(
                 onSuccess: () => {
@@ -6237,10 +6245,12 @@ namespace WinSDKTest
                     Console.WriteLine($"UpdateHMSPushToken failed, code:{code}, desc:{desc}");
                 }
             ));
+            */
         }
 
         public void CallFunc_IPushManager_UpdateFCMPushToken()
         {
+            /*
             string nk = GetParamValueFromContext(0);
             SDKClient.Instance.PushManager.UpdateFCMPushToken(nk, new CallBack(
                 onSuccess: () => {
@@ -6250,10 +6260,12 @@ namespace WinSDKTest
                     Console.WriteLine($"UpdateFCMPushToken failed, code:{code}, desc:{desc}");
                 }
             ));
+            */
         }
 
         public void CallFunc_IPushManager_UpdateAPNSPushToken()
         {
+            /*
             string nk = GetParamValueFromContext(0);
             SDKClient.Instance.PushManager.UpdateAPNSPushToken(nk, new CallBack(
                 onSuccess: () => {
@@ -6263,10 +6275,12 @@ namespace WinSDKTest
                     Console.WriteLine($"UpdateAPNSPushToken failed, code:{code}, desc:{desc}");
                 }
             ));
+            */
         }
 
         public void CallFunc_IPushManager_SetNoDisturb()
         {
+            /*
             int noDisturb = GetIntFromString(GetParamValueFromContext(0));
             int startTime = GetIntFromString(GetParamValueFromContext(1));
             int endTime = GetIntFromString(GetParamValueFromContext(2));
@@ -6279,10 +6293,12 @@ namespace WinSDKTest
                     Console.WriteLine($"SetNoDisturb failed, code:{code}, desc:{desc}");
                 }
             ));
+            */
         }
 
         public void CallFunc_IPushManager_SetPushStyle()
         {
+            /*
             int pushStyle = GetIntFromString(GetParamValueFromContext(0));
             SDKClient.Instance.PushManager.SetPushStyle(pushStyle == 0 ? PushStyle.Simple : PushStyle.Summary, new CallBack(
                 onSuccess: () => {
@@ -6292,10 +6308,12 @@ namespace WinSDKTest
                     Console.WriteLine($"SetPushStyle failed, code:{code}, desc:{desc}");
                 }
             ));
+            */
         }
 
         public void CallFunc_IPushManager_SetGroupToDisturb()
         {
+            /*
             string groupId = GetParamValueFromContext(0);
             int noDisturb = GetIntFromString(GetParamValueFromContext(1));
             SDKClient.Instance.PushManager.SetGroupToDisturb(groupId, noDisturb == 0 ? false : true, new CallBack(
@@ -6306,10 +6324,12 @@ namespace WinSDKTest
                     Console.WriteLine($"SetGroupToDisturb failed, code:{code}, desc:{desc}");
                 }
             ));
+            */
         }
 
         public void CallFunc_IPushManager_SetSilentModeForAll()
         {
+            /*
             int paramType = GetIntFromString(GetParamValueFromContext(0));
             int duration = GetIntFromString(GetParamValueFromContext(1));
             int type = GetIntFromString(GetParamValueFromContext(2));
@@ -6339,10 +6359,12 @@ namespace WinSDKTest
                     Console.WriteLine($"SetSilentModeForAll failed, code:{code}, desc:{desc}");
                 }
             ));
+            */
         }
 
         public void CallFunc_IPushManager_GetSilentModeForAll()
         {
+            /*
             SDKClient.Instance.PushManager.GetSilentModeForAll(new ValueCallBack<SilentModeItem>(
                 onSuccess: (item) => {
                     Console.WriteLine($"GetSilentModeForAll success.");
@@ -6353,10 +6375,11 @@ namespace WinSDKTest
                     Console.WriteLine($"GetSilentModeForAll failed, code:{code}, desc:{desc}");
                 }
             ));
+            */
         }
 
         public void CallFunc_IPushManager_SetSilentModeForConversation()
-        {
+        {/*
             string convId = GetParamValueFromContext(0);
             ConversationType convType = (ConversationType)GetIntFromString(GetParamValueFromContext(1));
             int paramType = GetIntFromString(GetParamValueFromContext(2));
@@ -6388,10 +6411,12 @@ namespace WinSDKTest
                     Console.WriteLine($"SetSilentModeForConversation failed, code:{code}, desc:{desc}");
                 }
             ));
+            */
         }
 
         public void CallFunc_IPushManager_GetSilentModeForConversation()
         {
+            /*
             string convId = GetParamValueFromContext(0);
             ConversationType convType = (ConversationType)GetIntFromString(GetParamValueFromContext(1));
 
@@ -6405,10 +6430,12 @@ namespace WinSDKTest
                     Console.WriteLine($"GetSilentModeForConversation failed, code:{code}, desc:{desc}");
                 }
             ));
+            */
         }
 
         public void CallFunc_IPushManager_GetSilentModeForConversations()
         {
+            /*
             string userlist = GetParamValueFromContext(0);
             string grouplist = GetParamValueFromContext(1);
 
@@ -6434,10 +6461,12 @@ namespace WinSDKTest
                     Console.WriteLine($"GetSilentModeForConversations failed, code:{code}, desc:{desc}");
                 }
             ));
+            */
         }
 
         public void CallFunc_IPushManager_SetPreferredNotificationLanguage()
         {
+            /*
             string languageCode = GetParamValueFromContext(0);
 
             SDKClient.Instance.PushManager.SetPreferredNotificationLanguage(languageCode, new CallBack(
@@ -6448,10 +6477,12 @@ namespace WinSDKTest
                     Console.WriteLine($"SetPreferredNotificationLanguage failed, code:{code}, desc:{desc}");
                 }
             ));
+            */
         }
 
         public void CallFunc_IPushManager_GetPreferredNotificationLanguage()
         {
+            /*
             SDKClient.Instance.PushManager.GetPreferredNotificationLanguage(new ValueCallBack<string>(
                 onSuccess: (str) => {
                     Console.WriteLine($"GetPreferredNotificationLanguage success. lang:{str}");
@@ -6460,6 +6491,7 @@ namespace WinSDKTest
                     Console.WriteLine($"GetPreferredNotificationLanguage failed, code:{code}, desc:{desc}");
                 }
             ));
+            */
         }
 
         public void CallFunc_IPushManager()
@@ -6714,7 +6746,7 @@ namespace WinSDKTest
         {
             int pageNum = GetIntFromString(GetParamValueFromContext(0));
             int pageSize = GetIntFromString(GetParamValueFromContext(1));
-            SDKClient.Instance.RoomManager.FetchPublicRoomsFromServer(pageNum, pageSize, handle: new ValueCallBack<PageResult<Room>>(
+            SDKClient.Instance.RoomManager.FetchPublicRoomsFromServer(pageNum, pageSize, callback: new ValueCallBack<PageResult<Room>>(
                 onSuccess: (result) => {
                     int count = 1;
                     foreach (var room in result.Data)
@@ -6784,7 +6816,7 @@ namespace WinSDKTest
             string roomId = GetParamValueFromContext(0);
             int pageNum = GetIntFromString(GetParamValueFromContext(1));
             int pageSzie = GetIntFromString(GetParamValueFromContext(2));
-            SDKClient.Instance.RoomManager.FetchRoomBlockList(roomId, pageNum, pageSzie, handle: new ValueCallBack<List<string>>(
+            SDKClient.Instance.RoomManager.FetchRoomBlockList(roomId, pageNum, pageSzie, callback: new ValueCallBack<List<string>>(
                 onSuccess: (list) => {
                     Console.WriteLine($"FetchRoomBlockList success, block num: {list.Count}");
                     foreach(var it in list)
@@ -6850,7 +6882,7 @@ namespace WinSDKTest
             string roomId = GetParamValueFromContext(0);
             string cursor = GetParamValueFromContext(1);
             int pageSize = GetIntFromString(GetParamValueFromContext(2));
-                SDKClient.Instance.RoomManager.FetchRoomMembers(roomId, cursor, pageSize, handle: new ValueCallBack<CursorResult<string>>(
+                SDKClient.Instance.RoomManager.FetchRoomMembers(roomId, cursor, pageSize, callback: new ValueCallBack<CursorResult<string>>(
                 onSuccess: (result) => {                
                     Console.WriteLine($"FetchRoomMembers success, member num: {result.Data.Count}");
                     foreach(var it in result.Data)
@@ -6869,7 +6901,7 @@ namespace WinSDKTest
             string roomId = GetParamValueFromContext(0);
             int pageSize = GetIntFromString(GetParamValueFromContext(1));
             int pageNum = GetIntFromString(GetParamValueFromContext(2));
-                SDKClient.Instance.RoomManager.FetchRoomMuteList(roomId, pageSize, pageNum, handle: new ValueCallBack<List<string>>(
+                SDKClient.Instance.RoomManager.FetchRoomMuteList(roomId, pageSize, pageNum, callback: new ValueCallBack<List<string>>(
                  onSuccess: (result) => {
                      Console.WriteLine($"FetchRoomMuteList success, mute count：{result.Count}");
                      foreach(var it in result)
@@ -7191,11 +7223,11 @@ namespace WinSDKTest
             int gender = GetIntFromString(GetParamValueFromContext(4));
 
             UserInfo userInfo = new UserInfo();
-            userInfo.userId = userId;
-            userInfo.nickName = nickName;
-            userInfo.avatarUrl = avatarUrl;
-            userInfo.email = email;
-            userInfo.gender = gender;
+            userInfo.UserId = userId;
+            userInfo.NickName = nickName;
+            userInfo.AvatarUrl = avatarUrl;
+            userInfo.Email = email;
+            userInfo.Gender = gender;
 
             SDKClient.Instance.UserInfoManager.UpdateOwnInfo(userInfo, new CallBack(
                 onSuccess: () => {
@@ -7223,15 +7255,15 @@ namespace WinSDKTest
                     {
                         Console.WriteLine($"user name: {it.Key}");
                         UserInfo ui = it.Value;
-                        Console.WriteLine($"userId: {ui.userId}");
-                        Console.WriteLine($"nickName: {ui.nickName}");
-                        Console.WriteLine($"avatarUrl: {ui.avatarUrl}");
-                        Console.WriteLine($"email: {ui.email}");
-                        Console.WriteLine($"phoneNumber: {ui.phoneNumber}");
-                        Console.WriteLine($"signature: {ui.signature}");
-                        Console.WriteLine($"birth: {ui.birth}");
-                        Console.WriteLine($"ext: {ui.ext}");
-                        Console.WriteLine($"gender: {ui.gender}");
+                        Console.WriteLine($"userId: {ui.UserId}");
+                        Console.WriteLine($"nickName: {ui.NickName}");
+                        Console.WriteLine($"avatarUrl: {ui.AvatarUrl}");
+                        Console.WriteLine($"email: {ui.Email}");
+                        Console.WriteLine($"phoneNumber: {ui.PhoneNumber}");
+                        Console.WriteLine($"signature: {ui.Signature}");
+                        Console.WriteLine($"birth: {ui.Birth}");
+                        Console.WriteLine($"ext: {ui.Ext}");
+                        Console.WriteLine($"gender: {ui.Gender}");
                         Console.WriteLine($"===============================");
                     }
                 },
@@ -7414,6 +7446,7 @@ namespace WinSDKTest
 
         public void CallFunc_IThreadManager_GetThreadWithThreadId()
         {
+            /*
             string tid = GetParamValueFromContext(0);
 
             SDKClient.Instance.ThreadManager.GetThreadWithThreadId(tid, new ValueCallBack<ChatThread>(
@@ -7434,6 +7467,7 @@ namespace WinSDKTest
                     Console.WriteLine($"SubscribePresences failed, code:{code}, desc:{desc}");
                 }
             ));
+            */
         }
 
         public void CallFunc_IThreadManager_CreateThread()
@@ -8315,12 +8349,12 @@ namespace WinSDKTest
 
     class MultiDeviceDelegate : IMultiDeviceDelegate
     {
-        public void onContactMultiDevicesEvent(MultiDevicesOperation operation, string target, string ext)
+        public void OnContactMultiDevicesEvent(MultiDevicesOperation operation, string target, string ext)
         {
             Console.WriteLine($"onContactMultiDevicesEvent: operation: {operation}; target:{target}； ext:{ext}"); 
         }
 
-        public void onGroupMultiDevicesEvent(MultiDevicesOperation operation, string target, List<string> usernames)
+        public void OnGroupMultiDevicesEvent(MultiDevicesOperation operation, string target, List<string> usernames)
         {
             Console.WriteLine($"onGroupMultiDevicesEvent: operation: {operation}; target:{target}");
             foreach(var it in usernames)
@@ -8329,7 +8363,7 @@ namespace WinSDKTest
             }
         }
 
-        public void onThreadMultiDevicesEvent(MultiDevicesOperation operation, string target, List<string> usernames)
+        public void OnThreadMultiDevicesEvent(MultiDevicesOperation operation, string target, List<string> usernames)
         {
             Console.WriteLine($"onThreadMultiDevicesEvent: operation: {operation}; target:{target}");
             foreach (var it in usernames)
@@ -8338,7 +8372,7 @@ namespace WinSDKTest
             }
         }
 
-        public void undisturbMultiDevicesEvent(string data)
+        public void OnUndisturbMultiDevicesEvent(string data)
         {
             Console.WriteLine($"data: {data}");
         }
@@ -8402,6 +8436,16 @@ namespace WinSDKTest
         public void OnRemovedFromRoom(string roomId, string roomName, string participant)
         {
             Console.WriteLine($"OnRemovedFromRoom: roomId: {roomId}; roomName:{roomName}; participant:{participant}");
+        }
+
+        void IRoomManagerDelegate.OnChatroomAttributesChanged(string roomId, Dictionary<string, string> kv, string from)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IRoomManagerDelegate.OnChatroomAttributesRemoved(string roomId, List<string> keys, string from)
+        {
+            throw new NotImplementedException();
         }
     }
 

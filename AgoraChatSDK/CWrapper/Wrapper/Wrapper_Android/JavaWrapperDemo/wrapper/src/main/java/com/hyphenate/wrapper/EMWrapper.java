@@ -17,7 +17,10 @@ public class EMWrapper {
     public String callSDKApi(String manager, String method, String jsonString, EMWrapperCallback callback) {
         String str = null;
         try {
-            JSONObject jsonObject = new JSONObject(jsonString);
+            JSONObject jsonObject = null;
+            if (jsonString.length() > 0) {
+                jsonObject = new JSONObject(jsonString);
+            }
             switch (manager) {
                 case EMSDKMethod.client:
                     str = clientWrapper.onMethodCall(method, jsonObject, callback);

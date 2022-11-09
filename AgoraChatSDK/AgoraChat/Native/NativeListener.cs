@@ -44,7 +44,8 @@ namespace AgoraChat
 
             nativeListenerEvent = (string listener, string method, string jsonString) =>
             {
-                if (string.IsNullOrEmpty(method) || string.IsNullOrEmpty(listener)) return;
+                if (string.IsNullOrEmpty(method) || string.IsNullOrEmpty(listener)) 
+                    return;
 
                 string json = Tools.GetUnicodeStringFromUTF8(jsonString);
                 JSONNode jsonNode = JSON.Parse(json);
@@ -69,7 +70,7 @@ namespace AgoraChat
                             RoomManagerEvent(method, jsonNode);
                             break;
                         case SDKMethod.connectionListener:
-                            ConnectionEvent(method, jsonNode);
+                            ConnectionEvent(method, jsonNode);                            
                             break;
                         case SDKMethod.multiDeviceListener:
                             MultiDeviceEvent(method, jsonNode);
@@ -81,7 +82,7 @@ namespace AgoraChat
                             ChatThreadManagerEvent(method, jsonNode);
                             break;
                         case SDKMethod.callback:
-                            callbackManager.CallAction(method, jsonNode);
+                            callbackManager.CallAction(method, jsonNode);                            
                             break;
                         case SDKMethod.callbackProgress:
                             callbackManager.CallActionProgress(method, jsonNode);

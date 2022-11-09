@@ -107,12 +107,15 @@ namespace wrapper_jni {
         jobject jObj = javaWrapper();
         jclass cls = javaWrapperClass();
         jmethodID get_method = (*env).GetMethodID(cls,"nativeGet","(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;");
-
         jobject j1 = getJStringObject(env, manager);
         jobject j2 = getJStringObject(env, method);
-        jobject j3 = getJStringObject(env, jstr);
+        jobject j3 = NULL;
+        if(jstr == nullptr) {
+            j3 = getJStringObject(env, "");
+        }else {
+            j3 = getJStringObject(env, jstr);
+        }
         jobject j4 = getJStringObject(env, cbid);
-
         jstring javaString = (jstring)(*env).CallObjectMethod(jObj, get_method, j1, j2, j3, j4);
         string str = extractJString(env, javaString);
         memcpy(buf, str.c_str(), str.size() + 1);
@@ -121,16 +124,15 @@ namespace wrapper_jni {
     }
 
     void call_Common(const char* manager, const char* method, const char* jstr, const char* cbid) {
+        
         JNIEnv* env = getCurrentThreadEnv();
         jobject jObj = javaWrapper();
         jclass cls = javaWrapperClass();
         jmethodID call_method = (*env).GetMethodID(cls,"nativeCall","(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
-
         jobject j1 = getJStringObject(env, manager);
         jobject j2 = getJStringObject(env, method);
         jobject j3 = getJStringObject(env, jstr);
         jobject j4 = getJStringObject(env, cbid);
-        
         (*env).CallVoidMethod(jObj, call_method, j1, j2, j3, j4);
     }
 

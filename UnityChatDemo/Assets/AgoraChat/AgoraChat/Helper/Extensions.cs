@@ -47,7 +47,7 @@ namespace AgoraChat
 
         internal static T CreateWithJsonObject<T>(JSONNode jsonNode) where T : BaseModel
         {
-            if (jsonNode == null || !jsonNode.IsObject) return null;
+            if (null == jsonNode || !jsonNode.IsObject) return null;
             BaseModel bs = (T)Activator.CreateInstance(typeof(T), true);
             bs.FromJsonObject(jsonNode.AsObject);
             return (T)bs;
@@ -114,9 +114,9 @@ namespace AgoraChat
 
         internal static List<T> BaseModelListFromJsonArray<T>(JSONNode jn) where T : BaseModel
         {
-            if (null != jn && jn.IsArray) return null;
-
             List<T> list = new List<T>();
+
+            if (null == jn || !jn.IsArray) return list;
 
             foreach (JSONNode it in jn.AsArray)
             {
@@ -149,9 +149,9 @@ namespace AgoraChat
         // T: BaseModel子类
         internal static Dictionary<string, T> BaseModelDictionaryFromJsonObject<T>(JSONNode jo) where T : BaseModel
         {
-            if (!jo.IsObject) return null;
-
             Dictionary<string, T> ret = new Dictionary<string, T>();
+
+            if (!jo.IsObject) return ret;
 
             foreach (string s in jo.Keys)
             {

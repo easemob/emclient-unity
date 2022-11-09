@@ -69,6 +69,7 @@
     <Compile Include="Assets/AgoraChat/AgoraChat/Delegates/IRoomManagerDelegate.cs" />
     <Compile Include="Assets/AgoraChat/AgoraChat/Enumerations.cs" />
     <Compile Include="Assets/AgoraChat/AgoraChat/Helper/Extensions.cs" />
+    <Compile Include="Assets/AgoraChat/AgoraChat/Helper/LogPrinter.cs" />
     <Compile Include="Assets/AgoraChat/AgoraChat/Helper/SDKMethod.cs" />
     <Compile Include="Assets/AgoraChat/AgoraChat/Helper/Tools.cs" />
     <Compile Include="Assets/AgoraChat/AgoraChat/Helper/UnityHelper.cs" />

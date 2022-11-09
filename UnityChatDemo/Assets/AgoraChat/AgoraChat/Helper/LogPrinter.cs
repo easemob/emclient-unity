@@ -1,7 +1,18 @@
 ﻿using System;
-public class NewClass
+
+#if !_WIN32
+using UnityEngine;
+#endif
+
+namespace AgoraChat
 {
-    public NewClass()
+    public class LogPrinter
     {
+        public static void Log(object message)
+        {
+#if !_WIN32
+            Debug.Log("UNITYSDK: " + message);
+#endif
+        }
     }
 }

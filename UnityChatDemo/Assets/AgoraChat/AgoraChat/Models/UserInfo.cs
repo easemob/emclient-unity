@@ -94,7 +94,7 @@ namespace AgoraChat
          */
         public int Gender = 0;
 
-        internal UserInfo() { }
+        public UserInfo() { }
 
         internal UserInfo(string jsonString) : base(jsonString) { }
 

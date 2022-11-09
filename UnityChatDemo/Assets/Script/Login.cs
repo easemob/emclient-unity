@@ -28,7 +28,7 @@ public class Login : MonoBehaviour
         m_LoginBtn.onClick.AddListener(LoginAction);
         m_RegisterBtn.onClick.AddListener(RegisterAction);
 
-
+        InitEaseMobSDK();
 
     }
 
@@ -45,29 +45,29 @@ public class Login : MonoBehaviour
 
     void LoginAction()
     {
-        InitEaseMobSDK();
+        LoginWithPassword();
         //LoginWithAgoraTokenAction();
         return;
     }
 
     void RegisterAction()
     {
-        LoginWithAgoraTokenAction();
-        //SDKClient.Instance.CreateAccount(m_UsernameText.text, m_PasswordText.text,
-        //    handle: new CallBack(
+        SDKClient.Instance.CreateAccount(m_UsernameText.text, m_PasswordText.text,
+            callback: new CallBack(
 
-        //        onSuccess: () =>
-        //        {
-        //            Debug.Log("login succeed");
-        //            UIManager.SuccessAlert(transform);
-        //        },
+                onSuccess: () =>
+                {
+                    Debug.Log("login succeed");
+                    UIManager.SuccessAlert(transform);
+                },
 
-        //        onError: (code, desc) =>
-        //        {
-        //            UIManager.ErrorAlert(transform, code, desc);
-        //        }
-        //    )
-        //);
+                onError: (code, desc) =>
+                {
+                    Debug.Log($"failed desc {desc}");
+                    UIManager.DefaultAlert(transform, "failed " + desc + " " + code);
+                }
+            )
+        );
     }
 
     void LoginWithAgoraTokenAction()
@@ -94,7 +94,7 @@ public class Login : MonoBehaviour
 #endif
 
         SDKClient.Instance.LoginWithAgoraToken(m_UsernameText.text, token,
-            handle: new CallBack(
+            callback: new CallBack(
 
                 onSuccess: () =>
                 {
@@ -110,7 +110,33 @@ public class Login : MonoBehaviour
                     }
                     else
                     {
-                        UIManager.DefaultAlert(transform, "login failed, code: " + code);
+                        UIManager.DefaultAlert(transform, "failed " + code + " " + desc);
+                    }
+                }
+            )
+        );
+    }
+
+    void LoginWithPassword()
+    {
+        SDKClient.Instance.Login(m_UsernameText.text, m_PasswordText.text,
+            callback: new CallBack(
+
+                onSuccess: () =>
+                {
+                    Debug.Log("login with agora token succeed");
+                    SceneManager.LoadSceneAsync("Main");
+                },
+
+                onError: (code, desc) =>
+                {
+                    if (code == 200)
+                    {
+                        SceneManager.LoadSceneAsync("Main");
+                    }
+                    else
+                    {
+                        UIManager.DefaultAlert(transform, "failed " + code + " " + desc);
                     }
                 }
             )
@@ -149,7 +175,7 @@ public class Login : MonoBehaviour
     void InitEaseMobSDK()
     {
         //default appkey
-        string appkey = "easemob-demo#unity";
+        string appkey = "easemob-demo#flutter";
         //string appkey = "easemob-demo#wang";
         //string appkey = "easemob-demo#unitytest";
         //string appkey = "41117440#383391";

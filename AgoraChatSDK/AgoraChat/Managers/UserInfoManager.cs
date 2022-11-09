@@ -13,7 +13,7 @@ namespace AgoraChat
     public class UserInfoManager : BaseManager
     {
 
-        internal UserInfoManager() : base(null, SDKMethod.userInfoManager)
+        internal UserInfoManager(NativeListener listener) : base(listener, SDKMethod.userInfoManager)
         {
 
         }
@@ -23,13 +23,13 @@ namespace AgoraChat
          * 修改当前用户的信息。
          *
          * @param userInfo  要修改的用户信息。
-         * @param handle    操作结果回调，详见 {@link CallBack}。
+         * @param callback    操作结果回调，详见 {@link CallBack}。
          *
          * \~english
          * Modifies the information of the current user.
          *
          * @param userInfo  The user information to be modified.
-         * @param handle	The operation callback. See {@link CallBack}.
+         * @param callback	The operation callback. See {@link CallBack}.
          */
         public void UpdateOwnInfo(UserInfo userInfo, CallBack callback = null)
         {
@@ -43,13 +43,13 @@ namespace AgoraChat
          * 根据用户 ID 获取用户信息。
          *
          * @param userIds   用户 ID 列表。
-         * @param handle    操作结果回调，成功则返回用户信息字典，失败则返回错误信息，详见 {@link ValueCallBack}。
+         * @param callback    操作结果回调，成功则返回用户信息字典，失败则返回错误信息，详见 {@link ValueCallBack}。
          *
          * \~english
          * Gets user information by user ID.
          *
          * @param userIds   The list of user IDs.
-         * @param handle	The operation callback. If success, the user information dictionary is returned; otherwise, an error is returned. See {@link ValueCallBack}.
+         * @param callback	The operation callback. If success, the user information dictionary is returned; otherwise, an error is returned. See {@link ValueCallBack}.
          */
         public void FetchUserInfoByUserId(List<string> userIds, ValueCallBack<Dictionary<string, UserInfo>> callback = null)
         {
