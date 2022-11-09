@@ -216,7 +216,7 @@ namespace AgoraChat
          * 可通过以下格式的正则表达式设置用户 ID：^[a-zA-Z0-9_-]+$。
          * 
          * @param password  密码，长度不超过 64 个字符。该参数必填。
-         * @param handle    创建结果回调，详见 {@link CallBack}。                             
+         * @param callback    创建结果回调，详见 {@link CallBack}。                             
          *
          * \~english
          * Creates a new user.
@@ -238,12 +238,12 @@ namespace AgoraChat
          * You can also set the user ID using a regular expression in the format of ^[a-zA-Z0-9_-]+$. 
          * 
          * @param password The password. The password can contain a maximum of 64 characters. Ensure that you set this parameter.
-         * @param handle  The creation result callback. See {@link CallBack}.          
+         * @param callback  The creation result callback. See {@link CallBack}.          
          *             
          */
-        public void CreateAccount(string username, string password, CallBack handle = null)
+        public void CreateAccount(string username, string password, CallBack callback = null)
         {
-            _clientImpl.CreateAccount(username, password, handle);
+            _clientImpl.CreateAccount(username, password, callback);
         }
 
         /**
@@ -257,7 +257,7 @@ namespace AgoraChat
          * @param isToken       是否通过 token 登录。
          *                      - `true`：通过 token 登录。
          *                      - （默认） `false`：通过密码登录。
-         * @param handle        登录结果回调，详见 {@link CallBack}。
+         * @param callback        登录结果回调，详见 {@link CallBack}。
          *
          * \~english
          * Logs in to the chat server with a password or token.
@@ -269,12 +269,12 @@ namespace AgoraChat
          * @param isToken       Whether to log in with a token or a password.
          *                      - `true`：Log in with a token.
          *                      - (Default) `false`：Log in with a password.
-         * @param handle 	    The login result callback. See {@link CallBack}.
+         * @param callback 	    The login result callback. See {@link CallBack}.
          *
          */
-        public void Login(string username, string pwdOrToken, bool isToken = false, CallBack handle = null)
+        public void Login(string username, string pwdOrToken, bool isToken = false, CallBack callback = null)
         {
-            _clientImpl.Login(username, pwdOrToken, isToken, handle);
+            _clientImpl.Login(username, pwdOrToken, isToken, callback);
         }
 
         /**
@@ -287,7 +287,7 @@ namespace AgoraChat
           *                           - `true`：是。
           *                           - `false`：否。
           *
-          * @param handle            退出结果回调，详见 {@link CallBack}。
+          * @param callback            退出结果回调，详见 {@link CallBack}。
           *
           * \~english
           * Logs you out of the chat service.
@@ -298,12 +298,12 @@ namespace AgoraChat
           * - `true`: Yes.
           * - `false`: No.
           *
-          * @param handle 	    The logout result callback. See {@link CallBack}.
+          * @param callback 	    The logout result callback. See {@link CallBack}.
           *
           */
-        public void Logout(bool unbindDeviceToken = true, CallBack handle = null)
+        public void Logout(bool unbindDeviceToken = true, CallBack callback = null)
         {
-            _clientImpl.Logout(unbindDeviceToken, handle);
+            _clientImpl.Logout(unbindDeviceToken, callback);
         }
 
         /**
@@ -316,7 +316,7 @@ namespace AgoraChat
         *
         * @param username      用户 ID，必填。
         * @param token         声网 token，必填。
-        * @param handle        登录结果回调，详见 {@link CallBack}。 
+        * @param callback        登录结果回调，详见 {@link CallBack}。 
         *
         * \~english
         * Logs in to the chat server with the user ID and an Agora token.
@@ -327,12 +327,12 @@ namespace AgoraChat
         *
         * @param username      The user ID. Ensure that you set this parameter.
         * @param token         The Agora token. Ensure that you set this parameter.
-        * @param handle        The login result callback. See {@link CallBack}.
+        * @param callback        The login result callback. See {@link CallBack}.
         *
         */
-        public void LoginWithAgoraToken(string username, string token, CallBack handle = null)
+        public void LoginWithAgoraToken(string username, string token, CallBack callback = null)
         {
-            _clientImpl.LoginWithAgoraToken(username, token, handle);
+            _clientImpl.LoginWithAgoraToken(username, token, callback);
         }
 
         /**

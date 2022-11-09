@@ -177,11 +177,10 @@ namespace sdk_wrapper
     {
         if (!CheckClientInitOrNot(cbid)) return;
 
-        string local_jstr = jstr;
         string local_cbid = cbid;
 
-        Document d; d.Parse(local_jstr.c_str());
-        string user_name = GetJsonValue_String(d, "username", "");
+        Document d; d.Parse(jstr);
+        string user_name = GetJsonValue_String(d, "userId", "");
         string pwd_or_token = GetJsonValue_String(d, "pwdOrToken", "");
         bool is_token = GetJsonValue_Bool(d, "isToken", false);
 

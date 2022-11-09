@@ -32,11 +32,12 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="chatsdk, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="AgoraChat, Version=1.0.8348.18400, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\chatsdk.dll</HintPath>
+      <HintPath>bin\Release\AgoraChat.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -57,17 +58,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>cd $(ProjectDir)
-
-xcopy /Y /S ..\FrameworkLib\bin\Debug\chatsdk.dll bin\Debug\
-
-
-xcopy /Y /S ..\..\Unity_SDK\win_build\build_shared\Debug\hyphenateCWrapper.dll bin\Debug\
-
-xcopy /Y /S bin\Debug\chatsdk.dll D:\workspace\test\testWinSDK_new_features\Debug\
-
-xcopy /Y /S bin\Debug\hyphenateCWrapper.dll D:\workspace\test\testWinSDK_new_features\Debug\
-
-xcopy /Y /S bin\Debug\FrameworkTest.exe D:\workspace\test\testWinSDK_new_features\Debug\another.exe</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

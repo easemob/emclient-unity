@@ -74,8 +74,8 @@ namespace sdk_wrapper {
 		static int StatusToInt(EMMessage::EMMessageStatus status);
 		static EMMessage::EMMessageStatus StatusFromInt(int i);
 
-		static string MessageDirectionToString(EMMessage::EMMessageDirection direction);
-		static EMMessage::EMMessageDirection MessageDirectionFromString(string str);
+		static int MessageDirectionToInt(EMMessage::EMMessageDirection direction);
+		static EMMessage::EMMessageDirection MessageDirectionFromInt(int i);
 
 		static int BodyTypeToInt(EMMessageBody::EMMessageBodyType btype);
 		static EMMessageBody::EMMessageBodyType BodyTypeFromInt(int i);

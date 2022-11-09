@@ -7,7 +7,8 @@
     <OutputType>Library</OutputType>
     <RootNamespace>AgoraChat</RootNamespace>
     <AssemblyName>AgoraChat</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -88,8 +89,6 @@
     <Compile Include="Models\CallBackResult.cs" />
     <Compile Include="Helper\UnityHelper.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Delegates\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

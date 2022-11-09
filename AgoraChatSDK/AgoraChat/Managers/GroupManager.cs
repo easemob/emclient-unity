@@ -29,7 +29,7 @@ namespace AgoraChat
 	     *
 	     * @param groupId	群组 ID。
 	     * @param reason    申请加入的原因。
-	     * @param handle    申请结果回调，详见 {@link CallBack}。
+	     * @param callback    申请结果回调，详见 {@link CallBack}。
 	     *
 	     * \~english
 	     * Requests to join a group.
@@ -38,7 +38,7 @@ namespace AgoraChat
 	     *
 	     * @param groupId	The group ID.
 	     * @param reason    The reason for requesting to joining the group.
-	     * @param handle    The callback of application. See {@link CallBack}.
+	     * @param callback    The callback of application. See {@link CallBack}.
 	     */
         public void applyJoinToGroup(string groupId, string reason = "", CallBack callback = null)
         {
@@ -55,7 +55,7 @@ namespace AgoraChat
 	     * 异步方法。
 	     *
 	     * @param groupId	群组 ID。
-	     * @param handle    接受结果回调，返回用户同意邀请的群组，详见 {@link ValueCallBack}。
+	     * @param callback    接受结果回调，返回用户同意邀请的群组，详见 {@link ValueCallBack}。
 	     *
 	     * \~english
 	     * Accepts a group invitation.
@@ -63,7 +63,7 @@ namespace AgoraChat
 	     * This is an asynchronous method.
 	     *
 	     * @param groupId 	The group ID.
-	     * @param handle    The callback of acceptance. Returns the group instance which the user has accepted the invitation to join. See {@link ValueCallBack}.
+	     * @param callback    The callback of acceptance. Returns the group instance which the user has accepted the invitation to join. See {@link ValueCallBack}.
 	     */
         public void AcceptGroupInvitation(string groupId, ValueCallBack<Group> callback = null)
         {
@@ -82,7 +82,7 @@ namespace AgoraChat
 	     *
 	     * @param groupId  	群组 ID。
 	     * @param userId 	申请人 ID。
-	     * @param handle    批准结果回调，详见 {@link CallBack}。
+	     * @param callback    批准结果回调，详见 {@link CallBack}。
 	     *
 	     * \~english
 	     * Approves a group request.
@@ -93,7 +93,7 @@ namespace AgoraChat
 	     *
 	     * @param groupId  	The group ID.
 	     * @param userId 	The ID of the user who sends the request to join the group.
-	     * @param handle    The callback of approval. See {@link CallBack}.
+	     * @param callback    The callback of approval. See {@link CallBack}.
 	     */
         public void AcceptGroupJoinApplication(string groupId, string userId, CallBack callback = null)
         {
@@ -113,7 +113,7 @@ namespace AgoraChat
          *
 	     * @param groupId	群组 ID。
 	     * @param memberId  新增加的管理员 ID。
-	     * @param handle    添加结果回调，详见 {@link CallBack}。
+	     * @param callback    添加结果回调，详见 {@link CallBack}。
 	     *
 	     * \~english
          * Adds a group admin.
@@ -123,7 +123,7 @@ namespace AgoraChat
          *
 	     * @param groupId	The group ID.
 	     * @param memberId	The new admin ID.
-	     * @param handle    The callback of addition. See {@link CallBack}.
+	     * @param callback    The callback of addition. See {@link CallBack}.
 	     */
         public void AddGroupAdmin(string groupId, string memberId, CallBack callback = null)
         {
@@ -142,7 +142,7 @@ namespace AgoraChat
 	     *
 	     * @param groupId       群组的 ID。
 	     * @param newmembers       要添加的新成员列表。
-	     * @param handle        添加结果回调，详见 {@link CallBack}。
+	     * @param callback        添加结果回调，详见 {@link CallBack}。
 	     *
 	     * \~english
 	     * Adds users to the group.
@@ -153,7 +153,7 @@ namespace AgoraChat
 	     *
 	     * @param groupId		The group ID.
 	     * @param newmembers	The list of new members to add.
-	     * @param handle        The operation callback. See {@link CallBack}.
+	     * @param callback        The operation callback. See {@link CallBack}.
 	     */
         public void AddGroupMembers(string groupId, List<string> newmembers, CallBack callback = null)
         {
@@ -172,7 +172,7 @@ namespace AgoraChat
 	     *
 	     * @param groupId 	群组 ID。
 	     * @param members 	要添加的成员列表。
-	     * @param handle    添加结果回调，详见 {@link CallBack}。
+	     * @param callback    添加结果回调，详见 {@link CallBack}。
 	     *
 	     * \~english
 	     * Adds members to the allow list.
@@ -183,7 +183,7 @@ namespace AgoraChat
 	     *
 	     * @param groupId 	The group ID.
 	     * @param members 	The members to be added to the allow list.
-	     * @param handle    The operation callback. See {@link CallBack}.
+	     * @param callback    The operation callback. See {@link CallBack}.
 	     */
         public void AddGroupWhiteList(string groupId, List<string> members, CallBack callback = null)
         {
@@ -202,7 +202,7 @@ namespace AgoraChat
 	     * 异步方法。
 	     *
 	     * @param groupId	群组 ID。
-	     * @param handle    屏蔽结果回调，详见 {@link CallBack}。
+	     * @param callback    屏蔽结果回调，详见 {@link CallBack}。
 	     *
 	     *\~english
 	     * Blocks group messages.
@@ -212,7 +212,7 @@ namespace AgoraChat
 	     * This is an asynchronous method.
 	     *
 	     * @param groupId	The group ID.
-	     * @param handle    The operation callback. See {@link CallBack}.
+	     * @param callback    The operation callback. See {@link CallBack}.
 	     */
         public void BlockGroup(string groupId, CallBack callback = null)
         {
@@ -233,7 +233,7 @@ namespace AgoraChat
 	     *
 	     * @param groupId 	群组ID。
 	     * @param members 	要加入黑名单的用户列表。
-	     * @param handle    操作结果回调，详见 {@link CallBack}。
+	     * @param callback    操作结果回调，详见 {@link CallBack}。
 	     *
 	     * \~english
          * Adds the user to the group block list.
@@ -246,7 +246,7 @@ namespace AgoraChat
 	     *
 	     * @param groupId	The group ID.
 	     * @param members 	The users to be added to the block list.
-	     * @param handle    The operation callback. See {@link CallBack}.
+	     * @param callback    The operation callback. See {@link CallBack}.
 	     */
         public void BlockGroupMembers(string groupId, List<string> members, CallBack callback = null)
         {
@@ -266,7 +266,7 @@ namespace AgoraChat
 	     *
 	     * @param groupId 	群组 ID。
 	     * @param desc 	    修改后的群描述。
-         * @param handle    操作结果回调，详见 {@link CallBack}。
+         * @param callback    操作结果回调，详见 {@link CallBack}。
 	     *
 	     * \~english
 	     * Changes the group description.
@@ -277,7 +277,7 @@ namespace AgoraChat
 	     *
 	     * @param groupId 	The group ID.
 	     * @param desc 	    The new group description.
-         * @param handle    The operation callback. See {@link CallBack}.
+         * @param callback    The operation callback. See {@link CallBack}.
 	     */
         public void ChangeGroupDescription(string groupId, string desc, CallBack callback = null)
         {
@@ -297,7 +297,7 @@ namespace AgoraChat
 	     *
 	     * @param groupId 	需修改名称的群组的 ID。
 	     * @param name 	    修改后的群组名称。
-	     * @param handle    操作结果回调，详见 {@link CallBack}。
+	     * @param callback    操作结果回调，详见 {@link CallBack}。
 	     *
 	     * \~english
 	     * Changes the group name.
@@ -308,7 +308,7 @@ namespace AgoraChat
 	     *
 	     * @param groupId 	The ID of group whose name is to be changed.
 	     * @param name 	    The new group name.
-	     * @param handle    The operation callback. See {@link CallBack}.
+	     * @param callback    The operation callback. See {@link CallBack}.
 	     */
         public void ChangeGroupName(string groupId, string name, CallBack callback = null)
         {
@@ -328,7 +328,7 @@ namespace AgoraChat
 	     *
 	     * @param groupId	群组 ID。
 	     * @param newOwner	新的群主。
-	     * @param handle    操作结果回调，详见 {@link CallBack}。
+	     * @param callback    操作结果回调，详见 {@link CallBack}。
 	     *
 	     * \~english
 	     * Transfers the group ownership.
@@ -339,7 +339,7 @@ namespace AgoraChat
          *
 	     * @param groupId	The group ID.
 	     * @param newOwner	The user ID of the new owner.
-	     * @param handle    The operation callback. See {@link CallBack}.
+	     * @param callback    The operation callback. See {@link CallBack}.
 	     */
         public void ChangeGroupOwner(string groupId, string newOwner, CallBack callback = null)
         {
@@ -356,7 +356,7 @@ namespace AgoraChat
 	     * 异步方法。
 	     *
 	     * @param groupId 	群组 ID。
-	     * @param handle    操作结果回调，详见 {@link CallBack}。
+	     * @param callback    操作结果回调，详见 {@link CallBack}。
 	     *
 	     * \~english
 	     * Gets whether the current user is on the allow list of the group.
@@ -364,7 +364,7 @@ namespace AgoraChat
 	     * This is an asynchronous method.
 	     *
 	     * @param groupId 	The group ID.
-	     * @param handle    The operation callback. See {@link CallBack}.
+	     * @param callback    The operation callback. See {@link CallBack}.
 	     */
         public void CheckIfInGroupWhiteList(string groupId, ValueCallBack<bool> callback = null)
         {
@@ -397,7 +397,7 @@ namespace AgoraChat
          * @param desc          群组描述。该参数可选，不设置传 `null`。
 	     * @param inviteMembers 群成员列表。该参数不可为 `null`。
          * @param inviteReason  成员入群的邀请信息。该参数可选，不设置传 `null`。
-         * @param handle        创建结果回调，详见 {@link CallBack}。
+         * @param callback        创建结果回调，详见 {@link CallBack}。
 	     *
 	     * \~english
 	     * Creates a group instance.
@@ -420,7 +420,7 @@ namespace AgoraChat
          * @param desc          The group description. It is optional. Pass `null` if you do not want to set this parameter.
 	     * @param inviteMembers The group member array. The group owner ID is optional. This parameter cannot be `null`.
 	     * @param inviteReason  The group joining invitation. It is optional. Pass `null` if you do not want to set this parameter.
-         * @param handle        The operation callback. See {@link CallBack}.
+         * @param callback        The operation callback. See {@link CallBack}.
          */
         public void CreateGroup(string groupName, GroupOptions options, string desc = null, List<string> inviteMembers = null, string inviteReason = null, ValueCallBack<Group> callback = null)
         {
@@ -448,7 +448,7 @@ namespace AgoraChat
 	     *
 	     * @param groupId	群组 ID。
 	     * @param reason	拒绝理由。
-	     * @param handle    操作结果回调，详见 {@link CallBack}。
+	     * @param callback    操作结果回调，详见 {@link CallBack}。
 	     *
 	     * \~english
 	     * Declines a group invitation.
@@ -457,7 +457,7 @@ namespace AgoraChat
 	     *
 	     * @param groupId 	The group ID.
 	     * @param reason	The reason for declining the group invitation.
-	     * @param handle    The operation callback. See {@link CallBack}.
+	     * @param callback    The operation callback. See {@link CallBack}.
 	     */
         public void DeclineGroupInvitation(string groupId, string reason = null, CallBack callback = null)
         {
@@ -478,7 +478,7 @@ namespace AgoraChat
 		 * @param groupId  	群组 ID。
 		 * @param userId 	申请人的用户 ID。
 		 * @param reason   	拒绝理由。
-		 * @param handle    操作结果回调，详见 {@link CallBack}。
+		 * @param callback    操作结果回调，详见 {@link CallBack}。
 		 *
 		 * \~english
 		 * Declines a group request.
@@ -490,7 +490,7 @@ namespace AgoraChat
 		 * @param groupId  	The group ID.
 		 * @param userId 	The ID of the user who sends the request to join the group.
 		 * @param reason   	The reason for declining the group request.
-		 * @param handle    The operation callback. See {@link CallBack}.
+		 * @param callback    The operation callback. See {@link CallBack}.
 		 */
         public void DeclineGroupJoinApplication(string groupId, string userId, string reason = null, CallBack callback = null)
         {
@@ -510,7 +510,7 @@ namespace AgoraChat
 		 * 异步方法。
 		 *
 		 * @param groupId	群组 ID。
-		 * @param handle    操作结果回调，详见 {@link CallBack}。
+		 * @param callback    操作结果回调，详见 {@link CallBack}。
 		 *
 		 * \~english
 		 * Destroys the group instance.
@@ -520,7 +520,7 @@ namespace AgoraChat
 		 * This is an asynchronous method.
 		 *
 		 * @param groupId	The group ID.
-		 * @param handle    The operation callback. See {@link CallBack}.
+		 * @param callback    The operation callback. See {@link CallBack}.
 		 */
         public void DestroyGroup(string groupId, CallBack callback = null)
         {
@@ -538,7 +538,7 @@ namespace AgoraChat
 		 * @param groupId   群组 ID。
 		 * @param fileId    共享文件 ID。
 		 * @param savePath  文件保存路径。
-		 * @param handle    操作结果回调，详见 {@link CallBack}。
+		 * @param callback    操作结果回调，详见 {@link CallBack}。
 		 *
 		 * \~english
 		 * Downloads the shared file of the group.
@@ -548,7 +548,7 @@ namespace AgoraChat
 		 * @param groupId   The group ID.
 		 * @param fileId    The ID of the shared file.
 		 * @param savePath  The path to save the downloaded file.
-		 * @param handle    The operation callback. See {@link CallBack}.
+		 * @param callback    The operation callback. See {@link CallBack}.
 		 */
         public void DownloadGroupSharedFile(string groupId, string fileId, string savePath, CallBack callback = null)
         {
@@ -568,7 +568,7 @@ namespace AgoraChat
 		 * 异步方法。
 		 *
 		 * @param groupId 	群组 ID。
-		 * @param handle    操作结果回调，详见 {@link ValueCallBack}。
+		 * @param callback    操作结果回调，详见 {@link ValueCallBack}。
 		 *
 		 * \~english
 		 * Gets the group announcement from the server.
@@ -577,7 +577,7 @@ namespace AgoraChat
 		 * This is an asynchronous method.
 		 *
 		 * @param groupId	The group ID.
-		 * @param handle    The operation callback. See {@link ValueCallBack}.
+		 * @param callback    The operation callback. See {@link ValueCallBack}.
 		 */
         public void GetGroupAnnouncementFromServer(string groupId, ValueCallBack<string> callback = null)
         {
@@ -603,7 +603,7 @@ namespace AgoraChat
 		 * @param groupId 				群组 ID。
 		 * @param pageNum 				当前页码，从 1 开始。
 		 * @param pageSize 				每页期望返回的黑名单成员数量。
-		 * @param handle				操作结果回调，返回黑名单列表或错误信息，详见 {@link ValueCallBack}。
+		 * @param callback				操作结果回调，返回黑名单列表或错误信息，详见 {@link ValueCallBack}。
 		 * 
 		 * \~english
 		 * Gets the group block list from the server with pagination.
@@ -615,7 +615,7 @@ namespace AgoraChat
 		 * @param groupId               The group ID.
 		 * @param pageNum            	The page number, starting from 1.
 		 * @param pageSize              The number of members on the block list that you expect to get on each page.
-		 * @param handle				The operation callback. If success, the obtained block list will be returned; otherwise, an error will be returned. See {@link ValueCallBack}.
+		 * @param callback				The operation callback. If success, the obtained block list will be returned; otherwise, an error will be returned. See {@link ValueCallBack}.
 		 */
         public void GetGroupBlockListFromServer(string groupId, int pageNum = 1, int pageSize = 200, ValueCallBack<List<string>> callback = null)
         {
@@ -644,7 +644,7 @@ namespace AgoraChat
 		 * @param pageNum 	当前页码，从 1 开始。
 		 * @param pageSize 	每页期望返回的共享文件数。
 		 *                  查询最后一页时，返回的数量小于 `pageSize` 的值。                                 
-		 * @param handle	操作结果回调，成功返回共享文件列表，失败则返回错误信息，详见 {@link ValueCallBack}。
+		 * @param callback	操作结果回调，成功返回共享文件列表，失败则返回错误信息，详见 {@link ValueCallBack}。
 		
 		 *    
 		 * \~english
@@ -658,7 +658,7 @@ namespace AgoraChat
 		 * @param pageNum 	The page number, starting from 1.
 		 *                  For the last page, the actual number of returned shared files is less than the value of `pageSize`.     
 		 * @param pageSize 	The number of shared files that you expect to get on each page.
-		 * @param handle	The operation callback. If success, the SDK returns the list of shared files; otherwise, an error will be returned. See {@link ValueCallBack}.
+		 * @param callback	The operation callback. If success, the SDK returns the list of shared files; otherwise, an error will be returned. See {@link ValueCallBack}.
 		 *
 		 */
         public void GetGroupFileListFromServer(string groupId, int pageNum = 1, int pageSize = 200, ValueCallBack<List<GroupSharedFile>> callback = null)
@@ -685,7 +685,7 @@ namespace AgoraChat
 		 * @param groupId 	群组 ID。
 		 * @param pageSize 	每页期望返回的群成员数。
 		 * @param cursor	从该游标位置开始获取数据，首次获取数据时传 `null` 会从最新一条数据开始获取。
-		 * @param handle	操作结果回调，成功返回成员列表及用于下次获取数据的cursor，失败返回错误信息，详见 {@link ValueCallBack}。
+		 * @param callback	操作结果回调，成功返回成员列表及用于下次获取数据的cursor，失败返回错误信息，详见 {@link ValueCallBack}。
 		 *    
 		 * \~english
 		 * Gets the group member list from the server.
@@ -695,7 +695,7 @@ namespace AgoraChat
 		 * @param groupId 	The group ID.
 		 * @param pageSize 	The number of members that you expect to get on each page.
 		   @param cursor    The position from which to start getting data. At the first method call, if you set `cursor` as `null`, the SDK gets the data in the reverse chronological order of when users joined the group.
-		 * @param handle	The operation callback. If success, the SDK returns the obtained group member list and the cursor for the next query; otherwise, an error will be returned. See {@link ValueCallBack}.
+		 * @param callback	The operation callback. If success, the SDK returns the obtained group member list and the cursor for the next query; otherwise, an error will be returned. See {@link ValueCallBack}.
 		 *
 		 */
         public void GetGroupMemberListFromServer(string groupId, int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<string>> callback = null)
@@ -727,7 +727,7 @@ namespace AgoraChat
 		 * @param groupId	群组 ID。
 		 * @param pageNum	当前页码，从 1 开始。
 		 * @param pageSize	每页期望返回的禁言成员数。
-		 * @param handle	操作结果回调，成功返回禁言列表，失败返回错误信息，详见 {@link ValueCallBack}。
+		 * @param callback	操作结果回调，成功返回禁言列表，失败返回错误信息，详见 {@link ValueCallBack}。
 		 *
 		 * \~english
 		 * Gets the mute list of the group from the server.
@@ -739,7 +739,7 @@ namespace AgoraChat
 		 * @param groupId	The group ID.
 		 * @param pageNum	The page number, starting from 1.
 		 * @param pageSize	The number of muted members that you expect to get on each page.
-		 * @param handle	The operation callback. If success, the SDK returns the obtained mute list; otherwise, an error will be returned. See {@link ValueCallBack}.
+		 * @param callback	The operation callback. If success, the SDK returns the obtained mute list; otherwise, an error will be returned. See {@link ValueCallBack}.
 		 *
 		 */
         public void GetGroupMuteListFromServer(string groupId, int pageNum = 1, int pageSize = 200, ValueCallBack<List<string>> callback = null)
@@ -764,7 +764,7 @@ namespace AgoraChat
 		 * 异步方法。
 		 *
 		 * @param groupId	群组 ID。
-		 * @param handle	操作结果回调，成功返群组实例，失败返回错误信息，详见 {@link ValueCallBack}。
+		 * @param callback	操作结果回调，成功返群组实例，失败返回错误信息，详见 {@link ValueCallBack}。
 		 *
 		 * \~english
 		 * Gets group details.
@@ -772,7 +772,7 @@ namespace AgoraChat
 		 * This is an asynchronous method.
 		 *
 		 * @param groupId	The group ID.
-		 * @param handle	The operation callback. If success, the SDK returns the group instance; otherwise, an error will be returned. See {@link ValueCallBack}.
+		 * @param callback	The operation callback. If success, the SDK returns the group instance; otherwise, an error will be returned. See {@link ValueCallBack}.
 		 *
 		 */
         public void GetGroupSpecificationFromServer(string groupId, ValueCallBack<Group> callback = null)
@@ -797,7 +797,7 @@ namespace AgoraChat
 		 * 异步方法。
 		 *
 		 * @param groupId 	群组 ID。
-		 * @param handle	操作结果回调，成功返回白名单列表，失败返回错误信息，详见 {@link ValueCallBack}。
+		 * @param callback	操作结果回调，成功返回白名单列表，失败返回错误信息，详见 {@link ValueCallBack}。
 		 *
 		 * \~english
 		 * Gets the allow list of the group from the server.
@@ -807,7 +807,7 @@ namespace AgoraChat
 		 * This is an asynchronous method.
 		 *
 		 * @param groupId 	The group ID.
-		 * @param handle	The operation callback. If success, the SDK returns the obtained allow list; otherwise, an error will be returned. See {@link ValueCallBack}.
+		 * @param callback	The operation callback. If success, the SDK returns the obtained allow list; otherwise, an error will be returned. See {@link ValueCallBack}.
 		 */
         public void GetGroupWhiteListFromServer(string groupId, ValueCallBack<List<string>> callback = null)
         {
@@ -879,7 +879,7 @@ namespace AgoraChat
 		 * @param pageSize		每页期望返回的群组数，最大为20。
 		 * @param needAffiliations 是否获取成员数目。
 		 * @param needRole 		是否获取当前用户在群中的角色。
-		 * @param handle		操作结果回调，成功群组列表，失败返回错误信息，详见 {@link ValueCallBack}。
+		 * @param callback		操作结果回调，成功群组列表，失败返回错误信息，详见 {@link ValueCallBack}。
 		 *
 		 * \~english
 		 * Gets the list of groups with pagination.
@@ -892,7 +892,7 @@ namespace AgoraChat
 		 * @param pageSize		The number of groups that you expect to get on each page. Max num is 20.
 		 * @param needAffiliations Get member count or not.
 		 * @param needRole 		Get role or current user in joined groups.
-		 * @param handle		The operation callback. If success, the SDK returns the obtained group list; otherwise, an error will be returned. See {@link ValueCallBack}. 
+		 * @param callback		The operation callback. If success, the SDK returns the obtained group list; otherwise, an error will be returned. See {@link ValueCallBack}. 
 		 */
         public void FetchJoinedGroupsFromServer(int pageNum = 0, int pageSize = 20, bool needAffiliations = false, bool needRole = false, ValueCallBack<List<Group>> callback = null)
         {
@@ -918,7 +918,7 @@ namespace AgoraChat
 		 *
 		 * @param pageSize		每页期望返回的公开群组数量。
 		 * @param cursor		从该游标位置开始取数据，首次获取数据时传 `null` 从最新数据开始获取。
-		 * @param handle		操作结果回调，成功返回获取的成员列表及用于下次获取数据的cursor，失败则返回错误信息，详见 {@link ValueCallBack}。
+		 * @param callback		操作结果回调，成功返回获取的成员列表及用于下次获取数据的cursor，失败则返回错误信息，详见 {@link ValueCallBack}。
 		 *
 		 * \~english
 		 * Gets public groups from the server with pagination.
@@ -927,7 +927,7 @@ namespace AgoraChat
 		 *
 		 * @param pageSize  	The number of public groups that you expect to get on each page.
 		 * @param cursor    	The position from which to start getting data. During the first call to this method, if `null` is passed to `cursor`, the SDK will get data in the reverse chronological order.
-		 * @param handle		The operation callback. If success, the SDK returns the obtained public group list and the cursor used for the next query; otherwise, an error will be returned. See {@link ValueCallBack}.
+		 * @param callback		The operation callback. If success, the SDK returns the obtained public group list and the cursor used for the next query; otherwise, an error will be returned. See {@link ValueCallBack}.
 		 */
         public void FetchPublicGroupsFromServer(int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<GroupInfo>> callback = null)
         {
@@ -953,7 +953,7 @@ namespace AgoraChat
 		 * 异步方法。
 		 *
 		 * @param groupId		公开群组 ID。
-		 * @param handle		操作结果回调，详见 {@link CallBack}。
+		 * @param callback		操作结果回调，详见 {@link CallBack}。
 		 *
 		 * \~english
 		 * Joins a public group.
@@ -961,7 +961,7 @@ namespace AgoraChat
 		 * This is an asynchronous method.
 		 *
 		 * @param groupId	  	The ID of the public group.
-		 * @param handle		The operation callback. See {@link CallBack}.
+		 * @param callback		The operation callback. See {@link CallBack}.
 		 */
         public void JoinPublicGroup(string groupId, CallBack callback = null)
         {
@@ -977,7 +977,7 @@ namespace AgoraChat
 		 * 异步方法。
 		 *
 		 * @param groupId	群组 ID。
-		 * @param handle    操作结果回调，详见 {@link CallBack}。
+		 * @param callback    操作结果回调，详见 {@link CallBack}。
 		 *
 		 * \~english
 		 * Leaves a group.
@@ -985,7 +985,7 @@ namespace AgoraChat
 		 * This is an asynchronous method.
 		 *
 		 * @param groupId	The group ID.
-		 * @param handle    The operation callback. See {@link CallBack}.
+		 * @param callback    The operation callback. See {@link CallBack}.
 		 */
         public void LeaveGroup(string groupId, CallBack callback = null)
         {
@@ -1003,7 +1003,7 @@ namespace AgoraChat
 		 * 异步方法。
 		 *
 		 * @param groupId		群组 ID。
-		 * @param handle		操作结果回调，详见 {@link CallBack}。
+		 * @param callback		操作结果回调，详见 {@link CallBack}。
 		 *
 		 * \~english
 		 * Mutes all members in the group.
@@ -1013,7 +1013,7 @@ namespace AgoraChat
 		 * This is an asynchronous method.
 		 *
 		 * @param groupId		The group ID.
-		 * @param handle		The operation callback. See {@link CallBack}.
+		 * @param callback		The operation callback. See {@link CallBack}.
 		 */
         public void MuteGroupAllMembers(string groupId, CallBack callback = null)
         {
@@ -1032,7 +1032,7 @@ namespace AgoraChat
 		 *
 		 * @param groupId		群组 ID。
 		 * @param members		要禁言的用户列表。
-		 * @param handle		操作结果回调，详见 {@link CallBack}。
+		 * @param callback		操作结果回调，详见 {@link CallBack}。
 		 *
 		 * \~english
 		 * Mutes the specified group members.
@@ -1042,7 +1042,7 @@ namespace AgoraChat
 		 *
 		 * @param groupId		The group ID.
 		 * @param members 		The list of members to be muted.
-		 * @param handle		The operation callback. See {@link CallBack}.
+		 * @param callback		The operation callback. See {@link CallBack}.
 		 */
         public void MuteGroupMembers(string groupId, List<string> members, CallBack callback = null)
         {
@@ -1062,7 +1062,7 @@ namespace AgoraChat
 		 *
 		 * @param groupId	群组 ID。
 		 * @param memberId	删除的管理员 ID。
-		 * @param handle	操作结果回调，详见 {@link CallBack}。
+		 * @param callback	操作结果回调，详见 {@link CallBack}。
 		 *
 		 * \~english
 		 * Removes a group admin.
@@ -1072,7 +1072,7 @@ namespace AgoraChat
 		 *
 		 * @param groupId	The group ID.
 		 * @param memberId	The ID of the admin to remove.
-		 * @param handle	The operation callback. See {@link CallBack}.
+		 * @param callback	The operation callback. See {@link CallBack}.
 		 */
         public void RemoveGroupAdmin(string groupId, string memberId, CallBack callback = null)
         {
@@ -1092,7 +1092,7 @@ namespace AgoraChat
 		 *
 		 * @param groupId 	群组 ID。
 		 * @param fileId 	共享文件 ID。
-		 * @param handle	操作结果回调，详见 {@link CallBack}。
+		 * @param callback	操作结果回调，详见 {@link CallBack}。
 		 *
 		 * \~english
 		 * Removes the shared file of the group.
@@ -1103,7 +1103,7 @@ namespace AgoraChat
 		 *
 		 * @param groupId 	The group ID.
 		 * @param fileId 	The ID of the shared file.
-		 * @param handle	The operation callback. See {@link CallBack}.
+		 * @param callback	The operation callback. See {@link CallBack}.
 		 */
         public void DeleteGroupSharedFile(string groupId, string fileId, CallBack callback = null)
         {
@@ -1123,7 +1123,7 @@ namespace AgoraChat
 		 *
 		 * @param groupId   群组 ID。
 		 * @param members   要删除的成员。
-		 * @param handle	操作结果回调，详见 {@link CallBack}。
+		 * @param callback	操作结果回调，详见 {@link CallBack}。
 		 *
 		 * \~english
 		 * Removes members from the group.
@@ -1134,7 +1134,7 @@ namespace AgoraChat
 		 *
 		 * @param groupId	The group ID.
 		 * @param members   The members to remove.
-		 * @param handle	The operation callback. See {@link CallBack}.
+		 * @param callback	The operation callback. See {@link CallBack}.
 		 */
         public void DeleteGroupMembers(string groupId, List<string> members, CallBack callback = null)
         {
@@ -1154,7 +1154,7 @@ namespace AgoraChat
 		 *
 		 * @param groupId 	群组 ID。
 		 * @param members 	需从白名单中移除的成员列表。
-		 * @param handle	操作结果回调，详见 {@link CallBack}。
+		 * @param callback	操作结果回调，详见 {@link CallBack}。
 		 *
 		 * \~english
 		 * Removes members from the group allow list.
@@ -1165,7 +1165,7 @@ namespace AgoraChat
 		 *
 		 * @param groupId 	The group ID.
 		 * @param members 	The list of members to be removed from the group allow list.
-		 * @param handle	The operation callback. See {@link CallBack}.
+		 * @param callback	The operation callback. See {@link CallBack}.
 		 */
         public void RemoveGroupWhiteList(string groupId, List<string> members, CallBack callback = null)
         {
@@ -1182,7 +1182,7 @@ namespace AgoraChat
 		 * 异步方法。
 		 *
 		 * @param groupId	群组 ID。
-		 * @param handle	操作结果回调，详见 {@link CallBack}。
+		 * @param callback	操作结果回调，详见 {@link CallBack}。
 		 *
 		 * \~english
 		 * Unblocks group messages.
@@ -1190,7 +1190,7 @@ namespace AgoraChat
 		 * This is an asynchronous method.
 		 *
 		 * @param groupId	The group ID
-		 * @param handle	The operation callback. See {@link CallBack}.
+		 * @param callback	The operation callback. See {@link CallBack}.
 		 */
         public void UnBlockGroup(string groupId, CallBack callback = null)
         {
@@ -1209,7 +1209,7 @@ namespace AgoraChat
 		 *
 		 * @param groupId 	群组 ID。
 		 * @param members 	要从黑名单中移除的用户列表。
-		 * @param handle	操作结果回调，详见 {@link CallBack}。
+		 * @param callback	操作结果回调，详见 {@link CallBack}。
 		 *
 		 * \~english
 		 * Removes users from the group block list.
@@ -1220,7 +1220,7 @@ namespace AgoraChat
 		 *
 		 * @param groupId	The group ID.
 		 * @param members	The list of users to be removed from the block list.
-		 * @param handle	The operation callback. See {@link CallBack}.
+		 * @param callback	The operation callback. See {@link CallBack}.
 		 */
         public void UnBlockGroupMembers(string groupId, List<string> members, CallBack callback = null)
         {
@@ -1239,7 +1239,7 @@ namespace AgoraChat
 		 * 异步方法。
 		 *
 		 * @param groupId 	群组 ID。
-		 * @param handle	操作结果回调，详见 {@link CallBack}。
+		 * @param callback	操作结果回调，详见 {@link CallBack}。
 		 *
 		 * \~english
 		 * Unmutes all members in the group.
@@ -1249,7 +1249,7 @@ namespace AgoraChat
 		 * This is an asynchronous method.
 		 *
 		 * @param groupId	The group ID.
-		 * @param handle	The operation callback. See {@link CallBack}.
+		 * @param callback	The operation callback. See {@link CallBack}.
 		 */
         public void UnMuteGroupAllMembers(string groupId, CallBack callback = null)
         {
@@ -1268,7 +1268,7 @@ namespace AgoraChat
 		 *
 		 * @param groupId	群组 ID。
 		 * @param members	要解除禁言的用户列表。
-		 * @param handle	操作结果回调，详见 {@link CallBack}。
+		 * @param callback	操作结果回调，详见 {@link CallBack}。
 		 *
 		 * \~english
 		 * Unmutes the specified group members.
@@ -1279,7 +1279,7 @@ namespace AgoraChat
 		 *
 		 * @param groupId	The group ID.
 		 * @param members	The list of members to be unmuted.
-		 * @param handle	The operation callback. See {@link CallBack}.
+		 * @param callback	The operation callback. See {@link CallBack}.
 		 */
         public void UnMuteGroupMembers(string groupId, List<string> members, CallBack callback = null)
         {
@@ -1298,7 +1298,7 @@ namespace AgoraChat
 		 *
 		 * @param groupId 		群组 ID。
 		 * @param announcement 	公告内容。
-		 * @param handle		操作结果回调，详见 {@link CallBack}。
+		 * @param callback		操作结果回调，详见 {@link CallBack}。
 		 *
 		 * \~english
 		 * Updates the group announcement.
@@ -1309,7 +1309,7 @@ namespace AgoraChat
 		 *
 		 * @param groupId 		The group ID.
 		 * @param announcement 	The group announcement.
-		 * @param handle	The operation callback. See {@link CallBack}.
+		 * @param callback	The operation callback. See {@link CallBack}.
 		 */
         public void UpdateGroupAnnouncement(string groupId, string announcement, CallBack callback = null)
         {
@@ -1329,7 +1329,7 @@ namespace AgoraChat
 		 *
 		 * @param groupId       群组 ID。
 		 * @param ext			群组扩展字段。
-		 * @param handle		操作结果回调，详见 {@link CallBack}。
+		 * @param callback		操作结果回调，详见 {@link CallBack}。
 		 *
 		 * \~english
 		 * Updates the group extension field.
@@ -1340,7 +1340,7 @@ namespace AgoraChat
 		 *
 		 * @param groupId       The group ID.
 		 * @param ext     		The group extension field.
-		 * @param handle		The operation callback. See {@link CallBack}.
+		 * @param callback		The operation callback. See {@link CallBack}.
 		 */
         public void UpdateGroupExt(string groupId, string ext, CallBack callback = null)
         {
@@ -1358,7 +1358,7 @@ namespace AgoraChat
 		 *
 		 * @param groupId 	群组 ID。
 		 * @param filePath 	共享文件的本地路径。
-		 * @param handle	操作结果回调，详见 {@link CallBack}。
+		 * @param callback	操作结果回调，详见 {@link CallBack}。
 		 *
 		 *
 		 * \~english
@@ -1368,7 +1368,7 @@ namespace AgoraChat
 		 *
 		 * @param groupId 	The group ID.
 		 * @param filePath 	The local path of the shared file.
-		 * @param handle	The operation callback. See {@link CallBack}.
+		 * @param callback	The operation callback. See {@link CallBack}.
 		 */
         public void UploadGroupSharedFile(string groupId, string filePath, CallBack callback = null)
         {
