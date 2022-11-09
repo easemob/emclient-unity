@@ -23,32 +23,13 @@ public class EMBaseWrapper {
 
     public void onSuccess(Object object, EMWrapperCallback callback)  {
         post(()->{
-                JSONObject jo = null;
-            try {
-                JSONObject jsonObject = new JSONObject();
-                if (object != null) {
-                    jsonObject.put("value", object);
-                    jo = jsonObject;
-                }
-            }catch (JSONException ignore){
-                ignore.printStackTrace();
-            }finally {
-                callback.onSuccess(jo != null ? jo.toString() : null);
-            }
+            callback.onSuccess(object);
         });
     }
 
     public void onError(HyphenateException e, EMWrapperCallback callback)  {
         post(()->{
-            JSONObject jo = null;
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("error", HyphenateExceptionHelper.toJson(e));
-            }catch (JSONException ignore) {
-                e.printStackTrace();
-            }finally {
-                callback.onError(jo.toString());
-            }
+            callback.onError(HyphenateExceptionHelper.toJson(e));
         });
     }
 

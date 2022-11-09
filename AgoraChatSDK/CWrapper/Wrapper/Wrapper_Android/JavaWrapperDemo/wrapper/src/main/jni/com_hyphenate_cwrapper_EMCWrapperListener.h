@@ -9,10 +9,10 @@ extern "C" {
 #endif
 /*
  * Class:     com_hyphenate_cwrapper_EMCWrapperListener
- * Method:    onReceive
+ * Method:    callListener
  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_com_hyphenate_cwrapper_EMCWrapperListener_onReceive
+JNIEXPORT void JNICALL Java_com_hyphenate_cwrapper_EMCWrapperListener_callListener
   (JNIEnv *, jobject, jstring, jstring, jstring);
 
 #ifdef __cplusplus

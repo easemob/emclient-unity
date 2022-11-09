@@ -23,31 +23,23 @@ public class EMCommonCallback implements EMCallBack {
     @Override
     public void onSuccess()
     {
-        post(()-> callback.onSuccess(null));
+        post(()-> {
+            callback.onSuccess(null);
+        });
     }
 
     @Override
     public void onProgress(int progress, String status) {
         post(()-> {
-            try {
-                JSONObject jo = new JSONObject();
-                jo.put("progress", progress);
-                callback.onProgress(jo.toString());
-            }catch (JSONException e) {
-                e.printStackTrace();
-            }
+            callback.onProgress(progress);
         });
     }
 
     @Override
     public void onError(int code, String error) {
-        HyphenateException e = new HyphenateException(code, error);
         post(()->{
-            try {
-                callback.onError(HyphenateExceptionHelper.toJson(e).toString());
-            } catch (JSONException jsonException) {
-                jsonException.printStackTrace();
-            }
+            HyphenateException e = new HyphenateException(code, error);
+            callback.onError(HyphenateExceptionHelper.toJson(e));
         });
     }
 }

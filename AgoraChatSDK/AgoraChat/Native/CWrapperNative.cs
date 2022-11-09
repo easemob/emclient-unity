@@ -10,7 +10,6 @@ namespace AgoraChat
     {
         internal static void NativeCall(string manager, string method, SimpleJSON.JSONNode json, string callbackId = null)
         {
-            //Debug.Log($"NativeCall: {manager}, {method}, {json}, {callbackId}");
             _NativeCall(manager, method, json?.ToString(), callbackId ?? "");
         }
 
@@ -19,8 +18,7 @@ namespace AgoraChat
         {
             StringBuilder sbuilder = new StringBuilder(512);
             _NativeGet(manager, method, json?.ToString(), sbuilder, callbackId ?? "");
-            string ret = Tools.GetUnicodeStringFromUTF8(sbuilder.ToString());
-            return ret;
+            return Tools.GetUnicodeStringFromUTF8(sbuilder.ToString());
         }
 
 

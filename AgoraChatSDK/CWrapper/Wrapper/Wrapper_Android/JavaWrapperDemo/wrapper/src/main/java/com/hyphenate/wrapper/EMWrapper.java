@@ -1,5 +1,6 @@
 package com.hyphenate.wrapper;
 
+import com.hyphenate.helper.EMUnityHelper;
 import com.hyphenate.wrapper.util.EMSDKMethod;
 import com.hyphenate.wrapper.callback.EMWrapperCallback;
 
@@ -10,12 +11,16 @@ public class EMWrapper {
     public EMClientWrapper clientWrapper;
     public EMWrapper() {
         clientWrapper = new EMClientWrapper();
+        new EMUnityHelper();
     }
 
     public String callSDKApi(String manager, String method, String jsonString, EMWrapperCallback callback) {
         String str = null;
         try {
-            JSONObject jsonObject = new JSONObject(jsonString);
+            JSONObject jsonObject = null;
+            if (jsonString.length() > 0) {
+                jsonObject = new JSONObject(jsonString);
+            }
             switch (manager) {
                 case EMSDKMethod.client:
                     str = clientWrapper.onMethodCall(method, jsonObject, callback);
@@ -49,7 +54,7 @@ public class EMWrapper {
             try {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("error", e.getLocalizedMessage());
-                callback.onError(jsonObject.toString());
+                callback.onError(jsonObject);
             }catch (JSONException ignore){}
         }
         return str;
