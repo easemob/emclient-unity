@@ -2,6 +2,7 @@ using AgoraChat.SimpleJSON;
 using System;
 using System.Runtime.InteropServices;
 
+
 namespace AgoraChat
 {
     internal delegate void NativeListenerEvent(string listener, string method, [In, MarshalAs(UnmanagedType.LPTStr)] string jsonString);
@@ -50,6 +51,9 @@ namespace AgoraChat
 
                 queue_worker.EnQueue(() =>
                 {
+
+                    LogPrinter.Log($"listener: {listener}  method: {method}  jsonString: {jsonString}");
+
                     switch (listener)
                     {
                         case SDKMethod.chatListener:
@@ -83,6 +87,7 @@ namespace AgoraChat
                             callbackManager.CallActionProgress(method, jsonNode);
                             break;
                         default:
+                            LogPrinter.Log("no listener handle");
                             break;
 
                     }

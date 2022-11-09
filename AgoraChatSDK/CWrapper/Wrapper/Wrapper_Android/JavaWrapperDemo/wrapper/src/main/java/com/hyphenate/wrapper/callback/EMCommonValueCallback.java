@@ -28,25 +28,13 @@ public class EMCommonValueCallback<T> implements EMValueCallBack<T> {
     @Override
     public void onError(int error, String errorMsg) {
         post(() -> {
-            JSONObject data = new JSONObject();
-            try {
-                data.put("error", EMErrorHelper.toJson(error, errorMsg));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            callback.onError(data.toString());
+            callback.onError(EMErrorHelper.toJson(error, errorMsg));
         });
     }
 
     public void updateObject(Object object) {
-        post(()-> {
-            JSONObject data = new JSONObject();
-            if (object != null) {
-                try {
-                    data.put("value", object);
-                }catch (JSONException e) {}
-            }
-            callback.onSuccess(data.toString());
+        post(() -> {
+            callback.onSuccess(object);
         });
     }
 }

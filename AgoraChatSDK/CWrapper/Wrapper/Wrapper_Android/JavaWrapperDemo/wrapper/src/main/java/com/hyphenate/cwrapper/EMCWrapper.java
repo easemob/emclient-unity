@@ -8,6 +8,7 @@ import com.hyphenate.wrapper.callback.EMWrapperCallback;
 import com.hyphenate.wrapper.util.EMSDKMethod;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 public class EMCWrapper {
 
@@ -30,40 +31,96 @@ public class EMCWrapper {
     }
 
     public void nativeCall(String manager, String method, String jsonString, String cid) throws JSONException{
+        System.out.println("java: nativeCall: manager:" + manager + " method:" + method + " jsonString:" + jsonString + " cid:" + cid);
         wrapper.callSDKApi(manager, method, jsonString, new EMWrapperCallback(){
             @Override
-            public void onSuccess(String jStr) {
-                EMWrapperHelper.listener.onReceive(EMSDKMethod.callback, cid, "jStr");
+            public void onSuccess(Object obj){
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    if (obj != null) {
+                        jsonObject.put("value", obj);
+                    }
+                    jsonObject.put("callbackId", cid);
+                    EMWrapperHelper.listener.onReceive(EMSDKMethod.callback, cid, jsonObject.toString());
+                }catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
-            public void onError(String jStr) {
-                EMWrapperHelper.listener.onReceive(EMSDKMethod.callback, cid, jStr);
+            public void onError(Object obj){
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("callbackId", cid);
+                    if (obj != null) {
+                        jsonObject.put("error", obj);
+                    }
+                    EMWrapperHelper.listener.onReceive(EMSDKMethod.callback, cid, jsonObject.toString());
+                }catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
-            public void onProgress(String jStr) {
-                EMWrapperHelper.listener.onReceive(EMSDKMethod.callbackProgress, cid, jStr);
+            public void onProgress(int progress) {
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("callbackId", cid);
+                    jsonObject.put("progress", progress);
+                    EMWrapperHelper.listener.onReceive(EMSDKMethod.callbackProgress, cid, jsonObject.toString());
+                }catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
 
     public String nativeGet(String manager, String method, String jsonString, String cid) {
-        return wrapper.callSDKApi(manager, method, jsonString, new EMWrapperCallback(){
+        System.out.println("java: nativeGet: manager:" + manager + " method:" + method + " jsonString:" + jsonString + " cid:" + cid);
+        String str = wrapper.callSDKApi(manager, method, jsonString, new EMWrapperCallback(){
             @Override
-            public void onSuccess(String jStr) {
-                EMWrapperHelper.listener.onReceive("callback", cid, jStr);
+            public void onSuccess(Object obj){
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    if (obj != null) {
+                        jsonObject.put("value", obj);
+                    }
+                    jsonObject.put("callbackId", cid);
+                    EMWrapperHelper.listener.onReceive(EMSDKMethod.callback, cid, jsonObject.toString());
+                }catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
-            public void onError(String jStr) {
-                EMWrapperHelper.listener.onReceive("callback", cid, jStr);
+            public void onError(Object obj){
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("callbackId", cid);
+                    if (obj != null) {
+                        jsonObject.put("error", obj);
+                    }
+                    EMWrapperHelper.listener.onReceive(EMSDKMethod.callback, cid, jsonObject.toString());
+                }catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
-            public void onProgress(String jStr) {
-                EMWrapperHelper.listener.onReceive(EMSDKMethod.callbackProgress, cid, jStr);
+            public void onProgress(int progress) {
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("callbackId", cid);
+                    jsonObject.put("progress", progress);
+                    EMWrapperHelper.listener.onReceive(EMSDKMethod.callbackProgress, cid, jsonObject.toString());
+                }catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
+
+        System.out.println("java: nativeGetReturn" + str + " cid:" + cid);
+
+        return str;
     }
 }

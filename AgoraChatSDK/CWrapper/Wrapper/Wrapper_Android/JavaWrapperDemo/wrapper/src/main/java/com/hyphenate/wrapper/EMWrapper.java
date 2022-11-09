@@ -51,7 +51,7 @@ public class EMWrapper {
             try {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("error", e.getLocalizedMessage());
-                callback.onError(jsonObject.toString());
+                callback.onError(jsonObject);
             }catch (JSONException ignore){}
         }
         return str;
