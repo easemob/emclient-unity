@@ -766,7 +766,7 @@ namespace sdk_wrapper {
         EMGroupPtr result = CLIENT->getGroupManager().fetchGroupSpecification(group_id, error);
 
         string json = Group::ToJson(result);
-        memcpy(buf, json.c_str(), json.size());
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_LoadAllMyGroupsFromDB(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -776,7 +776,7 @@ namespace sdk_wrapper {
         EMGroupList groupList = CLIENT->getGroupManager().loadAllMyGroupsFromDB();
 
         string json = Group::ToJson(groupList);
-        memcpy(buf, json.c_str(), json.size());
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_FetchAllMyGroupsWithPage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)

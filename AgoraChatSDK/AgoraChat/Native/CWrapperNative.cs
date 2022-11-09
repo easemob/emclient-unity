@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 using System.Text;
 //using UnityEngine;
 
@@ -18,8 +19,8 @@ namespace AgoraChat
         {
             StringBuilder sbuilder = new StringBuilder(512);
             _NativeGet(manager, method, json?.ToString(), sbuilder, callbackId ?? "");
-            //Debug.Log($"NativeGet: {manager}, {method}, {json}, {callbackId}");
-            return Tools.GetUnicodeStringFromUTF8(sbuilder.ToString());
+            string ret = Tools.GetUnicodeStringFromUTF8(sbuilder.ToString());
+            return ret;
         }
 
 

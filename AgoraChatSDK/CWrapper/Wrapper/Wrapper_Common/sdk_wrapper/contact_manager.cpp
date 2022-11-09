@@ -176,7 +176,7 @@ namespace sdk_wrapper {
 		if (EMError::EM_NO_ERROR == error.mErrorCode) {
 			json = MyJson::ToJson(vec);
 		}
-		memcpy(buf, json.c_str(), json.size());
+		Copy_To_Buffer(buf, json.c_str(), json.size());
 	}
 
 	SDK_WRAPPER_API void SDK_WRAPPER_CALL ContactManager_GetContactsFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -288,7 +288,7 @@ namespace sdk_wrapper {
 
 			string json = MyJson::ToJson(list);
 		}
-		memcpy(buf, json.c_str(), json.size());
+		Copy_To_Buffer(buf, json.c_str(), json.size());
 	}
 }
 
