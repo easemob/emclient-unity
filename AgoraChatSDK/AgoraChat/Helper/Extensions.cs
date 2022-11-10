@@ -76,7 +76,7 @@ namespace AgoraChat
 
                 JSONNode jn = JSON.Parse(str);
 
-                if (jn.IsNull || !jn.IsObject) break;
+                if (null == jn || jn.IsNull || !jn.IsObject) break;
 
                 jsonNode = jn["ret"];
 

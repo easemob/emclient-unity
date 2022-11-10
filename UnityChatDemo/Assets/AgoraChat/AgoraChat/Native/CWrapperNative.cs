@@ -33,6 +33,10 @@ namespace AgoraChat
 
 
         [DllImport("ChatCWrapper")]
+#if _WIN32
         private extern static int _NativeGet(string manager, string method, [In, MarshalAs(UnmanagedType.LPTStr)] string jsonString = null, [Out, MarshalAs(UnmanagedType.LPTStr)] StringBuilder buf = null, string callbackId = null);
+#else
+        private extern static int _NativeGet(string manager, string method, [In, MarshalAs(UnmanagedType.LPTStr)] string jsonString = null, StringBuilder buf = null, string callbackId = null);
+#endif
     }
 }

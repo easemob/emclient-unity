@@ -5,7 +5,11 @@ using System.Runtime.InteropServices;
 
 namespace AgoraChat
 {
-    internal delegate void NativeListenerEvent(string listener, string method, [In, MarshalAs(UnmanagedType.LPTStr)] string jsonString);
+#if _WIN32
+    internal delegate void NativeListenerEvent(string listener, string method, [MarshalAs(UnmanagedType.LPTStr)] string jsonString);
+#else
+    internal delegate void NativeListenerEvent(string listener, string method, string jsonString);
+#endif
 
     internal delegate void ManagerHandle(string method, JSONNode jsonNode);
 
