@@ -1,7 +1,5 @@
 package com.hyphenate.wrapper;
 
-import android.text.TextUtils;
-
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
@@ -164,7 +162,7 @@ public class EMConversationWrapper extends EMBaseWrapper {
 
     private String loadMsgWithStartId(JSONObject params, EMWrapperCallback callback) throws JSONException {
         EMConversation conversation = conversationWithParam(params);
-        String startId = params.getString("startId");
+        String startId = params.getString("startMessageId");
         int pageSize = params.getInt("count");
         EMConversation.EMSearchDirection direction = params.getInt("direction") == 0 ? EMConversation.EMSearchDirection.UP : EMConversation.EMSearchDirection.DOWN;
         List<EMMessage> msgList = conversation.loadMoreMsgFromDB(startId, pageSize, direction);
@@ -205,17 +203,17 @@ public class EMConversationWrapper extends EMBaseWrapper {
         }
         int count = params.getInt("count");
         EMConversation.EMSearchDirection direction = params.getInt("direction") == 0 ? EMConversation.EMSearchDirection.UP : EMConversation.EMSearchDirection.DOWN;
-        String typeStr = params.getString("msgType");
+        int iType = params.getInt("bodyType");
         EMMessage.Type type = EMMessage.Type.TXT;
-        switch (typeStr) {
-            case "txt" : type = EMMessage.Type.TXT; break;
-            case "loc" : type = EMMessage.Type.LOCATION; break;
-            case "cmd" : type = EMMessage.Type.CMD; break;
-            case "custom" : type = EMMessage.Type.CUSTOM; break;
-            case "file" : type = EMMessage.Type.FILE; break;
-            case "img" : type = EMMessage.Type.IMAGE; break;
-            case "video" : type = EMMessage.Type.VIDEO; break;
-            case "voice" : type = EMMessage.Type.VOICE; break;
+        switch (iType) {
+            case 0 : type = EMMessage.Type.TXT; break;
+            case 1 : type = EMMessage.Type.IMAGE; break;
+            case 2 : type = EMMessage.Type.VIDEO; break;
+            case 3 : type = EMMessage.Type.LOCATION; break;
+            case 4 : type = EMMessage.Type.VOICE; break;
+            case 5 : type = EMMessage.Type.FILE; break;
+            case 6 : type = EMMessage.Type.CMD; break;
+            case 7 : type = EMMessage.Type.CUSTOM; break;
         }
 
         EMMessage.Type finalType = type;
@@ -247,13 +245,10 @@ public class EMConversationWrapper extends EMBaseWrapper {
     }
 
     private EMConversation conversationWithParam(JSONObject params ) throws JSONException {
-        String con_id = params.getString("con_id");
-        EMConversation.EMConversationType type = EMConversationHelper.typeFromInt(params.getInt("type"));
+        String con_id = params.getString("convId");
+        EMConversation.EMConversationType type = EMConversationHelper.typeFromInt(params.getInt("convType"));
         EMConversation conversation = EMClient.getInstance().chatManager().getConversation(con_id, type, true);
         return conversation;
     }
 
-    private EMConversation.EMSearchDirection searchDirectionFromString(String direction) {
-        return TextUtils.equals(direction, "up") ? EMConversation.EMSearchDirection.UP : EMConversation.EMSearchDirection.DOWN;
-    }
 }

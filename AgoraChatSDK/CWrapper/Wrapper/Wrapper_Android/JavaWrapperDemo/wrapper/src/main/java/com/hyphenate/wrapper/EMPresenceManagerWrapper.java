@@ -130,7 +130,6 @@ public class EMPresenceManagerWrapper extends EMBaseWrapper{
                 for (EMPresence presence: presences) {
                     jsonArray.put(EMPresenceHelper.toJson(presence));
                 }
-                System.out.println("android!!!!!!!!");
                 post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.presenceListener, EMSDKMethod.onPresenceUpdated, jsonArray.toString()));
             }catch (JSONException e) {
                 e.printStackTrace();
