@@ -123,7 +123,7 @@ sysinfo.txt
 *.unitypackage
 **/change_all.sh
 **/change_all.sh.meta
-*.meta
+# *.meta
 **/unmanaged_dll.log
 *.pdb
 .vscode
@@ -131,7 +131,7 @@ sysinfo.txt
 !Unity_SDK/mac_build/lib/LDAP.framework
 
 **/HyphenateChat.framework
-**/*.meta
+*.cs.meta
 **/hyphenateCWrapper.bundle
 **/hyphenateCWrapper.dll
 **/*.jar
