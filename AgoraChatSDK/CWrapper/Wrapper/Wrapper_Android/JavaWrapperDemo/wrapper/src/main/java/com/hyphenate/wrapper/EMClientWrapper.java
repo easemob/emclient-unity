@@ -29,6 +29,8 @@ public class EMClientWrapper extends EMBaseWrapper {
     public EMPresenceManagerWrapper presenceManagerWrapper;
     public EMChatThreadManagerWrapper chatThreadManagerWrapper;
     public EMPushManagerWrapper pushManagerWrapper;
+    public EMMessageManager messageManager;
+    public EMConversationWrapper conversationWrapper;
 
 
 
