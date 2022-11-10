@@ -28,7 +28,7 @@ namespace sdk_wrapper {
         writer.Bool(ret);
         JSON_ENDOBJ
         string json = s.GetString();
-        memcpy(buf, json.c_str(), json.size());
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL ConversationManager_ClearAllMessages(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -48,7 +48,7 @@ namespace sdk_wrapper {
         writer.Bool(ret);
         JSON_ENDOBJ
         string json = s.GetString();
-        memcpy(buf, json.c_str(), json.size());
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL ConversationManager_RemoveMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -69,7 +69,7 @@ namespace sdk_wrapper {
         writer.Bool(ret);
         JSON_ENDOBJ
         string json = s.GetString();
-        memcpy(buf, json.c_str(), json.size());
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL ConversationManager_ExtField(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -84,7 +84,7 @@ namespace sdk_wrapper {
         EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(conv_id, type, true);
         std::string json = conversationPtr->extField();
 
-        memcpy(buf, json.c_str(), json.size());
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL ConversationManager_InsertMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -107,7 +107,7 @@ namespace sdk_wrapper {
         writer.Bool(ret);
         JSON_ENDOBJ
         string json = s.GetString();
-        memcpy(buf, json.c_str(), json.size());
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL ConversationManager_LatestMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -123,7 +123,7 @@ namespace sdk_wrapper {
         EMMessagePtr msgPtr = conversation->latestMessage();
 
         string json = Message::ToJson(msgPtr);
-        memcpy(buf, json.c_str(), json.size());
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL ConversationManager_LatestMessageFromOthers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -139,7 +139,7 @@ namespace sdk_wrapper {
         EMMessagePtr msgPtr = conversation->latestMessageFromOthers();
 
         string json = Message::ToJson(msgPtr);
-        memcpy(buf, json.c_str(), json.size());
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL ConversationManager_LoadMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -156,7 +156,7 @@ namespace sdk_wrapper {
         EMMessagePtr msgPtr = conversation->loadMessage(msg_id);
 
         string json = Message::ToJson(msgPtr);
-        memcpy(buf, json.c_str(), json.size());
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL ConversationManager_LoadMessages(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -360,7 +360,7 @@ namespace sdk_wrapper {
         JSON_ENDOBJ
 
         string json = s.GetString();
-        memcpy(buf, json.c_str(), json.size());
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL ConversationManager_MessagesCount(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -383,7 +383,7 @@ namespace sdk_wrapper {
         JSON_ENDOBJ
 
         string json = s.GetString();
-        memcpy(buf, json.c_str(), json.size());
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL ConversationManager_UpdateMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -404,7 +404,7 @@ namespace sdk_wrapper {
         writer.Bool(ret);
         JSON_ENDOBJ
         string json = s.GetString();
-        memcpy(buf, json.c_str(), json.size());
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
 }

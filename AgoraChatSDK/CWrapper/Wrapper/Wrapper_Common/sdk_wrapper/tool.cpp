@@ -29,6 +29,20 @@ void CallBackProgress(const char* method, const char* jstr)
     CallBack(STRING_CALLBACK_PROGRESS_LISTENER.c_str(), method, jstr);
 }
 
+void Copy_To_Buffer(char* dst, const char* src, size_t len)
+{
+    if (nullptr == dst || nullptr == src || 0 == len) return;
+
+    // there are some useless data in buffer.
+    // seems system alloc a memory in random, but not clear the data in it.
+    //if (dst_len > 0) {
+    //    memset(dst, 0, dst_len);
+    //}
+
+    memcpy(dst, src, len+1);
+    dst[len] = '\0';
+}
+
 bool CheckClientInitOrNot(const char* cbid)
 {    
     if (nullptr == gClient) {

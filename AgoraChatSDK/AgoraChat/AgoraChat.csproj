@@ -32,6 +32,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Custom\CallbackQueue.cs" />
+    <Compile Include="Helper\LogPrinter.cs" />
     <Compile Include="Helper\Tools.cs" />
     <Compile Include="Models\AttributeValue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

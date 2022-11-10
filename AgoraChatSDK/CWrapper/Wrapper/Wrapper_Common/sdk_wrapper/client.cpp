@@ -103,7 +103,8 @@ namespace sdk_wrapper
         JSON_ENDOBJ
 
         string json = s.GetString();
-        memcpy(buf, json.c_str(), json.size());
+
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_isLoggedIn(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -116,7 +117,7 @@ namespace sdk_wrapper
         JSON_ENDOBJ
 
         string json = s.GetString();
-        memcpy(buf, json.c_str(), json.size());
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_isConnected(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -129,7 +130,7 @@ namespace sdk_wrapper
         JSON_ENDOBJ
 
         string json = s.GetString();
-        memcpy(buf, json.c_str(), json.size());
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_LoginToken(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -142,7 +143,7 @@ namespace sdk_wrapper
         JSON_ENDOBJ
 
         string json = s.GetString();
-        memcpy(buf, json.c_str(), json.size());
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_CreateAccount(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)

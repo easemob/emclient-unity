@@ -402,7 +402,7 @@ namespace AgoraChat
 		 * @param connectionDelegate 		The connection status listener to remove. It is inherited from {@link IConnectionDelegate}.
 		 *
 		 */
-        internal void DeleteConnectionDelegate(IConnectionDelegate connectionDelegate)
+        public void DeleteConnectionDelegate(IConnectionDelegate connectionDelegate)
         {
             _clientImpl.DeleteConnectionDelegate(connectionDelegate);
         }
@@ -445,6 +445,11 @@ namespace AgoraChat
         public void DeInit()
         {
             _clientImpl.CleanUp();
+        }
+
+        internal void ClearResource()
+        {
+            _clientImpl.ClearResource();
         }
     }
 }

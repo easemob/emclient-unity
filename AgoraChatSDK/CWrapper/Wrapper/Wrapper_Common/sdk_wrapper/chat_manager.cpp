@@ -172,7 +172,7 @@ namespace sdk_wrapper {
 
         string updated_msg_json = JsonStringFromUpdatedMessage(msg_id);
         if(updated_msg_json.size() > 0)
-            memcpy(buf, updated_msg_json.c_str(), updated_msg_json.size());
+            Copy_To_Buffer(buf, updated_msg_json.c_str(), updated_msg_json.size());
 	}
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_RemoveConversation(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -339,7 +339,7 @@ namespace sdk_wrapper {
         if (nullptr != conversationPtr) {
             json = Conversation::ToJson(conversationPtr);
         }
-        memcpy(buf, json.c_str(), json.size());
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_GetConversationsFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -388,7 +388,7 @@ namespace sdk_wrapper {
         JSON_ENDOBJ
 
         string json = s.GetString();
-        memcpy(buf, json.c_str(), json.size());
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_InsertMessages(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -408,7 +408,7 @@ namespace sdk_wrapper {
         JSON_ENDOBJ
 
         string json = s.GetString();
-        memcpy(buf, json.c_str(), json.size());
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_LoadAllConversationsFromDB(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -417,7 +417,7 @@ namespace sdk_wrapper {
 
         EMConversationList conversationList = CLIENT->getChatManager().loadAllConversationsFromDB();
         string json = Conversation::ToJson(conversationList);
-        memcpy(buf, json.c_str(), json.size());
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_GetMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -433,7 +433,7 @@ namespace sdk_wrapper {
             json = Message::ToJson(messagePtr);
 
         }
-        memcpy(buf, json.c_str(), json.size());
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_MarkAllConversationsAsRead(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -460,7 +460,7 @@ namespace sdk_wrapper {
         JSON_ENDOBJ
 
         string json = s.GetString();
-        memcpy(buf, json.c_str(), json.size());
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_RecallMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -538,7 +538,7 @@ namespace sdk_wrapper {
         CLIENT->getChatManager().resendMessage(messagePtr);
 
         string json = Message::ToJson(messagePtr);
-        memcpy(buf, json.c_str(), json.size());
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_LoadMoreMessages(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -565,7 +565,7 @@ namespace sdk_wrapper {
             json = Message::ToJson(messageList);
         }
 
-        memcpy(buf, json.c_str(), json.size());
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_SendReadAckForConversation(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -666,7 +666,7 @@ namespace sdk_wrapper {
         JSON_ENDOBJ
 
         string json = s.GetString();
-        memcpy(buf, json.c_str(), json.size());
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_RemoveMessagesBeforeTimestamp(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -978,7 +978,7 @@ namespace sdk_wrapper {
         JSON_ENDOBJ
 
        string json = s.GetString();
-        memcpy(buf, json.c_str(), json.size());
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_GetHasDeliverAck(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -1004,7 +1004,7 @@ namespace sdk_wrapper {
         JSON_ENDOBJ
 
         string json = s.GetString();
-        memcpy(buf, json.c_str(), json.size());
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_GetHasReadAck(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -1030,7 +1030,7 @@ namespace sdk_wrapper {
         JSON_ENDOBJ
 
         string json = s.GetString();
-        memcpy(buf, json.c_str(), json.size());
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_GetReactionListForMsg(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -1051,7 +1051,7 @@ namespace sdk_wrapper {
             EMMessageReactionList& rl = messagePtr->reactionList();
             json = MessageReaction::ToJson(rl);
         }
-        memcpy(buf, json.c_str(), json.size());
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_GetChatThreadForMsg(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -1072,7 +1072,7 @@ namespace sdk_wrapper {
             EMThreadEventPtr t = messagePtr->threadOverview();
             json = ChatThread::ToJson(t);
         }
-        memcpy(buf, json.c_str(), json.size());
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 }
 
