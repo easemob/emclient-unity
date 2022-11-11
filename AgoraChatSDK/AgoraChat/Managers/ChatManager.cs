@@ -1007,7 +1007,7 @@ namespace AgoraChat
                 });
             };
 
-            NativeCall(SDKMethod.fetchReactionDetail, jo_param, callback);
+            NativeCall<CursorResult<MessageReaction>>(SDKMethod.fetchReactionDetail, jo_param, callback, process);
         }
 
         /**

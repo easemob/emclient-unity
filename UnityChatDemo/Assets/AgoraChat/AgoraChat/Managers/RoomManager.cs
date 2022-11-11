@@ -298,7 +298,7 @@ namespace AgoraChat
                 });
             };
 
-            NativeCall<PageResult<Room>>(SDKMethod.fetchPublicChatRoomsFromServer, jo_param, callback);
+            NativeCall<PageResult<Room>>(SDKMethod.fetchPublicChatRoomsFromServer, jo_param, callback, process);
         }
 
         /**
@@ -327,7 +327,7 @@ namespace AgoraChat
                 return jsonNode.IsString ? jsonNode.Value : null;
             };
 
-            NativeCall<string>(SDKMethod.fetchChatRoomAnnouncement, jo_param, callback);
+            NativeCall<string>(SDKMethod.fetchChatRoomAnnouncement, jo_param, callback, process);
         }
 
         /**
@@ -372,7 +372,7 @@ namespace AgoraChat
                 return List.StringListFromJsonArray(jsonNode);
             };
 
-            NativeCall<List<string>>(SDKMethod.fetchChatRoomBlockList, jo_param, callback);
+            NativeCall<List<string>>(SDKMethod.fetchChatRoomBlockList, jo_param, callback, process);
         }
 
         /**
@@ -396,7 +396,13 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("roomId", roomId);
-            NativeCall(SDKMethod.fetchChatRoomInfoFromServer, jo_param, callback);
+
+			Process process = (_, jsonNode) =>
+			{
+				return ModelHelper.CreateWithJsonObject<Room>(jsonNode);
+			};
+
+			NativeCall<Room>(SDKMethod.fetchChatRoomInfoFromServer, jo_param, callback, process);
         }
 
         /**
@@ -516,7 +522,13 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("roomId", roomId);
-            NativeCall(SDKMethod.joinChatRoom, jo_param, callback);
+
+			Process process = (_, jsonNode) =>
+			{
+				return ModelHelper.CreateWithJsonObject<Room>(jsonNode);
+			};
+
+			NativeCall<Room>(SDKMethod.joinChatRoom, jo_param, callback, process);
         }
 
         /**

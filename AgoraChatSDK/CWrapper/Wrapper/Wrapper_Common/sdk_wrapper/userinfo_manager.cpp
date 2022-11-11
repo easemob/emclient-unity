@@ -53,7 +53,9 @@ namespace sdk_wrapper {
 
             if (EMError::EM_NO_ERROR == error.mErrorCode) {
 
-                string json = response;
+				map<string, UserInfo> user_map = UserInfo::FromJsonFromServer(response);
+				string json = UserInfo::ToJson(user_map);
+
                 string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
@@ -71,7 +73,8 @@ namespace sdk_wrapper {
 
 		string local_cbid = cbid;
 
-		string userinfo_json = jstr;
+		UserInfo ui = UserInfo::FromJson(jstr);
+		string userinfo_json = UserInfo::ToJsonForServer(ui);
 
 		thread t([=]() {
 			std::string response = "";

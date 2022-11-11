@@ -104,7 +104,12 @@ namespace AgoraChat
         */
         public void GetAllContactsFromServer(ValueCallBack<List<string>> callback = null)
         {
-            NativeCall<List<string>>(SDKMethod.getAllContactsFromServer, callback: callback);
+            Process process = (_, jsonNode) =>
+            {
+                return List.StringListFromJsonArray(jsonNode);
+            };
+
+            NativeCall<List<string>>(SDKMethod.getAllContactsFromServer, null, callback, process);
         }
 
         /**
@@ -194,7 +199,12 @@ namespace AgoraChat
          */
         public void GetBlockListFromServer(ValueCallBack<List<string>> callback = null)
         {
-            NativeCall<List<string>>(SDKMethod.getBlockListFromServer, null, callback);
+            Process process = (_, jsonNode) =>
+            {
+                return List.StringListFromJsonArray(jsonNode);
+            };
+
+            NativeCall<List<string>>(SDKMethod.getBlockListFromServer, null, callback, process);
         }
 
         /**
@@ -270,7 +280,12 @@ namespace AgoraChat
          */
         public void GetSelfIdsOnOtherPlatform(ValueCallBack<List<string>> callback = null)
         {
-            NativeCall<List<string>>(SDKMethod.getSelfIdsOnOtherPlatform, null, callback);
+            Process process = (_, jsonNode) =>
+            {
+                return List.StringListFromJsonArray(jsonNode);
+            };
+
+            NativeCall<List<string>>(SDKMethod.getSelfIdsOnOtherPlatform, null, callback, process);
         }
 
         /**
