@@ -17,10 +17,9 @@ namespace AgoraChat
         public UnityHelper()
         {
         }
-    }
 
 #if UNITY_EDITOR
-    /*
+
         [RuntimeInitializeOnLoadMethod]
         static void InitializeOnLoadMethod()
         {
@@ -37,10 +36,7 @@ namespace AgoraChat
             {
                 SDKClient.Instance.Logout(false);
             }
-            if (CallbackManager._getInstance != null)
-            {
-                CallbackManager.Instance().ClearResource();
-            }
+            SDKClient.Instance.ClearResource();
             Debug.Log("Quit...");
             return true;
         }
@@ -63,6 +59,7 @@ namespace AgoraChat
                     }
             }
         }
-    */
+
 #endif
+    }
 }

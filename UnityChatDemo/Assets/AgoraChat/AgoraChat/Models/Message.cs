@@ -299,7 +299,9 @@ namespace AgoraChat
          */
         static public Message CreateReceiveMessage()
         {
-            if (null == SDKClient.Instance.CurrentUsername || SDKClient.Instance.CurrentUsername.Length == 0)
+            string user_name = SDKClient.Instance.CurrentUsername;
+
+            if (string.IsNullOrEmpty(user_name))
             {
                 return null;
             }
@@ -308,7 +310,7 @@ namespace AgoraChat
             {
                 Direction = MessageDirection.RECEIVE,
                 HasReadAck = false,
-                From = SDKClient.Instance.CurrentUsername
+                From = user_name
             };
 
             return msg;
@@ -339,9 +341,10 @@ namespace AgoraChat
          */
         static public Message CreateSendMessage(string to, IMessageBody body, MessageDirection direction = MessageDirection.SEND, bool hasRead = true)
         {
-            if (string.IsNullOrEmpty(SDKClient.Instance.CurrentUsername) || string.IsNullOrEmpty(to))
+            string user_name = SDKClient.Instance.CurrentUsername;
+
+            if (string.IsNullOrEmpty(user_name) || string.IsNullOrEmpty(to))
             {
-                // invalid input, return null
                 return null;
             }
 
@@ -350,7 +353,7 @@ namespace AgoraChat
                 Direction = direction,
                 HasReadAck = hasRead,
                 To = to,
-                From = SDKClient.Instance.CurrentUsername,
+                From = user_name,
                 ConversationId = to,
             };
 
@@ -709,8 +712,8 @@ namespace AgoraChat
                     To = jo["to"].Value;
                     HasReadAck = jo["hasReadAck"].AsBool;
                     HasDeliverAck = jo["hasDeliverAck"].AsBool;
-                    LocalTime = jo["localTime"].AsInt;
-                    ServerTime = jo["serverTime"].AsInt;
+                    LocalTime = (long)jo["localTime"].AsDouble;
+                    ServerTime = (long)jo["serverTime"].AsDouble;
                     ConversationId = jo["convId"].Value;
                     MsgId = jo["msgId"].Value;
                     Status = jo["status"].AsInt.ToMessageStatus();

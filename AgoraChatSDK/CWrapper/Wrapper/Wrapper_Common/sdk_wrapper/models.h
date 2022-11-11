@@ -176,6 +176,7 @@ namespace sdk_wrapper {
 		static string ToJson(const EMMucMuteList& vec);
 		static string ToJson(const EMGroupList& list);
 
+		static void ToJsonObjectWithGroupInfo(Writer<StringBuffer>& writer, EMGroupPtr group);
 		static void ToJsonObject(Writer<StringBuffer>& writer, EMGroupPtr group);
 		static void ToJsonObject(Writer<StringBuffer>& writer, const EMMucMuteList& vec);
 		static void ToJsonObject(Writer<StringBuffer>& writer, const EMGroupList& list);
@@ -290,6 +291,36 @@ namespace sdk_wrapper {
 
 		static void ToJsonObject(Writer<StringBuffer>& writer, const vector<EMDeviceInfoPtr> vec);
 		static string ToJson(const vector<EMDeviceInfoPtr> vec);
+	};
+
+	struct UserInfo
+	{
+	public:
+		string nickName;
+		string avatarUrl;
+		string email;
+		string phoneNumber;
+		string signature;
+		string birth;
+		string userId;
+		string ext;
+		int gender;
+
+		UserInfo();
+
+		static void ToJsonObject(Writer<StringBuffer>& writer, UserInfo& ui);
+		static void ToJsonObject(Writer<StringBuffer>& writer, map<string, UserInfo>& uis);
+		static UserInfo FromJsonObject(const Value& jnode);
+
+		static string ToJson(UserInfo& ui);
+		static string ToJson(map<string, UserInfo>& uis);
+		static UserInfo FromJson(string json);
+
+		static void ToJsonObjectForServer(Writer<StringBuffer>& writer, UserInfo& ui);
+		static map<string, UserInfo> FromJsonObjectFromServer(const Value& jnode);
+
+		static string ToJsonForServer(UserInfo& ui);
+		static map<string, UserInfo> FromJsonFromServer(string json);
 	};
 
 	class TokenWrapper

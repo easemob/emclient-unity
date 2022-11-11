@@ -94,11 +94,14 @@ namespace WinSDKTest
                 Console.WriteLine($"attribute item: key:{it.Key}; value:{jstr}");
             }*/
 
-            foreach (var it in msg.ReactionList)
+            if(null != msg.ReactionList)
             {
-                Console.WriteLine($"----------------------------");
-                Console.WriteLine($"reaction:{it.Rection};count:{it.Count};state:{it.State}");
-                Console.WriteLine("$userList:{TransformTool.JsonObjectFromStringList(it.UserList)}");
+                foreach (var it in msg.ReactionList)
+                {
+                    Console.WriteLine($"----------------------------");
+                    Console.WriteLine($"reaction:{it.Rection};count:{it.Count};state:{it.State}");
+                    Console.WriteLine("$userList:{TransformTool.JsonObjectFromStringList(it.UserList)}");
+                }
             }
 
             switch (msg.Body.Type)

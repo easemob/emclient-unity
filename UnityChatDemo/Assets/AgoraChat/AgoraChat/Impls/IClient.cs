@@ -34,8 +34,6 @@ namespace AgoraChat
             delegater_multidevice = new List<IMultiDeviceDelegate>();
             nativeListener.ConnectionEvent += NativeEventHandle_Connection;
             nativeListener.MultiDeviceEvent += NativeEventHandle_MultiDevice;
-
-            SetupManagers();
         }
 
         ~IClient()
@@ -48,14 +46,8 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("options", options.ToJsonObject());
-            NativeCall(SDKMethod.init, jo_param,
-                new CallBack(
-                    onSuccess: () =>
-                    {
-                        SetupManagers();
-                    }
-                )
-            );
+            NativeGet(SDKMethod.init, jo_param);
+            SetupManagers();
         }
 
         internal string CurrentUsername()

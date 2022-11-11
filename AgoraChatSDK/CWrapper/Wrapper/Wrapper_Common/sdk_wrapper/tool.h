@@ -52,6 +52,8 @@ void CallBack(const char* listener, const char* method, const char* jstr);
 void CallBack(const char* method, const char* jstr);
 void CallBackProgress(const char* method, const char* jstr);
 
+void Copy_To_Buffer(char* dst, const char* src, size_t len);
+
 bool CheckClientInitOrNot(const char* cbid);
 
 string GetLeftValue(const string& str);

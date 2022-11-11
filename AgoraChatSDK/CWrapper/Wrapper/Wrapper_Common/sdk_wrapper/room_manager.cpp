@@ -881,7 +881,7 @@ namespace sdk_wrapper {
         EMChatroomPtr room = CLIENT->getChatroomManager().chatroomWithId(room_id);
 
         string json = Room::ToJson(room);
-        memcpy(buf, json.c_str(), json.size());
+        Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_GetAllChatRooms(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)

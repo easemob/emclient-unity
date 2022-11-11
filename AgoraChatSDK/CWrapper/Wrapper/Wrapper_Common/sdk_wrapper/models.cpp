@@ -1593,7 +1593,7 @@ namespace sdk_wrapper
     {
         writer.StartObject();
 
-        writer.Key("con_id");
+        writer.Key("convId");
         writer.String(conversation->conversationId().c_str());
 
         writer.Key("type");
@@ -1601,6 +1601,13 @@ namespace sdk_wrapper
 
         writer.Key("isThread");
         writer.Bool(conversation->isThread());
+
+        string ext = conversation->extField();
+        map<string, string> ext_map = MyJson::FromJsonToMap(ext);
+        if (ext_map.size() > 0) {
+            writer.Key("ext");
+            MyJson::ToJsonObject(writer, ext_map);
+        }
 
         writer.EndObject();
     }
@@ -1827,7 +1834,19 @@ namespace sdk_wrapper
 
     void MessageReaction::ToJsonObject(Writer<StringBuffer>& writer, const EMMessageReactionPtr reaction)
     {
-        EMMessageEncoder::encodeReactionToJsonWriter(writer, reaction);
+        writer.StartObject();
+        {
+            writer.Key("reaction");
+            writer.String(reaction->reaction().c_str());
+            writer.Key("count");
+            writer.Int(reaction->count());
+            writer.Key("isAddedBySelf");
+            writer.Bool(reaction->state());
+
+            writer.Key("userList");
+            MyJson::ToJsonObject(writer, reaction->userList());
+        }
+        writer.EndObject();
     }
 
     void MessageReaction::ToJsonObject(Writer<StringBuffer>& writer, const EMMessageReactionList& list)
@@ -1836,24 +1855,27 @@ namespace sdk_wrapper
 
         writer.StartArray();
         for (EMMessageReactionPtr reaction : list) {
-            EMMessageEncoder::encodeReactionToJsonWriter(writer, reaction);
+            ToJsonObject(writer, reaction);
         }
         writer.EndArray();
     }
 
     EMMessageReactionPtr MessageReaction::FromJsonObjectToReaction(const Value& jnode)
     {
-        return EMMessageEncoder::decodeReactionFromJson(jnode);
+        //return EMMessageEncoder::decodeReactionFromJson(jnode);
+        //TODO: add your code
     }
 
     EMMessageReactionList MessageReaction::FromJsonObjectToReactionList(const Value& jnode)
     {
-        return EMMessageEncoder::decodeReactionListFromJson(jnode);
+        //return EMMessageEncoder::decodeReactionListFromJson(jnode);
+        //TODO: add your code
     }
 
     EMMessageReactionList MessageReaction::FromJsonToReactionList(string json)
     {
-        return EMMessageEncoder::decodeReactionListFromJson(json);
+        //return EMMessageEncoder::decodeReactionListFromJson(json);
+        //TODO: add your code
     }
 
     void MessageReactionChange::ToJsonObject(Writer<StringBuffer>& writer, EMMessageReactionChangePtr reactionChangePtr, std::string curname)
@@ -1864,11 +1886,11 @@ namespace sdk_wrapper
 
         writer.StartObject();
         {
-            writer.Key("conversationId");
+            writer.Key("convId");
             writer.String(covId.c_str());
-            writer.Key("messageId");
+            writer.Key("msgId");
             writer.String(reactionChangePtr->messageId().c_str());
-            writer.Key("reactionList");
+            writer.Key("reactions");
             MessageReaction::ToJsonObject(writer, reactionChangePtr->reactionList());
         }
         writer.EndObject();
@@ -1918,6 +1940,19 @@ namespace sdk_wrapper
         writer.EndArray();
     }
 
+    void Group::ToJsonObjectWithGroupInfo(Writer<StringBuffer>& writer, EMGroupPtr group)
+    {
+        writer.StartObject();
+
+        writer.Key("groupId");
+        writer.String(group->groupId().c_str());
+
+        writer.Key("name");
+        writer.String(group->groupSubject().c_str());
+
+        writer.EndObject();
+    }
+
     void Group::ToJsonObject(Writer<StringBuffer>& writer, EMGroupPtr group)
     {
         writer.StartObject();
@@ -1955,10 +1990,10 @@ namespace sdk_wrapper
         writer.Key("noticeEnable");
         writer.Bool(group->isPushEnabled());
 
-        writer.Key("messageBlocked");
+        writer.Key("block");
         writer.Bool(group->isMessageBlocked());
 
-        writer.Key("isAllMemberMuted");
+        writer.Key("isMuteAll");
         writer.Bool(group->groupAllMembersMuted());
 
         writer.Key("options");
@@ -2245,7 +2280,7 @@ namespace sdk_wrapper
             writer.StartArray();
             for (size_t i = 0; i < size; i++) {
                 EMGroupPtr groupPtr = dynamic_pointer_cast<EMGroup>(result.result().at(i));
-                Group::ToJsonObject(writer, groupPtr);
+                Group::ToJsonObjectWithGroupInfo(writer, groupPtr);
             }
             writer.EndArray();
         }
@@ -2319,7 +2354,7 @@ namespace sdk_wrapper
         writer.Key("owner");
         writer.String(room->owner().c_str());
 
-        writer.Key("isAllMemberMuted");
+        writer.Key("isMuteAll");
         writer.Bool(room->isMucAllMembersMuted());
 
         writer.Key("permissionType");
@@ -2451,10 +2486,10 @@ namespace sdk_wrapper
             writer.Key("from");
             writer.String(threadEventPtr->fromId().c_str());
 
-            writer.Key("operation");
+            writer.Key("type");
             writer.Int(ThreadOperationToInt(threadEventPtr->threadOperation()));
 
-            writer.Key("chatThread");
+            writer.Key("thread");
             ChatThread::ToJsonObject(writer, threadEventPtr);
 
         }
@@ -2470,10 +2505,10 @@ namespace sdk_wrapper
 
         writer.StartObject();
         {
-            writer.Key("tId");
+            writer.Key("threadId");
             writer.String(threadEventPtr->threadId().c_str());
 
-            writer.Key("messageId");
+            writer.Key("msgId");
             writer.String(threadEventPtr->threadMessageId().c_str());
 
             writer.Key("parentId");
@@ -2485,18 +2520,18 @@ namespace sdk_wrapper
             writer.Key("name");
             writer.String(threadEventPtr->threadName().c_str());
 
-            writer.Key("messageCount");
+            writer.Key("msgCount");
             writer.Int(threadEventPtr->messageCount());
 
-            writer.Key("membersCount");
+            writer.Key("memberCount");
             writer.Int(threadEventPtr->membersCount());
 
-            writer.Key("createTimestamp");
+            writer.Key("createAt");
             writer.Int64(threadEventPtr->createTimestamp());
 
             if (nullptr != threadEventPtr->lastMessage())
             {
-                writer.Key("lastMessage");
+                writer.Key("lastMsg");
                 Message::ToJsonObjectWithMessage(writer, threadEventPtr->lastMessage());
             }
         }
@@ -2555,13 +2590,13 @@ namespace sdk_wrapper
 
         EMThreadEventPtr thread = EMThreadEventPtr(new EMThreadEvent());
 
-        if (jnode.HasMember("tId") && jnode["tId"].IsString()) {
-            std::string str = jnode["tId"].GetString();
+        if (jnode.HasMember("threadId") && jnode["threadId"].IsString()) {
+            std::string str = jnode["threadId"].GetString();
             thread->setThreadId(str);
         }
 
-        if (jnode.HasMember("messageId") && jnode["messageId"].IsString()) {
-            std::string str = jnode["messageId"].GetString();
+        if (jnode.HasMember("msgId") && jnode["msgId"].IsString()) {
+            std::string str = jnode["msgId"].GetString();
             thread->setThreadMessageId(str);
         }
 
@@ -2580,23 +2615,23 @@ namespace sdk_wrapper
             thread->setThreadName(str);
         }
 
-        if (jnode.HasMember("messageCount") && jnode["messageCount"].IsInt()) {
-            int i = jnode["messageCount"].GetInt();
+        if (jnode.HasMember("msgCount") && jnode["msgCount"].IsInt()) {
+            int i = jnode["msgCount"].GetInt();
             thread->setMessageCount(i);
         }
 
-        if (jnode.HasMember("membersCount") && jnode["membersCount"].IsInt()) {
-            int i = jnode["membersCount"].GetInt();
+        if (jnode.HasMember("memberCount") && jnode["memberCount"].IsInt()) {
+            int i = jnode["memberCount"].GetInt();
             thread->setMembersCount(i);
         }
 
-        if (jnode.HasMember("createTimestamp") && jnode["createTimestamp"].IsInt64()) {
-            int64_t i = jnode["createTimestamp"].GetInt64();
+        if (jnode.HasMember("createAt") && jnode["createAt"].IsInt64()) {
+            int64_t i = jnode["createAt"].GetInt64();
             thread->setCreateTimestamp(i);
         }
 
-        if (jnode.HasMember("lastMessage") && jnode["lastMessage"].IsObject()) {
-            EMMessagePtr msg = Message::FromJsonObjectToMessage(jnode["lastMessage"]);
+        if (jnode.HasMember("lastMsg") && jnode["lastMsg"].IsObject()) {
+            EMMessagePtr msg = Message::FromJsonObjectToMessage(jnode["lastMsg"]);
             if (nullptr != msg)
                 thread->setLastMessage(msg);
         }
@@ -2881,6 +2916,272 @@ namespace sdk_wrapper
 
         std::string data = s.GetString();
         return data;
+    }
+
+    UserInfo::UserInfo()
+    {
+        nickName = "";
+        avatarUrl = "";
+        email = "";
+        phoneNumber = "";
+        signature = "";
+        birth = "";
+        userId = "";
+        ext = "";
+        gender = 0;
+    }
+
+    void UserInfo::ToJsonObject(Writer<StringBuffer>& writer, UserInfo& ui)
+    {
+        writer.StartObject();
+        {
+            if (ui.nickName.size() > 0) {
+                writer.Key("nickName");
+                writer.String(ui.nickName.c_str());
+            }
+
+            if (ui.avatarUrl.size() > 0) {
+                writer.Key("avatarUrl");
+                writer.String(ui.avatarUrl.c_str());
+            }
+            if (ui.email.size() > 0) {
+                writer.Key("mail");
+                writer.String(ui.email.c_str());
+            }
+            if (ui.phoneNumber.size() > 0) {
+                writer.Key("phone");
+                writer.String(ui.phoneNumber.c_str());
+            }
+            if (ui.signature.size() > 0) {
+                writer.Key("sign");
+                writer.String(ui.signature.c_str());
+            }
+            if (ui.birth.size() > 0) {
+                writer.Key("birth");
+                writer.String(ui.birth.c_str());
+            }
+            if (ui.userId.size() > 0) {
+                writer.Key("userId");
+                writer.String(ui.userId.c_str());
+            }
+            if (ui.ext.size() > 0) {
+                writer.Key("ext");
+                writer.String(ui.ext.c_str());
+            }
+
+            writer.Key("gender");
+            writer.Int(ui.gender);
+        }
+        writer.EndObject();
+    }
+
+    void UserInfo::ToJsonObject(Writer<StringBuffer>& writer, map<string, UserInfo>& uis)
+    {
+        writer.StartObject();
+        {
+            for (auto it : uis) {
+                ToJsonObject(writer, it.second);
+            }
+        }
+        writer.EndObject();
+    }
+
+    UserInfo UserInfo::FromJsonObject(const Value& jnode)
+    {
+        UserInfo ui;
+
+        if (jnode.HasMember("nickname") && jnode["nickname"].IsString())
+            ui.nickName = jnode["nickname"].GetString();
+
+        if (jnode.HasMember("avatarurl") && jnode["avatarurl"].IsString())
+            ui.avatarUrl = jnode["avatarurl"].GetString();
+
+        if (jnode.HasMember("mail") && jnode["mail"].IsString())
+            ui.email = jnode["mail"].GetString();
+
+        if (jnode.HasMember("phone") && jnode["phone"].IsString())
+            ui.phoneNumber = jnode["phone"].GetString();
+
+        if (jnode.HasMember("sign") && jnode["sign"].IsString())
+            ui.signature = jnode["sign"].GetString();
+
+        if (jnode.HasMember("birth") && jnode["birth"].IsString())
+            ui.birth = jnode["birth"].GetString();
+
+        if (jnode.HasMember("ext") && jnode["ext"].IsString())
+            ui.ext = jnode["ext"].GetString();
+
+        if (jnode.HasMember("gender") && jnode["gender"].IsInt())
+            ui.gender = jnode["gender"].GetInt();
+
+        if (jnode.HasMember("userId") && jnode["userId"].IsString())
+            ui.userId = jnode["userId"].GetString();
+        
+        return ui;
+    }
+
+    string UserInfo::ToJson(UserInfo& ui)
+    {
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        ToJsonObject(writer, ui);
+
+        std::string data = s.GetString();
+        return data;
+    }
+
+    string UserInfo::ToJson(map<string, UserInfo>& uis)
+    {
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        writer.StartObject();
+
+        for (auto it : uis) {
+            writer.Key(it.first.c_str());
+            ToJsonObject(writer, it.second);
+        }
+
+        writer.EndObject();
+
+        std::string data = s.GetString();
+        return data;
+    }
+
+    UserInfo UserInfo::FromJson(string json)
+    {
+        UserInfo ui;
+
+        Document d;
+        d.Parse(json.c_str());
+        if (d.HasParseError()) {
+            return ui;
+        }
+        else {
+            return FromJsonObject(d);
+        }
+    }
+
+    void UserInfo::ToJsonObjectForServer(Writer<StringBuffer>& writer, UserInfo& ui)
+    {
+        writer.StartObject();
+
+        if (ui.nickName.length() > 0) {
+            writer.Key("nickname");
+            writer.String(ui.nickName.c_str());
+        }
+
+        if (ui.avatarUrl.length() > 0) {
+            writer.Key("avatarurl");
+            writer.String(ui.avatarUrl.c_str());
+        }
+
+        if (ui.email.length() > 0) {
+            writer.Key("mail");
+            writer.String(ui.email.c_str());
+        }
+
+        if (ui.phoneNumber.length() > 0) {
+            writer.Key("phone");
+            writer.String(ui.phoneNumber.c_str());
+        }
+
+        if (0 == ui.gender || 1 == ui.gender || 2 == ui.gender) {
+            writer.Key("gender");
+            writer.Int(ui.gender);
+        }
+
+        if (ui.signature.length() > 0) {
+            writer.Key("sign");
+            writer.String(ui.signature.c_str());
+        }
+
+        if (ui.birth.length() > 0) {
+            writer.Key("birth");
+            writer.String(ui.birth.c_str());
+        }
+
+        if (ui.ext.length() > 0) {
+            writer.Key("ext");
+            writer.String(ui.ext.c_str());
+        }
+
+        writer.EndObject();
+    }
+
+    map<string, UserInfo> UserInfo::FromJsonObjectFromServer(const Value& jnode)
+    {
+        std::map<std::string, UserInfo> userinfoMap;
+
+        for (auto iter = jnode.MemberBegin(); iter != jnode.MemberEnd(); ++iter) {
+
+            auto key = iter->name.GetString();
+            const Value& objItem = iter->value;
+
+            if (objItem.IsObject()) {
+
+                UserInfo ui;
+
+                if (objItem.HasMember("nickname") && objItem["nickname"].IsString())
+                    ui.nickName = objItem["nickname"].GetString();
+
+                if (objItem.HasMember("avatarurl") && objItem["avatarurl"].IsString())
+                    ui.avatarUrl = objItem["avatarurl"].GetString();
+
+                if (objItem.HasMember("mail") && objItem["mail"].IsString())
+                    ui.email = objItem["mail"].GetString();
+
+                if (objItem.HasMember("phone") && objItem["phone"].IsString())
+                    ui.phoneNumber = objItem["phone"].GetString();
+
+                if (objItem.HasMember("sign") && objItem["sign"].IsString())
+                    ui.signature = objItem["sign"].GetString();
+
+                if (objItem.HasMember("birth") && objItem["birth"].IsString())
+                    ui.birth = objItem["birth"].GetString();
+
+                if (objItem.HasMember("ext") && objItem["ext"].IsString())
+                    ui.ext = objItem["ext"].GetString();
+
+                if (objItem.HasMember("gender") && objItem["gender"].IsString()) {
+                    std::string gender_str = objItem["gender"].GetString();
+                    if (gender_str.compare("0") == 0 || gender_str.compare("1") == 0 || gender_str.compare("2") == 0)
+                        ui.gender = std::stoi(gender_str);
+                }
+
+                ui.userId = key;
+                userinfoMap[key] = ui;
+            }
+        }
+        return userinfoMap;
+    }
+
+    string UserInfo::ToJsonForServer(UserInfo& ui)
+    {
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        writer.StartObject();
+        ToJsonObjectForServer(writer, ui);
+        writer.EndObject();
+
+        std::string data = s.GetString();
+        return data;
+    }
+
+    map<string, UserInfo> UserInfo::FromJsonFromServer(string json)
+    {
+        map<string, UserInfo> userinfoMap;
+
+        Document d;
+        d.Parse(json.c_str());
+        if (d.HasParseError()) {
+            return userinfoMap;
+        }
+        else {
+            return FromJsonObjectFromServer(d);
+        }        
     }
 
     TokenWrapper::TokenWrapper()
