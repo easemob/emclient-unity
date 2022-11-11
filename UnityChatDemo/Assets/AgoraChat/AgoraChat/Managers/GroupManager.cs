@@ -69,7 +69,13 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("groupId", groupId);
-            NativeCall(SDKMethod.acceptInvitationFromGroup, jo_param, callback);
+
+			Process process = (_, jsonNode) =>
+			{
+				return ModelHelper.CreateWithJsonObject<Group>(jsonNode);
+			};
+
+			NativeCall<Group>(SDKMethod.acceptInvitationFromGroup, jo_param, callback, process);
         }
 
         /**
@@ -629,7 +635,7 @@ namespace AgoraChat
                 return List.StringListFromJsonArray(jsonNode);
             };
 
-            NativeCall<List<string>>(SDKMethod.getGroupBlockListFromServer, jo_param, callback);
+            NativeCall<List<string>>(SDKMethod.getGroupBlockListFromServer, jo_param, callback, process);
         }
 
         /**
@@ -673,7 +679,7 @@ namespace AgoraChat
                 return List.BaseModelListFromJsonArray<GroupSharedFile>(jsonNode);
             };
 
-            NativeCall<List<GroupSharedFile>>(SDKMethod.getGroupFileListFromServer, jo_param, callback);
+            NativeCall<List<GroupSharedFile>>(SDKMethod.getGroupFileListFromServer, jo_param, callback, process);
         }
 
         /**
@@ -713,7 +719,7 @@ namespace AgoraChat
                 });
             };
 
-            NativeCall<CursorResult<string>>(SDKMethod.getGroupMemberListFromServer, jo_param, callback);
+            NativeCall<CursorResult<string>>(SDKMethod.getGroupMemberListFromServer, jo_param, callback, process);
         }
 
         /**
@@ -754,7 +760,7 @@ namespace AgoraChat
                 return List.StringListFromJsonArray(jsonNode);
             };
 
-            NativeCall<List<string>>(SDKMethod.getGroupMuteListFromServer, jo_param, callback);
+            NativeCall<List<string>>(SDKMethod.getGroupMuteListFromServer, jo_param, callback, process);
         }
 
         /**
@@ -785,7 +791,7 @@ namespace AgoraChat
                 return ModelHelper.CreateWithJsonObject<Group>(jsonNode);
             };
 
-            NativeCall<Group>(SDKMethod.getGroupSpecificationFromServer, jo_param, callback);
+            NativeCall<Group>(SDKMethod.getGroupSpecificationFromServer, jo_param, callback, process);
         }
 
         /**
@@ -819,7 +825,7 @@ namespace AgoraChat
                 return List.StringListFromJsonArray(jsonNode);
             };
 
-            NativeCall<List<string>>(SDKMethod.getGroupWhiteListFromServer, jo_param, callback);
+            NativeCall<List<string>>(SDKMethod.getGroupWhiteListFromServer, jo_param, callback, process);
         }
 
         /**
@@ -907,7 +913,7 @@ namespace AgoraChat
                 return List.BaseModelListFromJsonArray<Group>(jsonNode);
             };
 
-            NativeCall<List<Group>>(SDKMethod.getJoinedGroupsFromServer, jo_param, callback);
+            NativeCall<List<Group>>(SDKMethod.getJoinedGroupsFromServer, jo_param, callback, process);
         }
 
         /**
@@ -943,7 +949,7 @@ namespace AgoraChat
                 });
             };
 
-            NativeCall<CursorResult<GroupInfo>>(SDKMethod.getPublicGroupsFromServer, jo_param, callback);
+            NativeCall<CursorResult<GroupInfo>>(SDKMethod.getPublicGroupsFromServer, jo_param, callback, process);
         }
 
         /**

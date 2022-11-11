@@ -78,8 +78,8 @@ namespace AgoraChat
 
         internal override void FromJsonObject(JSONObject jsonObject)
         {
-            AckId = jsonObject["ack_id"];
-            MsgId = jsonObject["msg_id"];
+            AckId = jsonObject["ackId"];
+            MsgId = jsonObject["msgId"];
             From = jsonObject["from"];
             Content = jsonObject["content"];
             Count = jsonObject["count"];
@@ -89,8 +89,8 @@ namespace AgoraChat
         internal override JSONObject ToJsonObject()
         {
             JSONObject jo = new JSONObject();
-            jo.Add("ack_id", AckId);
-            jo.Add("msg_id", MsgId);
+            jo.Add("ackId", AckId);
+            jo.Add("msgId", MsgId);
             jo.Add("from", From);
             jo.Add("content", Content);
             jo.Add("count", Count);

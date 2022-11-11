@@ -54,9 +54,9 @@ namespace AgoraChat
                     object obj = null;
                     if (value.Length > 0 && null != process)
                     {
-                        JSONObject jsonNode = JSON.Parse(value).AsObject;
+                        JSONNode jsonNode = JSON.Parse(value);
                         LogPrinter.Log($"value: {code} jsonNode: {jsonNode}");
-                        obj = process(cbid, jsonNode["ret"]);
+                        obj = process(cbid, jsonNode);
                     }
 
                     // call callback
@@ -109,7 +109,9 @@ namespace AgoraChat
                     object obj = null;
                     if (value.Length > 0 && null != process)
                     {
-                        obj = process(cbid, value);
+                        JSONNode jsonNode = JSON.Parse(value);
+                        LogPrinter.Log($"value: {code} jsonNode: {jsonNode}");
+                        obj = process(cbid, jsonNode);
                     }
 
                     // call callback

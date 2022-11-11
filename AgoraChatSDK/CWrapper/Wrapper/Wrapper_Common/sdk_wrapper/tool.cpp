@@ -31,16 +31,21 @@ void CallBackProgress(const char* method, const char* jstr)
 
 void Copy_To_Buffer(char* dst, const char* src, size_t len)
 {
-    if (nullptr == dst || nullptr == src || 0 == len) return;
+    if (nullptr == dst || nullptr == src ) return;
 
     // there are some useless data in buffer.
     // seems system alloc a memory in random, but not clear the data in it.
+    // dst_len = strlen(dst);
+
     //if (dst_len > 0) {
     //    memset(dst, 0, dst_len);
     //}
 
-    memcpy(dst, src, len+1);
+    if(len > 0) memcpy(dst, src, len);
+
+    // unicode may need two bytes of \0 to regard as temination flag.
     dst[len] = '\0';
+    dst[len + 1] = '\0';
 }
 
 bool CheckClientInitOrNot(const char* cbid)

@@ -447,6 +447,7 @@ namespace AgoraChat
             return manager.MessagesCount(Id, Type);
         }
 
+        internal Conversation() { }
 
         internal Conversation(string json) : base(json) { }
         internal Conversation(JSONObject jo) : base(jo) { }
