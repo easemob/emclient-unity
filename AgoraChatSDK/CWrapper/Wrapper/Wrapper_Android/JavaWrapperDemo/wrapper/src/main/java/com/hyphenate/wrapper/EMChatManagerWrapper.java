@@ -401,8 +401,8 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
     private String asyncFetchGroupMessageAckFromServer(JSONObject params, EMWrapperCallback callback) throws JSONException {
         String msgId = params.getString("msgId");
         String ackId = null;
-        if (params.has("ack_id")){
-            ackId = params.getString("ack_id");
+        if (params.has("ackId")){
+            ackId = params.getString("ackId");
         }
         int pageSize = params.getInt("pageSize");
 

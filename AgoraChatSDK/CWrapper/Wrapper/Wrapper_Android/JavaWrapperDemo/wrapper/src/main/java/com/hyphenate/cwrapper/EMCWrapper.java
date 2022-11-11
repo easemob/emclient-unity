@@ -7,6 +7,7 @@ import com.hyphenate.wrapper.EMWrapperHelper;
 import com.hyphenate.wrapper.callback.EMWrapperCallback;
 import com.hyphenate.wrapper.util.EMSDKMethod;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -38,7 +39,10 @@ public class EMCWrapper {
                 try {
                     JSONObject jsonObject = new JSONObject();
                     if (obj != null) {
-                        jsonObject.put("value", obj);
+                        if (obj instanceof JSONObject || obj instanceof JSONArray) {
+                            // value 里是 JSONObject to String
+                            jsonObject.put("value", obj.toString());
+                        }
                     }
                     jsonObject.put("callbackId", cid);
                     EMWrapperHelper.listener.onReceive(EMSDKMethod.callback, cid, jsonObject.toString());
@@ -53,6 +57,7 @@ public class EMCWrapper {
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("callbackId", cid);
                     if (obj != null) {
+                        // error 里是 HyphenateException to JSONObject
                         jsonObject.put("error", obj);
                     }
                     EMWrapperHelper.listener.onReceive(EMSDKMethod.callback, cid, jsonObject.toString());
@@ -66,6 +71,7 @@ public class EMCWrapper {
                 try {
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("callbackId", cid);
+                    // progress 里是 int progress
                     jsonObject.put("progress", progress);
                     EMWrapperHelper.listener.onReceive(EMSDKMethod.callbackProgress, cid, jsonObject.toString());
                 }catch (JSONException e) {

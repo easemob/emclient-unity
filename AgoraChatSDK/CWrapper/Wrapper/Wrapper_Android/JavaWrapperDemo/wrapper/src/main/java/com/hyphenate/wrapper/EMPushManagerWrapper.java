@@ -196,7 +196,7 @@ public class EMPushManagerWrapper extends EMBaseWrapper{
     }
 
     private String updateGroupPushService(JSONObject params, EMWrapperCallback callback) throws JSONException {
-        JSONArray groupIds = params.getJSONArray("group_ids");
+        JSONArray groupIds = params.getJSONArray("groupIds");
         boolean noPush = params.getBoolean("noPush");
 
         List<String> groupList = new ArrayList<>();
@@ -217,8 +217,8 @@ public class EMPushManagerWrapper extends EMBaseWrapper{
 
     private String updateUserPushService(JSONObject params, EMWrapperCallback callback) throws JSONException {
         boolean noPush = params.getBoolean("noPush");
-        JSONArray groupIds = params.getJSONArray("user_ids");
-        List<String> userList = EMHelper.stringListFromJsonArray(groupIds);
+        JSONArray userIds = params.getJSONArray("userIds");
+        List<String> userList = EMHelper.stringListFromJsonArray(userIds);
 
         asyncRunnable(()-> {
             try {

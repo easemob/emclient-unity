@@ -88,8 +88,8 @@ public class EMConversationWrapper extends EMBaseWrapper {
 
     private String markMessageAsRead(JSONObject params, EMWrapperCallback callback) throws JSONException {
         EMConversation conversation = conversationWithParam(params);
-        String msg_id = params.getString("msgId");
-        conversation.markMessageAsRead(msg_id);
+        String msgId = params.getString("msgId");
+        conversation.markMessageAsRead(msgId);
         return null;
     }
 
@@ -106,8 +106,8 @@ public class EMConversationWrapper extends EMBaseWrapper {
 
     private String removeMessage(JSONObject params, EMWrapperCallback callback) throws JSONException {
         EMConversation conversation = conversationWithParam(params);
-        String msg_id = params.getString("msgId");
-        conversation.removeMessage(msg_id);
+        String msgId = params.getString("msgId");
+        conversation.removeMessage(msgId);
         return null;
     }
 
