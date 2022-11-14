@@ -83,7 +83,7 @@ namespace AgoraChat
             From = jsonObject["from"];
             Content = jsonObject["content"];
             Count = jsonObject["count"];
-            Timestamp = jsonObject["timestamp"];
+            Timestamp = (long)jsonObject["timestamp"].AsDouble;
         }
 
         internal override JSONObject ToJsonObject()

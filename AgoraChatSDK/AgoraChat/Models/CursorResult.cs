@@ -25,12 +25,12 @@ namespace AgoraChat
 
         internal CursorResult() { }
 
-        internal CursorResult(string jsonString, ItemCallback callback = null) : base(jsonString)
+        internal CursorResult(string jsonString, ItemCallback callback = null)
         {
             this.callback = callback;
         }
 
-        internal CursorResult(JSONObject jsonObject, ItemCallback callback = null) : base(jsonObject)
+        internal CursorResult(JSONObject jsonObject, ItemCallback callback = null)
         {
             this.callback = callback;
         }

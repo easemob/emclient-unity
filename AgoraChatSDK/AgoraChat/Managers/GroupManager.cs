@@ -711,13 +711,17 @@ namespace AgoraChat
             jo_param.Add("cursor", cursor);
             jo_param.Add("pageSize", pageSize);
 
-            Process process = (_, jsonNode) =>
-            {
-                return new CursorResult<string>(jsonNode, (jn) =>
-                {
-                    return jn.IsString ? jn.Value : null;
-                });
-            };
+			Process process = (_, jsonNode) =>
+			{
+				CursorResult<string> cursor_msg = new CursorResult<string>(_, (jn) =>
+				{
+					return jn.IsString ? jn.Value : null;
+				});
+
+				cursor_msg.FromJsonObject(jsonNode.AsObject);
+				return cursor_msg;
+
+			};
 
             NativeCall<CursorResult<string>>(SDKMethod.getGroupMemberListFromServer, jo_param, callback, process);
         }
@@ -941,13 +945,17 @@ namespace AgoraChat
             jo_param.Add("pageSize", pageSize);
             jo_param.Add("cursor", cursor);
 
-            Process process = (_, jsonNode) =>
-            {
-                return new CursorResult<GroupInfo>(jsonNode, (jn) =>
-                {
-                    return ModelHelper.CreateWithJsonObject<GroupInfo>(jn);
-                });
-            };
+			Process process = (_, jsonNode) =>
+			{
+				CursorResult<GroupInfo> cursor_msg = new CursorResult<GroupInfo>(_, (jn) =>
+				{
+					return ModelHelper.CreateWithJsonObject<GroupInfo>(jn);
+				});
+
+				cursor_msg.FromJsonObject(jsonNode.AsObject);
+				return cursor_msg;
+
+			};
 
             NativeCall<CursorResult<GroupInfo>>(SDKMethod.getPublicGroupsFromServer, jo_param, callback, process);
         }

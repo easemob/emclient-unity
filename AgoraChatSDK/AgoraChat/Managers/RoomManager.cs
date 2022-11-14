@@ -440,13 +440,17 @@ namespace AgoraChat
             jo_param.Add("cursor", cursor);
             jo_param.Add("pageSize", pageSize);
 
-            Process process = (_, jsonNode) =>
-            {
-                return new CursorResult<string>(jsonNode, (jn) =>
-                {
-                    return jn.IsString ? jn.Value : null;
-                });
-            };
+			Process process = (_, jsonNode) =>
+			{
+				CursorResult<string> cursor_msg = new CursorResult<string>(_, (jn) =>
+				{
+					return jn.IsString ? jn.Value : null;
+				});
+
+				cursor_msg.FromJsonObject(jsonNode.AsObject);
+				return cursor_msg;
+
+			};
 
             NativeCall<CursorResult<string>>(SDKMethod.fetchChatRoomMembers, jo_param, callback, process);
         }

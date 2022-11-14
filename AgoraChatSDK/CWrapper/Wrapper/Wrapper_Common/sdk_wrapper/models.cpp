@@ -1809,12 +1809,38 @@ namespace sdk_wrapper
 
     string MessageReaction::ToJson(EMMessageReactionList& list)
     {
-        return EMMessageEncoder::encodeReactionToJson(list);
+        if (list.size() == 0) return string();
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        writer.StartArray();
+        for (auto it : list) {
+            ToJsonObject(writer, it);
+        }
+
+        writer.EndArray();
+        return s.GetString();
     }
 
-    string MessageReaction::ToJson(EMMessage& msg)
+    string MessageReaction::ToJson(EMMessagePtr msg)
     {
-        return EMMessageEncoder::encodeReactionToJson(msg);
+        if (nullptr == msg) return string();
+
+        EMMessageReactionList& list = msg->reactionList();
+
+        if (list.size() == 0) return string();
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        writer.StartArray();
+        for (auto it : list) {
+            ToJsonObject(writer, it);
+        }
+
+        writer.EndArray();
+        return s.GetString();
     }
 
     string MessageReaction::ToJson(map<string, EMMessageReactionList>& map)
@@ -1825,8 +1851,10 @@ namespace sdk_wrapper
         Writer<StringBuffer> writer(s);
         writer.StartObject();
         for (auto it : map) {
-            writer.Key(it.first.c_str());
-            ToJsonObject(writer, it.second);
+            if (it.second.size() > 0) {
+                writer.Key(it.first.c_str());
+                ToJsonObject(writer, it.second);
+            }
         }
         writer.EndObject();
         return s.GetString();
@@ -1836,15 +1864,17 @@ namespace sdk_wrapper
     {
         writer.StartObject();
         {
-            writer.Key("reaction");
-            writer.String(reaction->reaction().c_str());
-            writer.Key("count");
-            writer.Int(reaction->count());
-            writer.Key("isAddedBySelf");
-            writer.Bool(reaction->state());
+            if (nullptr != reaction) {
+                writer.Key("reaction");
+                writer.String(reaction->reaction().c_str());
+                writer.Key("count");
+                writer.Int(reaction->count());
+                writer.Key("isAddedBySelf");
+                writer.Bool(reaction->state());
 
-            writer.Key("userList");
-            MyJson::ToJsonObject(writer, reaction->userList());
+                writer.Key("userList");
+                MyJson::ToJsonObject(writer, reaction->userList());
+            }
         }
         writer.EndObject();
     }
@@ -2257,7 +2287,9 @@ namespace sdk_wrapper
             writer.String(cursor.c_str());
 
             writer.Key("list");
+            writer.StartArray();
             MessageReaction::ToJsonObject(writer, reaction);
+            writer.EndArray();
         }
         writer.EndObject();
 

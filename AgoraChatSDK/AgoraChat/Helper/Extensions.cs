@@ -155,9 +155,40 @@ namespace AgoraChat
 
             foreach (string s in jo.Keys)
             {
-                ret.Add(s, ModelHelper.CreateWithJsonObject<T>(jo[s].AsObject));
+                if(jo[s].IsObject)
+                {
+                    ret.Add(s, ModelHelper.CreateWithJsonObject<T>(jo[s].AsObject));
+                }
+                else if(jo[s].AsArray)
+                {
+                    foreach(var it in jo[s].AsArray)
+                    {
+
+                    }
+                }
             }
 
+            return ret;
+        }
+
+        internal static Dictionary<string, List<T>> ListBaseModelDictionaryFromJsonObject<T>(JSONNode jo) where T : BaseModel
+        {
+            Dictionary<string, List<T>> ret = new Dictionary<string, List<T>>();
+
+            if (!jo.IsObject) return ret;
+
+            foreach (string s in jo.Keys)
+            {
+                if (jo[s].IsArray)
+                {
+                    List<T> list = new List<T>();
+                    foreach(var it in jo[s].AsArray)
+                    {
+                        list.Add(ModelHelper.CreateWithJsonObject<T>(it));
+                    }
+                    ret.Add(s, list);
+                }
+            }
             return ret;
         }
 

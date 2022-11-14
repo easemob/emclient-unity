@@ -759,8 +759,7 @@ namespace sdk_wrapper {
         Document d; d.Parse(jstr);
         EMMessagePtr msg = Message::FromJsonObjectToMessage(d["message"]);
 
-        string langs_json = GetJsonValue_String(d, "languages", "");
-        vector<string> langs_vec = MyJson::FromJsonToVector(langs_json);
+        vector<string> langs_vec = MyJson::FromJsonObjectToVector(d["languages"]);
 
         thread t([=]() {
             EMErrorPtr error = CLIENT->getChatManager().translateMessage(msg, langs_vec);
@@ -900,8 +899,7 @@ namespace sdk_wrapper {
 
         Document d; d.Parse(jstr);
 
-        string vec_str = GetJsonValue_String(d, "msgIds", "");
-        vector<string> id_vec = MyJson::FromJsonToVector(vec_str);
+        vector<string> id_vec = MyJson::FromJsonObjectToVector(d["msgIds"]);
 
         string group_id = GetJsonValue_String(d, "groupId", "");
 
@@ -1044,13 +1042,8 @@ namespace sdk_wrapper {
 
         EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(msg_id);
 
-        string json = "";
+        string json = MessageReaction::ToJson(messagePtr);
 
-        if (nullptr != messagePtr) {
-
-            EMMessageReactionList& rl = messagePtr->reactionList();
-            json = MessageReaction::ToJson(rl);
-        }
         Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 

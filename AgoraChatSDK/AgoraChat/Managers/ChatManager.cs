@@ -187,10 +187,14 @@ namespace AgoraChat
 
             Process process = (_, jsonNode) =>
             {
-                return new CursorResult<Message>(jsonNode, (jn) =>
+                CursorResult<Message> cursor_msg = new CursorResult<Message>(_, (jn) =>
                 {
                     return ModelHelper.CreateWithJsonObject<Message>(jn);
                 });
+
+                cursor_msg.FromJsonObject(jsonNode.AsObject);
+                return cursor_msg;
+
             };
 
             NativeCall<CursorResult<Message>>(SDKMethod.fetchHistoryMessages, jo_param, callback, process);
@@ -835,12 +839,16 @@ namespace AgoraChat
             jo_param.Add("groupId", groupId);
             jo_param.Add("ack_id", startAckId ?? "");
 
+
             Process process = (_, jsonNode) =>
             {
-                return new CursorResult<GroupReadAck>(jsonNode, (jn) =>
+                CursorResult<GroupReadAck> cursor_msg = new CursorResult<GroupReadAck>(_, (jn) =>
                 {
                     return ModelHelper.CreateWithJsonObject<GroupReadAck>(jn);
                 });
+
+                cursor_msg.FromJsonObject(jsonNode.AsObject);
+                return cursor_msg;
             };
             NativeCall<CursorResult<GroupReadAck>>(SDKMethod.asyncFetchGroupAcks, jo_param, callback, process);
         }
@@ -962,7 +970,7 @@ namespace AgoraChat
             jo_param.Add("type", chatType == MessageType.Group ? "groupchat" : "chat");
             Process process = (_, jsonNode) =>
             {
-                return Dictionary.BaseModelDictionaryFromJsonObject<MessageReaction>(jsonNode);
+                return Dictionary.ListBaseModelDictionaryFromJsonObject<MessageReaction>(jsonNode);
             };
 
             NativeCall<Dictionary<string, List<MessageReaction>>>(SDKMethod.fetchReactionList, jo_param, callback, process);
@@ -999,12 +1007,16 @@ namespace AgoraChat
             jo_param.Add("cursor", cursor ?? "");
             jo_param.Add("pageSize", pageSize);
 
+
             Process process = (_, jsonNode) =>
             {
-                return new CursorResult<MessageReaction>(jsonNode, (jn) =>
+                CursorResult<MessageReaction> cursor_msg = new CursorResult<MessageReaction>(_, (jn) =>
                 {
                     return ModelHelper.CreateWithJsonObject<MessageReaction>(jn);
                 });
+
+                cursor_msg.FromJsonObject(jsonNode.AsObject);
+                return cursor_msg;
             };
 
             NativeCall<CursorResult<MessageReaction>>(SDKMethod.fetchReactionDetail, jo_param, callback, process);

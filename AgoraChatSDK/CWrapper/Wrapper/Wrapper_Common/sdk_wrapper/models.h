@@ -152,7 +152,7 @@ namespace sdk_wrapper {
 	public:
 		static string ToJson(EMMessageReactionPtr reaction);
 		static string ToJson(EMMessageReactionList& list);
-		static string ToJson(EMMessage& msg);
+		static string ToJson(EMMessagePtr msg);
 		static string ToJson(map<string, EMMessageReactionList>& map);
 		static void ToJsonObject(Writer<StringBuffer>& writer, const EMMessageReactionPtr reaction);
 		static void ToJsonObject(Writer<StringBuffer>& writer, const EMMessageReactionList& list);
