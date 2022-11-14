@@ -82,7 +82,13 @@ namespace sdk_wrapper {
         EMConversation::EMConversationType type = Conversation::ConversationTypeFromInt(int_type);
 
         EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(conv_id, type, true);
-        std::string json = conversationPtr->extField();
+        std::string ext = conversationPtr->extField();
+
+        JSON_STARTOBJ
+        writer.Key("ret");
+        writer.String(ext.c_str());
+        JSON_ENDOBJ
+        string json = s.GetString();
 
         Copy_To_Buffer(buf, json.c_str(), json.size());
     }
@@ -122,7 +128,16 @@ namespace sdk_wrapper {
         EMConversationPtr conversation = CLIENT->getChatManager().conversationWithType(conv_id, type, true);
         EMMessagePtr msgPtr = conversation->latestMessage();
 
-        string json = Message::ToJson(msgPtr);
+        string json = "";
+
+        if (nullptr != msgPtr) {
+            JSON_STARTOBJ
+            writer.Key("ret");
+            Message::ToJsonObjectWithMessage(writer, msgPtr);
+            JSON_ENDOBJ
+            json = s.GetString();
+        }
+
         Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
@@ -138,7 +153,16 @@ namespace sdk_wrapper {
         EMConversationPtr conversation = CLIENT->getChatManager().conversationWithType(conv_id, type, true);
         EMMessagePtr msgPtr = conversation->latestMessageFromOthers();
 
-        string json = Message::ToJson(msgPtr);
+        string json = "";
+
+        if (nullptr != msgPtr) {
+            JSON_STARTOBJ
+            writer.Key("ret");
+            Message::ToJsonObjectWithMessage(writer, msgPtr);
+            JSON_ENDOBJ
+            json = s.GetString();
+        }
+
         Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
@@ -155,7 +179,15 @@ namespace sdk_wrapper {
         EMConversationPtr conversation = CLIENT->getChatManager().conversationWithType(conv_id, type, true);
         EMMessagePtr msgPtr = conversation->loadMessage(msg_id);
 
-        string json = Message::ToJson(msgPtr);
+        string json = "";
+
+        if (nullptr != msgPtr) {
+            JSON_STARTOBJ
+            writer.Key("ret");
+            Message::ToJsonObjectWithMessage(writer, msgPtr);
+            JSON_ENDOBJ
+            json = s.GetString();
+        }
         Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 

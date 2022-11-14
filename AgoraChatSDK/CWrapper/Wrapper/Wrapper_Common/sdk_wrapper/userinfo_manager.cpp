@@ -39,7 +39,7 @@ namespace sdk_wrapper {
 		string local_cbid = cbid;
 
 		Document d; d.Parse(jstr);
-		EMMucMemberList id_list = MyJson::FromJsonObjectToVector(d);
+		EMMucMemberList id_list = MyJson::FromJsonObjectToVector(d["userIds"]);
 
 		std::vector<std::string> attrv;
 		for (auto it : UserInfoTypeMap) {

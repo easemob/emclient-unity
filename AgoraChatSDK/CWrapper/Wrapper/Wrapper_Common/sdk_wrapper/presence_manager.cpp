@@ -53,7 +53,7 @@ namespace sdk_wrapper {
 
 		Document d; d.Parse(jstr);		
 		int64_t expiry = GetJsonValue_Int64(d, "expiry", 0);
-		EMMucMemberList mem_list = MyJson::FromJsonObjectToVector(d["members"]);
+		EMMucMemberList mem_list = MyJson::FromJsonObjectToVector(d["userIds"]);
 
 		thread t([=]() {
 			std::vector<EMPresencePtr> outputPresencesVec;
@@ -80,7 +80,7 @@ namespace sdk_wrapper {
 		string local_cbid = cbid;
 
 		Document d; d.Parse(jstr);
-		EMMucMemberList mem_list = MyJson::FromJsonObjectToVector(d["members"]);
+		EMMucMemberList mem_list = MyJson::FromJsonObjectToVector(d["userIds"]);
 
 		thread t([=]() {
 			EMErrorPtr error = CLIENT->getPresenceManager().unsubscribePresences(mem_list);
@@ -136,7 +136,7 @@ namespace sdk_wrapper {
 		string local_cbid = cbid;
 
 		Document d; d.Parse(jstr);
-		EMMucMemberList mem_list = MyJson::FromJsonObjectToVector(d["members"]);
+		EMMucMemberList mem_list = MyJson::FromJsonObjectToVector(d["userIds"]);
 
 		thread t([=]() {
 			std::vector<EMPresencePtr> presences;

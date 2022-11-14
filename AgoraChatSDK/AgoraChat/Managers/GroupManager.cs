@@ -849,8 +849,8 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("groupId", groupId);
-            string jsonString = NativeGet(SDKMethod.getGroupWithId, jo_param);
-            return ModelHelper.CreateWithJsonString<Group>(jsonString);
+            JSONNode jn = NativeGet(SDKMethod.getGroupWithId, jo_param).GetReturnJsonNode();
+            return ModelHelper.CreateWithJsonObject<Group>(jn);
         }
 
         /**
@@ -873,8 +873,8 @@ namespace AgoraChat
         public List<Group> GetJoinedGroups()
         {
             JSONObject jo_param = new JSONObject();
-            string jsonString = NativeGet(SDKMethod.getJoinedGroups);
-            return List.BaseModelListFromJsoString<Group>(jsonString);
+            JSONNode jn = NativeGet(SDKMethod.getJoinedGroups).GetReturnJsonNode();
+            return List.BaseModelListFromJsonArray<Group>(jn);
         }
 
         /**

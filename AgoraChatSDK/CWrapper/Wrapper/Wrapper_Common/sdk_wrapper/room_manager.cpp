@@ -880,7 +880,16 @@ namespace sdk_wrapper {
         EMError error;
         EMChatroomPtr room = CLIENT->getChatroomManager().chatroomWithId(room_id);
 
-        string json = Room::ToJson(room);
+        string json = "";
+
+        if (nullptr != room) {
+            JSON_STARTOBJ
+            writer.Key("ret");
+            Room::ToJsonObject(writer, room);
+            JSON_ENDOBJ
+            json = s.GetString();
+        }
+
         Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 

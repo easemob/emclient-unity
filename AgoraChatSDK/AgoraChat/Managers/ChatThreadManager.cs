@@ -487,7 +487,7 @@ namespace AgoraChat
                 return Dictionary.BaseModelDictionaryFromJsonObject<Message>(jsonNode);
             };
 
-            NativeCall<Dictionary<string, Message>>(SDKMethod.fetchChatThreadDetail, jo_param, callback, process);
+            NativeCall<Dictionary<string, Message>>(SDKMethod.fetchLastMessageWithChatThreads, jo_param, callback, process);
         }
 
         /**

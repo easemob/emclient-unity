@@ -119,6 +119,7 @@ namespace sdk_wrapper {
 		static string ToJson(EMConversationPtr conversation);
 		static string ToJson(EMConversationList conversations);
 		static void ToJsonObject(Writer<StringBuffer>& writer, EMConversationPtr conversation);
+		static void ToJsonObject(Writer<StringBuffer>& writer, const EMConversationList& conversations);
 
 		static int ConversationTypeToInt(EMConversation::EMConversationType type);
 		static EMConversation::EMConversationType ConversationTypeFromInt(int i);

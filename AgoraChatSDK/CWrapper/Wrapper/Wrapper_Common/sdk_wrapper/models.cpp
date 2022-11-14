@@ -103,7 +103,6 @@ namespace sdk_wrapper
     }
 
     string MyJson::ToJson(const vector<string>& vec) {
-        if (vec.size() == 0) return string("");
 
         StringBuffer s;
         Writer<StringBuffer> writer(s);
@@ -1612,6 +1611,15 @@ namespace sdk_wrapper
         writer.EndObject();
     }
 
+    void Conversation::ToJsonObject(Writer<StringBuffer>& writer, const EMConversationList& conversations)
+    {
+        writer.StartArray();
+        for (auto it : conversations) {
+            ToJsonObject(writer, it);
+        }
+        writer.EndArray();
+    }
+
     string Conversation::ToJson(EMConversationPtr conversation)
     {
         if (nullptr == conversation) return string();
@@ -1629,13 +1637,9 @@ namespace sdk_wrapper
 
         StringBuffer s;
         Writer<StringBuffer> writer(s);
-        writer.StartArray();
 
-        for (auto it : conversations) {
-            ToJsonObject(writer, it);
-        }
+        ToJsonObject(writer, conversations);
 
-        writer.EndArray();
         string jstr = s.GetString();
         return jstr;
     }
@@ -1881,8 +1885,6 @@ namespace sdk_wrapper
 
     void MessageReaction::ToJsonObject(Writer<StringBuffer>& writer, const EMMessageReactionList& list)
     {
-        if (list.size() == 0) return;
-
         writer.StartArray();
         for (EMMessageReactionPtr reaction : list) {
             ToJsonObject(writer, reaction);
@@ -3022,11 +3024,11 @@ namespace sdk_wrapper
     {
         UserInfo ui;
 
-        if (jnode.HasMember("nickname") && jnode["nickname"].IsString())
-            ui.nickName = jnode["nickname"].GetString();
+        if (jnode.HasMember("nickName") && jnode["nickName"].IsString())
+            ui.nickName = jnode["nickName"].GetString();
 
-        if (jnode.HasMember("avatarurl") && jnode["avatarurl"].IsString())
-            ui.avatarUrl = jnode["avatarurl"].GetString();
+        if (jnode.HasMember("avatarUrl") && jnode["avatarUrl"].IsString())
+            ui.avatarUrl = jnode["avatarUrl"].GetString();
 
         if (jnode.HasMember("mail") && jnode["mail"].IsString())
             ui.email = jnode["mail"].GetString();
@@ -3091,7 +3093,7 @@ namespace sdk_wrapper
             return ui;
         }
         else {
-            return FromJsonObject(d);
+            return FromJsonObject(d["userInfo"]);
         }
     }
 
@@ -3194,9 +3196,7 @@ namespace sdk_wrapper
         StringBuffer s;
         Writer<StringBuffer> writer(s);
 
-        writer.StartObject();
         ToJsonObjectForServer(writer, ui);
-        writer.EndObject();
 
         std::string data = s.GetString();
         return data;

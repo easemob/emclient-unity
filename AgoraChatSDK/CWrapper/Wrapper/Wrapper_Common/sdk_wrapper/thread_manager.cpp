@@ -56,7 +56,7 @@ namespace sdk_wrapper {
 		Document d; d.Parse(jstr);
 		string msg_id = GetJsonValue_String(d, "msgId", "");
 		string group_id = GetJsonValue_String(d, "groupId", "");
-		string name = GetJsonValue_String(d, "name", "");
+		string name = GetJsonValue_String(d, "threadName", "");
 
 		thread t([=]() {
 			EMError error;

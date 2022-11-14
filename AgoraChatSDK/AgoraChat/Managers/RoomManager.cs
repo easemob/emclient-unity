@@ -16,7 +16,7 @@ namespace AgoraChat
     {
         internal List<IRoomManagerDelegate> delegater;
 
-        internal RoomManager(NativeListener listener) : base(listener, SDKMethod.groupManager)
+        internal RoomManager(NativeListener listener) : base(listener, SDKMethod.roomManager)
         {
             listener.GroupManagerEvent += NativeEventcallback;
             delegater = new List<IRoomManagerDelegate>();
@@ -290,13 +290,16 @@ namespace AgoraChat
             jo_param.Add("pageNum", pageNum);
             jo_param.Add("pageSize", pageSize);
 
-            Process process = (_, jsonNode) =>
-            {
-                return new PageResult<Room>(jsonNode, (jn) =>
-                {
-                    return ModelHelper.CreateWithJsonObject<Room>(jn);
-                });
-            };
+			Process process = (_, jsonNode) =>
+			{
+				PageResult<Room> cursor_msg = new PageResult<Room>(_, (jn) =>
+				{
+					return ModelHelper.CreateWithJsonObject<Room>(jn);
+				});
+
+				cursor_msg.FromJsonObject(jsonNode.AsObject);
+				return cursor_msg;
+			};
 
             NativeCall<PageResult<Room>>(SDKMethod.fetchPublicChatRoomsFromServer, jo_param, callback, process);
         }
@@ -937,8 +940,8 @@ namespace AgoraChat
 			JSONObject jo_param = new JSONObject();
 			jo_param.Add("roomId", roomId);
 
-			JSONNode jsonNode = NativeGet<Room>(SDKMethod.getChatRoom, jo_param).GetReturnJsonNode();
-			return (null != jsonNode) ? new Room(jsonNode) : null;
+			JSONNode jn = NativeGet<Room>(SDKMethod.getChatRoom, jo_param).GetReturnJsonNode();
+			return ModelHelper.CreateWithJsonObject<Room>(jn);
 		}
 
 		//TODO: need to add comments

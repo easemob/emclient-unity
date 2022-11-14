@@ -152,7 +152,7 @@ namespace AgoraChat
             ParentId = jsonObject["parentId"];
             MembersCount = jsonObject["memberCount"];
             MessageCount = jsonObject["msgCount"];
-            CreateAt = jsonObject["createAt"].AsInt;
+            CreateAt = (long)jsonObject["createAt"].AsDouble;
             LastMessage = ModelHelper.CreateWithJsonObject<Message>(jsonObject["msg"].AsObject);
         }
 

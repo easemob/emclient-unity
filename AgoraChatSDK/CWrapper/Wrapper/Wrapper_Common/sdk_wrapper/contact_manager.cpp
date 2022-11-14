@@ -174,7 +174,13 @@ namespace sdk_wrapper {
 
 		string json = "";
 		if (EMError::EM_NO_ERROR == error.mErrorCode) {
-			json = MyJson::ToJson(vec);
+
+			JSON_STARTOBJ
+			writer.Key("ret");
+			MyJson::ToJsonObject(writer, vec);
+			JSON_ENDOBJ
+			json = s.GetString();
+
 		}
 		Copy_To_Buffer(buf, json.c_str(), json.size());
 	}
@@ -285,8 +291,11 @@ namespace sdk_wrapper {
 		string json = "";
 
 		if (EMError::EM_NO_ERROR == error.mErrorCode) {
-
-			string json = MyJson::ToJson(list);
+			JSON_STARTOBJ
+			writer.Key("ret");
+			MyJson::ToJsonObject(writer, list);
+			JSON_ENDOBJ
+			json = s.GetString();
 		}
 		Copy_To_Buffer(buf, json.c_str(), json.size());
 	}

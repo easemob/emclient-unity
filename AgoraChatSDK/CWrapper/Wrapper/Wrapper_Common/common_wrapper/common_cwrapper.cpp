@@ -138,6 +138,7 @@ void InitManagerMap()
 	manager_map["EMGroupManager"] = func_map_group_manager;
 
 
+	func_map_room_manager["getChatRoom"] = RoomManager_GetChatRoom;
 	func_map_room_manager["addChatRoomAdmin"] = RoomManager_AddRoomAdmin;
 	func_map_room_manager["blockChatRoomMembers"] = RoomManager_BlockChatroomMembers;
 	func_map_room_manager["changeChatRoomOwner"] = RoomManager_TransferChatroomOwner;
