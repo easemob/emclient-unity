@@ -252,12 +252,9 @@ namespace AgoraChat
 		 *
          * @return The list of Reactions.
          */
-        public List<MessageReaction> ReactionList
+        public List<MessageReaction> ReactionList()
         {
-            get
-            {
-                return SDKClient.Instance.MessageManager.GetReactionList(MsgId);
-            }
+            return SDKClient.Instance.MessageManager.GetReactionList(MsgId);
         }
 
         /**

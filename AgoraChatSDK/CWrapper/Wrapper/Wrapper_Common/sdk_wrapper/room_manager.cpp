@@ -796,13 +796,14 @@ namespace sdk_wrapper {
 
         Document d; d.Parse(jstr);
         string room_id = GetJsonValue_String(d, "roomId", "");
-        vector<string> keys = MyJson::FromJsonObjectToVector(d["list"]);
+        vector<string> keys = MyJson::FromJsonObjectToVector(d["list"], true);
 
         thread t([=]() {
             EMError error;
             string json = CLIENT->getChatroomManager().fetchChatRoomMetaFromSever(room_id, keys, error);
 
             if (EMError::EM_NO_ERROR == error.mErrorCode) {
+
                 string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
@@ -810,7 +811,7 @@ namespace sdk_wrapper {
                 string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
-            });
+        });
         t.detach();
     }
 
@@ -822,15 +823,23 @@ namespace sdk_wrapper {
 
         Document d; d.Parse(jstr);        
         string room_id = GetJsonValue_String(d, "roomId", "");
-        string kv_json = MyJson::ToJsonWithJsonObject(d["kv"]);
-        bool delete_when_exit = GetJsonValue_Bool(d, "deleteWhenExit", true); //TODO: addChatRoomMetaData no need this param?
+        bool delete_when_exit = GetJsonValue_Bool(d, "deleteWhenExit", true);
         bool forced = GetJsonValue_Bool(d, "forced", true);
+        map<string, string> kv = MyJson::FromJsonObjectToMap(d["kv"]);
+
+        string meta = Room::ToJsonFromRoomAttribute(kv, delete_when_exit);
 
         thread t([=]() {
             EMError error;
-            string json = CLIENT->getChatroomManager().addChatRoomMetaData(room_id, kv_json, error, forced); //TODO: check with c# side
+            string json = CLIENT->getChatroomManager().addChatRoomMetaData(room_id, meta, error, forced);
 
-            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+            if (EMError::EM_NO_ERROR == error.mErrorCode || EMError::PARTIAL_SUCCESS == error.mErrorCode) {
+
+                map<string, int> fail_info;
+                if (json.size() == 0) {
+                    json = MyJson::ToJson(fail_info); // use empty map to construct a json
+                }
+
                 string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
@@ -838,7 +847,7 @@ namespace sdk_wrapper {
                 string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
-            });
+         });
         t.detach();
     }
 
@@ -856,15 +865,21 @@ namespace sdk_wrapper {
             EMError error;
             string json = CLIENT->getChatroomManager().removeChatRoomMetaFromSever(room_id, keys, error);
 
-            if (EMError::EM_NO_ERROR == error.mErrorCode) {
-                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str()); //TODO: need to check with c# side
+            if (EMError::EM_NO_ERROR == error.mErrorCode || EMError::PARTIAL_SUCCESS == error.mErrorCode) {
+
+                map<string, int> fail_info;
+                if (json.size() == 0) {
+                    json = MyJson::ToJson(fail_info); // use empty map to construct a json
+                }
+
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
             else {
                 string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
-            });
+        });
         t.detach();
     }
 
@@ -880,7 +895,16 @@ namespace sdk_wrapper {
         EMError error;
         EMChatroomPtr room = CLIENT->getChatroomManager().chatroomWithId(room_id);
 
-        string json = Room::ToJson(room);
+        string json = "";
+
+        if (nullptr != room) {
+            JSON_STARTOBJ
+            writer.Key("ret");
+            Room::ToJsonObject(writer, room);
+            JSON_ENDOBJ
+            json = s.GetString();
+        }
+
         Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 

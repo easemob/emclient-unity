@@ -56,7 +56,14 @@ namespace sdk_wrapper {
         }
 
         if (nullptr != update_msg) {
-            return Message::ToJson(update_msg);
+
+            JSON_STARTOBJ
+            writer.Key("ret");
+            Message::ToJsonObjectWithMessage(writer, update_msg);
+            JSON_ENDOBJ
+
+            std::string data = s.GetString();
+            return data;
         }
         else {
             return string();
@@ -335,10 +342,16 @@ namespace sdk_wrapper {
 
         string json = "";
 
+        JSON_STARTOBJ
         EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(cov_id, conv_type, create_if_need, is_thread);
         if (nullptr != conversationPtr) {
             json = Conversation::ToJson(conversationPtr);
+            writer.Key("ret");
+            Conversation::ToJsonObject(writer, conversationPtr);
         }
+        JSON_ENDOBJ
+
+        json = s.GetString();
         Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
@@ -416,7 +429,13 @@ namespace sdk_wrapper {
         if (!CheckClientInitOrNot(nullptr)) return;
 
         EMConversationList conversationList = CLIENT->getChatManager().loadAllConversationsFromDB();
-        string json = Conversation::ToJson(conversationList);
+
+        JSON_STARTOBJ
+        writer.Key("ret");
+        Conversation::ToJsonObject(writer, conversationList);
+        JSON_ENDOBJ
+
+        string json = s.GetString();
         Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
@@ -429,10 +448,17 @@ namespace sdk_wrapper {
 
         string json = "";
         EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(msg_id);
-        if (nullptr != messagePtr) {
-            json = Message::ToJson(messagePtr);
 
+
+        if (nullptr != messagePtr) {
+
+            JSON_STARTOBJ
+            writer.Key("ret");
+            Message::ToJsonObjectWithMessage(writer, messagePtr);
+            JSON_ENDOBJ
+            json = s.GetString();
         }
+
         Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
@@ -537,7 +563,12 @@ namespace sdk_wrapper {
         messagePtr->setCallback(callbackPtr);
         CLIENT->getChatManager().resendMessage(messagePtr);
 
-        string json = Message::ToJson(messagePtr);
+        JSON_STARTOBJ
+        writer.Key("ret");
+        Message::ToJsonObjectWithMessage(writer, messagePtr);
+        JSON_ENDOBJ
+        string json = s.GetString();
+
         Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
@@ -562,7 +593,11 @@ namespace sdk_wrapper {
         string json = "";
 
         if (messageList.size() > 0) {
-            json = Message::ToJson(messageList);
+            JSON_STARTOBJ
+            writer.Key("ret");
+            Message::ToJsonObjectWithMessageList(writer, messageList);
+            JSON_ENDOBJ
+            json = s.GetString();
         }
 
         Copy_To_Buffer(buf, json.c_str(), json.size());
@@ -759,8 +794,7 @@ namespace sdk_wrapper {
         Document d; d.Parse(jstr);
         EMMessagePtr msg = Message::FromJsonObjectToMessage(d["message"]);
 
-        string langs_json = GetJsonValue_String(d, "languages", "");
-        vector<string> langs_vec = MyJson::FromJsonToVector(langs_json);
+        vector<string> langs_vec = MyJson::FromJsonObjectToVector(d["languages"]);
 
         thread t([=]() {
             EMErrorPtr error = CLIENT->getChatManager().translateMessage(msg, langs_vec);
@@ -900,8 +934,7 @@ namespace sdk_wrapper {
 
         Document d; d.Parse(jstr);
 
-        string vec_str = GetJsonValue_String(d, "msgIds", "");
-        vector<string> id_vec = MyJson::FromJsonToVector(vec_str);
+        vector<string> id_vec = MyJson::FromJsonObjectToVector(d["msgIds"]);
 
         string group_id = GetJsonValue_String(d, "groupId", "");
 
@@ -962,7 +995,7 @@ namespace sdk_wrapper {
         string local_cbid = cbid;
 
         Document d; d.Parse(jstr);
-        string msg_id = GetJsonValue_String(d, "messageId", "");
+        string msg_id = GetJsonValue_String(d, "msgId", "");
 
         EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(msg_id);
 
@@ -988,7 +1021,7 @@ namespace sdk_wrapper {
         string local_cbid = cbid;
 
         Document d; d.Parse(jstr);
-        string msg_id = GetJsonValue_String(d, "messageId", "");
+        string msg_id = GetJsonValue_String(d, "msgId", "");
 
         EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(msg_id);
 
@@ -1014,7 +1047,7 @@ namespace sdk_wrapper {
         string local_cbid = cbid;
 
         Document d; d.Parse(jstr);
-        string msg_id = GetJsonValue_String(d, "messageId", "");
+        string msg_id = GetJsonValue_String(d, "msgId", "");
 
         EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(msg_id);
 
@@ -1040,17 +1073,22 @@ namespace sdk_wrapper {
         string local_cbid = cbid;
 
         Document d; d.Parse(jstr);
-        string msg_id = GetJsonValue_String(d, "messageId", "");
+        string msg_id = GetJsonValue_String(d, "msgId", "");
 
         EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(msg_id);
 
         string json = "";
 
-        if (nullptr != messagePtr) {
-
-            EMMessageReactionList& rl = messagePtr->reactionList();
-            json = MessageReaction::ToJson(rl);
+        if (nullptr != messagePtr)
+        {
+            EMMessageReactionList& list = messagePtr->reactionList();
+            JSON_STARTOBJ
+            writer.Key("ret");
+            MessageReaction::ToJsonObject(writer, list);
+            JSON_ENDOBJ
+            json = s.GetString();
         }
+
         Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
@@ -1061,7 +1099,7 @@ namespace sdk_wrapper {
         string local_cbid = cbid;
 
         Document d; d.Parse(jstr);
-        string msg_id = GetJsonValue_String(d, "messageId", "");
+        string msg_id = GetJsonValue_String(d, "msgId", "");
 
         EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(msg_id);
 
@@ -1070,7 +1108,12 @@ namespace sdk_wrapper {
         if (nullptr != messagePtr) {
 
             EMThreadEventPtr t = messagePtr->threadOverview();
-            json = ChatThread::ToJson(t);
+
+            JSON_STARTOBJ
+            writer.Key("ret");
+            ChatThread::ToJsonObject(writer, t);
+            JSON_ENDOBJ
+            json = s.GetString();
         }
         Copy_To_Buffer(buf, json.c_str(), json.size());
     }

@@ -16,7 +16,7 @@ namespace AgoraChat
     {
         internal List<IRoomManagerDelegate> delegater;
 
-        internal RoomManager(NativeListener listener) : base(listener, SDKMethod.groupManager)
+        internal RoomManager(NativeListener listener) : base(listener, SDKMethod.roomManager)
         {
             listener.GroupManagerEvent += NativeEventcallback;
             delegater = new List<IRoomManagerDelegate>();
@@ -290,13 +290,16 @@ namespace AgoraChat
             jo_param.Add("pageNum", pageNum);
             jo_param.Add("pageSize", pageSize);
 
-            Process process = (_, jsonNode) =>
-            {
-                return new PageResult<Room>(jsonNode, (jn) =>
-                {
-                    return ModelHelper.CreateWithJsonObject<Room>(jn);
-                });
-            };
+			Process process = (_, jsonNode) =>
+			{
+				PageResult<Room> cursor_msg = new PageResult<Room>(_, (jn) =>
+				{
+					return ModelHelper.CreateWithJsonObject<Room>(jn);
+				});
+
+				cursor_msg.FromJsonObject(jsonNode.AsObject);
+				return cursor_msg;
+			};
 
             NativeCall<PageResult<Room>>(SDKMethod.fetchPublicChatRoomsFromServer, jo_param, callback, process);
         }
@@ -440,13 +443,17 @@ namespace AgoraChat
             jo_param.Add("cursor", cursor);
             jo_param.Add("pageSize", pageSize);
 
-            Process process = (_, jsonNode) =>
-            {
-                return new CursorResult<string>(jsonNode, (jn) =>
-                {
-                    return jn.IsString ? jn.Value : null;
-                });
-            };
+			Process process = (_, jsonNode) =>
+			{
+				CursorResult<string> cursor_msg = new CursorResult<string>(_, (jn) =>
+				{
+					return jn.IsString ? jn.Value : null;
+				});
+
+				cursor_msg.FromJsonObject(jsonNode.AsObject);
+				return cursor_msg;
+
+			};
 
             NativeCall<CursorResult<string>>(SDKMethod.fetchChatRoomMembers, jo_param, callback, process);
         }
@@ -933,8 +940,8 @@ namespace AgoraChat
 			JSONObject jo_param = new JSONObject();
 			jo_param.Add("roomId", roomId);
 
-			JSONNode jsonNode = NativeGet<Room>(SDKMethod.getChatRoom, jo_param).GetReturnJsonNode();
-			return (null != jsonNode) ? new Room(jsonNode) : null;
+			JSONNode jn = NativeGet<Room>(SDKMethod.getChatRoom, jo_param).GetReturnJsonNode();
+			return ModelHelper.CreateWithJsonObject<Room>(jn);
 		}
 
 		//TODO: need to add comments
@@ -993,18 +1000,23 @@ namespace AgoraChat
 		 * @forced              Whether to overwrite the attributes with same key set by others.
 		 * 						- `true`: Yes.
 		 *						- (Default)`false`: No.
-		 * @param callback        The completion callback. If this call succeeds, calls {@link CallBackResult#OnSuccessResult(Dictionary<string, int>)};
+		 * @param callback        The completion callback. If this call succeeds, calls {@link ValueCallBack#OnSuccessValue(Dictionary<string, int>)};
 		 *                      if this call fails, calls {@link CallBackResult#onError(int, String)}.
 		 */
-        public void AddAttributes(string roomId, Dictionary<string, string> kv, bool deleteWhenExit = true, bool forced = false, CallBackResult callback = null)
+		public void AddAttributes(string roomId, Dictionary<string, string> kv, bool deleteWhenExit = true, bool forced = false, ValueCallBack<Dictionary<string, int>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("roomId", roomId);
             jo_param.Add("kv", JsonObject.JsonObjectFromDictionary(kv));
             jo_param.Add("deleteWhenExit", deleteWhenExit);
             jo_param.Add("forced", forced);
-            // TODO: add back result?
-            //NativeCall<Room>(SDKMethod.setChatRoomAttributes, jo_param, callback);
+
+			Process process = (_, jsonNode) =>
+			{
+				return Dictionary.SimpleTypeDictionaryFromJsonObject<int>(jsonNode);
+			};
+
+			NativeCall<Dictionary<string, int>>(SDKMethod.setChatRoomAttributes, jo_param, callback, process);
         }
 
         /**
@@ -1072,15 +1084,19 @@ namespace AgoraChat
 		 * @param callback        The completion callback. If this call succeeds, calls {@link CallBackResult#OnSuccessResult(Dictionary<string, int>)};
 		 *                      if this call fails, calls {@link CallBackResult#onError(int, String)}.
 		 */
-        public void RemoveAttributes(string roomId, List<string> keys, bool forced = false, CallBackResult callback = null)
+        public void RemoveAttributes(string roomId, List<string> keys, bool forced = false, ValueCallBack<Dictionary<string, int>>callback = null)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("roomId", roomId);
             jo_param.Add("list", JsonObject.JsonArrayFromStringList(keys));
-            // TODO: add back result?
-            //NativeCall<Room>(SDKMethod.setChatRoomAttributes, jo_param, callback);
 
-        }
+			Process process = (_, jsonNode) =>
+			{
+				return Dictionary.SimpleTypeDictionaryFromJsonObject<int>(jsonNode);
+			};
+
+			NativeCall<Dictionary<string, int>>(SDKMethod.removeChatRoomAttributes, jo_param, callback, process);
+		}
 
         /**
 		 * \~chinese
