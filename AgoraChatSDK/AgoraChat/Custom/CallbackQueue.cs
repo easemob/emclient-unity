@@ -94,8 +94,11 @@ namespace AgoraChat
                 {
                     action();
                 }
+                else
+                {
+                    Thread.Sleep(20); // if no action, avoid running too fast, sleep 20 ms
+                }
                 action = null;
-                Thread.Sleep(20); // avoid running too fast
             }
         }
     }

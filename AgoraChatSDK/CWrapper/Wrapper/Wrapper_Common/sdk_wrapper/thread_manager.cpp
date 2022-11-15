@@ -28,7 +28,7 @@ namespace sdk_wrapper {
 
 		Document d; d.Parse(jstr);
 		string thread_id = GetJsonValue_String(d, "threadId", "");
-		string name = GetJsonValue_String(d, "name", "");
+		string name = GetJsonValue_String(d, "newName", "");
 
 		thread t([=]() {
 			EMError error;
@@ -279,7 +279,7 @@ namespace sdk_wrapper {
 
 		Document d; d.Parse(jstr);
 		string thread_id = GetJsonValue_String(d, "threadId", "");
-		string user_name = GetJsonValue_String(d, "username", "");
+		string user_name = GetJsonValue_String(d, "userId", "");
 
 		thread t([=]() {
 			EMError error;

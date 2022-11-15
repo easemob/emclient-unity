@@ -995,7 +995,7 @@ namespace sdk_wrapper {
         string local_cbid = cbid;
 
         Document d; d.Parse(jstr);
-        string msg_id = GetJsonValue_String(d, "messageId", "");
+        string msg_id = GetJsonValue_String(d, "msgId", "");
 
         EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(msg_id);
 
@@ -1021,7 +1021,7 @@ namespace sdk_wrapper {
         string local_cbid = cbid;
 
         Document d; d.Parse(jstr);
-        string msg_id = GetJsonValue_String(d, "messageId", "");
+        string msg_id = GetJsonValue_String(d, "msgId", "");
 
         EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(msg_id);
 
@@ -1047,7 +1047,7 @@ namespace sdk_wrapper {
         string local_cbid = cbid;
 
         Document d; d.Parse(jstr);
-        string msg_id = GetJsonValue_String(d, "messageId", "");
+        string msg_id = GetJsonValue_String(d, "msgId", "");
 
         EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(msg_id);
 
@@ -1073,7 +1073,7 @@ namespace sdk_wrapper {
         string local_cbid = cbid;
 
         Document d; d.Parse(jstr);
-        string msg_id = GetJsonValue_String(d, "messageId", "");
+        string msg_id = GetJsonValue_String(d, "msgId", "");
 
         EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(msg_id);
 
@@ -1099,7 +1099,7 @@ namespace sdk_wrapper {
         string local_cbid = cbid;
 
         Document d; d.Parse(jstr);
-        string msg_id = GetJsonValue_String(d, "messageId", "");
+        string msg_id = GetJsonValue_String(d, "msgId", "");
 
         EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(msg_id);
 

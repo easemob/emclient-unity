@@ -40,16 +40,20 @@ namespace sdk_wrapper {
 		static string ToJsonWithProcess(const char* cbid, int process);
 
 		static void ToJsonObject(Writer<StringBuffer>& writer, const vector<string>& vec);
-		static vector<string> FromJsonObjectToVector(const Value& jnode);
+		static vector<string> FromJsonObjectToVector(const Value& jnode, bool filter = false);
 
 		static string ToJson(const vector<string>& vec);
 		static vector<string> FromJsonToVector(string& jstr);
 
 		static void ToJsonObject(Writer<StringBuffer>& writer, const map<string, string>& map);
+		static void ToJsonObject(Writer<StringBuffer>& writer, const map<string, int>& map);
 		static map<string, string> FromJsonObjectToMap(const Value& jnode);
+		static map<string, int> FromJsonObjectToIntMap(const Value& jnode);
 
 		static string ToJson(const map<string, string>& map);
+		static string ToJson(const map<string, int>& map);
 		static map<string, string> FromJsonToMap(const string& jstr);
+		static map<string, int> FromJsonToIntMap(const string& jstr);
 	};
 
 	class Options
@@ -223,6 +227,10 @@ namespace sdk_wrapper {
 
 		static void ToJsonObject(Writer<StringBuffer>& writer, const EMChatroomList room_list);
 		static string ToJson(const EMChatroomList room_list);
+
+		static string ToJsonFromRoomAttribute(const map<string, string>& kvs, bool deleteWhenExit);
+		static map<string, string> FromJsonToRoomSuccessAttribute(const string& json);
+		static vector<string> FromJsonToRoomSuccessKeys(const string& json);
 
 		static int EMMucMemberTypeToInt(EMMuc::EMMucMemberType type);
 		static EMMuc::EMMucMemberType EMMucMemberTypeFromInt(int i);

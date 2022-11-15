@@ -399,7 +399,7 @@ namespace AgoraChat
             JSONNode jn = NativeGet(SDKMethod.getMessage, jo_param).GetReturnJsonNode();
 
             if (null == jn) return null;
-            return new Message(jn);
+            return new Message(jn.AsObject);
         }
 
         /**

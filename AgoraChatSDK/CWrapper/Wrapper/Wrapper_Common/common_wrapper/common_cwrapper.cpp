@@ -83,11 +83,11 @@ void InitManagerMap()
 	manager_map["EMChatManager"] = func_map_chat_manager;
 
 	//message manager
-	func_map_chat_manager["groupAckCount"] = ChatManager_GetGroupAckCount;
-	func_map_chat_manager["getHasDeliverAck"] = ChatManager_GetHasDeliverAck;
-	func_map_chat_manager["getHasReadAck"] = ChatManager_GetHasReadAck;
-	func_map_chat_manager["getReactionList"] = ChatManager_GetReactionListForMsg;
-	func_map_chat_manager["chatThread"] = ChatManager_GetChatThreadForMsg;
+	func_map_message_manager["groupAckCount"] = ChatManager_GetGroupAckCount;
+	func_map_message_manager["getHasDeliverAck"] = ChatManager_GetHasDeliverAck;
+	func_map_message_manager["getHasReadAck"] = ChatManager_GetHasReadAck;
+	func_map_message_manager["getReactionList"] = ChatManager_GetReactionListForMsg;
+	func_map_message_manager["chatThread"] = ChatManager_GetChatThreadForMsg;
 	manager_map["EMMessageManager"] = func_map_message_manager;
 
 
@@ -168,8 +168,8 @@ void InitManagerMap()
 	func_map_room_manager["fetchChatRoomWhiteListFromServer"] = RoomManager_FetchChatRoomWhiteListFromServer;
 	func_map_room_manager["isMemberInChatRoomWhiteListFromServer"] = RoomManager_IsMemberInChatRoomWhiteListFromServer;
 
-	func_map_room_manager["fetchChatRoomAttributes"] = RoomManager_FetchChatRoomWhiteListFromServer;
-	func_map_room_manager["setChatRoomAttributes"] = RoomManager_IsMemberInChatRoomWhiteListFromServer;
+	func_map_room_manager["fetchChatRoomAttributes"] = RoomManager_FetchChatRoomAttributes;
+	func_map_room_manager["setChatRoomAttributes"] = RoomManager_SetChatRoomAttributes;
 	func_map_room_manager["removeChatRoomAttributes"] = RoomManager_RemoveChatRoomAttributes;
 
 	manager_map["EMRoomManager"] = func_map_room_manager;
