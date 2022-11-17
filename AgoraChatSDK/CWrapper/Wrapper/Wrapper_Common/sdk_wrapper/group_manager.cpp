@@ -765,7 +765,16 @@ namespace sdk_wrapper {
         EMError error;
         EMGroupPtr result = CLIENT->getGroupManager().fetchGroupSpecification(group_id, error);
 
-        string json = Group::ToJson(result);
+        string json = "";
+
+        if (nullptr != result) {
+            JSON_STARTOBJ
+            writer.Key("ret");
+            Group::ToJsonObject(writer, result);
+            JSON_ENDOBJ
+            json = s.GetString();
+        }
+
         Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 
@@ -775,7 +784,12 @@ namespace sdk_wrapper {
 
         EMGroupList groupList = CLIENT->getGroupManager().loadAllMyGroupsFromDB();
 
-        string json = Group::ToJson(groupList);
+        JSON_STARTOBJ
+        writer.Key("ret");
+        Group::ToJsonObject(writer, groupList);
+        JSON_ENDOBJ
+        string json = s.GetString();
+
         Copy_To_Buffer(buf, json.c_str(), json.size());
     }
 

@@ -327,10 +327,14 @@ namespace AgoraChat
 
             Process process = (_, jsonNode) =>
             {
-                return new CursorResult<string>(jsonNode, (jn) =>
+                CursorResult<string> cursor_msg = new CursorResult<string>(_, (jn) =>
                 {
                     return jn.IsString ? jn.Value : null;
                 });
+
+                cursor_msg.FromJsonObject(jsonNode.AsObject);
+                return cursor_msg;
+
             };
 
             NativeCall<CursorResult<string>>(SDKMethod.fetchChatThreadMember, jo_param, callback, process);
@@ -372,10 +376,14 @@ namespace AgoraChat
 
             Process process = (_, jsonNode) =>
             {
-                return new CursorResult<ChatThread>(jsonNode, (jn) =>
+                CursorResult<ChatThread> cursor_msg = new CursorResult<ChatThread>(_, (jn) =>
                 {
                     return ModelHelper.CreateWithJsonObject<ChatThread>(jn);
                 });
+
+                cursor_msg.FromJsonObject(jsonNode.AsObject);
+                return cursor_msg;
+
             };
 
             NativeCall<CursorResult<ChatThread>>(SDKMethod.fetchChatThreadsWithParentId, jo_param, callback, process);
@@ -411,10 +419,14 @@ namespace AgoraChat
 
             Process process = (_, jsonNode) =>
             {
-                return new CursorResult<ChatThread>(jsonNode, (jn) =>
+                CursorResult<ChatThread> cursor_msg = new CursorResult<ChatThread>(_, (jn) =>
                 {
                     return ModelHelper.CreateWithJsonObject<ChatThread>(jn);
                 });
+
+                cursor_msg.FromJsonObject(jsonNode.AsObject);
+                return cursor_msg;
+
             };
 
             NativeCall<CursorResult<ChatThread>>(SDKMethod.fetchJoinedChatThreads, jo_param, callback, process);
@@ -475,7 +487,7 @@ namespace AgoraChat
                 return Dictionary.BaseModelDictionaryFromJsonObject<Message>(jsonNode);
             };
 
-            NativeCall<Dictionary<string, Message>>(SDKMethod.fetchChatThreadDetail, jo_param, callback, process);
+            NativeCall<Dictionary<string, Message>>(SDKMethod.fetchLastMessageWithChatThreads, jo_param, callback, process);
         }
 
         /**

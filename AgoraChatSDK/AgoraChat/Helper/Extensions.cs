@@ -155,9 +155,40 @@ namespace AgoraChat
 
             foreach (string s in jo.Keys)
             {
-                ret.Add(s, ModelHelper.CreateWithJsonObject<T>(jo[s].AsObject));
+                if(jo[s].IsObject)
+                {
+                    ret.Add(s, ModelHelper.CreateWithJsonObject<T>(jo[s].AsObject));
+                }
+                else if(jo[s].AsArray)
+                {
+                    foreach(var it in jo[s].AsArray)
+                    {
+
+                    }
+                }
             }
 
+            return ret;
+        }
+
+        internal static Dictionary<string, List<T>> ListBaseModelDictionaryFromJsonObject<T>(JSONNode jo) where T : BaseModel
+        {
+            Dictionary<string, List<T>> ret = new Dictionary<string, List<T>>();
+
+            if (!jo.IsObject) return ret;
+
+            foreach (string s in jo.Keys)
+            {
+                if (jo[s].IsArray)
+                {
+                    List<T> list = new List<T>();
+                    foreach(var it in jo[s].AsArray)
+                    {
+                        list.Add(ModelHelper.CreateWithJsonObject<T>(it));
+                    }
+                    ret.Add(s, list);
+                }
+            }
             return ret;
         }
 
@@ -173,6 +204,30 @@ namespace AgoraChat
                 ret.Add(s, jo[s]);
             }
 
+            return ret;
+        }
+
+        internal static Dictionary<string, T> SimpleTypeDictionaryFromJsonObject<T>(JSONNode jo) where T: IConvertible
+        {
+            if (jo == null) return null;
+
+            Dictionary<string, T> ret = new Dictionary<string, T>();
+
+            foreach (string s in jo.Keys)
+            {
+                if (jo[s].IsNumber)
+                {
+                    ret.Add(s, (T)Convert.ChangeType(jo[s].AsInt, typeof(T)));
+                }
+                else if (jo[s].IsString)
+                {
+                    ret.Add(s, (T)Convert.ChangeType(jo[s].Value, typeof(T)));
+                }
+                else if (jo[s].IsBoolean)
+                {
+                    ret.Add(s, (T)Convert.ChangeType(jo[s].AsBool, typeof(T)));
+                }
+            }
             return ret;
         }
     }
@@ -208,7 +263,7 @@ namespace AgoraChat
             return jsonArray;
         }
 
-        internal static string JsonObjectFromDictionary(Dictionary<string, string> dictionary)
+        internal static JSONObject JsonObjectFromDictionary(Dictionary<string, string> dictionary)
         {
             JSONObject jo = new JSONObject();
 

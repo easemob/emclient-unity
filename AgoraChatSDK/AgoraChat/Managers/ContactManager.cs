@@ -126,8 +126,8 @@ namespace AgoraChat
          */
         public List<string> GetAllContactsFromDB()
         {
-            string str = NativeGet(SDKMethod.getAllContactsFromDB);
-            return List.StringListFromJsonString(str);
+            JSONNode jn = NativeGet(SDKMethod.getAllContactsFromDB).GetReturnJsonNode();
+            return List.StringListFromJsonArray(jn);
         }
 
         /**
@@ -205,6 +205,13 @@ namespace AgoraChat
             };
 
             NativeCall<List<string>>(SDKMethod.getBlockListFromServer, null, callback, process);
+        }
+
+        //TODO: add comments
+        public List<string> GetBlockListFromDB()
+        {
+            JSONNode jn = NativeGet(SDKMethod.getBlockListFromDB).GetReturnJsonNode();
+            return List.StringListFromJsonArray(jn);
         }
 
         /**

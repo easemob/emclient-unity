@@ -89,21 +89,27 @@ namespace sdk_wrapper
         writer.EndArray();
     }
 
-    vector<string> MyJson::FromJsonObjectToVector(const Value& jnode)
+    vector<string> MyJson::FromJsonObjectToVector(const Value& jnode, bool filter)
     {
         vector<string> vec;
 
         if (jnode.IsArray() == true) {
+
             int size = jnode.Size();
+
             for (int i = 0; i < size; i++) {
-                vec.push_back(jnode[i].GetString());
+
+                string str = jnode[i].GetString();
+
+                if (filter && str.size() == 0) continue;
+
+                vec.push_back(str);
             }
         }
         return vec;
     }
 
     string MyJson::ToJson(const vector<string>& vec) {
-        if (vec.size() == 0) return string("");
 
         StringBuffer s;
         Writer<StringBuffer> writer(s);
@@ -140,11 +146,21 @@ namespace sdk_wrapper
         writer.EndObject();
     }
 
+    void MyJson::ToJsonObject(Writer<StringBuffer>& writer, const map<string, int>& map)
+    {
+        writer.StartObject();
+        for (auto it : map) {
+            writer.Key(it.first.c_str());
+            writer.Int(it.second);
+        }
+        writer.EndObject();
+    }
+
     map<string, string> MyJson::FromJsonObjectToMap(const Value& jnode)
     {
         map<string, string> map;
 
-        if (!jnode.IsArray()) return map;
+        if (!jnode.IsObject()) return map;
 
         for (auto iter = jnode.MemberBegin(); iter != jnode.MemberEnd(); ++iter) {
             auto key = iter->name.GetString();
@@ -155,8 +171,33 @@ namespace sdk_wrapper
         return map;
     }
 
+    map<string, int> MyJson::FromJsonObjectToIntMap(const Value& jnode)
+    {
+        map<string, int> map;
+
+        if (!jnode.IsArray()) return map;
+
+        for (auto iter = jnode.MemberBegin(); iter != jnode.MemberEnd(); ++iter) {
+            auto key = iter->name.GetString();
+            auto value = iter->value.GetInt();
+
+            map.insert(pair<string, int>(key, value));
+        }
+        return map;
+    }
+
     string MyJson::ToJson(const map<string, string>& map) {
-        if (map.size() == 0) return string("");
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        ToJsonObject(writer, map);
+
+        string data = s.GetString();
+        return data;
+    }
+
+    string MyJson::ToJson(const map<string, int>& map) {
 
         StringBuffer s;
         Writer<StringBuffer> writer(s);
@@ -178,7 +219,16 @@ namespace sdk_wrapper
         return map;
     }
 
+    map<string, int> MyJson::FromJsonToIntMap(const string& jstr) {
+        map<string, int> map;
+        if (jstr.length() < 3) return map;
 
+        Document d;
+        if (!d.Parse(jstr.data()).HasParseError()) {
+            return FromJsonObjectToIntMap(d);
+        }
+        return map;
+    }
 
     EMChatConfigsPtr Options::FromJson(const char* json, const char* rs, const char* wk)
 	{
@@ -1612,6 +1662,15 @@ namespace sdk_wrapper
         writer.EndObject();
     }
 
+    void Conversation::ToJsonObject(Writer<StringBuffer>& writer, const EMConversationList& conversations)
+    {
+        writer.StartArray();
+        for (auto it : conversations) {
+            ToJsonObject(writer, it);
+        }
+        writer.EndArray();
+    }
+
     string Conversation::ToJson(EMConversationPtr conversation)
     {
         if (nullptr == conversation) return string();
@@ -1629,13 +1688,9 @@ namespace sdk_wrapper
 
         StringBuffer s;
         Writer<StringBuffer> writer(s);
-        writer.StartArray();
 
-        for (auto it : conversations) {
-            ToJsonObject(writer, it);
-        }
+        ToJsonObject(writer, conversations);
 
-        writer.EndArray();
         string jstr = s.GetString();
         return jstr;
     }
@@ -1809,12 +1864,38 @@ namespace sdk_wrapper
 
     string MessageReaction::ToJson(EMMessageReactionList& list)
     {
-        return EMMessageEncoder::encodeReactionToJson(list);
+        if (list.size() == 0) return string();
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        writer.StartArray();
+        for (auto it : list) {
+            ToJsonObject(writer, it);
+        }
+
+        writer.EndArray();
+        return s.GetString();
     }
 
-    string MessageReaction::ToJson(EMMessage& msg)
+    string MessageReaction::ToJson(EMMessagePtr msg)
     {
-        return EMMessageEncoder::encodeReactionToJson(msg);
+        if (nullptr == msg) return string();
+
+        EMMessageReactionList& list = msg->reactionList();
+
+        if (list.size() == 0) return string();
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        writer.StartArray();
+        for (auto it : list) {
+            ToJsonObject(writer, it);
+        }
+
+        writer.EndArray();
+        return s.GetString();
     }
 
     string MessageReaction::ToJson(map<string, EMMessageReactionList>& map)
@@ -1825,8 +1906,10 @@ namespace sdk_wrapper
         Writer<StringBuffer> writer(s);
         writer.StartObject();
         for (auto it : map) {
-            writer.Key(it.first.c_str());
-            ToJsonObject(writer, it.second);
+            if (it.second.size() > 0) {
+                writer.Key(it.first.c_str());
+                ToJsonObject(writer, it.second);
+            }
         }
         writer.EndObject();
         return s.GetString();
@@ -1836,23 +1919,23 @@ namespace sdk_wrapper
     {
         writer.StartObject();
         {
-            writer.Key("reaction");
-            writer.String(reaction->reaction().c_str());
-            writer.Key("count");
-            writer.Int(reaction->count());
-            writer.Key("isAddedBySelf");
-            writer.Bool(reaction->state());
+            if (nullptr != reaction) {
+                writer.Key("reaction");
+                writer.String(reaction->reaction().c_str());
+                writer.Key("count");
+                writer.Int(reaction->count());
+                writer.Key("isAddedBySelf");
+                writer.Bool(reaction->state());
 
-            writer.Key("userList");
-            MyJson::ToJsonObject(writer, reaction->userList());
+                writer.Key("userList");
+                MyJson::ToJsonObject(writer, reaction->userList());
+            }
         }
         writer.EndObject();
     }
 
     void MessageReaction::ToJsonObject(Writer<StringBuffer>& writer, const EMMessageReactionList& list)
     {
-        if (list.size() == 0) return;
-
         writer.StartArray();
         for (EMMessageReactionPtr reaction : list) {
             ToJsonObject(writer, reaction);
@@ -2257,7 +2340,9 @@ namespace sdk_wrapper
             writer.String(cursor.c_str());
 
             writer.Key("list");
+            writer.StartArray();
             MessageReaction::ToJsonObject(writer, reaction);
+            writer.EndArray();
         }
         writer.EndObject();
 
@@ -2392,6 +2477,135 @@ namespace sdk_wrapper
 
         string data = s.GetString();
         return data;
+    }
+
+    /*
+    * return json string looking like:
+    * {
+    *      "metaData":{"key":"value"},
+    *      "autoDelete":"NO_DELETE"
+    * }
+    */
+    string Room::ToJsonFromRoomAttribute(const map<string, string>& kvs, bool deleteWhenExit)
+    {
+        string json = "";
+
+        if (kvs.size() > 0)
+        {
+            StringBuffer s;
+            Writer<StringBuffer> writer(s);
+
+            writer.StartObject();
+            {
+                writer.Key("metaData");
+                MyJson::ToJsonObject(writer, kvs);
+
+                string auto_delete = "DELETE";
+                if (false == deleteWhenExit) auto_delete = "NO_DELETE";
+
+                writer.Key("autoDelete");
+                writer.String(auto_delete.c_str());
+            }
+            writer.EndObject();
+
+            json = s.GetString();
+        }
+        return json;
+    }
+
+    /*
+     * input json string looks like:
+     * {
+     *  "result":
+     *   {
+     *      "successKeys":["xxx", "xxx"],
+     *      "errorKeys":
+     *      {
+     *          "xxx":"desc xxx",
+     *          "xxx":"desc xxx",
+     *      },
+     *   },
+     *   "is_forced":True,
+     *   "properties:"
+     *   {
+     *      "xxx": "xxx",
+     *      "xxx": "xxx",
+     *   },
+     *   "operator": "xxx"
+     * }
+     */
+
+    map<string, string> Room::FromJsonToRoomSuccessAttribute(const string& json)
+    {
+        map<string, string> success_props;
+        vector<string> successKeys;
+        map<string, string> properties;
+
+        Document d;
+        d.Parse(json.c_str());
+        if (d.HasParseError()) return success_props;
+
+        //get list from "successKeys" in json
+        if (d.HasMember("result") && d["result"].IsObject()) {
+
+            const Value& jn = d["result"];
+            if (jn.HasMember("successKeys") && jn["successKeys"].IsArray()) {
+                successKeys = MyJson::FromJsonObjectToVector(jn["successKeys"]);
+            }
+        }
+
+        // get dictionary from "properties" in json
+        if (d.HasMember("properties") && d["properties"].IsObject()) {
+            properties = MyJson::FromJsonObjectToMap(d["properties"]);
+        }
+
+        // generate success properties dictionary
+        for (string key : successKeys) {
+
+            auto it = properties.find(key);
+
+            if (properties.end() != it) {
+                success_props[key] = it->second;
+            }
+        }
+        return success_props;
+    }
+
+    /*
+    * input json string looks like:
+    * {
+    *  "result":
+    *   {
+    *      "successKeys":["xxx", "xxx"],
+    *      "errorKeys":
+    *      {
+    *          "xxx":"desc xxx",
+    *          "xxx":"desc xxx",
+    *      },
+    *   },
+    *   "keys:" ["xxx","xxx"],
+    *   "is_forced": True,
+    *   "auto_delete": False,
+    *   "operator": "xxx"
+    * }
+    */
+    vector<string> Room::FromJsonToRoomSuccessKeys(const string& json)
+    {
+        vector<string> successKeys;
+
+        Document d;
+        d.Parse(json.c_str());
+        if (d.HasParseError()) return successKeys;
+
+        //get list from "successKeys" in json
+        if (d.HasMember("result") && d["result"].IsObject()) {
+
+            const Value& jn = d["result"];
+            if (jn.HasMember("successKeys") && jn["successKeys"].IsArray()) {
+                successKeys = MyJson::FromJsonObjectToVector(jn["successKeys"]);
+            }
+        }
+        return successKeys;
     }
 
     int Room::EMMucMemberTypeToInt(EMMuc::EMMucMemberType type)
@@ -2551,8 +2765,6 @@ namespace sdk_wrapper
 
     std::string ChatThread::ToJson(std::vector<EMThreadEventPtr>& vec)
     {
-        if (vec.size() == 0) return std::string();
-
         StringBuffer s;
         Writer<StringBuffer> writer(s);
 
@@ -2568,8 +2780,6 @@ namespace sdk_wrapper
 
     std::string ChatThread::ToJson(std::map<std::string, EMMessagePtr> map)
     {
-        if (map.size() == 0) return std::string();
-
         StringBuffer s;
         Writer<StringBuffer> writer(s);
 
@@ -2990,11 +3200,11 @@ namespace sdk_wrapper
     {
         UserInfo ui;
 
-        if (jnode.HasMember("nickname") && jnode["nickname"].IsString())
-            ui.nickName = jnode["nickname"].GetString();
+        if (jnode.HasMember("nickName") && jnode["nickName"].IsString())
+            ui.nickName = jnode["nickName"].GetString();
 
-        if (jnode.HasMember("avatarurl") && jnode["avatarurl"].IsString())
-            ui.avatarUrl = jnode["avatarurl"].GetString();
+        if (jnode.HasMember("avatarUrl") && jnode["avatarUrl"].IsString())
+            ui.avatarUrl = jnode["avatarUrl"].GetString();
 
         if (jnode.HasMember("mail") && jnode["mail"].IsString())
             ui.email = jnode["mail"].GetString();
@@ -3059,7 +3269,7 @@ namespace sdk_wrapper
             return ui;
         }
         else {
-            return FromJsonObject(d);
+            return FromJsonObject(d["userInfo"]);
         }
     }
 
@@ -3162,9 +3372,7 @@ namespace sdk_wrapper
         StringBuffer s;
         Writer<StringBuffer> writer(s);
 
-        writer.StartObject();
         ToJsonObjectForServer(writer, ui);
-        writer.EndObject();
 
         std::string data = s.GetString();
         return data;

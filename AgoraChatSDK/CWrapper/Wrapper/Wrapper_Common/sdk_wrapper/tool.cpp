@@ -41,10 +41,10 @@ void Copy_To_Buffer(char* dst, const char* src, size_t len)
     //    memset(dst, 0, dst_len);
     //}
 
-    if(len > 0) memcpy(dst, src, len);
+    if(len > 0) memcpy(dst, src, len + 1);
 
     // unicode may need two bytes of \0 to regard as temination flag.
-    dst[len] = '\0';
+    //dst[len] = '\0';
     dst[len + 1] = '\0';
 }
 

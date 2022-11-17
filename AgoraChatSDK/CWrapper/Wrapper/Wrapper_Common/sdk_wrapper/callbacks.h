@@ -766,7 +766,7 @@ namespace sdk_wrapper {
             writer.Key("userId");
             writer.String(from.c_str());
 
-            map<string, string> ext_map = MyJson::FromJsonToMap(ext);
+            map<string, string> ext_map = Room::FromJsonToRoomSuccessAttribute(ext);
             writer.Key("kv");
             MyJson::ToJsonObject(writer, ext_map);
 
@@ -787,13 +787,7 @@ namespace sdk_wrapper {
             writer.Key("userId");
             writer.String(from.c_str());
 
-            map<string, string> ext_map = MyJson::FromJsonToMap(ext);
-
-            vector<string> list;
-            for (auto it : ext_map) {
-                list.push_back(it.first);
-            }
-
+            vector<string> list = Room::FromJsonToRoomSuccessKeys(ext);
             writer.Key("list");
             MyJson::ToJsonObject(writer, list);
 
@@ -895,10 +889,14 @@ namespace sdk_wrapper {
     public:
         void onCreatThread(const EMThreadEventPtr event) override {
             // Implement in onThreadNotifyChange, here no need to add anything
+            int i = 0;
+            i++;
         }
 
         void onUpdateMyThread(const EMThreadEventPtr event) override {
             // Implement in onThreadNotifyChange, here no need to add anything
+            int i = 0;
+            i++;
         }
 
         void onThreadNotifyChange(const EMThreadEventPtr event) override {
