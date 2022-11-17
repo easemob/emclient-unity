@@ -33,8 +33,6 @@ namespace AgoraChat
 #endif
 #endif
 
-        [DllImport(MyLibName)]
-        internal static extern void Init1(int aa);
 
         [DllImport(MyLibName)]
         internal static extern void Init(int type, NativeListenerEvent listener);

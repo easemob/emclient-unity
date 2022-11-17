@@ -25,42 +25,42 @@ public class EMMessageHelper {
             switch (type) {
                 case 0: {
                     message = EMMessage.createSendMessage(EMMessage.Type.TXT);
-                    message.addBody(EMMessageBodyHelper.textBodyFromJson(bodyJson));
+                    message.addBody(EMMessageBodyHelper.textBodyFromJson(bodyJson.getJSONObject("body")));
                 }
                 break;
                 case 1: {
                     message = EMMessage.createSendMessage(EMMessage.Type.IMAGE);
-                    message.addBody(EMMessageBodyHelper.imageBodyFromJson(bodyJson));
+                    message.addBody(EMMessageBodyHelper.imageBodyFromJson(bodyJson.getJSONObject("body")));
                 }
                 break;
                 case 3: {
                     message = EMMessage.createSendMessage(EMMessage.Type.LOCATION);
-                    message.addBody(EMMessageBodyHelper.localBodyFromJson(bodyJson));
+                    message.addBody(EMMessageBodyHelper.localBodyFromJson(bodyJson.getJSONObject("body")));
                 }
                 break;
                 case 2: {
                     message = EMMessage.createSendMessage(EMMessage.Type.VIDEO);
-                    message.addBody(EMMessageBodyHelper.videoBodyFromJson(bodyJson));
+                    message.addBody(EMMessageBodyHelper.videoBodyFromJson(bodyJson.getJSONObject("body")));
                 }
                 break;
                 case 4: {
                     message = EMMessage.createSendMessage(EMMessage.Type.VOICE);
-                    message.addBody(EMMessageBodyHelper.voiceBodyFromJson(bodyJson));
+                    message.addBody(EMMessageBodyHelper.voiceBodyFromJson(bodyJson.getJSONObject("body")));
                 }
                 break;
                 case 5: {
                     message = EMMessage.createSendMessage(EMMessage.Type.FILE);
-                    message.addBody(EMMessageBodyHelper.fileBodyFromJson(bodyJson));
+                    message.addBody(EMMessageBodyHelper.fileBodyFromJson(bodyJson.getJSONObject("body")));
                 }
                 break;
                 case 6: {
                     message = EMMessage.createSendMessage(EMMessage.Type.CMD);
-                    message.addBody(EMMessageBodyHelper.cmdBodyFromJson(bodyJson));
+                    message.addBody(EMMessageBodyHelper.cmdBodyFromJson(bodyJson.getJSONObject("body")));
                 }
                 break;
                 case 7: {
                     message = EMMessage.createSendMessage(EMMessage.Type.CUSTOM);
-                    message.addBody(EMMessageBodyHelper.customBodyFromJson(bodyJson));
+                    message.addBody(EMMessageBodyHelper.customBodyFromJson(bodyJson.getJSONObject("body")));
                 }
                 break;
                 default:
@@ -179,41 +179,50 @@ public class EMMessageHelper {
     public static JSONObject toJson(EMMessage message) throws JSONException{
         if (message == null) return null;
         JSONObject data = new JSONObject();
+        JSONObject bodyData = new JSONObject();
         switch (message.getType()) {
             case TXT: {
-                data.put("body", EMMessageBodyHelper.textBodyToJson((EMTextMessageBody) message.getBody()));
+                bodyData.put("body", EMMessageBodyHelper.textBodyToJson((EMTextMessageBody) message.getBody()));
+                bodyData.put("type", 0);
             }
             break;
             case IMAGE: {
-                data.put("body", EMMessageBodyHelper.imageBodyToJson((EMImageMessageBody) message.getBody()));
+                bodyData.put("body", EMMessageBodyHelper.imageBodyToJson((EMImageMessageBody) message.getBody()));
+                bodyData.put("type", 1);
             }
             break;
             case LOCATION: {
-                data.put("body", EMMessageBodyHelper.localBodyToJson((EMLocationMessageBody) message.getBody()));
+                bodyData.put("body", EMMessageBodyHelper.localBodyToJson((EMLocationMessageBody) message.getBody()));
+                bodyData.put("type", 3);
             }
             break;
             case CMD: {
-                data.put("body", EMMessageBodyHelper.cmdBodyToJson((EMCmdMessageBody) message.getBody()));
+                bodyData.put("body", EMMessageBodyHelper.cmdBodyToJson((EMCmdMessageBody) message.getBody()));
+                bodyData.put("type", 6);
             }
             break;
             case CUSTOM: {
-                data.put("body", EMMessageBodyHelper.customBodyToJson((EMCustomMessageBody) message.getBody()));
+                bodyData.put("body", EMMessageBodyHelper.customBodyToJson((EMCustomMessageBody) message.getBody()));
+                bodyData.put("type", 7);
             }
             break;
             case FILE: {
                 data.put("body", EMMessageBodyHelper.fileBodyToJson((EMNormalFileMessageBody) message.getBody()));
+                bodyData.put("type", 5);
             }
             break;
             case VIDEO: {
-                data.put("body", EMMessageBodyHelper.videoBodyToJson((EMVideoMessageBody) message.getBody()));
+                bodyData.put("body", EMMessageBodyHelper.videoBodyToJson((EMVideoMessageBody) message.getBody()));
+                bodyData.put("type", 2);
             }
             break;
             case VOICE: {
-                data.put("body", EMMessageBodyHelper.voiceBodyToJson((EMVoiceMessageBody) message.getBody()));
+                bodyData.put("body", EMMessageBodyHelper.voiceBodyToJson((EMVoiceMessageBody) message.getBody()));
+                bodyData.put("type", 4);
             }
             break;
         }
-
+        data.put("body", bodyData);
         if (message.ext().size() > 0 && null != message.ext()) {
             data.put("attr", message.ext());
         }
