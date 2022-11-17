@@ -1,6 +1,4 @@
 using AgoraChat.SimpleJSON;
-using System;
-using System.Runtime.InteropServices;
 
 
 namespace AgoraChat
@@ -13,32 +11,33 @@ namespace AgoraChat
 
     internal delegate void ManagerHandle(string method, JSONNode jsonNode);
 
+
     internal class NativeListener
     {
 
-        public NativeListenerEvent nativeListenerEvent;
+        internal NativeListenerEvent nativeListenerEvent;
 
-        public event ManagerHandle ChatManagerEvent;
+        internal event ManagerHandle ChatManagerEvent;
 
-        public event ManagerHandle ContactManagerEvent;
+        internal event ManagerHandle ContactManagerEvent;
 
-        public event ManagerHandle GroupManagerEvent;
+        internal event ManagerHandle GroupManagerEvent;
 
-        public event ManagerHandle RoomManagerEvent;
+        internal event ManagerHandle RoomManagerEvent;
 
-        public event ManagerHandle ChatThreadManagerEvent;
+        internal event ManagerHandle ChatThreadManagerEvent;
 
-        public event ManagerHandle PresenceManagerEvent;
+        internal event ManagerHandle PresenceManagerEvent;
 
-        public event ManagerHandle ConnectionEvent;
+        internal event ManagerHandle ConnectionEvent;
 
-        public event ManagerHandle MultiDeviceEvent;
+        internal event ManagerHandle MultiDeviceEvent;
 
-        public CallbackManager callbackManager;
+        internal CallbackManager callbackManager;
 
         internal CallbackQueue_Worker queue_worker;
 
-        public NativeListener()
+        internal NativeListener()
         {
 
             callbackManager = new CallbackManager();
@@ -48,7 +47,7 @@ namespace AgoraChat
 
             nativeListenerEvent = (string listener, string method, string jsonString) =>
             {
-                if (string.IsNullOrEmpty(method) || string.IsNullOrEmpty(listener)) 
+                if (string.IsNullOrEmpty(method) || string.IsNullOrEmpty(listener))
                     return;
 
                 string json = Tools.GetUnicodeStringFromUTF8(jsonString);
@@ -57,7 +56,7 @@ namespace AgoraChat
                 queue_worker.EnQueue(() =>
                 {
 
-                    LogPrinter.Log($"listener: {listener}  method: {method}  jsonString: {jsonString}");
+                    LogPrinter.Log($"nativeListenerEvent listener: {listener}  method: {method}  jsonString: {jsonString}");
 
                     switch (listener)
                     {
@@ -74,7 +73,7 @@ namespace AgoraChat
                             RoomManagerEvent(method, jsonNode);
                             break;
                         case SDKMethod.connectionListener:
-                            ConnectionEvent(method, jsonNode);                            
+                            ConnectionEvent(method, jsonNode);
                             break;
                         case SDKMethod.multiDeviceListener:
                             MultiDeviceEvent(method, jsonNode);
@@ -86,7 +85,7 @@ namespace AgoraChat
                             ChatThreadManagerEvent(method, jsonNode);
                             break;
                         case SDKMethod.callback:
-                            callbackManager.CallAction(method, jsonNode);                            
+                            callbackManager.CallAction(method, jsonNode);
                             break;
                         case SDKMethod.callbackProgress:
                             callbackManager.CallActionProgress(method, jsonNode);
@@ -100,19 +99,33 @@ namespace AgoraChat
             };
         }
 
+#if UNITY_IPHONE
+        [AOT.MonoPInvokeCallback(typeof(NativeListenerEvent))]
+        public static void OnRunCallback(string listener, string method, string jsonString)
+        {
+            LogPrinter.Log($"OnRunCallback listener: {listener},  method: {method}, jsonString: {jsonString}");
+            SDKClient.Instance._clientImpl.nativeListener.nativeListenerEvent?.Invoke(listener, method, jsonString);
+        }
+#endif
         ~NativeListener()
         {
             queue_worker.Stop();
+            CWrapperNative.UnInit();
             nativeListenerEvent = null;
-
         }
 
-        public void AddNaitveListener()
+        internal void AddNaitveListener()
         {
+            LogPrinter.Log($"AddNaitveListener run --- {nativeListenerEvent}");
+
+#if UNITY_IPHONE
+            CWrapperNative.Init(0, OnRunCallback);
+#else
             CWrapperNative.Init(0, nativeListenerEvent);
+#endif
         }
 
-        public void RemoveNativeListener()
+        internal void RemoveNativeListener()
         {
             CWrapperNative.UnInit();
         }

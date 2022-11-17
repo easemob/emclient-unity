@@ -5,6 +5,7 @@ using System.Text;
 namespace AgoraChat
 {
 
+
     public sealed class CWrapperNative
     {
         internal static void NativeCall(string manager, string method, SimpleJSON.JSONNode json, string callbackId = null)
@@ -20,23 +21,37 @@ namespace AgoraChat
             return Tools.GetUnicodeStringFromUTF8(sbuilder.ToString());
         }
 
+        #region DllImport
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR
+        public const string MyLibName = "ChatCWrapper";
+#else
 
-        [DllImport("ChatCWrapper")]
+#if UNITY_IPHONE
+		public const string MyLibName = "__Internal";
+#else
+        public const string MyLibName = "ChatCWrapper";
+#endif
+#endif
+
+        [DllImport(MyLibName)]
+        internal static extern void Init1(int aa);
+
+        [DllImport(MyLibName)]
         internal static extern void Init(int type, NativeListenerEvent listener);
 
-
-        [DllImport("ChatCWrapper")]
+        [DllImport(MyLibName)]
         internal static extern void UnInit();
 
-        [DllImport("ChatCWrapper")]
+        [DllImport(MyLibName)]
         private extern static void _NativeCall(string manager, string method, [In, MarshalAs(UnmanagedType.LPTStr)] string jsonString = null, string callbackId = null);
 
 
-        [DllImport("ChatCWrapper")]
+        [DllImport(MyLibName)]
 #if _WIN32
         private extern static int _NativeGet(string manager, string method, [In, MarshalAs(UnmanagedType.LPTStr)] string jsonString = null, [Out, MarshalAs(UnmanagedType.LPTStr)] StringBuilder buf = null, string callbackId = null);
 #else
         private extern static int _NativeGet(string manager, string method, [In, MarshalAs(UnmanagedType.LPTStr)] string jsonString = null, StringBuilder buf = null, string callbackId = null);
 #endif
+        #endregion engine callbacks
     }
 }
