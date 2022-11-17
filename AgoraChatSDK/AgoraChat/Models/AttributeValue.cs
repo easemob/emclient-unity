@@ -40,6 +40,7 @@ namespace AgoraChat
             }
             else if (type == AttributeValueType.UINT32)
             {
+                //TODO: check this
                 return Of((uint)value);
             }
             else if (type == AttributeValueType.INT64)
@@ -286,6 +287,20 @@ namespace AgoraChat
             return;
         }
 
+        internal static Dictionary<string, AttributeValue> DictFromJsonObject(JSONNode jn)
+        {
+            Dictionary<string, AttributeValue> ret = new Dictionary<string, AttributeValue>();
+
+            if (null == jn || !jn.IsObject) return ret;
+
+            JSONObject jo = jn.AsObject;
+            foreach (string k in jo.Keys)
+            {
+                ret.Add(k, new AttributeValue(jo[k].AsObject));
+            }
+            return ret;
+        }
+
         internal static Dictionary<string, AttributeValue> DictFromJson(string jsonString)
         {
             Dictionary<string, AttributeValue> ret = new Dictionary<string, AttributeValue>();
@@ -295,12 +310,7 @@ namespace AgoraChat
             JSONNode jn = JSON.Parse(jsonString);
             if (null == jn || !jn.IsObject) return ret;
 
-            JSONObject jo = jn.AsObject;
-            foreach (string k in jo.Keys)
-            {
-                ret.Add(k, new AttributeValue(jo[k].AsObject));
-            }
-            return ret;
+            return DictFromJsonObject(jn);
         }
     }
 }

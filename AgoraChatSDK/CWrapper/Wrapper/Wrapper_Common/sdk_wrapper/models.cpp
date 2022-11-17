@@ -1278,7 +1278,6 @@ namespace sdk_wrapper
             msg->setConversationId(str);
         }
 
-        //TODO: c# side has no recallBy item
         if (jnode.HasMember("recallBy") && jnode["recallBy"].IsString()) {
             string str = jnode["recallBy"].GetString();
             msg->setRecallBy(str);
@@ -1474,10 +1473,13 @@ namespace sdk_wrapper
 
     void AttributesValue::ToJsonObjectWithAttributes(Writer<StringBuffer>& writer, EMMessagePtr msg)
     {
-        if (nullptr == msg) return;
+        map<string, EMAttributeValuePtr> ext;
 
-        map<string, EMAttributeValuePtr> ext = msg->ext();
-        if (ext.size() == 0) return;
+        if (nullptr != msg) {
+            ext = msg->ext();
+        }
+
+        writer.StartObject();
 
         for (auto it : ext) {
             string key = it.first;
@@ -1485,6 +1487,8 @@ namespace sdk_wrapper
             writer.Key(key.c_str());
             ToJsonObjectWithAttribute(writer, attribute);
         }
+
+        writer.EndObject();
     }
 
     string AttributesValue::ToJson(EMMessagePtr msg)
@@ -1946,19 +1950,19 @@ namespace sdk_wrapper
     EMMessageReactionPtr MessageReaction::FromJsonObjectToReaction(const Value& jnode)
     {
         //return EMMessageEncoder::decodeReactionFromJson(jnode);
-        //TODO: add your code
+        //TODO: add your code later, no need now.
     }
 
     EMMessageReactionList MessageReaction::FromJsonObjectToReactionList(const Value& jnode)
     {
         //return EMMessageEncoder::decodeReactionListFromJson(jnode);
-        //TODO: add your code
+        //TODO: add your code later, no need now.
     }
 
     EMMessageReactionList MessageReaction::FromJsonToReactionList(string json)
     {
         //return EMMessageEncoder::decodeReactionListFromJson(json);
-        //TODO: add your code
+        //TODO: add your code later, no need now.
     }
 
     void MessageReactionChange::ToJsonObject(Writer<StringBuffer>& writer, EMMessageReactionChangePtr reactionChangePtr, std::string curname)
