@@ -40,7 +40,7 @@ namespace sdk_wrapper {
 		string local_cbid = cbid;
 
 		Document d; d.Parse(jstr);
-		string user_name = GetJsonValue_String(d, "username", "");
+		string user_name = GetJsonValue_String(d, "userId", "");
 
 		thread t([=]() {
 			EMError error;
@@ -66,8 +66,8 @@ namespace sdk_wrapper {
 		string local_cbid = cbid;
 
 		Document d; d.Parse(jstr);
-		string user_name = GetJsonValue_String(d, "username", "");
-		string reason = GetJsonValue_String(d, "reason", "");
+		string user_name = GetJsonValue_String(d, "userId", "");
+		string reason = GetJsonValue_String(d, "msg", "");
 
 		thread t([=]() {
 			EMError error;
@@ -93,7 +93,7 @@ namespace sdk_wrapper {
 		string local_cbid = cbid;
 
 		Document d; d.Parse(jstr);
-		string user_name = GetJsonValue_String(d, "username", "");
+		string user_name = GetJsonValue_String(d, "userId", "");
 
 		thread t([=]() {
 			EMError error;
@@ -119,7 +119,7 @@ namespace sdk_wrapper {
 		string local_cbid = cbid;
 
 		Document d; d.Parse(jstr);
-		string user_name = GetJsonValue_String(d, "username", "");
+		string user_name = GetJsonValue_String(d, "userId", "");
 
 		thread t([=]() {
 			EMError error;
@@ -145,7 +145,7 @@ namespace sdk_wrapper {
 		string local_cbid = cbid;
 
 		Document d; d.Parse(jstr);
-		string user_name = GetJsonValue_String(d, "username", "");
+		string user_name = GetJsonValue_String(d, "userId", "");
 		bool keep_conversation = GetJsonValue_Bool(d, "keepConversation", false);
 
 		thread t([=]() {
@@ -262,7 +262,7 @@ namespace sdk_wrapper {
 		string local_cbid = cbid;
 
 		Document d; d.Parse(jstr);
-		string user_name = GetJsonValue_String(d, "username", "");
+		string user_name = GetJsonValue_String(d, "userId", "");
 
 		thread t([=]() {
 			EMError error;

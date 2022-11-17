@@ -2099,8 +2099,6 @@ namespace sdk_wrapper
 
     string Group::ToJson(const EMMucMuteList& vec)
     {
-        if (vec.size() == 0) return string("");
-
         StringBuffer s;
         Writer<StringBuffer> writer(s);
 
@@ -2113,8 +2111,6 @@ namespace sdk_wrapper
 
     string Group::ToJson(const EMGroupList& list)
     {
-        if (list.size() == 0) return string();
-
         StringBuffer s;
         Writer<StringBuffer> writer(s);
 
@@ -2147,7 +2143,11 @@ namespace sdk_wrapper
         EMMucSetting::EMMucStyle style = GroupStyleFromInt(jnode["style"].GetInt());
         int count = jnode["maxCount"].GetInt();
         bool invite_need_confirm = jnode["inviteNeedConfirm"].GetBool();
-        string ext = jnode["ext"].GetString();
+
+        string ext = "";
+        if (jnode.HasMember("ext")) {
+            ext = jnode["ext"].GetString();
+        }
 
         EMMucSettingPtr setting = EMMucSettingPtr(new EMMucSetting(style, count, invite_need_confirm, ext));
         return setting;
@@ -2247,7 +2247,7 @@ namespace sdk_wrapper
             ToJsonObject(writer, it);
         }
 
-        writer.EndObject();
+        writer.EndArray();
     }
 
     string GroupSharedFile::ToJson(EMMucSharedFilePtr file)
@@ -2264,8 +2264,6 @@ namespace sdk_wrapper
 
     string GroupSharedFile::ToJson(EMMucSharedFileList file_list)
     {
-        if (file_list.size() == 0) return string();
-
         StringBuffer s;
         Writer<StringBuffer> writer(s);
 

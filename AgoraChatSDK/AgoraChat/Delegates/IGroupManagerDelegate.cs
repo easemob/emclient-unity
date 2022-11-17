@@ -207,7 +207,7 @@ namespace AgoraChat
 	     * @param mutes 		The member(s) added to the mute list.
 	     *	 			        Map.entry.key is the user ID of the muted member; Map.entry.value is the mute duration in milliseconds.
 	     */
-		void OnMuteListAddedFromGroup(string groupId, List<string> mutes, int muteExpire);
+		void OnMuteListAddedFromGroup(string groupId, List<string> mutes, long muteExpire);
 
 		/**
 	     * \~chinese

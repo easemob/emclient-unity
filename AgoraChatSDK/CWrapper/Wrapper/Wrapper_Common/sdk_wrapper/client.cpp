@@ -155,7 +155,7 @@ namespace sdk_wrapper
 
         Document d; d.Parse(local_jstr.c_str());
 
-        string user_name = GetJsonValue_String(d, "username", "");
+        string user_name = GetJsonValue_String(d, "userId", "");
         string passwd = GetJsonValue_String(d, "password", "");
 
         thread t([=]() {
