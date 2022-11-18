@@ -6,29 +6,19 @@ using AgoraChat.SimpleJSON;
 namespace AgoraChat
 {
 
-    internal static class SampleJSONExt
-    {
-        internal static void AddWithoutNull(this JSONObject jo, string aKey, JSONNode aItem)
-        {
-            if (aItem.IsNull || aItem == null)
-            {
-                return;
-            }
-            jo.AddWithoutNull(aKey, aItem);
-        }
-
-        internal static void AddWithoutNull(this JSONArray jsonArray, JSONNode aItem)
-        {
-            if (aItem.IsNull || aItem == null)
-            {
-                return;
-            }
-            jsonArray.Add(aItem);
-        }
-    }
 
     internal static class ModelHelper
     {
+
+        internal static void AddWithoutNull(this JSONObject jo, string key, JSONNode value)
+        {
+            if (value.IsNull || value == null)
+            {
+                return;
+            }
+
+            jo.Add(key, value);
+        }
 
         internal static IMessageBody CreateBodyWithJsonObject(JSONNode jsonNode)
         {
@@ -263,7 +253,7 @@ namespace AgoraChat
             {
                 foreach (string str in list)
                 {
-                    ja.AddWithoutNull(str);
+                    ja.Add(str);
                 }
             }
 
@@ -278,7 +268,7 @@ namespace AgoraChat
 
             foreach (BaseModel bm in list)
             {
-                jsonArray.AddWithoutNull(bm.ToJsonObject());
+                jsonArray.Add(bm.ToJsonObject());
             }
 
             return jsonArray;

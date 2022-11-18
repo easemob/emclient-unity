@@ -81,12 +81,15 @@ namespace AgoraChat
 
         internal override JSONObject ToJsonObject()
         {
-            JSONObject jo = new JSONObject();
-            jo.AddWithoutNull("style", (int)Style);
-            jo.AddWithoutNull("maxCount", MaxCount);
-            jo.AddWithoutNull("inviteNeedConfirm", InviteNeedConfirm);
-            jo.AddWithoutNull("ext", Ext);
-            return jo;
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.AddWithoutNull("style", (int)Style);
+            jsonObject.AddWithoutNull("maxCount", MaxCount);
+            jsonObject.AddWithoutNull("inviteNeedConfirm", InviteNeedConfirm);
+            if (null != Ext)
+            {
+                jsonObject.AddWithoutNull("ext", Ext);
+            }
+            return jsonObject;
         }
 
         internal override void FromJsonObject(JSONObject jsonObject)
@@ -94,7 +97,7 @@ namespace AgoraChat
             Style = (GroupStyle)jsonObject["style"].AsInt;
             MaxCount = jsonObject["maxCount"].AsInt;
             InviteNeedConfirm = jsonObject["inviteNeedConfirm"].AsBool;
-            if (jsonObject["ext"] != null && !jsonObject["ext"].IsNull)
+            if (!jsonObject["ext"].IsNull)
             {
                 Ext = jsonObject["ext"];
             }

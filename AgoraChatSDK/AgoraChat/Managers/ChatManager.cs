@@ -831,10 +831,10 @@ namespace AgoraChat
         public void FetchGroupReadAcks(string messageId, string groupId, int pageSize = 20, string startAckId = null, ValueCallBack<CursorResult<GroupReadAck>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.AddWithoutNull("msg_id", messageId);
+            jo_param.AddWithoutNull("msgId", messageId);
             jo_param.AddWithoutNull("pageSize", pageSize);
             jo_param.AddWithoutNull("groupId", groupId);
-            jo_param.AddWithoutNull("ack_id", startAckId ?? "");
+            jo_param.AddWithoutNull("ackId", startAckId ?? "");
 
 
             Process process = (_, jsonNode) =>
