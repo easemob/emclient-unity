@@ -6,6 +6,27 @@ using AgoraChat.SimpleJSON;
 namespace AgoraChat
 {
 
+    internal static class SampleJSONExt
+    {
+        internal static void AddWithoutNull(this JSONObject jo, string aKey, JSONNode aItem)
+        {
+            if (aItem.IsNull || aItem == null)
+            {
+                return;
+            }
+            jo.AddWithoutNull(aKey, aItem);
+        }
+
+        internal static void AddWithoutNull(this JSONArray jsonArray, JSONNode aItem)
+        {
+            if (aItem.IsNull || aItem == null)
+            {
+                return;
+            }
+            jsonArray.Add(aItem);
+        }
+    }
+
     internal static class ModelHelper
     {
 
@@ -155,13 +176,13 @@ namespace AgoraChat
 
             foreach (string s in jo.Keys)
             {
-                if(jo[s].IsObject)
+                if (jo[s].IsObject)
                 {
                     ret.Add(s, ModelHelper.CreateWithJsonObject<T>(jo[s].AsObject));
                 }
-                else if(jo[s].AsArray)
+                else if (jo[s].AsArray)
                 {
-                    foreach(var it in jo[s].AsArray)
+                    foreach (var it in jo[s].AsArray)
                     {
 
                     }
@@ -182,7 +203,7 @@ namespace AgoraChat
                 if (jo[s].IsArray)
                 {
                     List<T> list = new List<T>();
-                    foreach(var it in jo[s].AsArray)
+                    foreach (var it in jo[s].AsArray)
                     {
                         list.Add(ModelHelper.CreateWithJsonObject<T>(it));
                     }
@@ -207,7 +228,7 @@ namespace AgoraChat
             return ret;
         }
 
-        internal static Dictionary<string, T> SimpleTypeDictionaryFromJsonObject<T>(JSONNode jo) where T: IConvertible
+        internal static Dictionary<string, T> SimpleTypeDictionaryFromJsonObject<T>(JSONNode jo) where T : IConvertible
         {
             if (jo == null) return null;
 
@@ -242,7 +263,7 @@ namespace AgoraChat
             {
                 foreach (string str in list)
                 {
-                    ja.Add(str);
+                    ja.AddWithoutNull(str);
                 }
             }
 

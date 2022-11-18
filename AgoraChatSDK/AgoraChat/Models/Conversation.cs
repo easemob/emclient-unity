@@ -468,9 +468,9 @@ namespace AgoraChat
         internal override JSONObject ToJsonObject()
         {
             JSONObject jo = new JSONObject();
-            jo.Add("convId", Id);
-            jo.Add("type", Type.ToInt());
-            jo.Add("isThread", IsThread);
+            jo.AddWithoutNull("convId", Id);
+            jo.AddWithoutNull("type", Type.ToInt());
+            jo.AddWithoutNull("isThread", IsThread);
             return jo;
         }
 

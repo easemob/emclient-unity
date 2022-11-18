@@ -14,10 +14,10 @@ namespace AgoraChat
         internal override JSONObject ToJsonObject()
         {
             JSONObject jo = new JSONObject();
-            jo.Add("type", Type.ToInt());
+            jo.AddWithoutNull("type", Type.ToInt());
 
             JSONObject jo_body = new JSONObject();
-            jo.Add("body", jo_body);
+            jo.AddWithoutNull("body", jo_body);
 
             return jo;
         }
@@ -113,9 +113,9 @@ namespace AgoraChat
                 JSONObject jo = base.ToJsonObject();
 
                 JSONObject jo_body = jo["body"].AsObject;
-                jo_body.Add("content", Text);
-                jo_body.Add("targetLanguages", JsonObject.JsonArrayFromStringList(TargetLanguages));
-                jo_body.Add("translations", JsonObject.JsonObjectFromDictionary(Translations));
+                jo_body.AddWithoutNull("content", Text);
+                jo_body.AddWithoutNull("targetLanguages", JsonObject.JsonArrayFromStringList(TargetLanguages));
+                jo_body.AddWithoutNull("translations", JsonObject.JsonObjectFromDictionary(Translations));
 
                 return jo;
             }
@@ -211,10 +211,10 @@ namespace AgoraChat
                 JSONObject jo = base.ToJsonObject();
 
                 JSONObject jo_body = jo["body"].AsObject;
-                jo_body.Add("latitude", Latitude);
-                jo_body.Add("longitude", Longitude);
-                jo_body.Add("address", Address ?? "");
-                jo_body.Add("buildingName", BuildingName ?? "");
+                jo_body.AddWithoutNull("latitude", Latitude);
+                jo_body.AddWithoutNull("longitude", Longitude);
+                jo_body.AddWithoutNull("address", Address ?? "");
+                jo_body.AddWithoutNull("buildingName", BuildingName ?? "");
 
                 return jo;
             }
@@ -325,12 +325,12 @@ namespace AgoraChat
                 JSONObject jo = base.ToJsonObject();
 
                 JSONObject jo_body = jo["body"].AsObject;
-                jo_body.Add("localPath", LocalPath ?? "");
-                jo_body.Add("displayName", DisplayName ?? "");
-                jo_body.Add("fileSize", FileSize);
-                jo_body.Add("remotePath", RemotePath ?? "");
-                jo_body.Add("secret", Secret ?? "");
-                jo_body.Add("fileStatus", DownStatus.ToInt());
+                jo_body.AddWithoutNull("localPath", LocalPath ?? "");
+                jo_body.AddWithoutNull("displayName", DisplayName ?? "");
+                jo_body.AddWithoutNull("fileSize", FileSize);
+                jo_body.AddWithoutNull("remotePath", RemotePath ?? "");
+                jo_body.AddWithoutNull("secret", Secret ?? "");
+                jo_body.AddWithoutNull("fileStatus", DownStatus.ToInt());
 
                 return jo;
             }
@@ -463,12 +463,12 @@ namespace AgoraChat
                 JSONObject jo = base.ToJsonObject();
 
                 JSONObject jo_body = jo["body"].AsObject;
-                jo_body.Add("thumbnailLocalPath", ThumbnailLocalPath ?? "");
-                jo_body.Add("thumbnailRemotePath", ThumbnaiRemotePath ?? "");
-                jo_body.Add("thumbnailSecret", ThumbnaiSecret ?? "");
-                jo_body.Add("height", Height);
-                jo_body.Add("width", Width);
-                jo_body.Add("sendOriginalImage", Original);
+                jo_body.AddWithoutNull("thumbnailLocalPath", ThumbnailLocalPath ?? "");
+                jo_body.AddWithoutNull("thumbnailRemotePath", ThumbnaiRemotePath ?? "");
+                jo_body.AddWithoutNull("thumbnailSecret", ThumbnaiSecret ?? "");
+                jo_body.AddWithoutNull("height", Height);
+                jo_body.AddWithoutNull("width", Width);
+                jo_body.AddWithoutNull("sendOriginalImage", Original);
 
                 return jo;
             }
@@ -545,7 +545,7 @@ namespace AgoraChat
                 JSONObject jo = base.ToJsonObject();
 
                 JSONObject jo_body = jo["body"].AsObject;
-                jo_body.Add("duration", Duration);
+                jo_body.AddWithoutNull("duration", Duration);
 
                 return jo;
             }
@@ -663,12 +663,12 @@ namespace AgoraChat
                 JSONObject jo = base.ToJsonObject();
 
                 JSONObject jo_body = jo["body"].AsObject;
-                jo_body.Add("thumbnailRemotePath", ThumbnaiRemotePath ?? "");
-                jo_body.Add("thumbnailSecret", ThumbnaiSecret ?? "");
-                jo_body.Add("thumbnailLocalPath", ThumbnaiLocationPath ?? "");
-                jo_body.Add("height", Height);
-                jo_body.Add("width", Width);
-                jo_body.Add("duration", Duration);
+                jo_body.AddWithoutNull("thumbnailRemotePath", ThumbnaiRemotePath ?? "");
+                jo_body.AddWithoutNull("thumbnailSecret", ThumbnaiSecret ?? "");
+                jo_body.AddWithoutNull("thumbnailLocalPath", ThumbnaiLocationPath ?? "");
+                jo_body.AddWithoutNull("height", Height);
+                jo_body.AddWithoutNull("width", Width);
+                jo_body.AddWithoutNull("duration", Duration);
 
                 return jo;
             }
@@ -756,8 +756,8 @@ namespace AgoraChat
                 JSONObject jo = base.ToJsonObject();
 
                 JSONObject jo_body = jo["body"].AsObject;
-                jo_body.Add("deliverOnlineOnly", DeliverOnlineOnly);
-                jo_body.Add("action", Action ?? "");
+                jo_body.AddWithoutNull("deliverOnlineOnly", DeliverOnlineOnly);
+                jo_body.AddWithoutNull("action", Action ?? "");
 
                 return jo;
             }
@@ -838,8 +838,8 @@ namespace AgoraChat
                 JSONObject jo = base.ToJsonObject();
 
                 JSONObject jo_body = jo["body"].AsObject;
-                jo_body.Add("event", CustomEvent ?? "");
-                jo_body.Add("params", JsonObject.JsonObjectFromDictionary(CustomParams));
+                jo_body.AddWithoutNull("event", CustomEvent ?? "");
+                jo_body.AddWithoutNull("params", JsonObject.JsonObjectFromDictionary(CustomParams));
 
                 return jo;
             }
