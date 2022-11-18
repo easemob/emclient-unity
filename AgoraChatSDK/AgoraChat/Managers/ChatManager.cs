@@ -454,7 +454,7 @@ namespace AgoraChat
 
         /**
 		 * \~chinese
-		 * 重新发送指定消息。
+		 * 重新发送指定消息。[作废]
 		 *
 		 * 异步方法。
 		 *
@@ -464,7 +464,7 @@ namespace AgoraChat
 		 *
 		 *
 		 * \~english
-		 * Resends the message.
+		 * Resends the message.[Deprecated]
 		 *
 		 * This is an asynchronous method.
 		 *
@@ -474,6 +474,7 @@ namespace AgoraChat
 		 */
         public Message ResendMessage(string messageId, CallBack callback = null)
         {
+            /*
             JSONObject jo_param = new JSONObject();
             jo_param.Add("msgId", messageId);
 
@@ -482,6 +483,8 @@ namespace AgoraChat
             if (null == jn) return null;
 
             return new Message(jn);
+            */
+            return null;
         }
 
         /**
@@ -576,20 +579,22 @@ namespace AgoraChat
         {
             Process process = (_cbid, _json) =>
             {
-                UpdatedMsg(_cbid, _json);
+                UpdatedMsg(_cbid, _json["ret"]);
                 DeleteFromMsgMap(_cbid);
                 return null;
             };
 
-            AddMsgMap(message.MsgId, message);
+            callbackManager.AddCallbackAction(callback, process);
+
+            AddMsgMap(callback.callbackId, message);
 
             JSONObject jo_param = message.ToJsonObject();
 
-            JSONNode jn = NativeGet(SDKMethod.sendMessage, jo_param, callback, process).GetReturnJsonNode();
+            JSONNode jn = CWrapperNative.NativeGet(managerName, SDKMethod.sendMessage, jo_param, callback?.callbackId ?? "").GetReturnJsonNode();
 
             if (null != jn)
             {
-                UpdatedMsg(callback.callbackId, jn);
+                UpdatedMsg(callback.callbackId, jn["ret"]);
             }
         }
 

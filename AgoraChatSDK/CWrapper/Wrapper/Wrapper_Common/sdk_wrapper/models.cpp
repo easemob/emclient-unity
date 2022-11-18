@@ -823,12 +823,12 @@ namespace sdk_wrapper
                 ptr->setText(str);
             }
 
-            if (body.HasMember("translations") && body["translations"].IsString()) {
+            if (body.HasMember("translations") && body["translations"].IsObject()) {
                 map<string, string> translations = MyJson::FromJsonObjectToMap(body["translations"]);//FromJsonToMap(str);
                 ptr->setTranslations(translations);
             }
 
-            if (body.HasMember("targetLanguages") && body["targetLanguages"].IsString()) {
+            if (body.HasMember("targetLanguages") && body["targetLanguages"].IsArray()) {
                 vector<string> tagert_languages = MyJson::FromJsonObjectToVector(body["targetLanguages"]);
                 ptr->setTargetLanguages(tagert_languages);
             }
@@ -1278,7 +1278,6 @@ namespace sdk_wrapper
             msg->setConversationId(str);
         }
 
-        //TODO: c# side has no recallBy item
         if (jnode.HasMember("recallBy") && jnode["recallBy"].IsString()) {
             string str = jnode["recallBy"].GetString();
             msg->setRecallBy(str);
@@ -1474,10 +1473,13 @@ namespace sdk_wrapper
 
     void AttributesValue::ToJsonObjectWithAttributes(Writer<StringBuffer>& writer, EMMessagePtr msg)
     {
-        if (nullptr == msg) return;
+        map<string, EMAttributeValuePtr> ext;
 
-        map<string, EMAttributeValuePtr> ext = msg->ext();
-        if (ext.size() == 0) return;
+        if (nullptr != msg) {
+            ext = msg->ext();
+        }
+
+        writer.StartObject();
 
         for (auto it : ext) {
             string key = it.first;
@@ -1485,6 +1487,8 @@ namespace sdk_wrapper
             writer.Key(key.c_str());
             ToJsonObjectWithAttribute(writer, attribute);
         }
+
+        writer.EndObject();
     }
 
     string AttributesValue::ToJson(EMMessagePtr msg)
@@ -1946,19 +1950,19 @@ namespace sdk_wrapper
     EMMessageReactionPtr MessageReaction::FromJsonObjectToReaction(const Value& jnode)
     {
         //return EMMessageEncoder::decodeReactionFromJson(jnode);
-        //TODO: add your code
+        //TODO: add your code later, no need now.
     }
 
     EMMessageReactionList MessageReaction::FromJsonObjectToReactionList(const Value& jnode)
     {
         //return EMMessageEncoder::decodeReactionListFromJson(jnode);
-        //TODO: add your code
+        //TODO: add your code later, no need now.
     }
 
     EMMessageReactionList MessageReaction::FromJsonToReactionList(string json)
     {
         //return EMMessageEncoder::decodeReactionListFromJson(json);
-        //TODO: add your code
+        //TODO: add your code later, no need now.
     }
 
     void MessageReactionChange::ToJsonObject(Writer<StringBuffer>& writer, EMMessageReactionChangePtr reactionChangePtr, std::string curname)
@@ -2099,8 +2103,6 @@ namespace sdk_wrapper
 
     string Group::ToJson(const EMMucMuteList& vec)
     {
-        if (vec.size() == 0) return string("");
-
         StringBuffer s;
         Writer<StringBuffer> writer(s);
 
@@ -2113,8 +2115,6 @@ namespace sdk_wrapper
 
     string Group::ToJson(const EMGroupList& list)
     {
-        if (list.size() == 0) return string();
-
         StringBuffer s;
         Writer<StringBuffer> writer(s);
 
@@ -2147,7 +2147,11 @@ namespace sdk_wrapper
         EMMucSetting::EMMucStyle style = GroupStyleFromInt(jnode["style"].GetInt());
         int count = jnode["maxCount"].GetInt();
         bool invite_need_confirm = jnode["inviteNeedConfirm"].GetBool();
-        string ext = jnode["ext"].GetString();
+
+        string ext = "";
+        if (jnode.HasMember("ext")) {
+            ext = jnode["ext"].GetString();
+        }
 
         EMMucSettingPtr setting = EMMucSettingPtr(new EMMucSetting(style, count, invite_need_confirm, ext));
         return setting;
@@ -2247,7 +2251,7 @@ namespace sdk_wrapper
             ToJsonObject(writer, it);
         }
 
-        writer.EndObject();
+        writer.EndArray();
     }
 
     string GroupSharedFile::ToJson(EMMucSharedFilePtr file)
@@ -2264,8 +2268,6 @@ namespace sdk_wrapper
 
     string GroupSharedFile::ToJson(EMMucSharedFileList file_list)
     {
-        if (file_list.size() == 0) return string();
-
         StringBuffer s;
         Writer<StringBuffer> writer(s);
 

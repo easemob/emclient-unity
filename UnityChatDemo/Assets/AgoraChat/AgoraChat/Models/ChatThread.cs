@@ -148,12 +148,19 @@ namespace AgoraChat
         {
             Tid = jsonObject["threadId"];
             Owner = jsonObject["owner"];
+            Name = jsonObject["name"];
             MessageId = jsonObject["msgId"];
             ParentId = jsonObject["parentId"];
             MembersCount = jsonObject["memberCount"];
             MessageCount = jsonObject["msgCount"];
-            CreateAt = jsonObject["createAt"].AsInt;
-            LastMessage = ModelHelper.CreateWithJsonObject<Message>(jsonObject["msg"].AsObject);
+            CreateAt = (long)jsonObject["createAt"].AsDouble;
+
+            // if lastMsg node is not exist, once use AsObeject lastMsg node will be added into json!!
+            // So first check it first.
+            if (null != jsonObject["lastMsg"])
+            {
+                LastMessage = ModelHelper.CreateWithJsonObject<Message>(jsonObject["lastMsg"].AsObject);
+            }
         }
 
         internal override JSONObject ToJsonObject()
@@ -161,6 +168,7 @@ namespace AgoraChat
             JSONObject jo = new JSONObject();
             jo.Add("threadId", Tid);
             jo.Add("owner", Owner);
+            jo.Add("name", Name);
             jo.Add("msgId", MessageId);
             jo.Add("parentId", ParentId);
             jo.Add("memberCount", MembersCount);

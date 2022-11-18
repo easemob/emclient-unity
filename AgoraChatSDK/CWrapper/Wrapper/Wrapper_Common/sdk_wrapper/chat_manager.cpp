@@ -508,26 +508,20 @@ namespace sdk_wrapper {
             return;
         }
 
-        EMCallbackPtr callbackPtr(new EMCallback(gCallbackObserverHandle,
-            [=]()->bool {
+        thread t([=]() {
+            EMError error;
+            CLIENT->getChatManager().recallMessage(messagePtr, error);
+
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
                 string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
-                return true;
-            },
-            [=](const easemob::EMErrorPtr error)->bool {
-                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error->mErrorCode, error->mDescription.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
-                return true;
-            },
-            [=](int progress) {
-                string call_back_jstr = MyJson::ToJsonWithProcess(local_cbid.c_str(), progress);
-                CallBackProgress(local_cbid.c_str(), call_back_jstr.c_str());
-                return;
-            }));
-
-        EMError error;
-        messagePtr->setCallback(callbackPtr);
-        CLIENT->getChatManager().recallMessage(messagePtr, error);
+            }
+        });
+        t.detach();
     }
 
     SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_ResendMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)

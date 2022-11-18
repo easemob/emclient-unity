@@ -213,8 +213,8 @@ namespace AgoraChat
                 JSONObject jo_body = jo["body"].AsObject;
                 jo_body.Add("latitude", Latitude);
                 jo_body.Add("longitude", Longitude);
-                jo_body.Add("address", Address);
-                jo_body.Add("buildingName", BuildingName);
+                jo_body.Add("address", Address ?? "");
+                jo_body.Add("buildingName", BuildingName ?? "");
 
                 return jo;
             }
@@ -325,12 +325,13 @@ namespace AgoraChat
                 JSONObject jo = base.ToJsonObject();
 
                 JSONObject jo_body = jo["body"].AsObject;
-                jo_body.Add("localPath", LocalPath);
-                jo_body.Add("displayName", DisplayName);
+                jo_body.Add("localPath", LocalPath ?? "");
+                jo_body.Add("displayName", DisplayName ?? "");
                 jo_body.Add("fileSize", FileSize);
-                jo_body.Add("remotePath", RemotePath);
-                jo_body.Add("secret", Secret);
+                jo_body.Add("remotePath", RemotePath ?? "");
+                jo_body.Add("secret", Secret ?? "");
                 jo_body.Add("fileStatus", DownStatus.ToInt());
+
                 return jo;
             }
 
@@ -462,9 +463,9 @@ namespace AgoraChat
                 JSONObject jo = base.ToJsonObject();
 
                 JSONObject jo_body = jo["body"].AsObject;
-                jo_body.Add("thumbnailLocalPath", ThumbnailLocalPath);
-                jo_body.Add("thumbnailRemotePath", ThumbnaiRemotePath);
-                jo_body.Add("thumbnailSecret", ThumbnaiSecret);
+                jo_body.Add("thumbnailLocalPath", ThumbnailLocalPath ?? "");
+                jo_body.Add("thumbnailRemotePath", ThumbnaiRemotePath ?? "");
+                jo_body.Add("thumbnailSecret", ThumbnaiSecret ?? "");
                 jo_body.Add("height", Height);
                 jo_body.Add("width", Width);
                 jo_body.Add("sendOriginalImage", Original);
@@ -662,9 +663,9 @@ namespace AgoraChat
                 JSONObject jo = base.ToJsonObject();
 
                 JSONObject jo_body = jo["body"].AsObject;
-                jo_body.Add("thumbnailRemotePath", ThumbnaiRemotePath);
-                jo_body.Add("thumbnailSecret", ThumbnaiSecret);
-                jo_body.Add("thumbnailLocalPath", ThumbnaiLocationPath);
+                jo_body.Add("thumbnailRemotePath", ThumbnaiRemotePath ?? "");
+                jo_body.Add("thumbnailSecret", ThumbnaiSecret ?? "");
+                jo_body.Add("thumbnailLocalPath", ThumbnaiLocationPath ?? "");
                 jo_body.Add("height", Height);
                 jo_body.Add("width", Width);
                 jo_body.Add("duration", Duration);
@@ -756,7 +757,7 @@ namespace AgoraChat
 
                 JSONObject jo_body = jo["body"].AsObject;
                 jo_body.Add("deliverOnlineOnly", DeliverOnlineOnly);
-                jo_body.Add("action", Action);
+                jo_body.Add("action", Action ?? "");
 
                 return jo;
             }
@@ -837,7 +838,7 @@ namespace AgoraChat
                 JSONObject jo = base.ToJsonObject();
 
                 JSONObject jo_body = jo["body"].AsObject;
-                jo_body.Add("event", CustomEvent);
+                jo_body.Add("event", CustomEvent ?? "");
                 jo_body.Add("params", JsonObject.JsonObjectFromDictionary(CustomParams));
 
                 return jo;

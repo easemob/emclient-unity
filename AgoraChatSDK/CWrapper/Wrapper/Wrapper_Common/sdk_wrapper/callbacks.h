@@ -798,6 +798,14 @@ namespace sdk_wrapper {
             if (json.size() > 0)
                 CallBack(STRING_ROOMMANAGER_LISTENER.c_str(), STRING_onChatroomAttributesRemoved.c_str(), json.c_str());
         }
+
+        void onUpdateSpecificationFromChatroom(const easemob::EMChatroomPtr chatroom_) override {
+
+            string json = Room::ToJson(chatroom_);
+
+            if (json.size() > 0)
+                CallBack(STRING_ROOMMANAGER_LISTENER.c_str(), STRING_onSpecificationChangedFromRoom.c_str(), json.c_str());
+        }
     };
 
     class ContactManagerListener : public EMContactListener

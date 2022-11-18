@@ -109,8 +109,6 @@ namespace AgoraChat
             NativeCall(SDKMethod.loginWithAgoraToken, jo_param, callback);
         }
 
-
-
         internal void RenewAgoraToken(string token)
         {
             JSONObject jo_param = new JSONObject();

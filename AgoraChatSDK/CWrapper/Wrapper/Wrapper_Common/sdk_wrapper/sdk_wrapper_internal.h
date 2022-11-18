@@ -120,7 +120,8 @@ const string STRING_onAdminAddedFromRoom = "onAdminAddedFromRoom";
 const string STRING_onAdminRemovedFromRoom = "onAdminRemovedFromRoom";
 const string STRING_onOwnerChangedFromRoom = "onOwnerChangedFromRoom";
 const string STRING_onAnnouncementChangedFromRoom = "onAnnouncementChangedFromRoom";
-const string STRING_onChatroomAttributesChanged = "onChatroomAttributesChanged";
-const string STRING_onChatroomAttributesRemoved = "onChatroomAttributesRemoved";
+const string STRING_onChatroomAttributesChanged = "onAttributesChangedFromRoom";
+const string STRING_onChatroomAttributesRemoved = "onAttributesRemovedFromRoom";
+const string STRING_onSpecificationChangedFromRoom = "onSpecificationChangedFromRoom";
 
 #endif

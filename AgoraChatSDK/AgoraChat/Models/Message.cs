@@ -716,7 +716,7 @@ namespace AgoraChat
                     Status = jo["status"].AsInt.ToMessageStatus();
                     MessageType = jo["chatType"].AsInt.ToMessageType();
                     Direction = jo["direction"].AsInt.ToMesssageDirection();
-                    Attributes = AttributeValue.DictFromJson(jo["attr"]);
+                    Attributes = AttributeValue.DictFromJsonObject(jo["attr"].AsObject);
                     // body:{type:iType, "body":{object}}
                     Body = ModelHelper.CreateBodyWithJsonObject(jo["body"]);
                     IsNeedGroupAck = jo["isNeedGroupAck"].AsBool;
