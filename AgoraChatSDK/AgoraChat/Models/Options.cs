@@ -346,6 +346,7 @@ namespace AgoraChat
             jo.AddWithoutNull("areaCode", (int)AreaCode);
             jo.AddWithoutNull("enableDnsConfig", EnableDNSConfig);
 
+
             if (RestServer != null)
             {
                 jo.AddWithoutNull("restServer", RestServer);

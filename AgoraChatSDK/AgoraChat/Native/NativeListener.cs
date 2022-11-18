@@ -123,6 +123,7 @@ namespace AgoraChat
 #else
             CWrapperNative.Init(0, nativeListenerEvent);
 #endif
+            LogPrinter.Log($"AddNaitveListener end --- {nativeListenerEvent}");
         }
 
         internal void RemoveNativeListener()

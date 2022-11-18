@@ -86,9 +86,9 @@ namespace AgoraChat
          */
         public void UnsubscribePresences(List<string> members, CallBack callback = null)
         {
-            JSONObject jo_param = new JSONObject();
-            jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
-            NativeCall<List<Presence>>(SDKMethod.presenceUnsubscribe, jo_param, callback);
+            JSONObject jo_paran = new JSONObject();
+            jo_paran.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
+            NativeCall<List<Presence>>(SDKMethod.presenceUnsubscribe, jo_paran, callback);
         }
 
         /**
