@@ -48,8 +48,8 @@ namespace AgoraChat
         public void AddRoomAdmin(string roomId, string memberId, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("userId", memberId);
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("userId", memberId);
             NativeCall(SDKMethod.addChatRoomAdmin, jo_param, callback);
         }
 
@@ -91,8 +91,8 @@ namespace AgoraChat
         public void BlockRoomMembers(string roomId, List<string> members, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall(SDKMethod.blockChatRoomMembers, jo_param, callback);
         }
 
@@ -122,8 +122,8 @@ namespace AgoraChat
         public void ChangeRoomOwner(string roomId, string newOwner, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("userId", newOwner);
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("userId", newOwner);
             NativeCall(SDKMethod.changeChatRoomOwner, jo_param, callback);
         }
 
@@ -153,8 +153,8 @@ namespace AgoraChat
         public void ChangeRoomDescription(string roomId, string newDescription, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("desc", newDescription);
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("desc", newDescription);
             NativeCall(SDKMethod.changeChatRoomDescription, jo_param, callback);
         }
 
@@ -184,8 +184,8 @@ namespace AgoraChat
         public void ChangeRoomName(string roomId, string newName, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("name", newName);
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("name", newName);
             NativeCall(SDKMethod.changeChatRoomSubject, jo_param, callback);
         }
 
@@ -217,11 +217,11 @@ namespace AgoraChat
         public void CreateRoom(string name, string descriptions = null, string welcomeMsg = null, int maxUserCount = 300, List<string> members = null, ValueCallBack<Room> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("name", name);
-            jo_param.Add("desc", descriptions);
-            jo_param.Add("msg", welcomeMsg);
-            jo_param.Add("count", maxUserCount);
-            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
+            jo_param.AddWithoutNull("name", name);
+            jo_param.AddWithoutNull("desc", descriptions);
+            jo_param.AddWithoutNull("msg", welcomeMsg);
+            jo_param.AddWithoutNull("count", maxUserCount);
+            jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
 
             Process process = (_, jsonNode) =>
             {
@@ -255,7 +255,7 @@ namespace AgoraChat
         public void DestroyRoom(string roomId, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
+            jo_param.AddWithoutNull("roomId", roomId);
             NativeCall(SDKMethod.destroyChatRoom, jo_param, callback);
         }
 
@@ -287,19 +287,19 @@ namespace AgoraChat
         public void FetchPublicRoomsFromServer(int pageNum = 1, int pageSize = 200, ValueCallBack<PageResult<Room>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("pageNum", pageNum);
-            jo_param.Add("pageSize", pageSize);
+            jo_param.AddWithoutNull("pageNum", pageNum);
+            jo_param.AddWithoutNull("pageSize", pageSize);
 
-			Process process = (_, jsonNode) =>
-			{
-				PageResult<Room> cursor_msg = new PageResult<Room>(_, (jn) =>
-				{
-					return ModelHelper.CreateWithJsonObject<Room>(jn);
-				});
+            Process process = (_, jsonNode) =>
+            {
+                PageResult<Room> cursor_msg = new PageResult<Room>(_, (jn) =>
+                {
+                    return ModelHelper.CreateWithJsonObject<Room>(jn);
+                });
 
-				cursor_msg.FromJsonObject(jsonNode.AsObject);
-				return cursor_msg;
-			};
+                cursor_msg.FromJsonObject(jsonNode.AsObject);
+                return cursor_msg;
+            };
 
             NativeCall<PageResult<Room>>(SDKMethod.fetchPublicChatRoomsFromServer, jo_param, callback, process);
         }
@@ -324,7 +324,7 @@ namespace AgoraChat
         public void FetchRoomAnnouncement(string roomId, ValueCallBack<string> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
+            jo_param.AddWithoutNull("roomId", roomId);
             Process process = (_, jsonNode) =>
             {
                 return jsonNode["ret"].IsString ? jsonNode["ret"].Value : null;
@@ -367,9 +367,9 @@ namespace AgoraChat
         public void FetchRoomBlockList(string roomId, int pageNum = 1, int pageSize = 200, ValueCallBack<List<string>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("pageNum", pageNum);
-            jo_param.Add("pageSize", pageSize);
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("pageNum", pageNum);
+            jo_param.AddWithoutNull("pageSize", pageSize);
             Process process = (_, jsonNode) =>
             {
                 return List.StringListFromJsonArray(jsonNode);
@@ -400,12 +400,12 @@ namespace AgoraChat
             JSONObject jo_param = new JSONObject();
             jo_param.Add("roomId", roomId);
 
-			Process process = (_, jsonNode) =>
-			{
-				return ModelHelper.CreateWithJsonObject<Room>(jsonNode);
-			};
+            Process process = (_, jsonNode) =>
+            {
+                return ModelHelper.CreateWithJsonObject<Room>(jsonNode);
+            };
 
-			NativeCall<Room>(SDKMethod.fetchChatRoomInfoFromServer, jo_param, callback, process);
+            NativeCall<Room>(SDKMethod.fetchChatRoomInfoFromServer, jo_param, callback, process);
         }
 
         /**
@@ -439,21 +439,21 @@ namespace AgoraChat
         public void FetchRoomMembers(string roomId, string cursor = "", int pageSize = 200, ValueCallBack<CursorResult<string>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("cursor", cursor);
-            jo_param.Add("pageSize", pageSize);
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("cursor", cursor);
+            jo_param.AddWithoutNull("pageSize", pageSize);
 
-			Process process = (_, jsonNode) =>
-			{
-				CursorResult<string> cursor_msg = new CursorResult<string>(_, (jn) =>
-				{
-					return jn.IsString ? jn.Value : null;
-				});
+            Process process = (_, jsonNode) =>
+            {
+                CursorResult<string> cursor_msg = new CursorResult<string>(_, (jn) =>
+                {
+                    return jn.IsString ? jn.Value : null;
+                });
 
-				cursor_msg.FromJsonObject(jsonNode.AsObject);
-				return cursor_msg;
+                cursor_msg.FromJsonObject(jsonNode.AsObject);
+                return cursor_msg;
 
-			};
+            };
 
             NativeCall<CursorResult<string>>(SDKMethod.fetchChatRoomMembers, jo_param, callback, process);
         }
@@ -492,9 +492,9 @@ namespace AgoraChat
         public void FetchRoomMuteList(string roomId, int pageSize = 200, int pageNum = 1, ValueCallBack<List<string>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("pageNum", pageNum);
-            jo_param.Add("pageSize", pageSize);
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("pageNum", pageNum);
+            jo_param.AddWithoutNull("pageSize", pageSize);
 
             Process process = (_, jsonNode) =>
             {
@@ -528,14 +528,14 @@ namespace AgoraChat
         public void JoinRoom(string roomId, ValueCallBack<Room> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
+            jo_param.AddWithoutNull("roomId", roomId);
 
-			Process process = (_, jsonNode) =>
-			{
-				return ModelHelper.CreateWithJsonObject<Room>(jsonNode);
-			};
+            Process process = (_, jsonNode) =>
+            {
+                return ModelHelper.CreateWithJsonObject<Room>(jsonNode);
+            };
 
-			NativeCall<Room>(SDKMethod.joinChatRoom, jo_param, callback, process);
+            NativeCall<Room>(SDKMethod.joinChatRoom, jo_param, callback, process);
         }
 
         /**
@@ -563,7 +563,7 @@ namespace AgoraChat
         public void LeaveRoom(string roomId, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
+            jo_param.AddWithoutNull("roomId", roomId);
             NativeCall(SDKMethod.leaveChatRoom, jo_param, callback);
         }
 
@@ -593,8 +593,8 @@ namespace AgoraChat
         public void MuteRoomMembers(string roomId, List<string> members, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall(SDKMethod.muteChatRoomMembers, jo_param, callback);
         }
 
@@ -624,8 +624,8 @@ namespace AgoraChat
         public void RemoveRoomAdmin(string roomId, string adminId, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("userId", adminId);
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("userId", adminId);
             NativeCall(SDKMethod.removeChatRoomAdmin, jo_param, callback);
         }
 
@@ -655,8 +655,8 @@ namespace AgoraChat
         public void DeleteRoomMembers(string roomId, List<string> members, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall(SDKMethod.removeChatRoomMembers, jo_param, callback);
         }
 
@@ -686,8 +686,8 @@ namespace AgoraChat
         public void UnBlockRoomMembers(string roomId, List<string> members, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall(SDKMethod.unBlockChatRoomMembers, jo_param, callback);
         }
 
@@ -718,8 +718,8 @@ namespace AgoraChat
         public void UnMuteRoomMembers(string roomId, List<string> members, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall(SDKMethod.unMuteChatRoomMembers, jo_param, callback);
         }
 
@@ -750,8 +750,8 @@ namespace AgoraChat
         public void UpdateRoomAnnouncement(string roomId, string announcement, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("announcement", announcement);
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("announcement", announcement);
             NativeCall(SDKMethod.updateChatRoomAnnouncement, jo_param, callback);
         }
 
@@ -784,7 +784,7 @@ namespace AgoraChat
         public void MuteAllRoomMembers(string roomId, ValueCallBack<Room> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
+            jo_param.AddWithoutNull("roomId", roomId);
 
             Process process = (_, jsonNode) =>
             {
@@ -820,7 +820,7 @@ namespace AgoraChat
         public void UnMuteAllRoomMembers(string roomId, ValueCallBack<Room> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
+            jo_param.AddWithoutNull("roomId", roomId);
 
             Process process = (_, jsonNode) =>
             {
@@ -863,8 +863,8 @@ namespace AgoraChat
         public void AddWhiteListMembers(string roomId, List<string> members, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall(SDKMethod.addMembersToChatRoomWhiteList, jo_param, callback);
         }
 
@@ -901,61 +901,61 @@ namespace AgoraChat
         public void RemoveWhiteListMembers(string roomId, List<string> members, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall(SDKMethod.removeMembersFromChatRoomWhiteList, jo_param, callback);
         }
 
-		//TODO: add comments here
-		public void FetchWhiteListFromServer(string roomId, ValueCallBack<List<string>> callback = null)
+        //TODO: add comments here
+        public void FetchWhiteListFromServer(string roomId, ValueCallBack<List<string>> callback = null)
         {
-			JSONObject jo_param = new JSONObject();
-			jo_param.Add("roomId", roomId);
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("roomId", roomId);
 
-			Process process = (_, jsonNode) =>
-			{
-				return List.StringListFromJsonArray(jsonNode);
-			};
+            Process process = (_, jsonNode) =>
+            {
+                return List.StringListFromJsonArray(jsonNode);
+            };
 
-			NativeCall<List<string>>(SDKMethod.fetchChatRoomWhiteListFromServer, jo_param, callback, process);
-		}
+            NativeCall<List<string>>(SDKMethod.fetchChatRoomWhiteListFromServer, jo_param, callback, process);
+        }
 
-		//TODO: add comments here
-		public void CheckIfInRoomWhiteList(string roomId, ValueCallBack<bool> callback = null)
+        //TODO: add comments here
+        public void CheckIfInRoomWhiteList(string roomId, ValueCallBack<bool> callback = null)
         {
-			JSONObject jo_param = new JSONObject();
-			jo_param.Add("roomId", roomId);
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("roomId", roomId);
 
-			Process process = (_, jsonNode) =>
-			{
-				return jsonNode.IsBoolean ? jsonNode.AsBool : false;
-			};
+            Process process = (_, jsonNode) =>
+            {
+                return jsonNode.IsBoolean ? jsonNode.AsBool : false;
+            };
 
-			NativeCall<bool>(SDKMethod.isMemberInChatRoomWhiteListFromServer, jo_param, callback, process);
-		}
+            NativeCall<bool>(SDKMethod.isMemberInChatRoomWhiteListFromServer, jo_param, callback, process);
+        }
 
-		//TODO: need to add comments
-		public Room GetChatRoom(string roomId)
-		{
-			JSONObject jo_param = new JSONObject();
-			jo_param.Add("roomId", roomId);
+        //TODO: need to add comments
+        public Room GetChatRoom(string roomId)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("roomId", roomId);
 
-			JSONNode jn = NativeGet<Room>(SDKMethod.getChatRoom, jo_param).GetReturnJsonNode();
-			return ModelHelper.CreateWithJsonObject<Room>(jn);
-		}
+            JSONNode jn = NativeGet<Room>(SDKMethod.getChatRoom, jo_param).GetReturnJsonNode();
+            return ModelHelper.CreateWithJsonObject<Room>(jn);
+        }
 
-		//TODO: need to add comments
-		public void FetchAllRoomsFromServer(ValueCallBack<List<Room>> callback = null)
-		{
-			Process process = (_, jsonNode) =>
-			{
-				return List.BaseModelListFromJsonArray<Room>(jsonNode);
-			};
+        //TODO: need to add comments
+        public void FetchAllRoomsFromServer(ValueCallBack<List<Room>> callback = null)
+        {
+            Process process = (_, jsonNode) =>
+            {
+                return List.BaseModelListFromJsonArray<Room>(jsonNode);
+            };
 
-			NativeCall<List<Room>>(SDKMethod.getAllChatRooms, null, callback, process);
-		}
+            NativeCall<List<Room>>(SDKMethod.getAllChatRooms, null, callback, process);
+        }
 
-		/**
+        /**
 		 * \~chinese
 		 * 设置聊天室属性。
 		  * 
@@ -1003,20 +1003,20 @@ namespace AgoraChat
 		 * @param callback        The completion callback. If this call succeeds, calls {@link ValueCallBack#OnSuccessValue(Dictionary<string, int>)};
 		 *                      if this call fails, calls {@link CallBackResult#onError(int, String)}.
 		 */
-		public void AddAttributes(string roomId, Dictionary<string, string> kv, bool deleteWhenExit = true, bool forced = false, ValueCallBack<Dictionary<string, int>> callback = null)
+        public void AddAttributes(string roomId, Dictionary<string, string> kv, bool deleteWhenExit = true, bool forced = false, ValueCallBack<Dictionary<string, int>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("kv", JsonObject.JsonObjectFromDictionary(kv));
-            jo_param.Add("deleteWhenExit", deleteWhenExit);
-            jo_param.Add("forced", forced);
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("kv", JsonObject.JsonObjectFromDictionary(kv));
+            jo_param.AddWithoutNull("deleteWhenExit", deleteWhenExit);
+            jo_param.AddWithoutNull("forced", forced);
 
-			Process process = (_, jsonNode) =>
-			{
-				return Dictionary.SimpleTypeDictionaryFromJsonObject<int>(jsonNode);
-			};
+            Process process = (_, jsonNode) =>
+            {
+                return Dictionary.SimpleTypeDictionaryFromJsonObject<int>(jsonNode);
+            };
 
-			NativeCall<Dictionary<string, int>>(SDKMethod.setChatRoomAttributes, jo_param, callback, process);
+            NativeCall<Dictionary<string, int>>(SDKMethod.setChatRoomAttributes, jo_param, callback, process);
         }
 
         /**
@@ -1046,8 +1046,8 @@ namespace AgoraChat
         public void FetchAttributes(string roomId, List<string> keys, ValueCallBack<Dictionary<string, string>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("list", JsonObject.JsonArrayFromStringList(keys));
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("list", JsonObject.JsonArrayFromStringList(keys));
 
             Process process = (_, jsonNode) =>
             {
@@ -1084,19 +1084,19 @@ namespace AgoraChat
 		 * @param callback        The completion callback. If this call succeeds, calls {@link CallBackResult#OnSuccessResult(Dictionary<string, int>)};
 		 *                      if this call fails, calls {@link CallBackResult#onError(int, String)}.
 		 */
-        public void RemoveAttributes(string roomId, List<string> keys, bool forced = false, ValueCallBack<Dictionary<string, int>>callback = null)
+        public void RemoveAttributes(string roomId, List<string> keys, bool forced = false, ValueCallBack<Dictionary<string, int>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("list", JsonObject.JsonArrayFromStringList(keys));
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("list", JsonObject.JsonArrayFromStringList(keys));
 
-			Process process = (_, jsonNode) =>
-			{
-				return Dictionary.SimpleTypeDictionaryFromJsonObject<int>(jsonNode);
-			};
+            Process process = (_, jsonNode) =>
+            {
+                return Dictionary.SimpleTypeDictionaryFromJsonObject<int>(jsonNode);
+            };
 
-			NativeCall<Dictionary<string, int>>(SDKMethod.removeChatRoomAttributes, jo_param, callback, process);
-		}
+            NativeCall<Dictionary<string, int>>(SDKMethod.removeChatRoomAttributes, jo_param, callback, process);
+        }
 
         /**
 		 * \~chinese
@@ -1118,7 +1118,7 @@ namespace AgoraChat
             }
         }
 
-		/**
+        /**
 		 * \~chinese
 		 * 移除聊天室监听器。
 		 *
@@ -1233,7 +1233,7 @@ namespace AgoraChat
                             it.OnSpecificationChangedFromRoom(room);
                         }
                         break;
-				}
+                }
             }
         }
     }

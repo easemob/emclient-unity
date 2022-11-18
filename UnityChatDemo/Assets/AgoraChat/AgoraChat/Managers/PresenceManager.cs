@@ -60,8 +60,8 @@ namespace AgoraChat
         public void SubscribePresences(List<string> members, long expiry, ValueCallBack<List<Presence>> callback = null)
         {
             JSONObject jo_paran = new JSONObject();
-            jo_paran.Add("userIds", JsonObject.JsonArrayFromStringList(members));
-            jo_paran.Add("expiry", expiry);
+            jo_paran.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
+            jo_paran.AddWithoutNull("expiry", expiry);
 
             Process process = (_, jsonNode) =>
             {
@@ -87,7 +87,7 @@ namespace AgoraChat
         public void UnsubscribePresences(List<string> members, CallBack callback = null)
         {
             JSONObject jo_paran = new JSONObject();
-            jo_paran.Add("userIds", JsonObject.JsonArrayFromStringList(members));
+            jo_paran.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall<List<Presence>>(SDKMethod.presenceUnsubscribe, jo_paran, callback);
         }
 
@@ -109,8 +109,8 @@ namespace AgoraChat
         public void FetchSubscribedMembers(int pageNum, int pageSize, ValueCallBack<List<string>> callback = null)
         {
             JSONObject jo_paran = new JSONObject();
-            jo_paran.Add("pageNum", pageNum);
-            jo_paran.Add("pageSize", pageSize);
+            jo_paran.AddWithoutNull("pageNum", pageNum);
+            jo_paran.AddWithoutNull("pageSize", pageSize);
 
             Process process = (_, jsonNode) =>
             {
@@ -136,7 +136,7 @@ namespace AgoraChat
         public void FetchPresenceStatus(List<string> members, ValueCallBack<List<Presence>> callback = null)
         {
             JSONObject jo_paran = new JSONObject();
-            jo_paran.Add("userIds", JsonObject.JsonArrayFromStringList(members));
+            jo_paran.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
             Process process = (_, jsonNode) =>
             {
                 return List.BaseModelListFromJsonArray<Presence>(jsonNode);

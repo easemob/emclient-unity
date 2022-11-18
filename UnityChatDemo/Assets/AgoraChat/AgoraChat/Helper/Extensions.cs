@@ -9,6 +9,16 @@ namespace AgoraChat
     internal static class ModelHelper
     {
 
+        internal static void AddWithoutNull(this JSONObject jo, string key, JSONNode value)
+        {
+            if (value.IsNull || value == null)
+            {
+                return;
+            }
+
+            jo.Add(key, value);
+        }
+
         internal static IMessageBody CreateBodyWithJsonObject(JSONNode jsonNode)
         {
             if (jsonNode.IsNull || !jsonNode.IsObject) return null;
@@ -155,13 +165,13 @@ namespace AgoraChat
 
             foreach (string s in jo.Keys)
             {
-                if(jo[s].IsObject)
+                if (jo[s].IsObject)
                 {
                     ret.Add(s, ModelHelper.CreateWithJsonObject<T>(jo[s].AsObject));
                 }
-                else if(jo[s].AsArray)
+                else if (jo[s].AsArray)
                 {
-                    foreach(var it in jo[s].AsArray)
+                    foreach (var it in jo[s].AsArray)
                     {
 
                     }
@@ -182,7 +192,7 @@ namespace AgoraChat
                 if (jo[s].IsArray)
                 {
                     List<T> list = new List<T>();
-                    foreach(var it in jo[s].AsArray)
+                    foreach (var it in jo[s].AsArray)
                     {
                         list.Add(ModelHelper.CreateWithJsonObject<T>(it));
                     }
@@ -207,7 +217,7 @@ namespace AgoraChat
             return ret;
         }
 
-        internal static Dictionary<string, T> SimpleTypeDictionaryFromJsonObject<T>(JSONNode jo) where T: IConvertible
+        internal static Dictionary<string, T> SimpleTypeDictionaryFromJsonObject<T>(JSONNode jo) where T : IConvertible
         {
             if (jo == null) return null;
 

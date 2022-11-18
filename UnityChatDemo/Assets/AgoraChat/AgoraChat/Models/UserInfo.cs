@@ -151,15 +151,15 @@ namespace AgoraChat
         internal override JSONObject ToJsonObject()
         {
             JSONObject jo = new JSONObject();
-            jo.Add("nickName", NickName);
-            jo.Add("avatarUrl", AvatarUrl);
-            jo.Add("mail", Email);
-            jo.Add("phone", PhoneNumber);
-            jo.Add("sign", Signature);
-            jo.Add("birth", Birth);
-            jo.Add("gender", Gender);
-            jo.Add("userId", UserId);
-            jo.Add("ext", Ext);
+            jo.AddWithoutNull("nickName", NickName);
+            jo.AddWithoutNull("avatarUrl", AvatarUrl);
+            jo.AddWithoutNull("mail", Email);
+            jo.AddWithoutNull("phone", PhoneNumber);
+            jo.AddWithoutNull("sign", Signature);
+            jo.AddWithoutNull("birth", Birth);
+            jo.AddWithoutNull("gender", Gender);
+            jo.AddWithoutNull("userId", UserId);
+            jo.AddWithoutNull("ext", Ext);
 
             return jo;
         }
