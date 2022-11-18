@@ -78,11 +78,11 @@ namespace AgoraChat
         internal override JSONObject ToJsonObject()
         {
             JSONObject jo = new JSONObject();
-            jo.Add("name", FileName);
-            jo.Add("fileId", FileId);
-            jo.Add("owner", FileOwner);
-            jo.Add("createTime", CreateTime);
-            jo.Add("fileSize", FileSize);
+            jo.AddWithoutNull("name", FileName);
+            jo.AddWithoutNull("fileId", FileId);
+            jo.AddWithoutNull("owner", FileOwner);
+            jo.AddWithoutNull("createTime", CreateTime);
+            jo.AddWithoutNull("fileSize", FileSize);
             return jo;
         }
     }

@@ -12,7 +12,7 @@ public class EMConversationHelper {
     public static JSONObject toJson(EMConversation conversation) throws JSONException{
         if (conversation == null) return null;
         JSONObject data = new JSONObject();
-        data.put("con_id", conversation.conversationId());
+        data.put("convId", conversation.conversationId());
         data.put("type", typeToInt(conversation.getType()));
         data.put("isThread", conversation.isChatThread());
         try {

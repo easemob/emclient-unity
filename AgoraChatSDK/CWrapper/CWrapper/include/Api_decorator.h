@@ -20,7 +20,7 @@
 #elif defined(__APPLE__)
 
 	#define AGORA_CALL
-	#define HYPHENATE_API __attribute__(visibility("default")) extern "C"
+	#define HYPHENATE_API __attribute__((visibility("default"))) extern "C"
 
 #else
 

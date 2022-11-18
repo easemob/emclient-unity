@@ -89,12 +89,12 @@ namespace AgoraChat
         internal override JSONObject ToJsonObject()
         {
             JSONObject jo = new JSONObject();
-            jo.Add("ackId", AckId);
-            jo.Add("msgId", MsgId);
-            jo.Add("from", From);
-            jo.Add("content", Content);
-            jo.Add("count", Count);
-            jo.Add("timestamp", Timestamp);
+            jo.AddWithoutNull("ackId", AckId);
+            jo.AddWithoutNull("msgId", MsgId);
+            jo.AddWithoutNull("from", From);
+            jo.AddWithoutNull("content", Content);
+            jo.AddWithoutNull("count", Count);
+            jo.AddWithoutNull("timestamp", Timestamp);
             return jo;
         }
     }

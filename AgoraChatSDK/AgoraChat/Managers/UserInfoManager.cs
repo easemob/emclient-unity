@@ -34,7 +34,7 @@ namespace AgoraChat
         public void UpdateOwnInfo(UserInfo userInfo, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("userInfo", userInfo.ToJsonObject());
+            jo_param.AddWithoutNull("userInfo", userInfo.ToJsonObject());
             NativeCall(SDKMethod.updateOwnUserInfo, jo_param, callback);
         }
 
@@ -54,7 +54,7 @@ namespace AgoraChat
         public void FetchUserInfoByUserId(List<string> userIds, ValueCallBack<Dictionary<string, UserInfo>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(userIds));
+            jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(userIds));
 
             Process process = (_, jsonNode) =>
             {

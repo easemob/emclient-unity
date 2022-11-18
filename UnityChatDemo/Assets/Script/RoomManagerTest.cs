@@ -709,4 +709,9 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
     {
 
     }
+
+    public void OnSpecificationChangedFromRoom(Room room)
+    {
+        throw new System.NotImplementedException();
+    }
 }

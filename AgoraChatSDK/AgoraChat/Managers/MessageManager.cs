@@ -12,7 +12,7 @@ namespace AgoraChat
         internal int GetGroupAckCount(string messageId)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("msgId", messageId);
+            jo_param.AddWithoutNull("msgId", messageId);
             JSONNode jsonNode = NativeGet(SDKMethod.groupAckCount, jo_param).GetReturnJsonNode();
             return jsonNode.IsNumber ? jsonNode.AsInt : 0;
         }
@@ -20,7 +20,7 @@ namespace AgoraChat
         internal bool GetHasDeliverAck(string messageId)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("msgId", messageId);
+            jo_param.AddWithoutNull("msgId", messageId);
             JSONNode jn = NativeGet(SDKMethod.getHasDeliverAck, jo_param).GetReturnJsonNode();
             return jn.IsBoolean ? jn.AsBool : false;
         }
@@ -28,7 +28,7 @@ namespace AgoraChat
         internal bool GetHasReadAck(string messageId)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("msgId", messageId);
+            jo_param.AddWithoutNull("msgId", messageId);
             JSONNode jn = NativeGet(SDKMethod.getHasReadAck, jo_param).GetReturnJsonNode();
             return jn.IsBoolean ? jn.AsBool : false;
         }
@@ -36,7 +36,7 @@ namespace AgoraChat
         internal List<MessageReaction> GetReactionList(string messageId)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("msgId", messageId);
+            jo_param.AddWithoutNull("msgId", messageId);
             JSONNode jn = NativeGet(SDKMethod.getReactionList, jo_param).GetReturnJsonNode();
             return List.BaseModelListFromJsonArray<MessageReaction>(jn);
         }
@@ -44,7 +44,7 @@ namespace AgoraChat
         internal ChatThread GetChatThread(string messageId)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("msgId", messageId);
+            jo_param.AddWithoutNull("msgId", messageId);
             JSONNode jn = NativeGet(SDKMethod.getChatThread, jo_param).GetReturnJsonNode();
             return ModelHelper.CreateWithJsonObject<ChatThread>(jn);
         }

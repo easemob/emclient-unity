@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace AgoraChat
 {
-    public class AttributeValue: BaseModel
+    public class AttributeValue : BaseModel
     {
         public AttributeValue() { }
         internal AttributeValue(string json) : base(json) { }
@@ -194,43 +194,42 @@ namespace AgoraChat
             switch (VType)
             {
                 case AttributeValueType.BOOL:
-                    _type  = "b";
+                    _type = "b";
                     _value = BoolV.ToString();
                     break;
                 case AttributeValueType.INT32:
-                    _type  = "i";
+                    _type = "i";
                     _value = Int32V.ToString();
                     break;
                 case AttributeValueType.UINT32:
-                    _type  = "ui";
+                    _type = "ui";
                     _value = UInt32V.ToString();
                     break;
                 case AttributeValueType.INT64:
-                    _type  = "l";
+                    _type = "l";
                     _value = Int64V.ToString();
                     break;
                 case AttributeValueType.FLOAT:
-                    _type  = "f";
+                    _type = "f";
                     _value = FloatV.ToString();
                     break;
                 case AttributeValueType.DOUBLE:
-                    _type  = "d";
+                    _type = "d";
                     _value = DoubleV.ToString();
                     break;
                 case AttributeValueType.STRING:
-                    _type  = "str";
+                    _type = "str";
                     _value = StringV;
                     break;
                 case AttributeValueType.JSONSTRING:
-                    _type  = "jstr";
+                    _type = "jstr";
                     _value = JsonStringV;
                     break;
                 default:
                     break;
             }
-
-            jo["type"]  = _type;
-            jo["value"] = _value;
+            jo.AddWithoutNull("type", _type);
+            jo.AddWithoutNull("value", _value);
             return jo;
         }
 

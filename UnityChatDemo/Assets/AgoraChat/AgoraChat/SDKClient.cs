@@ -12,13 +12,13 @@ namespace AgoraChat
     public class SDKClient
     {
         private static SDKClient _instance;
-        private IClient _clientImpl;
+        internal IClient _clientImpl;
 
         public static SDKClient Instance
         {
             get
             {
-                return _instance ?? (_instance = new SDKClient());
+                return _instance = _instance ?? new SDKClient();
             }
         }
 

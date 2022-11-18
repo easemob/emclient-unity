@@ -48,8 +48,8 @@ namespace AgoraChat
         {
 
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("userId", userId);
-            jo_param.Add("msg", reason);
+            jo_param.AddWithoutNull("userId", userId);
+            jo_param.AddWithoutNull("msg", reason);
 
             NativeCall(SDKMethod.addContact, jo_param, callback);
 
@@ -81,8 +81,8 @@ namespace AgoraChat
         public void DeleteContact(string userId, bool keepConversation = false, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("userId", userId);
-            jo_param.Add("keepConversation", keepConversation);
+            jo_param.AddWithoutNull("userId", userId);
+            jo_param.AddWithoutNull("keepConversation", keepConversation);
 
             NativeCall(SDKMethod.deleteContact, jo_param, callback);
         }
@@ -152,7 +152,7 @@ namespace AgoraChat
         public void AddUserToBlockList(string userId, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("userId", userId);
+            jo_param.AddWithoutNull("userId", userId);
 
             NativeCall(SDKMethod.addUserToBlockList, jo_param, callback);
         }
@@ -177,7 +177,7 @@ namespace AgoraChat
         public void RemoveUserFromBlockList(string userId, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("userId", userId);
+            jo_param.AddWithoutNull("userId", userId);
 
             NativeCall(SDKMethod.removeUserFromBlockList, jo_param, callback);
         }
@@ -234,7 +234,7 @@ namespace AgoraChat
         public void AcceptInvitation(string userId, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("userId", userId);
+            jo_param.AddWithoutNull("userId", userId);
 
             NativeCall(SDKMethod.acceptInvitation, jo_param, callback);
         }
@@ -259,7 +259,7 @@ namespace AgoraChat
         public void DeclineInvitation(string userId, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("userId", userId);
+            jo_param.AddWithoutNull("userId", userId);
 
             NativeCall(SDKMethod.declineInvitation, jo_param, callback);
         }

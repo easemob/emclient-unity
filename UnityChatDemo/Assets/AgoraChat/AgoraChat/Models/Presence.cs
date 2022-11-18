@@ -99,11 +99,11 @@ namespace AgoraChat
         internal override JSONObject ToJsonObject()
         {
             JSONObject jo = new JSONObject();
-            jo.Add("publisher", Publisher);
-            jo.Add("desc", statusDescription);
-            jo.Add("lastTime", LatestTime);
-            jo.Add("expiryTime", ExpiryTime);
-            jo.Add("detail", JsonObject.JsonArrayFromList(StatusList));
+            jo.AddWithoutNull("publisher", Publisher);
+            jo.AddWithoutNull("desc", statusDescription);
+            jo.AddWithoutNull("lastTime", LatestTime);
+            jo.AddWithoutNull("expiryTime", ExpiryTime);
+            jo.AddWithoutNull("detail", JsonObject.JsonArrayFromList(StatusList));
             return jo;
         }
     }

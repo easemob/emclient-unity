@@ -49,6 +49,12 @@ public class EMWrapper {
                 case EMSDKMethod.pushManager:
                     str = clientWrapper.pushManagerWrapper.onMethodCall(method, jsonObject, callback);
                     break;
+                case EMSDKMethod.messageManager:
+                    str = clientWrapper.messageManager.onMethodCall(method, jsonObject, callback);
+                    break;
+                case EMSDKMethod.conversationManager:
+                    str = clientWrapper.conversationWrapper.onMethodCall(method, jsonObject, callback);
+                    break;
             }
         } catch (JSONException e) {
             try {
