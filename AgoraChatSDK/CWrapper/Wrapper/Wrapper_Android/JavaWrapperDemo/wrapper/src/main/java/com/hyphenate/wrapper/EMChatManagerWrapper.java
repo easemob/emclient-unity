@@ -209,7 +209,7 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
             createIfNeed = params.getBoolean("createIfNeed");
         }
 
-        EMConversation.EMConversationType type = EMConversationHelper.typeFromInt(params.getInt("type"));
+        EMConversation.EMConversationType type = EMConversationHelper.typeFromInt(params.getInt("convType"));
 
         boolean finalCreateIfNeed = createIfNeed;
         EMConversation conversation = EMClient.getInstance().chatManager().getConversation(conId, type, finalCreateIfNeed);

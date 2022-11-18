@@ -323,6 +323,7 @@ public class EMClientWrapper extends EMBaseWrapper {
 
             @Override
             public void onDisconnected(int errorCode) {
+                /*
                 if (errorCode == 206) {
                     post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, "onUserDidLoginFromOtherDevice", null));
                 } else if (errorCode == 207) {
@@ -340,6 +341,7 @@ public class EMClientWrapper extends EMBaseWrapper {
                 } else {
                     post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, "onDisconnected", null));
                 }
+                 */
             }
 
             @Override
