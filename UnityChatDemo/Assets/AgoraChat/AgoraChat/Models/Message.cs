@@ -730,28 +730,28 @@ namespace AgoraChat
         internal override JSONObject ToJsonObject()
         {
             JSONObject jo = new JSONObject();
-            jo.Add("from", From);
-            jo.Add("to", To);
-            jo.Add("hasReadAck", HasReadAck);
-            jo.Add("hasDeliverAck", HasDeliverAck);
-            jo.Add("localTime", LocalTime);
-            jo.Add("serverTime", ServerTime);
-            jo.Add("convId", ConversationId);
-            jo.Add("msgId", MsgId);
-            jo.Add("hasRead", HasReadAck);
-            jo.Add("status", Status.ToInt());
-            jo.Add("chatType", MessageType.ToInt());
-            jo.Add("direction", Direction.ToInt());
+            jo.AddWithoutNull("from", From);
+            jo.AddWithoutNull("to", To);
+            jo.AddWithoutNull("hasReadAck", HasReadAck);
+            jo.AddWithoutNull("hasDeliverAck", HasDeliverAck);
+            jo.AddWithoutNull("localTime", LocalTime);
+            jo.AddWithoutNull("serverTime", ServerTime);
+            jo.AddWithoutNull("convId", ConversationId);
+            jo.AddWithoutNull("msgId", MsgId);
+            jo.AddWithoutNull("hasRead", HasReadAck);
+            jo.AddWithoutNull("status", Status.ToInt());
+            jo.AddWithoutNull("chatType", MessageType.ToInt());
+            jo.AddWithoutNull("direction", Direction.ToInt());
             JSONNode jn = JsonObject.JsonObjectFromAttributes(Attributes);
             if (jn != null)
             {
-                jo.Add("attr", jn);
+                jo.AddWithoutNull("attr", jn);
             }
-            jo.Add("body", Body.ToJsonObject());
-            jo.Add("isNeedGroupAck", IsNeedGroupAck);
-            jo.Add("isRead", IsRead);
-            jo.Add("messageOnlineState", MessageOnlineState);
-            jo.Add("isThread", IsThread);
+            jo.AddWithoutNull("body", Body.ToJsonObject());
+            jo.AddWithoutNull("isNeedGroupAck", IsNeedGroupAck);
+            jo.AddWithoutNull("isRead", IsRead);
+            jo.AddWithoutNull("messageOnlineState", MessageOnlineState);
+            jo.AddWithoutNull("isThread", IsThread);
 
             return jo;
         }

@@ -45,7 +45,7 @@ namespace AgoraChat
         internal void InitWithOptions(Options options)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("options", options.ToJsonObject());
+            jo_param.AddWithoutNull("options", options.ToJsonObject());
             NativeGet(SDKMethod.init, jo_param);
             SetupManagers();
         }
@@ -78,8 +78,8 @@ namespace AgoraChat
         internal void CreateAccount(string userId, string password, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("userId", userId ?? "");
-            jo_param.Add("password", password ?? "");
+            jo_param.AddWithoutNull("userId", userId ?? "");
+            jo_param.AddWithoutNull("password", password ?? "");
 
             NativeCall(SDKMethod.createAccount, jo_param, callback);
         }
@@ -87,9 +87,9 @@ namespace AgoraChat
         internal void Login(string userId, string pwdOrToken, bool isToken = false, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("userId", userId ?? "");
-            jo_param.Add("pwdOrToken", pwdOrToken ?? "");
-            jo_param.Add("isToken", isToken);
+            jo_param.AddWithoutNull("userId", userId ?? "");
+            jo_param.AddWithoutNull("pwdOrToken", pwdOrToken ?? "");
+            jo_param.AddWithoutNull("isToken", isToken);
 
             NativeCall(SDKMethod.login, jo_param, callback);
         }
@@ -97,30 +97,30 @@ namespace AgoraChat
         internal void Logout(bool unbindDeviceToken, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("unbindDeviceToken", unbindDeviceToken);
+            jo_param.AddWithoutNull("unbindDeviceToken", unbindDeviceToken);
             NativeCall(SDKMethod.logout, jo_param, callback);
         }
 
         internal void LoginWithAgoraToken(string userId, string token, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("userId", userId);
-            jo_param.Add("token", token);
+            jo_param.AddWithoutNull("userId", userId);
+            jo_param.AddWithoutNull("token", token);
             NativeCall(SDKMethod.loginWithAgoraToken, jo_param, callback);
         }
 
         internal void RenewAgoraToken(string token)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("token", token);
+            jo_param.AddWithoutNull("token", token);
             NativeCall(SDKMethod.renewToken, jo_param);
         }
 
         internal void GetLoggedInDevicesFromServer(string username, string password, ValueCallBack<List<DeviceInfo>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("username", username);
-            jo_param.Add("password", password);
+            jo_param.AddWithoutNull("username", username);
+            jo_param.AddWithoutNull("password", password);
 
             Process process = (_, jsonNode) =>
             {
@@ -133,17 +133,17 @@ namespace AgoraChat
         internal void KickDevice(string username, string password, string resource, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("username", username);
-            jo_param.Add("password", password);
-            jo_param.Add("resource", resource);
+            jo_param.AddWithoutNull("username", username);
+            jo_param.AddWithoutNull("password", password);
+            jo_param.AddWithoutNull("resource", resource);
             NativeCall(SDKMethod.kickDevice, jo_param, callback);
         }
 
         internal void kickAllDevices(string username, string password, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("username", username);
-            jo_param.Add("password", password);
+            jo_param.AddWithoutNull("username", username);
+            jo_param.AddWithoutNull("password", password);
             NativeCall(SDKMethod.kickDevice, jo_param, callback);
         }
 

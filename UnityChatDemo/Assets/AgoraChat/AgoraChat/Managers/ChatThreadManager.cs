@@ -62,9 +62,9 @@ namespace AgoraChat
         public void CreateThread(string threadName, string msgId, string groupId, ValueCallBack<ChatThread> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("threadName", threadName);
-            jo_param.Add("msgId", msgId);
-            jo_param.Add("groupId", groupId);
+            jo_param.AddWithoutNull("threadName", threadName);
+            jo_param.AddWithoutNull("msgId", msgId);
+            jo_param.AddWithoutNull("groupId", groupId);
 
             Process process = (_, jsonNode) =>
             {
@@ -116,7 +116,7 @@ namespace AgoraChat
         public void JoinThread(string threadId, ValueCallBack<ChatThread> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("threadId", threadId);
+            jo_param.AddWithoutNull("threadId", threadId);
             Process process = (_, jsonNode) =>
             {
                 return ModelHelper.CreateWithJsonObject<ChatThread>(jsonNode);
@@ -165,7 +165,7 @@ namespace AgoraChat
         public void LeaveThread(string threadId, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("threadId", threadId);
+            jo_param.AddWithoutNull("threadId", threadId);
             NativeCall<ChatThread>(SDKMethod.leaveChatThread, jo_param, callback);
         }
 
@@ -208,7 +208,7 @@ namespace AgoraChat
         public void DestroyThread(string threadId, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("threadId", threadId);
+            jo_param.AddWithoutNull("threadId", threadId);
             NativeCall<ChatThread>(SDKMethod.destroyChatThread, jo_param, callback);
         }
 
@@ -247,8 +247,8 @@ namespace AgoraChat
         public void RemoveThreadMember(string threadId, string userId, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("threadId", threadId);
-            jo_param.Add("userId", userId);
+            jo_param.AddWithoutNull("threadId", threadId);
+            jo_param.AddWithoutNull("userId", userId);
             NativeCall<ChatThread>(SDKMethod.removeMemberFromChatThread, jo_param, callback);
         }
 
@@ -286,8 +286,8 @@ namespace AgoraChat
         public void ChangeThreadName(string threadId, string newName, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("threadId", threadId);
-            jo_param.Add("newName", newName);
+            jo_param.AddWithoutNull("threadId", threadId);
+            jo_param.AddWithoutNull("newName", newName);
             NativeCall<ChatThread>(SDKMethod.updateChatThreadSubject, jo_param, callback);
 
         }
@@ -321,9 +321,9 @@ namespace AgoraChat
         public void FetchThreadMembers(string threadId, string cursor = null, int pageSize = 20, ValueCallBack<CursorResult<string>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("threadId", threadId);
-            jo_param.Add("cursor", cursor);
-            jo_param.Add("pageSize", pageSize);
+            jo_param.AddWithoutNull("threadId", threadId);
+            jo_param.AddWithoutNull("cursor", cursor);
+            jo_param.AddWithoutNull("pageSize", pageSize);
 
             Process process = (_, jsonNode) =>
             {
@@ -369,10 +369,10 @@ namespace AgoraChat
         public void FetchThreadListOfGroup(string groupId, bool joined, string cursor = null, int pageSize = 20, ValueCallBack<CursorResult<ChatThread>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
-            jo_param.Add("joined", joined);
-            jo_param.Add("cursor", cursor);
-            jo_param.Add("pageSize", pageSize);
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("joined", joined);
+            jo_param.AddWithoutNull("cursor", cursor);
+            jo_param.AddWithoutNull("pageSize", pageSize);
 
             Process process = (_, jsonNode) =>
             {
@@ -414,8 +414,8 @@ namespace AgoraChat
         public void FetchMineJoinedThreadList(string cursor = null, int pageSize = 20, ValueCallBack<CursorResult<ChatThread>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("cursor", cursor);
-            jo_param.Add("pageSize", pageSize);
+            jo_param.AddWithoutNull("cursor", cursor);
+            jo_param.AddWithoutNull("pageSize", pageSize);
 
             Process process = (_, jsonNode) =>
             {
@@ -452,7 +452,7 @@ namespace AgoraChat
         public void GetThreadDetail(string threadId, ValueCallBack<ChatThread> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("threadId", threadId);
+            jo_param.AddWithoutNull("threadId", threadId);
             Process process = (_, jsonNode) =>
             {
                 return ModelHelper.CreateWithJsonObject<ChatThread>(jsonNode);
@@ -481,7 +481,7 @@ namespace AgoraChat
         public void GetLastMessageAccordingThreads(List<string> threadIds, ValueCallBack<Dictionary<string, Message>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("threadIds", JsonObject.JsonArrayFromStringList(threadIds));
+            jo_param.AddWithoutNull("threadIds", JsonObject.JsonArrayFromStringList(threadIds));
             Process process = (_, jsonNode) =>
             {
                 return Dictionary.BaseModelDictionaryFromJsonObject<Message>(jsonNode);

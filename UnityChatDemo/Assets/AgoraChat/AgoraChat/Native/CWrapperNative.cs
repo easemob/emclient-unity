@@ -20,7 +20,9 @@ namespace AgoraChat
             LogPrinter.Log($"---NativeGet: {manager}: {method}: {json}: {callbackId}");
             StringBuilder sbuilder = new StringBuilder(512);
             _NativeGet(manager, method, json?.ToString(), sbuilder, callbackId ?? "");
-            return Tools.GetUnicodeStringFromUTF8(sbuilder.ToString());
+            string ret = Tools.GetUnicodeStringFromUTF8(sbuilder.ToString());
+            LogPrinter.Log($"---NativeGet get: {ret}");
+            return ret;
         }
 
         #region DllImport
