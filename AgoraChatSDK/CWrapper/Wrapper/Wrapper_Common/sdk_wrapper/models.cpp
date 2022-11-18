@@ -823,12 +823,12 @@ namespace sdk_wrapper
                 ptr->setText(str);
             }
 
-            if (body.HasMember("translations") && body["translations"].IsString()) {
+            if (body.HasMember("translations") && body["translations"].IsObject()) {
                 map<string, string> translations = MyJson::FromJsonObjectToMap(body["translations"]);//FromJsonToMap(str);
                 ptr->setTranslations(translations);
             }
 
-            if (body.HasMember("targetLanguages") && body["targetLanguages"].IsString()) {
+            if (body.HasMember("targetLanguages") && body["targetLanguages"].IsArray()) {
                 vector<string> tagert_languages = MyJson::FromJsonObjectToVector(body["targetLanguages"]);
                 ptr->setTargetLanguages(tagert_languages);
             }

@@ -40,8 +40,7 @@ namespace AgoraChat
             }
             else if (type == AttributeValueType.UINT32)
             {
-                //TODO: check this
-                return Of((uint)value);
+                return Of(Convert.ToUInt32(value));
             }
             else if (type == AttributeValueType.INT64)
             {
@@ -49,7 +48,7 @@ namespace AgoraChat
             }
             else if (type == AttributeValueType.FLOAT)
             {
-                return Of((float)value);
+                return Of((float)Convert.ToDouble(value));
             }
             else if (type == AttributeValueType.DOUBLE)
             {

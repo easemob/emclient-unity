@@ -70,7 +70,7 @@ namespace AgoraChat
                         case SDKMethod.groupListener:
                             GroupManagerEvent(method, jsonNode);
                             break;
-                        case SDKMethod.roomManager:
+                        case SDKMethod.chatRoomListener:
                             RoomManagerEvent(method, jsonNode);
                             break;
                         case SDKMethod.connectionListener:

@@ -117,7 +117,7 @@ namespace AgoraChat
                 return List.StringListFromJsonArray(jsonNode);
             };
 
-            NativeCall<List<string>>(SDKMethod.presenceUnsubscribe, jo_paran, callback, process);
+            NativeCall<List<string>>(SDKMethod.fetchSubscribedMembersWithPageNum, jo_paran, callback, process);
         }
 
         /**
@@ -142,7 +142,7 @@ namespace AgoraChat
                 return List.BaseModelListFromJsonArray<Presence>(jsonNode);
             };
 
-            NativeCall<List<Presence>>(SDKMethod.presenceUnsubscribe, jo_paran, callback, process);
+            NativeCall<List<Presence>>(SDKMethod.fetchPresenceStatus, jo_paran, callback, process);
         }
 
         /**

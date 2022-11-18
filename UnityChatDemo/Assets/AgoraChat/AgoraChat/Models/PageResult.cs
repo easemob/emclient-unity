@@ -49,12 +49,12 @@ namespace AgoraChat
 
         internal PageResult() { }
 
-        internal PageResult(string jsonString, ItemCallback callback = null) : base(jsonString)
+        internal PageResult(string jsonString, ItemCallback callback = null)
         {
             this.callback = callback;
         }
 
-        internal PageResult(JSONObject josnObject, ItemCallback callback = null) : base(josnObject)
+        internal PageResult(JSONObject josnObject, ItemCallback callback = null)
         {
             this.callback = callback;
         }
@@ -67,7 +67,7 @@ namespace AgoraChat
             {
                 JSONArray jsonArray = jn.AsArray;
                 Data = new List<T>();
-                foreach (JSONObject jsonObj in jsonArray)
+                foreach (var jsonObj in jsonArray)
                 {
                     object ret = callback(jsonObj);
                     if (ret != null)
@@ -85,6 +85,6 @@ namespace AgoraChat
         }
 
         private ItemCallback callback;
-        internal delegate T ItemCallback(SimpleJSON.JSONObject jsonObject);
+        internal delegate T ItemCallback(JSONNode jsonObject);
     }
 }

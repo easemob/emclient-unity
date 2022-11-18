@@ -252,12 +252,9 @@ namespace AgoraChat
 		 *
          * @return The list of Reactions.
          */
-        public List<MessageReaction> ReactionList
+        public List<MessageReaction> ReactionList()
         {
-            get
-            {
-                return SDKClient.Instance.MessageManager.GetReactionList(MsgId);
-            }
+            return SDKClient.Instance.MessageManager.GetReactionList(MsgId);
         }
 
         /**
@@ -719,7 +716,7 @@ namespace AgoraChat
                     Status = jo["status"].AsInt.ToMessageStatus();
                     MessageType = jo["chatType"].AsInt.ToMessageType();
                     Direction = jo["direction"].AsInt.ToMesssageDirection();
-                    Attributes = AttributeValue.DictFromJson(jo["attr"]);
+                    Attributes = AttributeValue.DictFromJsonObject(jo["attr"].AsObject);
                     // body:{type:iType, "body":{object}}
                     Body = ModelHelper.CreateBodyWithJsonObject(jo["body"]);
                     IsNeedGroupAck = jo["isNeedGroupAck"].AsBool;

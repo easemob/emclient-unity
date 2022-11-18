@@ -61,7 +61,7 @@ namespace AgoraChat
                 return Dictionary.BaseModelDictionaryFromJsonObject<UserInfo>(jsonNode);
             };
 
-            NativeCall<Dictionary<string, UserInfo>>(SDKMethod.updateOwnUserInfo, jo_param, callback, process);
+            NativeCall<Dictionary<string, UserInfo>>(SDKMethod.fetchUserInfoById, jo_param, callback, process);
         }
     }
 }

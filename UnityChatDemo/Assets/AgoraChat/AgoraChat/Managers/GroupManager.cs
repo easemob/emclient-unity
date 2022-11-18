@@ -378,7 +378,7 @@ namespace AgoraChat
             jo_param.Add("groupId", groupId);
             Process process = (_, jsonNode) =>
             {
-                return jsonNode.IsBoolean ? jsonNode.AsBool : false;
+                return jsonNode["ret"].IsBoolean ? jsonNode["ret"].AsBool : false;
             };
             NativeCall<bool>(SDKMethod.isMemberInWhiteListFromServer, jo_param, callback, process);
         }
@@ -432,7 +432,10 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("name", groupName);
-            jo_param.Add("options", options?.ToJsonObject());
+			if(null != options)
+            {
+				jo_param.Add("options", options.ToJsonObject());
+			}
             jo_param.Add("desc", desc);
             jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(inviteMembers));
             jo_param.Add("msg", inviteReason);
@@ -443,7 +446,7 @@ namespace AgoraChat
             };
 
 
-            NativeCall<Group>(SDKMethod.updateGroupOwner, jo_param, callback, process);
+            NativeCall<Group>(SDKMethod.createGroup, jo_param, callback, process);
         }
 
         /**
@@ -592,10 +595,10 @@ namespace AgoraChat
 
             Process process = (_, jsonNode) =>
             {
-                return jsonNode.IsString ? jsonNode.Value : null;
+                return jsonNode["ret"].IsString ? jsonNode["ret"].Value : null;
             };
 
-            NativeCall<string>(SDKMethod.downloadGroupSharedFile, jo_param, callback, process);
+            NativeCall<string>(SDKMethod.getGroupAnnouncementFromServer, jo_param, callback, process);
         }
 
         /**
@@ -711,13 +714,17 @@ namespace AgoraChat
             jo_param.Add("cursor", cursor);
             jo_param.Add("pageSize", pageSize);
 
-            Process process = (_, jsonNode) =>
-            {
-                return new CursorResult<string>(jsonNode, (jn) =>
-                {
-                    return jn.IsString ? jn.Value : null;
-                });
-            };
+			Process process = (_, jsonNode) =>
+			{
+				CursorResult<string> cursor_msg = new CursorResult<string>(_, (jn) =>
+				{
+					return jn.IsString ? jn.Value : null;
+				});
+
+				cursor_msg.FromJsonObject(jsonNode.AsObject);
+				return cursor_msg;
+
+			};
 
             NativeCall<CursorResult<string>>(SDKMethod.getGroupMemberListFromServer, jo_param, callback, process);
         }
@@ -845,8 +852,8 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("groupId", groupId);
-            string jsonString = NativeGet(SDKMethod.getGroupWithId, jo_param);
-            return ModelHelper.CreateWithJsonString<Group>(jsonString);
+            JSONNode jn = NativeGet(SDKMethod.getGroupWithId, jo_param).GetReturnJsonNode();
+            return ModelHelper.CreateWithJsonObject<Group>(jn);
         }
 
         /**
@@ -869,8 +876,8 @@ namespace AgoraChat
         public List<Group> GetJoinedGroups()
         {
             JSONObject jo_param = new JSONObject();
-            string jsonString = NativeGet(SDKMethod.getJoinedGroups);
-            return List.BaseModelListFromJsoString<Group>(jsonString);
+            JSONNode jn = NativeGet(SDKMethod.getJoinedGroups).GetReturnJsonNode();
+            return List.BaseModelListFromJsonArray<Group>(jn);
         }
 
         /**
@@ -941,13 +948,17 @@ namespace AgoraChat
             jo_param.Add("pageSize", pageSize);
             jo_param.Add("cursor", cursor);
 
-            Process process = (_, jsonNode) =>
-            {
-                return new CursorResult<GroupInfo>(jsonNode, (jn) =>
-                {
-                    return ModelHelper.CreateWithJsonObject<GroupInfo>(jn);
-                });
-            };
+			Process process = (_, jsonNode) =>
+			{
+				CursorResult<GroupInfo> cursor_msg = new CursorResult<GroupInfo>(_, (jn) =>
+				{
+					return ModelHelper.CreateWithJsonObject<GroupInfo>(jn);
+				});
+
+				cursor_msg.FromJsonObject(jsonNode.AsObject);
+				return cursor_msg;
+
+			};
 
             NativeCall<CursorResult<GroupInfo>>(SDKMethod.getPublicGroupsFromServer, jo_param, callback, process);
         }
@@ -1261,7 +1272,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("groupId", groupId);
-            NativeCall(SDKMethod.muteAllMembers, jo_param, callback);
+            NativeCall(SDKMethod.unMuteAllMembers, jo_param, callback);
         }
 
         /**
@@ -1291,7 +1302,8 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("groupId", groupId);
-            NativeCall(SDKMethod.unMuteAllMembers, jo_param, callback);
+			jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
+			NativeCall(SDKMethod.unMuteMembers, jo_param, callback);
         }
 
         /**
@@ -1498,7 +1510,7 @@ namespace AgoraChat
                     case SDKMethod.onMuteListAddedFromGroup:
                         {
                             List<string> list = List.StringListFromJsonArray(jsonNode["mutes"]);
-                            int muteExpire = jsonNode["muteExpire"];
+                            long muteExpire = (long)jsonNode["muteExpire"].AsDouble;
                             it.OnMuteListAddedFromGroup(groupId, list, muteExpire);
                         }
                         break;

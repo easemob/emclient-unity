@@ -16,8 +16,9 @@ namespace AgoraChat
             JSONObject jo_param = new JSONObject();
             jo_param.Add("convId", conversationId);
             jo_param.Add("convType", conversationType.ToInt());
-            JSONNode jsonNode = NativeGet(SDKMethod.getLatestMessage, jo_param).GetReturnJsonNode();
-            return ModelHelper.CreateWithJsonObject<Message>(jsonNode);
+            JSONNode jn = NativeGet(SDKMethod.getLatestMessage, jo_param).GetReturnJsonNode();
+            return ModelHelper.CreateWithJsonObject<Message>(jn);
+
         }
 
         internal Message LastReceivedMessage(string conversationId, ConversationType conversationType)
@@ -25,8 +26,9 @@ namespace AgoraChat
             JSONObject jo_param = new JSONObject();
             jo_param.Add("convId", conversationId);
             jo_param.Add("convType", conversationType.ToInt());
-            JSONNode jsonNode = NativeGet(SDKMethod.getLatestMessageFromOthers, jo_param).GetReturnJsonNode();
-            return ModelHelper.CreateWithJsonObject<Message>(jsonNode);
+            JSONNode jn = NativeGet(SDKMethod.getLatestMessageFromOthers, jo_param).GetReturnJsonNode();
+            return ModelHelper.CreateWithJsonObject<Message>(jn);
+
         }
 
         internal bool SetExt(string conversationId, ConversationType conversationType, Dictionary<string, string> ext)

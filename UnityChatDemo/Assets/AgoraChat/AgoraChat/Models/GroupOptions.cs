@@ -85,7 +85,10 @@ namespace AgoraChat
             jsonObject.Add("style", (int)Style);
             jsonObject.Add("maxCount", MaxCount);
             jsonObject.Add("inviteNeedConfirm", InviteNeedConfirm);
-            jsonObject.Add("ext", Ext);
+            if(null != Ext)
+            {
+                jsonObject.Add("ext", Ext);
+            }
             return jsonObject;
         }
 
