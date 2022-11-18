@@ -66,6 +66,54 @@ namespace WinSDKTest
             PrintThread(thread);
         }
 
+        static public void PrintAttributeValue(Dictionary<string, AttributeValue> attrs)
+        {
+            Console.WriteLine($"===========================AttributeValue");
+            foreach (var it in attrs)
+            {
+                Console.WriteLine($"key: {it.Key}");
+                AttributeValue attr = it.Value;
+                AttributeValueType type = Message.GetAttributeValueType(attr);
+                bool found = false;
+                switch(type)
+                {
+                    case AttributeValueType.BOOL:
+                        bool b = Message.GetAttributeValue<bool>(attr, out found);
+                        Console.WriteLine($"value: {b}");
+                        break;
+                    case AttributeValueType.INT32:
+                        int i = Message.GetAttributeValue<int>(attr, out found);
+                        Console.WriteLine($"value: {i}");
+                        break;
+                    case AttributeValueType.UINT32:
+                        uint ui = Message.GetAttributeValue<uint>(attr, out found);
+                        Console.WriteLine($"value: {ui}");
+                        break;
+                    case AttributeValueType.INT64:
+                        Int64 i64 = Message.GetAttributeValue<Int64>(attr, out found);
+                        Console.WriteLine($"value: {i64}");
+                        break;
+                    case AttributeValueType.FLOAT:
+                        float f = Message.GetAttributeValue<float>(attr, out found);
+                        Console.WriteLine($"value: {f}");
+                        break;
+                    case AttributeValueType.DOUBLE:
+                        double d = Message.GetAttributeValue<double>(attr, out found);
+                        Console.WriteLine($"value: {d}");
+                        break;
+                    case AttributeValueType.STRING:
+                        string s = Message.GetAttributeValue<string>(attr, out found);
+                        Console.WriteLine($"value: {s}");
+                        break;
+                    case AttributeValueType.JSONSTRING:
+                        string js = Message.GetAttributeValue<string>(attr, out found);
+                        Console.WriteLine($"value: {js}");
+                        break;
+                }
+            }
+            Console.WriteLine($"===========================");
+        }
+
         static public void PrintMessage(Message msg)
         {
             Console.WriteLine($"===========================");
@@ -85,23 +133,15 @@ namespace WinSDKTest
             Console.WriteLine($"IsRead: {msg.IsRead}");
             Console.WriteLine($"MessageOnlineState: {msg.MessageOnlineState}");
             Console.WriteLine($"IsThread: {msg.IsThread}");
-            //TODO: need to test
-            /*foreach (var it in msg.Attributes)
-            {
-                AttributeValue attr = it.Value;
-                string jstr = attr.ToJsonObject().ToString();
-                Console.WriteLine($"----------------------------");
-                Console.WriteLine($"attribute item: key:{it.Key}; value:{jstr}");
-            }*/
 
-            if(null != msg.ReactionList)
+            PrintAttributeValue(msg.Attributes);
+
+            List<MessageReaction> list = msg.ReactionList();
+            foreach (var it in list)
             {
-                foreach (var it in msg.ReactionList)
-                {
-                    Console.WriteLine($"----------------------------");
-                    Console.WriteLine($"reaction:{it.Rection};count:{it.Count};state:{it.State}");
-                    Console.WriteLine("$userList:{TransformTool.JsonObjectFromStringList(it.UserList)}");
-                }
+                Console.WriteLine($"----------------------------");
+                Console.WriteLine($"reaction:{it.Rection};count:{it.Count};state:{it.State}");
+                Console.WriteLine("$userList:{TransformTool.JsonObjectFromStringList(it.UserList)}");
             }
 
             switch (msg.Body.Type)
@@ -110,6 +150,15 @@ namespace WinSDKTest
                     {
                         TextBody b = (TextBody)msg.Body;
                         Console.WriteLine($"message text content: {b.Text}");
+                        string str = string.Join(",", b.TargetLanguages.ToArray());
+                        Console.WriteLine($"message targent languages: {str}");
+                        if (null != b.Translations)
+                        {
+                            foreach (var it in b.Translations)
+                            {
+                                Console.WriteLine($"lang: {it.Key} and result:{it.Value}");
+                            }
+                        }
                     }
                     break;
                 case MessageBodyType.FILE:
@@ -988,7 +1037,7 @@ namespace WinSDKTest
             param.Add(menu_index, "groupName (string)"); menu_index++;
             param.Add(menu_index, "desc (string)"); menu_index++;
             param.Add(menu_index, "memberId1 (string)"); menu_index++;
-            param.Add(menu_index, "memberId2 (string)"); menu_index++;
+            //param.Add(menu_index, "memberId2 (string)"); menu_index++;
             param.Add(menu_index, "inviteReason (string)"); menu_index++;
             level3_menus.Add("CreateGroup", new Dictionary<int, string>(param));
             param.Clear();
@@ -1074,6 +1123,8 @@ namespace WinSDKTest
             menu_index = 1;
             param.Add(menu_index, "pageNum (int)"); menu_index++;
             param.Add(menu_index, "pageSize (int)"); menu_index++;
+            param.Add(menu_index, "needAffiliations (bool)"); menu_index++;
+            param.Add(menu_index, "needRole (bool)"); menu_index++;
             level3_menus.Add("FetchJoinedGroupsFromServer", new Dictionary<int, string>(param));
             param.Clear();
 
@@ -1337,6 +1388,9 @@ namespace WinSDKTest
             functions_IRoomManager.Add(menu_index, "UnBlockRoomMembers"); menu_index++;
             functions_IRoomManager.Add(menu_index, "UnMuteRoomMembers"); menu_index++;
             functions_IRoomManager.Add(menu_index, "UpdateRoomAnnouncement"); menu_index++;
+            functions_IRoomManager.Add(menu_index, "AddAttributes"); menu_index++;
+            functions_IRoomManager.Add(menu_index, "FetchAttributes"); menu_index++;
+            functions_IRoomManager.Add(menu_index, "RemoveAttributes"); menu_index++;
             level2_menus.Add("IRoomManager", functions_IRoomManager);
         }
 
@@ -1474,6 +1528,32 @@ namespace WinSDKTest
             param.Add(menu_index, "roomId (string)"); menu_index++;
             param.Add(menu_index, "announcement (string)"); menu_index++;
             level3_menus.Add("UpdateRoomAnnouncement", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "roomId (string)"); menu_index++;
+            param.Add(menu_index, "key1 (string)"); menu_index++;
+            param.Add(menu_index, "val1 (string)"); menu_index++;
+            param.Add(menu_index, "key2 (string)"); menu_index++;
+            param.Add(menu_index, "val2 (string)"); menu_index++;
+            param.Add(menu_index, "autodelete (int 0:false; 1:true)"); menu_index++;
+            param.Add(menu_index, "forced (int 0:false; 1:true)"); menu_index++;
+            level3_menus.Add("AddAttributes", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "roomId (string)"); menu_index++;
+            param.Add(menu_index, "key1 (string)"); menu_index++;
+            param.Add(menu_index, "key2 (string)"); menu_index++;
+            level3_menus.Add("FetchAttributes", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "roomId (string)"); menu_index++;
+            param.Add(menu_index, "key1 (string)"); menu_index++;
+            param.Add(menu_index, "key2 (string)"); menu_index++;
+            param.Add(menu_index, "forced (int 0:false; 1:true)"); menu_index++;
+            level3_menus.Add("RemoveAttributes", new Dictionary<int, string>(param));
             param.Clear();
         }
 
@@ -1621,7 +1701,7 @@ namespace WinSDKTest
 
             menu_index = 1;
             param.Add(menu_index, "groupId (string)"); menu_index++;
-            param.Add(menu_index, "joined (string)"); menu_index++;
+            param.Add(menu_index, "joined (bool)"); menu_index++;
             param.Add(menu_index, "curor (string)"); menu_index++;
             param.Add(menu_index, "pageSize (int)"); menu_index++;
             level3_menus.Add("FetchThreadListOfGroup", new Dictionary<int, string>(param));
@@ -2790,6 +2870,20 @@ namespace WinSDKTest
             msg.MessageType = msg_type;
             msg.IsThread = is_thread;
             msg.IsNeedGroupAck = true;
+            AgoraChat.MessageBody.TextBody tb = (AgoraChat.MessageBody.TextBody)msg.Body;
+            tb.TargetLanguages = new List<string>();
+            tb.TargetLanguages.Add("en");
+            tb.TargetLanguages.Add("ja");
+
+            msg.Attributes = new Dictionary<string, AttributeValue>();
+            Message.SetAttribute(msg.Attributes, "bool", true, AttributeValueType.BOOL);
+            Message.SetAttribute(msg.Attributes, "int", 123456, AttributeValueType.INT32);
+            Message.SetAttribute(msg.Attributes, "uint", 1234567, AttributeValueType.UINT32);
+            Message.SetAttribute(msg.Attributes, "int64", 123456789012345, AttributeValueType.INT64);
+            Message.SetAttribute(msg.Attributes, "float", 1.23, AttributeValueType.FLOAT);
+            Message.SetAttribute(msg.Attributes, "double", 1.23456, AttributeValueType.DOUBLE);
+            Message.SetAttribute(msg.Attributes, "string", "hello world", AttributeValueType.STRING);
+            Message.SetAttribute(msg.Attributes, "jstring", "{\"key\":\"value\"}", AttributeValueType.JSONSTRING);
 
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
                 onSuccess: () => {
@@ -3548,7 +3642,7 @@ namespace WinSDKTest
             if (_reason.Length > 0)
                 reason = _reason;
             else
-                reason = GetParamValueFromContext(0);
+                reason = GetParamValueFromContext(1);
 
             SDKClient.Instance.ContactManager.AddContact(username, reason, new CallBack(
                 onSuccess: () =>
@@ -4937,7 +5031,7 @@ namespace WinSDKTest
             string groupId = "";
             string desc = "";
             string member1 = "";
-            string member2 = "";
+            //string member2 = "";
             string reason = "";
 
             if (_groupId.Length > 0)
@@ -4955,21 +5049,21 @@ namespace WinSDKTest
             else
                 member1 = GetParamValueFromContext(2);
 
-            if (_member2.Length > 0)
-                member2 = _member2;
-            else
-                member2 = GetParamValueFromContext(3);
+            //if (_member2.Length > 0)
+            //    member2 = _member2;
+            //else
+            //    member2 = GetParamValueFromContext(3);
 
             if (_reason.Length > 0)
                 reason = _reason;
             else
-                reason = GetParamValueFromContext(4);
+                reason = GetParamValueFromContext(3);
 
             List<string> members = new List<string>();
             members.Add(member1);
-            members.Add(member2);
+            //members.Add(member2);
 
-            GroupOptions gp = new GroupOptions(GroupStyle.PrivateMemberCanInvite);
+            GroupOptions gp = new GroupOptions(GroupStyle.PublicJoinNeedApproval);
 
             SDKClient.Instance.GroupManager.CreateGroup(groupId, gp, desc, members, reason, new ValueCallBack<Group>(
                 onSuccess: (group) => {
@@ -5384,7 +5478,10 @@ namespace WinSDKTest
             else
                 size = GetIntFromString(GetParamValueFromContext(1));
 
-            SDKClient.Instance.GroupManager.FetchJoinedGroupsFromServer(num, size, callback: new ValueCallBack<List<Group>>(
+            bool affiliations = GetParamValueFromContext(2).CompareTo("true") == 0 ? true : false;
+            bool role = GetParamValueFromContext(3).CompareTo("true") == 0 ? true : false;
+
+            SDKClient.Instance.GroupManager.FetchJoinedGroupsFromServer(num, size, affiliations, role, callback: new ValueCallBack<List<Group>>(
                 onSuccess: (groupList) => {
                     int i = 1;
                     foreach (var group in groupList)
@@ -5396,6 +5493,7 @@ namespace WinSDKTest
                         Console.WriteLine($"Owner: {group.Owner}");
                         Console.WriteLine($"Annoumcement: {group.Announcement}");
                         Console.WriteLine($"MemberCount: {group.MemberCount}");
+                        Console.WriteLine($"permisstionType: {group.PermissionType}");
                         string members = string.Join(",", group.MemberList.ToArray());
                         string admins = string.Join(",", group.AdminList.ToArray());
                         string blocks = string.Join(",", group.BlockList.ToArray());
@@ -5407,6 +5505,7 @@ namespace WinSDKTest
                         Console.WriteLine($"NoticeEnabled: {group.NoticeEnabled}");
                         Console.WriteLine($"MessageBlocked: {group.MessageBlocked}");
                         Console.WriteLine($"IsAllMemberMuted: {group.IsAllMemberMuted}");
+                        //Console.WriteLine($"IsDisabled: {group.IsDisabled}");
                         Console.WriteLine($"option style: {group.Options.Style}");
                         Console.WriteLine($"option MaxCount: {group.Options.MaxCount}");
                         Console.WriteLine($"option InviteNeedConfirm: {group.Options.InviteNeedConfirm}");
@@ -7088,6 +7187,88 @@ namespace WinSDKTest
             ));
         }
 
+        public void CallFunc_IRoomManager_AddAttributes()
+        {
+            string roomId = GetParamValueFromContext(0);
+            string key1 = GetParamValueFromContext(1);
+            string val1 = GetParamValueFromContext(2);
+            string key2 = GetParamValueFromContext(3);
+            string val2 = GetParamValueFromContext(4);
+            bool auto_delete = GetIntFromString(GetParamValueFromContext(5)) == 0 ? false : true;
+            bool forced = GetIntFromString(GetParamValueFromContext(6)) == 0 ? false:true;
+
+            Dictionary<string, string> kv = new Dictionary<string, string>();
+            kv[key1] = val1;
+            kv[key2] = val2;
+
+            SDKClient.Instance.RoomManager.AddAttributes(roomId, kv, auto_delete, forced, new ValueCallBack<Dictionary<string, int>>(
+                onSuccess: (Dictionary<string, int> dict) => {
+                    if(dict.Count == 0)
+                        Console.WriteLine($"AddAttributes success.");
+                    else
+                    {
+                        Console.WriteLine($"AddAttributes partial sucess.");
+                        string str = string.Join(",", dict.ToArray());
+                        Console.WriteLine($"failed keys are:{str}.");
+                    }
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"AddAttributes failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IRoomManager_FetchAttributes()
+        {
+            string roomId = GetParamValueFromContext(0);
+            string key1 = GetParamValueFromContext(1);
+            string key2 = GetParamValueFromContext(2);
+
+            List<string> keys = new List<string>();
+            keys.Add(key1);
+            keys.Add(key2);
+
+            SDKClient.Instance.RoomManager.FetchAttributes(roomId, keys, new ValueCallBack<Dictionary<string, string>>(
+                onSuccess: (Dictionary<string, string> dict) => {
+                    Console.WriteLine($"FetchAttributes sucess.");
+                    string str = string.Join(",", dict.ToArray());
+                    Console.WriteLine($"fetch contents are:{str}.");
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"FetchAttributes failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IRoomManager_RemoveAttributes()
+        {
+            string roomId = GetParamValueFromContext(0);
+            string key1 = GetParamValueFromContext(1);
+            string key2 = GetParamValueFromContext(2);
+            int forced_int = GetIntFromString(GetParamValueFromContext(3));
+            bool forced = (0 == forced_int) ? false : true;
+
+            List<string> keys = new List<string>();
+            keys.Add(key1);
+            keys.Add(key2);
+
+            SDKClient.Instance.RoomManager.RemoveAttributes(roomId, keys, forced, new ValueCallBack<Dictionary<string, int>>(
+                onSuccess: (Dictionary<string, int> dict) => {
+                    if (dict.Count == 0)
+                        Console.WriteLine($"RemoveAttributes success.");
+                    else
+                    {
+                        Console.WriteLine($"RemoveAttributes partial sucess.");
+                        string str = string.Join(",", dict.ToArray());
+                        Console.WriteLine($"failed keys are:{str}.");
+                    }
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"RemoveAttributes failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
         public void CallFunc_IRoomManager()
         {
             if (select_context.level2_item.CompareTo("AddRoomAdmin") == 0)
@@ -7213,6 +7394,24 @@ namespace WinSDKTest
             if (select_context.level2_item.CompareTo("UpdateRoomAnnouncement") == 0)
             {
                 CallFunc_IRoomManager_UpdateRoomAnnouncement();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("AddAttributes") == 0)
+            {
+                CallFunc_IRoomManager_AddAttributes();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("FetchAttributes") == 0)
+            {
+                CallFunc_IRoomManager_FetchAttributes();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("RemoveAttributes") == 0)
+            {
+                CallFunc_IRoomManager_RemoveAttributes();
                 return;
             }
         }
@@ -7858,7 +8057,7 @@ namespace WinSDKTest
                 return;
             }
 
-            List<MessageReaction> list = msg.ReactionList;
+            List<MessageReaction> list = msg.ReactionList();
             Console.WriteLine($"Reaction list count is {list.Count} with id:{messageId}");
             foreach (var lit in list)
             {
@@ -8248,7 +8447,7 @@ namespace WinSDKTest
 
         public void OnAllMemberMuteChangedFromGroup(string groupId, bool isAllMuted)
         {
-            Console.WriteLine($"OnAdminRemovedFromGroup: gid: {groupId}; isAllMuted:{isAllMuted}");
+            Console.WriteLine($"OnAllMemberMuteChangedFromGroup: gid: {groupId}; isAllMuted:{isAllMuted}");
         }
 
         public void OnAnnouncementChangedFromGroup(string groupId, string announcement)
@@ -8291,7 +8490,7 @@ namespace WinSDKTest
             Console.WriteLine($"OnMemberJoinedFromGroup: gid: {groupId}; member:{member}");
         }
 
-        public void OnMuteListAddedFromGroup(string groupId, List<string> mutes, int muteExpire)
+        public void OnMuteListAddedFromGroup(string groupId, List<string> mutes, long muteExpire)
         {
             Console.WriteLine($"OnMuteListAddedFromGroup: gid: {groupId}; muteExpire:{muteExpire}");
             foreach(var it in mutes)
@@ -8316,7 +8515,11 @@ namespace WinSDKTest
 
         public void OnRemoveWhiteListMembersFromGroup(string groupId, List<string> whiteList)
         {
-            throw new NotImplementedException();
+            Console.WriteLine($"OnRemoveWhiteListMembersFromGroup: gid: {groupId}");
+            foreach (var it in whiteList)
+            {
+                Console.WriteLine($"white item: {it}");
+            }
         }
 
         public void OnRequestToJoinAcceptedFromGroup(string groupId, string groupName, string accepter)
@@ -8441,14 +8644,21 @@ namespace WinSDKTest
             Console.WriteLine($"OnRemovedFromRoom: roomId: {roomId}; roomName:{roomName}; participant:{participant}");
         }
 
-        void IRoomManagerDelegate.OnChatroomAttributesChanged(string roomId, Dictionary<string, string> kv, string from)
+        public void OnChatroomAttributesChanged(string roomId, Dictionary<string, string> kv, string from)
         {
-            throw new NotImplementedException();
+            string kv_str = string.Join(",", kv.ToArray());
+            Console.WriteLine($"OnChatroomAttributesChanged: roomId: {roomId}; changed attributes:{kv_str}; from:{from}");
         }
 
-        void IRoomManagerDelegate.OnChatroomAttributesRemoved(string roomId, List<string> keys, string from)
+        public void OnChatroomAttributesRemoved(string roomId, List<string> keys, string from)
         {
-            throw new NotImplementedException();
+            string kv_str = string.Join(",", keys.ToArray());
+            Console.WriteLine($"OnChatroomAttributesRemoved: roomId: {roomId}; removed keys:{kv_str}; from:{from}");
+        }
+
+        public void OnSpecificationChangedFromRoom(Room room)
+        {
+            Console.WriteLine($"OnSpecificationChangedFromRoom roomId: {room.RoomId}; roomName:{room.Name}");
         }
     }
 

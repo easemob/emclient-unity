@@ -215,5 +215,8 @@ namespace AgoraChat
          * @param from         The user ID of the operator.
          */
         void OnChatroomAttributesRemoved(string roomId, List<string> keys, string from);
+
+        //TODO: need to add comments
+        void OnSpecificationChangedFromRoom(Room room);
     }
 }

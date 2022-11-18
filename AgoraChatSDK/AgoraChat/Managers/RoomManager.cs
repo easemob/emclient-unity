@@ -18,7 +18,7 @@ namespace AgoraChat
 
         internal RoomManager(NativeListener listener) : base(listener, SDKMethod.roomManager)
         {
-            listener.GroupManagerEvent += NativeEventcallback;
+            listener.RoomManagerEvent += NativeEventcallback;
             delegater = new List<IRoomManagerDelegate>();
         }
 
@@ -228,7 +228,7 @@ namespace AgoraChat
                 return ModelHelper.CreateWithJsonObject<Room>(jsonNode);
             };
 
-            NativeCall<Room>(SDKMethod.changeChatRoomSubject, jo_param, callback, process);
+            NativeCall<Room>(SDKMethod.createChatRoom, jo_param, callback, process);
         }
 
         /**
@@ -327,7 +327,7 @@ namespace AgoraChat
             jo_param.Add("roomId", roomId);
             Process process = (_, jsonNode) =>
             {
-                return jsonNode.IsString ? jsonNode.Value : null;
+                return jsonNode["ret"].IsString ? jsonNode["ret"].Value : null;
             };
 
             NativeCall<string>(SDKMethod.fetchChatRoomAnnouncement, jo_param, callback, process);
@@ -1227,7 +1227,13 @@ namespace AgoraChat
                             it.OnChatroomAttributesRemoved(roomId, list, userId);
                         }
                         break;
-                }
+                    case SDKMethod.onSpecificationChangedFromRoom:
+                        {
+                            Room room = new Room(jsonNode.AsObject);
+                            it.OnSpecificationChangedFromRoom(room);
+                        }
+                        break;
+				}
             }
         }
     }

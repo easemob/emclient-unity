@@ -41,7 +41,7 @@ namespace sdk_wrapper {
 
         Document d; d.Parse(jstr);
         string room_id = GetJsonValue_String(d, "roomId", "");
-        string admin = GetJsonValue_String(d, "admin", "");
+        string admin = GetJsonValue_String(d, "userId", "");
 
         thread t([=]() {
             EMError error;
@@ -68,7 +68,7 @@ namespace sdk_wrapper {
 
         Document d; d.Parse(jstr);
         string room_id = GetJsonValue_String(d, "roomId", "");
-        EMMucMemberList mem_list = MyJson::FromJsonObjectToVector(d["members"]);
+        EMMucMemberList mem_list = MyJson::FromJsonObjectToVector(d["userIds"]);
 
         thread t([=]() {
             EMError error;
@@ -96,7 +96,7 @@ namespace sdk_wrapper {
 
         Document d; d.Parse(jstr);
         string room_id = GetJsonValue_String(d, "roomId", "");
-        string owner = GetJsonValue_String(d, "newOwner", "");
+        string owner = GetJsonValue_String(d, "userId", "");
 
         thread t([=]() {
             EMError error;
@@ -150,7 +150,7 @@ namespace sdk_wrapper {
 
         Document d; d.Parse(jstr);
         string room_id = GetJsonValue_String(d, "roomId", "");
-        string subject = GetJsonValue_String(d, "subject", "");
+        string subject = GetJsonValue_String(d, "name", "");
 
         thread t([=]() {
             EMError error;
@@ -176,11 +176,11 @@ namespace sdk_wrapper {
         string local_cbid = cbid;
 
         Document d; d.Parse(jstr);
-        string subject = GetJsonValue_String(d, "subject", "");
+        string subject = GetJsonValue_String(d, "name", "");
         string desc = GetJsonValue_String(d, "desc", "");
-        int max_count = GetJsonValue_Int(d, "maxUserCount", 300);
-        string welcome_msg = GetJsonValue_String(d, "welcomeMsg", "");
-        EMMucMemberList mem_list = MyJson::FromJsonObjectToVector(d["members"]);
+        int max_count = GetJsonValue_Int(d, "count", 300);
+        string welcome_msg = GetJsonValue_String(d, "msg", "");
+        EMMucMemberList mem_list = MyJson::FromJsonObjectToVector(d["userIds"]);
 
         EMMucSetting setting(EMMucSetting::EMMucStyle::DEFAUT, max_count, false);
 
@@ -467,7 +467,7 @@ namespace sdk_wrapper {
 
         Document d; d.Parse(jstr);
         string room_id = GetJsonValue_String(d, "roomId", "");
-        EMMucMemberList mem_list = MyJson::FromJsonObjectToVector(d["members"]);
+        EMMucMemberList mem_list = MyJson::FromJsonObjectToVector(d["userIds"]);
 
         thread t([=]() {
             EMError error;
@@ -494,7 +494,7 @@ namespace sdk_wrapper {
 
         Document d; d.Parse(jstr);
         string room_id = GetJsonValue_String(d, "roomId", "");
-        string admin = GetJsonValue_String(d, "admin", "");
+        string admin = GetJsonValue_String(d, "userId", "");
 
         thread t([=]() {
             EMError error;
@@ -521,7 +521,7 @@ namespace sdk_wrapper {
 
         Document d; d.Parse(jstr);
         string room_id = GetJsonValue_String(d, "roomId", "");
-        EMMucMemberList mem_list = MyJson::FromJsonObjectToVector(d["members"]);
+        EMMucMemberList mem_list = MyJson::FromJsonObjectToVector(d["userIds"]);
 
         thread t([=]() {
             EMError error;
@@ -548,7 +548,7 @@ namespace sdk_wrapper {
 
         Document d; d.Parse(jstr);
         string room_id = GetJsonValue_String(d, "roomId", "");
-        EMMucMemberList mem_list = MyJson::FromJsonObjectToVector(d["members"]);
+        EMMucMemberList mem_list = MyJson::FromJsonObjectToVector(d["userIds"]);
 
         thread t([=]() {
             EMError error;
@@ -575,7 +575,7 @@ namespace sdk_wrapper {
 
         Document d; d.Parse(jstr);
         string room_id = GetJsonValue_String(d, "roomId", "");
-        EMMucMemberList mem_list = MyJson::FromJsonObjectToVector(d["members"]);
+        EMMucMemberList mem_list = MyJson::FromJsonObjectToVector(d["userIds"]);
 
         thread t([=]() {
             EMError error;
@@ -684,7 +684,7 @@ namespace sdk_wrapper {
 
         Document d; d.Parse(jstr);
         string room_id = GetJsonValue_String(d, "roomId", "");
-        EMMucMemberList mem_list = MyJson::FromJsonObjectToVector(d["members"]);
+        EMMucMemberList mem_list = MyJson::FromJsonObjectToVector(d["userIds"]);
 
         thread t([=]() {
             EMError error;
@@ -711,7 +711,7 @@ namespace sdk_wrapper {
 
         Document d; d.Parse(jstr);
         string room_id = GetJsonValue_String(d, "roomId", "");
-        EMMucMemberList mem_list = MyJson::FromJsonObjectToVector(d["members"]);
+        EMMucMemberList mem_list = MyJson::FromJsonObjectToVector(d["userIds"]);
 
         thread t([=]() {
             EMError error;
@@ -796,7 +796,7 @@ namespace sdk_wrapper {
 
         Document d; d.Parse(jstr);
         string room_id = GetJsonValue_String(d, "roomId", "");
-        vector<string> keys = MyJson::FromJsonObjectToVector(d["list"], true);
+        vector<string> keys = MyJson::FromJsonObjectToVector(d["list"]);
 
         thread t([=]() {
             EMError error;

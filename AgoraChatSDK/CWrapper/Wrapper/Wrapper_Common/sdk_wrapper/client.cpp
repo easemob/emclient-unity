@@ -155,7 +155,7 @@ namespace sdk_wrapper
 
         Document d; d.Parse(local_jstr.c_str());
 
-        string user_name = GetJsonValue_String(d, "username", "");
+        string user_name = GetJsonValue_String(d, "userId", "");
         string passwd = GetJsonValue_String(d, "password", "");
 
         thread t([=]() {
@@ -276,7 +276,7 @@ namespace sdk_wrapper
 
         // parse param json
         Document d; d.Parse(local_jstr.c_str());
-        string user_name = GetJsonValue_String(d, "username", "");
+        string user_name = GetJsonValue_String(d, "userId", "");
         string agora_token = GetJsonValue_String(d, "token", "");
 
         // get easemob token with agora_token
@@ -300,10 +300,10 @@ namespace sdk_wrapper
 
         // async login with easemob token
         thread t([=]() {
-            EMErrorPtr error = CLIENT->loginWithToken(user_name, agora_token);
+            EMErrorPtr error = CLIENT->loginWithToken(user_name, easemob_token);
             if (EMError::EM_NO_ERROR == error->mErrorCode) {
 
-                token_wrapper.SetTokenInAutoLogin(user_name, agora_token, expire_ts);
+                token_wrapper.SetTokenInAutoLogin(user_name, easemob_token, expire_ts);
                 //token_wrapper.SaveAutoLoginConfigToFile(configs->deviceUuid()); // not support auto login for platform.
 
                 TOKEN_CHECK_INTERVAL = 180;
@@ -326,7 +326,6 @@ namespace sdk_wrapper
 
         // parse param json
         Document d; d.Parse(jstr);
-        string user_name = GetJsonValue_String(d, "username", "");
         string agora_token = GetJsonValue_String(d, "token", "");
 
         EMError error;
