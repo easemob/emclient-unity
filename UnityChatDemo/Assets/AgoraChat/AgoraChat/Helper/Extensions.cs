@@ -278,7 +278,7 @@ namespace AgoraChat
 
             foreach (BaseModel bm in list)
             {
-                jsonArray.Add(bm.ToJsonObject());
+                jsonArray.AddWithoutNull(bm.ToJsonObject());
             }
 
             return jsonArray;
