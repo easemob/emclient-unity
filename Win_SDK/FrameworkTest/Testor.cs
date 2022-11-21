@@ -8383,9 +8383,9 @@ namespace WinSDKTest
             Console.WriteLine("OnConnected");
         }
 
-        public void OnDisconnected(int i)
+        public void OnDisconnected(DisconnectReason reason)
         {
-            Console.WriteLine($"OnDisconnected: {i}");
+            Console.WriteLine($"OnDisconnected: {reason}");
         }
 
         public void OnTokenExpired()

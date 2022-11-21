@@ -205,7 +205,8 @@ namespace AgoraChat
                         it.OnConnected();
                         break;
                     case SDKMethod.onDisconnected:
-                        // TODO: dujiepeng 需要定义reason?
+                        int reason = jsonNode["ret"].AsInt;
+                        it.OnDisconnected(reason.ToDisconnectReason());
                         break;
                     case SDKMethod.onTokenExpired:
                         it.OnTokenExpired();
@@ -240,7 +241,8 @@ namespace AgoraChat
                         it.OnGroupMultiDevicesEvent(operation, target, userIds);
                         break;
                     case SDKMethod.onUnDisturbMultiDevicesEvent:
-                        // TODO: dujiepeng
+                        // OnUndisturbMultiDevicesEvent is related to Push function
+                        // currently Unity don't support Push function, so ignore OnUndisturbMultiDevicesEvent
                         //it.OnUndisturbMultiDevicesEvent();
                         break;
                     case SDKMethod.onThreadMultiDevicesEvent:

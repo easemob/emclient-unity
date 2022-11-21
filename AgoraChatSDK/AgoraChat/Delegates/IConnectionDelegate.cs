@@ -34,7 +34,7 @@
          * @param i The error code for the disconnection.
          * 
          */
-        void OnDisconnected(int i);
+        void OnDisconnected(DisconnectReason reason);
 
         /**
          * \~chinese
