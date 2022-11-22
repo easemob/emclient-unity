@@ -33,17 +33,19 @@ namespace AgoraChat
 
         internal event ManagerHandle MultiDeviceEvent;
 
+        internal UnityHelper unityHelper;
+
         internal CallbackManager callbackManager;
 
         internal CallbackQueue_Worker queue_worker;
 
         internal NativeListener()
         {
+            unityHelper = UnityHelper.Instance();
 
             callbackManager = new CallbackManager();
 
             queue_worker = CallbackQueue_Worker.Instance();
-            queue_worker.StartRun();
 
             nativeListenerEvent = (string listener, string method, string jsonString) =>
             {
@@ -109,7 +111,7 @@ namespace AgoraChat
 #endif
         ~NativeListener()
         {
-            queue_worker.Stop();
+            queue_worker.ClearQueue();
             CWrapperNative.UnInit();
             nativeListenerEvent = null;
         }

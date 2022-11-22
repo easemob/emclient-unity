@@ -7,13 +7,50 @@ using System.Threading;
 using UnityEngine;
 #endif
 
-
 namespace AgoraChat
 {
 
-    internal class CallbackQueue
+#if _WIN32
+
+    internal class CallbackQueue_ThreadPoolMode
+    {
+        private static CallbackQueue_ThreadPoolMode instance;
+        internal static CallbackQueue_ThreadPoolMode Instance()
+        {
+            if (null == instance)
+            {
+                instance = new CallbackQueue_ThreadPoolMode();
+                ThreadPool.SetMaxThreads(5,5);
+            }
+            return instance;
+        }
+
+        internal void EnQueue(Action action)
+        {
+            ThreadPool.QueueUserWorkItem(callBack:(obj)=> {
+                action();
+            },null);
+        }
+
+        internal void ClearQueue()
+        {
+        }
+    }
+
+#else
+    internal sealed class CallbackQueue_UnityMode
     {
         private Queue<Action> queue = new Queue<Action>();
+
+        private static CallbackQueue_UnityMode instance;
+        internal static CallbackQueue_UnityMode Instance()
+        {
+            if (null == instance)
+            {
+                instance = new CallbackQueue_UnityMode();
+            }
+            return instance;
+        }
 
         internal void ClearQueue()
         {
@@ -29,7 +66,7 @@ namespace AgoraChat
             {
                 if (queue.Count >= 250)
                 {
-                    queue.Dequeue();
+                    DeQueue();
                 }
                 queue.Enqueue(action);
             }
@@ -47,124 +84,11 @@ namespace AgoraChat
             }
             return action;
         }
-    }
 
-#if _WIN32
-    internal class CallbackQueue_ThreadMode
-    {
-        Task worker;
-        bool turn_on;
-        CallbackQueue queue = new CallbackQueue();
-
-        private static CallbackQueue_ThreadMode instance;
-        internal static CallbackQueue_ThreadMode Instance()
+        internal void Process()
         {
-            if (null == instance)
-            {
-                instance = new CallbackQueue_ThreadMode();
-            }
-            return instance;
-        }
-
-        internal void EnQueue(Action action)
-        {
-            queue.EnQueue(action);
-        }
-
-        internal void StartRun()
-        {
-            queue.ClearQueue();
-            turn_on = true;
-            worker = new Task(Process);
-            worker.Start();
-        }
-
-        internal void Stop()
-        {
-            turn_on = false;
-            queue.ClearQueue();
-        }
-
-        private void Process()
-        {
-            while(turn_on)
-            {
-                Action action = queue.DeQueue();
-                if (null != action)
-                {
-                    action();
-                }
-                else
-                {
-                    Thread.Sleep(20); // if no action, avoid running too fast, sleep 20 ms
-                }
-                action = null;
-            }
-        }
-    }
-
-#else
-    internal sealed class CallbackQueue_UnityMode : MonoBehaviour
-    {
-        CallbackQueue queue = new CallbackQueue();
-
-        static string callback_queue_name = "CallbackQueue_UnityMode";
-        private static bool application_is_quitting = false;
-        private static CallbackQueue_UnityMode instance;
-        internal static CallbackQueue_UnityMode Instance()
-        {
-            if (application_is_quitting == true)
-            {
-                return null;
-            }
-            if (null == instance)
-            {
-                GameObject callback_gameobj = new GameObject(callback_queue_name);
-                DontDestroyOnLoad(callback_gameobj);
-                instance = callback_gameobj.AddComponent<CallbackQueue_UnityMode>();
-            }
-            return instance;
-        }
-
-        internal void EnQueue(Action action)
-        {
-            queue.EnQueue(action);
-        }
-
-        internal void StartRun()
-        {
-            queue.ClearQueue();
-        }
-
-        internal void Stop()
-        {
-            queue.ClearQueue();
-        }
-
-        private void Process()
-        {
-            Action action = queue.DeQueue();
-            if (null != action)
-            {
-                action();
-            }
-            action = null;
-        }
-
-        void Awake()
-        {
-
-        }
-
-        void Update()
-        {
-            Process();
-        }
-
-        void OnDestory()
-        {
-            queue.ClearQueue();
-            application_is_quitting = true;
+            Action action = DeQueue();
+            action?.Invoke();
         }
     }
 #endif
@@ -172,7 +96,7 @@ namespace AgoraChat
     internal class CallbackQueue_Worker
     {
 #if _WIN32
-        CallbackQueue_ThreadMode callback_queue_ = CallbackQueue_ThreadMode.Instance();
+        CallbackQueue_ThreadPoolMode callback_queue_ = CallbackQueue_ThreadPoolMode.Instance();
 #else
         CallbackQueue_UnityMode callback_queue_ = CallbackQueue_UnityMode.Instance();
 #endif
@@ -192,14 +116,9 @@ namespace AgoraChat
             callback_queue_.EnQueue(action);
         }
 
-        internal void StartRun()
+        internal void ClearQueue()
         {
-            callback_queue_.StartRun();
-        }
-
-        internal void Stop()
-        {
-            callback_queue_.Stop();
+            callback_queue_.ClearQueue();
         }
     }
 }
