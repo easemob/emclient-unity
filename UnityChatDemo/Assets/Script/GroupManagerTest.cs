@@ -1297,10 +1297,6 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
         UIManager.DefaultAlert(transform, $"回调 自动同意群组{groupId}邀请，邀请人{inviter}");
     }
 
-    public void OnMuteListAddedFromGroup(string groupId, List<string> mutes, int muteExpire)
-    {
-        UIManager.DefaultAlert(transform, $"回调 {groupId}禁言列表添加");
-    }
 
     public void OnMuteListRemovedFromGroup(string groupId, List<string> mutes)
     {
@@ -1370,7 +1366,8 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
         UIManager.DefaultAlert(transform, $"回调 {groupId} 所有群成员禁言变化{isAllMuted}");
     }
 
-    void IGroupManagerDelegate.OnMuteListAddedFromGroup(string groupId, List<string> mutes, long muteExpire)
+    public void OnMuteListAddedFromGroup(string groupId, List<string> mutes, long muteExpire)
     {
+        UIManager.DefaultAlert(transform, $"回调 {groupId}禁言列表添加");
     }
 }

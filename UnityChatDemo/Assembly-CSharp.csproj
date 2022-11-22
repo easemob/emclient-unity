@@ -126,7 +126,7 @@
     <Compile Include="Assets/Script/UI/UIManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets/AgoraChat/Plugin/Android/AndroidManifest.xml" />
+    <None Include="Assets/AgoraChat/Plugins/Android/AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

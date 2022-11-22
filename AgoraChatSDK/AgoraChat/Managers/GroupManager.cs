@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using AgoraChat.SimpleJSON;
 
 namespace AgoraChat
@@ -43,8 +43,8 @@ namespace AgoraChat
         public void applyJoinToGroup(string groupId, string reason = "", CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
-            jo_param.Add("msg", reason);
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("msg", reason);
             NativeCall(SDKMethod.requestToJoinGroup, jo_param, callback);
         }
 
@@ -68,14 +68,14 @@ namespace AgoraChat
         public void AcceptGroupInvitation(string groupId, ValueCallBack<Group> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
+            jo_param.AddWithoutNull("groupId", groupId);
 
-			Process process = (_, jsonNode) =>
-			{
-				return ModelHelper.CreateWithJsonObject<Group>(jsonNode);
-			};
+            Process process = (_, jsonNode) =>
+            {
+                return ModelHelper.CreateWithJsonObject<Group>(jsonNode);
+            };
 
-			NativeCall<Group>(SDKMethod.acceptInvitationFromGroup, jo_param, callback, process);
+            NativeCall<Group>(SDKMethod.acceptInvitationFromGroup, jo_param, callback, process);
         }
 
         /**
@@ -104,8 +104,8 @@ namespace AgoraChat
         public void AcceptGroupJoinApplication(string groupId, string userId, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
-            jo_param.Add("userId", userId);
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("userId", userId);
             NativeCall(SDKMethod.acceptJoinApplication, jo_param, callback);
         }
 
@@ -134,8 +134,8 @@ namespace AgoraChat
         public void AddGroupAdmin(string groupId, string memberId, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
-            jo_param.Add("userId", memberId);
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("userId", memberId);
             NativeCall(SDKMethod.addAdmin, jo_param, callback);
         }
 
@@ -164,8 +164,8 @@ namespace AgoraChat
         public void AddGroupMembers(string groupId, List<string> newmembers, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
-            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(newmembers));
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(newmembers));
             NativeCall(SDKMethod.addMembers, jo_param, callback);
         }
 
@@ -194,8 +194,8 @@ namespace AgoraChat
         public void AddGroupWhiteList(string groupId, List<string> members, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
-            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall(SDKMethod.addWhiteList, jo_param, callback);
         }
 
@@ -223,7 +223,7 @@ namespace AgoraChat
         public void BlockGroup(string groupId, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
+            jo_param.AddWithoutNull("groupId", groupId);
             NativeCall(SDKMethod.blockGroup, jo_param, callback);
         }
 
@@ -257,8 +257,8 @@ namespace AgoraChat
         public void BlockGroupMembers(string groupId, List<string> members, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
-            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall(SDKMethod.blockMembers, jo_param, callback);
         }
 
@@ -288,8 +288,8 @@ namespace AgoraChat
         public void ChangeGroupDescription(string groupId, string desc, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
-            jo_param.Add("desc", desc);
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("desc", desc);
             NativeCall(SDKMethod.updateDescription, jo_param, callback);
         }
 
@@ -319,8 +319,8 @@ namespace AgoraChat
         public void ChangeGroupName(string groupId, string name, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
-            jo_param.Add("name", name);
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("name", name);
             NativeCall(SDKMethod.updateGroupSubject, jo_param, callback);
         }
 
@@ -350,8 +350,8 @@ namespace AgoraChat
         public void ChangeGroupOwner(string groupId, string newOwner, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
-            jo_param.Add("userId", newOwner);
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("userId", newOwner);
             NativeCall(SDKMethod.updateGroupOwner, jo_param, callback);
         }
 
@@ -375,7 +375,7 @@ namespace AgoraChat
         public void CheckIfInGroupWhiteList(string groupId, ValueCallBack<bool> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
+            jo_param.AddWithoutNull("groupId", groupId);
             Process process = (_, jsonNode) =>
             {
                 return jsonNode["ret"].IsBoolean ? jsonNode["ret"].AsBool : false;
@@ -431,14 +431,14 @@ namespace AgoraChat
         public void CreateGroup(string groupName, GroupOptions options, string desc = null, List<string> inviteMembers = null, string inviteReason = null, ValueCallBack<Group> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("name", groupName);
-			if(null != options)
+            jo_param.AddWithoutNull("name", groupName);
+            if (null != options)
             {
-				jo_param.Add("options", options.ToJsonObject());
-			}
-            jo_param.Add("desc", desc);
-            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(inviteMembers));
-            jo_param.Add("msg", inviteReason);
+                jo_param.AddWithoutNull("options", options.ToJsonObject());
+            }
+            jo_param.AddWithoutNull("desc", desc);
+            jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(inviteMembers));
+            jo_param.AddWithoutNull("msg", inviteReason);
 
             Process process = (_, jsonNode) =>
             {
@@ -471,8 +471,8 @@ namespace AgoraChat
         public void DeclineGroupInvitation(string groupId, string reason = null, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
-            jo_param.Add("msg", reason);
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("msg", reason);
             NativeCall(SDKMethod.declineInvitationFromGroup, jo_param, callback);
         }
 
@@ -504,9 +504,9 @@ namespace AgoraChat
         public void DeclineGroupJoinApplication(string groupId, string userId, string reason = null, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
-            jo_param.Add("userId", userId);
-            jo_param.Add("msg", reason);
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("userId", userId);
+            jo_param.AddWithoutNull("msg", reason);
             NativeCall(SDKMethod.declineJoinApplication, jo_param, callback);
         }
 
@@ -534,7 +534,7 @@ namespace AgoraChat
         public void DestroyGroup(string groupId, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
+            jo_param.AddWithoutNull("groupId", groupId);
             NativeCall(SDKMethod.destroyGroup, jo_param, callback);
         }
 
@@ -562,9 +562,9 @@ namespace AgoraChat
         public void DownloadGroupSharedFile(string groupId, string fileId, string savePath, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
-            jo_param.Add("fileId", fileId);
-            jo_param.Add("savePath", savePath);
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("fileId", fileId);
+            jo_param.AddWithoutNull("savePath", savePath);
             NativeCall(SDKMethod.downloadGroupSharedFile, jo_param, callback);
         }
 
@@ -591,7 +591,7 @@ namespace AgoraChat
         public void GetGroupAnnouncementFromServer(string groupId, ValueCallBack<string> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
+            jo_param.AddWithoutNull("groupId", groupId);
 
             Process process = (_, jsonNode) =>
             {
@@ -629,9 +629,9 @@ namespace AgoraChat
         public void GetGroupBlockListFromServer(string groupId, int pageNum = 1, int pageSize = 200, ValueCallBack<List<string>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
-            jo_param.Add("pageNum", pageNum);
-            jo_param.Add("pageSize", pageSize);
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("pageNum", pageNum);
+            jo_param.AddWithoutNull("pageSize", pageSize);
 
             Process process = (_, jsonNode) =>
             {
@@ -673,9 +673,9 @@ namespace AgoraChat
         public void GetGroupFileListFromServer(string groupId, int pageNum = 1, int pageSize = 200, ValueCallBack<List<GroupSharedFile>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
-            jo_param.Add("pageNum", pageNum);
-            jo_param.Add("pageSize", pageSize);
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("pageNum", pageNum);
+            jo_param.AddWithoutNull("pageSize", pageSize);
 
             Process process = (_, jsonNode) =>
             {
@@ -710,21 +710,21 @@ namespace AgoraChat
         public void GetGroupMemberListFromServer(string groupId, int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<string>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
-            jo_param.Add("cursor", cursor);
-            jo_param.Add("pageSize", pageSize);
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("cursor", cursor);
+            jo_param.AddWithoutNull("pageSize", pageSize);
 
-			Process process = (_, jsonNode) =>
-			{
-				CursorResult<string> cursor_msg = new CursorResult<string>(_, (jn) =>
-				{
-					return jn.IsString ? jn.Value : null;
-				});
+            Process process = (_, jsonNode) =>
+            {
+                CursorResult<string> cursor_msg = new CursorResult<string>(_, (jn) =>
+                {
+                    return jn.IsString ? jn.Value : null;
+                });
 
-				cursor_msg.FromJsonObject(jsonNode.AsObject);
-				return cursor_msg;
+                cursor_msg.FromJsonObject(jsonNode.AsObject);
+                return cursor_msg;
 
-			};
+            };
 
             NativeCall<CursorResult<string>>(SDKMethod.getGroupMemberListFromServer, jo_param, callback, process);
         }
@@ -758,9 +758,9 @@ namespace AgoraChat
         public void GetGroupMuteListFromServer(string groupId, int pageNum = 1, int pageSize = 200, ValueCallBack<List<string>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
-            jo_param.Add("pageNum", pageNum);
-            jo_param.Add("pageSize", pageSize);
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("pageNum", pageNum);
+            jo_param.AddWithoutNull("pageSize", pageSize);
 
             Process process = (_, jsonNode) =>
             {
@@ -791,7 +791,7 @@ namespace AgoraChat
         public void GetGroupSpecificationFromServer(string groupId, ValueCallBack<Group> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
+            jo_param.AddWithoutNull("groupId", groupId);
 
             Process process = (_, jsonNode) =>
             {
@@ -825,7 +825,7 @@ namespace AgoraChat
         public void GetGroupWhiteListFromServer(string groupId, ValueCallBack<List<string>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
+            jo_param.AddWithoutNull("groupId", groupId);
 
             Process process = (_, jsonNode) =>
             {
@@ -851,7 +851,7 @@ namespace AgoraChat
         public Group GetGroupWithId(string groupId)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
+            jo_param.AddWithoutNull("groupId", groupId);
             JSONNode jn = NativeGet(SDKMethod.getGroupWithId, jo_param).GetReturnJsonNode();
             return ModelHelper.CreateWithJsonObject<Group>(jn);
         }
@@ -910,10 +910,10 @@ namespace AgoraChat
         public void FetchJoinedGroupsFromServer(int pageNum = 0, int pageSize = 20, bool needAffiliations = false, bool needRole = false, ValueCallBack<List<Group>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("pageNum", pageNum);
-            jo_param.Add("pageSize", pageSize);
-            jo_param.Add("needAffiliations", needAffiliations);
-            jo_param.Add("needRole", needRole);
+            jo_param.AddWithoutNull("pageNum", pageNum);
+            jo_param.AddWithoutNull("pageSize", pageSize);
+            jo_param.AddWithoutNull("needAffiliations", needAffiliations);
+            jo_param.AddWithoutNull("needRole", needRole);
 
             Process process = (_, jsonNode) =>
             {
@@ -945,20 +945,20 @@ namespace AgoraChat
         public void FetchPublicGroupsFromServer(int pageSize = 200, string cursor = "", ValueCallBack<CursorResult<GroupInfo>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("pageSize", pageSize);
-            jo_param.Add("cursor", cursor);
+            jo_param.AddWithoutNull("pageSize", pageSize);
+            jo_param.AddWithoutNull("cursor", cursor);
 
-			Process process = (_, jsonNode) =>
-			{
-				CursorResult<GroupInfo> cursor_msg = new CursorResult<GroupInfo>(_, (jn) =>
-				{
-					return ModelHelper.CreateWithJsonObject<GroupInfo>(jn);
-				});
+            Process process = (_, jsonNode) =>
+            {
+                CursorResult<GroupInfo> cursor_msg = new CursorResult<GroupInfo>(_, (jn) =>
+                {
+                    return ModelHelper.CreateWithJsonObject<GroupInfo>(jn);
+                });
 
-				cursor_msg.FromJsonObject(jsonNode.AsObject);
-				return cursor_msg;
+                cursor_msg.FromJsonObject(jsonNode.AsObject);
+                return cursor_msg;
 
-			};
+            };
 
             NativeCall<CursorResult<GroupInfo>>(SDKMethod.getPublicGroupsFromServer, jo_param, callback, process);
         }
@@ -983,7 +983,7 @@ namespace AgoraChat
         public void JoinPublicGroup(string groupId, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
+            jo_param.AddWithoutNull("groupId", groupId);
             NativeCall(SDKMethod.joinPublicGroup, jo_param, callback);
         }
 
@@ -1007,7 +1007,7 @@ namespace AgoraChat
         public void LeaveGroup(string groupId, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
+            jo_param.AddWithoutNull("groupId", groupId);
             NativeCall(SDKMethod.leaveGroup, jo_param, callback);
         }
 
@@ -1035,7 +1035,7 @@ namespace AgoraChat
         public void MuteGroupAllMembers(string groupId, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
+            jo_param.AddWithoutNull("groupId", groupId);
             NativeCall(SDKMethod.muteAllMembers, jo_param, callback);
         }
 
@@ -1064,8 +1064,8 @@ namespace AgoraChat
         public void MuteGroupMembers(string groupId, List<string> members, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
-            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall(SDKMethod.muteMembers, jo_param, callback);
         }
 
@@ -1094,8 +1094,8 @@ namespace AgoraChat
         public void RemoveGroupAdmin(string groupId, string memberId, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
-            jo_param.Add("userId", memberId);
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("userId", memberId);
             NativeCall(SDKMethod.removeAdmin, jo_param, callback);
         }
 
@@ -1125,8 +1125,8 @@ namespace AgoraChat
         public void DeleteGroupSharedFile(string groupId, string fileId, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
-            jo_param.Add("fileId", fileId);
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("fileId", fileId);
             NativeCall(SDKMethod.removeGroupSharedFile, jo_param, callback);
         }
 
@@ -1156,8 +1156,8 @@ namespace AgoraChat
         public void DeleteGroupMembers(string groupId, List<string> members, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
-            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall(SDKMethod.removeMembers, jo_param, callback);
         }
 
@@ -1187,8 +1187,8 @@ namespace AgoraChat
         public void RemoveGroupWhiteList(string groupId, List<string> members, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
-            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall(SDKMethod.removeWhiteList, jo_param, callback);
         }
 
@@ -1212,7 +1212,7 @@ namespace AgoraChat
         public void UnBlockGroup(string groupId, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
+            jo_param.AddWithoutNull("groupId", groupId);
             NativeCall(SDKMethod.unblockGroup, jo_param, callback);
         }
 
@@ -1242,8 +1242,8 @@ namespace AgoraChat
         public void UnBlockGroupMembers(string groupId, List<string> members, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
-            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall(SDKMethod.unblockMembers, jo_param, callback);
         }
 
@@ -1271,7 +1271,7 @@ namespace AgoraChat
         public void UnMuteGroupAllMembers(string groupId, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
+            jo_param.AddWithoutNull("groupId", groupId);
             NativeCall(SDKMethod.unMuteAllMembers, jo_param, callback);
         }
 
@@ -1301,9 +1301,9 @@ namespace AgoraChat
         public void UnMuteGroupMembers(string groupId, List<string> members, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
-			jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
-			NativeCall(SDKMethod.unMuteMembers, jo_param, callback);
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
+            NativeCall(SDKMethod.unMuteMembers, jo_param, callback);
         }
 
         /**
@@ -1332,8 +1332,8 @@ namespace AgoraChat
         public void UpdateGroupAnnouncement(string groupId, string announcement, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
-            jo_param.Add("announcement", announcement);
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("announcement", announcement);
             NativeCall(SDKMethod.updateGroupAnnouncement, jo_param, callback);
         }
 
@@ -1363,8 +1363,8 @@ namespace AgoraChat
         public void UpdateGroupExt(string groupId, string ext, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
-            jo_param.Add("ext", ext);
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("ext", ext);
             NativeCall(SDKMethod.updateGroupExt, jo_param, callback);
         }
 
@@ -1391,8 +1391,8 @@ namespace AgoraChat
         public void UploadGroupSharedFile(string groupId, string filePath, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("groupId", groupId);
-            jo_param.Add("filePath", filePath);
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("filePath", filePath);
             NativeCall(SDKMethod.uploadGroupSharedFile, jo_param, callback);
         }
 

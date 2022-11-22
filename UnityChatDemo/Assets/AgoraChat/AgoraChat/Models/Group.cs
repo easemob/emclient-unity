@@ -221,20 +221,20 @@ namespace AgoraChat
         internal override JSONObject ToJsonObject()
         {
             JSONObject jo = new JSONObject();
-            jo.Add("groupId", GroupId);
-            jo.Add("name", Name);
-            jo.Add("desc", Description);
-            jo.Add("owner", Owner);
-            jo.Add("announcement", Announcement);
-            jo.Add("memberCount", MemberCount);
-            jo.Add("memberList", JsonObject.JsonArrayFromStringList(MemberList));
-            jo.Add("adminList", JsonObject.JsonArrayFromStringList(AdminList));
-            jo.Add("blockList", JsonObject.JsonArrayFromStringList(BlockList));
-            jo.Add("muteList", JsonObject.JsonArrayFromStringList(MuteList));
-            jo.Add("block", MessageBlocked);
-            jo.Add("isMuteAll", IsAllMemberMuted);
-            jo.Add("options", Options.ToJsonObject());
-            jo.Add("permissionType", PermissionType.ToInt());
+            jo.AddWithoutNull("groupId", GroupId);
+            jo.AddWithoutNull("name", Name);
+            jo.AddWithoutNull("desc", Description);
+            jo.AddWithoutNull("owner", Owner);
+            jo.AddWithoutNull("announcement", Announcement);
+            jo.AddWithoutNull("memberCount", MemberCount);
+            jo.AddWithoutNull("memberList", JsonObject.JsonArrayFromStringList(MemberList));
+            jo.AddWithoutNull("adminList", JsonObject.JsonArrayFromStringList(AdminList));
+            jo.AddWithoutNull("blockList", JsonObject.JsonArrayFromStringList(BlockList));
+            jo.AddWithoutNull("muteList", JsonObject.JsonArrayFromStringList(MuteList));
+            jo.AddWithoutNull("block", MessageBlocked);
+            jo.AddWithoutNull("isMuteAll", IsAllMemberMuted);
+            jo.AddWithoutNull("options", Options.ToJsonObject());
+            jo.AddWithoutNull("permissionType", PermissionType.ToInt());
             return jo;
         }
     }

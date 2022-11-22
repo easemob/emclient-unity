@@ -48,8 +48,8 @@ namespace AgoraChat
         public void AddRoomAdmin(string roomId, string memberId, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("userId", memberId);
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("userId", memberId);
             NativeCall(SDKMethod.addChatRoomAdmin, jo_param, callback);
         }
 
@@ -91,8 +91,8 @@ namespace AgoraChat
         public void BlockRoomMembers(string roomId, List<string> members, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall(SDKMethod.blockChatRoomMembers, jo_param, callback);
         }
 
@@ -122,8 +122,8 @@ namespace AgoraChat
         public void ChangeRoomOwner(string roomId, string newOwner, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("userId", newOwner);
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("userId", newOwner);
             NativeCall(SDKMethod.changeChatRoomOwner, jo_param, callback);
         }
 
@@ -153,8 +153,8 @@ namespace AgoraChat
         public void ChangeRoomDescription(string roomId, string newDescription, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("desc", newDescription);
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("desc", newDescription);
             NativeCall(SDKMethod.changeChatRoomDescription, jo_param, callback);
         }
 
@@ -184,8 +184,8 @@ namespace AgoraChat
         public void ChangeRoomName(string roomId, string newName, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("name", newName);
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("name", newName);
             NativeCall(SDKMethod.changeChatRoomSubject, jo_param, callback);
         }
 
@@ -217,11 +217,11 @@ namespace AgoraChat
         public void CreateRoom(string name, string descriptions = null, string welcomeMsg = null, int maxUserCount = 300, List<string> members = null, ValueCallBack<Room> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("name", name);
-            jo_param.Add("desc", descriptions);
-            jo_param.Add("msg", welcomeMsg);
-            jo_param.Add("count", maxUserCount);
-            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
+            jo_param.AddWithoutNull("name", name);
+            jo_param.AddWithoutNull("desc", descriptions);
+            jo_param.AddWithoutNull("msg", welcomeMsg);
+            jo_param.AddWithoutNull("count", maxUserCount);
+            jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
 
             Process process = (_, jsonNode) =>
             {
@@ -255,7 +255,7 @@ namespace AgoraChat
         public void DestroyRoom(string roomId, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
+            jo_param.AddWithoutNull("roomId", roomId);
             NativeCall(SDKMethod.destroyChatRoom, jo_param, callback);
         }
 
@@ -287,20 +287,18 @@ namespace AgoraChat
         public void FetchPublicRoomsFromServer(int pageNum = 1, int pageSize = 200, ValueCallBack<PageResult<Room>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("pageNum", pageNum);
-            jo_param.Add("pageSize", pageSize);
+            jo_param.AddWithoutNull("pageNum", pageNum);
+            jo_param.AddWithoutNull("pageSize", pageSize);
+            Process process = (_, jsonNode) =>
+            {
+                PageResult<Room> cursor_msg = new PageResult<Room>(_, (jn) =>
+                {
+                    return ModelHelper.CreateWithJsonObject<Room>(jn);
+                });
 
-			Process process = (_, jsonNode) =>
-			{
-				PageResult<Room> cursor_msg = new PageResult<Room>(_, (jn) =>
-				{
-					return ModelHelper.CreateWithJsonObject<Room>(jn);
-				});
-
-				cursor_msg.FromJsonObject(jsonNode.AsObject);
-				return cursor_msg;
-			};
-
+                cursor_msg.FromJsonObject(jsonNode.AsObject);
+                return cursor_msg;
+            };
             NativeCall<PageResult<Room>>(SDKMethod.fetchPublicChatRoomsFromServer, jo_param, callback, process);
         }
 
@@ -324,7 +322,7 @@ namespace AgoraChat
         public void FetchRoomAnnouncement(string roomId, ValueCallBack<string> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
+            jo_param.AddWithoutNull("roomId", roomId);
             Process process = (_, jsonNode) =>
             {
                 return jsonNode["ret"].IsString ? jsonNode["ret"].Value : null;
@@ -367,9 +365,9 @@ namespace AgoraChat
         public void FetchRoomBlockList(string roomId, int pageNum = 1, int pageSize = 200, ValueCallBack<List<string>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("pageNum", pageNum);
-            jo_param.Add("pageSize", pageSize);
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("pageNum", pageNum);
+            jo_param.AddWithoutNull("pageSize", pageSize);
             Process process = (_, jsonNode) =>
             {
                 return List.StringListFromJsonArray(jsonNode);
@@ -400,101 +398,98 @@ namespace AgoraChat
             JSONObject jo_param = new JSONObject();
             jo_param.Add("roomId", roomId);
 
-			Process process = (_, jsonNode) =>
-			{
-				return ModelHelper.CreateWithJsonObject<Room>(jsonNode);
-			};
+            Process process = (_, jsonNode) =>
+            {
+                return ModelHelper.CreateWithJsonObject<Room>(jsonNode);
+            };
 
-			NativeCall<Room>(SDKMethod.fetchChatRoomInfoFromServer, jo_param, callback, process);
+            NativeCall<Room>(SDKMethod.fetchChatRoomInfoFromServer, jo_param, callback, process);
         }
-
         /**
-		 * \~chinese
-		 * 以分页方式获取聊天室成员列表。
-		 * 
-		 * 对于数据量未知且很大的情况，你可以设置 `pageSize` 和 `cursor` 分页获取数据。
-		 *
-		 * 异步方法。
-		 *
-		 * @param roomId		聊天室 ID。
-		 * @param cursor		从该游标位置开始取数据。首次调用 `cursor` 传空值，SDK 按照用户加入聊天室时间的倒序获取数据，即从最新数据开始获取。服务器返回的数据中包含 `cursor` 字段，该字段保存在本地，下次调用接口时，可以将更新的 `cursor` 传入作为开始获取数据的位置。
-		 * @param pageSize		每页期望返回的成员数。如果当前为最后一页，返回的数据量小于该参数的值；
-		 * @param callback		操作结果回调，成功则返回聊天室成员列表，失败则返回错误描述，详见 {@link ValueCallBack}。
-		 * 
-		 *  
-		 * \~english
-		 * Gets the chat room member list with pagination.
-		 * For a large but unknown quantity of data, you can get data with pagination by specifying `pageSize` and `cursor`.
-		 *
-		 * This is an asynchronous method.
-		 *
-		 * @param roomId		The chat room ID.
-		 * @param cursor		The cursor position from which to start to get data.
-		 *                      At the first method call, if you set `cursor` as `null`, the SDK gets the data in the reverse chronological order of when users joined the chat room. 
-		 *                      Amid the returned data (CursorResult), `cursor` is a field saved locally and the updated cursor can be passed as the position from which to start to get data for the next query.
-		 * @param pageSize		The number of members that you expect to get on each page. For the last page, the number of returned members is less than the parameter value.
-		 * @param callback		The operation callback. If success, the chat room member list is returned; otherwise, an error is returned. See {@link ValueCallBack}.
-		 * 
-		 */
+         * \~chinese
+         * 以分页方式获取聊天室成员列表。
+         * 
+         * 对于数据量未知且很大的情况，你可以设置 `pageSize` 和 `cursor` 分页获取数据。
+         *
+         * 异步方法。
+         *
+         * @param roomId		聊天室 ID。
+         * @param cursor		从该游标位置开始取数据。首次调用 `cursor` 传空值，SDK 按照用户加入聊天室时间的倒序获取数据，即从最新数据开始获取。服务器返回的数据中包含 `cursor` 字段，该字段保存在本地，下次调用接口时，可以将更新的 `cursor` 传入作为开始获取数据的位置。
+         * @param pageSize		每页期望返回的成员数。如果当前为最后一页，返回的数据量小于该参数的值；
+         * @param callback		操作结果回调，成功则返回聊天室成员列表，失败则返回错误描述，详见 {@link ValueCallBack}。
+         * 
+         *  
+         * \~english
+         * Gets the chat room member list with pagination.
+         * For a large but unknown quantity of data, you can get data with pagination by specifying `pageSize` and `cursor`.
+         *
+         * This is an asynchronous method.
+         *
+         * @param roomId		The chat room ID.
+         * @param cursor		The cursor position from which to start to get data.
+         *                      At the first method call, if you set `cursor` as `null`, the SDK gets the data in the reverse chronological order of when users joined the chat room. 
+         *                      Amid the returned data (CursorResult), `cursor` is a field saved locally and the updated cursor can be passed as the position from which to start to get data for the next query.
+         * @param pageSize		The number of members that you expect to get on each page. For the last page, the number of returned members is less than the parameter value.
+         * @param callback		The operation callback. If success, the chat room member list is returned; otherwise, an error is returned. See {@link ValueCallBack}.
+         * 
+         */
         public void FetchRoomMembers(string roomId, string cursor = "", int pageSize = 200, ValueCallBack<CursorResult<string>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("cursor", cursor);
-            jo_param.Add("pageSize", pageSize);
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("cursor", cursor);
+            jo_param.AddWithoutNull("pageSize", pageSize);
+            Process process = (_, jsonNode) =>
+            {
+                CursorResult<string> cursor_msg = new CursorResult<string>(_, (jn) =>
+                {
+                    return jn.IsString ? jn.Value : null;
+                });
 
-			Process process = (_, jsonNode) =>
-			{
-				CursorResult<string> cursor_msg = new CursorResult<string>(_, (jn) =>
-				{
-					return jn.IsString ? jn.Value : null;
-				});
+                cursor_msg.FromJsonObject(jsonNode.AsObject);
+                return cursor_msg;
 
-				cursor_msg.FromJsonObject(jsonNode.AsObject);
-				return cursor_msg;
-
-			};
-
+            };
             NativeCall<CursorResult<string>>(SDKMethod.fetchChatRoomMembers, jo_param, callback, process);
         }
 
         /**
-		 * \~chinese
-		 * 以分页方式获取聊天室禁言列表。
-		 * 
-		 * 对于数据量未知且很大的情况，你可以设置 `pageSize` 和 `cursor` 分页获取数据。
-		 * 
-		 * 仅聊天室所有者和管理员可调用此方法。
-		 *
-		 * 异步方法。
-		 *
-		 * @param roomId		聊天室 ID。
-		 * @param pageNum		当前页码，从 1 开始。
-		 * @param pageSize		每页返回的禁言成员数。如果当前为最后一页，返回的数量小于该参数的值。
-		 * @param callback		操作结果回调，成功则返回聊天室禁言列表，失败返回错误描述，详见 {@link ValueCallBack}。
-		 * 
-		 *
-		 * \~english
-		 * Gets the list of members who are muted in the chat room.
-		 *
-		 * For a large but unknown quantity of data, you can get data with pagination by specifying `pageSize` and `cursor`.
-		 * 
-		 * Only the chat room owner or admin can call this method.
-		 *
-		 * This is an asynchronous method.
-		 *
-		 * @param roomId		The chat room ID.
-		 * @param pageNum		The page number, starting from 1.
-		 * @param pageSize		The number of muted members that you expect to get on each page. For the last page, the actual number of returned members is less than the parameter value.
-		 * @param callback		The operation callback. If success, the chat room mute list is returned; otherwise, an error is returned. See {@link ValueCallBack}.
-		 * 
-		 */
+         * \~chinese
+         * 以分页方式获取聊天室禁言列表。
+         * 
+         * 对于数据量未知且很大的情况，你可以设置 `pageSize` 和 `cursor` 分页获取数据。
+         * 
+         * 仅聊天室所有者和管理员可调用此方法。
+         *
+         * 异步方法。
+         *
+         * @param roomId		聊天室 ID。
+         * @param pageNum		当前页码，从 1 开始。
+         * @param pageSize		每页返回的禁言成员数。如果当前为最后一页，返回的数量小于该参数的值。
+         * @param callback		操作结果回调，成功则返回聊天室禁言列表，失败返回错误描述，详见 {@link ValueCallBack}。
+         * 
+         *
+         * \~english
+         * Gets the list of members who are muted in the chat room.
+         *
+         * For a large but unknown quantity of data, you can get data with pagination by specifying `pageSize` and `cursor`.
+         * 
+         * Only the chat room owner or admin can call this method.
+         *
+         * This is an asynchronous method.
+         *
+         * @param roomId		The chat room ID.
+         * @param pageNum		The page number, starting from 1.
+         * @param pageSize		The number of muted members that you expect to get on each page. For the last page, the actual number of returned members is less than the parameter value.
+         * @param callback		The operation callback. If success, the chat room mute list is returned; otherwise, an error is returned. See {@link ValueCallBack}.
+         * 
+         */
         public void FetchRoomMuteList(string roomId, int pageSize = 200, int pageNum = 1, ValueCallBack<List<string>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("pageNum", pageNum);
-            jo_param.Add("pageSize", pageSize);
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("pageNum", pageNum);
+            jo_param.AddWithoutNull("pageSize", pageSize);
 
             Process process = (_, jsonNode) =>
             {
@@ -505,286 +500,286 @@ namespace AgoraChat
         }
 
         /**
-		 * \~chinese
-		 * 加入聊天室。
-		 * 
-		 * 退出聊天室调用 {@link #LeaveRoom(String, CallBack)}。
-		 *
-		 * 异步方法。
-		 *
-		 * @param roomId 	聊天室 ID。
-		 * @param callback	操作结果回调，成功则返回加入的聊天室对象，失败则返回错误信息，详见 {@link ValueCallBack}。
-		 * 
-		 * \~english
-		 * Joins the chat room.
-		 * 
-		 * To exit the chat room, you can call {@link #LeaveRoom(String, CallBack)}.
-		 *
-		 * This is an asynchronous method.
-		 *
-		 * @param roomId 	The ID of the chat room to join.
-		 * @param callback	The operation callback. If success, the chat room instance is returned; otherwise, an error is returned. See {@link ValueCallBack}.
-		 */
+         * \~chinese
+         * 加入聊天室。
+         * 
+         * 退出聊天室调用 {@link #LeaveRoom(String, CallBack)}。
+         *
+         * 异步方法。
+         *
+         * @param roomId 	聊天室 ID。
+         * @param callback	操作结果回调，成功则返回加入的聊天室对象，失败则返回错误信息，详见 {@link ValueCallBack}。
+         * 
+         * \~english
+         * Joins the chat room.
+         * 
+         * To exit the chat room, you can call {@link #LeaveRoom(String, CallBack)}.
+         *
+         * This is an asynchronous method.
+         *
+         * @param roomId 	The ID of the chat room to join.
+         * @param callback	The operation callback. If success, the chat room instance is returned; otherwise, an error is returned. See {@link ValueCallBack}.
+         */
         public void JoinRoom(string roomId, ValueCallBack<Room> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
+            jo_param.AddWithoutNull("roomId", roomId);
 
-			Process process = (_, jsonNode) =>
-			{
-				return ModelHelper.CreateWithJsonObject<Room>(jsonNode);
-			};
+            Process process = (_, jsonNode) =>
+            {
+                return ModelHelper.CreateWithJsonObject<Room>(jsonNode);
+            };
 
-			NativeCall<Room>(SDKMethod.joinChatRoom, jo_param, callback, process);
+            NativeCall<Room>(SDKMethod.joinChatRoom, jo_param, callback, process);
         }
 
         /**
-		 * \~chinese
-		 * 离开聊天室。
-		 * 
-		 * 利用 {@link #JoinRoom(String, ValueCallBack)} 加入聊天室后，离开时调用此方法。
-		 *
-		 * 异步方法。
-		 *
-		 * @param roomId 	聊天室 ID。
-		 * @param callback	操作结果回调，详见 {@link CallBack}。
-		 *
-		 * \~english
-		 * Leaves a chat room.
-		 * 
-		 * After joining a chat room via {@link #JoinRoom(String, ValueCallBack)}, the member can call `LeaveRoom` to leave the chat room.
-		 *
-		 * This is an asynchronous method.
-		 *
-		 * @param roomId 	The ID of the chat room to leave.
-		 * @param callback	The operation callback. See {@link CallBack}.
-		 * 
-		 */
+         * \~chinese
+         * 离开聊天室。
+         * 
+         * 利用 {@link #JoinRoom(String, ValueCallBack)} 加入聊天室后，离开时调用此方法。
+         *
+         * 异步方法。
+         *
+         * @param roomId 	聊天室 ID。
+         * @param callback	操作结果回调，详见 {@link CallBack}。
+         *
+         * \~english
+         * Leaves a chat room.
+         * 
+         * After joining a chat room via {@link #JoinRoom(String, ValueCallBack)}, the member can call `LeaveRoom` to leave the chat room.
+         *
+         * This is an asynchronous method.
+         *
+         * @param roomId 	The ID of the chat room to leave.
+         * @param callback	The operation callback. See {@link CallBack}.
+         * 
+         */
         public void LeaveRoom(string roomId, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
+            jo_param.AddWithoutNull("roomId", roomId);
             NativeCall(SDKMethod.leaveChatRoom, jo_param, callback);
         }
 
         /**
-		 * \~chinese
-		 * 禁止聊天室成员发言。
-		 * 
-		 * 仅聊天室所有者和管理员可调用此方法。
-		 *
-		 * 异步方法。
-		 *
-		 * @param roomId	聊天室 ID。
-		 * @param members   要禁言的用户列表。
-		 * @param callback	操作结果回调，详见 {@link CallBack}。
-		 *
-		 * \~english
-		 * Mutes members in a chat room.
-		 * 
-		 * Only the chat room owner or admin can call this method.
-		 *
-		 * This is an asynchronous method.
-		 *
-		 * @param roomId	The chat room ID.
-		 * @param members 	The list of members to be muted.
-		 * @param callback	The operation callback. See {@link CallBack}.
-		 */
+         * \~chinese
+         * 禁止聊天室成员发言。
+         * 
+         * 仅聊天室所有者和管理员可调用此方法。
+         *
+         * 异步方法。
+         *
+         * @param roomId	聊天室 ID。
+         * @param members   要禁言的用户列表。
+         * @param callback	操作结果回调，详见 {@link CallBack}。
+         *
+         * \~english
+         * Mutes members in a chat room.
+         * 
+         * Only the chat room owner or admin can call this method.
+         *
+         * This is an asynchronous method.
+         *
+         * @param roomId	The chat room ID.
+         * @param members 	The list of members to be muted.
+         * @param callback	The operation callback. See {@link CallBack}.
+         */
         public void MuteRoomMembers(string roomId, List<string> members, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall(SDKMethod.muteChatRoomMembers, jo_param, callback);
         }
 
         /**
-		 * \~chinese
-		 * 移除聊天室管理员权限。
-		 * 
-		 * 仅聊天室所有者可调用此方法。
-		 *
-		 * 异步方法。
-		 *
-		 * @param roomId		聊天室 ID。
-		 * @param adminId		要移除管理员权限的 ID。
-		 * @param callback		操作结果回调，详见 {@link CallBack}。
-		 *
-		 * \~english
-		 * Removes the administrative privileges of a chat room admin.
-		 * 
-		 * Only the chat room owner can call this method.
-		 *
-		 * This is an asynchronous method.
-		 *
-		 * @param roomId		The chat room ID.
-		 * @param adminId		The user ID of the admin whose administrative privileges are to be removed.
-		 * @param callback		The operation callback. See {@link CallBack}.
-		 */
+         * \~chinese
+         * 移除聊天室管理员权限。
+         * 
+         * 仅聊天室所有者可调用此方法。
+         *
+         * 异步方法。
+         *
+         * @param roomId		聊天室 ID。
+         * @param adminId		要移除管理员权限的 ID。
+         * @param callback		操作结果回调，详见 {@link CallBack}。
+         *
+         * \~english
+         * Removes the administrative privileges of a chat room admin.
+         * 
+         * Only the chat room owner can call this method.
+         *
+         * This is an asynchronous method.
+         *
+         * @param roomId		The chat room ID.
+         * @param adminId		The user ID of the admin whose administrative privileges are to be removed.
+         * @param callback		The operation callback. See {@link CallBack}.
+         */
         public void RemoveRoomAdmin(string roomId, string adminId, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("userId", adminId);
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("userId", adminId);
             NativeCall(SDKMethod.removeChatRoomAdmin, jo_param, callback);
         }
 
         /**
-		 * \~chinese
-		 * 将成员移出聊天室。
-		 * 
-		 * 仅聊天室所有者和管理员可调用此方法。
-		 *
-		 * 异步方法。
-		 *
-		 * @param roomId		聊天室 ID。
-		 * @param members		要移出聊天室的用户列表。
-		 * @param callback		操作结果回调，详见 {@link CallBack}。
-		 *
-		 * \~english
-		 * Removes members from a chat room.
-		 * 
-		 * Only the chat room owner or admin can call this method.
-		 *
-		 * This is an asynchronous method.
-		 *
-		 * @param roomId		The chat room ID.
-		 * @param members		The list of members to be removed from the chat room.
-		 * @param callback		The operation callback. See {@link CallBack}.
-		 */
+         * \~chinese
+         * 将成员移出聊天室。
+         * 
+         * 仅聊天室所有者和管理员可调用此方法。
+         *
+         * 异步方法。
+         *
+         * @param roomId		聊天室 ID。
+         * @param members		要移出聊天室的用户列表。
+         * @param callback		操作结果回调，详见 {@link CallBack}。
+         *
+         * \~english
+         * Removes members from a chat room.
+         * 
+         * Only the chat room owner or admin can call this method.
+         *
+         * This is an asynchronous method.
+         *
+         * @param roomId		The chat room ID.
+         * @param members		The list of members to be removed from the chat room.
+         * @param callback		The operation callback. See {@link CallBack}.
+         */
         public void DeleteRoomMembers(string roomId, List<string> members, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall(SDKMethod.removeChatRoomMembers, jo_param, callback);
         }
 
         /**
-		 * \~chinese
-		 * 从聊天室黑名单中移除成员。
-		 * 
-		 * 仅聊天室所有者或管理员可调用此方法。
-		 *
-		 * 异步方法。
-		 *
-		 * @param roomId		聊天室 ID。
-		 * @param members		要移除黑名单的成员列表。
-		 * @param callback		操作结果回调，详见 {@link CallBack}。
-		 *
-		 * \~english
-		 * Removes members from the block list of the chat room.
-		 * 
-		 * Only the chat room owner or admin can call this method.
-		 *
-		 * This is an asynchronous method.
-		 *
-		 * @param roomId		The chat room ID.
-		 * @param members		The list of members to be removed from the block list of the chat room.
-		 * @param callback		The operation callback. See {@link CallBack}.
-		 */
+         * \~chinese
+         * 从聊天室黑名单中移除成员。
+         * 
+         * 仅聊天室所有者或管理员可调用此方法。
+         *
+         * 异步方法。
+         *
+         * @param roomId		聊天室 ID。
+         * @param members		要移除黑名单的成员列表。
+         * @param callback		操作结果回调，详见 {@link CallBack}。
+         *
+         * \~english
+         * Removes members from the block list of the chat room.
+         * 
+         * Only the chat room owner or admin can call this method.
+         *
+         * This is an asynchronous method.
+         *
+         * @param roomId		The chat room ID.
+         * @param members		The list of members to be removed from the block list of the chat room.
+         * @param callback		The operation callback. See {@link CallBack}.
+         */
         public void UnBlockRoomMembers(string roomId, List<string> members, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall(SDKMethod.unBlockChatRoomMembers, jo_param, callback);
         }
 
         /**
-		 * \~chinese
-		 * 解除禁言。
-		 * 
-		 * 仅聊天室所有者和管理员可调用此方法。
-		 *
-		 * 异步方法。
-		 *
-		 * @param roomId		聊天室 ID。
-		 * @param members		要解除禁言的用户列表。
-		 * @param callback		操作结果回调，详见 {@link CallBack}。
-		 *
-		 * \~english
-		 * Unmutes members in a chat room.
-		 * 
-		 * Only the chat room owner or admin can call this method.
-		 *
-		 * This is an asynchronous method.
-		 *
-		 * @param roomId		The chat room ID.
-		 * @param members		The list of members to be unmuted.
-		 * @param callback		The operation callback. See {@link CallBack}.
-		 * 
-		 */
+         * \~chinese
+         * 解除禁言。
+         * 
+         * 仅聊天室所有者和管理员可调用此方法。
+         *
+         * 异步方法。
+         *
+         * @param roomId		聊天室 ID。
+         * @param members		要解除禁言的用户列表。
+         * @param callback		操作结果回调，详见 {@link CallBack}。
+         *
+         * \~english
+         * Unmutes members in a chat room.
+         * 
+         * Only the chat room owner or admin can call this method.
+         *
+         * This is an asynchronous method.
+         *
+         * @param roomId		The chat room ID.
+         * @param members		The list of members to be unmuted.
+         * @param callback		The operation callback. See {@link CallBack}.
+         * 
+         */
         public void UnMuteRoomMembers(string roomId, List<string> members, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall(SDKMethod.unMuteChatRoomMembers, jo_param, callback);
         }
 
         /**
-		 * \~chinese
-		 * 更新聊天室公告。
-		 * 
-		 * 仅聊天室所有者和管理员可调用此方法。
-		 *
-		 * 异步方法。
-		 *
-		 * @param roomId 		聊天室 ID。
-		 * @param announcement 	公告内容。
-		 * @param callback		操作结果回调，详见 {@link CallBack}。
-		 *
-		 * \~english
-		 * Updates the chat room announcement.
-		 * 
-		 * Only the chat room owner or admin can call this method.
-		 *
-		 * This is an asynchronous method.
-		 *
-		 * @param roomId 		The chat room ID.
-		 * @param announcement 	The announcement content.
-		 * @param callback		The operation callback. See {@link CallBack}.
-		 * 
-		 */
+         * \~chinese
+         * 更新聊天室公告。
+         * 
+         * 仅聊天室所有者和管理员可调用此方法。
+         *
+         * 异步方法。
+         *
+         * @param roomId 		聊天室 ID。
+         * @param announcement 	公告内容。
+         * @param callback		操作结果回调，详见 {@link CallBack}。
+         *
+         * \~english
+         * Updates the chat room announcement.
+         * 
+         * Only the chat room owner or admin can call this method.
+         *
+         * This is an asynchronous method.
+         *
+         * @param roomId 		The chat room ID.
+         * @param announcement 	The announcement content.
+         * @param callback		The operation callback. See {@link CallBack}.
+         * 
+         */
         public void UpdateRoomAnnouncement(string roomId, string announcement, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("announcement", announcement);
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("announcement", announcement);
             NativeCall(SDKMethod.updateChatRoomAnnouncement, jo_param, callback);
         }
 
         /**
-		 * \~chinese
-		 * 设置全员禁言。
-		 * 
-		 * 仅聊天室所有者和管理员可调用此方法。
-		 * 
-		 * 聊天室拥有者、管理员及加入白名单的用户不受影响。
-		 *
-		 * 异步方法。
-		 *
-		 * @param roomId      聊天室 ID。
-		 * @param callback      结果回调，成功时回调 {@link ValueCallBack#onSuccess(Object)}，
-		 *                    失败时回调 {@link ValueCallBack#onError(int, String)}。
-		 *
-		 * \~english
-		 * Mutes all members.
-		 * Only the chat room owner or admin can call this method.
-		 * This method does not work for the chat room owner, admin, and members added to the allow list.
-		 *
-		 * This is an asynchronous method.
-		 *
-		 * @param roomId    The chat room ID.
-		 * @param callback    The completion callback. 
-		 *                  - If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
-		 *                  - If this call fails, calls {@link ValueCallBack#onError(int, String)}.
-		 */
+         * \~chinese
+         * 设置全员禁言。
+         * 
+         * 仅聊天室所有者和管理员可调用此方法。
+         * 
+         * 聊天室拥有者、管理员及加入白名单的用户不受影响。
+         *
+         * 异步方法。
+         *
+         * @param roomId      聊天室 ID。
+         * @param callback      结果回调，成功时回调 {@link ValueCallBack#onSuccess(Object)}，
+         *                    失败时回调 {@link ValueCallBack#onError(int, String)}。
+         *
+         * \~english
+         * Mutes all members.
+         * Only the chat room owner or admin can call this method.
+         * This method does not work for the chat room owner, admin, and members added to the allow list.
+         *
+         * This is an asynchronous method.
+         *
+         * @param roomId    The chat room ID.
+         * @param callback    The completion callback. 
+         *                  - If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
+         *                  - If this call fails, calls {@link ValueCallBack#onError(int, String)}.
+         */
         public void MuteAllRoomMembers(string roomId, ValueCallBack<Room> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
+            jo_param.AddWithoutNull("roomId", roomId);
 
             Process process = (_, jsonNode) =>
             {
@@ -795,32 +790,32 @@ namespace AgoraChat
         }
 
         /**
-		 * \~chinese
-		 * 解除所有成员的禁言状态。
-		 * 
-		 * 仅聊天室所有者和管理员可调用此方法。
-		 *
-		 * 异步方法。
-		 *
-		 * @param roomId    聊天室 ID。
-		 * @param callback    结果回调，成功时回调 {@link ValueCallBack#onSuccess(Object)}，
-		 *                  失败时回调 {@link ValueCallBack#onError(int, String)}。
-		 *
-		 * \~english
-		 * Unmutes all members.
-		 * Only the chat room owner or admin can call this method.
-		 *
-		 * This is an asynchronous method.
-		 *
-		 * @param roomId    The chat room ID.
-		 * @param callback    The completion callback. 
-		 *                  - If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
-		 *                  - If this call fails, calls {@link ValueCallBack#onError(int, String)}.
-		 */
+         * \~chinese
+         * 解除所有成员的禁言状态。
+         * 
+         * 仅聊天室所有者和管理员可调用此方法。
+         *
+         * 异步方法。
+         *
+         * @param roomId    聊天室 ID。
+         * @param callback    结果回调，成功时回调 {@link ValueCallBack#onSuccess(Object)}，
+         *                  失败时回调 {@link ValueCallBack#onError(int, String)}。
+         *
+         * \~english
+         * Unmutes all members.
+         * Only the chat room owner or admin can call this method.
+         *
+         * This is an asynchronous method.
+         *
+         * @param roomId    The chat room ID.
+         * @param callback    The completion callback. 
+         *                  - If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
+         *                  - If this call fails, calls {@link ValueCallBack#onError(int, String)}.
+         */
         public void UnMuteAllRoomMembers(string roomId, ValueCallBack<Room> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
+            jo_param.AddWithoutNull("roomId", roomId);
 
             Process process = (_, jsonNode) =>
             {
@@ -831,223 +826,222 @@ namespace AgoraChat
         }
 
         /**
-		 * \~chinese
-		 * 将成员添加到白名单。
-		 * 
-		 * 仅聊天室所有者或管理员可调用此方法。
-		 * 
-		 * 聊天室所有者或者管理员执行 {@link #MuteAllMembers} 时，加入白名单的成员不受影响。
-		 *
-		 * 异步方法。
-		 *
-		 * @param roomId      聊天室 ID。
-		 * @param members     加入白名单的成员列表。
-		 * @param callback      结果回调，成功时回调 {@link ValueCallBack#onSuccess(Object)}，
-		 *                    失败时回调 {@link ValueCallBack#onError(int, String)}。
-		 *
-		 * \~english
-		 * Adds members to the allow list.
-		 * 
-		 * Only the chat room owner or admin can call this method.
-		 * 
-		 * A call to the {@link #MuteAllMembers} method by the chat room owner or admin does not affect members on the allow list.
-		 *
-		 * This is an asynchronous method.
-		 *
-		 * @param roomId       The chat room ID.
-		 * @param members      The list of members to be added to the allow list.
-		 * @param callback       The completion callback. 
-		 *                     - If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
-		 *                     - If this call fails, calls {@link ValueCallBack#onError(int, String)}.
-		 */
+         * \~chinese
+         * 将成员添加到白名单。
+         * 
+         * 仅聊天室所有者或管理员可调用此方法。
+         * 
+         * 聊天室所有者或者管理员执行 {@link #MuteAllMembers} 时，加入白名单的成员不受影响。
+         *
+         * 异步方法。
+         *
+         * @param roomId      聊天室 ID。
+         * @param members     加入白名单的成员列表。
+         * @param callback      结果回调，成功时回调 {@link ValueCallBack#onSuccess(Object)}，
+         *                    失败时回调 {@link ValueCallBack#onError(int, String)}。
+         *
+         * \~english
+         * Adds members to the allow list.
+         * 
+         * Only the chat room owner or admin can call this method.
+         * 
+         * A call to the {@link #MuteAllMembers} method by the chat room owner or admin does not affect members on the allow list.
+         *
+         * This is an asynchronous method.
+         *
+         * @param roomId       The chat room ID.
+         * @param members      The list of members to be added to the allow list.
+         * @param callback       The completion callback. 
+         *                     - If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
+         *                     - If this call fails, calls {@link ValueCallBack#onError(int, String)}.
+         */
         public void AddWhiteListMembers(string roomId, List<string> members, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall(SDKMethod.addMembersToChatRoomWhiteList, jo_param, callback);
         }
 
         /**
-		 * \~chinese
-		 * 将成员从白名单移除。
-		 * 
-		 * 仅聊天室所有者和管理员可调用此方法。
-		 * 
-		 * 成员从白名单移除后，将受到 {@link #MuteAllMembers} 功能的影响。
-		 *
-		 * 异步方法。
-		 *
-		 * @param roomId         聊天室 ID。
-		 * @param members        移除白名单的用户列表。
-		 * @param callback         结果回调，成功时回调 {@link ValueCallBack#onSuccess(Object)}，
-		 *                       失败时回调 {@link ValueCallBack#onError(int, String)}。
-		 *
-		 * \~english
-		 * Removes members from the block list.
-		 * 
-		 * Only the chat room owner or admin can call this method.
-		 * 
-		 * When members are removed from the block list, a call to the method {@link #MuteAllMembers(String, EMValueCallBack)} will also mute them.
-		 *
-		 * This is an asynchronous method.
-		 *
-		 * @param roomId        The chat room ID.
-		 * @param members       The list of members to be removed from the block list.
-		 * @param callback        The completion callback. 
-		 *                      - If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
-		 *                      - If this call fails, calls {@link ValueCallBack#onError(int, String)}.
-		 */
+         * \~chinese
+         * 将成员从白名单移除。
+         * 
+         * 仅聊天室所有者和管理员可调用此方法。
+         * 
+         * 成员从白名单移除后，将受到 {@link #MuteAllMembers} 功能的影响。
+         *
+         * 异步方法。
+         *
+         * @param roomId         聊天室 ID。
+         * @param members        移除白名单的用户列表。
+         * @param callback         结果回调，成功时回调 {@link ValueCallBack#onSuccess(Object)}，
+         *                       失败时回调 {@link ValueCallBack#onError(int, String)}。
+         *
+         * \~english
+         * Removes members from the block list.
+         * 
+         * Only the chat room owner or admin can call this method.
+         * 
+         * When members are removed from the block list, a call to the method {@link #MuteAllMembers(String, EMValueCallBack)} will also mute them.
+         *
+         * This is an asynchronous method.
+         *
+         * @param roomId        The chat room ID.
+         * @param members       The list of members to be removed from the block list.
+         * @param callback        The completion callback. 
+         *                      - If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
+         *                      - If this call fails, calls {@link ValueCallBack#onError(int, String)}.
+         */
         public void RemoveWhiteListMembers(string roomId, List<string> members, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("userIds", JsonObject.JsonArrayFromStringList(members));
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall(SDKMethod.removeMembersFromChatRoomWhiteList, jo_param, callback);
         }
 
-		//TODO: add comments here
-		public void FetchWhiteListFromServer(string roomId, ValueCallBack<List<string>> callback = null)
-        {
-			JSONObject jo_param = new JSONObject();
-			jo_param.Add("roomId", roomId);
-
-			Process process = (_, jsonNode) =>
-			{
-				return List.StringListFromJsonArray(jsonNode);
-			};
-
-			NativeCall<List<string>>(SDKMethod.fetchChatRoomWhiteListFromServer, jo_param, callback, process);
-		}
-
-		//TODO: add comments here
-		public void CheckIfInRoomWhiteList(string roomId, ValueCallBack<bool> callback = null)
-        {
-			JSONObject jo_param = new JSONObject();
-			jo_param.Add("roomId", roomId);
-
-			Process process = (_, jsonNode) =>
-			{
-				return jsonNode.IsBoolean ? jsonNode.AsBool : false;
-			};
-
-			NativeCall<bool>(SDKMethod.isMemberInChatRoomWhiteListFromServer, jo_param, callback, process);
-		}
-
-		//TODO: need to add comments
-		public Room GetChatRoom(string roomId)
-		{
-			JSONObject jo_param = new JSONObject();
-			jo_param.Add("roomId", roomId);
-
-			JSONNode jn = NativeGet<Room>(SDKMethod.getChatRoom, jo_param).GetReturnJsonNode();
-			return ModelHelper.CreateWithJsonObject<Room>(jn);
-		}
-
-		//TODO: need to add comments
-		public void FetchAllRoomsFromServer(ValueCallBack<List<Room>> callback = null)
-		{
-			Process process = (_, jsonNode) =>
-			{
-				return List.BaseModelListFromJsonArray<Room>(jsonNode);
-			};
-
-			NativeCall<List<Room>>(SDKMethod.getAllChatRooms, null, callback, process);
-		}
-
-		/**
-		 * \~chinese
-		 * 设置聊天室属性。
-		  * 
-		 * 聊天室成员均可调用此方法。
-		 *
-		 * 异步方法。
-		 *
-		 * @param roomId         聊天室 ID。
-		 * @param kv			 新增的属性，为键值对（key-value）结构。在键值对中，key 为属性名，不超过 128 字符，value 为属性值不超过 4096 字符。
-		 *                       每个聊天室最多可有 100 个属性。每个应用的聊天室属性总大小不能超过 10 GB。Key 支持以下字符集：
-		 *						 - 26 个小写英文字母 a-z；
-		 *						 - 26 个大写英文字母 A-Z；
-		 *						 - 10 个数字 0-9；
-		 *						 - “_”, “-”, “.”。
-		 *						，
-		 * @param deleteWhenExit 当前成员退出聊天室时是否自动删除其设置的该聊天室的所有自定义属性。
-		 * 							- （默认）`true`：是。
-		 *							- `false`：否。
-		 * @forced               是否覆盖其他成员设置的 key 相同的属性。
-		 * 							- `true`：是。
-		 *							- （默认）`false`：否。
-		 * @param callback         结果回调，成功时回调 {@link CallBackResult#OnSuccessResult(Dictionary<string, int>)}，
-		 *                       失败时回调 {@link CallBackResult#onError(int, String)}。
-		 *
-		 * \~english
-		 * Sets custom chat room attributes.
-		 * All members in the chat room owner can call this method.
-		 *
-		 * This is an asynchronous method.
-		 *
-		 * @param roomId        The chat room ID.
-		 * @param kv            The chat room attributes to add. The attributes are in key-value format. 
-		 *                      In a key-value pair, the key is the attribute name that can contain 128 characters at most; the value is the attribute value that cannot exceed 4096 characters. 
-		 *                      A chat room can have a maximum of 100 custom attributes and the total length of custom chat room attributes cannot exceed 10 GB for each app. Attribute keys support the following character sets:
-		 *						 - 26 lowercase English letters (a-z)
-		 *						 - 26 uppercase English letters (A-Z)
-		 *						 - 10 numbers (0-9)
-		 *						 - "_", "-", "."
-		 * @deleteWhenExit      Whether to delete the chat room attributes set by the member when he or she exits the chat room.
-		 * 						- (Default)`true`: Yes.
-		 *						- `false`: No.
-		 * @forced              Whether to overwrite the attributes with same key set by others.
-		 * 						- `true`: Yes.
-		 *						- (Default)`false`: No.
-		 * @param callback        The completion callback. If this call succeeds, calls {@link ValueCallBack#OnSuccessValue(Dictionary<string, int>)};
-		 *                      if this call fails, calls {@link CallBackResult#onError(int, String)}.
-		 */
-		public void AddAttributes(string roomId, Dictionary<string, string> kv, bool deleteWhenExit = true, bool forced = false, ValueCallBack<Dictionary<string, int>> callback = null)
+        //TODO: add comments here
+        public void FetchWhiteListFromServer(string roomId, ValueCallBack<List<string>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("kv", JsonObject.JsonObjectFromDictionary(kv));
-            jo_param.Add("deleteWhenExit", deleteWhenExit);
-            jo_param.Add("forced", forced);
+            jo_param.AddWithoutNull("roomId", roomId);
 
-			Process process = (_, jsonNode) =>
-			{
-				return Dictionary.SimpleTypeDictionaryFromJsonObject<int>(jsonNode);
-			};
+            Process process = (_, jsonNode) =>
+            {
+                return List.StringListFromJsonArray(jsonNode);
+            };
 
-			NativeCall<Dictionary<string, int>>(SDKMethod.setChatRoomAttributes, jo_param, callback, process);
+            NativeCall<List<string>>(SDKMethod.fetchChatRoomWhiteListFromServer, jo_param, callback, process);
+        }
+
+        //TODO: add comments here
+        public void CheckIfInRoomWhiteList(string roomId, ValueCallBack<bool> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("roomId", roomId);
+            Process process = (_, jsonNode) =>
+            {
+                return jsonNode.IsBoolean ? jsonNode.AsBool : false;
+            };
+
+            NativeCall<bool>(SDKMethod.isMemberInChatRoomWhiteListFromServer, jo_param, callback, process);
+        }
+
+        //TODO: need to add comments
+        public Room GetChatRoom(string roomId)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("roomId", roomId);
+
+            JSONNode jn = NativeGet<Room>(SDKMethod.getChatRoom, jo_param).GetReturnJsonNode();
+            return ModelHelper.CreateWithJsonObject<Room>(jn);
+        }
+
+        //TODO: need to add comments
+        public void FetchAllRoomsFromServer(ValueCallBack<List<Room>> callback = null)
+        {
+            Process process = (_, jsonNode) =>
+            {
+                return List.BaseModelListFromJsonArray<Room>(jsonNode);
+            };
+
+            NativeCall<List<Room>>(SDKMethod.getAllChatRooms, null, callback, process);
         }
 
         /**
-		 * \~chinese
-		 * 根据聊天室属性 key 列表获取属性列表。
-		 * 聊天室成员均可调用此方法。
-		 *
-		 * 异步方法。
-		 *
-		 * @param roomId         聊天室 ID。
-		 * @param keys			 待获取属性的键值。如果未指定任何 key 值，则表示获取所有属性。
-		 * @param callback         结果回调，成功时回调 {@link ValueCallBack#OnSuccessValue(Dictionary<string, string>)}，
-		 *                       失败时回调 {@link ValueCallBack#onError(int, String)}。
-		 *
-		 * \~english
-		 * Gets the list of custom chat room attributes based on the attribute key list.
-		 * 
-		 * All members in the chat room owner can call this method.
-		 *
-		 * This is an asynchronous method.
-		 *
-		 * @param roomId        The chat room ID.
-		 * @param keys			The key list of attributes to get. If you set it as `null` or leave it empty, this method retrieves all custom attributes.
-		 * @param callback        The completion callback. If this call succeeds, calls {@link ValueCallBack#OnSuccessValue(Dictionary<string, string>)};
-		 *                      if this call fails, calls {@link ValueCallBack#onError(int, String)}.
-		 */
+         * \~chinese
+         * 设置聊天室属性。
+          * 
+         * 聊天室成员均可调用此方法。
+         *
+         * 异步方法。
+         *
+         * @param roomId         聊天室 ID。
+         * @param kv			 新增的属性，为键值对（key-value）结构。在键值对中，key 为属性名，不超过 128 字符，value 为属性值不超过 4096 字符。
+         *                       每个聊天室最多可有 100 个属性。每个应用的聊天室属性总大小不能超过 10 GB。Key 支持以下字符集：
+         *						 - 26 个小写英文字母 a-z；
+         *						 - 26 个大写英文字母 A-Z；
+         *						 - 10 个数字 0-9；
+         *						 - “_”, “-”, “.”。
+         *						，
+         * @param deleteWhenExit 当前成员退出聊天室时是否自动删除其设置的该聊天室的所有自定义属性。
+         * 							- （默认）`true`：是。
+         *							- `false`：否。
+         * @forced               是否覆盖其他成员设置的 key 相同的属性。
+         * 							- `true`：是。
+         *							- （默认）`false`：否。
+         * @param callback         结果回调，成功时回调 {@link CallBackResult#OnSuccessResult(Dictionary<string, int>)}，
+         *                       失败时回调 {@link CallBackResult#onError(int, String)}。
+         *
+         * \~english
+         * Sets custom chat room attributes.
+         * All members in the chat room owner can call this method.
+         *
+         * This is an asynchronous method.
+         *
+         * @param roomId        The chat room ID.
+         * @param kv            The chat room attributes to add. The attributes are in key-value format. 
+         *                      In a key-value pair, the key is the attribute name that can contain 128 characters at most; the value is the attribute value that cannot exceed 4096 characters. 
+         *                      A chat room can have a maximum of 100 custom attributes and the total length of custom chat room attributes cannot exceed 10 GB for each app. Attribute keys support the following character sets:
+         *						 - 26 lowercase English letters (a-z)
+         *						 - 26 uppercase English letters (A-Z)
+         *						 - 10 numbers (0-9)
+         *						 - "_", "-", "."
+         * @deleteWhenExit      Whether to delete the chat room attributes set by the member when he or she exits the chat room.
+         * 						- (Default)`true`: Yes.
+         *						- `false`: No.
+         * @forced              Whether to overwrite the attributes with same key set by others.
+         * 						- `true`: Yes.
+         *						- (Default)`false`: No.
+         * @param callback        The completion callback. If this call succeeds, calls {@link ValueCallBack#OnSuccessValue(Dictionary<string, int>)};
+         *                      if this call fails, calls {@link CallBackResult#onError(int, String)}.
+         */
+        public void AddAttributes(string roomId, Dictionary<string, string> kv, bool deleteWhenExit = true, bool forced = false, ValueCallBack<Dictionary<string, int>> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("kv", JsonObject.JsonObjectFromDictionary(kv));
+            jo_param.AddWithoutNull("deleteWhenExit", deleteWhenExit);
+            jo_param.AddWithoutNull("forced", forced);
+
+            Process process = (_, jsonNode) =>
+            {
+                return Dictionary.SimpleTypeDictionaryFromJsonObject<int>(jsonNode);
+            };
+
+            NativeCall<Dictionary<string, int>>(SDKMethod.setChatRoomAttributes, jo_param, callback, process);
+        }
+
+        /**
+         * \~chinese
+         * 根据聊天室属性 key 列表获取属性列表。
+         * 聊天室成员均可调用此方法。
+         *
+         * 异步方法。
+         *
+         * @param roomId         聊天室 ID。
+         * @param keys			 待获取属性的键值。如果未指定任何 key 值，则表示获取所有属性。
+         * @param callback         结果回调，成功时回调 {@link ValueCallBack#OnSuccessValue(Dictionary<string, string>)}，
+         *                       失败时回调 {@link ValueCallBack#onError(int, String)}。
+         *
+         * \~english
+         * Gets the list of custom chat room attributes based on the attribute key list.
+         * 
+         * All members in the chat room owner can call this method.
+         *
+         * This is an asynchronous method.
+         *
+         * @param roomId        The chat room ID.
+         * @param keys			The key list of attributes to get. If you set it as `null` or leave it empty, this method retrieves all custom attributes.
+         * @param callback        The completion callback. If this call succeeds, calls {@link ValueCallBack#OnSuccessValue(Dictionary<string, string>)};
+         *                      if this call fails, calls {@link ValueCallBack#onError(int, String)}.
+         */
         public void FetchAttributes(string roomId, List<string> keys, ValueCallBack<Dictionary<string, string>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("list", JsonObject.JsonArrayFromStringList(keys));
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("list", JsonObject.JsonArrayFromStringList(keys));
 
             Process process = (_, jsonNode) =>
             {
@@ -1058,58 +1052,58 @@ namespace AgoraChat
         }
 
         /**
-		 * \~chinese
-		 * 根据聊天室 ID 和属性 key 列表删除聊天室自定义属性。
-		 * 
-		 * 聊天室成员均可调用此方法。
-		 *
-		 * 异步方法。
-		 *
-		 * @param roomId         聊天室 ID。
-		 * @param keys           待删除属性的键值。
-		 * @forced               是否强制删除其他用户所设置的相同 key 的属性。
-		 * @param callback         结果回调，成功时回调 {@link CallBackResult#OnSuccessResult(Dictionary<string, int>)}，
-		 *                       失败时回调 {@link CallBackResult#onError(int, String)}。
-		 *
-		 * \~english
-		 * Removes custom chat room attributes by chat room ID and attribute key list.
-		 * 
-		 * All members in the chat room can call this method.
-		 *
-		 * This is an asynchronous method.
-		 *
-		 * @param roomId        The chat room ID.
-		 * @param keys			The keys of custom chat room attributes to remove.
-		 * @forced              Whether to remove attributes with same key set by others.
-		 * @param callback        The completion callback. If this call succeeds, calls {@link CallBackResult#OnSuccessResult(Dictionary<string, int>)};
-		 *                      if this call fails, calls {@link CallBackResult#onError(int, String)}.
-		 */
-        public void RemoveAttributes(string roomId, List<string> keys, bool forced = false, ValueCallBack<Dictionary<string, int>>callback = null)
+         * \~chinese
+         * 根据聊天室 ID 和属性 key 列表删除聊天室自定义属性。
+         * 
+         * 聊天室成员均可调用此方法。
+         *
+         * 异步方法。
+         *
+         * @param roomId         聊天室 ID。
+         * @param keys           待删除属性的键值。
+         * @forced               是否强制删除其他用户所设置的相同 key 的属性。
+         * @param callback         结果回调，成功时回调 {@link CallBackResult#OnSuccessResult(Dictionary<string, int>)}，
+         *                       失败时回调 {@link CallBackResult#onError(int, String)}。
+         *
+         * \~english
+         * Removes custom chat room attributes by chat room ID and attribute key list.
+         * 
+         * All members in the chat room can call this method.
+         *
+         * This is an asynchronous method.
+         *
+         * @param roomId        The chat room ID.
+         * @param keys			The keys of custom chat room attributes to remove.
+         * @forced              Whether to remove attributes with same key set by others.
+         * @param callback        The completion callback. If this call succeeds, calls {@link CallBackResult#OnSuccessResult(Dictionary<string, int>)};
+         *                      if this call fails, calls {@link CallBackResult#onError(int, String)}.
+         */
+        public void RemoveAttributes(string roomId, List<string> keys, bool forced = false, ValueCallBack<Dictionary<string, int>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("roomId", roomId);
-            jo_param.Add("list", JsonObject.JsonArrayFromStringList(keys));
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("list", JsonObject.JsonArrayFromStringList(keys));
 
-			Process process = (_, jsonNode) =>
-			{
-				return Dictionary.SimpleTypeDictionaryFromJsonObject<int>(jsonNode);
-			};
+            Process process = (_, jsonNode) =>
+            {
+                return Dictionary.SimpleTypeDictionaryFromJsonObject<int>(jsonNode);
+            };
 
-			NativeCall<Dictionary<string, int>>(SDKMethod.removeChatRoomAttributes, jo_param, callback, process);
-		}
+            NativeCall<Dictionary<string, int>>(SDKMethod.removeChatRoomAttributes, jo_param, callback, process);
+        }
 
         /**
-		 * \~chinese
-		 * 注册聊天室监听器。
-		 *
-		 * @param roomManagerDelegate 		要注册的聊天室监听器，继承自 {@link IRoomManagerDelegate}。
-		 *
-		 * \~english
-		 * Adds a chat room listener.
-		 *
-		 * @param roomManagerDelegate 		The chat room listener to add. It is inherited from {@link IRoomManagerDelegate}.
-		 * 
-		 */
+         * \~chinese
+         * 注册聊天室监听器。
+         *
+         * @param roomManagerDelegate 		要注册的聊天室监听器，继承自 {@link IRoomManagerDelegate}。
+         *
+         * \~english
+         * Adds a chat room listener.
+         *
+         * @param roomManagerDelegate 		The chat room listener to add. It is inherited from {@link IRoomManagerDelegate}.
+         * 
+         */
         public void AddRoomManagerDelegate(IRoomManagerDelegate roomManagerDelegate)
         {
             if (!delegater.Contains(roomManagerDelegate))
@@ -1118,18 +1112,18 @@ namespace AgoraChat
             }
         }
 
-		/**
-		 * \~chinese
-		 * 移除聊天室监听器。
-		 *
-		 * @param roomManagerDelegate 		要移除的聊天室监听器，继承自 {@link IRoomManagerDelegate}。
-		 *
-		 * \~english
-		 * Removes a chat room listener.
-		 *
-		 * @param roomManagerDelegate 		The chat room listener to remove. It is inherited from {@link IRoomManagerDelegate}.
-		 * 
-		 */
+        /**
+         * \~chinese
+         * 移除聊天室监听器。
+         *
+         * @param roomManagerDelegate 		要移除的聊天室监听器，继承自 {@link IRoomManagerDelegate}。
+         *
+         * \~english
+         * Removes a chat room listener.
+         *
+         * @param roomManagerDelegate 		The chat room listener to remove. It is inherited from {@link IRoomManagerDelegate}.
+         * 
+         */
         public void RemoveRoomManagerDelegate(IRoomManagerDelegate roomManagerDelegate)
         {
             delegater.Remove(roomManagerDelegate);
@@ -1233,7 +1227,7 @@ namespace AgoraChat
                             it.OnSpecificationChangedFromRoom(room);
                         }
                         break;
-				}
+                }
             }
         }
     }

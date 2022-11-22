@@ -37,9 +37,9 @@ namespace AgoraChat
          */
         public void PublishPresence(string description, CallBack callback = null)
         {
-            JSONObject jo_paran = new JSONObject();
-            jo_paran.Add("desc", description);
-            NativeCall(SDKMethod.presenceWithDescription, jo_paran, callback);
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("desc", description);
+            NativeCall(SDKMethod.presenceWithDescription, jo_param, callback);
         }
 
         /**
@@ -59,16 +59,16 @@ namespace AgoraChat
          */
         public void SubscribePresences(List<string> members, long expiry, ValueCallBack<List<Presence>> callback = null)
         {
-            JSONObject jo_paran = new JSONObject();
-            jo_paran.Add("userIds", JsonObject.JsonArrayFromStringList(members));
-            jo_paran.Add("expiry", expiry);
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
+            jo_param.AddWithoutNull("expiry", expiry);
 
             Process process = (_, jsonNode) =>
             {
                 return List.BaseModelListFromJsonArray<Presence>(jsonNode);
             };
 
-            NativeCall<List<Presence>>(SDKMethod.presenceSubscribe, jo_paran, callback, process);
+            NativeCall<List<Presence>>(SDKMethod.presenceSubscribe, jo_param, callback, process);
         }
 
         /**
@@ -87,7 +87,7 @@ namespace AgoraChat
         public void UnsubscribePresences(List<string> members, CallBack callback = null)
         {
             JSONObject jo_paran = new JSONObject();
-            jo_paran.Add("userIds", JsonObject.JsonArrayFromStringList(members));
+            jo_paran.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
             NativeCall<List<Presence>>(SDKMethod.presenceUnsubscribe, jo_paran, callback);
         }
 
@@ -108,16 +108,16 @@ namespace AgoraChat
          */
         public void FetchSubscribedMembers(int pageNum, int pageSize, ValueCallBack<List<string>> callback = null)
         {
-            JSONObject jo_paran = new JSONObject();
-            jo_paran.Add("pageNum", pageNum);
-            jo_paran.Add("pageSize", pageSize);
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("pageNum", pageNum);
+            jo_param.AddWithoutNull("pageSize", pageSize);
 
             Process process = (_, jsonNode) =>
             {
                 return List.StringListFromJsonArray(jsonNode);
             };
 
-            NativeCall<List<string>>(SDKMethod.fetchSubscribedMembersWithPageNum, jo_paran, callback, process);
+            NativeCall<List<string>>(SDKMethod.fetchSubscribedMembersWithPageNum, jo_param, callback, process);
         }
 
         /**
@@ -135,14 +135,14 @@ namespace AgoraChat
          */
         public void FetchPresenceStatus(List<string> members, ValueCallBack<List<Presence>> callback = null)
         {
-            JSONObject jo_paran = new JSONObject();
-            jo_paran.Add("userIds", JsonObject.JsonArrayFromStringList(members));
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
             Process process = (_, jsonNode) =>
             {
                 return List.BaseModelListFromJsonArray<Presence>(jsonNode);
             };
 
-            NativeCall<List<Presence>>(SDKMethod.fetchPresenceStatus, jo_paran, callback, process);
+            NativeCall<List<Presence>>(SDKMethod.fetchPresenceStatus, jo_param, callback, process);
         }
 
         /**

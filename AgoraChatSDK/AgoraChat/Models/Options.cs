@@ -329,42 +329,42 @@ namespace AgoraChat
         internal override JSONObject ToJsonObject()
         {
             JSONObject jo = new JSONObject();
-            jo["appKey"] = AppKey;
-            jo["debugMode"] = DebugMode;
-            jo["autoLogin"] = AutoLogin;
-            jo["acceptInvitationAlways"] = AcceptInvitationAlways;
-            jo["autoAcceptGroupInvitation"] = AutoAcceptGroupInvitation;
-            jo["requireAck"] = RequireAck;
-            jo["requireDeliveryAck"] = RequireDeliveryAck;
-            jo["deleteMessagesAsExitGroup"] = DeleteMessagesAsExitGroup;
-            jo["deleteMessagesAsExitRoom"] = DeleteMessagesAsExitRoom;
-            jo["isRoomOwnerLeaveAllowed"] = IsRoomOwnerLeaveAllowed;
-            jo["sortMessageByServerTime"] = SortMessageByServerTime;
-            jo["usingHttpsOnly"] = UsingHttpsOnly;
-            jo["serverTransfer"] = ServerTransfer;
-            jo["isAutoDownload"] = IsAutoDownload;
-            jo["areaCode"] = (int)AreaCode;
+            jo.AddWithoutNull("appKey", AppKey);
+            jo.AddWithoutNull("debugMode", DebugMode);
+            jo.AddWithoutNull("autoLogin", AutoLogin);
+            jo.AddWithoutNull("acceptInvitationAlways", AcceptInvitationAlways);
+            jo.AddWithoutNull("autoAcceptGroupInvitation", AutoAcceptGroupInvitation);
+            jo.AddWithoutNull("requireAck", RequireAck);
+            jo.AddWithoutNull("requireDeliveryAck", RequireDeliveryAck);
+            jo.AddWithoutNull("deleteMessagesAsExitGroup", DeleteMessagesAsExitGroup);
+            jo.AddWithoutNull("deleteMessagesAsExitRoom", DeleteMessagesAsExitRoom);
+            jo.AddWithoutNull("isRoomOwnerLeaveAllowed", IsRoomOwnerLeaveAllowed);
+            jo.AddWithoutNull("sortMessageByServerTime", SortMessageByServerTime);
+            jo.AddWithoutNull("usingHttpsOnly", UsingHttpsOnly);
+            jo.AddWithoutNull("serverTransfer", ServerTransfer);
+            jo.AddWithoutNull("isAutoDownload", IsAutoDownload);
+            jo.AddWithoutNull("areaCode", (int)AreaCode);
+            jo.AddWithoutNull("enableDnsConfig", EnableDNSConfig);
 
-            jo.Add("enableDnsConfig", EnableDNSConfig);
 
             if (RestServer != null)
             {
-                jo.Add("restServer", RestServer);
+                jo.AddWithoutNull("restServer", RestServer);
             }
 
             if (IMServer != null)
             {
-                jo.Add("imServer", IMServer);
+                jo.AddWithoutNull("imServer", IMServer);
             }
 
             if (IMPort != 0)
             {
-                jo.Add("imPort", IMPort);
+                jo.AddWithoutNull("imPort", IMPort);
             }
 
             if (DNSURL != null)
             {
-                jo.Add("dnsUrl", DNSURL);
+                jo.AddWithoutNull("dnsUrl", DNSURL);
             }
 
 
@@ -392,7 +392,7 @@ namespace AgoraChat
 
             pushConfig.Add("enableVivoPush", enableVivoPush);
 
-            jo.Add("pushConfig", pushConfig);
+            jo.AddWithoutNull("pushConfig", pushConfig);
             */
 
             return jo;

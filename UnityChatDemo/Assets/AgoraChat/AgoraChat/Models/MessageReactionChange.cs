@@ -54,9 +54,9 @@ namespace AgoraChat
         internal override JSONObject ToJsonObject()
         {
             JSONObject jo = new JSONObject();
-            jo.Add("convId", ConversationId);
-            jo.Add("msgId", MessageId);
-            jo.Add("reactions", JsonObject.JsonArrayFromList(ReactionList));
+            jo.AddWithoutNull("convId", ConversationId);
+            jo.AddWithoutNull("msgId", MessageId);
+            jo.AddWithoutNull("reactions", JsonObject.JsonArrayFromList(ReactionList));
             return jo;
         }
     }

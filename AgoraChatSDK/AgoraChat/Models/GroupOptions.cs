@@ -2,7 +2,7 @@
 
 namespace AgoraChat
 {
-    public class GroupOptions: BaseModel
+    public class GroupOptions : BaseModel
     {
         /**
          * \~chinese
@@ -82,12 +82,12 @@ namespace AgoraChat
         internal override JSONObject ToJsonObject()
         {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.Add("style", (int)Style);
-            jsonObject.Add("maxCount", MaxCount);
-            jsonObject.Add("inviteNeedConfirm", InviteNeedConfirm);
-            if(null != Ext)
+            jsonObject.AddWithoutNull("style", (int)Style);
+            jsonObject.AddWithoutNull("maxCount", MaxCount);
+            jsonObject.AddWithoutNull("inviteNeedConfirm", InviteNeedConfirm);
+            if (null != Ext)
             {
-                jsonObject.Add("ext", Ext);
+                jsonObject.AddWithoutNull("ext", Ext);
             }
             return jsonObject;
         }
@@ -97,7 +97,8 @@ namespace AgoraChat
             Style = (GroupStyle)jsonObject["style"].AsInt;
             MaxCount = jsonObject["maxCount"].AsInt;
             InviteNeedConfirm = jsonObject["inviteNeedConfirm"].AsBool;
-            if (!jsonObject["ext"].IsNull) {
+            if (!jsonObject["ext"].IsNull)
+            {
                 Ext = jsonObject["ext"];
             }
         }

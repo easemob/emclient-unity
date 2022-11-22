@@ -90,8 +90,8 @@ namespace AgoraChat
         public bool DeleteConversation(string conversationId, bool deleteMessages = true)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("convId", conversationId);
-            jo_param.Add("deleteMessages", deleteMessages);
+            jo_param.AddWithoutNull("convId", conversationId);
+            jo_param.AddWithoutNull("deleteMessages", deleteMessages);
             NativeCall(SDKMethod.deleteConversation, jo_param);
             return true;
         }
@@ -116,7 +116,7 @@ namespace AgoraChat
         public void DownloadAttachment(string messageId, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("msgId", messageId);
+            jo_param.AddWithoutNull("msgId", messageId);
             NativeCall(SDKMethod.downloadAttachment, jo_param, callback);
         }
 
@@ -140,7 +140,7 @@ namespace AgoraChat
         public void DownloadThumbnail(string messageId, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("msgId", messageId);
+            jo_param.AddWithoutNull("msgId", messageId);
             NativeCall(SDKMethod.downloadThumbnail, jo_param, callback);
         }
 
@@ -179,11 +179,11 @@ namespace AgoraChat
         public void FetchHistoryMessagesFromServer(string conversationId, ConversationType type = ConversationType.Chat, string startMessageId = null, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<CursorResult<Message>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("convId", conversationId);
-            jo_param.Add("convType", type.ToInt());
-            jo_param.Add("startMsgId", startMessageId ?? "");
-            jo_param.Add("direction", direction == MessageSearchDirection.UP ? 0 : 1);
-            jo_param.Add("count", count);
+            jo_param.AddWithoutNull("convId", conversationId);
+            jo_param.AddWithoutNull("convType", type.ToInt());
+            jo_param.AddWithoutNull("startMsgId", startMessageId ?? "");
+            jo_param.AddWithoutNull("direction", direction == MessageSearchDirection.UP ? 0 : 1);
+            jo_param.AddWithoutNull("count", count);
 
             Process process = (_, jsonNode) =>
             {
@@ -229,10 +229,10 @@ namespace AgoraChat
         public Conversation GetConversation(string conversationId, ConversationType type = ConversationType.Chat, bool createIfNeed = true)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("convId", conversationId);
-            jo_param.Add("convType", type.ToInt());
-            jo_param.Add("createIfNeed", createIfNeed);
-            jo_param.Add("isThread", false);
+            jo_param.AddWithoutNull("convId", conversationId);
+            jo_param.AddWithoutNull("convType", type.ToInt());
+            jo_param.AddWithoutNull("createIfNeed", createIfNeed);
+            jo_param.AddWithoutNull("isThread", false);
 
             JSONNode jn = NativeGet(SDKMethod.getConversation, jo_param).GetReturnJsonNode();
 
@@ -260,10 +260,10 @@ namespace AgoraChat
         public Conversation GetThreadConversation(string threadId)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("convId", threadId);
-            jo_param.Add("convType", ConversationType.Group.ToInt());
-            jo_param.Add("createIfNeed", true);
-            jo_param.Add("isThread", true);
+            jo_param.AddWithoutNull("convId", threadId);
+            jo_param.AddWithoutNull("convType", ConversationType.Group.ToInt());
+            jo_param.AddWithoutNull("createIfNeed", true);
+            jo_param.AddWithoutNull("isThread", true);
 
             string json = NativeGet(SDKMethod.getThreadConversation, jo_param);
 
@@ -346,7 +346,7 @@ namespace AgoraChat
         public bool ImportMessages(List<Message> messages)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("list", JsonObject.JsonArrayFromList(messages));
+            jo_param.AddWithoutNull("list", JsonObject.JsonArrayFromList(messages));
 
             string json = NativeGet(SDKMethod.importMessages, jo_param);
             if (null == json || json.Length == 0) return false;
@@ -395,7 +395,7 @@ namespace AgoraChat
         public Message LoadMessage(string messageId)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("msgId", messageId);
+            jo_param.AddWithoutNull("msgId", messageId);
             JSONNode jn = NativeGet(SDKMethod.getMessage, jo_param).GetReturnJsonNode();
 
             if (null == jn) return null;
@@ -447,7 +447,7 @@ namespace AgoraChat
         public void RecallMessage(string messageId, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("msgId", messageId);
+            jo_param.AddWithoutNull("msgId", messageId);
 
             NativeCall(SDKMethod.recallMessage, jo_param, callback);
         }
@@ -476,7 +476,7 @@ namespace AgoraChat
         {
             /*
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("msgId", messageId);
+            jo_param.AddWithoutNull("msgId", messageId);
 
             JSONNode jn = NativeGet(SDKMethod.resendMessage, jo_param, callback).GetReturnJsonNode();
 
@@ -518,11 +518,11 @@ namespace AgoraChat
         public List<Message> SearchMsgFromDB(string keywords, long timestamp = 0, int maxCount = 20, string from = null, MessageSearchDirection direction = MessageSearchDirection.UP)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("keywords", keywords);
-            jo_param.Add("from", from ?? "");
-            jo_param.Add("count", maxCount);
-            jo_param.Add("timestamp", timestamp.ToString());
-            jo_param.Add("direction", direction == MessageSearchDirection.UP ? "up" : "down");
+            jo_param.AddWithoutNull("keywords", keywords);
+            jo_param.AddWithoutNull("from", from ?? "");
+            jo_param.AddWithoutNull("count", maxCount);
+            jo_param.AddWithoutNull("timestamp", timestamp.ToString());
+            jo_param.AddWithoutNull("direction", direction == MessageSearchDirection.UP ? "up" : "down");
 
             JSONNode jn = NativeGet(SDKMethod.searchChatMsgFromDB, jo_param).GetReturnJsonNode();
             return List.BaseModelListFromJsonArray<Message>(jn);
@@ -548,7 +548,7 @@ namespace AgoraChat
         public void SendConversationReadAck(string conversationId, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("convId", conversationId);
+            jo_param.AddWithoutNull("convId", conversationId);
 
             NativeCall(SDKMethod.ackConversationRead, jo_param, callback);
         }
@@ -620,7 +620,7 @@ namespace AgoraChat
         public void SendMessageReadAck(string messageId, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("msgId", messageId);
+            jo_param.AddWithoutNull("msgId", messageId);
             NativeCall(SDKMethod.ackMessageRead, jo_param, callback);
         }
 
@@ -654,8 +654,8 @@ namespace AgoraChat
         public void SendReadAckForGroupMessage(string messageId, string ackContent, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("msgId", messageId);
-            jo_param.Add("content", ackContent);
+            jo_param.AddWithoutNull("msgId", messageId);
+            jo_param.AddWithoutNull("content", ackContent);
             NativeCall(SDKMethod.ackGroupMessageRead, jo_param, callback);
         }
 
@@ -709,7 +709,7 @@ namespace AgoraChat
         public void RemoveMessagesBeforeTimestamp(long timeStamp, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("timestamp", timeStamp.ToString());
+            jo_param.AddWithoutNull("timestamp", timeStamp.ToString());
             NativeCall(SDKMethod.deleteMessagesBeforeTimestamp, jo_param, callback);
         }
 
@@ -741,9 +741,9 @@ namespace AgoraChat
         public void DeleteConversationFromServer(string conversationId, ConversationType conversationType, bool isDeleteServerMessages, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("convId", conversationId);
-            jo_param.Add("convType", conversationType.ToInt());
-            jo_param.Add("isDeleteServerMessages", isDeleteServerMessages);
+            jo_param.AddWithoutNull("convId", conversationId);
+            jo_param.AddWithoutNull("convType", conversationType.ToInt());
+            jo_param.AddWithoutNull("isDeleteServerMessages", isDeleteServerMessages);
 
             NativeCall(SDKMethod.deleteRemoteConversation, jo_param, callback);
         }
@@ -783,8 +783,8 @@ namespace AgoraChat
         public void TranslateMessage(Message message, List<string> targetLanguages, ValueCallBack<Message> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("message", message.ToJsonObject());
-            jo_param.Add("languages", JsonObject.JsonArrayFromStringList(targetLanguages));
+            jo_param.AddWithoutNull("message", message.ToJsonObject());
+            jo_param.AddWithoutNull("languages", JsonObject.JsonArrayFromStringList(targetLanguages));
 
             Process process = (_, jsonNode) =>
             {
@@ -831,10 +831,10 @@ namespace AgoraChat
         public void FetchGroupReadAcks(string messageId, string groupId, int pageSize = 20, string startAckId = null, ValueCallBack<CursorResult<GroupReadAck>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("msg_id", messageId);
-            jo_param.Add("pageSize", pageSize);
-            jo_param.Add("groupId", groupId);
-            jo_param.Add("ack_id", startAckId ?? "");
+            jo_param.AddWithoutNull("msgId", messageId);
+            jo_param.AddWithoutNull("pageSize", pageSize);
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("ackId", startAckId ?? "");
 
 
             Process process = (_, jsonNode) =>
@@ -873,9 +873,9 @@ namespace AgoraChat
         public void ReportMessage(string messageId, string tag, string reason, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("msgId", messageId);
-            jo_param.Add("tag", tag);
-            jo_param.Add("reason", reason);
+            jo_param.AddWithoutNull("msgId", messageId);
+            jo_param.AddWithoutNull("tag", tag);
+            jo_param.AddWithoutNull("reason", reason);
 
             NativeCall(SDKMethod.reportMessage, jo_param, callback);
         }
@@ -902,8 +902,8 @@ namespace AgoraChat
         public void AddReaction(string messageId, string reaction, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("msgId", messageId);
-            jo_param.Add("reaction", reaction);
+            jo_param.AddWithoutNull("msgId", messageId);
+            jo_param.AddWithoutNull("reaction", reaction);
 
             NativeCall(SDKMethod.addReaction, jo_param, callback);
         }
@@ -931,8 +931,8 @@ namespace AgoraChat
         public void RemoveReaction(string messageId, string reaction, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("msgId", messageId);
-            jo_param.Add("reaction", reaction);
+            jo_param.AddWithoutNull("msgId", messageId);
+            jo_param.AddWithoutNull("reaction", reaction);
 
             NativeCall(SDKMethod.removeReaction, jo_param, callback);
         }
@@ -961,10 +961,10 @@ namespace AgoraChat
         public void GetReactionList(List<string> messageIdList, MessageType chatType, string groupId, ValueCallBack<Dictionary<string, List<MessageReaction>>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("msgIds", JsonObject.JsonArrayFromStringList(messageIdList));
-            jo_param.Add("groupId", groupId);
+            jo_param.AddWithoutNull("msgIds", JsonObject.JsonArrayFromStringList(messageIdList));
+            jo_param.AddWithoutNull("groupId", groupId);
             //TODO: need to check
-            jo_param.Add("type", chatType == MessageType.Group ? "groupchat" : "chat");
+            jo_param.AddWithoutNull("type", chatType == MessageType.Group ? "groupchat" : "chat");
             Process process = (_, jsonNode) =>
             {
                 return Dictionary.ListBaseModelDictionaryFromJsonObject<MessageReaction>(jsonNode);
@@ -999,10 +999,10 @@ namespace AgoraChat
         public void GetReactionDetail(string messageId, string reaction, string cursor = null, int pageSize = 20, ValueCallBack<CursorResult<MessageReaction>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.Add("msgId", messageId);
-            jo_param.Add("reaction", reaction);
-            jo_param.Add("cursor", cursor ?? "");
-            jo_param.Add("pageSize", pageSize);
+            jo_param.AddWithoutNull("msgId", messageId);
+            jo_param.AddWithoutNull("reaction", reaction);
+            jo_param.AddWithoutNull("cursor", cursor ?? "");
+            jo_param.AddWithoutNull("pageSize", pageSize);
 
 
             Process process = (_, jsonNode) =>
