@@ -20,9 +20,9 @@ namespace sdk_wrapper {
 		}
 	}
 
-	SDK_WRAPPER_API void SDK_WRAPPER_CALL PresenceManager_PublishPresence(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+	SDK_WRAPPER_API const char* SDK_WRAPPER_CALL PresenceManager_PublishPresence(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
 	{
-		if (!CheckClientInitOrNot(cbid)) return;
+		if (!CheckClientInitOrNot(cbid)) return nullptr;
 
 		string local_cbid = cbid;
 
@@ -43,11 +43,13 @@ namespace sdk_wrapper {
 			}
 		});
 		t.detach();
+
+        return nullptr;
 	}
 
-	SDK_WRAPPER_API void SDK_WRAPPER_CALL PresenceManager_SubscribePresences(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+	SDK_WRAPPER_API const char* SDK_WRAPPER_CALL PresenceManager_SubscribePresences(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
 	{
-		if (!CheckClientInitOrNot(cbid)) return;
+		if (!CheckClientInitOrNot(cbid)) return nullptr;
 
 		string local_cbid = cbid;
 
@@ -71,11 +73,13 @@ namespace sdk_wrapper {
 			}
 		});
 		t.detach();
+
+        return nullptr;
 	}
 
-	SDK_WRAPPER_API void SDK_WRAPPER_CALL PresenceManager_UnsubscribePresences(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+	SDK_WRAPPER_API const char* SDK_WRAPPER_CALL PresenceManager_UnsubscribePresences(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
 	{
-		if (!CheckClientInitOrNot(cbid)) return;
+		if (!CheckClientInitOrNot(cbid)) return nullptr;
 
 		string local_cbid = cbid;
 
@@ -96,11 +100,13 @@ namespace sdk_wrapper {
 			}
 		});
 		t.detach();
+
+        return nullptr;
 	}
 
-	SDK_WRAPPER_API void SDK_WRAPPER_CALL PresenceManager_FetchSubscribedMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+	SDK_WRAPPER_API const char* SDK_WRAPPER_CALL PresenceManager_FetchSubscribedMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
 	{
-		if (!CheckClientInitOrNot(cbid)) return;
+		if (!CheckClientInitOrNot(cbid)) return nullptr;
 
 		string local_cbid = cbid;
 
@@ -127,11 +133,13 @@ namespace sdk_wrapper {
 			}
 		});
 		t.detach();
+
+        return nullptr;
 	}
 
-	SDK_WRAPPER_API void SDK_WRAPPER_CALL PresenceManager_FetchPresenceStatus(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+	SDK_WRAPPER_API const char* SDK_WRAPPER_CALL PresenceManager_FetchPresenceStatus(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
 	{
-		if (!CheckClientInitOrNot(cbid)) return;
+		if (!CheckClientInitOrNot(cbid)) return nullptr;
 
 		string local_cbid = cbid;
 
@@ -154,5 +162,7 @@ namespace sdk_wrapper {
 			}
 		});
 		t.detach();
+
+        return nullptr;
 	}
 }

@@ -60,6 +60,15 @@ namespace AgoraChat
             }
         }
 
+        private void OnApplicationQuit()
+        {
+            if (SDKClient.Instance.IsLoggedIn)
+            {
+                SDKClient.Instance.Logout(false);
+            }
+            SDKClient.Instance.ClearResource();
+        }
+
 #endif
     }
 }

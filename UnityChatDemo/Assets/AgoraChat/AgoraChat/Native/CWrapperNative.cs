@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace AgoraChat
@@ -17,9 +18,12 @@ namespace AgoraChat
         internal static string NativeGet(string manager, string method, SimpleJSON.JSONNode json, string callbackId = null)
         {
             LogPrinter.Log($"---NativeGet: {manager}: {method}: {json}: {callbackId}");
-            StringBuilder sbuilder = new StringBuilder(512);
-            _NativeGet(manager, method, json?.ToString(), sbuilder, callbackId ?? "");
-            string ret = Tools.GetUnicodeStringFromUTF8(sbuilder.ToString());
+
+            IntPtr ptr = _NativeGet(manager, method, json?.ToString(), callbackId ?? "");
+            string native_string = Tools.PtrToString(ptr);
+            string ret = Tools.GetUnicodeStringFromUTF8(native_string);
+            Marshal.FreeHGlobal(ptr);
+
             LogPrinter.Log($"---NativeGet get: {ret}");
             return ret;
         }
@@ -36,7 +40,6 @@ namespace AgoraChat
 #endif
 #endif
 
-
         [DllImport(MyLibName)]
         internal static extern void Init(int type, NativeListenerEvent listener);
 
@@ -49,9 +52,9 @@ namespace AgoraChat
 
         [DllImport(MyLibName)]
 #if _WIN32
-        private extern static int _NativeGet(string manager, string method, [In, MarshalAs(UnmanagedType.LPTStr)] string jsonString = null, [Out, MarshalAs(UnmanagedType.LPTStr)] StringBuilder buf = null, string callbackId = null);
+        private extern static IntPtr _NativeGet(string manager, string method, [In, MarshalAs(UnmanagedType.LPTStr)] string jsonString = null, string callbackId = null);
 #else
-        private extern static int _NativeGet(string manager, string method, [In, MarshalAs(UnmanagedType.LPTStr)] string jsonString = null, StringBuilder buf = null, string callbackId = null);
+        private extern static IntPtr _NativeGet(string manager, string method, [In, MarshalAs(UnmanagedType.LPTStr)] string jsonString = null, string callbackId = null);
 #endif
         #endregion engine callbacks
     }

@@ -29,6 +29,19 @@ void CallBackProgress(const char* method, const char* jstr)
     CallBack(STRING_CALLBACK_PROGRESS_LISTENER.c_str(), method, jstr);
 }
 
+const char* CopyToPointer(const string& src)
+{
+    if (0 == src.length()) return nullptr;
+
+    size_t len = src.length() + 1;
+
+    char* p = (char*)malloc(len * sizeof(char));
+
+    memcpy(p, src.c_str(), len);
+
+    return p;
+}
+
 void Copy_To_Buffer(char* dst, const char* src, size_t len)
 {
     if (nullptr == dst || nullptr == src ) return;

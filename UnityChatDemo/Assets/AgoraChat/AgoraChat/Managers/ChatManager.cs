@@ -1058,6 +1058,10 @@ namespace AgoraChat
             }
         }
 
+        internal void ClearDelegates()
+        {
+            delegater.Clear();
+        }
 
         internal void NativeEventHandle(string method, JSONNode jsonNode)
         {

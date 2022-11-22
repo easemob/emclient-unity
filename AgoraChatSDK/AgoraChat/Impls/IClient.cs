@@ -255,18 +255,8 @@ namespace AgoraChat
             }
         }
 
-        private void OnApplicationQuit()
-        {
-            if (SDKClient.Instance.IsLoggedIn)
-            {
-                SDKClient.Instance.Logout(false);
-            }
-            ClearResource();
-        }
-
         internal void CleanUp()
         {
-
             nativeListener.RemoveNativeListener();
         }
 
@@ -274,6 +264,12 @@ namespace AgoraChat
         {
             delegater_connection.Clear();
             delegater_multidevice.Clear();
+            SDKClient.Instance.ChatManager.ClearDelegates();
+            SDKClient.Instance.ThreadManager.ClearDelegates();
+            SDKClient.Instance.ContactManager.ClearDelegates();
+            SDKClient.Instance.GroupManager.ClearDelegates();
+            SDKClient.Instance.RoomManager.ClearDelegates();
+            SDKClient.Instance.PresenceManager.ClearDelegates();
             CWrapperNative.NativeCall(SDKMethod.client, "clearResource", null, "");
         }
     }

@@ -52,7 +52,8 @@ void CallBack(const char* listener, const char* method, const char* jstr);
 void CallBack(const char* method, const char* jstr);
 void CallBackProgress(const char* method, const char* jstr);
 
-void Copy_To_Buffer(char* dst, const char* src, size_t len);
+void CopyToBuffer(char* dst, const char* src, size_t len);
+const char* CopyToPointer(const string& src);
 
 bool CheckClientInitOrNot(const char* cbid);
 

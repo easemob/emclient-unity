@@ -33,9 +33,9 @@ namespace sdk_wrapper {
         }
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_AddRoomAdmin(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_AddRoomAdmin(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -58,11 +58,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_BlockChatroomMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_BlockChatroomMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -86,11 +88,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_TransferChatroomOwner(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_TransferChatroomOwner(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -113,11 +117,13 @@ namespace sdk_wrapper {
             }
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_ChangeChatroomDescription(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_ChangeChatroomDescription(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -138,13 +144,15 @@ namespace sdk_wrapper {
                 string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
-            });
+        });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_ChangeRoomSubject(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_ChangeRoomSubject(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -167,11 +175,13 @@ namespace sdk_wrapper {
             }
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_CreateRoom(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_CreateRoom(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -200,11 +210,13 @@ namespace sdk_wrapper {
             }
             });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_DestroyChatroom(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_DestroyChatroom(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -225,11 +237,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_FetchChatroomsWithPage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_FetchChatroomsWithPage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -253,11 +267,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_FetchChatroomAnnouncement(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_FetchChatroomAnnouncement(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -284,13 +300,15 @@ namespace sdk_wrapper {
                 string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
-            });
+        });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_FetchChatroomBans(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_FetchChatroomBans(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -317,11 +335,12 @@ namespace sdk_wrapper {
         });
         t.detach();
 
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_FetchChatroomSpecification(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_FetchChatroomSpecification(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -344,11 +363,13 @@ namespace sdk_wrapper {
             }
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_FetchChatroomMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_FetchChatroomMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -375,11 +396,12 @@ namespace sdk_wrapper {
         });
         t.detach();
 
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_FetchChatroomMutes(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_FetchChatroomMutes(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -404,11 +426,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_JoinChatroom(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_JoinChatroom(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -431,11 +455,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_LeaveChatroom(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_LeaveChatroom(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -455,13 +481,15 @@ namespace sdk_wrapper {
                 string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
-            });
+        });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_MuteChatroomMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_MuteChatroomMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -484,11 +512,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_RemoveChatroomAdmin(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_RemoveChatroomAdmin(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -511,11 +541,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_RemoveRoomMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_RemoveRoomMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -538,11 +570,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_UnblockChatroomMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_UnblockChatroomMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -565,11 +599,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_UnmuteChatroomMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_UnmuteChatroomMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -592,11 +628,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_UpdateChatroomAnnouncement(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_UpdateChatroomAnnouncement(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -620,11 +658,13 @@ namespace sdk_wrapper {
         });
         t.detach();
 
+        return nullptr;
+
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_MuteAllChatroomMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_MuteAllChatroomMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -647,11 +687,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_UnMuteAllChatroomMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_UnMuteAllChatroomMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -674,11 +716,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_AddWhiteListMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_AddWhiteListMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -701,11 +745,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_RemoveWhiteListMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_RemoveWhiteListMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -727,11 +773,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_FetchChatRoomWhiteListFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_FetchChatRoomWhiteListFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -754,11 +802,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_IsMemberInChatRoomWhiteListFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_IsMemberInChatRoomWhiteListFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -786,11 +836,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_FetchChatRoomAttributes(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_FetchChatRoomAttributes(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -813,11 +865,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_SetChatRoomAttributes(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_SetChatRoomAttributes(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -849,11 +903,13 @@ namespace sdk_wrapper {
             }
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_RemoveChatRoomAttributes(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_RemoveChatRoomAttributes(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -881,11 +937,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_GetChatRoom(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_GetChatRoom(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -905,12 +963,12 @@ namespace sdk_wrapper {
             json = s.GetString();
         }
 
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+        return CopyToPointer(json);
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL RoomManager_GetAllChatRooms(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_GetAllChatRooms(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -929,6 +987,8 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 }
 

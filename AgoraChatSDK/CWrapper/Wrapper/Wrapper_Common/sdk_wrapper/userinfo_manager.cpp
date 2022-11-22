@@ -32,9 +32,9 @@ extern EMClient* gClient;
 
 namespace sdk_wrapper {
 
-	SDK_WRAPPER_API void SDK_WRAPPER_CALL UserInfoManager_FetchUserInfoByUserId(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+	SDK_WRAPPER_API const char* SDK_WRAPPER_CALL UserInfoManager_FetchUserInfoByUserId(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
 	{
-		if (!CheckClientInitOrNot(cbid)) return;
+		if (!CheckClientInitOrNot(cbid)) return nullptr;
 
 		string local_cbid = cbid;
 
@@ -65,11 +65,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
 	}
 
-	SDK_WRAPPER_API void SDK_WRAPPER_CALL UserInfoManager_UpdateOwnInfo(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+	SDK_WRAPPER_API const char* SDK_WRAPPER_CALL UserInfoManager_UpdateOwnInfo(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
 	{
-		if (!CheckClientInitOrNot(cbid)) return;
+		if (!CheckClientInitOrNot(cbid)) return nullptr;
 
 		string local_cbid = cbid;
 
@@ -92,5 +94,7 @@ namespace sdk_wrapper {
 			}
 		});
 		t.detach();
+
+        return nullptr;
 	}
 }

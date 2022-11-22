@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace AgoraChat
@@ -31,6 +32,22 @@ namespace AgoraChat
 #else
             string ret = utf8Str;
 #endif
+            return ret;
+        }
+
+        internal static string PtrToString(IntPtr ptr)
+        {
+            string ret = "";
+
+            if(null != ptr && IntPtr.Zero != ptr)
+            {
+#if _WIN32
+                ret = Marshal.PtrToStringUni(ptr);
+#else
+                ret = Marshal.PtrToStringAnsi(ptr);
+#endif
+            }
+
             return ret;
         }
     }
