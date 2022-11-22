@@ -1369,4 +1369,8 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
     {
         UIManager.DefaultAlert(transform, $"回调 {groupId} 所有群成员禁言变化{isAllMuted}");
     }
+
+    void IGroupManagerDelegate.OnMuteListAddedFromGroup(string groupId, List<string> mutes, long muteExpire)
+    {
+    }
 }
