@@ -42,7 +42,7 @@ const char* CopyToPointer(const string& src)
     return p;
 }
 
-void Copy_To_Buffer(char* dst, const char* src, size_t len)
+void CopyToBuffer(char* dst, const char* src, size_t len)
 {
     if (nullptr == dst || nullptr == src ) return;
 
