@@ -3920,9 +3920,12 @@ namespace WinSDKTest
 
             Conversation conv = SDKClient.Instance.ChatManager.GetConversation(cid, type);
 
-            if (conv.LastMessage != null)
+            Message msg = conv.LastMessage;
+
+            if (msg != null)
             {
-                Console.WriteLine($"LastMessage success, msgid: {conv.LastMessage.MsgId}.");
+                Utils.PrintMessage(msg);
+                //Console.WriteLine($"LastMessage success, msgid: {conv.LastMessage.MsgId}.");
             }
             else
             {
@@ -8250,10 +8253,11 @@ namespace WinSDKTest
                 Console.WriteLine($"servertime: {it.ServerTime}");
                 Console.WriteLine($"HasDeliverAck: {it.HasDeliverAck}");
                 Console.WriteLine($"HasReadAck: {it.HasReadAck}");
-                foreach (var it1 in it.Attributes)
+                /*foreach (var it1 in it.Attributes)
                 {
                     Console.WriteLine($"attribute item: key:{it1.Key}; value:{it1.Value}");
-                }
+                }*/
+                Utils.PrintAttributeValue(it.Attributes);
                 if (it.Body.Type == MessageBodyType.TXT)
                 {
                     TextBody tb = (TextBody)it.Body;
@@ -8383,9 +8387,9 @@ namespace WinSDKTest
             Console.WriteLine("OnConnected");
         }
 
-        public void OnDisconnected(int i)
+        public void OnDisconnected(DisconnectReason reason)
         {
-            Console.WriteLine($"OnDisconnected: {i}");
+            Console.WriteLine($"OnDisconnected: {reason}");
         }
 
         public void OnTokenExpired()

@@ -5,7 +5,7 @@
 #include "common_wrapper_internal.h"
 #include "sdk_wrapper.h"
 
-typedef void (*FUNC_CALL)(const char* jstr, const char* cbid, char* buf);
+typedef const char* (*FUNC_CALL)(const char* jstr, const char* cbid, char* buf);
 
 typedef std::map<std::string, FUNC_CALL> FUNC_MAP;		// function name -> function handle
 typedef std::map<std::string, FUNC_MAP>  MANAGER_MAP;   // manager name -> function map
@@ -285,15 +285,16 @@ COMMON_WRAPPER_API void COMMON_WRAPPER_CALL NativeCall_Common(const char* manage
 	}
 }
 
-COMMON_WRAPPER_API int  COMMON_WRAPPER_CALL NativeGet_Common(const char* manager, const char* method, const char* jstr, char* buf, const char* cbid)
+COMMON_WRAPPER_API const char*  COMMON_WRAPPER_CALL NativeGet_Common(const char* manager, const char* method, const char* jstr, const char* cbid)
 {
 	FUNC_CALL func = GetFuncHandle(manager, method);
+
 	if (nullptr != func) {
 		std::string json = GetUTF8FromUnicode(jstr);
-		func(json.c_str(), cbid, buf);
+		return func(json.c_str(), cbid, nullptr);
 	}
 
-	return 0;
+	return nullptr;
 }
 
 std::string GetUTF8FromUnicode(const char* src)

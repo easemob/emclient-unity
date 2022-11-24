@@ -206,7 +206,8 @@ namespace AgoraChat
                         it.OnConnected();
                         break;
                     case SDKMethod.onDisconnected:
-                        // TODO: dujiepeng 需要定义reason?
+                        int reason = jsonNode["ret"].AsInt;
+                        it.OnDisconnected(reason.ToDisconnectReason());
                         break;
                     case SDKMethod.onTokenExpired:
                         it.OnTokenExpired();
@@ -241,7 +242,8 @@ namespace AgoraChat
                         it.OnGroupMultiDevicesEvent(operation, target, userIds);
                         break;
                     case SDKMethod.onUnDisturbMultiDevicesEvent:
-                        // TODO: dujiepeng
+                        // OnUndisturbMultiDevicesEvent is related to Push function
+                        // currently Unity don't support Push function, so ignore OnUndisturbMultiDevicesEvent
                         //it.OnUndisturbMultiDevicesEvent();
                         break;
                     case SDKMethod.onThreadMultiDevicesEvent:
@@ -253,18 +255,8 @@ namespace AgoraChat
             }
         }
 
-        private void OnApplicationQuit()
-        {
-            if (SDKClient.Instance.IsLoggedIn)
-            {
-                SDKClient.Instance.Logout(false);
-            }
-            ClearResource();
-        }
-
         internal void CleanUp()
         {
-
             nativeListener.RemoveNativeListener();
         }
 
@@ -272,6 +264,12 @@ namespace AgoraChat
         {
             delegater_connection.Clear();
             delegater_multidevice.Clear();
+            SDKClient.Instance.ChatManager.ClearDelegates();
+            SDKClient.Instance.ThreadManager.ClearDelegates();
+            SDKClient.Instance.ContactManager.ClearDelegates();
+            SDKClient.Instance.GroupManager.ClearDelegates();
+            SDKClient.Instance.RoomManager.ClearDelegates();
+            SDKClient.Instance.PresenceManager.ClearDelegates();
             CWrapperNative.NativeCall(SDKMethod.client, "clearResource", null, "");
         }
     }

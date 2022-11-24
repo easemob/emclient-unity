@@ -73,9 +73,9 @@ namespace sdk_wrapper {
         }
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_ApplyJoinPublicGroup(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_ApplyJoinPublicGroup(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -97,11 +97,13 @@ namespace sdk_wrapper {
             }
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_AcceptInvitationFromGroup(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_AcceptInvitationFromGroup(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -125,11 +127,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_AcceptJoinGroupApplication(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_AcceptJoinGroupApplication(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -150,11 +154,13 @@ namespace sdk_wrapper {
             }
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_AddAdmin(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_AddAdmin(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -176,11 +182,13 @@ namespace sdk_wrapper {
             }
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_AddMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_AddMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -204,11 +212,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_AddWhiteListMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_AddWhiteListMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -231,11 +241,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_BlockGroupMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_BlockGroupMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -257,11 +269,13 @@ namespace sdk_wrapper {
             }
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_BlockGroupMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_BlockGroupMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -283,10 +297,12 @@ namespace sdk_wrapper {
             }
          });
         t.detach();
+
+        return nullptr;
     }
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_ChangeGroupDescription(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_ChangeGroupDescription(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -309,11 +325,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_ChangeGroupName(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_ChangeGroupName(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -336,11 +354,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_TransferGroupOwner(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_TransferGroupOwner(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -363,11 +383,13 @@ namespace sdk_wrapper {
             }
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_FetchIsMemberInWhiteList(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_FetchIsMemberInWhiteList(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -394,11 +416,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_CreateGroup(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_CreateGroup(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -424,11 +448,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_DeclineInvitationFromGroup(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_DeclineInvitationFromGroup(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -451,11 +477,13 @@ namespace sdk_wrapper {
             }
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_DeclineJoinGroupApplication(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_DeclineJoinGroupApplication(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -479,11 +507,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_DestoryGroup(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_DestoryGroup(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -505,11 +535,13 @@ namespace sdk_wrapper {
             }
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_DownloadGroupSharedFile(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_DownloadGroupSharedFile(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -543,11 +575,13 @@ namespace sdk_wrapper {
 
         EMError error;
         EMGroupPtr groupPtr = CLIENT->getGroupManager().downloadGroupSharedFile(group_id, save_path, file_id, callbackPtr, error);
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_FetchGroupAnnouncement(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_FetchGroupAnnouncement(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -575,11 +609,13 @@ namespace sdk_wrapper {
             }
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_FetchGroupBans(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_FetchGroupBans(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -604,11 +640,13 @@ namespace sdk_wrapper {
             }
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_FetchGroupSharedFiles(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_FetchGroupSharedFiles(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -633,11 +671,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_FetchGroupMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_FetchGroupMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -663,11 +703,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_FetchGroupMutes(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_FetchGroupMutes(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -692,11 +734,13 @@ namespace sdk_wrapper {
             }
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_FetchGroupSpecification(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_FetchGroupSpecification(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -719,11 +763,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_FetchGroupWhiteList(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_FetchGroupWhiteList(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -745,13 +791,15 @@ namespace sdk_wrapper {
                 string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
-            });
+        });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_GetGroupWithId(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_GetGroupWithId(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         Document d; d.Parse(jstr);
         string group_id = GetJsonValue_String(d, "groupId", "");
@@ -769,12 +817,12 @@ namespace sdk_wrapper {
             json = s.GetString();
         }
 
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+        return CopyToPointer(json);
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_LoadAllMyGroupsFromDB(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_LoadAllMyGroupsFromDB(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         EMGroupList groupList = CLIENT->getGroupManager().loadAllMyGroupsFromDB();
 
@@ -784,12 +832,12 @@ namespace sdk_wrapper {
         JSON_ENDOBJ
         string json = s.GetString();
 
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+        return CopyToPointer(json);
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_FetchAllMyGroupsWithPage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_FetchAllMyGroupsWithPage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -814,11 +862,13 @@ namespace sdk_wrapper {
             }
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_FetchPublicGroupsWithCursor(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_FetchPublicGroupsWithCursor(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -844,11 +894,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_JoinPublicGroup(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_JoinPublicGroup(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -869,11 +921,13 @@ namespace sdk_wrapper {
             }
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_LeaveGroup(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_LeaveGroup(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -894,11 +948,13 @@ namespace sdk_wrapper {
             }
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_MuteAllGroupMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_MuteAllGroupMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -919,11 +975,13 @@ namespace sdk_wrapper {
             }
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_MuteGroupMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_MuteGroupMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -945,11 +1003,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_RemoveGroupAdmin(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_RemoveGroupAdmin(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -972,11 +1032,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_DeleteGroupSharedFile(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_DeleteGroupSharedFile(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -999,11 +1061,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_RemoveMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_RemoveMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -1026,11 +1090,13 @@ namespace sdk_wrapper {
             }
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_RemoveWhiteListMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_RemoveWhiteListMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -1052,11 +1118,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_UnblockGroupMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_UnblockGroupMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -1077,11 +1145,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_UnblockGroupMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_UnblockGroupMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -1104,11 +1174,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_UnMuteAllMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_UnMuteAllMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -1129,11 +1201,13 @@ namespace sdk_wrapper {
             }
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_UnmuteGroupMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_UnmuteGroupMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -1156,11 +1230,13 @@ namespace sdk_wrapper {
             }
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_UpdateGroupAnnouncement(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_UpdateGroupAnnouncement(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -1183,11 +1259,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_ChangeGroupExtension(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_ChangeGroupExtension(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -1210,11 +1288,13 @@ namespace sdk_wrapper {
             }
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL GroupManager_UploadGroupSharedFile(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_UploadGroupSharedFile(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -1254,6 +1334,8 @@ namespace sdk_wrapper {
             CLIENT->getGroupManager().uploadGroupSharedFile(group_id, file_path, callbackPtr, error);
         });
         t.detach();
+
+        return nullptr;
     }
 }
 

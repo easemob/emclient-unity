@@ -20,9 +20,9 @@ namespace sdk_wrapper {
 		}
 	}
 
-	SDK_WRAPPER_API void SDK_WRAPPER_CALL ThreadManager_ChangeThreadSubject(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+	SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ThreadManager_ChangeThreadSubject(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
 	{
-		if (!CheckClientInitOrNot(cbid)) return;
+		if (!CheckClientInitOrNot(cbid)) return nullptr;
 
 		string local_cbid = cbid;
 
@@ -45,11 +45,13 @@ namespace sdk_wrapper {
 			}
 		});
 		t.detach();
+
+        return nullptr;
 	}
 
-	SDK_WRAPPER_API void SDK_WRAPPER_CALL ThreadManager_CreateThread(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+	SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ThreadManager_CreateThread(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
 	{
-		if (!CheckClientInitOrNot(cbid)) return;
+		if (!CheckClientInitOrNot(cbid)) return nullptr;
 
 		string local_cbid = cbid;
 
@@ -75,11 +77,13 @@ namespace sdk_wrapper {
 		});
 		t.detach();
 
+        return nullptr;
+
 	}
 
-	SDK_WRAPPER_API void SDK_WRAPPER_CALL ThreadManager_DestroyThread(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+	SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ThreadManager_DestroyThread(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
 	{
-		if (!CheckClientInitOrNot(cbid)) return;
+		if (!CheckClientInitOrNot(cbid)) return nullptr;
 
 		string local_cbid = cbid;
 
@@ -101,11 +105,13 @@ namespace sdk_wrapper {
 			}
 		});
 		t.detach();
+
+        return nullptr;
 	}
 
-	SDK_WRAPPER_API void SDK_WRAPPER_CALL ThreadManager_FetchThreadListOfGroup(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+	SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ThreadManager_FetchThreadListOfGroup(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
 	{
-		if (!CheckClientInitOrNot(cbid)) return;
+		if (!CheckClientInitOrNot(cbid)) return nullptr;
 
 		string local_cbid = cbid;
 
@@ -130,14 +136,16 @@ namespace sdk_wrapper {
 				string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
 				CallBack(local_cbid.c_str(), call_back_jstr.c_str());
 			}
-			});
+		});
 		t.detach();
+
+        return nullptr;
 
 	}
 
-	SDK_WRAPPER_API void SDK_WRAPPER_CALL ThreadManager_FetchThreadMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+	SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ThreadManager_FetchThreadMembers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
 	{
-		if (!CheckClientInitOrNot(cbid)) return;
+		if (!CheckClientInitOrNot(cbid)) return nullptr;
 
 		string local_cbid = cbid;
 
@@ -161,11 +169,13 @@ namespace sdk_wrapper {
 			}
 		});
 		t.detach();
+
+        return nullptr;
 	}
 
-	SDK_WRAPPER_API void SDK_WRAPPER_CALL ThreadManager_GetLastMessageAccordingThreads(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+	SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ThreadManager_GetLastMessageAccordingThreads(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
 	{
-		if (!CheckClientInitOrNot(cbid)) return;
+		if (!CheckClientInitOrNot(cbid)) return nullptr;
 
 		string local_cbid = cbid;
 
@@ -189,11 +199,13 @@ namespace sdk_wrapper {
 			}
 		});
 		t.detach();
+
+        return nullptr;
 	}
 
-	SDK_WRAPPER_API void SDK_WRAPPER_CALL ThreadManager_GetThreadDetail(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+	SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ThreadManager_GetThreadDetail(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
 	{
-		if (!CheckClientInitOrNot(cbid)) return;
+		if (!CheckClientInitOrNot(cbid)) return nullptr;
 
 		string local_cbid = cbid;
 
@@ -216,11 +228,13 @@ namespace sdk_wrapper {
 			}
 		});
 		t.detach();
+
+        return nullptr;
 	}
 
-	SDK_WRAPPER_API void SDK_WRAPPER_CALL ThreadManager_JoinThread(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+	SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ThreadManager_JoinThread(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
 	{
-		if (!CheckClientInitOrNot(cbid)) return;
+		if (!CheckClientInitOrNot(cbid)) return nullptr;
 
 		string local_cbid = cbid;
 
@@ -243,11 +257,13 @@ namespace sdk_wrapper {
 			}
 		});
 		t.detach();
+
+        return nullptr;
 	}
 
-	SDK_WRAPPER_API void SDK_WRAPPER_CALL ThreadManager_LeaveThread(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+	SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ThreadManager_LeaveThread(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
 	{
-		if (!CheckClientInitOrNot(cbid)) return;
+		if (!CheckClientInitOrNot(cbid)) return nullptr;
 
 		string local_cbid = cbid;
 
@@ -269,11 +285,13 @@ namespace sdk_wrapper {
 			}
 			});
 		t.detach();
+
+        return nullptr;
 	}
 
-	SDK_WRAPPER_API void SDK_WRAPPER_CALL ThreadManager_RemoveThreadMember(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+	SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ThreadManager_RemoveThreadMember(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
 	{
-		if (!CheckClientInitOrNot(cbid)) return;
+		if (!CheckClientInitOrNot(cbid)) return nullptr;
 
 		string local_cbid = cbid;
 
@@ -296,11 +314,13 @@ namespace sdk_wrapper {
 			}
 		});
 		t.detach();
+
+        return nullptr;
 	}
 
-	SDK_WRAPPER_API void SDK_WRAPPER_CALL ThreadManager_FetchMineJoinedThreadList(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+	SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ThreadManager_FetchMineJoinedThreadList(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
 	{
-		if (!CheckClientInitOrNot(cbid)) return;
+		if (!CheckClientInitOrNot(cbid)) return nullptr;
 
 		string local_cbid = cbid;
 
@@ -322,7 +342,9 @@ namespace sdk_wrapper {
 				string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
 				CallBack(local_cbid.c_str(), call_back_jstr.c_str());
 			}
-			});
+		});
 		t.detach();
+
+        return nullptr;
 	}
 }

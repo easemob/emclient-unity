@@ -12,6 +12,6 @@
 HYPHENATE_API void AGORA_CALL Init(int sdkType, NativeListenerEvent cb);
 HYPHENATE_API void AGORA_CALL UnInit();
 HYPHENATE_API void AGORA_CALL _NativeCall(const char* manager, const char* method, const char* jstr, const char* cbid);
-HYPHENATE_API int  AGORA_CALL _NativeGet(const char* manager, const char* method, const char* jstr, char* buf, const char* cbid);
+HYPHENATE_API const char*  AGORA_CALL _NativeGet(const char* manager, const char* method, const char* jstr, const char* cbid);
 
 #endif

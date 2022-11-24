@@ -160,10 +160,10 @@ public class Main : MonoBehaviour, IConnectionDelegate
         UIManager.DefaultAlert(transform, "OnConnected");
     }
 
-    public void OnDisconnected(int i)
+    public void OnDisconnected(DisconnectReason reason)
     {
-        UIManager.DefaultAlert(transform, $"OnDisconnected : {i.ToString()}");
-        if (i == 206)
+        UIManager.DefaultAlert(transform, $"OnDisconnected : {reason}");
+        if (reason == DisconnectReason.Reason_LoginFromOtherDevice)
         {
             SceneManager.LoadSceneAsync("Login");
         }

@@ -136,9 +136,9 @@ namespace sdk_wrapper {
         }
     }
 
-	SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_SendMessage(const char* jstr, const char* cbid, char* buf)
+	SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_SendMessage(const char* jstr, const char* cbid, char* buf)
 	{
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         EMMessagePtr message_ptr = Message::FromJsonToMessage(jstr);
         string msg_id = message_ptr->msgId();
@@ -178,24 +178,25 @@ namespace sdk_wrapper {
         CLIENT->getChatManager().sendMessage(message_ptr);
 
         string updated_msg_json = JsonStringFromUpdatedMessage(msg_id);
-        if(updated_msg_json.size() > 0)
-            Copy_To_Buffer(buf, updated_msg_json.c_str(), updated_msg_json.size());
+        return CopyToPointer(updated_msg_json);
 	}
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_RemoveConversation(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_RemoveConversation(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(nullptr)) return;
+        if (!CheckClientInitOrNot(nullptr)) return nullptr;
 
         Document d; d.Parse(jstr);
         string conv_id = GetJsonValue_String(d, "convId", "");
         bool delete_messages = GetJsonValue_Bool(d, "deleteMessages", true);
 
         CLIENT->getChatManager().removeConversation(conv_id, delete_messages, false);
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_DownloadMessageAttachments(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_DownloadMessageAttachments(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         Document d; d.Parse(jstr);
         string msg_id = GetJsonValue_String(d, "msgId", "");
@@ -208,7 +209,7 @@ namespace sdk_wrapper {
             EMError error(EMError::MESSAGE_INVALID);
             string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
-            return;
+            return nullptr;
         }
 
         AddProgressItem(msg_id);
@@ -238,11 +239,13 @@ namespace sdk_wrapper {
             ));
         messagePtr->setCallback(callbackPtr);
         CLIENT->getChatManager().downloadMessageAttachments(messagePtr);
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_DownloadMessageThumbnail(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_DownloadMessageThumbnail(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         Document d; d.Parse(jstr);
         string msg_id = GetJsonValue_String(d, "msgId", "");
@@ -255,7 +258,7 @@ namespace sdk_wrapper {
             EMError error(EMError::MESSAGE_INVALID);
             string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
-            return;
+            return nullptr;
         }
 
         AddProgressItem(msg_id);
@@ -286,11 +289,12 @@ namespace sdk_wrapper {
         messagePtr->setCallback(callbackPtr);
         CLIENT->getChatManager().downloadMessageThumbnail(messagePtr);
 
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_FetchHistoryMessages(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_FetchHistoryMessages(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -324,11 +328,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_ConversationWithType(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_ConversationWithType(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         Document d; d.Parse(jstr);
         string cov_id = GetJsonValue_String(d, "convId", "");
@@ -352,12 +358,12 @@ namespace sdk_wrapper {
         JSON_ENDOBJ
 
         json = s.GetString();
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+        return CopyToPointer(json);
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_GetConversationsFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_GetConversationsFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -376,11 +382,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_GetUnreadMessageCount(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_GetUnreadMessageCount(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(nullptr)) return;
+        if (!CheckClientInitOrNot(nullptr)) return nullptr;
 
         EMError error;
         int count = 0;
@@ -401,12 +409,12 @@ namespace sdk_wrapper {
         JSON_ENDOBJ
 
         string json = s.GetString();
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+        return CopyToPointer(json);
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_InsertMessages(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_InsertMessages(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(nullptr)) return;
+        if (!CheckClientInitOrNot(nullptr)) return nullptr;
 
         EMMessageList list = Message::FromJsonToMessageList(jstr);
 
@@ -421,12 +429,12 @@ namespace sdk_wrapper {
         JSON_ENDOBJ
 
         string json = s.GetString();
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+        return CopyToPointer(json);
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_LoadAllConversationsFromDB(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_LoadAllConversationsFromDB(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(nullptr)) return;
+        if (!CheckClientInitOrNot(nullptr)) return nullptr;
 
         EMConversationList conversationList = CLIENT->getChatManager().loadAllConversationsFromDB();
 
@@ -436,12 +444,12 @@ namespace sdk_wrapper {
         JSON_ENDOBJ
 
         string json = s.GetString();
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+        return CopyToPointer(json);
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_GetMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_GetMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(nullptr)) return;
+        if (!CheckClientInitOrNot(nullptr)) return nullptr;
 
         Document d; d.Parse(jstr);
         string msg_id = GetJsonValue_String(d, "msgId", "");
@@ -459,12 +467,12 @@ namespace sdk_wrapper {
             json = s.GetString();
         }
 
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+        return CopyToPointer(json);
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_MarkAllConversationsAsRead(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_MarkAllConversationsAsRead(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(nullptr)) return;
+        if (!CheckClientInitOrNot(nullptr)) return nullptr;
 
         bool ret = true;
 
@@ -486,12 +494,12 @@ namespace sdk_wrapper {
         JSON_ENDOBJ
 
         string json = s.GetString();
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+        return CopyToPointer(json);
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_RecallMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_RecallMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -505,7 +513,7 @@ namespace sdk_wrapper {
             EMError error(EMError::MESSAGE_INVALID);
             string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
-            return;
+            return nullptr;
         }
 
         thread t([=]() {
@@ -522,11 +530,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_ResendMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_ResendMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -540,7 +550,7 @@ namespace sdk_wrapper {
             EMError error(EMError::MESSAGE_INVALID);
             string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
-            return;
+            return nullptr;
         }
 
         EMCallbackPtr callbackPtr(new EMCallback(gCallbackObserverHandle,
@@ -563,12 +573,12 @@ namespace sdk_wrapper {
         JSON_ENDOBJ
         string json = s.GetString();
 
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+        return CopyToPointer(json);
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_LoadMoreMessages(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_LoadMoreMessages(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         Document d; d.Parse(jstr);
 
@@ -594,12 +604,12 @@ namespace sdk_wrapper {
             json = s.GetString();
         }
 
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+        return CopyToPointer(json);
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_SendReadAckForConversation(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_SendReadAckForConversation(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -619,11 +629,13 @@ namespace sdk_wrapper {
             }
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_SendReadAckForMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_SendReadAckForMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -646,11 +658,13 @@ namespace sdk_wrapper {
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_SendReadAckForGroupMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_SendReadAckForGroupMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -672,11 +686,13 @@ namespace sdk_wrapper {
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_UpdateMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_UpdateMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(nullptr)) return;
+        if (!CheckClientInitOrNot(nullptr)) return nullptr;
 
         EMMessagePtr messagePtr = Message::FromJsonToMessage(jstr);
 
@@ -695,12 +711,12 @@ namespace sdk_wrapper {
         JSON_ENDOBJ
 
         string json = s.GetString();
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+        return CopyToPointer(json);
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_RemoveMessagesBeforeTimestamp(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_RemoveMessagesBeforeTimestamp(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -724,11 +740,13 @@ namespace sdk_wrapper {
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_DeleteConversationFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_DeleteConversationFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -753,11 +771,13 @@ namespace sdk_wrapper {
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_FetchSupportLanguages(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_FetchSupportLanguages(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -777,11 +797,13 @@ namespace sdk_wrapper {
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_TranslateMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_TranslateMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -804,11 +826,13 @@ namespace sdk_wrapper {
             }
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_FetchGroupReadAcks(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_FetchGroupReadAcks(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -838,11 +862,13 @@ namespace sdk_wrapper {
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_ReportMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_ReportMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -865,11 +891,13 @@ namespace sdk_wrapper {
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_AddReaction(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_AddReaction(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -891,11 +919,13 @@ namespace sdk_wrapper {
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_RemoveReaction(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_RemoveReaction(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -918,11 +948,13 @@ namespace sdk_wrapper {
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_GetReactionList(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_GetReactionList(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -950,11 +982,13 @@ namespace sdk_wrapper {
             }
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_GetReactionDetail(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_GetReactionDetail(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -980,11 +1014,13 @@ namespace sdk_wrapper {
             }
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_GetGroupAckCount(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_GetGroupAckCount(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -1004,13 +1040,13 @@ namespace sdk_wrapper {
         writer.Int(count);
         JSON_ENDOBJ
 
-       string json = s.GetString();
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+        string json = s.GetString();
+        return CopyToPointer(json);
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_GetHasDeliverAck(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_GetHasDeliverAck(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -1031,12 +1067,12 @@ namespace sdk_wrapper {
         JSON_ENDOBJ
 
         string json = s.GetString();
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+        return CopyToPointer(json);
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_GetHasReadAck(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_GetHasReadAck(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -1057,12 +1093,12 @@ namespace sdk_wrapper {
         JSON_ENDOBJ
 
         string json = s.GetString();
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+        return CopyToPointer(json);
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_GetReactionListForMsg(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_GetReactionListForMsg(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -1083,12 +1119,12 @@ namespace sdk_wrapper {
             json = s.GetString();
         }
 
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+        return CopyToPointer(json);
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ChatManager_GetChatThreadForMsg(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_GetChatThreadForMsg(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -1109,7 +1145,7 @@ namespace sdk_wrapper {
             JSON_ENDOBJ
             json = s.GetString();
         }
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+        return CopyToPointer(json);
     }
 }
 

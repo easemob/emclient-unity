@@ -787,7 +787,6 @@ namespace AgoraChat
              * The custom event.
              */
             public string CustomEvent;
-            //TODO: Dictionary<string,string> -> string[][] in marshalling
 
             /**
              * \~chinese

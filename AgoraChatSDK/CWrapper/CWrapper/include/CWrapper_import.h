@@ -5,7 +5,7 @@
     extern "C" __declspec(dllimport) void __stdcall Init_Common(int sdkType, void* callback_handle);
     extern "C" __declspec(dllimport) void __stdcall Uninit_Common();
 	extern "C" __declspec(dllimport) void __stdcall NativeCall_Common(const char* manager, const char* method, const char* jstr, const char* cbid);
-	extern "C" __declspec(dllimport) int  __stdcall NativeGet_Common(const char* manager, const char* method, const char* jstr, char* buf, const char* cbid);
+	extern "C" __declspec(dllimport) const char*  __stdcall NativeGet_Common(const char* manager, const char* method, const char* jstr, const char* cbid);
 #else
 
     extern "C" void Init_Common(int sdkType, void* callback_handle);

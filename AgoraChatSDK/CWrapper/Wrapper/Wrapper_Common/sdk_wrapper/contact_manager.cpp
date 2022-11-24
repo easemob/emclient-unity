@@ -33,9 +33,9 @@ namespace sdk_wrapper {
 		}
 	}
 
-	SDK_WRAPPER_API void SDK_WRAPPER_CALL ContactManager_AcceptInvitation(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+	SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ContactManager_AcceptInvitation(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
 	{
-		if (!CheckClientInitOrNot(cbid)) return;
+		if (!CheckClientInitOrNot(cbid)) return nullptr;
 
 		string local_cbid = cbid;
 
@@ -57,11 +57,13 @@ namespace sdk_wrapper {
 			}
 		});
 		t.detach();
+
+        return nullptr;
 	}
 
-	SDK_WRAPPER_API void SDK_WRAPPER_CALL ContactManager_AddContact(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+	SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ContactManager_AddContact(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
 	{
-		if (!CheckClientInitOrNot(cbid)) return;
+		if (!CheckClientInitOrNot(cbid)) return nullptr;
 
 		string local_cbid = cbid;
 
@@ -84,11 +86,13 @@ namespace sdk_wrapper {
 			}
 		});
 		t.detach();
+
+        return nullptr;
 	}
 
-	SDK_WRAPPER_API void SDK_WRAPPER_CALL ContactManager_AddToBlackList(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+	SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ContactManager_AddToBlackList(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
 	{
-		if (!CheckClientInitOrNot(cbid)) return;
+		if (!CheckClientInitOrNot(cbid)) return nullptr;
 
 		string local_cbid = cbid;
 
@@ -110,11 +114,13 @@ namespace sdk_wrapper {
 			}
 			});
 		t.detach();
+
+        return nullptr;
 	}
 
-	SDK_WRAPPER_API void SDK_WRAPPER_CALL ContactManager_DeclineInvitation(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+	SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ContactManager_DeclineInvitation(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
 	{
-		if (!CheckClientInitOrNot(cbid)) return;
+		if (!CheckClientInitOrNot(cbid)) return nullptr;
 
 		string local_cbid = cbid;
 
@@ -136,11 +142,13 @@ namespace sdk_wrapper {
 			}
 			});
 		t.detach();
+
+        return nullptr;
 	}
 
-	SDK_WRAPPER_API void SDK_WRAPPER_CALL ContactManager_DeleteContact(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+	SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ContactManager_DeleteContact(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
 	{
-		if (!CheckClientInitOrNot(cbid)) return;
+		if (!CheckClientInitOrNot(cbid)) return nullptr;
 
 		string local_cbid = cbid;
 
@@ -163,11 +171,13 @@ namespace sdk_wrapper {
 			}
 			});
 		t.detach();
+
+        return nullptr;
 	}
 
-	SDK_WRAPPER_API void SDK_WRAPPER_CALL ContactManager_GetContactsFromDB(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+	SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ContactManager_GetContactsFromDB(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
 	{
-		if (!CheckClientInitOrNot(cbid)) return;
+		if (!CheckClientInitOrNot(cbid)) return nullptr;
 
 		EMError error;
 		vector<std::string> vec = CLIENT->getContactManager().getContactsFromDB(error);
@@ -182,12 +192,12 @@ namespace sdk_wrapper {
 			json = s.GetString();
 
 		}
-		Copy_To_Buffer(buf, json.c_str(), json.size());
+        return CopyToPointer(json);
 	}
 
-	SDK_WRAPPER_API void SDK_WRAPPER_CALL ContactManager_GetContactsFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+	SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ContactManager_GetContactsFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
 	{
-		if (!CheckClientInitOrNot(cbid)) return;
+		if (!CheckClientInitOrNot(cbid)) return nullptr;
 
 		string local_cbid = cbid;
 
@@ -207,11 +217,13 @@ namespace sdk_wrapper {
 			}
 		});
 		t.detach();
+
+        return nullptr;
 	}
 
-	SDK_WRAPPER_API void SDK_WRAPPER_CALL ContactManager_GetBlackListFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+	SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ContactManager_GetBlackListFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
 	{
-		if (!CheckClientInitOrNot(cbid)) return;
+		if (!CheckClientInitOrNot(cbid)) return nullptr;
 
 		string local_cbid = cbid;
 
@@ -230,11 +242,13 @@ namespace sdk_wrapper {
 			}
 		});
 		t.detach();
+
+        return nullptr;
 	}
 
-	SDK_WRAPPER_API void SDK_WRAPPER_CALL ContactManager_GetSelfIdsOnOtherPlatform(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+	SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ContactManager_GetSelfIdsOnOtherPlatform(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
 	{
-		if (!CheckClientInitOrNot(cbid)) return;
+		if (!CheckClientInitOrNot(cbid)) return nullptr;
 
 		string local_cbid = cbid;
 
@@ -253,11 +267,13 @@ namespace sdk_wrapper {
 			}
 		});
 		t.detach();
+
+        return nullptr;
 	}
 
-	SDK_WRAPPER_API void SDK_WRAPPER_CALL ContactManager_RemoveFromBlackList(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+	SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ContactManager_RemoveFromBlackList(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
 	{
-		if (!CheckClientInitOrNot(cbid)) return;
+		if (!CheckClientInitOrNot(cbid)) return nullptr;
 
 		string local_cbid = cbid;
 
@@ -279,11 +295,13 @@ namespace sdk_wrapper {
 			}
 		});
 		t.detach();
+
+        return nullptr;
 	}
 
-	SDK_WRAPPER_API void SDK_WRAPPER_CALL ContactManager_GetBlockListFromDB(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+	SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ContactManager_GetBlockListFromDB(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
 	{
-		if (!CheckClientInitOrNot(cbid)) return;
+		if (!CheckClientInitOrNot(cbid)) return nullptr;
 
 		EMError error;
 		vector<string> list = CLIENT->getContactManager().getBlackListFromDB(error);
@@ -297,7 +315,7 @@ namespace sdk_wrapper {
 			JSON_ENDOBJ
 			json = s.GetString();
 		}
-		Copy_To_Buffer(buf, json.c_str(), json.size());
+        return CopyToPointer(json);
 	}
 }
 

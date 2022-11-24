@@ -70,7 +70,7 @@ namespace sdk_wrapper
         gMultiDevicesListener = nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_InitWithOptions(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_InitWithOptions(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         // singleton client handle
         if (nullptr == gClient) {
@@ -91,11 +91,13 @@ namespace sdk_wrapper
         ContactManager_AddListener();
         PresenceManager_AddListener();
         ThreadManager_AddListener();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_CurrentUsername(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_CurrentUsername(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(nullptr)) return;
+        if (!CheckClientInitOrNot(nullptr)) return nullptr;
 
         JSON_STARTOBJ
         writer.Key("ret");
@@ -103,13 +105,12 @@ namespace sdk_wrapper
         JSON_ENDOBJ
 
         string json = s.GetString();
-
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+        return CopyToPointer(json);
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_isLoggedIn(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_isLoggedIn(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(nullptr)) return;
+        if (!CheckClientInitOrNot(nullptr)) return nullptr;
 
         JSON_STARTOBJ
         writer.Key("ret");
@@ -117,12 +118,12 @@ namespace sdk_wrapper
         JSON_ENDOBJ
 
         string json = s.GetString();
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+        return CopyToPointer(json);
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_isConnected(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_isConnected(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(nullptr)) return;
+        if (!CheckClientInitOrNot(nullptr)) return nullptr;
 
         JSON_STARTOBJ
         writer.Key("ret");
@@ -130,12 +131,12 @@ namespace sdk_wrapper
         JSON_ENDOBJ
 
         string json = s.GetString();
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+        return CopyToPointer(json);
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_LoginToken(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_LoginToken(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(nullptr)) return;
+        if (!CheckClientInitOrNot(nullptr)) return nullptr;
 
         JSON_STARTOBJ
         writer.Key("ret");
@@ -143,12 +144,12 @@ namespace sdk_wrapper
         JSON_ENDOBJ
 
         string json = s.GetString();
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+        return CopyToPointer(json);
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_CreateAccount(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_CreateAccount(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(nullptr)) return;
+        if (!CheckClientInitOrNot(nullptr)) return nullptr;
 
         string local_jstr = jstr;
         string local_cbid = cbid;
@@ -172,11 +173,13 @@ namespace sdk_wrapper
 
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_Login(const char* jstr, const char* cbid, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_Login(const char* jstr, const char* cbid, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -206,11 +209,13 @@ namespace sdk_wrapper
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_Logout(const char* jstr, const char* cbid, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_Logout(const char* jstr, const char* cbid, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -224,6 +229,7 @@ namespace sdk_wrapper
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
         });
         t.join();
+        return nullptr;
     }
 
     int TOKEN_CHECK_INTERVAL = 180; // 180s
@@ -264,9 +270,9 @@ namespace sdk_wrapper
         }
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_LoginWithAgoraToken(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_LoginWithAgoraToken(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_jstr = jstr;
         string local_cbid = cbid;
@@ -295,7 +301,7 @@ namespace sdk_wrapper
             error.mDescription = "Cannot get token config from response.";
             string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
-            return;
+            return nullptr;
         }
 
         // async login with easemob token
@@ -318,11 +324,13 @@ namespace sdk_wrapper
             }
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_RenewAgoraToken(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_RenewAgoraToken(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         // parse param json
         Document d; d.Parse(jstr);
@@ -347,12 +355,12 @@ namespace sdk_wrapper
             error.mDescription = "Cannot get token config from response.";
             string call_back_jstr = MyJson::ToJsonWithError(cbid, error.mErrorCode, error.mDescription.c_str());
             CallBack(cbid, call_back_jstr.c_str());
-            return;
+            return nullptr;
         }
 
         // Check expireTS first, then renewToken
         if (!token_wrapper.SetTokenInAutoLogin(token_wrapper.autologin_config_.userName, easemob_token, expire_ts)) {
-            return;
+            return nullptr;
         }
 
         CLIENT->renewToken(easemob_token);
@@ -360,13 +368,15 @@ namespace sdk_wrapper
 
         TOKEN_CHECK_INTERVAL = 180;
         StartTimer(token_wrapper.GetTokenCheckInterval(TOKEN_CHECK_INTERVAL, (int)token_wrapper.autologin_config_.availablePeriod), TokenCheck);
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_AutoLogin(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_AutoLogin(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
-        if (CLIENT->isLoggedIn()) return;
+        if (CLIENT->isLoggedIn()) return nullptr;
 
         string local_jstr = jstr;
         string local_cbid = cbid;
@@ -383,7 +393,7 @@ namespace sdk_wrapper
 
             string call_back_jstr = MyJson::ToJsonWithError(cbid, error.mErrorCode, error.mDescription.c_str());
             CallBack(cbid, call_back_jstr.c_str());
-            return;
+            return nullptr;
         }
 
         // default it is passwd login
@@ -421,26 +431,27 @@ namespace sdk_wrapper
             }
         });
         t.detach();
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_ChangeAppKey(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_ChangeAppKey(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        return; // No need to Implement
+        return nullptr; // No need to Implement
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_UploadLog(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_UploadLog(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        return; // No need to Implement
+        return nullptr; // No need to Implement
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_CompressLogs(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_CompressLogs(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        return; // No need to Implement
+        return nullptr; // No need to Implement
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_KickDevice(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_KickDevice(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_jstr = jstr;
         string local_cbid = cbid;
@@ -464,11 +475,12 @@ namespace sdk_wrapper
             }
          });
         t.detach();
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_KickDevices(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_KickDevices(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_jstr = jstr;
         string local_cbid = cbid;
@@ -491,11 +503,12 @@ namespace sdk_wrapper
             }
         });
         t.detach();
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_GetLoggedInDevicesFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_GetLoggedInDevicesFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_jstr = jstr;
         string local_cbid = cbid;
@@ -520,14 +533,16 @@ namespace sdk_wrapper
             }
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_ClearResource(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_ClearResource(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(nullptr)) return;
+        if (!CheckClientInitOrNot(nullptr)) return nullptr;
 
         if (CLIENT->isLoggedIn()) {
-            return;
+            return nullptr;
         }
 
         CLIENT->clearResource();
@@ -539,6 +554,8 @@ namespace sdk_wrapper
         //GroupManager_RemoveListener();
         //RoomManager_RemoveListener();
         //ContactManager_RemoveListener();
+
+        return nullptr;
     }
 }
 
