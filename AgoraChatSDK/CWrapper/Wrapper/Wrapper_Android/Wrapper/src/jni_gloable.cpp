@@ -101,7 +101,7 @@ namespace wrapper_jni {
         }
     }
 
-    int get_Common(const char* manager, const char* method, const char* jstr, char* buf, const char* cbid)
+    const char* get_Common(const char* manager, const char* method, const char* jstr, const char* cbid)
     {
         JNIEnv* env = getCurrentThreadEnv();
         jobject jObj = javaWrapper();
@@ -118,13 +118,13 @@ namespace wrapper_jni {
         jobject j4 = getJStringObject(env, cbid);
         jstring javaString = (jstring)(*env).CallObjectMethod(jObj, get_method, j1, j2, j3, j4);
         string str = extractJString(env, javaString);
+        char* buf = new char[str.size() + 1];
         memcpy(buf, str.c_str(), str.size() + 1);
         buf[str.size()] = '\0';
-        return 0;
+        return buf;
     }
 
     void call_Common(const char* manager, const char* method, const char* jstr, const char* cbid) {
-        
         JNIEnv* env = getCurrentThreadEnv();
         jobject jObj = javaWrapper();
         jclass cls = javaWrapperClass();
@@ -140,7 +140,6 @@ namespace wrapper_jni {
         jobject j4 = getJStringObject(env, cbid);
         (*env).CallVoidMethod(jObj, call_method, j1, j2, j3, j4);
     }
-
 }
 
 

@@ -11,7 +11,7 @@
     extern "C" void Init_Common(int sdkType, void* callback_handle);
     extern "C" void Uninit_Common();
 	extern "C" void NativeCall_Common(const char* manager, const char* method, const char* jstr, const char* cbid);
-	extern "C" int  NativeGet_Common(const char* manager, const char* method, const char* jstr, char* buf, const char* cbid);
+	extern "C" const char *  NativeGet_Common(const char* manager, const char* method, const char* jstr, const char* cbid);
 
 #endif
 
