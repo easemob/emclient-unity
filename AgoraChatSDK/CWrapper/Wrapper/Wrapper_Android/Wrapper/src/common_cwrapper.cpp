@@ -24,9 +24,9 @@ void NativeCall_Common(const char* manager, const char* method, const char* jstr
     wrapper_jni::call_Common(manager, method, jstr, cbid);
 }
 
-int NativeGet_Common(const char* manager, const char* method,const char* jstr, char* buf, const char* cbid)
+const char* NativeGet_Common(const char* manager, const char* method,const char* jstr, const char* cbid)
 {
-    return wrapper_jni::get_Common(manager, method, jstr, buf, cbid);
+    return wrapper_jni::get_Common(manager, method, jstr, cbid);
 }
 
 
