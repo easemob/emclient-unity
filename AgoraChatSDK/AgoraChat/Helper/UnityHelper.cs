@@ -10,12 +10,48 @@ namespace AgoraChat
 {
 #if _WIN32
     internal class UnityHelper
+    {
+        private static UnityHelper instance;
+        internal static UnityHelper Instance()
+        {
+            if (null == instance)
+            {
+                instance = new UnityHelper();
+            }
+            return instance;
+        }
+    }
 #else
     internal class UnityHelper : MonoBehaviour
-#endif
     {
-        public UnityHelper()
+        private static UnityHelper instance;
+        private static string game_name = "UnityHelper";
+
+        internal static UnityHelper Instance()
         {
+            if (null == instance)
+            {
+                instance = new UnityHelper();
+
+                GameObject callback_gameobj = new GameObject(game_name);
+                DontDestroyOnLoad(callback_gameobj);
+                instance = callback_gameobj.AddComponent<UnityHelper>();
+            }
+            return instance;
+        }
+
+        void Update()
+        {
+            CallbackQueue_UnityMode.Instance().Process();
+        }
+
+        private void OnApplicationQuit()
+        {
+            if (SDKClient.Instance.IsLoggedIn)
+            {
+                SDKClient.Instance.Logout(false);
+            }
+            SDKClient.Instance.ClearResource();
         }
 
 #if UNITY_EDITOR
@@ -59,7 +95,7 @@ namespace AgoraChat
                     }
             }
         }
-
 #endif
     }
+#endif
 }

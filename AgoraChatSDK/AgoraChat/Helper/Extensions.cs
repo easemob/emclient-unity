@@ -683,7 +683,24 @@ namespace AgoraChat
         }
     }
 
-
+    internal static class DisconnectReasonHelper
+    {
+        public static DisconnectReason ToDisconnectReason(this int iType)
+        {
+            switch (iType)
+            {
+                case 202: return DisconnectReason.Reason_AuthenticationFailed;
+                case 206: return DisconnectReason.Reason_LoginFromOtherDevice;
+                case 207: return DisconnectReason.Reason_RemoveFromServer;
+                case 214: return DisconnectReason.Reason_LoginTooManyDevice;
+                case 216: return DisconnectReason.Reason_ChangePassword;
+                case 217: return DisconnectReason.Reason_KickedByOtherDevice;
+                case 305: return DisconnectReason.Reason_ForbidByServer;
+                default:
+                    return DisconnectReason.Reason_Disconnected;
+            }
+        }
+    }
 
     namespace InternalSpace
     {

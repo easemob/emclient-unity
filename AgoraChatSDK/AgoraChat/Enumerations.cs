@@ -1,6 +1,6 @@
 ﻿namespace AgoraChat
 {
-
+    // TODO: need add comments
     public enum AreaCode
     {
         CN = 1,
@@ -16,6 +16,26 @@
         IN = 32,
 
         GLOB = -1,
+    }
+
+    //TODO: need to add comments
+    public enum DisconnectReason
+    {
+        Reason_Disconnected,
+
+        Reason_AuthenticationFailed,
+
+        Reason_LoginFromOtherDevice,
+
+        Reason_RemoveFromServer,
+
+        Reason_LoginTooManyDevice,
+
+        Reason_ChangePassword,
+
+        Reason_KickedByOtherDevice,
+
+        Reason_ForbidByServer,
     }
 
     public enum ChatThreadOperation

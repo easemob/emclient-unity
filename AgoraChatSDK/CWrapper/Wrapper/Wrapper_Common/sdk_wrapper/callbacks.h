@@ -26,7 +26,14 @@ namespace sdk_wrapper {
 
         void onDisconnect(EMErrorPtr error) override
         {
-            CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onDisconnected.c_str(), to_string(error->mErrorCode).c_str());
+            JSON_STARTOBJ
+            writer.Key("ret");
+            writer.Int(error->mErrorCode);
+            JSON_ENDOBJ
+
+            string json = s.GetString();
+
+            CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onDisconnected.c_str(), json.c_str());
         }
 
         void onPong() override

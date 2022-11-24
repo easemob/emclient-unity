@@ -10,9 +10,9 @@ extern EMClient* gClient;
 
 namespace sdk_wrapper {
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ConversationManager_AppendMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_AppendMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         Document d; d.Parse(jstr);
         string conv_id = GetJsonValue_String(d, "convId", "");
@@ -27,13 +27,14 @@ namespace sdk_wrapper {
         writer.Key("ret");
         writer.Bool(ret);
         JSON_ENDOBJ
+
         string json = s.GetString();
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+        return CopyToPointer(json);
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ConversationManager_ClearAllMessages(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_ClearAllMessages(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         Document d; d.Parse(jstr);
         string conv_id = GetJsonValue_String(d, "convId", "");
@@ -47,13 +48,14 @@ namespace sdk_wrapper {
         writer.Key("ret");
         writer.Bool(ret);
         JSON_ENDOBJ
+
         string json = s.GetString();
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+        return CopyToPointer(json);
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ConversationManager_RemoveMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_RemoveMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         Document d; d.Parse(jstr);
         string conv_id = GetJsonValue_String(d, "convId", "");
@@ -68,13 +70,14 @@ namespace sdk_wrapper {
         writer.Key("ret");
         writer.Bool(ret);
         JSON_ENDOBJ
+
         string json = s.GetString();
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+        return CopyToPointer(json);
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ConversationManager_ExtField(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_ExtField(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         Document d; d.Parse(jstr);
         string conv_id = GetJsonValue_String(d, "convId", "");
@@ -88,14 +91,14 @@ namespace sdk_wrapper {
         writer.Key("ret");
         writer.String(ext.c_str());
         JSON_ENDOBJ
-        string json = s.GetString();
 
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+        string json = s.GetString();
+        return CopyToPointer(json);
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ConversationManager_InsertMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_InsertMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -112,13 +115,14 @@ namespace sdk_wrapper {
         writer.Key("ret");
         writer.Bool(ret);
         JSON_ENDOBJ
+
         string json = s.GetString();
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+        return CopyToPointer(json);
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ConversationManager_LatestMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_LatestMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         Document d; d.Parse(jstr);
         string conv_id = GetJsonValue_String(d, "convId", "");
@@ -138,12 +142,12 @@ namespace sdk_wrapper {
             json = s.GetString();
         }
 
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+        return CopyToPointer(json);
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ConversationManager_LatestMessageFromOthers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_LatestMessageFromOthers(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         Document d; d.Parse(jstr);
         string conv_id = GetJsonValue_String(d, "convId", "");
@@ -163,12 +167,12 @@ namespace sdk_wrapper {
             json = s.GetString();
         }
 
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+        return CopyToPointer(json);
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ConversationManager_LoadMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_LoadMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         Document d; d.Parse(jstr);
         string conv_id = GetJsonValue_String(d, "convId", "");
@@ -188,12 +192,13 @@ namespace sdk_wrapper {
             JSON_ENDOBJ
             json = s.GetString();
         }
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+
+        return CopyToPointer(json);
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ConversationManager_LoadMessages(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_LoadMessages(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -219,12 +224,14 @@ namespace sdk_wrapper {
 
          });
         t.detach();
+
+        return nullptr;
     }
 
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ConversationManager_LoadMessagesWithKeyword(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_LoadMessagesWithKeyword(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -254,11 +261,13 @@ namespace sdk_wrapper {
 
          });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ConversationManager_LoadMessagesWithMsgType(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_LoadMessagesWithMsgType(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -291,11 +300,13 @@ namespace sdk_wrapper {
 
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ConversationManager_LoadMessagesWithTime(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_LoadMessagesWithTime(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -323,11 +334,13 @@ namespace sdk_wrapper {
 
         });
         t.detach();
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ConversationManager_MarkAllMessagesAsRead(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_MarkAllMessagesAsRead(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -338,11 +351,13 @@ namespace sdk_wrapper {
 
         EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(conv_id, type, true);
         conversationPtr->markAllMessagesAsRead(true);
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ConversationManager_MarkMessageAsRead(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_MarkMessageAsRead(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -354,11 +369,13 @@ namespace sdk_wrapper {
 
         EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(conv_id, type, true);
         conversationPtr->markMessageAsRead(msg_id,true);
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ConversationManager_SetExtField(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_SetExtField(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -370,11 +387,13 @@ namespace sdk_wrapper {
 
         EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(conv_id, type, true);
         conversationPtr->setExtField(ext);
+
+        return nullptr;
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ConversationManager_UnreadMessagesCount(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_UnreadMessagesCount(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -392,12 +411,12 @@ namespace sdk_wrapper {
         JSON_ENDOBJ
 
         string json = s.GetString();
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+        return CopyToPointer(json);
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ConversationManager_MessagesCount(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_MessagesCount(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         string local_cbid = cbid;
 
@@ -415,12 +434,12 @@ namespace sdk_wrapper {
         JSON_ENDOBJ
 
         string json = s.GetString();
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+        return CopyToPointer(json);
     }
 
-    SDK_WRAPPER_API void SDK_WRAPPER_CALL ConversationManager_UpdateMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_UpdateMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
-        if (!CheckClientInitOrNot(cbid)) return;
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
 
         Document d; d.Parse(jstr);
         string conv_id = GetJsonValue_String(d, "convId", "");
@@ -435,8 +454,9 @@ namespace sdk_wrapper {
         writer.Key("ret");
         writer.Bool(ret);
         JSON_ENDOBJ
+
         string json = s.GetString();
-        Copy_To_Buffer(buf, json.c_str(), json.size());
+        return CopyToPointer(json);
     }
 
 }
