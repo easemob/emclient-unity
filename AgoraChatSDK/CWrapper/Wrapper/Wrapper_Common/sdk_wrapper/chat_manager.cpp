@@ -344,7 +344,7 @@ namespace sdk_wrapper {
         conv_type = EMConversation::EMConversationType(var_type);
 
         bool create_if_need = GetJsonValue_Bool(d, "createIfNeed", true);
-        bool is_thread = GetJsonValue_String(d, "isThread", false);
+        bool is_thread = GetJsonValue_Bool(d, "isThread", false);
 
         string json = "";
 

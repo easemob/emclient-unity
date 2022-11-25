@@ -1,4 +1,3 @@
-
 #include "emclient.h"
 #include "utils/emencryptutils.h"
 #include "utils/emutils.h"
@@ -42,7 +41,7 @@ const char* CopyToPointer(const string& src)
     return p;
 }
 
-void Copy_To_Buffer(char* dst, const char* src, size_t len)
+void CopyToBuffer(char* dst, const char* src, size_t len)
 {
     if (nullptr == dst || nullptr == src ) return;
 
@@ -112,7 +111,7 @@ void StartTimer(int interval, TIMER_FUNC timer_func)
 
 
     if (setitimer(ITIMER_REAL, &tick, NULL) < 0) {
-        LOG("Error: start timer for token failed.");
+        //LOG("Error: start timer for token failed.");
         return;
     }
 }
@@ -122,7 +121,7 @@ void StopTimer()
     struct itimerval tick;
     memset(&tick, 0, sizeof(tick));
     if (setitimer(ITIMER_REAL, &tick, NULL) < 0) {
-        LOG("ERROR: stop timer for token failed.");
+        //LOG("ERROR: stop timer for token failed.");
         return;
     }
 }

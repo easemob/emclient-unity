@@ -143,34 +143,31 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     }
     void SendImageBtnAction()
     {
-        Message msg = Message.CreateTextSendMessage("yqtest1", "今天天气不错");
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            Message msg = Message.CreateImageSendMessage(dict["to"], dict["filepath"]);
+            SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.TitleAlert(transform, "成功", msg.MsgId);
 
-        List<string> targetLanguages = new List<string>();
-        targetLanguages.Add("lzh");
-        targetLanguages.Add("ja");
-        targetLanguages.Add("en");
+                    //Message msg1 = SDKClient.Instance.ChatManager.LoadMessage(msg.MsgId);
+                    //Debug.Log($"body content:{msg1.MsgId}");
+                },
+                onProgress: (progress) =>
+                {
+                    UIManager.TitleAlert(transform, "发送进度", progress.ToString());
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, msg.MsgId);
+                }
+            ));
+        });
 
-        SDKClient.Instance.ChatManager.TranslateMessage(msg, targetLanguages, new ValueCallBack<Message>(
-         onSuccess: (dmsg) =>
-         {
-             Debug.Log($"TranslateMessage success.");
-             AgoraChat.MessageBody.TextBody tb = (AgoraChat.MessageBody.TextBody)dmsg.Body;
-             foreach (var it in tb.Translations)
-             {
-                 Debug.Log($"Translate, lang:{it.Key}, result:{it.Value}");
-             }
-         },
-         onError: (code, desc) =>
-         {
-             Debug.Log($"TranslateMessage failed, code:{code}, desc:{desc}");
-         }
-        ));
-
-        return;
-
-
-        UIManager.UnfinishedAlert(transform);
-        Debug.Log("SendImageBtnAction");
+        config.AddField("to");
+        config.AddField("filepath");
+        UIManager.DefaultInputAlert(transform, config);
     }
     void SendFileBtnAction()
     {

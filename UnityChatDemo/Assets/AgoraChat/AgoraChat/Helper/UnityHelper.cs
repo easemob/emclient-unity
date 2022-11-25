@@ -31,8 +31,6 @@ namespace AgoraChat
         {
             if (null == instance)
             {
-                instance = new UnityHelper();
-
                 GameObject callback_gameobj = new GameObject(game_name);
                 DontDestroyOnLoad(callback_gameobj);
                 instance = callback_gameobj.AddComponent<UnityHelper>();

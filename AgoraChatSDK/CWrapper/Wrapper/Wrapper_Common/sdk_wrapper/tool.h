@@ -4,6 +4,8 @@
 #include <map>
 #include <sstream>
 #include <vector>
+#include <math.h>
+#include <fstream>
 
 #include "sdk_wrapper_internal.h"
 

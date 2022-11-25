@@ -1951,18 +1951,23 @@ namespace sdk_wrapper
     {
         //return EMMessageEncoder::decodeReactionFromJson(jnode);
         //TODO: add your code later, no need now.
+        return nullptr;
     }
 
     EMMessageReactionList MessageReaction::FromJsonObjectToReactionList(const Value& jnode)
     {
         //return EMMessageEncoder::decodeReactionListFromJson(jnode);
         //TODO: add your code later, no need now.
+        std::vector<EMMessageReactionPtr> vec;
+        return vec;
     }
 
     EMMessageReactionList MessageReaction::FromJsonToReactionList(string json)
     {
         //return EMMessageEncoder::decodeReactionListFromJson(json);
         //TODO: add your code later, no need now.
+        std::vector<EMMessageReactionPtr> vec;
+        return vec;
     }
 
     void MessageReactionChange::ToJsonObject(Writer<StringBuffer>& writer, EMMessageReactionChangePtr reactionChangePtr, std::string curname)
