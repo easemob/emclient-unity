@@ -17,10 +17,10 @@ HYPHENATE_API void UnInit() {
 
 HYPHENATE_API void _NativeCall(const char* manager, const char* method, const char* jstr, const char* cbid)
 {
-	NativeCall_Common(manager, method, jstr, cbid);
+    NativeCall_Common(manager, method, jstr, cbid);
 }
 
 HYPHENATE_API const char*  _NativeGet(const char* manager, const char* method, const char* jstr, const char* cbid)
 {
-	return NativeGet_Common(manager, method, jstr, cbid);
+    return NativeGet_Common(manager, method, jstr, cbid);
 }

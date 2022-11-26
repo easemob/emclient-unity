@@ -5,19 +5,45 @@ using AgoraChat.SimpleJSON;
 
 namespace AgoraChat
 {
-
-
     internal static class ModelHelper
     {
 
-        internal static void AddWithoutNull(this JSONObject jo, string key, JSONNode value)
+        internal static void AddWithoutNull(this JSONObject jo, string key, object value)
         {
-            if (value.IsNull || value == null)
+            if (value == null)
             {
                 return;
             }
 
-            jo.Add(key, value);
+            if (value.GetType() == typeof(double))
+            {
+                jo.Add(key, (double)value);
+            }
+
+            if (value.GetType() == typeof(float))
+            {
+                jo.Add(key, (float)value);
+            }
+
+            if (value.GetType() == typeof(string))
+            {
+                jo.Add(key, (string)value);
+            }
+
+            if (value.GetType() == typeof(bool))
+            {
+                jo.Add(key, (bool)value);
+            }
+
+            if (value.GetType() == typeof(int))
+            {
+                jo.Add(key, (int)value);
+            }
+
+            if (value.GetType() == typeof(JSONObject))
+            {
+                jo.Add(key, (JSONObject)value);
+            }
         }
 
         internal static IMessageBody CreateBodyWithJsonObject(JSONNode jsonNode)

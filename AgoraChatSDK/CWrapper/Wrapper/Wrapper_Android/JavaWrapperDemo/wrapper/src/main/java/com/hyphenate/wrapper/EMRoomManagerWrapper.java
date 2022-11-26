@@ -203,8 +203,8 @@ public class EMRoomManagerWrapper extends EMBaseWrapper{
 
     private String createChatRoom(JSONObject params, EMWrapperCallback callback)
             throws JSONException {
-        String subject = params.getString("subject");
-        int maxUserCount = params.getInt("maxUserCount");
+        String subject = params.getString("name");
+        int maxUserCount = params.getInt("count");
         String description = null;
         if (params.has("desc")){
             description = params.getString("desc");
