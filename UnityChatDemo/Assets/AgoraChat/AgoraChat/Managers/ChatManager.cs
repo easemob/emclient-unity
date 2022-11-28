@@ -187,10 +187,8 @@ namespace AgoraChat
 
             Process process = (_, jsonNode) =>
             {
-                LogPrinter.Log($"fetch result: {jsonNode}");
                 CursorResult<Message> cursor_msg = new CursorResult<Message>(_, (jn) =>
                 {
-                    LogPrinter.Log($"fetch result jn: {jn}");
                     return ModelHelper.CreateWithJsonObject<Message>(jn);
                 });
 

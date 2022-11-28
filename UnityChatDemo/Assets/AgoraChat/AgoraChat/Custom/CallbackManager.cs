@@ -86,9 +86,6 @@ namespace AgoraChat
                 callback,
                 (jn, cb, process) =>
                 {
-
-                    LogPrinter.Log($"CallAction item callback: {jn}");
-
                     // parse result json
                     if (null == jn || !jn.IsObject) return;
 
@@ -142,13 +139,9 @@ namespace AgoraChat
 
         internal void CallAction(string callbackId, JSONNode jsonNode)
         {
-
-            LogPrinter.Log($"CallAction: {jsonNode}");
-
             CallbackItem item = callbackMap[callbackId];
             if (item != null)
             {
-                LogPrinter.Log($"CallAction item: {jsonNode}");
                 item.callbackAction?.Invoke(jsonNode, item.callback, item.process);
                 callbackMap.Remove(callbackId); // delete the callback after triggered
             }

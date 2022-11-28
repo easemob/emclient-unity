@@ -10,14 +10,53 @@ namespace AgoraChat
     internal static class ModelHelper
     {
 
-        internal static void AddWithoutNull(this JSONObject jo, string key, JSONNode value)
+        internal static void AddWithoutNull(this JSONObject jo, string key, object value)
         {
-            if (value.IsNull || value == null)
+            if (value == null)
             {
                 return;
             }
 
-            jo.Add(key, value);
+            if (value.GetType() == typeof(long))
+            {
+                double d = Convert.ToDouble(value);
+                jo.Add(key, d);
+            }
+
+            else if (value.GetType() == typeof(double))
+            {
+                jo.Add(key, (double)value);
+            }
+
+            else if (value.GetType() == typeof(float))
+            {
+                jo.Add(key, (float)value);
+            }
+
+            else if (value.GetType() == typeof(string))
+            {
+                jo.Add(key, (string)value);
+            }
+
+            else if (value.GetType() == typeof(bool))
+            {
+                jo.Add(key, (bool)value);
+            }
+
+            else if (value.GetType() == typeof(int))
+            {
+                jo.Add(key, (int)value);
+            }
+
+            else if (value.GetType() == typeof(JSONObject))
+            {
+                jo.Add(key, (JSONObject)value);
+            }
+
+            else
+            {
+                jo.Add(key, (JSONNode)value);
+            }
         }
 
         internal static IMessageBody CreateBodyWithJsonObject(JSONNode jsonNode)

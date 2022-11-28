@@ -1214,8 +1214,6 @@ namespace sdk_wrapper
 
     string Message::ToJson(EMMessageList messages)
     {
-        if (messages.size() == 0) return string();
-
         StringBuffer s;
         Writer<StringBuffer> writer(s);
 

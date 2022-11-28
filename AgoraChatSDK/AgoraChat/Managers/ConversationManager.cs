@@ -102,7 +102,7 @@ namespace AgoraChat
             jo_param.AddWithoutNull("convId", conversationId);
             jo_param.AddWithoutNull("convType", conversationType.ToInt());
             jo_param.AddWithoutNull("msg", message.ToJsonObject());
-            JSONNode jn = NativeGet(SDKMethod.updateChatMessage, jo_param).GetReturnJsonNode();
+            JSONNode jn = NativeGet(SDKMethod.updateConversationMessage, jo_param).GetReturnJsonNode();
             return jn.IsBoolean ? jn.AsBool : false;
         }
 

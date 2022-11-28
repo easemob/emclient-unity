@@ -987,7 +987,10 @@ namespace sdk_wrapper {
 
         Document d; d.Parse(jstr);
         string group_id = GetJsonValue_String(d, "groupId", "");
-        EMMucMemberList mem_list = MyJson::FromJsonObjectToVector(d["userIds"]);
+        EMMucMemberList mem_list;
+        if (d.HasMember("userIds")) {
+            mem_list = MyJson::FromJsonObjectToVector(d["userIds"]);
+        }
 
         thread t([=]() {
             EMError error;

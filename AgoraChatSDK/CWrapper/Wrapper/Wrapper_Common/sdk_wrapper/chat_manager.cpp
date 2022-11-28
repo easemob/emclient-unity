@@ -723,7 +723,7 @@ namespace sdk_wrapper {
         Document d; d.Parse(jstr);
         string timestamp = GetJsonValue_String(d, "timestamp", "0");
 
-        int64_t ts = atol(timestamp.c_str());
+        int64_t ts = atoll(timestamp.c_str());
 
         thread t([=]() {
 
