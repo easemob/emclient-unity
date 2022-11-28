@@ -1,0 +1,484 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4503C46B292E1EAA0090F2D4 /* CWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4503C46A292E1EAA0090F2D4 /* CWrapper.cpp */; };
+		4503C522292E2F800090F2D4 /* libCommonWrapper.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4503C4B9292E21110090F2D4 /* libCommonWrapper.dylib */; };
+		4503C53029306DD90090F2D4 /* easemob.framework in Resources */ = {isa = PBXBuildFile; fileRef = 4503C52B29306DD90090F2D4 /* easemob.framework */; };
+		4503C53129306DD90090F2D4 /* libCommonWrapper.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4503C52F29306DD90090F2D4 /* libCommonWrapper.dylib */; };
+		4503C53329306DFE0090F2D4 /* libSdkWrapper.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4503C53229306DFE0090F2D4 /* libSdkWrapper.dylib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4503C4B8292E21110090F2D4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4503C4B4292E21110090F2D4 /* CommonWrapper.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4503C4A6292E21110090F2D4;
+			remoteInfo = CommonWrapper;
+		};
+		4503C4DC292E21BE0090F2D4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4503C4D8292E21BD0090F2D4 /* SdkWrapper.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4503C4CA292E21BD0090F2D4;
+			remoteInfo = SdkWrapper;
+		};
+		4503C5422930BB190090F2D4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4503C53E2930BB180090F2D4 /* easemob.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0B2C2C83CED2FF839E96E86A;
+			remoteInfo = easemob;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		4503C431292E1B5C0090F2D4 /* ChatCWrapper.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChatCWrapper.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		4503C466292E1EAA0090F2D4 /* CWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWrapper.h; sourceTree = "<group>"; };
+		4503C467292E1EAA0090F2D4 /* Api_decorator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Api_decorator.h; sourceTree = "<group>"; };
+		4503C468292E1EAA0090F2D4 /* CWrapper_import.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWrapper_import.h; sourceTree = "<group>"; };
+		4503C46A292E1EAA0090F2D4 /* CWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CWrapper.cpp; sourceTree = "<group>"; };
+		4503C4B4292E21110090F2D4 /* CommonWrapper.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CommonWrapper.xcodeproj; path = ../../CommonWrapper/CommonWrapper.xcodeproj; sourceTree = "<group>"; };
+		4503C4D8292E21BD0090F2D4 /* SdkWrapper.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SdkWrapper.xcodeproj; path = ../../SdkWrapper/SdkWrapper.xcodeproj; sourceTree = "<group>"; };
+		4503C52B29306DD90090F2D4 /* easemob.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = easemob.framework; path = build/Products/Debug/easemob.framework; sourceTree = "<group>"; };
+		4503C52F29306DD90090F2D4 /* libCommonWrapper.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libCommonWrapper.dylib; path = build/Products/Debug/libCommonWrapper.dylib; sourceTree = "<group>"; };
+		4503C53229306DFE0090F2D4 /* libSdkWrapper.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libSdkWrapper.dylib; path = build/Products/Debug/libSdkWrapper.dylib; sourceTree = "<group>"; };
+		4503C53E2930BB180090F2D4 /* easemob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = easemob.xcodeproj; path = ../../easemob/build/easemob.xcodeproj; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4503C42E292E1B5C0090F2D4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4503C522292E2F800090F2D4 /* libCommonWrapper.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4503C428292E1B5C0090F2D4 = {
+			isa = PBXGroup;
+			children = (
+				4503C53D2930BAC50090F2D4 /* easemob */,
+				4503C53229306DFE0090F2D4 /* libSdkWrapper.dylib */,
+				4503C52B29306DD90090F2D4 /* easemob.framework */,
+				4503C52F29306DD90090F2D4 /* libCommonWrapper.dylib */,
+				4503C49C292E20F10090F2D4 /* SdkWrapper */,
+				4503C49A292E20C20090F2D4 /* CommonWrapper */,
+				4503C464292E1EAA0090F2D4 /* CWrapper */,
+				4503C432292E1B5C0090F2D4 /* Products */,
+				4503C520292E2F800090F2D4 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		4503C432292E1B5C0090F2D4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4503C431292E1B5C0090F2D4 /* ChatCWrapper.bundle */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4503C464292E1EAA0090F2D4 /* CWrapper */ = {
+			isa = PBXGroup;
+			children = (
+				4503C465292E1EAA0090F2D4 /* include */,
+				4503C469292E1EAA0090F2D4 /* src */,
+			);
+			name = CWrapper;
+			path = ../../../../CWrapper;
+			sourceTree = "<group>";
+		};
+		4503C465292E1EAA0090F2D4 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				4503C466292E1EAA0090F2D4 /* CWrapper.h */,
+				4503C467292E1EAA0090F2D4 /* Api_decorator.h */,
+				4503C468292E1EAA0090F2D4 /* CWrapper_import.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		4503C469292E1EAA0090F2D4 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				4503C46A292E1EAA0090F2D4 /* CWrapper.cpp */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		4503C49A292E20C20090F2D4 /* CommonWrapper */ = {
+			isa = PBXGroup;
+			children = (
+				4503C4B4292E21110090F2D4 /* CommonWrapper.xcodeproj */,
+			);
+			path = CommonWrapper;
+			sourceTree = "<group>";
+		};
+		4503C49C292E20F10090F2D4 /* SdkWrapper */ = {
+			isa = PBXGroup;
+			children = (
+				4503C4D8292E21BD0090F2D4 /* SdkWrapper.xcodeproj */,
+			);
+			path = SdkWrapper;
+			sourceTree = "<group>";
+		};
+		4503C4B5292E21110090F2D4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4503C4B9292E21110090F2D4 /* libCommonWrapper.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4503C4D9292E21BD0090F2D4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4503C4DD292E21BE0090F2D4 /* libSdkWrapper.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4503C520292E2F800090F2D4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4503C53D2930BAC50090F2D4 /* easemob */ = {
+			isa = PBXGroup;
+			children = (
+				4503C53E2930BB180090F2D4 /* easemob.xcodeproj */,
+			);
+			path = easemob;
+			sourceTree = "<group>";
+		};
+		4503C53F2930BB180090F2D4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4503C5432930BB190090F2D4 /* easemob.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4503C430292E1B5C0090F2D4 /* ChatCWrapper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4503C435292E1B5C0090F2D4 /* Build configuration list for PBXNativeTarget "ChatCWrapper" */;
+			buildPhases = (
+				4503C42D292E1B5C0090F2D4 /* Sources */,
+				4503C42E292E1B5C0090F2D4 /* Frameworks */,
+				4503C42F292E1B5C0090F2D4 /* Resources */,
+				4503C53429306EB50090F2D4 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ChatCWrapper;
+			productName = ChatCWrapper;
+			productReference = 4503C431292E1B5C0090F2D4 /* ChatCWrapper.bundle */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4503C429292E1B5C0090F2D4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 1320;
+				TargetAttributes = {
+					4503C430292E1B5C0090F2D4 = {
+						CreatedOnToolsVersion = 13.2.1;
+					};
+				};
+			};
+			buildConfigurationList = 4503C42C292E1B5C0090F2D4 /* Build configuration list for PBXProject "ChatCWrapper" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 4503C428292E1B5C0090F2D4;
+			productRefGroup = 4503C432292E1B5C0090F2D4 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 4503C4B5292E21110090F2D4 /* Products */;
+					ProjectRef = 4503C4B4292E21110090F2D4 /* CommonWrapper.xcodeproj */;
+				},
+				{
+					ProductGroup = 4503C53F2930BB180090F2D4 /* Products */;
+					ProjectRef = 4503C53E2930BB180090F2D4 /* easemob.xcodeproj */;
+				},
+				{
+					ProductGroup = 4503C4D9292E21BD0090F2D4 /* Products */;
+					ProjectRef = 4503C4D8292E21BD0090F2D4 /* SdkWrapper.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				4503C430292E1B5C0090F2D4 /* ChatCWrapper */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		4503C4B9292E21110090F2D4 /* libCommonWrapper.dylib */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.dylib";
+			path = libCommonWrapper.dylib;
+			remoteRef = 4503C4B8292E21110090F2D4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4503C4DD292E21BE0090F2D4 /* libSdkWrapper.dylib */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.dylib";
+			path = libSdkWrapper.dylib;
+			remoteRef = 4503C4DC292E21BE0090F2D4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4503C5432930BB190090F2D4 /* easemob.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = easemob.framework;
+			remoteRef = 4503C5422930BB190090F2D4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4503C42F292E1B5C0090F2D4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4503C53329306DFE0090F2D4 /* libSdkWrapper.dylib in Resources */,
+				4503C53029306DD90090F2D4 /* easemob.framework in Resources */,
+				4503C53129306DD90090F2D4 /* libCommonWrapper.dylib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		4503C53429306EB50090F2D4 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd $SRCROOT/..\n./cplib.sh\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4503C42D292E1B5C0090F2D4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4503C46B292E1EAA0090F2D4 /* CWrapper.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		4503C433292E1B5C0090F2D4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.1;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		4503C434292E1B5C0090F2D4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		4503C436292E1B5C0090F2D4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSPrincipalClass = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Resources";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = easemob.ChatCWrapper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Debug;
+		};
+		4503C437292E1B5C0090F2D4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSPrincipalClass = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Resources";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = easemob.ChatCWrapper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4503C42C292E1B5C0090F2D4 /* Build configuration list for PBXProject "ChatCWrapper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4503C433292E1B5C0090F2D4 /* Debug */,
+				4503C434292E1B5C0090F2D4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4503C435292E1B5C0090F2D4 /* Build configuration list for PBXNativeTarget "ChatCWrapper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4503C436292E1B5C0090F2D4 /* Debug */,
+				4503C437292E1B5C0090F2D4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4503C429292E1B5C0090F2D4 /* Project object */;
+}

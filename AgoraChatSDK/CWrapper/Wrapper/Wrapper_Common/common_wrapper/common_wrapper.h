@@ -14,7 +14,7 @@
 #else
 
 	#define COMMON_WRAPPER_CALL
-	#define HYPHENATE_API extern "C"
+	#define COMMON_WRAPPER_API extern "C"
 
 #endif
 

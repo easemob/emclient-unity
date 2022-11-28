@@ -1,12 +1,15 @@
 #include "CWrapper.h"
 #include "CWrapper_import.h"
 
+#include <TargetConditionals.h>
+
 NativeListenerEvent gCallback = nullptr;
 
 HYPHENATE_API void Init(int sdkType, NativeListenerEvent cb) {
     gCallback = cb;
     Init_Common(sdkType, (void*)gCallback);
 }
+
 HYPHENATE_API void UnInit() {
     gCallback = nullptr;
     Uninit_Common();
