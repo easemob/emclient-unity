@@ -5,6 +5,8 @@ using AgoraChat.SimpleJSON;
 
 namespace AgoraChat
 {
+
+
     internal static class ModelHelper
     {
 
@@ -15,34 +17,45 @@ namespace AgoraChat
                 return;
             }
 
-            if (value.GetType() == typeof(double))
+            if (value.GetType() == typeof(long))
+            {
+                double d = Convert.ToDouble(value);
+                jo.Add(key, d);
+            }
+
+            else if (value.GetType() == typeof(double))
             {
                 jo.Add(key, (double)value);
             }
 
-            if (value.GetType() == typeof(float))
+            else if (value.GetType() == typeof(float))
             {
                 jo.Add(key, (float)value);
             }
 
-            if (value.GetType() == typeof(string))
+            else if (value.GetType() == typeof(string))
             {
                 jo.Add(key, (string)value);
             }
 
-            if (value.GetType() == typeof(bool))
+            else if (value.GetType() == typeof(bool))
             {
                 jo.Add(key, (bool)value);
             }
 
-            if (value.GetType() == typeof(int))
+            else if (value.GetType() == typeof(int))
             {
                 jo.Add(key, (int)value);
             }
 
-            if (value.GetType() == typeof(JSONObject))
+            else if (value.GetType() == typeof(JSONObject))
             {
                 jo.Add(key, (JSONObject)value);
+            }
+
+            else
+            {
+                jo.Add(key, (JSONNode)value);
             }
         }
 

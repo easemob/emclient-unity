@@ -973,7 +973,7 @@ namespace sdk_wrapper {
             string json = MessageReactionChange::ToJson(list, curname);
 
             if (json.size() > 0)
-                CallBack(STRING_THREADMANAGER_LISTENER.c_str(), STRING_onMessageReactionDidChange.c_str(), json.c_str());
+                CallBack(STRING_CHATMANAGER_LISTENER.c_str(), STRING_onMessageReactionDidChange.c_str(), json.c_str());
         }
     };
 

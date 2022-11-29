@@ -315,11 +315,8 @@ namespace sdk_wrapper {
         int int_type = GetJsonValue_Int(d, "convType", 0);
         EMConversation::EMConversationType type = Conversation::ConversationTypeFromInt(int_type);
 
-        string start_ts_str = GetJsonValue_String(d, "startTime", "0");
-        int64_t start_ts = atol(start_ts_str.c_str());
-
-        string end_ts_str = GetJsonValue_String(d, "endTime", "0");
-        int64_t end_ts = atol(end_ts_str.c_str());
+        int64_t start_ts = GetJsonValue_Int64(d, "startTime", 0);
+        int64_t end_ts = GetJsonValue_Int64(d, "endTime", 0);
 
         int count = GetJsonValue_Int(d, "count", 20);
 
@@ -383,12 +380,24 @@ namespace sdk_wrapper {
         string conv_id = GetJsonValue_String(d, "convId", "");
         int int_type = GetJsonValue_Int(d, "convType", 0);
         EMConversation::EMConversationType type = Conversation::ConversationTypeFromInt(int_type);
-        string ext = GetJsonValue_String(d, "ext", "");
+
+        map<string, string> ext_map;
+        if (d.HasMember("ext")) {
+            ext_map = MyJson::FromJsonObjectToMap(d["ext"]);
+        }
+        
+        string ext = MyJson::ToJson(ext_map);
 
         EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(conv_id, type, true);
         conversationPtr->setExtField(ext);
 
-        return nullptr;
+        JSON_STARTOBJ
+        writer.Key("ret");
+        writer.Bool(true);
+        JSON_ENDOBJ
+
+        string json = s.GetString();
+        return CopyToPointer(json);
     }
 
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_UnreadMessagesCount(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)

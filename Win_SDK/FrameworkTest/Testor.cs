@@ -4904,12 +4904,12 @@ namespace WinSDKTest
             if (_memberId2.Length > 0)
                 memberId2 = _memberId2;
             else
-                memberId2 = GetParamValueFromContext(1);
+                memberId2 = GetParamValueFromContext(2);
 
             if (_memberId3.Length > 0)
                 memberId3 = _memberId3;
             else
-                memberId2 = GetParamValueFromContext(1);
+                memberId3 = GetParamValueFromContext(3);
 
             List<string> members = new List<string>();
             members.Add(memberId1);
@@ -5899,15 +5899,15 @@ namespace WinSDKTest
             else
                 memberId2 = GetParamValueFromContext(2);
 
-            if (_memberId3.Length > 0)
-                memberId3 = _memberId3;
-            else
-                memberId2 = GetParamValueFromContext(3);
+            //if (_memberId3.Length > 0)
+            //    memberId3 = _memberId3;
+            //else
+            //    memberId3 = GetParamValueFromContext(3);
 
             List<string> members = new List<string>();
             members.Add(memberId1);
             members.Add(memberId2);
-            members.Add(memberId3);
+            //members.Add(memberId3);
 
             SDKClient.Instance.GroupManager.UnMuteGroupMembers(groupId, members, new CallBack(
                 onSuccess: () =>
