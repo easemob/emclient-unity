@@ -37,8 +37,6 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
             ret = getGroupWithId(jsonObject);
         } else if (EMSDKMethod.getJoinedGroups.equals(method)) {
             ret = getJoinedGroups();
-        } else if (EMSDKMethod.getGroupsWithoutPushNotification.equals(method)) {
-            ret = getGroupsWithoutPushNotification(callback);
         } else if (EMSDKMethod.getJoinedGroupsFromServer.equals(method)) {
             ret = getJoinedGroupsFromServer(jsonObject, callback);
         } else if (EMSDKMethod.getPublicGroupsFromServer.equals(method)) {
@@ -156,14 +154,6 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
         }
     }
 
-    private String getGroupsWithoutPushNotification(EMWrapperCallback callback) {
-
-        asyncRunnable(() -> {
-            List<String> groups = EMClient.getInstance().pushManager().getNoPushGroups();
-            onSuccess(EMHelper.stringListToJsonArray(groups), callback);
-        });
-        return null;
-    }
 
     private String getJoinedGroupsFromServer(JSONObject params, EMWrapperCallback callback) throws JSONException {
 
@@ -809,22 +799,18 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
     }
 
     private String downloadGroupSharedFile(JSONObject params, EMWrapperCallback callback) throws JSONException {
-        // TODO: 下载文件更新状态
-//        String groupId = params.getString("groupId");
-//        String fileId = null;
-//        if (params.has("fileId")) {
-//            fileId = params.getString("fileId");
-//        }
-//        String savePath = null;
-//        if (params.has("savePath")) {
-//            savePath = params.getString("savePath");
-//        }
-//        EMClient.getInstance().groupManager().asyncDownloadGroupSharedFile(groupId, fileId, savePath,
-//                new EMDownloadCallback(fileId, savePath));
-//
-//        post(()->{
-//            onSuccess(result, channelName, true);
-//        });
+        String groupId = params.getString("groupId");
+        String fileId = null;
+        if (params.has("fileId")) {
+            fileId = params.getString("fileId");
+        }
+        String savePath = null;
+        if (params.has("savePath")) {
+            savePath = params.getString("savePath");
+        }
+        EMClient.getInstance().groupManager().asyncDownloadGroupSharedFile(groupId, fileId, savePath,
+                new EMCommonCallback(callback));
+
         return null;
     }
 

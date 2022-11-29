@@ -360,5 +360,8 @@ namespace AgoraChat
         internal const string onAttributesChangedFromRoom = "onAttributesChangedFromRoom";
         internal const string onAttributesRemovedFromRoom = "onAttributesRemovedFromRoom";
         internal const string onSpecificationChangedFromRoom = "onSpecificationChangedFromRoom";
+        internal const string onAddWhiteListMembersFromRoom = "onAddWhiteListMembersFromRoom";
+        internal const string onRemoveWhiteListMembersFromRoom = "onRemoveWhiteListMembersFromRoom";
+        internal const string onAllMemberMuteChangedFromRoom = "onAllMemberMuteChangedFromRoom";
     }
 }

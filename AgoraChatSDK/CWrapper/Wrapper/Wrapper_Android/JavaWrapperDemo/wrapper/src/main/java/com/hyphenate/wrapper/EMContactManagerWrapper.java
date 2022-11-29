@@ -92,16 +92,14 @@ public class EMContactManagerWrapper extends EMBaseWrapper{
         return null;
     }
 
-    private String getAllContactsFromDB(EMWrapperCallback callback) {
-        asyncRunnable(() -> {
-            try {
-                List<String> contacts = EMClient.getInstance().contactManager().getContactsFromLocal();
-                onSuccess(EMHelper.stringListToJsonArray(contacts), callback);
-            } catch (HyphenateException e) {
-                onError(e, callback);
-            }
-        });
-        return null;
+    private String getAllContactsFromDB(EMWrapperCallback callback) throws JSONException{
+        List<String> contacts = null;
+        try {
+            contacts = EMClient.getInstance().contactManager().getContactsFromLocal();
+        }catch (HyphenateException e) {
+
+        }
+        return EMHelper.getReturnJsonObject(contacts).toString();
     }
 
     private String addUserToBlockList( JSONObject params, EMWrapperCallback callback) throws JSONException {

@@ -46,26 +46,11 @@ public class EMPushManagerWrapper extends EMBaseWrapper{
         else if(EMSDKMethod.updateImPushStyle.equals(method)){
             ret = updateImPushStyle(jsonObject, callback);
         }
-        else if(EMSDKMethod.updateGroupPushService.equals(method)){
-            ret = updateGroupPushService(jsonObject, callback);
-        }
         else if(EMSDKMethod.updateHMSPushToken.equals(method)){
             ret = updateHMSPushToken(jsonObject, callback);
         }
         else if(EMSDKMethod.updateFCMPushToken.equals(method)){
             ret = updateFCMPushToken(jsonObject, callback);
-        }
-        else if (EMSDKMethod.enableOfflinePush.equals(method)) {
-            ret = enableOfflinePush(jsonObject, callback);
-        }
-        else if (EMSDKMethod.disableOfflinePush.equals(method)){
-            ret = disableOfflinePush(jsonObject, callback);
-        }
-        else if (EMSDKMethod.getNoPushGroups.equals(method)) {
-            ret = getNoPushGroups(jsonObject, callback);
-        }
-        else if (EMSDKMethod.updateUserPushService.equals(method)) {
-            ret = updateUserPushService(jsonObject, callback);
         }
         else if (EMSDKMethod.reportPushAction.equals(method)) {
             ret = reportPushAction(jsonObject, callback);
@@ -144,90 +129,9 @@ public class EMPushManagerWrapper extends EMBaseWrapper{
         return null;
     }
 
-
-    private String enableOfflinePush(JSONObject params, EMWrapperCallback callback) throws JSONException
-    {
-        asyncRunnable(()-> {
-            try {
-                EMClient.getInstance().pushManager().enableOfflinePush();
-                onSuccess(null, callback);
-            } catch(HyphenateException e) {
-                onError(e, callback);
-            }
-        });
-        return null;
-    }
-
-    private String disableOfflinePush(JSONObject params, EMWrapperCallback callback) throws JSONException
-    {
-        int startTime = params.getInt("start");
-        int endTime = params.getInt("end");
-        asyncRunnable(()-> {
-            try {
-                EMClient.getInstance().pushManager().disableOfflinePush(startTime, endTime);
-                onSuccess(null, callback);
-            } catch(HyphenateException e) {
-                onError(e, callback);
-            }
-        });
-        return null;
-    }
-
-    private String getNoPushGroups(JSONObject params, EMWrapperCallback callback)  throws JSONException {
-        asyncRunnable(()-> {
-            List<String> groups = EMClient.getInstance().pushManager().getNoPushGroups();
-            onSuccess(EMHelper.stringListToJsonArray(groups), callback);
-        });
-        return null;
-    }
-
-    private String getNoPushUsers(JSONObject params, EMWrapperCallback callback) throws JSONException {
-        asyncRunnable(()->{
-            List<String> list = EMClient.getInstance().pushManager().getNoPushUsers();
-            onSuccess(EMHelper.stringListToJsonArray(list), callback);
-        });
-        return null;
-    }
-
     private String updateImPushStyle(JSONObject params, EMWrapperCallback callback) throws JSONException {
         EMPushManager.DisplayStyle style = params.getInt("pushStyle") == 0 ? EMPushManager.DisplayStyle.SimpleBanner : EMPushManager.DisplayStyle.MessageSummary;
         EMClient.getInstance().pushManager().asyncUpdatePushDisplayStyle(style, new EMCommonCallback(callback));
-        return null;
-    }
-
-    private String updateGroupPushService(JSONObject params, EMWrapperCallback callback) throws JSONException {
-        JSONArray groupIds = params.getJSONArray("groupIds");
-        boolean noPush = params.getBoolean("noPush");
-
-        List<String> groupList = new ArrayList<>();
-        for (int i = 0; i < groupIds.length(); i++) {
-            String groupId = groupIds.getString(i);
-            groupList.add(groupId);
-        }
-        asyncRunnable(()-> {
-            try {
-                EMClient.getInstance().pushManager().updatePushServiceForGroup(groupList, noPush);
-                onSuccess(null, callback);
-            } catch(HyphenateException e) {
-                onError(e, callback);
-            }
-        });
-        return null;
-    }
-
-    private String updateUserPushService(JSONObject params, EMWrapperCallback callback) throws JSONException {
-        boolean noPush = params.getBoolean("noPush");
-        JSONArray userIds = params.getJSONArray("userIds");
-        List<String> userList = EMHelper.stringListFromJsonArray(userIds);
-
-        asyncRunnable(()-> {
-            try {
-                EMClient.getInstance().pushManager().updatePushServiceForUsers(userList, noPush);
-                onSuccess(null, callback);
-            } catch(HyphenateException e) {
-                onError(e, callback);
-            }
-        });
         return null;
     }
 
@@ -252,7 +156,7 @@ public class EMPushManagerWrapper extends EMBaseWrapper{
     }
 
     private String setConversationSilentMode(JSONObject params, EMWrapperCallback callback) throws JSONException {
-        String conversationId = params.getString("conversationId");
+        String conversationId = params.getString("convId");
         EMConversation.EMConversationType type = EMConversationHelper.typeFromInt(params.getInt("conversationType"));
         EMSilentModeParam param = EMSilentModeParamHelper.fromJson(params.getJSONObject("param"));
         EMClient.getInstance().pushManager().setSilentModeForConversation(conversationId, type, param, new EMCommonValueCallback<EMSilentModeResult>(callback){

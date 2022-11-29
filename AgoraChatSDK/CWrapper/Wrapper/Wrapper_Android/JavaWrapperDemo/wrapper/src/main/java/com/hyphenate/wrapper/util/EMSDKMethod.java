@@ -317,7 +317,7 @@ public class EMSDKMethod {
     public static final String onTokenExpired = "onTokenExpired";
     public static final String onTokenWillExpire = "onTokenWillExpire";
 
-    // GroupManagerDeleagate
+    // GroupManagerDelegate
     public static final String onInvitationReceivedFromGroup = "onInvitationReceivedFromGroup";
     public static final String onRequestToJoinReceivedFromGroup = "onRequestToJoinReceivedFromGroup";
     public static final String onRequestToJoinAcceptedFromGroup = "onRequestToJoinAcceptedFromGroup";
@@ -357,4 +357,7 @@ public class EMSDKMethod {
     public static final String onAttributesChangedFromRoom = "onAttributesChangedFromRoom";
     public static final String onAttributesRemovedFromRoom = "onAttributesRemovedFromRoom";
     public static final String onSpecificationChangedFromRoom = "onSpecificationChangedFromRoom";
+    public static final String onAddWhiteListMembersFromRoom = "onAddWhiteListMembersFromRoom";
+    public static final String onRemoveWhiteListMembersFromRoom = "onRemoveWhiteListMembersFromRoom";
+    public static final String onAllMemberMuteChangedFromRoom = "onAllMemberMuteChangedFromRoom";
 }
