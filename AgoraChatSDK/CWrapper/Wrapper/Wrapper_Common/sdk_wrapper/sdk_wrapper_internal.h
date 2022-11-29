@@ -123,5 +123,8 @@ const string STRING_onAnnouncementChangedFromRoom = "onAnnouncementChangedFromRo
 const string STRING_onChatroomAttributesChanged = "onAttributesChangedFromRoom";
 const string STRING_onChatroomAttributesRemoved = "onAttributesRemovedFromRoom";
 const string STRING_onSpecificationChangedFromRoom = "onSpecificationChangedFromRoom";
+const string STRING_onAddWhiteListMembersFromRoom = "onAddWhiteListMembersFromRoom";
+const string STRING_onRemoveWhiteListMembersFromRoom = "onRemoveWhiteListMembersFromRoom";
+const string STRING_onAllMemberMuteChangedFromRoom = "onAllMemberMuteChangedFromRoom";
 
 #endif

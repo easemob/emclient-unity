@@ -200,6 +200,44 @@ namespace WinSDKTest
             }
             Console.WriteLine($"===========================");
         }
+
+        static public void PrintRoom(Room room)
+        {
+            Console.WriteLine($"--------------------------------");
+            Console.WriteLine($"roomId: {room.RoomId}");
+            Console.WriteLine($"name: {room.Name}");
+            Console.WriteLine($"Description: {room.Description}");
+            Console.WriteLine($"Announcement: {room.Announcement}");
+
+            Console.WriteLine($"AdminList num: {room.AdminList.Count}");
+            foreach (var it in room.AdminList)
+            {
+                Console.WriteLine($"admin item: {it}");
+            }
+
+            Console.WriteLine($"MemberList num: {room.MemberList.Count}");
+            foreach (var it in room.MemberList)
+            {
+                Console.WriteLine($"member item: {it}");
+            }
+
+            Console.WriteLine($"BlockList num: {room.BlockList.Count}");
+            foreach (var it in room.BlockList)
+            {
+                Console.WriteLine($"block item: {it}");
+            }
+
+            Console.WriteLine($"MuteList num: {room.MuteList.Count}");
+            foreach (var it in room.MuteList)
+            {
+                Console.WriteLine($"mute item: {it}");
+            }
+
+            Console.WriteLine($"MaxUsers: {room.MaxUsers}");
+            Console.WriteLine($"Owner: {room.Owner}");
+            Console.WriteLine($"IsAllMemberMuted: {room.IsAllMemberMuted}");
+            Console.WriteLine($"PermissionType: {room.PermissionType}");
+        }
     }
 
     /*
@@ -1391,6 +1429,14 @@ namespace WinSDKTest
             functions_IRoomManager.Add(menu_index, "AddAttributes"); menu_index++;
             functions_IRoomManager.Add(menu_index, "FetchAttributes"); menu_index++;
             functions_IRoomManager.Add(menu_index, "RemoveAttributes"); menu_index++;
+            functions_IRoomManager.Add(menu_index, "AddWhiteListMembers"); menu_index++;
+            functions_IRoomManager.Add(menu_index, "RemoveWhiteListMembers"); menu_index++;
+            functions_IRoomManager.Add(menu_index, "MuteAllRoomMembers"); menu_index++;
+            functions_IRoomManager.Add(menu_index, "FetchWhiteListFromServer"); menu_index++;
+            functions_IRoomManager.Add(menu_index, "UnMuteAllRoomMembers"); menu_index++;
+            functions_IRoomManager.Add(menu_index, "CheckIfInRoomWhiteList"); menu_index++;
+            functions_IRoomManager.Add(menu_index, "GetChatRoom"); menu_index++;
+            functions_IRoomManager.Add(menu_index, "FetchAllRoomsFromServer"); menu_index++;
             level2_menus.Add("IRoomManager", functions_IRoomManager);
         }
 
@@ -1554,6 +1600,50 @@ namespace WinSDKTest
             param.Add(menu_index, "key2 (string)"); menu_index++;
             param.Add(menu_index, "forced (int 0:false; 1:true)"); menu_index++;
             level3_menus.Add("RemoveAttributes", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "roomId (string)"); menu_index++;
+            param.Add(menu_index, "memberId1 (string)"); menu_index++;
+            param.Add(menu_index, "memberId2 (string)"); menu_index++;
+            level3_menus.Add("AddWhiteListMembers", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "roomId (string)"); menu_index++;
+            param.Add(menu_index, "memberId1 (string)"); menu_index++;
+            param.Add(menu_index, "memberId2 (string)"); menu_index++;
+            level3_menus.Add("RemoveWhiteListMembers", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "roomId (string)"); menu_index++;
+            level3_menus.Add("MuteAllRoomMembers", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "roomId (string)"); menu_index++;
+            level3_menus.Add("FetchWhiteListFromServer", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "roomId (string)"); menu_index++;
+            level3_menus.Add("UnMuteAllRoomMembers", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "roomId (string)"); menu_index++;
+            level3_menus.Add("CheckIfInRoomWhiteList", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "roomId (string)"); menu_index++;
+            level3_menus.Add("GetChatRoom", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "No params"); menu_index++;
+            level3_menus.Add("FetchAllRoomsFromServer", new Dictionary<int, string>(param));
             param.Clear();
         }
 
@@ -7272,6 +7362,131 @@ namespace WinSDKTest
             ));
         }
 
+        public void CallFunc_IRoomManager_AddWhiteListMembers()
+        {
+            string roomId = GetParamValueFromContext(0);
+            string member1 = GetParamValueFromContext(1);
+            string member2 = GetParamValueFromContext(2);
+
+            List<string> list = new List<string>();
+            list.Add(member1);
+            list.Add(member2);
+
+            SDKClient.Instance.RoomManager.AddWhiteListMembers(roomId, list, new CallBack(
+                onSuccess: () => {
+                    Console.WriteLine($"AddWhiteListMembers success.");
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"AddWhiteListMembers failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IRoomManager_RemoveWhiteListMembers()
+        {
+            string roomId = GetParamValueFromContext(0);
+            string member1 = GetParamValueFromContext(1);
+            string member2 = GetParamValueFromContext(2);
+
+            List<string> list = new List<string>();
+            list.Add(member1);
+            list.Add(member2);
+
+            SDKClient.Instance.RoomManager.RemoveWhiteListMembers(roomId, list, new CallBack(
+                onSuccess: () => {
+                    Console.WriteLine($"RemoveWhiteListMembers success.");
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"RemoveWhiteListMembers failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IRoomManager_MuteAllRoomMembers()
+        {
+            string roomId = GetParamValueFromContext(0);
+
+            SDKClient.Instance.RoomManager.MuteAllRoomMembers(roomId, new ValueCallBack<Room>(
+                onSuccess: (room) => {
+                    Console.WriteLine($"MuteAllRoomMembers success.");
+                    Utils.PrintRoom(room);
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"MuteAllRoomMembers failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IRoomManager_FetchWhiteListFromServer()
+        {
+            string roomId = GetParamValueFromContext(0);
+
+            SDKClient.Instance.RoomManager.FetchWhiteListFromServer(roomId, new ValueCallBack<List<string>>(
+                onSuccess: (list) => {
+                    string str = string.Join(",", list.ToArray());
+                    Console.WriteLine($"FetchWhiteListFromServer success. whitelist:{str}");
+                    
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"FetchWhiteListFromServer failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IRoomManager_UnMuteAllRoomMembers()
+        {
+            string roomId = GetParamValueFromContext(0);
+
+            SDKClient.Instance.RoomManager.UnMuteAllRoomMembers(roomId, new ValueCallBack<Room>(
+                onSuccess: (room) => {
+                    Console.WriteLine($"UnMuteAllRoomMembers success.");
+                    Utils.PrintRoom(room);
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"UnMuteAllRoomMembers failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IRoomManager_CheckIfInRoomWhiteList()
+        {
+            string roomId = GetParamValueFromContext(0);
+
+            SDKClient.Instance.RoomManager.CheckIfInRoomWhiteList(roomId, new ValueCallBack<bool>(
+                onSuccess: (b) => {
+                    Console.WriteLine($"CheckIfInRoomWhiteList success. in whitelist:{b}");
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"CheckIfInRoomWhiteList failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IRoomManager_FetchAllRoomsFromServer()
+        {
+            SDKClient.Instance.RoomManager.FetchAllRoomsFromServer(new ValueCallBack<List<Room>>(
+                onSuccess: (list) => {
+                    Console.WriteLine($"FetchAllRoomsFromServer success.");
+                    foreach(var room in list)
+                    {
+                        Utils.PrintRoom(room);
+                    }
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"FetchAllRoomsFromServer failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IRoomManager_GetChatRoom()
+        {
+            string roomId = GetParamValueFromContext(0);
+
+            Room room = SDKClient.Instance.RoomManager.GetChatRoom(roomId);
+            Console.WriteLine("GetChatRoom done");
+            Utils.PrintRoom(room);
+        }
+
         public void CallFunc_IRoomManager()
         {
             if (select_context.level2_item.CompareTo("AddRoomAdmin") == 0)
@@ -7415,6 +7630,54 @@ namespace WinSDKTest
             if (select_context.level2_item.CompareTo("RemoveAttributes") == 0)
             {
                 CallFunc_IRoomManager_RemoveAttributes();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("AddWhiteListMembers") == 0)
+            {
+                CallFunc_IRoomManager_AddWhiteListMembers();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("RemoveWhiteListMembers") == 0)
+            {
+                CallFunc_IRoomManager_RemoveWhiteListMembers();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("MuteAllRoomMembers") == 0)
+            {
+                CallFunc_IRoomManager_MuteAllRoomMembers();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("FetchWhiteListFromServer") == 0)
+            {
+                CallFunc_IRoomManager_FetchWhiteListFromServer();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("UnMuteAllRoomMembers") == 0)
+            {
+                CallFunc_IRoomManager_UnMuteAllRoomMembers();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("CheckIfInRoomWhiteList") == 0)
+            {
+                CallFunc_IRoomManager_CheckIfInRoomWhiteList();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("GetChatRoom") == 0)
+            {
+                CallFunc_IRoomManager_GetChatRoom();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("FetchAllRoomsFromServer") == 0)
+            {
+                CallFunc_IRoomManager_FetchAllRoomsFromServer();
                 return;
             }
         }
@@ -8663,6 +8926,23 @@ namespace WinSDKTest
         public void OnSpecificationChangedFromRoom(Room room)
         {
             Console.WriteLine($"OnSpecificationChangedFromRoom roomId: {room.RoomId}; roomName:{room.Name}");
+        }
+
+        public void OnAddWhiteListMembersFromChatroom(string roomId, List<string> members)
+        {
+            string members_str = string.Join(",", members.ToArray());
+            Console.WriteLine($"OnAddWhiteListMembersFromChatroom: roomId: {roomId}; added white list:{members_str}");
+        }
+
+        public void OnRemoveWhiteListMembersFromChatroom(string roomId, List<string> members)
+        {
+            string members_str = string.Join(",", members.ToArray());
+            Console.WriteLine($"OnRemoveWhiteListMembersFromChatroom: roomId: {roomId}; removed white list:{members_str}");
+        }
+
+        public void OnAllMemberMuteChangedFromChatroom(string roomId, bool isAllMuted)
+        {
+            Console.WriteLine($"OnAllMemberMuteChangedFromChatroom: roomId: {roomId}; isAllMuted:{isAllMuted}");
         }
     }
 

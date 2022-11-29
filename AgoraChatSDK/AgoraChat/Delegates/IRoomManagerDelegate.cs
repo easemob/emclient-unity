@@ -218,5 +218,14 @@ namespace AgoraChat
 
         //TODO: need to add comments
         void OnSpecificationChangedFromRoom(Room room);
+
+        //TODO: need to add comments
+        void OnAddWhiteListMembersFromChatroom(string roomId, List<string> members);
+
+        //TODO: need to add comments
+        void OnRemoveWhiteListMembersFromChatroom(string roomId, List<string> members);
+
+        //TODO: need to add comments
+        void OnAllMemberMuteChangedFromChatroom(string roomId, bool isAllMuted);
     }
 }

@@ -1227,6 +1227,24 @@ namespace AgoraChat
                             it.OnSpecificationChangedFromRoom(room);
                         }
                         break;
+                    case SDKMethod.onAddWhiteListMembersFromRoom:
+                        {
+                            List<string> list = List.StringListFromJsonArray(jsonNode["userIds"]);
+                            it.OnAddWhiteListMembersFromChatroom(roomId, list);
+                        }
+                        break;
+                    case SDKMethod.onRemoveWhiteListMembersFromRoom:
+                        {
+                            List<string> list = List.StringListFromJsonArray(jsonNode["userIds"]);
+                            it.OnRemoveWhiteListMembersFromChatroom(roomId, list);
+                        }
+                        break;
+                    case SDKMethod.onAllMemberMuteChangedFromRoom:
+                        {
+                            bool isAllMuted = jsonNode["isAllMuted"].AsBool;
+                            it.OnAllMemberMuteChangedFromChatroom(roomId, isAllMuted);
+                        }
+                        break;
                 }
             }
         }

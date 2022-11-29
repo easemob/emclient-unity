@@ -172,6 +172,8 @@ void InitManagerMap()
 	func_map_room_manager["setChatRoomAttributes"] = RoomManager_SetChatRoomAttributes;
 	func_map_room_manager["removeChatRoomAttributes"] = RoomManager_RemoveChatRoomAttributes;
 
+    func_map_room_manager["getAllChatRooms"] = RoomManager_GetAllChatRooms;
+
 	manager_map["EMRoomManager"] = func_map_room_manager;
 
 	func_map_contact_manager["acceptInvitation"] = ContactManager_AcceptInvitation;

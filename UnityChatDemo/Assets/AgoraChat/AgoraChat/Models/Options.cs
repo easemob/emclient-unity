@@ -120,7 +120,7 @@ namespace AgoraChat
 	     * - (Default) `true`: Yes.
 	     * - `false`: No.
 	     */
-        public bool AutoLogin = true;
+        public bool AutoLogin = false;
 
         /**
 	     * \~chinese
