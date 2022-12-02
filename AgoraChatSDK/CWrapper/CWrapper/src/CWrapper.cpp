@@ -1,7 +1,7 @@
 #include "CWrapper.h"
 #include "CWrapper_import.h"
 
-#include <TargetConditionals.h>
+// #include <TargetConditionals.h>
 
 NativeListenerEvent gCallback = nullptr;
 
