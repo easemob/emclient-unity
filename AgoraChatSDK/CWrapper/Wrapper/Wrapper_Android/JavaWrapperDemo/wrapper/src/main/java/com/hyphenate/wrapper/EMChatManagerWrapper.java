@@ -1,6 +1,8 @@
 package com.hyphenate.wrapper;
 
+import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConversationListener;
+import com.hyphenate.EMError;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
@@ -17,11 +19,13 @@ import com.hyphenate.wrapper.callback.EMCommonValueCallback;
 import com.hyphenate.wrapper.callback.EMWrapperCallback;
 import com.hyphenate.wrapper.helper.EMConversationHelper;
 import com.hyphenate.wrapper.helper.EMCursorResultHelper;
+import com.hyphenate.wrapper.helper.EMErrorHelper;
 import com.hyphenate.wrapper.helper.EMGroupAckHelper;
 import com.hyphenate.wrapper.helper.EMLanguageHelper;
 import com.hyphenate.wrapper.helper.EMMessageHelper;
 import com.hyphenate.wrapper.helper.EMMessageReactionChangeHelper;
 import com.hyphenate.wrapper.helper.EMMessageReactionHelper;
+import com.hyphenate.wrapper.helper.HyphenateExceptionHelper;
 import com.hyphenate.wrapper.util.EMHelper;
 import com.hyphenate.wrapper.util.EMSDKMethod;
 
@@ -111,7 +115,29 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
 
     private String sendMessage(JSONObject params, EMWrapperCallback callback) throws JSONException {
         final EMMessage msg = EMMessageHelper.fromJson(params);
-        msg.setMessageStatusCallback(new EMCommonCallback(callback));
+        msg.setMessageStatusCallback(new EMCallBack() {
+            @Override
+            public void onSuccess() {
+                JSONObject jo = new JSONObject();
+                try {
+                    jo.put("ret", EMMessageHelper.toJson(msg));
+                    callback.onSuccess(jo.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(int code, String error) {
+                HyphenateException e = new HyphenateException(code, error);
+                callback.onError(HyphenateExceptionHelper.toJson(e));
+            }
+
+            @Override
+            public void onProgress(int progress, String status) {
+                callback.onProgress(progress);
+            }
+        });
         asyncRunnable(() -> EMClient.getInstance().chatManager().sendMessage(msg));
         return EMHelper.getReturnJsonObject(EMMessageHelper.toJson(msg)).toString();
     }
@@ -119,14 +145,31 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
     private String resendMessage(JSONObject params, EMWrapperCallback callback) throws JSONException {
         EMMessage tempMsg = EMMessageHelper.fromJson(params);
         EMMessage msg = EMClient.getInstance().chatManager().getMessage(tempMsg.getMsgId());
-        if (msg == null) {
-            msg = tempMsg;
-        }
-        msg.setStatus(EMMessage.Status.CREATE);
-        EMMessage finalMsg = msg;
-        finalMsg.setMessageStatusCallback(new EMCommonCallback(callback));
-        asyncRunnable(() -> EMClient.getInstance().chatManager().sendMessage(finalMsg));
-        return EMHelper.getReturnJsonObject(EMMessageHelper.toJson(finalMsg)).toString();
+        msg.setMessageStatusCallback(new EMCallBack() {
+            @Override
+            public void onSuccess() {
+                JSONObject jo = new JSONObject();
+                try {
+                    jo.put("ret", EMMessageHelper.toJson(msg));
+                    callback.onSuccess(jo.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(int code, String error) {
+                HyphenateException e = new HyphenateException(code, error);
+                callback.onError(HyphenateExceptionHelper.toJson(e));
+            }
+
+            @Override
+            public void onProgress(int progress, String status) {
+                callback.onProgress(progress);
+            }
+        });
+        asyncRunnable(() -> EMClient.getInstance().chatManager().sendMessage(msg));
+        return EMHelper.getReturnJsonObject(EMMessageHelper.toJson(msg)).toString();
     }
 
     private String ackMessageRead(JSONObject params, EMWrapperCallback callback) throws JSONException {
@@ -256,17 +299,59 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
     private String downloadAttachment(JSONObject params, EMWrapperCallback callback) throws JSONException {
         EMMessage tempMsg = EMMessageHelper.fromJson(params.getJSONObject("message"));
         final EMMessage msg = EMClient.getInstance().chatManager().getMessage(tempMsg.getMsgId());
-        msg.setMessageStatusCallback(new EMCommonCallback(callback));
-        asyncRunnable(() -> {
-            EMClient.getInstance().chatManager().downloadAttachment(msg);
+        msg.setMessageStatusCallback(new EMCallBack() {
+            @Override
+            public void onSuccess() {
+                JSONObject jo = new JSONObject();
+                try {
+                    jo.put("ret", EMMessageHelper.toJson(msg));
+                    callback.onSuccess(jo.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(int code, String error) {
+                HyphenateException e = new HyphenateException(code, error);
+                callback.onError(HyphenateExceptionHelper.toJson(e));
+            }
+
+            @Override
+            public void onProgress(int progress, String status) {
+                callback.onProgress(progress);
+            }
         });
+        EMClient.getInstance().chatManager().downloadAttachment(msg);
         return EMHelper.getReturnJsonObject(EMMessageHelper.toJson(msg)).toString();
     }
 
     private String downloadThumbnail(JSONObject params, EMWrapperCallback callback) throws JSONException {
         EMMessage tempMsg = EMMessageHelper.fromJson(params.getJSONObject("message"));
         final EMMessage msg = EMClient.getInstance().chatManager().getMessage(tempMsg.getMsgId());
-        msg.setMessageStatusCallback(new EMCommonCallback(callback));
+        msg.setMessageStatusCallback(new EMCallBack() {
+            @Override
+            public void onSuccess() {
+                JSONObject jo = new JSONObject();
+                try {
+                    jo.put("ret", EMMessageHelper.toJson(msg));
+                    callback.onSuccess(jo.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(int code, String error) {
+                HyphenateException e = new HyphenateException(code, error);
+                callback.onError(HyphenateExceptionHelper.toJson(e));
+            }
+
+            @Override
+            public void onProgress(int progress, String status) {
+                callback.onProgress(progress);
+            }
+        });
         EMClient.getInstance().chatManager().downloadThumbnail(msg);
         return EMHelper.getReturnJsonObject(EMMessageHelper.toJson(msg)).toString();
     }

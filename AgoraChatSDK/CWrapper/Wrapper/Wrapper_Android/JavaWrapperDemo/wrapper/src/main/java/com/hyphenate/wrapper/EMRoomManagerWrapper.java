@@ -913,7 +913,7 @@ public class EMRoomManagerWrapper extends EMBaseWrapper{
                 try {
                     data.put("roomId", roomId);
                     data.put("name", roomName);
-                    data.put("userId", participant);
+                    data.put("reason", reason);
                     post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.chatRoomListener, EMSDKMethod.onRemovedFromRoom, data.toString()));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -925,7 +925,7 @@ public class EMRoomManagerWrapper extends EMBaseWrapper{
                 JSONObject data = new JSONObject();
                 try {
                     data.put("roomId", chatRoomId);
-                    data.put("list", mutes);
+                    data.put("userIds", mutes);
                     data.put("expireTime", String.valueOf(expireTime));
                     post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.chatRoomListener, EMSDKMethod.onMuteListAddedFromRoom, data.toString()));
                 } catch (JSONException e) {
@@ -938,7 +938,7 @@ public class EMRoomManagerWrapper extends EMBaseWrapper{
                 JSONObject data = new JSONObject();
                 try {
                     data.put("roomId", chatRoomId);
-                    data.put("list", mutes);
+                    data.put("userIds", mutes);
                     post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.chatRoomListener, EMSDKMethod.onMuteListRemovedFromRoom, data.toString()));
                 } catch (JSONException e) {
                     e.printStackTrace();

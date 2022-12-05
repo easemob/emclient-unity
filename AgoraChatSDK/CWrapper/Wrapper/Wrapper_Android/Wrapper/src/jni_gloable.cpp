@@ -77,8 +77,8 @@ namespace wrapper_jni {
     void init_common(int sdkType, void* listener) {
         if(wrapperJObj == NULL) {
             JNIEnv *env = getCurrentThreadEnv();
-            jclass cls = (*env).FindClass("com/hyphenate/cwrapper/EMCWrapper");
-            jmethodID mid = (*env).GetStaticMethodID(cls,"wrapper","(IJ)Lcom/hyphenate/cwrapper/EMCWrapper;");
+            jclass cls = javaWrapperClass();
+            jmethodID mid = (*env).GetStaticMethodID(cls,"cWrapper","(IJ)Lcom/hyphenate/cwrapper/EMCWrapper;");
             jobject jobj = (*env).CallStaticObjectMethod(cls, mid, sdkType, (long)listener);
             if (jobj != NULL) 
             {
