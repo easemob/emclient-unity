@@ -207,7 +207,17 @@ namespace AgoraChat
             NativeCall<List<string>>(SDKMethod.getBlockListFromServer, null, callback, process);
         }
 
-        //TODO: add comments
+        /**
+         * \~chinese
+         * 从本地获取黑名单列表。
+         *
+         * @return The blocklist.
+         *
+         * \~english
+         * Gets the local blocklist.
+         *
+         * @return The blocklist.
+         */
         public List<string> GetBlockListFromDB()
         {
             JSONNode jn = NativeGet(SDKMethod.getBlockListFromDB).GetReturnJsonNode();

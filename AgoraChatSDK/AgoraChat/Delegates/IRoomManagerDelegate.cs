@@ -216,16 +216,78 @@ namespace AgoraChat
          */
         void OnChatroomAttributesRemoved(string roomId, List<string> keys, string from);
 
-        //TODO: need to add comments
+        /**
+        * \~chinese
+        * 聊天室信息有更新。
+        *
+        * 聊天室的所有成员会收到该事件。
+        *
+        * @param room 聊天室对象。
+        *
+        * \~english
+        * Occurs when the chat room specifications changes.
+        *
+        * All chat room members receive this event.
+        *
+        * @param room The chat room instance.
+        */
         void OnSpecificationChangedFromRoom(Room room);
 
-        //TODO: need to add comments
+        /**
+         * \~chinese
+         * 有成员加入白名单。
+         *
+         * 被添加的成员收到该事件。
+         *
+         * @param roomId 聊天室 ID。
+         * @param members  白名单中增加的成员名单。
+         *
+         * \~english
+         * Occurs when the chat room member(s) is/are added to the allow list.
+         *
+         * The members added to the allow list receive this event.
+         *
+         * @param roomId The chat room ID.
+         * @param members  The member(s) added to the allow list.
+         */
         void OnAddWhiteListMembersFromChatroom(string roomId, List<string> members);
 
-        //TODO: need to add comments
+        /**
+         * \~chinese
+         * 有成员被移出白名单。
+         *
+         * 被移出白名单的成员会收到该事件。
+         *
+         * @param roomId 聊天室 ID。
+         * @param members  移出白名单的成员。
+         *
+         * \~english
+         * Occurs when the chat room member(s) is/are removed from the allow list.
+         *
+         * The members that are removed from the allow list receive this event.
+         *
+         * @param roomId The chat room ID.
+         * @param members  The member(s) removed from the allow list.
+         */
         void OnRemoveWhiteListMembersFromChatroom(string roomId, List<string> members);
 
-        //TODO: need to add comments
+        /**
+         * \~chinese
+         * 全员禁言状态有变更。
+         *
+         * 聊天室所有成员会收到该事件。
+         *
+         * @param roomId 聊天室 ID。
+         * @param isAllMuted    是否开启了全员禁言。
+         *
+         * \~english
+         * Occurs when all members in the chat room are muted or unmuted.
+         *
+         * All chat room members receive this event.
+         *
+         * @param roomId The chat room ID.
+         * @param isAllMuted    Whether all chat room members are muted or unmuted.
+         */
         void OnAllMemberMuteChangedFromChatroom(string roomId, bool isAllMuted);
     }
 }
