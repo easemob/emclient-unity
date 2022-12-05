@@ -250,7 +250,7 @@ namespace AgoraChat
          * @param roomId The chat room ID.
          * @param members  The member(s) added to the allow list.
          */
-        void OnAddWhiteListMembersFromChatroom(string roomId, List<string> members);
+        void OnAddAllowListMembersFromChatroom(string roomId, List<string> members);
 
         /**
          * \~chinese
@@ -269,7 +269,7 @@ namespace AgoraChat
          * @param roomId The chat room ID.
          * @param members  The member(s) removed from the allow list.
          */
-        void OnRemoveWhiteListMembersFromChatroom(string roomId, List<string> members);
+        void OnRemoveAllowListMembersFromChatroom(string roomId, List<string> members);
 
         /**
          * \~chinese

@@ -855,12 +855,12 @@ namespace AgoraChat
          *                     - If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
          *                     - If this call fails, calls {@link ValueCallBack#onError(int, String)}.
          */
-        public void AddWhiteListMembers(string roomId, List<string> members, CallBack callback = null)
+        public void AddAllowListMembers(string roomId, List<string> members, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("roomId", roomId);
             jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
-            NativeCall(SDKMethod.addMembersToChatRoomWhiteList, jo_param, callback);
+            NativeCall(SDKMethod.addMembersToChatRoomAllowList, jo_param, callback);
         }
 
         /**
@@ -893,12 +893,12 @@ namespace AgoraChat
          *                      - If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
          *                      - If this call fails, calls {@link ValueCallBack#onError(int, String)}.
          */
-        public void RemoveWhiteListMembers(string roomId, List<string> members, CallBack callback = null)
+        public void RemoveAllowListMembers(string roomId, List<string> members, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("roomId", roomId);
             jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
-            NativeCall(SDKMethod.removeMembersFromChatRoomWhiteList, jo_param, callback);
+            NativeCall(SDKMethod.removeMembersFromChatRoomAllowList, jo_param, callback);
         }
 
         /**
@@ -926,7 +926,7 @@ namespace AgoraChat
          * @param callBack		The completion callback. If this call succeeds, calls {@link ValueCallBack#OnSuccessValue(Object)};
          * 						If this call fails, calls {@link ValueCallBack#onError(int, String)}.
          */
-        public void FetchWhiteListFromServer(string roomId, ValueCallBack<List<string>> callback = null)
+        public void FetchAllowListFromServer(string roomId, ValueCallBack<List<string>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("roomId", roomId);
@@ -936,7 +936,7 @@ namespace AgoraChat
                 return List.StringListFromJsonArray(jsonNode);
             };
 
-            NativeCall<List<string>>(SDKMethod.fetchChatRoomWhiteListFromServer, jo_param, callback, process);
+            NativeCall<List<string>>(SDKMethod.fetchChatRoomAllowListFromServer, jo_param, callback, process);
         }
 
         /**
@@ -958,7 +958,7 @@ namespace AgoraChat
          * @param callBack		The completion callback. If this call succeeds, calls {@link ValueCallBack#OnSuccessValue(Object)} to show whether the member is on the block list;
          * 						if this call fails, calls {@link ValueCallBack#onError(int, String)}.
          */
-        public void CheckIfInRoomWhiteList(string roomId, ValueCallBack<bool> callback = null)
+        public void CheckIfInRoomAllowList(string roomId, ValueCallBack<bool> callback = null)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("roomId", roomId);
@@ -967,7 +967,7 @@ namespace AgoraChat
                 return jsonNode.IsBoolean ? jsonNode.AsBool : false;
             };
 
-            NativeCall<bool>(SDKMethod.isMemberInChatRoomWhiteListFromServer, jo_param, callback, process);
+            NativeCall<bool>(SDKMethod.isMemberInChatRoomAllowListFromServer, jo_param, callback, process);
         }
 
         /**
@@ -1283,16 +1283,16 @@ namespace AgoraChat
                             it.OnSpecificationChangedFromRoom(room);
                         }
                         break;
-                    case SDKMethod.onAddWhiteListMembersFromRoom:
+                    case SDKMethod.onAddAllowListMembersFromRoom:
                         {
                             List<string> list = List.StringListFromJsonArray(jsonNode["userIds"]);
-                            it.OnAddWhiteListMembersFromChatroom(roomId, list);
+                            it.OnAddAllowListMembersFromChatroom(roomId, list);
                         }
                         break;
-                    case SDKMethod.onRemoveWhiteListMembersFromRoom:
+                    case SDKMethod.onRemoveAllowListMembersFromRoom:
                         {
                             List<string> list = List.StringListFromJsonArray(jsonNode["userIds"]);
-                            it.OnRemoveWhiteListMembersFromChatroom(roomId, list);
+                            it.OnRemoveAllowListMembersFromChatroom(roomId, list);
                         }
                         break;
                     case SDKMethod.onAllMemberMuteChangedFromRoom:

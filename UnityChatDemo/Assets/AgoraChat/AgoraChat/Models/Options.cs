@@ -112,13 +112,13 @@ namespace AgoraChat
         /**
 	     * \~chinese
 	     * 是否开启自动登录。
-	     * -（默认） `true`：开启；
-	     * - `false`：关闭。
+	     * - `true`：开启；
+	     * - （默认）`false`：关闭。
 	     *
 	     * \~english
 	     * Whether to enable automatic login.
-	     * - (Default) `true`: Yes.
-	     * - `false`: No.
+	     * -  `true`: Yes.
+	     * -  (Default)`false`: No.
 	     */
         public bool AutoLogin = false;
 

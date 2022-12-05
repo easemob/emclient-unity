@@ -354,35 +354,35 @@ namespace AgoraChat
 		 */
 		void OnSharedFileDeletedFromGroup(string groupId, string fileId);
 
-		/**
+        /**
 		 * \~chinese
 		 * 有成员被加入群组白名单的回调。
 		 *
 		 * @param groupId       群组 ID。
-		 * @param whitelist     要添加的成员列表。
+		 * @param allowList     要添加的成员列表。
 		 *
 		 * \~english
 		 * Occurs when one or more group members are added to the group allow list.
 		 *
 		 * @param groupId       The group ID.
-		 * @param whitelist     The member(s) added to the group allow list.
+		 * @param allowList     The member(s) added to the group allow list.
 		 */
-		void OnAddWhiteListMembersFromGroup(string groupId, List<string> whiteList);
+        void OnAddAllowListMembersFromGroup(string groupId, List<string> allowList);
 
-		/**
+        /**
 		 * \~chinese
 		 * 有成员被移出群组白名单回调。
 		 *
 		 * @param groupId       群组 ID。
-		 * @param whitelist     从白名单中移除的成员列表。
+		 * @param allowList     从白名单中移除的成员列表。
 		 *
 		 * \~english
 		 * Occurs when one or more members are removed from the group allow list.
 		 *
 		 * @param groupId       The group ID.
-		 * @param whitelist     Member(s) removed from the group allow list.
+		 * @param allowList     Member(s) removed from the group allow list.
 		 */
-		void OnRemoveWhiteListMembersFromGroup(string groupId, List<string> whiteList);
+        void OnRemoveAllowListMembersFromGroup(string groupId, List<string> allowList);
 
 		/**
 		 * \~chinese

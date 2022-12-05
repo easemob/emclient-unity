@@ -191,12 +191,12 @@ namespace AgoraChat
 	     * @param members 	The members to be added to the allow list.
 	     * @param callback    The operation callback. See {@link CallBack}.
 	     */
-        public void AddGroupWhiteList(string groupId, List<string> members, CallBack callback = null)
+        public void AddGroupAllowList(string groupId, List<string> members, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("groupId", groupId);
             jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
-            NativeCall(SDKMethod.addWhiteList, jo_param, callback);
+            NativeCall(SDKMethod.addAllowList, jo_param, callback);
         }
 
         /**
@@ -372,7 +372,7 @@ namespace AgoraChat
 	     * @param groupId 	The group ID.
 	     * @param callback    The operation callback. See {@link CallBack}.
 	     */
-        public void CheckIfInGroupWhiteList(string groupId, ValueCallBack<bool> callback = null)
+        public void CheckIfInGroupAllowList(string groupId, ValueCallBack<bool> callback = null)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("groupId", groupId);
@@ -380,7 +380,7 @@ namespace AgoraChat
             {
                 return jsonNode["ret"].IsBoolean ? jsonNode["ret"].AsBool : false;
             };
-            NativeCall<bool>(SDKMethod.isMemberInWhiteListFromServer, jo_param, callback, process);
+            NativeCall<bool>(SDKMethod.isMemberInAllowListFromServer, jo_param, callback, process);
         }
 
         /**
@@ -822,7 +822,7 @@ namespace AgoraChat
 		 * @param groupId 	The group ID.
 		 * @param callback	The operation callback. If success, the SDK returns the obtained allow list; otherwise, an error will be returned. See {@link ValueCallBack}.
 		 */
-        public void GetGroupWhiteListFromServer(string groupId, ValueCallBack<List<string>> callback = null)
+        public void GetGroupAllowListFromServer(string groupId, ValueCallBack<List<string>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("groupId", groupId);
@@ -832,7 +832,7 @@ namespace AgoraChat
                 return List.StringListFromJsonArray(jsonNode);
             };
 
-            NativeCall<List<string>>(SDKMethod.getGroupWhiteListFromServer, jo_param, callback, process);
+            NativeCall<List<string>>(SDKMethod.getGroupAllowListFromServer, jo_param, callback, process);
         }
 
         /**
@@ -1184,12 +1184,12 @@ namespace AgoraChat
 		 * @param members 	The list of members to be removed from the group allow list.
 		 * @param callback	The operation callback. See {@link CallBack}.
 		 */
-        public void RemoveGroupWhiteList(string groupId, List<string> members, CallBack callback = null)
+        public void RemoveGroupAllowList(string groupId, List<string> members, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("groupId", groupId);
             jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
-            NativeCall(SDKMethod.removeWhiteList, jo_param, callback);
+            NativeCall(SDKMethod.removeAllowList, jo_param, callback);
         }
 
         /**
@@ -1569,16 +1569,16 @@ namespace AgoraChat
                             it.OnSharedFileDeletedFromGroup(groupId, fileId);
                         }
                         break;
-                    case SDKMethod.onAddWhiteListMembersFromGroup:
+                    case SDKMethod.onAddAllowListMembersFromGroup:
                         {
                             List<string> list = List.StringListFromJsonArray(jsonNode["userIds"]);
-                            it.OnAddWhiteListMembersFromGroup(groupId, list);
+                            it.OnAddAllowListMembersFromGroup(groupId, list);
                         }
                         break;
-                    case SDKMethod.onRemoveWhiteListMembersFromGroup:
+                    case SDKMethod.onRemoveAllowListMembersFromGroup:
                         {
                             List<string> list = List.StringListFromJsonArray(jsonNode["userIds"]);
-                            it.OnRemoveWhiteListMembersFromGroup(groupId, list);
+                            it.OnRemoveAllowListMembersFromGroup(groupId, list);
                         }
                         break;
                     case SDKMethod.onAllMemberMuteChangedFromGroup:
