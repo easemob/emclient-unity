@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^OnSuccessCallback)(NSObject *valueStr);
+typedef void(^OnSuccessCallback)(NSObject *valueObj);
 typedef void(^OnErrorCallback)(NSDictionary *errorDict);
 typedef void(^OnProgressCallback)(int progress);
 
@@ -20,8 +20,8 @@ typedef void(^OnProgressCallback)(int progress);
 @property (nonatomic, copy) OnErrorCallback onErrorCallback;
 @property (nonatomic, copy) OnProgressCallback onProgressCallback;
 
-- (void)onSuccess:(NSObject *)aObj;
-- (void)onError:(NSObject *)aObj;
+- (void)onSuccess:(NSString *)str;
+- (void)onError:(NSDictionary *)errDict;
 - (void)onProgress:(int)aProgress;
 
 - (void)runInQueue:(void(^)(void))aciton;

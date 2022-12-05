@@ -129,7 +129,7 @@
     for (EMPresence *presence in presences) {
         [array addObject:[presence toJson]];
     }
-    [EMWrapperHelper.shared.listener onReceive:chatListener method:onMessageReactionDidChange info:[array toJsonString]];
+    [EMWrapperHelper.shared.listener onReceive:chatListener method:onPresenceUpdated info:[array toJsonString]];
 }
 
 @end

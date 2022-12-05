@@ -38,13 +38,9 @@
     callback.onSuccessCallback = ^(NSObject *valueObj) {
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
         if (valueObj != nil) {
-            if ([valueObj isKindOfClass:[NSDictionary class]]) {
-                dict[@"value"] = [(NSDictionary *)valueObj toJsonString];
-            }else if ([valueObj isKindOfClass:[NSArray class]]) {
-                dict[@"value"] = [(NSArray *)valueObj toJsonString];
-            }
+            dict[@"value"] = valueObj;
         }
-        dict[@"callbackId"] = [NSString fromChar:cbid];
+        dict[@"callbackId"] = callbackId;
         [EMWrapperHelper.shared.listener onReceive:@"callback" method:callbackId info:[dict toJsonString]];
     };
     callback.onErrorCallback = ^(NSDictionary *errorDict) {
@@ -83,7 +79,7 @@
                 dict[@"value"] = [(NSArray *)valueObj toJsonString];
             }
         }
-        dict[@"callbackId"] = [NSString fromChar:cbid];
+        dict[@"callbackId"] = callbackId;
         [EMWrapperHelper.shared.listener onReceive:@"callback" method:callbackId info:[dict toJsonString]];
     };
     callback.onErrorCallback = ^(NSDictionary *errorDict) {

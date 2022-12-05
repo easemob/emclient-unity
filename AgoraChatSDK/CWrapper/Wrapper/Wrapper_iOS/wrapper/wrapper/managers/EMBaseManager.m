@@ -30,4 +30,17 @@
     }];
 }
 
+- (void)onSuccess:(nullable NSObject *)aObj callback:(EMWrapperCallback *)callback {
+    [EMThreadQueue mainQueue:^{
+        callback.onSuccessCallback(aObj);
+    }];
+}
+
+
+- (void)onError:(EMError *)aErr callback:(EMWrapperCallback *)callbcak {
+    [EMThreadQueue mainQueue:^{
+        callbcak.onErrorCallback([aErr toJson]);
+    }];
+}
+
 @end

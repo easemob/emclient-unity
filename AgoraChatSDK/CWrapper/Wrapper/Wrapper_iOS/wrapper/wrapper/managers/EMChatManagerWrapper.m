@@ -13,6 +13,7 @@
 #import "EMTranslateLanguage+Helper.h"
 #import "EMGroupMessageAck+Helper.h"
 #import "EMMessageReactionChange+Helper.h"
+#import "EMError+Helper.h"
 #import "EMUtil.h"
 #import "EMHelper.h"
 
@@ -114,9 +115,9 @@
         [callback onProgress:progress];
     } completion:^(EMChatMessage *message, EMError *error) {
         if (error) {
-            [callback onError:error];
+            [callback onError:[error toJson]];
         }else {
-            [callback onSuccess:[message toJson]];
+            [callback onSuccess:[@{@"ret": [message toJson]} toJsonString]];
         }
     }];
     
@@ -133,9 +134,9 @@
         [callback onProgress:progress];
     } completion:^(EMChatMessage *message, EMError *error) {
         if (error) {
-            [callback onError:error];
+            [callback onError:[error toJson]];
         }else {
-            [callback onSuccess:[message toJson]];
+            [callback onSuccess:[@{@"ret": [message toJson]} toJsonString]];
         }
     }];
     
@@ -299,9 +300,9 @@
     } completion:^(EMChatMessage *message, EMError *error)
      {
         if (error) {
-            [callback onError:error];
+            [callback onError:[error toJson]];
         }else {
-            [callback onSuccess:[message toJson]];
+            [callback onSuccess:[@{@"ret": [message toJson]} toJsonString]];
         }
     }];
     
@@ -319,9 +320,9 @@
     } completion:^(EMChatMessage *message, EMError *error)
      {
         if (error) {
-            [callback onError:error];
+            [callback onError:[error toJson]];
         }else {
-            [callback onSuccess:[message toJson]];
+            [callback onSuccess:[@{@"ret": [message toJson]} toJsonString]];
         }
     }];
     

@@ -22,6 +22,11 @@ NS_ASSUME_NONNULL_BEGIN
                   error:(nullable EMError *)aErr object:(nullable NSObject *)aObj;
 
 
+- (void)onSuccess:(nullable NSObject *)aObj callback:(EMWrapperCallback *)callback;
+
+
+- (void)onError:(EMError *)aErr callback:(EMWrapperCallback *)callbcak;
+
 @end
 
 NS_ASSUME_NONNULL_END

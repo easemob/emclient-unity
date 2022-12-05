@@ -12,26 +12,17 @@
 
 @implementation EMWrapperCallback
 
-- (void)onSuccess:(NSObject *)aObj {
+- (void)onSuccess:(NSString *)str {
     __weak EMWrapperCallback *weakSelf = self;
-    NSString *str = nil;
-    if ([aObj isKindOfClass:[NSDictionary class]]) {
-        str = [(NSDictionary *)aObj toJsonString];
-    }else if ([aObj isKindOfClass:[NSArray class]]){
-        str = [(NSArray *)aObj toJsonString];
-    }else {
-        str = (NSString *)aObj;
-    }
     [weakSelf runInQueue:^{
         weakSelf.onSuccessCallback(str);
     }];
 }
 
-- (void)onError:(NSObject *)aError {
-    EMError *err = (EMError *)aError;
+- (void)onError:(NSDictionary *)errDict {
     __weak EMWrapperCallback *weakSelf = self;
     [weakSelf runInQueue:^{
-        weakSelf.onErrorCallback([err toJson]);
+        weakSelf.onErrorCallback(errDict);
     }];
 }
 

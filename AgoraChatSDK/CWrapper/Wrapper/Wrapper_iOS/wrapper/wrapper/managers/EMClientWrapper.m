@@ -105,7 +105,7 @@
     __weak EMBaseManager *weakSelf = self;
     
     void(^result)(NSString *, EMError *) = ^(NSString *username, EMError *err) {
-        [weakSelf wrapperCallback:callback error:err object:username];
+        [weakSelf wrapperCallback:callback error:err object:nil];
     };
     
     if (isToken) {
