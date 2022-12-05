@@ -41,16 +41,16 @@ public class BL_BuildPostProcess
 #endif
     }
     // The followings are the addtional frameworks to add to the project
-    static string[] ProjectFrameworks = new string[] {
-        "Accelerate.framework",
-        "CoreTelephony.framework",
-        "CoreText.framework",
-        "CoreML.framework",
-        "Metal.framework",
-        "VideoToolbox.framework",
-        "libiPhone-lib.a",
-        "libresolv.tbd",
-    };
+    //static string[] ProjectFrameworks = new string[] {
+    //    "Accelerate.framework",
+    //    "CoreTelephony.framework",
+    //    "CoreText.framework",
+    //    "CoreML.framework",
+    //    "Metal.framework",
+    //    "VideoToolbox.framework",
+    //    "libiPhone-lib.a",
+    //    "libresolv.tbd",
+    //};
 
     public static void LinkLibraries(string path)
     {
@@ -67,11 +67,21 @@ public class BL_BuildPostProcess
         const string defaultLocationInProj = "AgoraChat/Plugins/iOS";
 
         const string HypheanteChatFrameworkName = "HyphenateChat.framework";
+        const string WrapperFrameworkName = "wrapper.framework";
+        const string CWrapperFrameworkName = "ChatCWrapper.framework";
 
         string HypheanteChatFrameworkPath = Path.Combine(defaultLocationInProj, HypheanteChatFrameworkName);
+        string WrapperFrameworkFrameworkPath = Path.Combine(defaultLocationInProj, WrapperFrameworkName);
+        string CWrapperFrameworkPath = Path.Combine(defaultLocationInProj, CWrapperFrameworkName);
 
-        string fileGuid = proj.AddFile(HypheanteChatFrameworkPath, "Frameworks/" + HypheanteChatFrameworkPath, PBXSourceTree.Sdk);
-        PBXProjectExtensions.AddFileToEmbedFrameworks(proj, target, fileGuid);
+        string sdkGuid = proj.AddFile(HypheanteChatFrameworkPath, "Frameworks/" + HypheanteChatFrameworkPath, PBXSourceTree.Sdk);
+        string wrapperGuid = proj.AddFile(WrapperFrameworkFrameworkPath, "Frameworks/" + WrapperFrameworkFrameworkPath, PBXSourceTree.Sdk);
+        string cwrapperGuid = proj.AddFile(CWrapperFrameworkPath, "Frameworks/" + CWrapperFrameworkPath, PBXSourceTree.Sdk);
+
+        PBXProjectExtensions.AddFileToEmbedFrameworks(proj, target, sdkGuid);
+        PBXProjectExtensions.AddFileToEmbedFrameworks(proj, target, wrapperGuid);
+        PBXProjectExtensions.AddFileToEmbedFrameworks(proj, target, cwrapperGuid);
+
         proj.SetBuildProperty(target, "LD_RUNPATH_SEARCH_PATHS", "$(inherited) @executable_path/Frameworks");
 
         // done, write to the project file

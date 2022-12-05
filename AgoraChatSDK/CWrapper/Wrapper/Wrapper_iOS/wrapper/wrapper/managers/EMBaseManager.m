@@ -18,15 +18,14 @@
     return nil;
 }
 
-
 - (void)wrapperCallback:(EMWrapperCallback *)callback
                   error:(EMError *)aErr
                  object:(NSObject *)aObj {
     [EMThreadQueue mainQueue:^{
             if (aErr) {
-                [callback onError:aErr];
+                callback.onErrorCallback([aErr toJson]);
             }else {
-                [callback onSuccess:aObj];
+                callback.onSuccessCallback(aObj);
             }
     }];
 }

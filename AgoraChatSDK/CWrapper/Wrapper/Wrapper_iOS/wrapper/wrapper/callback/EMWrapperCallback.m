@@ -14,15 +14,24 @@
 
 - (void)onSuccess:(NSObject *)aObj {
     __weak EMWrapperCallback *weakSelf = self;
+    NSString *str = nil;
+    if ([aObj isKindOfClass:[NSDictionary class]]) {
+        str = [(NSDictionary *)aObj toJsonString];
+    }else if ([aObj isKindOfClass:[NSArray class]]){
+        str = [(NSArray *)aObj toJsonString];
+    }else {
+        str = (NSString *)aObj;
+    }
     [weakSelf runInQueue:^{
-        weakSelf.onSuccessCallback( [(NSDictionary *)aObj toJsonString]);
+        weakSelf.onSuccessCallback(str);
     }];
 }
 
-- (void)onError:(EMError *)aError {
+- (void)onError:(NSObject *)aError {
+    EMError *err = (EMError *)aError;
     __weak EMWrapperCallback *weakSelf = self;
     [weakSelf runInQueue:^{
-        weakSelf.onErrorCallback([[aError toJson] toJsonString]);
+        weakSelf.onErrorCallback([err toJson]);
     }];
 }
 

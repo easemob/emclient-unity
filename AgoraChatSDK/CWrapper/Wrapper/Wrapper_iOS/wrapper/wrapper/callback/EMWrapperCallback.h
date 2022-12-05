@@ -6,12 +6,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <HyphenateChat/HyphenateChat.h>
+
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^OnSuccessCallback)(NSString *valueStr);
-typedef void(^OnErrorCallback)(NSString *errorStr);
+typedef void(^OnSuccessCallback)(NSObject *valueStr);
+typedef void(^OnErrorCallback)(NSDictionary *errorDict);
 typedef void(^OnProgressCallback)(int progress);
 
 @interface EMWrapperCallback : NSObject
@@ -21,7 +21,7 @@ typedef void(^OnProgressCallback)(int progress);
 @property (nonatomic, copy) OnProgressCallback onProgressCallback;
 
 - (void)onSuccess:(NSObject *)aObj;
-- (void)onError:(EMError *)aObj;
+- (void)onError:(NSObject *)aObj;
 - (void)onProgress:(int)aProgress;
 
 - (void)runInQueue:(void(^)(void))aciton;

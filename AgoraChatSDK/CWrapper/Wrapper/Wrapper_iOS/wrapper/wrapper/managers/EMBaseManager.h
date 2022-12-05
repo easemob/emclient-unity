@@ -18,7 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
                     params:(nullable NSDictionary *)params
                   callback:(nullable EMWrapperCallback *)callback;
 
-
 - (void)wrapperCallback:(EMWrapperCallback *)callback
                   error:(nullable EMError *)aErr object:(nullable NSObject *)aObj;
 

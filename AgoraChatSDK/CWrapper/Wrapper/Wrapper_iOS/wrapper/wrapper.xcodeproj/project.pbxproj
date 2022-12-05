@@ -36,14 +36,10 @@
 		90319C9B2935FC1E000D01BE /* EMWrapperHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 90319C442935FC1E000D01BE /* EMWrapperHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		90319C9C2935FC1E000D01BE /* EMWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 90319C452935FC1E000D01BE /* EMWrapper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		90319C9D2935FC1E000D01BE /* EMSDKMethod.h in Headers */ = {isa = PBXBuildFile; fileRef = 90319C472935FC1E000D01BE /* EMSDKMethod.h */; };
-		90319C9E2935FC1E000D01BE /* NSArray+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 90319C482935FC1E000D01BE /* NSArray+Category.m */; };
 		90319C9F2935FC1E000D01BE /* EMThreadQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 90319C492935FC1E000D01BE /* EMThreadQueue.m */; };
 		90319CA02935FC1E000D01BE /* EMHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 90319C4A2935FC1E000D01BE /* EMHelper.h */; };
 		90319CA12935FC1E000D01BE /* EMUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 90319C4B2935FC1E000D01BE /* EMUtil.h */; };
-		90319CA22935FC1E000D01BE /* NSDictionary+Category.h in Headers */ = {isa = PBXBuildFile; fileRef = 90319C4C2935FC1E000D01BE /* NSDictionary+Category.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		90319CA32935FC1E000D01BE /* EMThreadQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 90319C4D2935FC1E000D01BE /* EMThreadQueue.h */; };
-		90319CA42935FC1E000D01BE /* NSArray+Category.h in Headers */ = {isa = PBXBuildFile; fileRef = 90319C4E2935FC1E000D01BE /* NSArray+Category.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90319CA52935FC1E000D01BE /* NSDictionary+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 90319C4F2935FC1E000D01BE /* NSDictionary+Category.m */; };
 		90319CA62935FC1E000D01BE /* EMHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 90319C502935FC1E000D01BE /* EMHelper.m */; };
 		90319CA72935FC1E000D01BE /* EMWrapperListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 90319C512935FC1E000D01BE /* EMWrapperListener.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		90319CA82935FC1E000D01BE /* EMWrapperCallback.m in Sources */ = {isa = PBXBuildFile; fileRef = 90319C532935FC1E000D01BE /* EMWrapperCallback.m */; };
@@ -93,8 +89,10 @@
 		90319CD42935FC1E000D01BE /* EMWrapperHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 90319C802935FC1E000D01BE /* EMWrapperHelper.m */; };
 		90319D0E29360033000D01BE /* HyphenateChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90319D0D29360033000D01BE /* HyphenateChat.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		90319D1429373932000D01BE /* wrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 90319D132937392F000D01BE /* wrapper.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90319D1729373FE0000D01BE /* NSString+Category.h in Headers */ = {isa = PBXBuildFile; fileRef = 90319D1529373FE0000D01BE /* NSString+Category.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90319D1829373FE0000D01BE /* NSString+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 90319D1629373FE0000D01BE /* NSString+Category.m */; };
+		908CE3CC293D913600348C1A /* NSArray+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 908CE3C6293D913600348C1A /* NSArray+Category.m */; };
+		908CE3CD293D913600348C1A /* NSDictionary+Category.h in Headers */ = {isa = PBXBuildFile; fileRef = 908CE3C7293D913600348C1A /* NSDictionary+Category.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		908CE3CF293D913600348C1A /* NSArray+Category.h in Headers */ = {isa = PBXBuildFile; fileRef = 908CE3C9293D913600348C1A /* NSArray+Category.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		908CE3D0293D913600348C1A /* NSDictionary+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 908CE3CA293D913600348C1A /* NSDictionary+Category.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -128,14 +126,10 @@
 		90319C442935FC1E000D01BE /* EMWrapperHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EMWrapperHelper.h; sourceTree = "<group>"; };
 		90319C452935FC1E000D01BE /* EMWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EMWrapper.h; sourceTree = "<group>"; };
 		90319C472935FC1E000D01BE /* EMSDKMethod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EMSDKMethod.h; sourceTree = "<group>"; };
-		90319C482935FC1E000D01BE /* NSArray+Category.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Category.m"; sourceTree = "<group>"; };
 		90319C492935FC1E000D01BE /* EMThreadQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EMThreadQueue.m; sourceTree = "<group>"; };
 		90319C4A2935FC1E000D01BE /* EMHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EMHelper.h; sourceTree = "<group>"; };
 		90319C4B2935FC1E000D01BE /* EMUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EMUtil.h; sourceTree = "<group>"; };
-		90319C4C2935FC1E000D01BE /* NSDictionary+Category.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+Category.h"; sourceTree = "<group>"; };
 		90319C4D2935FC1E000D01BE /* EMThreadQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EMThreadQueue.h; sourceTree = "<group>"; };
-		90319C4E2935FC1E000D01BE /* NSArray+Category.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Category.h"; sourceTree = "<group>"; };
-		90319C4F2935FC1E000D01BE /* NSDictionary+Category.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+Category.m"; sourceTree = "<group>"; };
 		90319C502935FC1E000D01BE /* EMHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EMHelper.m; sourceTree = "<group>"; };
 		90319C512935FC1E000D01BE /* EMWrapperListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EMWrapperListener.h; sourceTree = "<group>"; };
 		90319C532935FC1E000D01BE /* EMWrapperCallback.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EMWrapperCallback.m; sourceTree = "<group>"; };
@@ -185,8 +179,10 @@
 		90319C802935FC1E000D01BE /* EMWrapperHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EMWrapperHelper.m; sourceTree = "<group>"; };
 		90319D0D29360033000D01BE /* HyphenateChat.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HyphenateChat.framework; path = ../HyphenateChat.framework; sourceTree = "<group>"; };
 		90319D132937392F000D01BE /* wrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = wrapper.h; sourceTree = "<group>"; };
-		90319D1529373FE0000D01BE /* NSString+Category.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+Category.h"; path = "../../../../../../../../../../.Trash/NSString+Category.h"; sourceTree = "<group>"; };
-		90319D1629373FE0000D01BE /* NSString+Category.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+Category.m"; path = "../../../../../../../../../../.Trash/NSString+Category.m"; sourceTree = "<group>"; };
+		908CE3C6293D913600348C1A /* NSArray+Category.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Category.m"; sourceTree = "<group>"; };
+		908CE3C7293D913600348C1A /* NSDictionary+Category.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+Category.h"; sourceTree = "<group>"; };
+		908CE3C9293D913600348C1A /* NSArray+Category.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Category.h"; sourceTree = "<group>"; };
+		908CE3CA293D913600348C1A /* NSDictionary+Category.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+Category.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -221,6 +217,7 @@
 		90319C212935FBE3000D01BE /* wrapper */ = {
 			isa = PBXGroup;
 			children = (
+				908CE3C4293D913600348C1A /* category */,
 				90319C522935FC1E000D01BE /* callback */,
 				90319C452935FC1E000D01BE /* EMWrapper.h */,
 				90319C7F2935FC1E000D01BE /* EMWrapper.m */,
@@ -238,32 +235,30 @@
 		90319C292935FC1E000D01BE /* managers */ = {
 			isa = PBXGroup;
 			children = (
-				90319C2A2935FC1E000D01BE /* EMMessageManager.m */,
-				90319C2B2935FC1E000D01BE /* EMChatroom+Helper.m */,
-				90319C2C2935FC1E000D01BE /* EMUserInfoManagerWrapper.h */,
 				90319C2D2935FC1E000D01BE /* EMBaseManager.h */,
-				90319C2E2935FC1E000D01BE /* EMPushManagerWrapper.m */,
-				90319C2F2935FC1E000D01BE /* EMPresenceManagerWrapper.m */,
-				90319C302935FC1E000D01BE /* EMChatManagerWrapper.m */,
-				90319C312935FC1E000D01BE /* EMConversationWrapper.h */,
+				90319C382935FC1E000D01BE /* EMBaseManager.m */,
 				90319C322935FC1E000D01BE /* EMClientWrapper.h */,
-				90319C332935FC1E000D01BE /* EMRoomManagerWrapper.h */,
-				90319C342935FC1E000D01BE /* EMChatThreadManagerWrapper.m */,
+				90319C3F2935FC1E000D01BE /* EMClientWrapper.m */,
+				90319C3C2935FC1E000D01BE /* EMChatManagerWrapper.h */,
+				90319C302935FC1E000D01BE /* EMChatManagerWrapper.m */,
+				90319C422935FC1E000D01BE /* EMContactManagerWrapper.h */,
 				90319C352935FC1E000D01BE /* EMContactManagerWrapper.m */,
 				90319C362935FC1E000D01BE /* EMGroupManagerWrapper.h */,
-				90319C372935FC1E000D01BE /* EMPushManagerWrapper.h */,
-				90319C382935FC1E000D01BE /* EMBaseManager.m */,
-				90319C392935FC1E000D01BE /* EMUserInfoManagerWrapper.m */,
-				90319C3A2935FC1E000D01BE /* EMChatroom+Helper.h */,
-				90319C3B2935FC1E000D01BE /* EMMessageManager.h */,
-				90319C3C2935FC1E000D01BE /* EMChatManagerWrapper.h */,
-				90319C3D2935FC1E000D01BE /* EMPresenceManagerWrapper.h */,
-				90319C3E2935FC1E000D01BE /* EMRoomManagerWrapper.m */,
-				90319C3F2935FC1E000D01BE /* EMClientWrapper.m */,
-				90319C402935FC1E000D01BE /* EMConversationWrapper.m */,
 				90319C412935FC1E000D01BE /* EMGroupManagerWrapper.m */,
-				90319C422935FC1E000D01BE /* EMContactManagerWrapper.h */,
+				90319C332935FC1E000D01BE /* EMRoomManagerWrapper.h */,
+				90319C3E2935FC1E000D01BE /* EMRoomManagerWrapper.m */,
+				90319C372935FC1E000D01BE /* EMPushManagerWrapper.h */,
+				90319C2E2935FC1E000D01BE /* EMPushManagerWrapper.m */,
+				90319C2C2935FC1E000D01BE /* EMUserInfoManagerWrapper.h */,
+				90319C392935FC1E000D01BE /* EMUserInfoManagerWrapper.m */,
 				90319C432935FC1E000D01BE /* EMChatThreadManagerWrapper.h */,
+				90319C342935FC1E000D01BE /* EMChatThreadManagerWrapper.m */,
+				90319C3D2935FC1E000D01BE /* EMPresenceManagerWrapper.h */,
+				90319C2F2935FC1E000D01BE /* EMPresenceManagerWrapper.m */,
+				90319C312935FC1E000D01BE /* EMConversationWrapper.h */,
+				90319C402935FC1E000D01BE /* EMConversationWrapper.m */,
+				90319C3B2935FC1E000D01BE /* EMMessageManager.h */,
+				90319C2A2935FC1E000D01BE /* EMMessageManager.m */,
 			);
 			path = managers;
 			sourceTree = "<group>";
@@ -271,18 +266,12 @@
 		90319C462935FC1E000D01BE /* util */ = {
 			isa = PBXGroup;
 			children = (
-				90319D1529373FE0000D01BE /* NSString+Category.h */,
-				90319D1629373FE0000D01BE /* NSString+Category.m */,
 				90319C472935FC1E000D01BE /* EMSDKMethod.h */,
-				90319C4E2935FC1E000D01BE /* NSArray+Category.h */,
-				90319C482935FC1E000D01BE /* NSArray+Category.m */,
 				90319C4D2935FC1E000D01BE /* EMThreadQueue.h */,
 				90319C492935FC1E000D01BE /* EMThreadQueue.m */,
 				90319C4A2935FC1E000D01BE /* EMHelper.h */,
-				90319C4B2935FC1E000D01BE /* EMUtil.h */,
-				90319C4C2935FC1E000D01BE /* NSDictionary+Category.h */,
-				90319C4F2935FC1E000D01BE /* NSDictionary+Category.m */,
 				90319C502935FC1E000D01BE /* EMHelper.m */,
+				90319C4B2935FC1E000D01BE /* EMUtil.h */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -299,6 +288,8 @@
 		90319C552935FC1E000D01BE /* helper */ = {
 			isa = PBXGroup;
 			children = (
+				90319C3A2935FC1E000D01BE /* EMChatroom+Helper.h */,
+				90319C2B2935FC1E000D01BE /* EMChatroom+Helper.m */,
 				90319C562935FC1E000D01BE /* EMConversation+Helper.h */,
 				90319C572935FC1E000D01BE /* EMDeviceConfig+Helper.m */,
 				90319C582935FC1E000D01BE /* EMOptions+Helper.h */,
@@ -352,6 +343,17 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		908CE3C4293D913600348C1A /* category */ = {
+			isa = PBXGroup;
+			children = (
+				908CE3C7293D913600348C1A /* NSDictionary+Category.h */,
+				908CE3CA293D913600348C1A /* NSDictionary+Category.m */,
+				908CE3C9293D913600348C1A /* NSArray+Category.h */,
+				908CE3C6293D913600348C1A /* NSArray+Category.m */,
+			);
+			path = category;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -369,10 +371,10 @@
 				90319CA32935FC1E000D01BE /* EMThreadQueue.h in Headers */,
 				90319CBB2935FC1E000D01BE /* EMTranslateLanguage+Helper.h in Headers */,
 				90319CBD2935FC1E000D01BE /* EMCursorResult+Helper.h in Headers */,
-				90319D1729373FE0000D01BE /* NSString+Category.h in Headers */,
 				90319CA12935FC1E000D01BE /* EMUtil.h in Headers */,
-				90319CA22935FC1E000D01BE /* NSDictionary+Category.h in Headers */,
+				908CE3CF293D913600348C1A /* NSArray+Category.h in Headers */,
 				90319CC42935FC1E000D01BE /* EMMessageReaction+Helper.h in Headers */,
+				908CE3CD293D913600348C1A /* NSDictionary+Category.h in Headers */,
 				90319CD02935FC1E000D01BE /* EMPushOptions+Helper.h in Headers */,
 				90319C8D2935FC1E000D01BE /* EMGroupManagerWrapper.h in Headers */,
 				90319CC52935FC1E000D01BE /* EMSilentModeParam+Helper.h in Headers */,
@@ -385,7 +387,6 @@
 				90319CB32935FC1E000D01BE /* EMChatThread+Helper.h in Headers */,
 				90319C8A2935FC1E000D01BE /* EMRoomManagerWrapper.h in Headers */,
 				90319C9A2935FC1E000D01BE /* EMChatThreadManagerWrapper.h in Headers */,
-				90319CA42935FC1E000D01BE /* NSArray+Category.h in Headers */,
 				90319CA92935FC1E000D01BE /* EMWrapperCallback.h in Headers */,
 				90319CB52935FC1E000D01BE /* EMGroup+Helper.h in Headers */,
 				90319C9D2935FC1E000D01BE /* EMSDKMethod.h in Headers */,
@@ -480,13 +481,11 @@
 				90319C872935FC1E000D01BE /* EMChatManagerWrapper.m in Sources */,
 				90319C982935FC1E000D01BE /* EMGroupManagerWrapper.m in Sources */,
 				90319CAF2935FC1E000D01BE /* EMChatThreadEvent+Helper.m in Sources */,
-				90319CA52935FC1E000D01BE /* NSDictionary+Category.m in Sources */,
 				90319CCA2935FC1E000D01BE /* EMGroup+Helper.m in Sources */,
 				90319CC32935FC1E000D01BE /* EMChatThread+Helper.m in Sources */,
 				90319C862935FC1E000D01BE /* EMPresenceManagerWrapper.m in Sources */,
 				90319C8F2935FC1E000D01BE /* EMBaseManager.m in Sources */,
 				90319CB12935FC1E000D01BE /* EMSilentModeParam+Helper.m in Sources */,
-				90319D1829373FE0000D01BE /* NSString+Category.m in Sources */,
 				90319CB92935FC1E000D01BE /* EMPushOptions+Helper.m in Sources */,
 				90319C902935FC1E000D01BE /* EMUserInfoManagerWrapper.m in Sources */,
 				90319CC22935FC1E000D01BE /* EMConversation+Helper.m in Sources */,
@@ -498,12 +497,12 @@
 				90319C8C2935FC1E000D01BE /* EMContactManagerWrapper.m in Sources */,
 				90319CA82935FC1E000D01BE /* EMWrapperCallback.m in Sources */,
 				90319CB22935FC1E000D01BE /* EMMessageReaction+Helper.m in Sources */,
+				908CE3CC293D913600348C1A /* NSArray+Category.m in Sources */,
 				90319C822935FC1E000D01BE /* EMChatroom+Helper.m in Sources */,
 				90319CAE2935FC1E000D01BE /* EMSilentModeResult+Helper.m in Sources */,
 				90319CC02935FC1E000D01BE /* EMOptions+Helper.m in Sources */,
 				90319CAB2935FC1E000D01BE /* EMDeviceConfig+Helper.m in Sources */,
 				90319CA62935FC1E000D01BE /* EMHelper.m in Sources */,
-				90319C9E2935FC1E000D01BE /* NSArray+Category.m in Sources */,
 				90319CD32935FC1E000D01BE /* EMWrapper.m in Sources */,
 				90319CBC2935FC1E000D01BE /* EMPresence+Helper.m in Sources */,
 				90319CC92935FC1E000D01BE /* EMChatMessage+Helper.m in Sources */,
@@ -512,6 +511,7 @@
 				90319C952935FC1E000D01BE /* EMRoomManagerWrapper.m in Sources */,
 				90319C972935FC1E000D01BE /* EMConversationWrapper.m in Sources */,
 				90319C812935FC1E000D01BE /* EMMessageManager.m in Sources */,
+				908CE3D0293D913600348C1A /* NSDictionary+Category.m in Sources */,
 				90319CCB2935FC1E000D01BE /* EMError+Helper.m in Sources */,
 				90319CD12935FC1E000D01BE /* EMSilentModeTime+Helper.m in Sources */,
 				90319CB42935FC1E000D01BE /* EMUserInfo+Helper.m in Sources */,

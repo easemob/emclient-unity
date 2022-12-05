@@ -7,6 +7,7 @@
 
 #import "EMCWrapperListener.h"
 #import <wrapper/wrapper.h>
+#import "NSString+Category.h"
 
 @interface EMCWrapperListener ()
 {

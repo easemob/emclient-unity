@@ -8,6 +8,7 @@
 #import "EMCWrapper.h"
 #import <wrapper/wrapper.h>
 #import "EMCWrapperListener.h"
+#import "NSString+Category.h"
 
 @interface EMCWrapper ()
 @property (nonatomic, strong) EMWrapper *wrapper;
@@ -32,25 +33,31 @@
                  method:(const char *)method
                  params:(const char*)jstr
                     cid:(const char *)cbid {
-    NSString *ret = nil;
     EMWrapperCallback *callback = [[EMWrapperCallback alloc] init];
-    callback.onSuccessCallback = ^(NSString *valueStr) {
+    __block NSString *callbackId = [NSString fromChar:cbid];
+    callback.onSuccessCallback = ^(NSObject *valueObj) {
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        if (valueObj != nil) {
+            if ([valueObj isKindOfClass:[NSDictionary class]]) {
+                dict[@"value"] = [(NSDictionary *)valueObj toJsonString];
+            }else if ([valueObj isKindOfClass:[NSArray class]]) {
+                dict[@"value"] = [(NSArray *)valueObj toJsonString];
+            }
+        }
         dict[@"callbackId"] = [NSString fromChar:cbid];
-        dict[@"value"] = valueStr;
-        [EMWrapperHelper.shared.listener onReceive:@"callback" method:[NSString fromChar:cbid] info:[dict toString]];
+        [EMWrapperHelper.shared.listener onReceive:@"callback" method:callbackId info:[dict toJsonString]];
     };
-    callback.onErrorCallback = ^(NSString *errorStr) {
+    callback.onErrorCallback = ^(NSDictionary *errorDict) {
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
         dict[@"callbackId"] = [NSString fromChar:cbid];
-        dict[@"error"] = errorStr;
-        [EMWrapperHelper.shared.listener onReceive:@"callback" method:[NSString fromChar:cbid] info:[dict toString]];
+        dict[@"error"] = errorDict;
+        [EMWrapperHelper.shared.listener onReceive:@"callback" method:callbackId info:[dict toJsonString]];
     };
     callback.onProgressCallback = ^(int progress) {
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
         dict[@"callbackId"] = [NSString fromChar:cbid];
         dict[@"progress"] = @(progress);
-        [EMWrapperHelper.shared.listener onReceive:@"callbackProgress" method:[NSString fromChar:cbid] info:[dict toString]];
+        [EMWrapperHelper.shared.listener onReceive:@"callbackProgress" method:callbackId info:[dict toJsonString]];
     };
     
     NSString *ret = [self.wrapper callSDKApi:[NSString fromChar:manager]
@@ -65,24 +72,31 @@
             params:(const char*)jstr
                cid:(const char *)cbid
 {
+    __block NSString *callbackId = [NSString fromChar:cbid];
     EMWrapperCallback *callback = [[EMWrapperCallback alloc] init];
-    callback.onSuccessCallback = ^(NSString *valueStr) {
+    callback.onSuccessCallback = ^(NSObject *valueObj) {
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        if (valueObj != nil) {
+            if ([valueObj isKindOfClass:[NSDictionary class]]) {
+                dict[@"value"] = [(NSDictionary *)valueObj toJsonString];
+            }else if ([valueObj isKindOfClass:[NSArray class]]) {
+                dict[@"value"] = [(NSArray *)valueObj toJsonString];
+            }
+        }
         dict[@"callbackId"] = [NSString fromChar:cbid];
-        dict[@"value"] = valueStr;
-        [EMWrapperHelper.shared.listener onReceive:@"callback" method:[NSString fromChar:cbid] info:[dict toString]];
+        [EMWrapperHelper.shared.listener onReceive:@"callback" method:callbackId info:[dict toJsonString]];
     };
-    callback.onErrorCallback = ^(NSString *errorStr) {
+    callback.onErrorCallback = ^(NSDictionary *errorDict) {
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
         dict[@"callbackId"] = [NSString fromChar:cbid];
-        dict[@"error"] = errorStr;
-        [EMWrapperHelper.shared.listener onReceive:@"callback" method:[NSString fromChar:cbid] info:[dict toString]];
+        dict[@"error"] = errorDict;
+        [EMWrapperHelper.shared.listener onReceive:@"callback" method:callbackId info:[dict toJsonString]];
     };
     callback.onProgressCallback = ^(int progress) {
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
         dict[@"callbackId"] = [NSString fromChar:cbid];
         dict[@"progress"] = @(progress);
-        [EMWrapperHelper.shared.listener onReceive:@"callbackProgress" method:[NSString fromChar:cbid] info:[dict toString]];
+        [EMWrapperHelper.shared.listener onReceive:@"callbackProgress" method:callbackId info:[dict toJsonString]];
     };
     
     [self.wrapper callSDKApi:[NSString fromChar:manager]

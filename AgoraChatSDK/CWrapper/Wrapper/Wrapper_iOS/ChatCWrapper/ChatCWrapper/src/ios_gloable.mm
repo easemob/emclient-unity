@@ -13,11 +13,9 @@
 #include "ios_gloable.h"
 #include "common_wrapper_internal.h"
 
-
-#import "NSString+Category.h"
-#import "NSDictionary+Category.h"
 #import "EMCWrapper.h"
 #import "EMCWrapperListener.h"
+#import "NSString+Category.h"
 
 using namespace wrapper_ios;
 
@@ -34,27 +32,7 @@ namespace wrapper_ios {
 
     const char* get_Common(const char* manager, const char* method, const char* jstr, const char* cbid)
     {
-        EMWrapperCallback *callback = [[EMWrapperCallback alloc] init];
-        callback.onSuccessCallback = ^(NSString *valueStr) {
-            NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-            dict[@"callbackId"] = [NSString fromChar:cbid];
-            dict[@"value"] = valueStr;
-            [EMWrapperHelper.shared.listener onReceive:@"callback" method:[NSString fromChar:cbid] info:[dict toString]];
-        };
-        callback.onErrorCallback = ^(NSString *errorStr) {
-            NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-            dict[@"callbackId"] = [NSString fromChar:cbid];
-            dict[@"error"] = errorStr;
-            [EMWrapperHelper.shared.listener onReceive:@"callback" method:[NSString fromChar:cbid] info:[dict toString]];
-        };
-        callback.onProgressCallback = ^(int progress) {
-            NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-            dict[@"callbackId"] = [NSString fromChar:cbid];
-            dict[@"progress"] = @(progress);
-            [EMWrapperHelper.shared.listener onReceive:@"callbackProgress" method:[NSString fromChar:cbid] info:[dict toString]];
-        };
-        
-        NSString *str = [cwrapper nativeGet:manager method:method cid:jstr];
+        NSString *str = [cwrapper nativeGet:manager method:method params:jstr cid:cbid];
         
         if(str == nil) str = @"";
         std::string ret = str.toChar;
@@ -66,14 +44,6 @@ namespace wrapper_ios {
 
     void call_Common(const char* manager, const char* method, const char* jstr, const char* cbid)
     {
-        EMWrapperCallback *callback = [[EMWrapperCallback alloc] init];
-        callback.onSuccessCallback = ^(NSString *valueStr) {};
-        callback.onErrorCallback = ^(NSString *errorStr) {};
-        callback.onProgressCallback = ^(int progress) {};
-        [cwrapper.wrapper callSDKApi:[NSString fromChar:manager]
-                              method:[NSString fromChar:method]
-                              params:[NSString fromChar:jstr].toDict
-                            callback:callback];
-        
+        [cwrapper nativeCall:manager method:method params:jstr cid:cbid];
     }
 }

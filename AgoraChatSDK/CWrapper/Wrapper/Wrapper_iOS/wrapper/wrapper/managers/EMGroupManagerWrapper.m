@@ -525,7 +525,7 @@
                                                            filePath:params[@"filePath"]
                                                            progress:^(int progress)
      {
-        [callback onProgress:progress];
+        callback.onProgressCallback(progress);
     } completion:^(EMGroupSharedFile *aSharedFile, EMError *aError)
      {
         [weakSelf wrapperCallback:callback error:aError object:[aSharedFile toJson]];
@@ -542,7 +542,7 @@
                                                          sharedFileId:fileId
                                                              progress:^(int progress)
      {
-        [callback onProgress:progress];
+        callback.onProgressCallback(progress);
     } completion:^(EMGroup *aGroup, EMError *aError)
      {
         [weakSelf wrapperCallback:callback error:aError object:[aGroup toJson]];
