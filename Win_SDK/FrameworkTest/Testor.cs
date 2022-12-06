@@ -386,6 +386,9 @@ namespace WinSDKTest
             functions_IClient.Add(menu_index, "AccessToken"); menu_index++;
             functions_IClient.Add(menu_index, "LoginWithAgoraToken"); menu_index++;
             functions_IClient.Add(menu_index, "RenewAgoraToken"); menu_index++;
+            functions_IClient.Add(menu_index, "GetLoggedInDevicesFromServer"); menu_index++;
+            functions_IClient.Add(menu_index, "KickDevice"); menu_index++;
+            functions_IClient.Add(menu_index, "kickAllDevices"); menu_index++;
             level2_menus.Add("IClient", functions_IClient);
         }
 
@@ -439,6 +442,25 @@ namespace WinSDKTest
             menu_index = 1;
             param.Add(menu_index, "token (string)"); menu_index++;
             level3_menus.Add("RenewAgoraToken", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "username (string)"); menu_index++;
+            param.Add(menu_index, "password (string)"); menu_index++;
+            level3_menus.Add("GetLoggedInDevicesFromServer", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "username (string)"); menu_index++;
+            param.Add(menu_index, "password (string)"); menu_index++;
+            param.Add(menu_index, "resource (string)"); menu_index++;
+            level3_menus.Add("KickDevice", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "username (string)"); menu_index++;
+            param.Add(menu_index, "password (string)"); menu_index++;
+            level3_menus.Add("kickAllDevices", new Dictionary<int, string>(param));
             param.Clear();
         }
 
@@ -2447,6 +2469,80 @@ namespace WinSDKTest
             Console.WriteLine($"RenewAgoraToken complete.");
         }
 
+        public void CallFunc_IClient_GetLoggedInDevicesFromServer()
+        {
+            string username = GetParamValueFromContext(0);
+
+            string password = GetParamValueFromContext(1);
+
+            SDKClient.Instance.GetLoggedInDevicesFromServer(username, password,
+            callback: new ValueCallBack<List<DeviceInfo>>(
+
+                onSuccess: (list) =>
+                {
+                    Console.WriteLine("GetLoggedInDevicesFromServer succeed");
+                    foreach (var it in list)
+                    {
+                        Console.WriteLine("--------------------");
+                        Console.WriteLine($"Resource: {it.Resource}");
+                        Console.WriteLine($"DeviceUUID: {it.DeviceUUID}");
+                        Console.WriteLine($"DeviceName: {it.DeviceName}");
+                    }
+                },
+
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"GetLoggedInDevicesFromServer failed, code:{code}, desc:{desc}");
+                }
+                )
+            );
+        }
+
+        public void CallFunc_IClient_KickDevice()
+        {
+            string username = GetParamValueFromContext(0);
+
+            string password = GetParamValueFromContext(1);
+
+            string resource = GetParamValueFromContext(2);
+
+            SDKClient.Instance.KickDevice(username, password, resource,
+            callback: new CallBack(
+
+                onSuccess: () =>
+                {
+                    Console.WriteLine("KickDevice succeed");
+                },
+
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"KickDevice failed, code:{code}, desc:{desc}");
+                }
+                )
+            );
+        }
+
+        public void CallFunc_IClient_kickAllDevices()
+        {
+            string username = GetParamValueFromContext(0);
+            string password = GetParamValueFromContext(1);
+
+            SDKClient.Instance.kickAllDevices(username, password,
+            callback: new CallBack(
+
+                onSuccess: () =>
+                {
+                    Console.WriteLine("kickAllDevices succeed");
+                },
+
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"kickAllDevices failed, code:{code}, desc:{desc}");
+                }
+                )
+            );
+        }
+
         public void CallFunc_IClient()
         {
             if (select_context.level2_item.CompareTo("CreateAccount") == 0)
@@ -2500,6 +2596,24 @@ namespace WinSDKTest
             if (select_context.level2_item.CompareTo("RenewAgoraToken") == 0)
             {
                 CallFunc_IClient_RenewAgoraToken();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("GetLoggedInDevicesFromServer") == 0)
+            {
+                CallFunc_IClient_GetLoggedInDevicesFromServer();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("KickDevice") == 0)
+            {
+                CallFunc_IClient_KickDevice();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("kickAllDevices") == 0)
+            {
+                CallFunc_IClient_kickAllDevices();
                 return;
             }
         }
@@ -4941,7 +5055,7 @@ namespace WinSDKTest
             members.Add(memberId2);
             members.Add(memberId3);
 
-            SDKClient.Instance.GroupManager.AddGroupWhiteList(groupId, members, new CallBack(
+            SDKClient.Instance.GroupManager.AddGroupAllowList(groupId, members, new CallBack(
                 onSuccess: () =>
                 {
                     Console.WriteLine($"AddGroupWhiteList success.");
@@ -5109,7 +5223,7 @@ namespace WinSDKTest
                 groupId = GetParamValueFromContext(0);
 
 
-            SDKClient.Instance.GroupManager.CheckIfInGroupWhiteList(groupId, new ValueCallBack<bool>(
+            SDKClient.Instance.GroupManager.CheckIfInGroupAllowList(groupId, new ValueCallBack<bool>(
                onSuccess: (ret) => {
                    Console.WriteLine($"CheckIfInGroupWhiteList success, ret:{ret}");
                },
@@ -5458,7 +5572,7 @@ namespace WinSDKTest
             else
                 groupId = GetParamValueFromContext(0);
 
-            SDKClient.Instance.GroupManager.GetGroupWhiteListFromServer(groupId, new ValueCallBack<List<string>>(
+            SDKClient.Instance.GroupManager.GetGroupAllowListFromServer(groupId, new ValueCallBack<List<string>>(
                 onSuccess: (list) =>
                 {
                     Console.WriteLine($"GetGroupWhiteListFromServer, white list num:{list.Count}");
@@ -5872,7 +5986,7 @@ namespace WinSDKTest
             members.Add(member1);
             members.Add(member2);
 
-            SDKClient.Instance.GroupManager.RemoveGroupWhiteList(groupId, members, callback: new CallBack(
+            SDKClient.Instance.GroupManager.RemoveGroupAllowList(groupId, members, callback: new CallBack(
                 onSuccess: () => {
                     Console.WriteLine($"RemoveGroupWhiteList success");
                 },
@@ -7372,7 +7486,7 @@ namespace WinSDKTest
             list.Add(member1);
             list.Add(member2);
 
-            SDKClient.Instance.RoomManager.AddWhiteListMembers(roomId, list, new CallBack(
+            SDKClient.Instance.RoomManager.AddAllowListMembers(roomId, list, new CallBack(
                 onSuccess: () => {
                     Console.WriteLine($"AddWhiteListMembers success.");
                 },
@@ -7392,7 +7506,7 @@ namespace WinSDKTest
             list.Add(member1);
             list.Add(member2);
 
-            SDKClient.Instance.RoomManager.RemoveWhiteListMembers(roomId, list, new CallBack(
+            SDKClient.Instance.RoomManager.RemoveAllowListMembers(roomId, list, new CallBack(
                 onSuccess: () => {
                     Console.WriteLine($"RemoveWhiteListMembers success.");
                 },
@@ -7421,7 +7535,7 @@ namespace WinSDKTest
         {
             string roomId = GetParamValueFromContext(0);
 
-            SDKClient.Instance.RoomManager.FetchWhiteListFromServer(roomId, new ValueCallBack<List<string>>(
+            SDKClient.Instance.RoomManager.FetchAllowListFromServer(roomId, new ValueCallBack<List<string>>(
                 onSuccess: (list) => {
                     string str = string.Join(",", list.ToArray());
                     Console.WriteLine($"FetchWhiteListFromServer success. whitelist:{str}");
@@ -7452,7 +7566,7 @@ namespace WinSDKTest
         {
             string roomId = GetParamValueFromContext(0);
 
-            SDKClient.Instance.RoomManager.CheckIfInRoomWhiteList(roomId, new ValueCallBack<bool>(
+            SDKClient.Instance.RoomManager.CheckIfInRoomAllowList(roomId, new ValueCallBack<bool>(
                 onSuccess: (b) => {
                     Console.WriteLine($"CheckIfInRoomWhiteList success. in whitelist:{b}");
                 },
@@ -7464,6 +7578,7 @@ namespace WinSDKTest
 
         public void CallFunc_IRoomManager_FetchAllRoomsFromServer()
         {
+            /*
             SDKClient.Instance.RoomManager.FetchAllRoomsFromServer(new ValueCallBack<List<Room>>(
                 onSuccess: (list) => {
                     Console.WriteLine($"FetchAllRoomsFromServer success.");
@@ -7476,6 +7591,7 @@ namespace WinSDKTest
                     Console.WriteLine($"FetchAllRoomsFromServer failed, code:{code}, desc:{desc}");
                 }
             ));
+            */
         }
 
         public void CallFunc_IRoomManager_GetChatRoom()
@@ -8696,7 +8812,7 @@ namespace WinSDKTest
 
     class GroupManagerDelegate : IGroupManagerDelegate
     {
-        public void OnAddWhiteListMembersFromGroup(string groupId, List<string> whiteList)
+        public void OnAddAllowListMembersFromGroup(string groupId, List<string> whiteList)
         {
             string str = string.Join(",", whiteList.ToArray());
             Console.WriteLine($"OnAddWhiteListMembersFromGroup: gid: {groupId}; whiteList:{str}");
@@ -8780,7 +8896,7 @@ namespace WinSDKTest
             Console.WriteLine($"OnOwnerChangedFromGroup: gid: {groupId}; newOwner:{newOwner}; oldOwner:{oldOwner}");
         }
 
-        public void OnRemoveWhiteListMembersFromGroup(string groupId, List<string> whiteList)
+        public void OnRemoveAllowListMembersFromGroup(string groupId, List<string> whiteList)
         {
             Console.WriteLine($"OnRemoveWhiteListMembersFromGroup: gid: {groupId}");
             foreach (var it in whiteList)
@@ -8928,13 +9044,13 @@ namespace WinSDKTest
             Console.WriteLine($"OnSpecificationChangedFromRoom roomId: {room.RoomId}; roomName:{room.Name}");
         }
 
-        public void OnAddWhiteListMembersFromChatroom(string roomId, List<string> members)
+        public void OnAddAllowListMembersFromChatroom(string roomId, List<string> members)
         {
             string members_str = string.Join(",", members.ToArray());
             Console.WriteLine($"OnAddWhiteListMembersFromChatroom: roomId: {roomId}; added white list:{members_str}");
         }
 
-        public void OnRemoveWhiteListMembersFromChatroom(string roomId, List<string> members)
+        public void OnRemoveAllowListMembersFromChatroom(string roomId, List<string> members)
         {
             string members_str = string.Join(",", members.ToArray());
             Console.WriteLine($"OnRemoveWhiteListMembersFromChatroom: roomId: {roomId}; removed white list:{members_str}");
