@@ -715,12 +715,12 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
         throw new System.NotImplementedException();
     }
 
-    public void OnAddWhiteListMembersFromChatroom(string roomId, List<string> members)
+    public void OnAddAllowListMembersFromChatroom(string roomId, List<string> members)
     {
         
     }
 
-    public void OnRemoveWhiteListMembersFromChatroom(string roomId, List<string> members)
+    public void OnRemoveAllowListMembersFromChatroom(string roomId, List<string> members)
     {
         
     }

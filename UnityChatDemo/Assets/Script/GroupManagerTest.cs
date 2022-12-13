@@ -251,7 +251,7 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
 
             List<string> list = new List<string>();
             list.Add(dict["memberId"]);
-            SDKClient.Instance.GroupManager.AddGroupWhiteList(currentGroupId, list, new CallBack(
+            SDKClient.Instance.GroupManager.AddGroupAllowList(currentGroupId, list, new CallBack(
                 onSuccess: () =>
                 {
                     UIManager.SuccessAlert(transform);
@@ -417,7 +417,7 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
             UIManager.DefaultAlert(transform, "缺少必要参数");
             return;
         }
-        SDKClient.Instance.GroupManager.CheckIfInGroupWhiteList(currentGroupId, new ValueCallBack<bool>(
+        SDKClient.Instance.GroupManager.CheckIfInGroupAllowList(currentGroupId, new ValueCallBack<bool>(
            onSuccess: (ret) =>
            {
                UIManager.DefaultAlert(transform, ret ? "在白名单中" : "不在白名单中");
@@ -712,7 +712,7 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
             UIManager.DefaultAlert(transform, "缺少必要参数");
             return;
         }
-        SDKClient.Instance.GroupManager.GetGroupWhiteListFromServer(currentGroupId, callback: new ValueCallBack<List<string>>(
+        SDKClient.Instance.GroupManager.GetGroupAllowListFromServer(currentGroupId, callback: new ValueCallBack<List<string>>(
             onSuccess: (list) =>
             {
                 if (0 == list.Count)
@@ -990,7 +990,7 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
 
             List<string> list = new List<string>();
             list.Add(dict["MemberId"]);
-            SDKClient.Instance.GroupManager.RemoveGroupWhiteList(currentGroupId, list, new CallBack(
+            SDKClient.Instance.GroupManager.RemoveGroupAllowList(currentGroupId, list, new CallBack(
                 onSuccess: () =>
                 {
                     UIManager.SuccessAlert(transform);
@@ -1345,7 +1345,7 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
         UIManager.DefaultAlert(transform, $"回调 {groupId}群组共享文件被移除");
     }
 
-    public void OnAddWhiteListMembersFromGroup(string groupId, List<string> whiteList)
+    public void OnAddAllowListMembersFromGroup(string groupId, List<string> whiteList)
     {
         string str = "";
         if (whiteList.Count > 0)
@@ -1353,7 +1353,7 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
         UIManager.DefaultAlert(transform, $"回调 {groupId} 添加成员至白名单{str}");
     }
 
-    public void OnRemoveWhiteListMembersFromGroup(string groupId, List<string> whiteList)
+    public void OnRemoveAllowListMembersFromGroup(string groupId, List<string> whiteList)
     {
         string str = "";
         if (whiteList.Count > 0)

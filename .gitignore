@@ -144,10 +144,14 @@ sysinfo.txt
 **/ProjectSettings/
 **/.vsconfig
 
-# windows sdk
+# Windows sdk
 *.nupkg
 *.dll
 AgoraChatSDK/CWrapper/Wrapper/Wrapper_Common/build_win/proj
 
-# plugins
+# Plugins
 UnityChatDemo/Assets/AgoraChat/Plugins
+
+# Unity project files 
+*/Assembly-CSharp-Editor.csproj
+*/Assembly-CSharp.csproj
