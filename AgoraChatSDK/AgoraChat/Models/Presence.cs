@@ -91,8 +91,8 @@ namespace AgoraChat
         {
             Publisher = jo["publisher"];
             statusDescription = jo["desc"];
-            LatestTime = jo["lastTime"];
-            ExpiryTime = jo["expiryTime"];
+            LatestTime = (long)jo["lastTime"].AsDouble;
+            ExpiryTime = (long)jo["expiryTime"].AsDouble;
             StatusList = List.BaseModelListFromJsonArray<PresenceDeviceStatus>(jo["detail"]);
         }
 

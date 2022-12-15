@@ -809,12 +809,15 @@ namespace sdk_wrapper {
 
         string json = "";
 
-        if (nullptr != result) {
-            JSON_STARTOBJ
-            writer.Key("ret");
-            Group::ToJsonObject(writer, result);
-            JSON_ENDOBJ
-            json = s.GetString();
+        if (EMError::EM_NO_ERROR == error.mErrorCode) {
+
+            if (nullptr != result) {
+                JSON_STARTOBJ
+                writer.Key("ret");
+                Group::ToJsonObject(writer, result);
+                JSON_ENDOBJ
+                json = s.GetString();
+            }
         }
 
         return CopyToPointer(json);

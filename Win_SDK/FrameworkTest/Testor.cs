@@ -2348,7 +2348,7 @@ namespace WinSDKTest
                 password = GetParamValueFromContext(1);
 
             bool istoken = false;
-            if (select_context.level3_params[1].CompareTo("true") == 0)
+            if (select_context.level3_params[2].CompareTo("true") == 0)
                 istoken = true;
             if (istoken_input)
                 istoken = true;
@@ -7874,8 +7874,8 @@ namespace WinSDKTest
 
         public void CallFunc_IPresenceManager_PublishPresence()
         {
-            int presenceStatus = GetIntFromString(GetParamValueFromContext(0));
-            string ext = GetParamValueFromContext(1);
+            //int presenceStatus = GetIntFromString(GetParamValueFromContext(0));
+            string ext = GetParamValueFromContext(0);
 
             SDKClient.Instance.PresenceManager.PublishPresence( ext, new CallBack(
                 onSuccess: () => {
@@ -8796,6 +8796,7 @@ namespace WinSDKTest
 
         public void OnContactInvited(string username, string reason)
         {
+            SDKClient.Instance.ContactManager.AcceptInvitation("123");
             Console.WriteLine($"OnContactInvited: {username}, reason:{reason}");
         }
 

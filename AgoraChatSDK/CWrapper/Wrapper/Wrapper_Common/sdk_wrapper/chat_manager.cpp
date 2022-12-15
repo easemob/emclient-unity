@@ -837,10 +837,10 @@ namespace sdk_wrapper {
         string local_cbid = cbid;
 
         Document d; d.Parse(jstr);
-        string msg_id = GetJsonValue_String(d, "msg_id", "");
+        string msg_id = GetJsonValue_String(d, "msgId", "");
         int page_size = GetJsonValue_Int(d, "pageSize", 20);
         string group_id = GetJsonValue_String(d, "groupId", "");
-        string ack_id = GetJsonValue_String(d, "ack_id", "");
+        string ack_id = GetJsonValue_String(d, "ackId", "");
 
         thread t([=]() {
 

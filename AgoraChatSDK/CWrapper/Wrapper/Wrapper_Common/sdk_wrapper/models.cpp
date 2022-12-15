@@ -2086,8 +2086,10 @@ namespace sdk_wrapper
         writer.Key("isMuteAll");
         writer.Bool(group->groupAllMembersMuted());
 
-        writer.Key("options");
-        JsonObject(writer, group->groupSetting());
+        if (nullptr != group->groupSetting()) {
+            writer.Key("options");
+            JsonObject(writer, group->groupSetting());
+        }
 
         writer.Key("permissionType");
         writer.Int(MemberTypeToInt(group->groupMemberType()));
