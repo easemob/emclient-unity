@@ -144,7 +144,7 @@ namespace AgoraChat
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("username", username);
             jo_param.AddWithoutNull("password", password);
-            NativeCall(SDKMethod.kickDevice, jo_param, callback);
+            NativeCall(SDKMethod.kickAllDevices, jo_param, callback);
         }
 
         internal void AddConnectionDelegate(IConnectionDelegate connectionDelegate)
