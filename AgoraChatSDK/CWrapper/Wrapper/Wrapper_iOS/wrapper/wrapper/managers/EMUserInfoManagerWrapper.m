@@ -21,13 +21,13 @@
                     params:(NSDictionary *)params
                   callback:(EMWrapperCallback *)callback {
     NSString *ret = nil;
-    if ([updateOwnUserInfo isEqualToString:sendMessage]) {
+    if ([updateOwnUserInfo isEqualToString:method]) {
         ret = [self updateOwnUserInfo:params callback:callback];
-    } else if ([updateOwnUserInfoWithType isEqualToString:sendMessage]) {
+    } else if ([updateOwnUserInfoWithType isEqualToString:method]) {
         ret = [self updateOwnUserInfoWithType:params callback:callback];
-    }else if ([fetchUserInfoById isEqualToString:sendMessage]) {
+    }else if ([fetchUserInfoById isEqualToString:method]) {
         ret = [self fetchUserInfoByUserId:params callback:callback];
-    }else if ([fetchUserInfoByIdWithType isEqualToString:sendMessage]) {
+    }else if ([fetchUserInfoByIdWithType isEqualToString:method]) {
         ret = [self fetchUserInfoByIdWithType:params callback:callback];
     } else {
         ret = [super onMethodCall:method params:params callback:callback];

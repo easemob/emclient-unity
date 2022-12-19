@@ -35,9 +35,13 @@ public class EMCWrapper {
                 try {
                     JSONObject jsonObject = new JSONObject();
                     if (obj != null) {
+                        // value 里是 JSONObject to String
                         if (obj instanceof JSONObject || obj instanceof JSONArray) {
-                            // value 里是 JSONObject to String
                             jsonObject.put("value", obj.toString());
+                        }else if (obj instanceof String) {
+                            JSONObject tmpJsonObject = new JSONObject();
+                            tmpJsonObject.put("ret", obj);
+                            jsonObject.put("value", tmpJsonObject.toString());
                         }
                     }
                     jsonObject.put("callbackId", cid);
