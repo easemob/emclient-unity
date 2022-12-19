@@ -9,6 +9,7 @@
 #import "EMMessageReaction+Helper.h"
 #import "EMChatThread+Helper.h"
 #import "EMHelper.h"
+#import "EMUtil.h"
 
 @implementation EMMessageManager
 
@@ -44,17 +45,17 @@
         [list addObject:[reaction toJson]];
     }
     
-    return [EMHelper getReturnJsonObject:list];
+    return [[EMHelper getReturnJsonObject:list] toJsonString];
 }
 
 - (NSString *)groupAckCount:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
     EMChatMessage *msg = [self getMessage:params];
-    return [EMHelper getReturnJsonObject:@(msg.groupAckCount)];
+    return [[EMHelper getReturnJsonObject:@(msg.groupAckCount)] toJsonString];
 }
 
 - (NSString *)getChatThread:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
     EMChatMessage *msg = [self getMessage:params];
-    return [EMHelper getReturnJsonObject:[msg.chatThread toJson]];
+    return [[EMHelper getReturnJsonObject:[msg.chatThread toJson]] toJsonString];
 }
 
 - (EMChatMessage *)getMessage:(NSDictionary *)params {

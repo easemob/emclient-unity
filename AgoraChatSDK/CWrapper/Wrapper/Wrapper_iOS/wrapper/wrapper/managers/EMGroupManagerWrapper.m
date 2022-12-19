@@ -130,7 +130,7 @@
 - (NSString *)getGroupWithId:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
     NSString *groupId = params[@"groupId"];
     EMGroup *group = [EMGroup groupWithId:groupId];
-    return [EMHelper getReturnJsonObject:[group toJson]];
+    return [[EMHelper getReturnJsonObject:[group toJson]] toJsonString];
 }
 
 - (NSString *)getJoinedGroups:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
@@ -139,7 +139,7 @@
     for (EMGroup *group in joinedGroups) {
         [list addObject:[group toJson]];
     }
-    return [EMHelper getReturnJsonObject:list];
+    return [[EMHelper getReturnJsonObject:list] toJsonString];
 }
 
 

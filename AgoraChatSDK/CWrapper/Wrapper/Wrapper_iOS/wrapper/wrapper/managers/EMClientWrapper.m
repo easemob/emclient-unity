@@ -146,7 +146,7 @@
 }
 
 - (NSString *)getCurrentUser:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
-    return [EMHelper getReturnJsonObject:EMClient.sharedClient.currentUsername];
+    return [[EMHelper getReturnJsonObject:EMClient.sharedClient.currentUsername] toJsonString];
 }
 
 - (NSString *)loginWithAgoraToken:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
@@ -163,15 +163,15 @@
 }
 
 - (NSString *)getToken:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
-    return [EMHelper getReturnJsonObject:EMClient.sharedClient.accessUserToken];
+    return [[EMHelper getReturnJsonObject:EMClient.sharedClient.accessUserToken] toJsonString];
 }
 
 - (NSString *)isLoggedInBefore:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
-    return [EMHelper getReturnJsonObject:@(EMClient.sharedClient.isLoggedIn)];
+    return [[EMHelper getReturnJsonObject:@(EMClient.sharedClient.isLoggedIn)] toJsonString];
 }
 
 - (NSString *)isConnected:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
-    return [EMHelper getReturnJsonObject:@(EMClient.sharedClient.isConnected)];
+    return [[EMHelper getReturnJsonObject:@(EMClient.sharedClient.isConnected)] toJsonString];
 }
 
 - (NSString *)uploadLog:(NSDictionary *)params callback:(EMWrapperCallback *)callback {

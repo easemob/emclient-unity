@@ -161,7 +161,7 @@
                  callback:(EMWrapperCallback *)callback {
     EMChatroom *chatroom = [EMChatroom chatroomWithId:param[@"roomId"]];
     
-    return [EMHelper getReturnJsonObject:[chatroom toJson]];
+    return [[EMHelper getReturnJsonObject:[chatroom toJson]] toJsonString];
 }
 
 - (NSString *)getAllChatRooms:(NSDictionary *)param
