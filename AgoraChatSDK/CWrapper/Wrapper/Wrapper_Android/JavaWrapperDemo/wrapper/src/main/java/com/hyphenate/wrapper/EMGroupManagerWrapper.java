@@ -662,13 +662,13 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
     private String muteMembers(JSONObject params, EMWrapperCallback callback) throws JSONException {
         String groupId = params.getString("groupId");
 
-        int duration = 0;
-        if (params.has("duration")){
-            duration = params.getInt("duration");
+        int duration = -1;
+        if (params.has("expireTime")){
+            duration = params.getInt("expireTime");
         }
         List<String> members = null;
-        if (params.has("list")){
-            members = EMHelper.stringListFromJsonArray(params.getJSONArray("list"));
+        if (params.has("userIds")){
+            members = EMHelper.stringListFromJsonArray(params.getJSONArray("userIds"));
         }
         EMCommonValueCallback<EMGroup> callBack = new EMCommonValueCallback<EMGroup>(callback) {
             @Override

@@ -990,6 +990,7 @@ namespace sdk_wrapper {
 
         Document d; d.Parse(jstr);
         string group_id = GetJsonValue_String(d, "groupId", "");
+        int64_t expireTime = GetJsonValue_Int64(d, "expireTime", -1);
         EMMucMemberList mem_list;
         if (d.HasMember("userIds")) {
             mem_list = MyJson::FromJsonObjectToVector(d["userIds"]);
@@ -997,7 +998,7 @@ namespace sdk_wrapper {
 
         thread t([=]() {
             EMError error;
-            EMGroupPtr result = CLIENT->getGroupManager().muteGroupMembers(group_id, mem_list, -1, error);
+            EMGroupPtr result = CLIENT->getGroupManager().muteGroupMembers(group_id, mem_list, expireTime, error);
             if (EMError::EM_NO_ERROR == error.mErrorCode) {
 
                 string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());

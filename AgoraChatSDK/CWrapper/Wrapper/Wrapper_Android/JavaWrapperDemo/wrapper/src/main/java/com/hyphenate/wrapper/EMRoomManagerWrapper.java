@@ -6,8 +6,10 @@ import com.hyphenate.EMResultCallBack;
 import com.hyphenate.chat.EMChatRoom;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCursorResult;
+import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMPageResult;
 import com.hyphenate.exceptions.HyphenateException;
+import com.hyphenate.wrapper.helper.EMGroupHelper;
 import com.hyphenate.wrapper.util.EMSDKMethod;
 import com.hyphenate.wrapper.util.EMHelper;
 import com.hyphenate.wrapper.callback.EMCommonValueCallback;
@@ -337,29 +339,31 @@ public class EMRoomManagerWrapper extends EMBaseWrapper{
     private String muteChatRoomMembers(JSONObject params, EMWrapperCallback callback)
             throws JSONException {
         String roomId = params.getString("roomId");
-        long duration = Long.parseLong(params.getString("duration"));
-        JSONArray muteMembers = params.getJSONArray("userIds");
-        List<String> muteMembersList = new ArrayList<>();
-        for (int i = 0; i < muteMembers.length(); i++) {
-            muteMembersList.add((String) muteMembers.get(i));
+        int duration = -1;
+        if (params.has("expireTime")){
+            duration = params.getInt("expireTime");
         }
-
-        asyncRunnable(() -> {
-            try {
-                EMChatRoom room = EMClient.getInstance().chatroomManager().muteChatRoomMembers(roomId, muteMembersList,
-                        duration);
-                JSONObject jo = null;
+        List<String> members = null;
+        if (params.has("userIds")){
+            members = EMHelper.stringListFromJsonArray(params.getJSONArray("userIds"));
+        }
+        EMCommonValueCallback<EMChatRoom> callBack = new EMCommonValueCallback<EMChatRoom>(callback) {
+            @Override
+            public void onSuccess(EMChatRoom object) {
+                JSONObject jsonObject = null;
                 try {
-                    jo = EMChatRoomHelper.toJson(room);
-                }catch (JSONException e) {
+                    jsonObject = EMChatRoomHelper.toJson(object);
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }finally {
-                    onSuccess(jo, callback);
+                    updateObject(jsonObject);
                 }
-            } catch (HyphenateException e) {
-                onError(e, callback);
             }
-        });
+        };
+
+        EMClient.getInstance().chatroomManager().asyncMuteChatRoomMembers(roomId, members,
+                duration, callBack);
+
         return null;
     }
 

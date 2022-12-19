@@ -266,10 +266,13 @@
                          callback:(EMWrapperCallback *)callback {
     __weak EMRoomManagerWrapper *weakSelf = self;
     
-    NSArray *muteMembers = param[@"userIds"];
-    NSInteger muteMilliseconds = [param[@"duration"] integerValue];
+    NSArray *userIds = param[@"userIds"];
+    NSInteger muteMilliseconds = [param[@"expireTime"] integerValue];
+    if (muteMilliseconds == 0) {
+        muteMilliseconds = -1;
+    }
     NSString *chatroomId = param[@"roomId"];
-    [EMClient.sharedClient.roomManager muteMembers:muteMembers
+    [EMClient.sharedClient.roomManager muteMembers:userIds
                                   muteMilliseconds:muteMilliseconds
                                       fromChatroom:chatroomId
                                         completion:^(EMChatroom *aChatroom, EMError *aError)
@@ -317,8 +320,8 @@
                       callback:(EMWrapperCallback *)callback {
     __weak EMRoomManagerWrapper *weakSelf = self;
     
-    NSString *admin = param[@"admin"];
-    NSString *chatroomId = param[@"userId"];
+    NSString *admin = param[@"userId"];
+    NSString *chatroomId = param[@"roomId"];
     [EMClient.sharedClient.roomManager addAdmin:admin
                                      toChatroom:chatroomId
                                      completion:^(EMChatroom *aChatroom, EMError *aError)
