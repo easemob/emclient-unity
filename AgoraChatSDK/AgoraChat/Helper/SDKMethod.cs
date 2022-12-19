@@ -144,10 +144,10 @@ namespace AgoraChat
         internal const string updateChatRoomAnnouncement = "updateChatRoomAnnouncement";
         internal const string fetchChatRoomAnnouncement = "fetchChatRoomAnnouncement";
 
-        internal const string addMembersToChatRoomWhiteList = "addMembersToChatRoomWhiteList";
-        internal const string removeMembersFromChatRoomWhiteList = "removeMembersFromChatRoomWhiteList";
-        internal const string fetchChatRoomWhiteListFromServer = "fetchChatRoomWhiteListFromServer";
-        internal const string isMemberInChatRoomWhiteListFromServer = "isMemberInChatRoomWhiteListFromServer";
+        internal const string addMembersToChatRoomAllowList = "addMembersToChatRoomWhiteList";
+        internal const string removeMembersFromChatRoomAllowList = "removeMembersFromChatRoomWhiteList";
+        internal const string fetchChatRoomAllowListFromServer = "fetchChatRoomWhiteListFromServer";
+        internal const string isMemberInChatRoomAllowListFromServer = "isMemberInChatRoomWhiteListFromServer";
 
         internal const string muteAllChatRoomMembers = "muteAllChatRoomMembers";
         internal const string unMuteAllChatRoomMembers = "unMuteAllChatRoomMembers";
@@ -167,8 +167,8 @@ namespace AgoraChat
         internal const string getGroupMemberListFromServer = "getGroupMemberListFromServer";
         internal const string getGroupBlockListFromServer = "getGroupBlockListFromServer";
         internal const string getGroupMuteListFromServer = "getGroupMuteListFromServer";
-        internal const string getGroupWhiteListFromServer = "getGroupWhiteListFromServer";
-        internal const string isMemberInWhiteListFromServer = "isMemberInWhiteListFromServer";
+        internal const string getGroupAllowListFromServer = "getGroupWhiteListFromServer";
+        internal const string isMemberInAllowListFromServer = "isMemberInWhiteListFromServer";
         internal const string getGroupFileListFromServer = "getGroupFileListFromServer";
         internal const string getGroupAnnouncementFromServer = "getGroupAnnouncementFromServer";
         internal const string addMembers = "addMembers";
@@ -189,8 +189,8 @@ namespace AgoraChat
         internal const string unMuteMembers = "unMuteMembers";
         internal const string muteAllMembers = "muteAllMembers";
         internal const string unMuteAllMembers = "unMuteAllMembers";
-        internal const string addWhiteList = "addWhiteList";
-        internal const string removeWhiteList = "removeWhiteList";
+        internal const string addAllowList = "addWhiteList";
+        internal const string removeAllowList = "removeWhiteList";
         internal const string uploadGroupSharedFile = "uploadGroupSharedFile";
         internal const string downloadGroupSharedFile = "downloadGroupSharedFile";
         internal const string removeGroupSharedFile = "removeGroupSharedFile";
@@ -339,8 +339,8 @@ namespace AgoraChat
         internal const string onAnnouncementChangedFromGroup = "onAnnouncementChangedFromGroup";
         internal const string onSharedFileAddedFromGroup = "onSharedFileAddedFromGroup";
         internal const string onSharedFileDeletedFromGroup = "onSharedFileDeletedFromGroup";
-        internal const string onAddWhiteListMembersFromGroup = "onAddWhiteListMembersFromGroup";
-        internal const string onRemoveWhiteListMembersFromGroup = "onRemoveWhiteListMembersFromGroup";
+        internal const string onAddAllowListMembersFromGroup = "onAddWhiteListMembersFromGroup";
+        internal const string onRemoveAllowListMembersFromGroup = "onRemoveWhiteListMembersFromGroup";
         internal const string onAllMemberMuteChangedFromGroup = "onAllMemberMuteChangedFromGroup";
         internal const string onSpecificationChangedFromGroup = "onSpecificationChangedFromGroup";
         internal const string onSpecificationChanged = "onSpecificationChanged";
@@ -360,8 +360,8 @@ namespace AgoraChat
         internal const string onAttributesChangedFromRoom = "onAttributesChangedFromRoom";
         internal const string onAttributesRemovedFromRoom = "onAttributesRemovedFromRoom";
         internal const string onSpecificationChangedFromRoom = "onSpecificationChangedFromRoom";
-        internal const string onAddWhiteListMembersFromRoom = "onAddWhiteListMembersFromRoom";
-        internal const string onRemoveWhiteListMembersFromRoom = "onRemoveWhiteListMembersFromRoom";
+        internal const string onAddAllowListMembersFromRoom = "onAddWhiteListMembersFromRoom";
+        internal const string onRemoveAllowListMembersFromRoom = "onRemoveWhiteListMembersFromRoom";
         internal const string onAllMemberMuteChangedFromRoom = "onAllMemberMuteChangedFromRoom";
     }
 }

@@ -1,6 +1,12 @@
 ﻿namespace AgoraChat
 {
-    // TODO: need add comments
+    /**
+    * \～chinese
+    * 区域代码。
+    *
+    \~english
+    * Area Code.
+    */
     public enum AreaCode
     {
         CN = 1,
@@ -18,23 +24,85 @@
         GLOB = -1,
     }
 
-    //TODO: need to add comments
+    /**
+    * \～chinese
+    * 链接断开原因。
+    *
+    \~english
+    * The reason of disconnection.
+    */
     public enum DisconnectReason
     {
+        /**
+        * \～chinese
+        * 断开链接, 无具体原因。
+        *
+        \~english
+        * Disconnected, no detail reason.
+        */
         Reason_Disconnected,
 
+        /**
+        * \～chinese
+        * 用户名或者密码认证错误。
+        *
+        \~english
+        * User name or password is wrong.
+        */
         Reason_AuthenticationFailed,
 
+        /**
+        * \～chinese
+        * 用户在另一台设备上登录。
+        *
+        \~english
+        * User login on another device.
+        */
         Reason_LoginFromOtherDevice,
 
+        /**
+        * \～chinese
+        * 用户被从server上移除。
+        *
+        \~english
+        * User was removed from server.
+        */
         Reason_RemoveFromServer,
 
+        /**
+        * \～chinese
+        * 用户登录登录设备超限。
+        *
+        \~english
+        * User login on too many devices.
+        */
         Reason_LoginTooManyDevice,
 
+        /**
+        * \～chinese
+        * 用户密码变更。
+        *
+        \~english
+        * User has changed the password.
+        */
         Reason_ChangePassword,
 
+        /**
+        * \～chinese
+        * 用户被其他设备或者后端控制台踢出。
+        *
+        \~english
+        * User was kicked by other device or console backend.
+        */
         Reason_KickedByOtherDevice,
 
+        /**
+        * \～chinese
+        * 服务被禁止。
+        *
+        \~english
+        * Serving is disabled.
+        */
         Reason_ForbidByServer,
     }
 
@@ -45,7 +113,7 @@
         * 未知操作，缺省值。
         *
         \~english
-        * Unkonw operation, default value.
+        * Unkonwn operation, default value.
         */
         UnKnown = 0,
         /**

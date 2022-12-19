@@ -87,7 +87,7 @@ appkey.conf
 **/.vs
 **/.idea/
 .vs
-# *.meta
+*.meta
 /ProjectSettings
 
 
@@ -123,7 +123,7 @@ sysinfo.txt
 *.unitypackage
 **/change_all.sh
 **/change_all.sh.meta
-# *.meta
+*.meta
 **/unmanaged_dll.log
 *.pdb
 .vscode
@@ -144,6 +144,14 @@ sysinfo.txt
 **/ProjectSettings/
 **/.vsconfig
 
-# windows sdk
+# Windows sdk
 *.nupkg
 *.dll
+AgoraChatSDK/CWrapper/Wrapper/Wrapper_Common/build_win/proj
+
+# Plugins
+UnityChatDemo/Assets/AgoraChat/Plugins
+
+# Unity project files 
+*/Assembly-CSharp-Editor.csproj
+*/Assembly-CSharp.csproj

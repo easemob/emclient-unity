@@ -686,15 +686,51 @@ namespace sdk_wrapper {
         }
 
         void onAddWhiteListMembersFromChatroom(const easemob::EMChatroomPtr chatroom, const std::vector<std::string>& members) override {
-            //no corresponding delegate defined in API
+            JSON_STARTOBJ
+            writer.Key("roomId");
+            writer.String(chatroom->chatroomId().c_str());
+
+            writer.Key("userIds");
+            MyJson::ToJsonObject(writer, members);
+
+            JSON_ENDOBJ
+
+            string json = s.GetString();
+
+            if (json.size() > 0)
+                CallBack(STRING_ROOMMANAGER_LISTENER.c_str(), STRING_onAddWhiteListMembersFromRoom.c_str(), json.c_str());
         }
 
         void onRemoveWhiteListMembersFromChatroom(const easemob::EMChatroomPtr chatroom, const std::vector<std::string>& members) override {
-            //no corresponding delegate defined in API
+            JSON_STARTOBJ
+            writer.Key("roomId");
+            writer.String(chatroom->chatroomId().c_str());
+
+            writer.Key("userIds");
+            MyJson::ToJsonObject(writer, members);
+
+            JSON_ENDOBJ
+
+            string json = s.GetString();
+
+            if (json.size() > 0)
+                CallBack(STRING_ROOMMANAGER_LISTENER.c_str(), STRING_onRemoveWhiteListMembersFromRoom.c_str(), json.c_str());
         }
 
         void onAllMemberMuteChangedFromChatroom(const easemob::EMChatroomPtr chatroom, bool isAllMuted) override {
-            //no corresponding delegate defined in API
+            JSON_STARTOBJ
+            writer.Key("roomId");
+            writer.String(chatroom->chatroomId().c_str());
+
+            writer.Key("isAllMuted");
+            writer.Bool(isAllMuted);
+
+            JSON_ENDOBJ
+
+            string json = s.GetString();
+
+            if (json.size() > 0)
+                CallBack(STRING_ROOMMANAGER_LISTENER.c_str(), STRING_onAllMemberMuteChangedFromRoom.c_str(), json.c_str());
         }
 
         void onAddAdminFromChatroom(const EMChatroomPtr chatroom, const std::string& admin) override {

@@ -472,6 +472,7 @@ namespace AgoraChat
 		 * @param callback  The resending status callback. See {@link CallBack}.
 		 * @return			The message that is resent.
 		 */
+        [Obsolete("ResendMessage is deprecated", false)]
         public Message ResendMessage(string messageId, CallBack callback = null)
         {
             /*

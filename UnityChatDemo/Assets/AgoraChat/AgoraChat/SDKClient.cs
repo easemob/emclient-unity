@@ -200,7 +200,9 @@ namespace AgoraChat
         /**
          * \~chinese
          * 创建账号。
-         * 
+         *
+         * 该方法不推荐使用，建议调用相应的 RESTful 方法。
+         *
          * 异步方法。
          *
          * @param username  用户 ID。该参数必填。用户 ID 不能超过 64 个字符，支持以下类型的字符：
@@ -220,6 +222,8 @@ namespace AgoraChat
          *
          * \~english
          * Creates a new user.
+         *
+         * This method is not recommended and you are advised to call the RESTful API.
          *
          * This is an asynchronous method.
          *
@@ -355,19 +359,79 @@ namespace AgoraChat
             _clientImpl.RenewAgoraToken(token);
         }
 
-        //TODO: add comments
+        /**
+         * \~chinese
+         * 获取指定账号下登录的在线设备列表。
+         *
+         * 异步方法。
+         *
+         * @param username  用户 ID。
+         * @param password  密码。
+         * @param callBack 		结果回调，成功时回调 {@link ValueCallBack#OnSuccessValue(Object)}，返回设备信息列表；
+         * 						失败时回调 {@link ValueCallBack#onError(int, String)}。
+         *
+         * \~english
+         * Gets the list of online devices to which you have logged in with a specified account.
+         *
+         * This is an asynchronous method.
+         *
+         * @param username The user ID.
+         * @param password The password.
+         * @param callBack		The completion callback. If this call succeeds, calls {@link ValueCallBack#OnSuccessValue(Object)} to show device information list;
+         * 						if this call fails, calls {@link ValueCallBack#onError(int, String)}.
+         */
         public void GetLoggedInDevicesFromServer(string username, string password, ValueCallBack<List<DeviceInfo>> callback = null)
         {
             _clientImpl.GetLoggedInDevicesFromServer(username, password, callback);
         }
 
-        //TODO: add comments
+        /**
+         * \~chinese
+         * 将指定账号登录的指定设备踢下线。
+         *
+         * 可通过 {@link #GetLoggedInDevicesFromServer()} 方法获取设备信息 {@link DeviceInfo}。
+         *
+         * 异步方法。
+         *
+         * @param username  用户 ID。
+         * @param password  用户的密码。
+         * @param resource  设备 ID, 见 {@link DeviceInfo#Resource}。
+         *
+         * \~english
+         * Logs out from a specified account on a device.
+         *
+         * You can call {@link GetLoggedInDevicesFromServer()} to get the device ID.
+         *
+         * This is an asynchronous method.
+         *
+         * @param username The user ID.
+         * @param password The password.
+         * @param resource The device ID. See {@link DeviceInfo#Resource}.
+         */
         public void KickDevice(string username, string password, string resource, CallBack callback = null)
         {
             _clientImpl.KickDevice(username, password, resource, callback);
         }
 
-        //TODO: add comments
+        /**
+         * \~chinese
+         * 将指定账号登录的所有设备都踢下线。
+         *
+         * 异步方法。
+         *
+         * @param username 用户 ID。
+         * @param password 密码。
+         * @param callback	操作结果回调，详见 {@link CallBack}。
+         *
+         * \~english
+         * Logs out from a specified account on all devices.
+         *
+         * This is an asynchronous method.
+         *
+         * @param username The user ID.
+         * @param password The password.
+         * @param callback The operation callback. See {@link CallBack}.
+         */
         public void kickAllDevices(string username, string password, CallBack callback = null)
         {
             _clientImpl.kickAllDevices(username, password, callback);

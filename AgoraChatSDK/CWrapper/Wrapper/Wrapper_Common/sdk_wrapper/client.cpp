@@ -290,6 +290,7 @@ namespace sdk_wrapper
         if (EMError::EM_NO_ERROR != error.mErrorCode) {
             string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            return nullptr;
         }
 
         string easemob_token = "";
@@ -344,6 +345,7 @@ namespace sdk_wrapper
         if (EMError::EM_NO_ERROR != error.mErrorCode) {
             string call_back_jstr = MyJson::ToJsonWithError(cbid, error.mErrorCode, error.mDescription.c_str());
             CallBack(cbid, call_back_jstr.c_str());
+            return nullptr;
         }
 
         string easemob_token = "";

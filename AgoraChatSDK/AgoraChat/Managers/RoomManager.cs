@@ -855,12 +855,12 @@ namespace AgoraChat
          *                     - If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
          *                     - If this call fails, calls {@link ValueCallBack#onError(int, String)}.
          */
-        public void AddWhiteListMembers(string roomId, List<string> members, CallBack callback = null)
+        public void AddAllowListMembers(string roomId, List<string> members, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("roomId", roomId);
             jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
-            NativeCall(SDKMethod.addMembersToChatRoomWhiteList, jo_param, callback);
+            NativeCall(SDKMethod.addMembersToChatRoomAllowList, jo_param, callback);
         }
 
         /**
@@ -893,16 +893,40 @@ namespace AgoraChat
          *                      - If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
          *                      - If this call fails, calls {@link ValueCallBack#onError(int, String)}.
          */
-        public void RemoveWhiteListMembers(string roomId, List<string> members, CallBack callback = null)
+        public void RemoveAllowListMembers(string roomId, List<string> members, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("roomId", roomId);
             jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
-            NativeCall(SDKMethod.removeMembersFromChatRoomWhiteList, jo_param, callback);
+            NativeCall(SDKMethod.removeMembersFromChatRoomAllowList, jo_param, callback);
         }
 
-        //TODO: add comments here
-        public void FetchWhiteListFromServer(string roomId, ValueCallBack<List<string>> callback = null)
+        /**
+         * \~chinese
+         * 从服务器获取白名单列表。
+         *
+         * @note
+         * 仅聊天室所有者和管理员可调用此方法。
+         *
+         * 异步方法。
+         *
+         * @param roomId 	    聊天室 ID。
+         * @param callBack		结果回调，成功时回调 {@link ValueCallBack#OnSuccessValue(Object)}，
+         * 						失败时回调 {@link ValueCallBack#onError(int, String)}。
+         *
+         * \~english
+         * Gets the chat room allow list from the server.
+         *
+         * @note
+         * Only the chat room owner or admin can call this method.
+         *
+         * This is an asynchronous method.
+         *
+         * @param chatRoomId 	The chat room ID.
+         * @param callBack		The completion callback. If this call succeeds, calls {@link ValueCallBack#OnSuccessValue(Object)};
+         * 						If this call fails, calls {@link ValueCallBack#onError(int, String)}.
+         */
+        public void FetchAllowListFromServer(string roomId, ValueCallBack<List<string>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("roomId", roomId);
@@ -912,11 +936,29 @@ namespace AgoraChat
                 return List.StringListFromJsonArray(jsonNode);
             };
 
-            NativeCall<List<string>>(SDKMethod.fetchChatRoomWhiteListFromServer, jo_param, callback, process);
+            NativeCall<List<string>>(SDKMethod.fetchChatRoomAllowListFromServer, jo_param, callback, process);
         }
 
-        //TODO: add comments here
-        public void CheckIfInRoomWhiteList(string roomId, ValueCallBack<bool> callback = null)
+        /**
+         * \~chinese
+         * 检查成员自己是否加入了白名单。
+         *
+         * 异步方法。
+         *
+         * @param roomId 	聊天室 ID。
+         * @param callBack 		结果回调，成功时回调 {@link ValueCallBack#OnSuccessValue(Object)}，返回是否在白名单中；
+         * 						失败时回调 {@link ValueCallBack#onError(int, String)}。
+         *
+         * \~english
+         * Checks whether the current member is on the chat room block list.
+         *
+         * This is an asynchronous method.
+         *
+         * @param roomId 	The chat room ID.
+         * @param callBack		The completion callback. If this call succeeds, calls {@link ValueCallBack#OnSuccessValue(Object)} to show whether the member is on the block list;
+         * 						if this call fails, calls {@link ValueCallBack#onError(int, String)}.
+         */
+        public void CheckIfInRoomAllowList(string roomId, ValueCallBack<bool> callback = null)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("roomId", roomId);
@@ -925,10 +967,22 @@ namespace AgoraChat
                 return jsonNode.IsBoolean ? jsonNode.AsBool : false;
             };
 
-            NativeCall<bool>(SDKMethod.isMemberInChatRoomWhiteListFromServer, jo_param, callback, process);
+            NativeCall<bool>(SDKMethod.isMemberInChatRoomAllowListFromServer, jo_param, callback, process);
         }
 
-        //TODO: need to add comments
+        /**
+         * \~chinese
+         * 从内存中获取聊天室。
+         *
+         * @param roomId		聊天室 ID。
+         * @return				返回聊天室对象。如果内存中不存在聊天室对象，会基于roomId创建一个聊天室对象，并返回。
+         *
+         * \~english
+         * Gets the chat room in the memory.
+         *
+         * @param roomId		The chat room ID.
+         * @return 				The chat room instance. The SDK returns a new chat room instances basing roomId if the chat room is not found in the memory.
+         */
         public Room GetChatRoom(string roomId)
         {
             JSONObject jo_param = new JSONObject();
@@ -938,7 +992,8 @@ namespace AgoraChat
             return ModelHelper.CreateWithJsonObject<Room>(jn);
         }
 
-        //TODO: need to add comments
+        /*
+         * @deprecated
         public void FetchAllRoomsFromServer(ValueCallBack<List<Room>> callback = null)
         {
             Process process = (_, jsonNode) =>
@@ -948,6 +1003,7 @@ namespace AgoraChat
 
             NativeCall<List<Room>>(SDKMethod.getAllChatRooms, null, callback, process);
         }
+        */
 
         /**
          * \~chinese
@@ -1225,6 +1281,24 @@ namespace AgoraChat
                         {
                             Room room = new Room(jsonNode.AsObject);
                             it.OnSpecificationChangedFromRoom(room);
+                        }
+                        break;
+                    case SDKMethod.onAddAllowListMembersFromRoom:
+                        {
+                            List<string> list = List.StringListFromJsonArray(jsonNode["userIds"]);
+                            it.OnAddAllowListMembersFromChatroom(roomId, list);
+                        }
+                        break;
+                    case SDKMethod.onRemoveAllowListMembersFromRoom:
+                        {
+                            List<string> list = List.StringListFromJsonArray(jsonNode["userIds"]);
+                            it.OnRemoveAllowListMembersFromChatroom(roomId, list);
+                        }
+                        break;
+                    case SDKMethod.onAllMemberMuteChangedFromRoom:
+                        {
+                            bool isAllMuted = jsonNode["isAllMuted"].AsBool;
+                            it.OnAllMemberMuteChangedFromChatroom(roomId, isAllMuted);
                         }
                         break;
                 }

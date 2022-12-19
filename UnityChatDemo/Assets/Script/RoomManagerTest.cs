@@ -714,4 +714,19 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
     {
         throw new System.NotImplementedException();
     }
+
+    public void OnAddAllowListMembersFromChatroom(string roomId, List<string> members)
+    {
+        
+    }
+
+    public void OnRemoveAllowListMembersFromChatroom(string roomId, List<string> members)
+    {
+        
+    }
+
+    public void OnAllMemberMuteChangedFromChatroom(string roomId, bool isAllMuted)
+    {
+        
+    }
 }

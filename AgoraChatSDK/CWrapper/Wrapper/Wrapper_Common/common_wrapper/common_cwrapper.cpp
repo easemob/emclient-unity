@@ -5,7 +5,11 @@
 #include "common_wrapper_internal.h"
 #include "sdk_wrapper.h"
 
+#if defined(_WIN32)
+typedef const char* (__stdcall *FUNC_CALL)(const char* jstr, const char* cbid, char* buf);
+#else
 typedef const char* (*FUNC_CALL)(const char* jstr, const char* cbid, char* buf);
+#endif
 
 typedef std::map<std::string, FUNC_CALL> FUNC_MAP;		// function name -> function handle
 typedef std::map<std::string, FUNC_MAP>  MANAGER_MAP;   // manager name -> function map
@@ -171,6 +175,8 @@ void InitManagerMap()
 	func_map_room_manager["fetchChatRoomAttributes"] = RoomManager_FetchChatRoomAttributes;
 	func_map_room_manager["setChatRoomAttributes"] = RoomManager_SetChatRoomAttributes;
 	func_map_room_manager["removeChatRoomAttributes"] = RoomManager_RemoveChatRoomAttributes;
+
+    func_map_room_manager["getAllChatRooms"] = RoomManager_GetAllChatRooms;
 
 	manager_map["EMRoomManager"] = func_map_room_manager;
 
