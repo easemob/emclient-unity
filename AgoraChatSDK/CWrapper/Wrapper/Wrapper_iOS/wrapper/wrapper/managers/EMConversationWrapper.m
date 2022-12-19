@@ -8,6 +8,7 @@
 #import "EMConversationWrapper.h"
 #import "EMHelper.h"
 #import "EMChatMessage+Helper.h"
+#import "EMUtil.h"
 
 @implementation EMConversationWrapper
 - (instancetype)init {
@@ -102,7 +103,7 @@
     EMConversation *conversation = [self conversationWithParam: params];
     NSDictionary *ext = params[@"ext"];
     conversation.ext = ext;
-    return nil;
+    return [@{@"ret":@(YES)} toJsonString];
 }
 
 - (NSString *)removeMessage:(NSDictionary *)params callback:(EMWrapperCallback *)callback {

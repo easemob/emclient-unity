@@ -101,7 +101,9 @@ public class EMConversationWrapper extends EMBaseWrapper {
             jsonStr = ext.toString();
         }
         conversation.setExtField(jsonStr);
-        return null;
+        JSONObject jo = new JSONObject();
+        jo.put("ret", true);
+        return jo.toString();
     }
 
     private String removeMessage(JSONObject params, EMWrapperCallback callback) throws JSONException {
