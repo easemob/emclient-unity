@@ -610,6 +610,19 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     {
         UIManager.UnfinishedAlert(transform);
         Debug.Log("ImportMessagesBtnAction");
+        Message msg = Message.CreateTextSendMessage("du003", "hehe11");
+        List<Message> msgs = new List<Message>();
+        msgs.Add(msg);
+        SDKClient.Instance.ChatManager.ImportMessages(msgs, new CallBack(
+            onSuccess: () =>
+            {
+                UIManager.DefaultAlert(transform, "插入成功");
+            },
+            onError: (code, desc) =>
+            {
+                UIManager.DefaultAlert(transform, "插入失败");
+            }
+        ));
     }
     void LoadMessageBtnAction()
     {

@@ -484,7 +484,7 @@ namespace AgoraChat
          * @param callback		The operation callback. If success, the chat room mute list is returned; otherwise, an error is returned. See {@link ValueCallBack}.
          * 
          */
-        public void FetchRoomMuteList(string roomId, int pageSize = 200, int pageNum = 1, ValueCallBack<List<string>> callback = null)
+        public void FetchRoomMuteList(string roomId, int pageSize = 200, int pageNum = 1, ValueCallBack<Dictionary<string, long>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("roomId", roomId);
@@ -493,10 +493,10 @@ namespace AgoraChat
 
             Process process = (_, jsonNode) =>
             {
-                return List.StringListFromJsonArray(jsonNode);
+                return Dictionary.SimpleTypeDictionaryFromJsonObject<long>(jsonNode);
             };
 
-            NativeCall<List<string>>(SDKMethod.fetchChatRoomMuteList, jo_param, callback, process);
+            NativeCall<Dictionary<string, long>>(SDKMethod.fetchChatRoomMuteList, jo_param, callback, process);
         }
 
         /**

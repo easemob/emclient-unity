@@ -111,7 +111,7 @@
     NSString *msgId = params[@"msgId"];
     EMError *error;
     [conversation deleteMessageWithId:msgId error:&error];
-    return [[EMHelper getReturnJsonObject:@(error == nil ? YES : NO)] toJsonString];
+    return [[EMHelper getReturnJsonObject:error == nil ? @(YES) : @(NO)] toJsonString];
 }
 
 - (NSString *)getLatestMessage:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
@@ -130,7 +130,7 @@
     EMConversation *conversation = [self conversationWithParam: params];
     EMError *error;
     [conversation deleteAllMessages:&error];
-    return [[EMHelper getReturnJsonObject:@(error == nil ? YES : NO)] toJsonString];
+    return [[EMHelper getReturnJsonObject:error == nil ? @(YES) : @(NO)] toJsonString];
 }
 
 - (NSString *)insertMessage:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
@@ -139,7 +139,7 @@
     EMChatMessage *msg = [EMChatMessage fromJson:msgDict];
     EMError *error;
     [conversation insertMessage:msg error:&error];
-    return [[EMHelper getReturnJsonObject:@(error == nil ? YES : NO)] toJsonString];
+    return [[EMHelper getReturnJsonObject:error == nil ? @(YES) : @(NO)] toJsonString];
 }
 
 - (NSString *)appendMessage:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
@@ -148,7 +148,7 @@
     EMChatMessage *msg = [EMChatMessage fromJson:msgDict];
     EMError *error;
     [conversation appendMessage:msg error:&error];
-    return [[EMHelper getReturnJsonObject:@(error == nil ? YES : NO)] toJsonString];
+    return [[EMHelper getReturnJsonObject:error == nil ? @(YES) : @(NO)] toJsonString];
 }
 
 - (NSString *)updateConversationMessage:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
@@ -157,7 +157,7 @@
     EMChatMessage *msg = [EMChatMessage fromJson:msgDict];
     EMError *error;
     [conversation updateMessageChange:msg error:&error];
-    return [[EMHelper getReturnJsonObject:@(error == nil ? YES : NO)] toJsonString];
+    return [[EMHelper getReturnJsonObject:error == nil ? @(YES) : @(NO)] toJsonString];
 }
 
 - (NSString *)loadMsgWithId:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
@@ -180,7 +180,8 @@
         [jsonMsgs addObject:[msg toJson]];
     }
     
-    return [[EMHelper getReturnJsonObject:jsonMsgs] toJsonString];
+    [self wrapperCallback:callback error:nil object:jsonMsgs];
+    return nil;
 }
 
 - (NSString *)loadMsgWithKeywords:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
@@ -196,7 +197,8 @@
         [jsonMsgs addObject:[msg toJson]];
     }
     
-    return [[EMHelper getReturnJsonObject:jsonMsgs] toJsonString];
+    [self wrapperCallback:callback error:nil object:jsonMsgs];
+    return nil;
 }
 
 
@@ -226,8 +228,8 @@
     for (EMChatMessage *msg in aMessages) {
         [jsonMsgs addObject:[msg toJson]];
     }
-    
-    return [[EMHelper getReturnJsonObject:jsonMsgs] toJsonString];
+    [self wrapperCallback:callback error:nil object:jsonMsgs];
+    return nil;
 }
 
 - (NSString *)loadMsgWithTime:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
@@ -241,7 +243,8 @@
         [jsonMsgs addObject:[msg toJson]];
     }
     
-    return [[EMHelper getReturnJsonObject:jsonMsgs] toJsonString];
+    [self wrapperCallback:callback error:nil object:jsonMsgs];
+    return nil;
 }
 
 - (NSString *)messageCount:(NSDictionary *)params callback:(EMWrapperCallback *)callback {

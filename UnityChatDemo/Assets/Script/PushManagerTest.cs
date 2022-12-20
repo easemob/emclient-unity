@@ -59,6 +59,15 @@ public class PushManagerTest : MonoBehaviour
     void GetPushConfigBtnAction()
     {
 
+
+        //Message msg = Message.CreateTextSendMessage("du003", "aawea");
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation("du003");
+        Message msg = conv.LastMessage;
+        bool ret = conv.DeleteMessage(msg.MsgId);
+
+        //bool ret = conv.AppendMessage(msg);
+        Debug.Log($"删除消息: {ret}");
+
         //PushConfig config = SDKClient.Instance.PushManager.GetPushConfig();
         //if(null != config)
         //    UIManager.DefaultAlert(transform, config.ToString());

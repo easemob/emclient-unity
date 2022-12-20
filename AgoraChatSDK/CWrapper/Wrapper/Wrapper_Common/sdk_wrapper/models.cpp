@@ -2023,11 +2023,12 @@ namespace sdk_wrapper
 
     void Group::ToJsonObject(Writer<StringBuffer>& writer, const EMMucMuteList& vec)
     {
-        writer.StartArray();
+        writer.StartObject();
         for (int i = 0; i < vec.size(); i++) {
-            writer.String(vec[i].first.c_str());
+            writer.Key(vec[i].first.c_str());
+            writer.Int64(vec[i].second);
         }
-        writer.EndArray();
+        writer.EndObject();
     }
 
     void Group::ToJsonObjectWithGroupInfo(Writer<StringBuffer>& writer, EMGroupPtr group)

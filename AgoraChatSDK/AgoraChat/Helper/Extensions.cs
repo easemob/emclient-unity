@@ -267,7 +267,22 @@ namespace AgoraChat
             {
                 if (jo[s].IsNumber)
                 {
-                    ret.Add(s, (T)Convert.ChangeType(jo[s].AsInt, typeof(T)));
+                    if (typeof(T) == typeof(long))
+                    {
+                        ret.Add(s, (T)Convert.ChangeType(jo[s].AsDouble, typeof(T)));
+                    }
+                    else if (typeof(T) == typeof(int))
+                    {
+                        ret.Add(s, (T)Convert.ChangeType(jo[s].AsInt, typeof(T)));
+                    }
+                    else if (typeof(T) == typeof(double))
+                    {
+                        ret.Add(s, (T)Convert.ChangeType(jo[s].AsDouble, typeof(T)));
+                    }
+                    else if (typeof(T) == typeof(float))
+                    {
+                        ret.Add(s, (T)Convert.ChangeType(jo[s].AsDouble, typeof(T)));
+                    }
                 }
                 else if (jo[s].IsString)
                 {

@@ -664,9 +664,14 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
             UIManager.DefaultAlert(transform, "缺少必要参数");
             return;
         }
-        SDKClient.Instance.GroupManager.GetGroupMuteListFromServer(currentGroupId, callback: new ValueCallBack<List<string>>(
-            onSuccess: (list) =>
+        SDKClient.Instance.GroupManager.GetGroupMuteListFromServer(currentGroupId, callback: new ValueCallBack<Dictionary<string, long>>(
+            onSuccess: (dict) =>
             {
+                List<string> list = new List<string>();
+                foreach (long key in dict.Values)
+                {
+                    list.Add(key.ToString());
+                }
                 string str = string.Join(",", list.ToArray());
                 UIManager.DefaultAlert(transform, str);
             },
