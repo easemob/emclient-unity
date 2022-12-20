@@ -187,7 +187,7 @@
     __weak EMGroupManagerWrapper *weakSelf = self;
     [EMClient.sharedClient.groupManager createGroupWithSubject:params[@"name"]
                                                    description:params[@"desc"]
-                                                      invitees:params[@"list"]
+                                                      invitees:params[@"userIds"]
                                                        message:params[@"msg"]
                                                        setting:[EMGroupOptions formJson:params[@"options"]]
                                                     completion:^(EMGroup *aGroup, EMError *aError)
@@ -302,7 +302,7 @@
 
 - (NSString *)inviterUser:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
     __weak EMGroupManagerWrapper *weakSelf = self;
-    [EMClient.sharedClient.groupManager addMembers:params[@"list"]
+    [EMClient.sharedClient.groupManager addMembers:params[@"userIds"]
                                             toGroup:params[@"groupId"]
                                             message:params[@"msg"]
                                          completion:^(EMGroup *aGroup, EMError *aError) {
@@ -313,7 +313,7 @@
 
 - (NSString *)addMembers:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
     __weak EMGroupManagerWrapper *weakSelf = self;
-    [EMClient.sharedClient.groupManager addMembers:params[@"list"]
+    [EMClient.sharedClient.groupManager addMembers:params[@"userIds"]
                                            toGroup:params[@"groupId"]
                                            message:params[@"msg"]
                                         completion:^(EMGroup *aGroup, EMError *aError)
@@ -326,7 +326,7 @@
 
 - (NSString *)removeMembers:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
     __weak EMGroupManagerWrapper *weakSelf = self;
-    [EMClient.sharedClient.groupManager removeMembers:params[@"list"]
+    [EMClient.sharedClient.groupManager removeMembers:params[@"userIds"]
                                             fromGroup:params[@"groupId"]
                                            completion:^(EMGroup *aGroup, EMError *aError)
      {
@@ -338,7 +338,7 @@
 
 - (NSString *)blockMembers:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
     __weak EMGroupManagerWrapper *weakSelf = self;
-    [EMClient.sharedClient.groupManager blockMembers:params[@"list"]
+    [EMClient.sharedClient.groupManager blockMembers:params[@"userIds"]
                                            fromGroup:params[@"groupId"]
                                           completion:^(EMGroup *aGroup, EMError *aError)
      {
@@ -349,7 +349,7 @@
 
 - (NSString *)unblockMembers:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
     __weak EMGroupManagerWrapper *weakSelf = self;
-    [EMClient.sharedClient.groupManager unblockMembers:params[@"list"]
+    [EMClient.sharedClient.groupManager unblockMembers:params[@"userIds"]
                                              fromGroup:params[@"groupId"]
                                             completion:^(EMGroup *aGroup, EMError *aError)
      {
@@ -476,7 +476,7 @@
 
 - (NSString *)unMuteMembers:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
     __weak EMGroupManagerWrapper *weakSelf = self;
-    [EMClient.sharedClient.groupManager unmuteMembers:params[@"list"]
+    [EMClient.sharedClient.groupManager unmuteMembers:params[@"userIds"]
                                             fromGroup:params[@"groupId"]
                                            completion:^(EMGroup *aGroup, EMError *aError)
      {
@@ -509,7 +509,7 @@
 
 - (NSString *)addWhiteList:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
     __weak EMGroupManagerWrapper *weakSelf = self;
-    [EMClient.sharedClient.groupManager addWhiteListMembers:params[@"list"]
+    [EMClient.sharedClient.groupManager addWhiteListMembers:params[@"userIds"]
                                                   fromGroup:params[@"groupId"]
                                                  completion:^(EMGroup *aGroup, EMError *aError) {
         [weakSelf wrapperCallback:callback error:aError object:[aGroup toJson]];
@@ -519,7 +519,7 @@
 
 - (NSString *)removeWhiteList:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
     __weak EMGroupManagerWrapper *weakSelf = self;
-    [EMClient.sharedClient.groupManager removeWhiteListMembers:params[@"list"]
+    [EMClient.sharedClient.groupManager removeWhiteListMembers:params[@"userIds"]
                                                      fromGroup:params[@"groupId"]
                                                     completion:^(EMGroup *aGroup, EMError *aError) {
         [weakSelf wrapperCallback:callback error:aError object:[aGroup toJson]];

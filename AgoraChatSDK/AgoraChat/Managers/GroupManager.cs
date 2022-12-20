@@ -755,7 +755,7 @@ namespace AgoraChat
 		 * @param callback	The operation callback. If success, the SDK returns the obtained mute list; otherwise, an error will be returned. See {@link ValueCallBack}.
 		 *
 		 */
-        public void GetGroupMuteListFromServer(string groupId, int pageNum = 1, int pageSize = 200, ValueCallBack<List<string>> callback = null)
+        public void GetGroupMuteListFromServer(string groupId, int pageNum = 1, int pageSize = 200, ValueCallBack<Dictionary<string, long>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("groupId", groupId);
@@ -764,10 +764,10 @@ namespace AgoraChat
 
             Process process = (_, jsonNode) =>
             {
-                return List.StringListFromJsonArray(jsonNode);
+                return Dictionary.SimpleTypeDictionaryFromJsonObject<long>(jsonNode);
             };
 
-            NativeCall<List<string>>(SDKMethod.getGroupMuteListFromServer, jo_param, callback, process);
+            NativeCall<Dictionary<string, long>>(SDKMethod.getGroupMuteListFromServer, jo_param, callback, process);
         }
 
         /**

@@ -477,10 +477,10 @@
                               callback:(EMWrapperCallback *)callback
 {
     __weak EMChatManagerWrapper * weakSelf = self;
-    NSString *conversationId = param[@"conversationId"];
+    NSString *conversationId = param[@"convId"];
     EMConversationType type = EMConversationTypeChat;
     BOOL isDeleteRemoteMessage = [param[@"isDeleteRemoteMessage"] boolValue];
-    int intType = [param[@"conversationType"] intValue];
+    int intType = [param[@"convType"] intValue];
     if (intType == 0) {
         type = EMConversationTypeChat;
     }else if (intType == 1) {
