@@ -343,16 +343,11 @@ namespace AgoraChat
         *         - `false`: No.
 
         */
-        public bool ImportMessages(List<Message> messages)
+        public void ImportMessages(List<Message> messages, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("list", JsonObject.JsonArrayFromList(messages));
-
-            string json = NativeGet(SDKMethod.importMessages, jo_param);
-            if (null == json || json.Length == 0) return false;
-
-            JSONNode jn = JSON.Parse(json);
-            return jn["ret"].AsBool;
+            NativeCall(SDKMethod.importMessages, jo_param, callback);
         }
 
         /**

@@ -385,10 +385,15 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
             UIManager.DefaultAlert(transform, "缺少必要参数");
             return;
         }
-        SDKClient.Instance.RoomManager.FetchRoomMuteList(currentRoomId, callback: new ValueCallBack<List<string>>(
+        SDKClient.Instance.RoomManager.FetchRoomMuteList(currentRoomId, callback: new ValueCallBack<Dictionary<string, long>>(
             onSuccess: (result) =>
             {
-                string str = string.Join(",", result.ToArray());
+                List<string> list = new List<string>();
+                foreach (string key in result.Keys)
+                {
+                    list.Add(key);
+                }
+                string str = string.Join(",", list.ToArray());
                 UIManager.DefaultAlert(this.transform, str);
             },
             onError: (code, desc) =>
