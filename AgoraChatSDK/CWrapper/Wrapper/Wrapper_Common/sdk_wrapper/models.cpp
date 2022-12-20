@@ -1451,6 +1451,7 @@ namespace sdk_wrapper
             //Note: here not support to parse str value further
         }
         //No need to support vector string
+        /*
         else if (attribute->is<vector<string>>()) {
             writer.Key("type");
             writer.String("strv");
@@ -1464,6 +1465,7 @@ namespace sdk_wrapper
             writer.Key("value");
             writer.String(attribute->value<EMJsonString>().c_str());
         }
+        */
         else {
         }
         writer.EndObject();
@@ -1516,7 +1518,7 @@ namespace sdk_wrapper
        name11:{type:d, value:1.23456},
        name12:{type:str, value:"a string"},
        name13:{type:strv, value:["str1", "str2", "str3"]},    --- not support any more!!
-       name14:{type:jstr, value:"a json string"},
+       name14:{type:jstr, value:"a json string"}, --- not support any more!!
        name15:{type:attr, value:{ --- not support any more!!
            name1: {type:b, value:true},
            name2: {type:c, value:11},
@@ -1597,6 +1599,7 @@ namespace sdk_wrapper
         else if (type.compare("str") == 0) {
             msg->setAttribute(key, v);
         }
+        /*
         else if (type.compare("strv") == 0) {
             EMJsonString json(v);
             msg->setAttribute(key, json);
@@ -1605,7 +1608,7 @@ namespace sdk_wrapper
             EMJsonString json(v);
             msg->setAttribute(key, json);
         }
-        /*else if (type.compare("attr") == 0) {
+        else if (type.compare("attr") == 0) {
             EMJsonString json(value.GetString());
             msg->setAttribute(key, json);
             LOG("Set type: attr, value:%s", attributeStr.c_str());
