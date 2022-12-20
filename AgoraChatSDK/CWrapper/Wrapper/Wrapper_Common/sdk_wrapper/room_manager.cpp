@@ -495,11 +495,12 @@ namespace sdk_wrapper {
 
         Document d; d.Parse(jstr);
         string room_id = GetJsonValue_String(d, "roomId", "");
+        int64_t expireTime = GetJsonValue_Int64(d, "expireTime", -1);
         EMMucMemberList mem_list = MyJson::FromJsonObjectToVector(d["userIds"]);
 
         thread t([=]() {
             EMError error;
-            EMChatroomPtr chatRoomPtr = CLIENT->getChatroomManager().muteChatroomMembers(room_id, mem_list, -1, error);
+            EMChatroomPtr chatRoomPtr = CLIENT->getChatroomManager().muteChatroomMembers(room_id, mem_list, expireTime, error);
 
             if (EMError::EM_NO_ERROR == error.mErrorCode) {
 

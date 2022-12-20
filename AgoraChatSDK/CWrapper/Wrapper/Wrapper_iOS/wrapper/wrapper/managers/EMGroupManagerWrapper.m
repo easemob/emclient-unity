@@ -130,7 +130,7 @@
 - (NSString *)getGroupWithId:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
     NSString *groupId = params[@"groupId"];
     EMGroup *group = [EMGroup groupWithId:groupId];
-    return [EMHelper getReturnJsonObject:[group toJson]];
+    return [[EMHelper getReturnJsonObject:[group toJson]] toJsonString];
 }
 
 - (NSString *)getJoinedGroups:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
@@ -139,7 +139,7 @@
     for (EMGroup *group in joinedGroups) {
         [list addObject:[group toJson]];
     }
-    return [EMHelper getReturnJsonObject:list];
+    return [[EMHelper getReturnJsonObject:list] toJsonString];
 }
 
 
@@ -456,9 +456,17 @@
 
 - (NSString *)muteMembers:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
     __weak EMGroupManagerWrapper *weakSelf = self;
-    [EMClient.sharedClient.groupManager muteMembers:params[@"list"]
-                                   muteMilliseconds:[params[@"duration"] integerValue]
-                                          fromGroup:params[@"groupId"]
+    
+    NSArray *userIds = params[@"userIds"];
+    NSInteger muteMilliseconds = [params[@"expireTime"] integerValue];
+    if (muteMilliseconds == 0) {
+        muteMilliseconds = -1;
+    }
+    NSString *groupId = params[@"groupId"];
+    
+    [EMClient.sharedClient.groupManager muteMembers:userIds
+                                   muteMilliseconds:muteMilliseconds
+                                          fromGroup:groupId
                                          completion:^(EMGroup *aGroup, EMError *aError)
      {
         [weakSelf wrapperCallback:callback error:aError object:[aGroup toJson]];

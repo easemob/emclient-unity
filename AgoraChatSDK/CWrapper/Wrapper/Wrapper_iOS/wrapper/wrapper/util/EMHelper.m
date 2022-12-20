@@ -9,13 +9,13 @@
 #import "EMUtil.h"
 
 @implementation EMHelper
-+ (NSString *)getReturnJsonObject:(NSObject *)aStr {
++ (NSDictionary *)getReturnJsonObject:(NSObject *)aStr {
     NSMutableDictionary *ret = [NSMutableDictionary dictionary];
     if (aStr) {
         ret[@"ret"] = aStr;
     }
     
-    return ret.toJsonString;
+    return ret;
 }
 
 @end

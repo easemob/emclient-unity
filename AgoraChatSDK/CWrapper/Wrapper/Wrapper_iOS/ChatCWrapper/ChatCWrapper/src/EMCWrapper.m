@@ -77,6 +77,8 @@
                 dict[@"value"] = [(NSDictionary *)valueObj toJsonString];
             }else if ([valueObj isKindOfClass:[NSArray class]]) {
                 dict[@"value"] = [(NSArray *)valueObj toJsonString];
+            }else if ([valueObj isKindOfClass:[NSString class]]) {
+                dict[@"value"] = [@{@"ret": (NSString*)valueObj} toJsonString];
             }
         }
         dict[@"callbackId"] = callbackId;

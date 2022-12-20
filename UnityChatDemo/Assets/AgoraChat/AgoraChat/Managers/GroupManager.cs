@@ -1049,6 +1049,7 @@ namespace AgoraChat
 		 *
 		 * @param groupId		群组 ID。
 		 * @param members		要禁言的用户列表。
+		 * @param muteMilliseconds 禁言时长， -1 为永久禁言。
 		 * @param callback		操作结果回调，详见 {@link CallBack}。
 		 *
 		 * \~english
@@ -1059,13 +1060,15 @@ namespace AgoraChat
 		 *
 		 * @param groupId		The group ID.
 		 * @param members 		The list of members to be muted.
+		 * @param muteMilliseconds Muted time duration in millisecond, -1 stand for eternity.
 		 * @param callback		The operation callback. See {@link CallBack}.
 		 */
-        public void MuteGroupMembers(string groupId, List<string> members, CallBack callback = null)
+        public void MuteGroupMembers(string groupId, List<string> members, long muteMilliseconds = -1, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("groupId", groupId);
             jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(members));
+            jo_param.AddWithoutNull("expireTime", muteMilliseconds);
             NativeCall(SDKMethod.muteMembers, jo_param, callback);
         }
 

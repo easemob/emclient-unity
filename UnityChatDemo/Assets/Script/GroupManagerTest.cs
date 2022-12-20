@@ -869,7 +869,7 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
 
             List<string> list = new List<string>();
             list.Add(member);
-            SDKClient.Instance.GroupManager.MuteGroupMembers(currentGroupId, list, new CallBack(
+            SDKClient.Instance.GroupManager.MuteGroupMembers(currentGroupId, list, -1, new CallBack(
                 onSuccess: () => { UIManager.SuccessAlert(transform); },
                 onError: (code, desc) => { UIManager.ErrorAlert(transform, code, desc); }
             ));

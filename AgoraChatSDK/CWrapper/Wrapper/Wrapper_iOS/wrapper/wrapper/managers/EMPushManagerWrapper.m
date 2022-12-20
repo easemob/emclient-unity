@@ -12,6 +12,7 @@
 #import "EMSilentModeParam+Helper.h"
 #import "EMSilentModeResult+Helper.h"
 #import "EMHelper.h"
+#import "EMUtil.h"
 
 @implementation EMPushManagerWrapper
 - (instancetype)init {
@@ -79,7 +80,7 @@
 
 - (NSString *)getImPushConfig:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
     EMPushOptions *options = EMClient.sharedClient.pushManager.pushOptions;
-    return [EMHelper getReturnJsonObject:[options toJson]];
+    return [[EMHelper getReturnJsonObject:[options toJson]] toJsonString];
 }
 
 - (NSString *)getImPushConfigFromServer:(NSDictionary *)params callback:(EMWrapperCallback *)callback {

@@ -121,7 +121,7 @@
         }
     }];
     
-    return [EMHelper getReturnJsonObject:[msg toJson]];
+    return [[EMHelper getReturnJsonObject:[msg toJson]] toJsonString];
 }
 
 - (NSString *)resendMessage:(NSDictionary *)param
@@ -140,7 +140,7 @@
         }
     }];
     
-    return [EMHelper getReturnJsonObject:[msg toJson]];
+    return [[EMHelper getReturnJsonObject:[msg toJson]] toJsonString];
 }
 
 
@@ -212,7 +212,7 @@
                 callback:(EMWrapperCallback *)callback {
     NSString *msgId = param[@"msgId"];
     EMChatMessage *msg = [EMClient.sharedClient.chatManager getMessageWithMessageId:msgId];
-    return [EMHelper getReturnJsonObject:[msg toJson]];
+    return [[EMHelper getReturnJsonObject:[msg toJson]] toJsonString];
 }
 
 
@@ -225,7 +225,7 @@
                                                                          type:type
                                                              createIfNotExist:needCreate];
     
-    return [EMHelper getReturnJsonObject:[conv toJson]];
+    return [[EMHelper getReturnJsonObject:[conv toJson]] toJsonString];
 }
 
 - (NSString *)getThreadConversation:(NSDictionary *)param
@@ -235,7 +235,7 @@
                                                                          type:EMConversationTypeGroupChat
                                                              createIfNotExist:YES
                                                                      isThread:YES];
-    return [EMHelper getReturnJsonObject:[conv toJson]];
+    return [[EMHelper getReturnJsonObject:[conv toJson]] toJsonString];
 }
 
 - (NSString *)markAllMessagesAsRead:(NSDictionary *)param
@@ -256,7 +256,7 @@
         unreadCount += con.unreadMessagesCount;
     }
     
-    return [EMHelper getReturnJsonObject:@(unreadCount)];
+    return [[EMHelper getReturnJsonObject:@(unreadCount)] toJsonString];
 }
 
 - (NSString *)updateChatMessage:(NSDictionary *)param
@@ -344,7 +344,7 @@
         [conList addObject:[conversation toJson]];
     }
     
-    return [EMHelper getReturnJsonObject:conList];;
+    return [[EMHelper getReturnJsonObject:conList] toJsonString];
 }
 
 - (NSString *)getConversationsFromServer:(NSDictionary *)param

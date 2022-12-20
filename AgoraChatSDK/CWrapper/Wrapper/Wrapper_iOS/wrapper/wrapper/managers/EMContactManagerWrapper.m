@@ -104,7 +104,7 @@
                           callback:(EMWrapperCallback *)callback {
     
     NSArray *aList = EMClient.sharedClient.contactManager.getContacts;
-    return [EMHelper getReturnJsonObject:aList];
+    return [[EMHelper getReturnJsonObject:aList] toJsonString];
 }
 
 - (NSString *)addUserToBlockList:(NSDictionary *)param
@@ -145,7 +145,7 @@
 - (NSString *)getBlockListFromDB:(NSDictionary *)param
                         callback:(EMWrapperCallback *)callback {
     NSArray * list = [EMClient.sharedClient.contactManager getBlackList];
-    return [EMHelper getReturnJsonObject:list];
+    return [[EMHelper getReturnJsonObject:list] toJsonString];
 }
 
 - (NSString *)acceptInvitation:(NSDictionary *)param

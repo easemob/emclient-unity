@@ -25,7 +25,9 @@ namespace AgoraChat
         private float FloatV;
         private double DoubleV;
         private string StringV;
+        [Obsolete]
         private List<string> StringVecV;
+        [Obsolete]
         private string JsonStringV;
 
         internal static AttributeValue Of(in object value, AttributeValueType type)
@@ -54,10 +56,9 @@ namespace AgoraChat
             {
                 return Of((double)value);
             }
-            else if (type == AttributeValueType.STRING ||
-                type == AttributeValueType.JSONSTRING)
+            else if (type == AttributeValueType.STRING)
             {
-                return Of((string)value, type);
+                return Of((string)value);
             }
             else
             {
@@ -123,19 +124,26 @@ namespace AgoraChat
             return result;
         }
 
+        internal static AttributeValue Of(in string value)
+        {
+            var result = new AttributeValue();
+            {
+                result.VType = AttributeValueType.STRING;
+                result.StringV = value;
+            };
+            return result;
+        }
+
+        [Obsolete]
         internal static AttributeValue Of(in string value, AttributeValueType type)
         {
             var result = new AttributeValue();
-            if (AttributeValueType.JSONSTRING == type)
-            {
-                result.VType = AttributeValueType.JSONSTRING;
-                result.JsonStringV = value;
-            }
-            else
+            if (AttributeValueType.STRING == type)
             {
                 result.VType = AttributeValueType.STRING;
                 result.StringV = value;
             }
+
             return result;
         }
 
@@ -169,10 +177,7 @@ namespace AgoraChat
             {
                 return StringV;
             }
-            else if (type == AttributeValueType.JSONSTRING)
-            {
-                return JsonStringV;
-            }
+
             else
             {
                 return null;
@@ -221,10 +226,6 @@ namespace AgoraChat
                     _type = "str";
                     _value = StringV;
                     break;
-                case AttributeValueType.JSONSTRING:
-                    _type = "jstr";
-                    _value = JsonStringV;
-                    break;
                 default:
                     break;
             }
@@ -249,7 +250,7 @@ namespace AgoraChat
             {
                 case "b":
                     VType = AttributeValueType.BOOL;
-                    BoolV = Boolean.Parse(value);
+                    BoolV = bool.Parse(value);
                     break;
                 case "i":
                     VType = AttributeValueType.INT32;
@@ -274,10 +275,6 @@ namespace AgoraChat
                 case "str":
                     VType = AttributeValueType.STRING;
                     StringV = value;
-                    break;
-                case "jstr":
-                    VType = AttributeValueType.JSONSTRING;
-                    JsonStringV = value;
                     break;
                 default:
                     break;

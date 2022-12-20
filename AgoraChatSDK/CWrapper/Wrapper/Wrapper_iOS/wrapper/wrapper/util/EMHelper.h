@@ -10,7 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface EMHelper : NSObject
-+ (NSString *)getReturnJsonObject:(NSObject *)aStr;
++ (NSDictionary *)getReturnJsonObject:(NSObject *)aStr;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -301,7 +301,9 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     {
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
-            Message msg = Message.CreateCustomSendMessage(dict["to"], dict["custom"]);
+            Dictionary<string, string> ext = new Dictionary<string, string>();
+            ext.Add("key", "value");
+            Message msg = Message.CreateCustomSendMessage(dict["to"], dict["custom"], ext);
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
                 onSuccess: () =>
                 {
