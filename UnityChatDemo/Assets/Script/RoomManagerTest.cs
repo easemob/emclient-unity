@@ -369,7 +369,6 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
             {
                 string str = string.Join(",", result.Data.ToArray());
                 UIManager.DefaultAlert(this.transform, str);
-                UIManager.DefaultAlert(this.transform, str);
             },
             onError: (code, desc) =>
             {
@@ -390,7 +389,6 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
             onSuccess: (result) =>
             {
                 string str = string.Join(",", result.ToArray());
-                UIManager.DefaultAlert(this.transform, str);
                 UIManager.DefaultAlert(this.transform, str);
             },
             onError: (code, desc) =>
@@ -458,7 +456,7 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
 
             List<string> list = new List<string>();
             list.Add(member);
-            SDKClient.Instance.RoomManager.MuteRoomMembers(currentRoomId, list, new CallBack(
+            SDKClient.Instance.RoomManager.MuteRoomMembers(currentRoomId, list, -1, new CallBack(
                 onSuccess: () =>
                 {
                     UIManager.SuccessAlert(transform);
@@ -717,16 +715,16 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
 
     public void OnAddAllowListMembersFromChatroom(string roomId, List<string> members)
     {
-        
+
     }
 
     public void OnRemoveAllowListMembersFromChatroom(string roomId, List<string> members)
     {
-        
+
     }
 
     public void OnAllMemberMuteChangedFromChatroom(string roomId, bool isAllMuted)
     {
-        
+
     }
 }

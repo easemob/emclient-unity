@@ -276,8 +276,16 @@ public class ConversationManagerTest : MonoBehaviour
     }
     void InsertMessageBtnAction()
     {
-        UIManager.UnfinishedAlert(transform);
-        Debug.Log("InsertMessageBtnAction");
+        if (null == conversationId || 0 == conversationId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
+
+        Message msg = Message.CreateTextSendMessage(conversationId, "test");
+        bool ret = conv.InsertMessage(msg);
+        UIManager.DefaultAlert(transform, ret ? "插入成功" : "插入失败");
     }
     void AppendMessageBtnAction()
     {
