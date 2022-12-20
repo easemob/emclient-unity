@@ -1512,14 +1512,14 @@ namespace AgoraChat
                         break;
                     case SDKMethod.onMuteListAddedFromGroup:
                         {
-                            List<string> list = List.StringListFromJsonArray(jsonNode["mutes"]);
-                            long muteExpire = (long)jsonNode["muteExpire"].AsDouble;
+                            List<string> list = List.StringListFromJsonArray(jsonNode["userIds"]);
+                            long muteExpire = (long)jsonNode["expireTime"].AsDouble;
                             it.OnMuteListAddedFromGroup(groupId, list, muteExpire);
                         }
                         break;
                     case SDKMethod.onMuteListRemovedFromGroup:
                         {
-                            List<string> list = List.StringListFromJsonArray(jsonNode["mutes"]);
+                            List<string> list = List.StringListFromJsonArray(jsonNode["userIds"]);
                             it.OnMuteListRemovedFromGroup(groupId, list);
                         }
                         break;

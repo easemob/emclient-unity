@@ -360,10 +360,10 @@ namespace sdk_wrapper {
             writer.Key("groupId");
             writer.String(group->groupId().c_str());
 
-            writer.Key("muteExpire");
+            writer.Key("expireTime");
             writer.Int64(muteExpire);
 
-            writer.Key("mutes");
+            writer.Key("userIds");
             MyJson::ToJsonObject(writer, mutes);
 
             JSON_ENDOBJ
@@ -380,7 +380,7 @@ namespace sdk_wrapper {
             writer.Key("groupId");
             writer.String(group->groupId().c_str());
 
-            writer.Key("mutes");
+            writer.Key("userIds");
             MyJson::ToJsonObject(writer, mutes);
 
             JSON_ENDOBJ
