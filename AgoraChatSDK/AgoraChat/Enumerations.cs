@@ -1,4 +1,6 @@
-﻿namespace AgoraChat
+﻿using System;
+
+namespace AgoraChat
 {
     /**
     * \～chinese
@@ -632,6 +634,7 @@
          *  \~english
          *  JSON string.
          */
+        [Obsolete]
         JSONSTRING,
         //ATTRIBUTEVALUE,
         NULLOBJ
