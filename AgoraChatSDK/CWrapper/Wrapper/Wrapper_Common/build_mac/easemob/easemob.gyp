@@ -206,6 +206,9 @@
                 '<(emclient-linux-path)/src/emthreadevent.cpp',
                 '<(emclient-linux-path)/src/emthreadmanager.cpp',
                 '<(emclient-linux-path)/src/emhttprequestmonitor.cpp',
+                '<(emclient-linux-path)/src/emmessagestatistics.cpp',
+                '<(emclient-linux-path)/src/emstatisticsmanager.cpp',
+                '<(emclient-linux-path)/src/emmessagecollect.cpp',
 
                 # Add protocol source files
                 '<(emclient-linux-path)/protocol/emconnectionfactory.cpp',

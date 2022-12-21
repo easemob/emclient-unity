@@ -173,6 +173,12 @@ namespace sdk_wrapper {
         void undisturbMultiDevicesEvent(const string& data) override {
             CallBack(STRING_MULTIDEVICE_LISTENER.c_str(), STRING_onUndisturbMultiDevicesEvent.c_str(), data.c_str());
         }
+
+
+        void onRoamDeleteMultiDevicesEvent(const std::string& conversationId, const std::string& deviceId, const std::vector<std::string>& msgIdList, int64_t beforeTimeStamp)
+        {
+            //No need to implement
+        }
     };
 
     class GroupManagerListener : public EMGroupManagerListener
