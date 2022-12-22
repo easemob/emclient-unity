@@ -352,16 +352,6 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
                 UIManager.DefaultAlert(transform, "缺少必要参数");
                 return;
             }
-            SDKClient.Instance.ChatManager.ResendMessage(dict["msgId"], new CallBack(
-                onSuccess: () =>
-                {
-                    UIManager.SuccessAlert(transform);
-                },
-                onError: (code, desc) =>
-                {
-                    UIManager.ErrorAlert(transform, code, desc);
-                }
-            ));
         });
 
         config.AddField("msgId");

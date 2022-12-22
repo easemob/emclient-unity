@@ -15,6 +15,7 @@ public class Main : MonoBehaviour, IConnectionDelegate
     private Button RoomBtn;
     private Button PushBtn;
     private Button PresenceBtn;
+    private Button ThreadBtn;
     private Button isConnectedBtn;
     private Button isLoggedBtn;
     private Button CurrentUsernameBtn;
@@ -35,6 +36,7 @@ public class Main : MonoBehaviour, IConnectionDelegate
         RoomBtn = transform.Find("Panel/RoomBtn").GetComponent<Button>();
         PushBtn = transform.Find("Panel/PushBtn").GetComponent<Button>();
         PresenceBtn = transform.Find("Panel/PresenceBtn").GetComponent<Button>();
+        ThreadBtn = transform.Find("Panel/ThreadBtn").GetComponent<Button>();
         isConnectedBtn = transform.Find("Panel/Panel/IsConnectBtn").GetComponent<Button>();
         isLoggedBtn = transform.Find("Panel/Panel/IsLoggedBtn").GetComponent<Button>();
         CurrentUsernameBtn = transform.Find("Panel/Panel/CurrentUsernameBtn").GetComponent<Button>();
@@ -49,6 +51,7 @@ public class Main : MonoBehaviour, IConnectionDelegate
         RoomBtn.onClick.AddListener(RoomBtnAction);
         PushBtn.onClick.AddListener(PushBtnAction);
         PresenceBtn.onClick.AddListener(PresenceBtnAction);
+        ThreadBtn.onClick.AddListener(ThreadBtnAction);
         isConnectedBtn.onClick.AddListener(isConnectedBtnAction);
         isLoggedBtn.onClick.AddListener(isLoggedBtnAction);
         CurrentUsernameBtn.onClick.AddListener(CurrentUsernameBtnAction);
@@ -98,7 +101,10 @@ public class Main : MonoBehaviour, IConnectionDelegate
     {
         SceneManager.LoadSceneAsync("PresenceManager");
     }
-
+    void ThreadBtnAction()
+    {
+        SceneManager.LoadSceneAsync("ThreadManager");
+    }
     void isConnectedBtnAction()
     {
         UIManager.DefaultAlert(transform, SDKClient.Instance.IsConnected ? "已连接" : "未连接");

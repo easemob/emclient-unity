@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using AgoraChat;
 using System.Collections.Generic;
 
-public class PresenceManagerTest : MonoBehaviour
+public class PresenceManagerTest : MonoBehaviour, IPresenceManagerDelegate
 {
 
     private Button backButton;
@@ -18,7 +18,7 @@ public class PresenceManagerTest : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log("push manager test script has load");
+        Debug.Log("PresenceManagerTest script has load");
 
         backButton = transform.Find("BackBtn").GetComponent<Button>();
 
@@ -37,7 +37,7 @@ public class PresenceManagerTest : MonoBehaviour
         FetchSubscribedMembersBtn.onClick.AddListener(FetchSubscribedMembersBtnAction);
         FetchPresenceStatusBtn.onClick.AddListener(FetchPresenceStatusBtnAction);
 
-
+        SDKClient.Instance.PresenceManager.AddPresenceManagerDelegate(this);
     }
 
     void backButtonAction()
@@ -198,5 +198,15 @@ public class PresenceManagerTest : MonoBehaviour
     void Update()
     {
 
+    }
+
+    public void OnPresenceUpdated(List<Presence> presences)
+    {
+        List<string> list = new List<string>();
+        foreach (var presence in presences)
+        {
+            list.Add(presence.Publisher);
+        }
+        UIManager.DefaultAlert(transform, $"发布状态: {string.Join(",", list.ToArray())}");
     }
 }
