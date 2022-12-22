@@ -456,8 +456,8 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
             reason = params.getString("msg");
         }
         String[] members = null;
-        if (params.has("list")){
-            JSONArray array = params.getJSONArray("list");
+        if (params.has("userIds")){
+            JSONArray array = params.getJSONArray("userIds");
             members = new String[array.length()];
             for (int i = 0; i < array.length(); i++) {
                 members[i] = array.getString(i);
@@ -476,8 +476,8 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
         String groupId = params.getString("groupId");
 
         String[] members = null;
-        if (params.has("list")){
-            JSONArray array = params.getJSONArray("list");
+        if (params.has("userIds")){
+            JSONArray array = params.getJSONArray("userIds");
             members = new String[array.length()];
             for (int i = 0; i < array.length(); i++) {
                 members[i] = array.getString(i);
@@ -534,8 +534,8 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
     private String unblockMembers(JSONObject params, EMWrapperCallback callback) throws JSONException {
         String groupId = params.getString("groupId");
         List<String> members = null;
-        if (params.has("list")){
-            members = EMHelper.stringListFromJsonArray(params.getJSONArray("list"));
+        if (params.has("userIds")){
+            members = EMHelper.stringListFromJsonArray(params.getJSONArray("userIds"));
         }
 
         EMClient.getInstance().groupManager().asyncUnblockUsers(groupId, members,
