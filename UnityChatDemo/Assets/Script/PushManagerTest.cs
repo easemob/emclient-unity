@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using AgoraChat;
+using System.Collections.Generic;
 
 public class PushManagerTest : MonoBehaviour
 {
@@ -58,15 +59,17 @@ public class PushManagerTest : MonoBehaviour
 
     void GetPushConfigBtnAction()
     {
+        SDKClient.Instance.ThreadManager.CreateThread("threadName", "1090761061528848352", "201453944766466", new ValueCallBack<ChatThread>(
+            onSuccess: (result) =>
+            {
+                UIManager.DefaultAlert(transform, "创建成功");
+            },
+            onError: (code, desc) =>
+            {
+                UIManager.DefaultAlert(transform, "创建失败");
+            }
+        ));
 
-
-        //Message msg = Message.CreateTextSendMessage("du003", "aawea");
-        Conversation conv = SDKClient.Instance.ChatManager.GetConversation("du003");
-        Message msg = conv.LastMessage;
-        bool ret = conv.DeleteMessage(msg.MsgId);
-
-        //bool ret = conv.AppendMessage(msg);
-        Debug.Log($"删除消息: {ret}");
 
         //PushConfig config = SDKClient.Instance.PushManager.GetPushConfig();
         //if(null != config)
@@ -77,28 +80,45 @@ public class PushManagerTest : MonoBehaviour
 
     void GetPushConfigFromServerBtnAction()
     {
-        //SDKClient.Instance.PushManager.GetPushConfigFromServer(new ValueCallBack<PushConfig>(
-        //    onSuccess: (config) => {
-        //        UIManager.DefaultAlert(transform, config.ToString());
-        //    },
-        //     onError:(code, desc) => {
-        //         UIManager.ErrorAlert(transform, code, desc);
-        //     }
-        //));
+        List<string> userIds = new List<string>();
+        userIds.Add("du003");
+        SDKClient.Instance.PresenceManager.SubscribePresences(userIds, 1000000, new ValueCallBack<List<Presence>>(
+            onSuccess: (list) =>
+            {
+                string publisher = "";
+                foreach (var presence in list)
+                {
+                    publisher = presence.Publisher;
+                }
+
+                UIManager.DefaultAlert(transform, $"发布人: {publisher}");
+            },
+            onError: (code, desc) =>
+            {
+                UIManager.DefaultAlert(transform, "订阅失败");
+            }
+        ));
     }
     void GetNoDisturbGroupsBtnAction()
     {
-        //List<string> list = SDKClient.Instance.PushManager.GetNoDisturbGroups();
-        //if(list.Count > 0)
-        //{
-        //    string str = string.Join(",", list.ToArray());
-        //    UIManager.DefaultAlert(transform, str);
-        //}
-        //else
-        //{
-        //    UIManager.DefaultAlert(transform, "未配置");
-        //}
+        List<string> userIds = new List<string>();
+        userIds.Add("du003");
+        SDKClient.Instance.PresenceManager.FetchPresenceStatus(userIds, new ValueCallBack<List<Presence>>(
+            onSuccess: (list) =>
+            {
+                string publisher = "";
+                foreach (var presence in list)
+                {
+                    publisher = presence.Publisher;
+                }
 
+                UIManager.DefaultAlert(transform, $"发布人: {publisher}");
+            },
+            onError: (code, desc) =>
+            {
+                UIManager.DefaultAlert(transform, "获取失败");
+            }
+        ));
     }
     void UpdatePushNickNameBtnAction()
     {

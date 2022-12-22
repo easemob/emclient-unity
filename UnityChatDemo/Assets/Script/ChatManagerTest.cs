@@ -608,7 +608,6 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
     void ImportMessagesBtnAction()
     {
-        UIManager.UnfinishedAlert(transform);
         Debug.Log("ImportMessagesBtnAction");
         Message msg = Message.CreateTextSendMessage("du003", "hehe11");
         List<Message> msgs = new List<Message>();

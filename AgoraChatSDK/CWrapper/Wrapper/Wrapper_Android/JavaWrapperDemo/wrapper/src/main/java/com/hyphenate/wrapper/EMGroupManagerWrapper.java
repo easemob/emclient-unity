@@ -237,8 +237,8 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
         }
 
         String[] members = null;
-        if(params.has("list")){
-            JSONArray inviteMembers = params.getJSONArray("list");
+        if(params.has("userIds")){
+            JSONArray inviteMembers = params.getJSONArray("userIds");
             members = new String[inviteMembers.length()];
             for (int i = 0; i < inviteMembers.length(); i++) {
                 members[i] = inviteMembers.getString(i);
@@ -393,8 +393,18 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
     private String isMemberInWhiteListFromServer(JSONObject params, EMWrapperCallback callback)
             throws JSONException {
         String groupId = params.getString("groupId");
-        EMClient.getInstance().groupManager().checkIfInGroupWhiteList(groupId,
-                new EMCommonValueCallback<>(callback));
+        EMClient.getInstance().groupManager().checkIfInGroupWhiteList(groupId, new EMCommonValueCallback<Boolean>(callback){
+            @Override
+            public void onSuccess(Boolean object) {
+                JSONObject jo = new JSONObject();
+                try {
+                    jo.put("ret", object);
+                    super.updateObject(jo);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         return null;
     }
 
@@ -498,8 +508,8 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
     private String removeMembers(JSONObject params, EMWrapperCallback callback) throws JSONException {
         String groupId = params.getString("groupId");
         List<String> members = null;
-        if (params.has("list")){
-            members = EMHelper.stringListFromJsonArray(params.getJSONArray("list"));
+        if (params.has("userIds")){
+            members = EMHelper.stringListFromJsonArray(params.getJSONArray("userIds"));
         }
 
         EMClient.getInstance().groupManager().asyncRemoveUsersFromGroup(groupId, members,
@@ -511,8 +521,8 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
     private String blockMembers(JSONObject params, EMWrapperCallback callback) throws JSONException {
         String groupId = params.getString("groupId");
         List<String> members = null;
-        if (params.has("list")){
-            members = EMHelper.stringListFromJsonArray(params.getJSONArray("list"));
+        if (params.has("userIds")){
+            members = EMHelper.stringListFromJsonArray(params.getJSONArray("userIds"));
         }
 
         EMClient.getInstance().groupManager().asyncBlockUsers(groupId, members,
@@ -684,7 +694,7 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
             }
         };
 
-        EMClient.getInstance().groupManager().aysncMuteGroupMembers(groupId, members, duration, callBack);
+        EMClient.getInstance().groupManager().asyncMuteGroupMembers(groupId, members, duration, callBack);
 
         return null;
     }
@@ -692,8 +702,8 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
     private String unMuteMembers(JSONObject params, EMWrapperCallback callback) throws JSONException {
         String groupId = params.getString("groupId");
         List<String> members = null;
-        if (params.has("list")){
-            members = EMHelper.stringListFromJsonArray(params.getJSONArray("list"));
+        if (params.has("userIds")){
+            members = EMHelper.stringListFromJsonArray(params.getJSONArray("userIds"));
         }
         EMCommonValueCallback<EMGroup> callBack = new EMCommonValueCallback<EMGroup>(callback) {
             @Override
@@ -761,8 +771,8 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
     private String addWhiteList(JSONObject params, EMWrapperCallback callback) throws JSONException {
         String groupId = params.getString("groupId");
         List<String> members = null;
-        if (params.has("list")){
-            members = EMHelper.stringListFromJsonArray(params.getJSONArray("list"));
+        if (params.has("userIds")){
+            members = EMHelper.stringListFromJsonArray(params.getJSONArray("userIds"));
         }
         EMClient.getInstance().groupManager().addToGroupWhiteList(groupId, members,
                 new EMCommonCallback(callback));
@@ -773,8 +783,8 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
     private String removeWhiteList(JSONObject params, EMWrapperCallback callback) throws JSONException {
         String groupId = params.getString("groupId");
         List<String> members = new ArrayList<>();
-        if (params.has("list")){
-            JSONArray array = params.getJSONArray("list");
+        if (params.has("userIds")){
+            JSONArray array = params.getJSONArray("userIds");
             for (int i = 0; i < array.length(); i++) {
                 members.add(array.getString(i));
             }
