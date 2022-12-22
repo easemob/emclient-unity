@@ -90,21 +90,6 @@
 - (NSString *)fetchPresenceStatus:(NSDictionary *)param
                          callback:(EMWrapperCallback *)callback {
     __weak EMPresenceManagerWrapper *weakSelf = self;
-    int pageNum = [param[@"pageNum"] intValue];
-    int pageSize = [param[@"pageSize"] intValue];
-    
-    [EMClient.sharedClient.presenceManager fetchSubscribedMembersWithPageNum:pageNum
-                                                                    pageSize:pageSize
-                                                                  Completion:^(NSArray<NSString *> *members, EMError *error)
-     {
-        [weakSelf wrapperCallback:callback error:error object:members];
-    }];
-    return nil;
-}
-
-- (NSString *)fetchSubscribedMembersWithPageNum:(NSDictionary *)param
-                                       callback:(EMWrapperCallback *)callback {
-    __weak EMPresenceManagerWrapper *weakSelf = self;
     NSArray *members = param[@"userIds"];
     
     [EMClient.sharedClient.presenceManager fetchPresenceStatus:members
@@ -115,6 +100,22 @@
             [list addObject:[presence toJson]];
         }
         [weakSelf wrapperCallback:callback error:error object:list];
+    }];
+    return nil;
+}
+
+- (NSString *)fetchSubscribedMembersWithPageNum:(NSDictionary *)param
+                                       callback:(EMWrapperCallback *)callback {
+
+    __weak EMPresenceManagerWrapper *weakSelf = self;
+    int pageNum = [param[@"pageNum"] intValue];
+    int pageSize = [param[@"pageSize"] intValue];
+    
+    [EMClient.sharedClient.presenceManager fetchSubscribedMembersWithPageNum:pageNum
+                                                                    pageSize:pageSize
+                                                                  Completion:^(NSArray<NSString *> *members, EMError *error)
+     {
+        [weakSelf wrapperCallback:callback error:error object:members];
     }];
     return nil;
 }

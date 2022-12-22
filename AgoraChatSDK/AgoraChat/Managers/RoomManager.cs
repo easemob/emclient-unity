@@ -1096,11 +1096,14 @@ namespace AgoraChat
          * @param callback        The completion callback. If this call succeeds, calls {@link ValueCallBack#OnSuccessValue(Dictionary<string, string>)};
          *                      if this call fails, calls {@link ValueCallBack#onError(int, String)}.
          */
-        public void FetchAttributes(string roomId, List<string> keys, ValueCallBack<Dictionary<string, string>> callback = null)
+        public void FetchAttributes(string roomId, List<string> keys = null, ValueCallBack<Dictionary<string, string>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("roomId", roomId);
-            jo_param.AddWithoutNull("list", JsonObject.JsonArrayFromStringList(keys));
+            if (keys != null)
+            {
+                jo_param.AddWithoutNull("list", JsonObject.JsonArrayFromStringList(keys));
+            }
 
             Process process = (_, jsonNode) =>
             {

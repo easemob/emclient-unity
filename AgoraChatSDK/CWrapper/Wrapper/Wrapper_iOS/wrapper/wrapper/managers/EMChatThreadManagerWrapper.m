@@ -90,7 +90,7 @@
     
     int pageSize = [param[@"pageSize"] intValue];
     NSString *cursor = param[@"cursor"];
-    NSString *parentId = param[@"parentId"];
+    NSString *parentId = param[@"groupId"];
     
     __weak EMChatThreadManagerWrapper *weakSelf = self;
     [EMClient.sharedClient.threadManager getChatThreadsFromServerWithParentId:parentId cursor:cursor pageSize:pageSize completion:^(EMCursorResult * _Nonnull cursorResult, EMError * _Nonnull aError) {
@@ -140,7 +140,7 @@
 - (NSString *)updateChatThreadSubject:(NSDictionary *)param
                              callback:(EMWrapperCallback *)callback{
     NSString *threadId = param[@"threadId"];
-    NSString *name = param[@"name"];
+    NSString *name = param[@"newName"];
     __weak EMChatThreadManagerWrapper *weakSelf = self;
     [EMClient.sharedClient.threadManager updateChatThreadName:name threadId:threadId completion:^(EMError * _Nonnull aError) {
         [weakSelf wrapperCallback:callback error:aError object:nil];
@@ -150,9 +150,9 @@
 
 - (NSString *)createChatThread:(NSDictionary *)param
                       callback:(EMWrapperCallback *)callback{
-    NSString *messageId = param[@"messageId"];
-    NSString *name = param[@"name"];
-    NSString *parentId = param[@"parentId"];
+    NSString *messageId = param[@"msgId"];
+    NSString *name = param[@"threadName"];
+    NSString *parentId = param[@"groupId"];
     __weak EMChatThreadManagerWrapper *weakSelf = self;
     [EMClient.sharedClient.threadManager createChatThread:name messageId:messageId parentId:parentId completion:^(EMChatThread * _Nonnull thread, EMError * _Nonnull aError) {
         [weakSelf wrapperCallback:callback error:aError object:[thread toJson]];
