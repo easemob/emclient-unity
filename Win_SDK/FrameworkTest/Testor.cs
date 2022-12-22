@@ -1213,6 +1213,7 @@ namespace WinSDKTest
             param.Add(menu_index, "groupId (string)"); menu_index++;
             param.Add(menu_index, "memberId1 (string)"); menu_index++;
             param.Add(menu_index, "memberId2 (string)"); menu_index++;
+            param.Add(menu_index, "expireTime (long)"); menu_index++;
             level3_menus.Add("MuteGroupMembers", new Dictionary<int, string>(param));
             param.Clear();
 
@@ -1562,6 +1563,7 @@ namespace WinSDKTest
             param.Add(menu_index, "roomId (string)"); menu_index++;
             param.Add(menu_index, "memberId1 (string)"); menu_index++;
             param.Add(menu_index, "memberId2 (string)"); menu_index++;
+            param.Add(menu_index, "expireTime (long)"); menu_index++;
             level3_menus.Add("MuteRoomMembers", new Dictionary<int, string>(param));
             param.Clear();
 
@@ -2860,11 +2862,15 @@ namespace WinSDKTest
             messages.Add(msg);
             messages.Add(msg);
 
-            bool ret = SDKClient.Instance.ChatManager.ImportMessages(messages);
-            if(ret)
-                Console.WriteLine($"ImportMessages {messages.Count} messages completed.");
-            else
-                Console.WriteLine($"ImportMessages {messages.Count} messages failed.");
+            SDKClient.Instance.ChatManager.ImportMessages(messages, new CallBack(
+                onSuccess: () => {
+                    Console.WriteLine($"ImportMessages completed.");
+                },
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"ImportMessages failed, code:{code}, desc:{desc}");
+                }
+            ));
         }
 
         public void CallFunc_IChatManager_LoadAllConversations()
@@ -5504,13 +5510,13 @@ namespace WinSDKTest
             else
                 size = GetIntFromString(GetParamValueFromContext(2));
 
-            SDKClient.Instance.GroupManager.GetGroupMuteListFromServer(groupId, num, size, new ValueCallBack<List<string>> (
-                onSuccess: (list) =>
+            SDKClient.Instance.GroupManager.GetGroupMuteListFromServer(groupId, num, size, new ValueCallBack<Dictionary<string,long>> (
+                onSuccess: (dict) =>
                 {
-                    Console.WriteLine($"GetGroupMuteListFromServer, mute list num:{list.Count}");
-                    foreach (var it in list)
+                    Console.WriteLine($"GetGroupMuteListFromServer, mute list num:{dict.Count}");
+                    foreach (var it in dict)
                     {
-                        Console.WriteLine($"mute item: fid:{it}");
+                        Console.WriteLine($"mute item: fid:{it.Key}, expireTime:{it.Value}");
                     }
                 },
                 onError: (code, desc) =>
@@ -5858,11 +5864,13 @@ namespace WinSDKTest
             else
                 member2 = GetParamValueFromContext(2);
 
+            long expireTime = GetLongFromString(GetParamValueFromContext(3));
+
             List<string> members = new List<string>();
             members.Add(member1);
             members.Add(member2);
 
-            SDKClient.Instance.GroupManager.MuteGroupMembers(groupId, members, callback: new CallBack(
+            SDKClient.Instance.GroupManager.MuteGroupMembers(groupId, members, expireTime, callback: new CallBack(
                 onSuccess: () => {
                     Console.WriteLine($"MuteGroupMembers success");
                 },
@@ -7210,12 +7218,12 @@ namespace WinSDKTest
             string roomId = GetParamValueFromContext(0);
             int pageSize = GetIntFromString(GetParamValueFromContext(1));
             int pageNum = GetIntFromString(GetParamValueFromContext(2));
-                SDKClient.Instance.RoomManager.FetchRoomMuteList(roomId, pageSize, pageNum, callback: new ValueCallBack<List<string>>(
+                SDKClient.Instance.RoomManager.FetchRoomMuteList(roomId, pageSize, pageNum, callback: new ValueCallBack<Dictionary<string, long>>(
                  onSuccess: (result) => {
                      Console.WriteLine($"FetchRoomMuteList success, mute count：{result.Count}");
                      foreach(var it in result)
                      {
-                         Console.WriteLine($"mute item: {it}");
+                         Console.WriteLine($"mute item: key:{it.Key}, value:{it.Value}");
                      }
                  },
                  onError: (code, desc) => {
@@ -7289,12 +7297,13 @@ namespace WinSDKTest
             string roomId = GetParamValueFromContext(0);
             string member1 = GetParamValueFromContext(1);
             string member2 = GetParamValueFromContext(2);
+            long expireTime = GetLongFromString(GetParamValueFromContext(3));
 
             List<string> list = new List<string>();
             list.Add(member1);
             list.Add(member2);
 
-            SDKClient.Instance.RoomManager.MuteRoomMembers(roomId, list, new CallBack(
+            SDKClient.Instance.RoomManager.MuteRoomMembers(roomId, list, expireTime, new CallBack(
                 onSuccess: () => {
                     Console.WriteLine($"MuteRoomMembers success.");
                 },

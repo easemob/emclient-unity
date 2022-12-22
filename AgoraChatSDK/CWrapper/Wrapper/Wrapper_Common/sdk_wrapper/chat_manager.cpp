@@ -416,20 +416,29 @@ namespace sdk_wrapper {
     {
         if (!CheckClientInitOrNot(nullptr)) return nullptr;
 
+        string local_cbid = cbid;
         EMMessageList list = Message::FromJsonToMessageList(jstr);
 
-        bool ret = true;
-        if (list.size() > 0) {
-            ret = CLIENT->getChatManager().insertMessages(list);
-        }
+        thread t([=]() {
 
-        JSON_STARTOBJ
-        writer.Key("ret");
-        writer.Bool(ret);
-        JSON_ENDOBJ
+            bool ret = true;
+            if (list.size() > 0) {
+                ret = CLIENT->getChatManager().insertMessages(list);
+            }
 
-        string json = s.GetString();
-        return CopyToPointer(json);
+            if (true == ret) {
+                string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                EMError error(EMError::DATABASE_ERROR);
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+        });
+        t.detach();
+
+        return nullptr;
     }
 
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_LoadAllConversationsFromDB(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
