@@ -184,7 +184,7 @@ namespace AgoraChat
 		void OnAutoAcceptInvitationFromGroup(
 			string groupId, string inviter, string inviteMessage);
 
-		/**
+        /**
 	     * \~chinese
 	     * 有成员被禁言。
 		 * 
@@ -192,9 +192,9 @@ namespace AgoraChat
 		 * 
 		 * 用户禁言后，将无法在群中发送消息，但可查看群组中的消息，而黑名单中的用户无法查看和发送群组消息。
 	     *
-	     * @param groupId 	群组 ID。
-	     * @param mutes 	禁言的成员列表。
-	     *              	Map.entry.key 是禁言成员 ID，Map.entry.value 是禁言时长，单位为毫秒。
+	     * @param groupId 	 群组 ID。
+	     * @param mutes 	 禁言的成员列表。
+	     * @param muteExpire 禁言时长，单位为毫秒。
 	     *
 	     * \~english
 	     * Occurs when one or more group members are muted.
@@ -205,9 +205,9 @@ namespace AgoraChat
 	     *
 	     * @param groupId		The group ID.
 	     * @param mutes 		The member(s) added to the mute list.
-	     *	 			        Map.entry.key is the user ID of the muted member; Map.entry.value is the mute duration in milliseconds.
+	     * @param muteExpire    The mute duration in milliseconds.
 	     */
-		void OnMuteListAddedFromGroup(string groupId, List<string> mutes, long muteExpire);
+        void OnMuteListAddedFromGroup(string groupId, List<string> mutes, long muteExpire);
 
 		/**
 	     * \~chinese

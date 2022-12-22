@@ -31,7 +31,7 @@
          * 
          * The SDK disconnects from the chat server when you log out of the app or a network interruption occurs.
          * 
-         * @param i The error code for the disconnection.
+         * @param reason  The error code for the disconnection.
          * 
          */
         void OnDisconnected(DisconnectReason reason);

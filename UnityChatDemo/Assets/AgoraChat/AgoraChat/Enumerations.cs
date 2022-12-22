@@ -3,10 +3,10 @@
 namespace AgoraChat
 {
     /**
-    * \～chinese
+    * \~chinese
     * 区域代码。
     *
-    \~english
+    * \~english
     * Area Code.
     */
     public enum AreaCode
@@ -27,82 +27,82 @@ namespace AgoraChat
     }
 
     /**
-    * \～chinese
+    * \~chinese
     * 链接断开原因。
     *
-    \~english
+    * \~english
     * The reason of disconnection.
     */
     public enum DisconnectReason
     {
         /**
-        * \～chinese
+        * \~chinese
         * 断开链接, 无具体原因。
         *
-        \~english
+        * \~english
         * Disconnected, no detail reason.
         */
         Reason_Disconnected,
 
         /**
-        * \～chinese
+        * \~chinese
         * 用户名或者密码认证错误。
         *
-        \~english
+        * \~english
         * User name or password is wrong.
         */
         Reason_AuthenticationFailed,
 
         /**
-        * \～chinese
+        * \~chinese
         * 用户在另一台设备上登录。
         *
-        \~english
+        * \~english
         * User login on another device.
         */
         Reason_LoginFromOtherDevice,
 
         /**
-        * \～chinese
+        * \~chinese
         * 用户被从server上移除。
         *
-        \~english
+        * \~english
         * User was removed from server.
         */
         Reason_RemoveFromServer,
 
         /**
-        * \～chinese
+        * \~chinese
         * 用户登录登录设备超限。
         *
-        \~english
+        * \~english
         * User login on too many devices.
         */
         Reason_LoginTooManyDevice,
 
         /**
-        * \～chinese
+        * \~chinese
         * 用户密码变更。
         *
-        \~english
+        * \~english
         * User has changed the password.
         */
         Reason_ChangePassword,
 
         /**
-        * \～chinese
+        * \~chinese
         * 用户被其他设备或者后端控制台踢出。
         *
-        \~english
+        * \~english
         * User was kicked by other device or console backend.
         */
         Reason_KickedByOtherDevice,
 
         /**
-        * \～chinese
+        * \~chinese
         * 服务被禁止。
         *
-        \~english
+        * \~english
         * Serving is disabled.
         */
         Reason_ForbidByServer,
@@ -111,55 +111,55 @@ namespace AgoraChat
     public enum ChatThreadOperation
     {
         /**
-        * \～chinese
+        * \~chinese
         * 未知操作，缺省值。
         *
-        \~english
+        * \~english
         * Unkonwn operation, default value.
         */
         UnKnown = 0,
         /**
-        * \～chinese
+        * \~chinese
         * 创建子区。
         *
-        \~english
+        * \~english
         * Create thread.
         */
         Create,
         /**
-        * \～chinese
+        * \~chinese
         * 更新子区。
         *
-        \~english
+        * \~english
         * Update thread.
         */
         Update,
         /**
-        * \～chinese
+        * \~chinese
         * 删除子区。
         *
-        \~english
+        * \~english
         * Delete thread.
         */
         Delete,
         /**
-        * \～chinese
+        * \~chinese
         * 子区消息更新。
         *
-        \~english
+        * \~english
         * Thread message updated.
         */
         Update_Msg,
     }
 
     /**
-         * \~chinese
-         * 群组成员角色枚举。
-         *
-         * \~english
-         * The group member roles.
-         *
-         */
+    * \~chinese
+    * 群组成员角色枚举。
+    *
+    * \~english
+    * The group member roles.
+    *
+    */
     public enum GroupPermissionType
     {
         /**

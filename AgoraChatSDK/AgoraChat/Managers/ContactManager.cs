@@ -63,8 +63,8 @@ namespace AgoraChat
          *
          * @param userId            要删除的联系人的用户 ID。
          * @param keepConversation  是否保留要删除的联系人的会话。
-   *                                - `true`：是；
-   *                                - （默认）`false`：否。
+         *                           - `true`：是；
+         *                           - （默认）`false`：否。
          * @param callback     	    结果回调，详见 {@link CallBack}。
          *
          * \~english
@@ -75,7 +75,7 @@ namespace AgoraChat
          * @param userId            The user ID of the contact to delete.
          * @param keepConversation  Whether to retain conversations of the contact to delete.
          *                          - `true`: Yes.
-   *                                - (Default) `false`: No.
+         *                          - (Default) `false`: No.
          * @param callback	        The result callback. See {@link CallBack}.
          */
         public void DeleteContact(string userId, bool keepConversation = false, CallBack callback = null)
