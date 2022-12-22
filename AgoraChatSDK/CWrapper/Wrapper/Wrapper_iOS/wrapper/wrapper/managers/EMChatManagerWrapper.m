@@ -245,7 +245,7 @@
         [con markAllMessagesAsRead:nil];
     }
     
-    return nil;
+    return [[EMHelper getReturnJsonObject:@(YES)] toJsonString];
 }
 
 - (NSString *)getUnreadMessageCount:(NSDictionary *)param

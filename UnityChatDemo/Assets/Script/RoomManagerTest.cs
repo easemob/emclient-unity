@@ -33,6 +33,9 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
     private Button UnBlockRoomMembersBtn;
     private Button UnMuteRoomMembersBtn;
     private Button UpdateRoomAnnouncementBtn;
+    private Button AddAttributeBtn;
+    private Button RemoveAttributeBtn;
+    private Button FetchAttributeBtn;
 
     private string currentRoomId
     {
@@ -71,6 +74,10 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
         UnBlockRoomMembersBtn = transform.Find("Scroll View/Viewport/Content/UnBlockRoomMembersBtn").GetComponent<Button>();
         UnMuteRoomMembersBtn = transform.Find("Scroll View/Viewport/Content/UnMuteRoomMembersBtn").GetComponent<Button>();
         UpdateRoomAnnouncementBtn = transform.Find("Scroll View/Viewport/Content/UpdateRoomAnnouncementBtn").GetComponent<Button>();
+        AddAttributeBtn = transform.Find("Scroll View/Viewport/Content/AddAttributeBtn").GetComponent<Button>();
+        RemoveAttributeBtn = transform.Find("Scroll View/Viewport/Content/RemoveAttributeBtn").GetComponent<Button>();
+        FetchAttributeBtn = transform.Find("Scroll View/Viewport/Content/FetchAttributeBtn").GetComponent<Button>();
+
 
 
         AddRoomAdminBtn.onClick.AddListener(AddRoomAdminBtnAction);
@@ -95,6 +102,9 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
         UnBlockRoomMembersBtn.onClick.AddListener(UnBlockRoomMembersBtnAction);
         UnMuteRoomMembersBtn.onClick.AddListener(UnMuteRoomMembersBtnAction);
         UpdateRoomAnnouncementBtn.onClick.AddListener(UpdateRoomAnnouncementBtnAction);
+        AddAttributeBtn.onClick.AddListener(AddAttributeBtnAction);
+        RemoveAttributeBtn.onClick.AddListener(RemoveAttributeBtnAction);
+        FetchAttributeBtn.onClick.AddListener(FetchAttributeBtnAction);
 
         SDKClient.Instance.RoomManager.AddRoomManagerDelegate(this);
     }
@@ -263,8 +273,22 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
     }
     void DestroyRoomBtnAction()
     {
-        UIManager.UnfinishedAlert(transform);
-        Debug.Log("DestroyRoomBtnAction");
+        if (null == currentRoomId || 0 == currentRoomId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
+
+        SDKClient.Instance.RoomManager.DestroyRoom(currentRoomId, new CallBack(
+            onSuccess: () =>
+            {
+                UIManager.DefaultAlert(transform, "解散成功");
+            },
+            onError: (code, desc) =>
+            {
+                UIManager.DefaultAlert(transform, $"解散失败: {code}: {desc}");
+            }
+        ));
     }
     void FetchPublicRoomsFromServerBtnAction()
     {
@@ -632,6 +656,80 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
 
         Debug.Log("UpdateRoomAnnouncementBtnAction");
     }
+
+
+    void AddAttributeBtnAction()
+    {
+        if (null == currentRoomId || 0 == currentRoomId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
+
+        Dictionary<string, string> kv = new Dictionary<string, string>();
+        kv.Add("key", "value");
+        SDKClient.Instance.RoomManager.AddAttributes(currentRoomId, kv, forced: true, callback: new ValueCallBack<Dictionary<string, int>>(
+            onSuccess: (result) =>
+            {
+                UIManager.DefaultAlert(transform, "添加attr成功");
+            },
+            onError: (code, desc) =>
+            {
+                UIManager.DefaultAlert(transform, $"添加attr失败 {code}:{desc}");
+            }
+        ));
+    }
+
+    void RemoveAttributeBtnAction()
+    {
+        if (null == currentRoomId || 0 == currentRoomId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
+
+        List<string> keys = new List<string>();
+        keys.Add("key");
+        SDKClient.Instance.RoomManager.RemoveAttributes(currentRoomId, keys, forced: true, callback: new ValueCallBack<Dictionary<string, int>>(
+            onSuccess: (result) =>
+            {
+                UIManager.DefaultAlert(transform, "移除attr成功");
+            },
+            onError: (code, desc) =>
+            {
+                UIManager.DefaultAlert(transform, $"移除attr失败 {code}:{desc}");
+            }
+        ));
+    }
+
+    void FetchAttributeBtnAction()
+    {
+        if (null == currentRoomId || 0 == currentRoomId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
+
+        SDKClient.Instance.RoomManager.FetchAttributes(currentRoomId, null, new ValueCallBack<Dictionary<string, string>>(
+            onSuccess: (result) =>
+            {
+                List<string> list = new List<string>();
+                foreach (string key in result.Keys)
+                {
+                    list.Add(key);
+                    list.Add(result[key]);
+                }
+
+                UIManager.DefaultAlert(transform, $"{string.Join(",", list.ToArray())}");
+            },
+            onError: (code, desc) =>
+            {
+                UIManager.DefaultAlert(transform, $"获取失败 {code}:{desc}");
+            }
+        ));
+    }
+
+
 
     // Start is called before the first frame update
     void Start()

@@ -289,13 +289,24 @@ public class ConversationManagerTest : MonoBehaviour
     }
     void AppendMessageBtnAction()
     {
-        UIManager.UnfinishedAlert(transform);
-        Debug.Log("AppendMessageBtnAction");
+        if (null == conversationId || 0 == conversationId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
+
+        Message msg = Message.CreateTextSendMessage(conversationId, "test");
+        bool ret = conv.AppendMessage(msg);
+        UIManager.DefaultAlert(transform, ret ? "添加成功" : "添加失败");
     }
     void UpdateMessageBtnAction()
     {
-        UIManager.UnfinishedAlert(transform);
-        Debug.Log("UpdateMessageBtnAction");
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
+        Message msg = conv.LastMessage;
+        msg.LocalTime = 10000;
+        bool ret = conv.UpdateMessage(msg);
+        UIManager.DefaultAlert(transform, ret ? "更新成功" : "更新失败");
     }
     void DeleteMessageBtnAction()
     {
