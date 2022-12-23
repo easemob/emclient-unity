@@ -382,6 +382,15 @@ namespace AgoraChat
              */
             public string ThumbnaiSecret;
 
+
+            /**
+             * \~chinese
+             * 缩略图的下载状态。
+             *
+             * \~english
+             * The status for downloading the thumbnail.
+             */
+            public DownLoadStatus ThumbnaiDownStatus = DownLoadStatus.PENDING;
             /**
              * \~chinese
              * 图片文件的宽度和高度，单位为像素。
@@ -404,14 +413,6 @@ namespace AgoraChat
              */
             public bool Original;
 
-            /**
-             * \~chinese
-             * 图片的下载状态。
-             *
-             * \~english
-             * The image download status.
-             */
-            public DownLoadStatus ThumbnaiDownStatus = DownLoadStatus.PENDING;
 
             /**
              * \~chinese
@@ -466,6 +467,7 @@ namespace AgoraChat
                 jo_body.AddWithoutNull("thumbnailLocalPath", ThumbnailLocalPath ?? "");
                 jo_body.AddWithoutNull("thumbnailRemotePath", ThumbnaiRemotePath ?? "");
                 jo_body.AddWithoutNull("thumbnailSecret", ThumbnaiSecret ?? "");
+                jo_body.AddWithoutNull("thumbnailStatus", ThumbnaiDownStatus);
                 jo_body.AddWithoutNull("height", Height);
                 jo_body.AddWithoutNull("width", Width);
                 jo_body.AddWithoutNull("sendOriginalImage", Original);
@@ -479,6 +481,7 @@ namespace AgoraChat
                 ThumbnailLocalPath = jo["thumbnailLocalPath"].Value;
                 ThumbnaiRemotePath = jo["thumbnailRemotePath"].Value;
                 ThumbnaiSecret = jo["thumbnailSecret"].Value;
+                ThumbnaiDownStatus = (DownLoadStatus)jo["thumbnailStatus"].AsInt;
                 Height = jo["height"].AsDouble;
                 Width = jo["width"].AsDouble;
                 Original = jo["sendOriginalImage"].AsBool;
@@ -593,6 +596,15 @@ namespace AgoraChat
              */
             public string ThumbnaiSecret;
 
+
+            /**
+             * \~chinese
+             * 缩略图下载状态。
+             *
+             * \~english
+             * The status for downloading the thumbnail.
+             */
+            public DownLoadStatus ThumbnaiDownStatus = DownLoadStatus.PENDING;
             /**
              * \~chinese
              * 视频的宽度和高度，单位为像素。
@@ -666,6 +678,7 @@ namespace AgoraChat
                 jo_body.AddWithoutNull("thumbnailRemotePath", ThumbnaiRemotePath ?? "");
                 jo_body.AddWithoutNull("thumbnailSecret", ThumbnaiSecret ?? "");
                 jo_body.AddWithoutNull("thumbnailLocalPath", ThumbnaiLocationPath ?? "");
+                jo_body.AddWithoutNull("thumbnailStatus", ThumbnaiDownStatus);
                 jo_body.AddWithoutNull("height", Height);
                 jo_body.AddWithoutNull("width", Width);
                 jo_body.AddWithoutNull("duration", Duration);
@@ -679,6 +692,7 @@ namespace AgoraChat
                 ThumbnaiRemotePath = jo["thumbnailRemotePath"];
                 ThumbnaiSecret = jo["thumbnailSecret"];
                 ThumbnaiLocationPath = jo["thumbnailLocalPath"];
+                ThumbnaiDownStatus = (DownLoadStatus)jo["thumbnailStatus"].AsInt;
                 Height = jo["height"].AsDouble;
                 Width = jo["width"].AsDouble;
                 Duration = jo["duration"].AsInt;
