@@ -52,7 +52,7 @@ namespace AgoraChat
          * @return The presence status description information.
          */
 
-        public string statusDescription { get; internal set; }
+        public string StatusDescription { get; internal set; }
 
         /**
          *  \~chinese
@@ -90,7 +90,7 @@ namespace AgoraChat
         internal override void FromJsonObject(JSONObject jo)
         {
             Publisher = jo["publisher"];
-            statusDescription = jo["desc"];
+            StatusDescription = jo["desc"];
             LatestTime = (long)jo["lastTime"].AsDouble;
             ExpiryTime = (long)jo["expiryTime"].AsDouble;
             StatusList = List.BaseModelListFromJsonArray<PresenceDeviceStatus>(jo["detail"]);
@@ -100,7 +100,7 @@ namespace AgoraChat
         {
             JSONObject jo = new JSONObject();
             jo.AddWithoutNull("publisher", Publisher);
-            jo.AddWithoutNull("desc", statusDescription);
+            jo.AddWithoutNull("desc", StatusDescription);
             jo.AddWithoutNull("lastTime", LatestTime);
             jo.AddWithoutNull("expiryTime", ExpiryTime);
             jo.AddWithoutNull("detail", JsonObject.JsonArrayFromList(StatusList));
