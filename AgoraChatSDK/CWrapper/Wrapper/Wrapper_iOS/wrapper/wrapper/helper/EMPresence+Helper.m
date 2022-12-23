@@ -16,8 +16,8 @@
     }
     return @{
         @"publisher": self.publisher,
-        @"statusDetails": details,
-        @"statusDescription": self.statusDescription,
+        @"detail": details,
+        @"desc": self.statusDescription,
         @"lastTime": @(self.lastTime),
         @"expiryTime": @(self.expirytime)
     };

@@ -20,9 +20,9 @@
     data[@"acceptInvitationAlways"] = @(self.autoAcceptFriendInvitation);
     data[@"autoAcceptGroupInvitation"] = @(self.autoAcceptGroupInvitation);
     data[@"deleteMessagesAsExitGroup"] = @(self.deleteMessagesOnLeaveGroup);
-    data[@"deleteMessagesAsExitChatRoom"] = @(self.deleteMessagesOnLeaveChatroom);
+    data[@"deleteMessagesAsExitRoom"] = @(self.deleteMessagesOnLeaveChatroom);
     data[@"isAutoDownload"] = @(self.autoDownloadThumbnail);
-    data[@"isChatRoomOwnerLeaveAllowed"] = @(self.canChatroomOwnerLeave);
+    data[@"isRoomOwnerLeaveAllowed"] = @(self.canChatroomOwnerLeave);
     data[@"serverTransfer"] = @(self.isAutoTransferMessageAttachments);
     data[@"usingHttpsOnly"] = @(self.usingHttpsOnly);
     data[@"pushConfig"] = @{@"pushConfig": @{@"apnsCertName": self.apnsCertName}};
@@ -45,9 +45,9 @@
     options.autoAcceptFriendInvitation = [aJson[@"acceptInvitationAlways"] boolValue];
     options.autoAcceptGroupInvitation = [aJson[@"autoAcceptGroupInvitation"] boolValue];
     options.deleteMessagesOnLeaveGroup = [aJson[@"deleteMessagesAsExitGroup"] boolValue];
-    options.deleteMessagesOnLeaveChatroom = [aJson[@"deleteMessagesAsExitChatRoom"] boolValue];
+    options.deleteMessagesOnLeaveChatroom = [aJson[@"deleteMessagesAsExitRoom"] boolValue];
     options.autoDownloadThumbnail = [aJson[@"isAutoDownload"] boolValue];
-    options.canChatroomOwnerLeave = [aJson[@"isChatRoomOwnerLeaveAllowed"] boolValue];
+    options.canChatroomOwnerLeave = [aJson[@"isRoomOwnerLeaveAllowed"] boolValue];
     options.isAutoTransferMessageAttachments = [aJson[@"serverTransfer"] boolValue];
     options.usingHttpsOnly = [aJson[@"usingHttpsOnly"] boolValue];
     options.apnsCertName = aJson[@"pushConfig"][@"apnsCertName"];

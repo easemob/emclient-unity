@@ -13,14 +13,15 @@ public class EMPresenceHelper {
         if (presence == null) return null;
         JSONObject data = new JSONObject();
         data.put("publisher", presence.getPublisher());
-        data.put("statusDescription", presence.getExt());
+        data.put("desc", presence.getExt());
         data.put("lastTime", presence.getLatestTime());
         data.put("expiryTime", presence.getExpiryTime());
         JSONObject statusList = new JSONObject();
         for (Map.Entry<String, Integer> entry: presence.getStatusList().entrySet()) {
             statusList.put(entry.getKey(), entry.getValue());
         }
-        data.put("statusDetails", statusList);
+        data.put("detail", statusList);
+
         return data;
     }
 

@@ -48,7 +48,7 @@
     msg.timestamp = [aJson[@"serverTime"] longLongValue];
     msg.isReadAcked = [aJson[@"hasReadAck"] boolValue];
     msg.isDeliverAcked = [aJson[@"hasDeliverAck"] boolValue];
-    msg.isRead = [aJson[@"isRead"] boolValue];
+    msg.isRead = [aJson[@"hasRead"] boolValue];
     msg.isNeedGroupAck = [aJson[@"isNeedGroupAck"] boolValue];
     // read only
     // msg.groupAckCount = [aJson[@"groupAckCount"] intValue]
@@ -66,7 +66,7 @@
     ret[@"msgId"] = self.messageId;
     ret[@"to"] = self.to;
     ret[@"convId"] = self.conversationId;
-    ret[@"isRead"] = @(self.isRead);
+    ret[@"hasRead"] = @(self.isRead);
     ret[@"hasDeliverAck"] = @(self.isDeliverAcked);
     ret[@"hasReadAck"] = @(self.isReadAcked);
     ret[@"isNeedGroupAck"] = @(self.isNeedGroupAck);
@@ -79,7 +79,7 @@
     ret[@"isThread"] = @(self.isChatThreadMessage);
     ret[@"direction"] = self.direction == EMMessageDirectionSend ? @(0) : @(1);
     ret[@"body"] = [self.body toJson];
-    ret[@"onlineState"] = @(self.onlineState);
+    ret[@"messageOnlineState"] = @(self.onlineState);
     
     return ret;
 }
