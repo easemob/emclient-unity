@@ -505,6 +505,7 @@
     ret.thumbnailLocalPath = aJson[@"thumbnailLocalPath"];
     ret.thumbnailRemotePath = aJson[@"thumbnailRemotePath"];
     ret.thumbnailSecretKey = aJson[@"thumbnailSecret"];
+    ret.thumbnailDownloadStatus = [ret downloadStatusFromInt:[aJson[@"thumbnailStatus"] intValue]];
     ret.size = CGSizeMake([aJson[@"width"] floatValue], [aJson[@"height"] floatValue]);
     ret.thumbnailDownloadStatus = [ret downloadStatusFromInt:[aJson[@"thumbnailStatus"] intValue]];
     ret.compressionRatio = [aJson[@"sendOriginalImage"] boolValue] ? 1.0 : 0.6;
