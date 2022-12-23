@@ -593,13 +593,11 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
             groupId = params.getString("groupId");
         }
         EMMessage.ChatType type = EMMessage.ChatType.Chat;
-        int iType = params.getInt("chatType");
-        if (iType == 0) {
+        String sType = params.getString("type");
+        if (sType.equals("chat")) {
             type = EMMessage.ChatType.Chat;
-        } else if(iType == 1) {
-            type = EMMessage.ChatType.GroupChat;
         } else {
-            type = EMMessage.ChatType.ChatRoom;
+            type = EMMessage.ChatType.GroupChat;
         }
         EMClient.getInstance().chatManager().asyncGetReactionList(msgIds, type, groupId, new EMCommonValueCallback<Map<String, List<EMMessageReaction>>>(callback){
             @Override

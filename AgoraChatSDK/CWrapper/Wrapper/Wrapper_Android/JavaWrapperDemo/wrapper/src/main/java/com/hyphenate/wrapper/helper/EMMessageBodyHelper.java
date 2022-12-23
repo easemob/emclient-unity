@@ -200,6 +200,10 @@ public class EMMessageBodyHelper {
         if (json.has("fileStatus")){
             body.setDownloadStatus(downloadStatusFromInt(json.getInt("fileStatus")));
         }
+        // 安卓没有暴露出来这个属性
+//        if (json.has("thumbnailStatus")) {
+//
+//        }
 
         return body;
     }
@@ -215,6 +219,7 @@ public class EMMessageBodyHelper {
         data.put("thumbnailLocalPath", body.thumbnailLocalPath());
         data.put("thumbnailRemotePath", body.getThumbnailUrl());
         data.put("thumbnailSecret", body.getThumbnailSecret());
+        data.put("thumbnailStatus", downloadStatusToInt(body.thumbnailDownloadStatus()));
         data.put("height", body.getHeight());
         data.put("width", body.getWidth());
         data.put("sendOriginalImage", body.isSendOriginalImage());
@@ -271,6 +276,7 @@ public class EMMessageBodyHelper {
         data.put("duration", body.getDuration());
         data.put("thumbnailRemotePath", body.getThumbnailUrl());
         data.put("thumbnailSecret", body.getThumbnailSecret());
+        data.put("thumbnailStatus", downloadStatusToInt(body.thumbnailDownloadStatus()));
         data.put("displayName", body.getFileName());
         data.put("height", body.getThumbnailHeight());
         data.put("width", body.getThumbnailWidth());

@@ -19,7 +19,7 @@ public class EMChatRoomHelper {
         data.put("memberList", chatRoom.getMemberList());
         data.put("blockList", chatRoom.getBlacklist());
         data.put("muteList", chatRoom.getMuteList().keySet().toArray());
-        data.put("isAllMemberMuted", chatRoom.isAllMemberMuted());
+        data.put("isMuteAll", chatRoom.isAllMemberMuted());
         data.put("announcement", chatRoom.getAnnouncement());
         data.put("permissionType", intTypeFromPermissionType(chatRoom.getChatRoomPermissionType()));
         return data;

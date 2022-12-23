@@ -2,6 +2,7 @@ package com.hyphenate.wrapper.helper;
 
 import com.hyphenate.chat.EMPresence;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,14 +14,18 @@ public class EMPresenceHelper {
         if (presence == null) return null;
         JSONObject data = new JSONObject();
         data.put("publisher", presence.getPublisher());
-        data.put("statusDescription", presence.getExt());
+        data.put("desc", presence.getExt());
         data.put("lastTime", presence.getLatestTime());
         data.put("expiryTime", presence.getExpiryTime());
-        JSONObject statusList = new JSONObject();
+        JSONArray ja = new JSONArray();
         for (Map.Entry<String, Integer> entry: presence.getStatusList().entrySet()) {
-            statusList.put(entry.getKey(), entry.getValue());
+            JSONObject jo = new JSONObject();
+            jo.put("device", entry.getKey());
+            jo.put("status", entry.getValue());
+            ja.put(jo);
         }
-        data.put("statusDetails", statusList);
+        data.put("detail", ja);
+
         return data;
     }
 

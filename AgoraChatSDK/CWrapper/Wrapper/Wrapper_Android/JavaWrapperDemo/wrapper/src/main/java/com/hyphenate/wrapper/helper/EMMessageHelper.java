@@ -132,7 +132,7 @@ public class EMMessageHelper {
 
         message.setAcked(json.getBoolean("hasReadAck"));
         if (statusFromInt(json.getInt("status")) == EMMessage.Status.SUCCESS) {
-            message.setUnread(!json.getBoolean("hasRead"));
+            message.setUnread(!json.getBoolean("isRead"));
         }
         message.setDeliverAcked(json.getBoolean("hasDeliverAck"));
         message.setIsNeedGroupAck(json.getBoolean("isNeedGroupAck"));
@@ -239,7 +239,7 @@ public class EMMessageHelper {
         data.put("msgId", message.getMsgId());
         data.put("isRead", !message.isUnread());
         data.put("isNeedGroupAck", message.isNeedGroupAck());
-        data.put("onlineState", message.isOnlineState());
+        data.put("messageOnlineState", message.isOnlineState());
         // 通过EMMessageWrapper获取
         // data.put("groupAckCount", message.groupAckCount());
         data.put("isThread", message.isChatThreadMessage());

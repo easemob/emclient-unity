@@ -12,15 +12,15 @@
 - (nonnull NSDictionary *)toJson {
     NSMutableDictionary *ret = [NSMutableDictionary dictionary];
     ret[@"threadId"] = self.threadId;
-    ret[@"threadName"] = self.threadName;
+    ret[@"name"] = self.threadName;
     ret[@"owner"] = self.owner;
     ret[@"msgId"] = self.messageId;
     ret[@"parentId"] = self.parentId;
     ret[@"memberCount"] = @(self.membersCount);
-    ret[@"messageCount"] = @(self.messageCount);
+    ret[@"msgCount"] = @(self.messageCount);
     ret[@"createAt"] = @(self.createAt);
     if (self.lastMessage) {
-        ret[@"lastMessage"] = [self.lastMessage toJson];
+        ret[@"lastMsg"] = [self.lastMessage toJson];
     }
     return ret;
 }

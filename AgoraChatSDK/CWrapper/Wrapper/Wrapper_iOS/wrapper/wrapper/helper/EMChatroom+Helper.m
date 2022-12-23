@@ -20,7 +20,7 @@
     ret[@"memberList"] = self.memberList;
     ret[@"blockList"] = self.blacklist;
     ret[@"muteList"] = self.muteList;
-    ret[@"isAllMemberMuted"] = @(self.isMuteAllMembers);
+    ret[@"isMuteAll"] = @(self.isMuteAllMembers);
     ret[@"announcement"] = self.announcement;
     ret[@"permissionType"] = @([self premissionTypeToInt:self.permissionType]);
     

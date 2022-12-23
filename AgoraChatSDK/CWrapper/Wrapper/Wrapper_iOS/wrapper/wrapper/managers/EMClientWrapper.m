@@ -88,7 +88,7 @@
     NSString *username = params[@"userId"];
     NSString *pwd = params[@"password"];
     __weak EMBaseManager *weakSelf = self;
-    [EMClient.sharedClient loginWithUsername:username
+    [EMClient.sharedClient registerWithUsername:username
                                     password:pwd
                                   completion:^(NSString * _Nonnull aUsername, EMError * _Nullable aError)
      {
