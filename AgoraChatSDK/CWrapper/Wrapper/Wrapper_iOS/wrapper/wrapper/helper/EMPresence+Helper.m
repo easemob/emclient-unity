@@ -10,14 +10,17 @@
 @implementation EMPresence (Helper)
 
 - (nonnull NSDictionary *)toJson {
-    NSMutableDictionary *details = [NSMutableDictionary dictionary];
+    NSMutableArray *details = [NSMutableArray array];
     for (EMPresenceStatusDetail *detail in self.statusDetails) {
-        details[detail.device] = @(detail.status);
+        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        dict[@"device"] = detail.device;
+        dict[@"status"] = @(detail.status);
+        [details addObject:dict];
     }
     return @{
         @"publisher": self.publisher,
-        @"statusDetails": details,
-        @"statusDescription": self.statusDescription,
+        @"detail": details,
+        @"desc": self.statusDescription,
         @"lastTime": @(self.lastTime),
         @"expiryTime": @(self.expirytime)
     };

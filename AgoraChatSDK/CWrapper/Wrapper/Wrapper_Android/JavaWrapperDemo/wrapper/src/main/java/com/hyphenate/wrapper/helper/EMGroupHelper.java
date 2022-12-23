@@ -20,9 +20,9 @@ public class EMGroupHelper {
         data.put("adminList", EMHelper.stringListToJsonArray(group.getAdminList()));
         data.put("blockList", EMHelper.stringListToJsonArray(group.getBlackList()));
         data.put("muteList", EMHelper.stringListToJsonArray(group.getMuteList()));
-        data.put("messageBlocked", group.isMsgBlocked());
+        data.put("block", group.isMsgBlocked());
         data.put("isDisabled", group.isDisabled());
-        data.put("isAllMemberMuted", group.isAllMemberMuted());
+        data.put("isMuteAll", group.isAllMemberMuted());
         data.put("permissionType", intTypeFromGroupPermissionType(group.getGroupPermissionType()));
         data.put("maxUserCount", group.getMemberCount());
         data.put("isMemberOnly", group.isMemberOnly());

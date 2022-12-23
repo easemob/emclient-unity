@@ -23,8 +23,8 @@
     ret[@"blockList"] = self.blacklist;
     ret[@"muteList"] = self.muteList;
     ret[@"noticeEnable"] = @(self.isPushNotificationEnabled);
-    ret[@"messageBlocked"] = @(self.isBlocked);
-    ret[@"isAllMemberMuted"] = @(self.isMuteAllMembers);
+    ret[@"block"] = @(self.isBlocked);
+    ret[@"isMuteAll"] = @(self.isMuteAllMembers);
     ret[@"isDisabled"] = @(self.isDisabled);
     ret[@"permissionType"] = @([EMGroup premissionTypeToInt:self.permissionType]);
     

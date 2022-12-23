@@ -10,8 +10,8 @@ public class EMMessageReactionChangeHelper {
     public static JSONObject toJson(EMMessageReactionChange change) throws JSONException {
         if (change == null) return null;
         JSONObject data = new JSONObject();
-        data.put("conversationId", change.getConversionID());
-        data.put("messageId", change.getMessageId());
+        data.put("convId", change.getConversionID());
+        data.put("msgId", change.getMessageId());
         JSONArray list = new JSONArray();
         for (int i = 0; i < change.getMessageReactionList().size(); i++) {
             list.put(EMMessageReactionHelper.toJson(change.getMessageReactionList().get(i)));

@@ -81,8 +81,8 @@ public class EMPresenceManagerWrapper extends EMBaseWrapper{
 
     private String unsubscribe(JSONObject params, EMWrapperCallback callback) throws JSONException {
         List<String> members = null;
-        if (params.has("members")){
-            members = EMHelper.stringListFromJsonArray(params.getJSONArray("members"));
+        if (params.has("userIds")){
+            members = EMHelper.stringListFromJsonArray(params.getJSONArray("userIds"));
         }
         EMClient.getInstance().presenceManager().unsubscribePresences(members, new EMCommonCallback(callback));
         return null;
@@ -102,8 +102,8 @@ public class EMPresenceManagerWrapper extends EMBaseWrapper{
 
     private String fetchPresenceStatus(JSONObject params, EMWrapperCallback callback) throws JSONException {
         List<String> members = null;
-        if (params.has("members")){
-            members = EMHelper.stringListFromJsonArray(params.getJSONArray("members"));
+        if (params.has("userIds")){
+            members = EMHelper.stringListFromJsonArray(params.getJSONArray("userIds"));
         }
         EMClient.getInstance().presenceManager().fetchPresenceStatus(members, new EMCommonValueCallback<List<EMPresence>>(callback){
             @Override

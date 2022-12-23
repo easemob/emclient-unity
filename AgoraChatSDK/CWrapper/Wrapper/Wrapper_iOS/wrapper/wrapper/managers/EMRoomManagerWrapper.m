@@ -580,7 +580,7 @@
     __weak EMRoomManagerWrapper *weakSelf = self;
     
     NSString *roomId = param[@"roomId"];
-    NSDictionary *attributes = param[@"attributes"];
+    NSDictionary *attributes = param[@"kv"];
     BOOL autoDelete = [param[@"autoDelete"] boolValue];
     BOOL forced = [param[@"forced"] boolValue];
     
@@ -612,7 +612,7 @@
     __weak EMRoomManagerWrapper *weakSelf = self;
     
     NSString *roomId = param[@"roomId"];
-    NSArray *keys = param[@"keys"];
+    NSArray *keys = param[@"list"];
     BOOL forced = [param[@"forced"] boolValue];
     
     void (^block)(EMError *, NSDictionary<NSString *, EMError*> *) = ^(EMError *error, NSDictionary <NSString * ,EMError *> *failureKeys) {

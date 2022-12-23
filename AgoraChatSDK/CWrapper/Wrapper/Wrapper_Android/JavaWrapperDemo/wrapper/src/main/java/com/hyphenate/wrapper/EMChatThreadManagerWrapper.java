@@ -116,7 +116,7 @@ public class EMChatThreadManagerWrapper extends EMBaseWrapper{
         if (params.has("cursor")) {
             cursor = params.getString("cursor");
         }
-        String parentId = params.getString("parentId");
+        String parentId = params.getString("groupId");
         EMClient.getInstance().chatThreadManager().getChatThreadsFromServer(parentId, pageSize, cursor, new EMCommonValueCallback<EMCursorResult<EMChatThread>>(callback){
             @Override
             public void onSuccess(EMCursorResult<EMChatThread> object) {
@@ -139,7 +139,7 @@ public class EMChatThreadManagerWrapper extends EMBaseWrapper{
         if (params.has("cursor")) {
             cursor = params.getString("cursor");
         }
-        String parentId = params.getString("parentId");
+        String parentId = params.getString("groupId");
 
         EMClient.getInstance().chatThreadManager().getJoinedChatThreadsFromServer(parentId, pageSize, cursor, new EMCommonValueCallback<EMCursorResult<EMChatThread>>(callback) {
             @Override
@@ -221,8 +221,8 @@ public class EMChatThreadManagerWrapper extends EMBaseWrapper{
 
     private String createChatThread(JSONObject params, EMWrapperCallback callback) throws JSONException {
         String messageId = params.getString("msgId");
-        String name = params.getString("name");
-        String parentId = params.getString("parentId");
+        String name = params.getString("threadName");
+        String parentId = params.getString("groupId");
         EMClient.getInstance().chatThreadManager().createChatThread(parentId, messageId, name, new EMCommonValueCallback<EMChatThread>(callback){
             @Override
             public void onSuccess(EMChatThread object) {

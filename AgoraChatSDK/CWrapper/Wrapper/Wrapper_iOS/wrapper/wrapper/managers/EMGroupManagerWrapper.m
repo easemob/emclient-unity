@@ -261,7 +261,7 @@
     [EMClient.sharedClient.groupManager isMemberInWhiteListFromServerWithGroupId:params[@"groupId"]
                                                                       completion:^(BOOL inWhiteList, EMError *aError)
      {
-        [weakSelf wrapperCallback:callback error:aError object:@(inWhiteList)];
+        [weakSelf wrapperCallback:callback error:aError object:@{@"ret":@(inWhiteList)}];
     }];
     
     return nil;

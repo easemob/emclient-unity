@@ -59,16 +59,16 @@ public class EMConversationWrapper extends EMBaseWrapper {
             ret = loadMsgWithStartId(jsonObject, callback);
         }
         else if (EMSDKMethod.loadMsgWithKeywords.equals(method)) {
-            loadMsgWithKeywords(jsonObject, callback);
+            ret = loadMsgWithKeywords(jsonObject, callback);
         }
         else if (EMSDKMethod.loadMsgWithMsgType.equals(method)) {
-            loadMsgWithMsgType(jsonObject, callback);
+            ret = loadMsgWithMsgType(jsonObject, callback);
         }
         else if (EMSDKMethod.loadMsgWithTime.equals(method)) {
-            loadMsgWithTime(jsonObject, callback);
+            ret = loadMsgWithTime(jsonObject, callback);
         }
         else if(EMSDKMethod.messageCount.equals(method)) {
-            messageCount(jsonObject, callback);
+            ret = messageCount(jsonObject, callback);
         } else {
             ret = super.onMethodCall(method, jsonObject, callback);
         }
@@ -101,32 +101,32 @@ public class EMConversationWrapper extends EMBaseWrapper {
             jsonStr = ext.toString();
         }
         conversation.setExtField(jsonStr);
-        return EMHelper.getReturnJsonObject(EMHelper.getReturnJsonObject(true)).toString();
+        return EMHelper.getReturnJsonObject(true).toString();
     }
 
     private String removeMessage(JSONObject params, EMWrapperCallback callback) throws JSONException {
         EMConversation conversation = conversationWithParam(params);
         String msgId = params.getString("msgId");
         conversation.removeMessage(msgId);
-        return EMHelper.getReturnJsonObject(EMHelper.getReturnJsonObject(true)).toString();
+        return EMHelper.getReturnJsonObject(true).toString();
     }
 
     private String getLatestMessage(JSONObject params, EMWrapperCallback callback) throws JSONException {
         EMConversation conversation = conversationWithParam(params);
         EMMessage msg = conversation.getLastMessage();
-        return EMHelper.getReturnJsonObject(EMHelper.getReturnJsonObject(EMMessageHelper.toJson(msg))).toString();
+        return EMHelper.getReturnJsonObject(EMMessageHelper.toJson(msg)).toString();
     }
 
     private String getLatestMessageFromOthers(JSONObject params, EMWrapperCallback callback) throws JSONException {
         EMConversation conversation = conversationWithParam(params);
         EMMessage msg = conversation.getLatestMessageFromOthers();
-        return EMHelper.getReturnJsonObject(EMHelper.getReturnJsonObject(EMMessageHelper.toJson(msg))).toString();
+        return EMHelper.getReturnJsonObject(EMMessageHelper.toJson(msg)).toString();
     }
 
     private String clearAllMessages(JSONObject params, EMWrapperCallback callback) throws JSONException {
         EMConversation conversation = conversationWithParam(params);
         conversation.clearAllMessages();
-        return EMHelper.getReturnJsonObject(EMHelper.getReturnJsonObject(true)).toString();
+        return EMHelper.getReturnJsonObject(true).toString();
     }
 
     private String insertMessage(JSONObject params, EMWrapperCallback callback) throws JSONException {
@@ -134,7 +134,7 @@ public class EMConversationWrapper extends EMBaseWrapper {
         JSONObject msg = params.getJSONObject("msg");
         EMMessage message = EMMessageHelper.fromJson(msg);
         boolean ret = conversation.insertMessage(message);
-        return EMHelper.getReturnJsonObject(EMHelper.getReturnJsonObject(ret)).toString();
+        return EMHelper.getReturnJsonObject(ret).toString();
     }
 
     private String appendMessage(JSONObject params, EMWrapperCallback callback) throws JSONException {
@@ -142,7 +142,7 @@ public class EMConversationWrapper extends EMBaseWrapper {
         JSONObject msg = params.getJSONObject("msg");
         EMMessage message = EMMessageHelper.fromJson(msg);
         boolean ret = conversation.appendMessage(message);
-        return EMHelper.getReturnJsonObject(EMHelper.getReturnJsonObject(ret)).toString();
+        return EMHelper.getReturnJsonObject(ret).toString();
     }
 
     private String updateConversationMessage(JSONObject params, EMWrapperCallback callback) throws JSONException {
@@ -150,7 +150,7 @@ public class EMConversationWrapper extends EMBaseWrapper {
         JSONObject msg = params.getJSONObject("msg");
         EMMessage message = EMMessageHelper.fromJson(msg);
         boolean ret = conversation.updateMessage(message);
-        return EMHelper.getReturnJsonObject(EMHelper.getReturnJsonObject(ret)).toString();
+        return EMHelper.getReturnJsonObject(ret).toString();
     }
 
     private String loadMsgWithId(JSONObject params, EMWrapperCallback callback) throws JSONException {
@@ -171,7 +171,8 @@ public class EMConversationWrapper extends EMBaseWrapper {
             jsonArray.put(EMMessageHelper.toJson(msg));
         }
 
-        return EMHelper.getReturnJsonObject(jsonArray).toString();
+        onSuccess(jsonArray, callback);
+        return null;
     }
 
     private String loadMsgWithKeywords(JSONObject params, EMWrapperCallback callback) throws JSONException {
@@ -191,7 +192,8 @@ public class EMConversationWrapper extends EMBaseWrapper {
             jsonArray.put(EMMessageHelper.toJson(msg));
         }
 
-        return EMHelper.getReturnJsonObject(jsonArray).toString();
+        onSuccess(jsonArray, callback);
+        return null;
     }
 
     private String loadMsgWithMsgType(JSONObject params, EMWrapperCallback callback) throws JSONException {
@@ -223,7 +225,8 @@ public class EMConversationWrapper extends EMBaseWrapper {
         for(EMMessage msg: msgList) {
             jsonArray.put(EMMessageHelper.toJson(msg));
         }
-        return EMHelper.getReturnJsonObject(jsonArray).toString();
+        onSuccess(jsonArray, callback);
+        return null;
     }
 
     private String loadMsgWithTime(JSONObject params, EMWrapperCallback callback) throws JSONException {
@@ -236,7 +239,8 @@ public class EMConversationWrapper extends EMBaseWrapper {
         for(EMMessage msg: msgList) {
             jsonArray.put(EMMessageHelper.toJson(msg));
         }
-        return EMHelper.getReturnJsonObject(jsonArray).toString();
+        onSuccess(jsonArray, callback);
+        return null;
     }
 
     private String messageCount(JSONObject params, EMWrapperCallback callback) throws JSONException {

@@ -265,12 +265,9 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
         return EMHelper.getReturnJsonObject(EMConversationHelper.toJson(conversation)).toString();
     }
 
-    private String markAllChatMsgAsRead(JSONObject params, EMWrapperCallback callback) throws JSONException {
+    private String  markAllChatMsgAsRead(JSONObject params, EMWrapperCallback callback) throws JSONException {
         EMClient.getInstance().chatManager().markAllConversationsAsRead();
-        asyncRunnable(() -> {
-            onSuccess(null, callback);
-        });
-        return null;
+        return EMHelper.getReturnJsonObject(true).toString();
     }
 
     private String getUnreadMessageCount(JSONObject params, EMWrapperCallback callback) throws JSONException {
@@ -291,8 +288,11 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
             JSONObject obj = ary.getJSONObject(i);
             messages.add(EMMessageHelper.fromJson(obj));
         }
+        asyncRunnable(()->{
+            EMClient.getInstance().chatManager().importMessages(messages);
+            onSuccess(true, callback);
+        });
 
-        EMClient.getInstance().chatManager().importMessages(messages);
         return null;
     }
 
@@ -593,13 +593,11 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
             groupId = params.getString("groupId");
         }
         EMMessage.ChatType type = EMMessage.ChatType.Chat;
-        int iType = params.getInt("chatType");
-        if (iType == 0) {
+        String sType = params.getString("type");
+        if (sType.equals("chat")) {
             type = EMMessage.ChatType.Chat;
-        } else if(iType == 1) {
-            type = EMMessage.ChatType.GroupChat;
         } else {
-            type = EMMessage.ChatType.ChatRoom;
+            type = EMMessage.ChatType.GroupChat;
         }
         EMClient.getInstance().chatManager().asyncGetReactionList(msgIds, type, groupId, new EMCommonValueCallback<Map<String, List<EMMessageReaction>>>(callback){
             @Override
@@ -662,7 +660,7 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
 
         EMClient.getInstance().chatManager().addConversationListener(new EMConversationListener() {
             @Override
-            public void onCoversationUpdate() {
+            public void onConversationUpdate() {
                 EMWrapperHelper.listener.onReceive(EMSDKMethod.chatListener, EMSDKMethod.onConversationsUpdate, null);
             }
 

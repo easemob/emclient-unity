@@ -352,16 +352,6 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
                 UIManager.DefaultAlert(transform, "缺少必要参数");
                 return;
             }
-            SDKClient.Instance.ChatManager.ResendMessage(dict["msgId"], new CallBack(
-                onSuccess: () =>
-                {
-                    UIManager.SuccessAlert(transform);
-                },
-                onError: (code, desc) =>
-                {
-                    UIManager.ErrorAlert(transform, code, desc);
-                }
-            ));
         });
 
         config.AddField("msgId");
@@ -608,7 +598,6 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
     void ImportMessagesBtnAction()
     {
-        UIManager.UnfinishedAlert(transform);
         Debug.Log("ImportMessagesBtnAction");
         Message msg = Message.CreateTextSendMessage("du003", "hehe11");
         List<Message> msgs = new List<Message>();

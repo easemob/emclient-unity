@@ -245,7 +245,7 @@
         [con markAllMessagesAsRead:nil];
     }
     
-    return nil;
+    return [[EMHelper getReturnJsonObject:@(YES)] toJsonString];
 }
 
 - (NSString *)getUnreadMessageCount:(NSDictionary *)param
@@ -584,7 +584,7 @@
                        callback:(EMWrapperCallback *)callback {
     NSArray *msgIds = param[@"msgIds"];
     NSString *groupId = param[@"groupId"];
-    EMChatType type = [EMChatMessage chatTypeFromInt:[param[@"chatType"] intValue]];
+    EMChatType type = [param[@"type"] isEqualToString:@"chat"] ? EMChatTypeChat : EMChatTypeGroupChat;
     __weak EMChatManagerWrapper * weakSelf = self;
     [EMClient.sharedClient.chatManager getReactionList:msgIds
                                                groupId:groupId
