@@ -87,7 +87,6 @@
     <Compile Include="Delegates\IRoomManagerDelegate.cs" />
     <Compile Include="Managers\BaseManager.cs" />
     <Compile Include="Helper\SDKMethod.cs" />
-    <Compile Include="Models\CallBackResult.cs" />
     <Compile Include="Helper\UnityHelper.cs" />
   </ItemGroup>
   <ItemGroup />
