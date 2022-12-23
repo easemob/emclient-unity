@@ -25,7 +25,7 @@ namespace AgoraChat
 
         internal IClient(NativeListener listener) : base(listener, SDKMethod.client)
         {
-            // 将 listener 和 native 挂钩
+            // make relation between listener and native.
             nativeListener = listener;
             nativeListener.AddNaitveListener();
 

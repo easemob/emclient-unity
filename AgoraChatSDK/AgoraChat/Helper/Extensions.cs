@@ -195,8 +195,8 @@ namespace AgoraChat
 
     internal static class Dictionary
     {
-        // 因为JSONNode key 只支持string，所以此处的key必须为string类型。
-        // T: BaseModel子类
+        // Because JSONNode key only support string type，so key must be string type。
+        // T is BaseModel child class
         internal static Dictionary<string, T> BaseModelDictionaryFromJsonObject<T>(JSONNode jo) where T : BaseModel
         {
             Dictionary<string, T> ret = new Dictionary<string, T>();

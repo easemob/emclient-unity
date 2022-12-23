@@ -682,6 +682,9 @@ namespace sdk_wrapper
                         writer.Key("thumbnailSecret");
                         writer.String(ptr->thumbnailSecretKey().c_str());
 
+                        writer.Key("thumbnailStatus");
+                        writer.Int(DownLoadStatusToInt(ptr->thumbnailDownloadStatus()));
+
                         writer.Key("height");
                         writer.Double(ptr->size().mHeight);
 
@@ -750,6 +753,9 @@ namespace sdk_wrapper
 
                         writer.Key("thumbnailSecret");
                         writer.String(ptr->thumbnailSecretKey().c_str());
+
+                        writer.Key("thumbnailStatus");
+                        writer.Int(DownLoadStatusToInt(ptr->thumbnailDownloadStatus()));
 
                         writer.Key("height");
                         writer.Double(ptr->size().mHeight);
@@ -966,6 +972,11 @@ namespace sdk_wrapper
                 ptr->setThumbnailSecretKey(str);
             }
 
+            if (body.HasMember("thumbnailStatus") && body["thumbnailStatus"].IsInt()) {
+                int i = body["thumbnailStatus"].GetInt();
+                ptr->setThumbnailDownloadStatus(DownLoadStatusFromInt(i));
+            }
+
             EMImageMessageBody::Size size;
             size.mWidth = 0;
             size.mHeight = 0;
@@ -1077,6 +1088,11 @@ namespace sdk_wrapper
             if (body.HasMember("thumbnailSecret") && body["thumbnailSecret"].IsString()) {
                 string str = body["thumbnailSecret"].GetString();
                 ptr->setThumbnailSecretKey(str);
+            }
+
+            if (body.HasMember("thumbnailStatus") && body["thumbnailStatus"].IsInt()) {
+                int i = body["thumbnailStatus"].GetInt();
+                ptr->setThumbnailDownloadStatus(DownLoadStatusFromInt(i));
             }
 
             EMVideoMessageBody::Size size;

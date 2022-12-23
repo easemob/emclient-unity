@@ -177,6 +177,7 @@ namespace WinSDKTest
                         Console.WriteLine($"RemotePath: {b.RemotePath}");
                         Console.WriteLine($"ThumbnailLocalPath: {b.ThumbnailLocalPath}");
                         Console.WriteLine($"ThumbnaiRemotePath: {b.ThumbnaiRemotePath}");
+                        Console.WriteLine($"ThumbnaiDownStatus: {b.ThumbnaiDownStatus}");
                     }
                     break;
                 case MessageBodyType.VIDEO:
@@ -187,6 +188,7 @@ namespace WinSDKTest
                         Console.WriteLine($"RemotePath: {b.RemotePath}");
                         Console.WriteLine($"ThumbnailLocalPath: {b.ThumbnaiLocationPath}");
                         Console.WriteLine($"ThumbnaiRemotePath: {b.ThumbnaiRemotePath}");
+                        Console.WriteLine($"ThumbnaiDownStatus: {b.ThumbnaiDownStatus}");
                     }
                     break;
                 case MessageBodyType.VOICE:
@@ -3124,6 +3126,9 @@ namespace WinSDKTest
                 path = GetParamValueFromContext(1);
 
             Message msg = Message.CreateImageSendMessage(to, path);
+
+            AgoraChat.MessageBody.ImageBody ib = (AgoraChat.MessageBody.ImageBody)msg.Body;
+            //ib.ThumbnaiDownStatus = DownLoadStatus.PENDING;
 
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
                 onSuccess: () => {
@@ -7920,7 +7925,7 @@ namespace WinSDKTest
                             str += "status:" + sit.Status + ";";
                         }
                         Console.WriteLine($"-------------------");
-                        Console.WriteLine($"Publisher:{it.Publisher}; statusDescription:{it.statusDescription}; lastestTime:{it.LatestTime}; ExpireTime:{it.ExpiryTime}");
+                        Console.WriteLine($"Publisher:{it.Publisher}; statusDescription:{it.StatusDescription}; lastestTime:{it.LatestTime}; ExpireTime:{it.ExpiryTime}");
                         Console.WriteLine($"preseceDeviceStatus:{str}");
                     }
                 },
@@ -7993,7 +7998,7 @@ namespace WinSDKTest
                             str += "status:" + sit.Status + ";";
                         }
                         Console.WriteLine($"-------------------");
-                        Console.WriteLine($"Publisher:{it.Publisher}; statusDescription:{it.statusDescription}; lastestTime:{it.LatestTime}; ExpireTime:{it.ExpiryTime}");
+                        Console.WriteLine($"Publisher:{it.Publisher}; statusDescription:{it.StatusDescription}; lastestTime:{it.LatestTime}; ExpireTime:{it.ExpiryTime}");
                         Console.WriteLine($"preseceDeviceStatus:{str}");
                     }
                 },
@@ -9087,7 +9092,7 @@ namespace WinSDKTest
                     str += "status:" + sit.Status + ";";
                 }
                 Console.WriteLine($"-------------------");
-                Console.WriteLine($"Publisher:{it.Publisher}; statusDescription:{it.statusDescription}; lastestTime:{it.LatestTime}; ExpireTime:{it.ExpiryTime}");
+                Console.WriteLine($"Publisher:{it.Publisher}; statusDescription:{it.StatusDescription}; lastestTime:{it.LatestTime}; ExpireTime:{it.ExpiryTime}");
                 Console.WriteLine($"preseceDeviceStatus:{str}");
             }
         }
