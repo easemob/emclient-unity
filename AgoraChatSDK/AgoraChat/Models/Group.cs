@@ -230,6 +230,15 @@ namespace AgoraChat
 
 
         /**
+        *  \~chinese
+        *  群组是否禁用。（本地数据库不存储，从数据库读取或拉取漫游消息默认值是 NO）
+        *
+        *  \~english
+        *  Whether the group is disabled. The default value for reading or pulling roaming messages from the database is NO
+         */
+        public bool IsDisabled { get; internal set; }
+
+        /**
          * \~chinese
          * 获取群组订制扩展信息。
          * @return  群组定制扩展信息。
@@ -266,6 +275,7 @@ namespace AgoraChat
             IsMemberAllowToInvite = jsonObject["isMemberAllowToInvite"].AsBool;
             Ext = jsonObject["ext"];
             PermissionType = (GroupPermissionType)jsonObject["permissionType"].AsInt;
+            IsDisabled = jsonObject["isDisabled"].AsBool;
         }
 
         internal override JSONObject ToJsonObject()
@@ -285,6 +295,7 @@ namespace AgoraChat
             jo.AddWithoutNull("isMuteAll", IsAllMemberMuted);
             jo.AddWithoutNull("options", Options.ToJsonObject());
             jo.AddWithoutNull("permissionType", PermissionType.ToInt());
+            jo.AddWithoutNull("isDisabled", IsDisabled);
             return jo;
         }
     }
