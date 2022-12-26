@@ -22,7 +22,7 @@
     ret[@"adminList"] = self.adminList;
     ret[@"blockList"] = self.blacklist;
     ret[@"muteList"] = self.muteList;
-    ret[@"noticeEnable"] = @(self.isPushNotificationEnabled);
+//    ret[@"noticeEnable"] = @(self.isPushNotificationEnabled);
     ret[@"block"] = @(self.isBlocked);
     ret[@"isMuteAll"] = @(self.isMuteAllMembers);
     ret[@"isDisabled"] = @(self.isDisabled);

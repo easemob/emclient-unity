@@ -843,7 +843,7 @@ public class EMRoomManagerWrapper extends EMBaseWrapper{
                 try {
                     data.put("roomId", chatRoomId);
                     data.put("userIds", whitelist);
-                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.chatRoomListener, EMSDKMethod.onAddWhiteListMembersFromRoom, data.toString()));
+                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.chatRoomListener, EMSDKMethod.onAddAllowListMembersFromRoom, data.toString()));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -855,7 +855,7 @@ public class EMRoomManagerWrapper extends EMBaseWrapper{
                 try {
                     data.put("roomId", chatRoomId);
                     data.put("userIds", whitelist);
-                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.chatRoomListener, EMSDKMethod.onRemoveWhiteListMembersFromRoom, data.toString()));
+                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.chatRoomListener, EMSDKMethod.onRemoveAllowListMembersFromRoom, data.toString()));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -866,7 +866,7 @@ public class EMRoomManagerWrapper extends EMBaseWrapper{
                 JSONObject data = new JSONObject();
                 try {
                     data.put("roomId", chatRoomId);
-                    data.put("isMuted", isMuted);
+                    data.put("isAllMuted", isMuted);
                     post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.chatRoomListener, EMSDKMethod.onAllMemberMuteChangedFromRoom, data.toString()));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -878,7 +878,7 @@ public class EMRoomManagerWrapper extends EMBaseWrapper{
                 JSONObject data = new JSONObject();
                 try {
                     data.put("roomId", roomId);
-                    data.put("roomName", roomName);
+                    data.put("name", roomName);
                     post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.chatRoomListener, EMSDKMethod.onDestroyedFromRoom, data.toString()));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -917,8 +917,14 @@ public class EMRoomManagerWrapper extends EMBaseWrapper{
                 try {
                     data.put("roomId", roomId);
                     data.put("name", roomName);
-                    data.put("reason", reason);
-                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.chatRoomListener, EMSDKMethod.onRemovedFromRoom, data.toString()));
+                    data.put("userId", participant);
+                    if (reason == 0) {
+                        post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.chatRoomListener, EMSDKMethod.onRemovedFromRoom, data.toString()));
+                    }else if (reason == 1){
+                        post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.chatRoomListener, EMSDKMethod.onDestroyedFromRoom, data.toString()));
+                    }else if (reason == 2) {
+                        post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.chatRoomListener, EMSDKMethod.onRemoveFromRoomByOffline, data.toString()));
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -1015,7 +1021,7 @@ public class EMRoomManagerWrapper extends EMBaseWrapper{
                 try {
                     data.put("roomId", chatRoomId);
                     data.put("kv", attributeMap);
-                    data.put("from", from);
+                    data.put("userId", from);
                     post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.chatRoomListener, EMSDKMethod.onAttributesChangedFromRoom, data.toString()));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -1028,7 +1034,7 @@ public class EMRoomManagerWrapper extends EMBaseWrapper{
                 try {
                     data.put("roomId", chatRoomId);
                     data.put("list", keyList);
-                    data.put("from", from);
+                    data.put("userId", from);
                     post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.chatRoomListener, EMSDKMethod.onAttributesRemovedFromRoom, data.toString()));
                 } catch (JSONException e) {
                     e.printStackTrace();

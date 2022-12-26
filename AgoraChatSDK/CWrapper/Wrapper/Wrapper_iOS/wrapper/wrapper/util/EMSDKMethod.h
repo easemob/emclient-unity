@@ -344,17 +344,17 @@ static NSString *const onMemberExitedFromGroup = @"onMemberExitedFromGroup";
 static NSString *const onAnnouncementChangedFromGroup = @"onAnnouncementChangedFromGroup";
 static NSString *const onSharedFileAddedFromGroup = @"onSharedFileAddedFromGroup";
 static NSString *const onSharedFileDeletedFromGroup = @"onSharedFileDeletedFromGroup";
-static NSString *const onAddWhiteListMembersFromGroup = @"onAddWhiteListMembersFromGroup";
-static NSString *const onRemoveWhiteListMembersFromGroup = @"onRemoveWhiteListMembersFromGroup";
+static NSString *const onAddAllowListMembersFromGroup = @"onAddWhiteListMembersFromGroup";
+static NSString *const onRemoveAllowListMembersFromGroup = @"onRemoveWhiteListMembersFromGroup";
 static NSString *const onAllMemberMuteChangedFromGroup = @"onAllMemberMuteChangedFromGroup";
 static NSString *const onSpecificationChangedFromGroup = @"onSpecificationChangedFromGroup";
 static NSString *const onStateChangedFromGroup = @"onStateChangedFromGroup";
-
 // RoomManagerDelegate
 static NSString *const onDestroyedFromRoom = @"onDestroyedFromRoom";
 static NSString *const onMemberJoinedFromRoom = @"onMemberJoinedFromRoom";
 static NSString *const onMemberExitedFromRoom = @"onMemberExitedFromRoom";
 static NSString *const onRemovedFromRoom = @"onRemovedFromRoom";
+static NSString *const onRemoveFromRoomByOffline = @"onRemoveFromRoomByOffline";
 static NSString *const onMuteListAddedFromRoom = @"onMuteListAddedFromRoom";
 static NSString *const onMuteListRemovedFromRoom = @"onMuteListRemovedFromRoom";
 static NSString *const onAdminAddedFromRoom = @"onAdminAddedFromRoom";
@@ -364,7 +364,8 @@ static NSString *const onAnnouncementChangedFromRoom = @"onAnnouncementChangedFr
 static NSString *const onAttributesChangedFromRoom = @"onAttributesChangedFromRoom";
 static NSString *const onAttributesRemovedFromRoom = @"onAttributesRemovedFromRoom";
 static NSString *const onSpecificationChangedFromRoom = @"onSpecificationChangedFromRoom";
-static NSString *const onAddWhiteListMembersFromRoom = @"onAddWhiteListMembersFromRoom";
-static NSString *const onRemoveWhiteListMembersFromRoom = @"onRemoveWhiteListMembersFromRoom";
+static NSString *const onAddAllowListMembersFromRoom = @"onAddWhiteListMembersFromRoom";
+static NSString *const onRemoveAllowListMembersFromRoom = @"onRemoveWhiteListMembersFromRoom";
 static NSString *const onAllMemberMuteChangedFromRoom = @"onAllMemberMuteChangedFromRoom";
+
 

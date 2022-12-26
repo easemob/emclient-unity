@@ -655,11 +655,13 @@
     [EMWrapperHelper.shared.listener onReceive:chatRoomListener method:onMemberJoinedFromRoom info: [dictionary toJsonString]];
 }
 
+
 - (void)userDidLeaveChatroom:(EMChatroom *)aChatroom
                         user:(NSString *)aUsername
 {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     dictionary[@"roomId"] = aChatroom.chatroomId;
+    dictionary[@"name"] = aChatroom.subject;
     dictionary[@"userId"] = aUsername;
     [EMWrapperHelper.shared.listener onReceive:chatRoomListener method:onMemberExitedFromRoom info: [dictionary toJsonString]];
 }
@@ -670,13 +672,32 @@
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     dictionary[@"roomId"] = aChatroom.chatroomId;
     dictionary[@"name"] = aChatroom.subject;
-    dictionary[@"reason"] = @(aReason);
-    [EMWrapperHelper.shared.listener onReceive:chatRoomListener method:onRemovedFromRoom info: [dictionary toJsonString]];
+    switch (aReason) {
+        case EMChatroomBeKickedReasonBeRemoved:
+        {
+            [EMWrapperHelper.shared.listener onReceive:chatRoomListener method:onRemovedFromRoom info: [dictionary toJsonString]];
+        }
+            break;
+        case EMChatroomBeKickedReasonDestroyed:
+        {
+            [EMWrapperHelper.shared.listener onReceive:chatRoomListener method:onDestroyedFromRoom info: [dictionary toJsonString]];
+        }
+            break;
+        case EMChatroomBeKickedReasonOffline:
+        {
+            [EMWrapperHelper.shared.listener onReceive:chatRoomListener method:onRemoveFromRoomByOffline info: [dictionary toJsonString]];
+        }
+            break;
+        default:
+            break;
+    }
 }
 
 - (void)chatroomSpecificationDidUpdate:(EMChatroom *)aChatroom
 {
-    [EMWrapperHelper.shared.listener onReceive:chatRoomListener method:onSpecificationChangedFromRoom info: [[aChatroom toJson] toJsonString]];
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+    dictionary[@"room"] = [aChatroom toJson];
+    [EMWrapperHelper.shared.listener onReceive:chatRoomListener method:onSpecificationChangedFromRoom info: [dictionary toJsonString]];
 }
 
 - (void)chatroomMuteListDidUpdate:(EMChatroom *)aChatroom
@@ -685,7 +706,7 @@
 {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     dictionary[@"roomId"] = aChatroom.chatroomId;
-    dictionary[@"list"] = aMutes;
+    dictionary[@"userIds"] = aMutes;
     dictionary[@"expireTime"] = @(aMuteExpire);
     [EMWrapperHelper.shared.listener onReceive:chatRoomListener method:onMuteListAddedFromRoom info: [dictionary toJsonString]];
 }
@@ -695,7 +716,7 @@
 {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     dictionary[@"roomId"] = aChatroom.chatroomId;
-    dictionary[@"list"] = aMutes;
+    dictionary[@"userIds"] = aMutes;
     [EMWrapperHelper.shared.listener onReceive:chatRoomListener method:onMuteListRemovedFromRoom info: [dictionary toJsonString]];
 }
 
@@ -705,7 +726,7 @@
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     dictionary[@"roomId"] = aChatroom.chatroomId;
     dictionary[@"userIds"] = aMembers;
-    [EMWrapperHelper.shared.listener onReceive:chatRoomListener method:onAddWhiteListMembersFromRoom info: [dictionary toJsonString]];
+    [EMWrapperHelper.shared.listener onReceive:chatRoomListener method:onAddAllowListMembersFromRoom info: [dictionary toJsonString]];
 }
 
 - (void)chatroomWhiteListDidUpdate:(EMChatroom *)aChatroom
@@ -714,7 +735,7 @@
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     dictionary[@"roomId"] = aChatroom.chatroomId;
     dictionary[@"userIds"] = aMembers;
-    [EMWrapperHelper.shared.listener onReceive:chatRoomListener method:onRemoveWhiteListMembersFromRoom info: [dictionary toJsonString]];
+    [EMWrapperHelper.shared.listener onReceive:chatRoomListener method:onRemoveAllowListMembersFromRoom info: [dictionary toJsonString]];
 }
 
 - (void)chatroomAllMemberMuteChanged:(EMChatroom *)aChatroom
@@ -722,7 +743,7 @@
 {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     dictionary[@"roomId"] = aChatroom.chatroomId;
-    dictionary[@"isMuted"] = @(aMuted);
+    dictionary[@"isAllMuted"] = @(aMuted);
     [EMWrapperHelper.shared.listener onReceive:chatRoomListener method:onAllMemberMuteChangedFromRoom info: [dictionary toJsonString]];
 }
 
@@ -771,7 +792,7 @@
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     dictionary[@"roomId"] = roomId;
     dictionary[@"kv"] = attributeMap;
-    dictionary[@"from"] = fromId;
+    dictionary[@"userId"] = fromId;
     [EMWrapperHelper.shared.listener onReceive:chatRoomListener method:onAttributesChangedFromRoom info: [dictionary toJsonString]];
 }
 
@@ -782,8 +803,9 @@
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     dictionary[@"roomId"] = roomId;
     dictionary[@"list"] = attributes;
-    dictionary[@"from"] = fromId;
+    dictionary[@"userId"] = fromId;
     [EMWrapperHelper.shared.listener onReceive:chatRoomListener method:onAttributesRemovedFromRoom info: [dictionary toJsonString]];
 }
+
 
 @end
