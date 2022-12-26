@@ -217,8 +217,17 @@ namespace AgoraChat
                     case SDKMethod.onForbidByServer:
                         it.OnForbidByServer();
                         break;
-                    case SDKMethod.onForcedToLogout:
-                        it.OnForcedToLogout();
+                    case SDKMethod.onChangedImPwd:
+                        it.OnChangedIMPwd();
+                        break;
+                    case SDKMethod.onLoginTooManyDevice:
+                        it.OnLoginTooManyDevice();
+                        break;
+                    case SDKMethod.onKickedByOtherDevice:
+                        it.OnKickedByOtherDevice();
+                        break;
+                    case SDKMethod.onAuthFailed:
+                        it.OnAuthFailed();
                         break;
                     case SDKMethod.onTokenExpired:
                         it.OnTokenExpired();

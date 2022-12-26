@@ -317,8 +317,14 @@ public class EMClientWrapper extends EMBaseWrapper {
 
             @Override
             public void onDisconnected(int errorCode) {
-                if (errorCode == 216 || errorCode == 214 || errorCode == 217 || errorCode == 202) {
-                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onForcedToLogout, null));
+                if (errorCode == 216) {
+                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onChangedImPwd, null));
+                } else if (errorCode == 214) {
+                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onLoginTooManyDevice, null));
+                } else if (errorCode == 217) {
+                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onKickedByOtherDevice, null));
+                } else if (errorCode == 202) {
+                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onAuthFailed, null));
                 } else if (errorCode == 220) {
                     post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onLoggedOtherDevice, null));
                 } else if (errorCode == 207) {
