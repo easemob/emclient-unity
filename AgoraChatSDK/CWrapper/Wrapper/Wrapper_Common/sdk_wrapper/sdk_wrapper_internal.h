@@ -116,6 +116,7 @@ const string STRING_onDestroyedFromRoom = "onDestroyedFromRoom";
 const string STRING_onMemberJoinedFromRoom = "onMemberJoinedFromRoom";
 const string STRING_onMemberExitedFromRoom = "onMemberExitedFromRoom";
 const string STRING_onRemovedFromRoom = "onRemovedFromRoom";
+const string STRING_onRemoveFromRoomByOffline = "onRemoveFromRoomByOffline";
 const string STRING_onMuteListAddedFromRoom = "onMuteListAddedFromRoom";
 const string STRING_onMuteListRemovedFromRoom = "onMuteListRemovedFromRoom";
 const string STRING_onAdminAddedFromRoom = "onAdminAddedFromRoom";

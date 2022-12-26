@@ -233,8 +233,8 @@ namespace sdk_wrapper {
             writer.Key("groupId");
             writer.String(group->groupId().c_str());
 
-            writer.Key("userId");
-            writer.String(invitee.c_str());
+            //writer.Key("userId");
+            //writer.String(invitee.c_str());
 
             writer.Key("msg");
             writer.String(reason.c_str());
@@ -658,14 +658,21 @@ namespace sdk_wrapper {
             }
             if ((EMMuc::EMMucLeaveReason::BE_KICKED == reason)) {
 
-                //writer.Key("userId");
-                //writer.String("");
-
                 JSON_ENDOBJ
                 json = s.GetString();
 
                 if (json.size() > 0)
                     CallBack(STRING_ROOMMANAGER_LISTENER.c_str(), STRING_onRemovedFromRoom.c_str(), json.c_str());
+
+                return;
+            }
+            if ((EMMuc::EMMucLeaveReason::BE_KICKED_FOR_OFFLINE == reason)) {
+
+                JSON_ENDOBJ
+                json = s.GetString();
+
+                if (json.size() > 0)
+                    CallBack(STRING_ROOMMANAGER_LISTENER.c_str(), STRING_onRemoveFromRoomByOffline.c_str(), json.c_str());
 
                 return;
             }
