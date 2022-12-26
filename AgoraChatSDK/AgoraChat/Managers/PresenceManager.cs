@@ -187,7 +187,7 @@ namespace AgoraChat
 
         internal void NativeEventcallback(string method, JSONNode jsonNode)
         {
-            LogPrinter.Log($"presenceManager  method: {method},  jn: {jsonNode}");
+
             if (delegater.Count == 0) return;
 
             List<Presence> list = List.BaseModelListFromJsonArray<Presence>(jsonNode);
