@@ -321,6 +321,11 @@ static NSString *const onPresenceUpdated = @"onPresenceUpdated";
 // ConnectionDelegate
 static NSString *const onConnected = @"onConnected";
 static NSString *const onDisconnected = @"onDisconnected";
+static NSString *const onLoggedOtherDevice = @"onLoggedOtherDevice";
+static NSString *const onRemovedFromServer = @"onRemovedFromServer";
+static NSString *const onForbidByServer = @"onForbidByServer";
+static NSString *const onForcedToLogout = @"onForcedToLogout";
+
 static NSString *const onTokenExpired = @"onTokenExpired";
 static NSString *const onTokenWillExpire = @"onTokenWillExpire";
 

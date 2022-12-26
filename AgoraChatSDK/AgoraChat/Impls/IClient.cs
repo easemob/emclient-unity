@@ -206,8 +206,19 @@ namespace AgoraChat
                         it.OnConnected();
                         break;
                     case SDKMethod.onDisconnected:
-                        int reason = jsonNode["ret"].AsInt;
-                        it.OnDisconnected(reason.ToDisconnectReason());
+                        it.OnDisconnected();
+                        break;
+                    case SDKMethod.onLoggedOtherDevice:
+                        it.OnLoggedOtherDevice();
+                        break;
+                    case SDKMethod.onRemovedFromServer:
+                        it.OnRemovedFromServer();
+                        break;
+                    case SDKMethod.onForbidByServer:
+                        it.OnForbidByServer();
+                        break;
+                    case SDKMethod.onForcedToLogout:
+                        it.OnForcedToLogout();
                         break;
                     case SDKMethod.onTokenExpired:
                         it.OnTokenExpired();

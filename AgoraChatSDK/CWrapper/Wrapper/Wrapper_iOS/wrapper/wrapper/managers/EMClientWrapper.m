@@ -264,36 +264,40 @@
     [EMClient.sharedClient addMultiDevicesDelegate:self delegateQueue:nil];
 }
 
-- (void)connectionStateDidChange:(EMConnectionState)aConnectionState {
-//    EMWrapperHelper.shared.listener(connectionListener, onConnected, )
-}
-
 - (void)autoLoginDidCompleteWithError:(EMError *)aError {
     
 }
 
+- (void)connectionStateDidChange:(EMConnectionState)aConnectionState {
+    if (aConnectionState == EMConnectionConnected) {
+        [EMWrapperHelper.shared.listener onReceive:multiDeviceListener method:onConnected info:nil];
+    }else {
+        [EMWrapperHelper.shared.listener onReceive:multiDeviceListener method:onDisconnected info:nil];
+    }
+}
+
 - (void)userAccountDidLoginFromOtherDevice {
-    
+    [EMWrapperHelper.shared.listener onReceive:multiDeviceListener method:onLoggedOtherDevice info:nil];
 }
 
 - (void)userAccountDidRemoveFromServer {
-    
+    [EMWrapperHelper.shared.listener onReceive:multiDeviceListener method:onRemovedFromServer info:nil];
 }
 
 - (void)userDidForbidByServer {
-    
+    [EMWrapperHelper.shared.listener onReceive:multiDeviceListener method:onForbidByServer info:nil];
 }
 
 - (void)userAccountDidForcedToLogout:(EMError *)aError {
-    
+    [EMWrapperHelper.shared.listener onReceive:multiDeviceListener method:onForcedToLogout info:nil];
 }
 
 - (void)tokenWillExpire:(EMErrorCode)aErrorCode {
-    
+    [EMWrapperHelper.shared.listener onReceive:multiDeviceListener method:onTokenWillExpire info:nil];
 }
 
 - (void)tokenDidExpire:(EMErrorCode)aErrorCode {
-    
+    [EMWrapperHelper.shared.listener onReceive:multiDeviceListener method:onTokenExpired info:nil];
 }
 
 - (void)multiDevicesContactEventDidReceive:(EMMultiDevicesEvent)aEvent username:(NSString *)aUsername ext:(NSString *)aExt {

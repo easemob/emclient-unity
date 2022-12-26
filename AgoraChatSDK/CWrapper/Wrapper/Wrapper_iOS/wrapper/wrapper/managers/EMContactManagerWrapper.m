@@ -188,22 +188,30 @@
 
 - (void)friendRequestDidApproveByUser:(NSString * _Nonnull)aUsername
 {
-    [EMWrapperHelper.shared.listener onReceive:contactListener method:onFriendRequestAccepted info:aUsername];
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"userId"] = aUsername;
+    [EMWrapperHelper.shared.listener onReceive:contactListener method:onFriendRequestAccepted info:[dict toJsonString]];
 }
 
 - (void)friendRequestDidDeclineByUser:(NSString * _Nonnull)aUsername
 {
-    [EMWrapperHelper.shared.listener onReceive:contactListener method:onFriendRequestDeclined info:aUsername];
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"userId"] = aUsername;
+    [EMWrapperHelper.shared.listener onReceive:contactListener method:onFriendRequestDeclined info:[dict toJsonString]];
 }
 
 - (void)friendshipDidRemoveByUser:(NSString * _Nonnull)aUsername
 {
-    [EMWrapperHelper.shared.listener onReceive:contactListener method:onContactDeleted info:aUsername];
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"userId"] = aUsername;
+    [EMWrapperHelper.shared.listener onReceive:contactListener method:onContactDeleted info:[dict toJsonString]];
 }
 
 - (void)friendshipDidAddByUser:(NSString *_Nonnull)aUsername
 {
-    [EMWrapperHelper.shared.listener onReceive:contactListener method:onContactAdded info:aUsername];
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"userId"] = aUsername;
+    [EMWrapperHelper.shared.listener onReceive:contactListener method:onContactAdded info:[dict toJsonString]];
 }
 
 - (void)friendRequestDidReceiveFromUser:(NSString *_Nonnull)aUsername
