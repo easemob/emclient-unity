@@ -675,7 +675,7 @@
     dictionary[@"name"] = aGroupName;
     dictionary[@"userId"] = aInviter;
     dictionary[@"msg"] = aMessage;
-    [EMWrapperHelper.shared.listener onReceive:groupListener method:onRequestToJoinReceivedFromGroup info: [dictionary toJsonString]];
+    [EMWrapperHelper.shared.listener onReceive:groupListener method:onInvitationReceivedFromGroup info: [dictionary toJsonString]];
 }
 
 - (void)groupInvitationDidAccept:(EMGroup *_Nonnull)aGroup
@@ -695,7 +695,7 @@
     dictionary[@"groupId"] = aGroup.groupId;
     dictionary[@"userId"] = aInvitee;
     dictionary[@"msg"] = aReason;
-    [EMWrapperHelper.shared.listener onReceive:groupListener method:onInvitationAcceptedFromGroup info: [dictionary toJsonString]];
+    [EMWrapperHelper.shared.listener onReceive:groupListener method:onInvitationDeclinedFromGroup info: [dictionary toJsonString]];
 }
 
 - (void)didJoinGroup:(EMGroup *_Nonnull)aGroup
@@ -765,7 +765,7 @@
     dictionary[@"groupId"] = aGroup.groupId;
     dictionary[@"userIds"] = aMutedMembers;
     dictionary[@"expireTime"] = @(aMuteExpire);
-    [EMWrapperHelper.shared.listener onReceive:groupListener method:onMuteListRemovedFromGroup info: [dictionary toJsonString]];
+    [EMWrapperHelper.shared.listener onReceive:groupListener method:onMuteListAddedFromGroup info: [dictionary toJsonString]];
 }
 
 
@@ -784,7 +784,7 @@
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     dictionary[@"groupId"] = aGroup.groupId;
     dictionary[@"userIds"] = aMembers;
-    [EMWrapperHelper.shared.listener onReceive:groupListener method:onAddWhiteListMembersFromGroup info: [dictionary toJsonString]];
+    [EMWrapperHelper.shared.listener onReceive:groupListener method:onAddAllowListMembersFromGroup info: [dictionary toJsonString]];
 }
 
 - (void)groupWhiteListDidUpdate:(EMGroup *_Nonnull)aGroup
@@ -793,7 +793,7 @@
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     dictionary[@"groupId"] = aGroup.groupId;
     dictionary[@"userIds"] = aMembers;
-    [EMWrapperHelper.shared.listener onReceive:groupListener method:onRemoveWhiteListMembersFromGroup info: [dictionary toJsonString]];
+    [EMWrapperHelper.shared.listener onReceive:groupListener method:onRemoveAllowListMembersFromGroup info: [dictionary toJsonString]];
 }
 
 - (void)groupAllMemberMuteChanged:(EMGroup *_Nonnull)aGroup
@@ -801,7 +801,7 @@
 {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     dictionary[@"groupId"] = aGroup.groupId;
-    dictionary[@"isMuted"] = @(aMuted);
+    dictionary[@"isMuteAll"] = @(aMuted);
     [EMWrapperHelper.shared.listener onReceive:groupListener method:onAllMemberMuteChangedFromGroup info: [dictionary toJsonString]];
 }
 
@@ -890,7 +890,9 @@
 
 - (void)groupSpecificationDidUpdate:(EMGroup *)aGroup
 {
-    [EMWrapperHelper.shared.listener onReceive:groupListener method:onSharedFileAddedFromGroup info: [[aGroup toJson] toJsonString]];
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+    dictionary[@"group"] = [aGroup toJson];
+    [EMWrapperHelper.shared.listener onReceive:groupListener method:onSpecificationChangedFromGroup info: [dictionary toJsonString]];
 }
 
 @end

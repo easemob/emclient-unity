@@ -3,8 +3,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using AgoraChat;
+using System.Collections.Generic;
 
-public class Main : MonoBehaviour, IConnectionDelegate
+public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IRoomManagerDelegate, IGroupManagerDelegate, IPresenceManagerDelegate, IMultiDeviceDelegate, IContactManagerDelegate, IChatThreadManagerDelegate
 {
     // Start is called before the first frame update
 
@@ -160,7 +161,19 @@ public class Main : MonoBehaviour, IConnectionDelegate
 
     void Start()
     {
+        SDKClient.Instance.AddConnectionDelegate(this);
+        SDKClient.Instance.AddMultiDeviceDelegate(this);
 
+        SDKClient.Instance.ChatManager.AddChatManagerDelegate(this);
+        SDKClient.Instance.ContactManager.AddContactManagerDelegate(this);
+        SDKClient.Instance.GroupManager.AddGroupManagerDelegate(this);
+        SDKClient.Instance.RoomManager.AddRoomManagerDelegate(this);
+
+
+        SDKClient.Instance.ChatManager.AddChatManagerDelegate(this);
+        SDKClient.Instance.ChatManager.AddChatManagerDelegate(this);
+        SDKClient.Instance.ChatManager.AddChatManagerDelegate(this);
+        SDKClient.Instance.ChatManager.AddChatManagerDelegate(this);
     }
 
     // Update is called once per frame
@@ -192,5 +205,315 @@ public class Main : MonoBehaviour, IConnectionDelegate
     public void OnTokenWillExpire()
     {
         UIManager.DefaultAlert(transform, $"OnTokenWillExpire");
+    }
+
+    public void OnMessagesReceived(List<Message> messages)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnCmdMessagesReceived(List<Message> messages)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnMessagesRead(List<Message> messages)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnMessagesDelivered(List<Message> messages)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnMessagesRecalled(List<Message> messages)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnReadAckForGroupMessageUpdated()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnGroupMessageRead(List<GroupReadAck> list)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnConversationsUpdate()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnConversationRead(string from, string to)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void MessageReactionDidChange(List<MessageReactionChange> list)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnDestroyedFromRoom(string roomId, string roomName)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnMemberJoinedFromRoom(string roomId, string participant)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnMemberExitedFromRoom(string roomId, string roomName, string participant)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnRemovedFromRoom(string roomId, string roomName, string participant)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnMuteListAddedFromRoom(string roomId, List<string> mutes, long expireTime)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnMuteListRemovedFromRoom(string roomId, List<string> mutes)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnAdminAddedFromRoom(string roomId, string admin)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnAdminRemovedFromRoom(string roomId, string admin)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnOwnerChangedFromRoom(string roomId, string newOwner, string oldOwner)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnAnnouncementChangedFromRoom(string roomId, string announcement)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnChatroomAttributesChanged(string roomId, Dictionary<string, string> kv, string from)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnChatroomAttributesRemoved(string roomId, List<string> keys, string from)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnSpecificationChangedFromRoom(Room room)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnAddAllowListMembersFromChatroom(string roomId, List<string> members)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnRemoveAllowListMembersFromChatroom(string roomId, List<string> members)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnAllMemberMuteChangedFromChatroom(string roomId, bool isAllMuted)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnChatThreadCreate(ChatThreadEvent threadEvent)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnChatThreadUpdate(ChatThreadEvent threadEvent)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnChatThreadDestroy(ChatThreadEvent threadEvent)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnUserKickOutOfChatThread(ChatThreadEvent threadEvent)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnPresenceUpdated(List<Presence> presences)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnContactMultiDevicesEvent(MultiDevicesOperation operation, string target, string ext)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnGroupMultiDevicesEvent(MultiDevicesOperation operation, string target, List<string> usernames)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnUndisturbMultiDevicesEvent(string data)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnThreadMultiDevicesEvent(MultiDevicesOperation operation, string target, List<string> usernames)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnInvitationReceivedFromGroup(string groupId, string groupName, string inviter, string reason)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnRequestToJoinReceivedFromGroup(string groupId, string groupName, string applicant, string reason)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnRequestToJoinAcceptedFromGroup(string groupId, string groupName, string accepter)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnRequestToJoinDeclinedFromGroup(string groupId, string groupName, string decliner, string reason)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnInvitationAcceptedFromGroup(string groupId, string invitee, string reason)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnInvitationDeclinedFromGroup(string groupId, string invitee, string reason)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnUserRemovedFromGroup(string groupId, string groupName)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnDestroyedFromGroup(string groupId, string groupName)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnAutoAcceptInvitationFromGroup(string groupId, string inviter, string inviteMessage)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnMuteListAddedFromGroup(string groupId, List<string> mutes, long muteExpire)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnMuteListRemovedFromGroup(string groupId, List<string> mutes)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnAdminAddedFromGroup(string groupId, string administrator)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnAdminRemovedFromGroup(string groupId, string administrator)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnOwnerChangedFromGroup(string groupId, string newOwner, string oldOwner)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnMemberJoinedFromGroup(string groupId, string member)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnMemberExitedFromGroup(string groupId, string member)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnAnnouncementChangedFromGroup(string groupId, string announcement)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnSharedFileAddedFromGroup(string groupId, GroupSharedFile sharedFile)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnSharedFileDeletedFromGroup(string groupId, string fileId)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnAddAllowListMembersFromGroup(string groupId, List<string> allowList)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnRemoveAllowListMembersFromGroup(string groupId, List<string> allowList)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnAllMemberMuteChangedFromGroup(string groupId, bool isAllMuted)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnContactAdded(string userId)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnContactDeleted(string userId)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnContactInvited(string userId, string reason)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnFriendRequestAccepted(string userId)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnFriendRequestDeclined(string userId)
+    {
+        throw new System.NotImplementedException();
     }
 }

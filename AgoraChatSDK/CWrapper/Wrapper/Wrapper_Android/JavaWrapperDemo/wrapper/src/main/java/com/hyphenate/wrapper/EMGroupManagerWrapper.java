@@ -986,7 +986,7 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
                     JSONObject data = new JSONObject();
                     data.put("groupId", groupId);
                     data.put("userIds", whitelist);
-                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.groupListener,EMSDKMethod.onAddWhiteListMembersFromGroup, data.toString()));
+                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.groupListener,EMSDKMethod.onAddAllowListMembersFromGroup, data.toString()));
                 }catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -998,7 +998,7 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
                     JSONObject data = new JSONObject();
                     data.put("groupId", groupId);
                     data.put("userIds", whitelist);
-                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.groupListener,EMSDKMethod.onRemoveWhiteListMembersFromGroup, data.toString()));
+                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.groupListener,EMSDKMethod.onRemoveAllowListMembersFromGroup, data.toString()));
                 }catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -1009,7 +1009,7 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
                 try {
                     JSONObject data = new JSONObject();
                     data.put("groupId", groupId);
-                    data.put("isMuted", isMuted);
+                    data.put("isMuteAll", isMuted);
                     post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.groupListener,EMSDKMethod.onAllMemberMuteChangedFromGroup, data.toString()));
                 }catch (JSONException e) {
                     e.printStackTrace();
