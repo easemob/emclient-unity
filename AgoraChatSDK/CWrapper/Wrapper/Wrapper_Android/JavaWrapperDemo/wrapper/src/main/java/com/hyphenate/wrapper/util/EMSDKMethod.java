@@ -337,8 +337,8 @@ public class EMSDKMethod {
     public static final String onAnnouncementChangedFromGroup = "onAnnouncementChangedFromGroup";
     public static final String onSharedFileAddedFromGroup = "onSharedFileAddedFromGroup";
     public static final String onSharedFileDeletedFromGroup = "onSharedFileDeletedFromGroup";
-    public static final String onAddWhiteListMembersFromGroup = "onAddWhiteListMembersFromGroup";
-    public static final String onRemoveWhiteListMembersFromGroup = "onRemoveWhiteListMembersFromGroup";
+    public static final String onAddAllowListMembersFromGroup = "onAddWhiteListMembersFromGroup";
+    public static final String onRemoveAllowListMembersFromGroup = "onRemoveWhiteListMembersFromGroup";
     public static final String onAllMemberMuteChangedFromGroup = "onAllMemberMuteChangedFromGroup";
     public static final String onSpecificationChangedFromGroup = "onSpecificationChangedFromGroup";
     public static final String onStateChangedFromGroup = "onStateChangedFromGroup";
@@ -348,6 +348,7 @@ public class EMSDKMethod {
     public static final String onMemberJoinedFromRoom = "onMemberJoinedFromRoom";
     public static final String onMemberExitedFromRoom = "onMemberExitedFromRoom";
     public static final String onRemovedFromRoom = "onRemovedFromRoom";
+    public static final String onRemoveFromRoomByOffline = "onRemoveFromRoomByOffline";
     public static final String onMuteListAddedFromRoom = "onMuteListAddedFromRoom";
     public static final String onMuteListRemovedFromRoom = "onMuteListRemovedFromRoom";
     public static final String onAdminAddedFromRoom = "onAdminAddedFromRoom";
@@ -357,7 +358,7 @@ public class EMSDKMethod {
     public static final String onAttributesChangedFromRoom = "onAttributesChangedFromRoom";
     public static final String onAttributesRemovedFromRoom = "onAttributesRemovedFromRoom";
     public static final String onSpecificationChangedFromRoom = "onSpecificationChangedFromRoom";
-    public static final String onAddWhiteListMembersFromRoom = "onAddWhiteListMembersFromRoom";
-    public static final String onRemoveWhiteListMembersFromRoom = "onRemoveWhiteListMembersFromRoom";
+    public static final String onAddAllowListMembersFromRoom = "onAddWhiteListMembersFromRoom";
+    public static final String onRemoveAllowListMembersFromRoom = "onRemoveWhiteListMembersFromRoom";
     public static final String onAllMemberMuteChangedFromRoom = "onAllMemberMuteChangedFromRoom";
 }

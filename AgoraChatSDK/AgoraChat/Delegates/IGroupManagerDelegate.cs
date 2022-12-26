@@ -75,20 +75,16 @@ namespace AgoraChat
 	     * 拒绝入群申请回调。
 		 * 
 	     * @param groupId 	群组 ID。
-	     * @param groupName 群组名称。
-	     * @param decliner 	拒绝人 ID。
 	     * @param reason 	拒绝理由。
          *
          * \~english
          * Occurs when a join request is declined.
 	     *
 	     * @param groupId 		The group ID.
-	     * @param groupName 	The group name.
-	     * @param decliner 		The ID of the user that declines the join request.
 	     * @param reason 		The reason for declining the join request.
 	     */
         void OnRequestToJoinDeclinedFromGroup(
-            string groupId, string groupName, string decliner, string reason);
+            string groupId, string reason);
 
         /**
          * \~chinese
@@ -96,16 +92,14 @@ namespace AgoraChat
 		 * 
 	     * @param groupId		群组 ID。
 	     * @param invitee		受邀人 ID。
-	     * @param reason		接受理由。
          *
          * \~english
          * Occurs when a group invitation is accepted.
 	     *
 	     * @param groupId 		The group ID.
 	     * @param invitee 		The user ID of the invitee.
-	     * @param reason		The reason for accepting the group invitation.
 	     */
-        void OnInvitationAcceptedFromGroup(string groupId, string invitee, string reason);
+        void OnInvitationAcceptedFromGroup(string groupId, string invitee);
 
         /**
          * \~chinese
