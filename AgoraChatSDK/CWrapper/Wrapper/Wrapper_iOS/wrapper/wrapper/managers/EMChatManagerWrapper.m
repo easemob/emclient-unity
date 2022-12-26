@@ -662,12 +662,7 @@
 }
 
 - (void)conversationListDidUpdate:(NSArray<EMConversation *> *)aConversationList {
-    NSMutableArray *ary = [NSMutableArray array];
-    for (EMConversation *conv in aConversationList) {
-        [ary addObject:[conv toJson]];
-    }
-    
-    [EMWrapperHelper.shared.listener onReceive:chatListener method:onConversationsUpdate info:[ary toJsonString]];
+    [EMWrapperHelper.shared.listener onReceive:chatListener method:onConversationsUpdate info:nil];
 }
 
 - (void)messagesDidReceive:(NSArray<EMChatMessage *> *)aMessages {

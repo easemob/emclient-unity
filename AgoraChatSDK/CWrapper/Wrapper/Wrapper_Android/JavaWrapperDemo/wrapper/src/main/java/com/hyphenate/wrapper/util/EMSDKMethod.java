@@ -314,6 +314,11 @@ public class EMSDKMethod {
     // ConnectionDelegate
     public static final String onConnected = "onConnected";
     public static final String onDisconnected = "onDisconnected";
+    public static final String onLoggedOtherDevice = "onLoggedOtherDevice";
+    public static final String onRemovedFromServer = "onRemovedFromServer";
+    public static final String onForbidByServer = "onForbidByServer";
+    public static final String onForcedToLogout = "onForcedToLogout";
+
     public static final String onTokenExpired = "onTokenExpired";
     public static final String onTokenWillExpire = "onTokenWillExpire";
 

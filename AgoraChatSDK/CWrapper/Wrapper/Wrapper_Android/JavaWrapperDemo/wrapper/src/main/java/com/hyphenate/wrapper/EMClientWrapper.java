@@ -307,13 +307,7 @@ public class EMClientWrapper extends EMBaseWrapper {
         EMConnectionListener connectionListener = new EMConnectionListener() {
             @Override
             public void onConnected() {
-                JSONObject data = new JSONObject();
-                try {
-                    data.put("connected", Boolean.TRUE);
-                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onConnected, data.toString()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onConnected, null));
             }
 
             @Override
@@ -323,25 +317,17 @@ public class EMClientWrapper extends EMBaseWrapper {
 
             @Override
             public void onDisconnected(int errorCode) {
-                /*
-                if (errorCode == 206) {
-                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, "onUserDidLoginFromOtherDevice", null));
+                if (errorCode == 216 || errorCode == 214 || errorCode == 217 || errorCode == 202) {
+                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onForcedToLogout, null));
+                } else if (errorCode == 220) {
+                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onLoggedOtherDevice, null));
                 } else if (errorCode == 207) {
-                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, "onUserDidRemoveFromServer", null));
+                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onRemovedFromServer, null));
                 } else if (errorCode == 305) {
-                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, "onUserDidForbidByServer", null));
-                } else if (errorCode == 216) {
-                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, "onUserDidChangePassword", null));
-                } else if (errorCode == 214) {
-                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, "onUserDidLoginTooManyDevice", null));
-                } else if (errorCode == 217) {
-                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, "onUserKickedByOtherDevice", null));
-                } else if (errorCode == 202) {
-                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, "onUserAuthenticationFailed", null));
+                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onForbidByServer, null));
                 } else {
-                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, "onDisconnected", null));
+                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onDisconnected, null));
                 }
-                 */
             }
 
             @Override

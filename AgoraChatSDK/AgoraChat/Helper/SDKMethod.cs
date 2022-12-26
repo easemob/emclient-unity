@@ -316,6 +316,12 @@ namespace AgoraChat
         // ConnectionDelegate
         internal const string onConnected = "onConnected";
         internal const string onDisconnected = "onDisconnected";
+
+        internal const string onLoggedOtherDevice = "onLoggedOtherDevice";
+        internal const string onRemovedFromServer = "onRemovedFromServer";
+        internal const string onForbidByServer = "onForbidByServer";
+        internal const string onForcedToLogout = "onForcedToLogout";
+
         internal const string onTokenExpired = "onTokenExpired";
         internal const string onTokenWillExpire = "onTokenWillExpire";
 
@@ -350,6 +356,7 @@ namespace AgoraChat
         internal const string onMemberJoinedFromRoom = "onMemberJoinedFromRoom";
         internal const string onMemberExitedFromRoom = "onMemberExitedFromRoom";
         internal const string onRemovedFromRoom = "onRemovedFromRoom";
+        internal const string onRemoveFromRoomByOffline = "onRemoveFromRoomByOffline";
         internal const string onMuteListAddedFromRoom = "onMuteListAddedFromRoom";
         internal const string onMuteListRemovedFromRoom = "onMuteListRemovedFromRoom";
         internal const string onAdminAddedFromRoom = "onAdminAddedFromRoom";
