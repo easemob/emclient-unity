@@ -108,6 +108,8 @@ const string STRING_onSharedFileDeletedFromGroup = "onSharedFileDeletedFromGroup
 const string STRING_onAddWhiteListMembersFromGroup = "onAddWhiteListMembersFromGroup";
 const string STRING_onRemoveWhiteListMembersFromGroup = "onRemoveWhiteListMembersFromGroup";
 const string STRING_onAllMemberMuteChangedFromGroup = "onAllMemberMuteChangedFromGroup";
+const string STRING_onStateChangedFromGroup = "onStateChangedFromGroup";
+const string STRING_onSpecificationChangedFromGroup = "onSpecificationChangedFromGroup";
 
 // RoomManagerDelegate
 const string STRING_onDestroyedFromRoom = "onDestroyedFromRoom";
