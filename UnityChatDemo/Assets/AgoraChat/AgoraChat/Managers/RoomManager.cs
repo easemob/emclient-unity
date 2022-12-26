@@ -1213,6 +1213,11 @@ namespace AgoraChat
                             it.OnDestroyedFromRoom(roomId, roomName);
                         }
                         break;
+                    case SDKMethod.onRemoveFromRoomByOffline:
+                        {
+                            it.OnRemoveFromRoomByOffline(roomId, roomName);
+                        }
+                        break;
                     case SDKMethod.onMemberJoinedFromRoom:
                         {
                             string userId = jsonNode["userId"];
@@ -1285,7 +1290,7 @@ namespace AgoraChat
                         break;
                     case SDKMethod.onSpecificationChangedFromRoom:
                         {
-                            Room room = new Room(jsonNode.AsObject);
+                            Room room = ModelHelper.CreateWithJsonObject<Room>(jsonNode["room"]);
                             it.OnSpecificationChangedFromRoom(room);
                         }
                         break;

@@ -467,7 +467,7 @@ namespace AgoraChat
                 jo_body.AddWithoutNull("thumbnailLocalPath", ThumbnailLocalPath ?? "");
                 jo_body.AddWithoutNull("thumbnailRemotePath", ThumbnaiRemotePath ?? "");
                 jo_body.AddWithoutNull("thumbnailSecret", ThumbnaiSecret ?? "");
-                jo_body.AddWithoutNull("thumbnailStatus", ThumbnaiDownStatus);
+                jo_body.AddWithoutNull("thumbnailStatus", ThumbnaiDownStatus.ToInt());
                 jo_body.AddWithoutNull("height", Height);
                 jo_body.AddWithoutNull("width", Width);
                 jo_body.AddWithoutNull("sendOriginalImage", Original);
@@ -481,7 +481,7 @@ namespace AgoraChat
                 ThumbnailLocalPath = jo["thumbnailLocalPath"].Value;
                 ThumbnaiRemotePath = jo["thumbnailRemotePath"].Value;
                 ThumbnaiSecret = jo["thumbnailSecret"].Value;
-                ThumbnaiDownStatus = (DownLoadStatus)jo["thumbnailStatus"].AsInt;
+                ThumbnaiDownStatus = jo["thumbnailStatus"].AsInt.ToDownLoadStatus();
                 Height = jo["height"].AsDouble;
                 Width = jo["width"].AsDouble;
                 Original = jo["sendOriginalImage"].AsBool;
@@ -678,7 +678,7 @@ namespace AgoraChat
                 jo_body.AddWithoutNull("thumbnailRemotePath", ThumbnaiRemotePath ?? "");
                 jo_body.AddWithoutNull("thumbnailSecret", ThumbnaiSecret ?? "");
                 jo_body.AddWithoutNull("thumbnailLocalPath", ThumbnaiLocationPath ?? "");
-                jo_body.AddWithoutNull("thumbnailStatus", ThumbnaiDownStatus);
+                jo_body.AddWithoutNull("thumbnailStatus", ThumbnaiDownStatus.ToInt());
                 jo_body.AddWithoutNull("height", Height);
                 jo_body.AddWithoutNull("width", Width);
                 jo_body.AddWithoutNull("duration", Duration);
@@ -692,7 +692,7 @@ namespace AgoraChat
                 ThumbnaiRemotePath = jo["thumbnailRemotePath"];
                 ThumbnaiSecret = jo["thumbnailSecret"];
                 ThumbnaiLocationPath = jo["thumbnailLocalPath"];
-                ThumbnaiDownStatus = (DownLoadStatus)jo["thumbnailStatus"].AsInt;
+                ThumbnaiDownStatus = jo["thumbnailStatus"].AsInt.ToDownLoadStatus();
                 Height = jo["height"].AsDouble;
                 Width = jo["width"].AsDouble;
                 Duration = jo["duration"].AsInt;

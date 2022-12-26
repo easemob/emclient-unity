@@ -2,7 +2,7 @@
 
 namespace AgoraChat
 {
-	/**
+    /**
          * \~chinese
 	     * 群组管理器回调接口。
 		 * 
@@ -10,9 +10,9 @@ namespace AgoraChat
 	     * The group manager callback interface.
 		 *
 	     */
-	public interface IGroupManagerDelegate
-	{
-		/**
+    public interface IGroupManagerDelegate
+    {
+        /**
          * \~chinese
 	     * 用户收到入群邀请的回调。
 		 * 
@@ -29,10 +29,10 @@ namespace AgoraChat
 	     * @param inviter		The user ID of the inviter.
 	     * @param reason		The reason for invitation.
 	     */
-		void OnInvitationReceivedFromGroup(
-			string groupId, string groupName, string inviter, string reason);
+        void OnInvitationReceivedFromGroup(
+            string groupId, string groupName, string inviter, string reason);
 
-		/**
+        /**
          * \~chinese
 	     * 用户申请入群回调。
 		 * 
@@ -49,10 +49,10 @@ namespace AgoraChat
 	     * @param applicant		The ID of the user requesting to join the group.
 	     * @param reason		The reason for requesting to join the group.
 	     */
-		void OnRequestToJoinReceivedFromGroup(
-			string groupId, string groupName, string applicant, string reason);
+        void OnRequestToJoinReceivedFromGroup(
+            string groupId, string groupName, string applicant, string reason);
 
-		/**
+        /**
          * \~chinese
 	     * 接受入群申请回调。
 		 * 
@@ -67,47 +67,41 @@ namespace AgoraChat
 	     * @param groupName 	The group name.
 	     * @param accepter 		The ID of the user that accepts the join request.
 	     */
-		void OnRequestToJoinAcceptedFromGroup(
-			string groupId, string groupName, string accepter);
+        void OnRequestToJoinAcceptedFromGroup(
+            string groupId, string groupName, string accepter);
 
-		/**
+        /**
          * \~chinese
 	     * 拒绝入群申请回调。
 		 * 
 	     * @param groupId 	群组 ID。
-	     * @param groupName 群组名称。
-	     * @param decliner 	拒绝人 ID。
 	     * @param reason 	拒绝理由。
          *
          * \~english
          * Occurs when a join request is declined.
 	     *
 	     * @param groupId 		The group ID.
-	     * @param groupName 	The group name.
-	     * @param decliner 		The ID of the user that declines the join request.
 	     * @param reason 		The reason for declining the join request.
 	     */
-		void OnRequestToJoinDeclinedFromGroup(
-			string groupId, string groupName, string decliner, string reason);
+        void OnRequestToJoinDeclinedFromGroup(
+            string groupId, string reason);
 
-		/**
+        /**
          * \~chinese
 	     * 接受入群邀请回调。
 		 * 
 	     * @param groupId		群组 ID。
 	     * @param invitee		受邀人 ID。
-	     * @param reason		接受理由。
          *
          * \~english
          * Occurs when a group invitation is accepted.
 	     *
 	     * @param groupId 		The group ID.
 	     * @param invitee 		The user ID of the invitee.
-	     * @param reason		The reason for accepting the group invitation.
 	     */
-		void OnInvitationAcceptedFromGroup(string groupId, string invitee, string reason);
+        void OnInvitationAcceptedFromGroup(string groupId, string invitee);
 
-		/**
+        /**
          * \~chinese
 	     * 拒绝群组邀请回调。
 		 * 
@@ -122,9 +116,9 @@ namespace AgoraChat
 	     * @param invitee		The user ID of the invitee.
 	     * @param reason 		The reason for declining the invitation.
 	     */
-		void OnInvitationDeclinedFromGroup(string groupId, string invitee, string reason);
+        void OnInvitationDeclinedFromGroup(string groupId, string invitee, string reason);
 
-		/**
+        /**
          * \~chinese
 	     * 当前登录用户被群主或群组管理员移出群组时的回调。
 		 * 
@@ -137,9 +131,9 @@ namespace AgoraChat
 	     * @param groupId 		The group ID.
 	     * @param groupName		The group name.
 	     */
-		void OnUserRemovedFromGroup(string groupId, string groupName);
+        void OnUserRemovedFromGroup(string groupId, string groupName);
 
-		/**
+        /**
          * \~chinese
          * 群组解散回调。
 		 * 
@@ -156,9 +150,9 @@ namespace AgoraChat
 	     * @param groupId		The group ID.
 	     * @param groupName 	The group name.
          */
-		void OnDestroyedFromGroup(string groupId, string groupName);
+        void OnDestroyedFromGroup(string groupId, string groupName);
 
-		/**
+        /**
          * \~chinese
          * 自动同意入群申请回调。
 		 * 
@@ -181,8 +175,8 @@ namespace AgoraChat
 	     * @param inviter			The user ID of the inviter.
 	     * @param inviteMessage		The invitation message.
          */
-		void OnAutoAcceptInvitationFromGroup(
-			string groupId, string inviter, string inviteMessage);
+        void OnAutoAcceptInvitationFromGroup(
+            string groupId, string inviter, string inviteMessage);
 
         /**
 	     * \~chinese
@@ -209,7 +203,7 @@ namespace AgoraChat
 	     */
         void OnMuteListAddedFromGroup(string groupId, List<string> mutes, long muteExpire);
 
-		/**
+        /**
 	     * \~chinese
 	     * 有成员被解除禁言。
 		 * 
@@ -230,9 +224,9 @@ namespace AgoraChat
 	     * @param groupId		The group ID.
 	     * @param mutes 		The member(s) removed from the mute list.
 	     */
-		void OnMuteListRemovedFromGroup(string groupId, List<string> mutes);
+        void OnMuteListRemovedFromGroup(string groupId, List<string> mutes);
 
-		/**
+        /**
 	     * \~chinese
 	     * 成员设置为管理员的回调。
 	     *
@@ -245,9 +239,9 @@ namespace AgoraChat
 	     * @param groupId		The group ID.
 	     * @param administrator The user ID of the member that is set as an admin.
 	     */
-		void OnAdminAddedFromGroup(string groupId, string administrator);
+        void OnAdminAddedFromGroup(string groupId, string administrator);
 
-		/**
+        /**
 		 * \~chinese
 		 * 取消成员的管理员权限的回调。
 		 * 
@@ -260,9 +254,9 @@ namespace AgoraChat
 		 * @param groupId 		The group ID.
 		 * @param administrator The user ID of the member whose admin privileges are removed.
 		 */
-		void OnAdminRemovedFromGroup(string groupId, string administrator);
+        void OnAdminRemovedFromGroup(string groupId, string administrator);
 
-		/**
+        /**
 		 * \~chinese
 		 * 转移群主权限的回调。
 		 * 
@@ -277,9 +271,9 @@ namespace AgoraChat
 		 * @param newOwner 		The new group owner.
 		 * @param oldOwner 		The previous group owner.
 		 */
-		void OnOwnerChangedFromGroup(string groupId, string newOwner, string oldOwner);
+        void OnOwnerChangedFromGroup(string groupId, string newOwner, string oldOwner);
 
-		/**
+        /**
 		 * \~chinese
 		 * 新成员加入群组的回调。
 		 * 
@@ -292,9 +286,9 @@ namespace AgoraChat
 		 * @param groupId  The group ID.
 		 * @param member   The ID of the new member.
 		 */
-		void OnMemberJoinedFromGroup(string groupId, string member);
+        void OnMemberJoinedFromGroup(string groupId, string member);
 
-		/**
+        /**
 		 * \~chinese
 		 * 群组成员主动退出回调。
 		 * 
@@ -307,9 +301,9 @@ namespace AgoraChat
 		 * @param groupId   The group ID.
 		 * @param member  	The user ID of the member who has left the group.
 		 */
-		void OnMemberExitedFromGroup(string groupId, string member);
+        void OnMemberExitedFromGroup(string groupId, string member);
 
-		/**
+        /**
 		 * \~chinese
 		 * 群公告更新回调。
 		 * 
@@ -322,9 +316,9 @@ namespace AgoraChat
 		 * @param groupId  The group ID.
 		 * @param announcement  The updated announcement content.
 		 */
-		void OnAnnouncementChangedFromGroup(string groupId, string announcement);
+        void OnAnnouncementChangedFromGroup(string groupId, string announcement);
 
-		/**
+        /**
 		 * \~chinese
 		 * 群组添加共享文件回调。
 		 * 
@@ -337,9 +331,9 @@ namespace AgoraChat
 		 * @param groupId The group ID.
 		 * @param sharedFile The new shared file.
 		 */
-		void OnSharedFileAddedFromGroup(string groupId, GroupSharedFile sharedFile);
+        void OnSharedFileAddedFromGroup(string groupId, GroupSharedFile sharedFile);
 
-		/**
+        /**
 		 * \~chinese
 		 * 群组删除共享文件回调。
 		 * 
@@ -352,7 +346,7 @@ namespace AgoraChat
 		 * @param groupId The group ID.
 		 * @param fileId  The ID of the removed shared file.
 		 */
-		void OnSharedFileDeletedFromGroup(string groupId, string fileId);
+        void OnSharedFileDeletedFromGroup(string groupId, string fileId);
 
         /**
 		 * \~chinese
@@ -384,7 +378,7 @@ namespace AgoraChat
 		 */
         void OnRemoveAllowListMembersFromGroup(string groupId, List<string> allowList);
 
-		/**
+        /**
 		 * \~chinese
 		 * 全员禁言状态变化回调。
 		 *
@@ -402,6 +396,36 @@ namespace AgoraChat
 		 * - `false`: All group members are unmuted.
 		 */
 
-		void OnAllMemberMuteChangedFromGroup(string groupId, bool isAllMuted);
-	}
+        void OnAllMemberMuteChangedFromGroup(string groupId, bool isAllMuted);
+
+
+        /**
+		 *  \~chinese
+		 *  群组禁用状态发生变化回调。
+		 *
+		 *  @param groupId           群组 ID。
+		 *  @param isDisable           是否禁用。
+		 *
+		 *  \~english
+		 *  Occurs when the disabled state of group changes.
+		 *
+		 *  @param groupId          The group ID.
+		 *  @param isDisable        Whether the group is disabled.
+		 */
+        void OnStateChangedFromGroup(string groupId, bool isDisable);
+
+        /**
+		 *  \~chinese
+		 *  群详情已有改动，需调用获取群详情api {@link GetGroupSpecificationFromServer(string, ValueCallBack<Group>)} 得到最新群信息
+		 *
+		 *  @param group       群组实例。
+		 *
+		 *  \~english
+		 *  Occurs when the group specification update,Need to call for details of the API {@link GetGroupSpecificationFromServer(string, ValueCallBack<Group>)} to get the latest information.
+		 *
+		 *  @param group      The group instance.
+		 */
+        void OnSpecificationChangedFromGroup(Group group);
+
+    }
 }

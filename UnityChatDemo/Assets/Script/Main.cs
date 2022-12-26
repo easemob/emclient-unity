@@ -28,6 +28,12 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
     private void Awake()
     {
 
+        Application.SetStackTraceLogType(LogType.Error, StackTraceLogType.None);
+        Application.SetStackTraceLogType(LogType.Assert, StackTraceLogType.None);
+        Application.SetStackTraceLogType(LogType.Warning, StackTraceLogType.None);
+        Application.SetStackTraceLogType(LogType.Log, StackTraceLogType.None);
+        Application.SetStackTraceLogType(LogType.Exception, StackTraceLogType.None);
+
         Debug.Log("main script has load");
 
         ChatBtn = transform.Find("Panel/ChatBtn").GetComponent<Button>();
@@ -61,11 +67,27 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         m_NewTokenBtn.onClick.AddListener(NewTokenAction);
 
         SDKClient.Instance.AddConnectionDelegate(this);
+        SDKClient.Instance.AddMultiDeviceDelegate(this);
+
+        SDKClient.Instance.ChatManager.AddChatManagerDelegate(this);
+        SDKClient.Instance.ContactManager.AddContactManagerDelegate(this);
+        SDKClient.Instance.GroupManager.AddGroupManagerDelegate(this);
+        SDKClient.Instance.RoomManager.AddRoomManagerDelegate(this);
+        SDKClient.Instance.PresenceManager.AddPresenceManagerDelegate(this);
+        SDKClient.Instance.ThreadManager.AddThreadManagerDelegate(this);
     }
 
     private void OnDestroy()
     {
         SDKClient.Instance.DeleteConnectionDelegate(this);
+        SDKClient.Instance.DeleteMultiDeviceDelegate(this);
+
+        SDKClient.Instance.ChatManager.RemoveChatManagerDelegate(this);
+        SDKClient.Instance.ContactManager.RemoveContactManagerDelegate(this);
+        SDKClient.Instance.GroupManager.RemoveGroupManagerDelegate(this);
+        SDKClient.Instance.RoomManager.RemoveRoomManagerDelegate(this);
+        SDKClient.Instance.PresenceManager.RemovePresenceManagerDelegate(this);
+        SDKClient.Instance.ThreadManager.RemoveThreadManagerDelegate(this);
     }
 
     void ChatBtnAction()
@@ -176,6 +198,7 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         SDKClient.Instance.ChatManager.AddChatManagerDelegate(this);
     }
 
+
     // Update is called once per frame
     void Update()
     {
@@ -187,24 +210,54 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         UIManager.DefaultAlert(transform, "OnConnected");
     }
 
-    public void OnDisconnected(DisconnectReason reason)
+    public void OnDisconnected()
     {
-        UIManager.DefaultAlert(transform, $"OnDisconnected : {reason}");
-        if (reason == DisconnectReason.Reason_LoginFromOtherDevice)
-        {
-            SceneManager.LoadSceneAsync("Login");
-        }
+        UIManager.DefaultAlert(transform, "OnDisconnected");
     }
 
+    public void OnLoggedOtherDevice()
+    {
+        UIManager.DefaultAlert(transform, "OnLoggedOtherDevice");
+    }
+
+    public void OnRemovedFromServer()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnForbidByServer()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnChangedIMPwd()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnLoginTooManyDevice()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnKickedByOtherDevice()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnAuthFailed()
+    {
+        throw new System.NotImplementedException();
+    }
 
     public void OnTokenExpired()
     {
-        UIManager.DefaultAlert(transform, $"OnTokenExpired");
+        throw new System.NotImplementedException();
     }
 
     public void OnTokenWillExpire()
     {
-        UIManager.DefaultAlert(transform, $"OnTokenWillExpire");
+        throw new System.NotImplementedException();
     }
 
     public void OnMessagesReceived(List<Message> messages)
@@ -277,6 +330,11 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         throw new System.NotImplementedException();
     }
 
+    public void OnRemoveFromRoomByOffline(string roomId, string roomName)
+    {
+        throw new System.NotImplementedException();
+    }
+
     public void OnMuteListAddedFromRoom(string roomId, List<string> mutes, long expireTime)
     {
         throw new System.NotImplementedException();
@@ -337,51 +395,6 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         throw new System.NotImplementedException();
     }
 
-    public void OnChatThreadCreate(ChatThreadEvent threadEvent)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void OnChatThreadUpdate(ChatThreadEvent threadEvent)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void OnChatThreadDestroy(ChatThreadEvent threadEvent)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void OnUserKickOutOfChatThread(ChatThreadEvent threadEvent)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void OnPresenceUpdated(List<Presence> presences)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void OnContactMultiDevicesEvent(MultiDevicesOperation operation, string target, string ext)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void OnGroupMultiDevicesEvent(MultiDevicesOperation operation, string target, List<string> usernames)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void OnUndisturbMultiDevicesEvent(string data)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void OnThreadMultiDevicesEvent(MultiDevicesOperation operation, string target, List<string> usernames)
-    {
-        throw new System.NotImplementedException();
-    }
-
     public void OnInvitationReceivedFromGroup(string groupId, string groupName, string inviter, string reason)
     {
         throw new System.NotImplementedException();
@@ -397,12 +410,12 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         throw new System.NotImplementedException();
     }
 
-    public void OnRequestToJoinDeclinedFromGroup(string groupId, string groupName, string decliner, string reason)
+    public void OnRequestToJoinDeclinedFromGroup(string groupId, string reason)
     {
         throw new System.NotImplementedException();
     }
 
-    public void OnInvitationAcceptedFromGroup(string groupId, string invitee, string reason)
+    public void OnInvitationAcceptedFromGroup(string groupId, string invitee)
     {
         throw new System.NotImplementedException();
     }
@@ -492,6 +505,41 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         throw new System.NotImplementedException();
     }
 
+    public void OnStateChangedFromGroup(string groupId, bool isDisable)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnSpecificationChangedFromGroup(Group group)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnPresenceUpdated(List<Presence> presences)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnContactMultiDevicesEvent(MultiDevicesOperation operation, string target, string ext)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnGroupMultiDevicesEvent(MultiDevicesOperation operation, string target, List<string> usernames)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnUndisturbMultiDevicesEvent(string data)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnThreadMultiDevicesEvent(MultiDevicesOperation operation, string target, List<string> usernames)
+    {
+        throw new System.NotImplementedException();
+    }
+
     public void OnContactAdded(string userId)
     {
         throw new System.NotImplementedException();
@@ -513,6 +561,26 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
     }
 
     public void OnFriendRequestDeclined(string userId)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnChatThreadCreate(ChatThreadEvent threadEvent)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnChatThreadUpdate(ChatThreadEvent threadEvent)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnChatThreadDestroy(ChatThreadEvent threadEvent)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnUserKickOutOfChatThread(ChatThreadEvent threadEvent)
     {
         throw new System.NotImplementedException();
     }
