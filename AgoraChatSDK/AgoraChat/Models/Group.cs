@@ -295,7 +295,7 @@ namespace AgoraChat
             jo.AddWithoutNull("isMuteAll", IsAllMemberMuted);
             jo.AddWithoutNull("options", Options.ToJsonObject());
             jo.AddWithoutNull("permissionType", PermissionType.ToInt());
-            jo.AddWithoutNull("isDisabled", IsDisabled);
+            // jo.AddWithoutNull("isDisabled", IsDisabled);
             return jo;
         }
     }

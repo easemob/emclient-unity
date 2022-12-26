@@ -409,16 +409,16 @@ namespace AgoraChat
 		 *  \~chinese
 		 *  群组禁用状态发生变化回调。
 		 *
-		 *  @param group           群组实例。
+		 *  @param groupId           群组 ID。
 		 *  @param isDisable           是否禁用。
 		 *
 		 *  \~english
 		 *  Occurs when the disabled state of group changes.
 		 *
-		 *  @param group           The group instance.
+		 *  @param groupId          The group ID.
 		 *  @param isDisable        Whether the group is disabled.
 		 */
-        void OnStateChangedFromGroup(Group group, bool isDisable);
+        void OnStateChangedFromGroup(string groupId, bool isDisable);
 
         /**
 		 *  \~chinese
@@ -431,7 +431,7 @@ namespace AgoraChat
 		 *
 		 *  @param group      The group instance.
 		 */
-        void OnSpecificationDidUpdateFromGroup(Group group);
+        void OnSpecificationChangedFromGroup(Group group);
 
     }
 }
