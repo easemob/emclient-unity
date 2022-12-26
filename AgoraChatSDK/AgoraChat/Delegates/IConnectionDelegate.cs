@@ -61,20 +61,39 @@
 
         /**
          *  \~chinese
-         *  当前登录账号被强制退出时会收到该回调，有以下原因：
-         *    - 密码被修改；
-         *    - 登录设备数过多；
-         *    - 服务被封禁;
-         *    - 被强制下线;
+         *  当前登录账号因密码被修改被强制退出。
          *
          *  \~english
-         *  The delegate method will be invoked when current IM account is forced to logout with the following reasons:
-         *    1. The password is modified;
-         *    2. Logged in too many devices;
-         *    3. User for forbidden;
-         *    4. Forced offline.
+         *  The delegate method will be invoked when current IM account password is modified to logout.
          */
-        void OnForcedToLogout();
+        void OnChangedIMPwd();
+
+        /**
+         *  \~chinese
+         *  当前登录账号登录设备数过多被强制退出。
+         *
+         *  \~english
+         *  The delegate method will be invoked when current IM account logged in too many devices to logout.
+         */
+        void OnLoginTooManyDevice();
+
+        /**
+         *  \~chinese
+         *  当前登录设备账号被登录其他设备的同账号踢下线。
+         *
+         *  \~english
+         *  The delegate method will be invoked when kicked offline by another device.
+         */
+        void OnKickedByOtherDevice();
+
+        /**
+         *  \~chinese
+         *  当前登录设备账号因鉴权失败强制退出。
+         *
+         *  \~english
+         *  The delegate method will be invoked when current device account is forcibly logged out due to authentication failure.
+         */
+        void OnAuthFailed();
 
 
         /**

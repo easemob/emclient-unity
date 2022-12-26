@@ -289,7 +289,15 @@
 }
 
 - (void)userAccountDidForcedToLogout:(EMError *)aError {
-    [EMWrapperHelper.shared.listener onReceive:multiDeviceListener method:onForcedToLogout info:nil];
+    if (aError.code == 216) {
+        [EMWrapperHelper.shared.listener onReceive:multiDeviceListener method:onChangedImPwd info:nil];
+    }else if(aError.code == 214) {
+        [EMWrapperHelper.shared.listener onReceive:multiDeviceListener method:onLoginTooManyDevice info:nil];
+    }else if(aError.code == 217) {
+        [EMWrapperHelper.shared.listener onReceive:multiDeviceListener method:onKickedByOtherDevice info:nil];
+    }else if(aError.code == 202) {
+        [EMWrapperHelper.shared.listener onReceive:multiDeviceListener method:onAuthFailed info:nil];
+    }
 }
 
 - (void)tokenWillExpire:(EMErrorCode)aErrorCode {
