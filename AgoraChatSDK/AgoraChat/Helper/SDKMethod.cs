@@ -343,7 +343,6 @@ namespace AgoraChat
         internal const string onRemoveAllowListMembersFromGroup = "onRemoveWhiteListMembersFromGroup";
         internal const string onAllMemberMuteChangedFromGroup = "onAllMemberMuteChangedFromGroup";
         internal const string onSpecificationChangedFromGroup = "onSpecificationChangedFromGroup";
-        internal const string onSpecificationChanged = "onSpecificationChanged";
         internal const string onStateChangedFromGroup = "onStateChangedFromGroup";
 
         // RoomManagerDelegate

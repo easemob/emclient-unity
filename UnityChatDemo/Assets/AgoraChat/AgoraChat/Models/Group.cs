@@ -79,12 +79,12 @@ namespace AgoraChat
          * \~chinese
          * 群组管理员列表。
          * 
-         * 若要获取服务器端的群组管理员列表，可调用 {@link IGroupManager#GetGroupWithId(String)} 获取群组详情。
+         * 若要获取服务器端的群组管理员列表，可调用 {@link IGroupManager#GetGroupSpecificationFromServer(String, ValueCallBack)} 获取群组详情。
          *
          * \~english
          * The admin list of the group.
          * 
-         * To get the admin list of the group from the server, you can call {@link IGroupManager#GetGroupWithId(String)} to get group details.
+         * To get the admin list of the group from the server, you can call {@link IGroupManager#GetGroupSpecificationFromServer(String, ValueCallBack)} to get group details.
          * 
          */
         public List<string> AdminList { get; internal set; }
@@ -182,7 +182,7 @@ namespace AgoraChat
          * The group options.
          * 
          */
-        public GroupOptions Options { get; internal set; }
+        internal GroupOptions Options;
 
         /**
          * \~chinese
@@ -193,6 +193,52 @@ namespace AgoraChat
          * 
          */
         public GroupPermissionType PermissionType { get; internal set; }
+
+        /**
+         * \~chinese
+         * 获取群组属性：成员是否能自由加入，还是需要申请或者被邀请。
+         * 
+         * 群组有四个类型属性，`IsMemberOnly`是除了 {@link GroupStyle#PublicOpenJoin} 之外的三种属性，表示该群不是自由加入的群组。
+         *
+         * - `true`：进群需要群主邀请，群成员邀请，或者群主和管理员同意入群申请；
+         * - `false`：意味着用户可以自由加入群，不需要申请和被邀请。
+         *
+         * \~english
+         * Fetches the group property: whether users can auto join the group VS need requesting or invitation from a group member to join the group.
+         * There are four types of group properties used to define the style of a group, and `IsMemberOnly` contains three types including: PrivateOnlyOwnerInvite,  PrivateMemberCanInvite, PublicJoinNeedApproval. And do not include {@link GroupStyle#PublicOpenJoin}.
+         *
+         * - `true`: Users can not join the group freely. Needs the invitation from the group owner or members, or the application been approved by the group owner or admins.
+         * - `false`: Users can join freely without the group owner or member‘s invitation or the new joiner’s application been approved.
+         */
+        public bool IsMemberOnly { get; internal set; }
+
+        /**
+         * \~chinese 获取群组是否允许成员邀请。
+         * 
+         * \~english 
+         * - `true`：群成员可以邀请其他用户加入； - `false`：不允许群成员邀请其他用户加入。 \~english Gets whether the group member is allowed to invite other users to join the group.
+         */
+        public bool IsMemberAllowToInvite { get; internal set; }
+
+        /**
+         * \~chinese 获取群允许加入的最大成员数，在创建群时确定。 需要获取群详情才能拿到正确的结果，如果没有获取则返回 0。
+         * 
+         * \~english 
+         * The max number of group members allowed in a group. The param is set when the group is created. Be sure to fetch the detail specification of the group from the server first, see IGroupManager#GetGroupSpecificationFromServer(String, ValueCallBack). If not, the SDK returns 0.
+         */
+        public int MaxUserCount { get; internal set; }
+
+
+        /**
+         * \~chinese
+         * 获取群组订制扩展信息。
+         * @return  群组定制扩展信息。
+         *
+         * \~english
+         * Gets the customized extension of the group.
+         * @return  The customized extension of the group.
+         */
+        public string Ext { get; internal set; }
 
         internal Group() { }
 
@@ -214,7 +260,11 @@ namespace AgoraChat
             MuteList = List.StringListFromJsonArray(jsonObject["muteList"]);
             MessageBlocked = jsonObject["block"];
             IsAllMemberMuted = jsonObject["isMuteAll"];
-            Options = ModelHelper.CreateWithJsonObject<GroupOptions>(jsonObject["options"]);
+            //Options = ModelHelper.CreateWithJsonObject<GroupOptions>(jsonObject["options"]);
+            MaxUserCount = jsonObject["maxUserCount"].AsInt;
+            IsMemberOnly = jsonObject["isMemberOnly"].AsBool;
+            IsMemberAllowToInvite = jsonObject["isMemberAllowToInvite"].AsBool;
+            Ext = jsonObject["ext"];
             PermissionType = (GroupPermissionType)jsonObject["permissionType"].AsInt;
         }
 

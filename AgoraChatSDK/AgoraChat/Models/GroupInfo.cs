@@ -7,7 +7,7 @@ namespace AgoraChat
      * \~chinese
      * 群组的基本信息, 用于定义公开群的信息。
      * 
-     * 若要从服务器获取群组基本信息，可调用 {@link GetGroupSpecificationFromServer(string  ValueCallBack<Group>)} 。
+     * 若要从服务器获取群组基本信息，可调用 {@link GetGroupSpecificationFromServer(string, ValueCallBack<Group>)} 。
      *
      * \~english
      * The class that defines basic information of public groups.

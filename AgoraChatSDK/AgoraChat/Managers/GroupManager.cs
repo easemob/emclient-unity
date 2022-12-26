@@ -1590,6 +1590,18 @@ namespace AgoraChat
                             it.OnAllMemberMuteChangedFromGroup(groupId, isMuteAll);
                         }
                         break;
+                    case SDKMethod.onStateChangedFromGroup:
+                        {
+                            bool isDisable = jsonNode["isDisabled"].AsBool;
+                            it.OnStateChangedFromGroup(groupId, isDisable);
+                        }
+                        break;
+                    case SDKMethod.onSpecificationChangedFromGroup:
+                        {
+                            Group group = ModelHelper.CreateWithJsonObject<Group>(jsonNode["group"]);
+                            it.OnSpecificationChangedFromGroup(group);
+                        }
+                        break;
                 }
             }
         }

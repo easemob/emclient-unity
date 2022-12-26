@@ -1285,7 +1285,7 @@ namespace AgoraChat
                         break;
                     case SDKMethod.onSpecificationChangedFromRoom:
                         {
-                            Room room = new Room(jsonNode.AsObject);
+                            Room room = ModelHelper.CreateWithJsonObject<Room>(jsonNode["room"]);
                             it.OnSpecificationChangedFromRoom(room);
                         }
                         break;
