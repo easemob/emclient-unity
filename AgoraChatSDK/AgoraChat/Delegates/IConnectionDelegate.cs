@@ -62,28 +62,18 @@
         /**
          *  \~chinese
          *  当前登录账号因密码被修改被强制退出。
-         *    - 登录设备数过多；
-         *    - 服务被封禁;
-         *    - 被强制下线;
          *
          *  \~english
          *  The delegate method will be invoked when current IM account password is modified to logout.
-         *    2. Logged in too many devices;
-         *    3. User for forbidden;
-         *    4. Forced offline.
          */
         void OnChangedIMPwd();
 
         /**
          *  \~chinese
          *  当前登录账号登录设备数过多被强制退出。
-         *    - 服务被封禁;
-         *    - 被强制下线;
          *
          *  \~english
          *  The delegate method will be invoked when current IM account logged in too many devices to logout.
-         *    3. User for forbidden;
-         *    4. Forced offline.
          */
         void OnLoginTooManyDevice();
 

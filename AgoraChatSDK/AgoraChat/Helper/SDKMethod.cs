@@ -316,12 +316,13 @@ namespace AgoraChat
         // ConnectionDelegate
         internal const string onConnected = "onConnected";
         internal const string onDisconnected = "onDisconnected";
-
         internal const string onLoggedOtherDevice = "onLoggedOtherDevice";
         internal const string onRemovedFromServer = "onRemovedFromServer";
         internal const string onForbidByServer = "onForbidByServer";
-        internal const string onForcedToLogout = "onForcedToLogout";
-
+        internal const string onChangedImPwd = "onChangedImPwd";
+        internal const string onLoginTooManyDevice = "onLoginTooManyDevice";
+        internal const string onKickedByOtherDevice = "onKickedByOtherDevice";
+        internal const string onAuthFailed = "onAuthFailed";
         internal const string onTokenExpired = "onTokenExpired";
         internal const string onTokenWillExpire = "onTokenWillExpire";
 
