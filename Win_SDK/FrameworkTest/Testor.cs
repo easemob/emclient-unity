@@ -5561,10 +5561,11 @@ namespace WinSDKTest
                     Console.WriteLine($"NoticeEnabled: {group.NoticeEnabled}");
                     Console.WriteLine($"MessageBlocked: {group.MessageBlocked}");
                     Console.WriteLine($"IsAllMemberMuted: {group.IsAllMemberMuted}");
-                    Console.WriteLine($"option style: {group.Options.Style}");
-                    Console.WriteLine($"option MaxCount: {group.Options.MaxCount}");
-                    Console.WriteLine($"option InviteNeedConfirm: {group.Options.InviteNeedConfirm}");
-                    Console.WriteLine($"option Ext: {group.Options.Ext}");
+                    Console.WriteLine($"IsMemberOnly: {group.IsMemberOnly}");
+                    Console.WriteLine($"MaxCount: {group.MaxUserCount}");
+                    Console.WriteLine($"IsMemberAllowToInvite: {group.IsMemberAllowToInvite}");
+                    Console.WriteLine($"Ext: {group.Ext}");
+                    Console.WriteLine($"IsDisabled: {group.IsDisabled}");
                     Console.WriteLine($"=======================================================");
                 },
                 onError: (code, desc) =>
@@ -5633,10 +5634,11 @@ namespace WinSDKTest
                 Console.WriteLine($"NoticeEnabled: {group.NoticeEnabled}");
                 Console.WriteLine($"MessageBlocked: {group.MessageBlocked}");
                 Console.WriteLine($"IsAllMemberMuted: {group.IsAllMemberMuted}");
-                Console.WriteLine($"option style: {group.Options.Style}");
-                Console.WriteLine($"option MaxCount: {group.Options.MaxCount}");
-                Console.WriteLine($"option InviteNeedConfirm: {group.Options.InviteNeedConfirm}");
-                Console.WriteLine($"option Ext: {group.Options.Ext}");
+                Console.WriteLine($"IsMemberOnly: {group.IsMemberOnly}");
+                Console.WriteLine($"MaxCount: {group.MaxUserCount}");
+                Console.WriteLine($"IsMemberAllowToInvite: {group.IsMemberAllowToInvite}");
+                Console.WriteLine($"Ext: {group.Ext}");
+                Console.WriteLine($"IsDisabled: {group.IsDisabled}");
                 Console.WriteLine($"=======================================================");
             }
         }
@@ -5671,10 +5673,11 @@ namespace WinSDKTest
                     Console.WriteLine($"NoticeEnabled: {group.NoticeEnabled}");
                     Console.WriteLine($"MessageBlocked: {group.MessageBlocked}");
                     Console.WriteLine($"IsAllMemberMuted: {group.IsAllMemberMuted}");
-                    Console.WriteLine($"option style: {group.Options.Style}");
-                    Console.WriteLine($"option MaxCount: {group.Options.MaxCount}");
-                    Console.WriteLine($"option InviteNeedConfirm: {group.Options.InviteNeedConfirm}");
-                    Console.WriteLine($"option Ext: {group.Options.Ext}");
+                    Console.WriteLine($"IsMemberOnly: {group.IsMemberOnly}");
+                    Console.WriteLine($"MaxCount: {group.MaxUserCount}");
+                    Console.WriteLine($"IsMemberAllowToInvite: {group.IsMemberAllowToInvite}");
+                    Console.WriteLine($"Ext: {group.Ext}");
+                    Console.WriteLine($"IsDisabled: {group.IsDisabled}");
                     Console.WriteLine($"=======================================================");
                     i++;
                 }
@@ -5724,10 +5727,11 @@ namespace WinSDKTest
                         Console.WriteLine($"MessageBlocked: {group.MessageBlocked}");
                         Console.WriteLine($"IsAllMemberMuted: {group.IsAllMemberMuted}");
                         //Console.WriteLine($"IsDisabled: {group.IsDisabled}");
-                        Console.WriteLine($"option style: {group.Options.Style}");
-                        Console.WriteLine($"option MaxCount: {group.Options.MaxCount}");
-                        Console.WriteLine($"option InviteNeedConfirm: {group.Options.InviteNeedConfirm}");
-                        Console.WriteLine($"option Ext: {group.Options.Ext}");
+                        Console.WriteLine($"IsMemberOnly: {group.IsMemberOnly}");
+                        Console.WriteLine($"MaxCount: {group.MaxUserCount}");
+                        Console.WriteLine($"IsMemberAllowToInvite: {group.IsMemberAllowToInvite}");
+                        Console.WriteLine($"Ext: {group.Ext}");
+                        Console.WriteLine($"IsDisabled: {group.IsDisabled}");
                         Console.WriteLine($"=======================================================");
                         i++;
                     }
@@ -8780,9 +8784,9 @@ namespace WinSDKTest
             Console.WriteLine("OnConnected");
         }
 
-        public void OnDisconnected(DisconnectReason reason)
+        public void OnDisconnected()
         {
-            Console.WriteLine($"OnDisconnected: {reason}");
+            Console.WriteLine($"OnDisconnected");
         }
 
         public void OnTokenExpired()
@@ -8793,6 +8797,41 @@ namespace WinSDKTest
         public void OnTokenWillExpire()
         {
             Console.WriteLine($"OnTokenWillExpire");
+        }
+
+        public void OnAuthFailed()
+        {
+            Console.WriteLine($"OnAuthFailed");
+        }
+
+        public void OnChangedIMPwd()
+        {
+            Console.WriteLine($"OnChangedIMPwd");
+        }
+
+        public void OnForbidByServer()
+        {
+            Console.WriteLine($"OnForbidByServer");
+        }
+
+        public void OnKickedByOtherDevice()
+        {
+            Console.WriteLine($"OnKickedByOtherDevice");
+        }
+
+        public void OnLoggedOtherDevice()
+        {
+            Console.WriteLine($"OnLoggedOtherDevice");
+        }
+
+        public void OnLoginTooManyDevice()
+        {
+            Console.WriteLine($"OnLoginTooManyDevice");
+        }
+
+        public void OnRemovedFromServer()
+        {
+            Console.WriteLine($"OnRemovedFromServer");
         }
     }
 
@@ -8863,9 +8902,9 @@ namespace WinSDKTest
             Console.WriteLine($"OnDestroyedFromGroup: gid: {groupId}; groupName:{groupName}");
         }
 
-        public void OnInvitationAcceptedFromGroup(string groupId, string invitee, string reason)
+        public void OnInvitationAcceptedFromGroup(string groupId, string invitee)
         {
-            Console.WriteLine($"OnInvitationAcceptedFromGroup: gid: {groupId}; invitee:{invitee}; reason:{reason}");
+            Console.WriteLine($"OnInvitationAcceptedFromGroup: gid: {groupId}; invitee:{invitee}");
         }
 
         public void OnInvitationDeclinedFromGroup(string groupId, string invitee, string reason)
@@ -8925,9 +8964,9 @@ namespace WinSDKTest
             Console.WriteLine($"OnRequestToJoinAcceptedFromGroup: gid: {groupId}; newOwner:{groupName}; oldOwner:{accepter}");
         }
 
-        public void OnRequestToJoinDeclinedFromGroup(string groupId, string groupName, string decliner, string reason)
+        public void OnRequestToJoinDeclinedFromGroup(string groupId, string reason)
         {
-            Console.WriteLine($"OnRequestToJoinDeclinedFromGroup: gid: {groupId}; newOwner:{groupName}; decliner:{decliner}; reason:{reason}");
+            Console.WriteLine($"OnRequestToJoinDeclinedFromGroup: gid: {groupId}; reason:{reason}");
         }
 
         public void OnRequestToJoinReceivedFromGroup(string groupId, string groupName, string applicant, string reason)
@@ -8948,6 +8987,16 @@ namespace WinSDKTest
         public void OnUserRemovedFromGroup(string groupId, string groupName)
         {
             Console.WriteLine($"OnUserRemovedFromGroup: gid: {groupId}; groupName:{groupName}");
+        }
+
+        public void OnSpecificationChangedFromGroup(Group group)
+        {
+            Console.WriteLine($"OnSpecificationChangedFromGroup: gid: {group.GroupId}; groupName:{group.Name}");
+        }
+
+        public void OnStateChangedFromGroup(string groupId, bool isDisable)
+        {
+            Console.WriteLine($"OnStateChangedFromGroup: gid: {groupId}; isDisable:{isDisable}");
         }
     }
 
@@ -9074,6 +9123,11 @@ namespace WinSDKTest
         public void OnAllMemberMuteChangedFromChatroom(string roomId, bool isAllMuted)
         {
             Console.WriteLine($"OnAllMemberMuteChangedFromChatroom: roomId: {roomId}; isAllMuted:{isAllMuted}");
+        }
+
+        public void OnRemoveFromRoomByOffline(string roomId, string roomName)
+        {
+            Console.WriteLine($"OnRemoveFromRoomByOffline: roomId: {roomId}; roomName:{roomName}");
         }
     }
 

@@ -26,14 +26,36 @@ namespace sdk_wrapper {
 
         void onDisconnect(EMErrorPtr error) override
         {
-            JSON_STARTOBJ
-            writer.Key("ret");
-            writer.Int(error->mErrorCode);
-            JSON_ENDOBJ
+            string json = "";
 
-            string json = s.GetString();
-
-            CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onDisconnected.c_str(), json.c_str());
+            switch (error->mErrorCode)
+            {
+            case 202:
+                CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onAuthFailed.c_str(), json.c_str());
+                break;
+            case 207:
+                CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onRemovedFromServer.c_str(), json.c_str());
+                break;
+            case 214:
+                CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onLoginTooManyDevice.c_str(), json.c_str());
+                break;
+            case 216:
+                CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onChangedImPwd.c_str(), json.c_str());
+                break;
+            case 217:
+                CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onKickedByOtherDevice.c_str(), json.c_str());
+                break;
+            case 206:
+            case 220:
+                CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onLoggedOtherDevice.c_str(), json.c_str());
+                break;
+            case 305:
+                CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onForbidByServer.c_str(), json.c_str());
+                break;
+            default:
+                CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onDisconnected.c_str(), json.c_str());
+                break;
+            }
         }
 
         void onPong() override
@@ -233,8 +255,8 @@ namespace sdk_wrapper {
             writer.Key("groupId");
             writer.String(group->groupId().c_str());
 
-            writer.Key("userId");
-            writer.String(invitee.c_str());
+            //writer.Key("userId");
+            //writer.String(invitee.c_str());
 
             writer.Key("msg");
             writer.String(reason.c_str());
@@ -579,6 +601,40 @@ namespace sdk_wrapper {
             if (json.size() > 0)
                 CallBack(STRING_GROUPMANAGER_LISTENER.c_str(), STRING_onSharedFileDeletedFromGroup.c_str(), json.c_str());
         }
+
+        void onDisabledStateChangedFromGroup(const easemob::EMGroupPtr group, bool isDisabled)
+        {
+            JSON_STARTOBJ
+            writer.Key("groupId");
+            writer.String(group->groupId().c_str());
+
+            writer.Key("isDisabled");
+            writer.Bool(isDisabled);
+
+            JSON_ENDOBJ
+
+            string json = s.GetString();
+
+            if (json.size() > 0)
+                CallBack(STRING_GROUPMANAGER_LISTENER.c_str(), STRING_onStateChangedFromGroup.c_str(), json.c_str());
+        }
+
+        void onUpdateSpecificationFromGroup(const easemob::EMGroupPtr group)
+        {
+            JSON_STARTOBJ
+
+            if (nullptr != group) {
+                writer.Key("group");
+                Group::ToJsonObject(writer, group);
+            }
+
+            JSON_ENDOBJ
+
+            string json = s.GetString();
+
+            if (json.size() > 0)
+                CallBack(STRING_GROUPMANAGER_LISTENER.c_str(), STRING_onSpecificationChangedFromGroup.c_str(), json.c_str());
+        }
     };
 
     class RoomManagerListener : public EMChatroomManagerListener
@@ -624,14 +680,21 @@ namespace sdk_wrapper {
             }
             if ((EMMuc::EMMucLeaveReason::BE_KICKED == reason)) {
 
-                //writer.Key("userId");
-                //writer.String("");
-
                 JSON_ENDOBJ
                 json = s.GetString();
 
                 if (json.size() > 0)
                     CallBack(STRING_ROOMMANAGER_LISTENER.c_str(), STRING_onRemovedFromRoom.c_str(), json.c_str());
+
+                return;
+            }
+            if ((EMMuc::EMMucLeaveReason::BE_KICKED_FOR_OFFLINE == reason)) {
+
+                JSON_ENDOBJ
+                json = s.GetString();
+
+                if (json.size() > 0)
+                    CallBack(STRING_ROOMMANAGER_LISTENER.c_str(), STRING_onRemoveFromRoomByOffline.c_str(), json.c_str());
 
                 return;
             }
@@ -850,7 +913,16 @@ namespace sdk_wrapper {
 
         void onUpdateSpecificationFromChatroom(const easemob::EMChatroomPtr chatroom_) override {
 
-            string json = Room::ToJson(chatroom_);
+            JSON_STARTOBJ
+
+            if (nullptr != chatroom_) {
+                writer.Key("room");
+                Room::ToJsonObject(writer, chatroom_);
+            }
+
+            JSON_ENDOBJ
+
+            string json = s.GetString();
 
             if (json.size() > 0)
                 CallBack(STRING_ROOMMANAGER_LISTENER.c_str(), STRING_onSpecificationChangedFromRoom.c_str(), json.c_str());
