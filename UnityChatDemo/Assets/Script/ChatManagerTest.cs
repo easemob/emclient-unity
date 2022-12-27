@@ -745,7 +745,32 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     }
     void UpdateMessageBtnAction()
     {
-        UIManager.UnfinishedAlert(transform);
+        InputAlertConfig config = new InputAlertConfig("更新消息id", (dict) =>
+        {
+            string messageId = dict["messageId"]; ;
+
+            Message msg = SDKClient.Instance.ChatManager.LoadMessage(messageId);
+            if (null == msg)
+            {
+                UIManager.ErrorAlert(transform, -1, " cannot find the message");
+                return;
+            }
+
+            msg.Status = MessageStatus.PROGRESS;
+
+            bool ret = SDKClient.Instance.ChatManager.UpdateMessage(msg);
+
+            if (ret)
+                UIManager.SuccessAlert(transform);
+            else
+                UIManager.ErrorAlert(transform, -1, "UpdateMessagen failed");
+
+        });
+
+        config.AddField("messageId");
+
+        UIManager.DefaultInputAlert(transform, config);
+
         Debug.Log("UpdateMessageBtnAction");
     }
 
