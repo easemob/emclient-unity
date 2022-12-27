@@ -455,11 +455,17 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         throw new System.NotImplementedException();
     }
 
+    public void OnRequestToJoinDeclinedFromGroup(string groupId, string reason)
+    {
+    }
     public void OnAdminRemovedFromGroup(string groupId, string administrator)
     {
         throw new System.NotImplementedException();
     }
 
+    public void OnInvitationAcceptedFromGroup(string groupId, string invitee)
+    {
+    }
     public void OnOwnerChangedFromGroup(string groupId, string newOwner, string oldOwner)
     {
         throw new System.NotImplementedException();
@@ -581,6 +587,61 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
     }
 
     public void OnUserKickOutOfChatThread(ChatThreadEvent threadEvent)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    void IConnectionDelegate.OnDisconnected()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    void IConnectionDelegate.OnLoggedOtherDevice()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    void IConnectionDelegate.OnRemovedFromServer()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    void IConnectionDelegate.OnForbidByServer()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    void IConnectionDelegate.OnChangedIMPwd()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    void IConnectionDelegate.OnLoginTooManyDevice()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    void IConnectionDelegate.OnKickedByOtherDevice()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    void IConnectionDelegate.OnAuthFailed()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    void IRoomManagerDelegate.OnRemoveFromRoomByOffline(string roomId, string roomName)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    void IGroupManagerDelegate.OnStateChangedFromGroup(string groupId, bool isDisable)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    void IGroupManagerDelegate.OnSpecificationChangedFromGroup(Group group)
     {
         throw new System.NotImplementedException();
     }
