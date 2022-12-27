@@ -28,12 +28,6 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
     private void Awake()
     {
 
-        Application.SetStackTraceLogType(LogType.Error, StackTraceLogType.None);
-        Application.SetStackTraceLogType(LogType.Assert, StackTraceLogType.None);
-        Application.SetStackTraceLogType(LogType.Warning, StackTraceLogType.None);
-        Application.SetStackTraceLogType(LogType.Log, StackTraceLogType.None);
-        Application.SetStackTraceLogType(LogType.Exception, StackTraceLogType.None);
-
         Debug.Log("main script has load");
 
         ChatBtn = transform.Find("Panel/ChatBtn").GetComponent<Button>();
