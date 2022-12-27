@@ -199,6 +199,16 @@ namespace WinSDKTest
                         Console.WriteLine($"RemotePath: {b.RemotePath}");
                     }
                     break;
+                case MessageBodyType.CUSTOM:
+                    {
+                        CustomBody cb = (CustomBody)msg.Body;
+                        Console.WriteLine($"CustomEvent:{cb.CustomEvent}");
+                        foreach(var it in cb.CustomParams)
+                        {
+                            Console.WriteLine($"CustomParams: key:{it.Key}, value: {it.Value}");
+                        }
+                    }
+                    break;
             }
             Console.WriteLine($"===========================");
         }
