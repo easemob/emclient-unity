@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using AgoraChat;
 
-public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
+public class RoomManagerTest : MonoBehaviour
 {
 
     private Text roomText;
@@ -106,13 +106,12 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
         RemoveAttributeBtn.onClick.AddListener(RemoveAttributeBtnAction);
         FetchAttributeBtn.onClick.AddListener(FetchAttributeBtnAction);
 
-        SDKClient.Instance.RoomManager.AddRoomManagerDelegate(this);
     }
 
 
     private void OnDestroy()
     {
-        SDKClient.Instance.RoomManager.RemoveRoomManagerDelegate(this);
+
     }
 
     void backButtonAction()

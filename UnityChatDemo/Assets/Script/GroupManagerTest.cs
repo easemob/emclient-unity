@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using AgoraChat;
 
-public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
+public class GroupManagerTest : MonoBehaviour
 {
     private Text groupText;
     private Button backButton;
@@ -158,13 +158,13 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
         UpdateGroupExtBtn.onClick.AddListener(UpdateGroupExtBtnAction);
         UploadGroupSharedFileBtn.onClick.AddListener(UploadGroupSharedFileBtnAction);
 
-        SDKClient.Instance.GroupManager.AddGroupManagerDelegate(this);
+
 
     }
 
     private void OnDestroy()
     {
-        SDKClient.Instance.GroupManager.RemoveGroupManagerDelegate(this);
+
     }
 
     void AcceptInvitationFromGroupBtnAction()
