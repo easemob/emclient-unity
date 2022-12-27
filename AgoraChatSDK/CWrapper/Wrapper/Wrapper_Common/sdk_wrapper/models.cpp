@@ -2107,12 +2107,27 @@ namespace sdk_wrapper
         writer.Bool(group->groupAllMembersMuted());
 
         if (nullptr != group->groupSetting()) {
-            writer.Key("options");
-            JsonObject(writer, group->groupSetting());
+            //writer.Key("options");
+            //JsonObject(writer, group->groupSetting());
+
+            writer.Key("maxUserCount");
+            writer.Int(group->groupSetting()->maxUserCount());
+
+            writer.Key("isMemberOnly");
+            writer.Bool(IsMemberOnly(group->groupSetting()->style()));
+
+            writer.Key("isMemberAllowToInvite");
+            writer.Bool(IsMemberAllowToInvite(group->groupSetting()->style()));
+
+            writer.Key("ext");
+            writer.String(group->groupSetting()->extension().c_str());
         }
 
         writer.Key("permissionType");
         writer.Int(MemberTypeToInt(group->groupMemberType()));
+
+        writer.Key("isDisabled");
+        writer.Bool(group->isDisabled());
 
         writer.EndObject();
     }
@@ -2244,6 +2259,25 @@ namespace sdk_wrapper
         default: style = EMMucSetting::EMMucStyle::PRIVATE_OWNER_INVITE; break;
         }
         return style;
+    }
+
+    bool Group::IsMemberOnly(EMMucSetting::EMMucStyle style)
+    {
+        if (EMMucSetting::EMMucStyle::PRIVATE_OWNER_INVITE == style ||
+            EMMucSetting::EMMucStyle::PRIVATE_MEMBER_INVITE == style ||
+            EMMucSetting::EMMucStyle::PUBLIC_JOIN_APPROVAL == style)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    bool Group::IsMemberAllowToInvite(EMMucSetting::EMMucStyle style)
+    {
+        if (EMMucSetting::EMMucStyle::PRIVATE_MEMBER_INVITE == style)
+            return true;
+        else
+            return false;
     }
 
     void GroupSharedFile::ToJsonObject(Writer<StringBuffer>& writer, EMMucSharedFilePtr file)

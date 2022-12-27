@@ -82,6 +82,13 @@ const string STRING_onPresenceUpdated = "onPresenceUpdated";
 // ConnectionDelegate
 const string STRING_onConnected = "onConnected";
 const string STRING_onDisconnected = "onDisconnected";
+const string STRING_onLoggedOtherDevice = "onLoggedOtherDevice";
+const string STRING_onRemovedFromServer = "onRemovedFromServer";
+const string STRING_onForbidByServer = "onForbidByServer";
+const string STRING_onChangedImPwd = "onChangedImPwd";
+const string STRING_onLoginTooManyDevice = "onLoginTooManyDevice";
+const string STRING_onKickedByOtherDevice = "onKickedByOtherDevice";
+const string STRING_onAuthFailed = "onAuthFailed";
 const string STRING_onTokenExpired = "onTokenExpired";
 const string STRING_onTokenWillExpire = "onTokenWillExpire";
 
@@ -108,12 +115,15 @@ const string STRING_onSharedFileDeletedFromGroup = "onSharedFileDeletedFromGroup
 const string STRING_onAddWhiteListMembersFromGroup = "onAddWhiteListMembersFromGroup";
 const string STRING_onRemoveWhiteListMembersFromGroup = "onRemoveWhiteListMembersFromGroup";
 const string STRING_onAllMemberMuteChangedFromGroup = "onAllMemberMuteChangedFromGroup";
+const string STRING_onStateChangedFromGroup = "onStateChangedFromGroup";
+const string STRING_onSpecificationChangedFromGroup = "onSpecificationChangedFromGroup";
 
 // RoomManagerDelegate
 const string STRING_onDestroyedFromRoom = "onDestroyedFromRoom";
 const string STRING_onMemberJoinedFromRoom = "onMemberJoinedFromRoom";
 const string STRING_onMemberExitedFromRoom = "onMemberExitedFromRoom";
 const string STRING_onRemovedFromRoom = "onRemovedFromRoom";
+const string STRING_onRemoveFromRoomByOffline = "onRemoveFromRoomByOffline";
 const string STRING_onMuteListAddedFromRoom = "onMuteListAddedFromRoom";
 const string STRING_onMuteListRemovedFromRoom = "onMuteListRemovedFromRoom";
 const string STRING_onAdminAddedFromRoom = "onAdminAddedFromRoom";

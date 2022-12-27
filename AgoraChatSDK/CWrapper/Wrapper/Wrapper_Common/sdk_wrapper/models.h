@@ -196,6 +196,9 @@ namespace sdk_wrapper {
 
 		static int GroupStyleToInt(EMMucSetting::EMMucStyle style);
 		static EMMucSetting::EMMucStyle GroupStyleFromInt(int i);
+
+        static bool IsMemberOnly(EMMucSetting::EMMucStyle style);
+        static bool IsMemberAllowToInvite(EMMucSetting::EMMucStyle style);
 	};
 
 	class GroupSharedFile
