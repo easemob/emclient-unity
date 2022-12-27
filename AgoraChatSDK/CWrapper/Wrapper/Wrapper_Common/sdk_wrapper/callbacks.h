@@ -26,14 +26,36 @@ namespace sdk_wrapper {
 
         void onDisconnect(EMErrorPtr error) override
         {
-            JSON_STARTOBJ
-            writer.Key("ret");
-            writer.Int(error->mErrorCode);
-            JSON_ENDOBJ
+            string json = "";
 
-            string json = s.GetString();
-
-            CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onDisconnected.c_str(), json.c_str());
+            switch (error->mErrorCode)
+            {
+            case 202:
+                CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onAuthFailed.c_str(), json.c_str());
+                break;
+            case 207:
+                CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onRemovedFromServer.c_str(), json.c_str());
+                break;
+            case 214:
+                CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onLoginTooManyDevice.c_str(), json.c_str());
+                break;
+            case 216:
+                CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onChangedImPwd.c_str(), json.c_str());
+                break;
+            case 217:
+                CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onKickedByOtherDevice.c_str(), json.c_str());
+                break;
+            case 206:
+            case 220:
+                CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onLoggedOtherDevice.c_str(), json.c_str());
+                break;
+            case 305:
+                CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onForbidByServer.c_str(), json.c_str());
+                break;
+            default:
+                CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onDisconnected.c_str(), json.c_str());
+                break;
+            }
         }
 
         void onPong() override

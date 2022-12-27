@@ -82,6 +82,13 @@ const string STRING_onPresenceUpdated = "onPresenceUpdated";
 // ConnectionDelegate
 const string STRING_onConnected = "onConnected";
 const string STRING_onDisconnected = "onDisconnected";
+const string STRING_onLoggedOtherDevice = "onLoggedOtherDevice";
+const string STRING_onRemovedFromServer = "onRemovedFromServer";
+const string STRING_onForbidByServer = "onForbidByServer";
+const string STRING_onChangedImPwd = "onChangedImPwd";
+const string STRING_onLoginTooManyDevice = "onLoginTooManyDevice";
+const string STRING_onKickedByOtherDevice = "onKickedByOtherDevice";
+const string STRING_onAuthFailed = "onAuthFailed";
 const string STRING_onTokenExpired = "onTokenExpired";
 const string STRING_onTokenWillExpire = "onTokenWillExpire";
 
