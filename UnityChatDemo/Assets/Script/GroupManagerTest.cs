@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using AgoraChat;
 
-public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
+public class GroupManagerTest : MonoBehaviour
 {
     private Text groupText;
     private Button backButton;
@@ -158,13 +158,13 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
         UpdateGroupExtBtn.onClick.AddListener(UpdateGroupExtBtnAction);
         UploadGroupSharedFileBtn.onClick.AddListener(UploadGroupSharedFileBtnAction);
 
-        SDKClient.Instance.GroupManager.AddGroupManagerDelegate(this);
+
 
     }
 
     private void OnDestroy()
     {
-        SDKClient.Instance.GroupManager.RemoveGroupManagerDelegate(this);
+
     }
 
     void AcceptInvitationFromGroupBtnAction()
@@ -1267,112 +1267,5 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
         );
     }
 
-    public void OnRequestToJoinAcceptedFromGroup(string groupId, string groupName, string accepter)
-    {
-        UIManager.DefaultAlert(transform, $"回调 加群申请已同意,groupId: {groupId}");
-    }
 
-    public void OnRequestToJoinDeclinedFromGroup(string groupId, string groupName, string decliner, string reason)
-    {
-        UIManager.DefaultAlert(transform, $"回调 加群申请被拒绝:{groupId} :{decliner}");
-    }
-
-    public void OnInvitationAcceptedFromGroup(string groupId, string invitee, string reason)
-    {
-        UIManager.DefaultAlert(transform, $"回调 {groupId}邀请被{invitee}同意");
-    }
-
-    public void OnInvitationDeclinedFromGroup(string groupId, string invitee, string reason)
-    {
-        UIManager.DefaultAlert(transform, $"回调 {groupId}邀请被{invitee}拒绝");
-    }
-
-    public void OnUserRemovedFromGroup(string groupId, string groupName)
-    {
-        UIManager.DefaultAlert(transform, $"回调 被{groupId}移除");
-    }
-
-    public void OnDestroyedFromGroup(string groupId, string groupName)
-    {
-        UIManager.DefaultAlert(transform, $"回调 群组{groupId}已销毁");
-    }
-
-    public void OnAutoAcceptInvitationFromGroup(string groupId, string inviter, string inviteMessage)
-    {
-        UIManager.DefaultAlert(transform, $"回调 自动同意群组{groupId}邀请，邀请人{inviter}");
-    }
-
-
-    public void OnMuteListRemovedFromGroup(string groupId, List<string> mutes)
-    {
-        UIManager.DefaultAlert(transform, $"回调 {groupId}禁言列表移除");
-    }
-
-    public void OnAdminAddedFromGroup(string groupId, string administrator)
-    {
-        Debug.Log($"{groupId}: {administrator}");
-        UIManager.DefaultAlert(transform, $"回调 {groupId}管理员列表添加{administrator}");
-    }
-
-    public void OnAdminRemovedFromGroup(string groupId, string administrator)
-    {
-        Debug.Log($"{groupId}: {administrator}");
-        UIManager.DefaultAlert(transform, $"回调 {groupId}管理员列表移除{administrator}");
-    }
-
-    public void OnOwnerChangedFromGroup(string groupId, string newOwner, string oldOwner)
-    {
-        UIManager.DefaultAlert(transform, $"回调 {groupId}群主由{oldOwner}变为{newOwner}");
-    }
-
-    public void OnMemberJoinedFromGroup(string groupId, string member)
-    {
-        UIManager.DefaultAlert(transform, $"回调 {member}加入群组{groupId}");
-    }
-
-    public void OnMemberExitedFromGroup(string groupId, string member)
-    {
-        UIManager.DefaultAlert(transform, $"回调 {member}离开群组{groupId}");
-    }
-
-    public void OnAnnouncementChangedFromGroup(string groupId, string announcement)
-    {
-        UIManager.DefaultAlert(transform, $"回调 {groupId}群组公告变更{announcement}");
-    }
-
-    public void OnSharedFileAddedFromGroup(string groupId, GroupSharedFile sharedFile)
-    {
-        UIManager.DefaultAlert(transform, $"回调 {groupId}群组共享文件增加");
-    }
-
-    public void OnSharedFileDeletedFromGroup(string groupId, string fileId)
-    {
-        UIManager.DefaultAlert(transform, $"回调 {groupId}群组共享文件被移除");
-    }
-
-    public void OnAddAllowListMembersFromGroup(string groupId, List<string> whiteList)
-    {
-        string str = "";
-        if (whiteList.Count > 0)
-            str = string.Join(",", whiteList.ToArray());
-        UIManager.DefaultAlert(transform, $"回调 {groupId} 添加成员至白名单{str}");
-    }
-
-    public void OnRemoveAllowListMembersFromGroup(string groupId, List<string> whiteList)
-    {
-        string str = "";
-        if (whiteList.Count > 0)
-            str = string.Join(",", whiteList.ToArray());
-        UIManager.DefaultAlert(transform, $"回调 {groupId} 将成员移出白名单{str}");
-    }
-
-    public void OnAllMemberMuteChangedFromGroup(string groupId, bool isAllMuted)
-    {
-        UIManager.DefaultAlert(transform, $"回调 {groupId} 所有群成员禁言变化{isAllMuted}");
-    }
-
-    public void OnMuteListAddedFromGroup(string groupId, List<string> mutes, long muteExpire)
-    {
-        UIManager.DefaultAlert(transform, $"回调 {groupId}禁言列表添加");
-    }
 }

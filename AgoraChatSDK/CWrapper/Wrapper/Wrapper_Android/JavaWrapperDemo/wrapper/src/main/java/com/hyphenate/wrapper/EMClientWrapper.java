@@ -325,7 +325,7 @@ public class EMClientWrapper extends EMBaseWrapper {
                     post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onKickedByOtherDevice, null));
                 } else if (errorCode == 202) {
                     post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onAuthFailed, null));
-                } else if (errorCode == 220) {
+                } else if (errorCode == 220 || errorCode == 206) {
                     post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onLoggedOtherDevice, null));
                 } else if (errorCode == 207) {
                     post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onRemovedFromServer, null));

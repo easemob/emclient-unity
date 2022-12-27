@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using AgoraChat;
 
-public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
+public class RoomManagerTest : MonoBehaviour
 {
 
     private Text roomText;
@@ -106,13 +106,12 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
         RemoveAttributeBtn.onClick.AddListener(RemoveAttributeBtnAction);
         FetchAttributeBtn.onClick.AddListener(FetchAttributeBtnAction);
 
-        SDKClient.Instance.RoomManager.AddRoomManagerDelegate(this);
     }
 
 
     private void OnDestroy()
     {
-        SDKClient.Instance.RoomManager.RemoveRoomManagerDelegate(this);
+
     }
 
     void backButtonAction()
@@ -739,94 +738,6 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
 
     // Update is called once per frame
     void Update()
-    {
-
-    }
-
-    public void OnDestroyedFromRoom(string roomId, string roomName)
-    {
-        UIManager.DefaultAlert(this.transform, $"回调 OnDestroyedFromRoom: {roomId} , {roomName}");
-    }
-
-    public void OnMemberJoinedFromRoom(string roomId, string participant)
-    {
-        UIManager.DefaultAlert(this.transform, $"回调 OnMemberJoinedFromRoom: {roomId} , {participant}");
-    }
-
-    public void OnMemberExitedFromRoom(string roomId, string roomName, string participant)
-    {
-        UIManager.DefaultAlert(this.transform, $"回调 OnMemberExitedFromRoom: {roomId} , {roomName}, {participant}");
-    }
-
-    public void OnRemovedFromRoom(string roomId, string roomName, string participant)
-    {
-
-        Debug.Log($"roomId: {roomId}, name:{roomName}, participant:{participant}, transfrom: {this.transform}");
-
-        UIManager.DefaultAlert(this.transform, $"回调 OnRemovedFromRoom: {roomId} , {roomName ?? ""}, {participant}");
-    }
-
-    public void OnMuteListAddedFromRoom(string roomId, List<string> mutes, long expireTime)
-    {
-
-        string str = string.Join(",", mutes.ToArray());
-
-        UIManager.DefaultAlert(this.transform, $"回调 OnMuteListAddedFromRoom: {roomId} , {str}");
-    }
-
-    public void OnMuteListRemovedFromRoom(string roomId, List<string> mutes)
-    {
-        string str = string.Join(",", mutes.ToArray());
-
-        UIManager.DefaultAlert(this.transform, $"回调 OnMuteListRemovedFromRoom: {roomId} , {str}");
-    }
-
-    public void OnAdminAddedFromRoom(string roomId, string admin)
-    {
-        UIManager.DefaultAlert(this.transform, $"回调 OnAdminAddedFromRoom: {roomId} , {admin}");
-    }
-
-    public void OnAdminRemovedFromRoom(string roomId, string admin)
-    {
-        UIManager.DefaultAlert(this.transform, $"回调 OnAdminRemovedFromRoom: {roomId} , {admin}");
-    }
-
-    public void OnOwnerChangedFromRoom(string roomId, string newOwner, string oldOwner)
-    {
-        UIManager.DefaultAlert(this.transform, $"回调 OnOwnerChangedFromRoom: {roomId} , {newOwner}, {oldOwner}");
-    }
-
-    public void OnAnnouncementChangedFromRoom(string roomId, string announcement)
-    {
-        UIManager.DefaultAlert(this.transform, $"回调 OnAnnouncementChangedFromRoom: {roomId} , {announcement}");
-    }
-
-    public void OnChatroomAttributesChanged(string roomId, Dictionary<string, string> kv, string from)
-    {
-
-    }
-
-    public void OnChatroomAttributesRemoved(string roomId, List<string> keys, string from)
-    {
-
-    }
-
-    public void OnSpecificationChangedFromRoom(Room room)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void OnAddAllowListMembersFromChatroom(string roomId, List<string> members)
-    {
-
-    }
-
-    public void OnRemoveAllowListMembersFromChatroom(string roomId, List<string> members)
-    {
-
-    }
-
-    public void OnAllMemberMuteChangedFromChatroom(string roomId, bool isAllMuted)
     {
 
     }
