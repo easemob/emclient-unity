@@ -1144,6 +1144,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("forced", forced);
             jo_param.AddWithoutNull("list", JsonObject.JsonArrayFromStringList(keys));
 
             Process process = (_, jsonNode) =>
@@ -1211,6 +1212,11 @@ namespace AgoraChat
                     case SDKMethod.onDestroyedFromRoom:
                         {
                             it.OnDestroyedFromRoom(roomId, roomName);
+                        }
+                        break;
+                    case SDKMethod.onRemoveFromRoomByOffline:
+                        {
+                            it.OnRemoveFromRoomByOffline(roomId, roomName);
                         }
                         break;
                     case SDKMethod.onMemberJoinedFromRoom:
@@ -1285,7 +1291,7 @@ namespace AgoraChat
                         break;
                     case SDKMethod.onSpecificationChangedFromRoom:
                         {
-                            Room room = new Room(jsonNode.AsObject);
+                            Room room = ModelHelper.CreateWithJsonObject<Room>(jsonNode["room"]);
                             it.OnSpecificationChangedFromRoom(room);
                         }
                         break;

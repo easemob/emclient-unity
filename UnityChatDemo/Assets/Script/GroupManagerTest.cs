@@ -1272,12 +1272,12 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
         UIManager.DefaultAlert(transform, $"回调 加群申请已同意,groupId: {groupId}");
     }
 
-    public void OnRequestToJoinDeclinedFromGroup(string groupId, string groupName, string decliner, string reason)
+    public void OnRequestToJoinDeclinedFromGroup(string groupId, string reason)
     {
-        UIManager.DefaultAlert(transform, $"回调 加群申请被拒绝:{groupId} :{decliner}");
+        UIManager.DefaultAlert(transform, $"回调 加群申请被拒绝:{groupId} :{reason}");
     }
 
-    public void OnInvitationAcceptedFromGroup(string groupId, string invitee, string reason)
+    public void OnInvitationAcceptedFromGroup(string groupId, string invitee)
     {
         UIManager.DefaultAlert(transform, $"回调 {groupId}邀请被{invitee}同意");
     }
@@ -1374,5 +1374,15 @@ public class GroupManagerTest : MonoBehaviour, IGroupManagerDelegate
     public void OnMuteListAddedFromGroup(string groupId, List<string> mutes, long muteExpire)
     {
         UIManager.DefaultAlert(transform, $"回调 {groupId}禁言列表添加");
+    }
+
+    public void OnStateChangedFromGroup(string groupId, bool isDisable)
+    {
+        UIManager.DefaultAlert(transform, $"回调OnStateChangedFromGroup {groupId},{isDisable}");
+    }
+
+    public void OnSpecificationChangedFromGroup(Group group)
+    {
+        UIManager.DefaultAlert(transform, $"回调 OnSpecificationChangedFromGroup {group.GroupId}");
     }
 }

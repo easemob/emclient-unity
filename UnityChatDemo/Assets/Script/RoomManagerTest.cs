@@ -689,7 +689,8 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
         }
 
         List<string> keys = new List<string>();
-        keys.Add("key");
+        keys.Add("key1");
+        keys.Add("key2");
         SDKClient.Instance.RoomManager.RemoveAttributes(currentRoomId, keys, forced: true, callback: new ValueCallBack<Dictionary<string, int>>(
             onSuccess: (result) =>
             {
@@ -710,7 +711,11 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
             return;
         }
 
-        SDKClient.Instance.RoomManager.FetchAttributes(currentRoomId, null, new ValueCallBack<Dictionary<string, string>>(
+        List<string> keys = new List<string>();
+        keys.Add("key1");
+        keys.Add("key2");
+
+        SDKClient.Instance.RoomManager.FetchAttributes(currentRoomId, keys, new ValueCallBack<Dictionary<string, string>>(
             onSuccess: (result) =>
             {
                 List<string> list = new List<string>();
@@ -803,31 +808,36 @@ public class RoomManagerTest : MonoBehaviour, IRoomManagerDelegate
 
     public void OnChatroomAttributesChanged(string roomId, Dictionary<string, string> kv, string from)
     {
-
+        UIManager.DefaultAlert(this.transform, $"回调 OnChatroomAttributesChanged: {roomId} , {from}");
     }
 
     public void OnChatroomAttributesRemoved(string roomId, List<string> keys, string from)
     {
-
+        UIManager.DefaultAlert(this.transform, $"回调 OnChatroomAttributesRemoved: {roomId} , {from}");
     }
 
     public void OnSpecificationChangedFromRoom(Room room)
     {
-        throw new System.NotImplementedException();
+        UIManager.DefaultAlert(this.transform, $"回调 OnSpecificationChangedFromRoom: {room.RoomId}");
     }
 
     public void OnAddAllowListMembersFromChatroom(string roomId, List<string> members)
     {
-
+        UIManager.DefaultAlert(this.transform, $"回调 OnAddAllowListMembersFromChatroom: {roomId}");
     }
 
     public void OnRemoveAllowListMembersFromChatroom(string roomId, List<string> members)
     {
-
+        UIManager.DefaultAlert(this.transform, $"回调 OnRemoveAllowListMembersFromChatroom: {roomId}");
     }
 
     public void OnAllMemberMuteChangedFromChatroom(string roomId, bool isAllMuted)
     {
+        UIManager.DefaultAlert(this.transform, $"回调 OnAllMemberMuteChangedFromChatroom: {roomId} , {isAllMuted}");
+    }
 
+    public void OnRemoveFromRoomByOffline(string roomId, string roomName)
+    {
+        UIManager.DefaultAlert(this.transform, $"回调 OnRemoveFromRoomByOffline: {roomId} , {roomName}");
     }
 }

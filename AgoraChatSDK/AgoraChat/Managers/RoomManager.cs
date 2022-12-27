@@ -1144,6 +1144,7 @@ namespace AgoraChat
         {
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("forced", forced);
             jo_param.AddWithoutNull("list", JsonObject.JsonArrayFromStringList(keys));
 
             Process process = (_, jsonNode) =>

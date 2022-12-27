@@ -849,7 +849,11 @@ namespace sdk_wrapper {
 
         Document d; d.Parse(jstr);
         string room_id = GetJsonValue_String(d, "roomId", "");
-        vector<string> keys = MyJson::FromJsonObjectToVector(d["list"]);
+
+        vector<string> keys;
+        if (d.HasMember("list")) {
+            keys = MyJson::FromJsonObjectToVector(d["list"]);
+        }
 
         thread t([=]() {
             EMError error;
@@ -916,11 +920,12 @@ namespace sdk_wrapper {
 
         Document d; d.Parse(jstr);
         string room_id = GetJsonValue_String(d, "roomId", "");
+        bool forced = GetJsonValue_Bool(d, "forced", false);
         vector<string> keys = MyJson::FromJsonObjectToVector(d["list"]);
 
         thread t([=]() {
             EMError error;
-            string json = CLIENT->getChatroomManager().removeChatRoomMetaFromSever(room_id, keys, error);
+            string json = CLIENT->getChatroomManager().removeChatRoomMetaFromSever(room_id, keys, error, forced);
 
             if (EMError::EM_NO_ERROR == error.mErrorCode || EMError::PARTIAL_SUCCESS == error.mErrorCode) {
 

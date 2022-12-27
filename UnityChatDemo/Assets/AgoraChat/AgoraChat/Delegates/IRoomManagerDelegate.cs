@@ -27,6 +27,7 @@ namespace AgoraChat
          */
         void OnDestroyedFromRoom(string roomId, string roomName);
 
+
         /**
         * \~chinese
         * 聊天室加入新成员事件。
@@ -59,6 +60,7 @@ namespace AgoraChat
          */
         void OnMemberExitedFromRoom(string roomId, string roomName, string participant);
 
+
         /**
          * \~chinese
          * 聊天室成员被移除。
@@ -76,6 +78,22 @@ namespace AgoraChat
          */
         void OnRemovedFromRoom(string roomId, string roomName, string participant);
 
+
+
+        /**
+         * \~chinese
+         * 聊天室成员因为离线被移除。
+         *
+         * @param roomId        聊天室 ID。
+         * @param roomName      聊天室名称。
+         *
+         * \~english
+         * Occurs when a member is removed from a chat room by offline.
+         *
+         * @param roomId        The chat room ID.
+         * @param roomName      The name of the chat room.
+         */
+        void OnRemoveFromRoomByOffline(string roomId, string roomName);
         /**
          * \~chinese
          * 有成员被禁言。
