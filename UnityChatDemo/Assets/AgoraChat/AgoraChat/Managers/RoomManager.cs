@@ -1241,7 +1241,8 @@ namespace AgoraChat
                             List<string> list = List.StringListFromJsonArray(jsonNode["userIds"]);
                             long muteExpire = (long)jsonNode["expireTime"].AsDouble;
                             it.OnMuteListAddedFromRoom(roomId, list, muteExpire);
-                            break;
+                        }
+                        break;
                     case SDKMethod.onMuteListRemovedFromRoom:
                         {
                             List<string> list = List.StringListFromJsonArray(jsonNode["userIds"]);
