@@ -9127,7 +9127,7 @@ namespace WinSDKTest
 
         public void OnRemoveFromRoomByOffline(string roomId, string roomName)
         {
-            Console.WriteLine($"OnAllMemberMuteChangedFromChatroom: roomId: {roomId}; roomName:{roomName}");
+            Console.WriteLine($"OnRemoveFromRoomByOffline: roomId: {roomId}; roomName:{roomName}");
         }
     }
 
