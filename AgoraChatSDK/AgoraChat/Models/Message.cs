@@ -738,7 +738,6 @@ namespace AgoraChat
             jo.AddWithoutNull("serverTime", ServerTime);
             jo.AddWithoutNull("convId", ConversationId);
             jo.AddWithoutNull("msgId", MsgId);
-            jo.AddWithoutNull("hasRead", HasReadAck);
             jo.AddWithoutNull("status", Status.ToInt());
             jo.AddWithoutNull("chatType", MessageType.ToInt());
             jo.AddWithoutNull("direction", Direction.ToInt());
