@@ -275,11 +275,7 @@ namespace AgoraChat
             IsMemberAllowToInvite = jsonObject["isMemberAllowToInvite"].AsBool;
             Ext = jsonObject["ext"];
             PermissionType = (GroupPermissionType)jsonObject["permissionType"].AsInt;
-<<<<<<< HEAD
             IsDisabled = jsonObject["isDisabled"].AsBool;
-=======
-            IsDisabled = jsonObject["isDisabled"].AsBool;
->>>>>>> upstream/new
         }
 
         internal override JSONObject ToJsonObject()
@@ -299,11 +295,7 @@ namespace AgoraChat
             jo.AddWithoutNull("isMuteAll", IsAllMemberMuted);
             jo.AddWithoutNull("options", Options.ToJsonObject());
             jo.AddWithoutNull("permissionType", PermissionType.ToInt());
-<<<<<<< HEAD
             // jo.AddWithoutNull("isDisabled", IsDisabled);
-=======
-            // jo.AddWithoutNull("isDisabled", IsDisabled);
->>>>>>> upstream/new
             return jo;
         }
     }
