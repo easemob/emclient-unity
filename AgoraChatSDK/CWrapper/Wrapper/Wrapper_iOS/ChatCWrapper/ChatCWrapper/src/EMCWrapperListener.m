@@ -26,7 +26,7 @@
 
 - (void)onReceive:(nonnull NSString *)listener method:(nullable NSString *)method info:(nullable NSString *)jsonInfo {
     if (jsonInfo == nil) {
-        _listener(listener.toChar, method.toChar, NULL);
+        _listener(listener.toChar, method.toChar, @"".toChar);
     }else {
         _listener(listener.toChar, method.toChar, jsonInfo.toChar);
     }
