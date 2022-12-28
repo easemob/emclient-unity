@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using AgoraChat;
 
-public class ContactManagerTest : MonoBehaviour, IContactManagerDelegate
+public class ContactManagerTest : MonoBehaviour
 {
     private Button addContactBtn;
     private Button deleteContactBtn;
@@ -49,12 +49,10 @@ public class ContactManagerTest : MonoBehaviour, IContactManagerDelegate
         backButton = transform.Find("BackBtn").GetComponent<Button>();
         backButton.onClick.AddListener(backButtonAction);
 
-        SDKClient.Instance.ContactManager.AddContactManagerDelegate(this);
     }
 
     private void OnDestroy()
     {
-        SDKClient.Instance.ContactManager.RemoveContactManagerDelegate(this);
     }
 
 
@@ -322,7 +320,18 @@ public class ContactManagerTest : MonoBehaviour, IContactManagerDelegate
     }
     void GetSelfIdsOnOtherPlatformBtnAction()
     {
-        UIManager.UnfinishedAlert(transform);
+
+        SDKClient.Instance.ContactManager.GetSelfIdsOnOtherPlatform(new ValueCallBack<List<string>>(
+            onSuccess: (list) =>
+            {
+                string str = string.Join(",", list.ToArray());
+                UIManager.DefaultAlert(transform, str);
+            },
+            onError: (code, desc) =>
+            {
+                UIManager.DefaultAlert(transform, $"失败code:{code}");
+            }
+        ));
     }
 
 
@@ -338,38 +347,5 @@ public class ContactManagerTest : MonoBehaviour, IContactManagerDelegate
 
     }
 
-    public void OnContactAdded(string username)
-    {
-        UIManager.DefaultAlert(transform, $"OnContactAdded: {username}");
-    }
 
-    public void OnContactDeleted(string username)
-    {
-        UIManager.DefaultAlert(transform, $"OnContactDeleted: {username}");
-    }
-
-    public void OnContactInvited(string username, string reason)
-    {
-        CallBack callBack = new CallBack(
-            onSuccess: () => { UIManager.SuccessAlert(transform); },
-            onError: (code, desc) => { UIManager.ErrorAlert(transform, code, desc); }
-        );
-
-        UIManager.TitleAlert(transform, $"收到好友申请", $"{username}添加您为好友",
-            () => { SDKClient.Instance.ContactManager.AcceptInvitation(username, callBack); },
-            () => { SDKClient.Instance.ContactManager.DeclineInvitation(username, callBack); },
-            "同意",
-            "拒绝"
-        );
-    }
-
-    public void OnFriendRequestAccepted(string username)
-    {
-        UIManager.DefaultAlert(transform, $"OnFriendRequestAccepted: {username}");
-    }
-
-    public void OnFriendRequestDeclined(string username)
-    {
-        UIManager.DefaultAlert(transform, $"OnFriendRequestDeclined: {username}");
-    }
 }

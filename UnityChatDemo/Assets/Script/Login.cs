@@ -47,6 +47,7 @@ public class Login : MonoBehaviour
     {
         LoginWithPassword();
         //LoginWithAgoraTokenAction();
+        Debug.Log("执行了登录");
         return;
     }
 

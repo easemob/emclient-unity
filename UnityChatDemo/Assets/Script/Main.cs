@@ -271,389 +271,435 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
 
     public void OnRequestToJoinAcceptedFromGroup(string groupId, string groupName, string accepter)
     {
-        UIManager.DefaultAlert(transform, $"回调 加群申请已同意,groupId: {groupId}");
+        Debug.Log($"OnRequestToJoinAcceptedFromGroup groupId: {groupId}, groupName: {groupName}, accepter: {accepter}");
     }
 
     public void OnRequestToJoinDeclinedFromGroup(string groupId, string reason)
     {
-        UIManager.DefaultAlert(transform, $"回调 加群申请被拒绝:{groupId} :{reason}");
+        Debug.Log($"OnRequestToJoinDeclinedFromGroup groupId: {groupId}, reason: {reason}");
     }
 
     public void OnInvitationAcceptedFromGroup(string groupId, string invitee)
     {
-        UIManager.DefaultAlert(transform, $"回调 {groupId}邀请被{invitee}同意");
+        Debug.Log($"OnInvitationAcceptedFromGroup groupId: {groupId}, invitee: {invitee}");
     }
 
     public void OnInvitationDeclinedFromGroup(string groupId, string invitee, string reason)
     {
-        UIManager.DefaultAlert(transform, $"回调 {groupId}邀请被{invitee}拒绝");
+        Debug.Log($"OnInvitationDeclinedFromGroup groupId: {groupId}, invitee: {invitee}, reason: {reason}");
     }
 
     public void OnUserRemovedFromGroup(string groupId, string groupName)
     {
-        UIManager.DefaultAlert(transform, $"回调 被{groupId}移除");
+        Debug.Log($"OnUserRemovedFromGroup groupId: {groupId}, groupName: {groupName}");
     }
 
     public void OnDestroyedFromGroup(string groupId, string groupName)
     {
-        UIManager.DefaultAlert(transform, $"回调 群组{groupId}已销毁");
+        Debug.Log($"OnDestroyedFromGroup groupId: {groupId}, groupName: {groupName}");
     }
 
     public void OnAutoAcceptInvitationFromGroup(string groupId, string inviter, string inviteMessage)
     {
-        UIManager.DefaultAlert(transform, $"回调 自动同意群组{groupId}邀请，邀请人{inviter}");
+        Debug.Log($"OnAutoAcceptInvitationFromGroup groupId: {groupId}, inviter: {inviter}, inviteMessage: {inviteMessage}");
     }
-
 
     public void OnMuteListRemovedFromGroup(string groupId, List<string> mutes)
     {
-        UIManager.DefaultAlert(transform, $"回调 {groupId}禁言列表移除");
+        Debug.Log($"OnMuteListRemovedFromGroup groupId: {groupId}, mutes: {string.Join(", ", mutes.ToArray())}");
     }
 
     public void OnAdminAddedFromGroup(string groupId, string administrator)
     {
-        Debug.Log($"{groupId}: {administrator}");
-        UIManager.DefaultAlert(transform, $"回调 {groupId}管理员列表添加{administrator}");
+        Debug.Log($"OnAdminAddedFromGroup groupId: {groupId}, administrator: {administrator}");
     }
 
     public void OnAdminRemovedFromGroup(string groupId, string administrator)
     {
-        Debug.Log($"{groupId}: {administrator}");
-        UIManager.DefaultAlert(transform, $"回调 {groupId}管理员列表移除{administrator}");
+        Debug.Log($"OnAdminRemovedFromGroup groupId: {groupId}, administrator: {administrator}");
     }
 
     public void OnOwnerChangedFromGroup(string groupId, string newOwner, string oldOwner)
     {
-        UIManager.DefaultAlert(transform, $"回调 {groupId}群主由{oldOwner}变为{newOwner}");
+        Debug.Log($"OnMemberJoinedFromGroup groupId: {groupId}, newOwner: {newOwner}, oldOwner: {oldOwner}");
     }
 
     public void OnMemberJoinedFromGroup(string groupId, string member)
     {
-        UIManager.DefaultAlert(transform, $"回调 {member}加入群组{groupId}");
+        Debug.Log($"OnMemberJoinedFromGroup groupId: {groupId}, member: {member}");
     }
 
     public void OnMemberExitedFromGroup(string groupId, string member)
     {
-        UIManager.DefaultAlert(transform, $"回调 {member}离开群组{groupId}");
+        Debug.Log($"OnMemberExitedFromGroup groupId: {groupId}, member: {member}");
     }
 
     public void OnAnnouncementChangedFromGroup(string groupId, string announcement)
     {
-        UIManager.DefaultAlert(transform, $"回调 {groupId}群组公告变更{announcement}");
+        Debug.Log($"OnAnnouncementChangedFromGroup groupId: {groupId}, announcement: {announcement}");
     }
 
     public void OnSharedFileAddedFromGroup(string groupId, GroupSharedFile sharedFile)
     {
-        UIManager.DefaultAlert(transform, $"回调 {groupId}群组共享文件增加");
+        Debug.Log($"OnSharedFileAddedFromGroup groupId: {groupId}, sharedFile: {sharedFile.ToJsonObject()}");
     }
 
     public void OnSharedFileDeletedFromGroup(string groupId, string fileId)
     {
-        UIManager.DefaultAlert(transform, $"回调 {groupId}群组共享文件被移除");
+        Debug.Log($"OnSharedFileDeletedFromGroup groupId: {groupId}, fileId: {fileId}");
     }
 
     public void OnAddAllowListMembersFromGroup(string groupId, List<string> whiteList)
     {
-        string str = "";
-        if (whiteList.Count > 0)
-            str = string.Join(",", whiteList.ToArray());
-        UIManager.DefaultAlert(transform, $"回调 {groupId} 添加成员至白名单{str}");
+        Debug.Log($"OnAddAllowListMembersFromGroup groupId: {groupId}, whiteList: {string.Join(", ", whiteList.ToArray())}");
     }
 
     public void OnRemoveAllowListMembersFromGroup(string groupId, List<string> whiteList)
     {
-        string str = "";
-        if (whiteList.Count > 0)
-            str = string.Join(",", whiteList.ToArray());
-        UIManager.DefaultAlert(transform, $"回调 {groupId} 将成员移出白名单{str}");
+        Debug.Log($"OnRemoveAllowListMembersFromGroup groupId: {groupId}, whiteList: {string.Join(", ", whiteList.ToArray())}");
     }
 
     public void OnAllMemberMuteChangedFromGroup(string groupId, bool isAllMuted)
     {
-        UIManager.DefaultAlert(transform, $"回调 {groupId} 所有群成员禁言变化{isAllMuted}");
+        Debug.Log($"OnStateChangedFromGroup groupId: {groupId}, isAllMuted:{isAllMuted}");
     }
 
     public void OnMuteListAddedFromGroup(string groupId, List<string> mutes, long muteExpire)
     {
-        UIManager.DefaultAlert(transform, $"回调 {groupId}禁言列表添加");
+        Debug.Log($"OnMuteListAddedFromGroup groupId: {groupId}, mutes: {string.Join(",", mutes.ToArray())}, expireTime: {muteExpire}");
     }
 
     public void OnStateChangedFromGroup(string groupId, bool isDisable)
     {
-        UIManager.DefaultAlert(transform, $"回调OnStateChangedFromGroup {groupId},{isDisable}");
+        Debug.Log($"OnStateChangedFromGroup groupId: {groupId}, isDisable:{isDisable}");
     }
 
     public void OnSpecificationChangedFromGroup(Group group)
     {
-        UIManager.DefaultAlert(transform, $"回调 OnSpecificationChangedFromGroup {group.GroupId}");
+        Debug.Log($"OnSpecificationChangedFromGroup group: {group.ToJsonObject()}");
     }
 
 
     public void OnDestroyedFromRoom(string roomId, string roomName)
     {
-        UIManager.DefaultAlert(this.transform, $"回调 OnDestroyedFromRoom: {roomId} , {roomName}");
+        Debug.Log($"OnDestroyedFromRoom roomId: {roomId}, roomName:{roomName}");
     }
 
     public void OnMemberJoinedFromRoom(string roomId, string participant)
     {
-        UIManager.DefaultAlert(this.transform, $"回调 OnMemberJoinedFromRoom: {roomId} , {participant}");
+        Debug.Log($"OnMemberJoinedFromRoom roomId: {roomId}, participant:{participant}");
     }
 
     public void OnMemberExitedFromRoom(string roomId, string roomName, string participant)
     {
-        UIManager.DefaultAlert(this.transform, $"回调 OnMemberExitedFromRoom: {roomId} , {roomName}, {participant}");
+        Debug.Log($"OnMemberExitedFromRoom roomId: {roomId}, name:{roomName}, participant:{participant}");
     }
 
     public void OnRemovedFromRoom(string roomId, string roomName, string participant)
     {
 
-        Debug.Log($"roomId: {roomId}, name:{roomName}, participant:{participant}, transfrom: {this.transform}");
-
-        UIManager.DefaultAlert(this.transform, $"回调 OnRemovedFromRoom: {roomId} , {roomName ?? ""}, {participant}");
+        Debug.Log($"OnRemovedFromRoom roomId: {roomId}, name: {roomName}, participant: {participant}");
     }
 
     public void OnMuteListAddedFromRoom(string roomId, List<string> mutes, long expireTime)
     {
-
-        string str = string.Join(",", mutes.ToArray());
-
-        UIManager.DefaultAlert(this.transform, $"回调 OnMuteListAddedFromRoom: {roomId} , {str}");
+        Debug.Log($"OnMuteListAddedFromRoom roomId: {roomId}, mutes: {string.Join(", ", mutes.ToArray())}, expireTime: {expireTime}");
     }
 
     public void OnMuteListRemovedFromRoom(string roomId, List<string> mutes)
     {
-        string str = string.Join(",", mutes.ToArray());
-
-        UIManager.DefaultAlert(this.transform, $"回调 OnMuteListRemovedFromRoom: {roomId} , {str}");
+        Debug.Log($"OnMuteListRemovedFromRoom roomId: {roomId}, mutes: {string.Join(", ", mutes.ToArray())}");
     }
 
     public void OnAdminAddedFromRoom(string roomId, string admin)
     {
-        UIManager.DefaultAlert(this.transform, $"回调 OnAdminAddedFromRoom: {roomId} , {admin}");
+        Debug.Log($"OnAdminAddedFromRoom roomId: {roomId}, admin: {admin}");
     }
 
     public void OnAdminRemovedFromRoom(string roomId, string admin)
     {
-        UIManager.DefaultAlert(this.transform, $"回调 OnAdminRemovedFromRoom: {roomId} , {admin}");
+        Debug.Log($"OnAdminRemovedFromRoom roomId: {roomId}, admin: {admin}");
     }
 
     public void OnOwnerChangedFromRoom(string roomId, string newOwner, string oldOwner)
     {
-        UIManager.DefaultAlert(this.transform, $"回调 OnOwnerChangedFromRoom: {roomId} , {newOwner}, {oldOwner}");
+        Debug.Log($"OnOwnerChangedFromRoom roomId: {roomId}, newOwner: {newOwner}, oldOwner: {oldOwner}");
     }
 
     public void OnAnnouncementChangedFromRoom(string roomId, string announcement)
     {
-        UIManager.DefaultAlert(this.transform, $"回调 OnAnnouncementChangedFromRoom: {roomId} , {announcement}");
+        Debug.Log($"OnAnnouncementChangedFromRoom roomId: {roomId}, announcement: {announcement}");
     }
 
     public void OnChatroomAttributesChanged(string roomId, Dictionary<string, string> kv, string from)
     {
-        UIManager.DefaultAlert(this.transform, $"回调 OnChatroomAttributesChanged: {roomId} , {from}");
+        List<string> list = new List<string>();
+
+        foreach (var key in kv.Keys)
+        {
+            list.Add($"{key}:kv[key]");
+        }
+
+        Debug.Log($"OnChatroomAttributesChanged roomId: {roomId}, keys: {string.Join(", ", list.ToArray())}, from: {from}");
     }
 
     public void OnChatroomAttributesRemoved(string roomId, List<string> keys, string from)
     {
-        UIManager.DefaultAlert(this.transform, $"回调 OnChatroomAttributesRemoved: {roomId} , {from}");
+        Debug.Log($"OnSpecificationChangedFromRoom roomId: {roomId}, keys: {string.Join(", ", keys.ToArray())}, from: {from}");
     }
 
     public void OnSpecificationChangedFromRoom(Room room)
     {
-        UIManager.DefaultAlert(this.transform, $"回调 OnSpecificationChangedFromRoom: {room.RoomId}");
+        Debug.Log($"OnSpecificationChangedFromRoom room: {room.ToJsonObject()}");
     }
 
     public void OnAddAllowListMembersFromChatroom(string roomId, List<string> members)
     {
-        UIManager.DefaultAlert(this.transform, $"回调 OnAddAllowListMembersFromChatroom: {roomId}");
+        Debug.Log($"OnAddAllowListMembersFromChatroom roomId: {roomId}, members: {string.Join(", ", members.ToArray())}");
     }
 
     public void OnRemoveAllowListMembersFromChatroom(string roomId, List<string> members)
     {
-        UIManager.DefaultAlert(this.transform, $"回调 OnRemoveAllowListMembersFromChatroom: {roomId}");
+        Debug.Log($"OnRemoveAllowListMembersFromChatroom roomId: {roomId}, members: {string.Join(", ", members.ToArray())}");
     }
 
     public void OnAllMemberMuteChangedFromChatroom(string roomId, bool isAllMuted)
     {
-        UIManager.DefaultAlert(this.transform, $"回调 OnAllMemberMuteChangedFromChatroom: {roomId} , {isAllMuted}");
+        Debug.Log($"OnAllMemberMuteChangedFromChatroom roomId: {roomId}, isAllMuted: {isAllMuted}");
     }
 
     public void OnRemoveFromRoomByOffline(string roomId, string roomName)
     {
-        UIManager.DefaultAlert(this.transform, $"回调 OnRemoveFromRoomByOffline: {roomId} , {roomName}");
+        Debug.Log($"OnRemoveFromRoomByOffline roomId: {roomId}, roomName: {roomName}");
     }
 
     public void OnPresenceUpdated(List<Presence> presences)
     {
-        throw new System.NotImplementedException();
+        List<string> list = new List<string>();
+        foreach (var presence in presences)
+        {
+            list.Add(presence.ToJsonObject().ToString());
+        }
+        Debug.Log($"OnPresenceUpdated {string.Join(", ", list.ToArray())}");
     }
 
     public void OnMessagesReceived(List<Message> messages)
     {
-        throw new System.NotImplementedException();
+        List<string> msgs = new List<string>();
+        foreach (var msg in messages)
+        {
+            msgs.Add(msg.ToJsonObject().ToString());
+        }
+        Debug.Log($"OnMessagesReceived {string.Join(", ", msgs.ToArray())}");
     }
 
     public void OnCmdMessagesReceived(List<Message> messages)
     {
-        throw new System.NotImplementedException();
+        List<string> msgs = new List<string>();
+        foreach (var msg in messages)
+        {
+            msgs.Add(msg.ToJsonObject().ToString());
+        }
+        Debug.Log($"OnCmdMessagesReceived {string.Join(", ", msgs.ToArray())}");
     }
 
     public void OnMessagesRead(List<Message> messages)
     {
-        throw new System.NotImplementedException();
+        List<string> msgs = new List<string>();
+        foreach (var msg in messages)
+        {
+            msgs.Add(msg.ToJsonObject().ToString());
+        }
+        Debug.Log($"OnMessagesRead {string.Join(", ", msgs.ToArray())}");
     }
 
     public void OnMessagesDelivered(List<Message> messages)
     {
-        throw new System.NotImplementedException();
+        List<string> msgs = new List<string>();
+        foreach (var msg in messages)
+        {
+            msgs.Add(msg.ToJsonObject().ToString());
+        }
+        Debug.Log($"OnMessagesDelivered {string.Join(", ", msgs.ToArray())}");
     }
 
     public void OnMessagesRecalled(List<Message> messages)
     {
-        throw new System.NotImplementedException();
+        List<string> msgs = new List<string>();
+        foreach (var msg in messages)
+        {
+            msgs.Add(msg.ToJsonObject().ToString());
+        }
+        Debug.Log($"OnMessagesRecalled {string.Join(", ", msgs.ToArray())}");
     }
 
     public void OnReadAckForGroupMessageUpdated()
     {
-        throw new System.NotImplementedException();
+        Debug.Log($"OnReadAckForGroupMessageUpdated");
     }
 
     public void OnGroupMessageRead(List<GroupReadAck> list)
     {
-        throw new System.NotImplementedException();
+        List<string> acks = new List<string>();
+        foreach (var ack in list)
+        {
+            acks.Add(ack.ToJsonObject().ToString());
+        }
+        Debug.Log($"OnGroupMessageRead {string.Join(", ", acks.ToArray())}");
     }
 
     public void OnConversationsUpdate()
     {
-        throw new System.NotImplementedException();
+        Debug.Log($"OnConversationsUpdate");
     }
 
     public void OnConversationRead(string from, string to)
     {
-        throw new System.NotImplementedException();
+        Debug.Log($"OnConversationRead from:{from}, to:{to}");
     }
 
     public void MessageReactionDidChange(List<MessageReactionChange> list)
     {
-        throw new System.NotImplementedException();
+        List<string> changes = new List<string>();
+        foreach (var change in list)
+        {
+            changes.Add(change.ToJsonObject().ToString());
+        }
+        Debug.Log($"OnContactAdded {string.Join(", ", changes.ToArray())}");
     }
 
-    public void OnContactAdded(string userId)
+    public void OnContactAdded(string username)
     {
-        throw new System.NotImplementedException();
+        Debug.Log($"OnContactAdded {username}");
     }
 
-    public void OnContactDeleted(string userId)
+    public void OnContactDeleted(string username)
     {
-        throw new System.NotImplementedException();
+        Debug.Log($"OnContactDeleted {username}");
     }
 
-    public void OnContactInvited(string userId, string reason)
+    public void OnContactInvited(string username, string reason)
     {
-        throw new System.NotImplementedException();
+        CallBack callBack = new CallBack(
+            onSuccess: () => { UIManager.SuccessAlert(transform); },
+            onError: (code, desc) => { UIManager.ErrorAlert(transform, code, desc); }
+        );
+
+        UIManager.TitleAlert(transform, $"收到好友申请", $"{username}添加您为好友",
+            () => { SDKClient.Instance.ContactManager.AcceptInvitation(username, callBack); },
+            () => { SDKClient.Instance.ContactManager.DeclineInvitation(username, callBack); },
+            "同意",
+            "拒绝"
+        );
     }
 
-    public void OnFriendRequestAccepted(string userId)
+    public void OnFriendRequestAccepted(string username)
     {
-        throw new System.NotImplementedException();
+        Debug.Log($"OnFriendRequestAccepted {username}");
     }
 
-    public void OnFriendRequestDeclined(string userId)
+    public void OnFriendRequestDeclined(string username)
     {
-        throw new System.NotImplementedException();
+        Debug.Log($"OnFriendRequestDeclined {username}");
     }
-
     public void OnChatThreadCreate(ChatThreadEvent threadEvent)
     {
-        throw new System.NotImplementedException();
+        Debug.Log($"OnChatThreadCreate {threadEvent.ToJsonObject()}");
     }
 
     public void OnChatThreadUpdate(ChatThreadEvent threadEvent)
     {
-        throw new System.NotImplementedException();
+        Debug.Log($"OnChatThreadUpdate {threadEvent.ToJsonObject()}");
     }
 
     public void OnChatThreadDestroy(ChatThreadEvent threadEvent)
     {
-        throw new System.NotImplementedException();
+        Debug.Log($"OnChatThreadDestroy {threadEvent.ToJsonObject()}");
     }
 
     public void OnUserKickOutOfChatThread(ChatThreadEvent threadEvent)
     {
-        throw new System.NotImplementedException();
+        Debug.Log($"OnUserKickOutOfChatThread {threadEvent.ToJsonObject()}");
     }
 
     public void OnContactMultiDevicesEvent(MultiDevicesOperation operation, string target, string ext)
     {
-        throw new System.NotImplementedException();
+        Debug.Log($"OnContactMultiDevicesEvent {operation}: {target}: {ext}");
     }
 
     public void OnGroupMultiDevicesEvent(MultiDevicesOperation operation, string target, List<string> usernames)
     {
-        throw new System.NotImplementedException();
+        Debug.Log($"OnGroupMultiDevicesEvent {operation}: {target}: {string.Join(", ", usernames.ToArray())}");
     }
 
     public void OnUndisturbMultiDevicesEvent(string data)
     {
-        throw new System.NotImplementedException();
+        Debug.Log($"OnUndisturbMultiDevicesEvent {data}");
     }
 
     public void OnThreadMultiDevicesEvent(MultiDevicesOperation operation, string target, List<string> usernames)
     {
-        throw new System.NotImplementedException();
+        Debug.Log($"OnThreadMultiDevicesEvent {operation}: {target}: {string.Join(", ", usernames.ToArray())}");
     }
 
     public void OnConnected()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("OnConnected run");
     }
 
     public void OnDisconnected()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("OnDisconnected run");
     }
 
     public void OnLoggedOtherDevice()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("OnLoggedOtherDevice run");
+        SceneManager.LoadSceneAsync("Login");
     }
 
     public void OnRemovedFromServer()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("OnRemovedFromServer run");
+        SceneManager.LoadSceneAsync("Login");
     }
 
     public void OnForbidByServer()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("OnForbidByServer run");
+        SceneManager.LoadSceneAsync("Login");
     }
 
     public void OnChangedIMPwd()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("OnChangedIMPwd run");
+        SceneManager.LoadSceneAsync("Login");
     }
 
     public void OnLoginTooManyDevice()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("OnLoginTooManyDevice run");
+        SceneManager.LoadSceneAsync("Login");
     }
 
     public void OnKickedByOtherDevice()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("OnKickedByOtherDevice run");
+        SceneManager.LoadSceneAsync("Login");
     }
 
     public void OnAuthFailed()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("OnAuthFailed run");
     }
 
     public void OnTokenExpired()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("OnTokenExpired run");
     }
 
     public void OnTokenWillExpire()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("OnTokenWillExpire run");
     }
 }
