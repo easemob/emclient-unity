@@ -13,6 +13,8 @@
 #import "EMHelper.h"
 #import "EMUtil.h"
 
+#import "DelegateTester.h"
+
 
 @interface EMClientWrapper () 
 
@@ -44,7 +46,10 @@
                   callback:(EMWrapperCallback *)callback
 {
     NSString *ret = nil;
-    if ([method isEqualToString:init]) {
+    if ([method isEqualToString:runDelegateTester]) {
+        return [self runDelegateTester];
+    }
+    else if ([method isEqualToString:init]) {
         return [self sdkInit:params callback:callback];
     }else if ([method isEqualToString:createAccount]) {
         return [self createAccount:params callback:callback];
@@ -83,6 +88,12 @@
     }
     
     return ret;
+}
+
+
+- (NSString *)runDelegateTester {
+    [DelegateTester.shared startTest];
+    return nil;
 }
 
 - (NSString *)sdkInit:(NSDictionary *)params callback:(EMWrapperCallback *)callback {

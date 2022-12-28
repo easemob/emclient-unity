@@ -180,6 +180,10 @@ namespace AgoraChat
         }
 
 
+        internal void DelegateTesterRun()
+        {
+            NativeCall(SDKMethod.runDelegateTester);
+        }
 
         private void SetupManagers()
         {

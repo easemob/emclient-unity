@@ -10,7 +10,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DelegateTester : NSObject
--(void)startTest;
++ (DelegateTester *)shared;
+- (void)startTest;
 @end
 
 NS_ASSUME_NONNULL_END

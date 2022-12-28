@@ -23,6 +23,7 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
     private Button AccessTokenBtn;
     private Button LogoutBtn;
     private Button m_NewTokenBtn;
+    private Button RunDelegateTester;
 
 
     private void Awake()
@@ -44,6 +45,7 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         AccessTokenBtn = transform.Find("Panel/Panel/AccessTokenBtn").GetComponent<Button>();
         LogoutBtn = transform.Find("Panel/LogoutBtn").GetComponent<Button>();
         m_NewTokenBtn = transform.Find("Panel/NewTokenBtn").GetComponent<Button>();
+        RunDelegateTester = transform.Find("Panel/RunDelegateTester").GetComponent<Button>();
 
         ChatBtn.onClick.AddListener(ChatBtnAction);
         ContactBtn.onClick.AddListener(ContactBtnAction);
@@ -59,6 +61,7 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         AccessTokenBtn.onClick.AddListener(AccessTokenBtnAction);
         LogoutBtn.onClick.AddListener(LogoutBtnAction);
         m_NewTokenBtn.onClick.AddListener(NewTokenAction);
+        RunDelegateTester.onClick.AddListener(RunDelegateTesterAction);
 
         SDKClient.Instance.AddConnectionDelegate(this);
         SDKClient.Instance.AddMultiDeviceDelegate(this);
@@ -175,6 +178,11 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         UIManager.DefaultAlert(transform, "Renew agora token complete.");
     }
 
+    void RunDelegateTesterAction()
+    {
+        SDKClient.Instance.DelegateTester();
+    }
+
     void Start()
     {
         SDKClient.Instance.AddConnectionDelegate(this);
@@ -203,6 +211,8 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
     // 收到群组邀请
     public void OnInvitationReceivedFromGroup(string groupId, string groupName, string inviter, string reason)
     {
+
+        Debug.Log($"GroupManager1 OnRequestToJoinReceivedFromGroup groupId: {groupId}, groupName: {groupName}, inviter: {inviter}, reason: {reason}");
         UIManager.TitleAlert(transform, "回调 收到群组邀请", $"groupId: {groupId}",
             () =>
             {
@@ -237,6 +247,7 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
 
     public void OnRequestToJoinReceivedFromGroup(string groupId, string groupName, string applicant, string reason)
     {
+        Debug.Log($"GroupManager2 OnRequestToJoinReceivedFromGroup groupId: {groupId}, groupName: {groupName}, applicant: {applicant}, reason: {reason}");
         UIManager.TitleAlert(transform, "回调 收到加群申请", $"groupId: {groupId}, user: {applicant}",
             () =>
             {
@@ -271,164 +282,163 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
 
     public void OnRequestToJoinAcceptedFromGroup(string groupId, string groupName, string accepter)
     {
-        Debug.Log($"OnRequestToJoinAcceptedFromGroup groupId: {groupId}, groupName: {groupName}, accepter: {accepter}");
+        Debug.Log($"GroupManager3 OnRequestToJoinAcceptedFromGroup groupId: {groupId}, groupName: {groupName}, accepter: {accepter}");
     }
 
     public void OnRequestToJoinDeclinedFromGroup(string groupId, string reason)
     {
-        Debug.Log($"OnRequestToJoinDeclinedFromGroup groupId: {groupId}, reason: {reason}");
+        Debug.Log($"GroupManager4 OnRequestToJoinDeclinedFromGroup groupId: {groupId}, reason: {reason}");
     }
 
     public void OnInvitationAcceptedFromGroup(string groupId, string invitee)
     {
-        Debug.Log($"OnInvitationAcceptedFromGroup groupId: {groupId}, invitee: {invitee}");
+        Debug.Log($"GroupManager5 OnInvitationAcceptedFromGroup groupId: {groupId}, invitee: {invitee}");
     }
 
     public void OnInvitationDeclinedFromGroup(string groupId, string invitee, string reason)
     {
-        Debug.Log($"OnInvitationDeclinedFromGroup groupId: {groupId}, invitee: {invitee}, reason: {reason}");
+        Debug.Log($"GroupManager6 OnInvitationDeclinedFromGroup groupId: {groupId}, invitee: {invitee}, reason: {reason}");
     }
 
     public void OnUserRemovedFromGroup(string groupId, string groupName)
     {
-        Debug.Log($"OnUserRemovedFromGroup groupId: {groupId}, groupName: {groupName}");
+        Debug.Log($"GroupManager7 OnUserRemovedFromGroup groupId: {groupId}, groupName: {groupName}");
     }
 
     public void OnDestroyedFromGroup(string groupId, string groupName)
     {
-        Debug.Log($"OnDestroyedFromGroup groupId: {groupId}, groupName: {groupName}");
+        Debug.Log($"GroupManager8 OnDestroyedFromGroup groupId: {groupId}, groupName: {groupName}");
     }
 
     public void OnAutoAcceptInvitationFromGroup(string groupId, string inviter, string inviteMessage)
     {
-        Debug.Log($"OnAutoAcceptInvitationFromGroup groupId: {groupId}, inviter: {inviter}, inviteMessage: {inviteMessage}");
+        Debug.Log($"GroupManager9 OnAutoAcceptInvitationFromGroup groupId: {groupId}, inviter: {inviter}, inviteMessage: {inviteMessage}");
     }
 
     public void OnMuteListRemovedFromGroup(string groupId, List<string> mutes)
     {
-        Debug.Log($"OnMuteListRemovedFromGroup groupId: {groupId}, mutes: {string.Join(", ", mutes.ToArray())}");
+        Debug.Log($"GroupManager10 OnMuteListRemovedFromGroup groupId: {groupId}, mutes: {string.Join(", ", mutes.ToArray())}");
     }
 
     public void OnAdminAddedFromGroup(string groupId, string administrator)
     {
-        Debug.Log($"OnAdminAddedFromGroup groupId: {groupId}, administrator: {administrator}");
+        Debug.Log($"GroupManager11 OnAdminAddedFromGroup groupId: {groupId}, administrator: {administrator}");
     }
 
     public void OnAdminRemovedFromGroup(string groupId, string administrator)
     {
-        Debug.Log($"OnAdminRemovedFromGroup groupId: {groupId}, administrator: {administrator}");
+        Debug.Log($"GroupManager12 OnAdminRemovedFromGroup groupId: {groupId}, administrator: {administrator}");
     }
 
     public void OnOwnerChangedFromGroup(string groupId, string newOwner, string oldOwner)
     {
-        Debug.Log($"OnMemberJoinedFromGroup groupId: {groupId}, newOwner: {newOwner}, oldOwner: {oldOwner}");
+        Debug.Log($"GroupManager13 OnMemberJoinedFromGroup groupId: {groupId}, newOwner: {newOwner}, oldOwner: {oldOwner}");
     }
 
     public void OnMemberJoinedFromGroup(string groupId, string member)
     {
-        Debug.Log($"OnMemberJoinedFromGroup groupId: {groupId}, member: {member}");
+        Debug.Log($"GroupManager14 OnMemberJoinedFromGroup groupId: {groupId}, member: {member}");
     }
 
     public void OnMemberExitedFromGroup(string groupId, string member)
     {
-        Debug.Log($"OnMemberExitedFromGroup groupId: {groupId}, member: {member}");
+        Debug.Log($"GroupManager15 OnMemberExitedFromGroup groupId: {groupId}, member: {member}");
     }
 
     public void OnAnnouncementChangedFromGroup(string groupId, string announcement)
     {
-        Debug.Log($"OnAnnouncementChangedFromGroup groupId: {groupId}, announcement: {announcement}");
+        Debug.Log($"GroupManager16 OnAnnouncementChangedFromGroup groupId: {groupId}, announcement: {announcement}");
     }
 
     public void OnSharedFileAddedFromGroup(string groupId, GroupSharedFile sharedFile)
     {
-        Debug.Log($"OnSharedFileAddedFromGroup groupId: {groupId}, sharedFile: {sharedFile.ToJsonObject()}");
+        Debug.Log($"GroupManager17 OnSharedFileAddedFromGroup groupId: {groupId}, sharedFile: {sharedFile.ToJsonObject()}");
     }
 
     public void OnSharedFileDeletedFromGroup(string groupId, string fileId)
     {
-        Debug.Log($"OnSharedFileDeletedFromGroup groupId: {groupId}, fileId: {fileId}");
+        Debug.Log($"GroupManager18 OnSharedFileDeletedFromGroup groupId: {groupId}, fileId: {fileId}");
     }
 
     public void OnAddAllowListMembersFromGroup(string groupId, List<string> whiteList)
     {
-        Debug.Log($"OnAddAllowListMembersFromGroup groupId: {groupId}, whiteList: {string.Join(", ", whiteList.ToArray())}");
+        Debug.Log($"GroupManager19 OnAddAllowListMembersFromGroup groupId: {groupId}, whiteList: {string.Join(", ", whiteList.ToArray())}");
     }
 
     public void OnRemoveAllowListMembersFromGroup(string groupId, List<string> whiteList)
     {
-        Debug.Log($"OnRemoveAllowListMembersFromGroup groupId: {groupId}, whiteList: {string.Join(", ", whiteList.ToArray())}");
+        Debug.Log($"GroupManager20 OnRemoveAllowListMembersFromGroup groupId: {groupId}, whiteList: {string.Join(", ", whiteList.ToArray())}");
     }
 
     public void OnAllMemberMuteChangedFromGroup(string groupId, bool isAllMuted)
     {
-        Debug.Log($"OnStateChangedFromGroup groupId: {groupId}, isAllMuted:{isAllMuted}");
+        Debug.Log($"GroupManager21 OnStateChangedFromGroup groupId: {groupId}, isAllMuted:{isAllMuted}");
     }
 
     public void OnMuteListAddedFromGroup(string groupId, List<string> mutes, long muteExpire)
     {
-        Debug.Log($"OnMuteListAddedFromGroup groupId: {groupId}, mutes: {string.Join(",", mutes.ToArray())}, expireTime: {muteExpire}");
+        Debug.Log($"GroupManager22 OnMuteListAddedFromGroup groupId: {groupId}, mutes: {string.Join(",", mutes.ToArray())}, expireTime: {muteExpire}");
     }
 
     public void OnStateChangedFromGroup(string groupId, bool isDisable)
     {
-        Debug.Log($"OnStateChangedFromGroup groupId: {groupId}, isDisable:{isDisable}");
+        Debug.Log($"GroupManager23 OnStateChangedFromGroup groupId: {groupId}, isDisable:{isDisable}");
     }
 
     public void OnSpecificationChangedFromGroup(Group group)
     {
-        Debug.Log($"OnSpecificationChangedFromGroup group: {group.ToJsonObject()}");
+        Debug.Log($"GroupManager24 OnSpecificationChangedFromGroup group: {group.ToJsonObject()}");
     }
-
 
     public void OnDestroyedFromRoom(string roomId, string roomName)
     {
-        Debug.Log($"OnDestroyedFromRoom roomId: {roomId}, roomName:{roomName}");
+        Debug.Log($"RoomManager1 OnDestroyedFromRoom roomId: {roomId}, roomName:{roomName}");
     }
 
     public void OnMemberJoinedFromRoom(string roomId, string participant)
     {
-        Debug.Log($"OnMemberJoinedFromRoom roomId: {roomId}, participant:{participant}");
+        Debug.Log($"RoomManager2 OnMemberJoinedFromRoom roomId: {roomId}, participant:{participant}");
     }
 
     public void OnMemberExitedFromRoom(string roomId, string roomName, string participant)
     {
-        Debug.Log($"OnMemberExitedFromRoom roomId: {roomId}, name:{roomName}, participant:{participant}");
+        Debug.Log($"RoomManager3 OnMemberExitedFromRoom roomId: {roomId}, name:{roomName}, participant:{participant}");
     }
 
     public void OnRemovedFromRoom(string roomId, string roomName, string participant)
     {
 
-        Debug.Log($"OnRemovedFromRoom roomId: {roomId}, name: {roomName}, participant: {participant}");
+        Debug.Log($"RoomManager4 OnRemovedFromRoom roomId: {roomId}, name: {roomName}, participant: {participant}");
     }
 
     public void OnMuteListAddedFromRoom(string roomId, List<string> mutes, long expireTime)
     {
-        Debug.Log($"OnMuteListAddedFromRoom roomId: {roomId}, mutes: {string.Join(", ", mutes.ToArray())}, expireTime: {expireTime}");
+        Debug.Log($"RoomManager5 OnMuteListAddedFromRoom roomId: {roomId}, mutes: {string.Join(", ", mutes.ToArray())}, expireTime: {expireTime}");
     }
 
     public void OnMuteListRemovedFromRoom(string roomId, List<string> mutes)
     {
-        Debug.Log($"OnMuteListRemovedFromRoom roomId: {roomId}, mutes: {string.Join(", ", mutes.ToArray())}");
+        Debug.Log($"RoomManager6 OnMuteListRemovedFromRoom roomId: {roomId}, mutes: {string.Join(", ", mutes.ToArray())}");
     }
 
     public void OnAdminAddedFromRoom(string roomId, string admin)
     {
-        Debug.Log($"OnAdminAddedFromRoom roomId: {roomId}, admin: {admin}");
+        Debug.Log($"RoomManager7 OnAdminAddedFromRoom roomId: {roomId}, admin: {admin}");
     }
 
     public void OnAdminRemovedFromRoom(string roomId, string admin)
     {
-        Debug.Log($"OnAdminRemovedFromRoom roomId: {roomId}, admin: {admin}");
+        Debug.Log($"RoomManager8 OnAdminRemovedFromRoom roomId: {roomId}, admin: {admin}");
     }
 
     public void OnOwnerChangedFromRoom(string roomId, string newOwner, string oldOwner)
     {
-        Debug.Log($"OnOwnerChangedFromRoom roomId: {roomId}, newOwner: {newOwner}, oldOwner: {oldOwner}");
+        Debug.Log($"RoomManager9 OnOwnerChangedFromRoom roomId: {roomId}, newOwner: {newOwner}, oldOwner: {oldOwner}");
     }
 
     public void OnAnnouncementChangedFromRoom(string roomId, string announcement)
     {
-        Debug.Log($"OnAnnouncementChangedFromRoom roomId: {roomId}, announcement: {announcement}");
+        Debug.Log($"RoomManager10 OnAnnouncementChangedFromRoom roomId: {roomId}, announcement: {announcement}");
     }
 
     public void OnChatroomAttributesChanged(string roomId, Dictionary<string, string> kv, string from)
@@ -440,37 +450,37 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
             list.Add($"{key}:kv[key]");
         }
 
-        Debug.Log($"OnChatroomAttributesChanged roomId: {roomId}, keys: {string.Join(", ", list.ToArray())}, from: {from}");
+        Debug.Log($"RoomManager11 OnChatroomAttributesChanged roomId: {roomId}, keys: {string.Join(", ", list.ToArray())}, from: {from}");
     }
 
     public void OnChatroomAttributesRemoved(string roomId, List<string> keys, string from)
     {
-        Debug.Log($"OnSpecificationChangedFromRoom roomId: {roomId}, keys: {string.Join(", ", keys.ToArray())}, from: {from}");
+        Debug.Log($"RoomManager12 OnSpecificationChangedFromRoom roomId: {roomId}, keys: {string.Join(", ", keys.ToArray())}, from: {from}");
     }
 
     public void OnSpecificationChangedFromRoom(Room room)
     {
-        Debug.Log($"OnSpecificationChangedFromRoom room: {room.ToJsonObject()}");
+        Debug.Log($"RoomManager13 OnSpecificationChangedFromRoom room: {room.ToJsonObject()}");
     }
 
     public void OnAddAllowListMembersFromChatroom(string roomId, List<string> members)
     {
-        Debug.Log($"OnAddAllowListMembersFromChatroom roomId: {roomId}, members: {string.Join(", ", members.ToArray())}");
+        Debug.Log($"RoomManager14 OnAddAllowListMembersFromChatroom roomId: {roomId}, members: {string.Join(", ", members.ToArray())}");
     }
 
     public void OnRemoveAllowListMembersFromChatroom(string roomId, List<string> members)
     {
-        Debug.Log($"OnRemoveAllowListMembersFromChatroom roomId: {roomId}, members: {string.Join(", ", members.ToArray())}");
+        Debug.Log($"RoomManager15 OnRemoveAllowListMembersFromChatroom roomId: {roomId}, members: {string.Join(", ", members.ToArray())}");
     }
 
     public void OnAllMemberMuteChangedFromChatroom(string roomId, bool isAllMuted)
     {
-        Debug.Log($"OnAllMemberMuteChangedFromChatroom roomId: {roomId}, isAllMuted: {isAllMuted}");
+        Debug.Log($"RoomManager16 OnAllMemberMuteChangedFromChatroom roomId: {roomId}, isAllMuted: {isAllMuted}");
     }
 
     public void OnRemoveFromRoomByOffline(string roomId, string roomName)
     {
-        Debug.Log($"OnRemoveFromRoomByOffline roomId: {roomId}, roomName: {roomName}");
+        Debug.Log($"RoomManager17 OnRemoveFromRoomByOffline roomId: {roomId}, roomName: {roomName}");
     }
 
     public void OnPresenceUpdated(List<Presence> presences)
@@ -480,7 +490,7 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         {
             list.Add(presence.ToJsonObject().ToString());
         }
-        Debug.Log($"OnPresenceUpdated {string.Join(", ", list.ToArray())}");
+        Debug.Log($"Presence1 OnPresenceUpdated {string.Join(", ", list.ToArray())}");
     }
 
     public void OnMessagesReceived(List<Message> messages)
@@ -490,7 +500,7 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         {
             msgs.Add(msg.ToJsonObject().ToString());
         }
-        Debug.Log($"OnMessagesReceived {string.Join(", ", msgs.ToArray())}");
+        Debug.Log($"ChatManager1 OnMessagesReceived {string.Join(", ", msgs.ToArray())}");
     }
 
     public void OnCmdMessagesReceived(List<Message> messages)
@@ -500,7 +510,7 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         {
             msgs.Add(msg.ToJsonObject().ToString());
         }
-        Debug.Log($"OnCmdMessagesReceived {string.Join(", ", msgs.ToArray())}");
+        Debug.Log($"ChatManager2 OnCmdMessagesReceived {string.Join(", ", msgs.ToArray())}");
     }
 
     public void OnMessagesRead(List<Message> messages)
@@ -510,7 +520,7 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         {
             msgs.Add(msg.ToJsonObject().ToString());
         }
-        Debug.Log($"OnMessagesRead {string.Join(", ", msgs.ToArray())}");
+        Debug.Log($"ChatManager3 OnMessagesRead {string.Join(", ", msgs.ToArray())}");
     }
 
     public void OnMessagesDelivered(List<Message> messages)
@@ -520,7 +530,7 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         {
             msgs.Add(msg.ToJsonObject().ToString());
         }
-        Debug.Log($"OnMessagesDelivered {string.Join(", ", msgs.ToArray())}");
+        Debug.Log($"ChatManager4 OnMessagesDelivered {string.Join(", ", msgs.ToArray())}");
     }
 
     public void OnMessagesRecalled(List<Message> messages)
@@ -530,12 +540,12 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         {
             msgs.Add(msg.ToJsonObject().ToString());
         }
-        Debug.Log($"OnMessagesRecalled {string.Join(", ", msgs.ToArray())}");
+        Debug.Log($"ChatManager5 OnMessagesRecalled {string.Join(", ", msgs.ToArray())}");
     }
 
     public void OnReadAckForGroupMessageUpdated()
     {
-        Debug.Log($"OnReadAckForGroupMessageUpdated");
+        Debug.Log($"ChatManager6 OnReadAckForGroupMessageUpdated");
     }
 
     public void OnGroupMessageRead(List<GroupReadAck> list)
@@ -545,17 +555,17 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         {
             acks.Add(ack.ToJsonObject().ToString());
         }
-        Debug.Log($"OnGroupMessageRead {string.Join(", ", acks.ToArray())}");
+        Debug.Log($"ChatManager7 OnGroupMessageRead {string.Join(", ", acks.ToArray())}");
     }
 
     public void OnConversationsUpdate()
     {
-        Debug.Log($"OnConversationsUpdate");
+        Debug.Log($"ChatManager8 OnConversationsUpdate");
     }
 
     public void OnConversationRead(string from, string to)
     {
-        Debug.Log($"OnConversationRead from:{from}, to:{to}");
+        Debug.Log($"ChatManager9 OnConversationRead from:{from}, to:{to}");
     }
 
     public void MessageReactionDidChange(List<MessageReactionChange> list)
@@ -565,21 +575,23 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         {
             changes.Add(change.ToJsonObject().ToString());
         }
-        Debug.Log($"OnContactAdded {string.Join(", ", changes.ToArray())}");
+        Debug.Log($"ChatManager10 OnContactAdded {string.Join(", ", changes.ToArray())}");
     }
 
     public void OnContactAdded(string username)
     {
-        Debug.Log($"OnContactAdded {username}");
+        Debug.Log($"ContactManager1 OnContactAdded {username}");
     }
 
     public void OnContactDeleted(string username)
     {
-        Debug.Log($"OnContactDeleted {username}");
+        Debug.Log($"ContactManager2 OnContactDeleted {username}");
     }
 
     public void OnContactInvited(string username, string reason)
     {
+
+        Debug.Log($"ContactManager3 OnContactInvited {username} {reason}");
         CallBack callBack = new CallBack(
             onSuccess: () => { UIManager.SuccessAlert(transform); },
             onError: (code, desc) => { UIManager.ErrorAlert(transform, code, desc); }
@@ -595,111 +607,105 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
 
     public void OnFriendRequestAccepted(string username)
     {
-        Debug.Log($"OnFriendRequestAccepted {username}");
+        Debug.Log($"ContactManager4 OnFriendRequestAccepted {username}");
     }
 
     public void OnFriendRequestDeclined(string username)
     {
-        Debug.Log($"OnFriendRequestDeclined {username}");
+        Debug.Log($"Contact5 OnFriendRequestDeclined {username}");
     }
     public void OnChatThreadCreate(ChatThreadEvent threadEvent)
     {
-        Debug.Log($"OnChatThreadCreate {threadEvent.ToJsonObject()}");
+        Debug.Log($"ChatThread1 OnChatThreadCreate {threadEvent.ToJsonObject()}");
     }
 
     public void OnChatThreadUpdate(ChatThreadEvent threadEvent)
     {
-        Debug.Log($"OnChatThreadUpdate {threadEvent.ToJsonObject()}");
+        Debug.Log($"ChatThread2 OnChatThreadUpdate {threadEvent.ToJsonObject()}");
     }
 
     public void OnChatThreadDestroy(ChatThreadEvent threadEvent)
     {
-        Debug.Log($"OnChatThreadDestroy {threadEvent.ToJsonObject()}");
+        Debug.Log($"ChatThread3 OnChatThreadDestroy {threadEvent.ToJsonObject()}");
     }
 
     public void OnUserKickOutOfChatThread(ChatThreadEvent threadEvent)
     {
-        Debug.Log($"OnUserKickOutOfChatThread {threadEvent.ToJsonObject()}");
+        Debug.Log($"ChatThread4 OnUserKickOutOfChatThread {threadEvent.ToJsonObject()}");
     }
 
     public void OnContactMultiDevicesEvent(MultiDevicesOperation operation, string target, string ext)
     {
-        Debug.Log($"OnContactMultiDevicesEvent {operation}: {target}: {ext}");
+        Debug.Log($"MultiDevice1 OnContactMultiDevicesEvent {operation}: {target}: {ext}");
     }
 
     public void OnGroupMultiDevicesEvent(MultiDevicesOperation operation, string target, List<string> usernames)
     {
-        Debug.Log($"OnGroupMultiDevicesEvent {operation}: {target}: {string.Join(", ", usernames.ToArray())}");
+        Debug.Log($"MultiDevice2 OnGroupMultiDevicesEvent {operation}: {target}: {string.Join(", ", usernames.ToArray())}");
     }
 
     public void OnUndisturbMultiDevicesEvent(string data)
     {
-        Debug.Log($"OnUndisturbMultiDevicesEvent {data}");
+        Debug.Log($"MultiDevice3 OnUndisturbMultiDevicesEvent {data}");
     }
 
     public void OnThreadMultiDevicesEvent(MultiDevicesOperation operation, string target, List<string> usernames)
     {
-        Debug.Log($"OnThreadMultiDevicesEvent {operation}: {target}: {string.Join(", ", usernames.ToArray())}");
+        Debug.Log($"MultiDevice4 OnThreadMultiDevicesEvent {operation}: {target}: {string.Join(", ", usernames.ToArray())}");
     }
 
     public void OnConnected()
     {
-        Debug.Log("OnConnected run");
+        Debug.Log("Connection1 OnConnected run");
     }
 
     public void OnDisconnected()
     {
-        Debug.Log("OnDisconnected run");
+        Debug.Log("Connection2 OnDisconnected run");
     }
 
     public void OnLoggedOtherDevice()
     {
-        Debug.Log("OnLoggedOtherDevice run");
-        SceneManager.LoadSceneAsync("Login");
+        Debug.Log("Connection3 OnLoggedOtherDevice run");
     }
 
     public void OnRemovedFromServer()
     {
-        Debug.Log("OnRemovedFromServer run");
-        SceneManager.LoadSceneAsync("Login");
+        Debug.Log("Connection4 OnRemovedFromServer run");
     }
 
     public void OnForbidByServer()
     {
-        Debug.Log("OnForbidByServer run");
-        SceneManager.LoadSceneAsync("Login");
+        Debug.Log("Connection5 OnForbidByServer run");
     }
 
     public void OnChangedIMPwd()
     {
-        Debug.Log("OnChangedIMPwd run");
-        SceneManager.LoadSceneAsync("Login");
+        Debug.Log("Connection6 OnChangedIMPwd run");
     }
 
     public void OnLoginTooManyDevice()
     {
-        Debug.Log("OnLoginTooManyDevice run");
-        SceneManager.LoadSceneAsync("Login");
+        Debug.Log("Connection7 OnLoginTooManyDevice run");
     }
 
     public void OnKickedByOtherDevice()
     {
-        Debug.Log("OnKickedByOtherDevice run");
-        SceneManager.LoadSceneAsync("Login");
+        Debug.Log("Connection8 OnKickedByOtherDevice run");
     }
 
     public void OnAuthFailed()
     {
-        Debug.Log("OnAuthFailed run");
+        Debug.Log("Connection9 OnAuthFailed run");
     }
 
     public void OnTokenExpired()
     {
-        Debug.Log("OnTokenExpired run");
+        Debug.Log("Connection10 OnTokenExpired run");
     }
 
     public void OnTokenWillExpire()
     {
-        Debug.Log("OnTokenWillExpire run");
+        Debug.Log("Connection11 OnTokenWillExpire run");
     }
 }

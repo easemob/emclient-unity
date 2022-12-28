@@ -155,4 +155,4 @@ UnityChatDemo/Assets/AgoraChat/Plugins
 # Unity project files 
 */Assembly-CSharp-Editor.csproj
 */Assembly-CSharp.csproj
-*/build_info
+/**/build_info
