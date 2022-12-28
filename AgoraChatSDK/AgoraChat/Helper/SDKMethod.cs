@@ -3,6 +3,9 @@ namespace AgoraChat
 {
     internal class SDKMethod
     {
+
+        internal const string runDelegateTester = "runDelegateTester";
+
         // client or manager
         internal const string client = "EMClient";
         internal const string chatManager = "EMChatManager";

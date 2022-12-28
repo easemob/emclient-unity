@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface EMGroupManagerWrapper : EMBaseManager
+@interface EMGroupManagerWrapper : EMBaseManager <EMGroupManagerDelegate>
 
 @end
 

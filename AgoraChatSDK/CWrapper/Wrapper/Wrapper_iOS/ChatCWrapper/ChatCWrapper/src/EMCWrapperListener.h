@@ -8,7 +8,7 @@
 #include "common_wrapper_internal.h"
 
 #import <Foundation/Foundation.h>
-#import <wrapper/EMWrapperListener.h>
+#import <wrapper/wrapper.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

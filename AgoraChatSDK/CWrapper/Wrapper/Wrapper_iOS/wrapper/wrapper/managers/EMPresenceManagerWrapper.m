@@ -9,7 +9,7 @@
 #import "EMPresence+Helper.h"
 #import "EMUtil.h"
 
-@interface EMPresenceManagerWrapper()<EMPresenceManagerDelegate>
+@interface EMPresenceManagerWrapper()
 
 @end
 
@@ -130,7 +130,7 @@
     for (EMPresence *presence in presences) {
         [array addObject:[presence toJson]];
     }
-    [EMWrapperHelper.shared.listener onReceive:chatListener method:onPresenceUpdated info:[array toJsonString]];
+    [EMWrapperHelper.shared.listener onReceive:presenceListener method:onPresenceUpdated info:[array toJsonString]];
 }
 
 @end

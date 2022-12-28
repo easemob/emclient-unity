@@ -12,7 +12,7 @@
 #import "EMHelper.h"
 #import "EMUtil.h"
 
-@interface EMRoomManagerWrapper ()<EMChatroomManagerDelegate>
+@interface EMRoomManagerWrapper ()
 
 @end
 
@@ -360,7 +360,11 @@
                                                                   pageSize:pageSize
                                                                 completion:^(NSArray *aList, EMError *aError)
     {
-        [weakSelf wrapperCallback:callback error:aError object:aList];
+        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        for (NSString *userId in aList) {
+            dict[userId] = @(0);
+        }
+        [weakSelf wrapperCallback:callback error:aError object:dict];
     }];
     
     return nil;

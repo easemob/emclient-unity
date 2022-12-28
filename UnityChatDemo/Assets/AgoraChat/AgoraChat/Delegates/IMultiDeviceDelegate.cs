@@ -48,19 +48,6 @@ namespace AgoraChat
 
         /**
          * \~chinese
-         * 多端多设备免打扰事件回调。
-         *
-         * @param data     免打扰事件数据。
-         *
-         * \~english
-         * The callback for a multi-device do-not-disturb event.
-         * 
-         * @param data     The do-not-disturb event data.
-         */
-        void OnUndisturbMultiDevicesEvent(string data);
-
-        /**
-         * \~chinese
          * 多端多设备子区事件回调。
          *
          * @param operation     群组事件，详见 {@link MultiDevicesOperation}。

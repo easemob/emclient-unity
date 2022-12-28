@@ -9,7 +9,7 @@
 #import "EMHelper.h"
 #import "EMUtil.h"
 
-@interface EMContactManagerWrapper () <EMContactManagerDelegate>
+@interface EMContactManagerWrapper () 
 
 @end
 

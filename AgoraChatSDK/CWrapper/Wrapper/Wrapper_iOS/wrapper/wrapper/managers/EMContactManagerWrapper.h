@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface EMContactManagerWrapper : EMBaseManager
+@interface EMContactManagerWrapper : EMBaseManager <EMContactManagerDelegate>
 
 @end
 

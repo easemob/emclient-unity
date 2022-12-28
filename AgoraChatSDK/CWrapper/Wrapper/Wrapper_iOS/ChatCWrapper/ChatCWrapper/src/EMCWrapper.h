@@ -7,7 +7,7 @@
 
 
 #import <Foundation/Foundation.h>
-#import <wrapper/EMWrapper.h>
+#import <wrapper/wrapper.h>
 
 
 @interface EMCWrapper : NSObject

@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+static NSString *const runDelegateTester = @"runDelegateTester";
+
 // client or manager
 static NSString *const client = @"EMClient";
 static NSString *const chatManager = @"EMChatManager";

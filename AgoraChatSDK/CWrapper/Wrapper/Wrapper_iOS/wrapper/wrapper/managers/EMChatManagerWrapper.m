@@ -19,7 +19,7 @@
 
 
 
-@interface EMChatManagerWrapper () <EMChatManagerDelegate>
+@interface EMChatManagerWrapper () 
 
 @end
 

@@ -21,7 +21,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface EMClientWrapper : EMBaseManager
+@interface EMClientWrapper : EMBaseManager <EMClientDelegate, EMMultiDevicesDelegate>
+
++ (EMClientWrapper *)shared;
+
 @property (nonatomic, strong) EMChatManagerWrapper *chatManager;
 @property (nonatomic, strong) EMContactManagerWrapper *contactManagerWrapper;
 @property (nonatomic, strong) EMRoomManagerWrapper *roomManagerWrapper;

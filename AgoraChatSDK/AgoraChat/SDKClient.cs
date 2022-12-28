@@ -515,5 +515,10 @@ namespace AgoraChat
         {
             _clientImpl.ClearResource();
         }
+
+        public void DelegateTester()
+        {
+            _clientImpl.DelegateTesterRun();
+        }
     }
 }

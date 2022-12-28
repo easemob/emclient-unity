@@ -293,8 +293,8 @@ namespace AgoraChat
             jo.AddWithoutNull("muteList", JsonObject.JsonArrayFromStringList(MuteList));
             jo.AddWithoutNull("block", MessageBlocked);
             jo.AddWithoutNull("isMuteAll", IsAllMemberMuted);
-            jo.AddWithoutNull("options", Options.ToJsonObject());
             jo.AddWithoutNull("permissionType", PermissionType.ToInt());
+            // jo.AddWithoutNull("options", Options.ToJsonObject());
             // jo.AddWithoutNull("isDisabled", IsDisabled);
             return jo;
         }
