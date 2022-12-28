@@ -537,64 +537,73 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         throw new System.NotImplementedException();
     }
 
-    public void OnContactAdded(string userId)
+    public void OnContactAdded(string username)
     {
-        throw new System.NotImplementedException();
+        UIManager.DefaultAlert(transform, $"OnContactAdded: {username}");
     }
 
-    public void OnContactDeleted(string userId)
+    public void OnContactDeleted(string username)
     {
-        throw new System.NotImplementedException();
+        UIManager.DefaultAlert(transform, $"OnContactDeleted: {username}");
     }
 
-    public void OnContactInvited(string userId, string reason)
+    public void OnContactInvited(string username, string reason)
     {
-        throw new System.NotImplementedException();
+        CallBack callBack = new CallBack(
+            onSuccess: () => { UIManager.SuccessAlert(transform); },
+            onError: (code, desc) => { UIManager.ErrorAlert(transform, code, desc); }
+        );
+
+        UIManager.TitleAlert(transform, $"收到好友申请", $"{username}添加您为好友",
+            () => { SDKClient.Instance.ContactManager.AcceptInvitation(username, callBack); },
+            () => { SDKClient.Instance.ContactManager.DeclineInvitation(username, callBack); },
+            "同意",
+            "拒绝"
+        );
     }
 
-    public void OnFriendRequestAccepted(string userId)
+    public void OnFriendRequestAccepted(string username)
     {
-        throw new System.NotImplementedException();
+        UIManager.DefaultAlert(transform, $"OnFriendRequestAccepted: {username}");
     }
 
-    public void OnFriendRequestDeclined(string userId)
+    public void OnFriendRequestDeclined(string username)
     {
-        throw new System.NotImplementedException();
+        UIManager.DefaultAlert(transform, $"OnFriendRequestDeclined: {username}");
     }
-
     public void OnChatThreadCreate(ChatThreadEvent threadEvent)
     {
-        throw new System.NotImplementedException();
+        UIManager.DefaultAlert(transform, $"OnChatThreadCreate: {threadEvent.ToJsonObject()}");
     }
 
     public void OnChatThreadUpdate(ChatThreadEvent threadEvent)
     {
-        throw new System.NotImplementedException();
+        UIManager.DefaultAlert(transform, $"OnChatThreadUpdate: {threadEvent.ToJsonObject()}");
     }
 
     public void OnChatThreadDestroy(ChatThreadEvent threadEvent)
     {
-        throw new System.NotImplementedException();
+        UIManager.DefaultAlert(transform, $"OnChatThreadDestroy: {threadEvent.ToJsonObject()}");
     }
 
     public void OnUserKickOutOfChatThread(ChatThreadEvent threadEvent)
     {
-        throw new System.NotImplementedException();
+        UIManager.DefaultAlert(transform, $"OnUserKickOutOfChatThread: {threadEvent.ToJsonObject()}");
     }
 
     public void OnContactMultiDevicesEvent(MultiDevicesOperation operation, string target, string ext)
     {
-        throw new System.NotImplementedException();
+        UIManager.DefaultAlert(transform, $"OnContactMultiDevicesEvent: {operation.ToInt()} : {target} : {ext}");
     }
 
     public void OnGroupMultiDevicesEvent(MultiDevicesOperation operation, string target, List<string> usernames)
     {
-        throw new System.NotImplementedException();
+        UIManager.DefaultAlert(transform, $"OnGroupMultiDevicesEvent: {operation.ToInt()} : {target} : {string.Join(",", usernames)}");
     }
 
     public void OnUndisturbMultiDevicesEvent(string data)
     {
-        throw new System.NotImplementedException();
+        UIManager.DefaultAlert(transform, $"OnUndisturbMultiDevicesEvent: {data}");
     }
 
     public void OnThreadMultiDevicesEvent(MultiDevicesOperation operation, string target, List<string> usernames)
