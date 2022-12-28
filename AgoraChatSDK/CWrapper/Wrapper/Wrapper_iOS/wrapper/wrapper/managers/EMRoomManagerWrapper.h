@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface EMRoomManagerWrapper : EMBaseManager
+@interface EMRoomManagerWrapper : EMBaseManager<EMChatroomManagerDelegate>
 
 @end
 

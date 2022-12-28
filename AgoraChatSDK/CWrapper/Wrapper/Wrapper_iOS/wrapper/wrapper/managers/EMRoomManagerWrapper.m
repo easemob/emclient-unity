@@ -12,7 +12,7 @@
 #import "EMHelper.h"
 #import "EMUtil.h"
 
-@interface EMRoomManagerWrapper ()<EMChatroomManagerDelegate>
+@interface EMRoomManagerWrapper ()
 
 @end
 

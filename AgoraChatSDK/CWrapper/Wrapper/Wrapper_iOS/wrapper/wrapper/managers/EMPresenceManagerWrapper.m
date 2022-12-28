@@ -9,7 +9,7 @@
 #import "EMPresence+Helper.h"
 #import "EMUtil.h"
 
-@interface EMPresenceManagerWrapper()<EMPresenceManagerDelegate>
+@interface EMPresenceManagerWrapper()
 
 @end
 

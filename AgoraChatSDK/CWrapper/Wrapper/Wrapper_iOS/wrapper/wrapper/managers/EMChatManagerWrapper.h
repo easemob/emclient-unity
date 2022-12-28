@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface EMChatManagerWrapper : EMBaseManager
+@interface EMChatManagerWrapper : EMBaseManager <EMChatManagerDelegate>
 
 @end
 

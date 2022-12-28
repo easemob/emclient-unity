@@ -17,7 +17,7 @@
 
 - (instancetype)init {
     if (self = [super init]) {
-        _clientWrapper = [[EMClientWrapper alloc] init];
+        _clientWrapper = [EMClientWrapper shared];
     }
     return self;
 }

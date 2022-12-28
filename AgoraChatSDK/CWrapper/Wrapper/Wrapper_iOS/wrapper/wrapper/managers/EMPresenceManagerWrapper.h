@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface EMPresenceManagerWrapper : EMBaseManager
+@interface EMPresenceManagerWrapper : EMBaseManager <EMPresenceManagerDelegate>
 
 @end
 

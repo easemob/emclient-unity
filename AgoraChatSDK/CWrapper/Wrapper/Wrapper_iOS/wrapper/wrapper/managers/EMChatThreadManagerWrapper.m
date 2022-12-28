@@ -12,7 +12,7 @@
 #import "EMChatThreadEvent+Helper.h"
 #import "EMUtil.h"
 
-@interface EMChatThreadManagerWrapper () <EMThreadManagerDelegate>
+@interface EMChatThreadManagerWrapper () 
 
 @end
 

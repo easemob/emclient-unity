@@ -12,7 +12,7 @@
 #import "EMUtil.h"
 
 
-@interface EMGroupManagerWrapper ()<EMGroupManagerDelegate>
+@interface EMGroupManagerWrapper ()
 
 @end
 

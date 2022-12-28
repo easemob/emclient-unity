@@ -93,6 +93,8 @@
 		908CE3CD293D913600348C1A /* NSDictionary+Category.h in Headers */ = {isa = PBXBuildFile; fileRef = 908CE3C7293D913600348C1A /* NSDictionary+Category.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		908CE3CF293D913600348C1A /* NSArray+Category.h in Headers */ = {isa = PBXBuildFile; fileRef = 908CE3C9293D913600348C1A /* NSArray+Category.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		908CE3D0293D913600348C1A /* NSDictionary+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 908CE3CA293D913600348C1A /* NSDictionary+Category.m */; };
+		90ED2EB7295C0DDA00601727 /* DelegateTester.h in Headers */ = {isa = PBXBuildFile; fileRef = 90ED2EB5295C0DDA00601727 /* DelegateTester.h */; };
+		90ED2EB8295C0DDA00601727 /* DelegateTester.m in Sources */ = {isa = PBXBuildFile; fileRef = 90ED2EB6295C0DDA00601727 /* DelegateTester.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -183,6 +185,8 @@
 		908CE3C7293D913600348C1A /* NSDictionary+Category.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+Category.h"; sourceTree = "<group>"; };
 		908CE3C9293D913600348C1A /* NSArray+Category.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Category.h"; sourceTree = "<group>"; };
 		908CE3CA293D913600348C1A /* NSDictionary+Category.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+Category.m"; sourceTree = "<group>"; };
+		90ED2EB5295C0DDA00601727 /* DelegateTester.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DelegateTester.h; sourceTree = "<group>"; };
+		90ED2EB6295C0DDA00601727 /* DelegateTester.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DelegateTester.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -272,6 +276,8 @@
 				90319C4A2935FC1E000D01BE /* EMHelper.h */,
 				90319C502935FC1E000D01BE /* EMHelper.m */,
 				90319C4B2935FC1E000D01BE /* EMUtil.h */,
+				90ED2EB5295C0DDA00601727 /* DelegateTester.h */,
+				90ED2EB6295C0DDA00601727 /* DelegateTester.m */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -371,6 +377,7 @@
 				90319CA32935FC1E000D01BE /* EMThreadQueue.h in Headers */,
 				90319CBB2935FC1E000D01BE /* EMTranslateLanguage+Helper.h in Headers */,
 				90319CBD2935FC1E000D01BE /* EMCursorResult+Helper.h in Headers */,
+				90ED2EB7295C0DDA00601727 /* DelegateTester.h in Headers */,
 				90319CA12935FC1E000D01BE /* EMUtil.h in Headers */,
 				908CE3CF293D913600348C1A /* NSArray+Category.h in Headers */,
 				90319CC42935FC1E000D01BE /* EMMessageReaction+Helper.h in Headers */,
@@ -500,6 +507,7 @@
 				908CE3CC293D913600348C1A /* NSArray+Category.m in Sources */,
 				90319C822935FC1E000D01BE /* EMChatroom+Helper.m in Sources */,
 				90319CAE2935FC1E000D01BE /* EMSilentModeResult+Helper.m in Sources */,
+				90ED2EB8295C0DDA00601727 /* DelegateTester.m in Sources */,
 				90319CC02935FC1E000D01BE /* EMOptions+Helper.m in Sources */,
 				90319CAB2935FC1E000D01BE /* EMDeviceConfig+Helper.m in Sources */,
 				90319CA62935FC1E000D01BE /* EMHelper.m in Sources */,

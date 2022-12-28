@@ -14,11 +14,22 @@
 #import "EMUtil.h"
 
 
-@interface EMClientWrapper () <EMClientDelegate, EMMultiDevicesDelegate>
+@interface EMClientWrapper () 
 
 @end
 
 @implementation EMClientWrapper
+
++ (EMClientWrapper *)shared {
+    static EMClientWrapper *wrapper_;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        wrapper_ = [[EMClientWrapper alloc] init];
+    });
+    
+    return wrapper_;
+}
+
 
 - (instancetype)init {
     if (self = [super init]) {
