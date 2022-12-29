@@ -282,7 +282,7 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
     }
 
     private String importMessages(JSONObject params, EMWrapperCallback callback) throws JSONException {
-        JSONArray ary = params.getJSONArray("messages");
+        JSONArray ary = params.getJSONArray("list");
         List<EMMessage> messages = new ArrayList<>();
         for (int i = 0; i < ary.length(); i++) {
             JSONObject obj = ary.getJSONObject(i);
@@ -297,8 +297,8 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
     }
 
     private String downloadAttachment(JSONObject params, EMWrapperCallback callback) throws JSONException {
-        EMMessage tempMsg = EMMessageHelper.fromJson(params.getJSONObject("message"));
-        final EMMessage msg = EMClient.getInstance().chatManager().getMessage(tempMsg.getMsgId());
+        String msgId = params.getString("msgId");
+        final EMMessage msg = EMClient.getInstance().chatManager().getMessage(msgId);
         msg.setMessageStatusCallback(new EMCallBack() {
             @Override
             public void onSuccess() {
@@ -327,8 +327,8 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
     }
 
     private String downloadThumbnail(JSONObject params, EMWrapperCallback callback) throws JSONException {
-        EMMessage tempMsg = EMMessageHelper.fromJson(params.getJSONObject("message"));
-        final EMMessage msg = EMClient.getInstance().chatManager().getMessage(tempMsg.getMsgId());
+        String msgId = params.getString("msgId");
+        final EMMessage msg = EMClient.getInstance().chatManager().getMessage(msgId);
         msg.setMessageStatusCallback(new EMCallBack() {
             @Override
             public void onSuccess() {

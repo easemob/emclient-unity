@@ -275,7 +275,7 @@
 - (NSString *)importMessages:(NSDictionary *)param
                     callback:(EMWrapperCallback *)callback {
     __weak EMChatManagerWrapper * weakSelf = self;
-    NSArray *dictAry = param[@"messages"];
+    NSArray *dictAry = param[@"list"];
     NSMutableArray *messages = [NSMutableArray array];
     for (NSDictionary *dict in dictAry) {
         [messages addObject:[EMChatMessage fromJson:dict]];
@@ -291,9 +291,8 @@
 
 - (NSString *)downloadAttachment:(NSDictionary *)param
                         callback:(EMWrapperCallback *)callback {
-    __block EMChatMessage *msg = [EMChatMessage fromJson:param[@"message"]];
-    EMChatMessage *needDownMSg = [EMClient.sharedClient.chatManager getMessageWithMessageId:msg.messageId];
-    [EMClient.sharedClient.chatManager downloadMessageAttachment:needDownMSg
+    EMChatMessage *needDownMsg = [EMClient.sharedClient.chatManager getMessageWithMessageId:param[@"msgId"]];
+    [EMClient.sharedClient.chatManager downloadMessageAttachment:needDownMsg
                                                         progress:^(int progress)
      {
         [callback onProgress:progress];
@@ -311,9 +310,8 @@
 
 - (NSString *)downloadThumbnail:(NSDictionary *)param
                        callback:(EMWrapperCallback *)callback {
-    __block EMChatMessage *msg = [EMChatMessage fromJson:param[@"message"]];
-    EMChatMessage *needDownMSg = [EMClient.sharedClient.chatManager getMessageWithMessageId:msg.messageId];
-    [EMClient.sharedClient.chatManager downloadMessageThumbnail:needDownMSg
+    EMChatMessage *needDownMsg = [EMClient.sharedClient.chatManager getMessageWithMessageId:param[@"msgId"]];
+    [EMClient.sharedClient.chatManager downloadMessageThumbnail:needDownMsg
                                                        progress:^(int progress)
      {
         [callback onProgress:progress];

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using AgoraChat;
 using UnityEngine.UI;
+using AgoraChat.MessageBody;
 
 public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 {
@@ -420,7 +421,8 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
             Conversation conversation = SDKClient.Instance.ChatManager.GetConversation(dict["conversationId"], type);
             if (conversation != null)
             {
-                UIManager.SuccessAlert(transform);
+                Debug.Log($"GetConversation: {conversation.ToJsonObject()}");
+                UIManager.DefaultAlert(transform, $"id: {conversation.Id}, type: {conversation.Type}, isThread: {conversation.IsThread}");
             }
             else
             {
@@ -602,20 +604,35 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
     void ImportMessagesBtnAction()
     {
-        Debug.Log("ImportMessagesBtnAction");
-        Message msg = Message.CreateTextSendMessage("du003", "hehe11");
-        List<Message> msgs = new List<Message>();
-        msgs.Add(msg);
-        SDKClient.Instance.ChatManager.ImportMessages(msgs, new CallBack(
-            onSuccess: () =>
-            {
-                UIManager.DefaultAlert(transform, "插入成功");
-            },
-            onError: (code, desc) =>
-            {
-                UIManager.DefaultAlert(transform, "插入失败");
-            }
-        ));
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string convId = dict["convId"];
+            string txt = dict["txt"];
+            Message msg = Message.CreateTextSendMessage(convId, txt);
+            List<Message> msgs = new List<Message>();
+            msgs.Add(msg);
+            SDKClient.Instance.ChatManager.ImportMessages(msgs, new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.DefaultAlert(transform, "获取消息?",
+                        () =>
+                        {
+                            Message loadMsg = SDKClient.Instance.ChatManager.LoadMessage(msg.MsgId);
+                            TextBody body = loadMsg.Body as TextBody;
+                            UIManager.DefaultAlert(transform, $"convId: { loadMsg.ConversationId}, content: {body.Text}");
+                        },
+                        () => { });
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.DefaultAlert(transform, "插入失败");
+                }
+            ));
+        });
+        config.AddField("convId");
+        config.AddField("txt");
+        UIManager.DefaultInputAlert(transform, config);
+
     }
     void LoadMessageBtnAction()
     {
@@ -625,6 +642,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
             Message msg = SDKClient.Instance.ChatManager.LoadMessage(dict["id"]);
             if (msg != null)
             {
+                Debug.Log($"loadMessage: {msg.ToJsonObject()}");
                 UIManager.SuccessAlert(transform);
             }
             else
