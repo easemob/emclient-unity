@@ -1,6 +1,9 @@
 package com.hyphenate.wrapper.util;
 
 public class EMSDKMethod {
+
+    public static final String runDelegateTester = "runDelegateTester";
+
     // client or manager
     public static final String client = "EMClient";
     public static final String chatManager = "EMChatManager";

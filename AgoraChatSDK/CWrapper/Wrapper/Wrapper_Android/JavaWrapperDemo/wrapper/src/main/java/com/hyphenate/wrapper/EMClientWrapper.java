@@ -6,6 +6,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMDeviceInfo;
 import com.hyphenate.chat.EMOptions;
 import com.hyphenate.exceptions.HyphenateException;
+import com.hyphenate.wrapper.util.DelegateTester;
 import com.hyphenate.wrapper.util.EMHelper;
 import com.hyphenate.wrapper.util.EMSDKMethod;
 import com.hyphenate.wrapper.callback.EMCommonCallback;
@@ -32,15 +33,22 @@ public class EMClientWrapper extends EMBaseWrapper {
     public EMMessageManager messageManager;
     public EMConversationWrapper conversationWrapper;
 
+    static EMClientWrapper clientWrapper;
 
-
-    EMClientWrapper() {
-
+    public static EMClientWrapper shared() {
+        if (clientWrapper == null) {
+            clientWrapper = new EMClientWrapper();
+        }
+        return clientWrapper;
     }
+
 
     public String onMethodCall(String method, JSONObject jsonObject, EMWrapperCallback callback) throws JSONException {
         String str = null;
         switch (method) {
+            case EMSDKMethod.runDelegateTester:
+                str = runDelegateTester();
+                break;
             case EMSDKMethod.init:
                 str = init(jsonObject, callback);
                 break;
@@ -98,6 +106,10 @@ public class EMClientWrapper extends EMBaseWrapper {
         return str;
     }
 
+    private String runDelegateTester() {
+        DelegateTester.shared().startTest();
+        return null;
+    }
 
     private String init(JSONObject param, EMWrapperCallback callback) throws JSONException {
         JSONObject jo = param.getJSONObject("options");
