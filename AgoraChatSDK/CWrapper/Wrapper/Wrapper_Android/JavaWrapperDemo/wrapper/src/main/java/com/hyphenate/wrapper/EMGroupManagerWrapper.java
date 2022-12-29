@@ -280,10 +280,14 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
     private String getGroupSpecificationFromServer(JSONObject params, EMWrapperCallback callback)
             throws JSONException {
         String groupId = params.getString("groupId");
-        boolean fetchMembers = params.getBoolean("fetchMembers");
+        boolean fetchMembers = false;
+        if (params.has("fetchMembers")) {
+            fetchMembers = params.getBoolean("fetchMembers");
+        }
+        boolean finalFetchMembers = fetchMembers;
         asyncRunnable(() -> {
             try {
-                EMGroup group = EMClient.getInstance().groupManager().getGroupFromServer(groupId, fetchMembers);
+                EMGroup group = EMClient.getInstance().groupManager().getGroupFromServer(groupId, finalFetchMembers);
                 JSONObject jo = null;
                 try {
                     jo = EMGroupHelper.toJson(group);

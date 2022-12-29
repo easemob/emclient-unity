@@ -361,8 +361,8 @@ public class EMClientWrapper extends EMBaseWrapper {
 
         EMClient.getInstance().addConnectionListener(connectionListener);
         EMClient.getInstance().addMultiDeviceListener(multiDeviceListener);
-
     }
+
 
     private void bindingManagers() {
         chatManagerWrapper = new EMChatManagerWrapper();

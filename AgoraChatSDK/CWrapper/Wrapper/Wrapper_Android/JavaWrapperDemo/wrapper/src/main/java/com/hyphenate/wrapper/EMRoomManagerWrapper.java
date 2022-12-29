@@ -164,11 +164,15 @@ public class EMRoomManagerWrapper extends EMBaseWrapper{
     private String fetchChatRoomInfoFromServer(JSONObject params, EMWrapperCallback callback)
             throws JSONException {
         String roomId = params.getString("roomId");
-        boolean fetchMembers = params.getBoolean("fetchMembers");
+        boolean fetchMembers = false;
+        if (params.has("fetchMembers")) {
+            fetchMembers = params.getBoolean("fetchMembers");
+        }
+        boolean finalFetchMembers = fetchMembers;
         asyncRunnable(() -> {
             EMChatRoom room;
             try {
-                if (fetchMembers) {
+                if (finalFetchMembers) {
                     room = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(roomId, true);
                 }else {
                     room = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(roomId);
