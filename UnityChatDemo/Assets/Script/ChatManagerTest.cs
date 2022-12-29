@@ -117,7 +117,10 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     {
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
+            int type = int.Parse(dict["type"]);
+
             Message msg = Message.CreateTextSendMessage(dict["to"], dict["content"]);
+            msg.MessageType = (MessageType)type;
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
                 onSuccess: () =>
                 {
@@ -139,6 +142,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
         config.AddField("to");
         config.AddField("content");
+        config.AddField("type");
         UIManager.DefaultInputAlert(transform, config);
     }
     void SendImageBtnAction()

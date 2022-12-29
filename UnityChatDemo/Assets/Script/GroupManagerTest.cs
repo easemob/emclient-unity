@@ -668,9 +668,9 @@ public class GroupManagerTest : MonoBehaviour
             onSuccess: (dict) =>
             {
                 List<string> list = new List<string>();
-                foreach (long key in dict.Values)
+                foreach (string key in dict.Keys)
                 {
-                    list.Add(key.ToString());
+                    list.Add(key);
                 }
                 string str = string.Join(",", list.ToArray());
                 UIManager.DefaultAlert(transform, str);
