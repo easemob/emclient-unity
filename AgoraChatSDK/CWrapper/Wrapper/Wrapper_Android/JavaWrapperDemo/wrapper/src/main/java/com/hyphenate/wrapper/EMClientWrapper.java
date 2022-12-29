@@ -6,6 +6,8 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMDeviceInfo;
 import com.hyphenate.chat.EMOptions;
 import com.hyphenate.exceptions.HyphenateException;
+import com.hyphenate.wrapper.listeners.EMWrapperConnectionListener;
+import com.hyphenate.wrapper.listeners.EMWrapperMultiDeviceListener;
 import com.hyphenate.wrapper.util.DelegateTester;
 import com.hyphenate.wrapper.util.EMHelper;
 import com.hyphenate.wrapper.util.EMSDKMethod;
@@ -34,6 +36,9 @@ public class EMClientWrapper extends EMBaseWrapper {
     public EMConversationWrapper conversationWrapper;
 
     static EMClientWrapper clientWrapper;
+
+    public EMWrapperConnectionListener wrapperConnectionListener;
+    public EMWrapperMultiDeviceListener wrapperMultiDeviceListener;
 
     public static EMClientWrapper shared() {
         if (clientWrapper == null) {
@@ -276,93 +281,11 @@ public class EMClientWrapper extends EMBaseWrapper {
 
     private void registerEaseListener() {
 
-        EMMultiDeviceListener multiDeviceListener = new EMMultiDeviceListener() {
-            @Override
-            public void onContactEvent(int event, String target, String ext) {
-                JSONObject data = new JSONObject();
-                try {
-                    data.put("operation", Integer.valueOf(event));
-                    data.put("target", target);
-                    data.put("ext", ext);
-                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.multiDeviceListener, EMSDKMethod.onContactMultiDevicesEvent, data.toString()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onGroupEvent(int event, String target, List<String> userNames) {
-                JSONObject data = new JSONObject();
-                try {
-                    data.put("operation", Integer.valueOf(event));
-                    data.put("target", target);
-                    data.put("userIds", userNames);
-                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.multiDeviceListener, EMSDKMethod.onGroupMultiDevicesEvent, data.toString()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            public void onChatThreadEvent(int event, String target, List<String> usernames) {
-                JSONObject data = new JSONObject();
-                try {
-                    data.put("operation", Integer.valueOf(event));
-                    data.put("target", target);
-                    data.put("userIds", usernames);
-                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.multiDeviceListener, EMSDKMethod.onChatThreadCreate, data.toString()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        EMConnectionListener connectionListener = new EMConnectionListener() {
-            @Override
-            public void onConnected() {
-                post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onConnected, null));
-            }
-
-            @Override
-            public void onLogout(int errorCode) {
-
-            }
-
-            @Override
-            public void onDisconnected(int errorCode) {
-                if (errorCode == 216) {
-                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onChangedImPwd, null));
-                } else if (errorCode == 214) {
-                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onLoginTooManyDevice, null));
-                } else if (errorCode == 217) {
-                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onKickedByOtherDevice, null));
-                } else if (errorCode == 202) {
-                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onAuthFailed, null));
-                } else if (errorCode == 220 || errorCode == 206) {
-                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onLoggedOtherDevice, null));
-                } else if (errorCode == 207) {
-                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onRemovedFromServer, null));
-                } else if (errorCode == 305) {
-                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onForbidByServer, null));
-                } else {
-                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onDisconnected, null));
-                }
-            }
-
-            @Override
-            public void onTokenExpired() {
-                post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onTokenExpired, null));
-            }
-
-            @Override
-            public void onTokenWillExpire() {
-                post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onTokenWillExpire, null));
-            }
-        };
-
-        EMClient.getInstance().addConnectionListener(connectionListener);
-        EMClient.getInstance().addMultiDeviceListener(multiDeviceListener);
+        wrapperConnectionListener = new EMWrapperConnectionListener();
+        wrapperMultiDeviceListener = new EMWrapperMultiDeviceListener();
+        EMClient.getInstance().addConnectionListener(wrapperConnectionListener);
+        EMClient.getInstance().addMultiDeviceListener(wrapperMultiDeviceListener);
     }
-
 
     private void bindingManagers() {
         chatManagerWrapper = new EMChatManagerWrapper();
@@ -376,4 +299,5 @@ public class EMClientWrapper extends EMBaseWrapper {
         messageManager = new EMMessageManager();
         conversationWrapper = new EMConversationWrapper();
     }
+
 }

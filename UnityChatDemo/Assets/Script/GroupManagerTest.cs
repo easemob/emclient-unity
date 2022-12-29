@@ -551,9 +551,34 @@ public class GroupManagerTest : MonoBehaviour
     void DownloadGroupSharedFileBtnAction()
     {
 
-        UIManager.UnfinishedAlert(transform);
-        Debug.Log("DownloadGroupSharedFileBtnAction");
+        if (null == currentGroupId || 0 == currentGroupId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string fileId = dict["fileId"];
+            string savePath = dict["savePath"];
+            SDKClient.Instance.GroupManager.DownloadGroupSharedFile(currentGroupId, fileId, savePath, new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                },
+                onProgress: (progress) =>
+                {
+                    Debug.Log($"download file progress: ${progress}");
+                }
 
+            ));
+        });
+        config.AddField("fileId");
+        config.AddField("savePath");
+        UIManager.DefaultInputAlert(transform, config);
     }
 
     void GetGroupAnnouncementFromServerBtnAction()

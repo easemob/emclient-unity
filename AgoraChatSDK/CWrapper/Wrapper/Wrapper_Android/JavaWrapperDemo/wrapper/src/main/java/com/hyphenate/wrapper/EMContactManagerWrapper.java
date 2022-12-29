@@ -3,6 +3,7 @@ package com.hyphenate.wrapper;
 import com.hyphenate.EMContactListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
+import com.hyphenate.wrapper.listeners.EMWrapperContactListener;
 import com.hyphenate.wrapper.util.EMSDKMethod;
 import com.hyphenate.wrapper.util.EMHelper;
 import com.hyphenate.wrapper.callback.EMWrapperCallback;
@@ -13,6 +14,8 @@ import org.json.JSONObject;
 import java.util.List;
 
 public class EMContactManagerWrapper extends EMBaseWrapper{
+
+    public EMWrapperContactListener wrapperContactListener;
 
     EMContactManagerWrapper() {
         registerEaseListener();
@@ -184,64 +187,7 @@ public class EMContactManagerWrapper extends EMBaseWrapper{
     }
 
     private void registerEaseListener() {
-        EMContactListener contactListener = new EMContactListener() {
-            @Override
-            public void onContactAdded(String userName) {
-                JSONObject data = new JSONObject();
-                try {
-                    data.put("userId", userName);
-                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.contactListener, EMSDKMethod.onContactAdded, data.toString()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onContactDeleted(String userName) {
-                JSONObject data = new JSONObject();
-                try {
-                    data.put("userId", userName);
-                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.contactListener, EMSDKMethod.onContactDeleted, data.toString()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onContactInvited(String userName, String reason) {
-                JSONObject data = new JSONObject();
-                try {
-                    data.put("userId", userName);
-                    data.put("msg", reason);
-                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.contactListener, EMSDKMethod.onContactInvited, data.toString()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFriendRequestAccepted(String userName) {
-                JSONObject data = new JSONObject();
-                try {
-                    data.put("userId", userName);
-                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.contactListener, EMSDKMethod.onFriendRequestAccepted, data.toString()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFriendRequestDeclined(String userName) {
-                JSONObject data = new JSONObject();
-                try {
-                    data.put("userId", userName);
-                    post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.contactListener, EMSDKMethod.onFriendRequestDeclined, data.toString()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        EMClient.getInstance().contactManager().setContactListener(contactListener);
+        wrapperContactListener = new EMWrapperContactListener();
+        EMClient.getInstance().contactManager().setContactListener(wrapperContactListener);
     }
 }

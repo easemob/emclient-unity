@@ -612,7 +612,7 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
 
     public void OnFriendRequestDeclined(string username)
     {
-        Debug.Log($"Contact5 OnFriendRequestDeclined {username}");
+        Debug.Log($"ContactManager5 OnFriendRequestDeclined {username}");
     }
     public void OnChatThreadCreate(ChatThreadEvent threadEvent)
     {
