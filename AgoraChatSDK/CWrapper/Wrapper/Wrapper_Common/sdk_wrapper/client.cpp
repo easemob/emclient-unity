@@ -559,6 +559,66 @@ namespace sdk_wrapper
 
         return nullptr;
     }
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_ConnectionDelegateTester(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (nullptr != gConnectionListener) {
+            gConnectionListener->onConnect("connected");
+
+            EMErrorPtr error(new EMError(202));
+
+            gConnectionListener->onDisconnect(error);
+            error->setErrorCode(206);
+            gConnectionListener->onDisconnect(error);
+            error->setErrorCode(207);
+            gConnectionListener->onDisconnect(error);
+            error->setErrorCode(214);
+            gConnectionListener->onDisconnect(error);
+            error->setErrorCode(216);
+            gConnectionListener->onDisconnect(error);
+            error->setErrorCode(217);
+            gConnectionListener->onDisconnect(error);
+            error->setErrorCode(220);
+            gConnectionListener->onDisconnect(error);
+            error->setErrorCode(305);
+            gConnectionListener->onDisconnect(error);
+            error->setErrorCode(1);
+            gConnectionListener->onDisconnect(error);
+
+            error->setErrorCode(EMError::TOKEN_EXPIRED);
+            gConnectionListener->onTokenNotification(error);
+
+            error->setErrorCode(EMError::TOKEN_WILL_EXPIRE);
+            gConnectionListener->onTokenNotification(error);
+        }
+
+        if (nullptr != gMultiDevicesListener) {
+            gMultiDevicesListener->onContactMultiDevicesEvent(EMMultiDevicesListener::MultiDevicesOperation::CONTACT_REMOVE, "target", "ext");
+
+            vector<string> usernames;
+            usernames.push_back("user1");
+            usernames.push_back("user2");
+            gMultiDevicesListener->onGroupMultiDevicesEvent(EMMultiDevicesListener::MultiDevicesOperation::CONTACT_REMOVE, "target", usernames);
+
+            gMultiDevicesListener->onThreadMultiDevicesEvent(EMMultiDevicesListener::MultiDevicesOperation::THREAD_CREATE, "thread_target", usernames);
+
+            gMultiDevicesListener->undisturbMultiDevicesEvent("data");
+        }
+
+        return nullptr;
+    }
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_RunDelegateTester(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        Client_ConnectionDelegateTester(nullptr);
+        ChatManager_RunDelegateTester(nullptr);
+        GroupManager_RunDelegateTester(nullptr);
+        RoomManager_RunDelegateTester(nullptr);
+        ContactManager_RunDelegateTester(nullptr);
+        PresenceManager_RunDelegateTester(nullptr);
+        ThreadManager_RunDelegateTester(nullptr);
+        return nullptr;
+    }
 }
 
 

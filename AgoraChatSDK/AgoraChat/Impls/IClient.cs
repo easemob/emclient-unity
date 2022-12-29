@@ -250,10 +250,19 @@ namespace AgoraChat
         {
             if (delegater_multidevice.Count == 0) return;
 
-            MultiDevicesOperation operation = jsonNode["operation"].AsInt.ToMultiDevicesOperation();
-            string target = jsonNode["target"];
-            string ext = jsonNode["ext"];
-            List<string> userIds = List.StringListFromJsonArray(jsonNode["userIds"]);
+            MultiDevicesOperation operation = MultiDevicesOperation.UNKNOWN;
+            string target = "";
+            string ext = "";
+            List<string> userIds = new List<string>();
+
+            //jsonNode maybe is null, e.g. when onUnDisturbMultiDevicesEvent is triggered
+            if (null != jsonNode)
+            {
+                operation = jsonNode["operation"].AsInt.ToMultiDevicesOperation();
+                target = jsonNode["target"];
+                ext = jsonNode["ext"];
+                userIds = List.StringListFromJsonArray(jsonNode["userIds"]);
+            }
 
             foreach (IMultiDeviceDelegate it in delegater_multidevice)
             {
