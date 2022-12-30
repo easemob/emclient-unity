@@ -40,10 +40,6 @@ namespace AgoraChat
             {
                 return Of((int)value);
             }
-            else if (type == AttributeValueType.UINT32)
-            {
-                return Of(Convert.ToUInt32(value));
-            }
             else if (type == AttributeValueType.INT64)
             {
                 return Of((long)value);
@@ -85,6 +81,7 @@ namespace AgoraChat
             return result;
         }
 
+        [Obsolete]
         internal static AttributeValue Of(in uint value)
         {
             var result = new AttributeValue
@@ -157,10 +154,6 @@ namespace AgoraChat
             {
                 return Int32V;
             }
-            else if (type == AttributeValueType.UINT32)
-            {
-                return UInt32V;
-            }
             else if (type == AttributeValueType.INT64)
             {
                 return Int64V;
@@ -205,10 +198,6 @@ namespace AgoraChat
                 case AttributeValueType.INT32:
                     _type = "i";
                     _value = Int32V.ToString();
-                    break;
-                case AttributeValueType.UINT32:
-                    _type = "ui";
-                    _value = UInt32V.ToString();
                     break;
                 case AttributeValueType.INT64:
                     _type = "l";
@@ -255,10 +244,6 @@ namespace AgoraChat
                 case "i":
                     VType = AttributeValueType.INT32;
                     Int32V = int.Parse(value);
-                    break;
-                case "ui":
-                    VType = AttributeValueType.UINT32;
-                    UInt32V = uint.Parse(value);
                     break;
                 case "l":
                     VType = AttributeValueType.INT64;

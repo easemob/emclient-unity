@@ -125,6 +125,14 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
             Message msg = Message.CreateTextSendMessage(dict["to"], dict["content"]);
             msg.MessageType = (MessageType)type;
+            Dictionary<string, AttributeValue> attr = new Dictionary<string, AttributeValue>();
+            attr["strKey"] = AttributeValue.Of("strValue");
+            attr["intKey"] = AttributeValue.Of(10, AttributeValueType.INT32);
+            attr["longKey"] = AttributeValue.Of(1999L, AttributeValueType.INT64);
+            attr["boolKey"] = AttributeValue.Of(true, AttributeValueType.BOOL);
+            attr["floatKey"] = AttributeValue.Of(12.3f, AttributeValueType.FLOAT);
+            attr["doubleKey"] = AttributeValue.Of(22.22, AttributeValueType.DOUBLE);
+            msg.Attributes = attr;
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
                 onSuccess: () =>
                 {
@@ -950,16 +958,6 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
                     case AttributeValueType.STRING:
                         {
                             Debug.Log($"{key}|STRING: {a.GetAttributeValue(AttributeValueType.STRING)}");
-                        }
-                        break;
-                    /*case AttributeValueType.STRVECTOR:
-                        {
-                            Debug.Log($"{key}|STRVECTOR: {a.GetAttributeValue(AttributeValueType.STRVECTOR)}");
-                        }
-                        break;*/
-                    case AttributeValueType.JSONSTRING:
-                        {
-                            Debug.Log($"{key}|JSONSTRING: {a.GetAttributeValue(AttributeValueType.JSONSTRING)}");
                         }
                         break;
                 }

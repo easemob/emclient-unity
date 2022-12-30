@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Iterator;
+import java.util.Map;
 
 public class EMMessageHelper {
     public static EMMessage fromJson(JSONObject json) throws JSONException {
@@ -157,19 +158,26 @@ public class EMMessageHelper {
             Iterator iterator = data.keys();
             while (iterator.hasNext()) {
                 String key = iterator.next().toString();
-                Object result = data.get(key);
-                if (result.getClass().getSimpleName().equals("Integer")) {
-                    message.setAttribute(key, (Integer) result);
-                } else if (result.getClass().getSimpleName().equals("Boolean")) {
-                    message.setAttribute(key, (Boolean) result);
-                } else if (result.getClass().getSimpleName().equals("Long")) {
-                    message.setAttribute(key, (Long) result);
-                } else if (result.getClass().getSimpleName().equals("JSONObject")) {
-                    message.setAttribute(key, (JSONObject) result);
-                } else if (result.getClass().getSimpleName().equals("JSONArray")) {
-                    message.setAttribute(key, (JSONArray) result);
-                } else {
-                    message.setAttribute(key, data.getString(key));
+                JSONObject result = data.getJSONObject(key);
+                String valueType = result.getString("type");
+                String value = result.getString("value");
+                if (valueType.equals("b")) {
+                    if (value.equalsIgnoreCase("false")) {
+                        message.setAttribute(key, false);
+                    }else {
+                        message.setAttribute(key, true);
+                    }
+                }else if (valueType.equals("int64")) {
+                    message.setAttribute(key, Long.valueOf(value));
+                }else if (valueType.equals("f")) {
+                    message.setAttribute(key, Float.valueOf(value));
+                }else if (valueType.equals("d")) {
+                    message.setAttribute(key, Double.valueOf(value));
+                }else if (valueType.equals("str")) {
+                    message.setAttribute(key, value);
+                }
+                else {
+                    message.setAttribute(key,Integer.valueOf(value));
                 }
             }
         }
@@ -224,7 +232,39 @@ public class EMMessageHelper {
         }
         data.put("body", bodyData);
         if (message.ext().size() > 0 && null != message.ext()) {
-            data.put("attr", message.ext());
+            Map<String, Object> ext = message.ext();
+            JSONObject jo = new JSONObject();
+            for (Map.Entry<String, Object> enter: ext.entrySet()) {
+                String key = enter.getKey();
+                Object value = enter.getValue();
+                JSONObject js = new JSONObject();
+                if (value instanceof String) {
+                    js.put("type", "str");
+                    js.put("value", value);
+                }else if (value instanceof Integer) {
+                    js.put("type", "i");
+                    js.put("value", value);
+                }else if (value instanceof Float) {
+                    js.put("type", "f");
+                    js.put("value", value);
+                }else if (value instanceof Double) {
+                    js.put("type", "d");
+                    js.put("value", value);
+                }else if (value instanceof Long) {
+                    js.put("type", "int64");
+                    js.put("value", value);
+                }else if (value instanceof Boolean) {
+                    js.put("type", "b");
+                    Boolean b = (Boolean)value;
+                    if (b) {
+                        js.put("value", "True");
+                    }else {
+                        js.put("value", "False");
+                    }
+                }
+                jo.put(key, js);
+            }
+            data.put("attr", jo);
         }
         data.put("from", message.getFrom());
         data.put("to", message.getTo());
