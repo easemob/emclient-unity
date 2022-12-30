@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using AgoraChat;
 using System.Collections.Generic;
+using AgoraChat.InternalSpace;
 
 public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IRoomManagerDelegate, IGroupManagerDelegate, IPresenceManagerDelegate, IMultiDeviceDelegate, IContactManagerDelegate, IChatThreadManagerDelegate
 {
@@ -180,7 +181,7 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
 
     void RunDelegateTesterAction()
     {
-        SDKClient.Instance.DelegateTester();
+        MyTest.DelegateTester();
     }
 
     void Start()

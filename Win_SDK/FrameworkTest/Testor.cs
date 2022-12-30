@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using AgoraChat;
 using AgoraChat.MessageBody;
+using AgoraChat.InternalSpace;
 
 namespace WinSDKTest
 {
@@ -2566,7 +2567,7 @@ namespace WinSDKTest
 
         public void CallFunc_IClient_RunDelegateTester()
         {
-            SDKClient.Instance.DelegateTester();
+            MyTest.DelegateTester();
         }
 
         public void CallFunc_IClient()
