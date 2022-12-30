@@ -248,7 +248,7 @@ namespace AgoraChat
 
         internal void NativeEventHandle_MultiDevice(string method, JSONNode jsonNode)
         {
-            if (delegater_multidevice.Count == 0) return;
+            if (delegater_multidevice.Count == 0 || null == jsonNode) return;
 
             MultiDevicesOperation operation = jsonNode["operation"].AsInt.ToMultiDevicesOperation();
             string target = jsonNode["target"];

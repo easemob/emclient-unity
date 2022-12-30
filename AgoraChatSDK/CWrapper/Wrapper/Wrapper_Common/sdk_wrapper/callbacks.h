@@ -107,7 +107,7 @@ namespace sdk_wrapper {
         }
 
         void onUpdateGroupAcks() override {
-            CallBack(STRING_CHATMANAGER_LISTENER.c_str(), STRING_onReadAckForGroupMessageUpdated.c_str(), nullptr);
+            CallBack(STRING_CHATMANAGER_LISTENER.c_str(), STRING_onReadAckForGroupMessageUpdated.c_str(), "");
         }
 
         void onReceiveReadAcksForGroupMessage(const EMGroupReadAckList& acks) override {
@@ -1018,14 +1018,10 @@ namespace sdk_wrapper {
     public:
         void onCreatThread(const EMThreadEventPtr event) override {
             // Implement in onThreadNotifyChange, here no need to add anything
-            int i = 0;
-            i++;
         }
 
         void onUpdateMyThread(const EMThreadEventPtr event) override {
             // Implement in onThreadNotifyChange, here no need to add anything
-            int i = 0;
-            i++;
         }
 
         void onThreadNotifyChange(const EMThreadEventPtr event) override {

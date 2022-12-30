@@ -48,6 +48,8 @@ void InitManagerMap()
 	//func_map_client["uploadLog"] = Client_UploadLog;
 	//func_map_client["compressLogs"] = Client_CompressLogs;
 
+    func_map_client["runDelegateTester"] = Client_RunDelegateTester;
+
 	func_map_client["kickDevice"] = Client_KickDevice;
 	func_map_client["kickAllDevices"] = Client_KickDevices;
 	func_map_client["getLoggedInDevicesFromServer"] = Client_GetLoggedInDevicesFromServer;

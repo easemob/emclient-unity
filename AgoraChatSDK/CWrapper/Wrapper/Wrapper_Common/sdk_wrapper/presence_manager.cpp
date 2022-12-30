@@ -165,4 +165,29 @@ namespace sdk_wrapper {
 
         return nullptr;
 	}
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL PresenceManager_RunDelegateTester(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (nullptr != gPresenceManagerListener) {
+
+            vector<EMPresencePtr> vec;
+            EMPresencePtr presence(new EMPresence());
+
+            presence->setPublisher("publisher");
+
+            set<pair<string, int>> status;
+            status.insert(make_pair("status1", 111));
+            status.insert(make_pair("status2", 222));
+            status.insert(make_pair("status3", 333));
+            presence->setStatusList(status);
+
+            presence->setExt("exts");
+            presence->setLatestTime(123456);
+            presence->setExpiryTime(654321);
+
+            vec.push_back(presence);
+            gPresenceManagerListener->onPresenceUpdated(vec);
+        }
+        return nullptr;
+    }
 }
