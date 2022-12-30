@@ -1344,5 +1344,50 @@ namespace sdk_wrapper {
 
         return nullptr;
     }
-}
 
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_RunDelegateTester(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (nullptr != gGroupManagerListener) {
+            gGroupManagerListener->onReceiveInviteFromGroup("groupId", "groupName", "inviter", "inviter message");
+
+            EMError error;
+            EMCursorResult cursorResult = CLIENT->getGroupManager().fetchPublicGroupsWithCursor("", 10, error);
+
+            if (cursorResult.result().size() == 0)
+                return nullptr;
+
+            EMGroupPtr groupPtr = dynamic_pointer_cast<EMGroup>(cursorResult.result().at(0));
+            gGroupManagerListener->onReceiveInviteAcceptionFromGroup(groupPtr, "invitee");
+            gGroupManagerListener->onReceiveInviteDeclineFromGroup(groupPtr, "invitee", "reason");
+            gGroupManagerListener->onAutoAcceptInvitationFromGroup(groupPtr, "inviter", "inviteMessage");
+            gGroupManagerListener->onLeaveGroup(groupPtr, EMMuc::EMMucLeaveReason::BE_KICKED);
+            gGroupManagerListener->onLeaveGroup(groupPtr, EMMuc::EMMucLeaveReason::DESTROYED);
+            gGroupManagerListener->onReceiveJoinGroupApplication(groupPtr, "from", "message");
+            gGroupManagerListener->onReceiveAcceptionFromGroup(groupPtr);
+            gGroupManagerListener->onReceiveRejectionFromGroup("123456", "reason");
+            //gGroupManagerListener->onUpdateMyGroupList()
+
+            vector<string> members;
+            members.push_back("user1");
+            members.push_back("user2");
+            gGroupManagerListener->onAddMutesFromGroup(groupPtr, members, 12345678);
+
+            gGroupManagerListener->onRemoveMutesFromGroup(groupPtr, members);
+            gGroupManagerListener->onAddWhiteListMembersFromGroup(groupPtr, members);
+            gGroupManagerListener->onRemoveWhiteListMembersFromGroup(groupPtr, members);
+            gGroupManagerListener->onAllMemberMuteChangedFromGroup(groupPtr, true);
+            gGroupManagerListener->onAddAdminFromGroup(groupPtr, "admin");
+            gGroupManagerListener->onRemoveAdminFromGroup(groupPtr, "admin");
+            gGroupManagerListener->onAssignOwnerFromGroup(groupPtr, "newOwner", "oldOwner");
+            gGroupManagerListener->onMemberJoinedGroup(groupPtr, "join_member");
+            gGroupManagerListener->onMemberLeftGroup(groupPtr, "left_member");
+            gGroupManagerListener->onUpdateAnnouncementFromGroup(groupPtr, "updated announcement");
+
+            EMMucSharedFilePtr shared_file(new EMMucSharedFile("fileId", "fileName", "fileOwner", 12345, 67890));
+            gGroupManagerListener->onUploadSharedFileFromGroup(groupPtr, shared_file);
+            gGroupManagerListener->onDeleteSharedFileFromGroup(groupPtr, "fileId");
+            gGroupManagerListener->onDisabledStateChangedFromGroup(groupPtr, true);
+            gGroupManagerListener->onUpdateSpecificationFromGroup(groupPtr);
+        }
+    }
+}

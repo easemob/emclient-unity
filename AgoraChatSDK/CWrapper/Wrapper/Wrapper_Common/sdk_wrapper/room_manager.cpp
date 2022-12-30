@@ -996,5 +996,49 @@ namespace sdk_wrapper {
 
         return nullptr;
     }
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_RunDelegateTester(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (nullptr != gRoomManagerListener) {
+            EMError error;
+            EMPageResult pageResult = CLIENT->getChatroomManager().fetchChatroomsWithPage(1, 10, error);
+
+            if (pageResult.result().size() == 0)
+                return nullptr;
+
+            EMChatroomPtr room = dynamic_pointer_cast<EMChatroom>(pageResult.result().at(0));
+
+            gRoomManagerListener->onMemberJoinedChatroom(room, "join_member");
+            gRoomManagerListener->onLeaveChatroom(room, EMMuc::EMMucLeaveReason::DESTROYED);
+            gRoomManagerListener->onLeaveChatroom(room, EMMuc::EMMucLeaveReason::BE_KICKED);
+            gRoomManagerListener->onLeaveChatroom(room, EMMuc::EMMucLeaveReason::BE_KICKED_FOR_OFFLINE);
+
+            gRoomManagerListener->onMemberLeftChatroom(room, "left_member");
+
+            std::vector<std::string> members;
+            members.push_back("user1");
+            members.push_back("user2");
+
+            gRoomManagerListener->onAddMutesFromChatroom(room, members, 123456);
+            gRoomManagerListener->onRemoveMutesFromChatroom(room, members);
+            gRoomManagerListener->onAddWhiteListMembersFromChatroom(room, members);
+            gRoomManagerListener->onRemoveWhiteListMembersFromChatroom(room, members);
+            gRoomManagerListener->onAllMemberMuteChangedFromChatroom(room, true);
+            gRoomManagerListener->onAddAdminFromChatroom(room, "admin");
+            gRoomManagerListener->onRemoveAdminFromChatroom(room, "admin");
+            gRoomManagerListener->onAssignOwnerFromChatroom(room, "newOwner", "oldOwner");
+            gRoomManagerListener->onUpdateAnnouncementFromChatroom(room, "this is a announcement");
+
+            map<string, string> kvs;
+            kvs["key1"] = "value1";
+            kvs["key2"] = "value2";
+            string json = Room::ToJsonFromRoomAttribute(kvs, true);
+            gRoomManagerListener->onChatroomAttributesChanged("123456", json, "from");
+            gRoomManagerListener->onChatroomAttributesRemoved("123456", json, "from");
+            gRoomManagerListener->onUpdateSpecificationFromChatroom(room);
+        }
+
+        return nullptr;
+    }
 }
 

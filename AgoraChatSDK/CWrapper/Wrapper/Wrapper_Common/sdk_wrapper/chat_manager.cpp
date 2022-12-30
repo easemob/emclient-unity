@@ -1156,5 +1156,70 @@ namespace sdk_wrapper {
         }
         return CopyToPointer(json);
     }
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_RunDelegateTester(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (nullptr != gChatManagerListener) {
+
+            EMTextMessageBodyPtr tb(new EMTextMessageBody("this is text message"));
+            EMMessagePtr msg = EMMessage::createSendMessage("from_user", "to_user", tb, EMMessage::EMChatType::SINGLE);
+
+            EMMessageList msg_list;
+            msg_list.push_back(msg);
+
+            gChatManagerListener->onReceiveMessages(msg_list);
+            gChatManagerListener->onReceiveCmdMessages(msg_list);
+            gChatManagerListener->onReceiveHasReadAcks(msg_list);
+            gChatManagerListener->onReceiveHasDeliveredAcks(msg_list);
+            gChatManagerListener->onReceiveRecallMessages(msg_list);
+            gChatManagerListener->onUpdateGroupAcks();
+
+            EMGroupReadAckList acklist;
+            EMGroupReadAckPtr ackptr(new EMGroupReadAck());
+            ackptr->meta_id = "meta_id";
+            ackptr->msgPtr = msg;
+            ackptr->from = "from";
+            ackptr->content = "content";
+            ackptr->count = 123;
+            ackptr->timestamp = 123456;
+            acklist.push_back(ackptr);
+            gChatManagerListener->onReceiveReadAcksForGroupMessage(acklist);
+
+            EMError error;
+            EMConversationList conversationList = CLIENT->getChatManager().getConversationsFromServer(error);
+
+            gChatManagerListener->onUpdateConversationList(conversationList);
+            gChatManagerListener->onReceiveReadAckForConversation("fromUsername", "toUsername");
+        }
+
+        if (nullptr != gReactionManagerListener) {
+
+            EMMessageReactionList reacion_list;
+            EMMessageReactionPtr reaction(new EMMessageReaction("hehe"));
+            reaction->setCount(10);
+            reaction->setState(true);
+
+            vector<string> user_list;
+            user_list.push_back("user1");
+            user_list.push_back("user2");
+            reaction->setUserList(user_list);
+            reaction->setTs(123456);
+
+            reacion_list.push_back(reaction);
+
+            EMMessageReactionChangeList reaction_change_list;
+
+            EMMessageReactionChangePtr reaction_change(new EMMessageReactionChange());
+            reaction_change->setFrom("from");
+            reaction_change->setTo("to");
+            reaction_change->setMessageId("messageId");
+            reaction_change->setReactionList(reacion_list);
+            reaction_change_list.push_back(reaction_change);
+
+            gReactionManagerListener->messageReactionDidChange(reaction_change_list);
+        }
+
+        return nullptr;
+    }
 }
 

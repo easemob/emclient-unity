@@ -347,4 +347,46 @@ namespace sdk_wrapper {
 
         return nullptr;
 	}
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ThreadManager_RunDelegateTester(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (nullptr != gThreadListener) {
+
+            EMThreadEventPtr event(new EMThreadEvent());
+            event->setThreadId("threadId");
+            event->setThreadName("threadName");
+            event->setOwner("threadOwner");
+            event->setParentId("parentId");
+            event->setThreadMessageId("messageId");
+            event->setThreadOperation("thread_operation");
+            event->setThreadTo("thread_to");
+            event->setThreadFrom("thread_from");
+            event->setMessageCount(10);
+            event->setMembersCount(10);
+            event->setCreateTimestamp(123456);
+            event->setUpdateTimestamp(67890);
+            event->setTimestamp(11111);
+
+            EMTextMessageBodyPtr tb(new EMTextMessageBody("this is text message"));
+            EMMessagePtr msg = EMMessage::createSendMessage("from_user", "to_user", tb, EMMessage::EMChatType::SINGLE);
+
+            event->setLastMessage(msg);
+
+            //gPresenceManagerListener->onCreatThread();
+            //gPresenceManagerListener->onUpdateMyThread();
+
+            event->setThreadOperation("create");
+            gThreadListener->onThreadNotifyChange(event);
+            event->setThreadOperation("delete");
+            gThreadListener->onThreadNotifyChange(event);
+            event->setThreadOperation("update");
+            gThreadListener->onThreadNotifyChange(event);
+
+            gThreadListener->onLeaveThread(event, EMThreadLeaveReason::BE_KICKED);
+
+            //gThreadListener->onMemberJoined()
+            //gThreadListener->onMemberLeave();
+        }
+        return nullptr;
+    }
 }

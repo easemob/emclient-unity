@@ -401,6 +401,7 @@ namespace WinSDKTest
             functions_IClient.Add(menu_index, "GetLoggedInDevicesFromServer"); menu_index++;
             functions_IClient.Add(menu_index, "KickDevice"); menu_index++;
             functions_IClient.Add(menu_index, "kickAllDevices"); menu_index++;
+            functions_IClient.Add(menu_index, "RunDelegateTester"); menu_index++;
             level2_menus.Add("IClient", functions_IClient);
         }
 
@@ -473,6 +474,11 @@ namespace WinSDKTest
             param.Add(menu_index, "username (string)"); menu_index++;
             param.Add(menu_index, "password (string)"); menu_index++;
             level3_menus.Add("kickAllDevices", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "No params"); menu_index++;
+            level3_menus.Add("RunDelegateTester", new Dictionary<int, string>(param));
             param.Clear();
         }
 
@@ -1896,6 +1902,7 @@ namespace WinSDKTest
         {
             //Options options = new Options("easemob-demo#easeim");
             Options options = new Options("easemob-demo#unitytest");
+            //Options options = new Options("easemob-demo#wang");
             //Options options = new Options("5101220107132865#test"); // 北京沙箱测试环境，无法正常登录
             //Options options = new Options("41117440#383391"); // 线上环境, demo中的token
             if (appkey.Length > 0 && appkey.Contains("#") == true)
@@ -2557,6 +2564,11 @@ namespace WinSDKTest
             );
         }
 
+        public void CallFunc_IClient_RunDelegateTester()
+        {
+            SDKClient.Instance.DelegateTester();
+        }
+
         public void CallFunc_IClient()
         {
             if (select_context.level2_item.CompareTo("CreateAccount") == 0)
@@ -2628,6 +2640,12 @@ namespace WinSDKTest
             if (select_context.level2_item.CompareTo("kickAllDevices") == 0)
             {
                 CallFunc_IClient_kickAllDevices();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("RunDelegateTester") == 0)
+            {
+                CallFunc_IClient_RunDelegateTester();
                 return;
             }
         }
@@ -5364,6 +5382,10 @@ namespace WinSDKTest
                 {
                     Console.WriteLine($"DownloadGroupSharedFile success.");
                 },
+                onProgress: (progress) => 
+                {
+                    Console.WriteLine($"DownloadGroupSharedFile progress:{progress}.");
+                },
                 onError: (code, desc) =>
                 {
                     Console.WriteLine($"DownloadGroupSharedFile failed, code:{code}, desc:{desc}");
@@ -6049,7 +6071,7 @@ namespace WinSDKTest
             string groupId = "";
             string memberId1 = "";
             string memberId2 = "";
-            string memberId3 = "";
+            //string memberId3 = "";
 
             if (_groupId.Length > 0)
                 groupId = _groupId;
@@ -6066,15 +6088,15 @@ namespace WinSDKTest
             else
                 memberId2 = GetParamValueFromContext(2);
 
-            if (_memberId3.Length > 0)
-                memberId3 = _memberId3;
-            else
-                memberId2 = GetParamValueFromContext(3);
+            //if (_memberId3.Length > 0)
+           //     memberId3 = _memberId3;
+           // else
+           //     memberId3 = GetParamValueFromContext(3);
 
             List<string> members = new List<string>();
             members.Add(memberId1);
             members.Add(memberId2);
-            members.Add(memberId3);
+            //members.Add(memberId3);
 
             SDKClient.Instance.GroupManager.UnBlockGroupMembers(groupId, members, new CallBack(
                 onSuccess: () =>
@@ -8605,9 +8627,11 @@ namespace WinSDKTest
 
     public class ChatManagerDelegate : IChatManagerDelegate
     {
+        int LISTENER_COUNT = 10;
+
         public void OnMessagesReceived(List<Message> messages)
         {
-            Console.WriteLine("OnMessagesReceived");
+            Console.WriteLine($"ChatManagerDelegate1 OnMessagesReceived, total listener:{LISTENER_COUNT}");
             foreach (var it in messages)
             {
                 Console.WriteLine($"===========================");
@@ -8618,7 +8642,7 @@ namespace WinSDKTest
 
         public void OnCmdMessagesReceived(List<Message> messages)
         {
-            Console.WriteLine("OnCmdMessagesReceived");
+            Console.WriteLine($"ChatManagerDelegate2 OnCmdMessagesReceived, total listener:{LISTENER_COUNT}");
             foreach (var it in messages)
             {
                 Console.WriteLine($"===========================");
@@ -8644,7 +8668,7 @@ namespace WinSDKTest
 
         public void OnMessagesRead(List<Message> messages)
         {
-            Console.WriteLine("OnMessagesRead");
+            Console.WriteLine($"ChatManagerDelegate3 OnMessagesRead, total listener:{LISTENER_COUNT}");
             foreach (var it in messages)
             {
                 Console.WriteLine($"===========================");
@@ -8676,7 +8700,7 @@ namespace WinSDKTest
 
         public void OnMessagesDelivered(List<Message> messages)
         {
-            Console.WriteLine("OnMessagesDelivered");
+            Console.WriteLine($"ChatManagerDelegate4 OnMessagesDelivered, total listener:{LISTENER_COUNT}");
             foreach (var it in messages)
             {
                 Console.WriteLine($"===========================");
@@ -8707,7 +8731,7 @@ namespace WinSDKTest
 
         public void OnMessagesRecalled(List<Message> messages)
         {
-            Console.WriteLine("OnMessagesRecalled");
+            Console.WriteLine($"ChatManagerDelegate5 OnMessagesRecalled, total listener:{LISTENER_COUNT}");
             foreach (var it in messages)
             {
                 Console.WriteLine($"===========================");
@@ -8738,12 +8762,12 @@ namespace WinSDKTest
 
         public void OnReadAckForGroupMessageUpdated()
         {
-            Console.WriteLine("OnReadAckForGroupMessageUpdated");
+            Console.WriteLine($"ChatManagerDelegate6 OnReadAckForGroupMessageUpdated, total listener:{LISTENER_COUNT}");
         }
 
         public void OnGroupMessageRead(List<GroupReadAck> list)
         {
-            Console.WriteLine("OnGroupMessageRead");
+            Console.WriteLine($"ChatManagerDelegate7 OnGroupMessageRead, total listener:{LISTENER_COUNT}");
             foreach (var it in list)
             {
                 Console.WriteLine($"===========================");
@@ -8759,17 +8783,17 @@ namespace WinSDKTest
 
         public void OnConversationsUpdate()
         {
-            Console.WriteLine("OnConversationsUpdate");
+            Console.WriteLine($"ChatManagerDelegate8 OnConversationsUpdate, total listener:{LISTENER_COUNT}");
         }
 
         public void OnConversationRead(string from, string to)
         {
-            Console.WriteLine("OnConversationRead");
+            Console.WriteLine($"ChatManagerDelegate9 OnConversationRead, total listener:{LISTENER_COUNT}");
         }
 
         public void MessageReactionDidChange(List<MessageReactionChange> list)
         {
-            Console.WriteLine($"MessageReactionDidChange, reaction list count: {list.Count}");
+            Console.WriteLine($"ChatManagerDelegate10 MessageReactionDidChange, reaction list count: {list.Count}, total listener:{LISTENER_COUNT}");
             if (list.Count == 0) return;
             foreach (var it in list)
             {
@@ -8789,158 +8813,149 @@ namespace WinSDKTest
 
     class ConnectionDelegate : IConnectionDelegate
     {
+        int LISTENER_COUNT = 11;
+
         public void OnConnected()
         {
-            Console.WriteLine("OnConnected");
-        }
-
-        public void OnDisconnected()
-        {
-            Console.WriteLine($"OnDisconnected");
-        }
-
-        public void OnTokenExpired()
-        {
-            Console.WriteLine($"OnTokenExpired");
-        }
-
-        public void OnTokenWillExpire()
-        {
-            Console.WriteLine($"OnTokenWillExpire");
+            Console.WriteLine($"IConnectionDelegate1 OnConnected, total listener count: {LISTENER_COUNT}");
         }
 
         public void OnAuthFailed()
         {
-            Console.WriteLine($"OnAuthFailed");
-        }
-
-        public void OnChangedIMPwd()
-        {
-            Console.WriteLine($"OnChangedIMPwd");
-        }
-
-        public void OnForbidByServer()
-        {
-            Console.WriteLine($"OnForbidByServer");
-        }
-
-        public void OnKickedByOtherDevice()
-        {
-            Console.WriteLine($"OnKickedByOtherDevice");
-        }
-
-        public void OnLoggedOtherDevice()
-        {
-            Console.WriteLine($"OnLoggedOtherDevice");
-        }
-
-        public void OnLoginTooManyDevice()
-        {
-            Console.WriteLine($"OnLoginTooManyDevice");
+            Console.WriteLine($"IConnectionDelegate2 OnAuthFailed, total listener count: {LISTENER_COUNT}");
         }
 
         public void OnRemovedFromServer()
         {
-            Console.WriteLine($"OnRemovedFromServer");
+            Console.WriteLine($"IConnectionDelegate3 OnRemovedFromServer, total listener count: {LISTENER_COUNT}");
         }
+
+        public void OnLoginTooManyDevice()
+        {
+            Console.WriteLine($"IConnectionDelegate4 OnLoginTooManyDevice, total listener count: {LISTENER_COUNT}");
+        }
+
+        public void OnChangedIMPwd()
+        {
+            Console.WriteLine($"IConnectionDelegate5 OnChangedIMPwd, total listener count: {LISTENER_COUNT}");
+        }
+
+        public void OnKickedByOtherDevice()
+        {
+            Console.WriteLine($"IConnectionDelegate6 OnKickedByOtherDevice, total listener count: {LISTENER_COUNT}");
+        }
+
+        public void OnLoggedOtherDevice()
+        {
+            Console.WriteLine($"IConnectionDelegate7 OnLoggedOtherDevice, total listener count: {LISTENER_COUNT}");
+        }
+
+        public void OnForbidByServer()
+        {
+            Console.WriteLine($"IConnectionDelegate8 OnForbidByServer, total listener count: {LISTENER_COUNT}");
+        }
+
+        public void OnDisconnected()
+        {
+            Console.WriteLine($"IConnectionDelegate9 OnDisconnected, total listener count: {LISTENER_COUNT}");
+        }
+
+        public void OnTokenExpired()
+        {
+            Console.WriteLine($"IConnectionDelegate10 OnTokenExpired, total listener count: {LISTENER_COUNT}");
+        }
+
+        public void OnTokenWillExpire()
+        {
+            Console.WriteLine($"IConnectionDelegate11 OnTokenWillExpire, total listener count: {LISTENER_COUNT}");
+        }
+
     }
 
     class ContactManagerDelegate : IContactManagerDelegate
     {
+        int LISTENER_COUNT = 5;
+
         public void OnContactAdded(string username)
         {
-            Console.WriteLine($"OnContactAdded: {username}");
+            Console.WriteLine($"IContactManagerDelegate1 OnContactAdded: {username}, total listener count:{LISTENER_COUNT}");
         }
 
         public void OnContactDeleted(string username)
         {
-            Console.WriteLine($"OnContactDeleted: {username}");
+            Console.WriteLine($"IContactManagerDelegate2 OnContactDeleted: {username}, total listener count:{LISTENER_COUNT}");
         }
 
         public void OnContactInvited(string username, string reason)
         {
             SDKClient.Instance.ContactManager.AcceptInvitation("123");
-            Console.WriteLine($"OnContactInvited: {username}, reason:{reason}");
+            Console.WriteLine($"IContactManagerDelegate3 OnContactInvited: {username}, reason:{reason}, total listener count:{LISTENER_COUNT}");
         }
 
         public void OnFriendRequestAccepted(string username)
         {
-            Console.WriteLine($"OnFriendRequestAccepted: {username}");
+            Console.WriteLine($"IContactManagerDelegate4 OnFriendRequestAccepted: {username}, total listener count:{LISTENER_COUNT}");
         }
 
         public void OnFriendRequestDeclined(string username)
         {
-            Console.WriteLine($"OnFriendRequestDeclined: {username}");
+            Console.WriteLine($"IContactManagerDelegate5 OnFriendRequestDeclined: {username}, total listener count:{LISTENER_COUNT}");
         }
     }
 
     class GroupManagerDelegate : IGroupManagerDelegate
     {
-        public void OnAddAllowListMembersFromGroup(string groupId, List<string> whiteList)
-        {
-            string str = string.Join(",", whiteList.ToArray());
-            Console.WriteLine($"OnAddWhiteListMembersFromGroup: gid: {groupId}; whiteList:{str}");
-        }
+        int LISTENER_COUNT = 24;
 
-        public void OnAdminAddedFromGroup(string groupId, string administrator)
+        public void OnInvitationReceivedFromGroup(string groupId, string groupName, string inviter, string reason)
         {
-            Console.WriteLine($"OnAdminAddedFromGroup: gid: {groupId}; admin:{administrator}");
-        }
-
-        public void OnAdminRemovedFromGroup(string groupId, string administrator)
-        {
-            Console.WriteLine($"OnAdminRemovedFromGroup: gid: {groupId}; admin:{administrator}");
-        }
-
-        public void OnAllMemberMuteChangedFromGroup(string groupId, bool isAllMuted)
-        {
-            Console.WriteLine($"OnAllMemberMuteChangedFromGroup: gid: {groupId}; isAllMuted:{isAllMuted}");
-        }
-
-        public void OnAnnouncementChangedFromGroup(string groupId, string announcement)
-        {
-            Console.WriteLine($"OnAnnouncementChangedFromGroup: gid: {groupId}; announcement:{announcement}");
-        }
-
-        public void OnAutoAcceptInvitationFromGroup(string groupId, string inviter, string inviteMessage)
-        {
-            Console.WriteLine($"OnAutoAcceptInvitationFromGroup: gid: {groupId}; inviter:{inviter}; inviteMessage:{inviteMessage}");
-        }
-
-        public void OnDestroyedFromGroup(string groupId, string groupName)
-        {
-            Console.WriteLine($"OnDestroyedFromGroup: gid: {groupId}; groupName:{groupName}");
+            Console.WriteLine($"IGroupManagerDelegate1 OnInvitationReceivedFromGroup: gid: {groupId}; groupName:{groupName}; inviter:{inviter}; reason:{reason}, total listener count:{LISTENER_COUNT}");
         }
 
         public void OnInvitationAcceptedFromGroup(string groupId, string invitee)
         {
-            Console.WriteLine($"OnInvitationAcceptedFromGroup: gid: {groupId}; invitee:{invitee}");
+            Console.WriteLine($"IGroupManagerDelegate2 OnInvitationAcceptedFromGroup: gid: {groupId}; invitee:{invitee}, total listener count:{LISTENER_COUNT}");
         }
 
         public void OnInvitationDeclinedFromGroup(string groupId, string invitee, string reason)
         {
-            Console.WriteLine($"OnInvitationDeclinedFromGroup: gid: {groupId}; invitee:{invitee}; reason:{reason}");
+            Console.WriteLine($"IGroupManagerDelegate3 OnInvitationDeclinedFromGroup: gid: {groupId}; invitee:{invitee}; reason:{reason}, total listener count:{LISTENER_COUNT}");
         }
 
-        public void OnInvitationReceivedFromGroup(string groupId, string groupName, string inviter, string reason)
+        public void OnAutoAcceptInvitationFromGroup(string groupId, string inviter, string inviteMessage)
         {
-            Console.WriteLine($"OnInvitationReceivedFromGroup: gid: {groupId}; groupName:{groupName}; inviter:{inviter}; reason:{reason}");
+            Console.WriteLine($"IGroupManagerDelegate4 OnAutoAcceptInvitationFromGroup: gid: {groupId}; inviter:{inviter}; inviteMessage:{inviteMessage}, total listener count:{LISTENER_COUNT}");
         }
 
-        public void OnMemberExitedFromGroup(string groupId, string member)
+        public void OnUserRemovedFromGroup(string groupId, string groupName)
         {
-            Console.WriteLine($"OnMemberExitedFromGroup: gid: {groupId}; member:{member}");
+            Console.WriteLine($"IGroupManagerDelegate5 OnUserRemovedFromGroup: gid: {groupId}; groupName:{groupName}, total listener count:{LISTENER_COUNT}");
         }
 
-        public void OnMemberJoinedFromGroup(string groupId, string member)
+        public void OnDestroyedFromGroup(string groupId, string groupName)
         {
-            Console.WriteLine($"OnMemberJoinedFromGroup: gid: {groupId}; member:{member}");
+            Console.WriteLine($"IGroupManagerDelegate6 OnDestroyedFromGroup: gid: {groupId}; groupName:{groupName}, total listener count:{LISTENER_COUNT}");
+        }
+
+        public void OnRequestToJoinReceivedFromGroup(string groupId, string groupName, string applicant, string reason)
+        {
+            Console.WriteLine($"IGroupManagerDelegate7 OnRequestToJoinReceivedFromGroup: gid: {groupId}; newOwner:{groupName}; applicant:{applicant}; reason:{reason}, total listener count:{LISTENER_COUNT}");
+        }
+
+        public void OnRequestToJoinAcceptedFromGroup(string groupId, string groupName, string accepter)
+        {
+            Console.WriteLine($"IGroupManagerDelegate8 OnRequestToJoinAcceptedFromGroup: gid: {groupId}; newOwner:{groupName}; oldOwner:{accepter}, total listener count:{LISTENER_COUNT}");
+        }
+
+        public void OnRequestToJoinDeclinedFromGroup(string groupId, string reason)
+        {
+            Console.WriteLine($"IGroupManagerDelegate9 OnRequestToJoinDeclinedFromGroup: gid: {groupId}; reason:{reason}, total listener count:{LISTENER_COUNT}");
         }
 
         public void OnMuteListAddedFromGroup(string groupId, List<string> mutes, long muteExpire)
         {
-            Console.WriteLine($"OnMuteListAddedFromGroup: gid: {groupId}; muteExpire:{muteExpire}");
-            foreach(var it in mutes)
+            Console.WriteLine($"IGroupManagerDelegate10 OnMuteListAddedFromGroup: gid: {groupId}; muteExpire:{muteExpire}, total listener count:{LISTENER_COUNT}");
+            foreach (var it in mutes)
             {
                 Console.WriteLine($"mute item: {it}");
             }
@@ -8948,78 +8963,95 @@ namespace WinSDKTest
 
         public void OnMuteListRemovedFromGroup(string groupId, List<string> mutes)
         {
-            Console.WriteLine($"OnMuteListRemovedFromGroup: gid: {groupId}");
+            Console.WriteLine($"IGroupManagerDelegate11 OnMuteListRemovedFromGroup: gid: {groupId}, total listener count:{LISTENER_COUNT}");
             foreach (var it in mutes)
             {
                 Console.WriteLine($"mute item: {it}");
             }
         }
 
-        public void OnOwnerChangedFromGroup(string groupId, string newOwner, string oldOwner)
+        public void OnAddAllowListMembersFromGroup(string groupId, List<string> whiteList)
         {
-            Console.WriteLine($"OnOwnerChangedFromGroup: gid: {groupId}; newOwner:{newOwner}; oldOwner:{oldOwner}");
+            string str = string.Join(",", whiteList.ToArray());
+            Console.WriteLine($"IGroupManagerDelegate12 OnAddWhiteListMembersFromGroup: gid: {groupId}; whiteList:{str}, total listener count:{LISTENER_COUNT}");
         }
 
         public void OnRemoveAllowListMembersFromGroup(string groupId, List<string> whiteList)
         {
-            Console.WriteLine($"OnRemoveWhiteListMembersFromGroup: gid: {groupId}");
+            Console.WriteLine($"IGroupManagerDelegate13 OnRemoveWhiteListMembersFromGroup: gid: {groupId}, total listener count:{LISTENER_COUNT}");
             foreach (var it in whiteList)
             {
                 Console.WriteLine($"white item: {it}");
             }
         }
 
-        public void OnRequestToJoinAcceptedFromGroup(string groupId, string groupName, string accepter)
+        public void OnAllMemberMuteChangedFromGroup(string groupId, bool isAllMuted)
         {
-            Console.WriteLine($"OnRequestToJoinAcceptedFromGroup: gid: {groupId}; newOwner:{groupName}; oldOwner:{accepter}");
+            Console.WriteLine($"IGroupManagerDelegate14 OnAllMemberMuteChangedFromGroup: gid: {groupId}; isAllMuted:{isAllMuted}, total listener count:{LISTENER_COUNT}");
+        }
+        public void OnAdminAddedFromGroup(string groupId, string administrator)
+        {
+            Console.WriteLine($"IGroupManagerDelegate15 OnAdminAddedFromGroup: gid: {groupId}; admin:{administrator}, total listener count:{LISTENER_COUNT}");
         }
 
-        public void OnRequestToJoinDeclinedFromGroup(string groupId, string reason)
+        public void OnAdminRemovedFromGroup(string groupId, string administrator)
         {
-            Console.WriteLine($"OnRequestToJoinDeclinedFromGroup: gid: {groupId}; reason:{reason}");
+            Console.WriteLine($"IGroupManagerDelegate16 OnAdminRemovedFromGroup: gid: {groupId}; admin:{administrator}, total listener count:{LISTENER_COUNT}");
+        }
+        public void OnOwnerChangedFromGroup(string groupId, string newOwner, string oldOwner)
+        {
+            Console.WriteLine($"IGroupManagerDelegate17 OnOwnerChangedFromGroup: gid: {groupId}; newOwner:{newOwner}; oldOwner:{oldOwner}, total listener count:{LISTENER_COUNT}");
         }
 
-        public void OnRequestToJoinReceivedFromGroup(string groupId, string groupName, string applicant, string reason)
+        public void OnMemberJoinedFromGroup(string groupId, string member)
         {
-            Console.WriteLine($"OnRequestToJoinReceivedFromGroup: gid: {groupId}; newOwner:{groupName}; applicant:{applicant}; reason:{reason}");
+            Console.WriteLine($"IGroupManagerDelegate18 OnMemberJoinedFromGroup: gid: {groupId}; member:{member}, total listener count:{LISTENER_COUNT}");
+        }
+
+        public void OnMemberExitedFromGroup(string groupId, string member)
+        {
+            Console.WriteLine($"IGroupManagerDelegate19 OnMemberExitedFromGroup: gid: {groupId}; member:{member}, total listener count:{LISTENER_COUNT}");
+        }
+
+        public void OnAnnouncementChangedFromGroup(string groupId, string announcement)
+        {
+            Console.WriteLine($"IGroupManagerDelegate20 OnAnnouncementChangedFromGroup: gid: {groupId}; announcement:{announcement}, total listener count:{LISTENER_COUNT}");
         }
 
         public void OnSharedFileAddedFromGroup(string groupId, GroupSharedFile sharedFile)
         {
-            Console.WriteLine($"OnRequestToJoinDeclinedFromGroup: gid: {groupId}; fid:{sharedFile.FileId}; fn:{sharedFile.FileName}");
+            Console.WriteLine($"IGroupManagerDelegate21 OnRequestToJoinDeclinedFromGroup: gid: {groupId}; fid:{sharedFile.FileId}; fn:{sharedFile.FileName}, total listener count:{LISTENER_COUNT}");
         }
 
         public void OnSharedFileDeletedFromGroup(string groupId, string fileId)
         {
-            Console.WriteLine($"OnRequestToJoinDeclinedFromGroup: gid: {groupId}; fileId:{fileId}");
-        }
-
-        public void OnUserRemovedFromGroup(string groupId, string groupName)
-        {
-            Console.WriteLine($"OnUserRemovedFromGroup: gid: {groupId}; groupName:{groupName}");
-        }
-
-        public void OnSpecificationChangedFromGroup(Group group)
-        {
-            Console.WriteLine($"OnSpecificationChangedFromGroup: gid: {group.GroupId}; groupName:{group.Name}");
+            Console.WriteLine($"IGroupManagerDelegate22 OnRequestToJoinDeclinedFromGroup: gid: {groupId}; fileId:{fileId}, total listener count:{LISTENER_COUNT}");
         }
 
         public void OnStateChangedFromGroup(string groupId, bool isDisable)
         {
-            Console.WriteLine($"OnStateChangedFromGroup: gid: {groupId}; isDisable:{isDisable}");
+            Console.WriteLine($"IGroupManagerDelegate23 OnStateChangedFromGroup: gid: {groupId}; isDisable:{isDisable}, total listener count:{LISTENER_COUNT}");
         }
+
+        public void OnSpecificationChangedFromGroup(Group group)
+        {
+            Console.WriteLine($"IGroupManagerDelegate24 OnSpecificationChangedFromGroup: gid: {group.GroupId}; groupName:{group.Name}, total listener count:{LISTENER_COUNT}");
+        }
+
     }
 
     class MultiDeviceDelegate : IMultiDeviceDelegate
     {
+        int LISTENER_COUNT = 4;
+
         public void OnContactMultiDevicesEvent(MultiDevicesOperation operation, string target, string ext)
         {
-            Console.WriteLine($"onContactMultiDevicesEvent: operation: {operation}; target:{target}； ext:{ext}"); 
+            Console.WriteLine($"IMultiDeviceDelegate1 onContactMultiDevicesEvent: operation: {operation}; target:{target}； ext:{ext}, total listener count:{LISTENER_COUNT}"); 
         }
 
         public void OnGroupMultiDevicesEvent(MultiDevicesOperation operation, string target, List<string> usernames)
         {
-            Console.WriteLine($"onGroupMultiDevicesEvent: operation: {operation}; target:{target}");
+            Console.WriteLine($"IMultiDeviceDelegate2 onGroupMultiDevicesEvent: operation: {operation}; target:{target}, total listener count:{LISTENER_COUNT}");
             foreach(var it in usernames)
             {
                 Console.WriteLine($"username: {it}");
@@ -9028,7 +9060,7 @@ namespace WinSDKTest
 
         public void OnThreadMultiDevicesEvent(MultiDevicesOperation operation, string target, List<string> usernames)
         {
-            Console.WriteLine($"onThreadMultiDevicesEvent: operation: {operation}; target:{target}");
+            Console.WriteLine($"IMultiDeviceDelegate3 onThreadMultiDevicesEvent: operation: {operation}; target:{target}, total listener count:{LISTENER_COUNT}");
             foreach (var it in usernames)
             {
                 Console.WriteLine($"username: {it}");
@@ -9037,45 +9069,41 @@ namespace WinSDKTest
 
         public void OnUndisturbMultiDevicesEvent(string data)
         {
-            Console.WriteLine($"data: {data}");
+            Console.WriteLine($"IMultiDeviceDelegate4 data: {data}, total listener count:{LISTENER_COUNT}");
         }
     }
 
     class RoomManagerDelegate : IRoomManagerDelegate
     {
-        public void OnAdminAddedFromRoom(string roomId, string admin)
-        {
-            Console.WriteLine($"OnAdminAddedFromRoom roomId: {roomId}; admin:{admin}");
-        }
+        int LISTENER_COUNT = 17;
 
-        public void OnAdminRemovedFromRoom(string roomId, string admin)
+        public void OnMemberJoinedFromRoom(string roomId, string participant)
         {
-            Console.WriteLine($"OnAdminRemovedFromRoom roomId: {roomId}; admin:{admin}");
-        }
-
-        public void OnAnnouncementChangedFromRoom(string roomId, string announcement)
-        {
-            Console.WriteLine($"OnAnnouncementChangedFromRoom roomId: {roomId}; announcement:{announcement}");
+            Console.WriteLine($"IRoomManagerDelegate1 OnMemberJoinedFromRoom roomId: {roomId}; participant:{participant}; total listener count:{LISTENER_COUNT}");
         }
 
         public void OnDestroyedFromRoom(string roomId, string roomName)
         {
-            Console.WriteLine($"OnDestroyedFromRoom roomId: {roomId}; roomName:{roomName}");
+            Console.WriteLine($"IRoomManagerDelegate2 OnDestroyedFromRoom roomId: {roomId}; roomName:{roomName}, total listener count:{LISTENER_COUNT}");
+        }
+
+        public void OnRemovedFromRoom(string roomId, string roomName, string participant)
+        {
+            Console.WriteLine($"IRoomManagerDelegate3 OnRemovedFromRoom: roomId: {roomId}; roomName:{roomName}; participant:{participant}, total listener count:{LISTENER_COUNT}");
+        }
+        public void OnRemoveFromRoomByOffline(string roomId, string roomName)
+        {
+            Console.WriteLine($"IRoomManagerDelegate4 OnRemoveFromRoomByOffline: roomId: {roomId}; roomName:{roomName}, total listener count:{LISTENER_COUNT}");
         }
 
         public void OnMemberExitedFromRoom(string roomId, string roomName, string participant)
         {
-            Console.WriteLine($"OnMemberExitedFromRoom roomId: {roomId}; roomName:{roomName}; participant:{participant}");
-        }
-
-        public void OnMemberJoinedFromRoom(string roomId, string participant)
-        {
-            Console.WriteLine($"OnMemberJoinedFromRoom roomId: {roomId}; participant:{participant};");
+            Console.WriteLine($"IRoomManagerDelegate5 OnMemberExitedFromRoom roomId: {roomId}; roomName:{roomName}; participant:{participant}, total listener count:{LISTENER_COUNT}");
         }
 
         public void OnMuteListAddedFromRoom(string roomId, List<string> mutes, long expireTime)
         {
-            Console.WriteLine($"OnMuteListAddedFromRoom: roomId: {roomId}; expireTime:{expireTime}");
+            Console.WriteLine($"IRoomManagerDelegate6 OnMuteListAddedFromRoom: roomId: {roomId}; expireTime:{expireTime}, total listener count:{LISTENER_COUNT}");
             foreach (var it in mutes)
             {
                 Console.WriteLine($"mute item: {it}");
@@ -9084,68 +9112,74 @@ namespace WinSDKTest
 
         public void OnMuteListRemovedFromRoom(string roomId, List<string> mutes)
         {
-            Console.WriteLine($"OnMuteListRemovedFromRoom: roomId: {roomId}");
+            Console.WriteLine($"IRoomManagerDelegate7 OnMuteListRemovedFromRoom: roomId: {roomId}, total listener count:{LISTENER_COUNT}");
             foreach (var it in mutes)
             {
                 Console.WriteLine($"mute item: {it}");
             }
         }
 
-        public void OnOwnerChangedFromRoom(string roomId, string newOwner, string oldOwner)
-        {
-            Console.WriteLine($"OnOwnerChangedFromRoom: roomId: {roomId}; newOwner:{newOwner}; oldOwner:{oldOwner}");
-        }
-
-        public void OnRemovedFromRoom(string roomId, string roomName, string participant)
-        {
-            Console.WriteLine($"OnRemovedFromRoom: roomId: {roomId}; roomName:{roomName}; participant:{participant}");
-        }
-
-        public void OnChatroomAttributesChanged(string roomId, Dictionary<string, string> kv, string from)
-        {
-            string kv_str = string.Join(",", kv.ToArray());
-            Console.WriteLine($"OnChatroomAttributesChanged: roomId: {roomId}; changed attributes:{kv_str}; from:{from}");
-        }
-
-        public void OnChatroomAttributesRemoved(string roomId, List<string> keys, string from)
-        {
-            string kv_str = string.Join(",", keys.ToArray());
-            Console.WriteLine($"OnChatroomAttributesRemoved: roomId: {roomId}; removed keys:{kv_str}; from:{from}");
-        }
-
-        public void OnSpecificationChangedFromRoom(Room room)
-        {
-            Console.WriteLine($"OnSpecificationChangedFromRoom roomId: {room.RoomId}; roomName:{room.Name}");
-        }
-
         public void OnAddAllowListMembersFromChatroom(string roomId, List<string> members)
         {
             string members_str = string.Join(",", members.ToArray());
-            Console.WriteLine($"OnAddWhiteListMembersFromChatroom: roomId: {roomId}; added white list:{members_str}");
+            Console.WriteLine($"IRoomManagerDelegate8 OnAddWhiteListMembersFromChatroom: roomId: {roomId}; added white list:{members_str}, total listener count:{LISTENER_COUNT}");
         }
 
         public void OnRemoveAllowListMembersFromChatroom(string roomId, List<string> members)
         {
             string members_str = string.Join(",", members.ToArray());
-            Console.WriteLine($"OnRemoveWhiteListMembersFromChatroom: roomId: {roomId}; removed white list:{members_str}");
+            Console.WriteLine($"IRoomManagerDelegate9 OnRemoveWhiteListMembersFromChatroom: roomId: {roomId}; removed white list:{members_str}, total listener count:{LISTENER_COUNT}");
         }
 
         public void OnAllMemberMuteChangedFromChatroom(string roomId, bool isAllMuted)
         {
-            Console.WriteLine($"OnAllMemberMuteChangedFromChatroom: roomId: {roomId}; isAllMuted:{isAllMuted}");
+            Console.WriteLine($"IRoomManagerDelegate10 OnAllMemberMuteChangedFromChatroom: roomId: {roomId}; isAllMuted:{isAllMuted}, total listener count:{LISTENER_COUNT}");
         }
 
-        public void OnRemoveFromRoomByOffline(string roomId, string roomName)
+        public void OnAdminAddedFromRoom(string roomId, string admin)
         {
-            Console.WriteLine($"OnRemoveFromRoomByOffline: roomId: {roomId}; roomName:{roomName}");
+            Console.WriteLine($"IRoomManagerDelegate11 OnAdminAddedFromRoom roomId: {roomId}; admin:{admin}, total listener count:{LISTENER_COUNT}");
+        }
+
+        public void OnAdminRemovedFromRoom(string roomId, string admin)
+        {
+            Console.WriteLine($"IRoomManagerDelegate12 OnAdminRemovedFromRoom roomId: {roomId}; admin:{admin}, total listener count:{LISTENER_COUNT}");
+        }
+
+        public void OnOwnerChangedFromRoom(string roomId, string newOwner, string oldOwner)
+        {
+            Console.WriteLine($"IRoomManagerDelegate13 OnOwnerChangedFromRoom: roomId: {roomId}; newOwner:{newOwner}; oldOwner:{oldOwner}, total listener count:{LISTENER_COUNT}");
+        }
+
+        public void OnAnnouncementChangedFromRoom(string roomId, string announcement)
+        {
+            Console.WriteLine($"IRoomManagerDelegate14 OnAnnouncementChangedFromRoom roomId: {roomId}; announcement:{announcement}, total listener count:{LISTENER_COUNT}");
+        }
+
+        public void OnChatroomAttributesChanged(string roomId, Dictionary<string, string> kv, string from)
+        {
+            string kv_str = string.Join(",", kv.ToArray());
+            Console.WriteLine($"IRoomManagerDelegate15 OnChatroomAttributesChanged: roomId: {roomId}; changed attributes:{kv_str}; from:{from}, total listener count:{LISTENER_COUNT}");
+        }
+
+        public void OnChatroomAttributesRemoved(string roomId, List<string> keys, string from)
+        {
+            string kv_str = string.Join(",", keys.ToArray());
+            Console.WriteLine($"IRoomManagerDelegate16 OnChatroomAttributesRemoved: roomId: {roomId}; removed keys:{kv_str}; from:{from}, total listener count:{LISTENER_COUNT}");
+        }
+
+        public void OnSpecificationChangedFromRoom(Room room)
+        {
+            Console.WriteLine($"IRoomManagerDelegate17 OnSpecificationChangedFromRoom roomId: {room.RoomId}; roomName:{room.Name}, total listener count:{LISTENER_COUNT}");
         }
     }
 
     class PresenceManagerDelegate : IPresenceManagerDelegate
     {
+        int LISTENER_COUNT = 1;
         public void OnPresenceUpdated(List<Presence> presences)
         {
-            Console.WriteLine($"OnPresenceUpdated, presences list count: {presences.Count}");
+            Console.WriteLine($"IPresenceManagerDelegate1 OnPresenceUpdated, presences list count: {presences.Count}, total listener count:{LISTENER_COUNT}");
             foreach (var it in presences)
             {
                 List<PresenceDeviceStatus> status_list = it.StatusList;
@@ -9164,27 +9198,28 @@ namespace WinSDKTest
 
     class ThreadManagerDelegate : IChatThreadManagerDelegate
     {
+        int LISTENER_COUNT = 4;
+        public void OnChatThreadCreate(ChatThreadEvent threadEvent)
+        {
+            Console.WriteLine($"IChatThreadManagerDelegate1 OnCreatThread received, total listener count:{LISTENER_COUNT}");
+            Utils.PrintThreadEvent(threadEvent);
+        }
+
         public void OnChatThreadDestroy(ChatThreadEvent threadEvent)
         {
-            Console.WriteLine($"OnChatThreadDestroy received");
+            Console.WriteLine($"IChatThreadManagerDelegate2 OnChatThreadDestroy received, total listener count:{LISTENER_COUNT}");
             Utils.PrintThreadEvent(threadEvent);
         }
 
         public void OnChatThreadUpdate(ChatThreadEvent threadEvent)
         {
-            Console.WriteLine($"OnChatThreadUpdate received");
-            Utils.PrintThreadEvent(threadEvent);
-        }
-
-        public void OnChatThreadCreate(ChatThreadEvent threadEvent)
-        {
-            Console.WriteLine($"OnCreatThread received");
+            Console.WriteLine($"IChatThreadManagerDelegate3 OnChatThreadUpdate received, total listener count:{LISTENER_COUNT}");
             Utils.PrintThreadEvent(threadEvent);
         }
 
         public void OnUserKickOutOfChatThread(ChatThreadEvent threadEvent)
         {
-            Console.WriteLine($"OnUserKickOutOfChatThread received");
+            Console.WriteLine($"IChatThreadManagerDelegate4 OnUserKickOutOfChatThread received, total listener count:{LISTENER_COUNT}");
             Utils.PrintThreadEvent(threadEvent);
         }
     }

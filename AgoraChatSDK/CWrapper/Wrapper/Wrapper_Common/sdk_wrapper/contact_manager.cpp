@@ -317,5 +317,20 @@ namespace sdk_wrapper {
 		}
         return CopyToPointer(json);
 	}
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ContactManager_RunDelegateTester(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (nullptr != gContactListener) {
+            gContactListener->onContactAdded("username");
+            gContactListener->onContactDeleted("username");
+
+            string reason = "reason";
+            gContactListener->onContactInvited("username", reason);
+
+            gContactListener->onContactAgreed("username");
+            gContactListener->onContactRefused("username");
+        }
+        return nullptr;
+    }
 }
 
