@@ -10,7 +10,7 @@ import org.json.JSONObject;
 public class EMWrapper {
     public EMClientWrapper clientWrapper;
     public EMWrapper() {
-        clientWrapper = new EMClientWrapper();
+        clientWrapper = EMClientWrapper.shared();
         new EMUnityHelper();
     }
 

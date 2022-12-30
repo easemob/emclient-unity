@@ -258,12 +258,6 @@
         else if ([value isKindOfClass:[NSString class]]) {
             dict[key] = @{@"type":@"str",@"value":value};
         }
-        else if ([value isKindOfClass:[NSArray class]]) {
-            dict[key] = @{@"type":@"strv", @"value": value};
-        }
-        else if ([value isKindOfClass:[NSDictionary class]]) {
-            dict[key] = @{@"type":@"jstr", @"value":value};
-        }
     }
     
 //    NSString *ret = [Transfrom NSStringFromJsonObject:dict];

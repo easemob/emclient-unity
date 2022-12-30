@@ -24,7 +24,7 @@ public class ThreadManagerTest : MonoBehaviour, IChatThreadManagerDelegate
     private Button GetLastMessageAccordingThreadsBtn;
 
 
-    private string currentGroupId
+    private string groupId
     {
         get => threadText.text;
     }
@@ -82,30 +82,34 @@ public class ThreadManagerTest : MonoBehaviour, IChatThreadManagerDelegate
 
     void CreateThreadBtnAction()
     {
+
+
         InputAlertConfig config = new InputAlertConfig("消息id", (dict) =>
         {
-            string id = dict["name"];
-            if (null == currentGroupId || 0 == currentGroupId.Length || null == id || 0 == id.Length)
+            string id = dict["msgId"];
+            string name = dict["name"];
+            if (null == groupId || 0 == groupId.Length || null == id || 0 == id.Length)
             {
                 UIManager.DefaultAlert(transform, "缺少必要参数");
                 return;
             }
 
-            SDKClient.Instance.ThreadManager.CreateThread("name", id, currentGroupId, new ValueCallBack<ChatThread>(
+            SDKClient.Instance.ThreadManager.CreateThread(name, id, groupId, new ValueCallBack<ChatThread>(
                 onSuccess: (result) =>
                 {
                     UIManager.SuccessAlert(transform);
                 },
                 onError: (code, desc) =>
                 {
-                    UIManager.ErrorAlert(this.transform, code, desc);
+                    UIManager.ErrorAlert(transform, code, desc);
                 }
             ));
         });
 
+        config.AddField("msgId");
         config.AddField("name");
 
-        UIManager.DefaultInputAlert(this.transform, config);
+        UIManager.DefaultInputAlert(transform, config);
 
     }
     void JoinThreadBtnAction()
@@ -128,13 +132,13 @@ public class ThreadManagerTest : MonoBehaviour, IChatThreadManagerDelegate
                 },
                 onError: (code, desc) =>
                 {
-                    UIManager.ErrorAlert(this.transform, code, desc);
+                    UIManager.ErrorAlert(transform, code, desc);
                 }
             ));
         });
         config.AddField("threadId");
 
-        UIManager.DefaultInputAlert(this.transform, config);
+        UIManager.DefaultInputAlert(transform, config);
 
     }
     void LeaveThreadBtnAction()
@@ -155,14 +159,14 @@ public class ThreadManagerTest : MonoBehaviour, IChatThreadManagerDelegate
                 },
                 onError: (code, desc) =>
                 {
-                    UIManager.ErrorAlert(this.transform, code, desc);
+                    UIManager.ErrorAlert(transform, code, desc);
                 }
             ));
         });
 
         config.AddField("threadId");
 
-        UIManager.DefaultInputAlert(this.transform, config);
+        UIManager.DefaultInputAlert(transform, config);
 
     }
     void DestroyThreadBtnAction()
@@ -184,13 +188,13 @@ public class ThreadManagerTest : MonoBehaviour, IChatThreadManagerDelegate
                 },
                 onError: (code, desc) =>
                 {
-                    UIManager.ErrorAlert(this.transform, code, desc);
+                    UIManager.ErrorAlert(transform, code, desc);
                 }
             ));
         });
         config.AddField("threadId");
 
-        UIManager.DefaultInputAlert(this.transform, config);
+        UIManager.DefaultInputAlert(transform, config);
 
     }
 
@@ -214,14 +218,14 @@ public class ThreadManagerTest : MonoBehaviour, IChatThreadManagerDelegate
                 },
                 onError: (code, desc) =>
                 {
-                    UIManager.ErrorAlert(this.transform, code, desc);
+                    UIManager.ErrorAlert(transform, code, desc);
                 }
             ));
         });
         config.AddField("threadId");
         config.AddField("userId");
 
-        UIManager.DefaultInputAlert(this.transform, config);
+        UIManager.DefaultInputAlert(transform, config);
 
     }
     void ChangeThreadNameBtnAction()
@@ -243,13 +247,13 @@ public class ThreadManagerTest : MonoBehaviour, IChatThreadManagerDelegate
                 },
                 onError: (code, desc) =>
                 {
-                    UIManager.ErrorAlert(this.transform, code, desc);
+                    UIManager.ErrorAlert(transform, code, desc);
                 }
             ));
         });
         config.AddField("threadId");
         config.AddField("newName");
-        UIManager.DefaultInputAlert(this.transform, config);
+        UIManager.DefaultInputAlert(transform, config);
     }
 
     void FetchThreadMembersBtnAction()
@@ -283,14 +287,14 @@ public class ThreadManagerTest : MonoBehaviour, IChatThreadManagerDelegate
     {
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
-            if (currentGroupId == null || currentGroupId.Length == 0)
+            if (groupId == null || groupId.Length == 0)
             {
                 UIManager.DefaultAlert(transform, "缺少必要参数");
                 return;
             }
 
             bool joined = dict["joined(0/1)"] == "1" ? true : false;
-            SDKClient.Instance.ThreadManager.FetchThreadListOfGroup(currentGroupId, joined, callback: new ValueCallBack<CursorResult<ChatThread>>(
+            SDKClient.Instance.ThreadManager.FetchThreadListOfGroup(groupId, joined, callback: new ValueCallBack<CursorResult<ChatThread>>(
                 onSuccess: (result) =>
                 {
                     List<string> list = new List<string>();
@@ -313,7 +317,7 @@ public class ThreadManagerTest : MonoBehaviour, IChatThreadManagerDelegate
 
     void FetchMineJoinedThreadListBtnAction()
     {
-        if (null == currentGroupId || 0 == currentGroupId.Length)
+        if (null == groupId || 0 == groupId.Length)
         {
             UIManager.DefaultAlert(transform, "缺少必要参数");
             return;
@@ -413,21 +417,21 @@ public class ThreadManagerTest : MonoBehaviour, IChatThreadManagerDelegate
 
     public void OnChatThreadCreate(ChatThreadEvent threadEvent)
     {
-        UIManager.DefaultAlert(this.transform, $"回调 OnChatThreadCreate: {threadEvent.ChatThread.Name}");
+        UIManager.DefaultAlert(transform, $"回调 OnChatThreadCreate: {threadEvent.ChatThread.Name}");
     }
 
     public void OnChatThreadUpdate(ChatThreadEvent threadEvent)
     {
-        UIManager.DefaultAlert(this.transform, $"回调 OnChatThreadUpdate: {threadEvent.ChatThread.Name}");
+        UIManager.DefaultAlert(transform, $"回调 OnChatThreadUpdate: {threadEvent.ChatThread.Name}");
     }
 
     public void OnChatThreadDestroy(ChatThreadEvent threadEvent)
     {
-        UIManager.DefaultAlert(this.transform, $"回调 OnChatThreadDestroy: {threadEvent.ChatThread.Name}");
+        UIManager.DefaultAlert(transform, $"回调 OnChatThreadDestroy: {threadEvent.ChatThread.Name}");
     }
 
     public void OnUserKickOutOfChatThread(ChatThreadEvent threadEvent)
     {
-        UIManager.DefaultAlert(this.transform, $"回调 OnUserKickOutOfChatThread: {threadEvent.ChatThread.Name}");
+        UIManager.DefaultAlert(transform, $"回调 OnUserKickOutOfChatThread: {threadEvent.ChatThread.Name}");
     }
 }

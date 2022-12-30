@@ -7,6 +7,7 @@ import com.hyphenate.wrapper.callback.EMCommonCallback;
 import com.hyphenate.wrapper.callback.EMCommonValueCallback;
 import com.hyphenate.wrapper.callback.EMWrapperCallback;
 import com.hyphenate.wrapper.helper.EMPresenceHelper;
+import com.hyphenate.wrapper.listeners.EMWrapperPresenceListener;
 import com.hyphenate.wrapper.util.EMHelper;
 import com.hyphenate.wrapper.util.EMSDKMethod;
 
@@ -18,6 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EMPresenceManagerWrapper extends EMBaseWrapper{
+
+    public EMWrapperPresenceListener emWrapperPresenceListener;
+
     EMPresenceManagerWrapper() {
         registerEaseListener();
     }
@@ -124,17 +128,8 @@ public class EMPresenceManagerWrapper extends EMBaseWrapper{
     }
     
     private void registerEaseListener(){
-        EMPresenceListener presenceListener = presences -> {
-            JSONArray jsonArray = new JSONArray();
-            try{
-                for (EMPresence presence: presences) {
-                    jsonArray.put(EMPresenceHelper.toJson(presence));
-                }
-                post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.presenceListener, EMSDKMethod.onPresenceUpdated, jsonArray.toString()));
-            }catch (JSONException e) {
-                e.printStackTrace();
-            }
-        };
-        EMClient.getInstance().presenceManager().addListener(presenceListener);
+
+        emWrapperPresenceListener = new EMWrapperPresenceListener();
+        EMClient.getInstance().presenceManager().addListener(emWrapperPresenceListener);
     }
 }

@@ -551,9 +551,35 @@ public class GroupManagerTest : MonoBehaviour
     void DownloadGroupSharedFileBtnAction()
     {
 
-        UIManager.UnfinishedAlert(transform);
-        Debug.Log("DownloadGroupSharedFileBtnAction");
+        if (null == currentGroupId || 0 == currentGroupId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string fileId = dict["fileId"];
+            string savePath = Application.temporaryCachePath + "/" + fileId;
+            Debug.Log($"savePath: {savePath}");
+            SDKClient.Instance.GroupManager.DownloadGroupSharedFile(currentGroupId, fileId, savePath, new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                },
+                onProgress: (progress) =>
+                {
+                    Debug.Log($"download file progress: ${progress}");
+                }
 
+            ));
+        });
+        config.AddField("fileId");
+        //config.AddField("savePath");
+        UIManager.DefaultInputAlert(transform, config);
     }
 
     void GetGroupAnnouncementFromServerBtnAction()
@@ -584,17 +610,30 @@ public class GroupManagerTest : MonoBehaviour
             UIManager.DefaultAlert(transform, "缺少必要参数");
             return;
         }
-        SDKClient.Instance.GroupManager.GetGroupBlockListFromServer(currentGroupId, callback: new ValueCallBack<List<string>>(
-            onSuccess: (list) =>
-            {
-                string str = string.Join(",", list.ToArray());
-                UIManager.DefaultAlert(transform, str);
-            },
-            onError: (code, desc) =>
-            {
-                UIManager.ErrorAlert(transform, code, desc);
-            }
-        ));
+
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+
+            int pageNum = int.Parse(dict["pageNum"]);
+            int pageSize = int.Parse(dict["pageSize"]);
+
+            SDKClient.Instance.GroupManager.GetGroupBlockListFromServer(currentGroupId, pageNum: pageNum, pageSize: pageSize, callback: new ValueCallBack<List<string>>(
+                onSuccess: (list) =>
+                {
+                    string str = string.Join(",", list.ToArray());
+                    UIManager.DefaultAlert(transform, str);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+        config.AddField("pageSize");
+        config.AddField("pageNum");
+
+        UIManager.DefaultInputAlert(transform, config);
+
 
         Debug.Log("GetGroupBlockListFromServerBtnAction");
     }
@@ -668,9 +707,9 @@ public class GroupManagerTest : MonoBehaviour
             onSuccess: (dict) =>
             {
                 List<string> list = new List<string>();
-                foreach (long key in dict.Values)
+                foreach (string key in dict.Keys)
                 {
-                    list.Add(key.ToString());
+                    list.Add(key);
                 }
                 string str = string.Join(",", list.ToArray());
                 UIManager.DefaultAlert(transform, str);

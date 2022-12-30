@@ -26,6 +26,7 @@ import com.hyphenate.wrapper.helper.EMMessageHelper;
 import com.hyphenate.wrapper.helper.EMMessageReactionChangeHelper;
 import com.hyphenate.wrapper.helper.EMMessageReactionHelper;
 import com.hyphenate.wrapper.helper.HyphenateExceptionHelper;
+import com.hyphenate.wrapper.listeners.EMWrapperMessageListener;
 import com.hyphenate.wrapper.util.EMHelper;
 import com.hyphenate.wrapper.util.EMSDKMethod;
 
@@ -39,6 +40,9 @@ import java.util.List;
 import java.util.Map;
 
 public class EMChatManagerWrapper extends EMBaseWrapper {
+
+    public EMWrapperMessageListener emWrapperMessageListener;
+
     EMChatManagerWrapper(){
         registerEaseListener();
     }
@@ -282,7 +286,7 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
     }
 
     private String importMessages(JSONObject params, EMWrapperCallback callback) throws JSONException {
-        JSONArray ary = params.getJSONArray("messages");
+        JSONArray ary = params.getJSONArray("list");
         List<EMMessage> messages = new ArrayList<>();
         for (int i = 0; i < ary.length(); i++) {
             JSONObject obj = ary.getJSONObject(i);
@@ -297,8 +301,8 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
     }
 
     private String downloadAttachment(JSONObject params, EMWrapperCallback callback) throws JSONException {
-        EMMessage tempMsg = EMMessageHelper.fromJson(params.getJSONObject("message"));
-        final EMMessage msg = EMClient.getInstance().chatManager().getMessage(tempMsg.getMsgId());
+        String msgId = params.getString("msgId");
+        final EMMessage msg = EMClient.getInstance().chatManager().getMessage(msgId);
         msg.setMessageStatusCallback(new EMCallBack() {
             @Override
             public void onSuccess() {
@@ -327,8 +331,8 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
     }
 
     private String downloadThumbnail(JSONObject params, EMWrapperCallback callback) throws JSONException {
-        EMMessage tempMsg = EMMessageHelper.fromJson(params.getJSONObject("message"));
-        final EMMessage msg = EMClient.getInstance().chatManager().getMessage(tempMsg.getMsgId());
+        String msgId = params.getString("msgId");
+        final EMMessage msg = EMClient.getInstance().chatManager().getMessage(msgId);
         msg.setMessageStatusCallback(new EMCallBack() {
             @Override
             public void onSuccess() {
@@ -657,125 +661,9 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
     }
     
     private void registerEaseListener(){
-
-        EMClient.getInstance().chatManager().addConversationListener(new EMConversationListener() {
-            @Override
-            public void onConversationUpdate() {
-                EMWrapperHelper.listener.onReceive(EMSDKMethod.chatListener, EMSDKMethod.onConversationsUpdate, null);
-            }
-
-            @Override
-            public void onConversationRead(String from, String to) {
-                try{
-                    JSONObject jo = new JSONObject();
-                    jo.put("from", from);
-                    jo.put("to", to);
-                    EMWrapperHelper.listener.onReceive(EMSDKMethod.chatListener, EMSDKMethod.onConversationRead, jo.toString());
-                }catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-
-        EMClient.getInstance().chatManager().addMessageListener(new EMMessageListener() {
-
-            @Override
-            public void onMessageReceived(List<EMMessage> messages) {
-                JSONArray jsonArray = new JSONArray();
-                try {
-                    for (EMMessage msg : messages) {
-                        jsonArray.put(EMMessageHelper.toJson(msg));
-                    }
-                    EMWrapperHelper.listener.onReceive(EMSDKMethod.chatListener, EMSDKMethod.onMessagesReceived, jsonArray.toString());
-                }catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onCmdMessageReceived(List<EMMessage> messages) {
-                JSONArray jsonArray = new JSONArray();
-                try {
-                    for (EMMessage msg : messages) {
-                        jsonArray.put(EMMessageHelper.toJson(msg));
-                    }
-                    EMWrapperHelper.listener.onReceive(EMSDKMethod.chatListener, EMSDKMethod.onCmdMessagesReceived, jsonArray.toString());
-                }catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onMessageRead(List<EMMessage> messages) {
-                JSONArray jsonArray = new JSONArray();
-                try {
-                    for (EMMessage msg : messages) {
-                        jsonArray.put(EMMessageHelper.toJson(msg));
-                    }
-                    EMWrapperHelper.listener.onReceive(EMSDKMethod.chatListener, EMSDKMethod.onMessagesRead, jsonArray.toString());
-                }catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onMessageDelivered(List<EMMessage> messages) {
-                JSONArray jsonArray = new JSONArray();
-                try {
-                    for (EMMessage msg : messages) {
-                        jsonArray.put(EMMessageHelper.toJson(msg));
-                    }
-                    EMWrapperHelper.listener.onReceive(EMSDKMethod.chatListener, EMSDKMethod.onMessagesDelivered, jsonArray.toString());
-                }catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onMessageRecalled(List<EMMessage> messages) {
-                JSONArray jsonArray = new JSONArray();
-                try {
-                    for (EMMessage msg : messages) {
-                        jsonArray.put(EMMessageHelper.toJson(msg));
-                    }
-                    EMWrapperHelper.listener.onReceive(EMSDKMethod.chatListener, EMSDKMethod.onMessagesRecalled, jsonArray.toString());
-                }catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onReadAckForGroupMessageUpdated() {
-                EMWrapperHelper.listener.onReceive(EMSDKMethod.chatListener, EMSDKMethod.onReadAckForGroupMessageUpdated, null);
-            }
-
-            @Override
-            public void onGroupMessageRead(List<EMGroupReadAck> groupReadAcks) {
-                JSONArray jsonArray = new JSONArray();
-                try {
-                    for (EMGroupReadAck ack : groupReadAcks) {
-                        jsonArray.put(EMGroupAckHelper.toJson(ack));
-                    }
-                    EMWrapperHelper.listener.onReceive(EMSDKMethod.chatListener, EMSDKMethod.onGroupMessageRead, jsonArray.toString());
-                }catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onReactionChanged(List<EMMessageReactionChange> messageReactionChangeList) {
-                JSONArray jsonArray = new JSONArray();
-                try {
-                    for (EMMessageReactionChange change : messageReactionChangeList) {
-                        jsonArray.put(EMMessageReactionChangeHelper.toJson(change));
-                    }
-                    EMWrapperHelper.listener.onReceive(EMSDKMethod.chatListener, EMSDKMethod.onMessageReactionDidChange, jsonArray.toString());
-                }catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        emWrapperMessageListener = new EMWrapperMessageListener();
+        EMClient.getInstance().chatManager().addConversationListener(emWrapperMessageListener);
+        EMClient.getInstance().chatManager().addMessageListener(emWrapperMessageListener);
     }
 
     private EMConversation.EMSearchDirection searchDirectionFromString(String direction) {

@@ -115,7 +115,6 @@
     [EMClientWrapper.shared.groupManagerWrapper didJoinGroup:_group inviter:@"inviter" message:@"message"];
     [EMClientWrapper.shared.groupManagerWrapper didLeaveGroup:_group reason: EMGroupLeaveReasonDestroyed];
     [EMClientWrapper.shared.groupManagerWrapper didLeaveGroup:_group reason: EMGroupLeaveReasonBeRemoved];
-    [EMClientWrapper.shared.groupManagerWrapper didLeaveGroup:_group reason: EMGroupLeaveReasonUserLeave];
     [EMClientWrapper.shared.groupManagerWrapper joinGroupRequestDidReceive:_group user:@"user" reason:@"reason"];
     [EMClientWrapper.shared.groupManagerWrapper joinGroupRequestDidDecline:_group.groupId reason: @"reason"];
     [EMClientWrapper.shared.groupManagerWrapper joinGroupRequestDidApprove:_group];

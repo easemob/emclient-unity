@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 public class EMCWrapper {
     int iType = 0;
+    // 用于保持callback指针，初始化时c++将自己listener的指针传过来放到java层保存，当需要是从java层取。
     long nativeListener = 0;
     static EMCWrapper cWrapper;
 
@@ -28,7 +29,6 @@ public class EMCWrapper {
     }
 
     public void nativeCall(String manager, String method, String jsonString, String cid) throws JSONException{
-        System.out.println("java: nativeCall: manager:" + manager + " method:" + method + " jsonString:" + jsonString + " cid:" + cid);
         wrapper.callSDKApi(manager, method, jsonString, new EMWrapperCallback(){
             @Override
             public void onSuccess(Object obj){
@@ -124,8 +124,6 @@ public class EMCWrapper {
                 }
             }
         });
-
-        System.out.println("java: nativeGetReturn" + str + " cid:" + cid);
 
         return str;
     }
