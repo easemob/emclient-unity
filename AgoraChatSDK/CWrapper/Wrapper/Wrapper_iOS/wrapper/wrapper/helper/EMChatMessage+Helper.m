@@ -62,7 +62,7 @@
         NSArray *keys = attrDict.allKeys;
         for (NSString *key in keys) {
             NSDictionary *valueDict = attrDict[key];
-            NSString *type = valueDict[@"key"];
+            NSString *type = valueDict[@"type"];
             NSString *value = valueDict[@"value"];
             if ([type isEqualToString:@"b"]) {
                 if ([value.lowercaseString isEqualToString:@"false"]) {
@@ -136,7 +136,7 @@
                     }
                 }
             }else if([value isKindOfClass:[NSString class]]) {
-                dict[key] = value;
+                dict[key] = @{@"type":@"str",@"value":value};;
             }
         }
         ret[@"attr"] = dict;
