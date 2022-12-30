@@ -55,7 +55,35 @@
     // msg.chatThread = [EMChatThread forJson:aJson[@"thread"]];
 //    msg.onlineState =
     msg.isChatThreadMessage = [aJson[@"isThread"] boolValue];
-    msg.ext = aJson[@"attr"];
+    NSMutableDictionary *extDict = nil;
+    if (aJson[@"attr"]) {
+        extDict = [NSMutableDictionary dictionary];
+        NSDictionary *attrDict = aJson[@"attr"];
+        NSArray *keys = attrDict.allKeys;
+        for (NSString *key in keys) {
+            NSDictionary *valueDict = attrDict[key];
+            NSString *type = valueDict[@"key"];
+            NSString *value = valueDict[@"value"];
+            if ([type isEqualToString:@"b"]) {
+                if ([value.lowercaseString isEqualToString:@"false"]) {
+                    extDict[key] = @(NO);
+                }else {
+                    extDict[key] = @(YES);
+                }
+            }else if ([type isEqualToString:@"i"]) {
+                extDict[key] = @([value intValue]);
+            }else if ([type isEqualToString:@"l"]) {
+                extDict[key] = @([value longLongValue]);
+            }else if ([type isEqualToString:@"f"]) {
+                extDict[key] = @([value floatValue]);
+            }else if ([type isEqualToString:@"d"]) {
+                extDict[key] = @([value doubleValue]);
+            }else if ([type isEqualToString:@"str"]) {
+                extDict[key] = value;
+            }
+        }
+    }
+    msg.ext = extDict;
     return msg;
 }
 
@@ -72,7 +100,6 @@
     ret[@"isNeedGroupAck"] = @(self.isNeedGroupAck);
     ret[@"serverTime"] = @(self.timestamp);
     ret[@"groupAckCount"] = @(self.groupAckCount);
-    ret[@"attr"] = self.ext;
     ret[@"localTime"] = @(self.localTime);
     ret[@"status"] = @([self statusToInt:self.status]);
     ret[@"chatType"] = @([EMChatMessage chatTypeToInt:self.chatType]);
@@ -80,7 +107,40 @@
     ret[@"direction"] = self.direction == EMMessageDirectionSend ? @(0) : @(1);
     ret[@"body"] = [self.body toJson];
     ret[@"messageOnlineState"] = @(self.onlineState);
-    
+    if (self.ext) {
+        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        for (NSString *key in self.ext.allKeys) {
+            id value = self.ext[key];
+            if ([value isKindOfClass:[NSNumber class]]) {
+                const char* objCType = [((NSNumber*)value) objCType];
+                if (strcmp(objCType, @encode(float)) == 0)
+                {
+                    dict[key] = @{@"type":@"f", @"value": value};
+                }
+                else if (strcmp(objCType, @encode(double)) == 0)
+                {
+                    dict[key] = @{@"type":@"d",@"value":value};
+                }
+                else if (strcmp(objCType, @encode(int)) == 0)
+                {
+                    dict[key] = @{@"type":@"i",@"value":value};
+                }
+                else if (strcmp(objCType, @encode(long)) == 0)
+                {
+                    dict[key] = @{@"type":@"l",@"value":value};
+                }else {
+                    if ([value boolValue] == YES) {
+                        dict[key] = @{@"type":@"b",@"value":@"True"};
+                    }else {
+                        dict[key] = @{@"type":@"b",@"value":@"False"};
+                    }
+                }
+            }else if([value isKindOfClass:[NSString class]]) {
+                dict[key] = value;
+            }
+        }
+        ret[@"attr"] = dict;
+    }
     return ret;
 }
 

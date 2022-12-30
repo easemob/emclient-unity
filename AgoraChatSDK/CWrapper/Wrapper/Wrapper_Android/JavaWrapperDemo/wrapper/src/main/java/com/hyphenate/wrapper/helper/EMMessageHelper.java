@@ -164,20 +164,19 @@ public class EMMessageHelper {
                 if (valueType.equals("b")) {
                     if (value.equalsIgnoreCase("false")) {
                         message.setAttribute(key, false);
-                    }else {
+                    } else {
                         message.setAttribute(key, true);
                     }
-                }else if (valueType.equals("int64")) {
+                } else if (valueType.equals("l")) {
                     message.setAttribute(key, Long.valueOf(value));
-                }else if (valueType.equals("f")) {
+                } else if (valueType.equals("f")) {
                     message.setAttribute(key, Float.valueOf(value));
-                }else if (valueType.equals("d")) {
+                } else if (valueType.equals("d")) {
                     message.setAttribute(key, Double.valueOf(value));
-                }else if (valueType.equals("str")) {
-                    message.setAttribute(key, value);
-                }
-                else {
+                } else if (valueType.equals("i")) {
                     message.setAttribute(key,Integer.valueOf(value));
+                } else if (valueType.equals("str")) {
+                    message.setAttribute(key, value);
                 }
             }
         }
@@ -251,7 +250,7 @@ public class EMMessageHelper {
                     js.put("type", "d");
                     js.put("value", value);
                 }else if (value instanceof Long) {
-                    js.put("type", "int64");
+                    js.put("type", "l");
                     js.put("value", value);
                 }else if (value instanceof Boolean) {
                     js.put("type", "b");
