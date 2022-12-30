@@ -24,6 +24,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     private Button getConversationBtn;
     private Button loadAllConverstaionsBtn;
     private Button downLoadAttachmentBtn;
+    private Button downLoadThumbAttachmentBtn;
     private Button fetchHistoryMessagesBtn;
     private Button getConversationsFromServerBtn;
     private Button getUnreadMessageCountBtn;
@@ -60,6 +61,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         getConversationBtn = transform.Find("Scroll View/Viewport/Content/GetConversationBtn").GetComponent<Button>();
         loadAllConverstaionsBtn = transform.Find("Scroll View/Viewport/Content/LoadAllConverstaionsBtn").GetComponent<Button>();
         downLoadAttachmentBtn = transform.Find("Scroll View/Viewport/Content/DownLoadAttachmentBtn").GetComponent<Button>();
+        downLoadThumbAttachmentBtn = transform.Find("Scroll View/Viewport/Content/DownLoadThumbAttachmentBtn").GetComponent<Button>();
         fetchHistoryMessagesBtn = transform.Find("Scroll View/Viewport/Content/FetchHistoryMessagesBtn").GetComponent<Button>();
         getConversationsFromServerBtn = transform.Find("Scroll View/Viewport/Content/GetConversationsFromServerBtn").GetComponent<Button>();
         getUnreadMessageCountBtn = transform.Find("Scroll View/Viewport/Content/GetUnreadMessageCountBtn").GetComponent<Button>();
@@ -87,6 +89,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         getConversationBtn.onClick.AddListener(GetConversationBtnAction);
         loadAllConverstaionsBtn.onClick.AddListener(LoadAllConverstaionsBtnAction);
         downLoadAttachmentBtn.onClick.AddListener(DownLoadAttachmentBtnAction);
+        downLoadThumbAttachmentBtn.onClick.AddListener(DownLoadThumbAttachmentBtnAction);
         fetchHistoryMessagesBtn.onClick.AddListener(FetchHistoryMessagesBtnAction);
         getConversationsFromServerBtn.onClick.AddListener(GetConversationsFromServerBtnAction);
         getUnreadMessageCountBtn.onClick.AddListener(GetUnreadMessageCountBtnAction);
@@ -451,64 +454,52 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     }
     void DownLoadAttachmentBtnAction()
     {
-        // Download Attachment
-        /*InputAlertConfig config = new InputAlertConfig((dict) => {
-
-            SDKClient.Instance.ChatManager.DownloadAttachment(dict["msgId"], new CallBack(
-                onSuccess: () => {
-                    UIManager.TitleAlert(transform, "下载附件成功", "完成");
-
-                    //Message msg = SDKClient.Instance.ChatManager.LoadMessage("Message ID");
-                    //if (msg != null)
-                    //{
-                    //    if (msg.Body.Type == ChatSDK.MessageBodyType.VIDEO) {
-                    //        ChatSDK.MessageBody.VideoBody vb = (ChatSDK.MessageBody.VideoBody)msg.Body;
-
-                           //从本地获取短视频文件路径
-                    //        string imgLocalUri = vb.LocalPath;
-                    //    }
-
-                    //}
-                    // else
-                    //{
-                    //     Debug.Log($"未找到消息");
-                    //}
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string msgId = dict["msgId"];
+            SDKClient.Instance.ChatManager.DownloadAttachment(msgId, new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
                 },
-                onProgress: (progress) => {
-                    UIManager.TitleAlert(transform, "下载附件进度", progress.ToString());
-                },
-                onError: (code, desc) => {
+                onError: (code, desc) =>
+                {
                     UIManager.ErrorAlert(transform, code, desc);
+                },
+                onProgress: (progress) =>
+                {
+                    Debug.Log($"download progress: {progress}");
                 }
             ));
-
         });
-        
-        
-        // Download Attatchment
-        InputAlertConfig config = new InputAlertConfig((dict) => {
-
-            SDKClient.Instance.ChatManager.DownloadThumbnail(dict["msgId"], new CallBack(
-                onSuccess: () => {
-                    UIManager.TitleAlert(transform, "下载缩略图成功", "完成"); ;
-                },
-                onProgress: (progress) => {
-                    UIManager.TitleAlert(transform, "下载缩略图进度", progress.ToString());
-                },
-                onError: (code, desc) => {
-                    UIManager.ErrorAlert(transform, code, desc);
-                }
-            ));
-
-        });
-        */
-
-        //config.AddField("msgId");
-        //UIManager.DefaultInputAlert(transform, config);
-
-        UIManager.UnfinishedAlert(transform);
-        Debug.Log("DownLoadAttachmentBtnAction");
+        config.AddField("msgId");
+        UIManager.DefaultInputAlert(transform, config);
     }
+
+    void DownLoadThumbAttachmentBtnAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string msgId = dict["msgId"];
+            SDKClient.Instance.ChatManager.DownloadThumbnail(msgId, new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                },
+                onProgress: (progress) =>
+                {
+                    Debug.Log($"thumb progress: {progress}");
+                }
+            ));
+        });
+        config.AddField("msgId");
+        UIManager.DefaultInputAlert(transform, config);
+    }
+
     void FetchHistoryMessagesBtnAction()
     {
         InputAlertConfig config = new InputAlertConfig((dict) =>
