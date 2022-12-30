@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using AgoraChat;
 using AgoraChat.MessageBody;
+using AgoraChat.InternalSpace;
 
 namespace WinSDKTest
 {
@@ -2566,7 +2567,7 @@ namespace WinSDKTest
 
         public void CallFunc_IClient_RunDelegateTester()
         {
-            SDKClient.Instance.DelegateTester();
+            MyTest.DelegateTester();
         }
 
         public void CallFunc_IClient()
@@ -3118,12 +3119,10 @@ namespace WinSDKTest
             msg.Attributes = new Dictionary<string, AttributeValue>();
             Message.SetAttribute(msg.Attributes, "bool", true, AttributeValueType.BOOL);
             Message.SetAttribute(msg.Attributes, "int", 123456, AttributeValueType.INT32);
-            Message.SetAttribute(msg.Attributes, "uint", 1234567, AttributeValueType.UINT32);
             Message.SetAttribute(msg.Attributes, "int64", 123456789012345, AttributeValueType.INT64);
             Message.SetAttribute(msg.Attributes, "float", 1.23, AttributeValueType.FLOAT);
             Message.SetAttribute(msg.Attributes, "double", 1.23456, AttributeValueType.DOUBLE);
             Message.SetAttribute(msg.Attributes, "string", "hello world", AttributeValueType.STRING);
-            Message.SetAttribute(msg.Attributes, "jstring", "{\"key\":\"value\"}", AttributeValueType.JSONSTRING);
 
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
                 onSuccess: () => {

@@ -1389,5 +1389,6 @@ namespace sdk_wrapper {
             gGroupManagerListener->onDisabledStateChangedFromGroup(groupPtr, true);
             gGroupManagerListener->onUpdateSpecificationFromGroup(groupPtr);
         }
+        return nullptr;
     }
 }

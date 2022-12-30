@@ -14,14 +14,8 @@ namespace AgoraChat
         private AttributeValueType VType;
 
         private bool BoolV;
-        private sbyte CharV;
-        private char UCharV;
-        private short ShortV;
-        private ushort UShortV;
         private int Int32V;
-        private uint UInt32V;
         private long Int64V;
-        private ulong UInt64V;
         private float FloatV;
         private double DoubleV;
         private string StringV;
@@ -39,10 +33,6 @@ namespace AgoraChat
             else if (type == AttributeValueType.INT32)
             {
                 return Of((int)value);
-            }
-            else if (type == AttributeValueType.UINT32)
-            {
-                return Of(Convert.ToUInt32(value));
             }
             else if (type == AttributeValueType.INT64)
             {
@@ -81,16 +71,6 @@ namespace AgoraChat
             {
                 VType = AttributeValueType.INT32,
                 Int32V = value
-            };
-            return result;
-        }
-
-        internal static AttributeValue Of(in uint value)
-        {
-            var result = new AttributeValue
-            {
-                VType = AttributeValueType.UINT32,
-                UInt32V = value
             };
             return result;
         }
@@ -157,10 +137,6 @@ namespace AgoraChat
             {
                 return Int32V;
             }
-            else if (type == AttributeValueType.UINT32)
-            {
-                return UInt32V;
-            }
             else if (type == AttributeValueType.INT64)
             {
                 return Int64V;
@@ -205,10 +181,6 @@ namespace AgoraChat
                 case AttributeValueType.INT32:
                     _type = "i";
                     _value = Int32V.ToString();
-                    break;
-                case AttributeValueType.UINT32:
-                    _type = "ui";
-                    _value = UInt32V.ToString();
                     break;
                 case AttributeValueType.INT64:
                     _type = "l";
@@ -255,10 +227,6 @@ namespace AgoraChat
                 case "i":
                     VType = AttributeValueType.INT32;
                     Int32V = int.Parse(value);
-                    break;
-                case "ui":
-                    VType = AttributeValueType.UINT32;
-                    UInt32V = uint.Parse(value);
                     break;
                 case "l":
                     VType = AttributeValueType.INT64;

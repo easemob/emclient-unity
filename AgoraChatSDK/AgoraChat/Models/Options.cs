@@ -294,6 +294,7 @@ namespace AgoraChat
             AppKey = appKey;
         }
 
+        /*
         // MeiZu
         private string mZAppId = "", mZAppKey = "";
         private bool enableMZPush = false;
@@ -318,7 +319,7 @@ namespace AgoraChat
 
         // HuaWei
         private bool enableHWPush = false;
-
+        */
 
         internal Options() { }
         internal Options(bool is_json, string json) : base(json) { }

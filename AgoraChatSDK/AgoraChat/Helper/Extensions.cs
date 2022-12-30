@@ -758,6 +758,14 @@ namespace AgoraChat
 
     namespace InternalSpace
     {
+        public static class MyTest
+        {
+            public static void DelegateTester()
+            {
+                SDKClient.Instance.DelegateTester();
+            }
+        }
+
         public static class MyJson
         {
             public static string ToJson(this BaseModel bs)
