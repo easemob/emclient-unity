@@ -2,6 +2,7 @@ package com.hyphenate.wrapper.helper;
 
 import com.hyphenate.chat.EMMessageReaction;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,7 +13,11 @@ public class EMMessageReactionHelper {
         data.put("reaction", reaction.getReaction());
         data.put("count", reaction.getUserCount());
         data.put("isAddedBySelf", reaction.isAddedBySelf());
-        data.put("userList", reaction.getUserList());
+        JSONArray jsonArray = new JSONArray();
+        for (String userId: reaction.getUserList()) {
+            jsonArray.put(userId);
+        }
+        data.put("userList", jsonArray);
         return data;
     }
 }

@@ -559,7 +559,8 @@ public class GroupManagerTest : MonoBehaviour
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
             string fileId = dict["fileId"];
-            string savePath = dict["savePath"];
+            string savePath = Application.temporaryCachePath + "/" + fileId;
+            Debug.Log($"savePath: {savePath}");
             SDKClient.Instance.GroupManager.DownloadGroupSharedFile(currentGroupId, fileId, savePath, new CallBack(
                 onSuccess: () =>
                 {
@@ -577,7 +578,7 @@ public class GroupManagerTest : MonoBehaviour
             ));
         });
         config.AddField("fileId");
-        config.AddField("savePath");
+        //config.AddField("savePath");
         UIManager.DefaultInputAlert(transform, config);
     }
 
