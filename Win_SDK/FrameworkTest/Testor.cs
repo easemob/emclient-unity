@@ -5382,6 +5382,10 @@ namespace WinSDKTest
                 {
                     Console.WriteLine($"DownloadGroupSharedFile success.");
                 },
+                onProgress: (progress) => 
+                {
+                    Console.WriteLine($"DownloadGroupSharedFile progress:{progress}.");
+                },
                 onError: (code, desc) =>
                 {
                     Console.WriteLine($"DownloadGroupSharedFile failed, code:{code}, desc:{desc}");
@@ -6067,7 +6071,7 @@ namespace WinSDKTest
             string groupId = "";
             string memberId1 = "";
             string memberId2 = "";
-            string memberId3 = "";
+            //string memberId3 = "";
 
             if (_groupId.Length > 0)
                 groupId = _groupId;
@@ -6084,15 +6088,15 @@ namespace WinSDKTest
             else
                 memberId2 = GetParamValueFromContext(2);
 
-            if (_memberId3.Length > 0)
-                memberId3 = _memberId3;
-            else
-                memberId2 = GetParamValueFromContext(3);
+            //if (_memberId3.Length > 0)
+           //     memberId3 = _memberId3;
+           // else
+           //     memberId3 = GetParamValueFromContext(3);
 
             List<string> members = new List<string>();
             members.Add(memberId1);
             members.Add(memberId2);
-            members.Add(memberId3);
+            //members.Add(memberId3);
 
             SDKClient.Instance.GroupManager.UnBlockGroupMembers(groupId, members, new CallBack(
                 onSuccess: () =>
