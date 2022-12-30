@@ -14,14 +14,8 @@ namespace AgoraChat
         private AttributeValueType VType;
 
         private bool BoolV;
-        private sbyte CharV;
-        private char UCharV;
-        private short ShortV;
-        private ushort UShortV;
         private int Int32V;
-        private uint UInt32V;
         private long Int64V;
-        private ulong UInt64V;
         private float FloatV;
         private double DoubleV;
         private string StringV;
@@ -77,17 +71,6 @@ namespace AgoraChat
             {
                 VType = AttributeValueType.INT32,
                 Int32V = value
-            };
-            return result;
-        }
-
-        [Obsolete]
-        internal static AttributeValue Of(in uint value)
-        {
-            var result = new AttributeValue
-            {
-                VType = AttributeValueType.UINT32,
-                UInt32V = value
             };
             return result;
         }

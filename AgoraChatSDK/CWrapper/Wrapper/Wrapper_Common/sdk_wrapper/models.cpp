@@ -1399,53 +1399,17 @@ namespace sdk_wrapper
             else
                 writer.String("False");
         }
-        else if (attribute->is<char>()) {
-            writer.Key("type");
-            writer.String("c");
-            writer.Key("value");
-            writer.String(convert2String<char>(attribute->value<char>()).c_str());
-        }
-        else if (attribute->is<unsigned char>()) {
-            writer.Key("type");
-            writer.String("uc");
-            writer.Key("value");
-            writer.String(convert2String<unsigned char>(attribute->value<unsigned char>()).c_str());
-        }
-        else if (attribute->is<short>()) {
-            writer.Key("type");
-            writer.String("s");
-            writer.Key("value");
-            writer.String(convert2String<short>(attribute->value<short>()).c_str());
-        }
-        else if (attribute->is<unsigned short>()) {
-            writer.Key("type");
-            writer.String("us");
-            writer.Key("value");
-            writer.String(convert2String<unsigned short>(attribute->value<unsigned short>()).c_str());
-        }
         else if (attribute->is<int32_t>()) {
             writer.Key("type");
             writer.String("i");
             writer.Key("value");
             writer.String(convert2String<int32_t>(attribute->value<int32_t>()).c_str());
         }
-        else if (attribute->is<uint32_t>()) {
-            writer.Key("type");
-            writer.String("ui");
-            writer.Key("value");
-            writer.String(convert2String<uint32_t>(attribute->value<uint32_t>()).c_str());
-        }
         else if (attribute->is<int64_t>()) {
             writer.Key("type");
             writer.String("l");
             writer.Key("value");
             writer.String(convert2String<int64_t>(attribute->value<int64_t>()).c_str());
-        }
-        else if (attribute->is<uint64_t>()) {
-            writer.Key("type");
-            writer.String("ul");
-            writer.Key("value");
-            writer.String(convert2String<uint64_t>(attribute->value<uint64_t>()).c_str());
         }
         else if (attribute->is<float>()) {
             writer.Key("type");
@@ -1522,14 +1486,14 @@ namespace sdk_wrapper
     attrs may looks like(most quote symbol are removed, and all items in {} are string):
     {
        name1: {type:b, value:true},
-       name2: {type:c, value:11},
-       name3: {type:uc, value:a},
-       name4: {type:s, value:-123},
-       name5: {type:us, value:123},
+       name2: {type:c, value:11}, --- not support any more!!
+       name3: {type:uc, value:a}, --- not support any more!!
+       name4: {type:s, value:-123}, --- not support any more!!
+       name5: {type:us, value:123}, --- not support any more!!
        name6: {type:i, value:-456},
-       name7: {type:ui, value:456},
+       name7: {type:ui, value:456}, --- not support any more!!
        name8: {type:l, value:-123456},
-       name9: {type:ul, value:123456},
+       name9: {type:ul, value:123456}, --- not support any more!!
        name10:{type:f, value:1.23},
        name11:{type:d, value:1.23456},
        name12:{type:str, value:"a string"},
@@ -1594,8 +1558,8 @@ namespace sdk_wrapper
             msg->setAttribute(key, i);
         }
         else if (type.compare("ui") == 0) {
-            uint32_t ui = convertFromString<uint32_t>(v);
-            msg->setAttribute(key, ui);
+            //uint32_t ui = convertFromString<uint32_t>(v);
+            //msg->setAttribute(key, ui);
         }
         else if (type.compare("l") == 0) {
             int64_t l = convertFromString<int64_t>(v);

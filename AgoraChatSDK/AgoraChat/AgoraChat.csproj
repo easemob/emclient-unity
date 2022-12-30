@@ -26,6 +26,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
+    <DefineConstants>_WIN32</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
