@@ -3156,6 +3156,9 @@ namespace WinSDKTest
 
             AgoraChat.MessageBody.ImageBody ib = (AgoraChat.MessageBody.ImageBody)msg.Body;
             //ib.ThumbnaiDownStatus = DownLoadStatus.PENDING;
+            ib.FileSize = 255;
+            ib.Width = 123;
+            ib.Height = 456;
 
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
                 onSuccess: () => {
@@ -3312,6 +3315,11 @@ namespace WinSDKTest
                 custom = GetParamValueFromContext(1);
 
             Message msg = Message.CreateCustomSendMessage(to, custom);
+            AgoraChat.MessageBody.CustomBody tb = (AgoraChat.MessageBody.CustomBody)msg.Body;
+            tb.CustomEvent = "CustomEvent";
+            tb.CustomParams = new Dictionary<string, string>();
+            tb.CustomParams["key1"] = "value1";
+            tb.CustomParams["key2"] = "value2";
 
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
                 onSuccess: () => {

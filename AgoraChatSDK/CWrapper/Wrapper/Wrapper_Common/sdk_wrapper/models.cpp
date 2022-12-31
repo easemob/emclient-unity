@@ -563,7 +563,7 @@ namespace sdk_wrapper
     {
         EMCustomMessageBody::EMCustomExts exts;
 
-        if (!jnode.IsArray()) return exts;
+        //if (!jnode.IsArray()) return exts;
 
         for (auto iter = jnode.MemberBegin(); iter != jnode.MemberEnd(); ++iter) {
 
@@ -845,12 +845,12 @@ namespace sdk_wrapper
         case EMMessageBody::LOCATION:
         {
             double latitude = 0;
-            if (body.HasMember("latitude") && body["latitude"].IsDouble()) {
+            if (body.HasMember("latitude") && body["latitude"].IsNumber()) {
                 latitude = body["latitude"].GetDouble();
             }
 
             double longitude = 0;
-            if (body.HasMember("longitude") && body["longitude"].IsDouble()) {
+            if (body.HasMember("longitude") && body["longitude"].IsNumber()) {
                 longitude = body["longitude"].GetDouble();
             }
 
@@ -981,11 +981,11 @@ namespace sdk_wrapper
             size.mWidth = 0;
             size.mHeight = 0;
 
-            if (body.HasMember("height") && body["height"].IsDouble()) {
+            if (body.HasMember("height") && body["height"].IsNumber()) {
                 size.mHeight = body["height"].GetDouble();
             }
 
-            if (body.HasMember("width") && body["width"].IsDouble()) {
+            if (body.HasMember("width") && body["width"].IsNumber()) {
                 size.mWidth = body["width"].GetDouble();
             }
 
@@ -1099,11 +1099,11 @@ namespace sdk_wrapper
             size.mWidth = 0;
             size.mHeight = 0;
 
-            if (body.HasMember("height") && body["height"].IsDouble()) {
+            if (body.HasMember("height") && body["height"].IsNumber()) {
                 size.mHeight = body["height"].GetDouble();
             }
 
-            if (body.HasMember("width") && body["width"].IsDouble()) {
+            if (body.HasMember("width") && body["width"].IsNumber()) {
                 size.mWidth = body["width"].GetDouble();
             }
 
@@ -1126,7 +1126,7 @@ namespace sdk_wrapper
 
             EMCustomMessageBodyPtr ptr = EMCustomMessageBodyPtr(new EMCustomMessageBody(event));
 
-            if (body.HasMember("params") && body["params"].IsString()) {
+            if (body.HasMember("params") && body["params"].IsObject()) {
                 EMCustomMessageBody::EMCustomExts exts = FromJsonObjectToCustomExts(body["params"]);
                 ptr->setExts(exts);
             }
