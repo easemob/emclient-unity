@@ -124,7 +124,13 @@ public class EMMessageBodyHelper {
         if (body == null) return null;
         JSONObject data = new JSONObject();
         data.put("event", body.event());
-        data.put("params", body.getParams());
+        if (body.getParams() != null) {
+            JSONObject jsonObject = new JSONObject();
+            for (Map.Entry<String, String> entry : body.getParams().entrySet()) {
+                jsonObject.put(entry.getKey(), entry.getValue());
+            }
+            data.put("params", jsonObject);
+        }
         return data;
     }
 
