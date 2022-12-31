@@ -926,8 +926,18 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         {
             if (msg.Body.Type == MessageBodyType.TXT)
             {
-                AgoraChat.MessageBody.TextBody tb = (AgoraChat.MessageBody.TextBody)msg.Body;
+                TextBody tb = msg.Body as TextBody;
                 Debug.Log($"text message body: {tb.Text}");
+            }
+            else if (msg.Body.Type == MessageBodyType.CUSTOM)
+            {
+                CustomBody cb = msg.Body as CustomBody;
+                List<string> arys = new List<string>();
+                foreach (string s in cb.CustomParams.Keys)
+                {
+                    arys.Add($"{s}: {cb.CustomParams[s]}");
+                }
+                Debug.Log($"custom message body event: {cb.CustomEvent}, params: {string.Join(",", arys)} ");
             }
             list.Add(msg.MsgId);
             foreach (string key in msg.Attributes.Keys)

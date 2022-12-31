@@ -431,21 +431,6 @@
 
 + (EMCustomMessageBody *)fromJson:(NSDictionary *)aJson {
     NSDictionary *dic = aJson[@"params"];
-    if ([dic isKindOfClass:[NSNull class]]) {
-        dic = nil;
-    }else if ([dic isKindOfClass:[NSString class]]) {
-        NSError *err = nil;
-        NSData *jsonData = [(NSString *)dic dataUsingEncoding:NSUTF8StringEncoding];
-        id obj = [NSJSONSerialization JSONObjectWithData:jsonData
-                                                 options:NSJSONReadingMutableContainers
-                                                   error:&err];
-        if (err == nil && obj != nil) {
-            dic = (NSDictionary *)obj;
-        }else {
-            dic = nil;
-        }
-    }
-    
     EMCustomMessageBody *ret = [[EMCustomMessageBody alloc] initWithEvent:aJson[@"event"]
                                                                 customExt:dic];
     return ret;
