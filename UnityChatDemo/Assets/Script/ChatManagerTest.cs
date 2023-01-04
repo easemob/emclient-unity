@@ -24,7 +24,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     private Button getConversationBtn;
     private Button loadAllConverstaionsBtn;
     private Button downLoadAttachmentBtn;
-    private Button downLoadThumbAttachmentBtn;
+    //private Button downLoadThumbAttachmentBtn;
     private Button fetchHistoryMessagesBtn;
     private Button getConversationsFromServerBtn;
     private Button getUnreadMessageCountBtn;
@@ -61,7 +61,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         getConversationBtn = transform.Find("Scroll View/Viewport/Content/GetConversationBtn").GetComponent<Button>();
         loadAllConverstaionsBtn = transform.Find("Scroll View/Viewport/Content/LoadAllConverstaionsBtn").GetComponent<Button>();
         downLoadAttachmentBtn = transform.Find("Scroll View/Viewport/Content/DownLoadAttachmentBtn").GetComponent<Button>();
-        downLoadThumbAttachmentBtn = transform.Find("Scroll View/Viewport/Content/DownLoadThumbAttachmentBtn").GetComponent<Button>();
+        //downLoadThumbAttachmentBtn = transform.Find("Scroll View/Viewport/Content/DownLoadThumbAttachmentBtn").GetComponent<Button>();
         fetchHistoryMessagesBtn = transform.Find("Scroll View/Viewport/Content/FetchHistoryMessagesBtn").GetComponent<Button>();
         getConversationsFromServerBtn = transform.Find("Scroll View/Viewport/Content/GetConversationsFromServerBtn").GetComponent<Button>();
         getUnreadMessageCountBtn = transform.Find("Scroll View/Viewport/Content/GetUnreadMessageCountBtn").GetComponent<Button>();
@@ -89,7 +89,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         getConversationBtn.onClick.AddListener(GetConversationBtnAction);
         loadAllConverstaionsBtn.onClick.AddListener(LoadAllConverstaionsBtnAction);
         downLoadAttachmentBtn.onClick.AddListener(DownLoadAttachmentBtnAction);
-        downLoadThumbAttachmentBtn.onClick.AddListener(DownLoadThumbAttachmentBtnAction);
+        //downLoadThumbAttachmentBtn.onClick.AddListener(DownLoadThumbAttachmentBtnAction);
         fetchHistoryMessagesBtn.onClick.AddListener(FetchHistoryMessagesBtnAction);
         getConversationsFromServerBtn.onClick.AddListener(GetConversationsFromServerBtnAction);
         getUnreadMessageCountBtn.onClick.AddListener(GetUnreadMessageCountBtnAction);

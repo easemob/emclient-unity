@@ -3,9 +3,9 @@
 
 NativeListenerEvent gCallback = nullptr;
 
-HYPHENATE_API void AGORA_CALL Init(int sdkType, NativeListenerEvent cb) {
+HYPHENATE_API void AGORA_CALL Init(int sdkType, int compileType, NativeListenerEvent cb) {
     gCallback = cb;
-    Init_Common(sdkType, (void*)gCallback);
+    Init_Common(sdkType, compileType, (void*)gCallback);
 }
 
 HYPHENATE_API void AGORA_CALL UnInit() {

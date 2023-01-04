@@ -41,7 +41,7 @@ namespace AgoraChat
 #endif
 
         [DllImport(MyLibName)]
-        internal static extern void Init(int type, NativeListenerEvent listener);
+        internal static extern void Init(int type, int compileType, NativeListenerEvent listener);
 
         [DllImport(MyLibName)]
         internal static extern void UnInit();
@@ -49,13 +49,9 @@ namespace AgoraChat
         [DllImport(MyLibName)]
         private extern static void _NativeCall(string manager, string method, [In, MarshalAs(UnmanagedType.LPTStr)] string jsonString = null, string callbackId = null);
 
-
         [DllImport(MyLibName)]
-#if _WIN32
         private extern static IntPtr _NativeGet(string manager, string method, [In, MarshalAs(UnmanagedType.LPTStr)] string jsonString = null, string callbackId = null);
-#else
-        private extern static IntPtr _NativeGet(string manager, string method, [In, MarshalAs(UnmanagedType.LPTStr)] string jsonString = null, string callbackId = null);
-#endif
+
         #endregion engine callbacks
     }
 }

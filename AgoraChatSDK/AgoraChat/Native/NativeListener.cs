@@ -1,4 +1,5 @@
 using AgoraChat.SimpleJSON;
+using System;
 using System.Runtime.InteropServices;
 
 namespace AgoraChat
@@ -38,6 +39,9 @@ namespace AgoraChat
         internal CallbackManager callbackManager;
 
         internal CallbackQueue_Worker queue_worker;
+
+        internal int COMPILE_TYPE_MONO = 0;
+        internal int COMPILE_TYPE_IL2CPP = 1;
 
         internal NativeListener()
         {
@@ -101,14 +105,18 @@ namespace AgoraChat
             };
         }
 
-#if UNITY_IPHONE
-        [AOT.MonoPInvokeCallback(typeof(NativeListenerEvent))]
+        internal class MonoPInvokeCallbackAttribute : Attribute
+        {
+            public MonoPInvokeCallbackAttribute(Type t) { }
+        }
+
+        [MonoPInvokeCallback(typeof(NativeListenerEvent))]
         public static void OnRunCallback(string listener, string method, string jsonString)
         {
             LogPrinter.Log($"OnRunCallback listener: {listener},  method: {method}, jsonString: {jsonString}");
             SDKClient.Instance._clientImpl.nativeListener.nativeListenerEvent?.Invoke(listener, method, jsonString);
         }
-#endif
+
         ~NativeListener()
         {
             queue_worker.ClearQueue();
@@ -120,11 +128,13 @@ namespace AgoraChat
         {
             LogPrinter.Log($"AddNaitveListener run --- {nativeListenerEvent}");
 
-#if UNITY_IPHONE
-            CWrapperNative.Init(0, OnRunCallback);
+
+#if ENABLE_IL2CPP
+            CWrapperNative.Init(0, COMPILE_TYPE_IL2CPP, OnRunCallback);
 #else
-            CWrapperNative.Init(0, nativeListenerEvent);
+            CWrapperNative.Init(0, COMPILE_TYPE_MONO, OnRunCallback);
 #endif
+
             LogPrinter.Log($"AddNaitveListener end --- {nativeListenerEvent}");
         }
 

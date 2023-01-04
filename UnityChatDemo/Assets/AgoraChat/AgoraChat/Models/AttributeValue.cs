@@ -24,7 +24,7 @@ namespace AgoraChat
         [Obsolete]
         private string JsonStringV;
 
-        internal static AttributeValue Of(in object value, AttributeValueType type)
+        public static AttributeValue Of(in object value, AttributeValueType type)
         {
             if (type == AttributeValueType.BOOL)
             {
