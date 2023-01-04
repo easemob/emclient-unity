@@ -589,6 +589,7 @@ namespace AgoraChat
          *  \~english
          *  Unsigned 32-bit int.
          */
+        [Obsolete]
         UINT32,
 
         /**

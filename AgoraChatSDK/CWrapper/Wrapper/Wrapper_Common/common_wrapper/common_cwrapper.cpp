@@ -18,6 +18,10 @@ typedef std::map<std::string, FUNC_MAP>  MANAGER_MAP;   // manager name -> funct
 
 MANAGER_MAP manager_map;
 
+const int COMPILE_TYPE_MONO = 0;
+const int COMPILE_TYPE_IL2CPP = 1;
+int compile_type = 0;
+
 void InitManagerMap()
 {
 	FUNC_MAP func_map_client;
@@ -271,15 +275,14 @@ bool CheckClientHandle()
 	return true;
 }
 
-COMMON_WRAPPER_API void COMMON_WRAPPER_CALL Init_Common(int sdkType, void* callback_handle)
+COMMON_WRAPPER_API void COMMON_WRAPPER_CALL Init_Common(int sdkType, int compileType, void* callback_handle)
 {
-	//gCallback = (NativeListenerEvent)callback_handle;
-	Init_SDKWrapper(sdkType, callback_handle);
+    compile_type = compileType;
+	Init_SDKWrapper(sdkType, compileType, callback_handle);
 }
 
 COMMON_WRAPPER_API void COMMON_WRAPPER_CALL Uninit_Common()
 {
-	//gCallback = nullptr;
 	Uninit_SDKWrapper();
 }
 
@@ -313,6 +316,11 @@ std::string GetUTF8FromUnicode(const char* src)
 		return std::string("");
 
 	std::string dst = std::string(src);
+
+    // For il2cpp compile mode, no need to convert from unicode to utf8
+    if (COMPILE_TYPE_IL2CPP == compile_type) {
+        return dst;
+    }
 
 #ifdef _WIN32
 	int len;

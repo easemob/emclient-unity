@@ -18,7 +18,7 @@
 
 #endif
 
-SDK_WRAPPER_API void SDK_WRAPPER_CALL Init_SDKWrapper(int sdkType, void* callback_handle);
+SDK_WRAPPER_API void SDK_WRAPPER_CALL Init_SDKWrapper(int sdkType, int compileType, void* callback_handle);
 SDK_WRAPPER_API void SDK_WRAPPER_CALL Uninit_SDKWrapper();
 
 // Client =====================================================================
