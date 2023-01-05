@@ -142,7 +142,8 @@ namespace WinSDKTest
             {
                 Console.WriteLine($"----------------------------");
                 Console.WriteLine($"reaction:{it.Rection};count:{it.Count};state:{it.State}");
-                Console.WriteLine("$userList:{TransformTool.JsonObjectFromStringList(it.UserList)}");
+                string str = string.Join(",", it.UserList.ToArray());
+                Console.WriteLine($"userList:{str}");
             }
 
             switch (msg.Body.Type)
