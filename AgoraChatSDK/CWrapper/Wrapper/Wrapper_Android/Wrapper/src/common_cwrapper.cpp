@@ -11,7 +11,7 @@ using namespace std;
 using namespace wrapper_jni;
 
 
-void Init_Common(int sdkType, void* callback) {
+void Init_Common(int sdkType, int compileType, void* callback) {
     wrapper_jni::init_common(sdkType, callback);
 }
 
