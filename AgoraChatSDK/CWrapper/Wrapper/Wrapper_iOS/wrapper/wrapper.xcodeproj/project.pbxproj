@@ -6,6 +6,20 @@
 	objectVersion = 55;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		90520FFB29669DD200072251 /* download_sdk */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 90520FFE29669DD200072251 /* Build configuration list for PBXAggregateTarget "download_sdk" */;
+			buildPhases = (
+				90520FFF29669DD600072251 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = download_sdk;
+			productName = download_sdk;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		90319C812935FC1E000D01BE /* EMMessageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 90319C2A2935FC1E000D01BE /* EMMessageManager.m */; };
 		90319C822935FC1E000D01BE /* EMChatroom+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 90319C2B2935FC1E000D01BE /* EMChatroom+Helper.m */; };
@@ -96,6 +110,16 @@
 		90ED2EB7295C0DDA00601727 /* DelegateTester.h in Headers */ = {isa = PBXBuildFile; fileRef = 90ED2EB5295C0DDA00601727 /* DelegateTester.h */; };
 		90ED2EB8295C0DDA00601727 /* DelegateTester.m in Sources */ = {isa = PBXBuildFile; fileRef = 90ED2EB6295C0DDA00601727 /* DelegateTester.m */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		9052100029669E0500072251 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 90319C162935FBE3000D01BE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 90520FFB29669DD200072251;
+			remoteInfo = download_sdk;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		90319C1F2935FBE3000D01BE /* wrapper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = wrapper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -431,6 +455,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				9052100129669E0500072251 /* PBXTargetDependency */,
 			);
 			name = wrapper;
 			productName = wrapper;
@@ -449,6 +474,9 @@
 					90319C1E2935FBE3000D01BE = {
 						CreatedOnToolsVersion = 13.4.1;
 					};
+					90520FFB29669DD200072251 = {
+						CreatedOnToolsVersion = 14.2;
+					};
 				};
 			};
 			buildConfigurationList = 90319C192935FBE3000D01BE /* Build configuration list for PBXProject "wrapper" */;
@@ -465,6 +493,7 @@
 			projectRoot = "";
 			targets = (
 				90319C1E2935FBE3000D01BE /* wrapper */,
+				90520FFB29669DD200072251 /* download_sdk */,
 			);
 		};
 /* End PBXProject section */
@@ -478,6 +507,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		90520FFF29669DD600072251 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd ..\n${SRCROOT}/../download_ios_sdk.sh\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		90319C1B2935FBE3000D01BE /* Sources */ = {
@@ -529,6 +578,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		9052100129669E0500072251 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 90520FFB29669DD200072251 /* download_sdk */;
+			targetProxy = 9052100029669E0500072251 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		90319C242935FBE3000D01BE /* Debug */ = {
@@ -718,6 +775,22 @@
 			};
 			name = Release;
 		};
+		90520FFC29669DD200072251 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		90520FFD29669DD200072251 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -735,6 +808,15 @@
 			buildConfigurations = (
 				90319C272935FBE3000D01BE /* Debug */,
 				90319C282935FBE3000D01BE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		90520FFE29669DD200072251 /* Build configuration list for PBXAggregateTarget "download_sdk" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				90520FFC29669DD200072251 /* Debug */,
+				90520FFD29669DD200072251 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

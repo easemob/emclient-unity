@@ -6,7 +6,7 @@
 NativeListenerEvent gCallback = nullptr;
 
 
-HYPHENATE_API void Init(int sdkType, void* cb) {
+HYPHENATE_API void Init(int sdkType, int compileType, void* cb) {
     NSLog(@"init run!");
     gCallback = (NativeListenerEvent)cb;
     Init_Common(sdkType, (void *)cb);

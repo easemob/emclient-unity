@@ -156,3 +156,5 @@ UnityChatDemo/Assets/AgoraChat/Plugins
 */Assembly-CSharp-Editor.csproj
 */Assembly-CSharp.csproj
 /**/build_info
+/**/build_*
+/**/*.emlock
