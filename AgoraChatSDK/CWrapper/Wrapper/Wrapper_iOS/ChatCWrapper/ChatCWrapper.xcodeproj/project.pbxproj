@@ -6,6 +6,20 @@
 	objectVersion = 55;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		90520FEF29666C8E00072251 /* download_ios_Sdk */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 90520FF229666C8E00072251 /* Build configuration list for PBXAggregateTarget "download_ios_Sdk" */;
+			buildPhases = (
+				90520FF329666C9F00072251 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = download_ios_Sdk;
+			productName = download_ios_Sdk;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		90319CEC2935FC43000D01BE /* common_cwrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 90319CD62935FC43000D01BE /* common_cwrapper.mm */; };
 		90319CEF2935FC43000D01BE /* ios_gloable.mm in Sources */ = {isa = PBXBuildFile; fileRef = 90319CD92935FC43000D01BE /* ios_gloable.mm */; };
@@ -24,6 +38,16 @@
 		908CE3D3293D93A000348C1A /* NSString+Category.h in Headers */ = {isa = PBXBuildFile; fileRef = 908CE3D1293D93A000348C1A /* NSString+Category.h */; };
 		908CE3D4293D93A000348C1A /* NSString+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 908CE3D2293D93A000348C1A /* NSString+Category.m */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		90520FF429666CF500072251 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 90319C022935FBDA000D01BE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 90520FEF29666C8E00072251;
+			remoteInfo = download_ios_Sdk;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		90319C0B2935FBDA000D01BE /* ChatCWrapper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ChatCWrapper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -156,6 +180,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				90520FF529666CF500072251 /* PBXTargetDependency */,
 			);
 			name = ChatCWrapper;
 			productName = ChatCWrapper;
@@ -174,6 +199,9 @@
 					90319C0A2935FBDA000D01BE = {
 						CreatedOnToolsVersion = 13.4.1;
 					};
+					90520FEF29666C8E00072251 = {
+						CreatedOnToolsVersion = 14.2;
+					};
 				};
 			};
 			buildConfigurationList = 90319C052935FBDA000D01BE /* Build configuration list for PBXProject "ChatCWrapper" */;
@@ -190,6 +218,7 @@
 			projectRoot = "";
 			targets = (
 				90319C0A2935FBDA000D01BE /* ChatCWrapper */,
+				90520FEF29666C8E00072251 /* download_ios_Sdk */,
 			);
 		};
 /* End PBXProject section */
@@ -203,6 +232,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		90520FF329666C9F00072251 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "${SRCROOT}/../download_ios_sdk.sh\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		90319C072935FBDA000D01BE /* Sources */ = {
@@ -219,6 +268,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		90520FF529666CF500072251 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 90520FEF29666C8E00072251 /* download_ios_Sdk */;
+			targetProxy = 90520FF429666CF500072251 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		90319C102935FBDA000D01BE /* Debug */ = {
@@ -354,7 +411,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -386,7 +443,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -399,6 +456,22 @@
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		90520FF029666C8E00072251 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		90520FF129666C8E00072251 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
@@ -419,6 +492,15 @@
 			buildConfigurations = (
 				90319C132935FBDA000D01BE /* Debug */,
 				90319C142935FBDA000D01BE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		90520FF229666C8E00072251 /* Build configuration list for PBXAggregateTarget "download_ios_Sdk" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				90520FF029666C8E00072251 /* Debug */,
+				90520FF129666C8E00072251 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
