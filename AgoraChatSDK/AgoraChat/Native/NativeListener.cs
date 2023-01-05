@@ -99,7 +99,6 @@ namespace AgoraChat
                         default:
                             LogPrinter.Log("no listener handle");
                             break;
-
                     }
                 });
             };
@@ -128,13 +127,15 @@ namespace AgoraChat
         {
             LogPrinter.Log($"AddNaitveListener run --- {nativeListenerEvent}");
 
-
+#if _WIN32
+            CWrapperNative.Init(0, COMPILE_TYPE_MONO, nativeListenerEvent);
+#else
 #if ENABLE_IL2CPP
             CWrapperNative.Init(0, COMPILE_TYPE_IL2CPP, OnRunCallback);
 #else
             CWrapperNative.Init(0, COMPILE_TYPE_MONO, OnRunCallback);
 #endif
-
+#endif
             LogPrinter.Log($"AddNaitveListener end --- {nativeListenerEvent}");
         }
 
