@@ -230,12 +230,16 @@ namespace AgoraChat
          * \~chinese 
          * 群组允许加入的最大成员数。
          * 
-         * 该属性在创建群时确定。需要获取群详情才能得到正确的结果，如果没有获取则返回 `0`。
+         * 该属性在创建群时确定。
+         * 
+         * 需要获取群详情才能得到正确的结果，如果没有获取则返回 `0`。
          * 
          * \~english 
          * The maximum number of members allowed in a group. 
          * 
-         * The parameter is set during group creation. To get the correct attribute value, you need to first get the details of the group from the server. See {@link IGroupManager#GetGroupSpecificationFromServer(String, ValueCallBack)}. If not, the SDK returns `0`.
+         * The attribute is set during group creation. 
+         
+         * To get the correct attribute value, you need to first get the details of the group from the server by calling {@link IGroupManager#GetGroupSpecificationFromServer(String, ValueCallBack)}. Otherwise, the SDK returns `0`.
          */
         public int MaxUserCount { get; internal set; }
 
