@@ -11,7 +11,7 @@ namespace AgoraChat
         public static void Log(object message)
         {
 #if !_WIN32
-            Debug.Log("UNITYSDK: " + message);
+            //Debug.Log("UNITYSDK: " + message);
 #endif
         }
     }
