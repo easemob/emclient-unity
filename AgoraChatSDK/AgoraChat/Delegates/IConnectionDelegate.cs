@@ -70,10 +70,10 @@
 
         /**
          *  \~chinese
-         *  当前登录账号登录设备数过多被强制退出。
+         *  当前登录账号因达到登录设备数量上限被强制退出。
          *
          *  \~english
-         *  Occurs when the user is forced to log out of the current account due to too many login failures.
+         *  Occurs when the user is forced to log out of the current account because he or she reaches the maximum number of devices that the user can log in with the current account.
          */
         void OnLoginTooManyDevice();
 
