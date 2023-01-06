@@ -243,7 +243,7 @@ namespace AgoraChat
         * @param room 聊天室对象。
         *
         * \~english
-        * Occurs when the chat room specifications change.
+        * Occurs when the chat room specifications are changed.
         *
         * All chat room members receive this event.
         *

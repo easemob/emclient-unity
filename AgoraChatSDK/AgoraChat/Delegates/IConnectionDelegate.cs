@@ -37,7 +37,7 @@
          *  当前登录账号在其它设备登录时会接收到此回调。
          *
          *  \~english
-         *  Occurs when the current user account has logged in to another device.
+         *  Occurs when the user logs in to another device with the current account.
          */
         void OnLoggedOtherDevice();
 
@@ -64,7 +64,7 @@
          *  当前登录账号因密码被修改被强制退出。
          *
          *  \~english
-         *  Occurs when the current user account is forced to log out because the login password is changed.
+         *  Occurs when the user is forced to log out of the current account because the login password is changed.
          */
         void OnChangedIMPwd();
 
@@ -73,7 +73,7 @@
          *  当前登录账号登录设备数过多被强制退出。
          *
          *  \~english
-         *  Occurs when the current user account is forced to log out due to too many login failures.
+         *  Occurs when the user is forced to log out of the current account due to too many login failures.
          */
         void OnLoginTooManyDevice();
 
@@ -82,7 +82,7 @@
          *  当前登录设备账号被登录其他设备的同账号踢下线。
          *
          *  \~english
-         *  Occurs when the current account is forced to log out on the current device due to login to another device.
+         *  Occurs when the user is forced to log out of the current account from the current device due to login to another device.
          */
         void OnKickedByOtherDevice();
 
@@ -91,7 +91,7 @@
          *  当前登录设备账号因鉴权失败强制退出。
          *
          *  \~english
-         *  Occurs when the current account is forced to log out due to an authentication failure.
+         *  Occurs when the user is forced to log out of the current account due to an authentication failure.
          */
         void OnAuthFailed();
 
