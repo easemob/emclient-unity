@@ -851,7 +851,7 @@ namespace AgoraChat
                 JSONObject jo = base.ToJsonObject();
 
                 JSONObject jo_body = jo["body"].AsObject;
-                jo_body.AddWithoutNull("event", CustomEven);
+                jo_body.AddWithoutNull("event", CustomEvent);
                 jo_body.AddWithoutNull("params", JsonObject.JsonObjectFromDictionary(CustomParams));
 
                 return jo;
