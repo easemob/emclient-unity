@@ -88,7 +88,7 @@ namespace AgoraChat
          * @param roomName      聊天室名称。
          *
          * \~english
-         * Occurs when a member is removed from a chat room by offline.
+         * Occurs when a member is removed from a chat room because he or she gets offline.
          *
          * @param roomId        The chat room ID.
          * @param roomName      The name of the chat room.
@@ -243,7 +243,7 @@ namespace AgoraChat
         * @param room 聊天室对象。
         *
         * \~english
-        * Occurs when the chat room specifications changes.
+        * Occurs when the chat room specifications are changed.
         *
         * All chat room members receive this event.
         *

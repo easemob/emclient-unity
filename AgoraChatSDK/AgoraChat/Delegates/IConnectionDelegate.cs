@@ -37,7 +37,7 @@
          *  当前登录账号在其它设备登录时会接收到此回调。
          *
          *  \~english
-         *  Occurs when the current user account is logged in to another device.
+         *  Occurs when the user logs in to another device with the current account.
          */
         void OnLoggedOtherDevice();
 
@@ -46,7 +46,7 @@
          *  当前登录账号已经被从服务器端删除时会收到该回调。
          *
          *  \~english
-         *  Occurs when the current chat user is removed from the server.
+         *  Occurs when the current user account is removed from the server.
          */
         void OnRemovedFromServer();
 
@@ -55,7 +55,7 @@
          *  当前用户账号被禁用时会收到该回调。
          *
          *  \~english
-         *  The delegate method will be invoked when the User account is forbidden.
+         *  Occurs when the current user account is banned.
          */
         void OnForbidByServer();
 
@@ -64,16 +64,16 @@
          *  当前登录账号因密码被修改被强制退出。
          *
          *  \~english
-         *  The delegate method will be invoked when current IM account password is modified to logout.
+         *  Occurs when the user is forced to log out of the current account because the login password is changed.
          */
         void OnChangedIMPwd();
 
         /**
          *  \~chinese
-         *  当前登录账号登录设备数过多被强制退出。
+         *  当前登录账号因达到登录设备数量上限被强制退出。
          *
          *  \~english
-         *  The delegate method will be invoked when current IM account logged in too many devices to logout.
+         *  Occurs when the user is forced to log out of the current account because he or she reaches the maximum number of devices that the user can log in to with the current account.
          */
         void OnLoginTooManyDevice();
 
@@ -82,7 +82,7 @@
          *  当前登录设备账号被登录其他设备的同账号踢下线。
          *
          *  \~english
-         *  The delegate method will be invoked when kicked offline by another device.
+         *  Occurs when the user is forced to log out of the current account from the current device due to login to another device.
          */
         void OnKickedByOtherDevice();
 
@@ -91,7 +91,7 @@
          *  当前登录设备账号因鉴权失败强制退出。
          *
          *  \~english
-         *  The delegate method will be invoked when current device account is forcibly logged out due to authentication failure.
+         *  Occurs when the user is forced to log out of the current account due to an authentication failure.
          */
         void OnAuthFailed();
 

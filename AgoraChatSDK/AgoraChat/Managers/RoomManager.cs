@@ -776,8 +776,8 @@ namespace AgoraChat
          *
          * @param roomId    The chat room ID.
          * @param callback    The completion callback. 
-         *                  - If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
-         *                  - If this call fails, calls {@link ValueCallBack#onError(int, String)}.
+         *                  - If this call succeeds, the SDK calls {@link ValueCallBack#onSuccess(Object)};
+         *                  - If this call fails, the SDK calls {@link ValueCallBack#onError(int, String)}.
          */
         public void MuteAllRoomMembers(string roomId, ValueCallBack<Room> callback = null)
         {
@@ -806,14 +806,15 @@ namespace AgoraChat
          *
          * \~english
          * Unmutes all members.
+         * 
          * Only the chat room owner or admin can call this method.
          *
          * This is an asynchronous method.
          *
          * @param roomId    The chat room ID.
          * @param callback    The completion callback. 
-         *                  - If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
-         *                  - If this call fails, calls {@link ValueCallBack#onError(int, String)}.
+         *                  - If this call succeeds, the SDK calls {@link ValueCallBack#onSuccess(Object)};
+         *                  - If this call fails, the SDK calls {@link ValueCallBack#onError(int, String)}.
          */
         public void UnMuteAllRoomMembers(string roomId, ValueCallBack<Room> callback = null)
         {
@@ -855,8 +856,8 @@ namespace AgoraChat
          * @param roomId       The chat room ID.
          * @param members      The list of members to be added to the allow list.
          * @param callback       The completion callback. 
-         *                     - If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
-         *                     - If this call fails, calls {@link ValueCallBack#onError(int, String)}.
+         *                     - If this call succeeds, the SDK calls {@link ValueCallBack#onSuccess(Object)};
+         *                     - If this call fails, the SDK calls {@link ValueCallBack#onError(int, String)}.
          */
         public void AddAllowListMembers(string roomId, List<string> members, CallBack callback = null)
         {
@@ -893,8 +894,8 @@ namespace AgoraChat
          * @param roomId        The chat room ID.
          * @param members       The list of members to be removed from the block list.
          * @param callback        The completion callback. 
-         *                      - If this call succeeds, calls {@link ValueCallBack#onSuccess(Object)};
-         *                      - If this call fails, calls {@link ValueCallBack#onError(int, String)}.
+         *                      - If this call succeeds, the SDK calls {@link ValueCallBack#onSuccess(Object)};
+         *                      - If this call fails, the SDK calls {@link ValueCallBack#onError(int, String)}.
          */
         public void RemoveAllowListMembers(string roomId, List<string> members, CallBack callback = null)
         {
@@ -908,7 +909,6 @@ namespace AgoraChat
          * \~chinese
          * 从服务器获取白名单列表。
          *
-         * @note
          * 仅聊天室所有者和管理员可调用此方法。
          *
          * 异步方法。
@@ -919,15 +919,14 @@ namespace AgoraChat
          *
          * \~english
          * Gets the chat room allow list from the server.
-         *
-         * @note
+         * 
          * Only the chat room owner or admin can call this method.
          *
          * This is an asynchronous method.
          *
          * @param chatRoomId 	The chat room ID.
-         * @param callBack		The completion callback. If this call succeeds, calls {@link ValueCallBack#OnSuccessValue(Object)};
-         * 						If this call fails, calls {@link ValueCallBack#onError(int, String)}.
+         * @param callBack		The completion callback. If this call succeeds, the SDK calls {@link ValueCallBack#OnSuccessValue(Object)};
+         * 						If this call fails, the SDK calls {@link ValueCallBack#onError(int, String)}.
          */
         public void FetchAllowListFromServer(string roomId, ValueCallBack<List<string>> callback = null)
         {
@@ -958,8 +957,8 @@ namespace AgoraChat
          * This is an asynchronous method.
          *
          * @param roomId 	The chat room ID.
-         * @param callBack		The completion callback. If this call succeeds, calls {@link ValueCallBack#OnSuccessValue(Object)} to show whether the member is on the block list;
-         * 						if this call fails, calls {@link ValueCallBack#onError(int, String)}.
+         * @param callBack		The completion callback. If this call succeeds, the SDK calls {@link ValueCallBack#OnSuccessValue(Object)} to show whether the member is on the block list;
+         * 						if this call fails, the SDK calls {@link ValueCallBack#onError(int, String)}.
          */
         public void CheckIfInRoomAllowList(string roomId, ValueCallBack<bool> callback = null)
         {
@@ -978,13 +977,13 @@ namespace AgoraChat
          * 从内存中获取聊天室。
          *
          * @param roomId		聊天室 ID。
-         * @return				返回聊天室对象。如果内存中不存在聊天室对象，会基于roomId创建一个聊天室对象，并返回。
+         * @return				返回聊天室对象。如果内存中不存在该聊天室对象，会基于聊天室 ID（roomId）创建一个聊天室对象，并返回。
          *
          * \~english
          * Gets the chat room in the memory.
          *
          * @param roomId		The chat room ID.
-         * @return 				The chat room instance. The SDK returns a new chat room instances basing roomId if the chat room is not found in the memory.
+         * @return 				The chat room instance. The SDK creates a new chat room instance based on the chat room ID (roomId) and returns it if the chat room is not found in the memory.
          */
         public Room GetChatRoom(string roomId)
         {
@@ -1053,8 +1052,8 @@ namespace AgoraChat
          * @forced              Whether to overwrite the attributes with same key set by others.
          * 						- `true`: Yes.
          *						- (Default)`false`: No.
-         * @param callback        The completion callback. If this call succeeds, calls {@link ValueCallBack#OnSuccessValue(Dictionary<string, int>)};
-         *                      if this call fails, calls {@link CallBackResult#onError(int, String)}.
+         * @param callback        The completion callback. If this call succeeds, the SDK calls {@link ValueCallBack#OnSuccessValue(Dictionary<string, int>)};
+         *                      if this call fails, the SDK calls {@link CallBackResult#onError(int, String)}.
          */
         public void AddAttributes(string roomId, Dictionary<string, string> kv, bool deleteWhenExit = true, bool forced = false, ValueCallBack<Dictionary<string, int>> callback = null)
         {
@@ -1093,8 +1092,8 @@ namespace AgoraChat
          *
          * @param roomId        The chat room ID.
          * @param keys			The key list of attributes to get. If you set it as `null` or leave it empty, this method retrieves all custom attributes.
-         * @param callback        The completion callback. If this call succeeds, calls {@link ValueCallBack#OnSuccessValue(Dictionary<string, string>)};
-         *                      if this call fails, calls {@link ValueCallBack#onError(int, String)}.
+         * @param callback        The completion callback. If this call succeeds, the SDK calls {@link ValueCallBack#OnSuccessValue(Dictionary<string, string>)};
+         *                      if this call fails, the SDK calls {@link ValueCallBack#onError(int, String)}.
          */
         public void FetchAttributes(string roomId, List<string> keys = null, ValueCallBack<Dictionary<string, string>> callback = null)
         {
@@ -1137,8 +1136,8 @@ namespace AgoraChat
          * @param roomId        The chat room ID.
          * @param keys			The keys of custom chat room attributes to remove.
          * @forced              Whether to remove attributes with same key set by others.
-         * @param callback        The completion callback. If this call succeeds, calls {@link CallBackResult#OnSuccessResult(Dictionary<string, int>)};
-         *                      if this call fails, calls {@link CallBackResult#onError(int, String)}.
+         * @param callback        The completion callback. If this call succeeds, the SDK calls {@link CallBackResult#OnSuccessResult(Dictionary<string, int>)};
+         *                      if this call fails, the SDK calls {@link CallBackResult#onError(int, String)}.
          */
         public void RemoveAttributes(string roomId, List<string> keys, bool forced = false, ValueCallBack<Dictionary<string, int>> callback = null)
         {

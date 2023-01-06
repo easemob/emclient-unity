@@ -196,56 +196,83 @@ namespace AgoraChat
 
         /**
          * \~chinese
-         * 获取群组属性：成员是否能自由加入，还是需要申请或者被邀请。
+         * 用户是否只能通过群成员邀请或申请才能加入群组：
+         * - `true`：是。
+         * - `false`：否。用户可自由加入群组，无需群成员邀请或提交入群申请。
          * 
-         * 群组有四个类型属性，`IsMemberOnly`是除了 {@link GroupStyle#PublicOpenJoin} 之外的三种属性，表示该群不是自由加入的群组。
-         *
-         * - `true`：进群需要群主邀请，群成员邀请，或者群主和管理员同意入群申请；
-         * - `false`：意味着用户可以自由加入群，不需要申请和被邀请。
+         * 群组类型（`GroupStyle`）设置为 `PrivateOnlyOwnerInvite`, `PrivateMemberCanInvite` 或 `PublicJoinNeedApproval` 时，该属性的值为 `true`。
          *
          * \~english
-         * Fetches the group property: whether users can auto join the group VS need requesting or invitation from a group member to join the group.
-         * There are four types of group properties used to define the style of a group, and `IsMemberOnly` contains three types including: PrivateOnlyOwnerInvite,  PrivateMemberCanInvite, PublicJoinNeedApproval. And do not include {@link GroupStyle#PublicOpenJoin}.
+         * Whether users can join a group only via a join request or a group invitation:
+         * - `true`: Yes.
+         * - `false`: No. Users can join a group freely, without a join request or a group invitation.
+         * 
+         * When `GroupStyle` is set to `PrivateOnlyOwnerInvite`, `PrivateMemberCanInvite`, or `PublicJoinNeedApproval`, the attribute value is `true`. 
+         * 
          *
-         * - `true`: Users can not join the group freely. Needs the invitation from the group owner or members, or the application been approved by the group owner or admins.
-         * - `false`: Users can join freely without the group owner or member‘s invitation or the new joiner’s application been approved.
          */
         public bool IsMemberOnly { get; internal set; }
 
         /**
-         * \~chinese 获取群组是否允许成员邀请。
+         * \~chinese 
+         * 群组是否允许除群主和管理员之外的成员邀请用户入群：
+         * - `true`：允许。所有群成员均可邀请其他用户加入群组。
+         * - `false`：不允许。只有群主和群管理员可邀请其他用户加入群组。
          * 
          * \~english 
-         * - `true`：群成员可以邀请其他用户加入； - `false`：不允许群成员邀请其他用户加入。 \~english Gets whether the group member is allowed to invite other users to join the group.
+         * Whether other group members than the group owner and admins can invite users to join the group:
+         * - `true`: Yes. All group members can invite other users to join the group.
+         * - `false`: No. Only the group owner and admins can invite other users to join the group.
          */
         public bool IsMemberAllowToInvite { get; internal set; }
 
         /**
-         * \~chinese 获取群允许加入的最大成员数，在创建群时确定。 需要获取群详情才能拿到正确的结果，如果没有获取则返回 0。
+         * \~chinese 
+         * 群组允许加入的最大成员数。
+         * 
+         * 该属性在创建群时确定。
+         * 
+         * 需要获取群详情才能得到正确的结果，如果没有获取则返回 `0`。
          * 
          * \~english 
-         * The max number of group members allowed in a group. The param is set when the group is created. Be sure to fetch the detail specification of the group from the server first, see IGroupManager#GetGroupSpecificationFromServer(String, ValueCallBack). If not, the SDK returns 0.
+         * The maximum number of members allowed in a group. 
+         * 
+         * The attribute is set during group creation. 
+         
+         * To get the correct attribute value, you need to first get the details of the group from the server by calling {@link IGroupManager#GetGroupSpecificationFromServer(String, ValueCallBack)}. Otherwise, the SDK returns `0`.
          */
         public int MaxUserCount { get; internal set; }
 
 
         /**
         *  \~chinese
-        *  群组是否禁用。（本地数据库不存储，从数据库读取或拉取漫游消息默认值是 NO）
+        *  群组是否禁用：
+        *  - `true`：该群组被禁用。群组成员无法收发消息，也不能进行群组和群成员的任何管理操作。而且，该群组的子区中也无法收发消息，也不能进行子区和成员的任何管理操作。
+        *  - `false`：该群组为正常状态。群组成员可以正常收发消息，进行群组和群成员的管理操作。而且，该群组的子区也能发送和接收消息，进行子区和成员的管理操作。
+        
+        *  本地数据库不存储该状态。对于从数据库加载的群组，该属性的默认值为 `NO`。
         *
         *  \~english
-        *  Whether the group is disabled. The default value for reading or pulling roaming messages from the database is NO
+        *  Whether the group is disabled:
+        *  - `true`: Yes. The group is disabled. Group members cannot send or receive messages, nor perform group and member management operations. This is also the case for threads in this group.
+        *  - `false`: No. The group is in the normal state. Group members can send and receive messages, as well as perform group and member management operations. This is also the case for threads in this group.
+        * 
+        *  This attribute is not stored in the local database.
+        *  
+        * For groups loaded from the local database, the default value of this attribute is `NO`.
          */
         public bool IsDisabled { get; internal set; }
 
         /**
          * \~chinese
-         * 获取群组订制扩展信息。
-         * @return  群组定制扩展信息。
+         * 群组的自定义扩展信息。
+         *
+         * @return  群组自定义扩展信息。
          *
          * \~english
-         * Gets the customized extension of the group.
-         * @return  The customized extension of the group.
+         * Gets the custom extension information of the group.
+         * 
+         * @return  The custom extension information of the group.
          */
         public string Ext { get; internal set; }
 
