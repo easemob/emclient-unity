@@ -73,7 +73,7 @@
          *  当前登录账号因达到登录设备数量上限被强制退出。
          *
          *  \~english
-         *  Occurs when the user is forced to log out of the current account because he or she reaches the maximum number of devices that the user can log in with the current account.
+         *  Occurs when the user is forced to log out of the current account because he or she reaches the maximum number of devices that the user can log in to with the current account.
          */
         void OnLoginTooManyDevice();
 
