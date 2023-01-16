@@ -1,6 +1,9 @@
 using AgoraChat.SimpleJSON;
 using System;
 using System.Runtime.InteropServices;
+#if !_WIN32
+using UnityEngine;
+#endif
 
 namespace AgoraChat
 {
@@ -104,18 +107,14 @@ namespace AgoraChat
             };
         }
 
-        internal class MonoPInvokeCallbackAttribute : Attribute
-        {
-            public MonoPInvokeCallbackAttribute(Type t) { }
-        }
-
-        [MonoPInvokeCallback(typeof(NativeListenerEvent))]
+#if !_WIN32
+        [AOT.MonoPInvokeCallback(typeof(NativeListenerEvent))]
         public static void OnRunCallback(string listener, string method, string jsonString)
         {
             LogPrinter.Log($"OnRunCallback listener: {listener},  method: {method}, jsonString: {jsonString}");
             SDKClient.Instance._clientImpl.nativeListener.nativeListenerEvent?.Invoke(listener, method, jsonString);
         }
-
+#endif
         ~NativeListener()
         {
             queue_worker.ClearQueue();
