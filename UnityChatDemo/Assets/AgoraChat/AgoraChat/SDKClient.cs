@@ -184,6 +184,7 @@ namespace AgoraChat
         * 请确保调用其他方法前，完成 SDK 初始化。
         * 
         * @param options  SDK 初始化选项，必填，请参见 {@link Options}。
+        * @return 返回初始化结果，0：成功，100：AppKey不合法
         *
         * \~english
         * Initializes the SDK.
@@ -191,10 +192,11 @@ namespace AgoraChat
         * Make sure that the SDK initialization is complete before you call any methods.
         *
         * @param options The options for SDK initialization. Ensure that you set the options. See {@link Options}.
+        * @return Return result, 0:success, 100: App key is invalid
         */
-        public void InitWithOptions(Options options)
+        public int InitWithOptions(Options options)
         {
-            _clientImpl.InitWithOptions(options);
+            return _clientImpl.InitWithOptions(options);
         }
 
         /**

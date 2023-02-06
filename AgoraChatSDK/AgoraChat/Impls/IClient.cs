@@ -42,12 +42,14 @@ namespace AgoraChat
             nativeListener = null;
         }
 
-        internal void InitWithOptions(Options options)
+        internal int InitWithOptions(Options options)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("options", options.ToJsonObject());
-            NativeGet(SDKMethod.init, jo_param);
+            JSONNode jsonNode = NativeGet(SDKMethod.init, jo_param).GetReturnJsonNode();
+            int ret = jsonNode.IsNumber ? jsonNode.AsInt : 0;
             SetupManagers();
+            return ret;
         }
 
         internal string CurrentUsername()
