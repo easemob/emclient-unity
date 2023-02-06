@@ -72,10 +72,21 @@ namespace sdk_wrapper
 
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_InitWithOptions(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
+        // 0: default and correct
+        // 100: App key is invalid
+        int ret = 0;
+
         // singleton client handle
         if (nullptr == gClient) {
+
             configs = Options::FromJson(jstr, "./sdkdata", "./sdkdata");
-            gClient = EMClient::create(configs);
+
+            if (nullptr == configs) {
+                ret = 100;
+            }
+            else {
+                gClient = EMClient::create(configs);
+            }
         }
         else {
             if (NeedAllocResource) {
@@ -84,15 +95,23 @@ namespace sdk_wrapper
             }
         }
 
-        Client_AddListener();
-        ChatManager_AddListener();
-        GroupManager_AddListener();
-        RoomManager_AddListener();
-        ContactManager_AddListener();
-        PresenceManager_AddListener();
-        ThreadManager_AddListener();
+        if (0 == ret) {
+            Client_AddListener();
+            ChatManager_AddListener();
+            GroupManager_AddListener();
+            RoomManager_AddListener();
+            ContactManager_AddListener();
+            PresenceManager_AddListener();
+            ThreadManager_AddListener();
+        }
 
-        return nullptr;
+        JSON_STARTOBJ
+        writer.Key("ret");
+        writer.Int(ret);
+        JSON_ENDOBJ
+
+        string json = s.GetString();
+        return CopyToPointer(json);
     }
 
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_CurrentUsername(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)

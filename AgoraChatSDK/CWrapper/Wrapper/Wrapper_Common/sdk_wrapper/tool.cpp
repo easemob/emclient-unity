@@ -72,6 +72,24 @@ bool CheckClientInitOrNot(const char* cbid)
     }
 }
 
+// AppKey looks like: easemob-demo#unitytest
+bool CheckAppKey(const char* app_key)
+{
+    if (nullptr == app_key || strlen(app_key) == 0) return false;
+
+    string s = app_key;
+    size_t len = s.length();
+
+    string::size_type pos = s.find("#");
+
+    if (s.npos == pos || 0 == pos || len - 1 == pos) {
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
 string GetLeftValue(const string& str)
 {
     if (str.size() == 0) return "";

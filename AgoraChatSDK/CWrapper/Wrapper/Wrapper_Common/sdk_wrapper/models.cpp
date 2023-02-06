@@ -251,7 +251,7 @@ namespace sdk_wrapper
             app_key = jnode["appKey"].GetString();
         }
 
-        if (app_key.size() == 0) return nullptr;
+        if (CheckAppKey(app_key.c_str()) == false) return nullptr;
 
         EMChatConfigsPtr configs = EMChatConfigsPtr(new EMChatConfigs(rs, wk, app_key, 0));
         configs->setAppKey(app_key);
