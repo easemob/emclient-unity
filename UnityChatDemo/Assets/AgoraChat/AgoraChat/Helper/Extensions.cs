@@ -650,7 +650,31 @@ namespace AgoraChat
         }
     }
 
+    internal static class MessagePriorityHelper
+    {
+        public static int ToInt(this MessagePriority priority)
+        {
+            switch (priority)
+            {
+                case MessagePriority.High: return 0;
+                case MessagePriority.Normal: return 1;
+                case MessagePriority.Low: return 2;
+                default: return 1;
+            }
+        }
 
+        public static MessagePriority ToMessagePriority(this int i)
+        {
+            switch (i)
+            {
+                case 0: return MessagePriority.High;
+                case 1: return MessagePriority.Normal;
+                case 2: return MessagePriority.Low;
+                default:
+                    return MessagePriority.Normal;
+            }
+        }
+    }
 
     internal static class MessageStatusHelper
     {

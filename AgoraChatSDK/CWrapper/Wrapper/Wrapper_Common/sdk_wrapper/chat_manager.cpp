@@ -1186,6 +1186,71 @@ namespace sdk_wrapper {
         return nullptr;
     }
 
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_RemoveMessagesFromServerWithMsgIds(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        string cov_id = GetJsonValue_String(d, "convId", "");
+
+        EMConversation::EMConversationType conv_type = EMConversation::EMConversationType::CHAT;
+        int var_type = GetJsonValue_Int(d, "convType", 0);
+        conv_type = EMConversation::EMConversationType(var_type);
+
+        vector<string> msgIds = MyJson::FromJsonObjectToVector(d["msgIds"]);
+
+        thread t([=]() {
+            EMErrorPtr error = CLIENT->getChatManager().removeMessagesFromServer(cov_id, conv_type, msgIds);
+
+            if (EMError::EM_NO_ERROR == error->mErrorCode) {
+                string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error->mErrorCode, error->mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+         });
+        t.detach();
+
+        return nullptr;
+    }
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_RemoveMessagesFromServerWithTs(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        string cov_id = GetJsonValue_String(d, "convId", "");
+
+        EMConversation::EMConversationType conv_type = EMConversation::EMConversationType::CHAT;
+        int var_type = GetJsonValue_Int(d, "convType", 0);
+        conv_type = EMConversation::EMConversationType(var_type);
+
+        string timestamp = GetJsonValue_String(d, "timestamp", "0");
+        int64_t ts = atoll(timestamp.c_str());
+
+        thread t([=]() {
+            EMErrorPtr error = CLIENT->getChatManager().removeMessagesFromServer(cov_id, conv_type, ts);
+
+            if (EMError::EM_NO_ERROR == error->mErrorCode) {
+                string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error->mErrorCode, error->mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+        });
+        t.detach();
+
+        return nullptr;
+    }
+
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_RunDelegateTester(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         if (nullptr != gChatManagerListener) {

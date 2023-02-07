@@ -418,6 +418,43 @@ namespace AgoraChat
 
     /**
     * \~chinese
+    * 聊天室消息优先级枚举。
+    *
+    * \~english
+    * The chatroom message priority enum.
+    */
+    public enum MessagePriority
+    {
+        /**
+        * \~chinese
+        * 高优先级。
+        *
+        * \~english
+        * High priority.
+        */
+        High = 0,
+
+        /**
+        * \~chinese
+        * 普通优先级。
+        *
+        * \~english
+        * Normal priority.
+        */
+        Normal,
+
+        /**
+        * \~chinese
+        * 低优先级。
+        *
+        * \~english
+        * Low priority.
+        */
+        Low
+    };
+
+    /**
+    * \~chinese
     * 消息查询方向枚举。
     *
     * \~english

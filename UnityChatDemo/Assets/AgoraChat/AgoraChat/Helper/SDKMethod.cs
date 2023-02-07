@@ -88,6 +88,8 @@ namespace AgoraChat
         internal const string fetchReactionList = "fetchReactionList";
         internal const string fetchReactionDetail = "fetchReactionDetail";
         internal const string reportMessage = "reportMessage";
+        internal const string removeMessagesFromServerWithMsgIds = "removeMessagesFromServerWithMsgIds";
+        internal const string removeMessagesFromServerWithTs = "removeMessagesFromServerWithTs";
 
         /// EMMessage listener
         internal const string onMessageProgressUpdate = "onMessageProgressUpdate";

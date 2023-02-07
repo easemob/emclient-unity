@@ -1049,6 +1049,70 @@ namespace AgoraChat
         }
 
         /**
+         * \~chinese
+         * 从会话中删除消息（包括本地存储和服务器存储）。
+         *
+         * 异步方法。
+         *
+         * @param conversationId    会话 ID。
+         * @param conversationType  会话类型，详见 {@link ConversationType}。
+         * @param messageIdList     消息 ID列表。
+         * @param callback          处理结果回调，详见 {@link CallBack}。
+         *
+         * \~english
+         * Removes messages in a conversation (from both local storage and the server).
+         *
+         * This is an asynchronous method.
+         *
+         * @param conversationId     The conversation ID.
+         * @param conversationType   The conversation type. See {@link ConversationType}.
+         * @param messageIdList      Message ID list.
+         * @param callback           Callback for the operation. See {@link CallBack}.
+         */
+
+        public void RemoveMessagesFromServer(string conversationId, ConversationType conversationType, List<string> messageIdList, CallBack callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("convId", conversationId);
+            jo_param.AddWithoutNull("convType", conversationType.ToInt());
+            jo_param.AddWithoutNull("msgIds", JsonObject.JsonArrayFromStringList(messageIdList));
+
+            NativeCall(SDKMethod.removeMessagesFromServerWithMsgIds, jo_param, callback);
+        }
+
+        /**
+         * \~chinese
+         * 从会话中删除消息（包括本地存储和服务器存储）。
+         *
+         * 异步方法。
+         *
+         * @param conversationId    会话 ID。
+         * @param conversationType  会话类型，详见 {@link ConversationType}。
+         * @param timeStamp	        指定的时间戳, 单位为毫秒。该时间戳之前的消息会被删除。
+         * @param callback          处理结果回调，详见 {@link CallBack}。
+         *
+         * \~english
+         * Removes messages in a conversation (from both local storage and the server).
+         *
+         * This is an asynchronous method.
+         *
+         * @param conversationId     The conversation ID.
+         * @param conversationType   The conversation type. See {@link ConversationType}.
+         * @param timeStamp          The specified Unix timestamp in miliseconds. Messages with a timestamp before the specified one will be removed from the conversation.
+         * @param callback           Callback for the operation. See {@link CallBack}.
+         */
+
+        public void RemoveMessagesFromServer(string conversationId, ConversationType conversationType, long timeStamp, CallBack callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("convId", conversationId);
+            jo_param.AddWithoutNull("convType", conversationType.ToInt());
+            jo_param.AddWithoutNull("timestamp", timeStamp.ToString());
+
+            NativeCall(SDKMethod.removeMessagesFromServerWithTs, jo_param, callback);
+        }
+
+        /**
 		 * \~chinese
 		 * 注册聊天管理器的监听器。
 		 *
