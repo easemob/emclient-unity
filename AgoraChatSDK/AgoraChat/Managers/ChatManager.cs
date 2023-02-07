@@ -1016,6 +1016,39 @@ namespace AgoraChat
         }
 
         /**
+         * \~chinese
+         * 从服务器获取指定数目的会话对象。
+         *
+         * 未找到任何会话对象返回的列表为空。
+         *
+         * @param pageNum     当前页码。
+         * @param pageSize    每页期望返回的会话数。
+         * @param callback    获取的会话列表，详见 {@link ValueCallBack}。
+         *
+         * \~english
+         * Gets the conversations from the server.
+         *
+         * An empty list will be returned if no conversation is found.
+         *
+         * @param pageNum     Current page number.
+         * @param pageSize    Conversations number in one page.
+         * @param callback    The list of obtained coversations. See {@link ValueCallBack}.
+         */
+        public void GetConversationsFromServerWithPage(int pageNum, int pageSize, ValueCallBack<List<Conversation>> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("pageNum", pageNum);
+            jo_param.AddWithoutNull("pageSize", pageSize);
+
+            Process process = (_, jsonNode) =>
+            {
+                return List.BaseModelListFromJsonArray<Conversation>(jsonNode);
+            };
+
+            NativeCall<List<Conversation>>(SDKMethod.getConversationsFromServerWithPage, jo_param, callback, process);
+        }
+
+        /**
 		 * \~chinese
 		 * 注册聊天管理器的监听器。
 		 *
