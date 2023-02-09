@@ -73,6 +73,7 @@ namespace AgoraChat
         internal const string importMessages = "importMessages";
         internal const string loadAllConversations = "loadAllConversations";
         internal const string getConversationsFromServer = "getConversationsFromServer";
+        internal const string getConversationsFromServerWithPage = "getConversationsFromServerWithPage";
         internal const string deleteConversation = "deleteConversation";
         internal const string fetchHistoryMessages = "fetchHistoryMessages";
         internal const string searchChatMsgFromDB = "searchChatMsgFromDB";
@@ -87,6 +88,8 @@ namespace AgoraChat
         internal const string fetchReactionList = "fetchReactionList";
         internal const string fetchReactionDetail = "fetchReactionDetail";
         internal const string reportMessage = "reportMessage";
+        internal const string removeMessagesFromServerWithMsgIds = "removeMessagesFromServerWithMsgIds";
+        internal const string removeMessagesFromServerWithTs = "removeMessagesFromServerWithTs";
 
         /// EMMessage listener
         internal const string onMessageProgressUpdate = "onMessageProgressUpdate";

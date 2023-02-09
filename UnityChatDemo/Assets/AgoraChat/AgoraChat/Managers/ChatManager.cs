@@ -1016,6 +1016,103 @@ namespace AgoraChat
         }
 
         /**
+         * \~chinese
+         * 从服务器获取指定数目的会话对象。
+         *
+         * 未找到任何会话对象返回的列表为空。
+         *
+         * @param pageNum     当前页码。
+         * @param pageSize    每页期望返回的会话数。
+         * @param callback    获取的会话列表，详见 {@link ValueCallBack}。
+         *
+         * \~english
+         * Gets the conversations from the server.
+         *
+         * An empty list will be returned if no conversation is found.
+         *
+         * @param pageNum     Current page number.
+         * @param pageSize    Conversations number in one page.
+         * @param callback    The list of obtained coversations. See {@link ValueCallBack}.
+         */
+        public void GetConversationsFromServerWithPage(int pageNum, int pageSize, ValueCallBack<List<Conversation>> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("pageNum", pageNum);
+            jo_param.AddWithoutNull("pageSize", pageSize);
+
+            Process process = (_, jsonNode) =>
+            {
+                return List.BaseModelListFromJsonArray<Conversation>(jsonNode);
+            };
+
+            NativeCall<List<Conversation>>(SDKMethod.getConversationsFromServerWithPage, jo_param, callback, process);
+        }
+
+        /**
+         * \~chinese
+         * 从会话中删除消息（包括本地存储和服务器存储）。
+         *
+         * 异步方法。
+         *
+         * @param conversationId    会话 ID。
+         * @param conversationType  会话类型，详见 {@link ConversationType}。
+         * @param messageIdList     消息 ID列表。
+         * @param callback          处理结果回调，详见 {@link CallBack}。
+         *
+         * \~english
+         * Removes messages in a conversation (from both local storage and the server).
+         *
+         * This is an asynchronous method.
+         *
+         * @param conversationId     The conversation ID.
+         * @param conversationType   The conversation type. See {@link ConversationType}.
+         * @param messageIdList      Message ID list.
+         * @param callback           Callback for the operation. See {@link CallBack}.
+         */
+
+        public void RemoveMessagesFromServer(string conversationId, ConversationType conversationType, List<string> messageIdList, CallBack callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("convId", conversationId);
+            jo_param.AddWithoutNull("convType", conversationType.ToInt());
+            jo_param.AddWithoutNull("msgIds", JsonObject.JsonArrayFromStringList(messageIdList));
+
+            NativeCall(SDKMethod.removeMessagesFromServerWithMsgIds, jo_param, callback);
+        }
+
+        /**
+         * \~chinese
+         * 从会话中删除消息（包括本地存储和服务器存储）。
+         *
+         * 异步方法。
+         *
+         * @param conversationId    会话 ID。
+         * @param conversationType  会话类型，详见 {@link ConversationType}。
+         * @param timeStamp	        指定的时间戳, 单位为毫秒。该时间戳之前的消息会被删除。
+         * @param callback          处理结果回调，详见 {@link CallBack}。
+         *
+         * \~english
+         * Removes messages in a conversation (from both local storage and the server).
+         *
+         * This is an asynchronous method.
+         *
+         * @param conversationId     The conversation ID.
+         * @param conversationType   The conversation type. See {@link ConversationType}.
+         * @param timeStamp          The specified Unix timestamp in miliseconds. Messages with a timestamp before the specified one will be removed from the conversation.
+         * @param callback           Callback for the operation. See {@link CallBack}.
+         */
+
+        public void RemoveMessagesFromServer(string conversationId, ConversationType conversationType, long timeStamp, CallBack callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("convId", conversationId);
+            jo_param.AddWithoutNull("convType", conversationType.ToInt());
+            jo_param.AddWithoutNull("timestamp", timeStamp.ToString());
+
+            NativeCall(SDKMethod.removeMessagesFromServerWithTs, jo_param, callback);
+        }
+
+        /**
 		 * \~chinese
 		 * 注册聊天管理器的监听器。
 		 *

@@ -65,6 +65,15 @@ namespace AgoraChat
 
         /**
 	     * \~chinese
+         * 聊天室消息的送达优先级。
+         *
+         * \~english
+         * The chatroom message priority of delivering.
+         */
+        public MessagePriority Priority = MessagePriority.Normal;
+
+        /**
+	     * \~chinese
 	     * 消息方向。
          * 
          * - `SEND`：该消息由当前用户发出；
@@ -713,6 +722,7 @@ namespace AgoraChat
                     ServerTime = (long)jo["serverTime"].AsDouble;
                     ConversationId = jo["convId"].Value;
                     MsgId = jo["msgId"].Value;
+                    Priority = jo["priority"].AsInt.ToMessagePriority();
                     Status = jo["status"].AsInt.ToMessageStatus();
                     MessageType = jo["chatType"].AsInt.ToMessageType();
                     Direction = jo["direction"].AsInt.ToMesssageDirection();
@@ -738,6 +748,7 @@ namespace AgoraChat
             jo.AddWithoutNull("serverTime", ServerTime);
             jo.AddWithoutNull("convId", ConversationId);
             jo.AddWithoutNull("msgId", MsgId);
+            jo.AddWithoutNull("priority", Priority.ToInt());
             jo.AddWithoutNull("status", Status.ToInt());
             jo.AddWithoutNull("chatType", MessageType.ToInt());
             jo.AddWithoutNull("direction", Direction.ToInt());

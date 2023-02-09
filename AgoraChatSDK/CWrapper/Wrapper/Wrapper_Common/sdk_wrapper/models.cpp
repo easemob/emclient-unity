@@ -251,7 +251,7 @@ namespace sdk_wrapper
             app_key = jnode["appKey"].GetString();
         }
 
-        if (app_key.size() == 0) return nullptr;
+        if (CheckAppKey(app_key.c_str()) == false) return nullptr;
 
         EMChatConfigsPtr configs = EMChatConfigsPtr(new EMChatConfigs(rs, wk, app_key, 0));
         configs->setAppKey(app_key);
@@ -1178,6 +1178,9 @@ namespace sdk_wrapper
             writer.Key("direction");
             writer.Int(MessageDirectionToInt(msg->msgDirection()));
 
+            writer.Key("priority");
+            writer.Int(msg->priority());
+
             writer.Key("status");
             writer.Int(StatusToInt(msg->status()));
 
@@ -1295,6 +1298,11 @@ namespace sdk_wrapper
         if (jnode.HasMember("recallBy") && jnode["recallBy"].IsString()) {
             string str = jnode["recallBy"].GetString();
             msg->setRecallBy(str);
+        }
+
+        if (jnode.HasMember("priority") && jnode["priority"].IsInt()) {
+            int i = jnode["priority"].GetInt();
+            msg->setPriority(i);
         }
 
         if (jnode.HasMember("status") && jnode["status"].IsInt()) {

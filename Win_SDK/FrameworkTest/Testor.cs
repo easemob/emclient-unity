@@ -525,6 +525,9 @@ namespace WinSDKTest
             functions_IChatManager.Add(menu_index, "RemoveReaction"); menu_index++;
             functions_IChatManager.Add(menu_index, "GetReactionList"); menu_index++;
             functions_IChatManager.Add(menu_index, "GetReactionDetail"); menu_index++;
+            functions_IChatManager.Add(menu_index, "GetConversationsFromServerWithPage"); menu_index++;
+            functions_IChatManager.Add(menu_index, "RemoveMessagesFromServerWithMsgIds"); menu_index++;
+            functions_IChatManager.Add(menu_index, "RemoveMessagesFromServerWithTs"); menu_index++;
             level2_menus.Add("IChatManager", functions_IChatManager);
         }
 
@@ -750,6 +753,26 @@ namespace WinSDKTest
             param.Add(menu_index, "cursor (string)"); menu_index++;
             param.Add(menu_index, "pageSize (int)"); menu_index++;
             level3_menus.Add("GetReactionDetail", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "pageNum (int)"); menu_index++;
+            param.Add(menu_index, "pageSize (int)"); menu_index++;
+            level3_menus.Add("GetConversationsFromServerWithPage", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "conversationId (string)"); menu_index++;
+            param.Add(menu_index, "conversationType (int, 0-chat;1-group;2-room)"); menu_index++;
+            param.Add(menu_index, "msgId (string)"); menu_index++;
+            level3_menus.Add("RemoveMessagesFromServerWithMsgIds", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "conversationId (string)"); menu_index++;
+            param.Add(menu_index, "conversationType (int, 0-chat;1-group;2-room)"); menu_index++;
+            param.Add(menu_index, "ts (long)"); menu_index++;
+            level3_menus.Add("RemoveMessagesFromServerWithTs", new Dictionary<int, string>(param));
             param.Clear();
         }
 
@@ -1922,7 +1945,11 @@ namespace WinSDKTest
             //options.IMPort = 12016;
             //options.EnableDNSConfig = false;
 
-            SDKClient.Instance.InitWithOptions(options);
+            if (SDKClient.Instance.InitWithOptions(options) != 0)
+            {
+                Console.WriteLine("failed to InitWithOptions");
+                System.Environment.Exit(100);
+            }
 
             ChatManagerDelegate chatManagerDelegate = new ChatManagerDelegate();
             SDKClient.Instance.ChatManager.AddChatManagerDelegate(chatManagerDelegate);
@@ -3112,6 +3139,7 @@ namespace WinSDKTest
             msg.MessageType = msg_type;
             msg.IsThread = is_thread;
             msg.IsNeedGroupAck = true;
+            msg.Priority = MessagePriority.Low;
             AgoraChat.MessageBody.TextBody tb = (AgoraChat.MessageBody.TextBody)msg.Body;
             tb.TargetLanguages = new List<string>();
             tb.TargetLanguages.Add("en");
@@ -3661,6 +3689,79 @@ namespace WinSDKTest
             ));
         }
 
+        public void CallFunc_IChatManager_GetConversationsFromServerWithPage()
+        {
+            int pageNum = GetIntFromString(GetParamValueFromContext(0));
+            int pageSize = GetIntFromString(GetParamValueFromContext(1));
+
+            SDKClient.Instance.ChatManager.GetConversationsFromServerWithPage(pageNum, pageSize, new ValueCallBack<List<Conversation>>(
+            onSuccess: (ret) =>
+            {
+                Console.WriteLine($"GetConversationsFromServerWithPage success");
+                string str = "";
+                foreach(var it in ret)
+                {
+                    str = str + it.Id + ";";
+                }
+                Console.WriteLine($"conversationList: {str}");
+            },
+            onError: (code, desc) =>
+            {
+                Console.WriteLine($"GetConversationsFromServerWithPage failed, code:{code}, desc:{desc}");
+            }
+            ));
+        }
+
+        public void CallFunc_IChatManager_RemoveMessagesFromServerWithMsgIds()
+        {
+            string convId = GetParamValueFromContext(0);
+
+            int convType = GetIntFromString(GetParamValueFromContext(1));
+            ConversationType ctype = ConversationType.Chat;
+            if (0 == convType) ctype = ConversationType.Chat;
+            if (1 == convType) ctype = ConversationType.Group;
+            if (2 == convType) ctype = ConversationType.Room;
+
+            List<string> list = new List<string>();
+            string msgId = GetParamValueFromContext(2);
+            list.Add(msgId);
+
+            SDKClient.Instance.ChatManager.RemoveMessagesFromServer(convId, ctype, list, new CallBack(
+            onSuccess: () =>
+            {
+                Console.WriteLine($"RemoveMessagesFromServerWithMsgIds success");
+            },
+            onError: (code, desc) =>
+            {
+                Console.WriteLine($"RemoveMessagesFromServerWithMsgIds failed, code:{code}, desc:{desc}");
+            }
+            ));
+        }
+
+        public void CallFunc_IChatManager_RemoveMessagesFromServerWithTs()
+        {
+            string convId = GetParamValueFromContext(0);
+
+            int convType = GetIntFromString(GetParamValueFromContext(1));
+            ConversationType ctype = ConversationType.Chat;
+            if (0 == convType) ctype = ConversationType.Chat;
+            if (1 == convType) ctype = ConversationType.Group;
+            if (2 == convType) ctype = ConversationType.Room;
+
+            long ts = GetLongFromString(GetParamValueFromContext(2));
+
+            SDKClient.Instance.ChatManager.RemoveMessagesFromServer(convId, ctype, ts, new CallBack(
+            onSuccess: () =>
+            {
+                Console.WriteLine($"RemoveMessagesFromServerWithTs success");
+            },
+            onError: (code, desc) =>
+            {
+                Console.WriteLine($"RemoveMessagesFromServerWithTs failed, code:{code}, desc:{desc}");
+            }
+            ));
+        }
+
         public void CallFunc_IChatManager()
         {
             if (select_context.level2_item.CompareTo("DeleteConversation") == 0)
@@ -3876,6 +3977,24 @@ namespace WinSDKTest
             if (select_context.level2_item.CompareTo("GetReactionDetail") == 0)
             {
                 CallFunc_IChatManager_GetReactionDetail();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("GetConversationsFromServerWithPage") == 0)
+            {
+                CallFunc_IChatManager_GetConversationsFromServerWithPage();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("RemoveMessagesFromServerWithMsgIds") == 0)
+            {
+                CallFunc_IChatManager_RemoveMessagesFromServerWithMsgIds();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("RemoveMessagesFromServerWithTs") == 0)
+            {
+                CallFunc_IChatManager_RemoveMessagesFromServerWithTs();
                 return;
             }
         }

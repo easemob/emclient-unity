@@ -59,6 +59,8 @@ const char* CopyToPointer(const string& src);
 
 bool CheckClientInitOrNot(const char* cbid);
 
+bool CheckAppKey(const char* app_key);
+
 string GetLeftValue(const string& str);
 string GetRightValue(const string& str);
 

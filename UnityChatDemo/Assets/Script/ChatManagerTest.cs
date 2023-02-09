@@ -38,6 +38,9 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     private Button removeMessagesBeforeTimestampBtn;
     private Button deleteConversationFromServerBtn;
     private Button deleteConversationBtn;
+    private Button getConversationsFromServerWithPageBtn;
+    private Button removeMessagesFromServerWithMsgIdsBtn;
+    private Button removeMessagesFromServerWithTsBtn;
 
     private void Awake()
     {
@@ -75,6 +78,9 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         removeMessagesBeforeTimestampBtn = transform.Find("Scroll View/Viewport/Content/RemoveMessagesBeforeTimestampBtn").GetComponent<Button>();
         deleteConversationFromServerBtn = transform.Find("Scroll View/Viewport/Content/DeleteConversationFromServerBtn").GetComponent<Button>();
         deleteConversationBtn = transform.Find("Scroll View/Viewport/Content/DeleteLocalConversationAndMessage").GetComponent<Button>();
+        getConversationsFromServerWithPageBtn = transform.Find("Scroll View/Viewport/Content/GetConversationsFromServerWithPageBtn").GetComponent<Button>();
+        removeMessagesFromServerWithMsgIdsBtn = transform.Find("Scroll View/Viewport/Content/RemoveMessagesFromServerWithMsgIdsBtn").GetComponent<Button>();
+        removeMessagesFromServerWithTsBtn = transform.Find("Scroll View/Viewport/Content/RemoveMessagesFromServerWithTsBtn").GetComponent<Button>();
 
         sendTextBtn.onClick.AddListener(SendTextBtnAction);
         sendImageBtn.onClick.AddListener(SendImageBtnAction);
@@ -103,6 +109,9 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         removeMessagesBeforeTimestampBtn.onClick.AddListener(RemoveMessagesBeforeTimestampBtnAction);
         deleteConversationFromServerBtn.onClick.AddListener(DeleteConversationFromServerBtnAction);
         deleteConversationBtn.onClick.AddListener(DeleteLocalConversationAndMessage);
+        getConversationsFromServerWithPageBtn.onClick.AddListener(GetConversationsFromServerWithPageAction);
+        removeMessagesFromServerWithMsgIdsBtn.onClick.AddListener(RemoveMessagesFromServerWithMsgIdsAction);
+        removeMessagesFromServerWithTsBtn.onClick.AddListener(RemoveMessagesFromServerWithTsAction);
         SDKClient.Instance.ChatManager.AddChatManagerDelegate(this);
     }
 
@@ -903,6 +912,141 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         config.AddField("id");
 
         UIManager.DefaultInputAlert(transform, config);
+    }
+
+    void GetConversationsFromServerWithPageAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string pageNumStr = dict["PageNum"];
+            string pageSizeStr = dict["PageSize"];
+
+            int pageNum = int.Parse(pageNumStr);
+            int pageSize = int.Parse(pageSizeStr);
+
+            SDKClient.Instance.ChatManager.GetConversationsFromServerWithPage(pageNum, pageSize, new ValueCallBack<List<Conversation>>(
+            onSuccess: (ret) =>
+            {
+                string str = "";
+                foreach (var it in ret)
+                {
+                    str = str + it.Id + ";";
+                }
+                UIManager.DefaultAlert(transform, str);
+            },
+            onError: (code, desc) =>
+            {
+                UIManager.ErrorAlert(transform, code, desc);
+            }
+            ));
+        });
+
+        config.AddField("PageNum");
+        config.AddField("PageSize");
+
+        UIManager.DefaultInputAlert(transform, config);
+        Debug.Log("GetConversationsFromServerWithPageAction");
+    }
+
+    void RemoveMessagesFromServerWithMsgIdsAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string conversationId = dict["ConversationId"];
+            string chatType = dict["ConversationType(0/1/2)"];
+            string msgId = dict["MsgId"];
+            if (null == conversationId || 0 == conversationId.Length || null == chatType || 0 == chatType.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
+            ConversationType type = ConversationType.Chat;
+            int iType = int.Parse(dict["ConversationType(0/1/2)"]);
+            switch (iType)
+            {
+                case 0:
+                    type = ConversationType.Chat;
+                    break;
+                case 1:
+                    type = ConversationType.Group;
+                    break;
+                case 2:
+                    type = ConversationType.Room;
+                    break;
+            }
+
+            List<string> list = new List<string>();
+            list.Add(msgId);
+
+            SDKClient.Instance.ChatManager.RemoveMessagesFromServer(conversationId, type, list, new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("ConversationId");
+        config.AddField("ConversationType(0/1/2)");
+        config.AddField("MsgId");
+
+        UIManager.DefaultInputAlert(transform, config);
+        Debug.Log("RemoveMessagesFromServerWithMsgIdsAction");
+    }
+
+    void RemoveMessagesFromServerWithTsAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string conversationId = dict["ConversationId"];
+            string chatType = dict["ConversationType(0/1/2)"];
+            string tsStr = dict["TimeStamp"];
+            if (null == conversationId || 0 == conversationId.Length || null == chatType || 0 == chatType.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
+            ConversationType type = ConversationType.Chat;
+            int iType = int.Parse(dict["ConversationType(0/1/2)"]);
+            switch (iType)
+            {
+                case 0:
+                    type = ConversationType.Chat;
+                    break;
+                case 1:
+                    type = ConversationType.Group;
+                    break;
+                case 2:
+                    type = ConversationType.Room;
+                    break;
+            }
+
+            long ts = long.Parse(tsStr);
+
+            SDKClient.Instance.ChatManager.RemoveMessagesFromServer(conversationId, type, ts, new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("ConversationId");
+        config.AddField("ConversationType(0/1/2)");
+        config.AddField("TimeStamp");
+
+        UIManager.DefaultInputAlert(transform, config);
+        Debug.Log("RemoveMessagesFromServerWithTsAction");
     }
 
     // Start is called before the first frame update

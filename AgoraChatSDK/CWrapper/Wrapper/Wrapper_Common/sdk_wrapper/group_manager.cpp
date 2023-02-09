@@ -552,29 +552,38 @@ namespace sdk_wrapper {
 
         AddGroupProgressItem(local_cbid);
 
-        EMCallbackPtr callbackPtr(new EMCallback(gCallbackObserverHandle,
-            [=]()->bool {
+        thread t([=]() {
+            EMCallbackPtr callbackPtr(new EMCallback(gCallbackObserverHandle,
+                [=]()->bool {
+                    return true;
+                },
+                [=](const easemob::EMErrorPtr error)->bool {
+                    return true;
+                },
+                [=](int progress) {
+                    int last_progress = GetGroupLastProgress(local_cbid);
+                    if (progress - last_progress >= 5) {
+                        string call_back_jstr = MyJson::ToJsonWithProcess(local_cbid.c_str(), progress);
+                        CallBackProgress(local_cbid.c_str(), call_back_jstr.c_str());
+                        UpdateGroupProgressMap(local_cbid, progress);
+                    }
+                    return;
+                }));
+
+            EMError error;
+            CLIENT->getGroupManager().downloadGroupSharedFile(group_id, save_path, file_id, callbackPtr, error);
+
+            DeleteGroupProgressItem(local_cbid);
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
                 string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
-                return true;
-            },
-            [=](const easemob::EMErrorPtr error)->bool {
-                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error->mErrorCode, error->mDescription.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
-                return true;
-            },
-            [=](int progress) {
-                int last_progress = GetGroupLastProgress(local_cbid);
-                if (progress - last_progress >= 5) {
-                    string call_back_jstr = MyJson::ToJsonWithProcess(local_cbid.c_str(), progress);
-                    CallBackProgress(local_cbid.c_str(), call_back_jstr.c_str());
-                    UpdateGroupProgressMap(local_cbid, progress);
-                }
-                return;
-            }));
-
-        EMError error;
-        EMGroupPtr groupPtr = CLIENT->getGroupManager().downloadGroupSharedFile(group_id, save_path, file_id, callbackPtr, error);
+            }
+        });
+        t.detach();
 
         return nullptr;
     }
@@ -1312,19 +1321,11 @@ namespace sdk_wrapper {
         AddGroupProgressItem(local_cbid);
 
         thread t([=]() {
-            EMError error;
-
             EMCallbackPtr callbackPtr(new EMCallback(gCallbackObserverHandle,
                 [=]()->bool {
-                    DeleteGroupProgressItem(local_cbid);
-                    string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
-                    CallBack(local_cbid.c_str(), call_back_jstr.c_str());
                     return true;
                 },
                 [=](const easemob::EMErrorPtr error)->bool {
-                    DeleteGroupProgressItem(local_cbid);
-                    string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error->mErrorCode, error->mDescription.c_str());
-                    CallBack(local_cbid.c_str(), call_back_jstr.c_str());
                     return false;
                 },
                 [=](int progress) {
@@ -1338,7 +1339,18 @@ namespace sdk_wrapper {
                     return;
                 }));
 
+            EMError error;
             CLIENT->getGroupManager().uploadGroupSharedFile(group_id, file_path, callbackPtr, error);
+
+            DeleteGroupProgressItem(local_cbid);
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+                string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
         });
         t.detach();
 

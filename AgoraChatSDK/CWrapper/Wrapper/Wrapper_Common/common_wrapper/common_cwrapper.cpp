@@ -67,6 +67,7 @@ void InitManagerMap()
 	func_map_chat_manager["getConversation"] = ChatManager_ConversationWithType;
 	func_map_chat_manager["getThreadConversation"] = ChatManager_ConversationWithType;
 	func_map_chat_manager["getConversationsFromServer"] = ChatManager_GetConversationsFromServer;
+    func_map_chat_manager["getConversationsFromServerWithPage"] = ChatManager_GetConversationsFromServerWithPage;
 	func_map_chat_manager["getUnreadMessageCount"] = ChatManager_GetUnreadMessageCount;
 	func_map_chat_manager["importMessages"] = ChatManager_InsertMessages;
 	func_map_chat_manager["loadAllConversations"] = ChatManager_LoadAllConversationsFromDB;
@@ -90,6 +91,9 @@ void InitManagerMap()
 	func_map_chat_manager["removeReaction"] = ChatManager_RemoveReaction;
 	func_map_chat_manager["fetchReactionList"] = ChatManager_GetReactionList;
 	func_map_chat_manager["fetchReactionDetail"] = ChatManager_GetReactionDetail;
+    func_map_chat_manager["removeMessagesFromServerWithMsgIds"] = ChatManager_RemoveMessagesFromServerWithMsgIds;
+    func_map_chat_manager["removeMessagesFromServerWithTs"] = ChatManager_RemoveMessagesFromServerWithTs;
+
 	manager_map["EMChatManager"] = func_map_chat_manager;
 
 	//message manager

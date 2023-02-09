@@ -72,10 +72,21 @@ namespace sdk_wrapper
 
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_InitWithOptions(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
+        // 0: default and correct
+        // 100: App key is invalid
+        int ret = 0;
+
         // singleton client handle
         if (nullptr == gClient) {
+
             configs = Options::FromJson(jstr, "./sdkdata", "./sdkdata");
-            gClient = EMClient::create(configs);
+
+            if (nullptr == configs) {
+                ret = 100;
+            }
+            else {
+                gClient = EMClient::create(configs);
+            }
         }
         else {
             if (NeedAllocResource) {
@@ -84,15 +95,23 @@ namespace sdk_wrapper
             }
         }
 
-        Client_AddListener();
-        ChatManager_AddListener();
-        GroupManager_AddListener();
-        RoomManager_AddListener();
-        ContactManager_AddListener();
-        PresenceManager_AddListener();
-        ThreadManager_AddListener();
+        if (0 == ret) {
+            Client_AddListener();
+            ChatManager_AddListener();
+            GroupManager_AddListener();
+            RoomManager_AddListener();
+            ContactManager_AddListener();
+            PresenceManager_AddListener();
+            ThreadManager_AddListener();
+        }
 
-        return nullptr;
+        JSON_STARTOBJ
+        writer.Key("ret");
+        writer.Int(ret);
+        JSON_ENDOBJ
+
+        string json = s.GetString();
+        return CopyToPointer(json);
     }
 
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_CurrentUsername(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -277,38 +296,38 @@ namespace sdk_wrapper
         string local_jstr = jstr;
         string local_cbid = cbid;
 
-        EMError error;
-        string response = "";
-
         // parse param json
         Document d; d.Parse(local_jstr.c_str());
         string user_name = GetJsonValue_String(d, "userId", "");
         string agora_token = GetJsonValue_String(d, "token", "");
 
-        // get easemob token with agora_token
-        CLIENT->getChatTokenbyAgoraToken(agora_token, response, error);
-        if (EMError::EM_NO_ERROR != error.mErrorCode) {
-            string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
-            CallBack(local_cbid.c_str(), call_back_jstr.c_str());
-            return nullptr;
-        }
-
-        string easemob_token = "";
-        string expire_ts = "";
-
-        // parse easemob token from json
-        if (!token_wrapper.GetTokenCofigFromJson(response, easemob_token, expire_ts)) {
-            error.mErrorCode = EMError::GENERAL_ERROR;
-            error.mDescription = "Cannot get token config from response.";
-            string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
-            CallBack(local_cbid.c_str(), call_back_jstr.c_str());
-            return nullptr;
-        }
-
-        // async login with easemob token
         thread t([=]() {
-            EMErrorPtr error = CLIENT->loginWithToken(user_name, easemob_token);
-            if (EMError::EM_NO_ERROR == error->mErrorCode) {
+
+            EMError error;
+            string response = "";
+
+            // get easemob token with agora_token
+            CLIENT->getChatTokenbyAgoraToken(agora_token, response, error);
+            if (EMError::EM_NO_ERROR != error.mErrorCode) {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+                return;
+            }
+
+            string easemob_token = "";
+            string expire_ts = "";
+
+            // parse easemob token from json
+            if (!token_wrapper.GetTokenCofigFromJson(response, easemob_token, expire_ts)) {
+                error.mErrorCode = EMError::GENERAL_ERROR;
+                error.mDescription = "Cannot get token config from response.";
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+                return;
+            }
+
+            EMErrorPtr error_ptr = CLIENT->loginWithToken(user_name, easemob_token);
+            if (EMError::EM_NO_ERROR == error_ptr->mErrorCode) {
 
                 token_wrapper.SetTokenInAutoLogin(user_name, easemob_token, expire_ts);
                 //token_wrapper.SaveAutoLoginConfigToFile(configs->deviceUuid()); // not support auto login for platform.
@@ -320,7 +339,7 @@ namespace sdk_wrapper
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
             else {
-                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error->mErrorCode, error->mDescription.c_str());
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error_ptr->mErrorCode, error_ptr->mDescription.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
          });
