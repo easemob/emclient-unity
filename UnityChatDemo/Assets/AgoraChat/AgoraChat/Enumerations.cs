@@ -423,7 +423,7 @@ namespace AgoraChat
     * \~english
     * The chatroom message priority enum.
     */
-    public enum MessagePriority
+    public enum RoomMessagePriority
     {
         /**
         * \~chinese

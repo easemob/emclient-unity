@@ -70,7 +70,7 @@ namespace AgoraChat
          * \~english
          * The chatroom message priority of delivering.
          */
-        public MessagePriority Priority = MessagePriority.Normal;
+        public RoomMessagePriority Priority = RoomMessagePriority.Normal;
 
         /**
 	     * \~chinese
