@@ -124,6 +124,7 @@ namespace WinSDKTest
             Console.WriteLine($"To: {msg.To}");
             //Console.WriteLine($"RecallBy: {msg.RecallBy}");
             Console.WriteLine($"message type: {msg.MessageType}");
+            Console.WriteLine($"priority: {msg.Priority}");
             Console.WriteLine($"diection: {msg.Direction}");
             Console.WriteLine($"status: {msg.Status}");
             Console.WriteLine($"localtime: {msg.LocalTime}");
