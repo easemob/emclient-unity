@@ -63,25 +63,18 @@ namespace AgoraChat
          */
         public MessageType MessageType;
 
+        private RoomMessagePriority Priority = RoomMessagePriority.Normal;
+
         /**
 	     * \~chinese
-         * 聊天室消息的送达优先级。
+         * 设置聊天室消息的送达优先级。
          *
          * \~english
-         * The chatroom message priority of delivering.
+         * Set the chatroom message priority of delivering.
          */
-        public MessagePriority? Priority
+        public void SetRoomMessagePriority(RoomMessagePriority priority)
         {
-            private get
-            {
-                return Priority;
-            }
-
-            set
-            {
-                Priority = value;
-            }
-
+            Priority = priority;
         }
 
         /**
@@ -759,11 +752,7 @@ namespace AgoraChat
             jo.AddWithoutNull("serverTime", ServerTime);
             jo.AddWithoutNull("convId", ConversationId);
             jo.AddWithoutNull("msgId", MsgId);
-            if (Priority != null)
-            {
-                jo.AddWithoutNull("priority", Priority?.ToInt());
-            }
-
+            jo.AddWithoutNull("priority", Priority.ToInt());
             jo.AddWithoutNull("status", Status.ToInt());
             jo.AddWithoutNull("chatType", MessageType.ToInt());
             jo.AddWithoutNull("direction", Direction.ToInt());

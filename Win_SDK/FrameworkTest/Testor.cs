@@ -124,6 +124,7 @@ namespace WinSDKTest
             Console.WriteLine($"To: {msg.To}");
             //Console.WriteLine($"RecallBy: {msg.RecallBy}");
             Console.WriteLine($"message type: {msg.MessageType}");
+            //Console.WriteLine($"priority: {msg.Priority}");
             Console.WriteLine($"diection: {msg.Direction}");
             Console.WriteLine($"status: {msg.Status}");
             Console.WriteLine($"localtime: {msg.LocalTime}");
@@ -3139,7 +3140,7 @@ namespace WinSDKTest
             msg.MessageType = msg_type;
             msg.IsThread = is_thread;
             msg.IsNeedGroupAck = true;
-            msg.Priority = MessagePriority.Low;
+            msg.SetRoomMessagePriority(RoomMessagePriority.High);
             AgoraChat.MessageBody.TextBody tb = (AgoraChat.MessageBody.TextBody)msg.Body;
             tb.TargetLanguages = new List<string>();
             tb.TargetLanguages.Add("en");

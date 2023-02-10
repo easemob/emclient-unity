@@ -652,26 +652,26 @@ namespace AgoraChat
 
     internal static class MessagePriorityHelper
     {
-        public static int ToInt(this MessagePriority priority)
+        public static int ToInt(this RoomMessagePriority priority)
         {
             switch (priority)
             {
-                case MessagePriority.High: return 0;
-                case MessagePriority.Normal: return 1;
-                case MessagePriority.Low: return 2;
+                case RoomMessagePriority.High: return 0;
+                case RoomMessagePriority.Normal: return 1;
+                case RoomMessagePriority.Low: return 2;
                 default: return 1;
             }
         }
 
-        public static MessagePriority ToMessagePriority(this int i)
+        public static RoomMessagePriority ToMessagePriority(this int i)
         {
             switch (i)
             {
-                case 0: return MessagePriority.High;
-                case 1: return MessagePriority.Normal;
-                case 2: return MessagePriority.Low;
+                case 0: return RoomMessagePriority.High;
+                case 1: return RoomMessagePriority.Normal;
+                case 2: return RoomMessagePriority.Low;
                 default:
-                    return MessagePriority.Normal;
+                    return RoomMessagePriority.Normal;
             }
         }
     }
