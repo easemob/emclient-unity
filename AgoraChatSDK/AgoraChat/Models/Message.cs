@@ -70,26 +70,38 @@ namespace AgoraChat
          * \~english
          * The chatroom message priority of delivering.
          */
-        public MessagePriority Priority = MessagePriority.Normal;
+        public MessagePriority? Priority
+        {
+            private get
+            {
+                return Priority;
+            }
+
+            set
+            {
+                Priority = value;
+            }
+
+        }
 
         /**
-	     * \~chinese
-	     * 消息方向。
+         * \~chinese
+         * 消息方向。
          * 
          * - `SEND`：该消息由当前用户发出；
          * - `RECEIVE`：该消息由当前用户接收；
          * 
          * 详见 {@link Direct}。
-	     * 
-	     * \~english
-	     * The message direction, that is, whether the message is received or sent. 
+         * 
+         * \~english
+         * The message direction, that is, whether the message is received or sent. 
          *
          * - `SEND`: This message is sent from the local client.
          * - `RECEIVE`: The message is received by the local client.
          *
          * See {@link Direct}.
          *  
-	     */
+         */
         public MessageDirection Direction;
 
         /**
@@ -189,7 +201,7 @@ namespace AgoraChat
          * @note
          * If you want to set message read, we recommend you to use {@link Conversation#MarkAllMessagesAsRead()} in a conversation.
          *
-		*/
+        */
         public bool IsRead = false;
 
         /**
@@ -255,10 +267,10 @@ namespace AgoraChat
          * \~chinese
          * 获取Reaction列表。
          * @return  Reaction 列表。
-		 *
+         *
          * \~english
          * Get the list of Reaction.
-		 *
+         *
          * @return The list of Reactions.
          */
         public List<MessageReaction> ReactionList()
@@ -269,7 +281,7 @@ namespace AgoraChat
         /**
          * \~chinese
          * 设置及获取是否是 Thread 消息。
-		 *
+         *
          * \~english
          * Sets and get whether the message is in a thread.
          */
@@ -323,7 +335,7 @@ namespace AgoraChat
         }
 
         /**
-	     * \~chinese
+         * \~chinese
          * 创建一条发送的消息。
          *
          * @param to        消息接收方 ID。
@@ -722,7 +734,6 @@ namespace AgoraChat
                     ServerTime = (long)jo["serverTime"].AsDouble;
                     ConversationId = jo["convId"].Value;
                     MsgId = jo["msgId"].Value;
-                    Priority = jo["priority"].AsInt.ToMessagePriority();
                     Status = jo["status"].AsInt.ToMessageStatus();
                     MessageType = jo["chatType"].AsInt.ToMessageType();
                     Direction = jo["direction"].AsInt.ToMesssageDirection();
@@ -748,7 +759,11 @@ namespace AgoraChat
             jo.AddWithoutNull("serverTime", ServerTime);
             jo.AddWithoutNull("convId", ConversationId);
             jo.AddWithoutNull("msgId", MsgId);
-            jo.AddWithoutNull("priority", Priority.ToInt());
+            if (Priority != null)
+            {
+                jo.AddWithoutNull("priority", Priority?.ToInt());
+            }
+
             jo.AddWithoutNull("status", Status.ToInt());
             jo.AddWithoutNull("chatType", MessageType.ToInt());
             jo.AddWithoutNull("direction", Direction.ToInt());
