@@ -36,6 +36,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -109,6 +110,12 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
             ret = fetchReactionDetail(jsonObject, callback);
         } else if (EMSDKMethod.reportMessage.equals(method)) {
             ret = reportMessage(jsonObject, callback);
+        } else if (EMSDKMethod.getConversationsFromServerWithPage.equals(method)) {
+            ret = getConversationsFromServerWithPage(jsonObject, callback);
+        } else if (EMSDKMethod.removeMessagesFromServerWithMsgIds.equals(method)) {
+            ret = removeMessagesFromServerWithMsgIds(jsonObject, callback);
+        } else if (EMSDKMethod.removeMessagesFromServerWithTs.equals(method)) {
+            ret = removeMessagesFromServerWithTs(jsonObject, callback);
         }
         else {
             super.onMethodCall(method, jsonObject, callback);
@@ -390,13 +397,13 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
                 }
             }catch(IllegalArgumentException e) {
                 retry = true;
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
         }while (retry);
 
         return EMHelper.getReturnJsonObject(conversations).toString();
     }
+
+
 
     private String getConversationsFromServer(JSONObject params, EMWrapperCallback callback) throws JSONException {
         asyncRunnable(() -> {
@@ -423,15 +430,60 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
                     for (EMConversation conversation : list) {
                         conversations.put(EMConversationHelper.toJson(conversation));
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }finally {
+                } finally {
                     onSuccess(conversations, callback);
                 }
             } catch (HyphenateException e) {
                 onError(e, callback);
             }
         });
+        return null;
+    }
+
+    private String getConversationsFromServerWithPage(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        int pageNum = params.getInt("pageNum");
+        int pageSize = params.getInt("pageSize");
+        EMCommonValueCallback<Map<String, EMConversation>> callBack = new EMCommonValueCallback<Map<String, EMConversation>>(callback){
+            @Override
+            public void onSuccess(Map<String, EMConversation> object) {
+                ArrayList<EMConversation>list = new ArrayList<>(object.values());
+                asyncRunnable(() -> {
+                    boolean retry = false;
+                    List<JSONObject> conversations = new ArrayList<>();
+                    do{
+                        try{
+                            retry = false;
+                            Collections.sort(list, (o1, o2) -> {
+                                if (o1 == null && o2 == null) {
+                                    return 0;
+                                }
+                                if (o1.getLastMessage() == null) {
+                                    return 1;
+                                }
+
+                                if (o2.getLastMessage() == null) {
+                                    return -1;
+                                }
+
+                                if (o1.getLastMessage().getMsgTime() == o2.getLastMessage().getMsgTime()) {
+                                    return 0;
+                                }
+
+                                return o2.getLastMessage().getMsgTime() - o1.getLastMessage().getMsgTime() > 0 ? 1 : -1;
+                            });
+                            for (EMConversation conversation : list) {
+                                conversations.add(EMConversationHelper.toJson(conversation));
+                            }
+
+                        }catch(IllegalArgumentException e) {
+                            retry = true;
+                        }
+                    }while (retry);
+                    updateObject(conversations);
+                });
+            }
+        };
+        EMClient.getInstance().chatManager().asyncFetchConversationsFromServer(pageNum, pageSize, callBack);
         return null;
     }
 
@@ -659,6 +711,35 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
         EMClient.getInstance().chatManager().asyncReportMessage(msgId, tag, reason, new EMCommonCallback(callback));
         return null;
     }
+
+    private String removeMessagesFromServerWithMsgIds(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        String conversationId = params.getString("convId");
+        EMConversation.EMConversationType type = EMConversationHelper.typeFromInt(params.getInt("convType"));
+        EMConversation conversation = EMClient.getInstance().chatManager().getConversation(conversationId, type, true);
+
+        JSONArray jsonArray = params.getJSONArray("msgIds");
+
+        ArrayList<String> msgIds = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            msgIds.add((String) jsonArray.get(i));
+        }
+
+        conversation.removeMessagesFromServer(msgIds, new EMCommonCallback(callback));
+        return null;
+    }
+
+    private String removeMessagesFromServerWithTs(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        String conversationId = params.getString("convId");
+        EMConversation.EMConversationType type = EMConversationHelper.typeFromInt(params.getInt("convType"));
+        EMConversation conversation = EMClient.getInstance().chatManager().getConversation(conversationId, type, true);
+        long timestamp = 0;
+        if(params.has("timestamp")) {
+            timestamp = params.getLong("timestamp");
+        }
+        conversation.removeMessagesFromServer(timestamp, new EMCommonCallback(callback));
+        return null;
+    }
+
     
     private void registerEaseListener(){
         emWrapperMessageListener = new EMWrapperMessageListener();
