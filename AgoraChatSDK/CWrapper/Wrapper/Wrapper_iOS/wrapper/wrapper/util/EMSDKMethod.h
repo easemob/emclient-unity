@@ -91,6 +91,9 @@ static NSString *const removeReaction = @"removeReaction";
 static NSString *const fetchReactionList = @"fetchReactionList";
 static NSString *const fetchReactionDetail = @"fetchReactionDetail";
 static NSString *const reportMessage = @"reportMessage";
+static NSString *const fetchConversationsFromServerWithPage = @"fetchConversationsFromServerWithPage";
+static NSString *const removeMessagesFromServerWithMsgIds = @"removeMessagesFromServerWithMsgIds";
+static NSString *const removeMessagesFromServerWithTs = @"removeMessagesFromServerWithTs";
 
 /// EMMessage listener
 static NSString *const onMessageProgressUpdate = @"onMessageProgressUpdate";

@@ -9,13 +9,14 @@ import org.json.JSONObject;
 import java.util.Iterator;
 
 public class EMConversationHelper {
-    public static JSONObject toJson(EMConversation conversation) throws JSONException{
+    public static JSONObject toJson(EMConversation conversation){
         if (conversation == null) return null;
         JSONObject data = new JSONObject();
-        data.put("convId", conversation.conversationId());
-        data.put("type", typeToInt(conversation.getType()));
-        data.put("isThread", conversation.isChatThread());
+
         try {
+            data.put("convId", conversation.conversationId());
+            data.put("type", typeToInt(conversation.getType()));
+            data.put("isThread", conversation.isChatThread());
             data.put("ext", jsonStringToMap(conversation.getExtField()));
         } catch (JSONException e) {
 

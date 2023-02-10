@@ -97,6 +97,12 @@
         ret = [self fetchReactionDetail:params callback:callback];
     }else if([method isEqualToString:reportMessage]) {
         ret = [self reportMessage:params callback:callback];
+    }else if([method isEqualToString:fetchConversationsFromServerWithPage]) {
+        ret = [self reportMessage:params callback:callback];
+    }else if([method isEqualToString:removeMessagesFromServerWithMsgIds]) {
+        ret = [self reportMessage:params callback:callback];
+    }else if([method isEqualToString:removeMessagesFromServerWithTs]) {
+        ret = [self reportMessage:params callback:callback];
     }else {
         ret = [super onMethodCall:method params:params callback:callback];
     }
@@ -651,6 +657,60 @@
         [weakSelf wrapperCallback:callback error:error object:nil];
     }];
     
+    return nil;
+}
+
+- (NSString *)fetchConversationsFromServerWithPage:(NSDictionary *)params
+                                          callback:(EMWrapperCallback *)callback {
+    int pageSize = [params[@"pageSize"] intValue];
+    int pageNum = [params[@"pageNum"] intValue];
+    __weak EMChatManagerWrapper * weakSelf = self;
+    [EMClient.sharedClient.chatManager getConversationsFromServerByPage:pageNum
+                                                               pageSize:pageSize
+                                                             completion:^(NSArray<EMConversation *> * _Nullable aConversations, EMError * _Nullable aError)
+     {
+        NSArray *sortedList = [aConversations sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+            if (((EMConversation *)obj1).latestMessage.timestamp > ((EMConversation *)obj2).latestMessage.timestamp) {
+                return NSOrderedAscending;
+            }else {
+                return NSOrderedDescending;
+            }
+        }];
+        NSMutableArray *conList = [NSMutableArray array];
+        for (EMConversation *conversation in sortedList) {
+            [conList addObject:[conversation toJson]];
+        }
+        
+        [weakSelf wrapperCallback:callback error:aError object: conList];
+    }];
+    
+    return nil;
+}
+
+- (NSString *)removeMessagesFromServerWithMsgIds:(NSDictionary *)param
+                                        callback:(EMWrapperCallback *)callback {
+    __weak EMChatManagerWrapper * weakSelf = self;
+    NSString *convId = param[@"convId"];
+    EMConversationType type = [EMConversation typeFromInt:[param[@"convType"] intValue]];
+    EMConversation *conversation = [EMClient.sharedClient.chatManager getConversation:convId type:type createIfNotExist:YES];
+    NSArray *msgIds = param[@"msgIds"];
+    [conversation removeMessagesFromServerMessageIds:msgIds completion:^(EMError * _Nullable aError) {
+        [weakSelf wrapperCallback:callback error:aError object:nil];
+    }];
+    
+    return nil;
+}
+
+- (NSString *)removeMessagesFromServerWithTs:(NSDictionary *)param
+                                    callback:(EMWrapperCallback *)callback {
+    __weak EMChatManagerWrapper * weakSelf = self;
+    NSString *convId = param[@"convId"];
+    EMConversationType type = [EMConversation typeFromInt:[param[@"convType"] intValue]];
+    long timestamp = [param[@"timestamp"] longValue];
+    EMConversation *conversation = [EMClient.sharedClient.chatManager getConversation:convId type:type createIfNotExist:YES];
+    [conversation removeMessagesFromServerWithTimeStamp:timestamp completion:^(EMError * _Nullable aError) {
+        [weakSelf wrapperCallback:callback error:aError object:nil];
+    }];
     return nil;
 }
 

@@ -86,6 +86,12 @@ public class EMSDKMethod {
     public static final String fetchReactionDetail = "fetchReactionDetail";
     public static final String reportMessage = "reportMessage";
 
+    public static final String getConversationsFromServerWithPage = "getConversationsFromServerWithPage";
+
+    public static final String removeMessagesFromServerWithMsgIds = "removeMessagesFromServerWithMsgIds";
+
+    public static final String removeMessagesFromServerWithTs = "removeMessagesFromServerWithTs";
+
     /// EMMessage listener
     public static final String onMessageProgressUpdate = "onMessageProgressUpdate";
     public static final String onMessageError = "onMessageError";

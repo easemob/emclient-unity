@@ -99,11 +99,14 @@
 - (NSString *)sdkInit:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
     NSDictionary *jo = params[@"options"];
     EMOptions *options = [EMOptions fromJson:jo];
-    [EMClient.sharedClient initializeSDKWithOptions:options];
+    EMError *err = [EMClient.sharedClient initializeSDKWithOptions:options];
+    if(!err) {
+        return [[EMHelper getReturnJsonObject:@(err.code)] toJsonString];
+    }
     [self bindingManagers];
     [self registerEaseListener];
     [self wrapperCallback:callback error:nil object:nil];
-    return nil;
+    return [[EMHelper getReturnJsonObject:@(0)] toJsonString];
 }
 
 - (NSString *)createAccount:(NSDictionary *)params callback:(EMWrapperCallback *)callback {

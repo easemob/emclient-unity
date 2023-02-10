@@ -50,6 +50,7 @@
     msg.isDeliverAcked = [aJson[@"hasDeliverAck"] boolValue];
     msg.isRead = [aJson[@"hasRead"] boolValue];
     msg.isNeedGroupAck = [aJson[@"isNeedGroupAck"] boolValue];
+    msg.priority = [aJson[@"priority"] integerValue];
     // read only
     // msg.groupAckCount = [aJson[@"groupAckCount"] intValue]
     // msg.chatThread = [EMChatThread forJson:aJson[@"thread"]];
