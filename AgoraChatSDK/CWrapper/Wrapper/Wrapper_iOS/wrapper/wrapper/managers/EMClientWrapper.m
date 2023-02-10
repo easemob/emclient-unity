@@ -179,7 +179,7 @@
     NSString *token = params[@"token"];
     __weak EMBaseManager *weakSelf = self;
     [EMClient.sharedClient loginWithUsername:username
-                                       token:token
+                                  agoraToken:token
                                   completion:^(NSString * _Nonnull aUsername, EMError * _Nullable aError)
      {
         [weakSelf wrapperCallback:callback error:aError object:aUsername];
