@@ -124,7 +124,7 @@ public class EMClientWrapper extends EMBaseWrapper {
         bindingManagers();
         registerEaseListener();
         onSuccess(null, callback);
-        return null;
+        return EMHelper.getReturnJsonObject(0).toString();
     }
 
     private String createAccount(JSONObject param, EMWrapperCallback callback) throws JSONException {

@@ -153,6 +153,17 @@ public class EMMessageHelper {
             message.setMsgId(json.getString("msgId"));
         }
 
+        if (json.has("priority")) {
+            int intPriority = json.getInt("priority");
+            if (intPriority == 0) {
+                message.setPriority(EMMessage.EMChatRoomMessagePriority.PriorityHigh);
+            }else if (intPriority == 1) {
+                message.setPriority(EMMessage.EMChatRoomMessagePriority.PriorityNormal);
+            }else if (intPriority == 2) {
+                message.setPriority(EMMessage.EMChatRoomMessagePriority.PriorityLow);
+            }
+        }
+
         if(json.has("attr")){
             JSONObject data = json.getJSONObject("attr");
             Iterator iterator = data.keys();
