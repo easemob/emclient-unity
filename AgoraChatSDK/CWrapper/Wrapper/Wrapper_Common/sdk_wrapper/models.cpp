@@ -1677,7 +1677,7 @@ namespace sdk_wrapper
 
     string Conversation::ToJson(EMConversationList conversations)
     {
-        if (conversations.size() == 0) return string();
+        //if (conversations.size() == 0) return string();
 
         StringBuffer s;
         Writer<StringBuffer> writer(s);
