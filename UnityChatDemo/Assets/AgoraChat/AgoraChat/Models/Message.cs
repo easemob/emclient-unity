@@ -67,10 +67,10 @@ namespace AgoraChat
 
         /**
 	     * \~chinese
-         * 设置聊天室消息的送达优先级。
+         * 设置聊天室消息优先级。
          *
          * \~english
-         * Set the chatroom message priority of delivering.
+         * Sets the priority of chat room messages.
          */
         public void SetRoomMessagePriority(RoomMessagePriority priority)
         {
