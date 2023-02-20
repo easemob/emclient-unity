@@ -366,6 +366,7 @@ namespace AgoraChat
                 To = to,
                 From = user_name,
                 ConversationId = to,
+                IsRead = true,
             };
 
             return msg;
