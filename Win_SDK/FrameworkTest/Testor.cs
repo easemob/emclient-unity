@@ -9016,7 +9016,7 @@ namespace WinSDKTest
 
         public void OnContactInvited(string username, string reason)
         {
-            SDKClient.Instance.ContactManager.AcceptInvitation("123");
+            //SDKClient.Instance.ContactManager.AcceptInvitation("123");
             Console.WriteLine($"IContactManagerDelegate3 OnContactInvited: {username}, reason:{reason}, total listener count:{LISTENER_COUNT}");
         }
 
