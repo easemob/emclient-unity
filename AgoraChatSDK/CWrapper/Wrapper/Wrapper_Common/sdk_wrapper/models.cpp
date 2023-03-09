@@ -1438,6 +1438,12 @@ namespace sdk_wrapper
             writer.String(attribute->value<string>().c_str());
             //Note: here not support to parse str value further
         }
+        else if (attribute->is<EMJsonString>()) {
+            writer.Key("type");
+            writer.String("jstr");
+            writer.Key("value");
+            writer.String(attribute->value<EMJsonString>().c_str());
+        }
         //No need to support vector string
         /*
         else if (attribute->is<vector<string>>()) {
@@ -1446,12 +1452,6 @@ namespace sdk_wrapper
             writer.Key("value");
             vector<string> vec = attribute->value<vector<string>>();
             writer.String(MyJson::ToJson(vec).c_str());
-        }
-        else if (attribute->is<EMJsonString>()) {
-            writer.Key("type");
-            writer.String("jstr");
-            writer.Key("value");
-            writer.String(attribute->value<EMJsonString>().c_str());
         }
         */
         else {
@@ -1587,15 +1587,15 @@ namespace sdk_wrapper
         else if (type.compare("str") == 0) {
             msg->setAttribute(key, v);
         }
-        /*
-        else if (type.compare("strv") == 0) {
-            EMJsonString json(v);
-            msg->setAttribute(key, json);
-        }
         else if (type.compare("jstr") == 0) {
             EMJsonString json(v);
             msg->setAttribute(key, json);
         }
+        /*
+        else if (type.compare("strv") == 0) {
+            EMJsonString json(v);
+            msg->setAttribute(key, json);
+        }        
         else if (type.compare("attr") == 0) {
             EMJsonString json(value.GetString());
             msg->setAttribute(key, json);

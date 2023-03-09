@@ -672,7 +672,6 @@ namespace AgoraChat
          *  \~english
          *  JSON string.
          */
-        [Obsolete]
         JSONSTRING,
         //ATTRIBUTEVALUE,
         NULLOBJ
