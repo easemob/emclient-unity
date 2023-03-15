@@ -139,6 +139,8 @@ namespace AgoraChat
 
         internal void CallAction(string callbackId, JSONNode jsonNode)
         {
+            if (!callbackMap.ContainsKey(callbackId)) return;
+
             CallbackItem item = callbackMap[callbackId];
             if (item != null)
             {
@@ -149,6 +151,8 @@ namespace AgoraChat
 
         internal void CallActionProgress(string callbackId, JSONNode jsonNode)
         {
+            if (!callbackMap.ContainsKey(callbackId)) return;
+
             CallbackItem item = callbackMap[callbackId];
             if (item != null)
             {

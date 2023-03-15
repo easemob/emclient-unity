@@ -4835,7 +4835,7 @@ namespace WinSDKTest
                     Console.WriteLine($"LoadMessages found {list.Count} messages");
                     foreach (var it in list)
                     {
-                        Console.WriteLine($"message id: {it.MsgId}");
+                        Console.WriteLine($"message id: {it.MsgId}, {it.ServerTime}");
                     }
                 },
                 onError: (code, desc) => {
