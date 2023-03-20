@@ -8,11 +8,10 @@
 #import <Foundation/Foundation.h>
 #import <HyphenateChat/HyphenateChat.h>
 #import "EMSDKMethod.h"
-#import "EMWrapperCallback.h"
 #import "EMWrapperHelper.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
+@class EMWrapperCallback;
 @interface EMBaseManager : NSObject
 - (NSString *)onMethodCall:(NSString *)method
                     params:(nullable NSDictionary *)params
