@@ -1030,9 +1030,9 @@ namespace AgoraChat
          *
          * An empty list will be returned if no conversation is found.
          *
-         * @param pageNum     Current page number.
-         * @param pageSize    Conversations number in one page.
-         * @param callback    The list of obtained coversations. See {@link ValueCallBack}.
+         * @param pageNum     The current page number.
+         * @param pageSize    The number of conversations to get on each page.
+         * @param callback    The list of obtained conversations. See {@link ValueCallBack}.
          */
         public void GetConversationsFromServerWithPage(int pageNum, int pageSize, ValueCallBack<List<Conversation>> callback = null)
         {
@@ -1056,7 +1056,7 @@ namespace AgoraChat
          *
          * @param conversationId    会话 ID。
          * @param conversationType  会话类型，详见 {@link ConversationType}。
-         * @param messageIdList     消息 ID列表。
+         * @param messageIdList     要移除的消息的 ID 列表。
          * @param callback          处理结果回调，详见 {@link CallBack}。
          *
          * \~english
@@ -1066,7 +1066,7 @@ namespace AgoraChat
          *
          * @param conversationId     The conversation ID.
          * @param conversationType   The conversation type. See {@link ConversationType}.
-         * @param messageIdList      Message ID list.
+         * @param messageIdList      The list of IDs of messages to be removed.
          * @param callback           Callback for the operation. See {@link CallBack}.
          */
 

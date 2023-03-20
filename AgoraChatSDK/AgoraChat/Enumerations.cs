@@ -421,9 +421,9 @@ namespace AgoraChat
     * 聊天室消息优先级枚举。
     *
     * \~english
-    * The chatroom message priority enum.
+    * The chat room message priorities.
     */
-    public enum MessagePriority
+    public enum RoomMessagePriority
     {
         /**
         * \~chinese
