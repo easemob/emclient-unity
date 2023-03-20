@@ -38,7 +38,7 @@ const char* CopyToPointer(const string& src)
 
     memcpy(p, src.c_str(), len);
 
-    p[len] = '\0';
+    p[len - 1] = '\0';
 
     return p;
 }
