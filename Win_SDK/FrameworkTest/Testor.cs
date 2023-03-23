@@ -3134,6 +3134,9 @@ namespace WinSDKTest
             else
                 text = GetParamValueFromContext(1);
 
+            //text = "\U0001F60D" + text + "\U0001F4A9";
+
+
             MessageType msg_type = (MessageType)GetIntFromString(GetParamValueFromContext(2));
             bool is_thread = GetParamValueFromContext(3).CompareTo("true") == 0 ? true : false;
 
