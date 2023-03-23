@@ -100,7 +100,7 @@
     NSDictionary *jo = params[@"options"];
     EMOptions *options = [EMOptions fromJson:jo];
     EMError *err = [EMClient.sharedClient initializeSDKWithOptions:options];
-    if(!err) {
+    if(err != nil) {
         return [[EMHelper getReturnJsonObject:@(err.code)] toJsonString];
     }
     [self bindingManagers];

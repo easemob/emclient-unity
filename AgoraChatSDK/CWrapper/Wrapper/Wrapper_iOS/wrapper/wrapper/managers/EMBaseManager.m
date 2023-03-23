@@ -8,6 +8,7 @@
 #import "EMBaseManager.h"
 #import "EMError+Helper.h"
 #import "EMThreadQueue.h"
+#import "EMWrapperCallback.h"
 
 @implementation EMBaseManager
 

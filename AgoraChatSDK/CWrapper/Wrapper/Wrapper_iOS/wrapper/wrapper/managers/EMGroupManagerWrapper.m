@@ -10,6 +10,7 @@
 #import "EMGroup+Helper.h"
 #import "EMCursorResult+Helper.h"
 #import "EMUtil.h"
+#import "EMWrapperCallback.h"
 
 
 @interface EMGroupManagerWrapper ()
