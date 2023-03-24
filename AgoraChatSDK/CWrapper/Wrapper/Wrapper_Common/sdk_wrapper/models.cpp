@@ -253,8 +253,17 @@ namespace sdk_wrapper
         if (jnode.HasMember("sdkDataPath") && jnode["sdkDataPath"].IsString()) {
             sdk_path = jnode["sdkDataPath"].GetString();
         }
-        string rs_str = sdk_path + rs;
-        string wk_str = sdk_path + wk;
+
+        string rs_str = rs;
+        string wk_str = wk;
+        if (strlen(sdk_path.c_str()) > 0)
+        {
+            string rs_pure(rs, 2, string::npos);
+            string wk_pure(wk, 2, string::npos);
+
+            rs_str = sdk_path + "/" + rs_pure;
+            wk_str = sdk_path + "/" + wk_pure;
+        }
 
         if (CheckAppKey(app_key.c_str()) == false) return nullptr;
 
