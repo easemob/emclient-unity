@@ -7,6 +7,7 @@ using System.Threading;
 using AgoraChat;
 using AgoraChat.MessageBody;
 using AgoraChat.InternalSpace;
+using AgoraChat.SimpleJSON;
 
 namespace WinSDKTest
 {
@@ -3133,6 +3134,9 @@ namespace WinSDKTest
             else
                 text = GetParamValueFromContext(1);
 
+            //text = "\U0001F60D" + text + "\U0001F4A9";
+
+
             MessageType msg_type = (MessageType)GetIntFromString(GetParamValueFromContext(2));
             bool is_thread = GetParamValueFromContext(3).CompareTo("true") == 0 ? true : false;
 
@@ -3153,6 +3157,29 @@ namespace WinSDKTest
             Message.SetAttribute(msg.Attributes, "float", 1.23, AttributeValueType.FLOAT);
             Message.SetAttribute(msg.Attributes, "double", 1.23456, AttributeValueType.DOUBLE);
             Message.SetAttribute(msg.Attributes, "string", "hello world", AttributeValueType.STRING);
+
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            dict.Add("key1", "val1");
+            dict.Add("key2", "val2");
+            dict.Add("key3", "val3");
+            JSONObject jo = new JSONObject();
+            foreach(var it in dict)
+            {
+                jo.Add(it.Key, it.Value);
+            }
+            Message.SetAttribute(msg.Attributes, "dict", jo.ToString(), AttributeValueType.JSONSTRING);
+
+            List<string> list = new List<string>();
+            list.Add("list-item-1");
+            list.Add("list-item-2");
+            list.Add("list-item-23");
+            JSONArray jo1 = new JSONArray();
+            foreach (var it in list)
+            {
+                jo1.Add(it);
+            }
+
+            Message.SetAttribute(msg.Attributes, "list", jo1.ToString(), AttributeValueType.JSONSTRING);
 
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
                 onSuccess: () => {
@@ -4835,7 +4862,7 @@ namespace WinSDKTest
                     Console.WriteLine($"LoadMessages found {list.Count} messages");
                     foreach (var it in list)
                     {
-                        Console.WriteLine($"message id: {it.MsgId}");
+                        Console.WriteLine($"message id: {it.MsgId}, {it.ServerTime}");
                     }
                 },
                 onError: (code, desc) => {

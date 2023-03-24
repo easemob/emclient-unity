@@ -207,7 +207,7 @@ namespace sdk_wrapper {
         int int_type = GetJsonValue_Int(d, "convType", 0);
         EMConversation::EMConversationType type = Conversation::ConversationTypeFromInt(int_type);
 
-        string start_id = GetJsonValue_String(d, "startId", "");
+        string start_id = GetJsonValue_String(d, "startMessageId", "");
         int count = GetJsonValue_Int(d, "count", 20);
 
         int int_direction = GetJsonValue_Int(d, "direction", 0);

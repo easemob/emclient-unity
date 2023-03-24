@@ -19,10 +19,10 @@ namespace AgoraChat
         private float FloatV;
         private double DoubleV;
         private string StringV;
+        private string JsonStringV;
         [Obsolete]
         private List<string> StringVecV;
-        [Obsolete]
-        private string JsonStringV;
+
 
         public static AttributeValue Of(in object value, AttributeValueType type)
         {
@@ -49,6 +49,10 @@ namespace AgoraChat
             else if (type == AttributeValueType.STRING)
             {
                 return Of((string)value);
+            }
+            else if (type == AttributeValueType.JSONSTRING)
+            {
+                return Of((string)value, AttributeValueType.JSONSTRING);
             }
             else
             {
@@ -114,16 +118,19 @@ namespace AgoraChat
             return result;
         }
 
-        [Obsolete]
         internal static AttributeValue Of(in string value, AttributeValueType type)
         {
             var result = new AttributeValue();
-            if (AttributeValueType.STRING == type)
+            if (AttributeValueType.JSONSTRING == type)
+            {
+                result.VType = AttributeValueType.JSONSTRING;
+                result.JsonStringV = value;
+            }
+            else
             {
                 result.VType = AttributeValueType.STRING;
                 result.StringV = value;
             }
-
             return result;
         }
 
@@ -153,7 +160,10 @@ namespace AgoraChat
             {
                 return StringV;
             }
-
+            else if (type == AttributeValueType.JSONSTRING)
+            {
+                return JsonStringV;
+            }
             else
             {
                 return null;
@@ -197,6 +207,10 @@ namespace AgoraChat
                 case AttributeValueType.STRING:
                     _type = "str";
                     _value = StringV;
+                    break;
+                case AttributeValueType.JSONSTRING:
+                    _type = "jstr";
+                    _value = JsonStringV;
                     break;
                 default:
                     break;
@@ -243,6 +257,10 @@ namespace AgoraChat
                 case "str":
                     VType = AttributeValueType.STRING;
                     StringV = value;
+                    break;
+                case "jstr":
+                    VType = AttributeValueType.JSONSTRING;
+                    JsonStringV = value;
                     break;
                 default:
                     break;
