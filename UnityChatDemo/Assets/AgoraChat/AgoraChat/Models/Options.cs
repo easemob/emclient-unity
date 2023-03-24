@@ -1,5 +1,8 @@
 ﻿using System;
 using AgoraChat.SimpleJSON;
+#if !_WIN32
+using UnityEngine;
+#endif
 
 namespace AgoraChat
 {
@@ -273,7 +276,7 @@ namespace AgoraChat
 	     * -（默认）`GLOB`: 不限制区域。
 	     *
 	     * \~english
-	     * sets area code, will follow the area when using edge node.
+	     * Sets area code, will follow the area when using edge node.
 	     * - (Default)`GLOB`: glob.
 	     */
         public AreaCode AreaCode = AreaCode.GLOB;
@@ -347,6 +350,9 @@ namespace AgoraChat
             jo.AddWithoutNull("areaCode", (int)AreaCode);
             jo.AddWithoutNull("enableDnsConfig", EnableDNSConfig);
 
+#if !_WIN32
+            jo.AddWithoutNull("sdkDataPath", Application.persistentDataPath);
+#endif
 
             if (RestServer != null)
             {

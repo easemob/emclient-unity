@@ -243,17 +243,22 @@ namespace sdk_wrapper
         const Value& jnode = d["options"];
         if (jnode.IsNull()) return nullptr;
 
-        string rs_str = rs;
-        string wk_str = wk;
 
         string app_key = "";
         if (jnode.HasMember("appKey") && jnode["appKey"].IsString()) {            
             app_key = jnode["appKey"].GetString();
         }
 
+        string sdk_path = "";
+        if (jnode.HasMember("sdkDataPath") && jnode["sdkDataPath"].IsString()) {
+            sdk_path = jnode["sdkDataPath"].GetString();
+        }
+        string rs_str = sdk_path + rs;
+        string wk_str = sdk_path + wk;
+
         if (CheckAppKey(app_key.c_str()) == false) return nullptr;
 
-        EMChatConfigsPtr configs = EMChatConfigsPtr(new EMChatConfigs(rs, wk, app_key, 0));
+        EMChatConfigsPtr configs = EMChatConfigsPtr(new EMChatConfigs(rs_str, wk_str, app_key, 0));
         configs->setAppKey(app_key);
 
         if (jnode.HasMember("dnsUrl") && jnode["dnsUrl"].IsString()) {
