@@ -7,6 +7,7 @@
 #include "models.h"
 #include "callbacks.h"
 #include "sdk_wrapper.h"
+#include "core_dump.h"
 
 int SDK_TYPE = -1;
 EMClient* gClient = nullptr;
@@ -78,6 +79,8 @@ namespace sdk_wrapper
 
         // singleton client handle
         if (nullptr == gClient) {
+
+            SetUnhandledExceptionHandle();
 
             configs = Options::FromJson(jstr, "./sdkdata", "./sdkdata");
 
