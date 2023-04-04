@@ -394,14 +394,22 @@
                           callback:(EMWrapperCallback *)callback {
     __weak EMChatManagerWrapper *weakSelf = self;
     NSString *conversationId = param[@"convId"];
-    EMConversationType type = (EMConversationType)[param[@"type"] intValue];
+    EMConversationType type = (EMConversationType)[param[@"convType"] intValue];
     int pageSize = [param[@"count"] intValue];
     NSString *startMsgId = param[@"startMsgId"];
+    EMMessageFetchHistoryDirection direction = EMMessageFetchHistoryDirectionUp;
+    if([param[@"direction"] intValue] == 0) {
+        direction = EMMessageFetchHistoryDirectionUp;
+    }else {
+        direction = EMMessageFetchHistoryDirectionDown;
+    }
+    
     [EMClient.sharedClient.chatManager asyncFetchHistoryMessagesFromServer:conversationId
                                                           conversationType:type
                                                             startMessageId:startMsgId
+                                                            fetchDirection:direction
                                                                   pageSize:pageSize
-                                                                completion:^(EMCursorResult *aResult, EMError *aError)
+                                                                completion:^(EMCursorResult<EMChatMessage *> * _Nullable aResult, EMError * _Nullable aError)
      {
         [weakSelf wrapperCallback:callback error:aError object:[aResult toJson]];
     }];

@@ -171,8 +171,8 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
         }
 
         boolean needMemberCount = false;
-        if (params.has("needMemberCount")) {
-            needMemberCount = params.getBoolean("needMemberCount");
+        if (params.has("needAffiliations")) {
+            needMemberCount = params.getBoolean("needAffiliations");
         }
 
         boolean needRole = false;

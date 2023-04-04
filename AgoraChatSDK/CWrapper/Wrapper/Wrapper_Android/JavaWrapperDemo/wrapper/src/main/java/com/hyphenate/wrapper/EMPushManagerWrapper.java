@@ -176,14 +176,14 @@ public class EMPushManagerWrapper extends EMBaseWrapper{
     }
     private String removeConversationSilentMode(JSONObject params, EMWrapperCallback callback) throws JSONException {
         String conversationId = params.getString("conversationId");
-        EMConversation.EMConversationType type = EMConversationHelper.typeFromInt(params.getInt("conversationType"));
+        EMConversation.EMConversationType type = EMConversationHelper.typeFromInt(params.getInt("convType"));
         EMClient.getInstance().pushManager().clearRemindTypeForConversation(conversationId, type, new EMCommonCallback(callback));
         return null;
     }
 
     private String fetchConversationSilentMode(JSONObject params, EMWrapperCallback callback) throws JSONException {
         String conversationId = params.getString("conversationId");
-        EMConversation.EMConversationType type = EMConversationHelper.typeFromInt(params.getInt("conversationType"));
+        EMConversation.EMConversationType type = EMConversationHelper.typeFromInt(params.getInt("convType"));
         EMClient.getInstance().pushManager().getSilentModeForConversation(conversationId, type, new EMCommonValueCallback<EMSilentModeResult>(callback){
             @Override
             public void onSuccess(EMSilentModeResult object) {

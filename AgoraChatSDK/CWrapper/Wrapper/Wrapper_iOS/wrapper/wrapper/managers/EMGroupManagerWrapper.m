@@ -150,7 +150,7 @@
     
     int pageSize = [params[@"pageSize"] intValue];
     int pageNum = [params[@"pageNum"] intValue];
-    BOOL needMemberCount = [params[@"needMemberCount"] boolValue];
+    BOOL needMemberCount = [params[@"needAffiliations"] boolValue];
     BOOL needRole = [params[@"needRole"] boolValue];
     [EMClient.sharedClient.groupManager getJoinedGroupsFromServerWithPage:pageNum
                                                                  pageSize:pageSize
