@@ -3373,20 +3373,50 @@ namespace WinSDKTest
 
             Message msg = Message.CreateCustomSendMessage(to, custom);
             AgoraChat.MessageBody.CustomBody tb = (AgoraChat.MessageBody.CustomBody)msg.Body;
-            tb.CustomEvent = "CustomEvent";
+            /*tb.CustomEvent = "CustomEvent";
             tb.CustomParams = new Dictionary<string, string>();
             tb.CustomParams["key1"] = "value1";
             tb.CustomParams["key2"] = "value2";
+            */
+
+            msg.MessageType = MessageType.Group;
+            tb.CustomEvent = "customCombinedMsg";
+
+            msg.Attributes = new Dictionary<string, AttributeValue>();
+
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            dict.Add("type", "img");
+            dict.Add("displayName", "0n1cgjo1zqz-lp.jpg");
+            dict.Add("fileStatus", "3");
+            dict.Add("width", "150");
+            dict.Add("height", "150");
+            dict.Add("sendOriginalImage", "false");
+            dict.Add("thumbnailStatus", "3");
+            dict.Add("localPath", "http://%1/421B420230402234316430.jpg");
+            JSONObject jo = new JSONObject();
+            foreach (var it in dict)
+            {
+                jo.Add(it.Key, it.Value);
+            }
+
+            JSONArray ja = new JSONArray();
+            ja.Add(jo);
+            Message.SetAttribute(msg.Attributes, "msg_list", ja.ToString(), AttributeValueType.JSONSTRING);
+
+            Message.SetAttribute(msg.Attributes, "text_content", "", AttributeValueType.STRING);
+            Message.SetAttribute(msg.Attributes, "type", "customCombinedMsg", AttributeValueType.STRING);
 
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
                 onSuccess: () => {
                     Console.WriteLine($"SendCustomMessage success. msgid:{msg.MsgId}");
+                    Utils.PrintMessage(msg);
                 },
                 onProgress: (progress) => {
                     Console.WriteLine($"SendCustomMessage progress :{progress.ToString()}");
                 },
                 onError: (code, desc) => {
                     Console.WriteLine($"SendCustomMessage failed, code:{code}, desc:{desc}");
+                    Utils.PrintMessage(msg);
                 }
             ));
         }
