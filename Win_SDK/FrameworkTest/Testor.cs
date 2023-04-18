@@ -1938,6 +1938,7 @@ namespace WinSDKTest
             options.AutoLogin = false;
             options.UsingHttpsOnly = true;
             options.DebugMode = true;
+            options.MyUUID = "12345678-1111-5555-aaaa-eeeeeeeeeeee";
 
             //options.RestServer = "a1.easemob.com";
             //options.IMServer = "182.92.23.113";

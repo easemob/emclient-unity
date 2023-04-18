@@ -360,6 +360,11 @@ namespace sdk_wrapper
             configs->setAutoDownloadThumbnail(is_auto_download);
         }
 
+        if (jnode.HasMember("myUUID") && jnode["myUUID"].IsString()) {
+            string myUUID = jnode["myUUID"].GetString();
+            configs->setMyUUID(myUUID);
+        }
+
         //TODO: need to Area code later
 
 #ifndef _WIN32
