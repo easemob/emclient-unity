@@ -21,6 +21,8 @@
 SDK_WRAPPER_API void SDK_WRAPPER_CALL Init_SDKWrapper(int sdkType, int compileType, void* callback_handle);
 SDK_WRAPPER_API void SDK_WRAPPER_CALL Uninit_SDKWrapper();
 
+SDK_WRAPPER_API void SDK_WRAPPER_CALL FreeMemory_SDKWrapper(void* p);
+
 // Client =====================================================================
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_InitWithOptions(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API void SDK_WRAPPER_CALL Client_AddListener();

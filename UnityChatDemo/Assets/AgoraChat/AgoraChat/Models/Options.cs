@@ -281,6 +281,8 @@ namespace AgoraChat
 	     */
         public AreaCode AreaCode = AreaCode.GLOB;
 
+        public string MyUUID = "";
+
         /**
         * \~chinese
         * Options 构造方法。
@@ -349,6 +351,7 @@ namespace AgoraChat
             jo.AddWithoutNull("isAutoDownload", IsAutoDownload);
             jo.AddWithoutNull("areaCode", (int)AreaCode);
             jo.AddWithoutNull("enableDnsConfig", EnableDNSConfig);
+            jo.AddWithoutNull("myUUID", MyUUID);
 
 #if !_WIN32
             jo.AddWithoutNull("sdkDataPath", Application.persistentDataPath);

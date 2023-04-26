@@ -20,12 +20,11 @@ namespace AgoraChat
             LogPrinter.Log($"---NativeGet: {manager}: {method}: {json}: {callbackId}");
 
             IntPtr ptr = _NativeGet(manager, method, json?.ToString(), callbackId ?? "");
-            string native_string = Tools.PtrToString(ptr);
-            string ret = Tools.GetUnicodeStringFromUTF8(native_string);
-            Marshal.FreeHGlobal(ptr);
+            string str = Tools.PtrToString(ptr);
+            FreeMemory(ptr);
 
-            LogPrinter.Log($"---NativeGet get: {ret}");
-            return ret;
+            LogPrinter.Log($"---NativeGet get: {str}");
+            return str;
         }
 
         #region DllImport
@@ -51,6 +50,9 @@ namespace AgoraChat
 
         [DllImport(MyLibName)]
         private extern static IntPtr _NativeGet(string manager, string method, [In, MarshalAs(UnmanagedType.LPTStr)] string jsonString = null, string callbackId = null);
+
+        [DllImport(MyLibName)]
+        internal static extern void FreeMemory(IntPtr p);
 
         #endregion engine callbacks
     }
