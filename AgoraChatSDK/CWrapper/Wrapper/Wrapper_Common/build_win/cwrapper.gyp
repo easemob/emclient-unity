@@ -243,6 +243,8 @@
             	'<(emclient-unity-path)/AgoraChatSDK/CWrapper/Wrapper/Wrapper_Common/sdk_wrapper/tool.cpp',
             	'<(emclient-unity-path)/AgoraChatSDK/CWrapper/Wrapper/Wrapper_Common/sdk_wrapper/thread_manager.cpp',
             	'<(emclient-unity-path)/AgoraChatSDK/CWrapper/Wrapper/Wrapper_Common/sdk_wrapper/userinfo_manager.cpp',
+            	'<(emclient-unity-path)/AgoraChatSDK/CWrapper/Wrapper/Wrapper_Common/sdk_wrapper/core_dump.h',
+            	'<(emclient-unity-path)/AgoraChatSDK/CWrapper/Wrapper/Wrapper_Common/sdk_wrapper/core_dump.cpp',
             ],
             
             'link_settings': {
