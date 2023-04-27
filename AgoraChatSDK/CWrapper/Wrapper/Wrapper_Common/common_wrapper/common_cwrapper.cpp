@@ -132,6 +132,7 @@ void InitManagerMap()
 	func_map_group_manager["getGroupWithId"] = GroupManager_GetGroupWithId;
 	func_map_group_manager["getJoinedGroups"] = GroupManager_LoadAllMyGroupsFromDB;
 	func_map_group_manager["getJoinedGroupsFromServer"] = GroupManager_FetchAllMyGroupsWithPage;
+    func_map_group_manager["getJoinedGroupsFromServerSimple"] = GroupManager_FetchAllMyGroupsWithPageSimple;
 	func_map_group_manager["getPublicGroupsFromServer"] = GroupManager_FetchPublicGroupsWithCursor;
 	func_map_group_manager["joinPublicGroup"] = GroupManager_JoinPublicGroup;
 	func_map_group_manager["leaveGroup"] = GroupManager_LeaveGroup;

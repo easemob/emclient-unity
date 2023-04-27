@@ -1041,6 +1041,7 @@ namespace WinSDKTest
             functions_IGroupManager.Add(menu_index, "GetGroupWithId"); menu_index++;
             functions_IGroupManager.Add(menu_index, "GetJoinedGroups"); menu_index++;
             functions_IGroupManager.Add(menu_index, "FetchJoinedGroupsFromServer"); menu_index++;
+            functions_IGroupManager.Add(menu_index, "FetchJoinedGroupsFromServerSimple"); menu_index++;
             functions_IGroupManager.Add(menu_index, "FetchPublicGroupsFromServer"); menu_index++;
             functions_IGroupManager.Add(menu_index, "JoinPublicGroup"); menu_index++;
             functions_IGroupManager.Add(menu_index, "LeaveGroup"); menu_index++;
@@ -1231,6 +1232,12 @@ namespace WinSDKTest
             param.Add(menu_index, "needAffiliations (bool)"); menu_index++;
             param.Add(menu_index, "needRole (bool)"); menu_index++;
             level3_menus.Add("FetchJoinedGroupsFromServer", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "pageNum (int)"); menu_index++;
+            param.Add(menu_index, "pageSize (int)"); menu_index++;
+            level3_menus.Add("FetchJoinedGroupsFromServerSimple", new Dictionary<int, string>(param));
             param.Clear();
 
             menu_index = 1;
@@ -5961,6 +5968,62 @@ namespace WinSDKTest
             ));
         }
 
+        public void CallFunc_IGroupManager_FetchJoinedGroupsFromServerSimple(int _num = -1, int _size = -1)
+        {
+            int num = -1;
+            int size = -1;
+
+            if (-1 != _num)
+                num = _num;
+            else
+                num = GetIntFromString(GetParamValueFromContext(0));
+
+            if (-1 != _size)
+                size = _size;
+            else
+                size = GetIntFromString(GetParamValueFromContext(1));
+
+            SDKClient.Instance.GroupManager.FetchJoinedGroupsFromServer(num, size, callback: new ValueCallBack<List<Group>>(
+                onSuccess: (groupList) => {
+                    int i = 1;
+                    foreach (var group in groupList)
+                    {
+                        Console.WriteLine($"FetchJoinedGroupsFromServerSimple sucess ====================={i}");
+                        Console.WriteLine($"groupid: {group.GroupId}");
+                        Console.WriteLine($"Name: {group.Name}");
+                        Console.WriteLine($"Description: {group.Description}");
+                        Console.WriteLine($"Owner: {group.Owner}");
+                        Console.WriteLine($"Annoumcement: {group.Announcement}");
+                        Console.WriteLine($"MemberCount: {group.MemberCount}");
+                        Console.WriteLine($"permisstionType: {group.PermissionType}");
+                        string members = string.Join(",", group.MemberList.ToArray());
+                        string admins = string.Join(",", group.AdminList.ToArray());
+                        string blocks = string.Join(",", group.BlockList.ToArray());
+                        //string mutes = string.Join(",", group.MuteList.ToArray());
+                        Console.WriteLine($"MemberList: {members}");
+                        Console.WriteLine($"AdminList: {admins}");
+                        Console.WriteLine($"BlockList: {blocks}");
+                        //Console.WriteLine($"MuteList: {mutes}");
+                        Console.WriteLine($"NoticeEnabled: {group.NoticeEnabled}");
+                        Console.WriteLine($"MessageBlocked: {group.MessageBlocked}");
+                        Console.WriteLine($"IsAllMemberMuted: {group.IsAllMemberMuted}");
+                        //Console.WriteLine($"IsDisabled: {group.IsDisabled}");
+                        Console.WriteLine($"IsMemberOnly: {group.IsMemberOnly}");
+                        Console.WriteLine($"MaxCount: {group.MaxUserCount}");
+                        Console.WriteLine($"IsMemberAllowToInvite: {group.IsMemberAllowToInvite}");
+                        Console.WriteLine($"Ext: {group.Ext}");
+                        Console.WriteLine($"IsDisabled: {group.IsDisabled}");
+                        Console.WriteLine($"=======================================================");
+                        i++;
+                    }
+                },
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"FetchJoinedGroupsFromServerSimple failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
         public void CallFunc_IGroupManager_FetchPublicGroupsFromServer(int _size = -1, string _cursor = "")
         {
             int size = -1;
@@ -6606,6 +6669,12 @@ namespace WinSDKTest
             if (select_context.level2_item.CompareTo("FetchJoinedGroupsFromServer") == 0)
             {
                 CallFunc_IGroupManager_FetchJoinedGroupsFromServer();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("FetchJoinedGroupsFromServerSimple") == 0)
+            {
+                CallFunc_IGroupManager_FetchJoinedGroupsFromServerSimple();
                 return;
             }
 

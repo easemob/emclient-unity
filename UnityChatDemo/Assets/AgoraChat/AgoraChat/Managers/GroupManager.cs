@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AgoraChat.SimpleJSON;
 
 namespace AgoraChat
@@ -921,6 +922,44 @@ namespace AgoraChat
             };
 
             NativeCall<List<Group>>(SDKMethod.getJoinedGroupsFromServer, jo_param, callback, process);
+        }
+
+        /**
+        * \~chinese
+        * 以分页方式从服务器获取当前用户加入的群组。
+        *
+        * 此操作只返回群组列表，不包含群组的所有成员信息。
+        *
+        * 异步方法，会阻塞当前线程。
+        *
+        * @param pageNum 		当前页码，从 0 开始。
+        * @param pageSize		每页期望返回的群组数，缺省为200。
+        * @param callback		操作结果回调，成功群组列表，失败返回错误信息，详见 {@link ValueCallBack}。
+        *
+        * \~english
+        * Gets the list of groups with pagination.
+        *
+        * This method gets a group list from the server, which does not contain member information.
+        *
+        * This is an asynchronous method and blocks the current thread.
+        *
+        * @param pageNum 		The page number, starting from 0.
+        * @param pageSize		The number of groups that you expect to get on each page. Default num is 200.
+        * @param callback		The operation callback. If success, the SDK returns the obtained group list; otherwise, an error will be returned. See {@link ValueCallBack}. 
+        */
+        [Obsolete]
+        public void FetchJoinedGroupsFromServer(int pageNum = 0, int pageSize = 20, ValueCallBack<List<Group>> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("pageNum", pageNum);
+            jo_param.AddWithoutNull("pageSize", pageSize);
+
+            Process process = (_, jsonNode) =>
+            {
+                return List.BaseModelListFromJsonArray<Group>(jsonNode);
+            };
+
+            NativeCall<List<Group>>(SDKMethod.getJoinedGroupsFromServerSimple, jo_param, callback, process);
         }
 
         /**

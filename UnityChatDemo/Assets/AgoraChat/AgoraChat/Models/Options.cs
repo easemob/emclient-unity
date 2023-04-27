@@ -281,6 +281,13 @@ namespace AgoraChat
 	     */
         public AreaCode AreaCode = AreaCode.GLOB;
 
+        /**
+        * \~chinese
+        * 设置当前设备UUID
+        *
+        * \~english
+        * Sets UUID for current device.
+        */
         public string MyUUID = "";
 
         /**

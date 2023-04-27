@@ -167,6 +167,7 @@ namespace AgoraChat
         internal const string getJoinedGroups = "getJoinedGroups";
         internal const string getGroupsWithoutPushNotification = "getGroupsWithoutPushNotification";
         internal const string getJoinedGroupsFromServer = "getJoinedGroupsFromServer";
+        internal const string getJoinedGroupsFromServerSimple = "getJoinedGroupsFromServerSimple";
         internal const string getPublicGroupsFromServer = "getPublicGroupsFromServer";
         internal const string createGroup = "createGroup";
         internal const string getGroupSpecificationFromServer = "getGroupSpecificationFromServer";

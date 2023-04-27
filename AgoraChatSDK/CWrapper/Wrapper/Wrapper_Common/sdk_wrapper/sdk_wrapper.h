@@ -125,6 +125,7 @@ SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_FetchGroupWhiteList(co
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_GetGroupWithId(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_LoadAllMyGroupsFromDB(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_FetchAllMyGroupsWithPage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_FetchAllMyGroupsWithPageSimple(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_FetchPublicGroupsWithCursor(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_JoinPublicGroup(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_LeaveGroup(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
