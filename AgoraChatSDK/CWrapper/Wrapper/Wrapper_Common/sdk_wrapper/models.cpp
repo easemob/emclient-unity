@@ -3155,6 +3155,9 @@ namespace sdk_wrapper
         case EMMultiDevicesListener::MultiDevicesOperation::THREAD_LEAVE: return 43;
         case EMMultiDevicesListener::MultiDevicesOperation::THREAD_UPDATE: return 44;
         case EMMultiDevicesListener::MultiDevicesOperation::THREAD_KICK: return 45;
+        case EMMultiDevicesListener::MultiDevicesOperation::SET_METADATA: return 50;
+        case EMMultiDevicesListener::MultiDevicesOperation::DELETE_METADATA: return 51;
+        case EMMultiDevicesListener::MultiDevicesOperation::GROUP_MEMBER_METADATA_CHANGED: return 52;
         default:
             return -1;
         }
@@ -3199,6 +3202,9 @@ namespace sdk_wrapper
         case 43: return EMMultiDevicesListener::MultiDevicesOperation::THREAD_LEAVE;
         case 44: return EMMultiDevicesListener::MultiDevicesOperation::THREAD_UPDATE;
         case 45: return EMMultiDevicesListener::MultiDevicesOperation::THREAD_KICK;
+        case 50: return EMMultiDevicesListener::MultiDevicesOperation::SET_METADATA;
+        case 51: return EMMultiDevicesListener::MultiDevicesOperation::DELETE_METADATA;
+        case 52: return EMMultiDevicesListener::MultiDevicesOperation::GROUP_MEMBER_METADATA_CHANGED;
         default: return EMMultiDevicesListener::MultiDevicesOperation::UNKNOW;
         }
     }

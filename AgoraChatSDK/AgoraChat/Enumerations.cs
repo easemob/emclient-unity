@@ -1043,5 +1043,32 @@ namespace AgoraChat
         * Kicked from thread on another device.
         */
         THREAD_KICK = 45,
+
+        /**
+        * \~chinese
+        * 在其他设备上设置了群组成员自定义属性。
+        *
+        * \~english
+        * The custom attributes of group members have been set on other devices.
+        */
+        SET_METADATA = 50,
+
+        /**
+        * \~chinese
+        * 在其他设备上删除了群组成员自定义属性。
+        *
+        * \~english
+        * The custom attributes of group members have been deleted on other devices.
+        */
+        DELETE_METADATA = 51,
+
+        /**
+        * \~chinese
+        * 群组成员自定义属性发生改变。
+        *
+        * \~english
+        * The custom attributes of group members have changed.
+        */
+        GROUP_MEMBER_METADATA_CHANGED = 52,
     };
 }
