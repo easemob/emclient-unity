@@ -1248,6 +1248,9 @@ namespace sdk_wrapper
             writer.Key("priority");
             writer.Int(msg->priority());
 
+            writer.Key("deliverOnlineOnly");
+            writer.Bool(msg->isDeliverOnlineOnly());
+
             writer.Key("status");
             writer.Int(StatusToInt(msg->status()));
 
@@ -1370,6 +1373,11 @@ namespace sdk_wrapper
         if (jnode.HasMember("priority") && jnode["priority"].IsInt()) {
             int i = jnode["priority"].GetInt();
             msg->setPriority(i);
+        }
+
+        if (jnode.HasMember("deliverOnlineOnly") && jnode["deliverOnlineOnly"].IsBool()) {
+            bool b = jnode["deliverOnlineOnly"].GetBool();
+            msg->deliverOnlineOnly(b);
         }
 
         if (jnode.HasMember("status") && jnode["status"].IsInt()) {

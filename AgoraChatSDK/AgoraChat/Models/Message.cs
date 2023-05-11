@@ -78,6 +78,15 @@ namespace AgoraChat
         }
 
         /**
+        * \~chinese
+        * 当前消息是否只投递在线用户。
+        *
+        * \~english
+        * Whether this message is delivered only to online users.
+        */
+        public bool DeliverOnlineOnly = false;
+
+        /**
          * \~chinese
          * 消息方向。
          * 
@@ -729,6 +738,7 @@ namespace AgoraChat
                     ConversationId = jo["convId"].Value;
                     MsgId = jo["msgId"].Value;
                     Status = jo["status"].AsInt.ToMessageStatus();
+                    DeliverOnlineOnly = jo["deliverOnlineOnly"].AsBool;
                     MessageType = jo["chatType"].AsInt.ToMessageType();
                     Direction = jo["direction"].AsInt.ToMesssageDirection();
                     Attributes = AttributeValue.DictFromJsonObject(jo["attr"].AsObject);
@@ -754,6 +764,7 @@ namespace AgoraChat
             jo.AddWithoutNull("convId", ConversationId);
             jo.AddWithoutNull("msgId", MsgId);
             jo.AddWithoutNull("priority", Priority.ToInt());
+            jo.AddWithoutNull("deliverOnlineOnly", DeliverOnlineOnly);
             jo.AddWithoutNull("status", Status.ToInt());
             jo.AddWithoutNull("chatType", MessageType.ToInt());
             jo.AddWithoutNull("direction", Direction.ToInt());
