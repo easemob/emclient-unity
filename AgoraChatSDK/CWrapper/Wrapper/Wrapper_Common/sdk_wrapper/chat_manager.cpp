@@ -1284,6 +1284,7 @@ namespace sdk_wrapper {
 
             gChatManagerListener->onUpdateConversationList(conversationList);
             gChatManagerListener->onReceiveReadAckForConversation("fromUsername", "toUsername");
+            gChatManagerListener->onMessageIdChanged("user", "oldMsgId", "newMsgId");
         }
 
         if (nullptr != gReactionManagerListener) {

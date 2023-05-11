@@ -299,6 +299,7 @@ namespace AgoraChat
         internal const string onConversationsUpdate = "onConversationsUpdate";
         internal const string onConversationRead = "onConversationRead";
         internal const string onMessageReactionDidChange = "messageReactionDidChange";
+        internal const string onMessageIdChanged = "onMessageIdChanged";
 
         // ChatThreadManagerDelegate
         internal const string onChatThreadCreate = "onChatThreadCreate";

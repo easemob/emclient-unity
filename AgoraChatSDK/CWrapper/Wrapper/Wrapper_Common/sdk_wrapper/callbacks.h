@@ -138,6 +138,25 @@ namespace sdk_wrapper {
             if (json.size() > 0)
                 CallBack(STRING_CHATMANAGER_LISTENER.c_str(), STRING_onConversationRead.c_str(), json.c_str());
         }
+
+        void onMessageIdChanged(const string& conversationId, const string& oldMsgId, const string& newMsgId) override {
+
+            JSON_STARTOBJ
+            writer.Key("convId");
+            writer.String(conversationId.c_str());
+
+            writer.Key("oldMsgId");
+            writer.String(oldMsgId.c_str());
+
+            writer.Key("newMsgId");
+            writer.String(newMsgId.c_str());
+            JSON_ENDOBJ
+
+            string json = s.GetString();
+
+            if (json.size() > 0)
+                CallBack(STRING_CHATMANAGER_LISTENER.c_str(), STRING_onMessageIdChanged.c_str(), json.c_str());
+        }
     };
 
     class MultiDevicesListener : public EMMultiDevicesListener

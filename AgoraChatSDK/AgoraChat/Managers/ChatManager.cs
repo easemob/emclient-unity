@@ -1160,6 +1160,87 @@ namespace AgoraChat
         {
             if (delegater.Count == 0) return;
 
+            foreach (IChatManagerDelegate it in delegater)
+            {
+                switch (method)
+                {
+                    case SDKMethod.onMessagesReceived:
+                        {
+                            List<Message> list = List.BaseModelListFromJsonArray<Message>(jsonNode);
+                            if (list.Count > 0) it.OnMessagesReceived(list);
+                        }
+                        break;
+                    case SDKMethod.onCmdMessagesReceived:
+                        {
+                            List<Message> list = List.BaseModelListFromJsonArray<Message>(jsonNode);
+                            if (list.Count > 0) it.OnCmdMessagesReceived(list);
+                        }
+                        break;
+                    case SDKMethod.onMessagesRead:
+                        {
+                            List<Message> list = List.BaseModelListFromJsonArray<Message>(jsonNode);
+                            if (list.Count > 0) it.OnMessagesRead(list);
+                        }
+                        break;
+                    case SDKMethod.onMessagesDelivered:
+                        {
+                            List<Message> list = List.BaseModelListFromJsonArray<Message>(jsonNode);
+                            if (list.Count > 0) it.OnMessagesDelivered(list);
+                        }
+                        break;
+                    case SDKMethod.onMessagesRecalled:
+                        {
+                            List<Message> list = List.BaseModelListFromJsonArray<Message>(jsonNode);
+                            if (list.Count > 0) it.OnMessagesRecalled(list);
+                        }
+                        break;
+                    case SDKMethod.onReadAckForGroupMessageUpdated:
+                        {
+                            it.OnReadAckForGroupMessageUpdated();
+                        }
+                        break;
+                    case SDKMethod.onGroupMessageRead:
+                        {
+                            List<GroupReadAck> list = List.BaseModelListFromJsonArray<GroupReadAck>(jsonNode);
+                            if (list.Count > 0) it.OnGroupMessageRead(list);
+                        }
+                        break;
+                    case SDKMethod.onConversationsUpdate:
+                        {
+                            it.OnConversationsUpdate();
+                        }
+                        break;
+                    case SDKMethod.onConversationRead:
+                        {
+                            string from = jsonNode["from"];
+                            string to = jsonNode["to"];
+                            it.OnConversationRead(from, to);
+                        }
+                        break;
+                    case SDKMethod.onMessageReactionDidChange:
+                        {
+                            List<MessageReactionChange> list = List.BaseModelListFromJsonArray<MessageReactionChange>(jsonNode);
+                            if (list.Count > 0) it.MessageReactionDidChange(list);
+                        }
+                        break;
+                    case SDKMethod.onMessageIdChanged:
+                        {
+                            string conversationId = jsonNode["convId"];
+                            string oldMsgId = jsonNode["oldMsgId"];
+                            string newMsgId = jsonNode["newMsgId"];
+                            it.onMessageIdChanged(conversationId, oldMsgId, newMsgId);
+                        }
+                        break;
+                }
+            }
+
+        }
+
+        /*
+        internal void NativeEventHandle(string method, JSONNode jsonNode)
+        {
+            if (delegater.Count == 0) return;
+
             if (method == SDKMethod.onMessagesReceived)
             {
                 if (jsonNode != null)
@@ -1278,6 +1359,20 @@ namespace AgoraChat
                     }
                 }
             }
-        }
+            else if (method == SDKMethod.onMessageIdChanged)
+            {
+                if (jsonNode != null)
+                {
+                    string conversationId = jsonNode["convId"];
+                    string oldMsgId = jsonNode["oldMsgId"];
+                    string newMsgId = jsonNode["newMsgId"];
+
+                    foreach (IChatManagerDelegate it in delegater)
+                    {
+                        it.onMessageIdChanged(conversationId, oldMsgId, newMsgId);
+                    }
+                }
+            }
+        }*/
     }
 }
