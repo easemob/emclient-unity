@@ -149,6 +149,8 @@ void InitManagerMap()
 	func_map_group_manager["updateGroupAnnouncement"] = GroupManager_UpdateGroupAnnouncement;
 	func_map_group_manager["updateGroupExt"] = GroupManager_ChangeGroupExtension;
 	func_map_group_manager["uploadGroupSharedFile"] = GroupManager_UploadGroupSharedFile;
+    func_map_group_manager["fetchMemberAttributes"] = GroupManager_FetchMemberAttributes;
+    func_map_group_manager["setMemberAttributes"] = GroupManager_SetMemberAttributes;
 
 	manager_map["EMGroupManager"] = func_map_group_manager;
 

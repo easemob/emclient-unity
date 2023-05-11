@@ -1439,6 +1439,72 @@ namespace AgoraChat
         }
 
         /**
+        * \~chinese
+        * 设置群组用户自定义属性。
+        *
+        * 异步方法。
+        *
+        * @param groupId 	群组 ID。
+        * @param userId 	需要设置自定义属性的用户id。
+        * @param callback	操作结果回调，详见 {@link CallBack}。
+        *
+        *
+        * \~english
+        * Set group member custom attributes.
+        *
+        * This is an asynchronous method.
+        *
+        * @param groupId 	The group ID.
+        * @param userId 	The user ID for setting custom attributes.
+        * @param callback	The operation callback. See {@link CallBack}.
+        */
+        public void SetMemberAttributes(string groupId, string userId, Dictionary<string, string> attrs, CallBack callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("userId", userId);
+            jo_param.AddWithoutNull("attrs", JsonObject.JsonObjectFromDictionary(attrs));
+            NativeCall(SDKMethod.setMemberAttributes, jo_param, callback);
+        }
+
+        /**
+		 * \~chinese
+		 * 获取群组成员自定义属性。
+		 *
+		 * 异步方法。
+		 *
+		 * @param groupId 	    群组 ID。
+		 * @param userIds 	    群组成员ID列表。
+		 * @param attrs     	自定义属性列表。
+		 * @param attrs     	操作结果回调，详见 {@link ValueCallBack}。
+		 *
+		 *
+		 * \~english
+		 * Fetch group members custom attributes.
+		 *
+		 * This is an asynchronous method.
+		 *
+		 * @param groupId 	    The group ID.
+		 * @param userIds    	User name ID list.
+		 * @param attrs         The custom attribute list.
+		 * @param callback	    The operation callback. See {@link ValueCallBack}.
+		 */
+        public void FetchMemberAttributes(string groupId, List<string> userIds, List<string> attrs, ValueCallBack<Dictionary<string, Dictionary<string, string>>> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("userIds", JsonObject.JsonArrayFromStringList(userIds));
+            jo_param.AddWithoutNull("attrs", JsonObject.JsonArrayFromStringList(attrs));
+
+            Process process = (_, jsonNode) =>
+            {
+                return Dictionary.NestedStringDictionaryFromJsonObject(jsonNode);
+            };
+
+            NativeCall<List<Group>>(SDKMethod.fetchMemberAttributes, jo_param, callback, process);
+        }
+
+        /**
 		 * \~chinese
 		 * 注册群组管理器的监听器。
 		 *

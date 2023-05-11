@@ -209,6 +209,8 @@ namespace AgoraChat
         internal const string declineJoinApplication = "declineJoinApplication";
         internal const string acceptInvitationFromGroup = "acceptInvitationFromGroup";
         internal const string declineInvitationFromGroup = "declineInvitationFromGroup";
+        internal const string fetchMemberAttributes = "fetchMemberAttributes";
+        internal const string setMemberAttributes = "setMemberAttributes";
 
 
         /// EMPushManager

@@ -146,6 +146,16 @@ namespace sdk_wrapper
         writer.EndObject();
     }
 
+    void MyJson::ToJsonObject(Writer<StringBuffer>& writer, const unordered_map<string, string>& map)
+    {
+        writer.StartObject();
+        for (auto it : map) {
+            writer.Key(it.first.c_str());
+            writer.String(it.second.c_str());
+        }
+        writer.EndObject();
+    }
+
     void MyJson::ToJsonObject(Writer<StringBuffer>& writer, const map<string, int>& map)
     {
         writer.StartObject();
@@ -159,6 +169,21 @@ namespace sdk_wrapper
     map<string, string> MyJson::FromJsonObjectToMap(const Value& jnode)
     {
         map<string, string> map;
+
+        if (!jnode.IsObject()) return map;
+
+        for (auto iter = jnode.MemberBegin(); iter != jnode.MemberEnd(); ++iter) {
+            auto key = iter->name.GetString();
+            auto value = iter->value.GetString();
+
+            map.insert(pair<string, string>(key, value));
+        }
+        return map;
+    }
+
+    unordered_map<string, string> MyJson::FromJsonObjectToUnorderedMap(const Value& jnode)
+    {
+        unordered_map<string, string> map;
 
         if (!jnode.IsObject()) return map;
 
@@ -197,6 +222,17 @@ namespace sdk_wrapper
         return data;
     }
 
+    string MyJson::ToJson(const unordered_map<string, string>& map)
+    {
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        ToJsonObject(writer, map);
+
+        string data = s.GetString();
+        return data;
+    }
+
     string MyJson::ToJson(const map<string, int>& map) {
 
         StringBuffer s;
@@ -215,6 +251,18 @@ namespace sdk_wrapper
         Document d;
         if (!d.Parse(jstr.data()).HasParseError()) {
             return FromJsonObjectToMap(d);
+        }
+        return map;
+    }
+
+    unordered_map<string, string> MyJson::FromJsonToUnorderedMap(const string& jstr)
+    {
+        unordered_map<string, string> map;
+        if (jstr.length() < 3) return map;
+
+        Document d;
+        if (!d.Parse(jstr.data()).HasParseError()) {
+            return FromJsonObjectToUnorderedMap(d);
         }
         return map;
     }
@@ -2132,6 +2180,18 @@ namespace sdk_wrapper
         writer.EndArray();
     }
 
+    void Group::ToJsonObject(Writer<StringBuffer>& writer, const unordered_map<string, unordered_map<string, string>>& map)
+    {
+        writer.StartObject();
+        for (auto it : map)
+        {
+            unordered_map<string, string> sec_map = it.second;
+            writer.Key(it.first.c_str());
+            MyJson::ToJsonObject(writer, sec_map);
+        }
+        writer.EndObject();
+    }
+
     string Group::ToJson(const EMMucMuteList& vec)
     {
         StringBuffer s;
@@ -2150,6 +2210,16 @@ namespace sdk_wrapper
         Writer<StringBuffer> writer(s);
 
         ToJsonObject(writer, list);
+
+        return s.GetString();
+    }
+
+    string Group::ToJson(const unordered_map<string, unordered_map<string, string>>& map)
+    {
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        ToJsonObject(writer, map);
 
         return s.GetString();
     }

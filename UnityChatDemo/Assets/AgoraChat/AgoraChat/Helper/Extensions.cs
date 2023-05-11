@@ -257,6 +257,23 @@ namespace AgoraChat
             return ret;
         }
 
+        internal static Dictionary<string, Dictionary<string, string>> NestedStringDictionaryFromJsonObject(JSONNode jo)
+        {
+            Dictionary<string, Dictionary<string, string>> ret = new Dictionary<string, Dictionary<string, string>>();
+
+            if (!jo.IsObject) return ret;
+
+            foreach (string s in jo.Keys)
+            {
+                if (jo[s].IsObject)
+                {
+                    Dictionary<string, string> dict = StringDictionaryFromJsonObject(jo[s]);
+                    if (null != dict) ret.Add(s, dict);
+                }
+            }
+            return ret;
+        }
+
         internal static Dictionary<string, T> SimpleTypeDictionaryFromJsonObject<T>(JSONNode jo) where T : IConvertible
         {
             if (jo == null) return null;
