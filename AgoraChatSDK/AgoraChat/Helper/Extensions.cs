@@ -797,6 +797,30 @@ namespace AgoraChat
         }
     }
 
+    internal static class MessageReactionOperateHelper
+    {
+        public static int ToInt(this MessageReactionOperate operate)
+        {
+            switch (operate)
+            {
+                case MessageReactionOperate.MessageReactionOperateRemove: return 0;
+                case MessageReactionOperate.MessageReactionOperateAdd: return 1;
+                default: return -1;
+            }
+        }
+
+        public static MessageReactionOperate ToMessageReactionOperate(this int i)
+        {
+            switch (i)
+            {
+                case 0: return MessageReactionOperate.MessageReactionOperateRemove;
+                case 1: return MessageReactionOperate.MessageReactionOperateAdd;
+                default:
+                    return MessageReactionOperate.MessageReactionOperateAdd;
+            }
+        }
+    }
+
     namespace InternalSpace
     {
         public static class MyTest

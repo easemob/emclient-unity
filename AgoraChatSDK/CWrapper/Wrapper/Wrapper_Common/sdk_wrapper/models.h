@@ -174,10 +174,16 @@ namespace sdk_wrapper {
 
 	struct MessageReactionChange
 	{
-		static std::string ToJson(EMMessageReactionChangePtr reactionChangePtr, std::string curname);
-		static std::string ToJson(EMMessageReactionChangeList list, std::string curname);
-		static void ToJsonObject(Writer<StringBuffer>& writer, EMMessageReactionChangePtr reactionChangePtr, std::string curname);
+		static string ToJson(EMMessageReactionChangePtr reactionChangePtr, std::string curname);
+		static string ToJson(EMMessageReactionChangeList list, std::string curname);
+		static void ToJsonObject(Writer<StringBuffer>& writer, const EMMessageReactionChangePtr reactionChangePtr, std::string curname);
 	};
+
+    struct MessageReactionOperation
+    {
+        static void ToJsonObject(Writer<StringBuffer>& writer, const EMMessageReactionOperationPtr reactionOperationPtr);
+        static void ToJsonObject(Writer<StringBuffer>& writer, const EMMessageReactionOperationList list);
+    };
 
 	class Group
 	{

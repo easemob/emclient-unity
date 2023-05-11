@@ -1071,4 +1071,25 @@ namespace AgoraChat
         */
         GROUP_MEMBER_METADATA_CHANGED = 52,
     };
+
+    public enum MessageReactionOperate
+    {
+        /**
+        * \~chinese
+        * Reaction删除操作。
+        *
+        * \~english
+        * Reaction delete operation.
+        */
+        MessageReactionOperateRemove = 0,
+
+        /**
+        * \~chinese
+        * Reaction增加操作。
+        *
+        * \~english
+        * Reaction add operation.
+        */
+        MessageReactionOperateAdd = 1,
+    }
 }

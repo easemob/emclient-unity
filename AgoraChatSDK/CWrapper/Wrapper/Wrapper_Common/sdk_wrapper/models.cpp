@@ -2034,7 +2034,7 @@ namespace sdk_wrapper
         return vec;
     }
 
-    void MessageReactionChange::ToJsonObject(Writer<StringBuffer>& writer, EMMessageReactionChangePtr reactionChangePtr, std::string curname)
+    void MessageReactionChange::ToJsonObject(Writer<StringBuffer>& writer, const EMMessageReactionChangePtr reactionChangePtr, std::string curname)
     {
         std::string covId = reactionChangePtr->to();
         if (covId.compare(curname) == 0)
@@ -2048,6 +2048,8 @@ namespace sdk_wrapper
             writer.String(reactionChangePtr->messageId().c_str());
             writer.Key("reactions");
             MessageReaction::ToJsonObject(writer, reactionChangePtr->reactionList());
+            writer.Key("operations");
+            MessageReactionOperation::ToJsonObject(writer, reactionChangePtr->operationList());
         }
         writer.EndObject();
     }
@@ -2075,6 +2077,35 @@ namespace sdk_wrapper
         }
         writer.EndArray();
         return s.GetString();
+    }
+
+    void MessageReactionOperation::ToJsonObject(Writer<StringBuffer>& writer, const EMMessageReactionOperationPtr reactionOperationPtr)
+    {
+        writer.StartObject();
+
+        if (nullptr != reactionOperationPtr)
+        {
+            writer.Key("userId");
+            writer.String(reactionOperationPtr->userId().c_str());
+
+            writer.Key("reaction");
+            writer.String(reactionOperationPtr->reaction().c_str());
+
+            writer.Key("operate");
+            writer.Int(reactionOperationPtr->operate());
+        }
+
+        writer.EndObject();
+    }
+
+    void MessageReactionOperation::ToJsonObject(Writer<StringBuffer>& writer, const EMMessageReactionOperationList list)
+    {
+        writer.StartArray();
+        for (auto it : list)
+        {
+            ToJsonObject(writer, it);
+        }
+        writer.EndArray();
     }
 
     string Group::ToJson(EMGroupPtr group)
