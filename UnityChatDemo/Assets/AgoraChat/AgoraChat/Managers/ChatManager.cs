@@ -1160,80 +1160,109 @@ namespace AgoraChat
         {
             if (delegater.Count == 0) return;
 
-            foreach (IChatManagerDelegate it in delegater)
+            switch (method)
             {
-                switch (method)
-                {
-                    case SDKMethod.onMessagesReceived:
+                case SDKMethod.onMessagesReceived:
+                    {
+                        List<Message> list = List.BaseModelListFromJsonArray<Message>(jsonNode);
+                        foreach (IChatManagerDelegate it in delegater)
                         {
-                            List<Message> list = List.BaseModelListFromJsonArray<Message>(jsonNode);
                             if (list.Count > 0) it.OnMessagesReceived(list);
                         }
-                        break;
-                    case SDKMethod.onCmdMessagesReceived:
+                    }
+                    break;
+                case SDKMethod.onCmdMessagesReceived:
+                    {
+                        List<Message> list = List.BaseModelListFromJsonArray<Message>(jsonNode);
+                        foreach (IChatManagerDelegate it in delegater)
                         {
-                            List<Message> list = List.BaseModelListFromJsonArray<Message>(jsonNode);
                             if (list.Count > 0) it.OnCmdMessagesReceived(list);
                         }
-                        break;
-                    case SDKMethod.onMessagesRead:
+                    }
+                    break;
+                case SDKMethod.onMessagesRead:
+                    {
+                        List<Message> list = List.BaseModelListFromJsonArray<Message>(jsonNode);
+                        foreach (IChatManagerDelegate it in delegater)
                         {
-                            List<Message> list = List.BaseModelListFromJsonArray<Message>(jsonNode);
                             if (list.Count > 0) it.OnMessagesRead(list);
                         }
-                        break;
-                    case SDKMethod.onMessagesDelivered:
+                    }
+                    break;
+                case SDKMethod.onMessagesDelivered:
+                    {
+                        List<Message> list = List.BaseModelListFromJsonArray<Message>(jsonNode);
+                        foreach (IChatManagerDelegate it in delegater)
                         {
-                            List<Message> list = List.BaseModelListFromJsonArray<Message>(jsonNode);
                             if (list.Count > 0) it.OnMessagesDelivered(list);
                         }
-                        break;
-                    case SDKMethod.onMessagesRecalled:
+                    }
+                    break;
+                case SDKMethod.onMessagesRecalled:
+                    {
+                        List<Message> list = List.BaseModelListFromJsonArray<Message>(jsonNode);
+                        foreach (IChatManagerDelegate it in delegater)
                         {
-                            List<Message> list = List.BaseModelListFromJsonArray<Message>(jsonNode);
                             if (list.Count > 0) it.OnMessagesRecalled(list);
                         }
-                        break;
-                    case SDKMethod.onReadAckForGroupMessageUpdated:
+                    }
+                    break;
+                case SDKMethod.onReadAckForGroupMessageUpdated:
+                    {
+                        foreach (IChatManagerDelegate it in delegater)
                         {
                             it.OnReadAckForGroupMessageUpdated();
                         }
-                        break;
-                    case SDKMethod.onGroupMessageRead:
+                    }
+                    break;
+                case SDKMethod.onGroupMessageRead:
+                    {
+                        List<GroupReadAck> list = List.BaseModelListFromJsonArray<GroupReadAck>(jsonNode);
+                        foreach (IChatManagerDelegate it in delegater)
                         {
-                            List<GroupReadAck> list = List.BaseModelListFromJsonArray<GroupReadAck>(jsonNode);
                             if (list.Count > 0) it.OnGroupMessageRead(list);
                         }
-                        break;
-                    case SDKMethod.onConversationsUpdate:
+                    }
+                    break;
+                case SDKMethod.onConversationsUpdate:
+                    {
+                        foreach (IChatManagerDelegate it in delegater)
                         {
                             it.OnConversationsUpdate();
                         }
-                        break;
-                    case SDKMethod.onConversationRead:
+                    }
+                    break;
+                case SDKMethod.onConversationRead:
+                    {
+                        string from = jsonNode["from"];
+                        string to = jsonNode["to"];
+                        foreach (IChatManagerDelegate it in delegater)
                         {
-                            string from = jsonNode["from"];
-                            string to = jsonNode["to"];
                             it.OnConversationRead(from, to);
                         }
-                        break;
-                    case SDKMethod.onMessageReactionDidChange:
+                    }
+                    break;
+                case SDKMethod.onMessageReactionDidChange:
+                    {
+                        List<MessageReactionChange> list = List.BaseModelListFromJsonArray<MessageReactionChange>(jsonNode);
+                        foreach (IChatManagerDelegate it in delegater)
                         {
-                            List<MessageReactionChange> list = List.BaseModelListFromJsonArray<MessageReactionChange>(jsonNode);
                             if (list.Count > 0) it.MessageReactionDidChange(list);
                         }
-                        break;
-                    case SDKMethod.onMessageIdChanged:
+                    }
+                    break;
+                case SDKMethod.onMessageIdChanged:
+                    {
+                        string conversationId = jsonNode["convId"];
+                        string oldMsgId = jsonNode["oldMsgId"];
+                        string newMsgId = jsonNode["newMsgId"];
+                        foreach (IChatManagerDelegate it in delegater)
                         {
-                            string conversationId = jsonNode["convId"];
-                            string oldMsgId = jsonNode["oldMsgId"];
-                            string newMsgId = jsonNode["newMsgId"];
                             it.onMessageIdChanged(conversationId, oldMsgId, newMsgId);
                         }
-                        break;
-                }
+                    }
+                    break;
             }
-
         }
 
         /*
