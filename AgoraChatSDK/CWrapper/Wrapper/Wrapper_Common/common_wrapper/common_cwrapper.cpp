@@ -211,6 +211,7 @@ void InitManagerMap()
 	func_map_conversation_manager["appendMessage"] = ConversationManager_AppendMessage;
 	func_map_conversation_manager["clearAllMessages"] = ConversationManager_ClearAllMessages;
 	func_map_conversation_manager["removeMessage"] = ConversationManager_RemoveMessage;
+    func_map_conversation_manager["removeMessages"] = ConversationManager_RemoveMessages;
 	func_map_conversation_manager["conversationExt"] = ConversationManager_ExtField;
 	func_map_conversation_manager["insertMessage"] = ConversationManager_InsertMessage;
 	func_map_conversation_manager["getLatestMessage"] = ConversationManager_LatestMessage;

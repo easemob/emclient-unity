@@ -270,6 +270,32 @@ namespace AgoraChat
 
         /**
          * \~chinese
+         * 删除本地数据库中指定时间段的消息。
+         *
+         * @param startTime     要删除消息的起始时间点，单位毫秒。
+         * @param endTime       要删除消息的结束时间点，单位毫秒。
+         *
+         * @return 该消息是否成功删除。
+         *          - `true`: 成功；
+         *          - `false`: 失败。
+         *
+         * \~english
+         * Delete messages from the local database for a specified time period.
+         *
+         * @param startTime    Specify the starting timestamp of the messages to be deleted, in milliseconds.
+         * @param endTime      Specify the ending timestamp of the messages to be deleted, in milliseconds.
+         *
+         * @return Whether the message is successfully deleted.
+         *           - `true`: Yes.
+         *           - `false`: No.
+         */
+        public bool DeleteMessages(long startTime, long endTime)
+        {
+            return manager.DeleteMessages(Id, Type, startTime, endTime);
+        }
+
+        /**
+         * \~chinese
          * 删除指定会话中所有消息。
          * 
          * 该方法同时删除指定会话在内存和数据库中的所有消息。

@@ -211,6 +211,7 @@ SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ContactManager_RunDelegateTester(co
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_AppendMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_ClearAllMessages(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_RemoveMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_RemoveMessages(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_ExtField(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_InsertMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_LatestMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);

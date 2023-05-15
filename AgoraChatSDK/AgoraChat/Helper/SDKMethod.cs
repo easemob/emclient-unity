@@ -105,6 +105,7 @@ namespace AgoraChat
         internal const string markMessageAsRead = "markMessageAsRead";
         internal const string syncConversationExt = "syncConversationExt";
         internal const string removeMessage = "removeMessage";
+        internal const string removeMessages = "removeMessages";
         internal const string getLatestMessage = "getLatestMessage";
         internal const string getLatestMessageFromOthers = "getLatestMessageFromOthers";
         internal const string clearAllMessages = "clearAllMessages";
