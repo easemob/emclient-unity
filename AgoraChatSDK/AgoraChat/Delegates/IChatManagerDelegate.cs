@@ -164,22 +164,5 @@ namespace AgoraChat
          * @param list The changed reaction list.
          */
 		void MessageReactionDidChange(List<MessageReactionChange> list);
-
-
-        /**
-         * \~chinese
-         * 消息ID 发生变化。
-         *
-         * @param conversationId    消息所属的会话ID。
-         * @param oldMsgId          老的消息ID。
-         * @param newMsgId          新的消息ID。
-         *  \~english
-         * Message ID changed.
-         *
-         * @param conversationId    The conversation ID which the message belong to.
-         * @param oldMsgId          Old message ID。
-         * @param newMsgId          New message ID。
-         */
-        void onMessageIdChanged(string conversationId, string oldMsgId, string newMsgId);
     }
 }

@@ -1306,6 +1306,7 @@ namespace AgoraChat
                     break;
                 case SDKMethod.onMessageIdChanged:
                     {
+                        /*
                         string conversationId = jsonNode["convId"];
                         string oldMsgId = jsonNode["oldMsgId"];
                         string newMsgId = jsonNode["newMsgId"];
@@ -1313,6 +1314,7 @@ namespace AgoraChat
                         {
                             it.onMessageIdChanged(conversationId, oldMsgId, newMsgId);
                         }
+                        */
                     }
                     break;
             }
