@@ -241,6 +241,9 @@ namespace AgoraChat
                     case SDKMethod.onTokenWillExpire:
                         it.OnTokenWillExpire();
                         break;
+                    case SDKMethod.onAppActiveNumberReachLimitation:
+                        it.OnAppActiveNumberReachLimitation();
+                        break;
                     default:
                         break;
                 }

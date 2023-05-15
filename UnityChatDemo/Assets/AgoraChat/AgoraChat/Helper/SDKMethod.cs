@@ -337,6 +337,7 @@ namespace AgoraChat
         internal const string onAuthFailed = "onAuthFailed";
         internal const string onTokenExpired = "onTokenExpired";
         internal const string onTokenWillExpire = "onTokenWillExpire";
+        internal const string onAppActiveNumberReachLimitation = "onAppActiveNumberReachLimitation";
 
         // GroupManagerDeleagate
         internal const string onInvitationReceivedFromGroup = "onInvitationReceivedFromGroup";
