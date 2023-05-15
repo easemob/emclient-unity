@@ -57,6 +57,7 @@ SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_RemoveConversation(cons
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_DownloadMessageAttachments(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_DownloadMessageThumbnail(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_FetchHistoryMessages(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_FetchHistoryMessagesBy(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_ConversationWithType(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_GetConversationsFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_GetUnreadMessageCount(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);

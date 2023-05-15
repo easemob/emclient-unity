@@ -64,6 +64,7 @@ void InitManagerMap()
 	func_map_chat_manager["downloadAttachment"] = ChatManager_DownloadMessageAttachments;
 	func_map_chat_manager["downloadThumbnail"] = ChatManager_DownloadMessageThumbnail;
 	func_map_chat_manager["fetchHistoryMessages"] = ChatManager_FetchHistoryMessages;
+    func_map_chat_manager["fetchHistoryMessagesBy"] = ChatManager_FetchHistoryMessagesBy;
 	func_map_chat_manager["getConversation"] = ChatManager_ConversationWithType;
 	func_map_chat_manager["getThreadConversation"] = ChatManager_ConversationWithType;
 	func_map_chat_manager["getConversationsFromServer"] = ChatManager_GetConversationsFromServer;

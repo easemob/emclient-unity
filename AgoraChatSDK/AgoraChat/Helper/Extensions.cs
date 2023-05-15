@@ -331,6 +331,20 @@ namespace AgoraChat
             return ja;
         }
 
+        internal static JSONNode JsonArrayFromIntList(List<int> list)
+        {
+            JSONArray ja = new JSONArray();
+            if (list != null)
+            {
+                foreach (int i in list)
+                {
+                    ja.Add(i);
+                }
+            }
+
+            return ja;
+        }
+
         internal static JSONNode JsonArrayFromList<T>(List<T> list) where T : BaseModel
         {
             if (list == null) return null;

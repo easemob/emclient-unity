@@ -22,6 +22,7 @@
 #include "emthreadmanager_listener.h"
 #include "empresence.h"
 #include "emmultidevices_listener.h"
+#include "emfetchmessageoption.h"
 
 #include "sdk_wrapper_internal.h"
 
@@ -50,14 +51,14 @@ namespace sdk_wrapper {
 		static void ToJsonObject(Writer<StringBuffer>& writer, const map<string, int>& map);
 		static map<string, string> FromJsonObjectToMap(const Value& jnode);
         static unordered_map<string, string> FromJsonObjectToUnorderedMap(const Value& jnode);
-		static map<string, int> FromJsonObjectToIntMap(const Value& jnode);
+		//static map<string, int> FromJsonObjectToIntMap(const Value& jnode);
 
 		static string ToJson(const map<string, string>& map);
         static string ToJson(const unordered_map<string, string>& map);
 		static string ToJson(const map<string, int>& map);
 		static map<string, string> FromJsonToMap(const string& jstr);
         static unordered_map<string, string> FromJsonToUnorderedMap(const string& jstr);
-		static map<string, int> FromJsonToIntMap(const string& jstr);
+		//static map<string, int> FromJsonToIntMap(const string& jstr);
 
 	};
 
@@ -317,6 +318,14 @@ namespace sdk_wrapper {
 		static void ToJsonObject(Writer<StringBuffer>& writer, const vector<EMDeviceInfoPtr> vec);
 		static string ToJson(const vector<EMDeviceInfoPtr> vec);
 	};
+
+    struct FetchMessageOption
+    {
+        static EMFetchMessageOptionPtr FromJsonObject(const Value& jnode);
+        static EMFetchMessageOptionPtr FromJson(std::string json);
+
+        static vector<EMMessageBody::EMMessageBodyType> FromJsonObjectToBodyTypeVector(const Value& jnode);
+    };
 
 	struct UserInfo
 	{

@@ -76,6 +76,7 @@ namespace AgoraChat
         internal const string getConversationsFromServerWithPage = "getConversationsFromServerWithPage";
         internal const string deleteConversation = "deleteConversation";
         internal const string fetchHistoryMessages = "fetchHistoryMessages";
+        internal const string fetchHistoryMessagesBy = "fetchHistoryMessagesBy";
         internal const string searchChatMsgFromDB = "searchChatMsgFromDB";
         internal const string getMessage = "getMessage";
         internal const string asyncFetchGroupAcks = "asyncFetchGroupAcks";

@@ -195,7 +195,7 @@ namespace sdk_wrapper
         }
         return map;
     }
-
+    /*
     map<string, int> MyJson::FromJsonObjectToIntMap(const Value& jnode)
     {
         map<string, int> map;
@@ -210,7 +210,7 @@ namespace sdk_wrapper
         }
         return map;
     }
-
+    */
     string MyJson::ToJson(const map<string, string>& map) {
 
         StringBuffer s;
@@ -266,7 +266,7 @@ namespace sdk_wrapper
         }
         return map;
     }
-
+    /*
     map<string, int> MyJson::FromJsonToIntMap(const string& jstr) {
         map<string, int> map;
         if (jstr.length() < 3) return map;
@@ -277,6 +277,7 @@ namespace sdk_wrapper
         }
         return map;
     }
+    */
 
     EMChatConfigsPtr Options::FromJson(const char* json, const char* rs, const char* wk)
 	{
@@ -3293,6 +3294,77 @@ namespace sdk_wrapper
 
         std::string data = s.GetString();
         return data;
+    }
+
+    vector<EMMessageBody::EMMessageBodyType> FetchMessageOption::FromJsonObjectToBodyTypeVector(const Value& jnode)
+    {
+        vector<EMMessageBody::EMMessageBodyType> vec;
+
+        if (!jnode.IsArray()) return vec;
+
+        int size = jnode.Size();
+
+        for (int i = 0; i < size; i++) {
+
+            int type = jnode[i].GetInt();
+
+            EMMessageBody::EMMessageBodyType btype = Message::BodyTypeFromInt(type);
+
+            vec.push_back(btype);
+        }
+
+        return vec;
+    }
+
+    EMFetchMessageOptionPtr FetchMessageOption::FromJsonObject(const Value& jnode)
+    {
+        if (jnode.IsNull()) return nullptr;
+
+        EMFetchMessageOptionPtr option = EMFetchMessageOptionPtr(new EMFetchMessageOption());
+
+        if (jnode.HasMember("isSave") && jnode["isSave"].IsBool()) {
+            bool isSave = jnode["isSave"].GetBool();
+            option->setIsSave(isSave);
+        }
+
+        if (jnode.HasMember("direction") && jnode["direction"].IsInt()) {
+            int direction = jnode["direction"].GetInt();
+            option->setDirection(Conversation::EMMessageSearchDirectionFromInt(direction));
+        }
+
+        if (jnode.HasMember("from") && jnode["from"].IsString()) {
+            std::string from = jnode["from"].GetString();
+            option->setFrom(from);
+        }
+
+        if (jnode.HasMember("types") && jnode["types"].IsArray()) {
+            const Value& array = jnode["types"];
+            vector<EMMessageBody::EMMessageBodyType> vec = FromJsonObjectToBodyTypeVector(array);
+            option->setMsgTypes(vec);
+        }
+
+        if (jnode.HasMember("startTime") && jnode["startTime"].IsInt64()) {
+            int64_t i = jnode["startTime"].GetInt64();
+            option->setStartTime(i);
+        }
+
+        if (jnode.HasMember("endTime") && jnode["endTime"].IsInt64()) {
+            int64_t i = jnode["endTime"].GetInt64();
+            option->setEndTime(i);
+        }
+
+        return option;
+    }
+
+    EMFetchMessageOptionPtr FetchMessageOption::FromJson(std::string json)
+    {
+        if (json.length() < 3) return nullptr;
+
+        Document d;
+        if (!d.Parse(json.data()).HasParseError()) {
+            return FromJsonObject(d);
+        }
+        return nullptr;
     }
 
     UserInfo::UserInfo()
