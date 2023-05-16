@@ -45,11 +45,14 @@ namespace AgoraChat
 
         private void OnApplicationQuit()
         {
-            if (SDKClient.Instance.IsLoggedIn)
+            if (IClient.IsInit)
             {
-                SDKClient.Instance.Logout(false);
+                if (SDKClient.Instance.IsLoggedIn)
+                {
+                    SDKClient.Instance.Logout(false);
+                }
+                SDKClient.Instance.ClearResource();
             }
-            SDKClient.Instance.ClearResource();
         }
 
 #if UNITY_EDITOR
@@ -66,11 +69,14 @@ namespace AgoraChat
 
         static bool Quit()
         {
-            if (SDKClient.Instance.IsLoggedIn)
+            if (IClient.IsInit)
             {
-                SDKClient.Instance.Logout(false);
+                if (SDKClient.Instance.IsLoggedIn)
+                {
+                    SDKClient.Instance.Logout(false);
+                }
+                SDKClient.Instance.ClearResource();
             }
-            SDKClient.Instance.ClearResource();
             Debug.Log("Quit...");
             return true;
         }
