@@ -364,6 +364,7 @@ namespace AgoraChat
         internal const string onAllMemberMuteChangedFromGroup = "onAllMemberMuteChangedFromGroup";
         internal const string onSpecificationChangedFromGroup = "onSpecificationChangedFromGroup";
         internal const string onStateChangedFromGroup = "onStateChangedFromGroup";
+        internal const string onUpdateMemberAttributesFromGroup = "onUpdateMemberAttributesFromGroup";
 
         // RoomManagerDelegate
         internal const string onDestroyedFromRoom = "onDestroyedFromRoom";

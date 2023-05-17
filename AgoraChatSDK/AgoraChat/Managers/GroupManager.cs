@@ -1706,6 +1706,14 @@ namespace AgoraChat
                             it.OnSpecificationChangedFromGroup(group);
                         }
                         break;
+                    case SDKMethod.onUpdateMemberAttributesFromGroup:
+                        {
+                            string userId = jsonNode["userId"];
+                            string from = jsonNode["from"];
+                            Dictionary<string, string> attributes = Dictionary.StringDictionaryFromJsonObject(jsonNode["attrs"]);
+                            it.OnUpdateMemberAttributesFromGroup(groupId, userId, attributes, from);
+                        }
+                        break;
                 }
             }
         }
