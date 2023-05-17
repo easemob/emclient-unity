@@ -391,6 +391,11 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         Debug.Log($"GroupManager24 OnSpecificationChangedFromGroup group: {group.ToJsonObject()}");
     }
 
+    public void OnUpdateMemberAttributesFromGroup(string groupId, string userId, Dictionary<string, string> attributes, string from)
+    {
+        Debug.Log($"GroupManager25 OnUpdateMemberAttributesFromGroup group: {groupId}");
+    }
+
     public void OnDestroyedFromRoom(string roomId, string roomName)
     {
         Debug.Log($"RoomManager1 OnDestroyedFromRoom roomId: {roomId}, roomName:{roomName}");

@@ -1488,6 +1488,12 @@ namespace sdk_wrapper {
             gGroupManagerListener->onDeleteSharedFileFromGroup(groupPtr, "fileId");
             gGroupManagerListener->onDisabledStateChangedFromGroup(groupPtr, true);
             gGroupManagerListener->onUpdateSpecificationFromGroup(groupPtr);
+
+            //const std::string& groupId, const std::string& username, const std::unordered_map<std::string, std::string>& attributes, const std::string& from
+            unordered_map<string, string> attributes;
+            attributes["name1"] = "value1";
+            attributes["name2"] = "value2";
+            gGroupManagerListener->onUpdateMemberAttributesFromGroup("groupId", "userId", attributes, "from");
         }
         return nullptr;
     }

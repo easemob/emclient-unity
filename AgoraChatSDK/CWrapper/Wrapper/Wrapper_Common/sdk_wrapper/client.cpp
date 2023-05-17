@@ -612,6 +612,10 @@ namespace sdk_wrapper
 
             error->setErrorCode(EMError::TOKEN_WILL_EXPIRE);
             gConnectionListener->onTokenNotification(error);
+
+            error->setErrorCode(EMError::APP_ACTIVE_NUMBER_REACH_LIMITATION);
+            gConnectionListener->onDisconnect(error);
+            
         }
 
         if (nullptr != gMultiDevicesListener) {

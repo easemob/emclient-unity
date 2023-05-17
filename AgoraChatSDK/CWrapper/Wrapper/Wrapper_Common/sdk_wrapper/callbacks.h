@@ -659,6 +659,30 @@ namespace sdk_wrapper {
             if (json.size() > 0)
                 CallBack(STRING_GROUPMANAGER_LISTENER.c_str(), STRING_onSpecificationChangedFromGroup.c_str(), json.c_str());
         }
+
+        void onUpdateMemberAttributesFromGroup(const std::string& groupId, const std::string& username, const std::unordered_map<std::string, std::string>& attributes, const std::string& from)
+        {
+            JSON_STARTOBJ
+
+            writer.Key("groupId");
+            writer.String(groupId.c_str());
+
+            writer.Key("userId");
+            writer.String(username.c_str());
+
+            writer.Key("from");
+            writer.String(from.c_str());
+
+            writer.Key("attrs");
+            MyJson::ToJsonObject(writer, attributes);
+
+            JSON_ENDOBJ
+
+            string json = s.GetString();
+
+            if (json.size() > 0)
+                CallBack(STRING_GROUPMANAGER_LISTENER.c_str(), STRING_onUpdateMemberAttributesFromGroup.c_str(), json.c_str());
+        }
     };
 
     class RoomManagerListener : public EMChatroomManagerListener
