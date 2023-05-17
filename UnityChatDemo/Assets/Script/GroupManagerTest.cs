@@ -53,6 +53,8 @@ public class GroupManagerTest : MonoBehaviour
     private Button UpdateGroupAnnouncementBtn;
     private Button UpdateGroupExtBtn;
     private Button UploadGroupSharedFileBtn;
+    private Button SetMemberAttributesBtn;
+    private Button FetchMemberAttributesBtn;
 
     private string currentGroupId
     {
@@ -113,6 +115,8 @@ public class GroupManagerTest : MonoBehaviour
         UpdateGroupAnnouncementBtn = transform.Find("Scroll View/Viewport/Content/UpdateGroupAnnouncementBtn").GetComponent<Button>();
         UpdateGroupExtBtn = transform.Find("Scroll View/Viewport/Content/UpdateGroupExtBtn").GetComponent<Button>();
         UploadGroupSharedFileBtn = transform.Find("Scroll View/Viewport/Content/UploadGroupSharedFileBtn").GetComponent<Button>();
+        SetMemberAttributesBtn = transform.Find("Scroll View/Viewport/Content/SetMemberAttributesBtn").GetComponent<Button>();
+        FetchMemberAttributesBtn = transform.Find("Scroll View/Viewport/Content/FetchMemberAttributesBtn").GetComponent<Button>();
 
         AcceptInvitationFromGroupBtn.onClick.AddListener(AcceptInvitationFromGroupBtnAction);
         AcceptJoinApplicationBtn.onClick.AddListener(AcceptJoinApplicationBtnAction);
@@ -157,7 +161,8 @@ public class GroupManagerTest : MonoBehaviour
         UpdateGroupAnnouncementBtn.onClick.AddListener(UpdateGroupAnnouncementBtnAction);
         UpdateGroupExtBtn.onClick.AddListener(UpdateGroupExtBtnAction);
         UploadGroupSharedFileBtn.onClick.AddListener(UploadGroupSharedFileBtnAction);
-
+        SetMemberAttributesBtn.onClick.AddListener(SetMemberAttributesBtnAction);
+        FetchMemberAttributesBtn.onClick.AddListener(FetchMemberAttributesBtnAction);
 
 
     }
@@ -1217,6 +1222,96 @@ public class GroupManagerTest : MonoBehaviour
     {
         UIManager.UnfinishedAlert(transform);
         Debug.Log("UploadGroupSharedFileBtnAction");
+    }
+
+    void SetMemberAttributesBtnAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            if (null == currentGroupId || 0 == currentGroupId.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
+            Dictionary<string, string> attrs = new Dictionary<string, string>();
+            attrs.Add(dict["key"], dict["value"]);
+
+            SDKClient.Instance.GroupManager.SetMemberAttributes(currentGroupId, dict["userId"], attrs, new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("userId");
+        config.AddField("key");
+        config.AddField("value");
+
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("SetMemberAttributesBtnAction");
+    }
+
+    void FetchMemberAttributesBtnAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            if (null == currentGroupId || 0 == currentGroupId.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
+            List<string> ulist = new List<string>();
+            ulist.Add(dict["userId"]);
+
+            List<string> alist = new List<string>();
+            if (dict["key"].Length > 0) alist.Add(dict["key"]);
+
+            SDKClient.Instance.GroupManager.FetchMemberAttributes(currentGroupId, ulist, alist, new ValueCallBack<Dictionary<string, Dictionary<string, string>>>(
+                onSuccess: (attrs) =>
+                {
+                    if (0 == attrs.Count)
+                    {
+                        UIManager.DefaultAlert(transform, "Not find any attributes.");
+                        return;
+                    }
+
+                    string str = "";
+                    foreach(var it in attrs)
+                    {
+                        string user = it.Key;
+                        str = "user=" + user + "{";
+                        Dictionary<string, string> adict = it.Value;
+                        foreach(var ait in adict)
+                        {
+                            string key = ait.Key;
+                            string value = ait.Value;
+                            str = str + "key=" + key + "; value=" + value + ";";
+                        }
+                        str += "}";
+                    }
+                    UIManager.DefaultAlert(transform, str);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("userId");
+        config.AddField("key");
+
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("FetchMemberAttributes");
     }
 
 

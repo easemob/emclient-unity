@@ -393,7 +393,12 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
 
     public void OnUpdateMemberAttributesFromGroup(string groupId, string userId, Dictionary<string, string> attributes, string from)
     {
-        Debug.Log($"GroupManager25 OnUpdateMemberAttributesFromGroup group: {groupId}");
+        Debug.Log($"IGroupManagerDelegate25 OnUpdateMemberAttributesFromGroup: gid: {groupId}; userId:{userId}, from:{from}");
+        Debug.Log($"attrs count:{attributes.Count}");
+        foreach (var it in attributes)
+        {
+            Debug.Log($"key:{it.Key}, value:{it.Value}");
+        }
     }
 
     public void OnDestroyedFromRoom(string roomId, string roomName)
