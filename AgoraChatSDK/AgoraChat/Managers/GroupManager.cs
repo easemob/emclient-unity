@@ -1501,7 +1501,7 @@ namespace AgoraChat
                 return Dictionary.NestedStringDictionaryFromJsonObject(jsonNode);
             };
 
-            NativeCall<List<Group>>(SDKMethod.fetchMemberAttributes, jo_param, callback, process);
+            NativeCall<Dictionary<string, Dictionary<string, string>>>(SDKMethod.fetchMemberAttributes, jo_param, callback, process);
         }
 
         /**
