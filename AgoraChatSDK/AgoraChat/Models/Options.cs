@@ -292,6 +292,29 @@ namespace AgoraChat
 
         /**
         * \~chinese
+        * 设置SDK底层数据存储路径。仅用于MacOS和Windows平台端。
+        * 如果未设置，则由SDK设置为缺省路径。
+        *
+        * 举例如下:
+        * MacOS: /Users/UserName/Library/Application Support/DefaultCompany/xxx
+        * Windows: C:/Users/UserName/AppData/LocalLow/DefaultCompany/xxx
+        *
+        * 最后以文件夹结尾，无需“/”
+        *
+        * \~english
+        * Sets persistent path for SDK data. Only used for MacOS and Windows platform.
+        * If not set, then SDK with set with default value.
+        *
+        * For example:
+        * MacOS: /Users/UserName/Library/Application Support/DefaultCompany/xxx
+        * Windows: C:/Users/UserName/AppData/LocalLow/DefaultCompany/xxx
+        *
+        * End with folder name, no need to append "/"
+        */
+        public string SDKDataPath = "";
+
+        /**
+        * \~chinese
         * Options 构造方法。
         *
         * @param appKey  App Key。
@@ -360,9 +383,16 @@ namespace AgoraChat
             jo.AddWithoutNull("enableDnsConfig", EnableDNSConfig);
             jo.AddWithoutNull("myUUID", MyUUID);
 
+            if (SDKDataPath.Length == 0)
+            {
 #if !_WIN32
-            jo.AddWithoutNull("sdkDataPath", Application.persistentDataPath);
+                jo.AddWithoutNull("sdkDataPath", Application.persistentDataPath);
 #endif
+            }
+            else
+            {
+                jo.AddWithoutNull("sdkDataPath", SDKDataPath);
+            }
 
             if (RestServer != null)
             {
