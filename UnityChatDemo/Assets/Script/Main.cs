@@ -709,4 +709,9 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
     {
         Debug.Log("Connection11 OnTokenWillExpire run");
     }
+
+    public void OnAppActiveNumberReachLimitation()
+    {
+        Debug.Log("Connection12 OnAppActiveNumberReachLimitation run");
+    }
 }

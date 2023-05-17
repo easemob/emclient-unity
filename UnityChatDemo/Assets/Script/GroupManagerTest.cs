@@ -817,7 +817,7 @@ public class GroupManagerTest : MonoBehaviour
 
     void GetJoinedGroupsFromServerBtnAction()
     {
-        SDKClient.Instance.GroupManager.FetchJoinedGroupsFromServer(callback: new ValueCallBack<List<Group>>(
+        SDKClient.Instance.GroupManager.FetchJoinedGroupsFromServer(0, 20, callback: new ValueCallBack<List<Group>>(
             onSuccess: (groupList) =>
             {
                 List<string> list = new List<string>();
