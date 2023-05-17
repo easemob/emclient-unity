@@ -437,6 +437,9 @@ namespace AgoraChat
                 case MultiDevicesOperation.THREAD_LEAVE: return 43;
                 case MultiDevicesOperation.THREAD_UPDATE: return 44;
                 case MultiDevicesOperation.THREAD_KICK: return 45;
+                case MultiDevicesOperation.SET_METADATA: return 50;
+                case MultiDevicesOperation.DELETE_METADATA: return 51;
+                case MultiDevicesOperation.GROUP_MEMBER_METADATA_CHANGED: return 52;
                 default:
                     return -1;
             }
@@ -482,6 +485,9 @@ namespace AgoraChat
                 case 43: return MultiDevicesOperation.THREAD_LEAVE;
                 case 44: return MultiDevicesOperation.THREAD_UPDATE;
                 case 45: return MultiDevicesOperation.THREAD_KICK;
+                case 50: return MultiDevicesOperation.SET_METADATA;
+                case 51: return MultiDevicesOperation.DELETE_METADATA;
+                case 52: return MultiDevicesOperation.GROUP_MEMBER_METADATA_CHANGED;
                 default: return MultiDevicesOperation.UNKNOWN;
             }
         }
