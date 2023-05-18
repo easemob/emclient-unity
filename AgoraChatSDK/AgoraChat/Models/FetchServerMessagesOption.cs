@@ -33,10 +33,10 @@ namespace AgoraChat
 
         /**
          *  \~chinese
-         *  消息发送方的用户 ID。
+         *  消息发送方的用户 ID。仅用于群组消息时使用。
          *
          *  \~english
-         *  The user ID of the message sender.
+         *  The user ID of the message sender. Only used for group message.
          */
         public string From;
 
@@ -77,7 +77,7 @@ namespace AgoraChat
          */
         public long EndTime = -1;
 
-        internal FetchServerMessagesOption() { }
+        public FetchServerMessagesOption() { }
 
         internal FetchServerMessagesOption(string jsonString) : base(jsonString) { }
 

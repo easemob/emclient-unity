@@ -349,7 +349,7 @@ namespace sdk_wrapper {
         int page_size = GetJsonValue_Int(d, "pageSize", 1);
 
         EMFetchMessageOptionPtr option = nullptr;
-        if (d.HasMember("option") && d["options"].IsObject()) {
+        if (d.HasMember("options") && d["options"].IsObject()) {
             option = FetchMessageOption::FromJsonObject(d["options"]);
         }
 
