@@ -136,6 +136,7 @@ namespace WinSDKTest
             Console.WriteLine($"IsRead: {msg.IsRead}");
             Console.WriteLine($"MessageOnlineState: {msg.MessageOnlineState}");
             Console.WriteLine($"IsThread: {msg.IsThread}");
+            Console.WriteLine($"DeliverOnlineOnly: {msg.DeliverOnlineOnly}");
 
             PrintAttributeValue(msg.Attributes);
 
@@ -494,6 +495,7 @@ namespace WinSDKTest
             functions_IChatManager.Add(menu_index, "DownloadAttachment"); menu_index++;
             functions_IChatManager.Add(menu_index, "DownloadThumbnail"); menu_index++;
             functions_IChatManager.Add(menu_index, "FetchHistoryMessagesFromServer"); menu_index++;
+            functions_IChatManager.Add(menu_index, "FetchHistoryMessagesFromServerBy"); menu_index++;
             functions_IChatManager.Add(menu_index, "FetchGroupReadAcks"); menu_index++;
             functions_IChatManager.Add(menu_index, "GetConversation"); menu_index++;
             functions_IChatManager.Add(menu_index, "GetConversationsFromServer"); menu_index++;
@@ -557,6 +559,22 @@ namespace WinSDKTest
             param.Add(menu_index, "startMessageId (string, default is empty string)"); menu_index++;
             param.Add(menu_index, "count (int)"); menu_index++;
             level3_menus.Add("FetchHistoryMessagesFromServer", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "conversationId (string)"); menu_index++;
+            param.Add(menu_index, "conversationType (0:Chat, 1:Group, 2:Room)"); menu_index++;
+            param.Add(menu_index, "cursor (string)"); menu_index++;
+            param.Add(menu_index, "pageSize (int)"); menu_index++;
+            param.Add(menu_index, "needOption (bool)"); menu_index++;
+            param.Add(menu_index, "isSave (bool)"); menu_index++;
+            param.Add(menu_index, "direction (int: 0-up; 1-down)"); menu_index++;
+            param.Add(menu_index, "from (string)"); menu_index++;
+            param.Add(menu_index, "msgType1 (int: TXT = 0,IMAGE = 1,VIDEO = 2,LOCATION = 3,VOICE = 4,FILE = 5,CMD = 6,CUSTOM = 7)"); menu_index++;
+            param.Add(menu_index, "msgType2 (int: TXT = 0,IMAGE = 1,VIDEO = 2,LOCATION = 3,VOICE = 4,FILE = 5,CMD = 6,CUSTOM = 7)"); menu_index++;
+            param.Add(menu_index, "startTime (long)"); menu_index++;
+            param.Add(menu_index, "endTime (long)"); menu_index++;
+            level3_menus.Add("FetchHistoryMessagesFromServerBy", new Dictionary<int, string>(param));
             param.Clear();
 
             menu_index = 1;
@@ -867,6 +885,7 @@ namespace WinSDKTest
             functions_IConversationManager.Add(menu_index, "AppendMessage"); menu_index++;
             functions_IConversationManager.Add(menu_index, "UpdateMessage"); menu_index++;
             functions_IConversationManager.Add(menu_index, "DeleteMessage"); menu_index++;
+            functions_IConversationManager.Add(menu_index, "DeleteMessages"); menu_index++;
             functions_IConversationManager.Add(menu_index, "DeleteAllMessages"); menu_index++;
             functions_IConversationManager.Add(menu_index, "LoadConverationMessage"); menu_index++;
             functions_IConversationManager.Add(menu_index, "LoadMessagesWithMsgType"); menu_index++;
@@ -953,6 +972,14 @@ namespace WinSDKTest
             param.Add(menu_index, "conversationType (0:Chat, 1:Group, 2:Room)"); menu_index++;
             param.Add(menu_index, "messageId (string)"); menu_index++;
             level3_menus.Add("DeleteMessage", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "conversationId (string)"); menu_index++;
+            param.Add(menu_index, "conversationType (0:Chat, 1:Group, 2:Room)"); menu_index++;
+            param.Add(menu_index, "startTime (long)"); menu_index++;
+            param.Add(menu_index, "endTime (long)"); menu_index++;
+            level3_menus.Add("DeleteMessages", new Dictionary<int, string>(param));
             param.Clear();
 
             menu_index = 1;
@@ -1058,6 +1085,8 @@ namespace WinSDKTest
             functions_IGroupManager.Add(menu_index, "UpdateGroupAnnouncement"); menu_index++;
             functions_IGroupManager.Add(menu_index, "UpdateGroupExt"); menu_index++;
             functions_IGroupManager.Add(menu_index, "UploadGroupSharedFile"); menu_index++;
+            functions_IGroupManager.Add(menu_index, "SetMemberAttributes"); menu_index++;
+            functions_IGroupManager.Add(menu_index, "FetchMemberAttributes"); menu_index++;
             level2_menus.Add("IGroupManager", functions_IGroupManager);
         }
 
@@ -1335,6 +1364,25 @@ namespace WinSDKTest
             param.Add(menu_index, "groupId (string)"); menu_index++;
             param.Add(menu_index, "filePath (string)"); menu_index++;
             level3_menus.Add("UploadGroupSharedFile", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "groupId (string)"); menu_index++;
+            param.Add(menu_index, "userId (string)"); menu_index++;
+            param.Add(menu_index, "attr-name1 (string)"); menu_index++;
+            param.Add(menu_index, "attr-val1 (string)"); menu_index++;
+            param.Add(menu_index, "attr-name2 (string)"); menu_index++;
+            param.Add(menu_index, "attr-val2 (string)"); menu_index++;
+            level3_menus.Add("SetMemberAttributes", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "groupId (string)"); menu_index++;
+            param.Add(menu_index, "userId1 (string)"); menu_index++;
+            param.Add(menu_index, "userId2 (string)"); menu_index++;
+            param.Add(menu_index, "attr-name1 (string)"); menu_index++;
+            param.Add(menu_index, "attr-name2 (string)"); menu_index++;
+            level3_menus.Add("FetchMemberAttributes", new Dictionary<int, string>(param));
             param.Clear();
         }
 
@@ -2834,6 +2882,57 @@ namespace WinSDKTest
             ));
         }
 
+        public void CallFunc_IChatManager_FetchHistoryMessagesFromServerBy()
+        {
+            string conversationId = GetParamValueFromContext(0);
+
+            ConversationType type = ConversationType.Chat;
+            type = (ConversationType)GetIntFromString(GetParamValueFromContext(1));
+
+            string cursor = GetParamValueFromContext(2);
+
+            int pageSize = GetIntFromString(GetParamValueFromContext(3));
+
+            bool needOption = (GetParamValueFromContext(4).CompareTo("false") == 0) ? false : true;
+
+            FetchServerMessagesOption option = null;
+
+            if (needOption)
+            {
+                option = new FetchServerMessagesOption();
+                option.IsSave = (GetParamValueFromContext(5).CompareTo("false") == 0) ? false : true;
+                option.Direction = (MessageSearchDirection)GetIntFromString(GetParamValueFromContext(6));
+                option.From = GetParamValueFromContext(7);
+                MessageBodyType msgType1 = (MessageBodyType)GetIntFromString(GetParamValueFromContext(8));
+                MessageBodyType msgType2 = (MessageBodyType)GetIntFromString(GetParamValueFromContext(9));
+                option.MsgTypes = new List<MessageBodyType>();
+                option.MsgTypes.Add(msgType1);
+                option.MsgTypes.Add(msgType2);
+                option.StartTime = GetLongFromString(GetParamValueFromContext(10));
+                option.EndTime = GetLongFromString(GetParamValueFromContext(11));
+            }
+
+            SDKClient.Instance.ChatManager.FetchHistoryMessagesFromServerBy(conversationId, type, cursor, pageSize, option, new ValueCallBack<CursorResult<Message>>(
+                onSuccess: (result) =>
+                {
+                    if (0 == result.Data.Count)
+                    {
+                        Console.WriteLine("No history messages.");
+                        return;
+                    }
+                    Console.WriteLine($"FetchHistoryMessagesFromServerBy: found {result.Data.Count} messages, cursor: {result.Cursor}");
+                    foreach (var msg in result.Data)
+                    {
+                        Utils.PrintMessage(msg);
+                    }
+                },
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"FetchHistoryMessagesFromServerBy failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
         public void CallFunc_IChatManager_FetchGroupReadAcks()
         {
             string messageId = GetParamValueFromContext(0);
@@ -3152,6 +3251,7 @@ namespace WinSDKTest
             msg.MessageType = msg_type;
             msg.IsThread = is_thread;
             msg.IsNeedGroupAck = true;
+            //msg.DeliverOnlineOnly = true;
             msg.SetRoomMessagePriority(RoomMessagePriority.High);
             AgoraChat.MessageBody.TextBody tb = (AgoraChat.MessageBody.TextBody)msg.Body;
             tb.TargetLanguages = new List<string>();
@@ -3851,6 +3951,12 @@ namespace WinSDKTest
             if (select_context.level2_item.CompareTo("FetchHistoryMessagesFromServer") == 0)
             {
                 CallFunc_IChatManager_FetchHistoryMessagesFromServer();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("FetchHistoryMessagesFromServerBy") == 0)
+            {
+                CallFunc_IChatManager_FetchHistoryMessagesFromServerBy();
                 return;
             }
 
@@ -4716,6 +4822,21 @@ namespace WinSDKTest
                 Console.WriteLine($"DeleteMessage failed.");
         }
 
+        public void CallFunc_IConversationManager_DeleteMessages()
+        {
+            string cid = GetParamValueFromContext(0); ;
+            ConversationType type = (ConversationType)GetIntFromString(GetParamValueFromContext(1));
+            long startTime = GetLongFromString(GetParamValueFromContext(2));
+            long endTime = GetLongFromString(GetParamValueFromContext(3));
+
+            Conversation conv = SDKClient.Instance.ChatManager.GetConversation(cid, type);
+
+            if (conv.DeleteMessages(startTime, endTime))
+                Console.WriteLine($"DeleteMessages success.");
+            else
+                Console.WriteLine($"DeleteMessages failed.");
+        }
+
         public void CallFunc_IConversationManager_DeleteAllMessages(string _cid = "", int _type = -1)
         {
             string cid = "";
@@ -5102,6 +5223,12 @@ namespace WinSDKTest
             if (select_context.level2_item.CompareTo("DeleteMessage") == 0)
             {
                 CallFunc_IConversationManager_DeleteMessage();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("DeleteMessages") == 0)
+            {
+                CallFunc_IConversationManager_DeleteMessages();
                 return;
             }
 
@@ -6508,6 +6635,71 @@ namespace WinSDKTest
             ));
         }
 
+        public void CallFunc_IGroupManager_SetMemberAttributes()
+        {
+            string groupId = GetParamValueFromContext(0);
+            string userId = GetParamValueFromContext(1);
+            string attr_name1 = GetParamValueFromContext(2);
+            string attr_val1 = GetParamValueFromContext(3);
+            string attr_name2 = GetParamValueFromContext(4);
+            string attr_val2 = GetParamValueFromContext(5);
+
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            dict.Add(attr_name1, attr_val1);
+            dict.Add(attr_name2, attr_val2);
+
+            SDKClient.Instance.GroupManager.SetMemberAttributes(groupId, userId, dict, new CallBack(
+                onSuccess: () =>
+                {
+                    Console.WriteLine($"SetMemberAttributes success.");
+                },
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"SetMemberAttributes failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IGroupManager_FetchMemberAttributes()
+        {
+            string groupId = GetParamValueFromContext(0);
+            string userId1 = GetParamValueFromContext(1);
+            string userId2 = GetParamValueFromContext(2);
+            string attr_name1 = GetParamValueFromContext(3);
+            string attr_name2 = GetParamValueFromContext(4);
+
+            List<string> user_list = new List<string>();
+            if (userId1.Length > 0) user_list.Add(userId1);
+            if (userId2.Length > 0) user_list.Add(userId2);
+
+            List<string> attr_list = new List<string>();
+            if (attr_name1.Length > 0) attr_list.Add(attr_name1);
+            if (attr_name2.Length > 0) attr_list.Add(attr_name2);
+
+            SDKClient.Instance.GroupManager.FetchMemberAttributes(groupId, user_list, attr_list, new ValueCallBack<Dictionary<string, Dictionary<string, string>>>(
+                onSuccess: (dict) =>
+                {
+                    Console.WriteLine($"FetchMemberAttributes, success.");                    
+                    foreach (var it in dict)
+                    {
+                        string user = it.Key;
+                        Console.WriteLine($"user: {user} ----------------");
+                        Dictionary<string, string> attrs = dict[it.Key];
+                        foreach(var ait in attrs)
+                        {
+                            Console.WriteLine($"attr name: {ait.Key}, attr value: {ait.Value}");
+                        }
+                        
+                    }
+                },
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"FetchMemberAttributes failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+
         public void CallFunc_IGroupManager()
         {
             if (select_context.level2_item.CompareTo("applyJoinToGroup") == 0)
@@ -6771,6 +6963,18 @@ namespace WinSDKTest
             if (select_context.level2_item.CompareTo("UploadGroupSharedFile") == 0)
             {
                 CallFunc_IGroupManager_UploadGroupSharedFile();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("SetMemberAttributes") == 0)
+            {
+                CallFunc_IGroupManager_SetMemberAttributes();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("FetchMemberAttributes") == 0)
+            {
+                CallFunc_IGroupManager_FetchMemberAttributes();
                 return;
             }
         }
@@ -9062,13 +9266,18 @@ namespace WinSDKTest
                     Console.WriteLine($"reaction: Reaction:{mr.Rection},count:{mr.Count},userlist:{userlist}; state:{mr.State}");
                 }
 
+                foreach (var oit in mrc.OperationList)
+                {
+                    Console.WriteLine($"operation: userid:{oit.UserId}, reaction:{oit.Reaction}, operate:{oit.operate}");
+                }
+
             }
         }
     }
 
     class ConnectionDelegate : IConnectionDelegate
     {
-        int LISTENER_COUNT = 11;
+        int LISTENER_COUNT = 12;
 
         public void OnConnected()
         {
@@ -9125,6 +9334,11 @@ namespace WinSDKTest
             Console.WriteLine($"IConnectionDelegate11 OnTokenWillExpire, total listener count: {LISTENER_COUNT}");
         }
 
+        public void OnAppActiveNumberReachLimitation()
+        {
+            Console.WriteLine($"IConnectionDelegate12 OnAppActiveNumberReachLimitation, total listener count: {LISTENER_COUNT}");
+        }
+
     }
 
     class ContactManagerDelegate : IContactManagerDelegate
@@ -9160,7 +9374,7 @@ namespace WinSDKTest
 
     class GroupManagerDelegate : IGroupManagerDelegate
     {
-        int LISTENER_COUNT = 24;
+        int LISTENER_COUNT = 25;
 
         public void OnInvitationReceivedFromGroup(string groupId, string groupName, string inviter, string reason)
         {
@@ -9293,6 +9507,15 @@ namespace WinSDKTest
             Console.WriteLine($"IGroupManagerDelegate24 OnSpecificationChangedFromGroup: gid: {group.GroupId}; groupName:{group.Name}, total listener count:{LISTENER_COUNT}");
         }
 
+        public void OnUpdateMemberAttributesFromGroup(string groupId, string userId, Dictionary<string, string> attributes, string from)
+        {
+            Console.WriteLine($"IGroupManagerDelegate25 OnUpdateMemberAttributesFromGroup: gid: {groupId}; userId:{userId}, from:{from}, total listener count:{LISTENER_COUNT}");
+            Console.WriteLine($"attrs count:{attributes.Count}");
+            foreach(var it in attributes)
+            {
+                Console.WriteLine($"key:{it.Key}, value:{it.Value}");
+            }
+        }
     }
 
     class MultiDeviceDelegate : IMultiDeviceDelegate
