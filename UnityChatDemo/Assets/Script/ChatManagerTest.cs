@@ -41,6 +41,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     private Button getConversationsFromServerWithPageBtn;
     private Button removeMessagesFromServerWithMsgIdsBtn;
     private Button removeMessagesFromServerWithTsBtn;
+    private Button fetchHistoryMessagesByBtn;
 
     private void Awake()
     {
@@ -81,6 +82,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         getConversationsFromServerWithPageBtn = transform.Find("Scroll View/Viewport/Content/GetConversationsFromServerWithPageBtn").GetComponent<Button>();
         removeMessagesFromServerWithMsgIdsBtn = transform.Find("Scroll View/Viewport/Content/RemoveMessagesFromServerWithMsgIdsBtn").GetComponent<Button>();
         removeMessagesFromServerWithTsBtn = transform.Find("Scroll View/Viewport/Content/RemoveMessagesFromServerWithTsBtn").GetComponent<Button>();
+        fetchHistoryMessagesByBtn = transform.Find("Scroll View/Viewport/Content/FetchHistoryMessagesByBtn").GetComponent<Button>();
 
         sendTextBtn.onClick.AddListener(SendTextBtnAction);
         sendImageBtn.onClick.AddListener(SendImageBtnAction);
@@ -112,6 +114,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         getConversationsFromServerWithPageBtn.onClick.AddListener(GetConversationsFromServerWithPageAction);
         removeMessagesFromServerWithMsgIdsBtn.onClick.AddListener(RemoveMessagesFromServerWithMsgIdsAction);
         removeMessagesFromServerWithTsBtn.onClick.AddListener(RemoveMessagesFromServerWithTsAction);
+        fetchHistoryMessagesByBtn.onClick.AddListener(FetchHistoryMessagesByBtnAction);
         SDKClient.Instance.ChatManager.AddChatManagerDelegate(this);
     }
 
@@ -580,6 +583,63 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         UIManager.DefaultInputAlert(transform, config);
         Debug.Log("FetchHistoryMessagesBtnAction");
     }
+
+    void FetchHistoryMessagesByBtnAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string conversationId = dict["ConversationId"];
+            ConversationType type = (ConversationType)(int.Parse(dict["ConversationType(0/1/2)"]));
+            string cursor = "";
+            int pageSize = 10;
+
+            FetchServerMessagesOption option = new FetchServerMessagesOption();
+            option.IsSave = false;
+            option.Direction = (MessageSearchDirection)(int.Parse(dict["Direction(0/1)"]));
+            option.From = dict["From"];
+
+            option.MsgTypes = new List<MessageBodyType>();
+            MessageBodyType msgType = (MessageBodyType)(int.Parse(dict["MsgType(0-7)"]));
+            option.MsgTypes.Add(msgType);
+
+            option.StartTime = long.Parse(dict["StartTime"]);
+            option.EndTime = long.Parse(dict["EndTime"]);
+
+            SDKClient.Instance.ChatManager.FetchHistoryMessagesFromServerBy(conversationId, type, cursor, pageSize, option, new ValueCallBack<CursorResult<Message>>(
+                onSuccess: (result) =>
+                {
+                    if (0 == result.Data.Count)
+                    {
+                        UIManager.DefaultAlert(transform, "No history messages.");
+                        return;
+                    }
+                    List<string> strList = new List<string>();
+                    foreach (var msg in result.Data)
+                    {
+                        strList.Add(msg.MsgId);
+                    }
+                    string str = string.Join(",", strList.ToArray());
+                    UIManager.DefaultAlert(transform, str);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("ConversationId");
+        config.AddField("ConversationType(0/1/2)");
+        config.AddField("Direction(0/1)");
+        config.AddField("From");
+        config.AddField("MsgType(0-7)");
+        config.AddField("StartTime");
+        config.AddField("EndTime");
+
+        UIManager.DefaultInputAlert(transform, config);
+        Debug.Log("FetchHistoryMessagesByBtnAction");
+    }
+
     void GetConversationsFromServerBtnAction()
     {
         SDKClient.Instance.ChatManager.GetConversationsFromServer(new ValueCallBack<List<Conversation>>(
@@ -1166,6 +1226,11 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
     public void MessageReactionDidChange(List<MessageReactionChange> list)
     {
-        throw new System.NotImplementedException();
+        string detail = "";
+        foreach(var it in list)
+        {
+            detail = detail + "ReactionChange:{" + it.ToJsonObject().ToString() + "};";
+        }
+        UIManager.DefaultAlert(transform, $"MessageReactionDidChange: {list.Count}, detail: {detail}");
     }
 }
