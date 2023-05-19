@@ -391,6 +391,16 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         Debug.Log($"GroupManager24 OnSpecificationChangedFromGroup group: {group.ToJsonObject()}");
     }
 
+    public void OnUpdateMemberAttributesFromGroup(string groupId, string userId, Dictionary<string, string> attributes, string from)
+    {
+        Debug.Log($"IGroupManagerDelegate25 OnUpdateMemberAttributesFromGroup: gid: {groupId}; userId:{userId}, from:{from}");
+        Debug.Log($"attrs count:{attributes.Count}");
+        foreach (var it in attributes)
+        {
+            Debug.Log($"key:{it.Key}, value:{it.Value}");
+        }
+    }
+
     public void OnDestroyedFromRoom(string roomId, string roomName)
     {
         Debug.Log($"RoomManager1 OnDestroyedFromRoom roomId: {roomId}, roomName:{roomName}");
@@ -708,5 +718,10 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
     public void OnTokenWillExpire()
     {
         Debug.Log("Connection11 OnTokenWillExpire run");
+    }
+
+    public void OnAppActiveNumberReachLimitation()
+    {
+        Debug.Log("Connection12 OnAppActiveNumberReachLimitation run");
     }
 }

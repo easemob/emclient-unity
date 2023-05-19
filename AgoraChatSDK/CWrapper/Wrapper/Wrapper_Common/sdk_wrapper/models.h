@@ -22,6 +22,7 @@
 #include "emthreadmanager_listener.h"
 #include "empresence.h"
 #include "emmultidevices_listener.h"
+#include "emfetchmessageoption.h"
 
 #include "sdk_wrapper_internal.h"
 
@@ -46,14 +47,19 @@ namespace sdk_wrapper {
 		static vector<string> FromJsonToVector(string& jstr);
 
 		static void ToJsonObject(Writer<StringBuffer>& writer, const map<string, string>& map);
+        static void ToJsonObject(Writer<StringBuffer>& writer, const unordered_map<string, string>& map);
 		static void ToJsonObject(Writer<StringBuffer>& writer, const map<string, int>& map);
 		static map<string, string> FromJsonObjectToMap(const Value& jnode);
-		static map<string, int> FromJsonObjectToIntMap(const Value& jnode);
+        static unordered_map<string, string> FromJsonObjectToUnorderedMap(const Value& jnode);
+		//static map<string, int> FromJsonObjectToIntMap(const Value& jnode);
 
 		static string ToJson(const map<string, string>& map);
+        static string ToJson(const unordered_map<string, string>& map);
 		static string ToJson(const map<string, int>& map);
 		static map<string, string> FromJsonToMap(const string& jstr);
-		static map<string, int> FromJsonToIntMap(const string& jstr);
+        static unordered_map<string, string> FromJsonToUnorderedMap(const string& jstr);
+		//static map<string, int> FromJsonToIntMap(const string& jstr);
+
 	};
 
 	class Options
@@ -169,10 +175,16 @@ namespace sdk_wrapper {
 
 	struct MessageReactionChange
 	{
-		static std::string ToJson(EMMessageReactionChangePtr reactionChangePtr, std::string curname);
-		static std::string ToJson(EMMessageReactionChangeList list, std::string curname);
-		static void ToJsonObject(Writer<StringBuffer>& writer, EMMessageReactionChangePtr reactionChangePtr, std::string curname);
+		static string ToJson(EMMessageReactionChangePtr reactionChangePtr, std::string curname);
+		static string ToJson(EMMessageReactionChangeList list, std::string curname);
+		static void ToJsonObject(Writer<StringBuffer>& writer, const EMMessageReactionChangePtr reactionChangePtr, std::string curname);
 	};
+
+    struct MessageReactionOperation
+    {
+        static void ToJsonObject(Writer<StringBuffer>& writer, const EMMessageReactionOperationPtr reactionOperationPtr);
+        static void ToJsonObject(Writer<StringBuffer>& writer, const EMMessageReactionOperationList list);
+    };
 
 	class Group
 	{
@@ -180,11 +192,13 @@ namespace sdk_wrapper {
 		static string ToJson(EMGroupPtr group);
 		static string ToJson(const EMMucMuteList& vec);
 		static string ToJson(const EMGroupList& list);
+        static string ToJson(const unordered_map<string, unordered_map<string, string>>& map);
 
 		static void ToJsonObjectWithGroupInfo(Writer<StringBuffer>& writer, EMGroupPtr group);
 		static void ToJsonObject(Writer<StringBuffer>& writer, EMGroupPtr group);
 		static void ToJsonObject(Writer<StringBuffer>& writer, const EMMucMuteList& vec);
 		static void ToJsonObject(Writer<StringBuffer>& writer, const EMGroupList& list);
+        static void ToJsonObject(Writer<StringBuffer>& writer, const unordered_map<string, unordered_map<string, string>>& map);
 
 		static string ToJson(const EMMucSettingPtr setting);
 		static EMMucSettingPtr FromJsonToMucSetting(string json);
@@ -304,6 +318,14 @@ namespace sdk_wrapper {
 		static void ToJsonObject(Writer<StringBuffer>& writer, const vector<EMDeviceInfoPtr> vec);
 		static string ToJson(const vector<EMDeviceInfoPtr> vec);
 	};
+
+    struct FetchMessageOption
+    {
+        static EMFetchMessageOptionPtr FromJsonObject(const Value& jnode);
+        static EMFetchMessageOptionPtr FromJson(std::string json);
+
+        static vector<EMMessageBody::EMMessageBodyType> FromJsonObjectToBodyTypeVector(const Value& jnode);
+    };
 
 	struct UserInfo
 	{

@@ -7,6 +7,7 @@
 #include "models.h"
 #include "callbacks.h"
 #include "sdk_wrapper.h"
+#include "core_dump.h"
 
 int SDK_TYPE = -1;
 EMClient* gClient = nullptr;
@@ -78,6 +79,8 @@ namespace sdk_wrapper
 
         // singleton client handle
         if (nullptr == gClient) {
+
+            SetUnhandledExceptionHandle();
 
             configs = Options::FromJson(jstr, "./sdkdata", "./sdkdata");
 
@@ -609,6 +612,10 @@ namespace sdk_wrapper
 
             error->setErrorCode(EMError::TOKEN_WILL_EXPIRE);
             gConnectionListener->onTokenNotification(error);
+
+            error->setErrorCode(EMError::APP_ACTIVE_NUMBER_REACH_LIMITATION);
+            gConnectionListener->onDisconnect(error);
+            
         }
 
         if (nullptr != gMultiDevicesListener) {

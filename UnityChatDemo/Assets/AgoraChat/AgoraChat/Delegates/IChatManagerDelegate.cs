@@ -164,5 +164,5 @@ namespace AgoraChat
          * @param list The changed reaction list.
          */
 		void MessageReactionDidChange(List<MessageReactionChange> list);
-	}
+    }
 }

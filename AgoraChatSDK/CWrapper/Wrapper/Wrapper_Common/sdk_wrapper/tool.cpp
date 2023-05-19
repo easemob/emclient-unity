@@ -4,18 +4,31 @@
 
 #include "tool.h"
 #include "models.h"
+#include "sdk_wrapper.h"
 
 extern EMClient* gClient;
 extern NativeListenerEvent gCallback;
 
+SDK_WRAPPER_API void SDK_WRAPPER_CALL FreeMemory_SDKWrapper(void* p)
+{
+    if (nullptr != p) free(p);
+}
 
 void CallBack(const char* listener, const char* method, const char* jstr)
 {
     if (nullptr == listener || nullptr == method || strlen(method) == 0)
         return;
 
+    const char* j = jstr;
+
+#ifdef _PURE_WIN32
+    std::wstring unicode = L"";
+    EMStringUtil::UTF8_to_Unicode(jstr, unicode);
+    j = reinterpret_cast<const char*>(unicode.c_str());
+#endif
+
     if (gCallback)
-        gCallback(listener, method, jstr);
+        gCallback(listener, method, j);
 }
 
 void CallBack(const char* method, const char* jstr)
@@ -28,6 +41,7 @@ void CallBackProgress(const char* method, const char* jstr)
     CallBack(STRING_CALLBACK_PROGRESS_LISTENER.c_str(), method, jstr);
 }
 
+/*
 const char* CopyToPointer(const string& src)
 {
     if (0 == src.length()) return nullptr;
@@ -38,6 +52,37 @@ const char* CopyToPointer(const string& src)
 
     memcpy(p, src.c_str(), len);
 
+    p[len - 1] = '\0';
+
+    return p;
+}
+*/
+const char* CopyToPointer(const string& src)
+{
+    if (0 == src.length()) return nullptr;
+
+#ifdef _PURE_WIN32
+    std::wstring unicode = L"";
+    EMStringUtil::UTF8_to_Unicode(src.c_str(), unicode);
+
+    size_t length = unicode.length() + 1;
+    wchar_t* wstrPtr = (wchar_t*)malloc(length * sizeof(wchar_t));
+
+    if (nullptr == wstrPtr) return nullptr;
+
+    wmemset(wstrPtr, 0, length);
+    wcsncpy_s(wstrPtr, length, unicode.c_str(), length);
+    const char* p = reinterpret_cast<const char*>(wstrPtr);
+#else
+    size_t len = src.length() + 1;
+    char* p = (char*)malloc(len * sizeof(char));
+
+    if (nullptr == p) return nullptr;
+
+    memset(p, 0, len);
+    memcpy(p, src.c_str(), len);
+    p[len - 1] = '\0';
+#endif
     return p;
 }
 

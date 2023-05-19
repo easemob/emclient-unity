@@ -1,5 +1,4 @@
-xcopy /Y ..\Dependency\*.dll runtimes\x64\native\
-#xcopy /Y ..\Dependency\*.dll runtimes\x86\native\
+xcopy /Y ..\Dependency\x64\*.dll runtimes\x64\native\
 
 xcopy /Y ..\..\..\emclient-unity\AgoraChatSDK\CWrapper\Wrapper\Wrapper_Common\build_win\proj\Release\ChatCWrapper.dll runtimes\x64\native\
 xcopy /Y ..\..\..\emclient-unity\AgoraChatSDK\CWrapper\Wrapper\Wrapper_Common\build_win\proj\Release\CommonWrapper.dll runtimes\x64\native\

@@ -114,6 +114,15 @@
          */
         void OnTokenWillExpire();
 
+        /**
+         * \~chinese
+         * App激活数量已达限制值。
+         *
+         * \~english
+         * App active number reach limitation.
+         */
+        void OnAppActiveNumberReachLimitation();
+
     }
 
 }

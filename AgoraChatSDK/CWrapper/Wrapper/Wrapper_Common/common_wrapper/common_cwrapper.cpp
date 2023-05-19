@@ -64,6 +64,7 @@ void InitManagerMap()
 	func_map_chat_manager["downloadAttachment"] = ChatManager_DownloadMessageAttachments;
 	func_map_chat_manager["downloadThumbnail"] = ChatManager_DownloadMessageThumbnail;
 	func_map_chat_manager["fetchHistoryMessages"] = ChatManager_FetchHistoryMessages;
+    func_map_chat_manager["fetchHistoryMessagesBy"] = ChatManager_FetchHistoryMessagesBy;
 	func_map_chat_manager["getConversation"] = ChatManager_ConversationWithType;
 	func_map_chat_manager["getThreadConversation"] = ChatManager_ConversationWithType;
 	func_map_chat_manager["getConversationsFromServer"] = ChatManager_GetConversationsFromServer;
@@ -132,6 +133,7 @@ void InitManagerMap()
 	func_map_group_manager["getGroupWithId"] = GroupManager_GetGroupWithId;
 	func_map_group_manager["getJoinedGroups"] = GroupManager_LoadAllMyGroupsFromDB;
 	func_map_group_manager["getJoinedGroupsFromServer"] = GroupManager_FetchAllMyGroupsWithPage;
+    func_map_group_manager["getJoinedGroupsFromServerSimple"] = GroupManager_FetchAllMyGroupsWithPageSimple;
 	func_map_group_manager["getPublicGroupsFromServer"] = GroupManager_FetchPublicGroupsWithCursor;
 	func_map_group_manager["joinPublicGroup"] = GroupManager_JoinPublicGroup;
 	func_map_group_manager["leaveGroup"] = GroupManager_LeaveGroup;
@@ -148,6 +150,8 @@ void InitManagerMap()
 	func_map_group_manager["updateGroupAnnouncement"] = GroupManager_UpdateGroupAnnouncement;
 	func_map_group_manager["updateGroupExt"] = GroupManager_ChangeGroupExtension;
 	func_map_group_manager["uploadGroupSharedFile"] = GroupManager_UploadGroupSharedFile;
+    func_map_group_manager["fetchMemberAttributes"] = GroupManager_FetchMemberAttributes;
+    func_map_group_manager["setMemberAttributes"] = GroupManager_SetMemberAttributes;
 
 	manager_map["EMGroupManager"] = func_map_group_manager;
 
@@ -207,6 +211,7 @@ void InitManagerMap()
 	func_map_conversation_manager["appendMessage"] = ConversationManager_AppendMessage;
 	func_map_conversation_manager["clearAllMessages"] = ConversationManager_ClearAllMessages;
 	func_map_conversation_manager["removeMessage"] = ConversationManager_RemoveMessage;
+    func_map_conversation_manager["removeMessages"] = ConversationManager_RemoveMessages;
 	func_map_conversation_manager["conversationExt"] = ConversationManager_ExtField;
 	func_map_conversation_manager["insertMessage"] = ConversationManager_InsertMessage;
 	func_map_conversation_manager["getLatestMessage"] = ConversationManager_LatestMessage;
@@ -277,6 +282,11 @@ bool CheckClientHandle()
 {
 	// only check client handle
 	return true;
+}
+
+COMMON_WRAPPER_API void COMMON_WRAPPER_CALL FreeMemory_Common(void* p)
+{
+    FreeMemory_SDKWrapper(p);
 }
 
 COMMON_WRAPPER_API void COMMON_WRAPPER_CALL Init_Common(int sdkType, int compileType, void* callback_handle)

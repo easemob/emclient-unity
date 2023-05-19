@@ -209,6 +209,8 @@
                 '<(emclient-linux-path)/src/emmessagestatistics.cpp',
                 '<(emclient-linux-path)/src/emstatisticsmanager.cpp',
                 '<(emclient-linux-path)/src/emmessagecollect.cpp',
+                '<(emclient-linux-path)/src/emfetchmessageoption.cpp',
+                '<(emclient-linux-path)/src/emgroupprivate.cpp',
 
                 # Add protocol source files
                 '<(emclient-linux-path)/protocol/emconnectionfactory.cpp',
@@ -245,6 +247,7 @@
                 '<(emclient-linux-path)/protocol/basenode.cpp',
                 '<(emclient-linux-path)/protocol/roamconfig.cpp',
                 '<(emclient-linux-path)/protocol/emcompressionzlib.cpp',
+                '<(emclient-linux-path)/protocol/muc.cpp',
                 '<(emclient-linux-path)/protocol/generated/jid.pb.cc',
                 '<(emclient-linux-path)/protocol/generated/keyvalue.pb.cc',
                 '<(emclient-linux-path)/protocol/generated/messagebody.pb.cc',

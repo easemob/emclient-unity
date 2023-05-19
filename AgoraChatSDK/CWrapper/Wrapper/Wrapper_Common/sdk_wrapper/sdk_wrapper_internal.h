@@ -56,6 +56,7 @@ const string STRING_onMessagesRecalled = "onMessagesRecalled";
 const string STRING_onConversationsUpdate = "onConversationsUpdate";
 const string STRING_onConversationRead = "onConversationRead";
 const string STRING_onMessageReactionDidChange = "messageReactionDidChange";
+const string STRING_onMessageIdChanged = "onMessageIdChanged";
 
 // ChatThreadManagerDelegate
 const string STRING_onChatThreadCreate = "onChatThreadCreate";
@@ -91,6 +92,7 @@ const string STRING_onKickedByOtherDevice = "onKickedByOtherDevice";
 const string STRING_onAuthFailed = "onAuthFailed";
 const string STRING_onTokenExpired = "onTokenExpired";
 const string STRING_onTokenWillExpire = "onTokenWillExpire";
+const string STRING_onAppActiveNumberReachLimitation = "onAppActiveNumberReachLimitation";
 
 // GroupManagerDeleagate
 const string STRING_onInvitationReceivedFromGroup = "onInvitationReceivedFromGroup";
@@ -117,6 +119,7 @@ const string STRING_onRemoveWhiteListMembersFromGroup = "onRemoveWhiteListMember
 const string STRING_onAllMemberMuteChangedFromGroup = "onAllMemberMuteChangedFromGroup";
 const string STRING_onStateChangedFromGroup = "onStateChangedFromGroup";
 const string STRING_onSpecificationChangedFromGroup = "onSpecificationChangedFromGroup";
+const string STRING_onUpdateMemberAttributesFromGroup = "onUpdateMemberAttributesFromGroup";
 
 // RoomManagerDelegate
 const string STRING_onDestroyedFromRoom = "onDestroyedFromRoom";

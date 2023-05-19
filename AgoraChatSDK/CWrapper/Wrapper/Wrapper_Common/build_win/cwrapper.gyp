@@ -243,6 +243,8 @@
             	'<(emclient-unity-path)/AgoraChatSDK/CWrapper/Wrapper/Wrapper_Common/sdk_wrapper/tool.cpp',
             	'<(emclient-unity-path)/AgoraChatSDK/CWrapper/Wrapper/Wrapper_Common/sdk_wrapper/thread_manager.cpp',
             	'<(emclient-unity-path)/AgoraChatSDK/CWrapper/Wrapper/Wrapper_Common/sdk_wrapper/userinfo_manager.cpp',
+            	'<(emclient-unity-path)/AgoraChatSDK/CWrapper/Wrapper/Wrapper_Common/sdk_wrapper/core_dump.h',
+            	'<(emclient-unity-path)/AgoraChatSDK/CWrapper/Wrapper/Wrapper_Common/sdk_wrapper/core_dump.cpp',
             ],
             
             'link_settings': {
@@ -388,6 +390,7 @@
                 '<(emclient-linux-path)/protocol/unreaddl.cpp',
                 '<(emclient-linux-path)/protocol/unreadul.cpp',
                 '<(emclient-linux-path)/protocol/roamconfig.cpp',
+                '<(emclient-linux-path)/protocol/muc.cpp',
 
                 '<(emclient-linux-path)/protocol/generated/conferencebody.pb.cc',
                 '<(emclient-linux-path)/protocol/generated/jid.pb.cc',
@@ -452,6 +455,8 @@
                 '<(emclient-linux-path)/src/emmessagestatistics.cpp',
                 '<(emclient-linux-path)/src/emstatisticsmanager.cpp',
                 '<(emclient-linux-path)/src/emmessagecollect.cpp',
+                '<(emclient-linux-path)/src/emfetchmessageoption.cpp',
+                '<(emclient-linux-path)/src/emgroupprivate.cpp',
             
                 '<(emclient-linux-path)/src/message/emcmdmessagebody.cpp',
                 '<(emclient-linux-path)/src/message/emcustommessagebody.cpp',
