@@ -427,5 +427,24 @@ namespace AgoraChat
 		 */
         void OnSpecificationChangedFromGroup(Group group);
 
+        /**
+		 *  \~chinese
+		 *  群成员自定义属性发生改变。
+		 *
+		 *  @param groupId           群组 ID。
+         *  @param userId            自定义属性变更的群成员的用户 ID。
+         *  @param attributes        修改后的自定义属性。
+         *  @param from              操作者的用户 ID。
+		 *
+		 *  \~english
+		 *  The custom attribute of a group member is changed
+		 *
+         *  @param groupId           The group ID.
+         *  @param userId            The user ID of the group member whose custom attributes are changed.
+         *  @param attributes        The modified custom attributes.
+         *  @param from              The user ID of the operator.
+		 */
+        void OnUpdateMemberAttributesFromGroup(string groupId, string userId, Dictionary<string, string> attributes, string from);
+
     }
 }

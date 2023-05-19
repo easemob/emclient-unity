@@ -257,6 +257,23 @@ namespace AgoraChat
             return ret;
         }
 
+        internal static Dictionary<string, Dictionary<string, string>> NestedStringDictionaryFromJsonObject(JSONNode jo)
+        {
+            Dictionary<string, Dictionary<string, string>> ret = new Dictionary<string, Dictionary<string, string>>();
+
+            if (!jo.IsObject) return ret;
+
+            foreach (string s in jo.Keys)
+            {
+                if (jo[s].IsObject)
+                {
+                    Dictionary<string, string> dict = StringDictionaryFromJsonObject(jo[s]);
+                    if (null != dict) ret.Add(s, dict);
+                }
+            }
+            return ret;
+        }
+
         internal static Dictionary<string, T> SimpleTypeDictionaryFromJsonObject<T>(JSONNode jo) where T : IConvertible
         {
             if (jo == null) return null;
@@ -308,6 +325,20 @@ namespace AgoraChat
                 foreach (string str in list)
                 {
                     ja.Add(str);
+                }
+            }
+
+            return ja;
+        }
+
+        internal static JSONNode JsonArrayFromIntList(List<int> list)
+        {
+            JSONArray ja = new JSONArray();
+            if (list != null)
+            {
+                foreach (int i in list)
+                {
+                    ja.Add(i);
                 }
             }
 
@@ -406,6 +437,9 @@ namespace AgoraChat
                 case MultiDevicesOperation.THREAD_LEAVE: return 43;
                 case MultiDevicesOperation.THREAD_UPDATE: return 44;
                 case MultiDevicesOperation.THREAD_KICK: return 45;
+                case MultiDevicesOperation.SET_METADATA: return 50;
+                case MultiDevicesOperation.DELETE_METADATA: return 51;
+                case MultiDevicesOperation.GROUP_MEMBER_METADATA_CHANGED: return 52;
                 default:
                     return -1;
             }
@@ -451,6 +485,9 @@ namespace AgoraChat
                 case 43: return MultiDevicesOperation.THREAD_LEAVE;
                 case 44: return MultiDevicesOperation.THREAD_UPDATE;
                 case 45: return MultiDevicesOperation.THREAD_KICK;
+                case 50: return MultiDevicesOperation.SET_METADATA;
+                case 51: return MultiDevicesOperation.DELETE_METADATA;
+                case 52: return MultiDevicesOperation.GROUP_MEMBER_METADATA_CHANGED;
                 default: return MultiDevicesOperation.UNKNOWN;
             }
         }
@@ -776,6 +813,30 @@ namespace AgoraChat
                 case 305: return DisconnectReason.Reason_ForbidByServer;
                 default:
                     return DisconnectReason.Reason_Disconnected;
+            }
+        }
+    }
+
+    internal static class MessageReactionOperateHelper
+    {
+        public static int ToInt(this MessageReactionOperate operate)
+        {
+            switch (operate)
+            {
+                case MessageReactionOperate.MessageReactionOperateRemove: return 0;
+                case MessageReactionOperate.MessageReactionOperateAdd: return 1;
+                default: return -1;
+            }
+        }
+
+        public static MessageReactionOperate ToMessageReactionOperate(this int i)
+        {
+            switch (i)
+            {
+                case 0: return MessageReactionOperate.MessageReactionOperateRemove;
+                case 1: return MessageReactionOperate.MessageReactionOperateAdd;
+                default:
+                    return MessageReactionOperate.MessageReactionOperateAdd;
             }
         }
     }

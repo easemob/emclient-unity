@@ -878,6 +878,35 @@ namespace sdk_wrapper {
         return nullptr;
     }
 
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_FetchAllMyGroupsWithPageSimple(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        int page_num = GetJsonValue_Int(d, "pageNum", 1);
+        int page_size = GetJsonValue_Int(d, "pageSize", 20);
+
+        thread t([=]() {
+            EMError error;
+            EMGroupList groupList = CLIENT->getGroupManager().fetchAllMyGroupsWithPage(page_num, page_size, error);
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+
+                string json = Group::ToJson(groupList);
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            });
+        t.detach();
+
+        return nullptr;
+    }
+
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_FetchPublicGroupsWithCursor(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         if (!CheckClientInitOrNot(cbid)) return nullptr;
@@ -1357,6 +1386,65 @@ namespace sdk_wrapper {
         return nullptr;
     }
 
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_FetchMemberAttributes(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        string group_id = GetJsonValue_String(d, "groupId", "");
+        vector<string> user_ids = MyJson::FromJsonObjectToVector(d["userIds"]);
+        vector<string> attrs = MyJson::FromJsonObjectToVector(d["attrs"]);
+
+        thread t([=]() {
+            EMError error;
+            unordered_map<string, unordered_map<string, string>> result = CLIENT->getGroupManager().fetchMemberAttributes(group_id, user_ids, attrs, error);
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+
+                string json = Group::ToJson(result);
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+        });
+        t.detach();
+
+        return nullptr;
+    }
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_SetMemberAttributes(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        string group_id = GetJsonValue_String(d, "groupId", "");
+        string user_id = GetJsonValue_String(d, "userId", "");
+        unordered_map<string, string> attrs = MyJson::FromJsonObjectToUnorderedMap(d["attrs"]);
+
+        thread t([=]() {
+            EMError error;
+            CLIENT->getGroupManager().setMemberAttributes(group_id, user_id, attrs, error);
+
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+
+                string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            });
+        t.detach();
+
+        return nullptr;
+    }
+
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_RunDelegateTester(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         if (nullptr != gGroupManagerListener) {
@@ -1400,6 +1488,12 @@ namespace sdk_wrapper {
             gGroupManagerListener->onDeleteSharedFileFromGroup(groupPtr, "fileId");
             gGroupManagerListener->onDisabledStateChangedFromGroup(groupPtr, true);
             gGroupManagerListener->onUpdateSpecificationFromGroup(groupPtr);
+
+            //const std::string& groupId, const std::string& username, const std::unordered_map<std::string, std::string>& attributes, const std::string& from
+            unordered_map<string, string> attributes;
+            attributes["name1"] = "value1";
+            attributes["name2"] = "value2";
+            gGroupManagerListener->onUpdateMemberAttributesFromGroup("groupId", "userId", attributes, "from");
         }
         return nullptr;
     }

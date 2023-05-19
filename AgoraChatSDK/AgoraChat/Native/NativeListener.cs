@@ -59,8 +59,16 @@ namespace AgoraChat
                 if (string.IsNullOrEmpty(method) || string.IsNullOrEmpty(listener))
                     return;
 
-                string json = Tools.GetUnicodeStringFromUTF8(jsonString);
-                JSONNode jsonNode = JSON.Parse(json);
+                JSONNode jsonNode = null;
+                try
+                {
+                    jsonNode = JSON.Parse(jsonString);
+                }
+                catch(Exception e)
+                {
+                    // Suggest to print log into file
+                    return;
+                }
 
                 queue_worker.EnQueue(() =>
                 {

@@ -6,6 +6,7 @@
 #include "emgroupmanager_listener.h"
 #include "emchatroommanager_listener.h"
 #include "emcontactlistener.h"
+#include "emerror.h"
 
 #include "sdk_wrapper_internal.h"
 #include "models.h"
@@ -30,26 +31,29 @@ namespace sdk_wrapper {
 
             switch (error->mErrorCode)
             {
-            case 202:
+            case EMError::APP_ACTIVE_NUMBER_REACH_LIMITATION:
+                CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onAppActiveNumberReachLimitation.c_str(), json.c_str());
+                break;
+            case EMError::USER_AUTHENTICATION_FAILED:
                 CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onAuthFailed.c_str(), json.c_str());
                 break;
-            case 207:
+            case EMError::USER_REMOVED:
                 CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onRemovedFromServer.c_str(), json.c_str());
                 break;
-            case 214:
+            case EMError::USER_LOGIN_TOO_MANY_DEVICES:
                 CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onLoginTooManyDevice.c_str(), json.c_str());
                 break;
-            case 216:
+            case EMError::USER_KICKED_BY_CHANGE_PASSWORD:
                 CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onChangedImPwd.c_str(), json.c_str());
                 break;
-            case 217:
+            case EMError::USER_KICKED_BY_OTHER_DEVICE:
                 CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onKickedByOtherDevice.c_str(), json.c_str());
                 break;
-            case 206:
-            case 220:
+            case EMError::USER_LOGIN_ANOTHER_DEVICE:
+            case EMError::USER_DEVICE_CHANGED:
                 CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onLoggedOtherDevice.c_str(), json.c_str());
                 break;
-            case 305:
+            case EMError::SERVER_SERVING_DISABLED:
                 CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onForbidByServer.c_str(), json.c_str());
                 break;
             default:
@@ -137,6 +141,26 @@ namespace sdk_wrapper {
 
             if (json.size() > 0)
                 CallBack(STRING_CHATMANAGER_LISTENER.c_str(), STRING_onConversationRead.c_str(), json.c_str());
+        }
+
+        void onMessageIdChanged(const string& conversationId, const string& oldMsgId, const string& newMsgId) override {
+            /*
+            JSON_STARTOBJ
+            writer.Key("convId");
+            writer.String(conversationId.c_str());
+
+            writer.Key("oldMsgId");
+            writer.String(oldMsgId.c_str());
+
+            writer.Key("newMsgId");
+            writer.String(newMsgId.c_str());
+            JSON_ENDOBJ
+
+            string json = s.GetString();
+
+            if (json.size() > 0)
+                CallBack(STRING_CHATMANAGER_LISTENER.c_str(), STRING_onMessageIdChanged.c_str(), json.c_str());
+            */
         }
     };
 
@@ -634,6 +658,30 @@ namespace sdk_wrapper {
 
             if (json.size() > 0)
                 CallBack(STRING_GROUPMANAGER_LISTENER.c_str(), STRING_onSpecificationChangedFromGroup.c_str(), json.c_str());
+        }
+
+        void onUpdateMemberAttributesFromGroup(const std::string& groupId, const std::string& username, const std::unordered_map<std::string, std::string>& attributes, const std::string& from)
+        {
+            JSON_STARTOBJ
+
+            writer.Key("groupId");
+            writer.String(groupId.c_str());
+
+            writer.Key("userId");
+            writer.String(username.c_str());
+
+            writer.Key("from");
+            writer.String(from.c_str());
+
+            writer.Key("attrs");
+            MyJson::ToJsonObject(writer, attributes);
+
+            JSON_ENDOBJ
+
+            string json = s.GetString();
+
+            if (json.size() > 0)
+                CallBack(STRING_GROUPMANAGER_LISTENER.c_str(), STRING_onUpdateMemberAttributesFromGroup.c_str(), json.c_str());
         }
     };
 

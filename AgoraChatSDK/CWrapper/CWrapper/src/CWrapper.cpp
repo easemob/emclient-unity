@@ -22,3 +22,8 @@ HYPHENATE_API const char* AGORA_CALL _NativeGet(const char* manager, const char*
 {
     return NativeGet_Common(manager, method, jstr, cbid);
 }
+
+HYPHENATE_API void AGORA_CALL FreeMemory(void* p)
+{
+    FreeMemory_Common(p);
+}

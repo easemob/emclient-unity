@@ -78,6 +78,20 @@ namespace AgoraChat
         }
 
         /**
+        * \~chinese
+        * 消息是否只投递给在线用户：
+        * - `true`：只有消息接收方在线时才能投递成功。若接收方离线，则消息会被丢弃。
+        * - `false`（默认）：如果用户在线，则直接投递；如果用户离线，消息会在用户上线时投递。
+        *
+        * \~english
+        * Whether the message is delivered only when the recipient(s) is/are online:
+        * - `true`：The message is delivered only when the recipient(s) is/are online. If the recipient is offline, the message is discarded.
+        * - `false`(Default)：The message is delivered when the recipient(s) is/are online. If the recipient(s) is/are offline, the message will not be delivered to them until they get online.
+        *
+        */
+        public bool DeliverOnlineOnly = false;
+
+        /**
          * \~chinese
          * 消息方向。
          * 
@@ -729,6 +743,7 @@ namespace AgoraChat
                     ConversationId = jo["convId"].Value;
                     MsgId = jo["msgId"].Value;
                     Status = jo["status"].AsInt.ToMessageStatus();
+                    DeliverOnlineOnly = jo["deliverOnlineOnly"].AsBool;
                     MessageType = jo["chatType"].AsInt.ToMessageType();
                     Direction = jo["direction"].AsInt.ToMesssageDirection();
                     Attributes = AttributeValue.DictFromJsonObject(jo["attr"].AsObject);
@@ -754,6 +769,7 @@ namespace AgoraChat
             jo.AddWithoutNull("convId", ConversationId);
             jo.AddWithoutNull("msgId", MsgId);
             jo.AddWithoutNull("priority", Priority.ToInt());
+            jo.AddWithoutNull("deliverOnlineOnly", DeliverOnlineOnly);
             jo.AddWithoutNull("status", Status.ToInt());
             jo.AddWithoutNull("chatType", MessageType.ToInt());
             jo.AddWithoutNull("direction", Direction.ToInt());

@@ -76,6 +76,7 @@ namespace AgoraChat
         internal const string getConversationsFromServerWithPage = "getConversationsFromServerWithPage";
         internal const string deleteConversation = "deleteConversation";
         internal const string fetchHistoryMessages = "fetchHistoryMessages";
+        internal const string fetchHistoryMessagesBy = "fetchHistoryMessagesBy";
         internal const string searchChatMsgFromDB = "searchChatMsgFromDB";
         internal const string getMessage = "getMessage";
         internal const string asyncFetchGroupAcks = "asyncFetchGroupAcks";
@@ -104,6 +105,7 @@ namespace AgoraChat
         internal const string markMessageAsRead = "markMessageAsRead";
         internal const string syncConversationExt = "syncConversationExt";
         internal const string removeMessage = "removeMessage";
+        internal const string removeMessages = "removeMessages";
         internal const string getLatestMessage = "getLatestMessage";
         internal const string getLatestMessageFromOthers = "getLatestMessageFromOthers";
         internal const string clearAllMessages = "clearAllMessages";
@@ -167,6 +169,7 @@ namespace AgoraChat
         internal const string getJoinedGroups = "getJoinedGroups";
         internal const string getGroupsWithoutPushNotification = "getGroupsWithoutPushNotification";
         internal const string getJoinedGroupsFromServer = "getJoinedGroupsFromServer";
+        internal const string getJoinedGroupsFromServerSimple = "getJoinedGroupsFromServerSimple";
         internal const string getPublicGroupsFromServer = "getPublicGroupsFromServer";
         internal const string createGroup = "createGroup";
         internal const string getGroupSpecificationFromServer = "getGroupSpecificationFromServer";
@@ -208,6 +211,8 @@ namespace AgoraChat
         internal const string declineJoinApplication = "declineJoinApplication";
         internal const string acceptInvitationFromGroup = "acceptInvitationFromGroup";
         internal const string declineInvitationFromGroup = "declineInvitationFromGroup";
+        internal const string fetchMemberAttributes = "fetchMemberAttributes";
+        internal const string setMemberAttributes = "setMemberAttributes";
 
 
         /// EMPushManager
@@ -296,6 +301,7 @@ namespace AgoraChat
         internal const string onConversationsUpdate = "onConversationsUpdate";
         internal const string onConversationRead = "onConversationRead";
         internal const string onMessageReactionDidChange = "messageReactionDidChange";
+        internal const string onMessageIdChanged = "onMessageIdChanged";
 
         // ChatThreadManagerDelegate
         internal const string onChatThreadCreate = "onChatThreadCreate";
@@ -331,6 +337,7 @@ namespace AgoraChat
         internal const string onAuthFailed = "onAuthFailed";
         internal const string onTokenExpired = "onTokenExpired";
         internal const string onTokenWillExpire = "onTokenWillExpire";
+        internal const string onAppActiveNumberReachLimitation = "onAppActiveNumberReachLimitation";
 
         // GroupManagerDeleagate
         internal const string onInvitationReceivedFromGroup = "onInvitationReceivedFromGroup";
@@ -357,6 +364,7 @@ namespace AgoraChat
         internal const string onAllMemberMuteChangedFromGroup = "onAllMemberMuteChangedFromGroup";
         internal const string onSpecificationChangedFromGroup = "onSpecificationChangedFromGroup";
         internal const string onStateChangedFromGroup = "onStateChangedFromGroup";
+        internal const string onUpdateMemberAttributesFromGroup = "onUpdateMemberAttributesFromGroup";
 
         // RoomManagerDelegate
         internal const string onDestroyedFromRoom = "onDestroyedFromRoom";

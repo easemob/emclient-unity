@@ -116,6 +116,17 @@ namespace AgoraChat
             return jn.IsBoolean ? jn.AsBool : false;
         }
 
+        internal bool DeleteMessages(string conversationId, ConversationType conversationType, long startTime, long endTime)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("convId", conversationId);
+            jo_param.AddWithoutNull("convType", conversationType.ToInt());
+            jo_param.AddWithoutNull("startTime", startTime);
+            jo_param.AddWithoutNull("endTime", endTime);
+            JSONNode jn = NativeGet(SDKMethod.removeMessages, jo_param).GetReturnJsonNode();
+            return jn.IsBoolean ? jn.AsBool : false;
+        }
+
         internal bool DeleteAllMessages(string conversationId, ConversationType conversationType)
         {
             JSONObject jo_param = new JSONObject();
