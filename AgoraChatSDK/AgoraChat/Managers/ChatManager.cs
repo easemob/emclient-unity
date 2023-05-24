@@ -202,6 +202,59 @@ namespace AgoraChat
 
         /**
 	     * \~chinese
+	     * 根据FetchServerMessagesOption从服务器获取历史消息。
+	     *
+	     * 分页获取。
+	     *
+	     * 异步方法。
+	     *
+	     * @param conversationId 		会话 ID。
+	     * @param type 					会话类型，详见 {@link ConversationType}。
+	     * @param cursor                查询的起始游标位置。
+	     * @param pageSize              每页期望获取的消息条数。取值范围为 [1,50]。
+	     * @param option                查询历史消息的参数配置接口，详见 {@link FetchServerMessagesOption}。
+	     * @param callback              结果回调，返回消息列表。
+	     *
+	     * \~english
+	     * Basing on FetchServerMessagesOption to get historical messages of the conversation from the server.
+	     *
+	     * Historical messages of a conversation can also be obtained with pagination.
+	     *
+	     * This is an asynchronous method.
+	     *
+	     * @param conversationId 		The conversation ID.
+	     * @param type 					The conversation type. See {@link ConversationType}.
+	     * @param cursor                The cursor position from which to start querying data.
+	     * @param pageSize              The number of messages that you expect to get on each page. The value range is [1,50].
+	     * @param option                The parameter configuration class for pulling historical messages from the server. See {@link FetchServerMessagesOption}.
+	     * @param callback				The result callback. Returns the list of obtained messages.
+	     */
+        public void FetchHistoryMessagesFromServerBy(string conversationId, ConversationType type = ConversationType.Chat, string cursor = null, int pageSize = 10, FetchServerMessagesOption option = null, ValueCallBack<CursorResult<Message>> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("convId", conversationId);
+            jo_param.AddWithoutNull("convType", type.ToInt());
+            jo_param.AddWithoutNull("cursor", cursor ?? "");
+            jo_param.AddWithoutNull("pageSize", pageSize);
+            if (null != option) jo_param.AddWithoutNull("options", option.ToJsonObject());
+
+            Process process = (_, jsonNode) =>
+            {
+                CursorResult<Message> cursor_msg = new CursorResult<Message>(_, (jn) =>
+                {
+                    return ModelHelper.CreateWithJsonObject<Message>(jn);
+                });
+
+                cursor_msg.FromJsonObject(jsonNode.AsObject);
+                return cursor_msg;
+
+            };
+
+            NativeCall<CursorResult<Message>>(SDKMethod.fetchHistoryMessagesBy, jo_param, callback, process);
+        }
+
+        /**
+	     * \~chinese
 	     * 获取本地指定会话对象。
 	     * 
 	     * @param conversationId    会话 ID。
@@ -1160,6 +1213,118 @@ namespace AgoraChat
         {
             if (delegater.Count == 0) return;
 
+            switch (method)
+            {
+                case SDKMethod.onMessagesReceived:
+                    {
+                        List<Message> list = List.BaseModelListFromJsonArray<Message>(jsonNode);
+                        foreach (IChatManagerDelegate it in delegater)
+                        {
+                            if (list.Count > 0) it.OnMessagesReceived(list);
+                        }
+                    }
+                    break;
+                case SDKMethod.onCmdMessagesReceived:
+                    {
+                        List<Message> list = List.BaseModelListFromJsonArray<Message>(jsonNode);
+                        foreach (IChatManagerDelegate it in delegater)
+                        {
+                            if (list.Count > 0) it.OnCmdMessagesReceived(list);
+                        }
+                    }
+                    break;
+                case SDKMethod.onMessagesRead:
+                    {
+                        List<Message> list = List.BaseModelListFromJsonArray<Message>(jsonNode);
+                        foreach (IChatManagerDelegate it in delegater)
+                        {
+                            if (list.Count > 0) it.OnMessagesRead(list);
+                        }
+                    }
+                    break;
+                case SDKMethod.onMessagesDelivered:
+                    {
+                        List<Message> list = List.BaseModelListFromJsonArray<Message>(jsonNode);
+                        foreach (IChatManagerDelegate it in delegater)
+                        {
+                            if (list.Count > 0) it.OnMessagesDelivered(list);
+                        }
+                    }
+                    break;
+                case SDKMethod.onMessagesRecalled:
+                    {
+                        List<Message> list = List.BaseModelListFromJsonArray<Message>(jsonNode);
+                        foreach (IChatManagerDelegate it in delegater)
+                        {
+                            if (list.Count > 0) it.OnMessagesRecalled(list);
+                        }
+                    }
+                    break;
+                case SDKMethod.onReadAckForGroupMessageUpdated:
+                    {
+                        foreach (IChatManagerDelegate it in delegater)
+                        {
+                            it.OnReadAckForGroupMessageUpdated();
+                        }
+                    }
+                    break;
+                case SDKMethod.onGroupMessageRead:
+                    {
+                        List<GroupReadAck> list = List.BaseModelListFromJsonArray<GroupReadAck>(jsonNode);
+                        foreach (IChatManagerDelegate it in delegater)
+                        {
+                            if (list.Count > 0) it.OnGroupMessageRead(list);
+                        }
+                    }
+                    break;
+                case SDKMethod.onConversationsUpdate:
+                    {
+                        foreach (IChatManagerDelegate it in delegater)
+                        {
+                            it.OnConversationsUpdate();
+                        }
+                    }
+                    break;
+                case SDKMethod.onConversationRead:
+                    {
+                        string from = jsonNode["from"];
+                        string to = jsonNode["to"];
+                        foreach (IChatManagerDelegate it in delegater)
+                        {
+                            it.OnConversationRead(from, to);
+                        }
+                    }
+                    break;
+                case SDKMethod.onMessageReactionDidChange:
+                    {
+                        List<MessageReactionChange> list = List.BaseModelListFromJsonArray<MessageReactionChange>(jsonNode);
+                        foreach (IChatManagerDelegate it in delegater)
+                        {
+                            if (list.Count > 0) it.MessageReactionDidChange(list);
+                        }
+                    }
+                    break;
+                case SDKMethod.onMessageIdChanged:
+                    {
+                        /*
+                        string conversationId = jsonNode["convId"];
+                        string oldMsgId = jsonNode["oldMsgId"];
+                        string newMsgId = jsonNode["newMsgId"];
+                        foreach (IChatManagerDelegate it in delegater)
+                        {
+                            it.onMessageIdChanged(conversationId, oldMsgId, newMsgId);
+                        }
+                        */
+                    }
+                    break;
+            }
+        }
+
+        /*
+        internal void NativeEventHandle(string method, JSONNode jsonNode)
+        {
+            if (delegater.Count == 0) return;
+
             if (method == SDKMethod.onMessagesReceived)
             {
                 if (jsonNode != null)
@@ -1278,6 +1443,20 @@ namespace AgoraChat
                     }
                 }
             }
-        }
+            else if (method == SDKMethod.onMessageIdChanged)
+            {
+                if (jsonNode != null)
+                {
+                    string conversationId = jsonNode["convId"];
+                    string oldMsgId = jsonNode["oldMsgId"];
+                    string newMsgId = jsonNode["newMsgId"];
+
+                    foreach (IChatManagerDelegate it in delegater)
+                    {
+                        it.onMessageIdChanged(conversationId, oldMsgId, newMsgId);
+                    }
+                }
+            }
+        }*/
     }
 }

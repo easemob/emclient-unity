@@ -332,6 +332,47 @@ namespace sdk_wrapper {
         return nullptr;
     }
 
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_FetchHistoryMessagesBy(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        string cov_id = GetJsonValue_String(d, "convId", "");
+
+        EMConversation::EMConversationType conv_type = EMConversation::EMConversationType::CHAT;
+        int var_type = GetJsonValue_Int(d, "convType", 0);
+        conv_type = EMConversation::EMConversationType(var_type);
+
+        string cursor = GetJsonValue_String(d, "cursor", "");
+        int page_size = GetJsonValue_Int(d, "pageSize", 1);
+
+        EMFetchMessageOptionPtr option = nullptr;
+        if (d.HasMember("options") && d["options"].IsObject()) {
+            option = FetchMessageOption::FromJsonObject(d["options"]);
+        }
+
+        thread t([=]() {
+            EMError error;
+            EMCursorResultRaw<EMMessagePtr> msgCursorResult = CLIENT->getChatManager().fetchHistoryMessages(cov_id, conv_type, error, page_size, cursor, option);
+
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+                string next_cursor = msgCursorResult.nextPageCursor();
+                string cursor_json = CursorResult::ToJson(next_cursor, msgCursorResult.result());
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), cursor_json.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            });
+        t.detach();
+
+        return nullptr;
+    }
+
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_ConversationWithType(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         if (!CheckClientInitOrNot(cbid)) return nullptr;
@@ -1284,6 +1325,7 @@ namespace sdk_wrapper {
 
             gChatManagerListener->onUpdateConversationList(conversationList);
             gChatManagerListener->onReceiveReadAckForConversation("fromUsername", "toUsername");
+            gChatManagerListener->onMessageIdChanged("user", "oldMsgId", "newMsgId");
         }
 
         if (nullptr != gReactionManagerListener) {

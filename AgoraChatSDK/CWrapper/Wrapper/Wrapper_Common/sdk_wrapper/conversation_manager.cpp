@@ -468,4 +468,27 @@ namespace sdk_wrapper {
         return CopyToPointer(json);
     }
 
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_RemoveMessages(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        Document d; d.Parse(jstr);
+        string conv_id = GetJsonValue_String(d, "convId", "");
+        int int_type = GetJsonValue_Int(d, "convType", 0);
+        EMConversation::EMConversationType type = Conversation::ConversationTypeFromInt(int_type);
+        int64_t start_time = GetJsonValue_Int64(d, "startTime", 0);
+        int64_t endTime = GetJsonValue_Int64(d, "endTime", 0);
+
+        EMConversationPtr conversation = CLIENT->getChatManager().conversationWithType(conv_id, type, true);
+        bool ret = conversation->removeMessages(start_time, endTime);
+
+        JSON_STARTOBJ
+        writer.Key("ret");
+        writer.Bool(ret);
+        JSON_ENDOBJ
+
+        string json = s.GetString();
+        return CopyToPointer(json);
+    }
+
 }

@@ -30,6 +30,7 @@ public class ConversationManagerTest : MonoBehaviour
     private Button LoadMessagesWithTimeBtn;
     private Button LoadMessagesWithMsgTypeBtn;
     private Button MessagesCountBtn;
+    private Button DeleteMessagesBtn;
 
     private string conversationId
     {
@@ -99,6 +100,7 @@ public class ConversationManagerTest : MonoBehaviour
         LoadMessagesWithTimeBtn = transform.Find("Scroll View/Viewport/Content/LoadMessagesWithTimeBtn").GetComponent<Button>();
         LoadMessagesWithMsgTypeBtn = transform.Find("Scroll View/Viewport/Content/LoadMessagesWithMsgTypeBtn").GetComponent<Button>();
         MessagesCountBtn = transform.Find("Scroll View/Viewport/Content/MessagesCountBtn").GetComponent<Button>();
+        DeleteMessagesBtn = transform.Find("Scroll View/Viewport/Content/DeleteMessagesBtn").GetComponent<Button>();
 
 
         LastMessageBtn.onClick.AddListener(LastMessageBtnAction);
@@ -119,6 +121,7 @@ public class ConversationManagerTest : MonoBehaviour
         LoadMessagesWithTimeBtn.onClick.AddListener(LoadMessagesWithTimeBtnAction);
         LoadMessagesWithMsgTypeBtn.onClick.AddListener(LoadMessagesWithMsgTypeBtnAction);
         MessagesCountBtn.onClick.AddListener(MessagesCountBtnAction);
+        DeleteMessagesBtn.onClick.AddListener(DeleteMessagesBtnAction);
     }
 
 
@@ -330,6 +333,36 @@ public class ConversationManagerTest : MonoBehaviour
 
         Debug.Log("DeleteMessageBtnAction");
     }
+
+    void DeleteMessagesBtnAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            long startTime = long.Parse(dict["StartTime"]);
+            long endTime = long.Parse(dict["EndTime"]);
+            if (null == conversationId || 0 == conversationId.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+            Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
+            if (conv.DeleteMessages(startTime, endTime))
+            {
+                UIManager.DefaultAlert(transform, "删除成功");
+            }
+            else
+            {
+                UIManager.DefaultAlert(transform, "删除失败");
+            }
+        });
+
+        config.AddField("StartTime");
+        config.AddField("EndTime");
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("DeleteMessagesBtnAction");
+    }
+
     void DeleteAllMessageBtnAction()
     {
         if (null == conversationId || 0 == conversationId.Length)
