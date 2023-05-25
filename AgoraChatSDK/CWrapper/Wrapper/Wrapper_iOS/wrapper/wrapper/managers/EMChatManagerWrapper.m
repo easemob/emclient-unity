@@ -398,11 +398,11 @@
     int pageSize = [param[@"count"] intValue];
     NSString *startMsgId = param[@"startMsgId"];
     EMMessageFetchHistoryDirection direction = EMMessageFetchHistoryDirectionUp;
-        if([param[@"direction"] intValue] == 0) {
-            direction = EMMessageFetchHistoryDirectionUp;
-        }else {
-            direction = EMMessageFetchHistoryDirectionDown;
-        }
+    if([param[@"direction"] intValue] == 0) {
+        direction = EMMessageFetchHistoryDirectionUp;
+    }else {
+        direction = EMMessageFetchHistoryDirectionDown;
+    }
     [EMClient.sharedClient.chatManager asyncFetchHistoryMessagesFromServer:conversationId
                                                           conversationType:type
                                                             startMessageId:startMsgId
