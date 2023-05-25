@@ -496,13 +496,13 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
 
     private String fetchHistoryMessages(JSONObject params, EMWrapperCallback callback) throws JSONException {
         String conId = params.getString("convId");
-        EMConversation.EMConversationType type = EMConversationHelper.typeFromInt(params.getInt("type"));
-        int pageSize = params.getInt("pageSize");
+        EMConversation.EMConversationType type = EMConversationHelper.typeFromInt(params.getInt("convType"));
+        int count = params.getInt("count");
         String startMsgId = params.getString("startMsgId");
+        EMConversation.EMSearchDirection direction = params.getInt("direction") == 0 ?EMConversation.EMSearchDirection.UP : EMConversation.EMSearchDirection.DOWN;
         asyncRunnable(() -> {
             try {
-                EMCursorResult<EMMessage> cursorResult = EMClient.getInstance().chatManager().fetchHistoryMessages(conId,
-                        type, pageSize, startMsgId);
+                EMCursorResult<EMMessage> cursorResult =  EMClient.getInstance().chatManager().fetchHistoryMessages(conId, type, count, startMsgId, direction);
                 JSONObject jsonObject = null;
                 try{
                     jsonObject = EMCursorResultHelper.toJson(cursorResult);
