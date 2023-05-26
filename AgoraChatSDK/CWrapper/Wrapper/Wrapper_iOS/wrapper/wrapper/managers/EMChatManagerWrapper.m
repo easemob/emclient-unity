@@ -403,7 +403,7 @@
     }else {
         direction = EMMessageFetchHistoryDirectionDown;
     }
-    
+
     [EMClient.sharedClient.chatManager asyncFetchHistoryMessagesFromServer:conversationId
                                                           conversationType:type
                                                             startMessageId:startMsgId
