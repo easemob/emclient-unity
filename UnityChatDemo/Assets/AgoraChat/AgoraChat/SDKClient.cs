@@ -130,7 +130,7 @@ namespace AgoraChat
          * \~english
          * The SDK version.
          */
-        public string SdkVersion { get => "1.1.0"; }
+        public string SdkVersion { get => "1.1.2"; }
 
 
         /**
