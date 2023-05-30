@@ -324,6 +324,8 @@ static NSString *const onContactMultiDevicesEvent = @"onContactMultiDevicesEvent
 static NSString *const onGroupMultiDevicesEvent = @"onGroupMultiDevicesEvent";
 static NSString *const onUnDisturbMultiDevicesEvent = @"onUnDisturbMultiDevicesEvent";
 static NSString *const onThreadMultiDevicesEvent = @"onThreadMultiDevicesEvent";
+static NSString *const onRoamDeleteMultiDevicesEvent = @"onRoamDeleteMultiDevicesEvent";
+
 
 // PresenceManagerDelegate
 static NSString *const onPresenceUpdated = @"onPresenceUpdated";
