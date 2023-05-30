@@ -21,22 +21,19 @@ namespace AgoraChat
 
             IntPtr ptr = _NativeGet(manager, method, json?.ToString(), callbackId ?? "");
             string str = Tools.PtrToString(ptr);
+#if UNITY_STANDALONE || UNITY_EDITOR
             FreeMemory(ptr);
-
+#else
+            Tools.PtrToString(ptr);
+#endif
             LogPrinter.Log($"---NativeGet get: {str}");
             return str;
         }
 
-        #region DllImport
-#if UNITY_STANDALONE_WIN || UNITY_EDITOR
-        public const string MyLibName = "ChatCWrapper";
-#else
-
 #if UNITY_IPHONE
-		public const string MyLibName = "__Internal";
+        public const string MyLibName = "__Internal";
 #else
         public const string MyLibName = "ChatCWrapper";
-#endif
 #endif
 
         [DllImport(MyLibName)]
@@ -54,6 +51,5 @@ namespace AgoraChat
         [DllImport(MyLibName)]
         internal static extern void FreeMemory(IntPtr p);
 
-        #endregion engine callbacks
     }
 }

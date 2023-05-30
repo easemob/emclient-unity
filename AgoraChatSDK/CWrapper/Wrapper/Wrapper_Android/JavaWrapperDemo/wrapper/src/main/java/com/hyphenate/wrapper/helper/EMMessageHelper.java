@@ -164,6 +164,10 @@ public class EMMessageHelper {
             }
         }
 
+        if (json.has("deliverOnlineOnly")) {
+            message.deliverOnlineOnly(json.getBoolean("deliverOnlineOnly"));
+        }
+
         if(json.has("attr")){
             JSONObject data = json.getJSONObject("attr");
             Iterator iterator = data.keys();
@@ -293,6 +297,7 @@ public class EMMessageHelper {
         // 通过EMMessageWrapper获取
         // data.put("groupAckCount", message.groupAckCount());
         data.put("isThread", message.isChatThreadMessage());
+        data.put("deliverOnlineOnly", message.isDeliverOnlineOnly());
         return data;
     }
 

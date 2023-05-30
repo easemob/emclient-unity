@@ -53,7 +53,9 @@
     if (aJson[@"priority"]) {
         msg.priority = [aJson[@"priority"] integerValue];
     }
-    
+    if(aJson[@"deliverOnlineOnly"]) {
+        msg.deliverOnlineOnly = [aJson[@"deliverOnlineOnly"] boolValue];
+    }
     // read only
     // msg.groupAckCount = [aJson[@"groupAckCount"] intValue]
     // msg.chatThread = [EMChatThread forJson:aJson[@"thread"]];
@@ -111,6 +113,7 @@
     ret[@"direction"] = self.direction == EMMessageDirectionSend ? @(0) : @(1);
     ret[@"body"] = [self.body toJson];
     ret[@"messageOnlineState"] = @(self.onlineState);
+    ret[@"deliverOnlineOnly"] = @(self.deliverOnlineOnly);
     if (self.ext) {
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
         for (NSString *key in self.ext.allKeys) {

@@ -7,6 +7,7 @@ import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMCursorResult;
+import com.hyphenate.chat.EMFetchMessageOption;
 import com.hyphenate.chat.EMGroupReadAck;
 import com.hyphenate.chat.EMLanguage;
 import com.hyphenate.chat.EMMessage;
@@ -20,6 +21,7 @@ import com.hyphenate.wrapper.callback.EMWrapperCallback;
 import com.hyphenate.wrapper.helper.EMConversationHelper;
 import com.hyphenate.wrapper.helper.EMCursorResultHelper;
 import com.hyphenate.wrapper.helper.EMErrorHelper;
+import com.hyphenate.wrapper.helper.EMFetchMessageOptionHelper;
 import com.hyphenate.wrapper.helper.EMGroupAckHelper;
 import com.hyphenate.wrapper.helper.EMLanguageHelper;
 import com.hyphenate.wrapper.helper.EMMessageHelper;
@@ -116,6 +118,8 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
             ret = removeMessagesFromServerWithMsgIds(jsonObject, callback);
         } else if (EMSDKMethod.removeMessagesFromServerWithTs.equals(method)) {
             ret = removeMessagesFromServerWithTs(jsonObject, callback);
+        } else if (EMSDKMethod.fetchHistoryMessagesBy.equals(method)) {
+            ret = fetchHistoryMessagesBy(jsonObject, callback);
         }
         else {
             super.onMethodCall(method, jsonObject, callback);
@@ -449,7 +453,7 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
                 ArrayList<EMConversation>list = new ArrayList<>(object.values());
                 asyncRunnable(() -> {
                     boolean retry = false;
-                    List<JSONObject> conversations = new ArrayList<>();
+                    JSONArray conversations = new JSONArray();
                     do{
                         try{
                             retry = false;
@@ -472,7 +476,7 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
                                 return o2.getLastMessage().getMsgTime() - o1.getLastMessage().getMsgTime() > 0 ? 1 : -1;
                             });
                             for (EMConversation conversation : list) {
-                                conversations.add(EMConversationHelper.toJson(conversation));
+                                conversations.put(EMConversationHelper.toJson(conversation));
                             }
 
                         }catch(IllegalArgumentException e) {
@@ -737,6 +741,31 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
             timestamp = params.getLong("timestamp");
         }
         conversation.removeMessagesFromServer(timestamp, new EMCommonCallback(callback));
+        return null;
+    }
+
+    private String fetchHistoryMessagesBy(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        String conversationId = params.getString("convId");
+        EMConversation.EMConversationType type = EMConversationHelper.typeFromInt(params.getInt("convType"));
+        String cursor = params.optString("cursor");
+        int pageSize = params.optInt("pageSize");
+        EMFetchMessageOption option = null;
+        if(params.has("options")){
+            option = EMFetchMessageOptionHelper.fromJson(params.getJSONObject("options"));
+        }
+
+        EMClient.getInstance().chatManager().asyncFetchHistoryMessages(conversationId, type, pageSize, cursor, option, new EMCommonValueCallback<EMCursorResult<EMMessage>>(callback){
+            @Override
+            public void onSuccess(EMCursorResult<EMMessage> object) {
+                JSONObject jsonObject = null;
+                try{
+                    jsonObject = EMCursorResultHelper.toJson(object);
+                    updateObject(jsonObject);
+                }catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         return null;
     }
 

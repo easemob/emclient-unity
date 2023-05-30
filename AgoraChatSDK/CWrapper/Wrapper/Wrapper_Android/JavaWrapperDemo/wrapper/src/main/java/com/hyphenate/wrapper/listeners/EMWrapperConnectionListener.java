@@ -28,7 +28,9 @@ public class EMWrapperConnectionListener implements EMConnectionListener {
             post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onRemovedFromServer, null));
         } else if (errorCode == 305) {
             post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onForbidByServer, null));
-        } else {
+        } else if (errorCode == 8) {
+            post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onAppActiveNumberReachLimitation, null));
+        }  else {
             post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onDisconnected, null));
         }
     }

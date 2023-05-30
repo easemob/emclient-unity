@@ -290,7 +290,13 @@
 }
 
 - (void)autoLoginDidCompleteWithError:(EMError *)aError {
-    
+    if(aError.code == EMAppActiveNumbersReachLimitation) {
+        [self onAppActiveNumberReachLimitation];
+    }else if (aError.code == EMErrorUserAuthenticationFailed) {
+        [EMWrapperHelper.shared.listener onReceive:connectionListener method:onAuthFailed info:nil];
+    }else if (aError.code == EMErrorUserNotFound) {
+        [self userAccountDidRemoveFromServer];
+    }
 }
 
 - (void)connectionStateDidChange:(EMConnectionState)aConnectionState {
@@ -299,6 +305,10 @@
     }else {
         [EMWrapperHelper.shared.listener onReceive:connectionListener method:onDisconnected info:nil];
     }
+}
+
+- (void)onAppActiveNumberReachLimitation {
+    [EMWrapperHelper.shared.listener onReceive:connectionListener method:onAppActiveNumberReachLimitation info:nil];
 }
 
 - (void)userAccountDidLoginFromOtherDevice {

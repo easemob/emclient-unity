@@ -103,6 +103,10 @@
 		90319CD42935FC1E000D01BE /* EMWrapperHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 90319C802935FC1E000D01BE /* EMWrapperHelper.m */; };
 		90319D0E29360033000D01BE /* HyphenateChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90319D0D29360033000D01BE /* HyphenateChat.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		90319D1429373932000D01BE /* wrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 90319D132937392F000D01BE /* wrapper.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9052DFA72A25D4BF00FB1FF2 /* EMFetchServerMessagesOption+Helper.h in Headers */ = {isa = PBXBuildFile; fileRef = 9052DFA52A25D4BF00FB1FF2 /* EMFetchServerMessagesOption+Helper.h */; };
+		9052DFA82A25D4BF00FB1FF2 /* EMFetchServerMessagesOption+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9052DFA62A25D4BF00FB1FF2 /* EMFetchServerMessagesOption+Helper.m */; };
+		9052DFAB2A25E78600FB1FF2 /* EMMessageReactionOperation+Helper.h in Headers */ = {isa = PBXBuildFile; fileRef = 9052DFA92A25E78600FB1FF2 /* EMMessageReactionOperation+Helper.h */; };
+		9052DFAC2A25E78600FB1FF2 /* EMMessageReactionOperation+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9052DFAA2A25E78600FB1FF2 /* EMMessageReactionOperation+Helper.m */; };
 		908CE3CC293D913600348C1A /* NSArray+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 908CE3C6293D913600348C1A /* NSArray+Category.m */; };
 		908CE3CD293D913600348C1A /* NSDictionary+Category.h in Headers */ = {isa = PBXBuildFile; fileRef = 908CE3C7293D913600348C1A /* NSDictionary+Category.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		908CE3CF293D913600348C1A /* NSArray+Category.h in Headers */ = {isa = PBXBuildFile; fileRef = 908CE3C9293D913600348C1A /* NSArray+Category.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -205,6 +209,10 @@
 		90319C802935FC1E000D01BE /* EMWrapperHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EMWrapperHelper.m; sourceTree = "<group>"; };
 		90319D0D29360033000D01BE /* HyphenateChat.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HyphenateChat.framework; path = ../HyphenateChat.framework; sourceTree = "<group>"; };
 		90319D132937392F000D01BE /* wrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = wrapper.h; sourceTree = "<group>"; };
+		9052DFA52A25D4BF00FB1FF2 /* EMFetchServerMessagesOption+Helper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EMFetchServerMessagesOption+Helper.h"; sourceTree = "<group>"; };
+		9052DFA62A25D4BF00FB1FF2 /* EMFetchServerMessagesOption+Helper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "EMFetchServerMessagesOption+Helper.m"; sourceTree = "<group>"; };
+		9052DFA92A25E78600FB1FF2 /* EMMessageReactionOperation+Helper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EMMessageReactionOperation+Helper.h"; sourceTree = "<group>"; };
+		9052DFAA2A25E78600FB1FF2 /* EMMessageReactionOperation+Helper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "EMMessageReactionOperation+Helper.m"; sourceTree = "<group>"; };
 		908CE3C6293D913600348C1A /* NSArray+Category.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Category.m"; sourceTree = "<group>"; };
 		908CE3C7293D913600348C1A /* NSDictionary+Category.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+Category.h"; sourceTree = "<group>"; };
 		908CE3C9293D913600348C1A /* NSArray+Category.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Category.h"; sourceTree = "<group>"; };
@@ -361,6 +369,10 @@
 				90319C7C2935FC1E000D01BE /* EMPushOptions+Helper.h */,
 				90319C7D2935FC1E000D01BE /* EMSilentModeTime+Helper.m */,
 				90319C7E2935FC1E000D01BE /* EMMessageReactionChange+Helper.h */,
+				9052DFA52A25D4BF00FB1FF2 /* EMFetchServerMessagesOption+Helper.h */,
+				9052DFA62A25D4BF00FB1FF2 /* EMFetchServerMessagesOption+Helper.m */,
+				9052DFA92A25E78600FB1FF2 /* EMMessageReactionOperation+Helper.h */,
+				9052DFAA2A25E78600FB1FF2 /* EMMessageReactionOperation+Helper.m */,
 			);
 			path = helper;
 			sourceTree = "<group>";
@@ -400,11 +412,13 @@
 				90319CD22935FC1E000D01BE /* EMMessageReactionChange+Helper.h in Headers */,
 				90319CA32935FC1E000D01BE /* EMThreadQueue.h in Headers */,
 				90319CBB2935FC1E000D01BE /* EMTranslateLanguage+Helper.h in Headers */,
+				9052DFAB2A25E78600FB1FF2 /* EMMessageReactionOperation+Helper.h in Headers */,
 				90319CBD2935FC1E000D01BE /* EMCursorResult+Helper.h in Headers */,
 				90ED2EB7295C0DDA00601727 /* DelegateTester.h in Headers */,
 				90319CA12935FC1E000D01BE /* EMUtil.h in Headers */,
 				908CE3CF293D913600348C1A /* NSArray+Category.h in Headers */,
 				90319CC42935FC1E000D01BE /* EMMessageReaction+Helper.h in Headers */,
+				9052DFA72A25D4BF00FB1FF2 /* EMFetchServerMessagesOption+Helper.h in Headers */,
 				908CE3CD293D913600348C1A /* NSDictionary+Category.h in Headers */,
 				90319CD02935FC1E000D01BE /* EMPushOptions+Helper.h in Headers */,
 				90319C8D2935FC1E000D01BE /* EMGroupManagerWrapper.h in Headers */,
@@ -537,11 +551,13 @@
 				90319C872935FC1E000D01BE /* EMChatManagerWrapper.m in Sources */,
 				90319C982935FC1E000D01BE /* EMGroupManagerWrapper.m in Sources */,
 				90319CAF2935FC1E000D01BE /* EMChatThreadEvent+Helper.m in Sources */,
+				9052DFA82A25D4BF00FB1FF2 /* EMFetchServerMessagesOption+Helper.m in Sources */,
 				90319CCA2935FC1E000D01BE /* EMGroup+Helper.m in Sources */,
 				90319CC32935FC1E000D01BE /* EMChatThread+Helper.m in Sources */,
 				90319C862935FC1E000D01BE /* EMPresenceManagerWrapper.m in Sources */,
 				90319C8F2935FC1E000D01BE /* EMBaseManager.m in Sources */,
 				90319CB12935FC1E000D01BE /* EMSilentModeParam+Helper.m in Sources */,
+				9052DFAC2A25E78600FB1FF2 /* EMMessageReactionOperation+Helper.m in Sources */,
 				90319CB92935FC1E000D01BE /* EMPushOptions+Helper.m in Sources */,
 				90319C902935FC1E000D01BE /* EMUserInfoManagerWrapper.m in Sources */,
 				90319CC22935FC1E000D01BE /* EMConversation+Helper.m in Sources */,

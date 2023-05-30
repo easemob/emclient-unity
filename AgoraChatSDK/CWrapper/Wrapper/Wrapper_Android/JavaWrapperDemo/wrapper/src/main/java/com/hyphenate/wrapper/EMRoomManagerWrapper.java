@@ -1,15 +1,12 @@
 package com.hyphenate.wrapper;
 
-import com.hyphenate.EMChatRoomChangeListener;
 import com.hyphenate.EMError;
 import com.hyphenate.EMResultCallBack;
 import com.hyphenate.chat.EMChatRoom;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCursorResult;
-import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMPageResult;
 import com.hyphenate.exceptions.HyphenateException;
-import com.hyphenate.wrapper.helper.EMGroupHelper;
 import com.hyphenate.wrapper.listeners.EMWrapperRoomListener;
 import com.hyphenate.wrapper.util.EMSDKMethod;
 import com.hyphenate.wrapper.util.EMHelper;
@@ -24,8 +21,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -757,18 +752,11 @@ public class EMRoomManagerWrapper extends EMBaseWrapper{
 
     private String setChatRoomAttributes(JSONObject params, EMWrapperCallback callback) throws JSONException {
         String roomId = params.getString("roomId");
-        Map<String, String> attributes = new HashMap<>();
-        if (params.has("attributes")) {
-            JSONObject jsonObject = params.getJSONObject("attributes");
-            Iterator<String> iterator = jsonObject.keys();
-            while (iterator.hasNext()) {
-                String key = iterator.next();
-                attributes.put(key, jsonObject.getString(key));
-            }
-        }
+        JSONObject attrs = params.optJSONObject("kv");
+        Map<String, String> attributes = EMHelper.getMapStrStrFromJsonObject(attrs);
         boolean autoDelete = false;
-        if (params.has("autoDelete")) {
-            autoDelete = params.getBoolean("autoDelete");
+        if (params.has("deleteWhenExit")) {
+            autoDelete = params.getBoolean("deleteWhenExit");
         }
         boolean forced = false;
         if(params.has("forced")) {

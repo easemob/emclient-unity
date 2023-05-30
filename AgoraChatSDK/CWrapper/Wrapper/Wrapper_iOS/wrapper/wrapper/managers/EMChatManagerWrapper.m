@@ -13,6 +13,7 @@
 #import "EMTranslateLanguage+Helper.h"
 #import "EMGroupMessageAck+Helper.h"
 #import "EMMessageReactionChange+Helper.h"
+#import "EMFetchServerMessagesOption+Helper.h"
 #import "EMError+Helper.h"
 #import "EMUtil.h"
 #import "EMHelper.h"
@@ -74,6 +75,8 @@
         ret = [self deleteConversation:params callback:callback];
     }else if([method isEqualToString:fetchHistoryMessages]) {
         ret = [self fetchHistoryMessages:params callback:callback];
+    }else if([method isEqualToString:fetchHistoryMessagesBy]) {
+        ret = [self fetchHistoryMessagesBy:params callback:callback];
     }else if([method isEqualToString:searchChatMsgFromDB]) {
         ret = [self searchChatMsgFromDB:params callback:callback];
     }else if([method isEqualToString:getMessage]) {
@@ -416,6 +419,23 @@
     
     return nil;
 }
+
+- (NSString *)fetchHistoryMessagesBy:(NSDictionary *)param
+                            callback:(EMWrapperCallback *)callback {
+    __weak EMChatManagerWrapper *weakSelf = self;
+    NSString *conversationId = param[@"convId"];
+    EMConversationType type = (EMConversationType)[param[@"convType"] intValue];
+    NSString *cursor = param[@"cursor"];
+    int pageSize = [param[@"pageSize"] intValue];
+    EMFetchServerMessagesOption *options = [EMFetchServerMessagesOption fromJson:param[@"options"]];
+    [EMClient.sharedClient.chatManager fetchMessagesFromServerBy:conversationId conversationType:type cursor:cursor pageSize:pageSize option:options completion:^(EMCursorResult<EMChatMessage *> * _Nullable aResult, EMError * _Nullable aError) {
+        [weakSelf wrapperCallback:callback error:aError object:[aResult toJson]];
+    }];
+    
+    return nil;
+}
+
+
 
 - (NSString *)asyncFetchGroupMessageAckFromServer:(NSDictionary *)param
                                          callback:(EMWrapperCallback *)callback {
