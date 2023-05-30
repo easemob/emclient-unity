@@ -50,7 +50,15 @@ public class EMWrapperMultiDeviceListener implements EMMultiDeviceListener {
 
     @Override
     public void onMessageRemoved(String conversationId, String deviceId) {
-        // TODO:
+        JSONObject data = new JSONObject();
+        try {
+            data.put("operation", Integer.valueOf(-1));
+            data.put("convId", conversationId);
+            data.put("deviceId", deviceId);
+            post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.multiDeviceListener, EMSDKMethod.onRoamDeleteMultiDevicesEvent, data.toString()));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public void post(Runnable runnable) {

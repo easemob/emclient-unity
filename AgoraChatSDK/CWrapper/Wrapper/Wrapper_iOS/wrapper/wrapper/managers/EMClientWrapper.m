@@ -372,7 +372,11 @@
 }
 
 - (void)multiDevicesMessageBeRemoved:(NSString *)conversationId deviceId:(NSString *)deviceId {
-    
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"operation"] = @(-1);
+    dict[@"convId"] = conversationId;
+    dict[@"deviceId"] = deviceId;
+    [EMWrapperHelper.shared.listener onReceive:multiDeviceListener method:onRoamDeleteMultiDevicesEvent info:dict.toJsonString];
 }
 
 @end
