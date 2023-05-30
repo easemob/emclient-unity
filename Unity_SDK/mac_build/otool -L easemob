@@ -1,9 +1,0 @@
-$ otool -L easemob
-easemob:
-	@rpath/easemob.framework/Versions/A/easemob (compatibility version 0.0.0, current version 0.0.0)
-	/usr/local/lib/libsqlite3.0.dylib (compatibility version 9.0.0, current version 9.6.0)
-	/usr/lib/libcurl.4.dylib (compatibility version 7.0.0, current version 9.0.0)
-	/usr/lib/libz.1.dylib (compatibility version 1.0.0, current version 1.2.11)
-	@rpath/easemob.framework/Versions/A/dylibs/libcrypto.1.0.0.dylib (compatibility version 1.0.0, current version 1.0.0)
-	/usr/lib/libc++.1.dylib (compatibility version 1.0.0, current version 902.1.0)
-	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1281.100.1)
