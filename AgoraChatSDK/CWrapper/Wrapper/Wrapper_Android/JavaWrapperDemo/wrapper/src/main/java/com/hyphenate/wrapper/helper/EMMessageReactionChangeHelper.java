@@ -12,12 +12,16 @@ public class EMMessageReactionChangeHelper {
         JSONObject data = new JSONObject();
         data.put("convId", change.getConversionID());
         data.put("msgId", change.getMessageId());
-        JSONArray list = new JSONArray();
+        JSONArray reactions = new JSONArray();
         for (int i = 0; i < change.getMessageReactionList().size(); i++) {
-            list.put(EMMessageReactionHelper.toJson(change.getMessageReactionList().get(i)));
+            reactions.put(EMMessageReactionHelper.toJson(change.getMessageReactionList().get(i)));
         }
-        data.put("reactions", list);
-
+        data.put("reactions", reactions);
+        JSONArray operations = new JSONArray();
+        for (int i = 0; i < change.getOperations().size(); i++) {
+            operations.put(EMMessageReactionOperationHelper.toJson(change.getOperations().get(i)));
+        }
+        data.put("operations", operations);
         return data;
     }
 }

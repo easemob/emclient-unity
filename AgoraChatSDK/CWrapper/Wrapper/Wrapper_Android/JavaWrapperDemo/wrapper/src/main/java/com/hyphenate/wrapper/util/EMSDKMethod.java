@@ -73,6 +73,7 @@ public class EMSDKMethod {
     public static final String getConversationsFromServer = "getConversationsFromServer";
     public static final String deleteConversation = "deleteConversation";
     public static final String fetchHistoryMessages = "fetchHistoryMessages";
+    public static final String fetchHistoryMessagesBy = "fetchHistoryMessagesBy";
     public static final String searchChatMsgFromDB = "searchChatMsgFromDB";
     public static final String getMessage = "getMessage";
     public static final String asyncFetchGroupAcks = "asyncFetchGroupAcks";
@@ -105,6 +106,7 @@ public class EMSDKMethod {
     public static final String markMessageAsRead = "markMessageAsRead";
     public static final String syncConversationExt = "syncConversationExt";
     public static final String removeMessage = "removeMessage";
+    public static final String removeMessages = "removeMessages";
     public static final String getLatestMessage = "getLatestMessage";
     public static final String getLatestMessageFromOthers = "getLatestMessageFromOthers";
     public static final String clearAllMessages = "clearAllMessages";
@@ -168,6 +170,7 @@ public class EMSDKMethod {
     public static final String getJoinedGroups = "getJoinedGroups";
     public static final String getGroupsWithoutPushNotification = "getGroupsWithoutPushNotification";
     public static final String getJoinedGroupsFromServer = "getJoinedGroupsFromServer";
+    public static final String getJoinedGroupsFromServerSimple = "getJoinedGroupsFromServerSimple";
     public static final String getPublicGroupsFromServer = "getPublicGroupsFromServer";
     public static final String createGroup = "createGroup";
     public static final String getGroupSpecificationFromServer = "getGroupSpecificationFromServer";
@@ -209,6 +212,8 @@ public class EMSDKMethod {
     public static final String declineJoinApplication = "declineJoinApplication";
     public static final String acceptInvitationFromGroup = "acceptInvitationFromGroup";
     public static final String declineInvitationFromGroup = "declineInvitationFromGroup";
+    public static final String fetchMemberAttributes = "fetchMemberAttributes";
+    public static final String setMemberAttributes = "setMemberAttributes";
 
 
     /// EMPushManager
@@ -326,6 +331,7 @@ public class EMSDKMethod {
     public static final String onLoggedOtherDevice = "onLoggedOtherDevice";
     public static final String onRemovedFromServer = "onRemovedFromServer";
     public static final String onForbidByServer = "onForbidByServer";
+    public static final String onAppActiveNumberReachLimitation = "onAppActiveNumberReachLimitation";
     public static final String onChangedImPwd = "onChangedImPwd";
     public static final String onLoginTooManyDevice = "onLoginTooManyDevice";
     public static final String onKickedByOtherDevice = "onKickedByOtherDevice";
@@ -358,7 +364,7 @@ public class EMSDKMethod {
     public static final String onAllMemberMuteChangedFromGroup = "onAllMemberMuteChangedFromGroup";
     public static final String onSpecificationChangedFromGroup = "onSpecificationChangedFromGroup";
     public static final String onStateChangedFromGroup = "onStateChangedFromGroup";
-
+    public static final String onUpdateMemberAttributesFromGroup = "onUpdateMemberAttributesFromGroup";
     // RoomManagerDelegate
     public static final String onDestroyedFromRoom = "onDestroyedFromRoom";
     public static final String onMemberJoinedFromRoom = "onMemberJoinedFromRoom";

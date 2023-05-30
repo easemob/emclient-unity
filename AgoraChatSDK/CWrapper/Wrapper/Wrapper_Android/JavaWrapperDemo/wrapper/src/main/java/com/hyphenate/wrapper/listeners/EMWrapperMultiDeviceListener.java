@@ -48,6 +48,11 @@ public class EMWrapperMultiDeviceListener implements EMMultiDeviceListener {
         }
     }
 
+    @Override
+    public void onMessageRemoved(String conversationId, String deviceId) {
+        // TODO:
+    }
+
     public void post(Runnable runnable) {
         EMWrapperThreadUtil.mainThreadExecute(runnable);
     }

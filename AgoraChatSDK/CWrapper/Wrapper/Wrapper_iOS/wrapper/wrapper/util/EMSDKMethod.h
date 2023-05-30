@@ -79,6 +79,7 @@ static NSString *const loadAllConversations = @"loadAllConversations";
 static NSString *const getConversationsFromServer = @"getConversationsFromServer";
 static NSString *const deleteConversation = @"deleteConversation";
 static NSString *const fetchHistoryMessages = @"fetchHistoryMessages";
+static NSString *const fetchHistoryMessagesBy = @"fetchHistoryMessagesBy";
 static NSString *const searchChatMsgFromDB = @"searchChatMsgFromDB";
 static NSString *const getMessage = @"getMessage";
 static NSString *const asyncFetchGroupAcks = @"asyncFetchGroupAcks";
@@ -108,6 +109,7 @@ static NSString *const markAllMessagesAsRead = @"markAllMessagesAsRead";
 static NSString *const markMessageAsRead = @"markMessageAsRead";
 static NSString *const syncConversationExt = @"syncConversationExt";
 static NSString *const removeMessage = @"removeMessage";
+static NSString *const removeMessages = @"removeMessages";
 static NSString *const getLatestMessage = @"getLatestMessage";
 static NSString *const getLatestMessageFromOthers = @"getLatestMessageFromOthers";
 static NSString *const clearAllMessages = @"clearAllMessages";
@@ -171,6 +173,7 @@ static NSString *const getGroupWithId = @"getGroupWithId";
 static NSString *const getJoinedGroups = @"getJoinedGroups";
 static NSString *const getGroupsWithoutPushNotification = @"getGroupsWithoutPushNotification";
 static NSString *const getJoinedGroupsFromServer = @"getJoinedGroupsFromServer";
+static NSString *const getJoinedGroupsFromServerSimple = @"getJoinedGroupsFromServerSimple";
 static NSString *const getPublicGroupsFromServer = @"getPublicGroupsFromServer";
 static NSString *const createGroup = @"createGroup";
 static NSString *const getGroupSpecificationFromServer = @"getGroupSpecificationFromServer";
@@ -212,6 +215,8 @@ static NSString *const acceptJoinApplication = @"acceptJoinApplication";
 static NSString *const declineJoinApplication = @"declineJoinApplication";
 static NSString *const acceptInvitationFromGroup = @"acceptInvitationFromGroup";
 static NSString *const declineInvitationFromGroup = @"declineInvitationFromGroup";
+static NSString *const fetchMemberAttributes = @"fetchMemberAttributes";
+static NSString *const setMemberAttributes = @"setMemberAttributes";
 
 
 /// EMPushManager
