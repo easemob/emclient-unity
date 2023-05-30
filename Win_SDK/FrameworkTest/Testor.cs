@@ -9520,7 +9520,7 @@ namespace WinSDKTest
 
     class MultiDeviceDelegate : IMultiDeviceDelegate
     {
-        int LISTENER_COUNT = 4;
+        int LISTENER_COUNT = 5;
 
         public void OnContactMultiDevicesEvent(MultiDevicesOperation operation, string target, string ext)
         {
@@ -9547,7 +9547,12 @@ namespace WinSDKTest
 
         public void OnUndisturbMultiDevicesEvent(string data)
         {
-            Console.WriteLine($"IMultiDeviceDelegate4 data: {data}, total listener count:{LISTENER_COUNT}");
+            Console.WriteLine($"IMultiDeviceDelegate4 OnUndisturbMultiDevicesEvent: data: {data}, total listener count:{LISTENER_COUNT}");
+        }
+
+        public void OnRoamDeleteMultiDevicesEvent(string conversationId, string deviceId)
+        {
+            Console.WriteLine($"IMultiDeviceDelegate5 OnRoamDeleteMultiDevicesEvent: conversationId: {conversationId}, deviceId:{deviceId}");
         }
     }
 

@@ -933,7 +933,7 @@ namespace AgoraChat
         * 异步方法，会阻塞当前线程。
         *
         * @param pageNum 		当前页码，从 0 开始。
-        * @param pageSize		每页期望返回的群组数，缺省为200。
+        * @param pageSize		每页期望返回的群组数，缺省为20。
         * @param callback		操作结果回调，成功群组列表，失败返回错误信息，详见 {@link ValueCallBack}。
         *
         * \~english
@@ -944,7 +944,7 @@ namespace AgoraChat
         * This is an asynchronous method and blocks the current thread.
         *
         * @param pageNum 		The page number, starting from 0.
-        * @param pageSize		The number of groups that you expect to get on each page. Default num is 200.
+        * @param pageSize		The number of groups that you expect to get on each page. Default num is 20.
         * @param callback		The operation callback. If success, the SDK returns the obtained group list; otherwise, an error will be returned. See {@link ValueCallBack}. 
         */
         [Obsolete]

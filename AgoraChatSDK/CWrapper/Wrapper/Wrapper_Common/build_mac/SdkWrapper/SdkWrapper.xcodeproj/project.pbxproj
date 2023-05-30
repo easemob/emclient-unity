@@ -25,6 +25,8 @@
 		4503C4FF292E21F10090F2D4 /* sdk_wrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 4503C4EE292E21F10090F2D4 /* sdk_wrapper.h */; };
 		4503C500292E21F10090F2D4 /* room_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4503C4EF292E21F10090F2D4 /* room_manager.cpp */; };
 		4503C513292E293D0090F2D4 /* easemob.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4503C512292E293D0090F2D4 /* easemob.framework */; };
+		450CCA7F2A24ADEB00B016D9 /* core_dump.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 450CCA7D2A24ADEB00B016D9 /* core_dump.cpp */; };
+		450CCA802A24ADEB00B016D9 /* core_dump.h in Headers */ = {isa = PBXBuildFile; fileRef = 450CCA7E2A24ADEB00B016D9 /* core_dump.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +49,8 @@
 		4503C4EE292E21F10090F2D4 /* sdk_wrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sdk_wrapper.h; sourceTree = "<group>"; };
 		4503C4EF292E21F10090F2D4 /* room_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = room_manager.cpp; sourceTree = "<group>"; };
 		4503C512292E293D0090F2D4 /* easemob.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = easemob.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		450CCA7D2A24ADEB00B016D9 /* core_dump.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = core_dump.cpp; sourceTree = "<group>"; };
+		450CCA7E2A24ADEB00B016D9 /* core_dump.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = core_dump.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +85,8 @@
 		4503C4DE292E21F10090F2D4 /* sdk_wrapper */ = {
 			isa = PBXGroup;
 			children = (
+				450CCA7D2A24ADEB00B016D9 /* core_dump.cpp */,
+				450CCA7E2A24ADEB00B016D9 /* core_dump.h */,
 				4503C4DF292E21F10090F2D4 /* userinfo_manager.cpp */,
 				4503C4E0292E21F10090F2D4 /* client.cpp */,
 				4503C4E1292E21F10090F2D4 /* callbacks.h */,
@@ -121,6 +127,7 @@
 				4503C4F3292E21F10090F2D4 /* sdk_wrapper_internal.h in Headers */,
 				4503C4F8292E21F10090F2D4 /* tool.h in Headers */,
 				4503C4FC292E21F10090F2D4 /* models.h in Headers */,
+				450CCA802A24ADEB00B016D9 /* core_dump.h in Headers */,
 				4503C4F2292E21F10090F2D4 /* callbacks.h in Headers */,
 				4503C4FF292E21F10090F2D4 /* sdk_wrapper.h in Headers */,
 			);
@@ -191,6 +198,7 @@
 				4503C4F0292E21F10090F2D4 /* userinfo_manager.cpp in Sources */,
 				4503C4FB292E21F10090F2D4 /* contact_manager.cpp in Sources */,
 				4503C4FE292E21F10090F2D4 /* push_manager.cpp in Sources */,
+				450CCA7F2A24ADEB00B016D9 /* core_dump.cpp in Sources */,
 				4503C4F9292E21F10090F2D4 /* presence_manager.cpp in Sources */,
 				4503C4F4292E21F10090F2D4 /* conversation_manager.cpp in Sources */,
 				4503C4F7292E21F10090F2D4 /* chat_manager.cpp in Sources */,

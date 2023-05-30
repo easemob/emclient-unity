@@ -223,7 +223,18 @@ namespace sdk_wrapper {
 
         void onRoamDeleteMultiDevicesEvent(const std::string& conversationId, const std::string& deviceId, const std::vector<std::string>& msgIdList, int64_t beforeTimeStamp)
         {
-            //No need to implement
+            JSON_STARTOBJ
+            writer.Key("operation");
+            writer.Int(MultiDevices::MultiDevicesOperationToInt(MultiDevicesOperation::UNKNOW));
+            writer.Key("convId");
+            writer.String(conversationId.c_str());
+            writer.Key("deviceId");
+            writer.String(deviceId.c_str());
+            JSON_ENDOBJ
+            string json = s.GetString();
+
+            if (json.size() > 0)
+                CallBack(STRING_MULTIDEVICE_LISTENER.c_str(), STRING_onRoamDeleteMultiDevicesEvent.c_str(), json.c_str());
         }
     };
 

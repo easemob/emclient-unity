@@ -281,6 +281,11 @@ namespace AgoraChat
                     case SDKMethod.onThreadMultiDevicesEvent:
                         it.OnThreadMultiDevicesEvent(operation, target, userIds);
                         break;
+                    case SDKMethod.onRoamDeleteMultiDevicesEvent:
+                        string convId = jsonNode["convId"];
+                        string deviceId = jsonNode["deviceId"];
+                        it.OnRoamDeleteMultiDevicesEvent(convId, deviceId);
+                        break;
                     default:
                         break;
                 }

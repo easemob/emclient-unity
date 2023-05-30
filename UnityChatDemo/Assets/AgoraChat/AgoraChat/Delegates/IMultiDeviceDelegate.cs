@@ -62,6 +62,21 @@ namespace AgoraChat
          * @param usernames     The target user ID(s) of the operation.
          */
         void OnThreadMultiDevicesEvent(MultiDevicesOperation operation, string target, List<string> usernames);
+
+        /**
+         * \~chinese
+         * 多端多设备单个会话删除漫游消息事件回调。
+         *
+         * @param conversationId    会话 ID。
+         * @param deviceId          设备 ID。
+         *
+         * \~english
+         * The callback for a multi-device event that messages of the conversaion are deleted from server.
+         *
+         * @param conversationId    Conversation ID.
+         * @param deviceId          Device ID.
+         */
+        void OnRoamDeleteMultiDevicesEvent(string conversationId, string deviceId);
     }
 
 }
