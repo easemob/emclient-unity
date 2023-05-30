@@ -340,6 +340,7 @@ static NSString *const onKickedByOtherDevice = @"onKickedByOtherDevice";
 static NSString *const onAuthFailed = @"onAuthFailed";
 static NSString *const onTokenExpired = @"onTokenExpired";
 static NSString *const onTokenWillExpire = @"onTokenWillExpire";
+static NSString *const onAppActiveNumberReachLimitation = @"onAppActiveNumberReachLimitation";
 
 // GroupManagerDeleagate
 static NSString *const onInvitationReceivedFromGroup = @"onInvitationReceivedFromGroup";
@@ -366,6 +367,7 @@ static NSString *const onRemoveAllowListMembersFromGroup = @"onRemoveWhiteListMe
 static NSString *const onAllMemberMuteChangedFromGroup = @"onAllMemberMuteChangedFromGroup";
 static NSString *const onSpecificationChangedFromGroup = @"onSpecificationChangedFromGroup";
 static NSString *const onStateChangedFromGroup = @"onStateChangedFromGroup";
+static NSString *const onUpdateMemberAttributesFromGroup = @"onUpdateMemberAttributesFromGroup";
 // RoomManagerDelegate
 static NSString *const onDestroyedFromRoom = @"onDestroyedFromRoom";
 static NSString *const onMemberJoinedFromRoom = @"onMemberJoinedFromRoom";
