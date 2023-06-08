@@ -21,7 +21,7 @@ namespace AgoraChat
 
             IntPtr ptr = _NativeGet(manager, method, json?.ToString(), callbackId ?? "");
             string str = Tools.PtrToString(ptr);
-#if UNITY_STANDALONE || UNITY_EDITOR
+#if UNITY_STANDALONE || UNITY_EDITOR || _WIN32
             FreeMemory(ptr);
 #else
             Tools.PtrToString(ptr);
