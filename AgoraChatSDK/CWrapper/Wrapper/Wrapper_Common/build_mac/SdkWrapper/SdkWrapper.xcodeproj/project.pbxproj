@@ -27,6 +27,46 @@
 		4503C513292E293D0090F2D4 /* easemob.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4503C512292E293D0090F2D4 /* easemob.framework */; };
 		450CCA7F2A24ADEB00B016D9 /* core_dump.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 450CCA7D2A24ADEB00B016D9 /* core_dump.cpp */; };
 		450CCA802A24ADEB00B016D9 /* core_dump.h in Headers */ = {isa = PBXBuildFile; fileRef = 450CCA7E2A24ADEB00B016D9 /* core_dump.h */; };
+		457E7D8B2A271D5700667E62 /* sdk_wrapper_internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 4503C4E2292E21F10090F2D4 /* sdk_wrapper_internal.h */; };
+		457E7D8C2A271D5700667E62 /* tool.h in Headers */ = {isa = PBXBuildFile; fileRef = 4503C4E7292E21F10090F2D4 /* tool.h */; };
+		457E7D8D2A271D5700667E62 /* models.h in Headers */ = {isa = PBXBuildFile; fileRef = 4503C4EB292E21F10090F2D4 /* models.h */; };
+		457E7D8E2A271D5700667E62 /* core_dump.h in Headers */ = {isa = PBXBuildFile; fileRef = 450CCA7E2A24ADEB00B016D9 /* core_dump.h */; };
+		457E7D8F2A271D5700667E62 /* callbacks.h in Headers */ = {isa = PBXBuildFile; fileRef = 4503C4E1292E21F10090F2D4 /* callbacks.h */; };
+		457E7D902A271D5700667E62 /* sdk_wrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 4503C4EE292E21F10090F2D4 /* sdk_wrapper.h */; };
+		457E7D922A271D5700667E62 /* client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4503C4E0292E21F10090F2D4 /* client.cpp */; };
+		457E7D932A271D5700667E62 /* group_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4503C4E5292E21F10090F2D4 /* group_manager.cpp */; };
+		457E7D942A271D5700667E62 /* thread_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4503C4E4292E21F10090F2D4 /* thread_manager.cpp */; };
+		457E7D952A271D5700667E62 /* tool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4503C4EC292E21F10090F2D4 /* tool.cpp */; };
+		457E7D962A271D5700667E62 /* room_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4503C4EF292E21F10090F2D4 /* room_manager.cpp */; };
+		457E7D972A271D5700667E62 /* userinfo_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4503C4DF292E21F10090F2D4 /* userinfo_manager.cpp */; };
+		457E7D982A271D5700667E62 /* contact_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4503C4EA292E21F10090F2D4 /* contact_manager.cpp */; };
+		457E7D992A271D5700667E62 /* push_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4503C4ED292E21F10090F2D4 /* push_manager.cpp */; };
+		457E7D9A2A271D5700667E62 /* core_dump.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 450CCA7D2A24ADEB00B016D9 /* core_dump.cpp */; };
+		457E7D9B2A271D5700667E62 /* presence_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4503C4E8292E21F10090F2D4 /* presence_manager.cpp */; };
+		457E7D9C2A271D5700667E62 /* conversation_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4503C4E3292E21F10090F2D4 /* conversation_manager.cpp */; };
+		457E7D9D2A271D5700667E62 /* chat_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4503C4E6292E21F10090F2D4 /* chat_manager.cpp */; };
+		457E7D9E2A271D5700667E62 /* models.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4503C4E9292E21F10090F2D4 /* models.cpp */; };
+		457E7DA62A271DA900667E62 /* easemob_arm64.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 457E7DA52A271DA900667E62 /* easemob_arm64.framework */; };
+		45B860B82A306E9200BCD6B8 /* sdk_wrapper_internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 4503C4E2292E21F10090F2D4 /* sdk_wrapper_internal.h */; };
+		45B860B92A306E9200BCD6B8 /* tool.h in Headers */ = {isa = PBXBuildFile; fileRef = 4503C4E7292E21F10090F2D4 /* tool.h */; };
+		45B860BA2A306E9200BCD6B8 /* models.h in Headers */ = {isa = PBXBuildFile; fileRef = 4503C4EB292E21F10090F2D4 /* models.h */; };
+		45B860BB2A306E9200BCD6B8 /* core_dump.h in Headers */ = {isa = PBXBuildFile; fileRef = 450CCA7E2A24ADEB00B016D9 /* core_dump.h */; };
+		45B860BC2A306E9200BCD6B8 /* callbacks.h in Headers */ = {isa = PBXBuildFile; fileRef = 4503C4E1292E21F10090F2D4 /* callbacks.h */; };
+		45B860BD2A306E9200BCD6B8 /* sdk_wrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 4503C4EE292E21F10090F2D4 /* sdk_wrapper.h */; };
+		45B860BF2A306E9200BCD6B8 /* client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4503C4E0292E21F10090F2D4 /* client.cpp */; };
+		45B860C02A306E9200BCD6B8 /* group_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4503C4E5292E21F10090F2D4 /* group_manager.cpp */; };
+		45B860C12A306E9200BCD6B8 /* thread_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4503C4E4292E21F10090F2D4 /* thread_manager.cpp */; };
+		45B860C22A306E9200BCD6B8 /* tool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4503C4EC292E21F10090F2D4 /* tool.cpp */; };
+		45B860C32A306E9200BCD6B8 /* room_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4503C4EF292E21F10090F2D4 /* room_manager.cpp */; };
+		45B860C42A306E9200BCD6B8 /* userinfo_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4503C4DF292E21F10090F2D4 /* userinfo_manager.cpp */; };
+		45B860C52A306E9200BCD6B8 /* contact_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4503C4EA292E21F10090F2D4 /* contact_manager.cpp */; };
+		45B860C62A306E9200BCD6B8 /* push_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4503C4ED292E21F10090F2D4 /* push_manager.cpp */; };
+		45B860C72A306E9200BCD6B8 /* core_dump.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 450CCA7D2A24ADEB00B016D9 /* core_dump.cpp */; };
+		45B860C82A306E9200BCD6B8 /* presence_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4503C4E8292E21F10090F2D4 /* presence_manager.cpp */; };
+		45B860C92A306E9200BCD6B8 /* conversation_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4503C4E3292E21F10090F2D4 /* conversation_manager.cpp */; };
+		45B860CA2A306E9200BCD6B8 /* chat_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4503C4E6292E21F10090F2D4 /* chat_manager.cpp */; };
+		45B860CB2A306E9200BCD6B8 /* models.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4503C4E9292E21F10090F2D4 /* models.cpp */; };
+		45B860F62A30750100BCD6B8 /* easemob_universal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45B860F52A30750100BCD6B8 /* easemob_universal.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +91,10 @@
 		4503C512292E293D0090F2D4 /* easemob.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = easemob.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		450CCA7D2A24ADEB00B016D9 /* core_dump.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = core_dump.cpp; sourceTree = "<group>"; };
 		450CCA7E2A24ADEB00B016D9 /* core_dump.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = core_dump.h; sourceTree = "<group>"; };
+		457E7DA42A271D5700667E62 /* libSdkWrapper_arm64.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libSdkWrapper_arm64.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		457E7DA52A271DA900667E62 /* easemob_arm64.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = easemob_arm64.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		45B860D12A306E9200BCD6B8 /* libSdkWrapper_universal.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libSdkWrapper_universal.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		45B860F52A30750100BCD6B8 /* easemob_universal.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = easemob_universal.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +103,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				4503C513292E293D0090F2D4 /* easemob.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		457E7D9F2A271D5700667E62 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				457E7DA62A271DA900667E62 /* easemob_arm64.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		45B860CC2A306E9200BCD6B8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				45B860F62A30750100BCD6B8 /* easemob_universal.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +138,8 @@
 			isa = PBXGroup;
 			children = (
 				4503C4CA292E21BD0090F2D4 /* libSdkWrapper.dylib */,
+				457E7DA42A271D5700667E62 /* libSdkWrapper_arm64.dylib */,
+				45B860D12A306E9200BCD6B8 /* libSdkWrapper_universal.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -112,6 +174,8 @@
 		4503C511292E293D0090F2D4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				45B860F52A30750100BCD6B8 /* easemob_universal.framework */,
+				457E7DA52A271DA900667E62 /* easemob_arm64.framework */,
 				4503C512292E293D0090F2D4 /* easemob.framework */,
 			);
 			name = Frameworks;
@@ -133,6 +197,32 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		457E7D8A2A271D5700667E62 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				457E7D8B2A271D5700667E62 /* sdk_wrapper_internal.h in Headers */,
+				457E7D8C2A271D5700667E62 /* tool.h in Headers */,
+				457E7D8D2A271D5700667E62 /* models.h in Headers */,
+				457E7D8E2A271D5700667E62 /* core_dump.h in Headers */,
+				457E7D8F2A271D5700667E62 /* callbacks.h in Headers */,
+				457E7D902A271D5700667E62 /* sdk_wrapper.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		45B860B72A306E9200BCD6B8 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				45B860B82A306E9200BCD6B8 /* sdk_wrapper_internal.h in Headers */,
+				45B860B92A306E9200BCD6B8 /* tool.h in Headers */,
+				45B860BA2A306E9200BCD6B8 /* models.h in Headers */,
+				45B860BB2A306E9200BCD6B8 /* core_dump.h in Headers */,
+				45B860BC2A306E9200BCD6B8 /* callbacks.h in Headers */,
+				45B860BD2A306E9200BCD6B8 /* sdk_wrapper.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
@@ -151,6 +241,40 @@
 			name = SdkWrapper;
 			productName = SdkWrapper;
 			productReference = 4503C4CA292E21BD0090F2D4 /* libSdkWrapper.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		457E7D892A271D5700667E62 /* SdkWrapper_arm64 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 457E7DA12A271D5700667E62 /* Build configuration list for PBXNativeTarget "SdkWrapper_arm64" */;
+			buildPhases = (
+				457E7D8A2A271D5700667E62 /* Headers */,
+				457E7D912A271D5700667E62 /* Sources */,
+				457E7D9F2A271D5700667E62 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SdkWrapper_arm64;
+			productName = SdkWrapper;
+			productReference = 457E7DA42A271D5700667E62 /* libSdkWrapper_arm64.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		45B860B62A306E9200BCD6B8 /* SdkWrapper_universal */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 45B860CE2A306E9200BCD6B8 /* Build configuration list for PBXNativeTarget "SdkWrapper_universal" */;
+			buildPhases = (
+				45B860B72A306E9200BCD6B8 /* Headers */,
+				45B860BE2A306E9200BCD6B8 /* Sources */,
+				45B860CC2A306E9200BCD6B8 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SdkWrapper_universal;
+			productName = SdkWrapper;
+			productReference = 45B860D12A306E9200BCD6B8 /* libSdkWrapper_universal.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
 /* End PBXNativeTarget section */
@@ -181,6 +305,8 @@
 			projectRoot = "";
 			targets = (
 				4503C4C9292E21BD0090F2D4 /* SdkWrapper */,
+				457E7D892A271D5700667E62 /* SdkWrapper_arm64 */,
+				45B860B62A306E9200BCD6B8 /* SdkWrapper_universal */,
 			);
 		};
 /* End PBXProject section */
@@ -203,6 +329,46 @@
 				4503C4F4292E21F10090F2D4 /* conversation_manager.cpp in Sources */,
 				4503C4F7292E21F10090F2D4 /* chat_manager.cpp in Sources */,
 				4503C4FA292E21F10090F2D4 /* models.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		457E7D912A271D5700667E62 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				457E7D922A271D5700667E62 /* client.cpp in Sources */,
+				457E7D932A271D5700667E62 /* group_manager.cpp in Sources */,
+				457E7D942A271D5700667E62 /* thread_manager.cpp in Sources */,
+				457E7D952A271D5700667E62 /* tool.cpp in Sources */,
+				457E7D962A271D5700667E62 /* room_manager.cpp in Sources */,
+				457E7D972A271D5700667E62 /* userinfo_manager.cpp in Sources */,
+				457E7D982A271D5700667E62 /* contact_manager.cpp in Sources */,
+				457E7D992A271D5700667E62 /* push_manager.cpp in Sources */,
+				457E7D9A2A271D5700667E62 /* core_dump.cpp in Sources */,
+				457E7D9B2A271D5700667E62 /* presence_manager.cpp in Sources */,
+				457E7D9C2A271D5700667E62 /* conversation_manager.cpp in Sources */,
+				457E7D9D2A271D5700667E62 /* chat_manager.cpp in Sources */,
+				457E7D9E2A271D5700667E62 /* models.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		45B860BE2A306E9200BCD6B8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				45B860BF2A306E9200BCD6B8 /* client.cpp in Sources */,
+				45B860C02A306E9200BCD6B8 /* group_manager.cpp in Sources */,
+				45B860C12A306E9200BCD6B8 /* thread_manager.cpp in Sources */,
+				45B860C22A306E9200BCD6B8 /* tool.cpp in Sources */,
+				45B860C32A306E9200BCD6B8 /* room_manager.cpp in Sources */,
+				45B860C42A306E9200BCD6B8 /* userinfo_manager.cpp in Sources */,
+				45B860C52A306E9200BCD6B8 /* contact_manager.cpp in Sources */,
+				45B860C62A306E9200BCD6B8 /* push_manager.cpp in Sources */,
+				45B860C72A306E9200BCD6B8 /* core_dump.cpp in Sources */,
+				45B860C82A306E9200BCD6B8 /* presence_manager.cpp in Sources */,
+				45B860C92A306E9200BCD6B8 /* conversation_manager.cpp in Sources */,
+				45B860CA2A306E9200BCD6B8 /* chat_manager.cpp in Sources */,
+				45B860CB2A306E9200BCD6B8 /* models.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -374,6 +540,118 @@
 			};
 			name = Release;
 		};
+		457E7DA22A271D5700667E62 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EXCLUDED_ARCHS = x86_64;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				HEADER_SEARCH_PATHS = (
+					"../../../../../../../emclient-linux/3rd_party/rapidjson/include",
+					"../../../../../../../emclient-linux/include",
+					"../../../../../../../emclient-linux/protocol",
+					"../../../../../../../emclient-linux/protocol/generated",
+					"../../../../../../../emclient-linux/3rd_party/protobuf",
+					"../../../../../../../emclient-linux/3rd_party/platform/darwin/depends/boringssl_1.1.1g_header/include",
+					"../../../../../../../emclient-linux/3rd_party/platform/darwin/depends/sqlcipher_4.4.3_static_intel/include",
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_PATH)";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Resources";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		457E7DA32A271D5700667E62 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EXCLUDED_ARCHS = x86_64;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				HEADER_SEARCH_PATHS = (
+					"../../../../../../../emclient-linux/3rd_party/rapidjson/include",
+					"../../../../../../../emclient-linux/include",
+					"../../../../../../../emclient-linux/protocol",
+					"../../../../../../../emclient-linux/protocol/generated",
+					"../../../../../../../emclient-linux/3rd_party/protobuf",
+					"../../../../../../../emclient-linux/3rd_party/platform/darwin/depends/boringssl_1.1.1g_header/include",
+					"../../../../../../../emclient-linux/3rd_party/platform/darwin/depends/sqlcipher_4.4.3_static_intel/include",
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_PATH)";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Resources";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		45B860CF2A306E9200BCD6B8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EXCLUDED_ARCHS = "";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				HEADER_SEARCH_PATHS = (
+					"../../../../../../../emclient-linux/3rd_party/rapidjson/include",
+					"../../../../../../../emclient-linux/include",
+					"../../../../../../../emclient-linux/protocol",
+					"../../../../../../../emclient-linux/protocol/generated",
+					"../../../../../../../emclient-linux/3rd_party/protobuf",
+					"../../../../../../../emclient-linux/3rd_party/platform/darwin/depends/boringssl_1.1.1g_header/include",
+					"../../../../../../../emclient-linux/3rd_party/platform/darwin/depends_universal/sqlcipher_4.4.3_static_universal/include",
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_PATH)";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Resources";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		45B860D02A306E9200BCD6B8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EXCLUDED_ARCHS = "";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				HEADER_SEARCH_PATHS = (
+					"../../../../../../../emclient-linux/3rd_party/rapidjson/include",
+					"../../../../../../../emclient-linux/include",
+					"../../../../../../../emclient-linux/protocol",
+					"../../../../../../../emclient-linux/protocol/generated",
+					"../../../../../../../emclient-linux/3rd_party/protobuf",
+					"../../../../../../../emclient-linux/3rd_party/platform/darwin/depends/boringssl_1.1.1g_header/include",
+					"../../../../../../../emclient-linux/3rd_party/platform/darwin/depends_universal/sqlcipher_4.4.3_static_universal/include",
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_PATH)";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Resources";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -391,6 +669,24 @@
 			buildConfigurations = (
 				4503C4D6292E21BD0090F2D4 /* Debug */,
 				4503C4D7292E21BD0090F2D4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		457E7DA12A271D5700667E62 /* Build configuration list for PBXNativeTarget "SdkWrapper_arm64" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				457E7DA22A271D5700667E62 /* Debug */,
+				457E7DA32A271D5700667E62 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		45B860CE2A306E9200BCD6B8 /* Build configuration list for PBXNativeTarget "SdkWrapper_universal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				45B860CF2A306E9200BCD6B8 /* Debug */,
+				45B860D02A306E9200BCD6B8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

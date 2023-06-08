@@ -11,6 +11,14 @@
 		4503C4BF292E21950090F2D4 /* common_wrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 4503C4BC292E21950090F2D4 /* common_wrapper.h */; };
 		4503C4C0292E21950090F2D4 /* common_cwrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4503C4BD292E21950090F2D4 /* common_cwrapper.cpp */; };
 		4503C516292E2A770090F2D4 /* libSdkWrapper.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4503C515292E2A770090F2D4 /* libSdkWrapper.dylib */; };
+		457E7DA92A271E5A00667E62 /* common_wrapper_internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 4503C4BB292E21950090F2D4 /* common_wrapper_internal.h */; };
+		457E7DAA2A271E5A00667E62 /* common_wrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 4503C4BC292E21950090F2D4 /* common_wrapper.h */; };
+		457E7DAC2A271E5A00667E62 /* common_cwrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4503C4BD292E21950090F2D4 /* common_cwrapper.cpp */; };
+		457E7DB42A271E8500667E62 /* libSdkWrapper_arm64.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 457E7DB32A271E8500667E62 /* libSdkWrapper_arm64.dylib */; };
+		45B860D42A306F2A00BCD6B8 /* common_wrapper_internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 4503C4BB292E21950090F2D4 /* common_wrapper_internal.h */; };
+		45B860D52A306F2A00BCD6B8 /* common_wrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 4503C4BC292E21950090F2D4 /* common_wrapper.h */; };
+		45B860D72A306F2A00BCD6B8 /* common_cwrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4503C4BD292E21950090F2D4 /* common_cwrapper.cpp */; };
+		45B860F82A30752C00BCD6B8 /* libSdkWrapper_universal.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 45B860F72A30752C00BCD6B8 /* libSdkWrapper_universal.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +27,10 @@
 		4503C4BC292E21950090F2D4 /* common_wrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = common_wrapper.h; sourceTree = "<group>"; };
 		4503C4BD292E21950090F2D4 /* common_cwrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = common_cwrapper.cpp; sourceTree = "<group>"; };
 		4503C515292E2A770090F2D4 /* libSdkWrapper.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; path = libSdkWrapper.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		457E7DB22A271E5A00667E62 /* libCommonWrapper_arm64.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libCommonWrapper_arm64.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		457E7DB32A271E8500667E62 /* libSdkWrapper_arm64.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; path = libSdkWrapper_arm64.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		45B860DD2A306F2A00BCD6B8 /* libCommonWrapper_universal.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libCommonWrapper_universal.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		45B860F72A30752C00BCD6B8 /* libSdkWrapper_universal.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; path = libSdkWrapper_universal.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -27,6 +39,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				4503C516292E2A770090F2D4 /* libSdkWrapper.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		457E7DAD2A271E5A00667E62 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				457E7DB42A271E8500667E62 /* libSdkWrapper_arm64.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		45B860D82A306F2A00BCD6B8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				45B860F82A30752C00BCD6B8 /* libSdkWrapper_universal.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -46,6 +74,8 @@
 			isa = PBXGroup;
 			children = (
 				4503C4A6292E21110090F2D4 /* libCommonWrapper.dylib */,
+				457E7DB22A271E5A00667E62 /* libCommonWrapper_arm64.dylib */,
+				45B860DD2A306F2A00BCD6B8 /* libCommonWrapper_universal.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -64,6 +94,8 @@
 		4503C514292E2A770090F2D4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				45B860F72A30752C00BCD6B8 /* libSdkWrapper_universal.dylib */,
+				457E7DB32A271E8500667E62 /* libSdkWrapper_arm64.dylib */,
 				4503C515292E2A770090F2D4 /* libSdkWrapper.dylib */,
 			);
 			name = Frameworks;
@@ -78,6 +110,24 @@
 			files = (
 				4503C4BE292E21950090F2D4 /* common_wrapper_internal.h in Headers */,
 				4503C4BF292E21950090F2D4 /* common_wrapper.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		457E7DA82A271E5A00667E62 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				457E7DA92A271E5A00667E62 /* common_wrapper_internal.h in Headers */,
+				457E7DAA2A271E5A00667E62 /* common_wrapper.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		45B860D32A306F2A00BCD6B8 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				45B860D42A306F2A00BCD6B8 /* common_wrapper_internal.h in Headers */,
+				45B860D52A306F2A00BCD6B8 /* common_wrapper.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -99,6 +149,40 @@
 			name = CommonWrapper;
 			productName = CommonWrapper;
 			productReference = 4503C4A6292E21110090F2D4 /* libCommonWrapper.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		457E7DA72A271E5A00667E62 /* CommonWrapper_arm64 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 457E7DAF2A271E5A00667E62 /* Build configuration list for PBXNativeTarget "CommonWrapper_arm64" */;
+			buildPhases = (
+				457E7DA82A271E5A00667E62 /* Headers */,
+				457E7DAB2A271E5A00667E62 /* Sources */,
+				457E7DAD2A271E5A00667E62 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CommonWrapper_arm64;
+			productName = CommonWrapper;
+			productReference = 457E7DB22A271E5A00667E62 /* libCommonWrapper_arm64.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		45B860D22A306F2A00BCD6B8 /* CommonWrapper_universal */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 45B860DA2A306F2A00BCD6B8 /* Build configuration list for PBXNativeTarget "CommonWrapper_universal" */;
+			buildPhases = (
+				45B860D32A306F2A00BCD6B8 /* Headers */,
+				45B860D62A306F2A00BCD6B8 /* Sources */,
+				45B860D82A306F2A00BCD6B8 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CommonWrapper_universal;
+			productName = CommonWrapper;
+			productReference = 45B860DD2A306F2A00BCD6B8 /* libCommonWrapper_universal.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
 /* End PBXNativeTarget section */
@@ -129,6 +213,8 @@
 			projectRoot = "";
 			targets = (
 				4503C4A5292E21110090F2D4 /* CommonWrapper */,
+				457E7DA72A271E5A00667E62 /* CommonWrapper_arm64 */,
+				45B860D22A306F2A00BCD6B8 /* CommonWrapper_universal */,
 			);
 		};
 /* End PBXProject section */
@@ -139,6 +225,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				4503C4C0292E21950090F2D4 /* common_cwrapper.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		457E7DAB2A271E5A00667E62 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				457E7DAC2A271E5A00667E62 /* common_cwrapper.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		45B860D62A306F2A00BCD6B8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				45B860D72A306F2A00BCD6B8 /* common_cwrapper.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -294,6 +396,84 @@
 			};
 			name = Release;
 		};
+		457E7DB02A271E5A00667E62 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EXCLUDED_ARCHS = x86_64;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				HEADER_SEARCH_PATHS = ../../sdk_wrapper;
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_PATH)";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Resources";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		457E7DB12A271E5A00667E62 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EXCLUDED_ARCHS = x86_64;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				HEADER_SEARCH_PATHS = ../../sdk_wrapper;
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_PATH)";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Resources";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		45B860DB2A306F2A00BCD6B8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				HEADER_SEARCH_PATHS = ../../sdk_wrapper;
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_PATH)";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Resources";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		45B860DC2A306F2A00BCD6B8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				HEADER_SEARCH_PATHS = ../../sdk_wrapper;
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_PATH)";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Resources";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -311,6 +491,24 @@
 			buildConfigurations = (
 				4503C4B2292E21110090F2D4 /* Debug */,
 				4503C4B3292E21110090F2D4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		457E7DAF2A271E5A00667E62 /* Build configuration list for PBXNativeTarget "CommonWrapper_arm64" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				457E7DB02A271E5A00667E62 /* Debug */,
+				457E7DB12A271E5A00667E62 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		45B860DA2A306F2A00BCD6B8 /* Build configuration list for PBXNativeTarget "CommonWrapper_universal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				45B860DB2A306F2A00BCD6B8 /* Debug */,
+				45B860DC2A306F2A00BCD6B8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
