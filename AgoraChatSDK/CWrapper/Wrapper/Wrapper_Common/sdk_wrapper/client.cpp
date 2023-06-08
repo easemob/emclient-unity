@@ -2,6 +2,7 @@
 
 #include "emclient.h"
 #include "emconfigmanager.h"
+#include "emlog.h"
 
 #include "tool.h"
 #include "models.h"
@@ -579,6 +580,30 @@ namespace sdk_wrapper
         //RoomManager_RemoveListener();
         //ContactManager_RemoveListener();
 
+        return nullptr;
+    }
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_LogDebug(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (nullptr != jstr && strlen(jstr) > 0) {
+            EMLog::getInstance().getDebugLogStream() << "SDK_Debug: " << jstr;
+        }
+        return nullptr;
+    }
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_LogWarn(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (nullptr != jstr && strlen(jstr) > 0) {
+            EMLog::getInstance().getWarningLogStream() << "SDK_Warn: " << jstr;
+        }
+        return nullptr;
+    }
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_LogError(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (nullptr != jstr && strlen(jstr) > 0) {
+            EMLog::getInstance().getErrorLogStream() << "SDK_Error: " << jstr;
+        }
         return nullptr;
     }
 

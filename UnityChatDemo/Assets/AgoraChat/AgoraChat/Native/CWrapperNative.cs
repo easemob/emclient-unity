@@ -10,24 +10,27 @@ namespace AgoraChat
     {
         internal static void NativeCall(string manager, string method, SimpleJSON.JSONNode json, string callbackId = null)
         {
-            LogPrinter.Log($"---NativeCall: {manager}: {method}: {json}: {callbackId}");
             _NativeCall(manager, method, json?.ToString(), callbackId ?? "");
         }
 
-
         internal static string NativeGet(string manager, string method, SimpleJSON.JSONNode json, string callbackId = null)
         {
-            LogPrinter.Log($"---NativeGet: {manager}: {method}: {json}: {callbackId}");
-
             IntPtr ptr = _NativeGet(manager, method, json?.ToString(), callbackId ?? "");
+
             string str = Tools.PtrToString(ptr);
 #if UNITY_STANDALONE || UNITY_EDITOR || _WIN32
             FreeMemory(ptr);
 #else
             Tools.PtrToString(ptr);
 #endif
-            LogPrinter.Log($"---NativeGet get: {str}");
             return str;
+        }
+
+        internal static void LogNativeCall(string manager, string method, string info)
+        {
+#if UNITY_STANDALONE || UNITY_EDITOR || _WIN32
+            _NativeCall(manager, method, info, "");
+#endif
         }
 
 #if UNITY_IPHONE

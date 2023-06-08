@@ -46,6 +46,7 @@ namespace AgoraChat
 
         internal int InitWithOptions(Options options)
         {
+            Tools.SetDebugMode(options.DebugMode);
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("options", options.ToJsonObject());
             JSONNode jsonNode = NativeGet(SDKMethod.init, jo_param).GetReturnJsonNode();
