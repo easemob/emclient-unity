@@ -145,7 +145,7 @@ namespace AgoraChat
             NativeCall(SDKMethod.kickDevice, jo_param, callback);
         }
 
-        internal void kickAllDevices(string username, string password, CallBack callback = null)
+        internal void KickAllDevices(string username, string password, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("username", username);
