@@ -2,7 +2,7 @@
 
 #include "emclient.h"
 #include "emconfigmanager.h"
-#include "emlog.h"
+#include "utils/emlog.h"
 
 #include "tool.h"
 #include "models.h"
