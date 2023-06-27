@@ -299,17 +299,23 @@ namespace AgoraChat
         * MacOS: /Users/UserName/Library/Application Support/DefaultCompany/xxx
         * Windows: C:/Users/UserName/AppData/LocalLow/DefaultCompany/xxx
         *
-        * 最后以文件夹结尾，无需“/”
+        * 最后以文件夹结尾，无需“/”。
+        *
+        * 注意: 在MacOS下，如果使用相对路径设置SDKDatapath，必须使用"."开头，
+        * 例如: "./sdkdatapath"。
         *
         * \~english
         * Sets persistent path for SDK data. Only used for MacOS and Windows platform.
-        * If not set, then SDK with set with default value.
+        * If not set, then SDK will set with default value.
         *
         * For example:
         * MacOS: /Users/UserName/Library/Application Support/DefaultCompany/xxx
         * Windows: C:/Users/UserName/AppData/LocalLow/DefaultCompany/xxx
         *
-        * End with folder name, no need to append "/"
+        * End with folder name, no need to append "/".
+        *
+        * Note: For MacOS, if set SDKDatapath with relative directory, must start with ".",
+        * for example: "./sdkdatapath".
         */
         public string SDKDataPath = "";
 
