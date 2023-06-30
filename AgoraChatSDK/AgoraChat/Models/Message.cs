@@ -390,13 +390,13 @@ namespace AgoraChat
          * \~chinese
          * 创建一条文本发送消息。
          *
-         * @param username 消息接收者的用户 ID 或群组 ID。
+         * @param username 消息接收者的用户 ID、群组 ID、子区ID或者是聊天室ID。
          * @param content 文本内容。
          * 
          * \~english
          * Creates a text message for sending.
          *
-         * @param username The user ID of the message recipient or a group ID.
+         * @param username The user ID of the message recipient, group ID, thread ID, or chatroom ID.
          * @param content The text content.
          */
         static public Message CreateTextSendMessage(string username, string content)
