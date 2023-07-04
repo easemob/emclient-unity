@@ -40,6 +40,9 @@ namespace AgoraChat
         internal const string isLoggedInBefore = "isLoggedInBefore";
         internal const string isConnected = "isConnected";
 
+        internal const string logDebug = "logDebug";
+        internal const string logWarn = "logWarn";
+        internal const string logError = "logError";
 
         /// EMContactManager methods
         internal const string addContact = "addContact";

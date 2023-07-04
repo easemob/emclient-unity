@@ -46,6 +46,7 @@ namespace AgoraChat
 
         internal int InitWithOptions(Options options)
         {
+            Tools.SetDebugMode(options.DebugMode);
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("options", options.ToJsonObject());
             JSONNode jsonNode = NativeGet(SDKMethod.init, jo_param).GetReturnJsonNode();
@@ -144,7 +145,7 @@ namespace AgoraChat
             NativeCall(SDKMethod.kickDevice, jo_param, callback);
         }
 
-        internal void kickAllDevices(string username, string password, CallBack callback = null)
+        internal void KickAllDevices(string username, string password, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("username", username);

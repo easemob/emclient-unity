@@ -906,16 +906,16 @@ namespace AgoraChat
          * 同步方法，会阻塞当前线程。
          *
          * @param messageId		要举报的消息 ID。
-         * @param tag			举报类型(例如：涉黄、涉恐)。
-         * @param reason		举报原因。
+         * @param tag			非法消息的标签。你需要填写自定义标签，例如`涉政`或`广告`。
+         * @param reason		举报原因。你需要自行填写举报原因。
          * @param callBack 		完成的回调，详见 {@link #CallBack()}。
          *
          * \~english
          * Reports a violation message.
          *
          * @param messageId		The ID of the message to report.
-         * @param tag			The report type (For example: involving pornography and terrorism).
-         * @param reason		The report Reason.
+         * @param tag			The tag of the inappropriate message. You need to type a custom tag, like `porn` or `ad`.
+         * @param reason		The reporting reason. You need to type a specific reason.
          *
          * @param callBack The result callback，see {@link #CallBack()}.
          */
@@ -1004,7 +1004,7 @@ namespace AgoraChat
         *
         * @param messageIdList  The message ID.
         * @param chatType       The chat type. Only one-to-one chat ({@link ConversationType.Chat} and group chat ({@link ConversationType.Group}) are allowed.
-        * @param groupId        The group ID, which is invalid only when the chat type is group chat.
+        * @param groupId        The group ID, which is valid only when the chat type is group chat.
         * @param callback       The result callback, which contains the Reaction list under the specified message ID（The user list of EMMessageReaction is the summary data, which only contains the information of the first three users）.
         */
         public void GetReactionList(List<string> messageIdList, MessageType chatType, string groupId, ValueCallBack<Dictionary<string, List<MessageReaction>>> callback = null)

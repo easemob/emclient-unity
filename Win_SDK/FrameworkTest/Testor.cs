@@ -2635,7 +2635,7 @@ namespace WinSDKTest
             string username = GetParamValueFromContext(0);
             string password = GetParamValueFromContext(1);
 
-            SDKClient.Instance.kickAllDevices(username, password,
+            SDKClient.Instance.KickAllDevices(username, password,
             callback: new CallBack(
 
                 onSuccess: () =>

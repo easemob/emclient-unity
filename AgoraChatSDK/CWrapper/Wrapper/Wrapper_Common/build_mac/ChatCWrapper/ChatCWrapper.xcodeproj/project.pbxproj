@@ -12,6 +12,16 @@
 		4503C53029306DD90090F2D4 /* easemob.framework in Resources */ = {isa = PBXBuildFile; fileRef = 4503C52B29306DD90090F2D4 /* easemob.framework */; };
 		4503C53129306DD90090F2D4 /* libCommonWrapper.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4503C52F29306DD90090F2D4 /* libCommonWrapper.dylib */; };
 		4503C53329306DFE0090F2D4 /* libSdkWrapper.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4503C53229306DFE0090F2D4 /* libSdkWrapper.dylib */; };
+		457E7DB72A271EF400667E62 /* CWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4503C46A292E1EAA0090F2D4 /* CWrapper.cpp */; };
+		457E7DCF2A27207C00667E62 /* libCommonWrapper_arm64.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 457E7DC62A271EF400667E62 /* libCommonWrapper_arm64.dylib */; };
+		457E7DD32A27219C00667E62 /* libCommonWrapper_arm64.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 457E7DD02A27219C00667E62 /* libCommonWrapper_arm64.dylib */; };
+		457E7DD42A27219C00667E62 /* libSdkWrapper_arm64.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 457E7DD12A27219C00667E62 /* libSdkWrapper_arm64.dylib */; };
+		457E7DD52A27219C00667E62 /* easemob_arm64.framework in Resources */ = {isa = PBXBuildFile; fileRef = 457E7DD22A27219C00667E62 /* easemob_arm64.framework */; };
+		45B860E02A30736900BCD6B8 /* CWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4503C46A292E1EAA0090F2D4 /* CWrapper.cpp */; };
+		45B860F92A30754E00BCD6B8 /* libCommonWrapper_universal.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 45B860EE2A30736900BCD6B8 /* libCommonWrapper_universal.dylib */; };
+		45B860FD2A3078A900BCD6B8 /* libSdkWrapper_universal.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 45B860FA2A3078A900BCD6B8 /* libSdkWrapper_universal.dylib */; };
+		45B860FE2A3078A900BCD6B8 /* easemob_universal.framework in Resources */ = {isa = PBXBuildFile; fileRef = 45B860FB2A3078A900BCD6B8 /* easemob_universal.framework */; };
+		45B860FF2A3078A900BCD6B8 /* libCommonWrapper_universal.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 45B860FC2A3078A900BCD6B8 /* libCommonWrapper_universal.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +46,48 @@
 			remoteGlobalIDString = 0B2C2C83CED2FF839E96E86A;
 			remoteInfo = easemob;
 		};
+		457E7DC52A271EF400667E62 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4503C4B4292E21110090F2D4 /* CommonWrapper.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 457E7DB22A271E5A00667E62;
+			remoteInfo = CommonWrapper_arm64;
+		};
+		457E7DC92A271EF400667E62 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4503C53E2930BB180090F2D4 /* easemob.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 450CCBA32A24B8A300B016D9;
+			remoteInfo = easemob_arm64;
+		};
+		457E7DCD2A271EF400667E62 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4503C4D8292E21BD0090F2D4 /* SdkWrapper.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 457E7DA42A271D5700667E62;
+			remoteInfo = SdkWrapper_arm64;
+		};
+		45B860ED2A30736900BCD6B8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4503C4B4292E21110090F2D4 /* CommonWrapper.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45B860DD2A306F2A00BCD6B8;
+			remoteInfo = CommonWrapper_universal;
+		};
+		45B860F02A30736900BCD6B8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4503C53E2930BB180090F2D4 /* easemob.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45B860B42A306B9F00BCD6B8;
+			remoteInfo = easemob_universal;
+		};
+		45B860F32A30736900BCD6B8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4503C4D8292E21BD0090F2D4 /* SdkWrapper.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45B860D12A306E9200BCD6B8;
+			remoteInfo = SdkWrapper_universal;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +102,14 @@
 		4503C52F29306DD90090F2D4 /* libCommonWrapper.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libCommonWrapper.dylib; path = build/Products/Debug/libCommonWrapper.dylib; sourceTree = "<group>"; };
 		4503C53229306DFE0090F2D4 /* libSdkWrapper.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libSdkWrapper.dylib; path = build/Products/Debug/libSdkWrapper.dylib; sourceTree = "<group>"; };
 		4503C53E2930BB180090F2D4 /* easemob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = easemob.xcodeproj; path = ../../easemob/build/easemob.xcodeproj; sourceTree = "<group>"; };
+		457E7DC22A271EF400667E62 /* ChatCWrapper.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChatCWrapper.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		457E7DD02A27219C00667E62 /* libCommonWrapper_arm64.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libCommonWrapper_arm64.dylib; path = build/Products/Debug/libCommonWrapper_arm64.dylib; sourceTree = "<group>"; };
+		457E7DD12A27219C00667E62 /* libSdkWrapper_arm64.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libSdkWrapper_arm64.dylib; path = build/Products/Debug/libSdkWrapper_arm64.dylib; sourceTree = "<group>"; };
+		457E7DD22A27219C00667E62 /* easemob_arm64.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = easemob_arm64.framework; path = build/Products/Debug/easemob_arm64.framework; sourceTree = "<group>"; };
+		45B860EB2A30736900BCD6B8 /* ChatCWrapper.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChatCWrapper.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		45B860FA2A3078A900BCD6B8 /* libSdkWrapper_universal.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libSdkWrapper_universal.dylib; path = build/Products/Debug/libSdkWrapper_universal.dylib; sourceTree = "<group>"; };
+		45B860FB2A3078A900BCD6B8 /* easemob_universal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = easemob_universal.framework; path = build/Products/Debug/easemob_universal.framework; sourceTree = "<group>"; };
+		45B860FC2A3078A900BCD6B8 /* libCommonWrapper_universal.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libCommonWrapper_universal.dylib; path = build/Products/Debug/libCommonWrapper_universal.dylib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,12 +121,34 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		457E7DB82A271EF400667E62 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				457E7DCF2A27207C00667E62 /* libCommonWrapper_arm64.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		45B860E12A30736900BCD6B8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				45B860F92A30754E00BCD6B8 /* libCommonWrapper_universal.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		4503C428292E1B5C0090F2D4 = {
 			isa = PBXGroup;
 			children = (
+				45B860FB2A3078A900BCD6B8 /* easemob_universal.framework */,
+				45B860FC2A3078A900BCD6B8 /* libCommonWrapper_universal.dylib */,
+				45B860FA2A3078A900BCD6B8 /* libSdkWrapper_universal.dylib */,
+				457E7DD22A27219C00667E62 /* easemob_arm64.framework */,
+				457E7DD02A27219C00667E62 /* libCommonWrapper_arm64.dylib */,
+				457E7DD12A27219C00667E62 /* libSdkWrapper_arm64.dylib */,
 				4503C53D2930BAC50090F2D4 /* easemob */,
 				4503C53229306DFE0090F2D4 /* libSdkWrapper.dylib */,
 				4503C52B29306DD90090F2D4 /* easemob.framework */,
@@ -83,6 +165,8 @@
 			isa = PBXGroup;
 			children = (
 				4503C431292E1B5C0090F2D4 /* ChatCWrapper.bundle */,
+				457E7DC22A271EF400667E62 /* ChatCWrapper.bundle */,
+				45B860EB2A30736900BCD6B8 /* ChatCWrapper.bundle */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -135,6 +219,8 @@
 			isa = PBXGroup;
 			children = (
 				4503C4B9292E21110090F2D4 /* libCommonWrapper.dylib */,
+				457E7DC62A271EF400667E62 /* libCommonWrapper_arm64.dylib */,
+				45B860EE2A30736900BCD6B8 /* libCommonWrapper_universal.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -143,6 +229,8 @@
 			isa = PBXGroup;
 			children = (
 				4503C4DD292E21BE0090F2D4 /* libSdkWrapper.dylib */,
+				457E7DCE2A271EF400667E62 /* libSdkWrapper_arm64.dylib */,
+				45B860F42A30736900BCD6B8 /* libSdkWrapper_universal.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -166,6 +254,8 @@
 			isa = PBXGroup;
 			children = (
 				4503C5432930BB190090F2D4 /* easemob.framework */,
+				457E7DCA2A271EF400667E62 /* easemob_arm64.framework */,
+				45B860F12A30736900BCD6B8 /* easemob_universal.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -189,6 +279,42 @@
 			name = ChatCWrapper;
 			productName = ChatCWrapper;
 			productReference = 4503C431292E1B5C0090F2D4 /* ChatCWrapper.bundle */;
+			productType = "com.apple.product-type.bundle";
+		};
+		457E7DB52A271EF400667E62 /* ChatCWrapper_arm64 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 457E7DBF2A271EF400667E62 /* Build configuration list for PBXNativeTarget "ChatCWrapper_arm64" */;
+			buildPhases = (
+				457E7DB62A271EF400667E62 /* Sources */,
+				457E7DB82A271EF400667E62 /* Frameworks */,
+				457E7DBA2A271EF400667E62 /* Resources */,
+				457E7DBE2A271EF400667E62 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ChatCWrapper_arm64;
+			productName = ChatCWrapper;
+			productReference = 457E7DC22A271EF400667E62 /* ChatCWrapper.bundle */;
+			productType = "com.apple.product-type.bundle";
+		};
+		45B860DE2A30736900BCD6B8 /* ChatCWrapper_universal */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 45B860E82A30736900BCD6B8 /* Build configuration list for PBXNativeTarget "ChatCWrapper_universal" */;
+			buildPhases = (
+				45B860DF2A30736900BCD6B8 /* Sources */,
+				45B860E12A30736900BCD6B8 /* Frameworks */,
+				45B860E32A30736900BCD6B8 /* Resources */,
+				45B860E72A30736900BCD6B8 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ChatCWrapper_universal;
+			productName = ChatCWrapper;
+			productReference = 45B860EB2A30736900BCD6B8 /* ChatCWrapper.bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -233,6 +359,8 @@
 			projectRoot = "";
 			targets = (
 				4503C430292E1B5C0090F2D4 /* ChatCWrapper */,
+				457E7DB52A271EF400667E62 /* ChatCWrapper_arm64 */,
+				45B860DE2A30736900BCD6B8 /* ChatCWrapper_universal */,
 			);
 		};
 /* End PBXProject section */
@@ -259,6 +387,48 @@
 			remoteRef = 4503C5422930BB190090F2D4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		457E7DC62A271EF400667E62 /* libCommonWrapper_arm64.dylib */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.dylib";
+			path = libCommonWrapper_arm64.dylib;
+			remoteRef = 457E7DC52A271EF400667E62 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		457E7DCA2A271EF400667E62 /* easemob_arm64.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = easemob_arm64.framework;
+			remoteRef = 457E7DC92A271EF400667E62 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		457E7DCE2A271EF400667E62 /* libSdkWrapper_arm64.dylib */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.dylib";
+			path = libSdkWrapper_arm64.dylib;
+			remoteRef = 457E7DCD2A271EF400667E62 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		45B860EE2A30736900BCD6B8 /* libCommonWrapper_universal.dylib */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.dylib";
+			path = libCommonWrapper_universal.dylib;
+			remoteRef = 45B860ED2A30736900BCD6B8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		45B860F12A30736900BCD6B8 /* easemob_universal.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = easemob_universal.framework;
+			remoteRef = 45B860F02A30736900BCD6B8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		45B860F42A30736900BCD6B8 /* libSdkWrapper_universal.dylib */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.dylib";
+			path = libSdkWrapper_universal.dylib;
+			remoteRef = 45B860F32A30736900BCD6B8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -269,6 +439,26 @@
 				4503C53329306DFE0090F2D4 /* libSdkWrapper.dylib in Resources */,
 				4503C53029306DD90090F2D4 /* easemob.framework in Resources */,
 				4503C53129306DD90090F2D4 /* libCommonWrapper.dylib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		457E7DBA2A271EF400667E62 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				457E7DD32A27219C00667E62 /* libCommonWrapper_arm64.dylib in Resources */,
+				457E7DD42A27219C00667E62 /* libSdkWrapper_arm64.dylib in Resources */,
+				457E7DD52A27219C00667E62 /* easemob_arm64.framework in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		45B860E32A30736900BCD6B8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				45B860FD2A3078A900BCD6B8 /* libSdkWrapper_universal.dylib in Resources */,
+				45B860FE2A3078A900BCD6B8 /* easemob_universal.framework in Resources */,
+				45B860FF2A3078A900BCD6B8 /* libCommonWrapper_universal.dylib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -292,6 +482,40 @@
 			shellPath = /bin/sh;
 			shellScript = "cd $SRCROOT/..\n./cplib.sh\n";
 		};
+		457E7DBE2A271EF400667E62 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd $SRCROOT/..\n./cplib_arm64.sh\n";
+		};
+		45B860E72A30736900BCD6B8 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd $SRCROOT/..\n./cplib_universal.sh\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -300,6 +524,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				4503C46B292E1EAA0090F2D4 /* CWrapper.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		457E7DB62A271EF400667E62 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				457E7DB72A271EF400667E62 /* CWrapper.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		45B860DF2A30736900BCD6B8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				45B860E02A30736900BCD6B8 /* CWrapper.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -457,6 +697,94 @@
 			};
 			name = Release;
 		};
+		457E7DC02A271EF400667E62 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				EXCLUDED_ARCHS = x86_64;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSPrincipalClass = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Resources";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = easemob_arm64.ChatCWrapper;
+				PRODUCT_NAME = ChatCWrapper;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Debug;
+		};
+		457E7DC12A271EF400667E62 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				EXCLUDED_ARCHS = x86_64;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSPrincipalClass = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Resources";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = easemob_arm64.ChatCWrapper;
+				PRODUCT_NAME = ChatCWrapper;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Release;
+		};
+		45B860E92A30736900BCD6B8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSPrincipalClass = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Resources";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = easemob.ChatCWrapper;
+				PRODUCT_NAME = ChatCWrapper;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Debug;
+		};
+		45B860EA2A30736900BCD6B8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSPrincipalClass = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Resources";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = easemob.ChatCWrapper;
+				PRODUCT_NAME = ChatCWrapper;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -474,6 +802,24 @@
 			buildConfigurations = (
 				4503C436292E1B5C0090F2D4 /* Debug */,
 				4503C437292E1B5C0090F2D4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		457E7DBF2A271EF400667E62 /* Build configuration list for PBXNativeTarget "ChatCWrapper_arm64" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				457E7DC02A271EF400667E62 /* Debug */,
+				457E7DC12A271EF400667E62 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		45B860E82A30736900BCD6B8 /* Build configuration list for PBXNativeTarget "ChatCWrapper_universal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				45B860E92A30736900BCD6B8 /* Debug */,
+				45B860EA2A30736900BCD6B8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

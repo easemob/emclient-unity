@@ -438,9 +438,9 @@ namespace AgoraChat
          * @param password The password.
          * @param callback The operation callback. See {@link CallBack}.
          */
-        public void kickAllDevices(string username, string password, CallBack callback = null)
+        public void KickAllDevices(string username, string password, CallBack callback = null)
         {
-            _clientImpl.kickAllDevices(username, password, callback);
+            _clientImpl.KickAllDevices(username, password, callback);
         }
 
         /**

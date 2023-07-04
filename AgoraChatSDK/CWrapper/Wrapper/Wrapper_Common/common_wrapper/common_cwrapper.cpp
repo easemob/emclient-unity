@@ -58,6 +58,10 @@ void InitManagerMap()
 	func_map_client["kickAllDevices"] = Client_KickDevices;
 	func_map_client["getLoggedInDevicesFromServer"] = Client_GetLoggedInDevicesFromServer;
 
+    func_map_client["logDebug"] = Client_LogDebug;
+    func_map_client["logWarn"] = Client_LogWarn;
+    func_map_client["logError"] = Client_LogError;
+
 	manager_map["EMClient"] = func_map_client;
 
 	func_map_chat_manager["deleteConversation"] = ChatManager_RemoveConversation;

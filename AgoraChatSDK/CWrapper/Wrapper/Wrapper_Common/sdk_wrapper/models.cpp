@@ -346,7 +346,12 @@ namespace sdk_wrapper
 
         if (jnode.HasMember("debugMode") && jnode["debugMode"].IsBool()) {
             bool debug_mode = jnode["debugMode"].GetBool();
-            // according to old code, not set debug_mode
+            if (false == debug_mode) {
+                configs->setLogLevel(EMChatConfigs::EMLogLevel::ERROR_LEVEL);
+            }
+            else {
+                configs->setLogLevel(EMChatConfigs::EMLogLevel::DEBUG_LEVEL);
+            }
         }
 
         if (jnode.HasMember("autoLogin") && jnode["autoLogin"].IsBool()) {
