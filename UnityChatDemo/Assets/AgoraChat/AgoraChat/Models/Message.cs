@@ -287,6 +287,15 @@ namespace AgoraChat
 
         /**
          * \~chinese
+         * 设置群组或聊天室消息接收列表。
+         *
+         * \~english
+         * Set group or room message receivers.
+         */
+        public List<string> ReceiverList;
+
+        /**
+         * \~chinese
          * 设置及获取是否是 Thread 消息。
          *
          * \~english
@@ -753,6 +762,7 @@ namespace AgoraChat
                     IsRead = jo["isRead"].AsBool;
                     MessageOnlineState = jo["messageOnlineState"].AsBool;
                     IsThread = jo["isThread"].AsBool;
+                    ReceiverList = new List<string>(); // avoid null reference error
                 }
             }
         }
@@ -783,6 +793,9 @@ namespace AgoraChat
             jo.AddWithoutNull("isRead", IsRead);
             jo.AddWithoutNull("messageOnlineState", MessageOnlineState);
             jo.AddWithoutNull("isThread", IsThread);
+
+            jn = JsonObject.JsonArrayFromStringList(ReceiverList);
+            jo.AddWithoutNull("receiverList", jn);
 
             return jo;
         }

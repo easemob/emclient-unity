@@ -1439,6 +1439,11 @@ namespace sdk_wrapper
             msg->setIsThread(b);
         }
 
+        if (jnode.HasMember("receiverList") && jnode["receiverList"].IsArray()) {
+            vector<string> rl = MyJson::FromJsonObjectToVector(jnode["receiverList"]);
+            if (rl.size() > 0) msg->setReceiverList(rl);
+        }
+
         return msg;
     }
 
