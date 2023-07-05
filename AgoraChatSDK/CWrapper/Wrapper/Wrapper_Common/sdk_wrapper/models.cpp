@@ -1726,6 +1726,12 @@ namespace sdk_wrapper
         writer.Key("isThread");
         writer.Bool(conversation->isThread());
 
+        writer.Key("isPinned");
+        writer.Bool(conversation->isPinned());
+
+        writer.Key("pinnedTime");
+        writer.Int64(conversation->pinnedTime());
+
         string ext = conversation->extField();
         map<string, string> ext_map = MyJson::FromJsonToMap(ext);
         if (ext_map.size() > 0) {

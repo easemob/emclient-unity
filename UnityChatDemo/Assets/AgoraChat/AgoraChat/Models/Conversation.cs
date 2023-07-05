@@ -31,13 +31,31 @@ namespace AgoraChat
         /**
          * \~chinese
          * 判断该会话是否为子区会话。
-         * @return 是否为子区会话。
          *
          * \~english
          * Check a conversation is thread or not.
-         * @return a conversation is thread or not.
          */
         public bool IsThread;
+
+        /**
+         * \~chinese
+         * 判断该会话是否被置顶。
+         *
+         * \~english
+         * Check a conversation is pinned or not.
+         */
+        public bool IsPinned;
+
+        /**
+         * \~chinese
+         * 会话置顶时间戳（毫秒）。
+         * 如果IsPinned为false，将返回0。
+         *
+         * \~english
+         * The timestamp when conversation is pinned.
+         * if isPinned is false, will return 0.
+         */
+        public long PinnedTime;
 
         /**
         * \~chinese
@@ -487,6 +505,8 @@ namespace AgoraChat
                 Id = jo["convId"];
                 Type = jo["type"].AsInt.ToConversationType();
                 IsThread = jo["isThread"];
+                IsPinned = jo["isPinned"];
+                PinnedTime = jo["pinnedTime"];
                 _Ext = Dictionary.StringDictionaryFromJsonObject(jo["ext"]);
             }
         }
