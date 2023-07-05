@@ -1236,6 +1236,35 @@ namespace AgoraChat
         }
 
         /**
+         * \~chinese
+         * 设置会话是否置顶。
+         *
+         * 异步方法。
+         *
+         * @param conversationId    会话 ID。
+         * @param isPinned          是否将会话设置为置顶。
+         * @param callback          处理结果回调，详见 {@link CallBack}。
+         *
+         * \~english
+         * Set the conversation pin or not.
+         *
+         * This is an asynchronous method.
+         *
+         * @param conversationId     The conversation ID.
+         * @param isPinned           Pin the conversation or not.
+         * @param callback           Callback for the operation. See {@link CallBack}.
+         */
+
+        public void PinConversation(string conversationId, bool isPinned, CallBack callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("convId", conversationId);
+            jo_param.AddWithoutNull("isPinned", isPinned);
+
+            NativeCall(SDKMethod.pinConversation, jo_param, callback);
+        }
+
+        /**
 		 * \~chinese
 		 * 注册聊天管理器的监听器。
 		 *
