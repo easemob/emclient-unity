@@ -427,6 +427,36 @@ namespace sdk_wrapper {
         return nullptr;
     }
 
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_GetConversationsFromServer_V2(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        bool pinOnly = GetJsonValue_Bool(d, "pinOnly", false);
+        string cursor = GetJsonValue_String(d, "cursor", "");
+        int limit = GetJsonValue_Int(d, "limit", 10);
+
+        thread t([=]() {
+            EMError error;
+            EMCursorResultRaw<EMConversationPtr> result = CLIENT->getChatManager().getConversationsFromServer(pinOnly, cursor, limit, error);
+
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+                string json = CursorResult::ToJson<EMConversationPtr, Conversation>(result.nextPageCursor(), result.result());
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            });
+        t.detach();
+
+        return nullptr;
+    }
+
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_GetUnreadMessageCount(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         if (!CheckClientInitOrNot(nullptr)) return nullptr;

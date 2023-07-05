@@ -383,6 +383,44 @@ namespace AgoraChat
 
         /**
 	     * \~chinese
+	     * 根据指定参数从服务器获取相关会话对象。
+	     *
+	     * @param pinOnly     只获取置顶会话。
+	     * @param cursor      查询 cursor。
+	     * @param limit       最大查询条数。
+	     * @param callback    获取的会话列表，详见 {@link ValueCallBack}。
+	     *
+	     * \~english
+	     * Gets the related conversations from the server basing on params.
+	     *
+	     * @param pingOnly    Only get the conversations being pinned.
+	     * @param cursor      The query cursor.
+	     * @param limit       The max query number of conversations.
+	     * @param callback    The list of obtained coversations. See {@link ValueCallBack}.
+	     */
+        public void GetConversationsFromServer(bool pinOnly, string cursor = "", int limit = 20, ValueCallBack<CursorResult<Conversation>> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("pinOnly", pinOnly);
+            jo_param.AddWithoutNull("cursor", cursor);
+            jo_param.AddWithoutNull("limit", limit);
+
+            Process process = (_, jsonNode) =>
+            {
+                CursorResult<Conversation> cursor_conversation = new CursorResult<Conversation>(_, (jn) =>
+                {
+                    return ModelHelper.CreateWithJsonObject<Conversation>(jn);
+                });
+
+                cursor_conversation.FromJsonObject(jsonNode.AsObject);
+                return cursor_conversation;
+            };
+
+            NativeCall<CursorResult<Conversation>>(SDKMethod.getConversationsFromServer_V2, jo_param, callback, process);
+        }
+
+        /**
+	     * \~chinese
 	     * 获取未读消息数。
 		 * 
 	     * @return		未读消息数。

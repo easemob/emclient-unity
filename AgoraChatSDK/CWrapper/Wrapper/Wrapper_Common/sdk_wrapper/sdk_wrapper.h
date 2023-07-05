@@ -64,6 +64,7 @@ SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_FetchHistoryMessages(co
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_FetchHistoryMessagesBy(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_ConversationWithType(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_GetConversationsFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_GetConversationsFromServer_V2(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_GetUnreadMessageCount(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_InsertMessages(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_LoadAllConversationsFromDB(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);

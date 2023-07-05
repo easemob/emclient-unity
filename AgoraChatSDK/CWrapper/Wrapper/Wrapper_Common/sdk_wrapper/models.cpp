@@ -2558,7 +2558,7 @@ namespace sdk_wrapper
         return data;
     }
 
-    std::string CursorResult::ToJson(string cursor, EMCursorResultRaw<EMThreadEventPtr> cusorResult)
+    string CursorResult::ToJson(string cursor, EMCursorResultRaw<EMThreadEventPtr> cusorResult)
     {
         StringBuffer s;
         Writer<StringBuffer> writer(s);

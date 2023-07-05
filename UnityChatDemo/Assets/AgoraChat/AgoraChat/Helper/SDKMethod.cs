@@ -77,6 +77,7 @@ namespace AgoraChat
         internal const string importMessages = "importMessages";
         internal const string loadAllConversations = "loadAllConversations";
         internal const string getConversationsFromServer = "getConversationsFromServer";
+        internal const string getConversationsFromServer_V2 = "getConversationsFromServer_V2";
         internal const string getConversationsFromServerWithPage = "getConversationsFromServerWithPage";
         internal const string deleteConversation = "deleteConversation";
         internal const string fetchHistoryMessages = "fetchHistoryMessages";

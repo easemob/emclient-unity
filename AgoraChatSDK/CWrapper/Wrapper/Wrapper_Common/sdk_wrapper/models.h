@@ -234,6 +234,31 @@ namespace sdk_wrapper {
 		static string ToJson(string cursor, const EMMessageReactionPtr reaction);
 		static string ToJsonWithGroupInfo(string cursor, const EMCursorResult& result);
 		static string ToJson(string cursor, const EMCursorResultRaw<EMThreadEventPtr> cusorResult);
+
+        template<typename ResultType, typename ConvertType>
+        static string ToJson(string cursor, const vector<ResultType>& cusorResult)
+        {
+            StringBuffer s;
+            Writer<StringBuffer> writer(s);
+
+            writer.StartObject();
+            {
+                writer.Key("cursor");
+                writer.String(cursor.c_str());
+
+                writer.Key("list");
+
+                writer.StartArray();
+                for (size_t i = 0; i < cusorResult.size(); i++) {
+                    ConvertType::ToJsonObject(writer, cusorResult[i]);
+                }
+                writer.EndArray();
+            }
+            writer.EndObject();
+
+            std::string data = s.GetString();
+            return data;
+        }
 	};
 
 	class Room
