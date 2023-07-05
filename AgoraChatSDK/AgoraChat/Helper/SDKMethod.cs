@@ -67,6 +67,7 @@ namespace AgoraChat
         internal const string ackConversationRead = "ackConversationRead";
         internal const string recallMessage = "recallMessage";
         internal const string getConversation = "getConversation";
+        internal const string getConversations = "getConversations";
         internal const string getThreadConversation = "getThreadConversation";
         internal const string markAllChatMsgAsRead = "markAllChatMsgAsRead";
         internal const string getUnreadMessageCount = "getUnreadMessageCount";

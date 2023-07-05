@@ -325,6 +325,38 @@ namespace AgoraChat
         }
 
         /**
+        * \~chinese
+        * 获取本地所有会话。
+        *
+        * 未找到任何会话对象返回的列表为空。
+        *
+        * @param isSort      返回的会话列表是否排序。
+        * @param callback    获取的会话列表，详见 {@link ValueCallBack}。
+        *
+        * \~english
+        * Get all local conversations.
+        *
+        * An empty list will be returned if no conversation is found.
+        *
+        * The SDK wil return `null` if the conversation is not found.
+        *
+        * @param isSort 	 Returned conversation list is sorted or not.
+        * @param callback    The list of obtained coversations. See {@link ValueCallBack}.
+        */
+        public void GetConversations(bool isSort = false, ValueCallBack<List<Conversation>> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("isSort", isSort);
+
+            Process process = (_, jsonNode) =>
+            {
+                return List.BaseModelListFromJsonArray<Conversation>(jsonNode);
+            };
+
+            NativeCall<List<Conversation>>(SDKMethod.getConversations, null, callback, process);
+        }
+
+        /**
 	     * \~chinese
 	     * 从服务器获取所有会话对象。
 	     * 

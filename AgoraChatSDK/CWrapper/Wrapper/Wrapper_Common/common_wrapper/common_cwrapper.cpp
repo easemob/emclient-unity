@@ -98,6 +98,7 @@ void InitManagerMap()
 	func_map_chat_manager["fetchReactionDetail"] = ChatManager_GetReactionDetail;
     func_map_chat_manager["removeMessagesFromServerWithMsgIds"] = ChatManager_RemoveMessagesFromServerWithMsgIds;
     func_map_chat_manager["removeMessagesFromServerWithTs"] = ChatManager_RemoveMessagesFromServerWithTs;
+    func_map_chat_manager["getConversations"] = ChatManager_GetConversations;
 
 	manager_map["EMChatManager"] = func_map_chat_manager;
 
