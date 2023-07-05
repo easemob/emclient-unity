@@ -263,6 +263,7 @@ namespace AgoraChat
             string target = jsonNode["target"];
             string ext = jsonNode["ext"];
             List<string> userIds = List.StringListFromJsonArray(jsonNode["userIds"]);
+            string convId = "";
 
             foreach (IMultiDeviceDelegate it in delegater_multidevice)
             {
@@ -283,9 +284,14 @@ namespace AgoraChat
                         it.OnThreadMultiDevicesEvent(operation, target, userIds);
                         break;
                     case SDKMethod.onRoamDeleteMultiDevicesEvent:
-                        string convId = jsonNode["convId"];
+                        convId = jsonNode["convId"];
                         string deviceId = jsonNode["deviceId"];
                         it.OnRoamDeleteMultiDevicesEvent(convId, deviceId);
+                        break;
+                    case SDKMethod.onConversationMultiDevicesEvent:
+                        convId = jsonNode["convId"];
+                        ConversationType type = jsonNode["type"].AsInt.ToConversationType();
+                        it.OnConversationMultiDevicesEvent(operation, convId, type);
                         break;
                     default:
                         break;

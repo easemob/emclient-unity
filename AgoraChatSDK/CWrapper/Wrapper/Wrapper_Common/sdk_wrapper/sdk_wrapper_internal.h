@@ -77,6 +77,7 @@ const string STRING_onGroupMultiDevicesEvent = "onGroupMultiDevicesEvent";
 const string STRING_onUndisturbMultiDevicesEvent = "onUndisturbMultiDevicesEvent";
 const string STRING_onThreadMultiDevicesEvent = "onThreadMultiDevicesEvent";
 const string STRING_onRoamDeleteMultiDevicesEvent = "onRoamDeleteMultiDevicesEvent";
+const string STRING_onConversationMultiDevicesEvent = "onConversationMultiDevicesEvent";
 
 // PresenceManagerDelegate
 const string STRING_onPresenceUpdated = "onPresenceUpdated";

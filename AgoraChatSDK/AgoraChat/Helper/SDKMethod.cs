@@ -325,6 +325,7 @@ namespace AgoraChat
         internal const string onUnDisturbMultiDevicesEvent = "onUnDisturbMultiDevicesEvent";
         internal const string onThreadMultiDevicesEvent = "onThreadMultiDevicesEvent";
         internal const string onRoamDeleteMultiDevicesEvent = "onRoamDeleteMultiDevicesEvent";
+        internal const string onConversationMultiDevicesEvent = "onConversationMultiDevicesEvent";
 
         // PresenceManagerDelegate
         internal const string onPresenceUpdated = "onPresenceUpdated";

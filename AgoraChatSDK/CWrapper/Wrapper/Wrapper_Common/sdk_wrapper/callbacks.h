@@ -236,6 +236,22 @@ namespace sdk_wrapper {
             if (json.size() > 0)
                 CallBack(STRING_MULTIDEVICE_LISTENER.c_str(), STRING_onRoamDeleteMultiDevicesEvent.c_str(), json.c_str());
         }
+
+        void onConversationMultiDevicesEvent(MultiDevicesOperation operation, const std::string& conversationId, EMConversation::EMConversationType type)
+        {
+            JSON_STARTOBJ
+            writer.Key("operation");
+            writer.Int(MultiDevices::MultiDevicesOperationToInt(MultiDevicesOperation::UNKNOW));
+            writer.Key("convId");
+            writer.String(conversationId.c_str());
+            writer.Key("type");
+            writer.Int(Conversation::ConversationTypeToInt(type));
+            JSON_ENDOBJ
+                string json = s.GetString();
+
+            if (json.size() > 0)
+                CallBack(STRING_MULTIDEVICE_LISTENER.c_str(), STRING_onConversationMultiDevicesEvent.c_str(), json.c_str());
+        }
     };
 
     class GroupManagerListener : public EMGroupManagerListener
