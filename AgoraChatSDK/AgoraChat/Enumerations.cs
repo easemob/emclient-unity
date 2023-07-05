@@ -1070,6 +1070,33 @@ namespace AgoraChat
         * The custom attributes of group members have changed.
         */
         GROUP_MEMBER_METADATA_CHANGED = 52,
+
+        /**
+        * \~chinese
+        * 会话被置顶。
+        *
+        * \~english
+        * Conversation is pinned.
+        */
+        CONVERSATION_PINNED = 60,
+
+        /**
+        * \~chinese
+        * 会话被取消置顶。
+        *
+        * \~english
+        * Conversation is unpinned.
+        */
+        CONVERSATION_UNPINNED = 61,
+
+        /**
+        * \~chinese
+        * 会话被删除。
+        *
+        * \~english
+        * Conversation is deleted.
+        */
+        CONVERSATION_DELETED = 62
     };
 
     public enum MessageReactionOperate

@@ -440,6 +440,9 @@ namespace AgoraChat
                 case MultiDevicesOperation.SET_METADATA: return 50;
                 case MultiDevicesOperation.DELETE_METADATA: return 51;
                 case MultiDevicesOperation.GROUP_MEMBER_METADATA_CHANGED: return 52;
+                case MultiDevicesOperation.CONVERSATION_PINNED: return 60;
+                case MultiDevicesOperation.CONVERSATION_UNPINNED: return 61;
+                case MultiDevicesOperation.CONVERSATION_DELETED: return 62;
                 default:
                     return -1;
             }
@@ -488,6 +491,9 @@ namespace AgoraChat
                 case 50: return MultiDevicesOperation.SET_METADATA;
                 case 51: return MultiDevicesOperation.DELETE_METADATA;
                 case 52: return MultiDevicesOperation.GROUP_MEMBER_METADATA_CHANGED;
+                case 60: return MultiDevicesOperation.CONVERSATION_PINNED;
+                case 61: return MultiDevicesOperation.CONVERSATION_UNPINNED;
+                case 62: return MultiDevicesOperation.CONVERSATION_DELETED;
                 default: return MultiDevicesOperation.UNKNOWN;
             }
         }
