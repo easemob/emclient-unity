@@ -656,6 +656,8 @@ namespace sdk_wrapper
             gMultiDevicesListener->undisturbMultiDevicesEvent("data");
 
             gMultiDevicesListener->onRoamDeleteMultiDevicesEvent("convId", "deviceId", usernames, 123456);
+
+            gMultiDevicesListener->onConversationMultiDevicesEvent(EMMultiDevicesListener::MultiDevicesOperation::CONVERSATION_PINNED, "convId", EMConversation::EMConversationType::CHAT);
         }
 
         return nullptr;
