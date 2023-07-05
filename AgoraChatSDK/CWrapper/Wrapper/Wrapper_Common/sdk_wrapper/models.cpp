@@ -419,6 +419,11 @@ namespace sdk_wrapper
             configs->setMyUUID(myUUID);
         }
 
+        if (jnode.HasMember("enableEmptyConversation") && jnode["enableEmptyConversation"].IsBool()) {
+            bool enable_empty_conversation = jnode["enableEmptyConversation"].GetBool();
+            configs->setEnableEmptyConversation(enable_empty_conversation);
+        }
+
         //TODO: need to Area code later
 
 #ifndef _WIN32
