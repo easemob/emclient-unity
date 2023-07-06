@@ -281,7 +281,7 @@ namespace AgoraChat
 	     * -(Default) `false`: No.
 	     *
 	     */
-        public bool EnableEmptyConversation = true;
+        public bool EnableEmptyConversation = false;
 
         /**
 	     * \~chinese
