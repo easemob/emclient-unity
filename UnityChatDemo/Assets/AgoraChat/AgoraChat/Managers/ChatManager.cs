@@ -1289,6 +1289,30 @@ namespace AgoraChat
         }
 
         /**
+         * \~chinese
+         * 移除指定数目以外更早的本地消息。
+         *
+         * 异步方法。
+         *
+         * @param count             保留的消息数目。
+         * @param callback          处理结果回调，详见 {@link CallBack}。
+         *
+         * \~english
+         * Remove local earlier messages exceed special count.
+         *
+         * This is an asynchronous method.
+         *
+         * @param count              Messages count kept.
+         * @param callback           Callback for the operation. See {@link CallBack}.
+         */
+        public void RemoveEarlierHistoryMessages(int count, CallBack callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("count", count);
+            NativeCall(SDKMethod.removeEarlierHistoryMessages, jo_param, callback);
+        }
+
+        /**
 		 * \~chinese
 		 * 注册聊天管理器的监听器。
 		 *
