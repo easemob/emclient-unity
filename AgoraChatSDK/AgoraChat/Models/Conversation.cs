@@ -506,7 +506,7 @@ namespace AgoraChat
                 Type = jo["type"].AsInt.ToConversationType();
                 IsThread = jo["isThread"];
                 IsPinned = jo["isPinned"];
-                PinnedTime = jo["pinnedTime"];
+                PinnedTime = (long)jo["pinnedTime"].AsDouble;
                 _Ext = Dictionary.StringDictionaryFromJsonObject(jo["ext"]);
             }
         }
