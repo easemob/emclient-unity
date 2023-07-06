@@ -241,7 +241,7 @@ namespace sdk_wrapper {
         {
             JSON_STARTOBJ
             writer.Key("operation");
-            writer.Int(MultiDevices::MultiDevicesOperationToInt(MultiDevicesOperation::UNKNOW));
+            writer.Int(MultiDevices::MultiDevicesOperationToInt(operation));
             writer.Key("convId");
             writer.String(conversationId.c_str());
             writer.Key("type");
