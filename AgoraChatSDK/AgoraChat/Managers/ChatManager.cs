@@ -353,7 +353,7 @@ namespace AgoraChat
                 return List.BaseModelListFromJsonArray<Conversation>(jsonNode);
             };
 
-            NativeCall<List<Conversation>>(SDKMethod.getConversations, null, callback, process);
+            NativeCall<List<Conversation>>(SDKMethod.getConversations, jo_param, callback, process);
         }
 
         /**
