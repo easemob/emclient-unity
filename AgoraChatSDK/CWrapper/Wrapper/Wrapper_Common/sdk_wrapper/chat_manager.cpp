@@ -1376,6 +1376,24 @@ namespace sdk_wrapper {
         return nullptr;
     }
 
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_GetMessagesCount(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(nullptr)) return nullptr;
+
+        EMError error;
+        int count = 0;
+
+        count = CLIENT->getChatManager().getMessagesCount();
+
+        JSON_STARTOBJ
+        writer.Key("ret");
+        writer.Int(count);
+        JSON_ENDOBJ
+
+        string json = s.GetString();
+        return CopyToPointer(json);
+    }
+
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_RunDelegateTester(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         if (nullptr != gChatManagerListener) {

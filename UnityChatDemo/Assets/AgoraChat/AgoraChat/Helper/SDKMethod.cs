@@ -71,6 +71,7 @@ namespace AgoraChat
         internal const string getThreadConversation = "getThreadConversation";
         internal const string markAllChatMsgAsRead = "markAllChatMsgAsRead";
         internal const string getUnreadMessageCount = "getUnreadMessageCount";
+        internal const string getMessagesCount = "getMessagesCount";
         internal const string updateChatMessage = "updateChatMessage";
         internal const string downloadAttachment = "downloadAttachment";
         internal const string downloadThumbnail = "downloadThumbnail";

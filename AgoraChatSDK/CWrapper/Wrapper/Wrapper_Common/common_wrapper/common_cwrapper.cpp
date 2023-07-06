@@ -101,6 +101,7 @@ void InitManagerMap()
     func_map_chat_manager["removeMessagesFromServerWithTs"] = ChatManager_RemoveMessagesFromServerWithTs;
     func_map_chat_manager["getConversations"] = ChatManager_GetConversations;
     func_map_chat_manager["pinConversation"] = ChatManager_PinConversation;
+    func_map_chat_manager["getMessagesCount"] = ChatManager_GetMessagesCount;
 
 	manager_map["EMChatManager"] = func_map_chat_manager;
 

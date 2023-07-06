@@ -428,12 +428,36 @@ namespace AgoraChat
 	     *
 	     * \~english
 	     * Gets the unread message count.
+	     *
 	     * @return		The count of unread messages.
 	     *
 	     */
         public int GetUnreadMessageCount()
         {
             string json = NativeGet(SDKMethod.getUnreadMessageCount);
+
+            if (null == json || json.Length == 0) return 0;
+
+            JSONObject jo = JSON.Parse(json).AsObject;
+            return int.Parse(jo["ret"].Value);
+        }
+
+        /**
+	     * \~chinese
+	     * 获取本地数据库所有消息数。
+	     *
+	     * @return		消息数。
+	     *
+	     *
+	     * \~english
+	     * Gets all messages count in db.
+	     *
+	     * @return		all messages count.
+	     *
+	     */
+        public int GetMessagesCount()
+        {
+            string json = NativeGet(SDKMethod.getMessagesCount);
 
             if (null == json || json.Length == 0) return 0;
 
