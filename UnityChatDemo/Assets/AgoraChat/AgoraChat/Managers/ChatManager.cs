@@ -371,6 +371,7 @@ namespace AgoraChat
 	     *
 	     * @param callback    The list of obtained coversations. See {@link ValueCallBack}.
 	     */
+        [Obsolete]
         public void GetConversationsFromServer(ValueCallBack<List<Conversation>> callback = null)
         {
             Process process = (_, jsonNode) =>
@@ -387,7 +388,7 @@ namespace AgoraChat
 	     *
 	     * @param pinOnly     只获取置顶会话。
 	     * @param cursor      查询 cursor。
-	     * @param limit       最大查询条数。
+	     * @param limit       最大查询条数(1-50)。
 	     * @param callback    获取的会话列表，详见 {@link ValueCallBack}。
 	     *
 	     * \~english
@@ -395,10 +396,10 @@ namespace AgoraChat
 	     *
 	     * @param pingOnly    Only get the conversations being pinned.
 	     * @param cursor      The query cursor.
-	     * @param limit       The max query number of conversations.
+	     * @param limit       The max query number of conversations(1-50).
 	     * @param callback    The list of obtained coversations. See {@link ValueCallBack}.
 	     */
-        public void GetConversationsFromServer(bool pinOnly, string cursor = "", int limit = 20, ValueCallBack<CursorResult<Conversation>> callback = null)
+        public void GetConversationsFromServerWithCursor(bool pinOnly, string cursor = "", int limit = 20, ValueCallBack<CursorResult<Conversation>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("pinOnly", pinOnly);
@@ -416,7 +417,7 @@ namespace AgoraChat
                 return cursor_conversation;
             };
 
-            NativeCall<CursorResult<Conversation>>(SDKMethod.getConversationsFromServer_V2, jo_param, callback, process);
+            NativeCall<CursorResult<Conversation>>(SDKMethod.getConversationsFromServerWithCursor, jo_param, callback, process);
         }
 
         /**
@@ -435,29 +436,6 @@ namespace AgoraChat
         public int GetUnreadMessageCount()
         {
             string json = NativeGet(SDKMethod.getUnreadMessageCount);
-
-            if (null == json || json.Length == 0) return 0;
-
-            JSONObject jo = JSON.Parse(json).AsObject;
-            return int.Parse(jo["ret"].Value);
-        }
-
-        /**
-	     * \~chinese
-	     * 获取本地数据库所有消息数。
-	     *
-	     * @return		消息数。
-	     *
-	     *
-	     * \~english
-	     * Gets all messages count in db.
-	     *
-	     * @return		all messages count.
-	     *
-	     */
-        public int GetMessagesCount()
-        {
-            string json = NativeGet(SDKMethod.getMessagesCount);
 
             if (null == json || json.Length == 0) return 0;
 
@@ -1286,30 +1264,6 @@ namespace AgoraChat
             jo_param.AddWithoutNull("isPinned", isPinned);
 
             NativeCall(SDKMethod.pinConversation, jo_param, callback);
-        }
-
-        /**
-         * \~chinese
-         * 移除指定数目以外更早的本地消息。
-         *
-         * 异步方法。
-         *
-         * @param count             保留的消息数目。
-         * @param callback          处理结果回调，详见 {@link CallBack}。
-         *
-         * \~english
-         * Remove local earlier messages exceed special count.
-         *
-         * This is an asynchronous method.
-         *
-         * @param count              Messages count kept.
-         * @param callback           Callback for the operation. See {@link CallBack}.
-         */
-        public void RemoveEarlierHistoryMessages(int count, CallBack callback = null)
-        {
-            JSONObject jo_param = new JSONObject();
-            jo_param.AddWithoutNull("count", count);
-            NativeCall(SDKMethod.removeEarlierHistoryMessages, jo_param, callback);
         }
 
         /**
