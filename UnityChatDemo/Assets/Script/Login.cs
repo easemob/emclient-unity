@@ -201,6 +201,7 @@ public class Login : MonoBehaviour
         options.AutoLogin = false;
         options.UsingHttpsOnly = true;
         options.DebugMode = true;
+        options.EnableEmptyConversation = true;
         SDKClient.Instance.InitWithOptions(options);
 
         //if (SDKClient.Instance.IsLoggedIn && SDKClient.Instance.Options.AutoLogin)

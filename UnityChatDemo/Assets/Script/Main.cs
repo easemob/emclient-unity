@@ -670,6 +670,11 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         Debug.Log($"MultiDevice5 OnRoamDeleteMultiDevicesEvent conversationId:{conversationId}, deviceId:{deviceId}");
     }
 
+    public void OnConversationMultiDevicesEvent(MultiDevicesOperation operation, string conversationId, ConversationType type)
+    {
+        Debug.Log($"MultiDevice6 OnConversationMultiDevicesEvent: operation: {operation}, conversationId:{conversationId}, type:{type}");
+    }
+
     public void OnConnected()
     {
         Debug.Log("Connection1 OnConnected run");

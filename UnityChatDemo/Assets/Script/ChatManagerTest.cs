@@ -22,6 +22,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     private Button resendBtn;
     private Button recallBtn;
     private Button getConversationBtn;
+    private Button getConversationsBtn;
     private Button loadAllConverstaionsBtn;
     private Button downLoadAttachmentBtn;
     //private Button downLoadThumbAttachmentBtn;
@@ -38,10 +39,12 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     private Button removeMessagesBeforeTimestampBtn;
     private Button deleteConversationFromServerBtn;
     private Button deleteConversationBtn;
+    private Button getConversationsFromServerWithCursorBtn;
     private Button getConversationsFromServerWithPageBtn;
     private Button removeMessagesFromServerWithMsgIdsBtn;
     private Button removeMessagesFromServerWithTsBtn;
     private Button fetchHistoryMessagesByBtn;
+    private Button pinConversationBtn;
 
     private void Awake()
     {
@@ -63,6 +66,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         resendBtn = transform.Find("Scroll View/Viewport/Content/ResendBtn").GetComponent<Button>();
         recallBtn = transform.Find("Scroll View/Viewport/Content/RecallBtn").GetComponent<Button>();
         getConversationBtn = transform.Find("Scroll View/Viewport/Content/GetConversationBtn").GetComponent<Button>();
+        getConversationsBtn = transform.Find("Scroll View/Viewport/Content/GetConversationsBtn").GetComponent<Button>();
         loadAllConverstaionsBtn = transform.Find("Scroll View/Viewport/Content/LoadAllConverstaionsBtn").GetComponent<Button>();
         downLoadAttachmentBtn = transform.Find("Scroll View/Viewport/Content/DownLoadAttachmentBtn").GetComponent<Button>();
         //downLoadThumbAttachmentBtn = transform.Find("Scroll View/Viewport/Content/DownLoadThumbAttachmentBtn").GetComponent<Button>();
@@ -79,10 +83,12 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         removeMessagesBeforeTimestampBtn = transform.Find("Scroll View/Viewport/Content/RemoveMessagesBeforeTimestampBtn").GetComponent<Button>();
         deleteConversationFromServerBtn = transform.Find("Scroll View/Viewport/Content/DeleteConversationFromServerBtn").GetComponent<Button>();
         deleteConversationBtn = transform.Find("Scroll View/Viewport/Content/DeleteLocalConversationAndMessage").GetComponent<Button>();
+        getConversationsFromServerWithCursorBtn = transform.Find("Scroll View/Viewport/Content/GetConversationsFromServerWithCursorBtn").GetComponent<Button>();
         getConversationsFromServerWithPageBtn = transform.Find("Scroll View/Viewport/Content/GetConversationsFromServerWithPageBtn").GetComponent<Button>();
         removeMessagesFromServerWithMsgIdsBtn = transform.Find("Scroll View/Viewport/Content/RemoveMessagesFromServerWithMsgIdsBtn").GetComponent<Button>();
         removeMessagesFromServerWithTsBtn = transform.Find("Scroll View/Viewport/Content/RemoveMessagesFromServerWithTsBtn").GetComponent<Button>();
         fetchHistoryMessagesByBtn = transform.Find("Scroll View/Viewport/Content/FetchHistoryMessagesByBtn").GetComponent<Button>();
+        pinConversationBtn = transform.Find("Scroll View/Viewport/Content/PinConversationBtn").GetComponent<Button>();
 
         sendTextBtn.onClick.AddListener(SendTextBtnAction);
         sendImageBtn.onClick.AddListener(SendImageBtnAction);
@@ -95,6 +101,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         resendBtn.onClick.AddListener(ResendBtnAction);
         recallBtn.onClick.AddListener(RecallBtnAction);
         getConversationBtn.onClick.AddListener(GetConversationBtnAction);
+        getConversationsBtn.onClick.AddListener(GetConversationsBtnAction);
         loadAllConverstaionsBtn.onClick.AddListener(LoadAllConverstaionsBtnAction);
         downLoadAttachmentBtn.onClick.AddListener(DownLoadAttachmentBtnAction);
         //downLoadThumbAttachmentBtn.onClick.AddListener(DownLoadThumbAttachmentBtnAction);
@@ -111,10 +118,12 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         removeMessagesBeforeTimestampBtn.onClick.AddListener(RemoveMessagesBeforeTimestampBtnAction);
         deleteConversationFromServerBtn.onClick.AddListener(DeleteConversationFromServerBtnAction);
         deleteConversationBtn.onClick.AddListener(DeleteLocalConversationAndMessage);
+        getConversationsFromServerWithCursorBtn.onClick.AddListener(GetConversationsFromServerWithCursorAction);
         getConversationsFromServerWithPageBtn.onClick.AddListener(GetConversationsFromServerWithPageAction);
         removeMessagesFromServerWithMsgIdsBtn.onClick.AddListener(RemoveMessagesFromServerWithMsgIdsAction);
         removeMessagesFromServerWithTsBtn.onClick.AddListener(RemoveMessagesFromServerWithTsAction);
         fetchHistoryMessagesByBtn.onClick.AddListener(FetchHistoryMessagesByBtnAction);
+        pinConversationBtn.onClick.AddListener(PinConversationBtnAction);
         SDKClient.Instance.ChatManager.AddChatManagerDelegate(this);
     }
 
@@ -145,6 +154,10 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
             attr["floatKey"] = AttributeValue.Of(12.3f, AttributeValueType.FLOAT);
             attr["doubleKey"] = AttributeValue.Of(22.22, AttributeValueType.DOUBLE);
             msg.Attributes = attr;
+
+            msg.ReceiverList = new List<string>();
+            msg.ReceiverList.Add(dict["receiverList"]);
+
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
                 onSuccess: () =>
                 {
@@ -167,6 +180,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         config.AddField("to");
         config.AddField("content");
         config.AddField("type");
+        config.AddField("receiverList");
         UIManager.DefaultInputAlert(transform, config);
     }
     void SendImageBtnAction()
@@ -445,7 +459,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
             if (conversation != null)
             {
                 Debug.Log($"GetConversation: {conversation.ToJsonObject()}");
-                UIManager.DefaultAlert(transform, $"id: {conversation.Id}, type: {conversation.Type}, isThread: {conversation.IsThread}");
+                UIManager.DefaultAlert(transform, $"id: {conversation.Id}, type: {conversation.Type}, isThread: {conversation.IsThread}, IsPinned:{conversation.IsPinned}, PinnedTime:{conversation.PinnedTime}");
             }
             else
             {
@@ -458,6 +472,36 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         config.AddField("type(0/1/2)");
         UIManager.DefaultInputAlert(transform, config);
     }
+
+    void GetConversationsBtnAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            bool isSort = dict["isSort"].CompareTo("true") == 0;
+
+            SDKClient.Instance.ChatManager.GetConversations(isSort, new ValueCallBack<List<Conversation>>(
+             onSuccess: (list) =>
+             {
+                 List<string> strList = new List<string>();
+                 foreach (var conv in list)
+                 {
+                     strList.Add(conv.Id);
+                 }
+                 string str = string.Join(",", strList.ToArray());
+                 UIManager.DefaultAlert(transform, str);
+             },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+        ));
+        });
+        config.AddField("isSort");
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("GetConversationsBtnAction");
+    }
+
     void LoadAllConverstaionsBtnAction()
     {
         List<Conversation> list = SDKClient.Instance.ChatManager.LoadAllConversations();
@@ -974,6 +1018,39 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         UIManager.DefaultInputAlert(transform, config);
     }
 
+    void GetConversationsFromServerWithCursorAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            bool pinOnly = dict["pinOnly"].CompareTo("true") == 0;
+            string cursor = dict["cursor"];
+            int limit = int.Parse(dict["limit"]);
+
+            SDKClient.Instance.ChatManager.GetConversationsFromServerWithCursor(pinOnly, cursor, limit, new ValueCallBack<CursorResult<Conversation>>(
+            onSuccess: (ret) =>
+            {
+                string str = "";
+                foreach (var it in ret.Data)
+                {
+                    str = str + it.Id + ";";
+                }
+                UIManager.DefaultAlert(transform, str);
+            },
+            onError: (code, desc) =>
+            {
+                UIManager.ErrorAlert(transform, code, desc);
+            }
+            ));
+        });
+
+        config.AddField("pinOnly");
+        config.AddField("cursor");
+        config.AddField("limit");
+
+        UIManager.DefaultInputAlert(transform, config);
+        Debug.Log("GetConversationsFromServerWithCursorAction");
+    }
+
     void GetConversationsFromServerWithPageAction()
     {
         InputAlertConfig config = new InputAlertConfig((dict) =>
@@ -1107,6 +1184,32 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
         UIManager.DefaultInputAlert(transform, config);
         Debug.Log("RemoveMessagesFromServerWithTsAction");
+    }
+
+    void PinConversationBtnAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string conversationId = dict["ConversationId"];
+            bool isPinned = dict["isPinned"].CompareTo("true") == 0;
+
+            SDKClient.Instance.ChatManager.PinConversation(conversationId, isPinned, new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("ConversationId");
+        config.AddField("isPinned");
+
+        UIManager.DefaultInputAlert(transform, config);
+        Debug.Log("PinConversationBtnAction");
     }
 
     // Start is called before the first frame update
