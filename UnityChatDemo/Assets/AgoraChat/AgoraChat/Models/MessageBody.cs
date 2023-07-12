@@ -890,7 +890,120 @@ namespace AgoraChat
                 CustomParams = Dictionary.StringDictionaryFromJsonObject(jo["params"]);
             }
         }
+
+        /**
+         * \~chinese
+         * 组合消息体。
+         *
+         * \~english
+         * The combine message body.
+         */
+        public class CombineBody : FileBody
+        {
+            /**
+             * \~chinese
+             * 组合消息标题。
+             *
+             * \~english
+             * The title of combined message.
+             */
+            public string Title;
+
+            /**
+             * \~chinese
+             * 组合消息概要。
+             *
+             * \~english
+             * The summary of combined message.
+             */
+            public string Summary;
+
+            /**
+             * \~chinese
+             * 组合消息兼容信息。
+             *
+             * \~english
+             * The compatible information of combined message.
+             */
+            public string CompatibleText;
+
+            /**
+             * \~chinese
+             * 组合消息所包含的消息Id列表。
+             *
+             * \~english
+             * The message Id list included in combined message.
+             */
+            public List<string> MessageList;
+
+            /**
+             * \~chinese
+             * 组合消息体构造方法。
+             *
+             * @param localPath         组合消息的本地路径。
+             * @param title             组合消息标题。
+             * @param summary           组合消息概要。
+             * @param compatibleText    组合消息兼容信息
+             * @param messageList       组合消息所包含的消息Id列表。
+             *
+             * \~english
+             * The voice message body constructor.
+             *
+             * @param localPath         The local path of the combined message.
+             * @param title             The title of combined message.
+             * @param summary           The summary of combined message.
+             * @param messageList       The message Id list included in combined message.
+             *
+             */
+            public CombineBody(string localPath, string title, string summary, string compatibleText, List<string> messageList) : base(localPath)
+            {
+                Type = MessageBodyType.COMBINE;
+
+                Title = title;
+                Summary = summary;
+                CompatibleText = compatibleText;
+                MessageList = messageList;
+            }
+
+            internal CombineBody()
+            {
+                Type = MessageBodyType.COMBINE;
+            }
+
+            internal CombineBody(string json) : base(json)
+            {
+                Type = MessageBodyType.COMBINE;
+            }
+            internal CombineBody(JSONObject jo) : base(jo)
+            {
+                Type = MessageBodyType.COMBINE;
+            }
+
+            internal override JSONObject ToJsonObject()
+            {
+                JSONObject jo = base.ToJsonObject();
+                JSONObject jo_body = jo["body"].AsObject;
+
+                jo_body.AddWithoutNull("title", Title);
+                jo_body.AddWithoutNull("summary", Summary);
+                jo_body.AddWithoutNull("compatibleText", CompatibleText);
+                jo_body.AddWithoutNull("messageList", JsonObject.JsonArrayFromStringList(MessageList));
+
+                return jo;
+            }
+
+            internal override void FromJsonObject(JSONObject jo)
+            {
+                base.FromJsonObject(jo);
+
+                Title = jo["title"];
+                Summary = jo["summary"];
+                CompatibleText = jo["compatibleText"];
+                MessageList = List.StringListFromJsonArray(jo["messageList"]);
+            }
+        }
     }
+
 }
 
 

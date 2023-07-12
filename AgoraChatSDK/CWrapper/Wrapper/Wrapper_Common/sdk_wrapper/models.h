@@ -10,6 +10,7 @@
 #include "message/emimagemessagebody.h"
 #include "message/emvideomessagebody.h"
 #include "message/emvoicemessagebody.h"
+#include "message/emcombinemessagebody.h"
 #include "message/emmessageencoder.h"
 #include "emgroupmanager_interface.h"
 #include "emmessagereactionchange.h"

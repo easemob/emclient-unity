@@ -62,8 +62,10 @@ namespace AgoraChat
         internal static IMessageBody CreateBodyWithJsonObject(JSONNode jsonNode)
         {
             if (jsonNode.IsNull || !jsonNode.IsObject) return null;
+
             IMessageBody body = null;
             MessageBodyType type = jsonNode["type"].AsInt.ToMessageBodyType();
+
             switch (type)
             {
                 case MessageBodyType.TXT:
@@ -89,6 +91,9 @@ namespace AgoraChat
                     break;
                 case MessageBodyType.CMD:
                     body = CreateWithJsonObject<CmdBody>(jsonNode["body"]);
+                    break;
+                case MessageBodyType.COMBINE:
+                    body = CreateWithJsonObject<CombineBody>(jsonNode["body"]);
                     break;
             }
 
@@ -568,6 +573,7 @@ namespace AgoraChat
                 case MessageBodyType.FILE: return 5;
                 case MessageBodyType.CMD: return 6;
                 case MessageBodyType.CUSTOM: return 7;
+                case MessageBodyType.COMBINE: return 8;
                 default: return 0;
             }
         }
@@ -584,6 +590,7 @@ namespace AgoraChat
                 case 5: return MessageBodyType.FILE;
                 case 6: return MessageBodyType.CMD;
                 case 7: return MessageBodyType.CUSTOM;
+                case 8: return MessageBodyType.COMBINE;
                 default:
                     return MessageBodyType.TXT;
             }

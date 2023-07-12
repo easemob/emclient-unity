@@ -539,6 +539,7 @@ namespace sdk_wrapper
         case EMMessageBody::EMMessageBodyType::FILE: return 5;
         case EMMessageBody::EMMessageBodyType::COMMAND: return 6;
         case EMMessageBody::EMMessageBodyType::CUSTOM: return 7;
+        case EMMessageBody::EMMessageBodyType::COMBINE: return 8;
         default: return 0;
         }
     }
@@ -554,6 +555,7 @@ namespace sdk_wrapper
         case 5: return EMMessageBody::EMMessageBodyType::FILE;
         case 6: return EMMessageBody::EMMessageBodyType::COMMAND;
         case 7: return EMMessageBody::EMMessageBodyType::CUSTOM;
+        case 8: return EMMessageBody::EMMessageBodyType::COMBINE;
         default:
             return EMMessageBody::EMMessageBodyType::TEXT;
         }
@@ -867,6 +869,40 @@ namespace sdk_wrapper
 
                         EMCustomMessageBody::EMCustomExts exts = ptr->exts();
                         ToJsonObject(writer, exts);
+                    }
+                    break;
+                    case EMMessageBody::COMBINE:
+                    {
+                        EMCombineMessageBodyPtr ptr = dynamic_pointer_cast<EMCombineMessageBody>(body);
+                        writer.Key("localPath");
+                        writer.String(ptr->localPath().c_str());
+
+                        writer.Key("displayName");
+                        writer.String(ptr->displayName().c_str());
+
+                        writer.Key("secret");
+                        writer.String(ptr->secretKey().c_str());
+
+                        writer.Key("remotePath");
+                        writer.String(ptr->remotePath().c_str());
+
+                        writer.Key("fileSize");
+                        writer.Int64(ptr->fileLength());
+
+                        writer.Key("fileStatus");
+                        writer.Int(DownLoadStatusToInt(ptr->downloadStatus()));
+
+                        writer.Key("title");
+                        writer.String(ptr->title().c_str());
+
+                        writer.Key("summary");
+                        writer.String(ptr->summary().c_str());
+
+                        writer.Key("compatibleText");
+                        writer.String(ptr->compatibleText().c_str());
+
+                        writer.Key("messageList");
+                        MyJson::ToJsonObject(writer, ptr->messageList());
                     }
                     break;
                     default:
@@ -1213,6 +1249,63 @@ namespace sdk_wrapper
             if (body.HasMember("params") && body["params"].IsObject()) {
                 EMCustomMessageBody::EMCustomExts exts = FromJsonObjectToCustomExts(body["params"]);
                 ptr->setExts(exts);
+            }
+
+            bodyptr = dynamic_pointer_cast<EMMessageBody>(ptr);
+        }
+        break;
+        case EMMessageBody::COMBINE:
+        {
+            EMCombineMessageBodyPtr ptr = EMCombineMessageBodyPtr(new EMCombineMessageBody());
+
+            if (body.HasMember("localPath") && body["localPath"].IsString()) {
+                string str = body["localPath"].GetString();
+                ptr->setLocalPath(str);
+            }
+
+            if (body.HasMember("fileSize") && body["fileSize"].IsInt64()) {
+                int64_t fz = body["fileSize"].GetInt64();
+                ptr->setFileLength(fz);
+            }
+
+            if (body.HasMember("displayName") && body["displayName"].IsString()) {
+                string str = body["displayName"].GetString();
+                ptr->setDisplayName(str);
+            }
+
+            if (body.HasMember("remotePath") && body["remotePath"].IsString()) {
+                string str = body["remotePath"].GetString();
+                ptr->setRemotePath(str);
+            }
+
+            if (body.HasMember("secret") && body["secret"].IsString()) {
+                string str = body["secret"].GetString();
+                ptr->setSecretKey(str);
+            }
+
+            if (body.HasMember("fileStatus") && body["fileStatus"].IsInt()) {
+                int i = body["fileStatus"].GetInt();
+                ptr->setDownloadStatus(DownLoadStatusFromInt(i));
+            }
+
+            if (body.HasMember("title") && body["title"].IsString()) {
+                string str = body["title"].GetString();
+                ptr->setTitle(str);
+            }
+
+            if (body.HasMember("summary") && body["summary"].IsString()) {
+                string str = body["summary"].GetString();
+                ptr->setSummary(str);
+            }
+
+            if (body.HasMember("compatibleText") && body["compatibleText"].IsString()) {
+                string str = body["compatibleText"].GetString();
+                ptr->setCompatibleText(str);
+            }
+
+            if (body.HasMember("messageList") && body["messageList"].IsArray()) {
+                vector<string> ml = MyJson::FromJsonObjectToVector(jnode["messageList"]);
+                ptr->setMessageList(ml);
             }
 
             bodyptr = dynamic_pointer_cast<EMMessageBody>(ptr);
