@@ -21,7 +21,34 @@ namespace AgoraChat
 
             return jo;
         }
+
+        internal override void FromJsonObject(JSONObject jo)
+        {
+            OperationTime = (long)jo["operationTime"].AsDouble;
+            OperatorId = jo["operatorId"];
+        }
+
         public MessageBodyType Type;
+
+        /**
+         * \~chinese
+         * 编辑消息中内容修改的时间（只读）。
+         *
+         * \~english
+         * The operation time in modified message(readonly).
+         *
+         */
+        public long OperationTime { get; internal set; }
+
+        /**
+         * \~chinese
+         * 编辑消息中的操作人Id（只读）。
+         *
+         * \~english
+         * The operation Id in modified message(readonly).
+         *
+         */
+        public string OperatorId { get; internal set; }
     }
 
 

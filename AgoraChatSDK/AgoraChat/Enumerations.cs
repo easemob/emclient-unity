@@ -413,7 +413,16 @@ namespace AgoraChat
           * \~english
           * The custom message.
           */
-        CUSTOM
+        CUSTOM,
+
+        /**
+          * \~chinese
+          * 合并消息。
+          *
+          * \~english
+          * The combine message.
+          */
+        COMBINE
     };
 
     /**

@@ -668,6 +668,12 @@ namespace sdk_wrapper
             writer.Key("type");
             writer.Int(Message::BodyTypeToInt(btype));
 
+            writer.Key("operationTime");
+            writer.Double(body->operationTime());
+
+            writer.Key("operatorId");
+            writer.String(body->operatorId().c_str());
+
             writer.Key("body");
             writer.StartObject();
             {

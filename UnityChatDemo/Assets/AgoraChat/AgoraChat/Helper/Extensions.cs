@@ -92,6 +92,9 @@ namespace AgoraChat
                     break;
             }
 
+            IMessageBody ibody = body;
+            ibody.FromJsonObject(jsonNode.AsObject);
+
             return body;
         }
 
