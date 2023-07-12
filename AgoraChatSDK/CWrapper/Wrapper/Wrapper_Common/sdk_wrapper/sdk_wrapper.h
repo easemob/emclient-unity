@@ -44,8 +44,11 @@ SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_UploadLog(const char* jstr, 
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_CompressLogs(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_KickDevice(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_KickDeviceWithToken(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_KickDevices(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_KickDevicesWithToken(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_GetLoggedInDevicesFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_GetLoggedInDevicesFromServerWithToken(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_LogDebug(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_LogWarn(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);

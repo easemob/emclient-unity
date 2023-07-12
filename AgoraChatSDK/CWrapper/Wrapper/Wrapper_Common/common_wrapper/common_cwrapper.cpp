@@ -55,8 +55,11 @@ void InitManagerMap()
     func_map_client["runDelegateTester"] = Client_RunDelegateTester;
 
 	func_map_client["kickDevice"] = Client_KickDevice;
+    func_map_client["kickDeviceWithToken"] = Client_KickDeviceWithToken;
 	func_map_client["kickAllDevices"] = Client_KickDevices;
+    func_map_client["kickAllDevicesWithToken"] = Client_KickDevicesWithToken;
 	func_map_client["getLoggedInDevicesFromServer"] = Client_GetLoggedInDevicesFromServer;
+    func_map_client["getLoggedInDevicesFromServerWithToken"] = Client_GetLoggedInDevicesFromServerWithToken;
 
     func_map_client["logDebug"] = Client_LogDebug;
     func_map_client["logWarn"] = Client_LogWarn;

@@ -393,6 +393,32 @@ namespace AgoraChat
 
         /**
          * \~chinese
+         * 获取指定账号下登录的在线设备列表。
+         *
+         * 异步方法。
+         *
+         * @param username      用户 ID。
+         * @param token         令牌。
+         * @param callBack 		结果回调，成功时回调 {@link ValueCallBack#OnSuccessValue(Object)}，返回设备信息列表；
+         * 						失败时回调 {@link ValueCallBack#onError(int, String)}。
+         *
+         * \~english
+         * Gets the list of online devices to which you have logged in with a specified account.
+         *
+         * This is an asynchronous method.
+         *
+         * @param username      The user ID.
+         * @param token         The token.
+         * @param callBack		The completion callback. If this call succeeds, calls {@link ValueCallBack#OnSuccessValue(Object)} to show device information list;
+         * 						if this call fails, calls {@link ValueCallBack#onError(int, String)}.
+         */
+        public void GetLoggedInDevicesFromServerWithToken(string username, string token, ValueCallBack<List<DeviceInfo>> callback = null)
+        {
+            _clientImpl.GetLoggedInDevicesFromServerWithToken(username, token, callback);
+        }
+
+        /**
+         * \~chinese
          * 将指定账号登录的指定设备踢下线。
          *
          * 可通过 {@link #GetLoggedInDevicesFromServer()} 方法获取设备信息 {@link DeviceInfo}。
@@ -420,6 +446,34 @@ namespace AgoraChat
         }
 
         /**
+        * \~chinese
+        * 将指定账号登录的指定设备踢下线。
+        *
+        * 可通过 {@link #GetLoggedInDevicesFromServer()} 方法获取设备信息 {@link DeviceInfo}。
+        *
+        * 异步方法。
+        *
+        * @param username  用户 ID。
+        * @param token     令牌。
+        * @param resource  设备 ID, 见 {@link DeviceInfo#Resource}。
+        *
+        * \~english
+        * Logs out from a specified account on a device.
+        *
+        * You can call {@link GetLoggedInDevicesFromServer()} to get the device ID.
+        *
+        * This is an asynchronous method.
+        *
+        * @param username The user ID.
+        * @param token    The token.
+        * @param resource The device ID. See {@link DeviceInfo#Resource}.
+        */
+        public void KickDeviceWithToken(string username, string token, string resource, CallBack callback = null)
+        {
+            _clientImpl.KickDeviceWithToken(username, token, resource, callback);
+        }
+
+        /**
          * \~chinese
          * 将指定账号登录的所有设备都踢下线。
          *
@@ -441,6 +495,30 @@ namespace AgoraChat
         public void KickAllDevices(string username, string password, CallBack callback = null)
         {
             _clientImpl.KickAllDevices(username, password, callback);
+        }
+
+        /**
+         * \~chinese
+         * 将指定账号登录的所有设备都踢下线。
+         *
+         * 异步方法。
+         *
+         * @param username  用户 ID。
+         * @param token     令牌。
+         * @param callback	操作结果回调，详见 {@link CallBack}。
+         *
+         * \~english
+         * Logs out from a specified account on all devices.
+         *
+         * This is an asynchronous method.
+         *
+         * @param username The user ID.
+         * @param token    The token.
+         * @param callback The operation callback. See {@link CallBack}.
+         */
+        public void KickAllDevicesWithToken(string username, string token, CallBack callback = null)
+        {
+            _clientImpl.KickAllDevicesWithToken(username, token, callback);
         }
 
         /**

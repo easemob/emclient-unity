@@ -32,8 +32,11 @@ namespace AgoraChat
         internal const string uploadLog = "uploadLog";
         internal const string compressLogs = "compressLogs";
         internal const string kickDevice = "kickDevice";
+        internal const string kickDeviceWithToken = "kickDeviceWithToken";
         internal const string kickAllDevices = "kickAllDevices";
+        internal const string kickAllDevicesWithToken = "kickAllDevicesWithToken";
         internal const string getLoggedInDevicesFromServer = "getLoggedInDevicesFromServer";
+        internal const string getLoggedInDevicesFromServerWithToken = "getLoggedInDevicesFromServerWithToken";
 
         internal const string getToken = "getToken";
         internal const string getCurrentUser = "getCurrentUser";
