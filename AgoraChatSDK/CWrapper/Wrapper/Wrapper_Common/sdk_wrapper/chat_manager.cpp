@@ -1424,6 +1424,36 @@ namespace sdk_wrapper {
         return nullptr;
     }
 
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_ModifyMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        string msgId = GetJsonValue_String(d, "msgId", "");
+        EMMessageBodyPtr body = Message::FromJsonObjectToBody(d["body"]);
+
+        thread t([=]() {
+
+            EMError error;
+            EMMessagePtr msg = CLIENT->getChatManager().modifyMessage(msgId, body, error);
+
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+                string json = Message::ToJson(msg);
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            });
+        t.detach();
+
+        return nullptr;
+    }
+
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_RunDelegateTester(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         if (nullptr != gChatManagerListener) {

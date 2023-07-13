@@ -102,6 +102,7 @@ namespace AgoraChat
         internal const string removeMessagesFromServerWithTs = "removeMessagesFromServerWithTs";
         internal const string pinConversation = "pinConversation";
         internal const string removeEarlierHistoryMessages = "removeEarlierHistoryMessages";
+        internal const string modifyMessage = "modifyMessage";
 
         /// EMMessage listener
         internal const string onMessageProgressUpdate = "onMessageProgressUpdate";

@@ -814,6 +814,33 @@ namespace AgoraChat
         }
 
         /**
+         * \~chinese
+         * 编辑消息（仅限于编辑文本消息）。
+         * @param messageId 要编辑消息的Id。
+         * @param body      新的消息体。
+         * @param callback 完成的回调，详见 {@link #CallBack()}。
+         *
+         * \~english
+         * Modify a message(Only can be used to modify text message).
+         * @param messageId The Id of message being modified.
+         * @param body      New message body.
+         * @param callBack The result callback，see {@link #CallBack()}.
+         */
+        public void ModifyMessage(string messageId, MessageBody.TextBody body, ValueCallBack<Message> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("msgId", messageId);
+            jo_param.AddWithoutNull("body", body.ToJsonObject());
+
+            Process process = (_, jsonNode) =>
+            {
+                return ModelHelper.CreateWithJsonObject<Message>(jsonNode);
+            };
+
+            NativeCall<Message>(SDKMethod.modifyMessage, jo_param, callback, process);
+        }
+
+        /**
 		 * \~chinese
 		 * 将指定 Unix 时间戳之前收发的消息从本地内存和数据库中移除。
 		 *
