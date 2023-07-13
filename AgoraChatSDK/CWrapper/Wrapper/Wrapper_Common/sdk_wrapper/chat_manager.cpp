@@ -1454,6 +1454,34 @@ namespace sdk_wrapper {
         return nullptr;
     }
 
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_DownloadCombineMessages(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        EMMessagePtr msg = Message::FromJsonObjectToMessage(d["msg"]);
+
+        thread t([=]() {
+            EMErrorPtr error(new EMError);
+            EMMessageList msgList = CLIENT->getChatManager().downloadCombineMessages(msg, error);
+
+            if (EMError::EM_NO_ERROR == error->mErrorCode) {
+                string json = Message::ToJson(msgList);
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error->mErrorCode, error->mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            });
+        t.detach();
+
+        return nullptr;
+    }
+
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_RunDelegateTester(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         if (nullptr != gChatManagerListener) {

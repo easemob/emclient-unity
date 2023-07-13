@@ -103,6 +103,7 @@ namespace AgoraChat
         internal const string pinConversation = "pinConversation";
         internal const string removeEarlierHistoryMessages = "removeEarlierHistoryMessages";
         internal const string modifyMessage = "modifyMessage";
+        internal const string downloadCombineMessages = "downloadCombineMessages";
 
         /// EMMessage listener
         internal const string onMessageProgressUpdate = "onMessageProgressUpdate";

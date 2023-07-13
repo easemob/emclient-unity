@@ -1294,6 +1294,32 @@ namespace AgoraChat
         }
 
         /**
+         * \~chinese
+         * 下载并解析合并消息。
+         *
+         * @param msg               需要下载和解析的合并消息。
+         * @param callback          成功返回合并消息中的消息列表，失败返回错误原因，详见 {@link ValueCallBack}。
+         *
+         * \~english
+         * Download and parse combined messages.
+         *
+         * @param msg               The combined messages to be downloaded and parsed.
+         * @param callback          If success, a list of messages included in combined message are returned; otherwise, an error is returned. See {@link ValueCallBack}.
+         */
+        internal void DownloadCombineMessages(Message msg, ValueCallBack<List<Message>> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("msg", msg.ToJsonObject());
+
+            Process process = (_, jsonNode) =>
+            {
+                return List.BaseModelListFromJsonArray<Message>(jsonNode);
+            };
+
+            NativeCall<List<Message>>(SDKMethod.downloadCombineMessages, jo_param, callback, process);
+        }
+
+        /**
 		 * \~chinese
 		 * 注册聊天管理器的监听器。
 		 *
