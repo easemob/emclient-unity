@@ -26,6 +26,7 @@ namespace AgoraChat
         {
             OperationTime = (long)jo["operationTime"].AsDouble;
             OperatorId = jo["operatorId"];
+            OperationCount = (long)jo["operationCount"].AsDouble;
         }
 
         public MessageBodyType Type;
@@ -49,6 +50,16 @@ namespace AgoraChat
          *
          */
         public string OperatorId { get; internal set; }
+
+        /**
+         * \~chinese
+         * 发送后编辑的次数（只读）。
+         *
+         * \~english
+         * The count of modification on the message(readonly).
+         *
+         */
+        public long OperationCount { get; internal set; }
     }
 
 

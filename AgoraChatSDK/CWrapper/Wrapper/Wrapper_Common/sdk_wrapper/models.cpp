@@ -671,10 +671,13 @@ namespace sdk_wrapper
             writer.Int(Message::BodyTypeToInt(btype));
 
             writer.Key("operationTime");
-            writer.Double(body->operationTime());
+            writer.Uint64(body->operationTime());
 
             writer.Key("operatorId");
             writer.String(body->operatorId().c_str());
+
+            writer.Key("operationCount");
+            writer.Uint64(body->operationCount());
 
             writer.Key("body");
             writer.StartObject();
