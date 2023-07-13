@@ -143,6 +143,26 @@ namespace sdk_wrapper {
                 CallBack(STRING_CHATMANAGER_LISTENER.c_str(), STRING_onConversationRead.c_str(), json.c_str());
         }
 
+        void onMessageContentChanged(const EMMessagePtr message, const std::string operatorId, uint64_t operationTime) override {
+
+            JSON_STARTOBJ
+            writer.Key("msg");
+            Message::ToJsonObjectWithMessage(writer, message);
+
+            writer.Key("operatorId");
+            writer.String(operatorId.c_str());
+
+            writer.Key("operationTime");
+            writer.Uint64(operationTime);
+
+            JSON_ENDOBJ
+
+            string json = s.GetString();
+
+            if (json.size() > 0)
+                CallBack(STRING_CHATMANAGER_LISTENER.c_str(), STRING_onMessageContentChanged.c_str(), json.c_str());
+        }
+
         void onMessageIdChanged(const string& conversationId, const string& oldMsgId, const string& newMsgId) override {
             /*
             JSON_STARTOBJ

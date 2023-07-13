@@ -57,6 +57,7 @@ const string STRING_onConversationsUpdate = "onConversationsUpdate";
 const string STRING_onConversationRead = "onConversationRead";
 const string STRING_onMessageReactionDidChange = "messageReactionDidChange";
 const string STRING_onMessageIdChanged = "onMessageIdChanged";
+const string STRING_onMessageContentChanged = "onMessageContentChanged";
 
 // ChatThreadManagerDelegate
 const string STRING_onChatThreadCreate = "onChatThreadCreate";

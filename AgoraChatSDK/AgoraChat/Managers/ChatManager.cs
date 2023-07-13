@@ -1458,6 +1458,18 @@ namespace AgoraChat
                         }
                     }
                     break;
+                case SDKMethod.onMessageContentChanged:
+                    {
+                        Message msg = new Message(jsonNode.AsObject);
+                        string operatorId = jsonNode["operatorId"];
+                        long operationTime = (long)jsonNode["operationTime"].AsDouble;
+
+                        foreach (IChatManagerDelegate it in delegater)
+                        {
+                            it.OnMessageContentChanged(msg, operatorId, operationTime);
+                        }
+                    }
+                    break;
                 case SDKMethod.onMessageIdChanged:
                     {
                         /*
