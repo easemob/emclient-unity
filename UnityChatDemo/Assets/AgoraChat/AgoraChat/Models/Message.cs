@@ -603,7 +603,6 @@ namespace AgoraChat
         * 创建一条组合发送消息。
         *
         * @param username               消息接收者的用户 ID 或群组 ID。
-        * @param localPath              组合消息的本地路径。
         * @param title                  组合消息标题。
         * @param summary                组合消息概要。
         * @param compatibleText         组合消息兼容信息
@@ -613,16 +612,15 @@ namespace AgoraChat
         * Creates an image message for sending.
         *
         * @param username               The user ID of the message recipient, group ID, thread ID, or chatroom ID.
-        * @param localPath              The local path of the combined message.
         * @param title                  The title of combined message.
         * @param summary                The summary of combined message.
         * @param messageList            The message Id list included in combined message.
         *
         *
         */
-        static public Message CreateCombineSendMessage(string username, string localPath, string title, string summary, string compatibleText, List<string> messageList)
+        static public Message CreateCombineSendMessage(string username, string title, string summary, string compatibleText, List<string> messageList)
         {
-            return CreateSendMessage(username, new MessageBody.CombineBody(localPath, title: title, summary: summary, compatibleText: compatibleText, messageList: messageList));
+            return CreateSendMessage(username, new MessageBody.CombineBody(title: title, summary: summary, compatibleText: compatibleText, messageList: messageList));
         }
 
         /**
