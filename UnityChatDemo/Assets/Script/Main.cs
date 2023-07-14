@@ -589,6 +589,11 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         Debug.Log($"ChatManager10 OnContactAdded {string.Join(", ", changes.ToArray())}");
     }
 
+    public void OnMessageContentChanged(Message msg, string operatorId, long operationTime)
+    {
+        Debug.Log($"ChatManager11 OnMessageContentChanged change msgId:{msg.MsgId}, operatorId:{operatorId}, operationTime:{operationTime}");
+    }
+
     public void OnContactAdded(string username)
     {
         Debug.Log($"ContactManager1 OnContactAdded {username}");

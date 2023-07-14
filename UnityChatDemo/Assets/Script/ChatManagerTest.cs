@@ -1336,4 +1336,9 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         }
         UIManager.DefaultAlert(transform, $"MessageReactionDidChange: {list.Count}, detail: {detail}");
     }
+
+    public void OnMessageContentChanged(Message msg, string operatorId, long operationTime)
+    {
+        UIManager.DefaultAlert(transform, $"OnMessageContentChanged change msgId:{msg.MsgId}, operatorId:{operatorId}, operationTime:{operationTime}");
+    }
 }
