@@ -22,7 +22,7 @@ namespace AgoraChat
             return jo;
         }
 
-        internal override void FromJsonObject(JSONObject jo)
+        internal void FromJsonObjectToIMessageBody(JSONObject jo)
         {
             OperationTime = (long)jo["operationTime"].AsDouble;
             OperatorId = jo["operatorId"];
@@ -951,7 +951,6 @@ namespace AgoraChat
              * \~chinese
              * 组合消息体构造方法。
              *
-             * @param localPath         组合消息的本地路径。
              * @param title             组合消息标题。
              * @param summary           组合消息概要。
              * @param compatibleText    组合消息兼容信息
@@ -960,13 +959,12 @@ namespace AgoraChat
              * \~english
              * The voice message body constructor.
              *
-             * @param localPath         The local path of the combined message.
              * @param title             The title of combined message.
              * @param summary           The summary of combined message.
              * @param messageList       The message Id list included in combined message.
              *
              */
-            public CombineBody(string localPath, string title, string summary, string compatibleText, List<string> messageList) : base(localPath)
+            public CombineBody(string title, string summary, string compatibleText, List<string> messageList) : base("")
             {
                 Type = MessageBodyType.COMBINE;
 

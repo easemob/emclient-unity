@@ -1306,7 +1306,7 @@ namespace AgoraChat
          * @param msg               The combined messages to be downloaded and parsed.
          * @param callback          If success, a list of messages included in combined message are returned; otherwise, an error is returned. See {@link ValueCallBack}.
          */
-        internal void DownloadCombineMessages(Message msg, ValueCallBack<List<Message>> callback = null)
+        public void DownloadCombineMessages(Message msg, ValueCallBack<List<Message>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("msg", msg.ToJsonObject());
@@ -1460,7 +1460,7 @@ namespace AgoraChat
                     break;
                 case SDKMethod.onMessageContentChanged:
                     {
-                        Message msg = new Message(jsonNode.AsObject);
+                        Message msg = new Message(jsonNode["msg"].AsObject);
                         string operatorId = jsonNode["operatorId"];
                         long operationTime = (long)jsonNode["operationTime"].AsDouble;
 

@@ -1307,7 +1307,7 @@ namespace sdk_wrapper
             }
 
             if (body.HasMember("messageList") && body["messageList"].IsArray()) {
-                vector<string> ml = MyJson::FromJsonObjectToVector(jnode["messageList"]);
+                vector<string> ml = MyJson::FromJsonObjectToVector(body["messageList"]);
                 ptr->setMessageList(ml);
             }
 

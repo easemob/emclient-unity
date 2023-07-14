@@ -69,7 +69,7 @@ namespace AgoraChat
             switch (type)
             {
                 case MessageBodyType.TXT:
-                    body = CreateWithJsonObject<TextBody>(jsonNode["body"].AsObject);
+                    body = CreateWithJsonObject<TextBody>(jsonNode["body"]);
                     break;
                 case MessageBodyType.IMAGE:
                     body = CreateWithJsonObject<ImageBody>(jsonNode["body"]);
@@ -97,8 +97,7 @@ namespace AgoraChat
                     break;
             }
 
-            IMessageBody ibody = body;
-            ibody.FromJsonObject(jsonNode.AsObject);
+            body.FromJsonObjectToIMessageBody(jsonNode.AsObject);
 
             return body;
         }
