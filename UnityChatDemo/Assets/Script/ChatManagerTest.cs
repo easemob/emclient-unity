@@ -19,6 +19,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     private Button sendCmdBtn;
     private Button sendCustomBtn;
     private Button sendLocBtn;
+    private Button sendCombineBtn;
     private Button resendBtn;
     private Button recallBtn;
     private Button getConversationBtn;
@@ -45,6 +46,8 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     private Button removeMessagesFromServerWithTsBtn;
     private Button fetchHistoryMessagesByBtn;
     private Button pinConversationBtn;
+    private Button modifyMessageBtn;
+    private Button downloadCombineMessagesBtn;
 
     private void Awake()
     {
@@ -63,6 +66,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         sendCmdBtn = transform.Find("Scroll View/Viewport/Content/SendCmdBtn").GetComponent<Button>();
         sendCustomBtn = transform.Find("Scroll View/Viewport/Content/SendCustomBtn").GetComponent<Button>();
         sendLocBtn = transform.Find("Scroll View/Viewport/Content/SendLocBtn").GetComponent<Button>();
+        sendCombineBtn = transform.Find("Scroll View/Viewport/Content/SendCombineBtn").GetComponent<Button>();
         resendBtn = transform.Find("Scroll View/Viewport/Content/ResendBtn").GetComponent<Button>();
         recallBtn = transform.Find("Scroll View/Viewport/Content/RecallBtn").GetComponent<Button>();
         getConversationBtn = transform.Find("Scroll View/Viewport/Content/GetConversationBtn").GetComponent<Button>();
@@ -89,6 +93,8 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         removeMessagesFromServerWithTsBtn = transform.Find("Scroll View/Viewport/Content/RemoveMessagesFromServerWithTsBtn").GetComponent<Button>();
         fetchHistoryMessagesByBtn = transform.Find("Scroll View/Viewport/Content/FetchHistoryMessagesByBtn").GetComponent<Button>();
         pinConversationBtn = transform.Find("Scroll View/Viewport/Content/PinConversationBtn").GetComponent<Button>();
+        modifyMessageBtn = transform.Find("Scroll View/Viewport/Content/ModifyMessageBtn").GetComponent<Button>();
+        downloadCombineMessagesBtn = transform.Find("Scroll View/Viewport/Content/DownloadCombineMessagesBtn").GetComponent<Button>();
 
         sendTextBtn.onClick.AddListener(SendTextBtnAction);
         sendImageBtn.onClick.AddListener(SendImageBtnAction);
@@ -98,6 +104,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         sendCmdBtn.onClick.AddListener(SendCmdBtnAction);
         sendCustomBtn.onClick.AddListener(SendCustomBtnAction);
         sendLocBtn.onClick.AddListener(SendLocBtnAction);
+        sendCombineBtn.onClick.AddListener(SendCombineBtnAction);
         resendBtn.onClick.AddListener(ResendBtnAction);
         recallBtn.onClick.AddListener(RecallBtnAction);
         getConversationBtn.onClick.AddListener(GetConversationBtnAction);
@@ -124,6 +131,8 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         removeMessagesFromServerWithTsBtn.onClick.AddListener(RemoveMessagesFromServerWithTsAction);
         fetchHistoryMessagesByBtn.onClick.AddListener(FetchHistoryMessagesByBtnAction);
         pinConversationBtn.onClick.AddListener(PinConversationBtnAction);
+        modifyMessageBtn.onClick.AddListener(ModifyMessageAction);
+        downloadCombineMessagesBtn.onClick.AddListener(DownloadCombineMessagesAction);
         SDKClient.Instance.ChatManager.AddChatManagerDelegate(this);
     }
 
@@ -156,7 +165,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
             msg.Attributes = attr;
 
             msg.ReceiverList = new List<string>();
-            msg.ReceiverList.Add(dict["receiverList"]);
+            if(dict["receiverList"].Length > 0) msg.ReceiverList.Add(dict["receiverList"]);
 
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
                 onSuccess: () =>
@@ -384,6 +393,40 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         config.AddField("buildingName");
         UIManager.DefaultInputAlert(transform, config);
     }
+
+    void SendCombineBtnAction ()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            List<string> ml = new List<string>();
+            ml.Add(dict["sub-msg1"]);
+            ml.Add(dict["sub-msg2"]);
+
+            Message msg = Message.CreateCombineSendMessage(dict["to"], dict["title"], dict["summary"], dict["compatible"], ml);
+            msg.MessageType = (MessageType)(int.Parse(dict["chattype"]));
+
+            SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.TitleAlert(transform, "成功", msg.MsgId);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("to");
+        config.AddField("chattype");
+        config.AddField("title");
+        config.AddField("summary");
+        config.AddField("compatible");
+        config.AddField("sub-msg1");
+        config.AddField("sub-msg2");
+        UIManager.DefaultInputAlert(transform, config);
+    }
+
     void ResendBtnAction()
     {
         InputAlertConfig config = new InputAlertConfig((dict) =>
@@ -1212,6 +1255,74 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         Debug.Log("PinConversationBtnAction");
     }
 
+    void ModifyMessageAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            TextBody tb = new TextBody(dict["text"]);
+
+            SDKClient.Instance.ChatManager.ModifyMessage(dict["msgId"], tb, new ValueCallBack<Message>(
+             onSuccess: (dmsg) =>
+             {
+                 UIManager.TitleAlert(transform, "成功", dmsg.ToJsonObject().ToString());
+             },
+             onError: (code, desc) =>
+             {
+                 UIManager.ErrorAlert(transform, code, desc);
+             }
+            ));
+        });
+
+        config.AddField("msgId");
+        config.AddField("text");
+
+        UIManager.DefaultInputAlert(transform, config);
+        Debug.Log("ModifyMessageAction");
+    }
+
+    void DownloadCombineMessages(Message _msg, int _level)
+    {
+        if (null == _msg || _msg.Body.Type != MessageBodyType.COMBINE)
+        {
+            Debug.Log($"Cannot find any combine message. --- level:{_level}");
+            return;
+        }
+
+        SDKClient.Instance.ChatManager.DownloadCombineMessages(_msg, new ValueCallBack<List<Message>>(
+            onSuccess: (list) => {
+                Debug.Log($"DownloadCombineMessages found {list.Count} messages --- level:{_level}");
+
+                foreach (var it in list)
+                {
+                    string json = it.ToJsonObject().ToString();
+                    Debug.Log($"level:{_level}, msg is:{json}");
+
+                    if (it.Body.Type == MessageBodyType.COMBINE)
+                    {
+                        DownloadCombineMessages(it, _level + 1);
+                    }
+                }
+            },
+            onError: (code, desc) => {
+                Debug.LogError($"DownloadCombineMessages failed, code:{code}, desc:{desc} --- level: {_level}");
+            }
+        ));
+    }
+
+    void DownloadCombineMessagesAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            Message msg = SDKClient.Instance.ChatManager.LoadMessage(dict["msgId"]);
+            DownloadCombineMessages(msg, 0);
+        });
+
+        config.AddField("msgId");
+
+        UIManager.DefaultInputAlert(transform, config);
+        Debug.Log("DownloadCombineMessagesAction");
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -1226,62 +1337,13 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
     public void OnMessagesReceived(List<Message> messages)
     {
-
         List<string> list = new List<string>();
 
         foreach (var msg in messages)
         {
-            if (msg.Body.Type == MessageBodyType.TXT)
-            {
-                TextBody tb = msg.Body as TextBody;
-                Debug.Log($"text message body: {tb.Text}");
-            }
-            else if (msg.Body.Type == MessageBodyType.CUSTOM)
-            {
-                CustomBody cb = msg.Body as CustomBody;
-                List<string> arys = new List<string>();
-                foreach (string s in cb.CustomParams.Keys)
-                {
-                    arys.Add($"{s}: {cb.CustomParams[s]}");
-                }
-                Debug.Log($"custom message body event: {cb.CustomEvent}, params: {string.Join(",", arys)} ");
-            }
             list.Add(msg.MsgId);
-            foreach (string key in msg.Attributes.Keys)
-            {
-                AttributeValue a = msg.Attributes[key];
-                switch (a.GetAttributeValueType())
-                {
-                    case AttributeValueType.BOOL:
-                        {
-                            Debug.Log($"{key}|BOOL: {a.GetAttributeValue(AttributeValueType.BOOL)}");
-                        }
-                        break;
-                    case AttributeValueType.INT64:
-                        {
-                            Debug.Log($"{key}|INT64: {a.GetAttributeValue(AttributeValueType.INT64)}");
-                        }
-                        break;
-                    case AttributeValueType.FLOAT:
-                        {
-                            Debug.Log($"{key}|FLOAT: {a.GetAttributeValue(AttributeValueType.FLOAT)}");
-                        }
-                        break;
-                    case AttributeValueType.DOUBLE:
-                        {
-                            Debug.Log($"{key}|DOUBLE: {a.GetAttributeValue(AttributeValueType.DOUBLE)}");
-                        }
-                        break;
-                    case AttributeValueType.STRING:
-                        {
-                            Debug.Log($"{key}|STRING: {a.GetAttributeValue(AttributeValueType.STRING)}");
-                        }
-                        break;
-                }
-            }
-
+            Debug.Log($"msg content: {msg.ToJsonObject().ToString()}");
         }
-
         string str = string.Join(",", list.ToArray());
 
         UIManager.DefaultAlert(transform, $"OnMessagesReceived: {str}");
@@ -1339,6 +1401,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
     public void OnMessageContentChanged(Message msg, string operatorId, long operationTime)
     {
-        UIManager.DefaultAlert(transform, $"OnMessageContentChanged change msgId:{msg.MsgId}, operatorId:{operatorId}, operationTime:{operationTime}");
+        AgoraChat.MessageBody.TextBody tb = (AgoraChat.MessageBody.TextBody)msg.Body;
+        UIManager.DefaultAlert(transform, $"OnMessageContentChanged change msgId:{msg.MsgId}, text:{tb.Text}; operatorId:{operatorId}, operationTime:{operationTime}");
     }
 }

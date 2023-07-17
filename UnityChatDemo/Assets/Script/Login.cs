@@ -180,6 +180,7 @@ public class Login : MonoBehaviour
         //string appkey = "easemob-demo#wang";
         //string appkey = "easemob-demo#unitytest";
         //string appkey = "41117440#383391";
+        //string appkey = "easemob#easeim";
 
 #if UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
 

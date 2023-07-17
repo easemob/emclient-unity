@@ -95,7 +95,8 @@ public class InputAlert
         Dictionary<string, string> dic = new Dictionary<string, string>();
         foreach (var gameObject in childs) {
             Text placeholder = gameObject.transform.Find("Placeholder").GetComponent<Text>() as Text;
-            Text text = gameObject.transform.Find("Text").GetComponent<Text>() as Text;
+            //Text text = gameObject.transform.Find("Text").GetComponent<Text>() as Text;
+            InputField text = gameObject.GetComponent<InputField>();
             dic.Add(placeholder.text, text.text ?? "");
         }
         return dic;
