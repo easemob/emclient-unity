@@ -51,8 +51,9 @@ namespace AgoraChat
         [DllImport(MyLibName)]
         private extern static IntPtr _NativeGet(string manager, string method, [In, MarshalAs(UnmanagedType.LPTStr)] string jsonString = null, string callbackId = null);
 
+#if UNITY_STANDALONE || UNITY_EDITOR || _WIN32
         [DllImport(MyLibName)]
         internal static extern void FreeMemory(IntPtr p);
-
+#endif
     }
 }

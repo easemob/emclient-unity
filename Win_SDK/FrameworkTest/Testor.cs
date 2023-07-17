@@ -149,6 +149,11 @@ namespace WinSDKTest
                 Console.WriteLine($"userList:{str}");
             }
 
+            Console.WriteLine($"Body Type: {msg.Body.Type}");
+            Console.WriteLine($"Body operationTime: {msg.Body.OperationTime}");
+            Console.WriteLine($"Body OperatorId: {msg.Body.OperatorId}");
+            Console.WriteLine($"Body OperationCount: {msg.Body.OperationCount}");
+
             switch (msg.Body.Type)
             {
                 case MessageBodyType.TXT:
@@ -211,6 +216,18 @@ namespace WinSDKTest
                         foreach(var it in cb.CustomParams)
                         {
                             Console.WriteLine($"CustomParams: key:{it.Key}, value: {it.Value}");
+                        }
+                    }
+                    break;
+                case MessageBodyType.COMBINE:
+                    {
+                        CombineBody cb = (CombineBody)msg.Body;
+                        Console.WriteLine($"Title:{cb.Title}");
+                        Console.WriteLine($"Summary:{cb.Summary}");
+                        Console.WriteLine($"CompatibleText:{cb.CompatibleText}");
+                        foreach (var it in cb.MessageList)
+                        {
+                            Console.WriteLine($"msgid: {it}");
                         }
                     }
                     break;
@@ -308,6 +325,8 @@ namespace WinSDKTest
         internal Dictionary<string, Dictionary<int, string>> level3_menus; // parameter names
         SelectContext select_context;
 
+        ChatManagerDelegate chatManagerDelegate;
+
         internal Int64 GetTS()
         {
             TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
@@ -404,8 +423,11 @@ namespace WinSDKTest
             functions_IClient.Add(menu_index, "LoginWithAgoraToken"); menu_index++;
             functions_IClient.Add(menu_index, "RenewAgoraToken"); menu_index++;
             functions_IClient.Add(menu_index, "GetLoggedInDevicesFromServer"); menu_index++;
+            functions_IClient.Add(menu_index, "GetLoggedInDevicesFromServerWithToken"); menu_index++;
             functions_IClient.Add(menu_index, "KickDevice"); menu_index++;
+            functions_IClient.Add(menu_index, "KickDeviceWithToken"); menu_index++;
             functions_IClient.Add(menu_index, "kickAllDevices"); menu_index++;
+            functions_IClient.Add(menu_index, "kickAllDevicesWithToken"); menu_index++;
             functions_IClient.Add(menu_index, "RunDelegateTester"); menu_index++;
             level2_menus.Add("IClient", functions_IClient);
         }
@@ -470,6 +492,12 @@ namespace WinSDKTest
 
             menu_index = 1;
             param.Add(menu_index, "username (string)"); menu_index++;
+            param.Add(menu_index, "token (string)"); menu_index++;
+            level3_menus.Add("GetLoggedInDevicesFromServerWithToken", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "username (string)"); menu_index++;
             param.Add(menu_index, "password (string)"); menu_index++;
             param.Add(menu_index, "resource (string)"); menu_index++;
             level3_menus.Add("KickDevice", new Dictionary<int, string>(param));
@@ -477,8 +505,21 @@ namespace WinSDKTest
 
             menu_index = 1;
             param.Add(menu_index, "username (string)"); menu_index++;
+            param.Add(menu_index, "token (string)"); menu_index++;
+            param.Add(menu_index, "resource (string)"); menu_index++;
+            level3_menus.Add("KickDeviceWithToken", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "username (string)"); menu_index++;
             param.Add(menu_index, "password (string)"); menu_index++;
             level3_menus.Add("kickAllDevices", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "username (string)"); menu_index++;
+            param.Add(menu_index, "token (string)"); menu_index++;
+            level3_menus.Add("kickAllDevicesWithToken", new Dictionary<int, string>(param));
             param.Clear();
 
             menu_index = 1;
@@ -498,7 +539,9 @@ namespace WinSDKTest
             functions_IChatManager.Add(menu_index, "FetchHistoryMessagesFromServerBy"); menu_index++;
             functions_IChatManager.Add(menu_index, "FetchGroupReadAcks"); menu_index++;
             functions_IChatManager.Add(menu_index, "GetConversation"); menu_index++;
+            functions_IChatManager.Add(menu_index, "GetConversations"); menu_index++;
             functions_IChatManager.Add(menu_index, "GetConversationsFromServer"); menu_index++;
+            functions_IChatManager.Add(menu_index, "GetConversationsFromServerWithCursor"); menu_index++;
             functions_IChatManager.Add(menu_index, "GetUnreadMessageCount"); menu_index++;
             functions_IChatManager.Add(menu_index, "ImportMessages"); menu_index++;
             functions_IChatManager.Add(menu_index, "LoadAllConversations"); menu_index++;
@@ -518,6 +561,7 @@ namespace WinSDKTest
             functions_IChatManager.Add(menu_index, "SendCmdMessage"); menu_index++;
             functions_IChatManager.Add(menu_index, "SendCustomMessage"); menu_index++;
             functions_IChatManager.Add(menu_index, "SendLocationMessage"); menu_index++;
+            functions_IChatManager.Add(menu_index, "SendCombineMessage"); menu_index++;
             functions_IChatManager.Add(menu_index, "SendMessageReadAck"); menu_index++;
             functions_IChatManager.Add(menu_index, "ChatManagerUpdateMessage"); menu_index++;
             functions_IChatManager.Add(menu_index, "RemoveMessagesBeforeTimestamp"); menu_index++;
@@ -532,6 +576,9 @@ namespace WinSDKTest
             functions_IChatManager.Add(menu_index, "GetConversationsFromServerWithPage"); menu_index++;
             functions_IChatManager.Add(menu_index, "RemoveMessagesFromServerWithMsgIds"); menu_index++;
             functions_IChatManager.Add(menu_index, "RemoveMessagesFromServerWithTs"); menu_index++;
+            functions_IChatManager.Add(menu_index, "PinConversation"); menu_index++;
+            functions_IChatManager.Add(menu_index, "ModifyMessage"); menu_index++;
+            functions_IChatManager.Add(menu_index, "DownloadCombineMessages"); menu_index++;
             level2_menus.Add("IChatManager", functions_IChatManager);
         }
 
@@ -593,8 +640,20 @@ namespace WinSDKTest
             param.Clear();
 
             menu_index = 1;
+            param.Add(menu_index, "isSort (bool)"); menu_index++;
+            level3_menus.Add("GetConversations", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
             param.Add(menu_index, "No params"); menu_index++;
             level3_menus.Add("GetConversationsFromServer", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "pinOnly (bool)"); menu_index++;
+            param.Add(menu_index, "cursor (string)"); menu_index++;
+            param.Add(menu_index, "limit (int)"); menu_index++;
+            level3_menus.Add("GetConversationsFromServerWithCursor", new Dictionary<int, string>(param));
             param.Clear();
 
             menu_index = 1;
@@ -705,6 +764,18 @@ namespace WinSDKTest
             param.Clear();
 
             menu_index = 1;
+            param.Add(menu_index, "to (string)"); menu_index++;
+            param.Add(menu_index, "chattype (int: 0-chat;1-group;2-room)"); menu_index++;
+            param.Add(menu_index, "isthread (bool)"); menu_index++;
+            param.Add(menu_index, "title (string)"); menu_index++;
+            param.Add(menu_index, "summary (string)"); menu_index++;
+            param.Add(menu_index, "compatible (string)"); menu_index++;
+            param.Add(menu_index, "sub-msgid1 (string)"); menu_index++;
+            param.Add(menu_index, "sub-msgid2 (string)"); menu_index++;
+            level3_menus.Add("SendCombineMessage", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
             param.Add(menu_index, "messageId (string)"); menu_index++;
             level3_menus.Add("SendMessageReadAck", new Dictionary<int, string>(param));
             param.Clear();
@@ -793,6 +864,25 @@ namespace WinSDKTest
             param.Add(menu_index, "conversationType (int, 0-chat;1-group;2-room)"); menu_index++;
             param.Add(menu_index, "ts (long)"); menu_index++;
             level3_menus.Add("RemoveMessagesFromServerWithTs", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "conversationId (string)"); menu_index++;
+            param.Add(menu_index, "isPinned (bool)"); menu_index++;
+            level3_menus.Add("PinConversation", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "messageId (string)"); menu_index++;
+            param.Add(menu_index, "text (string)"); menu_index++;
+            param.Add(menu_index, "lang1 (string)"); menu_index++;
+            param.Add(menu_index, "lang2 (string)"); menu_index++;
+            level3_menus.Add("ModifyMessage", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "messageId (string)"); menu_index++;
+            level3_menus.Add("DownloadCombineMessages", new Dictionary<int, string>(param));
             param.Clear();
         }
 
@@ -1982,7 +2072,7 @@ namespace WinSDKTest
 
         public void InitAll(string appkey)
         {
-            //Options options = new Options("easemob-demo#easeim");
+            //Options options = new Options("easemob#easeim");
             Options options = new Options("easemob-demo#unitytest");
             //Options options = new Options("easemob-demo#wang");
             //Options options = new Options("5101220107132865#test"); // 北京沙箱测试环境，无法正常登录
@@ -1994,6 +2084,7 @@ namespace WinSDKTest
             options.UsingHttpsOnly = true;
             options.DebugMode = true;
             options.MyUUID = "12345678-1111-5555-aaaa-eeeeeeeeeeee";
+            options.EnableEmptyConversation = true;
 
             //options.RestServer = "a1.easemob.com";
             //options.IMServer = "182.92.23.113";
@@ -2009,7 +2100,7 @@ namespace WinSDKTest
                 System.Environment.Exit(100);
             }
 
-            ChatManagerDelegate chatManagerDelegate = new ChatManagerDelegate();
+            chatManagerDelegate = new ChatManagerDelegate();
             SDKClient.Instance.ChatManager.AddChatManagerDelegate(chatManagerDelegate);
 
             ConnectionDelegate connectionDelegate = new ConnectionDelegate();
@@ -2606,6 +2697,35 @@ namespace WinSDKTest
             );
         }
 
+        public void CallFunc_IClient_GetLoggedInDevicesFromServerWithToken()
+        {
+            string username = GetParamValueFromContext(0);
+
+            string token = GetParamValueFromContext(1);
+
+            SDKClient.Instance.GetLoggedInDevicesFromServerWithToken(username, token,
+            callback: new ValueCallBack<List<DeviceInfo>>(
+
+                onSuccess: (list) =>
+                {
+                    Console.WriteLine("GetLoggedInDevicesFromServerWithToken succeed");
+                    foreach (var it in list)
+                    {
+                        Console.WriteLine("--------------------");
+                        Console.WriteLine($"Resource: {it.Resource}");
+                        Console.WriteLine($"DeviceUUID: {it.DeviceUUID}");
+                        Console.WriteLine($"DeviceName: {it.DeviceName}");
+                    }
+                },
+
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"GetLoggedInDevicesFromServerWithToken failed, code:{code}, desc:{desc}");
+                }
+                )
+            );
+        }
+
         public void CallFunc_IClient_KickDevice()
         {
             string username = GetParamValueFromContext(0);
@@ -2630,6 +2750,30 @@ namespace WinSDKTest
             );
         }
 
+        public void CallFunc_IClient_KickDeviceWithToken()
+        {
+            string username = GetParamValueFromContext(0);
+
+            string token = GetParamValueFromContext(1);
+
+            string resource = GetParamValueFromContext(2);
+
+            SDKClient.Instance.KickDeviceWithToken(username, token, resource,
+            callback: new CallBack(
+
+                onSuccess: () =>
+                {
+                    Console.WriteLine("KickDeviceWithToken succeed");
+                },
+
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"KickDeviceWithToken failed, code:{code}, desc:{desc}");
+                }
+                )
+            );
+        }
+
         public void CallFunc_IClient_kickAllDevices()
         {
             string username = GetParamValueFromContext(0);
@@ -2646,6 +2790,27 @@ namespace WinSDKTest
                 onError: (code, desc) =>
                 {
                     Console.WriteLine($"kickAllDevices failed, code:{code}, desc:{desc}");
+                }
+                )
+            );
+        }
+
+        public void CallFunc_IClient_kickAllDevicesWithToken()
+        {
+            string username = GetParamValueFromContext(0);
+            string token = GetParamValueFromContext(1);
+
+            SDKClient.Instance.KickAllDevicesWithToken(username, token,
+            callback: new CallBack(
+
+                onSuccess: () =>
+                {
+                    Console.WriteLine("kickAllDevicesWithToken succeed");
+                },
+
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"kickAllDevicesWithToken failed, code:{code}, desc:{desc}");
                 }
                 )
             );
@@ -2718,15 +2883,33 @@ namespace WinSDKTest
                 return;
             }
 
+            if (select_context.level2_item.CompareTo("GetLoggedInDevicesFromServerWithToken") == 0)
+            {
+                CallFunc_IClient_GetLoggedInDevicesFromServerWithToken();
+                return;
+            }
+
             if (select_context.level2_item.CompareTo("KickDevice") == 0)
             {
                 CallFunc_IClient_KickDevice();
                 return;
             }
 
+            if (select_context.level2_item.CompareTo("KickDeviceWithToken") == 0)
+            {
+                CallFunc_IClient_KickDeviceWithToken();
+                return;
+            }
+
             if (select_context.level2_item.CompareTo("kickAllDevices") == 0)
             {
                 CallFunc_IClient_kickAllDevices();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("kickAllDevicesWithToken") == 0)
+            {
+                CallFunc_IClient_kickAllDevicesWithToken();
                 return;
             }
 
@@ -2994,7 +3177,27 @@ namespace WinSDKTest
 
             Conversation ret = SDKClient.Instance.ChatManager.GetConversation(conversationId, type, createIfNeed);
             if (null != ret && null != ret.Id)
-            Console.WriteLine($"GetConversation complete, conversationid: {ret.Id}.");
+            Console.WriteLine($"GetConversation complete, conversationid: {ret.Id}, pinned:{ret.IsPinned}, pinTime:{ret.PinnedTime}.");
+        }
+
+        public void CallFunc_IChatManager_GetConversations(string conversationId_input = "", int type_input = -1, bool createIfNeed_input = true)
+        {
+            bool isSort = GetParamValueFromContext(0).CompareTo("true") == 0;
+
+            SDKClient.Instance.ChatManager.GetConversations(isSort, new ValueCallBack<List<Conversation>>(
+             onSuccess: (list) =>
+             {
+                 Console.WriteLine($"GetConversations found total: {list.Count}");
+                 foreach (var conv in list)
+                 {
+                     Console.WriteLine($"conv id: {conv.Id}, pinned:{conv.IsPinned}, pinTime:{conv.PinnedTime}");
+                 }
+             },
+             onError: (code, desc) =>
+             {
+                 Console.WriteLine($"GetConversations failed, code:{code}, desc:{desc}");
+             }
+            ));
         }
 
         public void CallFunc_IChatManager_GetConversationsFromServer(string conversationId_input = "", int type_input = -1, bool createIfNeed_input = true)
@@ -3005,7 +3208,29 @@ namespace WinSDKTest
                  Console.WriteLine($"GetConversationsFromServer found total: {list.Count}");
                  foreach (var conv in list)
                  {
-                     Console.WriteLine($"conv id: {conv.Id}");
+                     Console.WriteLine($"conv id: {conv.Id}, pinned:{conv.IsPinned}, pinTime:{conv.PinnedTime}");
+                 }
+             },
+             onError: (code, desc) =>
+             {
+                 Console.WriteLine($"GetConversationsFromServer failed, code:{code}, desc:{desc}");
+             }
+            ));
+        }
+
+        public void CallFunc_IChatManager_GetConversationsFromServerWithCursor(string conversationId_input = "", int type_input = -1, bool createIfNeed_input = true)
+        {
+            bool pinOnly = GetParamValueFromContext(0).CompareTo("true") == 0 ? true : false;
+            string cursor = GetParamValueFromContext(1);
+            int limit = GetIntFromString(GetParamValueFromContext(2));
+
+            SDKClient.Instance.ChatManager.GetConversationsFromServerWithCursor(pinOnly, cursor, limit, new ValueCallBack<CursorResult<Conversation>>(
+             onSuccess: (result) =>
+             {
+                 Console.WriteLine($"GetConversationsFromServerWithCursor found num: {result.Data.Count}, nextcursor: {result.Cursor}");
+                 foreach (var conv in result.Data)
+                 {
+                     Console.WriteLine($"conv id: {conv.Id}, pinned:{conv.IsPinned}, pinTime:{conv.PinnedTime}");
                  }
              },
              onError: (code, desc) =>
@@ -3257,6 +3482,9 @@ namespace WinSDKTest
             tb.TargetLanguages = new List<string>();
             tb.TargetLanguages.Add("en");
             tb.TargetLanguages.Add("ja");
+
+            msg.ReceiverList = new List<string>();
+            msg.ReceiverList.Add("yqtest1");
 
             msg.Attributes = new Dictionary<string, AttributeValue>();
             Message.SetAttribute(msg.Attributes, "bool", true, AttributeValueType.BOOL);
@@ -3566,6 +3794,52 @@ namespace WinSDKTest
                 }
             ));
         }
+
+        public void CallFunc_IChatManager_SendCombineMessage(string _to = "", string _text = "")
+        {
+            /*
+                param.Add(menu_index, "to (string)"); menu_index++;
+                param.Add(menu_index, "chattype (int: 0-chat;1-group;2-room)"); menu_index++;
+                param.Add(menu_index, "isthread (bool)"); menu_index++;
+                param.Add(menu_index, "title (string)"); menu_index++;
+                param.Add(menu_index, "summary (string)"); menu_index++;
+                param.Add(menu_index, "compatible (string)"); menu_index++;
+                param.Add(menu_index, "sub-msgid1 (string)"); menu_index++;
+                param.Add(menu_index, "sub-msgid2 (string)"); menu_index++;
+             */
+
+            string to = GetParamValueFromContext(0);
+
+            //text = "\U0001F60D" + text + "\U0001F4A9";
+
+            MessageType msg_type = (MessageType)GetIntFromString(GetParamValueFromContext(1));
+            bool is_thread = GetParamValueFromContext(2).CompareTo("true") == 0 ? true : false;
+
+            string title = GetParamValueFromContext(3);
+            string summary = GetParamValueFromContext(4);
+            string compatible = GetParamValueFromContext(5);
+
+            List<string> list = new List<string>();
+            list.Add(GetParamValueFromContext(6));
+            list.Add(GetParamValueFromContext(7));
+
+            Message msg = Message.CreateCombineSendMessage(to, title, summary, compatible, list);
+            msg.MessageType = msg_type;
+            msg.IsThread = is_thread;
+
+            SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
+                onSuccess: () => {
+                    Console.WriteLine($"SendCombineMessage success. msgid:{msg.MsgId}");
+                },
+                onProgress: (progress) => {
+                    Console.WriteLine($"SendCombineMessage progress :{progress.ToString()}");
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"SendCombineMessage failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
 
         public void CallFunc_IChatManager_SendMessageReadAck(string _messageId="")
         {
@@ -3928,6 +4202,92 @@ namespace WinSDKTest
             ));
         }
 
+        public void CallFunc_IChatManager_PinConversation()
+        {
+            string convId = GetParamValueFromContext(0);
+            bool isPinned = GetParamValueFromContext(1).CompareTo("true") == 0;
+
+            SDKClient.Instance.ChatManager.PinConversation(convId, isPinned, new CallBack(
+                onSuccess: () =>
+                {
+                    Console.WriteLine($"PinConversation success.");
+                },
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"PinConversation failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IChatManager_ModifyMessage()
+        {
+            string msgId = GetParamValueFromContext(0);
+            string text = GetParamValueFromContext(1);
+            string lang1 = GetParamValueFromContext(2);
+            string lang2 = GetParamValueFromContext(3);
+
+            TextBody tb = new TextBody(text);
+
+            tb.TargetLanguages = new List<string>();
+            tb.TargetLanguages.Add(lang1);
+            tb.TargetLanguages.Add(lang2);
+
+            SDKClient.Instance.ChatManager.ModifyMessage(msgId, tb, new ValueCallBack<Message>(
+             onSuccess: (dmsg) =>
+             {
+                 Console.WriteLine($"ModifyMessage success.");
+                 Utils.PrintMessage(dmsg);
+
+             },
+             onError: (code, desc) =>
+             {
+                 Console.WriteLine($"ModifyMessage failed, code:{code}, desc:{desc}");
+             }
+            ));
+        }
+
+        public void CallFunc_IChatManager_DownloadCombineMessages(Message _msg, int _level)
+        {
+            Message msg;
+            int level = _level;
+
+            if (null == _msg)
+            {
+                string msgId = GetParamValueFromContext(0);
+                msg = SDKClient.Instance.ChatManager.LoadMessage(msgId);
+                //msg = chatManagerDelegate.LatestCombineMsg();
+                level = 0;
+            }
+            else
+            {
+                msg = _msg;
+            }
+
+            if (null == msg || msg.Body.Type != MessageBodyType.COMBINE)
+            {
+                Console.WriteLine($"Cannot find any combine message. --- level:{level}");
+                return;
+            }
+
+            SDKClient.Instance.ChatManager.DownloadCombineMessages(msg, new ValueCallBack<List<Message>>(
+                onSuccess: (list) => {
+                    Console.WriteLine($"DownloadCombineMessages found {list.Count} messages --- level:{level}");
+                    foreach (var it in list)
+                    {
+                        Utils.PrintMessage(it);
+
+                        if(it.Body.Type == MessageBodyType.COMBINE)
+                        {
+                            CallFunc_IChatManager_DownloadCombineMessages(it, level + 1);
+                        }
+                    }
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"DownloadCombineMessages failed, code:{code}, desc:{desc} --- level: {level}");
+                }
+            ));
+        }
+
         public void CallFunc_IChatManager()
         {
             if (select_context.level2_item.CompareTo("DeleteConversation") == 0)
@@ -3972,9 +4332,21 @@ namespace WinSDKTest
                 return;
             }
 
+            if (select_context.level2_item.CompareTo("GetConversations") == 0)
+            {
+                CallFunc_IChatManager_GetConversations();
+                return;
+            }
+
             if (select_context.level2_item.CompareTo("GetConversationsFromServer") == 0)
             {
                 CallFunc_IChatManager_GetConversationsFromServer();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("GetConversationsFromServerWithCursor") == 0)
+            {
+                CallFunc_IChatManager_GetConversationsFromServerWithCursor();
                 return;
             }
 
@@ -4086,6 +4458,12 @@ namespace WinSDKTest
                 return;
             }
 
+            if (select_context.level2_item.CompareTo("SendCombineMessage") == 0)
+            {
+                CallFunc_IChatManager_SendCombineMessage();
+                return;
+            }
+
             if (select_context.level2_item.CompareTo("SendMessageReadAck") == 0)
             {
                 CallFunc_IChatManager_SendMessageReadAck();
@@ -4167,6 +4545,24 @@ namespace WinSDKTest
             if (select_context.level2_item.CompareTo("RemoveMessagesFromServerWithTs") == 0)
             {
                 CallFunc_IChatManager_RemoveMessagesFromServerWithTs();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("PinConversation") == 0)
+            {
+                CallFunc_IChatManager_PinConversation();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("ModifyMessage") == 0)
+            {
+                CallFunc_IChatManager_ModifyMessage();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("DownloadCombineMessages") == 0)
+            {
+                CallFunc_IChatManager_DownloadCombineMessages(null, 0);
                 return;
             }
         }
@@ -9086,13 +9482,13 @@ namespace WinSDKTest
 
     public class ChatManagerDelegate : IChatManagerDelegate
     {
-        int LISTENER_COUNT = 10;
+        int LISTENER_COUNT = 11;
 
         public void OnMessagesReceived(List<Message> messages)
         {
             Console.WriteLine($"ChatManagerDelegate1 OnMessagesReceived, total listener:{LISTENER_COUNT}");
             foreach (var it in messages)
-            {
+            {                
                 Console.WriteLine($"===========================");
                 Utils.PrintMessage(it);
                 Console.WriteLine($"===========================");
@@ -9272,6 +9668,15 @@ namespace WinSDKTest
                 }
 
             }
+        }
+
+        public void OnMessageContentChanged(Message msg, string operatorId, long operationTime)
+        {
+            Console.WriteLine("ChatManagerDelegate11 OnMessageContentChanged.");
+            Console.WriteLine($"operatorId: {operatorId}");
+            Console.WriteLine($"operationTime: {operationTime}");
+
+            Utils.PrintMessage(msg);
         }
     }
 
@@ -9553,6 +9958,11 @@ namespace WinSDKTest
         public void OnRoamDeleteMultiDevicesEvent(string conversationId, string deviceId)
         {
             Console.WriteLine($"IMultiDeviceDelegate5 OnRoamDeleteMultiDevicesEvent: conversationId: {conversationId}, deviceId:{deviceId}");
+        }
+
+        public void OnConversationMultiDevicesEvent(MultiDevicesOperation operation, string conversationId, ConversationType type)
+        {
+            Console.WriteLine($"IMultiDeviceDelegate6 OnConversationMultiDevicesEvent: operation: {operation}, conversationId:{conversationId}, type:{type}");
         }
     }
 

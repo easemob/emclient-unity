@@ -88,6 +88,11 @@ namespace WinSDKTest
         );
         }
 
+        public void OnMessageContentChanged(Message msg, string operatorId, long operationTime)
+        {
+            throw new NotImplementedException();
+        }
+
         public void MessageReactionDidChange(List<MessageReactionChange> list)
         {
             throw new NotImplementedException();

@@ -269,6 +269,19 @@ namespace AgoraChat
 	     */
         public bool IsAutoDownload = true;
 
+        /**
+	     * \~chinese
+	     * 从数据库加载会话时，是否允许加载空会话。
+	     * - `true`：是；
+	     * - （默认）`false`：否。
+	     *
+	     * \~english
+	     * Whether to load empty conversation while loading conversations from db.
+	     * -`true`: Yes;
+	     * -(Default) `false`: No.
+	     *
+	     */
+        public bool EnableEmptyConversation = false;
 
         /**
 	     * \~chinese
@@ -388,6 +401,7 @@ namespace AgoraChat
             jo.AddWithoutNull("areaCode", (int)AreaCode);
             jo.AddWithoutNull("enableDnsConfig", EnableDNSConfig);
             jo.AddWithoutNull("myUUID", MyUUID);
+            jo.AddWithoutNull("enableEmptyConversation", EnableEmptyConversation);
 
             if (SDKDataPath.Length == 0)
             {
