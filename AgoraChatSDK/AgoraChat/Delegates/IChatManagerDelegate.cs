@@ -164,5 +164,22 @@ namespace AgoraChat
          * @param list The changed reaction list.
          */
 		void MessageReactionDidChange(List<MessageReactionChange> list);
+
+        /**
+         * \~chinese
+         * 消息内容被修改回调。
+         *
+         * @param Message       被改变的消息。
+         * @param operatorId    修改消息的操作人Id。
+         * @param operationTime 修改消息的时间点。
+         *
+         *  \~english
+         * Occurs when user modify message content.
+         *
+         * @param Message       The modified message.
+         * @param operatorId    The operator Id who modified the message.
+         * @param operationTime The time when the message was modified.
+         */
+        void OnMessageContentChanged(Message msg, string operatorId, long operationTime);
     }
 }

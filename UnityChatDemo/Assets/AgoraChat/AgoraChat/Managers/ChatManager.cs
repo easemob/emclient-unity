@@ -325,6 +325,38 @@ namespace AgoraChat
         }
 
         /**
+        * \~chinese
+        * 获取本地所有会话。
+        *
+        * 未找到任何会话对象返回的列表为空。
+        *
+        * @param isSort      返回的会话列表是否排序。
+        * @param callback    获取的会话列表，详见 {@link ValueCallBack}。
+        *
+        * \~english
+        * Get all local conversations.
+        *
+        * An empty list will be returned if no conversation is found.
+        *
+        * The SDK wil return `null` if the conversation is not found.
+        *
+        * @param isSort 	 Returned conversation list is sorted or not.
+        * @param callback    The list of obtained coversations. See {@link ValueCallBack}.
+        */
+        public void GetConversations(bool isSort = false, ValueCallBack<List<Conversation>> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("isSort", isSort);
+
+            Process process = (_, jsonNode) =>
+            {
+                return List.BaseModelListFromJsonArray<Conversation>(jsonNode);
+            };
+
+            NativeCall<List<Conversation>>(SDKMethod.getConversations, jo_param, callback, process);
+        }
+
+        /**
 	     * \~chinese
 	     * 从服务器获取所有会话对象。
 	     * 
@@ -339,6 +371,7 @@ namespace AgoraChat
 	     *
 	     * @param callback    The list of obtained coversations. See {@link ValueCallBack}.
 	     */
+        [Obsolete]
         public void GetConversationsFromServer(ValueCallBack<List<Conversation>> callback = null)
         {
             Process process = (_, jsonNode) =>
@@ -351,6 +384,44 @@ namespace AgoraChat
 
         /**
 	     * \~chinese
+	     * 根据指定参数从服务器获取相关会话对象。
+	     *
+	     * @param pinOnly     只获取置顶会话。
+	     * @param cursor      查询 cursor。
+	     * @param limit       最大查询条数(1-50)。
+	     * @param callback    获取的会话列表，详见 {@link ValueCallBack}。
+	     *
+	     * \~english
+	     * Gets the related conversations from the server basing on params.
+	     *
+	     * @param pingOnly    Only get the conversations being pinned.
+	     * @param cursor      The query cursor.
+	     * @param limit       The max query number of conversations(1-50).
+	     * @param callback    The list of obtained coversations. See {@link ValueCallBack}.
+	     */
+        public void GetConversationsFromServerWithCursor(bool pinOnly, string cursor = "", int limit = 20, ValueCallBack<CursorResult<Conversation>> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("pinOnly", pinOnly);
+            jo_param.AddWithoutNull("cursor", cursor);
+            jo_param.AddWithoutNull("limit", limit);
+
+            Process process = (_, jsonNode) =>
+            {
+                CursorResult<Conversation> cursor_conversation = new CursorResult<Conversation>(_, (jn) =>
+                {
+                    return ModelHelper.CreateWithJsonObject<Conversation>(jn);
+                });
+
+                cursor_conversation.FromJsonObject(jsonNode.AsObject);
+                return cursor_conversation;
+            };
+
+            NativeCall<CursorResult<Conversation>>(SDKMethod.getConversationsFromServerWithCursor, jo_param, callback, process);
+        }
+
+        /**
+	     * \~chinese
 	     * 获取未读消息数。
 		 * 
 	     * @return		未读消息数。
@@ -358,6 +429,7 @@ namespace AgoraChat
 	     *
 	     * \~english
 	     * Gets the unread message count.
+	     *
 	     * @return		The count of unread messages.
 	     *
 	     */
@@ -739,6 +811,33 @@ namespace AgoraChat
 
             JSONObject jsonObject = JSON.Parse(json).AsObject;
             return jsonObject["ret"].AsBool;
+        }
+
+        /**
+         * \~chinese
+         * 编辑消息（仅限于编辑文本消息）。
+         * @param messageId 要编辑消息的Id。
+         * @param body      新的消息体。
+         * @param callback 完成的回调，详见 {@link #CallBack()}。
+         *
+         * \~english
+         * Modify a message(Only can be used to modify text message).
+         * @param messageId The Id of message being modified.
+         * @param body      New message body.
+         * @param callBack The result callback，see {@link #CallBack()}.
+         */
+        public void ModifyMessage(string messageId, MessageBody.TextBody body, ValueCallBack<Message> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("msgId", messageId);
+            jo_param.AddWithoutNull("body", body.ToJsonObject());
+
+            Process process = (_, jsonNode) =>
+            {
+                return ModelHelper.CreateWithJsonObject<Message>(jsonNode);
+            };
+
+            NativeCall<Message>(SDKMethod.modifyMessage, jo_param, callback, process);
         }
 
         /**
@@ -1166,6 +1265,61 @@ namespace AgoraChat
         }
 
         /**
+         * \~chinese
+         * 设置会话是否置顶。
+         *
+         * 异步方法。
+         *
+         * @param conversationId    会话 ID。
+         * @param isPinned          是否将会话设置为置顶。
+         * @param callback          处理结果回调，详见 {@link CallBack}。
+         *
+         * \~english
+         * Set the conversation pin or not.
+         *
+         * This is an asynchronous method.
+         *
+         * @param conversationId     The conversation ID.
+         * @param isPinned           Pin the conversation or not.
+         * @param callback           Callback for the operation. See {@link CallBack}.
+         */
+
+        public void PinConversation(string conversationId, bool isPinned, CallBack callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("convId", conversationId);
+            jo_param.AddWithoutNull("isPinned", isPinned);
+
+            NativeCall(SDKMethod.pinConversation, jo_param, callback);
+        }
+
+        /**
+         * \~chinese
+         * 下载并解析合并消息。
+         *
+         * @param msg               需要下载和解析的合并消息。
+         * @param callback          成功返回合并消息中的消息列表，失败返回错误原因，详见 {@link ValueCallBack}。
+         *
+         * \~english
+         * Download and parse combined messages.
+         *
+         * @param msg               The combined messages to be downloaded and parsed.
+         * @param callback          If success, a list of messages included in combined message are returned; otherwise, an error is returned. See {@link ValueCallBack}.
+         */
+        public void DownloadCombineMessages(Message msg, ValueCallBack<List<Message>> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("msg", msg.ToJsonObject());
+
+            Process process = (_, jsonNode) =>
+            {
+                return List.BaseModelListFromJsonArray<Message>(jsonNode);
+            };
+
+            NativeCall<List<Message>>(SDKMethod.downloadCombineMessages, jo_param, callback, process);
+        }
+
+        /**
 		 * \~chinese
 		 * 注册聊天管理器的监听器。
 		 *
@@ -1301,6 +1455,18 @@ namespace AgoraChat
                         foreach (IChatManagerDelegate it in delegater)
                         {
                             if (list.Count > 0) it.MessageReactionDidChange(list);
+                        }
+                    }
+                    break;
+                case SDKMethod.onMessageContentChanged:
+                    {
+                        Message msg = new Message(jsonNode["msg"].AsObject);
+                        string operatorId = jsonNode["operatorId"];
+                        long operationTime = (long)jsonNode["operationTime"].AsDouble;
+
+                        foreach (IChatManagerDelegate it in delegater)
+                        {
+                            it.OnMessageContentChanged(msg, operatorId, operationTime);
                         }
                     }
                     break;

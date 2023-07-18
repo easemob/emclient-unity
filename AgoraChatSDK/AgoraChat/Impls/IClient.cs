@@ -136,6 +136,20 @@ namespace AgoraChat
             NativeCall<List<DeviceInfo>>(SDKMethod.getLoggedInDevicesFromServer, jo_param, callback, process);
         }
 
+        internal void GetLoggedInDevicesFromServerWithToken(string username, string token, ValueCallBack<List<DeviceInfo>> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("username", username);
+            jo_param.AddWithoutNull("token", token);
+
+            Process process = (_, jsonNode) =>
+            {
+                return List.BaseModelListFromJsonArray<DeviceInfo>(jsonNode);
+            };
+
+            NativeCall<List<DeviceInfo>>(SDKMethod.getLoggedInDevicesFromServerWithToken, jo_param, callback, process);
+        }
+
         internal void KickDevice(string username, string password, string resource, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
@@ -145,12 +159,29 @@ namespace AgoraChat
             NativeCall(SDKMethod.kickDevice, jo_param, callback);
         }
 
+        internal void KickDeviceWithToken(string username, string token, string resource, CallBack callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("username", username);
+            jo_param.AddWithoutNull("token", token);
+            jo_param.AddWithoutNull("resource", resource);
+            NativeCall(SDKMethod.kickDeviceWithToken, jo_param, callback);
+        }
+
         internal void KickAllDevices(string username, string password, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("username", username);
             jo_param.AddWithoutNull("password", password);
             NativeCall(SDKMethod.kickAllDevices, jo_param, callback);
+        }
+
+        internal void KickAllDevicesWithToken(string username, string token, CallBack callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("username", username);
+            jo_param.AddWithoutNull("token", token);
+            NativeCall(SDKMethod.kickAllDevicesWithToken, jo_param, callback);
         }
 
         internal void AddConnectionDelegate(IConnectionDelegate connectionDelegate)
@@ -263,6 +294,7 @@ namespace AgoraChat
             string target = jsonNode["target"];
             string ext = jsonNode["ext"];
             List<string> userIds = List.StringListFromJsonArray(jsonNode["userIds"]);
+            string convId = "";
 
             foreach (IMultiDeviceDelegate it in delegater_multidevice)
             {
@@ -283,9 +315,14 @@ namespace AgoraChat
                         it.OnThreadMultiDevicesEvent(operation, target, userIds);
                         break;
                     case SDKMethod.onRoamDeleteMultiDevicesEvent:
-                        string convId = jsonNode["convId"];
+                        convId = jsonNode["convId"];
                         string deviceId = jsonNode["deviceId"];
                         it.OnRoamDeleteMultiDevicesEvent(convId, deviceId);
+                        break;
+                    case SDKMethod.onConversationMultiDevicesEvent:
+                        convId = jsonNode["convId"];
+                        ConversationType type = jsonNode["type"].AsInt.ToConversationType();
+                        it.OnConversationMultiDevicesEvent(operation, convId, type);
                         break;
                     default:
                         break;

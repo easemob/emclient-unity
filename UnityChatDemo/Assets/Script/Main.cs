@@ -25,6 +25,9 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
     private Button LogoutBtn;
     private Button m_NewTokenBtn;
     private Button RunDelegateTester;
+    private Button GetLoggedInDevicesFromServerWithTokenBtn;
+    private Button KickDeviceWithTokenBtn;
+    private Button KickAllDevicesWithTokenBtn;
 
 
     private void Awake()
@@ -32,21 +35,24 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
 
         Debug.Log("main script has load");
 
-        ChatBtn = transform.Find("Panel/ChatBtn").GetComponent<Button>();
-        ContactBtn = transform.Find("Panel/ContactBtn").GetComponent<Button>();
-        ConversationBtn = transform.Find("Panel/ConversationBtn").GetComponent<Button>();
-        GroupBtn = transform.Find("Panel/GroupBtn").GetComponent<Button>();
-        RoomBtn = transform.Find("Panel/RoomBtn").GetComponent<Button>();
-        PushBtn = transform.Find("Panel/PushBtn").GetComponent<Button>();
-        PresenceBtn = transform.Find("Panel/PresenceBtn").GetComponent<Button>();
-        ThreadBtn = transform.Find("Panel/ThreadBtn").GetComponent<Button>();
-        isConnectedBtn = transform.Find("Panel/Panel/IsConnectBtn").GetComponent<Button>();
-        isLoggedBtn = transform.Find("Panel/Panel/IsLoggedBtn").GetComponent<Button>();
-        CurrentUsernameBtn = transform.Find("Panel/Panel/CurrentUsernameBtn").GetComponent<Button>();
-        AccessTokenBtn = transform.Find("Panel/Panel/AccessTokenBtn").GetComponent<Button>();
-        LogoutBtn = transform.Find("Panel/LogoutBtn").GetComponent<Button>();
-        m_NewTokenBtn = transform.Find("Panel/NewTokenBtn").GetComponent<Button>();
-        RunDelegateTester = transform.Find("Panel/RunDelegateTester").GetComponent<Button>();
+        ChatBtn = transform.Find("Scroll View/Viewport/Content/ChatBtn").GetComponent<Button>();
+        ContactBtn = transform.Find("Scroll View/Viewport/Content/ContactBtn").GetComponent<Button>();
+        ConversationBtn = transform.Find("Scroll View/Viewport/Content/ConversationBtn").GetComponent<Button>();
+        GroupBtn = transform.Find("Scroll View/Viewport/Content/GroupBtn").GetComponent<Button>();
+        RoomBtn = transform.Find("Scroll View/Viewport/Content/RoomBtn").GetComponent<Button>();
+        PushBtn = transform.Find("Scroll View/Viewport/Content/PushBtn").GetComponent<Button>();
+        PresenceBtn = transform.Find("Scroll View/Viewport/Content/PresenceBtn").GetComponent<Button>();
+        ThreadBtn = transform.Find("Scroll View/Viewport/Content/ThreadBtn").GetComponent<Button>();
+        isConnectedBtn = transform.Find("Scroll View/Viewport/Content/IsConnectBtn").GetComponent<Button>();
+        isLoggedBtn = transform.Find("Scroll View/Viewport/Content/IsLoggedBtn").GetComponent<Button>();
+        CurrentUsernameBtn = transform.Find("Scroll View/Viewport/Content/CurrentUsernameBtn").GetComponent<Button>();
+        AccessTokenBtn = transform.Find("Scroll View/Viewport/Content/AccessTokenBtn").GetComponent<Button>();
+        LogoutBtn = transform.Find("Scroll View/Viewport/Content/LogoutBtn").GetComponent<Button>();
+        m_NewTokenBtn = transform.Find("Scroll View/Viewport/Content/NewTokenBtn").GetComponent<Button>();
+        RunDelegateTester = transform.Find("Scroll View/Viewport/Content/RunDelegateTester").GetComponent<Button>();
+        GetLoggedInDevicesFromServerWithTokenBtn = transform.Find("Scroll View/Viewport/Content/GetLoggedInDevicesFromServerWithTokenBtn").GetComponent<Button>();
+        KickDeviceWithTokenBtn = transform.Find("Scroll View/Viewport/Content/KickDeviceWithTokenBtn").GetComponent<Button>();
+        KickAllDevicesWithTokenBtn = transform.Find("Scroll View/Viewport/Content/KickAllDevicesWithTokenBtn").GetComponent<Button>();
 
         ChatBtn.onClick.AddListener(ChatBtnAction);
         ContactBtn.onClick.AddListener(ContactBtnAction);
@@ -63,6 +69,9 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         LogoutBtn.onClick.AddListener(LogoutBtnAction);
         m_NewTokenBtn.onClick.AddListener(NewTokenAction);
         RunDelegateTester.onClick.AddListener(RunDelegateTesterAction);
+        GetLoggedInDevicesFromServerWithTokenBtn.onClick.AddListener(GetLoggedInDevicesFromServerWithTokenAction);
+        KickDeviceWithTokenBtn.onClick.AddListener(KickDeviceWithTokenAction);
+        KickAllDevicesWithTokenBtn.onClick.AddListener(KickAllDevicesWithTokenAction);
 
         SDKClient.Instance.AddConnectionDelegate(this);
         SDKClient.Instance.AddMultiDeviceDelegate(this);
@@ -152,6 +161,91 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         SceneManager.LoadSceneAsync("Login");
     }
 
+    void GetLoggedInDevicesFromServerWithTokenAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            SDKClient.Instance.GetLoggedInDevicesFromServerWithToken(dict["username"], dict["token"],
+            callback: new ValueCallBack<List<DeviceInfo>>(
+
+                onSuccess: (list) =>
+                {
+                    string json = "";
+                    foreach (var it in list)
+                    {
+                        if (json.Length > 0)
+                        {
+                            json += ";";
+                        }
+                        json += it.ToJsonObject().ToString();
+                    }
+                    UIManager.TitleAlert(transform, "成功", json);
+                },
+
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+                )
+            );
+        });
+
+        config.AddField("username");
+        config.AddField("token");
+        UIManager.DefaultInputAlert(transform, config);
+    }
+
+    void KickDeviceWithTokenAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            SDKClient.Instance.KickDeviceWithToken(dict["username"], dict["token"], dict["resource"],
+            callback: new CallBack(
+
+                onSuccess: () =>
+                {
+                    UIManager.TitleAlert(transform, "成功", "Success");
+                },
+
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+                )
+            );
+        });
+
+        config.AddField("username");
+        config.AddField("token");
+        config.AddField("resource");
+        UIManager.DefaultInputAlert(transform, config);
+    }
+
+    void KickAllDevicesWithTokenAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            SDKClient.Instance.KickAllDevicesWithToken(dict["username"], dict["token"],
+            callback: new CallBack(
+
+                onSuccess: () =>
+                {
+                    UIManager.TitleAlert(transform, "成功", "Success");
+                },
+
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+                )
+            );
+        });
+
+        config.AddField("username");
+        config.AddField("token");
+        UIManager.DefaultInputAlert(transform, config);
+    }
+
     void NewTokenAction()
     {
         string token = "12345";
@@ -193,12 +287,8 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         SDKClient.Instance.ContactManager.AddContactManagerDelegate(this);
         SDKClient.Instance.GroupManager.AddGroupManagerDelegate(this);
         SDKClient.Instance.RoomManager.AddRoomManagerDelegate(this);
-
-
-        SDKClient.Instance.ChatManager.AddChatManagerDelegate(this);
-        SDKClient.Instance.ChatManager.AddChatManagerDelegate(this);
-        SDKClient.Instance.ChatManager.AddChatManagerDelegate(this);
-        SDKClient.Instance.ChatManager.AddChatManagerDelegate(this);
+        SDKClient.Instance.PresenceManager.AddPresenceManagerDelegate(this);
+        SDKClient.Instance.ThreadManager.AddThreadManagerDelegate(this);
     }
 
 
@@ -589,6 +679,11 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         Debug.Log($"ChatManager10 OnContactAdded {string.Join(", ", changes.ToArray())}");
     }
 
+    public void OnMessageContentChanged(Message msg, string operatorId, long operationTime)
+    {
+        Debug.Log($"ChatManager11 OnMessageContentChanged change msgId:{msg.MsgId}, operatorId:{operatorId}, operationTime:{operationTime}");
+    }
+
     public void OnContactAdded(string username)
     {
         Debug.Log($"ContactManager1 OnContactAdded {username}");
@@ -668,6 +763,11 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
     public void OnRoamDeleteMultiDevicesEvent(string conversationId, string deviceId)
     {
         Debug.Log($"MultiDevice5 OnRoamDeleteMultiDevicesEvent conversationId:{conversationId}, deviceId:{deviceId}");
+    }
+
+    public void OnConversationMultiDevicesEvent(MultiDevicesOperation operation, string conversationId, ConversationType type)
+    {
+        Debug.Log($"MultiDevice6 OnConversationMultiDevicesEvent: operation: {operation}, conversationId:{conversationId}, type:{type}");
     }
 
     public void OnConnected()

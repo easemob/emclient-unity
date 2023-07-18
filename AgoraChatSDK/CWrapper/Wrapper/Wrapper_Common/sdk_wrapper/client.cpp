@@ -503,6 +503,35 @@ namespace sdk_wrapper
         return nullptr;
     }
 
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_KickDeviceWithToken(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_jstr = jstr;
+        string local_cbid = cbid;
+
+        Document d; d.Parse(local_jstr.c_str());
+        string user_name = GetJsonValue_String(d, "username", "");
+        string token = GetJsonValue_String(d, "token", "");
+        string resource = GetJsonValue_String(d, "resource", "");
+
+        thread t([=]() {
+            EMError error;
+            CLIENT->kickDeviceWithToken(user_name, token, resource, error);
+
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+                string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            });
+        t.detach();
+        return nullptr;
+    }
+
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_KickDevices(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         if (!CheckClientInitOrNot(cbid)) return nullptr;
@@ -527,6 +556,34 @@ namespace sdk_wrapper
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
         });
+        t.detach();
+        return nullptr;
+    }
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_KickDevicesWithToken(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_jstr = jstr;
+        string local_cbid = cbid;
+
+        Document d; d.Parse(local_jstr.c_str());
+        string user_name = GetJsonValue_String(d, "username", "");
+        string token = GetJsonValue_String(d, "token", "");
+
+        thread t([=]() {
+            EMError error;
+            CLIENT->kickAllDevicesWithToken(user_name, token, error);
+
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+                string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            });
         t.detach();
         return nullptr;
     }
@@ -557,6 +614,37 @@ namespace sdk_wrapper
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
         });
+        t.detach();
+
+        return nullptr;
+    }
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_GetLoggedInDevicesFromServerWithToken(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_jstr = jstr;
+        string local_cbid = cbid;
+
+        Document d; d.Parse(local_jstr.c_str());
+        string user_name = GetJsonValue_String(d, "username", "");
+        string token = GetJsonValue_String(d, "token", "");
+
+        thread t([=]() {
+            EMError error;
+
+            vector<EMDeviceInfoPtr> vec = CLIENT->getLoggedInDevicesFromServerWithToken(user_name, token, error);
+
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+                string json = DeviceInfo::ToJson(vec);
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            });
         t.detach();
 
         return nullptr;
@@ -656,6 +744,8 @@ namespace sdk_wrapper
             gMultiDevicesListener->undisturbMultiDevicesEvent("data");
 
             gMultiDevicesListener->onRoamDeleteMultiDevicesEvent("convId", "deviceId", usernames, 123456);
+
+            gMultiDevicesListener->onConversationMultiDevicesEvent(EMMultiDevicesListener::MultiDevicesOperation::CONVERSATION_PINNED, "convId", EMConversation::EMConversationType::CHAT);
         }
 
         return nullptr;

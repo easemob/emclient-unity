@@ -50,15 +50,15 @@ namespace AgoraChat
          * \~chinese
          * 多端多设备子区事件回调。
          *
-         * @param operation     群组事件，详见 {@link MultiDevicesOperation}。
-         * @param target        群组 ID。
+         * @param operation     子区事件，详见 {@link MultiDevicesOperation}。
+         * @param target        子区 ID。
          * @param usernames     操作目标 ID 列表。
          *
          * \~english
          * The callback for a multi-device thread event.
          *
-         * @param operation     The group event. See {@link MultiDevicesOperation}.
-         * @param target        The group ID.
+         * @param operation     The thread event. See {@link MultiDevicesOperation}.
+         * @param target        The thread ID.
          * @param usernames     The target user ID(s) of the operation.
          */
         void OnThreadMultiDevicesEvent(MultiDevicesOperation operation, string target, List<string> usernames);
@@ -77,6 +77,23 @@ namespace AgoraChat
          * @param deviceId          Device ID.
          */
         void OnRoamDeleteMultiDevicesEvent(string conversationId, string deviceId);
+
+        /**
+        * \~chinese
+        * 多端多设备会话操作事件回调。
+        *
+        * @param operation         会话事件，详见 {@link MultiDevicesOperation}。
+        * @param conversationId    会话 ID。
+        * @param type              会话类型。
+        *
+        * \~english
+        * The callback for a multi-device conversation event.
+        *
+        * @param operation         The conversation event. See {@link MultiDevicesOperation}.
+        * @param conversationId    Conversation ID.
+        * @param deviceId          Conversation type.
+        */
+        void OnConversationMultiDevicesEvent(MultiDevicesOperation operation, string conversationId, ConversationType type);
     }
 
 }

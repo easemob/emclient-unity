@@ -470,6 +470,7 @@
                 '<(emclient-linux-path)/src/message/emvideomessagebody.cpp',
                 '<(emclient-linux-path)/src/message/emvoicemessagebody.cpp',
                 '<(emclient-linux-path)/src/message/emmessagereaction.cpp',
+                '<(emclient-linux-path)/src/message/emcombinemessagebody.cpp',
             
                 '<(emclient-linux-path)/src/utils/emcryptoadapter.cpp',
                 '<(emclient-linux-path)/src/utils/emencryptutils.cpp',
