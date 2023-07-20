@@ -81,10 +81,14 @@
          *  \~chinese
          *  当前登录设备账号被登录其他设备的同账号踢下线。
          *
+         *  @param deviceName 另一个设备的名称。
+         *
          *  \~english
          *  Occurs when the user is forced to log out of the current account from the current device due to login to another device.
+         *
+         *  @param deviceName Another device name.
          */
-        void OnKickedByOtherDevice();
+        void OnKickedByOtherDevice(string deviceName);
 
         /**
          *  \~chinese

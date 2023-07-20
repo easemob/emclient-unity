@@ -265,7 +265,10 @@ namespace AgoraChat
                         it.OnLoginTooManyDevice();
                         break;
                     case SDKMethod.onKickedByOtherDevice:
-                        it.OnKickedByOtherDevice();
+                        {
+                            string deviceName = jsonNode["deviceName"];
+                            it.OnKickedByOtherDevice(deviceName);
+                        }
                         break;
                     case SDKMethod.onAuthFailed:
                         it.OnAuthFailed();
