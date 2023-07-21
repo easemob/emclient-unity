@@ -311,12 +311,9 @@ public class EMMessageHelper {
                     }else {
                         js.put("value", "False");
                     }
-                }else if (value instanceof JSONArray) {
+                }else if (value instanceof JSONArray || value instanceof JSONObject) {
                     js.put("type", "jstr");
-                    js.put("value", value.toString());
-                }else if (value instanceof JSONObject) {
-                    js.put("type", "jstr");
-                    js.put("value", value.toString());
+                    js.put("value", value);
                 }
                 jo.put(key, js);
             }

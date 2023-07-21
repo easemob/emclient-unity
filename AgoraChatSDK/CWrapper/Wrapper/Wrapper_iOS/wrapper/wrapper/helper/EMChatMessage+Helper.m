@@ -148,10 +148,8 @@
                         dict[key] = @{@"type":@"b",@"value":@"False"};
                     }
                 }
-            } else if ([value isKindOfClass:[NSDictionary class]]) {
-                dict[key] = @{@"type":@"jstr",@"value": [(NSDictionary *)value toJsonString]};
-            } else if ([value isKindOfClass:[NSArray class]]) {
-                dict[key] = @{@"type":@"jstr",@"value":[(NSArray *)value toJsonString]};
+            } else if ([value isKindOfClass:[NSDictionary class]] || [value isKindOfClass:[NSArray class]]) {
+                dict[key] = @{@"type":@"jstr",@"value": value};
             }
             else if([value isKindOfClass:[NSString class]]) {
                 dict[key] = @{@"type":@"str",@"value":value};;
