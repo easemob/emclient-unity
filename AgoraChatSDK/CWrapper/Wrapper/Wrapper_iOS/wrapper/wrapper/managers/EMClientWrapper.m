@@ -225,11 +225,11 @@
 }
 
 - (NSString *)kickDevice:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
-    NSString *username = params[@"username"];
+    NSString *userId = params[@"userId"];
     NSString *password = params[@"password"];
     NSString *resource = params[@"resource"];
     __weak EMBaseManager *weakSelf = self;
-    [EMClient.sharedClient kickDeviceWithUsername:username
+    [EMClient.sharedClient kickDeviceWithUsername:userId
                                          password:password
                                          resource:resource
                                        completion:^(EMError * _Nullable aError) {
@@ -239,10 +239,10 @@
 }
 
 - (NSString *)kickAllDevices:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
-    NSString *username = params[@"username"];
+    NSString *userId = params[@"userId"];
     NSString *password = params[@"password"];
     __weak EMBaseManager *weakSelf = self;
-    [EMClient.sharedClient kickAllDevicesWithUsername:username
+    [EMClient.sharedClient kickAllDevicesWithUsername:userId
                                              password:password
                                            completion:^(EMError * _Nullable aError) {
         [weakSelf wrapperCallback:callback error:aError object:nil];
@@ -263,7 +263,7 @@
 }
 
 - (NSString *)getLoggedInDevicesFromServer:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
-    NSString *userId = params[@"username"];
+    NSString *userId = params[@"userId"];
     NSString *password = params[@"password"];
     __weak EMBaseManager *weakSelf = self;
     [EMClient.sharedClient getLoggedInDevicesFromServerWithUsername:userId
@@ -281,11 +281,11 @@
 }
 
 - (NSString *)kickDeviceWithToken:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
-    NSString *username = params[@"username"];
+    NSString *userId = params[@"userId"];
     NSString *token = params[@"token"];
     NSString *resource = params[@"resource"];
     __weak EMBaseManager *weakSelf = self;
-    [EMClient.sharedClient kickDeviceWithUserId:username
+    [EMClient.sharedClient kickDeviceWithUserId:userId
                                          token:token
                                          resource:resource
                                        completion:^(EMError * _Nullable aError) {
@@ -295,10 +295,10 @@
 }
 
 - (NSString *)kickAllDevicesWithToken:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
-    NSString *username = params[@"username"];
+    NSString *userId = params[@"userId"];
     NSString *token = params[@"token"];
     __weak EMBaseManager *weakSelf = self;
-    [EMClient.sharedClient kickAllDevicesWithUserId:username
+    [EMClient.sharedClient kickAllDevicesWithUserId:userId
                                              token:token
                                            completion:^(EMError * _Nullable aError) {
         [weakSelf wrapperCallback:callback error:aError object:nil];
@@ -308,7 +308,7 @@
 }
 
 - (NSString *)getLoggedInDevicesFromServerWithToken:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
-    NSString *userId = params[@"username"];
+    NSString *userId = params[@"userId"];
     NSString *token = params[@"token"];
     __weak EMBaseManager *weakSelf = self;
     [EMClient.sharedClient getLoggedInDevicesFromServerWithUserId:userId
