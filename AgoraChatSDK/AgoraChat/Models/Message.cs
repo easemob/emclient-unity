@@ -399,46 +399,46 @@ namespace AgoraChat
          * \~chinese
          * 创建一条文本发送消息。
          *
-         * @param username 消息接收者的用户 ID、群组 ID、子区ID或者是聊天室ID。
+         * @param userId  消息接收者的用户 ID、群组 ID、子区ID或者是聊天室ID。
          * @param content 文本内容。
          * 
          * \~english
          * Creates a text message for sending.
          *
-         * @param username The user ID of the message recipient, group ID, thread ID, or chatroom ID.
+         * @param userId  The user ID of the message recipient, group ID, thread ID, or chatroom ID.
          * @param content The text content.
          */
-        static public Message CreateTextSendMessage(string username, string content)
+        static public Message CreateTextSendMessage(string userId, string content)
         {
-            return CreateSendMessage(username, new MessageBody.TextBody(content));
+            return CreateSendMessage(userId, new MessageBody.TextBody(content));
         }
 
         /**
          * \~chinese
          * 创建一条文件发送消息。
          *
-         * @param username          消息接收者的用户 ID、群组 ID、子区ID或者是聊天室ID。
+         * @param userId            消息接收者的用户 ID、群组 ID、子区ID或者是聊天室ID。
          * @param localPath         文件的本地路径。
          * @param displayName       文件的显示名称。
          * @param fileSize          文件大小，单位为字节。
          * 
          * \~english
          * Creates a file message for sending.
-         * @param username          The user ID of the message recipient, group ID, thread ID, or chatroom ID.
+         * @param userId            The user ID of the message recipient, group ID, thread ID, or chatroom ID.
          * @param localPath         The local path of the file.
          * @param displayName       The display name of the file.
          * @param fileSize          The file size in bytes.
          */
-        static public Message CreateFileSendMessage(string username, string localPath, string displayName = "", long fileSize = 0)
+        static public Message CreateFileSendMessage(string userId, string localPath, string displayName = "", long fileSize = 0)
         {
-            return CreateSendMessage(username, new MessageBody.FileBody(localPath, displayName, fileSize: fileSize));
+            return CreateSendMessage(userId, new MessageBody.FileBody(localPath, displayName, fileSize: fileSize));
         }
 
         /**
          * \~chinese
          * 创建一条图片发送消息。
          *
-         * @param username              消息接收者的用户 ID、群组 ID、子区ID或者是聊天室ID。
+         * @param userId                消息接收者的用户 ID、群组 ID、子区ID或者是聊天室ID。
          * @param localPath             图片的本地路径。
          * @param displayName           图片的显示名称。
          * @param fileSize              图片大小，单位为字节。
@@ -451,7 +451,7 @@ namespace AgoraChat
          * \~english
          * Creates an image message for sending.
          *
-         * @param username              The user ID of the message recipient, group ID, thread ID, or chatroom ID.
+         * @param userId                The user ID of the message recipient, group ID, thread ID, or chatroom ID.
          * @param localPath             The local path of the image.
          * @param displayName           The display name of the image.
          * @param fileSize              The image size in bytes.
@@ -463,16 +463,16 @@ namespace AgoraChat
          * 
          *
          */
-        static public Message CreateImageSendMessage(string username, string localPath, string displayName = "", long fileSize = 0, bool original = false, double width = 0, double height = 0)
+        static public Message CreateImageSendMessage(string userId, string localPath, string displayName = "", long fileSize = 0, bool original = false, double width = 0, double height = 0)
         {
-            return CreateSendMessage(username, new MessageBody.ImageBody(localPath, displayName: displayName, fileSize: fileSize, original: original, width: width, height: height));
+            return CreateSendMessage(userId, new MessageBody.ImageBody(localPath, displayName: displayName, fileSize: fileSize, original: original, width: width, height: height));
         }
 
         /**
          * \~chinese
          * 创建一条视频发送消息。
          *
-         * @param username              消息接收者的用户 ID、群组 ID、子区ID或者是聊天室ID。
+         * @param userId                消息接收者的用户 ID、群组 ID、子区ID或者是聊天室ID。
          * @param localPath             视频文件的 URI。
          * @param displayName           视频文件的显示名称。
          * @param thumbnailLocalPath    缩略图的本地路径。
@@ -484,7 +484,7 @@ namespace AgoraChat
          * \~english
          * Creates a video message for sending.
          *
-         * @param username              The user ID of the message recipient, group ID, thread ID, or chatroom ID.
+         * @param userId                The user ID of the message recipient, group ID, thread ID, or chatroom ID.
          * @param localPath             The URI of the video file.
          * @param displayName           The display name of the video file.
          * @param thumbnailLocalPath    The local path of the thumbnail of the video file.
@@ -494,16 +494,16 @@ namespace AgoraChat
          * @param heigh                 The video height in pixels.
          * 
          */
-        static public Message CreateVideoSendMessage(string username, string localPath, string displayName = "", string thumbnailLocalPath = "", long fileSize = 0, int duration = 0, double width = 0, double height = 0)
+        static public Message CreateVideoSendMessage(string userId, string localPath, string displayName = "", string thumbnailLocalPath = "", long fileSize = 0, int duration = 0, double width = 0, double height = 0)
         {
-            return CreateSendMessage(username, new MessageBody.VideoBody(localPath, displayName: displayName, thumbnailLocalPath: thumbnailLocalPath, fileSize: fileSize, duration: duration, width: width, height: height));
+            return CreateSendMessage(userId, new MessageBody.VideoBody(localPath, displayName: displayName, thumbnailLocalPath: thumbnailLocalPath, fileSize: fileSize, duration: duration, width: width, height: height));
         }
 
         /**
          * \~chinese
          * 创建一条语音发送消息。
          *
-         * @param username      消息接收者的用户 ID、群组 ID、子区ID或者是聊天室ID。
+         * @param userId        消息接收者的用户 ID、群组 ID、子区ID或者是聊天室ID。
          * @param localPath     语音文件的本地路径。
          * @param displayName   语音文件的显示名称。
          * @param fileSize      语音文件的大小，单位为字节。
@@ -513,23 +513,23 @@ namespace AgoraChat
          * \~english
          * Creates a voice message for sending.
          *
-         * @param username      The user ID of the message recipient, group ID, thread ID, or chatroom ID.
+         * @param userId        The user ID of the message recipient, group ID, thread ID, or chatroom ID.
          * @param localPath     The local path of the voice file.
          * @param displayName   The display name of f the voice file.
          * @param fileSize      The size of the voice file, in bytes.
          * @param duration      The voice duration in seconds.
          *
          */
-        static public Message CreateVoiceSendMessage(string username, string localPath, string displayName = "", long fileSize = 0, int duration = 0)
+        static public Message CreateVoiceSendMessage(string userId, string localPath, string displayName = "", long fileSize = 0, int duration = 0)
         {
-            return CreateSendMessage(username, new MessageBody.VoiceBody(localPath, displayName: displayName, fileSize: fileSize, duration: duration));
+            return CreateSendMessage(userId, new MessageBody.VoiceBody(localPath, displayName: displayName, fileSize: fileSize, duration: duration));
         }
 
         /**
          * \~chinese
          * 创建一条位置发送消息。
          *
-         * @param username      消息接收者的用户 ID、群组 ID、子区ID或者是聊天室ID。
+         * @param userId        消息接收者的用户 ID、群组 ID、子区ID或者是聊天室ID。
          * @param latitude      纬度。
          * @param longitude     经度。
          * @param address       位置详情。
@@ -539,23 +539,23 @@ namespace AgoraChat
          * \~english
          * Creates a location message for sending.
          *
-         * @param username      The user ID of the message recipient, group ID, thread ID, or chatroom ID.
+         * @param userId        The user ID of the message recipient, group ID, thread ID, or chatroom ID.
          * @param latitude      The latitude.
          * @param longitude     The longitude.
          * @param address       The location details.
          * @param buildingName  The building name.
          * 
          */
-        static public Message CreateLocationSendMessage(string username, double latitude, double longitude, string address = "", string buildingName = "")
+        static public Message CreateLocationSendMessage(string userId, double latitude, double longitude, string address = "", string buildingName = "")
         {
-            return CreateSendMessage(username, new MessageBody.LocationBody(latitude: latitude, longitude: longitude, address: address, buildName: buildingName));
+            return CreateSendMessage(userId, new MessageBody.LocationBody(latitude: latitude, longitude: longitude, address: address, buildName: buildingName));
         }
 
         /**
          * \~chinese
          * 创建一条命令发送消息。
          *
-         * @param username              消息接收者的用户 ID、群组 ID、子区ID或者是聊天室ID。
+         * @param userId                消息接收者的用户 ID、群组 ID、子区ID或者是聊天室ID。
          * @param action                命令内容。
          *                              - `true`：只投在线用户。
          *                              - （默认） `false`：不管用户是否在线均投递。
@@ -564,23 +564,23 @@ namespace AgoraChat
          * \~english
          * Creates a command message for sending.
          *
-         * @param username              The user ID of the message recipient, group ID, thread ID, or chatroom ID.
+         * @param userId                The user ID of the message recipient, group ID, thread ID, or chatroom ID.
          * @param action                The command action.
          * @param deliverOnlineOnly     Whether this command message is delivered only to the online users.
          *                              - `true`: Yes.
          *                              - (Default) `false`: No. The command message is delivered to users, regardless of their online or offline status.
          * 
          */
-        static public Message CreateCmdSendMessage(string username, string action, bool deliverOnlineOnly = false)
+        static public Message CreateCmdSendMessage(string userId, string action, bool deliverOnlineOnly = false)
         {
-            return CreateSendMessage(username, new MessageBody.CmdBody(action, deliverOnlineOnly: deliverOnlineOnly));
+            return CreateSendMessage(userId, new MessageBody.CmdBody(action, deliverOnlineOnly: deliverOnlineOnly));
         }
 
         /**
          * \~chinese
          * 创建一条自定义发送消息。
          *
-         * @param username          消息接收者的用户 ID 或群组 ID。
+         * @param userId            消息接收者的用户 ID 或群组 ID。
          * @param customEvent       自定义事件。
          * @param customParams      自定义参数字典。
          * 
@@ -588,21 +588,21 @@ namespace AgoraChat
          * \~english
          * Creates a custom message for sending.
          *
-         * @param username          The user ID of the message recipient, group ID, thread ID, or chatroom ID.
+         * @param userId            The user ID of the message recipient, group ID, thread ID, or chatroom ID.
          * @param customEvent       The custom event.
          * @param customParams      The dictionary of custom parameters.
          * 
          */
-        static public Message CreateCustomSendMessage(string username, string customEvent, Dictionary<string, string> customParams = null)
+        static public Message CreateCustomSendMessage(string userId, string customEvent, Dictionary<string, string> customParams = null)
         {
-            return CreateSendMessage(username, new MessageBody.CustomBody(customEvent, customParams: customParams));
+            return CreateSendMessage(userId, new MessageBody.CustomBody(customEvent, customParams: customParams));
         }
 
         /**
         * \~chinese
         * 创建一条组合发送消息。
         *
-        * @param username               消息接收者的用户 ID 或群组 ID。
+        * @param userId                 消息接收者的用户 ID 或群组 ID。
         * @param title                  组合消息标题。
         * @param summary                组合消息概要。
         * @param compatibleText         组合消息兼容信息
@@ -611,16 +611,16 @@ namespace AgoraChat
         * \~english
         * Creates an image message for sending.
         *
-        * @param username               The user ID of the message recipient, group ID, thread ID, or chatroom ID.
+        * @param userId                 The user ID of the message recipient, group ID, thread ID, or chatroom ID.
         * @param title                  The title of combined message.
         * @param summary                The summary of combined message.
         * @param messageList            The message Id list included in combined message.
         *
         *
         */
-        static public Message CreateCombineSendMessage(string username, string title, string summary, string compatibleText, List<string> messageList)
+        static public Message CreateCombineSendMessage(string userId, string title, string summary, string compatibleText, List<string> messageList)
         {
-            return CreateSendMessage(username, new MessageBody.CombineBody(title: title, summary: summary, compatibleText: compatibleText, messageList: messageList));
+            return CreateSendMessage(userId, new MessageBody.CombineBody(title: title, summary: summary, compatibleText: compatibleText, messageList: messageList));
         }
 
         /**
