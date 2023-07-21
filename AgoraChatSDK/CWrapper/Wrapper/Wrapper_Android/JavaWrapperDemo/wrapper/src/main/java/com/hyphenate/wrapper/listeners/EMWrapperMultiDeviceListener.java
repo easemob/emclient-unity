@@ -71,6 +71,7 @@ public class EMWrapperMultiDeviceListener implements EMMultiDeviceListener {
             data.put("operation", event);
             data.put("type", iType);
             data.put("convId", conversationId);
+            post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.multiDeviceListener, EMSDKMethod.onConversationMultiDevicesEvent, data.toString()));
         } catch (JSONException e) {
             e.printStackTrace();
         }

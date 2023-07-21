@@ -330,6 +330,7 @@ public class EMSDKMethod {
     public static final String onUnDisturbMultiDevicesEvent = "onUnDisturbMultiDevicesEvent";
     public static final String onThreadMultiDevicesEvent = "onThreadMultiDevicesEvent";
     public static final String onRoamDeleteMultiDevicesEvent = "onRoamDeleteMultiDevicesEvent";
+    public static final String onConversationMultiDevicesEvent = "onConversationMultiDevicesEvent";
 
 
     // PresenceManagerDelegate
