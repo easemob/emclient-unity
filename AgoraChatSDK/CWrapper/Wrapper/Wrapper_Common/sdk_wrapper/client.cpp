@@ -482,13 +482,13 @@ namespace sdk_wrapper
         string local_cbid = cbid;
 
         Document d; d.Parse(local_jstr.c_str());
-        string user_name = GetJsonValue_String(d, "username", "");
+        string userId = GetJsonValue_String(d, "userId", "");
         string password = GetJsonValue_String(d, "password", "");
         string resource = GetJsonValue_String(d, "resource", "");
 
         thread t([=]() {
             EMError error;
-            CLIENT->kickDevice(user_name, password, resource, error);
+            CLIENT->kickDevice(userId, password, resource, error);
 
             if (EMError::EM_NO_ERROR == error.mErrorCode) {
                 string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
@@ -511,13 +511,13 @@ namespace sdk_wrapper
         string local_cbid = cbid;
 
         Document d; d.Parse(local_jstr.c_str());
-        string user_name = GetJsonValue_String(d, "username", "");
+        string userId = GetJsonValue_String(d, "userId", "");
         string token = GetJsonValue_String(d, "token", "");
         string resource = GetJsonValue_String(d, "resource", "");
 
         thread t([=]() {
             EMError error;
-            CLIENT->kickDeviceWithToken(user_name, token, resource, error);
+            CLIENT->kickDeviceWithToken(userId, token, resource, error);
 
             if (EMError::EM_NO_ERROR == error.mErrorCode) {
                 string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
@@ -540,12 +540,12 @@ namespace sdk_wrapper
         string local_cbid = cbid;
 
         Document d; d.Parse(local_jstr.c_str());
-        string user_name = GetJsonValue_String(d, "username", "");
+        string userId = GetJsonValue_String(d, "userId", "");
         string password = GetJsonValue_String(d, "password", "");
 
         thread t([=]() {
             EMError error;
-            CLIENT->kickAllDevices(user_name, password, error);
+            CLIENT->kickAllDevices(userId, password, error);
 
             if (EMError::EM_NO_ERROR == error.mErrorCode) {
                 string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
@@ -568,12 +568,12 @@ namespace sdk_wrapper
         string local_cbid = cbid;
 
         Document d; d.Parse(local_jstr.c_str());
-        string user_name = GetJsonValue_String(d, "username", "");
+        string userId = GetJsonValue_String(d, "userId", "");
         string token = GetJsonValue_String(d, "token", "");
 
         thread t([=]() {
             EMError error;
-            CLIENT->kickAllDevicesWithToken(user_name, token, error);
+            CLIENT->kickAllDevicesWithToken(userId, token, error);
 
             if (EMError::EM_NO_ERROR == error.mErrorCode) {
                 string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
@@ -596,13 +596,13 @@ namespace sdk_wrapper
         string local_cbid = cbid;
 
         Document d; d.Parse(local_jstr.c_str());
-        string user_name = GetJsonValue_String(d, "username", "");
+        string userId = GetJsonValue_String(d, "userId", "");
         string password = GetJsonValue_String(d, "password", "");
 
         thread t([=]() {
             EMError error;
 
-            vector<EMDeviceInfoPtr> vec = CLIENT->getLoggedInDevicesFromServer(user_name, password, error);
+            vector<EMDeviceInfoPtr> vec = CLIENT->getLoggedInDevicesFromServer(userId, password, error);
 
             if (EMError::EM_NO_ERROR == error.mErrorCode) {
                 string json = DeviceInfo::ToJson(vec);
@@ -627,13 +627,13 @@ namespace sdk_wrapper
         string local_cbid = cbid;
 
         Document d; d.Parse(local_jstr.c_str());
-        string user_name = GetJsonValue_String(d, "username", "");
+        string userId = GetJsonValue_String(d, "userId", "");
         string token = GetJsonValue_String(d, "token", "");
 
         thread t([=]() {
             EMError error;
 
-            vector<EMDeviceInfoPtr> vec = CLIENT->getLoggedInDevicesFromServerWithToken(user_name, token, error);
+            vector<EMDeviceInfoPtr> vec = CLIENT->getLoggedInDevicesFromServerWithToken(userId, token, error);
 
             if (EMError::EM_NO_ERROR == error.mErrorCode) {
                 string json = DeviceInfo::ToJson(vec);
