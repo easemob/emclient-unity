@@ -208,6 +208,22 @@ public class EMMessageHelper {
                     message.setAttribute(key,Integer.valueOf(value));
                 } else if (valueType.equals("str")) {
                     message.setAttribute(key, value);
+                } else if (valueType.equals("jstr")) {
+                    boolean hasAdd = false;
+                    do {
+                        try {
+                            JSONObject jo = new JSONObject(value);
+                            message.setAttribute(key, jo);
+                            hasAdd = true;
+                            break;
+                        }catch (JSONException ignored){}
+                        try {
+                            JSONArray ja = new JSONArray(value);
+                            message.setAttribute(key, ja);
+                            hasAdd = true;
+                            break;
+                        }catch (JSONException ignored){}
+                    }while (hasAdd);
                 }
             }
         }
@@ -295,6 +311,12 @@ public class EMMessageHelper {
                     }else {
                         js.put("value", "False");
                     }
+                }else if (value instanceof JSONArray) {
+                    js.put("type", "jstr");
+                    js.put("value", value.toString());
+                }else if (value instanceof JSONObject) {
+                    js.put("type", "jstr");
+                    js.put("value", value.toString());
                 }
                 jo.put(key, js);
             }

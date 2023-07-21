@@ -7,7 +7,8 @@
 
 #import "EMChatMessage+Helper.h"
 #import "EMChatThread+Helper.h"
-
+#import "NSDictionary+Category.h"
+#import "NSArray+Category.h"
 
 @implementation EMChatMessage (Helper)
 
@@ -86,6 +87,8 @@
                 extDict[key] = @([value doubleValue]);
             }else if ([type isEqualToString:@"str"]) {
                 extDict[key] = value;
+            }else if ([type isEqualToString:@"jstr"]) {
+                extDict[key] = [NSArray fromString:value];
             }
         }
     }
@@ -145,7 +148,12 @@
                         dict[key] = @{@"type":@"b",@"value":@"False"};
                     }
                 }
-            }else if([value isKindOfClass:[NSString class]]) {
+            } else if ([value isKindOfClass:[NSDictionary class]]) {
+                dict[key] = @{@"type":@"jstr",@"value": [(NSDictionary *)value toJsonString]};
+            } else if ([value isKindOfClass:[NSArray class]]) {
+                dict[key] = @{@"type":@"jstr",@"value":[(NSArray *)value toJsonString]};
+            }
+            else if([value isKindOfClass:[NSString class]]) {
                 dict[key] = @{@"type":@"str",@"value":value};;
             }
         }
