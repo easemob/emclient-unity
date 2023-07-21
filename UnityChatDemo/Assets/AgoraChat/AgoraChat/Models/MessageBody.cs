@@ -909,7 +909,7 @@ namespace AgoraChat
          * \~english
          * The combine message body.
          */
-        public class CombineBody : FileBody
+        public class CombineBody : IMessageBody
         {
             /**
              * \~chinese
@@ -947,6 +947,10 @@ namespace AgoraChat
              */
             public List<string> MessageList;
 
+            internal string RemotePath;
+            internal string Secret;
+            internal string LocalPath;
+
             /**
              * \~chinese
              * 组合消息体构造方法。
@@ -964,7 +968,7 @@ namespace AgoraChat
              * @param messageList       The message Id list included in combined message.
              *
              */
-            public CombineBody(string title, string summary, string compatibleText, List<string> messageList) : base("")
+            public CombineBody(string title, string summary, string compatibleText, List<string> messageList)
             {
                 Type = MessageBodyType.COMBINE;
 
@@ -993,6 +997,10 @@ namespace AgoraChat
                 JSONObject jo = base.ToJsonObject();
                 JSONObject jo_body = jo["body"].AsObject;
 
+                jo_body.AddWithoutNull("remotePath", RemotePath);
+                jo_body.AddWithoutNull("secret", Secret);
+                jo_body.AddWithoutNull("localPath", LocalPath);
+
                 jo_body.AddWithoutNull("title", Title);
                 jo_body.AddWithoutNull("summary", Summary);
                 jo_body.AddWithoutNull("compatibleText", CompatibleText);
@@ -1003,7 +1011,9 @@ namespace AgoraChat
 
             internal override void FromJsonObject(JSONObject jo)
             {
-                base.FromJsonObject(jo);
+                RemotePath = jo["remotePath"];
+                Secret = jo["secret"];
+                LocalPath = jo["localPath"];
 
                 Title = jo["title"];
                 Summary = jo["summary"];
