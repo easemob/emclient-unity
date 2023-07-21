@@ -424,6 +424,19 @@ namespace sdk_wrapper
             configs->setEnableEmptyConversation(enable_empty_conversation);
         }
 
+        if (jnode.HasMember("customOSType") && jnode["customOSType"].IsInt()) {
+            int custom_os_type = jnode["customOSType"].GetInt();
+            if (-1 != custom_os_type) {
+                configs->setOs(EMChatConfigs::OSType::OS_CUSTOM);
+                configs->setOSCustomValue(custom_os_type);
+            }
+        }
+
+        if (jnode.HasMember("customDeviceName") && jnode["customDeviceName"].IsString()) {
+            string custom_device_name = jnode["customDeviceName"].GetString();
+            configs->setDeviceName(custom_device_name);
+        }
+
         //TODO: need to Area code later
 
 #ifndef _WIN32
