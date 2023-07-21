@@ -219,6 +219,7 @@
         case 5:type = EMMessageBodyTypeFile; break;
         case 6:type = EMMessageBodyTypeCmd; break;
         case 7:type = EMMessageBodyTypeCustom; break;
+        case 8:type = EMMessageBodyTypeCombine; break;
         default:break;
     }
     long long timestamp = [params[@"timestamp"] longLongValue];

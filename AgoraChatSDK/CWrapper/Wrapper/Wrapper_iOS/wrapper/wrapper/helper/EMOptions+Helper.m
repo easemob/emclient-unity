@@ -32,13 +32,16 @@
     data[@"restServer"] = self.restServer;
     data[@"dnsUrl"] = self.dnsURL;
     data[@"areaCode"] = @(self.area);
+    data[@"enableEmptyConversation"] = @(self.loadEmptyConversations);
+    data[@"osType"] = @(self.customOSType);
+    data[@"deviceName"] = self.customDeviceName;
     
     return data;
 }
 + (EMOptions *)fromJson:(NSDictionary *)aJson {
     EMOptions *options = [EMOptions optionsWithAppkey:aJson[@"appKey"]];
     options.isAutoLogin = [aJson[@"autoLogin"] boolValue];
-    options.enableConsoleLog = YES; // [aJson[@"debugModel"] boolValue];
+    options.enableConsoleLog = [aJson[@"debugModel"] boolValue];
     options.enableRequireReadAck = [aJson[@"requireAck"] boolValue];
     options.enableDeliveryAck = [aJson[@"requireDeliveryAck"] boolValue];
     options.sortMessageByServerTime = [aJson[@"sortMessageByServerTime"] boolValue];
@@ -62,6 +65,13 @@
         }
     }
     options.area = [aJson[@"areaCode"] intValue];
+    if(aJson[@"enableEmptyConversation"]) {
+        options.loadEmptyConversations = [aJson[@"enableEmptyConversation"] boolValue];
+    }
+    options.customDeviceName = aJson[@"deviceName"];
+    if(aJson[@"osType"]) {
+        options.customOSType = [aJson[@"osType"] intValue];
+    }
     
     return options;
 }

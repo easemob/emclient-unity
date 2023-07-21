@@ -36,6 +36,8 @@
                 [list addObject:@(EMMessageBodyTypeCmd)];
             } else if (type == 7) {
                 [list addObject:@(EMMessageBodyTypeCustom)];
+            } else if (type == 8) {
+                [list addObject:@(EMMessageBodyTypeCombine)];
             }
         }
     }

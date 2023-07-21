@@ -38,6 +38,11 @@ static NSString *const compressLogs = @"compressLogs";
 static NSString *const kickDevice = @"kickDevice";
 static NSString *const kickAllDevices = @"kickAllDevices";
 static NSString *const getLoggedInDevicesFromServer = @"getLoggedInDevicesFromServer";
+static NSString *const kickDeviceWithToken = @"kickDeviceWithToken";
+static NSString *const kickAllDevicesWithToken = @"kickAllDevicesWithToken";
+static NSString *const getLoggedInDevicesFromServerWithToken = @"getLoggedInDevicesFromServerWithToken";
+
+
 
 static NSString *const getToken = @"getToken";
 static NSString *const getCurrentUser = @"getCurrentUser";
@@ -77,6 +82,9 @@ static NSString *const downloadThumbnail = @"downloadThumbnail";
 static NSString *const importMessages = @"importMessages";
 static NSString *const loadAllConversations = @"loadAllConversations";
 static NSString *const getConversationsFromServer = @"getConversationsFromServer";
+static NSString *const getConversationsFromServerWithCursor = @"getConversationsFromServerWithCursor";
+static NSString *const pinConversation = @"pinConversation";
+static NSString *const modifyMessage = @"modifyMessage";
 static NSString *const deleteConversation = @"deleteConversation";
 static NSString *const fetchHistoryMessages = @"fetchHistoryMessages";
 static NSString *const fetchHistoryMessagesBy = @"fetchHistoryMessagesBy";
@@ -95,6 +103,7 @@ static NSString *const reportMessage = @"reportMessage";
 static NSString *const fetchConversationsFromServerWithPage = @"fetchConversationsFromServerWithPage";
 static NSString *const removeMessagesFromServerWithMsgIds = @"removeMessagesFromServerWithMsgIds";
 static NSString *const removeMessagesFromServerWithTs = @"removeMessagesFromServerWithTs";
+static NSString *const downloadCombineMessages = @"downloadCombineMessages";
 
 /// EMMessage listener
 static NSString *const onMessageProgressUpdate = @"onMessageProgressUpdate";
@@ -305,6 +314,7 @@ static NSString *const onMessagesRecalled = @"onMessagesRecalled";
 static NSString *const onConversationsUpdate = @"onConversationsUpdate";
 static NSString *const onConversationRead = @"onConversationRead";
 static NSString *const onMessageReactionDidChange = @"messageReactionDidChange";
+static NSString *const onMessageContentChanged = @"onMessageContentChanged";
 
 // ChatThreadManagerDelegate
 static NSString *const onChatThreadCreate = @"onChatThreadCreate";
@@ -325,7 +335,7 @@ static NSString *const onGroupMultiDevicesEvent = @"onGroupMultiDevicesEvent";
 static NSString *const onUnDisturbMultiDevicesEvent = @"onUnDisturbMultiDevicesEvent";
 static NSString *const onThreadMultiDevicesEvent = @"onThreadMultiDevicesEvent";
 static NSString *const onRoamDeleteMultiDevicesEvent = @"onRoamDeleteMultiDevicesEvent";
-
+static NSString *const onConversationMultiDevicesEvent = @"onConversationMultiDevicesEvent";
 
 // PresenceManagerDelegate
 static NSString *const onPresenceUpdated = @"onPresenceUpdated";
