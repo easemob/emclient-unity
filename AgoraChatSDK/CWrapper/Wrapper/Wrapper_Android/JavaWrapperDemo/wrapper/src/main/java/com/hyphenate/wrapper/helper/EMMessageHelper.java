@@ -1,6 +1,7 @@
 package com.hyphenate.wrapper.helper;
 
 import com.hyphenate.chat.EMCmdMessageBody;
+import com.hyphenate.chat.EMCombineMessageBody;
 import com.hyphenate.chat.EMCustomMessageBody;
 import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.EMLocationMessageBody;
@@ -9,12 +10,14 @@ import com.hyphenate.chat.EMNormalFileMessageBody;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chat.EMVideoMessageBody;
 import com.hyphenate.chat.EMVoiceMessageBody;
+import com.hyphenate.wrapper.util.EMHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class EMMessageHelper {
@@ -62,6 +65,11 @@ public class EMMessageHelper {
                 case 7: {
                     message = EMMessage.createSendMessage(EMMessage.Type.CUSTOM);
                     message.addBody(EMMessageBodyHelper.customBodyFromJson(bodyJson.getJSONObject("body")));
+                }
+                break;
+                case 8: {
+                    message = EMMessage.createSendMessage(EMMessage.Type.COMBINE);
+                    message.addBody(EMMessageBodyHelper.combineBodyFromJson(bodyJson.getJSONObject("body")));
                 }
                 break;
                 default:
@@ -112,6 +120,11 @@ public class EMMessageHelper {
                     message.addBody(EMMessageBodyHelper.customBodyFromJson(bodyJson));
                 }
                 break;
+                case 8: {
+                    message = EMMessage.createReceiveMessage(EMMessage.Type.COMBINE);
+                    message.addBody(EMMessageBodyHelper.combineBodyFromJson(bodyJson));
+                }
+                break;
             }
             if (message != null) {
                 message.setDirection(EMMessage.Direct.RECEIVE);
@@ -130,7 +143,6 @@ public class EMMessageHelper {
             message.setFrom(json.getString("from"));
         }
 
-
         message.setAcked(json.getBoolean("hasReadAck"));
         if (statusFromInt(json.getInt("status")) == EMMessage.Status.SUCCESS) {
             message.setUnread(!json.getBoolean("isRead"));
@@ -139,6 +151,10 @@ public class EMMessageHelper {
         message.setIsNeedGroupAck(json.getBoolean("isNeedGroupAck"));
         if (json.has("groupAckCount")) {
             message.setGroupAckCount(json.getInt("groupAckCount"));
+        }
+
+        if (json.has("receiverList")){
+            message.setReceiverList(EMHelper.stringListFromJsonArray(json.getJSONArray("receiverList")));
         }
 
         message.setIsChatThreadMessage(json.getBoolean("isThread"));
@@ -241,6 +257,10 @@ public class EMMessageHelper {
             case VOICE: {
                 bodyData.put("body", EMMessageBodyHelper.voiceBodyToJson((EMVoiceMessageBody) message.getBody()));
                 bodyData.put("type", 4);
+            }
+            case COMBINE: {
+                bodyData.put("body", EMMessageBodyHelper.combineBodyToJson((EMCombineMessageBody) message.getBody()));
+                bodyData.put("type", 8);
             }
             break;
         }

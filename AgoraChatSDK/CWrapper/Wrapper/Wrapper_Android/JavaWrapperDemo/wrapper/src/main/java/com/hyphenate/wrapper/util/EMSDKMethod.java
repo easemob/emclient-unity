@@ -37,6 +37,9 @@ public class EMSDKMethod {
     public static final String getCurrentUser = "getCurrentUser";
     public static final String isLoggedInBefore = "isLoggedInBefore";
     public static final String isConnected = "isConnected";
+    public static final String kickDeviceWithToken = "kickDeviceWithToken";
+    public static final String kickAllDevicesWithToken = "kickAllDevicesWithToken";
+    public static final String getLoggedInDevicesFromServerWithToken = "getLoggedInDevicesFromServerWithToken";
 
 
     /// EMContactManager methods
@@ -71,6 +74,8 @@ public class EMSDKMethod {
     public static final String importMessages = "importMessages";
     public static final String loadAllConversations = "loadAllConversations";
     public static final String getConversationsFromServer = "getConversationsFromServer";
+    public static final String getConversationsFromServerWithCursor = "getConversationsFromServerWithCursor";
+    public static final String pinConversation = "pinConversation";
     public static final String deleteConversation = "deleteConversation";
     public static final String fetchHistoryMessages = "fetchHistoryMessages";
     public static final String fetchHistoryMessagesBy = "fetchHistoryMessagesBy";
@@ -92,6 +97,8 @@ public class EMSDKMethod {
     public static final String removeMessagesFromServerWithMsgIds = "removeMessagesFromServerWithMsgIds";
 
     public static final String removeMessagesFromServerWithTs = "removeMessagesFromServerWithTs";
+    public static final String modifyMessage = "modifyMessage";
+    public static final String downloadCombineMessages = "downloadCombineMessages";
 
     /// EMMessage listener
     public static final String onMessageProgressUpdate = "onMessageProgressUpdate";
@@ -302,6 +309,7 @@ public class EMSDKMethod {
     public static final String onConversationsUpdate = "onConversationsUpdate";
     public static final String onConversationRead = "onConversationRead";
     public static final String onMessageReactionDidChange = "messageReactionDidChange";
+    public static final String onMessageContentChanged = "onMessageContentChanged";
 
     // ChatThreadManagerDelegate
     public static final String onChatThreadCreate = "onChatThreadCreate";

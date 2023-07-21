@@ -5,6 +5,11 @@ import com.hyphenate.wrapper.EMWrapperHelper;
 import com.hyphenate.wrapper.util.EMSDKMethod;
 import com.hyphenate.wrapper.util.EMWrapperThreadUtil;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Map;
+
 public class EMWrapperConnectionListener implements EMConnectionListener {
 
     @Override
@@ -23,7 +28,7 @@ public class EMWrapperConnectionListener implements EMConnectionListener {
         } else if (errorCode == 202) {
             post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onAuthFailed, null));
         } else if (errorCode == 220 || errorCode == 206) {
-            post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onLoggedOtherDevice, null));
+//            post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onLoggedOtherDevice, null));
         } else if (errorCode == 207) {
             post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onRemovedFromServer, null));
         } else if (errorCode == 305) {
@@ -35,6 +40,7 @@ public class EMWrapperConnectionListener implements EMConnectionListener {
         }
     }
 
+
     @Override
     public void onTokenExpired() {
         post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onTokenExpired, null));
@@ -43,6 +49,18 @@ public class EMWrapperConnectionListener implements EMConnectionListener {
     @Override
     public void onTokenWillExpire() {
         post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onTokenWillExpire, null));
+    }
+
+    public void onLogout(int code, String info) {
+        if (code == 206 || code == 220) {
+            try {
+                JSONObject jo = new JSONObject();
+                jo.put("deviceName", info);
+                post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onLoggedOtherDevice, jo.toString()));
+            }catch (JSONException ignored) {
+
+            }
+        }
     }
 
     public void post(Runnable runnable) {

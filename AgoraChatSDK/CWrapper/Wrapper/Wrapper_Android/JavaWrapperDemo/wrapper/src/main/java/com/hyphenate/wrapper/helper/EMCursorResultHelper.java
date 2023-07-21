@@ -2,6 +2,7 @@ package com.hyphenate.wrapper.helper;
 
 import com.hyphenate.chat.EMChatRoom;
 import com.hyphenate.chat.EMChatThread;
+import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMCursorResult;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMGroupInfo;
@@ -54,6 +55,10 @@ public class EMCursorResultHelper {
 
                 if (obj instanceof EMChatThread) {
                     jsonList.put(EMChatThreadHelper.toJson((EMChatThread) obj));
+                }
+
+                if (obj instanceof EMConversation) {
+                    jsonList.put(EMConversationHelper.toJson((EMConversation) obj));
                 }
             }
         }

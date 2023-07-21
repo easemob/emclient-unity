@@ -104,6 +104,15 @@ public class EMClientWrapper extends EMBaseWrapper {
                 break;
             case EMSDKMethod.startCallback:
                 break;
+            case EMSDKMethod.kickDeviceWithToken:
+                str = kickDeviceWithToken(jsonObject, callback);
+                break;
+            case EMSDKMethod.kickAllDevicesWithToken:
+                str = kickAllDevicesWithToken(jsonObject, callback);
+                break;
+            case EMSDKMethod.getLoggedInDevicesFromServerWithToken:
+                str = getLoggedInDevicesFromServerWithToken(jsonObject, callback);
+                break;
             default:
                 super.onMethodCall(method, jsonObject, callback);
                 break;
@@ -278,6 +287,59 @@ public class EMClientWrapper extends EMBaseWrapper {
         return null;
     }
 
+    private String kickDeviceWithToken(JSONObject param, EMWrapperCallback callback) throws JSONException {
+        String userId = param.getString("userId");
+        String token = param.getString("token");
+        String resource = param.getString("resource");
+        asyncRunnable(()->{
+            try {
+                EMClient.getInstance().kickDeviceWithToken(userId, token, resource);
+                onSuccess(true, callback);
+            } catch (HyphenateException e) {
+                onError(e, callback);
+            }
+        });
+        return null;
+    }
+
+    private String kickAllDevicesWithToken(JSONObject param, EMWrapperCallback callback) throws JSONException {
+        String username = param.getString("userId");
+        String token = param.getString("token");
+
+        asyncRunnable(()->{
+            try {
+                EMClient.getInstance().kickAllDevicesWithToken(username, token);
+                onSuccess(true, callback);
+            } catch (HyphenateException e) {
+                onError(e, callback);
+            }
+        });
+        return null;
+    }
+
+    private String getLoggedInDevicesFromServerWithToken(JSONObject param, EMWrapperCallback callback) throws JSONException {
+        String username = param.getString("userId");
+        String token = param.getString("token");
+        asyncRunnable(()->{
+            try {
+                List<EMDeviceInfo> devices = EMClient.getInstance().getLoggedInDevicesFromServerWithToken(username, token);
+                JSONArray jsonArray = new JSONArray();
+                try {
+                    for (EMDeviceInfo info: devices) {
+                        jsonArray.put(EMDeviceInfoHelper.toJson(info));
+                    }
+                }catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                finally {
+                    onSuccess(jsonArray, callback);
+                }
+            } catch (HyphenateException e) {
+                onError(e, callback);
+            }
+        });
+        return null;
+    }
 
     private void registerEaseListener() {
 
