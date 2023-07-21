@@ -292,7 +292,13 @@ namespace AgoraChat
          * \~english
          * Set group or room message receivers.
          */
-        public List<string> ReceiverList;
+        public List<string> ReceiverList
+        {
+            internal get { return _receiverList; }
+            set { _receiverList = value; }
+        }
+
+        private List<string> _receiverList;
 
         /**
          * \~chinese
@@ -787,7 +793,6 @@ namespace AgoraChat
                     IsRead = jo["isRead"].AsBool;
                     MessageOnlineState = jo["messageOnlineState"].AsBool;
                     IsThread = jo["isThread"].AsBool;
-                    ReceiverList = new List<string>(); // avoid null reference error
                 }
             }
         }
@@ -819,8 +824,11 @@ namespace AgoraChat
             jo.AddWithoutNull("messageOnlineState", MessageOnlineState);
             jo.AddWithoutNull("isThread", IsThread);
 
-            jn = JsonObject.JsonArrayFromStringList(ReceiverList);
-            jo.AddWithoutNull("receiverList", jn);
+            if (null != _receiverList && _receiverList.Count > 0)
+            {
+                jn = JsonObject.JsonArrayFromStringList(_receiverList);
+                jo.AddWithoutNull("receiverList", jn);
+            }
 
             return jo;
         }
