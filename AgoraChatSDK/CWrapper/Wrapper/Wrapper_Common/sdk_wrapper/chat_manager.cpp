@@ -516,7 +516,10 @@ namespace sdk_wrapper {
     {
         if (!CheckClientInitOrNot(nullptr)) return nullptr;
 
-        EMConversationList conversationList = CLIENT->getChatManager().loadAllConversationsFromDB();
+        Document d; d.Parse(jstr);
+        bool is_sort = GetJsonValue_Bool(d, "isSort", true);
+
+        EMConversationList conversationList = CLIENT->getChatManager().getConversations(is_sort);
 
         JSON_STARTOBJ
         writer.Key("ret");
@@ -1317,28 +1320,6 @@ namespace sdk_wrapper {
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }
         });
-        t.detach();
-
-        return nullptr;
-    }
-
-    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_GetConversations(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
-    {
-        if (!CheckClientInitOrNot(cbid)) return nullptr;
-
-        string local_cbid = cbid;
-
-        Document d; d.Parse(jstr);
-        bool is_sort = GetJsonValue_Bool(d, "isSort", false);
-
-        thread t([=]() {
-            EMConversationList conversationList = CLIENT->getChatManager().getConversations(is_sort);
-
-            string json = Conversation::ToJson(conversationList);
-            string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
-            CallBack(local_cbid.c_str(), call_back_jstr.c_str());
-
-            });
         t.detach();
 
         return nullptr;

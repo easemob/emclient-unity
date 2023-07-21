@@ -325,38 +325,6 @@ namespace AgoraChat
         }
 
         /**
-        * \~chinese
-        * 获取本地所有会话。
-        *
-        * 未找到任何会话对象返回的列表为空。
-        *
-        * @param isSort      返回的会话列表是否排序。
-        * @param callback    获取的会话列表，详见 {@link ValueCallBack}。
-        *
-        * \~english
-        * Get all local conversations.
-        *
-        * An empty list will be returned if no conversation is found.
-        *
-        * The SDK wil return `null` if the conversation is not found.
-        *
-        * @param isSort 	 Returned conversation list is sorted or not.
-        * @param callback    The list of obtained coversations. See {@link ValueCallBack}.
-        */
-        public void GetConversations(bool isSort = false, ValueCallBack<List<Conversation>> callback = null)
-        {
-            JSONObject jo_param = new JSONObject();
-            jo_param.AddWithoutNull("isSort", isSort);
-
-            Process process = (_, jsonNode) =>
-            {
-                return List.BaseModelListFromJsonArray<Conversation>(jsonNode);
-            };
-
-            NativeCall<List<Conversation>>(SDKMethod.getConversations, jo_param, callback, process);
-        }
-
-        /**
 	     * \~chinese
 	     * 从服务器获取所有会话对象。
 	     * 
@@ -481,18 +449,23 @@ namespace AgoraChat
 		 * 
 	     * 一般情况下，该方法在成功登录后调用，以提升会话列表的加载速度。
 	     * 
-	     * @return		加载的会话列表。
+	     * @param isSort      返回的会话列表是否排序。（缺省为true）
+	     * @return            加载的会话列表。
 	     *
 	     * \~english
 	     * Loads all conversations from the local database into the memory.
 		 * 
 	     * To accelerate the loading, call this method immediately after the user is logged in.
 	     * 
-	     * @return      The list of loaded conversations.
+	     * @param isSort      Returned conversation list is sorted or not. (Default value is true)
+	     * @return            The list of loaded conversations.
 	     */
-        public List<Conversation> LoadAllConversations()
+        public List<Conversation> LoadAllConversations(bool isSort = true)
         {
-            JSONNode jn = NativeGet(SDKMethod.loadAllConversations).GetReturnJsonNode();
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("isSort", isSort);
+
+            JSONNode jn = NativeGet(SDKMethod.loadAllConversations, jo_param).GetReturnJsonNode();
 
             if (null == jn) return new List<Conversation>();
 
