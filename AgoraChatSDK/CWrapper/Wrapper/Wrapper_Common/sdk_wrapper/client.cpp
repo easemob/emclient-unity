@@ -712,9 +712,9 @@ namespace sdk_wrapper
             error->setErrorCode(216);
             gConnectionListener->onDisconnect(error);
             error->setErrorCode(217);
-            gConnectionListener->onDisconnect(error, "yourDevice");
-            error->setErrorCode(220);
             gConnectionListener->onDisconnect(error);
+            error->setErrorCode(220);
+            gConnectionListener->onDisconnect(error, "anotherDevice");
             error->setErrorCode(305);
             gConnectionListener->onDisconnect(error);
             error->setErrorCode(1);

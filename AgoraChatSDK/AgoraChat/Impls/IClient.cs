@@ -250,7 +250,10 @@ namespace AgoraChat
                         it.OnDisconnected();
                         break;
                     case SDKMethod.onLoggedOtherDevice:
-                        it.OnLoggedOtherDevice();
+                        {
+                            string deviceName = jsonNode["deviceName"];
+                            it.OnLoggedOtherDevice(deviceName);
+                        }
                         break;
                     case SDKMethod.onRemovedFromServer:
                         it.OnRemovedFromServer();
@@ -265,10 +268,7 @@ namespace AgoraChat
                         it.OnLoginTooManyDevice();
                         break;
                     case SDKMethod.onKickedByOtherDevice:
-                        {
-                            string deviceName = jsonNode["deviceName"];
-                            it.OnKickedByOtherDevice(deviceName);
-                        }
+                        it.OnKickedByOtherDevice();
                         break;
                     case SDKMethod.onAuthFailed:
                         it.OnAuthFailed();

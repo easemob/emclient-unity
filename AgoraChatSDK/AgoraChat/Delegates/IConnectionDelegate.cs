@@ -36,10 +36,14 @@
          *  \~chinese
          *  当前登录账号在其它设备登录时会接收到此回调。
          *
+         *  @param deviceName 另一个设备的名称。
+         *
          *  \~english
          *  Occurs when the user logs in to another device with the current account.
+         *
+         *  @param deviceName Another device name.
          */
-        void OnLoggedOtherDevice();
+        void OnLoggedOtherDevice(string deviceName);
 
         /**
          *  \~chinese
@@ -81,14 +85,10 @@
          *  \~chinese
          *  当前登录设备账号被登录其他设备的同账号踢下线。
          *
-         *  @param deviceName 另一个设备的名称。
-         *
          *  \~english
          *  Occurs when the user is forced to log out of the current account from the current device due to login to another device.
-         *
-         *  @param deviceName Another device name.
          */
-        void OnKickedByOtherDevice(string deviceName);
+        void OnKickedByOtherDevice();
 
         /**
          *  \~chinese
