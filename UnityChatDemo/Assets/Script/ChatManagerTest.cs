@@ -23,7 +23,6 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     private Button resendBtn;
     private Button recallBtn;
     private Button getConversationBtn;
-    private Button getConversationsBtn;
     private Button loadAllConverstaionsBtn;
     private Button downLoadAttachmentBtn;
     //private Button downLoadThumbAttachmentBtn;
@@ -70,7 +69,6 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         resendBtn = transform.Find("Scroll View/Viewport/Content/ResendBtn").GetComponent<Button>();
         recallBtn = transform.Find("Scroll View/Viewport/Content/RecallBtn").GetComponent<Button>();
         getConversationBtn = transform.Find("Scroll View/Viewport/Content/GetConversationBtn").GetComponent<Button>();
-        getConversationsBtn = transform.Find("Scroll View/Viewport/Content/GetConversationsBtn").GetComponent<Button>();
         loadAllConverstaionsBtn = transform.Find("Scroll View/Viewport/Content/LoadAllConverstaionsBtn").GetComponent<Button>();
         downLoadAttachmentBtn = transform.Find("Scroll View/Viewport/Content/DownLoadAttachmentBtn").GetComponent<Button>();
         //downLoadThumbAttachmentBtn = transform.Find("Scroll View/Viewport/Content/DownLoadThumbAttachmentBtn").GetComponent<Button>();
@@ -108,7 +106,6 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         resendBtn.onClick.AddListener(ResendBtnAction);
         recallBtn.onClick.AddListener(RecallBtnAction);
         getConversationBtn.onClick.AddListener(GetConversationBtnAction);
-        getConversationsBtn.onClick.AddListener(GetConversationsBtnAction);
         loadAllConverstaionsBtn.onClick.AddListener(LoadAllConverstaionsBtnAction);
         downLoadAttachmentBtn.onClick.AddListener(DownLoadAttachmentBtnAction);
         //downLoadThumbAttachmentBtn.onClick.AddListener(DownLoadThumbAttachmentBtnAction);
@@ -514,35 +511,6 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         config.AddField("conversationId");
         config.AddField("type(0/1/2)");
         UIManager.DefaultInputAlert(transform, config);
-    }
-
-    void GetConversationsBtnAction()
-    {
-        InputAlertConfig config = new InputAlertConfig((dict) =>
-        {
-            bool isSort = dict["isSort"].CompareTo("true") == 0;
-
-            SDKClient.Instance.ChatManager.GetConversations(isSort, new ValueCallBack<List<Conversation>>(
-             onSuccess: (list) =>
-             {
-                 List<string> strList = new List<string>();
-                 foreach (var conv in list)
-                 {
-                     strList.Add(conv.Id);
-                 }
-                 string str = string.Join(",", strList.ToArray());
-                 UIManager.DefaultAlert(transform, str);
-             },
-                onError: (code, desc) =>
-                {
-                    UIManager.ErrorAlert(transform, code, desc);
-                }
-        ));
-        });
-        config.AddField("isSort");
-        UIManager.DefaultInputAlert(transform, config);
-
-        Debug.Log("GetConversationsBtnAction");
     }
 
     void LoadAllConverstaionsBtnAction()
@@ -1288,7 +1256,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
             return;
         }
 
-        SDKClient.Instance.ChatManager.DownloadCombineMessages(_msg, new ValueCallBack<List<Message>>(
+        SDKClient.Instance.ChatManager.FetchCombineMessageDetail(_msg, new ValueCallBack<List<Message>>(
             onSuccess: (list) => {
                 Debug.Log($"DownloadCombineMessages found {list.Count} messages --- level:{_level}");
 
