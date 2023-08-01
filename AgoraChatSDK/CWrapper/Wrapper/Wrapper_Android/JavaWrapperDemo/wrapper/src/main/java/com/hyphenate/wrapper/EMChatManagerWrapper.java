@@ -797,7 +797,19 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
     private String modifyMessage(JSONObject params, EMWrapperCallback callback) throws JSONException {
         String msgId = params.optString("");
         EMMessageBody body = EMMessageBodyHelper.textBodyFromJson(params.optJSONObject("body"));
-        EMClient.getInstance().chatManager().asyncModifyMessage(msgId, body, new EMCommonCallback(callback));
+        EMClient.getInstance().chatManager().asyncModifyMessage(msgId, body, new EMCommonValueCallback<EMMessage>(callback) {
+            @Override
+            public void onSuccess(EMMessage object) {
+                JSONObject jsonObject = null;
+                try {
+                    jsonObject = EMMessageHelper.toJson(object);
+                }catch (JSONException e) {
+                    e.printStackTrace();
+                }finally {
+                    updateObject(jsonObject);
+                }
+            }
+        });
         return null;
     }
 
