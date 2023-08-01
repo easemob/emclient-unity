@@ -51,7 +51,15 @@ namespace sdk_wrapper {
                 break;
             case EMError::USER_LOGIN_ANOTHER_DEVICE:
             case EMError::USER_DEVICE_CHANGED:
-                CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onLoggedOtherDevice.c_str(), json.c_str());
+                {
+                    JSON_STARTOBJ
+                    writer.Key("deviceName");
+                    writer.String(info.c_str());
+                    JSON_ENDOBJ
+
+                    json = s.GetString();
+                    CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onLoggedOtherDevice.c_str(), json.c_str());
+                }
                 break;
             case EMError::SERVER_SERVING_DISABLED:
                 CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onForbidByServer.c_str(), json.c_str());

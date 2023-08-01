@@ -539,7 +539,7 @@ namespace WinSDKTest
             functions_IChatManager.Add(menu_index, "FetchHistoryMessagesFromServerBy"); menu_index++;
             functions_IChatManager.Add(menu_index, "FetchGroupReadAcks"); menu_index++;
             functions_IChatManager.Add(menu_index, "GetConversation"); menu_index++;
-            functions_IChatManager.Add(menu_index, "GetConversations"); menu_index++;
+            //functions_IChatManager.Add(menu_index, "GetConversations"); menu_index++;
             functions_IChatManager.Add(menu_index, "GetConversationsFromServer"); menu_index++;
             functions_IChatManager.Add(menu_index, "GetConversationsFromServerWithCursor"); menu_index++;
             functions_IChatManager.Add(menu_index, "GetUnreadMessageCount"); menu_index++;
@@ -639,10 +639,10 @@ namespace WinSDKTest
             level3_menus.Add("GetConversation", new Dictionary<int, string>(param));
             param.Clear();
 
-            menu_index = 1;
+            /*menu_index = 1;
             param.Add(menu_index, "isSort (bool)"); menu_index++;
             level3_menus.Add("GetConversations", new Dictionary<int, string>(param));
-            param.Clear();
+            param.Clear();*/
 
             menu_index = 1;
             param.Add(menu_index, "No params"); menu_index++;
@@ -667,7 +667,7 @@ namespace WinSDKTest
             param.Clear();
 
             menu_index = 1;
-            param.Add(menu_index, "No params"); menu_index++;
+            param.Add(menu_index, "isSort (bool)"); menu_index++;
             level3_menus.Add("LoadAllConversations", new Dictionary<int, string>(param));
             param.Clear();
 
@@ -3180,7 +3180,7 @@ namespace WinSDKTest
             Console.WriteLine($"GetConversation complete, conversationid: {ret.Id}, pinned:{ret.IsPinned}, pinTime:{ret.PinnedTime}.");
         }
 
-        public void CallFunc_IChatManager_GetConversations(string conversationId_input = "", int type_input = -1, bool createIfNeed_input = true)
+        /*public void CallFunc_IChatManager_GetConversations(string conversationId_input = "", int type_input = -1, bool createIfNeed_input = true)
         {
             bool isSort = GetParamValueFromContext(0).CompareTo("true") == 0;
 
@@ -3198,7 +3198,7 @@ namespace WinSDKTest
                  Console.WriteLine($"GetConversations failed, code:{code}, desc:{desc}");
              }
             ));
-        }
+        }*/
 
         public void CallFunc_IChatManager_GetConversationsFromServer(string conversationId_input = "", int type_input = -1, bool createIfNeed_input = true)
         {
@@ -3268,7 +3268,8 @@ namespace WinSDKTest
 
         public void CallFunc_IChatManager_LoadAllConversations()
         {
-            List<Conversation> list = SDKClient.Instance.ChatManager.LoadAllConversations();
+            bool isSort = GetParamValueFromContext(0).CompareTo("true") == 0;
+            List<Conversation> list = SDKClient.Instance.ChatManager.LoadAllConversations(isSort);
             Console.WriteLine($"LoadAllConversations total conv: {list.Count}");
             foreach (var conv in list)
             {
@@ -3483,8 +3484,10 @@ namespace WinSDKTest
             tb.TargetLanguages.Add("en");
             tb.TargetLanguages.Add("ja");
 
-            msg.ReceiverList = new List<string>();
-            msg.ReceiverList.Add("yqtest1");
+            List<string> rlist = new List<string>();
+            rlist.Add("yqtest1");
+
+            msg.ReceiverList = rlist;
 
             msg.Attributes = new Dictionary<string, AttributeValue>();
             Message.SetAttribute(msg.Attributes, "bool", true, AttributeValueType.BOOL);
@@ -4269,9 +4272,9 @@ namespace WinSDKTest
                 return;
             }
 
-            SDKClient.Instance.ChatManager.DownloadCombineMessages(msg, new ValueCallBack<List<Message>>(
+            SDKClient.Instance.ChatManager.FetchCombineMessageDetail(msg, new ValueCallBack<List<Message>>(
                 onSuccess: (list) => {
-                    Console.WriteLine($"DownloadCombineMessages found {list.Count} messages --- level:{level}");
+                    Console.WriteLine($"FetchCombineMessageDetail found {list.Count} messages --- level:{level}");
                     foreach (var it in list)
                     {
                         Utils.PrintMessage(it);
@@ -4283,7 +4286,7 @@ namespace WinSDKTest
                     }
                 },
                 onError: (code, desc) => {
-                    Console.WriteLine($"DownloadCombineMessages failed, code:{code}, desc:{desc} --- level: {level}");
+                    Console.WriteLine($"FetchCombineMessageDetail failed, code:{code}, desc:{desc} --- level: {level}");
                 }
             ));
         }
@@ -4332,11 +4335,11 @@ namespace WinSDKTest
                 return;
             }
 
-            if (select_context.level2_item.CompareTo("GetConversations") == 0)
+            /*if (select_context.level2_item.CompareTo("GetConversations") == 0)
             {
                 CallFunc_IChatManager_GetConversations();
                 return;
-            }
+            }*/
 
             if (select_context.level2_item.CompareTo("GetConversationsFromServer") == 0)
             {
@@ -9714,9 +9717,9 @@ namespace WinSDKTest
             Console.WriteLine($"IConnectionDelegate6 OnKickedByOtherDevice, total listener count: {LISTENER_COUNT}");
         }
 
-        public void OnLoggedOtherDevice()
+        public void OnLoggedOtherDevice(string dn)
         {
-            Console.WriteLine($"IConnectionDelegate7 OnLoggedOtherDevice, total listener count: {LISTENER_COUNT}");
+            Console.WriteLine($"IConnectionDelegate7 OnLoggedOtherDevice, devicename:{dn}, total listener count: {LISTENER_COUNT}");
         }
 
         public void OnForbidByServer()

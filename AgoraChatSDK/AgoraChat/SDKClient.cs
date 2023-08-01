@@ -211,7 +211,7 @@ namespace AgoraChat
          *
          * 异步方法。
          *
-         * @param username  用户 ID。该参数必填。用户 ID 不能超过 64 个字符，支持以下类型的字符：
+         * @param userId  用户 ID。该参数必填。用户 ID 不能超过 64 个字符，支持以下类型的字符：
          * - 26 个小写英文字母 a-z
          * - 26 个大写英文字母 A-Z
          * - 10 个数字 0-9
@@ -233,7 +233,7 @@ namespace AgoraChat
          *
          * This is an asynchronous method.
          *
-         * @param username The user ID. Ensure that you set this parameter. 
+         * @param userId The user ID. Ensure that you set this parameter.
          * 
          * The user ID can contain a maximum of 64 characters of the following types:
          * - 26 lowercase English letters (a-z);
@@ -251,9 +251,9 @@ namespace AgoraChat
          * @param callback  The creation result callback. See {@link CallBack}.          
          *             
          */
-        public void CreateAccount(string username, string password, CallBack callback = null)
+        public void CreateAccount(string userId, string password, CallBack callback = null)
         {
-            _clientImpl.CreateAccount(username, password, callback);
+            _clientImpl.CreateAccount(userId, password, callback);
         }
 
         /**
@@ -262,7 +262,7 @@ namespace AgoraChat
          *
          * 异步方法。
          *
-         * @param username      用户 ID，必填。
+         * @param userId        用户 ID，必填。
          * @param pwdOrToken    用户密码或者 token。 该参数必填。
          * @param isToken       是否通过 token 登录。
          *                      - `true`：通过 token 登录。
@@ -274,7 +274,7 @@ namespace AgoraChat
          *
          * This is an asynchronous method.
          *
-         * @param username 		The user ID. Ensure that you set this parameter.
+         * @param userId 		The user ID. Ensure that you set this parameter.
          * @param pwdOrToken 	The password or token of the user. Ensure that you set this parameter.
          * @param isToken       Whether to log in with a token or a password.
          *                      - `true`：Log in with a token.
@@ -282,9 +282,9 @@ namespace AgoraChat
          * @param callback 	    The login result callback. See {@link CallBack}.
          *
          */
-        public void Login(string username, string pwdOrToken, bool isToken = false, CallBack callback = null)
+        public void Login(string userId, string pwdOrToken, bool isToken = false, CallBack callback = null)
         {
-            _clientImpl.Login(username, pwdOrToken, isToken, callback);
+            _clientImpl.Login(userId, pwdOrToken, isToken, callback);
         }
 
         /**
@@ -324,9 +324,9 @@ namespace AgoraChat
         *
         * 异步方法。
         *
-        * @param username      用户 ID，必填。
+        * @param userId        用户 ID，必填。
         * @param token         声网 token，必填。
-        * @param callback        登录结果回调，详见 {@link CallBack}。 
+        * @param callback      登录结果回调，详见 {@link CallBack}。
         *
         * \~english
         * Logs in to the chat server with the user ID and an Agora token.
@@ -335,14 +335,14 @@ namespace AgoraChat
         *
         * This an asynchronous method.
         *
-        * @param username      The user ID. Ensure that you set this parameter.
+        * @param userId        The user ID. Ensure that you set this parameter.
         * @param token         The Agora token. Ensure that you set this parameter.
-        * @param callback        The login result callback. See {@link CallBack}.
+        * @param callback      The login result callback. See {@link CallBack}.
         *
         */
-        public void LoginWithAgoraToken(string username, string token, CallBack callback = null)
+        public void LoginWithAgoraToken(string userId, string token, CallBack callback = null)
         {
-            _clientImpl.LoginWithAgoraToken(username, token, callback);
+            _clientImpl.LoginWithAgoraToken(userId, token, callback);
         }
 
         /**
@@ -371,8 +371,8 @@ namespace AgoraChat
          *
          * 异步方法。
          *
-         * @param username  用户 ID。
-         * @param password  密码。
+         * @param userId        用户 ID。
+         * @param password      密码。
          * @param callBack 		结果回调，成功时回调 {@link ValueCallBack#OnSuccessValue(Object)}，返回设备信息列表；
          * 						失败时回调 {@link ValueCallBack#onError(int, String)}。
          *
@@ -381,14 +381,14 @@ namespace AgoraChat
          *
          * This is an asynchronous method.
          *
-         * @param username The user ID.
-         * @param password The password.
+         * @param userId        The user ID.
+         * @param password      The password.
          * @param callBack		The completion callback. If this call succeeds, calls {@link ValueCallBack#OnSuccessValue(Object)} to show device information list;
          * 						if this call fails, calls {@link ValueCallBack#onError(int, String)}.
          */
-        public void GetLoggedInDevicesFromServer(string username, string password, ValueCallBack<List<DeviceInfo>> callback = null)
+        public void GetLoggedInDevicesFromServer(string userId, string password, ValueCallBack<List<DeviceInfo>> callback = null)
         {
-            _clientImpl.GetLoggedInDevicesFromServer(username, password, callback);
+            _clientImpl.GetLoggedInDevicesFromServer(userId, password, callback);
         }
 
         /**
@@ -397,7 +397,7 @@ namespace AgoraChat
          *
          * 异步方法。
          *
-         * @param username      用户 ID。
+         * @param userId        用户 ID。
          * @param token         令牌。
          * @param callBack 		结果回调，成功时回调 {@link ValueCallBack#OnSuccessValue(Object)}，返回设备信息列表；
          * 						失败时回调 {@link ValueCallBack#onError(int, String)}。
@@ -407,14 +407,14 @@ namespace AgoraChat
          *
          * This is an asynchronous method.
          *
-         * @param username      The user ID.
+         * @param userId        The user ID.
          * @param token         The token.
          * @param callBack		The completion callback. If this call succeeds, calls {@link ValueCallBack#OnSuccessValue(Object)} to show device information list;
          * 						if this call fails, calls {@link ValueCallBack#onError(int, String)}.
          */
-        public void GetLoggedInDevicesFromServerWithToken(string username, string token, ValueCallBack<List<DeviceInfo>> callback = null)
+        public void GetLoggedInDevicesFromServerWithToken(string userId, string token, ValueCallBack<List<DeviceInfo>> callback = null)
         {
-            _clientImpl.GetLoggedInDevicesFromServerWithToken(username, token, callback);
+            _clientImpl.GetLoggedInDevicesFromServerWithToken(userId, token, callback);
         }
 
         /**
@@ -425,7 +425,7 @@ namespace AgoraChat
          *
          * 异步方法。
          *
-         * @param username  用户 ID。
+         * @param userId    用户 ID。
          * @param password  用户的密码。
          * @param resource  设备 ID, 见 {@link DeviceInfo#Resource}。
          *
@@ -436,13 +436,13 @@ namespace AgoraChat
          *
          * This is an asynchronous method.
          *
-         * @param username The user ID.
+         * @param userId   The user ID.
          * @param password The password.
          * @param resource The device ID. See {@link DeviceInfo#Resource}.
          */
-        public void KickDevice(string username, string password, string resource, CallBack callback = null)
+        public void KickDevice(string userId, string password, string resource, CallBack callback = null)
         {
-            _clientImpl.KickDevice(username, password, resource, callback);
+            _clientImpl.KickDevice(userId, password, resource, callback);
         }
 
         /**
@@ -453,7 +453,7 @@ namespace AgoraChat
         *
         * 异步方法。
         *
-        * @param username  用户 ID。
+        * @param userId    用户 ID。
         * @param token     令牌。
         * @param resource  设备 ID, 见 {@link DeviceInfo#Resource}。
         *
@@ -464,13 +464,13 @@ namespace AgoraChat
         *
         * This is an asynchronous method.
         *
-        * @param username The user ID.
+        * @param userId   The user ID.
         * @param token    The token.
         * @param resource The device ID. See {@link DeviceInfo#Resource}.
         */
-        public void KickDeviceWithToken(string username, string token, string resource, CallBack callback = null)
+        public void KickDeviceWithToken(string userId, string token, string resource, CallBack callback = null)
         {
-            _clientImpl.KickDeviceWithToken(username, token, resource, callback);
+            _clientImpl.KickDeviceWithToken(userId, token, resource, callback);
         }
 
         /**
@@ -479,7 +479,7 @@ namespace AgoraChat
          *
          * 异步方法。
          *
-         * @param username 用户 ID。
+         * @param userId   用户 ID。
          * @param password 密码。
          * @param callback	操作结果回调，详见 {@link CallBack}。
          *
@@ -488,13 +488,13 @@ namespace AgoraChat
          *
          * This is an asynchronous method.
          *
-         * @param username The user ID.
+         * @param userId   The user ID.
          * @param password The password.
          * @param callback The operation callback. See {@link CallBack}.
          */
-        public void KickAllDevices(string username, string password, CallBack callback = null)
+        public void KickAllDevices(string userId, string password, CallBack callback = null)
         {
-            _clientImpl.KickAllDevices(username, password, callback);
+            _clientImpl.KickAllDevices(userId, password, callback);
         }
 
         /**
@@ -503,7 +503,7 @@ namespace AgoraChat
          *
          * 异步方法。
          *
-         * @param username  用户 ID。
+         * @param userId    用户 ID。
          * @param token     令牌。
          * @param callback	操作结果回调，详见 {@link CallBack}。
          *
@@ -512,13 +512,13 @@ namespace AgoraChat
          *
          * This is an asynchronous method.
          *
-         * @param username The user ID.
+         * @param userId   The user ID.
          * @param token    The token.
          * @param callback The operation callback. See {@link CallBack}.
          */
-        public void KickAllDevicesWithToken(string username, string token, CallBack callback = null)
+        public void KickAllDevicesWithToken(string userId, string token, CallBack callback = null)
         {
-            _clientImpl.KickAllDevicesWithToken(username, token, callback);
+            _clientImpl.KickAllDevicesWithToken(userId, token, callback);
         }
 
         /**

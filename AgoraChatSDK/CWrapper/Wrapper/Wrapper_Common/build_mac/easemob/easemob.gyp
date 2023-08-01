@@ -19,6 +19,7 @@
                'defines': [
                     'DLL_EXPORT',
                     'SKIP_FPA',
+                    'TARGET_OS_OSX',
                ],
                 'msbuild_toolset': 'v120_xp',
                 'msvs_settings': {

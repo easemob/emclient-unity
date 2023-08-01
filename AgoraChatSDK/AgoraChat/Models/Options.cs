@@ -284,6 +284,25 @@ namespace AgoraChat
         public bool EnableEmptyConversation = false;
 
         /**
+         *  \~chinese
+         *  自定义系统类型。
+         *
+         *  \~english
+         *  The custom system type.
+         */
+        public int CustomOSType = -1;
+
+        /**
+         *  \~chinese
+         *  自定义设备名称。
+         *
+         *  \~english
+         *  The custom device name.
+         *
+         */
+        public string CustomDeviceName = "";
+
+        /**
 	     * \~chinese
 	     * 设置区域代号，使用边缘节点时遵循区域限制
 	     * -（默认）`GLOB`: 不限制区域。
@@ -402,6 +421,9 @@ namespace AgoraChat
             jo.AddWithoutNull("enableDnsConfig", EnableDNSConfig);
             jo.AddWithoutNull("myUUID", MyUUID);
             jo.AddWithoutNull("enableEmptyConversation", EnableEmptyConversation);
+            jo.AddWithoutNull("customOSType", CustomOSType);
+            jo.AddWithoutNull("customDeviceName", CustomDeviceName);
+
 
             if (SDKDataPath.Length == 0)
             {

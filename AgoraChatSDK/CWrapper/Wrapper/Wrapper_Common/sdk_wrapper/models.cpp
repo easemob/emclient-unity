@@ -424,6 +424,19 @@ namespace sdk_wrapper
             configs->setEnableEmptyConversation(enable_empty_conversation);
         }
 
+        if (jnode.HasMember("customOSType") && jnode["customOSType"].IsInt()) {
+            int custom_os_type = jnode["customOSType"].GetInt();
+            if (-1 != custom_os_type) {
+                configs->setOs(EMChatConfigs::OSType::OS_CUSTOM);
+                configs->setOSCustomValue(custom_os_type);
+            }
+        }
+
+        if (jnode.HasMember("customDeviceName") && jnode["customDeviceName"].IsString()) {
+            string custom_device_name = jnode["customDeviceName"].GetString();
+            configs->setDeviceName(custom_device_name);
+        }
+
         //TODO: need to Area code later
 
 #ifndef _WIN32
@@ -877,23 +890,15 @@ namespace sdk_wrapper
                     case EMMessageBody::COMBINE:
                     {
                         EMCombineMessageBodyPtr ptr = dynamic_pointer_cast<EMCombineMessageBody>(body);
-                        writer.Key("localPath");
-                        writer.String(ptr->localPath().c_str());
-
-                        writer.Key("displayName");
-                        writer.String(ptr->displayName().c_str());
-
-                        writer.Key("secret");
-                        writer.String(ptr->secretKey().c_str());
 
                         writer.Key("remotePath");
                         writer.String(ptr->remotePath().c_str());
 
-                        writer.Key("fileSize");
-                        writer.Int64(ptr->fileLength());
+                        writer.Key("secret");
+                        writer.String(ptr->secretKey().c_str());
 
-                        writer.Key("fileStatus");
-                        writer.Int(DownLoadStatusToInt(ptr->downloadStatus()));
+                        writer.Key("localPath");
+                        writer.String(ptr->localPath().c_str());
 
                         writer.Key("title");
                         writer.String(ptr->title().c_str());
@@ -1261,21 +1266,6 @@ namespace sdk_wrapper
         {
             EMCombineMessageBodyPtr ptr = EMCombineMessageBodyPtr(new EMCombineMessageBody());
 
-            if (body.HasMember("localPath") && body["localPath"].IsString()) {
-                string str = body["localPath"].GetString();
-                ptr->setLocalPath(str);
-            }
-
-            if (body.HasMember("fileSize") && body["fileSize"].IsInt64()) {
-                int64_t fz = body["fileSize"].GetInt64();
-                ptr->setFileLength(fz);
-            }
-
-            if (body.HasMember("displayName") && body["displayName"].IsString()) {
-                string str = body["displayName"].GetString();
-                ptr->setDisplayName(str);
-            }
-
             if (body.HasMember("remotePath") && body["remotePath"].IsString()) {
                 string str = body["remotePath"].GetString();
                 ptr->setRemotePath(str);
@@ -1286,9 +1276,9 @@ namespace sdk_wrapper
                 ptr->setSecretKey(str);
             }
 
-            if (body.HasMember("fileStatus") && body["fileStatus"].IsInt()) {
-                int i = body["fileStatus"].GetInt();
-                ptr->setDownloadStatus(DownLoadStatusFromInt(i));
+            if (body.HasMember("localPath") && body["localPath"].IsString()) {
+                string str = body["localPath"].GetString();
+                ptr->setLocalPath(str);
             }
 
             if (body.HasMember("title") && body["title"].IsString()) {
