@@ -7,7 +7,8 @@
 
 #import "EMChatMessage+Helper.h"
 #import "EMChatThread+Helper.h"
-
+#import "NSDictionary+Category.h"
+#import "NSArray+Category.h"
 
 @implementation EMChatMessage (Helper)
 
@@ -86,8 +87,13 @@
                 extDict[key] = @([value doubleValue]);
             }else if ([type isEqualToString:@"str"]) {
                 extDict[key] = value;
+            }else if ([type isEqualToString:@"jstr"]) {
+                extDict[key] = [NSArray fromString:value];
             }
         }
+    }
+    if(aJson[@"receiverList"]) {
+        msg.receiverList = aJson[@"receiverList"];
     }
     msg.ext = extDict;
     return msg;
@@ -142,7 +148,10 @@
                         dict[key] = @{@"type":@"b",@"value":@"False"};
                     }
                 }
-            }else if([value isKindOfClass:[NSString class]]) {
+            } else if ([value isKindOfClass:[NSDictionary class]] || [value isKindOfClass:[NSArray class]]) {
+                dict[key] = @{@"type":@"jstr",@"value": value};
+            }
+            else if([value isKindOfClass:[NSString class]]) {
                 dict[key] = @{@"type":@"str",@"value":value};;
             }
         }
@@ -324,10 +333,16 @@
         case EMMessageBodyTypeVoice:
             type = 4;
             break;
+        case EMMessageBodyTypeCombine:
+            type = 8;
+            break;
         default:
             break;
     }
     ret[@"type"] = @(type);
+    ret[@"operationTime"] = @(self.operationTime);
+    ret[@"operationCount"] = @(self.operatorCount);
+    ret[@"operatorId"] = self.operatorId;
     
     return ret;
 }
@@ -662,6 +677,48 @@
     bodyDict[@"fileStatus"] = @([self downloadStatusToInt:self.downloadStatus]);;
     ret[@"body"] = bodyDict;
     ret[@"type"] = @(4);
+    return ret;
+}
+
+@end
+
+
+#pragma mark - combine
+
+@interface EMCombineMessageBody (Helper)
++ (EMCombineMessageBody *)fromJson:(NSDictionary *)aJson;
+- (NSDictionary *)toJson;
+@end
+
+@implementation EMCombineMessageBody (Helper)
++ (EMCombineMessageBody *)fromJson:(NSDictionary *)aJson {
+    NSString *title = aJson[@"title"];
+    NSString *summary = aJson[@"summary"];
+    NSString *compatibleText = aJson[@"compatibleText"];
+    NSArray *msgList = aJson[@"messageList"];
+    EMCombineMessageBody *ret = [[EMCombineMessageBody alloc] initWithTitle:title
+                                                                    summary:summary
+                                                             compatibleText:compatibleText
+                                                              messageIdList:msgList];
+
+    
+    ret.remotePath = aJson[@"remotePath"];
+    ret.secretKey = aJson[@"secret"];
+    ret.localPath = aJson[@"localPath"];
+    return ret;
+}
+
+- (NSDictionary *)toJson {
+    NSMutableDictionary *ret = [NSMutableDictionary dictionary];
+    NSMutableDictionary *bodyDict = [NSMutableDictionary dictionary];
+    bodyDict[@"remotePath"] = self.remotePath;
+    bodyDict[@"secret"] = self.secretKey;
+    bodyDict[@"localPath"] = self.localPath;
+    bodyDict[@"title"] = self.title;
+    bodyDict[@"summary"] = self.summary;
+    bodyDict[@"compatibleText"] = self.compatibleText;
+    ret[@"body"] = bodyDict;
+    ret[@"type"] = @(8);
     return ret;
 }
 

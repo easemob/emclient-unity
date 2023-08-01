@@ -1,4 +1,4 @@
-SDKVERISON=4_0_2
+SDKVERISON=4_1_0
 FILE=HyphenateChat.framework
 LOCK=.emlock
 
@@ -22,8 +22,8 @@ if [ ! -d ${FILE} ]; then
   curl -o HyphenateChat.zip https://downloadsdk.easemob.com/downloads/HyphenateChat${SDKVERISON}.zip
   unzip HyphenateChat.zip
   rm -rf HyphenateChat.zip
-  mv HyphenateChat.xcframework/ios-arm64_armv7/HyphenateChat.framework ./HyphenateChat.framework
-  rm -rf HyphenateChat.xcframework
+  mv HyphenateChat.xcframework/ios-arm64/HyphenateChat.framework ./HyphenateChat.framework
+#  rm -rf HyphenateChat.xcframework
 fi
 
 echo ${SDKVERISON} > ${LOCK}

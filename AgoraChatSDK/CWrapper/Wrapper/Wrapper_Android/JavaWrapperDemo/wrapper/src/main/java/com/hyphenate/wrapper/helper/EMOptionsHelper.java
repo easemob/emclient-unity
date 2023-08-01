@@ -40,6 +40,15 @@ public class EMOptionsHelper {
                 options.setDnsUrl(json.getString("dnsUrl"));
             }
         }
+        if (json.has("enableEmptyConversation")) {
+            options.setLoadEmptyConversations(json.optBoolean("enableEmptyConversation"));
+        }
+        if (json.has("deviceName")) {
+            options.setCustomDeviceName(json.optString("deviceName"));
+        }
+        if (json.has("osType")) {
+            options.setCustomOSPlatform(json.optInt("osType"));
+        }
 
         if (json.has("pushConfig")) {
             EMPushConfig.Builder builder = new EMPushConfig.Builder(context);

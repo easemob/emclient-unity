@@ -10,6 +10,7 @@
 #import "EMOptions+Helper.h"
 #import "EMWrapperHelper.h"
 #import "EMDeviceConfig+Helper.h"
+#import "EMConversation+Helper.h"
 #import "EMHelper.h"
 #import "EMUtil.h"
 
@@ -83,12 +84,20 @@
         return [self renewToken:params callback:callback];
     }else if ([method isEqualToString:startCallback]) {
 //        return [self startCallback:params callback:callback];
+    }else if ([method isEqualToString:kickDeviceWithToken]) {
+        return [self kickDeviceWithToken:params callback:callback];
+    }else if ([method isEqualToString:kickAllDevicesWithToken]) {
+        return [self kickAllDevicesWithToken:params callback:callback];
+    }else if ([method isEqualToString:getLoggedInDevicesFromServerWithToken]) {
+        return [self getLoggedInDevicesFromServerWithToken:params callback:callback];
     }else {
         [super onMethodCall:method params:params callback:callback];
     }
     
     return ret;
 }
+
+
 
 
 - (NSString *)runDelegateTester {
@@ -216,11 +225,11 @@
 }
 
 - (NSString *)kickDevice:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
-    NSString *username = params[@"userId"];
+    NSString *userId = params[@"userId"];
     NSString *password = params[@"password"];
     NSString *resource = params[@"resource"];
     __weak EMBaseManager *weakSelf = self;
-    [EMClient.sharedClient kickDeviceWithUsername:username
+    [EMClient.sharedClient kickDeviceWithUsername:userId
                                          password:password
                                          resource:resource
                                        completion:^(EMError * _Nullable aError) {
@@ -230,10 +239,10 @@
 }
 
 - (NSString *)kickAllDevices:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
-    NSString *username = params[@"userId"];
+    NSString *userId = params[@"userId"];
     NSString *password = params[@"password"];
     __weak EMBaseManager *weakSelf = self;
-    [EMClient.sharedClient kickAllDevicesWithUsername:username
+    [EMClient.sharedClient kickAllDevicesWithUsername:userId
                                              password:password
                                            completion:^(EMError * _Nullable aError) {
         [weakSelf wrapperCallback:callback error:aError object:nil];
@@ -270,6 +279,52 @@
     
     return nil;
 }
+
+- (NSString *)kickDeviceWithToken:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
+    NSString *userId = params[@"userId"];
+    NSString *token = params[@"token"];
+    NSString *resource = params[@"resource"];
+    __weak EMBaseManager *weakSelf = self;
+    [EMClient.sharedClient kickDeviceWithUserId:userId
+                                         token:token
+                                         resource:resource
+                                       completion:^(EMError * _Nullable aError) {
+        [weakSelf wrapperCallback:callback error:aError object:nil];
+    }];
+    return nil;
+}
+
+- (NSString *)kickAllDevicesWithToken:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
+    NSString *userId = params[@"userId"];
+    NSString *token = params[@"token"];
+    __weak EMBaseManager *weakSelf = self;
+    [EMClient.sharedClient kickAllDevicesWithUserId:userId
+                                             token:token
+                                           completion:^(EMError * _Nullable aError) {
+        [weakSelf wrapperCallback:callback error:aError object:nil];
+    }];
+    
+    return nil;
+}
+
+- (NSString *)getLoggedInDevicesFromServerWithToken:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
+    NSString *userId = params[@"userId"];
+    NSString *token = params[@"token"];
+    __weak EMBaseManager *weakSelf = self;
+    [EMClient.sharedClient getLoggedInDevicesFromServerWithUserId:userId
+                                                            token:token
+                                                       completion:^(NSArray<EMDeviceConfig *> * _Nullable aList, EMError * _Nullable aError) {
+        NSMutableArray *list = [NSMutableArray array];
+        for (EMDeviceConfig *deviceInfo in aList) {
+            [list addObject:[deviceInfo toJson]];
+        }
+        
+        [weakSelf wrapperCallback:callback error:aError object:list];
+    }];
+    
+    return nil;
+}
+
 
 - (void)bindingManagers {
     self.chatManager = [[EMChatManagerWrapper alloc] init];
@@ -311,8 +366,9 @@
     [EMWrapperHelper.shared.listener onReceive:connectionListener method:onAppActiveNumberReachLimitation info:nil];
 }
 
-- (void)userAccountDidLoginFromOtherDevice {
-    [EMWrapperHelper.shared.listener onReceive:connectionListener method:onLoggedOtherDevice info:nil];
+- (void)userAccountDidLoginFromOtherDevice:(NSString *)aDeviceName {
+    [EMWrapperHelper.shared.listener onReceive:connectionListener method:onLoggedOtherDevice
+                                          info:@{@"deviceName": aDeviceName}.toJsonString];
 }
 
 - (void)userAccountDidRemoveFromServer {
@@ -377,6 +433,19 @@
     dict[@"convId"] = conversationId;
     dict[@"deviceId"] = deviceId;
     [EMWrapperHelper.shared.listener onReceive:multiDeviceListener method:onRoamDeleteMultiDevicesEvent info:dict.toJsonString];
+}
+
+- (void)multiDevicesConversationEvent:(EMMultiDevicesEvent)event
+                       conversationId:(NSString *)conversationId
+                     conversationType:(EMConversationType)conversationType
+{
+    NSDictionary *info = @{
+        @"operation": [NSNumber numberWithInt:(int)event],
+        @"convId": conversationId,
+        @"type": @([EMConversation typeToInt:conversationType])
+    };
+    [EMWrapperHelper.shared.listener onReceive:multiDeviceListener method:onConversationMultiDevicesEvent info:info.toJsonString];
+    
 }
 
 @end

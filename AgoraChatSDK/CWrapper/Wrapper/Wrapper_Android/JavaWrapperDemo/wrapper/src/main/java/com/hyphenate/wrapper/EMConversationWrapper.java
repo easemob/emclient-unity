@@ -219,6 +219,7 @@ public class EMConversationWrapper extends EMBaseWrapper {
             case 5 : type = EMMessage.Type.FILE; break;
             case 6 : type = EMMessage.Type.CMD; break;
             case 7 : type = EMMessage.Type.CUSTOM; break;
+            case 8 : type = EMMessage.Type.COMBINE; break;
         }
 
         EMMessage.Type finalType = type;

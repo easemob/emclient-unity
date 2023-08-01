@@ -11,6 +11,7 @@ import com.hyphenate.chat.EMFetchMessageOption;
 import com.hyphenate.chat.EMGroupReadAck;
 import com.hyphenate.chat.EMLanguage;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMMessageBody;
 import com.hyphenate.chat.EMMessageReaction;
 import com.hyphenate.chat.EMMessageReactionChange;
 import com.hyphenate.exceptions.HyphenateException;
@@ -24,6 +25,7 @@ import com.hyphenate.wrapper.helper.EMErrorHelper;
 import com.hyphenate.wrapper.helper.EMFetchMessageOptionHelper;
 import com.hyphenate.wrapper.helper.EMGroupAckHelper;
 import com.hyphenate.wrapper.helper.EMLanguageHelper;
+import com.hyphenate.wrapper.helper.EMMessageBodyHelper;
 import com.hyphenate.wrapper.helper.EMMessageHelper;
 import com.hyphenate.wrapper.helper.EMMessageReactionChangeHelper;
 import com.hyphenate.wrapper.helper.EMMessageReactionHelper;
@@ -84,6 +86,10 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
             ret = loadAllConversations(jsonObject, callback);
         } else if (EMSDKMethod.getConversationsFromServer.equals(method)) {
             ret = getConversationsFromServer(jsonObject, callback);
+        } else if (EMSDKMethod.getConversationsFromServerWithCursor.equals(method)){
+            ret = getConversationsFromServerWithCursor(jsonObject, callback);
+        } else if (EMSDKMethod.pinConversation.equals(method)) {
+            ret = pinConversation(jsonObject, callback);
         } else if (EMSDKMethod.deleteConversation.equals(method)) {
             ret = deleteConversation(jsonObject, callback);
         } else if (EMSDKMethod.fetchHistoryMessages.equals(method)) {
@@ -120,6 +126,10 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
             ret = removeMessagesFromServerWithTs(jsonObject, callback);
         } else if (EMSDKMethod.fetchHistoryMessagesBy.equals(method)) {
             ret = fetchHistoryMessagesBy(jsonObject, callback);
+        } else if (EMSDKMethod.modifyMessage.equals(method)) {
+            ret = modifyMessage(jsonObject, callback);
+        } else if (EMSDKMethod.downloadCombineMessages.equals(method)) {
+            ret = downloadCombineMessages(jsonObject, callback);
         }
         else {
             super.onMethodCall(method, jsonObject, callback);
@@ -372,42 +382,57 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
     }
 
     private String loadAllConversations(JSONObject params, EMWrapperCallback callback) throws JSONException {
-        List<EMConversation> list = new ArrayList<>(EMClient.getInstance().chatManager().getAllConversations().values());
-        boolean retry = false;
+        List<EMConversation> list = EMClient.getInstance().chatManager().getAllConversationsBySort();
         JSONArray conversations = new JSONArray();
-        do{
-            try{
-                retry = false;
-                Collections.sort(list, (o1, o2) -> {
-                    if (o1 == null && o2 == null) {
-                        return 0;
-                    }
-                    if (o1.getLastMessage() == null) {
-                        return 1;
-                    }
-
-                    if (o2.getLastMessage() == null) {
-                        return -1;
-                    }
-
-                    if (o1.getLastMessage().getMsgTime() == o2.getLastMessage().getMsgTime()) {
-                        return 0;
-                    }
-
-                    return o2.getLastMessage().getMsgTime() - o1.getLastMessage().getMsgTime() > 0 ? 1 : -1;
-                });
-                for (EMConversation conversation : list) {
-                    conversations.put(EMConversationHelper.toJson(conversation));
-                }
-            }catch(IllegalArgumentException e) {
-                retry = true;
-            }
-        }while (retry);
-
+        for (EMConversation conversation : list) {
+            conversations.put(EMConversationHelper.toJson(conversation));
+        }
         return EMHelper.getReturnJsonObject(conversations).toString();
     }
 
 
+
+    private String getConversationsFromServerWithCursor(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        boolean pinOnly = params.optBoolean("pinOnly");
+        String cursor = params.optString("cursor");
+        int limit = params.optInt("limit");
+        if (pinOnly) {
+            EMClient.getInstance().chatManager().asyncFetchPinnedConversationsFromServer(limit, cursor, new EMCommonValueCallback<EMCursorResult<EMConversation>>(callback) {
+                @Override
+                public void onSuccess(EMCursorResult<EMConversation> object) {
+                    JSONObject jo = null;
+                    try {
+                        jo = EMCursorResultHelper.toJson(object);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } finally {
+                        updateObject(jo);
+                    }
+                }
+            });
+        }else {
+            EMClient.getInstance().chatManager().asyncFetchConversationsFromServer(limit, cursor, new EMCommonValueCallback<EMCursorResult<EMConversation>>(callback){
+                public void onSuccess(EMCursorResult<EMConversation> object) {
+                    JSONObject jo = null;
+                    try {
+                        jo = EMCursorResultHelper.toJson(object);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } finally {
+                        updateObject(jo);
+                    }
+                }
+            });
+        }
+        return null;
+    }
+
+    private String pinConversation(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        String convId = params.optString("convId");
+        boolean isPin = params.optBoolean("isPinned");
+        EMClient.getInstance().chatManager().asyncPinConversation(convId, isPin, new EMCommonCallback(callback));
+        return null;
+    }
 
     private String getConversationsFromServer(JSONObject params, EMWrapperCallback callback) throws JSONException {
         asyncRunnable(() -> {
@@ -761,6 +786,44 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
                 try{
                     jsonObject = EMCursorResultHelper.toJson(object);
                     updateObject(jsonObject);
+                }catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        return null;
+    }
+
+    private String modifyMessage(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        String msgId = params.optString("");
+        EMMessageBody body = EMMessageBodyHelper.textBodyFromJson(params.optJSONObject("body"));
+        EMClient.getInstance().chatManager().asyncModifyMessage(msgId, body, new EMCommonValueCallback<EMMessage>(callback) {
+            @Override
+            public void onSuccess(EMMessage object) {
+                JSONObject jsonObject = null;
+                try {
+                    jsonObject = EMMessageHelper.toJson(object);
+                }catch (JSONException e) {
+                    e.printStackTrace();
+                }finally {
+                    updateObject(jsonObject);
+                }
+            }
+        });
+        return null;
+    }
+
+    private String downloadCombineMessages(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        EMMessage msg = EMMessageHelper.fromJson(params.optJSONObject("msg"));
+        EMClient.getInstance().chatManager().downloadAndParseCombineMessage(msg, new EMCommonValueCallback<List<EMMessage>>(callback){
+            @Override
+            public void onSuccess(List<EMMessage> messages) {
+                JSONArray jsonArray = new JSONArray();
+                try {
+                    for (EMMessage msg : messages) {
+                        jsonArray.put(EMMessageHelper.toJson(msg));
+                    }
+                updateObject(jsonArray);
                 }catch (JSONException e) {
                     e.printStackTrace();
                 }

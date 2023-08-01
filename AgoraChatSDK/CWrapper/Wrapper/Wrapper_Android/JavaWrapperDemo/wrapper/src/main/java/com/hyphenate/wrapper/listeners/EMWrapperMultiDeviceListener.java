@@ -1,7 +1,9 @@
 package com.hyphenate.wrapper.listeners;
 
 import com.hyphenate.EMMultiDeviceListener;
+import com.hyphenate.chat.EMConversation;
 import com.hyphenate.wrapper.EMWrapperHelper;
+import com.hyphenate.wrapper.helper.EMConversationHelper;
 import com.hyphenate.wrapper.util.EMSDKMethod;
 import com.hyphenate.wrapper.util.EMWrapperThreadUtil;
 
@@ -56,6 +58,20 @@ public class EMWrapperMultiDeviceListener implements EMMultiDeviceListener {
             data.put("convId", conversationId);
             data.put("deviceId", deviceId);
             post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.multiDeviceListener, EMSDKMethod.onRoamDeleteMultiDevicesEvent, data.toString()));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onConversationEvent(int event, String conversationId, EMConversation.EMConversationType type) {
+        JSONObject data = new JSONObject();
+        int iType = EMConversationHelper.typeToInt(type);
+        try {
+            data.put("operation", event);
+            data.put("type", iType);
+            data.put("convId", conversationId);
+            post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.multiDeviceListener, EMSDKMethod.onConversationMultiDevicesEvent, data.toString()));
         } catch (JSONException e) {
             e.printStackTrace();
         }

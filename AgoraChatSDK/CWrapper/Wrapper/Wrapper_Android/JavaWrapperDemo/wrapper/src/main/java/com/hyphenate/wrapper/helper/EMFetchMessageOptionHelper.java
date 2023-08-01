@@ -63,6 +63,10 @@ public class EMFetchMessageOptionHelper {
                         list.add(EMMessage.Type.CUSTOM);
                     }
                     break;
+                    case 8:{
+                        list.add(EMMessage.Type.COMBINE);
+                    }
+                    break;
                 }
             }
             if (list.size() > 0) {
