@@ -409,7 +409,7 @@ namespace AgoraChat
              * \~english
              * The URL where the thumbnail is located on the server.
              */
-            public string ThumbnaiRemotePath;
+            public string ThumbnailRemotePath;
 
             /**
              * \~chinese
@@ -418,7 +418,7 @@ namespace AgoraChat
              * \~english
              * The secret for downloading the thumbnail.
              */
-            public string ThumbnaiSecret;
+            public string ThumbnailSecret;
 
 
             /**
@@ -428,7 +428,7 @@ namespace AgoraChat
              * \~english
              * The status for downloading the thumbnail.
              */
-            public DownLoadStatus ThumbnaiDownStatus = DownLoadStatus.PENDING;
+            public DownLoadStatus ThumbnailDownStatus = DownLoadStatus.PENDING;
             /**
              * \~chinese
              * 图片文件的宽度和高度，单位为像素。
@@ -503,9 +503,9 @@ namespace AgoraChat
 
                 JSONObject jo_body = jo["body"].AsObject;
                 jo_body.AddWithoutNull("thumbnailLocalPath", ThumbnailLocalPath ?? "");
-                jo_body.AddWithoutNull("thumbnailRemotePath", ThumbnaiRemotePath ?? "");
-                jo_body.AddWithoutNull("thumbnailSecret", ThumbnaiSecret ?? "");
-                jo_body.AddWithoutNull("thumbnailStatus", ThumbnaiDownStatus.ToInt());
+                jo_body.AddWithoutNull("thumbnailRemotePath", ThumbnailRemotePath ?? "");
+                jo_body.AddWithoutNull("thumbnailSecret", ThumbnailSecret ?? "");
+                jo_body.AddWithoutNull("thumbnailStatus", ThumbnailDownStatus.ToInt());
                 jo_body.AddWithoutNull("height", Height);
                 jo_body.AddWithoutNull("width", Width);
                 jo_body.AddWithoutNull("sendOriginalImage", Original);
@@ -517,9 +517,9 @@ namespace AgoraChat
             {
                 base.FromJsonObject(jo);
                 ThumbnailLocalPath = jo["thumbnailLocalPath"].Value;
-                ThumbnaiRemotePath = jo["thumbnailRemotePath"].Value;
-                ThumbnaiSecret = jo["thumbnailSecret"].Value;
-                ThumbnaiDownStatus = jo["thumbnailStatus"].AsInt.ToDownLoadStatus();
+                ThumbnailRemotePath = jo["thumbnailRemotePath"].Value;
+                ThumbnailSecret = jo["thumbnailSecret"].Value;
+                ThumbnailDownStatus = jo["thumbnailStatus"].AsInt.ToDownLoadStatus();
                 Height = jo["height"].AsDouble;
                 Width = jo["width"].AsDouble;
                 Original = jo["sendOriginalImage"].AsBool;
@@ -623,7 +623,7 @@ namespace AgoraChat
              * \~english
              * The URL of the video thumbnail.
              */
-            public string ThumbnaiRemotePath;
+            public string ThumbnailRemotePath;
 
             /**
              * \~chinese
@@ -632,7 +632,7 @@ namespace AgoraChat
              * \~english
              * The secret for downloading the thumbnail.
              */
-            public string ThumbnaiSecret;
+            public string ThumbnailSecret;
 
 
             /**
@@ -642,7 +642,7 @@ namespace AgoraChat
              * \~english
              * The status for downloading the thumbnail.
              */
-            public DownLoadStatus ThumbnaiDownStatus = DownLoadStatus.PENDING;
+            public DownLoadStatus ThumbnailDownStatus = DownLoadStatus.PENDING;
             /**
              * \~chinese
              * 视频的宽度和高度，单位为像素。
@@ -713,10 +713,10 @@ namespace AgoraChat
                 JSONObject jo = base.ToJsonObject();
 
                 JSONObject jo_body = jo["body"].AsObject;
-                jo_body.AddWithoutNull("thumbnailRemotePath", ThumbnaiRemotePath ?? "");
-                jo_body.AddWithoutNull("thumbnailSecret", ThumbnaiSecret ?? "");
+                jo_body.AddWithoutNull("thumbnailRemotePath", ThumbnailRemotePath ?? "");
+                jo_body.AddWithoutNull("thumbnailSecret", ThumbnailSecret ?? "");
                 jo_body.AddWithoutNull("thumbnailLocalPath", ThumbnaiLocationPath ?? "");
-                jo_body.AddWithoutNull("thumbnailStatus", ThumbnaiDownStatus.ToInt());
+                jo_body.AddWithoutNull("thumbnailStatus", ThumbnailDownStatus.ToInt());
                 jo_body.AddWithoutNull("height", Height);
                 jo_body.AddWithoutNull("width", Width);
                 jo_body.AddWithoutNull("duration", Duration);
@@ -727,10 +727,10 @@ namespace AgoraChat
             internal override void FromJsonObject(JSONObject jo)
             {
                 base.FromJsonObject(jo);
-                ThumbnaiRemotePath = jo["thumbnailRemotePath"];
-                ThumbnaiSecret = jo["thumbnailSecret"];
+                ThumbnailRemotePath = jo["thumbnailRemotePath"];
+                ThumbnailSecret = jo["thumbnailSecret"];
                 ThumbnaiLocationPath = jo["thumbnailLocalPath"];
-                ThumbnaiDownStatus = jo["thumbnailStatus"].AsInt.ToDownLoadStatus();
+                ThumbnailDownStatus = jo["thumbnailStatus"].AsInt.ToDownLoadStatus();
                 Height = jo["height"].AsDouble;
                 Width = jo["width"].AsDouble;
                 Duration = jo["duration"].AsInt;

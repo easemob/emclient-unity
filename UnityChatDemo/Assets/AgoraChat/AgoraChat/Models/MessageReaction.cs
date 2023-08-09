@@ -28,7 +28,7 @@ namespace AgoraChat
          * \~english
          * Gets the Reaction.
          */
-        public string Rection;
+        public string Reaction;
 
         /**
          * \~chinese
@@ -80,7 +80,7 @@ namespace AgoraChat
 
         internal override void FromJsonObject(JSONObject jsonObject)
         {
-            Rection = jsonObject["reaction"];
+            Reaction = jsonObject["reaction"];
             Count = jsonObject["count"].AsInt;
             UserList = List.StringListFromJsonArray(jsonObject["userList"]);
             State = jsonObject["isAddedBySelf"].AsBool;
@@ -89,7 +89,7 @@ namespace AgoraChat
         internal override JSONObject ToJsonObject()
         {
             JSONObject jo = new JSONObject();
-            jo.AddWithoutNull("reaction", Rection);
+            jo.AddWithoutNull("reaction", Reaction);
             jo.AddWithoutNull("count", Count);
             jo.AddWithoutNull("userList", JsonObject.JsonArrayFromStringList(UserList));
             jo.AddWithoutNull("isAddedBySelf", State);
