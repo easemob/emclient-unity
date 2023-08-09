@@ -40,16 +40,16 @@ namespace AgoraChat
         * 断开链接, 无具体原因。
         *
         * \~english
-        * Disconnected, no detail reason.
+        * The SDK is disconnected from the server with no reason.
         */
         Reason_Disconnected,
 
         /**
         * \~chinese
-        * 用户名或者密码认证错误。
+        * 用户 ID 或者密码认证错误。
         *
         * \~english
-        * User name or password is wrong.
+        * The user ID or password is wrong.
         */
         Reason_AuthenticationFailed,
 
@@ -58,16 +58,16 @@ namespace AgoraChat
         * 用户在另一台设备上登录。
         *
         * \~english
-        * User login on another device.
+        * The user has logged in to another device.
         */
         Reason_LoginFromOtherDevice,
 
         /**
         * \~chinese
-        * 用户被从server上移除。
-        *
+        * 用户被从 server 上移除。
+        * 
         * \~english
-        * User was removed from server.
+        * The user is removed from the server.
         */
         Reason_RemoveFromServer,
 
@@ -76,7 +76,7 @@ namespace AgoraChat
         * 用户登录登录设备超限。
         *
         * \~english
-        * User login on too many devices.
+        * The user has logged in to too many devices.
         */
         Reason_LoginTooManyDevice,
 
@@ -85,7 +85,7 @@ namespace AgoraChat
         * 用户密码变更。
         *
         * \~english
-        * User has changed the password.
+        * The user has changed the password.
         */
         Reason_ChangePassword,
 
@@ -94,7 +94,7 @@ namespace AgoraChat
         * 用户被其他设备或者后端控制台踢出。
         *
         * \~english
-        * User was kicked by other device or console backend.
+        * The user is kicked by another device or on the console.
         */
         Reason_KickedByOtherDevice,
 
@@ -103,7 +103,7 @@ namespace AgoraChat
         * 服务被禁止。
         *
         * \~english
-        * Serving is disabled.
+        * The service is disabled.
         */
         Reason_ForbidByServer,
     }
@@ -115,7 +115,7 @@ namespace AgoraChat
         * 未知操作，缺省值。
         *
         * \~english
-        * Unkonwn operation, default value.
+        * Unknown operation, default value.
         */
         UnKnown = 0,
         /**
@@ -123,7 +123,7 @@ namespace AgoraChat
         * 创建子区。
         *
         * \~english
-        * Create thread.
+        * Create a thread.
         */
         Create,
         /**
@@ -131,7 +131,7 @@ namespace AgoraChat
         * 更新子区。
         *
         * \~english
-        * Update thread.
+        * Update a thread.
         */
         Update,
         /**
@@ -139,7 +139,7 @@ namespace AgoraChat
         * 删除子区。
         *
         * \~english
-        * Delete thread.
+        * Delete a thread.
         */
         Delete,
         /**
@@ -147,7 +147,7 @@ namespace AgoraChat
         * 子区消息更新。
         *
         * \~english
-        * Thread message updated.
+        * Update a thread message.
         */
         Update_Msg,
     }
@@ -420,7 +420,7 @@ namespace AgoraChat
           * 合并消息。
           *
           * \~english
-          * The combine message.
+          * The combined message.
           */
         COMBINE
     };
@@ -615,7 +615,7 @@ namespace AgoraChat
          *  布尔类型。
          *
          *  \~english
-         *  Bool.
+         *  Boolean.
          */
         BOOL = 0,
 
@@ -1013,7 +1013,7 @@ namespace AgoraChat
         * 子区在其他设备上被销毁。
         *
         * \~english
-        * A thread was destoryed on another device.
+        * A thread was destroyed on another device.
         */
         THREAD_DESTROY = 41,
 
@@ -1022,7 +1022,7 @@ namespace AgoraChat
         * 在其他设备上加入子区。
         *
         * \~english
-        * Joined thread on another device.
+        * The user joined a thread on another device.
         */
         THREAD_JOIN = 42,
 
@@ -1031,7 +1031,7 @@ namespace AgoraChat
         * 在其他设备上加退出子区。
         *
         * \~english
-        * Left thread on another device.
+        * The user left a thread on another device.
         */
         THREAD_LEAVE = 43,
 
@@ -1040,16 +1040,16 @@ namespace AgoraChat
         * 子区在其他设备上有更新。
         *
         * \~english
-        * Thread updated on another device.
+        * The thread was updated on another device.
         */
         THREAD_UPDATE = 44,
 
         /**
         * \~chinese
-        * 在其他设备上被提出子区。
+        * 在其他设备上被踢出子区。
         *
         * \~english
-        * Kicked from thread on another device.
+        * The user was kicked from a thread on another device.
         */
         THREAD_KICK = 45,
 
@@ -1058,7 +1058,7 @@ namespace AgoraChat
         * 在其他设备上设置了群组成员自定义属性。
         *
         * \~english
-        * The custom attributes of group members have been set on other devices.
+        * The custom attribute(s) of a group member(s) is/are set on other devices.
         */
         SET_METADATA = 50,
 
@@ -1067,7 +1067,7 @@ namespace AgoraChat
         * 在其他设备上删除了群组成员自定义属性。
         *
         * \~english
-        * The custom attributes of group members have been deleted on other devices.
+        * The custom attribute(s) of a group member(s) is/are deleted on other devices.
         */
         DELETE_METADATA = 51,
 
@@ -1076,7 +1076,7 @@ namespace AgoraChat
         * 群组成员自定义属性发生改变。
         *
         * \~english
-        * The custom attributes of group members have changed.
+        * The custom attribute(s) of a group member(s) is/are changed.
         */
         GROUP_MEMBER_METADATA_CHANGED = 52,
 
@@ -1085,7 +1085,7 @@ namespace AgoraChat
         * 会话被置顶。
         *
         * \~english
-        * Conversation is pinned.
+        * A conversation is pinned.
         */
         CONVERSATION_PINNED = 60,
 
@@ -1094,7 +1094,7 @@ namespace AgoraChat
         * 会话被取消置顶。
         *
         * \~english
-        * Conversation is unpinned.
+        * A conversation is unpinned.
         */
         CONVERSATION_UNPINNED = 61,
 
@@ -1103,7 +1103,7 @@ namespace AgoraChat
         * 会话被删除。
         *
         * \~english
-        * Conversation is deleted.
+        * A conversation is deleted.
         */
         CONVERSATION_DELETED = 62
     };
@@ -1112,19 +1112,19 @@ namespace AgoraChat
     {
         /**
         * \~chinese
-        * Reaction删除操作。
+        * Reaction 删除操作。
         *
         * \~english
-        * Reaction delete operation.
+        * A Reaction is deleted.
         */
         MessageReactionOperateRemove = 0,
 
         /**
         * \~chinese
-        * Reaction增加操作。
+        * Reaction 添加操作。
         *
         * \~english
-        * Reaction add operation.
+        * A Reaction is added.
         */
         MessageReactionOperateAdd = 1,
     }

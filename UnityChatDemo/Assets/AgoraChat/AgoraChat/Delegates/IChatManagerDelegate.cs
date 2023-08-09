@@ -169,16 +169,18 @@ namespace AgoraChat
          * \~chinese
          * 消息内容被修改回调。
          *
-         * @param Message       被改变的消息。
-         * @param operatorId    修改消息的操作人Id。
-         * @param operationTime 修改消息的时间点。
+         * @param Message       修改的消息对象，其中的 message body 包含消息修改次数、最后一次修改的操作者、最后一次修改时间等信息。
+         *               你也可通过 `onMessageContentChanged` 回调获得最后一次修改的操作者和最后一次修改时间等信息。
+         * @param operatorId    最后一次修改消息的用户 ID。
+         * @param operationTime 消息的最后一次修改时间戳，单位为毫秒。
          *
          *  \~english
-         * Occurs when user modify message content.
+         * Occurs when a sent message is modified.
          *
-         * @param Message       The modified message.
-         * @param operatorId    The operator Id who modified the message.
-         * @param operationTime The time when the message was modified.
+         * @param Message       The modified message object, where the message body contains the information such as the number of message modifications, the operator of the last modification, and the last modification time.
+	     * 	Also, you can get the operator of the last message modification and the last modification time via the `onMessageContentChanged` method.
+         * @param operatorId    The user ID of the operator that modified the message last time.
+         * @param operationTime The last message modification time. It is a UNIX timestamp in milliseconds.
          */
         void OnMessageContentChanged(Message msg, string operatorId, long operationTime);
     }

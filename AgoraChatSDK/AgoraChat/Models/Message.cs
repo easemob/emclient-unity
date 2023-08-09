@@ -81,12 +81,12 @@ namespace AgoraChat
         * \~chinese
         * 消息是否只投递给在线用户：
         * - `true`：只有消息接收方在线时才能投递成功。若接收方离线，则消息会被丢弃。
-        * - `false`（默认）：如果用户在线，则直接投递；如果用户离线，消息会在用户上线时投递。
+        * - （默认）`false`：如果用户在线，则直接投递；如果用户离线，消息会在用户上线时投递。
         *
         * \~english
         * Whether the message is delivered only when the recipient(s) is/are online:
         * - `true`：The message is delivered only when the recipient(s) is/are online. If the recipient is offline, the message is discarded.
-        * - `false`(Default)：The message is delivered when the recipient(s) is/are online. If the recipient(s) is/are offline, the message will not be delivered to them until they get online.
+        * - (Default) `false`：The message is delivered when the recipient(s) is/are online. If the recipient(s) is/are offline, the message will not be delivered to them until they get online.
         *
         */
         public bool DeliverOnlineOnly = false;
@@ -228,12 +228,14 @@ namespace AgoraChat
 
         /**
          * \~chinese
-         * 获取群组消息回执数。
-         * @return  群组消息回执数。
+         * 获取群组消息的已读回执数。
+         *
+         * @return  群组消息的已读回执数。
          *
          * \~english
-         * Get group ack count.
-         * @return group ack count.
+         * Gets the number of read receipts for a group message.
+         *
+         * @return The number of read receipts for a group message.
          */
         public int GroupAckCount
         {
@@ -272,11 +274,12 @@ namespace AgoraChat
         public Dictionary<string, AttributeValue> Attributes;
         /**
          * \~chinese
-         * 获取Reaction列表。
+         * 获取 Reaction 列表。
+         *
          * @return  Reaction 列表。
          *
          * \~english
-         * Get the list of Reaction.
+         * Get the list of Reactions.
          *
          * @return The list of Reactions.
          */
@@ -287,10 +290,10 @@ namespace AgoraChat
 
         /**
          * \~chinese
-         * 设置群组或聊天室消息接收列表。
+         * 接收消息的群组或聊天室成员列表。
          *
          * \~english
-         * Set group or room message receivers.
+         * The list of IDs of group or chat room members that receive a message.
          */
         public List<string> ReceiverList
         {
@@ -302,20 +305,27 @@ namespace AgoraChat
 
         /**
          * \~chinese
-         * 设置及获取是否是 Thread 消息。
+         * 是否是 Thread 消息：
+         * - `true`：是；
+         * - `false`：否。
          *
          * \~english
-         * Sets and get whether the message is in a thread.
+         * Whether the message is in a thread:
+         * - `true`: Yes.
+         * - `false`: No.
          */
         public bool IsThread = false;
 
         /**
          * \~chinese
-         * 获取子区内容。
+         * 获取子区概览信息。
+         *
+         * 子区概览信息仅在创建子区后携带。
          *
          * \~english
-         * Get thread on current message.
+         * Gets the overview of the message thread.
          *
+         * The overview of the message thread exists only after you creates a message thread.
          */
         public ChatThread ChatThread
         {

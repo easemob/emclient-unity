@@ -71,10 +71,10 @@ namespace AgoraChat
          * @param deviceId          设备 ID。
          *
          * \~english
-         * The callback for a multi-device event that messages of the conversaion are deleted from server.
+         * The callback for a multi-device event for deletion of historical messages in a conversation from the server.
          *
-         * @param conversationId    Conversation ID.
-         * @param deviceId          Device ID.
+         * @param conversationId    The conversation ID.
+         * @param deviceId          The device ID.
          */
         void OnRoamDeleteMultiDevicesEvent(string conversationId, string deviceId);
 
@@ -90,8 +90,8 @@ namespace AgoraChat
         * The callback for a multi-device conversation event.
         *
         * @param operation         The conversation event. See {@link MultiDevicesOperation}.
-        * @param conversationId    Conversation ID.
-        * @param deviceId          Conversation type.
+        * @param conversationId    The conversation ID.
+        * @param type              The conversation type.
         */
         void OnConversationMultiDevicesEvent(MultiDevicesOperation operation, string conversationId, ConversationType type);
     }

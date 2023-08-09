@@ -377,7 +377,7 @@ namespace AgoraChat
          * 						失败时回调 {@link ValueCallBack#onError(int, String)}。
          *
          * \~english
-         * Gets the list of online devices to which you have logged in with a specified account.
+         * Gets the list of currently logged-in devices of a specified account.
          *
          * This is an asynchronous method.
          *
@@ -398,12 +398,12 @@ namespace AgoraChat
          * 异步方法。
          *
          * @param userId        用户 ID。
-         * @param token         令牌。
+         * @param token         Token。
          * @param callBack 		结果回调，成功时回调 {@link ValueCallBack#OnSuccessValue(Object)}，返回设备信息列表；
          * 						失败时回调 {@link ValueCallBack#onError(int, String)}。
          *
          * \~english
-         * Gets the list of online devices to which you have logged in with a specified account.
+         * Gets the list of currently logged-in devices of a specified account.
          *
          * This is an asynchronous method.
          *
@@ -430,9 +430,9 @@ namespace AgoraChat
          * @param resource  设备 ID, 见 {@link DeviceInfo#Resource}。
          *
          * \~english
-         * Logs out from a specified account on a device.
+         * Forces the specified account to log out from the specified device.
          *
-         * You can call {@link GetLoggedInDevicesFromServer()} to get the device ID.
+         * You can call {@link GetLoggedInDevicesFromServer()} to get the device information {@link DeviceInfo}.
          *
          * This is an asynchronous method.
          *
@@ -454,13 +454,13 @@ namespace AgoraChat
         * 异步方法。
         *
         * @param userId    用户 ID。
-        * @param token     令牌。
+        * @param token     Token。
         * @param resource  设备 ID, 见 {@link DeviceInfo#Resource}。
         *
         * \~english
-        * Logs out from a specified account on a device.
+        * Forces the specified account to log out from the specified device.
         *
-        * You can call {@link GetLoggedInDevicesFromServer()} to get the device ID.
+        * You can call {@link GetLoggedInDevicesFromServer()} to get the device information {@link DeviceInfo}.
         *
         * This is an asynchronous method.
         *
@@ -484,7 +484,7 @@ namespace AgoraChat
          * @param callback	操作结果回调，详见 {@link CallBack}。
          *
          * \~english
-         * Logs out from a specified account on all devices.
+         * Forces the specified account to log out from all devices.
          *
          * This is an asynchronous method.
          *
@@ -504,11 +504,11 @@ namespace AgoraChat
          * 异步方法。
          *
          * @param userId    用户 ID。
-         * @param token     令牌。
+         * @param token     Token。
          * @param callback	操作结果回调，详见 {@link CallBack}。
          *
          * \~english
-         * Logs out from a specified account on all devices.
+         * Forces the specified account to log out from all devices.
          *
          * This is an asynchronous method.
          *

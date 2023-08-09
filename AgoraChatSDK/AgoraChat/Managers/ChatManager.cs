@@ -202,9 +202,9 @@ namespace AgoraChat
 
         /**
 	     * \~chinese
-	     * 根据FetchServerMessagesOption从服务器获取历史消息。
+	     * 根据根据消息拉取参数配置类 `FetchServerMessagesOption` 从服务器分页获取历史消息。
 	     *
-	     * 分页获取。
+         * 分页获取历史消息。
 	     *
 	     * 异步方法。
 	     *
@@ -216,9 +216,9 @@ namespace AgoraChat
 	     * @param callback              结果回调，返回消息列表。
 	     *
 	     * \~english
-	     * Basing on FetchServerMessagesOption to get historical messages of the conversation from the server.
+	     * Gets historical messages of a conversation from the server according the parameter configuration class for pulling historical messages `FetchServerMessagesOption`.
 	     *
-	     * Historical messages of a conversation can also be obtained with pagination.
+	     * Historical messages of a conversation can be obtained with pagination.
 	     *
 	     * This is an asynchronous method.
 	     *
@@ -227,7 +227,7 @@ namespace AgoraChat
 	     * @param cursor                The cursor position from which to start querying data.
 	     * @param pageSize              The number of messages that you expect to get on each page. The value range is [1,50].
 	     * @param option                The parameter configuration class for pulling historical messages from the server. See {@link FetchServerMessagesOption}.
-	     * @param callback				The result callback. Returns the list of obtained messages.
+	     * @param callback				The result callback. The SDK returns the list of obtained messages.
 	     */
         public void FetchHistoryMessagesFromServerBy(string conversationId, ConversationType type = ConversationType.Chat, string cursor = null, int pageSize = 10, FetchServerMessagesOption option = null, ValueCallBack<CursorResult<Message>> callback = null)
         {
@@ -333,11 +333,11 @@ namespace AgoraChat
 	     * @param callback    获取的会话列表，详见 {@link ValueCallBack}。
 	     *
 	     * \~english
-	     * Gets the all conversations from the server.
+	     * Gets all conversations from the server.
 	     * 
 	     * An empty list will be returned if no conversation is found.
 	     *
-	     * @param callback    The list of obtained coversations. See {@link ValueCallBack}.
+	     * @param callback    The list of obtained conversations. See {@link ValueCallBack}.
 	     */
         [Obsolete]
         public void GetConversationsFromServer(ValueCallBack<List<Conversation>> callback = null)
@@ -354,18 +354,23 @@ namespace AgoraChat
 	     * \~chinese
 	     * 根据指定参数从服务器获取相关会话对象。
 	     *
-	     * @param pinOnly     只获取置顶会话。
-	     * @param cursor      查询 cursor。
-	     * @param limit       最大查询条数(1-50)。
+	     * @param pinOnly     是否只获取置顶会话：
+         * - `true`：是。只获取置顶会话。SDK 按照会话置顶时间倒序返回。
+         * - `false`：否。
+	     * @param cursor      开始获取数据的游标位置。
+	     * @param limit       每页返回的会话数。取值范围为 [1,50]。
 	     * @param callback    获取的会话列表，详见 {@link ValueCallBack}。
 	     *
 	     * \~english
-	     * Gets the related conversations from the server basing on params.
+	     * Gets the conversations from the server.
 	     *
-	     * @param pingOnly    Only get the conversations being pinned.
-	     * @param cursor      The query cursor.
-	     * @param limit       The max query number of conversations(1-50).
-	     * @param callback    The list of obtained coversations. See {@link ValueCallBack}.
+	     * @param pingOnly    Whether to return pinned conversations only:
+         * - `true`: Yes. The SDK only returns pinned conversations in the reverse chronological order of their pinning.
+         * - `false`: No.
+         *
+	     * @param cursor      The position from which to start getting data.
+	     * @param limit       The number of conversations that you expect to get on each page. The value range is [1,50].
+	     * @param callback    The list of obtained conversations. See {@link ValueCallBack}.
 	     */
         public void GetConversationsFromServerWithCursor(bool pinOnly, string cursor = "", int limit = 20, ValueCallBack<CursorResult<Conversation>> callback = null)
         {
@@ -449,7 +454,9 @@ namespace AgoraChat
 		 * 
 	     * 一般情况下，该方法在成功登录后调用，以提升会话列表的加载速度。
 	     * 
-	     * @param isSort      返回的会话列表是否排序。（缺省为true）
+	     * @param isSort      返回的会话列表是否排序。
+         * - （默认）`true`：SDK 按照会话活跃时间（最新一条消息的时间戳）的倒序返回会话，置顶会话在前，非置顶会话在后。
+         * - `false`：返回的会话列表不会排序
 	     * @return            加载的会话列表。
 	     *
 	     * \~english
@@ -457,7 +464,9 @@ namespace AgoraChat
 		 * 
 	     * To accelerate the loading, call this method immediately after the user is logged in.
 	     * 
-	     * @param isSort      Returned conversation list is sorted or not. (Default value is true)
+	     * @param isSort      Whether conversations are returned in order.
+         * - (Default) `true`: Yes. Conversations are returned in the descending order of the timestamp of the latest message in them, with the pinned ones at the top of the list and followed by the unpinned ones.
+         * - `false`: No. Conversations are not returned sequentially.
 	     * @return            The list of loaded conversations.
 	     */
         public List<Conversation> LoadAllConversations(bool isSort = true)
@@ -788,16 +797,26 @@ namespace AgoraChat
 
         /**
          * \~chinese
-         * 编辑消息（仅限于编辑文本消息）。
-         * @param messageId 要编辑消息的Id。
-         * @param body      新的消息体。
+         * 修改消息内容。
+         *
+         * 调用该方法修改消息内容后，本地和服务端的消息均会修改。
+         *
+         * 调用该方法只能修改单聊和群聊中的文本消息，不能修改聊天室消息。
+
+         * @param messageId 要修改的消息的 ID。
+         * @param body      内容修改后的消息体。
          * @param callback 完成的回调，详见 {@link #CallBack()}。
          *
          * \~english
-         * Modify a message(Only can be used to modify text message).
-         * @param messageId The Id of message being modified.
-         * @param body      New message body.
-         * @param callBack The result callback，see {@link #CallBack()}.
+         * Modifies a message.
+         *
+         * After this method is called to modify a message, both the local message and the message on the server are modified.
+         *
+         * This method can only modify a text message in one-to-one chats or group chats, but not in chat rooms.
+         *
+         * @param messageId The ID of the message to modify.
+         * @param body      The modified message body.
+         * @param callBack The result callback. See {@link #CallBack()}.
          */
         public void ModifyMessage(string messageId, MessageBody.TextBody body, ValueCallBack<Message> callback = null)
         {
@@ -1274,10 +1293,10 @@ namespace AgoraChat
          * @param callback          成功返回合并消息中的消息列表，失败返回错误原因，详见 {@link ValueCallBack}。
          *
          * \~english
-         * Fetch and parse combined messages.
+         * Gets and parses the combined message.
          *
-         * @param msg               The combined messages to be fetched and parsed.
-         * @param callback          If success, a list of messages included in combined message are returned; otherwise, an error is returned. See {@link ValueCallBack}.
+         * @param msg               The combined message to get and parse.
+         * @param callback          If success, a list of original messages included in the combined message are returned; otherwise, an error is returned. See {@link ValueCallBack}.
          */
         public void FetchCombineMessageDetail(Message msg, ValueCallBack<List<Message>> callback = null)
         {

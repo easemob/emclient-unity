@@ -38,7 +38,7 @@ namespace AgoraChat
 	     * This is an asynchronous method.
 	     *
 	     * @param groupId	The group ID.
-	     * @param reason    The reason for requesting to joining the group.
+	     * @param reason    The reason for requesting to join the group.
 	     * @param callback    The callback of application. See {@link CallBack}.
 	     */
         public void applyJoinToGroup(string groupId, string reason = "", CallBack callback = null)
@@ -143,6 +143,7 @@ namespace AgoraChat
         /**
 	     * \~chinese
 	     * 向群组中添加新成员。
+	     *
 	     * 仅群主和管理员可调用此方法。
 	     *
 	     * 异步方法。
@@ -173,6 +174,7 @@ namespace AgoraChat
         /**
 	     * \~chinese
 	     * 添加白名单。
+	     *
 	     * 仅群主和管理员可调用此方法。
 	     *
 	     * 异步方法。 
@@ -423,7 +425,7 @@ namespace AgoraChat
 	     *                      - The maximum number of members allowed in the group. The default value is 200.
 	     *                      - The group style. See {@link GroupStyle}. 
 	     *                      - Whether to ask for permission when inviting a user to join the group. The default value is `false`, indicating that invitees are automaticall added to the group without their permission.
-	     *                      - The extention of group details.
+	     *                      - The extension of group details.
          * @param desc          The group description. It is optional. Pass `null` if you do not want to set this parameter.
 	     * @param inviteMembers The group member array. The group owner ID is optional. This parameter cannot be `null`.
 	     * @param inviteReason  The group joining invitation. It is optional. Pass `null` if you do not want to set this parameter.
@@ -582,6 +584,7 @@ namespace AgoraChat
 		 *
 		 * \~english
 		 * Gets the group announcement from the server.
+		 *
 		 * Group members can call this method.
 		 *
 		 * This is an asynchronous method.
@@ -1440,22 +1443,22 @@ namespace AgoraChat
 
         /**
         * \~chinese
-        * 设置群组用户自定义属性。
+        * 设置单个群成员的自定义属性。
         *
         * 异步方法。
         *
         * @param groupId 	群组 ID。
-        * @param userId 	需要设置自定义属性的用户id。
+        * @param userId 	要设置自定义属性的群成员的用户 ID。
         * @param callback	操作结果回调，详见 {@link CallBack}。
         *
         *
         * \~english
-        * Set group member custom attributes.
+        * Sets custom attributes of a group member.
         *
         * This is an asynchronous method.
         *
         * @param groupId 	The group ID.
-        * @param userId 	The user ID for setting custom attributes.
+        * @param userId 	The user ID of the group member for whom the custom attributes are set.
         * @param callback	The operation callback. See {@link CallBack}.
         */
         public void SetMemberAttributes(string groupId, string userId, Dictionary<string, string> attrs, CallBack callback = null)
@@ -1469,13 +1472,13 @@ namespace AgoraChat
 
         /**
 		 * \~chinese
-		 * 获取群组成员自定义属性。
+		 *根据指定的属性 key 获取多个群成员的自定义属性。
 		 *
 		 * 异步方法。
 		 *
 		 * @param groupId 	    群组 ID。
-		 * @param userIds 	    群组成员ID列表。
-		 * @param attrs     	自定义属性列表。
+		 * @param userIds 	    要获取自定义属性的群成员的用户 ID 数组。
+		 * @param attrs     	要获取自定义属性的 key 的数组。若 keys 为空数组或不传则获取这些群成员的所有自定义属性。
 		 * @param attrs     	操作结果回调，详见 {@link ValueCallBack}。
 		 *
 		 *
