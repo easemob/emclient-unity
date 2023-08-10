@@ -454,9 +454,6 @@ namespace AgoraChat
 		 * 
 	     * 一般情况下，该方法在成功登录后调用，以提升会话列表的加载速度。
 	     * 
-	     * @param isSort      返回的会话列表是否排序。
-         * - （默认）`true`：SDK 按照会话活跃时间（最新一条消息的时间戳）的倒序返回会话，置顶会话在前，非置顶会话在后。
-         * - `false`：返回的会话列表不会排序
 	     * @return            加载的会话列表。
 	     *
 	     * \~english
@@ -464,15 +461,12 @@ namespace AgoraChat
 		 * 
 	     * To accelerate the loading, call this method immediately after the user is logged in.
 	     * 
-	     * @param isSort      Whether conversations are returned in order.
-         * - (Default) `true`: Yes. Conversations are returned in the descending order of the timestamp of the latest message in them, with the pinned ones at the top of the list and followed by the unpinned ones.
-         * - `false`: No. Conversations are not returned sequentially.
 	     * @return            The list of loaded conversations.
 	     */
-        public List<Conversation> LoadAllConversations(bool isSort = true)
+        public List<Conversation> LoadAllConversations()
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.AddWithoutNull("isSort", isSort);
+            jo_param.AddWithoutNull("isSort", true);
 
             JSONNode jn = NativeGet(SDKMethod.loadAllConversations, jo_param).GetReturnJsonNode();
 
