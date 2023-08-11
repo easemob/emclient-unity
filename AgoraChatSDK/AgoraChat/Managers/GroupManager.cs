@@ -893,7 +893,7 @@ namespace AgoraChat
 		 * 异步方法，会阻塞当前线程。
 		 *
 		 * @param pageNum 		当前页码，从 0 开始。
-		 * @param pageSize		每页期望返回的群组数，取值范围为[1,50]。
+		 * @param pageSize		每页期望返回的群组数，取值范围为[1,20]。
 		 * @param needAffiliations 是否获取成员数目。
 		 * @param needRole 		是否获取当前用户在群中的角色。
 		 * @param callback		操作结果回调，成功群组列表，失败返回错误信息，详见 {@link ValueCallBack}。
@@ -906,7 +906,7 @@ namespace AgoraChat
 		 * This is an asynchronous method and blocks the current thread.
 		 *
 		 * @param pageNum 		The page number, starting from 0.
-		 * @param pageSize		The number of groups that you expect to get on each page. The value range is [1,50].
+		 * @param pageSize		The number of groups that you expect to get on each page. The value range is [1,20].
 		 * @param needAffiliations Get member count or not.
 		 * @param needRole 		Get role or current user in joined groups.
 		 * @param callback		The operation callback. If success, the SDK returns the obtained group list; otherwise, an error will be returned. See {@link ValueCallBack}. 
