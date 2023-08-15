@@ -20,9 +20,12 @@ namespace AgoraChat
 
         private void AddCallback(CallBack callback, Action<JSONNode, CallBack, Process> action, Process process)
         {
-            callback.callbackId = current_id.ToString();
-            callbackMap[callback.callbackId] = new CallbackItem(callback, action, process);
-            current_id++;
+            lock(callbackMap)
+            {
+                callback.callbackId = current_id.ToString();
+                callbackMap[callback.callbackId] = new CallbackItem(callback, action, process);
+                current_id++;
+            }
         }
 
         internal void AddCallbackAction(CallBack callback, Process _process = null)
@@ -139,21 +142,36 @@ namespace AgoraChat
 
         internal void CallAction(string callbackId, JSONNode jsonNode)
         {
-            if (!callbackMap.ContainsKey(callbackId)) return;
+            CallbackItem item;
 
-            CallbackItem item = callbackMap[callbackId];
+            lock (callbackMap)
+            {
+                if (!callbackMap.ContainsKey(callbackId))
+                {
+                    return;
+                }
+                item = callbackMap[callbackId];
+            }
+
             if (item != null)
             {
                 item.callbackAction?.Invoke(jsonNode, item.callback, item.process);
-                callbackMap.Remove(callbackId); // delete the callback after triggered
+                lock (callbackMap)
+                {
+                    callbackMap.Remove(callbackId); // delete the callback after triggered
+                }
             }
         }
 
         internal void CallActionProgress(string callbackId, JSONNode jsonNode)
         {
-            if (!callbackMap.ContainsKey(callbackId)) return;
+            CallbackItem item;
+            lock (callbackMap)
+            {
+                if (!callbackMap.ContainsKey(callbackId)) return;
+                item = callbackMap[callbackId];
+            }
 
-            CallbackItem item = callbackMap[callbackId];
             if (item != null)
             {
                 item.callbackAction?.Invoke(jsonNode, item.callback, item.process);
@@ -162,7 +180,10 @@ namespace AgoraChat
 
         internal void CleanAllItem()
         {
-            callbackMap.Clear();
+            lock (callbackMap)
+            {
+                callbackMap.Clear();
+            }
         }
     }
 
