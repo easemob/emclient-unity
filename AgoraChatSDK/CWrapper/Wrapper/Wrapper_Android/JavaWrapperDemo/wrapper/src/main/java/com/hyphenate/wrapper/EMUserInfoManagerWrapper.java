@@ -44,7 +44,7 @@ public class EMUserInfoManagerWrapper extends EMBaseWrapper{
             return null;
         }
 
-        EMUserInfo userInfo = EMUserInfoHelper.fromJson(params);
+        EMUserInfo userInfo = EMUserInfoHelper.fromJson(params.getJSONObject("userInfo"));
         userInfo.setUserId(username);
         asyncRunnable(() -> EMClient.getInstance().userInfoManager().updateOwnInfo(userInfo, new EMCommonValueCallback<>(callback)));
         return null;

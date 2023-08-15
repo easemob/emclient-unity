@@ -45,7 +45,7 @@
         return nil;
     }
     
-    EMUserInfo *userInfo = [EMUserInfo fromJson:param];
+    EMUserInfo *userInfo = [EMUserInfo fromJson:param[@"userInfo"]];
     userInfo.userId = usenrame;
     [EMClient.sharedClient.userInfoManager updateOwnUserInfo:userInfo completion:^(EMUserInfo *aUserInfo, EMError *aError) {
         [weakSelf wrapperCallback:callback error:aError object:[aUserInfo toJson]];
