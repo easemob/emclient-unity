@@ -11,30 +11,6 @@ using UnityEditor.iOS.Xcode.Extensions;
 namespace AgoraChat {
     
 
-    /// <summary>
-    /// This class is used to set the path of the AgoraChat SDK.
-    /// Sample code:
-    ///
-    /// #if UNITY_EDITOR
-    /// using UnityEditor.Callbacks;
-    /// using UnityEditor;
-    /// 
-    /// public class BuildAgoraChat
-    /// {
-    ///     [PostProcessBuildAttribute(0)]
-    ///     public static void SetAgoraChatPath(BuildTarget buildTarget, string path)
-    ///     {
-    ///        // SDK Path: Assets/ThirdParties/AgoraChat/Plugins/iOS
-    ///        AgoraChat.IOSBuildSetting.CustomPackagePath = "ThirdParties/";
-    ///     }
-    /// }
-    /// #endif
-    /// 
-    /// </summary>
-    public class IOSBuildSetting
-    {
-        public static string CustomPackagePath = null;
-    }
     
     public class BL_BuildPostProcess
     {
@@ -114,3 +90,32 @@ namespace AgoraChat {
 }
 #endif
 #endif
+
+namespace AgoraChat
+{
+    
+    /// <summary>
+    /// This class is used to set the path of the AgoraChat SDK.
+    /// Sample code:
+    ///
+    /// #if UNITY_EDITOR
+    /// using UnityEditor.Callbacks;
+    /// using UnityEditor;
+    /// 
+    /// public class BuildAgoraChat
+    /// {
+    ///     [PostProcessBuildAttribute(0)]
+    ///     public static void SetAgoraChatPath(BuildTarget buildTarget, string path)
+    ///     {
+    ///        // SDK Path: Assets/ThirdParties/AgoraChat/Plugins/iOS
+    ///        AgoraChat.IOSBuildSetting.CustomPackagePath = "ThirdParties/";
+    ///     }
+    /// }
+    /// #endif
+    /// 
+    /// </summary>
+    public class IOSBuildSetting
+    {
+        public static string CustomPackagePath = null;
+    }
+}
