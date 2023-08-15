@@ -6,6 +6,8 @@ namespace AgoraChat
 {
     internal class IClient : BaseManager
     {
+        public static bool IsInit { get; internal set; }
+
         internal ChatManager chatManager;
         internal ContactManager contactManager;
         internal GroupManager groupManager;
@@ -49,6 +51,7 @@ namespace AgoraChat
             JSONNode jsonNode = NativeGet(SDKMethod.init, jo_param).GetReturnJsonNode();
             int ret = jsonNode.IsNumber ? jsonNode.AsInt : 0;
             SetupManagers();
+            if (0 == ret) IsInit = true;
             return ret;
         }
 
