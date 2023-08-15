@@ -279,6 +279,11 @@ bool CheckClientHandle()
 	return true;
 }
 
+COMMON_WRAPPER_API void COMMON_WRAPPER_CALL FreeMemory_Common(void* p)
+{
+    FreeMemory_SDKWrapper(p);
+}
+
 COMMON_WRAPPER_API void COMMON_WRAPPER_CALL Init_Common(int sdkType, int compileType, void* callback_handle)
 {
     compile_type = compileType;

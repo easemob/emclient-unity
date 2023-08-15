@@ -10,34 +10,27 @@ namespace AgoraChat
     {
         internal static void NativeCall(string manager, string method, SimpleJSON.JSONNode json, string callbackId = null)
         {
-            LogPrinter.Log($"---NativeCall: {manager}: {method}: {json}: {callbackId}");
             _NativeCall(manager, method, json?.ToString(), callbackId ?? "");
         }
 
-
         internal static string NativeGet(string manager, string method, SimpleJSON.JSONNode json, string callbackId = null)
         {
-            LogPrinter.Log($"---NativeGet: {manager}: {method}: {json}: {callbackId}");
-
             IntPtr ptr = _NativeGet(manager, method, json?.ToString(), callbackId ?? "");
-            string native_string = Tools.PtrToString(ptr);
-            string ret = Tools.GetUnicodeStringFromUTF8(native_string);
-            Marshal.FreeHGlobal(ptr);
 
-            LogPrinter.Log($"---NativeGet get: {ret}");
-            return ret;
+            string str = Tools.PtrToString(ptr);
+#if UNITY_STANDALONE || UNITY_EDITOR || _WIN32
+            FreeMemory(ptr);
+#else
+            Marshal.FreeHGlobal(ptr);
+#endif
+            return str;
         }
 
-        #region DllImport
-#if UNITY_STANDALONE_WIN || UNITY_EDITOR
-        public const string MyLibName = "ChatCWrapper";
-#else
 
 #if UNITY_IPHONE
-		public const string MyLibName = "__Internal";
+        public const string MyLibName = "__Internal";
 #else
         public const string MyLibName = "ChatCWrapper";
-#endif
 #endif
 
         [DllImport(MyLibName)]
@@ -52,6 +45,9 @@ namespace AgoraChat
         [DllImport(MyLibName)]
         private extern static IntPtr _NativeGet(string manager, string method, [In, MarshalAs(UnmanagedType.LPTStr)] string jsonString = null, string callbackId = null);
 
-        #endregion engine callbacks
+#if UNITY_STANDALONE || UNITY_EDITOR || _WIN32
+        [DllImport(MyLibName)]
+        internal static extern void FreeMemory(IntPtr p);
+#endif
     }
 }
