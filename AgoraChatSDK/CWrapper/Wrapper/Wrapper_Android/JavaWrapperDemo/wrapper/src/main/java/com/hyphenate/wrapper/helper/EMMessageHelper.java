@@ -225,7 +225,7 @@ public class EMMessageHelper {
             }
             break;
             case FILE: {
-                data.put("body", EMMessageBodyHelper.fileBodyToJson((EMNormalFileMessageBody) message.getBody()));
+                bodyData.put("body", EMMessageBodyHelper.fileBodyToJson((EMNormalFileMessageBody) message.getBody()));
                 bodyData.put("type", 5);
             }
             break;
