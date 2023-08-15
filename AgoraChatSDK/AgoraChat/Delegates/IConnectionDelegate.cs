@@ -41,7 +41,7 @@
          *  \~english
          *  Occurs when the user logs in to another device with the current account.
          *
-         *  @param deviceName Another device name.
+         *  @param deviceName The name of another device.
          */
         void OnLoggedOtherDevice(string deviceName);
 
@@ -120,10 +120,10 @@
 
         /**
          * \~chinese
-         * App激活数量已达限制值。
+         * App 激活数量已达到上限值。
          *
          * \~english
-         * App active number reach limitation.
+         * The number of active apps has reached the upper limit.
          */
         void OnAppActiveNumberReachLimitation();
 

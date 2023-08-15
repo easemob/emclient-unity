@@ -652,6 +652,9 @@ namespace sdk_wrapper
 
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_ClearResource(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
+        // csharp side stopped, so the callback handle already freed. Here reset the handle!
+        Uninit_SDKWrapper();
+
         if (!CheckClientInitOrNot(nullptr)) return nullptr;
 
         if (CLIENT->isLoggedIn()) {

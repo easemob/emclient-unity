@@ -416,12 +416,16 @@ namespace AgoraChat
 
         /**
 		 *  \~chinese
-		 *  群详情已有改动，需调用获取群详情api {@link GetGroupSpecificationFromServer(string, ValueCallBack<Group>)} 得到最新群信息
+		 *  群详情发生了变更。
+		 *
+		 * 需调用获取群详情方法 {@link GetGroupSpecificationFromServer(string, ValueCallBack<Group>)} 从服务器获得最新的群组详情。
 		 *
 		 *  @param group       群组实例。
 		 *
 		 *  \~english
-		 *  Occurs when the group specification update,Need to call for details of the API {@link GetGroupSpecificationFromServer(string, ValueCallBack<Group>)} to get the latest information.
+		 *  Occurs when the group specification(s) is/are changed.
+		 *
+		 *  Once the group specifications are changed, you need to call {@link GetGroupSpecificationFromServer(string, ValueCallBack<Group>)} to get the latest group information from the server.
 		 *
 		 *  @param group      The group instance.
 		 */
@@ -429,7 +433,7 @@ namespace AgoraChat
 
         /**
 		 *  \~chinese
-		 *  群成员自定义属性发生改变。
+		 *  群成员自定义属性发生了变更。
 		 *
 		 *  @param groupId           群组 ID。
          *  @param userId            自定义属性变更的群成员的用户 ID。
@@ -437,11 +441,11 @@ namespace AgoraChat
          *  @param from              操作者的用户 ID。
 		 *
 		 *  \~english
-		 *  The custom attribute of a group member is changed
+		 *  Occurs when a custom attribute(s) of a group member is/are changed.
 		 *
          *  @param groupId           The group ID.
-         *  @param userId            The user ID of the group member whose custom attributes are changed.
-         *  @param attributes        The modified custom attributes.
+         *  @param userId            The user ID of the group member whose custom attribute(s) is/are changed.
+         *  @param attributes        The modified custom attribute(s).
          *  @param from              The user ID of the operator.
 		 */
         void OnUpdateMemberAttributesFromGroup(string groupId, string userId, Dictionary<string, string> attributes, string from);

@@ -4,10 +4,10 @@ namespace AgoraChat
 {
     /**
      *  \~chinese
-     *  reaction 操作类。
+     *  Reaction 操作类。
      *
      *  \~english
-     *  Operation class of reaction.
+     *  The Reaction operation class.
      */
     public class MessageReactionOperation : BaseModel
     {
@@ -16,16 +16,16 @@ namespace AgoraChat
          *  操作者。
          *
          *  \~english
-         *  Operator.
+         *  The user ID of the operator.
          */
         public string UserId;
 
         /**
          *  \~chinese
-         *  发生变化的 reaction。
+         *  发生变化的 Reaction。
          *
          *  \~english
-         *  Changed reaction.
+         *  The changed Reaction.
          */
         public string Reaction;
 
@@ -34,7 +34,7 @@ namespace AgoraChat
          *  操作。
          *
          *  \~english
-         *  Operate.
+         *  The Reaction operation.
          */
         public MessageReactionOperate operate;
 
@@ -63,37 +63,37 @@ namespace AgoraChat
 
     /**
     * \~chinese
-    * 消息 Reaction 变更实体类
+    * 消息 Reaction 变更实体类。
     *
     * \~english
-    * The message reaction change entity class
+    * The message Reaction change entity class.
     */
     public class MessageReactionChange : BaseModel
     {
 
         /**
          * \~chinese
-         * Reaction 会话id
+         * Reaction 会话 ID。
          *
          * \~english
-         * Reaction conversationId
+         * The conversation ID to which the Reaction belongs.
          */
         public string ConversationId;
         /**
          * \~chinese
-         * Reaction父消息ID
+         * Reaction 父消息 ID。
          *
          * \~english
-         * Reaction parent message ID
+         * The ID of the parent message of the Reaction.
          */
         public string MessageId;
 
         /**
          * \~chinese
-         * Reaction 列表
+         * Reaction 列表。
          *
          * \~english
-         * Reaction list
+         * The Reaction list.
          */
         public List<MessageReaction> ReactionList;
 
@@ -102,7 +102,7 @@ namespace AgoraChat
          * Reaction 操作列表
          *
          * \~english
-         * Reaction operation list
+         * The Reaction operation list.
          */
         public List<MessageReactionOperation> OperationList;
 

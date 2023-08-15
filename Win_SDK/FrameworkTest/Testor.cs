@@ -144,7 +144,7 @@ namespace WinSDKTest
             foreach (var it in list)
             {
                 Console.WriteLine($"----------------------------");
-                Console.WriteLine($"reaction:{it.Rection};count:{it.Count};state:{it.State}");
+                Console.WriteLine($"reaction:{it.Reaction};count:{it.Count};state:{it.State}");
                 string str = string.Join(",", it.UserList.ToArray());
                 Console.WriteLine($"userList:{str}");
             }
@@ -186,8 +186,8 @@ namespace WinSDKTest
                         Console.WriteLine($"LocalPath: {b.LocalPath}");
                         Console.WriteLine($"RemotePath: {b.RemotePath}");
                         Console.WriteLine($"ThumbnailLocalPath: {b.ThumbnailLocalPath}");
-                        Console.WriteLine($"ThumbnaiRemotePath: {b.ThumbnaiRemotePath}");
-                        Console.WriteLine($"ThumbnaiDownStatus: {b.ThumbnaiDownStatus}");
+                        Console.WriteLine($"ThumbnaiRemotePath: {b.ThumbnailRemotePath}");
+                        Console.WriteLine($"ThumbnaiDownStatus: {b.ThumbnailDownStatus}");
                     }
                     break;
                 case MessageBodyType.VIDEO:
@@ -197,8 +197,8 @@ namespace WinSDKTest
                         Console.WriteLine($"LocalPath: {b.LocalPath}");
                         Console.WriteLine($"RemotePath: {b.RemotePath}");
                         Console.WriteLine($"ThumbnailLocalPath: {b.ThumbnaiLocationPath}");
-                        Console.WriteLine($"ThumbnaiRemotePath: {b.ThumbnaiRemotePath}");
-                        Console.WriteLine($"ThumbnaiDownStatus: {b.ThumbnaiDownStatus}");
+                        Console.WriteLine($"ThumbnaiRemotePath: {b.ThumbnailRemotePath}");
+                        Console.WriteLine($"ThumbnaiDownStatus: {b.ThumbnailDownStatus}");
                     }
                     break;
                 case MessageBodyType.VOICE:
@@ -667,7 +667,7 @@ namespace WinSDKTest
             param.Clear();
 
             menu_index = 1;
-            param.Add(menu_index, "isSort (bool)"); menu_index++;
+            param.Add(menu_index, "No params"); menu_index++;
             level3_menus.Add("LoadAllConversations", new Dictionary<int, string>(param));
             param.Clear();
 
@@ -3268,8 +3268,8 @@ namespace WinSDKTest
 
         public void CallFunc_IChatManager_LoadAllConversations()
         {
-            bool isSort = GetParamValueFromContext(0).CompareTo("true") == 0;
-            List<Conversation> list = SDKClient.Instance.ChatManager.LoadAllConversations(isSort);
+            //bool isSort = GetParamValueFromContext(0).CompareTo("true") == 0;
+            List<Conversation> list = SDKClient.Instance.ChatManager.LoadAllConversations();
             Console.WriteLine($"LoadAllConversations total conv: {list.Count}");
             foreach (var conv in list)
             {
@@ -4095,7 +4095,7 @@ namespace WinSDKTest
                     {
                         Console.WriteLine($"-----------------");
                         string userlist = string.Join(",", lit.UserList.ToArray());
-                        Console.WriteLine($"reaction: Reaction:{lit.Rection},count:{lit.Count},userlist:{userlist}; state:{lit.State}");
+                        Console.WriteLine($"reaction: Reaction:{lit.Reaction},count:{lit.Count},userlist:{userlist}; state:{lit.State}");
                     }
                 }
             },
@@ -4122,7 +4122,7 @@ namespace WinSDKTest
                 {
                     MessageReaction mr = ret.Data[0];
                     string userlist = string.Join(",", mr.UserList.ToArray());
-                    Console.WriteLine($"cursor: {ret.Cursor}; reaction: Reaction:{mr.Rection},count:{mr.Count},userlist:{userlist}; state:{mr.State}");
+                    Console.WriteLine($"cursor: {ret.Cursor}; reaction: Reaction:{mr.Reaction},count:{mr.Count},userlist:{userlist}; state:{mr.State}");
                 }
             },
             onError: (code, desc) =>
@@ -9353,7 +9353,7 @@ namespace WinSDKTest
             {
                 Console.WriteLine($"-----------------");
                 string userlist = string.Join(",", lit.UserList.ToArray());
-                Console.WriteLine($"reaction: Reaction:{lit.Rection},count:{lit.Count},userlist:{userlist}; state:{lit.State}");
+                Console.WriteLine($"reaction: Reaction:{lit.Reaction},count:{lit.Count},userlist:{userlist}; state:{lit.State}");
             }
         }
 
@@ -9662,7 +9662,7 @@ namespace WinSDKTest
                 {
                     MessageReaction mr = rit;
                     string userlist = string.Join(",", mr.UserList.ToArray());
-                    Console.WriteLine($"reaction: Reaction:{mr.Rection},count:{mr.Count},userlist:{userlist}; state:{mr.State}");
+                    Console.WriteLine($"reaction: Reaction:{mr.Reaction},count:{mr.Count},userlist:{userlist}; state:{mr.State}");
                 }
 
                 foreach (var oit in mrc.OperationList)
