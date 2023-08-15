@@ -1,5 +1,8 @@
 ﻿using System;
 using AgoraChat.SimpleJSON;
+#if !_WIN32
+using UnityEngine;
+#endif
 
 namespace AgoraChat
 {
@@ -280,6 +283,35 @@ namespace AgoraChat
 
         /**
         * \~chinese
+        * 设置 SDK 底层数据存储路径。仅用于 MacOS 和 Windows 平台端。
+        *
+        * 如果未设置，则由 SDK 设置为缺省路径。
+        *
+        * 举例如下:
+        * MacOS: /Users/UserName/Library/Application Support/DefaultCompany/xxx
+        * Windows: C:/Users/UserName/AppData/LocalLow/DefaultCompany/xxx
+        *
+        * 最后以文件夹结尾，无需“/”。
+        *
+        * 注意: 在 MacOS 下，如果使用相对路径设置 `SDKDatapath`，必须使用"."开头，例如: "./sdkdatapath"。
+        *
+        * \~english
+        * The underlying storage path for SDK data. The storage path is used only for MacOS and Windows platforms.
+        *
+        * If this parameter is not set, the SDK will set the default value.
+        *
+        * For example:
+        * MacOS: /Users/UserName/Library/Application Support/DefaultCompany/xxx
+        * Windows: C:/Users/UserName/AppData/LocalLow/DefaultCompany/xxx
+        *
+        * The data storage path ends with the folder name without the appended "/".
+        *
+        * Note: For MacOS, if you set `SDKDatapath` to a relative path, the path must start with ".", for example "./sdkdatapath".
+        */
+        public string SDKDataPath = "";
+
+        /**
+        * \~chinese
         * Options 构造方法。
         *
         * @param appKey  App Key。
@@ -347,6 +379,17 @@ namespace AgoraChat
             jo.AddWithoutNull("areaCode", (int)AreaCode);
             jo.AddWithoutNull("enableDnsConfig", EnableDNSConfig);
 
+
+            if (SDKDataPath.Length == 0)
+            {
+#if !_WIN32
+                jo.AddWithoutNull("sdkDataPath", Application.persistentDataPath);
+#endif
+            }
+            else
+            {
+                jo.AddWithoutNull("sdkDataPath", SDKDataPath);
+            }
 
             if (RestServer != null)
             {
