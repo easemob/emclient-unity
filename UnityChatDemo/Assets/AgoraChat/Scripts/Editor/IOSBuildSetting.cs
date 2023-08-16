@@ -1,4 +1,5 @@
-﻿#if UNITY_IPHONE 
+﻿#if UNITY_EDITOR
+#if UNITY_IPHONE 
 
 using System.IO;
 using JetBrains.Annotations;
@@ -9,15 +10,13 @@ using UnityEditor.iOS.Xcode.Extensions;
 
 namespace AgoraChat {
     
+
     
     public class BL_BuildPostProcess
     {
-        // If you changed the default import path, add your new path here. If not set, it is "null".
-        private static string CustomPackagePath = null; 
+        const string defaultLocationInProj = "AgoraChat/Plugins/iOS";
         
-	    const string defaultLocationInProj = "AgoraChat/Plugins/iOS";
-
-        [PostProcessBuild]
+        [PostProcessBuildAttribute(99)]
         public static void OnPostprocessBuild(BuildTarget buildTarget, string path)
         {
             if (buildTarget == BuildTarget.iOS)
@@ -77,7 +76,7 @@ namespace AgoraChat {
 #endif
 	    foreach (string framework in EmbeddedFrameworks) 
 	    {
-		    EmbedFramework(proj, target, framework, CustomPackagePath);
+		    EmbedFramework(proj, target, framework, AgoraChat.IOSBuildSetting.CustomPackagePath);
 	    }
 
             proj.SetBuildProperty(target, "LD_RUNPATH_SEARCH_PATHS", "$(inherited) @executable_path/Frameworks");
@@ -90,3 +89,33 @@ namespace AgoraChat {
 
 }
 #endif
+#endif
+
+namespace AgoraChat
+{
+    
+    /// <summary>
+    /// This class is used to set the path of the AgoraChat SDK.
+    /// Sample code:
+    ///
+    /// #if UNITY_EDITOR
+    /// using UnityEditor.Callbacks;
+    /// using UnityEditor;
+    /// 
+    /// public class BuildAgoraChat
+    /// {
+    ///     [PostProcessBuildAttribute(0)]
+    ///     public static void SetAgoraChatPath(BuildTarget buildTarget, string path)
+    ///     {
+    ///        // SDK Path: Assets/ThirdParties/AgoraChat
+    ///        AgoraChat.IOSBuildSetting.CustomPackagePath = "ThirdParties/";
+    ///     }
+    /// }
+    /// #endif
+    /// 
+    /// </summary>
+    public class IOSBuildSetting
+    {
+        public static string CustomPackagePath = null;
+    }
+}
