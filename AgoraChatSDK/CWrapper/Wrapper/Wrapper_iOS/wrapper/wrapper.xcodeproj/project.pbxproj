@@ -101,7 +101,6 @@
 		90319CD22935FC1E000D01BE /* EMMessageReactionChange+Helper.h in Headers */ = {isa = PBXBuildFile; fileRef = 90319C7E2935FC1E000D01BE /* EMMessageReactionChange+Helper.h */; };
 		90319CD32935FC1E000D01BE /* EMWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 90319C7F2935FC1E000D01BE /* EMWrapper.m */; };
 		90319CD42935FC1E000D01BE /* EMWrapperHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 90319C802935FC1E000D01BE /* EMWrapperHelper.m */; };
-		90319D0E29360033000D01BE /* HyphenateChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90319D0D29360033000D01BE /* HyphenateChat.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		90319D1429373932000D01BE /* wrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 90319D132937392F000D01BE /* wrapper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9052DFA72A25D4BF00FB1FF2 /* EMFetchServerMessagesOption+Helper.h in Headers */ = {isa = PBXBuildFile; fileRef = 9052DFA52A25D4BF00FB1FF2 /* EMFetchServerMessagesOption+Helper.h */; };
 		9052DFA82A25D4BF00FB1FF2 /* EMFetchServerMessagesOption+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9052DFA62A25D4BF00FB1FF2 /* EMFetchServerMessagesOption+Helper.m */; };
@@ -209,6 +208,7 @@
 		90319C802935FC1E000D01BE /* EMWrapperHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EMWrapperHelper.m; sourceTree = "<group>"; };
 		90319D0D29360033000D01BE /* HyphenateChat.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HyphenateChat.framework; path = ../HyphenateChat.framework; sourceTree = "<group>"; };
 		90319D132937392F000D01BE /* wrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = wrapper.h; sourceTree = "<group>"; };
+		9050E16C2A8DC85900D95DF3 /* ActivityKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ActivityKit.framework; path = System/Library/Frameworks/ActivityKit.framework; sourceTree = SDKROOT; };
 		9052DFA52A25D4BF00FB1FF2 /* EMFetchServerMessagesOption+Helper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EMFetchServerMessagesOption+Helper.h"; sourceTree = "<group>"; };
 		9052DFA62A25D4BF00FB1FF2 /* EMFetchServerMessagesOption+Helper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "EMFetchServerMessagesOption+Helper.m"; sourceTree = "<group>"; };
 		9052DFA92A25E78600FB1FF2 /* EMMessageReactionOperation+Helper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EMMessageReactionOperation+Helper.h"; sourceTree = "<group>"; };
@@ -226,7 +226,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				90319D0E29360033000D01BE /* HyphenateChat.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -380,6 +379,7 @@
 		90319D022935FD2F000D01BE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9050E16C2A8DC85900D95DF3 /* ActivityKit.framework */,
 				90319D0D29360033000D01BE /* HyphenateChat.framework */,
 			);
 			name = Frameworks;

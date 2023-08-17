@@ -789,8 +789,22 @@
     __weak EMChatManagerWrapper * weakSelf = self;
     NSString *convId = param[@"convId"];
     EMConversationType type = [EMConversation typeFromInt:[param[@"convType"] intValue]];
-    EMConversation *conversation = [EMClient.sharedClient.chatManager getConversation:convId type:type createIfNotExist:YES];
     NSArray *msgIds = param[@"msgIds"];
+    
+    if(!EMClient.sharedClient.isLoggedIn) {
+        EMError *e = [EMError errorWithDescription:@"Not login" code:EMErrorUserNotLogin];
+        [weakSelf wrapperCallback:callback error:e object:nil];
+        return nil;
+    }
+    
+    if(convId == nil || convId.length == 0 || msgIds.count == 0 || type == EMConversationTypeChatRoom) {
+        EMError *e = [EMError errorWithDescription:@"Invalid parameter" code:EMErrorInvalidParam];
+        [weakSelf wrapperCallback:callback error:e object:nil];
+        return nil;
+    }
+    
+    EMConversation *conversation = [EMClient.sharedClient.chatManager getConversation:convId type:type createIfNotExist:YES];
+    
     [conversation removeMessagesFromServerMessageIds:msgIds completion:^(EMError * _Nullable aError) {
         [weakSelf wrapperCallback:callback error:aError object:nil];
     }];
@@ -804,10 +818,24 @@
     NSString *convId = param[@"convId"];
     EMConversationType type = [EMConversation typeFromInt:[param[@"convType"] intValue]];
     long timestamp = [param[@"timestamp"] longValue];
+    
+    if(!EMClient.sharedClient.isLoggedIn) {
+        EMError *e = [EMError errorWithDescription:@"Not login" code:EMErrorUserNotLogin];
+        [weakSelf wrapperCallback:callback error:e object:nil];
+        return nil;
+    }
+    
+    if(convId == nil || convId.length == 0 || timestamp <= 0 || type == EMConversationTypeChatRoom) {
+        EMError *e = [EMError errorWithDescription:@"Invalid parameter" code:EMErrorInvalidParam];
+        [weakSelf wrapperCallback:callback error:e object:nil];
+        return nil;
+    }
+    
     EMConversation *conversation = [EMClient.sharedClient.chatManager getConversation:convId type:type createIfNotExist:YES];
     [conversation removeMessagesFromServerWithTimeStamp:timestamp completion:^(EMError * _Nullable aError) {
         [weakSelf wrapperCallback:callback error:aError object:nil];
     }];
+    
     return nil;
 }
 
