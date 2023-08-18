@@ -11,8 +11,8 @@
 + (EMFetchServerMessagesOption *)fromJson:(NSDictionary *)dict {
     EMFetchServerMessagesOption *options = [[EMFetchServerMessagesOption alloc] init];
     options.direction = [dict[@"direction"] intValue] == 0 ? EMMessageSearchDirectionUp : EMMessageSearchDirectionDown;
-    options.startTime = [dict[@"startTime"] intValue];
-    options.endTime = [dict[@"endTime"] intValue];
+    options.startTime = [dict[@"startTime"] longValue];
+    options.endTime = [dict[@"endTime"] longValue];
     options.from = dict[@"from"];
     options.isSave = [dict[@"isSave"] boolValue];
     NSArray *types = dict[@"types"];
