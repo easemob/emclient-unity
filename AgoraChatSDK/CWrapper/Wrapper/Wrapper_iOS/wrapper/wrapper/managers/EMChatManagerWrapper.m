@@ -732,10 +732,19 @@
                      callback:(EMWrapperCallback *)callback {
     __weak EMChatManagerWrapper * weakSelf = self;
     NSString *msgId = params[@"msgId"];
-    EMMessageBody *body = [EMTextMessageBody fromJson:params[@"body"]];
+    NSDictionary *bodyDict = params[@"body"];
+    EMMessageBody *body = [EMTextMessageBody fromJson:bodyDict[@"body"]];
     
-    [EMClient.sharedClient.chatManager modifyMessage:msgId body:body completion:^(EMError * _Nullable error, EMChatMessage * _Nullable message) {
-        [weakSelf wrapperCallback:callback error:error object:message.toJson];
+    [EMClient.sharedClient.chatManager modifyMessage:msgId
+                                                body:body
+                                          completion:^(EMError * _Nullable error, EMChatMessage * _Nullable message)
+     {
+        if (error) {
+            [weakSelf wrapperCallback:callback error:error object:nil];
+        }else {
+            [weakSelf wrapperCallback:callback error:nil object:message.toJson];
+        }
+        
     }];
     
     return nil;
