@@ -795,18 +795,18 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
     }
 
     private String modifyMessage(JSONObject params, EMWrapperCallback callback) throws JSONException {
-        String msgId = params.optString("");
-        EMMessageBody body = EMMessageBodyHelper.textBodyFromJson(params.optJSONObject("body"));
+        String msgId = params.optString("msgId");
+        JSONObject bodyJson = params.optJSONObject("body");
+        EMMessageBody body = EMMessageBodyHelper.textBodyFromJson(bodyJson.optJSONObject("body"));
         EMClient.getInstance().chatManager().asyncModifyMessage(msgId, body, new EMCommonValueCallback<EMMessage>(callback) {
             @Override
             public void onSuccess(EMMessage object) {
                 JSONObject jsonObject = null;
                 try {
                     jsonObject = EMMessageHelper.toJson(object);
+                    updateObject(jsonObject);
                 }catch (JSONException e) {
                     e.printStackTrace();
-                }finally {
-                    updateObject(jsonObject);
                 }
             }
         });
