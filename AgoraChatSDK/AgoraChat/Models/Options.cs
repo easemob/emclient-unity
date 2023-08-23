@@ -331,6 +331,14 @@ namespace AgoraChat
         *
         * 如果未设置，则由 SDK 设置为缺省路径。
         *
+        * 注意：
+        * 对于Unity SDK，在1.1.2版本之前，SDKDataPath是当前路径，从1.1.2开始变更为持久化目录Application.persistentDataPath，
+        *   如果从1.1.2之前的SDK版本升级上来的，且需要保留本地历史消息，有两种方式：
+        *   方式一. 将SDKDataPath设置为当前路径，即"."；
+        *   方式二. 将原来当前路径下的sdkdata目录拷贝到Application.persistentDataPath持久化目录。
+        * 对于Windows SDK，SDKDataPath依然缺省保持为当前路径。
+        *
+        *
         * 举例如下:
         * MacOS: /Users/UserName/Library/Application Support/DefaultCompany/xxx
         * Windows: C:/Users/UserName/AppData/LocalLow/DefaultCompany/xxx
@@ -343,6 +351,14 @@ namespace AgoraChat
         * The underlying storage path for SDK data. The storage path is used only for MacOS and Windows platforms.
         *
         * If this parameter is not set, the SDK will set the default value.
+        *
+        * Note:
+        * For the Unity SDK, prior to version 1.1.2, SDKDataPath was set to the current path. Starting from version 1.1.2,
+        *   it has been changed to the persistent directory Application.persistentDataPath.
+        *   If you are upgrading from an SDK version earlier than 1.1.2 and need to retain the local historical messages, there are two methods:
+        *   Method 1: Set SDKDataPath to the current path, i.e., ".".
+        *   Method 2: Copy the sdkdata directory from the original current path to the Application.persistentDataPath persistent directory.
+        * For the Windows SDK, SDKDataPath still defaults to the current path.
         *
         * For example:
         * MacOS: /Users/UserName/Library/Application Support/DefaultCompany/xxx
