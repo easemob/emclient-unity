@@ -60,6 +60,7 @@ public class EMConversationHelper {
     public static JSONObject jsonStringToMap(String content) throws JSONException {
         if (content == null) return null;
         content = content.trim();
+        if (content.length() == 0) return null;
         JSONObject result = new JSONObject();
         try {
             if (content.charAt(0) == '[') {

@@ -176,11 +176,11 @@ public class Login : MonoBehaviour
     void InitEaseMobSDK()
     {
         //default appkey
-        string appkey = "easemob-demo#flutter";
-        //string appkey = "easemob-demo#wang";
+        // string appkey = "easemob-demo#flutter";
+        // string appkey = "easemob-demo#wang";
         //string appkey = "easemob-demo#unitytest";
         //string appkey = "41117440#383391";
-        //string appkey = "easemob#easeim";
+        string appkey = "easemob#easeim";
 
 #if UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
 
