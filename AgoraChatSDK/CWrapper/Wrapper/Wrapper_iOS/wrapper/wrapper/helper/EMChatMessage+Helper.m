@@ -298,6 +298,11 @@
             ret = [EMCustomMessageBody fromJson:bodyJson];
         }
             break;
+        case 8:
+        {
+            ret = [EMCombineMessageBody fromJson:bodyJson];
+        }
+            break;;
         default:
             break;
     }
@@ -692,6 +697,7 @@
 
 @implementation EMCombineMessageBody (Helper)
 + (EMCombineMessageBody *)fromJson:(NSDictionary *)aJson {
+    
     NSString *title = aJson[@"title"];
     NSString *summary = aJson[@"summary"];
     NSString *compatibleText = aJson[@"compatibleText"];

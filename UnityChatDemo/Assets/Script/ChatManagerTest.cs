@@ -238,8 +238,6 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
         return;
 
-        UIManager.UnfinishedAlert(transform);
-        Debug.Log("SendFileBtnAction");
     }
     void SendVideoBtnAction()
     {
@@ -396,9 +394,15 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
             List<string> ml = new List<string>();
-            ml.Add(dict["sub-msg1"]);
-            ml.Add(dict["sub-msg2"]);
-
+            if (dict["sub-msg1"].Length > 0)
+            {
+                ml.Add(dict["sub-msg1"]);    
+            }
+            
+            if (dict["sub-msg2"].Length > 0)
+            {
+                ml.Add(dict["sub-msg2"]);    
+            }
             Message msg = Message.CreateCombineSendMessage(dict["to"], dict["title"], dict["summary"], dict["compatible"], ml);
             msg.MessageType = (MessageType)(int.Parse(dict["chattype"]));
 
@@ -1043,7 +1047,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
                 string str = "";
                 foreach (var it in ret.Data)
                 {
-                    str = str + it.Id + ";";
+                    str = str + it.Id + (it.IsPinned ? "true" : "false") + it.PinnedTime.ToString() + ";";
                 }
                 UIManager.DefaultAlert(transform, str);
             },
@@ -1247,7 +1251,6 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         UIManager.DefaultInputAlert(transform, config);
         Debug.Log("ModifyMessageAction");
     }
-
     void DownloadCombineMessages(Message _msg, int _level)
     {
         if (null == _msg || _msg.Body.Type != MessageBodyType.COMBINE)
