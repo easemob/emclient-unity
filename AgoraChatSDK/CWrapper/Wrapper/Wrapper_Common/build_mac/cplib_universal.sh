@@ -13,3 +13,7 @@ cp -a ../../../../../../emclient-linux/3rd_party/platform/darwin/depends_univers
 cp -a ../../../../../../emclient-linux/3rd_party/platform/darwin/depends_universal/curl_7.80.0_share_universal/lib/* ChatCWrapper/build/Products/Debug/ChatCWrapper.bundle/Contents/Resources/lib
 cp -a ../../../../../../emclient-linux/3rd_party/platform/darwin/depends_universal/sqlite_3.34.1_share_universal/lib/* ChatCWrapper/build/Products/Debug/ChatCWrapper.bundle/Contents/Resources/lib
 cp -a ../../../../../../emclient-linux/3rd_party/platform/darwin/depends_universal/sqlcipher_4.4.3_share_universal/lib/* ChatCWrapper/build/Products/Debug/ChatCWrapper.bundle/Contents/Resources/lib
+
+#remove soft link from easemob.framework
+./remove_lnk.sh ChatCWrapper/build/Products/Debug/easemob_universal.framework
+./remove_lnk.sh ChatCWrapper/build/Products/Debug/ChatCWrapper.bundle/Contents/Resources/easemob_universal.framework
