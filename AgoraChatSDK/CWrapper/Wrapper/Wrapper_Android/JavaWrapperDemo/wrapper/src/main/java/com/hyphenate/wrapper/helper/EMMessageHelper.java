@@ -1,6 +1,7 @@
 package com.hyphenate.wrapper.helper;
 
 import com.hyphenate.chat.EMCmdMessageBody;
+import com.hyphenate.chat.EMCombineMessageBody;
 import com.hyphenate.chat.EMCustomMessageBody;
 import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.EMLocationMessageBody;
@@ -9,12 +10,14 @@ import com.hyphenate.chat.EMNormalFileMessageBody;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chat.EMVideoMessageBody;
 import com.hyphenate.chat.EMVoiceMessageBody;
+import com.hyphenate.wrapper.util.EMHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class EMMessageHelper {
@@ -62,6 +65,11 @@ public class EMMessageHelper {
                 case 7: {
                     message = EMMessage.createSendMessage(EMMessage.Type.CUSTOM);
                     message.addBody(EMMessageBodyHelper.customBodyFromJson(bodyJson.getJSONObject("body")));
+                }
+                break;
+                case 8: {
+                    message = EMMessage.createSendMessage(EMMessage.Type.COMBINE);
+                    message.addBody(EMMessageBodyHelper.combineBodyFromJson(bodyJson.getJSONObject("body")));
                 }
                 break;
                 default:
@@ -112,6 +120,11 @@ public class EMMessageHelper {
                     message.addBody(EMMessageBodyHelper.customBodyFromJson(bodyJson));
                 }
                 break;
+                case 8: {
+                    message = EMMessage.createReceiveMessage(EMMessage.Type.COMBINE);
+                    message.addBody(EMMessageBodyHelper.combineBodyFromJson(bodyJson));
+                }
+                break;
             }
             if (message != null) {
                 message.setDirection(EMMessage.Direct.RECEIVE);
@@ -130,7 +143,6 @@ public class EMMessageHelper {
             message.setFrom(json.getString("from"));
         }
 
-
         message.setAcked(json.getBoolean("hasReadAck"));
         if (statusFromInt(json.getInt("status")) == EMMessage.Status.SUCCESS) {
             message.setUnread(!json.getBoolean("isRead"));
@@ -139,6 +151,10 @@ public class EMMessageHelper {
         message.setIsNeedGroupAck(json.getBoolean("isNeedGroupAck"));
         if (json.has("groupAckCount")) {
             message.setGroupAckCount(json.getInt("groupAckCount"));
+        }
+
+        if (json.has("receiverList")){
+            message.setReceiverList(EMHelper.stringListFromJsonArray(json.getJSONArray("receiverList")));
         }
 
         message.setIsChatThreadMessage(json.getBoolean("isThread"));
@@ -162,6 +178,10 @@ public class EMMessageHelper {
             }else if (intPriority == 2) {
                 message.setPriority(EMMessage.EMChatRoomMessagePriority.PriorityLow);
             }
+        }
+
+        if (json.has("deliverOnlineOnly")) {
+            message.deliverOnlineOnly(json.getBoolean("deliverOnlineOnly"));
         }
 
         if(json.has("attr")){
@@ -188,6 +208,22 @@ public class EMMessageHelper {
                     message.setAttribute(key,Integer.valueOf(value));
                 } else if (valueType.equals("str")) {
                     message.setAttribute(key, value);
+                } else if (valueType.equals("jstr")) {
+                    boolean hasAdd = false;
+                    do {
+                        try {
+                            JSONObject jo = new JSONObject(value);
+                            message.setAttribute(key, jo);
+                            hasAdd = true;
+                            break;
+                        }catch (JSONException ignored){}
+                        try {
+                            JSONArray ja = new JSONArray(value);
+                            message.setAttribute(key, ja);
+                            hasAdd = true;
+                            break;
+                        }catch (JSONException ignored){}
+                    }while (hasAdd);
                 }
             }
         }
@@ -225,7 +261,7 @@ public class EMMessageHelper {
             }
             break;
             case FILE: {
-                data.put("body", EMMessageBodyHelper.fileBodyToJson((EMNormalFileMessageBody) message.getBody()));
+                bodyData.put("body", EMMessageBodyHelper.fileBodyToJson((EMNormalFileMessageBody) message.getBody()));
                 bodyData.put("type", 5);
             }
             break;
@@ -237,6 +273,10 @@ public class EMMessageHelper {
             case VOICE: {
                 bodyData.put("body", EMMessageBodyHelper.voiceBodyToJson((EMVoiceMessageBody) message.getBody()));
                 bodyData.put("type", 4);
+            }
+            case COMBINE: {
+                bodyData.put("body", EMMessageBodyHelper.combineBodyToJson((EMCombineMessageBody) message.getBody()));
+                bodyData.put("type", 8);
             }
             break;
         }
@@ -271,6 +311,9 @@ public class EMMessageHelper {
                     }else {
                         js.put("value", "False");
                     }
+                }else if (value instanceof JSONArray || value instanceof JSONObject) {
+                    js.put("type", "jstr");
+                    js.put("value", value);
                 }
                 jo.put(key, js);
             }
@@ -293,6 +336,7 @@ public class EMMessageHelper {
         // 通过EMMessageWrapper获取
         // data.put("groupAckCount", message.groupAckCount());
         data.put("isThread", message.isChatThreadMessage());
+        data.put("deliverOnlineOnly", message.isDeliverOnlineOnly());
         return data;
     }
 

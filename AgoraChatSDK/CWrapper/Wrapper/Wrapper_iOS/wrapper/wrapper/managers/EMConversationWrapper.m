@@ -74,7 +74,11 @@
     }
     else if([messageCount isEqualToString:method]) {
         ret = [self messageCount:params callback:callback];
-    }else {
+    }
+    else if([removeMessages isEqualToString:method]) {
+        ret = [self removeMessages:params callback:callback];
+    }
+    else {
         ret = [super onMethodCall:method params:params callback:callback];
     }
     return ret;
@@ -215,6 +219,7 @@
         case 5:type = EMMessageBodyTypeFile; break;
         case 6:type = EMMessageBodyTypeCmd; break;
         case 7:type = EMMessageBodyTypeCustom; break;
+        case 8:type = EMMessageBodyTypeCombine; break;
         default:break;
     }
     long long timestamp = [params[@"timestamp"] longLongValue];
@@ -250,6 +255,14 @@
 - (NSString *)messageCount:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
     EMConversation *conversation = [self conversationWithParam: params];
     return [[EMHelper getReturnJsonObject:@(conversation.messagesCount)] toJsonString];
+}
+
+- (NSString *)removeMessages:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
+    EMConversation *conversation = [self conversationWithParam: params];
+    NSInteger startTs = [params[@"startTime"] intValue];
+    NSInteger endTs = [params[@"endTime"] intValue];
+    EMError *error = [conversation removeMessagesStart:startTs to:endTs];
+    return [[EMHelper getReturnJsonObject:error == nil ? @(YES) : @(NO)] toJsonString];
 }
 
 

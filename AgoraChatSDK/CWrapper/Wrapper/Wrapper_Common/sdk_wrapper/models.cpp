@@ -346,7 +346,12 @@ namespace sdk_wrapper
 
         if (jnode.HasMember("debugMode") && jnode["debugMode"].IsBool()) {
             bool debug_mode = jnode["debugMode"].GetBool();
-            // according to old code, not set debug_mode
+            if (false == debug_mode) {
+                configs->setLogLevel(EMChatConfigs::EMLogLevel::ERROR_LEVEL);
+            }
+            else {
+                configs->setLogLevel(EMChatConfigs::EMLogLevel::DEBUG_LEVEL);
+            }
         }
 
         if (jnode.HasMember("autoLogin") && jnode["autoLogin"].IsBool()) {
@@ -412,6 +417,24 @@ namespace sdk_wrapper
         if (jnode.HasMember("myUUID") && jnode["myUUID"].IsString()) {
             string myUUID = jnode["myUUID"].GetString();
             configs->setMyUUID(myUUID);
+        }
+
+        if (jnode.HasMember("enableEmptyConversation") && jnode["enableEmptyConversation"].IsBool()) {
+            bool enable_empty_conversation = jnode["enableEmptyConversation"].GetBool();
+            configs->setEnableEmptyConversation(enable_empty_conversation);
+        }
+
+        if (jnode.HasMember("customOSType") && jnode["customOSType"].IsInt()) {
+            int custom_os_type = jnode["customOSType"].GetInt();
+            if (-1 != custom_os_type) {
+                configs->setOs(EMChatConfigs::OSType::OS_CUSTOM);
+                configs->setOSCustomValue(custom_os_type);
+            }
+        }
+
+        if (jnode.HasMember("customDeviceName") && jnode["customDeviceName"].IsString()) {
+            string custom_device_name = jnode["customDeviceName"].GetString();
+            configs->setDeviceName(custom_device_name);
         }
 
         //TODO: need to Area code later
@@ -529,6 +552,7 @@ namespace sdk_wrapper
         case EMMessageBody::EMMessageBodyType::FILE: return 5;
         case EMMessageBody::EMMessageBodyType::COMMAND: return 6;
         case EMMessageBody::EMMessageBodyType::CUSTOM: return 7;
+        case EMMessageBody::EMMessageBodyType::COMBINE: return 8;
         default: return 0;
         }
     }
@@ -544,6 +568,7 @@ namespace sdk_wrapper
         case 5: return EMMessageBody::EMMessageBodyType::FILE;
         case 6: return EMMessageBody::EMMessageBodyType::COMMAND;
         case 7: return EMMessageBody::EMMessageBodyType::CUSTOM;
+        case 8: return EMMessageBody::EMMessageBodyType::COMBINE;
         default:
             return EMMessageBody::EMMessageBodyType::TEXT;
         }
@@ -657,6 +682,15 @@ namespace sdk_wrapper
         {
             writer.Key("type");
             writer.Int(Message::BodyTypeToInt(btype));
+
+            writer.Key("operationTime");
+            writer.Uint64(body->operationTime());
+
+            writer.Key("operatorId");
+            writer.String(body->operatorId().c_str());
+
+            writer.Key("operationCount");
+            writer.Uint64(body->operationCount());
 
             writer.Key("body");
             writer.StartObject();
@@ -851,6 +885,32 @@ namespace sdk_wrapper
 
                         EMCustomMessageBody::EMCustomExts exts = ptr->exts();
                         ToJsonObject(writer, exts);
+                    }
+                    break;
+                    case EMMessageBody::COMBINE:
+                    {
+                        EMCombineMessageBodyPtr ptr = dynamic_pointer_cast<EMCombineMessageBody>(body);
+
+                        writer.Key("remotePath");
+                        writer.String(ptr->remotePath().c_str());
+
+                        writer.Key("secret");
+                        writer.String(ptr->secretKey().c_str());
+
+                        writer.Key("localPath");
+                        writer.String(ptr->localPath().c_str());
+
+                        writer.Key("title");
+                        writer.String(ptr->title().c_str());
+
+                        writer.Key("summary");
+                        writer.String(ptr->summary().c_str());
+
+                        writer.Key("compatibleText");
+                        writer.String(ptr->compatibleText().c_str());
+
+                        writer.Key("messageList");
+                        MyJson::ToJsonObject(writer, ptr->messageList());
                     }
                     break;
                     default:
@@ -1202,6 +1262,48 @@ namespace sdk_wrapper
             bodyptr = dynamic_pointer_cast<EMMessageBody>(ptr);
         }
         break;
+        case EMMessageBody::COMBINE:
+        {
+            EMCombineMessageBodyPtr ptr = EMCombineMessageBodyPtr(new EMCombineMessageBody());
+
+            if (body.HasMember("remotePath") && body["remotePath"].IsString()) {
+                string str = body["remotePath"].GetString();
+                ptr->setRemotePath(str);
+            }
+
+            if (body.HasMember("secret") && body["secret"].IsString()) {
+                string str = body["secret"].GetString();
+                ptr->setSecretKey(str);
+            }
+
+            if (body.HasMember("localPath") && body["localPath"].IsString()) {
+                string str = body["localPath"].GetString();
+                ptr->setLocalPath(str);
+            }
+
+            if (body.HasMember("title") && body["title"].IsString()) {
+                string str = body["title"].GetString();
+                ptr->setTitle(str);
+            }
+
+            if (body.HasMember("summary") && body["summary"].IsString()) {
+                string str = body["summary"].GetString();
+                ptr->setSummary(str);
+            }
+
+            if (body.HasMember("compatibleText") && body["compatibleText"].IsString()) {
+                string str = body["compatibleText"].GetString();
+                ptr->setCompatibleText(str);
+            }
+
+            if (body.HasMember("messageList") && body["messageList"].IsArray()) {
+                vector<string> ml = MyJson::FromJsonObjectToVector(body["messageList"]);
+                ptr->setMessageList(ml);
+            }
+
+            bodyptr = dynamic_pointer_cast<EMMessageBody>(ptr);
+        }
+        break;
         default:
         {
             //message = NULL;
@@ -1427,6 +1529,11 @@ namespace sdk_wrapper
         if (jnode.HasMember("isThread") && jnode["isThread"].IsBool()) {
             bool b = jnode["isThread"].GetBool();
             msg->setIsThread(b);
+        }
+
+        if (jnode.HasMember("receiverList") && jnode["receiverList"].IsArray()) {
+            vector<string> rl = MyJson::FromJsonObjectToVector(jnode["receiverList"]);
+            if (rl.size() > 0) msg->setReceiverList(rl);
         }
 
         return msg;
@@ -1720,6 +1827,12 @@ namespace sdk_wrapper
 
         writer.Key("isThread");
         writer.Bool(conversation->isThread());
+
+        writer.Key("isPinned");
+        writer.Bool(conversation->isPinned());
+
+        writer.Key("pinnedTime");
+        writer.Int64(conversation->pinnedTime());
 
         string ext = conversation->extField();
         map<string, string> ext_map = MyJson::FromJsonToMap(ext);
@@ -2537,7 +2650,7 @@ namespace sdk_wrapper
         return data;
     }
 
-    std::string CursorResult::ToJson(string cursor, EMCursorResultRaw<EMThreadEventPtr> cusorResult)
+    string CursorResult::ToJson(string cursor, EMCursorResultRaw<EMThreadEventPtr> cusorResult)
     {
         StringBuffer s;
         Writer<StringBuffer> writer(s);
@@ -3198,6 +3311,9 @@ namespace sdk_wrapper
         case EMMultiDevicesListener::MultiDevicesOperation::SET_METADATA: return 50;
         case EMMultiDevicesListener::MultiDevicesOperation::DELETE_METADATA: return 51;
         case EMMultiDevicesListener::MultiDevicesOperation::GROUP_MEMBER_METADATA_CHANGED: return 52;
+        case EMMultiDevicesListener::MultiDevicesOperation::CONVERSATION_PINNED: return 60;
+        case EMMultiDevicesListener::MultiDevicesOperation::CONVERSATION_UNPINNED: return 61;
+        case EMMultiDevicesListener::MultiDevicesOperation::CONVERSATION_DELETED: return 62;
         default:
             return -1;
         }
@@ -3245,6 +3361,9 @@ namespace sdk_wrapper
         case 50: return EMMultiDevicesListener::MultiDevicesOperation::SET_METADATA;
         case 51: return EMMultiDevicesListener::MultiDevicesOperation::DELETE_METADATA;
         case 52: return EMMultiDevicesListener::MultiDevicesOperation::GROUP_MEMBER_METADATA_CHANGED;
+        case 60: return EMMultiDevicesListener::MultiDevicesOperation::CONVERSATION_PINNED;
+        case 61: return EMMultiDevicesListener::MultiDevicesOperation::CONVERSATION_UNPINNED;
+        case 62: return EMMultiDevicesListener::MultiDevicesOperation::CONVERSATION_DELETED;
         default: return EMMultiDevicesListener::MultiDevicesOperation::UNKNOW;
         }
     }

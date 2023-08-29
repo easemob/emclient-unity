@@ -10,33 +10,33 @@ namespace AgoraChat
     {
         internal static void NativeCall(string manager, string method, SimpleJSON.JSONNode json, string callbackId = null)
         {
-            LogPrinter.Log($"---NativeCall: {manager}: {method}: {json}: {callbackId}");
             _NativeCall(manager, method, json?.ToString(), callbackId ?? "");
         }
 
-
         internal static string NativeGet(string manager, string method, SimpleJSON.JSONNode json, string callbackId = null)
         {
-            LogPrinter.Log($"---NativeGet: {manager}: {method}: {json}: {callbackId}");
-
             IntPtr ptr = _NativeGet(manager, method, json?.ToString(), callbackId ?? "");
-            string str = Tools.PtrToString(ptr);
-            FreeMemory(ptr);
 
-            LogPrinter.Log($"---NativeGet get: {str}");
+            string str = Tools.PtrToString(ptr);
+#if UNITY_STANDALONE || UNITY_EDITOR || _WIN32
+            FreeMemory(ptr);
+#else
+            Tools.PtrToString(ptr);
+#endif
             return str;
         }
 
-        #region DllImport
-#if UNITY_STANDALONE_WIN || UNITY_EDITOR
-        public const string MyLibName = "ChatCWrapper";
-#else
+        internal static void LogNativeCall(string manager, string method, string info)
+        {
+#if UNITY_STANDALONE || UNITY_EDITOR || _WIN32
+            _NativeCall(manager, method, info, "");
+#endif
+        }
 
 #if UNITY_IPHONE
-		public const string MyLibName = "__Internal";
+        public const string MyLibName = "__Internal";
 #else
         public const string MyLibName = "ChatCWrapper";
-#endif
 #endif
 
         [DllImport(MyLibName)]
@@ -51,9 +51,9 @@ namespace AgoraChat
         [DllImport(MyLibName)]
         private extern static IntPtr _NativeGet(string manager, string method, [In, MarshalAs(UnmanagedType.LPTStr)] string jsonString = null, string callbackId = null);
 
+#if UNITY_STANDALONE || UNITY_EDITOR || _WIN32
         [DllImport(MyLibName)]
         internal static extern void FreeMemory(IntPtr p);
-
-        #endregion engine callbacks
+#endif
     }
 }

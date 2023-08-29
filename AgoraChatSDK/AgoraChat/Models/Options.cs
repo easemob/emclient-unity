@@ -269,6 +269,38 @@ namespace AgoraChat
 	     */
         public bool IsAutoDownload = true;
 
+        /**
+	     * \~chinese
+	     * 从数据库加载会话时，是否允许加载空会话。
+	     * - `true`：是；
+	     * - （默认）`false`：否。
+	     *
+	     * \~english
+	     * Whether to include empty conversations while loading conversations from the database.
+	     * -`true`: Yes;
+	     * -(Default) `false`: No.
+	     *
+	     */
+        public bool EnableEmptyConversation = false;
+
+        /**
+         *  \~chinese
+         *  自定义系统类型。
+         *
+         *  \~english
+         *  The custom system type.
+         */
+        public int CustomOSType = -1;
+
+        /**
+         *  \~chinese
+         *  自定义设备名称。
+         *
+         *  \~english
+         *  The custom device name.
+         *
+         */
+        public string CustomDeviceName = "";
 
         /**
 	     * \~chinese
@@ -276,40 +308,49 @@ namespace AgoraChat
 	     * -（默认）`GLOB`: 不限制区域。
 	     *
 	     * \~english
-	     * Sets area code, will follow the area when using edge node.
-	     * - (Default)`GLOB`: glob.
+	     * The area code.
+         *
+         * Restrictions of the area should be followed when edge nodes are used.
+         *
+	     * - (Default)`GLOB`: No restrictions will be applied when you try to access the server node.
 	     */
         public AreaCode AreaCode = AreaCode.GLOB;
 
         /**
         * \~chinese
-        * 设置当前设备UUID
+        * 当前设备的 UUID。
         *
         * \~english
-        * Sets UUID for current device.
+        * The UUID for current device.
         */
         public string MyUUID = "";
 
         /**
         * \~chinese
-        * 设置SDK底层数据存储路径。仅用于MacOS和Windows平台端。
-        * 如果未设置，则由SDK设置为缺省路径。
+        * 设置 SDK 底层数据存储路径。仅用于 MacOS 和 Windows 平台端。
+        *
+        * 如果未设置，则由 SDK 设置为缺省路径。
         *
         * 举例如下:
         * MacOS: /Users/UserName/Library/Application Support/DefaultCompany/xxx
         * Windows: C:/Users/UserName/AppData/LocalLow/DefaultCompany/xxx
         *
-        * 最后以文件夹结尾，无需“/”
+        * 最后以文件夹结尾，无需“/”。
+        *
+        * 注意: 在 MacOS 下，如果使用相对路径设置 `SDKDatapath`，必须使用"."开头，例如: "./sdkdatapath"。
         *
         * \~english
-        * Sets persistent path for SDK data. Only used for MacOS and Windows platform.
-        * If not set, then SDK with set with default value.
+        * The underlying storage path for SDK data. The storage path is used only for MacOS and Windows platforms.
+        *
+        * If this parameter is not set, the SDK will set the default value.
         *
         * For example:
         * MacOS: /Users/UserName/Library/Application Support/DefaultCompany/xxx
         * Windows: C:/Users/UserName/AppData/LocalLow/DefaultCompany/xxx
         *
-        * End with folder name, no need to append "/"
+        * The data storage path ends with the folder name without the appended "/".
+        *
+        * Note: For MacOS, if you set `SDKDatapath` to a relative path, the path must start with ".", for example "./sdkdatapath".
         */
         public string SDKDataPath = "";
 
@@ -382,6 +423,10 @@ namespace AgoraChat
             jo.AddWithoutNull("areaCode", (int)AreaCode);
             jo.AddWithoutNull("enableDnsConfig", EnableDNSConfig);
             jo.AddWithoutNull("myUUID", MyUUID);
+            jo.AddWithoutNull("enableEmptyConversation", EnableEmptyConversation);
+            jo.AddWithoutNull("customOSType", CustomOSType);
+            jo.AddWithoutNull("customDeviceName", CustomDeviceName);
+
 
             if (SDKDataPath.Length == 0)
             {

@@ -2,17 +2,22 @@ package com.hyphenate.wrapper.listeners;
 
 import com.hyphenate.EMGroupChangeListener;
 import com.hyphenate.chat.EMGroup;
+import com.hyphenate.chat.EMMessageReaction;
 import com.hyphenate.chat.EMMucSharedFile;
 import com.hyphenate.wrapper.EMWrapperHelper;
 import com.hyphenate.wrapper.helper.EMGroupHelper;
+import com.hyphenate.wrapper.helper.EMMessageReactionHelper;
 import com.hyphenate.wrapper.helper.EMMucSharedFileHelper;
+import com.hyphenate.wrapper.util.EMHelper;
 import com.hyphenate.wrapper.util.EMSDKMethod;
 import com.hyphenate.wrapper.util.EMWrapperThreadUtil;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.Map;
 
 public class EMWrapperGroupListener implements EMGroupChangeListener {
     @Override
@@ -321,6 +326,23 @@ public class EMWrapperGroupListener implements EMGroupChangeListener {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void onGroupMemberAttributeChanged(String groupId, String userId, Map<String, String> attribute, String from) {
+        try {
+            JSONObject data = new JSONObject();
+            data.put("groupId", groupId);
+            data.put("userId", userId);
+            data.put("from", from);
+            JSONObject attr = EMHelper.stringMapToJsonObject(attribute);
+            data.put("attrs", attr);
+            post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.groupListener, EMSDKMethod.onUpdateMemberAttributesFromGroup, data.toString()));
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     // 测试用假数据
     public void onTestSharedFileAdded(String groupId, JSONObject data) {

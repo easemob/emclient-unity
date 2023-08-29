@@ -30,14 +30,43 @@ namespace AgoraChat
 
         /**
          * \~chinese
-         * 判断该会话是否为子区会话。
-         * @return 是否为子区会话。
+         * 判断该会话是否为子区会话：
+         * - `true`：是；
+         * - `false`：否。
          *
          * \~english
-         * Check a conversation is thread or not.
-         * @return a conversation is thread or not.
+         * Whether a conversation is a thread conversation:
+         * - `true`: Yes.
+         * - `false`: No.
          */
         public bool IsThread;
+
+        /**
+         * \~chinese
+         * 判断该会话是否被置顶。
+         * - `true`：是；
+         * - `false`：否。
+         *
+         * \~english
+         * Whether a conversation is pinned:
+         * - `true`: Yes.
+         * - `false`: No.
+         *
+         */
+        public bool IsPinned;
+
+        /**
+         * \~chinese
+         * 会话置顶时间戳（毫秒）。
+         *
+         * 如果 `IsPinned` 为 `false`，将返回 `0`。
+         *
+         * \~english
+         * The timestamp when the conversation is pinned. The unit is millisecond.
+         *
+         * If `isPinned` is `false`, `0` is returned.
+         */
+        public long PinnedTime;
 
         /**
         * \~chinese
@@ -272,18 +301,18 @@ namespace AgoraChat
          * \~chinese
          * 删除本地数据库中指定时间段的消息。
          *
-         * @param startTime     要删除消息的起始时间点，单位毫秒。
-         * @param endTime       要删除消息的结束时间点，单位毫秒。
+         * @param startTime     删除消息的起始时间。Unix 时间戳，单位为毫秒。
+         * @param endTime       删除消息的结束时间。Unix 时间戳，单位为毫秒
          *
          * @return 该消息是否成功删除。
          *          - `true`: 成功；
          *          - `false`: 失败。
          *
          * \~english
-         * Delete messages from the local database for a specified time period.
+         * Deletes messages sent or received in a certain period from the local database.
          *
-         * @param startTime    Specify the starting timestamp of the messages to be deleted, in milliseconds.
-         * @param endTime      Specify the ending timestamp of the messages to be deleted, in milliseconds.
+         * @param startTime    The starting Unix timestamp for message deletion. The unit is millisecond.
+         * @param endTime      The ending Unix timestamp for message deletion. The unit is millisecond.
          *
          * @return Whether the message is successfully deleted.
          *           - `true`: Yes.
@@ -487,6 +516,8 @@ namespace AgoraChat
                 Id = jo["convId"];
                 Type = jo["type"].AsInt.ToConversationType();
                 IsThread = jo["isThread"];
+                IsPinned = jo["isPinned"];
+                PinnedTime = (long)jo["pinnedTime"].AsDouble;
                 _Ext = Dictionary.StringDictionaryFromJsonObject(jo["ext"]);
             }
         }

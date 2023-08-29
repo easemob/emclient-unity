@@ -20,7 +20,7 @@ namespace AgoraChat
             if (null == instance)
             {
                 instance = new CallbackQueue_ThreadPoolMode();
-                ThreadPool.SetMaxThreads(5,5);
+                //ThreadPool.SetMaxThreads(5,5);
             }
             return instance;
         }

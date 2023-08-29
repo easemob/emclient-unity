@@ -69,6 +69,9 @@ public class EMConversationWrapper extends EMBaseWrapper {
         }
         else if(EMSDKMethod.messageCount.equals(method)) {
             ret = messageCount(jsonObject, callback);
+        }
+        else if(EMSDKMethod.removeMessages.equals(method)) {
+            ret = removeMessages(jsonObject, callback);
         } else {
             ret = super.onMethodCall(method, jsonObject, callback);
         }
@@ -216,6 +219,7 @@ public class EMConversationWrapper extends EMBaseWrapper {
             case 5 : type = EMMessage.Type.FILE; break;
             case 6 : type = EMMessage.Type.CMD; break;
             case 7 : type = EMMessage.Type.CUSTOM; break;
+            case 8 : type = EMMessage.Type.COMBINE; break;
         }
 
         EMMessage.Type finalType = type;
@@ -247,6 +251,14 @@ public class EMConversationWrapper extends EMBaseWrapper {
         EMConversation conversation = conversationWithParam(params);
         return EMHelper.getReturnJsonObject(conversation.getAllMsgCount()).toString();
     }
+
+    private String removeMessages(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        EMConversation conversation = conversationWithParam(params);
+        long startTs = params.getLong("startTime");
+        long endTs = params.getLong("endTime");
+        return EMHelper.getReturnJsonObject(conversation.removeMessages(startTs, endTs)).toString();
+    }
+
 
     private EMConversation conversationWithParam(JSONObject params ) throws JSONException {
         String con_id = params.getString("convId");

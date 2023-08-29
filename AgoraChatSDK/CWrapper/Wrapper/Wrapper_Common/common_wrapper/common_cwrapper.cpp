@@ -55,8 +55,15 @@ void InitManagerMap()
     func_map_client["runDelegateTester"] = Client_RunDelegateTester;
 
 	func_map_client["kickDevice"] = Client_KickDevice;
+    func_map_client["kickDeviceWithToken"] = Client_KickDeviceWithToken;
 	func_map_client["kickAllDevices"] = Client_KickDevices;
+    func_map_client["kickAllDevicesWithToken"] = Client_KickDevicesWithToken;
 	func_map_client["getLoggedInDevicesFromServer"] = Client_GetLoggedInDevicesFromServer;
+    func_map_client["getLoggedInDevicesFromServerWithToken"] = Client_GetLoggedInDevicesFromServerWithToken;
+
+    func_map_client["logDebug"] = Client_LogDebug;
+    func_map_client["logWarn"] = Client_LogWarn;
+    func_map_client["logError"] = Client_LogError;
 
 	manager_map["EMClient"] = func_map_client;
 
@@ -68,6 +75,7 @@ void InitManagerMap()
 	func_map_chat_manager["getConversation"] = ChatManager_ConversationWithType;
 	func_map_chat_manager["getThreadConversation"] = ChatManager_ConversationWithType;
 	func_map_chat_manager["getConversationsFromServer"] = ChatManager_GetConversationsFromServer;
+    func_map_chat_manager["getConversationsFromServerWithCursor"] = ChatManager_GetConversationsFromServerWithCursor;
     func_map_chat_manager["getConversationsFromServerWithPage"] = ChatManager_GetConversationsFromServerWithPage;
 	func_map_chat_manager["getUnreadMessageCount"] = ChatManager_GetUnreadMessageCount;
 	func_map_chat_manager["importMessages"] = ChatManager_InsertMessages;
@@ -94,6 +102,11 @@ void InitManagerMap()
 	func_map_chat_manager["fetchReactionDetail"] = ChatManager_GetReactionDetail;
     func_map_chat_manager["removeMessagesFromServerWithMsgIds"] = ChatManager_RemoveMessagesFromServerWithMsgIds;
     func_map_chat_manager["removeMessagesFromServerWithTs"] = ChatManager_RemoveMessagesFromServerWithTs;
+    func_map_chat_manager["pinConversation"] = ChatManager_PinConversation;
+    func_map_chat_manager["getMessagesCount"] = ChatManager_GetMessagesCount;
+    func_map_chat_manager["removeEarlierHistoryMessages"] = ChatManager_RemoveEarlierHistoryMessages;
+    func_map_chat_manager["modifyMessage"] = ChatManager_ModifyMessage;
+    func_map_chat_manager["downloadCombineMessages"] = ChatManager_DownloadCombineMessages;
 
 	manager_map["EMChatManager"] = func_map_chat_manager;
 

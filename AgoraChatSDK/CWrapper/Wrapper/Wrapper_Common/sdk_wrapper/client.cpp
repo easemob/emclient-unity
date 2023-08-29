@@ -2,6 +2,7 @@
 
 #include "emclient.h"
 #include "emconfigmanager.h"
+#include "utils/emlog.h"
 
 #include "tool.h"
 #include "models.h"
@@ -481,13 +482,13 @@ namespace sdk_wrapper
         string local_cbid = cbid;
 
         Document d; d.Parse(local_jstr.c_str());
-        string user_name = GetJsonValue_String(d, "username", "");
+        string userId = GetJsonValue_String(d, "userId", "");
         string password = GetJsonValue_String(d, "password", "");
         string resource = GetJsonValue_String(d, "resource", "");
 
         thread t([=]() {
             EMError error;
-            CLIENT->kickDevice(user_name, password, resource, error);
+            CLIENT->kickDevice(userId, password, resource, error);
 
             if (EMError::EM_NO_ERROR == error.mErrorCode) {
                 string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
@@ -502,6 +503,35 @@ namespace sdk_wrapper
         return nullptr;
     }
 
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_KickDeviceWithToken(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_jstr = jstr;
+        string local_cbid = cbid;
+
+        Document d; d.Parse(local_jstr.c_str());
+        string userId = GetJsonValue_String(d, "userId", "");
+        string token = GetJsonValue_String(d, "token", "");
+        string resource = GetJsonValue_String(d, "resource", "");
+
+        thread t([=]() {
+            EMError error;
+            CLIENT->kickDeviceWithToken(userId, token, resource, error);
+
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+                string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            });
+        t.detach();
+        return nullptr;
+    }
+
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_KickDevices(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         if (!CheckClientInitOrNot(cbid)) return nullptr;
@@ -510,12 +540,12 @@ namespace sdk_wrapper
         string local_cbid = cbid;
 
         Document d; d.Parse(local_jstr.c_str());
-        string user_name = GetJsonValue_String(d, "username", "");
+        string userId = GetJsonValue_String(d, "userId", "");
         string password = GetJsonValue_String(d, "password", "");
 
         thread t([=]() {
             EMError error;
-            CLIENT->kickAllDevices(user_name, password, error);
+            CLIENT->kickAllDevices(userId, password, error);
 
             if (EMError::EM_NO_ERROR == error.mErrorCode) {
                 string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
@@ -530,6 +560,34 @@ namespace sdk_wrapper
         return nullptr;
     }
 
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_KickDevicesWithToken(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_jstr = jstr;
+        string local_cbid = cbid;
+
+        Document d; d.Parse(local_jstr.c_str());
+        string userId = GetJsonValue_String(d, "userId", "");
+        string token = GetJsonValue_String(d, "token", "");
+
+        thread t([=]() {
+            EMError error;
+            CLIENT->kickAllDevicesWithToken(userId, token, error);
+
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+                string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            });
+        t.detach();
+        return nullptr;
+    }
+
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_GetLoggedInDevicesFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         if (!CheckClientInitOrNot(cbid)) return nullptr;
@@ -538,13 +596,13 @@ namespace sdk_wrapper
         string local_cbid = cbid;
 
         Document d; d.Parse(local_jstr.c_str());
-        string user_name = GetJsonValue_String(d, "username", "");
+        string userId = GetJsonValue_String(d, "userId", "");
         string password = GetJsonValue_String(d, "password", "");
 
         thread t([=]() {
             EMError error;
 
-            vector<EMDeviceInfoPtr> vec = CLIENT->getLoggedInDevicesFromServer(user_name, password, error);
+            vector<EMDeviceInfoPtr> vec = CLIENT->getLoggedInDevicesFromServer(userId, password, error);
 
             if (EMError::EM_NO_ERROR == error.mErrorCode) {
                 string json = DeviceInfo::ToJson(vec);
@@ -561,8 +619,42 @@ namespace sdk_wrapper
         return nullptr;
     }
 
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_GetLoggedInDevicesFromServerWithToken(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_jstr = jstr;
+        string local_cbid = cbid;
+
+        Document d; d.Parse(local_jstr.c_str());
+        string userId = GetJsonValue_String(d, "userId", "");
+        string token = GetJsonValue_String(d, "token", "");
+
+        thread t([=]() {
+            EMError error;
+
+            vector<EMDeviceInfoPtr> vec = CLIENT->getLoggedInDevicesFromServerWithToken(userId, token, error);
+
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+                string json = DeviceInfo::ToJson(vec);
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            });
+        t.detach();
+
+        return nullptr;
+    }
+
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_ClearResource(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
+        // csharp side stopped, so the callback handle already freed. Here reset the handle!
+        Uninit_SDKWrapper();
+
         if (!CheckClientInitOrNot(nullptr)) return nullptr;
 
         if (CLIENT->isLoggedIn()) {
@@ -579,6 +671,30 @@ namespace sdk_wrapper
         //RoomManager_RemoveListener();
         //ContactManager_RemoveListener();
 
+        return nullptr;
+    }
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_LogDebug(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (nullptr != jstr && strlen(jstr) > 0) {
+            EMLog::getInstance().getDebugLogStream() << "SDK_Debug: " << jstr;
+        }
+        return nullptr;
+    }
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_LogWarn(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (nullptr != jstr && strlen(jstr) > 0) {
+            EMLog::getInstance().getWarningLogStream() << "SDK_Warn: " << jstr;
+        }
+        return nullptr;
+    }
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_LogError(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (nullptr != jstr && strlen(jstr) > 0) {
+            EMLog::getInstance().getErrorLogStream() << "SDK_Error: " << jstr;
+        }
         return nullptr;
     }
 
@@ -601,7 +717,7 @@ namespace sdk_wrapper
             error->setErrorCode(217);
             gConnectionListener->onDisconnect(error);
             error->setErrorCode(220);
-            gConnectionListener->onDisconnect(error);
+            gConnectionListener->onDisconnect(error, "anotherDevice");
             error->setErrorCode(305);
             gConnectionListener->onDisconnect(error);
             error->setErrorCode(1);
@@ -629,6 +745,10 @@ namespace sdk_wrapper
             gMultiDevicesListener->onThreadMultiDevicesEvent(EMMultiDevicesListener::MultiDevicesOperation::THREAD_CREATE, "thread_target", usernames);
 
             gMultiDevicesListener->undisturbMultiDevicesEvent("data");
+
+            gMultiDevicesListener->onRoamDeleteMultiDevicesEvent("convId", "deviceId", usernames, 123456);
+
+            gMultiDevicesListener->onConversationMultiDevicesEvent(EMMultiDevicesListener::MultiDevicesOperation::CONVERSATION_PINNED, "convId", EMConversation::EMConversationType::CHAT);
         }
 
         return nullptr;

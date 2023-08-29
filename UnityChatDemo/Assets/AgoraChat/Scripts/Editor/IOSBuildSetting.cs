@@ -1,108 +1,121 @@
-﻿#if UNITY_IPHONE || UNITY_STANDALONE_OSX
+﻿#if UNITY_EDITOR
+#if UNITY_IPHONE 
+
 using System.IO;
+using JetBrains.Annotations;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
 using UnityEditor.iOS.Xcode.Extensions;
 
-namespace AgoraChat
-{
+namespace AgoraChat {
+    
+
+    
     public class BL_BuildPostProcess
     {
-
-        [PostProcessBuild]
+        const string defaultLocationInProj = "AgoraChat/Plugins/iOS";
+        
+        [PostProcessBuildAttribute(99)]
         public static void OnPostprocessBuild(BuildTarget buildTarget, string path)
         {
             if (buildTarget == BuildTarget.iOS)
             {
-    #if UNITY_IPHONE
                 LinkLibraries(path);
-                UpdatePermission(path + "/Info.plist");
-    #endif
-            }
-            else if (buildTarget == BuildTarget.StandaloneOSX)
-            {
-                string plistPath = path + "/Contents/Info.plist"; // straight to a binary
-                if (path.EndsWith(".xcodeproj"))
-                {
-                    // This must be a build that exports Xcode
-                    string dir = Path.GetDirectoryName(path);
-                    plistPath = dir + "/" + PlayerSettings.productName + "/Info.plist";
-                }
-                UpdatePermission(plistPath);
             }
         }
-    #if UNITY_IPHONE
+
         static string GetTargetGuid(PBXProject proj)
         {
-    #if UNITY_2019_3_OR_NEWER
+#if UNITY_2019_3_OR_NEWER
             return proj.GetUnityFrameworkTargetGuid();
-    #else
-	        return proj.TargetGuidByName("Unity-iPhone");
-    #endif
+#else
+            return proj.TargetGuidByName("Unity-iPhone");
+#endif
         }
-        // The followings are the addtional frameworks to add to the project
-        //static string[] ProjectFrameworks = new string[] {
-        //    "Accelerate.framework",
-        //    "CoreTelephony.framework",
-        //    "CoreText.framework",
-        //    "CoreML.framework",
-        //    "Metal.framework",
-        //    "VideoToolbox.framework",
-        //    "libiPhone-lib.a",
-        //    "libresolv.tbd",
-        //};
 
-        public static void LinkLibraries(string path)
+        // The followings are the addtional frameworks to add to the project
+        static string[] ProjectFrameworks = new string[] {
+        };
+
+        static string[] EmbeddedFrameworks = new string[] {
+	        "wrapper.framework",
+            "ChatCWrapper.framework",
+            "HyphenateChat.framework"
+	    };
+        
+
+        static void EmbedFramework(PBXProject proj, string target, string frameworkPath, string customPath)
         {
+            string ChatFrameWorkPath = Path.Combine(defaultLocationInProj, frameworkPath);
+            string projectPath = customPath ?? "";
+            string fileGuid = proj.AddFile(ChatFrameWorkPath, "Frameworks/" + projectPath + ChatFrameWorkPath, PBXSourceTree.Sdk);
+            PBXProjectExtensions.AddFileToEmbedFrameworks(proj, target, fileGuid);
+        }
+
+        static void LinkLibraries(string path)
+        {
+            // linked library
             string projPath = path + "/Unity-iPhone.xcodeproj/project.pbxproj";
             PBXProject proj = new PBXProject();
             proj.ReadFromFile(projPath);
             string target = GetTargetGuid(proj);
 
+            // disable bit-code
+            proj.SetBuildProperty(target, "ENABLE_BITCODE", "false");
+
+            // Frameworks
+            foreach (string framework in ProjectFrameworks)
+            {
+                proj.AddFrameworkToProject(target, framework, true);
+            }
 
             // embedded frameworks
-    #if UNITY_2019_1_OR_NEWER
-            target = proj.GetUnityMainTargetGuid();
-    #endif
-            const string defaultLocationInProj = "AgoraChat/Plugins/iOS";
-
-            const string HypheanteChatFrameworkName = "HyphenateChat.framework";
-            const string WrapperFrameworkName = "wrapper.framework";
-            const string CWrapperFrameworkName = "ChatCWrapper.framework";
-
-            string HypheanteChatFrameworkPath = Path.Combine(defaultLocationInProj, HypheanteChatFrameworkName);
-            string WrapperFrameworkFrameworkPath = Path.Combine(defaultLocationInProj, WrapperFrameworkName);
-            string CWrapperFrameworkPath = Path.Combine(defaultLocationInProj, CWrapperFrameworkName);
-
-            string sdkGuid = proj.AddFile(HypheanteChatFrameworkPath, "Frameworks/" + HypheanteChatFrameworkPath, PBXSourceTree.Sdk);
-            string wrapperGuid = proj.AddFile(WrapperFrameworkFrameworkPath, "Frameworks/" + WrapperFrameworkFrameworkPath, PBXSourceTree.Sdk);
-            string cwrapperGuid = proj.AddFile(CWrapperFrameworkPath, "Frameworks/" + CWrapperFrameworkPath, PBXSourceTree.Sdk);
-
-            PBXProjectExtensions.AddFileToEmbedFrameworks(proj, target, sdkGuid);
-            PBXProjectExtensions.AddFileToEmbedFrameworks(proj, target, wrapperGuid);
-            PBXProjectExtensions.AddFileToEmbedFrameworks(proj, target, cwrapperGuid);
+#if UNITY_2019_1_OR_NEWER
+	    target = proj.GetUnityMainTargetGuid();
+#endif
+	    foreach (string framework in EmbeddedFrameworks) 
+	    {
+		    EmbedFramework(proj, target, framework, AgoraChat.IOSBuildSetting.CustomPackagePath);
+	    }
 
             proj.SetBuildProperty(target, "LD_RUNPATH_SEARCH_PATHS", "$(inherited) @executable_path/Frameworks");
 
             // done, write to the project file
             File.WriteAllText(projPath, proj.WriteToString());
         }
-    #endif
 
-        /// <summary>
-        ///   Update the permission 
-        /// </summary>
-        /// <param name="pListPath">path to the Info.plist file</param>
-        static void UpdatePermission(string pListPath)
-        {
-            //PlistDocument plist = new PlistDocument();
-            //plist.ReadFromString(File.ReadAllText(pListPath));
-            //PlistElementDict rootDic = plist.root;
-            //var micPermission = "NSMicrophoneUsageDescription";
-            //rootDic.SetString(micPermission, "need to user mic");
-            //File.WriteAllText(pListPath, plist.WriteToString());
-        }
     }
+
 }
 #endif
+#endif
+
+namespace AgoraChat
+{
+    
+    /// <summary>
+    /// This class is used to set the path of the AgoraChat SDK.
+    /// Sample code:
+    ///
+    /// #if UNITY_EDITOR
+    /// using UnityEditor.Callbacks;
+    /// using UnityEditor;
+    /// 
+    /// public class BuildAgoraChat
+    /// {
+    ///     [PostProcessBuildAttribute(0)]
+    ///     public static void SetAgoraChatPath(BuildTarget buildTarget, string path)
+    ///     {
+    ///        // SDK Path: Assets/ThirdParties/AgoraChat
+    ///        AgoraChat.IOSBuildSetting.CustomPackagePath = "ThirdParties/";
+    ///     }
+    /// }
+    /// #endif
+    /// 
+    /// </summary>
+    public class IOSBuildSetting
+    {
+        public static string CustomPackagePath = null;
+    }
+}

@@ -1,20 +1,24 @@
 package com.hyphenate.wrapper.helper;
 
 import com.hyphenate.chat.EMCmdMessageBody;
+import com.hyphenate.chat.EMCombineMessageBody;
 import com.hyphenate.chat.EMCustomMessageBody;
 import com.hyphenate.chat.EMFileMessageBody;
 import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.EMLocationMessageBody;
+import com.hyphenate.chat.EMMessageBody;
 import com.hyphenate.chat.EMNormalFileMessageBody;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chat.EMVideoMessageBody;
 import com.hyphenate.chat.EMVoiceMessageBody;
+import com.hyphenate.wrapper.util.EMHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,6 +26,15 @@ import java.util.List;
 import java.util.Map;
 
 public class EMMessageBodyHelper {
+
+
+    public static JSONObject bodyToJson(EMMessageBody body) throws JSONException {
+        JSONObject data = new JSONObject();
+        data.put("operationCount", body.operationCount());
+        data.put("operationTime", body.operationTime());
+        data.put("operatorId", body.operatorId());
+        return data;
+    }
 
     public static EMTextMessageBody textBodyFromJson(JSONObject json) throws JSONException {
         String content = json.getString("content");
@@ -39,7 +52,7 @@ public class EMMessageBodyHelper {
 
     public static JSONObject textBodyToJson(EMTextMessageBody body) throws JSONException{
         if (body == null) return null;
-        JSONObject data = new JSONObject();
+        JSONObject data = bodyToJson(body);
         data.put("content", body.getMessage());
         if (body.getTargetLanguages() != null) {
             data.put("targetLanguages", body.getTargetLanguages());
@@ -77,7 +90,7 @@ public class EMMessageBodyHelper {
 
     public static JSONObject localBodyToJson(EMLocationMessageBody body) throws JSONException {
         if (body == null) return null;
-        JSONObject data = new JSONObject();
+        JSONObject data = bodyToJson(body);
         data.put("latitude", body.getLatitude());
         data.put("longitude", body.getLongitude());
         data.put("buildingName", body.getBuildingName());
@@ -97,7 +110,7 @@ public class EMMessageBodyHelper {
 
     public static JSONObject cmdBodyToJson(EMCmdMessageBody body) throws JSONException{
         if (body == null) return null;
-        JSONObject data = new JSONObject();
+        JSONObject data = bodyToJson(body);
         data.put("deliverOnlineOnly", body.isDeliverOnlineOnly());
         data.put("action", body.action());
         return data;
@@ -122,7 +135,7 @@ public class EMMessageBodyHelper {
 
     public static JSONObject customBodyToJson(EMCustomMessageBody body) throws JSONException{
         if (body == null) return null;
-        JSONObject data = new JSONObject();
+        JSONObject data = bodyToJson(body);
         data.put("event", body.event());
         if (body.getParams() != null) {
             JSONObject jsonObject = new JSONObject();
@@ -158,7 +171,7 @@ public class EMMessageBodyHelper {
 
     public static JSONObject fileBodyToJson(EMNormalFileMessageBody body) throws JSONException{
         if (body == null) return null;
-        JSONObject data = new JSONObject();
+        JSONObject data = bodyToJson(body);
         data.put("localPath", body.getLocalUrl());
         data.put("fileSize", body.getFileSize());
         data.put("displayName", body.getFileName());
@@ -216,7 +229,7 @@ public class EMMessageBodyHelper {
 
     public static JSONObject imageBodyToJson(EMImageMessageBody body) throws JSONException{
         if (body == null) return null;
-        JSONObject data = new JSONObject();
+        JSONObject data = bodyToJson(body);
         data.put("localPath", body.getLocalUrl());
         data.put("displayName", body.getFileName());
         data.put("remotePath", body.getRemoteUrl());
@@ -276,7 +289,7 @@ public class EMMessageBodyHelper {
 
     public static JSONObject videoBodyToJson(EMVideoMessageBody body) throws JSONException{
         if (body == null) return null;
-        JSONObject data = new JSONObject();
+        JSONObject data = bodyToJson(body);
         data.put("localPath", body.getLocalUrl());
         data.put("thumbnailLocalPath", body.getLocalThumbUri());
         data.put("duration", body.getDuration());
@@ -318,7 +331,7 @@ public class EMMessageBodyHelper {
 
     public static JSONObject voiceBodyToJson(EMVoiceMessageBody body) throws JSONException{
         if (body == null) return null;
-        JSONObject data = new JSONObject();
+        JSONObject data = bodyToJson(body);
         data.put("localPath", body.getLocalUrl());
         data.put("duration", body.getLength());
         data.put("displayName", body.getFileName());
@@ -327,6 +340,54 @@ public class EMMessageBodyHelper {
         data.put("secret", body.getSecret());
         data.put("fileSize", body.getFileSize());
         return data;
+    }
+
+    public static EMCombineMessageBody combineBodyFromJson(JSONObject json) throws JSONException {
+        String title = null;
+        if (json.has("title")) {
+            title = json.optString("title");
+        }
+        String summary = null;
+        if (json.has("summary")) {
+            summary = json.optString("summary");
+        }
+        String compatibleText = null;
+        if (json.has("compatibleText")) {
+            compatibleText = json.optString("compatibleText");
+        }
+        List<String> msgList = EMHelper.stringListFromJsonArray(json.optJSONArray("messageList"));
+
+        String remotePath = null;
+        if (json.has("remotePath")) {
+            remotePath = json.optString("remotePath");
+        }
+        String secret = null;
+        if (json.has("secret")) {
+            secret = json.optString("secret");
+        }
+        String localPath = null;
+        if (json.has("localPath")) {
+            localPath = json.optString("localPath");
+        }
+
+        EMCombineMessageBody body = new EMCombineMessageBody(title, summary, compatibleText, msgList);
+        body.setRemoteUrl(remotePath);
+        body.setSecret(secret);
+        body.setLocalUrl(localPath);
+        return body;
+    }
+
+    public static JSONObject combineBodyToJson(EMCombineMessageBody body) throws JSONException{
+        if (body == null) return null;
+        JSONObject jo = bodyToJson(body);
+        jo.put("remotePath", body.getRemoteUrl());
+        jo.put("secret", body.getSecret());
+        jo.put("localPath", body.getLocalUrl());
+        jo.put("title", body.getTitle());
+        jo.put("summary", body.getSummary());
+        jo.put("compatibleText", body.getCompatibleText());
+        jo.put("remotePath", body.getRemoteUrl());
+        return jo;
     }
 
     public  static EMFileMessageBody.EMDownloadStatus downloadStatusFromInt(int downloadStatus) {

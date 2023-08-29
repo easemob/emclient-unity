@@ -121,6 +121,12 @@
         ret = [self acceptInvitationFromGroup:params callback:callback];
     } else if ([declineInvitationFromGroup isEqualToString:method]) {
         ret = [self declineInvitationFromGroup:params callback:callback];
+    } else if ([getJoinedGroupsFromServerSimple isEqualToString:method]) {
+        ret = [self getJoinedGroupsFromServerSimple:params callback:callback];
+    } else if ([setMemberAttributes isEqualToString:method]) {
+        ret = [self setMemberAttributes:params callback:callback];
+    } else if ([fetchMemberAttributes isEqualToString:method]) {
+        ret = [self fetchMemberAttributes:params callback:callback];
     } else {
         ret = [super onMethodCall:method params:params callback:callback];
     }
@@ -661,6 +667,63 @@
     return nil;
 }
 
+- (NSString *)getJoinedGroupsFromServerSimple:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
+    __weak EMGroupManagerWrapper *weakSelf = self;
+    
+    int pageSize = [params[@"pageSize"] intValue];
+    int pageNum = [params[@"pageNum"] intValue];
+    [EMClient.sharedClient.groupManager getJoinedGroupsFromServerWithPage:pageNum
+                                                                 pageSize:pageSize
+                                                               completion:^(NSArray<EMGroup *> * _Nullable aList, EMError * _Nullable aError) {
+        if (aError) {
+            [weakSelf wrapperCallback:callback error:aError object:nil];
+            return;
+        }
+        NSMutableArray *list = [NSMutableArray array];
+        for (EMGroup *group in aList) {
+            [list addObject:[group toJson]];
+        }
+        
+        [weakSelf wrapperCallback:callback error:nil object:list];
+    }];
+    
+    return nil;
+}
+
+- (NSString *)setMemberAttributes:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
+    __weak EMGroupManagerWrapper *weakSelf = self;
+    NSString *groupId = params[@"groupId"];
+    NSString *userId = params[@"userId"];
+    NSDictionary *attrs = params[@"attrs"];
+    [EMClient.sharedClient.groupManager setMemberAttribute:groupId
+                                                    userId:userId
+                                                attributes:attrs
+                                                completion:^(EMError * _Nullable error) {
+        [weakSelf wrapperCallback:callback error:error object:nil];
+    }];
+    return nil;
+}
+
+- (NSString *)fetchMemberAttributes:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
+    __weak EMGroupManagerWrapper *weakSelf = self;
+    NSString *groupId = params[@"groupId"];
+    NSArray *userIds = params[@"userIds"];
+    NSArray *attrs = params[@"attrs"];
+    if(!attrs) {
+        attrs = [NSArray new];
+    }
+    [EMClient.sharedClient.groupManager fetchMembersAttributes:groupId
+                                                       userIds:userIds
+                                                          keys:attrs
+                                                    completion:^(NSDictionary<NSString *,NSDictionary<NSString *,NSString *> *> * _Nullable attributes, EMError * _Nullable error) {
+        [weakSelf wrapperCallback:callback error:error object:attributes];
+    }];
+    
+    return nil;
+}
+
+
+
 - (void)registerEaseListener{
     [EMClient.sharedClient.groupManager addDelegate:self delegateQueue:nil];
 }
@@ -895,5 +958,20 @@
     dictionary[@"group"] = [aGroup toJson];
     [EMWrapperHelper.shared.listener onReceive:groupListener method:onSpecificationChangedFromGroup info: [dictionary toJsonString]];
 }
+
+- (void)onAttributesChangedOfGroupMember:(NSString *)groupId
+                                  userId:(NSString *)userId
+                              attributes:(NSDictionary<NSString *,NSString *> *)attributes
+                              operatorId:(NSString *)operatorId
+{
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+    dictionary[@"group"] = groupId;
+    dictionary[@"userId"] = userId;
+    dictionary[@"from"] = operatorId;
+    dictionary[@"attrs"] = attributes;
+    [EMWrapperHelper.shared.listener onReceive:groupListener method:onUpdateMemberAttributesFromGroup info: [dictionary toJsonString]];
+}
+
+
 
 @end

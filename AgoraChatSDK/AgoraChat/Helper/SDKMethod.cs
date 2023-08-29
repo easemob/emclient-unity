@@ -32,14 +32,20 @@ namespace AgoraChat
         internal const string uploadLog = "uploadLog";
         internal const string compressLogs = "compressLogs";
         internal const string kickDevice = "kickDevice";
+        internal const string kickDeviceWithToken = "kickDeviceWithToken";
         internal const string kickAllDevices = "kickAllDevices";
+        internal const string kickAllDevicesWithToken = "kickAllDevicesWithToken";
         internal const string getLoggedInDevicesFromServer = "getLoggedInDevicesFromServer";
+        internal const string getLoggedInDevicesFromServerWithToken = "getLoggedInDevicesFromServerWithToken";
 
         internal const string getToken = "getToken";
         internal const string getCurrentUser = "getCurrentUser";
         internal const string isLoggedInBefore = "isLoggedInBefore";
         internal const string isConnected = "isConnected";
 
+        internal const string logDebug = "logDebug";
+        internal const string logWarn = "logWarn";
+        internal const string logError = "logError";
 
         /// EMContactManager methods
         internal const string addContact = "addContact";
@@ -67,12 +73,14 @@ namespace AgoraChat
         internal const string getThreadConversation = "getThreadConversation";
         internal const string markAllChatMsgAsRead = "markAllChatMsgAsRead";
         internal const string getUnreadMessageCount = "getUnreadMessageCount";
+        internal const string getMessagesCount = "getMessagesCount";
         internal const string updateChatMessage = "updateChatMessage";
         internal const string downloadAttachment = "downloadAttachment";
         internal const string downloadThumbnail = "downloadThumbnail";
         internal const string importMessages = "importMessages";
         internal const string loadAllConversations = "loadAllConversations";
         internal const string getConversationsFromServer = "getConversationsFromServer";
+        internal const string getConversationsFromServerWithCursor = "getConversationsFromServerWithCursor";
         internal const string getConversationsFromServerWithPage = "getConversationsFromServerWithPage";
         internal const string deleteConversation = "deleteConversation";
         internal const string fetchHistoryMessages = "fetchHistoryMessages";
@@ -91,6 +99,10 @@ namespace AgoraChat
         internal const string reportMessage = "reportMessage";
         internal const string removeMessagesFromServerWithMsgIds = "removeMessagesFromServerWithMsgIds";
         internal const string removeMessagesFromServerWithTs = "removeMessagesFromServerWithTs";
+        internal const string pinConversation = "pinConversation";
+        internal const string removeEarlierHistoryMessages = "removeEarlierHistoryMessages";
+        internal const string modifyMessage = "modifyMessage";
+        internal const string downloadCombineMessages = "downloadCombineMessages";
 
         /// EMMessage listener
         internal const string onMessageProgressUpdate = "onMessageProgressUpdate";
@@ -302,6 +314,7 @@ namespace AgoraChat
         internal const string onConversationRead = "onConversationRead";
         internal const string onMessageReactionDidChange = "messageReactionDidChange";
         internal const string onMessageIdChanged = "onMessageIdChanged";
+        internal const string onMessageContentChanged = "onMessageContentChanged";
 
         // ChatThreadManagerDelegate
         internal const string onChatThreadCreate = "onChatThreadCreate";
@@ -321,6 +334,8 @@ namespace AgoraChat
         internal const string onGroupMultiDevicesEvent = "onGroupMultiDevicesEvent";
         internal const string onUnDisturbMultiDevicesEvent = "onUnDisturbMultiDevicesEvent";
         internal const string onThreadMultiDevicesEvent = "onThreadMultiDevicesEvent";
+        internal const string onRoamDeleteMultiDevicesEvent = "onRoamDeleteMultiDevicesEvent";
+        internal const string onConversationMultiDevicesEvent = "onConversationMultiDevicesEvent";
 
         // PresenceManagerDelegate
         internal const string onPresenceUpdated = "onPresenceUpdated";

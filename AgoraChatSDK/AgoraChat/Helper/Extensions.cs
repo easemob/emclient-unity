@@ -62,12 +62,14 @@ namespace AgoraChat
         internal static IMessageBody CreateBodyWithJsonObject(JSONNode jsonNode)
         {
             if (jsonNode.IsNull || !jsonNode.IsObject) return null;
+
             IMessageBody body = null;
             MessageBodyType type = jsonNode["type"].AsInt.ToMessageBodyType();
+
             switch (type)
             {
                 case MessageBodyType.TXT:
-                    body = CreateWithJsonObject<TextBody>(jsonNode["body"].AsObject);
+                    body = CreateWithJsonObject<TextBody>(jsonNode["body"]);
                     break;
                 case MessageBodyType.IMAGE:
                     body = CreateWithJsonObject<ImageBody>(jsonNode["body"]);
@@ -90,7 +92,12 @@ namespace AgoraChat
                 case MessageBodyType.CMD:
                     body = CreateWithJsonObject<CmdBody>(jsonNode["body"]);
                     break;
+                case MessageBodyType.COMBINE:
+                    body = CreateWithJsonObject<CombineBody>(jsonNode["body"]);
+                    break;
             }
+
+            body.FromJsonObjectToIMessageBody(jsonNode.AsObject);
 
             return body;
         }
@@ -440,6 +447,9 @@ namespace AgoraChat
                 case MultiDevicesOperation.SET_METADATA: return 50;
                 case MultiDevicesOperation.DELETE_METADATA: return 51;
                 case MultiDevicesOperation.GROUP_MEMBER_METADATA_CHANGED: return 52;
+                case MultiDevicesOperation.CONVERSATION_PINNED: return 60;
+                case MultiDevicesOperation.CONVERSATION_UNPINNED: return 61;
+                case MultiDevicesOperation.CONVERSATION_DELETED: return 62;
                 default:
                     return -1;
             }
@@ -488,6 +498,9 @@ namespace AgoraChat
                 case 50: return MultiDevicesOperation.SET_METADATA;
                 case 51: return MultiDevicesOperation.DELETE_METADATA;
                 case 52: return MultiDevicesOperation.GROUP_MEMBER_METADATA_CHANGED;
+                case 60: return MultiDevicesOperation.CONVERSATION_PINNED;
+                case 61: return MultiDevicesOperation.CONVERSATION_UNPINNED;
+                case 62: return MultiDevicesOperation.CONVERSATION_DELETED;
                 default: return MultiDevicesOperation.UNKNOWN;
             }
         }
@@ -559,6 +572,7 @@ namespace AgoraChat
                 case MessageBodyType.FILE: return 5;
                 case MessageBodyType.CMD: return 6;
                 case MessageBodyType.CUSTOM: return 7;
+                case MessageBodyType.COMBINE: return 8;
                 default: return 0;
             }
         }
@@ -575,6 +589,7 @@ namespace AgoraChat
                 case 5: return MessageBodyType.FILE;
                 case 6: return MessageBodyType.CMD;
                 case 7: return MessageBodyType.CUSTOM;
+                case 8: return MessageBodyType.COMBINE;
                 default:
                     return MessageBodyType.TXT;
             }

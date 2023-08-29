@@ -36,10 +36,14 @@
          *  \~chinese
          *  当前登录账号在其它设备登录时会接收到此回调。
          *
+         *  @param deviceName 另一个设备的名称。
+         *
          *  \~english
          *  Occurs when the user logs in to another device with the current account.
+         *
+         *  @param deviceName The name of another device.
          */
-        void OnLoggedOtherDevice();
+        void OnLoggedOtherDevice(string deviceName);
 
         /**
          *  \~chinese
@@ -116,10 +120,10 @@
 
         /**
          * \~chinese
-         * App激活数量已达限制值。
+         * App 激活数量已达到上限值。
          *
          * \~english
-         * App active number reach limitation.
+         * The number of active apps has reached the upper limit.
          */
         void OnAppActiveNumberReachLimitation();
 

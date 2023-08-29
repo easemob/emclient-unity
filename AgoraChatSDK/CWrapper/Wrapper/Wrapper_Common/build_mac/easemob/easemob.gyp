@@ -19,6 +19,7 @@
                'defines': [
                     'DLL_EXPORT',
                     'SKIP_FPA',
+                    'TARGET_OS_OSX',
                ],
                 'msbuild_toolset': 'v120_xp',
                 'msvs_settings': {
@@ -175,6 +176,7 @@
                 '<(emclient-linux-path)/src/message/emvideomessagebody.cpp',
                 '<(emclient-linux-path)/src/message/emvoicemessagebody.cpp',
                 '<(emclient-linux-path)/src/message/emmessagereaction.cpp',
+                '<(emclient-linux-path)/src/message/emcombinemessagebody.cpp',
                 '<(emclient-linux-path)/src/sqlite.cpp',
                 '<(emclient-linux-path)/src/utils/emhttprequest.cpp',
                 '<(emclient-linux-path)/src/utils/emlog.cpp',
