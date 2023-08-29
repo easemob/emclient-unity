@@ -21,7 +21,7 @@ namespace AgoraChat
 #if UNITY_STANDALONE || UNITY_EDITOR || _WIN32
             FreeMemory(ptr);
 #else
-            Tools.PtrToString(ptr);
+            Marshal.FreeHGlobal(ptr);
 #endif
             return str;
         }
