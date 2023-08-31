@@ -1,27 +1,31 @@
 ﻿using System.Collections.Generic;
 using AgoraChat.SimpleJSON;
+#if !_WIN32
+using UnityEngine.Scripting;
+#endif
 
 namespace AgoraChat
 {
     /**
-         * \~chinese
-         * 分页类。
-         * 
-         * 该类包含下次查询的页码以及相应页面上的数据条数。
-         * 
-         * 该对象在分页获取数据时返回。
-         * 
-         * @param <T> 泛型类型 T。  
-         *
-         * \~english
-         * The pagination class.
-         * 
-         * This class contains the page number for the next query and the number of records on the page. 
-         * 
-         * The class instance is returned when you make a paginated query.
-         * 
-         * @param <T> The generic <T> type.
-         */
+    * \~chinese
+    * 分页类。
+    *
+    * 该类包含下次查询的页码以及相应页面上的数据条数。
+    *
+    * 该对象在分页获取数据时返回。
+    *
+    * @param <T> 泛型类型 T。
+    *
+    * \~english
+    * The pagination class.
+    *
+    * This class contains the page number for the next query and the number of records on the page.
+    *
+    * The class instance is returned when you make a paginated query.
+    *
+    * @param <T> The generic <T> type.
+    */
+    [Preserve]
     public class PageResult<T> : BaseModel
     {
         /**
@@ -47,13 +51,16 @@ namespace AgoraChat
         */
         public List<T> Data { get; internal set; }
 
+        [Preserve]
         internal PageResult() { }
 
+        [Preserve]
         internal PageResult(string jsonString, ItemCallback callback = null)
         {
             this.callback = callback;
         }
 
+        [Preserve]
         internal PageResult(JSONObject josnObject, ItemCallback callback = null)
         {
             this.callback = callback;
