@@ -146,7 +146,11 @@ namespace AgoraChat
 
             lock (callbackMap)
             {
-                if (!callbackMap.ContainsKey(callbackId)) return;
+                if (!callbackMap.ContainsKey(callbackId))
+                {
+                    Tools.LogError($"callbackId:{callbackId} lost in callbackMap!");
+                    return;
+                }
                 item = callbackMap[callbackId];
             }
 

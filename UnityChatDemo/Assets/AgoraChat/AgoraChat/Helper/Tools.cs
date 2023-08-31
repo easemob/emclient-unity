@@ -9,6 +9,7 @@ namespace AgoraChat
         private static int MIN_RANDOM_SEED = 1;
         private static int MAX_RANDOM_SEED = 10000;
         private static int random_seed = MIN_RANDOM_SEED;
+        private static bool debugMode = false;
 
         internal static int GetRandom()
         {
@@ -49,6 +50,26 @@ namespace AgoraChat
             }
 
             return ret;
+        }
+
+        internal static void SetDebugMode(bool mode)
+        {
+            debugMode = mode;
+        }
+
+        internal static void LogDebug(string info)
+        {
+            if (debugMode) CWrapperNative.LogNativeCall(SDKMethod.client, SDKMethod.logDebug, info);
+        }
+
+        internal static void LogWarn(string info)
+        {
+            if (debugMode) CWrapperNative.LogNativeCall(SDKMethod.client, SDKMethod.logWarn, info);
+        }
+
+        internal static void LogError(string info)
+        {
+            CWrapperNative.LogNativeCall(SDKMethod.client, SDKMethod.logError, info);
         }
     }
 }

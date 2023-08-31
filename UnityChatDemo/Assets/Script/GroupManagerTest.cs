@@ -822,22 +822,35 @@ public class GroupManagerTest : MonoBehaviour
 
     void GetJoinedGroupsFromServerBtnAction()
     {
-        SDKClient.Instance.GroupManager.FetchJoinedGroupsFromServer(0, 20, callback: new ValueCallBack<List<Group>>(
-            onSuccess: (groupList) =>
-            {
-                List<string> list = new List<string>();
-                foreach (var group in groupList)
+        
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            int pageNum = int.Parse(dict["pageNum"] ?? "0");
+            int pageSize = int.Parse(dict["pageSize"] ?? "20");
+
+            SDKClient.Instance.GroupManager.FetchJoinedGroupsFromServer(pageNum, pageSize, needAffiliations:true,  callback: new ValueCallBack<List<Group>>(
+                onSuccess: (groupList) =>
                 {
-                    list.Add(group.GroupId);
+                    List<string> list = new List<string>();
+                    foreach (var group in groupList)
+                    {
+                        list.Add(group.GroupId);
+                    }
+                    string str = string.Join(",", list.ToArray());
+                    UIManager.DefaultAlert(transform, str);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
                 }
-                string str = string.Join(",", list.ToArray());
-                UIManager.DefaultAlert(transform, str);
-            },
-            onError: (code, desc) =>
-            {
-                UIManager.ErrorAlert(transform, code, desc);
-            }
-        ));
+            ));
+        });
+
+        config.AddField("pageSize");
+        config.AddField("pageNum");
+
+        UIManager.DefaultInputAlert(transform, config);
+        
         Debug.Log("GetJoinedGroupsFromServerBtnAction");
     }
 

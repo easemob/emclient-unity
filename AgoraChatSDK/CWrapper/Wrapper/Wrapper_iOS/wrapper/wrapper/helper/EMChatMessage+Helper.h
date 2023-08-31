@@ -21,9 +21,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface EMMessageBody (Helper) <EaseModeToJson>
 + (EMMessageBody *)fromJson:(NSDictionary *)aJson;
 - (NSDictionary *)toJson;
+@end
 
-
-
+@interface EMTextMessageBody (Helper)
++ (EMMessageBody *)fromJson:(NSDictionary *)aJson;
+- (NSDictionary *)toJson;
 @end
 
 NS_ASSUME_NONNULL_END

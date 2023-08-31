@@ -1,5 +1,9 @@
 ﻿using System.Collections.Generic;
 using AgoraChat.SimpleJSON;
+#if !_WIN32
+using UnityEngine.Scripting;
+#endif
+
 namespace AgoraChat
 {
     /**
@@ -9,6 +13,7 @@ namespace AgoraChat
      * \~english
      * The presence property class that contains presence properties, including the publisher's user ID and current presence state, and the platform used by the online device, as well as the presence's extension information, update time, and subscription expiration time.
      */
+    [Preserve]
     public class Presence : BaseModel
     {
 
@@ -27,12 +32,12 @@ namespace AgoraChat
 
         /**
          * \~chinese
-         * 获取当前在线状态的详情。当前在线状态详情由键值对组成，其中 key 表示在线状态发布者使用的设备平台，如“ios”、“android”、“linux”、“windows”或“webbim”，value 表示发布者的当前在线状态。
+         * 获取当前在线状态的详情。当前在线状态详情由键值对组成，其中 key 表示在线状态发布者使用的设备平台，如“ios”、“android”、“linux”、“win”或“webim”，value 表示发布者的当前在线状态。
          *
          * @return 当前在线状态详情。
          *
          *\~english
-         * Gets the details of the current presence state. The presence state details are a key-value structure, where the key can be "ios", "android", "linux", "windows", or "webim", and the value is the current presence state of the publisher.
+         * Gets the details of the current presence state. The presence state details are a key-value structure, where the key can be "ios", "android", "linux", "win", or "webim", and the value is the current presence state of the publisher.
          *
          * @return The details of the current presence state.
          */
@@ -81,10 +86,13 @@ namespace AgoraChat
 
         public long ExpiryTime { get; internal set; }
 
+        [Preserve]
         internal Presence() { }
 
+        [Preserve]
         internal Presence(string jsonString) : base(jsonString) { }
 
+        [Preserve]
         internal Presence(JSONObject jsonObject) : base(jsonObject) { }
 
         internal override void FromJsonObject(JSONObject jo)

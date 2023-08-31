@@ -1,14 +1,21 @@
 ﻿using AgoraChat.SimpleJSON;
 using System.Collections.Generic;
-
+#if !_WIN32
+using UnityEngine.Scripting;
+#endif
 
 namespace AgoraChat
 {
+    [Preserve]
     public abstract class IMessageBody : BaseModel
     {
+        [Preserve]
         public IMessageBody() { }
 
+        [Preserve]
         internal IMessageBody(string jsonString) : base(jsonString) { }
+
+        [Preserve]
         internal IMessageBody(JSONObject jsonObject) : base(jsonObject) { }
 
         internal override JSONObject ToJsonObject()
@@ -21,7 +28,45 @@ namespace AgoraChat
 
             return jo;
         }
+
+        internal void FromJsonObjectToIMessageBody(JSONObject jo)
+        {
+            OperationTime = (long)jo["operationTime"].AsDouble;
+            OperatorId = jo["operatorId"];
+            OperationCount = (long)jo["operationCount"].AsDouble;
+        }
+
         public MessageBodyType Type;
+
+        /**
+         * \~chinese
+         * 最后一次消息修改的 UNIX 时间戳，单位为毫秒（只读）。
+         *
+         * \~english
+         * The UNIX timestamp of the last message modification, in milliseconds (readonly).
+         *
+         */
+        public long OperationTime { get; internal set; }
+
+        /**
+         * \~chinese
+         * 最后一次消息修改的操作者的用户 ID（只读）。
+         *
+         * \~english
+         * The user ID of the operator that modified the message last time (readonly).
+         *
+         */
+        public string OperatorId { get; internal set; }
+
+        /**
+         * \~chinese
+         * 消息发送后的修改次数（只读）。
+         *
+         * \~english
+         * The number of times a message is modified (readonly).
+         *
+         */
+        public long OperationCount { get; internal set; }
     }
 
 
@@ -42,6 +87,7 @@ namespace AgoraChat
          * \~english
          * The text message body.
          */
+        [Preserve]
         public class TextBody : IMessageBody
         {
             /**
@@ -68,7 +114,7 @@ namespace AgoraChat
               * 翻译语种与翻译结果。
               *
               * \~english
-              * Target languages and tranlations.
+              * Target languages and translations.
               * 
               */
             public Dictionary<string, string> Translations;
@@ -84,18 +130,20 @@ namespace AgoraChat
              * 
              * @param text  The text message body.
              */
+            [Preserve]
             public TextBody(string text)
             {
                 Text = text;
                 Type = MessageBodyType.TXT;
             }
 
+            [Preserve]
             internal TextBody()
             {
                 Type = MessageBodyType.TXT;
             }
 
-
+            [Preserve]
             internal TextBody(JSONObject jsonObject) : base(jsonObject)
             {
                 Type = MessageBodyType.TXT;
@@ -128,6 +176,7 @@ namespace AgoraChat
          * \~english
          * The location message body.
          */
+        [Preserve]
         public class LocationBody : IMessageBody
         {
             /**
@@ -135,7 +184,7 @@ namespace AgoraChat
              * 经纬度坐标。
              *
              * \~english
-             * The latitue and longitude.
+             * The latitude and longitude.
              */
             public double Latitude, Longitude;
 
@@ -161,7 +210,7 @@ namespace AgoraChat
              * \~chinese
              * 位置消息体构造方法。
              * 
-             * @param latitue 纬度。
+             * @param latitude 纬度。
              * @param longitude 经度。
              * @param address 地址信息。
              * @param buildName 建筑物名称。
@@ -169,11 +218,12 @@ namespace AgoraChat
              * \~english
              * The location message body constructor.
              * 
-             * @param latitue The latitue.
+             * @param latitude The latitude.
              * @param longitude The longitude.
              * @param address The address.
              * @param buildName The building name.
              */
+            [Preserve]
             public LocationBody(double latitude, double longitude, string address = "", string buildName = "")
             {
                 Latitude = latitude;
@@ -183,16 +233,19 @@ namespace AgoraChat
                 Type = MessageBodyType.LOCATION;
             }
 
+            [Preserve]
             internal LocationBody()
             {
                 Type = MessageBodyType.LOCATION;
             }
 
+            [Preserve]
             internal LocationBody(string jsonString) : base(jsonString)
             {
                 Type = MessageBodyType.LOCATION;
             }
 
+            [Preserve]
             internal LocationBody(JSONObject jsonObject) : base(jsonObject)
             {
                 Type = MessageBodyType.LOCATION;
@@ -227,6 +280,7 @@ namespace AgoraChat
          * \~english
          * The file message body.
          */
+        [Preserve]
         public class FileBody : IMessageBody
         {
             /**
@@ -298,6 +352,7 @@ namespace AgoraChat
              * @param displayName   The display name of the file.
              * @param fileSize      The file size in bytes.
              */
+            [Preserve]
             public FileBody(string localPath, string displayName = "", long fileSize = 0)
             {
                 LocalPath = localPath;
@@ -306,15 +361,19 @@ namespace AgoraChat
                 Type = MessageBodyType.FILE;
             }
 
+            [Preserve]
             internal FileBody()
             {
                 Type = MessageBodyType.FILE;
             }
 
+            [Preserve]
             internal FileBody(string json) : base(json)
             {
                 Type = MessageBodyType.FILE;
             }
+
+            [Preserve]
             internal FileBody(JSONObject jo) : base(jo)
             {
                 Type = MessageBodyType.FILE;
@@ -353,6 +412,7 @@ namespace AgoraChat
          * \~english
          * The image message body.
          */
+        [Preserve]
         public class ImageBody : FileBody
         {
             /**
@@ -371,7 +431,7 @@ namespace AgoraChat
              * \~english
              * The URL where the thumbnail is located on the server.
              */
-            public string ThumbnaiRemotePath;
+            public string ThumbnailRemotePath;
 
             /**
              * \~chinese
@@ -380,7 +440,7 @@ namespace AgoraChat
              * \~english
              * The secret for downloading the thumbnail.
              */
-            public string ThumbnaiSecret;
+            public string ThumbnailSecret;
 
 
             /**
@@ -390,7 +450,7 @@ namespace AgoraChat
              * \~english
              * The status for downloading the thumbnail.
              */
-            public DownLoadStatus ThumbnaiDownStatus = DownLoadStatus.PENDING;
+            public DownLoadStatus ThumbnailDownStatus = DownLoadStatus.PENDING;
             /**
              * \~chinese
              * 图片文件的宽度和高度，单位为像素。
@@ -436,6 +496,7 @@ namespace AgoraChat
              * @param Height        The image height in pixels.
              * 
              */
+            [Preserve]
             public ImageBody(string localPath, string displayName, long fileSize = 0, bool original = false, double width = 0, double height = 0) : base(localPath, displayName, fileSize)
             {
                 Original = original;
@@ -444,16 +505,19 @@ namespace AgoraChat
                 Type = MessageBodyType.IMAGE;
             }
 
-
+            [Preserve]
             internal ImageBody()
             {
                 Type = MessageBodyType.IMAGE;
             }
 
+            [Preserve]
             internal ImageBody(string json) : base(json)
             {
                 Type = MessageBodyType.IMAGE;
             }
+
+            [Preserve]
             internal ImageBody(JSONObject jo) : base(jo)
             {
                 Type = MessageBodyType.IMAGE;
@@ -465,9 +529,9 @@ namespace AgoraChat
 
                 JSONObject jo_body = jo["body"].AsObject;
                 jo_body.AddWithoutNull("thumbnailLocalPath", ThumbnailLocalPath ?? "");
-                jo_body.AddWithoutNull("thumbnailRemotePath", ThumbnaiRemotePath ?? "");
-                jo_body.AddWithoutNull("thumbnailSecret", ThumbnaiSecret ?? "");
-                jo_body.AddWithoutNull("thumbnailStatus", ThumbnaiDownStatus.ToInt());
+                jo_body.AddWithoutNull("thumbnailRemotePath", ThumbnailRemotePath ?? "");
+                jo_body.AddWithoutNull("thumbnailSecret", ThumbnailSecret ?? "");
+                jo_body.AddWithoutNull("thumbnailStatus", ThumbnailDownStatus.ToInt());
                 jo_body.AddWithoutNull("height", Height);
                 jo_body.AddWithoutNull("width", Width);
                 jo_body.AddWithoutNull("sendOriginalImage", Original);
@@ -479,9 +543,9 @@ namespace AgoraChat
             {
                 base.FromJsonObject(jo);
                 ThumbnailLocalPath = jo["thumbnailLocalPath"].Value;
-                ThumbnaiRemotePath = jo["thumbnailRemotePath"].Value;
-                ThumbnaiSecret = jo["thumbnailSecret"].Value;
-                ThumbnaiDownStatus = jo["thumbnailStatus"].AsInt.ToDownLoadStatus();
+                ThumbnailRemotePath = jo["thumbnailRemotePath"].Value;
+                ThumbnailSecret = jo["thumbnailSecret"].Value;
+                ThumbnailDownStatus = jo["thumbnailStatus"].AsInt.ToDownLoadStatus();
                 Height = jo["height"].AsDouble;
                 Width = jo["width"].AsDouble;
                 Original = jo["sendOriginalImage"].AsBool;
@@ -495,6 +559,8 @@ namespace AgoraChat
          * \~english
          * The voice message body.
          */
+
+        [Preserve]
         public class VoiceBody : FileBody
         {
             /**
@@ -523,21 +589,26 @@ namespace AgoraChat
              * @param fileSize      The size of the voice file, in bytes.
              * 
              */
+            [Preserve]
             public VoiceBody(string localPath, string displayName, int duration, long fileSize = 0) : base(localPath, displayName, fileSize)
             {
                 Duration = duration;
                 Type = MessageBodyType.VOICE;
             }
 
+            [Preserve]
             internal VoiceBody()
             {
                 Type = MessageBodyType.VOICE;
             }
 
+            [Preserve]
             internal VoiceBody(string json) : base(json)
             {
                 Type = MessageBodyType.VOICE;
             }
+
+            [Preserve]
             internal VoiceBody(JSONObject jo) : base(jo)
             {
                 Type = MessageBodyType.VOICE;
@@ -567,6 +638,7 @@ namespace AgoraChat
          * \~english
          * The video message body.
          */
+        [Preserve]
         public class VideoBody : FileBody
         {
             /**
@@ -585,7 +657,7 @@ namespace AgoraChat
              * \~english
              * The URL of the video thumbnail.
              */
-            public string ThumbnaiRemotePath;
+            public string ThumbnailRemotePath;
 
             /**
              * \~chinese
@@ -594,7 +666,7 @@ namespace AgoraChat
              * \~english
              * The secret for downloading the thumbnail.
              */
-            public string ThumbnaiSecret;
+            public string ThumbnailSecret;
 
 
             /**
@@ -604,7 +676,7 @@ namespace AgoraChat
              * \~english
              * The status for downloading the thumbnail.
              */
-            public DownLoadStatus ThumbnaiDownStatus = DownLoadStatus.PENDING;
+            public DownLoadStatus ThumbnailDownStatus = DownLoadStatus.PENDING;
             /**
              * \~chinese
              * 视频的宽度和高度，单位为像素。
@@ -647,6 +719,7 @@ namespace AgoraChat
              * @param Height        The video height in pixels.
              * 
              */
+            [Preserve]
             public VideoBody(string localPath, string displayName, int duration, long fileSize = 0, string thumbnailLocalPath = "", double width = 0, double height = 0) : base(localPath, displayName, fileSize)
             {
                 Duration = duration;
@@ -656,15 +729,19 @@ namespace AgoraChat
                 Type = MessageBodyType.VIDEO;
             }
 
+            [Preserve]
             internal VideoBody()
             {
                 Type = MessageBodyType.VIDEO;
             }
 
+            [Preserve]
             internal VideoBody(string json) : base(json)
             {
                 Type = MessageBodyType.VIDEO;
             }
+
+            [Preserve]
             internal VideoBody(JSONObject jo) : base(jo)
             {
                 Type = MessageBodyType.VIDEO;
@@ -675,10 +752,10 @@ namespace AgoraChat
                 JSONObject jo = base.ToJsonObject();
 
                 JSONObject jo_body = jo["body"].AsObject;
-                jo_body.AddWithoutNull("thumbnailRemotePath", ThumbnaiRemotePath ?? "");
-                jo_body.AddWithoutNull("thumbnailSecret", ThumbnaiSecret ?? "");
+                jo_body.AddWithoutNull("thumbnailRemotePath", ThumbnailRemotePath ?? "");
+                jo_body.AddWithoutNull("thumbnailSecret", ThumbnailSecret ?? "");
                 jo_body.AddWithoutNull("thumbnailLocalPath", ThumbnaiLocationPath ?? "");
-                jo_body.AddWithoutNull("thumbnailStatus", ThumbnaiDownStatus.ToInt());
+                jo_body.AddWithoutNull("thumbnailStatus", ThumbnailDownStatus.ToInt());
                 jo_body.AddWithoutNull("height", Height);
                 jo_body.AddWithoutNull("width", Width);
                 jo_body.AddWithoutNull("duration", Duration);
@@ -689,10 +766,10 @@ namespace AgoraChat
             internal override void FromJsonObject(JSONObject jo)
             {
                 base.FromJsonObject(jo);
-                ThumbnaiRemotePath = jo["thumbnailRemotePath"];
-                ThumbnaiSecret = jo["thumbnailSecret"];
+                ThumbnailRemotePath = jo["thumbnailRemotePath"];
+                ThumbnailSecret = jo["thumbnailSecret"];
                 ThumbnaiLocationPath = jo["thumbnailLocalPath"];
-                ThumbnaiDownStatus = jo["thumbnailStatus"].AsInt.ToDownLoadStatus();
+                ThumbnailDownStatus = jo["thumbnailStatus"].AsInt.ToDownLoadStatus();
                 Height = jo["height"].AsDouble;
                 Width = jo["width"].AsDouble;
                 Duration = jo["duration"].AsInt;
@@ -706,6 +783,7 @@ namespace AgoraChat
          * \~english
          * The command message body.
          */
+        [Preserve]
         public class CmdBody : IMessageBody
         {
             /**
@@ -744,6 +822,7 @@ namespace AgoraChat
              *                              - (Default) `false`: No. The command message is delivered to users, regardless of their online or offline status.
              * 
              */
+            [Preserve]
             public CmdBody(string action, bool deliverOnlineOnly = false)
             {
                 Action = action;
@@ -751,15 +830,19 @@ namespace AgoraChat
                 Type = MessageBodyType.CMD;
             }
 
+            [Preserve]
             internal CmdBody()
             {
                 Type = MessageBodyType.CMD;
             }
 
+            [Preserve]
             internal CmdBody(string json) : base(json)
             {
                 Type = MessageBodyType.CMD;
             }
+
+            [Preserve]
             internal CmdBody(JSONObject jo) : base(jo)
             {
                 Type = MessageBodyType.CMD;
@@ -791,6 +874,7 @@ namespace AgoraChat
          * \~english
          * The custom message body.
          */
+        [Preserve]
         public class CustomBody : IMessageBody
         {
             /**
@@ -825,6 +909,7 @@ namespace AgoraChat
              * @param customParams     The custom params map.
              * 
              */
+            [Preserve]
             public CustomBody(string customEvent, Dictionary<string, string> customParams = null)
             {
                 CustomEvent = customEvent;
@@ -832,15 +917,19 @@ namespace AgoraChat
                 Type = MessageBodyType.CUSTOM;
             }
 
+            [Preserve]
             internal CustomBody()
             {
                 Type = MessageBodyType.CUSTOM;
             }
 
+            [Preserve]
             internal CustomBody(string json) : base(json)
             {
                 Type = MessageBodyType.CUSTOM;
             }
+
+            [Preserve]
             internal CustomBody(JSONObject jo) : base(jo)
             {
                 Type = MessageBodyType.CUSTOM;
@@ -863,7 +952,134 @@ namespace AgoraChat
                 CustomParams = Dictionary.StringDictionaryFromJsonObject(jo["params"]);
             }
         }
+
+        /**
+         * \~chinese
+         * 合并消息体。
+         *
+         * \~english
+         * The body of the combined message.
+         */
+        [Preserve]
+        public class CombineBody : IMessageBody
+        {
+            /**
+             * \~chinese
+             * 合并消息的标题。
+             *
+             * \~english
+             * The title of the combined message.
+             */
+            public string Title;
+
+            /**
+             * \~chinese
+             * 合并消息的概要。
+             *
+             * \~english
+             * The summary of the combined message.
+             */
+            public string Summary;
+
+            /**
+             * \~chinese
+             * 合并消息的兼容文本信息。
+             *
+             * \~english
+             * The compatible text of the combined message.
+             */
+            public string CompatibleText;
+
+            /**
+             * \~chinese
+             * 合并消息包含的原始消息 ID 列表。
+             *
+             * \~english
+             * The list of original messages included in the combined message.
+             */
+            public List<string> MessageList;
+
+            internal string RemotePath;
+            internal string Secret;
+            internal string LocalPath;
+
+            /**
+             * \~chinese
+             * 合并消息体构造方法。
+             *
+             * @param title             合并消息的标题。
+             * @param summary           合并消息的概要。
+             * @param compatibleText    合并消息的兼容信息。
+             * @param messageList       合并消息包含的原始消息 ID 列表。
+             *
+             * \~english
+             * The constructor of the combined message body.
+             *
+             * @param title             The title of the combined message.
+             * @param summary           The summary of the combined message.
+             * @param messageList       The list of IDs of original messages included in the combined message.
+             *
+             */
+            [Preserve]
+            public CombineBody(string title, string summary, string compatibleText, List<string> messageList)
+            {
+                Type = MessageBodyType.COMBINE;
+
+                Title = title;
+                Summary = summary;
+                CompatibleText = compatibleText;
+                MessageList = messageList;
+            }
+
+            [Preserve]
+            internal CombineBody()
+            {
+                Type = MessageBodyType.COMBINE;
+            }
+
+            [Preserve]
+            internal CombineBody(string json) : base(json)
+            {
+                Type = MessageBodyType.COMBINE;
+            }
+
+            [Preserve]
+            internal CombineBody(JSONObject jo) : base(jo)
+            {
+                Type = MessageBodyType.COMBINE;
+            }
+
+            internal override JSONObject ToJsonObject()
+            {
+                JSONObject jo = base.ToJsonObject();
+                JSONObject jo_body = jo["body"].AsObject;
+
+                jo_body.AddWithoutNull("remotePath", RemotePath);
+                jo_body.AddWithoutNull("secret", Secret);
+                jo_body.AddWithoutNull("localPath", LocalPath);
+
+                jo_body.AddWithoutNull("title", Title);
+                jo_body.AddWithoutNull("summary", Summary);
+                jo_body.AddWithoutNull("compatibleText", CompatibleText);
+                jo_body.AddWithoutNull("messageList", JsonObject.JsonArrayFromStringList(MessageList));
+
+                return jo;
+            }
+
+            internal override void FromJsonObject(JSONObject jo)
+            {
+                RemotePath = jo["remotePath"];
+                Secret = jo["secret"];
+                LocalPath = jo["localPath"];
+
+                Title = jo["title"];
+                Summary = jo["summary"];
+                CompatibleText = jo["compatibleText"];
+                MessageList = List.StringListFromJsonArray(jo["messageList"]);
+            }
+        }
     }
+
 }
 
 

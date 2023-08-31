@@ -1,4 +1,7 @@
 ﻿using AgoraChat.SimpleJSON;
+#if !_WIN32
+using UnityEngine.Scripting;
+#endif
 
 namespace AgoraChat
 {
@@ -14,6 +17,7 @@ namespace AgoraChat
      * 
      * To get basic information of a group from the server, you can call {@link IGroupManager#FetchPublicGroupsFromServer(int, String, ValueCallBack)}.
      */
+    [Preserve]
     public class GroupInfo : BaseModel
     {
         /**
@@ -34,10 +38,13 @@ namespace AgoraChat
 	     */
         public string GroupName { get; internal set; }
 
+        [Preserve]
         internal GroupInfo() { }
 
+        [Preserve]
         internal GroupInfo(string jsonString) : base(jsonString) { }
 
+        [Preserve]
         internal GroupInfo(JSONObject jsonObject) : base(jsonObject) { }
 
         internal override void FromJsonObject(JSONObject jsonObject)

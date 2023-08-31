@@ -1,6 +1,5 @@
 package com.hyphenate.wrapper;
 
-import com.hyphenate.EMGroupChangeListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCursorResult;
 import com.hyphenate.chat.EMGroup;
@@ -125,6 +124,12 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
             ret = acceptInvitationFromGroup(jsonObject, callback);
         } else if (EMSDKMethod.declineInvitationFromGroup.equals(method)) {
             ret = declineInvitationFromGroup(jsonObject, callback);
+        } else if (EMSDKMethod.getJoinedGroupsFromServerSimple.equals(method)) {
+            ret = getJoinedGroupsFromServerSimple(jsonObject, callback);
+        } else if (EMSDKMethod.setMemberAttributes.equals(method)) {
+            ret = setMemberAttributes(jsonObject, callback);
+        } else if (EMSDKMethod.fetchMemberAttributes.equals(method)) {
+            ret = fetchMemberAttributes(jsonObject, callback);
         } else {
             ret = super.onMethodCall(method, jsonObject, callback);
         }
@@ -171,8 +176,8 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
         }
 
         boolean needMemberCount = false;
-        if (params.has("needMemberCount")) {
-            needMemberCount = params.getBoolean("needMemberCount");
+        if (params.has("needAffiliations")) {
+            needMemberCount = params.getBoolean("needAffiliations");
         }
 
         boolean needRole = false;
@@ -984,6 +989,71 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
 
         return null;
     }
+
+    private String getJoinedGroupsFromServerSimple(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        int pageSize = 0;
+        if (params.has("pageSize")){
+            pageSize = params.getInt("pageSize");
+        }
+        int pageNum = 0;
+        if (params.has("pageNum")){
+            pageNum = params.getInt("pageNum");
+        }
+
+        EMCommonValueCallback<List<EMGroup>> callBack = new EMCommonValueCallback<List<EMGroup>>(callback) {
+            @Override
+            public void onSuccess(List<EMGroup> object) {
+                JSONArray arrayList = new JSONArray();
+                try {
+                    for (EMGroup group : object) {
+                        arrayList.put(EMGroupHelper.toJson(group));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    updateObject(arrayList);
+                }
+            }
+        };
+
+        EMClient.getInstance().groupManager().asyncGetJoinedGroupsFromServer(pageNum, pageSize,callBack);
+        return null;
+    }
+
+    private String setMemberAttributes(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        String groupId = params.getString("groupId");
+        String userId = params.getString("userId");
+        JSONObject attrs = params.optJSONObject("attrs");
+        Map<String, String> map = EMHelper.getMapStrStrFromJsonObject(attrs);
+        EMClient.getInstance().groupManager().asyncSetGroupMemberAttributes(groupId, userId, map, new EMCommonCallback(callback));
+        return null;
+    }
+
+    private String fetchMemberAttributes(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        String groupId = params.getString("groupId");
+        JSONArray usersJa = params.getJSONArray("userIds");
+        JSONArray attrsJa = params.getJSONArray("attrs");
+        List<String> userIds = EMHelper.stringListFromJsonArray(usersJa);
+        List<String> attrs = EMHelper.stringListFromJsonArray(attrsJa);
+        EMClient.getInstance().groupManager().asyncFetchGroupMembersAttributes(groupId, userIds, attrs, new EMCommonValueCallback<Map<String, java.util.Map<String, String>>>(callback){
+            @Override
+            public void onSuccess(Map<String, Map<String, String>> object) {
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    for (Map.Entry<String, Map<String,String>> entry: object.entrySet()) {
+                        JSONObject tmpObject = new JSONObject();
+                        for (Map.Entry<String,String> entry1: entry.getValue().entrySet()) {
+                            tmpObject.put(entry1.getKey(), entry1.getValue());
+                        }
+                        jsonObject.put(entry.getKey(), tmpObject);
+                    }
+                    updateObject(jsonObject);
+                }catch (JSONException e) {}
+            }
+        });
+        return null;
+    }
+
     
     private void registerEaseListener(){
         wrapperGroupListener = new EMWrapperGroupListener();

@@ -25,7 +25,7 @@ namespace sdk_wrapper {
             CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onConnected.c_str(), info.c_str());
         }
 
-        void onDisconnect(EMErrorPtr error) override
+        void onDisconnect(EMErrorPtr error, const std::string& info) override
         {
             string json = "";
 
@@ -51,7 +51,15 @@ namespace sdk_wrapper {
                 break;
             case EMError::USER_LOGIN_ANOTHER_DEVICE:
             case EMError::USER_DEVICE_CHANGED:
-                CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onLoggedOtherDevice.c_str(), json.c_str());
+                {
+                    JSON_STARTOBJ
+                    writer.Key("deviceName");
+                    writer.String(info.c_str());
+                    JSON_ENDOBJ
+
+                    json = s.GetString();
+                    CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onLoggedOtherDevice.c_str(), json.c_str());
+                }
                 break;
             case EMError::SERVER_SERVING_DISABLED:
                 CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onForbidByServer.c_str(), json.c_str());
@@ -143,6 +151,26 @@ namespace sdk_wrapper {
                 CallBack(STRING_CHATMANAGER_LISTENER.c_str(), STRING_onConversationRead.c_str(), json.c_str());
         }
 
+        void onMessageContentChanged(const EMMessagePtr message, const std::string operatorId, uint64_t operationTime) override {
+
+            JSON_STARTOBJ
+            writer.Key("msg");
+            Message::ToJsonObjectWithMessage(writer, message);
+
+            writer.Key("operatorId");
+            writer.String(operatorId.c_str());
+
+            writer.Key("operationTime");
+            writer.Uint64(operationTime);
+
+            JSON_ENDOBJ
+
+            string json = s.GetString();
+
+            if (json.size() > 0)
+                CallBack(STRING_CHATMANAGER_LISTENER.c_str(), STRING_onMessageContentChanged.c_str(), json.c_str());
+        }
+
         void onMessageIdChanged(const string& conversationId, const string& oldMsgId, const string& newMsgId) override {
             /*
             JSON_STARTOBJ
@@ -223,7 +251,34 @@ namespace sdk_wrapper {
 
         void onRoamDeleteMultiDevicesEvent(const std::string& conversationId, const std::string& deviceId, const std::vector<std::string>& msgIdList, int64_t beforeTimeStamp)
         {
-            //No need to implement
+            JSON_STARTOBJ
+            writer.Key("operation");
+            writer.Int(MultiDevices::MultiDevicesOperationToInt(MultiDevicesOperation::UNKNOW));
+            writer.Key("convId");
+            writer.String(conversationId.c_str());
+            writer.Key("deviceId");
+            writer.String(deviceId.c_str());
+            JSON_ENDOBJ
+            string json = s.GetString();
+
+            if (json.size() > 0)
+                CallBack(STRING_MULTIDEVICE_LISTENER.c_str(), STRING_onRoamDeleteMultiDevicesEvent.c_str(), json.c_str());
+        }
+
+        void onConversationMultiDevicesEvent(MultiDevicesOperation operation, const std::string& conversationId, EMConversation::EMConversationType type)
+        {
+            JSON_STARTOBJ
+            writer.Key("operation");
+            writer.Int(MultiDevices::MultiDevicesOperationToInt(operation));
+            writer.Key("convId");
+            writer.String(conversationId.c_str());
+            writer.Key("type");
+            writer.Int(Conversation::ConversationTypeToInt(type));
+            JSON_ENDOBJ
+                string json = s.GetString();
+
+            if (json.size() > 0)
+                CallBack(STRING_MULTIDEVICE_LISTENER.c_str(), STRING_onConversationMultiDevicesEvent.c_str(), json.c_str());
         }
     };
 

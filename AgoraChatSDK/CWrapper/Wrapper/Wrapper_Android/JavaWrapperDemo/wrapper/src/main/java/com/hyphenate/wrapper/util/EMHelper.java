@@ -5,10 +5,30 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+
 public class EMHelper {
+
+    public static  Map<String, String> getMapStrStrFromJsonObject(JSONObject jsonObject)  {
+
+        HashMap<String, String> map = new HashMap<>();
+        if (jsonObject == null) {
+            return map;
+        }
+        Iterator<String> iterator = jsonObject.keys();
+        try {
+            while (iterator.hasNext()) {
+                String key = iterator.next();
+                map.put(key, jsonObject.getString(key));
+            }
+        }catch (JSONException e){}
+
+        return map;
+    }
 
     public static JSONArray stringListToJsonArray(List<String> list){
         if (list == null) {
@@ -24,6 +44,10 @@ public class EMHelper {
 
     public static List<String> stringListFromJsonArray(JSONArray jsonArray) {
         ArrayList<String> list = new ArrayList<>();
+        if (jsonArray == null) {
+            return list;
+        }
+
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 String str = jsonArray.getString(i);
@@ -37,11 +61,11 @@ public class EMHelper {
     }
 
     public static JSONObject stringMapToJsonObject(Map<String, String> map) throws JSONException{
+        JSONObject jsonObject = new JSONObject();
         if (map == null) {
-            return null;
+            return jsonObject;
         }
 
-        JSONObject jsonObject = new JSONObject();
         for (Map.Entry<String, String> entry: map.entrySet()) {
             jsonObject.put(entry.getKey(), entry.getValue());
         }
@@ -72,10 +96,10 @@ public class EMHelper {
         return jsonObject;
     }
 
-    public static JSONObject getReturnJsonObject(Object jsonObject) throws JSONException{
+    public static JSONObject getReturnJsonObject(Object obj) throws JSONException{
         JSONObject jo = new JSONObject();
-        if (jsonObject != null) {
-            jo.put("ret", jsonObject);
+        if (obj != null) {
+            jo.put("ret", obj);
         }
         return jo;
     }

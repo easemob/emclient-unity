@@ -2,6 +2,7 @@
 using AgoraChat.SimpleJSON;
 #if !_WIN32
 using UnityEngine;
+using UnityEngine.Scripting;
 #endif
 
 namespace AgoraChat
@@ -13,6 +14,7 @@ namespace AgoraChat
      * \~english
      * The chat setting class that defines parameters and options of the SDK, including whether to automatically accept friend invitations and whether to automatically download the thumbnail.
      */
+    [Preserve]
     public class Options : BaseModel
     {
         /**
@@ -106,8 +108,8 @@ namespace AgoraChat
          * - （默认） `false`: SDK 不输出调试信息。
          *
          * \~english
-         * Whether to output the debug information.
-         * - `true`: Yes. The debug information will be output as logs.
+         * Whether to output the debug information as logs.
+         * - `true`: Yes.
          * - (Default) `false`: No.
          */
         public bool DebugMode = false;
@@ -198,7 +200,7 @@ namespace AgoraChat
          *
          * \~english
 	     * Whether to delete the historical messages of the chat room in the memory and local database when leaving the chat room (either voluntarily or passively).
-	     * - (Default)` true`: Yes.
+	     * - (Default) `true`: Yes.
 	     * - `false`: No.
          */
         public bool DeleteMessagesAsExitRoom = true;
@@ -250,7 +252,7 @@ namespace AgoraChat
 	     *
 	     * \~english
 	     * Whether to upload the message attachments automatically to the chat server.
-	     * - (Default)`true`: Yes;
+	     * - (Default) `true`: Yes;
 	     * - `false`: No.
 	     */
         public bool ServerTransfer = true;
@@ -269,47 +271,105 @@ namespace AgoraChat
 	     */
         public bool IsAutoDownload = true;
 
+        /**
+	     * \~chinese
+	     * 从数据库加载会话时，是否允许加载空会话。
+	     * - `true`：是；
+	     * - （默认）`false`：否。
+	     *
+	     * \~english
+	     * Whether to include empty conversations while loading conversations from the database.
+	     * -`true`: Yes;
+	     * -(Default) `false`: No.
+	     *
+	     */
+        public bool EnableEmptyConversation = false;
+
+        /**
+         *  \~chinese
+         *  自定义系统类型。
+         *
+         *  \~english
+         *  The custom system type.
+         */
+        public int CustomOSType = -1;
+
+        /**
+         *  \~chinese
+         *  自定义设备名称。
+         *
+         *  \~english
+         *  The custom device name.
+         *
+         */
+        public string CustomDeviceName = "";
 
         /**
 	     * \~chinese
-	     * 设置区域代号，使用边缘节点时遵循区域限制
-	     * -（默认）`GLOB`: 不限制区域。
+	     * 设置区域代号，使用边缘节点时遵循区域限制。
+	     *
+	     * （默认）`GLOB`: 不限制区域。
 	     *
 	     * \~english
-	     * Sets area code, will follow the area when using edge node.
-	     * - (Default)`GLOB`: glob.
+	     * The area code.
+         *
+         * Restrictions of the area should be followed when edge nodes are used.
+         *
+	     * (Default) `GLOB`: No restrictions will be applied when you try to access the server node.
 	     */
         public AreaCode AreaCode = AreaCode.GLOB;
 
         /**
         * \~chinese
-        * 设置当前设备UUID
+        * 当前设备的 UUID。
         *
         * \~english
-        * Sets UUID for current device.
+        * The UUID for the current device.
         */
         public string MyUUID = "";
 
         /**
         * \~chinese
-        * 设置SDK底层数据存储路径。仅用于MacOS和Windows平台端。
-        * 如果未设置，则由SDK设置为缺省路径。
+        * 设置 SDK 底层数据存储路径。仅用于 MacOS 和 Windows 平台端。
+        *
+        * 如果未设置，则由 SDK 设置为缺省路径。
+        *
+        * 注意：
+        * 对于 Unity SDK，在 1.1.2 版本之前，SDKDataPath 为当前路径，即 "."，从 1.1.2 开始变更为持久化目录 Application.persistentDataPath，
+        * 若从 1.1.2 之前的 SDK 版本进行升级，而且需要保留本地历史消息，可使用以下两种方式：
+        * - 方式一：将 SDKDataPath 设置为当前路径，即 "."；
+        * - 方式二：将原来当前路径下的 sdkdata 文件夹拷贝到 Application.persistentDataPath 中。
+        * 对于 Windows SDK，SDKDataPath 仍使用缺省的当前路径，即 "."。
+        *
         *
         * 举例如下:
         * MacOS: /Users/UserName/Library/Application Support/DefaultCompany/xxx
         * Windows: C:/Users/UserName/AppData/LocalLow/DefaultCompany/xxx
         *
-        * 最后以文件夹结尾，无需“/”
+        * 若数据存储路径以文件夹结尾，无需添加 “/”。
+        *
+        * 注意: 在 MacOS 下，如果使用相对路径设置 `SDKDatapath`，必须使用"."开头，例如: "./sdkdatapath"。
         *
         * \~english
-        * Sets persistent path for SDK data. Only used for MacOS and Windows platform.
-        * If not set, then SDK with set with default value.
+        * The underlying storage path for SDK data. The storage path is used only for MacOS and Windows platforms.
+        *
+        * If this parameter is not set, the SDK will set the default value.
+        *
+        * Note:
+        * For the Unity SDK, prior to v1.1.2, SDKDataPath was set to the current path ".".
+        * Starting from v1.1.2, this path has been changed to the persistent directory Application.persistentDataPath.
+        * If you are upgrading from an SDK version earlier than v1.1.2 and need to retain the local historical messages, there are two methods:
+        * - Method 1: Set SDKDataPath to the current path ".".
+        * - Method 2: Copy the sdkdata folder in the original current path to the persistent directory Application.persistentDataPath.
+        * For the Windows SDK, SDKDataPath still uses the current path ".".
         *
         * For example:
         * MacOS: /Users/UserName/Library/Application Support/DefaultCompany/xxx
         * Windows: C:/Users/UserName/AppData/LocalLow/DefaultCompany/xxx
         *
-        * End with folder name, no need to append "/"
+        * If the data storage path ends with a folder name, it is unnecessary to appended "/" to the end of the path.
+        *
+        * Note: For MacOS, if you set `SDKDatapath` to a relative path, the path must start with ".", for example "./sdkdatapath".
         */
         public string SDKDataPath = "";
 
@@ -324,6 +384,7 @@ namespace AgoraChat
         *
         * @param appKey  The App Key.
         */
+        [Preserve]
         public Options(string appKey)
         {
             AppKey = appKey;
@@ -355,9 +416,13 @@ namespace AgoraChat
         // HuaWei
         private bool enableHWPush = false;
         */
-
+        [Preserve]
         internal Options() { }
+
+        [Preserve]
         internal Options(bool is_json, string json) : base(json) { }
+
+        [Preserve]
         internal Options(JSONObject jo) : base(jo) { }
 
         internal override void FromJsonObject(JSONObject jo) { }
@@ -382,6 +447,10 @@ namespace AgoraChat
             jo.AddWithoutNull("areaCode", (int)AreaCode);
             jo.AddWithoutNull("enableDnsConfig", EnableDNSConfig);
             jo.AddWithoutNull("myUUID", MyUUID);
+            jo.AddWithoutNull("enableEmptyConversation", EnableEmptyConversation);
+            jo.AddWithoutNull("customOSType", CustomOSType);
+            jo.AddWithoutNull("customDeviceName", CustomDeviceName);
+
 
             if (SDKDataPath.Length == 0)
             {

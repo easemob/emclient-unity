@@ -1,5 +1,9 @@
 ﻿using System.Collections.Generic;
 using AgoraChat.SimpleJSON;
+#if !_WIN32
+using UnityEngine.Scripting;
+#endif
+
 namespace AgoraChat
 {
     /**
@@ -19,6 +23,7 @@ namespace AgoraChat
     *   UserList: The list of users that added the Reaction.
     *   State: Whether the current user added this Reaction.
     */
+    [Preserve]
     public class MessageReaction : BaseModel
     {
         /**
@@ -28,7 +33,7 @@ namespace AgoraChat
          * \~english
          * Gets the Reaction.
          */
-        public string Rection;
+        public string Reaction;
 
         /**
          * \~chinese
@@ -72,15 +77,18 @@ namespace AgoraChat
          */
         public bool State;
 
+        [Preserve]
         internal MessageReaction() { }
 
+        [Preserve]
         internal MessageReaction(string jsonString) : base(jsonString) { }
 
+        [Preserve]
         internal MessageReaction(JSONObject jsonObject) : base(jsonObject) { }
 
         internal override void FromJsonObject(JSONObject jsonObject)
         {
-            Rection = jsonObject["reaction"];
+            Reaction = jsonObject["reaction"];
             Count = jsonObject["count"].AsInt;
             UserList = List.StringListFromJsonArray(jsonObject["userList"]);
             State = jsonObject["isAddedBySelf"].AsBool;
@@ -89,7 +97,7 @@ namespace AgoraChat
         internal override JSONObject ToJsonObject()
         {
             JSONObject jo = new JSONObject();
-            jo.AddWithoutNull("reaction", Rection);
+            jo.AddWithoutNull("reaction", Reaction);
             jo.AddWithoutNull("count", Count);
             jo.AddWithoutNull("userList", JsonObject.JsonArrayFromStringList(UserList));
             jo.AddWithoutNull("isAddedBySelf", State);

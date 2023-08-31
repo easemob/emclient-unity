@@ -102,4 +102,12 @@ namespace AgoraChat
 #endif
     }
 #endif
+
+#if _WIN32
+    [AttributeUsage(AttributeTargets.All, Inherited = false, AllowMultiple = true)]
+    public class PreserveAttribute : Attribute
+    {
+        // Empty attribute
+    }
+#endif
 }

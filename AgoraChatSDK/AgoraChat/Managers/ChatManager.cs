@@ -202,9 +202,9 @@ namespace AgoraChat
 
         /**
 	     * \~chinese
-	     * 根据FetchServerMessagesOption从服务器获取历史消息。
+	     * 根据根据消息拉取参数配置类 `FetchServerMessagesOption` 从服务器分页获取历史消息。
 	     *
-	     * 分页获取。
+         * 分页获取历史消息。
 	     *
 	     * 异步方法。
 	     *
@@ -216,9 +216,9 @@ namespace AgoraChat
 	     * @param callback              结果回调，返回消息列表。
 	     *
 	     * \~english
-	     * Basing on FetchServerMessagesOption to get historical messages of the conversation from the server.
+	     * Gets historical messages of a conversation from the server according the parameter configuration class for pulling historical messages `FetchServerMessagesOption`.
 	     *
-	     * Historical messages of a conversation can also be obtained with pagination.
+	     * Historical messages of a conversation can be obtained with pagination.
 	     *
 	     * This is an asynchronous method.
 	     *
@@ -227,7 +227,7 @@ namespace AgoraChat
 	     * @param cursor                The cursor position from which to start querying data.
 	     * @param pageSize              The number of messages that you expect to get on each page. The value range is [1,50].
 	     * @param option                The parameter configuration class for pulling historical messages from the server. See {@link FetchServerMessagesOption}.
-	     * @param callback				The result callback. Returns the list of obtained messages.
+	     * @param callback				The result callback. The SDK returns the list of obtained messages.
 	     */
         public void FetchHistoryMessagesFromServerBy(string conversationId, ConversationType type = ConversationType.Chat, string cursor = null, int pageSize = 10, FetchServerMessagesOption option = null, ValueCallBack<CursorResult<Message>> callback = null)
         {
@@ -333,12 +333,13 @@ namespace AgoraChat
 	     * @param callback    获取的会话列表，详见 {@link ValueCallBack}。
 	     *
 	     * \~english
-	     * Gets the all conversations from the server.
+	     * Gets all conversations from the server.
 	     * 
 	     * An empty list will be returned if no conversation is found.
 	     *
-	     * @param callback    The list of obtained coversations. See {@link ValueCallBack}.
+	     * @param callback    The list of obtained conversations. See {@link ValueCallBack}.
 	     */
+        [Obsolete]
         public void GetConversationsFromServer(ValueCallBack<List<Conversation>> callback = null)
         {
             Process process = (_, jsonNode) =>
@@ -351,6 +352,49 @@ namespace AgoraChat
 
         /**
 	     * \~chinese
+	     * 根据指定参数从服务器获取相关会话对象。
+	     *
+	     * @param pinOnly     是否只获取置顶会话：
+         * - `true`：是。只获取置顶会话。SDK 按照会话置顶时间倒序返回。
+         * - `false`：否。
+	     * @param cursor      开始获取数据的游标位置。
+	     * @param limit       每页返回的会话数。取值范围为 [1,50]。
+	     * @param callback    获取的会话列表，详见 {@link ValueCallBack}。
+	     *
+	     * \~english
+	     * Gets the conversations from the server.
+	     *
+	     * @param pingOnly    Whether to return pinned conversations only:
+         * - `true`: Yes. The SDK only returns pinned conversations in the reverse chronological order of their pinning.
+         * - `false`: No.
+         *
+	     * @param cursor      The position from which to start getting data.
+	     * @param limit       The number of conversations that you expect to get on each page. The value range is [1,50].
+	     * @param callback    The list of obtained conversations. See {@link ValueCallBack}.
+	     */
+        public void GetConversationsFromServerWithCursor(bool pinOnly, string cursor = "", int limit = 20, ValueCallBack<CursorResult<Conversation>> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("pinOnly", pinOnly);
+            jo_param.AddWithoutNull("cursor", cursor);
+            jo_param.AddWithoutNull("limit", limit);
+
+            Process process = (_, jsonNode) =>
+            {
+                CursorResult<Conversation> cursor_conversation = new CursorResult<Conversation>(_, (jn) =>
+                {
+                    return ModelHelper.CreateWithJsonObject<Conversation>(jn);
+                });
+
+                cursor_conversation.FromJsonObject(jsonNode.AsObject);
+                return cursor_conversation;
+            };
+
+            NativeCall<CursorResult<Conversation>>(SDKMethod.getConversationsFromServerWithCursor, jo_param, callback, process);
+        }
+
+        /**
+	     * \~chinese
 	     * 获取未读消息数。
 		 * 
 	     * @return		未读消息数。
@@ -358,6 +402,7 @@ namespace AgoraChat
 	     *
 	     * \~english
 	     * Gets the unread message count.
+	     *
 	     * @return		The count of unread messages.
 	     *
 	     */
@@ -409,18 +454,21 @@ namespace AgoraChat
 		 * 
 	     * 一般情况下，该方法在成功登录后调用，以提升会话列表的加载速度。
 	     * 
-	     * @return		加载的会话列表。
+	     * @return            加载的会话列表。
 	     *
 	     * \~english
 	     * Loads all conversations from the local database into the memory.
 		 * 
 	     * To accelerate the loading, call this method immediately after the user is logged in.
 	     * 
-	     * @return      The list of loaded conversations.
+	     * @return            The list of loaded conversations.
 	     */
         public List<Conversation> LoadAllConversations()
         {
-            JSONNode jn = NativeGet(SDKMethod.loadAllConversations).GetReturnJsonNode();
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("isSort", true);
+
+            JSONNode jn = NativeGet(SDKMethod.loadAllConversations, jo_param).GetReturnJsonNode();
 
             if (null == jn) return new List<Conversation>();
 
@@ -742,6 +790,43 @@ namespace AgoraChat
         }
 
         /**
+         * \~chinese
+         * 修改消息内容。
+         *
+         * 调用该方法修改消息内容后，本地和服务端的消息均会修改。
+         *
+         * 调用该方法只能修改单聊和群聊中的文本消息，不能修改聊天室消息。
+
+         * @param messageId 要修改的消息的 ID。
+         * @param body      内容修改后的消息体。
+         * @param callback 完成的回调，详见 {@link #CallBack()}。
+         *
+         * \~english
+         * Modifies a message.
+         *
+         * After this method is called to modify a message, both the local message and the message on the server are modified.
+         *
+         * This method can only modify a text message in one-to-one chats or group chats, but not in chat rooms.
+         *
+         * @param messageId The ID of the message to modify.
+         * @param body      The modified message body.
+         * @param callBack The result callback. See {@link #CallBack()}.
+         */
+        public void ModifyMessage(string messageId, MessageBody.TextBody body, ValueCallBack<Message> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("msgId", messageId);
+            jo_param.AddWithoutNull("body", body.ToJsonObject());
+
+            Process process = (_, jsonNode) =>
+            {
+                return ModelHelper.CreateWithJsonObject<Message>(jsonNode);
+            };
+
+            NativeCall<Message>(SDKMethod.modifyMessage, jo_param, callback, process);
+        }
+
+        /**
 		 * \~chinese
 		 * 将指定 Unix 时间戳之前收发的消息从本地内存和数据库中移除。
 		 *
@@ -906,16 +991,16 @@ namespace AgoraChat
          * 同步方法，会阻塞当前线程。
          *
          * @param messageId		要举报的消息 ID。
-         * @param tag			举报类型(例如：涉黄、涉恐)。
-         * @param reason		举报原因。
+         * @param tag			非法消息的标签。你需要填写自定义标签，例如`涉政`或`广告`。
+         * @param reason		举报原因。你需要自行填写举报原因。
          * @param callBack 		完成的回调，详见 {@link #CallBack()}。
          *
          * \~english
          * Reports a violation message.
          *
          * @param messageId		The ID of the message to report.
-         * @param tag			The report type (For example: involving pornography and terrorism).
-         * @param reason		The report Reason.
+         * @param tag			The tag of the inappropriate message. You need to type a custom tag, like `porn` or `ad`.
+         * @param reason		The reporting reason. You need to type a specific reason.
          *
          * @param callBack The result callback，see {@link #CallBack()}.
          */
@@ -1004,7 +1089,7 @@ namespace AgoraChat
         *
         * @param messageIdList  The message ID.
         * @param chatType       The chat type. Only one-to-one chat ({@link ConversationType.Chat} and group chat ({@link ConversationType.Group}) are allowed.
-        * @param groupId        The group ID, which is invalid only when the chat type is group chat.
+        * @param groupId        The group ID, which is valid only when the chat type is group chat.
         * @param callback       The result callback, which contains the Reaction list under the specified message ID（The user list of EMMessageReaction is the summary data, which only contains the information of the first three users）.
         */
         public void GetReactionList(List<string> messageIdList, MessageType chatType, string groupId, ValueCallBack<Dictionary<string, List<MessageReaction>>> callback = null)
@@ -1166,6 +1251,61 @@ namespace AgoraChat
         }
 
         /**
+         * \~chinese
+         * 设置会话是否置顶。
+         *
+         * 异步方法。
+         *
+         * @param conversationId    会话 ID。
+         * @param isPinned          是否将会话设置为置顶。
+         * @param callback          处理结果回调，详见 {@link CallBack}。
+         *
+         * \~english
+         * Set the conversation pin or not.
+         *
+         * This is an asynchronous method.
+         *
+         * @param conversationId     The conversation ID.
+         * @param isPinned           Pin the conversation or not.
+         * @param callback           Callback for the operation. See {@link CallBack}.
+         */
+
+        public void PinConversation(string conversationId, bool isPinned, CallBack callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("convId", conversationId);
+            jo_param.AddWithoutNull("isPinned", isPinned);
+
+            NativeCall(SDKMethod.pinConversation, jo_param, callback);
+        }
+
+        /**
+         * \~chinese
+         * 获取并解析合并消息。
+         *
+         * @param msg               需要获取和解析的合并消息。
+         * @param callback          成功返回合并消息中的消息列表，失败返回错误原因，详见 {@link ValueCallBack}。
+         *
+         * \~english
+         * Gets and parses the combined message.
+         *
+         * @param msg               The combined message to get and parse.
+         * @param callback          If success, a list of original messages included in the combined message are returned; otherwise, an error is returned. See {@link ValueCallBack}.
+         */
+        public void FetchCombineMessageDetail(Message msg, ValueCallBack<List<Message>> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("msg", msg.ToJsonObject());
+
+            Process process = (_, jsonNode) =>
+            {
+                return List.BaseModelListFromJsonArray<Message>(jsonNode);
+            };
+
+            NativeCall<List<Message>>(SDKMethod.downloadCombineMessages, jo_param, callback, process);
+        }
+
+        /**
 		 * \~chinese
 		 * 注册聊天管理器的监听器。
 		 *
@@ -1304,6 +1444,18 @@ namespace AgoraChat
                         }
                     }
                     break;
+                case SDKMethod.onMessageContentChanged:
+                    {
+                        Message msg = new Message(jsonNode["msg"].AsObject);
+                        string operatorId = jsonNode["operatorId"];
+                        long operationTime = (long)jsonNode["operationTime"].AsDouble;
+
+                        foreach (IChatManagerDelegate it in delegater)
+                        {
+                            it.OnMessageContentChanged(msg, operatorId, operationTime);
+                        }
+                    }
+                    break;
                 case SDKMethod.onMessageIdChanged:
                     {
                         /*
@@ -1319,144 +1471,5 @@ namespace AgoraChat
                     break;
             }
         }
-
-        /*
-        internal void NativeEventHandle(string method, JSONNode jsonNode)
-        {
-            if (delegater.Count == 0) return;
-
-            if (method == SDKMethod.onMessagesReceived)
-            {
-                if (jsonNode != null)
-                {
-                    List<Message> list = List.BaseModelListFromJsonArray<Message>(jsonNode);
-                    if (list.Count > 0)
-                    {
-                        foreach (IChatManagerDelegate it in delegater)
-                        {
-                            it.OnMessagesReceived(list);
-                        }
-                    }
-                }
-            }
-            else if (method == SDKMethod.onCmdMessagesReceived)
-            {
-                if (jsonNode != null)
-                {
-                    List<Message> list = List.BaseModelListFromJsonArray<Message>(jsonNode);
-                    if (list.Count > 0)
-                    {
-                        foreach (IChatManagerDelegate it in delegater)
-                        {
-                            it.OnCmdMessagesReceived(list);
-                        }
-                    }
-                }
-            }
-            else if (method == SDKMethod.onMessagesRead)
-            {
-                List<Message> list = List.BaseModelListFromJsonArray<Message>(jsonNode);
-                if (list.Count > 0)
-                {
-                    foreach (IChatManagerDelegate it in delegater)
-                    {
-                        it.OnMessagesRead(list);
-                    }
-                }
-            }
-            else if (method == SDKMethod.onMessagesDelivered)
-            {
-                List<Message> list = List.BaseModelListFromJsonArray<Message>(jsonNode);
-                if (list.Count > 0)
-                {
-                    foreach (IChatManagerDelegate it in delegater)
-                    {
-                        it.OnMessagesDelivered(list);
-                    }
-                }
-            }
-            else if (method == SDKMethod.onMessagesRecalled)
-            {
-                if (jsonNode != null)
-                {
-                    List<Message> list = List.BaseModelListFromJsonArray<Message>(jsonNode);
-                    if (list.Count > 0)
-                    {
-                        foreach (IChatManagerDelegate it in delegater)
-                        {
-                            it.OnMessagesRecalled(list);
-                        }
-                    }
-                }
-            }
-            else if (method == SDKMethod.onReadAckForGroupMessageUpdated)
-            {
-                foreach (IChatManagerDelegate it in delegater)
-                {
-                    it.OnReadAckForGroupMessageUpdated();
-                }
-            }
-            else if (method == SDKMethod.onGroupMessageRead)
-            {
-                if (jsonNode != null)
-                {
-                    List<GroupReadAck> list = List.BaseModelListFromJsonArray<GroupReadAck>(jsonNode);
-                    if (list.Count > 0)
-                    {
-                        foreach (IChatManagerDelegate it in delegater)
-                        {
-                            it.OnGroupMessageRead(list);
-                        }
-                    }
-                }
-            }
-            else if (method == SDKMethod.onConversationsUpdate)
-            {
-                foreach (IChatManagerDelegate it in delegater)
-                {
-                    it.OnConversationsUpdate();
-                }
-            }
-            else if (method == SDKMethod.onConversationRead)
-            {
-                if (jsonNode != null)
-                {
-                    string from = jsonNode["from"];
-                    string to = jsonNode["to"];
-                    foreach (IChatManagerDelegate it in delegater)
-                    {
-                        it.OnConversationRead(from, to);
-                    }
-                }
-            }
-            else if (method == SDKMethod.onMessageReactionDidChange)
-            {
-                if (jsonNode != null)
-                {
-                    List<MessageReactionChange> list = List.BaseModelListFromJsonArray<MessageReactionChange>(jsonNode);
-                    if (list.Count > 0)
-                    {
-                        foreach (IChatManagerDelegate it in delegater)
-                        {
-                            it.MessageReactionDidChange(list);
-                        }
-                    }
-                }
-            }
-            else if (method == SDKMethod.onMessageIdChanged)
-            {
-                if (jsonNode != null)
-                {
-                    string conversationId = jsonNode["convId"];
-                    string oldMsgId = jsonNode["oldMsgId"];
-                    string newMsgId = jsonNode["newMsgId"];
-
-                    foreach (IChatManagerDelegate it in delegater)
-                    {
-                        it.onMessageIdChanged(conversationId, oldMsgId, newMsgId);
-                    }
-                }
-            }
-        }*/
     }
 }
