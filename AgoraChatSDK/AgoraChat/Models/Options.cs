@@ -2,6 +2,7 @@
 using AgoraChat.SimpleJSON;
 #if !_WIN32
 using UnityEngine;
+using UnityEngine.Scripting;
 #endif
 
 namespace AgoraChat
@@ -13,6 +14,7 @@ namespace AgoraChat
      * \~english
      * The chat setting class that defines parameters and options of the SDK, including whether to automatically accept friend invitations and whether to automatically download the thumbnail.
      */
+    [Preserve]
     public class Options : BaseModel
     {
         /**
@@ -341,6 +343,7 @@ namespace AgoraChat
         *
         * @param appKey  The App Key.
         */
+        [Preserve]
         public Options(string appKey)
         {
             AppKey = appKey;
@@ -372,9 +375,13 @@ namespace AgoraChat
         // HuaWei
         private bool enableHWPush = false;
         */
-
+        [Preserve]
         internal Options() { }
+
+        [Preserve]
         internal Options(bool is_json, string json) : base(json) { }
+
+        [Preserve]
         internal Options(JSONObject jo) : base(jo) { }
 
         internal override void FromJsonObject(JSONObject jo) { }

@@ -1,9 +1,13 @@
 using AgoraChat.SimpleJSON;
 using System;
 using System.Collections.Generic;
+#if !_WIN32
+using UnityEngine.Scripting;
+#endif
 
 namespace AgoraChat
 {
+    [Preserve]
     public class Conversation : BaseModel
     {
         private ConversationManager manager { get => SDKClient.Instance.ConversationManager; }
@@ -447,9 +451,13 @@ namespace AgoraChat
             return manager.MessagesCount(Id, Type);
         }
 
+        [Preserve]
         internal Conversation() { }
 
+        [Preserve]
         internal Conversation(string json) : base(json) { }
+
+        [Preserve]
         internal Conversation(JSONObject jo) : base(jo) { }
 
         private Dictionary<string, string> _Ext;
