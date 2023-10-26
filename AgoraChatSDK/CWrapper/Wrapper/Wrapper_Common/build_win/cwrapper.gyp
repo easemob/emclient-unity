@@ -457,6 +457,7 @@
                 '<(emclient-linux-path)/src/emmessagecollect.cpp',
                 '<(emclient-linux-path)/src/emfetchmessageoption.cpp',
                 '<(emclient-linux-path)/src/emgroupprivate.cpp',
+                '<(emclient-linux-path)/src/emuploadinparts.cpp',
             
                 '<(emclient-linux-path)/src/message/emcmdmessagebody.cpp',
                 '<(emclient-linux-path)/src/message/emcustommessagebody.cpp',

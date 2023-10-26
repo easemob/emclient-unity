@@ -213,6 +213,7 @@
                 '<(emclient-linux-path)/src/emmessagecollect.cpp',
                 '<(emclient-linux-path)/src/emfetchmessageoption.cpp',
                 '<(emclient-linux-path)/src/emgroupprivate.cpp',
+                '<(emclient-linux-path)/src/emuploadinparts.cpp',
 
                 # Add protocol source files
                 '<(emclient-linux-path)/protocol/emconnectionfactory.cpp',
