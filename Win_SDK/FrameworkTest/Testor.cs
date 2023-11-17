@@ -2073,7 +2073,11 @@ namespace WinSDKTest
         public void InitAll(string appkey)
         {
             //Options options = new Options("easemob#easeim");
-            Options options = new Options("easemob-demo#unitytest");
+            //Options options = new Options("easemob-demo#unitytest");
+            //Options options = new Options("easemob-demo#support");
+            Options options = new Options("easemob-demo#rpttest");
+            //Options options = new Options("100230927254271#unitytest");  // 北京沙箱测试环境
+            //Options options = new Options("easemob-demo#sdk111");  // 北京沙箱测试环境
             //Options options = new Options("easemob-demo#wang");
             //Options options = new Options("5101220107132865#test"); // 北京沙箱测试环境，无法正常登录
             //Options options = new Options("41117440#383391"); // 线上环境, demo中的token
@@ -2085,14 +2089,13 @@ namespace WinSDKTest
             options.DebugMode = true;
             options.MyUUID = "12345678-1111-5555-aaaa-eeeeeeeeeeee";
             options.EnableEmptyConversation = true;
+            //options.IsAutoDownload = true;
 
-            //options.RestServer = "a1.easemob.com";
-            //options.IMServer = "182.92.23.113";
-            //options.IMPort = 12016;
-            //options.RestServer = "39.97.9.52:80";
-            //options.IMServer = "47.94.121.20";
-            //options.IMPort = 12016;
-            //options.EnableDNSConfig = false;
+            // 沙箱环境
+            /*options.EnableDNSConfig = false;
+            options.RestServer = "a1-hsb.easemob.com";
+            options.IMServer = "180.184.143.60";
+            options.IMPort = 6717;*/
 
             if (SDKClient.Instance.InitWithOptions(options) != 0)
             {
