@@ -3,7 +3,7 @@
 			'static_library': 'static_library',
 			'shared_library': 'shared_library',
 			'standalone': 1,
-			'msvs_RuntimeLibrary': '0', #md:2, mdd:3, mt:0, mtd:1
+			'msvs_RuntimeLibrary': '2', #md:2, mdd:3, mt:0, mtd:1
 			'emclient-linux-path':'emclient-linux',
 			'emclient-unity-path':'emclient-unity',
     },
@@ -190,8 +190,9 @@
 	               	},
 		            	'include_dirs': [
 		                #'<(emclient-linux-path)/3rd_party/platform/win/depends/openssl_1.1.1l-x64-static-md/include',
-		                '<(emclient-linux-path)/3rd_party/platform/win/depends/boringssl-1.1.1g-x64-header/include',
-		                '<(emclient-linux-path)/3rd_party/platform/win/depends/sqlcipher_4.4.3-x64-static-md/include',
+		                #'<(emclient-linux-path)/3rd_party/platform/win/depends/boringssl-1.1.1g-x64-header/include',
+		                '<(emclient-linux-path)/3rd_party/platform/win/depends/boringssl-1.1.1f-x64-static-md/include',
+		                '<(emclient-linux-path)/3rd_party/platform/win/depends/sqlcipher_4.4.3-x64-static-md-boringssl/include',
 		            	],
 	          		},
 	          		'Debug':{
@@ -211,8 +212,9 @@
 	               	},
 	            		'include_dirs': [
 		                #'<(emclient-linux-path)/3rd_party/platform/win/depends32/openssl_1.1.1l-x86-static-md/include',
-		                '<(emclient-linux-path)/3rd_party/platform/win/depends32/boringssl-1.1.1g-x86-header/include',
-		                '<(emclient-linux-path)/3rd_party/platform/win/depends32/sqlcipher_4.4.3-x86-static-md/include',
+		                #'<(emclient-linux-path)/3rd_party/platform/win/depends32/boringssl-1.1.1g-x86-header/include',
+		                '<(emclient-linux-path)/3rd_party/platform/win/depends32/boringssl-1.1.1f-x86-static-md/include',
+		                '<(emclient-linux-path)/3rd_party/platform/win/depends32/sqlcipher_4.4.3-x86-static-md-boringssl/include',
 		            	],
 	          		},
 	          		'Debug_32':{
@@ -249,12 +251,12 @@
             
             'link_settings': {
             	'libraries': [
-                   #'libcrypto.lib',
-                   #'libssl.lib',
-                   'agora_fpa_sdk.lib',
+                   'libcrypto.lib',
+                   'libssl.lib',
+                   'zlib.lib',
+                   #'agora_fpa_sdk.lib',
                    'libcurl.lib',
                    'libsqlcipher.lib',
-                   'zlib.lib',
                    'easemob.lib',
                    'crypt32.lib',
                    '%(AdditionalDependencies)',
@@ -263,12 +265,14 @@
 							'configurations':{            
 	          		'Release':{
 		            	    'library_dirs': [
-                           '<(emclient-linux-path)/3rd_party/platform/win/depends/curl_7.80.0-x64-static-md/lib',
+                           '<(emclient-linux-path)/3rd_party/platform/win/depends/curl_7.80.0-x64-static-md-boringssl/lib',
                            #'<(emclient-linux-path)/3rd_party/platform/win/depends/openssl_1.1.1l-x64-static-md/lib',
-                           '<(emclient-linux-path)/3rd_party/platform/win/depends/fpa_1.2.0-x64-static-mt/lib',
+                           '<(emclient-linux-path)/3rd_party/platform/win/depends/boringssl-1.1.1f-x64-static-md/lib',
+                           #'<(emclient-linux-path)/3rd_party/platform/win/depends/fpa_1.2.0-x64-static-mt/lib',
                            '<(emclient-linux-path)/3rd_party/platform/win/depends/sqlite_3.34.1-x64-static-md/lib',
                            '<(emclient-linux-path)/3rd_party/platform/win/depends/zlib_1.2.11-x64-static-md/lib',
-                           '<(emclient-linux-path)/3rd_party/platform/win/depends/sqlcipher_4.4.3-x64-static-md/lib',
+                           #'<(emclient-linux-path)/3rd_party/platform/win/depends/sqlcipher_4.4.3-x64-static-md/lib',
+                           '<(emclient-linux-path)/3rd_party/platform/win/depends/sqlcipher_4.4.3-x64-static-md-boringssl/lib',
                            '%(AddtionalLibrayDirectories)',
                       ],
 	          		},
@@ -277,11 +281,12 @@
 	          		},
 	          		'Release_32':{
 	            			'library_dirs': [
-                           '<(emclient-linux-path)/3rd_party/platform/win/depends32/curl_7.80.0-x86-static-md/lib',
+                           '<(emclient-linux-path)/3rd_party/platform/win/depends32/boringssl-1.1.1f-x86-static-md/lib',
+                           '<(emclient-linux-path)/3rd_party/platform/win/depends32/curl_7.80.0-x86-static-md-boringssl/lib',
                            #'<(emclient-linux-path)/3rd_party/platform/win/depends32/openssl_1.1.1l-x86-static-md/lib',
-                           '<(emclient-linux-path)/3rd_party/platform/win/depends32/fpa_1.2.0-x86-static-mt/lib',
+                           #'<(emclient-linux-path)/3rd_party/platform/win/depends32/fpa_1.2.0-x86-static-mt/lib',
                            '<(emclient-linux-path)/3rd_party/platform/win/depends32/zlib_1.2.11-x86-static-md/lib',
-                           '<(emclient-linux-path)/3rd_party/platform/win/depends32/sqlcipher_4.4.3-x86-static-md/lib',
+                           '<(emclient-linux-path)/3rd_party/platform/win/depends32/sqlcipher_4.4.3-x86-static-md-boringssl/lib',
                            '%(AddtionalLibrayDirectories)',
                   	],
 	          		},
@@ -313,9 +318,10 @@
 	          			'msvs_target_platform': 'x64',
 		            	'include_dirs': [
                         #'<(emclient-linux-path)/3rd_party/platform/win/depends/openssl_1.1.1l-x64-static-md/include',
-                        '<(emclient-linux-path)/3rd_party/platform/win/depends/boringssl-1.1.1g-x64-header/include',
-                        '<(emclient-linux-path)/3rd_party/platform/win/depends/curl_7.80.0-x64-static-md/include',
-                        '<(emclient-linux-path)/3rd_party/platform/win/depends/sqlcipher_4.4.3-x64-static-md/include',
+                        #'<(emclient-linux-path)/3rd_party/platform/win/depends/boringssl-1.1.1g-x64-header/include',
+                        '<(emclient-linux-path)/3rd_party/platform/win/depends/boringssl-1.1.1f-x64-static-md/include',
+                        '<(emclient-linux-path)/3rd_party/platform/win/depends/curl_7.80.0-x64-static-md-boringssl/include',
+                        '<(emclient-linux-path)/3rd_party/platform/win/depends/sqlcipher_4.4.3-x64-static-md-boringssl/include',
 		            	],
 	          		},
 	          		'Debug':{
@@ -325,9 +331,10 @@
 	          			'msvs_target_platform': 'x86',
 	            		'include_dirs': [
 			                	#'<(emclient-linux-path)/3rd_party/platform/win/depends32/openssl_1.1.1l-x86-static-md/include',
-	                      '<(emclient-linux-path)/3rd_party/platform/win/depends32/boringssl-1.1.1g-x86-header/include',
-	                      '<(emclient-linux-path)/3rd_party/platform/win/depends32/curl_7.80.0-x86-static-md/include',
-	                      '<(emclient-linux-path)/3rd_party/platform/win/depends32/sqlcipher_4.4.3-x86-static-md/include',
+	                      #'<(emclient-linux-path)/3rd_party/platform/win/depends32/boringssl-1.1.1g-x86-header/include',
+	                      '<(emclient-linux-path)/3rd_party/platform/win/depends32/boringssl-1.1.1f-x86-static-md/include',
+	                      '<(emclient-linux-path)/3rd_party/platform/win/depends32/curl_7.80.0-x86-static-md-boringssl/include',
+	                      '<(emclient-linux-path)/3rd_party/platform/win/depends32/sqlcipher_4.4.3-x86-static-md-boringssl/include',
 		            	],
 	          		},
 	          		'Debug_32':{
