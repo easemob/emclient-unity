@@ -424,6 +424,11 @@ namespace sdk_wrapper
             configs->setEnableEmptyConversation(enable_empty_conversation);
         }
 
+        if (jnode.HasMember("useReplacedMessageContents") && jnode["useReplacedMessageContents"].IsBool()) {
+            bool use_replaced_message_contents = jnode["useReplacedMessageContents"].GetBool();
+            configs->setUseReplacedMessageContents(use_replaced_message_contents);
+        }
+
         if (jnode.HasMember("customOSType") && jnode["customOSType"].IsInt()) {
             int custom_os_type = jnode["customOSType"].GetInt();
             if (-1 != custom_os_type) {
