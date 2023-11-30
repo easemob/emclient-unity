@@ -1387,6 +1387,12 @@ namespace sdk_wrapper
             writer.Key("isThread");
             writer.Bool(msg->isThread());
 
+            writer.Key("broadcast");
+            writer.Bool(msg->broadcast());
+
+            writer.Key("isContentReplaced");
+            writer.Bool(msg->isContentReplaced());
+
             writer.Key("body");
             Message::ToJsonObjectWithBody(writer, msg);
         }
