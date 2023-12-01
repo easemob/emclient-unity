@@ -3426,6 +3426,60 @@ namespace sdk_wrapper
         return data;
     }
 
+    EMContactPtr Contact::FromJson(const char* json)
+    {
+        // No need to implement this yet.
+        return nullptr;
+    }
+
+    void Contact::ToJsonObject(Writer<StringBuffer>& writer, const EMContactPtr contact)
+    {
+        writer.StartObject();
+
+        writer.Key("userId");
+        writer.String(contact->getUsername().c_str());
+
+        writer.Key("remark");
+        writer.String(contact->getRemark().c_str());
+
+        writer.EndObject();
+    }
+
+    string Contact::ToJson(const EMContactPtr contact)
+    {
+        if (nullptr == contact || nullptr == contact.get()) return string();
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        ToJsonObject(writer, contact);
+
+        std::string data = s.GetString();
+        return data;
+    }
+
+    void Contact::ToJsonObject(Writer<StringBuffer>& writer, const vector<EMContactPtr> vec)
+    {
+        writer.StartArray();
+
+        for (auto it : vec) {
+            ToJsonObject(writer, it);
+        }
+
+        writer.EndArray();
+    }
+
+    string Contact::ToJson(const vector<EMContactPtr> vec)
+    {
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        ToJsonObject(writer, vec);
+
+        std::string data = s.GetString();
+        return data;
+    }
+
     vector<EMMessageBody::EMMessageBodyType> FetchMessageOption::FromJsonObjectToBodyTypeVector(const Value& jnode)
     {
         vector<EMMessageBody::EMMessageBodyType> vec;

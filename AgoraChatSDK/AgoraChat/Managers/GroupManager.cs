@@ -863,8 +863,6 @@ namespace AgoraChat
         /**
 		 * \~chinese
 		 * 从本地内存和数据库获取加入的群组列表。
-		 *
-		 * 异步方法。
 		 * 
 		 * @return 			返回群组列表。
 		 *
@@ -872,8 +870,6 @@ namespace AgoraChat
 		 * Gets the list of groups that the user has joined.
 		 * 
 		 * This method gets the groups from the local memory and database.
-		 * 
-		 * This is an asynchronous method.
 		 *
 		 * @return 			The group list. 
 		 */

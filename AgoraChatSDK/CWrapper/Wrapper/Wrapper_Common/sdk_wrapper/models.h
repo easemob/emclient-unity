@@ -345,6 +345,18 @@ namespace sdk_wrapper {
 		static string ToJson(const vector<EMDeviceInfoPtr> vec);
 	};
 
+    class Contact
+    {
+    public:
+        static EMContactPtr FromJson(const char* json);
+
+        static void ToJsonObject(Writer<StringBuffer>& writer, const EMContactPtr contact);
+        static string ToJson(const EMContactPtr contact);
+
+        static void ToJsonObject(Writer<StringBuffer>& writer, const vector<EMContactPtr> vec);
+        static string ToJson(const vector<EMContactPtr> vec);
+    };
+
     struct FetchMessageOption
     {
         static EMFetchMessageOptionPtr FromJsonObject(const Value& jnode);

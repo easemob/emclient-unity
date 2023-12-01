@@ -218,6 +218,11 @@ void InitManagerMap()
 	func_map_contact_manager["getSelfIdsOnOtherPlatform"] = ContactManager_GetSelfIdsOnOtherPlatform;
 	func_map_contact_manager["removeUserFromBlockList"] = ContactManager_RemoveFromBlackList;
 	func_map_contact_manager["getBlockListFromDB"] = ContactManager_GetBlockListFromDB;
+    func_map_contact_manager["setContactRemark"] = ContactManager_SetContactRemark;
+    func_map_contact_manager["fetchContactFromLocal"] = ContactManager_FetchContactFromLocal;
+    func_map_contact_manager["fetchAllContactsFromLocal"] = ContactManager_FetchAllContactsFromLocal;
+    func_map_contact_manager["fetchAllContactsFromServer"] = ContactManager_FetchAllContactsFromServer;
+    func_map_contact_manager["FetchAllContactsFromServerByPage"] = ContactManager_FetchAllContactsFromServerByPage;
 	manager_map["EMContactManager"] = func_map_contact_manager;
 
 

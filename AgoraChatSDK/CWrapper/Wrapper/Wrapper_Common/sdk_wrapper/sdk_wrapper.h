@@ -218,6 +218,12 @@ SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ContactManager_RemoveFromBlackList(
 
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ContactManager_GetBlockListFromDB(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 
+SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ContactManager_SetContactRemark(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ContactManager_FetchContactFromLocal(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ContactManager_FetchAllContactsFromLocal(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ContactManager_FetchAllContactsFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ContactManager_FetchAllContactsFromServerByPage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ContactManager_RunDelegateTester(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 
 // ConversationManager ================================================================
