@@ -1504,6 +1504,31 @@ namespace AgoraChat
         }
 
         /**
+        * \~chinese
+        * 获取我加入的群组数。
+        *
+        * 异步方法。
+        *
+        * @param attrs     	操作结果回调，详见 {@link ValueCallBack}。
+        *
+        *
+        * \~english
+        * Fetch total count of my joined groups.
+        *
+        * This is an asynchronous method.
+        *
+        * @param callback	    The operation callback. See {@link ValueCallBack}.
+        */
+        public void FetchMyGroupsCount(ValueCallBack<int> callback = null)
+        {
+            Process process = (_, jsonNode) =>
+            {
+                return jsonNode["ret"].IsNumber ? jsonNode["ret"].AsInt : -1;
+            };
+            NativeCall<int>(SDKMethod.fetchMyGroupsCount, null, callback, process);
+        }
+
+        /**
 		 * \~chinese
 		 * 注册群组管理器的监听器。
 		 *

@@ -158,6 +158,7 @@ SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_ChangeGroupExtension(c
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_UploadGroupSharedFile(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_FetchMemberAttributes(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_SetMemberAttributes(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_FetchMyGroupsCount(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_RunDelegateTester(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 
