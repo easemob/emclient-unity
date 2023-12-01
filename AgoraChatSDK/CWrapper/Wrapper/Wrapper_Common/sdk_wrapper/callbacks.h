@@ -434,20 +434,20 @@ namespace sdk_wrapper {
                 CallBack(STRING_GROUPMANAGER_LISTENER.c_str(), STRING_onRequestToJoinAcceptedFromGroup.c_str(), json.c_str());
         }
 
-        void onReceiveRejectionFromGroup(const string& groupId, const string& reason) override {
+        void onReceiveRejectionFromGroup(const string& groupId, const string& reason, const std::string& decliner, const std::string& applicant) override {
 
             JSON_STARTOBJ
             writer.Key("groupId");
             writer.String(groupId.c_str());
 
-            //writer.Key("name");
-            //writer.String("");
-
-            //writer.Key("userId");
-            //writer.String("");
-
             writer.Key("msg");
             writer.String(reason.c_str());
+
+            writer.Key("decliner");
+            writer.String(decliner.c_str());
+
+            writer.Key("applicant");
+            writer.String(applicant.c_str());
 
             JSON_ENDOBJ
 

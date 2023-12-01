@@ -1604,8 +1604,9 @@ namespace AgoraChat
                     case SDKMethod.onRequestToJoinDeclinedFromGroup:
                         {
                             string reason = jsonNode["msg"];
-                            //string userId = jsonNode["userId"];
-                            it.OnRequestToJoinDeclinedFromGroup(groupId, reason);
+                            string decliner = jsonNode["decliner"];
+                            string applicant = jsonNode["applicant"];
+                            it.OnRequestToJoinDeclinedFromGroup(groupId, reason, decliner, applicant);
                         }
                         break;
                     case SDKMethod.onInvitationAcceptedFromGroup:
