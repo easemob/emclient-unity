@@ -1494,7 +1494,7 @@ namespace sdk_wrapper {
             gGroupManagerListener->onLeaveGroup(groupPtr, EMMuc::EMMucLeaveReason::DESTROYED);
             gGroupManagerListener->onReceiveJoinGroupApplication(groupPtr, "from", "message");
             gGroupManagerListener->onReceiveAcceptionFromGroup(groupPtr);
-            gGroupManagerListener->onReceiveRejectionFromGroup("123456", "reason");
+            gGroupManagerListener->onReceiveRejectionFromGroup("123456", "reason", "decliner", "applicant");
             //gGroupManagerListener->onUpdateMyGroupList()
 
             vector<string> members;
