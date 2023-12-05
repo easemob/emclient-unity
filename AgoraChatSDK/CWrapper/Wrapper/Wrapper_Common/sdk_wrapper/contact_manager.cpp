@@ -461,7 +461,6 @@ namespace sdk_wrapper {
 
         return nullptr;
     }
-}
 
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ContactManager_RunDelegateTester(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {

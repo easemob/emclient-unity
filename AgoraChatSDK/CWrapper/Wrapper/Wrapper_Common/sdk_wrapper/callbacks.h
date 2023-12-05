@@ -14,6 +14,7 @@
 
 extern EMClient* gClient;
 extern NativeListenerEvent gCallback;
+extern const int TOKEN_CHECK_INTERVAL;
 
 namespace sdk_wrapper {
 
@@ -82,6 +83,11 @@ namespace sdk_wrapper {
             else if (EMError::TOKEN_WILL_EXPIRE == error->mErrorCode) {
                 CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onTokenWillExpire.c_str(), to_string(error->mErrorCode).c_str());
             }
+        }
+
+        void onReceiveToken(const std::string& token, int64_t expiredTs) override
+        {
+            TokenWrapper::GetInstance()->SetAndStartTokenCheckTimer(expiredTs, TOKEN_CHECK_INTERVAL);
         }
     };
 

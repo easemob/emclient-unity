@@ -395,31 +395,32 @@ namespace sdk_wrapper {
 		static map<string, UserInfo> FromJsonFromServer(string json);
 	};
 
-	class TokenWrapper
-	{
-		struct AutoLoginConfig {
-			string userName;
-			string passwd;
-			string token;
-			string expireTS; // milli-second
-			int64_t expireTsInt; //second
-			int64_t availablePeriod; //second
-		};
+    class TokenWrapper
+    {
+    public:
+        TokenWrapper();
+        ~TokenWrapper();
 
-	public:
-		TokenWrapper();
+        static TokenWrapper* GetInstance();
+        static void TimeFunc(int signo);
 
-		bool GetTokenCofigFromJson(string& raw, string& token, string& expireTS);
-		int GetTokenCheckInterval(int pre_check_interval,int availablePeriod);
+        int GetTokenCheckInterval();
+        void AdjustLastCheckInterval(int64_t remain_ts);
+        void onTokenNotification(int errCode, int64_t remain_ts);
 
-		bool SetTokenInAutoLogin(const string& username, const string& token, const string expireTS);
-		void SetPasswdInAutoLogin(const string& username, const string& passwd);
+        void SetAndStartTokenCheckTimer(int64_t expireTS, int interval);
+        void StopTokenCheckTimer();
 
-		void SaveAutoLoginConfigToFile(const string& uuid);
-		void GetAutoLoginConfigFromFile(const string& uuid);
+        void TokenCheck();
 
-		AutoLoginConfig autologin_config_;
-	};
+        int64_t expireTS_; //second
+        int64_t availablePeriod_; //second
+        int check_interval_;
+
+    private:
+        static TokenWrapper* instance_;
+    };
+
 }
 
 #endif
