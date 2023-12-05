@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace AgoraChat
@@ -340,6 +341,7 @@ namespace AgoraChat
         * @param callback      The login result callback. See {@link CallBack}.
         *
         */
+        [Obsolete]
         public void LoginWithAgoraToken(string userId, string token, CallBack callback = null)
         {
             _clientImpl.LoginWithAgoraToken(userId, token, callback);
