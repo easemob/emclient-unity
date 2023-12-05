@@ -214,6 +214,7 @@
                 '<(emclient-linux-path)/src/emfetchmessageoption.cpp',
                 '<(emclient-linux-path)/src/emgroupprivate.cpp',
                 '<(emclient-linux-path)/src/emuploadinparts.cpp',
+                '<(emclient-linux-path)/src/emcontact.cpp',
 
                 # Add protocol source files
                 '<(emclient-linux-path)/protocol/emconnectionfactory.cpp',
