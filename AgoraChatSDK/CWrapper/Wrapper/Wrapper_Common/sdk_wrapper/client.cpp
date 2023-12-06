@@ -670,6 +670,8 @@ namespace sdk_wrapper
             check_interval_ = floor(availablePeriod_ / 3);
         }
 
+        EMLog::getInstance().getDebugLogStream() << "GetTokenCheckInterval check_interval_: " << check_interval_;
+
         return check_interval_;
     }
 
@@ -681,6 +683,9 @@ namespace sdk_wrapper
         if (abs(check_interval_ - remain_ts) <= 3 ||
             check_interval_ > remain_ts) {
             check_interval_ = (int)remain_ts + 2; // try to trigger with EMError::TOKEN_EXPIRED
+
+            EMLog::getInstance().getDebugLogStream() << "AdjustLastCheckInterval check_interval_: " << check_interval_;
+
             StartTimer(check_interval_, TimeFunc);
         }
     }
@@ -690,6 +695,7 @@ namespace sdk_wrapper
         if (EMError::TOKEN_EXPIRED == errCode) {
             EMErrorPtr error(new EMError(EMError::TOKEN_EXPIRED));
             if (nullptr != gConnectionListener) gConnectionListener->onTokenNotification(error);
+            EMLog::getInstance().getDebugLogStream() << "onTokenNotification token expired.";
             return;
         }
 
@@ -699,6 +705,7 @@ namespace sdk_wrapper
             error->mDescription.append(to_string((int)remain_ts));
             error->mDescription.append(" seconds.");
             if (nullptr != gConnectionListener) gConnectionListener->onTokenNotification(error);
+            EMLog::getInstance().getDebugLogStream() << "onTokenNotification will expire after " << remain_ts << " seconds";
             return;
         }
     }
@@ -718,7 +725,7 @@ namespace sdk_wrapper
         check_interval_ = interval;
 
         if (availablePeriod_ > 0) {
-            EMLog::getInstance().getDebugLogStream() << "SetAndStartTokenCheckTimer will start time, availablePeriod_ : " << availablePeriod_ << ", expireTS_: " << expireTS_ << "; nowTS: " << nowTS;
+            EMLog::getInstance().getDebugLogStream() << "SetAndStartTokenCheckTimer will start timer, availablePeriod_ : " << availablePeriod_ << ", expireTS_: " << expireTS_ << "; nowTS: " << nowTS;
             StartTimer(GetTokenCheckInterval(), TimeFunc);
         }
         else {
@@ -746,7 +753,7 @@ namespace sdk_wrapper
         if (remainTS <= 0) {
             StopTokenCheckTimer();
             onTokenNotification(EMError::TOKEN_EXPIRED, -1);
-            Client_Logout(nullptr, nullptr, nullptr);
+            Client_Logout(nullptr, "", nullptr);
         }
         else {
             if (remainTS < ceil(availablePeriod_ / 2)) { // will expire
