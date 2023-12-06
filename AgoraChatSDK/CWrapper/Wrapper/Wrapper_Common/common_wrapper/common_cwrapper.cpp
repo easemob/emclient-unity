@@ -223,7 +223,7 @@ void InitManagerMap()
     func_map_contact_manager["fetchContactFromLocal"] = ContactManager_FetchContactFromLocal;
     func_map_contact_manager["fetchAllContactsFromLocal"] = ContactManager_FetchAllContactsFromLocal;
     func_map_contact_manager["fetchAllContactsFromServer"] = ContactManager_FetchAllContactsFromServer;
-    func_map_contact_manager["FetchAllContactsFromServerByPage"] = ContactManager_FetchAllContactsFromServerByPage;
+    func_map_contact_manager["fetchAllContactsFromServerByPage"] = ContactManager_FetchAllContactsFromServerByPage;
 	manager_map["EMContactManager"] = func_map_contact_manager;
 
 
