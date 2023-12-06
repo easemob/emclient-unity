@@ -44,7 +44,7 @@ void InitManagerMap()
 	func_map_client["isConnected"] = Client_isConnected;
 	func_map_client["getToken"] = Client_LoginToken;
 	func_map_client["loginWithAgoraToken"] = Client_LoginWithAgoraToken;
-	func_map_client["renewToken"] = Client_RenewAgoraToken;
+	func_map_client["renewToken"] = Client_RenewToken;
 	//func_map_client["autoLogin"] = Client_AutoLogin; // not support for platform
 	func_map_client["clearResource"] = Client_ClearResource;
 

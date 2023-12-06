@@ -309,7 +309,7 @@ namespace sdk_wrapper
         return nullptr;
     }
 
-    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_RenewAgoraToken(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_RenewToken(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         if (!CheckClientInitOrNot(cbid)) return nullptr;
 
@@ -322,7 +322,7 @@ namespace sdk_wrapper
         CLIENT->getTokenExpiredTs(token, expiredTS, error);
 
         if (EMError::EM_NO_ERROR != error.mErrorCode) {
-            EMLog::getInstance().getErrorLogStream() << "Client_RenewAgoraToken getTokenExpiredTs failed, code: " << error.mErrorCode << "; desc: " << error.mDescription;
+            EMLog::getInstance().getErrorLogStream() << "Client_RenewToken getTokenExpiredTs failed, code: " << error.mErrorCode << "; desc: " << error.mDescription;
             return nullptr;
         }
 
