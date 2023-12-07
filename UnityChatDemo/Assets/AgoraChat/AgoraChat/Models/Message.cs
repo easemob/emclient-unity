@@ -322,6 +322,36 @@ namespace AgoraChat
 
         /**
          * \~chinese
+         * 只读。
+         * 是否是广播消息：
+         * - `true`：是；
+         * - `false`：否。
+         *
+         * \~english
+         * ReadOnly.
+         * Whether the message is in a broadcast message:
+         * - `true`: Yes.
+         * - `false`: No.
+         */
+        public bool Broadcast = false;
+
+        /**
+         * \~chinese
+         * 只读。
+         * 内容是否被替换：
+         * - `true`：是；
+         * - `false`：否。
+         *
+         * \~english
+         * ReadOnly.
+         * Whether the content of message is replaced:
+         * - `true`: Yes.
+         * - `false`: No.
+         */
+        public bool IsContentReplaced = false;
+
+        /**
+         * \~chinese
          * 获取子区概览信息。
          *
          * 子区概览信息仅在创建子区后携带。
@@ -810,6 +840,8 @@ namespace AgoraChat
                     IsRead = jo["isRead"].AsBool;
                     MessageOnlineState = jo["messageOnlineState"].AsBool;
                     IsThread = jo["isThread"].AsBool;
+                    Broadcast = jo["broadcast"].AsBool;
+                    IsContentReplaced = jo["isContentReplaced"].AsBool;
                 }
             }
         }

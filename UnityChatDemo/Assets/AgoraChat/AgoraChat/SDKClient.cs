@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace AgoraChat
@@ -324,6 +325,8 @@ namespace AgoraChat
         *
         * 异步方法。
         *
+        * 此方法已过时，建议使用Login方法
+        *
         * @param userId        用户 ID，必填。
         * @param token         声网 token，必填。
         * @param callback      登录结果回调，详见 {@link CallBack}。
@@ -335,11 +338,14 @@ namespace AgoraChat
         *
         * This an asynchronous method.
         *
+        * This method is obsolete; it is recommended to use the 'Login' method.
+        *
         * @param userId        The user ID. Ensure that you set this parameter.
         * @param token         The Agora token. Ensure that you set this parameter.
         * @param callback      The login result callback. See {@link CallBack}.
         *
         */
+        [Obsolete]
         public void LoginWithAgoraToken(string userId, string token, CallBack callback = null)
         {
             _clientImpl.LoginWithAgoraToken(userId, token, callback);
@@ -348,21 +354,46 @@ namespace AgoraChat
         /**
          * \~chinese
          * 更新声网 token。
-         * 
+         *
          * 当用户通过声网 token 登录时，在 {@link IConnectionDelegate} 回调中收到 token 即将过期的通知时可更新 token，避免因 token 失效产生未知问题。
+         *
+         * 此方法已过时，建议使用RenewToken方法
          *
          * @param token 新的声网 token。
          *
          * \~english
          * Renews the Agora token.
-         * 
+         *
          * If you log in with an Agora token and are notified by a callback method {@link IConnectionDelegate} that the token is to be expired, you can call this method to update the token to avoid unknown issues caused by an invalid token.
+         *
+         * This method is obsolete; it is recommended to use the 'RenewToken' method.
          *
          * @param token The new Agora token.
          */
+        [Obsolete]
         public void RenewAgoraToken(string token)
         {
-            _clientImpl.RenewAgoraToken(token);
+            _clientImpl.RenewToken(token);
+        }
+
+        /**
+         * \~chinese
+         * 更新token。
+         *
+         * 当用户通过token 登录时，在 {@link IConnectionDelegate} 回调中收到 token 即将过期的通知时可更新 token，避免因 token 失效产生未知问题。
+         *
+         * @param token 新的 token。
+         *
+         * \~english
+         * Renews the token.
+         *
+         * If you log in with a token and are notified by a callback method {@link IConnectionDelegate} that the token is to be expired, you can call this method to update the token to avoid unknown issues caused by an invalid token.
+         *
+         * @param token The new token.
+         */
+        public void RenewToken(string token)
+        {
+            _clientImpl.RenewToken(token);
         }
 
         /**
