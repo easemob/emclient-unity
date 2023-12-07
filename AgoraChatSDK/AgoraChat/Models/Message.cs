@@ -872,6 +872,8 @@ namespace AgoraChat
             jo.AddWithoutNull("isRead", IsRead);
             jo.AddWithoutNull("messageOnlineState", MessageOnlineState);
             jo.AddWithoutNull("isThread", IsThread);
+            jo.AddWithoutNull("broadcast", Broadcast);
+            jo.AddWithoutNull("isContentReplaced", IsContentReplaced);
 
             if (null != _receiverList && _receiverList.Count > 0)
             {
