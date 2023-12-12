@@ -43,6 +43,7 @@ namespace AgoraChat
             CallbackQueue_UnityMode.Instance().Process();
         }
 
+#if UNITY_EDITOR
         private void OnApplicationQuit()
         {
             if (IClient.IsInit)
@@ -51,11 +52,9 @@ namespace AgoraChat
                 {
                     SDKClient.Instance.Logout(false);
                 }
-                SDKClient.Instance.ClearResource();
+                //SDKClient.Instance.ClearResource();
             }
         }
-
-#if UNITY_EDITOR
 
         [RuntimeInitializeOnLoadMethod]
         static void InitializeOnLoadMethod()
@@ -99,6 +98,18 @@ namespace AgoraChat
                         EditorApplication.UnlockReloadAssemblies();
                         break;
                     }
+            }
+        }
+#else
+        private void OnApplicationQuit()
+        {
+            if (IClient.IsInit)
+            {
+                /*if (SDKClient.Instance.IsLoggedIn)
+                {
+                    SDKClient.Instance.Logout(false);
+                }*/
+                SDKClient.Instance.ClearResource();
             }
         }
 #endif

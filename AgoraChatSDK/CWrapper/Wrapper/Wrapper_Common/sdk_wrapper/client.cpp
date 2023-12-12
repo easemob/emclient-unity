@@ -528,9 +528,9 @@ namespace sdk_wrapper
     {
         if (!CheckClientInitOrNot(nullptr)) return nullptr;
 
-        if (CLIENT->isLoggedIn()) {
+        /*if (CLIENT->isLoggedIn()) {
             return nullptr;
-        }
+        }*/
 
         CLIENT->clearResource();
         NeedAllocResource = true;
