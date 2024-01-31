@@ -1,5 +1,7 @@
 ﻿using AgoraChat.SimpleJSON;
-using System.Collections.Generic;
+#if !_WIN32
+using UnityEngine.Scripting;
+#endif
 
 namespace AgoraChat
 {
@@ -12,6 +14,7 @@ namespace AgoraChat
     * Support languages of translation function.
     * 
     */
+    [Preserve]
     public class SupportLanguage : BaseModel
     {
         /**
@@ -42,10 +45,13 @@ namespace AgoraChat
         */
         public string LanguageNativeName { get; internal set; }
 
+        [Preserve]
         internal SupportLanguage() { }
 
+        [Preserve]
         internal SupportLanguage(string jsonString) : base(jsonString) { }
 
+        [Preserve]
         internal SupportLanguage(JSONObject jsonObject) : base(jsonObject) { }
 
         internal override void FromJsonObject(JSONObject jsonObject)

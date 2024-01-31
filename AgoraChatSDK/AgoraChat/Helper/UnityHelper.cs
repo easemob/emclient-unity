@@ -87,12 +87,14 @@ namespace AgoraChat
             {
                 case (PlayModeStateChange.EnteredPlayMode):
                     {
+                        Instance();
                         EditorApplication.LockReloadAssemblies();
                         Debug.Log("Assembly Reload locked as entering play mode");
                         break;
                     }
                 case (PlayModeStateChange.ExitingPlayMode):
                     {
+                        instance = null;
                         Debug.Log("Assembly Reload unlocked as exiting play mode");
                         EditorApplication.UnlockReloadAssemblies();
                         break;
@@ -100,6 +102,14 @@ namespace AgoraChat
             }
         }
 #endif
+    }
+#endif
+
+#if _WIN32
+    [AttributeUsage(AttributeTargets.All, Inherited = false, AllowMultiple = true)]
+    public class PreserveAttribute : Attribute
+    {
+        // Empty attribute
     }
 #endif
 }
