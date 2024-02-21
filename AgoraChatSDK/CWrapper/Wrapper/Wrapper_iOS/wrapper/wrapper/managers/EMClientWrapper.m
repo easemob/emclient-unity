@@ -345,7 +345,7 @@
 }
 
 - (void)autoLoginDidCompleteWithError:(EMError *)aError {
-    if(aError.code == EMAppActiveNumbersReachLimitation) {
+    if(aError.code == EMErrorAppActiveNumbersReachLimitation) {
         [self onAppActiveNumberReachLimitation];
     }else if (aError.code == EMErrorUserAuthenticationFailed) {
         [EMWrapperHelper.shared.listener onReceive:connectionListener method:onAuthFailed info:nil];
