@@ -120,6 +120,8 @@
     ret[@"body"] = [self.body toJson];
     ret[@"messageOnlineState"] = @(self.onlineState);
     ret[@"deliverOnlineOnly"] = @(self.deliverOnlineOnly);
+    ret[@"broadcast"] = @(self.broadcast);
+    ret[@"isContentReplaced"] = @(self.isContentReplaced);
     if (self.ext) {
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
         for (NSString *key in self.ext.allKeys) {
