@@ -116,7 +116,7 @@
     [EMClientWrapper.shared.groupManagerWrapper didLeaveGroup:_group reason: EMGroupLeaveReasonDestroyed];
     [EMClientWrapper.shared.groupManagerWrapper didLeaveGroup:_group reason: EMGroupLeaveReasonBeRemoved];
     [EMClientWrapper.shared.groupManagerWrapper joinGroupRequestDidReceive:_group user:@"user" reason:@"reason"];
-    [EMClientWrapper.shared.groupManagerWrapper joinGroupRequestDidDecline:_group.groupId reason: @"reason"];
+    [EMClientWrapper.shared.groupManagerWrapper joinGroupRequestDidDecline:_group.groupId reason: @"reason" decliner:@"decliner" applicant:@"applicant"];
     [EMClientWrapper.shared.groupManagerWrapper joinGroupRequestDidApprove:_group];
     [EMClientWrapper.shared.groupManagerWrapper groupListDidUpdate:@[_group]];
     [EMClientWrapper.shared.groupManagerWrapper groupMuteListDidUpdate:_group addedMutedMembers:@[@"user"] muteExpire:1000000];

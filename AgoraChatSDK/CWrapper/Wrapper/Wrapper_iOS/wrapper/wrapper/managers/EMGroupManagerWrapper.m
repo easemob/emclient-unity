@@ -809,10 +809,15 @@
 
 - (void)joinGroupRequestDidDecline:(NSString *_Nonnull)aGroupId
                             reason:(NSString *_Nullable)aReason
+                          decliner:(NSString *_Nullable)aDecliner
+                         applicant:(NSString* _Nonnull )aApplicant
+
 {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     dictionary[@"groupId"] = aGroupId;
     dictionary[@"msg"] = aReason;
+    dictionary[@"decliner"] = aDecliner;
+    dictionary[@"applicant"] = aApplicant;
     [EMWrapperHelper.shared.listener onReceive:groupListener method:onRequestToJoinDeclinedFromGroup info: [dictionary toJsonString]];
 }
 
