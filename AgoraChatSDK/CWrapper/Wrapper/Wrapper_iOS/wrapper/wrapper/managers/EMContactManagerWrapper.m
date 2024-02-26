@@ -6,6 +6,8 @@
 //
 
 #import "EMContactManagerWrapper.h"
+#import "EMContact+Helper.h"
+#import "EMCursorResult+Helper.h"
 #import "EMHelper.h"
 #import "EMUtil.h"
 
@@ -51,6 +53,16 @@
         ret = [self declineInvitation:params callback:callback];
     } else if ([getSelfIdsOnOtherPlatform isEqualToString:method]) {
         ret = [self getSelfIdsOnOtherPlatform:params callback:callback];
+    } else if ([setContactRemark isEqualToString:method]) {
+        ret = [self setContactRemark:params callback:callback];
+    } else if ([fetchContactFromLocal isEqualToString:method]) {
+        ret = [self fetchContactFromLocal:params callback:callback];
+    } else if ([fetchAllContactsFromLocal isEqualToString:method]) {
+        ret = [self fetchAllContactsFromLocal:params callback:callback];
+    } else if ([fetchAllContactsFromServer isEqualToString:method]) {
+        ret = [self fetchAllContactsFromServer:params callback:callback];
+    } else if ([fetchAllContactsFromServerByPage isEqualToString:method]) {
+        ret = [self fetchAllContactsFromServerByPage:params callback:callback];
     } else {
         ret = [super onMethodCall:method params:params callback:callback];
     }
@@ -179,6 +191,69 @@
      {
         [weakSelf wrapperCallback:callback error:aError object:aList];
     }];
+    return nil;
+}
+
+- (NSString *)setContactRemark:(NSDictionary *)param
+                      callback:(EMWrapperCallback *)callback {
+    __weak EMContactManagerWrapper * weakSelf = self;
+    NSString *userId = param[@"userId"];
+    NSString *remark = param[@"remark"];
+    [EMClient.sharedClient.contactManager setContactRemark:userId
+                                                    remark:remark
+                                                completion:^(EMContact* aContact, EMError *aError)
+     {
+        [weakSelf wrapperCallback:callback error:aError object:nil];
+    }];
+
+    return nil;
+}
+
+- (NSString *)fetchContactFromLocal:(NSDictionary *)param
+                           callback:(EMWrapperCallback *)callback {
+    NSString *userId = param[@"userId"];
+    EMContact* emContact = [EMClient.sharedClient.contactManager getContact:userId];
+    return [[emContact toJson] toJsonString];
+}
+
+- (NSString *)fetchAllContactsFromLocal:(NSDictionary *)param
+                               callback:(EMWrapperCallback *)callback {
+    NSArray* contactList = [EMClient.sharedClient.contactManager getAllContacts];
+    NSMutableArray *array = [NSMutableArray array];
+    for (EMContact *contact in contactList) {
+        [array addObject:[contact toJson]];
+    }
+    return [array toJsonString];
+}
+
+- (NSString *)fetchAllContactsFromServer:(NSDictionary *)param
+                                callback:(EMWrapperCallback *)callback {
+    __weak EMContactManagerWrapper * weakSelf = self;
+    [EMClient.sharedClient.contactManager getAllContactsFromServerWithCompletion:
+                                                ^(NSArray<EMContact *> *aList, EMError *aError)
+     {
+        NSMutableArray *array = [NSMutableArray array];
+        for (EMContact *contact in aList) {
+            [array addObject:[contact toJson]];
+        }
+        [weakSelf wrapperCallback:callback error:aError object:array];
+    }];
+
+    return nil;
+}
+
+- (NSString *)fetchAllContactsFromServerByPage:(NSDictionary *)param
+                                      callback:(EMWrapperCallback *)callback {
+    __weak EMContactManagerWrapper * weakSelf = self;
+    NSString *cursor = param[@"cursor"];
+    NSInteger limit = [param[@"limit"] intValue];
+    [EMClient.sharedClient.contactManager getContactsFromServerWithCursor:cursor
+                                                                 pageSize:limit
+                                                               completion:^(EMCursorResult *aResult, EMError *aError)
+     {
+        [weakSelf wrapperCallback:callback error:aError object:[aResult toJson]];
+    }];
+
     return nil;
 }
 
