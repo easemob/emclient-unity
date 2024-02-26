@@ -230,6 +230,7 @@ static NSString *const acceptInvitationFromGroup = @"acceptInvitationFromGroup";
 static NSString *const declineInvitationFromGroup = @"declineInvitationFromGroup";
 static NSString *const fetchMemberAttributes = @"fetchMemberAttributes";
 static NSString *const setMemberAttributes = @"setMemberAttributes";
+static NSString *const fetchMyGroupsCount = @"fetchMyGroupsCount";
 
 
 /// EMPushManager

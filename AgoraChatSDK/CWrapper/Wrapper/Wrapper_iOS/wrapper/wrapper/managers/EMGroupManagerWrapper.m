@@ -127,6 +127,8 @@
         ret = [self setMemberAttributes:params callback:callback];
     } else if ([fetchMemberAttributes isEqualToString:method]) {
         ret = [self fetchMemberAttributes:params callback:callback];
+    } else if ([fetchMyGroupsCount isEqualToString:method]) {
+        ret = [self fetchMyGroupsCount:params callback:callback];
     } else {
         ret = [super onMethodCall:method params:params callback:callback];
     }
@@ -722,7 +724,14 @@
     return nil;
 }
 
-
+- (NSString *)fetchMyGroupsCount:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
+    __weak EMGroupManagerWrapper *weakSelf = self;
+    [EMClient.sharedClient.groupManager getJoinedGroupsCountFromServerWithCompletion:^(NSInteger groupCount, EMError *_Nullable aError)
+     {
+        [weakSelf wrapperCallback:callback error:aError object:[[EMHelper getReturnJsonObject:@(groupCount)] toJsonString]];
+    }];
+    return nil;
+}
 
 - (void)registerEaseListener{
     [EMClient.sharedClient.groupManager addDelegate:self delegateQueue:nil];
