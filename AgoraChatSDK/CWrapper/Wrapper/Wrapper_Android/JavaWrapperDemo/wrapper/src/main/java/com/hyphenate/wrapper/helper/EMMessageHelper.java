@@ -337,6 +337,8 @@ public class EMMessageHelper {
         // data.put("groupAckCount", message.groupAckCount());
         data.put("isThread", message.isChatThreadMessage());
         data.put("deliverOnlineOnly", message.isDeliverOnlineOnly());
+        data.put("broadcast", message.isBroadcast());
+        data.put("isContentReplaced", message.isContentReplaced());
         return data;
     }
 
