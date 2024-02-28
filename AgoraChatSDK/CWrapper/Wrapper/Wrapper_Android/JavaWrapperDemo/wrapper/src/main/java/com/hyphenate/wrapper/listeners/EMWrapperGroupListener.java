@@ -99,10 +99,24 @@ public class EMWrapperGroupListener implements EMGroupChangeListener {
 
     @Override
     public void onRequestToJoinDeclined(String groupId, String groupName, String decliner, String reason) {
+        /*try {
+            JSONObject data = new JSONObject();
+            data.put("groupId", groupId);
+            data.put("msg", reason);
+            post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.groupListener,EMSDKMethod.onRequestToJoinDeclinedFromGroup, data.toString()));
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }*/
+    }
+
+    @Override
+    public void onRequestToJoinDeclined(String groupId, String groupName, String decliner, String reason, String applicant) {
         try {
             JSONObject data = new JSONObject();
             data.put("groupId", groupId);
             data.put("msg", reason);
+            data.put("decliner", decliner);
+            data.put("applicant", applicant);
             post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.groupListener,EMSDKMethod.onRequestToJoinDeclinedFromGroup, data.toString()));
         }catch (JSONException e) {
             e.printStackTrace();
