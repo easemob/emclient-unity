@@ -226,6 +226,7 @@ public class EMSDKMethod {
     public static final String declineInvitationFromGroup = "declineInvitationFromGroup";
     public static final String fetchMemberAttributes = "fetchMemberAttributes";
     public static final String setMemberAttributes = "setMemberAttributes";
+    public static final String fetchMyGroupsCount = "fetchMyGroupsCount";
 
 
     /// EMPushManager
