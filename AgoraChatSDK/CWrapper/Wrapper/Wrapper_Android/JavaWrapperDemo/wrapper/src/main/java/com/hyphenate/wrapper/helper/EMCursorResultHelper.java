@@ -9,6 +9,7 @@ import com.hyphenate.chat.EMGroupInfo;
 import com.hyphenate.chat.EMGroupReadAck;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMMessageReaction;
+import com.hyphenate.chat.EMContact;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,6 +60,10 @@ public class EMCursorResultHelper {
 
                 if (obj instanceof EMConversation) {
                     jsonList.put(EMConversationHelper.toJson((EMConversation) obj));
+                }
+
+                if (obj instanceof EMContact) {
+                    jsonList.put(EMContactHelper.toJson((EMContact) obj));
                 }
             }
         }
