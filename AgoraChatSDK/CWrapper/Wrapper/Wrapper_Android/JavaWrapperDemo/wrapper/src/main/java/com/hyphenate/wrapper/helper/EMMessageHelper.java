@@ -338,7 +338,7 @@ public class EMMessageHelper {
         data.put("isThread", message.isChatThreadMessage());
         data.put("deliverOnlineOnly", message.isDeliverOnlineOnly());
         data.put("broadcast", message.isBroadcast());
-        data.put("isContentReplaced", message.isContentReplaced());
+        //data.put("isContentReplaced", message.isContentReplaced());
         return data;
     }
 
