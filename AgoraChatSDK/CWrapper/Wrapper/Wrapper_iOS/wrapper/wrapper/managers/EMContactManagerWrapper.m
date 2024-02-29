@@ -218,12 +218,17 @@
 
 - (NSString *)fetchAllContactsFromLocal:(NSDictionary *)param
                                callback:(EMWrapperCallback *)callback {
-    NSArray* contactList = [EMClient.sharedClient.contactManager getAllContacts];
-    NSMutableArray *array = [NSMutableArray array];
-    for (EMContact *contact in contactList) {
-        [array addObject:[contact toJson]];
-    }
-    return [array toJsonString];
+    __weak EMContactManagerWrapper * weakSelf = self;
+    // since getAllContacts is implemented in async on Android, so here call getAllContacts in async.
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSArray* contactList = [EMClient.sharedClient.contactManager getAllContacts];
+        NSMutableArray *array = [NSMutableArray array];
+        for (EMContact *contact in contactList) {
+            [array addObject:[contact toJson]];
+        }
+        [weakSelf wrapperCallback:callback error:nil object:array];
+    });
+    return nil;
 }
 
 - (NSString *)fetchAllContactsFromServer:(NSDictionary *)param
