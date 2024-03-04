@@ -10,7 +10,7 @@
 mkdir -p ChatCWrapper/build/Products/Debug/ChatCWrapper.bundle/Contents/Resources/lib
 cp -a ../../../../../../emclient-linux/3rd_party/platform/darwin/depends/zlib_1.2.11_share_intel/lib/* ChatCWrapper/build/Products/Debug/ChatCWrapper.bundle/Contents/Resources/lib
 #cp -a ../../../../../../emclient-linux/3rd_party/platform/darwin/depends/openssl_1.1.1l_share_intel/lib/* ChatCWrapper/build/Products/Debug/ChatCWrapper.bundle/Contents/Resources/lib
-cp -a ../../../../../../emclient-linux/3rd_party/platform/darwin/depends/boringssl_1.1.1f_share_inteboringssl_1.1.1f_share_intell/lib/* ChatCWrapper/build/Products/Debug/ChatCWrapper.bundle/Contents/Resources/lib
+cp -a ../../../../../../emclient-linux/3rd_party/platform/darwin/depends/boringssl_1.1.1f_share_intel/lib/* ChatCWrapper/build/Products/Debug/ChatCWrapper.bundle/Contents/Resources/lib
 #cp -a ../../../../../../emclient-linux/3rd_party/platform/darwin/depends/curl_7.80.0_share_intel/lib/* ChatCWrapper/build/Products/Debug/ChatCWrapper.bundle/Contents/Resources/lib
 cp -a ../../../../../../emclient-linux/3rd_party/platform/darwin/depends/curl_7.80.0_share_intel_boringssl/lib/* ChatCWrapper/build/Products/Debug/ChatCWrapper.bundle/Contents/Resources/lib
 cp -a ../../../../../../emclient-linux/3rd_party/platform/darwin/depends/sqlite_3.34.1_share_intel/lib/* ChatCWrapper/build/Products/Debug/ChatCWrapper.bundle/Contents/Resources/lib
