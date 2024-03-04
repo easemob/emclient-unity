@@ -52,7 +52,7 @@ namespace AgoraChat
                 {
                     SDKClient.Instance.Logout(false);
                 }
-                //SDKClient.Instance.ClearResource();
+                SDKClient.Instance.ClearResource();
             }
         }
 
