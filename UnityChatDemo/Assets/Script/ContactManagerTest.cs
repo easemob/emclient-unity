@@ -395,14 +395,15 @@ public class ContactManagerTest : MonoBehaviour
                 return;
             }
 
-            SDKClient.Instance.ContactManager.FetchContactFromLocal(username, new ValueCallBack<Contact>(
-                onSuccess: (contact) => {
-                    UIManager.DefaultAlert(transform, $"成功: userid:{contact.UserId}, remark:{contact.Remark}");
-                },
-                onError: (code, desc) => {
-                    UIManager.DefaultAlert(transform, $"失败code:{code}，desc:{desc}");
-                }
-            ));
+            Contact contact = SDKClient.Instance.ContactManager.FetchContactFromLocal(username);
+            if (null != contact)
+            {
+                UIManager.DefaultAlert(transform, $"成功: userid:{contact.UserId}, remark:{contact.Remark}");
+            }
+            else
+            {
+                UIManager.DefaultAlert(transform, $"No any contact is found");
+            }
         });
 
         config.AddField("username");

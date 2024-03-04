@@ -354,31 +354,26 @@ namespace sdk_wrapper {
     {
         if (!CheckClientInitOrNot(cbid)) return nullptr;
 
-        string local_cbid = cbid;
-
         Document d; d.Parse(jstr);
         string userId = GetJsonValue_String(d, "userId", "");
 
-        thread t([=]() {
-            string u = userId;
+        EMError error;
+        EMContactPtr contact = CLIENT->getContactManager().fetchContactFromLocal(userId, error);
 
-            EMError error;
-            EMContactPtr contact = CLIENT->getContactManager().fetchContactFromLocal(u, error);
+        string json = "";
 
-            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+        if (EMError::EM_NO_ERROR == error.mErrorCode) {
 
-                string json = Contact::ToJson(contact);
-                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
-                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            if (nullptr != contact) {
+                JSON_STARTOBJ
+                writer.Key("ret");
+                Contact::ToJsonObject(writer, contact);
+                JSON_ENDOBJ
+                json = s.GetString();
             }
-            else {
-                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
-                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
-            }
-            });
-        t.detach();
+        }
 
-        return nullptr;
+        return CopyToPointer(json);
     }
 
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ContactManager_FetchAllContactsFromLocal(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)

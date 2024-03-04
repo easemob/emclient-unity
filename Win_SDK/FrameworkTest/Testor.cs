@@ -4841,14 +4841,14 @@ namespace WinSDKTest
         {
             string username = GetParamValueFromContext(0);
 
-            SDKClient.Instance.ContactManager.FetchContactFromLocal(username, new ValueCallBack<Contact>(
-                onSuccess: (contact) => {
-                    Console.WriteLine($"FetchContactFromLocal success, userid:{contact.UserId}, remark:{contact.Remark}");
-                },
-                onError: (code, desc) => {
-                    Console.WriteLine($"FetchContactFromLocal failed, code:{code}, desc:{desc}");
-                }
-            ));
+            Contact contact = SDKClient.Instance.ContactManager.FetchContactFromLocal(username);
+            if (null != contact)
+            {
+                Console.WriteLine($"Found contact, username:{contact.UserId}, mark:{contact.Remark}");
+            } else
+            {
+                Console.WriteLine("No any contact is found");
+            }
         }
 
         public void CallFunc_IContactManager_FetchAllContactsFromLocal()
