@@ -336,31 +336,28 @@ namespace AgoraChat
         /**
          * \~chinese
          * 从本地数据库中获取联系人信息。
+         * 如果未获取到联系人信息则返回null。
          *
-         * 异步方法。
+         * 同步方法。
          *
          * @param userId      联系人 ID。
          * @param callback    结果回调，详见 {@link ValueCallBack}。
          *
          * \~english
          * Fetch contact information from the local database.
+         * Return null if the contact information is not obtained.
          *
-         * This is an asynchronous method.
+         * This is an synchronous method.
          *
-         * @param userId      User ID.
+         * @param userId    User ID.
          * @param callback	The result callback. See {@link ValueCallBack}.
          */
-        public void FetchContactFromLocal(string userId, ValueCallBack<Contact> callback = null)
+        public Contact FetchContactFromLocal(string userId)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("userId", userId);
-
-            Process process = (_, jsonNode) =>
-            {
-                return ModelHelper.CreateWithJsonObject<Contact>(jsonNode);
-            };
-
-            NativeCall<Contact>(SDKMethod.fetchContactFromLocal, jo_param, callback, process);
+            JSONNode jn = NativeGet(SDKMethod.fetchContactFromLocal, jo_param).GetReturnJsonNode();
+            return ModelHelper.CreateWithJsonObject<Contact>(jn);
         }
 
         /**
