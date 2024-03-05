@@ -42,7 +42,7 @@
 - (void)connnectDelegateTest {
     [EMClientWrapper.shared connectionStateDidChange:EMConnectionConnected];
     [EMClientWrapper.shared connectionStateDidChange:EMConnectionDisconnected];
-    [EMClientWrapper.shared userAccountDidLoginFromOtherDevice];
+    [EMClientWrapper.shared userAccountDidLoginFromOtherDevice:@"another-device"];
     [EMClientWrapper.shared userAccountDidRemoveFromServer];
     [EMClientWrapper.shared userDidForbidByServer];
     [EMClientWrapper.shared userAccountDidForcedToLogout:[EMError errorWithDescription:@"" code:216]];
