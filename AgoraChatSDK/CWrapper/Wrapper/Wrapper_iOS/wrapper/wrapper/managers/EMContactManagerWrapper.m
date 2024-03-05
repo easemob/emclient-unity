@@ -213,7 +213,7 @@
                            callback:(EMWrapperCallback *)callback {
     NSString *userId = param[@"userId"];
     EMContact* emContact = [EMClient.sharedClient.contactManager getContact:userId];
-    return [[emContact toJson] toJsonString];
+    return [[EMHelper getReturnJsonObject:[emContact toJson]] toJsonString];
 }
 
 - (NSString *)fetchAllContactsFromLocal:(NSDictionary *)param
