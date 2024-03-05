@@ -728,7 +728,7 @@
     __weak EMGroupManagerWrapper *weakSelf = self;
     [EMClient.sharedClient.groupManager getJoinedGroupsCountFromServerWithCompletion:^(NSInteger groupCount, EMError *_Nullable aError)
      {
-        [weakSelf wrapperCallback:callback error:aError object:[[EMHelper getReturnJsonObject:@(groupCount)] toJsonString]];
+        [weakSelf wrapperCallback:callback error:aError object:[EMHelper getReturnJsonObject:@(groupCount)]];
     }];
     return nil;
 }
