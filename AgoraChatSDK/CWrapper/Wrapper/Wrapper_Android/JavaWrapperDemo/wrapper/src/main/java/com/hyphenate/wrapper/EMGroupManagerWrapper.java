@@ -1060,7 +1060,11 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
         EMCommonValueCallback<Integer> callBack = new EMCommonValueCallback<Integer>(callback) {
             @Override
             public void onSuccess(Integer object) {
-                updateObject(object.toString());
+                try {
+                    updateObject(EMHelper.getReturnJsonObject(object));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         };
 
