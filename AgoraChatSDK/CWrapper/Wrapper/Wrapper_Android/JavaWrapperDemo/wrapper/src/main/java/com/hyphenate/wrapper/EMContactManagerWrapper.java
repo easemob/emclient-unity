@@ -218,7 +218,7 @@ public class EMContactManagerWrapper extends EMBaseWrapper{
         } catch (HyphenateException e) {
 
         }
-        return EMHelper.getReturnJsonObject(contact).toString();
+        return EMHelper.getReturnJsonObject(EMContactHelper.toJson(contact)).toString();
     }
 
     private String fetchAllContactsFromLocal(EMWrapperCallback callback) {
