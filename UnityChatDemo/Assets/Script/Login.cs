@@ -206,7 +206,7 @@ public class Login : MonoBehaviour
         options.UsingHttpsOnly = true;
         options.DebugMode = true;
         options.EnableEmptyConversation = true;
-        options.UseReplacedMessageContents = true;
+        //options.UseReplacedMessageContents = true;
         SDKClient.Instance.InitWithOptions(options);
 
         //if (SDKClient.Instance.IsLoggedIn && SDKClient.Instance.Options.AutoLogin)
