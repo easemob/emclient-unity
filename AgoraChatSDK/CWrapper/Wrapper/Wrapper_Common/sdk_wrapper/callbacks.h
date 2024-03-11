@@ -14,6 +14,7 @@
 
 extern EMClient* gClient;
 extern NativeListenerEvent gCallback;
+extern const int TOKEN_CHECK_INTERVAL;
 
 namespace sdk_wrapper {
 
@@ -82,6 +83,11 @@ namespace sdk_wrapper {
             else if (EMError::TOKEN_WILL_EXPIRE == error->mErrorCode) {
                 CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onTokenWillExpire.c_str(), to_string(error->mErrorCode).c_str());
             }
+        }
+
+        void onReceiveToken(const std::string& token, int64_t expiredTs) override
+        {
+            TokenWrapper::GetInstance()->SetAndStartTokenCheckTimer(expiredTs, TOKEN_CHECK_INTERVAL);
         }
     };
 
@@ -434,20 +440,20 @@ namespace sdk_wrapper {
                 CallBack(STRING_GROUPMANAGER_LISTENER.c_str(), STRING_onRequestToJoinAcceptedFromGroup.c_str(), json.c_str());
         }
 
-        void onReceiveRejectionFromGroup(const string& groupId, const string& reason) override {
+        void onReceiveRejectionFromGroup(const string& groupId, const string& reason, const std::string& decliner, const std::string& applicant) override {
 
             JSON_STARTOBJ
             writer.Key("groupId");
             writer.String(groupId.c_str());
 
-            //writer.Key("name");
-            //writer.String("");
-
-            //writer.Key("userId");
-            //writer.String("");
-
             writer.Key("msg");
             writer.String(reason.c_str());
+
+            writer.Key("decliner");
+            writer.String(decliner.c_str());
+
+            writer.Key("applicant");
+            writer.String(applicant.c_str());
 
             JSON_ENDOBJ
 

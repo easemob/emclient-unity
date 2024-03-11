@@ -424,6 +424,11 @@ namespace sdk_wrapper
             configs->setEnableEmptyConversation(enable_empty_conversation);
         }
 
+        if (jnode.HasMember("useReplacedMessageContents") && jnode["useReplacedMessageContents"].IsBool()) {
+            bool use_replaced_message_contents = jnode["useReplacedMessageContents"].GetBool();
+            configs->setUseReplacedMessageContents(use_replaced_message_contents);
+        }
+
         if (jnode.HasMember("customOSType") && jnode["customOSType"].IsInt()) {
             int custom_os_type = jnode["customOSType"].GetInt();
             if (-1 != custom_os_type) {
@@ -1386,6 +1391,12 @@ namespace sdk_wrapper
 
             writer.Key("isThread");
             writer.Bool(msg->isThread());
+
+            writer.Key("broadcast");
+            writer.Bool(msg->broadcast());
+
+            writer.Key("isContentReplaced");
+            writer.Bool(msg->isContentReplaced());
 
             writer.Key("body");
             Message::ToJsonObjectWithBody(writer, msg);
@@ -3415,6 +3426,60 @@ namespace sdk_wrapper
         return data;
     }
 
+    EMContactPtr Contact::FromJson(const char* json)
+    {
+        // No need to implement this yet.
+        return nullptr;
+    }
+
+    void Contact::ToJsonObject(Writer<StringBuffer>& writer, const EMContactPtr contact)
+    {
+        writer.StartObject();
+
+        writer.Key("userId");
+        writer.String(contact->getUsername().c_str());
+
+        writer.Key("remark");
+        writer.String(contact->getRemark().c_str());
+
+        writer.EndObject();
+    }
+
+    string Contact::ToJson(const EMContactPtr contact)
+    {
+        if (nullptr == contact || nullptr == contact.get()) return string();
+
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        ToJsonObject(writer, contact);
+
+        std::string data = s.GetString();
+        return data;
+    }
+
+    void Contact::ToJsonObject(Writer<StringBuffer>& writer, const vector<EMContactPtr> vec)
+    {
+        writer.StartArray();
+
+        for (auto it : vec) {
+            ToJsonObject(writer, it);
+        }
+
+        writer.EndArray();
+    }
+
+    string Contact::ToJson(const vector<EMContactPtr> vec)
+    {
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        ToJsonObject(writer, vec);
+
+        std::string data = s.GetString();
+        return data;
+    }
+
     vector<EMMessageBody::EMMessageBodyType> FetchMessageOption::FromJsonObjectToBodyTypeVector(const Value& jnode)
     {
         vector<EMMessageBody::EMMessageBodyType> vec;
@@ -3748,202 +3813,6 @@ namespace sdk_wrapper
         else {
             return FromJsonObjectFromServer(d);
         }        
-    }
-
-    TokenWrapper::TokenWrapper()
-    {
-        autologin_config_.userName = "";
-        autologin_config_.passwd = "";
-        autologin_config_.token = "";
-        autologin_config_.expireTS = "";
-        autologin_config_.expireTsInt = -1;
-        autologin_config_.availablePeriod = -1;
-    }
-
-    bool TokenWrapper::GetTokenCofigFromJson(string& raw, string& token, string& expireTS)
-    {
-        const string ACCESS_TOKEN = "access_token";
-        const string EXPIRE_TS = "expire_timestamp";
-
-        //string expire_in;
-
-        int64_t expireTS_int = 0;
-
-        if (raw.length() < 3) {
-            return false;
-        }
-
-        Document d;
-        if (d.Parse(raw.c_str()).HasParseError()) {
-            return false;
-        }
-
-        if (d.HasMember(ACCESS_TOKEN.c_str())) {
-            token = d[ACCESS_TOKEN.c_str()].GetString();
-        }
-        else {
-            return false;
-        }
-
-        if (d.HasMember(EXPIRE_TS.c_str())) {
-            expireTS_int = d[EXPIRE_TS.c_str()].GetInt64();
-            expireTS = to_string(expireTS_int);
-        }
-        else {
-            return false;
-        }
-
-        return true;
-    }
-
-    int TokenWrapper::GetTokenCheckInterval(int pre_check_interval, int availablePeriod)
-    {
-        if (pre_check_interval > floor(availablePeriod / 2)) {
-            pre_check_interval = floor(availablePeriod / 3);
-        }
-
-        return pre_check_interval;
-    }
-
-    bool TokenWrapper::SetTokenInAutoLogin(const string& username, const string& token, const string expireTS)
-    {
-        if (username.size() == 0 || token.size() == 0) {
-            return false;
-        }
-
-        if (expireTS.size() > 0) {
-
-            int64_t expireTsInt = atoll(expireTS.c_str()); // milli-second
-            expireTsInt = expireTsInt / 1000; // second
-
-            time_t nowTS = time(NULL);
-
-            int64_t availablePeriod = expireTsInt - nowTS;
-            // no available time or expireTs is same with last time, then no need to update related fields
-            if (availablePeriod <= 0) {               
-                return false;
-            }
-
-            //expireTs is same with last time, then no need to update related fields
-            if (autologin_config_.expireTsInt == expireTsInt) {
-                return false;
-            }
-
-            autologin_config_.expireTS = expireTS;
-            autologin_config_.expireTsInt = expireTsInt;
-            autologin_config_.availablePeriod = availablePeriod;
-        }
-        else {
-            // Note: if expireTS is empty, but token is not, means
-            // current using easemob token to login, not agora token!
-            autologin_config_.expireTS = "";
-            autologin_config_.expireTsInt = 0;
-            autologin_config_.availablePeriod = 0;
-        }
-
-        autologin_config_.userName = username;
-        autologin_config_.passwd = "";
-        autologin_config_.token = token;
-        return true;
-    }
-
-    void TokenWrapper::SetPasswdInAutoLogin(const string& username, const string& passwd)
-    {
-        autologin_config_.userName = username;
-        autologin_config_.passwd = passwd;
-        autologin_config_.token = "";
-        autologin_config_.expireTS = "";
-        autologin_config_.expireTsInt = 0;
-        autologin_config_.availablePeriod = 0;
-    }
-
-    void TokenWrapper::SaveAutoLoginConfigToFile(const string& uuid)
-    {
-        // merge token config
-        string mergeStr = "userName";
-        mergeStr.append("=");
-        mergeStr.append(autologin_config_.userName);
-        mergeStr.append("\n");
-
-        mergeStr.append("passwd");
-        mergeStr.append("=");
-        mergeStr.append(autologin_config_.passwd);
-        mergeStr.append("\n");
-
-        mergeStr.append("token");
-        mergeStr.append("=");
-        mergeStr.append(autologin_config_.token);
-        mergeStr.append("\n");
-
-        mergeStr.append("expireTS");
-        mergeStr.append("=");
-        mergeStr.append(autologin_config_.expireTS);
-
-        EncryptAndSaveToFile(mergeStr, uuid);
-    }
-
-    void TokenWrapper::GetAutoLoginConfigFromFile(const string& uuid)
-    {
-        string mergeStr = DecryptAndGetFromFile(uuid);
-
-        // mergeStr has the format: aaa\nbbb\nccc
-        string::size_type pos, pos1;
-
-        string userName = "";
-        pos = mergeStr.find("\n");
-        if (string::npos != pos) {
-            string str = string(mergeStr, 0, pos - 0);
-            userName = GetRightValue(str);
-        }
-        else {
-            return;
-        }
-
-        string passwd = "";
-        pos = pos + 1;
-        pos1 = mergeStr.find("\n", pos);
-        if (string::npos != pos1) {
-            string str = string(mergeStr, pos, pos1 - pos);
-            passwd = GetRightValue(str);
-        }
-        else {
-            return;
-        }
-
-        string token = "";
-        pos = pos1 + 1;
-        pos1 = mergeStr.find("\n", pos);
-        if (string::npos != pos1) {
-            string str = string(mergeStr, pos, pos1 - pos);
-            token = GetRightValue(str);
-        }
-        else {
-            return;
-        }
-
-        pos = pos1 + 1;
-        if (pos > mergeStr.size() - 1) {
-            return;
-        }
-
-        string expireTS = "";
-        string str = string(mergeStr, pos, mergeStr.size() - pos);
-        expireTS = GetRightValue(str);
-
-        autologin_config_.userName = userName;
-        autologin_config_.passwd = passwd;
-        autologin_config_.token = token;
-        autologin_config_.expireTS = expireTS;
-        autologin_config_.expireTsInt = 0;
-        autologin_config_.availablePeriod = 0;
-
-        if (autologin_config_.expireTS.size() > 0) {
-            time_t nowTS = time(NULL); // second
-            int64_t expireTsInt = atoll(autologin_config_.expireTS.c_str()); // milli-second
-
-            autologin_config_.expireTsInt = (int)(expireTsInt / 1000); // second
-            autologin_config_.availablePeriod = autologin_config_.expireTsInt - nowTS;
-        }
     }
 }
 

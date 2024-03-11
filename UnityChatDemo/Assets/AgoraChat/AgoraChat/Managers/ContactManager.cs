@@ -306,6 +306,151 @@ namespace AgoraChat
         }
 
         /**
+         * \~chinese
+         * 设置联系人备注。
+         *
+         * 异步方法。
+         *
+         * @param userId      要设置备注的联系人 ID。
+         * @param remark      要设置的备注。
+         * @param callback    结果回调，详见 {@link CallBack}。
+         *
+         * \~english
+         * Set remark for the userId.
+         *
+         * This is an asynchronous method.
+         *
+         * @param userId      User ID to set a remark for.
+         * @param remark      Remark to be set.
+         * @param callback	The result callback. See {@link CallBack}.
+         */
+        public void SetContactRemark(string userId, string remark, CallBack callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("userId", userId);
+            jo_param.AddWithoutNull("remark", remark);
+
+            NativeCall(SDKMethod.setContactRemark, jo_param, callback);
+        }
+
+        /**
+         * \~chinese
+         * 从本地数据库中获取联系人信息。
+         * 如果未获取到联系人信息则返回null。
+         *
+         * 同步方法。
+         *
+         * @param userId      联系人 ID。
+         * @param callback    结果回调，详见 {@link ValueCallBack}。
+         *
+         * \~english
+         * Fetch contact information from the local database.
+         * Return null if the contact information is not obtained.
+         *
+         * This is an synchronous method.
+         *
+         * @param userId    User ID.
+         * @param callback	The result callback. See {@link ValueCallBack}.
+         */
+        public Contact FetchContactFromLocal(string userId)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("userId", userId);
+            JSONNode jn = NativeGet(SDKMethod.fetchContactFromLocal, jo_param).GetReturnJsonNode();
+            return ModelHelper.CreateWithJsonObject<Contact>(jn);
+        }
+
+        /**
+        * \~chinese
+        * 从本地数据库中获取所有联系人信息。
+        *
+        * 异步方法。
+        *
+        * @param callback    结果回调，详见 {@link ValueCallBack}。
+        *
+        * \~english
+        * Fetch all contact information from the local database.
+        *
+        * This is an asynchronous method.
+        *
+        * @param callback	The result callback. See {@link ValueCallBack}.
+        */
+        public void FetchAllContactsFromLocal(ValueCallBack<List<Contact>> callback = null)
+        {
+            Process process = (_, jsonNode) =>
+            {
+                return List.BaseModelListFromJsonArray<Contact>(jsonNode);
+            };
+
+            NativeCall<List<Contact>>(SDKMethod.fetchAllContactsFromLocal, null, callback, process);
+        }
+
+        /**
+        * \~chinese
+        * 从服务器获取所有联系人信息。
+        *
+        * 异步方法。
+        *
+        * @param callback    结果回调，详见 {@link ValueCallBack}。
+        *
+        * \~english
+        * Fetch all contact information from server.
+        *
+        * This is an asynchronous method.
+        *
+        * @param callback	The result callback. See {@link ValueCallBack}.
+        */
+        public void FetchAllContactsFromServer(ValueCallBack<List<Contact>> callback = null)
+        {
+            Process process = (_, jsonNode) =>
+            {
+                return List.BaseModelListFromJsonArray<Contact>(jsonNode);
+            };
+
+            NativeCall<List<Contact>>(SDKMethod.fetchAllContactsFromServer, null, callback, process);
+        }
+
+        /**
+        * \~chinese
+        * 从服务器分页获取所有联系人信息。
+        *
+        * 异步方法。
+        *
+        * @param limit       每页期望获取的联系人条数。取值范围为 [1,50]。
+        * @param cursor      查询的起始游标位置。
+        * @param callback    结果回调，详见 {@link ValueCallBack}。
+        *
+        * \~english
+        * Fetch all contact information from the server in page form.
+        *
+        * This is an asynchronous method.
+        *
+        * @param limit        The number of contact that you expect to get on each page. The value range is [1,50].
+        * @param cursor       The cursor position from which to start querying data.
+        *
+        * @param callback	The result callback. See {@link ValueCallBack}.
+        */
+        public void FetchAllContactsFromServerByPage(int limit = 20, string cursor = null, ValueCallBack<CursorResult<Contact>> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("limit", limit);
+            jo_param.AddWithoutNull("cursor", cursor);
+
+            Process process = (_, jsonNode) =>
+            {
+                CursorResult<Contact> cursor_contact = new CursorResult<Contact>(_, (jn) =>
+                {
+                    return ModelHelper.CreateWithJsonObject<Contact>(jn);
+                });
+
+                cursor_contact.FromJsonObject(jsonNode.AsObject);
+                return cursor_contact;
+            };
+
+            NativeCall<CursorResult<Contact>>(SDKMethod.fetchAllContactsFromServerByPage, jo_param, callback, process);
+        }
+
+        /**
 		 * \~chinese
 		 * 注册联系人监听器。
 		 *

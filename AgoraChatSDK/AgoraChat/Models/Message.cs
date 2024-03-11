@@ -1,9 +1,13 @@
 ﻿using AgoraChat.SimpleJSON;
 using System;
 using System.Collections.Generic;
+#if !_WIN32
+using UnityEngine.Scripting;
+#endif
 
 namespace AgoraChat
 {
+    [Preserve]
     public class Message : BaseModel
     {
         /**
@@ -315,6 +319,21 @@ namespace AgoraChat
          * - `false`: No.
          */
         public bool IsThread = false;
+
+        /**
+         * \~chinese
+         * 只读。
+         * 是否是广播消息：
+         * - `true`：是；
+         * - `false`：否。
+         *
+         * \~english
+         * ReadOnly.
+         * Whether the message is in a broadcast message:
+         * - `true`: Yes.
+         * - `false`: No.
+         */
+        public bool Broadcast = false;
 
         /**
          * \~chinese
@@ -771,10 +790,13 @@ namespace AgoraChat
             return GetAttributeValue<T>(value, out found);
         }
 
+        [Preserve]
         internal Message() { }
 
+        [Preserve]
         internal Message(string jsonString) : base(jsonString) { }
 
+        [Preserve]
         internal Message(JSONObject jsonObject) : base(jsonObject) { }
 
         internal override void FromJsonObject(JSONObject jn)
@@ -803,6 +825,8 @@ namespace AgoraChat
                     IsRead = jo["isRead"].AsBool;
                     MessageOnlineState = jo["messageOnlineState"].AsBool;
                     IsThread = jo["isThread"].AsBool;
+                    Broadcast = jo["broadcast"].AsBool;
+                    //IsContentReplaced = jo["isContentReplaced"].AsBool;
                 }
             }
         }
@@ -833,6 +857,8 @@ namespace AgoraChat
             jo.AddWithoutNull("isRead", IsRead);
             jo.AddWithoutNull("messageOnlineState", MessageOnlineState);
             jo.AddWithoutNull("isThread", IsThread);
+            jo.AddWithoutNull("broadcast", Broadcast);
+            //jo.AddWithoutNull("isContentReplaced", IsContentReplaced);
 
             if (null != _receiverList && _receiverList.Count > 0)
             {

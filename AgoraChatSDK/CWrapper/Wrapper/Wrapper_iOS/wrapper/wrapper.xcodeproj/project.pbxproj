@@ -21,6 +21,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		4597E80F2B875E1200D70B6D /* EMContact+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4597E80E2B875E1200D70B6D /* EMContact+Helper.m */; };
+		45F88D192B81EF2A0051DFEE /* HyphenateChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90319D0D29360033000D01BE /* HyphenateChat.framework */; };
 		90319C812935FC1E000D01BE /* EMMessageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 90319C2A2935FC1E000D01BE /* EMMessageManager.m */; };
 		90319C822935FC1E000D01BE /* EMChatroom+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 90319C2B2935FC1E000D01BE /* EMChatroom+Helper.m */; };
 		90319C832935FC1E000D01BE /* EMUserInfoManagerWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 90319C2C2935FC1E000D01BE /* EMUserInfoManagerWrapper.h */; };
@@ -125,6 +127,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4597E80D2B875DBF00D70B6D /* EMContact+Helper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EMContact+Helper.h"; sourceTree = "<group>"; };
+		4597E80E2B875E1200D70B6D /* EMContact+Helper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "EMContact+Helper.m"; sourceTree = "<group>"; };
 		90319C1F2935FBE3000D01BE /* wrapper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = wrapper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		90319C2A2935FC1E000D01BE /* EMMessageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EMMessageManager.m; sourceTree = "<group>"; };
 		90319C2B2935FC1E000D01BE /* EMChatroom+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "EMChatroom+Helper.m"; sourceTree = "<group>"; };
@@ -226,6 +230,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45F88D192B81EF2A0051DFEE /* HyphenateChat.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,28 +277,28 @@
 			children = (
 				90319C2D2935FC1E000D01BE /* EMBaseManager.h */,
 				90319C382935FC1E000D01BE /* EMBaseManager.m */,
-				90319C322935FC1E000D01BE /* EMClientWrapper.h */,
-				90319C3F2935FC1E000D01BE /* EMClientWrapper.m */,
 				90319C3C2935FC1E000D01BE /* EMChatManagerWrapper.h */,
 				90319C302935FC1E000D01BE /* EMChatManagerWrapper.m */,
-				90319C422935FC1E000D01BE /* EMContactManagerWrapper.h */,
-				90319C352935FC1E000D01BE /* EMContactManagerWrapper.m */,
-				90319C362935FC1E000D01BE /* EMGroupManagerWrapper.h */,
-				90319C412935FC1E000D01BE /* EMGroupManagerWrapper.m */,
-				90319C332935FC1E000D01BE /* EMRoomManagerWrapper.h */,
-				90319C3E2935FC1E000D01BE /* EMRoomManagerWrapper.m */,
-				90319C372935FC1E000D01BE /* EMPushManagerWrapper.h */,
-				90319C2E2935FC1E000D01BE /* EMPushManagerWrapper.m */,
-				90319C2C2935FC1E000D01BE /* EMUserInfoManagerWrapper.h */,
-				90319C392935FC1E000D01BE /* EMUserInfoManagerWrapper.m */,
 				90319C432935FC1E000D01BE /* EMChatThreadManagerWrapper.h */,
 				90319C342935FC1E000D01BE /* EMChatThreadManagerWrapper.m */,
-				90319C3D2935FC1E000D01BE /* EMPresenceManagerWrapper.h */,
-				90319C2F2935FC1E000D01BE /* EMPresenceManagerWrapper.m */,
+				90319C322935FC1E000D01BE /* EMClientWrapper.h */,
+				90319C3F2935FC1E000D01BE /* EMClientWrapper.m */,
+				90319C422935FC1E000D01BE /* EMContactManagerWrapper.h */,
+				90319C352935FC1E000D01BE /* EMContactManagerWrapper.m */,
 				90319C312935FC1E000D01BE /* EMConversationWrapper.h */,
 				90319C402935FC1E000D01BE /* EMConversationWrapper.m */,
+				90319C362935FC1E000D01BE /* EMGroupManagerWrapper.h */,
+				90319C412935FC1E000D01BE /* EMGroupManagerWrapper.m */,
 				90319C3B2935FC1E000D01BE /* EMMessageManager.h */,
 				90319C2A2935FC1E000D01BE /* EMMessageManager.m */,
+				90319C3D2935FC1E000D01BE /* EMPresenceManagerWrapper.h */,
+				90319C2F2935FC1E000D01BE /* EMPresenceManagerWrapper.m */,
+				90319C372935FC1E000D01BE /* EMPushManagerWrapper.h */,
+				90319C2E2935FC1E000D01BE /* EMPushManagerWrapper.m */,
+				90319C332935FC1E000D01BE /* EMRoomManagerWrapper.h */,
+				90319C3E2935FC1E000D01BE /* EMRoomManagerWrapper.m */,
+				90319C2C2935FC1E000D01BE /* EMUserInfoManagerWrapper.h */,
+				90319C392935FC1E000D01BE /* EMUserInfoManagerWrapper.m */,
 			);
 			path = managers;
 			sourceTree = "<group>";
@@ -325,53 +330,55 @@
 		90319C552935FC1E000D01BE /* helper */ = {
 			isa = PBXGroup;
 			children = (
+				90319C592935FC1E000D01BE /* EaseModeToJson.h */,
+				90319C622935FC1E000D01BE /* EMChatMessage+Helper.h */,
+				90319C752935FC1E000D01BE /* EMChatMessage+Helper.m */,
 				90319C3A2935FC1E000D01BE /* EMChatroom+Helper.h */,
 				90319C2B2935FC1E000D01BE /* EMChatroom+Helper.m */,
-				90319C562935FC1E000D01BE /* EMConversation+Helper.h */,
-				90319C572935FC1E000D01BE /* EMDeviceConfig+Helper.m */,
-				90319C582935FC1E000D01BE /* EMOptions+Helper.h */,
-				90319C592935FC1E000D01BE /* EaseModeToJson.h */,
-				90319C5A2935FC1E000D01BE /* EMSilentModeResult+Helper.m */,
-				90319C5B2935FC1E000D01BE /* EMChatThreadEvent+Helper.m */,
-				90319C5C2935FC1E000D01BE /* EMPageResult+Helper.m */,
-				90319C5D2935FC1E000D01BE /* EMSilentModeParam+Helper.m */,
-				90319C5E2935FC1E000D01BE /* EMMessageReaction+Helper.m */,
 				90319C5F2935FC1E000D01BE /* EMChatThread+Helper.h */,
-				90319C602935FC1E000D01BE /* EMUserInfo+Helper.m */,
-				90319C612935FC1E000D01BE /* EMGroup+Helper.h */,
-				90319C622935FC1E000D01BE /* EMChatMessage+Helper.h */,
-				90319C632935FC1E000D01BE /* EMMessageReactionChange+Helper.m */,
-				90319C642935FC1E000D01BE /* EMSilentModeTime+Helper.h */,
-				90319C652935FC1E000D01BE /* EMPushOptions+Helper.m */,
-				90319C662935FC1E000D01BE /* EMGroupMessageAck+Helper.m */,
-				90319C672935FC1E000D01BE /* EMTranslateLanguage+Helper.h */,
-				90319C682935FC1E000D01BE /* EMPresence+Helper.m */,
-				90319C692935FC1E000D01BE /* EMCursorResult+Helper.h */,
-				90319C6A2935FC1E000D01BE /* EMError+Helper.h */,
-				90319C6B2935FC1E000D01BE /* EMSilentModeResult+Helper.h */,
-				90319C6C2935FC1E000D01BE /* EMOptions+Helper.m */,
-				90319C6D2935FC1E000D01BE /* EMDeviceConfig+Helper.h */,
-				90319C6E2935FC1E000D01BE /* EMConversation+Helper.m */,
 				90319C6F2935FC1E000D01BE /* EMChatThread+Helper.m */,
-				90319C702935FC1E000D01BE /* EMMessageReaction+Helper.h */,
-				90319C712935FC1E000D01BE /* EMSilentModeParam+Helper.h */,
-				90319C722935FC1E000D01BE /* EMPageResult+Helper.h */,
 				90319C732935FC1E000D01BE /* EMChatThreadEvent+Helper.h */,
-				90319C742935FC1E000D01BE /* EMUserInfo+Helper.h */,
-				90319C752935FC1E000D01BE /* EMChatMessage+Helper.m */,
-				90319C762935FC1E000D01BE /* EMGroup+Helper.m */,
-				90319C772935FC1E000D01BE /* EMError+Helper.m */,
-				90319C782935FC1E000D01BE /* EMTranslateLanguage+Helper.m */,
-				90319C792935FC1E000D01BE /* EMPresence+Helper.h */,
+				90319C5B2935FC1E000D01BE /* EMChatThreadEvent+Helper.m */,
+				4597E80D2B875DBF00D70B6D /* EMContact+Helper.h */,
+				4597E80E2B875E1200D70B6D /* EMContact+Helper.m */,
+				90319C562935FC1E000D01BE /* EMConversation+Helper.h */,
+				90319C6E2935FC1E000D01BE /* EMConversation+Helper.m */,
+				90319C692935FC1E000D01BE /* EMCursorResult+Helper.h */,
 				90319C7A2935FC1E000D01BE /* EMCursorResult+Helper.m */,
-				90319C7B2935FC1E000D01BE /* EMGroupMessageAck+Helper.h */,
-				90319C7C2935FC1E000D01BE /* EMPushOptions+Helper.h */,
-				90319C7D2935FC1E000D01BE /* EMSilentModeTime+Helper.m */,
-				90319C7E2935FC1E000D01BE /* EMMessageReactionChange+Helper.h */,
+				90319C6D2935FC1E000D01BE /* EMDeviceConfig+Helper.h */,
+				90319C572935FC1E000D01BE /* EMDeviceConfig+Helper.m */,
+				90319C6A2935FC1E000D01BE /* EMError+Helper.h */,
+				90319C772935FC1E000D01BE /* EMError+Helper.m */,
 				9052DFA52A25D4BF00FB1FF2 /* EMFetchServerMessagesOption+Helper.h */,
 				9052DFA62A25D4BF00FB1FF2 /* EMFetchServerMessagesOption+Helper.m */,
+				90319C612935FC1E000D01BE /* EMGroup+Helper.h */,
+				90319C762935FC1E000D01BE /* EMGroup+Helper.m */,
+				90319C7B2935FC1E000D01BE /* EMGroupMessageAck+Helper.h */,
+				90319C662935FC1E000D01BE /* EMGroupMessageAck+Helper.m */,
+				90319C702935FC1E000D01BE /* EMMessageReaction+Helper.h */,
+				90319C5E2935FC1E000D01BE /* EMMessageReaction+Helper.m */,
+				90319C7E2935FC1E000D01BE /* EMMessageReactionChange+Helper.h */,
+				90319C632935FC1E000D01BE /* EMMessageReactionChange+Helper.m */,
 				9052DFA92A25E78600FB1FF2 /* EMMessageReactionOperation+Helper.h */,
 				9052DFAA2A25E78600FB1FF2 /* EMMessageReactionOperation+Helper.m */,
+				90319C582935FC1E000D01BE /* EMOptions+Helper.h */,
+				90319C6C2935FC1E000D01BE /* EMOptions+Helper.m */,
+				90319C722935FC1E000D01BE /* EMPageResult+Helper.h */,
+				90319C5C2935FC1E000D01BE /* EMPageResult+Helper.m */,
+				90319C792935FC1E000D01BE /* EMPresence+Helper.h */,
+				90319C682935FC1E000D01BE /* EMPresence+Helper.m */,
+				90319C7C2935FC1E000D01BE /* EMPushOptions+Helper.h */,
+				90319C652935FC1E000D01BE /* EMPushOptions+Helper.m */,
+				90319C712935FC1E000D01BE /* EMSilentModeParam+Helper.h */,
+				90319C5D2935FC1E000D01BE /* EMSilentModeParam+Helper.m */,
+				90319C6B2935FC1E000D01BE /* EMSilentModeResult+Helper.h */,
+				90319C5A2935FC1E000D01BE /* EMSilentModeResult+Helper.m */,
+				90319C642935FC1E000D01BE /* EMSilentModeTime+Helper.h */,
+				90319C7D2935FC1E000D01BE /* EMSilentModeTime+Helper.m */,
+				90319C672935FC1E000D01BE /* EMTranslateLanguage+Helper.h */,
+				90319C782935FC1E000D01BE /* EMTranslateLanguage+Helper.m */,
+				90319C742935FC1E000D01BE /* EMUserInfo+Helper.h */,
+				90319C602935FC1E000D01BE /* EMUserInfo+Helper.m */,
 			);
 			path = helper;
 			sourceTree = "<group>";
@@ -565,6 +572,7 @@
 				90319CCC2935FC1E000D01BE /* EMTranslateLanguage+Helper.m in Sources */,
 				90319CBA2935FC1E000D01BE /* EMGroupMessageAck+Helper.m in Sources */,
 				90319CCE2935FC1E000D01BE /* EMCursorResult+Helper.m in Sources */,
+				4597E80F2B875E1200D70B6D /* EMContact+Helper.m in Sources */,
 				90319C962935FC1E000D01BE /* EMClientWrapper.m in Sources */,
 				90319C8C2935FC1E000D01BE /* EMContactManagerWrapper.m in Sources */,
 				90319CA82935FC1E000D01BE /* EMWrapperCallback.m in Sources */,
@@ -725,6 +733,7 @@
 		90319C272935FBE3000D01BE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -732,6 +741,8 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
+				EXCLUDED_ARCHS = armv7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -760,6 +771,7 @@
 		90319C282935FBE3000D01BE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -767,6 +779,8 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
+				EXCLUDED_ARCHS = armv7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",

@@ -1,7 +1,11 @@
 ﻿using AgoraChat.SimpleJSON;
+#if !_WIN32
+using UnityEngine.Scripting;
+#endif
 
 namespace AgoraChat
 {
+    [Preserve]
     public class GroupOptions : BaseModel
     {
         /**
@@ -65,6 +69,7 @@ namespace AgoraChat
          * \~english
          * The group option class constructor.
          */
+        [Preserve]
         public GroupOptions(GroupStyle style, int count = 200, bool inviteNeedConfirm = false, string ext = null)
         {
             Style = style;
@@ -73,10 +78,13 @@ namespace AgoraChat
             Ext = ext;
         }
 
+        [Preserve]
         internal GroupOptions() { }
 
+        [Preserve]
         internal GroupOptions(string jsonString) : base(jsonString) { }
 
+        [Preserve]
         internal GroupOptions(JSONObject jsonObject) : base(jsonObject) { }
 
         internal override JSONObject ToJsonObject()

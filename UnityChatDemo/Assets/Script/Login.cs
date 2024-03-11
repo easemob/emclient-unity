@@ -10,7 +10,8 @@ public class Login : MonoBehaviour
     // Start is called before the first frame update
 
     private Text m_UsernameText;
-    private Text m_PasswordText;
+    //private Text m_PasswordText;
+    private InputField m_PasswordText;
     private Button m_LoginBtn;
     private Button m_RegisterBtn;
 
@@ -20,7 +21,8 @@ public class Login : MonoBehaviour
         Debug.Log("login script has load");
 
         m_UsernameText = transform.Find("Panel/Username/Text").GetComponent<Text>();
-        m_PasswordText = transform.Find("Panel/Password/Text").GetComponent<Text>();
+        //m_PasswordText = transform.Find("Panel/Password/Text").GetComponent<Text>();
+        m_PasswordText = transform.Find("Panel/Password").GetComponent<InputField>();
         m_LoginBtn = transform.Find("Panel/LoginBtn").GetComponent<Button>();
         m_RegisterBtn = transform.Find("Panel/RegisterBtn").GetComponent<Button>();
 
@@ -73,7 +75,6 @@ public class Login : MonoBehaviour
 
     void LoginWithAgoraTokenAction()
     {
-        string token = "12345";
 
 #if UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
 
@@ -94,7 +95,9 @@ public class Login : MonoBehaviour
         */
 #endif
 
-        SDKClient.Instance.LoginWithAgoraToken(m_UsernameText.text, token,
+        Debug.Log($"token is : {m_PasswordText.text}");
+
+        SDKClient.Instance.LoginWithAgoraToken(m_UsernameText.text, m_PasswordText.text,
             callback: new CallBack(
 
                 onSuccess: () =>
@@ -178,9 +181,9 @@ public class Login : MonoBehaviour
         //default appkey
         // string appkey = "easemob-demo#flutter";
         // string appkey = "easemob-demo#wang";
-        //string appkey = "easemob-demo#unitytest";
+        string appkey = "easemob-demo#unitytest";
         //string appkey = "41117440#383391";
-        string appkey = "easemob#easeim";
+        //string appkey = "easemob#easeim";
 
 #if UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
 
@@ -203,6 +206,7 @@ public class Login : MonoBehaviour
         options.UsingHttpsOnly = true;
         options.DebugMode = true;
         options.EnableEmptyConversation = true;
+        //options.UseReplacedMessageContents = true;
         SDKClient.Instance.InitWithOptions(options);
 
         //if (SDKClient.Instance.IsLoggedIn && SDKClient.Instance.Options.AutoLogin)

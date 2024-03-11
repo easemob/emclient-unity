@@ -248,8 +248,6 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
 
     void NewTokenAction()
     {
-        string token = "12345";
-
 #if UNITY_STANDALONE_OSX || UNITY_EDITOR_WIN || UNITY_STANDALONE
 
         /*
@@ -268,9 +266,16 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         }
         */
 #endif
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            SDKClient.Instance.RenewAgoraToken(dict["token"]);
+            UIManager.DefaultAlert(transform, "Renew agora token complete.");
+        });
 
-        SDKClient.Instance.RenewAgoraToken(token);
-        UIManager.DefaultAlert(transform, "Renew agora token complete.");
+        config.AddField("token");
+        UIManager.DefaultInputAlert(transform, config);
+
+
     }
 
     void RunDelegateTesterAction()
@@ -376,9 +381,9 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         Debug.Log($"GroupManager3 OnRequestToJoinAcceptedFromGroup groupId: {groupId}, groupName: {groupName}, accepter: {accepter}");
     }
 
-    public void OnRequestToJoinDeclinedFromGroup(string groupId, string reason)
+    public void OnRequestToJoinDeclinedFromGroup(string groupId, string reason, string decliner, string applicant)
     {
-        Debug.Log($"GroupManager4 OnRequestToJoinDeclinedFromGroup groupId: {groupId}, reason: {reason}");
+        Debug.Log($"GroupManager4 OnRequestToJoinDeclinedFromGroup groupId: {groupId}, reason: {reason}, decliner:{decliner}, applicant:{applicant}");
     }
 
     public void OnInvitationAcceptedFromGroup(string groupId, string invitee)

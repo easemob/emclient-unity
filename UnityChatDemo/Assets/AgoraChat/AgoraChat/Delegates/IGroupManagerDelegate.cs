@@ -76,15 +76,19 @@ namespace AgoraChat
 		 * 
 	     * @param groupId 	群组 ID。
 	     * @param reason 	拒绝理由。
+	     * @param decliner  申请驳回人。
+	     * @param applicant 申请人。
          *
          * \~english
          * Occurs when a join request is declined.
 	     *
 	     * @param groupId 		The group ID.
 	     * @param reason 		The reason for declining the join request.
+	     * @param decliner 		The decliner of the application.
+	     * @param applicant 	The applicant.
 	     */
         void OnRequestToJoinDeclinedFromGroup(
-            string groupId, string reason);
+            string groupId, string reason, string decliner, string applicant);
 
         /**
          * \~chinese

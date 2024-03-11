@@ -59,7 +59,11 @@ namespace AgoraChat
         internal const string acceptInvitation = "acceptInvitation";
         internal const string declineInvitation = "declineInvitation";
         internal const string getSelfIdsOnOtherPlatform = "getSelfIdsOnOtherPlatform";
-
+        internal const string setContactRemark = "setContactRemark";
+        internal const string fetchContactFromLocal = "fetchContactFromLocal";
+        internal const string fetchAllContactsFromLocal = "fetchAllContactsFromLocal";
+        internal const string fetchAllContactsFromServer = "fetchAllContactsFromServer";
+        internal const string fetchAllContactsFromServerByPage = "fetchAllContactsFromServerByPage";
 
 
         /// EMChatManager methods
@@ -225,6 +229,7 @@ namespace AgoraChat
         internal const string declineInvitationFromGroup = "declineInvitationFromGroup";
         internal const string fetchMemberAttributes = "fetchMemberAttributes";
         internal const string setMemberAttributes = "setMemberAttributes";
+        internal const string fetchMyGroupsCount = "fetchMyGroupsCount";
 
 
         /// EMPushManager

@@ -863,8 +863,6 @@ namespace AgoraChat
         /**
 		 * \~chinese
 		 * 从本地内存和数据库获取加入的群组列表。
-		 *
-		 * 异步方法。
 		 * 
 		 * @return 			返回群组列表。
 		 *
@@ -872,8 +870,6 @@ namespace AgoraChat
 		 * Gets the list of groups that the user has joined.
 		 * 
 		 * This method gets the groups from the local memory and database.
-		 * 
-		 * This is an asynchronous method.
 		 *
 		 * @return 			The group list. 
 		 */
@@ -1508,6 +1504,31 @@ namespace AgoraChat
         }
 
         /**
+        * \~chinese
+        * 获取我加入的群组数。
+        *
+        * 异步方法。
+        *
+        * @param attrs     	操作结果回调，详见 {@link ValueCallBack}。
+        *
+        *
+        * \~english
+        * Fetch total count of my joined groups.
+        *
+        * This is an asynchronous method.
+        *
+        * @param callback	    The operation callback. See {@link ValueCallBack}.
+        */
+        public void FetchMyGroupsCount(ValueCallBack<int> callback = null)
+        {
+            Process process = (_, jsonNode) =>
+            {
+                return jsonNode["ret"].IsNumber ? jsonNode["ret"].AsInt : -1;
+            };
+            NativeCall<int>(SDKMethod.fetchMyGroupsCount, null, callback, process);
+        }
+
+        /**
 		 * \~chinese
 		 * 注册群组管理器的监听器。
 		 *
@@ -1583,8 +1604,9 @@ namespace AgoraChat
                     case SDKMethod.onRequestToJoinDeclinedFromGroup:
                         {
                             string reason = jsonNode["msg"];
-                            //string userId = jsonNode["userId"];
-                            it.OnRequestToJoinDeclinedFromGroup(groupId, reason);
+                            string decliner = jsonNode["decliner"];
+                            string applicant = jsonNode["applicant"];
+                            it.OnRequestToJoinDeclinedFromGroup(groupId, reason, decliner, applicant);
                         }
                         break;
                     case SDKMethod.onInvitationAcceptedFromGroup:

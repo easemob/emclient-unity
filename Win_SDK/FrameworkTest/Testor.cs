@@ -136,7 +136,8 @@ namespace WinSDKTest
             Console.WriteLine($"IsRead: {msg.IsRead}");
             Console.WriteLine($"MessageOnlineState: {msg.MessageOnlineState}");
             Console.WriteLine($"IsThread: {msg.IsThread}");
-            Console.WriteLine($"DeliverOnlineOnly: {msg.DeliverOnlineOnly}");
+            Console.WriteLine($"Broadcast: {msg.Broadcast}");
+            Console.WriteLine($"IsContentReplaced: {msg.IsContentReplaced}");
 
             PrintAttributeValue(msg.Attributes);
 
@@ -900,6 +901,11 @@ namespace WinSDKTest
             functions_IContactManager.Add(menu_index, "AcceptInvitation"); menu_index++;
             functions_IContactManager.Add(menu_index, "DeclineInvitation"); menu_index++;
             functions_IContactManager.Add(menu_index, "GetSelfIdsOnOtherPlatform"); menu_index++;
+            functions_IContactManager.Add(menu_index, "SetContactRemark"); menu_index++;
+            functions_IContactManager.Add(menu_index, "FetchContactFromLocal"); menu_index++;
+            functions_IContactManager.Add(menu_index, "FetchAllContactsFromLocal"); menu_index++;
+            functions_IContactManager.Add(menu_index, "FetchAllContactsFromServer"); menu_index++;
+            functions_IContactManager.Add(menu_index, "FetchAllContactsFromServerByPage"); menu_index++;
             level2_menus.Add("IContactManager", functions_IContactManager);
         }
 
@@ -956,6 +962,33 @@ namespace WinSDKTest
             menu_index = 1;
             param.Add(menu_index, "No params"); menu_index++;
             level3_menus.Add("GetSelfIdsOnOtherPlatform", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "username (string)"); menu_index++;
+            param.Add(menu_index, "remark (string)"); menu_index++;
+            level3_menus.Add("SetContactRemark", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "username (string)"); menu_index++;
+            level3_menus.Add("FetchContactFromLocal", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "No params"); menu_index++;
+            level3_menus.Add("FetchAllContactsFromLocal", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "No params"); menu_index++;
+            level3_menus.Add("FetchAllContactsFromServer", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "limit (int)"); menu_index++;
+            param.Add(menu_index, "cursor (string)"); menu_index++;
+            level3_menus.Add("FetchAllContactsFromServerByPage", new Dictionary<int, string>(param));
             param.Clear();
         }
 
@@ -1177,6 +1210,7 @@ namespace WinSDKTest
             functions_IGroupManager.Add(menu_index, "UploadGroupSharedFile"); menu_index++;
             functions_IGroupManager.Add(menu_index, "SetMemberAttributes"); menu_index++;
             functions_IGroupManager.Add(menu_index, "FetchMemberAttributes"); menu_index++;
+            functions_IGroupManager.Add(menu_index, "FetchMyGroupsCount"); menu_index++;
             level2_menus.Add("IGroupManager", functions_IGroupManager);
         }
 
@@ -1473,6 +1507,11 @@ namespace WinSDKTest
             param.Add(menu_index, "attr-name1 (string)"); menu_index++;
             param.Add(menu_index, "attr-name2 (string)"); menu_index++;
             level3_menus.Add("FetchMemberAttributes", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "No params"); menu_index++;
+            level3_menus.Add("FetchMyGroupsCount", new Dictionary<int, string>(param));
             param.Clear();
         }
 
@@ -2074,6 +2113,10 @@ namespace WinSDKTest
         {
             //Options options = new Options("easemob#easeim");
             Options options = new Options("easemob-demo#unitytest");
+            //Options options = new Options("easemob-demo#support");
+            //Options options = new Options("easemob-demo#rpttest");
+            //Options options = new Options("100230927254271#unitytest");  // 北京沙箱测试环境
+            //Options options = new Options("easemob-demo#sdk111");  // 北京沙箱测试环境
             //Options options = new Options("easemob-demo#wang");
             //Options options = new Options("5101220107132865#test"); // 北京沙箱测试环境，无法正常登录
             //Options options = new Options("41117440#383391"); // 线上环境, demo中的token
@@ -2085,14 +2128,14 @@ namespace WinSDKTest
             options.DebugMode = true;
             options.MyUUID = "12345678-1111-5555-aaaa-eeeeeeeeeeee";
             options.EnableEmptyConversation = true;
+            options.UseReplacedMessageContents = true;
+            //options.IsAutoDownload = true;
 
-            //options.RestServer = "a1.easemob.com";
-            //options.IMServer = "182.92.23.113";
-            //options.IMPort = 12016;
-            //options.RestServer = "39.97.9.52:80";
-            //options.IMServer = "47.94.121.20";
-            //options.IMPort = 12016;
-            //options.EnableDNSConfig = false;
+            // 沙箱环境
+            /*options.EnableDNSConfig = false;
+            options.RestServer = "a1-hsb.easemob.com";
+            options.IMServer = "180.184.143.60";
+            options.IMPort = 6717;*/
 
             if (SDKClient.Instance.InitWithOptions(options) != 0)
             {
@@ -4777,6 +4820,87 @@ namespace WinSDKTest
             ));
         }
 
+        public void CallFunc_IContactManager_SetContactRemark()
+        {
+            string username = GetParamValueFromContext(0);
+            string remark = GetParamValueFromContext(1);
+
+            SDKClient.Instance.ContactManager.SetContactRemark(username, remark, new CallBack(
+                onSuccess: () =>
+                {
+                    Console.WriteLine($"SetContactRemark success.");
+                },
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"SetContactRemark failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IContactManager_FetchContactFromLocal()
+        {
+            string username = GetParamValueFromContext(0);
+
+            Contact contact = SDKClient.Instance.ContactManager.FetchContactFromLocal(username);
+            if (null != contact)
+            {
+                Console.WriteLine($"Found contact, username:{contact.UserId}, mark:{contact.Remark}");
+            } else
+            {
+                Console.WriteLine("No any contact is found");
+            }
+        }
+
+        public void CallFunc_IContactManager_FetchAllContactsFromLocal()
+        {
+            SDKClient.Instance.ContactManager.FetchAllContactsFromLocal(new ValueCallBack<List<Contact>>(
+                onSuccess: (list) => {
+                    foreach(var it in list)
+                    {
+                        Console.WriteLine($"FetchAllContactsFromLocal success, userid:{it.UserId}, remark:{it.Remark}");
+                    }
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"FetchAllContactsFromLocal failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IContactManager_FetchAllContactsFromServer()
+        {
+            SDKClient.Instance.ContactManager.FetchAllContactsFromServer(new ValueCallBack<List<Contact>>(
+                onSuccess: (list) => {
+                    foreach (var it in list)
+                    {
+                        Console.WriteLine($"FetchAllContactsFromServer success, userid:{it.UserId}, remark:{it.Remark}");
+                    }
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"FetchAllContactsFromServer failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IContactManager_FetchAllContactsFromServerByPage()
+        {
+            int limit = GetIntFromString(GetParamValueFromContext(0));
+            string cursor = GetParamValueFromContext(1);
+
+            SDKClient.Instance.ContactManager.FetchAllContactsFromServerByPage(limit, cursor, new ValueCallBack<CursorResult<Contact>>(
+                onSuccess: (result) => {
+
+                    Console.WriteLine($"FetchAllContactsFromServerByPage, contact list num:{result.Data.Count}, cursor:{result.Cursor}");
+                    foreach (var it in result.Data)
+                    {
+                        Console.WriteLine($"FetchAllContactsFromServerByPage success, userid:{it.UserId}, remark:{it.Remark}");
+                    };
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"FetchAllContactsFromServer failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
         public void CallFunc_IContactManager()
         {
             if (select_context.level2_item.CompareTo("AddContact") == 0)
@@ -4836,6 +4960,36 @@ namespace WinSDKTest
             if (select_context.level2_item.CompareTo("GetSelfIdsOnOtherPlatform") == 0)
             {
                 CallFunc_IContactManager_GetSelfIdsOnOtherPlatform();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("SetContactRemark") == 0)
+            {
+                CallFunc_IContactManager_SetContactRemark();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("FetchContactFromLocal") == 0)
+            {
+                CallFunc_IContactManager_FetchContactFromLocal();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("FetchAllContactsFromLocal") == 0)
+            {
+                CallFunc_IContactManager_FetchAllContactsFromLocal();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("FetchAllContactsFromServer") == 0)
+            {
+                CallFunc_IContactManager_FetchAllContactsFromServer();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("FetchAllContactsFromServerByPage") == 0)
+            {
+                CallFunc_IContactManager_FetchAllContactsFromServerByPage();
                 return;
             }
         }
@@ -7098,6 +7252,20 @@ namespace WinSDKTest
             ));
         }
 
+        public void CallFunc_IGroupManager_FetchMyGroupsCount()
+        {
+            SDKClient.Instance.GroupManager.FetchMyGroupsCount(new ValueCallBack<int>(
+                onSuccess: (count) =>
+                {
+                    Console.WriteLine($"FetchMyGroupsCount, success. count: {count}");
+                },
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"FetchMyGroupsCount failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
 
         public void CallFunc_IGroupManager()
         {
@@ -7374,6 +7542,12 @@ namespace WinSDKTest
             if (select_context.level2_item.CompareTo("FetchMemberAttributes") == 0)
             {
                 CallFunc_IGroupManager_FetchMemberAttributes();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("FetchMyGroupsCount") == 0)
+            {
+                CallFunc_IGroupManager_FetchMyGroupsCount();
                 return;
             }
         }
@@ -9824,9 +9998,9 @@ namespace WinSDKTest
             Console.WriteLine($"IGroupManagerDelegate8 OnRequestToJoinAcceptedFromGroup: gid: {groupId}; newOwner:{groupName}; oldOwner:{accepter}, total listener count:{LISTENER_COUNT}");
         }
 
-        public void OnRequestToJoinDeclinedFromGroup(string groupId, string reason)
+        public void OnRequestToJoinDeclinedFromGroup(string groupId, string reason, string decliner, string applicant)
         {
-            Console.WriteLine($"IGroupManagerDelegate9 OnRequestToJoinDeclinedFromGroup: gid: {groupId}; reason:{reason}, total listener count:{LISTENER_COUNT}");
+            Console.WriteLine($"IGroupManagerDelegate9 OnRequestToJoinDeclinedFromGroup: gid: {groupId}; reason:{reason}; decliner:{decliner};applicant:{applicant}, total listener count:{LISTENER_COUNT}");
         }
 
         public void OnMuteListAddedFromGroup(string groupId, List<string> mutes, long muteExpire)

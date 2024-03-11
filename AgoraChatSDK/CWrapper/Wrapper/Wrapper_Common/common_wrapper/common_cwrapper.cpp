@@ -44,7 +44,7 @@ void InitManagerMap()
 	func_map_client["isConnected"] = Client_isConnected;
 	func_map_client["getToken"] = Client_LoginToken;
 	func_map_client["loginWithAgoraToken"] = Client_LoginWithAgoraToken;
-	func_map_client["renewToken"] = Client_RenewAgoraToken;
+	func_map_client["renewToken"] = Client_RenewToken;
 	//func_map_client["autoLogin"] = Client_AutoLogin; // not support for platform
 	func_map_client["clearResource"] = Client_ClearResource;
 
@@ -165,6 +165,7 @@ void InitManagerMap()
 	func_map_group_manager["uploadGroupSharedFile"] = GroupManager_UploadGroupSharedFile;
     func_map_group_manager["fetchMemberAttributes"] = GroupManager_FetchMemberAttributes;
     func_map_group_manager["setMemberAttributes"] = GroupManager_SetMemberAttributes;
+    func_map_group_manager["fetchMyGroupsCount"] = GroupManager_FetchMyGroupsCount;
 
 	manager_map["EMGroupManager"] = func_map_group_manager;
 
@@ -218,6 +219,11 @@ void InitManagerMap()
 	func_map_contact_manager["getSelfIdsOnOtherPlatform"] = ContactManager_GetSelfIdsOnOtherPlatform;
 	func_map_contact_manager["removeUserFromBlockList"] = ContactManager_RemoveFromBlackList;
 	func_map_contact_manager["getBlockListFromDB"] = ContactManager_GetBlockListFromDB;
+    func_map_contact_manager["setContactRemark"] = ContactManager_SetContactRemark;
+    func_map_contact_manager["fetchContactFromLocal"] = ContactManager_FetchContactFromLocal;
+    func_map_contact_manager["fetchAllContactsFromLocal"] = ContactManager_FetchAllContactsFromLocal;
+    func_map_contact_manager["fetchAllContactsFromServer"] = ContactManager_FetchAllContactsFromServer;
+    func_map_contact_manager["fetchAllContactsFromServerByPage"] = ContactManager_FetchAllContactsFromServerByPage;
 	manager_map["EMContactManager"] = func_map_contact_manager;
 
 

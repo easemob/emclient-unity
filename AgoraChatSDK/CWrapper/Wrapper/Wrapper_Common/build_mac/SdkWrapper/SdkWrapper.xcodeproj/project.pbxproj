@@ -89,6 +89,8 @@
 		4503C4EE292E21F10090F2D4 /* sdk_wrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sdk_wrapper.h; sourceTree = "<group>"; };
 		4503C4EF292E21F10090F2D4 /* room_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = room_manager.cpp; sourceTree = "<group>"; };
 		4503C512292E293D0090F2D4 /* easemob.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = easemob.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4593C3C729E7A88D00966428 /* core_dump.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = core_dump.cpp; sourceTree = "<group>"; };
+		4593C3C829E7A88D00966428 /* core_dump.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = core_dump.h; sourceTree = "<group>"; };
 		450CCA7D2A24ADEB00B016D9 /* core_dump.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = core_dump.cpp; sourceTree = "<group>"; };
 		450CCA7E2A24ADEB00B016D9 /* core_dump.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = core_dump.h; sourceTree = "<group>"; };
 		457E7DA42A271D5700667E62 /* libSdkWrapper_arm64.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libSdkWrapper_arm64.dylib; sourceTree = BUILT_PRODUCTS_DIR; };

@@ -107,7 +107,8 @@ public class DelegateTester {
         EMClientWrapper.shared().groupManagerWrapper.wrapperGroupListener.onGroupDestroyed("groupId", "name");
         EMClientWrapper.shared().groupManagerWrapper.wrapperGroupListener.onUserRemoved("groupId","name");
         EMClientWrapper.shared().groupManagerWrapper.wrapperGroupListener.onRequestToJoinReceived("groupId", "name", "user", "reason");
-        EMClientWrapper.shared().groupManagerWrapper.wrapperGroupListener.onRequestToJoinDeclined("groupId", "name", "user", "reason");
+        //EMClientWrapper.shared().groupManagerWrapper.wrapperGroupListener.onRequestToJoinDeclined("groupId", "name", "user", "reason");
+        EMClientWrapper.shared().groupManagerWrapper.wrapperGroupListener.onRequestToJoinDeclined("groupId", "name", "user", "reason", "applicant");
         EMClientWrapper.shared().groupManagerWrapper.wrapperGroupListener.onRequestToJoinAccepted("groupId", "name", "user");
         EMClientWrapper.shared().groupManagerWrapper.wrapperGroupListener.onMuteListAdded("groupId", users, 10000000);
         EMClientWrapper.shared().groupManagerWrapper.wrapperGroupListener.onMuteListRemoved("groupId", users);

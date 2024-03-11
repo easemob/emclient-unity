@@ -1,4 +1,7 @@
 ﻿using AgoraChat.SimpleJSON;
+#if !_WIN32
+using UnityEngine.Scripting;
+#endif
 
 namespace AgoraChat
 {
@@ -10,6 +13,7 @@ namespace AgoraChat
      * The class for read receipts of group messages.
      * 
      */
+    [Preserve]
     public class GroupReadAck : BaseModel
     {
         /**
@@ -70,10 +74,13 @@ namespace AgoraChat
          */
         public long Timestamp { get; internal set; }
 
+        [Preserve]
         internal GroupReadAck() { }
 
+        [Preserve]
         internal GroupReadAck(string jsonString) : base(jsonString) { }
 
+        [Preserve]
         internal GroupReadAck(JSONObject jsonObject) : base(jsonObject) { }
 
         internal override void FromJsonObject(JSONObject jsonObject)

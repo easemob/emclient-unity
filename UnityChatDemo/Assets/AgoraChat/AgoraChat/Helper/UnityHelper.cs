@@ -43,6 +43,7 @@ namespace AgoraChat
             CallbackQueue_UnityMode.Instance().Process();
         }
 
+#if UNITY_EDITOR
         private void OnApplicationQuit()
         {
             if (IClient.IsInit)
@@ -54,8 +55,6 @@ namespace AgoraChat
                 SDKClient.Instance.ClearResource();
             }
         }
-
-#if UNITY_EDITOR
 
         [RuntimeInitializeOnLoadMethod]
         static void InitializeOnLoadMethod()
@@ -87,19 +86,41 @@ namespace AgoraChat
             {
                 case (PlayModeStateChange.EnteredPlayMode):
                     {
+                        Instance();
                         EditorApplication.LockReloadAssemblies();
                         Debug.Log("Assembly Reload locked as entering play mode");
                         break;
                     }
                 case (PlayModeStateChange.ExitingPlayMode):
                     {
+                        instance = null;
                         Debug.Log("Assembly Reload unlocked as exiting play mode");
                         EditorApplication.UnlockReloadAssemblies();
                         break;
                     }
             }
         }
+#else
+        private void OnApplicationQuit()
+        {
+            if (IClient.IsInit)
+            {
+                /*if (SDKClient.Instance.IsLoggedIn)
+                {
+                    SDKClient.Instance.Logout(false);
+                }*/
+                SDKClient.Instance.ClearResource();
+            }
+        }
 #endif
+    }
+#endif
+
+#if _WIN32
+    [AttributeUsage(AttributeTargets.All, Inherited = false, AllowMultiple = true)]
+    public class PreserveAttribute : Attribute
+    {
+        // Empty attribute
     }
 #endif
 }
