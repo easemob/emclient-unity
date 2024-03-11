@@ -62,7 +62,11 @@ static NSString *const getBlockListFromDB = @"getBlockListFromDB";
 static NSString *const acceptInvitation = @"acceptInvitation";
 static NSString *const declineInvitation = @"declineInvitation";
 static NSString *const getSelfIdsOnOtherPlatform = @"getSelfIdsOnOtherPlatform";
-
+static NSString *const setContactRemark = @"setContactRemark";
+static NSString *const fetchContactFromLocal = @"fetchContactFromLocal";
+static NSString *const fetchAllContactsFromLocal = @"fetchAllContactsFromLocal";
+static NSString *const fetchAllContactsFromServer = @"fetchAllContactsFromServer";
+static NSString *const fetchAllContactsFromServerByPage = @"fetchAllContactsFromServerByPage";
 
 
 /// EMChatManager methods
@@ -226,6 +230,7 @@ static NSString *const acceptInvitationFromGroup = @"acceptInvitationFromGroup";
 static NSString *const declineInvitationFromGroup = @"declineInvitationFromGroup";
 static NSString *const fetchMemberAttributes = @"fetchMemberAttributes";
 static NSString *const setMemberAttributes = @"setMemberAttributes";
+static NSString *const fetchMyGroupsCount = @"fetchMyGroupsCount";
 
 
 /// EMPushManager
