@@ -2,12 +2,19 @@ package com.hyphenate.wrapper;
 
 import com.hyphenate.EMContactListener;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMContact;
+import com.hyphenate.chat.EMCursorResult;
 import com.hyphenate.exceptions.HyphenateException;
+import com.hyphenate.wrapper.callback.EMCommonCallback;
+import com.hyphenate.wrapper.callback.EMCommonValueCallback;
+import com.hyphenate.wrapper.helper.EMContactHelper;
+import com.hyphenate.wrapper.helper.EMCursorResultHelper;
 import com.hyphenate.wrapper.listeners.EMWrapperContactListener;
 import com.hyphenate.wrapper.util.EMSDKMethod;
 import com.hyphenate.wrapper.util.EMHelper;
 import com.hyphenate.wrapper.callback.EMWrapperCallback;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -45,6 +52,16 @@ public class EMContactManagerWrapper extends EMBaseWrapper{
             ret = declineInvitation(jsonObject, callback);
         } else if (EMSDKMethod.getSelfIdsOnOtherPlatform.equals(method)) {
             ret = getSelfIdsOnOtherPlatform(callback);
+        } else if (EMSDKMethod.setContactRemark.equals(method)) {
+            ret = setContactRemark(jsonObject, callback);
+        } else if (EMSDKMethod.fetchContactFromLocal.equals(method)) {
+            ret = fetchContactFromLocal(jsonObject, callback);
+        } else if (EMSDKMethod.fetchAllContactsFromLocal.equals(method)) {
+            ret = fetchAllContactsFromLocal(callback);
+        } else if (EMSDKMethod.fetchAllContactsFromServer.equals(method)) {
+            ret = fetchAllContactsFromServer(callback);
+        } else if (EMSDKMethod.fetchAllContactsFromServerByPage.equals(method)) {
+            ret = fetchAllContactsFromServerByPage(jsonObject, callback);
         } else {
             ret = super.onMethodCall(method, jsonObject, callback);
         }
@@ -183,6 +200,87 @@ public class EMContactManagerWrapper extends EMBaseWrapper{
                 onError(e, callback);
             }
         });
+        return null;
+    }
+
+    private String setContactRemark(JSONObject params, EMWrapperCallback callback) throws JSONException{
+        String username = params.getString("userId");
+        String remark = params.getString("remark");
+        EMClient.getInstance().contactManager().asyncSetContactRemark(username, remark, new EMCommonCallback(callback));
+        return null;
+    }
+
+    private String fetchContactFromLocal(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        EMContact contact = null;
+        String username = params.getString("userId");
+        try {
+            contact = EMClient.getInstance().contactManager().fetchContactFromLocal(username);
+        } catch (HyphenateException e) {
+
+        }
+        return EMHelper.getReturnJsonObject(EMContactHelper.toJson(contact)).toString();
+    }
+
+    private String fetchAllContactsFromLocal(EMWrapperCallback callback) {
+        EMCommonValueCallback<List<EMContact>> callBack = new EMCommonValueCallback<List<EMContact>>(callback) {
+            @Override
+            public void onSuccess(List<EMContact> object) {
+                JSONArray arrayList = new JSONArray();
+                try {
+                    for (EMContact contact : object) {
+                        arrayList.put(EMContactHelper.toJson(contact));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    updateObject(arrayList);
+                }
+            }
+        };
+
+        EMClient.getInstance().contactManager().asyncFetchAllContactsFromLocal(callBack);
+        return null;
+    }
+
+    private String fetchAllContactsFromServer(EMWrapperCallback callback) {
+        EMCommonValueCallback<List<EMContact>> callBack = new EMCommonValueCallback<List<EMContact>>(callback) {
+            @Override
+            public void onSuccess(List<EMContact> object) {
+                JSONArray arrayList = new JSONArray();
+                try {
+                    for (EMContact contact : object) {
+                        arrayList.put(EMContactHelper.toJson(contact));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    updateObject(arrayList);
+                }
+            }
+        };
+
+        EMClient.getInstance().contactManager().asyncFetchAllContactsFromServer(callBack);
+        return null;
+    }
+
+    private String fetchAllContactsFromServerByPage(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        int limit = params.optInt("limit");
+        String cursor = params.optString("cursor");
+        EMCommonValueCallback<EMCursorResult<EMContact>> callBack = new EMCommonValueCallback<EMCursorResult<EMContact>>(callback) {
+            @Override
+            public void onSuccess(EMCursorResult<EMContact> object) {
+                JSONObject jo = null;
+                try {
+                    jo = EMCursorResultHelper.toJson(object);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    updateObject(jo);
+                }
+            }
+        };
+
+        EMClient.getInstance().contactManager().asyncFetchAllContactsFromServer(limit, cursor, callBack);
         return null;
     }
 

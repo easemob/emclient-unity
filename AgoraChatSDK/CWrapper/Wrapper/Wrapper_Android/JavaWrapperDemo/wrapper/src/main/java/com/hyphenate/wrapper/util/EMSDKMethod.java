@@ -54,6 +54,11 @@ public class EMSDKMethod {
     public static final String acceptInvitation = "acceptInvitation";
     public static final String declineInvitation = "declineInvitation";
     public static final String getSelfIdsOnOtherPlatform = "getSelfIdsOnOtherPlatform";
+    public static final String setContactRemark = "setContactRemark";
+    public static final String fetchContactFromLocal = "fetchContactFromLocal";
+    public static final String fetchAllContactsFromLocal = "fetchAllContactsFromLocal";
+    public static final String fetchAllContactsFromServer = "fetchAllContactsFromServer";
+    public static final String fetchAllContactsFromServerByPage = "fetchAllContactsFromServerByPage";
 
 
 
@@ -221,6 +226,7 @@ public class EMSDKMethod {
     public static final String declineInvitationFromGroup = "declineInvitationFromGroup";
     public static final String fetchMemberAttributes = "fetchMemberAttributes";
     public static final String setMemberAttributes = "setMemberAttributes";
+    public static final String fetchMyGroupsCount = "fetchMyGroupsCount";
 
 
     /// EMPushManager
