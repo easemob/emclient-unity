@@ -1,4 +1,8 @@
 ﻿using AgoraChat.SimpleJSON;
+#if !_WIN32
+using UnityEngine.Scripting;
+#endif
+
 namespace AgoraChat
 {
     /**
@@ -8,6 +12,7 @@ namespace AgoraChat
     * \~english
     * The user information class.
     */
+    [Preserve]
     public class UserInfo : BaseModel
     {
 
@@ -94,10 +99,13 @@ namespace AgoraChat
          */
         public int Gender = 0;
 
+        [Preserve]
         public UserInfo() { }
 
+        [Preserve]
         internal UserInfo(string jsonString) : base(jsonString) { }
 
+        [Preserve]
         internal UserInfo(JSONObject jsonObject) : base(jsonObject) { }
 
         internal override void FromJsonObject(JSONObject jsonObject)

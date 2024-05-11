@@ -27,10 +27,12 @@ public class ConversationManagerTest : MonoBehaviour
     private Button LoadMessageBtn;
     private Button LoadMessagesBtn;
     private Button LoadMessagesWithKeywordBtn;
+    private Button LoadMessagesWithScopeBtn;
     private Button LoadMessagesWithTimeBtn;
     private Button LoadMessagesWithMsgTypeBtn;
     private Button MessagesCountBtn;
     private Button DeleteMessagesBtn;
+    private Button PinnedMessagesBtn;
 
     private string conversationId
     {
@@ -97,10 +99,12 @@ public class ConversationManagerTest : MonoBehaviour
         LoadMessageBtn = transform.Find("Scroll View/Viewport/Content/LoadMessageBtn").GetComponent<Button>();
         LoadMessagesBtn = transform.Find("Scroll View/Viewport/Content/LoadMessagesBtn").GetComponent<Button>();
         LoadMessagesWithKeywordBtn = transform.Find("Scroll View/Viewport/Content/LoadMessagesWithKeywordBtn").GetComponent<Button>();
+        LoadMessagesWithScopeBtn = transform.Find("Scroll View/Viewport/Content/LoadMessagesWithScopeBtn").GetComponent<Button>();
         LoadMessagesWithTimeBtn = transform.Find("Scroll View/Viewport/Content/LoadMessagesWithTimeBtn").GetComponent<Button>();
         LoadMessagesWithMsgTypeBtn = transform.Find("Scroll View/Viewport/Content/LoadMessagesWithMsgTypeBtn").GetComponent<Button>();
         MessagesCountBtn = transform.Find("Scroll View/Viewport/Content/MessagesCountBtn").GetComponent<Button>();
         DeleteMessagesBtn = transform.Find("Scroll View/Viewport/Content/DeleteMessagesBtn").GetComponent<Button>();
+        PinnedMessagesBtn = transform.Find("Scroll View/Viewport/Content/PinnedMessagesBtn").GetComponent<Button>();
 
 
         LastMessageBtn.onClick.AddListener(LastMessageBtnAction);
@@ -118,10 +122,12 @@ public class ConversationManagerTest : MonoBehaviour
         LoadMessageBtn.onClick.AddListener(LoadMessageBtnAction);
         LoadMessagesBtn.onClick.AddListener(LoadMessagesBtnAction);
         LoadMessagesWithKeywordBtn.onClick.AddListener(LoadMessagesWithKeywordBtnAction);
+        LoadMessagesWithScopeBtn.onClick.AddListener(LoadMessagesWithScopeBtnAction);
         LoadMessagesWithTimeBtn.onClick.AddListener(LoadMessagesWithTimeBtnAction);
         LoadMessagesWithMsgTypeBtn.onClick.AddListener(LoadMessagesWithMsgTypeBtnAction);
         MessagesCountBtn.onClick.AddListener(MessagesCountBtnAction);
         DeleteMessagesBtn.onClick.AddListener(DeleteMessagesBtnAction);
+        PinnedMessagesBtn.onClick.AddListener(PinnedMessagesBtnAction);
     }
 
 
@@ -450,6 +456,38 @@ public class ConversationManagerTest : MonoBehaviour
 
         Debug.Log("LoadMessagesWithKeywordBtnAction");
     }
+
+    void LoadMessagesWithScopeBtnAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string keyword = dict["keyword"];
+            MessageSearchScope scope = (MessageSearchScope)(int.Parse(dict["scope"]));
+            if (null == conversationId || 0 == conversationId.Length || null == keyword || 0 == keyword.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
+            Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
+            conv.LoadMessagesWithScope(keyword, scope, -1, 10, "", MessageSearchDirection.UP, new ValueCallBack<List<Message>>(
+                onSuccess: (list) =>
+                {
+                    UIManager.DefaultAlert(transform, $"获取到{list.Count}条消息");
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("keyword");
+        config.AddField("scope");
+
+        UIManager.DefaultInputAlert(transform, config);
+    }
+
     void LoadMessagesWithTimeBtnAction()
     {
         if (null == conversationId || 0 == conversationId.Length)
@@ -513,6 +551,24 @@ public class ConversationManagerTest : MonoBehaviour
         UIManager.DefaultAlert(transform, $"messagecount:{count}");
 
         Debug.Log("MessagesCountBtnAction");
+    }
+
+    void PinnedMessagesBtnAction()
+    {
+        if (null == conversationId || 0 == conversationId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
+
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
+        List<Message> list = conv.PinnedMessages();
+        string str = "";
+        foreach (var it in list)
+        {
+            str = str + ", msgid:" + it.MsgId + "," + ", pinnedBy:" + it.PinnedInfo.PinnedBy + ", pinnedAt:" + it.PinnedInfo.PinnedAt + ";";
+        }
+        UIManager.DefaultAlert(transform, $"找到的消息条数: {list.Count}, pinnedinfo: {str}");
     }
 
     // Start is called before the first frame update

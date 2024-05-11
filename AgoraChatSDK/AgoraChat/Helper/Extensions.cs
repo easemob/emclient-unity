@@ -162,11 +162,34 @@ namespace AgoraChat
             return list;
         }
 
+        internal static List<int> IntListFromJsonArray(JSONNode jsonNode)
+        {
+            List<int> list = new List<int>();
+            if (jsonNode != null && jsonNode.IsArray)
+            {
+                foreach (JSONNode item in jsonNode.AsArray)
+                {
+                    if (item.IsNumber)
+                    {
+                        list.Add(item.AsInt);
+                    }
+                }
+            }
+            return list;
+        }
+
         internal static List<string> StringListFromJsonString(string json)
         {
             if (json == null) return new List<string>();
             JSONNode jn = JSON.Parse(json);
             return StringListFromJsonArray(jn);
+        }
+
+        internal static List<int> IntListFromJsonString(string json)
+        {
+            if (json == null) return new List<int>();
+            JSONNode jn = JSON.Parse(json);
+            return IntListFromJsonArray(jn);
         }
 
         internal static List<T> BaseModelListFromJsonArray<T>(JSONNode jn) where T : BaseModel
@@ -501,6 +524,7 @@ namespace AgoraChat
                 case 60: return MultiDevicesOperation.CONVERSATION_PINNED;
                 case 61: return MultiDevicesOperation.CONVERSATION_UNPINNED;
                 case 62: return MultiDevicesOperation.CONVERSATION_DELETED;
+                case 63: return MultiDevicesOperation.CONVERSATION_MARK;
                 default: return MultiDevicesOperation.UNKNOWN;
             }
         }
@@ -528,6 +552,31 @@ namespace AgoraChat
                 case 0: return MessageDirection.SEND;
                 case 1: return MessageDirection.RECEIVE;
                 default: return MessageDirection.SEND;
+            }
+        }
+    }
+
+    internal static class MessageSearchScopeHelper
+    {
+        public static int ToInt(this MessageSearchScope scope)
+        {
+            switch (scope)
+            {
+                case MessageSearchScope.CONTENT: return 0;
+                case MessageSearchScope.EXT: return 1;
+                case MessageSearchScope.ALL: return 2;
+                default: return 0;
+            }
+        }
+
+        public static MessageSearchScope ToMessageSearchScope(this int scope)
+        {
+            switch (scope)
+            {
+                case 0: return MessageSearchScope.CONTENT;
+                case 1: return MessageSearchScope.EXT;
+                case 2: return MessageSearchScope.ALL;
+                default: return MessageSearchScope.CONTENT;
             }
         }
     }

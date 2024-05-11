@@ -188,7 +188,7 @@
     NSString *token = params[@"token"];
     __weak EMBaseManager *weakSelf = self;
     [EMClient.sharedClient loginWithUsername:username
-                                  agoraToken:token
+                                       token:token
                                   completion:^(NSString * _Nonnull aUsername, EMError * _Nullable aError)
      {
         [weakSelf wrapperCallback:callback error:aError object:aUsername];
@@ -345,7 +345,7 @@
 }
 
 - (void)autoLoginDidCompleteWithError:(EMError *)aError {
-    if(aError.code == EMAppActiveNumbersReachLimitation) {
+    if(aError.code == EMErrorAppActiveNumbersReachLimitation) {
         [self onAppActiveNumberReachLimitation];
     }else if (aError.code == EMErrorUserAuthenticationFailed) {
         [EMWrapperHelper.shared.listener onReceive:connectionListener method:onAuthFailed info:nil];

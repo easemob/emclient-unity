@@ -18,7 +18,7 @@
 #import "EMUtil.h"
 #import "EMHelper.h"
 #import "EMWrapperCallback.h"
-
+#import "Mode.h"
 
 
 @interface EMChatManagerWrapper () 
@@ -79,6 +79,8 @@
         ret = [self fetchHistoryMessagesBy:params callback:callback];
     }else if([method isEqualToString:searchChatMsgFromDB]) {
         ret = [self searchChatMsgFromDB:params callback:callback];
+    }else if([method isEqualToString:searchChatMsgFromDBWithScope]) {
+        ret = [self searchChatMsgFromDBWithScope:params callback:callback];
     }else if([method isEqualToString:getMessage]) {
         ret = [self getMessage:params callback:callback];
     }else if([method isEqualToString:asyncFetchGroupAcks]) {
@@ -115,6 +117,16 @@
         ret = [self modifyMessage:params callback:callback];
     }else if ([method isEqualToString:downloadCombineMessages]) {
         ret = [self downloadCombineMessages:params callback:callback];
+    }else if ([method isEqualToString:getConversationsFromServerWithCursorAndMark]) {
+        ret = [self getConversationsFromServerWithCursorAndMark:params callback:callback];
+    }else if ([method isEqualToString:markConversations]) {
+        ret = [self markConversations:params callback:callback];
+    }else if ([method isEqualToString:deleteAllMessagesAndConversations]) {
+        ret = [self deleteAllMessagesAndConversations:params callback:callback];
+    }else if ([method isEqualToString:pinMessage]) {
+        ret = [self pinMessage:params callback:callback];
+    }else if ([method isEqualToString:getPinnedMessagesFromServer]) {
+        ret = [self getPinnedMessagesFromServer:params callback:callback];
     }
     else {
         ret = [super onMethodCall:method params:params callback:callback];
@@ -259,11 +271,12 @@
 
 - (NSString *)markAllMessagesAsRead:(NSDictionary *)param
                            callback:(EMWrapperCallback *)callback {
-    NSArray *conList = [EMClient.sharedClient.chatManager getAllConversations];
-    for (EMConversation *con in conList) {
-        [con markAllMessagesAsRead:nil];
-    }
+    //NSArray *conList = [EMClient.sharedClient.chatManager getAllConversations];
+    //for (EMConversation *con in conList) {
+    //    [con markAllMessagesAsRead:nil];
+    //}
     
+    [EMClient.sharedClient.chatManager markAllConversationsAsRead];
     return [[EMHelper getReturnJsonObject:@(YES)] toJsonString];
 }
 
@@ -483,9 +496,10 @@
     __weak EMChatManagerWrapper * weakSelf = self;
     NSString *keywords = param[@"keywords"];
     long long timestamp = [param[@"timestamp"] longLongValue];
-    int maxCount = [param[@"maxCount"] intValue];
+    int maxCount = [param[@"count"] intValue];
     NSString *from = param[@"from"];
-    EMMessageSearchDirection direction = [self searchDirectionFromString:param[@"direction"]];
+    //EMMessageSearchDirection direction = [self searchDirectionFromString:param[@"direction"]];
+    EMMessageSearchDirection direction = [param[@"direction"] intValue] == 0 ? EMMessageSearchDirectionUp : EMMessageSearchDirectionDown;
     [EMClient.sharedClient.chatManager loadMessagesWithKeyword:keywords
                                                      timestamp:timestamp
                                                          count:maxCount
@@ -508,6 +522,40 @@
     return nil;
 }
 
+- (NSString *)searchChatMsgFromDBWithScope:(NSDictionary *)param
+                         callback:(EMWrapperCallback *)callback {
+    __weak EMChatManagerWrapper * weakSelf = self;
+    NSString *keywords = param[@"keywords"];
+    long long timestamp = [param[@"timestamp"] longLongValue];
+    int maxCount = [param[@"count"] intValue];
+    NSString *from = param[@"from"];
+    //EMMessageSearchDirection direction = [self searchDirectionFromString:param[@"direction"]];
+    EMMessageSearchDirection direction = [param[@"direction"] intValue] == 0 ? EMMessageSearchDirectionUp : EMMessageSearchDirectionDown;
+    EMMessageSearchScope scope = [Mode searchScopeFromInt:[param[@"scope"] intValue]];
+
+    [EMClient.sharedClient.chatManager loadMessagesWithKeyword:keywords
+                                                     timestamp:timestamp
+                                                         count:maxCount
+                                                      fromUser:from
+                                               searchDirection:direction
+                                                         scope:scope
+                                                    completion:^(NSArray *aMessages, EMError *aError)
+     {
+        if (aError) {
+            [weakSelf wrapperCallback:callback error:aError object:nil];
+            return;
+        }
+        NSMutableArray *msgList = [NSMutableArray array];
+        for (EMChatMessage *msg in aMessages) {
+            [msgList addObject:[msg toJson]];
+        }
+
+        [weakSelf wrapperCallback:callback error:nil object:msgList];
+    }];
+
+    return nil;
+}
+
 
 - (NSString *)deleteRemoteConversation:(NSDictionary *)param
                               callback:(EMWrapperCallback *)callback
@@ -515,7 +563,7 @@
     __weak EMChatManagerWrapper * weakSelf = self;
     NSString *conversationId = param[@"convId"];
     EMConversationType type = EMConversationTypeChat;
-    BOOL isDeleteRemoteMessage = [param[@"isDeleteRemoteMessage"] boolValue];
+    BOOL isDeleteRemoteMessage = [param[@"isDeleteServerMessages"] boolValue];
     int intType = [param[@"convType"] intValue];
     if (intType == 0) {
         type = EMConversationTypeChat;
@@ -705,13 +753,36 @@
         [EMClient.sharedClient.chatManager getPinnedConversationsFromServerWithCursor:cursor pageSize:limit completion:^(EMCursorResult<EMConversation *> * _Nullable result, EMError * _Nullable error) {
             [weakSelf wrapperCallback:callback error:error object:[result toJson]];
         }];
-    }else {
+    } else {
         [EMClient.sharedClient.chatManager getConversationsFromServerWithCursor:cursor pageSize:limit completion:^(EMCursorResult<EMConversation *> * _Nullable result, EMError * _Nullable error) {
             [weakSelf wrapperCallback:callback error:error object:[result toJson]];
         }];
     }
     
     
+    return nil;
+}
+
+- (NSString *)getConversationsFromServerWithCursorAndMark:(NSDictionary *)params
+                                                 callback:(EMWrapperCallback *)callback {
+    __weak EMChatManagerWrapper * weakSelf = self;
+
+    BOOL needMark = [params[@"needMark"] boolValue];
+    int mark = [params[@"mark"] intValue];
+    NSString *cursor = params[@"cursor"];
+    int limit = [params[@"limit"] intValue];
+
+    if(needMark) {
+        EMConversationFilter* filter = [[EMConversationFilter alloc] initWithMark:mark pageSize:limit];
+
+        [EMClient.sharedClient.chatManager getConversationsFromServerWithCursor:cursor filter:filter completion:^(EMCursorResult<EMConversation *> * _Nullable result, EMError * _Nullable error) {
+            [weakSelf wrapperCallback:callback error:error object:[result toJson]];
+        }];
+    } else {
+        [EMClient.sharedClient.chatManager getConversationsFromServerWithCursor:cursor pageSize:limit completion:^(EMCursorResult<EMConversation *> * _Nullable result, EMError * _Nullable error) {
+            [weakSelf wrapperCallback:callback error:error object:[result toJson]];
+        }];
+    }
     return nil;
 }
 
@@ -848,6 +919,84 @@
     return nil;
 }
 
+- (NSString *)markConversations:(NSDictionary *)param
+                                   callback:(EMWrapperCallback *)callback
+{
+    BOOL isMarked = [param[@"isMarked"] boolValue];
+    __weak EMChatManagerWrapper * weakSelf = self;
+
+    if (isMarked){
+        [EMClient.sharedClient.chatManager addConversationMark:param[@"convIds"]
+                                                          mark:[param[@"mark"] intValue]
+                                                    completion:^(EMError *aError)
+         {
+            [weakSelf wrapperCallback:callback error:aError object:nil];
+        }];
+    } else {
+        [EMClient.sharedClient.chatManager removeConversationMark:param[@"convIds"]
+                                                             mark:[param[@"mark"] intValue]
+                                                       completion:^(EMError *aError)
+         {
+            [weakSelf wrapperCallback:callback error:aError object:nil];
+        }];
+    }
+
+    return nil;
+}
+
+- (NSString *)deleteAllMessagesAndConversations:(NSDictionary *)param
+                                    callback:(EMWrapperCallback *)callback
+{
+    BOOL clearServerData = [param[@"clearServerData"] boolValue];
+    __weak EMChatManagerWrapper * weakSelf = self;
+
+    [EMClient.sharedClient.chatManager deleteAllMessagesAndConversations:clearServerData
+                                                              completion:^(EMError *aError)
+     {
+        [weakSelf wrapperCallback:callback error:aError object:nil];
+    }];
+
+    return nil;
+}
+
+- (NSString *)pinMessage:(NSDictionary *)param
+                callback:(EMWrapperCallback *)callback
+{
+    BOOL isPinned = [param[@"isPinned"] boolValue];
+    __weak EMChatManagerWrapper * weakSelf = self;
+
+    if (isPinned){
+        [EMClient.sharedClient.chatManager pinMessage:param[@"msgId"]
+                                           completion:^(EMChatMessage* message, EMError *aError)
+         {
+            [weakSelf wrapperCallback:callback error:aError object:nil];
+        }];
+    } else {
+        [EMClient.sharedClient.chatManager unpinMessage:param[@"msgId"]
+                                             completion:^(EMChatMessage* message, EMError *aError)
+         {
+            [weakSelf wrapperCallback:callback error:aError object:nil];
+        }];
+    }
+
+    return nil;
+}
+
+- (NSString *)getPinnedMessagesFromServer:(NSDictionary *)param
+                                 callback:(EMWrapperCallback *)callback {
+    __weak EMChatManagerWrapper * weakSelf = self;
+
+    [EMClient.sharedClient.chatManager getPinnedMessagesFromServer:param[@"convId"]
+                                                        completion:^(NSArray<EMChatMessage *> * _Nullable messages, EMError * _Nullable error) {
+        NSMutableArray *jsonMsgs = [NSMutableArray array];
+        for (EMChatMessage *msg in messages) {
+            [jsonMsgs addObject:[msg toJson]];
+        }
+        [weakSelf wrapperCallback:callback error:error object:jsonMsgs];
+    }];
+
+    return nil;
+}
 
 - (void)registerEaseListener {
     [EMClient.sharedClient.chatManager addDelegate:self delegateQueue:nil];
@@ -949,6 +1098,17 @@
     
 }
 
+- (void)onMessagePinChanged:(NSString* _Nonnull)messageId conversationId:(NSString* _Nonnull)conversationId operation:(EMMessagePinOperation)pinOperation pinInfo:(EMMessagePinInfo* _Nonnull)pinInfo {
+    NSDictionary *info = @{
+        @"msgId": messageId,
+        @"convId": conversationId,
+        @"isPinned": (pinOperation == EMMessagePin) ? @(YES) : @(NO),
+        @"operatorId": pinInfo.operatorId,
+        @"ts": @(pinInfo.pinTime)
+    };
+    [EMWrapperHelper.shared.listener onReceive:chatListener method:onMessagePinChanged info:info.toJsonString];
+}
+
 #pragma mark - action
 
 - (EMMessageSearchDirection)searchDirectionFromString:(NSString *)str {
@@ -958,6 +1118,5 @@
         return EMMessageSearchDirectionDown;
     }
 }
-
 
 @end

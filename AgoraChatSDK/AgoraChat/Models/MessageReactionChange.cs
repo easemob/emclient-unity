@@ -1,5 +1,9 @@
 ﻿using System.Collections.Generic;
 using AgoraChat.SimpleJSON;
+#if !_WIN32
+using UnityEngine.Scripting;
+#endif
+
 namespace AgoraChat
 {
     /**
@@ -9,6 +13,7 @@ namespace AgoraChat
      *  \~english
      *  The Reaction operation class.
      */
+    [Preserve]
     public class MessageReactionOperation : BaseModel
     {
         /**
@@ -38,10 +43,13 @@ namespace AgoraChat
          */
         public MessageReactionOperate operate;
 
+        [Preserve]
         internal MessageReactionOperation() { }
 
+        [Preserve]
         internal MessageReactionOperation(string jsonString) : base(jsonString) { }
 
+        [Preserve]
         internal MessageReactionOperation(JSONObject jsonObject) : base(jsonObject) { }
 
         internal override void FromJsonObject(JSONObject jsonObject)
@@ -68,6 +76,7 @@ namespace AgoraChat
     * \~english
     * The message Reaction change entity class.
     */
+    [Preserve]
     public class MessageReactionChange : BaseModel
     {
 
@@ -106,10 +115,13 @@ namespace AgoraChat
          */
         public List<MessageReactionOperation> OperationList;
 
+        [Preserve]
         internal MessageReactionChange() { }
 
+        [Preserve]
         internal MessageReactionChange(string jsonString) : base(jsonString) { }
 
+        [Preserve]
         internal MessageReactionChange(JSONObject jsonObject) : base(jsonObject) { }
 
         internal override void FromJsonObject(JSONObject jsonObject)

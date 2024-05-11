@@ -4,6 +4,7 @@ import com.hyphenate.EMConversationListener;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMGroupReadAck;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMMessagePinInfo;
 import com.hyphenate.chat.EMMessageReactionChange;
 import com.hyphenate.wrapper.EMWrapperHelper;
 import com.hyphenate.wrapper.helper.EMGroupAckHelper;
@@ -123,6 +124,21 @@ public class EMWrapperMessageListener implements EMMessageListener , EMConversat
             jo.put("operatorId", operatorId);
             jo.put("operationTime", operationTime);
             post(()-> EMWrapperHelper.listener.onReceive(EMSDKMethod.chatListener, EMSDKMethod.onMessageContentChanged, jo.toString()));
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onMessagePinChanged(String messageId, String conversationId, EMMessagePinInfo.PinOperation pinOperation, EMMessagePinInfo pinInfo) {
+        JSONObject jo = new JSONObject();
+        try {
+            jo.put("msgId", messageId);
+            jo.put("convId", conversationId);
+            jo.put("isPinned", pinOperation == EMMessagePinInfo.PinOperation.PIN);
+            jo.put("operatorId", pinInfo.operatorId());
+            jo.put("ts", pinInfo.pinTime());
+            post(()-> EMWrapperHelper.listener.onReceive(EMSDKMethod.chatListener, EMSDKMethod.onMessagePinChanged, jo.toString()));
         }catch (JSONException e) {
             e.printStackTrace();
         }

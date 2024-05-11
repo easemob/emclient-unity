@@ -492,6 +492,43 @@ namespace AgoraChat
 
     /**
     * \~chinese
+    * 消息搜索范围枚举类型。
+    *
+    * \~english
+    * The message search scopes.
+    */
+    public enum MessageSearchScope
+    {
+        /**
+        * \~chinese
+        * 按消息内容搜索。
+        *
+        * \~english
+        * Search by message content.
+        */
+        CONTENT,
+
+        /**
+        * \~chinese
+        * 按消息扩展属性搜索。
+        *
+        * \~english
+        * Search by message extension.
+        */
+        EXT,
+
+        /**
+        * \~chinese
+        * 按消息内容和扩展属性搜索。
+        *
+        * \~english
+        * Search by message content and extension.
+        */
+        ALL,
+    };
+
+    /**
+    * \~chinese
     * 消息状态枚举。
     *
     *\~english
@@ -1105,7 +1142,16 @@ namespace AgoraChat
         * \~english
         * A conversation is deleted.
         */
-        CONVERSATION_DELETED = 62
+        CONVERSATION_DELETED = 62,
+
+        /**
+        * \~chinese
+        * 会话被标记或取消标记。
+        *
+        * \~english
+        * A conversation is marked or unmarked.
+        */
+        CONVERSATION_MARK = 63
     };
 
     public enum MessageReactionOperate
@@ -1127,5 +1173,36 @@ namespace AgoraChat
         * A Reaction is added.
         */
         MessageReactionOperateAdd = 1,
+    }
+
+    /**
+    * \~chinese
+    * 会话标记。
+    *
+    * \~english
+    * The conversation marks.
+    */
+    public enum MarkType
+    {
+        MarkType0 = 0,
+        MarkType1 = 1,
+        MarkType2 = 2,
+        MarkType3 = 3,
+        MarkType4 = 4,
+        MarkType5 = 5,
+        MarkType6 = 6,
+        MarkType7 = 7,
+        MarkType8 = 8,
+        MarkType9 = 9,
+        MarkType10 = 10,
+        MarkType11 = 11,
+        MarkType12 = 12,
+        MarkType13 = 13,
+        MarkType14 = 14,
+        MarkType15 = 15,
+        MarkType16 = 16,
+        MarkType17 = 17,
+        MarkType18 = 18,
+        MarkType19 = 19,
     }
 }

@@ -1,4 +1,8 @@
 ﻿using AgoraChat.SimpleJSON;
+#if !_WIN32
+using UnityEngine.Scripting;
+#endif
+
 namespace AgoraChat
 {
     /**
@@ -8,6 +12,7 @@ namespace AgoraChat
      * \~english
      * The presence device status class
      */
+    [Preserve]
     public class PresenceDeviceStatus : BaseModel
     {
         /**
@@ -29,10 +34,13 @@ namespace AgoraChat
          */
         public int Status;
 
+        [Preserve]
         internal PresenceDeviceStatus() { }
 
+        [Preserve]
         internal PresenceDeviceStatus(string jsonString) : base(jsonString) { }
 
+        [Preserve]
         internal PresenceDeviceStatus(JSONObject jsonObject) : base(jsonObject) { }
 
         internal override void FromJsonObject(JSONObject jsonObject)

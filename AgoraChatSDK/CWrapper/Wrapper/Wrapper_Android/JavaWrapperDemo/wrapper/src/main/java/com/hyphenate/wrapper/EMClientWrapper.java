@@ -189,8 +189,8 @@ public class EMClientWrapper extends EMBaseWrapper {
 
     private String loginWithAgoraToken(JSONObject param, EMWrapperCallback callback) throws JSONException {
         String username = param.getString("userId");
-        String agoraToken = param.getString("token");
-        EMClient.getInstance().loginWithAgoraToken(username, agoraToken, new EMCommonCallback(callback));
+        String token = param.getString("token");
+        EMClient.getInstance().loginWithToken(username, token, new EMCommonCallback(callback));
         return null;
     }
     private String getToken() throws JSONException
@@ -255,11 +255,8 @@ public class EMClientWrapper extends EMBaseWrapper {
     }
 
     private String renewToken(JSONObject param, EMWrapperCallback callback) throws JSONException {
-        String agoraToken = param.getString("token");
-        asyncRunnable(()->{
-            EMClient.getInstance().renewToken(agoraToken);
-            onSuccess(null, callback);
-        });
+        String token = param.getString("token");
+        EMClient.getInstance().renewToken(token, new EMCommonCallback(callback));
         return null;
     }
 

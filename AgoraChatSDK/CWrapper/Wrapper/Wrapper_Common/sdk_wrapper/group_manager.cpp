@@ -1445,6 +1445,36 @@ namespace sdk_wrapper {
         return nullptr;
     }
 
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_FetchMyGroupsCount(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        thread t([=]() {
+            EMError error;
+            int result = CLIENT->getGroupManager().fetchMyGroupsCount(error);
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+
+                JSON_STARTOBJ
+                writer.Key("ret");
+                writer.Int(result);
+                JSON_ENDOBJ
+
+                string json = s.GetString();
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            });
+        t.detach();
+
+        return nullptr;
+    }
+
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_RunDelegateTester(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         if (nullptr != gGroupManagerListener) {
@@ -1464,7 +1494,7 @@ namespace sdk_wrapper {
             gGroupManagerListener->onLeaveGroup(groupPtr, EMMuc::EMMucLeaveReason::DESTROYED);
             gGroupManagerListener->onReceiveJoinGroupApplication(groupPtr, "from", "message");
             gGroupManagerListener->onReceiveAcceptionFromGroup(groupPtr);
-            gGroupManagerListener->onReceiveRejectionFromGroup("123456", "reason");
+            gGroupManagerListener->onReceiveRejectionFromGroup("123456", "reason", "decliner", "applicant");
             //gGroupManagerListener->onUpdateMyGroupList()
 
             vector<string> members;

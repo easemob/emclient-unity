@@ -59,7 +59,11 @@ namespace AgoraChat
         internal const string acceptInvitation = "acceptInvitation";
         internal const string declineInvitation = "declineInvitation";
         internal const string getSelfIdsOnOtherPlatform = "getSelfIdsOnOtherPlatform";
-
+        internal const string setContactRemark = "setContactRemark";
+        internal const string fetchContactFromLocal = "fetchContactFromLocal";
+        internal const string fetchAllContactsFromLocal = "fetchAllContactsFromLocal";
+        internal const string fetchAllContactsFromServer = "fetchAllContactsFromServer";
+        internal const string fetchAllContactsFromServerByPage = "fetchAllContactsFromServerByPage";
 
 
         /// EMChatManager methods
@@ -81,11 +85,13 @@ namespace AgoraChat
         internal const string loadAllConversations = "loadAllConversations";
         internal const string getConversationsFromServer = "getConversationsFromServer";
         internal const string getConversationsFromServerWithCursor = "getConversationsFromServerWithCursor";
+        internal const string getConversationsFromServerWithCursorAndMark = "getConversationsFromServerWithCursorAndMark";
         internal const string getConversationsFromServerWithPage = "getConversationsFromServerWithPage";
         internal const string deleteConversation = "deleteConversation";
         internal const string fetchHistoryMessages = "fetchHistoryMessages";
         internal const string fetchHistoryMessagesBy = "fetchHistoryMessagesBy";
         internal const string searchChatMsgFromDB = "searchChatMsgFromDB";
+        internal const string searchChatMsgFromDBWithScope = "searchChatMsgFromDBWithScope";
         internal const string getMessage = "getMessage";
         internal const string asyncFetchGroupAcks = "asyncFetchGroupAcks";
         internal const string deleteRemoteConversation = "deleteRemoteConversation";
@@ -103,6 +109,10 @@ namespace AgoraChat
         internal const string removeEarlierHistoryMessages = "removeEarlierHistoryMessages";
         internal const string modifyMessage = "modifyMessage";
         internal const string downloadCombineMessages = "downloadCombineMessages";
+        internal const string markConversations = "markConversations";
+        internal const string deleteAllMessagesAndConversations = "deleteAllMessagesAndConversations";
+        internal const string pinMessage = "pinMessage";
+        internal const string getPinnedMessagesFromServer = "getPinnedMessagesFromServer";
 
         /// EMMessage listener
         internal const string onMessageProgressUpdate = "onMessageProgressUpdate";
@@ -129,7 +139,10 @@ namespace AgoraChat
         internal const string loadMsgWithKeywords = "loadMsgWithKeywords";
         internal const string loadMsgWithMsgType = "loadMsgWithMsgType";
         internal const string loadMsgWithTime = "loadMsgWithTime";
+        internal const string loadMsgWithScope = "loadMsgWithScope";
         internal const string messageCount = "messageCount";
+        internal const string pinnedMessages = "pinnedMessages";
+        internal const string marks = "marks";
 
         // EMMessage method
         internal const string getReactionList = "getReactionList";
@@ -137,7 +150,7 @@ namespace AgoraChat
         internal const string getChatThread = "chatThread";
         internal const string getHasDeliverAck = "getHasDeliverAck";
         internal const string getHasReadAck = "getHasReadAck";
-
+        internal const string getPinnedInfo = "pinnedInfo";
 
         // EMChatRoomManager
         internal const string joinChatRoom = "joinChatRoom";
@@ -225,6 +238,7 @@ namespace AgoraChat
         internal const string declineInvitationFromGroup = "declineInvitationFromGroup";
         internal const string fetchMemberAttributes = "fetchMemberAttributes";
         internal const string setMemberAttributes = "setMemberAttributes";
+        internal const string fetchMyGroupsCount = "fetchMyGroupsCount";
 
 
         /// EMPushManager
@@ -315,6 +329,7 @@ namespace AgoraChat
         internal const string onMessageReactionDidChange = "messageReactionDidChange";
         internal const string onMessageIdChanged = "onMessageIdChanged";
         internal const string onMessageContentChanged = "onMessageContentChanged";
+        internal const string onMessagePinChanged = "onMessagePinChanged";
 
         // ChatThreadManagerDelegate
         internal const string onChatThreadCreate = "onChatThreadCreate";

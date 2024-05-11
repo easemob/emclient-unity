@@ -44,7 +44,7 @@ void InitManagerMap()
 	func_map_client["isConnected"] = Client_isConnected;
 	func_map_client["getToken"] = Client_LoginToken;
 	func_map_client["loginWithAgoraToken"] = Client_LoginWithAgoraToken;
-	func_map_client["renewToken"] = Client_RenewAgoraToken;
+	func_map_client["renewToken"] = Client_RenewToken;
 	//func_map_client["autoLogin"] = Client_AutoLogin; // not support for platform
 	func_map_client["clearResource"] = Client_ClearResource;
 
@@ -76,6 +76,7 @@ void InitManagerMap()
 	func_map_chat_manager["getThreadConversation"] = ChatManager_ConversationWithType;
 	func_map_chat_manager["getConversationsFromServer"] = ChatManager_GetConversationsFromServer;
     func_map_chat_manager["getConversationsFromServerWithCursor"] = ChatManager_GetConversationsFromServerWithCursor;
+    func_map_chat_manager["getConversationsFromServerWithCursorAndMark"] = ChatManager_GetConversationsFromServerWithCursorAndMark;
     func_map_chat_manager["getConversationsFromServerWithPage"] = ChatManager_GetConversationsFromServerWithPage;
 	func_map_chat_manager["getUnreadMessageCount"] = ChatManager_GetUnreadMessageCount;
 	func_map_chat_manager["importMessages"] = ChatManager_InsertMessages;
@@ -85,6 +86,7 @@ void InitManagerMap()
 	func_map_chat_manager["recallMessage"] = ChatManager_RecallMessage;
 	func_map_chat_manager["resendMessage"] = ChatManager_ResendMessage;
 	func_map_chat_manager["searchChatMsgFromDB"] = ChatManager_LoadMoreMessages;
+    func_map_chat_manager["searchChatMsgFromDBWithScope"] = ChatManager_LoadMoreMessagesWithScope;
 	func_map_chat_manager["ackConversationRead"] = ChatManager_SendReadAckForConversation;
 	func_map_chat_manager["sendMessage"] = ChatManager_SendMessage;
 	func_map_chat_manager["ackMessageRead"] = ChatManager_SendReadAckForMessage;
@@ -107,6 +109,10 @@ void InitManagerMap()
     func_map_chat_manager["removeEarlierHistoryMessages"] = ChatManager_RemoveEarlierHistoryMessages;
     func_map_chat_manager["modifyMessage"] = ChatManager_ModifyMessage;
     func_map_chat_manager["downloadCombineMessages"] = ChatManager_DownloadCombineMessages;
+    func_map_chat_manager["markConversations"] = ChatManager_MarkConversations;
+    func_map_chat_manager["deleteAllMessagesAndConversations"] = ChatManager_DeleteAllMessagesAndConversations;
+    func_map_chat_manager["pinMessage"] = ChatManager_PinMessage;
+    func_map_chat_manager["getPinnedMessagesFromServer"] = ChatManager_GetPinnedMessagesFromServer;
 
 	manager_map["EMChatManager"] = func_map_chat_manager;
 
@@ -116,6 +122,7 @@ void InitManagerMap()
 	func_map_message_manager["getHasReadAck"] = ChatManager_GetHasReadAck;
 	func_map_message_manager["getReactionList"] = ChatManager_GetReactionListForMsg;
 	func_map_message_manager["chatThread"] = ChatManager_GetChatThreadForMsg;
+    func_map_message_manager["pinnedInfo"] = ChatManager_GetPinnedInfo;
 	manager_map["EMMessageManager"] = func_map_message_manager;
 
 
@@ -165,6 +172,7 @@ void InitManagerMap()
 	func_map_group_manager["uploadGroupSharedFile"] = GroupManager_UploadGroupSharedFile;
     func_map_group_manager["fetchMemberAttributes"] = GroupManager_FetchMemberAttributes;
     func_map_group_manager["setMemberAttributes"] = GroupManager_SetMemberAttributes;
+    func_map_group_manager["fetchMyGroupsCount"] = GroupManager_FetchMyGroupsCount;
 
 	manager_map["EMGroupManager"] = func_map_group_manager;
 
@@ -218,6 +226,11 @@ void InitManagerMap()
 	func_map_contact_manager["getSelfIdsOnOtherPlatform"] = ContactManager_GetSelfIdsOnOtherPlatform;
 	func_map_contact_manager["removeUserFromBlockList"] = ContactManager_RemoveFromBlackList;
 	func_map_contact_manager["getBlockListFromDB"] = ContactManager_GetBlockListFromDB;
+    func_map_contact_manager["setContactRemark"] = ContactManager_SetContactRemark;
+    func_map_contact_manager["fetchContactFromLocal"] = ContactManager_FetchContactFromLocal;
+    func_map_contact_manager["fetchAllContactsFromLocal"] = ContactManager_FetchAllContactsFromLocal;
+    func_map_contact_manager["fetchAllContactsFromServer"] = ContactManager_FetchAllContactsFromServer;
+    func_map_contact_manager["fetchAllContactsFromServerByPage"] = ContactManager_FetchAllContactsFromServerByPage;
 	manager_map["EMContactManager"] = func_map_contact_manager;
 
 
@@ -234,12 +247,15 @@ void InitManagerMap()
 	func_map_conversation_manager["loadMsgWithKeywords"] = ConversationManager_LoadMessagesWithKeyword;
 	func_map_conversation_manager["loadMsgWithMsgType"] = ConversationManager_LoadMessagesWithMsgType;
 	func_map_conversation_manager["loadMsgWithTime"] = ConversationManager_LoadMessagesWithTime;
+    func_map_conversation_manager["loadMsgWithScope"] = ConversationManager_LoadMessagesWithScope;
 	func_map_conversation_manager["markAllMessagesAsRead"] = ConversationManager_MarkAllMessagesAsRead;
 	func_map_conversation_manager["markMessageAsRead"] = ConversationManager_MarkMessageAsRead;
 	func_map_conversation_manager["syncConversationExt"] = ConversationManager_SetExtField;
 	func_map_conversation_manager["getConversationUnreadMsgCount"] = ConversationManager_UnreadMessagesCount;
 	func_map_conversation_manager["messageCount"] = ConversationManager_MessagesCount;
 	func_map_conversation_manager["updateConversationMessage"] = ConversationManager_UpdateMessage;
+    func_map_conversation_manager["pinnedMessages"] = ConversationManager_PinnedMessages;
+    func_map_conversation_manager["marks"] = ConversationManager_Marks;
 	manager_map["EMConversationManager"] = func_map_conversation_manager;
 
 

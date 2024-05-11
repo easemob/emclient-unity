@@ -335,6 +335,45 @@ namespace sdk_wrapper {
         return nullptr;
     }
 
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_LoadMessagesWithScope(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+
+        string conv_id = GetJsonValue_String(d, "convId", "");
+        int int_type = GetJsonValue_Int(d, "convType", 0);
+        EMConversation::EMConversationType type = Conversation::ConversationTypeFromInt(int_type);
+
+        string keywords = GetJsonValue_String(d, "keywords", "");
+        string from = GetJsonValue_String(d, "from", "");
+        int count = GetJsonValue_Int(d, "count", 20);
+
+        string timestamp_str = GetJsonValue_String(d, "timestamp", "0");
+        int64_t ts = atol(timestamp_str.c_str());
+
+        int var_direction = GetJsonValue_Int(d, "direction", 0);
+        EMConversation::EMMessageSearchDirection direction = Conversation::EMMessageSearchDirectionFromInt(var_direction);
+
+        int var_scope = GetJsonValue_Int(d, "scope", 0);
+        EMConversation::EMMessageSearchScope scope = Conversation::EMMessageSearchScopeFromInt(var_scope);
+
+        thread t([=]() {
+            EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(conv_id, type, true);
+            EMMessageList msgList = conversationPtr->loadMoreMessages(keywords, scope, ts, count, from, direction);
+
+            string json = Message::ToJson(msgList);
+            string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
+            CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+
+            });
+        t.detach();
+
+        return nullptr;
+    }
+
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_MarkAllMessagesAsRead(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         if (!CheckClientInitOrNot(cbid)) return nullptr;
@@ -491,4 +530,58 @@ namespace sdk_wrapper {
         return CopyToPointer(json);
     }
 
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_PinnedMessages(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        Document d; d.Parse(jstr);
+        string conv_id = GetJsonValue_String(d, "convId", "");
+        int int_type = GetJsonValue_Int(d, "convType", 0);
+        EMConversation::EMConversationType type = Conversation::ConversationTypeFromInt(int_type);
+
+        EMConversationPtr conversation = CLIENT->getChatManager().conversationWithType(conv_id, type, true);
+
+        EMMessageList messageList = conversation->pinnedMessages();
+
+        string json = "";
+
+        if (messageList.size() > 0) {
+            JSON_STARTOBJ
+            writer.Key("ret");
+            Message::ToJsonObjectWithMessageList(writer, messageList);
+            JSON_ENDOBJ
+            json = s.GetString();
+        }
+
+        return CopyToPointer(json);
+    }
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_Marks(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        Document d; d.Parse(jstr);
+        string conv_id = GetJsonValue_String(d, "convId", "");
+        int int_type = GetJsonValue_Int(d, "convType", 0);
+        EMConversation::EMConversationType type = Conversation::ConversationTypeFromInt(int_type);
+
+        EMConversationPtr conversation = CLIENT->getChatManager().conversationWithType(conv_id, type, true);
+        uint64_t markValue = (uint64_t)conversation->markValue();
+
+        std::vector<int> marks;
+        for (int offset = 0; markValue > 0; ++offset) {
+            if (markValue & 1) {
+                marks.push_back(offset);
+            }
+            markValue = markValue >> 1;
+        }
+
+        JSON_STARTOBJ
+        writer.Key("ret");
+        MyJson::ToJsonObject(writer, marks);
+        JSON_ENDOBJ
+
+        string json = s.GetString();
+        return CopyToPointer(json);
+    }
 }

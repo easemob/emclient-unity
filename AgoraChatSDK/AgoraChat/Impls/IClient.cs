@@ -115,7 +115,7 @@ namespace AgoraChat
             NativeCall(SDKMethod.loginWithAgoraToken, jo_param, callback);
         }
 
-        internal void RenewAgoraToken(string token)
+        internal void RenewToken(string token)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("token", token);

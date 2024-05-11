@@ -8,6 +8,7 @@
 #import "EMMessageManager.h"
 #import "EMMessageReaction+Helper.h"
 #import "EMChatThread+Helper.h"
+#import "EMMessagePinInfo+Helper.h"
 #import "EMHelper.h"
 #import "EMUtil.h"
 
@@ -32,6 +33,8 @@
         ret = [self groupAckCount:params callback:callback];
     } else if ([getChatThread isEqualToString:method]) {
         ret = [self getChatThread:params callback:callback];
+    } else if ([getPinnedInfo isEqualToString:method]) {
+        ret = [self getPinnedInfo:params callback:callback];
     } else {
         ret = [super onMethodCall:method params:params callback:callback];
     }
@@ -62,6 +65,20 @@
     NSString *msgId = params[@"msgId"];
     EMChatMessage *msg = [EMClient.sharedClient.chatManager getMessageWithMessageId:msgId];
     return msg;
+}
+
+- (NSString *)getPinnedInfo:(NSDictionary *)param
+                           callback:(EMWrapperCallback *)callback {
+    NSString *msgId = param[@"msgId"];
+
+    EMChatMessage *msg = [EMClient.sharedClient.chatManager getMessageWithMessageId:msgId];
+    if (msg) {
+        if (msg.pinnedInfo) {
+            return [[EMHelper getReturnJsonObject:[msg.pinnedInfo toJson]] toJsonString];
+        }
+    }
+
+    return nil;
 }
 
 - (void)registerEaseListener{

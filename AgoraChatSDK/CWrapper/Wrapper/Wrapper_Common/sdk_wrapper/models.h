@@ -41,6 +41,8 @@ namespace sdk_wrapper {
 		static string ToJsonWithSuccessResult(const char* cbid, const char* jstr);
 		static string ToJsonWithProcess(const char* cbid, int process);
 
+        static void ToJsonObject(Writer<StringBuffer>& writer, const vector<int>& vec);
+
 		static void ToJsonObject(Writer<StringBuffer>& writer, const vector<string>& vec);
 		static vector<string> FromJsonObjectToVector(const Value& jnode, bool filter = false);
 
@@ -137,6 +139,9 @@ namespace sdk_wrapper {
 
 		static int EMMessageSearchDirectionToInt(EMConversation::EMMessageSearchDirection direction);
 		static EMConversation::EMMessageSearchDirection EMMessageSearchDirectionFromInt(int i);
+
+        static int EMMessageSearchScopeToInt(EMConversation::EMMessageSearchScope scope);
+        static EMConversation::EMMessageSearchScope EMMessageSearchScopeFromInt(int i);
 	};
 
 	class SupportLanguage
@@ -345,6 +350,18 @@ namespace sdk_wrapper {
 		static string ToJson(const vector<EMDeviceInfoPtr> vec);
 	};
 
+    class Contact
+    {
+    public:
+        static EMContactPtr FromJson(const char* json);
+
+        static void ToJsonObject(Writer<StringBuffer>& writer, const EMContactPtr contact);
+        static string ToJson(const EMContactPtr contact);
+
+        static void ToJsonObject(Writer<StringBuffer>& writer, const vector<EMContactPtr> vec);
+        static string ToJson(const vector<EMContactPtr> vec);
+    };
+
     struct FetchMessageOption
     {
         static EMFetchMessageOptionPtr FromJsonObject(const Value& jnode);
@@ -383,31 +400,38 @@ namespace sdk_wrapper {
 		static map<string, UserInfo> FromJsonFromServer(string json);
 	};
 
-	class TokenWrapper
-	{
-		struct AutoLoginConfig {
-			string userName;
-			string passwd;
-			string token;
-			string expireTS; // milli-second
-			int64_t expireTsInt; //second
-			int64_t availablePeriod; //second
-		};
+    class PinnedInfo
+    {
+    public:
+        static void ToJsonObject(Writer<StringBuffer>& writer, bool isPinned, const string& operatorId, int64_t ts);
+    };
 
-	public:
-		TokenWrapper();
+    class TokenWrapper
+    {
+    public:
+        TokenWrapper();
+        ~TokenWrapper();
 
-		bool GetTokenCofigFromJson(string& raw, string& token, string& expireTS);
-		int GetTokenCheckInterval(int pre_check_interval,int availablePeriod);
+        static TokenWrapper* GetInstance();
+        static void TimeFunc(int signo);
 
-		bool SetTokenInAutoLogin(const string& username, const string& token, const string expireTS);
-		void SetPasswdInAutoLogin(const string& username, const string& passwd);
+        int GetTokenCheckInterval();
+        void AdjustLastCheckInterval(int64_t remain_ts);
+        void onTokenNotification(int errCode, int64_t remain_ts);
 
-		void SaveAutoLoginConfigToFile(const string& uuid);
-		void GetAutoLoginConfigFromFile(const string& uuid);
+        void SetAndStartTokenCheckTimer(int64_t expireTS, int interval);
+        void StopTokenCheckTimer();
 
-		AutoLoginConfig autologin_config_;
-	};
+        void TokenCheck();
+
+        int64_t expireTS_; //second
+        int64_t availablePeriod_; //second
+        int check_interval_;
+
+    private:
+        static TokenWrapper* instance_;
+    };
+
 }
 
 #endif

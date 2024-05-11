@@ -14,6 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.Set;
 
 public class EMConversationWrapper extends EMBaseWrapper {
     public String onMethodCall(String method, JSONObject jsonObject, EMWrapperCallback callback) throws JSONException {
@@ -67,11 +68,18 @@ public class EMConversationWrapper extends EMBaseWrapper {
         else if (EMSDKMethod.loadMsgWithTime.equals(method)) {
             ret = loadMsgWithTime(jsonObject, callback);
         }
+        else if (EMSDKMethod.loadMsgWithScope.equals(method)) {
+            ret = loadMsgWithScope(jsonObject, callback);
+        }
         else if(EMSDKMethod.messageCount.equals(method)) {
             ret = messageCount(jsonObject, callback);
         }
         else if(EMSDKMethod.removeMessages.equals(method)) {
             ret = removeMessages(jsonObject, callback);
+        } else if(EMSDKMethod.pinnedMessages.equals(method)) {
+            ret = pinnedMessages(jsonObject, callback);
+        } else if(EMSDKMethod.marks.equals(method)) {
+            ret = marks(jsonObject, callback);
         } else {
             ret = super.onMethodCall(method, jsonObject, callback);
         }
@@ -247,6 +255,24 @@ public class EMConversationWrapper extends EMBaseWrapper {
         return null;
     }
 
+    private String loadMsgWithScope(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        EMConversation conversation = conversationWithParam(params);
+        String keywords = params.getString("keywords");
+        String sender = params.getString("from");
+        int count = params.getInt("count");
+        long timestamp = params.getLong("timestamp");
+        EMConversation.EMSearchDirection direction = params.getInt("direction") == 0 ? EMConversation.EMSearchDirection.UP : EMConversation.EMSearchDirection.DOWN;
+        EMConversation.EMMessageSearchScope scope = EMMode.searchScopeFromInt(params.getInt("scope"));
+
+        List<EMMessage> msgList = conversation.searchMsgFromDB(keywords, timestamp, count, sender, direction, scope);
+        JSONArray jsonArray = new JSONArray();
+        for(EMMessage msg: msgList) {
+            jsonArray.put(EMMessageHelper.toJson(msg));
+        }
+        onSuccess(jsonArray, callback);
+        return null;
+    }
+
     private String messageCount(JSONObject params, EMWrapperCallback callback) throws JSONException {
         EMConversation conversation = conversationWithParam(params);
         return EMHelper.getReturnJsonObject(conversation.getAllMsgCount()).toString();
@@ -259,6 +285,25 @@ public class EMConversationWrapper extends EMBaseWrapper {
         return EMHelper.getReturnJsonObject(conversation.removeMessages(startTs, endTs)).toString();
     }
 
+    private String pinnedMessages(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        EMConversation conversation = conversationWithParam(params);
+        List<EMMessage> msgList = conversation.pinnedMessages();
+        JSONArray jsonArray = new JSONArray();
+        for(EMMessage msg: msgList) {
+            jsonArray.put(EMMessageHelper.toJson(msg));
+        }
+        return EMHelper.getReturnJsonObject(jsonArray).toString();
+    }
+
+    private String marks(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        EMConversation conversation = conversationWithParam(params);
+        Set<EMConversation.EMMarkType> marks = conversation.marks();
+        JSONArray jsonArray = new JSONArray();
+        for(EMConversation.EMMarkType mark: marks) {
+            jsonArray.put(EMMode.intFromMarkType(mark));
+        }
+        return EMHelper.getReturnJsonObject(jsonArray).toString();
+    }
 
     private EMConversation conversationWithParam(JSONObject params ) throws JSONException {
         String con_id = params.getString("convId");

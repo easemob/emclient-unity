@@ -229,6 +229,7 @@ void StartTimer(int interval, TIMER_FUNC timer_func)
             }
         }
         ISRUN = false;
+        STOP = false;
         });
     t.detach();
 }

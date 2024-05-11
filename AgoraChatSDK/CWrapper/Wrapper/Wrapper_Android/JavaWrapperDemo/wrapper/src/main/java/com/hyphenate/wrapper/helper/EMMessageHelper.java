@@ -274,6 +274,7 @@ public class EMMessageHelper {
                 bodyData.put("body", EMMessageBodyHelper.voiceBodyToJson((EMVoiceMessageBody) message.getBody()));
                 bodyData.put("type", 4);
             }
+            break;
             case COMBINE: {
                 bodyData.put("body", EMMessageBodyHelper.combineBodyToJson((EMCombineMessageBody) message.getBody()));
                 bodyData.put("type", 8);
@@ -337,6 +338,8 @@ public class EMMessageHelper {
         // data.put("groupAckCount", message.groupAckCount());
         data.put("isThread", message.isChatThreadMessage());
         data.put("deliverOnlineOnly", message.isDeliverOnlineOnly());
+        data.put("broadcast", message.isBroadcast());
+        data.put("isContentReplaced", message.isContentReplaced());
         return data;
     }
 

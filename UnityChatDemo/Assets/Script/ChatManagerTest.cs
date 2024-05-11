@@ -33,6 +33,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     private Button loadMessageBtn;
     private Button markAllConversationAsReadBtn;
     private Button searchMessageFromDBBtn;
+    private Button searchMessageFromDBWithScopeBtn;
     private Button sendConversationAckBtn;
     private Button sendMessageReadAckBtn;
     private Button updateMessageBtn;
@@ -40,6 +41,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     private Button deleteConversationFromServerBtn;
     private Button deleteConversationBtn;
     private Button getConversationsFromServerWithCursorBtn;
+    private Button getConversationsFromServerWithCursorWithMarkBtn;
     private Button getConversationsFromServerWithPageBtn;
     private Button removeMessagesFromServerWithMsgIdsBtn;
     private Button removeMessagesFromServerWithTsBtn;
@@ -47,6 +49,10 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     private Button pinConversationBtn;
     private Button modifyMessageBtn;
     private Button downloadCombineMessagesBtn;
+    private Button markConversationsBtn;
+    private Button deleteAllMessagesAndConversationsBtn;
+    private Button pinMessageBtn;
+    private Button getPinnedMessagesFromServerBtn;
 
     private void Awake()
     {
@@ -79,6 +85,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         loadMessageBtn = transform.Find("Scroll View/Viewport/Content/LoadMessageBtn").GetComponent<Button>();
         markAllConversationAsReadBtn = transform.Find("Scroll View/Viewport/Content/MarkAllConversationAsReadBtn").GetComponent<Button>();
         searchMessageFromDBBtn = transform.Find("Scroll View/Viewport/Content/SearchMessageFromDBBtn").GetComponent<Button>();
+        searchMessageFromDBWithScopeBtn = transform.Find("Scroll View/Viewport/Content/SearchMessageFromDBWithScopeBtn").GetComponent<Button>();
         sendConversationAckBtn = transform.Find("Scroll View/Viewport/Content/SendConversationAckBtn").GetComponent<Button>();
         sendMessageReadAckBtn = transform.Find("Scroll View/Viewport/Content/SendMessageReadAckBtn").GetComponent<Button>();
         updateMessageBtn = transform.Find("Scroll View/Viewport/Content/UpdateMessageBtn").GetComponent<Button>();
@@ -86,6 +93,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         deleteConversationFromServerBtn = transform.Find("Scroll View/Viewport/Content/DeleteConversationFromServerBtn").GetComponent<Button>();
         deleteConversationBtn = transform.Find("Scroll View/Viewport/Content/DeleteLocalConversationAndMessage").GetComponent<Button>();
         getConversationsFromServerWithCursorBtn = transform.Find("Scroll View/Viewport/Content/GetConversationsFromServerWithCursorBtn").GetComponent<Button>();
+        getConversationsFromServerWithCursorWithMarkBtn = transform.Find("Scroll View/Viewport/Content/GetConversationsFromServerWithCursorWithMarkBtn").GetComponent<Button>();
         getConversationsFromServerWithPageBtn = transform.Find("Scroll View/Viewport/Content/GetConversationsFromServerWithPageBtn").GetComponent<Button>();
         removeMessagesFromServerWithMsgIdsBtn = transform.Find("Scroll View/Viewport/Content/RemoveMessagesFromServerWithMsgIdsBtn").GetComponent<Button>();
         removeMessagesFromServerWithTsBtn = transform.Find("Scroll View/Viewport/Content/RemoveMessagesFromServerWithTsBtn").GetComponent<Button>();
@@ -93,6 +101,10 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         pinConversationBtn = transform.Find("Scroll View/Viewport/Content/PinConversationBtn").GetComponent<Button>();
         modifyMessageBtn = transform.Find("Scroll View/Viewport/Content/ModifyMessageBtn").GetComponent<Button>();
         downloadCombineMessagesBtn = transform.Find("Scroll View/Viewport/Content/DownloadCombineMessagesBtn").GetComponent<Button>();
+        markConversationsBtn = transform.Find("Scroll View/Viewport/Content/MarkConversationsBtn").GetComponent<Button>();
+        deleteAllMessagesAndConversationsBtn = transform.Find("Scroll View/Viewport/Content/DeleteAllMessagesAndConversationsBtn").GetComponent<Button>();
+        pinMessageBtn = transform.Find("Scroll View/Viewport/Content/PinMessageBtn").GetComponent<Button>();
+        getPinnedMessagesFromServerBtn = transform.Find("Scroll View/Viewport/Content/GetPinnedMessagesFromServerBtn").GetComponent<Button>();
 
         sendTextBtn.onClick.AddListener(SendTextBtnAction);
         sendImageBtn.onClick.AddListener(SendImageBtnAction);
@@ -116,6 +128,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         loadMessageBtn.onClick.AddListener(LoadMessageBtnAction);
         markAllConversationAsReadBtn.onClick.AddListener(MarkAllConversationAsReadBtnAction);
         searchMessageFromDBBtn.onClick.AddListener(SearchMessageFromDBBtnAction);
+        searchMessageFromDBWithScopeBtn.onClick.AddListener(SearchMessageFromDBWithScopeBtnAction);
         sendConversationAckBtn.onClick.AddListener(SendConversationAckBtnAction);
         sendMessageReadAckBtn.onClick.AddListener(SendMessageReadAckBtnAction);
         updateMessageBtn.onClick.AddListener(UpdateMessageBtnAction);
@@ -123,6 +136,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         deleteConversationFromServerBtn.onClick.AddListener(DeleteConversationFromServerBtnAction);
         deleteConversationBtn.onClick.AddListener(DeleteLocalConversationAndMessage);
         getConversationsFromServerWithCursorBtn.onClick.AddListener(GetConversationsFromServerWithCursorAction);
+        getConversationsFromServerWithCursorWithMarkBtn.onClick.AddListener(GetConversationsFromServerWithCursorWithMarkAction);
         getConversationsFromServerWithPageBtn.onClick.AddListener(GetConversationsFromServerWithPageAction);
         removeMessagesFromServerWithMsgIdsBtn.onClick.AddListener(RemoveMessagesFromServerWithMsgIdsAction);
         removeMessagesFromServerWithTsBtn.onClick.AddListener(RemoveMessagesFromServerWithTsAction);
@@ -130,6 +144,10 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         pinConversationBtn.onClick.AddListener(PinConversationBtnAction);
         modifyMessageBtn.onClick.AddListener(ModifyMessageAction);
         downloadCombineMessagesBtn.onClick.AddListener(DownloadCombineMessagesAction);
+        markConversationsBtn.onClick.AddListener(MarkConversationsBtnAction);
+        deleteAllMessagesAndConversationsBtn.onClick.AddListener(DeleteAllMessagesAndConversationsBtnAction);
+        pinMessageBtn.onClick.AddListener(PinMessageBtnAction);
+        getPinnedMessagesFromServerBtn.onClick.AddListener(GetPinnedMessagesFromServerBtnAction);
         SDKClient.Instance.ChatManager.AddChatManagerDelegate(this);
     }
 
@@ -813,15 +831,13 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
             }
 
             int count = int.Parse(dict["LoadCount"]);
-            List<Message> list = SDKClient.Instance.ChatManager.SearchMsgFromDB(dict["Keyword"], maxCount: count);
-            if (list != null)
-            {
-                UIManager.DefaultAlert(transform, $"找到的消息条数: {list.Count}");
-            }
-            else
-            {
-                UIManager.DefaultAlert(transform, "未找到消息");
-            }
+            SDKClient.Instance.ChatManager.SearchMsgFromDB(dict["Keyword"], -1, count, null, MessageSearchDirection.UP, new ValueCallBack<List<Message>>(
+                onSuccess: (list) => {
+                    UIManager.DefaultAlert(transform, $"找到的消息条数: {list.Count}");
+                },
+                onError: (code, desc) => {
+                    UIManager.DefaultAlert(transform, "未找到消息");
+                }));
 
         });
 
@@ -831,6 +847,39 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         UIManager.DefaultInputAlert(transform, config);
         Debug.Log("SearchMessageFromDBBtnAction");
     }
+
+    void SearchMessageFromDBWithScopeBtnAction()
+    {
+        InputAlertConfig config = new InputAlertConfig("根据关键字获取消息", (dict) =>
+        {
+            string keywordStr = dict["Keyword"];
+            string countStr = dict["LoadCount"];
+            if (null == keywordStr || 0 == keywordStr.Length || null == countStr || 0 == countStr.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
+            int count = int.Parse(dict["LoadCount"]);
+            MessageSearchScope scope = (MessageSearchScope)(int.Parse(dict["scope"]));
+            SDKClient.Instance.ChatManager.SearchMsgFromDB(dict["Keyword"], -1, count, null, MessageSearchDirection.UP, scope, new ValueCallBack<List<Message>>(
+                onSuccess: (list) => {
+                    UIManager.DefaultAlert(transform, $"找到的消息条数: {list.Count}");
+                },
+                onError: (code, desc) => {
+                    UIManager.DefaultAlert(transform, "未找到消息");
+                }));
+
+        });
+
+        config.AddField("Keyword");
+        config.AddField("scope");
+        config.AddField("LoadCount");
+
+        UIManager.DefaultInputAlert(transform, config);
+        Debug.Log("SearchMessageFromDBBtnAction");
+    }
+
     void SendConversationAckBtnAction()
     {
         InputAlertConfig config = new InputAlertConfig("发送会话Ack", (dict) =>
@@ -1066,6 +1115,40 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         Debug.Log("GetConversationsFromServerWithCursorAction");
     }
 
+    void GetConversationsFromServerWithCursorWithMarkAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            int mark = int.Parse(dict["mark"]);
+            string cursor = dict["cursor"];
+            int limit = int.Parse(dict["limit"]);
+
+            SDKClient.Instance.ChatManager.GetConversationsFromServerWithCursor((MarkType)mark, cursor, limit, new ValueCallBack<CursorResult<Conversation>>(
+            onSuccess: (ret) =>
+            {
+                string str = "";
+                foreach (var it in ret.Data)
+                {
+                    string marks_str = string.Join(", ", it.Marks());
+                    str = str + it.Id + (it.IsPinned ? "true" : "false") + "," + it.PinnedTime.ToString() + "," + marks_str + ";";
+                }
+                UIManager.DefaultAlert(transform, str);
+            },
+            onError: (code, desc) =>
+            {
+                UIManager.ErrorAlert(transform, code, desc);
+            }
+            ));
+        });
+
+        config.AddField("mark");
+        config.AddField("cursor");
+        config.AddField("limit");
+
+        UIManager.DefaultInputAlert(transform, config);
+        Debug.Log("GetConversationsFromServerWithCursorActionWithMark");
+    }
+
     void GetConversationsFromServerWithPageAction()
     {
         InputAlertConfig config = new InputAlertConfig((dict) =>
@@ -1294,6 +1377,106 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         Debug.Log("DownloadCombineMessagesAction");
     }
 
+    void MarkConversationsBtnAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string convId1 = dict["convId1"];
+            string convId2 = dict["convId2"];
+            bool isMarked = dict["isMarked"].CompareTo("true") == 0;
+            MarkType mark = (MarkType)(int.Parse(dict["mark"]));
+
+            List<string> list = new List<string>();
+            list.Add(convId1);
+            list.Add(convId2);
+
+            SDKClient.Instance.ChatManager.MarkConversations(list, isMarked, (MarkType)mark, new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+        config.AddField("convId1");
+        config.AddField("convId2");
+        config.AddField("isMarked");
+        config.AddField("mark");
+        UIManager.DefaultInputAlert(transform, config);
+    }
+
+    void DeleteAllMessagesAndConversationsBtnAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            bool clearServerData = dict["clearServerData"].CompareTo("true") == 0;
+
+            SDKClient.Instance.ChatManager.DeleteAllMessagesAndConversations(clearServerData, new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+        config.AddField("clearServerData");
+        UIManager.DefaultInputAlert(transform, config);
+    }
+
+    void PinMessageBtnAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string msgId = dict["msgId"];
+            bool isPinned = dict["isPinned"].CompareTo("true") == 0;
+
+            SDKClient.Instance.ChatManager.PinMessage(msgId, isPinned, new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+        config.AddField("msgId");
+        config.AddField("isPinned");
+        UIManager.DefaultInputAlert(transform, config);
+    }
+
+    void GetPinnedMessagesFromServerBtnAction()
+    {
+        InputAlertConfig config = new InputAlertConfig("根据关键字获取消息", (dict) =>
+        {
+            string convId = dict["convId"];
+
+            SDKClient.Instance.ChatManager.GetPinnedMessagesFromServer(convId, new ValueCallBack<List<Message>>(
+                onSuccess: (list) => {
+                    string str = "";
+                    foreach(var it in list)
+                    {
+                        str = str + ", msgid:" + it.MsgId + "," + ", pinnedBy:" + it.PinnedInfo.PinnedBy + ", pinnedAt:" + it.PinnedInfo.PinnedAt + ";";
+                    }
+                    UIManager.DefaultAlert(transform, $"找到的消息条数: {list.Count} and content: {str}");
+                },
+                onError: (code, desc) => {
+                    UIManager.DefaultAlert(transform, "未找到消息");
+                }
+            ));
+        });
+
+        config.AddField("convId");
+        UIManager.DefaultInputAlert(transform, config);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -1314,6 +1497,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         {
             list.Add(msg.MsgId);
             Debug.Log($"msg content: {msg.ToJsonObject().ToString()}");
+            Debug.Log($"msg pininfo: {msg.PinnedInfo.PinnedBy}, {msg.PinnedInfo.PinnedAt}");
         }
         string str = string.Join(",", list.ToArray());
 
@@ -1374,5 +1558,10 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     {
         AgoraChat.MessageBody.TextBody tb = (AgoraChat.MessageBody.TextBody)msg.Body;
         UIManager.DefaultAlert(transform, $"OnMessageContentChanged change msgId:{msg.MsgId}, text:{tb.Text}; operatorId:{operatorId}, operationTime:{operationTime}");
+    }
+
+    public void OnMessagePinChanged(string messageId, string conversationId, bool isPinned, string operatorId, long operationTime)
+    {
+        UIManager.DefaultAlert(transform, $"OnMessagePinChanged msgId:{messageId}, convId:{conversationId}, isPinned:{isPinned}, operatorId:{operatorId}, operationTime:{operationTime}");       
     }
 }

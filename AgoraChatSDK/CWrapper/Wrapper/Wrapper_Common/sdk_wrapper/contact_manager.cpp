@@ -318,6 +318,145 @@ namespace sdk_wrapper {
         return CopyToPointer(json);
 	}
 
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ContactManager_SetContactRemark(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        string userId = GetJsonValue_String(d, "userId", "");
+        string remark = GetJsonValue_String(d, "remark", "");
+
+        thread t([=]() {
+            string u = userId;
+            string r = remark;
+
+            EMError error;
+            CLIENT->getContactManager().setContactRemark(u, r, error);
+
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+
+                string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            });
+        t.detach();
+
+        return nullptr;
+    }
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ContactManager_FetchContactFromLocal(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        Document d; d.Parse(jstr);
+        string userId = GetJsonValue_String(d, "userId", "");
+
+        EMError error;
+        EMContactPtr contact = CLIENT->getContactManager().fetchContactFromLocal(userId, error);
+
+        string json = "";
+
+        if (EMError::EM_NO_ERROR == error.mErrorCode) {
+
+            if (nullptr != contact) {
+                JSON_STARTOBJ
+                writer.Key("ret");
+                Contact::ToJsonObject(writer, contact);
+                JSON_ENDOBJ
+                json = s.GetString();
+            }
+        }
+
+        return CopyToPointer(json);
+    }
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ContactManager_FetchAllContactsFromLocal(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        thread t([=]() {
+            EMError error;
+            vector<EMContactPtr> contacts = CLIENT->getContactManager().fetchAllContactsFromLocal(error);
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+
+                string json = Contact::ToJson(contacts);
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            });
+        t.detach();
+
+        return nullptr;
+    }
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ContactManager_FetchAllContactsFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        thread t([=]() {
+            EMError error;
+            vector<EMContactPtr> contacts = CLIENT->getContactManager().fetchAllContactsFromServer(error);
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+
+                string json = Contact::ToJson(contacts);
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            });
+        t.detach();
+
+        return nullptr;
+    }
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ContactManager_FetchAllContactsFromServerByPage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        int limit = GetJsonValue_Int(d, "limit", 20);
+        string cursor = GetJsonValue_String(d, "cursor", "");
+
+        thread t([=]() {
+            string c = cursor;
+
+            EMError error;
+            EMCursorResultRaw<EMContactPtr> cursorResult = CLIENT->getContactManager().fetchAllContactsFromServerByPage(limit, c, error);
+
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+                string json = CursorResult::ToJson<EMContactPtr, Contact>(cursorResult.nextPageCursor(), cursorResult.result());
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            });
+        t.detach();
+
+        return nullptr;
+    }
+
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ContactManager_RunDelegateTester(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         if (nullptr != gContactListener) {

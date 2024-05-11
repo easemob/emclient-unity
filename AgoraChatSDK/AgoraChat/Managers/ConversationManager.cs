@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AgoraChat.SimpleJSON;
 
 namespace AgoraChat
@@ -219,5 +220,51 @@ namespace AgoraChat
             NativeCall<List<Message>>(SDKMethod.loadMsgWithTime, jo_param, callback, process);
         }
 
+        internal void LoadMessagesWithScope(string conversationId, ConversationType conversationType, string keywords, long timestamp = 0, int maxCount = 20, string from = null, MessageSearchDirection direction = MessageSearchDirection.UP, MessageSearchScope scope = MessageSearchScope.CONTENT, ValueCallBack<List<Message>> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("convId", conversationId);
+            jo_param.AddWithoutNull("convType", conversationType.ToInt());
+            jo_param.AddWithoutNull("keywords", keywords);
+            jo_param.AddWithoutNull("from", from ?? "");
+            jo_param.AddWithoutNull("count", maxCount);
+            jo_param.AddWithoutNull("timestamp", timestamp.ToString());
+            jo_param.AddWithoutNull("direction", direction.ToInt());
+            jo_param.AddWithoutNull("scope", scope.ToInt());
+
+            Process process = (_, jsonNode) =>
+            {
+                return List.BaseModelListFromJsonArray<Message>(jsonNode);
+            };
+
+            NativeCall<List<Message>>(SDKMethod.loadMsgWithScope, jo_param, callback, process);
+        }
+
+        internal List<Message> PinnedMessages(string conversationId, ConversationType conversationType)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("convId", conversationId);
+            jo_param.AddWithoutNull("convType", conversationType.ToInt());
+            JSONNode jn = NativeGet(SDKMethod.pinnedMessages, jo_param).GetReturnJsonNode();
+            return List.BaseModelListFromJsonArray<Message>(jn);
+        }
+
+        internal List<MarkType> Marks(string conversationId, ConversationType conversationType)
+        {
+            List<MarkType> marks = new List<MarkType>();
+
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("convId", conversationId);
+            jo_param.AddWithoutNull("convType", conversationType.ToInt());
+            JSONNode jn = NativeGet(SDKMethod.marks, jo_param).GetReturnJsonNode();
+            List<int> marks_int = List.IntListFromJsonArray(jn);
+
+            foreach (int i in marks_int)
+            {
+                marks.Add((MarkType)i);
+            }
+
+            return marks;
+        }
     }
 }

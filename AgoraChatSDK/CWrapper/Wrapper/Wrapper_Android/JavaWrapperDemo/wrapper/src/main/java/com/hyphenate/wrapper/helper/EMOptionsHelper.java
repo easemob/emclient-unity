@@ -43,11 +43,20 @@ public class EMOptionsHelper {
         if (json.has("enableEmptyConversation")) {
             options.setLoadEmptyConversations(json.optBoolean("enableEmptyConversation"));
         }
+        if (json.has("useReplacedMessageContents")) {
+            options.setUseReplacedMessageContents(json.optBoolean("useReplacedMessageContents"));
+        }
         if (json.has("deviceName")) {
             options.setCustomDeviceName(json.optString("deviceName"));
         }
         if (json.has("osType")) {
             options.setCustomOSPlatform(json.optInt("osType"));
+        }
+        if (json.has("regardImportMsgAsRead")) {
+            options.setRegardImportedMsgAsRead(json.optBoolean("regardImportMsgAsRead"));
+        }
+        if (json.has("includeSendMessageInMessageListener")) {
+            options.setIncludeSendMessageInMessageListener(json.optBoolean("includeSendMessageInMessageListener"));
         }
 
         if (json.has("pushConfig")) {

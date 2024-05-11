@@ -457,6 +457,40 @@ namespace sdk_wrapper {
         return nullptr;
     }
 
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_GetConversationsFromServerWithCursorAndMark(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        bool needMark = GetJsonValue_Bool(d, "needMark", false);
+        int mark = GetJsonValue_Int(d, "mark", 0);
+        string cursor = GetJsonValue_String(d, "cursor", "");
+        int limit = GetJsonValue_Int(d, "limit", 10);
+
+        thread t([=]() {
+            EMError error;
+
+            EMConversationFilterPtr filter(new EMConversationFilter(mark, limit, needMark));
+
+            EMCursorResultRaw<EMConversationPtr> result = CLIENT->getChatManager().getConversationsFromServer(cursor, std::move(filter), error);
+
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+                string json = CursorResult::ToJson<EMConversationPtr, Conversation>(result.nextPageCursor(), result.result());
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            });
+        t.detach();
+
+        return nullptr;
+    }
+
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_GetUnreadMessageCount(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         if (!CheckClientInitOrNot(nullptr)) return nullptr;
@@ -552,7 +586,7 @@ namespace sdk_wrapper {
 
         return CopyToPointer(json);
     }
-
+    /*
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_MarkAllConversationsAsRead(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         if (!CheckClientInitOrNot(nullptr)) return nullptr;
@@ -570,6 +604,26 @@ namespace sdk_wrapper {
                     ret = false;
             }
         }
+
+        JSON_STARTOBJ
+        writer.Key("ret");
+        writer.Bool(ret);
+        JSON_ENDOBJ
+
+        string json = s.GetString();
+        return CopyToPointer(json);
+    }
+    */
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_MarkAllConversationsAsRead(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(nullptr)) return nullptr;
+
+        bool ret = true;
+
+        EMError error;
+        CLIENT->getChatManager().markAllConversationsAsRead(error);
+
+        if (error.mErrorCode != EMError::EM_NO_ERROR) ret = false;
 
         JSON_STARTOBJ
         writer.Key("ret");
@@ -663,6 +717,8 @@ namespace sdk_wrapper {
     {
         if (!CheckClientInitOrNot(cbid)) return nullptr;
 
+        string local_cbid = cbid;
+
         Document d; d.Parse(jstr);
 
         string keywords = GetJsonValue_String(d, "keywords", "");
@@ -675,19 +731,51 @@ namespace sdk_wrapper {
         int var_direction = GetJsonValue_Int(d, "direction", 0);
         EMConversation::EMMessageSearchDirection direction = Conversation::EMMessageSearchDirectionFromInt(var_direction);
 
-        EMMessageList messageList = CLIENT->getChatManager().loadMoreMessages(ts, keywords, count, from, direction);
+        thread t([=]() {
+            EMMessageList messageList = CLIENT->getChatManager().loadMoreMessages(ts, keywords, count, from, direction);
 
-        string json = "";
+            string json = Message::ToJson(messageList);
+            string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
+            CallBack(local_cbid.c_str(), call_back_jstr.c_str());
 
-        if (messageList.size() > 0) {
-            JSON_STARTOBJ
-            writer.Key("ret");
-            Message::ToJsonObjectWithMessageList(writer, messageList);
-            JSON_ENDOBJ
-            json = s.GetString();
-        }
+            });
+        t.detach();
 
-        return CopyToPointer(json);
+        return nullptr;
+    }
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_LoadMoreMessagesWithScope(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+
+        string keywords = GetJsonValue_String(d, "keywords", "");
+        string from = GetJsonValue_String(d, "from", "");
+        int count = GetJsonValue_Int(d, "count", 20);
+
+        string timestamp_str = GetJsonValue_String(d, "timestamp", "0");
+        int64_t ts = atol(timestamp_str.c_str());
+
+        int var_direction = GetJsonValue_Int(d, "direction", 0);
+        EMConversation::EMMessageSearchDirection direction = Conversation::EMMessageSearchDirectionFromInt(var_direction);
+
+        int var_scope = GetJsonValue_Int(d, "scope", 0);
+        EMConversation::EMMessageSearchScope scope = Conversation::EMMessageSearchScopeFromInt(var_scope);
+
+        thread t([=]() {
+            EMMessageList messageList = CLIENT->getChatManager().loadMoreMessages(ts, keywords, count, from, direction, scope);
+
+            string json = Message::ToJson(messageList);
+            string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
+            CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+
+            });
+        t.detach();
+
+        return nullptr;
     }
 
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_SendReadAckForConversation(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -1463,6 +1551,151 @@ namespace sdk_wrapper {
         return nullptr;
     }
 
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_GetPinnedInfo(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        string msg_id = GetJsonValue_String(d, "msgId", "");
+
+        EMMessagePtr messagePtr = CLIENT->getChatManager().getMessage(msg_id);
+
+        string json = "";
+
+        if (nullptr != messagePtr) {
+            bool isPinned = false;
+            string operatorId = "";
+            int64_t ts = 0;
+
+            messagePtr->pinnedInfo(isPinned, operatorId, ts);
+
+            if (isPinned == true) {
+                JSON_STARTOBJ
+                writer.Key("ret");
+                PinnedInfo::ToJsonObject(writer, isPinned, operatorId, ts);
+                JSON_ENDOBJ
+
+                json = s.GetString();
+            }
+        }
+
+        return CopyToPointer(json);
+    }
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_MarkConversations(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        vector<string> convIds = MyJson::FromJsonObjectToVector(d["convIds"]);
+        int mark = GetJsonValue_Int(d, "mark", 0);
+        bool isMarked = GetJsonValue_Bool(d, "isMarked", true);
+
+        thread t([=]() {
+            EMError error;
+            CLIENT->getChatManager().markConversation(convIds, mark, isMarked, error);
+
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+                string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            });
+        t.detach();
+
+        return nullptr;
+    }
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_DeleteAllMessagesAndConversations(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        bool clearServerData = GetJsonValue_Bool(d, "clearServerData", false);
+
+        thread t([=]() {
+            EMError error;
+            CLIENT->getChatManager().deleteAllMessagesAndConversations(clearServerData, error);
+
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+                string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            });
+        t.detach();
+
+        return nullptr;
+    }
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_PinMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        string msgId = GetJsonValue_String(d, "msgId", "");
+        bool isPinned = GetJsonValue_Bool(d, "isPinned", false);
+
+        thread t([=]() {
+            EMError error;
+            CLIENT->getChatManager().pinMessage(msgId, isPinned, error);
+
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+                string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            });
+        t.detach();
+
+        return nullptr;
+    }
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_GetPinnedMessagesFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        string msgId = GetJsonValue_String(d, "convId", "");
+
+        thread t([=]() {
+            EMError error;
+            EMMessageList msgList = CLIENT->getChatManager().getPinnedMessagesFromServer(msgId, error);
+
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+                string json = Message::ToJson(msgList);
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            });
+        t.detach();
+
+        return nullptr;
+    }
+
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_RunDelegateTester(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         if (nullptr != gChatManagerListener) {
@@ -1497,6 +1730,7 @@ namespace sdk_wrapper {
             gChatManagerListener->onUpdateConversationList(conversationList);
             gChatManagerListener->onReceiveReadAckForConversation("fromUsername", "toUsername");
             gChatManagerListener->onMessageIdChanged("user", "oldMsgId", "newMsgId");
+            gChatManagerListener->onMessagePinChanged("msgId", "convId", true, "me", 1712802152000);
         }
 
         if (nullptr != gReactionManagerListener) {

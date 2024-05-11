@@ -55,6 +55,7 @@ public class GroupManagerTest : MonoBehaviour
     private Button UploadGroupSharedFileBtn;
     private Button SetMemberAttributesBtn;
     private Button FetchMemberAttributesBtn;
+    private Button FetchMyGroupsCountBtn;
 
     private string currentGroupId
     {
@@ -117,6 +118,7 @@ public class GroupManagerTest : MonoBehaviour
         UploadGroupSharedFileBtn = transform.Find("Scroll View/Viewport/Content/UploadGroupSharedFileBtn").GetComponent<Button>();
         SetMemberAttributesBtn = transform.Find("Scroll View/Viewport/Content/SetMemberAttributesBtn").GetComponent<Button>();
         FetchMemberAttributesBtn = transform.Find("Scroll View/Viewport/Content/FetchMemberAttributesBtn").GetComponent<Button>();
+        FetchMyGroupsCountBtn = transform.Find("Scroll View/Viewport/Content/FetchMyGroupsCountBtn").GetComponent<Button>();
 
         AcceptInvitationFromGroupBtn.onClick.AddListener(AcceptInvitationFromGroupBtnAction);
         AcceptJoinApplicationBtn.onClick.AddListener(AcceptJoinApplicationBtnAction);
@@ -163,6 +165,7 @@ public class GroupManagerTest : MonoBehaviour
         UploadGroupSharedFileBtn.onClick.AddListener(UploadGroupSharedFileBtnAction);
         SetMemberAttributesBtn.onClick.AddListener(SetMemberAttributesBtnAction);
         FetchMemberAttributesBtn.onClick.AddListener(FetchMemberAttributesBtnAction);
+        FetchMyGroupsCountBtn.onClick.AddListener(FetchMyGroupsCountBtnAction);
 
 
     }
@@ -1327,6 +1330,20 @@ public class GroupManagerTest : MonoBehaviour
         Debug.Log("FetchMemberAttributes");
     }
 
+    void FetchMyGroupsCountBtnAction()
+    {
+        SDKClient.Instance.GroupManager.FetchMyGroupsCount(new ValueCallBack<int>(
+            onSuccess: (count) =>
+            {
+                UIManager.SuccessAlert(transform);
+                Debug.Log($"FetchMyGroupsCount, success. count: {count}");
+            },
+            onError: (code, desc) =>
+            {
+                Debug.Log($"FetchMyGroupsCount failed, code:{code}, desc:{desc}");
+            }
+        ));
+    }
 
     void backButtonAction()
     {

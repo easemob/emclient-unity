@@ -159,9 +159,9 @@ namespace AgoraChat
          * @param list 改变的 Reaction 列表。
          *
          *  \~english
-         * Occurs when the reactions changed.
+         * Occurs when the Reactions changed.
          *
-         * @param list The changed reaction list.
+         * @param list The changed Reaction list.
          */
 		void MessageReactionDidChange(List<MessageReactionChange> list);
 
@@ -183,5 +183,24 @@ namespace AgoraChat
          * @param operationTime The last message modification time. It is a UNIX timestamp in milliseconds.
          */
         void OnMessageContentChanged(Message msg, string operatorId, long operationTime);
+
+        /**
+         * \~chinese
+         * 消息置顶回调。
+         *
+         * @param messageId      置顶状态发生改变的消息 ID。
+         * @param conversationId 消息所属的会话 ID。
+         * @param operatorId     进行置顶操作的用户 ID。
+         * @param operationTime  消息的最后一次置顶操作的时间戳，单位为毫秒。
+         *
+         *  \~english
+         * Occurs when a message is pinned or unpinned.
+         *
+         * @param messageId      The message ID whose pinning status has changed.
+         * @param conversationId The ID of the conversation to which the message belongs.
+         * @param operatorId     The user ID of the operator that pinned or unpinned the message last time.
+         * @param operationTime  The time when the message is pinned or unpinned last time. It is a UNIX timestamp in milliseconds.
+         */
+        void OnMessagePinChanged(string messageId, string conversationId, bool isPinned, string operatorId, long operationTime);
     }
 }

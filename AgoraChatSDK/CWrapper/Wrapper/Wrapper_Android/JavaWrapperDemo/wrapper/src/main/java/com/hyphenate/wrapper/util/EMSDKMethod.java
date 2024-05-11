@@ -54,6 +54,11 @@ public class EMSDKMethod {
     public static final String acceptInvitation = "acceptInvitation";
     public static final String declineInvitation = "declineInvitation";
     public static final String getSelfIdsOnOtherPlatform = "getSelfIdsOnOtherPlatform";
+    public static final String setContactRemark = "setContactRemark";
+    public static final String fetchContactFromLocal = "fetchContactFromLocal";
+    public static final String fetchAllContactsFromLocal = "fetchAllContactsFromLocal";
+    public static final String fetchAllContactsFromServer = "fetchAllContactsFromServer";
+    public static final String fetchAllContactsFromServerByPage = "fetchAllContactsFromServerByPage";
 
 
 
@@ -75,11 +80,13 @@ public class EMSDKMethod {
     public static final String loadAllConversations = "loadAllConversations";
     public static final String getConversationsFromServer = "getConversationsFromServer";
     public static final String getConversationsFromServerWithCursor = "getConversationsFromServerWithCursor";
+    public static final String getConversationsFromServerWithCursorAndMark = "getConversationsFromServerWithCursorAndMark";
     public static final String pinConversation = "pinConversation";
     public static final String deleteConversation = "deleteConversation";
     public static final String fetchHistoryMessages = "fetchHistoryMessages";
     public static final String fetchHistoryMessagesBy = "fetchHistoryMessagesBy";
     public static final String searchChatMsgFromDB = "searchChatMsgFromDB";
+    public static final String searchChatMsgFromDBWithScope = "searchChatMsgFromDBWithScope";
     public static final String getMessage = "getMessage";
     public static final String asyncFetchGroupAcks = "asyncFetchGroupAcks";
     public static final String deleteRemoteConversation = "deleteRemoteConversation";
@@ -99,6 +106,11 @@ public class EMSDKMethod {
     public static final String removeMessagesFromServerWithTs = "removeMessagesFromServerWithTs";
     public static final String modifyMessage = "modifyMessage";
     public static final String downloadCombineMessages = "downloadCombineMessages";
+    public static final String markConversations = "markConversations";
+    public static final String deleteAllMessagesAndConversations = "deleteAllMessagesAndConversations";
+    public static final String pinMessage = "pinMessage";
+    public static final String getPinnedMessagesFromServer = "getPinnedMessagesFromServer";
+
 
     /// EMMessage listener
     public static final String onMessageProgressUpdate = "onMessageProgressUpdate";
@@ -125,7 +137,10 @@ public class EMSDKMethod {
     public static final String loadMsgWithKeywords = "loadMsgWithKeywords";
     public static final String loadMsgWithMsgType = "loadMsgWithMsgType";
     public static final String loadMsgWithTime = "loadMsgWithTime";
+    public static final String loadMsgWithScope = "loadMsgWithScope";
     public static final String messageCount = "messageCount";
+    public static final String pinnedMessages = "pinnedMessages";
+    public static final String marks = "marks";
 
     // EMMessage method
     public static final String getReactionList = "getReactionList";
@@ -133,6 +148,7 @@ public class EMSDKMethod {
     public static final String getChatThread = "chatThread";
     public static final String getHasDeliverAck = "getHasDeliverAck";
     public static final String getHasReadAck = "getHasReadAck";
+    public static final String pinnedInfo = "pinnedInfo";
 
 
     // EMChatRoomManager
@@ -221,6 +237,7 @@ public class EMSDKMethod {
     public static final String declineInvitationFromGroup = "declineInvitationFromGroup";
     public static final String fetchMemberAttributes = "fetchMemberAttributes";
     public static final String setMemberAttributes = "setMemberAttributes";
+    public static final String fetchMyGroupsCount = "fetchMyGroupsCount";
 
 
     /// EMPushManager
@@ -310,6 +327,7 @@ public class EMSDKMethod {
     public static final String onConversationRead = "onConversationRead";
     public static final String onMessageReactionDidChange = "messageReactionDidChange";
     public static final String onMessageContentChanged = "onMessageContentChanged";
+    public static final String onMessagePinChanged = "onMessagePinChanged";
 
     // ChatThreadManagerDelegate
     public static final String onChatThreadCreate = "onChatThreadCreate";

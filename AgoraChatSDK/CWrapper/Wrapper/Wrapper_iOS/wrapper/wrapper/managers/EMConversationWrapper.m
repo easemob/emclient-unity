@@ -9,6 +9,7 @@
 #import "EMHelper.h"
 #import "EMChatMessage+Helper.h"
 #import "EMUtil.h"
+#import "Mode.h"
 
 @implementation EMConversationWrapper
 - (instancetype)init {
@@ -72,11 +73,20 @@
     else if ([loadMsgWithTime isEqualToString:method]) {
         ret = [self loadMsgWithTime:params callback:callback];
     }
+    else if ([loadMsgWithScope isEqualToString:method]) {
+        ret = [self loadMsgWithScope:params callback:callback];
+    }
     else if([messageCount isEqualToString:method]) {
         ret = [self messageCount:params callback:callback];
     }
     else if([removeMessages isEqualToString:method]) {
         ret = [self removeMessages:params callback:callback];
+    }
+    else if([pinnedMessages isEqualToString:method]) {
+        ret = [self pinnedMessages:params callback:callback];
+    }
+    else if([marks isEqualToString:method]) {
+        ret = [self marks:params callback:callback];
     }
     else {
         ret = [super onMethodCall:method params:params callback:callback];
@@ -252,6 +262,35 @@
     return nil;
 }
 
+- (NSString *)loadMsgWithScope:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
+
+    __weak EMConversationWrapper * weakSelf = self;
+    EMConversation *conversation = [self conversationWithParam: params];
+    NSString * keywords = params[@"keywords"];
+    long long timestamp = [params[@"timestamp"] longLongValue];
+    int count = [params[@"count"] intValue];
+    NSString *sender = params[@"from"];
+    EMMessageSearchDirection direction = [params[@"direction"] intValue] == 0 ? EMMessageSearchDirectionUp : EMMessageSearchDirectionDown;
+    EMMessageSearchScope scope = [Mode searchScopeFromInt:[params[@"scope"] intValue]];
+
+    [conversation loadMessagesWithKeyword:keywords
+                                timestamp:timestamp
+                                    count:count
+                                 fromUser:sender
+                          searchDirection:direction
+                                   scope:scope
+                               completion:^(NSArray<EMChatMessage *> * _Nullable aMessages, EMError * _Nullable aError)
+    {
+        NSMutableArray *jsonMsgs = [NSMutableArray array];
+        for (EMChatMessage *msg in aMessages) {
+            [jsonMsgs addObject:[msg toJson]];
+        }
+        [weakSelf wrapperCallback:callback error:aError object:jsonMsgs];
+    }];
+
+    return nil;
+}
+
 - (NSString *)messageCount:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
     EMConversation *conversation = [self conversationWithParam: params];
     return [[EMHelper getReturnJsonObject:@(conversation.messagesCount)] toJsonString];
@@ -265,6 +304,22 @@
     return [[EMHelper getReturnJsonObject:error == nil ? @(YES) : @(NO)] toJsonString];
 }
 
+- (NSString *)pinnedMessages:(NSDictionary *)params
+                    callback:(EMWrapperCallback *)callback {
+    EMConversation *conversation = [self conversationWithParam: params];
+    NSArray *aMessages = [conversation pinnedMessages];
+    NSMutableArray *jsonMsgs = [NSMutableArray array];
+    for (EMChatMessage *msg in aMessages) {
+        [jsonMsgs addObject:[msg toJson]];
+    }
+    return [[EMHelper getReturnJsonObject:jsonMsgs] toJsonString];
+}
+
+- (NSString *)marks:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
+    EMConversation *conversation = [self conversationWithParam: params];
+    NSArray *mks = [conversation marks];
+    return [[EMHelper getReturnJsonObject:mks] toJsonString];
+}
 
 - (EMConversation *)conversationWithParam:(NSDictionary *)param
 {

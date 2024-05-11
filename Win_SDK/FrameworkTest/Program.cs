@@ -93,6 +93,11 @@ namespace WinSDKTest
             throw new NotImplementedException();
         }
 
+        public void OnMessagePinChanged(string messageId, string conversationId, bool isPinned, string operatorId, long operationTime)
+        {
+            throw new NotImplementedException();
+        }
+
         public void MessageReactionDidChange(List<MessageReactionChange> list)
         {
             throw new NotImplementedException();

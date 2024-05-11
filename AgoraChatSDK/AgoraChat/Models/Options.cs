@@ -2,6 +2,7 @@
 using AgoraChat.SimpleJSON;
 #if !_WIN32
 using UnityEngine;
+using UnityEngine.Scripting;
 #endif
 
 namespace AgoraChat
@@ -13,6 +14,7 @@ namespace AgoraChat
      * \~english
      * The chat setting class that defines parameters and options of the SDK, including whether to automatically accept friend invitations and whether to automatically download the thumbnail.
      */
+    [Preserve]
     public class Options : BaseModel
     {
         /**
@@ -211,7 +213,7 @@ namespace AgoraChat
          *
          * \~english
 	     * Whether to allow the chat room owner to leave the chat room.
-	     * - (Default) `true`: Yes. When leaving the chat room, the chat room owner still has all privileges, except for receive messages in the chat room.
+	     * - (Default) `true`: Yes. When leaving the chat room, the chat room owner still has all privileges, except for receiving messages in the chat room.
 	     * - `false`: No.
          */
         public bool IsRoomOwnerLeaveAllowed = true;
@@ -284,6 +286,34 @@ namespace AgoraChat
         public bool EnableEmptyConversation = false;
 
         /**
+        * \~chinese
+        * 是否在文本审核时，返回给发送者被替换内容的文本消息。
+        * - `true`：将内容替换后的消息返回给发送方。
+        * - （默认）`false`：将原消息返回给发送方。
+        *
+        * \~english
+        * Whether the server returns the sender the text message with the content replaced during text moderation.
+        * - `true`: Yes.
+	    * - (Default) `false`: No. The server returns the original message to the sender.
+        *
+        */
+        public bool UseReplacedMessageContents = false;
+
+        /**
+        * \~chinese
+        * 设置发送成功的消息是否在 {@link IChatManagerDelegate#OnMessagesReceived} 中回调给用户。
+        * - `true`：是；
+        * - （默认）`false`：否。
+        *
+        * \~english
+        * Sets whether to include the sent message in {@link IChatManagerDelegate#OnMessagesReceived}.
+        * - `true`: Yes;
+        * - (Default) `false`: No.
+        *
+        */
+        public bool IncludeSendMessageInMessageListener = false;
+
+        /**
          *  \~chinese
          *  自定义系统类型。
          *
@@ -325,6 +355,19 @@ namespace AgoraChat
         * The UUID for the current device.
         */
         public string MyUUID = "";
+
+        /**
+        * \~chinese
+        * 是否将导入的消息视为已读。
+        * - `true`：是；
+        * - （默认）`false`：否。
+        *
+        * \~english
+        * Whether to regard import messages as read.
+        * -`true`: Yes;
+        * -(Default) `false`: No.
+        */
+        public bool RegardImportMsgAsRead = false;
 
         /**
         * \~chinese
@@ -382,6 +425,7 @@ namespace AgoraChat
         *
         * @param appKey  The App Key.
         */
+        [Preserve]
         public Options(string appKey)
         {
             AppKey = appKey;
@@ -413,9 +457,13 @@ namespace AgoraChat
         // HuaWei
         private bool enableHWPush = false;
         */
-
+        [Preserve]
         internal Options() { }
+
+        [Preserve]
         internal Options(bool is_json, string json) : base(json) { }
+
+        [Preserve]
         internal Options(JSONObject jo) : base(jo) { }
 
         internal override void FromJsonObject(JSONObject jo) { }
@@ -441,8 +489,11 @@ namespace AgoraChat
             jo.AddWithoutNull("enableDnsConfig", EnableDNSConfig);
             jo.AddWithoutNull("myUUID", MyUUID);
             jo.AddWithoutNull("enableEmptyConversation", EnableEmptyConversation);
+            jo.AddWithoutNull("useReplacedMessageContents", UseReplacedMessageContents);
             jo.AddWithoutNull("customOSType", CustomOSType);
             jo.AddWithoutNull("customDeviceName", CustomDeviceName);
+            jo.AddWithoutNull("regardImportMsgAsRead", RegardImportMsgAsRead);
+            jo.AddWithoutNull("includeSendMessageInMessageListener", IncludeSendMessageInMessageListener);
 
 
             if (SDKDataPath.Length == 0)

@@ -6,12 +6,14 @@ import com.hyphenate.EMError;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMConversationFilter;
 import com.hyphenate.chat.EMCursorResult;
 import com.hyphenate.chat.EMFetchMessageOption;
 import com.hyphenate.chat.EMGroupReadAck;
 import com.hyphenate.chat.EMLanguage;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMMessageBody;
+import com.hyphenate.chat.EMMessagePinInfo;
 import com.hyphenate.chat.EMMessageReaction;
 import com.hyphenate.chat.EMMessageReactionChange;
 import com.hyphenate.exceptions.HyphenateException;
@@ -29,6 +31,7 @@ import com.hyphenate.wrapper.helper.EMMessageBodyHelper;
 import com.hyphenate.wrapper.helper.EMMessageHelper;
 import com.hyphenate.wrapper.helper.EMMessageReactionChangeHelper;
 import com.hyphenate.wrapper.helper.EMMessageReactionHelper;
+import com.hyphenate.wrapper.helper.EMPinnedInfoHelper;
 import com.hyphenate.wrapper.helper.HyphenateExceptionHelper;
 import com.hyphenate.wrapper.listeners.EMWrapperMessageListener;
 import com.hyphenate.wrapper.util.EMHelper;
@@ -88,6 +91,8 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
             ret = getConversationsFromServer(jsonObject, callback);
         } else if (EMSDKMethod.getConversationsFromServerWithCursor.equals(method)){
             ret = getConversationsFromServerWithCursor(jsonObject, callback);
+        } else if (EMSDKMethod.getConversationsFromServerWithCursorAndMark.equals(method)){
+            ret = getConversationsFromServerWithCursorAndMark(jsonObject, callback);
         } else if (EMSDKMethod.pinConversation.equals(method)) {
             ret = pinConversation(jsonObject, callback);
         } else if (EMSDKMethod.deleteConversation.equals(method)) {
@@ -96,6 +101,8 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
             ret = fetchHistoryMessages(jsonObject, callback);
         } else if (EMSDKMethod.searchChatMsgFromDB.equals(method)) {
             ret = searchChatMsgFromDB(jsonObject, callback);
+        } else if (EMSDKMethod.searchChatMsgFromDBWithScope.equals(method)) {
+            ret = searchChatMsgFromDBWithScope(jsonObject, callback);
         } else if (EMSDKMethod.getMessage.equals(method)) {
             ret = getMessage(jsonObject, callback);
         } else if (EMSDKMethod.asyncFetchGroupAcks.equals(method)){
@@ -130,6 +137,14 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
             ret = modifyMessage(jsonObject, callback);
         } else if (EMSDKMethod.downloadCombineMessages.equals(method)) {
             ret = downloadCombineMessages(jsonObject, callback);
+        } else if (EMSDKMethod.markConversations.equals(method)) {
+            ret = markConversations(jsonObject, callback);
+        } else if (EMSDKMethod.deleteAllMessagesAndConversations.equals(method)) {
+            ret = deleteAllMessagesAndConversations(jsonObject, callback);
+        } else if (EMSDKMethod.pinMessage.equals(method)) {
+            ret = pinMessage(jsonObject, callback);
+        } else if (EMSDKMethod.getPinnedMessagesFromServer.equals(method)) {
+            ret = getPinnedMessagesFromServer(jsonObject, callback);
         }
         else {
             super.onMethodCall(method, jsonObject, callback);
@@ -427,6 +442,43 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
         return null;
     }
 
+    private String getConversationsFromServerWithCursorAndMark(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        boolean needMark = params.optBoolean("needMark");
+        int mark = params.optInt("mark");
+        String cursor = params.optString("cursor");
+        int limit = params.optInt("limit");
+        if (needMark) {
+            EMConversationFilter filter = new EMConversationFilter(EMMode.markTypeFromInt(mark), limit);
+            EMClient.getInstance().chatManager().asyncGetConversationsFromServerWithCursor(cursor, filter, new EMCommonValueCallback<EMCursorResult<EMConversation>>(callback) {
+                @Override
+                public void onSuccess(EMCursorResult<EMConversation> object) {
+                    JSONObject jo = null;
+                    try {
+                        jo = EMCursorResultHelper.toJson(object);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } finally {
+                        updateObject(jo);
+                    }
+                }
+            });
+        }else {
+            EMClient.getInstance().chatManager().asyncFetchConversationsFromServer(limit, cursor, new EMCommonValueCallback<EMCursorResult<EMConversation>>(callback){
+                public void onSuccess(EMCursorResult<EMConversation> object) {
+                    JSONObject jo = null;
+                    try {
+                        jo = EMCursorResultHelper.toJson(object);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } finally {
+                        updateObject(jo);
+                    }
+                }
+            });
+        }
+        return null;
+    }
+
     private String pinConversation(JSONObject params, EMWrapperCallback callback) throws JSONException {
         String convId = params.optString("convId");
         boolean isPin = params.optBoolean("isPinned");
@@ -547,12 +599,12 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
         return null;
     }
 
-    private String searchChatMsgFromDB(JSONObject params, EMWrapperCallback callback) throws JSONException {
+    /*private String searchChatMsgFromDB(JSONObject params, EMWrapperCallback callback) throws JSONException {
         String keywords = params.getString("keywords");
         long timeStamp = params.getLong("timeStamp");
         int count = params.getInt("maxCount");
         String from = params.getString("from");
-        EMConversation.EMSearchDirection direction = searchDirectionFromString(params.getString("direction"));
+        EMConversation.EMSearchDirection direction = searchDirectionFromInt(params.getInt("direction"));
         List<EMMessage> msgList = EMClient.getInstance().chatManager().searchMsgFromDB(keywords, timeStamp, count,
                 from, direction);
         JSONArray messages = new JSONArray();
@@ -565,8 +617,54 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
         }finally {
             return EMHelper.getReturnJsonObject(messages).toString();
         }
+    }*/
+
+    private String searchChatMsgFromDB(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        String keywords = params.getString("keywords");
+        long timeStamp = params.getLong("timestamp");
+        int count = params.getInt("count");
+        String from = params.getString("from");
+        EMConversation.EMSearchDirection direction = searchDirectionFromInt(params.getInt("direction"));
+        asyncRunnable(() -> {
+            List<EMMessage> msgList = EMClient.getInstance().chatManager().searchMsgFromDB(keywords, timeStamp, count,
+                    from, direction);
+            JSONArray messages = new JSONArray();
+            try {
+                for (EMMessage msg : msgList) {
+                    messages.put(EMMessageHelper.toJson(msg));
+                }
+            }catch (JSONException e) {
+                e.printStackTrace();
+            }finally {
+                onSuccess(messages, callback);
+            }
+        });
+        return null;
     }
 
+    private String searchChatMsgFromDBWithScope(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        String keywords = params.getString("keywords");
+        long timeStamp = params.getLong("timestamp");
+        int count = params.getInt("count");
+        String from = params.getString("from");
+        EMConversation.EMSearchDirection direction = searchDirectionFromInt(params.getInt("direction"));
+        EMConversation.EMMessageSearchScope scope = EMMode.searchScopeFromInt(params.getInt("scope"));
+        asyncRunnable(() -> {
+            List<EMMessage> msgList = EMClient.getInstance().chatManager().searchMsgFromDB(keywords, timeStamp, count,
+                    from, direction, scope);
+            JSONArray messages = new JSONArray();
+            try {
+                for (EMMessage msg : msgList) {
+                    messages.put(EMMessageHelper.toJson(msg));
+                }
+            }catch (JSONException e) {
+                e.printStackTrace();
+            }finally {
+                onSuccess(messages, callback);
+            }
+        });
+        return null;
+    }
 
     private String asyncFetchGroupMessageAckFromServer(JSONObject params, EMWrapperCallback callback) throws JSONException {
         String msgId = params.getString("msgId");
@@ -832,6 +930,53 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
         return null;
     }
 
+    private String markConversations(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        List<String> convIds = EMHelper.stringListFromJsonArray(params.getJSONArray("convIds"));
+        boolean isMarked = params.optBoolean("isMarked");
+        EMConversation.EMMarkType mark = EMMode.markTypeFromInt(params.optInt("mark"));
+        if (isMarked) {
+            EMClient.getInstance().chatManager().asyncAddConversationMark(convIds, mark, new EMCommonCallback(callback));
+        } else {
+            EMClient.getInstance().chatManager().asyncRemoveConversationMark(convIds, mark, new EMCommonCallback(callback));
+        }
+        return null;
+    }
+
+    private String deleteAllMessagesAndConversations(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        boolean clearServerData = params.optBoolean("clearServerData");
+        EMClient.getInstance().chatManager().asyncDeleteAllMsgsAndConversations(clearServerData, new EMCommonCallback(callback));
+        return null;
+    }
+
+    private String pinMessage(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        String msgId = params.optString("msgId");
+        boolean isPinned = params.optBoolean("isPinned");
+        if (isPinned) {
+            EMClient.getInstance().chatManager().asyncPinMessage(msgId, new EMCommonCallback(callback));
+        } else {
+            EMClient.getInstance().chatManager().asyncUnPinMessage(msgId, new EMCommonCallback(callback));
+        }
+        return null;
+    }
+
+    private String getPinnedMessagesFromServer(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        String convId = params.getString("convId");
+        EMClient.getInstance().chatManager().asyncGetPinnedMessagesFromServer(convId,new EMCommonValueCallback<List<EMMessage>>(callback){
+                @Override
+                public void onSuccess(List<EMMessage> messages) {
+                    JSONArray jsonArray = new JSONArray();
+                    try {
+                        for (EMMessage msg : messages) {
+                            jsonArray.put(EMMessageHelper.toJson(msg));
+                        }
+                        updateObject(jsonArray);
+                    }catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+        });
+        return null;
+    }
     
     private void registerEaseListener(){
         emWrapperMessageListener = new EMWrapperMessageListener();
@@ -843,6 +988,16 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
         return direction.equals("up") ? EMConversation.EMSearchDirection.UP : EMConversation.EMSearchDirection.DOWN;
     }
 
+    private EMConversation.EMSearchDirection searchDirectionFromInt(int intType) {
+        if (intType == 0){
+            return EMConversation.EMSearchDirection.UP;
+        }else if(intType == 1){
+            return EMConversation.EMSearchDirection.DOWN;
+        }else {
+            return EMConversation.EMSearchDirection.UP;
+        }
+    }
+
     private EMConversation.EMConversationType typeFromInt(int intType) {
         if (intType == 0){
             return EMConversation.EMConversationType.Chat;
@@ -852,4 +1007,5 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
             return EMConversation.EMConversationType.ChatRoom;
         }
     }
+
 }

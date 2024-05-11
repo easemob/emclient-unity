@@ -1,9 +1,13 @@
 ﻿using AgoraChat.SimpleJSON;
 using System;
 using System.Collections.Generic;
+#if !_WIN32
+using UnityEngine.Scripting;
+#endif
 
 namespace AgoraChat
 {
+    [Preserve]
     public class Message : BaseModel
     {
         /**
@@ -27,7 +31,7 @@ namespace AgoraChat
 
         /**
          * \~chinese
-         * 消息发送者的 ID。
+         * 消息发送者的用户 ID。
          * 
          * \~english
          * The user ID of the message sender.
@@ -37,10 +41,16 @@ namespace AgoraChat
 
         /**
 	     * \~chinese
-         * 消息接收者的用户 ID 或群组 ID。
+         * 消息接收方，可以是：
+         * - 单聊：用户 ID；
+         * - 群组：群组 ID；
+         * - 聊天室：聊天室 ID。
          * 
          * \~english
-         * The user ID of the message recipient or the group ID.
+         * The message recipient.
+         * - For a one-to-one chat, it is the user ID of the peer user.
+         * - For a group chat, it is the group ID.
+         * - For a chat room, it is the chat room ID.
          * 
          */
         public string To = "";
@@ -48,18 +58,18 @@ namespace AgoraChat
 
         /**
 	     * \~chinese
-         * 消息类型。
+         * 聊天类型。
          * 
-         * - `Chat`：单聊消息；
-         * - `Group`：群聊消息；
-         * - `Room`：聊天室消息；
+         * - `Chat`：单聊；
+         * - `Group`：群聊；
+         * - `Room`：聊天室；
          * 
          * \~english
-         * The message type.
+         * The chat type.
          * 
-         * - `Chat`: The one-to-one chat message.
-         * - `Group`: The group chat message.
-         * - `Room`: The chat room message.
+         * - `Chat`: One-to-one chat.
+         * - `Group`: Group chat.
+         * - `Room`: Chat room.
          */
         public MessageType MessageType;
 
@@ -70,7 +80,7 @@ namespace AgoraChat
          * 设置聊天室消息优先级。
          *
          * \~english
-         * Sets the priority of chat room messages.
+         * Sets the priority of the chat room message.
          */
         public void SetRoomMessagePriority(RoomMessagePriority priority)
         {
@@ -184,13 +194,13 @@ namespace AgoraChat
 
         /**
          * \~chinese
-         * 设置消息是否需要群组已读回执。
-         * @param need - `true`：需要已读回执；
+         * 群组消息是否需要已读回执。
+         * - `true`：需要；
          * - `false`：不需要。
          *
          * \~english
-         * Sets whether read receipts are required for group messages.
-         * @param need - `true`: Yes.
+         * Whether read receipts are required for group messages.
+         * - `true`: Yes.
          * - `false`: No.
          */
         public bool IsNeedGroupAck = false;
@@ -200,13 +210,13 @@ namespace AgoraChat
          * 消息是否已读。
          *
          * @note
-         * 如要要设置消息已读，建议在会话中，使用 {@link IConversation#MarkAllMessageAsRead()}。
+         * 如果要设置消息已读，建议在会话中，使用 {@link IConversation#MarkAllMessageAsRead()}。
          *
          * \~english
-         * Check the message is read or not.
+         * Whether the message is read or not.
          *
          * @note
-         * If you want to set message read, we recommend you to use {@link Conversation#MarkAllMessagesAsRead()} in a conversation.
+         * To set the message as read, you are advised to use {@link Conversation#MarkAllMessagesAsRead()} in a conversation.
          *
         */
         public bool IsRead = false;
@@ -216,7 +226,7 @@ namespace AgoraChat
          * 是否为在线消息。
          * @return  是否在线。
          * - `true`：是。
-         * - `false`：是。
+         * - `false`：否。
          *
          * \~english
          * Whether the message is an online message.
@@ -252,6 +262,24 @@ namespace AgoraChat
             }
         }
 
+        /**
+         * \~chinese
+         * 获取当前消息的置顶信息。
+         *
+         * @return  置顶信息。
+         *
+         * \~english
+         * Gets the message pinning information.
+         *
+         * @return The message pinning information.
+         */
+        public PinnedInfo PinnedInfo
+        {
+            get
+            {
+                return SDKClient.Instance.MessageManager.GetPinnedInfo(MsgId);
+            }
+        }
 
         /**
          * \~chinese
@@ -279,7 +307,7 @@ namespace AgoraChat
          * @return  Reaction 列表。
          *
          * \~english
-         * Get the list of Reactions.
+         * Gets the list of Reactions.
          *
          * @return The list of Reactions.
          */
@@ -290,10 +318,13 @@ namespace AgoraChat
 
         /**
          * \~chinese
-         * 接收消息的群组或聊天室成员列表。
+         * 定向消息的接收方。
          *
+         * 该属性仅对群组聊天和聊天室中的消息有效。
          * \~english
-         * The list of IDs of group or chat room members that receive a message.
+         * The recipient list of a targeted message.
+         *
+         * This property is used only for messages in groups and chat rooms.
          */
         public List<string> ReceiverList
         {
@@ -308,13 +339,51 @@ namespace AgoraChat
          * 是否是 Thread 消息：
          * - `true`：是；
          * - `false`：否。
+         * 
+         * 该属性为只读属性。
          *
          * \~english
-         * Whether the message is in a thread:
+         * Whether the message is in a message thread:
          * - `true`: Yes.
          * - `false`: No.
+         * 
+         * This property is read only.
          */
         public bool IsThread = false;
+
+        /**
+         * \~chinese
+         * 是否是聊天室全局广播消息：
+         * - `true`：是；
+         * - `false`：否。
+         *
+         * 该属性为只读属性。
+         *
+         * \~english
+         * Whether it is a global broadcast message for all chat rooms in an app:
+         * - `true`: Yes.
+         * - `false`: No.
+         * 
+         * This property is read only.
+         */
+        public bool Broadcast = false;
+
+        /**
+         * \~chinese
+         * 内容是否被替换：
+         * - `true`：是；
+         * - `false`：否。
+         *
+         * 该属性为只读属性。
+         *
+         * \~english
+         * Whether the content of message is replaced:
+         * - `true`: Yes.
+         * - `false`: No.
+         * 
+         * This property is read only.
+         */
+        public bool IsContentReplaced = false;
 
         /**
          * \~chinese
@@ -325,7 +394,7 @@ namespace AgoraChat
          * \~english
          * Gets the overview of the message thread.
          *
-         * The overview of the message thread exists only after you creates a message thread.
+         * The overview of the message thread exists only after you create a message thread.
          */
         public ChatThread ChatThread
         {
@@ -370,7 +439,11 @@ namespace AgoraChat
          * \~chinese
          * 创建一条发送的消息。
          *
-         * @param to        消息接收方 ID。
+         * @param to        消息接收方。
+         *                  - 单聊：对端用户 ID；
+         *                  - 群组聊天：群组 ID；
+         *                  - 聊天室：聊天室 ID；
+         *                  - 子区：子区 ID。
          * @param body      消息体。
          * @param direction 消息方向，设置为 `SEND`。
          *                  - `SEND`: 发送该消息。
@@ -380,7 +453,11 @@ namespace AgoraChat
          * \~english
          * Creates a message instance for sending.
          *
-         * @param to        The user ID of the message recipient.
+         * @param to        The message recipient:
+         *                  - One-to-one chat: The user ID of the peer user.
+         *                  - Group chat: Group ID.
+         *                  - Chat room: Chat room ID.
+         *                  - Thread: Thread ID.
          * @param body      The message body.
          * @param direction The message direction, that is, whether the message is received or sent. This parameter is set to `SEND`.
          *                  - `SEND`: This message is sent from the local client.
@@ -415,13 +492,21 @@ namespace AgoraChat
          * \~chinese
          * 创建一条文本发送消息。
          *
-         * @param userId  消息接收者的用户 ID、群组 ID、子区ID或者是聊天室ID。
+         * @param userId  消息接收方。
+         *                  - 单聊：对端用户 ID；
+         *                  - 群组聊天：群组 ID；
+         *                  - 聊天室：聊天室 ID；
+         *                  - 子区：子区 ID。
          * @param content 文本内容。
          * 
          * \~english
          * Creates a text message for sending.
          *
-         * @param userId  The user ID of the message recipient, group ID, thread ID, or chatroom ID.
+         * @param userId  The message recipient:
+         *                  - One-to-one chat: The user ID of the peer user.
+         *                  - Group chat: Group ID.
+         *                  - Chat room: Chat room ID.
+         *                  - Thread: Thread ID.
          * @param content The text content.
          */
         static public Message CreateTextSendMessage(string userId, string content)
@@ -433,14 +518,22 @@ namespace AgoraChat
          * \~chinese
          * 创建一条文件发送消息。
          *
-         * @param userId            消息接收者的用户 ID、群组 ID、子区ID或者是聊天室ID。
+         * @param userId            消息接收方。
+         *                          - 单聊：对端用户 ID；
+         *                          - 群组聊天：群组 ID；
+         *                          - 聊天室：聊天室 ID；
+         *                          - 子区：子区 ID。
          * @param localPath         文件的本地路径。
          * @param displayName       文件的显示名称。
          * @param fileSize          文件大小，单位为字节。
          * 
          * \~english
          * Creates a file message for sending.
-         * @param userId            The user ID of the message recipient, group ID, thread ID, or chatroom ID.
+         * @param userId            The message recipient:
+         *                          - One-to-one chat: The user ID of the peer user.
+         *                          - Group chat: Group ID.
+         *                          - Chat room: Chat room ID.
+         *                          - Thread: Thread ID.
          * @param localPath         The local path of the file.
          * @param displayName       The display name of the file.
          * @param fileSize          The file size in bytes.
@@ -454,7 +547,11 @@ namespace AgoraChat
          * \~chinese
          * 创建一条图片发送消息。
          *
-         * @param userId                消息接收者的用户 ID、群组 ID、子区ID或者是聊天室ID。
+         * @param userId                消息接收方。
+         *                              - 单聊：对端用户 ID；
+         *                              - 群组聊天：群组 ID；
+         *                              - 聊天室：聊天室 ID；
+         *                              - 子区：子区 ID。
          * @param localPath             图片的本地路径。
          * @param displayName           图片的显示名称。
          * @param fileSize              图片大小，单位为字节。
@@ -467,7 +564,11 @@ namespace AgoraChat
          * \~english
          * Creates an image message for sending.
          *
-         * @param userId                The user ID of the message recipient, group ID, thread ID, or chatroom ID.
+         * @param userId                The message recipient:
+         *                              - One-to-one chat: The user ID of the peer user.
+         *                              - Group chat: Group ID.
+         *                              - Chat room: Chat room ID.
+         *                              - Thread: Thread ID.
          * @param localPath             The local path of the image.
          * @param displayName           The display name of the image.
          * @param fileSize              The image size in bytes.
@@ -488,7 +589,11 @@ namespace AgoraChat
          * \~chinese
          * 创建一条视频发送消息。
          *
-         * @param userId                消息接收者的用户 ID、群组 ID、子区ID或者是聊天室ID。
+         * @param userId                消息接收方。
+         *                              - 单聊：对端用户 ID；
+         *                              - 群组聊天：群组 ID；
+         *                              - 聊天室：聊天室 ID；
+         *                              - 子区：子区 ID。
          * @param localPath             视频文件的 URI。
          * @param displayName           视频文件的显示名称。
          * @param thumbnailLocalPath    缩略图的本地路径。
@@ -500,7 +605,11 @@ namespace AgoraChat
          * \~english
          * Creates a video message for sending.
          *
-         * @param userId                The user ID of the message recipient, group ID, thread ID, or chatroom ID.
+         * @param userId                The message recipient:
+         *                              - One-to-one chat: The user ID of the peer user.
+         *                              - Group chat: Group ID.
+         *                              - Chat room: Chat room ID.
+         *                              - Thread: Thread ID.
          * @param localPath             The URI of the video file.
          * @param displayName           The display name of the video file.
          * @param thumbnailLocalPath    The local path of the thumbnail of the video file.
@@ -519,7 +628,11 @@ namespace AgoraChat
          * \~chinese
          * 创建一条语音发送消息。
          *
-         * @param userId        消息接收者的用户 ID、群组 ID、子区ID或者是聊天室ID。
+         * @param userId        消息接收方。
+         *                      - 单聊：对端用户 ID；
+         *                      - 群组聊天：群组 ID；
+         *                      - 聊天室：聊天室 ID；
+         *                      - 子区：子区 ID。
          * @param localPath     语音文件的本地路径。
          * @param displayName   语音文件的显示名称。
          * @param fileSize      语音文件的大小，单位为字节。
@@ -529,7 +642,11 @@ namespace AgoraChat
          * \~english
          * Creates a voice message for sending.
          *
-         * @param userId        The user ID of the message recipient, group ID, thread ID, or chatroom ID.
+         * @param userId        The message recipient:
+         *                      - One-to-one chat: The user ID of the peer user.
+         *                      - Group chat: Group ID.
+         *                      - Chat room: Chat room ID.
+         *                      - Thread: Thread ID.
          * @param localPath     The local path of the voice file.
          * @param displayName   The display name of f the voice file.
          * @param fileSize      The size of the voice file, in bytes.
@@ -545,7 +662,11 @@ namespace AgoraChat
          * \~chinese
          * 创建一条位置发送消息。
          *
-         * @param userId        消息接收者的用户 ID、群组 ID、子区ID或者是聊天室ID。
+         * @param userId        消息接收方。
+         *                      - 单聊：对端用户 ID；
+         *                      - 群组聊天：群组 ID；
+         *                      - 聊天室：聊天室 ID；
+         *                      - 子区：子区 ID。
          * @param latitude      纬度。
          * @param longitude     经度。
          * @param address       位置详情。
@@ -555,7 +676,11 @@ namespace AgoraChat
          * \~english
          * Creates a location message for sending.
          *
-         * @param userId        The user ID of the message recipient, group ID, thread ID, or chatroom ID.
+         * @param userId        The message recipient:
+         *                      - One-to-one chat: The user ID of the peer user.
+         *                      - Group chat: Group ID.
+         *                      - Chat room: Chat room ID.
+         *                      - Thread: Thread ID.
          * @param latitude      The latitude.
          * @param longitude     The longitude.
          * @param address       The location details.
@@ -571,7 +696,11 @@ namespace AgoraChat
          * \~chinese
          * 创建一条命令发送消息。
          *
-         * @param userId                消息接收者的用户 ID、群组 ID、子区ID或者是聊天室ID。
+         * @param userId                消息接收方。
+         *                              - 单聊：对端用户 ID；
+         *                              - 群组聊天：群组 ID；
+         *                              - 聊天室：聊天室 ID；
+         *                              - 子区：子区 ID。
          * @param action                命令内容。
          *                              - `true`：只投在线用户。
          *                              - （默认） `false`：不管用户是否在线均投递。
@@ -580,7 +709,11 @@ namespace AgoraChat
          * \~english
          * Creates a command message for sending.
          *
-         * @param userId                The user ID of the message recipient, group ID, thread ID, or chatroom ID.
+         * @param userId                The message recipient:
+         *                              - One-to-one chat: The user ID of the peer user.
+         *                              - Group chat: Group ID.
+         *                              - Chat room: Chat room ID.
+         *                              - Thread: Thread ID.
          * @param action                The command action.
          * @param deliverOnlineOnly     Whether this command message is delivered only to the online users.
          *                              - `true`: Yes.
@@ -596,7 +729,11 @@ namespace AgoraChat
          * \~chinese
          * 创建一条自定义发送消息。
          *
-         * @param userId            消息接收者的用户 ID 或群组 ID。
+         * @param userId            消息接收方。
+         *                          - 单聊：对端用户 ID；
+         *                          - 群组聊天：群组 ID；
+         *                          - 聊天室：聊天室 ID；
+         *                          - 子区：子区 ID。
          * @param customEvent       自定义事件。
          * @param customParams      自定义参数字典。
          * 
@@ -604,7 +741,11 @@ namespace AgoraChat
          * \~english
          * Creates a custom message for sending.
          *
-         * @param userId            The user ID of the message recipient, group ID, thread ID, or chatroom ID.
+         * @param userId            The message recipient:
+         *                          - One-to-one chat: The user ID of the peer user.
+         *                          - Group chat: Group ID.
+         *                          - Chat room: Chat room ID.
+         *                          - Thread: Thread ID.
          * @param customEvent       The custom event.
          * @param customParams      The dictionary of custom parameters.
          * 
@@ -616,21 +757,30 @@ namespace AgoraChat
 
         /**
         * \~chinese
-        * 创建一条组合发送消息。
+        * 创建一条合并消息的发送消息。
         *
-        * @param userId                 消息接收者的用户 ID 或群组 ID。
-        * @param title                  组合消息标题。
-        * @param summary                组合消息概要。
-        * @param compatibleText         组合消息兼容信息
-        * @param messageList            组合消息所包含的消息Id列表。
+        * @param userId                 消息接收方。
+         *                              - 单聊：对端用户 ID；
+         *                              - 群组聊天：群组 ID；
+         *                              - 聊天室：聊天室 ID；
+         *                              - 子区：子区 ID。
+        * @param title                  合并消息的标题。该字段可以设置为 `null` 或者空字符串。
+        * @param summary                合并消息的概要。该字段可以设置为 `null` 或者空字符串。
+        * @param compatibleText         合并消息的兼容信息。该字段可以设置为 `null` 或者空字符串。该字段用于需要兼容不支持合并转发消息的版本。
+        * @param messageList            合并消息的消息 ID 列表。列表不可为`null`或者空，最多可包含 300 个消息 ID。
         *
         * \~english
-        * Creates an image message for sending.
+        * Creates a combined message for sending.
         *
-        * @param userId                 The user ID of the message recipient, group ID, thread ID, or chatroom ID.
-        * @param title                  The title of combined message.
-        * @param summary                The summary of combined message.
-        * @param messageList            The message Id list included in combined message.
+        * @param userId                 The message recipient:
+         *                              - One-to-one chat: The user ID of the peer user.
+         *                              - Group chat: Group ID.
+         *                              - Chat room: Chat room ID.
+         *                              - Thread: Thread ID.
+        * @param title                  The title of the combined message. It can be `null` or an empty string ("").
+        * @param summary                The summary of the combined message. It can be `null` or an empty string ("").
+        * @param compatibleText         The compatible text of the combined message. It can be `null` or an empty string ("").
+        * @param messageList            The ID list of messages included in the combined message. The list cannot be `null` or empty. It can contain a maximum of 300 message IDs.
         *
         *
         */
@@ -647,6 +797,7 @@ namespace AgoraChat
          * 
          * \~english
          * Gets the type of the message extension attribute.
+         *
          * @param value          The extension attribute instance.
          */
         static public AttributeValueType GetAttributeValueType(AttributeValue value)
@@ -771,10 +922,13 @@ namespace AgoraChat
             return GetAttributeValue<T>(value, out found);
         }
 
+        [Preserve]
         internal Message() { }
 
+        [Preserve]
         internal Message(string jsonString) : base(jsonString) { }
 
+        [Preserve]
         internal Message(JSONObject jsonObject) : base(jsonObject) { }
 
         internal override void FromJsonObject(JSONObject jn)
@@ -803,6 +957,8 @@ namespace AgoraChat
                     IsRead = jo["isRead"].AsBool;
                     MessageOnlineState = jo["messageOnlineState"].AsBool;
                     IsThread = jo["isThread"].AsBool;
+                    Broadcast = jo["broadcast"].AsBool;
+                    IsContentReplaced = jo["isContentReplaced"].AsBool;
                 }
             }
         }
@@ -833,6 +989,8 @@ namespace AgoraChat
             jo.AddWithoutNull("isRead", IsRead);
             jo.AddWithoutNull("messageOnlineState", MessageOnlineState);
             jo.AddWithoutNull("isThread", IsThread);
+            jo.AddWithoutNull("broadcast", Broadcast);
+            jo.AddWithoutNull("isContentReplaced", IsContentReplaced);
 
             if (null != _receiverList && _receiverList.Count > 0)
             {

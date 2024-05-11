@@ -17,6 +17,11 @@ public class ContactManagerTest : MonoBehaviour
     private Button acceptInvitationBtn;
     private Button declineInvitationBtn;
     private Button getSelfIdsOnOtherPlatformBtn;
+    private Button setContactRemarkBtn;
+    private Button fetchContactFromLocalBtn;
+    private Button fetchAllContactsFromLocalBtn;
+    private Button fetchAllContactsFromServerBtn;
+    private Button fetchAllContactsFromServerByPageBtn;
 
     private Button backButton;
 
@@ -35,6 +40,11 @@ public class ContactManagerTest : MonoBehaviour
         acceptInvitationBtn = transform.Find("Scroll View/Viewport/Content/AcceptInvitationBtn").GetComponent<Button>();
         declineInvitationBtn = transform.Find("Scroll View/Viewport/Content/DeclineInvitationBtn").GetComponent<Button>();
         getSelfIdsOnOtherPlatformBtn = transform.Find("Scroll View/Viewport/Content/GetSelfIdsOnOtherPlatformBtn").GetComponent<Button>();
+        setContactRemarkBtn = transform.Find("Scroll View/Viewport/Content/SetContactRemarkBtn").GetComponent<Button>();
+        fetchContactFromLocalBtn = transform.Find("Scroll View/Viewport/Content/FetchContactFromLocalBtn").GetComponent<Button>();
+        fetchAllContactsFromLocalBtn = transform.Find("Scroll View/Viewport/Content/FetchAllContactsFromLocalBtn").GetComponent<Button>();
+        fetchAllContactsFromServerBtn = transform.Find("Scroll View/Viewport/Content/FetchAllContactsFromServerBtn").GetComponent<Button>();
+        fetchAllContactsFromServerByPageBtn = transform.Find("Scroll View/Viewport/Content/FetchAllContactsFromServerByPageBtn").GetComponent<Button>();
         addContactBtn.onClick.AddListener(AddContactBtnAction);
         deleteContactBtn.onClick.AddListener(DeleteContactBtnAction);
         getAllContactsFromServerBtn.onClick.AddListener(GetAllContactsFromServerBtnAction);
@@ -45,6 +55,11 @@ public class ContactManagerTest : MonoBehaviour
         acceptInvitationBtn.onClick.AddListener(AcceptInvitationBtnAction);
         declineInvitationBtn.onClick.AddListener(DeclineInvitationBtnAction);
         getSelfIdsOnOtherPlatformBtn.onClick.AddListener(GetSelfIdsOnOtherPlatformBtnAction);
+        setContactRemarkBtn.onClick.AddListener(SetContactRemarkBtnAction);
+        fetchContactFromLocalBtn.onClick.AddListener(FetchContactFromLocalBtnAction);
+        fetchAllContactsFromLocalBtn.onClick.AddListener(FetchAllContactsFromLocalBtnAction);
+        fetchAllContactsFromServerBtn.onClick.AddListener(FetchAllContactsFromServerBtnAction);
+        fetchAllContactsFromServerByPageBtn.onClick.AddListener(FetchAllContactsFromServerByPageBtnAction);
 
         backButton = transform.Find("BackBtn").GetComponent<Button>();
         backButton.onClick.AddListener(backButtonAction);
@@ -334,6 +349,134 @@ public class ContactManagerTest : MonoBehaviour
         ));
     }
 
+    void SetContactRemarkBtnAction()
+    {
+
+        InputAlertConfig config = new InputAlertConfig("SetContactRemark", (dict) =>
+        {
+            string username = dict["username"];
+            string remark = dict["remark"];
+
+            if (null == username || 0 == username.Length || null == remark || 0 == remark.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
+            SDKClient.Instance.ContactManager.SetContactRemark(username, remark, new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.DefaultAlert(transform, "成功");
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.DefaultAlert(transform, $"失败code:{code}，desc:{desc}");
+                }
+            ));
+        });
+
+        config.AddField("username");
+        config.AddField("remark");
+
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("SetContactRemarkBtnAction");
+    }
+
+    void FetchContactFromLocalBtnAction()
+    {
+        InputAlertConfig config = new InputAlertConfig("FetchContactFromLocal", (dict) =>
+        {
+            string username = dict["username"];
+
+            if (null == username || 0 == username.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
+            Contact contact = SDKClient.Instance.ContactManager.FetchContactFromLocal(username);
+            if (null != contact)
+            {
+                UIManager.DefaultAlert(transform, $"成功: userid:{contact.UserId}, remark:{contact.Remark}");
+            }
+            else
+            {
+                UIManager.DefaultAlert(transform, $"No any contact is found");
+            }
+        });
+
+        config.AddField("username");
+
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("FetchContactFromLocalBtnAction");
+    }
+
+    void FetchAllContactsFromLocalBtnAction()
+    {
+        SDKClient.Instance.ContactManager.FetchAllContactsFromLocal(new ValueCallBack<List<Contact>>(
+            onSuccess: (list) => {
+                UIManager.DefaultAlert(transform, $"成功");
+                foreach (var it in list)
+                {
+                    Debug.Log($"FetchAllContactsFromLocal success, userid:{it.UserId}, remark:{it.Remark}");
+                }
+            },
+            onError: (code, desc) => {
+                UIManager.DefaultAlert(transform, $"失败code:{code}，desc:{desc}");
+            }
+        ));
+    }
+
+    void FetchAllContactsFromServerBtnAction()
+    {
+        SDKClient.Instance.ContactManager.FetchAllContactsFromServer(new ValueCallBack<List<Contact>>(
+            onSuccess: (list) => {
+                UIManager.DefaultAlert(transform, $"成功");
+                foreach (var it in list)
+                {
+                    Debug.Log($"FetchAllContactsFromServer success, userid:{it.UserId}, remark:{it.Remark}");
+                }
+            },
+            onError: (code, desc) => {
+                UIManager.DefaultAlert(transform, $"失败code:{code}，desc:{desc}");
+            }
+        ));
+    }
+
+    void FetchAllContactsFromServerByPageBtnAction()
+    {
+
+        InputAlertConfig config = new InputAlertConfig("FetchAllContactsFromServerByPage", (dict) =>
+        {
+            int limit = int.Parse(dict["limit"]);
+            string cursor = dict["cursor"];
+
+            SDKClient.Instance.ContactManager.FetchAllContactsFromServerByPage(limit, cursor, new ValueCallBack<CursorResult<Contact>>(
+                onSuccess: (result) =>
+                {
+                    UIManager.DefaultAlert(transform, "成功");
+                    Debug.Log($"FetchAllContactsFromServerByPage, contact list num:{result.Data.Count}, cursor:{result.Cursor}");
+                    foreach (var it in result.Data)
+                    {
+                        Debug.Log($"FetchAllContactsFromServerByPage success, userid:{it.UserId}, remark:{it.Remark}");
+                    };
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.DefaultAlert(transform, $"失败code:{code}，desc:{desc}");
+                }
+            ));
+        });
+
+        config.AddField("limit");
+        config.AddField("cursor");
+
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("FetchAllContactsFromServerByPageBtnAction");
+    }
 
     // Start is called before the first frame update
     void Start()

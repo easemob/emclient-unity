@@ -1,5 +1,9 @@
 ﻿using System.Collections.Generic;
 using AgoraChat.SimpleJSON;
+#if !_WIN32
+using UnityEngine.Scripting;
+#endif
+
 namespace AgoraChat
 {
     /**
@@ -9,6 +13,7 @@ namespace AgoraChat
      * \~english
      * The presence property class that contains presence properties, including the publisher's user ID and current presence state, and the platform used by the online device, as well as the presence's extension information, update time, and subscription expiration time.
      */
+    [Preserve]
     public class Presence : BaseModel
     {
 
@@ -81,10 +86,13 @@ namespace AgoraChat
 
         public long ExpiryTime { get; internal set; }
 
+        [Preserve]
         internal Presence() { }
 
+        [Preserve]
         internal Presence(string jsonString) : base(jsonString) { }
 
+        [Preserve]
         internal Presence(JSONObject jsonObject) : base(jsonObject) { }
 
         internal override void FromJsonObject(JSONObject jo)

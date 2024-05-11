@@ -130,6 +130,8 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
             ret = setMemberAttributes(jsonObject, callback);
         } else if (EMSDKMethod.fetchMemberAttributes.equals(method)) {
             ret = fetchMemberAttributes(jsonObject, callback);
+        } else if (EMSDKMethod.fetchMyGroupsCount.equals(method)) {
+            ret = fetchMyGroupsCount(callback);
         } else {
             ret = super.onMethodCall(method, jsonObject, callback);
         }
@@ -1054,6 +1056,21 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
         return null;
     }
 
+    private String fetchMyGroupsCount(EMWrapperCallback callback) {
+        EMCommonValueCallback<Integer> callBack = new EMCommonValueCallback<Integer>(callback) {
+            @Override
+            public void onSuccess(Integer object) {
+                try {
+                    updateObject(EMHelper.getReturnJsonObject(object));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        EMClient.getInstance().groupManager().asyncGetJoinedGroupsCountFromServer(callBack);
+        return null;
+    }
     
     private void registerEaseListener(){
         wrapperGroupListener = new EMWrapperGroupListener();

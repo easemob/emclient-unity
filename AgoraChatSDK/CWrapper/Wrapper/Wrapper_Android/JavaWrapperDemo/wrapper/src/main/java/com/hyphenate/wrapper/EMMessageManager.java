@@ -2,10 +2,12 @@ package com.hyphenate.wrapper;
 
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMMessagePinInfo;
 import com.hyphenate.chat.EMMessageReaction;
 import com.hyphenate.wrapper.callback.EMWrapperCallback;
 import com.hyphenate.wrapper.helper.EMChatThreadHelper;
 import com.hyphenate.wrapper.helper.EMMessageReactionHelper;
+import com.hyphenate.wrapper.helper.EMPinnedInfoHelper;
 import com.hyphenate.wrapper.util.EMHelper;
 import com.hyphenate.wrapper.util.EMSDKMethod;
 
@@ -25,7 +27,9 @@ public class EMMessageManager extends EMBaseWrapper {
             ret = getAckCount(jsonObject, callback);
         }else if (EMSDKMethod.getChatThread.equals(method)) {
             ret = getChatThread(jsonObject, callback);
-        } else {
+        }else if (EMSDKMethod.pinnedInfo.equals(method)) {
+            ret = getPinnedInfo(jsonObject, callback);
+        }else {
             ret = super.onMethodCall(method, jsonObject, callback);
         }
         return ret;
@@ -59,5 +63,18 @@ public class EMMessageManager extends EMBaseWrapper {
 
     private EMMessage getMessageWithId(String msgId) {
         return EMClient.getInstance().chatManager().getMessage(msgId);
+    }
+
+    private String getPinnedInfo(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        String msgId = params.getString("msgId");
+        final EMMessage msg = EMClient.getInstance().chatManager().getMessage(msgId);
+        String ret = "";
+        if (null != msg) {
+            EMMessagePinInfo pinnedInfo = msg.pinnedInfo();
+            if (null != pinnedInfo) {
+                ret = EMHelper.getReturnJsonObject(EMPinnedInfoHelper.toJson(pinnedInfo)).toString();
+            }
+        }
+        return ret;
     }
 }
