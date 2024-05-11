@@ -1,4 +1,8 @@
-﻿namespace AgoraChat
+﻿#if !_WIN32
+using UnityEngine.Scripting;
+#endif
+
+namespace AgoraChat
 {
     /**
     * \~chinese
@@ -7,6 +11,7 @@
     * \~english
     * The error information class.
     */
+    [Preserve]
     public class Error
     {
         /**
@@ -27,6 +32,7 @@
          */
         public string Desc { get; internal set; }
 
+        [Preserve]
         internal Error(int code, string desc)
         {
             Code = code;

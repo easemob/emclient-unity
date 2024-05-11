@@ -27,10 +27,14 @@ namespace AgoraChat
         }
 
 
+#if UNITY_EDITOR
+        public const string MyLibName = "ChatCWrapper";
+#else
 #if UNITY_IPHONE
         public const string MyLibName = "__Internal";
 #else
         public const string MyLibName = "ChatCWrapper";
+#endif
 #endif
 
         [DllImport(MyLibName)]

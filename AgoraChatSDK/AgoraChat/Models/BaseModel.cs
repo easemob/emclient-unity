@@ -1,11 +1,17 @@
 ﻿using AgoraChat.SimpleJSON;
+#if !_WIN32
+using UnityEngine.Scripting;
+#endif
 
 namespace AgoraChat
 {
+    [Preserve]
     public abstract class BaseModel
     {
+        [Preserve]
         internal BaseModel() { }
 
+        [Preserve]
         internal BaseModel(string json)
         {
             if (json.Length > 0)
@@ -18,6 +24,7 @@ namespace AgoraChat
             }
         }
 
+        [Preserve]
         internal BaseModel(JSONObject jo)
         {
             FromJsonObject(jo);

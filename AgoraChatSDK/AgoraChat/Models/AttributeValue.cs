@@ -2,13 +2,20 @@
 using AgoraChat.SimpleJSON;
 using System;
 using System.Collections.Generic;
+#if !_WIN32
+using UnityEngine.Scripting;
+#endif
 
 namespace AgoraChat
 {
+    [Preserve]
     public class AttributeValue : BaseModel
     {
+        [Preserve]
         public AttributeValue() { }
+        [Preserve]
         internal AttributeValue(string json) : base(json) { }
+        [Preserve]
         internal AttributeValue(JSONObject jo) : base(jo) { }
 
         private AttributeValueType VType;

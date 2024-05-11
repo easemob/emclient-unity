@@ -1,5 +1,9 @@
 ﻿using System.Collections.Generic;
 using AgoraChat.SimpleJSON;
+#if !_WIN32
+using UnityEngine.Scripting;
+#endif
+
 namespace AgoraChat
 {
     /**
@@ -7,8 +11,9 @@ namespace AgoraChat
     * 消息 Reaction 变更实体类
     * 
     * \~english
-    * The message reaction change entity class
+    * The message Reaction change entity class.
     */
+    [Preserve]
     public class MessageReactionChange : BaseModel
     {
 
@@ -38,10 +43,13 @@ namespace AgoraChat
          */
         public List<MessageReaction> ReactionList;
 
+        [Preserve]
         internal MessageReactionChange() { }
 
+        [Preserve]
         internal MessageReactionChange(string jsonString) : base(jsonString) { }
 
+        [Preserve]
         internal MessageReactionChange(JSONObject jsonObject) : base(jsonObject) { }
 
         internal override void FromJsonObject(JSONObject jsonObject)

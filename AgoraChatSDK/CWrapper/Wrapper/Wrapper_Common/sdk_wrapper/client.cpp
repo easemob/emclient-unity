@@ -18,6 +18,8 @@ EMChatConfigsPtr configs = nullptr;
 NativeListenerEvent gCallback = nullptr;
 static bool NeedAllocResource = false;
 
+string MY_APPKEY = "appkey";
+
 namespace sdk_wrapper
 {
     TokenWrapper token_wrapper;
@@ -70,32 +72,42 @@ namespace sdk_wrapper
         gMultiDevicesListener = nullptr;
     }
 
+    bool ResetAppKey(string& oldAppKey, string& newAppKey)
+    {
+        if (newAppKey.compare(oldAppKey) == 0) return true;
+
+        if (nullptr == gClient || newAppKey.size() == 0) return false;
+
+        CLIENT->logout(); // In login status, logout can clear dns
+        gClient->changeAppkey(newAppKey); // In logout status, changeAppKey can clear dns
+
+        gClient->getConfigManager()->setConfig(MY_APPKEY, newAppKey);
+        gClient->getConfigManager()->saveConfigs();
+
+        return true;
+    }
+
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_InitWithOptions(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         // 0: default and correct
         // 100: App key is invalid
         int ret = 0;
 
-        // singleton client handle
-        if (nullptr == gClient) {
+        string appkeyPreInConfig;
+        string appkeyInMem;
+        string appkeyNew;
 
-            configs = Options::FromJson(jstr, "./sdkdata", "./sdkdata");
+        configs = Options::FromJson(jstr, "./sdkdata", "./sdkdata");
 
-            if (nullptr == configs) {
-                ret = 100;
-            }
-            else {
-                gClient = EMClient::create(configs);
-            }
-        }
-        else {
-            if (NeedAllocResource) {
-                gClient->allocResource();
-                NeedAllocResource = false;
-            }
-        }
+        if (nullptr == configs) ret = 100;
 
-        if (0 == ret) {
+        if (nullptr != configs) appkeyNew = configs->getAppKey();
+
+        // singleton client handle, sdk initialize
+        if (nullptr == gClient && nullptr != configs) {
+
+            gClient = EMClient::create(configs);
+
             Client_AddListener();
             ChatManager_AddListener();
             GroupManager_AddListener();
@@ -103,6 +115,20 @@ namespace sdk_wrapper
             ContactManager_AddListener();
             PresenceManager_AddListener();
             ThreadManager_AddListener();
+
+            gClient->getConfigManager()->getConfig(MY_APPKEY, appkeyPreInConfig);
+            ResetAppKey(appkeyPreInConfig, appkeyNew);
+        }
+
+        if (nullptr != gClient) {
+
+            if (NeedAllocResource) {
+                gClient->allocResource();
+                NeedAllocResource = false;
+            }
+
+            appkeyInMem = gClient->getChatConfigs()->getAppKey();
+            ResetAppKey(appkeyInMem, appkeyNew);
         }
 
         JSON_STARTOBJ

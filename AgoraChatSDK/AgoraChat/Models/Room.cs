@@ -1,5 +1,9 @@
 ﻿using System.Collections.Generic;
 using AgoraChat.SimpleJSON;
+#if !_WIN32
+using UnityEngine.Scripting;
+#endif
+
 namespace AgoraChat
 {
     /**
@@ -9,6 +13,7 @@ namespace AgoraChat
      *  \~english
      *  The chat room class, which defines chat room information.
      */
+    [Preserve]
     public class Room : BaseModel
     {
         /**
@@ -164,10 +169,13 @@ namespace AgoraChat
          */
         public RoomPermissionType PermissionType { get; internal set; }
 
+        [Preserve]
         internal Room() { }
 
+        [Preserve]
         internal Room(string jsonString) : base(jsonString) { }
 
+        [Preserve]
         internal Room(JSONObject jsonObject) : base(jsonObject) { }
 
         internal override void FromJsonObject(JSONObject jsonObject)
