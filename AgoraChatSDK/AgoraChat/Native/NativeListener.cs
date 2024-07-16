@@ -64,7 +64,7 @@ namespace AgoraChat
                 {
                     jsonNode = JSON.Parse(jsonString);
                 }
-                catch(Exception e)
+                catch(Exception)
                 {
                     // Suggest to print log into file
                     return;

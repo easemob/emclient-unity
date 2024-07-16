@@ -261,12 +261,13 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
 
     private String recallMessage(JSONObject params, EMWrapperCallback callback) throws JSONException {
         String msgId = params.getString("msgId");
+        String ext = params.optString("ext", "");
 
         asyncRunnable(() -> {
             try {
                 EMMessage msg = EMClient.getInstance().chatManager().getMessage(msgId);
                 if (msg != null) {
-                    EMClient.getInstance().chatManager().recallMessage(msg);
+                    EMClient.getInstance().chatManager().recallMessage(msg, ext);
                     onSuccess(null, callback);
                 }else {
                     onError(new HyphenateException(500, "The message was not found"), callback);

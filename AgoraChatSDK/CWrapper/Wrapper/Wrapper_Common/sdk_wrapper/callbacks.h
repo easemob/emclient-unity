@@ -26,7 +26,7 @@ namespace sdk_wrapper {
             CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onConnected.c_str(), info.c_str());
         }
 
-        void onDisconnect(EMErrorPtr error, const std::string& info) override
+        void onDisconnect(EMErrorPtr error, const std::string& info, const std::string& ext) override
         {
             string json = "";
 
@@ -118,10 +118,27 @@ namespace sdk_wrapper {
                 CallBack(STRING_CHATMANAGER_LISTENER.c_str(), STRING_onMessagesDelivered.c_str(), json.c_str());
         }
 
-        void onReceiveRecallMessages(const EMMessageList& messages) override {
-            string json = Message::ToJson(messages);
-            if (json.size() > 0)
-                CallBack(STRING_CHATMANAGER_LISTENER.c_str(), STRING_onMessagesRecalled.c_str(), json.c_str());
+        void onReceiveRecallMessages(const std::vector<std::tuple<std::string, std::string, std::string, easemob::EMMessagePtr>>& list) override {
+            if (list.size() > 0) {
+                string json = RecallMessageInfo::ToJson(list);
+                if (json.size() > 0)
+                    CallBack(STRING_CHATMANAGER_LISTENER.c_str(), STRING_onMessagesRecalledByExt.c_str(), json.c_str());
+
+                /*
+                json.clear();
+                EMMessageList msgList;
+                for (auto it : list) {
+                    EMMessagePtr msg = nullptr;
+                    msg = std::get<3>(it);
+                    if (nullptr != msg && nullptr != msg.get()) {
+                        msgList.push_back(msg);
+                    }
+                }
+                json = Message::ToJson(msgList);
+                if (json.size() > 0)
+                    CallBack(STRING_CHATMANAGER_LISTENER.c_str(), STRING_onMessagesRecalled.c_str(), json.c_str());
+                */
+            }
         }
 
         void onUpdateGroupAcks() override {

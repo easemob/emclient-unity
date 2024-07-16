@@ -1,12 +1,16 @@
 ﻿#if UNITY_EDITOR
 #if UNITY_IPHONE 
 
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using JetBrains.Annotations;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
 using UnityEditor.iOS.Xcode.Extensions;
+using UnityEngine;
 
 namespace AgoraChat {
     
@@ -15,7 +19,7 @@ namespace AgoraChat {
     public class BL_BuildPostProcess
     {
         const string defaultLocationInProj = "AgoraChat/Plugins/iOS";
-        
+
         [PostProcessBuildAttribute(99)]
         public static void OnPostprocessBuild(BuildTarget buildTarget, string path)
         {
@@ -43,14 +47,69 @@ namespace AgoraChat {
             "ChatCWrapper.framework",
             "HyphenateChat.framework"
 	    };
-        
+
+        static string GetChatFrameworkGuid(PBXProject proj, string framework)
+        {
+
+            string guid = "";
+
+            // Get PBXProject type information
+            Type pbxProjectType = typeof(PBXProject);
+
+            // Use reflect to find the method
+            MethodInfo methodInfo = pbxProjectType.GetMethod("GetRealPathsOfAllFiles",
+                BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+
+            // Check method exist or not
+            if (methodInfo != null)
+            {
+
+                object[] parameters = new object[] { PBXSourceTree.Source };
+
+                // Method exist, then call it
+                List<string> list = (List<string>)methodInfo.Invoke(proj, parameters);
+
+                foreach (var item in list)
+                {
+                    if (item.Contains(framework))
+                    {
+                        guid = proj.FindFileGuidByRealPath(item);
+                    }
+                }
+
+                Debug.Log($"Automatically get the guid of {framework}");
+            }
+            else
+            {
+                // Method NOT exist, then just print log
+                Debug.Log($"Cannot automatically get the guid of {framework}, return empty");
+            }
+
+            return guid;
+        }
 
         static void EmbedFramework(PBXProject proj, string target, string frameworkPath, string customPath)
         {
-            string ChatFrameWorkPath = Path.Combine(defaultLocationInProj, frameworkPath);
-            string projectPath = customPath ?? "";
-            string fileGuid = proj.AddFile(ChatFrameWorkPath, "Frameworks/" + projectPath + ChatFrameWorkPath, PBXSourceTree.Sdk);
-            PBXProjectExtensions.AddFileToEmbedFrameworks(proj, target, fileGuid);
+
+            string guid;
+            guid = GetChatFrameworkGuid(proj, frameworkPath);
+
+            if (string.IsNullOrEmpty(guid))
+            {
+                Debug.Log($"Construct project path manually for {frameworkPath} to get guid");
+                string ChatFrameWorkPath = Path.Combine(defaultLocationInProj, frameworkPath);
+                string projectPath = customPath ?? "";
+                guid = proj.AddFile(ChatFrameWorkPath, "Frameworks/" + projectPath + ChatFrameWorkPath, PBXSourceTree.Sdk);
+            }
+
+            Debug.Log($"Get guid for {frameworkPath}: {guid}");
+
+            PBXProjectExtensions.AddFileToEmbedFrameworks(proj, target, guid);
+
+            //string ChatFrameWorkPath = Path.Combine(defaultLocationInProj, frameworkPath);
+            //string projectPath = customPath ?? "";
+            //string fileGuid = proj.AddFile(ChatFrameWorkPath, "Frameworks/" + projectPath + ChatFrameWorkPath, PBXSourceTree.Sdk);
+            //PBXProjectExtensions.AddFileToEmbedFrameworks(proj, target, frameworkGuild);
         }
 
         static void LinkLibraries(string path)
@@ -107,7 +166,7 @@ namespace AgoraChat
     ///     [PostProcessBuildAttribute(0)]
     ///     public static void SetAgoraChatPath(BuildTarget buildTarget, string path)
     ///     {
-    ///        // SDK Path: Assets/ThirdParties/AgoraChat
+    ///        // SDK Path: Assets/ThirdParties/AgoraChat/Plugins/iOS
     ///        AgoraChat.IOSBuildSetting.CustomPackagePath = "ThirdParties/";
     ///     }
     /// }

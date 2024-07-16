@@ -99,6 +99,8 @@
     
     EMRecallMessageInfo *recall = [[EMRecallMessageInfo alloc] init];
     recall.recallBy = @"recallBy";
+    recall.recallMessageId =@"messageId";
+    recall.ext = @"ext";
     recall.recallMessage = msg1;
     [EMClientWrapper.shared.chatManager messagesInfoDidRecall:@[recall]];
     

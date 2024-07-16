@@ -326,6 +326,7 @@ static NSString *const onGroupMessageRead = @"onGroupMessageRead";
 static NSString *const onReadAckForGroupMessageUpdated = @"onReadAckForGroupMessageUpdated";
 static NSString *const onMessagesDelivered = @"onMessagesDelivered";
 static NSString *const onMessagesRecalled = @"onMessagesRecalled";
+static NSString *const onMessagesRecalledByExt = @"onMessagesRecalledByExt";
 static NSString *const onConversationsUpdate = @"onConversationsUpdate";
 static NSString *const onConversationRead = @"onConversationRead";
 static NSString *const onMessageReactionDidChange = @"messageReactionDidChange";

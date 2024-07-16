@@ -209,7 +209,7 @@ namespace AgoraChat
             return list;
         }
 
-        internal static List<T> BaseModelListFromJsoString<T>(string jsonString) where T : BaseModel
+        internal static List<T> BaseModelListFromJsonString<T>(string jsonString) where T : BaseModel
         {
 
             if (string.IsNullOrEmpty(jsonString))

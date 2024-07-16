@@ -324,6 +324,7 @@ namespace AgoraChat
         internal const string onReadAckForGroupMessageUpdated = "onReadAckForGroupMessageUpdated";
         internal const string onMessagesDelivered = "onMessagesDelivered";
         internal const string onMessagesRecalled = "onMessagesRecalled";
+        internal const string onMessagesRecalledByExt = "onMessagesRecalledByExt";
         internal const string onConversationsUpdate = "onConversationsUpdate";
         internal const string onConversationRead = "onConversationRead";
         internal const string onMessageReactionDidChange = "messageReactionDidChange";

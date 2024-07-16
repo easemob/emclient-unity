@@ -472,6 +472,43 @@ namespace WinSDKTest
                 }
             ));
         }
+
+        static public void SendTxtMessage_return500_before_login()
+        {
+            string to = "";
+            string text = "I am message sender";
+
+            Message msg = Message.CreateTextSendMessage(to, text);
+
+            SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
+                onSuccess: () => {
+                    Console.WriteLine($"SendTxtMessage success. msgid:{msg.MsgId}");
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"SendTxtMessage failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        static public void ImportMessages_emptyfrom_emtpyto()
+        {
+            List<Message> messages = new List<Message>();
+            Message msg = Message.CreateTextSendMessage(null, "");
+            Message msg1 = Message.CreateReceiveMessage();
+
+            messages.Add(msg);
+            messages.Add(msg);
+
+            SDKClient.Instance.ChatManager.ImportMessages(messages, new CallBack(
+                onSuccess: () => {
+                    Console.WriteLine($"ImportMessages completed.");
+                },
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"ImportMessages failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
     }
 
     /*
@@ -903,6 +940,7 @@ namespace WinSDKTest
 
             menu_index = 1;
             param.Add(menu_index, "messageId (string)"); menu_index++;
+            param.Add(menu_index, "ext (string)"); menu_index++;
             level3_menus.Add("RecallMessage", new Dictionary<int, string>(param));
             param.Clear();
 
@@ -3637,6 +3675,9 @@ namespace WinSDKTest
 
         public void CallFunc_IChatManager_ImportMessages()
         {
+            //MyCase.ImportMessages_emptyfrom_emtpyto();
+            //return;
+
             List<Message> messages = new List<Message>();
             Message msg = Message.CreateTextSendMessage("to1", "hello");
             Message msg1 = Message.CreateTextSendMessage("to2", "world");
@@ -3710,7 +3751,9 @@ namespace WinSDKTest
             else
                 messageId = GetParamValueFromContext(0);
 
-            SDKClient.Instance.ChatManager.RecallMessage(messageId, new CallBack(
+            string ext = GetParamValueFromContext(1);
+
+            SDKClient.Instance.ChatManager.RecallMessage(messageId, ext, new CallBack(
                 onSuccess: () => {
                     Console.WriteLine($"RecallMessage completed.");
                 },
@@ -3898,6 +3941,7 @@ namespace WinSDKTest
         public void CallFunc_IChatManager_SendTxtMessage(string _to="", string _text="")
         {
             //MyCase.SendTxtMessage_AddReaction_RemoveReaction(99);
+            //MyCase.SendTxtMessage_return500_before_login();
             //return;
 
             string to = "";
@@ -10260,7 +10304,7 @@ namespace WinSDKTest
 
     public class ChatManagerDelegate : IChatManagerDelegate
     {
-        int LISTENER_COUNT = 11;
+        int LISTENER_COUNT = 13;
 
         public void OnMessagesReceived(List<Message> messages)
         {
@@ -10363,7 +10407,45 @@ namespace WinSDKTest
             }
         }
 
-        public void OnMessagesRecalled(List<Message> messages)
+        public void OnMessagesRecalled(List<RecallMessageInfo> recallMessagesInfo)
+        {
+            Console.WriteLine($"ChatManagerDelegate5 OnMessagesRecalled, total listener:{LISTENER_COUNT}");
+            foreach (var recallIt in recallMessagesInfo)
+            {
+                var it = recallIt.RecallMessage;
+                Console.WriteLine($"===========================");
+
+                Console.WriteLine($"recallBy: {recallIt.RecallBy}");
+                Console.WriteLine($"recallMessageId: {recallIt.RecallMessageId}");
+                Console.WriteLine($"recall-ext: {recallIt.Ext}");
+                if (null == it) continue;
+                Console.WriteLine($"recallMessage: -------------------");
+                Console.WriteLine($"message id: {it.MsgId}");
+                Console.WriteLine($"cov id: {it.ConversationId}");
+                Console.WriteLine($"From: {it.From}");
+                Console.WriteLine($"To: {it.To}");
+                //Console.WriteLine($"RecallBy: {it.RecallBy}");
+                Console.WriteLine($"message type: {it.MessageType}");
+                Console.WriteLine($"diection: {it.Direction}");
+                Console.WriteLine($"status: {it.Status}");
+                Console.WriteLine($"localtime: {it.LocalTime}");
+                Console.WriteLine($"servertime: {it.ServerTime}");
+                Console.WriteLine($"HasDeliverAck: {it.HasDeliverAck}");
+                Console.WriteLine($"HasReadAck: {it.HasReadAck}");
+                foreach (var it1 in it.Attributes)
+                {
+                    Console.WriteLine($"attribute item: key:{it1.Key}; value:{it1.Value}");
+                }
+                if (it.Body.Type == MessageBodyType.TXT)
+                {
+                    TextBody tb = (TextBody)it.Body;
+                    Console.WriteLine($"message text content: {tb.Text}");
+                }
+                Console.WriteLine($"===========================");
+            }
+        }
+
+        /*public void OnMessagesRecalled(List<Message> messages)
         {
             Console.WriteLine($"ChatManagerDelegate5 OnMessagesRecalled, total listener:{LISTENER_COUNT}");
             foreach (var it in messages)
@@ -10392,7 +10474,7 @@ namespace WinSDKTest
                 }
                 Console.WriteLine($"===========================");
             }
-        }
+        }*/
 
         public void OnReadAckForGroupMessageUpdated()
         {

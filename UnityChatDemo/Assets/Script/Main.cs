@@ -641,7 +641,7 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         Debug.Log($"ChatManager4 OnMessagesDelivered {string.Join(", ", msgs.ToArray())}");
     }
 
-    public void OnMessagesRecalled(List<Message> messages)
+    /*public void OnMessagesRecalled(List<Message> messages)
     {
         List<string> msgs = new List<string>();
         foreach (var msg in messages)
@@ -649,6 +649,16 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
             msgs.Add(msg.ToJsonObject().ToString());
         }
         Debug.Log($"ChatManager5 OnMessagesRecalled {string.Join(", ", msgs.ToArray())}");
+    }*/
+
+    public void OnMessagesRecalled(List<RecallMessageInfo> recallMessagesInfo)
+    {
+        List<string> list = new List<string>();
+        foreach (var msg in recallMessagesInfo)
+        {
+            list.Add(msg.ToJsonObject().ToString());
+        }
+        Debug.Log($"ChatManager5 OnMessagesRecalled {string.Join(", ", list.ToArray())}");
     }
 
     public void OnReadAckForGroupMessageUpdated()

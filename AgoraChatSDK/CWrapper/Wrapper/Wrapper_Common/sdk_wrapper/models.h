@@ -406,6 +406,14 @@ namespace sdk_wrapper {
         static void ToJsonObject(Writer<StringBuffer>& writer, bool isPinned, const string& operatorId, int64_t ts);
     };
 
+    class RecallMessageInfo
+    {
+    public:
+        static void ToJsonObject(Writer<StringBuffer>& writer, std::tuple<std::string, std::string, std::string, easemob::EMMessagePtr>& tuple);
+        static void ToJsonObjectWithList(Writer<StringBuffer>& writer, const std::vector<std::tuple<std::string, std::string, std::string, easemob::EMMessagePtr>>& vec);
+        static string ToJson(const std::vector<std::tuple<std::string, std::string, std::string, easemob::EMMessagePtr>>& vec);
+    };
+
     class TokenWrapper
     {
     public:

@@ -138,6 +138,11 @@ namespace WinSDKTest
             throw new NotImplementedException();
         }
 
+        public void OnMessagesRecalled(List<RecallMessageInfo> recallMessagesInfo)
+        {
+            throw new NotImplementedException();
+        }
+
         public void OnMessagesReceived(List<Message> messages)
         {
             List<string> list = new List<string>();

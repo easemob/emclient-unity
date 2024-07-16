@@ -568,7 +568,8 @@ namespace AgoraChat
 		 * 异步方法。
 		 *
 		 * @param messageId 要撤回消息的 ID。
-		 * @param callback    撤回结果回调，详见 {@link CallBack}。
+		 * @param ext       撤回消息时的提示信息。
+		 * @param callback  撤回结果回调，详见 {@link CallBack}。
 		 *
 		 *
 		 * \~english
@@ -576,13 +577,15 @@ namespace AgoraChat
 		 *
 		 * This is an asynchronous method.
 		 *
-		 * @param message	The ID of the message to be recalled.
-		 * @param callback    The recall status callback. See {@link CallBack}.
+		 * @param message   The ID of the message to be recalled.
+		 * @param ext       Prompt information when recalled the message.
+		 * @param callback  The recall status callback. See {@link CallBack}.
 		 */
-        public void RecallMessage(string messageId, CallBack callback = null)
+        public void RecallMessage(string messageId, string ext, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("msgId", messageId);
+            jo_param.AddWithoutNull("ext", ext);
 
             NativeCall(SDKMethod.recallMessage, jo_param, callback);
         }
@@ -1615,9 +1618,18 @@ namespace AgoraChat
                         }
                     }
                     break;
-                case SDKMethod.onMessagesRecalled:
+                /*case SDKMethod.onMessagesRecalled:
                     {
                         List<Message> list = List.BaseModelListFromJsonArray<Message>(jsonNode);
+                        foreach (IChatManagerDelegate it in delegater)
+                        {
+                            if (list.Count > 0) it.OnMessagesRecalled(list);
+                        }
+                    }
+                    break;*/
+                case SDKMethod.onMessagesRecalledByExt:
+                    {
+                        List<RecallMessageInfo> list = List.BaseModelListFromJsonArray<RecallMessageInfo>(jsonNode);
                         foreach (IChatManagerDelegate it in delegater)
                         {
                             if (list.Count > 0) it.OnMessagesRecalled(list);

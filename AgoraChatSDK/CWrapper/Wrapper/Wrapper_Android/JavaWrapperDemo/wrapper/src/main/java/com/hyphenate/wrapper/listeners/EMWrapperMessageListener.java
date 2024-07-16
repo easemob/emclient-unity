@@ -6,10 +6,12 @@ import com.hyphenate.chat.EMGroupReadAck;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMMessagePinInfo;
 import com.hyphenate.chat.EMMessageReactionChange;
+import com.hyphenate.chat.EMRecallMessageInfo;
 import com.hyphenate.wrapper.EMWrapperHelper;
 import com.hyphenate.wrapper.helper.EMGroupAckHelper;
 import com.hyphenate.wrapper.helper.EMMessageHelper;
 import com.hyphenate.wrapper.helper.EMMessageReactionChangeHelper;
+import com.hyphenate.wrapper.helper.EMRecallMessageInfoHelper;
 import com.hyphenate.wrapper.util.EMSDKMethod;
 import com.hyphenate.wrapper.util.EMWrapperThreadUtil;
 
@@ -74,12 +76,26 @@ public class EMWrapperMessageListener implements EMMessageListener , EMConversat
 
     @Override
     public void onMessageRecalled(List<EMMessage> messages) {
-        JSONArray jsonArray = new JSONArray();
+        /*JSONArray jsonArray = new JSONArray();
         try {
             for (EMMessage msg : messages) {
                 jsonArray.put(EMMessageHelper.toJson(msg));
             }
             post(()->EMWrapperHelper.listener.onReceive(EMSDKMethod.chatListener, EMSDKMethod.onMessagesRecalled, jsonArray.toString()));
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }*/
+    }
+
+    @Override
+    public void onMessageRecalledWithExt(List<EMRecallMessageInfo> recallMessageInfo)
+    {
+        JSONArray jsonArray = new JSONArray();
+        try {
+            for (EMRecallMessageInfo info : recallMessageInfo) {
+                jsonArray.put(EMRecallMessageInfoHelper.toJson(info));
+            }
+            post(()->EMWrapperHelper.listener.onReceive(EMSDKMethod.chatListener, EMSDKMethod.onMessagesRecalledByExt, jsonArray.toString()));
         }catch (JSONException e) {
             e.printStackTrace();
         }

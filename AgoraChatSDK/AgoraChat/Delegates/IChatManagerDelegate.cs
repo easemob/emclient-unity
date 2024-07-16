@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace AgoraChat
 {
@@ -72,27 +73,29 @@ namespace AgoraChat
          */
 		void OnMessagesDelivered(List<Message> messages);
 
-		/**
- 	     * \~chinese
- 	     * 撤回收到消息的回调。
- 	     * 
- 	     * @param messages 被撤回的消息列表。
- 	     *
- 	     * \~english
- 	     * Occurs when a received message is recalled.
- 	     * 
- 	     * @param messages  The recalled message(s).
- 	     */
-		void OnMessagesRecalled(List<Message> messages);
+        /**
+	    * \~chinese
+	    * 撤回收到消息的回调。
+	    *
+	    * @param recallMessagesInfo 被撤回的信息列表。
+	    * 如果撤回的是离线期间的消息，`RecallMessageInfo`对象中的`RecallMessage`会变为空对象。
+	    *
+	    * \~english
+	    * Occurs when a received message is recalled.
+	    * If the recalled message is offline, the `RecallMessage` in `RecallMessageInfo` object will be an empty object.
+	    *
+	    * @param recallMessagesInfo  The recalled information list.
+	    */
+        void OnMessagesRecalled(List<RecallMessageInfo> recallMessagesInfo);
 
-		/**
+        /**
 	     * \~chinese
 	     * 收到群组消息的读取状态更新时触发的回调。
 	     *
 	     * \~english
 	     * Occurs when the read status updates of a group message is received.
 	     */
-		void OnReadAckForGroupMessageUpdated();
+        void OnReadAckForGroupMessageUpdated();
 
 		/**
 	     * \~chinese

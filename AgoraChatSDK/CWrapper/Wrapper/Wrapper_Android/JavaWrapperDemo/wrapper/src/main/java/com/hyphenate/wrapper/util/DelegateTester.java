@@ -11,6 +11,7 @@ import com.hyphenate.chat.EMMessageReactionChange;
 import com.hyphenate.chat.EMMucSharedFile;
 import com.hyphenate.chat.EMPageResult;
 import com.hyphenate.chat.EMPresence;
+import com.hyphenate.chat.EMRecallMessageInfo;
 import com.hyphenate.cwrapper.EMCWrapperListener;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.wrapper.EMClientWrapper;
@@ -220,6 +221,11 @@ public class DelegateTester {
         EMClientWrapper.shared().chatManagerWrapper.emWrapperMessageListener.onReadAckForGroupMessageUpdated();
         EMClientWrapper.shared().chatManagerWrapper.emWrapperMessageListener.onConversationUpdate();
         EMClientWrapper.shared().chatManagerWrapper.emWrapperMessageListener.onConversationRead("from", "to");
+
+        List<EMRecallMessageInfo> recallInfos = new ArrayList<>();
+        EMRecallMessageInfo recallInfo = new EMRecallMessageInfo("recallBy", "messageId", msg, "ext");
+        recallInfos.add(recallInfo);
+        EMClientWrapper.shared().chatManagerWrapper.emWrapperMessageListener.onMessageRecalledWithExt(recallInfos);
 
         try{
             // 无法构建EMMessageReactionChange，使用假数据

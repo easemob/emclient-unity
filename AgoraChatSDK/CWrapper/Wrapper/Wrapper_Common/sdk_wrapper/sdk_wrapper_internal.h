@@ -53,6 +53,7 @@ const string STRING_onGroupMessageRead = "onGroupMessageRead";
 const string STRING_onReadAckForGroupMessageUpdated = "onReadAckForGroupMessageUpdated";
 const string STRING_onMessagesDelivered = "onMessagesDelivered";
 const string STRING_onMessagesRecalled = "onMessagesRecalled";
+const string STRING_onMessagesRecalledByExt = "onMessagesRecalledByExt";
 const string STRING_onConversationsUpdate = "onConversationsUpdate";
 const string STRING_onConversationRead = "onConversationRead";
 const string STRING_onMessageReactionDidChange = "messageReactionDidChange";

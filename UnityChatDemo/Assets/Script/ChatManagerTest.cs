@@ -237,63 +237,37 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     }
     void SendFileBtnAction()
     {
-        InputAlertConfig config = new InputAlertConfig((dict) =>
-        {
-            SDKClient.Instance.ThreadManager.DestroyThread(dict["threadId"], new CallBack(
-                onSuccess: () =>
-                {
-                    Debug.Log($"DestroyThread sucess");
+        InputAlertConfig config = new InputAlertConfig((dict) => {
+            long filesize = long.Parse(dict["fileSize"]);
+            Message msg = Message.CreateFileSendMessage(dict["to"], dict["localPath"], "", filesize);
+
+            SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
+                onSuccess: () => {
+                    UIManager.TitleAlert(transform, "成功", msg.MsgId);
                 },
-                onError: (code, desc) =>
-                {
-                    Debug.Log($"DestroyThread failed, code:{code}, desc:{desc}");
+                onProgress: (progress) => {
+                    UIManager.TitleAlert(transform, "发送进度", progress.ToString());
+                },
+                onError: (code, desc) => {
+                    UIManager.ErrorAlert(transform, code, desc);
                 }
-                ));
+            ));
         });
 
-        config.AddField("threadId");
+        config.AddField("to");
+        config.AddField("localPath");
+        config.AddField("fileSize");
         UIManager.DefaultInputAlert(transform, config);
-
-        return;
 
     }
     void SendVideoBtnAction()
     {
-
-        SDKClient.Instance.ThreadManager.FetchMineJoinedThreadList("", 10, new ValueCallBack<CursorResult<ChatThread>>(
-            onSuccess: (cursor_result) =>
-            {
-                Debug.Log($"FetchMineJoinedThreadList sucess");
-                if (null != cursor_result)
-                {
-                    Debug.Log($"cursor:{cursor_result.Cursor}");
-                    foreach (var it in cursor_result.Data)
-                    {
-                        ChatThread thread = it;
-                        Debug.Log($"--------------------------------");
-                        Debug.Log($"Tid:{thread.Tid}; msgId:{thread.MessageId}; parentId:{thread.ParentId}; owner:{thread.Owner}");
-                        Debug.Log($"Name:{thread.Name};  MessageCount:{thread.MessageCount}");
-                        Debug.Log($"MembersCount:{thread.MembersCount}; CreateTimestamp:{thread.CreateAt}");
-                    }
-                }
-            },
-            onError: (code, desc) =>
-            {
-                Debug.Log($"FetchMineJoinedThreadList failed, code:{code}, desc:{desc}");
-            }
-        ));
-
-        return;
-
-        UIManager.UnfinishedAlert(transform);
-        Debug.Log("SendVideoBtnAction");
-
-        /*InputAlertConfig config = new InputAlertConfig((dict) => {
+        InputAlertConfig config = new InputAlertConfig((dict) => {
             Message msg = Message.CreateVideoSendMessage(dict["to"], "/Users/yuqiang/Test/resource/video.mp4", "", "", 425507);
 
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
                 onSuccess: () => {
-                    ChatSDK.MessageBody.VideoBody vb = (ChatSDK.MessageBody.VideoBody)msg.Body;
+                    //VideoBody vb = (VideoBody)msg.Body;
                     UIManager.TitleAlert(transform, "成功", msg.MsgId);
                 },
                 onProgress: (progress) => {
@@ -307,7 +281,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
         config.AddField("to");
         UIManager.DefaultInputAlert(transform, config);
-        */
+
     }
     void SendVoiceBtnAction()
     {
@@ -472,7 +446,9 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
                 return;
             }
 
-            SDKClient.Instance.ChatManager.RecallMessage(dict["msgId"], new CallBack(
+            string ext = dict["ext"];
+
+            SDKClient.Instance.ChatManager.RecallMessage(dict["msgId"], ext, new CallBack(
                 onSuccess: () =>
                 {
                     UIManager.TitleAlert(transform, "成功", "回撤成功");
@@ -489,6 +465,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         });
 
         config.AddField("msgId");
+        config.AddField("ext");
         UIManager.DefaultInputAlert(transform, config);
     }
     void GetConversationBtnAction()
@@ -759,18 +736,19 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
             SDKClient.Instance.ChatManager.ImportMessages(msgs, new CallBack(
                 onSuccess: () =>
                 {
-                    UIManager.DefaultAlert(transform, "获取消息?",
+                    UIManager.DefaultAlert(transform, "导入消息成功");
+                    /*UIManager.DefaultAlert(transform, "获取消息?",
                         () =>
                         {
                             Message loadMsg = SDKClient.Instance.ChatManager.LoadMessage(msg.MsgId);
                             TextBody body = loadMsg.Body as TextBody;
                             UIManager.DefaultAlert(transform, $"convId: { loadMsg.ConversationId}, content: {body.Text}");
                         },
-                        () => { });
+                        () => { });*/
                 },
                 onError: (code, desc) =>
                 {
-                    UIManager.DefaultAlert(transform, "插入失败");
+                    UIManager.DefaultAlert(transform, $"插入失败:{code}, {desc}");
                 }
             ));
         });
@@ -1519,9 +1497,20 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         UIManager.DefaultAlert(transform, $"OnMessagesDelivered: {messages.Count}");
     }
 
-    public void OnMessagesRecalled(List<Message> messages)
+    /*public void OnMessagesRecalled(List<Message> messages)
     {
         UIManager.DefaultAlert(transform, $"OnMessagesRecalled: {messages.Count}");
+    }*/
+
+    public void OnMessagesRecalled(List<RecallMessageInfo> recallMessagesInfo)
+    {
+        List<string> list = new List<string>();
+        foreach (var msg in recallMessagesInfo)
+        {
+            list.Add(msg.ToJsonObject().ToString());
+        }
+        string s = "OnMessagesRecalled:" + string.Join(", ", list.ToArray());
+        UIManager.DefaultAlert(transform, s);
     }
 
     public void OnReadAckForGroupMessageUpdated()

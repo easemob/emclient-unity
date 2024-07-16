@@ -323,6 +323,7 @@ public class EMSDKMethod {
     public static final String onReadAckForGroupMessageUpdated = "onReadAckForGroupMessageUpdated";
     public static final String onMessagesDelivered = "onMessagesDelivered";
     public static final String onMessagesRecalled = "onMessagesRecalled";
+    public static final String onMessagesRecalledByExt = "onMessagesRecalledByExt";
     public static final String onConversationsUpdate = "onConversationsUpdate";
     public static final String onConversationRead = "onConversationRead";
     public static final String onMessageReactionDidChange = "messageReactionDidChange";

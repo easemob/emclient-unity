@@ -422,7 +422,7 @@ namespace AgoraChat
 
             if (string.IsNullOrEmpty(user_name))
             {
-                return null;
+                user_name = "";
             }
 
             Message msg = new Message()
@@ -470,9 +470,14 @@ namespace AgoraChat
         {
             string user_name = SDKClient.Instance.CurrentUsername;
 
-            if (string.IsNullOrEmpty(user_name) || string.IsNullOrEmpty(to))
+            if (string.IsNullOrEmpty(user_name))
             {
-                return null;
+                user_name = "";
+            }
+
+            if (string.IsNullOrEmpty(to))
+            {
+                to = "";
             }
 
             Message msg = new Message(body: body)

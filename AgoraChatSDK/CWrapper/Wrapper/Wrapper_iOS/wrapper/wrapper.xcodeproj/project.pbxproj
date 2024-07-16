@@ -25,7 +25,9 @@
 		4578AED32BC2452500DE8EB3 /* EMMessagePinInfo+Helper.h in Headers */ = {isa = PBXBuildFile; fileRef = 4578AED22BC2452500DE8EB3 /* EMMessagePinInfo+Helper.h */; };
 		4578AED52BC2467B00DE8EB3 /* EMMessagePinInfo+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4578AED42BC2467B00DE8EB3 /* EMMessagePinInfo+Helper.m */; };
 		4597E80F2B875E1200D70B6D /* EMContact+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4597E80E2B875E1200D70B6D /* EMContact+Helper.m */; };
-		45F88D192B81EF2A0051DFEE /* HyphenateChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90319D0D29360033000D01BE /* HyphenateChat.framework */; };
+		45C0A2032C09A9EE00D4833E /* HyphenateChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90319D0D29360033000D01BE /* HyphenateChat.framework */; };
+		45C0A2052C09C2C100D4833E /* EMRecallMessageInfo+Helper.h in Headers */ = {isa = PBXBuildFile; fileRef = 45C0A2042C09C2C100D4833E /* EMRecallMessageInfo+Helper.h */; };
+		45C0A2072C09C33D00D4833E /* EMRecallMessageInfo+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 45C0A2062C09C33D00D4833E /* EMRecallMessageInfo+Helper.m */; };
 		90319C812935FC1E000D01BE /* EMMessageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 90319C2A2935FC1E000D01BE /* EMMessageManager.m */; };
 		90319C822935FC1E000D01BE /* EMChatroom+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 90319C2B2935FC1E000D01BE /* EMChatroom+Helper.m */; };
 		90319C832935FC1E000D01BE /* EMUserInfoManagerWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 90319C2C2935FC1E000D01BE /* EMUserInfoManagerWrapper.h */; };
@@ -136,6 +138,8 @@
 		4578AED42BC2467B00DE8EB3 /* EMMessagePinInfo+Helper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "EMMessagePinInfo+Helper.m"; sourceTree = "<group>"; };
 		4597E80D2B875DBF00D70B6D /* EMContact+Helper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EMContact+Helper.h"; sourceTree = "<group>"; };
 		4597E80E2B875E1200D70B6D /* EMContact+Helper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "EMContact+Helper.m"; sourceTree = "<group>"; };
+		45C0A2042C09C2C100D4833E /* EMRecallMessageInfo+Helper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EMRecallMessageInfo+Helper.h"; sourceTree = "<group>"; };
+		45C0A2062C09C33D00D4833E /* EMRecallMessageInfo+Helper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "EMRecallMessageInfo+Helper.m"; sourceTree = "<group>"; };
 		90319C1F2935FBE3000D01BE /* wrapper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = wrapper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		90319C2A2935FC1E000D01BE /* EMMessageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EMMessageManager.m; sourceTree = "<group>"; };
 		90319C2B2935FC1E000D01BE /* EMChatroom+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "EMChatroom+Helper.m"; sourceTree = "<group>"; };
@@ -237,7 +241,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				45F88D192B81EF2A0051DFEE /* HyphenateChat.framework in Frameworks */,
+				45C0A2032C09A9EE00D4833E /* HyphenateChat.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -390,6 +394,8 @@
 				4578AED42BC2467B00DE8EB3 /* EMMessagePinInfo+Helper.m */,
 				4543E1C62BC2A23700429413 /* Mode.h */,
 				4543E1C72BC2A25000429413 /* Mode.m */,
+				45C0A2042C09C2C100D4833E /* EMRecallMessageInfo+Helper.h */,
+				45C0A2062C09C33D00D4833E /* EMRecallMessageInfo+Helper.m */,
 			);
 			path = helper;
 			sourceTree = "<group>";
@@ -464,6 +470,7 @@
 				90319C842935FC1E000D01BE /* EMBaseManager.h in Headers */,
 				90319C882935FC1E000D01BE /* EMConversationWrapper.h in Headers */,
 				90319CC12935FC1E000D01BE /* EMDeviceConfig+Helper.h in Headers */,
+				45C0A2052C09C2C100D4833E /* EMRecallMessageInfo+Helper.h in Headers */,
 				90319C9B2935FC1E000D01BE /* EMWrapperHelper.h in Headers */,
 				90319D1429373932000D01BE /* wrapper.h in Headers */,
 				90319CCD2935FC1E000D01BE /* EMPresence+Helper.h in Headers */,
@@ -601,6 +608,7 @@
 				90319CBC2935FC1E000D01BE /* EMPresence+Helper.m in Sources */,
 				90319CC92935FC1E000D01BE /* EMChatMessage+Helper.m in Sources */,
 				90319C9F2935FC1E000D01BE /* EMThreadQueue.m in Sources */,
+				45C0A2072C09C33D00D4833E /* EMRecallMessageInfo+Helper.m in Sources */,
 				90319CD42935FC1E000D01BE /* EMWrapperHelper.m in Sources */,
 				90319C952935FC1E000D01BE /* EMRoomManagerWrapper.m in Sources */,
 				90319C972935FC1E000D01BE /* EMConversationWrapper.m in Sources */,
@@ -750,6 +758,7 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = JC854K845H;
 				DYLIB_COMPATIBILITY_VERSION = 1;

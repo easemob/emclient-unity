@@ -3871,5 +3871,51 @@ namespace sdk_wrapper
         }
         writer.EndObject();
     }
+
+    void RecallMessageInfo::ToJsonObject(Writer<StringBuffer>& writer, std::tuple<std::string, std::string, std::string, easemob::EMMessagePtr>& tuple)
+    {
+        writer.StartObject();
+        {
+            writer.Key("recallBy");
+            writer.String(std::get<0>(tuple).c_str());
+
+            writer.Key("recallMessageId");
+            writer.String(std::get<1>(tuple).c_str());
+
+            writer.Key("ext");
+            writer.String(std::get<2>(tuple).c_str());
+
+            easemob::EMMessagePtr msg = nullptr;
+            msg = std::get<3>(tuple);
+
+            if (nullptr != msg && nullptr != msg.get()) {
+                writer.Key("recallMessage");
+                Message::ToJsonObjectWithMessage(writer, msg);
+            }
+        }
+        writer.EndObject();
+    }
+
+    void RecallMessageInfo::ToJsonObjectWithList(Writer<StringBuffer>& writer, const std::vector<std::tuple<std::string, std::string, std::string, easemob::EMMessagePtr>>& vec)
+    {
+        writer.StartArray();
+
+        for (auto it : vec) {
+            ToJsonObject(writer, it);
+        }
+
+        writer.EndArray();
+    }
+
+    string RecallMessageInfo::ToJson(const std::vector<std::tuple<std::string, std::string, std::string, easemob::EMMessagePtr>>& vec)
+    {
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        ToJsonObjectWithList(writer, vec);
+
+        std::string data = s.GetString();
+        return data;
+    }
 }
 

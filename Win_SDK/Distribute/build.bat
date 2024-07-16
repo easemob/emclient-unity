@@ -10,3 +10,5 @@ xcopy /Y ..\..\..\emclient-unity\AgoraChatSDK\AgoraChat\bin\Release\AgoraChat.dl
 xcopy /Y ..\..\..\emclient-unity\AgoraChatSDK\AgoraChat\bin\Release\AgoraChat.dll lib\net472\
 
 Nuget.exe pack agora_chat_sdk.nuspec
+
+backup.bat
