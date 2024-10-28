@@ -112,9 +112,12 @@ namespace AgoraChat
         internal List<int> GetListFromMsgTypes()
         {
             List<int> list = new List<int>();
-            foreach(var it in MsgTypes)
+            if (null != MsgTypes)
             {
-                list.Add(it.ToInt());
+                foreach (var it in MsgTypes)
+                {
+                    list.Add(it.ToInt());
+                }
             }
             return list;
         }
