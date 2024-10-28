@@ -43,7 +43,7 @@ namespace AgoraChat
             CallbackQueue_UnityMode.Instance().Process();
         }
 
-        private void OnApplicationQuit()
+        static bool Quit()
         {
             if (IClient.IsInit)
             {
@@ -52,7 +52,15 @@ namespace AgoraChat
                     SDKClient.Instance.Logout(false);
                 }
                 SDKClient.Instance.ClearResource();
+                IClient.IsInit = false;
             }
+            Debug.Log("Quit...");
+            return true;
+        }
+
+        private void OnApplicationQuit()
+        {
+            Quit();
         }
 
 #if UNITY_EDITOR
@@ -65,20 +73,6 @@ namespace AgoraChat
 
             EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
             EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
-        }
-
-        static bool Quit()
-        {
-            if (IClient.IsInit)
-            {
-                if (SDKClient.Instance.IsLoggedIn)
-                {
-                    SDKClient.Instance.Logout(false);
-                }
-                SDKClient.Instance.ClearResource();
-            }
-            Debug.Log("Quit...");
-            return true;
         }
 
         static void OnPlayModeStateChanged(PlayModeStateChange stateChange)
