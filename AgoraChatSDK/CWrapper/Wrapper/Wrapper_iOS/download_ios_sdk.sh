@@ -1,4 +1,4 @@
-SDKVERISON=4_1_0
+SDKVERISON=4_1_1
 FILE=HyphenateChat.framework
 LOCK=.emlock
 

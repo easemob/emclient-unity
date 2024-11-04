@@ -1,8 +1,12 @@
 ﻿using System.Collections.Generic;
 using AgoraChat.SimpleJSON;
+#if !_WIN32
+using UnityEngine.Scripting;
+#endif
 
 namespace AgoraChat
 {
+    [Preserve]
     public class CursorResult<T> : BaseModel
     {
         /**
@@ -23,13 +27,16 @@ namespace AgoraChat
         */
         public List<T> Data { get; internal set; }
 
+        [Preserve]
         internal CursorResult() { }
 
+        [Preserve]
         internal CursorResult(string jsonString, ItemCallback callback = null)
         {
             this.callback = callback;
         }
 
+        [Preserve]
         internal CursorResult(JSONObject jsonObject, ItemCallback callback = null)
         {
             this.callback = callback;

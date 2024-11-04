@@ -1,7 +1,12 @@
 ﻿using System.Collections.Generic;
 using AgoraChat.SimpleJSON;
+#if !_WIN32
+using UnityEngine.Scripting;
+#endif
+
 namespace AgoraChat
 {
+    [Preserve]
     public class Group : BaseModel
     {
         /**
@@ -276,10 +281,13 @@ namespace AgoraChat
          */
         public string Ext { get; internal set; }
 
+        [Preserve]
         internal Group() { }
 
+        [Preserve]
         internal Group(string jsonString) : base(jsonString) { }
 
+        [Preserve]
         internal Group(JSONObject jsonObject) : base(jsonObject) { }
 
         internal override void FromJsonObject(JSONObject jsonObject)

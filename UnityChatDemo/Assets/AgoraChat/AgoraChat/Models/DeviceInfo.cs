@@ -1,4 +1,8 @@
 ﻿using AgoraChat.SimpleJSON;
+#if !_WIN32
+using UnityEngine.Scripting;
+#endif
+
 namespace AgoraChat
 {
     /**
@@ -8,6 +12,7 @@ namespace AgoraChat
      * \~english
      * The multi-device information class.
      */
+    [Preserve]
     public class DeviceInfo : BaseModel
 
     {
@@ -43,10 +48,13 @@ namespace AgoraChat
          */
         public string DeviceName { get; private set; }
 
+        [Preserve]
         internal DeviceInfo() { }
 
+        [Preserve]
         internal DeviceInfo(string jsonString) : base(jsonString) { }
 
+        [Preserve]
         internal DeviceInfo(JSONObject jsonObject) : base(jsonObject) { }
 
         internal override void FromJsonObject(JSONObject jsonObject)

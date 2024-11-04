@@ -1,14 +1,21 @@
 ﻿using AgoraChat.SimpleJSON;
 using System.Collections.Generic;
-
+#if !_WIN32
+using UnityEngine.Scripting;
+#endif
 
 namespace AgoraChat
 {
+    [Preserve]
     public abstract class IMessageBody : BaseModel
     {
+        [Preserve]
         public IMessageBody() { }
 
+        [Preserve]
         internal IMessageBody(string jsonString) : base(jsonString) { }
+
+        [Preserve]
         internal IMessageBody(JSONObject jsonObject) : base(jsonObject) { }
 
         internal override JSONObject ToJsonObject()
@@ -80,6 +87,7 @@ namespace AgoraChat
          * \~english
          * The text message body.
          */
+        [Preserve]
         public class TextBody : IMessageBody
         {
             /**
@@ -122,18 +130,20 @@ namespace AgoraChat
              * 
              * @param text  The text message body.
              */
+            [Preserve]
             public TextBody(string text)
             {
                 Text = text;
                 Type = MessageBodyType.TXT;
             }
 
+            [Preserve]
             internal TextBody()
             {
                 Type = MessageBodyType.TXT;
             }
 
-
+            [Preserve]
             internal TextBody(JSONObject jsonObject) : base(jsonObject)
             {
                 Type = MessageBodyType.TXT;
@@ -166,6 +176,7 @@ namespace AgoraChat
          * \~english
          * The location message body.
          */
+        [Preserve]
         public class LocationBody : IMessageBody
         {
             /**
@@ -212,6 +223,7 @@ namespace AgoraChat
              * @param address The address.
              * @param buildName The building name.
              */
+            [Preserve]
             public LocationBody(double latitude, double longitude, string address = "", string buildName = "")
             {
                 Latitude = latitude;
@@ -221,16 +233,19 @@ namespace AgoraChat
                 Type = MessageBodyType.LOCATION;
             }
 
+            [Preserve]
             internal LocationBody()
             {
                 Type = MessageBodyType.LOCATION;
             }
 
+            [Preserve]
             internal LocationBody(string jsonString) : base(jsonString)
             {
                 Type = MessageBodyType.LOCATION;
             }
 
+            [Preserve]
             internal LocationBody(JSONObject jsonObject) : base(jsonObject)
             {
                 Type = MessageBodyType.LOCATION;
@@ -265,6 +280,7 @@ namespace AgoraChat
          * \~english
          * The file message body.
          */
+        [Preserve]
         public class FileBody : IMessageBody
         {
             /**
@@ -336,6 +352,7 @@ namespace AgoraChat
              * @param displayName   The display name of the file.
              * @param fileSize      The file size in bytes.
              */
+            [Preserve]
             public FileBody(string localPath, string displayName = "", long fileSize = 0)
             {
                 LocalPath = localPath;
@@ -344,15 +361,19 @@ namespace AgoraChat
                 Type = MessageBodyType.FILE;
             }
 
+            [Preserve]
             internal FileBody()
             {
                 Type = MessageBodyType.FILE;
             }
 
+            [Preserve]
             internal FileBody(string json) : base(json)
             {
                 Type = MessageBodyType.FILE;
             }
+
+            [Preserve]
             internal FileBody(JSONObject jo) : base(jo)
             {
                 Type = MessageBodyType.FILE;
@@ -391,6 +412,7 @@ namespace AgoraChat
          * \~english
          * The image message body.
          */
+        [Preserve]
         public class ImageBody : FileBody
         {
             /**
@@ -474,6 +496,7 @@ namespace AgoraChat
              * @param Height        The image height in pixels.
              * 
              */
+            [Preserve]
             public ImageBody(string localPath, string displayName, long fileSize = 0, bool original = false, double width = 0, double height = 0) : base(localPath, displayName, fileSize)
             {
                 Original = original;
@@ -482,16 +505,19 @@ namespace AgoraChat
                 Type = MessageBodyType.IMAGE;
             }
 
-
+            [Preserve]
             internal ImageBody()
             {
                 Type = MessageBodyType.IMAGE;
             }
 
+            [Preserve]
             internal ImageBody(string json) : base(json)
             {
                 Type = MessageBodyType.IMAGE;
             }
+
+            [Preserve]
             internal ImageBody(JSONObject jo) : base(jo)
             {
                 Type = MessageBodyType.IMAGE;
@@ -533,6 +559,8 @@ namespace AgoraChat
          * \~english
          * The voice message body.
          */
+
+        [Preserve]
         public class VoiceBody : FileBody
         {
             /**
@@ -561,21 +589,26 @@ namespace AgoraChat
              * @param fileSize      The size of the voice file, in bytes.
              * 
              */
+            [Preserve]
             public VoiceBody(string localPath, string displayName, int duration, long fileSize = 0) : base(localPath, displayName, fileSize)
             {
                 Duration = duration;
                 Type = MessageBodyType.VOICE;
             }
 
+            [Preserve]
             internal VoiceBody()
             {
                 Type = MessageBodyType.VOICE;
             }
 
+            [Preserve]
             internal VoiceBody(string json) : base(json)
             {
                 Type = MessageBodyType.VOICE;
             }
+
+            [Preserve]
             internal VoiceBody(JSONObject jo) : base(jo)
             {
                 Type = MessageBodyType.VOICE;
@@ -605,6 +638,7 @@ namespace AgoraChat
          * \~english
          * The video message body.
          */
+        [Preserve]
         public class VideoBody : FileBody
         {
             /**
@@ -685,6 +719,7 @@ namespace AgoraChat
              * @param Height        The video height in pixels.
              * 
              */
+            [Preserve]
             public VideoBody(string localPath, string displayName, int duration, long fileSize = 0, string thumbnailLocalPath = "", double width = 0, double height = 0) : base(localPath, displayName, fileSize)
             {
                 Duration = duration;
@@ -694,15 +729,19 @@ namespace AgoraChat
                 Type = MessageBodyType.VIDEO;
             }
 
+            [Preserve]
             internal VideoBody()
             {
                 Type = MessageBodyType.VIDEO;
             }
 
+            [Preserve]
             internal VideoBody(string json) : base(json)
             {
                 Type = MessageBodyType.VIDEO;
             }
+
+            [Preserve]
             internal VideoBody(JSONObject jo) : base(jo)
             {
                 Type = MessageBodyType.VIDEO;
@@ -744,6 +783,7 @@ namespace AgoraChat
          * \~english
          * The command message body.
          */
+        [Preserve]
         public class CmdBody : IMessageBody
         {
             /**
@@ -782,6 +822,7 @@ namespace AgoraChat
              *                              - (Default) `false`: No. The command message is delivered to users, regardless of their online or offline status.
              * 
              */
+            [Preserve]
             public CmdBody(string action, bool deliverOnlineOnly = false)
             {
                 Action = action;
@@ -789,15 +830,19 @@ namespace AgoraChat
                 Type = MessageBodyType.CMD;
             }
 
+            [Preserve]
             internal CmdBody()
             {
                 Type = MessageBodyType.CMD;
             }
 
+            [Preserve]
             internal CmdBody(string json) : base(json)
             {
                 Type = MessageBodyType.CMD;
             }
+
+            [Preserve]
             internal CmdBody(JSONObject jo) : base(jo)
             {
                 Type = MessageBodyType.CMD;
@@ -829,6 +874,7 @@ namespace AgoraChat
          * \~english
          * The custom message body.
          */
+        [Preserve]
         public class CustomBody : IMessageBody
         {
             /**
@@ -863,6 +909,7 @@ namespace AgoraChat
              * @param customParams     The custom params map.
              * 
              */
+            [Preserve]
             public CustomBody(string customEvent, Dictionary<string, string> customParams = null)
             {
                 CustomEvent = customEvent;
@@ -870,15 +917,19 @@ namespace AgoraChat
                 Type = MessageBodyType.CUSTOM;
             }
 
+            [Preserve]
             internal CustomBody()
             {
                 Type = MessageBodyType.CUSTOM;
             }
 
+            [Preserve]
             internal CustomBody(string json) : base(json)
             {
                 Type = MessageBodyType.CUSTOM;
             }
+
+            [Preserve]
             internal CustomBody(JSONObject jo) : base(jo)
             {
                 Type = MessageBodyType.CUSTOM;
@@ -909,6 +960,7 @@ namespace AgoraChat
          * \~english
          * The body of the combined message.
          */
+        [Preserve]
         public class CombineBody : IMessageBody
         {
             /**
@@ -968,6 +1020,7 @@ namespace AgoraChat
              * @param messageList       The list of IDs of original messages included in the combined message.
              *
              */
+            [Preserve]
             public CombineBody(string title, string summary, string compatibleText, List<string> messageList)
             {
                 Type = MessageBodyType.COMBINE;
@@ -978,15 +1031,19 @@ namespace AgoraChat
                 MessageList = messageList;
             }
 
+            [Preserve]
             internal CombineBody()
             {
                 Type = MessageBodyType.COMBINE;
             }
 
+            [Preserve]
             internal CombineBody(string json) : base(json)
             {
                 Type = MessageBodyType.COMBINE;
             }
+
+            [Preserve]
             internal CombineBody(JSONObject jo) : base(jo)
             {
                 Type = MessageBodyType.COMBINE;

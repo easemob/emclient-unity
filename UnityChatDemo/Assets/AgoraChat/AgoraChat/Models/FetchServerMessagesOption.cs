@@ -1,5 +1,9 @@
 ﻿using System.Collections.Generic;
 using AgoraChat.SimpleJSON;
+#if !_WIN32
+using UnityEngine.Scripting;
+#endif
+
 namespace AgoraChat
 {
     /**
@@ -9,6 +13,7 @@ namespace AgoraChat
      *  \~english
      *  The parameter configuration class for pulling historical messages from the server.
      */
+    [Preserve]
     public class FetchServerMessagesOption : BaseModel
     {
         /**
@@ -93,10 +98,13 @@ namespace AgoraChat
          */
         public long EndTime = -1;
 
+        [Preserve]
         public FetchServerMessagesOption() { }
 
+        [Preserve]
         internal FetchServerMessagesOption(string jsonString) : base(jsonString) { }
 
+        [Preserve]
         internal FetchServerMessagesOption(JSONObject jsonObject) : base(jsonObject) { }
 
         internal override void FromJsonObject(JSONObject jsonObject) { }
@@ -104,9 +112,12 @@ namespace AgoraChat
         internal List<int> GetListFromMsgTypes()
         {
             List<int> list = new List<int>();
-            foreach(var it in MsgTypes)
+            if (null != MsgTypes)
             {
-                list.Add(it.ToInt());
+                foreach (var it in MsgTypes)
+                {
+                    list.Add(it.ToInt());
+                }
             }
             return list;
         }

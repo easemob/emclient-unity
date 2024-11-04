@@ -43,7 +43,7 @@ namespace AgoraChat
             CallbackQueue_UnityMode.Instance().Process();
         }
 
-        private void OnApplicationQuit()
+        static bool Quit()
         {
             if (IClient.IsInit)
             {
@@ -52,7 +52,15 @@ namespace AgoraChat
                     SDKClient.Instance.Logout(false);
                 }
                 SDKClient.Instance.ClearResource();
+                IClient.IsInit = false;
             }
+            Debug.Log("Quit...");
+            return true;
+        }
+
+        private void OnApplicationQuit()
+        {
+            Quit();
         }
 
 #if UNITY_EDITOR
@@ -67,32 +75,20 @@ namespace AgoraChat
             EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
         }
 
-        static bool Quit()
-        {
-            if (IClient.IsInit)
-            {
-                if (SDKClient.Instance.IsLoggedIn)
-                {
-                    SDKClient.Instance.Logout(false);
-                }
-                SDKClient.Instance.ClearResource();
-            }
-            Debug.Log("Quit...");
-            return true;
-        }
-
         static void OnPlayModeStateChanged(PlayModeStateChange stateChange)
         {
             switch (stateChange)
             {
                 case (PlayModeStateChange.EnteredPlayMode):
                     {
+                        Instance();
                         EditorApplication.LockReloadAssemblies();
                         Debug.Log("Assembly Reload locked as entering play mode");
                         break;
                     }
                 case (PlayModeStateChange.ExitingPlayMode):
                     {
+                        instance = null;
                         Debug.Log("Assembly Reload unlocked as exiting play mode");
                         EditorApplication.UnlockReloadAssemblies();
                         break;
@@ -100,6 +96,14 @@ namespace AgoraChat
             }
         }
 #endif
+    }
+#endif
+
+#if _WIN32
+    [AttributeUsage(AttributeTargets.All, Inherited = false, AllowMultiple = true)]
+    public class PreserveAttribute : Attribute
+    {
+        // Empty attribute
     }
 #endif
 }

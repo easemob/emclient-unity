@@ -1,7 +1,11 @@
 ﻿using AgoraChat.SimpleJSON;
+#if !_WIN32
+using UnityEngine.Scripting;
+#endif
 
 namespace AgoraChat
 {
+    [Preserve]
     public class ChatThread : BaseModel
     {
         /**
@@ -138,10 +142,13 @@ namespace AgoraChat
          */
         public Message LastMessage;
 
+        [Preserve]
         internal ChatThread() { }
 
+        [Preserve]
         internal ChatThread(string jsonString) : base(jsonString) { }
 
+        [Preserve]
         internal ChatThread(JSONObject jsonObject) : base(jsonObject) { }
 
         internal override void FromJsonObject(JSONObject jsonObject)

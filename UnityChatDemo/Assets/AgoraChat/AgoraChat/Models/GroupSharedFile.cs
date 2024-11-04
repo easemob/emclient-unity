@@ -1,4 +1,8 @@
 ﻿using AgoraChat.SimpleJSON;
+#if !_WIN32
+using UnityEngine.Scripting;
+#endif
+
 namespace AgoraChat
 {
     /**
@@ -13,6 +17,7 @@ namespace AgoraChat
     * For example, you can get information about a group shared file by using {@link IGroupManager#GetGroupFileListFromServer(String, int, int, ValueCallBack)}.
     * 
     */
+    [Preserve]
     public class GroupSharedFile : BaseModel
     {
         /**
@@ -60,10 +65,13 @@ namespace AgoraChat
          */
         public long FileSize { get; internal set; }
 
+        [Preserve]
         internal GroupSharedFile() { }
 
+        [Preserve]
         internal GroupSharedFile(string jsonString) : base(jsonString) { }
 
+        [Preserve]
         internal GroupSharedFile(JSONObject jsonObject) : base(jsonObject) { }
 
         internal override void FromJsonObject(JSONObject jsonObject)

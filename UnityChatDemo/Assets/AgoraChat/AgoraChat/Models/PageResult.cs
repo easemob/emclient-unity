@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 using AgoraChat.SimpleJSON;
+#if !_WIN32
+using UnityEngine.Scripting;
+#endif
 
 namespace AgoraChat
 {
@@ -22,6 +25,7 @@ namespace AgoraChat
          * 
          * @param <T> The generic <T> type.
          */
+    [Preserve]
     public class PageResult<T> : BaseModel
     {
         /**
@@ -47,13 +51,16 @@ namespace AgoraChat
         */
         public List<T> Data { get; internal set; }
 
+        [Preserve]
         internal PageResult() { }
 
+        [Preserve]
         internal PageResult(string jsonString, ItemCallback callback = null)
         {
             this.callback = callback;
         }
 
+        [Preserve]
         internal PageResult(JSONObject josnObject, ItemCallback callback = null)
         {
             this.callback = callback;

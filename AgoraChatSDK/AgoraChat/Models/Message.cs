@@ -1,9 +1,13 @@
 ﻿using AgoraChat.SimpleJSON;
 using System;
 using System.Collections.Generic;
+#if !_WIN32
+using UnityEngine.Scripting;
+#endif
 
 namespace AgoraChat
 {
+    [Preserve]
     public class Message : BaseModel
     {
         /**
@@ -771,10 +775,13 @@ namespace AgoraChat
             return GetAttributeValue<T>(value, out found);
         }
 
+        [Preserve]
         internal Message() { }
 
+        [Preserve]
         internal Message(string jsonString) : base(jsonString) { }
 
+        [Preserve]
         internal Message(JSONObject jsonObject) : base(jsonObject) { }
 
         internal override void FromJsonObject(JSONObject jn)
