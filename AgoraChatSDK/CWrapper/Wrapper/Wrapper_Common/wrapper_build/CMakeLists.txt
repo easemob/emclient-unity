@@ -497,13 +497,19 @@ endif()
 
 target_link_libraries(${CommonWrapper} PRIVATE ${SdkWrapper})
 
-# 添加目标 ChatCWrapper
-add_library(${ChatCWrapper} MODULE 
+set(CHATCWRAPPER_SRC
     ${EMCLIENT_UNITY_PATH}/AgoraChatSDK/CWrapper/CWrapper/include/Api_decorator.h
     ${EMCLIENT_UNITY_PATH}/AgoraChatSDK/CWrapper/CWrapper/include/CWrapper.h
     ${EMCLIENT_UNITY_PATH}/AgoraChatSDK/CWrapper/CWrapper/include/CWrapper_import.h
     ${EMCLIENT_UNITY_PATH}/AgoraChatSDK/CWrapper/CWrapper/src/CWrapper.cpp
 )
+
+# 添加目标 ChatCWrapper
+if(APPLE)
+	add_library(${ChatCWrapper} MODULE ${CHATCWRAPPER_SRC})
+else()
+	add_library(${ChatCWrapper} SHARED ${CHATCWRAPPER_SRC})
+endif()
 
 target_compile_definitions(${ChatCWrapper} PRIVATE AGORACHAT_EXPORT)
 
@@ -544,7 +550,7 @@ if(APPLE)
     		COMMAND ${CMAKE_COMMAND} -E env
         	RESOURCE_FILES="${RESOURCE_FILES}"
         	TARGET_BUNDLE_DIR=$<TARGET_BUNDLE_DIR:ChatCWrapper>
-		EMCLIENT_LINUX_ABSOLUTE_PATH="${EMCLIENT_LINUX_ABSOLUTE_PATH}"
+        	EMCLIENT_LINUX_ABSOLUTE_PATH="${EMCLIENT_LINUX_ABSOLUTE_PATH}"
         	${CMAKE_COMMAND} -P ${CMAKE_SOURCE_DIR}/copy_resources.cmake
     		COMMENT "Processing and copying resources"
 	)
