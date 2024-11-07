@@ -159,3 +159,6 @@ UnityChatDemo/Assets/AgoraChat/Plugins
 /**/build_info
 /**/build_*
 /**/*.emlock
+
+# CMake files
+AgoraChatSDK/CWrapper/Wrapper/Wrapper_Common/wrapper_build/proj
