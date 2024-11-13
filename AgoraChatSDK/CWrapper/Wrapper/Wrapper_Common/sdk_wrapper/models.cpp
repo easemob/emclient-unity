@@ -3872,21 +3872,23 @@ namespace sdk_wrapper
         writer.EndObject();
     }
 
-    void RecallMessageInfo::ToJsonObject(Writer<StringBuffer>& writer, std::tuple<std::string, std::string, std::string, easemob::EMMessagePtr>& tuple)
+    void RecallMessageInfo::ToJsonObject(Writer<StringBuffer>& writer, EMChatManagerListener::EMRecallMessage& recallMessage)
     {
         writer.StartObject();
         {
             writer.Key("recallBy");
-            writer.String(std::get<0>(tuple).c_str());
+            writer.String(std::get<0>(recallMessage).c_str());
 
             writer.Key("recallMessageId");
-            writer.String(std::get<1>(tuple).c_str());
+            writer.String(std::get<1>(recallMessage).c_str());
 
             writer.Key("ext");
-            writer.String(std::get<2>(tuple).c_str());
+            writer.String(std::get<2>(recallMessage).c_str());
 
             easemob::EMMessagePtr msg = nullptr;
-            msg = std::get<3>(tuple);
+            msg = std::get<3>(recallMessage);
+
+            //TODO: need to pick conversationId from recallMessage!!
 
             if (nullptr != msg && nullptr != msg.get()) {
                 writer.Key("recallMessage");
@@ -3896,7 +3898,7 @@ namespace sdk_wrapper
         writer.EndObject();
     }
 
-    void RecallMessageInfo::ToJsonObjectWithList(Writer<StringBuffer>& writer, const std::vector<std::tuple<std::string, std::string, std::string, easemob::EMMessagePtr>>& vec)
+    void RecallMessageInfo::ToJsonObjectWithList(Writer<StringBuffer>& writer, const std::vector<EMChatManagerListener::EMRecallMessage>& vec)
     {
         writer.StartArray();
 
@@ -3907,7 +3909,7 @@ namespace sdk_wrapper
         writer.EndArray();
     }
 
-    string RecallMessageInfo::ToJson(const std::vector<std::tuple<std::string, std::string, std::string, easemob::EMMessagePtr>>& vec)
+    string RecallMessageInfo::ToJson(const std::vector<EMChatManagerListener::EMRecallMessage>& vec)
     {
         StringBuffer s;
         Writer<StringBuffer> writer(s);

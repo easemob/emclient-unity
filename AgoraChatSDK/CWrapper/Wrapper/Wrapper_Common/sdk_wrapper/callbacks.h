@@ -118,7 +118,7 @@ namespace sdk_wrapper {
                 CallBack(STRING_CHATMANAGER_LISTENER.c_str(), STRING_onMessagesDelivered.c_str(), json.c_str());
         }
 
-        void onReceiveRecallMessages(const std::vector<std::tuple<std::string, std::string, std::string, easemob::EMMessagePtr>>& list) override {
+        void onReceiveRecallMessages(const std::vector<EMRecallMessage>& list) override {
             if (list.size() > 0) {
                 string json = RecallMessageInfo::ToJson(list);
                 if (json.size() > 0)
@@ -793,13 +793,15 @@ namespace sdk_wrapper {
     {
     public:
 
-        void  onMemberJoinedChatroom(const EMChatroomPtr chatroom, const std::string& member) override {
+        void  onMemberJoinedChatroom(const EMChatroomPtr chatroom, const std::string& member, const std::string& ext) override {
             JSON_STARTOBJ
             writer.Key("roomId");
             writer.String(chatroom->chatroomId().c_str());
 
             writer.Key("userId");
             writer.String(member.c_str());
+
+            //TODO: need to add ext into json!!!
 
             JSON_ENDOBJ
 
