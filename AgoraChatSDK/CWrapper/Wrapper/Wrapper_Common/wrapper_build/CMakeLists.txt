@@ -154,7 +154,7 @@ else()
 			${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/boringssl_1.1.1f_share_universal/include
 			${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/curl_7.80.0_share_universal_boringssl/include
 			${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/sqlcipher_4.4.3_share_universal_boringssl/include
-			${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/libzip_1.11.2_share_universal_boringssl/include
+			${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/libzip_1.11.2_share_universal/include
 		)
 endif()
 
@@ -219,7 +219,7 @@ else()
 	find_library(agora_edge_allocator_static NAMES agora_edge_allocator_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/facility_static_universal-0.0.60.7/lib)
 	find_library(agora_generic_report_static NAMES agora_generic_report_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/facility_static_universal-0.0.60.7/lib)
 	find_library(libaosl_chat NAMES aosl PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/aosl_1.2.2_release)
-	find_library(libzip NAMES zip PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/libzip_1.11.2_share_universal/lib)
+	find_library(libzip NAMES zip.5 PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/libzip_1.11.2_share_universal/lib)
 	message(STATUS "Found libz.tbd: ${libz_tbd}")
 	message(STATUS "Found Security.framework: ${security_framework}")
 	message(STATUS "Found Foundation.framework: ${foundation_framework}")
