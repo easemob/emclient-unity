@@ -55,10 +55,18 @@ if(MSVC)
     # MultiThreadedDebugDLL 对应 /MDd
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")
 
+    # 获取BUILD_NO
+    execute_process(
+        COMMAND powershell -Command "[int64][double]::Parse((Get-Date -Date (Get-Date).ToUniversalTime() -UFormat %s))"
+        OUTPUT_VARIABLE BUILD_NO
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+
     add_definitions(
 		-D_WIN32
 		-DCONFIG_WINDOWS
 		-DWIN32_LEAN_AND_MEAN
+		-DBUILD_NO=${BUILD_NO}
     )
     
     # 设置全局编译选项
@@ -79,13 +87,23 @@ else()
     # 非 MSVC 编译选项（假设是 GCC 或 Clang）
 	set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
 
+    # 获取BUILD_NO
+    execute_process(
+        COMMAND date +%s
+        OUTPUT_VARIABLE BUILD_NO
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+
     add_compile_options(
         -Wall
         -fPIC
         -Os
     )
 
-    add_definitions(-DTARGET_OS_OSX)
+    add_definitions(
+		-DTARGET_OS_OSX
+		-DBUILD_NO=${BUILD_NO}
+	)
 
     set(CMAKE_XCODE_ATTRIBUTE_DEBUG_INFORMATION_FORMAT "dwarf-with-dsym")
     set(CMAKE_XCODE_ATTRIBUTE_STRIP_INSTALLED_PRODUCT "No")
