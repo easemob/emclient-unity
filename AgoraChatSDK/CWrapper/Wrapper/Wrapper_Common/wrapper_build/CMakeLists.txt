@@ -150,6 +150,7 @@ if(CMAKE_GENERATOR MATCHES "Visual Studio")
     if(CMAKE_GENERATOR_PLATFORM STREQUAL "Win32")
 				include_directories(
 					${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/libevent-2.1.10-stable-x86-static-mt/include
+					${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/zlib_1.2.11-x86-static-mt/include
 					${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/boringssl-1.1.1f-x86-static-mt/include
 					${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/curl_7.80.0-x86-static-md/include
 					${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/sqlcipher_4.4.3-x86-static-mt-boringssl/include
@@ -159,6 +160,7 @@ if(CMAKE_GENERATOR MATCHES "Visual Studio")
     elseif(CMAKE_GENERATOR_PLATFORM STREQUAL "x64" OR CMAKE_GENERATOR_PLATFORM STREQUAL "")
 				include_directories(
 					${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/libevent-2.1.10-stable-x64-static-mt/include
+					${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/zlib_1.2.11-x64-static-mt/include
 					${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/boringssl-1.1.1f-x64-static-mt/include
 					${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/curl_7.80.0-x64-static-md/include
 					${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/sqlcipher_4.4.3-x64-static-mt-boringssl/include
@@ -169,6 +171,7 @@ if(CMAKE_GENERATOR MATCHES "Visual Studio")
 else()
 		include_directories(
 			${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/libevent_2.1.10_share_universal/include
+			${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/libzip_1.11.2_share_universal/include
 			${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/boringssl_1.1.1f_share_universal/include
 			${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/curl_7.80.0_share_universal_boringssl/include
 			${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/sqlcipher_4.4.3_share_universal_boringssl/include
