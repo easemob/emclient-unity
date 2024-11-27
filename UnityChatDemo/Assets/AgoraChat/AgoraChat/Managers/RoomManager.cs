@@ -382,21 +382,24 @@ namespace AgoraChat
 		 *
 		 * 异步方法。
 		 *
-		 * @param roomId	聊天室 ID。
-		 * @param callback	操作结果回调，返回聊天室信息或错误描述，详见 {@link ValueCallBack}。
+		 * @param roomId        聊天室 ID。
+		 * @param fetchMembers  布尔类型，是否获取成员列表。
+		 * @param callback      操作结果回调，返回聊天室信息或错误描述，详见 {@link ValueCallBack}。
 		 *
 		 * \~english
 		 * Gets details of a chat room from the server, excluding the member list by default.
 		 *
 		 * This is an asynchronous method.
 		 *
-		 * @param roomId	The chat room ID.
-		 * @param callback	The operation callback. If success, the chat room instance is returned; otherwise, an error is returned. See {@link ValueCallBack}.
+		 * @param roomId        The chat room ID.
+		 * @param fetchMembers  Bool type, fetch member list or not.
+		 * @param callback      The operation callback. If success, the chat room instance is returned; otherwise, an error is returned. See {@link ValueCallBack}.
 		 */
-        public void FetchRoomInfoFromServer(string roomId, ValueCallBack<Room> callback = null)
+        public void FetchRoomInfoFromServer(string roomId, bool fetchMembers = false, ValueCallBack<Room> callback = null)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("roomId", roomId);
+            jo_param.AddWithoutNull("fetchMembers", fetchMembers);
 
             Process process = (_, jsonNode) =>
             {

@@ -346,10 +346,11 @@ namespace sdk_wrapper {
 
         Document d; d.Parse(jstr);
         string room_id = GetJsonValue_String(d, "roomId", "");
+        bool fetchMembers = GetJsonValue_Bool(d, "fetchMembers", false);
 
         thread t([=]() {
             EMError error;
-            EMChatroomPtr result = CLIENT->getChatroomManager().fetchChatroomSpecification(room_id, error, false);
+            EMChatroomPtr result = CLIENT->getChatroomManager().fetchChatroomSpecification(room_id, error, fetchMembers);
 
             if (EMError::EM_NO_ERROR == error.mErrorCode) {
 
