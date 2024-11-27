@@ -18,7 +18,6 @@ EMConnectionCallbackListener* gConnectionCallbackListener = nullptr;
 EMChatConfigsPtr configs = nullptr;
 
 NativeListenerEvent gCallback = nullptr;
-static bool NeedAllocResource = false;
 
 string MY_APPKEY = "appkey";
 
@@ -124,10 +123,7 @@ namespace sdk_wrapper
 
         if (nullptr != gClient) {
 
-            if (NeedAllocResource) {
-                gClient->allocResource();
-                NeedAllocResource = false;
-            }
+            gClient->allocResource();
 
             appkeyInMem = gClient->getChatConfigs()->getAppKey();
             ResetAppKey(appkeyInMem, appkeyNew);
@@ -528,12 +524,7 @@ namespace sdk_wrapper
     {
         if (!CheckClientInitOrNot(nullptr)) return nullptr;
 
-        /*if (CLIENT->isLoggedIn()) {
-            return nullptr;
-        }*/
-
         CLIENT->clearResource();
-        NeedAllocResource = true;
 
         // clear all listeners when replay, need remove?
         //Client_RemoveListener();

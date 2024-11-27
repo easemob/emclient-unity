@@ -446,7 +446,10 @@
     EMConversationType type = (EMConversationType)[param[@"convType"] intValue];
     NSString *cursor = param[@"cursor"];
     int pageSize = [param[@"pageSize"] intValue];
-    EMFetchServerMessagesOption *options = [EMFetchServerMessagesOption fromJson:param[@"options"]];
+    EMFetchServerMessagesOption *options = nil;
+    if (param[@"options"] != [NSNull null] && param[@"options"] != nil) {
+        options = [EMFetchServerMessagesOption fromJson:param[@"options"]];
+    }
     [EMClient.sharedClient.chatManager fetchMessagesFromServerBy:conversationId conversationType:type cursor:cursor pageSize:pageSize option:options completion:^(EMCursorResult<EMChatMessage *> * _Nullable aResult, EMError * _Nullable aError) {
         [weakSelf wrapperCallback:callback error:aError object:[aResult toJson]];
     }];

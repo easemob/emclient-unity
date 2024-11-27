@@ -1551,9 +1551,9 @@ namespace sdk_wrapper
             msg->setLocalTime(i);
         }
 
-        if (jnode.HasMember("serverTime") && jnode["serverTime"].IsString()) {
-            int64_t i = jnode["serverTime"].GetInt64();;
-            msg->setTimestamp(i);
+        if (jnode.HasMember("serverTime") && jnode["serverTime"].IsInt64()) {
+            int64_t i = jnode["serverTime"].GetInt64();
+            if (i > 0) msg->setTimestamp(i); // serverTime cannot be zero!
         }
 
         if (jnode.HasMember("isThread") && jnode["isThread"].IsBool()) {
