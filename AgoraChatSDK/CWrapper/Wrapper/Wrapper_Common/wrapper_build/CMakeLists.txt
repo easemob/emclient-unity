@@ -28,8 +28,8 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-message("CMAKE_RUNTIME_OUTPUT_DIRECTORY: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
-message("CMAKE_LIBRARY_OUTPUT_DIRECTORY: ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
+#message("CMAKE_RUNTIME_OUTPUT_DIRECTORY: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+#message("CMAKE_LIBRARY_OUTPUT_DIRECTORY: ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
 
 # 设置公共定义
 add_definitions(
@@ -40,6 +40,9 @@ add_definitions(
     -D_ITERATOR_DEBUG_LEVEL=0
     -DUNICODE
     -D_UNICODE
+    -DMEDIA_SERVER_LIBRARY_SDK
+    -DMEDIA_SERVER_LIBRARY_NGSDK
+    -DMEDIA_SERVER_LIBRARY_EMPTY_LOG
 )
 
 if(MSVC)
@@ -52,7 +55,19 @@ if(MSVC)
     # MultiThreadedDebugDLL 对应 /MDd
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")
 
-    add_definitions(-D_WIN32)
+    # 获取BUILD_NO
+    execute_process(
+        COMMAND powershell -Command "[int64][double]::Parse((Get-Date -Date (Get-Date).ToUniversalTime() -UFormat %s))"
+        OUTPUT_VARIABLE BUILD_NO
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+
+    add_definitions(
+		-D_WIN32
+		-DCONFIG_WINDOWS
+		-DWIN32_LEAN_AND_MEAN
+		-DBUILD_NO=${BUILD_NO}
+    )
     
     # 设置全局编译选项
     add_compile_options(
@@ -72,13 +87,23 @@ else()
     # 非 MSVC 编译选项（假设是 GCC 或 Clang）
 	set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
 
+    # 获取BUILD_NO
+    execute_process(
+        COMMAND date +%s
+        OUTPUT_VARIABLE BUILD_NO
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+
     add_compile_options(
         -Wall
         -fPIC
         -Os
     )
 
-    add_definitions(-DTARGET_OS_OSX)
+    add_definitions(
+		-DTARGET_OS_OSX
+		-DBUILD_NO=${BUILD_NO}
+	)
 
     set(CMAKE_XCODE_ATTRIBUTE_DEBUG_INFORMATION_FORMAT "dwarf-with-dsym")
     set(CMAKE_XCODE_ATTRIBUTE_STRIP_INSTALLED_PRODUCT "No")
@@ -108,6 +133,7 @@ include_directories(
     ${EMCLIENT_LINUX_PATH}/include
     ${EMCLIENT_LINUX_PATH}/internal/include
     ${EMCLIENT_LINUX_PATH}/3rd_party/protobuf
+    ${EMCLIENT_LINUX_PATH}/3rd_party/aosl
     ${EMCLIENT_LINUX_PATH}/3rd_party/rapidjson/include
     ${EMCLIENT_LINUX_PATH}/3rd_party/facility/include
     ${EMCLIENT_LINUX_PATH}/3rd_party/curlcpp/include
@@ -115,6 +141,7 @@ include_directories(
     ${EMCLIENT_LINUX_PATH}/3rd_party/facility/include/agora_facilities/internal
     ${EMCLIENT_LINUX_PATH}/3rd_party/facility/include/agora_facilities/inc
     ${EMCLIENT_LINUX_PATH}/3rd_party/facility/include/agora_utils/inc
+    ${EMCLIENT_LINUX_PATH}/3rd_party/facility/include/aut
 )
 
 # 设置平台区分包含目录
@@ -122,27 +149,30 @@ if(CMAKE_GENERATOR MATCHES "Visual Studio")
 
     if(CMAKE_GENERATOR_PLATFORM STREQUAL "Win32")
 				include_directories(
-				    ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/libevent-2.1.10-stable-x86-static-mt/include
-				    ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/boringssl-1.1.1f-x86-static-mt/include
-				    ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/curl_7.80.0-x86-static-md/include
-				    ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/sqlcipher_4.4.3-x86-static-mt-boringssl/include
+					${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/libevent-2.1.10-stable-x86-static-mt/include
+					${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/boringssl-1.1.1f-x86-static-mt/include
+					${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/curl_7.80.0-x86-static-md/include
+					${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/sqlcipher_4.4.3-x86-static-mt-boringssl/include
+					${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/libzip_1.11.2-x86-static-mt/include
 				)
 
     elseif(CMAKE_GENERATOR_PLATFORM STREQUAL "x64" OR CMAKE_GENERATOR_PLATFORM STREQUAL "")
 				include_directories(
-				    ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/libevent-2.1.10-stable-x64-static-mt/include
-				    ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/boringssl-1.1.1f-x64-static-mt/include
-				    ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/curl_7.80.0-x64-static-md/include
-				    ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/sqlcipher_4.4.3-x64-static-mt-boringssl/include
+					${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/libevent-2.1.10-stable-x64-static-mt/include
+					${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/boringssl-1.1.1f-x64-static-mt/include
+					${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/curl_7.80.0-x64-static-md/include
+					${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/sqlcipher_4.4.3-x64-static-mt-boringssl/include
+					${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/libzip_1.11.2-x64-static-mt/include
 				)
     endif()
 
 else()
 		include_directories(
-		    ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/libevent_2.1.10_share_universal/include
-		    ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/boringssl_1.1.1f_share_universal/include
-		    ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/curl_7.80.0_share_universal_boringssl/include
-		    ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/sqlcipher_4.4.3_share_universal_boringssl/include
+			${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/libevent_2.1.10_share_universal/include
+			${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/boringssl_1.1.1f_share_universal/include
+			${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/curl_7.80.0_share_universal_boringssl/include
+			${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/sqlcipher_4.4.3_share_universal_boringssl/include
+			${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/libzip_1.11.2_share_universal/include
 		)
 endif()
 
@@ -150,69 +180,68 @@ endif()
 if(CMAKE_GENERATOR MATCHES "Visual Studio")
 
     if(CMAKE_GENERATOR_PLATFORM STREQUAL "Win32")
-        find_library(libcrypto NAMES libcrypto PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/boringssl-1.1.1f-x86-static-mt/lib)
-        find_library(libssl NAMES libssl PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/boringssl-1.1.1f-x86-static-mt/lib)
-        find_library(zlib NAMES zlib PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/zlib_1.2.11-x86-static-mt/lib)
-        find_library(libcurl NAMES libcurl PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/curl_7.80.0-x86-static-md/lib)
-        find_library(libsqlcipher NAMES libsqlcipher PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/sqlcipher_4.4.3-x86-static-mt-boringssl/lib)
-        find_library(libevent_openssl NAMES libevent_openssl PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/libevent-2.1.10-stable-x86-static-mt/lib)
-        find_library(libevent_core NAMES libevent_core PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/libevent-2.1.10-stable-x86-static-mt/lib)
-        find_library(libevent_extra NAMES libevent_extra PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/libevent-2.1.10-stable-x86-static-mt/lib)
-        find_library(libevent NAMES libevent PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/libevent-2.1.10-stable-x86-static-mt/lib)
-        find_library(agora_utils_static NAMES agora_utils_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/facility-x86-static-mt-0.0.60.3/lib)
-        find_library(agora_transport_static NAMES agora_transport_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/facility-x86-static-mt-0.0.60.3/lib)
-        find_library(agora_ap_static NAMES agora_ap_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/facility-x86-static-mt-0.0.60.3/lib)
-        find_library(agora_edge_allocator_static NAMES agora_edge_allocator_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/facility-x86-static-mt-0.0.60.3/lib)
-        find_library(agora_generic_report_static NAMES agora_generic_report_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/facility-x86-static-mt-0.0.60.3/lib)
+		find_library(libcrypto NAMES libcrypto PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/boringssl-1.1.1f-x86-static-mt/lib)
+		find_library(libssl NAMES libssl PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/boringssl-1.1.1f-x86-static-mt/lib)
+		find_library(zlib NAMES zlib PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/zlib_1.2.11-x86-static-mt/lib)
+		find_library(libcurl NAMES libcurl PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/curl_7.80.0-x86-static-md/lib)
+		find_library(libsqlcipher NAMES libsqlcipher PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/sqlcipher_4.4.3-x86-static-mt-boringssl/lib)
+		find_library(libevent_openssl NAMES libevent_openssl PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/libevent-2.1.10-stable-x86-static-mt/lib)
+		find_library(libevent_core NAMES libevent_core PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/libevent-2.1.10-stable-x86-static-mt/lib)
+		find_library(libevent_extra NAMES libevent_extra PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/libevent-2.1.10-stable-x86-static-mt/lib)
+		find_library(libevent NAMES libevent PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/libevent-2.1.10-stable-x86-static-mt/lib)
+		find_library(agora_utils_static NAMES agora_utils_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/facility-x86-static-mt-0.0.60.7/lib)
+		find_library(agora_transport_static NAMES agora_transport_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/facility-x86-static-mt-0.0.60.7/lib)
+		find_library(agora_ap_static NAMES agora_ap_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/facility-x86-static-mt-0.0.60.7/lib)
+		find_library(agora_edge_allocator_static NAMES agora_edge_allocator_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/facility-x86-static-mt-0.0.60.7/lib)
+		find_library(agora_generic_report_static NAMES agora_generic_report_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/facility-x86-static-mt-0.0.60.7/lib)
+		find_library(libaosl_chat NAMES libaosl PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/aosl_1.2.2-x86-release)
+		find_library(libzip NAMES zip PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/libzip_1.11.2-x86-static-mt/lib)
 
     elseif(CMAKE_GENERATOR_PLATFORM STREQUAL "x64" OR CMAKE_GENERATOR_PLATFORM STREQUAL "")
-        find_library(libcrypto NAMES libcrypto PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/boringssl-1.1.1f-x64-static-mt/lib)
-        find_library(libssl NAMES libssl PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/boringssl-1.1.1f-x64-static-mt/lib)
-        find_library(zlib NAMES zlib PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/zlib_1.2.11-x64-static-mt/lib)
-        find_library(libcurl NAMES libcurl PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/curl_7.80.0-x64-static-md/lib)
-        find_library(libsqlcipher NAMES libsqlcipher PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/sqlcipher_4.4.3-x64-static-mt-boringssl/lib)
-        find_library(libevent_openssl NAMES libevent_openssl PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/libevent-2.1.10-stable-x64-static-mt/lib)
-        find_library(libevent_core NAMES libevent_core PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/libevent-2.1.10-stable-x64-static-mt/lib)
-        find_library(libevent_extra NAMES libevent_extra PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/libevent-2.1.10-stable-x64-static-mt/lib)
-        find_library(libevent NAMES libevent PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/libevent-2.1.10-stable-x64-static-mt/lib)
-        find_library(agora_utils_static NAMES agora_utils_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/facility-x64-static-mt-0.0.60.3/lib)
-        find_library(agora_transport_static NAMES agora_transport_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/facility-x64-static-mt-0.0.60.3/lib)
-        find_library(agora_ap_static NAMES agora_ap_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/facility-x64-static-mt-0.0.60.3/lib)
-        find_library(agora_edge_allocator_static NAMES agora_edge_allocator_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/facility-x64-static-mt-0.0.60.3/lib)
-        find_library(agora_generic_report_static NAMES agora_generic_report_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/facility-x64-static-mt-0.0.60.3/lib)
+		find_library(libcrypto NAMES libcrypto PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/boringssl-1.1.1f-x64-static-mt/lib)
+		find_library(libssl NAMES libssl PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/boringssl-1.1.1f-x64-static-mt/lib)
+		find_library(zlib NAMES zlib PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/zlib_1.2.11-x64-static-mt/lib)
+		find_library(libcurl NAMES libcurl PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/curl_7.80.0-x64-static-md/lib)
+		find_library(libsqlcipher NAMES libsqlcipher PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/sqlcipher_4.4.3-x64-static-mt-boringssl/lib)
+		find_library(libevent_openssl NAMES libevent_openssl PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/libevent-2.1.10-stable-x64-static-mt/lib)
+		find_library(libevent_core NAMES libevent_core PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/libevent-2.1.10-stable-x64-static-mt/lib)
+		find_library(libevent_extra NAMES libevent_extra PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/libevent-2.1.10-stable-x64-static-mt/lib)
+		find_library(libevent NAMES libevent PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/libevent-2.1.10-stable-x64-static-mt/lib)
+		find_library(agora_utils_static NAMES agora_utils_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/facility-x64-static-mt-0.0.60.7/lib)
+		find_library(agora_transport_static NAMES agora_transport_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/facility-x64-static-mt-0.0.60.7/lib)
+		find_library(agora_ap_static NAMES agora_ap_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/facility-x64-static-mt-0.0.60.7/lib)
+		find_library(agora_edge_allocator_static NAMES agora_edge_allocator_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/facility-x64-static-mt-0.0.60.7/lib)
+		find_library(agora_generic_report_static NAMES agora_generic_report_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/facility-x64-static-mt-0.0.60.7/lib)
+		find_library(libaosl_chat NAMES libaosl PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/aosl_1.2.2-x64-release)
+		find_library(libzip NAMES zip PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/libzip_1.11.2-x64-static-mt/lib)
     endif()
     message(STATUS "Found zlib: ${zlib}")
 
 else()
-    find_library(libz_tbd NAMES libz.tbd PATHS /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib)
-    find_library(security_framework NAMES Security PATHS /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks)
-    find_library(foundation_framework NAMES Foundation PATHS /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks)
-    find_library(libcrypto NAMES crypto.1.1 PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/boringssl_1.1.1f_share_universal/lib)
-    find_library(libssl NAMES ssl.1.1 PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/boringssl_1.1.1f_share_universal/lib)
-    #find_library(zlib NAMES zlib PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/zlib_1.2.11_share_universal/lib)
-    find_library(libcurl NAMES curl.4 PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/curl_7.80.0_share_universal_boringssl/lib)
-    find_library(libsqlcipher NAMES sqlcipher.0 PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/sqlcipher_4.4.3_share_universal_boringssl/lib)
-    find_library(libevent_openssl NAMES event_openssl PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/libevent_2.1.10_share_universal/lib)
-    find_library(libevent_core NAMES event_core PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/libevent_2.1.10_share_universal/lib)
-    find_library(libevent_extra NAMES event_extra PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/libevent_2.1.10_share_universal/lib)
-    find_library(libevent_thread NAMES event_pthreads PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/libevent_2.1.10_share_universal/lib)
-    find_library(libevent NAMES event PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/libevent_2.1.10_share_universal/lib)
-    find_library(agora_utils_static NAMES agora_utils_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/facility_static_universal-0.0.60.3/lib)
-    find_library(agora_transport_static NAMES agora_transport_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/facility_static_universal-0.0.60.3/lib)
-    find_library(agora_ap_static NAMES agora_ap_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/facility_static_universal-0.0.60.3/lib)
-    find_library(agora_edge_allocator_static NAMES agora_edge_allocator_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/facility_static_universal-0.0.60.3/lib)
-    find_library(agora_generic_report_static NAMES agora_generic_report_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/facility_static_universal-0.0.60.3/lib)
-    message(STATUS "Found libz.tbd: ${libz_tbd}")
-    message(STATUS "Found Security.framework: ${security_framework}")
-    message(STATUS "Found Foundation.framework: ${foundation_framework}")
-endif()
-
-# 检查是否找到所有库
-if(NOT libcrypto OR NOT libssl OR NOT libcurl OR NOT libsqlcipher OR
-   NOT libevent_openssl OR NOT libevent_core OR NOT libevent_extra OR NOT libevent OR
-   NOT agora_utils_static OR NOT agora_transport_static OR NOT agora_ap_static OR
-   NOT agora_edge_allocator_static OR NOT agora_generic_report_static)
-    message(FATAL_ERROR "Could not find one or more libraries")
+	find_library(libz_tbd NAMES libz.tbd PATHS /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib)
+	find_library(security_framework NAMES Security PATHS /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks)
+	find_library(foundation_framework NAMES Foundation PATHS /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks)
+	find_library(libcrypto NAMES crypto.1.1 PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/boringssl_1.1.1f_share_universal/lib)
+	find_library(libssl NAMES ssl.1.1 PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/boringssl_1.1.1f_share_universal/lib)
+	#find_library(zlib NAMES zlib PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/zlib_1.2.11_share_universal/lib)
+	find_library(libcurl NAMES curl.4 PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/curl_7.80.0_share_universal_boringssl/lib)
+	find_library(libsqlcipher NAMES sqlcipher.0 PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/sqlcipher_4.4.3_share_universal_boringssl/lib)
+	find_library(libevent_openssl NAMES event_openssl PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/libevent_2.1.10_share_universal/lib)
+	find_library(libevent_core NAMES event_core PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/libevent_2.1.10_share_universal/lib)
+	find_library(libevent_extra NAMES event_extra PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/libevent_2.1.10_share_universal/lib)
+	find_library(libevent_thread NAMES event_pthreads PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/libevent_2.1.10_share_universal/lib)
+	find_library(libevent NAMES event PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/libevent_2.1.10_share_universal/lib)
+	find_library(agora_utils_static NAMES agora_utils_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/facility_static_universal-0.0.60.7/lib)
+	find_library(agora_transport_static NAMES agora_transport_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/facility_static_universal-0.0.60.7/lib)
+	find_library(agora_ap_static NAMES agora_ap_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/facility_static_universal-0.0.60.7/lib)
+	find_library(agora_edge_allocator_static NAMES agora_edge_allocator_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/facility_static_universal-0.0.60.7/lib)
+	find_library(agora_generic_report_static NAMES agora_generic_report_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/facility_static_universal-0.0.60.7/lib)
+	find_library(libaosl_chat NAMES aosl PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/aosl_1.2.2_release)
+	find_library(libzip NAMES zip.5 PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/libzip_1.11.2_share_universal/lib)
+	message(STATUS "Found libz.tbd: ${libz_tbd}")
+	message(STATUS "Found Security.framework: ${security_framework}")
+	message(STATUS "Found Foundation.framework: ${foundation_framework}")
+	message(STATUS "Found libevent: ${libevent_thread}")
 endif()
 
 # 打印找到的库路径（可选）
@@ -230,6 +259,17 @@ message(STATUS "Found agora_transport_static: ${agora_transport_static}")
 message(STATUS "Found agora_ap_static: ${agora_ap_static}")
 message(STATUS "Found agora_edge_allocator_static: ${agora_edge_allocator_static}")
 message(STATUS "Found agora_generic_report_static: ${agora_generic_report_static}")
+message(STATUS "Found libaosl_chat: ${libaosl_chat}")
+message(STATUS "Found libzip: ${libzip}")
+
+# 检查是否找到所有库
+if(NOT libcrypto OR NOT libssl OR NOT libcurl OR NOT libsqlcipher OR
+   NOT libevent_openssl OR NOT libevent_core OR NOT libevent_extra OR NOT libevent OR
+   NOT agora_utils_static OR NOT agora_transport_static OR NOT agora_ap_static OR
+   NOT agora_edge_allocator_static OR NOT agora_generic_report_static
+   OR NOT libzip)
+    message(FATAL_ERROR "Could not find one or more libraries")
+endif()
 
 set(EASEMOB_SRC
 ${EMCLIENT_LINUX_PATH}/3rd_party/curlcpp/src/curl_easy.cpp
@@ -292,7 +332,8 @@ ${EMCLIENT_LINUX_PATH}/3rd_party/curlcpp/src/curl_easy.cpp
     ${EMCLIENT_LINUX_PATH}/protocol/generated/statisticsbody.pb.cc
     ${EMCLIENT_LINUX_PATH}/protocol/generated/argusdata.pb.cc
     ${EMCLIENT_LINUX_PATH}/protocol/generated/argussdkapi.pb.cc
-    ${EMCLIENT_LINUX_PATH}/protocol/generated/argussdkinit.pb.cc    
+    ${EMCLIENT_LINUX_PATH}/protocol/generated/argussdkinit.pb.cc
+    ${EMCLIENT_LINUX_PATH}/protocol/generated/arguscrashevent.pb.cc
     ${EMCLIENT_LINUX_PATH}/src/b64decoder.c
     ${EMCLIENT_LINUX_PATH}/src/b64encoder.c
     ${EMCLIENT_LINUX_PATH}/src/emattributevalue.cpp
@@ -374,6 +415,9 @@ ${EMCLIENT_LINUX_PATH}/3rd_party/curlcpp/src/curl_easy.cpp
     ${EMCLIENT_LINUX_PATH}/src/emtransportdelegateimpl.cpp
     ${EMCLIENT_LINUX_PATH}/src/emudpserverimpl.cpp
     ${EMCLIENT_LINUX_PATH}/src/emconversationfilter.cpp
+    ${EMCLIENT_LINUX_PATH}/src/emcrashmonitor.cpp
+    ${EMCLIENT_LINUX_PATH}/src/emautchattransport.cpp
+    ${EMCLIENT_LINUX_PATH}/src/emtcpchattransport.cpp
 )
 
 if(APPLE)
@@ -399,8 +443,8 @@ if(APPLE)
 
 	target_link_libraries(${easemob} PRIVATE 
 		${libz_tbd}
-                ${security_framework}
-                ${foundation_framework}
+		${security_framework}
+		${foundation_framework}
 		${libcrypto}
 		${libssl}
 		${libcurl}
@@ -408,13 +452,15 @@ if(APPLE)
 		${libevent_openssl}
 		${libevent_core}
 		${libevent_extra}
-                ${libevent_thread}
+		${libevent_thread}
 		${libevent}
 		${agora_utils_static}
 		${agora_transport_static}
 		${agora_ap_static}
 		${agora_edge_allocator_static}
 		${agora_generic_report_static}
+		${libaosl_chat}
+		${libzip}
 	)
 endif()
 
@@ -472,6 +518,8 @@ else()
 		${agora_ap_static}
 		${agora_edge_allocator_static}
 		${agora_generic_report_static}
+		${libaosl_chat}
+		${libzip}
 	)
 
 	target_link_options(${SdkWrapper} PRIVATE "/NODEFAULTLIB:LIBCMT.lib")

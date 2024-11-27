@@ -1008,7 +1008,7 @@ namespace sdk_wrapper {
 
             EMChatroomPtr room = dynamic_pointer_cast<EMChatroom>(pageResult.result().at(0));
 
-            gRoomManagerListener->onMemberJoinedChatroom(room, "join_member");
+            gRoomManagerListener->onMemberJoinedChatroom(room, "join_member", "ext");
             gRoomManagerListener->onLeaveChatroom(room, EMMuc::EMMucLeaveReason::DESTROYED);
             gRoomManagerListener->onLeaveChatroom(room, EMMuc::EMMucLeaveReason::BE_KICKED);
             gRoomManagerListener->onLeaveChatroom(room, EMMuc::EMMucLeaveReason::BE_KICKED_FOR_OFFLINE);

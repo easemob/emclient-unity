@@ -24,6 +24,7 @@
 #include "empresence.h"
 #include "emmultidevices_listener.h"
 #include "emfetchmessageoption.h"
+#include "emchatmanager_listener.h"
 
 #include "sdk_wrapper_internal.h"
 
@@ -409,9 +410,9 @@ namespace sdk_wrapper {
     class RecallMessageInfo
     {
     public:
-        static void ToJsonObject(Writer<StringBuffer>& writer, std::tuple<std::string, std::string, std::string, easemob::EMMessagePtr>& tuple);
-        static void ToJsonObjectWithList(Writer<StringBuffer>& writer, const std::vector<std::tuple<std::string, std::string, std::string, easemob::EMMessagePtr>>& vec);
-        static string ToJson(const std::vector<std::tuple<std::string, std::string, std::string, easemob::EMMessagePtr>>& vec);
+        static void ToJsonObject(Writer<StringBuffer>& writer, EMChatManagerListener::EMRecallMessage& recallMessage);
+        static void ToJsonObjectWithList(Writer<StringBuffer>& writer, const std::vector<EMChatManagerListener::EMRecallMessage>& vec);
+        static string ToJson(const std::vector<EMChatManagerListener::EMRecallMessage>& vec);
     };
 
     class TokenWrapper
