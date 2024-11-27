@@ -1115,7 +1115,7 @@ namespace sdk_wrapper
 
             if (body.HasMember("thumbnailLocalPath") && body["thumbnailLocalPath"].IsString()) {
                 string str = body["thumbnailLocalPath"].GetString();
-                ptr->setThumbnailRemotePath(str);
+                ptr->setThumbnailLocalPath(str);
             }
 
             if (body.HasMember("thumbnailRemotePath") && body["thumbnailRemotePath"].IsString()) {
