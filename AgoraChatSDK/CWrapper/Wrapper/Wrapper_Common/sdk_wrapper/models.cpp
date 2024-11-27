@@ -464,9 +464,13 @@ namespace sdk_wrapper
         //TODO: need to Area code later
 
 #ifndef _WIN32
+        configs->setOs(EMChatConfigs::OS_OSX);
+
         string uuid = GetMacUuid();
         if (uuid.size() > 0)
             configs->setDeviceUuid(uuid);
+#else
+        configs->setOs(EMChatConfigs::OS_MSWIN);
 #endif
         return configs;
 	}
