@@ -755,10 +755,11 @@ namespace sdk_wrapper {
 
         Document d; d.Parse(jstr);
         string group_id = GetJsonValue_String(d, "groupId", "");
+        bool fetchMembers = GetJsonValue_Bool(d, "fetchMembers", true);
 
         thread t([=]() {
             EMError error;
-            EMGroupPtr result = CLIENT->getGroupManager().fetchGroupSpecification(group_id, error);
+            EMGroupPtr result = CLIENT->getGroupManager().fetchGroupSpecification(group_id, error, fetchMembers);
 
             if (EMError::EM_NO_ERROR == error.mErrorCode) {
 
