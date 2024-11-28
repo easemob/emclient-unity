@@ -192,6 +192,7 @@ void InitManagerMap()
 	func_map_room_manager["fetchChatRoomMembers"] = RoomManager_FetchChatroomMembers;
 	func_map_room_manager["fetchChatRoomMuteList"] = RoomManager_FetchChatroomMutes;
 	func_map_room_manager["joinChatRoom"] = RoomManager_JoinChatroom;
+    func_map_room_manager["joinChatRoomExt"] = RoomManager_JoinChatroomExt;
 	func_map_room_manager["leaveChatRoom"] = RoomManager_LeaveChatroom;
 	func_map_room_manager["muteChatRoomMembers"] = RoomManager_MuteChatroomMembers;
 	func_map_room_manager["removeChatRoomAdmin"] = RoomManager_RemoveChatroomAdmin;

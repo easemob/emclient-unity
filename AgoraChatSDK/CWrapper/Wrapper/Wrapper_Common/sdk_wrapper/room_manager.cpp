@@ -460,6 +460,37 @@ namespace sdk_wrapper {
         return nullptr;
     }
 
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_JoinChatroomExt(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        string room_id = GetJsonValue_String(d, "roomId", "");
+        string ext = GetJsonValue_String(d, "ext", "");
+        bool leaveOtherRooms = GetJsonValue_Bool(d, "leaveOtherRooms", false);
+
+        thread t([=]() {
+            EMError error;
+            EMChatroomPtr result = CLIENT->getChatroomManager().joinChatroom(room_id, error, ext, leaveOtherRooms);
+
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+
+                string json = Room::ToJson(result);
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            });
+        t.detach();
+
+        return nullptr;
+    }
+
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL RoomManager_LeaveChatroom(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         if (!CheckClientInitOrNot(cbid)) return nullptr;

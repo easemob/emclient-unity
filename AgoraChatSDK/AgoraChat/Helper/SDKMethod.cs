@@ -155,6 +155,7 @@ namespace AgoraChat
 
         // EMChatRoomManager
         internal const string joinChatRoom = "joinChatRoom";
+        internal const string joinChatRoomExt = "joinChatRoomExt";
         internal const string leaveChatRoom = "leaveChatRoom";
         internal const string fetchPublicChatRoomsFromServer = "fetchPublicChatRoomsFromServer";
         internal const string fetchChatRoomInfoFromServer = "fetchChatRoomInfoFromServer";
