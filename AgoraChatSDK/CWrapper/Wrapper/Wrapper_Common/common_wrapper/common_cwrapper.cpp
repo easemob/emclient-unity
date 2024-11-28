@@ -246,6 +246,7 @@ void InitManagerMap()
 	func_map_conversation_manager["loadMsgWithStartId"] = ConversationManager_LoadMessages;
 	func_map_conversation_manager["loadMsgWithKeywords"] = ConversationManager_LoadMessagesWithKeyword;
 	func_map_conversation_manager["loadMsgWithMsgType"] = ConversationManager_LoadMessagesWithMsgType;
+    func_map_conversation_manager["loadMsgWithMsgTypeList"] = ConversationManager_LoadMessagesWithMsgTypeList;
 	func_map_conversation_manager["loadMsgWithTime"] = ConversationManager_LoadMessagesWithTime;
     func_map_conversation_manager["loadMsgWithScope"] = ConversationManager_LoadMessagesWithScope;
 	func_map_conversation_manager["markAllMessagesAsRead"] = ConversationManager_MarkAllMessagesAsRead;

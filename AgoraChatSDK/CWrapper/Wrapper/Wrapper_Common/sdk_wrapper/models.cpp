@@ -1634,6 +1634,26 @@ namespace sdk_wrapper
         return vec;
     }
 
+    EMSet<EMMessageBody::EMMessageBodyType> Message::FromJsonObjectToBodyTypeSet(const Value& jnode)
+    {
+        EMSet<EMMessageBody::EMMessageBodyType> bodySet;
+
+        if (jnode.IsArray() == true) {
+
+            int size = jnode.Size();
+
+            for (int it = 0; it < size; it++) {
+
+                int i = jnode[it].GetInt();
+
+                EMMessageBody::EMMessageBodyType b = BodyTypeFromInt(i);
+
+                bodySet.insert(b);
+            }
+        }
+        return bodySet;
+    }
+
     void AttributesValue::ToJsonObjectWithAttribute(Writer<StringBuffer>& writer, EMAttributeValuePtr attribute)
     {
         if (nullptr == attribute) return;

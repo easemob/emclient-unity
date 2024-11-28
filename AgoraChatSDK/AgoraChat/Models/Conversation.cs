@@ -404,6 +404,36 @@ namespace AgoraChat
 
         /**
          * \~chinese
+         * 加载多种消息类型的多条消息。
+         *
+         * SDK 首先在内存中查询消息，若在内存中未找到，SDK 会在本地数据库查询并加载。
+         *
+         * @param typeList          加载消息类型列表。该参数必填。
+         * @param sender            消息发送方的用户 ID。该参数必填。
+         * @param timestamp         查询的起始 Unix 时间戳，单位为毫秒。
+         * @param count             加载的最大消息数目。默认值为 `20`。
+         * @param direction         消息加载方向。默认按消息中的时间戳（{@link SortMessageByServerTime}）的倒序加载，详见 {@link MessageSearchDirection}。
+         * @param callback          加载结果回调，成功返回消息列表，失败返回错误原因，详见 {@link ValueCallBack}。
+         *
+         * \~english
+         * Loads the messages of a specific type.
+         *
+         * The SDK first retrieves the messages from the memory. If no message is found, the SDK will retrieve them from the local database and load them.
+         *
+         * @param typeList          The list of message types to load. Ensure that you set this parameter.
+         * @param sender            The user ID of the message sender. Ensure that you set this parameter.
+         * @param timestamp         The starting Unix timestamp for query, which is in milliseconds.
+         * @param count             The maximum number of messages to load. The default value is `20`.
+         * @param direction         The message loading direction. By default, the SDK loads messages in the reverse chronological order of the Unix timestamp ({@link SortMessageByServerTime}) in the message. See {@link MessageSearchDirection}.
+         * @param callback          The loading result callback. If success, a list of loaded messages are returned; otherwise, an error is returned. See {@link ValueCallBack}.
+         */
+        public void LoadMessagesWithMsgTypeList(List<MessageBodyType> typeList, string sender = null, long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callback = null)
+        {
+            manager.LoadMessagesWithMsgTypeList(Id, Type, typeList, sender, timestamp, count, direction, callback);
+        }
+
+        /**
+         * \~chinese
          * 从指定消息 ID 开始加载消息。
          * 
          * SDK 首先在内存中查找消息，若在内存中未找到，SDK 会在本地数据库查询并加载。

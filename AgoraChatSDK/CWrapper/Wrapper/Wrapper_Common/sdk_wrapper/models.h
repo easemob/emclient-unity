@@ -113,6 +113,8 @@ namespace sdk_wrapper {
 		static EMMessagePtr FromJsonObjectToMessage(const Value& jnode);
 
 		static void ToJsonObjectWithMessageList(Writer<StringBuffer>& writer, EMMessageList messages);
+
+        static EMSet<EMMessageBody::EMMessageBodyType> FromJsonObjectToBodyTypeSet(const Value& jnode);
 	};
 
 	class AttributesValue

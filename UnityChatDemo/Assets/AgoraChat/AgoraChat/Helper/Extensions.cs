@@ -375,6 +375,20 @@ namespace AgoraChat
             return ja;
         }
 
+        internal static JSONNode JsonArrayFromEnumList<T>(List<T> enumList) where T : Enum
+        {
+            JSONArray ja = new JSONArray();
+            if (enumList != null)
+            {
+                foreach (T e in enumList)
+                {
+                    ja.Add(Convert.ToInt32(e));
+                }
+            }
+
+            return ja;
+        }
+
         internal static JSONNode JsonArrayFromList<T>(List<T> list) where T : BaseModel
         {
             if (list == null) return null;

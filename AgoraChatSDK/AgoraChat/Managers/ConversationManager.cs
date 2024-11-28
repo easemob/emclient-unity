@@ -166,6 +166,25 @@ namespace AgoraChat
             NativeCall<List<Message>>(SDKMethod.loadMsgWithMsgType, jo_param, callback, process);
         }
 
+        internal void LoadMessagesWithMsgTypeList(string conversationId, ConversationType conversationType, List<MessageBodyType> bodyTypeList, string sender, long timestamp = -1, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("convId", conversationId);
+            jo_param.AddWithoutNull("convType", conversationType.ToInt());
+            jo_param.AddWithoutNull("bodyTypeList", JsonObject.JsonArrayFromEnumList(bodyTypeList));
+            jo_param.AddWithoutNull("sender", sender);
+            jo_param.AddWithoutNull("count", count);
+            jo_param.AddWithoutNull("direction", direction.ToInt());
+            jo_param.AddWithoutNull("timestamp", timestamp);
+
+            Process process = (_, jsonNode) =>
+            {
+                return List.BaseModelListFromJsonArray<Message>(jsonNode);
+            };
+
+            NativeCall<List<Message>>(SDKMethod.loadMsgWithMsgTypeList, jo_param, callback, process);
+        }
+
         internal void LoadMessages(string conversationId, ConversationType conversationType, string startMessageId = "", int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<List<Message>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
