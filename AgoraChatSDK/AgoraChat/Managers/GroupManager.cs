@@ -1532,6 +1532,20 @@ namespace AgoraChat
         }
 
         /**
+         *  \~chinese
+         *  清理数据库中当前用户的所有群组。
+         *
+         *
+         *  \~english
+         *  Clears the information of all groups in the local database.
+         *
+         */
+        public void CleanAllGroupsFromDB()
+        {
+            NativeCall(SDKMethod.cleanAllGroupsFromDB);
+        }
+
+        /**
 		 * \~chinese
 		 * 注册群组管理器的监听器。
 		 *
