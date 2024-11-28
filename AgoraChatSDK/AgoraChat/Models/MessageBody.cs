@@ -462,6 +462,15 @@ namespace AgoraChat
 
             /**
              * \~chinese
+             * 缩略图的宽度和高度，单位为像素。
+             *
+             * \~english
+             * The width and height of the thumbnail, in pixels.
+             */
+            public double ThumbnailHeight, ThumbnailWidth;
+
+            /**
+             * \~chinese
              * 是否发送原图。
              * - `true`: 发送原图和缩略图。
              * - (默认） `false`: 若图片小于 100 KB，发送原图和缩略图；若图片大于等于 100 KB, 发送压缩后的图片和压缩后图片的缩略图。
@@ -534,6 +543,8 @@ namespace AgoraChat
                 jo_body.AddWithoutNull("thumbnailStatus", ThumbnailDownStatus.ToInt());
                 jo_body.AddWithoutNull("height", Height);
                 jo_body.AddWithoutNull("width", Width);
+                jo_body.AddWithoutNull("thumbnailHeight", ThumbnailHeight);
+                jo_body.AddWithoutNull("thumbnailWidth", ThumbnailWidth);
                 jo_body.AddWithoutNull("sendOriginalImage", Original);
 
                 return jo;
@@ -548,6 +559,8 @@ namespace AgoraChat
                 ThumbnailDownStatus = jo["thumbnailStatus"].AsInt.ToDownLoadStatus();
                 Height = jo["height"].AsDouble;
                 Width = jo["width"].AsDouble;
+                ThumbnailHeight = jo["thumbnailHeight"].AsDouble;
+                ThumbnailWidth = jo["thumbnailWidth"].AsDouble;
                 Original = jo["sendOriginalImage"].AsBool;
             }
         }

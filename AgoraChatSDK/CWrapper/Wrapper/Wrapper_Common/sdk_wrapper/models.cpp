@@ -827,6 +827,12 @@ namespace sdk_wrapper
                         writer.Key("fileStatus");
                         writer.Int(DownLoadStatusToInt(ptr->downloadStatus()));
 
+                        writer.Key("thumbnailHeight");
+                        writer.Double(ptr->thumbnailSize().mHeight);
+
+                        writer.Key("thumbnailWidth");
+                        writer.Double(ptr->thumbnailSize().mWidth);
+
                         //writer.Key("ThumbnaiDownStatus");
                         //writer.Int((int)ptr->thumbnailDownloadStatus());
 
@@ -1146,6 +1152,20 @@ namespace sdk_wrapper
             }
 
             ptr->setSize(size);
+
+            EMImageMessageBody::Size thumbnail_size;
+            thumbnail_size.mWidth = 0;
+            thumbnail_size.mHeight = 0;
+
+            if (body.HasMember("thumbnailHeight") && body["thumbnailHeight"].IsNumber()) {
+                thumbnail_size.mHeight = body["thumbnailHeight"].GetDouble();
+            }
+
+            if (body.HasMember("thumbnailWidth") && body["thumbnailWidth"].IsNumber()) {
+                thumbnail_size.mWidth = body["thumbnailWidth"].GetDouble();
+            }
+
+            ptr->setThumbnailSize(thumbnail_size);
 
             //if (body.HasMember("sendOriginalImage") && body["sendOriginalImage"].IsBool()) {
             //    bool b = body["sendOriginalImage"].GetBool();            
