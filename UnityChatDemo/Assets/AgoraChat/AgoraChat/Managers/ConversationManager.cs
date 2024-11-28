@@ -60,6 +60,17 @@ namespace AgoraChat
             return jn.IsNumber ? jn.AsInt : 0;
         }
 
+        internal int MessagesCountWithTimestamp(string conversationId, ConversationType conversationType, long startTimestamp, long endTimestamp)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("convId", conversationId);
+            jo_param.AddWithoutNull("convType", conversationType.ToInt());
+            jo_param.AddWithoutNull("startTimestamp", startTimestamp);
+            jo_param.AddWithoutNull("endTimestamp", endTimestamp);
+            JSONNode jn = NativeGet(SDKMethod.messageCountWithTS, jo_param).GetReturnJsonNode();
+            return jn.IsNumber ? jn.AsInt : 0;
+        }
+
         internal void MarkMessageAsRead(string conversationId, ConversationType conversationType, string messageId)
         {
             JSONObject jo_param = new JSONObject();

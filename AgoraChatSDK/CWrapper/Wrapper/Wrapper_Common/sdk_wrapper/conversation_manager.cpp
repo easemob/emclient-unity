@@ -523,6 +523,33 @@ namespace sdk_wrapper {
         return CopyToPointer(json);
     }
 
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_MessagesCountWithTS(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        string conv_id = GetJsonValue_String(d, "convId", "");
+        int int_type = GetJsonValue_Int(d, "convType", 0);
+
+        int64_t start_ts = GetJsonValue_Int64(d, "startTimestamp", 0);
+        int64_t end_ts = GetJsonValue_Int64(d, "endTimestamp", 0);
+
+        EMConversation::EMConversationType type = Conversation::ConversationTypeFromInt(int_type);
+
+        EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(conv_id, type, true);
+        int count = conversationPtr->messagesCount(start_ts, end_ts);
+
+        JSON_STARTOBJ
+        writer.Key("ret");
+        writer.Int(count);
+        JSON_ENDOBJ
+
+        string json = s.GetString();
+        return CopyToPointer(json);
+    }
+
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_UpdateMessage(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         if (!CheckClientInitOrNot(cbid)) return nullptr;
