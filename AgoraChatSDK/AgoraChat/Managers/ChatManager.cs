@@ -176,6 +176,7 @@ namespace AgoraChat
          *                  				- `DOWN`: Gets messages after the timestamp of the specified message ID.
 	     * @param callback				The result callback. Returns the list of obtained messages. 
 	     */
+        [Obsolete]
         public void FetchHistoryMessagesFromServer(string conversationId, ConversationType type = ConversationType.Chat, string startMessageId = null, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<CursorResult<Message>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
