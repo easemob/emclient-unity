@@ -332,6 +332,17 @@ namespace AgoraChat
          */
         public string CustomDeviceName = "";
 
+
+        /**
+         *  \~chinese
+         *  自定义扩展消息，用于多设备登录时，通知被踢设备。
+         *
+         *  \~english
+         *  Custom extended message for notifying kicked devices during multi-device login.
+         *
+         */
+        public string LoginCustomExt = "";
+
         /**
 	     * \~chinese
 	     * 设置区域代号，使用边缘节点时遵循区域限制。
@@ -492,6 +503,7 @@ namespace AgoraChat
             jo.AddWithoutNull("useReplacedMessageContents", UseReplacedMessageContents);
             jo.AddWithoutNull("customOSType", CustomOSType);
             jo.AddWithoutNull("customDeviceName", CustomDeviceName);
+            jo.AddWithoutNull("loginCustomExt", LoginCustomExt);
             jo.AddWithoutNull("regardImportMsgAsRead", RegardImportMsgAsRead);
             jo.AddWithoutNull("includeSendMessageInMessageListener", IncludeSendMessageInMessageListener);
 

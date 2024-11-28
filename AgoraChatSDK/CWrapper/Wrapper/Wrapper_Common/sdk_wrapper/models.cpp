@@ -451,6 +451,11 @@ namespace sdk_wrapper
             configs->setDeviceName(custom_device_name);
         }
 
+        if (jnode.HasMember("loginCustomExt") && jnode["loginCustomExt"].IsString()) {
+            string login_custom_ext = jnode["loginCustomExt"].GetString();
+            configs->setDeviceReason(login_custom_ext);
+        }
+
         if (jnode.HasMember("regardImportMsgAsRead") && jnode["regardImportMsgAsRead"].IsBool()) {
             bool regard_import_msg_as_read = jnode["regardImportMsgAsRead"].GetBool();
             configs->setRegardImportMsgAsRead(regard_import_msg_as_read);
