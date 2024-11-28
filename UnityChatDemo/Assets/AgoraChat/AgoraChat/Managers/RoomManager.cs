@@ -1268,7 +1268,8 @@ namespace AgoraChat
                     case SDKMethod.onMemberJoinedFromRoom:
                         {
                             string userId = jsonNode["userId"];
-                            it.OnMemberJoinedFromRoom(roomId, userId);
+                            string ext = jsonNode["ext"];
+                            it.OnMemberJoinedFromRoom(roomId, userId, ext);
                         }
                         break;
                     case SDKMethod.onMemberExitedFromRoom:

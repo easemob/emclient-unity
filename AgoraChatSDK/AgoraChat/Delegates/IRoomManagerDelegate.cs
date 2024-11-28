@@ -34,14 +34,16 @@ namespace AgoraChat
         * 
         * @param roomId        聊天室 ID。
         * @param participant   新成员的 ID。
+        * @param ext           扩展信息。
         *
         * \~english
         * Occurs when a user joins the chat room.
         * 
         * @param roomId        The chat room ID.
         * @param participant   The user ID of the new member.
+        * @param ext           The extension information.
         */
-        void OnMemberJoinedFromRoom(string roomId, string participant);
+        void OnMemberJoinedFromRoom(string roomId, string participant, string ext);
 
         /**
          * \~chinese

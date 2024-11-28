@@ -501,9 +501,9 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         Debug.Log($"RoomManager1 OnDestroyedFromRoom roomId: {roomId}, roomName:{roomName}");
     }
 
-    public void OnMemberJoinedFromRoom(string roomId, string participant)
+    public void OnMemberJoinedFromRoom(string roomId, string participant, string ext)
     {
-        Debug.Log($"RoomManager2 OnMemberJoinedFromRoom roomId: {roomId}, participant:{participant}");
+        Debug.Log($"RoomManager2 OnMemberJoinedFromRoom roomId: {roomId}, participant:{participant}, ext:{ext}");
     }
 
     public void OnMemberExitedFromRoom(string roomId, string roomName, string participant)

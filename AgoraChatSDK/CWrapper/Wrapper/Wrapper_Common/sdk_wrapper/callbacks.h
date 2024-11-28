@@ -801,7 +801,8 @@ namespace sdk_wrapper {
             writer.Key("userId");
             writer.String(member.c_str());
 
-            //TODO: need to add ext into json!!!
+            writer.Key("ext");
+            writer.String(ext.c_str());
 
             JSON_ENDOBJ
 
