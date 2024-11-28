@@ -487,6 +487,8 @@ namespace AgoraChat
                 case MultiDevicesOperation.CONVERSATION_PINNED: return 60;
                 case MultiDevicesOperation.CONVERSATION_UNPINNED: return 61;
                 case MultiDevicesOperation.CONVERSATION_DELETED: return 62;
+                case MultiDevicesOperation.CONVERSATION_MARK: return 63;
+                case MultiDevicesOperation.CONVERSATION_MUTE_INFO_CHANGED: return 64;
                 default:
                     return -1;
             }
@@ -539,6 +541,7 @@ namespace AgoraChat
                 case 61: return MultiDevicesOperation.CONVERSATION_UNPINNED;
                 case 62: return MultiDevicesOperation.CONVERSATION_DELETED;
                 case 63: return MultiDevicesOperation.CONVERSATION_MARK;
+                case 64: return MultiDevicesOperation.CONVERSATION_MUTE_INFO_CHANGED;
                 default: return MultiDevicesOperation.UNKNOWN;
             }
         }

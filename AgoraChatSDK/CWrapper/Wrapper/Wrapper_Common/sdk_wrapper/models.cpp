@@ -3415,6 +3415,7 @@ namespace sdk_wrapper
         case EMMultiDevicesListener::MultiDevicesOperation::CONVERSATION_UNPINNED: return 61;
         case EMMultiDevicesListener::MultiDevicesOperation::CONVERSATION_DELETED: return 62;
         case EMMultiDevicesListener::MultiDevicesOperation::CONVERSATION_MARK: return 63;
+        case EMMultiDevicesListener::MultiDevicesOperation::CONVERSATION_MUTE_INFO_CHANGED: return 64;
         default:
             return -1;
         }
@@ -3465,6 +3466,8 @@ namespace sdk_wrapper
         case 60: return EMMultiDevicesListener::MultiDevicesOperation::CONVERSATION_PINNED;
         case 61: return EMMultiDevicesListener::MultiDevicesOperation::CONVERSATION_UNPINNED;
         case 62: return EMMultiDevicesListener::MultiDevicesOperation::CONVERSATION_DELETED;
+        case 63: return EMMultiDevicesListener::MultiDevicesOperation::CONVERSATION_MARK;
+        case 64: return EMMultiDevicesListener::MultiDevicesOperation::CONVERSATION_MUTE_INFO_CHANGED;
         default: return EMMultiDevicesListener::MultiDevicesOperation::UNKNOW;
         }
     }
