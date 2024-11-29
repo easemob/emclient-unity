@@ -89,6 +89,18 @@ namespace sdk_wrapper {
         {
             TokenWrapper::GetInstance()->SetAndStartTokenCheckTimer(expiredTs, TOKEN_CHECK_INTERVAL);
         }
+
+        void onOfflineMessageSyncStart() override
+        {
+            string json = "";
+            CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onOfflineMessageSyncStart.c_str(), json.c_str());
+        }
+
+        void onOfflineMessageSyncFinish() override
+        {
+            string json = "";
+            CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onOfflineMessageSyncFinish.c_str(), json.c_str());
+        }
     };
 
     class ChatManagerListener : public EMChatManagerListener

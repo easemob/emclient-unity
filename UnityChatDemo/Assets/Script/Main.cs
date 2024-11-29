@@ -851,4 +851,14 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
     {
         Debug.Log("Connection12 OnAppActiveNumberReachLimitation run");
     }
+
+    public void OnOfflineMessageSyncStart()
+    {
+        Debug.Log("Connection13 OnOfflineMessageSyncStart run");
+    }
+
+    public void OnOfflineMessageSyncFinish()
+    {
+        Debug.Log("Connection14 OnOfflineMessageSyncFinish run");
+    }
 }

@@ -282,6 +282,12 @@ namespace AgoraChat
                     case SDKMethod.onAppActiveNumberReachLimitation:
                         it.OnAppActiveNumberReachLimitation();
                         break;
+                    case SDKMethod.onOfflineMessageSyncStart:
+                        it.OnOfflineMessageSyncStart();
+                        break;
+                    case SDKMethod.onOfflineMessageSyncFinish:
+                        it.OnOfflineMessageSyncFinish();
+                        break;
                     default:
                         break;
                 }

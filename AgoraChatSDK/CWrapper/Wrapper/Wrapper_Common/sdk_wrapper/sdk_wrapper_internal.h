@@ -101,6 +101,8 @@ const string STRING_onAuthFailed = "onAuthFailed";
 const string STRING_onTokenExpired = "onTokenExpired";
 const string STRING_onTokenWillExpire = "onTokenWillExpire";
 const string STRING_onAppActiveNumberReachLimitation = "onAppActiveNumberReachLimitation";
+const string STRING_onOfflineMessageSyncStart = "onOfflineMessageSyncStart";
+const string STRING_onOfflineMessageSyncFinish = "onOfflineMessageSyncFinish";
 
 // GroupManagerDeleagate
 const string STRING_onInvitationReceivedFromGroup = "onInvitationReceivedFromGroup";
