@@ -580,6 +580,7 @@
     ret.thumbnailSecretKey = aJson[@"thumbnailSecret"];
     ret.thumbnailDownloadStatus = [ret downloadStatusFromInt:[aJson[@"thumbnailStatus"] intValue]];
     ret.size = CGSizeMake([aJson[@"width"] floatValue], [aJson[@"height"] floatValue]);
+    ret.thumbnailSize = CGSizeMake([aJson[@"thumbnailWidth"] floatValue], [aJson[@"thumbnailHeight"] floatValue]);
     ret.thumbnailDownloadStatus = [ret downloadStatusFromInt:[aJson[@"thumbnailStatus"] intValue]];
     ret.compressionRatio = [aJson[@"sendOriginalImage"] boolValue] ? 1.0 : 0.6;
     return ret;
@@ -595,6 +596,8 @@
     bodyDict[@"fileStatus"] = @([self downloadStatusToInt:self.downloadStatus]);
     bodyDict[@"width"] = @(self.size.width);
     bodyDict[@"height"] = @(self.size.height);
+    bodyDict[@"thumbnailWidth"] = @(self.thumbnailSize.width);
+    bodyDict[@"thumbnailHeight"] = @(self.thumbnailSize.height);
     bodyDict[@"fileSize"] = @(self.fileLength);
     bodyDict[@"remotePath"] = self.remotePath;
     bodyDict[@"secret"] = self.secretKey;
