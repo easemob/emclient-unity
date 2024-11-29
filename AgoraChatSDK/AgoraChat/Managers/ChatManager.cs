@@ -1475,8 +1475,6 @@ namespace AgoraChat
         * \~chinese
         * 消息置顶或取消置顶。
         *
-        * 仅支持群组消息。
-        *
         * 异步方法。
         *
         * @param messageId         置顶或取消置顶的消息 ID。
@@ -1487,8 +1485,6 @@ namespace AgoraChat
         *
         * \~english
         * Pins or unpins a message.
-        *
-        * This method is used only for group messages.
         *
         * This is an asynchronous method.
         *
