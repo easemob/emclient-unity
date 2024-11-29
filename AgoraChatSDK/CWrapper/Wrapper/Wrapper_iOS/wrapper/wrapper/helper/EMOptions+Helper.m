@@ -38,6 +38,7 @@
     data[@"useReplacedMessageContents"] = @(self.useReplacedMessageContents);
     data[@"regardImportMsgAsRead"] = @(self.regardImportMessagesAsRead);
     data[@"includeSendMessageInMessageListener"] = @(self.includeSendMessageInMessageListener);
+    data[@"loginCustomExt"] = self.loginExtensionInfo;
     
     return data;
 }
@@ -87,6 +88,7 @@
     if(aJson[@"includeSendMessageInMessageListener"]) {
         options.includeSendMessageInMessageListener = [aJson[@"includeSendMessageInMessageListener"] boolValue];
     }
+    options.loginExtensionInfo = aJson[@"loginCustomExt"];
 
     return options;
 }
