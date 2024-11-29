@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-#SDKVERISON=4_2_0
-#SDKVERISON=4_5_0
-SDKVERISON=4_7_0
-=======
-SDKVERISON=4_1_1
->>>>>>> branch_1.2.2_official
+SDKVERISON=4_10_2
+
 FILE=HyphenateChat.framework
 LOCK=.emlock
 
