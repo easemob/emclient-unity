@@ -206,6 +206,7 @@ namespace AgoraChat
         internal const string getGroupMuteListFromServer = "getGroupMuteListFromServer";
         internal const string getGroupAllowListFromServer = "getGroupWhiteListFromServer";
         internal const string isMemberInAllowListFromServer = "isMemberInWhiteListFromServer";
+        internal const string isMemberInMuteListFromServer = "isMemberInMuteListFromServer";
         internal const string getGroupFileListFromServer = "getGroupFileListFromServer";
         internal const string getGroupAnnouncementFromServer = "getGroupAnnouncementFromServer";
         internal const string addMembers = "addMembers";

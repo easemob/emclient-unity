@@ -138,6 +138,7 @@ void InitManagerMap()
 	func_map_group_manager["updateGroupSubject"] = GroupManager_ChangeGroupName;
 	func_map_group_manager["updateGroupOwner"] = GroupManager_TransferGroupOwner;
 	func_map_group_manager["isMemberInWhiteListFromServer"] = GroupManager_FetchIsMemberInWhiteList;
+    func_map_group_manager["isMemberInMuteListFromServer"] = GroupManager_FetchIsMemberInMuteList;
 	func_map_group_manager["createGroup"] = GroupManager_CreateGroup;
 	func_map_group_manager["declineInvitationFromGroup"] = GroupManager_DeclineInvitationFromGroup;
 	func_map_group_manager["declineJoinApplication"] = GroupManager_DeclineJoinGroupApplication;

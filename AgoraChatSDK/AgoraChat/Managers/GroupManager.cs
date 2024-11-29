@@ -387,6 +387,34 @@ namespace AgoraChat
         }
 
         /**
+        * \~chinese
+        * 检查当前用户是否在群组禁言列表中。
+        *
+        * 异步方法。
+        *
+        * @param groupId   群组 ID。
+        * @param callback  操作结果回调，详见 {@link CallBack}。
+        *
+        * \~english
+        * Gets whether the current user is on the mute list of the group.
+        *
+        * This is an asynchronous method.
+        *
+        * @param groupId   The group ID.
+        * @param callback  The operation callback. See {@link CallBack}.
+        */
+        public void CheckIfInGroupMuteList(string groupId, ValueCallBack<bool> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("groupId", groupId);
+            Process process = (_, jsonNode) =>
+            {
+                return jsonNode["ret"].IsBoolean ? jsonNode["ret"].AsBool : false;
+            };
+            NativeCall<bool>(SDKMethod.isMemberInMuteListFromServer, jo_param, callback, process);
+        }
+
+        /**
 	     * \~chinese
 	     * 创建群组。
 		 * 
