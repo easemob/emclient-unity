@@ -34,6 +34,8 @@
     NSString *ret = nil;
     if ([joinChatRoom isEqualToString:method]) {
         ret = [self joinChatRoom:params callback:callback];
+    } else if ([joinChatRoomExt isEqualToString:method]) {
+        ret = [self joinChatRoomExt:params callback:callback];
     } else if ([leaveChatRoom isEqualToString:method]) {
         ret = [self leaveChatRoom:params callback:callback];
     } else if ([fetchPublicChatRoomsFromServer isEqualToString:method]) {
@@ -109,6 +111,23 @@
     
     __weak EMRoomManagerWrapper *weakSelf = self;
     [EMClient.sharedClient.roomManager joinChatroom:roomId
+                                         completion:^(EMChatroom * _Nullable aChatroom, EMError * _Nullable aError)
+     {
+        [weakSelf wrapperCallback:callback error:aError object:[aChatroom toJson]];
+    }];
+    return nil;
+}
+
+- (NSString *)joinChatRoomExt:(NSDictionary *)param
+                  callback:(EMWrapperCallback *)callback {
+    NSString *roomId = param[@"roomId"];
+    NSString *ext = param[@"ext"];
+    BOOL leaveOtherRooms = param[@"leaveOtherRooms"];
+
+    __weak EMRoomManagerWrapper *weakSelf = self;
+    [EMClient.sharedClient.roomManager joinChatroom:roomId
+                                                ext:ext
+                                    leaveOtherRooms:leaveOtherRooms
                                          completion:^(EMChatroom * _Nullable aChatroom, EMError * _Nullable aError)
      {
         [weakSelf wrapperCallback:callback error:aError object:[aChatroom toJson]];

@@ -157,6 +157,7 @@ static NSString *const getPinnedInfo = @"pinnedInfo";
 
 // EMChatRoomManager
 static NSString *const joinChatRoom = @"joinChatRoom";
+static NSString *const joinChatRoomExt = @"joinChatRoomExt";
 static NSString *const leaveChatRoom = @"leaveChatRoom";
 static NSString *const fetchPublicChatRoomsFromServer = @"fetchPublicChatRoomsFromServer";
 static NSString *const fetchChatRoomInfoFromServer = @"fetchChatRoomInfoFromServer";
