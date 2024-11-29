@@ -3940,12 +3940,13 @@ namespace sdk_wrapper
             easemob::EMMessagePtr msg = nullptr;
             msg = std::get<3>(recallMessage);
 
-            //TODO: need to pick conversationId from recallMessage!!
-
             if (nullptr != msg && nullptr != msg.get()) {
                 writer.Key("recallMessage");
                 Message::ToJsonObjectWithMessage(writer, msg);
             }
+
+            writer.Key("conversationId");
+            writer.String(std::get<4>(recallMessage).c_str());
         }
         writer.EndObject();
     }

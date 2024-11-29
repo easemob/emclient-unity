@@ -56,6 +56,15 @@ namespace AgoraChat
          */
         public Message RecallMessage;
 
+        /**
+         * \~chinese
+         * 撤回消息所属的会话ID。
+         *
+         * \~english
+         * The conversation ID which the message recalled belongs to.
+         */
+        public string ConversationId { get; private set; }
+
         [Preserve]
         internal RecallMessageInfo() { }
 
@@ -70,6 +79,7 @@ namespace AgoraChat
             RecallBy = jsonObject["recallBy"];
             RecallMessageId = jsonObject["recallMessageId"];
             Ext = jsonObject["ext"];
+            ConversationId = jsonObject["conversationId"];
 
             if (null != jsonObject["recallMessage"] && jsonObject["recallMessage"].IsObject)
             {
@@ -83,6 +93,7 @@ namespace AgoraChat
             jo.AddWithoutNull("recallBy", RecallBy);
             jo.AddWithoutNull("recallMessageId", RecallMessageId);
             jo.AddWithoutNull("ext", Ext);
+            jo.AddWithoutNull("conversationId", ConversationId);
             if (null != RecallMessage)
             {
                 jo.AddWithoutNull("recallMessage", RecallMessage.ToJsonObject());
