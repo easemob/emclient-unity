@@ -458,6 +458,28 @@ namespace AgoraChat
 
         /**
         * \~chinese
+        * 获取数据库中的消息总数。
+        *
+        * @return		消息总数。
+        *
+        * \~english
+        * Gets the message count in DB.
+        *
+        * @return		The count of messages in DB.
+        *
+        */
+        public int GetMessageCount()
+        {
+            string json = NativeGet(SDKMethod.getMessagesCount);
+
+            if (null == json || json.Length == 0) return 0;
+
+            JSONObject jo = JSON.Parse(json).AsObject;
+            return int.Parse(jo["ret"].Value);
+        }
+
+        /**
+        * \~chinese
         * 将消息导入本地数据库。
         *
         * 你只能将你发送或接受的消息导入本地数据库。
