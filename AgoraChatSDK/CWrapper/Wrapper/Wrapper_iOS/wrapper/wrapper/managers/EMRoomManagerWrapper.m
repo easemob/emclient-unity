@@ -671,10 +671,15 @@
 
 - (void)userDidJoinChatroom:(EMChatroom *)aChatroom
                        user:(NSString *)aUsername
+                        ext:(NSString* _Nullable)ext
 {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     dictionary[@"roomId"] = aChatroom.chatroomId;
     dictionary[@"userId"] = aUsername;
+    if(nil == ext)
+        dictionary[@"ext"] = @"";
+    else
+        dictionary[@"ext"] = ext;
     [EMWrapperHelper.shared.listener onReceive:chatRoomListener method:onMemberJoinedFromRoom info: [dictionary toJsonString]];
 }
 
