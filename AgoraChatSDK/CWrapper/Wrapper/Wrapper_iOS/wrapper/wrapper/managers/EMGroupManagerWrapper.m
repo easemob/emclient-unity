@@ -129,6 +129,8 @@
         ret = [self fetchMemberAttributes:params callback:callback];
     } else if ([fetchMyGroupsCount isEqualToString:method]) {
         ret = [self fetchMyGroupsCount:params callback:callback];
+    } else if ([cleanAllGroupsFromDB isEqualToString:method]) {
+        ret = [self cleanAllGroupsFromDB:params callback:callback];
     } else {
         ret = [super onMethodCall:method params:params callback:callback];
     }
@@ -730,6 +732,11 @@
      {
         [weakSelf wrapperCallback:callback error:aError object:[EMHelper getReturnJsonObject:@(groupCount)]];
     }];
+    return nil;
+}
+
+- (NSString *)cleanAllGroupsFromDB:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
+    [EMClient.sharedClient.groupManager cleanAllGroupsFromDB];
     return nil;
 }
 
