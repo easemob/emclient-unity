@@ -139,6 +139,7 @@ static NSString *const loadMsgWithId = @"loadMsgWithId";
 static NSString *const loadMsgWithStartId = @"loadMsgWithStartId";
 static NSString *const loadMsgWithKeywords = @"loadMsgWithKeywords";
 static NSString *const loadMsgWithMsgType = @"loadMsgWithMsgType";
+static NSString *const loadMsgWithMsgTypeList = @"loadMsgWithMsgTypeList";
 static NSString *const loadMsgWithTime = @"loadMsgWithTime";
 static NSString *const loadMsgWithScope = @"loadMsgWithScope";
 static NSString *const messageCount = @"messageCount";

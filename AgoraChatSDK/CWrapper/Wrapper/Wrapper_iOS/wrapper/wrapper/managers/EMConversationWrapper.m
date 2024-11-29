@@ -70,6 +70,9 @@
     else if ([loadMsgWithMsgType isEqualToString:method]) {
         ret = [self loadMsgWithMsgType:params callback:callback];
     }
+    else if ([loadMsgWithMsgTypeList isEqualToString:method]) {
+        ret = [self loadMsgWithMsgTypeList:params callback:callback];
+    }
     else if ([loadMsgWithTime isEqualToString:method]) {
         ret = [self loadMsgWithTime:params callback:callback];
     }
@@ -244,6 +247,56 @@
         [jsonMsgs addObject:[msg toJson]];
     }
     [self wrapperCallback:callback error:nil object:jsonMsgs];
+    return nil;
+}
+
+- (NSString *)loadMsgWithMsgTypeList:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
+
+    __weak EMConversationWrapper * weakSelf = self;
+
+    NSArray<NSNumber *> *bodyTypeList = params[@"bodyTypeList"];
+    NSMutableArray<NSNumber *> *aTypes = [NSMutableArray array];
+
+    for (NSNumber *bodyType in bodyTypeList) {
+        EMMessageBodyType type = EMMessageBodyTypeText;
+        int iType = [bodyType intValue];
+
+        switch (iType) {
+            case 0: type = EMMessageBodyTypeText; break;
+            case 1: type = EMMessageBodyTypeImage; break;
+            case 2: type = EMMessageBodyTypeVideo; break;
+            case 3: type = EMMessageBodyTypeLocation; break;
+            case 4: type = EMMessageBodyTypeVoice; break;
+            case 5: type = EMMessageBodyTypeFile; break;
+            case 6: type = EMMessageBodyTypeCmd; break;
+            case 7: type = EMMessageBodyTypeCustom; break;
+            case 8: type = EMMessageBodyTypeCombine; break;
+            default: break;
+        }
+
+        [aTypes addObject:@(type)];
+    }
+
+    long long timestamp = [params[@"timestamp"] longLongValue];
+    int count = [params[@"count"] intValue];
+    NSString *sender = params[@"sender"];
+    EMMessageSearchDirection direction = [params[@"direction"] intValue] == 0 ? EMMessageSearchDirectionUp : EMMessageSearchDirectionDown;
+
+    EMConversation *conversation = [self conversationWithParam: params];
+    [conversation searchMessagesWithTypes:aTypes
+                                timestamp:timestamp
+                                    count:count
+                                 fromUser:sender
+                          searchDirection:direction
+                               completion:^(NSArray<EMChatMessage *> * _Nullable aMessages, EMError * _Nullable aError)
+    {
+        NSMutableArray *jsonMsgs = [NSMutableArray array];
+        for (EMChatMessage *msg in aMessages) {
+            [jsonMsgs addObject:[msg toJson]];
+        }
+        [weakSelf wrapperCallback:callback error:aError object:jsonMsgs];
+    }];
+
     return nil;
 }
 
