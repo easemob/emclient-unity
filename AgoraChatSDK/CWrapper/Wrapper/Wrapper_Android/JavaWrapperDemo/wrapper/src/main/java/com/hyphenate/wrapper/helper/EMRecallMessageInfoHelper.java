@@ -15,6 +15,7 @@ public class EMRecallMessageInfoHelper {
         if (info.getRecallMessage() != null) {
             data.put("recallMessage", EMMessageHelper.toJson(info.getRecallMessage()));
         }
+        data.put("conversationId", info.getConversationId());
         return data;
     }
 }
