@@ -63,11 +63,12 @@ public class EMWrapperRoomListener implements EMChatRoomChangeListener {
     }
 
     @Override
-    public void onMemberJoined(String roomId, String participant) {
+    public void onMemberJoined(String roomId, String participant, String ext) {
         JSONObject data = new JSONObject();
         try {
             data.put("roomId", roomId);
             data.put("userId", participant);
+            data.put("ext", ext);
             post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.chatRoomListener, EMSDKMethod.onMemberJoinedFromRoom, data.toString()));
         } catch (JSONException e) {
             e.printStackTrace();
