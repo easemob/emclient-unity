@@ -208,6 +208,7 @@ static NSString *const getGroupBlockListFromServer = @"getGroupBlockListFromServ
 static NSString *const getGroupMuteListFromServer = @"getGroupMuteListFromServer";
 static NSString *const getGroupWhiteListFromServer = @"getGroupWhiteListFromServer";
 static NSString *const isMemberInWhiteListFromServer = @"isMemberInWhiteListFromServer";
+static NSString *const isMemberInMuteListFromServer = @"isMemberInMuteListFromServer";
 static NSString *const getGroupFileListFromServer = @"getGroupFileListFromServer";
 static NSString *const getGroupAnnouncementFromServer = @"getGroupAnnouncementFromServer";
 static NSString *const addMembers = @"addMembers";

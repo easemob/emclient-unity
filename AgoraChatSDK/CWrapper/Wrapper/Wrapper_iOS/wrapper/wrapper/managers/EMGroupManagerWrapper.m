@@ -53,6 +53,8 @@
         ret = [self getGroupWhiteListFromServer:params callback:callback];
     } else if ([isMemberInWhiteListFromServer isEqualToString:method]) {
         ret = [self isMemberInWhiteListFromServer:params callback:callback];
+    } else if ([isMemberInMuteListFromServer isEqualToString:method]) {
+        ret = [self isMemberInMuteListFromServer:params callback:callback];
     } else if ([getGroupFileListFromServer isEqualToString:method]) {
         ret = [self getGroupFileListFromServer:params callback:callback];
     } else if ([getGroupAnnouncementFromServer isEqualToString:method]) {
@@ -275,6 +277,17 @@
         [weakSelf wrapperCallback:callback error:aError object:@{@"ret":@(inWhiteList)}];
     }];
     
+    return nil;
+}
+
+- (NSString *)isMemberInMuteListFromServer:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
+    __weak EMGroupManagerWrapper *weakSelf = self;
+    [EMClient.sharedClient.groupManager isMemberInMuteListFromServerWithGroupId:params[@"groupId"]
+                                                                     completion:^(BOOL inWhiteList, EMError *aError)
+     {
+        [weakSelf wrapperCallback:callback error:aError object:@{@"ret":@(inWhiteList)}];
+    }];
+
     return nil;
 }
 
