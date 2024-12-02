@@ -374,6 +374,8 @@ static NSString *const onAuthFailed = @"onAuthFailed";
 static NSString *const onTokenExpired = @"onTokenExpired";
 static NSString *const onTokenWillExpire = @"onTokenWillExpire";
 static NSString *const onAppActiveNumberReachLimitation = @"onAppActiveNumberReachLimitation";
+static NSString *const onOfflineMessageSyncStart = @"onOfflineMessageSyncStart";
+static NSString *const onOfflineMessageSyncFinish = @"onOfflineMessageSyncFinish";
 
 // GroupManagerDeleagate
 static NSString *const onInvitationReceivedFromGroup = @"onInvitationReceivedFromGroup";

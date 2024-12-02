@@ -399,6 +399,14 @@
     [EMWrapperHelper.shared.listener onReceive:connectionListener method:onTokenExpired info:nil];
 }
 
+- (void)onOfflineMessageSyncStart {
+    [EMWrapperHelper.shared.listener onReceive:connectionListener method:onOfflineMessageSyncStart info:nil];
+}
+
+- (void)onOfflineMessageSyncFinish {
+    [EMWrapperHelper.shared.listener onReceive:connectionListener method:onOfflineMessageSyncFinish info:nil];
+}
+
 - (void)multiDevicesContactEventDidReceive:(EMMultiDevicesEvent)aEvent username:(NSString *)aUsername ext:(NSString *)aExt {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     dict[@"operation"] = [NSNumber numberWithInt:(int)aEvent];
