@@ -13,7 +13,8 @@
     NSMutableDictionary *data = [NSMutableDictionary dictionary];
     data[@"recallBy"] = self.recallBy;
     data[@"recallMessageId"] = self.recallMessageId;
-    data[@"ext"] = self.ext;
+    data[@"ext"] = self.ext ?: @"";
+    data[@"conversationId"] = self.conversationId;
     if(nil != self.recallMessage) {
         data[@"recallMessage"] = [self.recallMessage toJson];
     }
