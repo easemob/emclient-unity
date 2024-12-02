@@ -143,6 +143,7 @@ static NSString *const loadMsgWithMsgTypeList = @"loadMsgWithMsgTypeList";
 static NSString *const loadMsgWithTime = @"loadMsgWithTime";
 static NSString *const loadMsgWithScope = @"loadMsgWithScope";
 static NSString *const messageCount = @"messageCount";
+static NSString *const messageCountWithTS = @"messageCountWithTS";
 static NSString *const pinnedMessages = @"pinnedMessages";
 static NSString *const marks = @"marks";
 

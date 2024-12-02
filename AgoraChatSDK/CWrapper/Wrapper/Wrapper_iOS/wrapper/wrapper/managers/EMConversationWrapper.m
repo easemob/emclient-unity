@@ -82,6 +82,9 @@
     else if([messageCount isEqualToString:method]) {
         ret = [self messageCount:params callback:callback];
     }
+    else if([messageCountWithTS isEqualToString:method]) {
+        ret = [self messageCountTS:params callback:callback];
+    }
     else if([removeMessages isEqualToString:method]) {
         ret = [self removeMessages:params callback:callback];
     }
@@ -347,6 +350,13 @@
 - (NSString *)messageCount:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
     EMConversation *conversation = [self conversationWithParam: params];
     return [[EMHelper getReturnJsonObject:@(conversation.messagesCount)] toJsonString];
+}
+
+- (NSString *)messageCountTS:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
+    EMConversation *conversation = [self conversationWithParam: params];
+    NSInteger startTs = [params[@"startTimestamp"] intValue];
+    NSInteger endTs = [params[@"endTimestamp"] intValue];
+    return [[EMHelper getReturnJsonObject:@([conversation getMessageCountStart:startTs to:endTs])] toJsonString];
 }
 
 - (NSString *)removeMessages:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
