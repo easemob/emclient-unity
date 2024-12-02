@@ -460,22 +460,24 @@ namespace AgoraChat
         * \~chinese
         * 获取数据库中的消息总数。
         *
-        * @return		消息总数。
+        * @return           消息总数。
+        * @param callback   成功返回消息总数，失败返回-1，详见 {@link ValueCallBack}。
         *
         * \~english
         * Gets the message count in DB.
         *
-        * @return		The count of messages in DB.
+        * @return           The count of messages in DB.
+        * @param callback   Returns the total number of messages on success, -1 on failure. See {@link ValueCallBack}。
         *
         */
-        public int GetMessageCount()
+        public void GetMessageCount(ValueCallBack<int> callback = null)
         {
-            string json = NativeGet(SDKMethod.getMessagesCount);
+            Process process = (_, jsonNode) =>
+            {
+                return jsonNode.IsNumber ? jsonNode.AsInt : -1;
+            };
 
-            if (null == json || json.Length == 0) return 0;
-
-            JSONObject jo = JSON.Parse(json).AsObject;
-            return int.Parse(jo["ret"].Value);
+            NativeCall<int>(SDKMethod.getMessagesCount, null, callback, process);
         }
 
         /**
