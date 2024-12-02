@@ -1446,6 +1446,7 @@ namespace sdk_wrapper {
         return nullptr;
     }
 
+    /*
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_GetMessagesCount(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         if (!CheckClientInitOrNot(nullptr)) return nullptr;
@@ -1462,6 +1463,31 @@ namespace sdk_wrapper {
 
         string json = s.GetString();
         return CopyToPointer(json);
+    }
+    */
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_GetMessagesCount(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        thread t([=]() {
+            int count = 0;
+            count = CLIENT->getChatManager().getMessagesCount();
+
+            JSON_STARTOBJ
+            writer.Key("ret");
+            writer.Int(count);
+            JSON_ENDOBJ
+
+            string json = s.GetString();
+            string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
+            CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            });
+        t.detach();
+
+        return nullptr;
     }
 
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_RemoveEarlierHistoryMessages(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
