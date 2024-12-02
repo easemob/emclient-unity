@@ -1513,10 +1513,7 @@ namespace sdk_wrapper {
     {
         if (!CheckClientInitOrNot(cbid)) return nullptr;
 
-        thread t([=]() {
-            CLIENT->getGroupManager().cleanAllGroupsFromDB();
-            });
-        t.detach();
+        CLIENT->getGroupManager().cleanAllGroupsFromDB();
 
         return nullptr;
     }
