@@ -58,6 +58,9 @@ public class EMOptionsHelper {
         if (json.has("includeSendMessageInMessageListener")) {
             options.setIncludeSendMessageInMessageListener(json.optBoolean("includeSendMessageInMessageListener"));
         }
+        if (json.has("loginCustomExt")) {
+            options.setLoginCustomExt(json.optString("loginCustomExt"));
+        }
 
         if (json.has("pushConfig")) {
             EMPushConfig.Builder builder = new EMPushConfig.Builder(context);
@@ -78,7 +81,7 @@ public class EMOptionsHelper {
                 builder.enableMeiZuPush(pushConfig.getString("mzAppId"), pushConfig.getString("mzAppKey"));
             }
             if (pushConfig.getBoolean("enableVivoPush")) {
-                builder.enableVivoPush();
+                builder.enableVivoPush(false);
             }
             options.setPushConfig(builder.build());
         }
