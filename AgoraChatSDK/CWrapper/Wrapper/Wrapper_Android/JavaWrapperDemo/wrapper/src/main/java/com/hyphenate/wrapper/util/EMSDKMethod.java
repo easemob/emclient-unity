@@ -73,6 +73,7 @@ public class EMSDKMethod {
     public static final String getThreadConversation = "getThreadConversation";
     public static final String markAllChatMsgAsRead = "markAllChatMsgAsRead";
     public static final String getUnreadMessageCount = "getUnreadMessageCount";
+    public static final String getMessagesCount = "getMessagesCount";
     public static final String updateChatMessage = "updateChatMessage";
     public static final String downloadAttachment = "downloadAttachment";
     public static final String downloadThumbnail = "downloadThumbnail";

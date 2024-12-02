@@ -77,6 +77,8 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
             ret = markAllChatMsgAsRead(jsonObject, callback);
         } else if (EMSDKMethod.getUnreadMessageCount.equals(method)) {
             ret = getUnreadMessageCount(jsonObject, callback);
+        } else if (EMSDKMethod.getMessagesCount.equals(method)) {
+            ret = getMessageCount(jsonObject, callback);
         } else if (EMSDKMethod.updateChatMessage.equals(method)) {
             ret = updateChatMessage(jsonObject, callback);
         } else if (EMSDKMethod.downloadAttachment.equals(method)) {
@@ -314,6 +316,22 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
     private String getUnreadMessageCount(JSONObject params, EMWrapperCallback callback) throws JSONException {
         int count = EMClient.getInstance().chatManager().getUnreadMessageCount();
         return EMHelper.getReturnJsonObject(count).toString();
+    }
+
+    private String getMessageCount(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        EMClient.getInstance().chatManager().asyncGetMessageCount(new EMCommonValueCallback<Integer>(callback){
+            @Override
+            public void onSuccess(Integer object) {
+                JSONObject jo = new JSONObject();
+                try {
+                    jo.put("ret", object);
+                    super.updateObject(jo);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        return null;
     }
 
     private String updateChatMessage(JSONObject params, EMWrapperCallback callback) throws JSONException {
