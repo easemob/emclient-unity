@@ -136,6 +136,7 @@ public class EMSDKMethod {
     public static final String loadMsgWithStartId = "loadMsgWithStartId";
     public static final String loadMsgWithKeywords = "loadMsgWithKeywords";
     public static final String loadMsgWithMsgType = "loadMsgWithMsgType";
+    public static final String loadMsgWithMsgTypeList = "loadMsgWithMsgTypeList";
     public static final String loadMsgWithTime = "loadMsgWithTime";
     public static final String loadMsgWithScope = "loadMsgWithScope";
     public static final String messageCount = "messageCount";
