@@ -154,6 +154,7 @@ public class EMSDKMethod {
 
     // EMChatRoomManager
     public static final String joinChatRoom = "joinChatRoom";
+    public static final String joinChatRoomExt = "joinChatRoomExt";
     public static final String leaveChatRoom = "leaveChatRoom";
     public static final String fetchPublicChatRoomsFromServer = "fetchPublicChatRoomsFromServer";
     public static final String fetchChatRoomInfoFromServer = "fetchChatRoomInfoFromServer";
