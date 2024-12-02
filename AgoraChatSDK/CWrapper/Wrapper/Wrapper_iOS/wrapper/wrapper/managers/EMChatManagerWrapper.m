@@ -60,6 +60,8 @@
         ret = [self markAllMessagesAsRead:params callback:callback];
     }else if([method isEqualToString:getUnreadMessageCount]) {
         ret = [self getUnreadMessageCount:params callback:callback];
+    }else if([method isEqualToString:getMessagesCount]) {
+        ret = [self getMessageCount:params callback:callback];
     }else if([method isEqualToString:updateChatMessage]) {
         ret = [self updateChatMessage:params callback:callback];
     }else if([method isEqualToString:downloadAttachment]) {
@@ -292,6 +294,18 @@
     }
     
     return [[EMHelper getReturnJsonObject:@(unreadCount)] toJsonString];
+}
+
+- (NSString *)getMessageCount:(NSDictionary *)param
+                           callback:(EMWrapperCallback *)callback {
+
+    __weak EMChatManagerWrapper * weakSelf = self;
+    [EMClient.sharedClient.chatManager getMessageCountWithCompletion:^(NSInteger count, EMError * _Nullable aError)
+     {
+         [weakSelf wrapperCallback:callback error:aError object:@(count)];
+    }];
+
+    return nil;
 }
 
 - (NSString *)updateChatMessage:(NSDictionary *)param

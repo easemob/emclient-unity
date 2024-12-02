@@ -80,6 +80,7 @@ static NSString *const getConversation = @"getConversation";
 static NSString *const getThreadConversation = @"getThreadConversation";
 static NSString *const markAllChatMsgAsRead = @"markAllChatMsgAsRead";
 static NSString *const getUnreadMessageCount = @"getUnreadMessageCount";
+static NSString *const getMessagesCount = @"getMessagesCount";
 static NSString *const updateChatMessage = @"updateChatMessage";
 static NSString *const downloadAttachment = @"downloadAttachment";
 static NSString *const downloadThumbnail = @"downloadThumbnail";
