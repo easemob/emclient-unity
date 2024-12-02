@@ -132,6 +132,8 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
             ret = fetchMemberAttributes(jsonObject, callback);
         } else if (EMSDKMethod.fetchMyGroupsCount.equals(method)) {
             ret = fetchMyGroupsCount(callback);
+        } else if (EMSDKMethod.cleanAllGroupsFromDB.equals(method)) {
+            ret = cleanAllGroupsFromDB();
         } else {
             ret = super.onMethodCall(method, jsonObject, callback);
         }
@@ -1069,6 +1071,11 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
         };
 
         EMClient.getInstance().groupManager().asyncGetJoinedGroupsCountFromServer(callBack);
+        return null;
+    }
+
+    private String cleanAllGroupsFromDB() {
+        EMClient.getInstance().groupManager().cleanAllGroupsFromLocal();
         return null;
     }
     
