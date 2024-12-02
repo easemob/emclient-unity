@@ -56,6 +56,8 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
             ret = getGroupWhiteListFromServer(jsonObject, callback);
         } else if (EMSDKMethod.isMemberInWhiteListFromServer.equals(method)) {
             ret = isMemberInWhiteListFromServer(jsonObject, callback);
+        } else if (EMSDKMethod.isMemberInMuteListFromServer.equals(method)) {
+            ret = isMemberInMuteListFromServer(jsonObject, callback);
         } else if (EMSDKMethod.getGroupFileListFromServer.equals(method)) {
             ret = getGroupFileListFromServer(jsonObject, callback);
         } else if (EMSDKMethod.getGroupAnnouncementFromServer.equals(method)) {
@@ -411,6 +413,24 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
             throws JSONException {
         String groupId = params.getString("groupId");
         EMClient.getInstance().groupManager().checkIfInGroupWhiteList(groupId, new EMCommonValueCallback<Boolean>(callback){
+            @Override
+            public void onSuccess(Boolean object) {
+                JSONObject jo = new JSONObject();
+                try {
+                    jo.put("ret", object);
+                    super.updateObject(jo);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        return null;
+    }
+
+    private String isMemberInMuteListFromServer(JSONObject params, EMWrapperCallback callback)
+            throws JSONException {
+        String groupId = params.getString("groupId");
+        EMClient.getInstance().groupManager().asyncCheckIfInMuteList(groupId, new EMCommonValueCallback<Boolean>(callback){
             @Override
             public void onSuccess(Boolean object) {
                 JSONObject jo = new JSONObject();

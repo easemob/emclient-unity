@@ -205,6 +205,7 @@ public class EMSDKMethod {
     public static final String getGroupMuteListFromServer = "getGroupMuteListFromServer";
     public static final String getGroupWhiteListFromServer = "getGroupWhiteListFromServer";
     public static final String isMemberInWhiteListFromServer = "isMemberInWhiteListFromServer";
+    public static final String isMemberInMuteListFromServer = "isMemberInMuteListFromServer";
     public static final String getGroupFileListFromServer = "getGroupFileListFromServer";
     public static final String getGroupAnnouncementFromServer = "getGroupAnnouncementFromServer";
     public static final String addMembers = "addMembers";
