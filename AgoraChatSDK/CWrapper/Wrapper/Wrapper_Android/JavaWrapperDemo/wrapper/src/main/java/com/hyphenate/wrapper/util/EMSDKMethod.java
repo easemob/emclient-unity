@@ -140,6 +140,7 @@ public class EMSDKMethod {
     public static final String loadMsgWithTime = "loadMsgWithTime";
     public static final String loadMsgWithScope = "loadMsgWithScope";
     public static final String messageCount = "messageCount";
+    public static final String messageCountWithTS = "messageCountWithTS";
     public static final String pinnedMessages = "pinnedMessages";
     public static final String marks = "marks";
 

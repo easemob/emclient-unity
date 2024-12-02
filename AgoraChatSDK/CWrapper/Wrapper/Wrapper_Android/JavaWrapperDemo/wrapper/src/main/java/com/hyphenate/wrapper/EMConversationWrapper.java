@@ -78,6 +78,9 @@ public class EMConversationWrapper extends EMBaseWrapper {
         else if(EMSDKMethod.messageCount.equals(method)) {
             ret = messageCount(jsonObject, callback);
         }
+        else if(EMSDKMethod.messageCountWithTS.equals(method)) {
+            ret = messageCountWithTS(jsonObject, callback);
+        }
         else if(EMSDKMethod.removeMessages.equals(method)) {
             ret = removeMessages(jsonObject, callback);
         } else if(EMSDKMethod.pinnedMessages.equals(method)) {
@@ -320,6 +323,13 @@ public class EMConversationWrapper extends EMBaseWrapper {
     private String messageCount(JSONObject params, EMWrapperCallback callback) throws JSONException {
         EMConversation conversation = conversationWithParam(params);
         return EMHelper.getReturnJsonObject(conversation.getAllMsgCount()).toString();
+    }
+
+    private String messageCountWithTS(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        EMConversation conversation = conversationWithParam(params);
+        long start_timestamp = params.getLong("startTimestamp");
+        long end_timestamp = params.getLong("endTimestamp");
+        return EMHelper.getReturnJsonObject(conversation.getAllMsgCount(start_timestamp, end_timestamp)).toString();
     }
 
     private String removeMessages(JSONObject params, EMWrapperCallback callback) throws JSONException {
