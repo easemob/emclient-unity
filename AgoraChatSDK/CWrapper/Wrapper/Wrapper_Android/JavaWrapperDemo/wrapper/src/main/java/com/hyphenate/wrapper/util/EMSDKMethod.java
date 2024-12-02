@@ -372,6 +372,8 @@ public class EMSDKMethod {
     public static final String onAuthFailed = "onAuthFailed";
     public static final String onTokenExpired = "onTokenExpired";
     public static final String onTokenWillExpire = "onTokenWillExpire";
+    public static final String onOfflineMessageSyncStart = "onOfflineMessageSyncStart";
+    public static final String onOfflineMessageSyncFinish = "onOfflineMessageSyncFinish";
 
     // GroupManagerDelegate
     public static final String onInvitationReceivedFromGroup = "onInvitationReceivedFromGroup";
