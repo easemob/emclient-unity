@@ -593,6 +593,9 @@ namespace sdk_wrapper
 
             error->setErrorCode(EMError::APP_ACTIVE_NUMBER_REACH_LIMITATION);
             gConnectionListener->onDisconnect(error);
+
+            gConnectionListener->onOfflineMessageSyncStart();
+            gConnectionListener->onOfflineMessageSyncFinish();
             
         }
 
@@ -610,7 +613,7 @@ namespace sdk_wrapper
 
             gMultiDevicesListener->onRoamDeleteMultiDevicesEvent("convId", "deviceId", usernames, 123456);
 
-            gMultiDevicesListener->onConversationMultiDevicesEvent(EMMultiDevicesListener::MultiDevicesOperation::CONVERSATION_MARK, "convId", EMConversation::EMConversationType::CHAT);
+            gMultiDevicesListener->onConversationMultiDevicesEvent(EMMultiDevicesListener::MultiDevicesOperation::CONVERSATION_MUTE_INFO_CHANGED, "convId", EMConversation::EMConversationType::CHAT);
         }
 
         return nullptr;
