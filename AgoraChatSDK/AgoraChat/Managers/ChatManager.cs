@@ -686,7 +686,7 @@ namespace AgoraChat
             jo_param.AddWithoutNull("keywords", keywords);
             jo_param.AddWithoutNull("from", from ?? "");
             jo_param.AddWithoutNull("count", maxCount);
-            jo_param.AddWithoutNull("timestamp", timestamp.ToString());
+            jo_param.AddWithoutNull("timestamp", timestamp);
             jo_param.AddWithoutNull("direction", direction.ToInt());
 
             Process process = (_, jsonNode) =>
@@ -733,7 +733,7 @@ namespace AgoraChat
             jo_param.AddWithoutNull("keywords", keywords);
             jo_param.AddWithoutNull("from", from ?? "");
             jo_param.AddWithoutNull("count", maxCount);
-            jo_param.AddWithoutNull("timestamp", timestamp.ToString());
+            jo_param.AddWithoutNull("timestamp", timestamp);
             jo_param.AddWithoutNull("direction", direction.ToInt());
             jo_param.AddWithoutNull("scope", scope.ToInt());
 
@@ -965,7 +965,7 @@ namespace AgoraChat
         public void RemoveMessagesBeforeTimestamp(long timeStamp, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.AddWithoutNull("timestamp", timeStamp.ToString());
+            jo_param.AddWithoutNull("timestamp", timeStamp);
             NativeCall(SDKMethod.deleteMessagesBeforeTimestamp, jo_param, callback);
         }
 
@@ -1364,7 +1364,7 @@ namespace AgoraChat
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("convId", conversationId);
             jo_param.AddWithoutNull("convType", conversationType.ToInt());
-            jo_param.AddWithoutNull("timestamp", timeStamp.ToString());
+            jo_param.AddWithoutNull("timestamp", timeStamp);
 
             NativeCall(SDKMethod.removeMessagesFromServerWithTs, jo_param, callback);
         }

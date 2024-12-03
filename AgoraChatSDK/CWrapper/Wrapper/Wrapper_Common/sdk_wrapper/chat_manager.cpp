@@ -726,8 +726,7 @@ namespace sdk_wrapper {
         string from = GetJsonValue_String(d, "from", "");
         int count = GetJsonValue_Int(d, "count", 20);
 
-        string timestamp_str = GetJsonValue_String(d, "timestamp", "0");
-        int64_t ts = atol(timestamp_str.c_str());
+        int64_t ts = GetJsonValue_Int64(d, "timestamp", -1);
 
         int var_direction = GetJsonValue_Int(d, "direction", 0);
         EMConversation::EMMessageSearchDirection direction = Conversation::EMMessageSearchDirectionFromInt(var_direction);
@@ -757,8 +756,7 @@ namespace sdk_wrapper {
         string from = GetJsonValue_String(d, "from", "");
         int count = GetJsonValue_Int(d, "count", 20);
 
-        string timestamp_str = GetJsonValue_String(d, "timestamp", "0");
-        int64_t ts = atol(timestamp_str.c_str());
+        int64_t ts = GetJsonValue_Int64(d, "timestamp", -1);
 
         int var_direction = GetJsonValue_Int(d, "direction", 0);
         EMConversation::EMMessageSearchDirection direction = Conversation::EMMessageSearchDirectionFromInt(var_direction);
@@ -893,9 +891,7 @@ namespace sdk_wrapper {
         string local_cbid = cbid;
 
         Document d; d.Parse(jstr);
-        string timestamp = GetJsonValue_String(d, "timestamp", "0");
-
-        int64_t ts = atoll(timestamp.c_str());
+        int64_t ts = GetJsonValue_Int64(d, "timestamp", -1);
 
         thread t([=]() {
 
@@ -1394,8 +1390,7 @@ namespace sdk_wrapper {
         int var_type = GetJsonValue_Int(d, "convType", 0);
         conv_type = EMConversation::EMConversationType(var_type);
 
-        string timestamp = GetJsonValue_String(d, "timestamp", "0");
-        int64_t ts = atoll(timestamp.c_str());
+        int64_t ts = GetJsonValue_Int64(d, "timestamp", -1);
 
         thread t([=]() {
             EMErrorPtr error = CLIENT->getChatManager().removeMessagesFromServer(cov_id, conv_type, ts);

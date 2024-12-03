@@ -6151,7 +6151,7 @@ namespace WinSDKTest
 
             Conversation conv = SDKClient.Instance.ChatManager.GetConversation(cid, type);
      
-            conv.LoadMessagesWithMsgType(bodyType, sender, (int)ts, count, direct, new ValueCallBack<List<Message>>(
+            conv.LoadMessagesWithMsgType(bodyType, sender, ts, count, direct, new ValueCallBack<List<Message>>(
                 onSuccess: (list) => {
                     Console.WriteLine($"LoadMessagesWithMsgType found {list.Count} messages");
                     foreach(var it in list)
@@ -6230,7 +6230,7 @@ namespace WinSDKTest
             tlist.Add(bodyType);
             tlist.Add(bodyType2);
 
-            conv.LoadMessagesWithMsgTypeList(tlist, sender, (int)ts, count, direct, new ValueCallBack<List<Message>>(
+            conv.LoadMessagesWithMsgTypeList(tlist, sender, ts, count, direct, new ValueCallBack<List<Message>>(
                 onSuccess: (list) => {
                     Console.WriteLine($"LoadMessagesWithMsgTypeList found {list.Count} messages");
                     foreach (var it in list)

@@ -244,8 +244,7 @@ namespace sdk_wrapper {
         string sender = GetJsonValue_String(d, "sender", "");
 
         int count = GetJsonValue_Int(d, "count", 20);
-        string timestamp = GetJsonValue_String(d, "timestamp", "0");
-        int64_t ts = atol(timestamp.c_str());
+        int64_t ts = GetJsonValue_Int64(d, "timestamp", -1);
 
         int int_direction = GetJsonValue_Int(d, "direction", 0);
         EMConversation::EMMessageSearchDirection direction = Conversation::EMMessageSearchDirectionFromInt(int_direction);
@@ -283,8 +282,7 @@ namespace sdk_wrapper {
 
         int count = GetJsonValue_Int(d, "count", 20);
 
-        string timestamp = GetJsonValue_String(d, "timestamp", "0");
-        int64_t ts = atol(timestamp.c_str());
+        int64_t ts = GetJsonValue_Int64(d, "timestamp", -1);
 
         int int_direction = GetJsonValue_Int(d, "direction", 0);
         EMConversation::EMMessageSearchDirection direction = Conversation::EMMessageSearchDirectionFromInt(int_direction);
@@ -321,8 +319,7 @@ namespace sdk_wrapper {
 
         int count = GetJsonValue_Int(d, "count", 20);
 
-        string timestamp = GetJsonValue_String(d, "timestamp", "0");
-        int64_t ts = atol(timestamp.c_str());
+        int64_t ts = GetJsonValue_Int64(d, "timestamp", -1);
 
         int int_direction = GetJsonValue_Int(d, "direction", 0);
         EMConversation::EMMessageSearchDirection direction = Conversation::EMMessageSearchDirectionFromInt(int_direction);
@@ -389,8 +386,7 @@ namespace sdk_wrapper {
         string from = GetJsonValue_String(d, "from", "");
         int count = GetJsonValue_Int(d, "count", 20);
 
-        string timestamp_str = GetJsonValue_String(d, "timestamp", "0");
-        int64_t ts = atol(timestamp_str.c_str());
+        int64_t ts = GetJsonValue_Int64(d, "timestamp", -1);
 
         int var_direction = GetJsonValue_Int(d, "direction", 0);
         EMConversation::EMMessageSearchDirection direction = Conversation::EMMessageSearchDirectionFromInt(var_direction);

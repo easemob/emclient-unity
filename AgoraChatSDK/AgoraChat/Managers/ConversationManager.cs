@@ -258,7 +258,7 @@ namespace AgoraChat
             jo_param.AddWithoutNull("keywords", keywords);
             jo_param.AddWithoutNull("from", from ?? "");
             jo_param.AddWithoutNull("count", maxCount);
-            jo_param.AddWithoutNull("timestamp", timestamp.ToString());
+            jo_param.AddWithoutNull("timestamp", timestamp);
             jo_param.AddWithoutNull("direction", direction.ToInt());
             jo_param.AddWithoutNull("scope", scope.ToInt());
 
