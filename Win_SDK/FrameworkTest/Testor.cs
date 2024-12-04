@@ -5234,6 +5234,11 @@ namespace WinSDKTest
                 CallFunc_IChatManager_GetPinnedMessagesFromServer();
                 return;
             }
+            if (select_context.level2_item.CompareTo("GetMessageCount") == 0)
+            {
+                CallFunc_IChatManager_GetMessageCount();
+                return;
+            }
 
         }
 
