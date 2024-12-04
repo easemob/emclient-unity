@@ -53,6 +53,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     private Button deleteAllMessagesAndConversationsBtn;
     private Button pinMessageBtn;
     private Button getPinnedMessagesFromServerBtn;
+    private Button getMessageCountBtn;
 
     private void Awake()
     {
@@ -105,6 +106,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         deleteAllMessagesAndConversationsBtn = transform.Find("Scroll View/Viewport/Content/DeleteAllMessagesAndConversationsBtn").GetComponent<Button>();
         pinMessageBtn = transform.Find("Scroll View/Viewport/Content/PinMessageBtn").GetComponent<Button>();
         getPinnedMessagesFromServerBtn = transform.Find("Scroll View/Viewport/Content/GetPinnedMessagesFromServerBtn").GetComponent<Button>();
+        getMessageCountBtn = transform.Find("Scroll View/Viewport/Content/GetMessageCountBtn").GetComponent<Button>();
 
         sendTextBtn.onClick.AddListener(SendTextBtnAction);
         sendImageBtn.onClick.AddListener(SendImageBtnAction);
@@ -148,6 +150,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         deleteAllMessagesAndConversationsBtn.onClick.AddListener(DeleteAllMessagesAndConversationsBtnAction);
         pinMessageBtn.onClick.AddListener(PinMessageBtnAction);
         getPinnedMessagesFromServerBtn.onClick.AddListener(GetPinnedMessagesFromServerBtnAction);
+        getMessageCountBtn.onClick.AddListener(GetMessageCountBtnAction);
         SDKClient.Instance.ChatManager.AddChatManagerDelegate(this);
     }
 
@@ -1453,6 +1456,18 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
         config.AddField("convId");
         UIManager.DefaultInputAlert(transform, config);
+    }
+
+    void GetMessageCountBtnAction()
+    {
+        SDKClient.Instance.ChatManager.GetMessageCount(new ValueCallBack<int>(
+            onSuccess: (count) => {
+                UIManager.DefaultAlert(transform, $"找到的消息条数: {count}");
+            },
+            onError: (code, desc) => {
+                UIManager.DefaultAlert(transform, "GetMessageCount failed");
+            }
+        ));
     }
 
     // Start is called before the first frame update

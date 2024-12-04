@@ -33,6 +33,8 @@ public class ConversationManagerTest : MonoBehaviour
     private Button MessagesCountBtn;
     private Button DeleteMessagesBtn;
     private Button PinnedMessagesBtn;
+    private Button LoadMessagesWithMsgTypeListBtn;
+    private Button MessagesCountWithTSBtn;
 
     private string conversationId
     {
@@ -105,7 +107,8 @@ public class ConversationManagerTest : MonoBehaviour
         MessagesCountBtn = transform.Find("Scroll View/Viewport/Content/MessagesCountBtn").GetComponent<Button>();
         DeleteMessagesBtn = transform.Find("Scroll View/Viewport/Content/DeleteMessagesBtn").GetComponent<Button>();
         PinnedMessagesBtn = transform.Find("Scroll View/Viewport/Content/PinnedMessagesBtn").GetComponent<Button>();
-
+        LoadMessagesWithMsgTypeListBtn = transform.Find("Scroll View/Viewport/Content/LoadMessagesWithMsgTypeListBtn").GetComponent<Button>();
+        MessagesCountWithTSBtn = transform.Find("Scroll View/Viewport/Content/MessagesCountWithTSBtn").GetComponent<Button>();
 
         LastMessageBtn.onClick.AddListener(LastMessageBtnAction);
         LastReceiveMessageBtn.onClick.AddListener(LastReceiveMessageBtnAction);
@@ -128,6 +131,8 @@ public class ConversationManagerTest : MonoBehaviour
         MessagesCountBtn.onClick.AddListener(MessagesCountBtnAction);
         DeleteMessagesBtn.onClick.AddListener(DeleteMessagesBtnAction);
         PinnedMessagesBtn.onClick.AddListener(PinnedMessagesBtnAction);
+        LoadMessagesWithMsgTypeListBtn.onClick.AddListener(LoadMessagesWithMsgTypeListBtnAction);
+        MessagesCountWithTSBtn.onClick.AddListener(MessagesCountWithTSBtnAction);
     }
 
 
@@ -538,6 +543,39 @@ public class ConversationManagerTest : MonoBehaviour
         Debug.Log("LoadMessagesWithMsgTypeBtnAction");
     }
 
+    void LoadMessagesWithMsgTypeListBtnAction()
+    {
+        if (null == conversationId || 0 == conversationId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
+
+        MessageBodyType type = MessageBodyType.TXT;
+        MessageBodyType type1 = MessageBodyType.FILE;
+        MessageBodyType type2 = MessageBodyType.IMAGE;
+        MessageBodyType type3 = MessageBodyType.LOCATION;
+
+        List<MessageBodyType> tlist = new List<MessageBodyType>();
+        tlist.Add(type);
+        tlist.Add(type1);
+        tlist.Add(type2);
+        tlist.Add(type3);
+
+        Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
+        conv.LoadMessagesWithMsgTypeList(tlist, null, -1, count: 200, MessageSearchDirection.UP, new ValueCallBack<List<Message>>(
+            onSuccess: (list) =>
+            {
+                UIManager.DefaultAlert(transform, $"获取到{list.Count}条消息");
+            },
+            onError: (code, desc) =>
+            {
+                UIManager.ErrorAlert(transform, code, desc);
+            }
+        ));
+        Debug.Log("LoadMessagesWithMsgTypeBtnAction");
+    }
+
     void MessagesCountBtnAction()
     {
         if (null == conversationId || 0 == conversationId.Length)
@@ -551,6 +589,32 @@ public class ConversationManagerTest : MonoBehaviour
         UIManager.DefaultAlert(transform, $"messagecount:{count}");
 
         Debug.Log("MessagesCountBtnAction");
+    }
+
+    void MessagesCountWithTSBtnAction()
+    {
+        if (null == conversationId || 0 == conversationId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
+
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            long starttime = long.Parse(dict["starttime"]);
+            long endtime = long.Parse(dict["endtime"]);
+
+            Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
+            int count = conv.MessagesCountWithTimestamp(starttime, endtime);
+            UIManager.DefaultAlert(transform, $"messagecount:{count}");
+        });
+
+        config.AddField("starttime");
+        config.AddField("endtime");
+
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("MessagesCountWithTSBtnAction");
     }
 
     void PinnedMessagesBtnAction()

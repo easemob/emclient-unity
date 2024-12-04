@@ -207,6 +207,7 @@ public class Login : MonoBehaviour
         options.DebugMode = true;
         options.EnableEmptyConversation = true;
         options.RegardImportMsgAsRead = true;
+        options.LoginCustomExt = "My LoginCustomExt";
         //options.UseReplacedMessageContents = true;
         SDKClient.Instance.InitWithOptions(options);
 

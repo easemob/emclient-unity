@@ -35,6 +35,7 @@ public class RoomManagerTest : MonoBehaviour
     private Button AddAttributeBtn;
     private Button RemoveAttributeBtn;
     private Button FetchAttributeBtn;
+    private Button JoinRoomExtBtn;
 
     private string currentRoomId
     {
@@ -76,6 +77,7 @@ public class RoomManagerTest : MonoBehaviour
         AddAttributeBtn = transform.Find("Scroll View/Viewport/Content/AddAttributeBtn").GetComponent<Button>();
         RemoveAttributeBtn = transform.Find("Scroll View/Viewport/Content/RemoveAttributeBtn").GetComponent<Button>();
         FetchAttributeBtn = transform.Find("Scroll View/Viewport/Content/FetchAttributeBtn").GetComponent<Button>();
+        JoinRoomExtBtn = transform.Find("Scroll View/Viewport/Content/JoinRoomExtBtn").GetComponent<Button>();
 
 
 
@@ -104,7 +106,7 @@ public class RoomManagerTest : MonoBehaviour
         AddAttributeBtn.onClick.AddListener(AddAttributeBtnAction);
         RemoveAttributeBtn.onClick.AddListener(RemoveAttributeBtnAction);
         FetchAttributeBtn.onClick.AddListener(FetchAttributeBtnAction);
-
+        JoinRoomExtBtn.onClick.AddListener(JoinRoomExtBtnAction);
     }
 
 
@@ -362,20 +364,33 @@ public class RoomManagerTest : MonoBehaviour
             UIManager.DefaultAlert(transform, "缺少必要参数");
             return;
         }
-        SDKClient.Instance.RoomManager.FetchRoomInfoFromServer(currentRoomId, new ValueCallBack<Room>(
+
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            bool fetchMembers = bool.Parse(dict["fetchMembers"]);
+
+            SDKClient.Instance.RoomManager.FetchRoomInfoFromServer(currentRoomId, fetchMembers, new ValueCallBack<Room>(
             onSuccess: (room) =>
             {
+                string members = string.Join(",", room.MemberList.ToArray());
+
                 List<string> list = new List<string>();
                 list.Add(room.Name);
                 list.Add(room.Description);
-                string str = string.Join(",", list.ToArray());
+                list.Add(members);
+                string str = string.Join(";", list.ToArray());
                 UIManager.DefaultAlert(this.transform, str);
             },
             onError: (code, desc) =>
             {
                 UIManager.ErrorAlert(this.transform, code, desc);
             }
-        ));
+            ));
+        });
+
+        config.AddField("AdminId");
+
+        UIManager.DefaultInputAlert(this.transform, config);
 
         Debug.Log("FetchRoomInfoFromServerBtnAction");
     }
@@ -450,6 +465,40 @@ public class RoomManagerTest : MonoBehaviour
         ));
         Debug.Log("JoinRoomBtnAction");
     }
+
+    void JoinRoomExtBtnAction()
+    {
+        if (null == currentRoomId || 0 == currentRoomId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string ext = dict["ext"];
+            bool leaveOtherRooms = bool.Parse(dict["leaveOtherRooms"]);
+
+            SDKClient.Instance.RoomManager.JoinRoom(currentRoomId, ext, leaveOtherRooms, new ValueCallBack<Room>(
+            onSuccess: (room) =>
+            {
+                UIManager.DefaultAlert(this.transform, "加入成功");
+            },
+            onError: (code, desc) =>
+            {
+                UIManager.ErrorAlert(this.transform, code, desc);
+            }
+        ));
+        });
+
+        config.AddField("ext");
+        config.AddField("leaveOtherRooms");
+
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("JoinRoomExtBtnAction");
+    }
+
+
     void LeaveRoomBtnAction()
     {
         if (null == currentRoomId || 0 == currentRoomId.Length)

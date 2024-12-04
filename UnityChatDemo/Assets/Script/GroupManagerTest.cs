@@ -56,6 +56,8 @@ public class GroupManagerTest : MonoBehaviour
     private Button SetMemberAttributesBtn;
     private Button FetchMemberAttributesBtn;
     private Button FetchMyGroupsCountBtn;
+    private Button CleanAllGroupsFromDBBtn;
+    private Button CheckIfInGroupMuteListBtn;
 
     private string currentGroupId
     {
@@ -119,6 +121,8 @@ public class GroupManagerTest : MonoBehaviour
         SetMemberAttributesBtn = transform.Find("Scroll View/Viewport/Content/SetMemberAttributesBtn").GetComponent<Button>();
         FetchMemberAttributesBtn = transform.Find("Scroll View/Viewport/Content/FetchMemberAttributesBtn").GetComponent<Button>();
         FetchMyGroupsCountBtn = transform.Find("Scroll View/Viewport/Content/FetchMyGroupsCountBtn").GetComponent<Button>();
+        CleanAllGroupsFromDBBtn = transform.Find("Scroll View/Viewport/Content/CleanAllGroupsFromDBBtn").GetComponent<Button>();
+        CheckIfInGroupMuteListBtn = transform.Find("Scroll View/Viewport/Content/CheckIfInGroupMuteListBtn").GetComponent<Button>();
 
         AcceptInvitationFromGroupBtn.onClick.AddListener(AcceptInvitationFromGroupBtnAction);
         AcceptJoinApplicationBtn.onClick.AddListener(AcceptJoinApplicationBtnAction);
@@ -166,8 +170,8 @@ public class GroupManagerTest : MonoBehaviour
         SetMemberAttributesBtn.onClick.AddListener(SetMemberAttributesBtnAction);
         FetchMemberAttributesBtn.onClick.AddListener(FetchMemberAttributesBtnAction);
         FetchMyGroupsCountBtn.onClick.AddListener(FetchMyGroupsCountBtnAction);
-
-
+        CleanAllGroupsFromDBBtn.onClick.AddListener(CleanAllGroupsFromDBBtnAction);
+        CheckIfInGroupMuteListBtn.onClick.AddListener(CheckIfInGroupMuteListBtnAction);
     }
 
     private void OnDestroy()
@@ -439,6 +443,28 @@ public class GroupManagerTest : MonoBehaviour
         Debug.Log("CheckIfInGroupWhiteListBtnAction");
 
     }
+
+    void CheckIfInGroupMuteListBtnAction()
+    {
+        if (null == currentGroupId || 0 == currentGroupId.Length)
+        {
+            UIManager.DefaultAlert(transform, "缺少必要参数");
+            return;
+        }
+        SDKClient.Instance.GroupManager.CheckIfInGroupMuteList(currentGroupId, new ValueCallBack<bool>(
+           onSuccess: (ret) =>
+           {
+               UIManager.DefaultAlert(transform, ret ? "在禁言列表中" : "不在禁言列表中");
+           },
+           onError: (code, desc) =>
+           {
+               UIManager.ErrorAlert(transform, code, desc);
+           }
+        ));
+
+        Debug.Log("CheckIfInGroupMuteListBtnAction");
+    }
+
     void CreateGroupBtnAction()
     {
 
@@ -738,23 +764,32 @@ public class GroupManagerTest : MonoBehaviour
             UIManager.DefaultAlert(transform, "缺少必要参数");
             return;
         }
-        SDKClient.Instance.GroupManager.GetGroupSpecificationFromServer(currentGroupId, new ValueCallBack<Group>(
-            onSuccess: (group) =>
-            {
-                List<string> list = new List<string>();
-                list.Add(group.Name);
-                list.Add(group.Description);
-                string str = string.Join(",", list.ToArray());
-                UIManager.DefaultAlert(transform, str);
-            },
-            onError: (code, desc) =>
-            {
-                UIManager.ErrorAlert(transform, code, desc);
-            }
-        ));
+
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            bool fetchMembers  = bool.Parse(dict["fetchMembers"]);
+
+            SDKClient.Instance.GroupManager.GetGroupSpecificationFromServer(currentGroupId, fetchMembers, new ValueCallBack<Group>(
+                onSuccess: (group) =>
+                {
+                    string members = string.Join(",", group.MemberList.ToArray());
+
+                    List<string> list = new List<string>();
+                    list.Add(group.Name);
+                    list.Add(group.Description);
+                    list.Add(members);
+                    string str = string.Join(";", list.ToArray());
+                    UIManager.DefaultAlert(transform, str);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+        config.AddField("fetchMembers");
 
         Debug.Log("GetGroupSpecificationFromServerBtnAction");
-
     }
 
     void GetGroupWhiteListFromServerBtnAction()
@@ -1343,6 +1378,12 @@ public class GroupManagerTest : MonoBehaviour
                 Debug.Log($"FetchMyGroupsCount failed, code:{code}, desc:{desc}");
             }
         ));
+    }
+
+    void CleanAllGroupsFromDBBtnAction()
+    {
+        SDKClient.Instance.GroupManager.CleanAllGroupsFromDB();
+        UIManager.SuccessAlert(transform);
     }
 
     void backButtonAction()
