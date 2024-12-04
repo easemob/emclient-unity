@@ -1363,7 +1363,7 @@ namespace WinSDKTest
             param.Add(menu_index, "conversationType (0:Chat, 1:Group, 2:Room)"); menu_index++;
             param.Add(menu_index, "startTime (long)"); menu_index++;
             param.Add(menu_index, "endTime (long)"); menu_index++;
-            level3_menus.Add("MessagesCountTS", new Dictionary<int, string>(param));
+            level3_menus.Add("MessagesCountWithTS", new Dictionary<int, string>(param));
             param.Clear();
 
             menu_index = 1;
