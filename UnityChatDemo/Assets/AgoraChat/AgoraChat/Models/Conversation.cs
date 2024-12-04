@@ -566,13 +566,13 @@ namespace AgoraChat
 
         /**
          * \~chinese
-         * 获取 SDK 本地数据库中会话的全部消息数目。
+         * 获取 SDK 本地数据库中会话指定时间段的消息数目。
          * @param startTimestamp  查询的起始时间戳。单位为毫秒。
          * @param endTimestamp    查询的结束时间戳。单位为毫秒。
          * @return 会话的全部消息数量。
          *
          * \~english
-         * Gets the count of all messages in this conversation in the local database.
+         * Gets the count of messages within a specified time period in this conversation in the local database.
          * @param startTimestamp  The starting Unix timestamp for query, which is in milliseconds.
          * @param endTimestamp    The ending Unix timestamp for query, which is in milliseconds.
          * @return The count of all the messages in this conversation.

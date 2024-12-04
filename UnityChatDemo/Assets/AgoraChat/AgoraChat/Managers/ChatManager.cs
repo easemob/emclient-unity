@@ -474,7 +474,7 @@ namespace AgoraChat
         {
             Process process = (_, jsonNode) =>
             {
-                return jsonNode.IsNumber ? jsonNode.AsInt : -1;
+                return jsonNode["ret"].IsNumber ? jsonNode["ret"].AsInt : -1;
             };
 
             NativeCall<int>(SDKMethod.getMessagesCount, null, callback, process);
