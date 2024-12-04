@@ -107,11 +107,11 @@
     }else if([method isEqualToString:reportMessage]) {
         ret = [self reportMessage:params callback:callback];
     }else if([method isEqualToString:fetchConversationsFromServerWithPage]) {
-        ret = [self reportMessage:params callback:callback];
+        ret = [self fetchConversationsFromServerWithPage:params callback:callback];
     }else if([method isEqualToString:removeMessagesFromServerWithMsgIds]) {
-        ret = [self reportMessage:params callback:callback];
+        ret = [self removeMessagesFromServerWithMsgIds:params callback:callback];
     }else if([method isEqualToString:removeMessagesFromServerWithTs]) {
-        ret = [self reportMessage:params callback:callback];
+        ret = [self removeMessagesFromServerWithTs:params callback:callback];
     }else if ([method isEqualToString:getConversationsFromServerWithCursor]) {
         ret = [self getConversationsFromServerWithCursor:params callback:callback];
     }else if ([method isEqualToString:pinConversation]) {
