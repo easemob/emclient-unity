@@ -2022,6 +2022,7 @@ namespace WinSDKTest
             functions_IRoomManager.Add(menu_index, "FetchRoomMembers"); menu_index++;
             functions_IRoomManager.Add(menu_index, "FetchRoomMuteList"); menu_index++;
             functions_IRoomManager.Add(menu_index, "JoinRoom"); menu_index++;
+            functions_IRoomManager.Add(menu_index, "JoinRoomExt"); menu_index++;
             functions_IRoomManager.Add(menu_index, "LeaveRoom"); menu_index++;
             functions_IRoomManager.Add(menu_index, "MuteRoomMembers"); menu_index++;
             functions_IRoomManager.Add(menu_index, "RemoveRoomAdmin"); menu_index++;
@@ -2133,6 +2134,13 @@ namespace WinSDKTest
             menu_index = 1;
             param.Add(menu_index, "roomId (string)"); menu_index++;
             level3_menus.Add("JoinRoom", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "roomId (string)"); menu_index++;
+            param.Add(menu_index, "ext (string)"); menu_index++;
+            param.Add(menu_index, "leaveOtherRooms (bool)"); menu_index++;
+            level3_menus.Add("JoinRoomExt", new Dictionary<int, string>(param));
             param.Clear();
 
             menu_index = 1;
@@ -9210,6 +9218,55 @@ namespace WinSDKTest
                     Console.WriteLine($"PermissionType: {room.PermissionType}");
                 },
                 onError: (code, desc) => {
+                    Console.WriteLine($"JoinRoomExt failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IRoomManager_JoinRoomExt()
+        {
+            string roomId = GetParamValueFromContext(0);
+            string ext = GetParamValueFromContext(1);
+            bool leaveOtherRooms = GetParamValueFromContext(2).CompareTo("true") == 0 ? true : false;
+
+            SDKClient.Instance.RoomManager.JoinRoom(roomId, ext, leaveOtherRooms, new ValueCallBack<Room>(
+                onSuccess: (room) => {
+                    Console.WriteLine($"JoinRoomExt success.");
+                    Console.WriteLine($"roomId: {room.RoomId}");
+                    Console.WriteLine($"name: {room.Name}");
+                    Console.WriteLine($"Description: {room.Description}");
+                    Console.WriteLine($"Announcement: {room.Announcement}");
+
+                    Console.WriteLine($"AdminList num: {room.AdminList.Count}");
+                    foreach (var it in room.AdminList)
+                    {
+                        Console.WriteLine($"admin item: {it}");
+                    }
+
+                    Console.WriteLine($"MemberList num: {room.MemberList.Count}");
+                    foreach (var it in room.MemberList)
+                    {
+                        Console.WriteLine($"member item: {it}");
+                    }
+
+                    Console.WriteLine($"BlockList num: {room.BlockList.Count}");
+                    foreach (var it in room.BlockList)
+                    {
+                        Console.WriteLine($"block item: {it}");
+                    }
+
+                    Console.WriteLine($"MuteList num: {room.MuteList.Count}");
+                    foreach (var it in room.MuteList)
+                    {
+                        Console.WriteLine($"mute item: {it}");
+                    }
+
+                    Console.WriteLine($"MaxUsers: {room.MaxUsers}");
+                    Console.WriteLine($"Owner: {room.Owner}");
+                    Console.WriteLine($"IsAllMemberMuted: {room.IsAllMemberMuted}");
+                    Console.WriteLine($"PermissionType: {room.PermissionType}");
+                },
+                onError: (code, desc) => {
                     Console.WriteLine($"JoinRoom failed, code:{code}, desc:{desc}");
                 }
             ));
@@ -9631,6 +9688,12 @@ namespace WinSDKTest
             if (select_context.level2_item.CompareTo("JoinRoom") == 0)
             {
                 CallFunc_IRoomManager_JoinRoom();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("JoinRoomExt") == 0)
+            {
+                CallFunc_IRoomManager_JoinRoomExt();
                 return;
             }
 
