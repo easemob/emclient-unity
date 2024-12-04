@@ -174,6 +174,7 @@ void InitManagerMap()
     func_map_group_manager["fetchMemberAttributes"] = GroupManager_FetchMemberAttributes;
     func_map_group_manager["setMemberAttributes"] = GroupManager_SetMemberAttributes;
     func_map_group_manager["fetchMyGroupsCount"] = GroupManager_FetchMyGroupsCount;
+    func_map_group_manager["cleanAllGroupsFromDB"] = GroupManager_CleanAllGroupsFromDB;
 
 	manager_map["EMGroupManager"] = func_map_group_manager;
 

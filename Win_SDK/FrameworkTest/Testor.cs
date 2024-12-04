@@ -4089,6 +4089,9 @@ namespace WinSDKTest
             ib.Width = 123;
             ib.Height = 456;
 
+            ib.ThumbnailWidth = 66;
+            ib.ThumbnailHeight = 77;
+
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
                 onSuccess: () => {
                     Console.WriteLine($"SendImageMessage success. msgid:{msg.MsgId}");
