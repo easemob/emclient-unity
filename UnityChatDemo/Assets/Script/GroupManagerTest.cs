@@ -789,6 +789,8 @@ public class GroupManagerTest : MonoBehaviour
         });
         config.AddField("fetchMembers");
 
+        UIManager.DefaultInputAlert(this.transform, config);
+
         Debug.Log("GetGroupSpecificationFromServerBtnAction");
     }
 
@@ -869,6 +871,7 @@ public class GroupManagerTest : MonoBehaviour
             SDKClient.Instance.GroupManager.FetchJoinedGroupsFromServer(pageNum, pageSize, needAffiliations:true,  callback: new ValueCallBack<List<Group>>(
                 onSuccess: (groupList) =>
                 {
+                    Debug.Log($"group count: {groupList.Count}");
                     List<string> list = new List<string>();
                     foreach (var group in groupList)
                     {

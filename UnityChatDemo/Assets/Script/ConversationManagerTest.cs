@@ -573,7 +573,7 @@ public class ConversationManagerTest : MonoBehaviour
                 UIManager.ErrorAlert(transform, code, desc);
             }
         ));
-        Debug.Log("LoadMessagesWithMsgTypeBtnAction");
+        Debug.Log("LoadMessagesWithMsgTypeListBtnAction");
     }
 
     void MessagesCountBtnAction()

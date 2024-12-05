@@ -51,6 +51,8 @@
     [EMClientWrapper.shared userAccountDidForcedToLogout:[EMError errorWithDescription:@"" code:202]];
     [EMClientWrapper.shared tokenWillExpire:0];
     [EMClientWrapper.shared tokenDidExpire:0];
+    [EMClientWrapper.shared onOfflineMessageSyncStart];
+    [EMClientWrapper.shared onOfflineMessageSyncFinish];
 }
 
 - (void)multiDeviceDelegateTest {
@@ -102,6 +104,7 @@
     recall.recallMessageId =@"messageId";
     recall.ext = @"ext";
     recall.recallMessage = msg1;
+    recall.conversationId = @"conversationId";
     [EMClientWrapper.shared.chatManager messagesInfoDidRecall:@[recall]];
     
     
@@ -142,7 +145,7 @@
 }
 
 - (void)roomManagerDelegateTest {
-    [EMClientWrapper.shared.roomManagerWrapper userDidJoinChatroom:_room user:@"user"];
+    [EMClientWrapper.shared.roomManagerWrapper userDidJoinChatroom:_room user:@"user" ext:@"ext"];
     [EMClientWrapper.shared.roomManagerWrapper userDidLeaveChatroom:_room user:@"user"];
     [EMClientWrapper.shared.roomManagerWrapper didDismissFromChatroom:_room reason:EMChatroomBeKickedReasonOffline];
     [EMClientWrapper.shared.roomManagerWrapper didDismissFromChatroom:_room reason:EMChatroomBeKickedReasonDestroyed];

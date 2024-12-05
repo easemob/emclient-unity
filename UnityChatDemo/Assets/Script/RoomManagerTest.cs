@@ -388,7 +388,7 @@ public class RoomManagerTest : MonoBehaviour
             ));
         });
 
-        config.AddField("AdminId");
+        config.AddField("fetchMembers");
 
         UIManager.DefaultInputAlert(this.transform, config);
 
