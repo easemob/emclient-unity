@@ -354,8 +354,8 @@
 
 - (NSString *)messageCountTS:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
     EMConversation *conversation = [self conversationWithParam: params];
-    NSInteger startTs = [params[@"startTimestamp"] intValue];
-    NSInteger endTs = [params[@"endTimestamp"] intValue];
+    NSInteger startTs = [params[@"startTimestamp"] longLongValue];
+    NSInteger endTs = [params[@"endTimestamp"] longLongValue];
     return [[EMHelper getReturnJsonObject:@([conversation getMessageCountStart:startTs to:endTs])] toJsonString];
 }
 
