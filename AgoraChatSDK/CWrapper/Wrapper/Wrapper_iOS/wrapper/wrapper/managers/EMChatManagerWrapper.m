@@ -613,7 +613,7 @@
 - (NSString *)deleteMessagesBeforeTimestamp:(NSDictionary *)param
                                    callback:(EMWrapperCallback *)callback
 {
-    NSUInteger timestamp = [param[@"timestamp"] unsignedIntValue];
+    NSUInteger timestamp = [param[@"timestamp"] longLongValue];
     __weak EMChatManagerWrapper * weakSelf = self;
     [EMClient.sharedClient.chatManager deleteMessagesBefore:timestamp completion:^(EMError *error) {
         [weakSelf wrapperCallback:callback error:error object:nil];
