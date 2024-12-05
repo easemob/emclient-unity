@@ -78,6 +78,8 @@ public class DelegateTester {
         EMClientWrapper.shared().wrapperConnectionListener.onDisconnected(0);
         EMClientWrapper.shared().wrapperConnectionListener.onTokenWillExpire();
         EMClientWrapper.shared().wrapperConnectionListener.onTokenExpired();
+        EMClientWrapper.shared().wrapperConnectionListener.onOfflineMessageSyncStart();
+        EMClientWrapper.shared().wrapperConnectionListener.onOfflineMessageSyncFinish();
     }
 
     public void multiDeviceDelegateTest() {
@@ -151,7 +153,7 @@ public class DelegateTester {
         EMClientWrapper.shared().roomManagerWrapper.emWrapperRoomListener.onWhiteListRemoved("roomId",users);
         EMClientWrapper.shared().roomManagerWrapper.emWrapperRoomListener.onAllMemberMuteStateChanged("roomId", true);
         EMClientWrapper.shared().roomManagerWrapper.emWrapperRoomListener.onChatRoomDestroyed("roomId", "name");
-        EMClientWrapper.shared().roomManagerWrapper.emWrapperRoomListener.onMemberJoined("roomId", "userId");
+        EMClientWrapper.shared().roomManagerWrapper.emWrapperRoomListener.onMemberJoined("roomId", "userId", "ext");
         EMClientWrapper.shared().roomManagerWrapper.emWrapperRoomListener.onMemberExited("roomId", "name","userId");
         EMClientWrapper.shared().roomManagerWrapper.emWrapperRoomListener.onRemovedFromChatRoom(0,"roomId", "name","userId");
         EMClientWrapper.shared().roomManagerWrapper.emWrapperRoomListener.onRemovedFromChatRoom(2,"roomId", "name","userId");
@@ -223,7 +225,7 @@ public class DelegateTester {
         EMClientWrapper.shared().chatManagerWrapper.emWrapperMessageListener.onConversationRead("from", "to");
 
         List<EMRecallMessageInfo> recallInfos = new ArrayList<>();
-        EMRecallMessageInfo recallInfo = new EMRecallMessageInfo("recallBy", "messageId", msg, "ext");
+        EMRecallMessageInfo recallInfo = new EMRecallMessageInfo("recallBy", "messageId", msg, "ext", "conversationId");
         recallInfos.add(recallInfo);
         EMClientWrapper.shared().chatManagerWrapper.emWrapperMessageListener.onMessageRecalledWithExt(recallInfos);
 
