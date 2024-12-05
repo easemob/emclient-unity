@@ -302,7 +302,7 @@
     __weak EMChatManagerWrapper * weakSelf = self;
     [EMClient.sharedClient.chatManager getMessageCountWithCompletion:^(NSInteger count, EMError * _Nullable aError)
      {
-         [weakSelf wrapperCallback:callback error:aError object:@(count)];
+        [weakSelf wrapperCallback:callback error:aError object:@{@"ret":@(count)}];
     }];
 
     return nil;
