@@ -809,7 +809,6 @@ namespace AgoraChat
 		 * 异步方法。
 		 *
 		 * @param groupId       群组 ID。
-		 * @param fetchMembers  布尔类型，是否获取成员列表。
 		 * @param callback      操作结果回调，成功返群组实例，失败返回错误信息，详见 {@link ValueCallBack}。
 		 *
 		 * \~english
@@ -818,15 +817,14 @@ namespace AgoraChat
 		 * This is an asynchronous method.
 		 *
 		 * @param groupId      The group ID.
-		 * @param fetchMembers Bool type, fetch member list or not.
 		 * @param callback     The operation callback. If success, the SDK returns the group instance; otherwise, an error will be returned. See {@link ValueCallBack}.
 		 *
 		 */
-        public void GetGroupSpecificationFromServer(string groupId, bool fetchMembers = true, ValueCallBack<Group> callback = null)
+        public void GetGroupSpecificationFromServer(string groupId, ValueCallBack<Group> callback = null)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("groupId", groupId);
-            jo_param.AddWithoutNull("fetchMembers", fetchMembers);
+            jo_param.AddWithoutNull("fetchMembers", false);
 
             Process process = (_, jsonNode) =>
             {
