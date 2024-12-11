@@ -169,6 +169,33 @@ namespace AgoraChat
          */
         public RoomPermissionType PermissionType { get; internal set; }
 
+        /**
+         * \~chinese
+         * 聊天室创建时间戳。
+         *
+         * \~english
+         * The timestamp when the chat room was created.
+         */
+        public long CreateTimeStamp { get; internal set; }
+
+        /**
+         * \~chinese
+         * 当前登录用户是否在白名单中。
+         *
+         * \~english
+         * Current user is in allow-list or not.
+         */
+        public bool IsInAllowList { get; internal set; }
+
+        /**
+         * \~chinese
+         * 当前登录用户是否被禁言。
+         *
+         * \~english
+         * Current user is in muted or not.
+         */
+        public bool IsMuted { get; internal set; }
+
         [Preserve]
         internal Room() { }
 
@@ -193,6 +220,9 @@ namespace AgoraChat
             Owner = jsonObject["owner"];
             IsAllMemberMuted = jsonObject["isMuteAll"];
             PermissionType = jsonObject["permissionType"].AsInt.ToRoomPermissionType();
+            CreateTimeStamp = (long)jsonObject["createTimestamp"].AsDouble;
+            IsInAllowList = jsonObject["isInAllowList"].AsBool;
+            IsMuted = jsonObject["isMuted"].AsBool;
         }
 
         internal override JSONObject ToJsonObject()
@@ -211,6 +241,9 @@ namespace AgoraChat
             jo.AddWithoutNull("owner", Owner);
             jo.AddWithoutNull("isMuteAll", IsAllMemberMuted);
             jo.AddWithoutNull("permissionType", PermissionType.ToInt());
+            jo.AddWithoutNull("createTimestamp", CreateTimeStamp);
+            jo.AddWithoutNull("isInAllowList", IsInAllowList);
+            jo.AddWithoutNull("isMuted", IsMuted);
             return jo;
         }
     }
