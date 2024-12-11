@@ -220,9 +220,33 @@ namespace AgoraChat
             Owner = jsonObject["owner"];
             IsAllMemberMuted = jsonObject["isMuteAll"];
             PermissionType = jsonObject["permissionType"].AsInt.ToRoomPermissionType();
-            CreateTimeStamp = (long)jsonObject["createTimestamp"].AsDouble;
-            IsInAllowList = jsonObject["isInAllowList"].AsBool;
-            IsMuted = jsonObject["isMuted"].AsBool;
+
+            if (jsonObject["createTimestamp"] != null)
+            {
+                CreateTimeStamp = (long)jsonObject["createTimestamp"].AsDouble;
+            }
+            else
+            {
+                CreateTimeStamp = 0;
+            }
+
+            if (jsonObject["isInAllowList"] != null)
+            {
+                IsInAllowList = jsonObject["isInAllowList"].AsBool;
+            }
+            else
+            {
+                IsInAllowList = false;
+            }
+
+            if (jsonObject["isMuted"] != null)
+            {
+                IsMuted = jsonObject["isMuted"].AsBool;
+            }
+            else
+            {
+                IsMuted = false;
+            }
         }
 
         internal override JSONObject ToJsonObject()
