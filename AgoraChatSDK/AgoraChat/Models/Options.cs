@@ -18,13 +18,66 @@ namespace AgoraChat
     public class Options : BaseModel
     {
         /**
-	     * \~chinese
-	     * 创建 App 时在 console 后台上注册的 App 唯一识别符，即 App Key。
-	     *
-	     * \~english
-	     * The App Key you get from the console when creating a chat app. It is the unique identifier of your app.
-	     */
+        * \~chinese
+        * 使用Appkey构造Options。
+        *
+        * @param appKey      App Key。
+        * @param return      返回Options对象。
+        *
+        * \~english
+        * Construct Options with AppKey.
+        *
+        * @param appKey      App Key.
+        * @param return      return a object of Options.
+        *
+        */
+        public static Options InitOptionsWithAppKey(string appKey)
+        {
+            Options options = new Options();
+            options.AppKey = appKey;
+            options.AppId = "";
+            return options;
+        }
+
+        /**
+        * \~chinese
+        * 使用AppId构造Options。
+        *
+        * @param appId       App Id。
+        * @param return      返回Options对象。
+        *
+        * \~english
+        * Construct Options with AppId.
+        *
+        * @param appId       App Id.
+        * @param return      return a object of Options.
+        *
+        */
+        public static Options InitOptionsWithAppId(string appId)
+        {
+            Options options = new Options();
+            options.AppId = appId;
+            options.AppKey = "";
+            return options;
+        }
+
+        /**
+        * \~chinese
+        * 创建 App 时在 console 后台上注册的 App 唯一识别符，即 App Key。不能和AppId同时使用。
+        *
+        * \~english
+        * The App Key you get from the console when creating a chat app. It is the unique identifier of your app. Can not be used with AppId.
+        */
         public string AppKey = "";
+
+        /**
+        * \~chinese
+        * 创建 App 时在 console 后台上注册的 App 唯一识别符，即 App Id。不能和AppKey同时使用。
+        *
+        * \~english
+        * The App Id you get from the console when creating a chat app. It is the unique identifier of your app. Can not be used with AppKey.
+        */
+        public string AppId = "";
 
         /**
 	     * \~chinese
@@ -436,6 +489,7 @@ namespace AgoraChat
         *
         * @param appKey  The App Key.
         */
+        [Obsolete("This constructor is obsolele, please use InitOptionsWithAppKey or InitOptionsWithAppId.")]
         [Preserve]
         public Options(string appKey)
         {
@@ -483,6 +537,7 @@ namespace AgoraChat
         {
             JSONObject jo = new JSONObject();
             jo.AddWithoutNull("appKey", AppKey);
+            jo.AddWithoutNull("appId", AppId);
             jo.AddWithoutNull("debugMode", DebugMode);
             jo.AddWithoutNull("autoLogin", AutoLogin);
             jo.AddWithoutNull("acceptInvitationAlways", AcceptInvitationAlways);

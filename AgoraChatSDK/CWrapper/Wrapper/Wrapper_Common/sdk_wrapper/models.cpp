@@ -307,6 +307,11 @@ namespace sdk_wrapper
             app_key = jnode["appKey"].GetString();
         }
 
+        string app_id = "";
+        if (jnode.HasMember("appId") && jnode["appId"].IsString()) {
+            app_key = jnode["appId"].GetString();
+        }
+
         string sdk_path = "";
         if (jnode.HasMember("sdkDataPath") && jnode["sdkDataPath"].IsString()) {
             sdk_path = jnode["sdkDataPath"].GetString();
@@ -323,9 +328,9 @@ namespace sdk_wrapper
             wk_str = sdk_path + "/" + wk_pure;
         }
 
-        if (CheckAppKey(app_key.c_str()) == false) return nullptr;
+        if (CheckAppKey(app_key.c_str()) == false && app_id.length() == 0) return nullptr;
 
-        EMChatConfigsPtr configs = EMChatConfigsPtr(new EMChatConfigs(rs_str, wk_str, app_key, 0));
+        EMChatConfigsPtr configs = EMChatConfigsPtr(new EMChatConfigs(rs_str, wk_str, app_key, app_id, 0));
         configs->setAppKey(app_key);
 
         if (jnode.HasMember("dnsUrl") && jnode["dnsUrl"].IsString()) {
