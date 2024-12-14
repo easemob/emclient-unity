@@ -64,6 +64,14 @@ namespace AgoraChat
             NativeCall(SDKMethod.changeAppKey, jo_param, callback);
         }
 
+        internal void ChangeAppId(string appId, CallBack callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("appId", appId);
+
+            NativeCall(SDKMethod.changeAppId, jo_param, callback);
+        }
+
         internal string CurrentUsername()
         {
 

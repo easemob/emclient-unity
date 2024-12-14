@@ -220,6 +220,43 @@ namespace sdk_wrapper
             EMErrorPtr result = CLIENT->changeAppkey(app_key);
 
             if (EMError::isNoError(result)) {
+                //Save it to file
+                gClient->getConfigManager()->setConfig(MY_APPKEY, app_key);
+                gClient->getConfigManager()->saveConfigs();
+
+                string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), result->mErrorCode, result->mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+
+            });
+        t.detach();
+
+        return nullptr;
+    }
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_ChangeAppId(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(nullptr)) return nullptr;
+
+        string local_jstr = jstr;
+        string local_cbid = cbid;
+
+        Document d; d.Parse(local_jstr.c_str());
+
+        string app_id = GetJsonValue_String(d, "appId", "");
+
+        thread t([=]() {
+            EMErrorPtr result = CLIENT->changeAppId(app_id);
+
+            if (EMError::isNoError(result)) {
+                //Save it to file
+                gClient->getConfigManager()->setConfig(MY_APPID, app_id);
+                gClient->getConfigManager()->saveConfigs();
+
                 string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
             }

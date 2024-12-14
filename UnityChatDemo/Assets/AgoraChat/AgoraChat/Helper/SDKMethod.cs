@@ -23,6 +23,7 @@ namespace AgoraChat
         /// EMClient methods
         internal const string init = "init";
         internal const string changeAppKey = "changeAppKey";
+        internal const string changeAppId = "changeAppId";
         internal const string createAccount = "createAccount";
         internal const string login = "login";
         internal const string loginWithAgoraToken = "loginWithAgoraToken";

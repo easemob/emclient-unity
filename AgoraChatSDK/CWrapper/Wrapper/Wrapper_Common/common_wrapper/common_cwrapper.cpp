@@ -37,6 +37,7 @@ void InitManagerMap()
 
 	func_map_client["init"] = Client_InitWithOptions;
     func_map_client["changeAppKey"] = Client_ChangeAppKey;
+    func_map_client["changeAppId"] = Client_ChangeAppId;
 	func_map_client["createAccount"] = Client_CreateAccount;
 	func_map_client["login"] = Client_Login;
 	func_map_client["logout"] = Client_Logout;

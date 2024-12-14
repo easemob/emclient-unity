@@ -220,13 +220,38 @@ namespace AgoraChat
         *
         * This is an asynchronous method.
         *
-        * @param appKey 		The new AppKey.
-        * @param callback 	    The result callback. See {@link CallBack}.
+        * @param appKey 	   The new AppKey.
+        * @param callback 	   The result callback. See {@link CallBack}.
         *
         */
         public void ChangeAppkey(string appKey, CallBack callback = null)
         {
             _clientImpl.ChangeAppkey(appKey, callback);
+        }
+
+        /**
+        * \~chinese
+        * 修改AppId。
+        * 此方法需要在调用Logout后，才能使用。
+        *
+        * 异步方法。
+        *
+        * @param appId         新的AppId。
+        * @param callback      结果回调，详见 {@link CallBack}。
+        *
+        * \~english
+        * Change AppId.
+        * This API should be called after the Logout API is called.
+        *
+        * This is an asynchronous method.
+        *
+        * @param appId 		   The new AppKey.
+        * @param callback 	   The result callback. See {@link CallBack}.
+        *
+        */
+        public void ChangeAppId(string appId, CallBack callback = null)
+        {
+            _clientImpl.ChangeAppId(appId, callback);
         }
 
         /**
