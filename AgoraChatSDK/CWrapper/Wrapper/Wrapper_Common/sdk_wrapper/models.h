@@ -51,6 +51,7 @@ namespace sdk_wrapper {
 		static vector<string> FromJsonToVector(string& jstr);
 
 		static void ToJsonObject(Writer<StringBuffer>& writer, const map<string, string>& map);
+        static void ToJsonObject(Writer<StringBuffer>& writer, const map<string, int64_t>& map);
         static void ToJsonObject(Writer<StringBuffer>& writer, const unordered_map<string, string>& map);
 		static void ToJsonObject(Writer<StringBuffer>& writer, const map<string, int>& map);
 		static map<string, string> FromJsonObjectToMap(const Value& jnode);

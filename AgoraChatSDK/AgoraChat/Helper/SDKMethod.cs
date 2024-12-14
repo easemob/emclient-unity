@@ -412,6 +412,7 @@ namespace AgoraChat
         internal const string onRemovedFromRoom = "onRemovedFromRoom";
         internal const string onRemoveFromRoomByOffline = "onRemoveFromRoomByOffline";
         internal const string onMuteListAddedFromRoom = "onMuteListAddedFromRoom";
+        internal const string onMuteListAddedFromRoomWithMap = "onMuteListAddedFromRoomWithMap";
         internal const string onMuteListRemovedFromRoom = "onMuteListRemovedFromRoom";
         internal const string onAdminAddedFromRoom = "onAdminAddedFromRoom";
         internal const string onAdminRemovedFromRoom = "onAdminRemovedFromRoom";

@@ -165,6 +165,16 @@ namespace sdk_wrapper
         writer.EndObject();
     }
 
+    void MyJson::ToJsonObject(Writer<StringBuffer>& writer, const map<string, int64_t>& map)
+    {
+        writer.StartObject();
+        for (auto it : map) {
+            writer.Key(it.first.c_str());
+            writer.Int64(it.second);
+        }
+        writer.EndObject();
+    }
+
     void MyJson::ToJsonObject(Writer<StringBuffer>& writer, const map<string, int>& map)
     {
         writer.StartObject();

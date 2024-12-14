@@ -905,6 +905,22 @@ namespace sdk_wrapper {
                 CallBack(STRING_ROOMMANAGER_LISTENER.c_str(), STRING_onMuteListAddedFromRoom.c_str(), json.c_str());
         }
 
+        void onAddMutesFromChatroom(const EMChatroomPtr chatroom, const std::map<std::string, int64_t>& mutes) override {
+            JSON_STARTOBJ
+            writer.Key("roomId");
+            writer.String(chatroom->chatroomId().c_str());
+
+            writer.Key("mutes");
+            MyJson::ToJsonObject(writer, mutes);
+
+            JSON_ENDOBJ
+
+            string json = s.GetString();
+
+            if (json.size() > 0)
+                CallBack(STRING_ROOMMANAGER_LISTENER.c_str(), STRING_onMuteListAddedFromRoomWithMap.c_str(), json.c_str());
+        }
+
         void onRemoveMutesFromChatroom(const EMChatroomPtr chatroom, const std::vector<std::string>& mutes) override {
             JSON_STARTOBJ
             writer.Key("roomId");

@@ -119,6 +119,25 @@ namespace AgoraChat
 
         /**
          * \~chinese
+         * 有成员被禁言。
+         *
+         * 禁言期间成员不能发送消息。
+         *
+         * @param chatRoomId    聊天室 ID。
+         * @param mutes         禁言的成员及禁言时间戳。
+         *
+         * \~english
+         * Occurs when a chat room member is added to the mute list.
+         *
+         * The muted members cannot send messages during the mute duration.
+         *
+         * @param chatRoomId    The chat room ID.
+         * @param mutes         The user ID(s) and the corresponding timestamp of the mute expiration.
+         */
+        void OnMuteListAddedFromRoom(string roomId, Dictionary<string, long> mutes);
+
+        /**
+         * \~chinese
          * 有成员从禁言列表中移除。
          *
          * @param chatRoomId    聊天室 ID。

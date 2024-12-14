@@ -1289,6 +1289,12 @@ namespace AgoraChat
                             it.OnMuteListAddedFromRoom(roomId, list, muteExpire);
                         }
                         break;
+                    case SDKMethod.onMuteListAddedFromRoomWithMap:
+                        {
+                            Dictionary<string, long> mutes = Dictionary.SimpleTypeDictionaryFromJsonObject<long>(jsonNode["mutes"]);
+                            it.OnMuteListAddedFromRoom(roomId, mutes);
+                        }
+                        break;
                     case SDKMethod.onMuteListRemovedFromRoom:
                         {
                             List<string> list = List.StringListFromJsonArray(jsonNode["userIds"]);
