@@ -36,6 +36,7 @@ void InitManagerMap()
 	FUNC_MAP func_map_userinfo_manager;
 
 	func_map_client["init"] = Client_InitWithOptions;
+    func_map_client["changeAppKey"] = Client_ChangeAppKey;
 	func_map_client["createAccount"] = Client_CreateAccount;
 	func_map_client["login"] = Client_Login;
 	func_map_client["logout"] = Client_Logout;
@@ -48,7 +49,6 @@ void InitManagerMap()
 	//func_map_client["autoLogin"] = Client_AutoLogin; // not support for platform
 	func_map_client["clearResource"] = Client_ClearResource;
 
-	//func_map_client["changeAppKey"] = Client_ChangeAppKey;
 	//func_map_client["uploadLog"] = Client_UploadLog;
 	//func_map_client["compressLogs"] = Client_CompressLogs;
 

@@ -205,6 +205,31 @@ namespace AgoraChat
         }
 
         /**
+        * \~chinese
+        * 修改AppKey。
+        * 此方法需要在调用Logout后，才能使用。
+        *
+        * 异步方法。
+        *
+        * @param appKey        新的AppKey。
+        * @param callback      结果回调，详见 {@link CallBack}。
+        *
+        * \~english
+        * Change AppKey.
+        * This API should be called after the Logout API is called.
+        *
+        * This is an asynchronous method.
+        *
+        * @param appKey 		The new AppKey.
+        * @param callback 	    The result callback. See {@link CallBack}.
+        *
+        */
+        public void ChangeAppkey(string appKey, CallBack callback = null)
+        {
+            _clientImpl.ChangeAppkey(appKey, callback);
+        }
+
+        /**
          * \~chinese
          * 创建账号。
          *

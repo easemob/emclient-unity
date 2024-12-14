@@ -205,6 +205,35 @@ namespace sdk_wrapper
         return CopyToPointer(json);
     }
 
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_ChangeAppKey(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(nullptr)) return nullptr;
+
+        string local_jstr = jstr;
+        string local_cbid = cbid;
+
+        Document d; d.Parse(local_jstr.c_str());
+
+        string app_key = GetJsonValue_String(d, "appKey", "");
+
+        thread t([=]() {
+            EMErrorPtr result = CLIENT->changeAppkey(app_key);
+
+            if (EMError::isNoError(result)) {
+                string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), result->mErrorCode, result->mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+
+            });
+        t.detach();
+
+        return nullptr;
+    }
+
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_CurrentUsername(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         if (!CheckClientInitOrNot(nullptr)) return nullptr;
@@ -394,11 +423,6 @@ namespace sdk_wrapper
         TokenWrapper::GetInstance()->SetAndStartTokenCheckTimer(expiredTS, TOKEN_CHECK_INTERVAL);
 
         return nullptr;
-    }
-
-    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_ChangeAppKey(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
-    {
-        return nullptr; // No need to Implement
     }
 
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_UploadLog(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
