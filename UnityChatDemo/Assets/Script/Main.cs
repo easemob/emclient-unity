@@ -254,6 +254,8 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
 
     void ChangeAppKeyAction()
     {
+        SDKClient.Instance.Logout(false);
+
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
             SDKClient.Instance.ChangeAppkey(dict["AppKey"], 
@@ -262,11 +264,13 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
                 onSuccess: () =>
                 {
                     UIManager.TitleAlert(transform, "成功", "Success");
+                    //SceneManager.LoadSceneAsync("Login");
                 },
 
                 onError: (code, desc) =>
                 {
                     UIManager.ErrorAlert(transform, code, desc);
+                    //SceneManager.LoadSceneAsync("Login");
                 }
                 )
             );
@@ -278,6 +282,8 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
 
     void ChangeAppIdAction()
     {
+        SDKClient.Instance.Logout(false);
+
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
             SDKClient.Instance.ChangeAppId(dict["AppId"],
@@ -286,11 +292,13 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
                 onSuccess: () =>
                 {
                     UIManager.TitleAlert(transform, "成功", "Success");
+                    //SceneManager.LoadSceneAsync("Login");
                 },
 
                 onError: (code, desc) =>
                 {
                     UIManager.ErrorAlert(transform, code, desc);
+                    //SceneManager.LoadSceneAsync("Login");
                 }
                 )
             );
