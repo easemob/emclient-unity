@@ -46,7 +46,7 @@
 + (EMOptions *)fromJson:(NSDictionary *)aJson {
 
     EMOptions *options = nil;
-    if (aJson[@"appKey"] != nil && aJson[@"appKey"].length > 0)
+    if (aJson[@"appKey"] != nil && [aJson[@"appKey"] isKindOfClass:[NSString class]] && [aJson[@"appKey"] length] > 0)
         options = [EMOptions optionsWithAppkey:aJson[@"appKey"]];
     else
         options = [EMOptions optionsWithAppId:aJson[@"appId"]];
