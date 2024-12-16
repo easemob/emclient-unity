@@ -666,6 +666,8 @@ namespace WinSDKTest
             functions_IClient.Add(menu_index, "KickDeviceWithToken"); menu_index++;
             functions_IClient.Add(menu_index, "kickAllDevices"); menu_index++;
             functions_IClient.Add(menu_index, "kickAllDevicesWithToken"); menu_index++;
+            functions_IClient.Add(menu_index, "ChangeAppKey"); menu_index++;
+            functions_IClient.Add(menu_index, "ChangeAppId"); menu_index++;
             functions_IClient.Add(menu_index, "RunDelegateTester"); menu_index++;
             level2_menus.Add("IClient", functions_IClient);
         }
@@ -764,6 +766,16 @@ namespace WinSDKTest
             param.Add(menu_index, "username (string)"); menu_index++;
             param.Add(menu_index, "token (string)"); menu_index++;
             level3_menus.Add("kickAllDevicesWithToken", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "appkey (string)"); menu_index++;
+            level3_menus.Add("ChangeAppKey", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "appid (string)"); menu_index++;
+            level3_menus.Add("ChangeAppId", new Dictionary<int, string>(param));
             param.Clear();
 
             menu_index = 1;
@@ -2472,7 +2484,7 @@ namespace WinSDKTest
         public void InitAll(string appkey)
         {
             //Options options = new Options("easemob#easeim");
-            Options options = new Options("easemob-demo#unitytest");
+            //Options options = new Options("easemob-demo#unitytest");
             //Options options = new Options("easemob-demo#support");
             //Options options = new Options("easemob-demo#rpttest");
             //Options options = new Options("100230927254271#unitytest");  // 北京沙箱测试环境
@@ -2480,8 +2492,11 @@ namespace WinSDKTest
             //Options options = new Options("easemob-demo#wang");
             //Options options = new Options("5101220107132865#test"); // 北京沙箱测试环境，无法正常登录
             //Options options = new Options("41117440#383391"); // 线上环境, demo中的token
-            if (appkey.Length > 0 && appkey.Contains("#") == true)
-                options.AppKey = appkey;
+
+            //if (appkey.Length > 0 && appkey.Contains("#") == true)
+            //    options.AppKey = appkey;
+
+            Options options = Options.InitOptionsWithAppId("ba85504621304fb894790708d304794f");
 
             options.AutoLogin = false;
             options.UsingHttpsOnly = true;
@@ -3260,6 +3275,46 @@ namespace WinSDKTest
             );
         }
 
+        public void CallFunc_IClient_ChangeAppKey()
+        {
+            string appkey = GetParamValueFromContext(0);
+
+            SDKClient.Instance.ChangeAppkey(appkey,
+            callback: new CallBack(
+
+                onSuccess: () =>
+                {
+                    Console.WriteLine("ChangeAppKey succeed");
+                },
+
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"Login failed, code:{code}, desc:{desc}");
+                }
+                )
+            );
+        }
+
+        public void CallFunc_IClient_ChangeAppId()
+        {
+            string appid = GetParamValueFromContext(0);
+
+            SDKClient.Instance.ChangeAppId(appid,
+            callback: new CallBack(
+
+                onSuccess: () =>
+                {
+                    Console.WriteLine("ChangeAppId succeed");
+                },
+
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"Login failed, code:{code}, desc:{desc}");
+                }
+                )
+            );
+        }
+
         public void CallFunc_IClient_RunDelegateTester()
         {
             MyTest.DelegateTester();
@@ -3360,6 +3415,18 @@ namespace WinSDKTest
             if (select_context.level2_item.CompareTo("kickAllDevicesWithToken") == 0)
             {
                 CallFunc_IClient_kickAllDevicesWithToken();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("ChangeAppKey") == 0)
+            {
+                CallFunc_IClient_ChangeAppKey();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("ChangeAppId") == 0)
+            {
+                CallFunc_IClient_ChangeAppId();
                 return;
             }
 
