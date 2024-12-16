@@ -87,7 +87,7 @@ namespace sdk_wrapper
             CLIENT->logout();              // In login status, logout can clear dns
             gClient->changeAppkey(newKey); // In logout status, changeAppKey can clear dns
             gClient->getConfigManager()->setConfig(MY_APPKEY, newKey);
-            gClient->getConfigManager()->saveConfigs();
+            gClient->getConfigManager()->saveConfigs(CONFIG_FILE);
             return true;
         }
 
@@ -95,7 +95,7 @@ namespace sdk_wrapper
             CLIENT->logout();             // In login status, logout can clear dns
             gClient->changeAppId(newKey); // In logout status, changeAppId can clear dns
             gClient->getConfigManager()->setConfig(MY_APPID, newKey);
-            gClient->getConfigManager()->saveConfigs();
+            gClient->getConfigManager()->saveConfigs(CONFIG_FILE);
             return true;
         }
 
@@ -222,7 +222,7 @@ namespace sdk_wrapper
             if (EMError::isNoError(result)) {
                 //Save it to file
                 gClient->getConfigManager()->setConfig(MY_APPKEY, app_key);
-                gClient->getConfigManager()->saveConfigs();
+                gClient->getConfigManager()->saveConfigs(CONFIG_FILE);
 
                 string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
@@ -255,7 +255,7 @@ namespace sdk_wrapper
             if (EMError::isNoError(result)) {
                 //Save it to file
                 gClient->getConfigManager()->setConfig(MY_APPID, app_id);
-                gClient->getConfigManager()->saveConfigs();
+                gClient->getConfigManager()->saveConfigs(CONFIG_FILE);
 
                 string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
                 CallBack(local_cbid.c_str(), call_back_jstr.c_str());
