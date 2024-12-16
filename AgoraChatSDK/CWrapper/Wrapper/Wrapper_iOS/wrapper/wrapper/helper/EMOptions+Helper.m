@@ -12,6 +12,7 @@
 - (NSDictionary *)toJson {
     NSMutableDictionary *data = [NSMutableDictionary dictionary];
     data[@"appKey"] = self.appkey;
+    data[@"appId"] = self.appId;
     data[@"autoLogin"] = @(self.isAutoLogin);
     data[@"debugModel"] = @(self.enableConsoleLog);
     data[@"requireAck"] = @(self.enableRequireReadAck);
@@ -43,7 +44,13 @@
     return data;
 }
 + (EMOptions *)fromJson:(NSDictionary *)aJson {
-    EMOptions *options = [EMOptions optionsWithAppkey:aJson[@"appKey"]];
+
+    EMOptions *options = nil;
+    if (aJson[@"appKey"] != nil && aJson[@"appKey"].length > 0)
+        options = [EMOptions optionsWithAppkey:aJson[@"appKey"]];
+    else
+        options = [EMOptions optionsWithAppId:aJson[@"appId"]];
+
     options.isAutoLogin = [aJson[@"autoLogin"] boolValue];
     options.enableConsoleLog = [aJson[@"debugModel"] boolValue];
     options.enableRequireReadAck = [aJson[@"requireAck"] boolValue];
