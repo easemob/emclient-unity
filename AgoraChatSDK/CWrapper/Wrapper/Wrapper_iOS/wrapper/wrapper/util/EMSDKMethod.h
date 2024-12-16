@@ -32,6 +32,7 @@ static NSString *const loginWithAgoraToken = @"loginWithAgoraToken";
 static NSString *const renewToken = @"renewToken";
 static NSString *const logout = @"logout";
 static NSString *const changeAppKey = @"changeAppKey";
+static NSString *const changeAppId = @"changeAppId";
 
 static NSString *const uploadLog = @"uploadLog";
 static NSString *const compressLogs = @"compressLogs";
