@@ -1052,6 +1052,13 @@ namespace sdk_wrapper {
             members.push_back("user2");
 
             gRoomManagerListener->onAddMutesFromChatroom(room, members, 123456);
+
+            std::map<std::string, int64_t> mutes;
+            mutes["user1"] = 1234567890;
+            mutes["user2"] = 9876543210;
+
+            gRoomManagerListener->onAddMutesFromChatroom(room, mutes);
+
             gRoomManagerListener->onRemoveMutesFromChatroom(room, members);
             gRoomManagerListener->onAddWhiteListMembersFromChatroom(room, members);
             gRoomManagerListener->onRemoveWhiteListMembersFromChatroom(room, members);

@@ -426,6 +426,30 @@ namespace AgoraChat
             return jo;
         }
 
+        internal static JSONObject JsonObjectFromSimpleDictionary<T>(Dictionary<string, T> dictionary)
+        {
+            JSONObject jo = new JSONObject();
+
+            if (dictionary != null && dictionary.Count > 0)
+            {
+                IDictionary<string, T> sortedParams = new SortedDictionary<string, T>(dictionary);
+                IEnumerator<KeyValuePair<string, T>> enumerator = sortedParams.GetEnumerator();
+
+                while (enumerator.MoveNext())
+                {
+                    string key = enumerator.Current.Key;
+                    T value = enumerator.Current.Value;
+
+                    if (!string.IsNullOrEmpty(key) && value != null)
+                    {
+                        jo.AddWithoutNull(key, value);
+                    }
+                }
+            }
+
+            return jo;
+        }
+
         internal static JSONObject JsonObjectFromAttributes(Dictionary<string, AttributeValue> attributes = null)
         {
             if (null == attributes || 0 == attributes.Count) return null;

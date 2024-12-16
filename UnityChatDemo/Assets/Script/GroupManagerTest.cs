@@ -765,31 +765,23 @@ public class GroupManagerTest : MonoBehaviour
             return;
         }
 
-        InputAlertConfig config = new InputAlertConfig((dict) =>
-        {
-            bool fetchMembers  = bool.Parse(dict["fetchMembers"]);
+        SDKClient.Instance.GroupManager.GetGroupSpecificationFromServer(currentGroupId, new ValueCallBack<Group>(
+            onSuccess: (group) =>
+            {
+                string members = string.Join(",", group.MemberList.ToArray());
 
-            SDKClient.Instance.GroupManager.GetGroupSpecificationFromServer(currentGroupId, fetchMembers, new ValueCallBack<Group>(
-                onSuccess: (group) =>
-                {
-                    string members = string.Join(",", group.MemberList.ToArray());
-
-                    List<string> list = new List<string>();
-                    list.Add(group.Name);
-                    list.Add(group.Description);
-                    list.Add(members);
-                    string str = string.Join(";", list.ToArray());
-                    UIManager.DefaultAlert(transform, str);
-                },
-                onError: (code, desc) =>
-                {
-                    UIManager.ErrorAlert(transform, code, desc);
-                }
-            ));
-        });
-        config.AddField("fetchMembers");
-
-        UIManager.DefaultInputAlert(this.transform, config);
+                List<string> list = new List<string>();
+                list.Add(group.Name);
+                list.Add(group.Description);
+                list.Add(members);
+                string str = string.Join(";", list.ToArray());
+                UIManager.DefaultAlert(transform, str);
+            },
+            onError: (code, desc) =>
+            {
+                UIManager.ErrorAlert(transform, code, desc);
+            }
+        ));
 
         Debug.Log("GetGroupSpecificationFromServerBtnAction");
     }

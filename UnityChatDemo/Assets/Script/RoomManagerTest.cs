@@ -365,32 +365,23 @@ public class RoomManagerTest : MonoBehaviour
             return;
         }
 
-        InputAlertConfig config = new InputAlertConfig((dict) =>
+        SDKClient.Instance.RoomManager.FetchRoomInfoFromServer(currentRoomId, new ValueCallBack<Room>(
+        onSuccess: (room) =>
         {
-            bool fetchMembers = bool.Parse(dict["fetchMembers"]);
+            string members = string.Join(",", room.MemberList.ToArray());
 
-            SDKClient.Instance.RoomManager.FetchRoomInfoFromServer(currentRoomId, fetchMembers, new ValueCallBack<Room>(
-            onSuccess: (room) =>
-            {
-                string members = string.Join(",", room.MemberList.ToArray());
-
-                List<string> list = new List<string>();
-                list.Add(room.Name);
-                list.Add(room.Description);
-                list.Add(members);
-                string str = string.Join(";", list.ToArray());
-                UIManager.DefaultAlert(this.transform, str);
-            },
-            onError: (code, desc) =>
-            {
-                UIManager.ErrorAlert(this.transform, code, desc);
-            }
-            ));
-        });
-
-        config.AddField("fetchMembers");
-
-        UIManager.DefaultInputAlert(this.transform, config);
+            List<string> list = new List<string>();
+            list.Add(room.Name);
+            list.Add(room.Description);
+            list.Add(members);
+            string str = string.Join(";", list.ToArray());
+            UIManager.DefaultAlert(this.transform, str);
+        },
+        onError: (code, desc) =>
+        {
+            UIManager.ErrorAlert(this.transform, code, desc);
+        }
+        ));
 
         Debug.Log("FetchRoomInfoFromServerBtnAction");
     }

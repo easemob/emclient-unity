@@ -28,6 +28,8 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
     private Button GetLoggedInDevicesFromServerWithTokenBtn;
     private Button KickDeviceWithTokenBtn;
     private Button KickAllDevicesWithTokenBtn;
+    private Button ChangeAppKeyBtn;
+    private Button ChangeAppIdBtn;
 
 
     private void Awake()
@@ -53,6 +55,8 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         GetLoggedInDevicesFromServerWithTokenBtn = transform.Find("Scroll View/Viewport/Content/GetLoggedInDevicesFromServerWithTokenBtn").GetComponent<Button>();
         KickDeviceWithTokenBtn = transform.Find("Scroll View/Viewport/Content/KickDeviceWithTokenBtn").GetComponent<Button>();
         KickAllDevicesWithTokenBtn = transform.Find("Scroll View/Viewport/Content/KickAllDevicesWithTokenBtn").GetComponent<Button>();
+        ChangeAppKeyBtn = transform.Find("Scroll View/Viewport/Content/ChangeAppKeyBtn").GetComponent<Button>();
+        ChangeAppIdBtn = transform.Find("Scroll View/Viewport/Content/ChangeAppIdBtn").GetComponent<Button>();
 
         ChatBtn.onClick.AddListener(ChatBtnAction);
         ContactBtn.onClick.AddListener(ContactBtnAction);
@@ -72,6 +76,8 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         GetLoggedInDevicesFromServerWithTokenBtn.onClick.AddListener(GetLoggedInDevicesFromServerWithTokenAction);
         KickDeviceWithTokenBtn.onClick.AddListener(KickDeviceWithTokenAction);
         KickAllDevicesWithTokenBtn.onClick.AddListener(KickAllDevicesWithTokenAction);
+        ChangeAppKeyBtn.onClick.AddListener(ChangeAppKeyAction);
+        ChangeAppIdBtn.onClick.AddListener(ChangeAppIdAction);
 
         SDKClient.Instance.AddConnectionDelegate(this);
         SDKClient.Instance.AddMultiDeviceDelegate(this);
@@ -243,6 +249,54 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
 
         config.AddField("username");
         config.AddField("token");
+        UIManager.DefaultInputAlert(transform, config);
+    }
+
+    void ChangeAppKeyAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            SDKClient.Instance.ChangeAppkey(dict["AppKey"], 
+            callback: new CallBack(
+
+                onSuccess: () =>
+                {
+                    UIManager.TitleAlert(transform, "成功", "Success");
+                },
+
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+                )
+            );
+        });
+
+        config.AddField("AppKey");
+        UIManager.DefaultInputAlert(transform, config);
+    }
+
+    void ChangeAppIdAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            SDKClient.Instance.ChangeAppId(dict["AppId"],
+            callback: new CallBack(
+
+                onSuccess: () =>
+                {
+                    UIManager.TitleAlert(transform, "成功", "Success");
+                },
+
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+                )
+            );
+        });
+
+        config.AddField("AppId");
         UIManager.DefaultInputAlert(transform, config);
     }
 
@@ -587,6 +641,11 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
     public void OnRemoveFromRoomByOffline(string roomId, string roomName)
     {
         Debug.Log($"RoomManager17 OnRemoveFromRoomByOffline roomId: {roomId}, roomName: {roomName}");
+    }
+
+    public void OnMuteListAddedFromRoom(string roomId, Dictionary<string, long> mutes)
+    {
+        Debug.Log($"RoomManager18 OnMuteListAddedFromRoom roomId: {roomId}, mutes: {string.Join(", ", JsonObject.JsonObjectFromSimpleDictionary<long>(mutes).ToString())}");
     }
 
     public void OnPresenceUpdated(List<Presence> presences)
