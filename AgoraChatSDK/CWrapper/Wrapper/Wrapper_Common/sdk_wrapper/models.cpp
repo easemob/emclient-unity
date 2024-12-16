@@ -319,7 +319,7 @@ namespace sdk_wrapper
 
         string app_id = "";
         if (jnode.HasMember("appId") && jnode["appId"].IsString()) {
-            app_key = jnode["appId"].GetString();
+            app_id = jnode["appId"].GetString();
         }
 
         string sdk_path = "";
