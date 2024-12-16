@@ -123,8 +123,6 @@
         ret = [self acceptInvitationFromGroup:params callback:callback];
     } else if ([declineInvitationFromGroup isEqualToString:method]) {
         ret = [self declineInvitationFromGroup:params callback:callback];
-    } else if ([getJoinedGroupsFromServerSimple isEqualToString:method]) {
-        ret = [self getJoinedGroupsFromServerSimple:params callback:callback];
     } else if ([setMemberAttributes isEqualToString:method]) {
         ret = [self setMemberAttributes:params callback:callback];
     } else if ([fetchMemberAttributes isEqualToString:method]) {
@@ -684,6 +682,7 @@
     return nil;
 }
 
+/*
 - (NSString *)getJoinedGroupsFromServerSimple:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
     __weak EMGroupManagerWrapper *weakSelf = self;
     
@@ -705,7 +704,7 @@
     }];
     
     return nil;
-}
+}*/
 
 - (NSString *)setMemberAttributes:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
     __weak EMGroupManagerWrapper *weakSelf = self;
