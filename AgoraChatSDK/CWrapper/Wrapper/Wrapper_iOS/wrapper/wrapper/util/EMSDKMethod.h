@@ -413,6 +413,7 @@ static NSString *const onMemberExitedFromRoom = @"onMemberExitedFromRoom";
 static NSString *const onRemovedFromRoom = @"onRemovedFromRoom";
 static NSString *const onRemoveFromRoomByOffline = @"onRemoveFromRoomByOffline";
 static NSString *const onMuteListAddedFromRoom = @"onMuteListAddedFromRoom";
+static NSString *const onMuteListAddedFromRoomWithMap = @"onMuteListAddedFromRoomWithMap";
 static NSString *const onMuteListRemovedFromRoom = @"onMuteListRemovedFromRoom";
 static NSString *const onAdminAddedFromRoom = @"onAdminAddedFromRoom";
 static NSString *const onAdminRemovedFromRoom = @"onAdminRemovedFromRoom";

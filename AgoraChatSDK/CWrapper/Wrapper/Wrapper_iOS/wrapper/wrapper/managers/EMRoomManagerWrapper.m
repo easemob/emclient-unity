@@ -740,6 +740,15 @@
 }
 
 - (void)chatroomMuteListDidUpdate:(EMChatroom *)aChatroom
+                addedMutedMembers:(NSDictionary<NSString *,NSNumber*> *)aMutes
+{
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+    dictionary[@"roomId"] = aChatroom.chatroomId;
+    dictionary[@"mutes"] = aMutes;
+    [EMWrapperHelper.shared.listener onReceive:chatRoomListener method:onMuteListAddedFromRoomWithMap info: [dictionary toJsonString]];
+}
+
+- (void)chatroomMuteListDidUpdate:(EMChatroom *)aChatroom
               removedMutedMembers:(NSArray<NSString *> *)aMutes
 {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
