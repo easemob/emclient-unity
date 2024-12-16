@@ -1706,7 +1706,7 @@ namespace WinSDKTest
 
             menu_index = 1;
             param.Add(menu_index, "groupId (string)"); menu_index++;
-            param.Add(menu_index, "fetchMembers (bool)"); menu_index++;
+            //param.Add(menu_index, "fetchMembers (bool)"); menu_index++;
             level3_menus.Add("GetGroupSpecificationFromServer", new Dictionary<int, string>(param));
             param.Clear();
 
@@ -2113,7 +2113,7 @@ namespace WinSDKTest
 
             menu_index = 1;
             param.Add(menu_index, "roomId (string)"); menu_index++;
-            param.Add(menu_index, "fetchMembers (bool)"); menu_index++;
+            //param.Add(menu_index, "fetchMembers (bool)"); menu_index++;
             level3_menus.Add("FetchRoomInfoFromServer", new Dictionary<int, string>(param));
             param.Clear();
 
@@ -7301,9 +7301,9 @@ namespace WinSDKTest
             else
                 groupId = GetParamValueFromContext(0);
 
-            bool fetchMembers =  GetParamValueFromContext(1).CompareTo("true") == 0 ? true : false;
+            //bool fetchMembers =  GetParamValueFromContext(1).CompareTo("true") == 0 ? true : false;
 
-            SDKClient.Instance.GroupManager.GetGroupSpecificationFromServer(groupId, fetchMembers, new ValueCallBack<Group>(
+            SDKClient.Instance.GroupManager.GetGroupSpecificationFromServer(groupId, new ValueCallBack<Group>(
                 onSuccess: (group) =>
                 {
                     Console.WriteLine($"GetGroupSpecificationFromServer sucess ===============");
@@ -9098,9 +9098,9 @@ namespace WinSDKTest
         public void CallFunc_IRoomManager_FetchRoomInfoFromServer()
         {
             string roomId = GetParamValueFromContext(0);
-            bool fetchMembers = GetParamValueFromContext(1).CompareTo("true") == 0 ? true:false;
+            //bool fetchMembers = GetParamValueFromContext(1).CompareTo("true") == 0 ? true:false;
 
-            SDKClient.Instance.RoomManager.FetchRoomInfoFromServer(roomId, fetchMembers, new ValueCallBack<Room>(
+            SDKClient.Instance.RoomManager.FetchRoomInfoFromServer(roomId, new ValueCallBack<Room>(
                 onSuccess: (room) => {
                     Console.WriteLine($"FetchRoomInfoFromServer success.");
                     Console.WriteLine($"roomId: {room.RoomId}");
@@ -11231,6 +11231,15 @@ namespace WinSDKTest
         public void OnSpecificationChangedFromRoom(Room room)
         {
             Console.WriteLine($"IRoomManagerDelegate17 OnSpecificationChangedFromRoom roomId: {room.RoomId}; roomName:{room.Name}, total listener count:{LISTENER_COUNT}");
+        }
+
+        public void OnMuteListAddedFromRoom(string roomId, Dictionary<string, long> mutes)
+        {
+            Console.WriteLine($"IRoomManagerDelegate18 OnMuteListAddedFromRoom: roomId: {roomId}; total listener count:{LISTENER_COUNT}");
+            foreach (var it in mutes)
+            {
+                Console.WriteLine($"mute item: key:{it.Key}, value:{it.Value}");
+            }
         }
     }
 
