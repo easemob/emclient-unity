@@ -125,11 +125,11 @@ namespace sdk_wrapper
         string keyInPreConfig = "";
 
         if (MY_KEY_TYPE_APPID == keyType) {
-            gClient->getConfigManager()->getConfig(MY_APPID, keyInPreConfig);
+            gClient->getConfigManager()->getConfig(MY_APPID, keyInPreConfig, CONFIG_FILE);
         }
 
         else if (MY_KEY_TYPE_APPKEY == keyType) {
-            gClient->getConfigManager()->getConfig(MY_APPKEY, keyInPreConfig);
+            gClient->getConfigManager()->getConfig(MY_APPKEY, keyInPreConfig, CONFIG_FILE);
         }
 
         return keyInPreConfig;
