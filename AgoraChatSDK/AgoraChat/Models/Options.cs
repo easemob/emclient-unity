@@ -68,7 +68,7 @@ namespace AgoraChat
         * \~english
         * The App Key you get from the console when creating a chat app. It is the unique identifier of your app. Can not be used with AppId.
         */
-        public string AppKey = "";
+        public string AppKey { get; internal set; }
 
         /**
         * \~chinese
@@ -77,7 +77,7 @@ namespace AgoraChat
         * \~english
         * The App Id you get from the console when creating a chat app. It is the unique identifier of your app. Can not be used with AppKey.
         */
-        public string AppId = "";
+        public string AppId { get; internal set; }
 
         /**
 	     * \~chinese
