@@ -126,8 +126,6 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
             ret = acceptInvitationFromGroup(jsonObject, callback);
         } else if (EMSDKMethod.declineInvitationFromGroup.equals(method)) {
             ret = declineInvitationFromGroup(jsonObject, callback);
-        } else if (EMSDKMethod.getJoinedGroupsFromServerSimple.equals(method)) {
-            ret = getJoinedGroupsFromServerSimple(jsonObject, callback);
         } else if (EMSDKMethod.setMemberAttributes.equals(method)) {
             ret = setMemberAttributes(jsonObject, callback);
         } else if (EMSDKMethod.fetchMemberAttributes.equals(method)) {
@@ -1014,7 +1012,7 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
         return null;
     }
 
-    private String getJoinedGroupsFromServerSimple(JSONObject params, EMWrapperCallback callback) throws JSONException {
+    /*private String getJoinedGroupsFromServerSimple(JSONObject params, EMWrapperCallback callback) throws JSONException {
         int pageSize = 0;
         if (params.has("pageSize")){
             pageSize = params.getInt("pageSize");
@@ -1042,7 +1040,7 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
 
         EMClient.getInstance().groupManager().asyncGetJoinedGroupsFromServer(pageNum, pageSize,callBack);
         return null;
-    }
+    }*/
 
     private String setMemberAttributes(JSONObject params, EMWrapperCallback callback) throws JSONException {
         String groupId = params.getString("groupId");
