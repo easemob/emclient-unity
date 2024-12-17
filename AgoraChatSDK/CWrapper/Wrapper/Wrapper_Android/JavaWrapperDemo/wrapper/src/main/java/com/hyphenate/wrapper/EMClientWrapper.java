@@ -69,6 +69,9 @@ public class EMClientWrapper extends EMBaseWrapper {
             case EMSDKMethod.changeAppKey:
                 str = changeAppKey(jsonObject, callback);
                 break;
+            case EMSDKMethod.changeAppId:
+                str = changeAppId(jsonObject, callback);
+                break;
             case EMSDKMethod.uploadLog:
                 str = uploadLog(callback);
                 break;
@@ -136,6 +139,32 @@ public class EMClientWrapper extends EMBaseWrapper {
         return EMHelper.getReturnJsonObject(0).toString();
     }
 
+    private String changeAppKey(JSONObject param, EMWrapperCallback callback) throws JSONException {
+        String appKey = param.getString("appKey");
+        asyncRunnable(()->{
+            try {
+                EMClient.getInstance().changeAppkey(appKey);
+                onSuccess(null, callback);
+            } catch (HyphenateException e) {
+                onError(e, callback);
+            }
+        });
+        return null;
+    }
+
+    private String changeAppId(JSONObject param, EMWrapperCallback callback) throws JSONException {
+        String appId = param.getString("appId");
+        asyncRunnable(()->{
+            try {
+                EMClient.getInstance().changeAppkey(appId);
+                onSuccess(null, callback);
+            } catch (HyphenateException e) {
+                onError(e, callback);
+            }
+        });
+        return null;
+    }
+
     private String createAccount(JSONObject param, EMWrapperCallback callback) throws JSONException {
         String username = param.getString("userId");
         String password = param.getString("password");
@@ -170,7 +199,7 @@ public class EMClientWrapper extends EMBaseWrapper {
         return null;
     }
 
-    private String changeAppKey(JSONObject param, EMWrapperCallback callback) throws JSONException{
+    /*private String changeAppKey(JSONObject param, EMWrapperCallback callback) throws JSONException{
         String appKey = param.getString("appKey");
         asyncRunnable(()-> {
             try {
@@ -181,7 +210,7 @@ public class EMClientWrapper extends EMBaseWrapper {
             }
         });
         return null;
-    }
+    }*/
 
     private String getCurrentUser() throws JSONException {
         return EMHelper.getReturnJsonObject(EMClient.getInstance().getCurrentUser()).toString();

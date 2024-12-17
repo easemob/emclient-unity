@@ -26,6 +26,7 @@ public class EMSDKMethod {
     public static final String renewToken = "renewToken";
     public static final String logout = "logout";
     public static final String changeAppKey = "changeAppKey";
+    public static final String changeAppId = "changeAppId";
 
     public static final String uploadLog = "uploadLog";
     public static final String compressLogs = "compressLogs";
