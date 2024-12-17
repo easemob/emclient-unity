@@ -258,7 +258,7 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
 
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
-            SDKClient.Instance.ChangeAppkey(dict["AppKey"], 
+            SDKClient.Instance.ChangeAppKey(dict["AppKey"],
             callback: new CallBack(
 
                 onSuccess: () =>
