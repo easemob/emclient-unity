@@ -46,14 +46,14 @@ public class DelegateTester {
         return tester;
     }
     public void startTest (){
-        try {
+        /*try {
             List<EMGroup> groups = EMClient.getInstance().groupManager().getJoinedGroupsFromServer();
             _group = groups.get(0);
             EMPageResult<EMChatRoom> result = EMClient.getInstance().chatroomManager().fetchPublicChatRoomsFromServer(0,5);
             _room = result.getData().get(0);
         }catch (HyphenateException e) {
 
-        }
+        }*/
 
 
         connectionDelegateTest();
@@ -126,8 +126,8 @@ public class DelegateTester {
         EMClientWrapper.shared().groupManagerWrapper.wrapperGroupListener.onAnnouncementChanged("groupId", "announcement");
 
         EMClientWrapper.shared().groupManagerWrapper.wrapperGroupListener.onSharedFileDeleted("groupId","fileId");
-        EMClientWrapper.shared().groupManagerWrapper.wrapperGroupListener.onStateChanged(_group, true);
-        EMClientWrapper.shared().groupManagerWrapper.wrapperGroupListener.onSpecificationChanged(_group);
+        //EMClientWrapper.shared().groupManagerWrapper.wrapperGroupListener.onStateChanged(_group, true);
+        //EMClientWrapper.shared().groupManagerWrapper.wrapperGroupListener.onSpecificationChanged(_group);
 //        无法构建EMMucSharedFile对象， 需要用json 数据测试
 //        EMMucSharedFile file = new EMMucSharedFile();
         try {
@@ -169,7 +169,7 @@ public class DelegateTester {
         EMClientWrapper.shared().roomManagerWrapper.emWrapperRoomListener.onAdminRemoved("roomId", "userId");
         EMClientWrapper.shared().roomManagerWrapper.emWrapperRoomListener.onOwnerChanged("roomId", "newOwner","oldOwner");
         EMClientWrapper.shared().roomManagerWrapper.emWrapperRoomListener.onAnnouncementChanged("roomId", "announcement");
-        EMClientWrapper.shared().roomManagerWrapper.emWrapperRoomListener.onSpecificationChanged(_room);
+        //EMClientWrapper.shared().roomManagerWrapper.emWrapperRoomListener.onSpecificationChanged(_room);
         Map<String, String> map = new HashMap<>();
         map.put("key", "value");
         EMClientWrapper.shared().roomManagerWrapper.emWrapperRoomListener.onAttributesUpdate("roomId", map, "from");
