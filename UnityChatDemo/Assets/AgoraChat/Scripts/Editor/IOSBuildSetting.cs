@@ -45,8 +45,9 @@ namespace AgoraChat {
         static string[] EmbeddedFrameworks = new string[] {
 	        "wrapper.framework",
             "ChatCWrapper.framework",
-            "HyphenateChat.framework"
-	    };
+            "HyphenateChat.framework",
+            "aosl.framework"
+        };
 
         static string GetChatFrameworkGuid(PBXProject proj, string framework)
         {
