@@ -411,6 +411,7 @@ public class EMSDKMethod {
     public static final String onRemovedFromRoom = "onRemovedFromRoom";
     public static final String onRemoveFromRoomByOffline = "onRemoveFromRoomByOffline";
     public static final String onMuteListAddedFromRoom = "onMuteListAddedFromRoom";
+    public static final String onMuteListAddedFromRoomWithMap = "onMuteListAddedFromRoomWithMap";
     public static final String onMuteListRemovedFromRoom = "onMuteListRemovedFromRoom";
     public static final String onAdminAddedFromRoom = "onAdminAddedFromRoom";
     public static final String onAdminRemovedFromRoom = "onAdminRemovedFromRoom";

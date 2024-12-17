@@ -149,6 +149,11 @@ public class DelegateTester {
         List<String>users = new ArrayList<>();
         users.add("userId1");
         users.add("userId1");
+
+        Map<String, Long> mutes = new HashMap<String, Long>();
+        mutes.put("user1", 1234567890L);
+        mutes.put("user2", 9876543210L);
+
         EMClientWrapper.shared().roomManagerWrapper.emWrapperRoomListener.onWhiteListAdded("roomId",users);
         EMClientWrapper.shared().roomManagerWrapper.emWrapperRoomListener.onWhiteListRemoved("roomId",users);
         EMClientWrapper.shared().roomManagerWrapper.emWrapperRoomListener.onAllMemberMuteStateChanged("roomId", true);
@@ -158,6 +163,7 @@ public class DelegateTester {
         EMClientWrapper.shared().roomManagerWrapper.emWrapperRoomListener.onRemovedFromChatRoom(0,"roomId", "name","userId");
         EMClientWrapper.shared().roomManagerWrapper.emWrapperRoomListener.onRemovedFromChatRoom(2,"roomId", "name","userId");
         EMClientWrapper.shared().roomManagerWrapper.emWrapperRoomListener.onMuteListAdded("roomId", users, 1000000);
+        EMClientWrapper.shared().roomManagerWrapper.emWrapperRoomListener.onMuteListAdded("roomId", mutes);
         EMClientWrapper.shared().roomManagerWrapper.emWrapperRoomListener.onMuteListRemoved("roomId",users);
         EMClientWrapper.shared().roomManagerWrapper.emWrapperRoomListener.onAdminAdded("roomId", "userId");
         EMClientWrapper.shared().roomManagerWrapper.emWrapperRoomListener.onAdminRemoved("roomId", "userId");
