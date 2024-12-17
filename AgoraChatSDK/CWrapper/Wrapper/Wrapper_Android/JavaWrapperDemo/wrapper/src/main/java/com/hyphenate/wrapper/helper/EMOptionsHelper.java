@@ -12,6 +12,7 @@ public class EMOptionsHelper {
     public static EMOptions fromJson(JSONObject json, Context context) throws JSONException {
         EMOptions options = new EMOptions();
         options.setAppKey(json.getString("appKey"));
+        options.setAppId(json.getString("appId"));
         options.setAutoLogin(json.getBoolean("autoLogin"));
         options.setRequireAck(json.getBoolean("requireAck"));
         options.setRequireDeliveryAck(json.getBoolean("requireDeliveryAck"));
