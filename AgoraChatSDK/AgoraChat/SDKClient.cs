@@ -224,9 +224,9 @@ namespace AgoraChat
         * @param callback 	   The result callback. See {@link CallBack}.
         *
         */
-        public void ChangeAppkey(string appKey, CallBack callback = null)
+        public void ChangeAppKey(string appKey, CallBack callback = null)
         {
-            _clientImpl.ChangeAppkey(appKey, callback);
+            _clientImpl.ChangeAppKey(appKey, callback);
         }
 
         /**
