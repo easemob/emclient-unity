@@ -156,7 +156,7 @@ public class EMClientWrapper extends EMBaseWrapper {
         String appId = param.getString("appId");
         asyncRunnable(()->{
             try {
-                EMClient.getInstance().changeAppkey(appId);
+                EMClient.getInstance().changeAppId(appId);
                 onSuccess(null, callback);
             } catch (HyphenateException e) {
                 onError(e, callback);
