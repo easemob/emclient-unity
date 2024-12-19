@@ -196,9 +196,9 @@ namespace AgoraChat
          * \~english
          * The timestamp(ms) when Current user will be unmuted.
          * Current use is not muted if it is zero.
-         * Means cannot get MuteDuration correctly if it is be set with -1;
+         * Means cannot get MuteUntilTimeStamp correctly if it is be set with -1;
          */
-        public long MuteDuration { get; internal set; }
+        public long MuteUntilTimeStamp { get; internal set; }
 
         [Preserve]
         internal Room() { }
@@ -243,13 +243,13 @@ namespace AgoraChat
                 IsInAllowList = false;
             }
 
-            if (jsonObject["muteDuration"] != null)
+            if (jsonObject["muteUntilTimeStamp"] != null)
             {
-                MuteDuration = (long)jsonObject["muteDuration"].AsDouble;
+                MuteUntilTimeStamp = (long)jsonObject["muteUntilTimeStamp"].AsDouble;
             }
             else
             {
-                MuteDuration = -1;
+                MuteUntilTimeStamp = -1;
             }
         }
 
@@ -271,7 +271,7 @@ namespace AgoraChat
             jo.AddWithoutNull("permissionType", PermissionType.ToInt());
             jo.AddWithoutNull("createTimestamp", CreateTimeStamp);
             jo.AddWithoutNull("isInAllowList", IsInAllowList);
-            jo.AddWithoutNull("muteDuration", MuteDuration);
+            jo.AddWithoutNull("muteUntilTimeStamp", MuteUntilTimeStamp);
             return jo;
         }
     }
