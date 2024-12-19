@@ -189,12 +189,16 @@ namespace AgoraChat
 
         /**
          * \~chinese
-         * 当前登录用户是否被禁言。
+         * 当前被禁言截止时间戳（毫秒）。
+         * 当取值为0，表示当前用户未被禁言。
+         * 当取值为-1，表示未能获取到用户被禁言时间戳。
          *
          * \~english
-         * Current user is in muted or not.
+         * The timestamp(ms) when Current user will be unmuted.
+         * Current use is not muted if it is zero.
+         * Means cannot get MuteDuration correctly if it is be set with -1;
          */
-        public bool IsMuted { get; internal set; }
+        public long MuteDuration { get; internal set; }
 
         [Preserve]
         internal Room() { }
@@ -239,13 +243,13 @@ namespace AgoraChat
                 IsInAllowList = false;
             }
 
-            if (jsonObject["isMuted"] != null)
+            if (jsonObject["muteDuration"] != null)
             {
-                IsMuted = jsonObject["isMuted"].AsBool;
+                MuteDuration = (long)jsonObject["muteDuration"].AsDouble;
             }
             else
             {
-                IsMuted = false;
+                MuteDuration = -1;
             }
         }
 
@@ -267,7 +271,7 @@ namespace AgoraChat
             jo.AddWithoutNull("permissionType", PermissionType.ToInt());
             jo.AddWithoutNull("createTimestamp", CreateTimeStamp);
             jo.AddWithoutNull("isInAllowList", IsInAllowList);
-            jo.AddWithoutNull("isMuted", IsMuted);
+            jo.AddWithoutNull("muteDuration", MuteDuration);
             return jo;
         }
     }
