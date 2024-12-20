@@ -2080,11 +2080,11 @@ namespace WinSDKTest
             if (appkey.Length > 0 && appkey.Contains("#") == true)
                 options.AppKey = appkey;
 
-            options.AutoLogin = false;
-            options.UsingHttpsOnly = true;
-            options.DebugMode = true;
-            options.MyUUID = "12345678-1111-5555-aaaa-eeeeeeeeeeee";
-            options.EnableEmptyConversation = true;
+            //options.AutoLogin = false;
+            //options.UsingHttpsOnly = true;
+            //options.DebugMode = true;
+            //options.MyUUID = "12345678-1111-5555-aaaa-eeeeeeeeeeee";
+            //options.EnableEmptyConversation = true;
 
             //options.RestServer = "a1.easemob.com";
             //options.IMServer = "182.92.23.113";
@@ -2093,6 +2093,13 @@ namespace WinSDKTest
             //options.IMServer = "47.94.121.20";
             //options.IMPort = 12016;
             //options.EnableDNSConfig = false;
+
+            //sandbox testing
+            options.UsingHttpsOnly = false;
+            options.RestServer = "a1-hsb.easemob.com";
+            options.IMServer = "180.184.143.60";
+            options.IMPort = 6717;
+            options.EnableDNSConfig = false;
 
             if (SDKClient.Instance.InitWithOptions(options) != 0)
             {
@@ -8086,6 +8093,12 @@ namespace WinSDKTest
                     Console.WriteLine($"Owner: {room.Owner}");
                     Console.WriteLine($"IsAllMemberMuted: {room.IsAllMemberMuted}");
                     Console.WriteLine($"PermissionType: {room.PermissionType}");
+                    Console.WriteLine($"------------------");
+                    Console.WriteLine($"CreateTimeStamp: {room.CreateTimeStamp}");
+                    Console.WriteLine($"IsAllMemberMuted: {room.IsAllMemberMuted}");
+                    Console.WriteLine($"IsInAllowList: {room.IsInAllowList}");
+                    Console.WriteLine($"MemberCount: {room.MemberCount}");
+                    Console.WriteLine($"MuteUntilTimeStamp: {room.MuteUntilTimeStamp}");
                 },
                 onError: (code, desc) => {
                     Console.WriteLine($"CreateRoom failed, code:{code}, desc:{desc}");
@@ -8171,6 +8184,12 @@ namespace WinSDKTest
                     Console.WriteLine($"Owner: {room.Owner}");
                     Console.WriteLine($"IsAllMemberMuted: {room.IsAllMemberMuted}");
                     Console.WriteLine($"PermissionType: {room.PermissionType}");
+                    Console.WriteLine($"------------------");
+                    Console.WriteLine($"CreateTimeStamp: {room.CreateTimeStamp}");
+                    Console.WriteLine($"IsAllMemberMuted: {room.IsAllMemberMuted}");
+                    Console.WriteLine($"IsInAllowList: {room.IsInAllowList}");
+                    Console.WriteLine($"MemberCount: {room.MemberCount}");
+                    Console.WriteLine($"MuteUntilTimeStamp: {room.MuteUntilTimeStamp}");
                 },
                 onError: (code, desc) => {
                     Console.WriteLine($"JoinRoom failed, code:{code}, desc:{desc}");
