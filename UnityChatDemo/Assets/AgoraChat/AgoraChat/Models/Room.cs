@@ -55,9 +55,13 @@ namespace AgoraChat
         /**
         * \~chinese
         * 在线成员数。
+        * 加入聊天室即可获取。
+        * 当聊天室有成员进出时，此属性会更新。
         *
         * \~english
         * The number of online members.
+        * This property is available once join the chat room.
+        * This property will be updated when others join or exit the chat room.
         */
         public int MemberCount { get; internal set; }
 
@@ -139,23 +143,20 @@ namespace AgoraChat
 
         /**
          * \~chinese
-         * 是否开启全员禁言。
+         * 是否开启全员禁言,加入聊天室即可获取。
          * - `true`：开启。
          * - `false`：关闭。
          *  
          * **注意**
-         * - 加入聊天室后，收到一键禁言/取消禁言的回调时，该状态会更新，此时为可靠状态。
-         * - 从聊天室退出后再进入聊天室，该状态不可信。
-         
+         * - 加入聊天室后，收到一键禁言/取消禁言的回调时，该状态会更新。
          *
          * \~english
-         * Whether all members are muted.
+         * Whether all members are muted. This propery is available once join the chat room.
          * - `true`: Yes.  
          * - `false`: No.
          * 
          * **Note**
          * - Once all members are muted or unmuted, the callback is triggered to notify and update the mute or unmute status. You can call the method to get the current status.
-         * - If you leave the chat room and rejoin it, the status is not reliable.
          * 
          */
         public bool IsAllMemberMuted { get; internal set; }
@@ -172,18 +173,24 @@ namespace AgoraChat
         /**
          * \~chinese
          * 聊天室创建时间戳。
+         * 只有加入聊天室时可获取。
          *
          * \~english
          * The timestamp when the chat room was created.
+         * This property ONLY can be available when join the chat room.
          */
         public long CreateTimeStamp { get; internal set; }
 
         /**
          * \~chinese
          * 当前登录用户是否在白名单中。
+         * 加入聊天室时可获取。
+         * 当前用户被加入或者被移除白名单时，此属性会发生变化。
          *
          * \~english
          * Current user is in allow-list or not.
+         * This property is available once join the chat room.
+         * This property will be updated when current user is added or removed from the allow list.
          */
         public bool IsInAllowList { get; internal set; }
 
@@ -192,11 +199,15 @@ namespace AgoraChat
          * 当前被禁言截止时间戳（毫秒）。
          * 当取值为0，表示当前用户未被禁言。
          * 当取值为-1，表示未能获取到用户被禁言时间戳。
+         * 加入聊天室时可获取。
+         * 当前用户被禁言或者被解除禁言时，此属性会被更新。
          *
          * \~english
          * The timestamp(ms) when Current user will be unmuted.
          * Current use is not muted if it is zero.
          * Means cannot get MuteUntilTimeStamp correctly if it is be set with -1;
+         * This property is available once join the chat room.
+         * This property will be updated when current use is muted or unmuted.
          */
         public long MuteUntilTimeStamp { get; internal set; }
 
