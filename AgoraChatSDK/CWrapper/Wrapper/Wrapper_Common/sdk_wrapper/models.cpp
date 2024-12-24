@@ -2727,7 +2727,7 @@ namespace sdk_wrapper
         writer.Bool(room->isInWhiteList());
 
         writer.Key("muteUntilTimeStamp");
-        writer.Uint64(room->muteUntilTimestamp());
+        writer.Int64(room->muteUntilTimestamp());
 
         writer.EndObject();
     }
