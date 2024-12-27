@@ -24,8 +24,9 @@
 		4543E1C82BC2A25000429413 /* Mode.m in Sources */ = {isa = PBXBuildFile; fileRef = 4543E1C72BC2A25000429413 /* Mode.m */; };
 		4578AED32BC2452500DE8EB3 /* EMMessagePinInfo+Helper.h in Headers */ = {isa = PBXBuildFile; fileRef = 4578AED22BC2452500DE8EB3 /* EMMessagePinInfo+Helper.h */; };
 		4578AED52BC2467B00DE8EB3 /* EMMessagePinInfo+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4578AED42BC2467B00DE8EB3 /* EMMessagePinInfo+Helper.m */; };
+		457CBF022D1EA4CF00659EB6 /* ChatHeaders.h in Headers */ = {isa = PBXBuildFile; fileRef = 457CBF012D1EA4CF00659EB6 /* ChatHeaders.h */; };
+		457CBF042D1EA70200659EB6 /* AgoraChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 457CBF032D1EA70200659EB6 /* AgoraChat.framework */; };
 		4597E80F2B875E1200D70B6D /* EMContact+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4597E80E2B875E1200D70B6D /* EMContact+Helper.m */; };
-		45C0A2032C09A9EE00D4833E /* HyphenateChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90319D0D29360033000D01BE /* HyphenateChat.framework */; };
 		45C0A2052C09C2C100D4833E /* EMRecallMessageInfo+Helper.h in Headers */ = {isa = PBXBuildFile; fileRef = 45C0A2042C09C2C100D4833E /* EMRecallMessageInfo+Helper.h */; };
 		45C0A2072C09C33D00D4833E /* EMRecallMessageInfo+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 45C0A2062C09C33D00D4833E /* EMRecallMessageInfo+Helper.m */; };
 		90319C812935FC1E000D01BE /* EMMessageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 90319C2A2935FC1E000D01BE /* EMMessageManager.m */; };
@@ -136,6 +137,8 @@
 		4543E1C72BC2A25000429413 /* Mode.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Mode.m; sourceTree = "<group>"; };
 		4578AED22BC2452500DE8EB3 /* EMMessagePinInfo+Helper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EMMessagePinInfo+Helper.h"; sourceTree = "<group>"; };
 		4578AED42BC2467B00DE8EB3 /* EMMessagePinInfo+Helper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "EMMessagePinInfo+Helper.m"; sourceTree = "<group>"; };
+		457CBF012D1EA4CF00659EB6 /* ChatHeaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatHeaders.h; sourceTree = "<group>"; };
+		457CBF032D1EA70200659EB6 /* AgoraChat.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AgoraChat.framework; path = ../AgoraChat.framework; sourceTree = "<group>"; };
 		4597E80D2B875DBF00D70B6D /* EMContact+Helper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EMContact+Helper.h"; sourceTree = "<group>"; };
 		4597E80E2B875E1200D70B6D /* EMContact+Helper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "EMContact+Helper.m"; sourceTree = "<group>"; };
 		45C0A2042C09C2C100D4833E /* EMRecallMessageInfo+Helper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EMRecallMessageInfo+Helper.h"; sourceTree = "<group>"; };
@@ -241,7 +244,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				45C0A2032C09A9EE00D4833E /* HyphenateChat.framework in Frameworks */,
+				457CBF042D1EA70200659EB6 /* AgoraChat.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -268,6 +271,7 @@
 		90319C212935FBE3000D01BE /* wrapper */ = {
 			isa = PBXGroup;
 			children = (
+				457CBF012D1EA4CF00659EB6 /* ChatHeaders.h */,
 				908CE3C4293D913600348C1A /* category */,
 				90319C522935FC1E000D01BE /* callback */,
 				90319C452935FC1E000D01BE /* EMWrapper.h */,
@@ -403,6 +407,7 @@
 		90319D022935FD2F000D01BE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				457CBF032D1EA70200659EB6 /* AgoraChat.framework */,
 				9050E16C2A8DC85900D95DF3 /* ActivityKit.framework */,
 				90319D0D29360033000D01BE /* HyphenateChat.framework */,
 			);
@@ -439,6 +444,7 @@
 				9052DFAB2A25E78600FB1FF2 /* EMMessageReactionOperation+Helper.h in Headers */,
 				90319CBD2935FC1E000D01BE /* EMCursorResult+Helper.h in Headers */,
 				90ED2EB7295C0DDA00601727 /* DelegateTester.h in Headers */,
+				457CBF022D1EA4CF00659EB6 /* ChatHeaders.h in Headers */,
 				90319CA12935FC1E000D01BE /* EMUtil.h in Headers */,
 				908CE3CF293D913600348C1A /* NSArray+Category.h in Headers */,
 				90319CC42935FC1E000D01BE /* EMMessageReaction+Helper.h in Headers */,

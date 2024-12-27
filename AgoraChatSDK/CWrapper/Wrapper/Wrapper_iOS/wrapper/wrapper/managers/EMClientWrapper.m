@@ -6,7 +6,7 @@
 //
 
 #import "EMClientWrapper.h"
-#import <HyphenateChat/HyphenateChat.h>
+#import "ChatHeaders.h"
 #import "EMOptions+Helper.h"
 #import "EMWrapperHelper.h"
 #import "EMDeviceConfig+Helper.h"

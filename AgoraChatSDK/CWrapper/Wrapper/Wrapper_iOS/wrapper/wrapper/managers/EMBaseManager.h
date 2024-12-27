@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <HyphenateChat/HyphenateChat.h>
+#import "ChatHeaders.h"
 #import "EMSDKMethod.h"
 #import "EMWrapperHelper.h"
 
