@@ -2496,7 +2496,8 @@ namespace WinSDKTest
             //if (appkey.Length > 0 && appkey.Contains("#") == true)
             //    options.AppKey = appkey;
 
-            Options options = Options.InitOptionsWithAppId("ba85504621304fb894790708d304794f");
+            //Options options = Options.InitOptionsWithAppId("ba85504621304fb894790708d304794f");
+            Options options = Options.InitOptionsWithAppKey("easemob-demo#unitytest");
 
             options.AutoLogin = false;
             options.UsingHttpsOnly = true;
@@ -3279,7 +3280,7 @@ namespace WinSDKTest
         {
             string appkey = GetParamValueFromContext(0);
 
-            SDKClient.Instance.ChangeAppkey(appkey,
+            SDKClient.Instance.ChangeAppKey(appkey,
             callback: new CallBack(
 
                 onSuccess: () =>
