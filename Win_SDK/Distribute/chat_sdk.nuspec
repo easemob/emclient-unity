@@ -2,18 +2,18 @@
 <package >
   <metadata>
     <id>chat_sdk</id>
-    <version>1.4.1</version>
+    <version>1.3.2</version>
     <title>agora im sdk wrapper</title>
     <authors>Agora</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <license type="expression">MIT</license>
     <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
     <projectUrl>https://docs.agora.io/en/agora-chat/get-started/get-started-sdk?platform=windows</projectUrl>
-    <description>AgoraChatSDK version 1.4.1</description>
+    <description>AgoraChatSDK version 1.3.2</description>
     <repository type="GitHub" url="https://github.com/easemob/emclient-unity"/>
-    <releaseNotes>AgoraChatSDK version 1.4.1</releaseNotes>
+    <releaseNotes>AgoraChatSDK version 1.3.2</releaseNotes>
     <copyright>AgroChat</copyright>
-    <tags>stable 4.11.0</tags>
+    <tags>stable 4.12.0</tags>
     <dependencies>
       <group targetFramework=".NETFramework4.5.2" />
       <group targetFramework=".NETFramework4.6.2" />
