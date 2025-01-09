@@ -5,9 +5,6 @@
 //  Created by 杜洁鹏 on 2024/12/25.
 //
 
-
-#define AgoraChat
-
 #if defined(AgoraChat)
 
 #import <AgoraChat/AgoraChat.h>
