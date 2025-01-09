@@ -21,11 +21,11 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		4528D9992D2FBE8000EA388C /* HyphenateChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90319D0D29360033000D01BE /* HyphenateChat.framework */; };
 		4543E1C82BC2A25000429413 /* Mode.m in Sources */ = {isa = PBXBuildFile; fileRef = 4543E1C72BC2A25000429413 /* Mode.m */; };
 		4578AED32BC2452500DE8EB3 /* EMMessagePinInfo+Helper.h in Headers */ = {isa = PBXBuildFile; fileRef = 4578AED22BC2452500DE8EB3 /* EMMessagePinInfo+Helper.h */; };
 		4578AED52BC2467B00DE8EB3 /* EMMessagePinInfo+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4578AED42BC2467B00DE8EB3 /* EMMessagePinInfo+Helper.m */; };
 		457CBF022D1EA4CF00659EB6 /* ChatHeaders.h in Headers */ = {isa = PBXBuildFile; fileRef = 457CBF012D1EA4CF00659EB6 /* ChatHeaders.h */; };
-		457CBF042D1EA70200659EB6 /* AgoraChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 457CBF032D1EA70200659EB6 /* AgoraChat.framework */; };
 		4597E80F2B875E1200D70B6D /* EMContact+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4597E80E2B875E1200D70B6D /* EMContact+Helper.m */; };
 		45C0A2052C09C2C100D4833E /* EMRecallMessageInfo+Helper.h in Headers */ = {isa = PBXBuildFile; fileRef = 45C0A2042C09C2C100D4833E /* EMRecallMessageInfo+Helper.h */; };
 		45C0A2072C09C33D00D4833E /* EMRecallMessageInfo+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 45C0A2062C09C33D00D4833E /* EMRecallMessageInfo+Helper.m */; };
@@ -244,7 +244,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				457CBF042D1EA70200659EB6 /* AgoraChat.framework in Frameworks */,
+				4528D9992D2FBE8000EA388C /* HyphenateChat.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
