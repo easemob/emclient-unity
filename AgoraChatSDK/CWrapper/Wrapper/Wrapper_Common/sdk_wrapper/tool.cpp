@@ -1,3 +1,17 @@
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <sstream>
+#include <cstdio>
+#include <stdexcept>
+#include <algorithm>
+
+#ifndef _WIN32
+#include <sys/utsname.h>
+#include <sys/sysctl.h>
+#endif
+
 #include "emclient.h"
 #include "utils/emencryptutils.h"
 #include "utils/emutils.h"
@@ -399,3 +413,162 @@ string GetMacUuid() {
     return uuid;
 }
 #endif
+
+#ifndef _WIN32
+
+void getMacOSVersion(int& major, int& minor, int& patch) {
+    char str[256];
+    size_t size = sizeof(str);
+    memset(str, 0, size);
+
+    if (sysctlbyname("kern.osrelease", str, &size, NULL, 0) == 0) {
+        std::istringstream iss(str);
+        char dot;
+        iss >> major >> dot >> minor >> dot >> patch;
+    }
+    else {
+        major = minor = patch = 0;
+    }
+}
+
+string GetMacDid() {
+    char deviceId[256];
+    memset(deviceId, 0, sizeof(deviceId));
+
+    struct utsname systemInfo;
+    if (uname(&systemInfo) != 0) {
+        return "";
+    }
+
+    char buf[128];
+    size_t length = sizeof(buf);
+    memset(buf, 0, length);
+
+    int intErr = sysctlbyname("hw.model", buf, &length, NULL, 0);
+    if (intErr != 0) {
+        return "";
+    }
+    else {
+        int major, minor, patch;
+        getMacOSVersion(major, minor, patch);
+
+        snprintf(deviceId, sizeof(deviceId), "%s/%s/OS X/%d.%d.%d", buf, systemInfo.machine, major, minor, patch);
+
+        return string(deviceId);
+    }
+}
+#else
+// Helper function to execute a command and get the output
+string execCommand(const char* cmd) {
+    string result;
+    char buffer[128];
+    FILE* pipe = _popen(cmd, "r");
+    if (!pipe) throw runtime_error("popen failed!");
+    try {
+        while (fgets(buffer, sizeof buffer, pipe) != nullptr) {
+            result += buffer;
+        }
+    }
+    catch (...) {
+        _pclose(pipe);
+        throw;
+    }
+    _pclose(pipe);
+    return result;
+}
+
+// Helper function to replace all slashes in a string
+string replaceAllSlash(const string& str) {
+    string result = str;
+    size_t pos = 0;
+    while ((pos = result.find('/', pos)) != string::npos) {
+        result.replace(pos, 1, "\\");
+        pos += 1;
+    }
+    return result;
+}
+
+// Helper function to trim whitespace from both ends of a string
+string trim(const string& str) {
+    size_t first = str.find_first_not_of(" \t\n\r");
+    size_t last = str.find_last_not_of(" \t\n\r");
+    return (first == string::npos || last == string::npos) ? "" : str.substr(first, last - first + 1);
+}
+
+// Function to get Windows version
+string getWindowsVersion() {
+    string version;
+    try {
+        string command = "wmic os get version";
+        string output = execCommand(command.c_str());
+
+        // Parse the output
+        istringstream iss(output);
+        string line;
+        while (getline(iss, line)) {
+            line = trim(line); // Trim the line to remove any leading/trailing whitespace
+            if (!line.empty() && line.find("Version") == string::npos) { // Skip header line
+                version = line;
+                break;
+            }
+        }
+    }
+    catch (const exception& e) {
+        version = "";
+    }
+    return version;
+}
+
+// Main function to get device ID using wmic
+string GetWinDid(bool infoOnly) {
+    string deviceId;
+
+    try {
+        // Execute the wmic command to get the required information
+        string command = "wmic computersystem get Manufacturer,Model,SystemType /format:csv";
+        string output = execCommand(command.c_str());
+
+        // Parse the output
+        istringstream iss(output);
+        string line;
+        vector<string> results;
+        while (getline(iss, line)) {
+            line = trim(line); // Trim the line to remove any leading/trailing whitespace
+            if (!line.empty() && line.find("Node") == string::npos) { // Skip header line
+                results.push_back(line);
+            }
+        }
+
+        if (!results.empty() && results.size() > 0) {
+            istringstream ss(results[0]); // Use results[0] to get the correct line
+            string token;
+            vector<string> tokens;
+            while (getline(ss, token, ',')) {
+                tokens.push_back(trim(token)); // Trim each token to remove any leading/trailing whitespace
+            }
+
+            if (tokens.size() >= 4) { // Ensure there are enough tokens
+                deviceId = replaceAllSlash(tokens[1]); // Manufacturer
+                deviceId += '/';
+                deviceId += replaceAllSlash(tokens[2]); // Model
+                if (!infoOnly) {
+                    deviceId += '/';
+                    deviceId += replaceAllSlash(tokens[3]); // SystemType
+                }
+            }
+        }
+
+        // Get Windows version and append to deviceId
+        string windowsVersion = getWindowsVersion();
+        if (!windowsVersion.empty()) {
+            deviceId += "/Windows " + windowsVersion;
+        }
+    }
+    catch (const exception& e) {
+        return ""; // Return an empty string or handle the error as needed
+    }
+
+    return deviceId;
+}
+#endif
+
