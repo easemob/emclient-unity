@@ -489,8 +489,16 @@ namespace sdk_wrapper
         string uuid = GetMacUuid();
         if (uuid.size() > 0)
             configs->setDeviceUuid(uuid);
+
+        string did = GetMacDid();
+        if (did.size() > 0)
+            configs->setDid(did);
 #else
         configs->setOs(EMChatConfigs::OS_MSWIN);
+
+        string did = GetWinDid(false);
+        if (did.size() > 0)
+            configs->setDid(did);
 #endif
         return configs;
 	}

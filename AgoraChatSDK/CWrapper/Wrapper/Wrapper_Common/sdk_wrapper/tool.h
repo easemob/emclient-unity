@@ -77,6 +77,9 @@ string DecryptAndGetFromFile(const string& key, string fn = "");
 
 #ifndef _WIN32
 string GetMacUuid();
+string GetMacDid();
+#else
+string GetWinDid(bool infoOnly);
 #endif
 
 #endif
