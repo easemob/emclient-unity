@@ -22,6 +22,9 @@ public class EMChatRoomHelper {
         data.put("isMuteAll", chatRoom.isAllMemberMuted());
         data.put("announcement", chatRoom.getAnnouncement());
         data.put("permissionType", intTypeFromPermissionType(chatRoom.getChatRoomPermissionType()));
+        data.put("createTimestamp", chatRoom.getCreateTimestamp());
+        data.put("isInAllowList", chatRoom.isInWhitelist());
+        data.put("muteUntilTimeStamp", chatRoom.getMuteExpireTimestamp());
         return data;
     }
 
