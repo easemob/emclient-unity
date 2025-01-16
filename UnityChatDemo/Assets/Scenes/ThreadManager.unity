@@ -670,7 +670,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 288029335}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f6c635af1ac4451dbf1f08c882c2fee, type: 3}
+  m_Script: {fileID: 11500000, guid: 8edb7ca00b0a64451bdbe4c3bf45f2bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &547332155
@@ -900,8 +900,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 999304644}
   m_HandleRect: {fileID: 999304643}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 1
+  m_Value: 1
+  m_Size: 0.27642277
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
