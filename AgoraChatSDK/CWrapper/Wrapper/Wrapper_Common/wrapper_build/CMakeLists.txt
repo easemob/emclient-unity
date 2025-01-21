@@ -66,7 +66,7 @@ if(MSVC)
 		-D_WIN32
 		-DCONFIG_WINDOWS
 		-DWIN32_LEAN_AND_MEAN
-                -DBUILD_NO=${BUILD_NO}
+                #-DBUILD_NO=${BUILD_NO}
     )
     
     # 设置全局编译选项
