@@ -122,16 +122,6 @@
 		90ED2EB8295C0DDA00601727 /* DelegateTester.m in Sources */ = {isa = PBXBuildFile; fileRef = 90ED2EB6295C0DDA00601727 /* DelegateTester.m */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		9052100029669E0500072251 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 90319C162935FBE3000D01BE /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 90520FFB29669DD200072251;
-			remoteInfo = download_sdk;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		4543E1C62BC2A23700429413 /* Mode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Mode.h; sourceTree = "<group>"; };
 		4543E1C72BC2A25000429413 /* Mode.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Mode.m; sourceTree = "<group>"; };
@@ -501,7 +491,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				9052100129669E0500072251 /* PBXTargetDependency */,
 			);
 			name = wrapper;
 			productName = wrapper;
@@ -630,14 +619,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		9052100129669E0500072251 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 90520FFB29669DD200072251 /* download_sdk */;
-			targetProxy = 9052100029669E0500072251 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		90319C242935FBE3000D01BE /* Debug */ = {
