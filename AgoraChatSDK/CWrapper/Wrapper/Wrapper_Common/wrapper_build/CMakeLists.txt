@@ -102,7 +102,7 @@ else()
 
     add_definitions(
 		-DTARGET_OS_OSX
-		-DBUILD_NO=${BUILD_NO}
+		#-DBUILD_NO=${BUILD_NO}
 	)
 
     set(CMAKE_XCODE_ATTRIBUTE_DEBUG_INFORMATION_FORMAT "dwarf-with-dsym")
