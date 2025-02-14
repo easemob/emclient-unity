@@ -5,7 +5,7 @@
 //  Created by yuqiang on 2024/5/31.
 //
 
-#import <HyphenateChat/HyphenateChat.h>
+#import "ChatHeaders.h"
 #import "EaseModeToJson.h"
 
 NS_ASSUME_NONNULL_BEGIN

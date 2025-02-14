@@ -176,6 +176,7 @@ namespace AgoraChat
          *                  				- `DOWN`: Gets messages after the timestamp of the specified message ID.
 	     * @param callback				The result callback. Returns the list of obtained messages. 
 	     */
+        [Obsolete]
         public void FetchHistoryMessagesFromServer(string conversationId, ConversationType type = ConversationType.Chat, string startMessageId = null, int count = 20, MessageSearchDirection direction = MessageSearchDirection.UP, ValueCallBack<CursorResult<Message>> callback = null)
         {
             JSONObject jo_param = new JSONObject();
@@ -457,6 +458,30 @@ namespace AgoraChat
 
         /**
         * \~chinese
+        * 获取数据库中的消息总数。
+        *
+        * @return           消息总数。
+        * @param callback   成功返回消息总数，失败返回-1，详见 {@link ValueCallBack}。
+        *
+        * \~english
+        * Gets the message count in DB.
+        *
+        * @return           The count of messages in DB.
+        * @param callback   Returns the total number of messages on success, -1 on failure. See {@link ValueCallBack}。
+        *
+        */
+        public void GetMessageCount(ValueCallBack<int> callback = null)
+        {
+            Process process = (_, jsonNode) =>
+            {
+                return jsonNode["ret"].IsNumber ? jsonNode["ret"].AsInt : -1;
+            };
+
+            NativeCall<int>(SDKMethod.getMessagesCount, null, callback, process);
+        }
+
+        /**
+        * \~chinese
         * 将消息导入本地数据库。
         *
         * 你只能将你发送或接受的消息导入本地数据库。
@@ -661,7 +686,7 @@ namespace AgoraChat
             jo_param.AddWithoutNull("keywords", keywords);
             jo_param.AddWithoutNull("from", from ?? "");
             jo_param.AddWithoutNull("count", maxCount);
-            jo_param.AddWithoutNull("timestamp", timestamp.ToString());
+            jo_param.AddWithoutNull("timestamp", timestamp);
             jo_param.AddWithoutNull("direction", direction.ToInt());
 
             Process process = (_, jsonNode) =>
@@ -708,7 +733,7 @@ namespace AgoraChat
             jo_param.AddWithoutNull("keywords", keywords);
             jo_param.AddWithoutNull("from", from ?? "");
             jo_param.AddWithoutNull("count", maxCount);
-            jo_param.AddWithoutNull("timestamp", timestamp.ToString());
+            jo_param.AddWithoutNull("timestamp", timestamp);
             jo_param.AddWithoutNull("direction", direction.ToInt());
             jo_param.AddWithoutNull("scope", scope.ToInt());
 
@@ -940,7 +965,7 @@ namespace AgoraChat
         public void RemoveMessagesBeforeTimestamp(long timeStamp, CallBack callback = null)
         {
             JSONObject jo_param = new JSONObject();
-            jo_param.AddWithoutNull("timestamp", timeStamp.ToString());
+            jo_param.AddWithoutNull("timestamp", timeStamp);
             NativeCall(SDKMethod.deleteMessagesBeforeTimestamp, jo_param, callback);
         }
 
@@ -1339,7 +1364,7 @@ namespace AgoraChat
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("convId", conversationId);
             jo_param.AddWithoutNull("convType", conversationType.ToInt());
-            jo_param.AddWithoutNull("timestamp", timeStamp.ToString());
+            jo_param.AddWithoutNull("timestamp", timeStamp);
 
             NativeCall(SDKMethod.removeMessagesFromServerWithTs, jo_param, callback);
         }
@@ -1474,8 +1499,6 @@ namespace AgoraChat
         * \~chinese
         * 消息置顶或取消置顶。
         *
-        * 仅支持群组消息。
-        *
         * 异步方法。
         *
         * @param messageId         置顶或取消置顶的消息 ID。
@@ -1486,8 +1509,6 @@ namespace AgoraChat
         *
         * \~english
         * Pins or unpins a message.
-        *
-        * This method is used only for group messages.
         *
         * This is an asynchronous method.
         *

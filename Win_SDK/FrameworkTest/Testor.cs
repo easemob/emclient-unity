@@ -399,7 +399,7 @@ namespace WinSDKTest
                 // 等待下一轮发送消息
                 Console.WriteLine($"Selected q to quit. other to continue... ");
                 string key = Console.ReadLine();
-                if (key.CompareTo("q") == 0)
+                if (null == key || key.CompareTo("q") == 0)
                 {
                     Console.WriteLine($"quit now.");
                     break;
@@ -457,7 +457,7 @@ namespace WinSDKTest
                     // 等待获取消息
                     Console.WriteLine($"Selected q to quit. other to continue... ");
                     string key = Console.ReadLine();
-                    if (key.CompareTo("q") == 0)
+                    if (null == key || key.CompareTo("q") == 0)
                     {
                         Console.WriteLine($"quit now.");
                     }
@@ -666,6 +666,8 @@ namespace WinSDKTest
             functions_IClient.Add(menu_index, "KickDeviceWithToken"); menu_index++;
             functions_IClient.Add(menu_index, "kickAllDevices"); menu_index++;
             functions_IClient.Add(menu_index, "kickAllDevicesWithToken"); menu_index++;
+            functions_IClient.Add(menu_index, "ChangeAppKey"); menu_index++;
+            functions_IClient.Add(menu_index, "ChangeAppId"); menu_index++;
             functions_IClient.Add(menu_index, "RunDelegateTester"); menu_index++;
             level2_menus.Add("IClient", functions_IClient);
         }
@@ -767,6 +769,16 @@ namespace WinSDKTest
             param.Clear();
 
             menu_index = 1;
+            param.Add(menu_index, "appkey (string)"); menu_index++;
+            level3_menus.Add("ChangeAppKey", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "appid (string)"); menu_index++;
+            level3_menus.Add("ChangeAppId", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
             param.Add(menu_index, "No params"); menu_index++;
             level3_menus.Add("RunDelegateTester", new Dictionary<int, string>(param));
             param.Clear();
@@ -829,6 +841,7 @@ namespace WinSDKTest
             functions_IChatManager.Add(menu_index, "DeleteAllMessagesAndConversations"); menu_index++;
             functions_IChatManager.Add(menu_index, "PinMessage"); menu_index++;
             functions_IChatManager.Add(menu_index, "GetPinnedMessagesFromServer"); menu_index++;
+            functions_IChatManager.Add(menu_index, "GetMessageCount"); menu_index++;
             level2_menus.Add("IChatManager", functions_IChatManager);
         }
 
@@ -1176,6 +1189,11 @@ namespace WinSDKTest
             param.Add(menu_index, "conversationId (string)"); menu_index++;
             level3_menus.Add("GetPinnedMessagesFromServer", new Dictionary<int, string>(param));
             param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "No params"); menu_index++;
+            level3_menus.Add("GetMessageCount", new Dictionary<int, string>(param));
+            param.Clear();
         }
 
         internal void InitLevel2Menus_IContactManager()
@@ -1293,6 +1311,7 @@ namespace WinSDKTest
             functions_IConversationManager.Add(menu_index, "SetExt"); menu_index++;
             functions_IConversationManager.Add(menu_index, "UnReadCount"); menu_index++;
             functions_IConversationManager.Add(menu_index, "MessagesCount"); menu_index++;
+            functions_IConversationManager.Add(menu_index, "MessagesCountWithTS"); menu_index++;
             functions_IConversationManager.Add(menu_index, "MarkMessageAsRead"); menu_index++;
             functions_IConversationManager.Add(menu_index, "MarkAllMessageAsRead"); menu_index++;
             functions_IConversationManager.Add(menu_index, "InsertMessage"); menu_index++;
@@ -1303,6 +1322,7 @@ namespace WinSDKTest
             functions_IConversationManager.Add(menu_index, "DeleteAllMessages"); menu_index++;
             functions_IConversationManager.Add(menu_index, "LoadConverationMessage"); menu_index++;
             functions_IConversationManager.Add(menu_index, "LoadMessagesWithMsgType"); menu_index++;
+            functions_IConversationManager.Add(menu_index, "LoadMessagesWithMsgTypeList"); menu_index++;
             functions_IConversationManager.Add(menu_index, "LoadMessages"); menu_index++;
             functions_IConversationManager.Add(menu_index, "LoadMessagesWithKeyword"); menu_index++;
             functions_IConversationManager.Add(menu_index, "LoadMessagesWithTime"); menu_index++;
@@ -1348,6 +1368,14 @@ namespace WinSDKTest
             param.Add(menu_index, "conversationId (string)"); menu_index++;
             param.Add(menu_index, "conversationType (0:Chat, 1:Group, 2:Room)"); menu_index++;
             level3_menus.Add("MessagesCount", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "conversationId (string)"); menu_index++;
+            param.Add(menu_index, "conversationType (0:Chat, 1:Group, 2:Room)"); menu_index++;
+            param.Add(menu_index, "startTime (long)"); menu_index++;
+            param.Add(menu_index, "endTime (long)"); menu_index++;
+            level3_menus.Add("MessagesCountWithTS", new Dictionary<int, string>(param));
             param.Clear();
 
             menu_index = 1;
@@ -1425,6 +1453,18 @@ namespace WinSDKTest
             menu_index = 1;
             param.Add(menu_index, "conversationId (string)"); menu_index++;
             param.Add(menu_index, "conversationType (0:Chat, 1:Group, 2:Room)"); menu_index++;
+            param.Add(menu_index, "bodyType1 (0:Txt,1:Image;2:Video;3:Location;4:Voice;5:File:6:Cmd;7:Custom)"); menu_index++;
+            param.Add(menu_index, "bodyType2 (0:Txt,1:Image;2:Video;3:Location;4:Voice;5:File:6:Cmd;7:Custom)"); menu_index++;
+            param.Add(menu_index, "sender (string)"); menu_index++;
+            param.Add(menu_index, "timestamp (long)"); menu_index++;
+            param.Add(menu_index, "count (int)"); menu_index++;
+            param.Add(menu_index, "direction (0:up; 1:down)"); menu_index++;
+            level3_menus.Add("LoadMessagesWithMsgTypeList", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "conversationId (string)"); menu_index++;
+            param.Add(menu_index, "conversationType (0:Chat, 1:Group, 2:Room)"); menu_index++;
             param.Add(menu_index, "startMessageId (string)"); menu_index++;
             param.Add(menu_index, "count (int)"); menu_index++;
             param.Add(menu_index, "direction (0:up; 1:down)"); menu_index++;
@@ -1486,6 +1526,7 @@ namespace WinSDKTest
             functions_IGroupManager.Add(menu_index, "ChangeGroupName"); menu_index++;
             functions_IGroupManager.Add(menu_index, "ChangeGroupOwner"); menu_index++;
             functions_IGroupManager.Add(menu_index, "CheckIfInGroupWhiteList"); menu_index++;
+            functions_IGroupManager.Add(menu_index, "CheckIfInGroupMuteList"); menu_index++;
             functions_IGroupManager.Add(menu_index, "CreateGroup"); menu_index++;
             functions_IGroupManager.Add(menu_index, "DeclineGroupInvitation"); menu_index++;
             functions_IGroupManager.Add(menu_index, "DeclineGroupJoinApplication"); menu_index++;
@@ -1521,6 +1562,7 @@ namespace WinSDKTest
             functions_IGroupManager.Add(menu_index, "SetMemberAttributes"); menu_index++;
             functions_IGroupManager.Add(menu_index, "FetchMemberAttributes"); menu_index++;
             functions_IGroupManager.Add(menu_index, "FetchMyGroupsCount"); menu_index++;
+            functions_IGroupManager.Add(menu_index, "CleanAllGroupsFromDB"); menu_index++;
             level2_menus.Add("IGroupManager", functions_IGroupManager);
         }
 
@@ -1603,6 +1645,11 @@ namespace WinSDKTest
             param.Clear();
 
             menu_index = 1;
+            param.Add(menu_index, "groupId (string)"); menu_index++;
+            level3_menus.Add("CheckIfInGroupMuteList", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
             param.Add(menu_index, "groupName (string)"); menu_index++;
             param.Add(menu_index, "desc (string)"); menu_index++;
             param.Add(menu_index, "memberId1 (string)"); menu_index++;
@@ -1671,6 +1718,7 @@ namespace WinSDKTest
 
             menu_index = 1;
             param.Add(menu_index, "groupId (string)"); menu_index++;
+            //param.Add(menu_index, "fetchMembers (bool)"); menu_index++;
             level3_menus.Add("GetGroupSpecificationFromServer", new Dictionary<int, string>(param));
             param.Clear();
 
@@ -1822,6 +1870,11 @@ namespace WinSDKTest
             menu_index = 1;
             param.Add(menu_index, "No params"); menu_index++;
             level3_menus.Add("FetchMyGroupsCount", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "No params"); menu_index++;
+            level3_menus.Add("CleanAllGroupsFromDB", new Dictionary<int, string>(param));
             param.Clear();
         }
 
@@ -1981,6 +2034,7 @@ namespace WinSDKTest
             functions_IRoomManager.Add(menu_index, "FetchRoomMembers"); menu_index++;
             functions_IRoomManager.Add(menu_index, "FetchRoomMuteList"); menu_index++;
             functions_IRoomManager.Add(menu_index, "JoinRoom"); menu_index++;
+            functions_IRoomManager.Add(menu_index, "JoinRoomExt"); menu_index++;
             functions_IRoomManager.Add(menu_index, "LeaveRoom"); menu_index++;
             functions_IRoomManager.Add(menu_index, "MuteRoomMembers"); menu_index++;
             functions_IRoomManager.Add(menu_index, "RemoveRoomAdmin"); menu_index++;
@@ -2071,6 +2125,7 @@ namespace WinSDKTest
 
             menu_index = 1;
             param.Add(menu_index, "roomId (string)"); menu_index++;
+            //param.Add(menu_index, "fetchMembers (bool)"); menu_index++;
             level3_menus.Add("FetchRoomInfoFromServer", new Dictionary<int, string>(param));
             param.Clear();
 
@@ -2091,6 +2146,13 @@ namespace WinSDKTest
             menu_index = 1;
             param.Add(menu_index, "roomId (string)"); menu_index++;
             level3_menus.Add("JoinRoom", new Dictionary<int, string>(param));
+            param.Clear();
+
+            menu_index = 1;
+            param.Add(menu_index, "roomId (string)"); menu_index++;
+            param.Add(menu_index, "ext (string)"); menu_index++;
+            param.Add(menu_index, "leaveOtherRooms (bool)"); menu_index++;
+            level3_menus.Add("JoinRoomExt", new Dictionary<int, string>(param));
             param.Clear();
 
             menu_index = 1;
@@ -2422,7 +2484,7 @@ namespace WinSDKTest
         public void InitAll(string appkey)
         {
             //Options options = new Options("easemob#easeim");
-            Options options = new Options("easemob-demo#unitytest");
+            //Options options = new Options("easemob-demo#unitytest");
             //Options options = new Options("easemob-demo#support");
             //Options options = new Options("easemob-demo#rpttest");
             //Options options = new Options("100230927254271#unitytest");  // 北京沙箱测试环境
@@ -2430,8 +2492,12 @@ namespace WinSDKTest
             //Options options = new Options("easemob-demo#wang");
             //Options options = new Options("5101220107132865#test"); // 北京沙箱测试环境，无法正常登录
             //Options options = new Options("41117440#383391"); // 线上环境, demo中的token
-            if (appkey.Length > 0 && appkey.Contains("#") == true)
-                options.AppKey = appkey;
+
+            //if (appkey.Length > 0 && appkey.Contains("#") == true)
+            //    options.AppKey = appkey;
+
+            //Options options = Options.InitOptionsWithAppId("ba85504621304fb894790708d304794f");
+            Options options = Options.InitOptionsWithAppKey("easemob-demo#unitytest");
 
             options.AutoLogin = false;
             options.UsingHttpsOnly = true;
@@ -2440,6 +2506,7 @@ namespace WinSDKTest
             options.EnableEmptyConversation = true;
             options.UseReplacedMessageContents = true;
             options.RegardImportMsgAsRead = true;
+            options.LoginCustomExt = "My LoginCustomExt";
             //options.IncludeSendMessageInMessageListener = true;
             //options.IsAutoDownload = true;
 
@@ -2721,7 +2788,7 @@ namespace WinSDKTest
                 while (true) {
                     Console.WriteLine("Press: b-current menu; m-main menu; u-up level menu");
                     key = Console.ReadLine();
-                    if (key.CompareTo("b") != 0 && key.CompareTo("m") != 0 && key.CompareTo("u") != 0)
+                    if (null == key || key.CompareTo("b") != 0 && key.CompareTo("m") != 0 && key.CompareTo("u") != 0)
                     {
                         Console.WriteLine("Wrong input.");
                     }
@@ -2763,7 +2830,7 @@ namespace WinSDKTest
             string manager_index = Console.ReadLine();
             int index = -1;
 
-            if(manager_index.Length == 0)
+            if(null == manager_index || manager_index.Length == 0)
             {
                 index = 0;
             }
@@ -2840,7 +2907,7 @@ namespace WinSDKTest
             if (1 == param_num && level3_menus[select_context.level2_item][1].CompareTo("No params") == 0)
                 return true;
 
-            if (values.Length == 0)
+            if (null == values || values.Length == 0)
             {
                 Console.WriteLine($"Error input: parame values expected.");
                 return false;
@@ -3209,6 +3276,46 @@ namespace WinSDKTest
             );
         }
 
+        public void CallFunc_IClient_ChangeAppKey()
+        {
+            string appkey = GetParamValueFromContext(0);
+
+            SDKClient.Instance.ChangeAppKey(appkey,
+            callback: new CallBack(
+
+                onSuccess: () =>
+                {
+                    Console.WriteLine("ChangeAppKey succeed");
+                },
+
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"Login failed, code:{code}, desc:{desc}");
+                }
+                )
+            );
+        }
+
+        public void CallFunc_IClient_ChangeAppId()
+        {
+            string appid = GetParamValueFromContext(0);
+
+            SDKClient.Instance.ChangeAppId(appid,
+            callback: new CallBack(
+
+                onSuccess: () =>
+                {
+                    Console.WriteLine("ChangeAppId succeed");
+                },
+
+                onError: (code, desc) =>
+                {
+                    Console.WriteLine($"Login failed, code:{code}, desc:{desc}");
+                }
+                )
+            );
+        }
+
         public void CallFunc_IClient_RunDelegateTester()
         {
             MyTest.DelegateTester();
@@ -3309,6 +3416,18 @@ namespace WinSDKTest
             if (select_context.level2_item.CompareTo("kickAllDevicesWithToken") == 0)
             {
                 CallFunc_IClient_kickAllDevicesWithToken();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("ChangeAppKey") == 0)
+            {
+                CallFunc_IClient_ChangeAppKey();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("ChangeAppId") == 0)
+            {
+                CallFunc_IClient_ChangeAppId();
                 return;
             }
 
@@ -4045,6 +4164,9 @@ namespace WinSDKTest
             ib.FileSize = 255;
             ib.Width = 123;
             ib.Height = 456;
+
+            ib.ThumbnailWidth = 66;
+            ib.ThumbnailHeight = 77;
 
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
                 onSuccess: () => {
@@ -4854,6 +4976,19 @@ namespace WinSDKTest
             ));
         }
 
+        public void CallFunc_IChatManager_GetMessageCount()
+        {
+
+            SDKClient.Instance.ChatManager.GetMessageCount(new ValueCallBack<int>(
+                onSuccess: (count)=> {
+                    Console.WriteLine($"GetMessageCount sucess, count:{count}");
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"GetMessageCount failed, code:{code}, desc:{desc}");
+                }
+           ));
+        }
+
         public void CallFunc_IChatManager()
         {
             if (select_context.level2_item.CompareTo("DeleteConversation") == 0)
@@ -5165,6 +5300,11 @@ namespace WinSDKTest
             if (select_context.level2_item.CompareTo("GetPinnedMessagesFromServer") == 0)
             {
                 CallFunc_IChatManager_GetPinnedMessagesFromServer();
+                return;
+            }
+            if (select_context.level2_item.CompareTo("GetMessageCount") == 0)
+            {
+                CallFunc_IChatManager_GetMessageCount();
                 return;
             }
 
@@ -5733,6 +5873,34 @@ namespace WinSDKTest
             Console.WriteLine($"MessagesCount is:{count}.");
         }
 
+        public void CallFunc_IConversationManager_MessagesCountWithTS(string _cid = "", int _type = -1)
+        {
+            string cid = "";
+            ConversationType type = ConversationType.Chat;
+
+            if (_cid.Length > 0)
+                cid = _cid;
+            else
+                cid = GetParamValueFromContext(0);
+
+            if (_type >= 0 && _type <= 2)
+                type = (ConversationType)_type;
+            else
+            {
+                int i = GetIntFromString(GetParamValueFromContext(1));
+                if (i >= 0 && i <= 2)
+                    type = (ConversationType)i;
+            }
+
+            long start_ts = GetLongFromString(GetParamValueFromContext(2));
+            long end_ts = GetLongFromString(GetParamValueFromContext(3));
+
+            Conversation conv = SDKClient.Instance.ChatManager.GetConversation(cid, type);
+
+            int count = conv.MessagesCountWithTimestamp(start_ts, end_ts);
+            Console.WriteLine($"MessagesCountWithTimestamp message count is:{count}.");
+        }
+
         public void CallFunc_IConversationManager_MarkMessageAsRead(string _cid = "", int _type = -1, string _msgid="")
         {
             string cid = "";
@@ -6067,7 +6235,7 @@ namespace WinSDKTest
 
             Conversation conv = SDKClient.Instance.ChatManager.GetConversation(cid, type);
      
-            conv.LoadMessagesWithMsgType(bodyType, sender, (int)ts, count, direct, new ValueCallBack<List<Message>>(
+            conv.LoadMessagesWithMsgType(bodyType, sender, ts, count, direct, new ValueCallBack<List<Message>>(
                 onSuccess: (list) => {
                     Console.WriteLine($"LoadMessagesWithMsgType found {list.Count} messages");
                     foreach(var it in list)
@@ -6077,6 +6245,85 @@ namespace WinSDKTest
                 },
                 onError: (code, desc) => {
                     Console.WriteLine($"LoadMessagesWithMsgType failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IConversationManager_LoadMessagesWithMsgTypeList(string _cid = "", int _type = -1, int _bodytype = -1, string _sender = "", long _ts = -1, int _count = -1, int _direct = -1)
+        {
+            string cid = "";
+            ConversationType type = ConversationType.Chat;
+            MessageBodyType bodyType = MessageBodyType.TXT;
+            string sender = "";
+            long ts = -1;
+            int count = -1;
+            MessageSearchDirection direct = MessageSearchDirection.UP;
+
+            if (_cid.Length > 0)
+                cid = _cid;
+            else
+                cid = GetParamValueFromContext(0);
+
+            if (_type >= 0 && _type <= 2)
+                type = (ConversationType)_type;
+            else
+            {
+                int i = GetIntFromString(GetParamValueFromContext(1));
+                if (i >= 0 && i <= 2)
+                    type = (ConversationType)i;
+            }
+
+            if (_bodytype >= 0 && _bodytype <= 7)
+                bodyType = (MessageBodyType)_bodytype;
+            else
+            {
+                int i = GetIntFromString(GetParamValueFromContext(2));
+                if (i >= 0 && i <= 7)
+                    bodyType = (MessageBodyType)i;
+            }
+
+            MessageBodyType bodyType2 = (MessageBodyType)GetIntFromString(GetParamValueFromContext(3));
+
+            if (_sender.Length > 0)
+                sender = _sender;
+            else
+                sender = GetParamValueFromContext(4);
+
+            if (-1 != _ts)
+                ts = _ts;
+            else
+                ts = GetLongFromString(GetParamValueFromContext(5));
+
+            if (-1 != _count)
+                count = _count;
+            else
+                count = GetIntFromString(GetParamValueFromContext(6));
+
+            if (0 == _direct || 1 == _direct)
+                direct = (MessageSearchDirection)_direct;
+            else
+            {
+                int i = GetIntFromString(GetParamValueFromContext(7));
+                if (0 == i || 1 == i)
+                    direct = (MessageSearchDirection)i;
+            }
+
+            Conversation conv = SDKClient.Instance.ChatManager.GetConversation(cid, type);
+
+            List<MessageBodyType> tlist = new List<MessageBodyType>();
+            tlist.Add(bodyType);
+            tlist.Add(bodyType2);
+
+            conv.LoadMessagesWithMsgTypeList(tlist, sender, ts, count, direct, new ValueCallBack<List<Message>>(
+                onSuccess: (list) => {
+                    Console.WriteLine($"LoadMessagesWithMsgTypeList found {list.Count} messages");
+                    foreach (var it in list)
+                    {
+                        Console.WriteLine($"message id: {it.MsgId}");
+                    }
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"LoadMessagesWithMsgTypeList failed, code:{code}, desc:{desc}");
                 }
             ));
         }
@@ -6362,6 +6609,12 @@ namespace WinSDKTest
                 return;
             }
 
+            if (select_context.level2_item.CompareTo("MessagesCountWithTS") == 0)
+            {
+                CallFunc_IConversationManager_MessagesCountWithTS();
+                return;
+            }
+
             if (select_context.level2_item.CompareTo("MarkMessageAsRead") == 0)
             {
                 CallFunc_IConversationManager_MarkMessageAsRead();
@@ -6419,6 +6672,12 @@ namespace WinSDKTest
             if (select_context.level2_item.CompareTo("LoadMessagesWithMsgType") == 0)
             {
                 CallFunc_IConversationManager_LoadMessagesWithMsgType();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("LoadMessagesWithMsgTypeList") == 0)
+            {
+                CallFunc_IConversationManager_LoadMessagesWithMsgTypeList();
                 return;
             }
 
@@ -6776,6 +7035,26 @@ namespace WinSDKTest
             ));
         }
 
+        public void CallFunc_IGroupManager_CheckIfInGroupMuteList(string _groupId = "")
+        {
+            string groupId = "";
+
+            if (_groupId.Length > 0)
+                groupId = _groupId;
+            else
+                groupId = GetParamValueFromContext(0);
+
+
+            SDKClient.Instance.GroupManager.CheckIfInGroupMuteList(groupId, new ValueCallBack<bool>(
+               onSuccess: (ret) => {
+                   Console.WriteLine($"CheckIfInGroupMuteList success, ret:{ret}");
+               },
+               onError: (code, desc) => {
+                   Console.WriteLine($"CheckIfInGroupMuteList failed, code:{code}, desc:{desc}");
+               }
+            ));
+        }
+
         public void CallFunc_IGroupManager_CreateGroup(string _groupId = "", string _desc = "",string _member1="", string _member2="", string _reason="")
         {
             string groupId = "";
@@ -7089,6 +7368,8 @@ namespace WinSDKTest
                 groupId = _groupId;
             else
                 groupId = GetParamValueFromContext(0);
+
+            //bool fetchMembers =  GetParamValueFromContext(1).CompareTo("true") == 0 ? true : false;
 
             SDKClient.Instance.GroupManager.GetGroupSpecificationFromServer(groupId, new ValueCallBack<Group>(
                 onSuccess: (group) =>
@@ -7911,6 +8192,11 @@ namespace WinSDKTest
             ));
         }
 
+        public void CallFunc_IGroupManager_CleanAllGroupsFromDB()
+        {
+            SDKClient.Instance.GroupManager.CleanAllGroupsFromDB();
+        }
+
 
         public void CallFunc_IGroupManager()
         {
@@ -7983,6 +8269,12 @@ namespace WinSDKTest
             if (select_context.level2_item.CompareTo("CheckIfInGroupWhiteList") == 0)
             {
                 CallFunc_IGroupManager_CheckIfInGroupWhiteList();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("CheckIfInGroupMuteList") == 0)
+            {
+                CallFunc_IGroupManager_CheckIfInGroupMuteList();
                 return;
             }
 
@@ -8193,6 +8485,12 @@ namespace WinSDKTest
             if (select_context.level2_item.CompareTo("FetchMyGroupsCount") == 0)
             {
                 CallFunc_IGroupManager_FetchMyGroupsCount();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("CleanAllGroupsFromDB") == 0)
+            {
+                CallFunc_IGroupManager_CleanAllGroupsFromDB();
                 return;
             }
         }
@@ -8868,6 +9166,7 @@ namespace WinSDKTest
         public void CallFunc_IRoomManager_FetchRoomInfoFromServer()
         {
             string roomId = GetParamValueFromContext(0);
+            //bool fetchMembers = GetParamValueFromContext(1).CompareTo("true") == 0 ? true:false;
 
             SDKClient.Instance.RoomManager.FetchRoomInfoFromServer(roomId, new ValueCallBack<Room>(
                 onSuccess: (room) => {
@@ -8957,6 +9256,55 @@ namespace WinSDKTest
             SDKClient.Instance.RoomManager.JoinRoom(roomId, new ValueCallBack<Room>(
                 onSuccess: (room) => {
                     Console.WriteLine($"JoinRoom success.");
+                    Console.WriteLine($"roomId: {room.RoomId}");
+                    Console.WriteLine($"name: {room.Name}");
+                    Console.WriteLine($"Description: {room.Description}");
+                    Console.WriteLine($"Announcement: {room.Announcement}");
+
+                    Console.WriteLine($"AdminList num: {room.AdminList.Count}");
+                    foreach (var it in room.AdminList)
+                    {
+                        Console.WriteLine($"admin item: {it}");
+                    }
+
+                    Console.WriteLine($"MemberList num: {room.MemberList.Count}");
+                    foreach (var it in room.MemberList)
+                    {
+                        Console.WriteLine($"member item: {it}");
+                    }
+
+                    Console.WriteLine($"BlockList num: {room.BlockList.Count}");
+                    foreach (var it in room.BlockList)
+                    {
+                        Console.WriteLine($"block item: {it}");
+                    }
+
+                    Console.WriteLine($"MuteList num: {room.MuteList.Count}");
+                    foreach (var it in room.MuteList)
+                    {
+                        Console.WriteLine($"mute item: {it}");
+                    }
+
+                    Console.WriteLine($"MaxUsers: {room.MaxUsers}");
+                    Console.WriteLine($"Owner: {room.Owner}");
+                    Console.WriteLine($"IsAllMemberMuted: {room.IsAllMemberMuted}");
+                    Console.WriteLine($"PermissionType: {room.PermissionType}");
+                },
+                onError: (code, desc) => {
+                    Console.WriteLine($"JoinRoomExt failed, code:{code}, desc:{desc}");
+                }
+            ));
+        }
+
+        public void CallFunc_IRoomManager_JoinRoomExt()
+        {
+            string roomId = GetParamValueFromContext(0);
+            string ext = GetParamValueFromContext(1);
+            bool leaveOtherRooms = GetParamValueFromContext(2).CompareTo("true") == 0 ? true : false;
+
+            SDKClient.Instance.RoomManager.JoinRoom(roomId, ext, leaveOtherRooms, new ValueCallBack<Room>(
+                onSuccess: (room) => {
+                    Console.WriteLine($"JoinRoomExt success.");
                     Console.WriteLine($"roomId: {room.RoomId}");
                     Console.WriteLine($"name: {room.Name}");
                     Console.WriteLine($"Description: {room.Description}");
@@ -9413,6 +9761,12 @@ namespace WinSDKTest
             if (select_context.level2_item.CompareTo("JoinRoom") == 0)
             {
                 CallFunc_IRoomManager_JoinRoom();
+                return;
+            }
+
+            if (select_context.level2_item.CompareTo("JoinRoomExt") == 0)
+            {
+                CallFunc_IRoomManager_JoinRoomExt();
                 return;
             }
 
@@ -10418,6 +10772,7 @@ namespace WinSDKTest
                 Console.WriteLine($"recallBy: {recallIt.RecallBy}");
                 Console.WriteLine($"recallMessageId: {recallIt.RecallMessageId}");
                 Console.WriteLine($"recall-ext: {recallIt.Ext}");
+                Console.WriteLine($"recall-conversationId: {recallIt.ConversationId}");
                 if (null == it) continue;
                 Console.WriteLine($"recallMessage: -------------------");
                 Console.WriteLine($"message id: {it.MsgId}");
@@ -10553,7 +10908,7 @@ namespace WinSDKTest
 
     class ConnectionDelegate : IConnectionDelegate
     {
-        int LISTENER_COUNT = 12;
+        int LISTENER_COUNT = 14;
 
         public void OnConnected()
         {
@@ -10615,6 +10970,15 @@ namespace WinSDKTest
             Console.WriteLine($"IConnectionDelegate12 OnAppActiveNumberReachLimitation, total listener count: {LISTENER_COUNT}");
         }
 
+        void IConnectionDelegate.OnOfflineMessageSyncStart()
+        {
+            Console.WriteLine($"IConnectionDelegate13 OnOfflineMessageSyncStart, total listener count: {LISTENER_COUNT}");
+        }
+
+        void IConnectionDelegate.OnOfflineMessageSyncFinish()
+        {
+            Console.WriteLine($"IConnectionDelegate14 OnOfflineMessageSyncFinish, total listener count: {LISTENER_COUNT}");
+        }
     }
 
     class ContactManagerDelegate : IContactManagerDelegate
@@ -10841,9 +11205,9 @@ namespace WinSDKTest
     {
         int LISTENER_COUNT = 17;
 
-        public void OnMemberJoinedFromRoom(string roomId, string participant)
+        public void OnMemberJoinedFromRoom(string roomId, string participant, string ext)
         {
-            Console.WriteLine($"IRoomManagerDelegate1 OnMemberJoinedFromRoom roomId: {roomId}; participant:{participant}; total listener count:{LISTENER_COUNT}");
+            Console.WriteLine($"IRoomManagerDelegate1 OnMemberJoinedFromRoom roomId: {roomId}; participant:{participant}; ext:{ext}, total listener count:{LISTENER_COUNT}");
         }
 
         public void OnDestroyedFromRoom(string roomId, string roomName)
@@ -10935,6 +11299,15 @@ namespace WinSDKTest
         public void OnSpecificationChangedFromRoom(Room room)
         {
             Console.WriteLine($"IRoomManagerDelegate17 OnSpecificationChangedFromRoom roomId: {room.RoomId}; roomName:{room.Name}, total listener count:{LISTENER_COUNT}");
+        }
+
+        public void OnMuteListAddedFromRoom(string roomId, Dictionary<string, long> mutes)
+        {
+            Console.WriteLine($"IRoomManagerDelegate18 OnMuteListAddedFromRoom: roomId: {roomId}; total listener count:{LISTENER_COUNT}");
+            foreach (var it in mutes)
+            {
+                Console.WriteLine($"mute item: key:{it.Key}, value:{it.Value}");
+            }
         }
     }
 

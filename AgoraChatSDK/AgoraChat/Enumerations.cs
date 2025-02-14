@@ -1151,7 +1151,16 @@ namespace AgoraChat
         * \~english
         * A conversation is marked or unmarked.
         */
-        CONVERSATION_MARK = 63
+        CONVERSATION_MARK = 63,
+
+        /**
+        * \~chinese
+        * 会话禁言发生改变。
+        *
+        * \~english
+        * A conversation is muted or unmuated.
+        */
+        CONVERSATION_MUTE_INFO_CHANGED = 64
     };
 
     public enum MessageReactionOperate

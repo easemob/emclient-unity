@@ -51,6 +51,8 @@
     [EMClientWrapper.shared userAccountDidForcedToLogout:[EMError errorWithDescription:@"" code:202]];
     [EMClientWrapper.shared tokenWillExpire:0];
     [EMClientWrapper.shared tokenDidExpire:0];
+    [EMClientWrapper.shared onOfflineMessageSyncStart];
+    [EMClientWrapper.shared onOfflineMessageSyncFinish];
 }
 
 - (void)multiDeviceDelegateTest {
@@ -102,6 +104,7 @@
     recall.recallMessageId =@"messageId";
     recall.ext = @"ext";
     recall.recallMessage = msg1;
+    recall.conversationId = @"conversationId";
     [EMClientWrapper.shared.chatManager messagesInfoDidRecall:@[recall]];
     
     
@@ -142,13 +145,19 @@
 }
 
 - (void)roomManagerDelegateTest {
-    [EMClientWrapper.shared.roomManagerWrapper userDidJoinChatroom:_room user:@"user"];
+    [EMClientWrapper.shared.roomManagerWrapper userDidJoinChatroom:_room user:@"user" ext:@"ext"];
     [EMClientWrapper.shared.roomManagerWrapper userDidLeaveChatroom:_room user:@"user"];
     [EMClientWrapper.shared.roomManagerWrapper didDismissFromChatroom:_room reason:EMChatroomBeKickedReasonOffline];
     [EMClientWrapper.shared.roomManagerWrapper didDismissFromChatroom:_room reason:EMChatroomBeKickedReasonDestroyed];
     [EMClientWrapper.shared.roomManagerWrapper didDismissFromChatroom:_room reason:EMChatroomBeKickedReasonBeRemoved];
     [EMClientWrapper.shared.roomManagerWrapper chatroomSpecificationDidUpdate:_room];
     [EMClientWrapper.shared.roomManagerWrapper chatroomMuteListDidUpdate:_room addedMutedMembers:@[@"user1", @"user2"] muteExpire:1000000];
+
+    NSMutableDictionary<NSString *, NSNumber *> *mutedMembersDict = [NSMutableDictionary dictionary];
+    mutedMembersDict[@"user1"] = @(123456789);
+    mutedMembersDict[@"user2"] = @(987654321);
+    [EMClientWrapper.shared.roomManagerWrapper chatroomMuteListDidUpdate:_room addedMutedMembers:mutedMembersDict];
+
     [EMClientWrapper.shared.roomManagerWrapper chatroomMuteListDidUpdate:_room removedMutedMembers:@[@"user1", @"user2"]];
     [EMClientWrapper.shared.roomManagerWrapper chatroomWhiteListDidUpdate:_room addedWhiteListMembers:@[@"user1", @"user2"]];
     [EMClientWrapper.shared.roomManagerWrapper chatroomWhiteListDidUpdate:_room removedWhiteListMembers:@[@"user1", @"user2"]];

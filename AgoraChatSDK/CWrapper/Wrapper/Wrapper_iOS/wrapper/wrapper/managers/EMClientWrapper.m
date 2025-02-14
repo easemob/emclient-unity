@@ -6,7 +6,7 @@
 //
 
 #import "EMClientWrapper.h"
-#import <HyphenateChat/HyphenateChat.h>
+#import "ChatHeaders.h"
 #import "EMOptions+Helper.h"
 #import "EMWrapperHelper.h"
 #import "EMDeviceConfig+Helper.h"
@@ -60,6 +60,8 @@
         return [self logout:params callback:callback];
     }else if ([method isEqualToString:changeAppKey]) {
         return [self changeAppKey:params callback:callback];
+    }else if ([method isEqualToString:changeAppId]) {
+        return [self changeAppId:params callback:callback];
     }else if ([method isEqualToString:uploadLog]) {
         return [self uploadLog:params callback:callback];
     }else if ([method isEqualToString:compressLogs]) {
@@ -131,6 +133,20 @@
     return nil;
 }
 
+- (NSString *)changeAppKey:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
+    NSString *appKey = params[@"appKey"];
+    EMError *e = [EMClient.sharedClient changeAppkey:appKey];
+    [self wrapperCallback:callback error:e object:nil];
+    return nil;
+}
+
+- (NSString *)changeAppId:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
+    NSString *appId = params[@"appId"];
+    EMError *e = [EMClient.sharedClient changeAppId:appId];
+    [self wrapperCallback:callback error:e object:nil];
+    return nil;
+}
+
 - (NSString *)login:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
     Boolean isToken = [params[@"isToken"] boolValue];
     NSString *userId = params[@"userId"];
@@ -172,12 +188,13 @@
     return nil;
 }
 
+/*
 - (NSString *)changeAppKey:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
     NSString *appkey = params[@"appKey"];
     [EMClient.sharedClient changeAppkey:appkey];
     [self wrapperCallback:callback error:nil object:nil];
     return nil;
-}
+}*/
 
 - (NSString *)getCurrentUser:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
     return [[EMHelper getReturnJsonObject:EMClient.sharedClient.currentUsername] toJsonString];
@@ -397,6 +414,14 @@
 
 - (void)tokenDidExpire:(EMErrorCode)aErrorCode {
     [EMWrapperHelper.shared.listener onReceive:connectionListener method:onTokenExpired info:nil];
+}
+
+- (void)onOfflineMessageSyncStart {
+    [EMWrapperHelper.shared.listener onReceive:connectionListener method:onOfflineMessageSyncStart info:nil];
+}
+
+- (void)onOfflineMessageSyncFinish {
+    [EMWrapperHelper.shared.listener onReceive:connectionListener method:onOfflineMessageSyncFinish info:nil];
 }
 
 - (void)multiDevicesContactEventDidReceive:(EMMultiDevicesEvent)aEvent username:(NSString *)aUsername ext:(NSString *)aExt {

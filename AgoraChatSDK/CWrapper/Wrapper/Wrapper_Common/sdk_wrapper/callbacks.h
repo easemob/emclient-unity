@@ -89,6 +89,18 @@ namespace sdk_wrapper {
         {
             TokenWrapper::GetInstance()->SetAndStartTokenCheckTimer(expiredTs, TOKEN_CHECK_INTERVAL);
         }
+
+        void onOfflineMessageSyncStart() override
+        {
+            string json = "";
+            CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onOfflineMessageSyncStart.c_str(), json.c_str());
+        }
+
+        void onOfflineMessageSyncFinish() override
+        {
+            string json = "";
+            CallBack(STRING_CLIENT_LISTENER.c_str(), STRING_onOfflineMessageSyncFinish.c_str(), json.c_str());
+        }
     };
 
     class ChatManagerListener : public EMChatManagerListener
@@ -118,7 +130,7 @@ namespace sdk_wrapper {
                 CallBack(STRING_CHATMANAGER_LISTENER.c_str(), STRING_onMessagesDelivered.c_str(), json.c_str());
         }
 
-        void onReceiveRecallMessages(const std::vector<std::tuple<std::string, std::string, std::string, easemob::EMMessagePtr>>& list) override {
+        void onReceiveRecallMessages(const std::vector<EMRecallMessage>& list) override {
             if (list.size() > 0) {
                 string json = RecallMessageInfo::ToJson(list);
                 if (json.size() > 0)
@@ -793,13 +805,16 @@ namespace sdk_wrapper {
     {
     public:
 
-        void  onMemberJoinedChatroom(const EMChatroomPtr chatroom, const std::string& member) override {
+        void  onMemberJoinedChatroom(const EMChatroomPtr chatroom, const std::string& member, const std::string& ext) override {
             JSON_STARTOBJ
             writer.Key("roomId");
             writer.String(chatroom->chatroomId().c_str());
 
             writer.Key("userId");
             writer.String(member.c_str());
+
+            writer.Key("ext");
+            writer.String(ext.c_str());
 
             JSON_ENDOBJ
 
@@ -888,6 +903,22 @@ namespace sdk_wrapper {
 
             if (json.size() > 0)
                 CallBack(STRING_ROOMMANAGER_LISTENER.c_str(), STRING_onMuteListAddedFromRoom.c_str(), json.c_str());
+        }
+
+        void onAddMutesFromChatroom(const EMChatroomPtr chatroom, const std::map<std::string, int64_t>& mutes) override {
+            JSON_STARTOBJ
+            writer.Key("roomId");
+            writer.String(chatroom->chatroomId().c_str());
+
+            writer.Key("mutes");
+            MyJson::ToJsonObject(writer, mutes);
+
+            JSON_ENDOBJ
+
+            string json = s.GetString();
+
+            if (json.size() > 0)
+                CallBack(STRING_ROOMMANAGER_LISTENER.c_str(), STRING_onMuteListAddedFromRoomWithMap.c_str(), json.c_str());
         }
 
         void onRemoveMutesFromChatroom(const EMChatroomPtr chatroom, const std::vector<std::string>& mutes) override {

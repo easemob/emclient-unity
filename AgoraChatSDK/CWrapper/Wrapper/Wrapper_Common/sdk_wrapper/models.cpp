@@ -165,6 +165,16 @@ namespace sdk_wrapper
         writer.EndObject();
     }
 
+    void MyJson::ToJsonObject(Writer<StringBuffer>& writer, const map<string, int64_t>& map)
+    {
+        writer.StartObject();
+        for (auto it : map) {
+            writer.Key(it.first.c_str());
+            writer.Int64(it.second);
+        }
+        writer.EndObject();
+    }
+
     void MyJson::ToJsonObject(Writer<StringBuffer>& writer, const map<string, int>& map)
     {
         writer.StartObject();
@@ -307,6 +317,11 @@ namespace sdk_wrapper
             app_key = jnode["appKey"].GetString();
         }
 
+        string app_id = "";
+        if (jnode.HasMember("appId") && jnode["appId"].IsString()) {
+            app_id = jnode["appId"].GetString();
+        }
+
         string sdk_path = "";
         if (jnode.HasMember("sdkDataPath") && jnode["sdkDataPath"].IsString()) {
             sdk_path = jnode["sdkDataPath"].GetString();
@@ -323,9 +338,9 @@ namespace sdk_wrapper
             wk_str = sdk_path + "/" + wk_pure;
         }
 
-        if (CheckAppKey(app_key.c_str()) == false) return nullptr;
+        if (CheckAppKey(app_key.c_str()) == false && app_id.length() == 0) return nullptr;
 
-        EMChatConfigsPtr configs = EMChatConfigsPtr(new EMChatConfigs(rs_str, wk_str, app_key, 0));
+        EMChatConfigsPtr configs = EMChatConfigsPtr(new EMChatConfigs(rs_str, wk_str, app_key, app_id, 0));
         configs->setAppKey(app_key);
 
         if (jnode.HasMember("dnsUrl") && jnode["dnsUrl"].IsString()) {
@@ -451,6 +466,11 @@ namespace sdk_wrapper
             configs->setDeviceName(custom_device_name);
         }
 
+        if (jnode.HasMember("loginCustomExt") && jnode["loginCustomExt"].IsString()) {
+            string login_custom_ext = jnode["loginCustomExt"].GetString();
+            configs->setDeviceReason(login_custom_ext);
+        }
+
         if (jnode.HasMember("regardImportMsgAsRead") && jnode["regardImportMsgAsRead"].IsBool()) {
             bool regard_import_msg_as_read = jnode["regardImportMsgAsRead"].GetBool();
             configs->setRegardImportMsgAsRead(regard_import_msg_as_read);
@@ -464,9 +484,21 @@ namespace sdk_wrapper
         //TODO: need to Area code later
 
 #ifndef _WIN32
+        configs->setOs(EMChatConfigs::OS_OSX);
+
         string uuid = GetMacUuid();
         if (uuid.size() > 0)
             configs->setDeviceUuid(uuid);
+
+        string did = GetMacDid();
+        if (did.size() > 0)
+            configs->setDid(did);
+#else
+        configs->setOs(EMChatConfigs::OS_MSWIN);
+
+        string did = GetWinDid(false);
+        if (did.size() > 0)
+            configs->setDid(did);
 #endif
         return configs;
 	}
@@ -823,6 +855,12 @@ namespace sdk_wrapper
                         writer.Key("fileStatus");
                         writer.Int(DownLoadStatusToInt(ptr->downloadStatus()));
 
+                        writer.Key("thumbnailHeight");
+                        writer.Double(ptr->thumbnailSize().mHeight);
+
+                        writer.Key("thumbnailWidth");
+                        writer.Double(ptr->thumbnailSize().mWidth);
+
                         //writer.Key("ThumbnaiDownStatus");
                         //writer.Int((int)ptr->thumbnailDownloadStatus());
 
@@ -1111,7 +1149,7 @@ namespace sdk_wrapper
 
             if (body.HasMember("thumbnailLocalPath") && body["thumbnailLocalPath"].IsString()) {
                 string str = body["thumbnailLocalPath"].GetString();
-                ptr->setThumbnailRemotePath(str);
+                ptr->setThumbnailLocalPath(str);
             }
 
             if (body.HasMember("thumbnailRemotePath") && body["thumbnailRemotePath"].IsString()) {
@@ -1142,6 +1180,20 @@ namespace sdk_wrapper
             }
 
             ptr->setSize(size);
+
+            EMImageMessageBody::Size thumbnail_size;
+            thumbnail_size.mWidth = 0;
+            thumbnail_size.mHeight = 0;
+
+            if (body.HasMember("thumbnailHeight") && body["thumbnailHeight"].IsNumber()) {
+                thumbnail_size.mHeight = body["thumbnailHeight"].GetDouble();
+            }
+
+            if (body.HasMember("thumbnailWidth") && body["thumbnailWidth"].IsNumber()) {
+                thumbnail_size.mWidth = body["thumbnailWidth"].GetDouble();
+            }
+
+            ptr->setThumbnailSize(thumbnail_size);
 
             //if (body.HasMember("sendOriginalImage") && body["sendOriginalImage"].IsBool()) {
             //    bool b = body["sendOriginalImage"].GetBool();            
@@ -1551,9 +1603,9 @@ namespace sdk_wrapper
             msg->setLocalTime(i);
         }
 
-        if (jnode.HasMember("serverTime") && jnode["serverTime"].IsString()) {
-            int64_t i = jnode["serverTime"].GetInt64();;
-            msg->setTimestamp(i);
+        if (jnode.HasMember("serverTime") && jnode["serverTime"].IsInt64()) {
+            int64_t i = jnode["serverTime"].GetInt64();
+            if (i > 0) msg->setTimestamp(i); // serverTime cannot be zero!
         }
 
         if (jnode.HasMember("isThread") && jnode["isThread"].IsBool()) {
@@ -1603,6 +1655,26 @@ namespace sdk_wrapper
         }
 
         return vec;
+    }
+
+    EMSet<EMMessageBody::EMMessageBodyType> Message::FromJsonObjectToBodyTypeSet(const Value& jnode)
+    {
+        EMSet<EMMessageBody::EMMessageBodyType> bodySet;
+
+        if (jnode.IsArray() == true) {
+
+            int size = jnode.Size();
+
+            for (int it = 0; it < size; it++) {
+
+                int i = jnode[it].GetInt();
+
+                EMMessageBody::EMMessageBodyType b = BodyTypeFromInt(i);
+
+                bodySet.insert(b);
+            }
+        }
+        return bodySet;
     }
 
     void AttributesValue::ToJsonObjectWithAttribute(Writer<StringBuffer>& writer, EMAttributeValuePtr attribute)
@@ -2771,6 +2843,15 @@ namespace sdk_wrapper
         writer.Key("permissionType");
         writer.Int(EMMucMemberTypeToInt(room->chatroomMemberType()));
 
+        writer.Key("createTimestamp");
+        writer.Uint64(room->mucCreateTime());
+
+        writer.Key("isInAllowList");
+        writer.Bool(room->isInWhiteList());
+
+        writer.Key("muteUntilTimeStamp");
+        writer.Int64(room->muteUntilTimestamp());
+
         writer.EndObject();
     }
     string Room::ToJson(const EMChatroomPtr room)
@@ -3366,6 +3447,7 @@ namespace sdk_wrapper
         case EMMultiDevicesListener::MultiDevicesOperation::CONVERSATION_UNPINNED: return 61;
         case EMMultiDevicesListener::MultiDevicesOperation::CONVERSATION_DELETED: return 62;
         case EMMultiDevicesListener::MultiDevicesOperation::CONVERSATION_MARK: return 63;
+        case EMMultiDevicesListener::MultiDevicesOperation::CONVERSATION_MUTE_INFO_CHANGED: return 64;
         default:
             return -1;
         }
@@ -3416,6 +3498,8 @@ namespace sdk_wrapper
         case 60: return EMMultiDevicesListener::MultiDevicesOperation::CONVERSATION_PINNED;
         case 61: return EMMultiDevicesListener::MultiDevicesOperation::CONVERSATION_UNPINNED;
         case 62: return EMMultiDevicesListener::MultiDevicesOperation::CONVERSATION_DELETED;
+        case 63: return EMMultiDevicesListener::MultiDevicesOperation::CONVERSATION_MARK;
+        case 64: return EMMultiDevicesListener::MultiDevicesOperation::CONVERSATION_MUTE_INFO_CHANGED;
         default: return EMMultiDevicesListener::MultiDevicesOperation::UNKNOW;
         }
     }
@@ -3872,31 +3956,34 @@ namespace sdk_wrapper
         writer.EndObject();
     }
 
-    void RecallMessageInfo::ToJsonObject(Writer<StringBuffer>& writer, std::tuple<std::string, std::string, std::string, easemob::EMMessagePtr>& tuple)
+    void RecallMessageInfo::ToJsonObject(Writer<StringBuffer>& writer, EMChatManagerListener::EMRecallMessage& recallMessage)
     {
         writer.StartObject();
         {
             writer.Key("recallBy");
-            writer.String(std::get<0>(tuple).c_str());
+            writer.String(std::get<0>(recallMessage).c_str());
 
             writer.Key("recallMessageId");
-            writer.String(std::get<1>(tuple).c_str());
+            writer.String(std::get<1>(recallMessage).c_str());
 
             writer.Key("ext");
-            writer.String(std::get<2>(tuple).c_str());
+            writer.String(std::get<2>(recallMessage).c_str());
 
             easemob::EMMessagePtr msg = nullptr;
-            msg = std::get<3>(tuple);
+            msg = std::get<3>(recallMessage);
 
             if (nullptr != msg && nullptr != msg.get()) {
                 writer.Key("recallMessage");
                 Message::ToJsonObjectWithMessage(writer, msg);
             }
+
+            writer.Key("conversationId");
+            writer.String(std::get<4>(recallMessage).c_str());
         }
         writer.EndObject();
     }
 
-    void RecallMessageInfo::ToJsonObjectWithList(Writer<StringBuffer>& writer, const std::vector<std::tuple<std::string, std::string, std::string, easemob::EMMessagePtr>>& vec)
+    void RecallMessageInfo::ToJsonObjectWithList(Writer<StringBuffer>& writer, const std::vector<EMChatManagerListener::EMRecallMessage>& vec)
     {
         writer.StartArray();
 
@@ -3907,7 +3994,7 @@ namespace sdk_wrapper
         writer.EndArray();
     }
 
-    string RecallMessageInfo::ToJson(const std::vector<std::tuple<std::string, std::string, std::string, easemob::EMMessagePtr>>& vec)
+    string RecallMessageInfo::ToJson(const std::vector<EMChatManagerListener::EMRecallMessage>& vec)
     {
         StringBuffer s;
         Writer<StringBuffer> writer(s);

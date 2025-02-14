@@ -36,6 +36,8 @@ public class EMRoomManagerWrapper extends EMBaseWrapper{
         String ret = null;
         if (EMSDKMethod.joinChatRoom.equals(method)) { 
             ret = joinChatRoom(jsonObject, callback);
+        } else if (EMSDKMethod.joinChatRoomExt.equals(method)) {
+            ret = joinChatRoomExt(jsonObject, callback);
         } else if (EMSDKMethod.leaveChatRoom.equals(method)) {
             ret = leaveChatRoom(jsonObject, callback);
         } else if (EMSDKMethod.fetchPublicChatRoomsFromServer.equals(method)) {
@@ -107,6 +109,26 @@ public class EMRoomManagerWrapper extends EMBaseWrapper{
     private String joinChatRoom(JSONObject params, EMWrapperCallback callback) throws JSONException {
         String roomId = params.getString("roomId");
         EMClient.getInstance().chatroomManager().joinChatRoom(roomId, new EMCommonValueCallback<EMChatRoom>(callback){
+            @Override
+            public void onSuccess(EMChatRoom object) {
+                JSONObject jsonObject = null;
+                try {
+                    jsonObject = EMChatRoomHelper.toJson(object);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    updateObject(jsonObject);
+                }
+            }
+        });
+        return null;
+    }
+
+    private String joinChatRoomExt(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        String roomId = params.getString("roomId");
+        String ext = params.optString("ext");
+        boolean leaveOtherRooms = params.getBoolean("leaveOtherRooms");
+        EMClient.getInstance().chatroomManager().joinChatRoom(roomId, leaveOtherRooms, ext, new EMCommonValueCallback<EMChatRoom>(callback){
             @Override
             public void onSuccess(EMChatRoom object) {
                 JSONObject jsonObject = null;

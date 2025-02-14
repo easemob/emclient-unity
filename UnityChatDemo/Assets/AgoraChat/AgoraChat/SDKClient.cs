@@ -131,7 +131,7 @@ namespace AgoraChat
          * \~english
          * The SDK version.
          */
-        public string SdkVersion { get => "1.3.1"; }
+        public string SdkVersion { get => "1.3.2"; }
 
 
         /**
@@ -202,6 +202,56 @@ namespace AgoraChat
         public int InitWithOptions(Options options)
         {
             return _clientImpl.InitWithOptions(options);
+        }
+
+        /**
+        * \~chinese
+        * 修改AppKey。
+        * 此方法需要在调用Logout后，才能使用。
+        *
+        * 异步方法。
+        *
+        * @param appKey        新的AppKey。
+        * @param callback      结果回调，详见 {@link CallBack}。
+        *
+        * \~english
+        * Change AppKey.
+        * This API should be called after the Logout API is called.
+        *
+        * This is an asynchronous method.
+        *
+        * @param appKey 	   The new AppKey.
+        * @param callback 	   The result callback. See {@link CallBack}.
+        *
+        */
+        public void ChangeAppKey(string appKey, CallBack callback = null)
+        {
+            _clientImpl.ChangeAppKey(appKey, callback);
+        }
+
+        /**
+        * \~chinese
+        * 修改AppId。
+        * 此方法需要在调用Logout后，才能使用。
+        *
+        * 异步方法。
+        *
+        * @param appId         新的AppId。
+        * @param callback      结果回调，详见 {@link CallBack}。
+        *
+        * \~english
+        * Change AppId.
+        * This API should be called after the Logout API is called.
+        *
+        * This is an asynchronous method.
+        *
+        * @param appId 		   The new AppKey.
+        * @param callback 	   The result callback. See {@link CallBack}.
+        *
+        */
+        public void ChangeAppId(string appId, CallBack callback = null)
+        {
+            _clientImpl.ChangeAppId(appId, callback);
         }
 
         /**

@@ -51,6 +51,18 @@ public class EMWrapperConnectionListener implements EMConnectionListener {
         post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onTokenWillExpire, null));
     }
 
+    @Override
+    public void onOfflineMessageSyncStart()
+    {
+        post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onOfflineMessageSyncStart, null));
+    }
+
+    @Override
+    public void onOfflineMessageSyncFinish()
+    {
+        post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onOfflineMessageSyncFinish, null));
+    }
+
     public void onLogout(int code, String info) {
         if (code == 206 || code == 220) {
             try {

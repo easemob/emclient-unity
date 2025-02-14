@@ -23,6 +23,9 @@
     ret[@"isMuteAll"] = @(self.isMuteAllMembers);
     ret[@"announcement"] = self.announcement;
     ret[@"permissionType"] = @([self premissionTypeToInt:self.permissionType]);
+    ret[@"createTimestamp"] = @(self.createTimestamp);
+    ret[@"isInAllowList"] = @(self.isInWhitelist);
+    ret[@"muteUntilTimeStamp"] = @(self.muteExpireTimestamp);
     
     return ret;
 }

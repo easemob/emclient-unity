@@ -382,21 +382,22 @@ namespace AgoraChat
 		 *
 		 * 异步方法。
 		 *
-		 * @param roomId	聊天室 ID。
-		 * @param callback	操作结果回调，返回聊天室信息或错误描述，详见 {@link ValueCallBack}。
+		 * @param roomId        聊天室 ID。
+		 * @param callback      操作结果回调，返回聊天室信息或错误描述，详见 {@link ValueCallBack}。
 		 *
 		 * \~english
 		 * Gets details of a chat room from the server, excluding the member list by default.
 		 *
 		 * This is an asynchronous method.
 		 *
-		 * @param roomId	The chat room ID.
-		 * @param callback	The operation callback. If success, the chat room instance is returned; otherwise, an error is returned. See {@link ValueCallBack}.
+		 * @param roomId        The chat room ID.
+		 * @param callback      The operation callback. If success, the chat room instance is returned; otherwise, an error is returned. See {@link ValueCallBack}.
 		 */
         public void FetchRoomInfoFromServer(string roomId, ValueCallBack<Room> callback = null)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.Add("roomId", roomId);
+            jo_param.AddWithoutNull("fetchMembers", false);
 
             Process process = (_, jsonNode) =>
             {
@@ -531,6 +532,50 @@ namespace AgoraChat
             };
 
             NativeCall<Room>(SDKMethod.joinChatRoom, jo_param, callback, process);
+        }
+
+        /**
+         * \~chinese
+         * 加入聊天室。
+         *
+         * 退出聊天室调用 {@link #LeaveRoom(String, CallBack)}。
+         *
+         * 异步方法。
+         *
+         * @param roomId           聊天室 ID。
+         * @param ext              扩展信息。
+         * @param leaveOtherRooms  加入聊天室时候，是否退出已加入的聊天室。
+         *                             - `YES`：加入该聊天室时，退出其他聊天室。
+         *                             - （默认）`NO`：加入该聊天室时，不退出其他聊天室。
+         * @param callback	操作结果回调，成功则返回加入的聊天室对象，失败则返回错误信息，详见 {@link ValueCallBack}。
+         *
+         * \~english
+         * Joins the chat room.
+         *
+         * To exit the chat room, you can call {@link #LeaveRoom(String, CallBack)}.
+         *
+         * This is an asynchronous method.
+         *
+         * @param roomId            The ID of the chat room to join.
+         * @param ext               The extension information.
+         * @param leaveOtherRooms   Whether to leave all the currently joined chat rooms when joining a chat room.
+         *                             - `YES`：Yes.  The user joins the chat room, while leaving all other chat rooms.
+         *                             -  (Default) `NO`:  No. The user joins the chat room, without leaving all other chat rooms.
+         * @param callback	The operation callback. If success, the chat room instance is returned; otherwise, an error is returned. See {@link ValueCallBack}.
+         */
+        public void JoinRoom(string roomId, string ext, bool leaveOtherRooms = false, ValueCallBack<Room> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("roomId", roomId);
+            jo_param.AddWithoutNull("ext", ext);
+            jo_param.AddWithoutNull("leaveOtherRooms", leaveOtherRooms);
+
+            Process process = (_, jsonNode) =>
+            {
+                return ModelHelper.CreateWithJsonObject<Room>(jsonNode);
+            };
+
+            NativeCall<Room>(SDKMethod.joinChatRoomExt, jo_param, callback, process);
         }
 
         /**
@@ -1221,7 +1266,8 @@ namespace AgoraChat
                     case SDKMethod.onMemberJoinedFromRoom:
                         {
                             string userId = jsonNode["userId"];
-                            it.OnMemberJoinedFromRoom(roomId, userId);
+                            string ext = jsonNode["ext"];
+                            it.OnMemberJoinedFromRoom(roomId, userId, ext);
                         }
                         break;
                     case SDKMethod.onMemberExitedFromRoom:
@@ -1241,6 +1287,12 @@ namespace AgoraChat
                             List<string> list = List.StringListFromJsonArray(jsonNode["userIds"]);
                             long muteExpire = (long)jsonNode["expireTime"].AsDouble;
                             it.OnMuteListAddedFromRoom(roomId, list, muteExpire);
+                        }
+                        break;
+                    case SDKMethod.onMuteListAddedFromRoomWithMap:
+                        {
+                            Dictionary<string, long> mutes = Dictionary.SimpleTypeDictionaryFromJsonObject<long>(jsonNode["mutes"]);
+                            it.OnMuteListAddedFromRoom(roomId, mutes);
                         }
                         break;
                     case SDKMethod.onMuteListRemovedFromRoom:

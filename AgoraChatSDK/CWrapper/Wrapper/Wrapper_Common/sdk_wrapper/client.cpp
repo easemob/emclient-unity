@@ -18,9 +18,12 @@ EMConnectionCallbackListener* gConnectionCallbackListener = nullptr;
 EMChatConfigsPtr configs = nullptr;
 
 NativeListenerEvent gCallback = nullptr;
-static bool NeedAllocResource = false;
+
+const int MY_KEY_TYPE_APPKEY = 1;
+const int MY_KEY_TYPE_APPID = 2;
 
 string MY_APPKEY = "appkey";
+string MY_APPID = "appid";
 
 const int TOKEN_CHECK_INTERVAL = 180; // 180s
 
@@ -74,20 +77,79 @@ namespace sdk_wrapper
         gMultiDevicesListener = nullptr;
     }
 
-    bool ResetAppKey(string& oldAppKey, string& newAppKey)
+    bool ResetKey(int keyType, string& oldKey, string& newKey)
     {
-        if (newAppKey.compare(oldAppKey) == 0) return true;
+        if (newKey.compare(oldKey) == 0) return true;
 
-        if (nullptr == gClient || newAppKey.size() == 0) return false;
+        if (nullptr == gClient || newKey.size() == 0) return false;
 
-        CLIENT->logout(); // In login status, logout can clear dns
-        gClient->changeAppkey(newAppKey); // In logout status, changeAppKey can clear dns
+        if (MY_KEY_TYPE_APPKEY == keyType) {
+            CLIENT->logout();              // In login status, logout can clear dns
+            gClient->changeAppkey(newKey); // In logout status, changeAppKey can clear dns
+            gClient->getConfigManager()->setConfig(MY_APPKEY, newKey);
+            gClient->getConfigManager()->saveConfigs(CONFIG_FILE);
+            return true;
+        }
 
-        gClient->getConfigManager()->setConfig(MY_APPKEY, newAppKey);
-        gClient->getConfigManager()->saveConfigs();
+        else if (MY_KEY_TYPE_APPID == keyType) {
+            CLIENT->logout();             // In login status, logout can clear dns
+            gClient->changeAppId(newKey); // In logout status, changeAppId can clear dns
+            gClient->getConfigManager()->setConfig(MY_APPID, newKey);
+            gClient->getConfigManager()->saveConfigs(CONFIG_FILE);
+            return true;
+        }
 
-        return true;
+        return false;
     }
+
+    int GetNewKey(EMChatConfigsPtr cfg, string& key)
+    {
+        string app_key = cfg->getAppKey();
+        string app_id = cfg->getAppId();
+
+        if (CheckAppKey(app_key.c_str()) == true) {
+            key = app_key;
+            return MY_KEY_TYPE_APPKEY;
+        }
+
+        if (app_id.length() > 0) {
+            key = app_id;
+            return MY_KEY_TYPE_APPID;
+        }
+
+        return -1;
+    }
+
+    string GetKeyInPreConfig(int keyType)
+    {
+        string keyInPreConfig = "";
+
+        if (MY_KEY_TYPE_APPID == keyType) {
+            gClient->getConfigManager()->getConfig(MY_APPID, keyInPreConfig, CONFIG_FILE);
+        }
+
+        else if (MY_KEY_TYPE_APPKEY == keyType) {
+            gClient->getConfigManager()->getConfig(MY_APPKEY, keyInPreConfig, CONFIG_FILE);
+        }
+
+        return keyInPreConfig;
+    }
+
+    string GetKeyInMem(int keyType)
+    {
+        string keyInMem = "";
+
+        if (MY_KEY_TYPE_APPID == keyType) {
+            keyInMem = gClient->getChatConfigs()->getAppId();
+        }
+
+        else if (MY_KEY_TYPE_APPKEY == keyType) {
+            keyInMem = gClient->getChatConfigs()->getAppKey();
+        }
+
+        return keyInMem;
+    }
+
 
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_InitWithOptions(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
@@ -95,42 +157,43 @@ namespace sdk_wrapper
         // 100: App key is invalid
         int ret = 0;
 
-        string appkeyPreInConfig;
-        string appkeyInMem;
-        string appkeyNew;
-
         configs = Options::FromJson(jstr, "./sdkdata", "./sdkdata");
 
-        if (nullptr == configs) ret = 100;
-
-        if (nullptr != configs) appkeyNew = configs->getAppKey();
-
-        // singleton client handle, sdk initialize
-        if (nullptr == gClient && nullptr != configs) {
-
-            gClient = EMClient::create(configs);
-
-            Client_AddListener();
-            ChatManager_AddListener();
-            GroupManager_AddListener();
-            RoomManager_AddListener();
-            ContactManager_AddListener();
-            PresenceManager_AddListener();
-            ThreadManager_AddListener();
-
-            gClient->getConfigManager()->getConfig(MY_APPKEY, appkeyPreInConfig);
-            ResetAppKey(appkeyPreInConfig, appkeyNew);
+        if (nullptr == configs) {
+            ret = 100;
         }
+        else {
 
-        if (nullptr != gClient) {
+            string keyNew;
+            string keyInPreConfig;
+            string keyInMem;
 
-            if (NeedAllocResource) {
-                gClient->allocResource();
-                NeedAllocResource = false;
+            int keyType = GetNewKey(configs, keyNew);
+
+            // singleton client handle, sdk initialize
+            if (nullptr == gClient && nullptr != configs) {
+
+                gClient = EMClient::create(configs);
+
+                Client_AddListener();
+                ChatManager_AddListener();
+                GroupManager_AddListener();
+                RoomManager_AddListener();
+                ContactManager_AddListener();
+                PresenceManager_AddListener();
+                ThreadManager_AddListener();
+
+                keyInPreConfig = GetKeyInPreConfig(keyType);
+                ResetKey(keyType, keyInPreConfig, keyNew);
             }
 
-            appkeyInMem = gClient->getChatConfigs()->getAppKey();
-            ResetAppKey(appkeyInMem, appkeyNew);
+            if (nullptr != gClient) {
+
+                gClient->allocResource();
+
+                keyInMem = GetKeyInMem(keyType);
+                ResetKey(keyType, keyInMem, keyNew);
+            }
         }
 
         JSON_STARTOBJ
@@ -140,6 +203,72 @@ namespace sdk_wrapper
 
         string json = s.GetString();
         return CopyToPointer(json);
+    }
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_ChangeAppKey(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(nullptr)) return nullptr;
+
+        string local_jstr = jstr;
+        string local_cbid = cbid;
+
+        Document d; d.Parse(local_jstr.c_str());
+
+        string app_key = GetJsonValue_String(d, "appKey", "");
+
+        thread t([=]() {
+            EMErrorPtr result = CLIENT->changeAppkey(app_key);
+
+            if (EMError::isNoError(result)) {
+                //Save it to file
+                gClient->getConfigManager()->setConfig(MY_APPKEY, app_key);
+                gClient->getConfigManager()->saveConfigs(CONFIG_FILE);
+
+                string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), result->mErrorCode, result->mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+
+            });
+        t.detach();
+
+        return nullptr;
+    }
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_ChangeAppId(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(nullptr)) return nullptr;
+
+        string local_jstr = jstr;
+        string local_cbid = cbid;
+
+        Document d; d.Parse(local_jstr.c_str());
+
+        string app_id = GetJsonValue_String(d, "appId", "");
+
+        thread t([=]() {
+            EMErrorPtr result = CLIENT->changeAppId(app_id);
+
+            if (EMError::isNoError(result)) {
+                //Save it to file
+                gClient->getConfigManager()->setConfig(MY_APPID, app_id);
+                gClient->getConfigManager()->saveConfigs(CONFIG_FILE);
+
+                string call_back_jstr = MyJson::ToJsonWithSuccess(local_cbid.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), result->mErrorCode, result->mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+
+            });
+        t.detach();
+
+        return nullptr;
     }
 
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_CurrentUsername(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -333,11 +462,6 @@ namespace sdk_wrapper
         return nullptr;
     }
 
-    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_ChangeAppKey(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
-    {
-        return nullptr; // No need to Implement
-    }
-
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL Client_UploadLog(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         return nullptr; // No need to Implement
@@ -528,12 +652,7 @@ namespace sdk_wrapper
     {
         if (!CheckClientInitOrNot(nullptr)) return nullptr;
 
-        /*if (CLIENT->isLoggedIn()) {
-            return nullptr;
-        }*/
-
         CLIENT->clearResource();
-        NeedAllocResource = true;
 
         // clear all listeners when replay, need remove?
         //Client_RemoveListener();
@@ -602,6 +721,9 @@ namespace sdk_wrapper
 
             error->setErrorCode(EMError::APP_ACTIVE_NUMBER_REACH_LIMITATION);
             gConnectionListener->onDisconnect(error);
+
+            gConnectionListener->onOfflineMessageSyncStart();
+            gConnectionListener->onOfflineMessageSyncFinish();
             
         }
 
@@ -619,7 +741,7 @@ namespace sdk_wrapper
 
             gMultiDevicesListener->onRoamDeleteMultiDevicesEvent("convId", "deviceId", usernames, 123456);
 
-            gMultiDevicesListener->onConversationMultiDevicesEvent(EMMultiDevicesListener::MultiDevicesOperation::CONVERSATION_MARK, "convId", EMConversation::EMConversationType::CHAT);
+            gMultiDevicesListener->onConversationMultiDevicesEvent(EMMultiDevicesListener::MultiDevicesOperation::CONVERSATION_MUTE_INFO_CHANGED, "convId", EMConversation::EMConversationType::CHAT);
         }
 
         return nullptr;

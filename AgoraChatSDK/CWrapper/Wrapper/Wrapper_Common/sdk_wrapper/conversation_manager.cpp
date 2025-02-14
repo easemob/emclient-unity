@@ -244,8 +244,7 @@ namespace sdk_wrapper {
         string sender = GetJsonValue_String(d, "sender", "");
 
         int count = GetJsonValue_Int(d, "count", 20);
-        string timestamp = GetJsonValue_String(d, "timestamp", "0");
-        int64_t ts = atol(timestamp.c_str());
+        int64_t ts = GetJsonValue_Int64(d, "timestamp", -1);
 
         int int_direction = GetJsonValue_Int(d, "direction", 0);
         EMConversation::EMMessageSearchDirection direction = Conversation::EMMessageSearchDirectionFromInt(int_direction);
@@ -283,8 +282,7 @@ namespace sdk_wrapper {
 
         int count = GetJsonValue_Int(d, "count", 20);
 
-        string timestamp = GetJsonValue_String(d, "timestamp", "0");
-        int64_t ts = atol(timestamp.c_str());
+        int64_t ts = GetJsonValue_Int64(d, "timestamp", -1);
 
         int int_direction = GetJsonValue_Int(d, "direction", 0);
         EMConversation::EMMessageSearchDirection direction = Conversation::EMMessageSearchDirectionFromInt(int_direction);
@@ -299,6 +297,43 @@ namespace sdk_wrapper {
             CallBack(local_cbid.c_str(), call_back_jstr.c_str());
 
         });
+        t.detach();
+
+        return nullptr;
+    }
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_LoadMessagesWithMsgTypeList(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        string conv_id = GetJsonValue_String(d, "convId", "");
+        int int_type = GetJsonValue_Int(d, "convType", 0);
+        EMConversation::EMConversationType type = Conversation::ConversationTypeFromInt(int_type);
+
+        EMSet<EMMessageBody::EMMessageBodyType> bodyTypes = Message::FromJsonObjectToBodyTypeSet(d["bodyTypeList"]);
+
+        string sender = GetJsonValue_String(d, "sender", "");
+
+        int count = GetJsonValue_Int(d, "count", 20);
+
+        int64_t ts = GetJsonValue_Int64(d, "timestamp", -1);
+
+        int int_direction = GetJsonValue_Int(d, "direction", 0);
+        EMConversation::EMMessageSearchDirection direction = Conversation::EMMessageSearchDirectionFromInt(int_direction);
+
+        thread t([=]() {
+            EMError error;
+            EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(conv_id, type, true);
+            EMMessageList msgList = conversationPtr->loadMoreMessages(bodyTypes, ts, count, sender, direction);
+
+            string json = Message::ToJson(msgList);
+            string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
+            CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+
+            });
         t.detach();
 
         return nullptr;
@@ -351,8 +386,7 @@ namespace sdk_wrapper {
         string from = GetJsonValue_String(d, "from", "");
         int count = GetJsonValue_Int(d, "count", 20);
 
-        string timestamp_str = GetJsonValue_String(d, "timestamp", "0");
-        int64_t ts = atol(timestamp_str.c_str());
+        int64_t ts = GetJsonValue_Int64(d, "timestamp", -1);
 
         int var_direction = GetJsonValue_Int(d, "direction", 0);
         EMConversation::EMMessageSearchDirection direction = Conversation::EMMessageSearchDirectionFromInt(var_direction);
@@ -475,6 +509,33 @@ namespace sdk_wrapper {
 
         EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(conv_id, type, true);
         int count = conversationPtr->messagesCount();
+
+        JSON_STARTOBJ
+        writer.Key("ret");
+        writer.Int(count);
+        JSON_ENDOBJ
+
+        string json = s.GetString();
+        return CopyToPointer(json);
+    }
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_MessagesCountWithTS(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        string conv_id = GetJsonValue_String(d, "convId", "");
+        int int_type = GetJsonValue_Int(d, "convType", 0);
+
+        int64_t start_ts = GetJsonValue_Int64(d, "startTimestamp", 0);
+        int64_t end_ts = GetJsonValue_Int64(d, "endTimestamp", 0);
+
+        EMConversation::EMConversationType type = Conversation::ConversationTypeFromInt(int_type);
+
+        EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(conv_id, type, true);
+        int count = conversationPtr->messagesCount(start_ts, end_ts);
 
         JSON_STARTOBJ
         writer.Key("ret");

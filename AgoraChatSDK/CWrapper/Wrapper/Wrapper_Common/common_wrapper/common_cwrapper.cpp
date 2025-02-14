@@ -36,6 +36,8 @@ void InitManagerMap()
 	FUNC_MAP func_map_userinfo_manager;
 
 	func_map_client["init"] = Client_InitWithOptions;
+    func_map_client["changeAppKey"] = Client_ChangeAppKey;
+    func_map_client["changeAppId"] = Client_ChangeAppId;
 	func_map_client["createAccount"] = Client_CreateAccount;
 	func_map_client["login"] = Client_Login;
 	func_map_client["logout"] = Client_Logout;
@@ -48,7 +50,6 @@ void InitManagerMap()
 	//func_map_client["autoLogin"] = Client_AutoLogin; // not support for platform
 	func_map_client["clearResource"] = Client_ClearResource;
 
-	//func_map_client["changeAppKey"] = Client_ChangeAppKey;
 	//func_map_client["uploadLog"] = Client_UploadLog;
 	//func_map_client["compressLogs"] = Client_CompressLogs;
 
@@ -138,6 +139,7 @@ void InitManagerMap()
 	func_map_group_manager["updateGroupSubject"] = GroupManager_ChangeGroupName;
 	func_map_group_manager["updateGroupOwner"] = GroupManager_TransferGroupOwner;
 	func_map_group_manager["isMemberInWhiteListFromServer"] = GroupManager_FetchIsMemberInWhiteList;
+    func_map_group_manager["isMemberInMuteListFromServer"] = GroupManager_FetchIsMemberInMuteList;
 	func_map_group_manager["createGroup"] = GroupManager_CreateGroup;
 	func_map_group_manager["declineInvitationFromGroup"] = GroupManager_DeclineInvitationFromGroup;
 	func_map_group_manager["declineJoinApplication"] = GroupManager_DeclineJoinGroupApplication;
@@ -173,6 +175,7 @@ void InitManagerMap()
     func_map_group_manager["fetchMemberAttributes"] = GroupManager_FetchMemberAttributes;
     func_map_group_manager["setMemberAttributes"] = GroupManager_SetMemberAttributes;
     func_map_group_manager["fetchMyGroupsCount"] = GroupManager_FetchMyGroupsCount;
+    func_map_group_manager["cleanAllGroupsFromDB"] = GroupManager_CleanAllGroupsFromDB;
 
 	manager_map["EMGroupManager"] = func_map_group_manager;
 
@@ -192,6 +195,7 @@ void InitManagerMap()
 	func_map_room_manager["fetchChatRoomMembers"] = RoomManager_FetchChatroomMembers;
 	func_map_room_manager["fetchChatRoomMuteList"] = RoomManager_FetchChatroomMutes;
 	func_map_room_manager["joinChatRoom"] = RoomManager_JoinChatroom;
+    func_map_room_manager["joinChatRoomExt"] = RoomManager_JoinChatroomExt;
 	func_map_room_manager["leaveChatRoom"] = RoomManager_LeaveChatroom;
 	func_map_room_manager["muteChatRoomMembers"] = RoomManager_MuteChatroomMembers;
 	func_map_room_manager["removeChatRoomAdmin"] = RoomManager_RemoveChatroomAdmin;
@@ -246,6 +250,7 @@ void InitManagerMap()
 	func_map_conversation_manager["loadMsgWithStartId"] = ConversationManager_LoadMessages;
 	func_map_conversation_manager["loadMsgWithKeywords"] = ConversationManager_LoadMessagesWithKeyword;
 	func_map_conversation_manager["loadMsgWithMsgType"] = ConversationManager_LoadMessagesWithMsgType;
+    func_map_conversation_manager["loadMsgWithMsgTypeList"] = ConversationManager_LoadMessagesWithMsgTypeList;
 	func_map_conversation_manager["loadMsgWithTime"] = ConversationManager_LoadMessagesWithTime;
     func_map_conversation_manager["loadMsgWithScope"] = ConversationManager_LoadMessagesWithScope;
 	func_map_conversation_manager["markAllMessagesAsRead"] = ConversationManager_MarkAllMessagesAsRead;
@@ -253,6 +258,7 @@ void InitManagerMap()
 	func_map_conversation_manager["syncConversationExt"] = ConversationManager_SetExtField;
 	func_map_conversation_manager["getConversationUnreadMsgCount"] = ConversationManager_UnreadMessagesCount;
 	func_map_conversation_manager["messageCount"] = ConversationManager_MessagesCount;
+    func_map_conversation_manager["messageCountWithTS"] = ConversationManager_MessagesCountWithTS;
 	func_map_conversation_manager["updateConversationMessage"] = ConversationManager_UpdateMessage;
     func_map_conversation_manager["pinnedMessages"] = ConversationManager_PinnedMessages;
     func_map_conversation_manager["marks"] = ConversationManager_Marks;

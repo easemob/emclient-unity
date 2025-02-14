@@ -34,14 +34,16 @@ namespace AgoraChat
         * 
         * @param roomId        聊天室 ID。
         * @param participant   新成员的 ID。
+        * @param ext           扩展信息。
         *
         * \~english
         * Occurs when a user joins the chat room.
         * 
         * @param roomId        The chat room ID.
         * @param participant   The user ID of the new member.
+        * @param ext           The extension information.
         */
-        void OnMemberJoinedFromRoom(string roomId, string participant);
+        void OnMemberJoinedFromRoom(string roomId, string participant, string ext);
 
         /**
          * \~chinese
@@ -114,6 +116,25 @@ namespace AgoraChat
          * @param expireTime    The mute duration in milliseconds.
          */
         void OnMuteListAddedFromRoom(string roomId, List<string> mutes, long expireTime);
+
+        /**
+         * \~chinese
+         * 有成员被禁言。
+         *
+         * 禁言期间成员不能发送消息。
+         *
+         * @param chatRoomId    聊天室 ID。
+         * @param mutes         禁言的成员及禁言时间戳。
+         *
+         * \~english
+         * Occurs when a chat room member is added to the mute list.
+         *
+         * The muted members cannot send messages during the mute duration.
+         *
+         * @param chatRoomId    The chat room ID.
+         * @param mutes         The user ID(s) and the corresponding timestamp of the mute expiration.
+         */
+        void OnMuteListAddedFromRoom(string roomId, Dictionary<string, long> mutes);
 
         /**
          * \~chinese

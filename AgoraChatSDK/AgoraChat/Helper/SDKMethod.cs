@@ -22,12 +22,13 @@ namespace AgoraChat
 
         /// EMClient methods
         internal const string init = "init";
+        internal const string changeAppKey = "changeAppKey";
+        internal const string changeAppId = "changeAppId";
         internal const string createAccount = "createAccount";
         internal const string login = "login";
         internal const string loginWithAgoraToken = "loginWithAgoraToken";
         internal const string renewToken = "renewToken";
         internal const string logout = "logout";
-        internal const string changeAppKey = "changeAppKey";
 
         internal const string uploadLog = "uploadLog";
         internal const string compressLogs = "compressLogs";
@@ -138,9 +139,11 @@ namespace AgoraChat
         internal const string loadMsgWithStartId = "loadMsgWithStartId";
         internal const string loadMsgWithKeywords = "loadMsgWithKeywords";
         internal const string loadMsgWithMsgType = "loadMsgWithMsgType";
+        internal const string loadMsgWithMsgTypeList = "loadMsgWithMsgTypeList";
         internal const string loadMsgWithTime = "loadMsgWithTime";
         internal const string loadMsgWithScope = "loadMsgWithScope";
         internal const string messageCount = "messageCount";
+        internal const string messageCountWithTS = "messageCountWithTS";
         internal const string pinnedMessages = "pinnedMessages";
         internal const string marks = "marks";
 
@@ -154,6 +157,7 @@ namespace AgoraChat
 
         // EMChatRoomManager
         internal const string joinChatRoom = "joinChatRoom";
+        internal const string joinChatRoomExt = "joinChatRoomExt";
         internal const string leaveChatRoom = "leaveChatRoom";
         internal const string fetchPublicChatRoomsFromServer = "fetchPublicChatRoomsFromServer";
         internal const string fetchChatRoomInfoFromServer = "fetchChatRoomInfoFromServer";
@@ -203,6 +207,7 @@ namespace AgoraChat
         internal const string getGroupMuteListFromServer = "getGroupMuteListFromServer";
         internal const string getGroupAllowListFromServer = "getGroupWhiteListFromServer";
         internal const string isMemberInAllowListFromServer = "isMemberInWhiteListFromServer";
+        internal const string isMemberInMuteListFromServer = "isMemberInMuteListFromServer";
         internal const string getGroupFileListFromServer = "getGroupFileListFromServer";
         internal const string getGroupAnnouncementFromServer = "getGroupAnnouncementFromServer";
         internal const string addMembers = "addMembers";
@@ -239,6 +244,7 @@ namespace AgoraChat
         internal const string fetchMemberAttributes = "fetchMemberAttributes";
         internal const string setMemberAttributes = "setMemberAttributes";
         internal const string fetchMyGroupsCount = "fetchMyGroupsCount";
+        internal const string cleanAllGroupsFromDB = "cleanAllGroupsFromDB";
 
 
         /// EMPushManager
@@ -369,6 +375,8 @@ namespace AgoraChat
         internal const string onTokenExpired = "onTokenExpired";
         internal const string onTokenWillExpire = "onTokenWillExpire";
         internal const string onAppActiveNumberReachLimitation = "onAppActiveNumberReachLimitation";
+        internal const string onOfflineMessageSyncStart = "onOfflineMessageSyncStart";
+        internal const string onOfflineMessageSyncFinish = "onOfflineMessageSyncFinish";
 
         // GroupManagerDeleagate
         internal const string onInvitationReceivedFromGroup = "onInvitationReceivedFromGroup";
@@ -404,6 +412,7 @@ namespace AgoraChat
         internal const string onRemovedFromRoom = "onRemovedFromRoom";
         internal const string onRemoveFromRoomByOffline = "onRemoveFromRoomByOffline";
         internal const string onMuteListAddedFromRoom = "onMuteListAddedFromRoom";
+        internal const string onMuteListAddedFromRoomWithMap = "onMuteListAddedFromRoomWithMap";
         internal const string onMuteListRemovedFromRoom = "onMuteListRemovedFromRoom";
         internal const string onAdminAddedFromRoom = "onAdminAddedFromRoom";
         internal const string onAdminRemovedFromRoom = "onAdminRemovedFromRoom";

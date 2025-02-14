@@ -53,6 +53,8 @@
         ret = [self getGroupWhiteListFromServer:params callback:callback];
     } else if ([isMemberInWhiteListFromServer isEqualToString:method]) {
         ret = [self isMemberInWhiteListFromServer:params callback:callback];
+    } else if ([isMemberInMuteListFromServer isEqualToString:method]) {
+        ret = [self isMemberInMuteListFromServer:params callback:callback];
     } else if ([getGroupFileListFromServer isEqualToString:method]) {
         ret = [self getGroupFileListFromServer:params callback:callback];
     } else if ([getGroupAnnouncementFromServer isEqualToString:method]) {
@@ -121,14 +123,14 @@
         ret = [self acceptInvitationFromGroup:params callback:callback];
     } else if ([declineInvitationFromGroup isEqualToString:method]) {
         ret = [self declineInvitationFromGroup:params callback:callback];
-    } else if ([getJoinedGroupsFromServerSimple isEqualToString:method]) {
-        ret = [self getJoinedGroupsFromServerSimple:params callback:callback];
     } else if ([setMemberAttributes isEqualToString:method]) {
         ret = [self setMemberAttributes:params callback:callback];
     } else if ([fetchMemberAttributes isEqualToString:method]) {
         ret = [self fetchMemberAttributes:params callback:callback];
     } else if ([fetchMyGroupsCount isEqualToString:method]) {
         ret = [self fetchMyGroupsCount:params callback:callback];
+    } else if ([cleanAllGroupsFromDB isEqualToString:method]) {
+        ret = [self cleanAllGroupsFromDB:params callback:callback];
     } else {
         ret = [super onMethodCall:method params:params callback:callback];
     }
@@ -273,6 +275,17 @@
         [weakSelf wrapperCallback:callback error:aError object:@{@"ret":@(inWhiteList)}];
     }];
     
+    return nil;
+}
+
+- (NSString *)isMemberInMuteListFromServer:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
+    __weak EMGroupManagerWrapper *weakSelf = self;
+    [EMClient.sharedClient.groupManager isMemberInMuteListFromServerWithGroupId:params[@"groupId"]
+                                                                     completion:^(BOOL inWhiteList, EMError *aError)
+     {
+        [weakSelf wrapperCallback:callback error:aError object:@{@"ret":@(inWhiteList)}];
+    }];
+
     return nil;
 }
 
@@ -669,6 +682,7 @@
     return nil;
 }
 
+/*
 - (NSString *)getJoinedGroupsFromServerSimple:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
     __weak EMGroupManagerWrapper *weakSelf = self;
     
@@ -690,7 +704,7 @@
     }];
     
     return nil;
-}
+}*/
 
 - (NSString *)setMemberAttributes:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
     __weak EMGroupManagerWrapper *weakSelf = self;
@@ -730,6 +744,11 @@
      {
         [weakSelf wrapperCallback:callback error:aError object:[EMHelper getReturnJsonObject:@(groupCount)]];
     }];
+    return nil;
+}
+
+- (NSString *)cleanAllGroupsFromDB:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
+    [EMClient.sharedClient.groupManager cleanAllGroupsFromDB];
     return nil;
 }
 

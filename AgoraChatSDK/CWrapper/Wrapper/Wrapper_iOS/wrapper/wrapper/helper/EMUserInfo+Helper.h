@@ -5,7 +5,7 @@
 //  Created by liujinliang on 2021/4/28.
 //
 
-#import <HyphenateChat/HyphenateChat.h>
+#import "ChatHeaders.h"
 #import "EaseModeToJson.h"
 
 

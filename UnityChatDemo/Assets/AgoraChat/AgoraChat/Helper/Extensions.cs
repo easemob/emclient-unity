@@ -375,6 +375,20 @@ namespace AgoraChat
             return ja;
         }
 
+        internal static JSONNode JsonArrayFromEnumList<T>(List<T> enumList) where T : Enum
+        {
+            JSONArray ja = new JSONArray();
+            if (enumList != null)
+            {
+                foreach (T e in enumList)
+                {
+                    ja.Add(Convert.ToInt32(e));
+                }
+            }
+
+            return ja;
+        }
+
         internal static JSONNode JsonArrayFromList<T>(List<T> list) where T : BaseModel
         {
             if (list == null) return null;
@@ -405,6 +419,30 @@ namespace AgoraChat
                     if (!string.IsNullOrEmpty(key) && !string.IsNullOrEmpty(value))
                     {
                         jo[key] = value;
+                    }
+                }
+            }
+
+            return jo;
+        }
+
+        internal static JSONObject JsonObjectFromSimpleDictionary<T>(Dictionary<string, T> dictionary)
+        {
+            JSONObject jo = new JSONObject();
+
+            if (dictionary != null && dictionary.Count > 0)
+            {
+                IDictionary<string, T> sortedParams = new SortedDictionary<string, T>(dictionary);
+                IEnumerator<KeyValuePair<string, T>> enumerator = sortedParams.GetEnumerator();
+
+                while (enumerator.MoveNext())
+                {
+                    string key = enumerator.Current.Key;
+                    T value = enumerator.Current.Value;
+
+                    if (!string.IsNullOrEmpty(key) && value != null)
+                    {
+                        jo.AddWithoutNull(key, value);
                     }
                 }
             }
@@ -473,6 +511,8 @@ namespace AgoraChat
                 case MultiDevicesOperation.CONVERSATION_PINNED: return 60;
                 case MultiDevicesOperation.CONVERSATION_UNPINNED: return 61;
                 case MultiDevicesOperation.CONVERSATION_DELETED: return 62;
+                case MultiDevicesOperation.CONVERSATION_MARK: return 63;
+                case MultiDevicesOperation.CONVERSATION_MUTE_INFO_CHANGED: return 64;
                 default:
                     return -1;
             }
@@ -525,6 +565,7 @@ namespace AgoraChat
                 case 61: return MultiDevicesOperation.CONVERSATION_UNPINNED;
                 case 62: return MultiDevicesOperation.CONVERSATION_DELETED;
                 case 63: return MultiDevicesOperation.CONVERSATION_MARK;
+                case 64: return MultiDevicesOperation.CONVERSATION_MUTE_INFO_CHANGED;
                 default: return MultiDevicesOperation.UNKNOWN;
             }
         }

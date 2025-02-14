@@ -12,6 +12,7 @@ public class EMOptionsHelper {
     public static EMOptions fromJson(JSONObject json, Context context) throws JSONException {
         EMOptions options = new EMOptions();
         options.setAppKey(json.getString("appKey"));
+        options.setAppId(json.getString("appId"));
         options.setAutoLogin(json.getBoolean("autoLogin"));
         options.setRequireAck(json.getBoolean("requireAck"));
         options.setRequireDeliveryAck(json.getBoolean("requireDeliveryAck"));
@@ -58,6 +59,9 @@ public class EMOptionsHelper {
         if (json.has("includeSendMessageInMessageListener")) {
             options.setIncludeSendMessageInMessageListener(json.optBoolean("includeSendMessageInMessageListener"));
         }
+        if (json.has("loginCustomExt")) {
+            options.setLoginCustomExt(json.optString("loginCustomExt"));
+        }
 
         if (json.has("pushConfig")) {
             EMPushConfig.Builder builder = new EMPushConfig.Builder(context);
@@ -78,7 +82,7 @@ public class EMOptionsHelper {
                 builder.enableMeiZuPush(pushConfig.getString("mzAppId"), pushConfig.getString("mzAppKey"));
             }
             if (pushConfig.getBoolean("enableVivoPush")) {
-                builder.enableVivoPush();
+                builder.enableVivoPush(false);
             }
             options.setPushConfig(builder.build());
         }

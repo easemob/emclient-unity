@@ -181,7 +181,7 @@ public class Login : MonoBehaviour
         //default appkey
         // string appkey = "easemob-demo#flutter";
         // string appkey = "easemob-demo#wang";
-        string appkey = "easemob-demo#unitytest";
+        //string appkey = "easemob-demo#unitytest";
         //string appkey = "41117440#383391";
         //string appkey = "easemob#easeim";
 
@@ -201,12 +201,16 @@ public class Login : MonoBehaviour
 #endif
 
         //Options options = new Options("81446724#514456");
-        Options options = new Options(appkey);
+        //Options options = new Options("easemob-demo#unitytest");
+
+        Options options = Options.InitOptionsWithAppId("ba85504621304fb894790708d304794f");
+
         options.AutoLogin = false;
         options.UsingHttpsOnly = true;
         options.DebugMode = true;
         options.EnableEmptyConversation = true;
         options.RegardImportMsgAsRead = true;
+        options.LoginCustomExt = "My LoginCustomExt";
         //options.UseReplacedMessageContents = true;
         SDKClient.Instance.InitWithOptions(options);
 

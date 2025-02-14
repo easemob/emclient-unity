@@ -3,7 +3,10 @@
 
 #if defined(_WIN32)
 
-	#define WIN32_LEAN_AND_MEAN
+    #ifndef WIN32_LEAN_AND_MEAN
+        #define WIN32_LEAN_AND_MEAN
+    #endif
+	
 	#include <windows.h>
 	#include <cstdint>
 	
@@ -98,6 +101,8 @@ const string STRING_onAuthFailed = "onAuthFailed";
 const string STRING_onTokenExpired = "onTokenExpired";
 const string STRING_onTokenWillExpire = "onTokenWillExpire";
 const string STRING_onAppActiveNumberReachLimitation = "onAppActiveNumberReachLimitation";
+const string STRING_onOfflineMessageSyncStart = "onOfflineMessageSyncStart";
+const string STRING_onOfflineMessageSyncFinish = "onOfflineMessageSyncFinish";
 
 // GroupManagerDeleagate
 const string STRING_onInvitationReceivedFromGroup = "onInvitationReceivedFromGroup";
@@ -133,6 +138,7 @@ const string STRING_onMemberExitedFromRoom = "onMemberExitedFromRoom";
 const string STRING_onRemovedFromRoom = "onRemovedFromRoom";
 const string STRING_onRemoveFromRoomByOffline = "onRemoveFromRoomByOffline";
 const string STRING_onMuteListAddedFromRoom = "onMuteListAddedFromRoom";
+const string STRING_onMuteListAddedFromRoomWithMap = "onMuteListAddedFromRoomWithMap";
 const string STRING_onMuteListRemovedFromRoom = "onMuteListRemovedFromRoom";
 const string STRING_onAdminAddedFromRoom = "onAdminAddedFromRoom";
 const string STRING_onAdminRemovedFromRoom = "onAdminRemovedFromRoom";

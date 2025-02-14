@@ -63,11 +63,12 @@ public class EMWrapperRoomListener implements EMChatRoomChangeListener {
     }
 
     @Override
-    public void onMemberJoined(String roomId, String participant) {
+    public void onMemberJoined(String roomId, String participant, String ext) {
         JSONObject data = new JSONObject();
         try {
             data.put("roomId", roomId);
             data.put("userId", participant);
+            data.put("ext", ext);
             post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.chatRoomListener, EMSDKMethod.onMemberJoinedFromRoom, data.toString()));
         } catch (JSONException e) {
             e.printStackTrace();
@@ -113,6 +114,24 @@ public class EMWrapperRoomListener implements EMChatRoomChangeListener {
             data.put("userIds", mutes);
             data.put("expireTime", String.valueOf(expireTime));
             post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.chatRoomListener, EMSDKMethod.onMuteListAddedFromRoom, data.toString()));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onMuteListAdded(String chatRoomId, Map<String, Long> muteInfo) {
+        JSONObject data = new JSONObject();
+        try {
+            data.put("roomId", chatRoomId);
+
+            JSONObject muteInfoJson = new JSONObject();
+            for (Map.Entry<String, Long> entry : muteInfo.entrySet()) {
+                muteInfoJson.put(entry.getKey(), entry.getValue());
+            }
+            data.put("mutes", muteInfoJson);
+
+            post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.chatRoomListener, EMSDKMethod.onMuteListAddedFromRoomWithMap, data.toString()));
         } catch (JSONException e) {
             e.printStackTrace();
         }

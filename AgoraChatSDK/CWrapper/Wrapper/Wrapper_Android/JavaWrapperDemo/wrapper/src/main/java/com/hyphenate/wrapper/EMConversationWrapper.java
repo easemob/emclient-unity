@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -65,6 +66,9 @@ public class EMConversationWrapper extends EMBaseWrapper {
         else if (EMSDKMethod.loadMsgWithMsgType.equals(method)) {
             ret = loadMsgWithMsgType(jsonObject, callback);
         }
+        else if (EMSDKMethod.loadMsgWithMsgTypeList.equals(method)) {
+            ret = loadMsgWithMsgTypeList(jsonObject, callback);
+        }
         else if (EMSDKMethod.loadMsgWithTime.equals(method)) {
             ret = loadMsgWithTime(jsonObject, callback);
         }
@@ -73,6 +77,9 @@ public class EMConversationWrapper extends EMBaseWrapper {
         }
         else if(EMSDKMethod.messageCount.equals(method)) {
             ret = messageCount(jsonObject, callback);
+        }
+        else if(EMSDKMethod.messageCountWithTS.equals(method)) {
+            ret = messageCountWithTS(jsonObject, callback);
         }
         else if(EMSDKMethod.removeMessages.equals(method)) {
             ret = removeMessages(jsonObject, callback);
@@ -241,6 +248,46 @@ public class EMConversationWrapper extends EMBaseWrapper {
         return null;
     }
 
+    private String loadMsgWithMsgTypeList(JSONObject params, EMWrapperCallback callback) throws JSONException {
+    EMConversation conversation = conversationWithParam(params);
+    long timestamp = params.getLong("timestamp");
+    String sender = null;
+    if (params.has("sender")) {
+        sender = params.getString("sender");
+    }
+    int count = params.getInt("count");
+    EMConversation.EMSearchDirection direction = params.getInt("direction") == 0 ? EMConversation.EMSearchDirection.UP : EMConversation.EMSearchDirection.DOWN;
+
+    JSONArray bodyTypeList = params.getJSONArray("bodyTypeList");
+    Set<EMMessage.Type> typeSet = new HashSet<>();
+    for (int i = 0; i < bodyTypeList.length(); i++) {
+        int iType = bodyTypeList.getInt(i);
+        EMMessage.Type type = EMMessage.Type.TXT;
+        switch (iType) {
+            case 0: type = EMMessage.Type.TXT; break;
+            case 1: type = EMMessage.Type.IMAGE; break;
+            case 2: type = EMMessage.Type.VIDEO; break;
+            case 3: type = EMMessage.Type.LOCATION; break;
+            case 4: type = EMMessage.Type.VOICE; break;
+            case 5: type = EMMessage.Type.FILE; break;
+            case 6: type = EMMessage.Type.CMD; break;
+            case 7: type = EMMessage.Type.CUSTOM; break;
+            case 8: type = EMMessage.Type.COMBINE; break;
+        }
+        typeSet.add(type);
+    }
+
+    String finalSender = sender;
+    List<EMMessage> msgList = conversation.searchMsgFromDB(typeSet, timestamp, count, finalSender, direction);
+
+    JSONArray jsonArray = new JSONArray();
+    for (EMMessage msg : msgList) {
+        jsonArray.put(EMMessageHelper.toJson(msg));
+    }
+    onSuccess(jsonArray, callback);
+    return null;
+}
+
     private String loadMsgWithTime(JSONObject params, EMWrapperCallback callback) throws JSONException {
         EMConversation conversation = conversationWithParam(params);
         long startTime = params.getLong("startTime");
@@ -276,6 +323,13 @@ public class EMConversationWrapper extends EMBaseWrapper {
     private String messageCount(JSONObject params, EMWrapperCallback callback) throws JSONException {
         EMConversation conversation = conversationWithParam(params);
         return EMHelper.getReturnJsonObject(conversation.getAllMsgCount()).toString();
+    }
+
+    private String messageCountWithTS(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        EMConversation conversation = conversationWithParam(params);
+        long start_timestamp = params.getLong("startTimestamp");
+        long end_timestamp = params.getLong("endTimestamp");
+        return EMHelper.getReturnJsonObject(conversation.getAllMsgCount(start_timestamp, end_timestamp)).toString();
     }
 
     private String removeMessages(JSONObject params, EMWrapperCallback callback) throws JSONException {

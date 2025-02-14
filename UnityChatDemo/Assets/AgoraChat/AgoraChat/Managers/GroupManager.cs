@@ -387,6 +387,34 @@ namespace AgoraChat
         }
 
         /**
+        * \~chinese
+        * 检查当前用户是否在群组禁言列表中。
+        *
+        * 异步方法。
+        *
+        * @param groupId   群组 ID。
+        * @param callback  操作结果回调，详见 {@link CallBack}。
+        *
+        * \~english
+        * Gets whether the current user is on the mute list of the group.
+        *
+        * This is an asynchronous method.
+        *
+        * @param groupId   The group ID.
+        * @param callback  The operation callback. See {@link CallBack}.
+        */
+        public void CheckIfInGroupMuteList(string groupId, ValueCallBack<bool> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("groupId", groupId);
+            Process process = (_, jsonNode) =>
+            {
+                return jsonNode["ret"].IsBoolean ? jsonNode["ret"].AsBool : false;
+            };
+            NativeCall<bool>(SDKMethod.isMemberInMuteListFromServer, jo_param, callback, process);
+        }
+
+        /**
 	     * \~chinese
 	     * 创建群组。
 		 * 
@@ -780,22 +808,23 @@ namespace AgoraChat
 		 *
 		 * 异步方法。
 		 *
-		 * @param groupId	群组 ID。
-		 * @param callback	操作结果回调，成功返群组实例，失败返回错误信息，详见 {@link ValueCallBack}。
+		 * @param groupId       群组 ID。
+		 * @param callback      操作结果回调，成功返群组实例，失败返回错误信息，详见 {@link ValueCallBack}。
 		 *
 		 * \~english
 		 * Gets group details.
 		 *
 		 * This is an asynchronous method.
 		 *
-		 * @param groupId	The group ID.
-		 * @param callback	The operation callback. If success, the SDK returns the group instance; otherwise, an error will be returned. See {@link ValueCallBack}.
+		 * @param groupId      The group ID.
+		 * @param callback     The operation callback. If success, the SDK returns the group instance; otherwise, an error will be returned. See {@link ValueCallBack}.
 		 *
 		 */
         public void GetGroupSpecificationFromServer(string groupId, ValueCallBack<Group> callback = null)
         {
             JSONObject jo_param = new JSONObject();
             jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("fetchMembers", false);
 
             Process process = (_, jsonNode) =>
             {
@@ -921,44 +950,6 @@ namespace AgoraChat
             };
 
             NativeCall<List<Group>>(SDKMethod.getJoinedGroupsFromServer, jo_param, callback, process);
-        }
-
-        /**
-        * \~chinese
-        * 以分页方式从服务器获取当前用户加入的群组。
-        *
-        * 此操作只返回群组列表，不包含群组的所有成员信息。
-        *
-        * 异步方法，会阻塞当前线程。
-        *
-        * @param pageNum 		当前页码，从 0 开始。
-        * @param pageSize		每页期望返回的群组数，缺省为20。
-        * @param callback		操作结果回调，成功群组列表，失败返回错误信息，详见 {@link ValueCallBack}。
-        *
-        * \~english
-        * Gets the list of groups with pagination.
-        *
-        * This method gets a group list from the server, which does not contain member information.
-        *
-        * This is an asynchronous method and blocks the current thread.
-        *
-        * @param pageNum 		The page number, starting from 0.
-        * @param pageSize		The number of groups that you expect to get on each page. Default num is 20.
-        * @param callback		The operation callback. If success, the SDK returns the obtained group list; otherwise, an error will be returned. See {@link ValueCallBack}. 
-        */
-        [Obsolete]
-        public void FetchJoinedGroupsFromServer(int pageNum = 0, int pageSize = 20, ValueCallBack<List<Group>> callback = null)
-        {
-            JSONObject jo_param = new JSONObject();
-            jo_param.AddWithoutNull("pageNum", pageNum);
-            jo_param.AddWithoutNull("pageSize", pageSize);
-
-            Process process = (_, jsonNode) =>
-            {
-                return List.BaseModelListFromJsonArray<Group>(jsonNode);
-            };
-
-            NativeCall<List<Group>>(SDKMethod.getJoinedGroupsFromServerSimple, jo_param, callback, process);
         }
 
         /**
@@ -1526,6 +1517,20 @@ namespace AgoraChat
                 return jsonNode["ret"].IsNumber ? jsonNode["ret"].AsInt : -1;
             };
             NativeCall<int>(SDKMethod.fetchMyGroupsCount, null, callback, process);
+        }
+
+        /**
+         *  \~chinese
+         *  清理数据库中当前用户的所有群组。
+         *
+         *
+         *  \~english
+         *  Clears the information of all groups in the local database.
+         *
+         */
+        public void CleanAllGroupsFromDB()
+        {
+            NativeCall(SDKMethod.cleanAllGroupsFromDB);
         }
 
         /**

@@ -56,6 +56,22 @@ namespace AgoraChat
             return ret;
         }
 
+        internal void ChangeAppKey(string appKey, CallBack callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("appKey", appKey);
+
+            NativeCall(SDKMethod.changeAppKey, jo_param, callback);
+        }
+
+        internal void ChangeAppId(string appId, CallBack callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("appId", appId);
+
+            NativeCall(SDKMethod.changeAppId, jo_param, callback);
+        }
+
         internal string CurrentUsername()
         {
 
@@ -281,6 +297,12 @@ namespace AgoraChat
                         break;
                     case SDKMethod.onAppActiveNumberReachLimitation:
                         it.OnAppActiveNumberReachLimitation();
+                        break;
+                    case SDKMethod.onOfflineMessageSyncStart:
+                        it.OnOfflineMessageSyncStart();
+                        break;
+                    case SDKMethod.onOfflineMessageSyncFinish:
+                        it.OnOfflineMessageSyncFinish();
                         break;
                     default:
                         break;

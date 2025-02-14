@@ -726,8 +726,7 @@ namespace sdk_wrapper {
         string from = GetJsonValue_String(d, "from", "");
         int count = GetJsonValue_Int(d, "count", 20);
 
-        string timestamp_str = GetJsonValue_String(d, "timestamp", "0");
-        int64_t ts = atol(timestamp_str.c_str());
+        int64_t ts = GetJsonValue_Int64(d, "timestamp", -1);
 
         int var_direction = GetJsonValue_Int(d, "direction", 0);
         EMConversation::EMMessageSearchDirection direction = Conversation::EMMessageSearchDirectionFromInt(var_direction);
@@ -757,8 +756,7 @@ namespace sdk_wrapper {
         string from = GetJsonValue_String(d, "from", "");
         int count = GetJsonValue_Int(d, "count", 20);
 
-        string timestamp_str = GetJsonValue_String(d, "timestamp", "0");
-        int64_t ts = atol(timestamp_str.c_str());
+        int64_t ts = GetJsonValue_Int64(d, "timestamp", -1);
 
         int var_direction = GetJsonValue_Int(d, "direction", 0);
         EMConversation::EMMessageSearchDirection direction = Conversation::EMMessageSearchDirectionFromInt(var_direction);
@@ -893,9 +891,7 @@ namespace sdk_wrapper {
         string local_cbid = cbid;
 
         Document d; d.Parse(jstr);
-        string timestamp = GetJsonValue_String(d, "timestamp", "0");
-
-        int64_t ts = atoll(timestamp.c_str());
+        int64_t ts = GetJsonValue_Int64(d, "timestamp", -1);
 
         thread t([=]() {
 
@@ -1394,8 +1390,7 @@ namespace sdk_wrapper {
         int var_type = GetJsonValue_Int(d, "convType", 0);
         conv_type = EMConversation::EMConversationType(var_type);
 
-        string timestamp = GetJsonValue_String(d, "timestamp", "0");
-        int64_t ts = atoll(timestamp.c_str());
+        int64_t ts = GetJsonValue_Int64(d, "timestamp", -1);
 
         thread t([=]() {
             EMErrorPtr error = CLIENT->getChatManager().removeMessagesFromServer(cov_id, conv_type, ts);
@@ -1446,6 +1441,7 @@ namespace sdk_wrapper {
         return nullptr;
     }
 
+    /*
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_GetMessagesCount(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         if (!CheckClientInitOrNot(nullptr)) return nullptr;
@@ -1462,6 +1458,31 @@ namespace sdk_wrapper {
 
         string json = s.GetString();
         return CopyToPointer(json);
+    }
+    */
+
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_GetMessagesCount(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        thread t([=]() {
+            int count = 0;
+            count = CLIENT->getChatManager().getMessagesCount();
+
+            JSON_STARTOBJ
+            writer.Key("ret");
+            writer.Int(count);
+            JSON_ENDOBJ
+
+            string json = s.GetString();
+            string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
+            CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            });
+        t.detach();
+
+        return nullptr;
     }
 
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ChatManager_RemoveEarlierHistoryMessages(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
@@ -1712,8 +1733,8 @@ namespace sdk_wrapper {
             gChatManagerListener->onReceiveHasReadAcks(msg_list);
             gChatManagerListener->onReceiveHasDeliveredAcks(msg_list);
 
-            std::vector<std::tuple<std::string, std::string, std::string, easemob::EMMessagePtr>> recallVec;
-            std::tuple<std::string, std::string, std::string, easemob::EMMessagePtr> tuple("recallBy", "msgId", "ext", msg);
+            std::vector<EMChatManagerListener::EMRecallMessage> recallVec;
+            EMChatManagerListener::EMRecallMessage tuple("recallBy", "msgId", "ext", msg, "conversationId");
             recallVec.push_back(tuple);
             gChatManagerListener->onReceiveRecallMessages(recallVec);
 

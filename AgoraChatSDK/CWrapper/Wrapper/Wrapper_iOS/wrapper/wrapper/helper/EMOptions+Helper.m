@@ -6,12 +6,13 @@
 //
 
 #import "EMOptions+Helper.h"
-#import <HyphenateChat/EMOptions+PrivateDeploy.h>
+#import "ChatHeaders.h"
 
 @implementation EMOptions (Helper)
 - (NSDictionary *)toJson {
     NSMutableDictionary *data = [NSMutableDictionary dictionary];
     data[@"appKey"] = self.appkey;
+    data[@"appId"] = self.appId;
     data[@"autoLogin"] = @(self.isAutoLogin);
     data[@"debugModel"] = @(self.enableConsoleLog);
     data[@"requireAck"] = @(self.enableRequireReadAck);
@@ -38,11 +39,18 @@
     data[@"useReplacedMessageContents"] = @(self.useReplacedMessageContents);
     data[@"regardImportMsgAsRead"] = @(self.regardImportMessagesAsRead);
     data[@"includeSendMessageInMessageListener"] = @(self.includeSendMessageInMessageListener);
+    data[@"loginCustomExt"] = self.loginExtensionInfo;
     
     return data;
 }
 + (EMOptions *)fromJson:(NSDictionary *)aJson {
-    EMOptions *options = [EMOptions optionsWithAppkey:aJson[@"appKey"]];
+
+    EMOptions *options = nil;
+    if (aJson[@"appKey"] != nil && [aJson[@"appKey"] isKindOfClass:[NSString class]] && [aJson[@"appKey"] length] > 0)
+        options = [EMOptions optionsWithAppkey:aJson[@"appKey"]];
+    else
+        options = [EMOptions optionsWithAppId:aJson[@"appId"]];
+
     options.isAutoLogin = [aJson[@"autoLogin"] boolValue];
     options.enableConsoleLog = [aJson[@"debugModel"] boolValue];
     options.enableRequireReadAck = [aJson[@"requireAck"] boolValue];
@@ -87,6 +95,7 @@
     if(aJson[@"includeSendMessageInMessageListener"]) {
         options.includeSendMessageInMessageListener = [aJson[@"includeSendMessageInMessageListener"] boolValue];
     }
+    options.loginExtensionInfo = aJson[@"loginCustomExt"];
 
     return options;
 }

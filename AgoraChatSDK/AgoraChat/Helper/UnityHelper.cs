@@ -43,29 +43,6 @@ namespace AgoraChat
             CallbackQueue_UnityMode.Instance().Process();
         }
 
-#if UNITY_EDITOR
-        private void OnApplicationQuit()
-        {
-            if (IClient.IsInit)
-            {
-                if (SDKClient.Instance.IsLoggedIn)
-                {
-                    SDKClient.Instance.Logout(false);
-                }
-                SDKClient.Instance.ClearResource();
-            }
-        }
-
-        [RuntimeInitializeOnLoadMethod]
-        static void InitializeOnLoadMethod()
-        {
-            EditorApplication.wantsToQuit -= Quit;
-            EditorApplication.wantsToQuit += Quit;
-
-            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
-            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
-        }
-
         static bool Quit()
         {
             if (IClient.IsInit)
@@ -75,9 +52,27 @@ namespace AgoraChat
                     SDKClient.Instance.Logout(false);
                 }
                 SDKClient.Instance.ClearResource();
+                IClient.IsInit = false;
             }
             Debug.Log("Quit...");
             return true;
+        }
+
+        private void OnApplicationQuit()
+        {
+            Quit();
+        }
+
+#if UNITY_EDITOR
+
+        [RuntimeInitializeOnLoadMethod]
+        static void InitializeOnLoadMethod()
+        {
+            EditorApplication.wantsToQuit -= Quit;
+            EditorApplication.wantsToQuit += Quit;
+
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
         }
 
         static void OnPlayModeStateChanged(PlayModeStateChange stateChange)
@@ -98,18 +93,6 @@ namespace AgoraChat
                         EditorApplication.UnlockReloadAssemblies();
                         break;
                     }
-            }
-        }
-#else
-        private void OnApplicationQuit()
-        {
-            if (IClient.IsInit)
-            {
-                if (SDKClient.Instance.IsLoggedIn)
-                {
-                    SDKClient.Instance.Logout(false);
-                }
-                SDKClient.Instance.ClearResource();
             }
         }
 #endif

@@ -5,7 +5,7 @@
 //  Created by 杜洁鹏 on 2022/7/8.
 //
 
-#import <HyphenateChat/HyphenateChat.h>
+#import "ChatHeaders.h"
 
 
 NS_ASSUME_NONNULL_BEGIN

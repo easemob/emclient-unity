@@ -56,6 +56,8 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
             ret = getGroupWhiteListFromServer(jsonObject, callback);
         } else if (EMSDKMethod.isMemberInWhiteListFromServer.equals(method)) {
             ret = isMemberInWhiteListFromServer(jsonObject, callback);
+        } else if (EMSDKMethod.isMemberInMuteListFromServer.equals(method)) {
+            ret = isMemberInMuteListFromServer(jsonObject, callback);
         } else if (EMSDKMethod.getGroupFileListFromServer.equals(method)) {
             ret = getGroupFileListFromServer(jsonObject, callback);
         } else if (EMSDKMethod.getGroupAnnouncementFromServer.equals(method)) {
@@ -124,14 +126,14 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
             ret = acceptInvitationFromGroup(jsonObject, callback);
         } else if (EMSDKMethod.declineInvitationFromGroup.equals(method)) {
             ret = declineInvitationFromGroup(jsonObject, callback);
-        } else if (EMSDKMethod.getJoinedGroupsFromServerSimple.equals(method)) {
-            ret = getJoinedGroupsFromServerSimple(jsonObject, callback);
         } else if (EMSDKMethod.setMemberAttributes.equals(method)) {
             ret = setMemberAttributes(jsonObject, callback);
         } else if (EMSDKMethod.fetchMemberAttributes.equals(method)) {
             ret = fetchMemberAttributes(jsonObject, callback);
         } else if (EMSDKMethod.fetchMyGroupsCount.equals(method)) {
             ret = fetchMyGroupsCount(callback);
+        } else if (EMSDKMethod.cleanAllGroupsFromDB.equals(method)) {
+            ret = cleanAllGroupsFromDB();
         } else {
             ret = super.onMethodCall(method, jsonObject, callback);
         }
@@ -409,6 +411,24 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
             throws JSONException {
         String groupId = params.getString("groupId");
         EMClient.getInstance().groupManager().checkIfInGroupWhiteList(groupId, new EMCommonValueCallback<Boolean>(callback){
+            @Override
+            public void onSuccess(Boolean object) {
+                JSONObject jo = new JSONObject();
+                try {
+                    jo.put("ret", object);
+                    super.updateObject(jo);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        return null;
+    }
+
+    private String isMemberInMuteListFromServer(JSONObject params, EMWrapperCallback callback)
+            throws JSONException {
+        String groupId = params.getString("groupId");
+        EMClient.getInstance().groupManager().asyncCheckIfInMuteList(groupId, new EMCommonValueCallback<Boolean>(callback){
             @Override
             public void onSuccess(Boolean object) {
                 JSONObject jo = new JSONObject();
@@ -992,7 +1012,7 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
         return null;
     }
 
-    private String getJoinedGroupsFromServerSimple(JSONObject params, EMWrapperCallback callback) throws JSONException {
+    /*private String getJoinedGroupsFromServerSimple(JSONObject params, EMWrapperCallback callback) throws JSONException {
         int pageSize = 0;
         if (params.has("pageSize")){
             pageSize = params.getInt("pageSize");
@@ -1020,7 +1040,7 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
 
         EMClient.getInstance().groupManager().asyncGetJoinedGroupsFromServer(pageNum, pageSize,callBack);
         return null;
-    }
+    }*/
 
     private String setMemberAttributes(JSONObject params, EMWrapperCallback callback) throws JSONException {
         String groupId = params.getString("groupId");
@@ -1069,6 +1089,11 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
         };
 
         EMClient.getInstance().groupManager().asyncGetJoinedGroupsCountFromServer(callBack);
+        return null;
+    }
+
+    private String cleanAllGroupsFromDB() {
+        EMClient.getInstance().groupManager().cleanAllGroupsFromLocal();
         return null;
     }
     

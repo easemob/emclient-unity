@@ -26,6 +26,7 @@ public class EMSDKMethod {
     public static final String renewToken = "renewToken";
     public static final String logout = "logout";
     public static final String changeAppKey = "changeAppKey";
+    public static final String changeAppId = "changeAppId";
 
     public static final String uploadLog = "uploadLog";
     public static final String compressLogs = "compressLogs";
@@ -73,6 +74,7 @@ public class EMSDKMethod {
     public static final String getThreadConversation = "getThreadConversation";
     public static final String markAllChatMsgAsRead = "markAllChatMsgAsRead";
     public static final String getUnreadMessageCount = "getUnreadMessageCount";
+    public static final String getMessagesCount = "getMessagesCount";
     public static final String updateChatMessage = "updateChatMessage";
     public static final String downloadAttachment = "downloadAttachment";
     public static final String downloadThumbnail = "downloadThumbnail";
@@ -136,9 +138,11 @@ public class EMSDKMethod {
     public static final String loadMsgWithStartId = "loadMsgWithStartId";
     public static final String loadMsgWithKeywords = "loadMsgWithKeywords";
     public static final String loadMsgWithMsgType = "loadMsgWithMsgType";
+    public static final String loadMsgWithMsgTypeList = "loadMsgWithMsgTypeList";
     public static final String loadMsgWithTime = "loadMsgWithTime";
     public static final String loadMsgWithScope = "loadMsgWithScope";
     public static final String messageCount = "messageCount";
+    public static final String messageCountWithTS = "messageCountWithTS";
     public static final String pinnedMessages = "pinnedMessages";
     public static final String marks = "marks";
 
@@ -153,6 +157,7 @@ public class EMSDKMethod {
 
     // EMChatRoomManager
     public static final String joinChatRoom = "joinChatRoom";
+    public static final String joinChatRoomExt = "joinChatRoomExt";
     public static final String leaveChatRoom = "leaveChatRoom";
     public static final String fetchPublicChatRoomsFromServer = "fetchPublicChatRoomsFromServer";
     public static final String fetchChatRoomInfoFromServer = "fetchChatRoomInfoFromServer";
@@ -202,6 +207,7 @@ public class EMSDKMethod {
     public static final String getGroupMuteListFromServer = "getGroupMuteListFromServer";
     public static final String getGroupWhiteListFromServer = "getGroupWhiteListFromServer";
     public static final String isMemberInWhiteListFromServer = "isMemberInWhiteListFromServer";
+    public static final String isMemberInMuteListFromServer = "isMemberInMuteListFromServer";
     public static final String getGroupFileListFromServer = "getGroupFileListFromServer";
     public static final String getGroupAnnouncementFromServer = "getGroupAnnouncementFromServer";
     public static final String addMembers = "addMembers";
@@ -238,6 +244,7 @@ public class EMSDKMethod {
     public static final String fetchMemberAttributes = "fetchMemberAttributes";
     public static final String setMemberAttributes = "setMemberAttributes";
     public static final String fetchMyGroupsCount = "fetchMyGroupsCount";
+    public static final String cleanAllGroupsFromDB = "cleanAllGroupsFromDB";
 
 
     /// EMPushManager
@@ -368,6 +375,8 @@ public class EMSDKMethod {
     public static final String onAuthFailed = "onAuthFailed";
     public static final String onTokenExpired = "onTokenExpired";
     public static final String onTokenWillExpire = "onTokenWillExpire";
+    public static final String onOfflineMessageSyncStart = "onOfflineMessageSyncStart";
+    public static final String onOfflineMessageSyncFinish = "onOfflineMessageSyncFinish";
 
     // GroupManagerDelegate
     public static final String onInvitationReceivedFromGroup = "onInvitationReceivedFromGroup";
@@ -402,6 +411,7 @@ public class EMSDKMethod {
     public static final String onRemovedFromRoom = "onRemovedFromRoom";
     public static final String onRemoveFromRoomByOffline = "onRemoveFromRoomByOffline";
     public static final String onMuteListAddedFromRoom = "onMuteListAddedFromRoom";
+    public static final String onMuteListAddedFromRoomWithMap = "onMuteListAddedFromRoomWithMap";
     public static final String onMuteListRemovedFromRoom = "onMuteListRemovedFromRoom";
     public static final String onAdminAddedFromRoom = "onAdminAddedFromRoom";
     public static final String onAdminRemovedFromRoom = "onAdminRemovedFromRoom";

@@ -24,6 +24,7 @@
 #include "empresence.h"
 #include "emmultidevices_listener.h"
 #include "emfetchmessageoption.h"
+#include "emchatmanager_listener.h"
 
 #include "sdk_wrapper_internal.h"
 
@@ -50,6 +51,7 @@ namespace sdk_wrapper {
 		static vector<string> FromJsonToVector(string& jstr);
 
 		static void ToJsonObject(Writer<StringBuffer>& writer, const map<string, string>& map);
+        static void ToJsonObject(Writer<StringBuffer>& writer, const map<string, int64_t>& map);
         static void ToJsonObject(Writer<StringBuffer>& writer, const unordered_map<string, string>& map);
 		static void ToJsonObject(Writer<StringBuffer>& writer, const map<string, int>& map);
 		static map<string, string> FromJsonObjectToMap(const Value& jnode);
@@ -112,6 +114,8 @@ namespace sdk_wrapper {
 		static EMMessagePtr FromJsonObjectToMessage(const Value& jnode);
 
 		static void ToJsonObjectWithMessageList(Writer<StringBuffer>& writer, EMMessageList messages);
+
+        static EMSet<EMMessageBody::EMMessageBodyType> FromJsonObjectToBodyTypeSet(const Value& jnode);
 	};
 
 	class AttributesValue
@@ -409,9 +413,9 @@ namespace sdk_wrapper {
     class RecallMessageInfo
     {
     public:
-        static void ToJsonObject(Writer<StringBuffer>& writer, std::tuple<std::string, std::string, std::string, easemob::EMMessagePtr>& tuple);
-        static void ToJsonObjectWithList(Writer<StringBuffer>& writer, const std::vector<std::tuple<std::string, std::string, std::string, easemob::EMMessagePtr>>& vec);
-        static string ToJson(const std::vector<std::tuple<std::string, std::string, std::string, easemob::EMMessagePtr>>& vec);
+        static void ToJsonObject(Writer<StringBuffer>& writer, EMChatManagerListener::EMRecallMessage& recallMessage);
+        static void ToJsonObjectWithList(Writer<StringBuffer>& writer, const std::vector<EMChatManagerListener::EMRecallMessage>& vec);
+        static string ToJson(const std::vector<EMChatManagerListener::EMRecallMessage>& vec);
     };
 
     class TokenWrapper

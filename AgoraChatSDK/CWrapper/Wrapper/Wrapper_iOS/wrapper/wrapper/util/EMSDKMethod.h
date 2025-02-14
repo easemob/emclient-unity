@@ -32,6 +32,7 @@ static NSString *const loginWithAgoraToken = @"loginWithAgoraToken";
 static NSString *const renewToken = @"renewToken";
 static NSString *const logout = @"logout";
 static NSString *const changeAppKey = @"changeAppKey";
+static NSString *const changeAppId = @"changeAppId";
 
 static NSString *const uploadLog = @"uploadLog";
 static NSString *const compressLogs = @"compressLogs";
@@ -80,6 +81,7 @@ static NSString *const getConversation = @"getConversation";
 static NSString *const getThreadConversation = @"getThreadConversation";
 static NSString *const markAllChatMsgAsRead = @"markAllChatMsgAsRead";
 static NSString *const getUnreadMessageCount = @"getUnreadMessageCount";
+static NSString *const getMessagesCount = @"getMessagesCount";
 static NSString *const updateChatMessage = @"updateChatMessage";
 static NSString *const downloadAttachment = @"downloadAttachment";
 static NSString *const downloadThumbnail = @"downloadThumbnail";
@@ -139,9 +141,11 @@ static NSString *const loadMsgWithId = @"loadMsgWithId";
 static NSString *const loadMsgWithStartId = @"loadMsgWithStartId";
 static NSString *const loadMsgWithKeywords = @"loadMsgWithKeywords";
 static NSString *const loadMsgWithMsgType = @"loadMsgWithMsgType";
+static NSString *const loadMsgWithMsgTypeList = @"loadMsgWithMsgTypeList";
 static NSString *const loadMsgWithTime = @"loadMsgWithTime";
 static NSString *const loadMsgWithScope = @"loadMsgWithScope";
 static NSString *const messageCount = @"messageCount";
+static NSString *const messageCountWithTS = @"messageCountWithTS";
 static NSString *const pinnedMessages = @"pinnedMessages";
 static NSString *const marks = @"marks";
 
@@ -156,6 +160,7 @@ static NSString *const getPinnedInfo = @"pinnedInfo";
 
 // EMChatRoomManager
 static NSString *const joinChatRoom = @"joinChatRoom";
+static NSString *const joinChatRoomExt = @"joinChatRoomExt";
 static NSString *const leaveChatRoom = @"leaveChatRoom";
 static NSString *const fetchPublicChatRoomsFromServer = @"fetchPublicChatRoomsFromServer";
 static NSString *const fetchChatRoomInfoFromServer = @"fetchChatRoomInfoFromServer";
@@ -205,6 +210,7 @@ static NSString *const getGroupBlockListFromServer = @"getGroupBlockListFromServ
 static NSString *const getGroupMuteListFromServer = @"getGroupMuteListFromServer";
 static NSString *const getGroupWhiteListFromServer = @"getGroupWhiteListFromServer";
 static NSString *const isMemberInWhiteListFromServer = @"isMemberInWhiteListFromServer";
+static NSString *const isMemberInMuteListFromServer = @"isMemberInMuteListFromServer";
 static NSString *const getGroupFileListFromServer = @"getGroupFileListFromServer";
 static NSString *const getGroupAnnouncementFromServer = @"getGroupAnnouncementFromServer";
 static NSString *const addMembers = @"addMembers";
@@ -241,6 +247,7 @@ static NSString *const declineInvitationFromGroup = @"declineInvitationFromGroup
 static NSString *const fetchMemberAttributes = @"fetchMemberAttributes";
 static NSString *const setMemberAttributes = @"setMemberAttributes";
 static NSString *const fetchMyGroupsCount = @"fetchMyGroupsCount";
+static NSString *const cleanAllGroupsFromDB = @"cleanAllGroupsFromDB";
 
 
 /// EMPushManager
@@ -370,6 +377,8 @@ static NSString *const onAuthFailed = @"onAuthFailed";
 static NSString *const onTokenExpired = @"onTokenExpired";
 static NSString *const onTokenWillExpire = @"onTokenWillExpire";
 static NSString *const onAppActiveNumberReachLimitation = @"onAppActiveNumberReachLimitation";
+static NSString *const onOfflineMessageSyncStart = @"onOfflineMessageSyncStart";
+static NSString *const onOfflineMessageSyncFinish = @"onOfflineMessageSyncFinish";
 
 // GroupManagerDeleagate
 static NSString *const onInvitationReceivedFromGroup = @"onInvitationReceivedFromGroup";
@@ -404,6 +413,7 @@ static NSString *const onMemberExitedFromRoom = @"onMemberExitedFromRoom";
 static NSString *const onRemovedFromRoom = @"onRemovedFromRoom";
 static NSString *const onRemoveFromRoomByOffline = @"onRemoveFromRoomByOffline";
 static NSString *const onMuteListAddedFromRoom = @"onMuteListAddedFromRoom";
+static NSString *const onMuteListAddedFromRoomWithMap = @"onMuteListAddedFromRoomWithMap";
 static NSString *const onMuteListRemovedFromRoom = @"onMuteListRemovedFromRoom";
 static NSString *const onAdminAddedFromRoom = @"onAdminAddedFromRoom";
 static NSString *const onAdminRemovedFromRoom = @"onAdminRemovedFromRoom";

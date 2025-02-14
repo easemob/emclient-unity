@@ -127,6 +127,23 @@
          */
         void OnAppActiveNumberReachLimitation();
 
+        /**
+         * \~chinese
+         * 离线消息同步开始回调。
+         *
+         * \~english
+         * Occurs when the client begin to receive offline messages from the server.
+         */
+        void OnOfflineMessageSyncStart();
+
+        /**
+         * \~chinese
+         * 离线消息同步结束回调。
+         *
+         * \~english
+         * Occurs when the client finishes receiving offline messages from the server.
+         */
+        void OnOfflineMessageSyncFinish();
     }
 
 }
