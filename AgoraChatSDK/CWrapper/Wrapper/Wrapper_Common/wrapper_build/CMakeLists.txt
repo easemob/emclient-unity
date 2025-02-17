@@ -66,7 +66,7 @@ if(MSVC)
 		-D_WIN32
 		-DCONFIG_WINDOWS
 		-DWIN32_LEAN_AND_MEAN
-		-DBUILD_NO=${BUILD_NO}
+                #-DBUILD_NO=${BUILD_NO}
     )
     
     # 设置全局编译选项
@@ -102,7 +102,7 @@ else()
 
     add_definitions(
 		-DTARGET_OS_OSX
-		-DBUILD_NO=${BUILD_NO}
+		#-DBUILD_NO=${BUILD_NO}
 	)
 
     set(CMAKE_XCODE_ATTRIBUTE_DEBUG_INFORMATION_FORMAT "dwarf-with-dsym")
@@ -197,8 +197,8 @@ if(CMAKE_GENERATOR MATCHES "Visual Studio")
 		find_library(agora_ap_static NAMES agora_ap_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/facility-x86-static-mt-0.0.60.7/lib)
 		find_library(agora_edge_allocator_static NAMES agora_edge_allocator_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/facility-x86-static-mt-0.0.60.7/lib)
 		find_library(agora_generic_report_static NAMES agora_generic_report_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/facility-x86-static-mt-0.0.60.7/lib)
-		find_library(libaosl_chat NAMES libaosl PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/aosl_1.2.2-x86-release)
-		find_library(libzip NAMES zip PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/libzip_1.11.2-x86-static-mt/lib)
+		#find_library(libaosl_chat NAMES libaosl PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/aosl_1.2.2-x86-release)
+		#find_library(libzip NAMES zip PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends32/libzip_1.11.2-x86-static-mt/lib)
 
     elseif(CMAKE_GENERATOR_PLATFORM STREQUAL "x64" OR CMAKE_GENERATOR_PLATFORM STREQUAL "")
 		find_library(libcrypto NAMES libcrypto PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/boringssl-1.1.1f-x64-static-mt/lib)
@@ -215,8 +215,8 @@ if(CMAKE_GENERATOR MATCHES "Visual Studio")
 		find_library(agora_ap_static NAMES agora_ap_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/facility-x64-static-mt-0.0.60.7/lib)
 		find_library(agora_edge_allocator_static NAMES agora_edge_allocator_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/facility-x64-static-mt-0.0.60.7/lib)
 		find_library(agora_generic_report_static NAMES agora_generic_report_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/facility-x64-static-mt-0.0.60.7/lib)
-		find_library(libaosl_chat NAMES libaosl PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/aosl_1.2.2-x64-release)
-		find_library(libzip NAMES zip PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/libzip_1.11.2-x64-static-mt/lib)
+		#find_library(libaosl_chat NAMES libaosl PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/aosl_1.2.2-x64-release)
+		#find_library(libzip NAMES zip PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/win/depends/libzip_1.11.2-x64-static-mt/lib)
     endif()
     message(STATUS "Found zlib: ${zlib}")
 
@@ -239,8 +239,8 @@ else()
 	find_library(agora_ap_static NAMES agora_ap_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/facility_static_universal-0.0.60.7/lib)
 	find_library(agora_edge_allocator_static NAMES agora_edge_allocator_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/facility_static_universal-0.0.60.7/lib)
 	find_library(agora_generic_report_static NAMES agora_generic_report_static PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/facility_static_universal-0.0.60.7/lib)
-	find_library(libaosl_chat NAMES aosl PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/aosl_1.2.2_release)
-	find_library(libzip NAMES zip.5 PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/libzip_1.11.2_share_universal/lib)
+	#find_library(libaosl_chat NAMES aosl PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/aosl_1.2.2_release)
+	#find_library(libzip NAMES zip.5 PATHS ${EMCLIENT_LINUX_PATH}/3rd_party/platform/darwin/depends_universal/libzip_1.11.2_share_universal/lib)
 	message(STATUS "Found libz.tbd: ${libz_tbd}")
 	message(STATUS "Found Security.framework: ${security_framework}")
 	message(STATUS "Found Foundation.framework: ${foundation_framework}")
@@ -262,15 +262,15 @@ message(STATUS "Found agora_transport_static: ${agora_transport_static}")
 message(STATUS "Found agora_ap_static: ${agora_ap_static}")
 message(STATUS "Found agora_edge_allocator_static: ${agora_edge_allocator_static}")
 message(STATUS "Found agora_generic_report_static: ${agora_generic_report_static}")
-message(STATUS "Found libaosl_chat: ${libaosl_chat}")
-message(STATUS "Found libzip: ${libzip}")
+#message(STATUS "Found libaosl_chat: ${libaosl_chat}")
+#message(STATUS "Found libzip: ${libzip}")
 
 # 检查是否找到所有库
 if(NOT libcrypto OR NOT libssl OR NOT libcurl OR NOT libsqlcipher OR
    NOT libevent_openssl OR NOT libevent_core OR NOT libevent_extra OR NOT libevent OR
    NOT agora_utils_static OR NOT agora_transport_static OR NOT agora_ap_static OR
-   NOT agora_edge_allocator_static OR NOT agora_generic_report_static
-   OR NOT libzip)
+   NOT agora_edge_allocator_static OR NOT agora_generic_report_static)
+   #OR NOT libzip)
     message(FATAL_ERROR "Could not find one or more libraries")
 endif()
 
@@ -336,7 +336,7 @@ ${EMCLIENT_LINUX_PATH}/3rd_party/curlcpp/src/curl_easy.cpp
     ${EMCLIENT_LINUX_PATH}/protocol/generated/argusdata.pb.cc
     ${EMCLIENT_LINUX_PATH}/protocol/generated/argussdkapi.pb.cc
     ${EMCLIENT_LINUX_PATH}/protocol/generated/argussdkinit.pb.cc
-    ${EMCLIENT_LINUX_PATH}/protocol/generated/arguscrashevent.pb.cc
+    #${EMCLIENT_LINUX_PATH}/protocol/generated/arguscrashevent.pb.cc
     ${EMCLIENT_LINUX_PATH}/src/b64decoder.c
     ${EMCLIENT_LINUX_PATH}/src/b64encoder.c
     ${EMCLIENT_LINUX_PATH}/src/emattributevalue.cpp
@@ -418,7 +418,7 @@ ${EMCLIENT_LINUX_PATH}/3rd_party/curlcpp/src/curl_easy.cpp
     ${EMCLIENT_LINUX_PATH}/src/emtransportdelegateimpl.cpp
     ${EMCLIENT_LINUX_PATH}/src/emudpserverimpl.cpp
     ${EMCLIENT_LINUX_PATH}/src/emconversationfilter.cpp
-    ${EMCLIENT_LINUX_PATH}/src/emcrashmonitor.cpp
+    #${EMCLIENT_LINUX_PATH}/src/emcrashmonitor.cpp
     ${EMCLIENT_LINUX_PATH}/src/emautchattransport.cpp
     ${EMCLIENT_LINUX_PATH}/src/emtcpchattransport.cpp
 )
@@ -462,8 +462,8 @@ if(APPLE)
 		${agora_ap_static}
 		${agora_edge_allocator_static}
 		${agora_generic_report_static}
-		${libaosl_chat}
-		${libzip}
+		#${libaosl_chat}
+		#${libzip}
 	)
 endif()
 
@@ -521,8 +521,8 @@ else()
 		${agora_ap_static}
 		${agora_edge_allocator_static}
 		${agora_generic_report_static}
-		${libaosl_chat}
-		${libzip}
+		#${libaosl_chat}
+		#${libzip}
 	)
 
 	target_link_options(${SdkWrapper} PRIVATE "/NODEFAULTLIB:LIBCMT.lib")
