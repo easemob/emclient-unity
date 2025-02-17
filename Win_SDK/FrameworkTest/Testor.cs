@@ -2500,6 +2500,13 @@ namespace WinSDKTest
             options.IMServer = "180.184.143.60";
             options.IMPort = 6717;*/
 
+            //sandbox testing
+            /*options.UsingHttpsOnly = false;
+            options.RestServer = "a1-hsb.easemob.com";
+            options.IMServer = "180.184.143.60";
+            options.IMPort = 6717;
+            options.EnableDNSConfig = false; */
+
             if (SDKClient.Instance.InitWithOptions(options) != 0)
             {
                 Console.WriteLine("failed to InitWithOptions");
@@ -9136,6 +9143,12 @@ namespace WinSDKTest
                     Console.WriteLine($"Owner: {room.Owner}");
                     Console.WriteLine($"IsAllMemberMuted: {room.IsAllMemberMuted}");
                     Console.WriteLine($"PermissionType: {room.PermissionType}");
+                    Console.WriteLine($"------------------");
+                    Console.WriteLine($"CreateTimeStamp: {room.CreateTimeStamp}");
+                    Console.WriteLine($"IsAllMemberMuted: {room.IsAllMemberMuted}");
+                    Console.WriteLine($"IsInAllowList: {room.IsInAllowList}");
+                    Console.WriteLine($"MemberCount: {room.MemberCount}");
+                    Console.WriteLine($"MuteUntilTimeStamp: {room.MuteUntilTimeStamp}");
                 },
                 onError: (code, desc) => {
                     Console.WriteLine($"CreateRoom failed, code:{code}, desc:{desc}");
@@ -9221,6 +9234,12 @@ namespace WinSDKTest
                     Console.WriteLine($"Owner: {room.Owner}");
                     Console.WriteLine($"IsAllMemberMuted: {room.IsAllMemberMuted}");
                     Console.WriteLine($"PermissionType: {room.PermissionType}");
+                    Console.WriteLine($"------------------");
+                    Console.WriteLine($"CreateTimeStamp: {room.CreateTimeStamp}");
+                    Console.WriteLine($"IsAllMemberMuted: {room.IsAllMemberMuted}");
+                    Console.WriteLine($"IsInAllowList: {room.IsInAllowList}");
+                    Console.WriteLine($"MemberCount: {room.MemberCount}");
+                    Console.WriteLine($"MuteUntilTimeStamp: {room.MuteUntilTimeStamp}");
                 },
                 onError: (code, desc) => {
                     Console.WriteLine($"JoinRoomExt failed, code:{code}, desc:{desc}");

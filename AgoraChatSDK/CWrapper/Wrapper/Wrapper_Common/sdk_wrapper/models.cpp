@@ -2820,6 +2820,15 @@ namespace sdk_wrapper
         writer.Key("permissionType");
         writer.Int(EMMucMemberTypeToInt(room->chatroomMemberType()));
 
+        writer.Key("createTimestamp");
+        writer.Uint64(room->mucCreateTime());
+
+        writer.Key("isInAllowList");
+        writer.Bool(room->isInWhiteList());
+
+        writer.Key("muteUntilTimeStamp");
+        writer.Int64(room->muteUntilTimestamp());
+
         writer.EndObject();
     }
     string Room::ToJson(const EMChatroomPtr room)
