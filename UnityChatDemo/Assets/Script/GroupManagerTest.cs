@@ -769,7 +769,7 @@ public class GroupManagerTest : MonoBehaviour
         {
             bool fetchMembers  = bool.Parse(dict["fetchMembers"]);
 
-            SDKClient.Instance.GroupManager.GetGroupSpecificationFromServer(currentGroupId, fetchMembers, new ValueCallBack<Group>(
+            SDKClient.Instance.GroupManager.GetGroupSpecificationFromServer(currentGroupId, new ValueCallBack<Group>(
                 onSuccess: (group) =>
                 {
                     string members = string.Join(",", group.MemberList.ToArray());

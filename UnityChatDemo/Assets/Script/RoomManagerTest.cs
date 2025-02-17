@@ -369,7 +369,7 @@ public class RoomManagerTest : MonoBehaviour
         {
             bool fetchMembers = bool.Parse(dict["fetchMembers"]);
 
-            SDKClient.Instance.RoomManager.FetchRoomInfoFromServer(currentRoomId, fetchMembers, new ValueCallBack<Room>(
+            SDKClient.Instance.RoomManager.FetchRoomInfoFromServer(currentRoomId, new ValueCallBack<Room>(
             onSuccess: (room) =>
             {
                 string members = string.Join(",", room.MemberList.ToArray());
