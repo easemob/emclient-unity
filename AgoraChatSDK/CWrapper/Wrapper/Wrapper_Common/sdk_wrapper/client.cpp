@@ -697,7 +697,7 @@ namespace sdk_wrapper
 
             gConnectionListener->onDisconnect(error);
             error->setErrorCode(206);
-            gConnectionListener->onDisconnect(error);
+            gConnectionListener->onDisconnect(error, "anotherDevice", "kickInfo");
             error->setErrorCode(207);
             gConnectionListener->onDisconnect(error);
             error->setErrorCode(214);
@@ -707,7 +707,7 @@ namespace sdk_wrapper
             error->setErrorCode(217);
             gConnectionListener->onDisconnect(error);
             error->setErrorCode(220);
-            gConnectionListener->onDisconnect(error, "anotherDevice");
+            gConnectionListener->onDisconnect(error, "anotherDevice", "kickInfo");
             error->setErrorCode(305);
             gConnectionListener->onDisconnect(error);
             error->setErrorCode(1);
