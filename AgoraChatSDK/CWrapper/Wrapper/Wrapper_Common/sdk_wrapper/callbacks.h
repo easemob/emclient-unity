@@ -56,6 +56,9 @@ namespace sdk_wrapper {
                     JSON_STARTOBJ
                     writer.Key("deviceName");
                     writer.String(info.c_str());
+
+                    writer.Key("ext");
+                    writer.String(ext.c_str());
                     JSON_ENDOBJ
 
                     json = s.GetString();
