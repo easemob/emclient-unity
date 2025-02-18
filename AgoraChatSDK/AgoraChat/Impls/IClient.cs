@@ -268,7 +268,8 @@ namespace AgoraChat
                     case SDKMethod.onLoggedOtherDevice:
                         {
                             string deviceName = jsonNode["deviceName"];
-                            it.OnLoggedOtherDevice(deviceName);
+                            string info = jsonNode["ext"];
+                            it.OnLoggedOtherDevice(deviceName, info);
                         }
                         break;
                     case SDKMethod.onRemovedFromServer:

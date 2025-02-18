@@ -880,9 +880,9 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
         Debug.Log("Connection2 OnDisconnected run");
     }
 
-    public void OnLoggedOtherDevice(string deviceName)
+    public void OnLoggedOtherDevice(string deviceName, string info)
     {
-        Debug.Log($"Connection3 OnLoggedOtherDevice run, deviceName:{deviceName}");
+        Debug.Log($"Connection3 OnLoggedOtherDevice run, deviceName:{deviceName}, info:{info}");
     }
 
     public void OnRemovedFromServer()
