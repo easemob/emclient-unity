@@ -366,9 +366,18 @@
     [EMWrapperHelper.shared.listener onReceive:connectionListener method:onAppActiveNumberReachLimitation info:nil];
 }
 
-- (void)userAccountDidLoginFromOtherDevice:(NSString *)aDeviceName {
+/*- (void)userAccountDidLoginFromOtherDevice:(NSString *)aDeviceName {
     [EMWrapperHelper.shared.listener onReceive:connectionListener method:onLoggedOtherDevice
                                           info:@{@"deviceName": aDeviceName}.toJsonString];
+}*/
+
+- (void)userAccountDidLoginFromOtherDeviceWithInfo:(EMLoginExtensionInfo *)info {
+
+    NSMutableDictionary *jo = [NSMutableDictionary dictionary];
+    jo[@"deviceName"] = info.deviceName;
+    jo[@"ext"] = info.extensionInfo;
+
+    [EMWrapperHelper.shared.listener onReceive:connectionListener method:onLoggedOtherDevice info:[jo toJsonString]];
 }
 
 - (void)userAccountDidRemoveFromServer {
