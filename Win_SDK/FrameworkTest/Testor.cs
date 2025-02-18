@@ -7310,7 +7310,7 @@ namespace WinSDKTest
 
             bool fetchMembers =  GetParamValueFromContext(1).CompareTo("true") == 0 ? true : false;
 
-            SDKClient.Instance.GroupManager.GetGroupSpecificationFromServer(groupId, fetchMembers, new ValueCallBack<Group>(
+            SDKClient.Instance.GroupManager.GetGroupSpecificationFromServer(groupId, new ValueCallBack<Group>(
                 onSuccess: (group) =>
                 {
                     Console.WriteLine($"GetGroupSpecificationFromServer sucess ===============");
@@ -9107,7 +9107,7 @@ namespace WinSDKTest
             string roomId = GetParamValueFromContext(0);
             bool fetchMembers = GetParamValueFromContext(1).CompareTo("true") == 0 ? true:false;
 
-            SDKClient.Instance.RoomManager.FetchRoomInfoFromServer(roomId, fetchMembers, new ValueCallBack<Room>(
+            SDKClient.Instance.RoomManager.FetchRoomInfoFromServer(roomId, new ValueCallBack<Room>(
                 onSuccess: (room) => {
                     Console.WriteLine($"FetchRoomInfoFromServer success.");
                     Console.WriteLine($"roomId: {room.RoomId}");
@@ -10891,9 +10891,9 @@ namespace WinSDKTest
             Console.WriteLine($"IConnectionDelegate6 OnKickedByOtherDevice, total listener count: {LISTENER_COUNT}");
         }
 
-        public void OnLoggedOtherDevice(string dn)
+        public void OnLoggedOtherDevice(string dn, string info)
         {
-            Console.WriteLine($"IConnectionDelegate7 OnLoggedOtherDevice, devicename:{dn}, total listener count: {LISTENER_COUNT}");
+            Console.WriteLine($"IConnectionDelegate7 OnLoggedOtherDevice, devicename:{dn}, info:{info}, total listener count: {LISTENER_COUNT}");
         }
 
         public void OnForbidByServer()
@@ -11249,7 +11249,7 @@ namespace WinSDKTest
 
         public void OnSpecificationChangedFromRoom(Room room)
         {
-            Console.WriteLine($"IRoomManagerDelegate17 OnSpecificationChangedFromRoom roomId: {room.RoomId}; roomName:{room.Name}, total listener count:{LISTENER_COUNT}");
+            Console.WriteLine($"IRoomManagerDelegate17 OnSpecificationChangedFromRoom roomId: {room.RoomId}; roomName:{room.Name}, room:{room.ToJson()},total listener count:{LISTENER_COUNT}");
         }
     }
 

@@ -38,8 +38,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AgoraChat, Version=1.0.9106.21350, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\chat_sdk.1.4.0\lib\net452\AgoraChat.dll</HintPath>
+    <Reference Include="AgoraChat, Version=1.0.9180.25740, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Release\AgoraChat.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
