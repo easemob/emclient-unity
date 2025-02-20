@@ -9289,6 +9289,12 @@ namespace WinSDKTest
                     Console.WriteLine($"Owner: {room.Owner}");
                     Console.WriteLine($"IsAllMemberMuted: {room.IsAllMemberMuted}");
                     Console.WriteLine($"PermissionType: {room.PermissionType}");
+                    Console.WriteLine($"------------------");
+                    Console.WriteLine($"CreateTimeStamp: {room.CreateTimeStamp}");
+                    Console.WriteLine($"IsAllMemberMuted: {room.IsAllMemberMuted}");
+                    Console.WriteLine($"IsInAllowList: {room.IsInAllowList}");
+                    Console.WriteLine($"MemberCount: {room.MemberCount}");
+                    Console.WriteLine($"MuteUntilTimeStamp: {room.MuteUntilTimeStamp}");
                 },
                 onError: (code, desc) => {
                     Console.WriteLine($"JoinRoom failed, code:{code}, desc:{desc}");
