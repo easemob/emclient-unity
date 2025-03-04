@@ -1,6 +1,7 @@
 package com.hyphenate.wrapper.listeners;
 
 import com.hyphenate.EMConnectionListener;
+import com.hyphenate.chat.EMLoginExtensionInfo;
 import com.hyphenate.wrapper.EMWrapperHelper;
 import com.hyphenate.wrapper.util.EMSDKMethod;
 import com.hyphenate.wrapper.util.EMWrapperThreadUtil;
@@ -63,11 +64,12 @@ public class EMWrapperConnectionListener implements EMConnectionListener {
         post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onOfflineMessageSyncFinish, null));
     }
 
-    public void onLogout(int code, String info) {
+    public void onLogout(int code, EMLoginExtensionInfo info) {
         if (code == 206 || code == 220) {
             try {
                 JSONObject jo = new JSONObject();
-                jo.put("deviceName", info);
+                jo.put("deviceName", info.getDeviceInfo());
+                jo.put("ext", info.getDeviceExt());
                 post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.connectionListener, EMSDKMethod.onLoggedOtherDevice, jo.toString()));
             }catch (JSONException ignored) {
 

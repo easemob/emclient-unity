@@ -37,13 +37,15 @@
          *  当前登录账号在其它设备登录时会接收到此回调。
          *
          *  @param deviceName 另一个设备的名称。
+         *  @param info 设备 B 登录时，将设备 A 踢下线携带的扩展信息。
          *
          *  \~english
          *  Occurs when the user logs in to another device with the current account.
          *
          *  @param deviceName The name of another device.
+         *  @param info When device B logs in, it kicks device A offline along with the associated extended information.
          */
-        void OnLoggedOtherDevice(string deviceName);
+        void OnLoggedOtherDevice(string deviceName, string info);
 
         /**
          *  \~chinese
