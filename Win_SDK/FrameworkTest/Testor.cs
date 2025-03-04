@@ -2496,7 +2496,7 @@ namespace WinSDKTest
             //if (appkey.Length > 0 && appkey.Contains("#") == true)
             //    options.AppKey = appkey;
 
-            //Options options = Options.InitOptionsWithAppId("ba85504621304fb894790708d304794f");
+            //Options options = Options.InitOptionsWithAppId("YouAppId");
             Options options = Options.InitOptionsWithAppKey("easemob-demo#unitytest");
 
             options.AutoLogin = false;
