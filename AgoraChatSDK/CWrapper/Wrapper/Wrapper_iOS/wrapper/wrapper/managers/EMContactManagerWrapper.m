@@ -91,6 +91,7 @@
     
     NSString *username = param[@"userId"];
     BOOL keepConversation = [param[@"keepConversation"] boolValue];
+    keepConversation = !keepConversation;
     [EMClient.sharedClient.contactManager deleteContact:username
                                    isDeleteConversation:keepConversation
                                              completion:^(NSString *aUsername, EMError *aError)
