@@ -8,7 +8,7 @@ CURRENT_PATH=$(cd $(dirname $0);pwd)
 cd ${CURRENT_PATH}
 cd ../CWrapper/Wrapper/Wrapper_iOS
 
-sh download_ios_sdk.sh
+#sh download_ios_sdk.sh
 
 timefile="build_"$(date "+%Y%m%d%H%M%S")
 
