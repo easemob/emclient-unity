@@ -29,7 +29,7 @@
 
 #### 导入SDK 到 Unity
 
-`Assets` -> `Import Package` -> `Custom Package..`  -> `imUnitySDK.unitypackage`
+`Assets` -> `Import Package` -> `Custom Package..`  -> `select downloaded unitypackage`
 
 ## SDK讲解
 
