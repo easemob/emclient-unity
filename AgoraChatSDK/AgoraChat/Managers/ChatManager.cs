@@ -934,6 +934,7 @@ namespace AgoraChat
          * @param body      The modified message body.
          * @param callBack The result callback. See {@link #CallBack()}.
          */
+        [Obsolete]
         public void ModifyMessage(string messageId, MessageBody.TextBody body, ValueCallBack<Message> callback = null)
         {
             JSONObject jo_param = new JSONObject();
