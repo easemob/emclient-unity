@@ -1528,7 +1528,7 @@ namespace sdk_wrapper {
         thread t([=]() {
 
             EMError error;
-            EMMessagePtr msg = CLIENT->getChatManager().modifyMessage(msgId, body, error);
+            EMMessagePtr msg = CLIENT->getChatManager().modifyMessage(msgId, body, nullptr, error);
 
             if (EMError::EM_NO_ERROR == error.mErrorCode) {
                 string json = Message::ToJson(msg);
