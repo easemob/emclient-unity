@@ -137,6 +137,8 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
             ret = fetchHistoryMessagesBy(jsonObject, callback);
         } else if (EMSDKMethod.modifyMessage.equals(method)) {
             ret = modifyMessage(jsonObject, callback);
+        } else if (EMSDKMethod.modifyMessageWithExt.equals(method)) {
+            ret = modifyMessageWithExt(jsonObject, callback);
         } else if (EMSDKMethod.downloadCombineMessages.equals(method)) {
             ret = downloadCombineMessages(jsonObject, callback);
         } else if (EMSDKMethod.markConversations.equals(method)) {
@@ -916,6 +918,65 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
         JSONObject bodyJson = params.optJSONObject("body");
         EMMessageBody body = EMMessageBodyHelper.textBodyFromJson(bodyJson.optJSONObject("body"));
         EMClient.getInstance().chatManager().asyncModifyMessage(msgId, body, new EMCommonValueCallback<EMMessage>(callback) {
+            @Override
+            public void onSuccess(EMMessage object) {
+                JSONObject jsonObject = null;
+                try {
+                    jsonObject = EMMessageHelper.toJson(object);
+                    updateObject(jsonObject);
+                }catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        return null;
+    }
+
+    private String modifyMessageWithExt(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        String msgId = params.optString("msgId");
+
+        EMMessageBody body = null;
+        if (params.has("body")) {
+            JSONObject bodyJson = params.optJSONObject("body");
+            body = EMMessageBodyHelper.textBodyFromJson(bodyJson.optJSONObject("body"));
+        }
+
+        Map<String, Object> ext = null;
+        if (params.has("attributes")) {
+            JSONObject attributesJson = params.optJSONObject("attributes");
+            ext = new java.util.HashMap<>();
+            java.util.Iterator<String> keys = attributesJson.keys();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                JSONObject valueObj = attributesJson.optJSONObject(key);
+                if (valueObj != null) {
+                    String type = valueObj.optString("type");
+                    String value = valueObj.optString("value");
+
+                    try {
+                        // 根据类型转换value
+                        if ("b".equals(type)) {
+                            ext.put(key, Boolean.parseBoolean(value));
+                        } else if ("i".equals(type)) {
+                            ext.put(key, Integer.parseInt(value));
+                        } else if ("l".equals(type)) {
+                            ext.put(key, Long.parseLong(value));
+                        } else if ("f".equals(type)) {
+                            ext.put(key, Float.parseFloat(value));
+                        } else if ("d".equals(type)) {
+                            ext.put(key, Double.parseDouble(value));
+                        } else if ("str".equals(type) || "jstr".equals(type)) {
+                            ext.put(key, value);
+                        }
+                    } catch (NumberFormatException e) {
+                        // 数值解析失败，跳过该字段
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        EMClient.getInstance().chatManager().asyncModifyMessage(msgId, body, ext, new EMCommonValueCallback<EMMessage>(callback) {
             @Override
             public void onSuccess(EMMessage object) {
                 JSONObject jsonObject = null;

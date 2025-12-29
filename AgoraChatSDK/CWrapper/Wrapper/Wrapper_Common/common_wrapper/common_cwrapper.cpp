@@ -109,6 +109,7 @@ void InitManagerMap()
     func_map_chat_manager["getMessagesCount"] = ChatManager_GetMessagesCount;
     func_map_chat_manager["removeEarlierHistoryMessages"] = ChatManager_RemoveEarlierHistoryMessages;
     func_map_chat_manager["modifyMessage"] = ChatManager_ModifyMessage;
+    func_map_chat_manager["modifyMessageWithExt"] = ChatManager_ModifyMessageWithExt;
     func_map_chat_manager["downloadCombineMessages"] = ChatManager_DownloadCombineMessages;
     func_map_chat_manager["markConversations"] = ChatManager_MarkConversations;
     func_map_chat_manager["deleteAllMessagesAndConversations"] = ChatManager_DeleteAllMessagesAndConversations;

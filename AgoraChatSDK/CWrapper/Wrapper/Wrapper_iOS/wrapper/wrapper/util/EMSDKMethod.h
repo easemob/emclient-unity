@@ -92,6 +92,7 @@ static NSString *const getConversationsFromServerWithCursor = @"getConversations
 static NSString *const getConversationsFromServerWithCursorAndMark = @"getConversationsFromServerWithCursorAndMark";
 static NSString *const pinConversation = @"pinConversation";
 static NSString *const modifyMessage = @"modifyMessage";
+static NSString *const modifyMessageWithExt = @"modifyMessageWithExt";
 static NSString *const deleteConversation = @"deleteConversation";
 static NSString *const fetchHistoryMessages = @"fetchHistoryMessages";
 static NSString *const fetchHistoryMessagesBy = @"fetchHistoryMessagesBy";

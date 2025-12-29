@@ -949,6 +949,55 @@ namespace AgoraChat
         }
 
         /**
+         * \~chinese
+         * 修改本地以及服务端消息。
+         *
+         * - 文本/自定义消息：支持修改消息内容（body）和扩展 `ext`。
+         * - 文件/视频/音频/图片/位置/合并转发消息：只支持修改消息扩展 `ext`。
+         * - 命令消息：不支持修改。
+         *
+         * 该方法会同时更新服务器和本地的消息，消息 ID 不会更新。
+         *
+         * @param messageId       要修改的消息 ID。
+         * @param body            修改后的消息 body。只有文本消息和自定义消息支持，传 null 表示不修改。
+         * @param attributes      修改后的消息扩展信息，将会覆盖之前的扩展信息，传 null 表示不修改。
+         * @param callback        该方法完成调用的回调。如果该方法调用失败，会包含调用失败的原因。
+         * 如果body和attributes都为null，会返回参数错误。
+         *
+         * \~english
+         * Modifies a message both in the local storage and server.
+         *
+         * - Text and custom message: Both the message body `body` and extension information `ext` can be modified.
+         * - Image/voice/video/file/combined message: Only the message extension field `ext` can be modified.
+         * - Command message: This type of message cannot be modified.
+         *
+         * Note that the message ID cannot be changed.
+         *
+         * @param messageId       The ID of the message for modification.
+         * @param body            The modified message body. You can only modify the body of a text message and a custom message. The value `null` indicates that the message body remains unchanged.
+         * @param attributes      The modified message extension information. The new extension information will overwrite the previous. The value `null` indicates that the message extension information remains unchanged.
+         * @param callback        The completion block, which contains the error message if the method fails.
+         * If both body and attributes are null, the parameter error will be returned.
+         */
+        public void ModifyMessage(string messageId, IMessageBody body = null, Dictionary<string, AttributeValue> attributes = null, ValueCallBack<Message> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("msgId", messageId);
+            if (body != null)
+            {
+                jo_param.AddWithoutNull("body", body.ToJsonObject());
+            }
+            jo_param.AddWithoutNull("attributes", JsonObject.JsonObjectFromAttributes(attributes));
+
+            Process process = (_, jsonNode) =>
+            {
+                return ModelHelper.CreateWithJsonObject<Message>(jsonNode);
+            };
+
+            NativeCall<Message>(SDKMethod.modifyMessageWithExt, jo_param, callback, process);
+        }
+
+        /**
 		 * \~chinese
 		 * 将指定 Unix 时间戳之前收发的消息从本地内存和数据库中移除。
 		 *

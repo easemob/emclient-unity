@@ -107,6 +107,7 @@ public class EMSDKMethod {
 
     public static final String removeMessagesFromServerWithTs = "removeMessagesFromServerWithTs";
     public static final String modifyMessage = "modifyMessage";
+    public static final String modifyMessageWithExt = "modifyMessageWithExt";
     public static final String downloadCombineMessages = "downloadCombineMessages";
     public static final String markConversations = "markConversations";
     public static final String deleteAllMessagesAndConversations = "deleteAllMessagesAndConversations";

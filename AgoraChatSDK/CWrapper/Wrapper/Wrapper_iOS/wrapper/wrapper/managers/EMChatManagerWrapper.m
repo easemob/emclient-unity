@@ -118,6 +118,8 @@
         ret = [self pinConversation:params callback:callback];
     }else if ([method isEqualToString:modifyMessage]) {
         ret = [self modifyMessage:params callback:callback];
+    }else if ([method isEqualToString:modifyMessageWithExt]) {
+        ret = [self modifyMessageWithExt:params callback:callback];
     }else if ([method isEqualToString:downloadCombineMessages]) {
         ret = [self downloadCombineMessages:params callback:callback];
     }else if ([method isEqualToString:getConversationsFromServerWithCursorAndMark]) {
@@ -838,6 +840,70 @@
         
     }];
     
+    return nil;
+}
+
+- (NSString *)modifyMessageWithExt:(NSDictionary *)params
+                          callback:(EMWrapperCallback *)callback {
+    __weak EMChatManagerWrapper * weakSelf = self;
+    NSString *msgId = params[@"msgId"];
+
+    EMMessageBody *body = nil;
+    if (params[@"body"] != nil && params[@"body"] != [NSNull null]) {
+        NSDictionary *bodyDict = params[@"body"];
+        body = [EMTextMessageBody fromJson:bodyDict[@"body"]];
+    }
+
+    NSDictionary *ext = nil;
+    if (params[@"attributes"] != nil && params[@"attributes"] != [NSNull null]) {
+        NSDictionary *attributesDict = params[@"attributes"];
+        NSMutableDictionary *extDict = [NSMutableDictionary dictionary];
+
+        for (NSString *key in attributesDict.allKeys) {
+            id valueObj = attributesDict[key];
+            if (![valueObj isKindOfClass:[NSDictionary class]]) {
+                continue;
+            }
+
+            NSDictionary *valueDict = (NSDictionary *)valueObj;
+            NSString *type = valueDict[@"type"];
+            NSString *value = valueDict[@"value"];
+
+            if (![type isKindOfClass:[NSString class]] || ![value isKindOfClass:[NSString class]]) {
+                continue;
+            }
+
+            if ([type isEqualToString:@"b"]) {
+                extDict[key] = @([value boolValue]);
+            } else if ([type isEqualToString:@"i"]) {
+                extDict[key] = @([value intValue]);
+            } else if ([type isEqualToString:@"l"]) {
+                extDict[key] = @([value longLongValue]);
+            } else if ([type isEqualToString:@"f"]) {
+                extDict[key] = @([value floatValue]);
+            } else if ([type isEqualToString:@"d"]) {
+                extDict[key] = @([value doubleValue]);
+            } else if ([type isEqualToString:@"str"] || [type isEqualToString:@"jstr"]) {
+                extDict[key] = value;
+            }
+        }
+
+        ext = extDict;
+    }
+
+    [EMClient.sharedClient.chatManager modifyMessage:msgId
+                                                body:body
+                                                 ext:ext
+                                          completion:^(EMError * _Nullable error, EMChatMessage * _Nullable message)
+     {
+        if (error) {
+            [weakSelf wrapperCallback:callback error:error object:nil];
+        }else {
+            [weakSelf wrapperCallback:callback error:nil object:message.toJson];
+        }
+
+    }];
+
     return nil;
 }
 
