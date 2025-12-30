@@ -146,6 +146,7 @@ void InitManagerMap()
 	func_map_group_manager["declineInvitationFromGroup"] = GroupManager_DeclineInvitationFromGroup;
 	func_map_group_manager["declineJoinApplication"] = GroupManager_DeclineJoinGroupApplication;
 	func_map_group_manager["destroyGroup"] = GroupManager_DestoryGroup;
+	func_map_group_manager["updateGroupAvatar"] = GroupManager_UpdateGroupAvatar;
 	func_map_group_manager["downloadGroupSharedFile"] = GroupManager_DownloadGroupSharedFile;
 	func_map_group_manager["getGroupAnnouncementFromServer"] = GroupManager_FetchGroupAnnouncement;
 	func_map_group_manager["getGroupBlockListFromServer"] = GroupManager_FetchGroupBans;

@@ -221,6 +221,7 @@ public class EMSDKMethod {
     public static final String updateDescription = "updateDescription";
     public static final String leaveGroup = "leaveGroup";
     public static final String destroyGroup = "destroyGroup";
+    public static final String updateGroupAvatar = "updateGroupAvatar";
     public static final String blockGroup = "blockGroup";
     public static final String unblockGroup = "unblockGroup";
     public static final String updateGroupOwner = "updateGroupOwner";

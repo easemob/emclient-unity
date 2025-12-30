@@ -81,6 +81,8 @@
         ret = [self leaveGroup:params callback:callback];
     } else if ([destroyGroup isEqualToString:method]) {
         ret = [self destroyGroup:params callback:callback];
+    } else if ([updateGroupAvatar isEqualToString:method]) {
+        ret = [self updateGroupAvatar:params callback:callback];
     } else if ([blockGroup isEqualToString:method]) {
         ret = [self blockGroup:params callback:callback];
     } else if ([unblockGroup isEqualToString:method]) {
@@ -433,6 +435,17 @@
     __weak EMGroupManagerWrapper *weakSelf = self;
     [EMClient.sharedClient.groupManager destroyGroup:params[@"groupId"]
                                     finishCompletion:^(EMError *aError)
+     {
+        [weakSelf wrapperCallback:callback error:aError object:nil];
+    }];
+    return nil;
+}
+
+- (NSString *)updateGroupAvatar:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
+    __weak EMGroupManagerWrapper *weakSelf = self;
+    [EMClient.sharedClient.groupManager updateGroupAvatar:params[@"avatar"]
+                                                  groupId:params[@"groupId"]
+                                               completion:^(EMGroup *aGroup, EMError *aError)
      {
         [weakSelf wrapperCallback:callback error:aError object:nil];
     }];

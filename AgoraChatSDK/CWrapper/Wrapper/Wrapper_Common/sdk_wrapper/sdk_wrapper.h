@@ -137,6 +137,7 @@ SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_CreateGroupWithAvatar(
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_DeclineInvitationFromGroup(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_DeclineJoinGroupApplication(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_DestoryGroup(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
+SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_UpdateGroupAvatar(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_DownloadGroupSharedFile(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_FetchGroupAnnouncement(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);
 SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_FetchGroupBans(const char* jstr, const char* cbid = nullptr, char* buf = nullptr);

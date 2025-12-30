@@ -639,6 +639,37 @@ namespace AgoraChat
         }
 
         /**
+         * \~chinese
+         * 更新群组头像。
+         *
+         * 仅群主和群管理员可调用此方法。
+         *
+         * 异步方法。
+         *
+         * @param groupId   群组 ID。
+         * @param avatar    群组头像的 URL。
+         * @param callback  操作结果回调，详见 {@link CallBack}。
+         *
+         * \~english
+         * Updates the group avatar.
+         *
+         * Only the group owner or admin can call this method.
+         *
+         * This is an asynchronous method.
+         *
+         * @param groupId   The group ID.
+         * @param avatar    The URL of the group avatar.
+         * @param callback  The operation callback. See {@link CallBack}.
+         */
+        public void UpdateGroupAvatar(string groupId, string avatar, CallBack callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("avatar", avatar);
+            NativeCall(SDKMethod.updateGroupAvatar, jo_param, callback);
+        }
+
+        /**
 		 * \~chinese
 		 * 下载群组中指定的共享文件。
 		 *

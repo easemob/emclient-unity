@@ -84,6 +84,8 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
             ret = leaveGroup(jsonObject, callback);
         } else if (EMSDKMethod.destroyGroup.equals(method)) {
             ret = destroyGroup(jsonObject, callback);
+        } else if (EMSDKMethod.updateGroupAvatar.equals(method)) {
+            ret = updateGroupAvatar(jsonObject, callback);
         } else if (EMSDKMethod.blockGroup.equals(method)) {
             ret = blockGroup(jsonObject, callback);
         } else if (EMSDKMethod.unblockGroup.equals(method)) {
@@ -675,6 +677,15 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
     private String destroyGroup(JSONObject params, EMWrapperCallback callback) throws JSONException {
         String groupId = params.getString("groupId");
         EMClient.getInstance().groupManager().asyncDestroyGroup(groupId,
+                new EMCommonCallback(callback));
+
+        return null;
+    }
+
+    private String updateGroupAvatar(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        String groupId = params.getString("groupId");
+        String avatar = params.getString("avatar");
+        EMClient.getInstance().groupManager().asyncChangeGroupAvatar(groupId, avatar,
                 new EMCommonCallback(callback));
 
         return null;

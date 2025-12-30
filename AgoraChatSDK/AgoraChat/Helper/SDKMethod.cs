@@ -221,6 +221,7 @@ namespace AgoraChat
         internal const string updateDescription = "updateDescription";
         internal const string leaveGroup = "leaveGroup";
         internal const string destroyGroup = "destroyGroup";
+        internal const string updateGroupAvatar = "updateGroupAvatar";
         internal const string blockGroup = "blockGroup";
         internal const string unblockGroup = "unblockGroup";
         internal const string updateGroupOwner = "updateGroupOwner";
