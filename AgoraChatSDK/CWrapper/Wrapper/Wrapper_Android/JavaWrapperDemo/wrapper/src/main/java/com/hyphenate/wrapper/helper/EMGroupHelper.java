@@ -28,6 +28,7 @@ public class EMGroupHelper {
         data.put("isMemberOnly", group.isMemberOnly());
         data.put("isMemberAllowToInvite", group.isMemberAllowToInvite());
         data.put("ext", group.getGroupId());
+        data.put("avatar", group.getGroupAvatar());
         return data;
     }
 

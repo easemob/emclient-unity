@@ -34,6 +34,8 @@
         ret[@"isMemberAllowToInvite"] = @([self isMemberAllowToInvite]);
         ret[@"ext"] = self.settings.ext;
     }
+
+    ret[@"avatar"] = self.groupAvatar;
     
     return ret;
 }

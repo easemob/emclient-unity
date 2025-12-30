@@ -2452,6 +2452,9 @@ namespace sdk_wrapper
         writer.Key("isDisabled");
         writer.Bool(group->isDisabled());
 
+        writer.Key("avatar");
+        writer.String(group->groupAvatar().c_str());
+
         writer.EndObject();
     }
 
