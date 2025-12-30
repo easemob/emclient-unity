@@ -43,6 +43,8 @@
         ret = [self getPublicGroupsFromServer:params callback:callback];
     } else if ([createGroup isEqualToString:method]) {
         ret = [self createGroup:params callback:callback];
+    } else if ([createGroupWithAvatar isEqualToString:method]) {
+        ret = [self createGroupWithAvatar:params callback:callback];
     } else if ([getGroupSpecificationFromServer isEqualToString:method]) {
         ret = [self getGroupSpecificationFromServer:params callback:callback];
     } else if ([getGroupMemberListFromServer isEqualToString:method]) {
@@ -197,6 +199,21 @@
 - (NSString *)createGroup:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
     __weak EMGroupManagerWrapper *weakSelf = self;
     [EMClient.sharedClient.groupManager createGroupWithSubject:params[@"name"]
+                                                   description:params[@"desc"]
+                                                      invitees:params[@"userIds"]
+                                                       message:params[@"msg"]
+                                                       setting:[EMGroupOptions formJson:params[@"options"]]
+                                                    completion:^(EMGroup *aGroup, EMError *aError)
+     {
+        [weakSelf wrapperCallback:callback error:aError object:[aGroup toJson]];
+    }];
+    return nil;
+}
+
+- (NSString *)createGroupWithAvatar:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
+    __weak EMGroupManagerWrapper *weakSelf = self;
+    [EMClient.sharedClient.groupManager createGroupWithSubject:params[@"name"]
+                                                        avatar:params[@"avatar"]
                                                    description:params[@"desc"]
                                                       invitees:params[@"userIds"]
                                                        message:params[@"msg"]

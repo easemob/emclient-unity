@@ -46,6 +46,8 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
             ret = getPublicGroupsFromServer(jsonObject, callback);
         } else if (EMSDKMethod.createGroup.equals(method)) {
             ret = createGroup(jsonObject, callback);
+        } else if (EMSDKMethod.createGroupWithAvatar.equals(method)) {
+            ret = createGroupWithAvatar(jsonObject, callback);
         } else if (EMSDKMethod.getGroupSpecificationFromServer.equals(method)) {
             ret = getGroupSpecificationFromServer(jsonObject, callback);
         } else if (EMSDKMethod.getGroupMemberListFromServer.equals(method)) {
@@ -286,6 +288,64 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
         };
 
         EMClient.getInstance().groupManager().asyncCreateGroup(groupName, desc, members, inviteReason, options,
+                callBack);
+        return null;
+    }
+
+    private String createGroupWithAvatar(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        String groupName = null;
+
+        if (params.has("name")){
+            groupName = params.getString("name");
+        }
+
+        String avatar = null;
+        if (params.has("avatar")){
+            avatar = params.getString("avatar");
+        }
+
+        String desc = null;
+        if(params.has("desc")){
+            desc = params.getString("desc");
+        }
+
+        String[] members = null;
+        if(params.has("userIds")){
+            JSONArray inviteMembers = params.getJSONArray("userIds");
+            members = new String[inviteMembers.length()];
+            for (int i = 0; i < inviteMembers.length(); i++) {
+                members[i] = inviteMembers.getString(i);
+            }
+        }
+        if (members == null) {
+            members = new String[0];
+        }
+        String inviteReason = null;
+
+        if (params.has("msg")){
+            inviteReason = params.getString("msg");
+        }
+
+        EMGroupOptions options = null;
+        if (params.has("options")) {
+            options = EMGroupOptionsHelper.fromJson(params.getJSONObject("options"));
+        }
+
+        EMCommonValueCallback<EMGroup> callBack = new EMCommonValueCallback<EMGroup>(callback) {
+            @Override
+            public void onSuccess(EMGroup object) {
+                JSONObject jo = null;
+                try {
+                    jo = EMGroupHelper.toJson(object);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    updateObject(jo);
+                }
+            }
+        };
+
+        EMClient.getInstance().groupManager().asyncCreateGroup(groupName, avatar, desc, members, inviteReason, options,
                 callBack);
         return null;
     }

@@ -202,6 +202,7 @@ public class EMSDKMethod {
     public static final String getJoinedGroupsFromServerSimple = "getJoinedGroupsFromServerSimple";
     public static final String getPublicGroupsFromServer = "getPublicGroupsFromServer";
     public static final String createGroup = "createGroup";
+    public static final String createGroupWithAvatar = "createGroupWithAvatar";
     public static final String getGroupSpecificationFromServer = "getGroupSpecificationFromServer";
     public static final String getGroupMemberListFromServer = "getGroupMemberListFromServer";
     public static final String getGroupBlockListFromServer = "getGroupBlockListFromServer";
