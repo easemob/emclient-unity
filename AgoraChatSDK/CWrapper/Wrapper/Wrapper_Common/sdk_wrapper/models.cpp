@@ -861,6 +861,9 @@ namespace sdk_wrapper
                         writer.Key("thumbnailWidth");
                         writer.Double(ptr->thumbnailSize().mWidth);
 
+                        writer.Key("isGif");
+                        writer.Bool(ptr->isGif());
+
                         //writer.Key("ThumbnaiDownStatus");
                         //writer.Int((int)ptr->thumbnailDownloadStatus());
 
@@ -1194,6 +1197,11 @@ namespace sdk_wrapper
             }
 
             ptr->setThumbnailSize(thumbnail_size);
+
+            if (body.HasMember("isGif") && body["isGif"].IsBool()) {
+                bool isGif = body["isGif"].GetBool();
+                ptr->setGif(isGif);
+            }
 
             //if (body.HasMember("sendOriginalImage") && body["sendOriginalImage"].IsBool()) {
             //    bool b = body["sendOriginalImage"].GetBool();            
