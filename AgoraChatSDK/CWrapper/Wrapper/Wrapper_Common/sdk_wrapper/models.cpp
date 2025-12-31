@@ -2795,6 +2795,25 @@ namespace sdk_wrapper
         return data;
     }
 
+    string CursorResult::ToJson(string cursor, const EMMucMemberInfoList& memberInfoList)
+    {
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+
+        writer.StartObject();
+        {
+            writer.Key("cursor");
+            writer.String(cursor.c_str());
+
+            writer.Key("list");
+            Group::ToJsonObject(writer, memberInfoList);
+        }
+        writer.EndObject();
+
+        string data = s.GetString();
+        return data;
+    }
+
     string CursorResult::ToJsonWithGroupInfo(string cursor, const EMCursorResult& result)
     {
         StringBuffer s;

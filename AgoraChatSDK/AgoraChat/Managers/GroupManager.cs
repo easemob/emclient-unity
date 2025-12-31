@@ -863,6 +863,50 @@ namespace AgoraChat
 
         /**
 		 * \~chinese
+		 * 从服务器获取群成员详细信息列表。
+		 *
+		 * 异步方法。
+		 *
+		 * @param groupId 	群组 ID。
+		 * @param cursor	从该游标位置开始获取数据，首次获取数据时传 `null` 或空字符串会从最新一条数据开始获取。
+		 * @param pageSize 	每页期望返回的群成员数。取值范围为 [1, 50]。
+		 * @param callback	操作结果回调。成功时返回包含群成员详细信息列表和用于下次获取数据的 cursor 的对象。如果是最后一页，cursor 返回结果为空字符串。失败时返回错误信息，详见 {@link ValueCallBack}。
+		 *
+		 * \~english
+		 * Gets a group's member info list from the server.
+		 *
+		 * This is an asynchronous method.
+		 *
+		 * @param groupId 	The group ID.
+		 * @param cursor	The cursor position from which to start to get data next time. Sets the parameter as `null` or empty string for the first time.
+		 * @param pageSize 	The number of group members per page. The value range is [1, 50].
+		 * @param callback	The completion callback. If this call succeeds, the SDK returns the group member info list and the cursor for getting data next time. For the last page, the return value of cursor is an empty string. If this call fails, an error will be returned. See {@link ValueCallBack}.
+		 *
+		 */
+        public void FetchGroupMemberInfoFromServer(string groupId, string cursor, int pageSize, ValueCallBack<CursorResult<GroupMemberInfo>> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("groupId", groupId);
+            jo_param.AddWithoutNull("cursor", cursor ?? "");
+            jo_param.AddWithoutNull("pageSize", pageSize);
+
+            Process process = (_, jsonNode) =>
+            {
+                CursorResult<GroupMemberInfo> cursor_msg = new CursorResult<GroupMemberInfo>(_, (jn) =>
+                {
+                    return ModelHelper.CreateWithJsonObject<GroupMemberInfo>(jn);
+                });
+
+                cursor_msg.FromJsonObject(jsonNode.AsObject);
+                return cursor_msg;
+
+            };
+
+            NativeCall<CursorResult<GroupMemberInfo>>(SDKMethod.fetchGroupMemberInfoFromServer, jo_param, callback, process);
+        }
+
+        /**
+		 * \~chinese
 		 * 获取群组的禁言列表。
 		 * 
 		 * 仅群主和管理员可调用此方法。

@@ -206,6 +206,7 @@ namespace AgoraChat
         internal const string createGroupWithAvatar = "createGroupWithAvatar";
         internal const string getGroupSpecificationFromServer = "getGroupSpecificationFromServer";
         internal const string getGroupMemberListFromServer = "getGroupMemberListFromServer";
+        internal const string fetchGroupMemberInfoFromServer = "fetchGroupMemberInfoFromServer";
         internal const string getGroupBlockListFromServer = "getGroupBlockListFromServer";
         internal const string getGroupMuteListFromServer = "getGroupMuteListFromServer";
         internal const string getGroupAllowListFromServer = "getGroupWhiteListFromServer";

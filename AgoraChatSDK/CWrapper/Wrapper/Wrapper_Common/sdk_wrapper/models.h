@@ -246,6 +246,7 @@ namespace sdk_wrapper {
 		static string ToJson(string cursor, const EMMessageReactionPtr reaction);
 		static string ToJsonWithGroupInfo(string cursor, const EMCursorResult& result);
 		static string ToJson(string cursor, const EMCursorResultRaw<EMThreadEventPtr> cusorResult);
+		static string ToJson(string cursor, const EMMucMemberInfoList& memberInfoList);
 
         template<typename ResultType, typename ConvertType>
         static string ToJson(string cursor, const vector<ResultType>& cusorResult)

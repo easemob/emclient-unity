@@ -811,6 +811,38 @@ namespace sdk_wrapper {
         return nullptr;
     }
 
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_FetchGroupMemberInfoFromServer(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+        string group_id = GetJsonValue_String(d, "groupId", "");
+        string cursor = GetJsonValue_String(d, "cursor", "");
+        int page_size = GetJsonValue_Int(d, "pageSize", 20);
+
+        thread t([=]() {
+            EMError error;
+            EMCursorResultRaw<EMMucMemberInfo> memberInfoCursorResult = CLIENT->getGroupManager().fetchGroupMemberInfoList(group_id, cursor, page_size, error);
+
+            if (EMError::EM_NO_ERROR == error.mErrorCode) {
+
+                string next_cursor = memberInfoCursorResult.nextPageCursor();
+                string json = CursorResult::ToJson(next_cursor, memberInfoCursorResult.result());
+                string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+            else {
+                string call_back_jstr = MyJson::ToJsonWithError(local_cbid.c_str(), error.mErrorCode, error.mDescription.c_str());
+                CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+            }
+        });
+        t.detach();
+
+        return nullptr;
+    }
+
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL GroupManager_FetchGroupMutes(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         if (!CheckClientInitOrNot(cbid)) return nullptr;

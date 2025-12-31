@@ -151,6 +151,7 @@ void InitManagerMap()
 	func_map_group_manager["getGroupAnnouncementFromServer"] = GroupManager_FetchGroupAnnouncement;
 	func_map_group_manager["getGroupBlockListFromServer"] = GroupManager_FetchGroupBans;
 	func_map_group_manager["getGroupMemberListFromServer"] = GroupManager_FetchGroupMembers;
+	func_map_group_manager["fetchGroupMemberInfoFromServer"] = GroupManager_FetchGroupMemberInfoFromServer;
 	func_map_group_manager["getGroupMuteListFromServer"] = GroupManager_FetchGroupMutes;
 	func_map_group_manager["getGroupFileListFromServer"] = GroupManager_FetchGroupSharedFiles;
 	func_map_group_manager["getGroupSpecificationFromServer"] = GroupManager_FetchGroupSpecification;

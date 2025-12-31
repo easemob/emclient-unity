@@ -52,6 +52,8 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
             ret = getGroupSpecificationFromServer(jsonObject, callback);
         } else if (EMSDKMethod.getGroupMemberListFromServer.equals(method)) {
             ret = getGroupMemberListFromServer(jsonObject, callback);
+        } else if (EMSDKMethod.fetchGroupMemberInfoFromServer.equals(method)) {
+            ret = fetchGroupMemberInfoFromServer(jsonObject, callback);
         } else if (EMSDKMethod.getGroupMuteListFromServer.equals(method)) {
             ret = getGroupMuteListFromServer(jsonObject, callback);
         } else if (EMSDKMethod.getGroupWhiteListFromServer.equals(method)) {
@@ -403,6 +405,34 @@ public class EMGroupManagerWrapper extends EMBaseWrapper{
         };
 
         EMClient.getInstance().groupManager().asyncFetchGroupMembers(groupId, cursor, pageSize, callBack);
+        return null;
+    }
+
+    private String fetchGroupMemberInfoFromServer(JSONObject params, EMWrapperCallback callback)
+            throws JSONException {
+        String groupId = params.getString("groupId");
+        String cursor = null;
+        if(params.has("cursor")){
+            cursor = params.getString("cursor");
+        }
+        int pageSize = params.getInt("pageSize");
+
+        EMCommonValueCallback<EMCursorResult<EMGroupMemberInfo>> callBack = new EMCommonValueCallback<EMCursorResult<EMGroupMemberInfo>>(
+                callback) {
+            @Override
+            public void onSuccess(EMCursorResult<EMGroupMemberInfo> object) {
+                JSONObject jo = null;
+                try {
+                    jo = EMCursorResultHelper.toJson(object);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    updateObject(jo);
+                }
+            }
+        };
+
+        EMClient.getInstance().groupManager().asyncFetchGroupMembersInfo(groupId, cursor, pageSize, callBack);
         return null;
     }
 

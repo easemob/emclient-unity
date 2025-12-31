@@ -49,6 +49,8 @@
         ret = [self getGroupSpecificationFromServer:params callback:callback];
     } else if ([getGroupMemberListFromServer isEqualToString:method]) {
         ret = [self getGroupMemberListFromServer:params callback:callback];
+    } else if ([fetchGroupMemberInfoFromServer isEqualToString:method]) {
+        ret = [self fetchGroupMemberInfoFromServer:params callback:callback];
     } else if ([getGroupMuteListFromServer isEqualToString:method]) {
         ret = [self getGroupMuteListFromServer:params callback:callback];
     } else if ([getGroupWhiteListFromServer isEqualToString:method]) {
@@ -248,6 +250,18 @@
                                                                 completion:^(EMCursorResult *aResult, EMError *aError)
      {
         [weakSelf wrapperCallback:callback error:aError object:[aResult toJson]];
+    }];
+    return nil;
+}
+
+- (NSString *)fetchGroupMemberInfoFromServer:(NSDictionary *)params callback:(EMWrapperCallback *)callback {
+    __weak EMGroupManagerWrapper *weakSelf = self;
+    [EMClient.sharedClient.groupManager fetchGroupMemberInfoListFromServerWithGroupId:params[@"groupId"]
+                                                                               cursor:params[@"cursor"]
+                                                                                limit:[params[@"pageSize"] intValue]
+                                                                           completion:^(EMCursorResult<EMGroupMemberInfo *> * _Nullable cursorResult, EMError * _Nullable aError)
+     {
+        [weakSelf wrapperCallback:callback error:aError object:[cursorResult toJson]];
     }];
     return nil;
 }
