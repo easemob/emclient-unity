@@ -209,6 +209,8 @@ namespace sdk_wrapper {
 		static void ToJsonObject(Writer<StringBuffer>& writer, const EMMucMuteList& vec);
 		static void ToJsonObject(Writer<StringBuffer>& writer, const EMGroupList& list);
         static void ToJsonObject(Writer<StringBuffer>& writer, const unordered_map<string, unordered_map<string, string>>& map);
+		static void ToJsonObject(Writer<StringBuffer>& writer, EMMucMemberInfoPtr mucMemberInfo);
+		static void ToJsonObject(Writer<StringBuffer>& writer, const EMMucMemberInfoList& list);
 
 		static string ToJson(const EMMucSettingPtr setting);
 		static EMMucSettingPtr FromJsonToMucSetting(string json);

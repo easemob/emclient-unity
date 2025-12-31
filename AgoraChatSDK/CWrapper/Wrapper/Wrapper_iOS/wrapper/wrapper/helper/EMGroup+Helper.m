@@ -202,3 +202,15 @@
 }
 
 @end
+
+
+@implementation EMGroupMemberInfo (Helper)
+- (NSDictionary *)toJson {
+    NSMutableDictionary *data = [NSMutableDictionary dictionary];
+    data[@"memberId"] = self.userId;
+    data[@"joinedTimestamp"] = @(self.joinedTimestamp);
+    data[@"role"] = @([EMGroup premissionTypeToInt:self.role]);
+    return data;
+}
+
+@end

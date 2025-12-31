@@ -2467,6 +2467,42 @@ namespace sdk_wrapper
         writer.EndArray();
     }
 
+    void Group::ToJsonObject(Writer<StringBuffer>& writer, EMMucMemberInfoPtr mucMemberInfo)
+    {
+        if (nullptr == mucMemberInfo) return;
+
+        writer.StartObject();
+
+        writer.Key("memberId");
+        writer.String(mucMemberInfo->userId.c_str());
+
+        writer.Key("joinedTimestamp");
+        writer.Uint64(mucMemberInfo->joinTimestamp);
+
+        writer.Key("role");
+        int role = -1;
+        switch (mucMemberInfo->role)
+        {
+            case EMMucRole::Member: role = 0; break;
+            case EMMucRole::Admin:  role = 1; break;
+            case EMMucRole::Owner:  role = 2; break;
+            default: role = -1; break;
+        }
+        writer.Int(role);
+
+        writer.EndObject();
+    }
+
+    void Group::ToJsonObject(Writer<StringBuffer>& writer, const EMMucMemberInfoList& list)
+    {
+        writer.StartArray();
+        for (int i = 0; i < list.size(); i++) {
+            EMMucMemberInfoPtr ptr = std::make_shared<EMMucMemberInfo>(list[i]);
+            ToJsonObject(writer, ptr);
+        }
+        writer.EndArray();
+    }
+
     void Group::ToJsonObject(Writer<StringBuffer>& writer, const unordered_map<string, unordered_map<string, string>>& map)
     {
         writer.StartObject();
