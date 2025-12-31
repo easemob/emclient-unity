@@ -75,6 +75,9 @@ public class EMConversationWrapper extends EMBaseWrapper {
         else if (EMSDKMethod.loadMsgWithScope.equals(method)) {
             ret = loadMsgWithScope(jsonObject, callback);
         }
+        else if (EMSDKMethod.loadMsgWithScopeAndFromIds.equals(method)) {
+            ret = loadMsgWithScopeAndFromIds(jsonObject, callback);
+        }
         else if(EMSDKMethod.messageCount.equals(method)) {
             ret = messageCount(jsonObject, callback);
         }
@@ -317,6 +320,42 @@ public class EMConversationWrapper extends EMBaseWrapper {
             jsonArray.put(EMMessageHelper.toJson(msg));
         }
         onSuccess(jsonArray, callback);
+        return null;
+    }
+
+    private String loadMsgWithScopeAndFromIds(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        EMConversation conversation = conversationWithParam(params);
+        String keywords = params.getString("keywords");
+
+        List<String> senders = null;
+        if (params.has("fromIds")) {
+            JSONArray fromIdsArray = params.getJSONArray("fromIds");
+            senders = new java.util.ArrayList<>();
+            for (int i = 0; i < fromIdsArray.length(); i++) {
+                senders.add(fromIdsArray.getString(i));
+            }
+        }
+
+        int count = params.getInt("count");
+        long timestamp = params.getLong("timestamp");
+        EMConversation.EMSearchDirection direction = params.getInt("direction") == 0 ? EMConversation.EMSearchDirection.UP : EMConversation.EMSearchDirection.DOWN;
+        EMConversation.EMMessageSearchScope scope = EMMode.searchScopeFromInt(params.getInt("scope"));
+
+        conversation.asyncSearchMsgFromDB(keywords, timestamp, count, senders, direction, scope, new EMValueCallBack<List<EMMessage>>() {
+            @Override
+            public void onSuccess(List<EMMessage> value) {
+                JSONArray jsonArray = new JSONArray();
+                for(EMMessage msg: value) {
+                    jsonArray.put(EMMessageHelper.toJson(msg));
+                }
+                EMConversationWrapper.this.onSuccess(jsonArray, callback);
+            }
+
+            @Override
+            public void onError(int error, String errorMsg) {
+                EMConversationWrapper.this.onFail(error, errorMsg, callback);
+            }
+        });
         return null;
     }
 

@@ -408,6 +408,49 @@ namespace sdk_wrapper {
         return nullptr;
     }
 
+    SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_LoadMessagesWithScopeAndFromIds(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
+    {
+        if (!CheckClientInitOrNot(cbid)) return nullptr;
+
+        string local_cbid = cbid;
+
+        Document d; d.Parse(jstr);
+
+        string conv_id = GetJsonValue_String(d, "convId", "");
+        int int_type = GetJsonValue_Int(d, "convType", 0);
+        EMConversation::EMConversationType type = Conversation::ConversationTypeFromInt(int_type);
+
+        string keywords = GetJsonValue_String(d, "keywords", "");
+
+        vector<string> fromIds;
+        if (d.HasMember("fromIds") && d["fromIds"].IsArray()) {
+            fromIds = MyJson::FromJsonObjectToVector(d["fromIds"]);
+        }
+
+        int count = GetJsonValue_Int(d, "count", 20);
+
+        int64_t ts = GetJsonValue_Int64(d, "timestamp", 0);
+
+        int var_direction = GetJsonValue_Int(d, "direction", 0);
+        EMConversation::EMMessageSearchDirection direction = Conversation::EMMessageSearchDirectionFromInt(var_direction);
+
+        int var_scope = GetJsonValue_Int(d, "scope", 0);
+        EMConversation::EMMessageSearchScope scope = Conversation::EMMessageSearchScopeFromInt(var_scope);
+
+        thread t([=]() {
+            EMConversationPtr conversationPtr = CLIENT->getChatManager().conversationWithType(conv_id, type, true);
+            EMMessageList msgList = conversationPtr->loadMoreMessages(keywords, scope, ts, count, fromIds, direction);
+
+            string json = Message::ToJson(msgList);
+            string call_back_jstr = MyJson::ToJsonWithSuccessResult(local_cbid.c_str(), json.c_str());
+            CallBack(local_cbid.c_str(), call_back_jstr.c_str());
+
+            });
+        t.detach();
+
+        return nullptr;
+    }
+
     SDK_WRAPPER_API const char* SDK_WRAPPER_CALL ConversationManager_MarkAllMessagesAsRead(const char* jstr, const char* cbid = nullptr, char* buf = nullptr)
     {
         if (!CheckClientInitOrNot(cbid)) return nullptr;
