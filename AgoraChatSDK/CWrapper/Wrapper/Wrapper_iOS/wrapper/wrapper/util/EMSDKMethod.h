@@ -118,6 +118,7 @@ static NSString *const markConversations = @"markConversations";
 static NSString *const deleteAllMessagesAndConversations = @"deleteAllMessagesAndConversations";
 static NSString *const pinMessage = @"pinMessage";
 static NSString *const getPinnedMessagesFromServer = @"getPinnedMessagesFromServer";
+static NSString *const loadMessages = @"loadMessages";
 
 /// EMMessage listener
 static NSString *const onMessageProgressUpdate = @"onMessageProgressUpdate";

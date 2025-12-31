@@ -134,6 +134,8 @@
         ret = [self pinMessage:params callback:callback];
     }else if ([method isEqualToString:getPinnedMessagesFromServer]) {
         ret = [self getPinnedMessagesFromServer:params callback:callback];
+    }else if ([method isEqualToString:loadMessages]) {
+        ret = [self loadMessages:params callback:callback];
     }
     else {
         ret = [super onMethodCall:method params:params callback:callback];
@@ -1106,6 +1108,25 @@
             [jsonMsgs addObject:[msg toJson]];
         }
         [weakSelf wrapperCallback:callback error:error object:jsonMsgs];
+    }];
+
+    return nil;
+}
+
+- (NSString *)loadMessages:(NSDictionary *)param
+                  callback:(EMWrapperCallback *)callback {
+    NSArray *msgIds = param[@"msgIds"];
+    NSString *convId = param[@"convId"];
+    __weak EMChatManagerWrapper * weakSelf = self;
+
+    [EMClient.sharedClient.chatManager getMessages:msgIds
+                                 withConversationId:convId
+                                         completion:^(NSArray<EMChatMessage *> * _Nullable aMessages, EMError * _Nullable aError) {
+        NSMutableArray *jsonMsgs = [NSMutableArray array];
+        for (EMChatMessage *msg in aMessages) {
+            [jsonMsgs addObject:[msg toJson]];
+        }
+        [weakSelf wrapperCallback:callback error:aError object:jsonMsgs];
     }];
 
     return nil;

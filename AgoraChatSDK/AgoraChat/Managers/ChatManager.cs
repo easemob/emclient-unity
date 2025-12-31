@@ -1652,6 +1652,35 @@ namespace AgoraChat
         }
 
         /**
+         * \~chinese
+         * 从 SDK 本地数据库获取指定 ID 的消息，一次最多获取 20 条消息，返回的消息按照时间倒序排列。
+         *
+         * @param messageIdList     消息 ID 列表。
+         * @param conversationId    消息 ID 所在的会话 ID。
+         * @param callback          成功返回消息列表，失败返回错误原因，详见 {@link ValueCallBack}。
+         *
+         * \~english
+         * Gets messages with the specified IDs from the local database. A maximum of 20 messages can be retrieved at a time, and the returned messages are sorted in reverse chronological order.
+         *
+         * @param messageIdList     The message ID list.
+         * @param conversationId    The conversation ID which messages in.
+         * @param callback          If success, the list of messages are returned; otherwise, an error is returned. See {@link ValueCallBack}.
+         */
+        public void LoadMessages(List<string> messageIdList, string conversationId, ValueCallBack<List<Message>> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("msgIds", JsonObject.JsonArrayFromStringList(messageIdList));
+            jo_param.AddWithoutNull("convId", conversationId);
+
+            Process process = (_, jsonNode) =>
+            {
+                return List.BaseModelListFromJsonArray<Message>(jsonNode);
+            };
+
+            NativeCall<List<Message>>(SDKMethod.loadMessages, jo_param, callback, process);
+        }
+
+        /**
 		 * \~chinese
 		 * 注册聊天管理器的监听器。
 		 *
