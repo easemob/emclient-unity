@@ -3657,6 +3657,11 @@ namespace sdk_wrapper
             option->setFrom(from);
         }
 
+        if (jnode.HasMember("fromIds") && jnode["fromIds"].IsArray()) {
+            vector<string> fromIds = MyJson::FromJsonObjectToVector(jnode["fromIds"]);
+            option->setFromIds(fromIds);
+        }
+
         if (jnode.HasMember("types") && jnode["types"].IsArray()) {
             const Value& array = jnode["types"];
             vector<EMMessageBody::EMMessageBodyType> vec = FromJsonObjectToBodyTypeVector(array);
