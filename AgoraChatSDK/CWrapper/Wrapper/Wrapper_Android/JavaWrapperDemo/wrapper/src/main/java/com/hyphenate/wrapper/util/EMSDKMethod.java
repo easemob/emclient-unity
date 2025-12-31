@@ -99,6 +99,7 @@ public class EMSDKMethod {
     public static final String removeReaction = "removeReaction";
     public static final String fetchReactionList = "fetchReactionList";
     public static final String fetchReactionDetail = "fetchReactionDetail";
+    public static final String loadConversationMessagesWithKeyword = "loadConversationMessagesWithKeyword";
     public static final String reportMessage = "reportMessage";
 
     public static final String getConversationsFromServerWithPage = "getConversationsFromServerWithPage";

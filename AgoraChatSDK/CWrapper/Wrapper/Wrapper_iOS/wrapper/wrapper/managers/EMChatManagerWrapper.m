@@ -104,6 +104,8 @@
         ret = [self fetchReactionList:params callback:callback];
     }else if([method isEqualToString:fetchReactionDetail]) {
         ret = [self fetchReactionDetail:params callback:callback];
+    }else if([method isEqualToString:loadConversationMessagesWithKeyword]) {
+        ret = [self loadConversationMessagesWithKeyword:params callback:callback];
     }else if([method isEqualToString:reportMessage]) {
         ret = [self reportMessage:params callback:callback];
     }else if([method isEqualToString:fetchConversationsFromServerWithPage]) {
@@ -714,6 +716,31 @@
         [weakSelf wrapperCallback:callback error:nil object:dictionary];
     }];
     
+    return nil;
+}
+
+- (NSString *)loadConversationMessagesWithKeyword:(NSDictionary *)param
+                                         callback:(EMWrapperCallback *)callback {
+    NSString *keywords = param[@"keywords"];
+    long long timestamp = [param[@"timestamp"] longLongValue];
+    NSString *from = param[@"from"];
+    int directionInt = [param[@"direction"] intValue];
+    int scopeInt = [param[@"scope"] intValue];
+
+    EMMessageSearchDirection direction = directionInt == 0 ? EMMessageSearchDirectionUp : EMMessageSearchDirectionDown;
+    EMMessageSearchScope scope = (EMMessageSearchScope)scopeInt;
+
+    __weak EMChatManagerWrapper * weakSelf = self;
+    [EMClient.sharedClient.chatManager loadConversationMessagesWithKeyword:keywords
+                                                                 timestamp:timestamp
+                                                                  fromUser:from
+                                                           searchDirection:direction
+                                                                     scope:scope
+                                                                completion:^(NSDictionary<NSString *,NSArray<NSString *> *> * _Nullable aConversationMessages, EMError * _Nullable aError)
+     {
+        [weakSelf wrapperCallback:callback error:aError object:aConversationMessages];
+    }];
+
     return nil;
 }
 

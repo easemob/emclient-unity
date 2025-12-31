@@ -108,6 +108,7 @@ static NSString *const addReaction = @"addReaction";
 static NSString *const removeReaction = @"removeReaction";
 static NSString *const fetchReactionList = @"fetchReactionList";
 static NSString *const fetchReactionDetail = @"fetchReactionDetail";
+static NSString *const loadConversationMessagesWithKeyword = @"loadConversationMessagesWithKeyword";
 static NSString *const reportMessage = @"reportMessage";
 static NSString *const fetchConversationsFromServerWithPage = @"fetchConversationsFromServerWithPage";
 static NSString *const removeMessagesFromServerWithMsgIds = @"removeMessagesFromServerWithMsgIds";

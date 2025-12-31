@@ -125,6 +125,8 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
             ret = fetchReactionList(jsonObject, callback);
         } else if (EMSDKMethod.fetchReactionDetail.equals(method)) {
             ret = fetchReactionDetail(jsonObject, callback);
+        } else if (EMSDKMethod.loadConversationMessagesWithKeyword.equals(method)) {
+            ret = loadConversationMessagesWithKeyword(jsonObject, callback);
         } else if (EMSDKMethod.reportMessage.equals(method)) {
             ret = reportMessage(jsonObject, callback);
         } else if (EMSDKMethod.getConversationsFromServerWithPage.equals(method)) {
@@ -825,6 +827,52 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
                 }
             }
         });
+        return null;
+    }
+
+    private String loadConversationMessagesWithKeyword(JSONObject params, EMWrapperCallback callback) throws JSONException {
+        String keywords = params.getString("keywords");
+        long timestamp = params.getLong("timestamp");
+        String from = null;
+        if (params.has("from")) {
+            from = params.getString("from");
+        }
+        int directionInt = params.getInt("direction");
+        int scopeInt = params.getInt("scope");
+
+        EMConversation.EMSearchDirection direction = directionInt == 0 ? 
+            EMConversation.EMSearchDirection.UP : EMConversation.EMSearchDirection.DOWN;
+        EMConversation.EMMessageSearchScope scope = EMConversation.EMMessageSearchScope.valueOf(scopeInt);
+
+        EMClient.getInstance().chatManager().asyncLoadConversationMessagesWithKeyword(
+            keywords, timestamp, from, direction, scope,
+            new EMCommonValueCallback<Map<String, List<String>>>(callback) {
+                @Override
+                public void onSuccess(Map<String, List<String>> object) {
+                    JSONObject jo = new JSONObject();
+                    try {
+                        if (object != null) {
+                            for (Map.Entry<String, List<String>> entry : object.entrySet()) {
+                                JSONArray jsonArray = new JSONArray();
+                                for (String msgId : entry.getValue()) {
+                                    jsonArray.put(msgId);
+                                }
+                                jo.put(entry.getKey(), jsonArray);
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } finally {
+                        updateObject(jo);
+                    }
+                }
+
+                @Override
+                public void onError(int code, String error) {
+                    HyphenateException e = new HyphenateException(code, error);
+                    callback.onError(HyphenateExceptionHelper.toJson(e));
+                }
+            });
         return null;
     }
 

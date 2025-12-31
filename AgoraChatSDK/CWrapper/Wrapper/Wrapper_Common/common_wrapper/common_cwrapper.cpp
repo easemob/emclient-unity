@@ -103,6 +103,7 @@ void InitManagerMap()
 	func_map_chat_manager["removeReaction"] = ChatManager_RemoveReaction;
 	func_map_chat_manager["fetchReactionList"] = ChatManager_GetReactionList;
 	func_map_chat_manager["fetchReactionDetail"] = ChatManager_GetReactionDetail;
+	func_map_chat_manager["loadConversationMessagesWithKeyword"] = ChatManager_LoadConversationMessagesWithKeyword;
     func_map_chat_manager["removeMessagesFromServerWithMsgIds"] = ChatManager_RemoveMessagesFromServerWithMsgIds;
     func_map_chat_manager["removeMessagesFromServerWithTs"] = ChatManager_RemoveMessagesFromServerWithTs;
     func_map_chat_manager["pinConversation"] = ChatManager_PinConversation;

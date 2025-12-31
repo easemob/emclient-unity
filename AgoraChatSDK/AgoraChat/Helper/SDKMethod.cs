@@ -103,6 +103,7 @@ namespace AgoraChat
         internal const string removeReaction = "removeReaction";
         internal const string fetchReactionList = "fetchReactionList";
         internal const string fetchReactionDetail = "fetchReactionDetail";
+        internal const string loadConversationMessagesWithKeyword = "loadConversationMessagesWithKeyword";
         internal const string reportMessage = "reportMessage";
         internal const string removeMessagesFromServerWithMsgIds = "removeMessagesFromServerWithMsgIds";
         internal const string removeMessagesFromServerWithTs = "removeMessagesFromServerWithTs";

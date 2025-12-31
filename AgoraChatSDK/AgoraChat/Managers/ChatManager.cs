@@ -1278,6 +1278,54 @@ namespace AgoraChat
 
         /**
         * \~chinese
+        * 通过关键词从本地数据库中获取消息，返回会话 ID 及消息 ID 数组。
+        * SDK 返回的消息按时间顺序排列。
+        *
+        * 异步方法。
+        *
+        * @param keywords      搜索关键词，设为 `null` 表示忽略该参数。
+        * @param timestamp     搜索开始的 Unix 时间戳。单位为毫秒。如果该参数设置的时间戳为负数，则从最新消息向前获取。
+        * @param from          消息发送方。设为 `null` 表示忽略该参数。
+        * @param direction     消息搜索方向，详见 {@link MessageSearchDirection}。
+        *                      - `UP`：按消息时间戳的逆序获取。
+        *                      - `DOWN`：按消息时间戳的顺序获取。
+        * @param scope         消息搜索范围，详见 {@link MessageSearchScope}。
+        * @param callback      处理结果回调，包含会话 ID 及对应的消息 ID 列表。
+        *
+        * \~english
+        * Loads messages with the specified keyword from the local database, returning a dictionary containing conversation IDs and message ID arrays.
+        * The SDK returns messages in chronological order.
+        *
+        * This is an asynchronous method.
+        *
+        * @param keywords      The keyword for message search. If you set this parameter as `null`, the SDK ignores this parameter when retrieving messages.
+        * @param timestamp     The Unix timestamp threshold for message search. The unit is millisecond. If you set this parameter as a negative value, the SDK loads messages from the latest one.
+        * @param from          The sender of the message. If you set this parameter as `null`, the SDK ignores this parameter when retrieving messages.
+        * @param direction     The message search direction. See {@link MessageSearchDirection}.
+        *                      - `UP`: The SDK retrieves messages in the descending order of the timestamp included in them.
+        *                      - `DOWN`：The SDK retrieves messages in the ascending order of the timestamp included in them.
+        * @param scope         The message search scope. See {@link MessageSearchScope}.
+        * @param callback      The result callback, which contains the conversation IDs and corresponding message ID lists.
+        */
+        public void LoadConversationMessagesWithKeyword(string keywords, long timestamp = 0, string from = null, MessageSearchDirection direction = MessageSearchDirection.UP, MessageSearchScope scope = MessageSearchScope.CONTENT, ValueCallBack<Dictionary<string, List<string>>> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("keywords", keywords);
+            jo_param.AddWithoutNull("timestamp", timestamp);
+            jo_param.AddWithoutNull("from", from);
+            jo_param.AddWithoutNull("direction", direction == MessageSearchDirection.UP ? 0 : 1);
+            jo_param.AddWithoutNull("scope", (int)scope);
+
+            Process process = (_, jsonNode) =>
+            {
+                return Dictionary.StringListDictionaryFromJsonObject(jsonNode);
+            };
+
+            NativeCall<Dictionary<string, List<string>>>(SDKMethod.loadConversationMessagesWithKeyword, jo_param, callback, process);
+        }
+
+        /**
+        * \~chinese
         * 获取 Reaction 详细信息。
         *
         * 异步方法。
