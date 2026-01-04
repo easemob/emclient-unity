@@ -3,6 +3,7 @@ package com.hyphenate.wrapper.helper;
 import android.content.Context;
 
 import com.hyphenate.chat.EMOptions;
+import com.hyphenate.chat.EMOptions.EMSDKPlatform;
 import com.hyphenate.push.EMPushConfig;
 
 import org.json.JSONException;
@@ -13,6 +14,9 @@ public class EMOptionsHelper {
         EMOptions options = new EMOptions();
         options.setAppKey(json.getString("appKey"));
         options.setAppId(json.getString("appId"));
+
+        options.setPlatform(EMSDKPlatform.EMSDKPlatformUnity);
+
         options.setAutoLogin(json.getBoolean("autoLogin"));
         options.setRequireAck(json.getBoolean("requireAck"));
         options.setRequireDeliveryAck(json.getBoolean("requireDeliveryAck"));
