@@ -270,6 +270,29 @@ namespace AgoraChat
             NativeCall<List<Message>>(SDKMethod.loadMsgWithScope, jo_param, callback, process);
         }
 
+        internal void LoadMessagesWithScopeAndFromIds(string conversationId, ConversationType conversationType, string keywords, long timestamp = 0, int maxCount = 20, List<string> fromIds = null, MessageSearchDirection direction = MessageSearchDirection.UP, MessageSearchScope scope = MessageSearchScope.CONTENT, ValueCallBack<List<Message>> callback = null)
+        {
+            JSONObject jo_param = new JSONObject();
+            jo_param.AddWithoutNull("convId", conversationId);
+            jo_param.AddWithoutNull("convType", conversationType.ToInt());
+            jo_param.AddWithoutNull("keywords", keywords);
+            if (fromIds != null && fromIds.Count > 0)
+            {
+                jo_param.AddWithoutNull("fromIds", JsonObject.JsonArrayFromStringList(fromIds));
+            }
+            jo_param.AddWithoutNull("count", maxCount);
+            jo_param.AddWithoutNull("timestamp", timestamp);
+            jo_param.AddWithoutNull("direction", direction.ToInt());
+            jo_param.AddWithoutNull("scope", scope.ToInt());
+
+            Process process = (_, jsonNode) =>
+            {
+                return List.BaseModelListFromJsonArray<Message>(jsonNode);
+            };
+
+            NativeCall<List<Message>>(SDKMethod.loadMsgWithScopeAndFromIds, jo_param, callback, process);
+        }
+
         internal List<Message> PinnedMessages(string conversationId, ConversationType conversationType)
         {
             JSONObject jo_param = new JSONObject();

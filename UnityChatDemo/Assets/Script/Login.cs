@@ -203,7 +203,9 @@ public class Login : MonoBehaviour
         //Options options = new Options("81446724#514456");
         //Options options = new Options("easemob-demo#unitytest");
 
-        Options options = Options.InitOptionsWithAppId("ba85504621304fb894790708d304794f");
+        //Options options = Options.InitOptionsWithAppId("ba85504621304fb894790708d304794f");
+        Options options = Options.InitOptionsWithAppKey("easemob-demo#unitytest");
+        //Options options = Options.InitOptionsWithAppKey("easemob#easeim");
 
         options.AutoLogin = false;
         options.UsingHttpsOnly = true;

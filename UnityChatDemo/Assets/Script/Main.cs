@@ -158,7 +158,9 @@ public class Main : MonoBehaviour, IConnectionDelegate, IChatManagerDelegate, IR
 
     void AccessTokenBtnAction()
     {
-        UIManager.DefaultAlert(transform, SDKClient.Instance.AccessToken);
+        string token = SDKClient.Instance.AccessToken;
+        UIManager.DefaultAlert(transform, token);
+        Debug.Log($"AccessToken is: {token}");
     }
 
     void LogoutBtnAction()
