@@ -54,6 +54,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     private Button pinMessageBtn;
     private Button getPinnedMessagesFromServerBtn;
     private Button getMessageCountBtn;
+    private Button modifyMessageWithExtBtn;
 
     private void Awake()
     {
@@ -107,6 +108,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         pinMessageBtn = transform.Find("Scroll View/Viewport/Content/PinMessageBtn").GetComponent<Button>();
         getPinnedMessagesFromServerBtn = transform.Find("Scroll View/Viewport/Content/GetPinnedMessagesFromServerBtn").GetComponent<Button>();
         getMessageCountBtn = transform.Find("Scroll View/Viewport/Content/GetMessageCountBtn").GetComponent<Button>();
+        modifyMessageWithExtBtn = transform.Find("Scroll View/Viewport/Content/ModifyMessageWithExtBtn").GetComponent<Button>();
 
         sendTextBtn.onClick.AddListener(SendTextBtnAction);
         sendImageBtn.onClick.AddListener(SendImageBtnAction);
@@ -151,6 +153,9 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         pinMessageBtn.onClick.AddListener(PinMessageBtnAction);
         getPinnedMessagesFromServerBtn.onClick.AddListener(GetPinnedMessagesFromServerBtnAction);
         getMessageCountBtn.onClick.AddListener(GetMessageCountBtnAction);
+        modifyMessageWithExtBtn.onClick.AddListener(ModifyMessageWithExtBtnAction);
+
+
         SDKClient.Instance.ChatManager.AddChatManagerDelegate(this);
     }
 
@@ -1468,6 +1473,36 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
                 UIManager.DefaultAlert(transform, "GetMessageCount failed");
             }
         ));
+    }
+
+    void ModifyMessageWithExtBtnAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            TextBody tb = new TextBody(dict["text"]);
+
+            // 创建 attributes 字典
+            Dictionary<string, AttributeValue> attributes = new Dictionary<string, AttributeValue>();
+            attributes["extKey1"] = AttributeValue.Of("extValue1");
+            attributes["extKey2"] = AttributeValue.Of(100, AttributeValueType.INT32);
+
+            SDKClient.Instance.ChatManager.ModifyMessage(dict["msgId"], tb, attributes, new ValueCallBack<Message>(
+             onSuccess: (dmsg) =>
+             {
+                 UIManager.TitleAlert(transform, "成功", dmsg.ToJsonObject().ToString());
+             },
+             onError: (code, desc) =>
+             {
+                 UIManager.ErrorAlert(transform, code, desc);
+             }
+            ));
+        });
+
+        config.AddField("msgId");
+        config.AddField("text");
+
+        UIManager.DefaultInputAlert(transform, config);
+        Debug.Log("ModifyMessageWithExtBtnAction");
     }
 
     // Start is called before the first frame update
