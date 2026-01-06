@@ -59,6 +59,7 @@ public class GroupManagerTest : MonoBehaviour
     private Button CleanAllGroupsFromDBBtn;
     private Button CheckIfInGroupMuteListBtn;
     private Button CreateGroupWithAvatarBtn;
+    private Button UpdateGroupAvatarBtn;
 
     private string currentGroupId
     {
@@ -125,6 +126,7 @@ public class GroupManagerTest : MonoBehaviour
         CleanAllGroupsFromDBBtn = transform.Find("Scroll View/Viewport/Content/CleanAllGroupsFromDBBtn").GetComponent<Button>();
         CheckIfInGroupMuteListBtn = transform.Find("Scroll View/Viewport/Content/CheckIfInGroupMuteListBtn").GetComponent<Button>();
         CreateGroupWithAvatarBtn = transform.Find("Scroll View/Viewport/Content/CreateGroupWithAvatarBtn").GetComponent<Button>();
+        UpdateGroupAvatarBtn = transform.Find("Scroll View/Viewport/Content/UpdateGroupAvatarBtn").GetComponent<Button>();
 
         AcceptInvitationFromGroupBtn.onClick.AddListener(AcceptInvitationFromGroupBtnAction);
         AcceptJoinApplicationBtn.onClick.AddListener(AcceptJoinApplicationBtnAction);
@@ -175,6 +177,7 @@ public class GroupManagerTest : MonoBehaviour
         CleanAllGroupsFromDBBtn.onClick.AddListener(CleanAllGroupsFromDBBtnAction);
         CheckIfInGroupMuteListBtn.onClick.AddListener(CheckIfInGroupMuteListBtnAction);
         CreateGroupWithAvatarBtn.onClick.AddListener(CreateGroupWithAvatarBtnAction);
+        UpdateGroupAvatarBtn.onClick.AddListener(UpdateGroupAvatarBtnAction);
     }
 
     private void OnDestroy()
@@ -513,6 +516,36 @@ public class GroupManagerTest : MonoBehaviour
         UIManager.DefaultInputAlert(transform, config);
 
         Debug.Log("CreateGroupWithAvatarBtnAction");
+    }
+
+    void UpdateGroupAvatarBtnAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string avatar = dict["avatar"];
+            if (null == currentGroupId || 0 == currentGroupId.Length || null == avatar || 0 == avatar.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
+            SDKClient.Instance.GroupManager.UpdateGroupAvatar(currentGroupId, dict["avatar"], new CallBack(
+                onSuccess: () =>
+                {
+                    UIManager.SuccessAlert(transform);
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("avatar");
+
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("UpdateGroupAvatarBtnAction");
     }
 
     void CreateGroupBtnAction()
