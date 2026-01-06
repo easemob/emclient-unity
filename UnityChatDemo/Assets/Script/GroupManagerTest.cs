@@ -58,6 +58,7 @@ public class GroupManagerTest : MonoBehaviour
     private Button FetchMyGroupsCountBtn;
     private Button CleanAllGroupsFromDBBtn;
     private Button CheckIfInGroupMuteListBtn;
+    private Button CreateGroupWithAvatarBtn;
 
     private string currentGroupId
     {
@@ -123,6 +124,7 @@ public class GroupManagerTest : MonoBehaviour
         FetchMyGroupsCountBtn = transform.Find("Scroll View/Viewport/Content/FetchMyGroupsCountBtn").GetComponent<Button>();
         CleanAllGroupsFromDBBtn = transform.Find("Scroll View/Viewport/Content/CleanAllGroupsFromDBBtn").GetComponent<Button>();
         CheckIfInGroupMuteListBtn = transform.Find("Scroll View/Viewport/Content/CheckIfInGroupMuteListBtn").GetComponent<Button>();
+        CreateGroupWithAvatarBtn = transform.Find("Scroll View/Viewport/Content/CreateGroupWithAvatarBtn").GetComponent<Button>();
 
         AcceptInvitationFromGroupBtn.onClick.AddListener(AcceptInvitationFromGroupBtnAction);
         AcceptJoinApplicationBtn.onClick.AddListener(AcceptJoinApplicationBtnAction);
@@ -172,6 +174,7 @@ public class GroupManagerTest : MonoBehaviour
         FetchMyGroupsCountBtn.onClick.AddListener(FetchMyGroupsCountBtnAction);
         CleanAllGroupsFromDBBtn.onClick.AddListener(CleanAllGroupsFromDBBtnAction);
         CheckIfInGroupMuteListBtn.onClick.AddListener(CheckIfInGroupMuteListBtnAction);
+        CreateGroupWithAvatarBtn.onClick.AddListener(CreateGroupWithAvatarBtnAction);
     }
 
     private void OnDestroy()
@@ -463,6 +466,53 @@ public class GroupManagerTest : MonoBehaviour
         ));
 
         Debug.Log("CheckIfInGroupMuteListBtnAction");
+    }
+
+    void CreateGroupWithAvatarBtnAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string name = dict["name"];
+            string desc = dict["desc"];
+            string avatar = dict["avatar"];
+            string memberId = dict["memberId"];
+            string inviteReason = dict["inviteReason"];
+
+            if (null == name || 0 == name.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
+            GroupOptions options = new GroupOptions(GroupStyle.PrivateMemberCanInvite);
+
+            List<string> inviteMembers = new List<string>();
+            if (memberId.Length > 0)
+            {
+                inviteMembers.Add(memberId);
+            }
+
+            SDKClient.Instance.GroupManager.CreateGroup(name, options, avatar, desc, inviteMembers, inviteReason, new ValueCallBack<Group>(
+                onSuccess: (group) =>
+                {
+                    Debug.Log($"CreateGroup success: {group.ToJsonObject().ToString()}");
+                },
+                onError: (code, error) =>
+                {
+                    Debug.Log($"CreateGroup failed, code: {code}, error: {error}");
+                }
+            ));
+        });
+
+        config.AddField("name");
+        config.AddField("desc");
+        config.AddField("avatar");
+        config.AddField("memberId");
+        config.AddField("inviteReason");
+
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("CreateGroupWithAvatarBtnAction");
     }
 
     void CreateGroupBtnAction()
