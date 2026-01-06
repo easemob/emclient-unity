@@ -56,6 +56,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     private Button getMessageCountBtn;
     private Button modifyMessageWithExtBtn;
     private Button LoadConversationMessagesWithKeywordBtn;
+    private Button LoadMessagesBtn;
 
     private void Awake()
     {
@@ -111,6 +112,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         getMessageCountBtn = transform.Find("Scroll View/Viewport/Content/GetMessageCountBtn").GetComponent<Button>();
         modifyMessageWithExtBtn = transform.Find("Scroll View/Viewport/Content/ModifyMessageWithExtBtn").GetComponent<Button>();
         LoadConversationMessagesWithKeywordBtn = transform.Find("Scroll View/Viewport/Content/LoadConversationMessagesWithKeywordBtn").GetComponent<Button>();
+        LoadMessagesBtn = transform.Find("Scroll View/Viewport/Content/LoadMessagesBtn").GetComponent<Button>();
 
         sendTextBtn.onClick.AddListener(SendTextBtnAction);
         sendImageBtn.onClick.AddListener(SendImageBtnAction);
@@ -157,6 +159,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         getMessageCountBtn.onClick.AddListener(GetMessageCountBtnAction);
         modifyMessageWithExtBtn.onClick.AddListener(ModifyMessageWithExtBtnAction);
         LoadConversationMessagesWithKeywordBtn.onClick.AddListener(LoadConversationMessagesWithKeywordBtnAction);
+        LoadMessagesBtn.onClick.AddListener(LoadMessagesBtnAction);
 
 
         SDKClient.Instance.ChatManager.AddChatManagerDelegate(this);
@@ -1587,6 +1590,62 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
         UIManager.DefaultInputAlert(transform, config);
         Debug.Log("LoadConversationMessagesWithKeywordBtnAction");
+    }
+
+    void LoadMessagesBtnAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string conversationId = dict["conversationId"];
+            string msgId1 = dict["msgId1"];
+            string msgId2 = dict["msgId2"];
+
+            if (null == conversationId || 0 == conversationId.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
+            // 创建消息ID列表
+            List<string> messageIdList = new List<string>();
+            if (!string.IsNullOrEmpty(msgId1))
+            {
+                messageIdList.Add(msgId1);
+            }
+            if (!string.IsNullOrEmpty(msgId2))
+            {
+                messageIdList.Add(msgId2);
+            }
+
+            if (messageIdList.Count == 0)
+            {
+                UIManager.DefaultAlert(transform, "至少需要一个消息ID");
+                return;
+            }
+
+            SDKClient.Instance.ChatManager.LoadMessages(messageIdList, conversationId, new ValueCallBack<List<Message>>(
+                onSuccess: (messages) =>
+                {
+                    string str = "";
+                    foreach (var msg in messages)
+                    {
+                        str += $"msgId:{msg.MsgId}, from:{msg.From}, type:{msg.Body.Type};";
+                    }
+                    UIManager.DefaultAlert(transform, $"成功加载 {messages.Count} 条消息: {str}");
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("conversationId");
+        config.AddField("msgId1");
+        config.AddField("msgId2");
+
+        UIManager.DefaultInputAlert(transform, config);
+        Debug.Log("LoadMessagesBtnAction");
     }
 
     // Start is called before the first frame update
