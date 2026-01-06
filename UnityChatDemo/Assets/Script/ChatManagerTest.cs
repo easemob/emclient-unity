@@ -55,6 +55,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
     private Button getPinnedMessagesFromServerBtn;
     private Button getMessageCountBtn;
     private Button modifyMessageWithExtBtn;
+    private Button LoadConversationMessagesWithKeywordBtn;
 
     private void Awake()
     {
@@ -109,6 +110,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         getPinnedMessagesFromServerBtn = transform.Find("Scroll View/Viewport/Content/GetPinnedMessagesFromServerBtn").GetComponent<Button>();
         getMessageCountBtn = transform.Find("Scroll View/Viewport/Content/GetMessageCountBtn").GetComponent<Button>();
         modifyMessageWithExtBtn = transform.Find("Scroll View/Viewport/Content/ModifyMessageWithExtBtn").GetComponent<Button>();
+        LoadConversationMessagesWithKeywordBtn = transform.Find("Scroll View/Viewport/Content/LoadConversationMessagesWithKeywordBtn").GetComponent<Button>();
 
         sendTextBtn.onClick.AddListener(SendTextBtnAction);
         sendImageBtn.onClick.AddListener(SendImageBtnAction);
@@ -154,6 +156,7 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         getPinnedMessagesFromServerBtn.onClick.AddListener(GetPinnedMessagesFromServerBtnAction);
         getMessageCountBtn.onClick.AddListener(GetMessageCountBtnAction);
         modifyMessageWithExtBtn.onClick.AddListener(ModifyMessageWithExtBtnAction);
+        LoadConversationMessagesWithKeywordBtn.onClick.AddListener(LoadConversationMessagesWithKeywordBtnAction);
 
 
         SDKClient.Instance.ChatManager.AddChatManagerDelegate(this);
@@ -1521,6 +1524,69 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
 
         UIManager.DefaultInputAlert(transform, config);
         Debug.Log("ModifyMessageWithExtBtnAction");
+    }
+
+    void LoadConversationMessagesWithKeywordBtnAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string keywords = dict["keywords"];
+            string timestampStr = dict["timestamp"];
+            string from = dict["from"];
+            string directionStr = dict["direction"];
+            string scopeStr = dict["scope"];
+
+            if (null == keywords || 0 == keywords.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
+            long timestamp = 0;
+            if (!string.IsNullOrEmpty(timestampStr))
+            {
+                timestamp = long.Parse(timestampStr);
+            }
+
+            MessageSearchDirection direction = MessageSearchDirection.UP;
+            if (!string.IsNullOrEmpty(directionStr))
+            {
+                direction = (MessageSearchDirection)(int.Parse(directionStr));
+            }
+
+            MessageSearchScope scope = MessageSearchScope.CONTENT;
+            if (!string.IsNullOrEmpty(scopeStr))
+            {
+                scope = (MessageSearchScope)(int.Parse(scopeStr));
+            }
+
+            SDKClient.Instance.ChatManager.LoadConversationMessagesWithKeyword(keywords, timestamp, from, direction, scope, new ValueCallBack<Dictionary<string, List<string>>>(
+                onSuccess: (result) =>
+                {
+                    string str = "";
+                    foreach (var kvp in result)
+                    {
+                        string conversationId = kvp.Key;
+                        List<string> messageIds = kvp.Value;
+                        str += $"[{conversationId}]: {messageIds.Count} messages;";
+                    }
+                    UIManager.DefaultAlert(transform, $"找到 {result.Count} 个会话的消息: {str}");
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("keywords");
+        config.AddField("timestamp");
+        config.AddField("from");
+        config.AddField("direction");
+        config.AddField("scope");
+
+        UIManager.DefaultInputAlert(transform, config);
+        Debug.Log("LoadConversationMessagesWithKeywordBtnAction");
     }
 
     // Start is called before the first frame update
