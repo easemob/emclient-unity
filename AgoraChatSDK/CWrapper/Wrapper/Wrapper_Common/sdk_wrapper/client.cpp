@@ -788,8 +788,19 @@ namespace sdk_wrapper
 
     int TokenWrapper::GetTokenCheckInterval()
     {
-        if (check_interval_ > floor(availablePeriod_ / 2)) {
-            check_interval_ = floor(availablePeriod_ / 3);
+        // Adjust check interval to ensure we can detect TOKEN_WILL_EXPIRE at 20% threshold
+        // Use availablePeriod_ / 10 to have sufficient checks before reaching 20%
+        if (check_interval_ > floor(availablePeriod_ * 0.2)) {
+            check_interval_ = floor(availablePeriod_ / 10);
+
+            // Dynamic minimum interval based on token validity period
+            // For very short tokens (<50s), use 3s minimum to ensure TOKEN_WILL_EXPIRE can be triggered
+            // For normal tokens (≥50s), use 10s minimum to avoid too frequent checks
+            int min_interval = (availablePeriod_ < 50) ? 3 : 10;
+
+            if (check_interval_ < min_interval) {
+                check_interval_ = min_interval;
+            }
         }
 
         EMLog::getInstance().getDebugLogStream() << "GetTokenCheckInterval check_interval_: " << check_interval_;
@@ -878,7 +889,8 @@ namespace sdk_wrapper
             Client_Logout(nullptr, "", nullptr);
         }
         else {
-            if (remainTS < ceil(availablePeriod_ / 2)) { // will expire
+            // Trigger TOKEN_WILL_EXPIRE when remaining time is less than 20% of available period
+            if (remainTS < availablePeriod_ * 0.2) { // will expire
                 onTokenNotification(EMError::TOKEN_WILL_EXPIRE, remainTS);
                 AdjustLastCheckInterval(remainTS);
             }
