@@ -35,6 +35,7 @@ public class ConversationManagerTest : MonoBehaviour
     private Button PinnedMessagesBtn;
     private Button LoadMessagesWithMsgTypeListBtn;
     private Button MessagesCountWithTSBtn;
+    private Button LoadMessagesWithScopeAndFromIdsBtn;
 
     private string conversationId
     {
@@ -109,6 +110,7 @@ public class ConversationManagerTest : MonoBehaviour
         PinnedMessagesBtn = transform.Find("Scroll View/Viewport/Content/PinnedMessagesBtn").GetComponent<Button>();
         LoadMessagesWithMsgTypeListBtn = transform.Find("Scroll View/Viewport/Content/LoadMessagesWithMsgTypeListBtn").GetComponent<Button>();
         MessagesCountWithTSBtn = transform.Find("Scroll View/Viewport/Content/MessagesCountWithTSBtn").GetComponent<Button>();
+        LoadMessagesWithScopeAndFromIdsBtn = transform.Find("Scroll View/Viewport/Content/LoadMessagesWithScopeAndFromIdsBtn").GetComponent<Button>();
 
         LastMessageBtn.onClick.AddListener(LastMessageBtnAction);
         LastReceiveMessageBtn.onClick.AddListener(LastReceiveMessageBtnAction);
@@ -133,6 +135,7 @@ public class ConversationManagerTest : MonoBehaviour
         PinnedMessagesBtn.onClick.AddListener(PinnedMessagesBtnAction);
         LoadMessagesWithMsgTypeListBtn.onClick.AddListener(LoadMessagesWithMsgTypeListBtnAction);
         MessagesCountWithTSBtn.onClick.AddListener(MessagesCountWithTSBtnAction);
+        LoadMessagesWithScopeAndFromIdsBtn.onClick.AddListener(LoadMessagesWithScopeAndFromIdsBtnAction);
     }
 
 
@@ -615,6 +618,59 @@ public class ConversationManagerTest : MonoBehaviour
         UIManager.DefaultInputAlert(transform, config);
 
         Debug.Log("MessagesCountWithTSBtnAction");
+    }
+
+    void LoadMessagesWithScopeAndFromIdsBtnAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string keyword = dict["keyword"];
+            MessageSearchScope scope = (MessageSearchScope)(int.Parse(dict["scope"]));
+            long timestamp = long.Parse(dict["timestamp"]);
+            int maxCount = int.Parse(dict["maxCount"]);
+            MessageSearchDirection direction = (MessageSearchDirection)(int.Parse(dict["direction"]));
+
+            if (null == conversationId || 0 == conversationId.Length || null == keyword || 0 == keyword.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
+            // 创建 fromIds 列表
+            List<string> fromIds = new List<string>();
+            if (!string.IsNullOrEmpty(dict["fromId1"]))
+            {
+                fromIds.Add(dict["fromId1"]);
+            }
+            if (!string.IsNullOrEmpty(dict["fromId2"]))
+            {
+                fromIds.Add(dict["fromId2"]);
+            }
+
+            Conversation conv = SDKClient.Instance.ChatManager.GetConversation(conversationId, convType);
+            conv.LoadMessagesWithScopeAndFromIds(keyword, timestamp, maxCount, fromIds, direction, scope, new ValueCallBack<List<Message>>(
+                onSuccess: (list) =>
+                {
+                    UIManager.DefaultAlert(transform, $"获取到{list.Count}条消息");
+                },
+                onError: (code, desc) =>
+                {
+                    UIManager.ErrorAlert(transform, code, desc);
+                }
+            ));
+        });
+
+        config.AddField("keyword");
+        config.AddField("scope");
+        config.AddField("timestamp");
+        config.AddField("maxCount");
+        config.AddField("direction");
+        config.AddField("fromId1");
+        config.AddField("fromId2");
+
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("LoadMessagesWithScopeAndFromIdsBtnAction");
     }
 
     void PinnedMessagesBtnAction()
