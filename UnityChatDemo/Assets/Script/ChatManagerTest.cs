@@ -665,7 +665,17 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
             FetchServerMessagesOption option = new FetchServerMessagesOption();
             option.IsSave = false;
             option.Direction = (MessageSearchDirection)(int.Parse(dict["Direction(0/1)"]));
-            option.From = dict["From"];
+
+            // 使用 FromIds 替代已过时的 From 属性
+            option.FromIds = new List<string>();
+            if (!string.IsNullOrEmpty(dict["FromIds1"]))
+            {
+                option.FromIds.Add(dict["FromIds1"]);
+            }
+            if (!string.IsNullOrEmpty(dict["FromIds2"]))
+            {
+                option.FromIds.Add(dict["FromIds2"]);
+            }
 
             option.MsgTypes = new List<MessageBodyType>();
             MessageBodyType msgType = (MessageBodyType)(int.Parse(dict["MsgType(0-7)"]));
@@ -700,7 +710,8 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         config.AddField("ConversationId");
         config.AddField("ConversationType(0/1/2)");
         config.AddField("Direction(0/1)");
-        config.AddField("From");
+        config.AddField("FromIds1");
+        config.AddField("FromIds2");
         config.AddField("MsgType(0-7)");
         config.AddField("StartTime");
         config.AddField("EndTime");
