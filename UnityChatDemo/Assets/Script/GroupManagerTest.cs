@@ -60,6 +60,7 @@ public class GroupManagerTest : MonoBehaviour
     private Button CheckIfInGroupMuteListBtn;
     private Button CreateGroupWithAvatarBtn;
     private Button UpdateGroupAvatarBtn;
+    private Button FetchGroupMemberInfoFromServerBtn;
 
     private string currentGroupId
     {
@@ -127,6 +128,7 @@ public class GroupManagerTest : MonoBehaviour
         CheckIfInGroupMuteListBtn = transform.Find("Scroll View/Viewport/Content/CheckIfInGroupMuteListBtn").GetComponent<Button>();
         CreateGroupWithAvatarBtn = transform.Find("Scroll View/Viewport/Content/CreateGroupWithAvatarBtn").GetComponent<Button>();
         UpdateGroupAvatarBtn = transform.Find("Scroll View/Viewport/Content/UpdateGroupAvatarBtn").GetComponent<Button>();
+        FetchGroupMemberInfoFromServerBtn = transform.Find("Scroll View/Viewport/Content/FetchGroupMemberInfoFromServerBtn").GetComponent<Button>();
 
         AcceptInvitationFromGroupBtn.onClick.AddListener(AcceptInvitationFromGroupBtnAction);
         AcceptJoinApplicationBtn.onClick.AddListener(AcceptJoinApplicationBtnAction);
@@ -178,6 +180,7 @@ public class GroupManagerTest : MonoBehaviour
         CheckIfInGroupMuteListBtn.onClick.AddListener(CheckIfInGroupMuteListBtnAction);
         CreateGroupWithAvatarBtn.onClick.AddListener(CreateGroupWithAvatarBtnAction);
         UpdateGroupAvatarBtn.onClick.AddListener(UpdateGroupAvatarBtnAction);
+        FetchGroupMemberInfoFromServerBtn.onClick.AddListener(FetchGroupMemberInfoFromServerBtnAction);
     }
 
     private void OnDestroy()
@@ -546,6 +549,49 @@ public class GroupManagerTest : MonoBehaviour
         UIManager.DefaultInputAlert(transform, config);
 
         Debug.Log("UpdateGroupAvatarBtnAction");
+    }
+
+    void FetchGroupMemberInfoFromServerBtnAction()
+    {
+        InputAlertConfig config = new InputAlertConfig((dict) =>
+        {
+            string cursor = dict["cursor"];
+            string pageSizeStr = dict["pageSize"];
+
+            if (null == currentGroupId || 0 == currentGroupId.Length)
+            {
+                UIManager.DefaultAlert(transform, "缺少必要参数");
+                return;
+            }
+
+            int pageSize = 10;
+            if (!string.IsNullOrEmpty(pageSizeStr))
+            {
+                pageSize = int.Parse(pageSizeStr);
+            }
+
+            SDKClient.Instance.GroupManager.FetchGroupMemberInfoFromServer(currentGroupId, cursor, pageSize, new ValueCallBack<CursorResult<GroupMemberInfo>>(
+                onSuccess: (result) =>
+                {
+                    Debug.Log($"FetchGroupMemberInfoFromServer success, count: {result.Data.Count}, cursor: {result.Cursor}");
+                    foreach (var memberInfo in result.Data)
+                    {
+                        Debug.Log($"Member: userId={memberInfo.MemberId}, nickName={memberInfo.NickName}, avatarUrl={memberInfo.AvatarUrl}");
+                    }
+                },
+                onError: (code, error) =>
+                {
+                    Debug.Log($"FetchGroupMemberInfoFromServer failed, code: {code}, error: {error}");
+                }
+            ));
+        });
+
+        config.AddField("cursor");
+        config.AddField("pageSize");
+
+        UIManager.DefaultInputAlert(transform, config);
+
+        Debug.Log("FetchGroupMemberInfoFromServerBtnAction");
     }
 
     void CreateGroupBtnAction()
