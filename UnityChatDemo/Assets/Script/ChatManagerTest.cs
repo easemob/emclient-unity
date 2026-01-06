@@ -220,6 +220,13 @@ public class ChatManagerTest : MonoBehaviour, IChatManagerDelegate
         InputAlertConfig config = new InputAlertConfig((dict) =>
         {
             Message msg = Message.CreateImageSendMessage(dict["to"], dict["filepath"]);
+
+            // 设置 ImageBody 的 isGif 属性为 true
+            if (msg.Body is ImageBody imageBody)
+            {
+                imageBody.isGif = true;
+            }
+
             SDKClient.Instance.ChatManager.SendMessage(ref msg, new CallBack(
                 onSuccess: () =>
                 {
