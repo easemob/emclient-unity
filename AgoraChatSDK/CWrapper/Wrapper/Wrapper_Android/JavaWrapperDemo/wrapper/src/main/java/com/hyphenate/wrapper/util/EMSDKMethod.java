@@ -402,6 +402,8 @@ public class EMSDKMethod {
     public static final String onOwnerChangedFromGroup = "onOwnerChangedFromGroup";
     public static final String onMemberJoinedFromGroup = "onMemberJoinedFromGroup";
     public static final String onMemberExitedFromGroup = "onMemberExitedFromGroup";
+    public static final String onMembersJoinedFromGroup = "onMembersJoinedFromGroup";
+    public static final String onMembersExitedFromGroup = "onMembersExitedFromGroup";
     public static final String onAnnouncementChangedFromGroup = "onAnnouncementChangedFromGroup";
     public static final String onSharedFileAddedFromGroup = "onSharedFileAddedFromGroup";
     public static final String onSharedFileDeletedFromGroup = "onSharedFileDeletedFromGroup";

@@ -694,6 +694,46 @@ namespace sdk_wrapper {
                 CallBack(STRING_GROUPMANAGER_LISTENER.c_str(), STRING_onMemberExitedFromGroup.c_str(), json.c_str());
         }
 
+        void onMembersJoinedGroup(const EMGroupPtr group, const std::vector<std::string>& members) override {
+            JSON_STARTOBJ
+            writer.Key("groupId");
+            writer.String(group->groupId().c_str());
+
+            writer.Key("userIds");
+            writer.StartArray();
+            for (const auto& member : members) {
+                writer.String(member.c_str());
+            }
+            writer.EndArray();
+
+            JSON_ENDOBJ
+
+            string json = s.GetString();
+
+            if (json.size() > 0)
+                CallBack(STRING_GROUPMANAGER_LISTENER.c_str(), STRING_onMembersJoinedFromGroup.c_str(), json.c_str());
+        }
+
+        void onMembersLeftGroup(const EMGroupPtr group, const std::vector<std::string>& members) override {
+            JSON_STARTOBJ
+            writer.Key("groupId");
+            writer.String(group->groupId().c_str());
+
+            writer.Key("userIds");
+            writer.StartArray();
+            for (const auto& member : members) {
+                writer.String(member.c_str());
+            }
+            writer.EndArray();
+
+            JSON_ENDOBJ
+
+            string json = s.GetString();
+
+            if (json.size() > 0)
+                CallBack(STRING_GROUPMANAGER_LISTENER.c_str(), STRING_onMembersExitedFromGroup.c_str(), json.c_str());
+        }
+
         void onUpdateAnnouncementFromGroup(const EMGroupPtr group, const string& announcement) override {
             JSON_STARTOBJ
             writer.Key("groupId");

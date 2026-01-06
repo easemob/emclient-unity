@@ -1,4 +1,5 @@
 using AgoraChat.SimpleJSON;
+using System;
 using System.Collections.Generic;
 #if !_WIN32
 using UnityEngine.Scripting;

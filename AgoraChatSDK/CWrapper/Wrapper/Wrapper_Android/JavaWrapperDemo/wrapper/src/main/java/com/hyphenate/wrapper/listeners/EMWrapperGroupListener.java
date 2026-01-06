@@ -272,6 +272,30 @@ public class EMWrapperGroupListener implements EMGroupChangeListener {
     }
 
     @Override
+    public void onMembersJoined(final String groupId, final List<String> members) {
+        try {
+            JSONObject data = new JSONObject();
+            data.put("groupId", groupId);
+            data.put("userIds", members);
+            post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.groupListener,EMSDKMethod.onMembersJoinedFromGroup, data.toString()));
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onMembersExited(final String groupId, final List<String> members) {
+        try {
+            JSONObject data = new JSONObject();
+            data.put("groupId", groupId);
+            data.put("userIds", members);
+            post(() -> EMWrapperHelper.listener.onReceive(EMSDKMethod.groupListener,EMSDKMethod.onMembersExitedFromGroup, data.toString()));
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void onAnnouncementChanged(String groupId, String announcement) {
         try {
             JSONObject data = new JSONObject();

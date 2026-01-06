@@ -993,6 +993,24 @@
     [EMWrapperHelper.shared.listener onReceive:groupListener method:onMemberExitedFromGroup info: [dictionary toJsonString]];
 }
 
+- (void)userDidJoinGroup:(EMGroup *_Nonnull)group
+                   users:(NSArray<NSString*> *_Nonnull)userIds
+{
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+    dictionary[@"groupId"] = group.groupId;
+    dictionary[@"userIds"] = userIds;
+    [EMWrapperHelper.shared.listener onReceive:groupListener method:onMembersJoinedFromGroup info: [dictionary toJsonString]];
+}
+
+- (void)userDidLeaveGroup:(EMGroup *_Nonnull)group
+                    users:(NSArray<NSString *>* _Nonnull)userIds
+{
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+    dictionary[@"groupId"] = group.groupId;
+    dictionary[@"userIds"] = userIds;
+    [EMWrapperHelper.shared.listener onReceive:groupListener method:onMembersExitedFromGroup info: [dictionary toJsonString]];
+}
+
 - (void)groupAnnouncementDidUpdate:(EMGroup *_Nonnull)aGroup
                       announcement:(NSString *_Nullable)aAnnouncement
 {

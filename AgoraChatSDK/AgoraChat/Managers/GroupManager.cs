@@ -1832,6 +1832,18 @@ namespace AgoraChat
                             it.OnMemberExitedFromGroup(groupId, userId);
                         }
                         break;
+                    case SDKMethod.onMembersJoinedFromGroup:
+                        {
+                            List<string> members = List.StringListFromJsonArray(jsonNode["userIds"]);
+                            it.OnMembersJoinedFromGroup(groupId, members);
+                        }
+                        break;
+                    case SDKMethod.onMembersExitedFromGroup:
+                        {
+                            List<string> members = List.StringListFromJsonArray(jsonNode["userIds"]);
+                            it.OnMembersExitedFromGroup(groupId, members);
+                        }
+                        break;
                     case SDKMethod.onAnnouncementChangedFromGroup:
                         {
                             string announcement = jsonNode["announcement"];

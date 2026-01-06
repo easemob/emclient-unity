@@ -123,6 +123,8 @@ public class DelegateTester {
         EMClientWrapper.shared().groupManagerWrapper.wrapperGroupListener.onOwnerChanged("groupId", "newOwner", "oldOwner");
         EMClientWrapper.shared().groupManagerWrapper.wrapperGroupListener.onMemberJoined("groupId", "user");
         EMClientWrapper.shared().groupManagerWrapper.wrapperGroupListener.onMemberExited("groupId", "user");
+        EMClientWrapper.shared().groupManagerWrapper.wrapperGroupListener.onMembersJoined("groupId", users);
+        EMClientWrapper.shared().groupManagerWrapper.wrapperGroupListener.onMembersExited("groupId", users);
         EMClientWrapper.shared().groupManagerWrapper.wrapperGroupListener.onAnnouncementChanged("groupId", "announcement");
 
         EMClientWrapper.shared().groupManagerWrapper.wrapperGroupListener.onSharedFileDeleted("groupId","fileId");

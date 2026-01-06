@@ -402,6 +402,8 @@ namespace AgoraChat
         internal const string onOwnerChangedFromGroup = "onOwnerChangedFromGroup";
         internal const string onMemberJoinedFromGroup = "onMemberJoinedFromGroup";
         internal const string onMemberExitedFromGroup = "onMemberExitedFromGroup";
+        internal const string onMembersJoinedFromGroup = "onMembersJoinedFromGroup";
+        internal const string onMembersExitedFromGroup = "onMembersExitedFromGroup";
         internal const string onAnnouncementChangedFromGroup = "onAnnouncementChangedFromGroup";
         internal const string onSharedFileAddedFromGroup = "onSharedFileAddedFromGroup";
         internal const string onSharedFileDeletedFromGroup = "onSharedFileDeletedFromGroup";

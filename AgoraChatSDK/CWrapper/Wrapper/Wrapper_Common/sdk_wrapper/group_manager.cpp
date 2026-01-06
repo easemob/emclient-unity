@@ -1648,6 +1648,8 @@ namespace sdk_wrapper {
             gGroupManagerListener->onAssignOwnerFromGroup(groupPtr, "newOwner", "oldOwner");
             gGroupManagerListener->onMemberJoinedGroup(groupPtr, "join_member");
             gGroupManagerListener->onMemberLeftGroup(groupPtr, "left_member");
+            gGroupManagerListener->onMembersJoinedGroup(groupPtr, members);
+            gGroupManagerListener->onMembersLeftGroup(groupPtr, members);
             gGroupManagerListener->onUpdateAnnouncementFromGroup(groupPtr, "updated announcement");
 
             EMMucSharedFilePtr shared_file(new EMMucSharedFile("fileId", "fileName", "fileOwner", 12345, 67890));
