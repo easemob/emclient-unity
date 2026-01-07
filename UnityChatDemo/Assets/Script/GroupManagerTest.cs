@@ -576,7 +576,7 @@ public class GroupManagerTest : MonoBehaviour
                     Debug.Log($"FetchGroupMemberInfoFromServer success, count: {result.Data.Count}, cursor: {result.Cursor}");
                     foreach (var memberInfo in result.Data)
                     {
-                        Debug.Log($"Member: userId={memberInfo.MemberId}, nickName={memberInfo.NickName}, avatarUrl={memberInfo.AvatarUrl}");
+                        Debug.Log($"Member: userId={memberInfo.MemberId}, MemberId={memberInfo.MemberId}, JoinedTimestamp={memberInfo.JoinedTimestamp}");
                     }
                 },
                 onError: (code, error) =>
@@ -903,6 +903,7 @@ public class GroupManagerTest : MonoBehaviour
                 list.Add(group.Name);
                 list.Add(group.Description);
                 list.Add(members);
+                list.Add(group.Avatar);
                 string str = string.Join(";", list.ToArray());
                 UIManager.DefaultAlert(transform, str);
             },
