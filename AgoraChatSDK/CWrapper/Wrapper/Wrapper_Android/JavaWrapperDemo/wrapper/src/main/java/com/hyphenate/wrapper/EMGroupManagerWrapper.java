@@ -6,6 +6,7 @@ import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMGroupInfo;
 import com.hyphenate.chat.EMGroupOptions;
 import com.hyphenate.chat.EMMucSharedFile;
+import com.hyphenate.chat.EMGroupMemberInfo;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.wrapper.listeners.EMWrapperGroupListener;
 import com.hyphenate.wrapper.util.EMHelper;

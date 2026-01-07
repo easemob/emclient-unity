@@ -3,6 +3,7 @@ package com.hyphenate.wrapper;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.wrapper.callback.EMCommonValueCallback;
 import com.hyphenate.wrapper.callback.EMWrapperCallback;
 import com.hyphenate.wrapper.helper.EMConversationHelper;
 import com.hyphenate.wrapper.helper.EMMessageHelper;
@@ -341,19 +342,25 @@ public class EMConversationWrapper extends EMBaseWrapper {
         EMConversation.EMSearchDirection direction = params.getInt("direction") == 0 ? EMConversation.EMSearchDirection.UP : EMConversation.EMSearchDirection.DOWN;
         EMConversation.EMMessageSearchScope scope = EMMode.searchScopeFromInt(params.getInt("scope"));
 
-        conversation.asyncSearchMsgFromDB(keywords, timestamp, count, senders, direction, scope, new EMValueCallBack<List<EMMessage>>() {
+        conversation.asyncSearchMsgFromDB(keywords, timestamp, count, senders, direction, scope, 
+                new EMCommonValueCallback<List<EMMessage>>(callback) {
             @Override
             public void onSuccess(List<EMMessage> value) {
                 JSONArray jsonArray = new JSONArray();
-                for(EMMessage msg: value) {
-                    jsonArray.put(EMMessageHelper.toJson(msg));
+                try {
+                    for(EMMessage msg: value) {
+                        jsonArray.put(EMMessageHelper.toJson(msg));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    updateObject(jsonArray);
                 }
-                EMConversationWrapper.this.onSuccess(jsonArray, callback);
             }
 
             @Override
             public void onError(int error, String errorMsg) {
-                EMConversationWrapper.this.onFail(error, errorMsg, callback);
+                super.onError(error, errorMsg);
             }
         });
         return null;

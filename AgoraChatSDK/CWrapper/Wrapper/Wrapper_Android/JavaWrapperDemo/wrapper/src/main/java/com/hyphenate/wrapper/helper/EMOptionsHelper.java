@@ -15,7 +15,7 @@ public class EMOptionsHelper {
         options.setAppKey(json.getString("appKey"));
         options.setAppId(json.getString("appId"));
 
-        options.setPlatform(EMSDKPlatform.EMSDKPlatformUnity);
+        options.setSDKPlatform(EMSDKPlatform.EMSDKPlatformUnity);
 
         options.setAutoLogin(json.getBoolean("autoLogin"));
         options.setRequireAck(json.getBoolean("requireAck"));

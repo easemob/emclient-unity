@@ -844,7 +844,7 @@ public class EMChatManagerWrapper extends EMBaseWrapper {
 
         EMConversation.EMSearchDirection direction = directionInt == 0 ? 
             EMConversation.EMSearchDirection.UP : EMConversation.EMSearchDirection.DOWN;
-        EMConversation.EMMessageSearchScope scope = EMConversation.EMMessageSearchScope.valueOf(scopeInt);
+        EMConversation.EMMessageSearchScope scope = EMMode.searchScopeFromInt(scopeInt);
 
         EMClient.getInstance().chatManager().asyncLoadConversationMessagesWithKeyword(
             keywords, timestamp, from, direction, scope,
