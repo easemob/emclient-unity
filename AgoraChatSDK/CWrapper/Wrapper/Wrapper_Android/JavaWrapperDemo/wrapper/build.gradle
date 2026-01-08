@@ -3,7 +3,6 @@ plugins {
 }
 
 android {
-    namespace 'com.hyphenate.wrapper'
     compileSdk 33
 
     defaultConfig {
