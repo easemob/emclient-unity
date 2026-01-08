@@ -133,10 +133,10 @@ public class EMWrapperMessageListener implements EMMessageListener , EMConversat
     }
 
     @Override
-    public void onMessageContentChanged(com.hyphenate.chat.EMMessage messageModified, java.lang.String operatorId, long operationTime) {
+    public void onMessageContentChanged(EMMessage messageModified, String operatorId, long operationTime) {
         JSONObject jo = new JSONObject();
         try {
-            jo.put("msg", messageModified.toString());
+            jo.put("msg", EMMessageHelper.toJson(messageModified));
             jo.put("operatorId", operatorId);
             jo.put("operationTime", operationTime);
             post(()-> EMWrapperHelper.listener.onReceive(EMSDKMethod.chatListener, EMSDKMethod.onMessageContentChanged, jo.toString()));
