@@ -573,15 +573,16 @@ public class GroupManagerTest : MonoBehaviour
             SDKClient.Instance.GroupManager.FetchGroupMemberInfoFromServer(currentGroupId, cursor, pageSize, new ValueCallBack<CursorResult<GroupMemberInfo>>(
                 onSuccess: (result) =>
                 {
-                    Debug.Log($"FetchGroupMemberInfoFromServer success, count: {result.Data.Count}, cursor: {result.Cursor}");
+                    string memberDetails = "";
                     foreach (var memberInfo in result.Data)
                     {
-                        Debug.Log($"Member: userId={memberInfo.MemberId}, MemberId={memberInfo.MemberId}, JoinedTimestamp={memberInfo.JoinedTimestamp}");
+                        memberDetails += $"userId={memberInfo.MemberId}, JoinedAt={memberInfo.JoinedTimestamp};";
                     }
+                    UIManager.DefaultAlert(transform, $"成功获取 {result.Data.Count} 个成员, cursor: {result.Cursor}, 详情: {memberDetails}");
                 },
                 onError: (code, error) =>
                 {
-                    Debug.Log($"FetchGroupMemberInfoFromServer failed, code: {code}, error: {error}");
+                    UIManager.ErrorAlert(transform, code, error);
                 }
             ));
         });
