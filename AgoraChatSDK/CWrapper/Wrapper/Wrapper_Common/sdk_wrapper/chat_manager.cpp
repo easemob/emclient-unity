@@ -1358,11 +1358,13 @@ namespace sdk_wrapper {
 
             EMThreadEventPtr t = messagePtr->threadOverview();
 
-            JSON_STARTOBJ
-            writer.Key("ret");
-            ChatThread::ToJsonObject(writer, t);
-            JSON_ENDOBJ
-            json = s.GetString();
+            if (nullptr != t) {
+                JSON_STARTOBJ
+                writer.Key("ret");
+                ChatThread::ToJsonObject(writer, t);
+                JSON_ENDOBJ
+                json = s.GetString();
+            }
         }
         return CopyToPointer(json);
     }
