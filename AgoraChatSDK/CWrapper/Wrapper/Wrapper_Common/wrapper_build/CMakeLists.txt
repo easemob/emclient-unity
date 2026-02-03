@@ -442,6 +442,9 @@ if(APPLE)
 		FRAMEWORK TRUE
 		FRAMEWORK_VERSION A
 		XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "com.easemob.hyphenateChat-mac"
+		XCODE_ATTRIBUTE_DWARF_VERSION "4"
+		XCODE_ATTRIBUTE_OTHER_CFLAGS "-gdwarf-4 -Xclang -dwarf-version=4"
+		XCODE_ATTRIBUTE_OTHER_CPLUSPLUSFLAGS "-gdwarf-4 -Xclang -dwarf-version=4"
 		MACOSX_FRAMEWORK_INFO_PLIST ${CMAKE_SOURCE_DIR}/Info.plist
 	)
 
@@ -504,6 +507,9 @@ if(APPLE)
 		INSTALL_NAME_DIR "@rpath"
 		INSTALL_NAME "@rpath/$(EXECUTABLE_PATH)"
 		BUILD_RPATH "@loader_path/../Resources"
+		XCODE_ATTRIBUTE_DWARF_VERSION "4"
+		XCODE_ATTRIBUTE_OTHER_CFLAGS "-gdwarf-4 -Xclang -dwarf-version=4"
+		XCODE_ATTRIBUTE_OTHER_CPLUSPLUSFLAGS "-gdwarf-4 -Xclang -dwarf-version=4"
 	)
 else()
 	target_link_libraries(${SdkWrapper} PRIVATE 
@@ -544,6 +550,9 @@ if(APPLE)
 		INSTALL_NAME_DIR "@rpath"
 		INSTALL_NAME "@rpath/$(EXECUTABLE_PATH)"
 		BUILD_RPATH "@loader_path/../Resources"
+		XCODE_ATTRIBUTE_DWARF_VERSION "4"
+		XCODE_ATTRIBUTE_OTHER_CFLAGS "-gdwarf-4 -Xclang -dwarf-version=4"
+		XCODE_ATTRIBUTE_OTHER_CPLUSPLUSFLAGS "-gdwarf-4 -Xclang -dwarf-version=4"
 	)
 endif()
 
@@ -574,6 +583,9 @@ if(APPLE)
     	    BUNDLE TRUE
             MACOSX_BUNDLE TRUE
 	    XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "com.easemob.ChatCWrapper"
+	    XCODE_ATTRIBUTE_DWARF_VERSION "4"
+	    XCODE_ATTRIBUTE_OTHER_CFLAGS "-gdwarf-4 -Xclang -dwarf-version=4"
+	    XCODE_ATTRIBUTE_OTHER_CPLUSPLUSFLAGS "-gdwarf-4 -Xclang -dwarf-version=4"
             MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/Info.plist
 	)
 
